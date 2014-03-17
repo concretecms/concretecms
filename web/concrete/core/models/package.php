@@ -94,6 +94,7 @@ class Concrete5_Model_Package extends Object {
 	protected $DIR_PACKAGES = DIR_PACKAGES;
 	protected $REL_DIR_PACKAGES_CORE = REL_DIR_PACKAGES_CORE;
 	protected $REL_DIR_PACKAGES = REL_DIR_PACKAGES;
+	protected $backedUpFname = '';
 	
 	public function getRelativePath() {
 		$dirp = (is_dir($this->DIR_PACKAGES . '/' . $this->getPackageHandle())) ? $this->REL_DIR_PACKAGES : $this->REL_DIR_PACKAGES_CORE;
@@ -298,13 +299,87 @@ class Concrete5_Model_Package extends Object {
 		ksort($items);
 		return $items;
 	}
-	
+
+	/** Returns the display name of a category of package items (localized and escaped accordingly to $format)
+	* @param string $categoryHandle The category handle
+	* @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+	* @return string
+	*/
+	public static function getPackageItemsCategoryDisplayName($categoryHandle, $format = 'html') {
+		switch($categoryHandle) {
+			case 'attribute_categories':
+				$value = t('Attribute categories');
+				break;
+			case 'permission_categories':
+				$value = t('Permission categories');
+				break;
+			case 'permission_access_entity_types':
+				$value = t('Permission access entity types');
+				break;
+			case 'attribute_keys':
+				$value = t('Attribute keys');
+				break;
+			case 'attribute_sets':
+				$value = t('Attribute sets');
+				break;
+			case 'group_sets':
+				$value = t('Group sets');
+				break;
+			case 'page_types':
+				$value = t('Page types');
+				break;
+			case 'mail_importers':
+				$value = t('Mail importers');
+				break;
+			case 'configuration_values':
+				$value = t('Configuration values');
+				break;
+			case 'block_types':
+				$value = t('Block types');
+				break;
+			case 'page_themes':
+				$value = t('Page themes');
+				break;
+			case 'permissions':
+				$value = t('Permissions');
+				break;
+			case 'single_pages':
+				$value = t('Single pages');
+				break;
+			case 'attribute_types':
+				$value = t('Attribute types');
+				break;
+			case 'captcha_libraries':
+				$value = t('Captcha libraries');
+				break;
+			case 'antispam_libraries':
+				$value = t('Antispam libraries');
+				break;
+			case 'jobs':
+				$value = t('Jobs');
+				break;
+			case 'workflow_types':
+				$value = t('Workflow types');
+				break;
+			default:
+				$value = t(Loader::helper('text')->unhandle($categoryHandle));
+				break;
+		}
+		switch($format) {
+			case 'html':
+				return h($value);
+			case 'text':
+			default:
+				return $value;
+		}
+	}
+
 	public static function getItemName($item) {
 		$txt = Loader::helper('text');
 		if ($item instanceof BlockType) {
 			return t($item->getBlockTypeName());
 		} else if ($item instanceof PageTheme) {
-			return $item->getThemeName();
+			return $item->getThemeDisplayName();
 		} else if ($item instanceof Feature) {
 			return $item->getFeatureName();
 		} else if ($item instanceof FeatureCategory) {
@@ -712,15 +787,32 @@ class Concrete5_Model_Package extends Object {
 		return $upgradeables;		
 	}	
 	
+	/**
+	 * moves the current package's directory to the trash directory renamed with the package handle and a date code.
+	*/
 	public function backup() {
 		// you can only backup root level packages.
 		// Need to figure something else out for core level
 		if ($this->pkgHandle != '' && is_dir(DIR_PACKAGES . '/' . $this->pkgHandle)) {
-			$ret = @rename(DIR_PACKAGES . '/' . $this->pkgHandle, DIR_FILES_TRASH . '/' . $this->pkgHandle . '_' . date('YmdHis'));
+			$trashName = DIR_FILES_TRASH . '/' . $this->pkgHandle . '_' . date('YmdHis');
+			$ret = @rename(DIR_PACKAGES . '/' . $this->pkgHandle, $trashName);
 			if (!$ret) {
 				return array(Package::E_PACKAGE_MIGRATE_BACKUP);
+			} else {
+				$this->backedUpFname = $trashName; 
 			}
 		}
+	}
+	
+	/**
+	 * if a packate was just backed up by this instance of the package object and the packages/package handle directory doesn't exist, this will restore the 
+	 * package from the trash
+	*/
+	public function restore() {
+		if(strlen($this->backedUpFname) && is_dir($this->backedUpFname) && !is_dir(DIR_PACKAGES . '/' . $this->pkgHandle)) {
+			return @rename($this->backedUpFname, DIR_PACKAGES . '/' . $this->pkgHandle);
+		}
+		return false;
 	}
 
 

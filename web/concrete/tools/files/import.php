@@ -283,7 +283,7 @@ $(function() {
 				</td>
 				<td width="20%" valign="middle" class="center"><?=$ft->getThumbnail(1)?></td>
 				<td width="45%" valign="middle"><?=$file_array['name']?></td>
-				<td width="25%" valign="middle" class="center"><?=$file_array['size']?><?=t('Kb')?></td>
+				<td width="25%" valign="middle" class="center"><?=Loader::helper('number')->formatSize($file_array['size'], 'KB')?></td>
 			</tr>
 		<?php } ?>
 		</table>

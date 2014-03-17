@@ -21,7 +21,7 @@ class Concrete5_Controller_Page_Dashboard_System_Optimization_Jobs extends Dashb
 		if ($handle) {
 			Loader::model("job");
 			Job::installByHandle($handle);
-			$this->redirect('/dashboard/system/optimization/jobs', 'job_uninstalled');
+			$this->redirect('/dashboard/system/optimization/jobs', 'job_installed');
 		} else {
 			$this->error->add(t('No job specified.'));
 		}

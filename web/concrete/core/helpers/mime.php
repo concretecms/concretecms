@@ -94,7 +94,8 @@ class Concrete5_Helper_Mime {
 			'avi' => 'video/x-msvideo',
 			'ogv' => 'video/ogg',
 			'webm' => 'video/webm',
-			'wmv' => 'video/x-ms-wmv'
+			'wmv' => 'video/x-ms-wmv',
+			'mov' => 'video/quicktime'
 	);
 
 	/**

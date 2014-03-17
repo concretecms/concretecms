@@ -156,7 +156,7 @@ $addSelected = true;
 
 		<div class="form-group">
 			<div id="emailSettings">
-				<?php print $form->label('send_notification_from', t('Send Form Email From This Address'));?>
+				<?php print $form->label('send_notification_from', t('Reply to this email address'));?>
 				<span class="send_notification_from"><?php print $form->checkbox('send_notification_from', 1); ?></span>
 			</div>
 		</div>
@@ -227,7 +227,7 @@ $addSelected = true;
 
 			<div class="form-group">
 				<div id="emailSettings">
-					<?php print $form->label('send_notification_from_edit', t('Send Form Email From This Address'));?>
+					<?php print $form->label('send_notification_from_edit', t('Reply to this email address'));?>
 					<span class="send_notification_from_edit"><?php print $form->checkbox('send_notification_from_edit', 1); ?></span>
 				</div>
 			</div>

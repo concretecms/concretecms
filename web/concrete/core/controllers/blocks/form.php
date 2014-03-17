@@ -186,8 +186,9 @@ class Concrete5_Controller_Block_Form extends BlockController {
 		$pendingDeleteQIDs=array();
 		foreach($pendingDeleteQIDsDirty as $msqID)
 			$pendingDeleteQIDs[]=intval($msqID);		
-		$vals=array( $this->bID, intval($data['qsID']), join(',',$pendingDeleteQIDs) );  
-		$unchangedQuestions=$db->query('DELETE FROM btFormQuestions WHERE bID=? AND questionSetId=? AND msqID IN (?)',$vals);			
+		$vals = array($this->bID, intval($data['qsID']));
+		$pendingDeleteQIDs = implode(',', $pendingDeleteQIDs);
+		$unchangedQuestions = $db->query('DELETE FROM btFormQuestions WHERE bID=? AND questionSetId=? AND msqID IN ('.$pendingDeleteQIDs.')', $vals);
 	} 
 	
 	//Duplicate will run when copying a page with a block, or editing a block for the first time within a page version (before the save).
@@ -443,9 +444,7 @@ class Concrete5_Controller_Block_Form extends BlockController {
 			}
 			
 			if(intval($this->notifyMeOnSubmission)>0 && !$foundSpam){	
-				if ($this->sendEmailFrom !== false) {
-					$formFormEmailAddress = $this->sendEmailFrom;
-				} else if( strlen(FORM_BLOCK_SENDER_EMAIL)>1 && strstr(FORM_BLOCK_SENDER_EMAIL,'@') ){
+				if( strlen(FORM_BLOCK_SENDER_EMAIL)>1 && strstr(FORM_BLOCK_SENDER_EMAIL,'@') ){
 					$formFormEmailAddress = FORM_BLOCK_SENDER_EMAIL;  
 				}else{ 
 					$adminUserInfo=UserInfo::getByID(USER_SUPER_ID);

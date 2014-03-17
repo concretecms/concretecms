@@ -212,36 +212,68 @@ class Concrete5_Controller_Page_Login extends PageController {
 		if (!$this->error) {
 			$this->error = Loader::helper('validation/error');
 		}
-		$dash = Page::getByPath("/dashboard", "RECENT");
-		$dbp = new Permissions($dash);
+		
+		$nh = Loader::helper('validation/numbers');
+		$navigation = Loader::helper('navigation');
+		$rUrl = false;
 
-		//should administrator be redirected to dashboard?  defaults to yes if not set.
-		$adminToDash=intval(Config::get('LOGIN_ADMIN_TO_DASHBOARD'));
 		$u = new User(); // added for the required registration attribute change above. We recalc the user and make sure they're still logged in
 		if ($u->isRegistered()) {
 			if ($u->config('NEWSFLOW_LAST_VIEWED') == 'FIRSTRUN') {
 				$u->saveConfig('NEWSFLOW_LAST_VIEWED', 0);
 			}
-
-			if ($dbp->canRead() && $adminToDash) {
-				$this->redirect('/dashboard');
-			} else {
+			do {
+				// redirect to original destination
+				if(isset($_SESSION['rcID'])) {
+					$rcID = $_SESSION['rcID'];
+					if ($nh->integer($rcID)) {
+						$rc = Page::getByID($rcID);
+					} elseif (strlen($rcID)) {
+						$rcID = trim($rcID, '/');
+						$rc = Page::getByPath('/' . $rcID);
+					}
+					if ($rc instanceof Page && !$rc->isError()) {
+						$rUrl = $navigation->getLinkToCollection($rc);
+						break;
+					}		
+				}
+				
+				// admin to dashboard?
+				$dash = Page::getByPath("/dashboard", "RECENT");
+				$dbp = new Permissions($dash);
+				//should administrator be redirected to dashboard?  defaults to yes if not set.
+				$adminToDash=intval(Config::get('LOGIN_ADMIN_TO_DASHBOARD'));
+				if ($dbp->canRead() && $adminToDash) {
+					$rUrl = $navigation->getLinkToCollection($rc);
+					break;
+				}
+				
 				//options set in dashboard/users/registration
-				$login_redirect_cid=intval(Config::get('LOGIN_REDIRECT_CID'));
 				$login_redirect_mode=Config::get('LOGIN_REDIRECT');
-
+				
 				//redirect to user profile
 				if ($login_redirect_mode=='PROFILE' && ENABLE_USER_PROFILES) {
-					$this->redirect( '/profile/', $u->uID );
-
+					$rUrl = View::url('/profile',$u->getUserID());
+					break;
+				} 
+				
 				//redirect to custom page
-				} elseif ($login_redirect_mode=='CUSTOM' && $login_redirect_cid > 0) {
-					$redirectTarget = Page::getByID( $login_redirect_cid );
-					if (intval($redirectTarget->cID)>0) $this->redirect( $redirectTarget->getCollectionPath());
-					else $this->redirect('/');
-
-				//redirect home
-				} else $this->redirect('/');
+				$login_redirect_cid = intval(Config::get('LOGIN_REDIRECT_CID'));
+				if ($login_redirect_mode == 'CUSTOM' && $login_redirect_cid > 0) {
+					$rc = Page::getByID($login_redirect_cid);
+					if ($rc instanceof Page && !$rc->isError()) {
+						$rUrl = $navigation->getLinkToCollection($rc);
+						break;
+					}
+				}
+				
+				break;
+			} while(false);
+			
+			if($rUrl) {
+				$this->redirect($rUrl);
+			} else {
+				$this->redirect('/');
 			}
 		} else {
 			$this->error->add(t('User is not registered. Check your authentication controller.'));
@@ -259,6 +291,7 @@ class Concrete5_Controller_Page_Login extends PageController {
 		$nh = Loader::helper('validation/numbers');
 		if ($nh->integer($cID)) {
 			$this->set('rcID', $cID);
+			$_SESSION['rcID'] = $cID;
 		}
 	}
 	/* @TODO this functionality needs to be ported to the concrete5 auth type

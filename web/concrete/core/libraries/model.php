@@ -18,4 +18,5 @@ class Concrete5_Library_Model extends ADOdb_Active_Record {
 		$db = Loader::db();
 		parent::__construct();
 	}
+
 }

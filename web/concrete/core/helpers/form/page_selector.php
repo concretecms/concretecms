@@ -35,7 +35,7 @@ class Concrete5_Helper_Form_PageSelector {
 		$r->requireAsset('core/sitemap');
 		$selectedCID = 0;
 		if (isset($_REQUEST[$fieldName])) {
-			$selectedCID = $_REQUEST[$fieldName];
+			$selectedCID = Loader::helper('security')->sanitizeInt($_REQUEST[$fieldName]);
 		} else if ($cID > 0) {
 			$selectedCID = $cID;
 		}

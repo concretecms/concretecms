@@ -12,6 +12,11 @@ class Concrete5_Controller_Page_Account_Profile_Edit extends AccountPageControll
 			throw new Exception(t('You must be logged in to access this page.'));
 		}
 	}
+	
+	public function on_start() {
+		parent::on_start();
+		$this->set('valt', Loader::helper('validation/token'));
+	}
 
 	public function callback($type,$method='callback') {
 		$at = AuthenticationType::getByHandle($type);
@@ -46,11 +51,19 @@ class Concrete5_Controller_Page_Account_Profile_Edit extends AccountPageControll
 		$th = Loader::helper('text');
 		$vsh = Loader::helper('validation/strings');
 		$cvh = Loader::helper('concrete/validation');
+		$valt = Loader::helper('validation/token');
 		$e = Loader::helper('validation/error');
 	
 		$data = $this->post();
 		
-		
+		/* 
+		 * Validation
+		*/
+		//token
+		if(!$valt->validate('profile_edit')) {
+			$e->add($valt->getErrorMessage());
+		}
+
 		// validate the user's email
 		$email = $this->post('uEmail');
 		if (!$vsh->email($email)) {
@@ -58,6 +71,7 @@ class Concrete5_Controller_Page_Account_Profile_Edit extends AccountPageControll
 		} else if (!$cvh->isUniqueEmail($email) && $ui->getUserEmail() != $email) {
 			$e->add(t("The email address '%s' is already in use. Please choose another.",$email));
 		}
+
 
 		// password
 		if(strlen($data['uPasswordNew'])) {

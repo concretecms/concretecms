@@ -82,9 +82,9 @@ class Concrete5_Model_JobSet extends Object {
 	}
 
 	public function updateJobSetName($jsName) {
-		$this->jsName = $jsName;
+		$this->jsName = Loader::helper('security')->sanitizeString($jsName);
 		$db = Loader::db();
-		$db->Execute("update JobSets set jsName = ? where jsID = ?", array($jsName, $this->jsID));
+		$db->Execute("update JobSets set jsName = ? where jsID = ?", array($this->jsName, $this->jsID));
 	}
 
 	public function addJob(Job $j) {
@@ -97,6 +97,7 @@ class Concrete5_Model_JobSet extends Object {
 
 	public static function add($jsName, $pkg = false) {
 		$db = Loader::db();
+		$jsName = Loader::helper('security')->sanitizeString($jsName);
 		$pkgID = 0;
 		if (is_object($pkg)) {
 			$pkgID = $pkg->getPackageID();

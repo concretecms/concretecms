@@ -1,3 +1,5 @@
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Allowed File Types'), false, 'span8 offset2', false)?>
 
 	<form method="post" id="file-access-extensions" action="<?=$this->url('/dashboard/system/permissions/file_types', 'file_access_extensions')?>">

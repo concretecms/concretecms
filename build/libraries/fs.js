@@ -28,6 +28,55 @@ else {
 	};
 }
 
+/** Checks whether a directory exists
+* @param {string} path
+* @return boolean
+*/ 
+function isDirectory(path) {
+	try {
+		return fs.lstatSync(path).isDirectory();
+	}
+	catch(e) {
+		if(e.code == 'ENOENT') {
+			return false;
+		}
+		throw e;
+	}
+}
+
+/** Checks whether a file exists
+* @param {string} path
+* @return boolean
+*/ 
+function isFile(path) {
+	try {
+		return fs.lstatSync(path).isFile();
+	}
+	catch(e) {
+		if(e.code == 'ENOENT') {
+			return false;
+		}
+		throw e;
+	}
+}
+
+/** Checks whether a file or directory exists
+* @param {string} path
+* @return boolean
+*/ 
+function fileExists(path) {
+	try {
+		fs.lstatSync(path);
+		return true;
+	}
+	catch(e) {
+		if(e.code == 'ENOENT') {
+			return false;
+		}
+		throw e;
+	}
+}
+
 /** Helper function that effectively parses the directory tree (used by directoryParser).
 * @param {directoryParser} main The directoryParser instance.
 * @param {string} dirAbs The absolute path of the directory to parse.

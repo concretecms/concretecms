@@ -10,7 +10,7 @@ $gl = new GroupSearch();
 $gl->setItemsPerPage(10000);
 $gArray = $gl->getPage();
 
-$languages = Localization::getAvailableInterfaceLanguages();
+$locales = Localization::getAvailableInterfaceLanguageDescriptions(ACTIVE_LOCALE);
 
 ?>
 
@@ -18,11 +18,11 @@ $languages = Localization::getAvailableInterfaceLanguages();
 
 <form method="post" enctype="multipart/form-data" id="ccm-user-form" action="<?=$this->url('/dashboard/users/add')?>">
 	<?=$valt->output('create_account')?>
-	
+
 	<input type="hidden" name="_disableLogin" value="1">
 
 	<div class="ccm-pane-body">
-	
+
     	<table class="table table-bordered">
             <thead>
                 <tr>
@@ -48,36 +48,24 @@ $languages = Localization::getAvailableInterfaceLanguages();
 				</tr>
                 
                 
-				<? if (count($languages) > 0) { ?>
+				<? if (count($locales) > 1) { // "> 1" because en_US is always available ?>
 			
 				<tr>
 					<td colspan="2"><?=t('Language')?></td>
-				</tr>	
+				</tr>
 				<tr>
 					<td colspan="2">
-					<?
-						array_unshift($languages, 'en_US');
-						$locales = array();
-						$locales[''] = t('** Default');
-						Loader::library('3rdparty/Zend/Locale');
-						Loader::library('3rdparty/Zend/Locale/Data');
-						Zend_Locale_Data::setCache(Cache::getLibrary());
-						foreach($languages as $lang) {
-							$loc = new Zend_Locale($lang);
-							$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', ACTIVE_LOCALE);
-						}
-						print $form->select('uDefaultLanguage', $locales);
-					?>
+					<? print $form->select('uDefaultLanguage', $locales, Localization::activeLocale()); ?>
 					</td>
 				</tr>
-                
+
 				<? } ?>
-                
+
 			</tbody>
 		</table>
 
 	<? if (count($attribs) > 0) { ?>
-	
+
         <table class="table table-striped">
         	<thead>
 	        	<tr>
@@ -85,9 +73,9 @@ $languages = Localization::getAvailableInterfaceLanguages();
 	        	</tr>
 			</thead>
             <tbody>
-            
-			<? foreach($attribs as $ak) { 
-				if (in_array($ak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) { 
+
+			<? foreach($attribs as $ak) {
+				if (in_array($ak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) {
 				?>
                 <tr>
                     <td class="clearfix">
@@ -97,10 +85,10 @@ $languages = Localization::getAvailableInterfaceLanguages();
                 </tr>
                 <? } ?>
             <? } // END Foreach ?>
-        
+
 			</tbody>
         </table>
-	
+
 	<? } ?>
 
 		<table class="inputs-list table-striped table">
@@ -112,14 +100,13 @@ $languages = Localization::getAvailableInterfaceLanguages();
             <tbody>
 				<tr>
 					<td>
-                    
 					<? 
 					foreach ($gArray as $g) {
 						$gp = new Permissions($g);
 						if ($gp->canAssignGroup()) {
 						?>
 						<label>
-							<input type="checkbox" name="gID[]" value="<?=$g['gID']?>" <? 
+							<input type="checkbox" name="gID[]" value="<?=$g->getGroupID()?>" <?
                             if (is_array($_POST['gID'])) {
                                 if (in_array($g['gID'], $_POST['gID'])) {
                                     echo(' checked ');
@@ -129,12 +116,12 @@ $languages = Localization::getAvailableInterfaceLanguages();
 							<span><?=$g->getGroupDisplayName()?></span>
 						</label>
                     <? }
-                    
-                    
+
+
                 } ?>
-			
+
 					<div id="ccm-additional-groups"></div>
-			
+
 					</td>
 				</tr>
 			</tbody>
@@ -146,9 +133,9 @@ $languages = Localization::getAvailableInterfaceLanguages();
         <div class="ccm-buttons">
             <input type="hidden" name="create" value="1" />
             <? print $ih->submit(t('Add'), 'ccm-user-form', 'right', 'primary'); ?>
-        </div>	
+        </div>
     </div>
 
 </form>
-    
+
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>

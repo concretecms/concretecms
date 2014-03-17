@@ -11,15 +11,14 @@ class Concrete5_Model_File extends Object {
 	 * @param int $fID
 	 * @return File
 	 */
-	public function getByID($fID) {
+	public static function getByID($fID) {
 		
-		Loader::model('file_set');
 		$db = Loader::db();
 		$f = new File();
 		$row = $db->GetRow("SELECT Files.*, FileVersions.fvID
 		FROM Files LEFT JOIN FileVersions on Files.fID = FileVersions.fID and FileVersions.fvIsApproved = 1
 		WHERE Files.fID = ?", array($fID));
-		if ($row['fID'] == $fID) {
+		if (!is_null($fID) && $row['fID'] == $fID) {
 			$f->setPropertiesFromArray($row);
 		} else {
 			$f->error = File::F_ERROR_INVALID_FILE;

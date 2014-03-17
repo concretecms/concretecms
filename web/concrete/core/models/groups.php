@@ -497,6 +497,4 @@ class Concrete5_Model_Group extends Object {
 		$interval = $minutes + ($hours * 60) + ($days * 1440);
 		$db->Execute('update Groups set gUserExpirationIsEnabled = 1, gUserExpirationMethod = \'INTERVAL\', gUserExpirationSetDateTime = null, gUserExpirationInterval = ?, gUserExpirationAction = ? where gID = ?', array($interval, $action, $this->gID));
 	}
-
-
 }

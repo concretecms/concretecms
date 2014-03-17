@@ -8,7 +8,7 @@ $this->inc('elements/header.php'); ?>
 			--><a href="<?=DIR_REL?>/"><?
 				$block = Block::getByName('My_Site_Name');
 				if( $block && $block->bID ) $block->display();  
-				else echo SITE;
+				else echo h(SITE);
 			?></a><!--
 		--></h1>
 		<?
@@ -39,6 +39,7 @@ $this->inc('elements/header.php'); ?>
 		</div>
 		<div id="body">
 			<?
+			Loader::element('system_errors', array('error' => $error));
 			print $innerContent;
 			?>
 		</div>	
@@ -46,7 +47,7 @@ $this->inc('elements/header.php'); ?>
 	</div>
 	<div id="footer">
 			<span class="powered-by"><a href="http://www.concrete5.org" title="<?=t('concrete5 - open source content management system for PHP and MySQL')?>"><?=t('concrete5 - open source CMS')?></a></span>
-			&copy; <?=date('Y')?> <a href="<?=DIR_REL?>/"><?=SITE?></a>.
+			&copy; <?=date('Y')?> <a href="<?=DIR_REL?>/"><?=h(SITE)?></a>.
 			&nbsp;&nbsp;
 			<?=t('All rights reserved.')?>	
 			<?

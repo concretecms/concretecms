@@ -58,7 +58,8 @@ ob_start();
 <?= BASE_URL.View::url('/dashbard/users/search?uID='.$uID) ?>
 <?
 
-$body = ob_end_clean();
+$body = ob_get_clean();
+ob_end_clean();
 /**
  * PLAIN TEXT BODY END
  */

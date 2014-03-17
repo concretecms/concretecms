@@ -77,7 +77,7 @@ if (!isset($_REQUEST['reload'])) { ?>
 							$gp = new Permissions($g);
 							if ($gp->canAssignGroup()) {
 						?>
-							<option value="<?=$g['gID']?>"  <? if (is_array($_REQUEST['groupIDs']) && in_array($g['gID'], $_REQUEST['groupIDs'])) { ?> selected="selected" <? } ?>><?=h(tc('GroupName', $g['gName']))?></option>
+							<option value="<?=$g->getGroupID()?>"  <? if (is_array($_REQUEST['groupIDs']) && in_array($g->getGroupID(), $_REQUEST['groupIDs'])) { ?> selected="selected" <? } ?>><?=$g->getGroupDisplayName()?></option>
 						<? } 
 						
 						}?>
@@ -115,6 +115,6 @@ ccm_userBulkGroupAdd = function() {
 	});
 };
 $(function() { 
-	$(".chosen-select").chosen();	
+	$(".chosen-select").chosen(ccmi18n_chosen);	
 });
 </script>

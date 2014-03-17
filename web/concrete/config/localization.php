@@ -53,11 +53,6 @@ if (!defined('DATE_APP_GENERIC_MDYT')) {
 	define('DATE_APP_GENERIC_MDYT', t('n/j/Y \a\t g:i A'));
 }
 
-if (ACTIVE_LOCALE != 'en_US' && (!defined('DATE_APP_GENERIC_MDY'))) {
-	define('DATE_APP_GENERIC_MDY', 'Y-m-d');
-	define('DATE_APP_DATE_PICKER', t('yy-mm-dd'));
-}
-
 if (!defined('DATE_APP_GENERIC_MDY')) {
 	define('DATE_APP_GENERIC_MDY', t('n/j/Y'));
 }
@@ -110,7 +105,7 @@ if (!defined('DATE_APP_DATE_ATTRIBUTE_TYPE_T')) {
 	define('DATE_APP_DATE_ATTRIBUTE_TYPE_T', DATE_APP_GENERIC_TS);
 }
 if (!defined('DATE_APP_DATE_PICKER')) {
-	define('DATE_APP_DATE_PICKER', 'm/d/yy');
+	define('DATE_APP_DATE_PICKER', t(/*i18n http://api.jqueryui.com/datepicker/#utility-formatDate */'m/d/yy'));
 }
 
 

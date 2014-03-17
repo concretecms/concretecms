@@ -262,6 +262,9 @@ class Concrete5_Library_Content_Importer {
 					if ($bx['type'] != '') {
 						// we check this because you might just get a block node with only an mc-block-id, if it's an alias
 						$bt = BlockType::getByHandle($bx['type']);
+						if(!is_object($bt)) {
+							throw new Exception(t('Invalid block type handle: %s' . strval($bx['type'])));
+						}
 						$btc = $bt->getController();
 						$btc->import($page, (string) $ax['name'], $bx);
 					} else if ($bx['mc-block-id'] != '') {
@@ -648,7 +651,10 @@ class Concrete5_Library_Content_Importer {
 		if (isset($sx->attributecategories)) {
 			foreach($sx->attributecategories->category as $akc) {
 				$pkg = ContentImporter::getPackageObject($akc['package']);
-				$akx = AttributeKeyCategory::add($akc['handle'], $akc['allow-sets'], $pkg);
+				$akx = AttributeKeyCategory::getByHandle($akc['handle']);
+				if (!is_object($akx)) {
+					$akx = AttributeKeyCategory::add($akc['handle'], $akc['allow-sets'], $pkg);
+				}
 			}
 		}
 	}

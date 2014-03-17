@@ -135,7 +135,7 @@
 						$current_file_stats = stat(DIR_FILES_INCOMING .'/'. $file);
 						
 						$incoming_file_information[$cnt]['name'] = $file;
-			            $incoming_file_information[$cnt]['size'] = floor($current_file_stats[7] / 1000); // Fetch for Kb
+						$incoming_file_information[$cnt]['size'] = $current_file_stats[7];
 			        
 						$cnt++;
 					}

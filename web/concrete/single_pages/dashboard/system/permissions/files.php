@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 	<? ob_start(); ?>
 	<?=Loader::element('permission/help');?>

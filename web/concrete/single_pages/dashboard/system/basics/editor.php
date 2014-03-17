@@ -1,3 +1,4 @@
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Rich Text Editor'), t('Control the options available for TinyMCE.'), false, false);?>
 <?php
 $h = Loader::helper('concrete/interface');

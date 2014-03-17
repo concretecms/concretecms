@@ -12,7 +12,6 @@
 		<? Loader::helper('composer')->displayButtons($pagetype, $draft); ?>
 	</div>
 
-
 	</form>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>

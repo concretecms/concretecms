@@ -32,7 +32,7 @@
 			--><a href="<?php  echo DIR_REL?>/"><?  
 				$block = Block::getByName('My_Site_Name');  
 				if( $block && $block->bID ) $block->display();   
-				else echo SITE;
+				else echo h(SITE);
 			?></a><!--
 		--></h1>
 

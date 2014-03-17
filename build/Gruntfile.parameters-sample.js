@@ -17,7 +17,6 @@ module.exports = {
 	txPassword: '',
 	// The identifier of the Transifex resource, for instance 'core-5621'.
 	// It's needed only if you have to run tasks that interact with Transifex.
-
 	txResource: '',
 	// A list of locales. If empty then all the Transifex locales are retrieved.
 	txLocales: [],

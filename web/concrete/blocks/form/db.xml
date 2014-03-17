@@ -24,13 +24,13 @@
 		</field>
 		<field name="recipientEmail" type="C" size="255">
 		</field>		
-		<field name="displayCaptcha" type="i">
+		<field name="displayCaptcha" type="I">
 			<default value="1"/>
 		</field>
-		<field name="redirectCID" type="i">
+		<field name="redirectCID" type="I">
 			<default value="0"/>
 		</field>      		
-		<field name="addFilesToSet" type="i">
+		<field name="addFilesToSet" type="I">
 			<default value="0" />
 		</field>
 	</table>
@@ -71,7 +71,7 @@
 			<unsigned />
 			<default value="3" />
 		</field> 
-		<field name="required" type="i">
+		<field name="required" type="I">
 			<default value="0"/>
 		</field>  
 		<index name="questionSetId">

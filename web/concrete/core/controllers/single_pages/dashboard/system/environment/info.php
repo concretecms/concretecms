@@ -4,11 +4,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Controller_Page_Dashboard_System_Environment_Info extends DashboardController {	
 	
 	public function get_environment_info() {
+		$activeLocale = Localization::activeLocale();
+		if($activeLocale != 'en_US') {
+			Localization::changeLocale('en_US');
+		}
 		$maxExecutionTime = ini_get('max_execution_time');
 		set_time_limit(5);
 		
-		$environmentMessage = '# ' . t('concrete5 Version') . "\n" . APP_VERSION . "\n\n";
-		$environmentMessage .= '# ' . t('concrete5 Packages') . "\n";
+		$environmentMessage = "# concrete5 Version\n" . APP_VERSION . "\n\n";
+		$environmentMessage .= "# concrete5 Packages\n";
 		$pla = PackageList::get();
 		$pl = $pla->getPackages();
 		$packages = array();
@@ -22,12 +26,12 @@ class Concrete5_Controller_Page_Dashboard_System_Environment_Info extends Dashbo
 			$environmentMessage .= implode(', ', $packages);
 			$environmentMessage .= ".\n";
 		} else {
-			$environmentMessage .= t('None') . "\n";
+			$environmentMessage .= "None\n";
 		}
 		$environmentMessage .= "\n";
 		
 		// overrides
-		$environmentMessage .= '# ' . t('concrete5 Overrides') . "\n";
+		$environmentMessage .= "# concrete5 Overrides\n";
 		$fh = Loader::helper('file');
 		$overrides = array();
 		$ovBlocks = $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES);
@@ -92,34 +96,34 @@ class Concrete5_Controller_Page_Dashboard_System_Environment_Info extends Dashbo
 			$environmentMessage .= implode(', ', $overrides);
 			$environmentMessage .= "\n";
 		} else {
-			$environmentMessage .= t('None') . "\n";
+			$environmentMessage .= "None\n";
 		}
 		$environmentMessage .= "\n";
 
 		print $environmentMessage;
                                 
 		// cache
-		$environmentMessage = '# ' . t('concrete5 Cache Settings') . "\n";
-		$environmentMessage .= t('Block Cache - %s', (ENABLE_BLOCK_CACHE ? t('On') : t('Off'))) . "\n";
-		$environmentMessage .= t('Overrides Cache - %s', (ENABLE_OVERRIDE_CACHE ? t('On') : t('Off'))) . "\n";
-		$environmentMessage .= t('Full Page Caching - %s', (FULL_PAGE_CACHE_GLOBAL == 'blocks' ? t('On - If blocks on the particular page allow it.') : (FULL_PAGE_CACHE_GLOBAL == 'all' ? t('On - In all cases.'): t('Off')))) . "\n";
+		$environmentMessage = "# concrete5 Cache Settings\n";
+		$environmentMessage .= sprintf("Block Cache - %s\n", ENABLE_BLOCK_CACHE ? 'On' : 'Off');
+		$environmentMessage .= sprintf("Overrides Cache - %s\n", ENABLE_OVERRIDE_CACHE ? 'On' : 'Off');
+		$environmentMessage .= sprintf("Full Page Caching - %s\n", (FULL_PAGE_CACHE_GLOBAL == 'blocks' ? 'On - If blocks on the particular page allow it.' : (FULL_PAGE_CACHE_GLOBAL == 'all' ? 'On - In all cases.': 'Off')));
 		if (FULL_PAGE_CACHE_GLOBAL) {
-			$environmentMessage .= t('Full Page Cache Lifetime - %s', (FULL_PAGE_CACHE_LIFETIME == 'default' ? t('Every %s (default setting).', Loader::helper('date')->timeSince(time()-CACHE_LIFETIME)) : (FULL_PAGE_CACHE_LIFETIME == 'forever' ? t('Only when manually removed or the cache is cleared.'): t('Every %s minute.', Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM'))))) . "\n";
+			$environmentMessage .= sprintf("Full Page Cache Lifetime - %s\n", (FULL_PAGE_CACHE_LIFETIME == 'default' ? sprintf('Every %s (default setting).', Loader::helper('date')->timeSince(time()-CACHE_LIFETIME)) : (FULL_PAGE_CACHE_LIFETIME == 'forever' ? 'Only when manually removed or the cache is cleared.': sprintf('Every %s minutes.', Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM')))));
 		}
 		$environmentMessage .= "\n";
 		print $environmentMessage;
 		
-		$environmentMessage = '# ' . t('Server Software') . "\n" . $_SERVER['SERVER_SOFTWARE'] . "\n\n";
-		$environmentMessage .= '# ' . t('Server API') . "\n" . php_sapi_name() . "\n\n";
-		$environmentMessage .= '# ' . t('PHP Version') . "\n" . PHP_VERSION . "\n\n";
-		$environmentMessage .= '# ' . t('PHP Extensions') . "\n";
+		$environmentMessage = "# Server Software\n" . $_SERVER['SERVER_SOFTWARE'] . "\n\n";
+		$environmentMessage .= "# Server API\n" . php_sapi_name() . "\n\n";
+		$environmentMessage .= "# PHP Version\n" . PHP_VERSION . "\n\n";
+		$environmentMessage .= "# PHP Extensions\n";
 		if (function_exists('get_loaded_extensions')) {
 			$gle = @get_loaded_extensions();
 			natcasesort($gle);
 			$environmentMessage .= implode(', ', $gle);
 			$environmentMessage .= ".\n";
 		} else {
-			$environmentMessage .= t('Unable to determine.') . "\n";
+			$environmentMessage .= "Unable to determine\n";
 		}
 
 		print $environmentMessage;
@@ -137,8 +141,8 @@ class Concrete5_Controller_Page_Dashboard_System_Environment_Info extends Dashbo
 				$phpinfo[end(array_keys($phpinfo))][] = $match[2];
 			}
 		}		
-		$environmentMessage = "\n# " . t('PHP Settings') . "\n";
-		$environmentMessage .= "max_execution_time - " . $maxExecutionTime . "\n";
+		$environmentMessage = "\n# PHP Settings\n";
+		$environmentMessage .= "max_execution_time - $maxExecutionTime\n";
 		foreach($phpinfo as $name => $section) {
 			foreach($section as $key => $val) {
 				if (preg_match('/.*max_execution_time*/', $key)) {

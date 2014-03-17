@@ -1,4 +1,4 @@
-
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <? if (isset($key)) { ?>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Attribute'), false, false, false)?>
