@@ -1,7 +1,7 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
 	# Filename: _process.php
-	# Author: Andrew Embler (andrew@bluepavo.com)
+	# Author: Andrew Embler (andrew@concrete5.org)
 	# -------------------
 	# _process.php is included at the top of the dispatcher and basically
 	# checks to see if a any submits are taking place. If they are, then
@@ -31,11 +31,8 @@
 			case 'ajax_do_arrange': /* called via ajax */
 				if ($cp->canEditPageContents()) {
 					$nvc = $c->getVersionToModify();
-					$doProcessArrangement = true;
 					// handle dragging gathering items
-					if ($doProcessArrangement) {
-						$nvc->processArrangement($_POST['area'], $_POST['block'], $_POST['blocks']);
-					}
+					$nvc->processArrangement($_POST['area'], $_POST['block'], $_POST['blocks']);
 
 					if (!is_object($r)) {
 						$r = new stdClass;

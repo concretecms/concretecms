@@ -6,14 +6,13 @@ module.exports = function(grunt) {
 		parameters = require(__dirname + '/Gruntfile.parameters.js');
 	}
 	parameters = parameters || {};
-
 	grunt.option.flags().forEach(function(p) {
 		var m = /^--(.+?)=(.+)$/.exec(p);
 		if(m) {
 			parameters[m[1]] = m[2];
 		}
 	});
-
+	
 	var config = {};
 
 	config.DIR_REL = ('DIR_REL' in parameters) ? parameters.DIR_REL : '';
@@ -52,7 +51,6 @@ module.exports = function(grunt) {
 	// Options for the generation of JavaScripts. See https://github.com/gruntjs/grunt-contrib-uglify
 	var jsOptions = {
 		mangle: true,
-		compress: true,
 		beautify: false,
 		report: 'min',
 		preserveComments: false,
@@ -296,6 +294,7 @@ module.exports = function(grunt) {
 	for(var key in js) {
 		var target = {files: {}};
 		target.files[js[key].dest] = js[key].src;
+
 		var srcFile = js[key].src;
 		if (typeof(srcFile) == 'string') {
 			watchJS.push(srcFile);
@@ -304,9 +303,11 @@ module.exports = function(grunt) {
 				watchJS.push(srcFile[i]);
 			}
 		}
-		config.uglify[key + '_release'] = extend({}, target);
+
+		config.uglify[key + '_release'] = extend({options: {compress: {warnings: false}}}, target);
+
 		jsTargets.release.push('uglify:' + key + '_release');
-		target.options = {};
+		target.options = {compress: {warnings: true}};
 		target.options.sourceMap = js[key].dest + '.map';
 		target.options.sourceMappingURL = target.options.sourceMap.replace(/<%=\s*DIR_BASE\s*%>/g, '<%= DIR_REL %>');
 		target.options.sourceMapRoot = '<%= DIR_REL %>/';
@@ -362,9 +363,38 @@ module.exports = function(grunt) {
 	grunt.registerTask('release', ['js:release', 'css:release']);
 	grunt.registerTask('debug', ['js:debug', 'css:debug']);
 
-	grunt.registerTask('translations', 'Download and compile translations.', function() {
-		require('./tasks/translations.js')(grunt, config, parameters, this.async());
+	grunt.registerTask('remove-short-tags', 'Remove short tags.', function() {
+		require('./tasks/remove-short-tags.js')(grunt, config, parameters, this.async());
 	});
+
+	grunt.registerTask('build-release-start', 'Create concrete5 release from Git, run various required functions.', function() {
+		require('./tasks/build-release/start.js')(grunt, config, parameters, this.async());
+	});
+
+	grunt.registerTask('build-release-clean', 'Remove certain dotfiles.', function() {
+		require('./tasks/build-release/clean.js')(grunt, config, parameters, this.async());
+	});
+
+	grunt.registerTask('build-release-finish', 'Create zip file and finish.', function() {
+		require('./tasks/build-release/finish.js')(grunt, config, parameters, this.async());
+	});
+
+	var buildTranslationParameters = extend({}, parameters);
+	buildTranslationParameters.destination = './release/concrete5-master/web';
+
+	var buildTagParameters = extend({}, parameters);
+	buildTagParameters = parameters;
+	buildTagParameters.source = './release/concrete5-master/web';
+
+	grunt.registerTask('build-release-translations', 'Downloading Translations.', function() {
+		require('./tasks/translations.js')(grunt, config, buildTranslationParameters, this.async());
+	});
+
+	grunt.registerTask('build-release-remove-short-tags', 'Remove short tags.', function() {
+		require('./tasks/remove-short-tags.js')(grunt, config, buildTagParameters, this.async());
+	});
+
+	grunt.registerTask('build-release', ['build-release-start', 'build-release-remove-short-tags', 'build-release-translations', 'build-release-clean', 'build-release-finish']);
 
 	grunt.registerTask('default', 'release');
 };

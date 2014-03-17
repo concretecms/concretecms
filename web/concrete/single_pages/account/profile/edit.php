@@ -13,6 +13,7 @@ $(function() {
 
 	<form method="post" action="<?php echo $this->action('save')?>" enctype="multipart/form-data">
 	<?php  $attribs = UserAttributeKey::getEditableInProfileList(); 
+	$valt->output('profile_edit');
 	if(is_array($attribs) && count($attribs)) { 
 	?>
 		<fieldset>

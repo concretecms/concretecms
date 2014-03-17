@@ -3,7 +3,7 @@
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Multilingual Setup'), false, 'span8 offset2', false)?>
 <? 
 
-if (count($languages) == 0) { ?>
+if (count($interfacelocales) <= 1) { ?>
 <div class="ccm-pane-body ccm-pane-body-footer">
 	<?=t("You don't have any interface languages installed. You must run concrete5 in English.");?>
 </div>

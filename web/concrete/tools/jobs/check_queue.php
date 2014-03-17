@@ -12,6 +12,10 @@ if (Job::authenticateRequest($_REQUEST['auth'])) {
 	foreach($list as $job) {
 		if ($job->supportsQueue()) {
 			$q = $job->getQueueObject();
+			// don't process queues that are empty
+			if($q->count() <1){
+				continue;
+			}
 			$obj = new stdClass;
 			$js = Loader::helper('json');
 			try {
@@ -22,6 +26,8 @@ if (Job::authenticateRequest($_REQUEST['auth'])) {
 				}
 				$totalItems = $q->count();	
 				$obj->totalItems = $totalItems;
+				$obj->jHandle = $job->getJobHandle();
+				$obj->jID = $job->getJobID();
 				if ($q->count() == 0) {
 					$result = $job->finish($q);
 					$obj = $job->markCompleted(0, $result);
@@ -32,6 +38,8 @@ if (Job::authenticateRequest($_REQUEST['auth'])) {
 				$obj->message = $obj->result; // needed for progressive library.
 			}
 			print $js->encode($obj);
+			// End when one queue has processed a batch step
+			break;
 		}
 	}
 }

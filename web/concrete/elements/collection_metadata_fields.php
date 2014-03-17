@@ -117,7 +117,6 @@ $usedKeysCombined = array_merge($requiredKeys, $usedKeys);
 		</div>
 		
 	<? } ?>
-
 </div>
 </div>
 

@@ -83,13 +83,8 @@ class Concrete5_Model_MarketplaceRemoteItem extends Object {
 	public function getVersion() {return $this->pkgVersion;}
 	
 	public function downloadUpdate() {
-		// backup the old package
 		$pkg = Package::getByHandle($this->getHandle());
-		$r = $pkg->backup();
-		if (is_array($r)) {
-			return $r;
-		}
-
+		
 		$fileURL = $this->getRemoteFileURL();
 		if (empty($fileURL)) {
 			return array(Package::E_PACKAGE_NOT_FOUND);
@@ -101,12 +96,18 @@ class Concrete5_Model_MarketplaceRemoteItem extends Object {
 		} else if ($file == Package::E_PACKAGE_SAVE) {
 			return array($file);
 		}
+		
+		$r = $pkg->backup();
+		if (is_array($r)) {
+			return $r;
+		}
 			
 		try {
 			Loader::model('package_archive');
 			$am = new PackageArchive($this->getHandle());
 			$am->install($file, true);
 		} catch (Exception $e) {
+			$pkg->restore();
 			return array($e->getMessage());
 		}
 

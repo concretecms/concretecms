@@ -14,11 +14,11 @@
 		
 		<field name="parentLabel" type="C" size="128"></field>
 
-		<field name="showArrows" type="i"><default value="1"/></field>
+		<field name="showArrows" type="I"><default value="1"/></field>
 		
-		<field name="loopSequence" type="i"><default value="1"/></field>
+		<field name="loopSequence" type="I"><default value="1"/></field>
 
-		<field name="excludeSystemPages" type="i"><default value="1"/></field>
+		<field name="excludeSystemPages" type="I"><default value="1"/></field>
 		
 		<field name="orderBy" type="C" size="20"><default value="display_asc"/></field>
 		

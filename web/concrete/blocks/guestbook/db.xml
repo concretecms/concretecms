@@ -5,7 +5,7 @@
 			<key />
 			<unsigned />
 		</field>
-		<field name="requireApproval" type="i">
+		<field name="requireApproval" type="I">
 			<default value="0"/>
 		</field>
 		<field name="title" type="C" size="100">
@@ -13,13 +13,13 @@
 		</field>
 		<field name="dateFormat" type="C" size="100">
 		</field>
-		<field name="displayGuestBookForm" type="i">
+		<field name="displayGuestBookForm" type="I">
 			<default value="1"/>
 		</field>
-		<field name="displayCaptcha" type="i">
+		<field name="displayCaptcha" type="I">
 			<default value="1"/>
 		</field>
-		<field name="authenticationRequired" type="i">
+		<field name="authenticationRequired" type="I">
 			<default value="0"/>
 		</field>
 		<field name="notifyEmail" type="C" size="100">
@@ -45,9 +45,9 @@
 		<field name="user_email" type="C" size="100">
 		</field>
 		<field name="entryDate" type="T">
-			<deftimestamp/>
+			<default value="0000-00-00 00:00:00"/>
 		</field>
-		<field name="approved" type="i">
+		<field name="approved" type="I">
 			<default value="1"/>
 		</field>
 		<index name="cID">

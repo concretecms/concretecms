@@ -1,3 +1,5 @@
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+
 <? $ih = Loader::helper('concrete/interface'); ?>
 <?
 $enabledVals = array('0' => t('No'), '1' => t('Yes'));
@@ -55,6 +57,7 @@ $form = Loader::helper('form');
 	</fieldset>	
 	</div>
 	<div class="ccm-pane-footer">
+		<a href="<?=$this->url('/dashboard/system/mail/method/test_settings')?>" class="btn"><?=t('Test Settings')?></a>
 		<?=$ih->submit(t('Save'), 'mail-settings-form','right','primary')?>
 	</div>
 	</form>

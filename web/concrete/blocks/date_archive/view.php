@@ -8,7 +8,7 @@ $dh = Loader::helper("date");
 		$startDt = new DateTime();
 		$firstPost = new DateTime($firstPost->format('m/01/Y'));
 		$first = date_diff($startDt,$firstPost);
-		$first = $first->m;
+		$first = $first->m + $first->y * 12;
 		
 		if($first > $numMonths) {
 			$first = $numMonths;

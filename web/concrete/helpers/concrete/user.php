@@ -53,12 +53,6 @@ class ConcreteUserHelper {
 			$invalid=1;
 		}
 			
-		if (strlen($password) >= USER_PASSWORD_MINIMUM && !$valc->password($password)) {
-			if($errorObj) 
-				$errorObj->add( t('A password may not contain ", \', >, <, or any spaces.') );
-			$invalid=1;
-		}
-		
 		if($invalid) return false;
 		
 		return true;

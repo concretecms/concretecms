@@ -120,7 +120,7 @@ class Concrete5_Model_PageTheme extends Object {
 			$th->pThemeDescription = $res->pThemeDescription;	
 			switch($dir) {
 				case DIR_FILES_THEMES:
-					$th->pThemeURL = BASE_URL . DIR_REL . '/' . DIRNAME_THEMES . '/' . $handle;
+					$th->pThemeURL = DIR_REL . '/' . DIRNAME_THEMES . '/' . $handle;
 					break;
 			}
 			return $th;
@@ -451,8 +451,8 @@ class Concrete5_Model_PageTheme extends Object {
 	
 	private static function getThemeNameAndDescription($dir) {
 		$res = new stdClass;
-		$res->pThemeName = t('(No Name)');
-		$res->pThemeDescription = t('(No Description)');
+		$res->ptName = '';
+		$res->ptDescription = '';
 		if (file_exists($dir . '/' . FILENAME_THEMES_DESCRIPTION)) {
 			$con = file($dir . '/' . FILENAME_THEMES_DESCRIPTION);
 			$res->pThemeName = trim($con[0]);
@@ -515,19 +515,61 @@ class Concrete5_Model_PageTheme extends Object {
 	
 	public function getThemeID() {return $this->pThemeID;}
 	public function getThemeName() {return $this->pThemeName;}
+
+	/** Returns the display name for this theme (localized and escaped accordingly to $format)
+	* @param string $format = 'html'
+	*	Escape the result in html format (if $format is 'html').
+	*	If $format is 'text' or any other value, the display name won't be escaped.
+	* @return string
+	*/
+	public function getThemeDisplayName($format = 'html') {
+		$value = $this->getThemeName();
+		if(strlen($value)) {
+			$value = t($value);
+		}
+		else {
+			$value = t('(No Name)');
+		}
+		switch($format) {
+			case 'html':
+				return h($value);
+			case 'text':
+			default:
+				return $value;
+		}
+	}
+
 	public function getPackageID() {return $this->pkgID;}
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
 	}
+
 	/** 
 	 * Returns whether a theme has a custom class.
 	 */
 	public function hasCustomClass() {return $this->pThemeHasCustomClass;}
 	public function getThemeHandle() {return $this->pThemeHandle;}
 	public function getThemeDescription() {return $this->pThemeDescription;}
+	public function getThemeDisplayDescription($format = 'html') {
+		$value = $this->getThemeDescription();
+		if(strlen($value)) {
+			$value = t($value);
+		}
+		else {
+			$value = t('(No Description)');
+		}
+		switch($format) {
+			case 'html':
+				return h($value);
+			case 'text':
+			default:
+				return $value;
+		}
+	}
 	public function getThemeDirectory() {return $this->pThemeDirectory;}
 	public function getThemeURL() {return $this->pThemeURL;}
 	public function getThemeEditorCSS() {return $this->pThemeURL . '/' . PageTheme::FILENAME_TYPOGRAPHY_CSS;}
+
 	public function isUninstallable() {
 		return ($this->pThemeDirectory != DIR_FILES_THEMES_CORE . '/' . $this->getThemeHandle());
 	}

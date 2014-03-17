@@ -16,7 +16,7 @@ $th = Loader::helper('text');
 		$target = ($page->getCollectionPointerExternalLink() != '' && $page->openCollectionPointerExternalLinkInNewWindow()) ? '_blank' : $page->getAttribute('nav_target');
 		$target = empty($target) ? '_self' : $target;
 		$description = $page->getCollectionDescription();
-		$description = $controller->truncateSummaries ? $th->shorten($description, $controller->truncateChars) : $description;
+		$description = $controller->truncateSummaries ? $th->wordSafeShortText($description, $controller->truncateChars) : $description;
 		$description = $th->entities($description);	
 		
 		//Other useful page data...

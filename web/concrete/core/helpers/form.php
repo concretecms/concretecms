@@ -105,14 +105,14 @@ class Concrete5_Helper_Form {
 		$id = $key;
 		$_field = $key;
 
-		if ((strpos($key, '[]') + 2) == strlen($key)) {
-			$_field = substr($key, 0, strpos($key, '[]'));
+		if (substr($key, -2) == '[]') {
+			$_field = substr($key, 0, -2);
 			$id = $_field . '_' . $value;
 		}
 
 		if ($isChecked && (!isset($_REQUEST[$_field])) && ($_SERVER['REQUEST_METHOD'] != 'POST')) {
 			$checked = true;
-		} else if ($this->getRequestValue($key) == $value) {
+		} else if ($this->getRequestValue($key) == $value && $value != false) {
 			$checked = true;
 		} else if (is_array($this->getRequestValue($key)) && in_array($value, $this->getRequestValue($key))) {
 			$checked = true;
@@ -308,7 +308,7 @@ class Concrete5_Helper_Form {
 	}
 
 	/**
-	 * Renders a select field. First argument is the name of the field. Second is an associative array of key => display. Second argument is either the value of the field to be selected (and if it's blank we check post) or a misc. array of fields
+	 * Renders a select field. First argument is the name of the field. Second is an associative array of key => display. Third argument is either the value of the field to be selected (and if it's blank we check post) or a misc. array of fields
 	 * @param string $key
 	 * @return $html
 	 */
@@ -318,8 +318,8 @@ class Concrete5_Helper_Form {
 			$valueOrArray = $val[0];
 		}
 
-		if ((strpos($key, '[]') + 2) == strlen($key)) {
-			$_key = substr($key, 0, strpos($key, '[]'));
+		if (substr($key, -2) == '[]') {
+			$_key = substr($key, 0, -2);
 			$id = $_key . $this->selectIndex;
 		} else {
 			$_key = $key;

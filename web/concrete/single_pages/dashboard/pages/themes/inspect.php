@@ -12,7 +12,7 @@ $ci = Loader::helper('concrete/interface');
     
 	<div class="ccm-pane-body" style="padding-top:10px;">
     
-    	<h3><?=t("Theme name: ").$pageTheme->getThemeName()?></h3>
+    	<h3><?=t("Theme name: ").$pageTheme->getThemeDisplayName()?></h3>
         
         <div class="row">
         

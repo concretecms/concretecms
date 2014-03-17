@@ -448,7 +448,7 @@ $(function() {
 			height: 550,
 			width: 650,
 			modal: true,
-			title: '<?=t('Automation Instructions')?>'
+			title: <?=$jh->encode(t('Automation Instructions'))?>
 		});
 	});
 	$('.btn-run-job').on('click', $('#ccm-jobs-list'), function() {

@@ -34,7 +34,6 @@ class Concrete5_Job_GenerateSitemap extends Job {
 	public function run() {
 		Cache::disableCache();
 		Cache::disableLocalCache();
-		
 		try {
 			$db = Loader::db();
 			$instances = array(
@@ -42,10 +41,22 @@ class Concrete5_Job_GenerateSitemap extends Job {
 				'dashboard' => Loader::helper('concrete/dashboard'),
 				'view_page' => PermissionKey::getByHandle('view_page'),
 				'guestGroup' => Group::getByID(GUEST_GROUP_ID),
-				'now' => new DateTime('now')
+				'now' => new DateTime('now'),
+				'ak_exclude_sitemapxml' => CollectionAttributeKey::getByHandle('exclude_sitemapxml'),
+				'ak_sitemap_changefreq' => CollectionAttributeKey::getByHandle('sitemap_changefreq'),
+				'ak_sitemap_priority' => CollectionAttributeKey::getByHandle('sitemap_priority')
 			);
 			$instances['guestGroupAE'] = array(GroupPermissionAccessEntity::getOrCreate($instances['guestGroup']));
-			$rsPages = $db->query('SELECT cID FROM Pages WHERE (cID > 1) ORDER BY cID');
+			$xmlDoc = new SimpleXMLElement('<'.'?xml version="1.0" encoding="' . APP_CHARSET . '"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" />');
+			$rs = Loader::db()->Query('SELECT cID FROM Pages');
+			while($row = $rs->FetchRow()) {
+				self::addPage($xmlDoc, intval($row['cID']), $instances);
+			}
+			$rs->Close();
+			Events::fire('on_sitemap_xml_ready', $xmlDoc);
+			$dom = dom_import_simplexml($xmlDoc)->ownerDocument;
+			$dom->formatOutput = true;
+			$addedPages = count($xmlDoc->url);
 			$relName = ltrim(SITEMAPXML_FILE, '\\/');
 			$osName = rtrim(DIR_BASE, '\\/') . '/' . $relName;
 			$urlName = rtrim(BASE_URL . DIR_REL, '\\/') . '/' . $relName;
@@ -55,36 +66,18 @@ class Concrete5_Job_GenerateSitemap extends Job {
 			if(!is_writable($osName)) {
 				throw new Exception(t('The file %s is not writable', $osName));
 			}
-			if(!$hFile = fopen($osName, 'w')) {
+			if(!$hFile = @fopen($osName, 'w')) {
 				throw new Exception(t('Cannot open file %s', $osName));
 			}
-			if(!@fprintf($hFile, '<'.'?xml version="1.0" encoding="%s"?>' . self::EOL . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">', APP_CHARSET)) {
-				throw new Exception(t('Error writing header of %s', $osName));
-			}
-			$addedPages = 0;
-			if(self::AddPage($hFile, 1, $instances)) {
-				$addedPages++;
-			}
-			while($rowPage = $rsPages->FetchRow()) {
-				if(self::AddPage($hFile, intval($rowPage['cID']), $instances)) {
-					$addedPages++;
-				}
-			}
-			$rsPages->Close();
-			unset($rsPages);
-			if(!@fwrite($hFile, self::EOL . '</urlset>')) {
-				throw new Exception(t('Error writing footer of %s', $osName));
+			if(!@fprintf($hFile, $dom->saveXML())) {
+				throw new Exception(t('Error writing to file %s', $osName));
 			}
 			@fflush($hFile);
 			@fclose($hFile);
 			unset($hFile);
-			return t('%1$s file saved (%2$d pages).', $urlName, $addedPages);
+			return t('%1$s file saved (%2$d pages).', sprintf('<a href="%s" target="_blank">%s</a>', $urlName, preg_replace('/^https?:\/\//i', '', $urlName)), $addedPages);
 		}
 		catch(Exception $x) {
-			if(isset($rsPages) && $rsPages) {
-				$rsPages->Close();
-				$rsPages = null;
-			}
 			if(isset($hFile) && $hFile) {
 				@fflush($hFile);
 				@ftruncate($hFile, 0);
@@ -95,62 +88,61 @@ class Concrete5_Job_GenerateSitemap extends Job {
 		}
 	}
 
-	/** Check if the specified page should be included in the sitemap.xml file; if so adds it to the file.
-	* @param unknown_type $hFile
+	/** Check if the specified page should be included in the sitemap.xml file; if so adds it to the XML document.
+	* @param SimpleXMLElement $xmlDoc The xml document containing the sitemap nodes.
 	* @param int $cID The page collection id.
-	* @param array $instances Already instantiated helpers, models, ...
-	* @return bool Returns true if the page has been added, false otherwise.
+	* @param array $instances An array with some already instantiated helpers, models, ...
 	* @throws Exception Throws an exception in case of errors.
 	*/
-	private static function AddPage($hFile, $cID, $instances) {
+	private static function addPage($xmlDoc, $cID, $instances) {
 		$page = Page::getByID($cID, 'ACTIVE');
 		if($page->isSystemPage()) {
-			return false;
+			return;
 		}
 		if($page->isExternalLink()) {
-			return false;
+			return;
 		}
 		if($instances['dashboard']->inDashboard($page)) {
-			return false;
+			return;
 		}
 		if($page->isInTrash()) {
-			return false;
+			return;
 		}
 		$pageVersion = $page->getVersionObject();
 		if($pageVersion && !$pageVersion->isApproved()) {
-			return false;
+			return;
 		}
 		$pubDate = new DateTime($page->getCollectionDatePublic());
 		if($pubDate > $instances['now']) {
-			return false;
+			return;
 		}
-		if($page->getAttribute('exclude_sitemapxml')) {
-			return false;
+		if($page->getAttribute($instances['ak_exclude_sitemapxml'])) {
+			return;
 		}
 		$instances['view_page']->setPermissionObject($page);
 		$pa = $instances['view_page']->getPermissionAccessObject();
 		if (!is_object($pa)) {
-			return false;
+			return;
 		}
 		if (!$pa->validateAccessEntities($instances['guestGroupAE'])) {
-			return false;
+			return;
 		}
 		$lastmod = new DateTime($page->getCollectionDateLastModified());
-		$changefreq = $page->getAttribute('sitemap_changefreq');
-		$priority = $page->getAttribute('sitemap_priority');
-		$url = SITEMAPXML_BASE_URL . $instances['navigation']->getLinkToCollection($page);
-		if(!@fprintf(
-			$hFile,
-			"%1\$s\t<url>%1\$s\t\t<loc>%2\$s</loc>%1\$s\t\t<lastmod>%3\$s</lastmod>%1\$s\t\t<changefreq>%4\$s</changefreq>%1\$s\t\t<priority>%5\$s</priority>%1\$s\t</url>",
-			self::EOL,
-			$url,
-			$lastmod->format(DateTime::ATOM),
-			htmlspecialchars(($changefreq == '') ? SITEMAPXML_DEFAULT_CHANGEFREQ : $changefreq),
-			htmlspecialchars(($priority == '') ? SITEMAPXML_DEFAULT_PRIORITY : $priority)
-		)) {
-			throw new Exception(t('Error writing page with cID %d to sitemap.xml', $cID));
+		$changefreq = $page->getAttribute($instances['ak_sitemap_changefreq']);
+		$priority = $page->getAttribute($instances['ak_sitemap_priority']);
+		$xmlNode = $xmlDoc->addChild('url');
+		$xmlNode->addChild('loc', SITEMAPXML_BASE_URL . $instances['navigation']->getLinkToCollection($page));
+		$xmlNode->addChild('lastmod', $lastmod->format(DateTime::ATOM));
+		$xmlNode->addChild('changefreq', empty($changefreq) ? SITEMAPXML_DEFAULT_CHANGEFREQ : $changefreq);
+		$xmlNode->addChild('priority', is_numeric($priority) ? $priority : SITEMAPXML_DEFAULT_PRIORITY);
+		$ret = Events::fire('on_sitemap_xml_addingpage', $xmlNode, $page);
+		if((!empty($ret)) && ($ret < 0)) {
+			for($i = count($xmlDoc->url) - 1; $i >= 0; $i--) {
+				if($xmlDoc->url[$i] == $xmlNode) {
+					unset($xmlDoc->url[$i]);
+					break;
+				}
+			}
 		}
-		@fflush($hFile);
-		return true;
 	}
 }

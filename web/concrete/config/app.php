@@ -222,7 +222,7 @@ if(!defined('USER_PRIVATE_MESSAGE_MAX_TIME_SPAN')) {
 //these are the hashkey types for registration related authentication
 define('UVTYPE_REGISTER', 0);
 define('UVTYPE_CHANGE_PASSWORD', 1);
-
+define('UVTYPE_LOGIN_FOREVER', 2);
 
 if (!defined('UPLOAD_FILE_EXTENSIONS_ALLOWED')) {
 	Config::getOrDefine('UPLOAD_FILE_EXTENSIONS_ALLOWED','*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.3gp;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;*.pptx;*.kml;*.xml;*.svg;*.webm;*.ogg;*.ogv');

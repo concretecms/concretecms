@@ -367,10 +367,20 @@ class Concrete5_Model_UserAttributeKey extends AttributeKey {
 
 class Concrete5_Model_UserAttributeValue extends AttributeValue {
 
+	/**
+	 * @param UserInfo $uo
+	 */
 	public function setUser($uo) {
 		$this->u = $uo;
 	}
-	
+
+	/**
+	 * @return UserInfo
+	 */
+	public function getUser() {
+		return $this->u;
+	}
+
 	public static function getByID($avID) {
 		$uav = new UserAttributeValue();
 		$uav->load($avID);

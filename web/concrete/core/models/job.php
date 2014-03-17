@@ -62,7 +62,7 @@ abstract class Concrete5_Model_Job extends Object {
 	//Other Job Variables
 	public $jID=0;
 	public $jStatus='ENABLED';	
-	public $availableJStatus=array( 'ENABLED','RUNNING','DISABLED_ERROR','DISABLED' );
+	public $availableJStatus=array( 'ENABLED','RUNNING','ERROR','DISABLED_ERROR','DISABLED' );
 	public $jDateLastRun;
 	public $jHandle='';
 	public $jNotUninstallable=0;
@@ -85,16 +85,27 @@ abstract class Concrete5_Model_Job extends Object {
 	public function getJobStatus() {return $this->jStatus;}
 	public function getJobLastStatusText() {return $this->jLastStatusText;}
 
-	// authenticateRequest checks against your site's salt and a custom auth field to make 
+	// authenticateRequest checks against your site's job security token and a custom auth field to make 
 	// sure that this is a request that is coming either from something cronned by the site owner
 	// or from the dashboard
 	public static function authenticateRequest($auth) {
-		$val = PASSWORD_SALT . ':' . DIRNAME_JOBS;
-		return md5($val) == $auth;
+		// this is a little tricky. We have TWO ways of doing this
+		// 1. Does the security token for jobs md5 correctly? If so, good.
+		$val = Config::get('SECURITY_TOKEN_JOBS') . ':' . DIRNAME_JOBS;
+		if (md5($val) == $auth) {
+			return true;
+		}
+
+		// 2. Uh oh. We didn't get a match. However, due to backward compatibility
+		// we will check the legacy PASSWORD_SALT parameter here.
+		if (defined('PASSWORD_SALT')) {
+			$val = PASSWORD_SALT . ':' . DIRNAME_JOBS;
+			return md5($val) == $auth;
+		}
 	}
 	
 	public static function generateAuth() {
-		$val = PASSWORD_SALT . ':' . DIRNAME_JOBS;
+		$val = Config::get('SECURITY_TOKEN_JOBS') . ':' . DIRNAME_JOBS;
 		return md5($val);
 	}
 	
@@ -167,7 +178,9 @@ abstract class Concrete5_Model_Job extends Object {
 		$obj->error = $resultCode;
 		$obj->result = $resultMsg;
 		$obj->jDateLastRun = date(DATE_APP_GENERIC_MDYT_FULL_SECONDS);
-
+		$obj->jHandle = $this->getJobHandle();
+		$obj->jID = $this->getJobID();
+		
 		$this->jLastStatusCode = $resultCode;
 		$this->jLastStatusText = $resultMsg;
 		$this->jStatus = $jStatus;
@@ -420,7 +433,7 @@ abstract class Concrete5_Model_Job extends Object {
 	
 	public function setSchedule($scheduled, $interval, $value) {
 		$this->isScheduled = ($scheduled?true:false);
-		$this->scheduledInterval = $interval;
+		$this->scheduledInterval = Loader::helper('security')->sanitizeString($interval);
 		$this->scheduledValue = $value;
 		if($this->getJobID()) {
 			$db = Loader::db();

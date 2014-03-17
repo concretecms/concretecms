@@ -300,13 +300,22 @@ class Auth_OpenID_FileStore extends Auth_OpenID_OpenIDStore {
             return null;
         }
 
+        if (file_exists($filename) !== true) {
+            return null;
+        }
+
         $assoc_file = @fopen($filename, 'rb');
 
         if ($assoc_file === false) {
             return null;
         }
 
-        $assoc_s = fread($assoc_file, filesize($filename));
+        $filesize = filesize($filename);
+        if ($filesize === false || $filesize <= 0) {
+            return null;
+        }
+
+        $assoc_s = fread($assoc_file, $filesize);
         fclose($assoc_file);
 
         if (!$assoc_s) {
@@ -367,7 +376,7 @@ class Auth_OpenID_FileStore extends Auth_OpenID_OpenIDStore {
         }
 
         if ( abs($timestamp - time()) > $Auth_OpenID_SKEW ) {
-            return False;
+            return false;
         }
 
         if ($server_url) {
@@ -519,7 +528,7 @@ class Auth_OpenID_FileStore extends Auth_OpenID_OpenIDStore {
     /**
      * @access private
      */
-    function _mkdtemp($dir)
+    static function _mkdtemp($dir)
     {
         foreach (range(0, 4) as $i) {
             $name = $dir . strval(DIRECTORY_SEPARATOR) . strval(getmypid()) .
@@ -615,4 +624,4 @@ class Auth_OpenID_FileStore extends Auth_OpenID_OpenIDStore {
     }
 }
 
-?>
+

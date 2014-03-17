@@ -207,6 +207,14 @@ module.exports = function(grunt, config, parameters, done) {
 			return;
 		}
 		var locale = allLocales[localeIndex];
+		var destinationFolder;
+
+		if (parameters.destination) {
+			destinationFolder = path.resolve(__dirname, '..', parameters.destination);
+		} else {
+			destinationFolder = path.resolve(__dirname, config.DIR_BASE);
+		}
+
 		process.stdout.write('Locale ' + locale.name + '... ');
 		get('/api/2/project/concrete5/resource/' + parameters.txResource + '/stats/' + locale.code + '/', {type: 'json'}, function(data) {
 			var tot = data.translated_entities + data.untranslated_entities;
@@ -217,8 +225,8 @@ module.exports = function(grunt, config, parameters, done) {
 				parseLocale(allLocales, localeIndex + 1, callback);
 				return;
 			}
-			locale.poFile = path.join(config.DIR_BASE, 'languages/' + locale.code + '/LC_MESSAGES/messages.po');
-			locale.moFile = path.join(config.DIR_BASE, 'languages/' + locale.code + '/LC_MESSAGES/messages.mo');
+			locale.poFile = path.join(destinationFolder, 'languages/' + locale.code + '/LC_MESSAGES/messages.po');
+			locale.moFile = path.join(destinationFolder, 'languages/' + locale.code + '/LC_MESSAGES/messages.mo');
 			downloadLocale(locale, function() {
 				compileLocale(
 					locale,

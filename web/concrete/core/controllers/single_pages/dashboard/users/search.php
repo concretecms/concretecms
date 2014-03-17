@@ -215,9 +215,9 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 				
 				if (strlen($username) >= USER_USERNAME_MINIMUM && !Loader::helper('concrete/validation')->username($username)) {
 					if(USER_USERNAME_ALLOW_SPACES) {
-						$this->error->add(t('A username may only contain letters, numbers and spaces.'));
+						$this->error->add(t('A username may only contain letters, numbers, spaces, dots (not at the beginning/end), underscores (not at the beginning/end).'));
 					} else {
-						$this->error->add(t('A username may only contain letters or numbers.'));
+						$this->error->add(t('A username may only contain letters numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'));
 					}
 				}
 				if (strcasecmp($uo->getUserName(), $username) && !Loader::Helper('concrete/validation')->isUniqueUsername($username)) {

@@ -252,10 +252,11 @@ class Concrete5_Model_Page extends Collection {
 		// a{areaID} = array(b1, b2, b3) (where b1, etc... are blocks with ids appended.)
 		$db = Loader::db();
 		$db->Execute('delete from CollectionVersionBlockStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
+
 		foreach($areas as $arID => $blocks) {
 			if (intval($arID) > 0) {
 				// this is a serialized area;
-				$arHandle = $db->getOne("select arHandle from Areas where arID = ?", array($arID));
+				$arHandle =  Area::getAreaHandleFromID($arID);
 				$startDO = 0;
 				foreach($blocks as $bIdentifier) {
 
@@ -849,7 +850,7 @@ class Concrete5_Model_Page extends Collection {
 	 */
 	public static function getCollectionPathFromID($cID) {
 		$db = Loader::db();
-		$path = $db->GetOne("select cPath from PagePaths inner join CollectionVersions on (PagePaths.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1) where PagePaths.cID = ?", array($cID));
+		$path = $db->GetOne("select cPath from PagePaths inner join CollectionVersions on (PagePaths.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1) where PagePaths.cID = ? order by PagePaths.ppIsCanonical desc", array($cID));
 		return $path;
 	}
 
@@ -1045,19 +1046,21 @@ class Concrete5_Model_Page extends Collection {
 	/**
 	 * Gets the date a the current version was made public,
 	 * if user is specified, returns in the current user's timezone
-	 * @param string $dateFormat
+	 * @param string $mask
 	 * @param string $type (system || user)
 	 * @return string date formated like: 2009-01-01 00:00:00
 	*/
-	function getCollectionDatePublic($dateFormat = null, $type='system') {
-		if(!$dateFormat) {
-			$dateFormat = 'Y-m-d H:i:s';
-		}
+	function getCollectionDatePublic($mask = null, $type='system') {
 		$dh = Loader::helper('date');
 		if(ENABLE_USER_TIMEZONES && $type == 'user') {
-			return $dh->getLocalDateTime($this->vObj->cvDatePublic, $dateFormat);
+			$cDatePublic = $dh->getLocalDateTime($this->vObj->cvDatePublic);
 		} else {
-			return $dh->date($dateFormat, strtotime($this->vObj->cvDatePublic));
+			$cDatePublic = $this->vObj->cvDatePublic;
+		}
+		if ($mask == null) {
+			return $cDatePublic;
+		} else {
+			return $dh->date($mask, strtotime($cDatePublic));
 		}
 	}
 
@@ -2040,16 +2043,12 @@ class Concrete5_Model_Page extends Collection {
 	}
 
 	public function movePageDisplayOrderToBottom() {
-		// first, we take the current collection, stick it at the beginning of an array, then get all other items from the current level that aren't that cID, order by display order, and then update
+		// find the highest cDisplayOrder and increment by 1
 		$db = Loader::db();
-		$nodes = $db->GetCol('select cID from Pages where cParentID = ? and cID <> ? order by cDisplayOrder asc', array($this->getCollectionParentID(), $this->getCollectionID()));
-		$displayOrder = 0;
-		$nodes[] = $this->getCollectionID();
-		foreach($nodes as $do) {
-			$co = Page::getByID($do);
-			$co->updateDisplayOrder($displayOrder);
-			$displayOrder++;
-		}
+		$mx = $db->GetRow("select max(cDisplayOrder) as m from Pages where cParentID = ?",array($this->getCollectionParentID()));
+		$max = $mx['m'];
+		$max++;
+		$this->updateDisplayOrder($max);
 	}
 
 	public function movePageDisplayOrderToSibling(Page $c, $position = 'before') {

@@ -117,7 +117,7 @@ class Concrete5_Helper_Pagination {
 	
 	public function getRequestedPage() {
 		if (isset($_REQUEST[$this->queryStringPagingVariable])) {
-			return $_REQUEST[$this->queryStringPagingVariable];
+			return intval($_REQUEST[$this->queryStringPagingVariable]);
 		} else {
 			return 1;
 		}

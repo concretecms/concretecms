@@ -36,12 +36,15 @@ class Concrete5_Model_GroupSetPermissionAccessEntity extends PermissionAccessEnt
 	}
 	
 	public function getAccessEntityUsers(PermissionAccess $pa) {
+		if (!isset($this->groupset)) {
+			$this->load();
+		}
 		$groups = $this->groupset->getGroups();
 		$users = array();
 		$ingids = array();
 		$db = Loader::db();
-		foreach($user->getUserGroups() as $key => $val) {
-			$ingids[] = $key;
+		foreach($groups as $group) {
+			$ingids[] = $group->getGroupID();
 		}
 		$instr = implode(',',$ingids);
 		$r = $db->Execute('select uID from UserGroups where gID in (' . $instr . ')');
@@ -76,7 +79,7 @@ class Concrete5_Model_GroupSetPermissionAccessEntity extends PermissionAccessEnt
 			$gs = GroupSet::getByID($gsID);
 			if (is_object($gs)) {
 				$this->groupset = $gs;
-				$this->label = $gs->getGroupSetName();
+				$this->label = $gs->getGroupSetDisplayName();
 			}
 		}
 	}
