@@ -70,11 +70,6 @@ if (intval($_GET['uID'])) {
 	$uo = UserInfo::getByID(intval($_GET['uID']));
 	if (is_object($uo)) {
 	
-		if (!PermissionKey::getByHandle('access_user_search')->validate($uo)) { 
-			throw new Exception(t('Access Denied.'));
-		}
-		
-		
 		$uID = intval($_REQUEST['uID']);
 		
 		if (isset($_GET['task'])) {
@@ -285,10 +280,12 @@ if (is_object($uo)) {
             	<tr class="inputs-list">
 					<td>
                     
-					<? foreach ($gArray as $g) { ?>
+					<? foreach ($gArray as $g) {
+						$gp = new Permissions($g);
+						 ?>
                     
                             <label>
-                                <input type="checkbox" name="gID[]" value="<?=$g->getGroupID()?>" <? 
+                                <input <? if (!$gp->canAssignGroup()) { ?>disabled<? } ?> type="checkbox" name="gID[]" value="<?=$g->getGroupID()?>" <? 
                                     if (is_array($_POST['gID'])) {
                                         if (in_array($g->getGroupID(), $_POST['gID'])) {
                                             echo(' checked ');
@@ -380,7 +377,7 @@ if (is_object($uo)) {
 		<?
 		$tp = new TaskPermission();
 		if ($uo->getUserID() != $u->getUserID()) {
-			if ($tp->canSudo()) { 
+			if ($tp->canSudo() && $uo->getUserID() != USER_SUPER_ID) { 
 			
 				$loginAsUserConfirm = t('This will end your current session and sign you in as %s', $uo->getUserName());
 				
@@ -591,8 +588,8 @@ $(function() {
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Search Users'), t('Search the users of your site and perform bulk actions on them.'), false, false);?>
 
 <?
-$tp = new TaskPermission();
-if ($tp->canAccessUserSearch()) { ?>
+$tp = Loader::helper('concrete/user');
+if ($tp->canAccessUserSearchInterface()) { ?>
 <div class="ccm-pane-options" id="ccm-<?=$searchInstance?>-pane-options">
 <? Loader::element('users/search_form_advanced', array('columns' => $columns, 'searchInstance' => $searchInstance, 'searchRequest' => $searchRequest, 'searchType' => 'DASHBOARD')); ?>
 </div>

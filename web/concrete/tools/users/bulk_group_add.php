@@ -8,14 +8,6 @@ $form = Loader::helper('form');
 $ih = Loader::helper('concrete/interface');
 $tp = new TaskPermission();
 
-$sk = PermissionKey::getByHandle('access_user_search');
-$gk = PermissionKey::getByHandle('assign_user_groups');
-
-if (!$gk->validate()) {
-	die(t("Access Denied."));
-}
-
-
 $users = array();
 if (is_array($_REQUEST['uID'])) {
 	foreach($_REQUEST['uID'] as $uID) {
@@ -25,7 +17,8 @@ if (is_array($_REQUEST['uID'])) {
 }
 
 foreach($users as $ui) {
-	if (!$sk->validate($ui)) { 
+	$up = new Permissions($ui);
+	if (!$up->canViewUser()) {
 		die(t("Access Denied."));
 	}
 }
@@ -50,7 +43,8 @@ if ($_POST['task'] == 'group_add') {
 		if($ui instanceof UserInfo) {
 			$u = $ui->getUserObject();
 			foreach($groups as $g) {
-				if ($gk->validate($g)) { 
+				$gp = new Permissions($g);
+				if ($gp->canAssignGroup()) {
 					if(!$u->inGroup($g)) { // avoid messing up group enter times
 						$u->enterGroup($g); 
 					}				
@@ -79,11 +73,12 @@ if (!isset($_REQUEST['reload'])) { ?>
 				<?=$form->label('groupIDs', t('Add the users below to Group(s)'))?>
 				<div class="input">
 					<select multiple name="groupIDs[]" class="chosen-select" data-placeholder="<?php echo t('Select Group(s)');?>" >
-						<? foreach($g1 as $g) { 
-							if ($gk->validate($g['gID'])) { 
-
+						<? foreach($g1 as $gRow) {
+							$g = Group::getByID($gRow['gID']); 
+							$gp = new Permissions($g);
+							if ($gp->canAssignGroup()) {
 						?>
-							<option value="<?=$g['gID']?>"  <? if (is_array($_REQUEST['groupIDs']) && in_array($g['gID'], $_REQUEST['groupIDs'])) { ?> selected="selected" <? } ?>><?=h(tc('GroupName', $g['gName']))?></option>
+							<option value="<?=$g->getGroupID()?>"  <? if (is_array($_REQUEST['groupIDs']) && in_array($g->getGroupID(), $_REQUEST['groupIDs'])) { ?> selected="selected" <? } ?>><?=$g->getGroupDisplayName()?></option>
 						<? } 
 						
 						}?>

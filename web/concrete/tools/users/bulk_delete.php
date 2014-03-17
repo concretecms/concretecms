@@ -9,7 +9,6 @@ $form = Loader::helper('form');
 $ih = Loader::helper('concrete/interface');
 $tp = new TaskPermission();
 $u = new User();
-$sk = PermissionKey::getByHandle('access_user_search');
 $tp = new TaskPermission();
 if (!$tp->canDeleteUser()) { 
 	die(t("Access Denied."));
@@ -24,7 +23,8 @@ $excluded_user_ids[] = USER_SUPER_ID; // can't delete the super user (admin)
 if (is_array($_REQUEST['uID'])) {
 	foreach($_REQUEST['uID'] as $uID) {
 		$ui = UserInfo::getByID($uID);		
-		if(!$sk->validate($ui) || (in_array($ui->getUserID(),$excluded_user_ids))) { 
+		$up = new Permissions($ui);
+		if(!$up->canViewUser() || (in_array($ui->getUserID(),$excluded_user_ids))) { 
 			$excluded = true;
 		} else {
 			$users[] = $ui;

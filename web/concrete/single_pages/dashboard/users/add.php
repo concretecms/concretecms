@@ -20,11 +20,11 @@ $locales = Localization::getAvailableInterfaceLanguageDescriptions(ACTIVE_LOCALE
 
 <form method="post" enctype="multipart/form-data" id="ccm-user-form" action="<?=$this->url('/dashboard/users/add')?>">
 	<?=$valt->output('create_account')?>
-	
+
 	<input type="hidden" name="_disableLogin" value="1">
 
 	<div class="ccm-pane-body">
-	
+
     	<table class="table table-bordered">
             <thead>
                 <tr>
@@ -54,20 +54,20 @@ $locales = Localization::getAvailableInterfaceLanguageDescriptions(ACTIVE_LOCALE
 			
 				<tr>
 					<td colspan="2"><?=t('Language')?></td>
-				</tr>	
+				</tr>
 				<tr>
 					<td colspan="2">
 					<? print $form->select('uDefaultLanguage', $locales, Localization::activeLocale()); ?>
 					</td>
 				</tr>
-                
+
 				<? } ?>
-                
+
 			</tbody>
 		</table>
 
 	<? if (count($attribs) > 0) { ?>
-	
+
         <table class="table table-striped">
         	<thead>
 	        	<tr>
@@ -75,9 +75,9 @@ $locales = Localization::getAvailableInterfaceLanguageDescriptions(ACTIVE_LOCALE
 	        	</tr>
 			</thead>
             <tbody>
-            
-			<? foreach($attribs as $ak) { 
-				if (in_array($ak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) { 
+
+			<? foreach($attribs as $ak) {
+				if (in_array($ak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) {
 				?>
                 <tr>
                     <td class="clearfix">
@@ -87,10 +87,10 @@ $locales = Localization::getAvailableInterfaceLanguageDescriptions(ACTIVE_LOCALE
                 </tr>
                 <? } ?>
             <? } // END Foreach ?>
-        
+
 			</tbody>
         </table>
-	
+
 	<? } ?>
 
 		<table class="inputs-list table-striped table">
@@ -102,16 +102,28 @@ $locales = Localization::getAvailableInterfaceLanguageDescriptions(ACTIVE_LOCALE
             <tbody>
 				<tr>
 					<td>
+<<<<<<< HEAD
                     
 					<? 
 					$gak = PermissionKey::getByHandle('assign_user_groups');
 					foreach ($gArray as $g) { 
 						if ($gak->validate($g['gID'])) {
 
+=======
+>>>>>>> 8ba6af33041618aca9da16352517461127fded23
 
+					<?
+					foreach ($gArray as $gRow) {
+						$g = Group::getByID($gRow['gID']);
+						$gp = new Permissions($g);
+						if ($gp->canAssignGroup()) {
 						?>
 						<label>
+<<<<<<< HEAD
 							<input type="checkbox" name="gID[]" value="<?=$g['gID']?>" <? 
+=======
+							<input type="checkbox" name="gID[]" value="<?=$g->getGroupID()?>" <?
+>>>>>>> 8ba6af33041618aca9da16352517461127fded23
                             if (is_array($_POST['gID'])) {
                                 if (in_array($g['gID'], $_POST['gID'])) {
                                     echo(' checked ');
@@ -121,12 +133,12 @@ $locales = Localization::getAvailableInterfaceLanguageDescriptions(ACTIVE_LOCALE
 							<span><?=h(tc('GroupName', $g['gName']))?></span>
 						</label>
                     <? }
-                    
-                    
+
+
                 } ?>
-			
+
 					<div id="ccm-additional-groups"></div>
-			
+
 					</td>
 				</tr>
 			</tbody>
@@ -138,9 +150,9 @@ $locales = Localization::getAvailableInterfaceLanguageDescriptions(ACTIVE_LOCALE
         <div class="ccm-buttons">
             <input type="hidden" name="create" value="1" />
             <? print $ih->submit(t('Add'), 'ccm-user-form', 'right', 'primary'); ?>
-        </div>	
+        </div>
     </div>
 
 </form>
-    
+
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>

@@ -48,6 +48,10 @@ module.exports = function(grunt) {
 			dest: '<%= DIR_BASE %>/concrete/js/ccm.dashboard.js',
 			src: '<%= DIR_BASE %>/concrete/js/ccm_app/dashboard.js'
 		},
+		dynatree: {
+			dest: '<%= DIR_BASE %>/concrete/js/dynatree.js',
+			src: '<%= DIR_BASE %>/concrete/js/dynatree/dynatree.js'
+		},
 		ccm_app: {
 			dest: '<%= DIR_BASE %>/concrete/js/ccm.app.js',
 			src: [
@@ -62,6 +66,7 @@ module.exports = function(grunt) {
 				'<%= DIR_BASE %>/concrete/js/ccm_app/legacy_dialog.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/newsflow.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/page_reindexing.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/group_tree.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/quicksilver.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/remote_marketplace.js',
 				'<%= DIR_BASE %>/concrete/js/ccm_app/search.js',
@@ -155,10 +160,6 @@ module.exports = function(grunt) {
 	
 	grunt.registerTask('debug', ['js:debug', 'css:debug']);
 	grunt.registerTask('release', ['js:release', 'css:release']);
-
-	grunt.registerTask('translations', 'Download and compile translations.', function() {
-		require('./tasks/translations.js')(grunt, config, parameters, this.async());
-	});
 
 	grunt.registerTask('remove-short-tags', 'Remove short tags.', function() {
 		require('./tasks/remove-short-tags.js')(grunt, config, parameters, this.async());

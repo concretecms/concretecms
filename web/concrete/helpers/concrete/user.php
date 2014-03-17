@@ -57,4 +57,9 @@ class ConcreteUserHelper {
 		
 		return true;
 	}
+
+	public function canAccessUserSearchInterface() {
+		$tp = new TaskPermission();
+		return $tp->canAccessUserSearch();
+	}
 }

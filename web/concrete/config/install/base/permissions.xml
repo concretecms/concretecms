@@ -16,6 +16,7 @@
         <category handle="sitemap" package=""/>
         <category handle="marketplace_newsflow" package=""/>
         <category handle="basic_workflow" package=""/>
+        <category handle="group_tree_node" package=""/>
     </permissioncategories>
 
     <permissionkeys>
@@ -35,7 +36,7 @@
         <permissionkey handle="add_subpage" has-custom-class="true" name="Add Sub-Page" package="" description="Can add a page beneath the current page." category="page"/>
         <permissionkey handle="move_or_copy_page" name="Move or Copy Page" description="Can move or copy this page to another location." package="" category="page" can-trigger-workflow="true" />
         <permissionkey handle="schedule_page_contents_guest_access" name="Schedule Guest Access" description="Can control scheduled guest access to this page." package="" category="page"/>
-		<!-- block types //-->
+        <!-- block types //-->
         <permissionkey handle="add_block" has-custom-class="true" name="Add Block" description="Can add a block to any area on the site. If someone is added here they can add blocks to any area (unless that area has permissions that override these global permissions.)" package="" category="block_type">
             <access>
                 <group name="Administrators"/>
@@ -47,7 +48,7 @@
             </access>
         </permissionkey>
         
-		<!-- areas //-->
+        <!-- areas //-->
         <permissionkey handle="view_area" name="View Area" package="" description="Can view the area and its contents." category="area"/>
         <permissionkey handle="edit_area_contents" name="Edit Area Contents" description="Can edit blocks within this area." package="" category="area"/>
         <permissionkey handle="add_block_to_area" has-custom-class="true" name="Add Block to Area" description="Can add blocks to this area. This setting overrides the global Add Block permission for this area." package="" category="area"/>
@@ -58,7 +59,7 @@
         <permissionkey handle="delete_area_contents" name="Delete Area Contents" package="" description="Controls whether users can delete blocks from this area." category="area"/>
         <permissionkey handle="schedule_area_contents_guest_access" name="Schedule Guest Access" description="Controls whether users can schedule guest access permissions on blocks in this area. Guest Access is a shortcut for granting permissions just to the Guest Group." package="" category="area" />
 
-		<!-- blocks //-->
+        <!-- blocks //-->
         <permissionkey handle="view_block" name="View Block" package="" category="block" description="Controls whether users can view this block in the page." />
         <permissionkey handle="edit_block" name="Edit Block" package="" category="block" description="Controls whether users can edit this block. This overrides any area or page permissions." />
         <permissionkey handle="edit_block_custom_template" name="Change Custom Template" description="Controls whether users can change the custom template on this block. This overrides any area or page permissions." package="" category="block"/>
@@ -89,116 +90,122 @@
         <permissionkey handle="notify_on_basic_workflow_entry" name="Notify on Entry" description="Notify approvers that a change has entered the workflow." package="" category="basic_workflow" />
         <permissionkey handle="notify_on_basic_workflow_approve" name="Notify on Approve" description="Notify approvers that a change has been approved." package="" category="basic_workflow" />
         <permissionkey handle="notify_on_basic_workflow_deny" name="Notify on Deny" description="Notify approvers that a change has been denied." package="" category="basic_workflow" />
-        		
+                
         <!-- users //-->
-        <permissionkey handle="access_user_search" has-custom-class="true" name="Access User Search" description="" package="" category="user">
-            <access>
-                <group name="Administrators"/>
-            </access>
-        </permissionkey>
-        
         <permissionkey handle="edit_user_properties" has-custom-class="true" name="Edit User Details" package="" category="user">
             <access>
                 <group name="Administrators"/>
             </access>
-		</permissionkey>
+        </permissionkey>
 
         <permissionkey handle="view_user_attributes" has-custom-class="true" name="View User Attributes" package="" category="user">
             <access>
                 <group name="Administrators"/>
             </access>
-		</permissionkey>
+        </permissionkey>
 
         <permissionkey handle="activate_user" name="Activate/Deactivate User" package="" category="user">
             <access>
                 <group name="Administrators"/>
             </access>
-		</permissionkey>
+        </permissionkey>
 
         <permissionkey handle="sudo" name="Sign in as User" package="" category="user">
         </permissionkey>
-        
+
+        <permissionkey handle="access_group_search" name="Access Group Search" package="" category="user">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
         
         <permissionkey handle="delete_user" name="Delete User" package="" category="user">
             <access>
                 <group name="Administrators"/>
             </access>
-		</permissionkey>
-
-        <permissionkey handle="access_group_search" name="Access Group Search" description="" package="" category="user">
-            <access>
-                <group name="Administrators"/>
-            </access>
         </permissionkey>
 
-        <permissionkey handle="edit_groups" name="Edit Groups" description="" package="" category="user">
-            <access>
-                <group name="Administrators"/>
-            </access>
+        <!-- groups //-->
+
+        <permissionkey handle="search_users_in_group" name="Search User Group" package="" category="group_tree_node">
         </permissionkey>
 
-        <permissionkey handle="assign_user_groups" has-custom-class="true" name="Assign Groups to User" description="" package="" category="user">
-            <access>
-                <group name="Administrators"/>
-            </access>
+        <permissionkey handle="edit_group" name="Edit Group" package="" category="group_tree_node">
+        </permissionkey>
+
+        <permissionkey handle="assign_group" name="Assign Group" package="" category="group_tree_node">
+        </permissionkey>
+
+
+        <permissionkey handle="add_sub_group" name="Add Child Group" package="" category="group_tree_node">
+        </permissionkey>
+
+
+        <permissionkey handle="edit_group_permissions" name="Edit Group Permissions" package="" category="group_tree_node">
         </permissionkey>
 
         <permissionkey handle="backup" name="Perform Backups" package="" category="admin">
             <access>
                 <group name="Administrators"/>
             </access>
-		</permissionkey>
+        </permissionkey>
 
         <permissionkey handle="access_task_permissions" name="Access Task Permissions" package="" category="admin">
-		</permissionkey>
+        </permissionkey>
 
         <permissionkey handle="access_sitemap" name="Access Sitemap" package="" category="sitemap">
             <access>
                 <group name="Administrators"/>
             </access>
-		</permissionkey>
+        </permissionkey>
 
         <permissionkey handle="access_page_defaults" name="Access Page Type Defaults" package="" category="admin">
             <access>
                 <group name="Administrators"/>
             </access>
-		</permissionkey>
+        </permissionkey>
 
         <permissionkey handle="empty_trash" name="Empty Trash" package="" category="admin">
             <access>
                 <group name="Administrators"/>
             </access>
-		</permissionkey>
+        </permissionkey>
 
         <permissionkey handle="uninstall_packages" name="Uninstall Packages" package="" category="marketplace_newsflow">
             <access>
                 <group name="Administrators"/>
             </access>
-		</permissionkey>
+        </permissionkey>
 
         <permissionkey handle="install_packages" name="Install Packages" package="" category="marketplace_newsflow">
             <access>
                 <group name="Administrators"/>
             </access>
-		</permissionkey>
+        </permissionkey>
 
         <permissionkey handle="view_newsflow" name="View Newsflow" package="" category="marketplace_newsflow">
             <access>
                 <group name="Administrators"/>
             </access>
-		</permissionkey>
+        </permissionkey>
 
-		<permissionkey handle="access_user_search_export" name="Export Site Users" description="Controls whether a user can export site users or not" package="" category="user">
-			<access>
-				<group name="Administrators"/>
-			</access>
-		</permissionkey>
+        <permissionkey handle="access_user_search_export" name="Export Site Users" description="Controls whether a user can export site users or not" package="" category="user">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
+        <permissionkey handle="access_user_search" name="Access User Search" description="Controls whether a user can view the search user interface." package="" category="user">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
         
-	</permissionkeys>
+    </permissionkeys>
     
-	<systemcaptcha>
-		<library handle="securimage" name="SecurImage (Default)" package="" activated="1"/>
-	</systemcaptcha>
+    <systemcaptcha>
+        <library handle="securimage" name="SecurImage (Default)" package="" activated="1"/>
+    </systemcaptcha>
 
     <workflowtypes>
         <workflowtype handle="basic" name="Basic Workflow" package=""/>
@@ -206,75 +213,75 @@
 
     <permissionaccessentitytypes>
         <permissionaccessentitytype handle="group" name="Group" package="">
-        	<categories>
-		        <category handle="page" />
-		        <category handle="user" />
-		        <category handle="file_set" />
-		        <category handle="file" />
-		        <category handle="area" />
-		        <category handle="block_type" />
-		        <category handle="block" />
-		        <category handle="admin" />
-		        <category handle="sitemap" />
-		        <category handle="marketplace_newsflow" />
-		        <category handle="basic_workflow" />
-			</categories>
+            <categories>
+                <category handle="page" />
+                <category handle="user" />
+                <category handle="file_set" />
+                <category handle="file" />
+                <category handle="area" />
+                <category handle="block_type" />
+                <category handle="block" />
+                <category handle="admin" />
+                <category handle="sitemap" />
+                <category handle="marketplace_newsflow" />
+                <category handle="basic_workflow" />
+            </categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="user" name="User" package="">
-			<categories>
-		        <category handle="page" />
-		        <category handle="user" />
-		        <category handle="file_set" />
-		        <category handle="file" />
-		        <category handle="area" />
-		        <category handle="block_type" />
-		        <category handle="block" />
-		        <category handle="admin" />
-		        <category handle="sitemap" />
-		        <category handle="marketplace_newsflow" />
-		        <category handle="basic_workflow" />
-			</categories>
+            <categories>
+                <category handle="page" />
+                <category handle="user" />
+                <category handle="file_set" />
+                <category handle="file" />
+                <category handle="area" />
+                <category handle="block_type" />
+                <category handle="block" />
+                <category handle="admin" />
+                <category handle="sitemap" />
+                <category handle="marketplace_newsflow" />
+                <category handle="basic_workflow" />
+            </categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_set" name="Group Set" package="">
-			<categories>
-		        <category handle="page" />
-		        <category handle="user" />
-		        <category handle="file_set" />
-		        <category handle="file" />
-		        <category handle="area" />
-		        <category handle="block_type" />
-		        <category handle="block" />
-		        <category handle="admin" />
-		        <category handle="sitemap" />
-		        <category handle="marketplace_newsflow" />
-		        <category handle="basic_workflow" />
-			</categories>
+            <categories>
+                <category handle="page" />
+                <category handle="user" />
+                <category handle="file_set" />
+                <category handle="file" />
+                <category handle="area" />
+                <category handle="block_type" />
+                <category handle="block" />
+                <category handle="admin" />
+                <category handle="sitemap" />
+                <category handle="marketplace_newsflow" />
+                <category handle="basic_workflow" />
+            </categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="group_combination" name="Group Combination" package="">
-			<categories>
-		        <category handle="page" />
-		        <category handle="user" />
-		        <category handle="file_set" />
-		        <category handle="file" />
-		        <category handle="area" />
-		        <category handle="block_type" />
-		        <category handle="block" />
-		        <category handle="admin" />
-		        <category handle="sitemap" />
-		        <category handle="marketplace_newsflow" />
-		        <category handle="basic_workflow" />
-			</categories>
+            <categories>
+                <category handle="page" />
+                <category handle="user" />
+                <category handle="file_set" />
+                <category handle="file" />
+                <category handle="area" />
+                <category handle="block_type" />
+                <category handle="block" />
+                <category handle="admin" />
+                <category handle="sitemap" />
+                <category handle="marketplace_newsflow" />
+                <category handle="basic_workflow" />
+            </categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="page_owner" name="Page Owner" package="">
-			<categories>
-		        <category handle="page" />
-			</categories>
+            <categories>
+                <category handle="page" />
+            </categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="file_uploader" name="File Uploader" package="">
-			<categories>
-		        <category handle="file_set" />
-		        <category handle="file" />
-			</categories>
+            <categories>
+                <category handle="file_set" />
+                <category handle="file" />
+            </categories>
         </permissionaccessentitytype>
     </permissionaccessentitytypes>
 

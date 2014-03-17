@@ -9,6 +9,11 @@ $valt = Loader::helper('validation/token');
 $date = Loader::helper('form/date_time');
 $form = Loader::helper('form');
 
+$rootNode = $tree->getRootTreeNodeObject();
+
+$guestGroupNode = GroupTreeNode::getTreeNodeByGroupID(GUEST_GROUP_ID);
+$registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
+
 ?>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Group'), false, false, false)?>
@@ -29,6 +34,41 @@ $form = Loader::helper('form');
 	<?=$form->textarea('gDescription', array('rows' => 6, 'class' =>'span6'))?>
 </div>
 </div>
+
+<div class="control-group">
+<label class="control-label"><?=t('Parent Group')?></label>
+<div class="controls">
+    <div class="groups-tree" style="width: 460px" data-groups-tree="<?=$tree->getTreeID()?>">
+    </div>
+    <?=$form->hidden('gParentNodeID')?>
+    
+    <script type="text/javascript">
+    $(function() {
+       $('[data-groups-tree=<?=$tree->getTreeID()?>]').ccmgroupstree({
+          'treeID': '<?=$tree->getTreeID()?>',
+          'chooseNodeInForm': true,
+          <? if ($this->controller->isPost()) { ?> 
+             'selectNodeByKey': '<?=$_POST['gParentNodeID']?>',
+          <? } else {
+
+          	if (is_object($rootNode)) { ?>
+          		'selectNodeByKey': '<?=$rootNode->getTreeNodeID()?>',
+          		<? } ?>
+	      	<? } ?>
+		removeNodesByID: ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
+          'onSelect': function(select, node) {
+             if (select) {
+                $('input[name=gParentNodeID]').val(node.data.key);
+             } else {
+                $('input[name=gParentNodeID]').val('');
+             }
+          }
+       });
+    });
+    </script> 
+</div>
+</div>
+
 </fieldset>
 <fieldset>
 <legend><?=t("Group Expiration Options")?></legend>

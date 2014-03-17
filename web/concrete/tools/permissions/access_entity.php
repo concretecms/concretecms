@@ -2,8 +2,9 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper("form");
 $tp = new TaskPermission();
+$tu = Loader::helper('concrete/user');
 $dt = Loader::helper('form/date_time');
-if (!$tp->canAccessUserSearch() && !$tp->canAccessGroupSearch()) { 
+if (!$tu->canAccessUserSearchInterface() && !$tp->canAccessGroupSearch()) { 
 	die(t("You do not have user search or group search permissions."));
 }
 $pae = false;

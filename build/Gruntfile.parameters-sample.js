@@ -1,6 +1,5 @@
 // This is an sample configuration file.
 // Set your values and save this file as Gruntfile.parameters.js
-
 module.exports = {
 
 	// If concrete5 is installed in a subfolder and if you want to use javascript sourcemap you should change this variable.
