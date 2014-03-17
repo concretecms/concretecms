@@ -38,6 +38,8 @@ $classes = array(
 	'AttributeKeyCategory' => array('model','attribute/category'),
 	'AttributeSet' => array('model','attribute/set'),
 	'AttributeType' => array('model','attribute/type'),
+	'AuthenticationType' => array('model','authentication/type'),
+	'AuthenticationTypeController' => array('library','authentication/controller'),
 	'Block,BlockRecord' => array('model','block'),
 	'Job' => array('model','job'),
 	'JobSet' => array('model','job_set'),
@@ -171,9 +173,6 @@ $classes = array(
 	'AddSubpagePagePermissionKey' => array('model','permission/keys/custom/add_subpage'),
 	'AddSubpagePagePermissionAccess' => array('model','permission/access/categories/custom/add_subpage'),
 	'AddSubpagePagePermissionAccessListItem' => array('model','permission/access/list_items/custom/add_subpage'),
-	'AssignUserGroupsUserPermissionKey' => array('model','permission/keys/custom/assign_user_groups'),
-	'AssignUserGroupsUserPermissionAccess' => array('model','permission/access/categories/custom/assign_user_groups'),
-	'AssignUserGroupsUserPermissionAccessListItem' => array('model','permission/access/list_items/custom/assign_user_groups'),
 	'EditPagePropertiesPagePermissionKey' => array('model','permission/keys/custom/edit_page_properties'),
 	'EditPagePropertiesPagePermissionAccess' => array('model','permission/access/categories/custom/edit_page_properties'),
 	'EditPagePropertiesPagePermissionAccessListItem' => array('model','permission/access/list_items/custom/edit_page_properties'),
@@ -228,7 +227,27 @@ $classes = array(
 	'DashboardBaseController' => array('controller', '/dashboard/base'),
 	'AccountController' => array('controller', '/account'),
 	'AccountProfileEditController' => array('controller', '/account/profile/edit'),
-	'Zend_Queue_Adapter_Concrete5' => array('library', 'Zend/Queue/Adapter/Concrete5')
+	'Zend_Queue_Adapter_Concrete5' => array('library', 'Zend/Queue/Adapter/Concrete5'),
+	'Tree' => array('model', 'tree/model'),
+	'TreeType' => array('model', 'tree/type'),
+	'TreeNode' => array('model', 'tree/node/model'),
+	'TreeNodeType' => array('model', 'tree/node/type'),
+	'CategoryTreeNode' => array('model', 'tree/node/types/category'),
+	/* Permissions Tree Node BASE class */
+	'TreeNodePermissionKey' => array('model','permission/keys/tree/node'),
+	'TreeNodePermissionAssignment' => array('model','permission/assignments/tree/node'),
+	'TreeNodePermissionAccess' => array('model','permission/access/categories/tree/node'),
+	'TreeNodePermissionAccessListItem' => array('model','permission/access/list_items/tree/node'),
+	'TreeNodePermissionResponse' => array('model','permission/response/tree/node'),
+	'GroupTreeNode' => array('model', 'tree/node/types/group'),
+	'GroupTree' => array('model', 'tree/types/group'),
+	'GroupTreeNodePermissionKey' => array('model','permission/keys/tree/node/group'),
+	'GroupTreeNodePermissionAssignment' => array('model','permission/assignments/tree/node/group'),
+	'GroupTreeNodePermissionAccess' => array('model','permission/access/categories/tree/node/group'),
+	'GroupTreeNodePermissionAccessListItem' => array('model','permission/access/list_items/tree/node/group'),
+	'GroupTreeNodePermissionResponse' => array('model','permission/response/tree/node/group'),
+	'GroupPermissionResponse' => array('model','permission/response/group'),
+	'UserInfoPermissionResponse' => array('model','permission/response/user_info')
 );
 
 Loader::registerAutoload($classes);

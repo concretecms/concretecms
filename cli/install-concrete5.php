@@ -79,7 +79,7 @@ $config = array_merge($defaults, $config, $args);
 if ($config['target']) {
 	$target = $config['target'];
 	if (substr($target, 0, 1) !== '/') {
-		$target = dirname(__FILE__) . '/' . $target;
+		$target = realpath(dirname(__FILE__) . '/' . $target);
 	}
 	if (!file_exists($target)) {
 		die("ERROR: Target location not found.\n");

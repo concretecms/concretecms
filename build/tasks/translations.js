@@ -140,7 +140,7 @@ module.exports = function(grunt, config, parameters, done) {
 	if(isNaN(txProgressLimit)) {
 		txProgressLimit = 95;
 	}
-	
+
 	var getAllLocales;
 	if(parameters.txLocales && parameters.txLocales.length) {
 		getAllLocales = function(callback) {

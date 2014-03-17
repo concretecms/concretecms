@@ -99,7 +99,14 @@ class Concrete5_Model_PermissionKeyCategory extends Object {
 
 	public function associateAccessEntityType(PermissionAccessEntityType $pt) {
 		$db = Loader::db();
-		$db->Execute('insert into PermissionAccessEntityTypeCategories (petID, pkCategoryID) values (?, ?)', array($pt->getAccessEntityTypeID(), $this->pkCategoryID));
+		$r = $db->GetOne('select petID from PermissionAccessEntityTypeCategories where petID = ? and pkCategoryID = ?', array(
+			$pt->getAccessEntityTypeID(), $this->pkCategoryID
+		));
+		if (!$r) {
+			$db->Execute('insert into PermissionAccessEntityTypeCategories (petID, pkCategoryID) values (?, ?)', array(
+				$pt->getAccessEntityTypeID(), $this->pkCategoryID
+			));
+		}
 	}
 	
 	public function clearAccessEntityTypeCategories() {

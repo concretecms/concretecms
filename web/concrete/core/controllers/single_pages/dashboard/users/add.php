@@ -105,11 +105,12 @@ class Concrete5_Controller_Dashboard_Users_Add extends Controller {
 							}
 						}
 
-						$gak = PermissionKey::getByHandle('assign_user_groups');
 						$gIDs = array();
 						if (is_array($_POST['gID'])) {
 							foreach($_POST['gID'] as $gID) {
-								if ($gak->validate($gID)) {
+								$gx = Group::getByID($gID);
+								$gxp = new Permissions($gx);
+								if ($gxp->canAssignGroup()) {
 									$gIDs[] = $gID;
 								}
 							}

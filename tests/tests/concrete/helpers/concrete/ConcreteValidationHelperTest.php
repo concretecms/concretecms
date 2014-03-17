@@ -34,8 +34,7 @@ class ConcreteValidationTest extends PHPUnit_Framework_TestCase {
         $false[] = '1a'; //min length alpha num
 
         $false[] = '012345678901234567890123456789012345678901234567890123456789abcd012345678901234567890123456789012345678901234567890123456789abcde';
-	 //max is 128, so this is 129
-
+    	//max is 128, so this is 129
 
         foreach ($false as $string) {
             $this->assertFalse($this->object->password($string));

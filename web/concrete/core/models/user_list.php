@@ -41,8 +41,16 @@ class Concrete5_Model_UserList extends DatabaseItemList {
 		$this->filter(false, '( u.uName like ' . $qkeywords . $emailSearchStr . $attribsStr . ')');
 	}
 	
-	public function filterByGroup($groupName='', $inGroup = true){ 
-		$group=Group::getByName($groupName); 
+	/**
+	 * filters the user list for only users within the provided group.  Accepts an instance of a group object or a string group name
+	 * @param Group|string $group
+	 * @param boolean $inGroup
+	 * @return void
+	*/
+	public function filterByGroup($group='', $inGroup = true){
+		if(!$group instanceof Group) {
+			$group = Group::getByName($group);
+		}
 		$tbl='ug_'.$group->getGroupID();
 		$this->addToQuery("left join UserGroups $tbl on {$tbl}.uID = u.uID ");	
 		if ($inGroup) {
@@ -71,7 +79,10 @@ class Concrete5_Model_UserList extends DatabaseItemList {
 		$this->filter('u.uDateAdded', $date, $comparison);
 	}
 	
-	// Returns an array of userInfo objects based on current filter settings
+	/**
+	 * Returns an array of userInfo objects based on current filter settings
+	 * @return UserInfo[]
+	 */
 	public function get($itemsToGet = 100, $offset = 0) {
 		$userInfos = array(); 
 		$this->createQuery();
@@ -81,6 +92,21 @@ class Concrete5_Model_UserList extends DatabaseItemList {
 			$userInfos[] = $ui;
 		}
 		return $userInfos;
+	}
+	
+	/**
+	 * similar to get except it returns an array of userIDs
+	 * much faster than getting a UserInfo object for each result if all you need is the user's id
+	 * @return array $userIDs
+	*/
+	public function getUserIDs($itemsToGet = 100, $offset=0) {
+		$this->createQuery();
+		$userIDs = array();
+		$r = parent::get($itemsToGet, intval($offset));
+		foreach($r as $row) {
+			$userIDs[] = $row['uID'];
+		}
+		return $userIDs;
 	}	
 	
 	public function getTotal(){ 

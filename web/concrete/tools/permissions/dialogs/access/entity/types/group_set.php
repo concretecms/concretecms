@@ -9,15 +9,6 @@ $tp = new TaskPermission();
 if (!$tp->canAccessGroupSearch()) { 
 	echo(t("You have no access to groups."));
 } else { 	
-
-	if ($_REQUEST['filter'] == 'assign') { 
-		$pk = PermissionKey::getByHandle('assign_user_groups');
-		if (!$pk->validate()) {
-			die(t('You have no access to assign groups.'));
-		}
-	}
-	
-
 	$gl = new GroupSetList();
 	?>
 	<div id="ccm-list-wrapper">

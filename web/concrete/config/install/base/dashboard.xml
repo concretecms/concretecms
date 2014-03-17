@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
-    <singlepages>
-        <page name="Dashboard" path="/dashboard" filename="/dashboard/view.php" pagetype="" description="" package="" root="true" />
-        <page name="Composer" path="/dashboard/composer" filename="/dashboard/composer/view.php" pagetype="" description="Write for your site." package="">
+	<singlepages>
+		<page name="Dashboard" path="/dashboard" filename="/dashboard/view.php" pagetype="" description="" package="" root="true" />
+		<page name="Composer" path="/dashboard/composer" filename="/dashboard/composer/view.php" pagetype="" description="Write for your site." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>blog, blogging</value>
@@ -11,8 +11,8 @@
 					<value>icon-book</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Write" path="/dashboard/composer/write" filename="/dashboard/composer/write.php" pagetype="" description="" package="">
+		</page>
+		<page name="Write" path="/dashboard/composer/write" filename="/dashboard/composer/write.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>new blog, write blog, blogging</value>
@@ -21,8 +21,8 @@
 					<value>icon-pencil</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Drafts" path="/dashboard/composer/drafts" filename="/dashboard/composer/drafts.php" pagetype="" description="" package="">
+		</page>
+		<page name="Drafts" path="/dashboard/composer/drafts" filename="/dashboard/composer/drafts.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>blog drafts, composer</value>
@@ -31,15 +31,15 @@
 					<value>icon-book</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Sitemap" path="/dashboard/sitemap" filename="/dashboard/sitemap/view.php" pagetype="" description="Whole world at a glance." package="">
+		</page>
+		<page name="Sitemap" path="/dashboard/sitemap" filename="/dashboard/sitemap/view.php" pagetype="" description="Whole world at a glance." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>pages, add page, delete page, copy, move, alias</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Full Sitemap" path="/dashboard/sitemap/full" filename="/dashboard/sitemap/full.php" pagetype="" description="" package="">
+		</page>
+		<page name="Full Sitemap" path="/dashboard/sitemap/full" filename="/dashboard/sitemap/full.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>pages, add page, delete page, copy, move, alias</value>
@@ -48,8 +48,8 @@
 					<value>icon-home</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Flat View" path="/dashboard/sitemap/explore" filename="/dashboard/sitemap/explore.php" pagetype="" description="" package="">
+		</page>
+		<page name="Flat View" path="/dashboard/sitemap/explore" filename="/dashboard/sitemap/explore.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>pages, add page, delete page, copy, move, alias, bulk</value>
@@ -58,8 +58,8 @@
 					<value>icon-road</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Page Search" path="/dashboard/sitemap/search" filename="/dashboard/sitemap/search.php" pagetype="" description="" package="">
+		</page>
+		<page name="Page Search" path="/dashboard/sitemap/search" filename="/dashboard/sitemap/search.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>find page, search page, search, find, pages, sitemap</value>
@@ -68,9 +68,9 @@
 					<value>icon-search</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Files" path="/dashboard/files" filename="/dashboard/files/view.php" pagetype="" description="All documents and images." package=""/>
-        <page name="File Manager" path="/dashboard/files/search" filename="/dashboard/files/search.php" pagetype="" description="" package="">
+		</page>
+		<page name="Files" path="/dashboard/files" filename="/dashboard/files/view.php" pagetype="" description="All documents and images." package=""/>
+		<page name="File Manager" path="/dashboard/files/search" filename="/dashboard/files/search.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>add file, delete file, copy, move, alias, resize, crop, rename, images, title, attribute</value>
@@ -79,8 +79,8 @@
 					<value>icon-picture</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Attributes" path="/dashboard/files/attributes" filename="/dashboard/files/attributes.php" pagetype="" description="" package="">
+		</page>
+		<page name="Attributes" path="/dashboard/files/attributes" filename="/dashboard/files/attributes.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>file, file attributes, title, attribute, description, rename</value>
@@ -89,8 +89,8 @@
 					<value>icon-cog</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="File Sets" path="/dashboard/files/sets" filename="/dashboard/files/sets.php" pagetype="" description="" package="">
+		</page>
+		<page name="File Sets" path="/dashboard/files/sets" filename="/dashboard/files/sets.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>files, category, categories</value>
@@ -99,8 +99,8 @@
 					<value>icon-list-alt</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Add File Set" path="/dashboard/files/add_set" filename="/dashboard/files/add_set.php" pagetype="" description="" package="">
+		</page>
+		<page name="Add File Set" path="/dashboard/files/add_set" filename="/dashboard/files/add_set.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="exclude_nav">
 					<value><![CDATA[1]]></value>
@@ -112,15 +112,15 @@
 					<value>icon-plus-sign</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Members" path="/dashboard/users" filename="/dashboard/users/view.php" pagetype="" description="Add and manage the user accounts and groups on your website." package="">
+		</page>
+		<page name="Members" path="/dashboard/users" filename="/dashboard/users/view.php" pagetype="" description="Add and manage the user accounts and groups on your website." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>users, groups, people, find, delete user, remove user, change password, password</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Search Users" path="/dashboard/users/search" filename="/dashboard/users/search.php" pagetype="" description="" package="">
+		</page>
+		<page name="Search Users" path="/dashboard/users/search" filename="/dashboard/users/search.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>find, search, people, delete user, remove user, change password, password</value>
@@ -129,8 +129,8 @@
 					<value>icon-user</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="User Groups" path="/dashboard/users/groups" filename="/dashboard/users/groups.php" pagetype="" description="" package="">
+		</page>
+		<page name="User Groups" path="/dashboard/users/groups" filename="/dashboard/users/groups.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>user, group, people, permissions, access, expire</value>
@@ -139,8 +139,8 @@
 					<value>icon-globe</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Attributes" path="/dashboard/users/attributes" filename="/dashboard/users/attributes.php" pagetype="" description="" package="">
+		</page>
+		<page name="Attributes" path="/dashboard/users/attributes" filename="/dashboard/users/attributes.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>user attributes, user data, gather data, registration data</value>
@@ -149,8 +149,8 @@
 					<value>icon-cog</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Add User" path="/dashboard/users/add" filename="/dashboard/users/add.php" pagetype="" description="" package="">
+		</page>
+		<page name="Add User" path="/dashboard/users/add" filename="/dashboard/users/add.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>new user, create</value>
@@ -162,8 +162,8 @@
 					<value>icon-plus-sign</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Add Group" path="/dashboard/users/add_group" filename="/dashboard/users/add_group.php" pagetype="" description="" package="">
+		</page>
+		<page name="Add Group" path="/dashboard/users/add_group" filename="/dashboard/users/add_group.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>new user group, new group, group, create</value>
@@ -175,8 +175,10 @@
 					<value>icon-plus</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Group Sets" path="/dashboard/users/group_sets" filename="/dashboard/users/group_sets.php" pagetype="" description="" package="">
+		</page>
+		<page name="Move Multiple Groups" path="/dashboard/users/groups/bulk_update" filename="/dashboard/users/groups/bulk_update.php" pagetype="" description="" package="">
+		</page>
+		<page name="Group Sets" path="/dashboard/users/group_sets" filename="/dashboard/users/group_sets.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>group set</value>
@@ -185,15 +187,15 @@
 					<value>icon-list</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype="" description="Get data from forms and logs." package="">
+		</page>
+		<page name="Reports" path="/dashboard/reports" filename="/dashboard/reports.php" pagetype="" description="Get data from forms and logs." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>forms, log, error, email, mysql, exception, survey</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Statistics" path="/dashboard/reports/statistics" filename="/dashboard/reports/statistics.php" pagetype="" description="View your site activity." package="">
+		</page>
+		<page name="Statistics" path="/dashboard/reports/statistics" filename="/dashboard/reports/statistics.php" pagetype="" description="View your site activity." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>hits, pageviews, visitors, activity</value>
@@ -202,8 +204,8 @@
 					<value>icon-signal</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Form Results" path="/dashboard/reports/forms" filename="/dashboard/reports/forms.php" pagetype="" description="Get submission data." package="">
+		</page>
+		<page name="Form Results" path="/dashboard/reports/forms" filename="/dashboard/reports/forms.php" pagetype="" description="Get submission data." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>forms, questions, response, data</value>
@@ -212,8 +214,8 @@
 					<value>icon-briefcase</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Surveys" path="/dashboard/reports/surveys" filename="/dashboard/reports/surveys.php" pagetype="" description="" package="">
+		</page>
+		<page name="Surveys" path="/dashboard/reports/surveys" filename="/dashboard/reports/surveys.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>questions, quiz, response</value>
@@ -222,8 +224,8 @@
 					<value>icon-tasks</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Logs" path="/dashboard/reports/logs" filename="/dashboard/reports/logs.php" pagetype="" description="" package="">
+		</page>
+		<page name="Logs" path="/dashboard/reports/logs" filename="/dashboard/reports/logs.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>forms, log, error, email, mysql, exception, survey, history</value>
@@ -232,9 +234,9 @@
 					<value>icon-time</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Pages &amp; Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype="" description="Reskin your site." package=""></page>
-        <page name="Themes" path="/dashboard/pages/themes" filename="/dashboard/pages/themes/view.php" pagetype="" description="Reskin your site." package="">
+		</page>
+		<page name="Pages &amp; Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype="" description="Reskin your site." package=""></page>
+		<page name="Themes" path="/dashboard/pages/themes" filename="/dashboard/pages/themes/view.php" pagetype="" description="Reskin your site." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>new theme, theme, active theme, change theme, template, css</value>
@@ -243,29 +245,29 @@
 					<value>icon-font</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Add" path="/dashboard/pages/themes/add" filename="/dashboard/pages/themes/add.php" pagetype="" description="" package="">
+		</page>
+		<page name="Add" path="/dashboard/pages/themes/add" filename="/dashboard/pages/themes/add.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>theme</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Inspect" path="/dashboard/pages/themes/inspect" filename="/dashboard/pages/themes/inspect.php" pagetype="" description="" package="">
-        	<attributes>
+		</page>
+		<page name="Inspect" path="/dashboard/pages/themes/inspect" filename="/dashboard/pages/themes/inspect.php" pagetype="" description="" package="">
+			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>page types</value>
 				</attributekey>
 			</attributes>
 		</page>
-        <page name="Customize" path="/dashboard/pages/themes/customize" filename="/dashboard/pages/themes/customize.php" pagetype="" description="" package="">
+		<page name="Customize" path="/dashboard/pages/themes/customize" filename="/dashboard/pages/themes/customize.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>custom theme, change theme, custom css, css</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Page Types" path="/dashboard/pages/types" filename="/dashboard/pages/types/view.php" pagetype="" description="What goes in your site." package="">
+		</page>
+		<page name="Page Types" path="/dashboard/pages/types" filename="/dashboard/pages/types/view.php" pagetype="" description="What goes in your site." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>page type defaults, global block, global area, starter, template</value>
@@ -274,9 +276,9 @@
 					<value>icon-file</value>
 				</attributekey>
 			</attributes>
-        </page>
+		</page>
 		<page name="Add Page Type" path="/dashboard/pages/types/add" filename="/dashboard/pages/types/add.php" pagetype="" description="Add page types to your site." package=""/>
-        <page name="Attributes" path="/dashboard/pages/attributes" filename="/dashboard/pages/attributes.php" pagetype="" description="" package="">
+		<page name="Attributes" path="/dashboard/pages/attributes" filename="/dashboard/pages/attributes.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>page attributes, custom</value>
@@ -285,42 +287,42 @@
 					<value>icon-cog</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Single Pages" path="/dashboard/pages/single" filename="/dashboard/pages/single.php" pagetype="" description="" package="">
-        	<attributes>
-        		<attributekey handle="meta_keywords">
+		</page>
+		<page name="Single Pages" path="/dashboard/pages/single" filename="/dashboard/pages/single.php" pagetype="" description="" package="">
+			<attributes>
+				<attributekey handle="meta_keywords">
 					<value>single, page, custom, application</value>
 				</attributekey>
 				<attributekey handle="icon_dashboard">
 					<value>icon-wrench</value>
 				</attributekey>
 			</attributes>
-        </page>        
+		</page>
 
-        <page name="Workflow" path="/dashboard/workflow" filename="/dashboard/workflow/view.php" pagetype="" description="" package="">
-        	<attributes>
+		<page name="Workflow" path="/dashboard/workflow" filename="/dashboard/workflow/view.php" pagetype="" description="" package="">
+			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>add workflow, remove workflow</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Workflow List" path="/dashboard/workflow/list" filename="/dashboard/workflow/list.php" pagetype="" description="" package="">
-        	<attributes>
+		</page>
+		<page name="Workflow List" path="/dashboard/workflow/list" filename="/dashboard/workflow/list.php" pagetype="" description="" package="">
+			<attributes>
 				<attributekey handle="icon_dashboard">
 					<value>icon-list</value>
 				</attributekey>
-			</attributes>        
-        </page>
-        <page name="Waiting for Me" path="/dashboard/workflow/me" filename="/dashboard/workflow/me.php" pagetype="" description="" package="">
-        	<attributes>
+			</attributes>
+		</page>
+		<page name="Waiting for Me" path="/dashboard/workflow/me" filename="/dashboard/workflow/me.php" pagetype="" description="" package="">
+			<attributes>
 				<attributekey handle="icon_dashboard">
 					<value>icon-user</value>
 				</attributekey>
-			</attributes>        
-        </page>
-        <page name="Stacks &amp; Blocks" path="/dashboard/blocks" filename="/dashboard/blocks/view.php" pagetype="" description="Manage sitewide content and administer block types." package="" />
-        <page name="Stacks" path="/dashboard/blocks/stacks" filename="/dashboard/blocks/stacks/view.php" pagetype="" description="Share content across your site." package="">
-        	<attributes>
+			</attributes>
+		</page>
+		<page name="Stacks &amp; Blocks" path="/dashboard/blocks" filename="/dashboard/blocks/view.php" pagetype="" description="Manage sitewide content and administer block types." package="" />
+		<page name="Stacks" path="/dashboard/blocks/stacks" filename="/dashboard/blocks/stacks/view.php" pagetype="" description="Share content across your site." package="">
+			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>stacks, reusable content, scrapbook, copy, paste, paste block, copy block, site name, logo</value>
 				</attributekey>
@@ -328,16 +330,16 @@
 					<value>icon-th</value>
 				</attributekey>
 			</attributes>
-        
-        </page>
-        <page name="Block &amp; Stack Permissions" path="/dashboard/blocks/permissions" filename="/dashboard/blocks/permissions.php" pagetype="" description="Control who can add blocks and stacks on your site." package="">
-           	<attributes>
+
+		</page>
+		<page name="Block &amp; Stack Permissions" path="/dashboard/blocks/permissions" filename="/dashboard/blocks/permissions.php" pagetype="" description="Control who can add blocks and stacks on your site." package="">
+			<attributes>
 				<attributekey handle="icon_dashboard">
 					<value>icon-lock</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Stack List" path="/dashboard/blocks/stacks/list" filename="/dashboard/blocks/stacks/list/view.php" pagetype="" description="" package="">
+		</page>
+		<page name="Stack List" path="/dashboard/blocks/stacks/list" filename="/dashboard/blocks/stacks/list/view.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="exclude_nav">
 					<value><![CDATA[1]]></value>
@@ -351,9 +353,9 @@
 					<value>edit stacks, view stacks, all stacks</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Block Types" path="/dashboard/blocks/types" filename="/dashboard/blocks/types/view.php" pagetype="" description="Manage the installed block types in your site." package="">
-        	<attributes>
+		</page>
+		<page name="Block Types" path="/dashboard/blocks/types" filename="/dashboard/blocks/types/view.php" pagetype="" description="Manage the installed block types in your site." package="">
+			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>block, refresh, custom</value>
 				</attributekey>
@@ -361,9 +363,9 @@
 					<value>icon-wrench</value>
 				</attributekey>
 			</attributes>
-        </page>
-    	
-        <page name="Extend concrete5" path="/dashboard/extend" filename="/dashboard/extend/view.php" pagetype="" description="Connect to the concrete5 marketplace, install custom add-ons, and download updates for marketplace add-ons and themes." package="">
+		</page>
+
+		<page name="Extend concrete5" path="/dashboard/extend" filename="/dashboard/extend/view.php" pagetype="" description="Connect to the concrete5 marketplace, install custom add-ons, and download updates for marketplace add-ons and themes." package="">
 			<attributes>
 				<attributekey handle="exclude_nav">
 					<value><![CDATA[1]]></value>
@@ -374,8 +376,8 @@
 					<value>add-on, addon, add on, package, applications, ecommerce, discussions, forums, themes, templates, blocks</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Dashboard" path="/dashboard/news" filename="/dashboard/news.php" pagetype="" description="" package="">
+		</page>
+		<page name="Dashboard" path="/dashboard/news" filename="/dashboard/news.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="exclude_nav">
 					<value><![CDATA[1]]></value>
@@ -386,43 +388,43 @@
 					<value><![CDATA[1]]></value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Add Functionality" path="/dashboard/extend/install" filename="/dashboard/extend/install.php" pagetype="" description="Install add-ons &amp; themes." package="">
+		</page>
+		<page name="Add Functionality" path="/dashboard/extend/install" filename="/dashboard/extend/install.php" pagetype="" description="Install add-ons &amp; themes." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>add-on, addon, ecommerce, install, discussions, forums, themes, templates, blocks</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Update Add-Ons" path="/dashboard/extend/update" filename="/dashboard/extend/update.php" pagetype="" description="Update your installed packages." package="">
+		</page>
+		<page name="Update Add-Ons" path="/dashboard/extend/update" filename="/dashboard/extend/update.php" pagetype="" description="Update your installed packages." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>update, upgrade</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Connect to the Community" path="/dashboard/extend/connect" filename="/dashboard/extend/connect.php" pagetype="" description="Connect to the concrete5 community." package="" >
+		</page>
+		<page name="Connect to the Community" path="/dashboard/extend/connect" filename="/dashboard/extend/connect.php" pagetype="" description="Connect to the concrete5 community." package="" >
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>concrete5.org, my account, marketplace</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Get More Themes" path="/dashboard/extend/themes" filename="/dashboard/extend/themes.php" pagetype="" description="Download themes from concrete5.org." package="">
+		</page>
+		<page name="Get More Themes" path="/dashboard/extend/themes" filename="/dashboard/extend/themes.php" pagetype="" description="Download themes from concrete5.org." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>buy theme, new theme, marketplace, template</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Get More Add-Ons" path="/dashboard/extend/add-ons" filename="/dashboard/extend/add_ons.php" pagetype="" description="Download add-ons from concrete5.org." package="">
+		</page>
+		<page name="Get More Add-Ons" path="/dashboard/extend/add-ons" filename="/dashboard/extend/add_ons.php" pagetype="" description="Download add-ons from concrete5.org." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>buy addon, buy add on, buy add-on, purchase addon, purchase add on, purchase add-on, find addon, new addon, marketplace</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="System &amp; Settings" path="/dashboard/system" filename="/dashboard/system/view.php" pagetype="" description="Secure and setup your site." package="">
+		</page>
+		<page name="System &amp; Settings" path="/dashboard/system" filename="/dashboard/system/view.php" pagetype="" description="Secure and setup your site." package="">
 			<attributes>
 				<attributekey handle="exclude_nav">
 					<value><![CDATA[1]]></value>
@@ -433,210 +435,218 @@
 					<value>dashboard, configuration</value>
 				</attributekey>
 			</attributes>
-        </page>
-		  <page name="Basics" path="/dashboard/system/basics" filename="/dashboard/system/basics/view.php" pagetype="" description="Basic information about your website." package=""/>
-        <page name="Site Name" path="/dashboard/system/basics/site_name" filename="/dashboard/system/basics/site_name.php" pagetype="" description="" package="">
+		</page>
+		<page name="Basics" path="/dashboard/system/basics" filename="/dashboard/system/basics/view.php" pagetype="" description="Basic information about your website." package=""/>
+		<page name="Site Name" path="/dashboard/system/basics/site_name" filename="/dashboard/system/basics/site_name.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>website name, title</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Bookmark Icons" path="/dashboard/system/basics/icons" filename="/dashboard/system/basics/icons.php" pagetype="" description="Bookmark icon and mobile home screen icon setup." package="">
+		</page>
+		<page name="Bookmark Icons" path="/dashboard/system/basics/icons" filename="/dashboard/system/basics/icons.php" pagetype="" description="Bookmark icon and mobile home screen icon setup." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>logo, favicon, iphone, icon, bookmark</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Rich Text Editor" path="/dashboard/system/basics/editor" filename="/dashboard/system/basics/editor.php" pagetype="" description="" package="">
+		</page>
+		<page name="Rich Text Editor" path="/dashboard/system/basics/editor" filename="/dashboard/system/basics/editor.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>tinymce, content block, fonts, editor, content, overlay</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Languages" path="/dashboard/system/basics/multilingual" filename="/dashboard/system/basics/multilingual/view.php" pagetype="" description="" package="">
+		</page>
+		<page name="Languages" path="/dashboard/system/basics/multilingual" filename="/dashboard/system/basics/multilingual/view.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>translate, translation, internationalization, multilingual</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Time Zone" path="/dashboard/system/basics/timezone" filename="/dashboard/system/basics/timezone.php" pagetype="" description="" package="">
+		</page>
+		<page name="Time Zone" path="/dashboard/system/basics/timezone" filename="/dashboard/system/basics/timezone.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>timezone, profile, locale</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Interface Preferences" path="/dashboard/system/basics/interface" filename="/dashboard/system/basics/interface.php" pagetype="" description="" package="">
+		</page>
+		<page name="Interface Preferences" path="/dashboard/system/basics/interface" filename="/dashboard/system/basics/interface.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>interface, quick nav, dashboard background, background image</value>
 				</attributekey>
 			</attributes>
-        </page>
+		</page>
 
-        <page name="SEO &amp; Statistics" path="/dashboard/system/seo" filename="/dashboard/system/seo/view.php" pagetype="" description="Enable pretty URLs, statistics and tracking codes." package=""/>
-        <page name="Pretty URLs" path="/dashboard/system/seo/urls" filename="/dashboard/system/seo/urls.php" pagetype="" description="" package="">
+		<page name="SEO &amp; Statistics" path="/dashboard/system/seo" filename="/dashboard/system/seo/view.php" pagetype="" description="Enable pretty URLs, statistics and tracking codes." package=""/>
+		<page name="Pretty URLs" path="/dashboard/system/seo/urls" filename="/dashboard/system/seo/urls.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>vanity, pretty url, seo, pageview, view</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Bulk SEO Updater" path="/dashboard/system/seo/bulk_seo_tool" filename="/dashboard/system/seo/bulk_seo_tool.php" pagetype="" description="" package="">
+		</page>
+		<page name="Bulk SEO Updater" path="/dashboard/system/seo/bulk_seo_tool" filename="/dashboard/system/seo/bulk_seo_tool.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>bulk, seo, change keywords, engine, optimization, search</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Tracking Codes" path="/dashboard/system/seo/tracking_codes" filename="/dashboard/system/seo/tracking_codes.php" pagetype="" description="" package="">
+		</page>
+		<page name="Tracking Codes" path="/dashboard/system/seo/tracking_codes" filename="/dashboard/system/seo/tracking_codes.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>traffic, statistics, google analytics, quant, pageviews, hits</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Excluded URL Word List" path="/dashboard/system/seo/excluded" filename="/dashboard/system/seo/excluded.php" pagetype="" description="" package="">
+		</page>
+		<page name="Excluded URL Word List" path="/dashboard/system/seo/excluded" filename="/dashboard/system/seo/excluded.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>pretty, slug</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Statistics" path="/dashboard/system/seo/statistics" filename="/dashboard/system/seo/statistics.php" pagetype="" description="" package="">
+		</page>
+		<page name="Statistics" path="/dashboard/system/seo/statistics" filename="/dashboard/system/seo/statistics.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>turn off statistics, tracking, statistics, pageviews, hits</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Search Index" path="/dashboard/system/seo/search_index" filename="/dashboard/system/seo/search_index.php" pagetype="" description="" package="">
+		</page>
+		<page name="Search Index" path="/dashboard/system/seo/search_index" filename="/dashboard/system/seo/search_index.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>configure search, site search, search option</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Optimization" path="/dashboard/system/optimization" filename="/dashboard/system/optimization/view.php" pagetype="" description="Keep your site running well." package=""/>
-        <page name="Cache &amp; Speed Settings" path="/dashboard/system/optimization/cache" filename="/dashboard/system/optimization/cache.php" pagetype="" description="" package="">
+		</page>
+		<page name="Optimization" path="/dashboard/system/optimization" filename="/dashboard/system/optimization/view.php" pagetype="" description="Keep your site running well." package=""/>
+		<page name="Cache &amp; Speed Settings" path="/dashboard/system/optimization/cache" filename="/dashboard/system/optimization/cache.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>cache option, change cache, override, turn on cache, turn off cache, no cache, page cache, caching</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Clear Cache" path="/dashboard/system/optimization/clear_cache" filename="/dashboard/system/optimization/clear_cache.php" pagetype="" description="" package="">
+		</page>
+		<page name="Clear Cache" path="/dashboard/system/optimization/clear_cache" filename="/dashboard/system/optimization/clear_cache.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>cache option, turn off cache, no cache, page cache, caching</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Automated Jobs" path="/dashboard/system/optimization/jobs" filename="/dashboard/system/optimization/jobs.php" pagetype="" description="" package="">
+		</page>
+		<page name="Automated Jobs" path="/dashboard/system/optimization/jobs" filename="/dashboard/system/optimization/jobs.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>index search, reindex search, build sitemap, sitemap.xml, clear old versions, page versions, remove old</value>
 				</attributekey>
 			</attributes>
-        </page>
+		</page>
 
-        <page name="Permissions &amp; Access" path="/dashboard/system/permissions" filename="/dashboard/system/permissions/view.php" pagetype="" description="Control who sees and edits your site." package=""/>
-        <page name="Site Access" path="/dashboard/system/permissions/site" filename="/dashboard/system/permissions/site.php" pagetype="" description="" package="">
+		<page name="Permissions &amp; Access" path="/dashboard/system/permissions" filename="/dashboard/system/permissions/view.php" pagetype="" description="Control who sees and edits your site." package=""/>
+		<page name="Site Access" path="/dashboard/system/permissions/site" filename="/dashboard/system/permissions/site.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>editors, hide site, offline, private, public, access</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="File Manager Permissions" path="/dashboard/system/permissions/files" filename="/dashboard/system/permissions/file.php" pagetype="" description="" package="">
+		</page>
+		<page name="File Manager Permissions" path="/dashboard/system/permissions/files" filename="/dashboard/system/permissions/file.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>file options, file manager, upload, modify</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Allowed File Types" path="/dashboard/system/permissions/file_types" filename="/dashboard/system/permissions/file_types.php" pagetype="" description="" package="">
+		</page>
+		<page name="Allowed File Types" path="/dashboard/system/permissions/file_types" filename="/dashboard/system/permissions/file_types.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>security, files, media, extension, manager, upload</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Task Permissions" path="/dashboard/system/permissions/tasks" filename="/dashboard/system/permissions/tasks.php" pagetype="" description="" package="">
+		</page>
+		<page name="Task Permissions" path="/dashboard/system/permissions/tasks" filename="/dashboard/system/permissions/tasks.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>security, actions, administrator, admin, package, marketplace, search</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="User Permissions" path="/dashboard/system/permissions/users" filename="/dashboard/system/permissions/users.php" pagetype="" description="" package="">
-        </page>
-        <page name="Advanced Permissions" path="/dashboard/system/permissions/advanced" filename="/dashboard/system/permissions/advanced.php" pagetype="" description="" package="">
-        </page>
-        <page name="IP Blacklist" path="/dashboard/system/permissions/ip_blacklist" filename="/dashboard/system/permissions/ip_blacklist.php" pagetype="" description="" package="">
+		</page>
+		<page name="User Permissions" path="/dashboard/system/permissions/users" filename="/dashboard/system/permissions/users.php" pagetype="" description="" package="">
+		</page>
+		<page name="Advanced Permissions" path="/dashboard/system/permissions/advanced" filename="/dashboard/system/permissions/advanced.php" pagetype="" description="" package="">
+		</page>
+		<page name="IP Blacklist" path="/dashboard/system/permissions/ip_blacklist" filename="/dashboard/system/permissions/ip_blacklist.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>security, lock ip, lock out, block ip, address, restrict, access</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Captcha Setup" path="/dashboard/system/permissions/captcha" filename="/dashboard/system/permissions/captcha.php" pagetype="" description="" package="">
+		</page>
+		<page name="Captcha Setup" path="/dashboard/system/permissions/captcha" filename="/dashboard/system/permissions/captcha.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>security, registration</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Spam Control" path="/dashboard/system/permissions/antispam" filename="/dashboard/system/permissions/antispam.php" pagetype="" description="" package="">
+		</page>
+		<page name="Spam Control" path="/dashboard/system/permissions/antispam" filename="/dashboard/system/permissions/antispam.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>antispam, block spam, security</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Maintenance Mode" path="/dashboard/system/permissions/maintenance_mode" filename="/dashboard/system/permissions/maintenance_mode.php" pagetype="" description="" package="">
+		</page>
+		<page name="Maintenance Mode" path="/dashboard/system/permissions/maintenance_mode" filename="/dashboard/system/permissions/maintenance_mode.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>lock site, under construction, hide, hidden</value>
 				</attributekey>
 			</attributes>
-        </page>
+		</page>
 
-		  <page name="Login &amp; Registration" path="/dashboard/system/registration" filename="/dashboard/system/registration/view.php" pagetype="" description="Change login behaviors and setup public profiles." package=""/>
-        <page name="Login Destination" path="/dashboard/system/registration/postlogin" filename="/dashboard/system/registration/postlogin.php" pagetype="" description="" package="">
+		<page name="Login &amp; Registration" path="/dashboard/system/registration" filename="/dashboard/system/registration/view.php" pagetype="" description="Change login behaviors and setup public profiles." package=""/>
+		<page name="Login Destination" path="/dashboard/system/registration/postlogin" filename="/dashboard/system/registration/postlogin.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>profile, login, redirect, specific, dashboard, administrators</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Public Profiles" path="/dashboard/system/registration/profiles" filename="/dashboard/system/registration/profiles.php" pagetype="" description="" package="">
+		</page>
+		<page name="Public Profiles" path="/dashboard/system/registration/profiles" filename="/dashboard/system/registration/profiles.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>member profile, member page, community, forums, social, avatar</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Public Registration" path="/dashboard/system/registration/public_registration" filename="/dashboard/system/registration/public_registration.php" pagetype="" description="" package="">
+		</page>
+		<page name="Public Registration" path="/dashboard/system/registration/public_registration" filename="/dashboard/system/registration/public_registration.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>signup, new user, community</value>
 				</attributekey>
 			</attributes>
-        </page>
+		</page>
 
-        <page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype="" description="Control how your site send and processes mail." package="">
+		<page name="Authentication Types" path="/dashboard/system/registration/authentication_types" filename="/dashboard/system/registration/authentication_types.php" pagetype="" description="" package="">
+			<attributes>
+				<attributekey handle="meta_keywords">
+					<value>auth, authentication, types, oauth, facebook, login, registration</value>
+				</attributekey>
+			</attributes>
+		</page>
+
+		<page name="Email" path="/dashboard/system/mail" filename="/dashboard/system/mail/view.php" pagetype="" description="Control how your site send and processes mail." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>smtp, mail settings</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="SMTP Method" path="/dashboard/system/mail/method" filename="/dashboard/system/mail/method.php" pagetype="" description="" package="">
+		</page>
+		<page name="SMTP Method" path="/dashboard/system/mail/method" filename="/dashboard/system/mail/method.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>email server, mail settings, mail configuration, external, internal</value>
@@ -656,106 +666,106 @@
 					<value>email server, mail settings, mail configuration, private message, message system, import, email, message</value>
 				</attributekey>
 			</attributes>
-        </page>
+		</page>
 
-        <page name="Attributes" path="/dashboard/system/attributes" filename="/dashboard/system/attributes/view.php" pagetype="" description="Setup attributes for pages, users, files and more." package="">
+		<page name="Attributes" path="/dashboard/system/attributes" filename="/dashboard/system/attributes/view.php" pagetype="" description="Setup attributes for pages, users, files and more." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>attribute configuration</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Sets" path="/dashboard/system/attributes/sets" filename="/dashboard/system/attributes/sets.php" pagetype="" description="Group attributes into sets for easier organization" package="">
-        	<attributes>
+		</page>
+		<page name="Sets" path="/dashboard/system/attributes/sets" filename="/dashboard/system/attributes/sets.php" pagetype="" description="Group attributes into sets for easier organization" package="">
+			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>attributes, sets</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Types" path="/dashboard/system/attributes/types" filename="/dashboard/system/attributes/types.php" pagetype="" description="Choose which attribute types are available for different items." package="">
-        	<attributes>
+		</page>
+		<page name="Types" path="/dashboard/system/attributes/types" filename="/dashboard/system/attributes/types.php" pagetype="" description="Choose which attribute types are available for different items." package="">
+			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>attributes, types</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Environment" path="/dashboard/system/environment" filename="/dashboard/system/environment/view.php" pagetype="" description="Advanced settings for web developers." package="">
+		</page>
+		<page name="Environment" path="/dashboard/system/environment" filename="/dashboard/system/environment/view.php" pagetype="" description="Advanced settings for web developers." package="">
 			<attributes>
 				<attributekey handle="exclude_search_index">
 					<value><![CDATA[1]]></value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Environment Information" path="/dashboard/system/environment/info" filename="/dashboard/system/environment/info.php" pagetype="" description="" package="">
+		</page>
+		<page name="Environment Information" path="/dashboard/system/environment/info" filename="/dashboard/system/environment/info.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>overrides, system info, debug, support, help</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Debug Settings" path="/dashboard/system/environment/debug" filename="/dashboard/system/environment/debug.php" pagetype="" description="" package="">
+		</page>
+		<page name="Debug Settings" path="/dashboard/system/environment/debug" filename="/dashboard/system/environment/debug.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>errors, exceptions, develop, support, help</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Logging Settings" path="/dashboard/system/environment/logging" filename="/dashboard/system/environment/logging.php" pagetype="" description="" package="">
+		</page>
+		<page name="Logging Settings" path="/dashboard/system/environment/logging" filename="/dashboard/system/environment/logging.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>email, logging, logs, smtp, pop, errors, mysql, log</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="File Storage Locations" path="/dashboard/system/environment/file_storage_locations" filename="/dashboard/system/environment/file_storage_locations.php" pagetype="" description="" package="">
+		</page>
+		<page name="File Storage Locations" path="/dashboard/system/environment/file_storage_locations" filename="/dashboard/system/environment/file_storage_locations.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>security, alternate storage, hide files</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Proxy Server" path="/dashboard/system/environment/proxy"
-            filename="/dashboard/system/environment/proxy.php" pagetype=""
-            description="" package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>network, proxy server</value>
-                </attributekey>
-            </attributes>
-        </page>
-        <page name="Backup &amp; Restore" path="/dashboard/system/backup_restore" filename="/dashboard/system/backup_restore/view.php" pagetype="" description="Backup or restore your website." package="">
-        	<attributes>
+		</page>
+		<page name="Proxy Server" path="/dashboard/system/environment/proxy"
+			filename="/dashboard/system/environment/proxy.php" pagetype=""
+			description="" package="">
+			<attributes>
+				<attributekey handle="meta_keywords">
+					<value>network, proxy server</value>
+				</attributekey>
+			</attributes>
+		</page>
+		<page name="Backup &amp; Restore" path="/dashboard/system/backup_restore" filename="/dashboard/system/backup_restore/view.php" pagetype="" description="Backup or restore your website." package="">
+			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>export, backup, database, sql, mysql, encryption, restore</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Backup Database" path="/dashboard/system/backup_restore/backup" filename="/dashboard/system/backup_restore/backup.php" pagetype="" description="" package=""/>
-        <page name="Update concrete5" path="/dashboard/system/backup_restore/update" filename="/dashboard/system/backup_restore/update.php" pagetype="" description="" package="">
+		</page>
+		<page name="Backup Database" path="/dashboard/system/backup_restore/backup" filename="/dashboard/system/backup_restore/backup.php" pagetype="" description="" package=""/>
+		<page name="Update concrete5" path="/dashboard/system/backup_restore/update" filename="/dashboard/system/backup_restore/update.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>upgrade, new version, update</value>
 				</attributekey>
 			</attributes>
-        </page>
-        <page name="Database XML" path="/dashboard/system/backup_restore/database" filename="/dashboard/system/backup_restore/database.php" pagetype="" description="" package="">
+		</page>
+		<page name="Database XML" path="/dashboard/system/backup_restore/database" filename="/dashboard/system/backup_restore/database.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>export, database, xml, starting, points, schema, refresh, custom, tables</value>
 				</attributekey>
 			</attributes>
 		</page>
-	
 
-        <page name="Composer" path="/dashboard/pages/types/composer" filename="/dashboard/pages/types/composer.php" pagetype="" description="" package=""/>
-    </singlepages>
-    <pagetypes>
-        <pagetype handle="core_stack" name="Stack" internal="1" package="" />
-        <pagetype handle="dashboard_primary_five" name="Dashboard Primary + Five" internal="1" package="" />
-        <pagetype handle="dashboard_header_four_col" name="Dashboard Header + Four Column" internal="1" package="" />
-    </pagetypes>
-    <pages>
-    	<page name="Welcome to concrete5" path="/dashboard/welcome" filename="" description="Learn about how to use concrete5, how to develop for concrete5, and get general help." pagetype="dashboard_header_four_col">
+
+		<page name="Composer" path="/dashboard/pages/types/composer" filename="/dashboard/pages/types/composer.php" pagetype="" description="" package=""/>
+	</singlepages>
+	<pagetypes>
+		<pagetype handle="core_stack" name="Stack" internal="1" package="" />
+		<pagetype handle="dashboard_primary_five" name="Dashboard Primary + Five" internal="1" package="" />
+		<pagetype handle="dashboard_header_four_col" name="Dashboard Header + Four Column" internal="1" package="" />
+	</pagetypes>
+	<pages>
+		<page name="Welcome to concrete5" path="/dashboard/welcome" filename="" description="Learn about how to use concrete5, how to develop for concrete5, and get general help." pagetype="dashboard_header_four_col">
 			<attributes>
 				<attributekey handle="exclude_nav">
 					<value><![CDATA[1]]></value>
@@ -765,9 +775,12 @@
 				<block type="content" name="">
 					<data table="btContentLocal">
 						<record>
-						<content><![CDATA[	<div id="newsflow-header-first-run"><h1>Welcome to concrete5.</h1>
-						<h2>It's easy to edit content and add pages using in-context editing.</h2></div>
-						]]></content>
+							<content>
+								<![CDATA[
+								<div id="newsflow-header-first-run"><h1>Welcome to concrete5.</h1>
+								<h2>It's easy to edit content and add pages using in-context editing.</h2></div>
+								]]>
+							</content>
 						</record>
 					</data>
 				</block>
@@ -776,12 +789,15 @@
 				<block type="content" name="">
 					<data table="btContentLocal">
 						<record>
-						<content><![CDATA[<div class="newsflow-column-first-run">
-							<h3>Building Your Own Site</h3>
-							<p>Editing with concrete5 is a breeze. Just point and click to make changes.</p>
-							<br/>
-							<p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/editors')" class="btn primary">Editor's Guide</a></p>
-							</div>]]></content>
+							<content>
+								<![CDATA[
+								<div class="newsflow-column-first-run">
+									<h3>Building Your Own Site</h3>
+									<p>Editing with concrete5 is a breeze. Just point and click to make changes.</p>
+									<br/>
+									<p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/editors')" class="btn primary">Editor's Guide</a></p>
+								</div>]]>
+							</content>
 						</record>
 					</data>
 				</block>
@@ -790,11 +806,14 @@
 				<block type="content" name="">
 					<data table="btContentLocal">
 						<record>
-						<content><![CDATA[<div class="newsflow-column-first-run">
-							<h3>Developing Applications</h3>
-							<p>If you’re comfortable in PHP concrete5 should be a breeze to learn. Take a few moments to understand the architecture.</p>
-							<p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/developers')" class="btn primary">Developer's Guide</a></p>
-							</div>]]></content>
+							<content>
+								<![CDATA[
+								<div class="newsflow-column-first-run">
+									<h3>Developing Applications</h3>
+									<p>If you’re comfortable in PHP concrete5 should be a breeze to learn. Take a few moments to understand the architecture.</p>
+									<p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/developers')" class="btn primary">Developer's Guide</a></p>
+								</div>]]>
+							</content>
 						</record>
 					</data>
 				</block>
@@ -803,12 +822,15 @@
 				<block type="content" name="">
 					<data table="btContentLocal">
 						<record>
-						<content><![CDATA[<div class="newsflow-column-first-run">
-							<h3>Designing Websites</h3>
-							<p>Good with CSS and HTML? You can easily theme anything with concrete5.</p>
-							<br/>
-							<p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/designers')" class="btn primary">Designer's Guide</a></p>
-							</div>]]></content>
+							<content>
+								<![CDATA[
+								<div class="newsflow-column-first-run">
+									<h3>Designing Websites</h3>
+									<p>Good with CSS and HTML? You can easily theme anything with concrete5.</p>
+									<br/>
+									<p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/designers')" class="btn primary">Designer's Guide</a></p>
+								</div>]]>
+							</content>
 						</record>
 					</data>
 				</block>
@@ -817,19 +839,21 @@
 				<block type="content" name="">
 					<data table="btContentLocal">
 						<record>
-						<content><![CDATA[
-						<div class="newsflow-column-first-run">
-						<h3>Business Background</h3>
-						<p>Worried about license structures, white-labeling or why concrete5 is a good choice for your agency?</p>
-						<p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/executives')" class="btn primary">Executive's Guide</a></p>
-						</div>]]></content>
+							<content>
+								<![CDATA[
+								<div class="newsflow-column-first-run">
+									<h3>Business Background</h3>
+									<p>Worried about license structures, white-labeling or why concrete5 is a good choice for your agency?</p>
+									<p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/executives')" class="btn primary">Executive's Guide</a></p>
+								</div>]]>
+							</content>
 						</record>
 					</data>
 				</block>
 			</area>
-    	</page>
-    	
-    	<page name="Customize Dashboard Home" path="/dashboard/home" filename="" pagetype="dashboard_primary_five" description="" package="">
+		</page>
+
+		<page name="Customize Dashboard Home" path="/dashboard/home" filename="" pagetype="dashboard_primary_five" description="" package="">
 			<attributes>
 				<attributekey handle="exclude_nav">
 					<value><![CDATA[1]]></value>
@@ -876,5 +900,5 @@
 				</block>
 			</area>
 		</page>
-      </pages>
+	</pages>
 </concrete5-cif>
