@@ -760,25 +760,6 @@ class Concrete5_Model_BlockTypeDB extends ADOdb_Active_Record {
 		// action properties for the form that presents the drop-down select menu for selecting which type of block to add. We call the other
 		// function when we've already chosen a type to add, and we're interested in actually adding the block - content completed - to the database
 				
-		function getBlockAddAction(&$a, $alternateHandler = null) {
-			// Note: This is fugly, since we're just grabbing query string variables, but oh well. Not _everything_ can be object oriented
-			$btID = $this->btID;
-			$step = ($_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';			
-			$c = $a->getAreaCollectionObject();
-			$cID = $c->getCollectionID();
-			$arHandle = urlencode($a->getAreaHandle());
-			$valt = Loader::helper('validation/token');
-			
-			
-			if ($alternateHandler) {
-				$str = $alternateHandler . "?cID={$cID}&arHandle={$arHandle}&btID={$btID}&mode=edit" . $step . '&' . $valt->getParameter();
-			} else {
-				$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&arHandle={$arHandle}&btID={$btID}&mode=edit" . $step . '&' . $valt->getParameter();
-			}
-			return $str;			
-		}
-		
-		
 		function getBlockTypeName() {
 			return $this->btName;
 		}

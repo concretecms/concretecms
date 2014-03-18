@@ -93,6 +93,7 @@ $rl->register('/system/dialogs/file/bulk/properties/clear_attribute', 'FileBulkP
  * Editing Actions
  */
 $rl->register('/system/page/check_in/{cID}/{token}', 'PageCheckInPanelController::exitEditMode');
+$rl->register('/system/dialogs/page/add_block', 'PageAddBlockDialogController::view');
 
 /** 
  * Search Routes

@@ -129,8 +129,6 @@ class Concrete5_Library_BlockView extends AbstractView {
 				}
 				break;
 			case 'add':
-				$this->setBlockViewHeaderFile(DIR_FILES_ELEMENTS_CORE . '/block_header_add.php');
-				$this->setBlockViewFooterFile(DIR_FILES_ELEMENTS_CORE . '/block_footer_add.php');
 				if ($this->controller->blockViewRenderOverride) {
 					$template = DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . $this->controller->blockViewRenderOverride . '.php';
 				} else {

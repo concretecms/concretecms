@@ -125,7 +125,7 @@
       });
       $.ajax({
         type: 'GET',
-        url: CCM_TOOLS_PATH + '/add_block_popup',
+        url: CCM_DISPATCHER_FILENAME + '/system/dialogs/page/add_block',
         data: postData,
         success: function(r) {
           var $container = $('<div id="a' + area.getId() + '-bt' + btID + '" class="ccm-block-edit-inline-active">' + r + '</div>');
@@ -1124,7 +1124,7 @@
             width: parseInt(elem.data('dialog-width'), 10),
             height: parseInt(elem.data('dialog-height'), 10) + 20,
             title: elem.data('dialog-title'),
-            href: CCM_TOOLS_PATH + '/add_block_popup?cID=' + CCM_CID + '&btID=' + block_type_id + '&arHandle=' + encodeURIComponent(area_handle)
+            href: CCM_DISPATCHER_FILENAME + '/system/dialogs/page/add_block?cID=' + CCM_CID + '&btID=' + block_type_id + '&arHandle=' + encodeURIComponent(area_handle)
           });
         }
       }

@@ -193,35 +193,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			return $btArray;
 		}
 		
-		/**
-		 * gets the form post action for the current block type given the area
-		 * @param Area $a
-		 * @return string
-		 */
-		public function getBlockTypeAddAction(&$a) {
-			$step = ($_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';
-			$arHandle = urlencode($a->getAreaHandle());
-			$c = $a->getAreaCollectionObject();
-			$cID = $c->getCollectionID();
-			$valt = Loader::helper('validation/token');
-			$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&amp;areaName={$arHandle}&amp;mode=edit&amp;btask=add" . $step . '&' . $valt->getParameter();
-			return $str;			
-		}
-		
-		/**
-		 * gets the form post action for the current block type given the area
-		 * @param Area $a
-		 * @return string
-		 */
-		public function getBlockTypeAliasAction(&$a) {
-			$step = ($_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';
-			$arHandle = urlencode($a->getAreaHandle());
-			$c = $a->getAreaCollectionObject();
-			$cID = $c->getCollectionID();
-			$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&amp;areaName={$arHandle}&amp;mode=edit&amp;btask=alias" . $step . '&' . $valt->getParameter();
-			return $str;			
-		}
-		
 		public static function resetBlockTypeDisplayOrder($column = 'btID') {
 			$db = Loader::db();
 			$ca = new Cache();
