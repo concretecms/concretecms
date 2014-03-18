@@ -608,7 +608,15 @@
      * @return {Boolean}       Success, always true
      */
     addBlockToIndex: function areaAddBlockToIndex(block, index) {
-      var totalBlocks = this.getTotalBlocks();
+      var totalBlocks = this.getTotalBlocks(),
+          blocks = this.getBlocks();
+
+
+      // any blocks with indexes higher than this one need to have them incremented
+      for (var i = index; i < totalBlocks; i++) {
+        this.getBlocks()[i+1] = blocks[i];
+      }
+
       this.setTotalBlocks(totalBlocks+1);
       block.setArea(this);
       this.getBlocks()[index] = block;
@@ -616,6 +624,7 @@
 
       // ensure that the DOM attributes are correct
       block.getElem().attr("data-area-id", this.getId());
+
       return true;
     },
 
@@ -983,8 +992,8 @@
       my.getDragger().css({top:0, left:0});
       my.dragPosition(pep);
       if (my.getSelected()) {
-        var targetArea = my.getSelected().getArea();
         sourceArea.removeBlock(my);
+        var targetArea = my.getSelected().getArea();
         my.getSelected().getElem().after(my.getElem());
         if (selected_block = my.getSelected().getBlock()) {
           my.getSelected().getArea().addBlock(my, selected_block);
