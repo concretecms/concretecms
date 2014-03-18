@@ -16,13 +16,15 @@
 		}, options);
 		my.options = options;
 
+		if (options.dragAreaBlockID) {
+			$form.find('input[name=dragAreaBlockID]').val(options.dragAreaBlockID);
+		}
 		return ConcreteAjaxForm.call(my, $form, options);
 	}
 
 	ConcreteAjaxBlockForm.prototype = Object.create(ConcreteAjaxForm.prototype);
 
 	ConcreteAjaxBlockForm.prototype.beforeSubmit = function(my) {
-		$('input[name=ccm-block-form-method]').val('AJAX');
 		ConcreteAjaxForm.prototype.beforeSubmit.call(this, my);
 	};
 

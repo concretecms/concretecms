@@ -3,8 +3,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 if ($action == null) { 
 	// we can pass an action from the block, but in most instances we won't, we'll use the default
 	$action = $bt->getBlockAddAction($a);
-	global $c;
-} ?>
+}
+
+$c = $a->getAreaCollectionObject();
+
+ ?>
 
 <a name="_add<?=$bt->getBlockTypeID()?>"></a>
 
@@ -32,9 +35,6 @@ if (is_array($headerItems[$identifier])) {
 ?>
 
 </script>
-
-<input type="hidden" name="ccm-block-pane-action" value="<?= Loader::helper('security')->sanitizeURL($_SERVER['REQUEST_URI']); ?>" />
-
 <?
 $hih = Loader::helper("concrete/interface/help");
 $blockTypes = $hih->getBlockTypes();
@@ -59,9 +59,31 @@ if (isset($help) && !$bt->supportsInlineAdd()) { ?>
 
 <div <? if (!$bt->supportsInlineAdd()) { ?>class="ccm-ui"<? } ?>>
 
+		function getBlockAddAction(&$a, $alternateHandler = null) {
+			// Note: This is fugly, since we're just grabbing query string variables, but oh well. Not _everything_ can be object oriented
+			$arHandle = urlencode($a->getAreaHandle());
+			$valt = Loader::helper('validation/token');
+			
+			
+			if ($alternateHandler) {
+				$str = $alternateHandler . "?cID={$cID}&arHandle={$arHandle}&btID={$btID}&mode=edit" . $step . '&' . $valt->getParameter();
+			} else {
+				$str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&arHandle={$arHandle}&btID={$btID}&mode=edit" . $step . '&' . $valt->getParameter();
+			}
+			return $str;			
+		}
+		
+		
+
 <form method="post" action="<?=$action?>" id="ccm-block-form" enctype="multipart/form-data" class="validate">
 
-<input type="hidden" name="ccm-block-form-method" value="REGULAR" />
+<input type="hidden" name="arHandle" value="<?=$a->getAreaHandle()?>">
+<input type="hidden" name="btID" value="<?=$bt->getBlockTypeID()?>">
+<input type="hidden" name="arHandle" value="<?=$a->getAreaHandle()?>">
+<input type="hidden" name="cID" value="<?=$c->getCollectionID()?>">
+<?=Loader::helper('validation/token')->output('add_block')?>
+
+<input type="hidden" name="dragAreaBlockID" value="0" />
 
 <? foreach($this->controller->getJavaScriptStrings() as $key => $val) { ?>
 	<input type="hidden" name="ccm-string-<?=$key?>" value="<?=h($val)?>" />

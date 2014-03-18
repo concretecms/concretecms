@@ -71,8 +71,6 @@ if (isset($help) && !$bt->supportsInlineEdit()) { ?>
 
 <form method="post" id="ccm-block-form" class="validate" action="<?=$b->getBlockEditAction()?>&rcID=<?=intval($rcID)?>" enctype="multipart/form-data">
 
-<input type="hidden" name="ccm-block-form-method" value="REGULAR" />
-
 <? foreach($this->controller->getJavaScriptStrings() as $key => $val) { ?>
 	<input type="hidden" name="ccm-string-<?=$key?>" value="<?=h($val)?>" />
 <? } ?>

@@ -10,8 +10,13 @@ abstract class Concrete5_Controller_Backend_Interface_Page extends BackendInterf
 		$request = $this->request;
 		$cID = $request->query->get('cID');
 		if ($cID) {
-			$this->setPageObject(Page::getByID($cID));
+			$page = Page::getByID($cID);
+			$this->setPageObject($page);
 			$request->setCurrentPage($this->page);
+		}
+
+		if (!is_object($page) || $page->isError()) {
+			throw new Exception(t('Access Denied'));
 		}
 	}
 
