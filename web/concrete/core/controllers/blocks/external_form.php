@@ -60,7 +60,7 @@
 			}
 			
 			
-			if (isset($filename)) {
+			if (isset($filename) && is_file($filename)) {
 				require_once($filename);
 				$class .= 'ExternalFormBlockController';
 				$fp = new $class($this->getBlockObject());
@@ -70,7 +70,7 @@
 				$fp->on_start();
 				return $fp;
 			} else {
-				throw new Exception(t('Unable load external form block controller file: %s',$this->filename)); 
+				print(t('Unable load external form block controller file: %s',$this->filename)); 
 			}
 		}
 		
@@ -80,10 +80,12 @@
 		
 		public function __call($nm, $a) {
 			$cnt = $this->getControllerFile();
-			$cnt->runTask($nm, $a);
-			// set scope items in this controller
-			foreach($cnt->getSets() as $key => $value) {
-				$this->set($key, $value);
+			if (is_object($cnt)) {
+				$cnt->runTask($nm, $a);
+				// set scope items in this controller
+				foreach($cnt->getSets() as $key => $value) {
+					$this->set($key, $value);
+				}
 			}
 		}
 
