@@ -28,9 +28,11 @@
 		// these are tasks dealing with blocks (moving up, down, removing)
 
 		switch ($_REQUEST['btask']) {
-			case 'ajax_do_arrange': /* called via ajax */
+			/*
+			case 'ajax_do_arrange':
 				if ($cp->canEditPageContents()) {
 					$nvc = $c->getVersionToModify();
+					return false;
 					// handle dragging gathering items
 					$nvc->processArrangement($_POST['area'], $_POST['block'], $_POST['blocks']);
 
@@ -48,6 +50,7 @@
 				print Loader::helper('json')->encode($r);
 				exit;
 				break;
+				*/
 			case 'remove':
 				$a = Area::get($c, $_REQUEST['arHandle']);
 				if (is_object($a)) {

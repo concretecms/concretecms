@@ -15,9 +15,6 @@ abstract class Concrete5_Controller_Backend_Interface_Page extends BackendInterf
 			$request->setCurrentPage($this->page);
 		}
 
-		if (!is_object($page) || $page->isError()) {
-			throw new Exception(t('Access Denied'));
-		}
 	}
 
 	public function setPageObject(Page $c) {

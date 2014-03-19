@@ -437,6 +437,8 @@ $classes = array(
 	'FileSearchCustomizeDialogController' => array('controller', '/dialogs/file/search/customize'),
 	'FilePropertiesDialogController' => array('controller', '/dialogs/file/properties'),
 
+	'BackendPageArrangeBlocksController' => array('controller', '/backend/page/arrange_blocks'),
+
 	'AreaLayoutPresetsDialogController' => array('controller', '/dialogs/area/layout/presets'),
 	'PageAddBlockDialogController' => array('controller', '/dialogs/page/add_block'),
 	'PageDeleteDialogController' => array('controller', '/dialogs/page/delete'),

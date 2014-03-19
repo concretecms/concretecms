@@ -194,10 +194,10 @@
           targetArea = data.targetArea,
           sourceArea = data.sourceArea,
           data = {
-            cID: CCM_CID,
             ccm_token: window.CCM_SECURITY_TOKEN,
             btask: 'ajax_do_arrange',
             area: targetArea.getId(),
+            sourceArea: sourceArea.getId(),
             block: block.getId(),
             blocks: {}
           };
@@ -211,12 +211,15 @@
         $.fn.dialog.showLoader();
       }, 150);
 
-      $.post(window.CCM_DISPATCHER_FILENAME, data, function() {
-        if (loading) {
+      $.concreteAjax({
+        url: CCM_DISPATCHER_FILENAME + '/system/page/arrange_blocks?cID=' + CCM_CID,
+        data: data,
+        success: function(r) {
           $.fn.dialog.hideLoader();
+          clearTimeout(timeout);
         }
-        clearTimeout(timeout);
       });
+
     });
 
     Concrete.event.bind('EditModeBlockDragStart', function editModeEditModeBlockDragStartEventHandler() {
@@ -609,17 +612,29 @@
      */
     addBlockToIndex: function areaAddBlockToIndex(block, index) {
       var totalBlocks = this.getTotalBlocks(),
-          blocks = this.getBlocks();
+          blocks = this.getBlocks(),
+          totalHigherBlocks = totalBlocks - index;
 
+
+      block.setArea(this);
+      this.setTotalBlocks(totalBlocks+1);
 
       // any blocks with indexes higher than this one need to have them incremented
-      for (var i = index; i < totalBlocks; i++) {
-        this.getBlocks()[i+1] = blocks[i];
+      if (totalHigherBlocks > 0) {
+        var updateBlocksArray = []
+        for (var i = 0; i < blocks.length; i++) {
+          if (i >= index) {
+            updateBlocksArray[i+1] = blocks[i]; 
+          } else {
+            updateBlocksArray[i] = blocks[i];
+          }
+        }
+        updateBlocksArray[index] = block;
+        this.setBlocks(updateBlocksArray);
+      } else {
+        this.getBlocks()[index] = block;
       }
 
-      this.setTotalBlocks(totalBlocks+1);
-      block.setArea(this);
-      this.getBlocks()[index] = block;
       this.addDragArea(block);
 
       // ensure that the DOM attributes are correct
