@@ -95,6 +95,8 @@ $rl->register('/system/dialogs/file/bulk/properties/clear_attribute', 'FileBulkP
 $rl->register('/system/page/check_in/{cID}/{token}', 'PageCheckInPanelController::exitEditMode');
 $rl->register('/system/dialogs/page/add_block', 'PageAddBlockDialogController::view');
 $rl->register('/system/dialogs/page/add_block/submit', 'PageAddBlockDialogController::submit');
+$rl->register('/system/page/create/{ptID}', 'BackendPageController::create');
+$rl->register('/system/page/arrange_blocks/', 'BackendPageArrangeBlocksController::arrange');
 
 /** 
  * Search Routes
@@ -122,7 +124,6 @@ $rl->register('/system/file/approve_version', 'FileController::approveVersion');
 $rl->register('/system/file/delete_version', 'FileController::deleteVersion');
 $rl->register('/system/file/get_json', 'FileController::getJSON');
 $rl->register('/system/file/duplicate', 'FileController::duplicate');
-$rl->register('/system/page/create/{ptID}', 'BackendPageController::create');
 $rl->register('/system/file/upload', 'FileController::upload');
 
 /* Users */
