@@ -72,6 +72,18 @@ class Concrete5_Controller_Dialogs_Page_AddBlock extends BackendInterfacePageCon
 					$xvc = $this->page->getVersionToModify(); // we need to create a new version of THIS page as well.
 					$xvc->relateVersionEdits($nvc);
 				}
+
+				// now we check to see if there's a block in this area that we are adding it after.
+				if ($_REQUEST['dragAreaBlockID'] > 0 && Loader::helper('validation/numbers')->integer($_REQUEST['dragAreaBlockID'])) {
+					$db = Block::getByID($_REQUEST['dragAreaBlockID'], $this->pageToModify, $this->areaToModify);
+					if (is_object($db) && !$db->isError()) {
+						$nb->moveBlockToDisplayOrderPosition($db);
+					}
+				}
+				if (!is_object($db)) {
+					$nb->moveBlockToDisplayOrderPosition(false);
+				}
+
 				$pc->setAdditionalDataAttribute('btID', $nb->getBlockTypeID());
 				$pc->setAdditionalDataAttribute('bID', $nb->getBlockID());
 				$pc->setAdditionalDataAttribute('arHandle', $this->areaToModify->getAreaHandle());

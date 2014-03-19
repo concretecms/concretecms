@@ -949,6 +949,33 @@ class Concrete5_Model_Block extends Object {
 		$this->originalBID = $originalBID;
 	}
 	
+	public function moveBlockToDisplayOrderPosition($afterBlock) {
+		// first, we increase the display order of all blocks found after this one.
+
+		$db = Loader::db();
+		$c = $this->getBlockCollectionObject();
+		if ($afterBlock instanceof Block) {
+			$q = "update CollectionVersionBlocks set cbDisplayOrder = cbDisplayOrder + 1 where cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ? and cbDisplayOrder > ?";
+			$v = array($c->getCollectionID(), $c->getVersionID(), $this->arHandle, $afterBlock->getBlockDisplayOrder());
+			$db->Execute($q, $v);
+
+			// now we set this block's display order to 1 + the current block
+			$q = "update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
+			$v = array($afterBlock->getBlockDisplayOrder() + 1, $this->getBlockID(), $c->getCollectionID(), $c->getVersionID(), $this->arHandle);
+			$db->Execute($q, $v);
+		} else {
+			$q = "update CollectionVersionBlocks set cbDisplayOrder = cbDisplayOrder + 1 where cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
+			$v = array($c->getCollectionID(), $c->getVersionID(), $this->arHandle);
+			$db->Execute($q, $v);
+
+			$q = "update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
+			$v = array(0, $this->getBlockID(), $c->getCollectionID(), $c->getVersionID(), $this->arHandle, $this->getBlockDisplayOrder());
+			$db->Execute($q, $v);
+
+
+		}
+	}
+
 	public function setAbsoluteBlockDisplayOrder($do) {
 		$db = Loader::db();
 
@@ -964,67 +991,6 @@ class Concrete5_Model_Block extends Object {
 		
 	}
 	
-	function setBlockDisplayOrder($i) {
-		// This function moves a block up or down
-		// Since this is a function that has to be called from an instantiated block, then we already know the cID and areaName
-
-		if (BLOCK_DISPLAY_ORDER == 'desc') {
-			$i = ($i == 1) ? '-1' : '1';
-		}
-
-		$db = Loader::db();
-
-		$cID = $this->cID;
-		$bID = $this->bID;
-		$arHandle = $this->arHandle;
-
-		$c = $this->getBlockCollectionObject();
-		$cvID = $c->getVersionID();
-
-		switch($i) {
-			case '1':
-				// we're moving the block up
-				$q = "select cbDisplayOrder from CollectionVersionBlocks where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?";
-				$origDisplayOrder = $db->getOne($q, array($cID, $cvID, $bID, $arHandle));
-
-				// So now we have the display order for the original element. If it's 0, we do nothing.
-
-				if ($origDisplayOrder != '0') {
-					$newDisplayOrder = $origDisplayOrder - 1;
-					$q = "update CollectionVersionBlocks set cbDisplayOrder = ? where cbDisplayOrder = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
-					$r = $db->query($q, array($origDisplayOrder, $newDisplayOrder, $cID, $cvID, $arHandle));
-
-					// now that we've set the other block to our original display order, we set our block to the new display order
-
-					$q = "update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
-					$r = $db->query($q, array($newDisplayOrder, $bID, $cID, $cvID, $arHandle));
-				}
-				break;
-			case '-1':
-				// we're moving the block down
-				$q = "select cbDisplayOrder from CollectionVersionBlocks where cID = ? and (cvID = ? or cbIncludeAll=1) and bID = ? and arHandle = ?";
-				$origDisplayOrder = $db->getOne($q, array($cID, $cvID, $bID, $arHandle));
-
-				// Now, to ensure that we don't screw up the display order stuff in the database, we can't set a display order greater than
-				// n - 1 blocks (meaning if there are 5 blocks in this particular area+collection, we can't have a display order greater than 4
-
-				$q = "select count(*) as total from CollectionVersionBlocks where cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
-				$maxDisplayOrder = ($db->getOne($q, array($cID, $cvID, $arHandle)) - 1);
-
-				if ($origDisplayOrder <= $maxDisplayOrder) {
-					$newDisplayOrder = $origDisplayOrder + 1;
-					$q = "update CollectionVersionBlocks set cbDisplayOrder = ? where cbDisplayOrder = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
-					$r = $db->query($q, array($origDisplayOrder, $newDisplayOrder, $cID, $cvID, $arHandle));
-
-					// now that we've set the other block to our original display order, we set our block to the new display order
-
-					$q = "update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and arHandle = ?";
-					$r = $db->query($q, array($newDisplayOrder, $bID, $cID, $arHandle));
-				}
-				break;
-		}
-	}
-
 	public function doOverrideAreaPermissions() {
 		$db = Loader::db();
 		$c = $this->getBlockCollectionObject();
