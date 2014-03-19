@@ -52,7 +52,6 @@ if (isset($help) && !$blockType->supportsInlineAdd()) { ?>
 <input type="hidden" name="btID" value="<?=$blockType->getBlockTypeID()?>">
 <input type="hidden" name="arHandle" value="<?=$area->getAreaHandle()?>">
 <input type="hidden" name="cID" value="<?=$c->getCollectionID()?>">
-<?=Loader::helper('validation/token')->output('add_block');?>
 
 <input type="hidden" name="dragAreaBlockID" value="0" />
 

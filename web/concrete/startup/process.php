@@ -627,7 +627,7 @@
 					print Loader::helper('json')->encode($obj);
 					exit;
 				} else {
-
+					/*
 					$bt = BlockType::getByID($_REQUEST['btID']);
 					if ($ap->canAddBlock($bt)) {
 						$data = $_POST;
@@ -670,6 +670,7 @@
 						print Loader::helper('json')->encode($obj);
 						exit;
 					}
+					*/
 				}
 			}
 
