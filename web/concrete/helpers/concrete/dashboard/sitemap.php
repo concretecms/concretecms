@@ -139,7 +139,7 @@ class ConcreteDashboardSitemapHelper {
 			if ($cID == 1) {
 				$cIconClass = 'glyphicon glyphicon-home';
 			} else if ($numSubpages > 0) {
-				$cIcon = ASSETS_URL_IMAGES . '/dashboard/sitemap/folder.png';
+				$cIcon = false;
 			} else {
 				$cIcon = ASSETS_URL_IMAGES . '/dashboard/sitemap/document.png';
 			}
@@ -174,10 +174,10 @@ class ConcreteDashboardSitemapHelper {
 		if ($numSubpages > 0) {
 			$node->isLazy = true;
 		}
-		if ($cIcon) {
-			$node->icon = $cIcon;
-		} else if ($cIconClass) {
+		if ($cIconClass) {
 			$node->iconClass = $cIconClass;
+		} else {
+			$node->icon = $cIcon;
 		}
 		$node->cAlias = $cAlias;
 		$node->isInTrash = $isInTrash;

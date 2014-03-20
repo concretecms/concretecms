@@ -8,7 +8,16 @@
 		padding-top: 10px;
 		padding-bottom: 0px; /* the ccm-search-fields-row has a margin on the bottom */
 		margin-left: 95px;
-		margin-right: 10px;
+
+		&.ccm-search-fields-none {
+			margin-left: 0px;
+			border-bottom: 1px solid #efefef;
+			margin-bottom: 20px;
+			div.ccm-search-main-lookup-field {
+				border-left: 0px;
+				margin-left: 95px;
+			}
+		}
 
 		select.ccm-search-bulk-action, select.ccm-search-choose-field {
 			border: 0px;
@@ -70,7 +79,7 @@
 		 	}
 
 			position: absolute;
-			right: 0px;
+			right: 10px;
 			top: 10px;
 			font-size: @font-size-small;
 		}
