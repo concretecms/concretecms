@@ -38,7 +38,7 @@
 			} else {
 				minExpandLevel = 1;
 			}
-    
+    		$(my.$element).addClass('ccm-tree-sitemap');
     		$(my.$element).dynatree({
 				autoFocus: false,
 				cookieId: 'ConcreteSitemap',
