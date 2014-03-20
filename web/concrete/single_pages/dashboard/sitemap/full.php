@@ -7,7 +7,15 @@ $sh = Loader::helper('concrete/dashboard/sitemap');
 <script type="text/javascript">
 	$(function() {
 		$('div#ccm-full-sitemap-container').concreteSitemap({
+			includeSystemPages: $('input[name=includeSystemPages]').is(':checked')
+		});
 
+		$('input[name=includeSystemPages]').on('click', function() {
+			var $tree = $('div#ccm-full-sitemap-container');
+			$tree.dynatree('destroy');
+			$tree.concreteSitemap({
+				includeSystemPages: $('input[name=includeSystemPages]').is(':checked')
+			})
 		});
 	});
 </script>
@@ -56,6 +64,17 @@ if ($u->isSuperUser()) {
 	
 
 	<hr/>
+
+	<section>
+		<div class="checkbox">
+		<label>
+			<input type="checkbox" name="includeSystemPages" <? if ($includeSystemPages) { ?>checked<? } ?> value="1" />
+			<?=t('Include System Pages in Sitemap')?>
+		</label>
+		</div>
+	</section>
+
+
 <? } else { ?>
 
 	<p><?=t("You do not have access to the sitemap.");?></p>

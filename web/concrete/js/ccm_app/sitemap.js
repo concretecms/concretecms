@@ -11,6 +11,7 @@
 		options = $.extend({
 			displayNodePagination: false,
 			cParentID: 0,
+			includeSystemPages: false,
 			displaySingleLevel: false,
 		}, options);
 		my.options = options;
@@ -51,7 +52,8 @@
 					data: {
 						'displayNodePagination': my.options.displayNodePagination ? 1 : 0,
 						'cParentID': my.options.cParentID,
-						'displaySingleLevel': my.options.displaySingleLevel ? 1 : 0
+						'displaySingleLevel': my.options.displaySingleLevel ? 1 : 0,
+						'includeSystemPages': my.options.includeSystemPages ? 1 : 0
 					}, 
 
 				},
