@@ -53,6 +53,10 @@ div#ccm-dashboard-content {
 	div.ccm-dashboard-content-full {
 		margin-left: -95px;		
 		margin-right: -20px;
+
+		section {
+			margin-left: 95px;
+		}
 	}
 
 	header + div.ccm-dashboard-content-full {
@@ -65,30 +69,7 @@ div#ccm-dashboard-content {
 		right: 30px;
 	}
 
-	/** 
-	 * Radio and Checkbox
-	 */
-	input[type=checkbox], input[type=radio] {
-		appearance: none;
-		-webkit-appearance: none;
-		padding: 9px;
-		margin-top: -1px;
-		display: inline-block;
-		position: relative;
-		.border-radius(3px);
 
-		&:focus {
-			outline: 0px;
-		}
-
-		&:checked:after {
-			content: '\2714';
-			font-size: 14px;
-			position: absolute;
-			top: 0px;
-			left: 3px;
-		}
-	}
 
 
 }
