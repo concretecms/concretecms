@@ -31,11 +31,10 @@ if ($_REQUEST['displayNodePagination']) {
 	$dh->setDisplayNodePagination(false);
 }
 
-if (isset($_REQUEST['show_system'])) {
-	$_SESSION['dsbSitemapShowSystem'] = $_REQUEST['show_system'];
-	$js = Loader::helper('json');
-	print $js->encode(array());
-	exit;
+if ($_REQUEST['includeSystemPages']) {
+	$dh->setIncludeSystemPages(true);
+} else {
+	$dh->setIncludeSystemPages(false);
 }
 
 $cParentID = (isset($_REQUEST['cParentID'])) ? $_REQUEST['cParentID'] : 0;
