@@ -190,6 +190,7 @@ $al->registerGroup('core/sitemap', array(
 	array('javascript', 'underscore'),
 	array('javascript', 'jqueryui'),
 	array('javascript', 'dynatree'),
+	array('javascript', 'core/app'),
 	array('javascript', 'core/sitemap'),
 	array('css', 'dynatree'),
 	array('css', 'core/sitemap')

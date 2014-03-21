@@ -22,13 +22,22 @@ class ConcreteDashboardSitemapHelper {
 
 	protected $autoOpenNodes = true;
 	protected $displayNodePagination = false;
-
-	function showSystemPages() {
-		return $_SESSION['dsbSitemapShowSystem'] == 1;
-	}
+	protected $includeSystemPages;
 
 	public function setAutoOpenNodes($autoOpen) {
 		$this->autoOpenNodes = $autoOpen;
+	}
+
+	public function includeSystemPages() {
+		if (!isset($this->includeSystemPages)) {
+			$this->includeSystemPages = Cookie::get('includeSystemPages');
+		}
+		return $this->includeSystemPages;
+	}
+
+	public function setIncludeSystemPages($systemPages) {
+		$this->includeSystemPages = $systemPages;
+		Cookie::set('includeSystemPages', $systemPages);
 	}
 
 	public function setDisplayNodePagination($paginate) {
@@ -41,7 +50,7 @@ class ConcreteDashboardSitemapHelper {
 		$obj = new stdClass;
 		$pl = new PageList();
 		$pl->sortByDisplayOrder();
-		if (ConcreteDashboardSitemapHelper::showSystemPages()) {
+		if ($this->includeSystemPages()) {
 			$pl->includeSystemPages();
 			$pl->includeInactivePages();
 		}
@@ -139,7 +148,7 @@ class ConcreteDashboardSitemapHelper {
 			if ($cID == 1) {
 				$cIconClass = 'glyphicon glyphicon-home';
 			} else if ($numSubpages > 0) {
-				$cIcon = false;
+				$cIcon = ASSETS_URL_IMAGES . '/dashboard/sitemap/folder.png';
 			} else {
 				$cIcon = ASSETS_URL_IMAGES . '/dashboard/sitemap/document.png';
 			}
@@ -178,6 +187,9 @@ class ConcreteDashboardSitemapHelper {
 			$node->iconClass = $cIconClass;
 		} else {
 			$node->icon = $cIcon;
+		}
+		if ($cID == HOME_CID) {
+			$node->addClass = 'ccm-page-home';
 		}
 		$node->cAlias = $cAlias;
 		$node->isInTrash = $isInTrash;

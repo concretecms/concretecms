@@ -4,5 +4,8 @@ class Concrete5_Controller_Page_Dashboard_Sitemap_Full extends DashboardControll
 
 	public function view() {
 		$this->requireAsset('core/sitemap');
+		$dh = Loader::helper('concrete/dashboard/sitemap');
+		$this->set('includeSystemPages', $dh->includeSystemPages());
+
 	}
 }

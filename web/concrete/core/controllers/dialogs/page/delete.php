@@ -34,7 +34,6 @@ class Concrete5_Controller_Dialogs_Page_Delete extends BackendInterfacePageContr
 						if ($response instanceof WorkflowProgressResponse) {
 							// we only get this response if we have skipped workflows and jumped straight in to an approve() step.
 							$pr->setMessage(t('Page deleted successfully.'));
-							$pr->setRedirectURL(BASE_URL . '/' . DISPATCHER_FILENAME . '?cID=' . $parent->getCollectionID());
 						} else {
 							$pr->setMessage(t('Page request saved. This action will have to be approved before the page is deleted.'));
 						}

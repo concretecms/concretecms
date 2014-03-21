@@ -162,7 +162,10 @@ module.exports = function(grunt) {
 
 		ccm_sitemap: {
 			dest: '<%= DIR_BASE %>/concrete/js/ccm.sitemap.js',
-			src: '<%= DIR_BASE %>/concrete/js/ccm_app/sitemap.js'
+			src: [
+				'<%= DIR_BASE %>/concrete/js/ccm_app/pages/sitemap.js',
+				'<%= DIR_BASE %>/concrete/js/ccm_app/pages/menu.js'
+			]
 		},
 
 		ccm_topics: {
