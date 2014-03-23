@@ -16,6 +16,13 @@ class Concrete5_Library_PageSearchResultItem extends SearchResultItem {
 
 	protected function populateDetails($item) {
 		$this->cID = $item->getCollectionID();
+		$cp = new Permissions($item);        
+		$this->canEditPageProperties = $cp->canEditPageProperties();
+		$this->canEditPageSpeedSettings = $cp->anEditPageSpeedSettings();
+		$this->canEditPagePermissions = $cp->canEditPagePermissions();
+		$this->canEditPageDesign = $cp->canEditPageDesign();
+		$this->canViewPageVersions = $cp->canViewPageVersions();
+		$this->canDeletePage = $cp->canDeletePage();
 		$this->cvName = $item->getCollectionName();
 	}
 
