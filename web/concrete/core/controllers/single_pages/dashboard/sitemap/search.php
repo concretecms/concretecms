@@ -5,6 +5,8 @@ class Concrete5_Controller_Page_Dashboard_Sitemap_Search extends DashboardContro
 	public $helpers = array('form');
 	
 	public function view() {
+		$r = ResponseAssetGroup::get();
+		$r->requireAsset('core/sitemap');
 		$cnt = new SearchPagesController();
 		$cnt->search();
 		$this->set('searchController', $cnt);

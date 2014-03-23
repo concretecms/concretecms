@@ -89,14 +89,4 @@ $searchRequest = $controller->getSearchRequest();
 <% }); %>
 </script>
 
-<script type="text/template" data-template="search-results-menu">
-<div class="popover fade ccm-popover-page-menu" data-search-menu="<%=item.cID%>">
-	<div class="arrow"></div>
-	<div class="popover-inner">
-	<ul class="dropdown-menu">
-		<li><a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<%=item.cID%>"><?=t('Visit Page')?></a></li>
-	</ul>
-</div>
-</script>
-
 <? Loader::element('search/template')?>
