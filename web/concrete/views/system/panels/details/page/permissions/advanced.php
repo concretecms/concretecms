@@ -11,8 +11,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<? } ?>		
 
 
-	<div class="form-inline">
-		<div class="form-group" style="margin-right: 40px">
+	<div>
+		<div class="form-group">
 			<label for="ccm-page-permissions-inherit"><?=t('Assign Permissions')?></label>
 			<select id="ccm-page-permissions-inherit" class="form-control">
 			<? if ($c->getCollectionID() > 1) { ?><option value="PARENT" <? if ($c->getCollectionInheritance() == "PARENT") { ?> selected<? } ?>><?=t('By Area of Site (Hierarchy)')?></option><? } ?>
@@ -36,7 +36,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<p class="lead"><?=t('Current Permission Set')?></p>
 
 	<? $cat = PermissionKeyCategory::getByHandle('page'); ?>
-	<form method="post" id="ccm-permission-list-form" data-panel-detail-form="permissions" action="<?=$cat->getToolsURL("save_permission_assignments")?>&cID=<?=$c->getCollectionID()?>">
+	<form method="post" id="ccm-permission-list-form" data-dialog-form="permissions" data-panel-detail-form="permissions" action="<?=$cat->getToolsURL("save_permission_assignments")?>&cID=<?=$c->getCollectionID()?>">
 
 	<table class="ccm-permission-grid table table-striped">
 	<?
@@ -58,9 +58,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	</tr>
 	<? } ?>
 	</table>
-	<div class="ccm-panel-detail-form-actions">
-		<button class="pull-left btn btn-default" type="button" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
-		<button class="pull-right btn btn-success" type="button" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
+	<div class="ccm-panel-detail-form-actions dialog-buttons">
+		<button class="pull-left btn btn-default" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
+		<button class="pull-right btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
 	</div>
 	</form>
 </section>
