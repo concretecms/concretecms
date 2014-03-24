@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 <script type="text/template" class="attribute">
-	<div class="form-group <% if (pending) { %>ccm-panel-page-attribute-adding<% } %>" data-attribute-key-id="<%=akID%>">
+	<div class="form-group <% if (pending) { %>ccm-page-attribute-adding<% } %>" data-attribute-key-id="<%=akID%>">
 		<a href="#" data-remove-attribute-key="<%=akID%>"><i class="glyphicon glyphicon-minus-sign"></i></a>
 		<label class="control-label"><%=label%></label>
 		<div>
@@ -13,8 +13,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	</div>
 </script>
 
+<div id="ccm-detail-page-attributes">
+
 <section class="ccm-ui">
-	<form method="post" action="<?=$controller->action('submit')?>" data-panel-detail-form="attributes">
+	<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="attributes" data-panel-detail-form="attributes">
 
 		<?=Loader::helper('concrete/interface/help')->notify('panel', '/page/attributes')?>
 		<? if ($assignment->allowEditName()) { ?>
@@ -57,11 +59,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<? } ?>
 
 	</form>
-	<div class="ccm-panel-detail-form-actions">
-		<button class="pull-right btn btn-success" type="button" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
+	<div class="ccm-panel-detail-form-actions dialog-buttons">
+		<button class="pull-right btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
 	</div>
 
 </section>
+</div>
 
 <script type="text/javascript">
 
@@ -70,13 +73,13 @@ var renderAttribute = _.template(
 );
 
 
-ConcretePanelPageAttributesDetail = {
+ConcretePageAttributesDetail = {
 
 	removeAttributeKey: function(akID) {
 		var $attribute = $('div[data-attribute-key-id=' + akID + ']');
 		$attribute.queue(function() {
-			$(this).addClass('ccm-panel-page-attribute-removing');
-			ConcretePanelPageAttributes.deselectAttributeKey(akID);
+			$(this).addClass('ccm-page-attribute-removing');
+			ConcreteMenuPageAttributes.deselectAttributeKey(akID);
 			$(this).dequeue();
 		}).delay(400).queue(function() {
 			$(this).remove();
@@ -99,7 +102,7 @@ ConcretePanelPageAttributesDetail = {
 					renderAttribute(r)
 				);
 				$form.delay(1).queue(function() {
-					$('[data-attribute-key-id=' + r.akID + ']').removeClass('ccm-panel-page-attribute-adding');
+					$('[data-attribute-key-id=' + r.akID + ']').removeClass('ccm-page-attribute-adding');
 					$(this).dequeue();
 				});
 			},
@@ -119,7 +122,7 @@ $(function() {
 	});
 	$form.on('click', 'a[data-remove-attribute-key]', function() {
 		var akID = $(this).attr('data-remove-attribute-key');
-		ConcretePanelPageAttributesDetail.removeAttributeKey(akID);
+		ConcretePageAttributesDetail.removeAttributeKey(akID);
 	});
 
 });

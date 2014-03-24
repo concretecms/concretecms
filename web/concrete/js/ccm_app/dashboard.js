@@ -17,6 +17,9 @@ var ConcreteDashboard = function() {
 	}
 
 	setupTooltips = function() {
+		if ($("#ccm-tooltip-holder").length == 0) {
+			$('<div />').attr('id','ccm-tooltip-holder').attr('class', 'ccm-ui').prependTo(document.body);
+		}
 		$('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
 	}
 

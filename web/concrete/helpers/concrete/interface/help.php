@@ -185,7 +185,7 @@ class ConcreteInterfaceHelpHelper {
 		$html =<<<EOT
 		<div class="ccm-notification-help ccm-notification">
 			<i class="glyphicon glyphicon-info-sign"></i>
-			<div class="ccm-notification-inner">{$message}</div>
+			<div class="ccm-notification-inner dialog-help">{$message}</div>
 			<div class="ccm-notification-actions">
 				<a href="#" data-help-notification-identifier="{$identifier}" data-help-notification-type="{$type}" data-dismiss="help-single">{$ok}</a>
 				<a href="#" data-help-notification-identifier="{$identifier}" data-help-notification-type="{$type}" data-dismiss="help-all">{$hideAll}</a>
@@ -243,7 +243,6 @@ class ConcreteInterfaceHelpHelperMessage {
 
 	
 	/**
-	 
 	 * @param string $handle
 	 * @param string $content
 	 * @param int $displayOnCount

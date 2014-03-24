@@ -33,7 +33,7 @@ switch(FULL_PAGE_CACHE_LIFETIME) {
 ?>
 <section class="ccm-ui">
 	<header><?=t('Page Caching')?></header>
-	<form method="post" action="<?=$controller->action('submit')?>" data-panel-detail-form="caching">
+	<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="caching" data-panel-detail-form="caching">
 
 	<?=Loader::helper('concrete/interface/help')->notify('panel', '/page/caching')?>
 
@@ -113,9 +113,9 @@ switch(FULL_PAGE_CACHE_LIFETIME) {
 		<? } ?>
 
 	</form>
-	<div class="ccm-panel-detail-form-actions">
-		<button class="pull-left btn btn-default" type="button" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
-		<button class="pull-right btn btn-success" type="button" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
+	<div class="ccm-panel-detail-form-actions dialog-buttons">
+		<button class="pull-left btn btn-default" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
+		<button class="pull-right btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
 	</div>
 
 </section>

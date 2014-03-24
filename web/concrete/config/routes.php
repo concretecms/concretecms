@@ -77,6 +77,8 @@ $rl->register('/system/dialogs/group/search', 'GroupSearchDialogController::view
 $rl->register('/system/dialogs/file/search', 'FileSearchDialogController::view');
 $rl->register('/system/dialogs/page/search', 'PageSearchDialogController::view');
 
+$rl->register('/system/dialogs/page/attributes', 'PageAttributesDialogController::view');
+
 $rl->register('/system/dialogs/user/bulk/properties', 'UserBulkPropertiesDialogController::view');
 $rl->register('/system/dialogs/user/bulk/properties/update_attribute', 'UserBulkPropertiesDialogController::updateAttribute');
 $rl->register('/system/dialogs/user/bulk/properties/clear_attribute', 'UserBulkPropertiesDialogController::clearAttribute');

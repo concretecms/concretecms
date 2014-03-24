@@ -107,10 +107,11 @@
 						'<li class="divider"></li>' + 
 					'<% } %>' +
 					'<% if (item.canEditPageProperties) { %>' + 
-						'<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="850" dialog-height="360" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pagePropertiesTitle + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup?rel=SITEMAP&cID=<%=item.cID%>&ctask=edit_metadata">' + ccmi18n_sitemap.pageProperties + '</a></li>' + 
+						'<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="640" dialog-height="360" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.seo + '" href="' + CCM_DISPATCHER_FILENAME + '/system/panels/details/page/seo?cID=<%=item.cID%>">' + ccmi18n_sitemap.seo + '</a></li>' + 
+						'<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageAttributesTitle + '" href="' + CCM_DISPATCHER_FILENAME + '/system/dialogs/page/attributes?cID=<%=item.cID%>">' + ccmi18n_sitemap.pageAttributes + '</a></li>' + 
 					'<% } %>' +
 					'<% if (item.canEditPageSpeedSettings) { %>' + 
-						'<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="550" dialog-height="280" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.speedSettingsTitle + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup?rel=SITEMAP&cID=<%=item.cID%>&ctask=edit_speed_settings">' + ccmi18n_sitemap.speedSettings + '</a></li>' + 
+						'<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="550" dialog-height="280" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.speedSettingsTitle + '" href="' + CCM_DISPATCHER_FILENAME + '/system/panels/details/page/caching?cID=<%=item.cID%>">' + ccmi18n_sitemap.speedSettings + '</a></li>' + 
 					'<% } %>' +
 					'<% if (item.canEditPagePermissions) { %>' + 
 						'<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="420" dialog-height="630" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.setPagePermissions + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup?rel=SITEMAP&cID=<%=item.cID%>&ctask=edit_permissions">' + ccmi18n_sitemap.setPagePermissions + '</a></li>' + 
