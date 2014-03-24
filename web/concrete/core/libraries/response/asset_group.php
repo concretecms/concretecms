@@ -63,16 +63,6 @@ class Concrete5_Library_ResponseAssetGroup {
 			}
 		}
 
-		function sortByKey($k1, $k2) {
-			if ($k1 > $k2) {
-				return 1;
-			} else if ($k1 < $k2) {
-				return -1;
-			} else {
-				return 0;
-			}
-		}
-
 		// now we iterate through the $outputAssetsPre array, maintaining position, and sorting all the stdClass
 		// objects within each array, keeping non-post-processed items first, and sorting by key.
 		foreach($outputAssetsPre as $position => $assets) {
@@ -84,8 +74,13 @@ class Concrete5_Library_ResponseAssetGroup {
 				
 				// This is a great idea but it's not working. We're going to ditch this attempt at 
 				// intelligent grouping and just sort strictly by key.
-
-				return sortByKey($k1, $k2);
+				if ($k1 > $k2) {
+					return 1;
+				} else if ($k1 < $k2) {
+					return -1;
+				} else {
+					return 0;
+				}
 
 				/*
 				// o1 not an asset, o2 not an asset

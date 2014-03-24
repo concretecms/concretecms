@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <section class="ccm-ui">
 	<header><?=t('SEO')?></header>
-	<form method="post" action="<?=$controller->action('submit')?>" class="ccm-panel-detail-content-form" data-panel-detail-form="seo">
+	<form method="post" action="<?=$controller->action('submit')?>" class="ccm-panel-detail-content-form" data-dialog-form="seo" data-panel-detail-form="seo">
 
 	<? if ($allowEditPaths && !$c->isGeneratedCollection()) { ?>
 	<div class="form-group">
@@ -27,8 +27,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 
 	</form>
-	<div class="ccm-panel-detail-form-actions">
-		<button class="pull-left btn btn-default" type="button" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
-		<button class="pull-right btn btn-success" type="button" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
+	<div class="ccm-panel-detail-form-actions dialog-buttons">
+		<button class="pull-left btn btn-default" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
+		<button class="pull-right btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
 	</div>
 </section>

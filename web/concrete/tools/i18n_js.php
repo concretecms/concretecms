@@ -98,6 +98,7 @@ var ccmi18n_editor = {
 
 var ccmi18n_sitemap = {
 
+	seo: "<?=t('SEO')?>",
 	visitExternalLink: "<?=t('Visit')?>",
 	editExternalLink: "<?=t('Edit External Link')?>",
 	deleteExternalLink: "<?=t('Delete')?>",
@@ -110,10 +111,10 @@ var ccmi18n_sitemap = {
 	deletePageForever: "<?=t('Delete Forever')?>", 
 	previewPage: "<?=t('Preview')?>", 
 	visitPage: "<?=t('Visit')?>",
-	pageProperties: "<?=t('Properties')?>",
-	speedSettings: "<?=t('Full Page Caching')?>",
-	speedSettingsTitle: "<?=t('Full Page Caching')?>",
-	pagePropertiesTitle: "<?=t('Page Properties')?>",
+	pageAttributes: "<?=t('Attributes')?>",
+	speedSettings: "<?=t('Caching')?>",
+	speedSettingsTitle: "<?=t('Caching')?>",
+	pageAttributesTitle: "<?=t('Attributes')?>",
 	pagePermissionsTitle: "<?=t('Page Permissions')?>",
 	setPagePermissions: "<?=t('Set Permissions')?>",
 	setPagePermissionsMsg: "<?=t('Page permissions updated successfully.')?>",

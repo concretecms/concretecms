@@ -216,7 +216,7 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
 		$dialog.jqdialog('option', 'buttons', [{}]);
 		$dialog.parent().find(".ui-dialog-buttonset").remove();
 		$dialog.parent().find(".ui-dialog-buttonpane").html('');
-		$dialog.find('.dialog-buttons').appendTo($dialog.parent().find('.ui-dialog-buttonpane').addClass("ccm-ui"));
+		$dialog.find('.dialog-buttons').removeClass().appendTo($dialog.parent().find('.ui-dialog-buttonpane').addClass("ccm-ui"));
 	}
 
 	// make dialogs

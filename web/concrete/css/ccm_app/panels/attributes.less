@@ -1,95 +1,122 @@
 /** 
  * Add block
  */
-#ccm-panel-page-attributes {
-	
-	header {
-		margin-bottom: 0px;
+
+div.ccm-menu-page-attributes-search {
+
+	position: relative;
+	i.glyphicon-search {
+		position: absolute;
+		top: 22px;
+		left: 40px;
+		color: #000;
 	}
 
-	div.ccm-panel-page-attributes-search {
+	input {
+		display: block;
+		padding: 20px 20px 20px 70px;
+		border: 0px;
+		outline: none;
+		width: 100%;
 
-		position: relative;
-		i.glyphicon-search {
-			position: absolute;
-			top: 22px;
-			left: 40px;
-			color: #000;
-		}
-
-		input {
-			display: block;
-			padding: 20px 20px 20px 70px;
-			background-color: #333539;
+		&:focus {
+			outline: none;
+			.box-shadow(none);
 			border: 0px;
-			width: 100%;
-
-			&:focus {
-				outline: none;
-				.box-shadow(none);
-				border: 0px;
-			}
-
-			&::-webkit-input-placeholder {
-				color: #44494d;
-			}
-
-			&:-ms-input-placeholder {
-				color: #44494d;
-			}
-
-			&:-moz-placeholder {
-				color: #44494d;
-			}
-
-			&::-moz-placeholder {
-				color: #44494d;
-			}
-
 		}
+
 	}
+}
 
-	div.ccm-panel-page-attributes-set {
-		h5 {
-			border-top: 1px solid #464544;
-			color: #3baaf7;
-			margin-top: 30px;
-			padding-top: 8px;
-			padding-bottom: 8px;
+#ccm-panel-page {
+	
+	section#ccm-menu-page-attributes {
 
+		header {
+			margin-bottom: 0px;
 		}
 
+		div.ccm-menu-page-attributes-set {
+			color: #3baaf7;
+
+			h5 {
+				border-top: 1px solid #464544;
+			}
+		}
+
+		div.ccm-menu-page-attributes-search {
+			input {
+				background-color: #333539;
+
+				&::-webkit-input-placeholder {
+					color: #44494d;
+				}
+
+				&:-ms-input-placeholder {
+					color: #44494d;
+				}
+
+				&:-moz-placeholder {
+					color: #44494d;
+				}
+
+				&::-moz-placeholder {
+					color: #44494d;
+				}
+			}
+		}
 		ul {
-			list-style-type: none;
 			li {
-				padding: 0px;
-				margin: 0px 0px 5px 0px;
 				a {
-					display: block;
-					padding: 10px 20px 10px 20px;
-					font-size: 15px;
 					color: #5c676c;
 					background-color: #272a2e;
-					.border-radius(4px);
-					.transition(all 0.3s cubic-bezier(0.190, 1.000, 0.220, 1.000));	
-
 					&:hover {
-						text-decoration: none;
 						background-color: #191b1f;
 					}
-					&.ccm-panel-page-attribute-selected {
+					&.ccm-menu-page-attribute-selected {
 						background-color: #153d71;
 						color: #fff;
-						cursor: default;
 					}
 				}
 			}
 		}
+	}
+}
 
-		&:first-child {
-			h5 {
-				margin-top: 0px;
+
+div.ccm-menu-page-attributes-set {
+	h5 {
+		margin-top: 30px;
+		padding-top: 8px;
+		padding-bottom: 8px;
+
+	}
+
+	ul {
+		list-style-type: none;
+		li {
+			padding: 0px;
+			margin: 0px 0px 5px 0px;
+			a {
+				display: block;
+				padding: 10px 20px 10px 20px;
+				font-size: 15px;
+				.border-radius(4px);
+				.transition(all 0.3s cubic-bezier(0.190, 1.000, 0.220, 1.000));	
+
+				&:hover {
+					text-decoration: none;
+				}
+				&.ccm-menu-page-attribute-selected {
+					cursor: default;
+				}
 			}
+		}
+	}
+
+	&:first-child {
+		h5 {
+			margin-top: 0px;
 		}
 	}
 }
@@ -98,6 +125,9 @@ div#ccm-panel-detail-page-attributes {
 	div.ccm-panel-detail-content {
 		padding: 0px 0px 100px 0px;
 	}
+}
+
+div#ccm-detail-page-attributes {
 	div.form-group {
 		.transition(opacity 0.3s cubic-bezier(0.190, 1.000, 0.220, 1.000));	
 		.opacity(1);
@@ -118,8 +148,62 @@ div#ccm-panel-detail-page-attributes {
 			}
 		}
 	}
-	div.ccm-panel-page-attribute-adding,
-	div.ccm-panel-page-attribute-removing {
+	div.ccm-page-attribute-adding,
+	div.ccm-page-attribute-removing {
 		.opacity(0);
 	}
+}
+
+/** 
+ * Dialog version
+ */
+div#ccm-dialog-attributes-menu {
+	float: left;
+	width: 260px;
+
+	ul {
+		li {
+			a {
+				&:hover {
+					color: #333;
+					background-color: #eee;
+				}
+				&.ccm-menu-page-attribute-selected {
+					background-color: #999;
+					color: #000;
+				}
+			}
+		}
+	}
+
+	div.ccm-menu-page-attributes-search {
+		i.glyphicon-search {
+			top: 22px;
+			left: 0px;
+			color: #000;
+		}
+
+		input {
+			padding-left: 20px;
+		}
+	}
+
+	div#ccm-menu-page-attributes-list {
+		padding: 0px;
+	}
+
+	div.ccm-menu-page-attributes-set {
+		h5 {
+			border-top: 1px solid #ccc;
+		}
+	}
+
+	ul {
+		margin-left: 0px;
+		padding-left: 0px;
+	}
+}
+
+div#ccm-dialog-attributes-detail {
+	margin-left: 300px;
 }
