@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 <section class="ccm-ui">
 	<header><?=t('Location')?></header>
-	<form method="post" action="<?=$controller->action('submit')?>" data-panel-detail-form="location">
+	<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="location" data-panel-detail-form="location">
 
 		<?=Loader::helper('concrete/interface/help')->notify('panel', '/page/location')?>
 
@@ -62,9 +62,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<? } ?>
 
 	</form>
-	<div class="ccm-panel-detail-form-actions">
-		<button class="pull-left btn btn-default" type="button" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
-		<button class="pull-right btn btn-success" type="button" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
+	<div class="ccm-panel-detail-form-actions dialog-buttons">
+		<button class="pull-left btn btn-default" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
+		<button class="pull-right btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
 	</div>
 
 </section>
