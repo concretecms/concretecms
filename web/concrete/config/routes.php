@@ -71,6 +71,8 @@ $rl->register('/system/dialogs/area/layout/presets/{arLayoutID}/{token}', 'AreaL
 $rl->register('/system/dialogs/page/bulk/properties', 'PageBulkPropertiesDialogController::view');
 $rl->register('/system/dialogs/page/bulk/properties/update_attribute', 'PageBulkPropertiesDialogController::updateAttribute');
 $rl->register('/system/dialogs/page/bulk/properties/clear_attribute', 'PageBulkPropertiesDialogController::clearAttribute');
+$rl->register('/system/dialogs/page/design', 'PageDesignDialogController::view');
+$rl->register('/system/dialogs/page/design/submit', 'PageDesignDialogController::submit');
 
 $rl->register('/system/dialogs/user/search', 'UserSearchDialogController::view');
 $rl->register('/system/dialogs/group/search', 'GroupSearchDialogController::view');

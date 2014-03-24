@@ -53,6 +53,17 @@ class Concrete5_Controller_Panel_Page_Design extends BackendInterfacePageControl
 			}
 		}
 
+		$templatesSelect = array();
+		$themesSelect = array();
+		foreach($_themes as $pt) {
+			$themesSelect[$pt->getThemeID()] = $pt->getThemeDisplayName();
+		}
+		foreach($_templates as $pt) {
+			$templatesSelect[$pt->getPageTemplateID()] = $pt->getPageTemplateName();
+		}
+
+		$this->set('templatesSelect', $templatesSelect);
+		$this->set('themesSelect', $themesSelect);
 		$this->set('themes', $themes);
 		$this->set('templates', $templates);
 		$this->set('selectedTheme', $selectedTheme);
@@ -127,7 +138,7 @@ class Concrete5_Controller_Panel_Page_Design extends BackendInterfacePageControl
 
 			$r = new PageEditResponse();
 			$r->setPage($c);
-			$r->setMessage(t('Page theme updated successfully.'));
+			$r->setMessage(t('Page design successfully.'));
 			$r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
 			$r->outputJSON();
 		}

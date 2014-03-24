@@ -416,6 +416,7 @@ $classes = array(
 	/* Editing Controllers */
 	'PageCheckInPanelController' => array('controller', '/panels/page/check_in'),
 	'PageDesignPanelController' => array('controller', '/panels/page/design'),
+	'PageDesignDialogController' => array('controller', '/dialogs/page/design'),
 	'PageDesignCustomizePanelController' => array('controller', '/panels/page/design/customize'),
 	'PageVersionsPanelController' => array('controller', '/panels/page/versions'),
 	'PageAttributesPanelController' => array('controller', '/panels/page/attributes'),
