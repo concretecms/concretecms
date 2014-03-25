@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Page_Dashboard_System_Environment_Logging extends DashboardBaseController{
+class Concrete5_Controller_Page_Dashboard_System_Environment_Logging extends DashboardController{
 	/**
 	* Dasboard page view
 	*
