@@ -9,6 +9,7 @@
 			'menu': false,
 			'highlightClassName': 'ccm-menu-highlight',
 			'highlightOffset': 0,
+			'menuContainerClass': false,
 			'menuActiveClass': 'ccm-menu-item-active',
 			'menuActiveParentClass': 'ccm-parent-menu-item-active',
 			'menuLauncherHoverClass': 'ccm-menu-item-hover',
@@ -153,7 +154,9 @@
 			my.setupMenuOptions($menu);
 			$container.html('');
 			$menu.appendTo($container);
-
+			if (options.menuContainerClass) {
+				$container.addClass(options.menuContainerClass);
+			}
 			$menu.css('opacity', 0).show();
 			var	mwidth = $menu.width(),
 				mheight = $menu.height(); // have to do this after you show the element
@@ -204,7 +207,7 @@
 			_.defer(function() { 
 				my.$element.removeClass(my.options.menuActiveClass); 
 				my.$element.parents('*').slice(0,3).removeClass(my.options.menuActiveParentClass);
-				global.$container.html('');
+				global.$container.removeClass().addClass('ccm-ui').html('');
 			});
 
 			global.$clickProxy.css(reset);

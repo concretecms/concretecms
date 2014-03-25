@@ -41,8 +41,8 @@
 /* Disable Toolbar (over toolbar) */
 @index-level-toolbar-disabled: 1100;
 
-/* Edit Response HUDs */
-@index-level-hud: 1100;
+/* Dashboard Help Notifications – has to come BELOW the modal dialog stuff, because it's not really an ephemeral notification */
+@index-level-dashboard-help: 1100;
 
 /* Inline Editing Toolbar - has to come above disabled toolbar */
 @index-level-inline-toolbar: 1150;
@@ -67,5 +67,9 @@
 
 /* Tooltips and hovers in dialogs */
 @index-level-tooltip-holder: 2000;
+@index-level-menu-panel-and-dialog: 2000;
 @index-level-dialog-hover: 2000;
 @index-level-editor-full-screen: 2000;
+
+/* Edit Response HUDs - should come above modal dialog stuff. */
+@index-level-hud: 2100;
