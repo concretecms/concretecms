@@ -289,11 +289,12 @@ class Concrete5_Controller_Page_Login extends PageController {
 
 	public function forward($cID = 0) {
 		$nh = Loader::helper('validation/numbers');
-		if ($nh->integer($cID)) {
-			$this->set('rcID', $cID);
-			$_SESSION['rcID'] = $cID;
+		if ($nh->integer($cID) && intval($cID) > 0) {
+			$this->set('rcID', intval($cID));
+			$_SESSION['rcID'] = intval($cID);
 		}
 	}
+
 	/* @TODO this functionality needs to be ported to the concrete5 auth type
 	// responsible for validating a user's email address
 	public function v($hash = '') {

@@ -141,6 +141,7 @@ var CCMPageVersionList = {
 		$('a.ccm-panel-page-versions-version-menu').each(function() {
 			$(this).concreteMenu({
 				menuLauncherHoverClass: 'ccm-panel-page-versions-hover',
+				menuContainerClass: 'ccm-panel-page-versions-container',
 				menu: 'div[data-menu=' + $(this).attr('data-launch-versions-menu') + ']'
 			});
 		});
@@ -273,7 +274,7 @@ $(function() {
 </script>				
 
 
-<section id="ccm-panel-page-versions">
+<section id="ccm-panel-page-versions" class="ccm-ui">
 	<header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="glyphicon glyphicon-chevron-left"></span></a> <?=t('Versions')?></header>
 	<table>
 		<thead>
