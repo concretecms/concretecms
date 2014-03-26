@@ -16,6 +16,8 @@ if (isset($_REQUEST['fID'])) {
 	$fr = false;
 }
 
+$r = new FileEditResponse();
+
 $searchInstance = $_POST['searchInstance'];
 
 $valt = Loader::helper('validation/token');
@@ -25,16 +27,16 @@ Loader::library('3rdparty/Zend/Uri/Http');
 $file = Loader::helper('file');
 Loader::helper('mime');
 
-$error = array();
+$error = Loader::helper('validation/error');
 
 // load all the incoming fields into an array
 $incoming_urls = array();
 
 if (!function_exists('iconv_get_encoding')) {
-	$errors[] = t('Remote URL import requires the iconv extension enabled on your server.');
+	$error->add(t('Remote URL import requires the iconv extension enabled on your server.'));
 }
 
-if (count($errors) == 0) { 
+if (!$error->has()) {
 	for ($i = 1; $i < 6; $i++) {
 		$this_url = trim($_REQUEST['url_upload_' .$i]); 
 	
@@ -47,17 +49,17 @@ if (count($errors) == 0) {
 			// URL appears to be good... add it
 			$incoming_urls[] = $this_url;
 		} else {
-			$errors[] = Loader::helper('text')->specialchars($this_url) . t(' is not a valid URL.');
+			$error->add(Loader::helper('text')->specialchars($this_url) . t(' is not a valid URL.'));
 		}
 	}
 
 	if (!$valt->validate('import_remote')) {
-		$errors[] = $valt->getErrorMessage();
+		$$error->add($valt->getErrorMessage());
 	}
 				
 	
 	if (count($incoming_urls) < 1) {
-		$errors[] = t('You must specify at least one valid URL.');
+		$error->add(t('You must specify at least one valid URL.'));
 	}
 
 }
@@ -66,7 +68,7 @@ if (count($errors) == 0) {
 $import_responses = array();
 
 // if we haven't gotten any errors yet then try to process the form
-if (count($errors) < 1) {
+if (!$error->has()) {
 	// itterate over each incoming URL adding if relevant
 	foreach($incoming_urls as $this_url) {
 		// try to D/L the provided file
@@ -86,7 +88,7 @@ if (count($errors) < 1) {
 				// use mimetype from http response
 				$fextension = MimeHelper::mimeToExtension($response->getHeader('Content-Type'));
 				if ($fextension === false)
-					$errors[] = t('Unknown mime-type: ') . $response->getHeader('Content-Type');
+					$error->add(t('Unknown mime-type: ') . $response->getHeader('Content-Type'));
 				else {
 					// make sure we're coming up with a unique filename 
 					do {
@@ -108,11 +110,15 @@ if (count($errors) < 1) {
 				if ($fp->canAddFileType($cf->getExtension($fname))) {
 					$fi = new FileImporter();
 					$resp = $fi->import($fpath.'/'.$fname, $fname, $fr);
+					$r->setMessage(t('File uploaded successfully.'));
+					if (is_object($fr)) {
+						$r->setMessage(t('File replaced successfully.'));
+					}
 				} else {
 					$resp = FileImporter::E_FILE_INVALID_EXTENSION;
 				}
 				if (!($resp instanceof FileVersion)) {
-					$errors[] .= $fname . ': ' . FileImporter::getErrorMessage($resp) . "\n";
+					$error->add($fname . ': ' . FileImporter::getErrorMessage($resp));
 				} else {
 					$import_responses[] = $resp;
 					
@@ -120,6 +126,8 @@ if (count($errors) < 1) {
 						// we check $fr because we don't want to set it if we are replacing an existing file
 						$respf = $resp->getFile();
 						$respf->setOriginalPage($_POST['ocID']);
+					} else {
+						$respf = $fr;
 					}
 					
 				}
@@ -128,37 +136,17 @@ if (count($errors) < 1) {
 				unlink($fpath.'/'.$fname);
 			} else {
 				// could not figure out a file name
-				$errors[] = t('Could not determine the name of the file at ') . $this_url;
+				$error->add(t('Could not determine the name of the file at ') . $this_url);
 			}
 		} else {
 			// warn that we couldn't download the file
-			$errors[] = t('There was an error downloading ') . $this_url;
+			$error->add(t('There was an error downloading ') . $this_url);
 		}
 	}
 }
-?>
-<html>
-	<head>
-		<script language="javascript">
-<? 
-if(count($errors)) { 
-?>
-	window.parent.ConcreteAlert.notice("<?=t('Upload Error')?>", "<?=str_replace("\n", '', nl2br(implode('\n', $errors)))?>");
-	window.parent.ccm_alResetSingle();
-<? } else { ?>
-		highlight = new Array();
-	<? 	foreach ($import_responses as $r) { ?>
-			highlight.push(<?=$r->getFileID()?>);
-			window.parent.ccm_uploadedFiles.push(<?=intval($r->getFileID())?>);
-	<?	} ?>		
-		window.parent.jQuery.fn.dialog.closeTop();
-		setTimeout(function() { 
-			window.parent.ccm_filesUploadedDialog('<?=$searchInstance?>');	
-		}, 100);
-		
-<? } ?>
-		</script>
-	</head>
-	<body>
-	</body>
-</html>
+
+$r->setError($error);
+if (is_object($respf)) {
+	$r->setFile($respf);
+}
+$r->outputJSON();

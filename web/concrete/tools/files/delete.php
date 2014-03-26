@@ -97,7 +97,7 @@ foreach($files as $f) {
 	$(function() {
 		ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function(e, data) {
 			if (data.form == 'delete-file') {
-				ConcreteEvent.publish('FileManagerDeleteRequestComplete', {files: data.response.files});
+				ConcreteEvent.publish('FileManagerUpdateRequestComplete', {files: data.response.files});
 			}
 		});
 	});
