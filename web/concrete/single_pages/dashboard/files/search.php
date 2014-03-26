@@ -1,5 +1,4 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Manager'), array(t('Add, search, replace and modify the files for your website.'), 'http://www.concrete5.org/documentation/editors-guide/dashboard/file-manager/'), false, false);?>
 
 <? 
 $c = Page::getCurrentPage();
@@ -22,5 +21,3 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
 <div class="ccm-pane-footer"></div>
 
 <? } ?>
-
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false); ?>

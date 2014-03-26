@@ -17,15 +17,18 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 
 <div class="ccm-ui">
 
-<?
 
-Loader::element('files/upload_single', array('searchInstance' => $searchInstance, 'mode' => 'replace', 'fID' => $f->getFileID())); 
+<form method="post" class="form-inline" id="ccm-file-manager-replace-upload" data-dialog-form="replace-file" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/single">
+	<h4><?=t('Add From Computer')?></h4>
+	<input type="file" name="Filedata" class="form-control" style="width: 195px" />
+	<?=$valt->output('upload');?>
+	<button type="submit" class="btn btn-default btn-sm"><?=t('Upload')?></button>
+</form>
 
-?>
 
 <hr />
 
-<h3><?=t('Add from Incoming Directory')?></h3>
+<h4><?=t('Add from Incoming Directory')?></h4>
 <div>
 <?
 $contents = array();
@@ -34,11 +37,10 @@ foreach($con1 as $con) {
 	$contents[$con['name']] = $con['name'];
 }
 if (count($contents) > 0) { ?>
-<form method="post" id="ccm-file-manager-replace-incoming" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/incoming">
-    <input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
-	<?= $form->select('send_file', $contents, array('style' => 'width:200px'));?>
+<form method="post" id="ccm-file-manager-replace-incoming" class="form-inline" data-dialog-form="replace-file" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/incoming">
+	<?= $form->select('send_file', $contents, array('style' => 'width:195px'));?>
 	&nbsp;&nbsp;
-	<?= $form->submit('submit', t('Add File')); ?>
+	<button type="submit" class="btn btn-default btn-sm"><?=t('Replace')?></button>
 	<?= $form->hidden('fID', $f->getFileID()); ?>
 	<?=$valt->output('import_incoming');?>
 </form>
@@ -49,31 +51,29 @@ if (count($contents) > 0) { ?>
 
 <hr />
 
-<h3><?=t("Add from Remote URL")?></h3>
+<h4><?=t("Add from Remote URL")?></h4>
 
 
-<form method="post" id="ccm-file-manager-replace-remote" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/remote">
+<form method="post" id="ccm-file-manager-replace-remote" class="form-inline" data-dialog-form="replace-file" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/importers/remote">
 <?=$valt->output('import_remote');?>
     <input type="hidden" name="searchInstance" value="<?=$searchInstance?>" />
 <?= $form->hidden('fID', $f->getFileID()); ?>
 
 <?=$form->text('url_upload_1', array('style' => 'width:195px'))?>
-&nbsp;&nbsp;
-<?= $form->submit('submit', t('Add File')); ?>
+
+<button type="submit" class="btn btn-default btn-sm"><?=t('Replace')?></button>
+
 
 </form>
 </div>
 
 <script type="text/javascript">
-$(function() { 
-	ccm_alSetupSingleUploadForm();
-	$("#ccm-file-manager-replace-incoming").submit(function() {
-		$(this).attr('target', ccm_alProcessorTarget);		
+$(function() {
+	$('#ccm-file-manager-replace-incoming,#ccm-file-manager-replace-remote,#ccm-file-manager-replace-upload').concreteAjaxForm();
+	ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function(e, data) {
+		if (data.form == 'replace-file') {
+			ConcreteEvent.publish('FileManagerUpdateRequestComplete', {files: data.response.files});
+		}
 	});
-	$("#ccm-file-manager-replace-remote").submit(function() {
-		$(this).attr('target', ccm_alProcessorTarget);		
-	});
-
 });
-
 </script>
