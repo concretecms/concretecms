@@ -23,7 +23,6 @@ Loader::model('file_set');
 $s1 = FileSet::getMySets();
 
 $files = array();
-$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 $extensions = array();
 
 if (is_array($_REQUEST['item'])) {
@@ -76,6 +75,10 @@ foreach($s1 as $fs) {
 
 if ($_POST['task'] == 'add_to_sets') {
 	
+	$r = new FileEditResponse();
+	$r->setFiles($files);
+	$r->setMessage(t('File sets saved successfully.'));
+
 	foreach($_POST as $key => $value) {
 	
 		if (preg_match('/fsID:/', $key)) {
@@ -113,21 +116,71 @@ if ($_POST['task'] == 'add_to_sets') {
 			$fs->addFileToSet($f);
 		}
 	}
-	exit;
+
+	$r->outputJSON();
+
 }
 ?>
 
 <script type="text/javascript">
-$("#ccm-add-to-set-form").ajaxSubmit(function(resp) {
-	jQuery.fn.dialog.closeTop();
-	jQuery.fn.dialog.hideLoader();		
-	$("#ccm-" + searchInstance + "-advanced-search").ajaxSubmit(function(resp) {
-		$("#ccm-" + searchInstance + "-sets-search-wrapper").load(CCM_TOOLS_PATH + '/files/search_sets_reload', {'searchInstance': searchInstance}, function() {
-			$(".chosen-select").chosen();
-			ccm_parseAdvancedSearchResponse(resp, searchInstance);
+$(function() {
+	$('#fsAddToSearchName').liveUpdate('ccm-file-search-add-to-sets-list', 'fileset');
+
+	$("#ccm-add-to-set-form input[name=fsNew]").click(function() {
+		if (!$(this).prop('checked')) {
+			$("#ccm-add-to-set-form input[name=fsNewText]").val('');
+		}
+	});
+
+	// Setup the tri-state checkboxes
+	$('.ccm-file-set-add-cb a').each(function() {
+		var cb = $(this);
+		var startingState = cb.attr("ccm-tri-state-startup");
+		$(this).click(function() {
+			var selectedState = $(this).attr("ccm-tri-state-selected");
+			var toSetState = 0;
+			switch(selectedState) {
+				case '0':
+					if (startingState == '1') {
+						toSetState = '1';
+					} else {
+						toSetState = '2';
+					}
+					break;
+				case '1':
+					toSetState = '2';
+					break;
+				case '2':
+					toSetState = '0';
+					break;
+			}
+
+			$(this).attr('ccm-tri-state-selected', toSetState);
+			$(this).parent().find('input').val(toSetState);
+			$(this).find('img').attr('src', CCM_IMAGE_PATH + '/checkbox_state_' + toSetState + '.png');
 		});
 	});
 });
+/*
+$(function() {
+	$("#ccm-add-to-set-form").ajaxSubmit(function(resp) {
+		jQuery.fn.dialog.closeTop();
+		jQuery.fn.dialog.hideLoader();		
+		$("#ccm-" + searchInstance + "-advanced-search").ajaxSubmit(function(resp) {
+			$("#ccm-" + searchInstance + "-sets-search-wrapper").load(CCM_TOOLS_PATH + '/files/search_sets_reload', {'searchInstance': searchInstance}, function() {
+				$(".chosen-select").chosen();
+				ccm_parseAdvancedSearchResponse(resp, searchInstance);
+			});
+		});
+	});
+
+
+ccm_alSetupSetsForm = function(searchInstance) {
+
+}
+}
+*/
+
 </script>
 
 
@@ -145,69 +198,78 @@ $("#ccm-add-to-set-form").ajaxSubmit(function(resp) {
 	</div>
 
 <? if (!$disableForm) { ?>
-	<form method="post" id="ccm-<?=$searchInstance?>-add-to-set-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/add_to/">
+	<form method="post" class="form-stacked" data-dialog-form="file-sets" id="ccm-add-to-set-form" action="<?=Loader::helper('concrete/urls')->getToolsURL('files/add_to')?>">
 	<?=$form->hidden('task', 'add_to_sets')?>
 	<? foreach($files as $f) { ?>
-		<input type="hidden" name="fID[]" value="<?=$f->getFileID();?>" />
+		<input type="hidden" name="item[]" value="<?=$f->getFileID();?>" />
 	<? } ?>
 
 <? } ?>
 	
 
+
+	<br/>
+	<fieldset>
+		<legend><?=t('Existing Set')?></legend>
 	
 	<? $s1 = FileSet::getMySets(); ?>
 	<? if (count($s1) > 0) { ?>
-	<div class="clearfix" style="padding-left: 5px; padding-top: 8px">
-		<ul class="inputs-list" id="ccm-file-search-add-to-sets-list">
-	
-	
-	<? foreach($sets as $s) { 
-		$displaySet = true;
+
+		<div class="form-group">
+			<ul id="ccm-file-search-add-to-sets-list" class="list-unstyled">
 		
-		$pf = new Permissions($s);
-		if (!$pf->canAddFiles()) { 
-			$displaySet = false;
-		} else {
-			foreach($extensions as $ext) {
-				if (!$pf->canAddFileType($ext)) {
-					$displaySet = false;
+		
+		<? foreach($sets as $s) { 
+			$displaySet = true;
+			
+			$pf = new Permissions($s);
+			if (!$pf->canAddFiles()) { 
+				$displaySet = false;
+			} else {
+				foreach($extensions as $ext) {
+					if (!$pf->canAddFileType($ext)) {
+						$displaySet = false;
+					}
 				}
 			}
-		}
-		
-		if ($displaySet) {
-		?>
-	
-		<li class="ccm-file-set-add-cb">
+			
+			if ($displaySet) {
+			?>
+				<li class="ccm-file-set-add-cb">
 				<label>
-				<?=checkbox('fsID', $s->getFileSetID(), $s->state)?>
-				<span><?=$s->getFileSetName()?></span>
+					<?=checkbox('fsID', $s->getFileSetID(), $s->state)?>
+					<span><?=$s->getFileSetName()?></span>
 				</label>
-		</li>
-	<? } 
-	} ?>
-	
-		</ul>
-	</div>
-	<? } else { ?>
-		<?=t('You have not created any file sets yet.')?>
-	<? } ?>
+				</li>
+		<? } 
+		} ?>
+		
+			</ul>
+		</div>
+		<? } else { ?>
+			<?=t('You have not created any file sets yet.')?>
+		<? } ?>
 
+	</fieldset>
 <? if (count($extensions) > 1) { ?>
 
 	<div class="alert-message info"><p><?=t('If a file set does not appear above, you either have no access to add files to it, or it does not accept the file types %s.', implode(', ', $extensions));?></p></div>
 	
 <? } ?>
 
+<br/><br/>
 
-<h3><?=t('Add to New Set')?></h3>
+<fieldset class="form-inline">
+	<legend><?=t('Add to New Set')?></legend>
 
-<?=$form->checkbox('fsNew', 1)?> <?=$form->text('fsNewText', array('style' => 'width: 120px', 'onclick' => '$(\'input[name=fsNew]\').attr(\'checked\',true)'))?> <?=$form->checkbox('fsNewShare', 1, true)?> <?=t('Make set public')?>
+	<?=$form->checkbox('fsNew', 1)?> <?=$form->text('fsNewText', array('style' => 'width: 120px', 'onclick' => '$(\'input[name=fsNew]\').attr(\'checked\',true)'))?> <?=$form->checkbox('fsNewShare', 1, true)?> <?=t('Make set public')?>
+
+</fieldset>
 
 <? if (!$disableForm) { ?>
 
 <div class="dialog-buttons">
-	<input type="button" value="<?=t('Update')?>" class="btn btn-primary pull-right" onclick="$('#ccm-<?=$searchInstance?>-add-to-set-form').submit()" />
+	<input type="button" data-dialog-button="submit" value="<?=t('Update')?>" class="btn btn-primary pull-right" onclick="$('#ccm-add-to-set-form').submit()" />
 </div>
 
 	</form>
