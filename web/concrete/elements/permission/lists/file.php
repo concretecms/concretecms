@@ -1,32 +1,32 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="clearfix">
-
+<p>
 <? 
 
 $enablePermissions = false;
 if (!$f->overrideFileSetPermissions()) { ?>
 
-	<div class="block-message alert-message notice">
+	<div class="alert alert-notice">
 	<p>
 	<?=t("Permissions for this file are currently dependent on file sets and global file permissions.")?>
 	</p>
 	<br/>
-	<a href="javascript:void(0)" class="btn btn-small" onclick="ccm_setFilePermissionsToOverride()"><?=t('Override Permissions')?></a>
+	<a href="javascript:void(0)" class="btn btn-default btn-sm" onclick="ccm_setFilePermissionsToOverride()"><?=t('Override Permissions')?></a>
 	</div>
 	
 <? } else { 
 	$enablePermissions = true;
 	?>
 
-	<div class="block-message alert-message notice">
+	<div class="alert alert-notice">
 	<p><?=t("Permissions for this file currently override its sets and the global file permissions.")?></p>
 	<br/>
-	<a href="javascript:void(0)" class="btn btn-small" onclick="ccm_revertToGlobalFilePermissions()"><?=t('Revert to File Set and Global Permissions')?></a>
+	<a href="javascript:void(0)" class="btn btn-default btn-sm" onclick="ccm_revertToGlobalFilePermissions()"><?=t('Revert to File Set and Global Permissions')?></a>
 	</div>
 
 <? } ?>
 
+</p>
 
 <?=Loader::element('permission/help');?>
 
@@ -59,12 +59,10 @@ foreach($permissions as $pk) {
 
 <? if ($enablePermissions) { ?>
 <div id="ccm-file-permissions-advanced-buttons" style="display: none">
-	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn pull-left"><?=t('Cancel')?></a>
-	<button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary pull-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
+	<button onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?=t('Cancel')?></button>
+	<button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary pull-right"><?=t('Save')?></i></button>
 </div>
 <? } ?>
-
-</div>
 
 <script type="text/javascript">
 

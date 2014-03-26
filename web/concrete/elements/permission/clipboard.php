@@ -2,9 +2,9 @@
 <?
 	$set = PermissionSet::getSavedPermissionSetFromSession();
 ?>
-<button class="btn btn-mini" type="button" id="ccm-permissions-list-copy-permissions"><?=t('Copy')?></button>
+<button class="btn btn-xs btn-default" type="button" id="ccm-permissions-list-copy-permissions"><?=t('Copy')?></button>
 <? if (is_object($set) && $set->getPermissionKeyCategory() == $pkCategory->getPermissionKeyCategoryHandle()) { ?>
-	<button class="btn btn-mini" type="button" id="ccm-permissions-list-paste-permissions"><?=t('Paste')?></button>
+	<button class="btn btn-xs btn-default" type="button" id="ccm-permissions-list-paste-permissions"><?=t('Paste')?></button>
 <? } ?>
 <input type="hidden" name="pkCategoryHandle" value="<?=$pkCategory->getPermissionKeyCategoryHandle()?>" />
 <script type="text/javascript">

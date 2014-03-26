@@ -2,7 +2,6 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
 $form = Loader::helper('form');
-$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 $ih = Loader::helper('concrete/interface'); 
 $f = File::getByID($_REQUEST['fID']);
 $cp = new Permissions($f);
@@ -11,9 +10,13 @@ if (!$cp->canAdmin()) {
 }
 $form = Loader::helper('form');
 
+$r = new FileEditResponse();
+$r->setFile($f);
+
 if ($_POST['task'] == 'set_password') {
 	$f->setPassword($_POST['fPassword']);
-	exit;
+	$r->setMessage(t('File password saved successfully.'));
+	$r->outputJSON();
 }
 
 
@@ -27,7 +30,9 @@ if ($_POST['task'] == 'set_location') {
 			$f->setStorageLocation($fsl);
 		}
 	}
-	exit;
+	$r->setMessage(t('File storage location saved successfully.'));
+	$r->outputJSON();
+
 }
 
 ?>
@@ -60,13 +65,14 @@ if ($_POST['task'] == 'set_location') {
 
 <p><?=t('Leave the following form field blank in order to allow everyone to download this file.')?></p>
 
-<form method="post" id="ccm-<?=$searchInstance?>-password-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/permissions/">
+<form method="post" data-dialog-form="file-password" action="<?=Loader::helper('concrete/urls')->getToolsURL('files/permissions')?>">
 <?=$form->hidden('task', 'set_password')?>
 <?=$form->hidden('fID', $f->getFileID())?>
 <?=$form->text('fPassword', $f->getPassword(), array('style' => 'width: 250px'))?>
 
 <div id="ccm-file-password-buttons"  style="display: none">
-<?=$ih->button_js(t('Save Password'), 'ccm_alSubmitPasswordForm(\'' . $searchInstance . '\')', 'left', 'primary')?>
+	<button onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?=t('Cancel')?></button>
+	<button onclick="$('form[data-dialog-form=file-password]').submit()" class="btn btn-primary pull-right"><?=t('Save Password')?></i></button>
 </div>
 
 </form>
@@ -81,7 +87,7 @@ if ($_POST['task'] == 'set_location') {
 
 <h4><?=t('Choose File Storage Location')?></h4>
 
-<form method="post" id="ccm-<?=$searchInstance?>-storage-form" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/permissions/">
+<form method="post" data-dialog-form="file-storage" action="<?=Loader::helper('concrete/urls')->getToolsURL('files/permissions')?>">
 <div class="help-block"><p><?=t('All versions of a file will be moved to the selected location.')?></p></div>
 
 <?=$form->hidden('task', 'set_location')?>
@@ -96,7 +102,9 @@ if (is_object($fsl)) { ?>
 </form>
 
 <div id="ccm-file-storage-buttons" style="display: none">
-<?=$ih->button_js(t('Save Location'), 'ccm_alSubmitStorageForm(\'' . $searchInstance . '\')', 'left', 'primary')?>
+	<button onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?=t('Cancel')?></button>
+	<button onclick="$('form[data-dialog-form=file-storage]').submit()" class="btn btn-primary pull-right"><?=t('Save Location')?></i></button>
+
 </div>
 
 
@@ -117,9 +125,12 @@ $("#ccm-file-permissions-tabs a").click(function() {
 });
 
 ccm_filePermissionsSetupButtons = function() {
+	var $dialog = $("#ccm-file-permissions-dialog-wrapper").closest('.ui-dialog-content');
 	if ($("#" + ccm_fpActiveTab + "-buttons").length > 0) {
-		$("#ccm-file-permissions-dialog-wrapper").closest('.ui-dialog-content').jqdialog('option', 'buttons', [{}]);
-		$("#" + ccm_fpActiveTab + "-buttons").clone().show().appendTo($('#ccm-file-permissions-dialog-wrapper').closest('.ui-dialog').find('.ui-dialog-buttonpane').addClass('ccm-ui'));
+		$dialog.jqdialog('option', 'buttons', [{}]);
+		$dialog.parent().find(".ui-dialog-buttonset").remove();
+		$dialog.parent().find(".ui-dialog-buttonpane").html('');
+		$("#" + ccm_fpActiveTab + "-buttons").clone().show().appendTo($dialog.parent().find('.ui-dialog-buttonpane').addClass('ccm-ui'));
 	} else {
 		$("#ccm-file-permissions-dialog-wrapper").closest('.ui-dialog-content').jqdialog('option', 'buttons', false);
 	}
@@ -136,14 +147,7 @@ $(function() {
 <? } ?>
 
 	ccm_filePermissionsSetupButtons();
-	$("#ccm-<?=$searchInstance?>-storage-form").submit(function() {
-		ccm_alSubmitStorageForm('<?=$searchInstance?>');
-		return false;
-	});
-	$("#ccm-<?=$searchInstance?>-password-form").submit(function() {
-		ccm_alSubmitPasswordForm('<?=$searchInstance?>');
-		return false;
-	});
+	$('form[data-dialog-form=file-storage],form[data-dialog-form=file-password]').concreteAjaxForm();
 });
 	
 </script>
