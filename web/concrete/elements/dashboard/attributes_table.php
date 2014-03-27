@@ -9,30 +9,19 @@ if (is_object($category) && $category->allowAttributeSets()) {
 }
 ?>
 
-<div class="ccm-pane-options">
-<form class="form-horizontal">
-<div class="ccm-pane-options-permanent-search">
 
-	<? $form = Loader::helper('form'); ?>
-
+<div class="ccm-dashboard-header-buttons">
 	<? if (count($sets) > 0) { ?>
-	<div class="span6">
-	<?=$form->label('asGroupAttributes', t('View'))?>
-	<div class="controls">
-	<select class="span3" onchange="window.location.href='<?=Loader::helper('navigation')->getLinkToCollection($c)?>?asGroupAttributes=' + this.value" id="asGroupAttributes" name="asGroupAttributes">
-		<option value="1" <? if ($_REQUEST['asGroupAttributes'] !== '0') { ?> selected <? } ?>><?=t('Grouped by set')?></option>
-		<option value="0" <? if ($_REQUEST['asGroupAttributes'] === '0') { ?> selected <? } ?>><?=t('In one list')?></option>
-	</select>
-	</div>
-	</div>
-	
+		<button type="button" class="btn btn-default" data-toggle="dropdown">
+		<?=t('View')?> <span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" role="menu">
+		<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($c)?>?asGroupAttributes=1"><?=t('Grouped by Set')?></a></li>
+		<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($c)?>?asGroupAttributes=0"><?=t('In One List')?></a></li>
+		</ul>
 	<? } ?>
-	<a href="<?=$this->url('/dashboard/system/attributes/sets', 'category', $category->getAttributeKeyCategoryID())?>" id="ccm-list-view-customize-top"><span class="ccm-menu-icon ccm-icon-properties"></span><?=t('Manage Sets')?></a>
+	<button type="submit" name="task" value="activate" class="btn btn-default"><?=t('Manage Sets')?></i></button>
 </div>
-</form>
-</div>
-
-<div class="ccm-pane-body">
 
 <?
 if (count($attribs) > 0) { ?>
@@ -50,8 +39,9 @@ if (count($attribs) > 0) { ?>
 	
 		foreach($sets as $as) { ?>
 	
-		
-		<h3><?=$as->getAttributeSetDisplayName()?></h3>
+	
+		<fieldset>
+			<legend><?=$as->getAttributeSetDisplayName()?></legend>
 	
 		<?
 		
@@ -69,7 +59,7 @@ if (count($attribs) > 0) { ?>
 			foreach($setattribs as $ak) { ?>
 			
 			<div class="ccm-attribute" id="akID_<?=$as->getAttributeSetID()?>_<?=$ak->getAttributeKeyID()?>">
-				<img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /><a href="<?=$this->url($editURL, 'edit', $ak->getAttributeKeyID())?>"><?=$ak->getAttributeKeyDisplayName()?></a>
+				<img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /> <a href="<?=$this->url($editURL, 'edit', $ak->getAttributeKeyID())?>"><?=$ak->getAttributeKeyDisplayName()?></a>
 			</div>
 	
 
@@ -79,24 +69,28 @@ if (count($attribs) > 0) { ?>
 			
 			<? } ?>
 			
+		</fieldset>
+
 			
 		<? } 
 		
 		$unsetattribs = $category->getUnassignedAttributeKeys();
 		if (count($unsetattribs) > 0) { ?>
 		
-			<h3><?=t('Other')?></h3>
-			<div class="ccm-attribute-list-wrapper">
-			<?
-			foreach($unsetattribs as $ak) { ?>
+			<fieldset>
+				<legend><?=t('Other')?></legend>
 	
-			<div class="ccm-attribute" id="akID_<?=$as->getAttributeSetID()?>_<?=$ak->getAttributeKeyID()?>">
-				<img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /><a href="<?=$this->url($editURL, 'edit', $ak->getAttributeKeyID())?>"><?=$ak->getAttributeKeyDisplayName()?></a>
-			</div>
+				<div class="ccm-attribute-list-wrapper">
+				<?
+				foreach($unsetattribs as $ak) { ?>
+		
+				<div class="ccm-attribute" id="akID_<?=$as->getAttributeSetID()?>_<?=$ak->getAttributeKeyID()?>">
+					<img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /> <a href="<?=$this->url($editURL, 'edit', $ak->getAttributeKeyID())?>"><?=$ak->getAttributeKeyDisplayName()?></a>
+				</div>
 	
 
 			<? } ?>
-			</div>
+			</fieldset>
 		
 		<?
 		
@@ -104,7 +98,7 @@ if (count($attribs) > 0) { ?>
 	
 	} else { ?>
 		
-		<div class="ccm-attributes-list">
+				<div class="ccm-attribute-list-wrapper">
 		
 		<?
 		foreach($attribs as $ak) { ?>
@@ -128,7 +122,6 @@ if (count($attribs) > 0) { ?>
 	
 <? } ?>
 
-</div>
 
 <script type="text/javascript">
 $(function() {

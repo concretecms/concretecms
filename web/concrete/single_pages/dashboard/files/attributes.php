@@ -33,30 +33,18 @@
 
 <? } else { ?>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Attributes'), false, false, false)?>
-
 	<?
 	$attribs = FileAttributeKey::getList();
 	Loader::element('dashboard/attributes_table', array('category' => $category, 'attribs'=> $attribs, 'editURL' => '/dashboard/files/attributes')); ?>
 
-
-	<div class="ccm-pane-body ccm-pane-body-footer" style="margin-top: -25px">
-
-	<form method="get" class="form-inline" action="<?=$this->action('select_type')?>" id="ccm-attribute-type-form">
-	<div class="control-group">
-	<?=$form->label('atID', t('Add Attribute'))?>
-	<div class="controls">
-	
-	<?=$form->select('atID', $types)?>
-	<?=$form->submit('submit', t('Go'))?>
-	
-	</div>
-	</div>
-	
+	<form method="get" action="<?=$this->action('select_type')?>" id="ccm-attribute-type-form">
+		<label for="atID"><?=t('Add Attribute')?></label>
+		<div class="form-inline">
+		<div class="form-group">
+			<?=$form->select('atID', $types)?>
+		</div>
+		<button type="submit" class="btn btn-default"><?=t('Go')?></button>
+		</div>
 	</form>
-
-	</div>
-	
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
 
 <? } ?>
