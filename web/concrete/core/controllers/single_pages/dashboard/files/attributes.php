@@ -3,17 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 class Concrete5_Controller_Page_Dashboard_Files_Attributes extends DashboardController {
 	
 	public $helpers = array('form');
-	
-	public function __construct() {
-		parent::__construct();
-		$otypes = AttributeType::getList('file');
-		$types = array();
-		foreach($otypes as $at) {
-			$types[$at->getAttributeTypeID()] = $at->getAttributeTypeDisplayName();
-		}
-		$this->set('types', $types);
-	}
-	
+
 	public function delete($akID, $token = null){
 		try {
 			$ak = FileAttributeKey::getByID($akID); 
@@ -47,7 +37,14 @@ class Concrete5_Controller_Page_Dashboard_Files_Attributes extends DashboardCont
 	}
 	
 	public function on_start() {
+		parent::on_start();
 		$this->set('category', AttributeKeyCategory::getByHandle('file'));
+		$otypes = AttributeType::getList('file');
+		$types = array();
+		foreach($otypes as $at) {
+			$types[$at->getAttributeTypeID()] = $at->getAttributeTypeDisplayName();
+		}
+		$this->set('types', $types);
 	}
 	
 	public function add() {
