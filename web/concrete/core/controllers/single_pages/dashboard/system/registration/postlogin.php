@@ -5,7 +5,8 @@ class Concrete5_Controller_Page_Dashboard_System_Registration_Postlogin extends 
 
 	public $helpers = array('form'); 
 	
-	public function __construct() { 
+	public function __construct( $c ) {
+		parent::__construct( $c );
 		$this->token = Loader::helper('validation/token');
 
 		//login redirection

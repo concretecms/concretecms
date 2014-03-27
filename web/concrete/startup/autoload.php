@@ -447,7 +447,6 @@ $classes = array(
 	'PageBulkPropertiesDialogController' => array('controller', '/dialogs/page/bulk/properties'),
 	'FileBulkPropertiesDialogController' => array('controller', '/dialogs/file/bulk/properties'),
 	'UserBulkPropertiesDialogController' => array('controller', '/dialogs/user/bulk/properties'),
-	'DashboardBaseController' => array('controller', '/dashboard/base'),
 	'AccountController' => array('controller', '/account'),
 	'AccountProfileEditController' => array('controller', '/account/profile/edit'),
 	'Zend_Queue_Adapter_Concrete5' => array('library', 'Zend/Queue/Adapter/Concrete5'),

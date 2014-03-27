@@ -1,6 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Bulk Update'));?>
+Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Bulk Update'));
+$form = Loader::helper('form');?>
 
 <? if (is_array($selectedGroups)) { ?>
 

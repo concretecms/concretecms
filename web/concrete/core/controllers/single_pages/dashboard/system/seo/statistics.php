@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Page_Dashboard_System_Seo_Statistics extends DashboardBaseController{
+class Concrete5_Controller_Page_Dashboard_System_Seo_Statistics extends DashboardController{
 
 	public function view($updated = false) {
 		if ($this->isPost()) {

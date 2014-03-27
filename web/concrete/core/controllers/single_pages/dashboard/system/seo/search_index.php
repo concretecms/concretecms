@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Page_Dashboard_System_Seo_SearchIndex extends DashboardBaseController{
+class Concrete5_Controller_Page_Dashboard_System_Seo_SearchIndex extends DashboardController{
 
 	public function view($updated = false) {
 		Loader::library('database_indexed_search');
