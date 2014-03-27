@@ -21,8 +21,6 @@ if (is_object($key)) {
 }
 ?>
 
-<div class="ccm-pane-body">
-
 <? if (is_object($key)) { ?>
 	<?
 	$valt = Loader::helper('validation/token');
@@ -44,24 +42,25 @@ if (is_object($key)) {
 <fieldset>
 <legend><?=t('%s: Basic Details', $type->getAttributeTypeDisplayName())?></legend>
 
-<div class="control-group">
-<?=$form->label('akHandle', t('Handle'))?>
-<div class="controls">
+<div class="form-group">
+	<?=$form->label('akHandle', t('Handle'))?>
+	<div class="input-group">
 	<?=$form->text('akHandle', $akHandle)?>
-	<span class="help-inline"><?=t('Required')?></span>
-</div>
+	<span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i></span>
+	</div>
 </div>
 
-<div class="control-group">
-<?=$form->label('akName', t('Name'))?>
-<div class="controls">
-	<?=$form->text('akName', $akName)?>
-	<span class="help-inline"><?=t('Required')?></span>
-</div>
+
+<div class="form-group">
+	<?=$form->label('akName', t('Name'))?>
+	<div class="input-group">
+		<?=$form->text('akName', $akName)?>
+		<span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i></span>
+	</div>
 </div>
 
 <? if ($category->allowAttributeSets() == AttributeKeyCategory::ASET_ALLOW_SINGLE) { ?>
-<div class="control-group">
+<div class="form-group">
 <?=$form->label('asID', t('Set'))?>
 <div class="controls">
 	<?
@@ -76,9 +75,9 @@ if (is_object($key)) {
 </div>
 <? } ?>
 
-<div class="control-group">
+<div class="form-group">
 <label class="control-label"><?=t('Searchable')?></label>
-<div class="controls">
+
 <?php
 	$category_handle = $category->getAttributeKeyCategoryHandle();
 	$keyword_label = t('Content included in "Keyword Search".');
@@ -98,9 +97,8 @@ if (is_object($key)) {
 			break;
 	}
 	?>
-	<label class="checkbox"><?=$form->checkbox('akIsSearchableIndexed', 1, $akIsSearchableIndexed)?> <span><?=$keyword_label?></span></label>
-	<label class="checkbox"><?=$form->checkbox('akIsSearchable', 1, $akIsSearchable)?> <span><?=$advanced_label?></span></label>
-</div>
+	<div class="checkbox"><label><?=$form->checkbox('akIsSearchableIndexed', 1, $akIsSearchableIndexed)?> <?=$keyword_label?></label></div>
+	<div class="checkbox"><label><?=$form->checkbox('akIsSearchable', 1, $akIsSearchable)?> <?=$advanced_label?></label></div>
 </div>
 
 </fieldset>
@@ -115,14 +113,17 @@ if ($category->getPackageID() > 0) {
 	@Loader::element('attribute/categories/' . $category->getAttributeKeyCategoryHandle(), array('key' => $key));
 }
 ?>
+
 <? $type->render('type_form', $key); ?>
 
-</div>
-<div class="ccm-pane-footer">
 
+<div class="ccm-dashboard-form-actions-wrapper">
+<div class="ccm-dashboard-form-actions">
 <? if (is_object($key)) { ?>
 	<?=$ih->submit(t('Save'), 'ccm-attribute-key-form', 'right', 'primary')?>
 <? } else { ?>
 	<?=$ih->submit(t('Add'), 'ccm-attribute-key-form', 'right', 'primary')?>
 <? } ?>
 </div>
+</div>
+
