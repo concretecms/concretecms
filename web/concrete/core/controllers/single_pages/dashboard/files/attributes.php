@@ -51,10 +51,8 @@ class Concrete5_Controller_Page_Dashboard_Files_Attributes extends DashboardCont
 		$this->select_type();
 		$type = $this->get('type');
 		$cnt = $type->getController();
-		$e = $cnt->validateKey($this->post());
-		if ($e->has()) {
-			$this->set('error', $e);
-		} else {
+		$this->error = $cnt->validateKey($this->post());
+		if (!$this->error->has()) {
 			$type = AttributeType::getByID($this->post('atID'));
 			$ak = FileAttributeKey::add($type, $this->post());
 			$this->redirect('/dashboard/files/attributes/', 'attribute_created');

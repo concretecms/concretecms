@@ -20,7 +20,7 @@ if (is_object($category) && $category->allowAttributeSets()) {
 		<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($c)?>?asGroupAttributes=0"><?=t('In One List')?></a></li>
 		</ul>
 	<? } ?>
-	<button type="submit" name="task" value="activate" class="btn btn-default"><?=t('Manage Sets')?></i></button>
+	<a href="<?=$this->url('/dashboard/system/attributes/sets', 'category', $category->getAttributeKeyCategoryID())?>" class="btn btn-default"><?=t('Manage Sets')?></a>
 </div>
 
 <?
@@ -103,7 +103,7 @@ if (count($attribs) > 0) { ?>
 		<?
 		foreach($attribs as $ak) { ?>
 		<div class="ccm-attribute" id="akID_<?=$ak->getAttributeKeyID()?>">
-			<img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /><a href="<?=$this->url($editURL, 'edit', $ak->getAttributeKeyID())?>"><?=$ak->getAttributeKeyDisplayName()?></a>
+			<img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /> <a href="<?=$this->url($editURL, 'edit', $ak->getAttributeKeyID())?>"><?=$ak->getAttributeKeyDisplayName()?></a>
 		</div>
 		
 		<? } ?>

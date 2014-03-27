@@ -140,25 +140,19 @@ $txt = Loader::helper('text');?>
 
 	<input type="hidden" name="categoryID" value="<?php echo $categoryID?>" />
 	<?php echo Loader::helper('validation/token')->output('add_set')?>
-	<div class="clearfix">
+	<div class="form-group">
 		<?php echo $form->label('asHandle', t('Handle'))?>
-		<div class="input">
-			<?php echo $form->text('asHandle')?>
-		</div>
+		<?php echo $form->text('asHandle')?>
 	</div>
 	
-	<div class="clearfix">
+	<div class="form-group">
 		<?php echo $form->label('asName', t('Name'))?>
-		<div class="input">
-			<?php echo $form->text('asName')?>
-		</div>
+		<?php echo $form->text('asName')?>
 	</div>
 	
-	<div class="clearfix">
-		<label></label>
-		<div class="input">
-			<?php echo $form->submit('submit', t('Add Set'), array('class' => 'btn'))?>
-		</div>
+	<div class="form-group">
+		<label class="control-label"></label>
+		<?php echo $form->submit('submit', t('Add Set'), array('class' => 'btn'))?>
 	</div>
 
 	</form>
