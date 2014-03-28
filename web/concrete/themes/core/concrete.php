@@ -30,7 +30,7 @@ if (is_object($c)) {
 <? if ($showLogo) { ?>
 <div id="ccm-toolbar">
 	<ul>
-		<li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></span></li>
+		<li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></span></li>
 	</ul>
 </div>
 <? } ?>

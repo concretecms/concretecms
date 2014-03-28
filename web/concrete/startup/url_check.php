@@ -1,7 +1,6 @@
 <?php 
 
-defined('C5_EXECUTE') or die("Access Denied.");
-
+use Request;
 if (REDIRECT_TO_BASE_URL == true && C5_ENVIRONMENT_ONLY == false) {
 	$protocol = 'http://';
 	$base_url = BASE_URL;

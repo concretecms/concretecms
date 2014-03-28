@@ -148,7 +148,6 @@ if (!defined('DIR_BASE_CORE')) {
 	define('DIR_BASE_CORE', realpath(dirname(__FILE__) . '/..'));
 }
 
-define('DIRNAME_CORE_CLASSES', 'core');
 # if "concrete/" does NOT exist in DIR_BASE then we set multi_site to on
 if (!is_dir(DIR_BASE . '/' . DIRNAME_APP)) {
 	define("MULTI_SITE", 1);
@@ -165,7 +164,7 @@ define('DIR_LIBRARIES_CORE', DIR_BASE_CORE . '/libraries'); // front-end
 define('DIR_LIBRARIES_3RDPARTY', DIR_LIBRARIES . '/3rdparty');
 define('DIR_LIBRARIES_3RDPARTY_CORE', DIR_LIBRARIES_CORE . '/3rdparty');
 
-ini_set('include_path', DIR_LIBRARIES_3RDPARTY . PATH_SEPARATOR . DIR_LIBRARIES_3RDPARTY_CORE . PATH_SEPARATOR . get_include_path());
+ini_set('include_path', DIR_BASE_CORE . '/vendor' . PATH_SEPARATOR . get_include_path());
 
 # Models are explicit things - concrete-related or not - that deal with the db
 define('DIR_MODELS', DIR_BASE . '/models'); // front-end
