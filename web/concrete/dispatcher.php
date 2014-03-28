@@ -33,13 +33,12 @@ require __DIR__ . '/config/base_pre.php';
 require __DIR__ . '/startup/config_check.php';
 require __DIR__ . '/startup/updated_core_check.php';
 require __DIR__ . '/config/base.php';
-require __DIR__ . '/startup/required.php';
-require __DIR__ . '/startup/autoload.php';
+require __DIR__ . '/startup/classes.php';
 
 /** 
  * Create the app container
  */
-$app = Dispatcher::get();
+$app = Concrete\Core\Dispatcher::get();
 
 /** 
  * Startup

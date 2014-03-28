@@ -1,5 +1,5 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
+use Localization;
 
 /** Translate text (simple form).
 * @param string $text The text to be translated.
