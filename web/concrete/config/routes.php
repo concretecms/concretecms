@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$rl = Router::getInstance();
+$rl = \Concrete\Core\Routing\Router::getInstance();
 
 /** 
  * Install

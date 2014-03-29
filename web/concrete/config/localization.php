@@ -33,10 +33,6 @@ if (!defined("LANGUAGE")) {
 	define("LANGUAGE", ACTIVE_LOCALE);
 }
 
-if (!defined('ENABLE_TRANSLATE_LOCALE_EN_US')) {
-	define('ENABLE_TRANSLATE_LOCALE_EN_US', false);
-}
-
 // initialize localization immediately following defining locale
 Localization::init();
 

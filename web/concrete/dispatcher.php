@@ -33,7 +33,7 @@ require __DIR__ . '/config/base_pre.php';
 require __DIR__ . '/startup/config_check.php';
 require __DIR__ . '/startup/updated_core_check.php';
 require __DIR__ . '/config/base.php';
-require __DIR__ . '/startup/classes.php';
+require __DIR__ . '/startup/autoload.php';
 
 /** 
  * Create the app container
@@ -48,7 +48,7 @@ $app->bootstrap();
 /** 
  * Get the current request
  */
-$request = Request::getInstance();
+$request = Concrete\Core\Http\Request::getInstance();
 
 /** 
  * Start the application

@@ -2,12 +2,11 @@
 namespace Concrete\Core\Localization;
 
 use Loader;
-use Zend_Date;
-use Zend_Translate;
 use Cache;
 
 class Localization {
-	private static $loc = null;
+	private static $loc 
+	= null;
 
 	public function init() {
 		$loc = Localization::getInstance();
@@ -47,12 +46,12 @@ class Localization {
 		
 		$locale = defined('ACTIVE_LOCALE') ? ACTIVE_LOCALE : 'en_US';
 		$this->setLocale($locale);
-		Zend_Date::setOptions(array('format_type' => 'php'));
+		\Zend_Date::setOptions(array('format_type' => 'php'));
 		if (ENABLE_TRANSLATE_LOCALE_EN_US || $locale != 'en_US') {
 			$cache = Cache::getLibrary();
 			if (is_object($cache)) {
-				Zend_Translate::setCache($cache);
-				Zend_Date::setOptions(array('cache'=>$cache));
+				\Zend_Translate::setCache($cache);
+				\Zend_Date::setOptions(array('cache'=>$cache));
 			}
 		}
 	}
@@ -90,7 +89,7 @@ class Localization {
 		}
 
 		if (!isset($this->translate)) {
-			$this->translate = new Zend_Translate($options);
+			$this->translate = new \Zend_Translate($options);
 			$localeNeededLoading = true;
 		} else {
 			if (!in_array($locale, $this->translate->getList())) {
@@ -118,9 +117,9 @@ class Localization {
 		} else {
 			$cache = Cache::getLibrary();
 			if (is_object($cache)) {
-				Zend_Translate::setCache($cache);
+				\Zend_Translate::setCache($cache);
 			}
-			$this->translate = new Zend_Translate(array('adapter' => 'gettext', 'content' => DIR_LANGUAGES_SITE_INTERFACE . '/' . $language . '.mo', 'locale' => $language, 'disableNotices' => true));
+			$this->translate = new \Zend_Translate(array('adapter' => 'gettext', 'content' => DIR_LANGUAGES_SITE_INTERFACE . '/' . $language . '.mo', 'locale' => $language, 'disableNotices' => true));
 		}
 	}
 
@@ -184,7 +183,7 @@ class Localization {
 	 * @return string Description of a language
 	 */
 	public static function getLanguageDescription($locale, $displayLocale = null) {
-		$localeList = Zend_Locale::getLocaleList();
+		$localeList = \Zend_Locale::getLocaleList();
 		if (! isset($localeList[$locale])) {
 			return $locale;
 		} 
@@ -195,19 +194,19 @@ class Localization {
 		
 		$cacheLibrary = Cache::getLibrary();
 		if (is_object($cacheLibrary)) {
-			Zend_Locale_Data::setCache($cacheLibrary);
+			\Zend_Locale_Data::setCache($cacheLibrary);
 		}		
 		
 		$displayLocale = $displayLocale?$displayLocale:$locale;
 		
-		$zendLocale = new Zend_Locale($locale);
-		$languageName = Zend_Locale::getTranslation($zendLocale->getLanguage(), 'language', $displayLocale);
+		$zendLocale = new \Zend_Locale($locale);
+		$languageName = \Zend_Locale::getTranslation($zendLocale->getLanguage(), 'language', $displayLocale);
 		$description = $languageName;
 		$region = $zendLocale->getRegion();
 		if($region !== false) {
-			$regionName = Zend_Locale::getTranslation($region, 'country', $displayLocale);
+			$regionName = \Zend_Locale::getTranslation($region, 'country', $displayLocale);
 			if($regionName !== false) {
-				$localeData = Zend_Locale_Data::getList($displayLocale, 'layout');
+				$localeData = \Zend_Locale_Data::getList($displayLocale, 'layout');
 				if ( $localeData['characters'] == "right-to-left") {
 					$description = '(' . $languageName . ' (' . $regionName ;
 				} else {

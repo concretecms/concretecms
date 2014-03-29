@@ -1,5 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\Asset\AssetList as AssetList;
+use Concrete\Core\Asset\Asset as Asset;
 
 $al = AssetList::getInstance();
 

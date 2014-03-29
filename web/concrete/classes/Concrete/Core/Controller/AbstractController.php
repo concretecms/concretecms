@@ -1,6 +1,7 @@
 <?
 
 namespace Concrete\Core\Controller;
+use Request;
 abstract class AbstractController {
 
 	protected $helpers = array();
@@ -45,9 +46,8 @@ abstract class AbstractController {
 
 	public function getHelperObjects() {
 		$helpers = array();
-		return $helpers;
 		foreach($this->helpers as $handle) {
-			$h = Loader::helper($handle);
+			$h = helper($handle);
 			$helpers[(str_replace('/','_',$handle))] = $h;
 		}		
 		return $helpers;

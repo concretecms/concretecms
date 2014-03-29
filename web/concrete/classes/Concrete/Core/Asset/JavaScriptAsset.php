@@ -52,13 +52,13 @@ class JavaScriptAsset extends Asset {
 		return $assets;
     }
 
-	public static function combine($assets) {
+	public function combine($assets) {
 		return self::process($assets, function($js, $assetPath, $targetPath) {
 			return $js;
 		});
 	}
 
-	public static function minify($assets) {
+	public function minify($assets) {
 		Loader::library('3rdparty/jsmin');
 		return self::process($assets, function($js, $assetPath, $targetPath) {
 			return JSMin::minify($js);

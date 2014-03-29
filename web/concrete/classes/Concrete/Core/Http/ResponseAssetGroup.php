@@ -1,9 +1,9 @@
 <?php 
 namespace Concrete\Core\Http;
-use Asset;
-use AssetGroup;
-use AssetList;
-use AssetPointer;
+use Concrete\Core\Asset\Asset;
+use Concrete\Core\Asset\AssetGroup;
+use Concrete\Core\Asset\AssetList;
+use Concrete\Core\Asset\AssetPointer;
 
 class ResponseAssetGroup {
 
@@ -215,7 +215,7 @@ class ResponseAssetGroup {
 	 */
 	public function getRequiredAssetsToOutput() {
 		$required = $this->requiredAssetGroup->getAssetPointers();
-		$assetPointers = array_filter($required, array('ResponseAssetGroup', 'filterProvidedAssets'));
+		$assetPointers = array_filter($required, array('\Concrete\Core\Http\ResponseAssetGroup', 'filterProvidedAssets'));
 		$assets = array();
 		$al = AssetList::getInstance();
 		foreach($assetPointers as $ap) {

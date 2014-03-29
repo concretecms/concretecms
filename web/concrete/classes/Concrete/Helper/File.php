@@ -1,7 +1,6 @@
 <?
-
-namespace Concrete\Core\Helper;
-use Environment;
+namespace Concrete\Helper;
+use Concrete\Core\Foundation\Environment;
 
 /**
  * File helper

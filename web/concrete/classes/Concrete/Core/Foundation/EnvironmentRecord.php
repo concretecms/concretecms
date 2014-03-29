@@ -1,6 +1,6 @@
 <?
 
-namespace Concrete\Core\Foundation\Environment;
+namespace Concrete\Core\Foundation;
 
 /**
  * @package Core

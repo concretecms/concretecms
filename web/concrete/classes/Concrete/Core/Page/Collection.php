@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Core\Page;
-use Object;
+use Concrete\Core\Foundation\Object as Object;
  
 	class Collection extends Object {
 		
@@ -596,7 +596,7 @@ use Object;
 				// there is nothing in the collections table for this page, so we create and grab
 
 				$data['handle'] = $handle;
-				$cObj = Collection::add($data);
+				$cObj = self::addCollection($data);
 
 			} else {
 				$row = $r->fetchRow();
@@ -752,7 +752,7 @@ use Object;
 				array('cID', 'cvID', 'feID'), true);
 		}
 
-		public function add($data) {
+		public function addCollection($data) {
 			$db = Loader::db();
 			$dh = Loader::helper('date');
 			$cDate = $dh->getSystemDateTime(); 
@@ -837,7 +837,7 @@ use Object;
 			}
 		}
 		
-		public function duplicate() {
+		public function duplicateCollection() {
 			$db = Loader::db();
 			$dh = Loader::helper('date');
 			$cDate = $dh->getSystemDateTime();

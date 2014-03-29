@@ -10,8 +10,7 @@
  *
  */
 
-use FileTypeList;
-use FileType;
+namespace Concrete\Core\File;
 
 $ft = FileTypeList::getInstance();
 $ft->define('jpg,jpeg,jpe', t('JPEG'), FileType::T_IMAGE, 'image', 'image', 'image');

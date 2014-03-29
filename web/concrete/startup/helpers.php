@@ -1,5 +1,7 @@
 <?
-use Localization;
+use Concrete\Core\Foundation\Environment as Environment;
+use Concrete\Core\Foundation\Object as Object;
+use Concrete\Core\Localization\Localization as Localization;
 
 /** Translate text (simple form).
 * @param string $text The text to be translated.
@@ -85,4 +87,70 @@ function tc($context, $text) {
  */
 function h($input) {
     return Loader::helper('text')->specialchars($input);
+}
+
+
+/**
+ * Global helper function
+ */
+function helper($file, $pkgHandle = false) {
+	/*
+
+	$class = Object::camelcase($file) . "Helper";
+	$siteclass = "Site" . Object::camelcase($file) . "Helper";
+
+	if (array_key_exists($class, $instances)) {
+    	$instance = $instances[$class];
+	} else if (array_key_exists($siteclass, $instances)) {
+    	$instance = $instances[$siteclass];
+	} else {
+
+		$env = Environment::get();
+		$f1 = $env->getRecord(DIRNAME_HELPERS . '/' . $file . '.php', $pkgHandle);
+		require_once($f1->file);
+		if ($f1->override) {
+			if (class_exists($siteclass, false)) {
+				$class = $siteclass;
+			}
+		} else if ($pkgHandle) {
+			$pkgclass = Object::camelcase($pkgHandle . '_' . $file) . "Helper";
+			if (class_exists($pkgclass, false)) {
+				$class = $pkgclass;
+			}
+		}
+
+
+		$instance = new $class();
+		if (!property_exists($instance, 'helperAlwaysCreateNewInstance') || $instance->helperAlwaysCreateNewInstance == false) {
+            $instances[$class] = $instance;
+        }
+	}
+	
+	if(method_exists($instance,'reset')) {
+		$instance->reset();
+	}
+	*/
+
+	static $instances = array();
+	$class = Object::camelcase($file);
+
+	if (array_key_exists($class, $instances)) {
+    	$instance = $instances[$class];
+	} else {
+
+		$file = str_replace('/', '\\', $file);
+		$className = Object::camelcase($file);
+		$loader = Concrete\Core\Foundation\ClassLoader::getInstance();
+		$class = $loader->getClassName('Helper\\' . $className);
+		$instance = new $class();
+		if (!property_exists($instance, 'helperAlwaysCreateNewInstance') || $instance->helperAlwaysCreateNewInstance == false) {
+	        $instances[$class] = $instance;
+	    }
+	}
+
+	if(method_exists($instance,'reset')) {
+		$instance->reset();
+	}
+
+	return $instance;
 }

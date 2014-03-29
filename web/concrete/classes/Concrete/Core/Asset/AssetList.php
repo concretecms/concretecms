@@ -1,7 +1,7 @@
 <?
 
 namespace Concrete\Core\Asset;
-use Object; // imports from aliased Concrete\Core\Foundation\Object
+use Concrete\Core\Foundation\Object as Object;
 
 class AssetList {	
 	private static $loc = null;
@@ -30,7 +30,7 @@ class AssetList {
 		// overwrite all the defaults with the arguments
 		$args = array_merge($defaults, $args);
 
-		$class = Object::camelcase($assetType) . 'Asset';
+		$class = '\\Concrete\\Core\\Asset\\' . Object::camelcase($assetType) . 'Asset';
 		$o = new $class($assetHandle);
 		$o->setPackageObject($pkg);
 		$o->setAssetIsLocal($args['local']);
@@ -55,7 +55,7 @@ class AssetList {
 		// we have to check and see if the asset already exists.
 		// If it exists, we only replace it if our current asset has a later version
 		$doRegister = true;
-		if (is_object($this->assets[$asset->getAssetType()][$asset->getAssetHandle()])) {
+		if (isset($this->assets[$asset->getAssetType()][$asset->getAssetHandle()])) {
 			$existingAsset = $this->assets[$asset->getAssetType()][$asset->getAssetHandle()];
 			if (version_compare($existingAsset->getAssetVersion(), $asset->getAssetVersion(), '>')) {
 				$doRegister = false;
@@ -68,9 +68,9 @@ class AssetList {
 
 	public function registerGroup($assetGroupHandle, $assetHandles, $customClass = false) {
 		if ($customClass) {
-			$class = Object::camelcase($assetGroupHandle) . 'AssetGroup';
+			$class = '\\Concrete\\Core\\Asset\\Group\\' . Object::camelcase($assetGroupHandle) . 'AssetGroup';
 		} else {
-			$class = 'AssetGroup';
+			$class = '\\Concrete\\Core\\Asset\\AssetGroup';
 		}
 		$group = new $class();
 		foreach($assetHandles as $assetArray) {

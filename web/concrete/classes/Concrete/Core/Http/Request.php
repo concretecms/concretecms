@@ -1,6 +1,7 @@
 <?php 
 
 namespace Concrete\Core\Http;
+use \Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Loader;
 /**
  * @package Core
@@ -20,7 +21,7 @@ use Loader;
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-class Request extends \Symfony\Component\HttpFoundation\Request {
+class Request extends SymfonyRequest {
 
 	static $_request = null;
 	protected $hasCustomRequestUser;
@@ -32,7 +33,7 @@ class Request extends \Symfony\Component\HttpFoundation\Request {
 		return $this->c;
 	}
 
-	public function setCurrentPage(Page $c) {
+	public function setCurrentPage(\Concrete\Core\Page\Page $c) {
 		$this->c = $c;
 	}
 
@@ -96,25 +97,8 @@ class Request extends \Symfony\Component\HttpFoundation\Request {
 		return $defaultValue;
 	}
 
-	/** 
-	* If no arguments are passed, returns the GET array. If a key is passed, it returns the value as it exists in the GET array.
-	* Also checks the set array, because this function used to return the value of the $this->set() function
-	* If a default value is provided and the key does not exist in the GET array, the default value is returned
-	* @param string $key
-	* @param mixed $defaultValue
-	* @return mixed $value
-	*/
-	public function get($key = null, $defaultValue = null) {
-		if ($key == null) {
-			return $_GET;
-		}
-		if(isset($_GET[$key])){
-			return (is_string($_GET[$key])) ? trim($_GET[$key]) : $_GET[$key];
-		}
-		return $defaultValue;
-	}
 
-	public function request($key = null, $defaultValue = null) {
+	public function request($key = null) {
 		if ($key == null) {
 			return $_REQUEST;
 		}
@@ -125,7 +109,6 @@ class Request extends \Symfony\Component\HttpFoundation\Request {
 			return $req->request->get($key);
 		}
 
-		return $defaultValue;
 	}
 
 	public function isPost() {

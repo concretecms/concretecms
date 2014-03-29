@@ -22,7 +22,7 @@ namespace Concrete\Core\File;
  */
 class FileTypeList {
 	
-	public function getInstance() {
+	public static function getInstance() {
 		static $instance;
 		if (!isset($instance)) {
 			$v = __CLASS__;

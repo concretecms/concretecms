@@ -616,7 +616,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				// there is nothing in the collections table for this page, so we create and grab
 
 				$data['handle'] = $handle;
-				$cObj = Collection::add($data);
+				$cObj = Collection::addCollection($data);
 
 			} else {
 				$row = $r->fetchRow();
@@ -772,7 +772,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 				array('cID', 'cvID', 'feID'), true);
 		}
 
-		public function add($data) {
+		public function addCollection($data) {
 			$db = Loader::db();
 			$dh = Loader::helper('date');
 			$cDate = $dh->getSystemDateTime(); 

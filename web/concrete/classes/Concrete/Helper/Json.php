@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Core\Helper;
+namespace Concrete\Helper;
 /**
  * @package Helpers
  * @category Concrete

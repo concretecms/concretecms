@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Core\Page\Theme;
-use ResponseAssetGroup;
-use Object;
+use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Foundation\Object;
 /**
 *
 * A page's theme is a pointer to a directory containing templates, CSS files and optionally PHP includes, images and JavaScript files. 
