@@ -18,7 +18,7 @@ class Router {
 		return $this->collection;
 	}
 	
-	public function setRequest(Request $req) {
+	public function setRequest(\Concrete\Core\Http\Request $req) {
 		$this->request = $req;
 	}
 	

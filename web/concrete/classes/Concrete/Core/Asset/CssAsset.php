@@ -112,13 +112,13 @@ class CssAsset extends Asset {
 		return $assets;
     }
 
-	public static function combine($assets) {
+	public function combine($assets) {
 		return self::process($assets, function($css, $assetPath, $targetPath) {
 			return CSSAsset::changePaths($css, $assetPath, $targetPath);
 		});
 	}
 
-	public static function minify($assets) {
+	public function minify($assets) {
 		Loader::library('3rdparty/cssmin');
 		return self::process($assets, function($css, $assetPath, $targetPath) {
 			return CssMin::minify($css);

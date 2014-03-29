@@ -10,7 +10,7 @@
  * @license    http://www.concrete5.org/license/     MIT License
  */
 
-namespace Concrete\Core\Helper;
+namespace Concrete\Helper;
 class Security {
 
     public function sanitizeString($string) {

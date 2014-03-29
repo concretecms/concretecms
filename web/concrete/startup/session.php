@@ -49,9 +49,9 @@ if (!empty($_SESSION['client']['REMOTE_ADDR']) && ($_SESSION['client']['REMOTE_A
 }
  
 // session defaults
-if (empty($_SESSION['client']['REMOTE_ADDR'])) {
+if (empty($_SESSION['client']['REMOTE_ADDR']) && isset($_SERVER['REMOTE_ADDR'])) {
    $_SESSION['client']['REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
 }
-if (empty($_SESSION['client']['HTTP_USER_AGENT'])) {
+if (empty($_SESSION['client']['HTTP_USER_AGENT']) && isset($_SERVER['HTTP_USER_AGENT'])) {
    $_SESSION['client']['HTTP_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
 }

@@ -1,6 +1,6 @@
 <?
-namespace Concrete\Core\Page\Theme;
-
+namespace Concrete\Theme;
+use Concrete\Core\Page\Theme\PageTheme;
 class ConcretePageTheme extends PageTheme {
 
 	public function registerAssets() {

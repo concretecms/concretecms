@@ -1,10 +1,9 @@
 <?
 namespace Concrete\Core\View;
-use Asset;
-use ResponseAssetGroup;
-use Environment;
-use Events;
-use ConcretePageTheme;
+use Concrete\Core\Asset\Asset;
+use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\Foundation\Environment;
+use Concrete\Core\Events\Events;
 use Page;
 class View extends AbstractView {
 
@@ -114,7 +113,7 @@ class View extends AbstractView {
 	protected function onBeforeGetContents() {
 		Events::fire('on_before_render', $this);
 		if ($this->themeHandle == VIEW_CORE_THEME) {
-			$_pt = new ConcretePageTheme();
+			$_pt = new \Concrete\Theme\ConcretePageTheme();
 			$_pt->registerAssets();
 		} else if (is_object($this->themeObject)) {
 			$this->themeObject->registerAssets();
@@ -265,6 +264,20 @@ class View extends AbstractView {
 	
 	protected function outputAssetIntoView($item) {
 		return $item . "\n";			
+	}
+
+	public static function element($_file, $args = null, $_pkgHandle= null) {
+
+		if (is_array($args)) {
+			$collisions = array_intersect(array('_file', '_pkgHandle'), array_keys($args));
+			if ($collisions) {
+				throw new Exception(t("Illegal variable name '%s' in element args.", implode(', ', $collisions)));
+			}
+			$collisions = null;
+			extract($args);
+		}
+
+		include(Environment::get()->getPath(DIRNAME_ELEMENTS . '/' . $_file . '.php', $_pkgHandle));
 	}
 
 }

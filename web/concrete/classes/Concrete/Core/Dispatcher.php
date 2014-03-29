@@ -1,11 +1,9 @@
 <?
 namespace Concrete\Core;
 
-use Loader;
-use Request;
 use Redirect;
-use Router;
-
+use Concrete\Core\Http\Request as Request;
+use Concrete\Core\Routing\Router as Router;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 
@@ -22,6 +20,7 @@ class Dispatcher {
 	 * Loads everything in the proper order to begin a concrete5 visit
 	 */
 	public function bootstrap() {
+		require(DIR_BASE_CORE . '/startup/helpers.php');
 		$this->installed = CONFIG_FILE_EXISTS;
 		if (file_exists(DIR_CONFIG_SITE . '/site_post_autoload.php')) {
 			require(DIR_CONFIG_SITE . '/site_post_autoload.php');
@@ -31,7 +30,6 @@ class Dispatcher {
 
 		require(DIR_BASE_CORE . '/startup/timezone.php');
 		require(DIR_BASE_CORE . '/startup/file_access_check.php');
-		require(DIR_BASE_CORE . '/startup/helpers.php');
 		require(DIR_BASE_CORE . '/config/theme_paths.php');
 		if (file_exists(DIR_CONFIG_SITE . '/site_assets.php')) {
 			require(DIR_CONFIG_SITE . '/site_assets.php');
@@ -39,6 +37,7 @@ class Dispatcher {
 		require(DIR_BASE_CORE . '/config/assets.php');
 		require(DIR_BASE_CORE . '/startup/session.php');
 		require(DIR_BASE_CORE . '/config/routes.php');
+		require(DIR_BASE_CORE . '/config/class_aliases.php');
 		if (file_exists(DIR_CONFIG_SITE . '/routes.php')) {
 			require(DIR_CONFIG_SITE . '/routes.php');
 		}
@@ -96,7 +95,7 @@ class Dispatcher {
 	protected function getEarlyStartResponse() {
 		// check to see if this is an upgrade
 		if ($this->request->getPath() == '/tools/required/upgrade') {
-			$cnt = Loader::controller('/upgrade');
+			//$cnt = Loader::controller('/upgrade');
 			$cnt->on_start();
 			$cnt->view();
 			$v = $cnt->getViewObject();

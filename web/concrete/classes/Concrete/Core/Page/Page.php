@@ -509,7 +509,7 @@ class Page extends Collection {
 		$data['handle'] = $this->getCollectionHandle();
 		$data['name'] = $this->getCollectionName();
 
-		$cobj = parent::add($data);
+		$cobj = parent::addCollection($data);
 		$newCID = $cobj->getCollectionID();
 
 		$v = array($newCID, $cParentID, $uID, $this->getCollectionID());
@@ -577,7 +577,7 @@ class Page extends Collection {
 		$data['handle'] = $handle;
 		$data['name'] = $cName;
 
-		$cobj = parent::add($data);
+		$cobj = parent::addCollection($data);
 		$newCID = $cobj->getCollectionID();
 
 		if ($newWindow) {
@@ -1838,7 +1838,7 @@ class Page extends Collection {
 			}
 		}
 
-		$newC = $cobj->duplicate();
+		$newC = $cobj->duplicateCollection();
 		$newCID = $newC->getCollectionID();
 
 		$v = array($newCID, $this->getPageTypeID(), $cParentID, $uID, $this->overrideTemplatePermissions(), $this->getPermissionsCollectionID(), $this->getCollectionInheritance(), $this->cFilename, $this->cPointerID, $this->cPointerExternalLink, $this->cPointerExternalLinkNewWindow, $this->cDisplayOrder, $this->pkgID);
@@ -2296,7 +2296,7 @@ class Page extends Collection {
 		$data['uID'] = $uID;
 		$data['cID'] = HOME_CID;
 
-		$cobj = parent::add($data);
+		$cobj = parent::addCollection($data);
 		$cID = $cobj->getCollectionID();
 
 		$cDate = $dh->getSystemDateTime();
@@ -2379,7 +2379,7 @@ class Page extends Collection {
 			$data['pTemplateID'] = $template->getPageTemplateID();
 		}
 
-		$cobj = parent::add($data);
+		$cobj = parent::addCollection($data);
 		$cID = $cobj->getCollectionID();
 
 		//$this->rescanChildrenDisplayOrder();
@@ -2474,7 +2474,7 @@ class Page extends Collection {
 		$uID = USER_SUPER_ID;
 		$data['uID'] = $uID;
 		$cIsSystemPage = 0;
-		$cobj = parent::add($data);
+		$cobj = parent::addCollection($data);
 		$cID = $cobj->getCollectionID();
 
 		$this->rescanChildrenDisplayOrder();

@@ -16,8 +16,8 @@ abstract class Asset {
 
 	abstract public function getAssetDefaultPosition();
 	abstract public function getAssetType();
-	abstract public static function minify($assets);
-	abstract public static function combine($assets);
+	abstract public function minify($assets);
+	abstract public function combine($assets);
 	abstract public function __toString();
 
 	public function assetSupportsMinification() { return $this->local && $this->assetSupportsMinification;}

@@ -137,7 +137,7 @@ class Concrete5_Model_PageType extends Object {
 			$dh = Loader::helper('date');
 			$cDate = $dh->getSystemDateTime();
 			$data['pTemplateID'] = $template->getPageTemplateID();
-			$cobj = Collection::add($data);
+			$cobj = Collection::addCollection($data);
 			$cID = $cobj->getCollectionID();
 			
 			$v2 = array($cID, 1);

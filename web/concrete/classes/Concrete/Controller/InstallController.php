@@ -1,9 +1,10 @@
 <?
 namespace Concrete\Controller;
-use Cache;
 use Loader;
-use Localization;
-use View;
+use Cache;
+use Concrete\Core\Localization\Localization as Localization;
+use Concrete\Core\Foundation\Environment as Environment;
+use Concrete\Core\View\View;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 ini_set('display_errors', 1);
@@ -76,8 +77,7 @@ class InstallController extends Controller {
 		Cache::disableLocalCache();
 		$this->setRequiredItems();
 		$this->setOptionalItems();
-		Loader::model('package/starting_point');
-
+		
 		if (file_exists(DIR_CONFIG_SITE . '/site.php')) {
 			throw new Exception(t('concrete5 is already installed.'));
 		}		

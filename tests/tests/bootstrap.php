@@ -6,12 +6,19 @@
 // TODO: check include path
 //ini_set('include_path', ini_get('include_path'));
 
-error_reporting(E_ERROR | E_WARNING | E_USER_ERROR);
-
 define('C5_EXECUTE', true);
-$DIR_BASE = realpath(dirname(__FILE__) . '/../../web');
-define('DIR_BASE', $DIR_BASE);
+define('C5_ENVIRONMENT_ONLY', true);
+$DIR_BASE_CORE = realpath(dirname(__FILE__) . '/../../web/concrete');
 
+require $DIR_BASE_CORE . '/config/base_pre.php';
+require $DIR_BASE_CORE . '/startup/config_check.php';
+require $DIR_BASE_CORE . '/startup/updated_core_check.php';
+require $DIR_BASE_CORE . '/config/base.php';
+require $DIR_BASE_CORE . '/startup/autoload.php';
+
+$app = Concrete\Core\Dispatcher::get();
+$app->bootstrap();
+/*
 //causes dispatcher to skip the page rendering
 define('C5_ENVIRONMENT_ONLY', true);
 
@@ -30,5 +37,4 @@ Log::addEntry('bootsrapped','unit tests');
 
 // include adodb-lib to avoid a PHPUnit problem with globals
 include(ADODB_DIR.'/adodb-lib.inc.php');
-
-?>
+*/

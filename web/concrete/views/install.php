@@ -215,7 +215,7 @@ $(function() {
 
 		
 		<?
-		$uh = Loader::helper('concrete/urls');
+		$uh = helper('concrete/urls');
 		?>
 		
 		<table class="table table-striped" id="sample-content-selector">

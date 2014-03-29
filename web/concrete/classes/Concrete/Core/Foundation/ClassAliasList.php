@@ -18,7 +18,6 @@ class ClassAliasList {
 
 	public function register($alias, $class) {
 		$this->aliases[$alias] = $class;
-		class_alias($class, $alias);
 	}
 
 	public function registerMultiple($array) {

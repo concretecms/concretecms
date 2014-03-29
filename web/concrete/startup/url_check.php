@@ -1,6 +1,6 @@
 <?php 
 
-use Request;
+
 if (REDIRECT_TO_BASE_URL == true && C5_ENVIRONMENT_ONLY == false) {
 	$protocol = 'http://';
 	$base_url = BASE_URL;
@@ -29,6 +29,7 @@ if (REDIRECT_TO_BASE_URL == true && C5_ENVIRONMENT_ONLY == false) {
 }
 
 $r = Request::getInstance();
+
 /** 
  * Normalize trailing slash
  */

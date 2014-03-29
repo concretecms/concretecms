@@ -15,13 +15,23 @@ if (!defined('ENABLE_APPLICATION_EVENTS')) {
 	define('ENABLE_APPLICATION_EVENTS', true);
 }
 
+if (!defined('NAMESPACE_SEGMENT_VENDOR')) {
+	define('NAMESPACE_SEGMENT_VENDOR', 'Concrete');	
+}
+
+if (!defined('NAMESPACE_SEGMENT_APPLICATION')) {
+	define('NAMESPACE_SEGMENT_APPLICATION', 'Application');	
+}
+
 # These items should be set by site.php in config/ but if they're not that means we're installing and we need something there
 /* https patch applied here */
 if (!defined('BASE_URL')) {
 	if(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) {
 		define('BASE_URL', 'https://' . $_SERVER['HTTP_HOST']);
-	} else {
+	} else if (isset($_SERVER['HTTP_HOST'])) {
 		define('BASE_URL', 'http://' . $_SERVER['HTTP_HOST']);
+	} else {
+		define('BASE_URL', false);
 	}
 }
 
@@ -32,11 +42,6 @@ if (!defined('DIR_REL')) {
 	}
 	$uri = substr($_SERVER['SCRIPT_NAME'], 0, $pos);
 	define('DIR_REL', $uri);
-}
-
-if ($config_check_failed) {
-	// we define URL_REWRITING to be false
-	define('URL_REWRITING', false);
 }
 
 // AS: moved to concrete/config/app.php Wednesday; February 4, 2009
@@ -223,6 +228,7 @@ define('DIRNAME_BLOCK_TOOLS', 'tools');
 define('DIRNAME_BLOCK_TEMPLATES', 'templates');
 define('DIRNAME_BLOCK_TEMPLATES_COMPOSER', 'composer');
 define('DIRNAME_CSS', 'css');
+define('DIRNAME_CLASSES', 'classes');
 define('DIRNAME_PREVIEW', 'preview');
 define('DIRNAME_GROUP', 'group');
 define('DIRNAME_GROUP_AUTOMATION', 'automation');
@@ -251,9 +257,6 @@ define('FILENAME_BLOCK_ICON', 'icon.png');
 define('FILENAME_BLOCK_CONTROLLER', 'controller.php');
 define('FILENAME_BLOCK_DB', 'db.xml');
 define('BLOCK_HANDLE_SCRAPBOOK_PROXY', 'core_scrapbook_display');
-define('BLOCK_HANDLE_GATHERING_ITEM_PROXY', 'core_gathering_item');
-define('BLOCK_HANDLE_GATHERING_PROXY', 'core_gathering_display');
-define('BLOCK_HANDLE_GATHERING', 'core_gathering');
 define('BLOCK_HANDLE_LAYOUT_PROXY', 'core_area_layout');
 define('BLOCK_HANDLE_PAGE_TYPE_OUTPUT_PROXY', 'core_page_type_composer_control_output');
 define('FILENAME_FORM', 'form.php');
@@ -375,6 +378,10 @@ define('DIR_FILES_UPLOADED_STANDARD', DIR_BASE . '/files');
 define('DIR_FILES_TRASH_STANDARD', DIR_BASE . '/files/trash');
 define('REL_DIR_FILES_UPLOADED', DIR_REL . '/files');
 
+if (!defined('ENABLE_TRANSLATE_LOCALE_EN_US')) {
+	define('ENABLE_TRANSLATE_LOCALE_EN_US', false);
+}
+
 if (!defined('DIR_FILES_BACKUPS')) {
 	define('DIR_FILES_BACKUPS', DIR_BASE . '/files/backups');
 }
@@ -431,6 +438,9 @@ if(!defined('DIR_FILES_BIN_ASPELL')) define('DIR_FILES_BIN_ASPELL', '/usr/bin/as
 
 # Gathering
 define('BLOCK_HANDLE_GATHERING', 'core_gathering');
+define('BLOCK_HANDLE_GATHERING_ITEM_PROXY', 'core_gathering_item');
+define('BLOCK_HANDLE_GATHERING_PROXY', 'core_gathering_display');
+
 if (!defined('DIRNAME_GATHERING')) {
 	 define('DIRNAME_GATHERING', 'gathering');
 }

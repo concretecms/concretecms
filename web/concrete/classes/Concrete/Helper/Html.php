@@ -1,8 +1,8 @@
 <?
-namespace Concrete\Core\Helper;
-use CSSAsset;
-use JavaScriptAsset;
-use View;
+namespace Concrete\Helper;
+use Concrete\Core\Asset\CSSAsset;
+use Concrete\Core\Asset\JavaScriptAsset;
+use Concrete\Core\View\View;
 
 /**
  * @package Helpers

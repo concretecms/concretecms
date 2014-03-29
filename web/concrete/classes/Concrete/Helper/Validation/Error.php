@@ -1,6 +1,6 @@
 <?
 
-namespace Concrete\Core\Helper\Validation;
+namespace Concrete\Helper\Validation;
 
 /**
  * @package Helpers
