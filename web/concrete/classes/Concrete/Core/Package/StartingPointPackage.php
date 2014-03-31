@@ -1,6 +1,7 @@
 <?
 
 namespace Concrete\Core\Package;
+use Cache;
 use Concrete\Core\Foundation\Object;
 class StartingPointPackage extends Package {
 
@@ -288,7 +289,7 @@ class StartingPointPackage extends Package {
 		return false;
 	}
 
-	protected function getClass($pkgHandle) {
+	public function getClass($pkgHandle) {
 		$dir = (is_dir(DIR_STARTING_POINT_PACKAGES . '/' . $pkgHandle)) ? DIR_STARTING_POINT_PACKAGES : DIR_STARTING_POINT_PACKAGES_CORE;
 		if (file_exists($dir . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER)) {
 			require_once($dir . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER);
@@ -315,28 +316,6 @@ class StartingPointPackage extends Package {
 			$availableList[] = static::getClass($pkgHandle);
 		}
 		return $availableList;
-	}
-
-}
-
-class StartingPointInstallRoutine {
-
-	public function __construct($method, $progress, $text = '') {
-		$this->method = $method;
-		$this->progress = $progress;
-		$this->text = $text;
-	}
-
-	public function getMethod() {
-		return $this->method;
-	}
-
-	public function getText() {
-		return $this->text;
-	}
-
-	public function getProgress() {
-		return $this->progress;
 	}
 
 }

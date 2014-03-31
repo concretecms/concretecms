@@ -2,9 +2,11 @@
 namespace Concrete\Controller;
 use Loader;
 use Cache;
+use StartingPointPackage;
 use Concrete\Core\Localization\Localization as Localization;
 use Concrete\Core\Foundation\Environment as Environment;
 use Concrete\Core\View\View;
+use Concrete\Core\Database\Database;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 ini_set('display_errors', 1);
@@ -99,9 +101,9 @@ class InstallController extends Controller {
 				$this->set('error', $e);
 			} else {
 				if (defined('INSTALL_STARTING_POINT') && INSTALL_STARTING_POINT) { 
-					$spl = Loader::startingPointPackage(INSTALL_STARTING_POINT);
+					$spl = StartingPointPackage::getClass(INSTALL_STARTING_POINT);
 				} else {
-					$spl = Loader::startingPointPackage('standard');
+					$spl = StartingPointPackage::getClass('standard');
 				}
 				$this->set('installPackage', $spl->getPackageHandle());
 				$this->set('installRoutines', $spl->getInstallRoutines());
@@ -171,12 +173,12 @@ class InstallController extends Controller {
 	}
 	
 	public function run_routine($pkgHandle, $routine) {
-		$spl = Loader::startingPointPackage($pkgHandle);
+		$spl = StartingPointPackage::getClass($pkgHandle);
 		require(DIR_CONFIG_SITE . '/site_install.php');
 		@include(DIR_CONFIG_SITE . '/site_install_user.php');
 		
 		$jsx = Loader::helper('json');
-		$js = new stdClass;
+		$js = new \stdClass;
 		
 		try {
 			call_user_func(array($spl, $routine));
@@ -191,7 +193,7 @@ class InstallController extends Controller {
 	}
 	
 	protected function validateSampleContent($e) {
-		$pkg = Loader::startingPointPackage($this->post('SAMPLE_CONTENT'));
+		$pkg = StartingPointPackage::getClass($this->post('SAMPLE_CONTENT'));
 		if (!is_object($pkg)) {
 			$e->add(t("You must select a valid sample content starting point."));
 		}
@@ -205,11 +207,22 @@ class InstallController extends Controller {
 
 			// attempt to connect to the database
 			if (defined('DB_SERVER')) {
-				$db = Loader::db($DB_SERVER, $DB_USERNAME, $DB_PASSWORD, $DB_DATABASE, true);
+				$db = Database::connect(array(
+					'host' => DB_SERVER,
+					'user' => DB_USERNAME,
+					'password' => DB_PASSWORD,
+					'database' => DB_DATABASE
+				));
 				$DB_SERVER = DB_SERVER;
 				$DB_DATABASE = DB_DATABASE;
 			} else {
-				$db = Loader::db( $_POST['DB_SERVER'], $_POST['DB_USERNAME'], $_POST['DB_PASSWORD'], $_POST['DB_DATABASE'], true);			
+				$db = Database::connect(array(
+					'host' => $_POST['DB_SERVER'],
+					'user' => $_POST['DB_USERNAME'],
+					'password' => $_POST['DB_PASSWORD'],
+					'database' => $_POST['DB_DATABASE']
+				));
+
 				$DB_SERVER = $_POST['DB_SERVER'];
 				$DB_DATABASE = $_POST['DB_DATABASE'];
 			}
@@ -230,7 +243,7 @@ class InstallController extends Controller {
 	
 	public function reset() {
 		// remove site.php so that we can try again ?
-		return;
+
 		if (is_resource($this->fp)) {
 			fclose($this->fp);
 		}
@@ -275,7 +288,7 @@ class InstallController extends Controller {
 			
 			$e = $this->validateDatabase($e);
 			$e = $this->validateSampleContent($e);
-			
+
 			if ($val->test() && (!$e->has())) {
 
 
@@ -305,8 +318,7 @@ class InstallController extends Controller {
 				}
 
 				if ($this->fpu) {
-					Loader::library('3rdparty/phpass/PasswordHash');
-					$hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
+					$hasher = new \PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
 					$configuration = "<?php\n";
 					$configuration .= "define('INSTALL_USER_EMAIL', '" . $_POST['uEmail'] . "');\n";
 					$configuration .= "define('INSTALL_USER_PASSWORD_HASH', '" . $hasher->HashPassword($_POST['uPassword']) . "');\n";
@@ -327,6 +339,7 @@ class InstallController extends Controller {
 
 			
 			} else {
+
 				if ($e->has()) {
 					$this->set('error', $e);
 				} else {
