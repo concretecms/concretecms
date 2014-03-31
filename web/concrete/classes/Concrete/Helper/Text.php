@@ -9,6 +9,8 @@
  */
 
 namespace Concrete\Helper;
+use \Concrete\Core\Foundation\Object;
+
 class Text { 
 
 	/** Takes text and converts it to an ASCII-only string (characters with code between 32 and 127, plus \t, \n and \r).

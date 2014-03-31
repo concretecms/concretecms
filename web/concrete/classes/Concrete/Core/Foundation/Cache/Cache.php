@@ -3,6 +3,9 @@ namespace Concrete\Core\Foundation\Cache;
 use Loader;
 use Zend_Cache;
 use Zend_Translate;
+use Concrete\Core\Foundation\Cache\Page\PageCache;
+use Concrete\Core\Events\Events;
+
 class Cache {
 	
 	public static function key($type, $id) {
