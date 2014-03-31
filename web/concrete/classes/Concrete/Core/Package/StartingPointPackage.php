@@ -3,6 +3,7 @@
 namespace Concrete\Core\Package;
 use Cache;
 use Concrete\Core\Foundation\Object;
+use Loader;
 class StartingPointPackage extends Package {
 
 
@@ -142,7 +143,6 @@ class StartingPointPackage extends Package {
 		$db = Loader::db();
 		$installDirectory = DIR_BASE_CORE. '/config';
 		try {
-			Database::ensureEncoding();
 			Package::installDB($installDirectory . '/db.xml');
 			$this->indexAdditionalDatabaseFields();
 		} catch (Exception $e) {

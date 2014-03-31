@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Core\Package;
 use Concrete\Core\Foundation\Object;
+use Concrete\Core\Database\Database;
+use Loader;
 /**
  *
  * Groups and lists installed and available pages.
@@ -184,16 +186,7 @@ class Package extends Object {
 		}
 		
 		// currently this is just done from xml
-		
 		$db = Loader::db();
-
-		// this sucks - but adodb generates errors at the beginning because it attempts
-		// to find a table that doesn't exist! 
-		
-		$handler = $db->IgnoreErrors();
-		if (Database::getDebug() == false) {
-			ob_start();
-		}
 		
 		$schema = Database::getADOSChema();		
 		$sql = $schema->ParseSchema($xmlFile);
@@ -207,13 +200,7 @@ class Package extends Object {
 
 		$r = $schema->ExecuteSchema();
 
-
-		if (Database::getDebug() == false) {
-			$dbLayerErrorMessage = ob_get_contents();
-			ob_end_clean();
-		}
-		
-		$result = new stdClass;
+		$result = new \stdClass;
 		$result->result = false;
 		
 		if ($dbLayerErrorMessage != '') {
