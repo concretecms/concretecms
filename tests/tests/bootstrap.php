@@ -1,7 +1,14 @@
 <?php
 /**
  * @author jshannon
+ * @author Andrew Embler
  */
+
+// testing credentials
+define('DB_USERNAME', 'phpunitTesting');
+define('DB_PASSWORD', 'phpunitTesting');
+define('DB_DATABASE', 'phpunitTesting');
+define('DB_SERVER', 'localhost');
 
 // TODO: check include path
 //ini_set('include_path', ini_get('include_path'));

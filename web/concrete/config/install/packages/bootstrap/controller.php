@@ -1,5 +1,5 @@
 <?
-
+use \Concrete\Core\Package\StartingPointPackage;
 class BootstrapStartingPointPackage extends StartingPointPackage {
 
 	protected $pkgHandle = 'bootstrap';

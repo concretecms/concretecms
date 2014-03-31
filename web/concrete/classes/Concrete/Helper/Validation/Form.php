@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Helper\Validation;
+use Loader;
 /**
  * @package Helpers
  * @subpackage Validation
@@ -199,7 +200,7 @@ namespace Concrete\Helper\Validation;
 							$this->fieldsInvalid[] = $f;
 						}
 						break;
-					case ststic::VALID_UPLOADED_FILE_REQUIRED:
+					case self::VALID_UPLOADED_FILE_REQUIRED:
 						if (!$fil->file($this->files[$field]['tmp_name'])) {
 							$this->fieldsInvalid[] = $f;
 						}

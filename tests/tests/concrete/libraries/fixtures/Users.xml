@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<mysqldump xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<database name="phpunitTesting">
+  <table_data name="Users">
+		<row>
+			<field name="uName">admin</field>
+			<field name="uEmail">andrew@concrete5.org</field>
+		</row>
+		<row>
+			<field name="uName">testuser</field>
+			<field name="uEmail">testuser@concrete5.org</field>
+		</row>
+	</table_data>
+</database>
+</mysqldump>

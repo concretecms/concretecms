@@ -41,6 +41,7 @@ class ClassLoader  {
 
 	protected function setupLegacyAutoloader() {
 		$mapping = array(
+			'PasswordHash' => DIR_BASE_CORE . '/vendor/phpass/PasswordHash.php',
 		    'Loader' => DIR_BASE_CORE . '/classes/Concrete/Core/Legacy/Loader.php',
 		);
 
