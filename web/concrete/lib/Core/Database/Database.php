@@ -49,4 +49,39 @@ class Database {
 		return $connection;
 	}
 
+	/** 
+	 * @deprecated
+	 */
+	public static function getADOSChema() {
+		return false;
+	}
+
+	/** 
+	 * @deprecated
+	 */
+	public function setDebug($_debug) {
+		return false;
+	}
+
+	/** 
+	 * @deprecated
+	 */
+	public function getDebug() {
+		return false;
+	}
+
+	/** 
+	 * @deprecated
+	 */
+	public function setLogging($log) {
+		return false;
+	}
+
+	/** 
+	 * @deprecated
+	 */
+	public static function ensureEncoding() {
+		return false;
+	}
+
 }

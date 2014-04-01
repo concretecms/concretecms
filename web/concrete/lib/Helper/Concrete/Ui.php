@@ -18,7 +18,7 @@ namespace Concrete\Helper\Concrete;
  * @license    http://www.concrete5.org/license/     MIT License
  */
 
-class Ui {
+class UI {
 
 	static $menuItems = array();
 	
