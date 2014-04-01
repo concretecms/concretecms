@@ -9,11 +9,11 @@
     <field name="ptName" type="C" size="255">
       <notnull/>
     </field>
-    <field name="ptHandle" type="C" size="255">
+    <field name="ptHandle" type="C" size="128">
       <notnull/>
     </field>
     <field name="ptPublishTargetTypeID" type="I" size="10">
-      <unsigned/>
+      <UNSIGNED />
     </field>
     <field name="ptDefaultPageTemplateID" type="I" size="10">
       <unsigned/>
@@ -640,11 +640,6 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="cnvMessageParentID" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
 
     <field name="cnvMessageDateCreated" type="T"/>
     <field name="cnvMessageSubject" type="X"/>
@@ -687,7 +682,7 @@
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="cnvMessageFlagTypeHandle" type="c" size="64" />
+    <field name="cnvMessageFlagTypeHandle" type="C" size="64" />
     <index name='cnvMessageFlagTypeID'>
       <col>cnvMessageFlagTypeID</col>
     </index>
@@ -2326,8 +2321,6 @@
     </field>
   </table>
   <table name="FileVersions">
-    <opt platform="MYSQL">ENGINE=MYISAM</opt>
-    <opt platform="MYSQLT">ENGINE=MYISAM</opt>
     <field name="fID" type="I" size="10">
       <key/>
       <default value="0"/>
@@ -2393,7 +2386,7 @@
     <index name="fvExtension">
       <col>fvExtension</col>
     </index>
-    <index name="fvExtension">
+    <index name="fvType">
       <col>fvType</col>
     </index>
     <index name="fvTitle">
@@ -2557,10 +2550,6 @@
       <default value="0"/>
       <unsigned/>
     </field>
-    <index name="gName">
-      <unique/>
-      <col>gName</col>
-    </index>
   </table>
   <table name="Jobs">
     <field name="jID" type="I" size="10">
@@ -2594,18 +2583,6 @@
       <notnull/>
     </field>
     <field name="jNotUninstallable" type="I2" size="4">
-      <notnull/>
-      <default value="0"/>
-    </field>
-    <field name="isScheduled" type="I2" size="1">
-      <notnull/>
-      <default value="0"/>
-    </field>
-    <field name="scheduledInterval" type="C" size="255">
-      <notnull/>
-      <default value="days"/>
-    </field>
-    <field name="scheduledValue" type="I" size="10">
       <notnull/>
       <default value="0"/>
     </field>

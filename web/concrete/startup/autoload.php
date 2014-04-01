@@ -6,7 +6,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * it needs in order to do so
  */
 
-require __DIR__ . '/../classes/Concrete/Core/Foundation/Classloader.php';
+require __DIR__ . '/../lib/Core/Foundation/Classloader.php';
 require __DIR__ . '/../vendor/zend/Loader/Autoloader.php';
 require __DIR__ . '/../vendor/autoload.php';
 

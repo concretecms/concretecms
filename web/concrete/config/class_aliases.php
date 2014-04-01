@@ -11,7 +11,14 @@ $list->registerMultiple(array(
 	'Response' => 'Core\Http\Response',
 	'Cookie' => 'Core\Cookie\Cookie',
 	'Page' => 'Core\Page\Page',
+	'Package' => 'Core\Package\Package',
 	'Collection' => 'Core\Page\Collection',
-	'StartingPointPackage' => 'Core\Package\StartingPointPackage'
+	'User' => 'Core\User\User',
+	'StartingPointPackage' => 'Core\Package\StartingPointPackage',
+	'AuthenticationType' => 'Core\Authentication\AuthenticationType',
+	'ConcreteAuthenticationTypeController' => 'Core\Authentication\Type\Concrete',
+	'FacebookAuthenticationTypeController' => 'Core\Authentication\Type\Facebook',
+	'GroupTree' => 'Core\Foundation\Tree\Type\Group',
+	'GroupTreeNode' => 'Core\Foundation\Tree\Node\Type\Group'
 
 ));
