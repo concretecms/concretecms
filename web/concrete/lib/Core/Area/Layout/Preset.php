@@ -1,7 +1,7 @@
-<?
-
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_AreaLayoutPreset extends Object {
+<?php
+namespace Concrete\Core\Area\Layout;
+use \Concrete\Core\Foundation\Object;
+class Preset extends Object {
 
 	public static function add(AreaLayout $arLayout, $name) {
 		$db = Loader::db();

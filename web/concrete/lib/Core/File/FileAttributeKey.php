@@ -1,24 +1,7 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-/**
- * Contains the file attribute key and value objects.
- * @package Pages
- * @author Andrew Embler <andrew@concrete5.org>
- * @category Concrete
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- *
- */
-/**
- * An object that represents metadata added to files. 
- * @author Andrew Embler <andrew@concrete5.org>
- * @package Pages
- * @category Concrete
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- *
- */
-class Concrete5_Model_FileAttributeKey extends AttributeKey {
+namespace Concrete\Core\File;
+use \Concrete\Core\Attribute\Attribute\Key as AttributeKey;
+class FileAttributeKey extends AttributeKey {
 
 	public function getIndexedSearchTable() {
 		return 'FileSearchIndexAttributes';
@@ -179,45 +162,4 @@ class Concrete5_Model_FileAttributeKey extends AttributeKey {
 		$db->Execute('delete from FileAttributeValues where akID = ?', array($this->getAttributeKeyID()));
 	}
 
-}
-
-class Concrete5_Model_FileAttributeValue extends AttributeValue {
-
-	/**
-	 * @param File $f
-	 */
-	public function setFile($f) {
-		$this->f = $f;
-	}
-
-	/**
-	 * @return File
-	 */
-	public function getFile() {
-		return $this->f;
-	}
-	
-	public static function getByID($avID) {
-		$fav = new FileAttributeValue();
-		$fav->load($avID);
-		if ($fav->getAttributeValueID() == $avID) {
-			return $fav;
-		}
-	}
-
-	public function delete() {
-		$db = Loader::db();
-		$db->Execute('delete from FileAttributeValues where fID = ? and fvID = ? and akID = ? and avID = ?', array(
-			$this->f->getFileID(), 
-			$this->f->getFileVersionID(),
-			$this->attributeKey->getAttributeKeyID(),
-			$this->getAttributeValueID()
-		));
-
-		// Before we run delete() on the parent object, we make sure that attribute value isn't being referenced in the table anywhere else
-		$num = $db->GetOne('select count(avID) from FileAttributeValues where avID = ?', array($this->getAttributeValueID()));
-		if ($num < 1) {
-			parent::delete();
-		}
-	}
 }

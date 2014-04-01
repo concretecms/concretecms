@@ -1,8 +1,6 @@
-<?
-
-defined('C5_EXECUTE') or die("Access Denied.");
-
-class Concrete5_Model_SubArea extends Area {
+<?php
+namespace Concrete\Core\Area;
+class SubArea {
 
 	const AREA_SUB_DELIMITER = ' : ';
 

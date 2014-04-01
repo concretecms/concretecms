@@ -1,9 +1,7 @@
-<?
-
-defined('C5_EXECUTE') or die("Access Denied.");
-
-class Concrete5_Model_GlobalArea extends Area {
-
+<?php
+namespace Concrete\Core\Area;
+use Area;
+class GlobalArea extends Area {
 
 	public function isGlobalArea() {return true;}
 	

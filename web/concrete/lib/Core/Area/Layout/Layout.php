@@ -1,8 +1,7 @@
-<?
-
-defined('C5_EXECUTE') or die("Access Denied.");
-
-abstract class Concrete5_Model_AreaLayout extends Object {
+<?php
+namespace Concrete\Core\Area\Layout;
+use \Concrete\Core\Foundation\Object;
+abstract class Layout extends Object {
 
 	public static function getByID($arLayoutID) {
 		$db = Loader::db();

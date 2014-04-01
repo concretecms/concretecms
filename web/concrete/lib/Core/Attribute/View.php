@@ -1,7 +1,7 @@
 <?
-namespace Concrete\Core\Attribute\View;
+namespace Concrete\Core\Attribute;
 use Concrete\Core\View\View;
-class AttributeTypeView extends AbstractView {
+class View extends AbstractView {
 	
 	protected $attributeValue;
 	protected $attributeKey;

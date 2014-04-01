@@ -1,15 +1,7 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-/**
- * An object that represents metadata added to users.
- * of metadata added to pages.
- * @author Andrew Embler <andrew@concrete5.org>
- * @package Users
- * @copyright  Copyright (c) 2003-2009 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- *
- */
-class Concrete5_Model_UserAttributeKey extends AttributeKey {
+namespace Concrete\Core\User;
+use \Concrete\Core\Attribute\Attribute\Key as AttributeKey;
+class UserAttributeKey extends AttributeKey {
 
 	public function getIndexedSearchTable() {
 		return 'UserSearchIndexAttributes';
@@ -363,44 +355,4 @@ class Concrete5_Model_UserAttributeKey extends AttributeKey {
 	}
 
 
-}
-
-class Concrete5_Model_UserAttributeValue extends AttributeValue {
-
-	/**
-	 * @param UserInfo $uo
-	 */
-	public function setUser($uo) {
-		$this->u = $uo;
-	}
-
-	/**
-	 * @return UserInfo
-	 */
-	public function getUser() {
-		return $this->u;
-	}
-
-	public static function getByID($avID) {
-		$uav = new UserAttributeValue();
-		$uav->load($avID);
-		if ($uav->getAttributeValueID() == $avID) {
-			return $uav;
-		}
-	}
-
-	public function delete() {
-		$db = Loader::db();
-		$db->Execute('delete from UserAttributeValues where uID = ? and akID = ? and avID = ?', array(
-			$this->u->getUserID(), 
-			$this->attributeKey->getAttributeKeyID(),
-			$this->getAttributeValueID()
-		));
-		// Before we run delete() on the parent object, we make sure that attribute value isn't being referenced in the table anywhere else
-		$num = $db->GetOne('select count(avID) from UserAttributeValues where avID = ?', array($this->getAttributeValueID()));
-		if ($num < 1) {
-			parent::delete();
-		}
-
-	}
 }

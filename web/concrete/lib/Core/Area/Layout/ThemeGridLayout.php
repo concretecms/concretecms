@@ -1,8 +1,6 @@
-<?
-
-defined('C5_EXECUTE') or die("Access Denied.");
-
-class Concrete5_Model_ThemeGridAreaLayout extends AreaLayout {
+<?php
+namespace Concrete\Core\Area\Layout;
+class ThemeGridLayout extends Layout {
 
 	protected $arLayoutType = 'theme_grid';
 	protected $arLayoutMaxColumns;

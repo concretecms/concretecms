@@ -1,8 +1,6 @@
-<?
-
-defined('C5_EXECUTE') or die("Access Denied.");
-
-class Concrete5_Model_CustomAreaLayoutColumn extends AreaLayoutColumn {
+<?php
+namespace Concrete\Core\Area\Layout;
+class CustomColumn extends Column;
 
 	public static function getByID($arLayoutColumnID) {
 		$db = Loader::db();

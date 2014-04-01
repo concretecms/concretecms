@@ -13,6 +13,7 @@ $list->registerMultiple(array(
 	'Page' => 'Core\Page\Page',
 	'Package' => 'Core\Package\Package',
 	'Collection' => 'Core\Page\Collection',
+	'Area' => 'Core\Area\Area',
 	'Job' => 'Core\Job\Job',
 	'QueueableJob' => 'Core\Job\QueueableJob',
 	'User' => 'Core\User\User',

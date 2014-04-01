@@ -1,8 +1,7 @@
-<?
-
-defined('C5_EXECUTE') or die("Access Denied.");
-
-abstract class Concrete5_Model_AreaLayoutColumn extends Object {
+<?php
+namespace Concrete\Core\Area\Layout;
+use \Concrete\Core\Foundation\Object;
+class Column extends Object {
 
 	abstract static public function getByID($arLayoutColumnID);
 	abstract public function getAreaLayoutColumnClass();

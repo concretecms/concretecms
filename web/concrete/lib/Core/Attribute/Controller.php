@@ -1,7 +1,7 @@
 <?
-namespace Concrete\Core\Attribute\Controller;
-use Concrete\Core\Controller;
-class AttributeTypeController extends AbstractController {
+namespace Concrete\Core\Attribute;
+use Concrete\Core\Controller\AbstractController;
+class Controller extends AbstractController {
 	
 	protected $identifier;
  	protected $attributeKey;
