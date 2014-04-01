@@ -17,6 +17,8 @@ $list->registerMultiple(array(
 	'Collection' => 'Core\Page\Collection',
 	'Area' => 'Core\Area\Area',
 	'Job' => 'Core\Job\Job',
+	'File' => 'Core\File\File',
+	'FileSet' => 'Core\FileSet\FileSet',
 	'QueueableJob' => 'Core\Job\QueueableJob',
 	'User' => 'Core\User\User',
 	'Log' => 'Core\Log\Log',

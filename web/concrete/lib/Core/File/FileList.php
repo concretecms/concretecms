@@ -1,11 +1,13 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php 
+namespace Concrete\Core\File;
+use \Concrete\Core\Foundation\Collection\DatabaseItemList;
 /**
 *
 * An object that allows a filtered list of files to be returned.
 * @package Files
 *
 */
-class Concrete5_Model_FileList extends DatabaseItemList { 
+class FileList extends DatabaseItemList { 
 
 	protected $attributeFilters = array();
 	protected $autoSortColumns = array('fvFilename', 'fvAuthorName','fvTitle', 'fDateAdded', 'fvDateAdded', 'fvSize');

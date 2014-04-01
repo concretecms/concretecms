@@ -1,7 +1,7 @@
 <?
-
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_FileStorageLocation extends Object {
+namespace Concrete\Core\File;
+use \Concrete\Core\Foundation\Object;
+class FileStorageLocation extends Object {
 
 	const ALTERNATE_ID = 1;
 	

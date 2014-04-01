@@ -1,6 +1,6 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_FileSearchColumnSet extends DatabaseItemListColumnSet {
+namespace Concrete\Core\File;
+class FileSearchColumnSet extends \Concrete\Core\Foundation\Collection\Database\Column\Set {
 	protected $attributeClass = 'FileAttributeKey';
 	public function getCurrent() {
 		$u = new User();

@@ -1,6 +1,7 @@
 <?
-
-class Concrete5_Model_FileVersion extends Object {
+namespace Concrete\Core\File;
+use \Concrete\Core\Foundation\Object;
+class FileVersion extends Object {
 
 	protected $numThumbnailLevels = 3;
 	protected $attributes = array();
