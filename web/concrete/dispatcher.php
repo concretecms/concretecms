@@ -38,7 +38,7 @@ require __DIR__ . '/startup/autoload.php';
 /** 
  * Create the app container
  */
-$app = Concrete\Core\Dispatcher::get();
+$app = Concrete\Core\Application\Dispatcher::get();
 
 /** 
  * Startup
