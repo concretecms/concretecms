@@ -1,26 +1,7 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-/**
- * Contains the collection attribute key and value objects.
- * @package Pages
- * @author Andrew Embler <andrew@concrete5.org>
- * @category Concrete
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- *
- */
-
-/**
- * An object that represents metadata added to pages. They key object maps to the "type"
- * of metadata added to pages.
- * @author Andrew Embler <andrew@concrete5.org>
- * @package Pages
- * @category Concrete
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- *
- */
-class Concrete5_Model_CollectionAttributeKey extends AttributeKey {
+namespace Concrete\Core\Page;
+use \Concrete\Core\Attribute\Attribute\Key as AttributeKey;
+class CollectionAttributeKey extends AttributeKey {
 
 	public function getIndexedSearchTable() {
 		return 'CollectionSearchIndexAttributes';
@@ -155,57 +136,4 @@ class Concrete5_Model_CollectionAttributeKey extends AttributeKey {
 		$db->Execute('delete from PageTypeAttributes where akID = ?', array($this->getAttributeKeyID()));
 	}
 
-}
-
-class Concrete5_Model_CollectionAttributeValue extends AttributeValue {
-
-	/**
-	 * @param Collection $cObj
-	 */
-	public function setCollection($cObj) {
-		$this->c = $cObj;
-	}
-
-	/**
-	 * @return Collection
-	 */
-	public function getCollection() {
-		return $this->c;
-	}
-	
-	public static function getByID($avID) {
-		$cav = new CollectionAttributeValue();
-		$cav->load($avID);
-		if ($cav->getAttributeValueID() == $avID) {
-			return $cav;
-		}
-	}
-
-	public function __destruct() {
-		parent::__destruct();
-		unset($this->c);
-	}
-
-	public function delete() {
-		$db = Loader::db();
-		$db->Execute('delete from CollectionAttributeValues where cID = ? and cvID = ? and akID = ? and avID = ?', array(
-			$this->c->getCollectionID(), 
-			$this->c->getVersionID(),
-			$this->attributeKey->getAttributeKeyID(),
-			$this->getAttributeValueID()
-		));
-		
-		// Before we run delete() on the parent object, we make sure that attribute value isn't being referenced in the table anywhere else
-		// Note: we're going to keep these around and not delete them. We'll just clean this up with an optimize job later on - this'll speed up page deletion by a ton.
-		
-		/*
-		$num = $db->GetOne('select count(avID) from CollectionAttributeValues where avID = ?', array($this->getAttributeValueID()));
-		if ($num < 1) {
-			parent::delete();
-		}
-		*/
-
-
-		
-	}
 }

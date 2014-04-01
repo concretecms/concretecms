@@ -1,6 +1,7 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_AttributeKey extends Object {
+namespace Concrete\Core\Attribute;
+use \Concrete\Core\Foundation\Object;
+class Key extends Object {
 	
 	public function getIndexedSearchTable() {return false;}
 	public function getSearchIndexFieldDefinition() {

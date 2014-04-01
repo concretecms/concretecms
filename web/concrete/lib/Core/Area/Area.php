@@ -1,9 +1,7 @@
-<?
-
-defined('C5_EXECUTE') or die("Access Denied.");
-
-class Concrete5_Model_Area extends Object {
-
+<?php
+namespace Concrete\Core\Area;
+use \Concrete\Core\Foundation\Object;
+class Area extends Object {
 
 	public $cID, $arID, $arHandle;
 	public $c;

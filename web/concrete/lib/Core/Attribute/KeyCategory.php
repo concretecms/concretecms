@@ -1,6 +1,7 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_AttributeKeyCategory extends Object {
+namespace Concrete\Core\Attribute;
+use \Concrete\Core\Foundation\Object;
+class KeyCategory extends Object {
 
 	const ASET_ALLOW_NONE = 0;
 	const ASET_ALLOW_SINGLE = 1;

@@ -1,6 +1,7 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_AttributeSet extends Object {
+namespace Concrete\Core\Attribute;
+use \Concrete\Core\Foundation\Object;
+class Set extends Object {
 
 	public static function getByID($asID) {
 		$db = Loader::db();
