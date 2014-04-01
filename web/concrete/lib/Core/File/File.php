@@ -1,6 +1,7 @@
 <?
-
-class Concrete5_Model_File extends Object { 
+namespace Concrete\Core\File;
+use \Concrete\Core\Foundation\Object;
+class File extends Object { 
 
 	const CREATE_NEW_VERSION_THRESHOLD = 300; // in seconds (5 minutes)
 	const F_ERROR_INVALID_FILE = 1;
