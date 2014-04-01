@@ -152,6 +152,11 @@ class DatabaseTest extends PHPUnit_Extensions_Database_TestCase {
 		$r = $db->query('select * from Users');
 		$this->assertTrue($r->numRows() == 3);
 
+		$v = array('testuser4', 'testuser4@concrete5.org');
+		$q = "insert into Users (uName, uEmail) values (?, ?)";
+		$r = $db->query($q, $v);
+		$newUID = $db->Insert_ID();
+		$this->assertTrue($newUID == 4);
 
 
 	}
