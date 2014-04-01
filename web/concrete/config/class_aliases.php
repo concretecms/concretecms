@@ -11,6 +11,8 @@ $list->registerMultiple(array(
 	'Response' => 'Core\Http\Response',
 	'Cookie' => 'Core\Cookie\Cookie',
 	'Page' => 'Core\Page\Page',
+	'Block' => 'Core\Page\Block',
+	'Conversation' => 'Core\Conversation\Conversation',
 	'Package' => 'Core\Package\Package',
 	'Collection' => 'Core\Page\Collection',
 	'Area' => 'Core\Area\Area',
