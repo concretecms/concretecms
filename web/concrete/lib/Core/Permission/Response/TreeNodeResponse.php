@@ -1,6 +1,6 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-abstract class Concrete5_Model_TreeNodePermissionResponse extends PermissionResponse {
+namespace Concrete\Core\Permission\Response;
+class TreeNodeResponse extends Response {
 
 	abstract public function canViewTreeNode();
 	abstract public function canDeleteTreeNode();

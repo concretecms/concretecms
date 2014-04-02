@@ -1,6 +1,6 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_PermissionSet {
+namespace Concrete\Core\Permission;
+class Set {
 
 	protected $permissions;
 	protected $pkCategoryHandle;

@@ -23,7 +23,7 @@ $list->registerMultiple(array(
 	'FileSet' => 'Core\FileSet\FileSet',
 	'FileList' => 'Core\File\List',
 	'QueueableJob' => 'Core\Job\QueueableJob',
-	'Permissions' => 'Core\Permissions\PermissionsChecker',
+	'Permissions' => 'Core\Permission\Checker',
 	'Stack' => 'Core\Page\Stack\Stack',
 	'User' => 'Core\User\User',
 	'UserInfo' => 'Core\User\UserInfo',

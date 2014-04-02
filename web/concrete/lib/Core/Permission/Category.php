@@ -1,6 +1,7 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_PermissionKeyCategory extends Object {
+namespace Concrete\Core\Permission;
+use \Concrete\Core\Foundation\Object;
+class Category extends Object {
 
 	protected static $categories;
 

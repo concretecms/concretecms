@@ -1,6 +1,6 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_FileSetPermissionResponse extends PermissionResponse {
+namespace Concrete\Core\Permission\Response;
+class FileSetResponse extends Response {
 	
 	public function canSearchFiles() { return $this->validate('search_file_set'); }
 	public function canRead() { return $this->validate('view_file_set_file'); }

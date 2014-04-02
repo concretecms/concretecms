@@ -1,6 +1,6 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_GatheringPermissionResponse extends PermissionResponse {
+namespace Concrete\Core\Permission\Response;
+class GatheringResponse extends Response {
 	
 	public function canEditGatheringItems() {
 		// Eventually this will be overrideable at a particular gathering level.

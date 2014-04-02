@@ -1,6 +1,6 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_GroupTreeNodePermissionResponse extends TreeNodePermissionResponse {
+namespace Concrete\Core\Permission\Response;
+class GroupTreeNodeResponse extends TreeNodeResponse {
 
 	public function canEditTreeNodePermissions() {
 		return $this->validate('edit_group_permissions');

@@ -1,7 +1,6 @@
 <?
-
-namespace Concrete\Core\Permissions;
-class PermissionsChecker {
+namespace Concrete\Core\Permission;
+class Checker {
 
 	public $error;
 

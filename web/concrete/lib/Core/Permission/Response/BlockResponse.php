@@ -1,6 +1,6 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_BlockPermissionResponse extends PermissionResponse {
+namespace Concrete\Core\Permission\Response;
+class BlockResponse extends Response {
 	
 	// legacy support
 	public function canRead() { return $this->validate('view_block'); }

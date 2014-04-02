@@ -1,6 +1,6 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_PagePermissionResponse extends PermissionResponse {
+namespace Concrete\Core\Permission\Response;
+class PageResponse extends Response {
 	
 	// legacy support
 	public function canWrite() { return $this->validate('edit_page_contents'); }

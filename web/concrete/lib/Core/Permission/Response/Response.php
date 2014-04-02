@@ -1,6 +1,6 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_PermissionResponse {
+namespace Concrete\Core\Permission\Response;
+class Response {
 
 	protected $object;
 	protected $allowedPermissions = array();

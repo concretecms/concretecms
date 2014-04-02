@@ -1,6 +1,7 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-abstract class Concrete5_Model_PermissionKey extends Object {
+namespace Concrete\Core\Permission\Key;
+use Concrete\Core\Foundation\Object;
+abstract class Key extends Object {
 	
 	const ACCESS_TYPE_INCLUDE = 10;
 	const ACCESS_TYPE_EXCLUDE = -1;
