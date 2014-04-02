@@ -1,6 +1,6 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_TopicCategoryTreeNodePermissionResponse extends TreeNodePermissionResponse {
+namespace Concrete\Core\Permission\Response;
+class TopicTreeNodeResponse extends Response {
 
 	protected function canAccessTopics() {
 		$c = Page::getByPath('/dashboard/system/attributes/topics');
@@ -13,7 +13,7 @@ class Concrete5_Model_TopicCategoryTreeNodePermissionResponse extends TreeNodePe
 	}
 
 	public function canViewTreeNode() {
-		return $this->validate('view_topic_category_tree_node');
+		return $this->validate('view_topic_tree_node');
 	}
 
 	public function canDuplicateTreeNode() {
@@ -28,18 +28,9 @@ class Concrete5_Model_TopicCategoryTreeNodePermissionResponse extends TreeNodePe
 		return $this->canAccessTopics();
 	}
 
-	public function canAddTopicTreeNode() {
-		return $this->canAccessTopics();
-	}
-
-	public function canAddTopicCategoryTreeNode() {
-		return $this->canAccessTopics();
-	}
-
 	public function canAddTreeSubNode() {
 		return $this->canAccessTopics();
 	}
-
 
 
 }

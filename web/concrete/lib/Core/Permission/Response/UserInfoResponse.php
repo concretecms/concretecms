@@ -1,6 +1,6 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_UserInfoPermissionResponse extends PermissionResponse {
+namespace Concrete\Core\Permission\Response;
+class UserInfoResponse extends Response {
 
 	public function canViewUser() {
 		$ui = $this->getPermissionObject();
