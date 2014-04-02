@@ -2766,34 +2766,7 @@
     </field>
   </table>
 
-  <table name="SystemNotifications">
-    <field name="snID" type="I" size="10">
-      <key/>
-      <autoincrement/>
-      <unsigned/>
-    </field>
-    <field name="snTypeID" type="I" size="3">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="snURL" type="X"/>
-    <field name="snURL2" type="X"/>
-    <field name="snDateTime" type="T">
-      <notnull/>
-    </field>
-    <field name="snIsArchived" type="I" size="1">
-      <notnull/>
-      <default value="0"/>
-    </field>
-    <field name="snIsNew" type="I" size="1">
-      <notnull/>
-      <default value="0"/>
-    </field>
-    <field name="snTitle" type="C" size="255"/>
-    <field name="snDescription" type="X"/>
-    <field name="snBody" type="X"/>
-  </table>
+
   <table name="SystemImageEditorControlSets">
     <field name="scsID" type="I" size="10">
       <key/>
