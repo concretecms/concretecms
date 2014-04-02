@@ -1,7 +1,7 @@
 <?
-namespace Concrete\Core\Page;
+namespace Concrete\Core\Page\Collection\Version;
 use \Concrete\Core\Foundation\Object;
-class Concrete5_Model_CollectionVersion extends Object {
+class Version extends Object {
 	
 	var $cvIsApproved;
 	var $cID;

@@ -1,7 +1,7 @@
 <?
-namespace Concrete\Core\Page;
+namespace Concrete\Core\Page\Collection\Version;
 use \Concrete\Core\Feature\Assignment as FeatureAssignment;
-class CollectionVersionFeatureAssignment extends FeatureAssignment {
+class FeatureAssignment extends FeatureAssignment {
 
 	protected $cID;
 	protected $cvID;

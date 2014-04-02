@@ -1,7 +1,7 @@
 <?
-namespace Concrete\Core\Page;
+namespace Concrete\Core\Page\Collection\Version;
 use \Concrete\Core\Feature\Category as FeatureCategory;
-class CollectionVersionFeatureCategory extends FeatureCategory {
+class FeatureCategory extends FeatureCategory {
 
 	public function assignmentIsInUse(FeatureAssignment $fa) {
 		$db = Loader::db();
