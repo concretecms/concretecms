@@ -200,15 +200,10 @@ class Marketplace {
 	 * Runs through all packages on the marketplace, sees if they're installed here, and updates the available version number for them
 	 */
 	public static function checkPackageUpdates() {
-		Loader::model('system_notification');
 		$items = Marketplace::getAvailableMarketplaceItems(false);
 		foreach($items as $i) {
 			$p = Package::getByHandle($i->getHandle());
 			if (is_object($p)) {
-				// we only add a notification if it's newer than the last one we know about
-				if (version_compare($p->getPackageVersionUpdateAvailable(), $i->getVersion(), '<') && version_compare($p->getPackageVersion(), $i->getVersion(), '<')) {
-					SystemNotification::add(SystemNotification::SN_TYPE_ADDON_UPDATE, t('An updated version of %s is available.', $i->getName()), t('New Version: %s.', $i->getVersion()), '', View::url('/dashboard/extend/update'), $i->getRemoteURL());
-				}
 				$p->updateAvailableVersionNumber($i->getVersion());
 			}
 		}
