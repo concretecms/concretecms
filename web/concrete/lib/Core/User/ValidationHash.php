@@ -1,6 +1,6 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
-
-class Concrete5_Model_UserValidationHash {
+<?php 
+namespace Concrete\Core\User;
+class ValidationHash {
 		
 	/**
 	 * generates a random string

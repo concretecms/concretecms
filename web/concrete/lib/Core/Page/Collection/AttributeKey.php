@@ -1,7 +1,7 @@
 <?
-namespace Concrete\Core\Page;
+namespace Concrete\Core\Page\Collection;
 use \Concrete\Core\Attribute\Attribute\Key as AttributeKey;
-class CollectionAttributeKey extends AttributeKey {
+class AttributeKey extends AttributeKey {
 
 	public function getIndexedSearchTable() {
 		return 'CollectionSearchIndexAttributes';
