@@ -1,6 +1,7 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-abstract class Concrete5_Model_GatheringItemTemplate extends Object {
+namespace Concrete\Core\Gathering\Item\Template;
+use \Concrete\Core\Foundation\Object;
+abstract class Template extends Object {
 
 	abstract public function gatheringItemTemplateControlsSlotDimensions();
 

@@ -1,6 +1,7 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_TitleDateCommentsTileGatheringItemTemplate extends TileGatheringItemTemplate {
+namespace Concrete\Core\Gathering\Item\Template\Tile;
+use \Concrete\Core\Gathering\Item\Template\Tile as TileTemplate;
+class TitleDateComments extends TileTemplate {
 
 	public function getGatheringItemTemplateData(GatheringItem $item) {
 		$items = parent::getGatheringItemTemplateData($item);

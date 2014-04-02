@@ -1,6 +1,6 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_PageGatheringDataSourceConfiguration extends GatheringDataSourceConfiguration {
+namespace \Concrete\Core\Gathering\DataSource\Configuration;
+class Page extends Configuration {
 	
 	protected $ptID;
 

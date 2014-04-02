@@ -1,6 +1,7 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-abstract class Concrete5_Model_GatheringDataSource extends Object {
+namespace Concrete\Core\Gathering\DataSource;
+use \Concrete\Core\Foundation\Object;
+abstract class DataSource extends Object {
 
 	abstract public function createConfigurationObject(Gathering $ga, $post);
 	abstract public function createGatheringItems(GatheringDataSourceConfiguration $configuration);

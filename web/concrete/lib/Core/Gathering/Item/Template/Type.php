@@ -1,6 +1,7 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_GatheringItemTemplateType extends Object {
+namespace Concrete\Core\Gathering\Template;
+use \Concrete\Core\Foundation\Object;
+class Type extends Object {
 
 	public function getGatheringItemTemplateTypeID() {return $this->gatTypeID;}
 	public function getGatheringItemTemplateTypeHandle() {return $this->gatTypeHandle;}

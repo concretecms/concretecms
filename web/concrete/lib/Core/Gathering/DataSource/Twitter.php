@@ -1,6 +1,6 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_TwitterGatheringDataSource extends GatheringDataSource {
+namespace \Concrete\Core\Gathering\DataSource;
+class Twitter extends DataSource {
 
 	const TWITTER_SEARCH_URL = 'http://api.flickr.com/services/feeds/photos_public.gne';
 

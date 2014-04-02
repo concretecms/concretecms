@@ -1,7 +1,6 @@
 <?
-namespace Concrete\Core\Gathering;
-use \Concrete\Core\Feature\Category as FeatureCategory;
-class GatheringItemFeatureCategory extends FeatureCategory {
+namespace Concrete\Core\Gathering\Item
+class FeatureCategory extends \Concrete\Core\Feature\Category {
 
 	public function assignmentIsInUse(FeatureAssignment $fa) {
 		$db = Loader::db();

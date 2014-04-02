@@ -1,6 +1,7 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_GatheringDataSourceConfiguration extends Object {
+namespace Concrete\Core\Gathering\DataSource\Configuration;
+use \Concrete\Core\Foundation\Object;
+class Configuration extends Object {
 
 	protected $dataSource;
 
