@@ -1,16 +1,7 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-/**
- * Bundles groups together into different sets.
- * @package Users
- * @author Andrew Embler <andrew@concrete5.org>
- * @category Concrete
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- *
- */
-
-class Concrete5_Model_GroupSet extends Object {
+namespace Concrete\Core\Group;
+use \Concrete\Core\Foundation\Object;
+class GroupSet extends Object {
 	
 	public static function getList() {
 		$db = Loader::db();

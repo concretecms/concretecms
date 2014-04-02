@@ -1,7 +1,6 @@
 <?
 
-defined('C5_EXECUTE') or die("Access Denied.");
-
+namespace Concrete\Core\Job;
 /**
 *
 * Contains the job class.
@@ -23,7 +22,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 * @license http://www.opensource.org/licenses/mit-license.php MIT
 *
 */
-abstract class Concrete5_Model_QueueableJob extends Job {
+abstract class QueueableJob extends Job {
 
 	// optional queue functions
 	protected $jQueueBatchSize = JOB_QUEUE_BATCH_SIZE;

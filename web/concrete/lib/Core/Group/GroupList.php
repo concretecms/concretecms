@@ -1,20 +1,7 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-
-/**
- * @package Users
- * @author Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- * @access private
- */
- 
-/** 
- * @access private
- */
-
-class Concrete5_Model_GroupSearch extends DatabaseItemList {
-	
+namespace Concrete\Core\Group;
+use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+class GroupList extends DatabaseItemList {
 	
 	protected $itemsPerPage = 10;
 	protected $minimumGroupID = REGISTERED_GROUP_ID;
