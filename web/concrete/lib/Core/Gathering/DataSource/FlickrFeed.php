@@ -1,6 +1,6 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_FlickrFeedGatheringDataSource extends GatheringDataSource {
+namespace \Concrete\Core\Gathering\DataSource;
+class FlickrFeed extends DataSource {
 
 	const FLICKR_FEED_URL = 'http://api.flickr.com/services/feeds/photos_public.gne';
 

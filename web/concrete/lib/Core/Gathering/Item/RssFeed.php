@@ -1,12 +1,12 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_FlickrFeedGatheringItem extends GatheringItem {
+namespace Concrete\Core\Gathering\Item;
+class RssFeed extends Item {
 
 	public function loadDetails() {}
 	public function canViewGatheringItem() {return true;}
 
 	public static function getListByItem($mixed) {
-		$ags = GatheringDataSource::getByHandle('flickr_feed');
+		$ags = GatheringDataSource::getByHandle('rss_feed');
 		return GatheringItem::getListByKey($ags, $mixed->get_link());
 	}
 	
@@ -25,7 +25,7 @@ class Concrete5_Model_FlickrFeedGatheringItem extends GatheringItem {
 	}
 
 	public function assignFeatureAssignments($post) {
-
+		/*
 		$thumbnail = null;
 		$enclosures = $post->get_enclosures();
 		if (is_array($enclosures)) {
@@ -36,6 +36,8 @@ class Concrete5_Model_FlickrFeedGatheringItem extends GatheringItem {
 				}
 			}
 		}
+		*/
+
 
 		$this->addFeatureAssignment('title', $post->get_title());
 		$this->addFeatureAssignment('date_time', $post->get_date('Y-m-d H:i:s'));
@@ -44,13 +46,11 @@ class Concrete5_Model_FlickrFeedGatheringItem extends GatheringItem {
 		if ($description != '') {
 			$this->addFeatureAssignment('description', $description);
 		}
-		$author = $post->get_author();
-		if ($author) {
-			$this->addFeatureAssignment('author', $author->get_name());
-		}
+		/*
 		if ($thumbnail) {
 			$this->addFeatureAssignment('image', $thumbnail);
 		}
+		*/
 	}
 
 }

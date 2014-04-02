@@ -1,6 +1,6 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_TwitterGatheringDataSourceConfiguration extends GatheringDataSourceConfiguration  {
+namespace \Concrete\Core\Gathering\DataSource\Configuration;
+class Twitter extends Configuration {
 
 	public function setTwitterUsername($username) {
 		$this->username = $username;

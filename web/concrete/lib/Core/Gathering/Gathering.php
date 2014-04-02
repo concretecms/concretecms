@@ -1,6 +1,7 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_Gathering extends Object {
+namespace Concrete\Core\Gathering;
+use \Concrete\Core\Foundation\Object;
+class Gathering extends Object {
 
 	public function getGatheringID() {return $this->gaID;}
 	public function getGatheringDateCreated() {return $this->gaDateCreated;}

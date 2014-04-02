@@ -1,7 +1,6 @@
 <?
-namespace Concrete\Core\Gathering;
-use \Concrete\Core\Feature\Assignment as FeatureAssignment;
-class GatheringItemFeatureAssignment extends FeatureAssignment {
+namespace Concrete\Core\Gathering\Item;
+class FeatureAssignment extends \Concrete\Core\Feature\Assignment {
 
 	protected $gaiID;
 	public function loadDetails($mixed) {

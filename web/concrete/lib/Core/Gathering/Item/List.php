@@ -1,6 +1,7 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_Gathering_Item_List extends DatabaseItemList {
+namespace Concrete\Core\Gathering\Item;
+use \Concrete\Core\Founation\Collection\DatabaseItemList;
+class List extends DatabaseItemList {
 
 	protected $itemsPerPage = 24;
 

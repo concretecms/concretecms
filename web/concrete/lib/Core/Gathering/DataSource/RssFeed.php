@@ -1,6 +1,6 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_RssFeedGatheringDataSource extends GatheringDataSource {
+namespace \Concrete\Core\Gathering\DataSource;
+class RssFeed extends DataSource {
 
 	public function createConfigurationObject(Gathering $ag, $post) {
 		$o = new RssFeedGatheringDataSourceConfiguration();

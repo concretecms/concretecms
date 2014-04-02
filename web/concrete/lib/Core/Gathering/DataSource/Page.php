@@ -1,6 +1,6 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_PageGatheringDataSource extends GatheringDataSource {
+namespace \Concrete\Core\Gathering\DataSource;
+class Page extends DataSource {
 
 	public function createConfigurationObject(Gathering $ga, $post) {
 		$o = new PageGatheringDataSourceConfiguration();

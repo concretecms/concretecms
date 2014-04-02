@@ -1,6 +1,6 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_TwitterGatheringItem extends GatheringItem {
+namespace Concrete\Core\Gathering\Item;
+class Twitter extends Item {
 
 	public function loadDetails() {}
 	public function canViewGatheringItem() {return true;}

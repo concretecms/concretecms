@@ -1,6 +1,7 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-abstract class Concrete5_Model_GatheringItem extends Object {
+namespace Concrete\Core\Gathering\Item;
+use \Concrete\Core\Foundation\Object;
+abstract class Item extends Object {
 
 	abstract public function loadDetails();
 	abstract public function canViewGatheringItem();

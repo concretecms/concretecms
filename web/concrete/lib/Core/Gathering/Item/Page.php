@@ -1,6 +1,6 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_PageGatheringItem extends GatheringItem {
+namespace Concrete\Core\Gathering\Item;
+class Page extends Item {
 
 	public function canViewGatheringItem() {
 		$cp = new Permissions($this->page);
