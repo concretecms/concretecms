@@ -1,29 +1,7 @@
 <?
-
-defined('C5_EXECUTE') or die("Access Denied.");
-
-/**
-*
-* Contains the job class.
-* @package Utilities
-* @author Andrew Embler <andrew@concrete5.org>
-* @author Tony Trupp <tony@concrete5.org>
-* @link http://www.concrete5.org
-* @license http://www.opensource.org/licenses/mit-license.php MIT
-*
-*/
-
-/**
-*
-* The job class is essentially sub-dispatcher for certain maintenance tasks that need to be run at specified intervals. Examples include indexing a search engine or generating a sitemap page.
-* @package Utilities
-* @author Andrew Embler <andrew@concrete5.org>
-* @author Tony Trupp <tony@concrete5.org>
-* @link http://www.concrete5.org
-* @license http://www.opensource.org/licenses/mit-license.php MIT
-*
-*/
-abstract class Concrete5_Model_Job extends Object {
+namespace Concrete\Core\Job;
+use \Concrete\Core\Foundation\Object;
+abstract class Job extends Object {
 
 	const JOB_SUCCESS = 0;
 	const JOB_ERROR_EXCEPTION_GENERAL = 1;

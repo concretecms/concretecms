@@ -1,6 +1,7 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Model_GroupSetList extends DatabaseItemList {
+namspace Concrete\Core\Group;
+use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+class GroupSetList extends DatabaseItemList {
 
 	public function __construct() {
 		$this->setQuery('select gsID from GroupSets');
