@@ -1,5 +1,5 @@
 <?
-namspace Concrete\Core\Group;
+namspace Concrete\Core\User\Group;
 use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
 class GroupSetList extends DatabaseItemList {
 

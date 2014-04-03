@@ -1,5 +1,22 @@
 <?
 namespace Concrete\Core\Backup;
+use Page;
+use Package;
+use Stack;
+use SinglePage;
+use \Concrete\Core\Page\Collection\AttributeKey as CollectionAttributeKey;
+use UserInfo;
+use PageType;
+use \Concrete\Core\Page\Template\Template as PageTemplate;
+use BlockType;
+use Block;
+use Loader;
+use \Concrete\Core\Attribute\Type as AttributeType;
+use \Concrete\Core\Attribute\Category as AttributeKeyCategory;
+use \Concrete\Core\Permission\Category as PermissionKeyCategory;
+use \Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
+use \Concrete\Core\Workflow\Progress\Category as WorkflowProgressCategory;
+
 class ContentImporter {
 
 	protected static $mcBlockIDs = array();
@@ -70,7 +87,7 @@ class ContentImporter {
 		return $pkg;
 	}
 
-	protected function importStacksStructure(SimpleXMLElement $sx) {
+	protected function importStacksStructure(\SimpleXMLElement $sx) {
 		if (isset($sx->stacks)) {
 			foreach($sx->stacks->stack as $p) {
 				if (isset($p['type'])) {
@@ -83,7 +100,7 @@ class ContentImporter {
 		}
 	}
 
-	protected function importStacksContent(SimpleXMLElement $sx) {
+	protected function importStacksContent(\SimpleXMLElement $sx) {
 		if (isset($sx->stacks)) {
 			foreach($sx->stacks->stack as $p) {
 				$stack = Stack::getByName($p['name']);
@@ -94,10 +111,10 @@ class ContentImporter {
 		}
 	}
 
-	protected function importSinglePageStructure(SimpleXMLElement $sx) {
+	protected function importSinglePageStructure(\SimpleXMLElement $sx) {
 		if (isset($sx->singlepages)) {
 			foreach($sx->singlepages->page as $p) {
-				$pkg = ContentImporter::getPackageObject($p['package']);
+				$pkg = static::getPackageObject($p['package']);
 				$spl = SinglePage::add($p['path'], $pkg);
 				if (is_object($spl)) {
 					if (isset($p['root']) && $p['root'] == true) {
@@ -111,7 +128,7 @@ class ContentImporter {
 		}
 	}
 
-	protected function importSinglePageContent(SimpleXMLElement $sx) {
+	protected function importSinglePageContent(\SimpleXMLElement $sx) {
 		if (isset($sx->singlepages)) {
 			foreach($sx->singlepages->page as $px) {
 				$page = Page::getByPath($px['path'], 'RECENT');
@@ -148,7 +165,7 @@ class ContentImporter {
 		}
 	}
 
-	protected function importPageContent(SimpleXMLElement $sx) {
+	protected function importPageContent(\SimpleXMLElement $sx) {
 		if (isset($sx->pages)) {
 			foreach($sx->pages->page as $px) {
 				if ($px['path'] != '') {
@@ -172,7 +189,7 @@ class ContentImporter {
 		}
 	}
 
-	protected function importPageStructure(SimpleXMLElement $sx) {
+	protected function importPageStructure(\SimpleXMLElement $sx) {
 		if (isset($sx->pages)) {
 			$nodes = array();
 			$i = 0;
@@ -185,7 +202,7 @@ class ContentImporter {
 			$home = Page::getByID(HOME_CID, 'RECENT');
 
 			foreach($nodes as $px) {
-				$pkg = ContentImporter::getPackageObject($px['package']);
+				$pkg = static::getPackageObject($px['package']);
 				$data = array();
 				$user = (string) $px['user'];
 				if ($user != '') {
@@ -237,7 +254,7 @@ class ContentImporter {
 		}
 	}
 
-	public function importPageAreas(Page $page, SimpleXMLElement $px) {
+	public function importPageAreas(Page $page, \SimpleXMLElement $px) {
 		foreach($px->area as $ax) {
 			if (isset($ax->block)) {
 				foreach($ax->block as $bx) {
@@ -284,10 +301,10 @@ class ContentImporter {
 		}
 	}
 
-	protected function importPageTemplates(SimpleXMLElement $sx) {
+	protected function importPageTemplates(\SimpleXMLElement $sx) {
 		if (isset($sx->pagetemplates)) {
 			foreach($sx->pagetemplates->pagetemplate as $pt) {
-				$pkg = ContentImporter::getPackageObject($pt['package']);
+				$pkg = static::getPackageObject($pt['package']);
 				$ptt = PageTemplate::getByHandle($pt['handle']);
 				if (!is_object($ptt)) {
 					$ptt = PageTemplate::add((string) $pt['handle'], (string) $pt['name'], (string) $pt['icon'], $pkg, (string) $pt['internal']);
@@ -296,10 +313,10 @@ class ContentImporter {
 		}
 	}
 
-	protected function importBlockTypes(SimpleXMLElement $sx) {
+	protected function importBlockTypes(\SimpleXMLElement $sx) {
 		if (isset($sx->blocktypes)) {
 			foreach($sx->blocktypes->blocktype as $bt) {
-				$pkg = ContentImporter::getPackageObject($bt['package']);
+				$pkg = static::getPackageObject($bt['package']);
 				if (is_object($pkg)) {
 					BlockType::installBlockTypeFromPackage($bt['handle'], $pkg);
 				} else {
@@ -309,23 +326,23 @@ class ContentImporter {
 		}
 	}
 
-	protected function importWorkflowTypes(SimpleXMLElement $sx) {
+	protected function importWorkflowTypes(\SimpleXMLElement $sx) {
 		if (isset($sx->workflowtypes)) {
 			foreach($sx->workflowtypes->workflowtype as $wt) {
-				$pkg = ContentImporter::getPackageObject($wt['package']);
+				$pkg = static::getPackageObject($wt['package']);
 				$name = $wt['name'];
 				if (!$name) {
 					$name = Loader::helper('text')->unhandle($wt['handle']);
 				}
-				$type = WorkflowType::add($wt['handle'], $name, $pkg);
+				$type = \Concrete\Core\Workflow\Type::add($wt['handle'], $name, $pkg);
 			}
 		}
 	}
 
-	protected function importAttributeTypes(SimpleXMLElement $sx) {
+	protected function importAttributeTypes(\SimpleXMLElement $sx) {
 		if (isset($sx->attributetypes)) {
 			foreach($sx->attributetypes->attributetype as $at) {
-				$pkg = ContentImporter::getPackageObject($at['package']);
+				$pkg = static::getPackageObject($at['package']);
 				$name = $at['name'];
 				if (!$name) {
 					$name = Loader::helper('text')->unhandle($at['handle']);
@@ -344,10 +361,10 @@ class ContentImporter {
 		}
 	}
 
-	protected function importPermissionAccessEntityTypes(SimpleXMLElement $sx) {
+	protected function importPermissionAccessEntityTypes(\SimpleXMLElement $sx) {
 		if (isset($sx->permissionaccessentitytypes)) {
 			foreach($sx->permissionaccessentitytypes->permissionaccessentitytype as $pt) {
-				$pkg = ContentImporter::getPackageObject($pt['package']);
+				$pkg = static::getPackageObject($pt['package']);
 				$name = $pt['name'];
 				if (!$name) {
 					$name = Loader::helper('text')->unhandle($pt['handle']);
@@ -363,7 +380,7 @@ class ContentImporter {
 		}
 	}
 
-	protected function importPackages(SimpleXMLElement $sx) {
+	protected function importPackages(\SimpleXMLElement $sx) {
 		if (isset($sx->packages)) {
 			foreach($sx->packages->package as $p) {
 				$pkg = Loader::package((string) $p['handle']);
@@ -372,10 +389,10 @@ class ContentImporter {
 		}
 	}
 
-	protected function importThemes(SimpleXMLElement $sx) {
+	protected function importThemes(\SimpleXMLElement $sx) {
 		if (isset($sx->themes)) {
 			foreach($sx->themes->theme as $th) {
-				$pkg = ContentImporter::getPackageObject($th['package']);
+				$pkg = static::getPackageObject($th['package']);
 				$pThemeHandle = (string) $th['handle'];
 				$pt = PageTheme::getByHandle($pThemeHandle);
 				if (!is_object($pt)) {
@@ -388,25 +405,25 @@ class ContentImporter {
 		}
 	}
 
-	protected function importPageTypePublishTargetTypes(SimpleXMLElement $sx) {
+	protected function importPageTypePublishTargetTypes(\SimpleXMLElement $sx) {
 		if (isset($sx->pagetypepublishtargettypes)) {
 			foreach($sx->pagetypepublishtargettypes->type as $th) {
-				$pkg = ContentImporter::getPackageObject($th['package']);
+				$pkg = static::getPackageObject($th['package']);
 				$ce = PageTypePublishTargetType::add((string) $th['handle'], (string) $th['name'], $pkg);
 			}
 		}
 	}
 
-	protected function importPageTypeComposerControlTypes(SimpleXMLElement $sx) {
+	protected function importPageTypeComposerControlTypes(\SimpleXMLElement $sx) {
 		if (isset($sx->pagetypecomposercontroltypes)) {
 			foreach($sx->pagetypecomposercontroltypes->type as $th) {
-				$pkg = ContentImporter::getPackageObject($th['package']);
+				$pkg = static::getPackageObject($th['package']);
 				$ce = PageTypeComposerControlType::add((string) $th['handle'], (string) $th['name'], $pkg);
 			}
 		}
 	}
 
-	protected function importPageTypesBase(SimpleXMLElement $sx) {
+	protected function importPageTypesBase(\SimpleXMLElement $sx) {
 		if (isset($sx->pagetypes)) {
 			foreach($sx->pagetypes->pagetype as $p) {
 				PageType::import($p);
@@ -414,7 +431,7 @@ class ContentImporter {
 		}
 	}
 
-	protected function importPageTypeTargets(SimpleXMLElement $sx) {
+	protected function importPageTypeTargets(\SimpleXMLElement $sx) {
 		if (isset($sx->pagetypes)) {
 			foreach($sx->pagetypes->pagetype as $p) {
 				PageType::importTargets($p);
@@ -422,7 +439,7 @@ class ContentImporter {
 		}
 	}
 
-	protected function importPageTypeDefaults(SimpleXMLElement $sx) {
+	protected function importPageTypeDefaults(\SimpleXMLElement $sx) {
 		if (isset($sx->pagetypes)) {
 			foreach($sx->pagetypes->pagetype as $p) {
 				PageType::importContent($p);
@@ -430,10 +447,10 @@ class ContentImporter {
 		}
 	}
 
-	protected function importConversationEditors(SimpleXMLElement $sx) {
+	protected function importConversationEditors(\SimpleXMLElement $sx) {
 		if (isset($sx->conversationeditors)) {
 			foreach($sx->conversationeditors->editor as $th) {
-				$pkg = ContentImporter::getPackageObject($th['package']);
+				$pkg = static::getPackageObject($th['package']);
 				$ce = ConversationEditor::add((string) $th['handle'], (string) $th['name'], $pkg);
 				if ($th['activated'] == '1') {
 					$ce->activate();
@@ -442,17 +459,17 @@ class ContentImporter {
 		}
 	}
 
-	protected function importConversationRatingTypes(SimpleXMLElement $sx) {
+	protected function importConversationRatingTypes(\SimpleXMLElement $sx) {
 		if (isset($sx->conversationratingtypes)) {
 			foreach($sx->conversationratingtypes->conversationratingtype as $th) {
-				$pkg = ContentImporter::getPackageObject($th['package']);
+				$pkg = static::getPackageObject($th['package']);
 				$ce = ConversationRatingType::add((string) $th['handle'], (string) $th['name'], $th['points'], $pkg);
 			}
 		}
 	}
 
 
-	protected function importBannedWords(SimpleXMLElement $sx) {
+	protected function importBannedWords(\SimpleXMLElement $sx) {
 		if (isset($sx->banned_words)) {
 			foreach($sx->banned_words->banned_word as $p) {
 				$bw = BannedWord::add(str_rot13($p));
@@ -460,7 +477,7 @@ class ContentImporter {
 		}
 	}
 
-	protected function importConversationFlagTypes(SimpleXMLElement $sx) {
+	protected function importConversationFlagTypes(\SimpleXMLElement $sx) {
 		if (isset($sx->flag_types)) {
 			foreach($sx->flag_types->flag_type as $p) {
 				$bw = ConversationFlagType::add($p);
@@ -468,11 +485,11 @@ class ContentImporter {
 		}
 	}
 
-	protected function importSystemCaptchaLibraries(SimpleXMLElement $sx) {
+	protected function importSystemCaptchaLibraries(\SimpleXMLElement $sx) {
 		if (isset($sx->systemcaptcha)) {
 			Loader::model('system/captcha/library');
 			foreach($sx->systemcaptcha->library as $th) {
-				$pkg = ContentImporter::getPackageObject($th['package']);
+				$pkg = static::getPackageObject($th['package']);
 				$scl = SystemCaptchaLibrary::add($th['handle'], $th['name'], $pkg);
 				if ($th['activated'] == '1') {
 					$scl->activate();
@@ -481,10 +498,10 @@ class ContentImporter {
 		}
 	}
 
-	protected function importSystemContentEditorSnippets(SimpleXMLElement $sx) {
+	protected function importSystemContentEditorSnippets(\SimpleXMLElement $sx) {
 		if (isset($sx->systemcontenteditorsnippets)) {
 			foreach($sx->systemcontenteditorsnippets->snippet as $th) {
-				$pkg = ContentImporter::getPackageObject($th['package']);
+				$pkg = static::getPackageObject($th['package']);
 				$scs = SystemContentEditorSnippet::add($th['handle'], $th['name'], $pkg);
 				if ($th['activated'] == '1') {
 					$scs->activate();
@@ -493,11 +510,11 @@ class ContentImporter {
 		}
 	}
 
-	protected function importJobs(SimpleXMLElement $sx) {
+	protected function importJobs(\SimpleXMLElement $sx) {
 		Loader::model('job');
 		if (isset($sx->jobs)) {
 			foreach($sx->jobs->job as $jx) {
-				$pkg = ContentImporter::getPackageObject($jx['package']);
+				$pkg = static::getPackageObject($jx['package']);
 				if (is_object($pkg)) {
 					Job::installByPackage($jx['handle'], $pkg);
 				} else {
@@ -507,10 +524,10 @@ class ContentImporter {
 		}
 	}
 
-	protected function importJobSets(SimpleXMLElement $sx) {
+	protected function importJobSets(\SimpleXMLElement $sx) {
 		if (isset($sx->jobsets)) {
 			foreach($sx->jobsets->jobset as $js) {
-				$pkg = ContentImporter::getPackageObject($js['package']);
+				$pkg = static::getPackageObject($js['package']);
 				$jso = JobSet::getByName((string) $js['name']);
 				if (!is_object($jso)) {
 					$jso = JobSet::add((string) $js['name']);
@@ -525,12 +542,12 @@ class ContentImporter {
 		}
 	}
 
-	protected function importConfigValues(SimpleXMLElement $sx) {
+	protected function importConfigValues(\SimpleXMLElement $sx) {
 		if (isset($sx->config)) {
 			$db = Loader::db();
 			$configstore = new ConfigStore($db);
 			foreach($sx->config->children() as $key) {
-				$pkg = ContentImporter::getPackageObject($key['package']);
+				$pkg = static::getPackageObject($key['package']);
 				if (is_object($pkg)) {
 					$configstore->set($key->getName(), (string) $key, $pkg->getPackageID());
 				} else {
@@ -540,10 +557,10 @@ class ContentImporter {
 		}
 	}
 
-	protected function importTaskPermissions(SimpleXMLElement $sx) {
+	protected function importTaskPermissions(\SimpleXMLElement $sx) {
 		if (isset($sx->taskpermissions)) {
 			foreach($sx->taskpermissions->taskpermission as $tp) {
-				$pkg = ContentImporter::getPackageObject($tp['package']);
+				$pkg = static::getPackageObject($tp['package']);
 				$tpa = TaskPermission::addTask($tp['handle'], $tp['name'], $tp['description'], $pkg);
 				if (isset($tp->access)) {
 					foreach($tp->access->children() as $ch) {
@@ -560,29 +577,29 @@ class ContentImporter {
 		}
 	}
 
-	protected function importPermissionCategories(SimpleXMLElement $sx) {
+	protected function importPermissionCategories(\SimpleXMLElement $sx) {
 		if (isset($sx->permissioncategories)) {
 			foreach($sx->permissioncategories->category as $pkc) {
-				$pkg = ContentImporter::getPackageObject($akc['package']);
+				$pkg = static::getPackageObject($akc['package']);
 				$pkx = PermissionKeyCategory::add((string) $pkc['handle'], $pkg);
 			}
 		}
 	}
 
-	protected function importWorkflowProgressCategories(SimpleXMLElement $sx) {
+	protected function importWorkflowProgressCategories(\SimpleXMLElement $sx) {
 		if (isset($sx->workflowprogresscategories)) {
 			foreach($sx->workflowprogresscategories->category as $wpc) {
-				$pkg = ContentImporter::getPackageObject($wpc['package']);
+				$pkg = static::getPackageObject($wpc['package']);
 				$wkx = WorkflowProgressCategory::add((string) $wpc['handle'], $pkg);
 			}
 		}
 	}
 
-	protected function importPermissions(SimpleXMLElement $sx) {
+	protected function importPermissions(\SimpleXMLElement $sx) {
 		if (isset($sx->permissionkeys)) {
 			foreach($sx->permissionkeys->permissionkey as $pk) {
 				$pkc = PermissionKeyCategory::getByHandle((string) $pk['category']);
-				$pkg = ContentImporter::getPackageObject($pk['package']);
+				$pkg = static::getPackageObject($pk['package']);
 				$txt = Loader::helper('text');
 				$className = $txt->camelcase($pkc->getPermissionKeyCategoryHandle());
 				$c1 = $className . 'PermissionKey';
@@ -607,32 +624,32 @@ class ContentImporter {
 		}
 	}
 
-	protected function importFeatures(SimpleXMLElement $sx) {
+	protected function importFeatures(\SimpleXMLElement $sx) {
 		if (isset($sx->features)) {
 			foreach($sx->features->feature as $fea) {
 				$feHasCustomClass = false;
 				if ($fea['has-custom-class']) {
 					$feHasCustomClass = true;
 				}
-				$pkg = ContentImporter::getPackageObject($fea['package']);
+				$pkg = static::getPackageObject($fea['package']);
 				$fx = Feature::add((string) $fea['handle'], (string) $fea['score'], $feHasCustomClass, $pkg);
 			}
 		}
 	}
 
-	protected function importFeatureCategories(SimpleXMLElement $sx) {
+	protected function importFeatureCategories(\SimpleXMLElement $sx) {
 		if (isset($sx->featurecategories)) {
 			foreach($sx->featurecategories->featurecategory as $fea) {
-				$pkg = ContentImporter::getPackageObject($fea['package']);
+				$pkg = static::getPackageObject($fea['package']);
 				$fx = FeatureCategory::add($fea['handle'], $pkg);
 			}
 		}
 	}
 
-	protected function importAttributeCategories(SimpleXMLElement $sx) {
+	protected function importAttributeCategories(\SimpleXMLElement $sx) {
 		if (isset($sx->attributecategories)) {
 			foreach($sx->attributecategories->category as $akc) {
-				$pkg = ContentImporter::getPackageObject($akc['package']);
+				$pkg = static::getPackageObject($akc['package']);
 				$akx = AttributeKeyCategory::getByHandle($akc['handle']);
 				if (!is_object($akx)) {
 					$akx = AttributeKeyCategory::add($akc['handle'], $akc['allow-sets'], $pkg);
@@ -641,11 +658,11 @@ class ContentImporter {
 		}
 	}
 
-	protected function importAttributes(SimpleXMLElement $sx) {
+	protected function importAttributes(\SimpleXMLElement $sx) {
 		if (isset($sx->attributekeys)) {
 			foreach($sx->attributekeys->attributekey as $ak) {
 				$akc = AttributeKeyCategory::getByHandle($ak['category']);
-				$pkg = ContentImporter::getPackageObject($ak['package']);
+				$pkg = static::getPackageObject($ak['package']);
 				$type = AttributeType::getByHandle($ak['type']);
 				$txt = Loader::helper('text');
 				$className = $txt->camelcase($akc->getAttributeKeyCategoryHandle());
@@ -655,11 +672,11 @@ class ContentImporter {
 		}
 	}
 
-	protected function importAttributeSets(SimpleXMLElement $sx) {
+	protected function importAttributeSets(\SimpleXMLElement $sx) {
 		if (isset($sx->attributesets)) {
 			foreach($sx->attributesets->attributeset as $as) {
 				$akc = AttributeKeyCategory::getByHandle($as['category']);
-				$pkg = ContentImporter::getPackageObject($as['package']);
+				$pkg = static::getPackageObject($as['package']);
 				$set = $akc->addSet((string) $as['handle'], (string) $as['name'], $pkg, $as['locked']);
 				foreach($as->children() as $ask) {
 					$ak = $akc->getAttributeKeyByHandle((string) $ask['handle']);
@@ -671,28 +688,28 @@ class ContentImporter {
 		}
 	}
 
-	protected function importGatheringDataSources(SimpleXMLElement $sx) {
+	protected function importGatheringDataSources(\SimpleXMLElement $sx) {
 		if (isset($sx->gatheringsources)) {
 			foreach($sx->gatheringsources->gatheringsource as $ags) {
-				$pkg = ContentImporter::getPackageObject($ags['package']);
+				$pkg = static::getPackageObject($ags['package']);
 				$source = GatheringDataSource::add((string) $ags['handle'], (string) $ags['name'], $pkg);
 			}
 		}
 	}
 
-	protected function importGatheringItemTemplateTypes(SimpleXMLElement $sx) {
+	protected function importGatheringItemTemplateTypes(\SimpleXMLElement $sx) {
 		if (isset($sx->gatheringitemtemplatetypes)) {
 			foreach($sx->gatheringitemtemplatetypes->gatheringitemtemplatetype as $at) {
-				$pkg = ContentImporter::getPackageObject($wt['package']);
+				$pkg = static::getPackageObject($wt['package']);
 				$type = GatheringItemTemplateType::add((string) $at['handle'], $pkg);
 			}
 		}
 	}
 
-	protected function importGatheringItemTemplates(SimpleXMLElement $sx) {
+	protected function importGatheringItemTemplates(\SimpleXMLElement $sx) {
 		if (isset($sx->gatheringitemtemplates)) {
 			foreach($sx->gatheringitemtemplates->gatheringitemtemplate as $at) {
-				$pkg = ContentImporter::getPackageObject($at['package']);
+				$pkg = static::getPackageObject($at['package']);
 				$type = GatheringItemTemplateType::getByHandle((string) $at['type']);
 				$gatHasCustomClass = false;
 				$gatForceDefault = false;
@@ -721,7 +738,7 @@ class ContentImporter {
 		}
 	}
 
-	protected function importImageEditorControlSets(SimpleXMLElement $sx) {
+	protected function importImageEditorControlSets(\SimpleXMLElement $sx) {
 		if (isset($sx->imageeditor_controlsets)) {
 			foreach($sx->imageeditor_controlsets->imageeditor_controlset as $controlset) {
 				$handle = $controlset['handle'];
@@ -734,7 +751,7 @@ class ContentImporter {
 		}
 	}
 
-	protected function importImageEditorComponents(SimpleXMLElement $sx) {
+	protected function importImageEditorComponents(\SimpleXMLElement $sx) {
 		if (isset($sx->imageeditor_components)) {
 			foreach($sx->imageeditor_components->imageeditor_component as $component) {
 				$handle = $component['handle'];
@@ -747,7 +764,7 @@ class ContentImporter {
 		}
 	}
 
-	protected function importImageEditorFilters(SimpleXMLElement $sx) {
+	protected function importImageEditorFilters(\SimpleXMLElement $sx) {
 		if (isset($sx->imageeditor_filters)) {
 			foreach($sx->imageeditor_filters->imageeditor_filter as $filter) {
 				$handle = $filter['handle'];
@@ -760,10 +777,10 @@ class ContentImporter {
 		}
 	}
 
-	protected function importBlockTypeSets(SimpleXMLElement $sx) {
+	protected function importBlockTypeSets(\SimpleXMLElement $sx) {
 		if (isset($sx->blocktypesets)) {
 			foreach($sx->blocktypesets->blocktypeset as $bts) {
-				$pkg = ContentImporter::getPackageObject($bts['package']);
+				$pkg = static::getPackageObject($bts['package']);
 				$set = BlockTypeSet::add((string) $bts['handle'], (string) $bts['name'], $pkg);
 				foreach($bts->children() as $btk) {
 					$bt = BlockType::getByHandle((string) $btk['handle']);

@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Core\Group;
+namespace Concrete\Core\User\Group;
 use \Concrete\Core\Foundation\Object;
 class GroupSet extends Object {
 	

@@ -1,7 +1,7 @@
 <?
-namespace Concrete\Core\Foundation\Tree\Node\Type;
-use Concrete\Core\Foundation\Tree\Node\Node;
-abstract class Category extends Node {
+namespace Concrete\Core\Tree\Node\Type;
+use Concrete\Core\Tree\Node\Node as TreeNode;
+abstract class Category extends TreeNode {
 
 	public function getTreeNodeDisplayName() {
 		if ($this->treeNodeCategoryName) {

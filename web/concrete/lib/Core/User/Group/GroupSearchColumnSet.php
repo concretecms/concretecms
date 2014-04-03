@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Core\Group;
+namespace Concrete\Core\User\Group;
 class GroupSearchColumnSet extends \Concrete\Core\Foundation\Collection\Database\Column\Set {
 	
 	public function getGroupName($g) {

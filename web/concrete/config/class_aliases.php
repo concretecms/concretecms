@@ -2,8 +2,10 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $list = \Concrete\Core\Foundation\ClassAliasList::getInstance();
 $list->registerMultiple(array(
-	'Cache' => 'Core\Foundation\Cache\Cache',
+	'Cache' => 'Core\Cache\Cache',
+	'CacheLocal' => 'Core\Cache\CacheLocal',
 	'Database' => 'Core\Database\Database',
+	'Environment' => 'Core\Foundation\Environment',
 	'Localization' => 'Core\Localization\Localization',
 	'Redirect' => 'Core\Routing\Redirect',
 	'RedirectResponse' => 'Core\Routing\RedirectResponse',
@@ -11,8 +13,10 @@ $list->registerMultiple(array(
 	'Response' => 'Core\Http\Response',
 	'Cookie' => 'Core\Cookie\Cookie',
 	'Page' => 'Core\Page\Page',
+	'PageType' => 'Core\Page\Type\Type',
 	'PageList' => 'Core\Page\List',
 	'Block' => 'Core\Page\Block',
+	'BlockType' => 'Core\Block\BlockType\BlockType',
 	'Conversation' => 'Core\Conversation\Conversation',
 	'Package' => 'Core\Package\Package',
 	'Collection' => 'Core\Page\Collection\Collection',
@@ -21,6 +25,7 @@ $list->registerMultiple(array(
 	'Job' => 'Core\Job\Job',
 	'File' => 'Core\File\File',
 	'FileSet' => 'Core\FileSet\FileSet',
+	'Group' => 'Core\User\Group\Group',
 	'FileList' => 'Core\File\List',
 	'QueueableJob' => 'Core\Job\QueueableJob',
 	'Permissions' => 'Core\Permission\Checker',
@@ -32,7 +37,7 @@ $list->registerMultiple(array(
 	'AuthenticationType' => 'Core\Authentication\AuthenticationType',
 	'ConcreteAuthenticationTypeController' => 'Core\Authentication\Type\Concrete',
 	'FacebookAuthenticationTypeController' => 'Core\Authentication\Type\Facebook',
-	'GroupTree' => 'Core\Foundation\Tree\Type\Group',
-	'GroupTreeNode' => 'Core\Foundation\Tree\Node\Type\Group'
+	'GroupTree' => 'Core\Tree\Type\Group',
+	'GroupTreeNode' => 'Core\Tree\Node\Type\Group'
 
 ));

@@ -5,9 +5,9 @@ class ClassloaderTest extends PHPUnit_Framework_TestCase {
 		$this->obj = \Concrete\Core\Foundation\Classloader::getInstance();
 	}
 
-	public function testPsr0AutoloadingCore() {
+	public function testPsr4AutoloadingCore() {
 		$this->assertTrue(class_exists('Concrete\Core\Foundation\Object'));
-		$this->assertTrue(class_exists('Concrete\Core\Dispatcher'));
+		$this->assertTrue(class_exists('Concrete\Core\Application\Dispatcher'));
 		$this->assertTrue(class_exists('Concrete\Core\Http\Request'));
 	}
 
@@ -17,7 +17,7 @@ class ClassloaderTest extends PHPUnit_Framework_TestCase {
 
 	public function testOverrideableCoreClassesCore() {
 		$c = new Cache();
-		$this->assertTrue($c instanceof \Concrete\Core\Foundation\Cache\Cache);
+		$this->assertTrue($c instanceof \Concrete\Core\Cache\Cache);
 	}
 
 	public function testRouteController() {

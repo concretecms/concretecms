@@ -1,10 +1,12 @@
 <?
-namespace Concrete\Core\Foundation\Cache;
-use Loader;
+namespace Concrete\Core\Cache;
+use \Concrete\Core\Cache\Page\PageCache;
+use \Concrete\Core\Events\Events;
+use Database as DB;
 use Zend_Cache;
 use Zend_Translate;
-use Concrete\Core\Foundation\Cache\Page\PageCache;
-use Concrete\Core\Events\Events;
+use Environment;
+use CacheLocal;
 
 class Cache {
 	
@@ -166,18 +168,18 @@ class Cache {
 	 * Completely flushes the cache
 	 */	
 	public function flush() {
-		$db = Loader::db();
+		$db = DB::get();
 		$r = $db->MetaTables();
 
 		// flush the CSS cache
 		if (is_dir(DIR_FILES_CACHE . '/' . DIRNAME_CSS)) {
-			$fh = Loader::helper("file");
+			$fh = helper("file");
 			$fh->removeAll(DIR_FILES_CACHE . '/' . DIRNAME_CSS);
 		}
 
 		// flush the JS cache
 		if (is_dir(DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT)) {
-			$fh = Loader::helper("file");
+			$fh = helper("file");
 			$fh->removeAll(DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT);
 		}
 		

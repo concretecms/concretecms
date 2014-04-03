@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Workflow;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 /**
  * @package Workflow
  * @author Andrew Embler <andrew@concrete5.org>

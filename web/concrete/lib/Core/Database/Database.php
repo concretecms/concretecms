@@ -49,6 +49,7 @@ class Database {
 		return $connection;
 	}
 
+
 	/** 
 	 * @deprecated
 	 */

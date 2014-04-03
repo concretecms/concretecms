@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Workflow;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 class Type extends Object {
 
 	public function getWorkflowTypeID() {return $this->wftID;}
@@ -11,7 +12,7 @@ class Type extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select wftID, pkgID, wftHandle, wftName from WorkflowTypes where wftID = ?', array($wftID));
 		if ($row['wftHandle']) {
-			$wt = new WorkflowType();
+			$wt = new static();
 			$wt->setPropertiesFromArray($row);
 			return $wt;
 		}
@@ -23,7 +24,7 @@ class Type extends Object {
 		$r = $db->Execute('select wftID from WorkflowTypes order by wftID asc');
 
 		while ($row = $r->FetchRow()) {
-			$list[] = WorkflowType::getByID($row['wftID']);
+			$list[] = static::getByID($row['wftID']);
 		}
 		
 		$r->Close();
@@ -31,7 +32,7 @@ class Type extends Object {
 	}
 	
 	public static function exportList($xml) {
-		$wtypes = WorkflowType::getList();
+		$wtypes = static::getList();
 		$db = Loader::db();
 		$axml = $xml->addChild('workflowtypes');
 		foreach($wtypes as $wt) {
@@ -52,7 +53,7 @@ class Type extends Object {
 		$list = array();
 		$r = $db->Execute('select wftID from WorkflowTypes where pkgID = ? order by wftID asc', array($pkg->getPackageID()));
 		while ($row = $r->FetchRow()) {
-			$list[] = WorkflowType::getByID($row['wftID']);
+			$list[] = static::getByID($row['wftID']);
 		}
 		$r->Close();
 		return $list;
@@ -79,7 +80,7 @@ class Type extends Object {
 		$db = Loader::db();
 		$db->Execute('insert into WorkflowTypes (wftHandle, wftName, pkgID) values (?, ?, ?)', array($wftHandle, $wftName, $pkgID));
 		$id = $db->Insert_ID();
-		$est = WorkflowType::getByID($id);
+		$est = static::getByID($id);
 		return $est;
 	}
 	

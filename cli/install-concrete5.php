@@ -33,8 +33,7 @@ if (count($argv) === 1) {
 
 define('FILE_PERMISSIONS_MODE', 0777);
 define('DIRECTORY_PERMISSIONS_MODE', 0777);
-define('APP_VERSION_CLI_MINIMUM', '5.5.1');
-define('BASE_URL', 'http://localhost');
+define('C5_ENVIRONMENT_ONLY', true);
 
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 ini_set('display_errors', 1);
@@ -113,75 +112,56 @@ if (file_exists(DIR_BASE . '/config/site.php')) {
 	die("ERROR: concrete5 is already installed.\n");
 }		
 
-## Startup check ##	
-require($corePath . '/config/base_pre.php');
 
-## Load the base config file ##
-require($corePath . '/config/base.php');
+require $corePath . '/config/base_pre.php';
+require $corePath . '/startup/config_check.php';
+require $corePath . '/startup/updated_core_check.php';
+require $corePath . '/config/base.php';
+require $corePath . '/startup/autoload.php';
+require $corePath . '/startup/helpers.php';
+require $corePath . '/startup/file_permission_config.php';
+require $corePath . '/startup/magic_quotes_gpc_check.php';
+require $corePath . '/startup/timezone.php';
+require $corePath . '/startup/file_access_check.php';
+require $corePath . '/config/theme_paths.php';
+require $corePath . '/config/routes.php';
+require $corePath . '/config/class_aliases.php';
+require $corePath . '/startup/url_check.php';
+require $corePath . '/startup/encoding_check.php';
+require $corePath . '/config/file_types.php';
 
-## Required Loading
-require($corePath . '/startup/required.php');
-
-## Setup timezone support
-require($corePath . '/startup/timezone.php'); // must be included before any date related functions are called (php 5.3 +)
-
-## First we ensure that dispatcher is not being called directly
-require($corePath . '/startup/file_access_check.php');
-
-require($corePath . '/startup/localization.php');
-
-## Security helpers
-require($corePath . '/startup/security.php');
-
-## Autoload core classes
-spl_autoload_register(array('Loader', 'autoloadCore'), true);
-
-## Load the database ##
-Loader::database();
-
-require($corePath . '/startup/autoload.php');
-
-## Exception handler
-require($corePath . '/startup/exceptions.php');
-
-## Set default permissions for new files and directories ##
-require($corePath . '/startup/file_permission_config.php');
-
-## Startup check, install ##	
-require($corePath . '/startup/magic_quotes_gpc_check.php');
-
-## Default routes for various content items ##
-require($corePath . '/config/theme_paths.php');
-
-## Load session handlers
-require($corePath . '/startup/session.php');
 if ($config['reinstall'] === 'yes') {
-	require($corePath . '/config/app.php');
 
 	// Remove all files from the files directory
 	function removeDemoFiles($path) {
+		global $target;
 		$path .= end(str_split($path)) !== '/' ? '/' : '';
 		foreach (glob($path . "*") as $file) {
 			if (is_dir($file)) removeDemoFiles($file);
 			if (is_file($file)) unlink($file);
 		}
+		$dirf = $target . '/files/';
 		// Remove Directory once Files have been removed (If Exists)
-		if (is_dir($path) && $path !== DIR_FILES_UPLOADED . '/') rmdir($path); 
+		if (is_dir($path) && $path !== $dirf) rmdir($path); 
 	}
-	removeDemoFiles(DIR_FILES_UPLOADED . '/');
 
+	removeDemoFiles($target . '/files/');
 
-	foreach (Loader::db($config['db-server'], $config['db-username'], $config['db-password'], $config['db-database'])->MetaTables('TABLES') as $table) {
-		Loader::db($config['db-server'], $config['db-username'], $config['db-password'], $config['db-database'])->Execute('DROP TABLE '.$table);
+	$db = Database::connect(array(
+		'host' => $config['db-server'],
+		'user' => $config['db-username'],
+		'password' => $config['db-password'],
+		'database' => $config['db-database']
+	));
+
+	$tables = $db->MetaTables();
+	$sm = $db->getSchemaManager();
+	foreach($tables as $table) {
+		$sm->dropTable($table);
 	}
-	Loader::library('cache');
-	Cache::flush();
 }
 
-## Startup check ##	
-require($corePath . '/startup/encoding_check.php');
-
-$cnt = Loader::controller("/install");
+$cnt = new \Concrete\Controller\Install();
 $cnt->on_start();
 $fileWriteErrors = clone $cnt->fileWriteErrors;
 $e = Loader::helper('validation/error');
@@ -233,10 +213,11 @@ if ($e->has()) {
 		print "ERROR: " . $ei . "\n";
 	}	
 } else {
-	$spl = Loader::startingPointPackage($config['starting-point']);
+	$spl = StartingPointPackage::getClass($config['starting-point']);
 	require(DIR_CONFIG_SITE . '/site_install.php');
 	require(DIR_CONFIG_SITE . '/site_install_user.php');
 	$routines = $spl->getInstallRoutines();
+
 	try {
 		foreach($routines as $r) {
 			print $r->getProgress() . '%: ' . $r->getText() . "\n";

@@ -35,6 +35,23 @@ class PDOStatement extends \Doctrine\DBAL\Driver\PDOStatement {
         return $this->fetch();
     }
 
+
+    /** 
+     * @deprecated
+     * alias to old ADODB method
+     */
+    public function Close() {
+        return $this->closeCursor();
+    }
+
+    /** 
+     * @deprecated
+     * alias to old ADODB method
+     */
+    public function free() {
+        return $this->closeCursor();
+    }
+
     /** 
      * @deprecated
      * alias to old ADODB result method

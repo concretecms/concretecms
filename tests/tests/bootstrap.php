@@ -23,7 +23,7 @@ require $DIR_BASE_CORE . '/startup/updated_core_check.php';
 require $DIR_BASE_CORE . '/config/base.php';
 require $DIR_BASE_CORE . '/startup/autoload.php';
 
-$app = Concrete\Core\Dispatcher::get();
+$app = Concrete\Core\Application\Dispatcher::get();
 $app->bootstrap();
 /*
 //causes dispatcher to skip the page rendering

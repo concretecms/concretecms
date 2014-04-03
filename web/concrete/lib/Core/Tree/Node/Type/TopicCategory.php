@@ -1,6 +1,5 @@
 <?
-namespace Concrete\Core\Foundation\Tree\Node\Type;
-use Concrete\Core\Foundation\Tree\Node\Node;
+namespace Concrete\Core\Tree\Node\Type;
 class TopicCategory extends Category {
 
 	public function getTreeNodePermissionKeyCategoryHandle() { return 'topic_category_tree_node';}

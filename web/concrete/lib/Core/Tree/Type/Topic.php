@@ -1,6 +1,6 @@
 <?
-namespace Concrete\Core\Foundation\Tree\Type;
-use Concrete\Core\Foundation\Tree\Tree;
+namespace Concrete\Core\Tree\Type;
+use Concrete\Core\Tree\Tree;
 use Loader;
 class Topic extends Tree {
 

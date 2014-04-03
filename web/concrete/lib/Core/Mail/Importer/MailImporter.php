@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Mail\Importer;
 use Concrete\Core\Foundation\Object;
+use Loader;
 class MailImporter extends Object {
 
 	/**
@@ -44,9 +45,8 @@ class MailImporter extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow("select miID, miHandle, miServer, miUsername, miPassword, miEncryption, miIsEnabled, miEmail, miPort, miConnectionMethod, Packages.pkgID, pkgHandle from MailImporters left join Packages on MailImporters.pkgID = Packages.pkgID where miID = ?", array($miID));
 		if (isset($row['miID'])) {
-			Loader::library('mail/importers/' . $row['miHandle'], $row['pkgHandle']);
 			$txt = Loader::helper('text');
-			$className = $txt->camelcase($row['miHandle']) . 'MailImporter';
+			$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Mail\\Importer\\Type\\' . $txt->camelcase($row['miHandle']));
 			$mi = new $className();
 			$mi->setPropertiesFromArray($row);
 			return $mi;

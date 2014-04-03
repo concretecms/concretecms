@@ -1,7 +1,6 @@
 <?
 use Concrete\Core\Foundation\Environment as Environment;
 use Concrete\Core\Foundation\Object as Object;
-use Concrete\Core\Localization\Localization as Localization;
 
 /** Translate text (simple form).
 * @param string $text The text to be translated.

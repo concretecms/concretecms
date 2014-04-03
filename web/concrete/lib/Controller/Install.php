@@ -3,10 +3,10 @@ namespace Concrete\Controller;
 use Loader;
 use Cache;
 use StartingPointPackage;
-use Concrete\Core\Localization\Localization as Localization;
-use Concrete\Core\Foundation\Environment as Environment;
-use Concrete\Core\View\View;
-use Concrete\Core\Database\Database;
+use \Concrete\Core\Localization\Localization as Localization;
+use \Concrete\Core\Foundation\Environment as Environment;
+use \Concrete\Core\View\View;
+use Database as DB;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 ini_set('display_errors', 1);
@@ -74,7 +74,6 @@ class Install extends Controller {
 			define("ACTIVE_LOCALE", $_POST['locale']);
 			$this->set('locale', $_POST['locale']);
 		}
-		require(DIR_BASE_CORE . '/config/file_types.php');
 		Cache::disableCache();
 		Cache::disableLocalCache();
 		$this->setRequiredItems();
@@ -207,7 +206,7 @@ class Install extends Controller {
 
 			// attempt to connect to the database
 			if (defined('DB_SERVER')) {
-				$db = Database::connect(array(
+				$db = DB::connect(array(
 					'host' => DB_SERVER,
 					'user' => DB_USERNAME,
 					'password' => DB_PASSWORD,
@@ -216,7 +215,7 @@ class Install extends Controller {
 				$DB_SERVER = DB_SERVER;
 				$DB_DATABASE = DB_DATABASE;
 			} else {
-				$db = Database::connect(array(
+				$db = DB::connect(array(
 					'host' => $_POST['DB_SERVER'],
 					'user' => $_POST['DB_USERNAME'],
 					'password' => $_POST['DB_PASSWORD'],

@@ -7,6 +7,12 @@ use AuthenticationType;
 use Loader;
 use Package;
 use GroupTree;
+use Group;
+use UserInfo;
+use User;
+use \Concrete\Core\Mail\Importer\MailImporter;
+use \Concrete\Core\User\Point\Action\Action as UserPointAction;
+use \Concrete\Core\Backup\ContentImporter;
 class StartingPointPackage extends Package {
 
 
@@ -166,8 +172,8 @@ class StartingPointPackage extends Package {
 
 		$fba->disable();
 
-		\Concrete\Core\Foundation\Tree\TreeType::add('group');
-		\Concrete\Core\Foundation\Tree\Node\NodeType::add('group');
+		\Concrete\Core\Tree\TreeType::add('group');
+		\Concrete\Core\Tree\Node\NodeType::add('group');
 		$tree = GroupTree::get();
 		$tree = GroupTree::add();
 

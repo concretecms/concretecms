@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Workflow\Progress;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 abstract class Progress extends Object {  
 
 	protected $wpID;

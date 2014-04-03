@@ -1,7 +1,7 @@
 <?
-namespace Concrete\Core\Foundation\Tree\Node\Type;
-use Concrete\Core\Foundation\Tree\Node\Node;
-class Topic extends Node {
+namespace Concrete\Core\Tree\Node\Type;
+use Concrete\Core\Tree\Node\Node as TreeNode;
+class Topic extends TreeNode {
 
 	public function getTreeNodePermissionKeyCategoryHandle() { return 'topic_tree_node';}
 	public function getTreeNodeDisplayName() {

@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Workflow\Progress;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 class History extends Object {  
 
 	public function getWorkflowProgressHistoryTimestamp() {return $this->timestamp;}

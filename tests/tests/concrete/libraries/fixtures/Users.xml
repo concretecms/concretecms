@@ -4,10 +4,12 @@
   <table_data name="Users">
 		<row>
 			<field name="uName">admin</field>
+			<field name="uFirstName">Andrew</field>
 			<field name="uEmail">andrew@concrete5.org</field>
 		</row>
 		<row>
 			<field name="uName">testuser</field>
+			<field name="uFirstName">Testie</field>
 			<field name="uEmail">testuser@concrete5.org</field>
 		</row>
 	</table_data>

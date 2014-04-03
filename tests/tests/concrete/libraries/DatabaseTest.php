@@ -11,7 +11,7 @@ class DatabaseTest extends PHPUnit_Extensions_Database_TestCase {
 		$pdo = $conn->getConnection();
 
 		$pdo->exec('drop table if exists Users');
-		$pdo->exec('create table Users (uID int unsigned not null auto_increment, uName varchar(128) null, uEmail varchar(128) null, primary key (uID));');
+		$pdo->exec('create table Users (uID int unsigned not null auto_increment, uName varchar(128) null, uFirstName varchar(128) null, uEmail varchar(128) null, primary key (uID));');
 		parent::setUp();
 	}
 
@@ -117,6 +117,7 @@ class DatabaseTest extends PHPUnit_Extensions_Database_TestCase {
 	}
 
 	public function testLegacyConcreteApi() {
+		
 		$db = Loader::db();
 
 		$q = "select * from Users";
@@ -157,8 +158,30 @@ class DatabaseTest extends PHPUnit_Extensions_Database_TestCase {
 		$r = $db->query($q, $v);
 		$newUID = $db->Insert_ID();
 		$this->assertTrue($newUID == 4);
+	}
 
+	public function testLegacyReplace() {
+		$db = Database::get();
+		$db->Replace('Users', array('uName' => 'testuser5', 'uEmail'=> 'testuser5@concrete5.org'), array('uName'));
+		$uID = $db->GetOne('select uID from Users where uEmail = ?', array('testuser5@concrete5.org'));
+		$this->assertTrue($uID == 3);
+		$row = $db->GetRow('select uName, uEmail from Users where uID = ?', array(3));
+		$this->assertTrue($row['uName'] == 'testuser5');
 
+		$db->Replace('Users', array('uName' => 'testuser6', 'uEmail'=> 'testuser6@concrete5.org'), array('uName', 'uEmail'));
+		$row = $db->GetRow('select uName, uEmail from Users where uEmail = ?', array('testuser6@concrete5.org'));
+		$this->assertTrue($row['uName'] == 'testuser6');
+
+		$db->Replace('Users', array('uEmail' => 'andrew@concretecms.com', 'uName' => 'admin'), array('uName'));
+		$row = $db->GetRow('select uName, uID, uEmail from Users where uID = ?', array(1));
+		$this->assertTrue($row['uID'] == 1 && $row['uName'] == 'admin' && $row['uEmail'] == 'andrew@concretecms.com');
+	}
+
+	public function testQuoting() {
+		$db = Database::get();
+		$db->Replace('Users', array('uName' => "test'der", 'uEmail'=> "testuser5'@concrete5.org"), array('uName'));
+		$uName = $db->GetOne('select uName from Users where uEmail = ?', array("testuser5'@concrete5.org"));
+		$this->assertTrue($uName == "test'der");
 	}
 
 

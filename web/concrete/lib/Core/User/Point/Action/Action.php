@@ -1,10 +1,8 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-
-/**
- * @author Ryan Tyler ryan@concrete5.org
- */
-class Concrete5_Model_UserPointAction extends Model {
+namespace Concrete\Core\User\Point\Action;
+use Loader;
+use Environment;
+class Action {
 	public $_table = 'UserPointActions';
 	
 	public $upaID;
@@ -51,7 +49,7 @@ class Concrete5_Model_UserPointAction extends Model {
 		$upaIDs = $db->GetCol('select upaID from UserPointActions where pkgID = ? order by upaName asc', array($pkg->getPackageID()));
 		$actions = array();
 		foreach($upaIDs as $upaID) {
-			$action = UserPointAction::getByID($upaID);
+			$action = static::getByID($upaID);
 			if (is_object($action)) {
 				$actions[] = $action;
 			}
@@ -83,7 +81,7 @@ class Concrete5_Model_UserPointAction extends Model {
 	}
 
 	public static function add($upaHandle, $upaName, $upaDefaultPoints, $group, $upaIsActive = true, $pkg = false) {
-		$upa = new UserPointAction();
+		$upa = new static();
 		$upa->upaHandle = $upaHandle;
 		$upa->upaName = $upaName;
 		$upa->upaDefaultPoints = $upaDefaultPoints;
@@ -110,7 +108,7 @@ class Concrete5_Model_UserPointAction extends Model {
 			$upa->upaHasCustomClass = 1;
 		}
 
-		$upa->save();
+		//$upa->save();
 	}
 
 	/**

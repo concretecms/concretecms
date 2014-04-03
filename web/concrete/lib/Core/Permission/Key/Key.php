@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Permission\Key;
 use Concrete\Core\Foundation\Object;
+use Loader;
 abstract class Key extends Object {
 	
 	const ACCESS_TYPE_INCLUDE = 10;
