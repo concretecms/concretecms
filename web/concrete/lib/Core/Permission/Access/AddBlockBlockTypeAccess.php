@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Access;
+use Loader;
 class AddBlockBlockTypeAccess extends BlockTypeAccess {
 
 	public function duplicate($newPA = false) {

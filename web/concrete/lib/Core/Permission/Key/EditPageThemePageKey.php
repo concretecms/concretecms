@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Key;
+use Loader;
 class EditPageThemePageKey extends PageKey  {
 	
 	protected function getAllowedThemeIDs() {

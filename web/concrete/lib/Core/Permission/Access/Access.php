@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Permission\Access;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 class Access extends Object {
 	
 	protected $paID;

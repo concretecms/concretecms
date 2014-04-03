@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Access;
+use Loader;
 class AddBlockToAreaAreaAccess extends AreaAccess {
 
 	public function duplicate($newPA = false) {

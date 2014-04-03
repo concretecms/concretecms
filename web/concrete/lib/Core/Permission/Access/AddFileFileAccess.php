@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Access;
+use Loader;
 
 class AddFileFileSetAccess extends FileSetAccess {
 

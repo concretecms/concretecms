@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Key;
+use Loader;
 class BlockKey extends Key {
 
 	public function copyFromPageOrAreaToBlock() {

@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Key;
+use Loader;
 class PageTypeKey extends Key {
 	
 	public function copyFromDefaultsToPageType(PermissionKey $pk) {

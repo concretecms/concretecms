@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Access\Entity;
+use Loader;
 class FileUploaderEntity extends Entity {
 
 	public function getAccessEntityUsers(PermissionAccess $pa) {

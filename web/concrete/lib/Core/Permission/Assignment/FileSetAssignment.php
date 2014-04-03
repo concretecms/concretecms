@@ -1,6 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 namespace Concrete\Core\Permission\Assignment;
+use Loader;
 class FileSetAssignment extends Assignment {
 	
 	public function setPermissionObject(FileSet $fs) {

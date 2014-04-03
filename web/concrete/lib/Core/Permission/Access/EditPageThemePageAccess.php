@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Access;
+use Loader;
 class EditPageThemePageAccess extends PageAccess {
 
 	public function duplicate($newPA = false) {

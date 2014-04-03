@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Access\ListItem;
+use Loader;
 class EditUserPropertiesUserListItem extends UserListItem {
 	
 	protected $customAttributeKeyArray = array();

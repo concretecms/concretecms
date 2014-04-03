@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Access\Entity;
+use Loader;
 class GroupCombinationEntity extends Entity {
 	
 	protected $groups = array();

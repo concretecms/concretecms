@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Key;
+use Loader;
 class AddBlockBlockTypeKey extends BlockTypeKey  {
 
 	protected function getAllowedBlockTypeIDs() {

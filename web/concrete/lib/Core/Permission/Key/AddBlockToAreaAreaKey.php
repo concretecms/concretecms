@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Key;
+use Loader;
 class AddBlockToAreaAreaKey extends AreaKey  {
 
 	public function copyFromPageToArea() {

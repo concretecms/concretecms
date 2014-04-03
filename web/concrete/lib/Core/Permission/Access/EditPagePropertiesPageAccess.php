@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Access;
+use Loader;
 class EditPagePropertiesPageAccess extends PageAccess {
 
 	public function duplicate($newPA = false) {

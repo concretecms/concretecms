@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Key;
+use Loader;
 class EditUserPropertiesUserKey extends UserKey  {
 
 	public function getMyAssignment() {
