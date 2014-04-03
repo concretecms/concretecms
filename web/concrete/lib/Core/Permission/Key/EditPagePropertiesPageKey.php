@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Key;
+use Loader;
 class EditPagePropertiesPageKey extends PageKey  {
 
 	protected function getAllAttributeKeyIDs() {

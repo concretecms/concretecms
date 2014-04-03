@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Permission;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 class Category extends Object {
 
 	protected static $categories;

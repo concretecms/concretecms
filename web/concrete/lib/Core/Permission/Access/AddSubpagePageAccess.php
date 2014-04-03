@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Access;
+use Loader;
 class AddSubpagePageAccess extends PageAccess {
 
 	public function duplicate($newPA = false) {

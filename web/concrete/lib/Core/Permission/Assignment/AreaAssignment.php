@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Assignment;
+use Loader;
 class AreaAssignment extends Assignment {
 
 	protected $area;

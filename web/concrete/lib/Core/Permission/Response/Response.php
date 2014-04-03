@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Response;
+use Loader;
 class Response {
 
 	protected $object;

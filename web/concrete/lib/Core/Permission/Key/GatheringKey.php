@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Key;
+use Loader;
 class GatheringKey extends Key {
 	
 	public function copyFromDefaultsToGathering(PermissionKey $pk) {

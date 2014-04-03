@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Permission\Assignment;
+use Loader;
 class Assignment {
 
 	protected $pk; // permissionkey

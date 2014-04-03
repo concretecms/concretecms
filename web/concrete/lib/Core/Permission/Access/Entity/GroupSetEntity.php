@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Access\Entity;
+use Loader;
 class GroupSetEntity extends Entity {
 	
 	protected $groupset;

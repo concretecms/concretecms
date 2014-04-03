@@ -1,6 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 namespace Concrete\Core\Permission\Key;
+use Loader;
 class ViewUserAttributesUserKey extends UserKey  {
 
 	protected function getAllowedAttributeKeyIDs($list = false) {

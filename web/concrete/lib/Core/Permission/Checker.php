@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission;
+use Loader;
 class Checker {
 
 	public $error;

@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Key;
+use Loader;
 class AddSubpagePageKey extends PageKey  {
 	
 	public function canAddExternalLink() {
