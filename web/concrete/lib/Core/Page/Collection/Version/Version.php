@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page\Collection\Version;
+use Loader;
 use \Concrete\Core\Foundation\Object;
 class Version extends Object {
 	
@@ -40,7 +41,7 @@ class Version extends Object {
 		}
 
 		$row = $db->GetRow($q, $v);
-		$cv = new CollectionVersion();
+		$cv = new static();
 
 		if (is_array($row) && $row['cvID']) {
 			$cv->setPropertiesFromArray($row);
@@ -192,7 +193,7 @@ class Version extends Object {
 		}
 		
 		
-		$nv = CollectionVersion::get($c, $newVID);
+		$nv = static::get($c, $newVID);
 		Events::fire('on_page_version_add', $c, $nv);
 		$nv->refreshCache();
 		// now we return it
@@ -326,13 +327,12 @@ class Version extends Object {
 			}
 		}
 		
-		$features = CollectionVersionFeatureAssignment::getList($this);
+		$features = \Concrete\Core\Page\Collection\Version\FeatureAssignment::getList($this);
 		foreach($features as $fa) {
 			$fa->delete();
 		}
 
 		$r = $db->Execute('select avID, akID from CollectionAttributeValues where cID = ? and cvID = ?', array($cID, $cvID));
-		Loader::model('attribute/categories/collection');			
 		while ($row = $r->FetchRow()) {
 			$cak = CollectionAttributeKey::getByID($row['akID']);
 			$cav = $c->getAttributeValueObject($cak);

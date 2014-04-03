@@ -1,6 +1,6 @@
 <?php 
-
 namespace Concrete\Core\Page\Type\PublishTarget\Configuration;
+use Loader;
 class PageTypeConfiguration extends Configuration {
 
 	protected $ptID;

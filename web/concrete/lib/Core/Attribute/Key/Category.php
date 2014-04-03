@@ -1,7 +1,9 @@
 <?
-namespace Concrete\Core\Attribute;
+namespace Concrete\Core\Attribute\Key;
 use \Concrete\Core\Foundation\Object;
-class KeyCategory extends Object {
+use \Concrete\Core\Attribute\Set as AttributeSet;
+use Loader;
+class Category extends Object {
 
 	const ASET_ALLOW_NONE = 0;
 	const ASET_ALLOW_SINGLE = 1;
@@ -11,7 +13,7 @@ class KeyCategory extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select akCategoryID, akCategoryHandle, akCategoryAllowSets, pkgID from AttributeKeyCategories where akCategoryID = ?', array($akCategoryID));
 		if (isset($row['akCategoryID'])) {
-			$akc = new AttributeKeyCategory();
+			$akc = new static();
 			$akc->setPropertiesFromArray($row);
 			return $akc;
 		}
@@ -21,7 +23,7 @@ class KeyCategory extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select akCategoryID, akCategoryHandle, akCategoryAllowSets, pkgID from AttributeKeyCategories where akCategoryHandle = ?', array($akCategoryHandle));
 		if (isset($row['akCategoryID'])) {
-			$akc = new AttributeKeyCategory();
+			$akc = new static();
 			$akc->setPropertiesFromArray($row);
 			return $akc;
 		}
@@ -45,24 +47,13 @@ class KeyCategory extends Object {
 	}
 	
 	public function getAttributeKeyByHandle($akHandle) {
-		if ($this->pkgID > 0) {
-			Loader::model('attribute/categories/' . $this->akCategoryHandle, $this->getPackageHandle());
-		} else {
-			Loader::model('attribute/categories/' . $this->akCategoryHandle);
-		}		
 		$txt = Loader::helper('text');
-		$className = $txt->camelcase($this->akCategoryHandle);
-		$c1 = $className . 'AttributeKey';
-		$ak = call_user_func(array($c1, 'getByHandle'), $akHandle);
+		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Attribute\\Key\\' . $txt->camelcase($this->akCategoryHandle) . 'Key');
+		$ak = call_user_func(array($className, 'getByHandle'), $akHandle);
 		return $ak;
 	}
 
 	public function getAttributeKeyByID($akID) {
-		if ($this->pkgID > 0) {
-			Loader::model('attribute/categories/' . $this->akCategoryHandle, $this->getPackageHandle());
-		} else {
-			Loader::model('attribute/categories/' . $this->akCategoryHandle);
-		}		
 		$txt = Loader::helper('text');
 		$className = $txt->camelcase($this->akCategoryHandle);
 		$c1 = $className . 'AttributeKey';
@@ -74,7 +65,7 @@ class KeyCategory extends Object {
 		$db = Loader::db();
 		$r = $db->Execute('select AttributeKeys.akID from AttributeKeys left join AttributeSetKeys on AttributeKeys.akID = AttributeSetKeys.akID where asID is null and akIsInternal = 0 and akCategoryID = ?', $this->akCategoryID);
 		$keys = array();
-		$cat = AttributeKeyCategory::getByID($this->akCategoryID);
+		$cat = static::getByID($this->akCategoryID);
 		while ($row = $r->FetchRow()) {
 			$keys[] = $cat->getAttributeKeyByID($row['akID']);
 		}
@@ -86,7 +77,7 @@ class KeyCategory extends Object {
 		$list = array();
 		$r = $db->Execute('select akCategoryID from AttributeKeyCategories where pkgID = ? order by akCategoryID asc', array($pkg->getPackageID()));
 		while ($row = $r->FetchRow()) {
-			$list[] = AttributeKeyCategory::getByID($row['akCategoryID']);
+			$list[] = static::getByID($row['akCategoryID']);
 		}
 		$r->Close();
 		return $list;
@@ -152,12 +143,12 @@ class KeyCategory extends Object {
 		$cats = array();
 		$r = $db->Execute('select akCategoryID from AttributeKeyCategories order by akCategoryID asc');
 		while ($row = $r->FetchRow()) {
-			$cats[] = AttributeKeyCategory::getByID($row['akCategoryID']);
+			$cats[] = static::getByID($row['akCategoryID']);
 		}
 		return $cats;
 	}
 	
-	public static function add($akCategoryHandle, $akCategoryAllowSets = AttributeKeyCategory::ASET_ALLOW_NONE, $pkg = false) {
+	public static function add($akCategoryHandle, $akCategoryAllowSets = 0, $pkg = false) {
 		$db = Loader::db();
 		if (is_object($pkg)) {
 			$pkgID = $pkg->getPackageID();
@@ -165,21 +156,16 @@ class KeyCategory extends Object {
 		$db->Execute('insert into AttributeKeyCategories (akCategoryHandle, akCategoryAllowSets, pkgID) values (?, ?, ?)', array($akCategoryHandle, $akCategoryAllowSets, $pkgID));
 		$id = $db->Insert_ID();
 		
-		if ($pkgID > 0) {
-			Loader::model('attribute/categories/' . $akCategoryHandle, $pkg->getPackageHandle());
-		} else {
-			Loader::model('attribute/categories/' . $akCategoryHandle);
-		}		
 		$txt = Loader::helper("text");
-		$class = $txt->camelcase($akCategoryHandle) . 'AttributeKey';
+		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle). 'Key');
 		$obj = new $class;
 		$obj->createIndexedSearchTable();
 		
-		return AttributeKeyCategory::getByID($id);
+		return static::getByID($id);
 	}
 
 	public function addSet($asHandle, $asName, $pkg = false, $asIsLocked = 1) {
-		if ($this->akCategoryAllowSets > AttributeKeyCategory::ASET_ALLOW_NONE) {
+		if ($this->akCategoryAllowSets > static::ASET_ALLOW_NONE) {
 			$db = Loader::db();
 			$pkgID = 0;
 			if (is_object($pkg)) {

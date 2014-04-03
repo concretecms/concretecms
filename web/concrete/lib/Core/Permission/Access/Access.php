@@ -2,6 +2,9 @@
 namespace Concrete\Core\Permission\Access;
 use \Concrete\Core\Foundation\Object;
 use Loader;
+use \Concrete\Core\Permission\Key\Key as PermissionKey;
+use \Concrete\Core\Permission\Cache as PermissionCache;
+use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 class Access extends Object {
 	
 	protected $paID;
@@ -201,7 +204,7 @@ class Access extends Object {
 	public static function create(PermissionKey $pk) {
 		$db = Loader::db();
 		$db->Execute('insert into PermissionAccess (paIsInUse) values (0)');
-		return PermissionAccess::getByID($db->Insert_ID(), $pk);
+		return static::getByID($db->Insert_ID(), $pk);
 	}
 	
 	public static function getByID($paID, PermissionKey $pk, $checkPA = true) {
@@ -210,7 +213,14 @@ class Access extends Object {
 		if (is_object($pa)) {
 			return $pa;
 		}
-		$class = str_replace('PermissionKey', 'PermissionAccess', get_class($pk));
+
+		$handle = $pk->getPermissionKeyCategoryHandle();
+		if ($pk->permissionKeyHasCustomClass()) {
+			$handle = $pk->getPermissionKeyHandle() . '_' . $handle;
+		}
+
+		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\' . helper('text')->camelcase($handle) . 'Access');
+
 		if ($checkPA) {
 			$row = $db->GetRow('select paID, paIsInUse from PermissionAccess where paID = ?', array($paID));
 			if ($row['paID']) {

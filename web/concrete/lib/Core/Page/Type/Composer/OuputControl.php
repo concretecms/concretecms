@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page\Type\Composer;
+use Loader;
 use \Concrete\Core\Foundation\Object;
 class OutputControl extends Object {
 

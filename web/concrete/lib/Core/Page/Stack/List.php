@@ -1,6 +1,6 @@
 <?
-
 namespace Concrete\Core\Stack;
+use Loader;
 use PageList;
 class List extends PageList {
 

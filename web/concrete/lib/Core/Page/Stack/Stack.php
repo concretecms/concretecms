@@ -1,6 +1,7 @@
 <?
 
 namespace Concrete\Core\Page;
+use Loader;
 
 class Stack extends Page {
 

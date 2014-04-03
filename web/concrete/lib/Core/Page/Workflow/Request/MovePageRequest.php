@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page\Workflow\Request;
+use Loader;
 class MovePageRequest extends Request {
 	
 	protected $targetCID;

@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Attribute;
 use Concrete\Core\Controller\AbstractController;
+use Loader;
 class Controller extends AbstractController {
 	
 	protected $identifier;

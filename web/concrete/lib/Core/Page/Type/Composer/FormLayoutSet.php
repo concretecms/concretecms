@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Page\Type\Composer;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 class FormLayoutSet extends Object {
 
 	public function getPageTypeComposerFormLayoutSetID() {return $this->ptComposerFormLayoutSetID;}

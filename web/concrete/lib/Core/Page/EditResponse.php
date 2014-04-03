@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Page;
+use Loader;
 class EditResponse extends \Concrete\Core\Application\EditResponse {
 
 	protected $cID = 0;

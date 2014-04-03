@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
+use Loader;
 class UserCorePageProperty extends CorePageProperty {
 	
 	public function __construct() {

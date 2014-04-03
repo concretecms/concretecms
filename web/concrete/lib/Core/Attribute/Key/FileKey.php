@@ -1,7 +1,10 @@
 <?
-namespace Concrete\Core\File;
-use \Concrete\Core\Attribute\Attribute\Key as AttributeKey;
-class FileAttributeKey extends AttributeKey {
+namespace Concrete\Core\Attribute\Key;
+use Loader;
+use Package;
+use CacheLocal;
+
+class FileKey extends Key {
 
 	public function getIndexedSearchTable() {
 		return 'FileSearchIndexAttributes';
@@ -19,7 +22,7 @@ class FileAttributeKey extends AttributeKey {
 		$values = $db->GetAll("select akID, avID from FileAttributeValues where fID = ? and fvID = ?", array($fID, $fvID));
 		$avl = new AttributeValueList();
 		foreach($values as $val) {
-			$ak = FileAttributeKey::getByID($val['akID']);
+			$ak = static::getByID($val['akID']);
 			if (is_object($ak)) {
 				$value = $ak->getAttributeValue($val['avID'], $method);
 				$avl->addAttributeValue($ak, $value);
@@ -63,7 +66,7 @@ class FileAttributeKey extends AttributeKey {
 					'akIsAutoCreated' => 1,
 					'akIsEditable' => $ia->akIsEditable
 				);
-			 	$ak = FileAttributeKey::add($at, $args);
+			 	$ak = static::add($at, $args);
 			 }
 		}
 		CacheLocal::set('file_attribute_key_by_handle', $akHandle, $ak);
@@ -74,7 +77,7 @@ class FileAttributeKey extends AttributeKey {
 	}
 
 	public static function getByID($akID) {
-		$ak = new FileAttributeKey();
+		$ak = new static();
 		$ak->load($akID);
 		if ($ak->getAttributeKeyID() > 0) {
 			return $ak;	
@@ -117,7 +120,7 @@ class FileAttributeKey extends AttributeKey {
 	 * @access private 
 	 */
 	public function get($akID) {
-		return FileAttributeKey::getByID($akID);
+		return static::getByID($akID);
 	}
 	
 	protected function saveAttribute($f, $value = false) {

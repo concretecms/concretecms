@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page\Workflow\Progress;
+use Loader;
 use \Concrete\Core\Workflow\Progress as WorkflowProgress;
 class Progress extends WorkflowProgress {  
 	

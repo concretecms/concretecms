@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Permission\Access\Entity;
 use Loader;
+use \Concrete\Core\Permission\Access\Access as PermissionAccess;
 class GroupSetEntity extends Entity {
 	
 	protected $groupset;
@@ -69,7 +70,7 @@ class GroupSetEntity extends Entity {
 			$peID = $db->Insert_ID();
 			$db->Execute('insert into PermissionAccessEntityGroupSets (peID, gsID) values (?, ?)', array($peID, $gs->getGroupSetID()));
 		}
-		return PermissionAccessEntity::getByID($peID);
+		return \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
 	}
 	
 	public function load() {

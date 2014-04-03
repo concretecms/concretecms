@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Core\Permission\Access;
 use Loader;
-class ViewUseAttributesUserAccess extends UserAccess {
+class ViewUserAttributesUserAccess extends UserAccess {
 
 	public function save($args) {
 		parent::save();

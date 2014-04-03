@@ -1,5 +1,6 @@
 <?php 
 namespace Concrete\Core\Page\Type\PublishTarget\Type;
+use Loader;
 class AllType extends Type {
 
 	public function configurePageTypePublishTarget(PageType $pt, $post) {

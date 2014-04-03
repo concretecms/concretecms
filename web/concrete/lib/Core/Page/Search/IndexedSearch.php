@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page\Search;
+use Loader;
 class IndexedSearch {
 	
 	public $searchBatchSize = PAGE_SEARCH_INDEX_BATCH_SIZE;

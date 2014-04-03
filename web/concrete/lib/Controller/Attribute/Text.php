@@ -1,9 +1,9 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
+namespace Concrete\Controller\Attribute;
+use Loader;
+use \Concrete\Core\Foundation\Object;
 
-Loader::model('attribute/types/default/controller');
-
-class Concrete5_Controller_AttributeType_Text extends DefaultAttributeTypeController  {
+class Text extends Base  {
 
 	protected $searchIndexFieldDefinition = 'X NULL';
 

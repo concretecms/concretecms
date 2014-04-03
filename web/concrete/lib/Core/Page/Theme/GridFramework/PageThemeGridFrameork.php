@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page\Theme\GridFramework;
+use Loader;
 abstract class PageThemeGridFramework {
 
 	public static function getByHandle($pThemeGridFrameworkHandle) {

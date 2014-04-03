@@ -33,7 +33,7 @@ class Type extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select petID, pkgID, petHandle, petName from PermissionAccessEntityTypes where petID = ?', array($petID));
 		if ($row['petHandle']) {
-			$wt = new PermissionAccessEntityType();
+			$wt = new static();
 			$wt->setPropertiesFromArray($row);
 			return $wt;
 		}
@@ -66,7 +66,7 @@ class Type extends Object {
 		}
 		
 		while ($row = $r->FetchRow()) {
-			$list[] = PermissionAccessEntityType::getByID($row['petID']);
+			$list[] = static::getByID($row['petID']);
 		}
 		
 		$r->Close();
@@ -79,7 +79,7 @@ class Type extends Object {
 	}
 	
 	public static function exportList($xml) {
-		$ptypes = PermissionAccessEntityType::getList();
+		$ptypes = static::getList();
 		$db = Loader::db();
 		$axml = $xml->addChild('permissionaccessentitytypes');
 		foreach($ptypes as $pt) {
@@ -107,7 +107,7 @@ class Type extends Object {
 		$list = array();
 		$r = $db->Execute('select petID from PermissionAccessEntityTypes where pkgID = ? order by petID asc', array($pkg->getPackageID()));
 		while ($row = $r->FetchRow()) {
-			$list[] = PermissionAccessEntityType::getByID($row['petID']);
+			$list[] = static::getByID($row['petID']);
 		}
 		$r->Close();
 		return $list;
@@ -129,7 +129,7 @@ class Type extends Object {
 		$db = Loader::db();
 		$db->Execute('insert into PermissionAccessEntityTypes (petHandle, petName, pkgID) values (?, ?, ?)', array($petHandle, $petName, $pkgID));
 		$id = $db->Insert_ID();
-		$est = PermissionAccessEntityType::getByID($id);
+		$est = static::getByID($id);
 		return $est;
 	}
 	

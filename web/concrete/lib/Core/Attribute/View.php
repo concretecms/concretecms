@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Attribute;
 use Concrete\Core\View\View;
+use Loader;
 class View extends AbstractView {
 	
 	protected $attributeValue;

@@ -1,6 +1,10 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php
+namespace Concrete\Controller\Attribute;
+use Loader;
+use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Attribute\Controller as AttributeTypeController;
 
-class Concrete5_Controller_AttributeType_Select extends AttributeTypeController  {
+class Select extends AttributeTypeController  {
 
 	private $akSelectAllowMultipleValues;
 	private $akSelectAllowOtherValues;
@@ -537,7 +541,7 @@ class Concrete5_Controller_AttributeType_Select extends AttributeTypeController 
 	
 }
 
-class Concrete5_Model_SelectAttributeTypeOption extends Object {
+class SelectOption extends Object {
 
 	public function __construct($ID, $value, $displayOrder, $usageCount = false) {
 		$this->ID = $ID;
@@ -635,7 +639,7 @@ class Concrete5_Model_SelectAttributeTypeOption extends Object {
 	
 }
 
-class Concrete5_Model_SelectAttributeTypeOptionList extends Object implements Iterator {
+class SelectOptionList extends Object implements \Iterator {
 
 	private $options = array();
 	

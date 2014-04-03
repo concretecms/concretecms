@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Page\Search\ColumnSet;
+use Loader;
 class Default extends \Concrete\Core\Foundation\Collection\Database\Column\Set {
 	protected $attributeClass = 'CollectionAttributeKey';	
 

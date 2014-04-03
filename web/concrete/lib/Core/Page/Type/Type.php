@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page\Type;
+use Loader;
 use \Concrete\Core\Foundation\Object;
 class Type extends Object {
 

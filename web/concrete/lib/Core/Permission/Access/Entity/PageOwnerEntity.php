@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Permission\Access\Entity;
 use Loader;
+use \Concrete\Core\Permission\Access\Access as PermissionAccess;
 class PageOwnerEntity extends Entity {
 
 	public function getAccessEntityUsers(PermissionAccess $pae) {
@@ -57,7 +58,7 @@ class PageOwnerEntity extends Entity {
 			Config::save('ACCESS_ENTITY_UPDATED', time());
 			$peID = $db->Insert_ID();
 		}
-		return PermissionAccessEntity::getByID($peID);
+		return \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
 	}
 
 	public function load() {

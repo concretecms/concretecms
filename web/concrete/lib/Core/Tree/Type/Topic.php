@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Tree\Type;
-use Concrete\Core\Tree\Tree;
+use \Concrete\Core\Tree\Tree;
+use \Concrete\Core\Tree\Node\Type\TopicCategory as TopicCategoryTreeNode;
 use Loader;
 class Topic extends Tree {
 

@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page\Theme\EditableStyle;
+use Loader;
 /** 
  * A class specifically for editable fonts
  */

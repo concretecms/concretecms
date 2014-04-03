@@ -1,5 +1,4 @@
 <?
-
 namespace Concrete\Core\Page;
 class TimedContentPermissionRecord {
 	

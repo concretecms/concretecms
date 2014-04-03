@@ -1,7 +1,10 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
+namespace Concrete\Controller\Attribute;
+use Loader;
+use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Attribute\Controller as AttributeTypeController;
 
-class Concrete5_Controller_AttributeType_Number extends AttributeTypeController  {
+class Number extends AttributeTypeController  {
 
 	protected $searchIndexFieldDefinition = 'N 14.4 DEFAULT 0 NULL';
 

@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page\Theme\GridFramework\Type;
+use Loader;
 use Concrete\Core\Page\Theme\GridFramework;
 class Bootstrap2 extends PageThemeGridFramework {
 

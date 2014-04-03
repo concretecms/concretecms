@@ -1,6 +1,11 @@
 <?
-namespace Concrete\Core\Attribute;
+namespace Concrete\Core\Attribute\Key;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Attribute\Type as AttributeType;
+use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use Loader;
+use Package;
+use CacheLocal;
 class Key extends Object {
 	
 	public function getIndexedSearchTable() {return false;}
@@ -227,7 +232,7 @@ class Key extends Object {
 		return $list;
 	}	
 	
-	public static function import(SimpleXMLElement $ak) {
+	public static function import(\SimpleXMLElement $ak) {
 		$type = AttributeType::getByHandle($ak['type']);
 		$akCategoryHandle = $ak['category'];
 		$pkg = false;
@@ -289,7 +294,7 @@ class Key extends Object {
 		}
 		
 		$db = Loader::db();
-		$akCategoryID = $db->GetOne("select akCategoryID from AttributeKeyCategories where akCategoryHandle = ?", $akCategoryHandle);
+		$akCategoryID = $db->GetOne("select akCategoryID from AttributeKeyCategories where akCategoryHandle = ?", array($akCategoryHandle));
 		$a = array($akHandle, $akName, $_akIsSearchable, $_akIsSearchableIndexed, $_akIsInternal, $_akIsAutoCreated, $_akIsEditable, $atID, $akCategoryID, $pkgID);
 		$r = $db->query("insert into AttributeKeys (akHandle, akName, akIsSearchable, akIsSearchableIndexed, akIsInternal, akIsAutoCreated, akIsEditable, atID, akCategoryID, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", $a);
 		
@@ -298,7 +303,7 @@ class Key extends Object {
 			//certain adodb drivers (like mysqli) will fail and return 0
 			$akID = $db->Insert_ID();
 			$category = AttributeKeyCategory::getByID($akCategoryID);
-			$className = $txt->camelcase($akCategoryHandle) . 'AttributeKey';
+			$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key');
 			$ak = new $className();
 			$ak->load($akID);
 			switch($category->allowAttributeSets()) {
@@ -441,6 +446,9 @@ class Key extends Object {
 	}
 	
 	public function updateSearchIndex($prevHandle = false) {
+
+		return;
+
 		$type = $this->getAttributeType();
 		$cnt = $type->getController();
 		if ($this->getIndexedSearchTable() == false) {
@@ -509,6 +517,8 @@ class Key extends Object {
 		$db = Loader::db();
 		$db->Execute('delete from AttributeKeys where akID = ?', array($this->getAttributeKeyID()));
 		$db->Execute('delete from AttributeSetKeys where akID = ?', array($this->getAttributeKeyID()));
+
+		return;
 
 		if ($this->getIndexedSearchTable()) {
 			$columns = $db->MetaColumns($this->getIndexedSearchTable());
@@ -629,6 +639,8 @@ class Key extends Object {
 
 
 	public function createIndexedSearchTable() {
+		return;
+
 		if ($this->getIndexedSearchTable() != false) {
 			$db = Loader::db();
 			$dba = NewDataDictionary($db, DB_TYPE);

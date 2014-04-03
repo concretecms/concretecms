@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Page;
+use Loader;
 class EditVersionResponse extends EditResponse {
 
 	protected $versions = array();

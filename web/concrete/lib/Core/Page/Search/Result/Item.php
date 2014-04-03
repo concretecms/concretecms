@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page\Search\Result;
+use Loader;
 use \Concrete\Core\Search\Result\Item as SearchItem;
 class Item extends SearchItem {
 

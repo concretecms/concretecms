@@ -1,15 +1,18 @@
 <?
 namespace Concrete\Core\Permission;
+use \Concrete\Core\Permission\Key\Key as PermissionKey;
+use CacheLocal;
+
 class Cache {
 	
 	static $enabled = true;
 
 	public static function disable() {
-		PermissionCache::$enabled = false;
+		static::$enabled = false;
 	}
 	
 	public static function getResponse($object) {
-		if (!PermissionCache::$enabled) {
+		if (!static::$enabled) {
 			return false;
 		}
 		$cl = CacheLocal::get();
@@ -22,7 +25,7 @@ class Cache {
 	}
 
 	public static function addResponse($object, PermissionResponse $pr) {
-		if (!PermissionCache::$enabled) {
+		if (!static::$enabled) {
 			return false;
 		}
 		$cl = CacheLocal::get();
@@ -33,7 +36,7 @@ class Cache {
 	}
 
 	public static function getPermissionAccessObject($paID, PermissionKey $pk) {
-		if (!PermissionCache::$enabled) {
+		if (!static::$enabled) {
 			return false;
 		}
 		$cl = CacheLocal::get();
@@ -46,7 +49,7 @@ class Cache {
 	}
 
 	public static function addPermissionAccessObject($paID, PermissionKey $pk, $obj) {
-		if (!PermissionCache::$enabled) {
+		if (!static::$enabled) {
 			return false;
 		}
 		$cl = CacheLocal::get();
@@ -57,7 +60,7 @@ class Cache {
 	}
 	
 	public static function validate(PermissionKey $pk) {
-		if (!PermissionCache::$enabled) {
+		if (!static::$enabled) {
 			return -1;
 		}
 		$cl = CacheLocal::get();
@@ -80,7 +83,7 @@ class Cache {
 	}
 
 	public static function addValidate(PermissionKey $pk, $valid) {
-		if (!PermissionCache::$enabled) {
+		if (!static::$enabled) {
 			return false;
 		}
 		$cl = CacheLocal::get();
@@ -96,7 +99,7 @@ class Cache {
 	}
 	
 	public static function addAccessObject(PermissionKey $pk, $object, $pa) {
-		if (!PermissionCache::$enabled) {
+		if (!static::$enabled) {
 			return false;
 		}
 		$cl = CacheLocal::get();
@@ -107,7 +110,7 @@ class Cache {
 	}
 
 	public static function clearAccessObject(PermissionKey $pk, $object) {
-		if (!PermissionCache::$enabled) {
+		if (!static::$enabled) {
 			return false;
 		}
 		$cl = CacheLocal::get();
@@ -118,7 +121,7 @@ class Cache {
 	}
 
 	public static function getAccessObject($pk, $object) {
-		if (!PermissionCache::$enabled) {
+		if (!static::$enabled) {
 			return false;
 		}
 		$cl = CacheLocal::get();

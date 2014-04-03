@@ -19,7 +19,7 @@ class Category extends Object {
 		self::$categories = array();
 		$r = $db->Execute('select pkCategoryID, pkCategoryHandle, pkgID from PermissionKeyCategories');
 		while ($row = $r->FetchRow()) {
-			$pkc = new PermissionKeyCategory();
+			$pkc = new static();
 			$pkc->setPropertiesFromArray($row);
 			self::$categories[$pkc->getPermissionKeyCategoryID()] = $pkc;
 			self::$categories[$pkc->getPermissionKeyCategoryHandle()] = $pkc;
@@ -55,7 +55,7 @@ class Category extends Object {
 		$list = array();
 		$r = $db->Execute('select pkCategoryID from PermissionKeyCategories where pkgID = ? order by pkCategoryID asc', array($pkg->getPackageID()));
 		while ($row = $r->FetchRow()) {
-			$list[] = PermissionKeyCategory::getByID($row['pkCategoryID']);
+			$list[] = static::getByID($row['pkCategoryID']);
 		}
 		$r->Close();
 		return $list;
@@ -82,7 +82,7 @@ class Category extends Object {
 			$task = 'save_permission';
 		}
 		$uh = Loader::helper('concrete/urls');
-		$akc = PermissionKeyCategory::getByID($this->getPermissionKeyCategoryID());
+		$akc = static::getByID($this->getPermissionKeyCategoryID());
 		$url = $uh->getToolsURL('permissions/categories/' . $this->pkCategoryHandle, $akc->getPackageHandle());
 		$token = Loader::helper('validation/token')->getParameter($task);
 		$url .= '?' . $token . '&task=' . $task;
@@ -99,7 +99,7 @@ class Category extends Object {
 		$db->Execute('delete from PermissionKeyCategories where pkCategoryID = ?', array($this->pkCategoryID));
 	}
 
-	public function associateAccessEntityType(PermissionAccessEntityType $pt) {
+	public function associateAccessEntityType(\Concrete\Core\Permission\Access\Entity\Type $pt) {
 		$db = Loader::db();
 		$r = $db->GetOne('select petID from PermissionAccessEntityTypeCategories where petID = ? and pkCategoryID = ?', array(
 			$pt->getAccessEntityTypeID(), $this->pkCategoryID
@@ -121,7 +121,7 @@ class Category extends Object {
 		$cats = array();
 		$r = $db->Execute('select pkCategoryID from PermissionKeyCategories order by pkCategoryID asc');
 		while ($row = $r->FetchRow()) {
-			$cats[] = PermissionKeyCategory::getByID($row['pkCategoryID']);
+			$cats[] = static::getByID($row['pkCategoryID']);
 		}
 		return $cats;
 	}
@@ -135,7 +135,7 @@ class Category extends Object {
 		$id = $db->Insert_ID();
 		
 		self::$categories = array();
-		return PermissionKeyCategory::getByID($id);
+		return static::getByID($id);
 	}
 	
 

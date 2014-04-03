@@ -8,6 +8,7 @@ use Loader;
 use Package;
 use GroupTree;
 use Group;
+use Page;
 use UserInfo;
 use User;
 use \Concrete\Core\Mail\Importer\MailImporter;
@@ -73,9 +74,9 @@ class StartingPointPackage extends Package {
 		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/attributes.xml');
 
 		$topicType = \Concrete\Core\Tree\TreeType::add('topic', $pkg);
-		$topicCategoryNodeType = \Concrete\Core\Tree\TreeNodeType::add('topic_category', $pkg);
-		$topicNodeType = TreeNodeType::add('topic', $pkg);
-		$tree = TopicTree::add('Topics');
+		$topicCategoryNodeType = \Concrete\Core\Tree\Node\NodeType::add('topic_category', $pkg);
+		$topicNodeType = \Concrete\Core\Tree\Node\NodeType::add('topic', $pkg);
+		$tree = \Concrete\Core\Tree\Type\Topic::add('Topics');
 
 	}
 

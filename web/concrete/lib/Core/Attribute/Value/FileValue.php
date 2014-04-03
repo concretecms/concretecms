@@ -1,7 +1,7 @@
 <?
-namespace Concrete\Core\File;
-use \Concrete\Core\Attribute\Attribute\Value as AttributeValue;
-class FileAttributeValue extends AttributeValue {
+namespace Concrete\Core\Attribute\Value;
+use Loader;
+class FileValue extends Value {
 
 	/**
 	 * @param File $f

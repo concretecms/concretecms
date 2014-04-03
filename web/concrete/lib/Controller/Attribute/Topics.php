@@ -1,6 +1,9 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_AttributeType_Topics extends AttributeTypeController  {
+namespace Concrete\Controller\Attribute;
+use Loader;
+use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Attribute\Controller as AttributeTypeController;
+class Topics extends AttributeTypeController  {
 
 	protected $searchIndexFieldDefinition = 'X NULL';
 	public $helpers = array('form');

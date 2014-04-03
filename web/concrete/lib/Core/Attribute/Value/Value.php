@@ -1,6 +1,7 @@
 <?
-namespace Concrete\Core\Attribute;
+namespace Concrete\Core\Attribute\Value;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 class Value extends Object {
 	
 	protected $attributeType;

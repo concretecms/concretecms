@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Permission\Access\Entity;
 use Loader;
+use \Concrete\Core\Permission\Access\Access as PermissionAccess;
 class FileUploaderEntity extends Entity {
 
 	public function getAccessEntityUsers(PermissionAccess $pa) {
@@ -53,7 +54,7 @@ class FileUploaderEntity extends Entity {
 			$peID = $db->Insert_ID();
 			Config::save('ACCESS_ENTITY_UPDATED', time());
 		}
-		return PermissionAccessEntity::getByID($peID);
+		return \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
 	}
 
 	public function load() {

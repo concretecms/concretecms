@@ -1,5 +1,6 @@
 <?php 
 namespace Concrete\Core\Page\Type\Composer\Control\Type;
+use Loader;
 use \Concrete\Core\Foundation\Object;
 
 class BlockType extends Type {

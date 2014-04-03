@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page\Search;
+use Loader;
 class IndexedSearchResult {
 
 	public function __construct($id, $name, $description, $score, $cPath, $content, $cDatePublic = false) {

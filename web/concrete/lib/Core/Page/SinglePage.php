@@ -1,6 +1,6 @@
 <?
-
 namespace Concrete\Core\Page;
+use Loader;
 /**
 *
 * SinglePage extends the page class for those instances of pages that have no type, and are special "single pages"

@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page\Collection\Version;
+use Loader;
 use \Concrete\Core\Feature\Category as FeatureCategory;
 class FeatureCategory extends FeatureCategory {
 

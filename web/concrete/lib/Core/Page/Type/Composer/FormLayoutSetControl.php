@@ -1,6 +1,6 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
 namespace Concrete\Core\Page\Type\Composer;
+use Loader;
 use \Concrete\Core\Foundation\Object;
 class FormLayoutSetControl extends Object {
 

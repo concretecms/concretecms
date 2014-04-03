@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Core\Page;
+use Loader;
+use CacheLocal;
 use \Concrete\Core\Page\Collection\Collection as Collection;
 use Request;
 
@@ -520,7 +522,6 @@ class Page extends Collection {
 		$res = $db->execute($r, $v);
 		$newCID = $db->Insert_ID();
 
-		Loader::model('page_statistics');
 		PageStatistics::incrementParents($newCID);
 
 
@@ -594,7 +595,6 @@ class Page extends Collection {
 		$res = $db->execute($r, $v);
 		$newCID = $db->Insert_ID();
 
-		Loader::model('page_statistics');
 		PageStatistics::incrementParents($newCID);
 
 		Page::getByID($newCID)->movePageDisplayOrderToBottom();
@@ -662,7 +662,6 @@ class Page extends Collection {
 		} else if ($cIDRedir > 0) {
 			$db = Loader::db();
 
-			Loader::model('page_statistics');
 			PageStatistics::decrementParents($this->getCollectionPointerOriginalID());
 
 			$args = array($this->getCollectionPointerOriginalID());
@@ -1724,8 +1723,6 @@ class Page extends Collection {
 		$newCParentID = $nc->getCollectionID();
 		$dh = Loader::helper('date');
 
-		Loader::model('page_statistics');
-
 		$cID = ($this->getCollectionPointerOriginalID() > 0) ? $this->getCollectionPointerOriginalID() : $this->cID;
 
 		PageStatistics::decrementParents($cID);
@@ -1846,7 +1843,6 @@ class Page extends Collection {
 		$q = "insert into Pages (cID, ptID, cParentID, uID, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cInheritPermissionsFrom, cFilename, cPointerID, cPointerExternalLink, cPointerExternalLinkNewWindow, cDisplayOrder, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		$res = $db->query($q, $v);
 
-		Loader::model('page_statistics');
 		PageStatistics::incrementParents($newCID);
 
 		if ($res) {
@@ -1886,7 +1882,6 @@ class Page extends Collection {
 	}
 
 	function delete() {
-		Loader::model('page_statistics');
 		$cID = $this->getCollectionID();
 
 		if ($cID <= 1) {
@@ -2283,7 +2278,6 @@ class Page extends Collection {
 
 	public static function addHomePage() {
 		// creates the home page of the site
-		Loader::model('collection_types');
 		$dh = Loader::helper('date');
 		$db = Loader::db();
 
@@ -2398,7 +2392,6 @@ class Page extends Collection {
 
 		if ($res) {
 			// Collection added with no problem -- update cChildren on parrent
-			Loader::model('page_statistics');
 			PageStatistics::incrementParents($newCID);
 
 			if ($r) {
@@ -2492,7 +2485,6 @@ class Page extends Collection {
 
 		if ($res) {
 			// Collection added with no problem -- update cChildren on parrent
-			Loader::model('page_statistics');
 			PageStatistics::incrementParents($cID);
 		}
 

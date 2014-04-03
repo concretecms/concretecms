@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Page\Theme;
 use Concrete\Core\Http\ResponseAssetGroup;
+use Loader;
 use Concrete\Core\Foundation\Object;
 /**
 *

@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Core\Attribute;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Attribute\View as AttributeTypeView;
+use Loader;
 class Type extends Object {
 
 	public function getAttributeTypeID() {return $this->atID;}
@@ -28,7 +30,7 @@ class Type extends Object {
 	public static function getByID($atID) {
 		$db = Loader::db();
 		$row = $db->GetRow('select atID, pkgID, atHandle, atName from AttributeTypes where atID = ?', array($atID));
-		$at = new AttributeType();
+		$at = new static();
 		$at->setPropertiesFromArray($row);
 		$at->loadController();
 		return $at;
@@ -48,14 +50,14 @@ class Type extends Object {
 		}
 		
 		while ($row = $r->FetchRow()) {
-			$list[] = AttributeType::getByID($row['atID']);
+			$list[] = static::getByID($row['atID']);
 		}
 		$r->Close();
 		return $list;
 	}
 	
 	public static function exportList($xml) {
-		$attribs = AttributeType::getList();
+		$attribs = static::getList();
 		$db = Loader::db();
 		$axml = $xml->addChild('attributetypes');
 		foreach($attribs as $at) {
@@ -87,7 +89,7 @@ class Type extends Object {
 		$list = array();
 		$r = $db->Execute('select atID from AttributeTypes where pkgID = ? order by atID asc', array($pkg->getPackageID()));
 		while ($row = $r->FetchRow()) {
-			$list[] = AttributeType::getByID($row['atID']);
+			$list[] = static::getByID($row['atID']);
 		}
 		$r->Close();
 		return $list;
@@ -116,7 +118,7 @@ class Type extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select atID, pkgID, atHandle, atName from AttributeTypes where atHandle = ?', array($atHandle));
 		if ($row['atID']) {
-			$at = new AttributeType();
+			$at = new static();
 			$at->setPropertiesFromArray($row);
 			$at->loadController();
 			return $at;
@@ -131,7 +133,7 @@ class Type extends Object {
 		$db = Loader::db();
 		$db->Execute('insert into AttributeTypes (atHandle, atName, pkgID) values (?, ?, ?)', array($atHandle, $atName, $pkgID));
 		$id = $db->Insert_ID();
-		$est = AttributeType::getByID($id);
+		$est = static::getByID($id);
 		
 		$path = $est->getAttributeTypeFilePath(FILENAME_ATTRIBUTE_DB);
 		if ($path) {
@@ -147,7 +149,6 @@ class Type extends Object {
 	
 	public function render($view, $ak = false, $value = false, $return = false) {
 		// local scope
-		Loader::library('attribute/view');
 		if ($value) {
 			$av = new AttributeTypeView($value);
 		} else if ($ak) {
@@ -238,18 +239,8 @@ class Type extends Object {
 	}
 	
 	protected function loadController() { 
-		// local scope
-		$atHandle = $this->atHandle;
 		$txt = Loader::helper('text');
-		$className = $txt->camelcase($this->atHandle) . 'AttributeTypeController';
-		$file = $this->mapAttributeTypeFilePath(FILENAME_ATTRIBUTE_CONTROLLER);
-		if (!$file) {
-			$cont = DIR_MODELS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/default/' . FILENAME_ATTRIBUTE_CONTROLLER;
-			$className = 'DefaultAttributeTypeController';
-		} else {
-			$cont = $file->file;
-		}
-		require_once($cont);
+		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Controller\\Attribute\\' . $txt->camelcase($this->atHandle));
 		$this->controller = new $className($this);
 	}
 	

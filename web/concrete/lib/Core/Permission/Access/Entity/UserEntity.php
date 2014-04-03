@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Permission\Access\Entity;
 use Loader;
+use \Concrete\Core\Permission\Access\Access as PermissionAccess;
 class UserEntity extends Entity {
 
 	protected $user;
@@ -41,7 +42,7 @@ class UserEntity extends Entity {
 			Config::save('ACCESS_ENTITY_UPDATED', time());
 			$db->Execute('insert into PermissionAccessEntityUsers (peID, uID) values (?, ?)', array($peID, $ui->getUserID()));
 		}
-		return PermissionAccessEntity::getByID($peID);
+		return \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
 	}
 
 	public function load() {
