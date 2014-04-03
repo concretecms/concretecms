@@ -1,13 +1,14 @@
 <?
 namespace Concrete\Core\Workflow\Progress;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 class Category extends Object {
 
 	public static function getByID($wpCategoryID) {
 		$db = Loader::db();
 		$row = $db->GetRow('select wpCategoryID, wpCategoryHandle, pkgID from WorkflowProgressCategories where wpCategoryID = ?', array($wpCategoryID));
 		if (isset($row['wpCategoryID'])) {
-			$pkc = new WorkflowProgressCategory();
+			$pkc = new static();
 			$pkc->setPropertiesFromArray($row);
 			return $pkc;
 		}
@@ -17,7 +18,7 @@ class Category extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select wpCategoryID, wpCategoryHandle, pkgID from WorkflowProgressCategories where wpCategoryHandle = ?', array($wpCategoryHandle));
 		if (isset($row['wpCategoryID'])) {
-			$pkc = new WorkflowProgressCategory();
+			$pkc = new static();
 			$pkc->setPropertiesFromArray($row);
 			return $pkc;
 		}
@@ -38,7 +39,7 @@ class Category extends Object {
 		$list = array();
 		$r = $db->Execute('select wpCategoryID from WorkflowProgressCategories where pkgID = ? order by wpCategoryID asc', array($pkg->getPackageID()));
 		while ($row = $r->FetchRow()) {
-			$list[] = WorkflowProgressCategory::getByID($row['wpCategoryID']);
+			$list[] = static::getByID($row['wpCategoryID']);
 		}
 		$r->Close();
 		return $list;
@@ -64,7 +65,7 @@ class Category extends Object {
 		$cats = array();
 		$r = $db->Execute('select wpCategoryID from WorkflowProgressCategories order by wpCategoryID asc');
 		while ($row = $r->FetchRow()) {
-			$cats[] = WorkflowProgressCategory::getByID($row['wpCategoryID']);
+			$cats[] = static::getByID($row['wpCategoryID']);
 		}
 		return $cats;
 	}
@@ -77,7 +78,7 @@ class Category extends Object {
 		$db->Execute('insert into WorkflowProgressCategories (wpCategoryHandle, pkgID) values (?, ?)', array($wpCategoryHandle, $pkgID));
 		$id = $db->Insert_ID();
 		
-		return WorkflowProgressCategory::getByID($id);
+		return static::getByID($id);
 	}
 	
 

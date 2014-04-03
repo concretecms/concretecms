@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Core\Foundation\Tree;
+namespace Concrete\Core\Tree;
 use \Concrete\Core\Foundation\Object;
 use Loader;
 abstract class Tree extends Object {
@@ -33,7 +33,7 @@ abstract class Tree extends Object {
 	}
 
 	public function getTreeID() {return $this->treeID;}
-	public function getRootTreeNodeObject() {return TreeNode::getByID($this->rootTreeNodeID);}
+	public function getRootTreeNodeObject() {return \Concrete\Core\Tree\Node\Node::getByID($this->rootTreeNodeID);}
 
 	public function setRequest($data) {
 		$this->requestData = $data;
@@ -75,10 +75,10 @@ abstract class Tree extends Object {
 		return $root->getTreeNodeJSON();
 	}
 
-	protected static function add(TreeNode $rootNode) {
+	protected static function add(\Concrete\Core\Tree\Node\Node $rootNode) {
 		$db = Loader::db();
 		$date = Loader::helper('date')->getSystemDateTime();
-		$treeTypeHandle = Loader::helper('text')->uncamelcase(substr(get_called_class(), 0, strpos(get_called_class(), 'Tree')));
+		$treeTypeHandle = helper('text')->uncamelcase(strrchr(get_called_class(), '\\'));
 		$type = TreeType::getByHandle($treeTypeHandle);
 		$db->Execute('insert into Trees (treeDateAdded, rootTreeNodeID, treeTypeID) values (?, ?, ?)', array(
 			$date, $rootNode->getTreeNodeID(), $type->getTreeTypeID()

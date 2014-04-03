@@ -1,8 +1,8 @@
 <?
-namespace Concrete\Core\Foundation\Tree\Node;
+namespace Concrete\Core\Tree\Node;
 use \Concrete\Core\Foundation\Object;
 use Loader;
-use Concrete\Core\Foundation\Tree\Node\NodeType as TreeNodeType;
+use Concrete\Core\Tree\Node\NodeType as TreeNodeType;
 class NodeType extends Object {
 
 	public function getTreeNodeTypeID() {

@@ -45,6 +45,47 @@ class Connection extends \Doctrine\DBAL\Connection {
 
     /** 
      * @deprecated
+     * Returns an associative array of all columns in a table
+     */
+    public function MetaColumnNames($table) {
+        $sm = $this->getSchemaManager();
+        $columnNames = array();
+        $columns = $sm->listTableColumns($table);
+        foreach($columns as $column) {
+            $columnNames[] = $column->getName();
+        }
+        return $columnNames;
+    }
+
+    /** 
+     * @deprecated
+     * Alias to old ADODB Replace() method.
+     */
+    public function Replace($table, $fieldArray, $keyCol, $autoQuote = true) {
+        $qb = $this->createQueryBuilder();
+        $qb->select('count(*)')->from($table, 't');
+        $where = $qb->expr()->andX();
+        $updateKeys = array();
+        foreach($keyCol as $key) {
+            $field = $fieldArray[$key];
+            $updateKeys[$key] = $field;
+            if ($autoQuote) {
+                $field = $qb->expr()->literal($field);
+            }
+            $where->add($qb->expr()->eq($key, $field));
+        }
+        $qb->where($where);
+        $num = $this->query($qb->getSql())->fetchColumn();
+        if ($num < 1) {
+            $this->insert($table, $fieldArray);
+        } else {
+            $this->update($table, $fieldArray, $updateKeys);
+        }
+    }
+
+
+    /** 
+     * @deprecated
      * alias to old ADODB method
      */
     public function GetCol($q, $arguments = array()) {

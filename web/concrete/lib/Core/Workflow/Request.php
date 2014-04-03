@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Workflow\Request;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 abstract class Request extends Object {  
 	
 	protected $currentWP;

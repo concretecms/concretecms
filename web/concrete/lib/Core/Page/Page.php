@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page;
+use \Concrete\Core\Page\Collection\Collection as Collection;
 use Request;
 
 /**

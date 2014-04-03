@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Helper;
+use Request;
+use Localization;
 class Date {
 
 
@@ -32,7 +34,7 @@ class Date {
 			if($u && $u->isRegistered()) {
 				$utz = $u->getUserTimezone();
 				if($utz) {
-					$tz = new DateTimeZone($utz);
+					$tz = new \DateTimeZone($utz);
 					$datetime->setTimezone($tz);
 				}
 			}
@@ -63,11 +65,11 @@ class Date {
 		if(!isset($userDateTime) || !strlen($userDateTime)) {
 			return NULL; // if passed a null value, pass it back
 		}
-		$datetime = new DateTime($userDateTime);
+		$datetime = new \DateTime($userDateTime);
 		
 		if (defined('APP_TIMEZONE')) {
 			$tz = new DateTimeZone(APP_TIMEZONE_SERVER);
-			$datetime = new DateTime($userDateTime,$tz); // create the in the user's timezone 				
+			$datetime = new \DateTime($userDateTime,$tz); // create the in the user's timezone 				
 			$stz = new DateTimeZone(date_default_timezone_get()); // grab the default timezone
 			$datetime->setTimeZone($stz); // convert the datetime object to the current timezone
 		}
@@ -78,7 +80,7 @@ class Date {
 				$utz = $u->getUserTimezone();
 				if($utz) {			
 					$tz = new DateTimeZone($utz);
-					$datetime = new DateTime($userDateTime,$tz); // create the in the user's timezone 
+					$datetime = new \DateTime($userDateTime,$tz); // create the in the user's timezone 
 					
 					$stz = new DateTimeZone(date_default_timezone_get()); // grab the default timezone
 					$datetime->setTimeZone($stz); // convert the datetime object to the current timezone

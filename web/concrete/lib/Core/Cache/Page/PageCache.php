@@ -1,6 +1,6 @@
 <?
 
-namespace Concrete\Core\Foundation\Cache\Page;
+namespace Concrete\Core\Cache\Page;
 
 abstract class PageCache {
 
@@ -19,7 +19,7 @@ abstract class PageCache {
 
 	public static function getLibrary() {
 		if (!PageCache::$library) {
-			$class = '\\Concrete\\Core\\Foundation\\Cache\\Page\\' . helper('text')->camelcase(PAGE_CACHE_LIBRARY) . 'PageCache';
+			$class = '\\Concrete\\Core\\Cache\\Page\\' . helper('text')->camelcase(PAGE_CACHE_LIBRARY) . 'PageCache';
 			PageCache::$library = new $class();
 		}
 		return PageCache::$library;

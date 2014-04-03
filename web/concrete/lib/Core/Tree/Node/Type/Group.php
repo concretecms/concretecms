@@ -1,8 +1,9 @@
 <?
-namespace Concrete\Core\Foundation\Tree\Node\Type;
-use Concrete\Core\Foundation\Tree\Node\Node;
+namespace Concrete\Core\Tree\Node\Type;
+use Concrete\Core\Tree\Node\Node as TreeNode;
 use Loader;
-class Group extends Node {
+use Group as UserGroup;
+class Group extends TreeNode {
 
 	public function getTreeNodePermissionKeyCategoryHandle() { return 'group_tree_node';}
 	public function getTreeNodeGroupID() {
@@ -57,7 +58,7 @@ class Group extends Node {
 		}
 	}
 
-	public function setTreeNodeGroup(Group $g) {
+	public function setTreeNodeGroup(UserGroup $g) {
 		$db = Loader::db();
 		$db->Replace('TreeGroupNodes', array('treeNodeID' => $this->getTreeNodeID(), 'gID' => $g->getGroupID()), array('treeNodeID'), true);
 		$this->gID = $g->getGroupID();

@@ -1,6 +1,6 @@
 <?
 
-namespace Concrete\Core\Foundation\Cache\Page;
+namespace Concrete\Core\Cache\Page;
 
 class FilePageCache extends PageCache {
 

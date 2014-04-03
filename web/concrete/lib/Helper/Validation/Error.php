@@ -29,7 +29,7 @@ namespace Concrete\Helper\Validation;
 		 * @return void
 		 */
 		public function add($e) {
-			if ($e instanceof ValidationErrorHelper) {
+			if ($e instanceof Error) {
 				foreach($e->getList() as $errorString) {
 					$this->add($errorString);
 				}

@@ -1,8 +1,8 @@
 <?
 namespace Concrete\Core\Package;
 use Concrete\Core\Foundation\Object;
-use Concrete\Core\Database\Database;
-use Concrete\Core\Database\Schema\Schema;
+use Database;
+use \Concrete\Core\Database\Schema\Schema;
 use Loader;
 
 class Package extends Object {

@@ -12,7 +12,6 @@ class PrivateMessage extends MailImporter {
 		// We need to know what to do with it, now. We check the "data" column, which stores
 		// a serialized PHP object that contains relevant information about what this item needs to respond to, post to, etc...
 		$do = $mail->getDataObject();
-		Loader::model('user_private_message');
 		if ($do->msgID > 0) {
 			$upm = UserPrivateMessage::getByID($do->msgID);
 			if (is_object($upm)) {

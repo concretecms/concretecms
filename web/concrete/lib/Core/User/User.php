@@ -1,6 +1,8 @@
 <?php 
 namespace Concrete\Core\User;
 use \Concrete\Core\Foundation\Object;
+use Loader;
+use Request;
 
 class User extends Object {
 
@@ -64,7 +66,7 @@ class User extends Object {
 		session_write_close(); 
 		setcookie(session_name(), session_id(), time()-100000);
 		session_id(sha1(mt_rand())); 
-		session_start(); 
+		@session_start(); 
 		$_SESSION = $tmpSession;
 
 	}

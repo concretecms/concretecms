@@ -1,8 +1,9 @@
 <?
-namespace Concrete\Core\Foundation\Tree\Node;
+namespace Concrete\Core\Tree\Node;
 use \Concrete\Core\Foundation\Object;
 use Loader;
-use \Concrete\Core\Foundation\Tree\Node\NodeType as TreeNodeType;
+use \Concrete\Core\Tree\Node\NodeType as TreeNodeType;
+use \Concrete\Core\Permission\Key\Key as PermissionKey;
 
 abstract class Node extends Object {
 

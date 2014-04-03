@@ -1,6 +1,11 @@
 <?
-namespace Concrete\Core\Group;
+namespace Concrete\Core\User\Group;
 use \Concrete\Core\Foundation\Object;
+use Loader;
+use CacheLocal;
+use GroupTree;
+use GroupTreeNode;
+use \Concrete\Core\Events\Events;
 class Group extends Object {
 
 	var $ctID;

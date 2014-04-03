@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Core\Foundation\Tree;
+namespace Concrete\Core\Tree;
 use \Concrete\Core\Foundation\Object;
 use Loader;
 class TreeType extends Object {

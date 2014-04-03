@@ -1,6 +1,6 @@
 <?
 
-namespace Concrete\Core\Foundation\Cache;
+namespace Concrete\Core\Cache;
 class CacheLocal {
 
 	public $cache = array();

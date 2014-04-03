@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Core\Page;
+namespace Concrete\Core\Page\Collection;
 use Concrete\Core\Foundation\Object as Object;
  
 	class Collection extends Object {

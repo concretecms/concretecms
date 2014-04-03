@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\User;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 class UserInfo extends Object { 
 
 	public function __toString() {
