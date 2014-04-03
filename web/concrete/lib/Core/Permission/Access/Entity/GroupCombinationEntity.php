@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Permission\Access\Entity;
 use Loader;
+use \Concrete\Core\Permission\Access\Access as PermissionAccess;
 class GroupCombinationEntity extends Entity {
 	
 	protected $groups = array();
@@ -66,7 +67,7 @@ class GroupCombinationEntity extends Entity {
 				$db->Execute('insert into PermissionAccessEntityGroups (peID, gID) values (?, ?)', array($peID, $g->getGroupID()));
 			}
 		}
-		return PermissionAccessEntity::getByID($peID);
+		return \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
 	}
 	
 	public function getAccessEntityUsers(PermissionAccess $pa) {

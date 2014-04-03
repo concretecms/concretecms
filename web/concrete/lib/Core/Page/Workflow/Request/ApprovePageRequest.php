@@ -1,5 +1,6 @@
 <?php 
 namespace Concrete\Core\Page\Workflow\Request;
+use Loader;
 class ApprovePageRequest extends Request {
 	
 	protected $wrStatusNum = 30;

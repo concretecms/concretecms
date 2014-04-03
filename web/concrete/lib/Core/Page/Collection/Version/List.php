@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Page\Collection\Version;
+use Loader;
 use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
 
 /**

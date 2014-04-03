@@ -1,5 +1,6 @@
 <?php 
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
+use Loader;
 use \Concrete\Core\Foundation\Object;
 abstract class CorePageProperty extends \Concrete\Core\Page\Type\Composer\Control {
 

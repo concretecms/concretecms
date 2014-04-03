@@ -1,7 +1,10 @@
 <?
-namespace Concrete\Core\User;
-use \Concrete\Core\Attribute\Attribute\Key as AttributeKey;
-class UserAttributeKey extends AttributeKey {
+namespace Concrete\Core\Attribute\Key;
+use \Concrete\Core\Attribute\Type as AttributeType;
+use Loader;
+use CacheLocal;
+use Package;
+class UserKey extends Key {
 
 	public function getIndexedSearchTable() {
 		return 'UserSearchIndexAttributes';
@@ -14,7 +17,7 @@ class UserAttributeKey extends AttributeKey {
 		$values = $db->GetAll("select avID, akID from UserAttributeValues where uID = ?", array($uID));
 		$avl = new AttributeValueList();
 		foreach($values as $val) {
-			$ak = UserAttributeKey::getByID($val['akID']);
+			$ak = static::getByID($val['akID']);
 			if (is_object($ak)) {
 				$value = $ak->getAttributeValue($val['avID'], $method);
 				$avl->addAttributeValue($ak, $value);
@@ -40,7 +43,7 @@ class UserAttributeKey extends AttributeKey {
 	}
 	
 	public static function getByID($akID) {
-		$ak = new UserAttributeKey();
+		$ak = new static();
 		$ak->load($akID);
 		if ($ak->getAttributeKeyID() > 0) {
 			return $ak;	
@@ -64,7 +67,7 @@ class UserAttributeKey extends AttributeKey {
 			AND akc.akCategoryHandle = 'user'";
 		$akID = $db->GetOne($q, array($akHandle));
 		if ($akID > 0) {
-			$ak = UserAttributeKey::getByID($akID);
+			$ak = static::getByID($akID);
 		}
 
 		CacheLocal::set('user_attribute_key_by_handle', $akHandle, $ak);
@@ -85,13 +88,13 @@ class UserAttributeKey extends AttributeKey {
 		return $akey;
 	}
 
-	public static function import(SimpleXMLElement $ak) {
+	public static function import(\SimpleXMLElement $ak) {
 		$type = AttributeType::getByHandle($ak['type']);
 		$pkg = false;
 		if ($ak['package']) {
 			$pkg = Package::getByHandle($ak['package']);
 		}
-		$akn = UserAttributeKey::add($type, array(
+		$akn = static::add($type, array(
 			'akHandle' => $ak['handle'], 
 			'akName' => $ak['name'], 
 			'akIsSearchableIndexed' => $ak['indexed'], 
@@ -162,7 +165,7 @@ class UserAttributeKey extends AttributeKey {
 	 * @access private 
 	 */
 	public function get($akID) {
-		return UserAttributeKey::getByID($akID);
+		return static::getByID($akID);
 	}
 	
 	protected function saveAttribute($uo, $value = false) {
@@ -225,7 +228,7 @@ class UserAttributeKey extends AttributeKey {
 		$v = array($ak->getAttributeKeyID(), $uakProfileDisplay, $uakMemberListDisplay, $uakProfileEdit, $uakProfileEditRequired, $uakRegisterEdit, $uakRegisterEditRequired, $displayOrder, $uakIsActive);
 		$db->Execute('insert into UserAttributeKeys (akID, uakProfileDisplay, uakMemberListDisplay, uakProfileEdit, uakProfileEditRequired, uakRegisterEdit, uakRegisterEditRequired, displayOrder, uakIsActive) values (?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
 		
-		$nak = new UserAttributeKey();
+		$nak = new static();
 		$nak->load($ak->getAttributeKeyID());
 		return $nak;
 	}
@@ -347,7 +350,7 @@ class UserAttributeKey extends AttributeKey {
 	function updateAttributesDisplayOrder($uats) {
 		$db = Loader::db();
 		for ($i = 0; $i < count($uats); $i++) {
-			$uak = UserAttributeKey::getByID($uats[$i]);
+			$uak = static::getByID($uats[$i]);
 			$uak->refreshCache();			
 			$v = array($uats[$i]);
 			$db->query("update UserAttributeKeys set displayOrder = {$i} where akID = ?", $v);

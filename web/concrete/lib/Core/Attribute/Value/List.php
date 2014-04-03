@@ -1,7 +1,7 @@
 <?
-namespace Concrete\Core\Attribute;
+namespace Concrete\Core\Attribute\Value;
 use \Concrete\Core\Foundation\Object;
-class ValueList extends Object implements Iterator {
+class List extends Object implements Iterator {
 			
 	private $attributes = array();
 	

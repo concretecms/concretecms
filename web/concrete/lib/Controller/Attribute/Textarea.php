@@ -1,8 +1,10 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
-Loader::model('attribute/types/default/controller');
-Loader::library('3rdparty/htmLawed');
+<?
+namespace Concrete\Controller\Attribute;
+use Loader;
+use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Attribute\Controller as AttributeTypeController;
 
-class Concrete5_Controller_AttributeType_Textarea extends DefaultAttributeTypeController  {
+class Textarea extends Base  {
 	
 	public $helpers = array('form');
 	

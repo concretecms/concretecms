@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Tree\Node\Type;
 use Concrete\Core\Tree\Node\Node as TreeNode;
+use Loader;
 abstract class Category extends TreeNode {
 
 	public function getTreeNodeDisplayName() {

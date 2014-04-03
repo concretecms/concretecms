@@ -4,18 +4,22 @@ use Page;
 use Package;
 use Stack;
 use SinglePage;
-use \Concrete\Core\Page\Collection\AttributeKey as CollectionAttributeKey;
+use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 use UserInfo;
 use PageType;
 use \Concrete\Core\Page\Template\Template as PageTemplate;
 use BlockType;
 use Block;
+use Group;
 use Loader;
 use \Concrete\Core\Attribute\Type as AttributeType;
-use \Concrete\Core\Attribute\Category as AttributeKeyCategory;
+use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use \Concrete\Core\Permission\Category as PermissionKeyCategory;
 use \Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
 use \Concrete\Core\Workflow\Progress\Category as WorkflowProgressCategory;
+use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
+use \Concrete\Core\Permission\Access\Access as PermissionAccess;
+use \Concrete\Core\Captcha\Library as SystemCaptchaLibrary;
 
 class ContentImporter {
 
@@ -487,7 +491,6 @@ class ContentImporter {
 
 	protected function importSystemCaptchaLibraries(\SimpleXMLElement $sx) {
 		if (isset($sx->systemcaptcha)) {
-			Loader::model('system/captcha/library');
 			foreach($sx->systemcaptcha->library as $th) {
 				$pkg = static::getPackageObject($th['package']);
 				$scl = SystemCaptchaLibrary::add($th['handle'], $th['name'], $pkg);
@@ -511,7 +514,6 @@ class ContentImporter {
 	}
 
 	protected function importJobs(\SimpleXMLElement $sx) {
-		Loader::model('job');
 		if (isset($sx->jobs)) {
 			foreach($sx->jobs->job as $jx) {
 				$pkg = static::getPackageObject($jx['package']);
@@ -601,8 +603,8 @@ class ContentImporter {
 				$pkc = PermissionKeyCategory::getByHandle((string) $pk['category']);
 				$pkg = static::getPackageObject($pk['package']);
 				$txt = Loader::helper('text');
-				$className = $txt->camelcase($pkc->getPermissionKeyCategoryHandle());
-				$c1 = $className . 'PermissionKey';
+				$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Key\\' . $txt->camelcase($pkc->getPermissionKeyCategoryHandle()));
+				$c1 = $className . 'Key';
 				$pkx = call_user_func(array($c1, 'import'), $pk);
 				if (isset($pk->access)) {
 					foreach($pk->access->children() as $ch) {
@@ -665,8 +667,8 @@ class ContentImporter {
 				$pkg = static::getPackageObject($ak['package']);
 				$type = AttributeType::getByHandle($ak['type']);
 				$txt = Loader::helper('text');
-				$className = $txt->camelcase($akc->getAttributeKeyCategoryHandle());
-				$c1 = $className . 'AttributeKey';
+				$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Attribute\\Key\\' . $txt->camelcase($akc->getAttributeKeyCategoryHandle()));
+				$c1 = $className . 'Key';
 				$ak = call_user_func(array($c1, 'import'), $ak);
 			}
 		}

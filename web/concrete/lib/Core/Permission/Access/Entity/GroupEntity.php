@@ -1,6 +1,9 @@
 <?
 namespace Concrete\Core\Permission\Access\Entity;
 use Loader;
+use Group;
+use Config;
+use \Concrete\Core\Permission\Access\Access as PermissionAccess;
 class GroupEntity extends Entity {
 
 	protected $group = false;
@@ -47,7 +50,7 @@ class GroupEntity extends Entity {
 			Config::save('ACCESS_ENTITY_UPDATED', time());
 			$db->Execute('insert into PermissionAccessEntityGroups (peID, gID) values (?, ?)', array($peID, $g->getGroupID()));
 		}
-		return PermissionAccessEntity::getByID($peID);
+		return \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
 	}
 	
 	public function load() {

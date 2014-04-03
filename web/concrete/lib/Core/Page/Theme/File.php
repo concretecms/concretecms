@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page\Theme;
+use Loader;
 /**
 *
 * When activating a theme, any file within the theme is loaded into the system as a Page Theme File. At that point

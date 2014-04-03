@@ -1,7 +1,9 @@
 <?
-namespace Concrete\Core\Page\Collection;
-use \Concrete\Core\Attribute\Attribute\Key as AttributeKey;
-class AttributeKey extends AttributeKey {
+namespace Concrete\Core\Attribute\Key;
+use Loader;
+use Package;
+use CacheLocal;
+class CollectionKey extends Key {
 
 	public function getIndexedSearchTable() {
 		return 'CollectionSearchIndexAttributes';
@@ -19,7 +21,7 @@ class AttributeKey extends AttributeKey {
 		$values = $db->GetAll("select akID, avID from CollectionAttributeValues where cID = ? and cvID = ?", array($cID, $cvID));
 		$avl = new AttributeValueList();
 		foreach($values as $val) {
-			$ak = CollectionAttributeKey::getByID($val['akID']);
+			$ak = static::getByID($val['akID']);
 			if (is_object($ak)) {
 				$value = $ak->getAttributeValue($val['avID'], $method);
 				$avl->addAttributeValue($ak, $value);
@@ -51,7 +53,7 @@ class AttributeKey extends AttributeKey {
 	}
 	
 	public static function getByID($akID) {
-		$ak = new CollectionAttributeKey();
+		$ak = new static();
 		$ak->load($akID);
 		if ($ak->getAttributeKeyID() > 0) {
 			return $ak;	
@@ -66,7 +68,7 @@ class AttributeKey extends AttributeKey {
 			return false;
 		}
 		
-		$ak = new CollectionAttributeKey();
+		$ak = new static();
 		$ak->load($akHandle, 'akHandle');
 		if ($ak->getAttributeKeyID() < 1) {
 			$ak = -1;
@@ -89,7 +91,7 @@ class AttributeKey extends AttributeKey {
 	 * @access private 
 	 */
 	public function get($akID) {
-		return CollectionAttributeKey::getByID($akID);
+		return static::getByID($akID);
 	}
 	
 	protected function saveAttribute($nvc, $value = false) {

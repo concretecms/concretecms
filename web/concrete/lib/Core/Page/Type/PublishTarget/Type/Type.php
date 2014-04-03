@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Page\Type\PublishTarget\Type;
+use Loader;
 use \Concrete\Core\Foundation\Object;
 abstract class Type extends Object {
 

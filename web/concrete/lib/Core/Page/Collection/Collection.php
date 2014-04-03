@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Core\Page\Collection;
-use Concrete\Core\Foundation\Object as Object;
+use Loader;
+use \Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
+use \Concrete\Core\Foundation\Object as Object;
  
 	class Collection extends Object {
 		

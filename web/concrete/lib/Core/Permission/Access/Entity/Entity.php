@@ -2,11 +2,13 @@
 namespace Concrete\Core\Permission\Access\Entity;
 use \Concrete\Core\Foundation\Object;
 use Loader;
+use \Concrete\Core\Permission\Access\Access as PermissionAccess;
+use CacheLocal;
 abstract class Entity extends Object {
 	
 	public function getAccessEntityTypeID() {return $this->petID;}
 	public function getAccessEntityTypeObject() {
-		return PermissionAccessEntityType::getByID($this->petID);
+		return Type::getByID($this->petID);
 	}
 	public function getAccessEntityTypeHandle() {return $this->petHandle;}
 	public function getAccessEntityID() {return $this->peID;}
@@ -27,13 +29,12 @@ abstract class Entity extends Object {
 		$db = Loader::db();
 		$r = $db->GetRow('select petID, peID from PermissionAccessEntities where peID = ?', array($peID));
 		if (is_array($r)) {
-			$pt = PermissionAccessEntityType::getByID($r['petID']);
+			$pt = Type::getByID($r['petID']);
 			if (!is_object($pt)) {
 				return false;
 			}
-			$class = Loader::helper('text')->camelcase($pt->getAccessEntityTypeHandle());
-			$class .= 'PermissionAccessEntity';
-			$obj = new $class();
+			$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\Entity\\' . helper('text')->camelcase($pt->getAccessEntityTypeHandle()) . 'Entity');
+			$obj = new $className();
 			$r['petHandle'] = $pt->getAccessEntityTypeHandle();
 			$obj->setPropertiesFromArray($r);
 			$obj->load();
@@ -45,7 +46,7 @@ abstract class Entity extends Object {
 	public static function getForUser($user) {
 		$entities = array();
 		$db = Loader::db();
-		$types = PermissionAccessEntityType::getList();
+		$types = Type::getList();
 		foreach($types as $t) {
 			$entities = array_merge($entities, $t->getAccessEntitiesForUser($user));			
 		}

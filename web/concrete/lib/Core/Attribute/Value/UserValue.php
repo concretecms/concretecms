@@ -1,7 +1,7 @@
 <?
-namespace Concrete\Core\User;
-use \Concrete\Core\Attribute\Attribute\Value as AttributeValue;
-class UserAttributeValue extends AttributeValue {
+namespace Concrete\Core\Attribute\Value;
+use Loader;
+class UserValue extends Value {
 
 	/**
 	 * @param UserInfo $uo

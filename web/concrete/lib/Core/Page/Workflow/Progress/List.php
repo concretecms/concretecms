@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Page\Workflow\Progress;
 use \Concrete\Core\Page\Page\List as PageList;
+use Loader;
 class List extends PageList {
 	
 	protected $autoSortColumns = array('wpDateLastAction', 'cvName', 'wpCurrentStatus');

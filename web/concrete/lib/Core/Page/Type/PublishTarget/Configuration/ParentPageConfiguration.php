@@ -1,6 +1,6 @@
 <?php
-
 namespace Concrete\Core\Page\Type\PublishTarget\Configuration;
+use Loader;
 class ParentPageConfiguration extends Configuration {
 
 	protected $cParentID;

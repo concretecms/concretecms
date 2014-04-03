@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page\Collection\Version;
+use Loader;
 use \Concrete\Core\Feature\Assignment as FeatureAssignment;
 class FeatureAssignment extends FeatureAssignment {
 

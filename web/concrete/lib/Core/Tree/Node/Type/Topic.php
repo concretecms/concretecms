@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Tree\Node\Type;
 use Concrete\Core\Tree\Node\Node as TreeNode;
+use Loader;
 class Topic extends TreeNode {
 
 	public function getTreeNodePermissionKeyCategoryHandle() { return 'topic_tree_node';}

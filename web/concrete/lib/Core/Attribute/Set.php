@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Attribute;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 class Set extends Object {
 
 	public static function getByID($asID) {
@@ -85,7 +86,7 @@ class Set extends Object {
 		$db = Loader::db();
 		$no = $db->GetOne("select count(akID) from AttributeSetKeys where akID = ? and asID = ?", array($ak->getAttributeKeyID(), $this->getAttributeSetID()));
 		if ($no < 1) {
-			$do = $db->GetOne('select max(displayOrder) from AttributeSetKeys where asID = ?', $this->getAttributeSetID());
+			$do = $db->GetOne('select max(displayOrder) from AttributeSetKeys where asID = ?', array($this->getAttributeSetID()));
 			$do++;
 			$db->Execute('insert into AttributeSetKeys (asID, akID, displayOrder) values (?, ?, ?)', array($this->getAttributeSetID(), $ak->getAttributeKeyID(), $do));
 		}

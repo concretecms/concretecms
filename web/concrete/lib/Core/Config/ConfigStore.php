@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Config;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 class ConfigStore {
 	/**
 	 * @var Database

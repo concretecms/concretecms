@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page\Workflow\Request;
+use Loader;
 class DeletePageRequest extends Request {
 	
 	protected $wrStatusNum = 100;

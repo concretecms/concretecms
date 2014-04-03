@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Captcha;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 class Library extends Object {
 
 	public function getSystemCaptchaLibraryHandle() { return $this->sclHandle;}
@@ -16,14 +17,14 @@ class Library extends Object {
 	public static function getActive() {
 		$db = Loader::db();
 		$sclHandle = $db->GetOne('select sclHandle from SystemCaptchaLibraries where sclIsActive = 1');
-		return SystemCaptchaLibrary::getByHandle($sclHandle);
+		return static::getByHandle($sclHandle);
 	}
 	
 	public static function getByHandle($sclHandle) {
 		$db = Loader::db();
 		$r = $db->GetRow('select sclHandle, sclIsActive, pkgID, sclName from SystemCaptchaLibraries where sclHandle = ?', array($sclHandle));
 		if (is_array($r) && $r['sclHandle']) {
-			$sc = new SystemCaptchaLibrary();
+			$sc = new static();
 			$sc->setPropertiesFromArray($r);
 			return $sc;
 		}
@@ -36,13 +37,13 @@ class Library extends Object {
 		}
 		$db = Loader::db();
 		$db->Execute('insert into SystemCaptchaLibraries (sclHandle, sclName, pkgID) values (?, ?, ?)', array($sclHandle, $sclName, $pkgID));
-		return SystemCaptchaLibrary::getByHandle($sclHandle);
+		return static::getByHandle($sclHandle);
 	}
 	
 	public function delete() {
 		$db = Loader::db();
-		if(SystemCaptchaLibrary::getActive()->getSystemCaptchaLibraryHandle() == $this->sclHandle) {
-			if ($scl = SystemCaptchaLibrary::getByHandle('securimage')) {
+		if(static::getActive()->getSystemCaptchaLibraryHandle() == $this->sclHandle) {
+			if ($scl = static::getByHandle('securimage')) {
 				$scl->activate();
 			}
 		}
@@ -60,7 +61,7 @@ class Library extends Object {
 		$sclHandles = $db->GetCol('select sclHandle from SystemCaptchaLibraries order by sclHandle asc');
 		$libraries = array();
 		foreach($sclHandles as $sclHandle) {
-			$scl = SystemCaptchaLibrary::getByHandle($sclHandle);
+			$scl = static::getByHandle($sclHandle);
 			$libraries[] = $scl;
 		}
 		return $libraries;
@@ -71,7 +72,7 @@ class Library extends Object {
 		$sclHandles = $db->GetCol('select sclHandle from SystemCaptchaLibraries where pkgID = ? order by sclHandle asc', array($pkg->getPackageID()));
 		$libraries = array();
 		foreach($sclHandles as $sclHandle) {
-			$scl = SystemCaptchaLibrary::getByHandle($sclHandle);
+			$scl = static::getByHandle($sclHandle);
 			$libraries[] = $scl;
 		}
 		return $libraries;

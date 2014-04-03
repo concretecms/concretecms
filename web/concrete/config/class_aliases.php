@@ -13,6 +13,7 @@ $list->registerMultiple(array(
 	'Response' => 'Core\Http\Response',
 	'Cookie' => 'Core\Cookie\Cookie',
 	'Page' => 'Core\Page\Page',
+	'Config' => 'Core\Config\Config',
 	'PageType' => 'Core\Page\Type\Type',
 	'PageList' => 'Core\Page\List',
 	'Block' => 'Core\Page\Block',

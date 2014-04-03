@@ -64,7 +64,7 @@ class User extends Object {
 
 		$tmpSession = $_SESSION; 
 		session_write_close(); 
-		setcookie(session_name(), session_id(), time()-100000);
+		@setcookie(session_name(), session_id(), time()-100000);
 		session_id(sha1(mt_rand())); 
 		@session_start(); 
 		$_SESSION = $tmpSession;

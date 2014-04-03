@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Config;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 class Config extends Object {
 	protected $pkg = false;
 	protected static $store;

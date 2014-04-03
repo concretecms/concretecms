@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Permission\Assignment;
 use Loader;
+use \Concrete\Core\Permission\Access\Access as PermissionAccess;
+use \Concrete\Core\Permission\Category as PermissionKeyCategory;
 class Assignment {
 
 	protected $pk; // permissionkey

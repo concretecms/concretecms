@@ -1,6 +1,7 @@
 <?
 
 namespace Concrete\Core\Captcha;
+use Loader;
 use \Concrete\Core\Foundation\Object;
 
 class SecurimageController extends Controller {

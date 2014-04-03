@@ -1,7 +1,11 @@
 <?
 namespace Concrete\Core\Permission\Key;
-use Concrete\Core\Foundation\Object;
+use \Concrete\Core\Foundation\Object;
 use Loader;
+use CacheLocal;
+use Package;
+use \Concrete\Core\Permission\Assignment\Assignment as PermissionAssignment;
+
 abstract class Key extends Object {
 	
 	const ACCESS_TYPE_INCLUDE = 10;
@@ -102,11 +106,12 @@ abstract class Key extends Object {
 		$cl = new CacheLocal();
 		$db = Loader::db();
 		$permissionkeys = array();
+		$txt = helper('text');
 		$e = $db->Execute('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, pkHasCustomClass, PermissionKeys.pkCategoryID, pkCategoryHandle, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID');
 		while ($r = $e->FetchRow()) {
-			$class = Loader::helper('text')->camelcase($r['pkCategoryHandle']) . 'PermissionKey';
+			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Key\\' . $txt->camelcase($r['pkCategoryHandle']) . 'Key');
 			if ($r['pkHasCustomClass']) {
-				$class = Loader::helper('text')->camelcase($r['pkHandle']) . $class;
+				$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Key\\' . $txt->camelcase($r['pkHandle'] . '_' . $r['pkCategoryHandle']) . 'Key');
 			}
 			$pk = new $class();
 			$pk->setPropertiesFromArray($r);
@@ -120,16 +125,17 @@ abstract class Key extends Object {
 
 	protected static function load($key, $loadBy = 'pkID') {
 		$db = Loader::db();
+		$txt = helper('text');
 		$r = $db->GetRow('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, pkHasCustomClass, PermissionKeys.pkCategoryID, pkCategoryHandle, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID where ' . $loadBy . ' = ?', array($key));
-		$class = Loader::helper('text')->camelcase($r['pkCategoryHandle']) . 'PermissionKey';
+		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Key\\' . $txt->camelcase($r['pkCategoryHandle']) . 'Key');
 		if (!is_array($r) && (!$r['pkID'])) { 
 			return false;
 		}
-		
+
 		if ($r['pkHasCustomClass']) {
-			$class = Loader::helper('text')->camelcase($r['pkHandle']) . $class;
+			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Key\\' . $txt->camelcase($r['pkHandle'] . $r['pkCategoryHandle']) . 'Key');
 		}
-		
+				
 		$pk = new $class();
 		$pk->setPropertiesFromArray($r);
 		return $pk;
@@ -215,7 +221,7 @@ abstract class Key extends Object {
 		return $list;
 	}	
 	
-	public static function import(SimpleXMLElement $pk) {
+	public static function import(\SimpleXMLElement $pk) {
 		$pkCategoryHandle = $pk['category'];
 		$pkg = false;
 		if ($pk['package']) {
@@ -274,7 +280,7 @@ abstract class Key extends Object {
 		} else {
 			$pkHasCustomClass = 0;
 		}
-		$pkCategoryID = $db->GetOne("select pkCategoryID from PermissionKeyCategories where pkCategoryHandle = ?", $pkCategoryHandle);
+		$pkCategoryID = $db->GetOne("select pkCategoryID from PermissionKeyCategories where pkCategoryHandle = ?", array($pkCategoryHandle));
 		$a = array($pkHandle, $pkName, $pkDescription, $pkCategoryID, $pkCanTriggerWorkflow, $pkHasCustomClass, $pkgID);
 		$r = $db->query("insert into PermissionKeys (pkHandle, pkName, pkDescription, pkCategoryID, pkCanTriggerWorkflow, pkHasCustomClass, pkgID) values (?, ?, ?, ?, ?, ?, ?)", $a);
 		

@@ -1,7 +1,10 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
+namespace Concrete\Controller\Attribute;
+use Loader;
+use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Attribute\Controller as AttributeTypeController;
 
-class Concrete5_Controller_AttributeType_Address extends AttributeTypeController  {
+class Address extends AttributeTypeController  {
 
 	public $helpers = array('form');
 	

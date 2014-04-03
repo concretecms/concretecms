@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Page\Workflow\Request;
 use \Concrete\Core\Workflow\Request as WorkflowRequest;
+use Loader;
 abstract class Request extends WorkflowRequest {  
 	
 	public function setRequestedPage($c) {

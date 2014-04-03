@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page\Search;
+use Loader;
 use PageList;
 class IndexedPageList extends PageList {
 

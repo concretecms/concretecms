@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Attribute;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 class PendingType extends Type {
 
 	public static function getList() {

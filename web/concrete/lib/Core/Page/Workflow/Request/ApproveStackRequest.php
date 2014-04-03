@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page\Workflow\Request;
+use Loader;
 class ApproveStackRequest extends Request {
 
 	public function approve(WorkflowProgress $wp) {

@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page\View;
+use Loader;
 use Concrete\Core\View\View;
 class PageView extends View {
 

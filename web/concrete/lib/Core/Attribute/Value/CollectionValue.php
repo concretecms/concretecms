@@ -1,7 +1,7 @@
 <?
-namespace Concrete\Core\Page\Collection;
-use \Concrete\Core\Attribute\Attribute\Value as AttributeValue;
-class AttributeValue extends AttributeValue {
+namespace Concrete\Core\Attribute\Value;
+use Loader;
+class CollectionValue extends Value {
 
 	/**
 	 * @param Collection $cObj
