@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 if ($_REQUEST['treeNodeID'] > 0) {
 	$node = TreeNode::getByID($_REQUEST['treeNodeID']);
 	$np = new Permissions($node);
-	$handle = $node->getTreeNodePermissionKeyCategoryHandle();
+	$handle = $node->getPermissionObjectKeyCategoryHandle();
 	if ($np->canEditTreeNodePermissions()) {
 
 		if ($_REQUEST['task'] == 'add_access_entity' && Loader::helper("validation/token")->validate('add_access_entity')) {

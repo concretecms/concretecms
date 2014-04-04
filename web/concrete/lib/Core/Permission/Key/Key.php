@@ -340,23 +340,11 @@ abstract class Key extends Object {
 			return array();
 		}
 	}
-	
+
 	public function getPermissionAssignmentObject() {
 		if (is_object($this->permissionObject)) {
-			if (method_exists($this->permissionObject, 'getPermissionObjectPermissionKeyCategoryHandle')) {
-				$objectClass = Loader::helper('text')->camelcase($this->permissionObject->getPermissionObjectPermissionKeyCategoryHandle());
-			} else {
-				$objectClass = get_class($this->permissionObject);
-			}
-			$class = $objectClass . 'PermissionAssignment';
-			if (!class_exists($class)) {
-				if ($this->permissionObject instanceof Page) {
-					$class = 'PagePermissionAssignment';
-				} else if ($this->permissionObject instanceof Area) {
-					$class = 'AreaPermissionAssignment';
-				}
-			}
-			$targ = new $class();
+			$className = \Concrete\Core\Foundation\ClassLoader::getClassName($this->permissionObject->getPermissionAssignmentClassName());
+			$targ = new $className();
 			$targ->setPermissionObject($this->permissionObject);
 		} else {
 			$targ = new PermissionAssignment();
@@ -364,7 +352,6 @@ abstract class Key extends Object {
 		$targ->setPermissionKeyObject($this);
 		return $targ;
 	}
-
 	
 	public function getPermissionAccessObject() {
 		$targ = $this->getPermissionAssignmentObject();

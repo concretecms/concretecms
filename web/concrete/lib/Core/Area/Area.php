@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Area;
 use \Concrete\Core\Foundation\Object;
-class Area extends Object {
+class Area extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
 	public $cID, $arID, $arHandle;
 	public $c;
@@ -83,6 +83,18 @@ class Area extends Object {
 	public function getPermissionObjectIdentifier() {
 		return $this->getCollectionID() . ':' . $this->getAreaHandle();
 	}
+
+	public function getPermissionResponseClassName() {
+		return 'Core\\Permission\\Response\\AreaResponse';
+	}
+
+	public function getPermissionAssignmentClassName() {
+		return 'Core\\Permission\\Assignment\\AreaAssignment';	
+	}
+	public function getPermissionObjectKeyCategoryHandle() {
+		return 'area';
+	}
+
 
 
 	/**

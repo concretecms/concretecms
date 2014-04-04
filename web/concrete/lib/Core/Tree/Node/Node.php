@@ -5,21 +5,18 @@ use Loader;
 use \Concrete\Core\Tree\Node\NodeType as TreeNodeType;
 use \Concrete\Core\Permission\Key\Key as PermissionKey;
 
-abstract class Node extends Object {
+abstract class Node extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
 	abstract public function loadDetails();
 	abstract public function getTreeNodeDisplayName();
 	abstract public function deleteDetails();
-	abstract public function getTreeNodePermissionKeyCategoryHandle();
 
 	protected $childNodes = array();
 	protected $childNodesLoaded = false;
 	protected $treeNodeIsSelected = false;
 
 	public function getPermissionObjectIdentifier() {return $this->treeNodeID;}
-	public function getPermissionObjectPermissionKeyCategoryHandle() {
-		return $this->getTreeNodePermissionKeyCategoryHandle();
-	}
+
 	public function getTreeNodeID() {return $this->treeNodeID;}
 	public function getTreeNodeParentID() {return $this->treeNodeParentID;}
 	public function getTreeNodeParentObject() {return TreeNode::getByID($this->treeNodeParentID);}
@@ -149,7 +146,7 @@ abstract class Node extends Object {
 
 		$db->Execute('delete from TreeNodePermissionAssignments where treeNodeID = ?', array($this->treeNodeID));
 		// copy permissions from the page to the area
-		$permissions = PermissionKey::getList($this->getTreeNodePermissionKeyCategoryHandle());
+		$permissions = PermissionKey::getList($this->getPermissionObjectKeyCategoryHandle());
 		foreach($permissions as $pk) {
 			$pk->setPermissionObject($this);
 			$pk->copyFromParentNodeToCurrentNode();

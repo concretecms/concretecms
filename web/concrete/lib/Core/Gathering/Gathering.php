@@ -1,12 +1,24 @@
 <?
 namespace Concrete\Core\Gathering;
 use \Concrete\Core\Foundation\Object;
-class Gathering extends Object {
+class Gathering extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
 	public function getGatheringID() {return $this->gaID;}
 	public function getGatheringDateCreated() {return $this->gaDateCreated;}
 	public function getGatheringDateLastUpdated() {return $this->gaDateLastUpdated;}
 	public function getPermissionObjectIdentifier() { return $this->gaID;}
+
+
+	public function getPermissionResponseClassName() {
+		return 'Core\\Permission\\Response\\GatheringResponse';
+	}
+
+	public function getPermissionAssignmentClassName() {
+		return 'Core\\Permission\\Assignment\\GatheringAssignment';	
+	}
+	public function getPermissionObjectKeyCategoryHandle() {
+		return 'gathering';
+	}
 
 	public static function getByID($gaID) {
 		$db = Loader::db();

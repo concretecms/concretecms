@@ -26,33 +26,17 @@ class Response {
 		if (is_object($r)) {
 			return $r;
 		}
-		
-		if (method_exists($object, 'getPermissionObjectPermissionKeyCategoryHandle')) {
-			$objectClass = Loader::helper('text')->camelcase($object->getPermissionObjectPermissionKeyCategoryHandle());
-			$handle = $object->getPermissionObjectPermissionKeyCategoryHandle();
-		} else {
-			$objectClass = get_class($object);
-			$handle = Loader::helper('text')->uncamelcase($objectClass);
-		}
-		$category = PermissionKeyCategory::getByHandle($handle);
-		$c1 = $objectClass . 'PermissionResponse';
-		if (!is_object($category)) {
-			if ($object instanceof Page) {
-				$category = PermissionKeyCategory::getByHandle('page');
-				$c1 = 'PagePermissionResponse';
-			} else if ($object instanceof Area) {
-				$category = PermissionKeyCategory::getByHandle('area');
-				$c1 = 'AreaPermissionResponse';
-			}
-		}
 
-		$pr = new $c1();
+		$className = \Concrete\Core\Foundation\ClassLoader::getClassName($object->getPermissionResponseClassName());
+		$category = \Core\Permission\Key\Category\Category::getByHandle($object->getPermissionObjectKeyCategoryHandle());
+		$object = new $className();
+		$object->setPermissionCategoryObject($object);
+		
 		$pr->setPermissionObject($object);
-		$pr->setPermissionCategoryObject($category);	
 		PermissionCache::addResponse($object, $pr);
 		return $pr;
 	}
-	
+
 	public function validate($permission, $args = array()) {
 		$u = new User();
 		if ($u->isSuperUser()) {

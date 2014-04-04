@@ -9,7 +9,7 @@ use Loader;
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-abstract class Workflow extends Object {  
+abstract class Workflow extends Object implements \Concrete\Core\Permission\ObjectInterface {  
 	
 	protected $wfID = 0;
 	protected $allowedTasks = array('cancel', 'approve');

@@ -2,7 +2,7 @@
 namespace Concrete\Core\Page\Type;
 use Loader;
 use \Concrete\Core\Foundation\Object;
-class Type extends Object {
+class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
 	protected $ptDraftVersionsToSave = 10;
 
@@ -18,6 +18,16 @@ class Type extends Object {
 	public function getPageTypeDefaultPageTemplateObject() {return PageTemplate::getByID($this->ptDefaultPageTemplateID);}
 	public function getPermissionObjectIdentifier() {
 		return $this->getPageTypeID();
+	}
+	public function getPermissionResponseClassName() {
+		return 'Core\\Permission\\Response\\PageTypeResponse';
+	}
+
+	public function getPermissionAssignmentClassName() {
+		return 'Core\\Permission\\Assignment\\PageTypeAssignment';	
+	}
+	public function getPermissionObjectKeyCategoryHandle() {
+		return 'page_type';
 	}
 	public function isPageTypeInternal() {
 		return $this->ptIsInternal;

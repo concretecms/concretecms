@@ -1,6 +1,6 @@
 <?php
 namespace Concrete\Core\File\FileSet
-class FileSet {
+class FileSet implements \Concrete\Core\Permission\ObjectInterface {
 	const TYPE_PRIVATE 	= 0;
 	const TYPE_PUBLIC 	= 1;
 	const TYPE_STARRED 	= 2;
@@ -32,6 +32,17 @@ class FileSet {
 			$sets[] = $fs;
 		}
 		return $sets;
+	}
+
+	public function getPermissionResponseClassName() {
+		return 'Core\\Permission\\Response\\FileSetResponse';
+	}
+
+	public function getPermissionAssignmentClassName() {
+		return 'Core\\Permission\\Assignment\\FileSetAssignment';	
+	}
+	public function getPermissionObjectKeyCategoryHandle() {
+		return 'file_set';
 	}
 
 	public function getPermissionObjectIdentifier() {
