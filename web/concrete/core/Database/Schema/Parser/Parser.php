@@ -10,6 +10,6 @@ abstract class Parser {
 		$this->rawXML = $xml;
 	}
 
-	abstract public function parse();
+	abstract public function parse(\Concrete\Core\Database\Connection $db);
 
 }

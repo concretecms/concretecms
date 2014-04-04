@@ -102,7 +102,7 @@ class Package extends Object {
 		// currently this is just done from xml
 		$db = Database::get();
 		
-		$schema = Schema::loadFromXMLFile($xmlFile);
+		$schema = Schema::loadFromXMLFile($xmlFile, $db);
 		$platform = $db->getDatabasePlatform();
 		$queries = $schema->toSql($platform);
 		foreach($queries as $query) {

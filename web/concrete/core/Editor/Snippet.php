@@ -1,6 +1,8 @@
 <?
-namespace Concrete\CoreEditor;
+namespace Concrete\Core\Editor;
+use Loader;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Package\PackageList;
 abstract class Snippet extends Object {
 
 	/** 
@@ -30,8 +32,8 @@ abstract class Snippet extends Object {
 			if ($r['pkgID']) {
 				$pkgHandle = PackageList::getHandle($r['pkgID']);
 			}
-			Loader::model('system/content_editor/snippets/' . $r['scsHandle'], $pkgHandle);
-			$class = Loader::helper('text')->camelcase($r['scsHandle']) . 'SystemContentEditorSnippet';
+			$txt = helper('text');
+			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Editor\\' . $txt->camelcase($r['scsHandle'] . 'Snippet'));
 			$sc = new $class();
 			$sc->setPropertiesFromArray($r);
 			return $sc;
@@ -45,7 +47,7 @@ abstract class Snippet extends Object {
 		}
 		$db = Loader::db();
 		$db->Execute('insert into SystemContentEditorSnippets (scsHandle, scsName, pkgID) values (?, ?, ?)', array($scsHandle, $scsName, $pkgID));
-		return SystemContentEditorSnippet::getByHandle($scsHandle);
+		return static::getByHandle($scsHandle);
 	}
 	
 	public function delete() {
@@ -68,7 +70,7 @@ abstract class Snippet extends Object {
 		$scsHandles = $db->GetCol('select scsHandle from SystemContentEditorSnippets order by scsHandle asc');
 		$libraries = array();
 		foreach($scsHandles as $scsHandle) {
-			$scs = SystemContentEditorSnippet::getByHandle($scsHandle);
+			$scs = static::getByHandle($scsHandle);
 			$libraries[] = $scs;
 		}
 		return $libraries;
@@ -79,7 +81,7 @@ abstract class Snippet extends Object {
 		$scsHandles = $db->GetCol('select scsHandle from SystemContentEditorSnippets where scsIsActive = 1 order by scsHandle asc');
 		$libraries = array();
 		foreach($scsHandles as $scsHandle) {
-			$scs = SystemContentEditorSnippet::getByHandle($scsHandle);
+			$scs = static::getByHandle($scsHandle);
 			$libraries[] = $scs;
 		}
 		return $libraries;
@@ -90,7 +92,7 @@ abstract class Snippet extends Object {
 		$scsHandles = $db->GetCol('select scsHandle from SystemContentEditorSnippets where pkgID = ? order by scsHandle asc', array($pkg->getPackageID()));
 		$libraries = array();
 		foreach($scsHandles as $scsHandle) {
-			$scs = SystemContentEditorSnippet::getByHandle($scsHandle);
+			$scs = static::getByHandle($scsHandle);
 			$libraries[] = $scs;
 		}
 		return $libraries;

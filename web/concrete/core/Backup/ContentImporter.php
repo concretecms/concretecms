@@ -9,6 +9,7 @@ use UserInfo;
 use PageType;
 use \Concrete\Core\Page\Template\Template as PageTemplate;
 use BlockType;
+use \Concrete\Core\Block\BlockType\Set as BlockTypeSet;
 use Block;
 use Group;
 use Loader;
@@ -20,6 +21,7 @@ use \Concrete\Core\Workflow\Progress\Category as WorkflowProgressCategory;
 use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use \Concrete\Core\Permission\Access\Access as PermissionAccess;
 use \Concrete\Core\Captcha\Library as SystemCaptchaLibrary;
+use \Concrete\Core\Editor\Snippet as SystemContentEditorSnippet;
 
 class ContentImporter {
 

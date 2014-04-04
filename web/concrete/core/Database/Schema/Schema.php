@@ -4,10 +4,10 @@ namespace Concrete\Core\Database\Schema;
 
 class Schema {
 
-	public static function loadFromXMLFile($file) {
+	public static function loadFromXMLFile($file, \Concrete\Core\Database\Connection $connection) {
 		$sx = simplexml_load_file($file);
 		$parser = static::getSchemaParser($sx);
-		return $parser->parse();
+		return $parser->parse($connection);
 	}
 
 	protected function getSchemaParser(\SimpleXMLElement $sx) {
