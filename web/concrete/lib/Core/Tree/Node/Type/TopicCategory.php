@@ -2,7 +2,17 @@
 namespace Concrete\Core\Tree\Node\Type;
 class TopicCategory extends Category {
 
-	public function getTreeNodePermissionKeyCategoryHandle() { return 'topic_category_tree_node';}
+	public function getPermissionResponseClassName() {
+		return 'Core\\Permission\\Response\\TopicCategoryTreeNodeResponse';
+	}
+
+	public function getPermissionAssignmentClassName() {
+		return 'Core\\Permission\\Assignment\\TopicCategoryTreeNodeAssignment';	
+	}
+	public function getPermissionObjectKeyCategoryHandle() {
+		return 'topic_category_tree_node';
+	}
+
 	public function getTreeNodeJSON() {
 		$obj = parent::getTreeNodeJSON();
 		if (is_object($obj)) {

@@ -5,7 +5,17 @@ use Loader;
 use Group as UserGroup;
 class Group extends TreeNode {
 
-	public function getTreeNodePermissionKeyCategoryHandle() { return 'group_tree_node';}
+	public function getPermissionResponseClassName() {
+		return 'Core\\Permission\\Response\\GroupTreeNodeResponse';
+	}
+
+	public function getPermissionAssignmentClassName() {
+		return 'Core\\Permission\\Assignment\\GroupTreeNodeAssignment';	
+	}
+	public function getPermissionObjectKeyCategoryHandle() {
+		return 'group_tree_node';
+	}
+
 	public function getTreeNodeGroupID() {
 		return $this->gID;
 	}

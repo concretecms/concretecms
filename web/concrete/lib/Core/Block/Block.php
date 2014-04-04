@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Core\Block;
 use \Concrete\Core\Foundation\Object;
-class Block extends Object {
+class Block extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
 	var $cID;
 	var $arHandle;
@@ -28,6 +28,17 @@ class Block extends Object {
 
 	public function getPermissionObjectIdentifier() {
 		return $this->cID . ':' . $this->getAreaHandle() . ':' . $this->bID;
+	}
+
+	public function getPermissionResponseClassName() {
+		return 'Core\\Permission\\Response\\BlockResponse';
+	}
+
+	public function getPermissionAssignmentClassName() {
+		return 'Core\\Permission\\Assignment\\BlockAssignment';	
+	}
+	public function getPermissionObjectKeyCategoryHandle() {
+		return 'block';
 	}
 	
 	public static function getByID($bID, $c = null, $a = null) {

@@ -12,7 +12,7 @@ use Request;
 * @package Pages
 *
 */
-class Page extends Collection {
+class Page extends Collection implements \Concrete\Core\Permission\ObjectInterface {
 
 	protected $blocksAliasedFromMasterCollection = null;
 
@@ -114,6 +114,16 @@ class Page extends Collection {
 		unset($r);
 	}
 
+	public function getPermissionResponseClassName() {
+		return 'Core\\Permission\\Response\\PageResponse';
+	}
+
+	public function getPermissionAssignmentClassName() {
+		return 'Core\\Permission\\Assignment\\PageAssignment';	
+	}
+	public function getPermissionObjectKeyCategoryHandle() {
+		return 'page';
+	}
 
 	public function getPermissionObjectIdentifier() {
 		// this is a hack but it's a really good one for performance

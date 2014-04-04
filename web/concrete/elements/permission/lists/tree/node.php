@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div id="topics-tree-node-permissions">
 	<? 
-$handle = $node->getTreeNodePermissionKeyCategoryHandle();
+$handle = $node->getPermissionObjectKeyCategoryHandle();
 $enablePermissions = false;
 if (!$node->overrideParentTreeNodePermissions()) { 
 	$permNode = TreeNode::getByID($node->getTreeNodePermissionsNodeID()); ?>

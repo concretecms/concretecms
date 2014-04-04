@@ -1,5 +1,4 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
 namespace Concrete\Core\Permission\Assignment;
 use Loader;
 class TreeNodeAssignment extends Assignment {

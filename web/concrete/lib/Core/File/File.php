@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Core\File;
 use \Concrete\Core\Foundation\Object;
-class File extends Object { 
+class File extends Object implements \Concrete\Core\Permission\ObjectInterface { 
 
 	const CREATE_NEW_VERSION_THRESHOLD = 300; // in seconds (5 minutes)
 	const F_ERROR_INVALID_FILE = 1;
@@ -33,6 +33,17 @@ class File extends Object {
 	public function __call($nm, $a) {
 		$fv = $this->getApprovedVersion();
 		return call_user_func_array(array($fv, $nm), $a);
+	}
+
+	public function getPermissionResponseClassName() {
+		return 'Core\\Permission\\Response\\FileResponse';
+	}
+
+	public function getPermissionAssignmentClassName() {
+		return 'Core\\Permission\\Assignment\\FileAssignment';	
+	}
+	public function getPermissionObjectKeyCategoryHandle() {
+		return 'file';
 	}
 
 	public function getPermissionObjectIdentifier() {
