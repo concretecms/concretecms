@@ -22,6 +22,7 @@ use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccess
 use \Concrete\Core\Permission\Access\Access as PermissionAccess;
 use \Concrete\Core\Captcha\Library as SystemCaptchaLibrary;
 use \Concrete\Core\Editor\Snippet as SystemContentEditorSnippet;
+use \Concrete\Core\Feature\Feature;
 
 class ContentImporter {
 

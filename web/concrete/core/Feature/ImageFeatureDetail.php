@@ -1,5 +1,6 @@
 <?
 namespace \Concrete\Core\Feature;
+use Loader;
 class ImageFeatureDetail extends Detail {
 
 	protected $path;
