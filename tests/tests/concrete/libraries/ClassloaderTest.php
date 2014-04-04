@@ -12,7 +12,12 @@ class ClassloaderTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testThemeAutoloadingCore() {
-		$this->assertTrue(class_exists('Concrete\Theme\Concrete'));
+		$this->assertTrue(class_exists('Concrete\Theme\TwitterBootstrap\PageTheme'));
+		$this->assertTrue(class_exists('Concrete\Theme\Concrete\PageTheme'));
+	}
+
+	public function testJobAutoloadingCore() {
+		$this->assertTrue(class_exists('Concrete\Job\IndexSearchAll'));
 	}
 
 	public function testOverrideableCoreClassesCore() {
@@ -54,12 +59,37 @@ class ClassloaderTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testAttributes() {
-		$this->assertTrue(class_exists('Concrete\Controller\Attribute\Boolean'));
+		$at = new \Concrete\Core\Attribute\Type();
+		$at->atHandle = 'boolean';
+		$at->loadController();
+		$this->assertTrue(class_exists('\Concrete\Attribute\Boolean\Controller'));
 	}
 
 	public function testBlocks() {
-		$this->assertTrue(class_exists('Concrete\Controller\Block\Autonav'));
-		$this->assertTrue(class_exists('Concrete\Controller\Block\CoreAreaLayout'));
+		$bt = new BlockType();
+		$bt->btHandle = 'core_stack_display';
+		$class = $bt->getBlockTypeClass();
+		$classExists = class_exists($class);
+		$this->assertTrue($class == '\Concrete\Block\CoreStackDisplay\Controller');
+		$this->assertTrue($classExists);
+
+	}
+
+	public function testBlockControllerOverride() {
+		$root = dirname(DIR_BASE_CORE . '../');
+		mkdir($root . '/blocks/CoreAreaLayout/', 0777, true);
+		copy(dirname(__FILE__) . '/fixtures/CoreAreaLayoutController.php', $root . '/blocks/CoreAreaLayout/Controller.php');
+
+		$bt = new BlockType();
+		$bt->btHandle = 'core_area_layout';
+		$class = $bt->getBlockTypeClass();
+		$classExists = class_exists($class);
+
+		unlink($root . '/blocks/CoreAreaLayout/controller.php');
+		rmdir($root . '/blocks/CoreAreaLayout');
+
+		$this->assertTrue($class == '\Application\Block\CoreAreaLayout\Controller');
+		$this->assertTrue($classExists);
 	}
 
 	public function testHelpers() {
