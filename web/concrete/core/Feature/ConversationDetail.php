@@ -1,7 +1,6 @@
 <?
-namespace Concrete\Core\Conversation;
-use \Concrete\Core\Feature\Detail as FeatureDetail;
-class ConversationFeatureDetail extends FeatureDetail {
+namespace Concrete\Core\Feature;
+class ConversationFeatureDetail extends Detail {
 
 	protected $cnvID;
 
