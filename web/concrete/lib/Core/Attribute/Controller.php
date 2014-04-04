@@ -149,11 +149,11 @@ class Controller extends AbstractController {
 		}
 	}
 
-	public function saveKey() {
+	public function saveKey($data) {
 	
 	}
 	
-	public function duplicateKey() {
+	public function duplicateKey($newAK) {
 	
 	}
 	

@@ -1,5 +1,8 @@
 <?
 namespace Concrete\Core\Block\View;
+use Loader;
+use Environment;
+use CacheLocal;
 class BlockViewTemplate {
 
 	protected $basePath = '';

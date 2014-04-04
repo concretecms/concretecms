@@ -53,6 +53,15 @@ class ClassloaderTest extends PHPUnit_Framework_TestCase {
 
 	}
 
+	public function testAttributes() {
+		$this->assertTrue(class_exists('Concrete\Controller\Attribute\Boolean'));
+	}
+
+	public function testBlocks() {
+		$this->assertTrue(class_exists('Concrete\Controller\Block\Autonav'));
+		$this->assertTrue(class_exists('Concrete\Controller\Block\CoreAreaLayout'));
+	}
+
 	public function testHelpers() {
 		$fh = Loader::helper('file');
 		$vh = Loader::helper('validation/error');

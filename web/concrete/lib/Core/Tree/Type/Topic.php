@@ -3,6 +3,10 @@ namespace Concrete\Core\Tree\Type;
 use \Concrete\Core\Tree\Tree;
 use \Concrete\Core\Tree\Node\Type\TopicCategory as TopicCategoryTreeNode;
 use Loader;
+use Group as UserGroup;
+use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
+use \Concrete\Core\Permission\Key\TopicCategoryTreeNodeKey as TopicCategoryTreeNodePermissionKey;
+use \Concrete\Core\Permission\Access\Access as PermissionAccess;
 class Topic extends Tree {
 
 	public function getTreeDisplayName() {return $this->topicTreeName;}
@@ -26,7 +30,7 @@ class Topic extends Tree {
 		$tree->setTopicTreeName($name);
 
 		// by default, topic trees are viewable by all
-		$guestGroupEntity = GroupPermissionAccessEntity::getOrCreate(Group::getByID(GUEST_GROUP_ID));
+		$guestGroupEntity = GroupPermissionAccessEntity::getOrCreate(UserGroup::getByID(GUEST_GROUP_ID));
 		$pk = TopicCategoryTreeNodePermissionKey::getByHandle('view_topic_category_tree_node');
 		$pk->setPermissionObject($rootNode);
 		$pa = PermissionAccess::create($pk);

@@ -1,6 +1,9 @@
 <?
 namespace Concrete\Core\Block\View;
 use Concrete\Core\View;
+use Loader;
+use Environment;
+use CacheLocal;
 class BlockView extends AbstractView {
 
 	protected $block;
