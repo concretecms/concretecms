@@ -1,6 +1,6 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
 namespace Concrete\Core\Permission\Assignment;
+use \Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Loader;
 class BasicWorkflowAssignment extends Assignment {
 	
