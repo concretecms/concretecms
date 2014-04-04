@@ -15,6 +15,7 @@ define('DB_SERVER', 'localhost');
 
 define('C5_EXECUTE', true);
 define('C5_ENVIRONMENT_ONLY', true);
+define('DIR_BASE', realpath(dirname(__FILE__) . '/../../web'));
 $DIR_BASE_CORE = realpath(dirname(__FILE__) . '/../../web/concrete');
 
 require $DIR_BASE_CORE . '/config/base_pre.php';
@@ -22,6 +23,7 @@ require $DIR_BASE_CORE . '/startup/config_check.php';
 require $DIR_BASE_CORE . '/startup/updated_core_check.php';
 require $DIR_BASE_CORE . '/config/base.php';
 require $DIR_BASE_CORE . '/startup/autoload.php';
+
 
 $app = Concrete\Core\Application\Dispatcher::get();
 $app->bootstrap();
