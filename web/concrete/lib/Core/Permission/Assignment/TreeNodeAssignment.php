@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Assignment;
+use \Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Loader;
 class TreeNodeAssignment extends Assignment {
 	
