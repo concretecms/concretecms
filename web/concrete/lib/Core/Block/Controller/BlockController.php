@@ -1,6 +1,9 @@
 <?
 namespace Concrete\Core\Block\Controller;
 use Concrete\Core\Controller;
+use Loader;
+use Environment;
+use CacheLocal;
 class BlockController extends AbstractController {
 	
 	protected $record; // blockrecord

@@ -92,8 +92,8 @@ abstract class AbstractController {
 	public function isPost() {
 		return Request::isPost();
 	}
-	public function post($key = null, $defaultValue = null) {
-		return Request::post($key, $defaultValue);
+	public function post($key = null) {
+		return Request::post($key);
 	}
 	public function redirect() {
 		$args = func_get_args();
@@ -103,8 +103,8 @@ abstract class AbstractController {
 	public function runTask($action, $parameters) {
 		$this->runAction($action, $parameters);
 	}
-	public function request($key = null, $defaultValue = null) {
-		return Request::request($key, $defaultValue);
+	public function request($key = null) {
+		return Request::request($key);
 	}
 
 }

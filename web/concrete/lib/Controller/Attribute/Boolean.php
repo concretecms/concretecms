@@ -53,7 +53,7 @@ class Boolean extends AttributeTypeController  {
 		$this->set('akCheckedByDefault', $this->akCheckedByDefault);
 	}
 
-	public function label() {}
+	public function label($customText = false) {}
 	
 	public function form() {
 

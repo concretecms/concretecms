@@ -1,6 +1,9 @@
 <?
 namespace Concrete\Core\Block\BlockType;
 use \Concrete\Core\Foundation\Object;
+use Loader;
+use Environment;
+use CacheLocal;
 class BlockType extends Object {
 
 	/**
@@ -175,7 +178,7 @@ class BlockType extends Object {
 	 * @return string
 	 */
 	public function getPackageHandle() {
-		return PackageList::getHandle($this->pkgID);
+		return \Concrete\Core\Package\PackageList::getHandle($this->pkgID);
 	}
 	
 	
@@ -580,31 +583,7 @@ class BlockType extends Object {
 	
 /** @todo Continue documenting from here down **/
 	
-	 
-	/*
-	 * @access private
-	 *
-	 */
-	protected function _getClass() {
 
-		$btHandle = $this->btHandle;
-		$pkgHandle = $this->getPackageHandle();
-		$env = Environment::get();
-		require_once($env->getPath(DIRNAME_BLOCKS . '/' . $this->btHandle . '/' . FILENAME_BLOCK_CONTROLLER, $pkgHandle));
-		
-		// takes the handle and performs some magic to get the class;
-		$btHandle = $this->getBlockTypeHandle();
-		// split by underscores or dashes
-		$words = preg_split('/\_|\-/', $btHandle);
-		for ($i = 0; $i < count($words); $i++) {
-			$words[$i] = ucfirst($words[$i]);
-		}
-		
-		$class = implode('', $words);
-		$class = $class . 'BlockController';
-		return $class;
-	}
-	
 	public function inc($file, $args = array()) {
 		extract($args);
 		$bt = $this;
@@ -615,7 +594,9 @@ class BlockType extends Object {
 	}
 	
 	public function getBlockTypeClass() {
-		return $this->_getClass();
+		$txt = Loader::helper('text');
+		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Controller\\Block\\' . $txt->camelcase($this->btHandle));
+		$this->controller = new $className($this);
 	}
 	
 	/**

@@ -20,25 +20,32 @@ class ClassLoader  {
 		$this->setupFileAutoloader();
 		$this->setupThirdPartyAutoloader();
 		$this->setupAliasAutoloader();
-		//$this->setupCoreAutoloader();
+		$this->setupCoreCustomAutoloaders();
 		$this->setupLegacyAutoloader();
 	}
 
 	protected function setupThirdPartyAutoloader() {
 		\Zend_Loader_Autoloader::getInstance();
+		$mapping = array(
+			'PasswordHash' => DIR_BASE_CORE . '/vendor/phpass/PasswordHash.php',
+		);
+
+		$loader = new SymfonyMapClassloader($mapping);
+		$loader->register();
 	}
 
 	/** 
 	 * Responsible for autoloading core classes based on their names, not based on PSR-0
+	 * For example, the \Concrete\Controller\Block namespace doesn't map to blocks – it maps
+	 * to the attributes directory. The \Concrete\Controller\Attribute\ namespace maps to
+	 * attributes/, etc...
 	 */
 
-	/** 
-	 * POSSIBLY NOT NECESSARY. TRY TO DELETE ONCE WE CAN VERIFY PAGE THEME WORKS
-	 */
-	/*
-	protected function setupCoreAutoloader() {
+	protected function setupCoreCustomAutoloaders() {
 		$loader = $this;
 		spl_autoload_register(function($class) use ($loader) {
+			print $class;
+
 			if ($theme = strstr($class, 'PageTheme', true)) {
 				$className = $loader->getClassName('Theme\\' . $class);
 
@@ -52,8 +59,7 @@ class ClassLoader  {
 	
 	protected function setupLegacyAutoloader() {
 		$mapping = array(
-			'PasswordHash' => DIR_BASE_CORE . '/vendor/phpass/PasswordHash.php',
-		    'Loader' => DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Core/Legacy/Loader.php',
+		    'Loader' => DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Core/Legacy/Loader.php'
 		);
 
 		$loader = new SymfonyMapClassloader($mapping);
@@ -110,41 +116,6 @@ class ClassLoader  {
 		$classPath .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
 		return $classPath;
 	}
-	*/
-
-/*	public function element($_file, $args = null, $_pkgHandle= null) {
-		if (is_array($args)) {
-			$collisions = array_intersect(array('_file', '_pkgHandle'), array_keys($args));
-			if ($collisions) {
-				throw new Exception(t("Illegal variable name '%s' in element args.", implode(', ', $collisions)));
-			}
-			$collisions = null;
-			extract($args);
-		}
-
-		include(Environment::get()->getPath(DIRNAME_ELEMENTS . '/' . $_file . '.php', $_pkgHandle));
-	}
-
-	public function mapClassesToPath($array) {
-
-		$cl = new \Symfony\Component\ClassLoader\MapClassLoader($array);
-		$cl->register();
-	}
-
-	public static function autoload($class) {
-
-		if (strpos($class, 'Controller') > 0) {
-			$env = Environment::get();
-			$class = substr($class, 0, strpos($class, 'Controller'));
-			$handle = Object::uncamelcase($class);
-			$path = str_replace('_', '/', $handle);
-			$path = $env->getPath(DIRNAME_CONTROLLERS . '/' . $path . '.php');
-			require_once($path);
-		}
-
-
-	}
-
 	*/
 
 

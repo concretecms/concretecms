@@ -1,7 +1,6 @@
 <?
 namespace Concrete\Core\Package;
-use Package;
-use Object;
+use \Concrete\Core\Foundation\Object;
 use Loader;
 class PackageList extends Object {
 	

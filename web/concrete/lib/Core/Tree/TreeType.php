@@ -57,7 +57,9 @@ class TreeType extends Object {
 	}
 
 	public function getTreeTypeClass() {
-		return Loader::helper('text')->camelcase($this->treeTypeHandle) . 'Tree';
+		$txt = helper('text');
+		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Tree\\Type\\' . $txt->camelcase($this->treeTypeHandle));
+		return $className;
 	}
 
 

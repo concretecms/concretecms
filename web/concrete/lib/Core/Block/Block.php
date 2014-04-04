@@ -1,6 +1,10 @@
 <?
 namespace Concrete\Core\Block;
 use \Concrete\Core\Foundation\Object;
+use Loader;
+use Environment;
+use CacheLocal;
+
 class Block extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
 	var $cID;
