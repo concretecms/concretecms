@@ -23,6 +23,7 @@ use \Concrete\Core\Permission\Access\Access as PermissionAccess;
 use \Concrete\Core\Captcha\Library as SystemCaptchaLibrary;
 use \Concrete\Core\Editor\Snippet as SystemContentEditorSnippet;
 use \Concrete\Core\Feature\Feature;
+use \Concrete\Core\Feature\Category as FeatureCategory;
 
 class ContentImporter {
 

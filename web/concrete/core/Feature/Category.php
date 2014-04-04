@@ -4,13 +4,13 @@ use \Concrete\Core\Foundation\Object;
 use Loader;
 abstract class Category extends Object {
 
-	abstract public function assignmentIsInUse(FeatureAssignment $fa);
+	abstract public function assignmentIsInUse(Assignment $fa);
 	
 	public static function getByID($fcID) {
 		$db = Loader::db();
 		$row = $db->GetRow('select fcID, fcHandle, pkgID from FeatureCategories where fcID = ?', array($fcID));
 		if (isset($row['fcID'])) {
-			$class = Loader::helper('text')->camelcase($row['fcHandle']) . 'FeatureCategory';
+			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\' . helper('text')->camelcase($row['fcHandle']) . 'Category');
 			$fe = new $class();
 			$fe->setPropertiesFromArray($row);
 			return $fe;
@@ -21,7 +21,7 @@ abstract class Category extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select fcID, fcHandle, pkgID from FeatureCategories where fcHandle = ?', array($fcHandle));
 		if (isset($row['fcID'])) {
-			$class = Loader::helper('text')->camelcase($row['fcHandle']) . 'FeatureCategory';
+			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\' . helper('text')->camelcase($row['fcHandle']) . 'Category');
 			$fe = new $class();
 			$fe->setPropertiesFromArray($row);
 			return $fe;
@@ -33,7 +33,7 @@ abstract class Category extends Object {
 		$list = array();
 		$r = $db->Execute('select fcID from FeatureCategories where pkgID = ? order by fcID asc', array($pkg->getPackageID()));
 		while ($row = $r->FetchRow()) {
-			$fe = FeatureCategory::getByID($row['fcID']);
+			$fe = static::getByID($row['fcID']);
 			if (is_object($fe)) {
 				$list[] = $fe;
 			}
@@ -47,7 +47,7 @@ abstract class Category extends Object {
 		$list = array();
 		$r = $db->Execute('select fcID from FeatureCategories order by fcID asc');
 		while ($row = $r->FetchRow()) {
-			$fe = FeatureCategory::getByID($row['fcID']);
+			$fe = static::getByID($row['fcID']);
 			if (is_object($fe)) {
 				$list[] = $fe;
 			}
@@ -71,7 +71,7 @@ abstract class Category extends Object {
 		$db->Execute('insert into FeatureCategories (fcHandle, pkgID) values (?, ?)', array($fcHandle, $pkgID));
 		$id = $db->Insert_ID();
 		
-		$fe = FeatureCategory::getByID($id);
+		$fe = static::getByID($id);
 		return $fe;
 	}
 
@@ -89,7 +89,7 @@ abstract class Category extends Object {
 		$r = $db->Execute('select fcID from FeatureCategories order by fcID asc');
 		$list = array();
 		while ($row = $r->FetchRow()) {
-			$fe = FeatureCategory::getByID($row['fcID']);
+			$fe = static::getByID($row['fcID']);
 			if (is_object($fe)) {
 				$list[] = $fe;
 			}
