@@ -1,6 +1,6 @@
 <?
-
-use Concrete\Core\Editor;
+namespace Concrete\Core\Editor;
+use Loader;
 class PageNameSnippet extends Snippet {
 
 

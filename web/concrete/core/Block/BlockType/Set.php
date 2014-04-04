@@ -10,7 +10,7 @@ class Set extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select btsID, btsHandle, pkgID, btsName from BlockTypeSets where btsID = ?', array($btsID));
 		if (isset($row['btsID'])) {
-			$akc = new BlockTypeSet();
+			$akc = new static();
 			$akc->setPropertiesFromArray($row);
 			return $akc;
 		}
@@ -20,7 +20,7 @@ class Set extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select btsID, btsHandle, pkgID, btsName from BlockTypeSets where btsHandle = ?', array($btsHandle));
 		if (isset($row['btsID'])) {
-			$akc = new BlockTypeSet();
+			$akc = new static();
 			$akc->setPropertiesFromArray($row);
 			return $akc;
 		}
@@ -31,7 +31,7 @@ class Set extends Object {
 		$list = array();
 		$r = $db->Execute('select btsID from BlockTypeSets where pkgID = ? order by btsID asc', array($pkg->getPackageID()));
 		while ($row = $r->FetchRow()) {
-			$list[] = BlockTypeSet::getByID($row['btsID']);
+			$list[] = static::getByID($row['btsID']);
 		}
 		$r->Close();
 		return $list;
@@ -42,7 +42,7 @@ class Set extends Object {
 		$list = array();
 		$r = $db->Execute('select btsID from BlockTypeSets order by btsDisplayOrder asc');
 		while ($row = $r->FetchRow()) {
-			$list[] = BlockTypeSet::getByID($row['btsID']);
+			$list[] = static::getByID($row['btsID']);
 		}
 		$r->Close();
 		return $list;
@@ -102,7 +102,7 @@ class Set extends Object {
 		$db->Execute('insert into BlockTypeSets (btsHandle, btsName, pkgID) values (?, ?, ?)', array($btsHandle, $btsName, $pkgID));
 		$id = $db->Insert_ID();
 		
-		$bs = BlockTypeSet::getByID($id);
+		$bs = static::getByID($id);
 		return $bs;
 	}
 
@@ -126,7 +126,7 @@ class Set extends Object {
 		$r = $db->Execute('select btsID from BlockTypeSets order by btsID asc');
 		$list = array();
 		while ($row = $r->FetchRow()) {
-			$list[] = BlockTypeSet::getByID($row['btsID']);
+			$list[] = static::getByID($row['btsID']);
 		}
 		foreach($list as $bs) {
 			$bs->export($bxml);

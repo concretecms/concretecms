@@ -8,10 +8,21 @@ class Legacy extends Parser {
 	 * Transforms the XML from Adodb XML into 
 	 * Doctrine DBAL Schema
 	 */
-	public function parse() {
+	public function parse(\Concrete\Core\Database\Connection $db) {
+        $sm = $db->getSchemaManager();
+        $schemaTables = $sm->listTables();
+        $existingTables = array();
+        foreach($schemaTables as $table) {
+            $existingTables[] = $table->getName();
+        }
+
 		$x = $this->rawXML;
 		$schema = new \Doctrine\DBAL\Schema\Schema();
 		foreach($x->table as $t) {
+
+			if (in_array((string) $t['name'], $existingTables)) {
+				continue;
+			}
 			$table = $schema->createTable((string) $t['name']);
 			foreach($t->field as $f) {
 				$options = $this->_getColumnOptions($f);

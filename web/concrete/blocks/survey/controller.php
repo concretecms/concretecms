@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Block\Survey;
 use \Concrete\Core\Block\BlockController;
+use Page;
 class Controller extends BlockController {
 	 
 	protected $btTable = 'btSurvey';
