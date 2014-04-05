@@ -4,15 +4,15 @@ use Page;
 use Package;
 use Stack;
 use SinglePage;
-use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 use UserInfo;
 use PageType;
-use \Concrete\Core\Page\Template\Template as PageTemplate;
 use BlockType;
-use \Concrete\Core\Block\BlockType\Set as BlockTypeSet;
 use Block;
 use Group;
 use Loader;
+use \Concrete\Core\Page\Template\Template as PageTemplate;
+use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use \Concrete\Core\Block\BlockType\Set as BlockTypeSet;
 use \Concrete\Core\Attribute\Type as AttributeType;
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use \Concrete\Core\Permission\Category as PermissionKeyCategory;
@@ -23,7 +23,10 @@ use \Concrete\Core\Permission\Access\Access as PermissionAccess;
 use \Concrete\Core\Captcha\Library as SystemCaptchaLibrary;
 use \Concrete\Core\Editor\Snippet as SystemContentEditorSnippet;
 use \Concrete\Core\Feature\Feature;
-use \Concrete\Core\Feature\Category as FeatureCategory;
+use \Concrete\Core\Feature\Category\Category as FeatureCategory;
+use \Concrete\Core\Gathering\DataSource\DataSource as GatheringDataSource;
+use \Concrete\Core\Gathering\Item\Template\Template as GatheringItemTemplate;
+use \Concrete\Core\Gathering\Item\Template\Type as GatheringItemTemplateType;
 
 class ContentImporter {
 

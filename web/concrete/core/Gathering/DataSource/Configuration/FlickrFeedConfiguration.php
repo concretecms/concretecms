@@ -1,6 +1,7 @@
 <?php
-namespace \Concrete\Core\Gathering\DataSource\Configuration;
-class FlickrFeed extends Configuration {
+namespace Concrete\Core\Gathering\DataSource\Configuration;
+use Loader;
+class FlickrFeedConfiguration extends Configuration {
 
 	public function setFlickrFeedTags($tags) {
 		$this->tags = $tags;

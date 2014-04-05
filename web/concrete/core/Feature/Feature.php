@@ -36,6 +36,7 @@ class Feature extends Object {
 			if ($row['feHasCustomClass']) {
 				$class = Loader::helper('text')->camelcase($row['feHandle']) . $class;
 			}
+			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\' . $class);
 			$fe = new $class;
 			$fe->setPropertiesFromArray($row);
 			return $fe;

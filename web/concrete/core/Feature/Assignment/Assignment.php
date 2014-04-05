@@ -1,5 +1,5 @@
 <?
-namespace \Concrete\Core\Feature;
+namespace Concrete\Core\Feature\Assignment;
 use \Concrete\Core\Foundation\Object;
 use Loader;
 abstract class Assignment extends Object {

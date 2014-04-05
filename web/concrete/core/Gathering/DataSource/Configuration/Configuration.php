@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Gathering\DataSource\Configuration;
+use Loader;
 use \Concrete\Core\Foundation\Object;
 class Configuration extends Object {
 

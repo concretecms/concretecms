@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Gathering\Item\Template;
+use Loader;
 use \Concrete\Core\Foundation\Object;
 abstract class Template extends Object {
 
@@ -20,11 +21,13 @@ abstract class Template extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select GatheringItemTemplates.*, GatheringItemTemplateTypes.gatTypeHandle from GatheringItemTemplates inner join GatheringItemTemplateTypes on GatheringItemTemplateTypes.gatTypeID = GatheringItemTemplates.gatTypeID where GatheringItemTemplates.gatID = ?', array($gatID));
 		if (isset($row['gatID'])) {
-			$class = Loader::helper('text')->camelcase($row['gatTypeHandle']) . 'GatheringItemTemplate';
+			$ns = helper('text')->camelcase($row['gatTypeHandle']);
+			$class = 'Template';
 			if ($row['gatHasCustomClass']) {
 				$class = Loader::helper('text')->camelcase($row['gatHandle']) . $class;
 			}
-			$agt = new $class();
+			$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Gathering\\Item\\Template\\' . $ns . '\\' . $class);
+			$agt = new $className();
 			$agt->setPropertiesFromArray($row);
 			return $agt;
 		}
@@ -34,7 +37,7 @@ abstract class Template extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select gatID from GatheringItemTemplates where gatHandle = ?', array($gatHandle));
 		if (isset($row['gatID'])) {
-			return GatheringItemTemplate::getByID($row['gatID']);
+			return static::getByID($row['gatID']);
 		}
 	}
 
@@ -43,7 +46,7 @@ abstract class Template extends Object {
 		$list = array();
 		$r = $db->Execute('select gatID from GatheringItemTemplates where pkgID = ? order by gatID asc', array($pkg->getPackageID()));
 		while ($row = $r->FetchRow()) {
-			$agt = GatheringItemTemplate::getByID($row['gatID']);
+			$agt = static::getByID($row['gatID']);
 			if (is_object($agt)) {
 				$agt[] = $agt;
 			}
@@ -52,12 +55,12 @@ abstract class Template extends Object {
 		return $list;
 	}	
 
-	public static function getListByType(GatheringItemTemplateType $type) {
+	public static function getListByType(\Concrete\Core\Gathering\Item\Template\Type $type) {
 		$db = Loader::db();
 		$list = array();
 		$r = $db->Execute('select gatID from GatheringItemTemplates where gatTypeID = ? order by gatName asc', array($type->getGatheringItemTemplateTypeID()));
 		while ($row = $r->FetchRow()) {
-			$agt = GatheringItemTemplate::getByID($row['gatID']);
+			$agt = static::getByID($row['gatID']);
 			if (is_object($agt)) {
 				$list[] = $agt;
 			}
@@ -71,7 +74,7 @@ abstract class Template extends Object {
 		$list = array();
 		$r = $db->Execute('select gatID from GatheringItemTemplates order by gatName asc');
 		while ($row = $r->FetchRow()) {
-			$agt = GatheringItemTemplate::getByID($row['gatID']);
+			$agt = static::getByID($row['gatID']);
 			if (is_object($agt)) {
 				$list[] = $agt;
 			}
@@ -120,7 +123,7 @@ abstract class Template extends Object {
 
 		$w = 0;
 		$handles = $this->getGatheringItemTemplateFeatureHandles();
-		$assignments = GatheringItemFeatureAssignment::getList($item);
+		$assignments = \Concrete\Core\Gathering\Feature\Assignment::getList($item);
 		foreach($assignments as $as) {
 			if (in_array($as->getFeatureDetailHandle(), $handles)) {
 				$fd = $as->getFeatureDetailObject();
@@ -195,7 +198,7 @@ abstract class Template extends Object {
 		return $features;		
 	}
 
-	public static function add(GatheringItemTemplateType $type, $gatHandle, $gatName, $gatFixedSlotWidth, $gatFixedSlotHeight, $gatHasCustomClass = false, $gatForceDefault = false, $pkg = false) {
+	public static function add(\Concrete\Core\Gathering\Item\Template\Type $type, $gatHandle, $gatName, $gatFixedSlotWidth, $gatFixedSlotHeight, $gatHasCustomClass = false, $gatForceDefault = false, $pkg = false) {
 		$db = Loader::db();
 		$pkgID = 0;
 		if (is_object($pkg)) {
@@ -205,7 +208,7 @@ abstract class Template extends Object {
 		$db->Execute('insert into GatheringItemTemplates (gatTypeID, gatHandle, gatName, gatFixedSlotWidth, gatFixedSlotHeight, gatHasCustomClass, gatForceDefault, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?)', array($type->getGatheringItemTemplateTypeID(), $gatHandle, $gatName, $gatFixedSlotWidth, $gatFixedSlotHeight, $gatHasCustomClass, $gatForceDefault, $pkgID));
 		$id = $db->Insert_ID();
 		
-		$agt = GatheringItemTemplate::getByID($id);
+		$agt = static::getByID($id);
 		return $agt;
 	}
 
@@ -235,7 +238,7 @@ abstract class Template extends Object {
 		$r = $db->Execute('select gatID from GatheringItemTemplates order by gatID asc');
 		$list = array();
 		while ($row = $r->FetchRow()) {
-			$agt = GatheringItemTemplate::getByID($row['gatID']);
+			$agt = static::getByID($row['gatID']);
 			if (is_object($agt)) {
 				$list[] = $agt;
 			}
@@ -250,8 +253,8 @@ abstract class Template extends Object {
 		$db->Execute('delete from GatheringItemTemplates where gatID = ?', array($this->gatID));
 	}
 
-	public function getGatheringItemTemplateData(GatheringItem $item) {
-		$assignments = GatheringItemFeatureAssignment::getList($item);
+	public function getGatheringItemTemplateData(\Concrete\Gathering\Item $item) {
+		$assignments = \Concrete\Core\Gathering\Feature\Assignment::getList($item);
 		$data = array();
 		foreach($assignments as $as) {
 			$fd = $as->getFeatureDetailObject();

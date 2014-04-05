@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Gathering\Item;
+use Loader;
 class Twitter extends Item {
 
 	public function loadDetails() {}
