@@ -1,6 +1,7 @@
 <?php
-namespace \Concrete\Core\Gathering\DataSource\Configuration;
-class Page extends Configuration {
+namespace Concrete\Core\Gathering\DataSource\Configuration;
+use Loader;
+class PageConfiguration extends Configuration {
 	
 	protected $ptID;
 

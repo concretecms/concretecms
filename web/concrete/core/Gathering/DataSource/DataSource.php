@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Core\Gathering\DataSource;
+use Loader;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Gathering\DataSource\Configuration\Configuration as GatheringDataSourceConfiguration;
 abstract class DataSource extends Object {
 
 	abstract public function createConfigurationObject(Gathering $ga, $post);
@@ -21,8 +23,9 @@ abstract class DataSource extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select gasID, gasHandle, pkgID, gasName from GatheringDataSources where gasID = ?', array($gasID));
 		if (isset($row['gasID'])) {
-			$class = Loader::helper('text')->camelcase($row['gasHandle']) . 'GatheringDataSource';
-			$gas = new $class();
+			$txt = helper('text');
+			$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Gathering\\DataSource\\' . $txt->camelcase($row['gasHandle'] . 'DataSource'));
+			$gas = new $className();
 			$gas->setPropertiesFromArray($row);
 			return $gas;
 		}
@@ -56,7 +59,7 @@ abstract class DataSource extends Object {
 		$list = array();
 		$r = $db->Execute('select gasID from GatheringDataSources where pkgID = ? order by gasID asc', array($pkg->getPackageID()));
 		while ($row = $r->FetchRow()) {
-			$gas = GatheringDataSource::getByID($row['gasID']);
+			$gas = static::getByID($row['gasID']);
 			if (is_object($gas)) {
 				$list[] = $gas;
 			}
@@ -70,7 +73,7 @@ abstract class DataSource extends Object {
 		$list = array();
 		$r = $db->Execute('select gasID from GatheringDataSources order by gasDisplayOrder asc');
 		while ($row = $r->FetchRow()) {
-			$gas = GatheringDataSource::getByID($row['gasID']);
+			$gas = static::getByID($row['gasID']);
 			if (is_object($gas)) {
 				$list[] = $gas;
 			}
@@ -119,7 +122,7 @@ abstract class DataSource extends Object {
 		$db->Execute('insert into GatheringDataSources (gasHandle, gasName, gasDisplayOrder, pkgID) values (?, ?, ?, ?)', array($gasHandle, $gasName, $gasDisplayOrder, $pkgID));
 		$id = $db->Insert_ID();
 		
-		$gas = GatheringDataSource::getByID($id);
+		$gas = static::getByID($id);
 		return $gas;
 	}
 
@@ -138,7 +141,7 @@ abstract class DataSource extends Object {
 		$r = $db->Execute('select gasID from GatheringDataSources order by gasID asc');
 		$list = array();
 		while ($row = $r->FetchRow()) {
-			$gas = GatheringDataSource::getByID($row['gasID']);
+			$gas = static::getByID($row['gasID']);
 			if (is_object($gas)) {
 				$list[] = $gas;
 			}

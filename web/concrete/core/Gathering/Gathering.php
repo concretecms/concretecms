@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Gathering;
+use Loader;
 use \Concrete\Core\Foundation\Object;
 class Gathering extends Object implements \Concrete\Core\Permission\ObjectInterface {
 

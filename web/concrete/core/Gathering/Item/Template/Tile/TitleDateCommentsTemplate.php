@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Core\Gathering\Item\Template\Tile;
+use Loader;
 use \Concrete\Core\Gathering\Item\Template\Tile as TileTemplate;
-class TitleDateComments extends TileTemplate {
+class TitleDateCommentsTemplate extends Template {
 
 	public function getGatheringItemTemplateData(GatheringItem $item) {
 		$items = parent::getGatheringItemTemplateData($item);

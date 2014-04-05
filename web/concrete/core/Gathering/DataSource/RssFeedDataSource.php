@@ -1,18 +1,18 @@
 <?php
-namespace \Concrete\Core\Gathering\DataSource;
-class FlickrFeed extends DataSource {
-
-	const FLICKR_FEED_URL = 'http://api.flickr.com/services/feeds/photos_public.gne';
+namespace Concrete\Core\Gathering\DataSource;
+use Loader;
+use \Concrete\Core\Gathering\DataSource\Configuration\Configuration as GatheringDataSourceConfiguration;
+class RssFeedDataSource extends DataSource {
 
 	public function createConfigurationObject(Gathering $ag, $post) {
-		$o = new FlickrFeedGatheringDataSourceConfiguration();
-		$o->setFlickrFeedTags($post['flickrFeedTags']);
+		$o = new RssFeedGatheringDataSourceConfiguration();
+		$o->setRssFeedURL($post['rssFeedURL']);
 		return $o;
 	}
 
 	public function createGatheringItems(GatheringDataSourceConfiguration $configuration) {
 		$fp = Loader::helper('feed');
-		$feed = $fp->load(self::FLICKR_FEED_URL . '?tags=' . $configuration->getFlickrFeedTags(), false); 
+		$feed = $fp->load($configuration->getRssFeedURL(), false); 
 		$feed->init();
 		$feed->handle_content_type();
 		$posts = $feed->get_items(0);
@@ -25,7 +25,10 @@ class FlickrFeed extends DataSource {
 
 		$items = array();
 		foreach($posts as $p) {
-			$item = FlickrFeedGatheringItem::add($configuration, $p);
+			$posttime = strtotime($p->get_date('Y-m-d H:i:s'));
+			//if ($posttime > $lastupdated) {
+				$item = RssFeedGatheringItem::add($configuration, $p);
+			//}
 
 			if (is_object($item)) {
 				$items[] = $item;

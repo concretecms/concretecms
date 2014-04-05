@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Core\Feature;
+namespace Concrete\Core\Feature\Detail;
 class ConversationFeatureDetail extends Detail {
 
 	protected $cnvID;

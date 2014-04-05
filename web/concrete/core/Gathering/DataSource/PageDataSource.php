@@ -1,6 +1,8 @@
 <?php
-namespace \Concrete\Core\Gathering\DataSource;
-class Page extends DataSource {
+namespace Concrete\Core\Gathering\DataSource;
+use Loader;
+use \Concrete\Core\Gathering\DataSource\Configuration\Configuration as GatheringDataSourceConfiguration;
+class PageDataSource extends DataSource {
 
 	public function createConfigurationObject(Gathering $ga, $post) {
 		$o = new PageGatheringDataSourceConfiguration();

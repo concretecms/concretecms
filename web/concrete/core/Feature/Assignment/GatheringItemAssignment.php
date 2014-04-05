@@ -1,13 +1,13 @@
 <?
-namespace Concrete\Core\Gathering\Item;
-class FeatureAssignment extends \Concrete\Core\Feature\Assignment {
+namespace Concrete\Core\Feature\Assignment;
+class GatheringItemAssignment extends Assignment {
 
 	protected $gaiID;
 	public function loadDetails($mixed) {
 		$this->gaiID = $mixed->getGatheringItemID();
 	}
 
-	public static function add(Feature $fe, FeatureDetail $fd, GatheringItem $item) {
+	public static function add(Feature $fe, Detail $fd, \Concrete\Core\Gathering\Item\Item $item) {
 		$fc = FeatureCategory::getByHandle('gathering_item');
 		$fa = parent::add($fe, $fc, $fd, $item);
 		$db = Loader::db();

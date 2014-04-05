@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Gathering\Item;
+use Loader;
 class Page extends Item {
 
 	public function canViewGatheringItem() {

@@ -1,6 +1,8 @@
 <?php
-namespace \Concrete\Core\Gathering\DataSource;
-class Twitter extends DataSource {
+namespace Concrete\Core\Gathering\DataSource;
+use Loader;
+use \Concrete\Core\Gathering\DataSource\Configuration\Configuration as GatheringDataSourceConfiguration;
+class TwitterDataSource extends DataSource {
 
 	const TWITTER_SEARCH_URL = 'http://api.flickr.com/services/feeds/photos_public.gne';
 

@@ -1,6 +1,7 @@
 <?php
-namespace \Concrete\Core\Gathering\DataSource\Configuration;
-class RssFeed extends Configuration {
+namespace Concrete\Core\Gathering\DataSource\Configuration;
+use Loader;
+class RssFeedConfiguration extends Configuration {
 
 	public function setRssFeedURL($url) {
 		$this->url = $url;
