@@ -1,7 +1,10 @@
 <?
 namespace Concrete\Core\Job;
+use Loader;
+use JobSet;
+use Environment;
 use \Concrete\Core\Foundation\Object;
-class JobSet extends Object {
+class Set extends Object {
 	
 	const DEFAULT_JOB_SET_ID = 1;
 	

@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page;
+use \Page as CorePage;
 use Loader;
 /**
 *
@@ -8,7 +9,7 @@ use Loader;
 * @package Pages
 *
 */
-class SinglePage extends Page {
+class Single extends CorePage {
 
 	// These are pages that you're allowed to override with templates set in themes
 	public static function getThemeableCorePages() {

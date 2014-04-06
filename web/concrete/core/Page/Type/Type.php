@@ -134,7 +134,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 			$db = Loader::db();
 			$ptID = $db->GetOne('select ptID from PageTypePageTemplateDefaultPages where cID = ?', array($c->getCollectionID()));
 			if ($ptID) {
-				return PageType::getByID($ptID);
+				return static::getByID($ptID);
 			}
 		}
 	}
@@ -197,9 +197,9 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		$ptHandle = (string) $node['handle'];
 		$db = Loader::db();
 		$ptID = $db->GetOne('select ptID from PageTypes where ptHandle = ?', array($ptHandle));
-		$cm = PageType::getByID($ptID);
+		$cm = static::getByID($ptID);
 		if (is_object($cm) && isset($node->target)) {
-			$target = PageTypePublishTargetType::importConfiguredPageTypePublishTarget($node->target);
+			$target = \Concrete\Core\Page\Type\PublishTarget\Type\Type::importConfiguredPageTypePublishTarget($node->target);
 			$cm->setConfiguredPageTypePublishTargetObject($target);
 		}
 	}
@@ -246,10 +246,10 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
 		$data['templates'] = $types;
 		if ($ptID) {
-			$cm = PageType::getByID($ptID);
+			$cm = static::getByID($ptID);
 			$cm->update($data);
 		} else {
-			$cm = PageType::add($data);
+			$cm = static::add($data);
 		}
 		$node = $node->composer;
 		if (isset($node->formlayout->set)) {
@@ -289,7 +289,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		$ptHandle = (string) $node['handle'];
 		$ptID = $db->GetOne('select ptID from PageTypes where ptHandle = ?', array($ptHandle));
 		if ($ptID) {
-			$pt = PageType::getByID($ptID);
+			$pt = static::getByID($ptID);
 			if (isset($node->composer->output->pagetemplate)) {
 				$ci = new ContentImporter();
 				foreach($node->composer->output->pagetemplate as $pagetemplate) {
@@ -420,7 +420,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 			}
 		}
 
-		$ptt = PageType::getByID($db->Insert_ID());
+		$ptt = static::getByID($db->Insert_ID());
 
 		// copy permissions from the defaults to the page type
 		$cpk = PermissionKey::getByHandle('access_page_type_permissions');
@@ -507,7 +507,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		}
 		$list = array();
 		foreach($ptIDs as $ptID) {
-			$cm = PageType::getByID($ptID);
+			$cm = static::getByID($ptID);
 			if (is_object($cm)) {
 				$list[] = $cm;
 			}
@@ -520,7 +520,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		$ptIDs = $db->GetCol('select ptID from PageTypes where pkgID = ? order by ptID asc', array($pkg->getPackageID()));
 		$list = array();
 		foreach($ptIDs as $ptID) {
-			$cm = PageType::getByID($ptID);
+			$cm = static::getByID($ptID);
 			if (is_object($cm)) {
 				$list[] = $cm;
 			}
@@ -543,7 +543,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		$db = Loader::db();
 		$ptID = $db->GetOne('select ptID from PageTypes where ptHandle = ?', array($ptHandle));
 		if ($ptID) {
-			return PageType::getByID($ptID);
+			return static::getByID($ptID);
 		}
 	}
 

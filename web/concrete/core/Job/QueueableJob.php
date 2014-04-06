@@ -1,6 +1,8 @@
 <?
-
 namespace Concrete\Core\Job;
+use \Job as AbstractJob;
+use Loader;
+use Environment;
 /**
 *
 * Contains the job class.
@@ -22,7 +24,7 @@ namespace Concrete\Core\Job;
 * @license http://www.opensource.org/licenses/mit-license.php MIT
 *
 */
-abstract class QueueableJob extends Job {
+abstract class QueueableJob extends AbstractJob {
 
 	// optional queue functions
 	protected $jQueueBatchSize = JOB_QUEUE_BATCH_SIZE;

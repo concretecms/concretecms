@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Job;
-use Job;
-class GenerateSitemap extends Job {
+use \Job as AbstractJob;
+class GenerateSitemap extends AbstractJob {
 
 	/** The end-of-line terminator.
 	* @var string

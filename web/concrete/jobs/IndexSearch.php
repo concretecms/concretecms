@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Job;
-use Job;
-class IndexSearch extends Job {
+use \Job as AbstractJob;
+class IndexSearch extends AbstractJob {
 
 	public $jNotUninstallable=1;
 	

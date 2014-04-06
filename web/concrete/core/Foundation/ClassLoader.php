@@ -111,7 +111,6 @@ class ClassLoader  {
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Helper', DIR_BASE . '/' . DIRNAME_HELPERS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Controller', DIR_BASE . '/' . DIRNAME_CONTROLLERS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Job', DIR_BASE . '/' . DIRNAME_JOBS);
-		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Core', DIR_BASE . '/' . DIRNAME_CLASSES);
 
 		$symfonyLoader->register();
 	}

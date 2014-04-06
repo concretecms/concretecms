@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Job;
-use Job;
-class ProcessEmail extends Job {
+use \Job as AbstractJob;
+class ProcessEmail extends AbstractJob {
 
 	public function getJobName() {
 		return t("Process Email Posts");

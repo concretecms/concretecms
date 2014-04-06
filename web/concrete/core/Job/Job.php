@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Core\Job;
 use \Concrete\Core\Foundation\Object;
+use Loader;
+use Environment;
 abstract class Job extends Object {
 
 	const JOB_SUCCESS = 0;
@@ -20,7 +22,7 @@ abstract class Job extends Object {
 	}
 	public function didFail() {
 		return in_array($this->jLastStatusCode, array(
-			self::JOB_ERROR_EXCEPTION_GENERAL
+			static::JOB_ERROR_EXCEPTION_GENERAL
 		));
 	}
 	public function canUninstall() {
@@ -88,7 +90,7 @@ abstract class Job extends Object {
 	}
 	
 	public static function exportList($xml) {
-		$jobs = self::getList();
+		$jobs = static::getList();
 		if (count($jobs) > 0) {
 			$jx = $xml->addChild('jobs');
 			foreach($jobs as $j) { 
@@ -113,7 +115,7 @@ abstract class Job extends Object {
 		$r = $db->Execute($q);
 		$jobs = array();
 		while ($row = $r->FetchRow()) {
-			$j = Job::getByID($row['jID']);
+			$j = static::getByID($row['jID']);
 			if (is_object($j)) {
 				$jobs[] = $j;
 			}
@@ -170,18 +172,18 @@ abstract class Job extends Object {
 		$db = Loader::db(); 
 		$jobData = $db->getRow("SELECT * FROM Jobs WHERE jID=".intval($jID));
 		if( !$jobData || !$jobData['jHandle']  ) return NULL; 
-		return Job::getJobObjByHandle( $jobData['jHandle'], $jobData );
+		return static::getJobObjByHandle( $jobData['jHandle'], $jobData );
 	}
 	
 	public static function getByHandle( $jHandle='' ){
 		$db = Loader::db(); 
 		$jobData = $db->getRow( 'SELECT * FROM Jobs WHERE jHandle=?', array($jHandle) );
 		if( !$jobData || !$jobData['jHandle']  ) return NULL; 
-		return Job::getJobObjByHandle( $jobData['jHandle'], $jobData );
+		return static::getJobObjByHandle( $jobData['jHandle'], $jobData );
 	}
 	
 	public static function getJobObjByHandle( $jHandle='', $jobData=array() ){
-		$jcl = Job::jobClassLocations();
+		$jcl = static::jobClassLocations();
 		
 		//check for the job file in the various locations
 		$db = Loader::db();
@@ -200,8 +202,7 @@ abstract class Job extends Object {
 			//load the file & class, then run the job
 			$path=$jobClassLocation.'/'.$jHandle.'.php';	
 			if( file_exists($path) ){ 
-				require_once($path);
-				$className=Object::camelcase( $jHandle );
+				$className = static::getClassName($jHandle);
 				$j = new $className();
 				$j->jHandle=$jHandle;
 				if(intval($jobData['jID'])>0){
@@ -213,6 +214,11 @@ abstract class Job extends Object {
 		
 		return NULL;
 	}
+
+	protected static function getClassName($jHandle) {
+		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Job\\' . helper('text')->camelcase($jHandle));
+		return $className;
+	}
 	
 	//Scan job directories for job classes
 	public static function getAvailableList($includeConcreteDirJobs=1){
@@ -221,14 +227,14 @@ abstract class Job extends Object {
 	
 		//get existing jobs
 		$existingJobHandles=array();
-		$existingJobs = Job::getList();
+		$existingJobs = static::getList();
 		foreach($existingJobs as $j) {
 			$existingJobHandles[] = $j->getJobHandle();
 		}
 	
 		if(!$includeConcreteDirJobs)
 			 $jobClassLocations = array( DIR_FILES_JOBS );
-		else $jobClassLocations = Job::jobClassLocations();
+		else $jobClassLocations = static::jobClassLocations();
 	
 		foreach( $jobClassLocations as $jobClassLocation){ 
 			// Open a known directory, and proceed to read its contents
@@ -246,25 +252,9 @@ abstract class Job extends Object {
 						}
 						if($alreadyInstalled) continue;
 						
-						$path=$jobClassLocation .'/'. $file;
-						require_once( $jobClassLocation .'/'. $file );
 						$jHandle = substr($file,0,strlen($file)-4);
-						$className=Object::camelcase( $jHandle );
-						if(class_exists($className)){
-							$jobObjs[$jHandle]=new $className();
-							$jobObjs[$jHandle]->jHandle=$jHandle;
-							if(!$jobObjs[$jHandle] instanceof Job){
-								$jobObjs[$jHandle]->jDescription= t('Error: The Job class must be a child class of Job.');
-								$jobObjs[$jHandle]->invalid=1;
-							}
-						  }else{	
-						  	$invalidJob = new Job();
-							$invalidJob->jName = $className;
-							$invalidJob->jHandle=$jHandle;
-							$invalidJob->jDescription = t('Error: Invalid Job file. The class %s was not found in %s .', $className, $path); 
-							$invalidJob->invalid=1;
-							$jobObjs[$jHandle] = $invalidJob;
-						}					
+						$className = static::getClassName($jHandle);
+						$jobObjs[$jHandle]=new $className();
 					}
 					closedir($dh);
 				}
@@ -298,7 +288,7 @@ abstract class Job extends Object {
 			} 
 		}catch(Exception $e){
 			$resultMsg=$e->getMessage();
-			$error = self::JOB_ERROR_EXCEPTION_GENERAL;
+			$error = static::JOB_ERROR_EXCEPTION_GENERAL;
 		}
 		Events::fire('on_job_execute', $this);
 		$obj = $this->markCompleted($error, $resultMsg);
@@ -312,8 +302,8 @@ abstract class Job extends Object {
 		$rs = $db->query( "UPDATE Jobs SET jStatus=? WHERE jHandle=?", array( $jStatus, $this->jHandle ) );
 	}
  
- 	 public function installByHandle($jHandle=''){
-		$availableJobs=Job::getAvailableList();
+ 	 public static function installByHandle($jHandle=''){
+		$availableJobs=static::getAvailableList();
 		foreach( $availableJobs as $availableJobHandle=>$availableJobObj ){
 			if( $availableJobObj->jHandle!=$jHandle ) continue;
 			$availableJobObj->install();
@@ -325,17 +315,16 @@ abstract class Job extends Object {
 		$list = array();
 		$r = $db->Execute('select jHandle from Jobs where pkgID = ? order by jHandle asc', array($pkg->getPackageID()));
 		while ($row = $r->FetchRow()) {
-			$list[] = Job::getJobObjByHandle($row['jHandle']);
+			$list[] = static::getJobObjByHandle($row['jHandle']);
 		}
 		$r->Close();
 		return $list;
 	}	
 	
 	
-	public function installByPackage($jHandle, $pkg) {
+	public static function installByPackage($jHandle, $pkg) {
 		$dir = is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle()) ? DIR_PACKAGES . '/' . $pkg->getPackageHandle() : DIR_PACKAGES_CORE . '/' . $pkg->getPackageHandle();
-		require_once( $dir .'/'. DIRNAME_JOBS . '/' . $jHandle . '.php');
-		$className=Object::camelcase( $jHandle  );
+		$className = static::getClassName($jHandle);
 		if(class_exists($className)){
 			$j = new $className();
 			$db = Loader::db();
@@ -424,5 +413,3 @@ abstract class Job extends Object {
 	}
 
 }
-
-?>

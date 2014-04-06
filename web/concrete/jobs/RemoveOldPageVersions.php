@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Job;
-use Job;
-class RemoveOldPageVersions extends Job {
+use \Job as AbstractJob;
+class RemoveOldPageVersions extends AbstractJob {
 
 	public function getJobName() {
 		return t("Remove Old Page Versions");
