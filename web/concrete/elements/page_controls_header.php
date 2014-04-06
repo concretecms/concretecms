@@ -74,7 +74,7 @@ EOL;
 	if (ENABLE_PROGRESSIVE_PAGE_REINDEX && Config::get('DO_PAGE_REINDEX_CHECK')) {
 		$this->addFooterItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
 	}
-	$cih = Loader::helper('concrete/interface');
+	$cih = Loader::helper('concrete/ui');
 	if (LANGUAGE != 'en') {
 		$this->addFooterItem($html->javascript('i18n/ui.datepicker-' . LANGUAGE . '.js'));
 		$this->addFooterItem('<script type="text/javascript">$(function() { jQuery.datepicker.setDefaults({dateFormat: \'yy-mm-dd\'}); });</script>');

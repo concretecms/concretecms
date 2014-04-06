@@ -4,7 +4,7 @@ $types = AttributeType::getList();
 $categories = AttributeKeyCategory::getList();
 $txt = Loader::helper('text');
 $form = Loader::helper('form');
-$interface = Loader::helper('concrete/interface');
+$interface = Loader::helper('concrete/ui');
 
 echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Attribute Type Associations'), false, 'span10 offset1');?>
 <form method="post" class="" id="attribute_type_associations_form" action="<?=$this->action('save_attribute_type_associations')?>">
@@ -37,7 +37,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Attr
 
 <h3><?=t('Custom Attribute Types')?></h3>
 <?
-$ch = Loader::helper('concrete/interface');
+$ch = Loader::helper('concrete/ui');
 $types = PendingAttributeType::getList(); ?>
 <? if (count($types) == 0) { ?>
 	<?=t('There are no available attribute types awaiting installation.')?>

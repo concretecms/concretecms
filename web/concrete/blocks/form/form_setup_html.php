@@ -5,14 +5,14 @@ $uh = Loader::helper('concrete/urls');
 /* @var $form FormHelper */
 $form = Loader::helper('form');
 /* @var $ih ConcreteInterfaceHelper */
-$ih = Loader::helper('concrete/interface');
+$ih = Loader::helper('concrete/ui');
 $a = $view->getAreaObject();
 $bt = BlockType::getByHandle('form');
 
 $addSelected = true;
 ?>
 <p>
-<? print Loader::helper('concrete/interface')->tabs(array(
+<? print Loader::helper('concrete/ui')->tabs(array(
 	array('form-add', t('Add'), $addSelected),
 	array('form-edit', t('Edit')),
 	array('form-preview', t('Preview')),

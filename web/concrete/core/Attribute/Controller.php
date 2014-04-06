@@ -36,13 +36,13 @@ class Controller extends AbstractController {
  		return $ak;
  	}
  	
- 	public function importValue(SimpleXMLElement $akv) {
+ 	public function importValue(\SimpleXMLElement $akv) {
 		if (isset($akv->value)) {
 			return (string) $akv->value;
 		}
  	}
  	
- 	public function exportValue(SimpleXMLElement $akv) {
+ 	public function exportValue(\SimpleXMLElement $akv) {
 		$val = $this->attributeValue->getValue();
 		if (is_object($val)) {
 			$val = (string) $val;

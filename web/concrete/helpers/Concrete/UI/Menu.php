@@ -12,7 +12,7 @@ class Menu {
 	 * </code>
 	 */
 	public function addPageHeaderMenuItem($menuItemID, $menuItemName, $positionInMenu, $linkAttributes, $pkgHandle = false) {
-		$obj = new ConcreteInterfaceHelperMenuItem($menuItemID, $menuItemName, $positionInMenu, $linkAttributes, $pkgHandle);
+		$obj = new MenuItem($menuItemID, $menuItemName, $positionInMenu, $linkAttributes, $pkgHandle);
 		$this->pageHeaderMenuItems[] = $obj;
 	}
 	
@@ -35,7 +35,7 @@ class Menu {
 
 }
 
-class ConcreteInterfaceHelperMenuItem {
+class MenuItem {
 
 	public function __construct($handle, $name, $position, $linkAttributes, $pkgHandle = false) {
 		$this->handle = $handle;
@@ -58,7 +58,7 @@ class ConcreteInterfaceHelperMenuItem {
 		if (isset($this->controller)) {
 			return $this->controller;
 		} else {
-			$class = Object::camelcase($this->handle . 'ConcreteInterfaceMenuItemController');
+			$class = Object::camelcase($this->handle . 'MenuItemController');
 			if (!class_exists($class)) {
 				$file1 = DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $this->handle . '/' . FILENAME_MENU_ITEM_CONTROLLER;
 				if ($this->pkgHandle) {
@@ -132,7 +132,7 @@ class ConcreteInterfaceHelperMenuItem {
 	}
 }
 
-class ConcreteInterfaceMenuItemController extends Controller {
+class MenuItemController extends Controller {
 	
 	protected $menuItem;
 	protected $headerItemsToCheck = array(

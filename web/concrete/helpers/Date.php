@@ -24,9 +24,9 @@ class Date {
 		if(!isset($systemDateTime) || !strlen($systemDateTime)) {
 			return NULL; // if passed a null value, pass it back
 		} elseif(strlen($systemDateTime)) {
-			$datetime = new DateTime($systemDateTime);
+			$datetime = new \DateTime($systemDateTime);
 		} else {
-			$datetime = new DateTime();
+			$datetime = new \DateTime();
 		}
 		
 		if(defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) {
@@ -68,9 +68,9 @@ class Date {
 		$datetime = new \DateTime($userDateTime);
 		
 		if (defined('APP_TIMEZONE')) {
-			$tz = new DateTimeZone(APP_TIMEZONE_SERVER);
+			$tz = new \DateTimeZone(APP_TIMEZONE_SERVER);
 			$datetime = new \DateTime($userDateTime,$tz); // create the in the user's timezone 				
-			$stz = new DateTimeZone(date_default_timezone_get()); // grab the default timezone
+			$stz = new \DateTimeZone(date_default_timezone_get()); // grab the default timezone
 			$datetime->setTimeZone($stz); // convert the datetime object to the current timezone
 		}
 		
@@ -79,10 +79,10 @@ class Date {
 			if($u && $u->isRegistered()) {
 				$utz = $u->getUserTimezone();
 				if($utz) {			
-					$tz = new DateTimeZone($utz);
+					$tz = new \DateTimeZone($utz);
 					$datetime = new \DateTime($userDateTime,$tz); // create the in the user's timezone 
 					
-					$stz = new DateTimeZone(date_default_timezone_get()); // grab the default timezone
+					$stz = new \DateTimeZone(date_default_timezone_get()); // grab the default timezone
 					$datetime->setTimeZone($stz); // convert the datetime object to the current timezone
 				} 
 			}
@@ -100,9 +100,9 @@ class Date {
 	 * @return string 
 	 */
 	public function dateTimeFormatLocal(&$datetime,$mask) {
-		$locale = new Zend_Locale(Localization::activeLocale());
+		$locale = new \Zend_Locale(Localization::activeLocale());
 
-		$date = new Zend_Date($datetime->format(DATE_ATOM),DATE_ATOM, $locale);
+		$date = new \Zend_Date($datetime->format(DATE_ATOM),DATE_ATOM, $locale);
 		$date->setTimeZone($datetime->format("e"));
 		return $date->toString($mask);
 	}
@@ -141,7 +141,7 @@ class Date {
 	 * @return array:
 	 */
 	public function getTimezones() {
-		return array_combine(DateTimeZone::listIdentifiers(),DateTimeZone::listIdentifiers());
+		return array_combine(\DateTimeZone::listIdentifiers(),DateTimeZone::listIdentifiers());
 	}
 
 	

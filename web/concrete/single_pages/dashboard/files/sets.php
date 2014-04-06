@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
-<? $ih = Loader::helper('concrete/interface'); ?>
+<? $ih = Loader::helper('concrete/ui'); ?>
 <? if ($this->controller->getTask() == 'view_detail') { ?>
 
 

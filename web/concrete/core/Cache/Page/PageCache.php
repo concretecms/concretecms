@@ -1,6 +1,7 @@
 <?
 
 namespace Concrete\Core\Cache\Page;
+use \Page as ConcretePage;
 
 abstract class PageCache {
 
@@ -35,13 +36,13 @@ abstract class PageCache {
 		return true;
 	}
 
-	public function outputCacheHeaders(Page $c) {
+	public function outputCacheHeaders(ConcretePage $c) {
 		foreach ($this->getCacheHeaders($c) as $header) {
 			header($header);
 		}
 	}
 
-	public function getCacheHeaders(Page $c) {
+	public function getCacheHeaders(ConcretePage $c) {
 		$lifetime = $c->getCollectionFullPageCachingLifetimeValue();
 		$expires  = gmdate('D, d M Y H:i:', time() + $lifetime) . ' GMT';
 
@@ -131,9 +132,9 @@ abstract class PageCache {
 	}
 
 	abstract public function getRecord($mixed);
-	abstract public function set(Page $c, $content);
-	abstract public function purgeByRecord(PageCacheRecord $rec);
-	abstract public function purge(Page $c);
+	abstract public function set(ConcretePage $c, $content);
+	abstract public function purgeByRecord(\Concrete\Core\Cache\Page\PageCacheRecord $rec);
+	abstract public function purge(ConcretePage $c);
 	abstract public function flush();
 
 }

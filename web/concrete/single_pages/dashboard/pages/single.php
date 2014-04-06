@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-$ih = Loader::helper('concrete/interface');
+$ih = Loader::helper('concrete/ui');
 
 echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Single Pages'), false);?>
 	<div class="clearfix">

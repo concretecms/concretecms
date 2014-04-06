@@ -1,9 +1,13 @@
 <?
 namespace Concrete\Core\Page\Collection;
 use Loader;
+use CacheLocal;
 use \Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
 use \Concrete\Core\Foundation\Object as Object;
- 
+use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use \Concrete\Core\Attribute\Value\CollectionValue as CollectionAttributeValue;
+use User;
+
 	class Collection extends Object {
 		
 		public $cID;
@@ -167,13 +171,14 @@ use \Concrete\Core\Foundation\Object as Object;
 		}
 				
 		public function reindex($index = false, $actuallyDoReindex = true) {
+			return false;
+
 			if ($this->isAlias()) {
 				return false;
 			}
 			if ($actuallyDoReindex || ENABLE_PROGRESSIVE_PAGE_REINDEX == false) { 
 				$db = Loader::db();
 				
-				Loader::model('attribute/categories/collection');
 				$attribs = CollectionAttributeKey::getAttributes($this->getCollectionID(), $this->getVersionID(), 'getSearchIndexValue');
 		
 				$db->Execute('delete from CollectionSearchIndexAttributes where cID = ?', array($this->getCollectionID()));
@@ -243,7 +248,6 @@ use \Concrete\Core\Foundation\Object as Object;
 		}
 		
 		public function setAttribute($ak, $value) {
-			Loader::model('attribute/categories/collection');
 			if (!is_object($ak)) {
 				$ak = CollectionAttributeKey::getByHandle($ak);
 			}
@@ -489,7 +493,6 @@ use \Concrete\Core\Foundation\Object as Object;
 		
 		if ($csrID > 0) {
 			$txt = Loader::helper('text');
-			Loader::model('custom_style');
 			$arHandle = $txt->filterNonAlphaNum($area->getAreaHandle());			
 			$csr = CustomStyleRule::getByID($csrID);
 			if (is_object($csr)) {

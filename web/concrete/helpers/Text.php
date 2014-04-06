@@ -20,11 +20,10 @@ class Text {
 	*/
 	public function asciify($text, $locale = '') {
 		if(!strlen($locale)) {
-			$locale = Localization::activeLocale();
+			$locale = \Localization::activeLocale();
 		}
 		$language = substr($locale, 0, strcspn($locale, '_'));
-		Loader::library('3rdparty/urlify');
-		$text = URLify::downcode($text, $language);
+		$text = \URLify::downcode($text, $language);
 		if(preg_match('/[^\\t\\r\\n\\x20-\\x7e]/', $text)) {
 			if(function_exists('iconv')) {
 				$t = @iconv(APP_CHARSET, 'US-ASCII//IGNORE//TRANSLIT', $text);
@@ -69,8 +68,7 @@ class Text {
 				}
 			}
 			else {
-				Loader::library('3rdparty/urlify');
-				$remove_list = URLify::$remove_list;
+				$remove_list = \URLify::$remove_list;
 			}
 			if(count($remove_list)) {
 				$text = preg_replace('/\b(' . join ('|', $remove_list) . ')\b/i', '', $text);

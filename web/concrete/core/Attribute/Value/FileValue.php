@@ -18,7 +18,7 @@ class FileValue extends Value {
 	}
 	
 	public static function getByID($avID) {
-		$fav = new FileAttributeValue();
+		$fav = new static();
 		$fav->load($avID);
 		if ($fav->getAttributeValueID() == $avID) {
 			return $fav;

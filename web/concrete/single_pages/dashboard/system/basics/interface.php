@@ -42,7 +42,7 @@ $(function() {
 
 </div>
 <div class="ccm-pane-footer">
-	<?=Loader::helper('concrete/interface')->submit(t('Save'), 'submit', 'right', 'primary')?>
+	<?=Loader::helper('concrete/ui')->submit(t('Save'), 'submit', 'right', 'primary')?>
 </div>
 </form>
 

@@ -66,7 +66,7 @@ if (!$error->has()) { ?>
 		echo t('The package was successfully downloaded and decompressed on your server.');
 	} 
 	print '<div class="dialog-buttons">';
-	print Loader::helper('concrete/interface')->button_js(t('Return'), 'javascript:ccm_getMarketplaceItem.onComplete()', 'right');
+	print Loader::helper('concrete/ui')->button_js(t('Return'), 'javascript:ccm_getMarketplaceItem.onComplete()', 'right');
 	print '</div>';
 	?>
 	</p>

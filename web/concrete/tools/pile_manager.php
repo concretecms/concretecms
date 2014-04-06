@@ -198,7 +198,7 @@ if($_REQUEST['btask']=='add'){
 			
 		$sp = Pile::getDefault();
 		$scrapBookAreasData = $scrapbookHelper->getAvailableScrapbooks(); 
-		$ih = Loader::helper('concrete/interface'); 
+		$ih = Loader::helper('concrete/ui'); 
 		
 		$defaultScrapbook=$scrapbookHelper->getDefault(); ?>		
 		<script type="text/javascript">

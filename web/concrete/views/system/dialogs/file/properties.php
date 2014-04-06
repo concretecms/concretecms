@@ -12,7 +12,7 @@ $tabs[] = array('versions', t('Versions'));
 $tabs[] = array('statistics', t('Statistics'));
 
 if (!$previewMode) {
-	print Loader::helper('concrete/interface')->tabs($tabs);
+	print Loader::helper('concrete/ui')->tabs($tabs);
 }
 ?>
 

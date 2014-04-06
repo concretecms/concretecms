@@ -7,7 +7,7 @@ class Value extends Object {
 	protected $attributeType;
 	
 	public static function getByID($avID) {
-		$av = new AttributeValue();
+		$av = new static();
 		$av->load($avID);
 		if ($av->getAttributeValueID() == $avID) {
 			return $av;
@@ -73,7 +73,7 @@ class Value extends Object {
 	public function getAttributeValueDateAdded() { return $this->avDateAdded;}
 	public function getAttributeTypeID() { return $this->atID;}
 	public function getAttributeTypeObject() {
-		$ato = AttributeType::getByID($this->atID);
+		$ato = \Concrete\Core\Attribute\Type::getByID($this->atID);
 		return $ato;
 	}
 	

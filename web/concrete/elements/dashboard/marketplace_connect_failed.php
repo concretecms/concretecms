@@ -6,7 +6,7 @@ if ($mi->hasConnectionError() && $mi->getConnectionError() == Marketplace::E_MAR
 
 <? } else {
 
-	$h = Loader::helper('concrete/interface');
+	$h = Loader::helper('concrete/ui');
 	?>
 	
 	<p><?=t('Your site is <strong>not</strong> connected to the concrete5 community.')?></p>

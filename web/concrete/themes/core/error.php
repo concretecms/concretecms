@@ -10,7 +10,7 @@
 </head>
 <body>
 
-<div id="ccm-logo"><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></div>
+<div id="ccm-logo"><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></div>
 
 <div id="ccm-theme-wrapper" class="ccm-ui">
 <?				Loader::element('error_fatal', array('innerContent' => $innerContent, 

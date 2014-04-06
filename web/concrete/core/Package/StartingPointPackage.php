@@ -66,7 +66,7 @@ class StartingPointPackage extends Package {
 			$bi = $b->getInstance();
 			$bi->setupAndRun('view');
 		}
-		helper('concrete/interface')->cacheInterfaceItems();
+		helper('concrete/ui')->cacheInterfaceItems();
 	}
 
 	public function install_attributes() {

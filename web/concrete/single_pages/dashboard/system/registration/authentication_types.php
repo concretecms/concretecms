@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 $label = $editmode ? t('Edit %s Authentication Type',$at->getAuthenticationTypeName()) : t('Authentication Types');
 echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($label, t('Manage Authentication Types'), false, false);
-$h = Loader::helper('concrete/interface');
+$h = Loader::helper('concrete/ui');
 ?>
 <style>
 i.handle {

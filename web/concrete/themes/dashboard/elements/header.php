@@ -41,7 +41,7 @@ if (!$frontendPageID) {
 <div id="ccm-dashboard-page" class="ccm-ui">
 <div id="ccm-toolbar">
     <ul>
-        <li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></span></li>
+        <li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></span></li>
         <li class="ccm-toolbar-account pull-left"><a href="<?=$backLink?>"><i class="glyphicon glyphicon-arrow-left"></i></a>
 		<li class="pull-right"><a href="<?=URL::to('/dashboard')?>" data-launch-panel="dashboard" class="ccm-launch-panel-active" data-panel-url="<?=URL::to('/system/panels/dashboard')?>"><i class="glyphicon glyphicon-th-large"></i></a>
 		<li class="pull-right"><a href="#" data-panel-url="<?=URL::to('/system/panels/sitemap')?>" data-launch-panel="sitemap"><i class="glyphicon glyphicon-list-alt"></i></a></li>

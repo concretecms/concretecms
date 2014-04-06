@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 // HELPERS
-$bt = Loader::helper('concrete/interface');
+$bt = Loader::helper('concrete/ui');
 $valt = Loader::helper('validation/token');
 $form = Loader::helper("form");
 $alreadyActiveMessage = t('This theme is currently active on your site.');

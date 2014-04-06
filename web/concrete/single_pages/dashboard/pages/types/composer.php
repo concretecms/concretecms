@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <? 
 $form = Loader::helper('form');
 $html = Loader::helper('html');
-$ih = Loader::helper('concrete/interface');
+$ih = Loader::helper('concrete/ui');
 $cap = Loader::helper('concrete/dashboard');
 $ctArray = CollectionType::getList();
 ?>

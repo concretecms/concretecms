@@ -25,7 +25,7 @@
 		<div class="ccm-ui" style="height: 100%">
 		
 		<? 
-		$ih = Loader::helper('concrete/interface');
+		$ih = Loader::helper('concrete/ui');
 		$display = 'block';
 		$i = 0;
 		if (count($_REQUEST['cvID']) > 0) {

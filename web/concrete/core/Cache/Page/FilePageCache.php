@@ -1,6 +1,7 @@
 <?
 
 namespace Concrete\Core\Cache\Page;
+use \Page as ConcretePage;
 
 class FilePageCache extends PageCache {
 
@@ -34,7 +35,7 @@ class FilePageCache extends PageCache {
 		}
 	}
 
-	public function purgeByRecord(PageCacheRecord $rec) {
+	public function purgeByRecord(\Concrete\Core\Cache\Page\PageCacheRecord $rec) {
 		$file = $this->getCacheFile($rec);
 		if ($file && file_exists($file)) {
 			@unlink($file);
@@ -46,14 +47,14 @@ class FilePageCache extends PageCache {
 		$fh->removeAll(DIR_FILES_PAGE_CACHE);
 	}
 
-	public function purge(Page $c) {
+	public function purge(ConcretePage $c) {
 		$file = $this->getCacheFile($c);
 		if ($file && file_exists($file)) {
 			@unlink($file);
 		}
 	}
 
-	public function set(Page $c, $content) {
+	public function set(ConcretePage $c, $content) {
 		if (!is_dir(DIR_FILES_PAGE_CACHE)) {
 			@mkdir(DIR_FILES_PAGE_CACHE);
 			@touch(DIR_FILES_PAGE_CACHE . '/index.html');

@@ -2,7 +2,7 @@
 /* @var $h ConcreteDashboardHelper */
 $h = Loader::helper('concrete/dashboard');
 /* @var $ih ConcreteInterfaceHelper */
-$ih = Loader::helper('concrete/interface');
+$ih = Loader::helper('concrete/ui');
 /* @var $form FormHelper */
 $form = Loader::helper('form');
 /* @var $jh JsonHelper */
@@ -42,7 +42,7 @@ $dh = Loader::helper('date');
 
 <?=$h->getDashboardPaneHeaderWrapper(t('Automated Jobs'), false, false);?>
 
-<?=Loader::helper('concrete/interface')->tabs(array(
+<?=Loader::helper('concrete/ui')->tabs(array(
 	array($this->action('view'), t('Jobs'), $jobListSelected),
 	array($this->action('view_sets'), t('Job Sets'), $jobSetsSelected)
 ), false);?>

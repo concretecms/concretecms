@@ -3,7 +3,7 @@ namespace Concrete\Core\View;
 use Concrete\Core\Asset\Asset;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\Foundation\Environment;
-use Concrete\Core\Events\Events;
+use Events;
 use Page;
 class View extends AbstractView {
 

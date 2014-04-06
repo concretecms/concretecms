@@ -117,7 +117,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 	</table>
 	</form>
 	<div class="dialog-buttons">
-	<? $ih = Loader::helper('concrete/interface')?>
+	<? $ih = Loader::helper('concrete/ui')?>
 	<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left', 'btn')?>	
 	<?=$ih->button_js(t('Delete'), 'ccm_sitemapDeletePages(\'' . $searchInstance . '\')', 'right', 'btn error')?>
 	</div>		

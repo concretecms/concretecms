@@ -10,7 +10,7 @@
     	<? switch($this->controller->getTask()) { 
     		case 'view_message': ?>
 
-			<?=Loader::helper('concrete/interface')->tabs(array(
+			<?=Loader::helper('concrete/ui')->tabs(array(
 				array($this->action('view_mailbox', 'inbox'), t('Inbox'), $box == 'inbox'),
 				array($this->action('view_mailbox', 'sent'), t('Sent'), $box == 'sent')
 			), false)?>
@@ -66,7 +66,7 @@
     			break;
     		case 'view_mailbox': ?>
 
-			<?=Loader::helper('concrete/interface')->tabs(array(
+			<?=Loader::helper('concrete/ui')->tabs(array(
 				array($this->action('view_mailbox', 'inbox'), t('Inbox'), $mailbox == 'inbox'),
 				array($this->action('view_mailbox', 'sent'), t('Sent'), $mailbox == 'sent')
 			), false)?>

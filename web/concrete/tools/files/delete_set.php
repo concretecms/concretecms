@@ -41,7 +41,7 @@ if ($fsp->canDeleteFileSet()) {
 	<?=$vt->output('delete_file_set');?>
 	<?=$form->hidden('fsID', $_REQUEST['fsID']); ?>	
 	<?=$form->hidden('searchInstance', $searchInstance); ?>	
-	<? $ih = Loader::helper('concrete/interface')?>
+	<? $ih = Loader::helper('concrete/ui')?>
 
 <div class="dialog-buttons">
 	<?=$ih->button_js(t('Delete'), "ccm_alDeleteFileSet($('#ccm-" . $searchInstance . "-delete-file-set-form').get(0))", 'right', 'error')?>

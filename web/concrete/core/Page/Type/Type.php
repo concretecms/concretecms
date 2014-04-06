@@ -2,6 +2,11 @@
 namespace Concrete\Core\Page\Type;
 use Loader;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Page\Template as PageTemplate;
+use \Concrete\Core\Permission\Key\Key as PermissionKey;
+use \Concrete\Core\Permission\Access\Access as PermissionAccess;
+use \Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
+
 class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
 	protected $ptDraftVersionsToSave = 10;
@@ -532,7 +537,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		$db = Loader::db();
 		$r = $db->GetRow('select * from PageTypes where ptID = ?', array($ptID));
 		if (is_array($r) && $r['ptID']) {
-			$cm = new PageType;
+			$cm = new static();
 			$cm->setPropertiesFromArray($r);
 			$cm->ptPublishTargetObject = unserialize($r['ptPublishTargetObject']);
 			return $cm;

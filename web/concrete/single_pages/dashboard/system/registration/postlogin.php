@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");?>
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Login Destination'), false, 'span8 offset2', false);?>
 <?php
-$h = Loader::helper('concrete/interface');
+$h = Loader::helper('concrete/ui');
 ?>
     <form method="post" id="login-redirect-form" action="<?php echo $this->url('/dashboard/system/registration/postlogin', 'update_login_redirect')?>">  
     	<?php echo $this->controller->token->output('update_login_redirect')?>

@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 $h = Loader::helper('concrete/dashboard');
-$ih = Loader::helper('concrete/interface');
+$ih = Loader::helper('concrete/ui');
 $form = Loader::helper('form');
 if ($downloadableUpgradeAvailable) { ?>
 	<?=$h->getDashboardPaneHeaderWrapper(t('Download Update'), false, 'span8 offset2');?>
@@ -16,7 +16,7 @@ if ($downloadableUpgradeAvailable) { ?>
 		<form method="post" action="<?=$this->action('download_update')?>" id="ccm-download-update-form">
 		
 			<?=Loader::helper('validation/token')->output('download_update')?>
-			<?=Loader::helper('concrete/interface')->submit(t('Download'), 'ccm-download-update-form', 'right', 'primary')?>
+			<?=Loader::helper('concrete/ui')->submit(t('Download'), 'ccm-download-update-form', 'right', 'primary')?>
 		
 			<h3><?=t('Version: %s', $update->version)?>. <?=t('Release Date: %s', date(t('F d, Y'), strtotime($update->date)))?></h3>
 			<hr/>
@@ -32,7 +32,7 @@ if ($downloadableUpgradeAvailable) { ?>
 	<?=$h->getDashboardPaneHeaderWrapper(t('Install Local Update'),false,'span8 offset2',false);?>
 		<div class="ccm-pane-body">
 			<?print '<strong>' . t('Make sure you <a href="%s">backup your database</a> before updating.', $this->url('/dashboard/system/backup_restore/backup')) . '</strong><br/>';
-			$ih = Loader::helper('concrete/interface');
+			$ih = Loader::helper('concrete/ui');
 
 			if (count($updates) == 1) { ?>
 					<p><?=t('An update is available. Click below to update to <strong>%s</strong>.', $updates[0]->getUpdateVersion())?></p>

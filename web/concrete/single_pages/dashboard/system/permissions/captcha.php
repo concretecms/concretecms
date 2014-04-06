@@ -39,7 +39,7 @@
 <? if (is_object($activeCaptcha) && $activeCaptcha->hasOptionsForm()) { ?>
 	</div>
 	<div class="ccm-pane-footer">
-		<?=Loader::helper('concrete/interface')->submit(t('Save Additional Settings'), 'submit', 'right', 'primary')?>
+		<?=Loader::helper('concrete/ui')->submit(t('Save Additional Settings'), 'submit', 'right', 'primary')?>
 	</div>
 <? } ?>	
 

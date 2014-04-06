@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Helper\Concrete;
-
+use \User as ConcreteUser;
+use Loader;
 /**
  * @package Helpers
  * @subpackage Concrete
@@ -153,7 +154,7 @@ class UI {
 		$tp = new TaskPermission();
 		$c = Page::getCurrentPage();
         if ((!defined(MOBILE_THEME_IS_ACTIVE) || MOBILE_THEME_IS_ACTIVE == false) && ENABLE_NEWSFLOW_OVERLAY == true && $tp->canViewNewsflow() && $c->getCollectionPath() != '/dashboard/news') {
-			$u = new User();
+			$u = new CoreUser;
 			$nf = $u->config('NEWSFLOW_LAST_VIEWED');
 			if ($nf == 'FIRSTRUN') {
 				return false;
@@ -174,14 +175,14 @@ class UI {
 	}
 		
 	public function clearInterfaceItemsCache() {
-		$u = new User();
+		$u = new ConcreteUser();
 		if ($u->isRegistered()) {
 			unset($_SESSION['dashboardMenus']);
 		}
 	}
 	
 	public function cacheInterfaceItems() {
-		$u = new User();
+		$u = new ConcreteUser();
 		if ($u->isRegistered()) {
 			$ch = Loader::helper('concrete/dashboard');
 			$_SESSION['dashboardMenus'][Localization::activeLocale()] = $ch->getIntelligentSearchMenu();

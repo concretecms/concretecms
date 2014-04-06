@@ -172,7 +172,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 	</div>	
 	</form>
 	<div class="dialog-buttons">
-	<? $ih = Loader::helper('concrete/interface')?>
+	<? $ih = Loader::helper('concrete/ui')?>
 	<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left', 'btn')?>	
 	<?=$ih->button_js(t('Update'), "$('#ccm-" . $searchInstance . "-speed-settings-form').submit()", 'right', 'btn primary')?>
 	</div>		

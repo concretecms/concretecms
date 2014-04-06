@@ -1,10 +1,6 @@
 <?
 namespace Concrete\Helper;
 class Feed {
-
-	public function __construct() {
-		Loader::library("3rdparty/simplepie");
-	}
 	
 	/**
 	 * Loads a newsfeed object.

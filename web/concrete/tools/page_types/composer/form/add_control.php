@@ -2,7 +2,7 @@
 <?
 $c = Page::getByPath('/dashboard/pages/types/form');
 $cp = new Permissions($c);
-$ih = Loader::helper('concrete/interface');
+$ih = Loader::helper('concrete/ui');
 $set = PageTypeComposerFormLayoutSet::getByID($_REQUEST['ptComposerFormLayoutSetID']);
 if (!is_object($set)) {
 	die(t('Invalid set'));

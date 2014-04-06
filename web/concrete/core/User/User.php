@@ -3,6 +3,7 @@ namespace Concrete\Core\User;
 use \Concrete\Core\Foundation\Object;
 use Loader;
 use Request;
+use Events;
 
 class User extends Object {
 
@@ -49,7 +50,7 @@ class User extends Object {
 				$_SESSION['uTimezone'] = $row['uTimezone'];
 				$_SESSION['uDefaultLanguage'] = $row['uDefaultLanguage'];
 				if ($cacheItemsOnLogin) {
-					Loader::helper('concrete/interface')->cacheInterfaceItems();
+					Loader::helper('concrete/ui')->cacheInterfaceItems();
 				}
 				$nu->recordLogin();
 			}
@@ -160,7 +161,7 @@ class User extends Object {
 						$_SESSION['uGroups'] = $this->uGroups;
 						$_SESSION['uTimezone'] = $this->uTimezone;
 						$_SESSION['uDefaultLanguage'] = $this->uDefaultLanguage;
-						Loader::helper('concrete/interface')->cacheInterfaceItems();
+						Loader::helper('concrete/ui')->cacheInterfaceItems();
 					}
 				} else if ($row['uID'] && !$row['uIsActive']) {
 					$this->loadError(USER_INACTIVE);
@@ -636,8 +637,7 @@ class User extends Object {
 		if (isset($this->hasher)) {
 			return $this->hasher;
 		}
-		Loader::library('3rdparty/phpass/PasswordHash');
-		$this->hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
+		$this->hasher = new \PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
 		return $this->hasher;
 	}
 

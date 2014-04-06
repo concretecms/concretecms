@@ -68,6 +68,9 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 	}
 	
 	public function reindex() {
+
+		return;
+		
 		Loader::model('attribute/categories/file');
 		$attribs = FileAttributeKey::getAttributes($this->getFileID(), $this->getFileVersionID(), 'getSearchIndexValue');
 		$db = Loader::db();

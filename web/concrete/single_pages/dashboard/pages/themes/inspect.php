@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 // HELPERS
-$ci = Loader::helper('concrete/interface');
+$ci = Loader::helper('concrete/ui');
 
 ?>
 

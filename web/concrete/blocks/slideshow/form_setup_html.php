@@ -1,7 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $al = Loader::helper('concrete/asset_library');
-$ah = Loader::helper('concrete/interface');
+$ah = Loader::helper('concrete/ui');
 ?>
 <style type="text/css">
 #ccm-slideshowBlock-imgRows a{cursor:pointer}

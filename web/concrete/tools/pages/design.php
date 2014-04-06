@@ -204,7 +204,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 	
 	</form>
 	<div class="dialog-buttons">
-	<? $ih = Loader::helper('concrete/interface')?>
+	<? $ih = Loader::helper('concrete/ui')?>
 	<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left', 'btn pull-left')?>	
 	<?=$ih->button_js(t('Update'), 'ccm_sitemapUpdateDesign(\'' . $searchInstance . '\')', 'right', 'btn btn-primary')?>
 	</div>		

@@ -123,7 +123,7 @@ if (is_object($cp)) {
 
 	Loader::element('page_controls_header', array('cp' => $cp, 'c' => $c));
 
-	$cih = Loader::helper('concrete/interface');
+	$cih = Loader::helper('concrete/ui');
 	if ($cih->showNewsflowOverlay()) {
 		$this->addFooterItem('<script type="text/javascript">$(function() { ccm_showDashboardNewsflowWelcome(); });</script>');
 	}

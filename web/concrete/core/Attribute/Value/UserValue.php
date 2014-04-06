@@ -18,7 +18,7 @@ class UserValue extends Value {
 	}
 
 	public static function getByID($avID) {
-		$uav = new UserAttributeValue();
+		$uav = new static();
 		$uav->load($avID);
 		if ($uav->getAttributeValueID() == $avID) {
 			return $uav;

@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $ih = Loader::helper('validation/numbers');
 $dh = Loader::helper('concrete/dashboard');
-$ish = Loader::helper('concrete/interface');
+$ish = Loader::helper('concrete/ui');
 $canAdd = false;
 
 if ($ih->integer($_REQUEST['cID'])) {

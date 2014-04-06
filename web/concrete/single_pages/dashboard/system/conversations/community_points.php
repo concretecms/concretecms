@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
-$ih = Loader::helper('concrete/interface');
+$ih = Loader::helper('concrete/ui');
 echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Community Points'), false, 'span8 offset2', false);
 ?>
 

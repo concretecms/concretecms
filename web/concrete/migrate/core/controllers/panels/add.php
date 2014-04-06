@@ -31,7 +31,7 @@ class Concrete5_Controller_Panel_Add extends BackendInterfacePageController {
 
 		$this->set('tab', $tab);
 		$this->set('blockTypes', $blockTypes);
-		$this->set('ih', Loader::helper('concrete/interface'));
+		$this->set('ih', Loader::helper('concrete/ui'));
 		$this->set('ci', Loader::helper('concrete/urls'));
 	}
 

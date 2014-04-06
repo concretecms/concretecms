@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
 $form = Loader::helper('form');
-$ih = Loader::helper('concrete/interface'); 
+$ih = Loader::helper('concrete/ui'); 
 $f = File::getByID($_REQUEST['fID']);
 $cp = new Permissions($f);
 if (!$cp->canAdmin()) {

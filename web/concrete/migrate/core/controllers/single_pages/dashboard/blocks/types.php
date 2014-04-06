@@ -4,7 +4,7 @@ class Concrete5_Controller_Page_Dashboard_Blocks_Types extends DashboardControll
 
 	public function on_start() {
 		$this->set('ci', Loader::helper('concrete/urls'));
-		$this->set('ch', Loader::helper('concrete/interface'));
+		$this->set('ch', Loader::helper('concrete/ui'));
 		$this->set("valt", Loader::helper('validation/token'));
 		$this->error = Loader::helper('validation/error');
 	}

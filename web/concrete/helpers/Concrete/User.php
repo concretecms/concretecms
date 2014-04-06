@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Helper\Concrete;
+use Loader;
 /**
  * @access private
  * @package Helpers
