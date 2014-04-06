@@ -5,7 +5,7 @@ use Loader;
 use CacheLocal;
 use GroupTree;
 use GroupTreeNode;
-use \Concrete\Core\Events\Events;
+use Events;
 class Group extends Object {
 
 	var $ctID;

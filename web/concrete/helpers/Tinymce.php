@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Helper;
+use Loader;
+use Config;
 class Tinymce {
 
 

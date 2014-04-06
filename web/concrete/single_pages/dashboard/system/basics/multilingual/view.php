@@ -37,7 +37,7 @@ if (count($interfacelocales) <= 1) { ?>
 	<?=Loader::helper('validation/token')->output('save_interface_language')?>
 </div>
 <div class="ccm-pane-footer">
-	<?= Loader::helper('concrete/interface')->submit(t('Save'), 'save', 'left', 'primary')?>
+	<?= Loader::helper('concrete/ui')->submit(t('Save'), 'save', 'left', 'primary')?>
 </div>
 </form>
 	

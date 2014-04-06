@@ -17,7 +17,7 @@ $type = $workflow->getWorkflowTypeObject();
 
 	<?
 	$valt = Loader::helper('validation/token');
-	$ih = Loader::helper('concrete/interface');
+	$ih = Loader::helper('concrete/ui');
 	$delConfirmJS = t('Are you sure you want to remove this workflow?');
 	?>
 	<script type="text/javascript">

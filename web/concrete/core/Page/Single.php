@@ -2,6 +2,11 @@
 namespace Concrete\Core\Page;
 use \Page as CorePage;
 use Loader;
+use Environment;
+use Config;
+use User;
+
+use CacheLocal;
 /**
 *
 * SinglePage extends the page class for those instances of pages that have no type, and are special "single pages"
@@ -22,7 +27,7 @@ class Single extends CorePage {
 		$r = $db->Execute("select cID from Pages where cFilename is not null and pkgID = ?", $pkg->getPackageID());
 		$singlePages = array();
 		while ($row = $r->FetchRow()) {
-			$singlePages[] = SinglePage::getByID($row['cID']);
+			$singlePages[] = static::getByID($row['cID']);
 		}
 		return $singlePages;
 	}
@@ -42,7 +47,7 @@ class Single extends CorePage {
 	}
 	
 	public static function getPathToNode($node, $pkg) {
-		$node = SinglePage::sanitizePath($node);
+		$node = static::sanitizePath($node);
 		// checks to see whether a passed $node is a static content node
 		// (static content nodes exist within the views directory)
 		
@@ -92,8 +97,8 @@ class Single extends CorePage {
 		
 		$pkg = Package::getByID($this->getPackageID());
 		$currentPath = $this->getCollectionPath();
-		$pathToFile = SinglePage::getPathToNode($currentPath, $pkg);
-		$pxml = SinglePage::obtainPermissionsXML($currentPath, $pkg);
+		$pathToFile = static::getPathToNode($currentPath, $pkg);
+		$pxml = static::obtainPermissionsXML($currentPath, $pkg);
 
 		$txt = Loader::helper('text');
 
@@ -123,13 +128,13 @@ class Single extends CorePage {
 	 * @param Package $pkg
 	 * @return Page
 	 */
-	public function add($cPath, $pkg = null) {
+	public static function addSinglePage($cPath, $pkg = null) {
 		// if we get to this point, we create a special collection 
 		// without a specific type. This collection has a special cFilename that
 		// points to the passed node
 		$db = Loader::db();
 		$txt = Loader::helper('text');
-		Loader::helper('concrete/interface')->clearInterfaceItemsCache();
+		Loader::helper('concrete/ui')->clearInterfaceItemsCache();
 		
 		// trim off a leading / if there is one
 		$cPath = trim($cPath, '/');
@@ -139,7 +144,7 @@ class Single extends CorePage {
 		$pages = explode('/', $cPath);
 		
 		// instantiate the home collection so we have someplace to add these to
-		$parent = Page::getByID(1);
+		$parent = CorePage::getByID(1);
 		
 		// now we iterate through the pages  to ensure that they exist in the system before adding the new guy
 		
@@ -148,10 +153,10 @@ class Single extends CorePage {
 		for ($i = 0; $i < count($pages); $i++) {
 			$currentPath = $pathPrefix . $pages[$i];
 			
-			$pathToFile = SinglePage::getPathToNode($currentPath, $pkg);
+			$pathToFile = static::getPathToNode($currentPath, $pkg);
 
 			// check to see if a page at this point in the tree exists
-			$c = Page::getByPath("/" . $currentPath);
+			$c = CorePage::getByPath("/" . $currentPath);
 			if ($c->isError() && $c->getError() == COLLECTION_NOT_FOUND) {
 				// create the page at that point in the tree
 			
@@ -167,7 +172,7 @@ class Single extends CorePage {
 				$newC = $parent->addStatic($data);	
 				$parent = $newC;
 				
-				$pxml = SinglePage::obtainPermissionsXML($currentPath, $pkg);
+				$pxml = static::obtainPermissionsXML($currentPath, $pkg);
 				
 				if ($pxml) {
 					$newC->assignPermissionSet($pxml); // pass it an array
@@ -198,7 +203,7 @@ class Single extends CorePage {
 		// this function reads a file in, and grabs all the various filesystem permissions xml that applies to that file
 		// and returns it in a DOM object
 		
-		$node = SinglePage::sanitizePath($node);
+		$node = static::sanitizePath($node);
 		
 		
 		// first, we operate on this if it's not in a package
@@ -231,7 +236,7 @@ class Single extends CorePage {
 				
 			
 			if (isset($xmlweb)) {
-				$perms = SinglePage::checkPermissionsXML($xmlweb, $node);
+				$perms = static::checkPermissionsXML($xmlweb, $node);
 				if ($perms != null) {
 					return $perms;
 				}
@@ -239,7 +244,7 @@ class Single extends CorePage {
 
 			
 			if (isset($xmlcore)) {
-				$perms = SinglePage::checkPermissionsXML($xmlcore, $node);
+				$perms = static::checkPermissionsXML($xmlcore, $node);
 				if ($perms != null) {
 					return $perms;
 				}
@@ -267,7 +272,7 @@ class Single extends CorePage {
 			}
 			
 			if (isset($xml)) {
-				$perms = SinglePage::checkPermissionsXML($xml, $node);
+				$perms = static::checkPermissionsXML($xml, $node);
 				if ($perms != null) {
 					return $perms;
 				}

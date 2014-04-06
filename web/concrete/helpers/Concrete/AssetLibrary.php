@@ -1,6 +1,7 @@
 <?
 
 namespace Concrete\Helper\Concrete;
+use View;
 class AssetLibrary {
 
 

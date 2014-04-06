@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
 $ci = Loader::helper('concrete/urls');
-$ch = Loader::helper('concrete/interface');
+$ch = Loader::helper('concrete/ui');
 $tp = new TaskPermission();
 if ($tp->canInstallPackages()) {
 	$mi = Marketplace::getInstance();

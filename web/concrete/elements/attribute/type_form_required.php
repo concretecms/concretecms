@@ -24,7 +24,7 @@ if (is_object($key)) {
 <? if (is_object($key)) { ?>
 	<?
 	$valt = Loader::helper('validation/token');
-	$ih = Loader::helper('concrete/interface');
+	$ih = Loader::helper('concrete/ui');
 	$delConfirmJS = t('Are you sure you want to remove this attribute?');
 	?>
 	<script type="text/javascript">

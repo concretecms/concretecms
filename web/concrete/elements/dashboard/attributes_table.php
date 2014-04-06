@@ -28,7 +28,7 @@ if (count($attribs) > 0) { ?>
 
 
 	<?
-	$ih = Loader::helper('concrete/interface');
+	$ih = Loader::helper('concrete/ui');
 	$valt = Loader::helper('validation/token');
 
 	

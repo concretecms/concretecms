@@ -6,6 +6,10 @@ use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use Loader;
 use Package;
 use CacheLocal;
+use User;
+use \Concrete\Core\Attribute\Value\Value as AttributeValue;
+
+
 class Key extends Object {
 	
 	public function getIndexedSearchTable() {return false;}
@@ -191,7 +195,7 @@ class Key extends Object {
 		$categories = AttributeKeyCategory::getList();
 		$axml = $xml->addChild('attributekeys');
 		foreach($categories as $cat) {
-			$attributes = AttributeKey::getList($cat->getAttributeKeyCategoryHandle());
+			$attributes = static::getList($cat->getAttributeKeyCategoryHandle());
 			foreach($attributes as $at) {
 				$at->export($axml);
 			}

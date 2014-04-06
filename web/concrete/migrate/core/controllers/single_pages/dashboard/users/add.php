@@ -7,7 +7,7 @@ class Concrete5_Controller_Page_Dashboard_Users_Add extends DashboardController 
 		$this->set('form',Loader::helper('form'));
 		$this->set('valt',Loader::helper('validation/token'));
 		$this->set('valc',Loader::helper('concrete/validation'));
-		$this->set('ih',Loader::helper('concrete/interface'));
+		$this->set('ih',Loader::helper('concrete/ui'));
 		$this->set('av',Loader::helper('concrete/avatar'));
 		$this->set('dtt',Loader::helper('form/date_time'));
 			

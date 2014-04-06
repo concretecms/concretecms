@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");
 $h = Loader::helper('concrete/dashboard');
-$ih = Loader::helper('concrete/interface');
+$ih = Loader::helper('concrete/ui');
 $form = Loader::helper('form');
 echo $h->getDashboardPaneHeaderWrapper(t('Maintenance Mode'), false, 'span6 offset3', false);?>
 <form id="maintenance-mode-form" action="<?php echo $this->action('')?>" method="post">

@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $section = 'groups';
 
 $txt = Loader::helper('text');
-$ih = Loader::helper('concrete/interface');
+$ih = Loader::helper('concrete/ui');
 $valt = Loader::helper('validation/token');
 
 $date = Loader::helper('form/date_time');

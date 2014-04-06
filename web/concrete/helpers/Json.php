@@ -28,8 +28,7 @@ class Json {
 		if (function_exists('json_decode')) {
 			return json_decode($string, $assoc);
 		} else {
-			Loader::library('3rdparty/JSON/JSON');
-			$sjs = new Services_JSON($assoc ? SERVICES_JSON_LOOSE_TYPE : 0);
+			$sjs = new \Services_JSON($assoc ? SERVICES_JSON_LOOSE_TYPE : 0);
 			return $sjs->decode($string);
 		}
 	}
@@ -44,8 +43,7 @@ class Json {
 		if (function_exists('json_encode')) {
 			return json_encode($mixed);
 		} else {
-			Loader::library('3rdparty/JSON/JSON');
-			$sjs = new Services_JSON();
+			$sjs = new \Services_JSON();
 			return $sjs->encode($mixed);
 		}
 	}

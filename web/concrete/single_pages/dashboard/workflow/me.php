@@ -2,7 +2,7 @@
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Waiting for Me'), false)?>
 
-<?=Loader::helper('concrete/interface')->tabs($tabs, false); ?>
+<?=Loader::helper('concrete/ui')->tabs($tabs, false); ?>
 	
 <? if ($category->getPackageID() > 0) { ?>
 	<? Loader::packageElement('workflow/progress/categories/' . $category->getWorkflowProgressCategoryHandle() . '/pending', $category->getPackageHandle(), array('category' => $category))?>

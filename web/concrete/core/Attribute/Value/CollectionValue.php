@@ -18,7 +18,7 @@ class CollectionValue extends Value {
 	}
 	
 	public static function getByID($avID) {
-		$cav = new CollectionAttributeValue();
+		$cav = new static();
 		$cav->load($avID);
 		if ($cav->getAttributeValueID() == $avID) {
 			return $cav;

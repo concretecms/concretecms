@@ -2,6 +2,7 @@
 namespace Concrete\Core\User;
 use \Concrete\Core\Foundation\Object;
 use Loader;
+use Events;
 class UserInfo extends Object { 
 
 	public function __toString() {
@@ -114,8 +115,7 @@ class UserInfo extends Object {
 		$db = Loader::db();
 		$dh = Loader::helper('date');
 		$uDateAdded = $dh->getSystemDateTime();
-		Loader::library('3rdparty/phpass/PasswordHash');
-		$hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
+		$hasher = new \PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
 		
 		if ($data['uIsValidated'] == 1) {
 			$uIsValidated = 1;
@@ -174,6 +174,8 @@ class UserInfo extends Object {
 	 * @return void
 	 */
 	public function delete(){
+		return;
+
 		// we will NOT let you delete the admin user
 		if ($this->uID == USER_SUPER_ID) {
 			return false;
@@ -188,7 +190,6 @@ class UserInfo extends Object {
 		$db = Loader::db();  
 
 		$r = $db->Execute('select avID, akID from UserAttributeValues where uID = ?', array($this->uID));
-		Loader::model('attribute/categories/user');
 		while ($row = $r->FetchRow()) {
 			$uak = UserAttributeKey::getByID($row['akID']);
 			$av = $this->getAttributeValueObject($uak);
@@ -228,7 +229,6 @@ class UserInfo extends Object {
 	}
 	
 	public function sendPrivateMessage($recipient, $subject, $text, $inReplyTo = false) {
-		Loader::model('user_private_message');
 		if(UserPrivateMessageLimit::isOverLimit($this->getUserID())) {
 			return UserPrivateMessageLimit::getErrorObject();
 		}
@@ -274,7 +274,6 @@ class UserInfo extends Object {
 			$mh->addParameter('profilePreferencesURL', BASE_URL . View::url('/account/profile/edit'));
 			$mh->to($recipient->getUserEmail());
 			
-			Loader::library('mail/importer');
 			$mi = MailImporter::getByHandle("private_message");
 			if (is_object($mi) && $mi->isMailImporterEnabled()) {
 				$mh->load('private_message_response_enabled');
@@ -305,7 +304,6 @@ class UserInfo extends Object {
 	 * Sets the attribute of a user info object to the specified value, and saves it in the database 
 	*/
 	public function setAttribute($ak, $value) {
-		Loader::model('attribute/categories/user');
 		if (!is_object($ak)) {
 			$ak = UserAttributeKey::getByHandle($ak);
 		}
@@ -339,7 +337,6 @@ class UserInfo extends Object {
 	 * Gets the value of the attribute for the user
 	 */
 	public function getAttribute($ak, $displayMode = false) {
-		Loader::model('attribute/categories/user');
 		if (!is_object($ak)) {
 			$ak = UserAttributeKey::getByHandle($ak);
 		}
@@ -358,7 +355,6 @@ class UserInfo extends Object {
 	}
 	
 	public function getAttributeField($ak) {
-		Loader::model('attribute/categories/user');
 		if (!is_object($ak)) {
 			$ak = UserAttributeKey::getByHandle($ak);
 		}

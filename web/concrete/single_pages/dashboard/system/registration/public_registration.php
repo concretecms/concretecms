@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");?>
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Public Registration'), t('Control the options available for Public Registration.'), 'span6 offset3', false);?>
 <?php
-$h = Loader::helper('concrete/interface');
+$h = Loader::helper('concrete/ui');
 ?>	
     <form class="form-stacked" method="post" id="registration-type-form" action="<?php echo $this->url('/dashboard/system/registration/public_registration', 'update_registration_type')?>">  
     

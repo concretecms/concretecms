@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");?>
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Public Profiles'), t('Control the options available for Public Profiles.'), 'span8 offset2', false);?>
 <?php
-$h = Loader::helper('concrete/interface');
+$h = Loader::helper('concrete/ui');
 $form = Loader::helper('form');
 ?>
     <form method="post" class="form-horizontal" id="public-profiles-form" action="<?php echo $this->url('/dashboard/system/registration/profiles', 'update_profiles')?>">  

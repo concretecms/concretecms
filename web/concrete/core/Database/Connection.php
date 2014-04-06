@@ -45,6 +45,15 @@ class Connection extends \Doctrine\DBAL\Connection {
 
     /** 
      * @deprecated
+     * alias to old ADODB method
+     */
+    public function GetAll($q, $arguments = array()) {
+        return $this->fetchAll($q, $arguments);
+    }
+
+
+    /** 
+     * @deprecated
      * Returns an associative array of all columns in a table
      */
     public function MetaColumnNames($table) {
@@ -66,6 +75,9 @@ class Connection extends \Doctrine\DBAL\Connection {
         $qb->select('count(*)')->from($table, 't');
         $where = $qb->expr()->andX();
         $updateKeys = array();
+        if (!is_array($keyCol)) {
+            $keyCol = array($keyCol);
+        }
         foreach($keyCol as $key) {
             $field = $fieldArray[$key];
             $updateKeys[$key] = $field;

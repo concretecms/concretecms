@@ -13,7 +13,7 @@ if (!$tp->canInstallPackages()) { ?>
 		<? Loader::element('dashboard/marketplace_connect_failed')?>
 	</div>
 <? } else {	
-	$ch = Loader::helper('concrete/interface'); 
+	$ch = Loader::helper('concrete/ui'); 
 	Loader::library('marketplace');
 	Loader::model('marketplace_remote_item');
 	

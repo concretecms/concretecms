@@ -31,7 +31,7 @@ if (isset($_REQUEST['requestID']) && Loader::helper('validation/numbers')->integ
 ?>
 <div class="ccm-ui" id="ccm-sitemap-search-selector">
 
-<?=Loader::helper('concrete/interface')->tabs(array(
+<?=Loader::helper('concrete/ui')->tabs(array(
 	array('sitemap', t('Full Sitemap')),
 	array('explore', t('Flat View')),
 	array('search', t('Search'))

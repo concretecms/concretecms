@@ -3,6 +3,8 @@ namespace Concrete\Core\Attribute\Key;
 use Loader;
 use Package;
 use CacheLocal;
+use \Concrete\Core\Attribute\Value\ValueList as AttributeValueList;
+use \Concrete\Core\Attribute\Value\FileValue as FileAttributeValue;
 
 class FileKey extends Key {
 

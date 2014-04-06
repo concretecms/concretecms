@@ -2,11 +2,13 @@
 namespace Concrete\Core\Page;
 use Loader;
 use Concrete\Core\Foundation\Object;
+use PageType;
+use CacheLocal;
 class Template extends Object {
 
 	public static function exportList($xml) {
 		$nxml = $xml->addChild('pagetemplates');
-		$list = PageTemplate::getList();
+		$list = static::getList();
 		foreach($list as $pt) {
 			$type = $nxml->addChild('pagetemplate');
 			$type->addAttribute('icon', $pt->getPageTemplateIcon());
@@ -35,7 +37,7 @@ class Template extends Object {
 			$row = $r->fetchRow();
 			$r->free();
 			if (is_array($row)) {
-				$pt = new PageTemplate; 
+				$pt = new static(); 
 				$pt->setPropertiesFromArray($row);
 			}					
 		}
@@ -82,7 +84,7 @@ class Template extends Object {
 		$list = array();
 		$r = $db->Execute('select pTemplateID from PageTemplates where pkgID = ? order by pTemplateName asc', array($pkg->getPackageID()));
 		while ($row = $r->FetchRow()) {
-			$list[] = PageTemplate::getByID($row['pTemplateID']);
+			$list[] = static::getByID($row['pTemplateID']);
 		}
 		$r->Close();
 		return $list;
@@ -97,7 +99,7 @@ class Template extends Object {
 			$r = $db->Execute('select pTemplateID from PageTemplates where pTemplateIsInternal = 0 order by pTemplateName asc');
 		}
 		while ($row = $r->FetchRow()) {
-			$list[] = PageTemplate::getByID($row['pTemplateID']);
+			$list[] = static::getByID($row['pTemplateID']);
 		}
 		$r->Close();
 		return $list;
@@ -124,7 +126,7 @@ class Template extends Object {
 		
 		if ($res) {
 			$pTemplateID = $db->Insert_ID();
-			return PageTemplate::getByID($pTemplateID);
+			return static::getByID($pTemplateID);
 		}
 	}
 	

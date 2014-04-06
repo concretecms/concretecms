@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
-$ih = Loader::helper('concrete/interface');
+$ih = Loader::helper('concrete/ui');
 if (isset($group)) { 
 
 	if ($_POST['update']) {

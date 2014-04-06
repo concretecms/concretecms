@@ -111,7 +111,7 @@
 			<?
 			$prompt = t('Are you sure you wish to reset the display order of installed block types?');
 			$onclick = "if (confirm('" . $prompt . "')) { $(this).closest('form').submit(); }";
-			echo Loader::helper('concrete/interface')->button_js(t('Reset Order'), $onclick, 'right', 'small');
+			echo Loader::helper('concrete/ui')->button_js(t('Reset Order'), $onclick, 'right', 'small');
 			echo Loader::helper('form')->hidden('isSubmitted', '1');
 			?>
 		</form>

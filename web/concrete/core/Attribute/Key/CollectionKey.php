@@ -3,6 +3,9 @@ namespace Concrete\Core\Attribute\Key;
 use Loader;
 use Package;
 use CacheLocal;
+use \Concrete\Core\Attribute\Value\ValueList as AttributeValueList;
+use \Concrete\Core\Attribute\Value\CollectionValue as CollectionAttributeValue;
+
 class CollectionKey extends Key {
 
 	public function getIndexedSearchTable() {
@@ -16,7 +19,7 @@ class CollectionKey extends Key {
 	 * against its object.
 	 * @return AttributeValueList
 	 */
-	public function getAttributes($cID, $cvID, $method = 'getValue') {
+	public static function getAttributes($cID, $cvID, $method = 'getValue') {
 		$db = Loader::db();
 		$values = $db->GetAll("select akID, avID from CollectionAttributeValues where cID = ? and cvID = ?", array($cID, $cvID));
 		$avl = new AttributeValueList();

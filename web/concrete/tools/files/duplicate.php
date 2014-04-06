@@ -108,7 +108,7 @@ if (!is_array($_REQUEST['item'])) {
 		} ?>
 		</table>
 		</form>
-		<? $ih = Loader::helper('concrete/interface')?>
+		<? $ih = Loader::helper('concrete/ui')?>
 		<div class="dialog-buttons">
 			<?=$ih->button_js(t('Copy'), 'ccm_alDuplicateFiles(\'' . $searchInstance . '\')', 'right', 'primary')?>
 			<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left')?>	

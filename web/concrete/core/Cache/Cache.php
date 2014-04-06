@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Core\Cache;
 use \Concrete\Core\Cache\Page\PageCache;
-use \Concrete\Core\Events\Events;
+use Events;
 use Database as DB;
 use Zend_Cache;
 use Zend_Translate;

@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Helper;
+use Loader;
 class Ajax {
 
 	/** Sends a result to the client and ends the execution.
@@ -21,7 +22,7 @@ class Ajax {
 		if(@ob_get_length()) {
 			@ob_end_clean();
 		}
-		if ($error instanceof ValidationErrorHelper) {
+		if ($error instanceof \Concrete\Helper\Validation\Error) {
 			$error->outputJSON();
 		} else {
 			header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);

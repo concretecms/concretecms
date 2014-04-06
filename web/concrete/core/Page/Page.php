@@ -4,7 +4,12 @@ use Loader;
 use CacheLocal;
 use \Concrete\Core\Page\Collection\Collection as Collection;
 use Request;
-
+use \Concrete\Core\Page\Statistics as PageStatistics;
+use \Concrete\Core\Cache\Page\PageCache;
+use \Events;
+use Config;
+use User;
+use UserInfo;
 /**
 *
 * The page object in Concrete encapsulates all the functionality used by a typical page and their contents

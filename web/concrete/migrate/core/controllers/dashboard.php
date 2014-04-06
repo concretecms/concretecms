@@ -17,7 +17,7 @@ class Concrete5_Controller_Dashboard extends PageController {
 	public function on_start() {
 		$this->token = Loader::helper('validation/token');
 		$this->error = Loader::helper('validation/error');
-		$this->set('interface', Loader::helper('concrete/interface'));
+		$this->set('interface', Loader::helper('concrete/ui'));
 	}
 	
 	public function on_before_render() {

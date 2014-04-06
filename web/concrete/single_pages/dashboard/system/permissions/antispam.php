@@ -67,7 +67,7 @@
 <? if (is_object($activeLibrary) && $activeLibrary->hasOptionsForm()) { ?>
 	</div>
 	<div class="ccm-pane-footer">
-		<?=Loader::helper('concrete/interface')->submit(t('Save Additional Settings'), 'submit', 'right', 'primary')?>
+		<?=Loader::helper('concrete/ui')->submit(t('Save Additional Settings'), 'submit', 'right', 'primary')?>
 	</div>
 <? } ?>	
 </form>

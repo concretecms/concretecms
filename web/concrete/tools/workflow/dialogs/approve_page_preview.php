@@ -1,7 +1,7 @@
 <?php 
 defined('C5_EXECUTE') or die("Access Denied.");
 $wp = WorkflowProgress::getByID($_REQUEST['wpID']);
-$ih = Loader::helper('concrete/interface');
+$ih = Loader::helper('concrete/ui');
 $wf = $wp->getWorkflowObject();
 $req = $wp->getWorkflowRequestObject();
 if ($wp instanceof PageWorkflowProgress) {

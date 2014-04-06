@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Helper\Validation;
+use Loader;
 /**
  * @package Helpers
  * @subpackage Validation

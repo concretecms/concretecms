@@ -2,6 +2,7 @@
 namespace Concrete\Core\Permission\Access\Entity;
 use Loader;
 use \Concrete\Core\Permission\Access\Access as PermissionAccess;
+use Config;
 class PageOwnerEntity extends Entity {
 
 	public function getAccessEntityUsers(PermissionAccess $pae) {
@@ -55,8 +56,8 @@ class PageOwnerEntity extends Entity {
 			array($petID));
 		if (!$peID) { 
 			$db->Execute("insert into PermissionAccessEntities (petID) values(?)", array($petID));
-			Config::save('ACCESS_ENTITY_UPDATED', time());
 			$peID = $db->Insert_ID();
+			Config::save('ACCESS_ENTITY_UPDATED', time());
 		}
 		return \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
 	}

@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");
 $h = Loader::helper('concrete/dashboard');
-$ih = Loader::helper('concrete/interface');
+$ih = Loader::helper('concrete/ui');
 $form = Loader::helper('form');
 echo $h->getDashboardPaneHeaderWrapper(t('Advanced Permissions'), false, 'span6 offset3', false);?>
 <form id="permissions-form" action="<?php echo $this->action('enable_advanced_permissions')?>" method="post">

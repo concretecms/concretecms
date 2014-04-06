@@ -5,7 +5,7 @@ if(!strlen($searchInstance)) {
 }
 
 $form = Loader::helper('form');
-$ih = Loader::helper('concrete/interface');
+$ih = Loader::helper('concrete/ui');
 $tp = new TaskPermission();
 
 $users = array();

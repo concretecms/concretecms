@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Helper;
+use Config;
 class Mail {
 
 	protected $headers = array();

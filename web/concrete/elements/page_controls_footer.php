@@ -42,7 +42,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 	<div id="ccm-page-controls-wrapper" class="ccm-ui">
 		<div id="ccm-toolbar">
 			<ul>
-				<li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/interface')->getToolbarLogoSRC()?></span></li>
+				<li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></span></li>
 				<? if ($c->isMasterCollection()) { ?>
 					<li class="pull-left"><a href="<?=View::url('/dashboard/pages/types')?>"><i class="glyphicon glyphicon-arrow-left"></i></a>
 				<? } ?>
@@ -80,7 +80,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 					}
 				}
 				
-				if (Loader::helper('concrete/interface')->showWhiteLabelMessage()) { ?>
+				if (Loader::helper('concrete/ui')->showWhiteLabelMessage()) { ?>
 					<li class="pull-left" id="ccm-white-label-message"><?=t('Powered by <a href="%s">concrete5</a>.', CONCRETE5_ORG_URL)?></li>
 				<? }?>
 

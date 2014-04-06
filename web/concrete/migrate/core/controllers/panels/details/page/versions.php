@@ -9,7 +9,7 @@ class Concrete5_Controller_Panel_Details_Page_Versions extends BackendInterfaceP
 	}
 
 	public function view() {
-		$this->set('ih', Loader::helper('concrete/interface'));
+		$this->set('ih', Loader::helper('concrete/ui'));
 	}
 
 

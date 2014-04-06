@@ -1,6 +1,9 @@
 <?
 
 namespace Concrete\Helper\Concrete;
+use Loader;
+use Page;
+use Permissions;
 class Dashboard {
 
 

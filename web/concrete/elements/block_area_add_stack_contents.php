@@ -14,7 +14,7 @@ if (count($blocks) == 0) { ?>
 
 <? } else { ?>
 	
-	<?=Loader::helper('concrete/interface')->tabs(array(
+	<?=Loader::helper('concrete/ui')->tabs(array(
 		array('add-stack', t('Full Stack'), true),
 		array('add-stack-block', t('Individual Block'))
 	));

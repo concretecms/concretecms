@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Helper\Form;
+use UserInfo;
 class UserSelector {
 
 	/**

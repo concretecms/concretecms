@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");
 
 // Helpers
-$h = Loader::helper('concrete/interface');
+$h = Loader::helper('concrete/ui');
 $d = Loader::helper('concrete/dashboard');
 ?>
 

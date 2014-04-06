@@ -2,7 +2,7 @@
 /* @var $h ConcreteDashboardHelper */
 $h = Loader::helper('concrete/dashboard');
 /* @var $ih ConcreteInterfaceHelper */
-$ih = Loader::helper('concrete/interface');
+$ih = Loader::helper('concrete/ui');
 /* @var $form FormHelper */
 $form = Loader::helper('form');
 ?>

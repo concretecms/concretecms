@@ -4,6 +4,9 @@ use \Concrete\Core\Attribute\Type as AttributeType;
 use Loader;
 use CacheLocal;
 use Package;
+use \Concrete\Core\Attribute\Value\ValueList as AttributeValueList;
+use \Concrete\Core\Attribute\Value\UserValue as UserAttributeValue;
+
 class UserKey extends Key {
 
 	public function getIndexedSearchTable() {

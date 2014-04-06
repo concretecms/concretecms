@@ -160,7 +160,7 @@ abstract class AbstractView {
 
 
 	public function renderError($title, $error, $errorObj = null) {
-		Loader::helper('concrete/interface')->renderError($title, $error);
+		Loader::helper('concrete/ui')->renderError($title, $error);
 	}
 
 	/** 

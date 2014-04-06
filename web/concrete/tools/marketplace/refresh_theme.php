@@ -1,6 +1,6 @@
 <?  defined('C5_EXECUTE') or die("Access Denied.");
 
-$ch = Loader::helper('concrete/interface');
+$ch = Loader::helper('concrete/ui');
 $tp = new TaskPermission();
 
 //marketplace

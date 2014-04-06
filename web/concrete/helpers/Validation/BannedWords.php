@@ -10,7 +10,7 @@ class BannedWords {
 
 	function loadBannedWords(){
 		if ($this->bannedWords) return;
-		$bw = new BannedWordList();
+		$bw = new static();
 		$bannedWords = $bw->get();
 		$this->bannedWords = array();
 		foreach ($bannedWords as $word) {

@@ -230,8 +230,6 @@ if ($e->has()) {
 
 	if ($config['demo-username']) {
 		print "Adding demo user\n";
-		Loader::model('userinfo');
-		Loader::model('groups');
 		UserInfo::add(array(
 			'uName'            => $config['demo-username'],
 			'uEmail'           => $config['demo-email'],

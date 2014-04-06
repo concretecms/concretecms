@@ -34,7 +34,7 @@ $tabs = array();
 		$tabs[] = array('custom-options', t('Details'));
 	}
 	?>
-	<?=Loader::helper('concrete/interface')->tabs($tabs);?>
+	<?=Loader::helper('concrete/ui')->tabs($tabs);?>
 <? } ?>
 	
 <? if ($permissionKey->getPermissionKeyDisplayDescription()) { ?>

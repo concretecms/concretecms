@@ -1,6 +1,8 @@
 <?
 
 namespace Concrete\Helper\Concrete\Dashboard
+use Loader;
+use PageList;
 class Sitemap {
 
 

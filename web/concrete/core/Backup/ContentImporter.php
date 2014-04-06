@@ -13,7 +13,7 @@ use PageTheme;
 use Loader;
 use Job;
 use JobSet;
-use \Concrete\Core\Page\Template\Template as PageTemplate;
+use \Concrete\Core\Page\Template as PageTemplate;
 use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 use \Concrete\Core\Block\BlockType\Set as BlockTypeSet;
 use \Concrete\Core\Attribute\Type as AttributeType;
@@ -131,7 +131,7 @@ class ContentImporter {
 		if (isset($sx->singlepages)) {
 			foreach($sx->singlepages->page as $p) {
 				$pkg = static::getPackageObject($p['package']);
-				$spl = SinglePage::add($p['path'], $pkg);
+				$spl = SinglePage::addSinglePage($p['path'], $pkg);
 				if (is_object($spl)) {
 					if (isset($p['root']) && $p['root'] == true) {
 						$spl->moveToRoot();
@@ -214,7 +214,7 @@ class ContentImporter {
 				$nodes[] = $p;
 				$i++;
 			}
-			usort($nodes, array('ContentImporter', 'setupPageNodeOrder'));
+			usort($nodes, array('static', 'setupPageNodeOrder'));
 			$home = Page::getByID(HOME_CID, 'RECENT');
 
 			foreach($nodes as $px) {
@@ -278,7 +278,7 @@ class ContentImporter {
 						// we check this because you might just get a block node with only an mc-block-id, if it's an alias
 						$bt = BlockType::getByHandle($bx['type']);
 						if(!is_object($bt)) {
-							throw new Exception(t('Invalid block type handle: %s' . strval($bx['type'])));
+							throw new \Exception(t('Invalid block type handle: %s', strval($bx['type'])));
 						}
 						$btc = $bt->getController();
 						$btc->import($page, (string) $ax['name'], $bx);

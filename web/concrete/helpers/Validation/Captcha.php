@@ -5,7 +5,7 @@ class Captcha {
 	public function __construct() {
 		Loader::model('system/captcha/library');
 		Loader::model('system/captcha/controller');
-		$captcha = SystemCaptchaLibrary::getActive();
+		$captcha = \Concrete\Core\Captcha\Library::getActive();
 		$this->controller = $captcha->getController();
 	}		
 	

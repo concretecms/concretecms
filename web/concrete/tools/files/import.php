@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
 $ch = Loader::helper('concrete/file');
-$h = Loader::helper('concrete/interface');
+$h = Loader::helper('concrete/ui');
 $form = Loader::helper('form');
 
 $fp = FilePermissions::getGlobal();

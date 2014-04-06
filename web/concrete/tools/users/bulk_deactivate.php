@@ -9,7 +9,7 @@ $sk = PermissionKey::getByHandle('access_user_search');
 $ek = PermissionKey::getByHandle('activate_user');
 
 $form = Loader::helper('form');
-$ih = Loader::helper('concrete/interface');
+$ih = Loader::helper('concrete/ui');
 $tp = new TaskPermission();
 if (!$tp->canActivateUser()) { 
 	die(t("Access Denied."));
