@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Job;
 use QueueableJob;
-class UpdateGatherings extends QueueableJob {
+class CheckAutomatedGroups extends QueueableJob {
 
 	public $jSupportsQueue = true;
 

@@ -23,7 +23,8 @@ abstract class Type extends Object {
 		$db = Loader::db();
 		$r = $db->GetRow('select ptComposerControlTypeID, ptComposerControlTypeHandle, ptComposerControlTypeName, pkgID from PageTypeComposerControlTypes where ptComposerControlTypeHandle = ?', array($ptComposerControlTypeHandle));
 		if (is_array($r) && $r['ptComposerControlTypeHandle']) {
-			$class = Loader::helper('text')->camelcase($r['ptComposerControlTypeHandle']) . 'PageTypeComposerControlType';
+			$txt = helper('text');
+			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Page\\Type\\Composer\\Control\\Type\\' . $txt->camelcase($r['ptComposerControlTypeHandle']) . 'Type');
 			$sc = new $class();
 			$sc->setPropertiesFromArray($r);
 			return $sc;
@@ -33,7 +34,8 @@ abstract class Type extends Object {
 		$db = Loader::db();
 		$r = $db->GetRow('select ptComposerControlTypeID, ptComposerControlTypeHandle, ptComposerControlTypeName, pkgID from PageTypeComposerControlTypes where ptComposerControlTypeID = ?', array($ptComposerControlTypeID));
 		if (is_array($r) && $r['ptComposerControlTypeHandle']) {
-			$class = Loader::helper('text')->camelcase($r['ptComposerControlTypeHandle']) . 'PageTypeComposerControlType';
+			$txt = helper('text');
+			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Page\\Type\\Composer\\Control\\Type\\' . $txt->camelcase($r['ptComposerControlTypeHandle']) . 'Type');
 			$sc = new $class();
 			$sc->setPropertiesFromArray($r);
 			return $sc;
@@ -47,7 +49,7 @@ abstract class Type extends Object {
 		}
 		$db = Loader::db();
 		$db->Execute('insert into PageTypeComposerControlTypes (ptComposerControlTypeHandle, ptComposerControlTypeName, pkgID) values (?, ?, ?)', array($ptComposerControlTypeHandle, $ptComposerControlTypeName, $pkgID));
-		return PageTypeComposerControlType::getByHandle($ptComposerControlTypeHandle);
+		return static::getByHandle($ptComposerControlTypeHandle);
 	}
 	
 	public function delete() {
@@ -60,7 +62,7 @@ abstract class Type extends Object {
 		$ids = $db->GetCol('select ptComposerControlTypeID from PageTypeComposerControlTypes order by ptComposerControlTypeName asc');
 		$types = array();
 		foreach($ids as $id) {
-			$type = PageTypeComposerControlType::getByID($id);
+			$type = static::getByID($id);
 			if (is_object($type)) {
 				$types[] = $type;
 			}
@@ -73,7 +75,7 @@ abstract class Type extends Object {
 		$ids = $db->GetCol('select ptComposerControlTypeID from PageTypeComposerControlTypes where pkgID = ? order by ptComposerControlTypeName asc', array($pkg->getPackageID()));
 		$types = array();
 		foreach($ids as $id) {
-			$type = PageTypeComposerControlType::getByID($id);
+			$type = static::getByID($id);
 			if (is_object($type)) {
 				$types[] = $type;
 			}

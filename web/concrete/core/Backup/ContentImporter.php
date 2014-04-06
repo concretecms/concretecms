@@ -9,7 +9,10 @@ use PageType;
 use BlockType;
 use Block;
 use Group;
+use PageTheme;
 use Loader;
+use Job;
+use JobSet;
 use \Concrete\Core\Page\Template\Template as PageTemplate;
 use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 use \Concrete\Core\Block\BlockType\Set as BlockTypeSet;
@@ -27,6 +30,8 @@ use \Concrete\Core\Feature\Category\Category as FeatureCategory;
 use \Concrete\Core\Gathering\DataSource\DataSource as GatheringDataSource;
 use \Concrete\Core\Gathering\Item\Template\Template as GatheringItemTemplate;
 use \Concrete\Core\Gathering\Item\Template\Type as GatheringItemTemplateType;
+use \Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;
+use \Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
 
 class ContentImporter {
 

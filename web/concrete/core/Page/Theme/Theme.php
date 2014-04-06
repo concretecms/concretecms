@@ -1,7 +1,9 @@
 <?
 namespace Concrete\Core\Page\Theme;
-use Concrete\Core\Http\ResponseAssetGroup;
+use \Concrete\Core\Http\ResponseAssetGroup;
 use Loader;
+use Environment;
+use \Concrete\Core\Page\Theme\File as PageThemeFile;
 use Concrete\Core\Foundation\Object;
 /**
 *
@@ -10,7 +12,7 @@ use Concrete\Core\Foundation\Object;
 * @package Pages and Collections
 * @subpackages Themes
 */
-class PageTheme extends Object {
+class Theme extends Object {
 
 	protected $pThemeName;
 	protected $pThemeID;
@@ -29,15 +31,15 @@ class PageTheme extends Object {
 	public function registerAssets() {}
 	
 	public static function getGlobalList() {
-		return PageTheme::getList('pkgID > 0');
+		return static::getList('pkgID > 0');
 	}
 	
 	public static function getLocalList() {
-		return PageTheme::getList('pkgID = 0');
+		return static::getList('pkgID = 0');
 	}
 
 	public static function getListByPackage($pkg) {
-		return PageTheme::getList('pkgID = ' . $pkg->getPackageID());
+		return static::getList('pkgID = ' . $pkg->getPackageID());
 	}
 	
 	public static function getList($where = null) {
@@ -49,7 +51,7 @@ class PageTheme extends Object {
 		$r = $db->query("select pThemeID from PageThemes" . $where);
 		$themes = array();
 		while ($row = $r->fetchRow()) {
-			$pl = PageTheme::getByID($row['pThemeID']);
+			$pl = static::getByID($row['pThemeID']);
 			$themes[] = $pl;
 		}
 		return $themes;
@@ -100,7 +102,7 @@ class PageTheme extends Object {
 			$themesTemp = array();
 			// get theme objects from the file system
 			foreach($themes as $t) {
-				$th = PageTheme::getByFileHandle($t);
+				$th = static::getByFileHandle($t);
 				if (!empty($th)) {
 					$themesTemp[] = $th;
 				}
@@ -114,7 +116,7 @@ class PageTheme extends Object {
 	public static function getByFileHandle($handle, $dir = DIR_FILES_THEMES) {
 		$dirt = $dir . '/' . $handle;
 		if (is_dir($dirt)) {
-			$res = PageTheme::getThemeNameAndDescription($dirt);
+			$res = static::getThemeNameAndDescription($dirt);
 	
 			$th = new PageTheme;
 			$th->pThemeHandle = $handle;
@@ -273,7 +275,7 @@ class PageTheme extends Object {
 		foreach($files as $f) {
 			$pos = strrpos($f, '.');
 			$ext = substr($f, $pos + 1);
-			if ($ext == PageTheme::FILENAME_EXTENSION_CSS) {
+			if ($ext == static::FILENAME_EXTENSION_CSS) {
 				$sheets[] = $f;
 			}
 		}
@@ -358,10 +360,10 @@ class PageTheme extends Object {
 	 * @param string $pThemeHandle
 	 * @return PageTheme
 	 */
-	public function getByHandle($pThemeHandle) {
+	public static function getByHandle($pThemeHandle) {
 		$where = 'pThemeHandle = ?';
 		$args = array($pThemeHandle);
-		$pt = PageTheme::populateThemeQuery($where, $args);
+		$pt = static::populateThemeQuery($where, $args);
 		return $pt;
 	}
 	
@@ -369,10 +371,10 @@ class PageTheme extends Object {
 	 * @param int $ptID
 	 * @return PageTheme
 	 */
-	public function getByID($pThemeID) {
+	public static function getByID($pThemeID) {
 		$where = 'pThemeID = ?';
 		$args = array($pThemeID);
-		$pt = PageTheme::populateThemeQuery($where, $args);
+		$pt = static::populateThemeQuery($where, $args);
 		return $pt;
 	}
 	
@@ -381,9 +383,9 @@ class PageTheme extends Object {
 		$row = $db->GetRow("select pThemeID, pThemeHandle, pThemeDescription, pkgID, pThemeName, pThemeHasCustomClass from PageThemes where {$where}", $args);
 		if ($row['pThemeID']) {
 			if ($row['pThemeHasCustomClass']) {
-				$class = Loader::helper('text')->camelcase($row['pThemeHandle']) . 'PageTheme';
+				$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Theme\\' . helper('text')->camelcase($row['pThemeHandle']));
 			} else {
-				$class = 'PageTheme';
+				$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Page\\Theme\\Theme');
 			}
 			$pl = new $class();
 			$pl->setPropertiesFromArray($row);
@@ -395,7 +397,7 @@ class PageTheme extends Object {
 		}
 	}
 	
-	public function add($pThemeHandle, $pkg = null) {
+	public static function add($pThemeHandle, $pkg = null) {
 		if (is_object($pkg)) {
 			if (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle())) {
 				$dir = DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_THEMES . '/' . $pThemeHandle;
@@ -410,7 +412,7 @@ class PageTheme extends Object {
 			$dir = DIR_FILES_THEMES_CORE . '/' . $pThemeHandle;
 			$pkgID = 0;
 		}
-		$l = PageTheme::install($dir, $pThemeHandle, $pkgID);
+		$l = static::install($dir, $pThemeHandle, $pkgID);
 		return $l;
 	}
 	
@@ -427,7 +429,7 @@ class PageTheme extends Object {
 		
 		$filesTmp = $dh->getDirectoryContents($this->pThemeDirectory);
 		foreach($filesTmp as $f) {
-			if (strrchr($f, '.') == PageTheme::THEME_EXTENSION) {
+			if (strrchr($f, '.') == static::THEME_EXTENSION) {
 				$fHandle = substr($f, 0, strpos($f, '.'));
 				
 				if ($f == FILENAME_THEMES_VIEW) {
@@ -453,7 +455,7 @@ class PageTheme extends Object {
 	}
 	
 	private static function getThemeNameAndDescription($dir) {
-		$res = new stdClass;
+		$res = new \stdClass;
 		$res->ptName = '';
 		$res->ptDescription = '';
 		if (file_exists($dir . '/' . FILENAME_THEMES_DESCRIPTION)) {
@@ -466,8 +468,8 @@ class PageTheme extends Object {
 	
 	public static function exportList($xml) {
 		$nxml = $xml->addChild('themes');
-		$list = PageTheme::getList();
-		$pst = PageTheme::getSiteTheme();
+		$list = static::getList();
+		$pst = static::getSiteTheme();
 		
 		foreach($list as $pt) {
 			$activated = 0;
@@ -482,14 +484,14 @@ class PageTheme extends Object {
 
 	}
 	
-	protected function install($dir, $pThemeHandle, $pkgID) {
+	protected static function install($dir, $pThemeHandle, $pkgID) {
 		if (is_dir($dir)) {
 			$db = Loader::db();
 			$cnt = $db->getOne("select count(pThemeID) from PageThemes where pThemeHandle = ?", array($pThemeHandle));
 			if ($cnt > 0) {
-				throw new Exception(PageTheme::E_THEME_INSTALLED);
+				throw new Exception(static::E_THEME_INSTALLED);
 			}
-			$res = PageTheme::getThemeNameAndDescription($dir);
+			$res = static::getThemeNameAndDescription($dir);
 			$pThemeName = $res->pThemeName;
 			$pThemeDescription = $res->pThemeDescription;
 			$db->query("insert into PageThemes (pThemeHandle, pThemeName, pThemeDescription, pkgID) values (?, ?, ?, ?)", array($pThemeHandle, $pThemeName, $pThemeDescription, $pkgID));
@@ -497,7 +499,7 @@ class PageTheme extends Object {
 			$env = Environment::get();
 			$env->clearOverrideCache();
 			
-			$pt = PageTheme::getByID($db->Insert_ID());
+			$pt = static::getByID($db->Insert_ID());
 			$pt->updateThemeCustomClass();
 			return $pt;
 		}
@@ -544,7 +546,7 @@ class PageTheme extends Object {
 
 	public function getPackageID() {return $this->pkgID;}
 	public function getPackageHandle() {
-		return PackageList::getHandle($this->pkgID);
+		return \Concrete\Core\Package\PackageList::getHandle($this->pkgID);
 	}
 
 	/** 
@@ -571,7 +573,7 @@ class PageTheme extends Object {
 	}
 	public function getThemeDirectory() {return $this->pThemeDirectory;}
 	public function getThemeURL() {return $this->pThemeURL;}
-	public function getThemeEditorCSS() {return $this->pThemeURL . '/' . PageTheme::FILENAME_TYPOGRAPHY_CSS;}
+	public function getThemeEditorCSS() {return $this->pThemeURL . '/' . static::FILENAME_TYPOGRAPHY_CSS;}
 
 	public function isUninstallable() {
 		return ($this->pThemeDirectory != DIR_FILES_THEMES_CORE . '/' . $this->getThemeHandle());
@@ -594,7 +596,7 @@ class PageTheme extends Object {
 	
 	public function getSiteTheme() {
 		$c = Page::getByID(HOME_CID);
-		return PageTheme::getByID($c->getCollectionThemeID());
+		return static::getByID($c->getCollectionThemeID());
 	}
 	
 	public function uninstall() {

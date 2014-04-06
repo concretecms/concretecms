@@ -1,7 +1,7 @@
 <?
-namespace Concrete\Core\Page;
+namespace Concrete\Core\Page\Theme
 use Loader;
-class PageThemeArchive extends \Concrete\Updater\Archive {
+class Archive extends \Concrete\Updater\Archive {
 	
 	// takes a zip file and tries to unpack it to the theme directory on the site
 	

@@ -15,7 +15,7 @@ class FormLayoutSet extends Object {
 		$ptComposerFormLayoutSetIDs = $db->GetCol('select ptComposerFormLayoutSetID from PageTypeComposerFormLayoutSets where ptID = ? order by ptComposerFormLayoutSetDisplayOrder asc', array($pagetype->getPageTypeID()));
 		$list = array();
 		foreach($ptComposerFormLayoutSetIDs as $ptComposerFormLayoutSetID) {
-			$set = PageTypeComposerFormLayoutSet::getByID($ptComposerFormLayoutSetID);
+			$set = static::getByID($ptComposerFormLayoutSetID);
 			if (is_object($set)) {
 				$list[] = $set;
 			}
@@ -27,7 +27,7 @@ class FormLayoutSet extends Object {
 		$db = Loader::db();
 		$r = $db->GetRow('select * from PageTypeComposerFormLayoutSets where ptComposerFormLayoutSetID = ?', array($ptComposerFormLayoutSetID));
 		if (is_array($r) && $r['ptComposerFormLayoutSetID']) {
-			$set = new PageTypeComposerFormLayoutSet;
+			$set = new static;
 			$set->setPropertiesFromArray($r);
 			return $set;
 		}
@@ -36,7 +36,7 @@ class FormLayoutSet extends Object {
 	public function export($fxml) {
 		$node = $fxml->addChild('set');
 		$node->addAttribute('name', $this->getPageTypeComposerFormLayoutSetName());
-		$controls = PageTypeComposerFormLayoutSetControl::getList($this);
+		$controls = FormLayoutSetControl::getList($this);
 		foreach($controls as $con) {
 			$con->export($node);
 		}
@@ -71,7 +71,7 @@ class FormLayoutSet extends Object {
 	}
 
 	public function rescanFormLayoutSetControlDisplayOrder() {
-		$sets = PageTypeComposerFormLayoutSetControl::getList($this);
+		$sets = FormLayoutSetControl::getList($this);
 		$displayOrder = 0;
 		foreach($sets as $s) {
 			$s->updateFormLayoutSetControlDisplayOrder($displayOrder);

@@ -6,18 +6,24 @@ class ClassloaderTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testPsr4AutoloadingCore() {
-		$this->assertTrue(class_exists('Concrete\Core\Foundation\Object'));
-		$this->assertTrue(class_exists('Concrete\Core\Application\Dispatcher'));
-		$this->assertTrue(class_exists('Concrete\Core\Http\Request'));
+		$this->assertTrue(class_exists('\Concrete\Core\Foundation\Object'));
+		$this->assertTrue(class_exists('\Concrete\Core\Application\Dispatcher'));
+		$this->assertTrue(class_exists('\Concrete\Core\Http\Request'));
 	}
 
 	public function testThemeAutoloadingCore() {
-		$this->assertTrue(class_exists('Concrete\Theme\TwitterBootstrap\PageTheme'));
-		$this->assertTrue(class_exists('Concrete\Theme\Concrete\PageTheme'));
+		$this->assertTrue(class_exists('\Concrete\Theme\TwitterBootstrap\PageTheme'));
+		$this->assertTrue(class_exists('\Concrete\Theme\Concrete\PageTheme'));
 	}
 
 	public function testJobAutoloadingCore() {
-		$this->assertTrue(class_exists('Concrete\Job\IndexSearchAll'));
+		$this->assertTrue(class_exists('\Concrete\Job\IndexSearchAll'));
+		$this->assertTrue(class_exists('\Concrete\Job\IndexSearch'));
+		$this->assertTrue(class_exists('\Concrete\Job\GenerateSitemap'));
+		$this->assertTrue(class_exists('\Concrete\Job\UpdateGatherings'));
+		$this->assertTrue(class_exists('\Concrete\Job\IndexSearchAll'));
+		$this->assertTrue(class_exists('\Concrete\Job\RemoveOldPageVersions'));
+		$this->assertTrue(class_exists('\Concrete\Job\ProcessEmail'));
 	}
 
 	public function testOverrideableCoreClassesCore() {

@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Theme\TwitterBootstrap;
-class PageTheme extends \Concrete\Core\Page\Theme\PageTheme {
+class PageTheme extends \Concrete\Core\Page\Theme\Theme {
 
 	protected $pThemeGridFrameworkHandle = 'bootstrap2';
 

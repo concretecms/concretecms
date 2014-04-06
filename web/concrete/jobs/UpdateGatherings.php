@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Job;
-use Job;
-class UpdateGatherings extends Job {
+use \Job as AbstractJob;
+class UpdateGatherings extends AbstractJob {
 
 	public function getJobName() {
 		return t("Update Gatherings");
