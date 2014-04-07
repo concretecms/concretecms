@@ -5,7 +5,8 @@ use Package;
 use CacheLocal;
 use \Concrete\Core\Attribute\Value\ValueList as AttributeValueList;
 use \Concrete\Core\Attribute\Value\FileValue as FileAttributeValue;
-
+use File;
+use \Concrete\Core\File\Version as FileVersion;
 class FileKey extends Key {
 
 	public function getIndexedSearchTable() {

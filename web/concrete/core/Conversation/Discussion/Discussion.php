@@ -1,6 +1,9 @@
 <?
 namespace Concrete\Core\Conversation\Discussion;
+use Loader;
 use \Concrete\Core\Foundation\Object;
+use Page;
+
 class Discussion extends Object {
 
 	public static function add(Page $c) {
@@ -11,7 +14,7 @@ class Discussion extends Object {
 		$cID = $c->getCollectionID();
 		$date = Loader::helper('date')->getSystemDateTime();
 		$r = $db->Execute('insert into ConversationDiscussions (cnvDiscussionDateCreated, cID) values (?, ?)', array($date, $cID));
-		return ConversationDiscussion::getByID($db->Insert_ID());
+		return static::getByID($db->Insert_ID());
 	}
 
 	public function getConversationDiscussionCollectionObject() {
@@ -36,7 +39,7 @@ class Discussion extends Object {
 		$db = Loader::db();
 		$r = $db->GetRow('select * from ConversationDiscussions where cnvDiscussionID = ?', array($cnvDiscussionID));
 		if (is_array($r) && $r['cnvDiscussionID'] == $cnvDiscussionID) {
-			$d = new ConversationDiscussion;
+			$d = new static;
 			$d->setPropertiesFromArray($r);
 			return $d;
 		}

@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Area;
+use Loader;
 use Area;
+use Page;
+use Stack;
 class GlobalArea extends Area {
 
 	public function isGlobalArea() {return true;}

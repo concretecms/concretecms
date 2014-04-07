@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Conversation\Rating;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 class UpVoteType extends Type {
 
 	public function outputRatingTypeHTML() {

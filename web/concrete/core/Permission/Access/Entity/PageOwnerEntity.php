@@ -3,6 +3,11 @@ namespace Concrete\Core\Permission\Access\Entity;
 use Loader;
 use \Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Config;
+use UserInfo;
+use \Concrete\Core\Permission\Access\PageAccess as PagePermissionAccess;
+use \Concrete\Core\Permission\Access\AreaAccess as AreaPermissionAccess;
+use \Concrete\Core\Permission\Access\BlockAccess as BlockPermissionAccess;
+
 class PageOwnerEntity extends Entity {
 
 	public function getAccessEntityUsers(PermissionAccess $pae) {
@@ -40,7 +45,7 @@ class PageOwnerEntity extends Entity {
 		$entities = array();
 		$db = Loader::db();
 		if ($user->isRegistered()) { 
-			$pae = PageOwnerPermissionAccessEntity::getOrCreate();
+			$pae = static::getOrCreate();
 			$r = $db->GetOne('select cID from Pages where uID = ?', array($user->getUserID()));
 			if ($r > 0) {
 				$entities[] = $pae;

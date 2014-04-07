@@ -1,7 +1,8 @@
 <?
 namespace Concrete\Core\Conversation\Editor;
+use Loader;
 use \Concrete\Core\Foundation\Object;
-abstract class RedactorConversationEditor extends Object {
+abstract class Editor extends Object {
 
 	abstract public function getConversationEditorAssetPointers();
 
@@ -77,7 +78,7 @@ abstract class RedactorConversationEditor extends Object {
 		$db = Loader::db();
 		$cnvEditorHandle = $db->GetOne('select cnvEditorHandle from ConversationEditors where cnvEditorIsActive = 1');
 		if ($cnvEditorHandle) { 
-			return ConversationEditor::getByHandle($cnvEditorHandle);
+			return static::getByHandle($cnvEditorHandle);
 		}
 	}
 	
@@ -85,7 +86,7 @@ abstract class RedactorConversationEditor extends Object {
 		$db = Loader::db();
 		$r = $db->GetRow('select cnvEditorHandle, cnvEditorIsActive, pkgID, cnvEditorName from ConversationEditors where cnvEditorHandle = ?', array($cnvEditorHandle));
 		if (is_array($r) && $r['cnvEditorHandle']) {
-			$class = Loader::helper('text')->camelcase($r['cnvEditorHandle']) . 'ConversationEditor';
+            $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Conversation\\Editor\\' . helper('text')->camelcase($r['cnvEditorHandle']) . 'Editor');
 			$sc = new $class();
 			$sc->setPropertiesFromArray($r);
 			return $sc;
@@ -99,7 +100,7 @@ abstract class RedactorConversationEditor extends Object {
 		}
 		$db = Loader::db();
 		$db->Execute('insert into ConversationEditors (cnvEditorHandle, cnvEditorName, pkgID) values (?, ?, ?)', array($cnvEditorHandle, $cnvEditorName, $pkgID));
-		return ConversationEditor::getByHandle($cnvEditorHandle);
+		return static::getByHandle($cnvEditorHandle);
 	}
 	
 	public function delete() {
@@ -109,7 +110,7 @@ abstract class RedactorConversationEditor extends Object {
 	
 	public function activate() {
 		$db = Loader::db();
-		ConversationEditor::deactivateAll();
+		static::deactivateAll();
 		$db->Execute('update ConversationEditors set cnvEditorIsActive = 1 where cnvEditorHandle = ?', array($this->cnvEditorHandle));
 	}
 	
@@ -123,7 +124,7 @@ abstract class RedactorConversationEditor extends Object {
 		$cnvEditorHandles = $db->GetCol('select cnvEditorHandle from ConversationEditors order by cnvEditorHandle asc');
 		$editors = array();
 		foreach($cnvEditorHandles as $cnvEditorHandle) {
-			$cnvEditor = ConversationEditor::getByHandle($cnvEditorHandle);
+			$cnvEditor = static::getByHandle($cnvEditorHandle);
 			$editors[] = $cnvEditor;
 		}
 		return $editors;
@@ -134,7 +135,7 @@ abstract class RedactorConversationEditor extends Object {
 		$cnvEditorHandles = $db->GetCol('select cnvEditorHandle from ConversationEditors where pkgID = ? order by cnvEditorHandle asc', array($pkg->getPackageID()));
 		$editors = array();
 		foreach($cnvEditorHandles as $cnvEditorHandle) {
-			$cnvEditor = ConversationEditor::getByHandle($cnvEditorHandle);
+			$cnvEditor = static::getByHandle($cnvEditorHandle);
 			$editors[] = $cnvEditor;
 		}
 		return $editors;

@@ -1,8 +1,25 @@
 <?php
 
 namespace Concrete\Core\Database;
+use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\EntityManager;
 
 class Connection extends \Doctrine\DBAL\Connection {
+
+    static $entityManager;
+
+    /** 
+     * Returns the entity manager for use with Doctrine ORM
+     */
+    public function getEntityManager() {
+        if (!isset(static::$entityManager)) {
+            $devMode = true;
+            $config = Setup::createXMLMetadataConfiguration(array(DIR_ORM_ENTITIES), $devMode);
+            $conn = $this->getParams();
+            static::$entityManager = EntityManager::create($conn, $config);
+        }
+        return static::$entityManager;
+    }
 
 	/** 
 	 * @deprecated

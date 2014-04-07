@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Core\Conversation\Editor;
-class RedactorConversationEditor extends Editor {
+use Loader;
+use AssetList;
+class RedactorEditor extends Editor {
 
 	public function getConversationEditorAssetPointers() {
 		$list = AssetList::getInstance();

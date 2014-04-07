@@ -1,5 +1,4 @@
-<?
-namespace Concrete\Core\Package;
+<? namespace Concrete\Core\Package;
 use Concrete\Core\Foundation\Object;
 use Database;
 use \Concrete\Core\Database\Schema\Schema;
@@ -121,8 +120,6 @@ class Package extends Object {
 
 		$r = $schema->ExecuteSchema();
 
-		$result = new \stdClass;
-		$result->result = false;
 		
 		if ($dbLayerErrorMessage != '') {
 			$result->message = $dbLayerErrorMessage;
@@ -137,6 +134,8 @@ class Package extends Object {
 		$db->CacheFlush();
 		*/
 
+		$result = new \stdClass;
+		$result->result = false;
 
 		return $result;
 	

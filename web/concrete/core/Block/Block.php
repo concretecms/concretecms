@@ -4,6 +4,11 @@ use \Concrete\Core\Foundation\Object;
 use Loader;
 use Environment;
 use CacheLocal;
+use BlockType;
+use Page;
+use Area;
+use Events;
+use Cache;
 
 class Block extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
@@ -344,7 +349,8 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface 
 		if (ENABLE_BLOCK_CACHE && $this->instance->cacheBlockRecord() && is_object($this->instance->getBlockControllerData())) {
 			$this->instance->__construct();
 		} else {
-			$this->instance = Loader::controller($this);
+			$class = BlockType::getBlockTypeMappedClass($this->btHandle);
+			$this->instance = new $class($this);
 		}		
 		$this->instance->setBlockObject($this);
 		return $this->instance;

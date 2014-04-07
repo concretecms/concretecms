@@ -2,6 +2,8 @@
 namespace Concrete\Core\Page\Collection\Version;
 use Loader;
 use \Concrete\Core\Foundation\Object;
+use Block;
+
 class Version extends Object {
 	
 	var $cvIsApproved;
@@ -20,7 +22,7 @@ class Version extends Object {
 		Events::fire('on_page_version_refresh_cache', $this);
 	}
 	
-	public function get(&$c, $cvID) {
+	public static function get(&$c, $cvID) {
 		$db = Loader::db();
 
 		if (($c instanceof Page) && $c->getCollectionPointerID()) {

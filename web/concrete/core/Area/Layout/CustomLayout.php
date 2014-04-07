@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Area\Layout;
+use Loader;
 class CustomLayout extends Layout {
 
 	protected $arLayoutType = 'custom';

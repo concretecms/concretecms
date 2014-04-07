@@ -22,4 +22,4 @@ if($b){
 $data=array( 'c'=>$c, 'b'=>$b, 'bID'=>$bID, 'bCID'=>$bCID, 'uh'=>$uh, 'isOtherPage'=>$isOtherPage);
 $data['controller']=$controller;
 $data = array_merge($controller->getSets(), $data);
-$bt->inc('form_setup_html.php', $data ); 
+$view->inc('form_setup_html.php', $data ); 

@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Conversation\Editor;
+use Loader;
 class PlainTextEditor extends Editor {
 
 	public function getConversationEditorAssetPointers() {

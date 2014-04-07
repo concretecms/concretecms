@@ -6,11 +6,15 @@ class Schema {
 
 	public static function loadFromXMLFile($file, \Concrete\Core\Database\Connection $connection) {
 		$sx = simplexml_load_file($file);
+		return static::loadFromXMLElement($sx, $connection);
+	}
+
+	public static function loadFromXMLElement(\SimpleXMLElement $sx, \Concrete\Core\Database\Connection $connection) {
 		$parser = static::getSchemaParser($sx);
 		return $parser->parse($connection);
 	}
 
-	protected function getSchemaParser(\SimpleXMLElement $sx) {
+	protected static function getSchemaParser(\SimpleXMLElement $sx) {
 		switch($sx['version']) {
 			case '0.3':
 				$parser = new \Concrete\Core\Database\Schema\Parser\Legacy($sx);

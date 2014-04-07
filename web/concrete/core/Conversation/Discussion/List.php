@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Core\Conversation\Discussion;
+use Loader;
 use \Concrete\Core\Page\PageList;
+use Page;
 class List extends PageList {
 
 	public function __construct(Page $c) {

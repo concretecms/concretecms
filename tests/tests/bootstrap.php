@@ -1,6 +1,5 @@
 <?php
 /**
- * @author jshannon
  * @author Andrew Embler
  */
 
@@ -24,6 +23,7 @@ require $DIR_BASE_CORE . '/startup/updated_core_check.php';
 require $DIR_BASE_CORE . '/config/base.php';
 require $DIR_BASE_CORE . '/startup/autoload.php';
 
+require realpath(dirname(__FILE__) . '/ConcreteDatabaseTestcase.php');
 
 $app = Concrete\Core\Application\Dispatcher::get();
 $app->bootstrap();

@@ -33,13 +33,13 @@ if ($cID > 0 && $bID > 0) {
 
 			switch($_REQUEST['tab']) {
 				case 'sources':
-					$bt->inc('form/sources.php', $data);
+					$view->inc('form/sources.php', $data);
 					break;
 				case 'posting':
-					$bt->inc('form/posting.php', $data);
+					$view->inc('form/posting.php', $data);
 					break;
 				default: // output
-					$bt->inc('form/output.php', $data);
+					$view->inc('form/output.php', $data);
 					break;
 			}
 

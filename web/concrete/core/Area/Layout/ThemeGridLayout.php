@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Area\Layout;
+use Loader;
 class ThemeGridLayout extends Layout {
 
 	protected $arLayoutType = 'theme_grid';

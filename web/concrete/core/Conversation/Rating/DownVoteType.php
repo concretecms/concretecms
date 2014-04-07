@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Conversation\Rating;
+use Loader;
 class DownVoteType extends Type {
 
 	public function outputRatingTypeHTML() {

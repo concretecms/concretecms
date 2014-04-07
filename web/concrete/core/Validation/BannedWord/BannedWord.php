@@ -1,6 +1,7 @@
 <?php 
 namespace Concrete\Core\Validation\BannedWord;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 class BannedWord extends Object {
 
 	protected $id;
@@ -37,7 +38,7 @@ class BannedWord extends Object {
 		$db = Loader::db();
 		$word = $db->getOne("SELECT bannedWord FROM BannedWords WHERE bwID=?",array($id));
 		if (!$word) return false;
-		$bw = new BannedWord($id, $word);
+		$bw = new static($id, $word);
 		return $bw;
 	}
 
@@ -46,7 +47,7 @@ class BannedWord extends Object {
 		$word = strtolower($word);
 		$id = $db->getOne("SELECT bwID FROM BannedWords WHERE bannedWord=?",array($word));
 		if (!$id) return false;
-		$bw = new BannedWord($id, $word);
+		$bw = new static($id, $word);
 		return $bw;
 	}
 
@@ -54,10 +55,10 @@ class BannedWord extends Object {
 		if (!$word) return false;
 		$db = Loader::db();
 		$word = strtolower($word);
-		if ($bw = BannedWord::getByWord($word)) return $bw;
+		if ($bw = static::getByWord($word)) return $bw;
 		$db->execute('INSERT INTO BannedWords (bannedWord) VALUES (?)',array($word));
 		$id = $db->Insert_ID();
-		return new BannedWord($id, $word);
+		return new static($id, $word);
 	}
 
 }

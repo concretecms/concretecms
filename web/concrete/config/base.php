@@ -500,6 +500,8 @@ if (!defined('GROUP_BADGE_DEFAULT_POINT_VALUE')) {
 	define('GROUP_BADGE_DEFAULT_POINT_VALUE', 50);
 }
 
+define('DIR_ORM_ENTITIES', DIR_BASE_CORE . '/config/entities');
+
 # Default search size
 define('SEARCH_CHUNK_SIZE','20'); /* number of entries retrieved per page */
 if (!defined('PAGE_SEARCH_INDEX_LIFETIME')) {

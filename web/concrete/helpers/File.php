@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Helper;
 use Environment;
+use Loader;
 
 /**
  * File helper

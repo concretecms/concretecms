@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Conversation\Message;
+use Loader;
 use \Concrete\Core\Foundation\Collection\DatabaseItemList;
 class List extends DatabaseItemList {
 
@@ -60,7 +61,7 @@ class List extends DatabaseItemList {
 		$r = parent::get($num, $offset);
 		$messages = array();
 		foreach($r as $row) {
-			$messages[] = ConversationMessage::getByID($row['cnvMessageID']);	
+			$messages[] = Message::getByID($row['cnvMessageID']);	
 		}
 		return $messages;
 	}

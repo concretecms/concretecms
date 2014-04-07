@@ -1,6 +1,7 @@
 <?php 
 namespace Concrete\Core\File;
 use \Concrete\Core\Foundation\Collection\DatabaseItemList;
+use Loader;
 /**
 *
 * An object that allows a filtered list of files to be returned.

@@ -4,6 +4,7 @@ use \Concrete\Core\Foundation\Object;
 use Loader;
 use Request;
 use Events;
+use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 
 class User extends Object {
 

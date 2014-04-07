@@ -10,9 +10,10 @@
  *
  */
 
-namespace Concrete\Core\File;
+namespace Concrete\Core\File\Type;
+use \Concrete\Core\File\Type\Type as FileType;
 
-$ft = FileTypeList::getInstance();
+$ft = TypeList::getInstance();
 $ft->define('jpg,jpeg,jpe', t('JPEG'), FileType::T_IMAGE, 'image', 'image', 'image');
 $ft->define('gif', t('GIF'), FileType::T_IMAGE, 'image', 'image', 'image');
 $ft->define('png', t('PNG'), FileType::T_IMAGE, 'image', 'image', 'image');

@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Area;
+use Loader;
 class SubArea {
 
 	const AREA_SUB_DELIMITER = ' : ';
