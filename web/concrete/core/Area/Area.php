@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Area;
+use Loader;
 use \Concrete\Core\Foundation\Object;
+use CacheLocal;
+use Block;
 class Area extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
 	public $cID, $arID, $arHandle;

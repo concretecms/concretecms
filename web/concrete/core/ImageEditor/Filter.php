@@ -1,5 +1,6 @@
 <?php
-use Concrete\Core\ImageEditor;
+namespace Concrete\Core\ImageEditor;
+use Loader;
 class Filter {
 	public $scsID;
 	public $scsHandle;
@@ -69,7 +70,7 @@ class Filter {
 		return self::load($q->FetchRow());
 	}
 	public static function load($arr) {
-		$obj = new SystemImageEditorFilter;
+		$obj = new static;
 		foreach((array) $arr as $key=>$val) {
 			$obj->{$key} = $val;
 		}

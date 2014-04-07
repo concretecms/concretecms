@@ -1386,10 +1386,6 @@
       <notnull/>
     </field>
     <field name="btDescription" type="X"/>
-    <field name="btActiveWhenAdded" type="I1" size="1">
-      <notnull/>
-      <default value="1"/>
-    </field>
     <field name="btCopyWhenPropagate" type="I1" size="1">
       <notnull/>
       <default value="0"/>

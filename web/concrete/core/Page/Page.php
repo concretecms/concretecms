@@ -9,6 +9,7 @@ use \Concrete\Core\Cache\Page\PageCache;
 use \Events;
 use Config;
 use User;
+use Block;
 use UserInfo;
 /**
 *

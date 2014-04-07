@@ -7,6 +7,7 @@ use \Concrete\Core\Foundation\Object as Object;
 use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 use \Concrete\Core\Attribute\Value\CollectionValue as CollectionAttributeValue;
 use User;
+use Block;
 
 	class Collection extends Object {
 		

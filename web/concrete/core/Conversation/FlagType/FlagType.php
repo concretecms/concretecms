@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Conversation\FlagType;
+use Loader;
 use \Concrete\Core\Foundation\Object;
 class FlagType extends Object {
 
@@ -30,7 +31,7 @@ class FlagType extends Object {
 		$db = Loader::db();
 		$handle = $db->getOne("SELECT cnvMessageFlagTypeHandle FROM ConversationFlaggedMessageTypes WHERE cnvMessageFlagTypeID=?",array($id));
 		if (!$handle) return false;
-		$bw = new ConversationFlagType($id, $handle);
+		$bw = new static($id, $handle);
 		return $bw;
 	}
 
@@ -39,7 +40,7 @@ class FlagType extends Object {
 		$handle = strtolower($handle);
 		$id = $db->getOne("SELECT cnvMessageFlagTypeID FROM ConversationFlaggedMessageTypes WHERE cnvMessageFlagTypeHandle=?",array($handle));
 		if (!$id) return false;
-		$bw = new ConversationFlagType($id, $handle);
+		$bw = new static($id, $handle);
 		return $bw;
 	}
 
@@ -47,10 +48,10 @@ class FlagType extends Object {
 		if (!$handle) return false;
 		$db = Loader::db();
 		$handle = strtolower($handle);
-		if ($ft = ConversationFlagType::getByhandle($handle)) return $ft;
+		if ($ft = static::getByhandle($handle)) return $ft;
 		$db->execute('INSERT INTO ConversationFlaggedMessageTypes (cnvMessageFlagTypeHandle) VALUES (?)',array($handle));
 		$id = $db->Insert_ID();
-		return new ConversationFlagType($id, $handle);
+		return new static($id, $handle);
 	}
 
 }

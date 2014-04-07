@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Area\Layout;
+use Loader;
 class CustomColumn extends Column;
 
 	public static function getByID($arLayoutColumnID) {

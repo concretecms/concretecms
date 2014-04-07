@@ -29,7 +29,7 @@ class GroupEntity extends Entity {
 		$peIDs = $db->GetCol('select pae.peID from PermissionAccessEntities pae inner join PermissionAccessEntityTypes paet on pae.petID = paet.petID inner join PermissionAccessEntityGroups paeg on pae.peID = paeg.peID where petHandle = \'group\' and paeg.gID in (' . $instr . ')');
 		if (is_array($peIDs)) {
 			foreach($peIDs as $peID) { 
-				$entity = PermissionAccessEntity::getByID($peID);
+				$entity = \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
 				if (is_object($entity)) { 
 					$entities[] = $entity;
 				}

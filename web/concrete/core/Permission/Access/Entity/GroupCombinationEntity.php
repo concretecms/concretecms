@@ -34,7 +34,7 @@ class GroupCombinationEntity extends Entity {
 				$r = $db->GetRow('select count(gID) as peGroups, (select count(UserGroups.gID) from UserGroups where uID = ? and gID in (select gID from PermissionAccessEntityGroups where peID = ?)) as uGroups from PermissionAccessEntityGroups where peID = ?', array(
 					$user->getUserID(), $peID, $peID));
 				if ($r['peGroups'] == $r['uGroups'] && $r['peGroups'] > 1) { 
-					$entity = PermissionAccessEntity::getByID($peID);
+					$entity = Entity::getByID($peID);
 					if (is_object($entity)) { 
 						$entities[] = $entity;
 					}

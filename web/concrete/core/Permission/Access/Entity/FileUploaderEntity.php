@@ -3,6 +3,10 @@ namespace Concrete\Core\Permission\Access\Entity;
 use Loader;
 use \Concrete\Core\Permission\Access\Access as PermissionAccess;
 use Config;
+use UserInfo;
+use \Concrete\Core\Permission\Access\FileSetAccess as FileSetPermissionAccess;
+use \Concrete\Core\Permission\Access\FileAccess as FilePermissionAccess;
+
 class FileUploaderEntity extends Entity {
 
 	public function getAccessEntityUsers(PermissionAccess $pa) {
@@ -36,7 +40,7 @@ class FileUploaderEntity extends Entity {
 		$entities = array();
 		$db = Loader::db();
 		if ($user->isRegistered()) { 
-			$pae = FileUploaderPermissionAccessEntity::getOrCreate();
+			$pae = static::getOrCreate();
 			$r = $db->GetOne('select fID from Files where uID = ?', array($user->getUserID()));
 			if ($r > 0) {
 				$entities[] = $pae;

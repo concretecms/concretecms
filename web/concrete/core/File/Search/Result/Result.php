@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\File\Search\Result;
 use \Concrete\Core\Search\Result\Result as SearchResult;
+use Loader;
 class Result extends SearchResult {
 
 	public function getItemDetails($item) {

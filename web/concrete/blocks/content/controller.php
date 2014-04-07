@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Block\Content;
 use \Concrete\Core\Block\BlockController;
+use \Concrete\Core\Routing\URL;
 
 /**
  * The controller for the content block.
@@ -74,22 +75,22 @@ use \Concrete\Core\Block\BlockController;
 
 			$content = preg_replace_callback(
 				'/\{ccm:export:page:(.*)\}/i',
-				array('ContentBlockController', 'replacePagePlaceHolderOnImport'),				
+				array('static', 'replacePagePlaceHolderOnImport'),				
 				$content);
 
 			$content = preg_replace_callback(
 				'/\{ccm:export:image:(.*)\}/i',
-				array('ContentBlockController', 'replaceImagePlaceHolderOnImport'),				
+				array('static', 'replaceImagePlaceHolderOnImport'),				
 				$content);
 
 			$content = preg_replace_callback(
 				'/\{ccm:export:file:(.*)\}/i',
-				array('ContentBlockController', 'replaceFilePlaceHolderOnImport'),				
+				array('static', 'replaceFilePlaceHolderOnImport'),				
 				$content);
 
 			$content = preg_replace_callback(
 				'/\{ccm:export:define:(.*)\}/i',
-				array('ContentBlockController', 'replaceDefineOnImport'),				
+				array('static', 'replaceDefineOnImport'),				
 				$content);
 
 			$args['content'] = $content;			
@@ -168,13 +169,13 @@ use \Concrete\Core\Block\BlockController;
 			
 			$text = preg_replace_callback(
 				'/{CCM:FID_([0-9]+)}/i',
-				array('ContentBlockController', 'replaceFileIDInEditMode'),				
+				array('static', 'replaceFileIDInEditMode'),				
 				$text);
 
 			
 			$text = preg_replace_callback(
 				'/{CCM:FID_DL_([0-9]+)}/i',
-				array('ContentBlockController', 'replaceDownloadFileIDInEditMode'),				
+				array('static', 'replaceDownloadFileIDInEditMode'),				
 				$text);
 			
 
@@ -182,9 +183,6 @@ use \Concrete\Core\Block\BlockController;
 		}
 		
 		function translateFrom($text) {
-			// old stuff. Can remove in a later version.
-			$text = str_replace('href="{[CCM:BASE_URL]}', 'href="' . BASE_URL . DIR_REL, $text);
-			$text = str_replace('src="{[CCM:REL_DIR_FILES_UPLOADED]}', 'src="' . BASE_URL . REL_DIR_FILES_UPLOADED, $text);
 
 			// we have the second one below with the backslash due to a screwup in the
 			// 5.1 release. Can remove in a later version.
@@ -202,25 +200,25 @@ use \Concrete\Core\Block\BlockController;
 			
 			$text = preg_replace_callback(
 				'/{CCM:CID_([0-9]+)}/i',
-				array('ContentBlockController', 'replaceCollectionID'),				
+				array('static', 'replaceCollectionID'),				
 				$text);
 
 			$text = preg_replace_callback(
 				'/<img [^>]*src\s*=\s*"{CCM:FID_([0-9]+)}"[^>]*>/i',
-				array('ContentBlockController', 'replaceImageID'),				
+				array('static', 'replaceImageID'),				
 				$text);
 
 			// now we add in support for the files that we view inline			
 			$text = preg_replace_callback(
 				'/{CCM:FID_([0-9]+)}/i',
-				array('ContentBlockController', 'replaceFileID'),				
+				array('static', 'replaceFileID'),				
 				$text);
 
 			// now files we download
 			
 			$text = preg_replace_callback(
 				'/{CCM:FID_DL_([0-9]+)}/i',
-				array('ContentBlockController', 'replaceDownloadFileID'),				
+				array('static', 'replaceDownloadFileID'),				
 				$text);
 			
 			// snippets
@@ -263,9 +261,9 @@ use \Concrete\Core\Block\BlockController;
 			if ($fID > 0) {
 				$c = Page::getCurrentPage();
 				if (is_object($c)) {
-					return View::url('/download_file', 'view', $fID, $c->getCollectionID());
+					return URL::to('/download_file', 'view', $fID, $c->getCollectionID());
 				} else {
-					return View::url('/download_file', 'view', $fID);
+					return URL::to('/download_file', 'view', $fID);
 				}
 			}
 		}
@@ -273,13 +271,13 @@ use \Concrete\Core\Block\BlockController;
 		private function replaceDownloadFileIDInEditMode($match) {
 			$fID = $match[1];
 			if ($fID > 0) {
-				return View::url('/download_file', 'view', $fID);
+				return URL::to('/download_file', 'view', $fID);
 			}
 		}
 		
 		private function replaceFileIDInEditMode($match) {
 			$fID = $match[1];
-			return View::url('/download_file', 'view_inline', $fID);
+			return URL::to('/download_file', 'view_inline', $fID);
 		}
 		
 		private function replaceCollectionID($match) {
@@ -294,10 +292,10 @@ use \Concrete\Core\Block\BlockController;
 			// keep links valid
 			$url1 = str_replace('/', '\/', BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME);
 			$url2 = str_replace('/', '\/', BASE_URL . DIR_REL);
-			$url3 = View::url('/download_file', 'view_inline');
+			$url3 = URL::to('/download_file', 'view_inline');
 			$url3 = str_replace('/', '\/', $url3);
 			$url3 = str_replace('-', '\-', $url3);
-			$url4 = View::url('/download_file', 'view');
+			$url4 = URL::to('/download_file', 'view');
 			$url4 = str_replace('/', '\/', $url4);
 			$url4 = str_replace('-', '\-', $url4);
 			$text = preg_replace(

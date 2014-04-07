@@ -32,6 +32,15 @@ use \Concrete\Core\Gathering\Item\Template\Template as GatheringItemTemplate;
 use \Concrete\Core\Gathering\Item\Template\Type as GatheringItemTemplateType;
 use \Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;
 use \Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
+use \Concrete\Core\Conversation\Editor\Editor as ConversationEditor;
+use \Concrete\Core\Conversation\Rating\Type as ConversationRatingType;
+use \Concrete\Core\ImageEditor\ControlSet as SystemImageEditorControlSet;
+use \Concrete\Core\ImageEditor\Filter as SystemImageEditorFilter;
+use \Concrete\Core\ImageEditor\Component as SystemImageEditorComponent;
+use \Concrete\Core\Conversation\FlagType\FlagType as ConversationFlagType;
+use \Concrete\Core\Validation\BannedWord\BannedWord as BannedWord;
+use \Concrete\Core\Config\ConfigStore;
+use \Concrete\Core\File\Importer as FileImporter;
 
 class ContentImporter {
 

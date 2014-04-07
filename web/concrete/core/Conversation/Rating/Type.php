@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Conversation\Rating;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 abstract class Type extends Object {
 
 	abstract public function outputRatingTypeHTML();
@@ -12,7 +13,7 @@ abstract class Type extends Object {
 		$handles = $db->GetCol('select cnvRatingTypeHandle from ConversationRatingTypes order by cnvRatingTypeHandle asc');
 		$types = array();
 		foreach($handles as $handle) {
-			$ratingType = ConversationRatingType::getByHandle($handle);
+			$ratingType = static::getByHandle($handle);
 			if (is_object($ratingType)) {
 				$types[] = $ratingType;
 			}
@@ -27,7 +28,7 @@ abstract class Type extends Object {
 		}
 		$db = Loader::db();
 		$db->Execute('insert into ConversationRatingTypes (cnvRatingTypeHandle, cnvRatingTypeName, cnvRatingTypeCommunityPoints, pkgID) values (?, ?, ?, ?)', array($cnvRatingTypeHandle, $cnvRatingTypeName, $cnvRatingTypeCommunityPoints, $pkgID));
-		return ConversationRatingType::getByHandle($cnvRatingTypeHandle);
+		return static::getByHandle($cnvRatingTypeHandle);
 	}
 
 	public static function getByHandle($cnvRatingTypeHandle) {
@@ -35,7 +36,7 @@ abstract class Type extends Object {
 		$r = $db->GetRow('select cnvRatingTypeID, cnvRatingTypeHandle, cnvRatingTypeName, cnvRatingTypeCommunityPoints, pkgID from ConversationRatingTypes where cnvRatingTypeHandle = ?', array($cnvRatingTypeHandle));
 		
 		if (is_array($r) && $r['cnvRatingTypeHandle']) {
-			$class = Loader::helper('text')->camelcase($r['cnvRatingTypeHandle']) . 'ConversationRatingType';
+            $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Conversation\\Rating\\' . helper('text')->camelcase($r['cnvRatingTypeHandle']) . 'Type');
 			$sc = new $class();
 			$sc->setPropertiesFromArray($r);
 			return $sc;
@@ -47,7 +48,7 @@ abstract class Type extends Object {
 		$r = $db->GetRow('select cnvRatingTypeID, cnvRatingTypeHandle, cnvRatingTypeName, cnvRatingTypeCommunityPoints, pkgID from ConversationRatingTypes where cnvRatingTypeID = ?', array($cnvRatingTypeID));
 		
 		if (is_array($r) && $r['cnvRatingTypeHandle']) {
-			$class = Loader::helper('text')->camelcase($r['cnvRatingTypeHandle']) . 'ConversationRatingType';
+            $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Conversation\\Rating\\' . helper('text')->camelcase($r['cnvRatingTypeHandle']) . 'Type');
 			$sc = new $class();
 			$sc->setPropertiesFromArray($r);
 			return $sc;
@@ -72,7 +73,7 @@ abstract class Type extends Object {
 		$handles = $db->GetCol('select cnvRatingTypeHandle from ConversationRatingTypes where pkgID = ? order by cnvRatingTypeHandle asc', array($pkg->getPackageID()));
 		$types = array();
 		foreach($handles as $handle) {
-			$ratingType = ConversationRatingType::getByHandle($handle);
+			$ratingType = static::getByHandle($handle);
 			if (is_object($ratingType)) {
 				$types[] = $ratingType;
 			}

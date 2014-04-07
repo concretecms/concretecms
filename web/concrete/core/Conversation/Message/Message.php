@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Conversation\Message;
+use Loader;
 use \Concrete\Core\Foundation\Object;
 class Message extends Object {
 	public function getConversationMessageID() {return $this->cnvMessageID;}
@@ -30,7 +31,7 @@ class Message extends Object {
 		$db = Loader::db();
 		$children = $db->getCol('SELECT cnvMessageID as cnt FROM ConversationMessages WHERE cnvMessageParentID=?',array($this->cnvMessageID));
 		foreach ($children as $childID) {
-			$child = ConversationMessage::getByID($childID);
+			$child = static:;getByID($childID);
 			if (($child->isConversationMessageApproved() && !$child->isConversationMessageDeleted()) || $child->conversationMessageHasActiveChildren()) {
 				return true;
 			}
@@ -200,7 +201,7 @@ class Message extends Object {
 		$db = Loader::db();
 		$r = $db->GetRow('select * from ConversationMessages where cnvMessageID = ?', array($cnvMessageID));
 		if (is_array($r) && $r['cnvMessageID'] == $cnvMessageID) {
-			$cnv = new ConversationMessage;
+			$cnv = new static;
 			$cnv->getConversationMessageFlagTypes();
 			$cnv->setPropertiesFromArray($r);
 			return $cnv;
@@ -209,7 +210,7 @@ class Message extends Object {
 	
 	public function attachFile(File $f, $cnvMessageID) {
 		$db = Loader::db();
-		if(!is_object($f) || !is_object(ConversationMessage::getByID($cnvMessageID))) {
+		if(!is_object($f) || !is_object(static::getByID($cnvMessageID))) {
 			return false;
 		} else {
 			
@@ -271,12 +272,14 @@ class Message extends Object {
 
 		$r = $db->Execute('insert into ConversationMessages (cnvMessageSubject, cnvMessageBody, cnvMessageDateCreated, cnvMessageParentID, cnvMessageLevel, cnvID, uID, cnvMessageSubmitIP, cnvMessageSubmitUserAgent) values (?, ?, ?, ?, ?, ?, ?, ?, ?)',
 						  array($cnvMessageSubject, $cnvMessageBody, $date, $cnvMessageParentID, $cnvMessageLevel, $cnvID, $uID, ip2long(Loader::Helper('validation/ip')->getRequestIP()), $_SERVER['HTTP_USER_AGENT']));
+		
+		$cnvMessageID = $db->Insert_ID();
 
 		if ($cnv instanceof Conversation) {
 			$cnv->updateConversationSummary();
 		}
 
-		return ConversationMessage::getByID($db->Insert_ID());
+		return static::getByID($cnvMessageID);
 	}
 
 	public function delete() {

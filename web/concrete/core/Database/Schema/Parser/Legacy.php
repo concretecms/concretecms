@@ -132,6 +132,9 @@ class Legacy extends Parser {
 		if ($type == 'C') {
 			return 'string';
 		}
+		if ($type == 'F') {
+			return 'float';
+		}
 		if ($type == 'X') {
 			return 'text';
 		}

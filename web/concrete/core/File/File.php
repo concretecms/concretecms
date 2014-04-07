@@ -1,6 +1,16 @@
 <?
 namespace Concrete\Core\File;
 use \Concrete\Core\Foundation\Object;
+use Loader;
+use CacheLocal;
+use User;
+use Events;
+use Page;
+use \Concrete\Core\Attribute\Key as AttributeKey;
+use \Concrete\Core\Permission\Key as PermissionKey;
+use FileSet;
+use \Concrete\Core\File\StorageLocation as FileStorageLocation;
+use \Concrete\Core\Attribute\Key\FileKey as FileAttributeKey;
 class File extends Object implements \Concrete\Core\Permission\ObjectInterface { 
 
 	const CREATE_NEW_VERSION_THRESHOLD = 300; // in seconds (5 minutes)
@@ -22,7 +32,7 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		if (!is_null($fID) && $row['fID'] == $fID) {
 			$f->setPropertiesFromArray($row);
 		} else {
-			$f->error = File::F_ERROR_INVALID_FILE;
+			$f->error = static::F_ERROR_INVALID_FILE;
 		}
 		return $f;
 	}	
@@ -71,7 +81,6 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
 		return;
 		
-		Loader::model('attribute/categories/file');
 		$attribs = FileAttributeKey::getAttributes($this->getFileID(), $this->getFileVersionID(), 'getSearchIndexValue');
 		$db = Loader::db();
 
@@ -87,7 +96,7 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 			return $path;
 		}
 		
-		$f = File::getByID($fID);
+		$f = static::getByID($fID);
 		$path = $f->getRelativePath();
 		
 		CacheLocal::set('file_relative_path', $fID, $path);
@@ -187,7 +196,6 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 			$u = new User();
 		}
 		$db = Loader::db();
-		Loader::model('file_set');
 		$r = $db->GetOne("select fsfID from FileSetFiles fsf inner join FileSets fs on fs.fsID = fsf.fsID where fsf.fID = ? and fs.uID = ? and fs.fsType = ?",
 			array($this->getFileID(), $u->getUserID(), FileSet::TYPE_STARRED));
 		return $r > 0;
@@ -284,7 +292,7 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		}
 		
 		// return the new file object
-		$nf = File::getByID($fIDNew);
+		$nf = static::getByID($fIDNew);
 		Events::fire('on_file_duplicate', $this, $nf);
 		return $nf;		
 	}
@@ -306,7 +314,7 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		
 		$fID = $db->Insert_ID();
 		
-		$f = File::getByID($fID);
+		$f = static::getByID($fID);
 		
 		$fv = $f->addVersion($filename, $prefix, $data);
 		Events::fire('on_file_add', $f, $fv);
@@ -334,7 +342,7 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		
 		$fvTitle = (isset($data['fvTitle'])) ? $data['fvTitle'] : '';
 		$fvDescription = (isset($data['fvDescription'])) ? $data['fvDescription'] : '';
-		$fvTags = (isset($data['fvTags'])) ? FileVersion::cleanTags($data['fvTags']) : '';
+		$fvTags = (isset($data['fvTags'])) ? Version::cleanTags($data['fvTags']) : '';
 		$fvIsApproved = (isset($data['fvIsApproved'])) ? $data['fvIsApproved'] : '1';
 
 		$db = Loader::db();
@@ -395,7 +403,6 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		$pathbase = false;
 		$r = $db->GetAll('select fvFilename, fvPrefix from FileVersions where fID = ?', array($this->fID));
 		$h = Loader::helper('concrete/file');
-		Loader::model('file_storage_location');
 		if ($this->getStorageLocationID() > 0) {
 			$fsl = FileStorageLocation::getByID($this->getStorageLocationID());
 			$pathbase = $fsl->getDirectory();
@@ -477,7 +484,7 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		$row = $db->GetRow("select * from FileVersions where fvID = ? and fID = ?", array($fvID, $this->fID));
 		$row['fvAuthorName'] = $db->GetOne("select uName from Users where uID = ?", array($row['fvAuthorUID']));
 		
-		$fv = new FileVersion();
+		$fv = new Version();
 		$row['fslID'] = $this->fslID;
 		$fv->setPropertiesFromArray($row);
 		

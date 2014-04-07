@@ -11,7 +11,7 @@ use \Concrete\Core\Block\BlockController;
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-	class Controller extends BlockController implements ConversationFeatureInterface {
+	class Controller extends BlockController implements \Concrete\Core\Feature\ConversationFeatureInterface {
 
 		protected $btCacheBlockRecord = true;
 		protected $btTable = 'btCoreConversation';

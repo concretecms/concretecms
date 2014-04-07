@@ -1,10 +1,17 @@
 <?
 namespace Concrete\Core\Block;
-use Concrete\Core\Controller;
+use \Concrete\Core\Controller;
 use Loader;
 use Environment;
 use Package;
 use CacheLocal;
+use Events;
+use Cache;
+use \Concrete\Core\Block\BlockType\BlockType;
+use \Concrete\Core\Legacy\BlockRecord;
+use \Concrete\Core\Backup\ContentExporter;
+use \Concrete\Core\Backup\ContentImporter;
+
 class BlockController extends \Concrete\Core\Controller\AbstractController {
 	
 	protected $record; // blockrecord
@@ -16,7 +23,6 @@ class BlockController extends \Concrete\Core\Controller\AbstractController {
 	protected $btIsInternal = 0;
 	protected $btSupportsInlineAdd = false;
 	protected $btSupportsInlineEdit = false;
-	protected $btActiveWhenAdded = 1;
 	protected $btCopyWhenPropagate = 0;
 	protected $btIncludeAll = 0;
 	protected $dbFile = 'db.xml';
@@ -74,8 +80,9 @@ class BlockController extends \Concrete\Core\Controller\AbstractController {
 	function install($path) {
 		// passed path is the path to this block (try saying that ten times fast)
 		// create the necessary table
+		
 		if (!$this->btTable) {
-			$r = new stdClass;
+			$r = new \stdClass;
 			$r->result = true;
 			return $r;
 		}
@@ -114,7 +121,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController {
 		//$argsMerged = array_merge($_POST, $args);
 		if ($this->btTable) {
 			$db = Loader::db();
-			$columns = $db->GetCol('show columns from `' . $this->btTable . '`'); // I have no idea why getAttributeNames isn't working anymore.
+			$columns = $db->MetaColumnNames($this->btTable);
 			$this->record = new BlockRecord($this->btTable);
 			$this->record->bID = $this->bID;
 			foreach($columns as $key) {
@@ -263,7 +270,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController {
 		}
 	}
 	
-	public function import($page, $arHandle, SimpleXMLElement $blockNode) {
+	public function import($page, $arHandle, \SimpleXMLElement $blockNode) {
 		$args = array();
 		$db = Loader::db();
 		// handle the adodb stuff
@@ -515,13 +522,6 @@ class BlockController extends \Concrete\Core\Controller\AbstractController {
 	 */
 	public function getBlockTypeHelp() {
 		return $this->btHelpContent;
-	}
-	
-	/**
-	 * @access private
-	 */
-	public function isActiveWhenAdded() {
-		return $this->btActiveWhenAdded;
 	}
 	
 	/**

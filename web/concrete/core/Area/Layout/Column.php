@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Area\Layout;
+use Loader;
 use \Concrete\Core\Foundation\Object;
 class Column extends Object {
 

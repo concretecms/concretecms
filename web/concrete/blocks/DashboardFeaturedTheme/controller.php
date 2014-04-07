@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Block\DashboardFeaturedTheme;
 use \Concrete\Core\Block\BlockController;
-=/**
+/**
  * The controller for the block that displays featured themes in the dashboard news overlay.
  *
  * @package Blocks

@@ -1,6 +1,10 @@
 <?
 namespace Concrete\Core\Conversation;
+use Loader;
 use \Concrete\Core\Foundation\Object;
+use Page;
+use \Concrete\Core\Conversation\Message\List as ConversationMessageList;
+
 class Conversation extends Object {
 
 	public function getConversationID() {return $this->cnvID;}
@@ -13,7 +17,7 @@ class Conversation extends Object {
 		$db = Loader::db();
 		$r = $db->GetRow('select cnvID, cID, cnvDateCreated, cnvDateLastMessage, cnvMessagesTotal from Conversations where cnvID = ?', array($cnvID));
 		if (is_array($r) && $r['cnvID'] == $cnvID) {
-			$cnv = new Conversation;
+			$cnv = new static;
 			$cnv->setPropertiesFromArray($r);
 			return $cnv;
 		}
@@ -72,7 +76,7 @@ class Conversation extends Object {
 		$db = Loader::db();
 		$date = Loader::helper('date')->getSystemDateTime();
 		$r = $db->Execute('insert into Conversations (cnvDateCreated, cnvDateLastMessage) values (?, ?)', array($date, $date));
-		return Conversation::getByID($db->Insert_ID());
+		return static::getByID($db->Insert_ID());
 	}
 
 

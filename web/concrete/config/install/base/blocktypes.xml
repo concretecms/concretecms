@@ -57,7 +57,6 @@
             <blocktype handle="date_nav"/>
             <blocktype handle="tags"/>
             <blocktype handle="rss_displayer"/>
-            <blocktype handle="date_archive"/>
         </blocktypeset>
         <blocktypeset handle="form" name="Forms" package="">
             <blocktype handle="form"/>

@@ -20,7 +20,6 @@ class Controller extends BlockController {
 	}
 	
 	public function view() {
-		Loader::library('newsflow');
 		// get the latest data as well
 		$slots = Newsflow::getSlotContents();
 		$this->set('slot', $slots[$this->slot]);

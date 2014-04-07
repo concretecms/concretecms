@@ -2,5 +2,5 @@
 
 <? 
 $info = array();
-$bt->inc('form_setup_html.php', array('info' => $info, 'c' => $c)); 
+$view->inc('form_setup_html.php', array('info' => $info, 'c' => $c)); 
 ?>
