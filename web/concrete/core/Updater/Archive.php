@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Core\Updater;
+use Loader;
+use Marketplace;
 class Archive {
 	
 	/**
@@ -40,7 +42,7 @@ class Archive {
 		$fh = Loader::helper('file');
 		if (function_exists('zip_open')) {
 			try {
-				$zip = new ZipArchive;
+				$zip = new \ZipArchive;
 				if ($zip->open($fh->getTemporaryDirectory() . '/' . $file) === TRUE) {
 					$zip->extractTo($fh->getTemporaryDirectory() . '/' . $directory . '/');
 					$zip->close();	
@@ -96,11 +98,11 @@ class Archive {
 		$dirFull = $this->getArchiveDirectory($dir);
 		$dirBase = substr(strrchr($dirFull, '/'), 1);
 		if (file_exists($this->targetDirectory . '/' . $dirBase)) {
-			throw new Exception(t('The directory %s already exists. Perhaps this item has already been installed.', $this->targetDirectory . '/' . $dirBase));
+			throw new \Exception(t('The directory %s already exists. Perhaps this item has already been installed.', $this->targetDirectory . '/' . $dirBase));
 		} else {
 			$f = $fh->copyAll($dirFull, $this->targetDirectory . '/' . $dirBase);
 			if (!is_dir($this->targetDirectory . '/' . $dirBase)) {
-				throw new Exception(t('Unable to copy directory %s to %s. Perhaps permissions are set incorrectly or the target directory does not exist.',$dirBase,$this->targetDirectory));
+				throw new \Exception(t('Unable to copy directory %s to %s. Perhaps permissions are set incorrectly or the target directory does not exist.',$dirBase,$this->targetDirectory));
 			}
 		}
 		return $dirBase;

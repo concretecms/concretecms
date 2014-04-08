@@ -21,7 +21,7 @@ class List extends PageList {
 		$this->filter('stType', Stack::ST_TYPE_USER_ADDED);
 	}
 	
-	public static function export(SimpleXMLElement $x) {
+	public static function export(\SimpleXMLElement $x) {
 		$db = Loader::db();
 		$r = $db->Execute('select stName, cID, stType from Stacks order by stName asc');
 		if ($r->NumRows()) {

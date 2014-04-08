@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Core\Permission\Response;
 use Loader;
+use User;
+use \Concrete\Core\Permission\Cache as PermissionCache;
 class Response {
 
 	protected $object;
@@ -28,10 +30,9 @@ class Response {
 		}
 
 		$className = \Concrete\Core\Foundation\ClassLoader::getClassName($object->getPermissionResponseClassName());
-		$category = \Core\Permission\Key\Category\Category::getByHandle($object->getPermissionObjectKeyCategoryHandle());
-		$object = new $className();
-		$object->setPermissionCategoryObject($object);
-		
+		$category = \Concrete\Core\Permission\Category::getByHandle($object->getPermissionObjectKeyCategoryHandle());
+		$pr = new $className();
+		$pr->setPermissionCategoryObject($object);
 		$pr->setPermissionObject($object);
 		PermissionCache::addResponse($object, $pr);
 		return $pr;
@@ -43,7 +44,7 @@ class Response {
 			return true;
 		}
 		if (!is_object($this->category)) {
-			throw new Exception(t('Unable to get category for permission %s', $permission));
+			throw new \Exception(t('Unable to get category for permission %s', $permission));
 		}
 		$pk = $this->category->getPermissionKeyByHandle($permission);
 		if (!$pk) {

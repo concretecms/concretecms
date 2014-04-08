@@ -1,5 +1,5 @@
 <?
-namespace \Concrete\Core\Feature\Detail;
+namespace Concrete\Core\Feature\Detail;
 use Loader;
 class ImageDetail extends Detail {
 

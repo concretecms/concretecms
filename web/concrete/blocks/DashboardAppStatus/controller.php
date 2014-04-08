@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Block\DashboardAppStatus;
+use Loader;
+use Package;
 use \Concrete\Core\Block\BlockController;
 /**
  * The controller for the Dashboard App Status block. It is added to the dashboard news page/overlay and handles display of available updates.
@@ -30,9 +32,8 @@ use \Concrete\Core\Block\BlockController;
 		}
 		
 		public function view() {
-			Loader::library('update');
-			$this->set('latest_version', Update::getLatestAvailableVersionNumber());
-			$tp = new TaskPermission();
+			$this->set('latest_version', \Concrete\Core\Updater\Update::getLatestAvailableVersionNumber());
+			$tp = new \TaskPermission();
 			$updates = 0;
 			$local = array();
 			$remote = array();

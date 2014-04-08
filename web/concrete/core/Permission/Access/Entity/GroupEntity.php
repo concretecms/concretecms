@@ -3,7 +3,7 @@ namespace Concrete\Core\Permission\Access\Entity;
 use Loader;
 use Group;
 use Config;
-use \Concrete\Core\Permission\Access\Access as PermissionAccess;
+use PermissionAccess;
 class GroupEntity extends Entity {
 
 	protected $group = false;

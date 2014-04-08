@@ -289,7 +289,6 @@ class BlockType {
 		if(is_dir($dir)) {
 			$files = array_merge($files, $fh->getDirectoryContents($dir));
 		}
-		Loader::library('template_file');
 		$templates = array();
 		foreach(array_unique($files) as $file) {
 			$templates[] = new TemplateFile($this, $file);

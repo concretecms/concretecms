@@ -1,5 +1,8 @@
 <?
 namespace Concrete\Core\Feature\Assignment;
+use \Concrete\Core\Feature\Feature;
+use \Concrete\Core\Feature\Category\Category as FeatureCategory;
+use \Concrete\Core\Feature\Detail\Detail as FeatureDetail;
 class GatheringItemAssignment extends Assignment {
 
 	protected $gaiID;
@@ -7,9 +10,9 @@ class GatheringItemAssignment extends Assignment {
 		$this->gaiID = $mixed->getGatheringItemID();
 	}
 
-	public static function add(Feature $fe, Detail $fd, \Concrete\Core\Gathering\Item\Item $item) {
+	public static function add(Feature $fe, Detail $fd, $item) {
 		$fc = FeatureCategory::getByHandle('gathering_item');
-		$fa = parent::add($fe, $fc, $fd, $item);
+		$fa = parent::addAssignment($fe, $fc, $fd, $item);
 		$db = Loader::db();
 		$db->Execute('insert into GatheringItemFeatureAssignments (gaiID, faID) values (?, ?)', array(
 			$item->getGatheringItemID(),

@@ -24,8 +24,6 @@ class Concrete5_Controller_Page_Login extends PageController {
 		$languages = array();
 		$locales = array();
 		if (Config::get('LANGUAGE_CHOOSE_ON_LOGIN')) {
-			Loader::library('3rdparty/Zend/Locale');
-			Loader::library('3rdparty/Zend/Locale/Data');
 			$languages = Localization::getAvailableInterfaceLanguages();
 			if (count($languages) > 0) {
 				array_unshift($languages, 'en_US');

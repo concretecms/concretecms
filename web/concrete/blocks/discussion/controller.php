@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Block\Discussion;
+use Loader;
 use \Concrete\Core\Block\BlockController;
 class Controller extends BlockController {
 	protected $btCacheBlockRecord = true;

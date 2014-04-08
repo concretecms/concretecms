@@ -1,5 +1,6 @@
 <?php 
 namespace Concrete\Block\NextPrevious;
+use Loader;
 use \Concrete\Core\Block\BlockController;
 class Controller extends BlockController {
 

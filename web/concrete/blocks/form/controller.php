@@ -1,5 +1,6 @@
 <?php 
 namespace Concrete\Block\Form;
+use Loader;
 use \Concrete\Core\Block\BlockController;
 class Controller extends BlockController {
 	public $btTable = 'btForm';
@@ -43,7 +44,7 @@ class Controller extends BlockController {
 					$table = (string) $data['table'];
 					if (isset($data->record)) {
 						foreach($data->record as $record) {
-							$aar = new ADODB_Active_Record($table);
+							$aar = new \Concrete\Core\Legacy\BlockRecord($table);
 							$aar->bID = $b->getBlockID();
 							foreach($record->children() as $node) {
 								$nodeName = $node->getName();
@@ -53,7 +54,7 @@ class Controller extends BlockController {
 								$db = Loader::db();
 								$aar->questionSetId = $db->GetOne('select questionSetId from btForm where bID = ?', array($b->getBlockID()));
 							}
-							$aar->Save();
+							$aar->Replace();
 						}
 					}								
 				}
@@ -235,7 +236,7 @@ class Controller extends BlockController {
 	function action_submit_form() { 
 	
 		$ip = Loader::helper('validation/ip');
-		Loader::library("file/importer");
+		
 		
 		if (!$ip->check()) {
 			$this->set('invalidIP', $ip->getErrorMessage());			

@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Block\CoreConversation;
+use Loader;
 use \Concrete\Core\Block\BlockController;
 /**
  * The controller for the conversation block. This block is used to display conversations in a page.

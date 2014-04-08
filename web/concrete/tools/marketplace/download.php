@@ -7,7 +7,6 @@ if (!$tp->canInstallPackages()) { ?>
 
 }
 
-Loader::library('marketplace');
 Loader::model('marketplace_remote_item');
 
 $mpID = $_REQUEST['mpID'];

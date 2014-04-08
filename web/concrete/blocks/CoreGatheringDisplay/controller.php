@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Block\CoreGatheringDisplay;
+use Loader;
 use \Concrete\Core\Block\BlockController;
 /**
  * Displays an gathering stand-alone in a page.

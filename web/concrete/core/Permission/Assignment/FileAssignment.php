@@ -1,7 +1,9 @@
 <?
 namespace Concrete\Core\Permission\Assignment;
-use \Concrete\Core\Permission\Access\Access as PermissionAccess;
+use PermissionAccess;
 use Loader;
+use FileSet;
+use File;
 class FileAssignment extends Assignment {
 
 	protected $permissionObjectToCheck;

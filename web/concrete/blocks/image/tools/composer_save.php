@@ -6,7 +6,7 @@ if (!$fp->canAddFiles()) {
 }
 $cf = Loader::helper("file");
 $valt = Loader::helper('validation/token');
-Loader::library("file/importer");
+
 $json = Loader::helper('json');
 $id = Loader::helper('validation/identifier');
 

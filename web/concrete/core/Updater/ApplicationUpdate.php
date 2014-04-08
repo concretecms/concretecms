@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Core\Updater;
+use Loader;
+use Marketplace;
 class ApplicationUpdate {
 
 	protected $version;
@@ -52,7 +54,7 @@ class ApplicationUpdate {
 		$version = DIR_APP_UPDATES . '/' . $dir . '/' . DIRNAME_APP . '/config/version.php';
 		@include($version);
 		if ($APP_VERSION != false) {
-			$obj = new ApplicationUpdate();
+			$obj = new static();
 			$obj->version = $APP_VERSION;
 			$obj->identifier = $dir;
 			return $obj;

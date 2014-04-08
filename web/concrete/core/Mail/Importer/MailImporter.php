@@ -187,7 +187,7 @@ class MailImporter extends Object {
 	public function getPendingMessages() {
 		$messages = array();
 		// connect to the server to grab all messages 
-		Loader::library('3rdparty/Zend/Exception');
+		
 		if ($this->miConnectionMethod == 'IMAP') { 
 			Loader::library('3rdparty/Zend/Mail/Storage/Imap');
 		} else {

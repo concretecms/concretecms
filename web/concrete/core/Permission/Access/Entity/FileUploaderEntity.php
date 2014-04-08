@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Core\Permission\Access\Entity;
 use Loader;
-use \Concrete\Core\Permission\Access\Access as PermissionAccess;
+use PermissionAccess;
 use Config;
 use UserInfo;
 use \Concrete\Core\Permission\Access\FileSetAccess as FileSetPermissionAccess;

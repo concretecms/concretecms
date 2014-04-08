@@ -44,7 +44,6 @@ class Concrete5_Controller_Page_Dashboard_System_Basics_Icons extends DashboardC
 				$this->redirect('/dashboard/system/basics/icons/', 'modern_icon_removed');
 			}
 			else {
-				Loader::library('file/importer');
 				$fi = new FileImporter();
 				$resp = $fi->import($_FILES['favicon_file']['tmp_name'], $_FILES['favicon_file']['name'], $fr);
 				if(!($resp instanceof FileVersion)) {

@@ -3,7 +3,7 @@ namespace Concrete\Core\Tree\Node;
 use \Concrete\Core\Foundation\Object;
 use Loader;
 use \Concrete\Core\Tree\Node\NodeType as TreeNodeType;
-use \Concrete\Core\Permission\Key\Key as PermissionKey;
+use PermissionKey;
 
 abstract class Node extends Object implements \Concrete\Core\Permission\ObjectInterface {
 

@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Block\CoreStackDisplay;
+use Stack;
+use Loader;
 /**
  * The controller for the stack display block. This is an internal proxy block that is inserted when a stack's contents are displayed in a page.
  *

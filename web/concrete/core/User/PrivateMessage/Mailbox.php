@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\User\PrivateMessage;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 class Mailbox extends Object {
 
 	const MBTYPE_INBOX = -1;

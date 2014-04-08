@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Foundation\Collection\Database\Column;
+use Loader;
 class Column {
 
 	public function getColumnValue($obj) {

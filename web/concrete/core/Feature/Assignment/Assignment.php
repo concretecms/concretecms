@@ -2,13 +2,17 @@
 namespace Concrete\Core\Feature\Assignment;
 use \Concrete\Core\Foundation\Object;
 use Loader;
+use \Concrete\Core\Feature\Feature;
+use \Concrete\Core\Feature\Category\Category as FeatureCategory;
+use \Concrete\Core\Feature\Detail\Detail as FeatureDetail;
 abstract class Assignment extends Object {
 
 	abstract public function loadDetails($mixed);
 	abstract public static function getList($mixed);
 	abstract public static function getFeature($feHandle, $mixed);
+	abstract public static function add(Feature $fe, FeatureDetail $fd, $mixed);
 	
-	public static function add(Feature $fe, FeatureCategory $fc, FeatureDetail $fd, $mixed) {
+	public static function addAssignment(Feature $fe, FeatureCategory $fc, FeatureDetail $fd, $mixed) {
 		$db = Loader::db();
 		$db->Execute('insert into FeatureAssignments (fcID, feID, fdObject) values (?, ?, ?)', array(
 			$fc->getFeatureCategoryID(),
@@ -16,7 +20,7 @@ abstract class Assignment extends Object {
 			serialize($fd)
 		));
 		// sometimes feature detail objects need to do more with the feature assignments, so we do that here.
-		$fa = FeatureAssignment::getByID($db->Insert_ID(), $mixed);
+		$fa = static::getByID($db->Insert_ID(), $mixed);
 		$fd->handleFeatureAssignment($fa);
 		return $fa;
 	}
@@ -45,7 +49,7 @@ abstract class Assignment extends Object {
 		$db = Loader::db();
 		$r = $db->GetRow('select faID, fa.fcID, fdObject, fa.feID, fe.feHandle, fc.fcHandle from FeatureAssignments fa inner join FeatureCategories fc on fa.fcID = fc.fcID inner join Features fe on fa.feID = fe.feID where faID = ?', array($faID));
 		if (is_array($r) && $r['faID'] == $faID) {
-			$class = Loader::helper('text')->camelcase($r['fcHandle']) . 'FeatureAssignment';
+            $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\Assignment\\' . helper('text')->camelcase($r['fcHandle']) . 'Assignment');
 			$fa = new $class();
 			$fa->setPropertiesFromArray($r);
 			$fa->fdObject = @unserialize($r['fdObject']);

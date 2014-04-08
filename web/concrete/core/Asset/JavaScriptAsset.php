@@ -59,7 +59,6 @@ class JavaScriptAsset extends Asset {
 	}
 
 	public function minify($assets) {
-		Loader::library('3rdparty/jsmin');
 		return self::process($assets, function($js, $assetPath, $targetPath) {
 			return JSMin::minify($js);
 		});

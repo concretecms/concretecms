@@ -6,7 +6,7 @@ use Loader;
 use Group as UserGroup;
 use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use \Concrete\Core\Permission\Key\TopicCategoryTreeNodeKey as TopicCategoryTreeNodePermissionKey;
-use \Concrete\Core\Permission\Access\Access as PermissionAccess;
+use PermissionAccess;
 class Topic extends Tree {
 
 	public function getTreeDisplayName() {return $this->topicTreeName;}

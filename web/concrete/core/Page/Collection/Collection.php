@@ -8,6 +8,7 @@ use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 use \Concrete\Core\Attribute\Value\CollectionValue as CollectionAttributeValue;
 use User;
 use Block;
+use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 
 	class Collection extends Object {
 		
@@ -188,7 +189,6 @@ use Block;
 				AttributeKey::reindex('CollectionSearchIndexAttributes', $searchableAttributes, $attribs, $rs);
 				
 				if ($index == false) {
-					Loader::library('database_indexed_search');
 					$index = new IndexedSearch();
 				}
 				

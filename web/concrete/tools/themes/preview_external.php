@@ -2,7 +2,6 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 Loader::model('collection_types');
-Loader::library('marketplace');
 $mi = Marketplace::getInstance();
 $tp = new TaskPermission();
 if ($mi->isConnected() && $tp->canInstallPackages()) { 

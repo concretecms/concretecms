@@ -2,7 +2,6 @@
 
 $tp = new TaskPermission();
 if ($tp->canInstallPackages()) { 
-	Loader::library('marketplace');
 	$mi = Marketplace::getInstance();
 	if ($_REQUEST['complete']) { 
 	

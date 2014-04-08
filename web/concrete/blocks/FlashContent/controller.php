@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Block\FlashContent;
+use File;
+use Loader;
 use \Concrete\Core\Block\BlockController;
 class Controller extends BlockController {
 

@@ -7,10 +7,12 @@ use Package;
 use CacheLocal;
 use Events;
 use Cache;
+use Page;
 use \Concrete\Core\Block\BlockType\BlockType;
 use \Concrete\Core\Legacy\BlockRecord;
 use \Concrete\Core\Backup\ContentExporter;
 use \Concrete\Core\Backup\ContentImporter;
+use \Concrete\Core\Feature\Feature;
 
 class BlockController extends \Concrete\Core\Controller\AbstractController {
 	

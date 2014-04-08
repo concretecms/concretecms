@@ -655,20 +655,6 @@ class UserInfo extends Object {
 		return $this->uDefaultLanguage;
 	}
 
-	/*
-	Loader::library('3rdparty/Zend/Locale');
-	Loader::library('3rdparty/Zend/Locale/Data');
-	Zend_Locale_Data::setCache(Cache::getLibrary());
-	foreach($languages as $lang) {
-		$loc = new Zend_Locale($lang);
-		$obj = new stdClass;
-		$obj->value = $lang;
-		$obj->text = Zend_Locale::getTranslation($loc->getLanguage(), 'language', $lang);
-		$result[] = $obj;
-	}
-*/
-
-
 	/**
 	* Gets the date a user was added to the system, 
 	* if user is specified, returns in the current user's timezone

@@ -114,11 +114,17 @@ class Connection extends \Doctrine\DBAL\Connection {
 
 
     /** 
-     * @deprecated
+     * @deprecated -
      * alias to old ADODB method
      */
     public function GetCol($q, $arguments = array()) {
-        return $this->fetchAll($q, $arguments);
+        $r = $this->fetchAll($q, $arguments);
+        $return = array();
+        
+        foreach($r as $value) {
+            $return[] = $value[key($value)];
+        }
+        return $return;
     }
 
 

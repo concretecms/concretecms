@@ -1,6 +1,6 @@
 <?
-
 namespace Concrete\Core\Activity;
+use Loader;
 class NewsflowSlotItem {
 	
 	protected $content;

@@ -1,6 +1,9 @@
 <?
 namespace Concrete\Core\Permission;
 use Loader;
+use \Concrete\Core\Permission\Response\Response as PermissionResponse;
+use \Concrete\Core\Permission\Key\Key as PermissionKey;
+
 class Checker {
 
 	public $error;
@@ -69,7 +72,7 @@ class Checker {
 				if (is_object($pk)) {
 					$r = $pk->validate();
 				} else {
-					throw new Exception(t('Unable to get permission key for %s', $permission));
+					throw new \Exception(t('Unable to get permission key for %s', $permission));
 				}
 			}
 		}

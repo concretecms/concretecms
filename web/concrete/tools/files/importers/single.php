@@ -3,7 +3,6 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
 $valt = Loader::helper('validation/token');
-Loader::library("file/importer");
 $cf = Loader::helper('file');
 
 $fp = FilePermissions::getGlobal();

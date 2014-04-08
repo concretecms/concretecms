@@ -2,6 +2,7 @@
 namespace Concrete\Core\View;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Request;
+use URL;
 abstract class AbstractView {
 
 	protected static $requestInstance;
@@ -148,7 +149,7 @@ abstract class AbstractView {
 	*/	
 	public function url($action, $task = null) {
 		$args = func_get_args();
-		return call_user_func_array(array('Concrete\Core\Routing\URL', 'to'), $args);
+		return call_user_func_array(array('URL', 'to'), $args);
 	}
 
 	// Legacy Items. Deprecated

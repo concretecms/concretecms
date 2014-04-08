@@ -3,6 +3,8 @@ use Concrete\Core\Foundation\Object;
 use Database;
 use \Concrete\Core\Database\Schema\Schema;
 use Loader;
+use Config;
+use Environment;
 use \Concrete\Core\Package\PackageList;
 
 class Package extends Object {
@@ -108,6 +110,10 @@ class Package extends Object {
 		foreach($queries as $query) {
 			$db->query($query);
 		}
+
+		unset($schema);
+		unset($platform);
+		
 		/*
 		$schema = Database::getADOSChema();		
 		$sql = $schema->ParseSchema($xmlFile);
@@ -141,6 +147,20 @@ class Package extends Object {
 		return $result;
 	
 	}
+
+	public function getClass($pkgHandle) {
+		// loads and instantiates the object
+		$env = Environment::get();
+		$path = $env->getPath(FILENAME_PACKAGE_CONTROLLER, $pkgHandle);
+		if (file_exists($path)) {
+			require_once($path);
+		}
+		$class = Object::camelcase($pkgHandle) . "Package";
+		if (class_exists($class)) {
+			$cl = new $class;
+			return $cl;
+		}
+	}
 	
 	/**
 	 * Loads package translation files into zend translate 
@@ -172,7 +192,7 @@ class Package extends Object {
 	public function getPackageItems() {
 		$items = array();
 		Loader::model('single_page');
-		Loader::library('mail/importer');
+		
 		Loader::model('job');
 		Loader::model('collection_types');
 		Loader::model('system/captcha/library');
@@ -482,7 +502,7 @@ class Package extends Object {
 			
 			// now we add in any files that this package has
 			if (is_dir($this->getPackagePath() . '/content_files')) {
-				Loader::library('file/importer');
+				
 				$fh = new FileImporter();
 				$contents = Loader::helper('file')->getDirectoryContents($this->getPackagePath() . '/content_files');
 		
@@ -492,7 +512,7 @@ class Package extends Object {
 			}	
 			
 			// now we parse the content.xml if it exists.
-			Loader::library('content/importer');
+			
 			$ci = new ContentImporter();
 			$ci->importContentFile($this->getPackagePath() . '/content.xml');
 
@@ -505,7 +525,7 @@ class Package extends Object {
 		$db = Loader::db();
 		$errors = array();
 		
-		$pkg = Loader::package($package);
+		$pkg = static::getClass($package);
 		
 		// Step 1 does that package exist ?
 		if ((!is_dir(DIR_PACKAGES . '/' . $package) && (!is_dir(DIR_PACKAGES_CORE . '/' . $package))) || $package == '') {
@@ -584,7 +604,7 @@ class Package extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow("select * from Packages where pkgID = ?", array($pkgID));
 		if ($row) {
-			$pkg = Loader::package($row['pkgHandle']);
+			$pkg = static::getClass($row['pkgHandle']);
 			if (is_object($pkg)) {
 				$pkg->setPropertiesFromArray($row);
 				return $pkg;
@@ -601,7 +621,7 @@ class Package extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow("select * from Packages where pkgHandle = ?", array($pkgHandle));
 		if ($row) {
-			$pkg = Loader::package($row['pkgHandle']);
+			$pkg = static::getClass($row['pkgHandle']);
 			if (is_object($pkg)) {
 				$pkg->setPropertiesFromArray($row);
 			}
@@ -634,7 +654,7 @@ class Package extends Object {
 	
 	public function upgradeCoreData() {
 		$db = Loader::db();
-		$p1 = Loader::package($this->getPackageHandle());
+		$p1 = static::getClass($this->getPackageHandle());
 		$v = array($p1->getPackageName(), $p1->getPackageDescription(), $p1->getPackageVersion(), $this->getPackageID());
 		$db->query("update Packages set pkgName = ?, pkgDescription = ?, pkgVersion = ? where pkgID = ?", $v);
 	}
@@ -767,7 +787,7 @@ class Package extends Object {
 			$packagesTemp = array();
 			// get package objects from the file system
 			foreach($packages as $p) {
-				$pkg = Loader::package($p);
+				$pkg = static::getClass($p);
                 if (!empty($pkg)) {
 				    $packagesTemp[] = $pkg;
                 }

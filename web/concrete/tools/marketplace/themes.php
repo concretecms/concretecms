@@ -1,8 +1,6 @@
 <?  defined('C5_EXECUTE') or die("Access Denied.");?>
 <div class="ccm-ui">
 <?
-
-Loader::library('marketplace');
 $mi = Marketplace::getInstance();
 $tp = new TaskPermission();
 if (!$tp->canInstallPackages()) { ?>

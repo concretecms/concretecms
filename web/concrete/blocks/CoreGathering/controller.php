@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Block\CoreGathering;
+use Loader;
+use \Concrete\Core\Gathering\Gathering;
 use \Concrete\Core\Block\BlockController;
 class Controller extends BlockController {
 

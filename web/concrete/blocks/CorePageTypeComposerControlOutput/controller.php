@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Block\CorePageTypeComposerControlOutput;
+use Loader;
 use \Concrete\Core\Block\BlockController;
 use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
 use \Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;

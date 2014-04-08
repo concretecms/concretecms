@@ -1,8 +1,9 @@
 <?php
-namespace Concrete\Core\File;
+namespace Concrete\Core\File\Set;
 use \Concrete\Core\Foundation\Collection\DatabaseItemList;
 use Loader;
-class List extends DatabaseItemList {
+use \File;
+class SetList extends DatabaseItemList {
 
 	protected $itemsPerPage = 10;
 	

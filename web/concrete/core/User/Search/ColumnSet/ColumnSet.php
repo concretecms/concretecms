@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\User\Search\ColumnSet;
+use PermissionKey;
 class ColumnSet extends \Concrete\Core\Foundation\Collection\Database\Column\Set {
 	protected $attributeClass = 'UserAttributeKey';
 	public function getColumns() {

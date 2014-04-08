@@ -1,6 +1,7 @@
 <?
 namspace Concrete\Core\User\Group;
 use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use GroupSet;
 class GroupSetList extends DatabaseItemList {
 
 	public function __construct() {

@@ -12,8 +12,7 @@ class ProcessEmail extends AbstractJob {
 	}
 	
 	public function run() {
-		Loader::library('mail/importer');
-		
+	
 		$list = MailImporter::getEnabledList();
 		foreach($list as $mi) {
 			// for each one, we connect and retrieve any mail messages we haven't seen

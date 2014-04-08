@@ -1,5 +1,9 @@
 <?
 namespace Concrete\Core\Marketplace;
+use Cache;
+use Loader;
+use Config;
+use Package;
 class Marketplace {
 	
 	const E_INVALID_BASE_URL = 20;

@@ -1,5 +1,6 @@
 <?php 
 namespace Concrete\Block\Form;
+use Loader;
 class MiniSurvey {
 
 		public $btTable = 'btForm';

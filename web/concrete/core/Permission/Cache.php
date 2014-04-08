@@ -1,7 +1,8 @@
 <?
 namespace Concrete\Core\Permission;
-use \Concrete\Core\Permission\Key\Key as PermissionKey;
+use PermissionKey;
 use CacheLocal;
+use \Concrete\Core\Permission\Response\Response as PermissionResponse;
 
 class Cache {
 	

@@ -2,7 +2,7 @@
 namespace Concrete\Core\Permission\Access\Entity;
 use Loader;
 use Config;
-use \Concrete\Core\Permission\Access\Access as PermissionAccess;
+use PermissionAccess;
 class GroupCombinationEntity extends Entity {
 	
 	protected $groups = array();

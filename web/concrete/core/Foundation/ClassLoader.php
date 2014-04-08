@@ -64,7 +64,9 @@ class ClassLoader  {
 	*/	
 	protected function setupLegacyAutoloader() {
 		$mapping = array(
-		    'Loader' => DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Legacy/Loader.php'
+		    'Loader' => DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Legacy/Loader.php',
+		    'TaskPermission' => DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Legacy/TaskPermission.php',
+		    'FilePermissions' => DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Legacy/FilePermissions.php'
 		);
 
 		$loader = new SymfonyMapClassloader($mapping);

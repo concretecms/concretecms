@@ -15,8 +15,7 @@ class IndexSearch extends AbstractJob {
 	
 	public function run() {
 		Cache::disableCache();
-
-		Loader::library('database_indexed_search');
+	
 		$is = new IndexedSearch();
 		if ($_GET['force'] == 1) {
 			Loader::model('attribute/categories/collection');

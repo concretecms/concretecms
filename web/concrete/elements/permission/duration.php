@@ -22,7 +22,6 @@ for ($i = 1; $i <= 12; $i++) {
 }
 
 
-Loader::library('3rdparty/Zend/Locale');
 $list = Zend_Locale::getTranslationList('Days', ACTIVE_LOCALE);
 
 

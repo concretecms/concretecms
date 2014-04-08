@@ -1,5 +1,6 @@
 <?php 
 namespace Concrete\Block\Form;
+use Loader;
 class Statistics {
 
 	public static function getTotalSubmissions($date = null) {

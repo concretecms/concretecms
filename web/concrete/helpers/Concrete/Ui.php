@@ -2,6 +2,7 @@
 namespace Concrete\Helper\Concrete;
 use \User as ConcreteUser;
 use Loader;
+use Localization;
 /**
  * @package Helpers
  * @subpackage Concrete

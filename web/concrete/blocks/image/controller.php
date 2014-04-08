@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Block\Image;
+use Loader;
+use \File;
 use \Concrete\Core\Block\BlockController;
 class Controller extends BlockController {
 

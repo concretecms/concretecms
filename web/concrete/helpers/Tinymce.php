@@ -55,7 +55,6 @@ class Tinymce {
 					$extraOptions = trim($extraOptions, " \t\n\r,");
 					if(strlen($extraOptions)) {
 						// PHP's json_decode fails decoding strings containing comments and strings like '{key:"value"}', since it requires this format '{"key":"value"}' (double quotes around keys)
-						Loader::library('3rdparty/JSON/JSON');
 						$sjs = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
 						@$extraOptions = @$sjs->decode('{' . $extraOptions . "\n" . '}');
 						if(is_array($extraOptions)) {

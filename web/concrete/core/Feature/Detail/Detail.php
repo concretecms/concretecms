@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Feature\Detail;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Feature\Assignment\Assignment as FeatureAssignment;
 class Detail extends Object {
 
 	protected $item;
