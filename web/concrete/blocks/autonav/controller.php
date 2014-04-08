@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Block\Autonav;
+use Loader;
 use \Concrete\Core\Block\BlockController;
 use Page;
 /**

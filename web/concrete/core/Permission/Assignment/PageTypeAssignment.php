@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Assignment;
-use \Concrete\Core\Permission\Access\Access as PermissionAccess;
+use PermissionAccess;
 use Loader;
 class PageTypeAssignment extends Assignment {
 

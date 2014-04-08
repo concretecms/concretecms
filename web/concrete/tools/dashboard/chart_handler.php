@@ -7,9 +7,6 @@ $chp = new Permissions($ch);
 if (!$chp->canRead()) {
 	die(t("Access Denied."));
 }
-
-Loader::library('3rdparty/open_flash_chart' );
-Loader::model('page_statistics');
 $daysRow = array();
 // first, we grab the last 5 days
 $viewsArray = array();

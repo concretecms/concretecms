@@ -13,7 +13,7 @@ class TwitterDataSource extends DataSource {
 	}
 
 	public function createGatheringItems(GatheringDataSourceConfiguration $configuration) {
-		Loader::library('3rdparty/twitteroauth/twitteroauth');
+		
 		$connection = new TwitterOAuth(TWITTER_APP_CONSUMER_KEY, TWITTER_APP_CONSUMER_SECRET, TWITTER_APP_ACCESS_TOKEN, TWITTER_APP_ACCESS_SECRET);
 		$tweets = $connection->get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=".$configuration->getTwitterUsername()."&count=50");
 		if (!empty($tweets->errors[0])) {

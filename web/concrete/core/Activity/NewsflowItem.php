@@ -1,6 +1,7 @@
 <?
 
 namespace Concrete\Core\Activity;
+use Loader;
 class NewsflowItem {
 	
 	public function getID() {return $this->id;}

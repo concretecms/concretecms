@@ -1,9 +1,6 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-
-Loader::library('view');
-
 $previewCID=intval($_REQUEST['previewCID']);
 
 $composer = Page::getByPath('/dashboard/composer/write/');

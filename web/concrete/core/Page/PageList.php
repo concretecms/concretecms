@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page;
 use Loader;
+use Page;
 use Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
 /**
 *
@@ -8,7 +9,7 @@ use Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
 * @package Pages
 *
 */
-class List extends DatabaseItemList {
+class PageList extends DatabaseItemList {
 
 	protected $includeSystemPages = false;
 	protected $attributeFilters = array();

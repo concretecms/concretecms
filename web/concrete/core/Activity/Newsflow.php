@@ -1,6 +1,10 @@
 <?
-
 namespace Concrete\Core\Activity;
+use Loader;
+use Config;
+use Package;
+use Environment;
+use Marketplace;
 class Newsflow {
 	
 	const E_NEWSFLOW_SUPPORT_MANUALLY_DISABLED = 21;
@@ -38,7 +42,6 @@ class Newsflow {
 		$ni = self::getInstance();
 		if (!$ni->hasConnectionError()) {
 			$fh = Loader::helper('file');
-			Loader::library('marketplace');
 			$cfToken = Marketplace::getSiteToken();
 			$r = $fh->getContents(NEWSFLOW_URL . '/' . DISPATCHER_FILENAME . '/?_ccm_view_external=1&cID=' . $cID . '&cfToken=' . $cfToken);
 			$obj = NewsflowItem::parseResponse($r);
@@ -51,7 +54,6 @@ class Newsflow {
 		$cPath = trim($cPath, '/');
 		if (!$ni->hasConnectionError()) {
 			$fh = Loader::helper('file');
-			Loader::library('marketplace');
 			$cfToken = Marketplace::getSiteToken();
 			$r = $fh->getContents(NEWSFLOW_URL . '/' . DISPATCHER_FILENAME . '/' . $cPath . '/-/view_external?cfToken=' . $cfToken);
 			$obj = NewsflowItem::parseResponse($r);
@@ -62,7 +64,6 @@ class Newsflow {
 	public static function getSlotContents() {
 		if (!isset(self::$slots)) {
 			$fh = Loader::helper('file');
-			Loader::library('marketplace');
 			$cfToken = Marketplace::getSiteToken();
 			$r = $fh->getContents(NEWSFLOW_SLOT_CONTENT_URL . '?cfToken=' . $cfToken);
 			self::$slots = NewsflowSlotItem::parseResponse($r);

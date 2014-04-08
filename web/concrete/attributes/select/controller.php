@@ -88,7 +88,7 @@ class Controller extends AttributeTypeController  {
 		}
 	}
 	
-	public function importValue(SimpleXMLElement $akv) {
+	public function importValue(\SimpleXMLElement $akv) {
 		if (isset($akv->value)) {
 			$vals = array();
 			foreach($akv->value->children() as $ch) {

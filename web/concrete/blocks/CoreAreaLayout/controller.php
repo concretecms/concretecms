@@ -1,6 +1,10 @@
 <?
 namespace Concrete\Block\CoreAreaLayout;
+use Loader;
 use \Concrete\Core\Block\BlockController;
+use \Concrete\Core\Area\Layout\Layout as AreaLayout;
+use \Concrete\Core\Area\Layout\Preset as AreaLayoutPreset;
+
 class Controller extends BlockController {
 
 		protected $btCacheBlockRecord = false;

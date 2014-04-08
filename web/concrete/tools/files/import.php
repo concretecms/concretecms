@@ -255,7 +255,6 @@ $(function() {
 <?php
 	$valt = Loader::helper('validation/token');
 	$fh = Loader::helper('validation/file');
-	Loader::library('file/types');
 	
 	$incoming_contents = $ch->getIncomingDirectoryContents();
 ?>

@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Block\Search;
+use Loader;
 use \Concrete\Core\Block\BlockController;
 class Controller extends BlockController {
 
@@ -159,7 +160,7 @@ class Controller extends BlockController {
 		// i have NO idea why we added this in rev 2000. I think I was being stupid. - andrew
 		// $_q = trim(preg_replace('/[^A-Za-z0-9\s\']/i', ' ', $_REQUEST['query']));
 		$_q = $q;
-		Loader::library('database_indexed_search');
+		
 		$ipl = new IndexedPageList();
 		$aksearch = false;
 		$ipl->ignoreAliases();

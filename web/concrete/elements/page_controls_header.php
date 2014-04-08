@@ -26,15 +26,7 @@ $v = View::getInstance();
 if (!$dh->inDashboard()) {
 
 	$v->requireAsset('core/app');
-	/*
-	Loader::library("3rdparty/mobile_detect");
-	$md = new Mobile_Detect();
-	if ($md->isMobile()) {
-		$this->addHeaderItem($html->css('ccm.app.mobile.css'));
-		$this->addFooterItem($html->javascript('jquery.ui.touch-punch.js'));
-	}
-	*/
-
+	
 	$editMode = $c->isEditMode();
 	$tools = REL_DIR_FILES_TOOLS_REQUIRED;
 	if ($c->isEditMode()) {

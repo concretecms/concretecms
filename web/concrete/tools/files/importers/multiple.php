@@ -3,7 +3,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $jsh = Loader::helper("json");
 $cf = Loader::helper("file");
 $valt = Loader::helper('validation/token');
-Loader::library("file/importer");
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAddFiles()) {
 	$error = FileImporter::getErrorMessage(FileImporter::E_PHP_FILE_ERROR_DEFAULT);

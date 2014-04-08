@@ -2,7 +2,8 @@
 namespace Concrete\Core\Permission\Access;
 use \Concrete\Core\Foundation\Object;
 use Loader;
-use \Concrete\Core\Permission\Key\Key as PermissionKey;
+use CacheLocal;
+use PermissionKey;
 use \Concrete\Core\Permission\Cache as PermissionCache;
 use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 class Access extends Object {
@@ -27,10 +28,15 @@ class Access extends Object {
 	
 	protected function deliverAccessListItems($q, $accessType, $filterEntities) {
 		$db = Loader::db();
-		$class = str_replace('PermissionKey', 'PermissionAccessListItem', get_class($this->pk));
-		if (!class_exists($class)) {
-			$class = 'PermissionAccessListItem';
+		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\ListItem\\' . helper('text')->camelcase($this->pk->getPermissionKeyCategoryHandle()) . 'ListItem');
+		if ($r['pkHasCustomClass']) {
+			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\ListItem\\' . helper('text')->camelcase($this->pk->getPermissionKeyHandle() . '_' . $this->pk->getPermissionKeyCategoryHandle()) . 'ListItem');
 		}
+
+		if (!class_exists($class)) {
+			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\ListItem\\ListItem');
+		}
+
 		$filterString = $this->buildAssignmentFilterString($accessType, $filterEntities);
 		$q = $q . ' ' . $filterString;
  		$list = array();

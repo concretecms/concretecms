@@ -45,7 +45,6 @@ class Mail {
 	 * @return array <Zend_Mail_Transport_Smtp, Zend_Mail>
 	*/
 	public static function getMailerObject(){
-		Loader::library('3rdparty/Zend/Mail');
 		$response = array();
 		$response['mail'] = new Zend_Mail(APP_CHARSET);
 	

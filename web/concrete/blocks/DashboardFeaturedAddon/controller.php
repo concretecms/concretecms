@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Block\DashboardFeaturedAddon;
+use Loader;
 use \Concrete\Core\Block\BlockController;
+use \Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
 /**
  * The controller for the block that displays featured add-ons in the dashboard news overlay.
  *
@@ -32,7 +34,6 @@ use \Concrete\Core\Block\BlockController;
 		}
 		
 		public function view() {
-			Loader::model('marketplace_remote_item');
 			$mri = new MarketplaceRemoteItemList();
 			$mri->sortBy('recommended');
 			$mri->setItemsPerPage(1);

@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\User\Point;
 use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use Loader;
 class ActivityList extends DatabaseItemList {
 	
 	protected $itemsPerPage = 50;

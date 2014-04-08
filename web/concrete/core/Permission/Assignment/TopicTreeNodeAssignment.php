@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Permission\Assignment;
-use \Concrete\Core\Permission\Access\Access as PermissionAccess;
+use PermissionAccess;
+use \Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
 use Loader;
 class TopicTreeNodeAssignment extends TreeNodeAssignment {
 

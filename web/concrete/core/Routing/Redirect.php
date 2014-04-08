@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Routing;
 use Request;
+use URL as CoreUrl;
 class Redirect {
 
 	/** 
@@ -16,7 +17,7 @@ class Redirect {
 	* Redirects to a concrete5 resource.	
 	 */
 	public static function to() {
-		$url = BASE_URL . call_user_func_array(array('\Concrete\Core\Routing\URL', 'to'), func_get_args());
+		$url = BASE_URL . call_user_func_array(array('CoreUrl', 'to'), func_get_args());
 		$r = static::createRedirectResponse($url, 302, array());
 		return $r;
 	}

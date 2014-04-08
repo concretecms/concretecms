@@ -15,7 +15,6 @@ class IndexSearchAll extends QueueableJob {
 	}
 
 	public function start(\Zend_Queue $q) {
-		Loader::library('database_indexed_search');
 		$this->is = new IndexedSearch();
 
 		Loader::model('attribute/categories/collection');

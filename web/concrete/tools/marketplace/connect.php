@@ -1,8 +1,5 @@
 <?  defined('C5_EXECUTE') or die("Access Denied.");
 
-Loader::library('marketplace');
-Loader::model('marketplace_remote_item');
-
 $js = Loader::helper('json');
 $mi = Marketplace::getInstance();
 

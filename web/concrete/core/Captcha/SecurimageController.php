@@ -9,7 +9,6 @@ class SecurimageController extends Controller {
    	protected $securimage;
    
 	public function __construct() {
-		Loader::library("3rdparty/securimage/securimage");
 		
 		$this->securimage = new Securimage();
 		$this->securimage->image_width   = 190;

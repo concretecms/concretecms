@@ -74,7 +74,7 @@ if (is_object($f) && $fp->canWrite()) {
 			$imp->parseImage($ext,$selector,$file);
 			imagedestroy($viewport);
 			
-			Loader::library('file/importer');
+			
 			$fi = new FileImporter();
 			$resp = $fi->import($file, $f->getFileName(), $f);
 		}

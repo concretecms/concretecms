@@ -1,6 +1,9 @@
 <?
 namespace Concrete\Block\DashboardNewsflowLatest;
+use Loader;
 use \Concrete\Core\Block\BlockController;
+use \Concrete\Core\Activity\Newsflow;
+
 class Controller extends BlockController {
 
 	protected $btCacheBlockRecord = true;

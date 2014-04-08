@@ -3,6 +3,7 @@ namespace Concrete\Core\Page\Collection\Version;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use Block;
+use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 
 class Version extends Object {
 	

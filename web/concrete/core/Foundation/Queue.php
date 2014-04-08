@@ -3,8 +3,7 @@ namespace Concrete\Core\Foundation;
 class Queue {
 
 	public static function get($name, $additionalConfig = array()) {
-		Loader::library('3rdparty/Zend/Queue');
-
+	
 		$type = 'pdo_mysql';
 		if (!extension_loaded('pdo_mysql')) {
 			$type = 'mysql';

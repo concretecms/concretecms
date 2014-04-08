@@ -1,6 +1,6 @@
 <?php 
-
 namespace Concrete\Block\DateNav;
+use Loader;
 use \Concrete\Core\Block\BlockController;
 class Controller extends BlockController {
 

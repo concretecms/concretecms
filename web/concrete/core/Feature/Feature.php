@@ -6,9 +6,10 @@ use \Concrete\Core\Package\PackageList;
 class Feature extends Object {
 
 	public function getFeatureDetailObject($mixed) {
-		$class = 'Detail';
 		if ($this->feHasCustomClass) {
-			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\' . helper('text')->camelcase($this->feHandle) . 'Feature');
+			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\Detail\\' . helper('text')->camelcase($this->feHandle) . 'Detail');
+		} else {
+			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\Detail\\Detail');
 		}
 		$o = new $class($mixed);
 		return $o;

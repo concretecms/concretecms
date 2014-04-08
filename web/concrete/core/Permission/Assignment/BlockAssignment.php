@@ -1,7 +1,11 @@
 <?
 namespace Concrete\Core\Permission\Assignment;
-use \Concrete\Core\Permission\Access\Access as PermissionAccess;
+use PermissionAccess;
 use Loader;
+use Block;
+use Area;
+use Page;
+
 class BlockAssignment extends Assignment {
 		
 	protected $permissionObjectToCheck;

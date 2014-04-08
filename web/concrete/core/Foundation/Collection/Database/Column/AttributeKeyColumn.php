@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Foundation\Collection\Database\Column;
+use Loader;
 class AttributeKeyColumn extends Column {
 
 	protected $attributeKey = false;

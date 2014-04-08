@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\User\PrivateMessage;
+use Loader;
 class Limit {
 	/**
 	 * checks to see if a user has exceeded their limit for sending private messages

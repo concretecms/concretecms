@@ -339,8 +339,7 @@ class Concrete5_Controller_Page_Dashboard_Users_Search extends DashboardControll
 		$obj->text = t('** Default');
 		$obj->value = '';
 		$result = array($obj);
-		Loader::library('3rdparty/Zend/Locale');
-		Loader::library('3rdparty/Zend/Locale/Data');
+		
 		Zend_Locale_Data::setCache(Cache::getLibrary());
 		foreach($languages as $lang) {
 			$loc = new Zend_Locale($lang);

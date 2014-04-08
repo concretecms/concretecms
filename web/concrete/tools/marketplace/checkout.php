@@ -2,7 +2,6 @@
 
 $tp = new TaskPermission();
 if ($tp->canInstallPackages()) { 
-	Loader::library('marketplace');
 	$mi = Marketplace::getInstance();
 	Loader::model('marketplace_remote_item');
 	$mp = MarketplaceRemoteItem::getByID($_REQUEST['mpID']);

@@ -23,7 +23,6 @@ class Concrete5_Controller_Page_Dashboard_System_Seo_Excluded extends DashboardC
 					break;
 			}
 		}
-		Loader::library('3rdparty/urlify');
 		$this->set('SEO_EXCLUDE_WORDS_ORIGINAL_ARRAY', Urlify::$remove_list);
 		$excludeSeoWords = Config::get('SEO_EXCLUDE_WORDS');
 		if(is_string($excludeSeoWords)) {

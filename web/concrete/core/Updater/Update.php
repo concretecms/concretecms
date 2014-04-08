@@ -1,8 +1,12 @@
 <?
 namespace Concrete\Core\Updater;
+use Loader;
+use Marketplace;
+use Cache;
+use Config;
 class Update {
 
-	public function getLatestAvailableVersionNumber() {
+	public static function getLatestAvailableVersionNumber() {
 		if (defined('MULTI_SITE') && MULTI_SITE == 1) {
 			$updates = Update::getLocalAvailableUpdates();
 			$multiSiteVersion = 0;
@@ -39,12 +43,11 @@ class Update {
 		}
 		
 		if ($queryWS) {
-			Loader::library('marketplace');
 			$mi = Marketplace::getInstance();
 			if ($mi->isConnected()) {
 				Marketplace::checkPackageUpdates();
 			}
-			$update = Update::getLatestAvailableUpdate();
+			$update = static::getLatestAvailableUpdate();
 			$versionNum = $update->version;
 			
 			if ($versionNum) {
@@ -61,13 +64,13 @@ class Update {
 	public function getApplicationUpdateInformation() {
 		$r = Cache::get('APP_UPDATE_INFO', false);
 		if (!is_object($r)) {
-			$r = Update::getLatestAvailableUpdate();
+			$r = static::getLatestAvailableUpdate();
 		}
 		return $r;
 	}
 		
-	protected function getLatestAvailableUpdate() {
-		$obj = new stdClass;
+	protected static function getLatestAvailableUpdate() {
+		$obj = new \stdClass;
 		$obj->notes = false;
 		$obj->url = false;
 		$obj->date = false;
@@ -98,7 +101,7 @@ class Update {
 				// invalid. That means it's old and it's just the version
 				$obj->version = trim($resp);
 			} else {
-				$obj = new stdClass;
+				$obj = new \stdClass;
 				$obj->version = (string) $xml->version;
 				$obj->notes = (string) $xml->notes;
 				$obj->url = (string) $xml->url;

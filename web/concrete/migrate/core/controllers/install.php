@@ -297,7 +297,7 @@ class Concrete5_Controller_Install extends Controller {
 				}
 
 				if ($this->fpu) {
-					Loader::library('3rdparty/phpass/PasswordHash');
+					
 					$hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
 					$configuration = "<?php\n";
 					$configuration .= "define('INSTALL_USER_EMAIL', '" . $_POST['uEmail'] . "');\n";

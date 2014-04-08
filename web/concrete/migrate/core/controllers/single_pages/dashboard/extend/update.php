@@ -5,7 +5,6 @@ class Concrete5_Controller_Page_Dashboard_Extend_Update extends DashboardControl
 	
 	public function on_start() {
 		$this->error = Loader::helper('validation/error');
-		Loader::library('marketplace');
 	}
 	public function do_update($pkgHandle = false) {
 		$tp = new TaskPermission();

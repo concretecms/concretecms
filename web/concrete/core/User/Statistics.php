@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Core\User;
 use \Concrete\Core\Foundation\Object;
+use Loader;
+use UserInfo as ConcreteUserInfo;
 class Statistics extends Object {
 
 	protected $ui;
@@ -32,7 +34,7 @@ class Statistics extends Object {
 	public static function getLastLoggedInUser() {
 		$db = Loader::db();
 		$uID = $db->GetOne("select uID from Users order by uLastLogin desc");
-		return UserInfo::getByID($uID);
+		return ConcreteUserInfo::getByID($uID);
 	}
 
 }

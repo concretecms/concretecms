@@ -198,7 +198,7 @@ class Controller extends AttributeTypeController  {
 		$avn->addAttribute('postal-code', $address->getPostalCode());
 	}
 
-	public function importValue(SimpleXMLElement $akv) {
+	public function importValue(\SimpleXMLElement $akv) {
 		if (isset($akv->value)) {
 			$data['address1'] = $akv->value['address1'];
 			$data['address2'] = $akv->value['address2'];

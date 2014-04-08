@@ -50,7 +50,7 @@ class Controller extends AttributeTypeController  {
 		return $value;	
 	}
 	
-	public function importValue(SimpleXMLElement $akv) {
+	public function importValue(\SimpleXMLElement $akv) {
 		if (isset($akv->value->fID)) {
 			$fIDVal = (string) $akv->value->fID;
 			$fID = ContentImporter::getValue($fIDVal);

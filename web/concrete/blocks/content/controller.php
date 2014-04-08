@@ -1,7 +1,10 @@
 <?
 namespace Concrete\Block\Content;
+use File;
+use Page;
+use Loader;
+use URL;
 use \Concrete\Core\Block\BlockController;
-use \Concrete\Core\Routing\URL;
 
 /**
  * The controller for the content block.
@@ -129,7 +132,7 @@ use \Concrete\Core\Routing\URL;
 			return '{CCM:FID_DL_' . $fID . '}';
 		}
 		
-		public function export(SimpleXMLElement $blockNode) {			
+		public function export(\SimpleXMLElement $blockNode) {			
 			
 			$data = $blockNode->addChild('data');
 			$data->addAttribute('table', $this->btTable);

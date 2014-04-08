@@ -2,13 +2,14 @@
 namespace Concrete\Core\File;
 use \Concrete\Core\Foundation\Collection\DatabaseItemList;
 use Loader;
+use \File as ConcreteFile;
 /**
 *
 * An object that allows a filtered list of files to be returned.
 * @package Files
 *
 */
-class List extends DatabaseItemList { 
+class FileList extends DatabaseItemList { 
 
 	protected $attributeFilters = array();
 	protected $autoSortColumns = array('fvFilename', 'fvAuthorName','fvTitle', 'fDateAdded', 'fvDateAdded', 'fvSize');
@@ -356,7 +357,7 @@ class List extends DatabaseItemList {
 		$this->createQuery();
 		$r = parent::get($itemsToGet, $offset);
 		foreach($r as $row) {
-			$f = File::getByID($row['fID']);			
+			$f = ConcreteFile::getByID($row['fID']);			
 			$files[] = $f;
 		}
 		return $files;

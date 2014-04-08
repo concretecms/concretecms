@@ -119,7 +119,6 @@ class CssAsset extends Asset {
 	}
 
 	public function minify($assets) {
-		Loader::library('3rdparty/cssmin');
 		return self::process($assets, function($css, $assetPath, $targetPath) {
 			return CssMin::minify($css);
 		});

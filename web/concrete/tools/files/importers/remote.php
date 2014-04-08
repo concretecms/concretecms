@@ -21,9 +21,6 @@ $r = new FileEditResponse();
 $searchInstance = $_POST['searchInstance'];
 
 $valt = Loader::helper('validation/token');
-Loader::library("file/importer");
-Loader::library('3rdparty/Zend/Http/Client');
-Loader::library('3rdparty/Zend/Uri/Http');
 $file = Loader::helper('file');
 Loader::helper('mime');
 

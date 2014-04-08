@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\User\Point;
+use Loader;
 class Entry {
 	public $_table = 'UserPointHistory'; 
 	

@@ -2,6 +2,7 @@
 namespace Concrete\Core\File;
 use \Concrete\Core\Foundation\Object;
 use Loader;
+use \File as ConcreteFile;
 use \Concrete\Core\File\Type\TypeList as FileTypeList;
 use \Concrete\Core\Attribute\Key\FileKey as FileAttributeKey;
 use \Concrete\Core\Attribute\Value\FileValue as FileAttributeValue;
@@ -38,7 +39,7 @@ class Version extends Object {
 	 * @return File
 	 */
 	public function getFile() {
-		$fo = File::getByID($this->fID);
+		$fo = ConcreteFile::getByID($this->fID);
 		return $fo;
 	}
 
@@ -144,7 +145,7 @@ class Version extends Object {
 	 * Takes the current value of the file version and makes a new one with the same values
 	 */
 	public function duplicate() {
-		$f = File::getByID($this->fID);
+		$f = ConcreteFile::getByID($this->fID);
 
 		$dh = Loader::helper('date');
 		$date = $dh->getSystemDateTime();
@@ -493,7 +494,7 @@ class Version extends Object {
 		$db = Loader::db();
 
 		if (!file_exists($this->getPath())) {
-			return File::F_ERROR_FILE_NOT_FOUND;
+			return ConcreteFile::F_ERROR_FILE_NOT_FOUND;
 		}
 
 		$size = filesize($this->getPath());

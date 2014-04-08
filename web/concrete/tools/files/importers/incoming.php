@@ -8,7 +8,6 @@ if (!$fp->canAddFiles()) {
 }
 $cf = Loader::helper("file");
 $valt = Loader::helper('validation/token');
-Loader::library("file/importer");
 
 $error = Loader::helper('validation/error');
 

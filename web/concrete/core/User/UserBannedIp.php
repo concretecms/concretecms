@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\User;
+use Loader;
 class UserBannedIp {	
 	
 	public $_table = 'UserBannedIPs';

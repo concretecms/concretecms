@@ -11,11 +11,15 @@ use Group;
 use Page;
 use UserInfo;
 use User;
+use Config;
+use FileSet;
+use PermissionKey;
+use \Concrete\Core\Permission\Access\Access as PermissionAccess;
+use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use \Concrete\Core\Mail\Importer\MailImporter;
 use \Concrete\Core\User\Point\Action\Action as UserPointAction;
 use \Concrete\Core\Backup\ContentImporter;
 use \Concrete\Core\File\Importer as FileImporter;
-
 class StartingPointPackage extends Package {
 
 
@@ -189,7 +193,7 @@ class StartingPointPackage extends Package {
 
 		// insert admin user into the user table
 		if (defined('INSTALL_USER_PASSWORD')) {
-			Loader::library('3rdparty/phpass/PasswordHash');
+			
 			$hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
 			$uPassword = INSTALL_USER_PASSWORD;
 			$uPasswordEncrypted = $hasher->HashPassword($uPassword);

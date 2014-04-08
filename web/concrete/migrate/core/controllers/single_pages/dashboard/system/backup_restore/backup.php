@@ -1,6 +1,5 @@
 <?php 
 defined('C5_EXECUTE') or die("Access Denied.");
-Loader::library('backup');
 class Concrete5_Controller_Page_Dashboard_System_BackupRestore_Backup extends DashboardController { 	 
 
    public function on_start() {

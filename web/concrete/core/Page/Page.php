@@ -6,12 +6,20 @@ use Collection;
 use Request;
 use \Concrete\Core\Page\Statistics as PageStatistics;
 use \Concrete\Core\Cache\Page\PageCache;
+use \Concrete\Core\Page\Template as PageTemplate;
 use \Events;
 use Config;
 use User;
 use Block;
 use UserInfo;
+use PageType;
+use \Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
+use \Concrete\Core\Permission\Access\Access as PermissionAccess;
 use \Concrete\Core\Package\PackageList;
+use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
+use \Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombinationPermissionAccessEntity;
+use \Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
+
 /**
 *
 * The page object in Concrete encapsulates all the functionality used by a typical page and their contents
@@ -1548,7 +1556,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 		}
 
 		// Third, fill in the cPath values from the user updated data.
-		Loader::library('3rdparty/urlify');
 		foreach ($newPaths as $key=>$val) {
 			if (!empty($val)) {
 				// Auto-prepend a slash if one is missing.

@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Block\Slideshow;
+use Loader;
 use \Concrete\Core\Block\BlockController;
 class Controller extends BlockController {
 	
@@ -48,11 +49,7 @@ class Controller extends BlockController {
 		if (intval($this->fsID) < 1) {
 			return false;
 		}
-        	Loader::helper('concrete/file');
-		Loader::model('file_attributes');
-		Loader::library('file/types');
-		Loader::model('file_list');
-		Loader::model('file_set');
+        Loader::helper('concrete/file');
 		
 		$ak = FileAttributeKey::getByHandle('height');
 

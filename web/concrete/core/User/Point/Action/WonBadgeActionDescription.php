@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\User\Point\Action;
+use Group;
 class WonBadgeActionDescription extends ActionDescription {
 
 	public function setBadgeGroupID($gID) {

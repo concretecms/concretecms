@@ -6,7 +6,6 @@ class Concrete5_Controller_Page_Dashboard_Extend_Connect extends DashboardContro
 	public $helpers = array('form'); 
 
 	public function on_start() {
-		Loader::library('marketplace');
 		$this->addFooterItem(Loader::helper('html')->javascript('jquery.postmessage.js'));
 	}
 	

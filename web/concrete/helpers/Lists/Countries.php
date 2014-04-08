@@ -5,7 +5,7 @@ class Countries {
 	protected $countries = array();
 
 	public function __construct() {
-		Loader::library('3rdparty/Zend/Locale');
+		
 		$countries = Zend_Locale::getTranslationList('territory', Localization::activeLocale(), 2);
 		unset(
 			// Fake countries

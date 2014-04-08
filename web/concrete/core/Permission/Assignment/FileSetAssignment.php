@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Permission\Assignment;
-use \Concrete\Core\Permission\Access\Access as PermissionAccess;
+use PermissionAccess;
+use FileSet;
 use Loader;
 class FileSetAssignment extends Assignment {
 	

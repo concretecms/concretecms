@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Block\CoreScrapbookDisplay;
+use Loader;
 use \Concrete\Core\Block\BlockController;
 /**
  * The controller for the core scrapbook display block. This block is automatically used when a block is copied into a page from a clipboard. It is a proxy block.

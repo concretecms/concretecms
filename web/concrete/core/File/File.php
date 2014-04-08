@@ -1,14 +1,14 @@
 <?
 namespace Concrete\Core\File;
-use \Concrete\Core\Foundation\Object;
+use FileSet;
 use Loader;
 use CacheLocal;
 use User;
 use Events;
 use Page;
+use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Key as AttributeKey;
 use \Concrete\Core\Permission\Key as PermissionKey;
-use FileSet;
 use \Concrete\Core\File\StorageLocation as FileStorageLocation;
 use \Concrete\Core\Attribute\Key\FileKey as FileAttributeKey;
 class File extends Object implements \Concrete\Core\Permission\ObjectInterface { 

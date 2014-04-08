@@ -1,8 +1,10 @@
 <?
-namespace Concrete\Core\Page\Collection\Version;
+namespace Concrete\Core\Feature\Assignment;
 use Loader;
-use \Concrete\Core\Feature\Assignment as FeatureAssignment;
-class FeatureAssignment extends FeatureAssignment {
+use \Concrete\Core\Feature\Feature;
+use \Concrete\Core\Feature\Category\Category as FeatureCategory;
+use \Concrete\Core\Feature\Detail\Detail as FeatureDetail;
+class CollectionVersionAssignment extends Assignment {
 
 	protected $cID;
 	protected $cvID;
@@ -12,9 +14,9 @@ class FeatureAssignment extends FeatureAssignment {
 		$this->cvID = $page->getVersionID();
 	}
 
-	public static function add(Feature $fe, FeatureDetail $fd, Collection $page) {
+	public static function add(Feature $fe, FeatureDetail $fd, $page) {
 		$fc = FeatureCategory::getByHandle('collection_version');
-		$fa = parent::add($fe, $fc, $fd, $page);
+		$fa = parent::addAssignment($fe, $fc, $fd, $page);
 		$db = Loader::db();
 		$db->Execute('insert into CollectionVersionFeatureAssignments (cID, cvID, faID) values (?, ?, ?)', array(
 			$page->getCollectionID(),

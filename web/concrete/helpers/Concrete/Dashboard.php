@@ -3,6 +3,8 @@
 namespace Concrete\Helper\Concrete;
 use Loader;
 use Page;
+use URL;
+use User as ConcreteUser;
 use Permissions;
 class Dashboard {
 
@@ -314,7 +316,7 @@ class Dashboard {
 				
 				
 				<ul class="ccm-intelligent-search-results-list">
-					<li><a href="<?=View::url('/dashboard/home')?>"><?=t('Customize')?> <span><?=t('Customize Dashboard Home')?></span></a></li>
+					<li><a href="<?=URL::to('/dashboard/home')?>"><?=t('Customize')?> <span><?=t('Customize Dashboard Home')?></span></a></li>
 				</ul>
 				
 				</div>
@@ -356,12 +358,12 @@ class Dashboard {
 }
 
 
-class ConcreteDashboardMenu {
+class Menu {
 	
 	protected $items;
 	public function getItems($sort = true) {
 		if ($sort) {
-			usort($this->items, array('ConcreteDashboardMenu', 'sortItems'));
+			usort($this->items, array('Menu', 'sortItems'));
 		}
 		return $this->items;
 	}
@@ -419,13 +421,13 @@ class ConcreteDashboardMenu {
 	}
 
 	public static function getMine() {
-		$u = new User();
+		$u = new ConcreteUser();
 		$qn = unserialize($u->config('QUICK_NAV_BOOKMARKS'));
 		if (is_object($qn)) {
 			return $qn;
 		}
-		$qn = new ConcreteDashboardMenu();
-		$qnx = new ConcreteDashboardDefaultMenu();
+		$qn = new Menu();
+		$qnx = new DefaultMenu();
 		$qn->items = $qnx->items;
 		return $qn;	
 	}
@@ -433,7 +435,7 @@ class ConcreteDashboardMenu {
 
 }
 
-class ConcreteDashboardDefaultMenu extends ConcreteDashboardMenu {
+class DefaultMenu extends Menu {
 	
 	public $items = array(
 		'/dashboard/composer/write',

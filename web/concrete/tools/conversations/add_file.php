@@ -125,7 +125,6 @@ if(count($error) > 0) {  // send in the errors
 
 move_uploaded_file($_FILES["file"]["tmp_name"],
 $_SERVER['DOCUMENT_ROOT'] . "/files/tmp/" . $_FILES["file"]["name"]);
-Loader::library("file/importer");
 $fi = new FileImporter();
 $fv = $fi->import( $_SERVER['DOCUMENT_ROOT'] . '/files/tmp/' . $_FILES["file"]["name"], $_FILES["file"]["name"]);
 unlink($_SERVER['DOCUMENT_ROOT'] . '/files/tmp/' . $_FILES["file"]["name"]);

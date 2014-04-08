@@ -1,6 +1,16 @@
 <?php
-namespace Concrete\Core\File\FileSet
+namespace Concrete\Core\File\Set;
 use Loader;
+use Events;
+use User;
+use File as ConcreteFile;
+use \Concrete\Core\Permission\Key\FileSetKey as FileSetPermissionKey;
+use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
+use \Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombinationPermissionAccessEntity;
+use \Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
+use PermissionKey;
+use PermissionAccess;
+
 class Set implements \Concrete\Core\Permission\ObjectInterface {
 	const TYPE_PRIVATE 	= 0;
 	const TYPE_PUBLIC 	= 1;
@@ -13,8 +23,8 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 	 * This is really only used for permissions mapping
 	 */
 	 
-	public function getGlobal() {
-		$fs = new FileSet;
+	public static function getGlobal() {
+		$fs = new static;
 		$fs->fsID = 0;
 		return $fs;
 	}
@@ -28,7 +38,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 		$u = new User();
 		$r = $db->Execute('select * from FileSets where fsType = ? and uID = ? order by fsName asc', array(FileSet::TYPE_SAVED_SEARCH, $u->getUserID()));
 		while ($row = $r->FetchRow()) {
-			$fs = new FileSet();
+			$fs = new static();
 			$fs->Set($row);
 			$sets[] = $fs;
 		}
@@ -56,9 +66,9 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 		}
 		$db = Loader::db();
 		$sets = array();
-		$r = $db->Execute('select * from FileSets where fsType = ? or (fsType in (?, ?) and uID = ?) order by fsName asc', array(FileSet::TYPE_PUBLIC, FileSet::TYPE_STARRED, FileSet::TYPE_PRIVATE, $u->getUserID()));
+		$r = $db->Execute('select * from FileSets where fsType = ? or (fsType in (?, ?) and uID = ?) order by fsName asc', array(static::TYPE_PUBLIC, static::TYPE_STARRED, static::TYPE_PRIVATE, $u->getUserID()));
 		while ($row = $r->FetchRow()) {
-			$fs = new FileSet();
+			$fs = new static();
 			$fs->Set($row);
 			$fsp = new Permissions($fs);
 			if ($fsp->canSearchFiles()) {
@@ -89,9 +99,9 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 		$db = Loader::db();
 		$row = $db->GetRow('select * from FileSets where fsID = ?', array($fsID));
 		if (is_array($row)) {
-			$fs = new FileSet();
+			$fs = new static();
 			$fs->Set($row);
-			if ($row['fsType'] == FileSet::TYPE_SAVED_SEARCH) {
+			if ($row['fsType'] == static::TYPE_SAVED_SEARCH) {
 				$row2 = $db->GetRow('select fsSearchRequest, fsResultColumns from FileSetSavedSearches where fsID = ?', array($fsID));
 				$fs->fsSearchRequest = @unserialize($row2['fsSearchRequest']);
 				$fs->fsResultColumns = @unserialize($row2['fsResultColumns']);
@@ -109,7 +119,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 		$db = Loader::db();
 		$row = $db->GetRow('select * from FileSets where fsName = ?', array($fsName));
 		if (is_array($row) && count($row)) {
-			$fs = new FileSet();
+			$fs = new static();
 			$fs->Set($row);
 			return $fs;
 		}
@@ -143,7 +153,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 			$fs_uid = $u->uID;
 		}
 		
-		$file_set = new FileSet();
+		$file_set = new static();
 		$criteria = array($fs_name,$fs_type,$fs_uid);
 		$matched_sets = $file_set->Find('fsName=? AND fsType=? and uID=?',$criteria);
 		
@@ -180,7 +190,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 		if (is_object($f_id)) {
 			$f_id = $f_id->getFileID();
 		}			
-		$file_set_file = FileSetFile::createAndGetFile($f_id,$this->fsID);
+		$file_set_file = File::createAndGetFile($f_id,$this->fsID);
 		Events::fire('on_file_added_to_set', $f_id, $this->getFileSetID());
 		return $file_set_file;
 	}
@@ -210,7 +220,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 	* @return type $var_name
 	*/		
 	private function populateFiles(){			
-		$utility 			= new FileSetFile();
+		$utility 			= new File();
 		$this->fileSetFiles = $utility->Find('fsID = ? ORDER BY fsDisplayOrder', array($this->fsID));
 	}
 	
@@ -233,7 +243,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 		if (!$this->fileSetFiles) { $this->populateFiles();	}
 		$files = array();
 		foreach ($this->fileSetFiles as $file) {
-			$files[] = File::getByID($file->fID);
+			$files[] = ConcreteFile::getByID($file->fID);
 		}
 		return $files;
 	}
@@ -260,7 +270,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 	public static function getFilesBySetName($fsName) {
 		if (!empty($fsName)) {
 			$fileset = self::getByName($fsName);
-			if ($fileset instanceof FileSet) {
+			if ($fileset instanceof \Concrete\Core\File\Set\Set) {
 				return $fileset->getFiles();
 			}
 		}

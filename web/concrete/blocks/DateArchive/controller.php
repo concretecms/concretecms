@@ -1,5 +1,6 @@
 <?php 
 namespace Concrete\Block\DateArchive;
+use Loader;
 use \Concrete\Core\Block\BlockController;
 class Controller extends BlockController {
 

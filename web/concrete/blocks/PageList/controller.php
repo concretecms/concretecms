@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Block\PageList;
+use Loader;
+use PageList;
 use \Concrete\Core\Block\BlockController;
 class Controller extends BlockController {
 	protected $btTable = 'btPageList';

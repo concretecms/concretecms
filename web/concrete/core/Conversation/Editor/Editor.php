@@ -13,7 +13,7 @@ abstract class Editor extends Object {
 
 	public function formatConversationMessageBody($cnv,$cnvMessageBody,$config=array()) {
 		if (isset($config['htmlawed'])) {
-			Loader::library('3rdparty/htmLawed');
+			
 			$default = array('safe'=>1,'elements'=>'span, em, b, i, p, strike, font, br, div');
 			$conf = array_merge($default,(array)$config['htmlawed']);
 			$lawed = htmLawed($cnvMessageBody, $conf);

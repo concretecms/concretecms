@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\File;
 use Loader;
+use \File as ConcreteFile;
 class Importer {
 	
 	/** 
@@ -25,24 +26,24 @@ class Importer {
 	public function getErrorMessage($code) {
 		$msg = '';
 		switch($code) {
-			case FileImporter::E_PHP_NO_FILE:
-			case FileImporter::E_FILE_INVALID:
+			case static::E_PHP_NO_FILE:
+			case static::E_FILE_INVALID:
 				$msg = t('Invalid file.');
 				break;
-			case FileImporter::E_FILE_INVALID_EXTENSION:
+			case static::E_FILE_INVALID_EXTENSION:
 				$msg = t('Invalid file extension.');
 				break;
-			case FileImporter::E_PHP_FILE_PARTIAL_UPLOAD:
+			case static::E_PHP_FILE_PARTIAL_UPLOAD:
 				$msg = t('The file was only partially uploaded.');
 				break;
-			case FileImporter::E_PHP_FILE_EXCEEDS_HTML_MAX_FILE_SIZE:
-			case FileImporter::E_PHP_FILE_EXCEEDS_UPLOAD_MAX_FILESIZE:
+			case static::E_PHP_FILE_EXCEEDS_HTML_MAX_FILE_SIZE:
+			case static::E_PHP_FILE_EXCEEDS_UPLOAD_MAX_FILESIZE:
 				$msg = t('Uploaded file is too large. The current value of upload_max_filesize is %s', ini_get('upload_max_filesize'));
 				break;
-			case FileImporter::E_FILE_UNABLE_TO_STORE:			
+			case static::E_FILE_UNABLE_TO_STORE:			
 				$msg = t('Unable to copy file to storage directory. Please check permissions on your upload directory and ensure they can be written to by your web server.');
 				break;
-			case FileImporter::E_PHP_FILE_ERROR_DEFAULT:
+			case static::E_PHP_FILE_ERROR_DEFAULT:
 			default:
 				$msg = t("An unknown error occurred while uploading the file. Please check that file uploads are enabled, and that your file does not exceed the size of the post_max_size or upload_max_filesize variables.\n\nFile Uploads: %s\nMax Upload File Size: %s\nPost Max Size: %s", ini_get('file_uploads'), ini_get('upload_max_filesize'), ini_get('post_max_size'));			
 				break;
@@ -61,8 +62,7 @@ class Importer {
 		$path = false;
 		if ($fr instanceof File) {
 			if ($fr->getStorageLocationID() > 0) {
-				Loader::model('file_storage_location');
-				$fsl = FileStorageLocation::getByID($fr->getStorageLocationID());
+				$fsl = StorageLocation::getByID($fr->getStorageLocationID());
 				$path = $fi->mapSystemPath($prefix, $filename, true, $fsl->getDirectory());
 			}
 		}
@@ -98,11 +98,11 @@ class Importer {
 		
 		// test if file is valid, else return FileImporter::E_FILE_INVALID
 		if (!$fh->file($pointer)) {
-			return FileImporter::E_FILE_INVALID;
+			return static::E_FILE_INVALID;
 		}
 		
 		if (!$fh->extension($filename)) {
-			return FileImporter::E_FILE_INVALID_EXTENSION;
+			return static::E_FILE_INVALID_EXTENSION;
 		}
 
 		
@@ -113,12 +113,12 @@ class Importer {
 		// move file to correct area in the filesystem based on prefix
 		$response = $this->storeFile($prefix, $pointer, $sanitized_filename, $fr);
 		if (!$response) {
-			return FileImporter::E_FILE_UNABLE_TO_STORE;
+			return static::E_FILE_UNABLE_TO_STORE;
 		}
 		
 		if (!($fr instanceof File)) {
 			// we have to create a new file object for this file version
-			$fv = File::add($sanitized_filename, $prefix, array('fvTitle'=>$filename));
+			$fv = ConcreteFile::add($sanitized_filename, $prefix, array('fvTitle'=>$filename));
 			$fv->refreshAttributes();
 			$fr = $fv->getFile();
 		} else {

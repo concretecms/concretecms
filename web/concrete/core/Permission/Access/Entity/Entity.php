@@ -2,7 +2,7 @@
 namespace Concrete\Core\Permission\Access\Entity;
 use \Concrete\Core\Foundation\Object;
 use Loader;
-use \Concrete\Core\Permission\Access\Access as PermissionAccess;
+use PermissionAccess;
 use CacheLocal;
 abstract class Entity extends Object {
 	

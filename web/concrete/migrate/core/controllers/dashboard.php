@@ -7,7 +7,6 @@ class Concrete5_Controller_Dashboard extends PageController {
 	protected $helpers = array('form');
 
 	public function enableNativeMobile() {
-		Loader::library('3rdparty/mobile_detect');
 		$md = new Mobile_Detect();
 		if ($md->isMobile()) {
 			$this->addHeaderItem('<meta name="viewport" content="width=device-width,initial-scale=1"/>');

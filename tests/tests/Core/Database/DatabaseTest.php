@@ -116,6 +116,14 @@ class DatabaseTest extends ConcreteDatabaseTestcase {
 		$r = $db->query($q, $v);
 		$newUID = $db->Insert_ID();
 		$this->assertTrue($newUID == 4);
+
+		// getcol
+		$col = $db->GetCol('select uID from Users');
+		$this->assertTrue(count($col) == 4);
+		for($i = 0; $i < 4; $i++) {
+			$uID = $col[$i];
+			$this->assertTrue(($i + 1) == $uID);
+		}
 	}
 
 	public function testLegacyReplace() {

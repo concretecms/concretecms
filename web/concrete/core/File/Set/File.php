@@ -3,7 +3,7 @@ namespace Concrete\Core\File\Set;
 use Loader;
 class File  {
 	public static function createAndGetFile($f_id, $fs_id){	
-		$file_set_file = new FileSetFile();
+		$file_set_file = new static();
 		$criteria = array($f_id,$fs_id);		
 		
 		$matched_sets = $file_set_file->Find('fID=? AND fsID=?',$criteria);
