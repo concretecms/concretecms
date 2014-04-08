@@ -10,7 +10,7 @@ namespace Concrete\Block\Autonav;
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-	class Item {
+	class NavItem {
 
 		protected $level;
 		protected $isActive = false;

@@ -2,6 +2,10 @@
 namespace Concrete\Core\Permission\Assignment;
 use PermissionAccess;
 use Loader;
+use Area;
+use Stack;
+use PermissionKey;
+
 class AreaAssignment extends Assignment {
 
 	protected $area;

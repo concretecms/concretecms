@@ -3,6 +3,7 @@ namespace Concrete\Core\Area;
 use Loader;
 use Area;
 use Page;
+use Permissions;
 use Stack;
 class GlobalArea extends Area {
 

@@ -2,7 +2,7 @@
 namespace Concrete\Core\Routing;
 use Symfony\Component\HttpKernel;
 use Response;
-use Concrete\Core\View\View;
+use View;
 use Concrete\Controller;
 
 class ControllerRouteCallback extends RouteCallback {

@@ -4,6 +4,7 @@ use File;
 use Page;
 use Loader;
 use URL;
+use \Concrete\Core\Editor\Snippet;
 use \Concrete\Core\Block\BlockController;
 
 /**
@@ -225,7 +226,7 @@ use \Concrete\Core\Block\BlockController;
 				$text);
 			
 			// snippets
-			$snippets = SystemContentEditorSnippet::getActiveList();
+			$snippets = Snippet::getActiveList();
 			foreach($snippets as $sn) {
 				$text = $sn->findAndReplace($text);
 			}
@@ -293,6 +294,10 @@ use \Concrete\Core\Block\BlockController;
 		
 		function translateTo($text) {
 			// keep links valid
+			if (!defined('BASE_URL') || BASE_URL == '') {
+				return $text;
+			}
+			
 			$url1 = str_replace('/', '\/', BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME);
 			$url2 = str_replace('/', '\/', BASE_URL . DIR_REL);
 			$url3 = URL::to('/download_file', 'view_inline');

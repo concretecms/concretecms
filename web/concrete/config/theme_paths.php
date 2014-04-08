@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-use Concrete\Core\Routing\Router as Router;
+
 $l = Router::getInstance();
 $l->setThemeByRoute('/dashboard', 'dashboard');
 $l->setThemeByRoute('/dashboard/*', 'dashboard');

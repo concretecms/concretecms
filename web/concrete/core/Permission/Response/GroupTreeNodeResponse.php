@@ -1,5 +1,10 @@
 <?
 namespace Concrete\Core\Permission\Response;
+use Page;
+use User;
+use Group;
+use PermissionKey;
+use Permissions;
 class GroupTreeNodeResponse extends TreeNodeResponse {
 
 	public function canEditTreeNodePermissions() {

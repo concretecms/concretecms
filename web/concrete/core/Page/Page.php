@@ -13,6 +13,7 @@ use User;
 use Block;
 use UserInfo;
 use PageType;
+use PageTheme;
 use \Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
 use PermissionAccess;
 use \Concrete\Core\Package\PackageList;
@@ -140,6 +141,34 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 		return 'page';
 	}
 
+	public function getPageController() {
+		if ($this->getPageTypeID() > 0) {
+			/*
+			$ptHandle = $mixed->getPageTypeHandle();
+			$path = self::pageTypeControllerPath($ptHandle, $mixed->getPackageHandle());
+			if ($path) {
+				require_once($path);
+				$class = Object::camelcase($ptHandle) . 'PageTypeController';
+			}
+			*/
+		} else if ($this->isGeneratedCollection()) {
+			$file = $this->getCollectionFilename();
+			if (strpos($file, '/' . FILENAME_COLLECTION_VIEW) !== false) {
+				$path = substr($file, 0, strpos($file, '/'. FILENAME_COLLECTION_VIEW));
+			} else {
+				$path = substr($file, 0, strpos($file, '.php'));
+			}
+			$path = trim(str_replace(' ', '\\', ucwords(str_replace(array('/', '_'), ' ', $path))), '\\');
+			$class = \Concrete\Core\Foundation\Classloader::getClassName('Controller\\Page\\' . $path);
+		}
+
+		if (isset($class) && class_exists($class)) {
+			return new $class($this);
+		} else {
+			return new \Concrete\Core\Page\Controller\PageController($this);
+		}
+	}
+
 	public function getPermissionObjectIdentifier() {
 		// this is a hack but it's a really good one for performance
 		// if the permission access entity for page owner exists in the database, then we return the collection ID. Otherwise, we just return the permission collection id
@@ -156,7 +185,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 	 * @return bool
 	 */
 	public function isEditMode() {
-		$v = View::getInstance();
 		return $this->isCheckedOutByMe();
 	}
 
@@ -218,7 +246,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 			$db = Loader::db();
 			$cID = false;
 			while ((!$cID) && $path) {
-				$cID = $db->GetOne('select cID from PagePaths where cPath = ?', $path);
+				$cID = $db->GetOne('select cID from PagePaths where cPath = ?', array($path));
 				if ($cID) {
 					$cPath = $path;
 					break;

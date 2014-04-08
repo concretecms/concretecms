@@ -1,7 +1,11 @@
 <?
 namespace Concrete\Core\Page\Workflow\Progress;
 use Loader;
-use \Concrete\Core\Workflow\Progress as WorkflowProgress;
+use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
+use Page;
+use \Concrete\Core\Workflow\Workflow;
+use \Concrete\Core\Page\Workflow\Request\Request as PageWorkflowRequest;
+
 class Progress extends WorkflowProgress {  
 	
 	protected $cID;
@@ -36,7 +40,7 @@ class Progress extends WorkflowProgress {
 		$r = $db->Execute('select wp.wpID from PageWorkflowProgress pwp inner join WorkflowProgress wp on pwp.wpID = wp.wpID where cID = ? ' . $filter, array($c->getCollectionID()));
 		$list = array();
 		while ($row = $r->FetchRow()) {
-			$wp = PageWorkflowProgress::getByID($row['wpID']);
+			$wp = static::getByID($row['wpID']);
 			if (is_object($wp)) {
 				$list[] = $wp;
 			}
@@ -49,7 +53,7 @@ class Progress extends WorkflowProgress {
 	}
 
 	public function getPendingWorkflowProgressList() {
-		$list = new PageWorkflowProgressList();
+		$list = new ProgressList();
 		$list->filter('wpApproved', 0);
 		$list->sortBy('wpDateLastAction', 'desc');
 		return $list;

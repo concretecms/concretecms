@@ -4,8 +4,8 @@ namespace Concrete\Core\Application;
 use PermissionKey;
 use User;
 use Redirect;
+use Router;
 use Concrete\Core\Http\Request as Request;
-use Concrete\Core\Routing\Router as Router;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 
@@ -22,6 +22,7 @@ class Dispatcher {
 	 * Loads everything in the proper order to begin a concrete5 visit
 	 */
 	public function bootstrap() {
+		require(DIR_BASE_CORE . '/config/class_aliases.php');
 		require(DIR_BASE_CORE . '/startup/helpers.php');
 		$this->installed = CONFIG_FILE_EXISTS;
 		if (file_exists(DIR_CONFIG_SITE . '/site_post_autoload.php')) {
@@ -39,7 +40,6 @@ class Dispatcher {
 		require(DIR_BASE_CORE . '/config/assets.php');
 		require(DIR_BASE_CORE . '/startup/session.php');
 		require(DIR_BASE_CORE . '/config/routes.php');
-		require(DIR_BASE_CORE . '/config/class_aliases.php');
 		if (file_exists(DIR_CONFIG_SITE . '/routes.php')) {
 			require(DIR_CONFIG_SITE . '/routes.php');
 		}

@@ -1,7 +1,12 @@
 <?
 namespace Concrete\Core\Page\View;
 use Loader;
-use Concrete\Core\View\View;
+use View;
+use Environment;
+use \Concrete\Core\Page\Template as PageTemplate;
+use Permissions;
+use \Concrete\Core\Cache\Page\PageCache;
+
 class PageView extends View {
 
 	protected $c; // page
@@ -90,7 +95,7 @@ class PageView extends View {
 				$u = new User();
 				$u->markPreviousFrontendPage($this->c);
 			}
-			$ih = Loader::helper('concrete/interface/menu');
+			$ih = Loader::helper('concrete/ui/menu');
 			$interfaceItems = $ih->getPageHeaderMenuItems();
 			foreach($interfaceItems as $item) {
 				$controller = $item->getController();

@@ -1,6 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-$c = $this->getCollectionObject();
+$c = Page::getCurrentPage();
 if (is_object($c)) {
 	$cp = new Permissions($c);
 }
@@ -90,7 +90,7 @@ $v->requireAsset('javascript', 'jquery');
 
 if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES && $u->isRegistered()) {
 	$v->requireAsset('core/account');
-	$this->addFooterItem('<script type="text/javascript">$(function() { ccm_enableUserProfileMenu(); });</script>');
+	$v->addFooterItem('<script type="text/javascript">$(function() { ccm_enableUserProfileMenu(); });</script>');
 }
 
 $favIconFID=intval(Config::get('FAVICON_FID'));
@@ -125,10 +125,10 @@ if (is_object($cp)) {
 
 	$cih = Loader::helper('concrete/ui');
 	if ($cih->showNewsflowOverlay()) {
-		$this->addFooterItem('<script type="text/javascript">$(function() { ccm_showDashboardNewsflowWelcome(); });</script>');
+		$v->addFooterItem('<script type="text/javascript">$(function() { ccm_showDashboardNewsflowWelcome(); });</script>');
 	}
 	if ($_COOKIE['ccmLoadAddBlockWindow'] && $c->isEditMode()) {
-		$this->addFooterItem('<script type="text/javascript">$(function() { setTimeout(function() { $("a[data-launch-panel=add-block]").click()}, 100); });</script>', 'CORE');
+		$v->addFooterItem('<script type="text/javascript">$(function() { setTimeout(function() { $("a[data-launch-panel=add-block]").click()}, 100); });</script>', 'CORE');
 		setcookie("ccmLoadAddBlockWindow", false, -1, DIR_REL . '/');
 	}
 }

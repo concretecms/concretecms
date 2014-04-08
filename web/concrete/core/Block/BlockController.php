@@ -13,7 +13,7 @@ use \Concrete\Core\Legacy\BlockRecord;
 use \Concrete\Core\Backup\ContentExporter;
 use \Concrete\Core\Backup\ContentImporter;
 use \Concrete\Core\Feature\Feature;
-
+use \Concrete\Core\Block\View\BlockViewTemplate;
 class BlockController extends \Concrete\Core\Controller\AbstractController {
 	
 	protected $record; // blockrecord

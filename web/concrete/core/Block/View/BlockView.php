@@ -1,9 +1,13 @@
 <?
 namespace Concrete\Core\Block\View;
-use Concrete\Core\View;
+use Concrete\Core\View\AbstractView;
 use Loader;
 use Environment;
 use CacheLocal;
+use User;
+use Page;
+use Block;
+use BlockType;
 class BlockView extends AbstractView {
 
 	protected $block;
@@ -33,7 +37,7 @@ class BlockView extends AbstractView {
 				$this->controller = $this->block->getInstance();
 				$this->controller->setBlockObject($this->block);
 			} else {
-				$this->controller = Loader::controller($this->blockType);
+				$this->controller = $this->blockType->getController();
 			}
 		}
 		

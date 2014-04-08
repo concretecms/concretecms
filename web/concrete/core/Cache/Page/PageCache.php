@@ -3,6 +3,9 @@
 namespace Concrete\Core\Cache\Page;
 use Request;
 use \Page as ConcretePage;
+use \Concrete\Core\Page\View\PageView;
+use Permissions;
+use User;
 
 abstract class PageCache {
 

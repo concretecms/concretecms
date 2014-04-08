@@ -1,5 +1,10 @@
 <?
 namespace Concrete\Core\Permission\Response;
+use User;
+use Group;
+use PermissionKey;
+use Permissions;
+
 class UserInfoResponse extends Response {
 
 	public function canViewUser() {

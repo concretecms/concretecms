@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Response;
+use PermissionKey;
 class GatheringResponse extends Response {
 	
 	public function canEditGatheringItems() {

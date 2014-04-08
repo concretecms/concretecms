@@ -2,13 +2,13 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $html = Loader::helper('html');
 $dh = Loader::helper('concrete/dashboard');
-$ihm = Loader::helper('concrete/interface/menu');
+$ihm = Loader::helper('concrete/ui/menu');
 $valt = Loader::helper('validation/token');
 $token = '&' . $valt->getParameter();
 $logouttoken = Loader::helper('validation/token')->generate('logout');
 $cID = $c->getCollectionID();
 
-$workflowList = PageWorkflowProgress::getList($c);
+$workflowList = \Concrete\Core\Page\Workflow\Progress\Progress::getList($c);
 
 $canViewToolbar = $cp->canViewToolbar();
 

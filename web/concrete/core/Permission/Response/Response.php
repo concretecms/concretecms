@@ -1,7 +1,11 @@
 <?
 namespace Concrete\Core\Permission\Response;
 use Loader;
+use Page;
 use User;
+use Group;
+use PermissionKey;
+use Permissions;
 use \Concrete\Core\Permission\Cache as PermissionCache;
 class Response {
 

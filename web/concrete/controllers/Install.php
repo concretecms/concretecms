@@ -5,7 +5,7 @@ use Cache;
 use StartingPointPackage;
 use \Concrete\Core\Localization\Localization as Localization;
 use \Concrete\Core\Foundation\Environment as Environment;
-use \Concrete\Core\View\View;
+use View;
 use Database as DB;
 
 defined('C5_EXECUTE') or die("Access Denied.");

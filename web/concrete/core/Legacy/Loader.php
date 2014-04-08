@@ -16,7 +16,7 @@ class Loader {
 	}
 
 	public function element($_file, $args = null, $_pkgHandle= null) {
-		return Concrete\Core\View\View::element($_file, $args, $_pkgHandle);
+		return View::element($_file, $args, $_pkgHandle);
 	}
 
 

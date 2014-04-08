@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<header><?=t('Location')?></header>
 	<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="location" data-panel-detail-form="location">
 
-		<?=Loader::helper('concrete/interface/help')->notify('panel', '/page/location')?>
+		<?=Loader::helper('concrete/ui/help')->notify('panel', '/page/location')?>
 
 	<div style="min-height: 140px">
 		<? if ($c->isPageDraft()) { ?>

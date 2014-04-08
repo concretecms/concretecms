@@ -36,7 +36,7 @@ if (is_array($headerItems[$identifier])) {
 
 </script>
 <?
-$hih = Loader::helper("concrete/interface/help");
+$hih = Loader::helper("concrete/ui/help");
 $blockTypes = $hih->getBlockTypes();
 $cont = $bt->getController();
 	

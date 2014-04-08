@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Page;
 use Loader;
-use Page;
+use Page as ConcretePage;
 use Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
 /**
 *
@@ -488,7 +488,7 @@ class PageList extends DatabaseItemList {
 	}
 	
 	protected function loadPageID($cID, $versionOrig = 'RECENT') {
-		return Page::getByID($cID, $versionOrig);
+		return ConcretePage::getByID($cID, $versionOrig);
 	}
 	
 	public function getTotal() {

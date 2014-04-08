@@ -2,6 +2,7 @@
 namespace Concrete\Helper\Concrete;
 use \User as ConcreteUser;
 use Loader;
+use Page;
 use Localization;
 /**
  * @package Helpers
@@ -152,7 +153,7 @@ class UI {
 	}
 	
 	public function showNewsflowOverlay() {
-		$tp = new TaskPermission();
+		$tp = new \TaskPermission();
 		$c = Page::getCurrentPage();
         if ((!defined(MOBILE_THEME_IS_ACTIVE) || MOBILE_THEME_IS_ACTIVE == false) && ENABLE_NEWSFLOW_OVERLAY == true && $tp->canViewNewsflow() && $c->getCollectionPath() != '/dashboard/news') {
 			$u = new CoreUser;

@@ -18,7 +18,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <section class="ccm-ui">
 	<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="attributes" data-panel-detail-form="attributes">
 
-		<?=Loader::helper('concrete/interface/help')->notify('panel', '/page/attributes')?>
+		<?=Loader::helper('concrete/ui/help')->notify('panel', '/page/attributes')?>
 		<? if ($assignment->allowEditName()) { ?>
 		<div class="form-group">
 			<label for="cName" class="control-label"><?=t('Name')?></label>

@@ -42,7 +42,7 @@ $(function() {
 </script>
 
 <?
-$hih = Loader::helper("concrete/interface/help");
+$hih = Loader::helper("concrete/ui/help");
 $blockTypes = $hih->getBlockTypes();
 $cont = $bt->getController();
 if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {

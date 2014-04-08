@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Response;
+use User;
 class FileSetResponse extends Response {
 	
 	public function canSearchFiles() { return $this->validate('search_file_set'); }
