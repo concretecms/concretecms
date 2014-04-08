@@ -6,6 +6,14 @@ use \Concrete\Core\Page\Template as PageTemplate;
 use \Concrete\Core\Permission\Key\Key as PermissionKey;
 use \Concrete\Core\Permission\Access\Access as PermissionAccess;
 use \Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
+use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
+use \Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;
+use \Concrete\Core\Backup\ContentImporter;
+use \Concrete\Core\Package\PackageList;
+use \Concrete\Core\Page\Collection\Version as CollectionVersion;
+use Collection;
+use Page;
+use \Concrete\Core\Page\Type\PublishTarget\Configuration\Configuration as PageTypePublishTargetConfiguration;
 
 class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
@@ -162,7 +170,6 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 			$r2 = $db->prepare($q2);
 			$res2 = $db->execute($r2, $v2);
 
-			$cID = $db->Insert_ID();
 			$db->Execute('insert into PageTypePageTemplateDefaultPages (ptID, pTemplateID, cID) values (?, ?, ?)', array(
 				$this->ptID, $template->getPageTemplateID(), $cID
 			));
@@ -425,7 +432,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 			}
 		}
 
-		$ptt = static::getByID($db->Insert_ID());
+		$ptt = static::getByID($ptID);
 
 		// copy permissions from the defaults to the page type
 		$cpk = PermissionKey::getByHandle('access_page_type_permissions');

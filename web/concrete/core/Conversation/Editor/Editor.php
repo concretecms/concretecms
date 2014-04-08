@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Conversation\Editor;
 use Loader;
+use \Concrete\Core\Package\PackageList;
 use \Concrete\Core\Foundation\Object;
 abstract class Editor extends Object {
 

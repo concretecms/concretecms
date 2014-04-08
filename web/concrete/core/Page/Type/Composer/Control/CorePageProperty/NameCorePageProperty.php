@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 use Loader;
+use Page;
 class NameCorePageProperty extends CorePageProperty {
 	
 	protected $ptComposerControlRequiredByDefault = true;

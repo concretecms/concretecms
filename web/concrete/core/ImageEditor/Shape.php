@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\ImageEditor;
 use Loader;
+use \Concrete\Core\Package\PackageList;
 class Shape {
 	public $scsID;
 	public $scsHandle;

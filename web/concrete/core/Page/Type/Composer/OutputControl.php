@@ -2,6 +2,9 @@
 namespace Concrete\Core\Page\Type\Composer;
 use Loader;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Page\Template as PageTemplate;
+use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
+
 class OutputControl extends Object {
 
 	public function getPageTypeComposerOutputControlID() {return $this->ptComposerOutputControlID;}
@@ -18,7 +21,7 @@ class OutputControl extends Object {
 			$pagetype->getPageTypeID(), $pt->getPageTemplateID(), $control->getPageTypeComposerFormLayoutSetControlID()
 		));
 		$ptComposerOutputControlID = $db->Insert_ID();
-		return PageTypeComposerOutputControl::getByID($ptComposerOutputControlID);
+		return static::getByID($ptComposerOutputControlID);
 	}
 
 	public static function getList(PageType $pt, PageTemplate $template) {
@@ -29,7 +32,7 @@ class OutputControl extends Object {
 		));
 		$list = array();
 		foreach($ptComposerOutputControlIDs as $ptComposerOutputControlID) {
-			$cm = PageTypeComposerOutputControl::getByID($ptComposerOutputControlID);
+			$cm = static::getByID($ptComposerOutputControlID);
 			if (is_object($cm)) {
 				$list[] = $cm;
 			}
@@ -41,7 +44,7 @@ class OutputControl extends Object {
 		$db = Loader::db();
 		$r = $db->GetRow('select * from PageTypeComposerOutputControls where ptComposerOutputControlID = ?', array($ptComposerOutputControlID));
 		if (is_array($r) && $r['ptComposerOutputControlID']) {
-			$cm = new PageTypeComposerOutputControl;
+			$cm = new static;
 			$cm->setPropertiesFromArray($r);
 			return $cm;
 		}
@@ -51,7 +54,7 @@ class OutputControl extends Object {
 		$db = Loader::db();
 		$ptComposerOutputControlID = $db->GetOne('select ptComposerOutputControlID from PageTypeComposerOutputControls where pTemplateID = ? and ptComposerFormLayoutSetControlID = ?', array($pt->getPageTemplateID(), $control->getPageTypeComposerFormLayoutSetControlID()));
 		if ($ptComposerOutputControlID) {
-			return PageTypeComposerOutputControl::getByID($ptComposerOutputControlID);
+			return static::getByID($ptComposerOutputControlID);
 		}
 	}
 

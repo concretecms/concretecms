@@ -2,6 +2,8 @@
 namespace Concrete\Core\Page\Type\Composer;
 use Loader;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
+
 class FormLayoutSetControl extends Object {
 
 	public function getPageTypeComposerFormLayoutSetControlID() {return $this->ptComposerFormLayoutSetControlID;}
@@ -75,7 +77,7 @@ class FormLayoutSetControl extends Object {
 		);
 		$list = array();
 		foreach($ptComposerFormLayoutSetControlIDs as $ptComposerFormLayoutSetControlID) {
-			$control = PageTypeComposerFormLayoutSetControl::getByID($ptComposerFormLayoutSetControlID);
+			$control = static::getByID($ptComposerFormLayoutSetControlID);
 			if (is_object($control)) {
 				$list[] = $control;
 			}
@@ -87,7 +89,7 @@ class FormLayoutSetControl extends Object {
 		$db = Loader::db();
 		$r = $db->GetRow('select * from PageTypeComposerFormLayoutSetControls where ptComposerFormLayoutSetControlID = ?', array($ptComposerFormLayoutSetControlID));
 		if (is_array($r) && $r['ptComposerFormLayoutSetControlID']) {
-			$control = new PageTypeComposerFormLayoutSetControl;
+			$control = new static;
 			$control->setPropertiesFromArray($r);
 			$control->ptComposerControlObject = unserialize($r['ptComposerControlObject']);
 			return $control;

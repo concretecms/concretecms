@@ -2,6 +2,7 @@
 namespace Concrete\Core\Feature;
 use \Concrete\Core\Foundation\Object;
 use Loader;
+use \Concrete\Core\Package\PackageList;
 class Feature extends Object {
 
 	public function getFeatureDetailObject($mixed) {

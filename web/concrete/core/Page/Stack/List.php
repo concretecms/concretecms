@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Core\Stack;
+namespace Concrete\Core\Page\Stack;
 use Loader;
 use PageList;
 class List extends PageList {

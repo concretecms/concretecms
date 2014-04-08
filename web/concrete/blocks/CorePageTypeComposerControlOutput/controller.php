@@ -1,6 +1,12 @@
 <?
 namespace Concrete\Block\CorePageTypeComposerControlOutput;
 use \Concrete\Core\Block\BlockController;
+use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
+use \Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
+use \Concrete\Core\Backup\ContentImporter;
+use \Concrete\Core\Backup\ContentExporter;
+use \Concrete\Core\Page\Template as PageTemplate;
+
 class Controller extends BlockController {
 
 	protected $btCacheBlockRecord = true;
@@ -14,7 +20,7 @@ class Controller extends BlockController {
 		return t("Composer Control (Core)");
 	}
 
-	public function export(SimpleXMLElement $blockNode) {			
+	public function export(\SimpleXMLElement $blockNode) {			
 		$outputControl = PageTypeComposerOutputControl::getByID($this->ptComposerOutputControlID);
 		if (is_object($outputControl)) {
 			$fsc = PageTypeComposerFormLayoutSetControl::getByID($outputControl->getPageTypeComposerFormLayoutSetControlID());

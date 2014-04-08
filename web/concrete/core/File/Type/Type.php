@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\File\Type;
 use Loader;
+use \Concrete\Core\Package\PackageList;
 
 class Type {
 

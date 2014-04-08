@@ -2,6 +2,7 @@
 namespace Concrete\Core\Permission;
 use \Concrete\Core\Foundation\Object;
 use Loader;
+use \Concrete\Core\Package\PackageList;
 class Category extends Object {
 
 	protected static $categories;

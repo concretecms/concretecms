@@ -1,7 +1,9 @@
 <?php
 namespace Concrete\Core\Page\Type\PublishTarget\Type;
 use Loader;
+use PageType;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Package\PackageList;
 abstract class Type extends Object {
 
 	abstract public function configurePageTypePublishTarget(PageType $pt, $post);

@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Antispam;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Package\PackageList;
+
 class Library extends Object {
 
 	public function getSystemAntispamLibraryHandle() { return $this->saslHandle;}

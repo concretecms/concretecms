@@ -2,6 +2,9 @@
 namespace Concrete\Core\Page\Type\Composer\Control;
 use Loader;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Controller\Controller;
+use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
+
 class BlockControl extends Control {
 
 	protected $btID;

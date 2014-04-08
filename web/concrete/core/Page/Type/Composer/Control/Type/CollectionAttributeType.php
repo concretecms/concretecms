@@ -2,6 +2,9 @@
 namespace Concrete\Core\Page\Type\Composer\Control\Type;
 use Loader;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use \Concrete\Core\Page\Type\Composer\Control\CollectionAttributeControl;
+
 class CollectionAttributeType extends Type {
 
 	public function getPageTypeComposerControlObjects() {
@@ -9,7 +12,7 @@ class CollectionAttributeType extends Type {
 		$keys = AttributeKey::getList('collection');
 
 		foreach($keys as $ak) {
-			$ac = new CollectionAttributePageTypeComposerControl();
+			$ac = new CollectionAttributeControl();
 			$ac->setAttributeKeyID($ak->getAttributeKeyID());
 			$ac->setPageTypeComposerControlIconSRC($ak->getAttributeKeyIconSRC());
 			$ac->setPageTypeComposerControlName($ak->getAttributeKeyName());
@@ -20,7 +23,7 @@ class CollectionAttributeType extends Type {
 
 	public function getPageTypeComposerControlByIdentifier($identifier) {
 		$ak = CollectionAttributeKey::getByID($identifier);
-		$ax = new CollectionAttributePageTypeComposerControl();
+		$ax = new CollectionAttributeControl();
 		$ax->setAttributeKeyID($ak->getAttributeKeyID());
 		$ax->setPageTypeComposerControlIconSRC($ak->getAttributeKeyIconSRC($ak));
 		$ax->setPageTypeComposerControlName($ak->getAttributeKeyName());
@@ -29,7 +32,7 @@ class CollectionAttributeType extends Type {
 
 	public function configureFromImport($node) {
 		$ak = CollectionAttributeKey::getByHandle((string) $node['handle']);
-		return CollectionAttributePageTypeComposerControlType::getPageTypeComposerControlByIdentifier($ak->getAttributeKeyID());
+		return static::getPageTypeComposerControlByIdentifier($ak->getAttributeKeyID());
 	}
 	
 

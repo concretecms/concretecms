@@ -9,6 +9,7 @@ use Page;
 use Area;
 use Events;
 use Cache;
+use \Concrete\Core\Package\PackageList;
 
 class Block extends Object implements \Concrete\Core\Permission\ObjectInterface {
 

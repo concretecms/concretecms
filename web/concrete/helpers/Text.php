@@ -10,6 +10,8 @@
 
 namespace Concrete\Helper;
 use \Concrete\Core\Foundation\Object;
+use Config;
+use Loader;
 
 class Text { 
 

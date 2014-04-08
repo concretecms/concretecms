@@ -2,6 +2,7 @@
 namespace Concrete\Core\Attribute;
 use \Concrete\Core\Foundation\Object;
 use Loader;
+use \Concrete\Core\Package\PackageList;
 class Set extends Object {
 
 	public static function getByID($asID) {

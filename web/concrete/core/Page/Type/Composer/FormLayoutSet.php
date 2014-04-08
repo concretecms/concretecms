@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Page\Type\Composer;
 use \Concrete\Core\Foundation\Object;
+use PageType;
 use Loader;
 class FormLayoutSet extends Object {
 
@@ -60,7 +61,7 @@ class FormLayoutSet extends Object {
 	}
 
 	public function delete() {
-		$controls = PageTypeComposerFormLayoutSetControl::getList($this);
+		$controls = FormLayoutSetControl::getList($this);
 		foreach($controls as $control) {
 			$control->delete();
 		}

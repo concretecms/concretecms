@@ -6,6 +6,7 @@ use CacheLocal;
 use GroupTree;
 use GroupTreeNode;
 use Events;
+use \Concrete\Core\Package\PackageList;
 class Group extends Object {
 
 	var $ctID;

@@ -2,7 +2,7 @@
 namespace Concrete\Core\Page;
 use Loader;
 use CacheLocal;
-use \Concrete\Core\Page\Collection\Collection as Collection;
+use Collection;
 use Request;
 use \Concrete\Core\Page\Statistics as PageStatistics;
 use \Concrete\Core\Cache\Page\PageCache;
@@ -11,6 +11,7 @@ use Config;
 use User;
 use Block;
 use UserInfo;
+use \Concrete\Core\Package\PackageList;
 /**
 *
 * The page object in Concrete encapsulates all the functionality used by a typical page and their contents

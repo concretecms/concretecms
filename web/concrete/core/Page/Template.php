@@ -4,6 +4,7 @@ use Loader;
 use Concrete\Core\Foundation\Object;
 use PageType;
 use CacheLocal;
+use \Concrete\Core\Package\PackageList;
 class Template extends Object {
 
 	public static function exportList($xml) {
@@ -66,7 +67,7 @@ class Template extends Object {
 			$row = $r->fetchRow();
 			$r->free();
 			if (is_array($row)) {
-				$pt = new PageTemplate; 
+				$pt = new static; 
 				$pt->setPropertiesFromArray($row);
 			}
 		}

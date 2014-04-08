@@ -2,6 +2,7 @@
 namespace Concrete\Core\Job;
 use \Concrete\Core\Foundation\Object;
 use Loader;
+use \Concrete\Core\Package\PackageList;
 use Environment;
 abstract class Job extends Object {
 

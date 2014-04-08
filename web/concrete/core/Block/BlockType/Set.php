@@ -4,6 +4,7 @@ use \Concrete\Core\Foundation\Object;
 use Loader;
 use Environment;
 use CacheLocal;
+use \Concrete\Core\Package\PackageList;
 class Set extends Object {
 
 	public static function getByID($btsID) {

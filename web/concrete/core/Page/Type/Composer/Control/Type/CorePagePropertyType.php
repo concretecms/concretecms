@@ -2,6 +2,8 @@
 namespace Concrete\Core\Page\Type\Composer\Control\Type;
 use Loader;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Page\Type\Composer\Control\CorePageProperty\CorePageProperty as CorePagePropertyControl;
+
 class CorePagePropertyType extends Type {
 
 	protected $corePageProperties = array(
@@ -16,13 +18,13 @@ class CorePagePropertyType extends Type {
 	}
 
 	public function getPageTypeComposerControlByIdentifier($identifier) {
-		$class = Loader::helper('text')->camelcase($identifier) . 'CorePagePropertyPageTypeComposerControl';
+		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Page\\Type\\Composer\\Control\\CorePageProperty\\' . helper('text')->camelcase($identifier) . 'CorePageProperty');
 		$object = new $class();
 		return $object;
 	}
 
 	public function configureFromImport($node) {
-		return CorePagePropertyPageTypeComposerControlType::getPageTypeComposerControlByIdentifier((string) $node['handle']);
+		return static::getPageTypeComposerControlByIdentifier((string) $node['handle']);
 	}
 	
 }

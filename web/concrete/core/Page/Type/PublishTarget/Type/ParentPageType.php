@@ -1,16 +1,21 @@
 <?php 
 namespace Concrete\Core\Page\Type\PublishTarget\Type;
 use Loader;
+use PageType;
+use Page;
+
+use \Concrete\Core\Page\Type\PublishTarget\Configuration\ParentPageConfiguration;
+
 class ParentPageType extends Type {
 
 	public function configurePageTypePublishTarget(PageType $pt, $post) {
-		$configuration = new ParentPagePageTypePublishTargetConfiguration($this);
+		$configuration = new ParentPageConfiguration($this);
 		$configuration->setParentPageID($post['cParentID']);
 		return $configuration;
 	}
 
 	public function configurePageTypePublishTargetFromImport($txml) {
-		$configuration = new ParentPagePageTypePublishTargetConfiguration($this);
+		$configuration = new ParentPageConfiguration($this);
 		$path = (string) $txml['path'];
 		if (!$path) {
 			$c = Page::getByID(HOME_CID);

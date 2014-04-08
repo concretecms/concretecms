@@ -2,6 +2,7 @@
 namespace Concrete\Core\Workflow;
 use \Concrete\Core\Foundation\Object;
 use Loader;
+use \Concrete\Core\Package\PackageList;
 class Type extends Object {
 
 	public function getWorkflowTypeID() {return $this->wftID;}

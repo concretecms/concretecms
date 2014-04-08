@@ -36,7 +36,7 @@ class Controller extends AttributeTypeController  {
 		}
 		
 		$db = Loader::db();
-		$row = $db->GetRow('select akSelectAllowMultipleValues, akSelectOptionDisplayOrder, akSelectAllowOtherValues from atSelectSettings where akID = ?', $ak->getAttributeKeyID());
+		$row = $db->GetRow('select akSelectAllowMultipleValues, akSelectOptionDisplayOrder, akSelectAllowOtherValues from atSelectSettings where akID = ?', array($ak->getAttributeKeyID()));
 		$this->akSelectAllowMultipleValues = $row['akSelectAllowMultipleValues'];
 		$this->akSelectAllowOtherValues = $row['akSelectAllowOtherValues'];
 		$this->akSelectOptionDisplayOrder = $row['akSelectOptionDisplayOrder'];
@@ -113,14 +113,14 @@ class Controller extends AttributeTypeController  {
 
 			if (isset($akey->type->options)) {
 				foreach($akey->type->options->children() as $option) {
-					SelectAttributeTypeOption::add($this->attributeKey, $option['value'], $option['is-end-user-added']);
+					Option::add($this->attributeKey, $option['value'], $option['is-end-user-added']);
 				}
 			}
 		}
 	}
 	
 	private function getSelectValuesFromPost() {
-		$options = new SelectAttributeTypeOptionList();
+		$options = new OptionList();
 		$displayOrder = 0;		
 		foreach($_POST as $key => $value) {
 			if( !strstr($key,'akSelectValue_') || $value=='TEMPLATE' ) continue; 
@@ -130,10 +130,10 @@ class Controller extends AttributeTypeController  {
 			// now we determine from the post whether this is a new option
 			// or an existing. New ones have this value from in the akSelectValueNewOption_ post field
 			if ($_POST['akSelectValueNewOption_' . $id] == $id) {
-				$opt = new SelectAttributeTypeOption(0, $value, $displayOrder);
+				$opt = new Option(0, $value, $displayOrder);
 				$opt->tempID = $id;
 			} else if ($_POST['akSelectValueExistingOption_' . $id] == $id) {
-				$opt = new SelectAttributeTypeOption($id, $value, $displayOrder);
+				$opt = new Option($id, $value, $displayOrder);
 			}
 			
 			if (is_object($opt)) {
@@ -198,10 +198,10 @@ class Controller extends AttributeTypeController  {
 						break;
 					}
 				}
-				if($existing instanceof SelectAttributeTypeOption) {
+				if($existing instanceof Option) {
 					$data['atSelectOptionID'][] = $existing->getSelectAttributeOptionID();
 				} else {
-					$optobj = SelectAttributeTypeOption::add($this->attributeKey, $newoption, 1);
+					$optobj = Option::add($this->attributeKey, $newoption, 1);
 					$data['atSelectOptionID'][] = $optobj->getSelectAttributeOptionID();
 				}
 			}
@@ -237,11 +237,11 @@ class Controller extends AttributeTypeController  {
 		
 		if (is_array($value) && $this->akSelectAllowMultipleValues) {
 			foreach($value as $v) {
-				$opt = SelectAttributeTypeOption::getByValue($v, $this->attributeKey);
+				$opt = Option::getByValue($v, $this->attributeKey);
 				if (is_object($opt)) {
 					$options[] = $opt;	
 				}else if ($this->akSelectAllowOtherValues) {
-			        $options[] = SelectAttributeTypeOption::add($this->attributeKey, $v, true);
+			        $options[] = Option::add($this->attributeKey, $v, true);
 			    }
 			}
 		} else {
@@ -249,7 +249,7 @@ class Controller extends AttributeTypeController  {
 				$value = $value[0];
 			}
 			
-			$opt = SelectAttributeTypeOption::getByValue($value, $this->attributeKey);
+			$opt = Option::getByValue($value, $this->attributeKey);
 			if (is_object($opt)) {
 				$options[] = $opt;	
 			}
@@ -314,7 +314,7 @@ class Controller extends AttributeTypeController  {
 		$optionQuery = array();
 		foreach($options as $id) {
 			if ($id > 0) {
-				$opt = SelectAttributeTypeOption::getByID($id);
+				$opt = Option::getByID($id);
 				if (is_object($opt)) {
 					$optionQuery[] = $opt->getSelectAttributeOptionValue(false);
 				}
@@ -375,9 +375,9 @@ class Controller extends AttributeTypeController  {
 				break;
 		}
 		$db = Loader::db();
-		$list = new SelectAttributeTypeOptionList();
+		$list = new OptionList();
 		foreach($options as $row) {
-			$opt = new SelectAttributeTypeOption($row['ID'], $row['value'], $row['displayOrder']);
+			$opt = new Option($row['ID'], $row['value'], $row['displayOrder']);
 			$list->add($opt);
 		}
 		if($sortByDisplayName) {
@@ -409,10 +409,10 @@ class Controller extends AttributeTypeController  {
 		}
 		$q .= " group by atSelectOptionID order by total desc limit " . $limit;
 		$r = $db->Execute($q, $v);
-		$list = new SelectAttributeTypeOptionList();
+		$list = new OptionList();
 		$i = 0;
 		while ($row = $r->FetchRow()) {
-			$opt = new SelectAttributeTypeOption($row['atSelectOptionID'], $row['value'], $i, $row['total']);
+			$opt = new Option($row['atSelectOptionID'], $row['value'], $i, $row['total']);
 			$list->add($opt);
 			$i++;
 		}		
@@ -456,9 +456,9 @@ class Controller extends AttributeTypeController  {
 				}
 				break;
 		}
-		$options = new SelectAttributeTypeOptionList();
+		$options = new OptionList();
 		while ($row = $r->FetchRow()) {
-			$opt = new SelectAttributeTypeOption($row['ID'], $row['value'], $row['displayOrder']);
+			$opt = new Option($row['ID'], $row['value'], $row['displayOrder']);
 			$options->add($opt);
 		}
 		return $options;
@@ -495,7 +495,7 @@ class Controller extends AttributeTypeController  {
 		), array('akID'), true);
 		
 		// Now we add the options
-		$newOptionSet = new SelectAttributeTypeOptionList();
+		$newOptionSet = new OptionList();
 		$displayOrder = 0;
 		foreach($selectedPostValues as $option) {
 			$opt = $option->saveOrCreate($ak);
@@ -541,7 +541,7 @@ class Controller extends AttributeTypeController  {
 	
 }
 
-class SelectOption extends Object {
+class Option extends Object {
 
 	public function __construct($ID, $value, $displayOrder, $usageCount = false) {
 		$this->ID = $ID;
@@ -590,7 +590,7 @@ class SelectOption extends Object {
 		$v = array($ak->getAttributeKeyID(), $displayOrder, $th->sanitize($option), $isEndUserAdded);
 		$db->Execute('insert into atSelectOptions (akID, displayOrder, value, isEndUserAdded) values (?, ?, ?, ?)', $v);
 		
-		return SelectAttributeTypeOption::getByID($db->Insert_ID());
+		return Option::getByID($db->Insert_ID());
 	}
 	
 	public function setDisplayOrder($num) {
@@ -602,7 +602,7 @@ class SelectOption extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow("select ID, displayOrder, value from atSelectOptions where ID = ?", array($id));
 		if (isset($row['ID'])) {
-			$obj = new SelectAttributeTypeOption($row['ID'], $row['value'], $row['displayOrder']);
+			$obj = new Option($row['ID'], $row['value'], $row['displayOrder']);
 			return $obj;
 		}
 	}
@@ -615,7 +615,7 @@ class SelectOption extends Object {
 			$row = $db->GetRow("select ID, displayOrder, value from atSelectOptions where value = ?", array($value));
 		}
 		if (isset($row['ID'])) {
-			$obj = new SelectAttributeTypeOption($row['ID'], $row['value'], $row['displayOrder']);
+			$obj = new Option($row['ID'], $row['value'], $row['displayOrder']);
 			return $obj;
 		}
 	}
@@ -628,22 +628,22 @@ class SelectOption extends Object {
 	
 	public function saveOrCreate($ak) {
 		if ($this->tempID != false || $this->ID==0) {
-			return SelectAttributeTypeOption::add($ak, $this->value);
+			return Option::add($ak, $this->value);
 		} else {
 			$db = Loader::db();
 			$th = Loader::helper('text');
 			$db->Execute('update atSelectOptions set value = ? where ID = ?', array($th->sanitize($this->value), $this->ID));
-			return SelectAttributeTypeOption::getByID($this->ID);
+			return Option::getByID($this->ID);
 		}
 	}
 	
 }
 
-class SelectOptionList extends Object implements \Iterator {
+class OptionList extends Object implements \Iterator {
 
 	private $options = array();
 	
-	public function add(SelectAttributeTypeOption $opt) {
+	public function add(Option $opt) {
 		$this->options[] = $opt;
 	}
 	
@@ -669,7 +669,7 @@ class SelectOptionList extends Object implements \Iterator {
 	
 	public function count() {return count($this->options);}
 	
-	public function contains(SelectAttributeTypeOption $opt) {
+	public function contains(Option $opt) {
 		foreach($this->options as $o) {
 			if ($o->getSelectAttributeOptionID() == $opt->getSelectAttributeOptionID()) {
 				return true;
