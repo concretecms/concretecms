@@ -1,5 +1,10 @@
 <?
 namespace Concrete\Core\Permission\Response;
+use User;
+use Page;
+use Group;
+use PermissionKey;
+use Permissions;
 class TopicTreeNodeResponse extends Response {
 
 	protected function canAccessTopics() {

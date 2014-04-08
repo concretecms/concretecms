@@ -156,7 +156,7 @@ class Dashboard {
 		*/
 		$html .= '<ul class="ccm-pane-header-icons">';
 		if (!$help) {
-			$ih = Loader::helper('concrete/interface/help');
+			$ih = Loader::helper('concrete/ui/help');
 			$pageHelp = $ih->getPages();
 			if (isset($pageHelp[$c->getCollectionPath()])) {
 				$help = $pageHelp[$c->getCollectionPath()];

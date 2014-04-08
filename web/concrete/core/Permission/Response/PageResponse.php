@@ -1,6 +1,11 @@
 <?
 namespace Concrete\Core\Permission\Response;
 use Loader;
+use Page;
+use User;
+use Group;
+use PermissionKey;
+use Permissions;
 class PageResponse extends Response {
 	
 	// legacy support

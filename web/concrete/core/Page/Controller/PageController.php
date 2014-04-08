@@ -1,7 +1,10 @@
 <?
 namespace Concrete\Core\Page\Controller;
+use Page;
+use Request;
 use Loader;
-use Concrete\Core\Controller;
+use \Concrete\Core\Controller\Controller;
+use \Concrete\Core\Page\View\PageView;
 class PageController extends Controller {
 
 	protected $supportsPageCache = false;
@@ -70,14 +73,14 @@ class PageController extends Controller {
 		$foundTask = false;
 
 		try {
-			$r = new ReflectionMethod(get_class($this), $method);
+			$r = new \ReflectionMethod(get_class($this), $method);
 			$cl = $r->getDeclaringClass();
 			if (is_object($cl)) {
-				if ($cl->getName() != 'Controller' && strpos($method, 'on_') !== 0 && strpos($method, '__') !== 0 && $r->isPublic()) {
+				if ($cl->getName() != 'Concrete\Core\Controller\Controller' && strpos($method, 'on_') !== 0 && strpos($method, '__') !== 0 && $r->isPublic()) {
 					$foundTask = true;
 				}
 			}
-		} catch(Exception $e) {
+		} catch(\Exception $e) {
 
 		}
 
@@ -104,7 +107,7 @@ class PageController extends Controller {
 		if (is_callable(array($this, $this->action))  && (get_class($this) != 'PageForbiddenController')) {
 			// we use reflection to see if the task itself, which now much exist, takes fewer arguments than 
 			// what is specified
-			$r = new ReflectionMethod(get_class($this), $this->action);
+			$r = new \ReflectionMethod(get_class($this), $this->action);
 			if ($r->getNumberOfParameters() < count($this->parameters)) {
 				$valid = false;
 			}

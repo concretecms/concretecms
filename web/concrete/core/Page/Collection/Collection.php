@@ -2,6 +2,8 @@
 namespace Concrete\Core\Page\Collection;
 use Loader;
 use CacheLocal;
+use Permissions;
+use Stack;
 use \Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
 use \Concrete\Core\Foundation\Object as Object;
 use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;

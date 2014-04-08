@@ -35,7 +35,7 @@ switch(FULL_PAGE_CACHE_LIFETIME) {
 	<header><?=t('Page Caching')?></header>
 	<form method="post" action="<?=$controller->action('submit')?>" data-dialog-form="caching" data-panel-detail-form="caching">
 
-	<?=Loader::helper('concrete/interface/help')->notify('panel', '/page/caching')?>
+	<?=Loader::helper('concrete/ui/help')->notify('panel', '/page/caching')?>
 
 		<p class="lead"><?=t('Enable Cache')?></p>
 

@@ -2,6 +2,7 @@
 namespace Concrete\Block\Autonav;
 use Loader;
 use \Concrete\Core\Block\BlockController;
+use Permissions;
 use Page;
 /**
  * The controller for the Auto-Nav block.
@@ -241,7 +242,7 @@ use Page;
 					$niRow['cvDescription'] = $tc1->getCollectionDescription();
 					$niRow['cPath'] = $tc1->getCollectionPath();
 					
-					$ni = new AutonavBlockItem($niRow, 0);
+					$ni = new NavItem($niRow, 0);
 					$ni->setCollectionObject($tc1);
 					
 					array_unshift($this->navArray, $ni);
@@ -256,7 +257,7 @@ use Page;
 					$niRow['cvDescription'] = $tc1->getCollectionDescription();
 					$niRow['cPath'] = $tc1->getCollectionPath();
 					
-					$ni = new AutonavBlockItem($niRow, 0);
+					$ni = new NavItem($niRow, 0);
 					$level++;
 					$ni->setCollectionObject($tc1);
 					
@@ -364,7 +365,7 @@ use Page;
 							$niRow['cPointerExternalLinkNewWindow'] = $tc->openCollectionPointerExternalLinkInNewWindow();
 							$dateKey = strtotime($tc->getCollectionDatePublic());
 
-							$ni = new AutonavBlockItem($niRow, $currentLevel);
+							$ni = new NavItem($niRow, $currentLevel);
 							$ni->setCollectionObject($tc);
 							// $this->navArray[] = $ni;
 							$navSort[$niRow['cID']] = $dateKey;
@@ -649,7 +650,7 @@ use Page;
 
 
 				//Package up all the data
-				$navItem = new stdClass();
+				$navItem = new \stdClass();
 				$navItem->url = $pageLink;
 				$navItem->name = $ni->getName();
 				$navItem->target = $target;

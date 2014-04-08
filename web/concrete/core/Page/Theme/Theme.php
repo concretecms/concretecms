@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Theme;
 use \Concrete\Core\Http\ResponseAssetGroup;
 use Loader;
+use Page;
 use Environment;
 use \Concrete\Core\Page\Theme\File as PageThemeFile;
 use \Concrete\Core\Package\PackageList;
@@ -160,7 +161,7 @@ class Theme extends Object {
 			// if a replacement style array is passed then we use that instead of the database (as is the case when previewing)
 			if (!is_array($styles)) {			
 				$db = Loader::db();
-				$ptes = $db->GetAll("select pThemeStyleHandle, pThemeStyleValue, pThemeStyleType from PageThemeStyles where pThemeID = ?", $this->getThemeID());
+				$ptes = $db->GetAll("select pThemeStyleHandle, pThemeStyleValue, pThemeStyleType from PageThemeStyles where pThemeID = ?", array($this->getThemeID()));
 				$styles = array();
 				foreach($ptes as $p) {
 					$pts = new PageThemeEditableStyle($p['pThemeStyleValue']);
@@ -595,7 +596,7 @@ class Theme extends Object {
 		$r = $db->query("update CollectionVersions inner join Pages on CollectionVersions.cID = Pages.cID left join Packages on Pages.pkgID = Packages.pkgID set CollectionVersions.pThemeID = ? where cIsTemplate = 0 and (Packages.pkgHandle <> 'core' or pkgHandle is null or Pages.ptID > 0)", array($this->pThemeID));
 	}
 	
-	public function getSiteTheme() {
+	public static function getSiteTheme() {
 		$c = Page::getByID(HOME_CID);
 		return static::getByID($c->getCollectionThemeID());
 	}

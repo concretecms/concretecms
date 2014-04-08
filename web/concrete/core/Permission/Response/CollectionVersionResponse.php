@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Response;
+use Page;
 class CollectionVersionResponse extends Response {
 
 	public function testForErrors() { 

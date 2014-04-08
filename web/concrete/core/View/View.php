@@ -2,8 +2,9 @@
 namespace Concrete\Core\View;
 use Concrete\Core\Asset\Asset;
 use Concrete\Core\Http\ResponseAssetGroup;
-use Concrete\Core\Foundation\Environment;
+use Environment;
 use Events;
+use PageTheme;
 use Page;
 class View extends AbstractView {
 

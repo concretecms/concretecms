@@ -2,7 +2,7 @@
 namespace Concrete\Helper;
 use Concrete\Core\Asset\CSSAsset;
 use Concrete\Core\Asset\JavaScriptAsset;
-use Concrete\Core\View\View;
+use View;
 
 /**
  * @package Helpers

@@ -6,7 +6,9 @@ use Events;
 use Loader;
 use Page;
 use Config;
+use View;
 use Permissions;
+use Response;
 
 class DispatcherRouteCallback extends RouteCallback {
 	
@@ -23,7 +25,7 @@ class DispatcherRouteCallback extends RouteCallback {
 			$item = $c;
 			$request->setCurrentPage($c);
 		}
-		$cnt = Loader::controller($item);
+		$cnt = $item->getPageController();
 		$v = $cnt->getViewObject();
 		$cnt->on_start();
 		$cnt->runAction('view');
@@ -38,7 +40,7 @@ class DispatcherRouteCallback extends RouteCallback {
 			$item = $c;
 			$request->setCurrentPage($c);
 		}
-		$cnt = Loader::controller($item);
+		$cnt = $item->getPageController();
 		$v = $cnt->getViewObject();
 		$cnt->on_start();
 		$cnt->runAction('view');
@@ -58,7 +60,7 @@ class DispatcherRouteCallback extends RouteCallback {
 			// let's test to see if this is, in fact, the home page,
 			// and we're routing arguments onto it (which is screwing up the path.)
 			$home = Page::getByID(HOME_CID);
-			$homeController = Loader::controller($home);
+			$homeController = $home->getPageController();
 			$homeController->setupRequestActionAndParameters($request);
 			if (!$homeController->validateRequest()) {
 				return $this->sendPageNotFound($request);
@@ -127,7 +129,7 @@ class DispatcherRouteCallback extends RouteCallback {
 		## Fire the on_page_view Eventclass
 		Events::fire('on_page_view', $c, $u);
 
-		$controller = Loader::controller($c);
+		$controller = $c->getPageController();
 		$controller->on_start();
 		$controller->setupRequestActionAndParameters($request);
 		$requestTask = $controller->getRequestAction();

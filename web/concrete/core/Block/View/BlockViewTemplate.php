@@ -3,6 +3,11 @@ namespace Concrete\Core\Block\View;
 use Loader;
 use Environment;
 use CacheLocal;
+use AssetList;
+use View;
+use \Concrete\Core\Asset\JavaScriptAsset;
+use \Concrete\Core\Asset\CSSAsset;
+
 class BlockViewTemplate {
 
 	protected $basePath = '';

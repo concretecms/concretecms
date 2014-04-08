@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Core\Attribute;
-use Concrete\Core\View\View;
+use View;
 use Loader;
 class View extends AbstractView {
 	

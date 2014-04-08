@@ -4,6 +4,7 @@ use PermissionAccess;
 use Loader;
 use Block;
 use Area;
+use PermissionKey;
 use Page;
 
 class BlockAssignment extends Assignment {

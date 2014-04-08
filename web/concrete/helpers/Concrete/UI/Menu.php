@@ -1,6 +1,9 @@
 <?
 
 namespace Concrete\Helper\Concrete\UI;
+use \Concrete\Core\Controller\Controller;
+use \Concrete\Core\Foundation\Object;
+
 class Menu {
 
 	protected $pageHeaderMenuItems = array();

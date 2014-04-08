@@ -1,6 +1,8 @@
 <?
 
 namespace Concrete\Core\Controller;
+use Router;
+use Request;
 class Controller extends AbstractController {
 
 	protected $view;

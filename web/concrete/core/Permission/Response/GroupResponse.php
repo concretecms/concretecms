@@ -1,5 +1,11 @@
 <?
 namespace Concrete\Core\Permission\Response;
+use Page;
+use User;
+use Group;
+use \Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
+use PermissionKey;
+use Permissions;
 class GroupResponse extends Response {
 
 	protected function getTreeGroupNodePermissions() {

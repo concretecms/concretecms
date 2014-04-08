@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Core\Foundation\Collection\Database;
-use ItemList;
+use \Concrete\Core\Foundation\Collection\ItemList;
 use Loader;
 class DatabaseItemList extends ItemList {
 

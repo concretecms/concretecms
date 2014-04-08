@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Response;
+use User;
 class AreaResponse extends Response {
 	
 	// legacy support

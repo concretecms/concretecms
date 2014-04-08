@@ -10,7 +10,8 @@ if (empty($disableTrackingCode) && (empty($_trackingCodePosition) || $_trackingC
 	echo Config::get('SITE_TRACKING_CODE');
 }
 
-print $this->markFooterAssetPosition();
+$v = View::getInstance();
+print $v->markFooterAssetPosition();
 
 // user profile menu
 Loader::element('account/menu');

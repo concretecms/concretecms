@@ -2,6 +2,7 @@
 namespace Concrete\Block\Search;
 use Loader;
 use \Concrete\Core\Block\BlockController;
+use Page;
 class Controller extends BlockController {
 
 	protected $btTable = 'btSearch';

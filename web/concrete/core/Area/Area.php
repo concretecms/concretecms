@@ -4,6 +4,11 @@ use Loader;
 use \Concrete\Core\Foundation\Object;
 use CacheLocal;
 use Block;
+use View;
+use Permissions;
+use Page;
+use User;
+use \Concrete\Core\Block\View\BlockView;
 class Area extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
 	public $cID, $arID, $arHandle;
