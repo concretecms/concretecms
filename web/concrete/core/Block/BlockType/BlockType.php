@@ -10,6 +10,7 @@ use Database as DB;
 use User;
 use Block;
 use \Concrete\Core\Filesystem\TemplateFile;
+use \Concrete\Core\Package\PackageList;
 
 class BlockType {
 

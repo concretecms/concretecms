@@ -3,6 +3,7 @@ namespace Concrete\Core\Permission\Access\Entity;
 use \Concrete\Core\Foundation\Object;
 use Loader;
 use Config;
+use \Concrete\Core\Package\PackageList;
 class Type extends Object {
 
 	public function getAccessEntityTypeID() {return $this->petID;}

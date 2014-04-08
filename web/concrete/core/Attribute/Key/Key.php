@@ -8,6 +8,7 @@ use Package;
 use CacheLocal;
 use User;
 use \Concrete\Core\Attribute\Value\Value as AttributeValue;
+use \Concrete\Core\Package\PackageList;
 
 
 class Key extends Object {

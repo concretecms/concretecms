@@ -3,6 +3,7 @@ namespace Concrete\Core\Tree\Node;
 use \Concrete\Core\Foundation\Object;
 use Loader;
 use Concrete\Core\Tree\Node\NodeType as TreeNodeType;
+use \Concrete\Core\Package\PackageList;
 class NodeType extends Object {
 
 	public function getTreeNodeTypeID() {

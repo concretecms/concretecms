@@ -2,6 +2,7 @@
 namespace Concrete\Core\Conversation\Rating;
 use \Concrete\Core\Foundation\Object;
 use Loader;
+use \Concrete\Core\Package\PackageList;
 abstract class Type extends Object {
 
 	abstract public function outputRatingTypeHTML();

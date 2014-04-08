@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
     <themes>
-        <theme handle="twitter_bootstrap" package="" activated="1"/>
+        <theme handle="TwitterBootstrap" package="" activated="1"/>
     </themes>
     <pagetemplates>
         <pagetemplate handle="right_sidebar" name="Right Sidebar" icon="right_sidebar.png" package="" />

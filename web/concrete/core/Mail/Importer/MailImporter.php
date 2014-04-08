@@ -2,6 +2,7 @@
 namespace Concrete\Core\Mail\Importer;
 use Concrete\Core\Foundation\Object;
 use Loader;
+use \Concrete\Core\Package\PackageList;
 class MailImporter extends Object {
 
 	/**

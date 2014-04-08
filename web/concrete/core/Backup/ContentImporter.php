@@ -41,6 +41,7 @@ use \Concrete\Core\Conversation\FlagType\FlagType as ConversationFlagType;
 use \Concrete\Core\Validation\BannedWord\BannedWord as BannedWord;
 use \Concrete\Core\Config\ConfigStore;
 use \Concrete\Core\File\Importer as FileImporter;
+use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
 
 class ContentImporter {
 

@@ -4,6 +4,7 @@ use \Concrete\Core\Http\ResponseAssetGroup;
 use Loader;
 use Environment;
 use \Concrete\Core\Page\Theme\File as PageThemeFile;
+use \Concrete\Core\Package\PackageList;
 use Concrete\Core\Foundation\Object;
 /**
 *

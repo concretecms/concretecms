@@ -3,6 +3,7 @@ namespace Concrete\Core\Attribute\Key;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Set as AttributeSet;
 use Loader;
+use \Concrete\Core\Package\PackageList;
 class Category extends Object {
 
 	const ASET_ALLOW_NONE = 0;

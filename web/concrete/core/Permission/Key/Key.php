@@ -4,6 +4,7 @@ use \Concrete\Core\Foundation\Object;
 use Loader;
 use CacheLocal;
 use Package;
+use \Concrete\Core\Package\PackageList;
 use \Concrete\Core\Permission\Assignment\Assignment as PermissionAssignment;
 
 abstract class Key extends Object {

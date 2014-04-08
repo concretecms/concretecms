@@ -3,6 +3,7 @@ use Concrete\Core\Foundation\Object;
 use Database;
 use \Concrete\Core\Database\Schema\Schema;
 use Loader;
+use \Concrete\Core\Package\PackageList;
 
 class Package extends Object {
 

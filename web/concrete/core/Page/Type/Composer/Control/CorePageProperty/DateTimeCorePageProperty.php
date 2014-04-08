@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 use Loader;
+use Page;
 class DateTimeCorePageProperty extends CorePageProperty {
 	
 	public function __construct() {

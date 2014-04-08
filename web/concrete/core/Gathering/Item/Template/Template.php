@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Gathering\Item\Template;
 use Loader;
+use \Concrete\Core\Package\PackageList;
 use \Concrete\Core\Foundation\Object;
 abstract class Template extends Object {
 

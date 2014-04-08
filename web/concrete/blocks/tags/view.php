@@ -3,7 +3,7 @@
 <?php if(strlen($title)) {
 	?><h4><?php echo $title ?></h4><?php
 }
-if($options instanceof SelectAttributeTypeOptionList && $options->count() > 0) {
+if($options instanceof \Concrete\Attribute\Select\OptionList && $options->count() > 0) {
 	?><ul class="ccm-tag-list">
 		<?php foreach($options as $opt) {
 			$qs = $akc->field('atSelectOptionID') . '[]=' . $opt->getSelectAttributeOptionID();

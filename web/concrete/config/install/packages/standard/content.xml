@@ -22,8 +22,8 @@
         </attributekey>
     </attributekeys>
     <themes>
-        <theme handle="greek_yogurt" package="" activated="1"/>
-        <theme handle="twitter_bootstrap" package="" />
+        <theme handle="GreekYogurt" package="" activated="1"/>
+        <theme handle="TwitterBootstrap" package="" />
     </themes>
     <pagetypes>
         <pagetype name="Blog Entry" handle="blog_entry" launch-in-composer="1">

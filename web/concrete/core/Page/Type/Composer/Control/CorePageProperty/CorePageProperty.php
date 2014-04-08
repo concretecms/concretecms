@@ -1,8 +1,11 @@
 <?php 
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 use Loader;
+use Environment;
+use Page;
 use \Concrete\Core\Foundation\Object;
-abstract class CorePageProperty extends \Concrete\Core\Page\Type\Composer\Control {
+use \Concrete\Core\Controller\Controller;
+abstract class CorePageProperty extends \Concrete\Core\Page\Type\Composer\Control\Control {
 
 	protected $propertyHandle;
 	protected $ptComposerControlTypeHandle = 'core_page_property';

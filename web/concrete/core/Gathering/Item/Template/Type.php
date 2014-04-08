@@ -2,6 +2,7 @@
 namespace Concrete\Core\Gathering\Item\Template;
 use \Concrete\Core\Foundation\Object;
 use Loader;
+use \Concrete\Core\Package\PackageList;
 class Type extends Object {
 
 	public function getGatheringItemTemplateTypeID() {return $this->gatTypeID;}

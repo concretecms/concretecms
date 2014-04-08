@@ -1,8 +1,8 @@
 <?
-
 namespace Concrete\Core\Captcha;
 use \Concrete\Core\Foundation\Object;
 use Loader;
+use \Concrete\Core\Package\PackageList;
 class Library extends Object {
 
 	public function getSystemCaptchaLibraryHandle() { return $this->sclHandle;}

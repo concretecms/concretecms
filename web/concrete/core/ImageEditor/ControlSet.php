@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\ImageEditor;
 use Loader;
+use \Concrete\Core\Package\PackageList;
+
 class ControlSet {
 	public $scsID;
 	public $scsHandle;

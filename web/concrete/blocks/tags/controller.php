@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Block\Tags;
 use \Concrete\Core\Block\BlockController;
+use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use Page;
+
 class Controller extends BlockController {
 
 	protected $btTable = 'btTags';
@@ -60,8 +63,8 @@ class Controller extends BlockController {
 			$controller = $type->getController();
 			$controller->setAttributeKey($ak);
 			$items = $controller->getOptions();
-			$options = new SelectAttributeTypeOptionList();
-			if($this->cloudCount > 0 && $items instanceof SelectAttributeTypeOptionList && $items->count()) {
+			$options = new \Concrete\Attribute\Select\OptionList();
+			if($this->cloudCount > 0 && $items instanceof \Concrete\Attribute\Select\OptionList && $items->count()) {
 				$i = 1;
 				foreach($items as $item) {
 					$options->add($item); 

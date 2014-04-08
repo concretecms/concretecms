@@ -2,6 +2,8 @@
 namespace Concrete\Core\User\Point\Action;
 use Loader;
 use Environment;
+use \Concrete\Core\Package\PackageList;
+
 class Action {
 	public $_table = 'UserPointActions';
 	

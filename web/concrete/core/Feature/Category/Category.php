@@ -2,6 +2,7 @@
 namespace Concrete\Core\Feature\Category;
 use \Concrete\Core\Foundation\Object;
 use Loader;
+use \Concrete\Core\Package\PackageList;
 abstract class Category extends Object {
 
 	abstract public function assignmentIsInUse(\Concrete\Core\Feature\Assignment $fa);

@@ -4,6 +4,7 @@ use \Concrete\Core\Foundation\Object;
 use Exception;
 use Package;
 use Loader;
+use \Concrete\Core\Package\PackageList;
 class AuthenticationType extends Object {
 
 	public function getAuthenticationTypeID() {return $this->authTypeID;}

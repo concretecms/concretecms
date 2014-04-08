@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Type\PublishTarget\Configuration;
 use Loader;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
 class Configuration extends Object {
 
 	public function getPageTypePublishTargetTypeID() {return $this->ptPublishTargetTypeID;}

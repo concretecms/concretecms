@@ -3,6 +3,7 @@ namespace Concrete\Core\Attribute;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\View as AttributeTypeView;
 use Loader;
+use \Concrete\Core\Package\PackageList;
 class Type extends Object {
 
 	protected $atID;

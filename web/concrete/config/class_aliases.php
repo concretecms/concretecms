@@ -36,7 +36,6 @@ $list->registerMultiple(array(
 	'FileList' => 'Core\File\List',
 	'QueueableJob' => 'Core\Job\QueueableJob',
 	'Permissions' => 'Core\Permission\Checker',
-	'Stack' => 'Core\Page\Stack\Stack',
 	'User' => 'Core\User\User',
 	'UserInfo' => 'Core\User\UserInfo',
 	'Log' => 'Core\Log\Log',
