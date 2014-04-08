@@ -6,7 +6,7 @@ use Database as DB;
 use Zend_Cache;
 use Zend_Translate;
 use Environment;
-use CacheLocal;
+use CacheLocal as ConcreteCacheLocal;
 
 class Cache {
 	
@@ -72,10 +72,10 @@ class Cache {
 	}
 	
 	public function disableLocalCache() {
-		CacheLocal::get()->enabled = false;
+		ConcreteCacheLocal::get()->enabled = false;
 	}
 	public function enableLocalCache() {
-		CacheLocal::get()->enabled = true;
+		ConcreteCacheLocal::get()->enabled = true;
 	}
 	
 	/** 
@@ -83,7 +83,7 @@ class Cache {
 	 * the cache must always be enabled for (getting remote data, etc..)
 	 */	
 	public function set($type, $id, $obj, $expire = false) {
-		$loc = CacheLocal::get();
+		$loc = ConcreteCacheLocal::get();
 		if ($loc->enabled) {
 			if (is_object($obj)) {
 				$r = clone $obj;
@@ -103,7 +103,7 @@ class Cache {
 	 * Retrieves an item from the cache
 	 */	
 	public function get($type, $id, $mustBeNewerThan = false) {
-		$loc = CacheLocal::get();
+		$loc = ConcreteCacheLocal::get();
 		$key = Cache::key($type, $id);
 		if ($loc->enabled && array_key_exists($key, $loc->cache)) {
 			return $loc->cache[$key];
@@ -137,17 +137,6 @@ class Cache {
 		}
 		return $loaded;
 	}
-
-	/** 
-	 * not used. Good idea but doesn't work with all cache layers and on large caches is VERY slow.
-
-	public function deleteType($type) {
-		Cache::getLibrary()->clean('matchingTag', array($type));
-		$loc = CacheLocal::get();
-		$loc->enabled = false;
-	}
-	
-	*/
 	
 	/** 
 	 * Removes an item from the cache
@@ -158,7 +147,7 @@ class Cache {
 			$cache->remove(Cache::key($type, $id));
 		}
 
-		$loc = CacheLocal::get();
+		$loc = ConcreteCacheLocal::get();
 		if ($loc->enabled && isset($loc->cache[Cache::key($type, $id)])) {
 			unset($loc->cache[Cache::key($type, $id)]);
 		}
@@ -201,7 +190,7 @@ class Cache {
 			}
 		}
 		
-		$loc = CacheLocal::get();
+		$loc = ConcreteCacheLocal::get();
 		$loc->cache = array();
 
 		$cache = Cache::getLibrary();

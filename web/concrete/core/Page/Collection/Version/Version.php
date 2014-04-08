@@ -5,7 +5,7 @@ use \Concrete\Core\Foundation\Object;
 use Block;
 use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 
-class Version extends Object {
+class Version extends Object implements \Concrete\Core\Permission\ObjectInterface {
 	
 	var $cvIsApproved;
 	var $cID;
@@ -15,6 +15,18 @@ class Version extends Object {
 	public function getPermissionObjectIdentifier() {
 		return $this->getCollectionID() . ':' . $this->getVersionID();
 	}
+
+	public function getPermissionResponseClassName() {
+		return 'Core\\Permission\\Response\\CollectionVersionResponse';
+	}
+
+	public function getPermissionAssignmentClassName() {
+		return 'Core\\Permission\\Assignment\\PageAssignment';	
+	}
+	public function getPermissionObjectKeyCategoryHandle() {
+		return 'page';
+	}
+
 	
 	public function refreshCache() {
 		CacheLocal::delete('page', $this->getCollectionID() . ':' . $this->getVersionID());

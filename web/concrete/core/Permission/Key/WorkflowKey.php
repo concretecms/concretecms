@@ -1,5 +1,8 @@
 <?
 namespace Concrete\Core\Permission\Key;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
+use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
+
 abstract class WorkflowKey extends Key {
 
 	public function getCurrentlyActiveUsers(WorkflowProgress $wp) {

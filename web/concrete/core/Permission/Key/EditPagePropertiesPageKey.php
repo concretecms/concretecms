@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Core\Permission\Key;
 use Loader;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
+use User;
 class EditPagePropertiesPageKey extends PageKey  {
 
 	protected function getAllAttributeKeyIDs() {
@@ -11,7 +13,7 @@ class EditPagePropertiesPageKey extends PageKey  {
 
 	public function getMyAssignment() {
 		$u = new User();
-		$asl = new EditPagePropertiesPagePermissionAccessListItem();
+		$asl = new \Concrete\Core\Permission\Access\ListItem\EditPagePropertiesPageListItem();
 		
 
 		if ($u->isSuperUser()) {
@@ -32,7 +34,7 @@ class EditPagePropertiesPageKey extends PageKey  {
 
 		$accessEntities = $u->getUserAccessEntityObjects();
 		$accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
-		$list = $pae->getAccessListItems(PagePermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = $pae->getAccessListItems(PageKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		$properties = array();
 		
@@ -60,23 +62,23 @@ class EditPagePropertiesPageKey extends PageKey  {
 				$asl->setAllowEditPaths(1);
 			}		
 			
-			if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditName()) {
+			if ($l->getAccessType() == PageKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditName()) {
 				$asl->setAllowEditName(0);
 				$excluded[] = 'name';
 			}
-			if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditDateTime()) {
+			if ($l->getAccessType() == PageKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditDateTime()) {
 				$asl->setAllowEditDateTime(0);
 				$excluded[] = 'date';
 			}
-			if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditUserID()) {
+			if ($l->getAccessType() == PageKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditUserID()) {
 				$asl->setAllowEditUserID(0);
 				$excluded[] = 'uID';
 			}
-			if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditDescription()) {
+			if ($l->getAccessType() == PageKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditDescription()) {
 				$asl->setAllowEditDescription(0);
 				$excluded[] = 'description';
 			}
-			if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditPaths()) {
+			if ($l->getAccessType() == PageKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditPaths()) {
 				$asl->setAllowEditPaths(0);
 				$excluded[] = 'paths';
 			}
@@ -88,7 +90,7 @@ class EditPagePropertiesPageKey extends PageKey  {
 
 			if ($l->getAttributesAllowedPermission() == 'C') {
 				$asl->setAttributesAllowedPermission('C');
-				if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE) {
+				if ($l->getAccessType() == PageKey::ACCESS_TYPE_EXCLUDE) {
 					$akIDs = array_values(array_diff($akIDs, $l->getAttributesAllowedArray()));
 				} else { 
 					$akIDs = array_unique(array_merge($akIDs, $l->getAttributesAllowedArray()));

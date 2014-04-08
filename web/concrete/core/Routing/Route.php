@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Routing;
+use Loader;
 class Route extends \Symfony\Component\Routing\Route {
 
 	public function getCallback() {

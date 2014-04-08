@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-$pla = PackageList::get();
+$pla = \Concrete\Core\Package\PackageList::get();
 $pl = $pla->getPackages();
 
 foreach($pl as $p) {

@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Routing;
+use Loader;
 
 abstract class RouteCallback {
 

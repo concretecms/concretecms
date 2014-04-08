@@ -89,8 +89,9 @@ class ClassLoader  {
 				// we have an alias for it, but we don't have it yet loaded
 				// (because after all, we're in the auto loader.)
 				$fullClass = $loader->getClassName($aliases[$class]);
-				spl_autoload_call($fullClass);
-
+				if (!class_exists($fullClass, false)) {
+					spl_autoload_call($fullClass);
+				}
 				// finally, we set up a class alias for this list. We do this now because
 				// we don't know earlier what namespace it'll be in
 				class_alias($fullClass, $class);

@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Core\Permission\Key;
 use Loader;
+use User;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
 class AddBlockToAreaAreaKey extends AreaKey  {
 
 	public function copyFromPageToArea() {
@@ -56,7 +58,7 @@ class AddBlockToAreaAreaKey extends AreaKey  {
 		
 		$accessEntities = $u->getUserAccessEntityObjects();
 		$accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
-		$list = $this->getAccessListItems(AreaPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = $this->getAccessListItems(AreaKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		
 		$db = Loader::db();
@@ -73,7 +75,7 @@ class AddBlockToAreaAreaKey extends AreaKey  {
 					$btIDs = array();
 				}
 				if ($l->getBlockTypesAllowedPermission() == 'C') {
-					if ($l->getAccessType() == AreaPermissionKey::ACCESS_TYPE_EXCLUDE) {
+					if ($l->getAccessType() == AreaKey::ACCESS_TYPE_EXCLUDE) {
 						$btIDs = array_values(array_diff($btIDs, $l->getBlockTypesAllowedArray()));
 					} else { 
 						$btIDs = array_unique(array_merge($btIDs, $l->getBlockTypesAllowedArray()));

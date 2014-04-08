@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Routing;
+use Loader;
 class URL {
 
 	public static function isValidURL($path) {

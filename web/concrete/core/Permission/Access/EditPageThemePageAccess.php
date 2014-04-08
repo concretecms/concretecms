@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Access;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
 use Loader;
 class EditPageThemePageAccess extends PageAccess {
 

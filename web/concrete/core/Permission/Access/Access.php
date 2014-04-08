@@ -4,8 +4,10 @@ use \Concrete\Core\Foundation\Object;
 use Loader;
 use CacheLocal;
 use PermissionKey;
+use User;
 use \Concrete\Core\Permission\Cache as PermissionCache;
 use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
 class Access extends Object {
 	
 	protected $paID;

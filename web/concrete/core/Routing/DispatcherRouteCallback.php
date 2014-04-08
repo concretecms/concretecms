@@ -1,5 +1,13 @@
 <?
 namespace Concrete\Core\Routing;
+use Request;
+use User;
+use Events;
+use Loader;
+use Page;
+use Config;
+use Permissions;
+
 class DispatcherRouteCallback extends RouteCallback {
 	
 	protected function sendResponse(View $v, $code = 200) {

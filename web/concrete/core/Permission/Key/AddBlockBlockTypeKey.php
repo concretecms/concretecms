@@ -1,6 +1,9 @@
 <?
 namespace Concrete\Core\Permission\Key;
 use Loader;
+use User;
+use PermissionKey;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
 class AddBlockBlockTypeKey extends BlockTypeKey  {
 
 	protected function getAllowedBlockTypeIDs() {
