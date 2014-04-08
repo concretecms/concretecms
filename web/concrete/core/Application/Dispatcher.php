@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Core\Application;
 
+use PermissionKey;
+use User;
 use Redirect;
 use Concrete\Core\Http\Request as Request;
 use Concrete\Core\Routing\Router as Router;

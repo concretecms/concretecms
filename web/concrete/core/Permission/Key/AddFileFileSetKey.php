@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Permission\Key;
 use Loader;
+use User;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
 class AddFileFileSetKey extends FileSetKey  {
 
 	public function getAllowedFileExtensions() {
@@ -19,7 +21,7 @@ class AddFileFileSetKey extends FileSetKey  {
 	
 		$accessEntities = $u->getUserAccessEntityObjects();
 		$accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
-		$list = $this->getAccessListItems(FileSetPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = $this->getAccessListItems(FileSetKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 
 		foreach($list as $l) {

@@ -1,6 +1,7 @@
 <?
 
 namespace Concrete\Core\Cache\Page;
+use Request;
 use \Page as ConcretePage;
 
 abstract class PageCache {

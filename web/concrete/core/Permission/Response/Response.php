@@ -32,7 +32,7 @@ class Response {
 		$className = \Concrete\Core\Foundation\ClassLoader::getClassName($object->getPermissionResponseClassName());
 		$category = \Concrete\Core\Permission\Category::getByHandle($object->getPermissionObjectKeyCategoryHandle());
 		$pr = new $className();
-		$pr->setPermissionCategoryObject($object);
+		$pr->setPermissionCategoryObject($category);
 		$pr->setPermissionObject($object);
 		PermissionCache::addResponse($object, $pr);
 		return $pr;

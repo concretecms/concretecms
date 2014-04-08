@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Core\Permission\Key;
 use Loader;
+use User;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
 class EditPageThemePageKey extends PageKey  {
 	
 	protected function getAllowedThemeIDs() {
@@ -13,7 +15,7 @@ class EditPageThemePageKey extends PageKey  {
 		
 		$accessEntities = $u->getUserAccessEntityObjects();
 		$accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
-		$list = $this->getAccessListItems(PagePermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = $this->getAccessListItems(PageKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		
 		$db = Loader::db();
@@ -24,7 +26,7 @@ class EditPageThemePageKey extends PageKey  {
 				$pThemeIDs = array();
 			}
 			if ($l->getThemesAllowedPermission() == 'C') {
-				if ($l->getAccessType() == PagePermissionKey::ACCESS_TYPE_EXCLUDE) {
+				if ($l->getAccessType() == PageKey::ACCESS_TYPE_EXCLUDE) {
 					$pThemeIDs = array_values(array_diff($pThemeIDs, $l->getThemesAllowedArray()));
 				} else { 
 					$pThemeIDs = array_unique(array_merge($pThemeIDs, $l->getThemesAllowedArray()));

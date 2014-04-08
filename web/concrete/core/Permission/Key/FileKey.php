@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Core\Permission\Key;
 use Loader;
+use User;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
 class FileKey extends Key {
 
 

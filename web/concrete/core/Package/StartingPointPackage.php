@@ -14,7 +14,7 @@ use User;
 use Config;
 use FileSet;
 use PermissionKey;
-use \Concrete\Core\Permission\Access\Access as PermissionAccess;
+use PermissionAccess;
 use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use \Concrete\Core\Mail\Importer\MailImporter;
 use \Concrete\Core\User\Point\Action\Action as UserPointAction;

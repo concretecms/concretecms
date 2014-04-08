@@ -14,7 +14,7 @@ use Block;
 use UserInfo;
 use PageType;
 use \Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
-use \Concrete\Core\Permission\Access\Access as PermissionAccess;
+use PermissionAccess;
 use \Concrete\Core\Package\PackageList;
 use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use \Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombinationPermissionAccessEntity;

@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Permission\Access;
 use Loader;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
 class EditUserPropertiesUserAccess extends UserAccess {
 	
 	public function duplicate($newPA = false) {

@@ -1,13 +1,16 @@
 <?
 namespace Concrete\Core\Permission\Key;
 use Loader;
+use User;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
+
 class ViewUserAttributesUserKey extends UserKey  {
 
 	protected function getAllowedAttributeKeyIDs($list = false) {
 		if (!$list) {
 			$u = new User();
 			$accessEntities = $u->getUserAccessEntityObjects();
-			$list = $this->getAccessListItems(UserPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+			$list = $this->getAccessListItems(UserKey::ACCESS_TYPE_ALL, $accessEntities);
 			$list = PermissionDuration::filterByActive($list);
 		}
 		
@@ -49,7 +52,7 @@ class ViewUserAttributesUserKey extends UserKey  {
 		
 		$accessEntities = $u->getUserAccessEntityObjects();
 		$accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
-		$list = $this->getAccessListItems(UserPermissionKey::ACCESS_TYPE_ALL, $accessEntities);
+		$list = $this->getAccessListItems(UserKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 
 		foreach($list as $l) {

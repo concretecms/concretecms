@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Routing;
+use Loader;
 use Request;
 use URL as CoreUrl;
 class Redirect {

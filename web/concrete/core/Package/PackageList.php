@@ -2,6 +2,7 @@
 namespace Concrete\Core\Package;
 use \Concrete\Core\Foundation\Object;
 use Loader;
+use CacheLocal;
 class PackageList extends Object {
 	
 	protected $packages = array();
@@ -15,7 +16,7 @@ class PackageList extends Object {
 	}
 	
 	public static function export($xml) {
-		$packages = PackageList::get()->getPackages();
+		$packages = static::get()->getPackages();
 		$pkgs = $xml->addChild("packages");
 		foreach($packages as $pkg) {
 			$node = $pkgs->addChild('package');
@@ -57,7 +58,7 @@ class PackageList extends Object {
 		
 		$db = Loader::db();
 		$r = $db->query("select pkgID, pkgName, pkgIsInstalled, pkgDescription, pkgVersion, pkgHandle, pkgDateInstalled from Packages where pkgIsInstalled = ? order by pkgID asc", array($pkgIsInstalled));
-		$list = new PackageList();
+		$list = new static();
 		while ($row = $r->fetchRow()) {
 			$pkg = new Package;
 			$pkg->setPropertiesFromArray($row);

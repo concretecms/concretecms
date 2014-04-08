@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Helper\Validation;
+use User;
+use Config;
 class Token {
 
 	const VALID_HASH_TIME_THRESHOLD = 86400; // 24 hours (in seconds)
@@ -75,7 +77,7 @@ class Token {
 			if (substr($compHash, strpos($compHash, ':') + 1) == $hash) {
 				$diff = $now - $time;
 				//hash is only valid if $diff is less than VALID_HASH_TIME_RECORD
-				return $diff <= ValidationTokenHelper::VALID_HASH_TIME_THRESHOLD;
+				return $diff <= static::VALID_HASH_TIME_THRESHOLD;
 			}
 		}
 	 	return false;

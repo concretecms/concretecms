@@ -2,6 +2,7 @@
 namespace Concrete\Core\Routing;
 use \Symfony\Component\Routing\RouteCollection as SymfonyRouteCollection;
 use Request;
+use Loader;
 
 class Router {
 
