@@ -36,8 +36,7 @@ define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', DIR_FILES_UPLOADED . '/thumbnails
 define('DIR_FILES_AVATARS', DIR_FILES_UPLOADED . '/avatars');
 define('ENABLE_ASSET_CACHE', false);
 
-use Concrete\Core\Controller\Controller;
-
+use Controller;
 class Install extends Controller {
 
 	public $helpers = array('form', 'html');

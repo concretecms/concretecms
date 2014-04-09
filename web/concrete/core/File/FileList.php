@@ -353,7 +353,6 @@ class FileList extends DatabaseItemList {
 	 */
 	public function get($itemsToGet = 0, $offset = 0) {
 		$files = array();
-		Loader::model('file');
 		$this->createQuery();
 		$r = parent::get($itemsToGet, $offset);
 		foreach($r as $row) {

@@ -2,7 +2,7 @@
 
 <? $included = $permissionAccess->getAccessListItems(PermissionKey::ACCESS_TYPE_INCLUDE); ?>
 <? $excluded = $permissionAccess->getAccessListItems(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
-<? Loader::model("attribute/categories/user"); ?>
+
 <? $attributes = UserAttributeKey::getList(); ?>
 <? $form = Loader::helper('form'); ?>
 

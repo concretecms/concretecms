@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $c  = Page::getCurrentPage();
 
 // grab all the collections belong to the collection type that we're looking at
-Loader::model('collection_types');
+
 $ptID = $c->getPageTypeID();
 $ct = PageType::getByID($ptID);
 

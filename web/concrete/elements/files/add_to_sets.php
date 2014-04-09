@@ -18,7 +18,6 @@ function checkbox($field, $value, $state, $miscFields = array()) {
 	return $str;
 }
 
-Loader::model('file_set');
 
 $s1 = FileSet::getMySets();
 

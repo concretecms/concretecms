@@ -135,7 +135,7 @@ class Rating {
 	public function getAverageChildRating($cItem, $akHandle = 'rating') {
 		$cID = (is_object($cItem)) ? $cItem->getCollectionID() : $cItem;
 		$db = Loader::db();
-		Loader::model('attribute/categories/collection');
+		
 		$ak = CollectionAttributeKey::getByHandle($akHandle);
 		if (is_object($ak)) {
 			$val = $db->GetOne('select avg(ak_' . $akHandle . ') from CollectionSearchIndexAttributes c inner join Pages p on p.cID = c.cID where p.cParentID = ?', array($cID));

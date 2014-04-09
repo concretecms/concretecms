@@ -74,10 +74,11 @@ class ClassLoader  {
 	}
 
 	public static function getClassName($classPartialPath) {
-		$vendor = NAMESPACE_SEGMENT_APPLICATION;
+		/*$vendor = NAMESPACE_SEGMENT_APPLICATION;
 		if (!class_exists('\\' . $vendor . '\\' . $classPartialPath)) {
+		*/
 			$vendor = NAMESPACE_SEGMENT_VENDOR;
-		}
+		//}
 		$fullClass = '\\' . $vendor . '\\' . $classPartialPath;
 		return $fullClass;
 	}
@@ -102,7 +103,7 @@ class ClassLoader  {
 	protected function setupFileAutoloader() {
 		$symfonyLoader = new SymfonyClassloader();
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Attribute', DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES);
-		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Authentication', DIR_BASE_CORE . '/' . DIRNAME_AUTHENTICATION_TYPES);
+		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Authentication', DIR_BASE_CORE . '/' . DIRNAME_AUTHENTICATION);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Block', DIR_BASE_CORE . '/' . DIRNAME_BLOCKS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Theme', DIR_BASE_CORE . '/' . DIRNAME_THEMES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Helper', DIR_BASE_CORE . '/' . DIRNAME_HELPERS);
@@ -110,12 +111,15 @@ class ClassLoader  {
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Job', DIR_BASE_CORE . '/' . DIRNAME_JOBS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
 
+		/*
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Attribute', DIR_BASE. '/' . DIRNAME_ATTRIBUTES);
+		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Authentication', DIR_BASE . '/' . DIRNAME_AUTHENTICATION);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Block', DIR_BASE . '/' . DIRNAME_BLOCKS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Theme', DIR_BASE . '/' . DIRNAME_THEMES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Helper', DIR_BASE . '/' . DIRNAME_HELPERS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Controller', DIR_BASE . '/' . DIRNAME_CONTROLLERS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Job', DIR_BASE . '/' . DIRNAME_JOBS);
+		*/
 
 		$symfonyLoader->register();
 	}

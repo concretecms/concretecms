@@ -12,8 +12,7 @@ class Concrete5_Controller_Page_Dashboard_Extend_Themes extends DashboardControl
 		$tp = new TaskPermission();
 		$mi = Marketplace::getInstance();
 		if ($mi->isConnected() && $tp->canInstallPackages()) { 
-			Loader::model('marketplace_remote_item');
-			
+					
 			$mri = new MarketplaceRemoteItemList();
 			$mri->setItemsPerPage(9);
 			$sets = MarketplaceRemoteItemList::getItemSets('themes');

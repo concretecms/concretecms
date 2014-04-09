@@ -5,7 +5,7 @@ if ($dh->canRead()) {
 	session_write_close();
 	
 	$js = Loader::helper('json');
-	Loader::model('marketplace_remote_item');
+	
 
 	$mri = new MarketplaceRemoteItemList();
 	$mri->setItemsPerPage(5);

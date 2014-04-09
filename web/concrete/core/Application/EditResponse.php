@@ -1,5 +1,7 @@
 <?php
-namespace Concrete\CoreApplication;
+namespace Concrete\Core\Application;
+use Loader;
+use stdClass;
 abstract class EditResponse {
 
 	public $time;

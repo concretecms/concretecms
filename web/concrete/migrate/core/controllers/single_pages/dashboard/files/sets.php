@@ -4,7 +4,7 @@ class Concrete5_Controller_Page_Dashboard_Files_Sets extends DashboardController
 	public $helpers = array('form','validation/token','concrete/interface'); 
 
 	public function view() {
-		Loader::model('file_set');
+		
 		$fsl = new FileSetList();
 		if (isset($_REQUEST['fsKeywords'])) {
 			$fsl->filterByKeywords($_REQUEST['fsKeywords']);
@@ -34,7 +34,7 @@ class Concrete5_Controller_Page_Dashboard_Files_Sets extends DashboardController
 	public function delete($fsID, $token = '') {
 
 		$u=new User();
-		Loader::model('file_set');
+		
 		$fs = FileSet::getByID($fsID);
 		
 			
@@ -53,7 +53,7 @@ class Concrete5_Controller_Page_Dashboard_Files_Sets extends DashboardController
 	}
 	
 	public function view_detail($fsID, $action = false) {
-		Loader::model('file_set');
+		
 		$fs = FileSet::getByID($fsID);
 		$ph = Loader::controller('/dashboard/system/permissions/files');
 		$this->set('ph', $ph);		
@@ -66,7 +66,7 @@ class Concrete5_Controller_Page_Dashboard_Files_Sets extends DashboardController
 	
 	public function file_sets_edit(){
 		extract($this->getHelperObjects());
-		Loader::model('file_set');
+		
 		//do my editing
 		if (!$validation_token->validate("file_sets_edit")) {			
 			$this->set('error', array($validation_token->getErrorMessage()));

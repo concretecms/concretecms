@@ -135,7 +135,7 @@ class Version570 {
 		}
 
 		// Install default control_sets
-		Loader::model('system/image_editor/control_set');
+		
 
 		$position = Concrete5_Model_System_ImageEditor_ControlSet::getByHandle('position');
 		if ($position->getImageEditorControlSetHandle() != 'position')  {

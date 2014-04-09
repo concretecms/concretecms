@@ -4,7 +4,7 @@ use Loader;
 use Environment;
 use Page;
 use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Controller\Controller;
+use Controller;
 abstract class CorePageProperty extends \Concrete\Core\Page\Type\Composer\Control\Control {
 
 	protected $propertyHandle;

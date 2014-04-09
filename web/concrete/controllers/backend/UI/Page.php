@@ -1,5 +1,8 @@
 <?php
 namespace Concrete\Controller\Backend\UI;
+use Page as ConcretePage;
+use Permissions;
+use Exception;
 abstract class Page extends \Concrete\Controller\Backend\UI {
 
 	protected $page;
@@ -9,14 +12,14 @@ abstract class Page extends \Concrete\Controller\Backend\UI {
 		$request = $this->request;
 		$cID = $request->query->get('cID');
 		if ($cID) {
-			$page = Page::getByID($cID);
+			$page = ConcretePage::getByID($cID);
 			$this->setPageObject($page);
 			$request->setCurrentPage($this->page);
 		}
 
 	}
 
-	public function setPageObject(Page $c) {
+	public function setPageObject(ConcretePage $c) {
 		$this->page = $c;
 		$this->permissions = new Permissions($this->page);		
 		$this->set('c', $this->page);

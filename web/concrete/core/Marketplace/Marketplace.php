@@ -214,7 +214,7 @@ class Marketplace {
 	}
 
 	public function getAvailableMarketplaceItems($filterInstalled=true) {
-		Loader::model('marketplace_remote_item');
+		
 		
 		$fh = Loader::helper('file'); 
 		if (!$fh) return array();
@@ -241,7 +241,7 @@ class Marketplace {
 			} catch (Exception $e) {}
 	
 			if ($filterInstalled && is_array($addons)) {
-				Loader::model('package');
+				
 				$handles = Package::getInstalledHandles();
 				if (is_array($handles)) {
 					$adlist = array();

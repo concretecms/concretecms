@@ -1,14 +1,14 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
 $form = Loader::helper('form');
-Loader::model('attribute/categories/collection');
+
 $sh = Loader::helper('concrete/dashboard/sitemap');
 if (!$sh->canRead()) {
 	die(t('Access Denied'));
 }
 
 
-Loader::model('page_list');
+
 $selectedAKIDs = array();
 
 $fldc = PageSearchColumnSet::getCurrent();

@@ -1,8 +1,10 @@
 <?php
-
 namespace Concrete\Core\Authentication;
 use User;
-abstract class AuthenticationTypeController extends \Concrete\Core\Controller\Controller implements AuthenticationTypeControllerInterface {
+use Page;
+use Loader;
+use Controller;
+abstract class AuthenticationTypeController extends Controller implements AuthenticationTypeControllerInterface {
 
 	protected $authenticationType;
 
@@ -15,7 +17,9 @@ abstract class AuthenticationTypeController extends \Concrete\Core\Controller\Co
 	}
 
 	public function completeAuthentication(User $u) {
-		Loader::controller('/login')->finishAuthentication($this->getAuthenticationType());
+		$c = Page::getByPath('/login');
+		$controller = $c->getPageController();
+		$controller->finishAuthentication($this->getAuthenticationType());
 	}
 
 }

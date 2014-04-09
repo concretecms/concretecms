@@ -10,7 +10,7 @@ if (!$scrapbookPermissions->canRead()) {
 $db = Loader::db();
 
 // update order of collections
-Loader::model('user_attributes');
+
 
 if($_REQUEST['mode']=='reorder'){
 	if( is_array($_REQUEST['ccm-scrapbook-list-item']) ){ 

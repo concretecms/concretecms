@@ -6,7 +6,9 @@ use Page;
 use Environment;
 use \Concrete\Core\Page\Theme\File as PageThemeFile;
 use \Concrete\Core\Package\PackageList;
-use Concrete\Core\Foundation\Object;
+use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Page\Theme\EditableStyle\EditableStyle;
+use \Concrete\Core\Page\Theme\EditableStyle\FontEditableStyle;
 /**
 *
 * A page's theme is a pointer to a directory containing templates, CSS files and optionally PHP includes, images and JavaScript files. 
@@ -164,7 +166,7 @@ class Theme extends Object {
 				$ptes = $db->GetAll("select pThemeStyleHandle, pThemeStyleValue, pThemeStyleType from PageThemeStyles where pThemeID = ?", array($this->getThemeID()));
 				$styles = array();
 				foreach($ptes as $p) {
-					$pts = new PageThemeEditableStyle($p['pThemeStyleValue']);
+					$pts = new EditableStyle($p['pThemeStyleValue']);
 					$pts->setPropertiesFromArray($p);
 					$styles[] = $pts;
 				}
@@ -174,7 +176,7 @@ class Theme extends Object {
 			$searches = array();
 			
 			foreach($styles as $p) {
-				if ($p->getType() == PageThemeEditableStyle::TSTYPE_CUSTOM) {
+				if ($p->getType() == EditableStyle::TSTYPE_CUSTOM) {
 					$contents = preg_replace("/\/\*[\s]?customize_" . $p->getHandle() . "[\s]?\*\/(.*)\/\*[\s]?customize_" . $p->getHandle() . "[\s]?\*\//i", 
 						"/* customize_" . $p->getHandle() . " */ " . $p->getValue() . " /* customize_" . $p->getHandle() . " */"
 					, $contents);	
@@ -194,25 +196,25 @@ class Theme extends Object {
 		$values = array();
 		$styles = $this->getEditableStylesList();
 		foreach($styles as $st) {
-			$ptes = new PageThemeEditableStyle();
+			$ptes = new EditableStyle();
 			$ptes->pThemeStyleHandle = $st->getHandle();
 			$ptes->pThemeStyleType = $st->getType();
 			$ptes->pThemeStyleProperty = $st->getProperty();
 			
 			switch($st->getType()) {
-				case PageThemeEditableStyle::TSTYPE_COLOR:
+				case EditableStyle::TSTYPE_COLOR:
 					if (isset($post[$st->getFormFieldInputName()])) {
 						$ptes->pThemeStyleValue = $ptes->getProperty() . ':' . $post[$st->getFormFieldInputName()] . ';';
 						$values[] = $ptes;
 					}
 					break;
-				case PageThemeEditableStyle::TSTYPE_CUSTOM:
+				case EditableStyle::TSTYPE_CUSTOM:
 					if (isset($post[$st->getFormFieldInputName()])) {
 						$ptes->pThemeStyleValue = $post[$st->getFormFieldInputName()];
 						$values[] = $ptes;
 					}
 					break;
-				case PageThemeEditableStyle::TSTYPE_FONT:
+				case EditableStyle::TSTYPE_FONT:
 					if (isset($post[$st->getFormFieldInputName()])) {
 						$value = $post[$st->getFormFieldInputName()];
 						// now we transform it from it's post, which has pipes and separators and crap
@@ -290,12 +292,12 @@ class Theme extends Object {
 	private function getEditableStyleType($value) {
 		// thx yamanoi
 		if (preg_match('/^\s*font\s*:/',$value)) {
-			return PageThemeEditableStyle::TSTYPE_FONT;
+			return EditableStyle::TSTYPE_FONT;
 		}
 		if (preg_match('/^\s*([a-z]+-)*color\s*:/',$value)) {
-			return PageThemeEditableStyle::TSTYPE_COLOR;
+			return EditableStyle::TSTYPE_COLOR;
 		}
-		return PageThemeEditableStyle::TSTYPE_CUSTOM;
+		return EditableStyle::TSTYPE_CUSTOM;
 
 	}
 
@@ -332,10 +334,10 @@ class Theme extends Object {
 			$values = $matches[2];
 			for($i = 0 ; $i < count($handles); $i++) {
 				$type = $this->getEditableStyleType($values[$i]);
-				if ($type == PageThemeEditableStyle::TSTYPE_FONT) {
-					$pte = new PageThemeEditableStyleFont(trim($values[$i]));
+				if ($type == EditableStyle::TSTYPE_FONT) {
+					$pte = new FontEditableStyle(trim($values[$i]));
 				} else {
-					$pte = new PageThemeEditableStyle(trim($values[$i]));
+					$pte = new EditableStyle(trim($values[$i]));
 				}
 				$pte->pThemeStyleHandle = trim($handles[$i]);
 				$pte->pThemeStyleType = $type;
@@ -603,7 +605,7 @@ class Theme extends Object {
 	
 	public function uninstall() {
 		$db = Loader::db();
-		Loader::model('page_theme_archive');
+		
 		$db->query("delete from PageThemes where pThemeID = ?", array($this->pThemeID));
 		$env = Environment::get();
 		$env->clearOverrideCache();

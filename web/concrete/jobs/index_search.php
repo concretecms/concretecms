@@ -18,9 +18,9 @@ class IndexSearch extends AbstractJob {
 	
 		$is = new IndexedSearch();
 		if ($_GET['force'] == 1) {
-			Loader::model('attribute/categories/collection');
-			Loader::model('attribute/categories/file');
-			Loader::model('attribute/categories/user');
+			
+			
+			
 			$attributes = CollectionAttributeKey::getList();
 			$attributes = array_merge($attributes, FileAttributeKey::getList());
 			$attributes = array_merge($attributes, UserAttributeKey::getList());

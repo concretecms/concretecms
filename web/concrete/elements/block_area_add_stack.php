@@ -1,6 +1,6 @@
 <? 
 defined('C5_EXECUTE') or die("Access Denied.");
-Loader::model('stack/list');
+
 $sl = new StackList();
 $sl->filterByUserAdded();
 $stacks = $sl->get();

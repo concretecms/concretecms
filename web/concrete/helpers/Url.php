@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Helper;
+use Loader;
 class Url {
 
 

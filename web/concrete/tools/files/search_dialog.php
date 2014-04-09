@@ -5,7 +5,7 @@ $cp = FilePermissions::getGlobal();
 if ((!$cp->canAddFile()) && (!$cp->canSearchFiles())) {
 	die(t("Unable to access the file manager."));
 }
-Loader::model('file_list');
+
 
 if (isset($_REQUEST['searchInstance'])) {
 	$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);

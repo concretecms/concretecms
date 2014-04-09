@@ -20,7 +20,7 @@ if ($_POST['task'] == 'set_password') {
 }
 
 
-Loader::model('file_storage_location');
+
 if ($_POST['task'] == 'set_location') {
 	if ($_POST['fslID'] == 0) {
 		$f->setStorageLocation(0);

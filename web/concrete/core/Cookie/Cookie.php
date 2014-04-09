@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Cookie;
 use Symfony\Component\HttpFoundation\Cookie as CookieObject;
+use Request;
 
 class Cookie {
 

@@ -19,7 +19,7 @@ class Concrete5_Controller_Page_Dashboard_System_Optimization_Jobs extends Dashb
 
 	function install($handle = null) {
 		if ($handle) {
-			Loader::model("job");
+			
 			Job::installByHandle($handle);
 			$this->redirect('/dashboard/system/optimization/jobs', 'job_installed');
 		} else {
@@ -30,7 +30,7 @@ class Concrete5_Controller_Page_Dashboard_System_Optimization_Jobs extends Dashb
 	
 	function uninstall($job_id = null) {
 		if ($job_id) {
-			Loader::model("job");
+			
 			$job = Job::getByID((int) $job_id);
 			if ($job) {
 				if (!$job->jNotUninstallable) {

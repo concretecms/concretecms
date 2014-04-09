@@ -6,8 +6,6 @@ if (!$cp->canAccessFileManager()) {
 	die(t("Unable to access the file manager."));
 }
 
-Loader::model('file_list');
-Loader::model('file_set');
 
 $fileList = new FileList();
 $fileList->enableStickySearchRequest();

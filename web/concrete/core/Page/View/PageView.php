@@ -4,6 +4,7 @@ use Loader;
 use View;
 use Environment;
 use \Concrete\Core\Page\Template as PageTemplate;
+use User;
 use Permissions;
 use \Concrete\Core\Cache\Page\PageCache;
 

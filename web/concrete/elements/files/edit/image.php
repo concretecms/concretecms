@@ -14,10 +14,6 @@ if (!$fp->canEditFileContents()) {
 $req = ResponseAssetGroup::get();
 $req->requireAsset('core/imageeditor');
 
-Loader::model('system/image_editor/control_set');
-Loader::model('system/image_editor/component');
-Loader::model('system/image_editor/filter');
-
 $controlsets = SystemImageEditorControlSet::getList();
 $components = SystemImageEditorComponent::getList();
 $filters = SystemImageEditorFilter::getList();

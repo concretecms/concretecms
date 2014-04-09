@@ -118,7 +118,7 @@ class IndexedSearch {
 		Cache::disableLocalCache();
 		
 		$db = Loader::db();
-		Loader::model('collection_attributes');
+		
 		
 		if ($fullReindex) {
 			$db->Execute("truncate table PageSearchIndex");

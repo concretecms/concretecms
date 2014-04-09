@@ -32,7 +32,7 @@ class Action {
 				if ($row['pkgID']) {
 					$pkgHandle = PackageList::getHandle($row['pkgID']);
 				}
-				Loader::model('user_point/actions/' . $row['upaHandle'], $pkgHandle);
+				
 				$class = Loader::helper('text')->camelcase($row['upaHandle']) . $class;
 			}
 			$upa = new $class();
@@ -73,7 +73,7 @@ class Action {
 				if ($row['pkgID']) {
 					$pkgHandle = PackageList::getHandle($row['pkgID']);
 				}
-				Loader::model('user_point/actions/' . $row['upaHandle'], $pkgHandle);
+				
 				$class = Loader::helper('text')->camelcase($row['upaHandle']) . $class;
 			}
 			$upa = new $class();

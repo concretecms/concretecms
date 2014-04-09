@@ -201,7 +201,6 @@ define('DIRNAME_MODELS', 'models');
 define('DIRNAME_ATTRIBUTES', 'attributes');
 define('DIRNAME_ATTRIBUTE_TYPES', 'types');
 define('DIRNAME_AUTHENTICATION', 'authentication');
-define('DIRNAME_AUTHENTICATION_TYPES', 'authentication');
 define('DIRNAME_LIBRARIES', 'libraries');
 define('DIRNAME_RESPONSE', 'response');
 define('DIRNAME_PERMISSIONS', 'permission');

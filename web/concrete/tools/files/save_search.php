@@ -11,8 +11,6 @@ if (!$fp->canAccessFileManager()) {
 $searchInstance = Loader::helper('text')->alphanum($_REQUEST['searchInstance']);
 
 if ($_POST['task'] == 'save_search') {
-	Loader::model('file_set');
-	Loader::model('file_list');
 	$cnt = Loader::controller('/dashboard/files/search');
 	$fileList = $cnt->getRequestedSearchResults();
 	$req = $fileList->getSearchRequest();

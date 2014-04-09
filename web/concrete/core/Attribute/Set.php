@@ -3,6 +3,8 @@ namespace Concrete\Core\Attribute;
 use \Concrete\Core\Foundation\Object;
 use Loader;
 use \Concrete\Core\Package\PackageList;
+use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+
 class Set extends Object {
 
 	public static function getByID($asID) {
@@ -128,7 +130,7 @@ class Set extends Object {
 
 	public function getAttributeKeys() {
 		$db = Loader::db();
-		$r = $db->Execute('select akID from AttributeSetKeys where asID = ? order by displayOrder asc', $this->getAttributeSetID());
+		$r = $db->Execute('select akID from AttributeSetKeys where asID = ? order by displayOrder asc', array($this->getAttributeSetID()));
 		$keys = array();
 		$cat = AttributeKeyCategory::getByID($this->akCategoryID);
 		while ($row = $r->FetchRow()) {
@@ -164,7 +166,7 @@ class Set extends Object {
 	protected function rescanDisplayOrder() {
 		$db = Loader::db();
 		$do = 1;
-		$r = $db->Execute('select akID from AttributeSetKeys where asID = ? order by displayOrder asc', $this->getAttributeSetID());
+		$r = $db->Execute('select akID from AttributeSetKeys where asID = ? order by displayOrder asc', array($this->getAttributeSetID()));
 		while ($row = $r->FetchRow()) {
 			$db->Execute('update AttributeSetKeys set displayOrder = ? where akID = ? and asID = ?', array($do, $row['akID'], $this->getAttributeSetID()));
 			$do++;

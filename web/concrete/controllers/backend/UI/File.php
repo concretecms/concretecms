@@ -1,5 +1,10 @@
 <?php
 namespace Concrete\Controller\Backend\UI;
+use File;
+use Loader;
+use Permissions;
+use Exception;
+
 abstract class File extends \Concrete\Controller\Backend\UI {
 
 	protected $file;

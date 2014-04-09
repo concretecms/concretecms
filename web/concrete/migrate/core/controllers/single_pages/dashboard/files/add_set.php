@@ -6,7 +6,7 @@ class Concrete5_Controller_Page_Dashboard_Files_AddSet extends DashboardControll
 
 	public function do_add() {
 		extract($this->getHelperObjects());
-		Loader::model('file_set');
+		
 		
 		if (!$validation_token->validate("file_sets_add")) {
 			$this->set('error', array($validation_token->getErrorMessage()));

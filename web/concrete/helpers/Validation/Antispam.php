@@ -6,7 +6,7 @@ class Antispam {
 	protected $controller = false;
 	
 	public function __construct() {
-		Loader::model('system/antispam/library');
+		
 		$library = SystemAntispamLibrary::getActive();
 		if (is_object($library)) { 
 			$this->controller = $library->getController();

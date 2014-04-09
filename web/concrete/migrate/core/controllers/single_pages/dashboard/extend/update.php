@@ -53,7 +53,7 @@ class Concrete5_Controller_Page_Dashboard_Extend_Update extends DashboardControl
     public function prepare_remote_upgrade($remoteMPID = 0){
 		$tp = new TaskPermission();
 		if ($tp->canInstallPackages()) { 
-			Loader::model('marketplace_remote_item');
+			
 			$mri = MarketplaceRemoteItem::getByID($remoteMPID);
 	
 			if (!is_object($mri)) {

@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Key;
-class BlockTypeKey extends Key {
+use PermissionKey;
+class BlockTypeKey extends PermissionKey {
 	
 }

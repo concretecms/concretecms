@@ -60,7 +60,7 @@ class Version extends Object {
 	public function getAttributeList() {
 		$db = Loader::db();
 		$v = array($this->fID, $this->fvID);
-		Loader::model('attribute/categories/file');
+		
 		$attributes = FileAttributeKey::getAttributes($this->fID, $this->fvID);
 		return $attributes;
 	}
@@ -364,7 +364,7 @@ class Version extends Object {
 	public function getPath() {
 		$f = Loader::helper('concrete/file');
 		if ($this->fslID > 0) {
-			Loader::model('file_storage_location');
+			
 			$fsl = FileStorageLocation::getByID($this->fslID);
 			$path = $f->mapSystemPath($this->fvPrefix, $this->fvFilename, false, $fsl->getDirectory());
 		} else {

@@ -5,9 +5,7 @@ if (ENABLE_AREA_LAYOUTS == false) {
 }
 global $c;
 
-$form = Loader::helper('form'); 
-
-//Loader::model('layout'); 
+$form = Loader::helper('form');  
 
 
 if( intval($_REQUEST['lpID']) ){ 

@@ -7,7 +7,7 @@ class Concrete5_Controller_Page_Dashboard_Reports_Statistics extends DashboardCo
 	protected $dates = array();
 	
 	protected function setLatestPageViews() {
-		Loader::model('page_statistics');
+		
 		$viewsArray = array();
 		$u = new User();
 		foreach($this->dates as $i => $date) { 

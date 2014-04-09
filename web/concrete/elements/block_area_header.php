@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?
 $btl = new BlockTypeList();
-$blockTypes = $btl->getBlockTypeList();
+$blockTypes = $btl->get();
 $handles = '';
 $ap = new Permissions($a);
 $class = 'ccm-area';

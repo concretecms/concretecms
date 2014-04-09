@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 
 <?
-	Loader::model('attribute/categories/collection');
+	
 	// grab all tags in use based on the path
 	$ak = CollectionAttributeKey::getByHandle('tags');
 	$akc = $ak->getController();

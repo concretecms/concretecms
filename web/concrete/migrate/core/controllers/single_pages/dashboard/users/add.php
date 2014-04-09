@@ -71,7 +71,6 @@ class Concrete5_Controller_Page_Dashboard_Users_Add extends DashboardController 
 					$this->error->add($valt->getErrorMessage());
 				}
 			
-				Loader::model("attribute/categories/user");
 				$aks = UserAttributeKey::getRegistrationList();
 			
 				foreach($aks as $uak) {

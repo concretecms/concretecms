@@ -3,7 +3,7 @@ namespace Concrete\Core\Page\Controller;
 use Page;
 use Request;
 use Loader;
-use \Concrete\Core\Controller\Controller;
+use Controller;
 use \Concrete\Core\Page\View\PageView;
 class PageController extends Controller {
 

@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-
+use \Concrete\Core\File\Type\Type as FileType;
 header('Content-type: text/javascript'); ?>
 
 var ccmi18n = { 

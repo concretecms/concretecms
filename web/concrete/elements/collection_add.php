@@ -1,8 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <? 
 
-Loader::model('collection_attributes');
-Loader::model('collection_types');
 $dh = Loader::helper('date');
 
 ?>

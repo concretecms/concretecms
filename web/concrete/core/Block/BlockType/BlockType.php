@@ -11,6 +11,8 @@ use User;
 use Block;
 use \Concrete\Core\Filesystem\TemplateFile;
 use \Concrete\Core\Package\PackageList;
+use \Concrete\Core\Block\View\BlockView;
+use BlockTypeSet;
 
 class BlockType {
 
@@ -26,7 +28,7 @@ class BlockType {
 	protected $btInterfaceHeight;
 	protected $btInterfaceWidth;
 	protected $pkgID;
-	protected $controller;
+	public $controller;
 	/** 
 	 * Sets the block type handle
 	 */

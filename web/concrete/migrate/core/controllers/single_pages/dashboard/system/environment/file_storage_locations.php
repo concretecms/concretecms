@@ -6,7 +6,7 @@ class Concrete5_Controller_Page_Dashboard_System_Environment_FileStorageLocation
 	
 	public function view($updated=false) {
 		$helper_file = Loader::helper('concrete/file');
-		Loader::model('file_storage_location');
+		
 		$fsl = FileStorageLocation::getByID(FileStorageLocation::ALTERNATE_ID);
 		if (is_object($fsl)) {
 			$this->set('fsl', $fsl);
