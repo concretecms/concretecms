@@ -2,7 +2,7 @@
 namespace Concrete\Controller\Panel\Page;
 use \Concrete\Controller\Backend\UI\Page as BackendInterfacePageController;
 use Permissions;
-use CollectionVersion;
+use \Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
 use Loader;
 use Page;
 use User;
@@ -11,6 +11,8 @@ use \Concrete\Helper\Validation\Error as ValidationErrorHelper;
 use Redirect;
 use \Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
+use \Concrete\Core\Page\EditResponse as PageEditResponse;
+use \Concrete\Core\Page\Type\Composer\Control\Control as PageTypeComposerControl;
 class CheckIn extends BackendInterfacePageController {
 
 	protected $viewPath = '/system/panels/page/check_in';

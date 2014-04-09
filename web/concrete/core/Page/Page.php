@@ -5,7 +5,7 @@ use CacheLocal;
 use Collection;
 use Request;
 use \Concrete\Core\Page\Statistics as PageStatistics;
-use \Concrete\Core\Cache\Page\PageCache;
+use PageCache;
 use \Concrete\Core\Page\Template as PageTemplate;
 use \Events;
 use Config;
@@ -2549,8 +2549,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 	function getPagePaths() {
 		$db = Loader::db();
 
-		$q = "select ppID, cPath, ppIsCanonical from PagePaths where cID = {$this->cID}";
-		$r = $db->query($q, $v);
+		$q = "select ppID, cPath, ppIsCanonical from PagePaths where cID = ?";
+		$r = $db->query($q, array($this->cID));
 		$paths = array();
 		if ($r) {
 			while ($row = $r->fetchRow()) {

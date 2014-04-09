@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Core\Cache;
-use \Concrete\Core\Cache\Page\PageCache;
+use PageCache;
 use Events;
 use Database as DB;
 use Zend_Cache;

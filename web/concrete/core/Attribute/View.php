@@ -1,7 +1,12 @@
 <?
 namespace Concrete\Core\Attribute;
-use View;
+use View as ConcreteView;
 use Loader;
+use \Concrete\Core\Attribute\Value\Value as AttributeValue;
+use \Concrete\Core\Attribute\Key\Key as AttributeKey;
+use Environment;
+use \Concrete\Core\View\AbstractView;
+
 class View extends AbstractView {
 	
 	protected $attributeValue;

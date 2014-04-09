@@ -8,6 +8,7 @@ use PermissionAccess;
 use \Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
 use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
 use \Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;
+use \Concrete\Core\Page\Type\Composer\Control\Control as PageTypeComposerControl;
 use \Concrete\Core\Backup\ContentImporter;
 use \Concrete\Core\Package\PackageList;
 use \Concrete\Core\Page\Collection\Version as CollectionVersion;

@@ -64,7 +64,7 @@ $searchRequest = $controller->getSearchRequest();
 		<div class="form-group">
 			<?=$form->label('gID', t('In Group'))?>
 			<? 
-			$gl = new GroupSearch();
+			$gl = new GroupList();
 			$gl->setItemsPerPage(-1);
 			$g1 = $gl->getPage();
 			?>		

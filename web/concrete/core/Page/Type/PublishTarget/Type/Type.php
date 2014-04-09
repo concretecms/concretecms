@@ -109,7 +109,7 @@ abstract class Type extends Object {
 	}	
 
 	public function includeOptionsForm($pagetype = false) {
-		Loader::element(DIRNAME_PAGE_TYPES . '/' . DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES . '/' . $this->getPageTypePublishTargetTypeHandle(), array('pagetype' => $pagetype), $this->getPackageHandle());
+		Loader::element(DIRNAME_PAGE_TYPES . '/' . DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES . '/' . $this->getPageTypePublishTargetTypeHandle(), array('type' => $this, 'pagetype' => $pagetype), $this->getPackageHandle());
 	}
 
 

@@ -8,7 +8,7 @@ if ($cp->canViewPageVersions()) {
 	$req = Request::getInstance();
 	$req->setCustomRequestUser(-1);
 	$req->setCurrentPage($c);
-	$controller = Loader::controller($c);
+	$controller = $c->getPageController();
 	$view = $controller->getViewObject();
 	$response = new Response();
 	$content = $view->render();

@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Core\Page\Workflow\Request;
 use Loader;
+use \Concrete\Workflow\Workflow\Progress\Response as WorkflowProgressResponse;
+use \Concrete\Core\Workflow\Description as WorkflowDescription;
 class MovePageRequest extends Request {
 	
 	protected $targetCID;

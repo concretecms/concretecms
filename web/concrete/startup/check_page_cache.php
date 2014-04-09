@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 $request = Request::getInstance();
-$library = \Concrete\Core\Cache\Page\PageCache::getLibrary();
+$library = PageCache::getLibrary();
 if ($library->shouldCheckCache($request)) {
     $record = $library->getRecord($request);
     if ($record instanceof PageCacheRecord) {

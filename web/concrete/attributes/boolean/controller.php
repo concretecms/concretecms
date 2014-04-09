@@ -47,7 +47,7 @@ class Controller extends AttributeTypeController  {
 		}
 		
 		$db = Loader::db();
-		$row = $db->GetRow('select akCheckedByDefault from atBooleanSettings where akID = ?', $ak->getAttributeKeyID());
+		$row = $db->GetRow('select akCheckedByDefault from atBooleanSettings where akID = ?', array($ak->getAttributeKeyID()));
 		$this->akCheckedByDefault = $row['akCheckedByDefault'];
 		$this->set('akCheckedByDefault', $this->akCheckedByDefault);
 	}

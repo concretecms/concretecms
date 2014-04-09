@@ -3,6 +3,10 @@ namespace Concrete\Core\Page\Collection\Version;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use Block;
+use Page;
+use User;
+use Events;
+use CacheLocal;
 use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
 
 class Version extends Object implements \Concrete\Core\Permission\ObjectInterface {

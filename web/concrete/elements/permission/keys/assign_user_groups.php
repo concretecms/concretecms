@@ -3,7 +3,7 @@
 <? $included = $permissionAccess->getAccessListItems(PermissionKey::ACCESS_TYPE_INCLUDE); ?>
 <? $excluded = $permissionAccess->getAccessListItems(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
 <?
-$gl = new GroupSearch();
+$gl = new GroupList();
 $gl->filter('gID', REGISTERED_GROUP_ID, '>');
 $gl->sortBy('gID', 'asc');
 $gIDs = $gl->get();

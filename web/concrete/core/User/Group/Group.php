@@ -426,7 +426,7 @@ class Group extends Object {
 	}
 
 	public static function getBadges() {
-		$gs = new GroupSearch();
+		$gs = new GroupList();
 		$gs->filter('gIsBadge', 1);
 		$results = $gs->get();
 		$badges = array();
@@ -437,7 +437,7 @@ class Group extends Object {
 	}
 
 	protected function getAutomationControllers($column, $excludeUser = false) {
-		$gs = new GroupSearch();
+		$gs = new GroupList();
 		$gs->filter($column, 1);
 		$excludeGIDs = array();
 		if (is_object($excludeUser)) {

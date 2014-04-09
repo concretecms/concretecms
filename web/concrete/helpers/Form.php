@@ -184,7 +184,7 @@ class Form {
 			// we've got something like 'akID[34]['value'] here, which we need to get data from
 			
 			/* @var $ah ArrayHelper */
-			$ah = helper('array');
+			$ah = helper('arrays');
 			$key = str_replace(']', '', $key);
 			$key = explode('[', trim($key, '['));
 			$v2 = $ah->get($arr, $key);

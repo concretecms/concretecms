@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Core\Workflow;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
+
 class EmptyWorkflow extends Workflow {
 	public function start(WorkflowProgress $wp) {
 		$req = $wp->getWorkflowRequestObject();

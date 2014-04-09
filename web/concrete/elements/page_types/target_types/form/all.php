@@ -5,7 +5,7 @@ $cParentID = false;
 if (is_object($page)) {
 	$cParentID = $page->getPageDraftTargetParentPageID();
 }
-if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $this->getPageTypePublishTargetTypeID()) {
+if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $configuration->getPageTypePublishTargetTypeID()) {
 	$ps = Loader::helper('form/page_selector');
 	print $ps->selectPage('cParentID', $cParentID);
 }

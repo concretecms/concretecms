@@ -1,6 +1,8 @@
 <?
 
 namespace Concrete\Helper\Concrete\UI;
+use User;
+
 class Help {
 
 	public function getBlockTypes() {
@@ -93,10 +95,10 @@ class Help {
 		
 		// displays views 3 -> 5
 		$msgTxt = "Need help speeding up your site?  contact concrete5's <a href=\"http://enterprise.concrete5.com/\" target=\"_blank\">enterprise services</a>.";
-		$pages['/dashboard/system/optimization/cache'][] = ConcreteInterfaceHelpHelperMessage::get('/page/design', $msgTxt, 3, 5);
+		$pages['/dashboard/system/optimization/cache'][] = HelpMessage::get('/page/design', $msgTxt, 3, 5);
 		
 		// default message
-		$pages['/dashboard/system/optimization/cache'][] = ConcreteInterfaceHelpHelperMessage::get('/dashboard/system/optimization/cache', t("The basic cache stores some of concrete5's code in memory. Full page caching saves parts of your website's pages to files on the server. If you are building a new site, it's a good idea to turn the cache off while you are working with code, checking out add-ons and themes, and so on.  Once you feel content creation is your focus, turn caching back on."));
+		$pages['/dashboard/system/optimization/cache'][] = HelpMessage::get('/dashboard/system/optimization/cache', t("The basic cache stores some of concrete5's code in memory. Full page caching saves parts of your website's pages to files on the server. If you are building a new site, it's a good idea to turn the cache off while you are working with code, checking out add-ons and themes, and so on.  Once you feel content creation is your focus, turn caching back on."));
 		return $pages;
 	}
 
@@ -113,7 +115,7 @@ class Help {
 		$msgTxt = "Need some help?<br/>
 		 We noticed you've been in this area a few times recently. There's additional themes you can buy 
 		 <a href=\"http://www.concrete5.org/marketplace/themes\" target=\"_blank\">here</a>, or you can get custom design services from our <a href=\"http://enterprise.concrete5.com/\" target=\"_blank\">partners</a>.";
-		$panels['/page/design'][] = ConcreteInterfaceHelpHelperMessage::get('/page/design', $msgTxt, 3, 6);
+		$panels['/page/design'][] = HelpMessage::get('/page/design', $msgTxt, 3, 6);
 		
 		// default message
 		$msgTxt = "<b>Welcome to customizing themes!</b><br/>
@@ -121,7 +123,7 @@ class Help {
 		<div style=\"text-align: center\" padding: 20px;\">
 		<a style=\"margin: 10px;\" href=\"http://www.youtube.com/watch?v=pischKK2uHQ\" target=\"_blank\"><img src=\"http://www.concrete5.org/files/6413/9067/3863/video_button.png\"/></a></div>
 		";
-		$panels['/page/design'][] = ConcreteInterfaceHelpHelperMessage::get('/page/design', $msgTxt);
+		$panels['/page/design'][] = HelpMessage::get('/page/design', $msgTxt);
 		return $panels;
 	}
 
@@ -142,7 +144,7 @@ class Help {
 		
 		if(is_array($message)) {
 			foreach($message as $m) {
-				if($m instanceof ConcreteInterfaceHelpHelperMessage) {
+				if($m instanceof HelpMessage) {
 					$message = $m->getContentToDisplay($displayCount);
 					if($message) { break; }
 				}
@@ -217,7 +219,7 @@ EOT;
 
 }
 
-class ConcreteInterfaceHelpHelperMessage {
+class HelpMessage {
 	/**
 	 * @var string $identifier unique to the event - typically path of the item the help relates to: /dashboard/users/add
 	*/

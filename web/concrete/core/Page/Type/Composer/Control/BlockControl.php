@@ -3,6 +3,11 @@ namespace Concrete\Core\Page\Type\Composer\Control;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use Controller;
+use Block;
+use BlockType;
+use Environment;
+use Page;
+use \Concrete\Core\Page\Template as PageTemplate;
 use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
 
 class BlockControl extends Control {

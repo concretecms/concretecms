@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Collection;
 use Loader;
 use CacheLocal;
+use Page;
 use Permissions;
 use Stack;
 use \Concrete\Core\Page\Collection\Version\Version as CollectionVersion;

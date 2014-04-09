@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Page\Workflow\Request;
 use Loader;
+use \Concrete\Workflow\Workflow\Progress\Response as WorkflowProgressResponse;
 class ChangePagePermissionsRequest extends Request {
 	
 	protected $wrStatusNum = 30;

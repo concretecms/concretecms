@@ -1,7 +1,11 @@
 <?
 namespace Concrete\Core\Workflow\Request;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Workflow\Workflow;
+use \Concrete\Core\Workflow\EmptyWorkflow;
 use Loader;
+use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
+use PermissionKey;
 abstract class Request extends Object {  
 	
 	protected $currentWP;

@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Helper;
-class Array {
+
+class Arrays {
 
 	/**
 	 * Fetches a value from an (multidimensional) array

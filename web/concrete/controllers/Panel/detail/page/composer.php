@@ -1,6 +1,13 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_Details_Page_Composer extends BackendInterfacePageController {
+namespace Concrete\Controller\Panel\Detail\Page;
+use \Concrete\Controller\Backend\UI\Page as BackendInterfacePageController;
+use \Concrete\Core\Page\EditResponse as PageEditResponse;
+use PageType;
+use View;
+use Loader;
+use \Concrete\Core\Page\Template as PageTemplate;
+
+class Composer extends BackendInterfacePageController {
 
 	protected $viewPath = '/system/panels/details/page/composer';
 

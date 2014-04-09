@@ -59,18 +59,15 @@ use \Concrete\Core\Block\BlockController;
 		}
 
 		public function add() {
-			$r = ResponseAssetGroup::get();
-			$r->requireAsset('redactor');
+			$this->requireAsset('redactor');
 		}
 
 		public function edit() {
-			$r = ResponseAssetGroup::get();
-			$r->requireAsset('redactor');
+			$this->requireAsset('redactor');
 		}
 
 		public function composer() {
-			$r = ResponseAssetGroup::get();
-			$r->requireAsset('redactor');
+			$this->requireAsset('redactor');
 		}
 
 		public function getImportData($blockNode, $page) {

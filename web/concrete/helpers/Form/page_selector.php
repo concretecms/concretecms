@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Helper\Form;
 use Page;
+use \Concrete\Core\Http\ResponseAssetGroup;
+
 class PageSelector {
 
 

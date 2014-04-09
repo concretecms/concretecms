@@ -163,7 +163,7 @@ class Controller extends DefaultController  {
 		}
 		
 		$db = Loader::db();
-		$row = $db->GetRow('select akTextareaDisplayMode, akTextareaDisplayModeCustomOptions from atTextareaSettings where akID = ?', $ak->getAttributeKeyID());
+		$row = $db->GetRow('select akTextareaDisplayMode, akTextareaDisplayModeCustomOptions from atTextareaSettings where akID = ?', array($ak->getAttributeKeyID()));
 		$this->akTextareaDisplayMode = $row['akTextareaDisplayMode'];
 		$this->akTextareaDisplayModeCustomOptions = array();
 		if ($row['akTextareaDisplayMode'] == 'rich_text_custom') {

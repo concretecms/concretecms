@@ -1,6 +1,12 @@
 <?
 namespace Concrete\Core\Page\Workflow\Request;
 use Loader;
+use \Concrete\Core\Page\Collection\Version as CollectionVersion;
+use Stack;
+use EVents;
+use \Concrete\Workflow\Workflow\Progress\Response as WorkflowProgressResponse;
+use \Concrete\Workflow\Workflow\Progress\Response as WorkflowProgressResponse;
+
 class ApproveStackRequest extends Request {
 
 	public function approve(WorkflowProgress $wp) {

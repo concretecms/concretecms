@@ -1,5 +1,8 @@
 <?
 namespace Concrete\Helper;
+use PageType;
+use \Concrete\Core\Http\ResponseAssetGroup;
+use \Concrete\Core\Page\Type\Composer\Control as PageTypeComposerControl;
 use Loader;
 class Composer {
 
