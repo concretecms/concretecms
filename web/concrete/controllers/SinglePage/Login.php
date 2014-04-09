@@ -1,6 +1,13 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php
+namespace Concrete\Controller\SinglePage;
+use PageController;
+use Loader;
+use Localization;
+use \Concrete\Core\Authentication\AuthenticationType;
+use \Concrete\Core\Authentication\AuthenticationTypeFailureException;
+use Config;
 
-class Concrete5_Controller_Page_Login extends PageController {
+class Login extends PageController {
 
 	public $helpers = array('form');
 	protected $locales = array();
@@ -29,10 +36,10 @@ class Concrete5_Controller_Page_Login extends PageController {
 				array_unshift($languages, 'en_US');
 			}
 			$locales = array();
-			Zend_Locale_Data::setCache(Cache::getLibrary());
+			\Zend_Locale_Data::setCache(Cache::getLibrary());
 			foreach($languages as $lang) {
-				$loc = new Zend_Locale($lang);
-				$locales[$lang] = Zend_Locale::getTranslation($loc->getLanguage(), 'language', $lang);
+				$loc = new \Zend_Locale($lang);
+				$locales[$lang] = \Zend_Locale::getTranslation($loc->getLanguage(), 'language', $lang);
 				$locRegion = $loc->getRegion();
 				if($locRegion !== false) {
 					$locRegionName = $loc->getTranslation($loc->getRegion(), 'country', $lang);
@@ -81,11 +88,11 @@ class Concrete5_Controller_Page_Login extends PageController {
 	public function callback($type,$method='callback') {
 		$at = AuthenticationType::getByHandle($type);
 		if (!method_exists($at->controller, $method)) {
-			throw new Exception(t('Invalid method.'));
+			throw new \Exception(t('Invalid method.'));
 		}
 		if ($method != 'callback') {
 			if (!is_array($at->controller->apiMethods) || !in_array($method,$at->controller->apiMethods)) {
-				throw new Exception(t("Invalid method."));
+				throw new \Exception(t("Invalid method."));
 			}
 		}
 		try {

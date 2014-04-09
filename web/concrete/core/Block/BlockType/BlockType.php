@@ -359,7 +359,7 @@ class BlockType {
 		$env = Environment::get();
 		$class = static::getBlockTypeMappedClass($btHandle);
 		$bta = new $class;
-		$path = dirname($env->getPath(DIRNAME_BLOCKS . '/' . helper('text')->camelcase($btHandle) . '/'. FILENAME_CONTROLLER));
+		$path = dirname($env->getPath(DIRNAME_BLOCKS . '/' . $btHandle . '/'. FILENAME_CONTROLLER));
 		
 		//Attempt to run the subclass methods (install schema from db.xml, etc.)
 		$r = $bta->install($path);

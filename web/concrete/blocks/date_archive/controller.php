@@ -1,6 +1,7 @@
 <?php 
 namespace Concrete\Block\DateArchive;
 use Loader;
+use Page;
 use \Concrete\Core\Block\BlockController;
 class Controller extends BlockController {
 
@@ -44,7 +45,7 @@ class Controller extends BlockController {
 		$firstPost = $db->getOne($query);
 
 		if(strlen($firstPost)) {
-			$firstPost = new DateTime($firstPost);
+			$firstPost = new \DateTime($firstPost);
 			$this->set('firstPost',$firstPost);
 		}
 	}

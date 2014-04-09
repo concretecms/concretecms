@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Foundation;
 use \Concrete\Core\Foundation\Object;
-use \Symfony\Component\ClassLoader\PSR4ClassLoader as SymfonyClassloader;
+use \Concrete\Core\Foundation\ModifiedPSR4ClassLoader as SymfonyClassloader;
 use \Symfony\Component\ClassLoader\MapClassLoader as SymfonyMapClassloader;
 
 class ClassLoader  {

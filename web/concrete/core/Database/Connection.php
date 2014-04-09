@@ -147,7 +147,15 @@ class Connection extends \Doctrine\DBAL\Connection {
             $tables[] = $table->getName();
         }
         return $tables;
-
     }
 
+    /** 
+     * @deprecated
+     */
+    public function MetaColumns($table) {
+        $sm = $this->getSchemaManager();
+        $schemaColumns = $sm->listTableColumns($table);
+        return $schemaColumns;
+
+    }
 }

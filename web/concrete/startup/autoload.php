@@ -6,9 +6,10 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * it needs in order to do so
  */
 
-require __DIR__ . '/../core/Foundation/Classloader.php';
-require __DIR__ . '/../vendor/zend/Loader/Autoloader.php';
 require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../core/Foundation/Classloader.php';
+require __DIR__ . '/../core/Foundation/ModifiedPsr4ClassLoader.php';
+require __DIR__ . '/../vendor/zend/Loader/Autoloader.php';
 
 /** 
  * Trigger the start of autoload

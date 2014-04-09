@@ -5,6 +5,7 @@ use Environment;
 use CacheLocal;
 use AssetList;
 use View;
+use \Concrete\Core\Package\PackageList;
 use \Concrete\Core\Asset\JavaScriptAsset;
 use \Concrete\Core\Asset\CSSAsset;
 

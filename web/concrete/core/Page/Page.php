@@ -9,6 +9,7 @@ use \Concrete\Core\Cache\Page\PageCache;
 use \Concrete\Core\Page\Template as PageTemplate;
 use \Events;
 use Config;
+use PageController;
 use User;
 use Block;
 use UserInfo;
@@ -159,13 +160,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 				$path = substr($file, 0, strpos($file, '.php'));
 			}
 			$path = trim(str_replace(' ', '\\', ucwords(str_replace(array('/', '_'), ' ', $path))), '\\');
-			$class = \Concrete\Core\Foundation\Classloader::getClassName('Controller\\Page\\' . $path);
+			$class = \Concrete\Core\Foundation\Classloader::getClassName('Controller\\SinglePage\\' . $path);
 		}
 
 		if (isset($class) && class_exists($class)) {
 			return new $class($this);
 		} else {
-			return new \Concrete\Core\Page\Controller\PageController($this);
+			return new PageController($this);
 		}
 	}
 
