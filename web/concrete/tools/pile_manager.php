@@ -9,7 +9,7 @@ $scrapbookHelper=Loader::helper('concrete/scrapbook');
 if (!$u->isRegistered()) {
 	die(t("Access Denied."));
 }
-Loader::model('pile');
+
 $p = false;
 $scrapbookName=$_REQUEST['scrapbookName'];
 if($scrapbookName) $scrapbookHelper->setDefault($scrapbookName);

@@ -6,6 +6,7 @@ use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
 use User;
 use \Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
 use PermissionKey;
+use Permissions;
 /**
 *
 * An object that allows a filtered list of pages to be returned.
@@ -84,7 +85,7 @@ class PageList extends DatabaseItemList {
 		$db = Loader::db();
 		$kw = $db->quote($keywords);
 		$qk = $db->quote('%' . $keywords . '%');
-		Loader::model('attribute/categories/collection');		
+				
 		$keys = CollectionAttributeKey::getSearchableIndexedList();
 		$attribsStr = '';
 		foreach ($keys as $ak) {

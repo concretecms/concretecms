@@ -143,7 +143,6 @@ class Concrete5_Controller_Page_Dashboard_Extend_Install extends DashboardContro
     public function download($remoteMPID=null) {
 		$tp = new TaskPermission();
 		if ($tp->canInstallPackages()) { 
-			Loader::model('marketplace_remote_item');
 			$mri = MarketplaceRemoteItem::getByID($remoteMPID);
 			
 			if (!is_object($mri)) {

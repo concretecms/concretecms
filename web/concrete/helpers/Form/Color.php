@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Helper\Form;
 use Loader;
+use View;
 class Color {
 
 	

@@ -2,8 +2,12 @@
 namespace Concrete\Core\User;
 use \Concrete\Core\Foundation\Object;
 use Loader;
+use Config;
+use UserInfo as CoreUserInfo;
 use Request;
+use \Concrete\Core\Authentication\AuthenticationType;
 use Events;
+use Page;
 use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 
 class User extends Object {
@@ -493,7 +497,7 @@ class User extends Object {
 					}
 
 					$mh = Loader::helper('mail');
-					$ui = UserInfo::getByID($this->getUserID());
+					$ui = CoreUserInfo::getByID($this->getUserID());
 					$mh->addParameter('badgeName', $g->getGroupName());
 					$mh->addParameter('uDisplayName', $ui->getUserDisplayName());
 					$mh->addParameter('uProfileURL', BASE_URL . View::url('/account/profile/public', 'view', $this->getUserID()));

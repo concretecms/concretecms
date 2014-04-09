@@ -63,7 +63,7 @@ class ContentExporter {
 		WorkflowType::exportList($this->x);
 		
 		// now jobs
-		Loader::model('job');
+		
 		Job::exportList($this->x);
 		
 		// now single pages
@@ -76,7 +76,7 @@ class ContentExporter {
 		}		
 		
 		// now stacks/global areas
-		Loader::model('stack/list');
+		
 		StackList::export($this->x);
 		
 		// now content pages
@@ -88,7 +88,7 @@ class ContentExporter {
 			$pc->export($pages);
 		}		
 		
-		Loader::model("system/captcha/library");		
+				
 		SystemCaptchaLibrary::exportList($this->x);
 		
 		Config::exportList($this->x);
@@ -121,7 +121,7 @@ class ContentExporter {
 	}
 	
 	public function getFilesArchive() {
-		Loader::model('file_list');
+		
 		$vh = Loader::helper("validation/identifier");
 		$archive = $vh->getString();
 		FileList::exportArchive($archive);

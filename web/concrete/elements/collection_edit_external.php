@@ -2,8 +2,6 @@
 <div class="ccm-ui">
 <? 
 
-Loader::model('collection_attributes');
-Loader::model('collection_types');
 $dh = Loader::helper('date');
 
 if ($c->isAlias() && $c->getCollectionPointerExternalLink() != '') {

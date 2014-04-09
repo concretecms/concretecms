@@ -11,7 +11,6 @@ if (!$canRead) {
 	die(t("Access Denied."));
 }
 
-Loader::model('block_types');
 $btID = intval($_REQUEST['btID']);
 $btDisplayOrder = intval($_REQUEST['btDisplayOrder']);
 if ($btID && $btDisplayOrder) {

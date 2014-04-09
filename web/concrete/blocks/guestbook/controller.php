@@ -151,7 +151,7 @@ class Controller extends BlockController {
 			if( $stringsHelper->email($this->notifyEmail) ){
 				$c = Page::getCurrentPage(); 
 				if(intval($uID)>0){
-					Loader::model('userinfo');
+					
 					$ui = UserInfo::getByID($uID);
 					$fromEmail=$ui->getUserEmail();
 					$fromName=$ui->getUserName();

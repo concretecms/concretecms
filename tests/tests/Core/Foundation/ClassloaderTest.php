@@ -109,4 +109,18 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue($vh instanceof \Concrete\Helper\Validation\Error);
 	}
 
+	public function testHelperOverrides() {
+		$root = dirname(DIR_BASE_CORE . '../');
+		mkdir($root . '/helpers/validation/', 0777, true);
+		copy(dirname(__FILE__) . '/fixtures/captcha.php', $root . '/helpers/validation/captcha.php');
+
+		$fh = Loader::helper('validation/captcha');
+
+		unlink($root . '/helpers/validation/captcha.php');
+		rmdir($root . '/helpers/validation');
+
+		$this->assertTrue($fh instanceof \Application\Helper\Validation\Captcha);
+		$this->assertTrue($fh instanceof \Concrete\Helper\Validation\Captcha);
+	}
+
 }

@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-$rl = \Concrete\Core\Routing\Router::getInstance();
+$rl = Router::getInstance();
 
 /** 
  * Install
@@ -17,33 +17,119 @@ $rl->register('/install/run_routine/{pkgHandle}/{routine}', 'Controller\Install:
 /** 
  * Tools - legacy
  */
-$rl->register('/tools/blocks/{btHandle}/{tool}', 'ToolController::displayBlock', 'blockTool', array('tool' => '[A-Za-z0-9_/]+'));
-$rl->register('/tools/{tool}', 'ToolController::display', 'tool', array('tool' => '[A-Za-z0-9_/]+'));
+$rl->register('/tools/blocks/{btHandle}/{tool}', 'Core\Legacy\Controller\ToolController::displayBlock', 'blockTool', array('tool' => '[A-Za-z0-9_/]+'));
+$rl->register('/tools/{tool}', 'Core\Legacy\Controller\ToolController::display', 'tool', array('tool' => '[A-Za-z0-9_/]+'));
+
+/** 
+ * Dialog
+ */
+
+$rl->register('/system/dialogs/page/delete/', 'Controller\Dialog\Page\Delete::view');
+$rl->register('/system/dialogs/page/delete/submit', 'Controller\Dialog\Page\Delete::submit');
+$rl->register('/system/dialogs/area/layout/presets/submit/{arLayoutID}', 'Controller\Dialog\Area\Layout\Presets::submit');
+$rl->register('/system/dialogs/area/layout/presets/{arLayoutID}/{token}', 'Controller\Dialog\Area\Layout\Presets::view');
+$rl->register('/system/dialogs/page/bulk/properties', 'Controller\Dialog\Page\Bulk\Properties::view');
+$rl->register('/system/dialogs/page/bulk/properties/update_attribute', 'Controller\Dialog\Page\Bulk\Properties::updateAttribute');
+$rl->register('/system/dialogs/page/bulk/properties/clear_attribute', 'Controller\Dialog\Page\Bulk\Properties::clearAttribute');
+$rl->register('/system/dialogs/page/design', 'Controller\Dialog\Page\Design::view');
+$rl->register('/system/dialogs/page/design/submit', 'Controller\Dialog\Page\Design::submit');
+$rl->register('/system/dialogs/user/search', 'Controller\Dialog\User\Search::view');
+$rl->register('/system/dialogs/group/search', 'Controller\Dialog\Group\Search::view');
+$rl->register('/system/dialogs/file/search', 'Controller\Dialog\File\Search::view');
+$rl->register('/system/dialogs/page/search', 'Controller\Dialog\Page\Search::view');
+$rl->register('/system/dialogs/page/attributes', 'Controller\Dialog\Page\Attributes::view');
+$rl->register('/system/dialogs/user/bulk/properties', 'Controller\Dialog\User\Bulk\Properties::view');
+$rl->register('/system/dialogs/user/bulk/properties/update_attribute', 'Controller\Dialog\User\Bulk\Properties::updateAttribute');
+$rl->register('/system/dialogs/user/bulk/properties/clear_attribute', 'Controller\Dialog\User\Bulk\Properties::clearAttribute');
+$rl->register('/system/dialogs/file/properties', 'Controller\Dialog\File\Properties::view');
+$rl->register('/system/dialogs/file/properties/save', 'Controller\Dialog\File\Properties::save');
+$rl->register('/system/dialogs/file/properties/update_attribute', 'Controller\Dialog\File\Properties::update_attribute');
+$rl->register('/system/dialogs/file/properties/clear_attribute', 'Controller\Dialog\File\Properties::clear_attribute');
+$rl->register('/system/dialogs/file/bulk/properties', 'Controller\Dialog\File\Bulk\Properties::view');
+$rl->register('/system/dialogs/file/bulk/properties/update_attribute', 'Controller\Dialog\File\Bulk\Properties::updateAttribute');
+$rl->register('/system/dialogs/file/bulk/properties/clear_attribute', 'Controller\Dialog\File\Bulk\Properties::clearAttribute');
+$rl->register('/system/dialogs/page/add_block', 'Controller\Dialog\Page\AddBlock::view');
+$rl->register('/system/dialogs/page/add_block/submit', 'Controller\Dialog\Page\AddBlock::submit');
+$rl->register('/system/dialogs/page/search/customize', 'Controller\Dialog\Page\Search\Customize::view');
+$rl->register('/system/dialogs/page/search/customize/submit', 'Controller\Dialog\Page\Search\Customize::submit');
+$rl->register('/system/dialogs/file/search/customize', 'Controller\Dialog\File\Search\Customize::view');
+$rl->register('/system/dialogs/file/search/customize/submit', 'Controller\Dialog\File\Search\Customize::submit');
+$rl->register('/system/dialogs/user/search/customize', 'Controller\Dialog\User\Search\Customize::view');
+$rl->register('/system/dialogs/user/search/customize/submit', 'Controller\Dialog\User\Search\Customize::submit');
+
+/**
+ * Files
+ */
+$rl->register('/system/file/star', 'Controller\Backend\File::star');
+$rl->register('/system/file/rescan', 'Controller\Backend\File::rescan');
+$rl->register('/system/file/approve_version', 'Controller\Backend\File::approveVersion');
+$rl->register('/system/file/delete_version', 'Controller\Backend\File::deleteVersion');
+$rl->register('/system/file/get_json', 'Controller\Backend\File::getJSON');
+$rl->register('/system/file/duplicate', 'Controller\Backend\File::duplicate');
+$rl->register('/system/file/upload', 'Controller\Backend\File::upload');
+
+
+/** 
+ * Users
+ */
+$rl->register('/system/user/add_group', 'Controller\Backend\User::addGroup');
+$rl->register('/system/user/remove_group', 'Controller\Backend\User::removeGroup');
+
+/**
+ * Page actions - non UI
+ */
+$rl->register('/system/page/check_in/{cID}/{token}', 'Controller\Panel\Page\CheckIn::exitEditMode');
+$rl->register('/system/page/create/{ptID}', 'Controller\Backend\Page::create');
+$rl->register('/system/page/arrange_blocks/', 'Controller\Backend\Page\ArrangeBlocks::arrange');
+
+
+/** 
+ * Misc
+ */
+$rl->register('/system/css/page/{cID}/{cvID}/{stylesheet}', 'Controller\Frontend\Stylesheet::page');
+$rl->register('/system/css/layout/{bID}', 'Controller\Frontend\Stylesheet::layout');
+
+/** 
+ * Search Routes
+ */
+$rl->register('/system/search/pages/submit', 'Controller\Search\Pages::submit');
+$rl->register('/system/search/pages/field/{field}', 'Controller\Search\Pages::field');
+$rl->register('/system/search/files/submit', 'Controller\Search\Files::submit');
+$rl->register('/system/search/files/field/{field}', 'Controller\Search\Files::field');
+$rl->register('/system/search/users/submit', 'Controller\Search\Users::submit');
+$rl->register('/system/search/users/field/{field}', 'Controller\Search\Users::field');
+$rl->register('/system/search/groups/submit', 'Controller\Search\Groups::submit');
+
+
+/** 
+ * Panels - top level
+ */
+$rl->register('/system/panels/dashboard', 'Controller\Panel\Dashboard::view');
+$rl->register('/system/panels/sitemap', 'Controller\Panel\Sitemap::view');
+$rl->register('/system/panels/add', 'Controller\Panel\Add::view');
+$rl->register('/system/panels/page', 'Controller\Panel\Page::view');
+$rl->register('/system/panels/page/attributes', 'Controller\Panel\Page\Attributes::view');
+$rl->register('/system/panels/page/design', 'Controller\Panel\Page\Design::view');
+$rl->register('/system/panels/page/design/preview_contents', 'Controller\Panel\Page\Design::preview_contents');
+$rl->register('/system/panels/page/design/submit', 'Controller\Panel\Page\Design::submit');
+$rl->register('/system/panels/page/design/customize/preview/{pThemeID}', 'Controller\Panel\Page\Design\Customize::preview');
+$rl->register('/system/panels/page/design/customize/apply_to_page/{pThemeID}', 'Controller\Panel\Page\Design\Customize::apply_to_page');
+$rl->register('/system/panels/page/design/customize/apply_to_site/{pThemeID}', 'Controller\Panel\Page\Design\Customize::apply_to_site');
+$rl->register('/system/panels/page/design/customize/reset_page_customizations', 'Controller\Panel\Page\Design\Customize::reset_page_customizations');
+$rl->register('/system/panels/page/design/customize/reset_site_customizations/{pThemeID}', 'Controller\Panel\Page\Design\Customize::reset_site_customizations');
+$rl->register('/system/panels/page/design/customize/{pThemeID}', 'Controller\Panel\Page\Design\Customize::view');
+$rl->register('/system/panels/page/check_in', 'Controller\Panel\Page\CheckIn::__construct');
+$rl->register('/system/panels/page/check_in/submit', 'Controller\Panel\Page\CheckIn::submit');
+$rl->register('/system/panels/page/versions', 'Controller\Panel\Page\Versions::view');
+$rl->register('/system/panels/page/versions/get_json', 'Controller\Panel\Page\Versions::get_json');
+$rl->register('/system/panels/page/versions/duplicate', 'Controller\Panel\Page\Versions::duplicate');
+$rl->register('/system/panels/page/versions/new_page', 'Controller\Panel\Page\Versions::new_page');
+$rl->register('/system/panels/page/versions/delete', 'Controller\Panel\Page\Versions::delete');
+$rl->register('/system/panels/page/versions/approve', 'Controller\Panel\Page\Versions::approve');
 
 /** 
  * Editing Interfaces
  */
-$rl->register('/system/panels/dashboard', 'DashboardPanelController::view');
-$rl->register('/system/panels/sitemap', 'SitemapPanelController::view');
-$rl->register('/system/panels/add', 'AddPanelController::view');
-$rl->register('/system/panels/page', 'PagePanelController::view');
-$rl->register('/system/panels/page/check_in', 'PageCheckInPanelController::__construct');
-$rl->register('/system/panels/page/check_in/submit', 'PageCheckInPanelController::submit');
-$rl->register('/system/panels/page/design', 'PageDesignPanelController::view');
-$rl->register('/system/panels/page/design/preview_contents', 'PageDesignPanelController::preview_contents');
-$rl->register('/system/panels/page/design/submit', 'PageDesignPanelController::submit');
-$rl->register('/system/panels/page/design/customize/preview/{pThemeID}', 'PageDesignCustomizePanelController::preview');
-$rl->register('/system/panels/page/design/customize/apply_to_page/{pThemeID}', 'PageDesignCustomizePanelController::apply_to_page');
-$rl->register('/system/panels/page/design/customize/apply_to_site/{pThemeID}', 'PageDesignCustomizePanelController::apply_to_site');
-$rl->register('/system/panels/page/design/customize/reset_page_customizations', 'PageDesignCustomizePanelController::reset_page_customizations');
-$rl->register('/system/panels/page/design/customize/reset_site_customizations/{pThemeID}', 'PageDesignCustomizePanelController::reset_site_customizations');
-$rl->register('/system/panels/page/design/customize/{pThemeID}', 'PageDesignCustomizePanelController::view');
-$rl->register('/system/panels/page/versions', 'PageVersionsPanelController::view');
-$rl->register('/system/panels/page/versions/get_json', 'PageVersionsPanelController::get_json');
-$rl->register('/system/panels/page/versions/duplicate', 'PageVersionsPanelController::duplicate');
-$rl->register('/system/panels/page/versions/new_page', 'PageVersionsPanelController::new_page');
-$rl->register('/system/panels/page/versions/delete', 'PageVersionsPanelController::delete');
-$rl->register('/system/panels/page/versions/approve', 'PageVersionsPanelController::approve');
 $rl->register('/system/panels/details/page/versions', 'PageVersionsPanelDetailController::view');
 $rl->register('/system/panels/details/page/seo', 'PageSeoPanelDetailController::view');
 $rl->register('/system/panels/details/page/seo/submit', 'PageSeoPanelDetailController::submit');
@@ -54,7 +140,6 @@ $rl->register('/system/panels/details/page/composer', 'PageComposerPanelDetailCo
 $rl->register('/system/panels/details/page/composer/autosave', 'PageComposerPanelDetailController::autosave');
 $rl->register('/system/panels/details/page/composer/publish', 'PageComposerPanelDetailController::publish');
 $rl->register('/system/panels/details/page/composer/discard', 'PageComposerPanelDetailController::discard');
-$rl->register('/system/panels/page/attributes', 'PageAttributesPanelController::view');
 $rl->register('/system/panels/details/page/attributes', 'PageAttributesPanelDetailController::view');
 $rl->register('/system/panels/details/page/attributes/submit', 'PageAttributesPanelDetailController::submit');
 $rl->register('/system/panels/details/page/attributes/add_attribute', 'PageAttributesPanelDetailController::add_attribute');
@@ -64,81 +149,8 @@ $rl->register('/system/panels/details/page/caching/purge', 'PageCachingPanelDeta
 $rl->register('/system/panels/details/page/permissions', 'PagePermissionsPanelDetailController::view');
 $rl->register('/system/panels/details/page/permissions/simple/submit', 'PagePermissionsPanelDetailController::save_simple');
 $rl->register('/system/panels/details/page/permissions/advanced/submit', 'PagePermissionsPanelDetailController::save_advanced');
-$rl->register('/system/dialogs/page/delete/', 'PageDeleteDialogController::view');
-$rl->register('/system/dialogs/page/delete/submit', 'PageDeleteDialogController::submit');
-$rl->register('/system/dialogs/area/layout/presets/submit/{arLayoutID}', 'AreaLayoutPresetsDialogController::submit');
-$rl->register('/system/dialogs/area/layout/presets/{arLayoutID}/{token}', 'AreaLayoutPresetsDialogController::view');
-$rl->register('/system/dialogs/page/bulk/properties', 'PageBulkPropertiesDialogController::view');
-$rl->register('/system/dialogs/page/bulk/properties/update_attribute', 'PageBulkPropertiesDialogController::updateAttribute');
-$rl->register('/system/dialogs/page/bulk/properties/clear_attribute', 'PageBulkPropertiesDialogController::clearAttribute');
-$rl->register('/system/dialogs/page/design', 'PageDesignDialogController::view');
-$rl->register('/system/dialogs/page/design/submit', 'PageDesignDialogController::submit');
 
-$rl->register('/system/dialogs/user/search', 'UserSearchDialogController::view');
-$rl->register('/system/dialogs/group/search', 'GroupSearchDialogController::view');
-$rl->register('/system/dialogs/file/search', 'FileSearchDialogController::view');
-$rl->register('/system/dialogs/page/search', 'PageSearchDialogController::view');
 
-$rl->register('/system/dialogs/page/attributes', 'PageAttributesDialogController::view');
-
-$rl->register('/system/dialogs/user/bulk/properties', 'UserBulkPropertiesDialogController::view');
-$rl->register('/system/dialogs/user/bulk/properties/update_attribute', 'UserBulkPropertiesDialogController::updateAttribute');
-$rl->register('/system/dialogs/user/bulk/properties/clear_attribute', 'UserBulkPropertiesDialogController::clearAttribute');
-
-$rl->register('/system/dialogs/file/properties', 'FilePropertiesDialogController::view');
-$rl->register('/system/dialogs/file/properties/save', 'FilePropertiesDialogController::save');
-$rl->register('/system/dialogs/file/properties/update_attribute', 'FilePropertiesDialogController::update_attribute');
-$rl->register('/system/dialogs/file/properties/clear_attribute', 'FilePropertiesDialogController::clear_attribute');
-$rl->register('/system/dialogs/file/bulk/properties', 'FileBulkPropertiesDialogController::view');
-$rl->register('/system/dialogs/file/bulk/properties/update_attribute', 'FileBulkPropertiesDialogController::updateAttribute');
-$rl->register('/system/dialogs/file/bulk/properties/clear_attribute', 'FileBulkPropertiesDialogController::clearAttribute');
-
-/**
- * Editing Actions
- */
-$rl->register('/system/page/check_in/{cID}/{token}', 'PageCheckInPanelController::exitEditMode');
-$rl->register('/system/dialogs/page/add_block', 'PageAddBlockDialogController::view');
-$rl->register('/system/dialogs/page/add_block/submit', 'PageAddBlockDialogController::submit');
-$rl->register('/system/page/create/{ptID}', 'BackendPageController::create');
-$rl->register('/system/page/arrange_blocks/', 'BackendPageArrangeBlocksController::arrange');
-
-/** 
- * Search Routes
- */
-$rl->register('/system/dialogs/page/search/customize', 'PageSearchCustomizeDialogController::view');
-$rl->register('/system/dialogs/page/search/customize/submit', 'PageSearchCustomizeDialogController::submit');
-$rl->register('/system/search/pages/submit', 'SearchPagesController::submit');
-$rl->register('/system/search/pages/field/{field}', 'SearchPagesController::field');
-
-$rl->register('/system/dialogs/file/search/customize', 'FileSearchCustomizeDialogController::view');
-$rl->register('/system/dialogs/file/search/customize/submit', 'FileSearchCustomizeDialogController::submit');
-$rl->register('/system/search/files/submit', 'SearchFilesController::submit');
-$rl->register('/system/search/files/field/{field}', 'SearchFilesController::field');
-
-$rl->register('/system/dialogs/user/search/customize', 'UserSearchCustomizeDialogController::view');
-$rl->register('/system/dialogs/user/search/customize/submit', 'UserSearchCustomizeDialogController::submit');
-$rl->register('/system/search/users/submit', 'SearchUsersController::submit');
-$rl->register('/system/search/users/field/{field}', 'SearchUsersController::field');
-$rl->register('/system/search/groups/submit', 'SearchGroupsController::submit');
-
-/* Files */
-$rl->register('/system/file/star', 'FileController::star');
-$rl->register('/system/file/rescan', 'FileController::rescan');
-$rl->register('/system/file/approve_version', 'FileController::approveVersion');
-$rl->register('/system/file/delete_version', 'FileController::deleteVersion');
-$rl->register('/system/file/get_json', 'FileController::getJSON');
-$rl->register('/system/file/duplicate', 'FileController::duplicate');
-$rl->register('/system/file/upload', 'FileController::upload');
-
-/* Users */
-$rl->register('/system/user/add_group', 'UserController::addGroup');
-$rl->register('/system/user/remove_group', 'UserController::removeGroup');
-
-/** 
- * Misc
- */
-$rl->register('/system/css/page/{cID}/{cvID}/{stylesheet}', 'FrontendStylesheetController::page');
-$rl->register('/system/css/layout/{bID}', 'FrontendStylesheetController::layout');
 
 /** 
  * Page Routes - these must come at the end.

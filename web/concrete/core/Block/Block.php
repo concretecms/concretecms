@@ -10,6 +10,7 @@ use Area;
 use Events;
 use Cache;
 use \Concrete\Core\Package\PackageList;
+use \Concrete\Core\Block\View\BlockView;
 
 class Block extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
@@ -606,7 +607,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface 
 	
 	public function getBlockCustomStyleRule() {
 		if ($this->getBlockCustomStyleRuleID() > 0) {
-			Loader::model('custom_style');
+			
 			$txt = Loader::helper('text');
 			$csr = CustomStyleRule::getByID($this->getBlockCustomStyleRuleID());
 			$arHandle = $txt->filterNonAlphaNum($this->getAreaHandle());

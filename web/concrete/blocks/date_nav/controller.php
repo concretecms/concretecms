@@ -67,7 +67,7 @@ class Controller extends BlockController {
 		$cParentID = ($row['cThis']) ? $this->cID : $row['cParentID'];
 		
 		if ($this->displayFeaturedOnly == 1) {
-			Loader::model('attribute/categories/collection');
+			
 			$cak = CollectionAttributeKey::getByHandle('is_featured');
 			if (is_object($cak)) {
 				$pl->filterByIsFeatured(1);

@@ -3,7 +3,7 @@
 <? $included = $permissionAccess->getAccessListItems(); ?>
 <? $excluded = $permissionAccess->getAccessListItems(PermissionKey::ACCESS_TYPE_EXCLUDE); ?>
 <?
-Loader::model('attribute/categories/user');
+
 $attribs = UserAttributeKey::getList();
 ?>
 <? $form = Loader::helper('form'); ?>

@@ -17,9 +17,6 @@ class IndexSearchAll extends QueueableJob {
 	public function start(\Zend_Queue $q) {
 		$this->is = new IndexedSearch();
 
-		Loader::model('attribute/categories/collection');
-		Loader::model('attribute/categories/file');
-		Loader::model('attribute/categories/user');
 		$attributes = CollectionAttributeKey::getList();
 		$attributes = array_merge($attributes, FileAttributeKey::getList());
 		$attributes = array_merge($attributes, UserAttributeKey::getList());

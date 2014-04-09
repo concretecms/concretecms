@@ -11,7 +11,7 @@ if (PERMISSIONS_MODEL == 'advanced') {
 	$searchFields['group_set'] = t('Group Set');
 }
 
-Loader::model('attribute/categories/collection');
+
 $searchFieldAttributes = UserAttributeKey::getSearchableList();
 foreach($searchFieldAttributes as $ak) {
 	$searchFields[$ak->getAttributeKeyID()] = tc('AttributeKeyName', $ak->getAttributeKeyName());

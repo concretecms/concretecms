@@ -6,6 +6,7 @@ use User;
 use Group;
 use PermissionKey;
 use Permissions;
+use Area;
 class PageResponse extends Response {
 	
 	// legacy support

@@ -191,12 +191,8 @@ class Package extends Object {
 	 */
 	public function getPackageItems() {
 		$items = array();
-		Loader::model('single_page');
 		
-		Loader::model('job');
-		Loader::model('collection_types');
-		Loader::model('system/captcha/library');
-		Loader::model('system/antispam/library');
+		
 		$items['attribute_categories'] = AttributeKeyCategory::getListByPackage($this);
 		$items['permission_categories'] = PermissionKeyCategory::getListByPackage($this);
 		$items['permission_access_entity_types'] = PermissionAccessEntityType::getListByPackage($this);
@@ -212,7 +208,10 @@ class Package extends Object {
 		$items['gathering_data_sources'] = GatheringDataSource::getListByPackage($this);
 		$items['features'] = Feature::getListByPackage($this);
 		$items['feature_categories'] = FeatureCategory::getListByPackage($this);
-		$items['block_types'] = BlockTypeList::getByPackage($this);
+		$btl = new BlockTypeList();
+		$btl->filterByPackage($this);
+		$blocktypes = $btl->get();
+		$items['block_types'] = $blocktypes;
 		$items['block_type_sets'] = BlockTypeSet::getListByPackage($this);
 		$items['page_themes'] = PageTheme::getListByPackage($this);
 		$items['permissions'] = PermissionKey::getListByPackage($this);
@@ -467,10 +466,7 @@ class Package extends Object {
 	
 	public function swapContent($options) {
 		if ($this->validateClearSiteContents($options)) { 
-			Loader::model("page_list");
-			Loader::model("file_list");
-			Loader::model("stack/list");
-
+			
 			$pl = new PageList();
 			$pages = $pl->get();
 			foreach($pages as $c) {

@@ -326,7 +326,7 @@ class Controller extends BlockController {
 			}else{
 				$tmpFileIds[intval($row['msqID'])] = $resp->getFileID();
 				if(intval($this->addFilesToSet)) {
-					Loader::model('file_set');
+					
 					$fs = new FileSet();
 					$fs = $fs->getByID($this->addFilesToSet);
 					if($fs->getFileSetID()) {

@@ -7,7 +7,7 @@ if (!$tp->canInstallPackages()) { ?>
 
 }
 
-Loader::model('marketplace_remote_item');
+
 
 $mpID = $_REQUEST['mpID'];
 $install = isset($_REQUEST['install']) ? $_REQUEST['install'] : false;

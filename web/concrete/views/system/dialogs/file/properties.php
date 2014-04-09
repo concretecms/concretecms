@@ -71,7 +71,7 @@ if (is_object($oc)) {
 	<div class="col-md-9"><p><?=t('Added by <strong>%s</strong> on %s', $fv->getAuthorName(), $dateHelper->date(DATE_APP_FILE_PROPERTIES, strtotime($f->getDateAdded())))?></p></div>
 </div>
 <?
-Loader::model("file_storage_location");
+
 $fsl = FileStorageLocation::getByID(FileStorageLocation::ALTERNATE_ID);
 if (is_object($fsl)) {
 	if ($f->getStorageLocationID() > 0) {

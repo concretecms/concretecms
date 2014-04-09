@@ -7,7 +7,7 @@ if (!$fp->canAccessFileManager()) {
 
 $u = new User();
 	
-Loader::model('file_list');
+
 
 $cnt = Loader::controller('/dashboard/files/search');
 $fileList = $cnt->getRequestedSearchResults();

@@ -1,14 +1,14 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
 $form = Loader::helper('form');
-Loader::model('attribute/categories/file');
+
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAccessFileManager()) {
 	die(t("Unable to access the file manager."));
 }
 
 
-Loader::model('file_list');
+
 $selectedAKIDs = array();
 
 $fldc = FileManagerColumnSet::getCurrent();

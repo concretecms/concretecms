@@ -58,7 +58,7 @@ $ah = Loader::helper('concrete/ui');
 </div>
 
 <?
-Loader::model('file_set');
+
 $s1 = FileSet::getMySets();
 $sets = array();
 foreach ($s1 as $s){

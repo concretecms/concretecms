@@ -56,15 +56,14 @@ class Category extends Object {
 
 	public function getAttributeKeyByID($akID) {
 		$txt = Loader::helper('text');
-		$className = $txt->camelcase($this->akCategoryHandle);
-		$c1 = $className . 'AttributeKey';
-		$ak = call_user_func(array($c1, 'getByID'), $akID);
+		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Attribute\\Key\\' . $txt->camelcase($this->akCategoryHandle) . 'Key');
+		$ak = call_user_func(array($className, 'getByID'), $akID);
 		return $ak;
 	}
 
 	public function getUnassignedAttributeKeys() {
 		$db = Loader::db();
-		$r = $db->Execute('select AttributeKeys.akID from AttributeKeys left join AttributeSetKeys on AttributeKeys.akID = AttributeSetKeys.akID where asID is null and akIsInternal = 0 and akCategoryID = ?', $this->akCategoryID);
+		$r = $db->Execute('select AttributeKeys.akID from AttributeKeys left join AttributeSetKeys on AttributeKeys.akID = AttributeSetKeys.akID where asID is null and akIsInternal = 0 and akCategoryID = ?', array($this->akCategoryID));
 		$keys = array();
 		$cat = static::getByID($this->akCategoryID);
 		while ($row = $r->FetchRow()) {
@@ -97,7 +96,7 @@ class Category extends Object {
 	
 	public function getAttributeSets() {
 		$db = Loader::db();
-		$r = $db->Execute('select asID from AttributeSets where akCategoryID = ? order by asDisplayOrder asc, asID asc', $this->akCategoryID);
+		$r = $db->Execute('select asID from AttributeSets where akCategoryID = ? order by asDisplayOrder asc, asID asc', array($this->akCategoryID));
 		$sets = array();
 		while ($row = $r->FetchRow()) {
 			$sets[] = AttributeSet::getByID($row['asID']);
@@ -107,7 +106,7 @@ class Category extends Object {
 	
 	public function clearAttributeKeyCategoryColumnHeaders() {
 		$db = Loader::db();
-		$db->Execute('update AttributeKeys set akIsColumnHeader = 0 where akCategoryID = ?', $this->akCategoryID);
+		$db->Execute('update AttributeKeys set akIsColumnHeader = 0 where akCategoryID = ?', array($this->akCategoryID));
 	}
 	
 	public function associateAttributeKeyType($at) {
@@ -125,7 +124,7 @@ class Category extends Object {
 	
 	public function clearAttributeKeyCategoryTypes() {
 		$db = Loader::db();
-		$db->Execute('delete from AttributeTypeCategories where akCategoryID = ?', $this->akCategoryID);
+		$db->Execute('delete from AttributeTypeCategories where akCategoryID = ?', array($this->akCategoryID));
 	}
 
 	/** 
@@ -136,7 +135,7 @@ class Category extends Object {
 		$this->clearAttributeKeyCategoryTypes();
 		$this->clearAttributeKeyCategoryColumnHeaders();
 		$this->rescanSetDisplayOrder();
-		$db->Execute('delete from AttributeKeyCategories where akCategoryID = ?', $this->akCategoryID);		
+		$db->Execute('delete from AttributeKeyCategories where akCategoryID = ?', array($this->akCategoryID));
 	}
 	
 	public static function getList() {
@@ -190,7 +189,7 @@ class Category extends Object {
 	protected function rescanSetDisplayOrder() {
 		$db = Loader::db();
 		$do = 1;
-		$r = $db->Execute('select asID from AttributeSets where akCategoryID = ? order by asDisplayOrder asc, asID asc', $this->getAttributeKeyCategoryID());
+		$r = $db->Execute('select asID from AttributeSets where akCategoryID = ? order by asDisplayOrder asc, asID asc', array($this->getAttributeKeyCategoryID()));
 		while ($row = $r->FetchRow()) {
 			$db->Execute('update AttributeSetKeys set displayOrder = ? where asID = ?', array($do, $row['asID']));
 			$do++;

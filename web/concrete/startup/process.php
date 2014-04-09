@@ -109,7 +109,7 @@
 							$updateAll = true;
 						}
 
-						Loader::model('custom_style');
+						
 
 						$nvc = $cx->getVersionToModify();
 						if ($a->isGlobalArea()) {
@@ -318,7 +318,7 @@
 				$area = Area::get($c, $_GET['arHandle']);
 				$ap = new Permissions($area);
 				if ($ap->canEditAreaDesign() ) {
-					Loader::model('custom_style');
+					
 
 					$nvc = $c->getVersionToModify();
 
@@ -414,7 +414,7 @@
 	}
 
 	if (isset($_REQUEST['ptask']) && $_REQUEST['ptask'] && $valt->validate()) {
-		Loader::model('pile');
+		
 
 		// piles !
 		switch($_REQUEST['ptask']) {
@@ -567,7 +567,7 @@
 				$ap = new Permissions($ax);
 				if ($_REQUEST['btask'] == 'alias_existing_block') {
 					if (is_array($_REQUEST['pcID'])) {
-						Loader::model('pile');
+						
 
 						// we're taking an existing block and aliasing it to here
 						foreach($_REQUEST['pcID'] as $pcID) {
@@ -691,7 +691,7 @@
 			}
 		} else if ($_POST['add']) {
 			// adding a collection to a collection
-			Loader::model('collection_types');
+			
 
 			$ct = PageType::getByID($_POST['ptID']);
 			if ($cp->canAddSubpage($ct)) {
@@ -709,7 +709,7 @@
 
 				if (is_object($nc)) {
 
-					Loader::model('collection_attributes');
+					
 					$attributes = $ct->getAvailableAttributeKeys();
 					if (is_array($attributes)) {
 						foreach($attributes as $ak) {
@@ -748,7 +748,7 @@
 			}
 		} else if ($_POST['add_external']) {
 			// adding a collection to a collection
-			Loader::model('collection_types');
+			
 			if ($cp->canAddExternalLink()) {
 				$ncID = $c->addCollectionAliasExternal($_POST['cName'], $_POST['cExternalLink'], $_POST['cExternalLinkNewWindow']);
 				header('Location: ' . URL_SITEMAP);

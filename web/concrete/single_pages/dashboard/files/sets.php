@@ -76,7 +76,7 @@
 
 	<div style="display: none" class="ccm-tab" id="ccm-tab-files">
 		<?
-		Loader::model("file_list");
+		
 		$fl = new FileList();
 		$fl->filterBySet($fs);
 		$fl->sortByFileSetDisplayOrder();

@@ -1,8 +1,13 @@
 <?
-
-namespace Concrete\Helper\Concrete\Dashboard
+namespace Concrete\Helper\Concrete\Dashboard;
 use Loader;
 use PageList;
+use TaskPermission;
+use Cookie;
+use stdClass;
+use Permissions;
+use PageType;
+
 class Sitemap {
 
 
@@ -52,7 +57,7 @@ class Sitemap {
 		
 		$nodes = array();
 		foreach($results as $c) {
-			$n = ConcreteDashboardSitemapHelper::getNode($c);
+			$n = $this->getNode($c);
 			if ($n != false) {
 				$nodes[] = $n;
 			}

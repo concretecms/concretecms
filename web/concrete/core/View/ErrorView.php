@@ -1,6 +1,8 @@
 <?
 
 namespace Concrete\Core\View;
+use View;
+
 class ErrorView extends View {
 	
 	protected $error;

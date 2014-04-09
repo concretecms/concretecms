@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 $th = Loader::helper('text');
 
-Loader::model('attribute/categories/user');
+
 $attribs = UserAttributeKey::getRegistrationList();
 $assignment = PermissionKey::getByHandle('edit_user_properties')->getMyAssignment();
 $gl = new GroupSearch();

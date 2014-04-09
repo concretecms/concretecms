@@ -1,5 +1,5 @@
 <? 
-Loader::model('pile');
+
 $ci = Loader::helper('concrete/urls');
 $ap = new Permissions($a);
 ?>

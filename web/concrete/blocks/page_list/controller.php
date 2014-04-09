@@ -180,7 +180,7 @@ class Controller extends BlockController {
 	*/
 	
 	public function add() {
-		Loader::model("collection_types");
+		
 		$c = Page::getCurrentPage();
 		$uh = Loader::helper('concrete/urls');
 		//	echo $rssUrl;

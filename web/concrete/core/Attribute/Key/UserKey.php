@@ -137,15 +137,7 @@ class UserKey extends Key {
 	public function isAttributeKeyActive() {
 		return $this->uakIsActive;
 	}
-	
-	public function sortListByDisplayOrder($a, $b) {
-		if ($a->getAttributeKeyDisplayOrder() == $b->getAttributeKeyDisplayOrder()) {
-			return 0;
-		} else {
-			return ($a->getAttributeKeyDisplayOrder() < $b->getAttributeKeyDisplayOrder()) ? -1 : 1;
-		}
-	}
-	
+		
 	public function activate() {
 		$db = Loader::db();
 		$this->refreshCache();
@@ -160,7 +152,13 @@ class UserKey extends Key {
 
 	public static function getList() {
 		$list = parent::getList('user');	
-		usort($list, array('UserAttributeKey', 'sortListByDisplayOrder'));
+		usort($list, function($a, $b) {
+			if ($a->getAttributeKeyDisplayOrder() == $b->getAttributeKeyDisplayOrder()) {
+				return 0;
+			} else {
+				return ($a->getAttributeKeyDisplayOrder() < $b->getAttributeKeyDisplayOrder()) ? -1 : 1;
+			}
+		});
 		return $list;
 	}
 	

@@ -1,9 +1,10 @@
 <?
 namespace Concrete\Helper\Concrete;
-use \User as ConcreteUser;
+use User as ConcreteUser;
 use Loader;
 use Page;
 use Localization;
+use Config;
 /**
  * @package Helpers
  * @subpackage Concrete
@@ -156,7 +157,7 @@ class UI {
 		$tp = new \TaskPermission();
 		$c = Page::getCurrentPage();
         if ((!defined(MOBILE_THEME_IS_ACTIVE) || MOBILE_THEME_IS_ACTIVE == false) && ENABLE_NEWSFLOW_OVERLAY == true && $tp->canViewNewsflow() && $c->getCollectionPath() != '/dashboard/news') {
-			$u = new CoreUser;
+			$u = new ConcreteUser;
 			$nf = $u->config('NEWSFLOW_LAST_VIEWED');
 			if ($nf == 'FIRSTRUN') {
 				return false;

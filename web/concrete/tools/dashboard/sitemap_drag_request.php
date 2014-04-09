@@ -6,8 +6,6 @@ if (!$sh->canRead()) {
 	die(t('Access Denied'));
 }
 
-Loader::model('collection_types');
-
 $error = t("An unspecified error has occurred.");
 
 $originalPages = array();

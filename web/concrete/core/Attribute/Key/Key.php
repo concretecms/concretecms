@@ -156,15 +156,10 @@ class Key extends Object {
 		$r = $db->Execute($q, array($akCategoryHandle));
 		$list = array();
 		$txt = Loader::helper('text');
-		if ($pkgHandle) { 
-			Loader::model('attribute/categories/' . $akCategoryHandle, $pkgHandle);
-		} else {
-			Loader::model('attribute/categories/' . $akCategoryHandle);
-		}
-		$className = $txt->camelcase($akCategoryHandle);
+		
+		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key');
 		while ($row = $r->FetchRow()) {
-			$c1 = $className . 'AttributeKey';
-			$c1a = call_user_func(array($c1, 'getByID'), $row['akID']);
+			$c1a = call_user_func(array($className, 'getByID'), $row['akID']);
 			if (is_object($c1a)) {
 				$list[] = $c1a;
 			}

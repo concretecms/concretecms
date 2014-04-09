@@ -496,13 +496,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 		$this->controller = $controller;
 	}
 
+	/** 
+	 * @deprecated
+	 */
 	public function getController() {
-		if (isset($this->controller)) {
-			return $this->controller;
-		}
-		$cnt = Loader::controller($this);
-		$this->controller = $cnt;
-		return $cnt;
+		return $this->getPageController();
 	}
 	/**
 	 * @private

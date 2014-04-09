@@ -2,6 +2,8 @@
 
 namespace Concrete\Core\Controller;
 use Request;
+use View;
+use \Concrete\Core\Http\ResponseAssetGroup;
 abstract class AbstractController {
 
 	protected $helpers = array();

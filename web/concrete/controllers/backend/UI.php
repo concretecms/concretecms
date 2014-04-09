@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Controller\Backend;
-use \Concrete\Core\Controller\Controller;
+use Controller;
 use \Concrete\Core\View\DialogView;
 use Request;
 abstract class UI extends Controller {

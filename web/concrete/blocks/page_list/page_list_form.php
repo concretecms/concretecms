@@ -33,7 +33,7 @@
 		  <h2><?=t('Filter')?></h2>
 		  
 		  <?
-		  Loader::model('attribute/categories/collection');
+		  
 		  $cadf = CollectionAttributeKey::getByHandle('is_featured');
 		  ?>
 		  <label class="checkbox">

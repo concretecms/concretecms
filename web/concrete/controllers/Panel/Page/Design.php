@@ -1,6 +1,13 @@
 <?
 namespace Concrete\Controller\Panel\Page;
 use \Concrete\Controller\Backend\UI\Page as BackendUIPageController;
+use Permissions;
+use \Concrete\Core\Page\Template as PageTemplate;
+use PageTheme;
+use Request;
+use \Concrete\Core\Page\EditResponse as PageEditResponse;
+use Loader;
+use Response;
 
 class Design extends BackendUIPageController {
 

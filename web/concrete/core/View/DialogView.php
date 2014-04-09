@@ -1,5 +1,10 @@
 <?
 namespace Concrete\Core\View;
+use View;
+use \Concrete\Core\Asset\CssAsset;
+use \Concrete\Core\Asset\JavascriptAsset;
+use User;
+
 class DialogView extends View {
 	
 	protected function onBeforeGetContents() {

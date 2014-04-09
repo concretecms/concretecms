@@ -90,7 +90,7 @@ class Ip {
 	}	
 	
 	public function logSignupRequest($ignoreConfig=false) {		
-		Loader::model('signup_request');
+		
 		if (Config::get('IP_BAN_LOCK_IP_ENABLE') == 1) {
 			$signupRequest = new SignupRequest();
 			$signupRequest->id = null;
@@ -134,7 +134,7 @@ class Ip {
 			$time 		= $timeOffset ? time() + $timeOffset : 0;
 			
 			$db	= Loader::db();				
-			Loader::model('user_banned_ip');
+			
 			
 			//delete before inserting .. catching a duplicate (1062) doesn't 
 			//seem to be working in all enviornments.  If there's a permanant ban,

@@ -144,7 +144,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 	
 	/* Load featured add-ons from the marketplace.
 	 */
-	Loader::model('collection_attributes');
+	
 	$db = Loader::db();
 	
 	if(ENABLE_MARKETPLACE_SUPPORT && $tp->canInstallPackages()){

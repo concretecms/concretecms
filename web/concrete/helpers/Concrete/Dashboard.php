@@ -4,6 +4,7 @@ namespace Concrete\Helper\Concrete;
 use Loader;
 use Page;
 use URL;
+use Localization;
 use User as ConcreteUser;
 use Permissions;
 class Dashboard {
@@ -358,7 +359,7 @@ class Dashboard {
 }
 
 
-class Menu {
+class DashboardMenu {
 	
 	protected $items;
 	public function getItems($sort = true) {
@@ -426,8 +427,8 @@ class Menu {
 		if (is_object($qn)) {
 			return $qn;
 		}
-		$qn = new Menu();
-		$qnx = new DefaultMenu();
+		$qn = new DashboardMenu();
+		$qnx = new DefaultDashboardMenu();
 		$qn->items = $qnx->items;
 		return $qn;	
 	}
@@ -435,7 +436,7 @@ class Menu {
 
 }
 
-class DefaultMenu extends Menu {
+class DefaultDashboardMenu extends DashboardMenu {
 	
 	public $items = array(
 		'/dashboard/composer/write',

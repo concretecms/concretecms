@@ -84,7 +84,7 @@ $addSelected = true;
 			<label class="control-label" for="ccm-form-fileset"><?=t('Add uploaded files to a set?')?></label>
 			<div id="ccm-form-fileset">
 				<?php
-					Loader::model('file_set');
+					
 					$fs = new FileSet();
 					$fileSets = $fs->getMySets();
 					$sets = array(0 => t('None'));

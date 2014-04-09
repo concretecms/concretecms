@@ -76,7 +76,7 @@ class Concrete5_Controller_Page_Dashboard_Users_Points_Assign extends DashboardC
 	}
 
 	public function getUserPointActions() {
-		Loader::model('user_point/action_list');
+		
 		$res = array(0=>t('-- None --'));
 		$upal = new UserPointActionList();
 		$upal->filterByIsActive(1);		

@@ -16,13 +16,13 @@ class EditableStyle extends Object {
 	
 	public function getTypeHeaderName() {
 		switch($this->pThemeStyleType) {
-			case PageThemeEditableStyle::TSTYPE_COLOR: 
+			case static::TSTYPE_COLOR: 
 				return t('Colors');
 				break;
-			case PageThemeEditableStyle::TSTYPE_FONT:
+			case static::TSTYPE_FONT:
 				return t('Typography');
 				break;
-			case PageThemeEditableStyle::TSTYPE_CUSTOM:
+			case static::TSTYPE_CUSTOM:
 				return t('Custom CSS');
 				break;
 		}

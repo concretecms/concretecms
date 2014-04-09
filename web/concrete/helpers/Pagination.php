@@ -1,5 +1,8 @@
 <?
 namespace Concrete\Helper;
+use stdClass;
+use Loader;
+
 class Pagination {
 
 

@@ -55,7 +55,7 @@ class Concrete5_Controller_Page_Dashboard_System_Permissions_IpBlacklist extends
 	public function update_ipblacklist() {
 		$db = Loader::db();
 		if ($this->token->validate("update_ipblacklist")) {	
-			Loader::model('user_banned_ip');
+
 			//configs from top part form
 			$ip_ban_lock_ip_enable = (1 == $this->post('ip_ban_lock_ip_enable')) ? 1 : 0;
 			Config::save('IP_BAN_LOCK_IP_ENABLE',$ip_ban_lock_ip_enable);
@@ -138,7 +138,7 @@ class Concrete5_Controller_Page_Dashboard_System_Permissions_IpBlacklist extends
 	
 	public function view() {
 		//IP Address Blacklist
-		Loader::model('user_banned_ip');
+
 		$ip_ban_enable_lock_ip_after 	= Config::get('IP_BAN_LOCK_IP_ENABLE');
 		$ip_ban_enable_lock_ip_after	= ($ip_ban_enable_lock_ip_after == 1) ? 1 : 0;
 		$ip_ban_lock_ip_after_attempts 	= Config::get('IP_BAN_LOCK_IP_ATTEMPTS');

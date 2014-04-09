@@ -1,13 +1,13 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
 $form = Loader::helper('form');
-Loader::model('attribute/categories/user');
+
 $tp = Loader::helper('concrete/user');
 if (!$tp->canAccessUserSearchInterface()) { 
 	die(t("You have no access to users."));
 }
 
-Loader::model('user_list');
+
 $selectedAKIDs = array();
 
 $fldc = UserSearchColumnSet::getCurrent();

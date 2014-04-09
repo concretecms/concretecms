@@ -251,23 +251,23 @@ class AuthenticationType extends Object {
 		$atHandle = $this->getAuthenticationTypeHandle();
 
 		$locations = array();
-		$locations[] = implode('/',array(DIR_MODELS,DIRNAME_AUTHENTICATION,DIRNAME_AUTHENTICATION_TYPES,$atHandle,$_file));
+		$locations[] = implode('/',array(DIR_BASE,DIRNAME_AUTHENTICATION,DIRNAME_AUTHENTICATION_TYPES,$atHandle,$_file));
 		if ($_file == FILENAME_AUTHENTICATION_CONTROLLER) {
-			$locations[] = implode('/',array(DIR_MODELS,DIRNAME_AUTHENTICATION,DIRNAME_AUTHENTICATION_TYPES,$atHandle)).".php";
+			$locations[] = implode('/',array(DIR_BASE,DIRNAME_AUTHENTICATION,DIRNAME_AUTHENTICATION_TYPES,$atHandle)).".php";
 		}
 
 		if ($this->pkgID > 0) {
 			$pkgHandle = PackageList::getHandle($this->pkgID);
 			$dirp = is_dir(DIR_PACKAGES.'/'.$pkgHandle)?DIR_PACKAGES.'/'.$pkgHandle:DIR_PACKAGES_CORE.'/'.$pkgHandle;
-			$locations[] = implode('/',array($dirp,DIRNAME_MODELS,DIRNAME_AUTHENTICATION,DIRNAME_AUTHENTICATION_TYPES,$atHandle,$_file));
+			$locations[] = implode('/',array($dirp,DIRNAME_AUTHENTICATION,$atHandle,$_file));
 			if ($_file == FILENAME_AUTHENTICATION_CONTROLLER) {
-				$locations[] = implode('/',array($dirp,DIRNAME_MODELS,DIRNAME_AUTHENTICATION,DIRNAME_AUTHENTICATION_TYPES,$atHandle)).".php";
+				$locations[] = implode('/',array($dirp,DIRNAME_AUTHENTICATION,$atHandle)).".php";
 			}
 		}
 
-		$locations[] = implode('/',array(DIR_MODELS_CORE,DIRNAME_AUTHENTICATION,DIRNAME_AUTHENTICATION_TYPES,$atHandle,$_file));
+		$locations[] = implode('/',array(DIR_BASE_CORE,DIRNAME_AUTHENTICATION,$atHandle,$_file));
 		if ($_file == FILENAME_AUTHENTICATION_CONTROLLER) {
-			$locations[] = implode('/',array(DIR_MODELS_CORE,DIRNAME_AUTHENTICATION,DIRNAME_AUTHENTICATION_TYPES,$atHandle)).".php";
+			$locations[] = implode('/',array(DIR_BASE_CORE,DIRNAME_AUTHENTICATION,$atHandle)).".php";
 		}
 
 		foreach($locations as $location) {
@@ -342,8 +342,7 @@ class AuthenticationType extends Object {
 	protected function loadController() {
 		// local scope
 		$atHandle = $this->authTypeHandle;
-		$txt = Loader::helper('text');
-		$className = $txt->camelcase($this->authTypeHandle).'AuthenticationTypeController';
+		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Authentication\\' . helper('text')->camelcase($this->authTypeHandle) . '\\Controller');
 		$this->controller = new $className($this);
 	}
 

@@ -5,7 +5,7 @@ class Concrete5_Controller_Page_Dashboard_Blocks_Stacks extends DashboardControl
 	
 	public function on_start() {
 		parent::on_start();
-		Loader::model('stack/list');
+		
 		$stm = new StackList();
 		$stm->filterByGlobalAreas();
 		$this->set('globalareas', $stm->get());

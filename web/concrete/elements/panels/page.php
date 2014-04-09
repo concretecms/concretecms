@@ -1,5 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?
+	use Concrete\Core\Attribute\Set as AttributeSet;
 	$cp = new Permissions($c);
 	$pk = PermissionKey::getByHandle('edit_page_properties');
 	$pk->setPermissionObject($c);

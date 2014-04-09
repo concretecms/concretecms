@@ -1,7 +1,7 @@
 <?
 
 namespace Concrete\Helper\Concrete\UI;
-use \Concrete\Core\Controller\Controller;
+use Controller;
 use \Concrete\Core\Foundation\Object;
 
 class Menu {

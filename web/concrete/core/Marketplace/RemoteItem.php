@@ -97,7 +97,7 @@ class RemoteItem extends Object {
 		}
 			
 		try {
-			Loader::model('package_archive');
+			
 			$am = new PackageArchive($this->getHandle());
 			$am->install($file, true);
 		} catch (Exception $e) {
@@ -118,7 +118,7 @@ class RemoteItem extends Object {
 		}
 	
 		try {
-			Loader::model('package_archive');
+			
 			$am = new PackageArchive($this->getHandle());
 			$am->install($file, true);
 		} catch (Exception $e) {
