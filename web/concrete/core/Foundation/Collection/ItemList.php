@@ -254,7 +254,7 @@ class ItemList {
 	 */
 	public function getSummary() {
 
-		$ss = new stdClass;
+		$ss = new \stdClass;
 		$ss->chunk = $this->itemsPerPage;
 		$ss->order = $this->sortByDirection;
 		

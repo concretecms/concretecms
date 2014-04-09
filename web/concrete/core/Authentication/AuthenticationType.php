@@ -348,9 +348,3 @@ class AuthenticationType extends Object {
 	}
 
 }
-
-/**
- * Fatal authentication error, for things that you cannot possibly recover from.
- */
-class AuthenticationTypeFailureException extends exception {}
-

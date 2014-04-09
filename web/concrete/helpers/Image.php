@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Helper;
+use Loader;
+use File as ConcreteFile;
 class Image {
 
 	public $jpegCompression = 80;
@@ -226,7 +228,7 @@ class Image {
 	 */
 	public function getThumbnail($obj, $maxWidth, $maxHeight, $crop = false) {
 		$fID = false;
-		if ($obj instanceof File) {
+		if ($obj instanceof ConcreteFile) {
 			$path = $obj->getPath();
 			$fID = $obj->getFileID();
 		} else {
@@ -254,7 +256,7 @@ class Image {
 		
 		$src = REL_DIR_FILES_CACHE . '/' . $filename;
 		$abspath = DIR_FILES_CACHE . '/' . $filename;
-		$thumb = new stdClass;
+		$thumb = new \stdClass;
 		if (isset($abspath) && file_exists($abspath)) {			
 			$thumb->src = $src;
 			$dimensions = getimagesize($abspath);

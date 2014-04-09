@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Block\Search;
 use Loader;
+use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use \Concrete\Core\Page\Search\IndexedPageList;
 use \Concrete\Core\Block\BlockController;
 use Page;
 class Controller extends BlockController {
@@ -166,7 +168,6 @@ class Controller extends BlockController {
 		$aksearch = false;
 		$ipl->ignoreAliases();
 		if (is_array($_REQUEST['akID'])) {
-			Loader::model('attribute/categories/collection');
 			foreach($_REQUEST['akID'] as $akID => $req) {
 				$fak = CollectionAttributeKey::getByID($akID);
 				if (is_object($fak)) {

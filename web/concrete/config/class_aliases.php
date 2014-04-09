@@ -16,6 +16,7 @@ $list->registerMultiple(array(
 	'Cookie' => 'Core\Cookie\Cookie',
 	'Events' => 'Core\Events\Events',
 	'Page' => 'Core\Page\Page',
+	'PageController' => 'Core\Page\Controller\PageController',
 	'SinglePage' => 'Core\Page\Single',
 	'Config' => 'Core\Config\Config',
 	'PageType' => 'Core\Page\Type\Type',

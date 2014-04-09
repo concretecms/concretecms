@@ -1773,7 +1773,25 @@
       <col>cDateAdded</col>
     </index>
   </table>
-  <table name="Config">
+  <table name="CollectionSearchIndexAttributes">
+    <field name="cID" type="I" size="10">
+      <key/>
+      <unsigned/>
+    </field>
+  </table>
+  <table name="FileSearchIndexAttributes">
+    <field name="fID" type="I" size="10">
+      <key/>
+      <unsigned/>
+    </field>
+  </table>
+<table name="UserSearchIndexAttributes">
+    <field name="uID" type="I" size="10">
+      <key/>
+      <unsigned/>
+    </field>
+  </table>
+    <table name="Config">
     <field name="cfKey" type="C" size="64">
       <key/>
     </field>
