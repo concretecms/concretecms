@@ -27,7 +27,7 @@ class Configuration extends Object {
 
 
 	public function includeChooseTargetForm($pagetype = false, $page = false) {
-		Loader::element(DIRNAME_PAGE_TYPES . '/' . DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES . '/' . DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES_FORM . '/' . $this->getPageTypePublishTargetTypeHandle(), array('page' => $page, 'pagetype' => $pagetype), $this->pkgHandle);
+		Loader::element(DIRNAME_PAGE_TYPES . '/' . DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES . '/' . DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES_FORM . '/' . $this->getPageTypePublishTargetTypeHandle(), array('configuration' => $this, 'page' => $page, 'pagetype' => $pagetype), $this->pkgHandle);
 	}
 
 	public function getPageTypePublishTargetConfiguredTargetParentPageID() {

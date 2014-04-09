@@ -4,7 +4,7 @@ use Controller;
 use UserList;
 use \Concrete\Core\User\Search\ColumnSet\ColumnSet as UserSearchColumnSet;
 use \Concrete\Core\User\Search\Result\Result as UserSearchResult;
-use \Concrete\Core\User\Group\GroupList;
+use GroupList;
 use \Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
 use Permissions;
 use Loader;

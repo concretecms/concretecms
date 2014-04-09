@@ -30,7 +30,7 @@ if ($cp->canEditPagePermissions()) {
 		}
 	}
 	
-	$gl = new GroupSearch();
+	$gl = new GroupList();
 	$gl->sortBy('gID', 'asc');
 	$gArray = $gl->get();
 

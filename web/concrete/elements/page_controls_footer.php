@@ -8,7 +8,7 @@ $token = '&' . $valt->getParameter();
 $logouttoken = Loader::helper('validation/token')->generate('logout');
 $cID = $c->getCollectionID();
 
-$workflowList = \Concrete\Core\Page\Workflow\Progress\Progress::getList($c);
+$workflowList = \Concrete\Core\Workflow\Progress\PageProgress::getList($c);
 
 $canViewToolbar = $cp->canViewToolbar();
 
@@ -200,7 +200,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 					<? if ($canApprovePageVersions && !$c->isCheckedOut()) { ?>
 					<div class="ccm-page-status-bar-buttons">
 						<?
-						$pk = PagePermissionKey::getByHandle('approve_page_versions');
+						$pk = \Concrete\Core\Permission\Key\PageKey::getByHandle('approve_page_versions');
 						$pk->setPermissionObject($c);
 						$pa = $pk->getPermissionAccessObject();
 						if (is_object($pa)) {

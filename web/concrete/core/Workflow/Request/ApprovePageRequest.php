@@ -1,7 +1,17 @@
 <?php 
-namespace Concrete\Core\Page\Workflow\Request;
+namespace Concrete\Core\Workflow\Request;
 use Loader;
-class ApprovePageRequest extends Request {
+use Page;
+use \Concrete\Core\Workflow\Description as WorkflowDescription;
+use Permissions;
+use PermissionKey;
+use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
+use \Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
+use Events;
+use \Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
+use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
+
+class ApprovePageRequest extends PageRequest {
 	
 	protected $wrStatusNum = 30;
 

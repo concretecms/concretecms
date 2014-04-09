@@ -128,29 +128,28 @@ $rl->register('/system/panels/page/versions/delete', 'Controller\Panel\Page\Vers
 $rl->register('/system/panels/page/versions/approve', 'Controller\Panel\Page\Versions::approve');
 
 /** 
- * Editing Interfaces
+ * Panel Details
  */
-$rl->register('/system/panels/details/page/versions', 'PageVersionsPanelDetailController::view');
-$rl->register('/system/panels/details/page/seo', 'PageSeoPanelDetailController::view');
-$rl->register('/system/panels/details/page/seo/submit', 'PageSeoPanelDetailController::submit');
-$rl->register('/system/panels/details/page/location', 'PageLocationPanelDetailController::view');
-$rl->register('/system/panels/details/page/location/submit', 'PageLocationPanelDetailController::submit');
-$rl->register('/system/panels/details/page/preview', 'PageDesignPanelController::preview');
-$rl->register('/system/panels/details/page/composer', 'PageComposerPanelDetailController::view');
-$rl->register('/system/panels/details/page/composer/autosave', 'PageComposerPanelDetailController::autosave');
-$rl->register('/system/panels/details/page/composer/publish', 'PageComposerPanelDetailController::publish');
-$rl->register('/system/panels/details/page/composer/discard', 'PageComposerPanelDetailController::discard');
-$rl->register('/system/panels/details/page/attributes', 'PageAttributesPanelDetailController::view');
-$rl->register('/system/panels/details/page/attributes/submit', 'PageAttributesPanelDetailController::submit');
-$rl->register('/system/panels/details/page/attributes/add_attribute', 'PageAttributesPanelDetailController::add_attribute');
-$rl->register('/system/panels/details/page/caching', 'PageCachingPanelDetailController::view');
-$rl->register('/system/panels/details/page/caching/submit', 'PageCachingPanelDetailController::submit');
-$rl->register('/system/panels/details/page/caching/purge', 'PageCachingPanelDetailController::purge');
-$rl->register('/system/panels/details/page/permissions', 'PagePermissionsPanelDetailController::view');
-$rl->register('/system/panels/details/page/permissions/simple/submit', 'PagePermissionsPanelDetailController::save_simple');
-$rl->register('/system/panels/details/page/permissions/advanced/submit', 'PagePermissionsPanelDetailController::save_advanced');
 
-
+$rl->register('/system/panels/details/page/versions', 'Controller\Panel\Detail\Page\Versions::view');
+$rl->register('/system/panels/details/page/seo', 'Controller\Panel\Detail\Page\Seo::view');
+$rl->register('/system/panels/details/page/seo/submit', 'Controller\Panel\Detail\Page\Seo::submit');
+$rl->register('/system/panels/details/page/location', 'Controller\Panel\Detail\Page\Location::view');
+$rl->register('/system/panels/details/page/location/submit', 'Controller\Panel\Detail\Page\Location::submit');
+$rl->register('/system/panels/details/page/preview', 'Controller\Panel\Detail\Page\Preview::preview');
+$rl->register('/system/panels/details/page/composer', 'Controller\Panel\Detail\Page\Composer::view');
+$rl->register('/system/panels/details/page/composer/autosave', 'Controller\Panel\Detail\Page\Composer::autosave');
+$rl->register('/system/panels/details/page/composer/publish', 'Controller\Panel\Detail\Page\Composer::publish');
+$rl->register('/system/panels/details/page/composer/discard', 'Controller\Panel\Detail\Page\Composer::discard');
+$rl->register('/system/panels/details/page/attributes', 'Controller\Panel\Detail\Page\Attributes::view');
+$rl->register('/system/panels/details/page/attributes/submit', 'Controller\Panel\Detail\Page\Attributes::submit');
+$rl->register('/system/panels/details/page/attributes/add_attribute', 'Controller\Panel\Detail\Page\Attributes::add_attribute');
+$rl->register('/system/panels/details/page/caching', 'Controller\Panel\Detail\Page\Caching::view');
+$rl->register('/system/panels/details/page/caching/submit', 'Controller\Panel\Detail\Page\Caching::submit');
+$rl->register('/system/panels/details/page/caching/purge', 'Controller\Panel\Detail\Page\Caching::purge');
+$rl->register('/system/panels/details/page/permissions', 'Controller\Panel\Detail\Page\Permissions::view');
+$rl->register('/system/panels/details/page/permissions/simple/submit', 'Controller\Panel\Detail\Page\Permissions::save_simple');
+$rl->register('/system/panels/details/page/permissions/advanced/submit', 'Controller\Panel\Detail\Page\Permissions::save_advanced');
 
 /** 
  * Page Routes - these must come at the end.

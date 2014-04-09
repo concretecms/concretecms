@@ -6,7 +6,7 @@ use Environment;
 use \Concrete\Core\Page\Template as PageTemplate;
 use User;
 use Permissions;
-use \Concrete\Core\Cache\Page\PageCache;
+use PageCache;
 
 class PageView extends View {
 

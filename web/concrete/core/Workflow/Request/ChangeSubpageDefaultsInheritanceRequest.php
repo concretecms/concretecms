@@ -1,7 +1,10 @@
 <?
 namespace Concrete\Core\Page\Workflow\Request;
 use Loader;
-class ChangePagePermissionsInheritanceRequest extends Request {
+use PermissionKey;
+use \Concrete\Workflow\Workflow\Progress\Response as WorkflowProgressResponse;
+
+class ChangeSubpageDefaultsInheritanceRequest extends Request {
 	
 	protected $wrStatusNum = 30;
 
@@ -22,10 +25,14 @@ class ChangePagePermissionsInheritanceRequest extends Request {
 		$d = new WorkflowDescription();
 		$c = Page::getByID($this->cID, 'ACTIVE');
 		$link = Loader::helper('navigation')->getLinkToCollection($c, true);
-		$d->setEmailDescription(t("\"%s\" has pending permission inheritance. View the page here: %s.", $c->getCollectionName(), $link));
-		$d->setInContextDescription(t("Page Submitted to Change Permission Inheritance to %s.", ucfirst(strtolower($this->inheritance))));
-		$d->setDescription(t("<a href=\"%s\">%s</a> submitted to change permission inheritance to %s.", $link, $c->getCollectionName(), ucfirst(strtolower($this->inheritance))));
-		$d->setShortStatus(t("Permission Inheritance Changes"));
+		$d->setEmailDescription(t("\"%s\" has pending sub-page permission inhiterance changes. View the page here: %s.", $c->getCollectionName(), $link));
+		if ($this->inheritance == 0) {
+			$d->setInContextDescription(t("Sub-pages pending change to inherit permissions from page type."));
+		} else {
+			$d->setInContextDescription(t("Sub-pages pending change to inherit permissions from parent."));
+		}
+		$d->setDescription(t("<a href=\"%s\">%s</a> has pending sub-page permission inhiterance changes.", $link, $c->getCollectionName()));
+		$d->setShortStatus(t("Sub-Page Inheritance Changes"));
 		return $d;
 	}
 	
@@ -47,17 +54,7 @@ class ChangePagePermissionsInheritanceRequest extends Request {
 	
 	public function approve(WorkflowProgress $wp) {
 		$c = Page::getByID($this->getRequestedPageID());
-		switch($this->inheritance) {
-			case 'PARENT':
-				$c->inheritPermissionsFromParent();
-				break;
-			case 'TEMPLATE':
-				$c->inheritPermissionsFromDefaults();
-				break;
-			default:
-				$c->setPermissionsToManualOverride();
-				break;
-		}			
+		$c->setOverrideTemplatePermissions($this->inheritance);
 		$wpr = new WorkflowProgressResponse();
 		$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
 		return $wpr;

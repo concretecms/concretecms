@@ -1,7 +1,10 @@
 <?
 namespace Concrete\Core\Attribute;
-use Concrete\Core\Controller\AbstractController;
+use \Concrete\Core\Controller\AbstractController;
 use Loader;
+use View as AttributeTypeView;
+use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+
 class Controller extends AbstractController {
 	
 	protected $identifier;

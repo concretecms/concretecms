@@ -1,6 +1,16 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_Details_Page_Location extends BackendInterfacePageController {
+namespace Concrete\Controller\Panel\Detail\Page;
+use \Concrete\Controller\Backend\UI\Page as BackendInterfacePageController;
+use \Concrete\Core\Page\EditResponse as PageEditResponse;
+use PermissionKey;
+use Exception;
+use Loader;
+use Permissions;
+use Page;
+use \Concrete\Core\Workflow\Request\MovePageRequest as MovePagePageWorkflowRequest;
+use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
+
+class Location extends BackendInterfacePageController {
 
 	protected $viewPath = '/system/panels/details/page/location';
 
@@ -69,7 +79,7 @@ class Concrete5_Controller_Panel_Details_Page_Location extends BackendInterfaceP
 				$successMessage = t('Page location saved successfully.');
 			}
 
-			$r = new PageEditVersionResponse();
+			$r = new PageEditResponse();
 			$r->setPage($this->page);
 			$r->setMessage($successMessage);
 			$nc = Page::getByID($this->page->getCollectionID(), 'ACTIVE');

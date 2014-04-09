@@ -367,7 +367,7 @@ class User extends Object {
 	}
 
 	public function getUserGroupObjects() {
-		$gs = new GroupSearch();
+		$gs = new GroupList();
 		$gs->filterByUserID($this->uID);
 		return $gs->get();
 	}

@@ -7,7 +7,7 @@ class Concrete5_Controller_Page_Dashboard_Users_Group_Sets extends DashboardCont
 	public function on_start() {
 		parent::on_start();
 		$this->set('groupSets', GroupSet::getList());
-		$gl = new GroupSearch();
+		$gl = new GroupList();
 		$gl->setItemsPerPage(10000);
 		$gArray = $gl->getPage();
 		$groups = array();

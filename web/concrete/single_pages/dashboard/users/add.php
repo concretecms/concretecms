@@ -6,7 +6,7 @@ $th = Loader::helper('text');
 
 $attribs = UserAttributeKey::getRegistrationList();
 $assignment = PermissionKey::getByHandle('edit_user_properties')->getMyAssignment();
-$gl = new GroupSearch();
+$gl = new GroupList();
 $gl->setItemsPerPage(10000);
 $gArray = $gl->getPage();
 

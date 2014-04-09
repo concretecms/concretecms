@@ -1,12 +1,11 @@
 <?
-namespace Concrete\Core\Page\Workflow\Progress;
+namespace Concrete\Core\Workflow\Progress;
 use Loader;
-use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use Page;
 use \Concrete\Core\Workflow\Workflow;
-use \Concrete\Core\Page\Workflow\Request\Request as PageWorkflowRequest;
+use \Concrete\Core\Workflow\Request\PageRequest as PageWorkflowRequest;
 
-class Progress extends WorkflowProgress {  
+class PageProgress extends Progress {  
 	
 	protected $cID;
 

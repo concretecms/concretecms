@@ -1,8 +1,13 @@
 <?
-namespace Concrete\Core\Page\Workflow\Request;
-use \Concrete\Core\Workflow\Request as WorkflowRequest;
+namespace Concrete\Core\Workflow\Request;
+use \Concrete\Core\Workflow\Workflow;
 use Loader;
-abstract class Request extends WorkflowRequest {  
+use Page;
+use PermissionKey;
+use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
+use \Concrete\Core\Workflow\Progress\PageProgress as PageWorkflowProgress;
+use \Concrete\Workflow\Workflow\Progress\Response as WorkflowProgressResponse;
+abstract class PageRequest extends Request {  
 	
 	public function setRequestedPage($c) {
 		$this->cID = $c->getCollectionID();

@@ -20,7 +20,7 @@ class Concrete5_Controller_Page_Dashboard_System_Permissions_Site extends Dashbo
 			}
 		}
 		
-		$gl = new GroupSearch();
+		$gl = new GroupList();
 		$gl->filter('gID', REGISTERED_GROUP_ID, '>');
 		$gIDs = $gl->get();
 		$gArray = array();

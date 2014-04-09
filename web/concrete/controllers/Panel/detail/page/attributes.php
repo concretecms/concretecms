@@ -1,6 +1,13 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_Details_Page_Attributes extends BackendInterfacePageController {
+namespace Concrete\Controller\Panel\Detail\Page;
+use \Concrete\Controller\Backend\UI\Page as BackendInterfacePageController;
+use \Concrete\Core\Page\EditResponse as PageEditResponse;
+use PermissionKey;
+use stdClass;
+use Loader;
+use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+
+class Attributes extends BackendInterfacePageController {
 
 	protected $viewPath = '/system/panels/details/page/attributes';
 
@@ -102,7 +109,7 @@ class Concrete5_Controller_Panel_Details_Page_Attributes extends BackendInterfac
 				}
 			}
 
-			$r = new PageEditVersionResponse();
+			$r = new PageEditResponse();
 			$r->setPage($c);
 			$r->setMessage(t('Page attributes saved.'));
 			$r->outputJSON();

@@ -60,7 +60,7 @@ class Concrete5_Controller_Dashboard_Users_Groups_BulkUpdate extends DashboardCo
 			$this->error->add(t('You must specify a search string.'));
 		}
 		if (!$this->error->has()) {
-			$gl = new GroupSearch();
+			$gl = new GroupList();
 			$gl->filterByKeywords($gName);
 			$gl->setItemsPerPage(-1);
 			foreach($gl->get() as $g) {

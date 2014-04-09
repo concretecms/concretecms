@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Workflow;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use Loader;
 /**
  * @package Workflow
@@ -24,6 +25,17 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 	}
 	public function getRestrictedToPermissionKeyHandles() {
 		return $this->restrictedToPermissionKeyHandles;
+	}
+
+	public function getPermissionResponseClassName() {
+		return 'Core\\Permission\\Response\\Workflow';
+	}
+
+	public function getPermissionAssignmentClassName() {
+		return 'Core\\Permission\\Assignment\\WorkflowAssignment';	
+	}
+	public function getPermissionObjectKeyCategoryHandle() {
+		return 'page';
 	}
 	
 	public function getPermissionObjectIdentifier() {

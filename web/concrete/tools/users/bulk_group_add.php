@@ -23,7 +23,7 @@ foreach($users as $ui) {
 	}
 }
 
-$gl = new GroupSearch();
+$gl = new GroupList();
 $gl->setItemsPerPage(-1);
 $g1 = $gl->getPage();
 

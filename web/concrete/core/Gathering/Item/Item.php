@@ -218,7 +218,7 @@ abstract class Item extends Object {
 	}
 
 	public function setAutomaticGatheringItemTemplate() {
-		$arr = Loader::helper('array');
+		$arr = Loader::helper('arrays');
 		$db = Loader::db();
 		$myFeatureHandles = $this->getGatheringItemFeatureHandles();
 

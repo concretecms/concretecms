@@ -1,6 +1,9 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_Details_Page_Versions extends BackendInterfacePageController {
+namespace Concrete\Controller\Panel\Detail\Page;
+use \Concrete\Controller\Backend\UI\Page as BackendInterfacePageController;
+use Loader;
+
+class Versions extends BackendInterfacePageController {
 
 	protected $viewPath = '/system/panels/details/page/versions';
 

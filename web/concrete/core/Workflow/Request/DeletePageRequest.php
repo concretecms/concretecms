@@ -1,6 +1,9 @@
 <?
 namespace Concrete\Core\Page\Workflow\Request;
 use Loader;
+use \Concrete\Core\Workflow\Description as WorkflowDescription;
+use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
+use \Concrete\Workflow\Workflow\Progress\Response as WorkflowProgressResponse;
 class DeletePageRequest extends Request {
 	
 	protected $wrStatusNum = 100;

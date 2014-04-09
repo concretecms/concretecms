@@ -1,6 +1,16 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Panel_Details_Page_Permissions extends BackendInterfacePageController {
+namespace Concrete\Controller\Panel\Detail\Page;
+use \Concrete\Controller\Backend\UI\Page as BackendInterfacePageController;
+use \Concrete\Core\Page\EditResponse as PageEditResponse;
+use \Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
+use PermissionKey;
+use Loader;
+use GroupList;
+use PermissionAccess;
+use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
+use Group;
+
+class Permissions extends BackendInterfacePageController {
 
 	protected $viewPath = '/system/panels/details/page/permissions/simple';
 
@@ -48,7 +58,7 @@ class Concrete5_Controller_Panel_Details_Page_Permissions extends BackendInterfa
 				}
 			}
 			
-			$gl = new GroupSearch();
+			$gl = new GroupList();
 			$gl->sortBy('gID', 'asc');
 			$groups = $gl->get();
 
@@ -111,7 +121,7 @@ class Concrete5_Controller_Panel_Details_Page_Permissions extends BackendInterfa
 				$pt->assignPermissionAccess($pa);
 			}
 
-			$r = new PageEditVersionResponse();
+			$r = new PageEditResponse();
 			$r->setPage($this->page);
 			$r->setMessage(t('Page permissions saved successfully.'));
 			$r->outputJSON();

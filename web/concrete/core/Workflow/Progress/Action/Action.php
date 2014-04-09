@@ -57,22 +57,3 @@ class Action extends Object {
 		return $this->wrActionURL;
 	}	
 }
-
-class Concrete5_Model_WorkflowProgressCancelAction extends Concrete5_Model_WorkflowProgressAction {
-	
-	public function __construct() {
-		$this->setWorkflowProgressActionLabel(t('Cancel'));
-		$this->setWorkflowProgressActionTask('cancel');
-		$this->setWorkflowProgressActionStyleClass('btn-default');
-	}
-	
-}
-
-class Concrete5_Model_WorkflowProgressApprovalAction extends Concrete5_Model_WorkflowProgressAction {
-	
-	public function __construct() {
-		$this->setWorkflowProgressActionLabel(t('Approve'));
-		$this->setWorkflowProgressActionTask('approve');
-	}
-	
-}
