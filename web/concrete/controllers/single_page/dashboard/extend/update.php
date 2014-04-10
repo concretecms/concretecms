@@ -1,7 +1,15 @@
 <?
 
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_Extend_Update extends DashboardPageController {
+namespace Concrete\Controller\SinglePage\Dashboard\Extend;
+use \Concrete\Core\Page\Controller\DashboardPageController;
+use TaskPermission;
+use Package;
+use Marketplace;
+use \Concrete\Core\Marketplace\RemoteItem as MarketplaceRemoteItem;
+use Localization;
+use Loader;
+
+class Update extends DashboardPageController {
 	
 	public function on_start() {
 		$this->error = Loader::helper('validation/error');

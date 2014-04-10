@@ -1,7 +1,17 @@
 <?
 
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_Extend_Install extends DashboardPageController {
+namespace Concrete\Controller\SinglePage\Dashboard\Extend;
+use \Concrete\Core\Page\Controller\DashboardPageController;
+use Loader;
+use TaskPermission;
+use Package;
+use Localization;
+use Marketplace;
+use \Concrete\Core\Marketplace\RemoteItem as MarketplaceRemoteItem;
+use Exception;
+use User;
+
+class Install extends DashboardPageController {
 	
 	public function on_start() {
 		$this->error = Loader::helper('validation/error');
@@ -86,7 +96,7 @@ class Concrete5_Controller_Page_Dashboard_Extend_Install extends DashboardPageCo
 	public function install_package($package) {
 		$tp = new TaskPermission();
 		if ($tp->canInstallPackages()) { 
-			$p = Loader::package($package);
+			$p = Package::getClass($package);
 			if (is_object($p)) {
 				if (
 					(!$p->showInstallOptionsScreen()) ||

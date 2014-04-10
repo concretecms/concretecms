@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Helper;
+use Localization;
 class Number {
 
 	/** Rounds the value only out to its most significant digit.
@@ -24,7 +25,7 @@ class Number {
 		static $zl;
 		$locale = Localization::activeLocale();
 		if((!isset($zl)) || ($locale != $zl->toString())) {
-			$zl = new Zend_Locale($locale);
+			$zl = new \Zend_Locale($locale);
 		}
 		return $zl;
 	}
@@ -34,7 +35,7 @@ class Number {
 	* @example http://www.concrete5.org/documentation/how-tos/developers/formatting-numbers/ See the Formatting numbers how-to for more details
 	*/
 	public function isNumber($string) {
-		return Zend_Locale_Format::isNumber($string, array('locale' => $this->getZendLocale()));
+		return \Zend_Locale_Format::isNumber($string, array('locale' => $this->getZendLocale()));
 	}
 
 	/** Checks if a given string is valid representation of an integer in the current locale.
@@ -42,7 +43,7 @@ class Number {
 	* @example http://www.concrete5.org/documentation/how-tos/developers/formatting-numbers/ See the Formatting numbers how-to for more details
 	*/
 	public function isInteger($string) {
-		return Zend_Locale_Format::isInteger($string, array('locale' => $this->getZendLocale()));
+		return \Zend_Locale_Format::isInteger($string, array('locale' => $this->getZendLocale()));
 	}
 
 	/** Format a number with grouped thousands and localized decimal point/thousands separator.
@@ -59,7 +60,7 @@ class Number {
 		if(is_numeric($precision)) {
 			$options['precision'] = $precision;
 		}
-		return Zend_Locale_Format::toNumber($number, $options);
+		return \Zend_Locale_Format::toNumber($number, $options);
 	}
 
 
@@ -87,7 +88,7 @@ class Number {
 		if(is_numeric($precision)) {
 			$options['precision'] = $precision;
 		}
-		return Zend_Locale_Format::getNumber($string, $options);
+		return \Zend_Locale_Format::getNumber($string, $options);
 	}
 
 	/** Formats a size (measured in bytes, KB, MB, ...).

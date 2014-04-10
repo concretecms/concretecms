@@ -5,12 +5,12 @@ use Loader;
 class Result extends SearchResult {
 
 	public function getItemDetails($item) {
-		$node = new FileSearchResultItem($this, $this->listColumns, $item);
+		$node = new Item($this, $this->listColumns, $item);
 		return $node;
 	}
 
 	public function getColumnDetails($column) {
-		$node = new FileSearchResultColumn($this, $column);
+		$node = new Column($this, $column);
 		return $node;
 	}
 

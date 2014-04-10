@@ -1,6 +1,10 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_Files_AddSet extends DashboardPageController {
+namespace Concrete\Controller\SinglePage\Dashboard\Files;
+use \Concrete\Core\Page\Controller\DashboardPageController;
+use User;
+use FileSet;
+
+class AddSet extends DashboardPageController {
 
 	public $helpers = array('form','validation/token','concrete/interface'); 
 

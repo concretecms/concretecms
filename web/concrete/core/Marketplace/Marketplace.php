@@ -4,6 +4,9 @@ use Cache;
 use Loader;
 use Config;
 use Package;
+use TaskPermission;
+use URL;
+
 class Marketplace {
 	
 	const E_INVALID_BASE_URL = 20;
@@ -116,7 +119,7 @@ class Marketplace {
 		if ($tp->canInstallPackages()) {
 			if (!$this->isConnected()) {
 				if (!$completeURL) {
-					$completeURL = BASE_URL . View::url('/dashboard/extend/connect', 'connect_complete');
+					$completeURL = BASE_URL . URL::to('/dashboard/extend/connect', 'connect_complete');
 				}
 				$csReferrer = urlencode($completeURL);
 				$csiURL = urlencode(BASE_URL . DIR_REL);

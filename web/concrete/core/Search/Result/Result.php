@@ -1,5 +1,9 @@
 <?
-namespace Concrete\Core\Search;
+namespace Concrete\Core\Search\Result;
+use \Concrete\Core\Foundation\Collection\Database\Column\Set as DatabaseItemListColumnSet;
+use \Concrete\Core\Foundation\Collection\ItemList;
+use stdClass;
+
 class Result {
 
 	protected $summary;

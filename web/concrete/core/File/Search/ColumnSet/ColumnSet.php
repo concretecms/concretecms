@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\File\Search\ColumnSet;
 use Loader;
+use User;
 class ColumnSet extends \Concrete\Core\Foundation\Collection\Database\Column\Set {
 	protected $attributeClass = 'FileAttributeKey';
 	public function getCurrent() {
@@ -10,7 +11,7 @@ class ColumnSet extends \Concrete\Core\Foundation\Collection\Database\Column\Set
 			$fldc = @unserialize($fldc);
 		}
 		if (!($fldc instanceof DatabaseItemListColumnSet)) {
-			$fldc = new FileSearchDefaultColumnSet();
+			$fldc = new DefaultSet();
 		}
 		return $fldc;
 	}

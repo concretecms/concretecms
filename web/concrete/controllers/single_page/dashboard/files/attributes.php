@@ -1,6 +1,11 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_Files_Attributes extends DashboardPageController {
+namespace Concrete\Controller\SinglePage\Dashboard\Files;
+use \Concrete\Core\Page\Controller\DashboardPageController;
+use \Concrete\Core\Attribute\Type as AttributeType;
+use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use \Concrete\Core\Attribute\Key\FileKey as FileAttributeKey;
+ 
+class Attributes extends DashboardPageController {
 	
 	public $helpers = array('form');
 
