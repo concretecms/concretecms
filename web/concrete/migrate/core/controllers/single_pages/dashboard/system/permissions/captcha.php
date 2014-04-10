@@ -1,7 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Page_Dashboard_System_Permissions_Captcha extends DashboardController {
+class Concrete5_Controller_Page_Dashboard_System_Permissions_Captcha extends DashboardPageController {
 	
 	public function view() {
 		$list = SystemCaptchaLibrary::getList();

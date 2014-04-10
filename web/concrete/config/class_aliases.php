@@ -35,6 +35,7 @@ $list->registerMultiple(array(
 	'Area' => 'Core\Area\Area',
 	'GlobalArea' => 'Core\Area\GlobalArea',
 	'Stack' => 'Core\Page\Stack\Stack',
+	'StackList' => 'Core\Page\Stack\StackList',
 	'View' => 'Core\View\View',
 	'Job' => 'Core\Job\Job',
 	'JobSet' => 'Core\Job\Set',

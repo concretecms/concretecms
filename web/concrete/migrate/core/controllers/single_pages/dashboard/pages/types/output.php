@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Page_Dashboard_Pages_Types_Output extends DashboardController {
+class Concrete5_Controller_Page_Dashboard_Pages_Types_Output extends DashboardPageController {
 
 	public function view($ptID = false) {
 		$this->pagetype = PageType::getByID($ptID);

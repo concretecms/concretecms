@@ -2,6 +2,8 @@
 namespace Concrete\Core\Permission\Access;
 use \Concrete\Core\Permission\Duration as PermissionDuration;
 use Loader;
+use Page;
+use PermissionKey;
 class AddBlockBlockTypeAccess extends BlockTypeAccess {
 
 	public function duplicate($newPA = false) {

@@ -1,7 +1,11 @@
 <?
+namespace Concrete\Controller\SinglePage;
+use \Concrete\Core\Page\Controller\DashboardPageController;
+use Loader;
+use Page;
+use Permissions;
 
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard extends DashboardController {
+class Dashboard extends DashboardPageController {
 
 	public $helpers = array('form'); 
 	

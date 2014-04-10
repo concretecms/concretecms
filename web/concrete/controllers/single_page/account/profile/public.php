@@ -1,7 +1,12 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
+namespace Concrete\Controller\SinglePage\Account\Profile;
+use \Concrete\Core\Page\Controller\AccountPageController;
+use Loader;
+use User;
+use UserInfo;
+use Exception;
 
-class Concrete5_Controller_Page_Account_Profile_Public extends AccountPageController {
+class Public extends AccountPageController {
 	
 	public function save_complete() {
 		$this->set('success', t('Profile updated successfully.'));

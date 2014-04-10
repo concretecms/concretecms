@@ -1,15 +1,14 @@
 <?
-namespace \Concrete\Controller\Backend;
-use \Concrete\Core\Controller\PageController;
-
-class DashboardPage extends PageController {
+namespace Concrete\Core\Page\Controller;
+use Loader;
+class DashboardPageController extends PageController {
 	
 	protected $error; 
 	public $token;
 	protected $helpers = array('form');
 
 	public function enableNativeMobile() {
-		$md = new Mobile_Detect();
+		$md = new \Mobile_Detect();
 		if ($md->isMobile()) {
 			$this->addHeaderItem('<meta name="viewport" content="width=device-width,initial-scale=1"/>');
 		}

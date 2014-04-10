@@ -2,7 +2,10 @@
 namespace Concrete\Core\Page\Stack;
 use Loader;
 use PageList;
-class List extends PageList {
+use Page;
+use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+
+class StackList extends PageList {
 
 	public function __construct() {
 		$c = Page::getByPath(STACKS_PAGE_PATH);

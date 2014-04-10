@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_Scrapbook extends DashboardController {
+class Concrete5_Controller_Page_Dashboard_Scrapbook extends DashboardPageController {
 
 	public function view() {  
 	

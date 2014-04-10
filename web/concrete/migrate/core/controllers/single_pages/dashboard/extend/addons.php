@@ -1,7 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_Extend_Addons extends DashboardController {
+class Concrete5_Controller_Page_Dashboard_Extend_Addons extends DashboardPageController {
 	
 	public function on_start() {
 		$this->error = Loader::helper('validation/error');

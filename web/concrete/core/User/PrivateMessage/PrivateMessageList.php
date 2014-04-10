@@ -2,7 +2,7 @@
 namespace Concrete\Core\User\PrivateMessage;
 use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
 use Loader;
-class List extends DatabaseItemList {
+class PrivateMessageList extends DatabaseItemList {
 	
 	protected $itemsPerPage = 10;
 	protected $mailbox;

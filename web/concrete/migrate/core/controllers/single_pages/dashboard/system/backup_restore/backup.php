@@ -1,6 +1,6 @@
 <?php 
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_System_BackupRestore_Backup extends DashboardController { 	 
+class Concrete5_Controller_Page_Dashboard_System_BackupRestore_Backup extends DashboardPageController { 	 
 
    public function on_start() {
       $this->addHeaderItem(Loader::helper('html')->javascript('jquery.cookie.js'));

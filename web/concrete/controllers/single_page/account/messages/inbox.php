@@ -1,7 +1,13 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
+namespace Concrete\Controller\SinglePage\Account\Messages;
+use \Concrete\Core\Page\Controller\AccountPageController;
+use \Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
+use \Concrete\Core\User\PrivateMessage\PrivateMessage as UserPrivateMessage;
+use UserInfo;
+use Loader;
+use User;
 
-class Concrete5_Controller_Page_Account_Messages_Inbox extends AccountPageController {
+class Inbox extends AccountPageController {
 	
 	public function view() {
 		$this->view_mailbox('inbox');
@@ -139,7 +145,7 @@ class Concrete5_Controller_Page_Account_Messages_Inbox extends AccountPageContro
 			$u = new User();
 			$sender = UserInfo::getByID($u->getUserID());
 			$r = $sender->sendPrivateMessage($this->get('recipient'), $this->post('msgSubject'), $this->post('msgBody'), $this->get('msg'));
-			if ($r instanceof ValidationErrorHelper) {
+			if ($r instanceof \Concrete\Core\Helper\Validation\Error) {
 				$this->error = $r;
 			} else {
 				if ($this->post('msgID') > 0) { 

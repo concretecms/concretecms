@@ -1,7 +1,8 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-
-class Concrete5_Controller_Page_Account extends PageController {
+namespace Concrete\Core\Page\Controller;
+use Loader;
+use Page;
+class AccountPageControlle extends PageController {
 
 	public $helpers = array('html', 'form', 'text'); 
 
@@ -24,6 +25,5 @@ class Concrete5_Controller_Page_Account extends PageController {
 	}
 
 	
-
 
 }

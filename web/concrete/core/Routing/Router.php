@@ -40,7 +40,8 @@ class Router {
 		}
 		$rtPath = '/' . $rtPathTrimmed . '/';
 		$attributes = array();
-		if ($callback instanceof Closure) {
+
+		if ($callback instanceof \Closure) {
 			$attributes = ClosureRouteCallback::getRouteAttributes($callback);
 		} else if ($callback == 'dispatcher') {
 			$attributes = DispatcherRouteCallback::getRouteAttributes($callback);

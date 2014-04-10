@@ -1,6 +1,6 @@
 <? 
 
-class Concrete5_Controller_Dashboard_Users_Groups_BulkUpdate extends DashboardController {
+class Concrete5_Controller_Dashboard_Users_Groups_BulkUpdate extends DashboardPageController {
 
 	public function confirm() {
 		$this->move();

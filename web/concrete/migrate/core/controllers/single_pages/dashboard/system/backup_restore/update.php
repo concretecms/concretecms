@@ -20,7 +20,7 @@ if (!ini_get('safe_mode')) {
 	ini_set('max_execution_time', 0);
 }
 
-class Concrete5_Controller_Page_Dashboard_System_BackupRestore_Update extends DashboardController { 	 
+class Concrete5_Controller_Page_Dashboard_System_BackupRestore_Update extends DashboardPageController { 	 
 	
 	function view() {  
 		$upd = new Update();

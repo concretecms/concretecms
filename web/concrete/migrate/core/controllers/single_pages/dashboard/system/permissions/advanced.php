@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_System_Permissions_Advanced extends DashboardController {
+class Concrete5_Controller_Page_Dashboard_System_Permissions_Advanced extends DashboardPageController {
 	
 	public function enable_advanced_permissions() {
 		if ($this->token->validate("enable_advanced_permissions")) { 
