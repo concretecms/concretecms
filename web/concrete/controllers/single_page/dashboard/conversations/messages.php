@@ -1,7 +1,13 @@
 <?
 
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_Conversations_Messages extends DashboardPageController {
+namespace Concrete\Controller\SinglePage\Dashboard\Conversations;
+use \Concrete\Core\Page\Controller\DashboardPageController;
+use Loader;
+use \Concrete\Core\Conversation\FlagType\FlagTypeList as ConversationFlagTypeList;
+use \Concrete\Core\Conversation\Message as ConversationMessage;
+use \Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
+
+class Messages extends DashboardPageController {
 
 	public function view() {
 		$ml = new ConversationMessageList();
