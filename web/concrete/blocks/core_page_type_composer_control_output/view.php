@@ -1,5 +1,7 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
+	use \Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
+	use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
 	$control = PageTypeComposerOutputControl::getByID($ptComposerOutputControlID);
 	if (is_object($control)) {
 		$fls = PageTypeComposerFormLayoutSetControl::getByID($control->getPageTypeComposerFormLayoutSetControlID());

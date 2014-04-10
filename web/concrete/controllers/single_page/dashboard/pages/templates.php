@@ -1,6 +1,10 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_Pages_Templates extends DashboardPageController {
+namespace Concrete\Controller\SinglePage\Dashboard\Pages;
+use \Concrete\Core\Page\Controller\DashboardPageController;
+use PageTemplate;
+use Loader;
+
+class Templates extends DashboardPageController {
 	
 	public function view() { 
 		$this->set('templates', PageTemplate::getList());

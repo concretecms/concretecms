@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?
-	$set = PermissionSet::getSavedPermissionSetFromSession();
+	$set = \Concrete\Core\Permission\Set::getSavedPermissionSetFromSession();
 ?>
 <button class="btn btn-xs btn-default" type="button" id="ccm-permissions-list-copy-permissions"><?=t('Copy')?></button>
 <? if (is_object($set) && $set->getPermissionKeyCategory() == $pkCategory->getPermissionKeyCategoryHandle()) { ?>

@@ -7,7 +7,7 @@ use Block;
 use BlockType;
 use Environment;
 use Page;
-use \Concrete\Core\Page\Template as PageTemplate;
+use PageTemplate;
 use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
 
 class BlockControl extends Control {

@@ -136,7 +136,7 @@ $rl->register('/system/panels/details/page/seo', 'Controller\Panel\Detail\Page\S
 $rl->register('/system/panels/details/page/seo/submit', 'Controller\Panel\Detail\Page\Seo::submit');
 $rl->register('/system/panels/details/page/location', 'Controller\Panel\Detail\Page\Location::view');
 $rl->register('/system/panels/details/page/location/submit', 'Controller\Panel\Detail\Page\Location::submit');
-$rl->register('/system/panels/details/page/preview', 'Controller\Panel\Detail\Page\Preview::preview');
+$rl->register('/system/panels/details/page/preview', 'Controller\Panel\Page\Design::preview');
 $rl->register('/system/panels/details/page/composer', 'Controller\Panel\Detail\Page\Composer::view');
 $rl->register('/system/panels/details/page/composer/autosave', 'Controller\Panel\Detail\Page\Composer::autosave');
 $rl->register('/system/panels/details/page/composer/publish', 'Controller\Panel\Detail\Page\Composer::publish');

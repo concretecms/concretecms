@@ -13,7 +13,7 @@ use PageTheme;
 use Loader;
 use Job;
 use JobSet;
-use \Concrete\Core\Page\Template as PageTemplate;
+use PageTemplate;
 use CollectionAttributeKey;
 use \Concrete\Core\Block\BlockType\Set as BlockTypeSet;
 use \Concrete\Core\Attribute\Type as AttributeType;

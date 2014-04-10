@@ -2,7 +2,7 @@
 namespace Concrete\Core\Page\Type;
 use Loader;
 use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Page\Template as PageTemplate;
+use PageTemplate;
 use PermissionKey;
 use PermissionAccess;
 use \Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;

@@ -1,7 +1,13 @@
 <?
+namespace Concrete\Controller\SinglePage\Dashboard\Pages\Themes;
+use \Concrete\Core\Page\Controller\DashboardPageController;
+use Loader;
+use PageTheme;
+use Package;
+use PageTemplate;
+use Exception;
 
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_Pages_Themes_Inspect extends DashboardPageController {
+class Inspect extends DashboardPageController {
 
 	protected $helpers = array('html');
 

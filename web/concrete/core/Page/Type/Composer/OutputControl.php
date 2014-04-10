@@ -2,7 +2,7 @@
 namespace Concrete\Core\Page\Type\Composer;
 use Loader;
 use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Page\Template as PageTemplate;
+use PageTemplate;
 use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
 
 class OutputControl extends Object {
