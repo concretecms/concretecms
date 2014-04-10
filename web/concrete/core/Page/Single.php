@@ -5,6 +5,7 @@ use Loader;
 use Environment;
 use Config;
 use User;
+use Package;
 
 use CacheLocal;
 /**
@@ -117,7 +118,7 @@ class Single extends CorePage {
 
 	public static function getByID($cID, $version = 'RECENT') {
 		$where = "where Pages.cID = ? and Pages.cFilename is not null";
-		$c = new SinglePage;
+		$c = new static;
 		$c->populatePage($cID, $where, $version);
 		return $c;
 	}
@@ -288,7 +289,7 @@ class Single extends CorePage {
 		$r = $db->query("select Pages.cID from Pages inner join Collections on Pages.cID = Collections.cID where cFilename is not null order by cDateModified desc");
 		$pages = array();
 		while ($row = $r->fetchRow()) {
-			$p = new SinglePage;
+			$p = new static;
 			$p->populatePage($row['cID'], 'where Pages.cID = ?', 'RECENT');
 			$pages[] = $p;
 		}

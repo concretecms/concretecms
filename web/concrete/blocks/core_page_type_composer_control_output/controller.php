@@ -6,7 +6,7 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFo
 use \Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
 use \Concrete\Core\Backup\ContentImporter;
 use \Concrete\Core\Backup\ContentExporter;
-use \Concrete\Core\Page\Template as PageTemplate;
+use PageTemplate;
 
 class Controller extends BlockController {
 

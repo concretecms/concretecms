@@ -2,13 +2,13 @@
 namespace Concrete\Controller\Panel\Page;
 use \Concrete\Controller\Backend\UI\Page as BackendUIPageController;
 use Permissions;
-use \Concrete\Core\Page\Template as PageTemplate;
+use PageTemplate;
 use PageTheme;
 use Request;
 use \Concrete\Core\Page\EditResponse as PageEditResponse;
 use Loader;
 use Response;
-
+use View;
 class Design extends BackendUIPageController {
 
 	protected $viewPath = '/system/panels/page/design';
@@ -86,7 +86,7 @@ class Design extends BackendUIPageController {
 	public function preview_contents() {
 		$req = Request::getInstance();
 		$req->setCurrentPage($this->page);
-		$controller = Loader::controller($this->page);
+		$controller = $this->page->getPageController();
 		$view = $controller->getViewObject();
 		if ($_REQUEST['pTemplateID']) {
 			$pt = PageTemplate::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['pTemplateID']));

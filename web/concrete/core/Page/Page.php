@@ -6,7 +6,7 @@ use Collection;
 use Request;
 use \Concrete\Core\Page\Statistics as PageStatistics;
 use PageCache;
-use \Concrete\Core\Page\Template as PageTemplate;
+use PageTemplate;
 use \Events;
 use Config;
 use PageController;

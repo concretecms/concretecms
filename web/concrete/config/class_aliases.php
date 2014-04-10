@@ -24,6 +24,7 @@ $list->registerMultiple(array(
 	'SinglePage' => 'Core\Page\Single',
 	'Config' => 'Core\Config\Config',
 	'PageType' => 'Core\Page\Type\Type',
+	'PageTemplate' => 'Core\Page\Template',
 	'PageTheme' => 'Core\Page\Theme\Theme',
 	'PageList' => 'Core\Page\PageList',
 	'PageCache' => 'Core\Cache\Page\PageCache',

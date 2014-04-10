@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 // HELPERS
 $vt = Loader::helper('validation/token');
 $ih = Loader::helper('concrete/ui');
-
+use \Concrete\Core\Page\Theme\EditableStyle\EditableStyle as PageThemeEditableStyle;
 ?>
 
 	<? if (count($styles) > 0) {
@@ -21,8 +21,8 @@ $ih = Loader::helper('concrete/ui');
 	<?	
 		$customSt = false;
 		
-		foreach($styles as $sto) { 
-			$st = $sto[0];
+		foreach($styles as $st) { 
+
 			if ($st->getType() == PageThemeEditableStyle::TSTYPE_CUSTOM) {
 				$customST = $st;
 				continue;

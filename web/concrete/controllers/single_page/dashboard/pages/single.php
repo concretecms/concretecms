@@ -1,5 +1,11 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_Pages_Single extends DashboardPageController {
+<?php 
+namespace Concrete\Controller\SinglePage\Dashboard\Pages;
+use \Concrete\Core\Page\Controller\DashboardPageController;
+use \Concrete\Core\Page\Single as SinglePage;
+use Permissions;
+use Package;
+
+class Single extends DashboardPageController {
 
 	public function single_page_added() {
 		$this->set('message', t('Page Successfully Added.'));

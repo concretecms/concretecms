@@ -4,7 +4,8 @@ use \Concrete\Core\Page\Controller\DashboardPageController;
 use \Concrete\Core\Attribute\Type as AttributeType;
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use FileAttributeKey;
- 
+use Exception;
+
 class Attributes extends DashboardPageController {
 	
 	public $helpers = array('form');

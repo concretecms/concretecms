@@ -1,5 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
 $form = Loader::helper('form');
 $templates = array();
 $pagetemplates = PageTemplate::getList();

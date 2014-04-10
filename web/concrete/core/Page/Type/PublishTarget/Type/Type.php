@@ -4,6 +4,8 @@ use Loader;
 use PageType;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Package\PackageList;
+use Environment;
+
 abstract class Type extends Object {
 
 	abstract public function configurePageTypePublishTarget(PageType $pt, $post);

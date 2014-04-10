@@ -9,6 +9,9 @@ use \Concrete\Core\Package\PackageList;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Page\Theme\EditableStyle\EditableStyle;
 use \Concrete\Core\Page\Theme\EditableStyle\FontEditableStyle;
+use PageTemplate;
+use \Concrete\Core\Page\Single as SinglePage;
+
 /**
 *
 * A page's theme is a pointer to a directory containing templates, CSS files and optionally PHP includes, images and JavaScript files. 

@@ -1,7 +1,14 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
+namespace Concrete\Controller\SinglePage\Dashboard\Pages\Types;
+use \Concrete\Core\Page\Controller\DashboardPageController;
+use Loader;
+use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
+use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
+use View;
+use PageType;
 
-class Concrete5_Controller_Page_Dashboard_Pages_Types_Form extends DashboardPageController {
+
+class Form extends DashboardPageController {
 
 	public function view($ptID = false, $message = false) {
 		$this->pagetype = PageType::getByID($ptID);

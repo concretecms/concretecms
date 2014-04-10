@@ -3,10 +3,11 @@ namespace Concrete\Core\Page\View;
 use Loader;
 use View;
 use Environment;
-use \Concrete\Core\Page\Template as PageTemplate;
+use PageTemplate;
 use User;
 use Permissions;
 use PageCache;
+use PageTheme;
 
 class PageView extends View {
 

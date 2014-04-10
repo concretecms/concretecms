@@ -237,13 +237,6 @@
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Add" path="/dashboard/pages/themes/add" filename="/dashboard/pages/themes/add.php" pagetype="" description="" package="">
-			<attributes>
-				<attributekey handle="meta_keywords">
-					<value>theme</value>
-				</attributekey>
-			</attributes>
-        </page>
         <page name="Inspect" path="/dashboard/pages/themes/inspect" filename="/dashboard/pages/themes/inspect.php" pagetype="" description="" package="">
         	<attributes>
 				<attributekey handle="meta_keywords">

@@ -1,7 +1,11 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-
-class Concrete5_Controller_Page_Dashboard_Pages_Types extends DashboardPageController {
+namespace Concrete\Controller\SinglePage\Dashboard\Pages;
+use \Concrete\Core\Page\Controller\DashboardPageController;
+use PageType;
+use Loader;
+use PageTemplate;
+use \Concrete\Core\Page\Type\PublishTarget\Type as PageTypePublishTargetType;
+class Types extends DashboardPageController {
 
 	public function page_type_added() {
 		$this->set('success', t('Page Type added successfully.'));

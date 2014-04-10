@@ -1,6 +1,11 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_Pages_Attributes extends DashboardPageController {
+namespace Concrete\Controller\SinglePage\Dashboard\Pages;
+use \Concrete\Core\Page\Controller\DashboardPageController;
+use \Concrete\Core\Attribute\Type as AttributeType;
+use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use CollectionAttributeKey;
+use Exception;
+class Attributes extends DashboardPageController {
 	
 	public $helpers = array('form');
 
@@ -44,7 +49,7 @@ class Concrete5_Controller_Page_Dashboard_Pages_Attributes extends DashboardPage
 			
 			$this->redirect("/dashboard/pages/attributes", 'attribute_deleted');
 		} catch (Exception $e) {
-			$this->set('error', $e);
+			$this->error = $e;
 		}
 	}
 	
@@ -60,7 +65,7 @@ class Concrete5_Controller_Page_Dashboard_Pages_Attributes extends DashboardPage
 		$cnt = $type->getController();
 		$e = $cnt->validateKey($this->post());
 		if ($e->has()) {
-			$this->set('error', $e);
+			$this->error = $e;
 		} else {
 			$type = AttributeType::getByID($this->post('atID'));
 			$ak = CollectionAttributeKey::add($type, $this->post());
@@ -85,7 +90,7 @@ class Concrete5_Controller_Page_Dashboard_Pages_Attributes extends DashboardPage
 			$cnt->setAttributeKey($key);
 			$e = $cnt->validateKey($this->post());
 			if ($e->has()) {
-				$this->set('error', $e);
+				$this->error = $e;
 			} else {
 				$type = AttributeType::getByID($this->post('atID'));
 				$key->update($this->post());

@@ -1,7 +1,11 @@
 <?
 
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_Pages_Themes_Customize extends DashboardPageController {
+namespace Concrete\Controller\SinglePage\Dashboard\Pages\Themes;
+use \Concrete\Core\Page\Controller\DashboardPageController;
+use PageTheme;
+use Cache;
+use View;
+class Customize extends DashboardPageController {
 
 	protected $helpers = array('html', 'form');
 

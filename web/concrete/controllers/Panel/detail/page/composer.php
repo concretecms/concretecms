@@ -5,7 +5,7 @@ use \Concrete\Core\Page\EditResponse as PageEditResponse;
 use PageType;
 use View;
 use Loader;
-use \Concrete\Core\Page\Template as PageTemplate;
+use PageTemplate;
 
 class Composer extends BackendInterfacePageController {
 
