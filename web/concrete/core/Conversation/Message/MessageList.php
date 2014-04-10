@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Core\Conversation\Message;
 use Loader;
-use \Concrete\Core\Foundation\Collection\DatabaseItemList;
-class List extends DatabaseItemList {
+use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+class MessageList extends DatabaseItemList {
 
 	protected $sortBy = 'cnvMessageDateCreated';
 	protected $sortByDirection = 'asc';

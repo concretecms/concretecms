@@ -1,8 +1,8 @@
 <?php
 namespace Concrete\Core\Conversation\FlagType;
 use Loader;
-use \Concrete\Core\Foundation\Collection\DatabaseItemList;
-class List extends DatabaseItemList {
+use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+class FlagTypeList extends DatabaseItemList {
 
 	public function __construct() {
 		$this->setQuery('select * from ConversationFlaggedMessageTypes');
