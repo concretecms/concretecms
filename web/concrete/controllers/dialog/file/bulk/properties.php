@@ -4,7 +4,7 @@ use \Concrete\Controller\Backend\UI as BackendInterfaceController;
 use FilePermissions;
 use \Concrete\Core\Http\ResponseAssetGroup;
 use \Concrete\Core\File\EditResponse as FileEditResponse;
-use \Concrete\Core\Attribute\Key\FileKey as FileAttributeKey;
+use FileAttributeKey;
 use Permissions;
 
 class Properties extends BackendInterfaceController {

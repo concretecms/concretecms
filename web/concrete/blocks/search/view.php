@@ -4,7 +4,7 @@
 	<?=$error?><br/><br/>
 <? } ?>
 
-<form action="<?=$this->url( $resultTargetURL )?>" method="get" class="ccm-search-block-form">
+<form action="<?=$view->url( $resultTargetURL )?>" method="get" class="ccm-search-block-form">
 
 	<? if( strlen($title)>0){ ?><h3><?=$title?></h3><? } ?>
 	

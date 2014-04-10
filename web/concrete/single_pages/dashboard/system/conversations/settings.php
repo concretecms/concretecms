@@ -3,7 +3,7 @@ $form = Loader::helper('form');
 $file = Loader::helper('file');
 echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Conversations Settings'), false, 'span8 offset2', false);
 ?>
-<form action="<?=$this->action('save')?>" method='post'>
+<form action="<?=$view->action('save')?>" method='post'>
 	<div class='ccm-pane-body'>
 		<fieldset>
 			<legend><?php echo t('Conversation File Attachment Settings'); ?></legend>

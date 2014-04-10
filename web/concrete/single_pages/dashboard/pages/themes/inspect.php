@@ -8,7 +8,7 @@ $ci = Loader::helper('concrete/ui');
 
 		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Inspect Theme'), false, 'span10 offset1', false);?>
     
-    <form method="post" id="ccm-inspect-form" action="<?=$this->url('/dashboard/pages/themes/inspect/', 'activate_files', $pThemeID)?>">
+    <form method="post" id="ccm-inspect-form" action="<?=$view->url('/dashboard/pages/themes/inspect/', 'activate_files', $pThemeID)?>">
     
 	<div class="ccm-pane-body" style="padding-top:10px;">
     
@@ -108,7 +108,7 @@ $ci = Loader::helper('concrete/ui');
     
     <div class="ccm-pane-footer">
         <?
-        print $ci->button(t('Return to Themes'), $this->url('/dashboard/pages/themes'), 'left');
+        print $ci->button(t('Return to Themes'), $view->url('/dashboard/pages/themes'), 'left');
         if ($pf > 0) { 
             print $ci->submit(t('Ok'), 'ccm-inspect-form', 'right', 'primary'); ?>
         <? }?>

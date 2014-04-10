@@ -3,7 +3,7 @@ namespace Concrete\Core\Page\Type\Composer\Control;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use Controller;
-use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use CollectionAttributeKey;
 class CollectionAttributeControl extends Control {
 	
 	protected $akID;

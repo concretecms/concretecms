@@ -2,6 +2,8 @@
 
 namespace Concrete\Helper\Concrete;
 use Loader;
+use Config;
+use \Concrete\Core\Authentication\AuthenticationType;
 class Avatar {
 
 	/**

@@ -3,7 +3,7 @@ namespace \Concrete\Controller\Dialog\Search;
 use \Concrete\Controller\Backend\UI as BackendInterfaceController;
 use \Concrete\Core\File\Search\ColumnSet\ColumnSet as FileSearchColumnSet;
 use \Concrete\Core\File\Search\ColumnSet\Available as FileSearchAvailableColumnSet;
-use \Concrete\Core\Attribute\Key\FileKey as FileAttributeKey;
+use FileAttributeKey;
 use \Concrete\Core\File\Search\Result\Result as FileSearchResult;
 use \Concrete\Core\Search\Response as SearchResponse;
 

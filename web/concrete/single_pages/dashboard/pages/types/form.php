@@ -4,7 +4,7 @@
 
 <div style="display: none">
 	<div id="ccm-page-type-composer-add-set">
-		<form method="post" class="form-stacked" action="<?=$this->action('add_set', $pagetype->getPageTypeID())?>">
+		<form method="post" class="form-stacked" action="<?=$view->action('add_set', $pagetype->getPageTypeID())?>">
 			<?=Loader::helper('validation/token')->output('add_set')?>
 			<div class="control-group">
 				<?=$form->label('ptComposerFormLayoutSetName', t('Set Name'))?>
@@ -42,7 +42,7 @@
 				<div class="ccm-page-type-composer-form-layout-control-set-name" ><? if ($set->getPageTypeComposerFormLayoutSetName()) { ?><?=$set->getPageTypeComposerFormLayoutSetName()?><? } else { ?><?=t('(No Name)')?><? } ?></div>
 				<div style="display: none">
 					<div data-delete-set-dialog="<?=$set->getPageTypeComposerFormLayoutSetID()?>">
-						<form data-delete-set-form="<?=$set->getPageTypeComposerFormLayoutSetID()?>" action="<?=$this->action('delete_set', $set->getPageTypeComposerFormLayoutSetID())?>" method="post">
+						<form data-delete-set-form="<?=$set->getPageTypeComposerFormLayoutSetID()?>" action="<?=$view->action('delete_set', $set->getPageTypeComposerFormLayoutSetID())?>" method="post">
 						<?=t("Delete this form layout set? This cannot be undone.")?>
 						<?=Loader::helper('validation/token')->output('delete_set')?>
 						</form>
@@ -51,7 +51,7 @@
 
 				<div style="display: none">
 					<div data-edit-set-dialog="<?=$set->getPageTypeComposerFormLayoutSetID()?>">
-						<form data-edit-set-form="<?=$set->getPageTypeComposerFormLayoutSetID()?>" action="<?=$this->action('update_set', $set->getPageTypeComposerFormLayoutSetID())?>" method="post">
+						<form data-edit-set-form="<?=$set->getPageTypeComposerFormLayoutSetID()?>" action="<?=$view->action('update_set', $set->getPageTypeComposerFormLayoutSetID())?>" method="post">
 						<div class="control-group">
 							<?=$form->label('ptComposerFormLayoutSetName', t('Set Name'))?>
 							<div class="controls">
@@ -162,7 +162,7 @@ $(function() {
 			$.ajax({
 				type: 'post',
 				data: formData,
-				url: '<?=$this->action("update_set_display_order")?>',
+				url: '<?=$view->action("update_set_display_order")?>',
 				success: function() {
 
 				}
@@ -193,7 +193,7 @@ $(function() {
 			$.ajax({
 				type: 'post',
 				data: formData,
-				url: '<?=$this->action("update_set_control_display_order")?>',
+				url: '<?=$view->action("update_set_control_display_order")?>',
 				success: function() {}
 			});
 
@@ -232,7 +232,7 @@ $(function() {
 						$.ajax({
 							type: 'post',
 							data: formData,
-							url: '<?=$this->action("delete_set_control")?>',
+							url: '<?=$view->action("delete_set_control")?>',
 							success: function() {
 								jQuery.fn.dialog.hideLoader();
 								jQuery.fn.dialog.closeAll();

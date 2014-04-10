@@ -11,7 +11,7 @@ if ($tp->canInstallPackages()) {
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Browse Add-Ons'), t('Get more add-ons from concrete5.org.'), false, false);?>
 <div class="ccm-pane-options">
-	<?=Loader::element('marketplace/search_form', array('action' => $this->url('/dashboard/extend/add-ons'), 'sets' => $sets, 'sortBy' => $sortBy));?>
+	<?=Loader::element('marketplace/search_form', array('action' => $view->url('/dashboard/extend/add-ons'), 'sets' => $sets, 'sortBy' => $sortBy));?>
 </div>
 <div class="ccm-pane-body">
 	<?=Loader::element('marketplace/results', array('type' => 'addons', 'items' => $items));?>

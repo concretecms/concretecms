@@ -17,12 +17,12 @@ foreach($posts as $p) { ?>
     <div class="guestBook-entry<?php if ($c->getVersionObject()->getVersionAuthorUserName() == $u->getUserName()) {?> authorPost <?php }?>">
     	<? if($bp->canWrite()) { ?> 
 				<div class="guestBook-manage-links">
-                	<a href="<?=$this->action('loadEntry')."&entryID=".$p['entryID'];?>#guestBookForm"><?=t('Edit')?></a> | 
-					<a href="<?=$this->action('removeEntry')."&entryID=".$p['entryID'];?>" onclick="return confirm('<?=t("Are you sure you would like to remove this comment?")?>');"><?=t('Remove')?></a> |
+                	<a href="<?=$view->action('loadEntry')."&entryID=".$p['entryID'];?>#guestBookForm"><?=t('Edit')?></a> | 
+					<a href="<?=$view->action('removeEntry')."&entryID=".$p['entryID'];?>" onclick="return confirm('<?=t("Are you sure you would like to remove this comment?")?>');"><?=t('Remove')?></a> |
                 	<? if($p['approved']) { ?>
- 	                   	<a href="<?=$this->action('unApproveEntry')."&entryID=".$p['entryID'];?>"><?=t('Un-Approve')?></a>
+ 	                   	<a href="<?=$view->action('unApproveEntry')."&entryID=".$p['entryID'];?>"><?=t('Un-Approve')?></a>
                     <? } else { ?>
-	                    <a href="<?=$this->action('approveEntry')."&entryID=".$p['entryID'];?>"><?=t('Approve')?></a>
+	                    <a href="<?=$view->action('approveEntry')."&entryID=".$p['entryID'];?>"><?=t('Approve')?></a>
 					<? } ?>
                 </div>
 			<? } ?>
@@ -61,7 +61,7 @@ foreach($posts as $p) { ?>
 		<div id="guestBook-formBlock-<?=$controller->bID?>" class="guestBook-formBlock">
 
 			<h5 class="guestBook-formBlock-title"><?php echo t('Leave a Reply')?></h5>
-			<form method="post" action="<?=$this->action('form_save_entry', '#guestBookForm-'.$controller->bID)?>">
+			<form method="post" action="<?=$view->action('form_save_entry', '#guestBookForm-'.$controller->bID)?>">
 			<? if(isset($Entry->entryID)) { ?>
 				<input type="hidden" name="entryID" value="<?=$Entry->entryID?>" />
 			<? } ?>

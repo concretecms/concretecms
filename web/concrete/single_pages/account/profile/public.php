@@ -10,12 +10,12 @@
 <div id="ccm-profile-controls">
 	<? if ($canEdit) { ?>
 		<div class="btn-group">
-			<a href="<?=$this->url('/account/profile/edit')?>" class="btn btn-mini"><i class="icon-cog"></i> <?=t('Edit')?></a>
-			<a href="<?=$this->url('/account')?>" class="btn btn-mini"><i class="icon-home"></i> <?=t('Home')?></a>
+			<a href="<?=$view->url('/account/profile/edit')?>" class="btn btn-mini"><i class="icon-cog"></i> <?=t('Edit')?></a>
+			<a href="<?=$view->url('/account')?>" class="btn btn-mini"><i class="icon-home"></i> <?=t('Home')?></a>
 		</div>
 	<? } else { ?>
 		<? if ($profile->getAttribute('profile_private_messages_enabled')) { ?>
-			<a href="<?=$this->url('/account/messages/inbox', 'write', $profile->getUserID())?>" class="btn btn-mini"><i class="icon-user"></i> <?=t('Connect')?></a>		
+			<a href="<?=$view->url('/account/messages/inbox', 'write', $profile->getUserID())?>" class="btn btn-mini"><i class="icon-user"></i> <?=t('Connect')?></a>		
 		<? } ?>
 	<? } ?>
 </div>

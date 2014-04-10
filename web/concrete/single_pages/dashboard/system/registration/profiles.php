@@ -4,7 +4,7 @@
 $h = Loader::helper('concrete/ui');
 $form = Loader::helper('form');
 ?>
-    <form method="post" class="form-horizontal" id="public-profiles-form" action="<?php echo $this->url('/dashboard/system/registration/profiles', 'update_profiles')?>">  
+    <form method="post" class="form-horizontal" id="public-profiles-form" action="<?php echo $view->url('/dashboard/system/registration/profiles', 'update_profiles')?>">  
     
     <div class="ccm-pane-body"> 
     	

@@ -2,12 +2,13 @@
 namespace Concrete\Controller\Search;
 use Controller;
 use GroupList;
-use \Concrete\Core\Group\Search\ColumnSet\ColumnSet as GroupSearchColumnSet;
+use \Concrete\Core\User\Group\GroupSearchColumnSet;
 use \Concrete\Core\Search\Result\Result as SearchResult;
 use Permissions;
 use Loader;
 use stdClass;
 use TaskPermission;
+use URL;
 
 class Groups extends Controller {
 

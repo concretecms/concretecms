@@ -17,20 +17,20 @@ if($success) { ?>
 		case "registered": 
 			?>
 			<p><strong><?=$successMsg ?></strong><br/><br/>
-			<a href="<?=$this->url('/')?>"><?=t('Return to Home')?></a></p>
+			<a href="<?=$view->url('/')?>"><?=t('Return to Home')?></a></p>
 			<? 
 		break;
 		case "validate": 
 			?>
 			<p><?=$successMsg[0] ?></p>
 			<p><?=$successMsg[1] ?></p>
-			<p><a href="<?=$this->url('/')?>"><?=t('Return to Home')?></a></p>
+			<p><a href="<?=$view->url('/')?>"><?=t('Return to Home')?></a></p>
 			<?
 		break;
 		case "pending":
 			?>
 			<p><?=$successMsg ?></p>
-			<p><a href="<?=$this->url('/')?>"><?=t('Return to Home')?></a></p>
+			<p><a href="<?=$view->url('/')?>"><?=t('Return to Home')?></a></p>
             <?
 		break;
 	} ?>
@@ -38,7 +38,7 @@ if($success) { ?>
 </div>
 <? 
 } else { ?>
-	<form method="post" action="<?=$this->url('/register', 'do_register')?>" class="form-horizontal">
+	<form method="post" action="<?=$view->url('/register', 'do_register')?>" class="form-horizontal">
 		<div class="row">
 			<div class="span10 offset1">
 				<fieldset>

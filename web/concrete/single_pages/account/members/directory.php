@@ -8,7 +8,7 @@
 <div class="navbar">
 <div class="navbar-inner">
 
-<form method="get" action="<?=$this->action('search_members')?>" class="navbar-form">
+<form method="get" action="<?=$view->action('search_members')?>" class="navbar-form">
 	<input name="keywords" type="text" value="<?=$keywords?>" size="20" class="" placeholder="<?=t('Search')?>" />		
 	<input name="submit" type="button" value="<?=t('Search')?>" class="btn" />	
 </form>
@@ -32,8 +32,8 @@
 		foreach($users as $user) { 	?>
 		
 		<tr>
-			<td class="ccm-members-directory-avatar"><a href="<?=$this->url('/account/profile/public','view', $user->getUserID())?>"><?=$av->outputUserAvatar($user)?></a></td>
-			<td class="ccm-members-directory-name"><a href="<?=$this->url('/account/profile/public','view', $user->getUserID())?>"><?=ucfirst($user->getUserName())?></a></td>
+			<td class="ccm-members-directory-avatar"><a href="<?=$view->url('/account/profile/public','view', $user->getUserID())?>"><?=$av->outputUserAvatar($user)?></a></td>
+			<td class="ccm-members-directory-name"><a href="<?=$view->url('/account/profile/public','view', $user->getUserID())?>"><?=ucfirst($user->getUserName())?></a></td>
 			<?
 			foreach($attribs as $ak) { ?>
 				<td>

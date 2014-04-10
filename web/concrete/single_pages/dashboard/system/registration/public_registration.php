@@ -3,7 +3,7 @@
 <?php
 $h = Loader::helper('concrete/ui');
 ?>	
-    <form class="form-stacked" method="post" id="registration-type-form" action="<?php echo $this->url('/dashboard/system/registration/public_registration', 'update_registration_type')?>">  
+    <form class="form-stacked" method="post" id="registration-type-form" action="<?php echo $view->url('/dashboard/system/registration/public_registration', 'update_registration_type')?>">  
     
     <div class="ccm-pane-body"> 
     	

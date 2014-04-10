@@ -24,7 +24,7 @@
 		
 		</div>
 		<? if ($profile->getUserProfilePrivateMessagesEnabled() == 1) { ?>
-			<a href="<?=$this->url('/profile/messages', 'write', $profile->getUserID())?>"><?=t('Send Private Message')?></a>	
+			<a href="<?=$view->url('/profile/messages', 'write', $profile->getUserID())?>"><?=t('Send Private Message')?></a>	
 		<? } ?>
 		
 	</div>
@@ -52,7 +52,7 @@
 	?>
 	</div>
 
-		<form method="get" action="<?=$this->url('/members')?>">
+		<form method="get" action="<?=$view->url('/members')?>">
 		<h4><?=t('Search Members')?></h4>
 		<?
 		$form = Loader::helper('form');

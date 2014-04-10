@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Helper\Concrete;
 use Loader;
+use TaskPermission;
+
 /**
  * @access private
  * @package Helpers

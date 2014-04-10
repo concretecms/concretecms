@@ -418,6 +418,9 @@ class Key extends Object {
 	}
 	
 	public function reindex($tbl, $columnHeaders, $attribs, $rs) {
+
+		return;
+		
 		$db = Loader::db();
 		$columns = $db->MetaColumns($tbl);
 		

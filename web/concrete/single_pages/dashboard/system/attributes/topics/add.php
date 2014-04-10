@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Topic Tree'), false, 'span8 offset2', false);?>
-<form method="post" action="<?=$this->action('submit')?>" class="form-horizontal">
+<form method="post" action="<?=$view->action('submit')?>" class="form-horizontal">
 
 <div class="ccm-pane-body">
 <? if (PermissionKey::getByHandle('add_topic_tree')->validate()) { ?>
@@ -18,7 +18,7 @@ Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Topic
 </div>
 
 <div class="ccm-pane-footer">
-	<a href="<?=$this->url('/dashboard/system/attributes/topics')?>" class="btn pull-left"><?=t("Cancel")?></a>
+	<a href="<?=$view->url('/dashboard/system/attributes/topics')?>" class="btn pull-left"><?=t("Cancel")?></a>
 	<button type="submit" class="btn btn-primary pull-right"><?=t('Add Topic Tree')?></button>
 </div>
 </form>

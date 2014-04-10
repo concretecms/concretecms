@@ -14,7 +14,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Comm
 				<th class="span1"></th>
 			</tr>
 			<? foreach($ratingTypes as $ratingType) { ?>
-				<form action="<?=$this->action('save')?>" method='post'>
+				<form action="<?=$view->action('save')?>" method='post'>
 					<?=$form->hidden('rtID', $ratingType->getConversationRatingTypeID());?>
 					<tr>
 						<td class="span1"><?php echo $ratingType->cnvRatingTypeName;?></td>

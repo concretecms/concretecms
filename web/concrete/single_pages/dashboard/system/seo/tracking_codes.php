@@ -7,7 +7,7 @@ $ih = Loader::helper('concrete/ui');
 $form = Loader::helper('form');
 ?>
 <?=$h->getDashboardPaneHeaderWrapper(t('Tracking Codes'), false, 'span8 offset2', false);?>
-<form id="tracking-code-form" action="<?=$this->action('')?>" method="post">
+<form id="tracking-code-form" action="<?=$view->action('')?>" method="post">
 <div class="ccm-pane-body">
 	<?=$this->controller->token->output('update_tracking_code')?>
 	<div class="clearfix">

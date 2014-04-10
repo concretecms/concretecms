@@ -1,5 +1,8 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Core\Tree\Tree;
+use \Concrete\Core\Tree\Node\Node as TreeNode;
+
 $form = Loader::helper('form');
 $treeID = Loader::helper('security')->sanitizeInt($_REQUEST['treeID']);
 $tree = Tree::getByID($treeID);

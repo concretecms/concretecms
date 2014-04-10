@@ -6,7 +6,7 @@ echo $dh->getDashboardPaneHeaderWrapper(t('Proxy Server Settings'), t('Configure
 ?>
 
 <form method="post" class="form-stacked" id="proxy-form"
-	action="<?php echo $this->action('update_proxy'); ?>">
+	action="<?php echo $view->action('update_proxy'); ?>">
 	<div class="ccm-pane-body">
 		<?php echo $this->controller->token->output('update_proxy'); ?>
 

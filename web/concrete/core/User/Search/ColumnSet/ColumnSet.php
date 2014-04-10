@@ -1,6 +1,11 @@
 <?php
 namespace Concrete\Core\User\Search\ColumnSet;
 use PermissionKey;
+use Loader;
+use User;
+use \Concrete\Core\Foundation\Collection\Database\Column\Set as DatabaseItemListColumnSet;
+use \Concrete\Core\Foundation\Collection\Database\Column\AttributeKeyColumn as DatabaseItemListAttributeKeyColumn;
+
 class ColumnSet extends \Concrete\Core\Foundation\Collection\Database\Column\Set {
 	protected $attributeClass = 'UserAttributeKey';
 	public function getColumns() {
@@ -26,7 +31,7 @@ class ColumnSet extends \Concrete\Core\Foundation\Collection\Database\Column\Set
 			$fldc = @unserialize($fldc);
 		}
 		if (!($fldc instanceof DatabaseItemListColumnSet)) {
-			$fldc = new UserSearchDefaultColumnSet();
+			$fldc = new DefaultSet();
 		}
 		return $fldc;
 	}

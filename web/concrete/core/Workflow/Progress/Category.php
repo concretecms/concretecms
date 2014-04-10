@@ -52,7 +52,7 @@ class Category extends Object {
 	public function getPackageHandle() {return PackageList::getHandle($this->pkgID);}
 
 	public function __call($method, $arguments) {
-		$class = Loader::helper('text')->camelcase($this->wpCategoryHandle) . 'WorkflowProgress';
+		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Workflow\\Progress\\' . helper('text')->camelcase($this->wpCategoryHandle) . 'Progress');
 		return call_user_func_array(array($class, $method), $arguments);
 	}
 	

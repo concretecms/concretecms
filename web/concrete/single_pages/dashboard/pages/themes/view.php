@@ -34,7 +34,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
     
     <div class="ccm-pane-footer">
         <?=$bt->button(t("Ok"), $activate_confirm, 'right', 'btn btn-primary');?>            
-    	<?=$bt->button(t('Cancel'), $this->url('/dashboard/pages/themes/'), 'left');?>
+    	<?=$bt->button(t('Cancel'), $view->url('/dashboard/pages/themes/'), 'left');?>
     </div>
     
     <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
@@ -86,13 +86,13 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
                     <? if ($siteThemeID == $t->getThemeID()) { ?>
                         <?=$bt->button_js(t("Activate"), "alert('" . $alreadyActiveMessage . "')", 'left', 'primary ccm-button-inactive', array('disabled'=>'disabled'));?>
                     <? } else { ?>
-                        <?=$bt->button(t("Activate"), $this->url('/dashboard/pages/themes','activate', $t->getThemeID()), 'left', 'primary');?>
+                        <?=$bt->button(t("Activate"), $view->url('/dashboard/pages/themes','activate', $t->getThemeID()), 'left', 'primary');?>
                     <? } ?>
                         <?=$bt->button_js(t("Preview"), "ccm_previewInternalTheme(1, " . intval($t->getThemeID()) . ",'" . addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeDisplayName())) . "')", 'left');?>
-                        <?=$bt->button(t("Inspect"), $this->url('/dashboard/pages/themes/inspect', $t->getThemeID()), 'left');?>
-                        <?=$bt->button(t("Customize"), $this->url('/dashboard/pages/themes/customize', $t->getThemeID()), 'left');?>
+                        <?=$bt->button(t("Inspect"), $view->url('/dashboard/pages/themes/inspect', $t->getThemeID()), 'left');?>
+                        <?=$bt->button(t("Customize"), $view->url('/dashboard/pages/themes/customize', $t->getThemeID()), 'left');?>
                     
-                        <?=$bt->button(t("Remove"), $this->url('/dashboard/pages/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), 'right', 'error');?>
+                        <?=$bt->button(t("Remove"), $view->url('/dashboard/pages/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), 'right', 'error');?>
                     </div>
                 
                 </td>
@@ -107,7 +107,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
     </table>
     
     
-    <form method="post" action="<?=$this->action('save_mobile_theme')?>" class="form-horizontal">
+    <form method="post" action="<?=$view->action('save_mobile_theme')?>" class="form-horizontal">
     <h3><?=t("Mobile Theme")?></h3>
     <p><?=t("To use a separate theme for mobile browsers, specify it below.")?></p>
     
@@ -148,7 +148,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
                 <p class="ccm-themes-description"><em><?=$t->getThemeDisplayDescription()?></em></p>
                 
                 <div class="ccm-themes-button-row clearfix">
-                <?=$bt->button(t("Install"), $this->url('/dashboard/pages/themes','install',$t->getThemeHandle()),'left','primary');?>
+                <?=$bt->button(t("Install"), $view->url('/dashboard/pages/themes','install',$t->getThemeHandle()),'left','primary');?>
                 </div>
                 </td>
                 
@@ -167,7 +167,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 	<div class="well" style="padding:10px 20px;">
         <h3><?=t('Want more themes?')?></h3>
         <p><?=t('You can download themes and add-ons from the concrete5 marketplace.')?></p>
-        <p><a class="btn btn-success" href="<?=$this->url('/dashboard/extend/themes')?>"><?=t("Get More Themes")?></a></p>
+        <p><a class="btn btn-success" href="<?=$view->url('/dashboard/extend/themes')?>"><?=t("Get More Themes")?></a></p>
     </div>
     
     <? } ?>

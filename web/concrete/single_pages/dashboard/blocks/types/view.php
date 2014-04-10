@@ -27,9 +27,9 @@
 
 </div>
 <div class="ccm-pane-footer">
-	<a href="<?=$this->url('/dashboard/blocks/types')?>" class="btn"><?=t('Back to Block Types')?></a>
+	<a href="<?=$view->url('/dashboard/blocks/types')?>" class="btn"><?=t('Back to Block Types')?></a>
 
-	<? print $ch->button(t("Refresh"), $this->url('/dashboard/blocks/types','refresh', $bt->getBlockTypeID()), "right"); ?>
+	<? print $ch->button(t("Refresh"), $view->url('/dashboard/blocks/types','refresh', $bt->getBlockTypeID()), "right"); ?>
 	<?
 	$u = new User();
 	if ($u->isSuperUser()) {
@@ -41,7 +41,7 @@
 		<script type="text/javascript">
 		removeBlockType = function() {
 			if (confirm('<?=$removeBTConfirm?>')) { 
-				location.href = "<?=$this->url('/dashboard/blocks/types', 'uninstall', $bt->getBlockTypeID(), $valt->generate('uninstall'))?>";				
+				location.href = "<?=$view->url('/dashboard/blocks/types', 'uninstall', $bt->getBlockTypeID(), $valt->generate('uninstall'))?>";				
 			}
 		}
 		</script>
@@ -63,7 +63,7 @@
 			$btIcon = $ci->getBlockTypeIconURL($bt);
 			?>
 			<li class="ccm-block-type ccm-block-type-available">
-				<p style="background-image: url(<?=$btIcon?>)" class="ccm-block-type-inner"><?=$ch->button(t("Install"), $this->url('/dashboard/blocks/types','install', $bt->getBlockTypeHandle()), "right", 'small');?> <?=t($bt->getBlockTypeName())?></p>
+				<p style="background-image: url(<?=$btIcon?>)" class="ccm-block-type-inner"><?=$ch->button(t("Install"), $view->url('/dashboard/blocks/types','install', $bt->getBlockTypeHandle()), "right", 'small');?> <?=t($bt->getBlockTypeName())?></p>
 			</li>
 		<? } ?>
 		</ul>
@@ -75,7 +75,7 @@
 	<div class="well" style="padding:10px 20px;">
         <h3><?=t('More Blocks')?></h3>
         <p><?=t('Browse our marketplace of add-ons to extend your site!')?></p>
-        <p><a class="btn success" href="<?=$this->url('/dashboard/extend/add-ons')?>"><?=t("More Add-ons")?></a></p>
+        <p><a class="btn success" href="<?=$view->url('/dashboard/extend/add-ons')?>"><?=t("More Add-ons")?></a></p>
     </div>
     <? } ?>
     
@@ -87,7 +87,7 @@
 			?>
 			<div class="ccm-group" id="btID_<?=$btID?>" data-btid="<?=$btID?>">
 				<img class="ccm-group-sort" src="<?php echo ASSETS_URL_IMAGES?>/icons/up_down.png" width="14" height="14" />
-				<a class="ccm-group-inner" href="<?=$this->action('inspect', $bt->getBlockTypeID())?>" style="background-image: url(<?=$btIcon?>)"><?=t($bt->getBlockTypeName())?></a>
+				<a class="ccm-group-inner" href="<?=$view->action('inspect', $bt->getBlockTypeID())?>" style="background-image: url(<?=$btIcon?>)"><?=t($bt->getBlockTypeName())?></a>
 			</div>
 		<? } ?>
 	</div>
@@ -107,7 +107,7 @@
 	});
 	</script>
 	<div style="padding: 10px 0 20px 0;">
-		<form action="<?=$this->action('reset_display_order')?>" method="post">
+		<form action="<?=$view->action('reset_display_order')?>" method="post">
 			<?
 			$prompt = t('Are you sure you wish to reset the display order of installed block types?');
 			$onclick = "if (confirm('" . $prompt . "')) { $(this).closest('form').submit(); }";
@@ -123,7 +123,7 @@
 			$btIcon = $ci->getBlockTypeIconURL($bt);
 			?>	
 			<li class="ccm-block-type ccm-block-type-available">
-				<a style="background-image: url(<?=$btIcon?>)" class="ccm-block-type-inner" href="<?=$this->action('inspect', $bt->getBlockTypeID())?>"><?=t($bt->getBlockTypeName())?></a>
+				<a style="background-image: url(<?=$btIcon?>)" class="ccm-block-type-inner" href="<?=$view->action('inspect', $bt->getBlockTypeID())?>"><?=t($bt->getBlockTypeName())?></a>
 				<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeID()?>"><?=t($bt->getBlockTypeDescription())?></div>
 			</li>
 		<? } ?>

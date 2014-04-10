@@ -6,7 +6,7 @@ use Exception;
 use \Concrete\Core\Authentication\AuthenticationType;
 use \Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Loader;
-use \Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
+use UserAttributeKey;
 
 class Edit extends AccountPageController {
 	

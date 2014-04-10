@@ -10,7 +10,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sing
 		} else { 
 			$base = BASE_URL.DIR_REL.'/'.DISPATCHER_FILENAME;
 		}?>
-		<form class="form-stacked" method="post" id="add_static_page_form" action="<?php echo $this->url('/dashboard/pages/single')?>">
+		<form class="form-stacked" method="post" id="add_static_page_form" action="<?php echo $view->url('/dashboard/pages/single')?>">
 			<?php echo $this->controller->token->output('add_single_page')?>
 			<div class="control-group">
 			<label for="pageURL" class="control-label"><?php echo t('The page you want to add is available at:')?></label>
@@ -57,7 +57,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sing
 						<td><?php echo $p->getCollectionPath()?></td>
 						<td><?php print $packageName; ?></td>
 						<td>
-							<?php if($cp->canAdmin()) { print $ih->button(t('Refresh'),$this->action('refresh', $p->getCollectionID(), $this->controller->token->generate('refresh')), 'left', false, array('title'=>t('Refreshes the page, rebuilding its permissions and its name.'))); }?>
+							<?php if($cp->canAdmin()) { print $ih->button(t('Refresh'),$view->action('refresh', $p->getCollectionID(), $this->controller->token->generate('refresh')), 'left', false, array('title'=>t('Refreshes the page, rebuilding its permissions and its name.'))); }?>
 						</td>
 					</tr>
 				<?php }

@@ -54,7 +54,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 		<? $cpc = new Permissions($stack); ?>
 		
 		<? if ($cpc->canEditPageProperties()) { ?>
-			<a class="btn small ccm-main-nav-edit-option"href="<?=$this->action('rename', $stack->getCollectionID())?>"><?=t('Rename')?></a>
+			<a class="btn small ccm-main-nav-edit-option"href="<?=$view->action('rename', $stack->getCollectionID())?>"><?=t('Rename')?></a>
 		<? } ?>
 		
 		<a class="btn small ccm-main-nav-edit-option" dialog-width="640" dialog-height="340" id="stackVersions" dialog-title="<?=t('Version History')?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/versions.php?rel=SITEMAP&cID=<?=$stack->getCollectionID()?>"><?=t('Version History')?></a>
@@ -66,11 +66,11 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 		<? } ?>
 
 		<? if ($cpc->canDeletePage()) { ?>
-			<a class="btn ccm-button-v2-right small ccm-main-nav-edit-option error" href="javascript:void(0)" onclick="if (confirm('<?=t('Are you sure you want to remove this stack?')?>')) { window.location.href='<?=$this->url('/dashboard/blocks/stacks/', 'delete', $stack->getCollectionID(), Loader::helper('validation/token')->generate('delete'))?>' }"><?=t('Delete Stack')?></a>
+			<a class="btn ccm-button-v2-right small ccm-main-nav-edit-option error" href="javascript:void(0)" onclick="if (confirm('<?=t('Are you sure you want to remove this stack?')?>')) { window.location.href='<?=$view->url('/dashboard/blocks/stacks/', 'delete', $stack->getCollectionID(), Loader::helper('validation/token')->generate('delete'))?>' }"><?=t('Delete Stack')?></a>
 		<? } ?>
 		
 		<? if ($cpc->canMoveOrCopyPage()) { ?>
-			<a class="btn ccm-button-v2-right small ccm-main-nav-edit-option" href="<?=$this->action('duplicate', $stack->getCollectionID())?>" style="margin-right: 4px;"><?=t('Duplicate Stack')?></a>
+			<a class="btn ccm-button-v2-right small ccm-main-nav-edit-option" href="<?=$view->action('duplicate', $stack->getCollectionID())?>" style="margin-right: 4px;"><?=t('Duplicate Stack')?></a>
 		<? } ?>
 		
 		<?
@@ -177,7 +177,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 	?>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t("Duplicate %s", $sv->getVersionName()), false, 'span10 offset1', false)?>
-	<form name="duplicate_form" action="<?=$this->action('duplicate', $stack->getCollectionID())?>" method="POST">
+	<form name="duplicate_form" action="<?=$view->action('duplicate', $stack->getCollectionID())?>" method="POST">
 		<?=Loader::helper("validation/token")->output('duplicate_stack')?>
 		<div class="ccm-pane-body ccm-pane-body">
 			<div class="clearfix">
@@ -188,7 +188,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 			</div>
 		</div>
 		<div class="ccm-pane-footer">
-			<?=$interface->button(t("Cancel"), $this->action('view_details', $stack->getCollectionID()), 'left')?>
+			<?=$interface->button(t("Cancel"), $view->action('view_details', $stack->getCollectionID()), 'left')?>
 			<?=$interface->submit(t("Duplicate Stack"), 'duplicate_form', 'right', 'primary')?>
 		</div>
 	</form>
@@ -199,7 +199,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 	?>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t("Rename %s", $sv->getVersionName()), false, 'span10 offset1', false)?>
-	<form name="duplicate_form" action="<?=$this->action('rename', $stack->getCollectionID())?>" method="POST">
+	<form name="duplicate_form" action="<?=$view->action('rename', $stack->getCollectionID())?>" method="POST">
 		<?=Loader::helper("validation/token")->output('rename_stack')?>
 		<div class="ccm-pane-body ccm-pane-body">
 			<div class="clearfix">
@@ -210,7 +210,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 			</div>
 		</div>
 		<div class="ccm-pane-footer">
-			<?=$interface->button(t("Cancel"), $this->action('view_details', $stack->getCollectionID()), 'left')?>
+			<?=$interface->button(t("Cancel"), $view->action('view_details', $stack->getCollectionID()), 'left')?>
 			<?=$interface->submit(t("Rename"), 'duplicate_form', 'right', 'primary')?>
 		</div>
 	</form>
@@ -231,7 +231,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 			<div class="ccm-stack ccm-group" id="stID_<?=$st->getCollectionID()?>">
 				<? if ($canMoveStacks) { ?><img class="ccm-group-sort" src="<?=ASSETS_URL_IMAGES?>/icons/up_down.png" width="14" height="14" /><? } ?>
-				<a href="<?=$this->url('/dashboard/blocks/stacks', 'view_details', $st->getCollectionID())?>"><?=$sv->getVersionName()?></a>
+				<a href="<?=$view->url('/dashboard/blocks/stacks', 'view_details', $st->getCollectionID())?>"><?=$sv->getVersionName()?></a>
 			</div>
 		
 		<?
@@ -255,7 +255,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 			<div class="ccm-stack ccm-group" id="stID_<?=$st->getCollectionID()?>">
 				<? if ($canMoveStacks) { ?><img class="ccm-group-sort" src="<?=ASSETS_URL_IMAGES?>/icons/up_down.png" width="14" height="14" /><? } ?>
-				<a href="<?=$this->url('/dashboard/blocks/stacks', 'view_details', $st->getCollectionID())?>"><?=$sv->getVersionName()?></a>
+				<a href="<?=$view->url('/dashboard/blocks/stacks', 'view_details', $st->getCollectionID())?>"><?=$sv->getVersionName()?></a>
 			</div>
 		
 		<?
@@ -268,7 +268,7 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 	?>
 	</div>
 		<h3><?=t('Add Stack')?></h3>
-		<form method="post" class="form-stacked" style="padding-left: 0px" action="<?=$this->action('add_stack')?>">
+		<form method="post" class="form-stacked" style="padding-left: 0px" action="<?=$view->action('add_stack')?>">
 		<?=Loader::helper("validation/token")->output('add_stack')?>
 		<div class="clearfix">
 			<?=Loader::helper("form")->label('stackName', t('Name'))?>

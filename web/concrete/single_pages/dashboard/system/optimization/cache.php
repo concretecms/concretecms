@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<form method="post" class="ccm-dashboard-content-form" action="<?php echo $this->url('/dashboard/system/optimization/cache', 'update_cache')?>">
+<form method="post" class="ccm-dashboard-content-form" action="<?php echo $view->url('/dashboard/system/optimization/cache', 'update_cache')?>">
         <?php echo $this->controller->token->output('update_cache')?>
         
     <fieldset>

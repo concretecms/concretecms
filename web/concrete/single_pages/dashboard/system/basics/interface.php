@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");?>
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Interface Settings'), false, 'span10 offset1', false)?>
-<form method="post" class="form-horizontal" action="<?=$this->action('save_interface_settings')?>" enctype="multipart/form-data" >
+<form method="post" class="form-horizontal" action="<?=$view->action('save_interface_settings')?>" enctype="multipart/form-data" >
 <div class="ccm-pane-body">
 <?=Loader::helper('validation/token')->output('save_interface_settings')?>
 

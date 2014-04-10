@@ -2,7 +2,7 @@
 $form = Loader::helper('form');
 echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Statistics'), t("Tracks page views in concrete5. Disabling this may increase site performance, but you will have to get statistics information from elsewhere."), 'span6 offset3', false); ?>
 
-	<form method="post" id="url-form" action="<?php echo $this->action('')?>">
+	<form method="post" id="url-form" action="<?php echo $view->action('')?>">
 		<?=$this->controller->token->output('update_statistics')?>
 		<div class="ccm-pane-body">
 			<div class="control-group">

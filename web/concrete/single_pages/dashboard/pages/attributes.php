@@ -3,7 +3,7 @@
 <? if (isset($key)) { ?>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Attribute'), false, false, false)?>
-<form method="post" action="<?=$this->action('edit')?>" id="ccm-attribute-key-form">
+<form method="post" action="<?=$view->action('edit')?>" id="ccm-attribute-key-form">
 
 <? Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type, 'key' => $key)); ?>
 
@@ -19,7 +19,7 @@
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Page Attributes'), false, false, false)?>
 
 	<? if (isset($type)) { ?>
-		<form method="post" action="<?=$this->action('add')?>" id="ccm-attribute-key-form">
+		<form method="post" action="<?=$view->action('add')?>" id="ccm-attribute-key-form">
 		<? Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type)); ?>
 		</form>	
 	<? } ?>
@@ -38,7 +38,7 @@
 
 	<div class="ccm-pane-body ccm-pane-body-footer">
 	
-	<form method="get" class="form-inline" action="<?=$this->action('select_type')?>" id="ccm-attribute-type-form">
+	<form method="get" class="form-inline" action="<?=$view->action('select_type')?>" id="ccm-attribute-type-form">
 	<div class="control-group">
 	<?=$form->label('atID', t('Add Attribute'))?>
 	<div class="controls">

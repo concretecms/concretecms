@@ -9,7 +9,7 @@ $this->inc('elements/header.php');
 if (isset($error)) {
 	if ($error instanceof Exception) {
 		$_error[] = $error->getMessage();
-	} else if ($error instanceof ValidationErrorHelper) {
+	} else if ($error instanceof \Concrete\Helper\Validation\Error) {
 		$_error = array();
 		if ($error->has()) {
 			$_error = $error->getList();

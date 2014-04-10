@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Search\Result;
+use \Concrete\Core\Foundation\Collection\Database\Column\Column as DatabaseItemListColumn;
 class Column {
 
 	public $isColumnSortable;
@@ -48,7 +49,7 @@ class Column {
 		return $this->sortURL;
 	}
 
-	public function __construct(SearchResult $result, $column = false) {
+	public function __construct(Result $result, $column = false) {
 		if ($column instanceof DatabaseItemListColumn) {
 			$this->isColumnSortable = $column->isColumnSortable();
 			$this->key = $column->getColumnKey();

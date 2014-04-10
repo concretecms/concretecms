@@ -11,13 +11,13 @@
     		case 'view_message': ?>
 
 			<?=Loader::helper('concrete/ui')->tabs(array(
-				array($this->action('view_mailbox', 'inbox'), t('Inbox'), $box == 'inbox'),
-				array($this->action('view_mailbox', 'sent'), t('Sent'), $box == 'sent')
+				array($view->action('view_mailbox', 'inbox'), t('Inbox'), $box == 'inbox'),
+				array($view->action('view_mailbox', 'sent'), t('Sent'), $box == 'sent')
 			), false)?>
     		
     		<div id="ccm-private-message-detail">
-				<a href="<?=$this->url('/account/profile/public', 'view', $msg->getMessageRelevantUserID())?>"><?=$av->outputUserAvatar($msg->getMessageRelevantUserObject())?></a>
-				<a href="<?=$this->url('/account/profile/public', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
+				<a href="<?=$view->url('/account/profile/public', 'view', $msg->getMessageRelevantUserID())?>"><?=$av->outputUserAvatar($msg->getMessageRelevantUserObject())?></a>
+				<a href="<?=$view->url('/account/profile/public', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
 				
 				<div id="ccm-private-message-actions">
 				
@@ -40,7 +40,7 @@
 					$mui = $msg->getMessageRelevantUserObject();
 					if (is_object($mui)) { 
 						if ($mui->getUserProfilePrivateMessagesEnabled()) { ?>
-							<li><a href="<?=$this->action('reply', $box, $msg->getMessageID())?>"><?=t('Reply')?></a>
+							<li><a href="<?=$view->action('reply', $box, $msg->getMessageID())?>"><?=t('Reply')?></a>
 							<li class="divider"></li>
 						<? } 						
 					}?>
@@ -67,8 +67,8 @@
     		case 'view_mailbox': ?>
 
 			<?=Loader::helper('concrete/ui')->tabs(array(
-				array($this->action('view_mailbox', 'inbox'), t('Inbox'), $mailbox == 'inbox'),
-				array($this->action('view_mailbox', 'sent'), t('Sent'), $mailbox == 'sent')
+				array($view->action('view_mailbox', 'inbox'), t('Inbox'), $mailbox == 'inbox'),
+				array($view->action('view_mailbox', 'sent'), t('Sent'), $mailbox == 'sent')
 			), false)?>
 			
     		
@@ -90,10 +90,10 @@
 					
 					<tr>
 						<td class="ccm-profile-message-from">
-						<a href="<?=$this->url('/account/profile/public', 'view', $msg->getMessageRelevantUserID())?>"><?=$av->outputUserAvatar($msg->getMessageRelevantUserObject())?></a>
-						<a href="<?=$this->url('/account/profile/public', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
+						<a href="<?=$view->url('/account/profile/public', 'view', $msg->getMessageRelevantUserID())?>"><?=$av->outputUserAvatar($msg->getMessageRelevantUserObject())?></a>
+						<a href="<?=$view->url('/account/profile/public', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
 						</td>
-						<td class="ccm-profile-messages-item-name"><a href="<?=$this->url('/account/messages/inbox', 'view_message', $mailbox, $msg->getMessageID())?>"><?=$msg->getFormattedMessageSubject()?></a></td>
+						<td class="ccm-profile-messages-item-name"><a href="<?=$view->url('/account/messages/inbox', 'view_message', $mailbox, $msg->getMessageID())?>"><?=$msg->getFormattedMessageSubject()?></a></td>
 						<td style="white-space: nowrap"><?=$msg->getMessageDateAdded('user', t('F d, Y \a\t g:i A'))?></td>
 						<td><?=$msg->getMessageStatus()?></td>
 					</tr>
@@ -117,14 +117,14 @@
     		case 'reply_complete': ?>
     		
     		<div class="alert alert-success"><?=t('Reply Sent.')?></div>
-    		<a href="<?=$this->url('/account/messages/inbox', 'view_message', $box, $msgID)?>" class="btn"><?=t('Back to Message')?></a>
+    		<a href="<?=$view->url('/account/messages/inbox', 'view_message', $box, $msgID)?>" class="btn"><?=t('Back to Message')?></a>
     		
     		<?
     			break;
     		case 'send_complete': ?>
     		
     		<div class="alert alert-success"><?=t('Message Sent.')?></div>
-    		<a href="<?=$this->url('/account/profile/public', 'view', $recipient->getUserID())?>" class="btn"><?=t('Back to Profile')?></a>
+    		<a href="<?=$view->url('/account/profile/public', 'view', $recipient->getUserID())?>" class="btn"><?=t('Back to Profile')?></a>
     		
     		<?
     			break;
@@ -139,7 +139,7 @@
     		case 'write': ?>
 
 			<div id="ccm-profile-message-compose">
-				<form method="post" action="<?=$this->action('send')?>" class="form-horizontal">
+				<form method="post" action="<?=$view->action('send')?>" class="form-horizontal">
 				
 				<?=$form->hidden("uID", $recipient->getUserID())?>
 				<? if ($this->controller->getTask() == 'reply') { ?>
@@ -199,7 +199,7 @@
     				<th><?=t('Latest Message')?></th>
     			</tr>
     			<tr>
-    				<td class="ccm-profile-messages-item-name"><a href="<?=$this->action('view_mailbox', 'inbox')?>"><?=t('Inbox')?></a></td>
+    				<td class="ccm-profile-messages-item-name"><a href="<?=$view->action('view_mailbox', 'inbox')?>"><?=t('Inbox')?></a></td>
     				<td><?=$inbox->getTotalMessages()?></td>
     				<td class="ccm-profile-mailbox-last-message"><?
     				$msg = $inbox->getLastMessageObject();
@@ -209,7 +209,7 @@
     				?></td>
     			</tr>
     			<tr>
-    				<td class="ccm-profile-messages-item-name"><a href="<?=$this->action('view_mailbox', 'sent')?>"><?=t('Sent Messages')?></a></td>
+    				<td class="ccm-profile-messages-item-name"><a href="<?=$view->action('view_mailbox', 'sent')?>"><?=t('Sent Messages')?></a></td>
     				<td><?=$sent->getTotalMessages()?></td>
     				<td class="ccm-profile-mailbox-last-message"><?
      				$msg = $sent->getLastMessageObject();

@@ -7,7 +7,7 @@ $d = Loader::helper('concrete/dashboard');
 
 <?php print $d->getDashboardPaneHeaderWrapper(t('Timezone'), false, 'span8 offset2', false); ?>
 
-<form method="post" id="user-timezone-form" action="<?php echo $this->action('update') ?>" class="form-horizontal">
+<form method="post" id="user-timezone-form" action="<?php echo $view->action('update') ?>" class="form-horizontal">
 
      <?php echo $this->controller->token->output('update_timezone')?>
      

@@ -7,7 +7,7 @@ $form = Loader::helper('form');
 $interface = Loader::helper('concrete/ui');
 
 echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Attribute Type Associations'), false, 'span10 offset1');?>
-<form method="post" class="" id="attribute_type_associations_form" action="<?=$this->action('save_attribute_type_associations')?>">
+<form method="post" class="" id="attribute_type_associations_form" action="<?=$view->action('save_attribute_type_associations')?>">
 	<table border="0" cellspacing="1" cellpadding="0" border="0" class="table">
 		<tr>
 			<th><?=t('Name')?></th>
@@ -45,7 +45,7 @@ $types = PendingAttributeType::getList(); ?>
 	<ul class="item-select-list">
 		<? foreach($types as $at) { ?>
 			<li>
-				<form id="attribute_type_install_form_<?=$at->getAttributeTypeHandle()?>" style="margin: 0px" method="post" action="<?=$this->action('add_attribute_type')?>">
+				<form id="attribute_type_install_form_<?=$at->getAttributeTypeHandle()?>" style="margin: 0px" method="post" action="<?=$view->action('add_attribute_type')?>">
 					<?
 					print $form->hidden("atHandle", $at->getAttributeTypeHandle());
 					?>

@@ -1,15 +1,15 @@
 <?
-namespace Concrete\Core\User\Result;
-use \Concrete\Core\Search\Result as SearchResult;
+namespace Concrete\Core\User\Search\Result;
+use \Concrete\Core\Search\Result\Result as SearchResult;
 class Result extends SearchResult {
 
 	public function getItemDetails($item) {
-		$node = new UserSearchResultItem($this, $this->listColumns, $item);
+		$node = new Item($this, $this->listColumns, $item);
 		return $node;
 	}
 
 	public function getColumnDetails($column) {
-		$node = new UserSearchResultColumn($this, $column);
+		$node = new Column($this, $column);
 		return $node;
 	}
 

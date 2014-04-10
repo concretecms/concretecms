@@ -4,7 +4,8 @@ use \Concrete\Core\Foundation\Object;
 use Loader;
 use \Concrete\Core\Tree\Node\NodeType as TreeNodeType;
 use PermissionKey;
-
+use Permissions;
+use stdClass;
 abstract class Node extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
 	abstract public function loadDetails();

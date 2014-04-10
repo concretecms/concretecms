@@ -7,7 +7,7 @@ use Page;
 use User;
 use Events;
 use CacheLocal;
-use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use CollectionAttributeKey;
 
 class Version extends Object implements \Concrete\Core\Permission\ObjectInterface {
 	

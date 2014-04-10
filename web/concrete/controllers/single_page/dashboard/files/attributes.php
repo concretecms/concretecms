@@ -3,7 +3,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\Files;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use \Concrete\Core\Attribute\Type as AttributeType;
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
-use \Concrete\Core\Attribute\Key\FileKey as FileAttributeKey;
+use FileAttributeKey;
  
 class Attributes extends DashboardPageController {
 	

@@ -4,7 +4,7 @@
 <br/>
 
 <? if (version_compare($latest_version, APP_VERSION, '>')) { ?>
-<p><span class="label notice"><?=t('concrete5 Update')?></span> <?=t('The latest version of concrete5 is <strong>%s</strong>. You are currently running concrete5 version <strong>%s</strong>.', $latest_version, APP_VERSION)?> <a class="" href="<?=$this->url('/dashboard/system/backup_restore/update')?>"><?=t('Learn more and update.')?></a></p>
+<p><span class="label notice"><?=t('concrete5 Update')?></span> <?=t('The latest version of concrete5 is <strong>%s</strong>. You are currently running concrete5 version <strong>%s</strong>.', $latest_version, APP_VERSION)?> <a class="" href="<?=$view->url('/dashboard/system/backup_restore/update')?>"><?=t('Learn more and update.')?></a></p>
 
 <? } else if (version_compare(APP_VERSION, Config::get('SITE_APP_VERSION'), '>')) { ?>
 <p><span class="label warning"><?=t('concrete5')?></span>
@@ -18,6 +18,6 @@
 	<? } else { ?>
 		<?=t('There are currently <strong>%s</strong> updates available.', $updates)?>
 	<? } ?>
-	<a class="" href="<?=$this->url('/dashboard/extend/update')?>"><?=t('Update add-ons.')?></a></p>
+	<a class="" href="<?=$view->url('/dashboard/extend/update')?>"><?=t('Update add-ons.')?></a></p>
 <? } ?>
 

@@ -2,7 +2,7 @@
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Allowed File Types'), false, 'span8 offset2', false)?>
 
-	<form method="post" id="file-access-extensions" action="<?=$this->url('/dashboard/system/permissions/file_types', 'file_access_extensions')?>">
+	<form method="post" id="file-access-extensions" action="<?=$view->url('/dashboard/system/permissions/file_types', 'file_access_extensions')?>">
 	<div class="ccm-pane-body">
 			<?=$validation_token->output('file_access_extensions');?>
 			<p>

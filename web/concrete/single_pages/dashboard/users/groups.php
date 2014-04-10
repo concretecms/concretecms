@@ -15,7 +15,7 @@ if (isset($group)) {
 	?>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Group'), false, false, false)?>
-<form method="post"  class="form-horizontal" id="update-group-form" action="<?=$this->url('/dashboard/users/groups/', 'update_group')?>">
+<form method="post"  class="form-horizontal" id="update-group-form" action="<?=$view->url('/dashboard/users/groups/', 'update_group')?>">
 <?=$valt->output('add_or_update_group')?>
 <div class="ccm-pane-body">
 	<?
@@ -31,7 +31,7 @@ if (isset($group)) {
 		<script type="text/javascript">
 		deleteGroup = function() {
 			if (confirm('<?=$delConfirmJS?>')) { 
-				location.href = "<?=$this->url('/dashboard/users/groups', 'delete', $group->getGroupID(), $valt->generate('delete_group_' . $group->getGroupID() ))?>";				
+				location.href = "<?=$view->url('/dashboard/users/groups', 'delete', $group->getGroupID(), $valt->generate('delete_group_' . $group->getGroupID() ))?>";				
 			}
 		}
 		</script>
@@ -216,7 +216,7 @@ if (isset($group)) {
 </div>
 <div class="ccm-pane-footer">
 	<button class="btn pull-right btn-primary" style="margin-left: 10px" type="submit"><?=t('Update Group')?></button>
-	<a href="<?=$this->url('/dashboard/users/groups')?>" class="btn pull-left"><?=t('Cancel')?></a>
+	<a href="<?=$view->url('/dashboard/users/groups')?>" class="btn pull-left"><?=t('Cancel')?></a>
 	<? if ($u->isSuperUser()) { ?>
 		<? print $ih->button_js(t('Delete'), "deleteGroup()", 'right', 'error');?>
 		<? } ?>

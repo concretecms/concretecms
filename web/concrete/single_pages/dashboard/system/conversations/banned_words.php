@@ -2,7 +2,7 @@
 $form = Loader::helper('form');
 echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Conversation Editor'), false, 'span8 offset2', false);
 ?>
-<form action="<?=$this->action('save')?>" method='post'>
+<form action="<?=$view->action('save')?>" method='post'>
 	<div class='ccm-pane-body'>
 		<div class='clearfix'>
 			<label>

@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");?>
-<form method="post" class="ccm-dashboard-content-form" action="<?=$this->action('update_sitename')?>">
+<form method="post" class="ccm-dashboard-content-form" action="<?=$view->action('update_sitename')?>">
 	<?=$this->controller->token->output('update_sitename')?>
 
 	<fieldset>

@@ -305,7 +305,7 @@ class StartingPointPackage extends Package {
 		return false;
 	}
 
-	public function getClass($pkgHandle) {
+	public static function getClass($pkgHandle) {
 		$dir = (is_dir(DIR_STARTING_POINT_PACKAGES . '/' . $pkgHandle)) ? DIR_STARTING_POINT_PACKAGES : DIR_STARTING_POINT_PACKAGES_CORE;
 		if (file_exists($dir . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER)) {
 			require_once($dir . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER);

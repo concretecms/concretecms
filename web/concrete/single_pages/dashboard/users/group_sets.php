@@ -9,7 +9,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<div class="row">
 		<div class="span-pane-half">
 	
-		<form class="form-vertical" method="post" action="<?php echo $this->action('update_set')?>">
+		<form class="form-vertical" method="post" action="<?php echo $view->action('update_set')?>">
 			
 			<input type="hidden" name="gsID" value="<?php echo $set->getGroupSetID()?>" />
 
@@ -34,7 +34,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		</fieldset>
 		</form>
 
-		<form method="post" action="<?php echo $this->action('delete_set')?>" class="form-vertical">
+		<form method="post" action="<?php echo $view->action('delete_set')?>" class="form-vertical">
 		<fieldset>
 			<legend><?=t('Delete Set')?></legend>
 			<div class="control-group">
@@ -55,7 +55,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 		<div class="span-pane-half">
 	
-		<form class="form-vertical" method="post" action="<?php echo $this->action('update_set_groups')?>">
+		<form class="form-vertical" method="post" action="<?php echo $view->action('update_set_groups')?>">
 			<input type="hidden" name="gsID" value="<?php echo $set->getGroupSetID()?>" />
 			<?php echo Loader::helper('validation/token')->output('update_set_groups')?>
 
@@ -105,7 +105,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
  
 	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Group Sets'), false, 'span10 offset1');?>
 	<? if (PERMISSIONS_MODEL == 'advanced') { ?>
-	<form method="post" class="form-horizontal" action="<?php echo $this->action('add_set')?>">
+	<form method="post" class="form-horizontal" action="<?php echo $view->action('add_set')?>">
 
 
 	<?php if (count($groupSets) > 0) { ?>
@@ -114,7 +114,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		
 			<?php foreach($groupSets as $gs) { ?>
 				<div class="ccm-group" id="asID_<?php echo $gs->getGroupSetID()?>">
-					<a class="ccm-group-inner" href="<?php echo $this->url('/dashboard/users/group_sets', 'edit', $gs->getGroupSetID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo $gs->getGroupSetDisplayName()?></a>
+					<a class="ccm-group-inner" href="<?php echo $view->url('/dashboard/users/group_sets', 'edit', $gs->getGroupSetID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo $gs->getGroupSetDisplayName()?></a>
 				</div>
 			<?php } ?>
 		</div>
@@ -155,7 +155,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 	</form>
 	<? } else { ?>
-		<p><?=t('You must enable <a href="%s">advanced permissions</a> to use group sets.', $this->url('/dashboard/system/permissions/advanced'))?></p>
+		<p><?=t('You must enable <a href="%s">advanced permissions</a> to use group sets.', $view->url('/dashboard/system/permissions/advanced'))?></p>
 	<? } ?>
 	
 	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>

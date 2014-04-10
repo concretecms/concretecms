@@ -1,7 +1,7 @@
 <?php
 namespace \Concrete\Controller\SinglePage\Account\Members;
 use \Concrete\Core\Page\Controller\AccountPageController;
-use \Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
+use UserAttributeKey;
 use Loader;
 use UserList;
 

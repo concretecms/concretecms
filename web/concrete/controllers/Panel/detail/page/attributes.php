@@ -5,7 +5,7 @@ use \Concrete\Core\Page\EditResponse as PageEditResponse;
 use PermissionKey;
 use stdClass;
 use Loader;
-use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use CollectionAttributeKey;
 
 class Attributes extends BackendInterfacePageController {
 

@@ -58,7 +58,7 @@ do {
 	
 	<li class="divider"></li>
 	<li><a href="<?=DIR_REL?>/"><i class="icon-home"></i> <?=t("Home")?></a></li>
-	<li><a href="<?=$this->url('/login', 'logout')?>"><i class="icon-remove"></i> <?=t("Sign Out")?></a></li>
+	<li><a href="<?=$view->url('/login', 'logout')?>"><i class="icon-remove"></i> <?=t("Sign Out")?></a></li>
  </ul>
 </div>
 </div>

@@ -5,12 +5,12 @@ use \Concrete\Core\Search\Result\Result as SearchResult;
 class Result extends SearchResult {
 
 	public function getItemDetails($item) {
-		$node = new PageSearchResultItem($this, $this->listColumns, $item);
+		$node = new Item($this, $this->listColumns, $item);
 		return $node;
 	}
 
 	public function getColumnDetails($column) {
-		$node = new PageSearchResultColumn($this, $column);
+		$node = new Column($this, $column);
 		return $node;
 	}
 
@@ -18,7 +18,7 @@ class Result extends SearchResult {
 		if (!isset($this->columns)) {
 			parent::getColumns();
 			if ($this->getItemListObject()->isIndexedSearch()) {
-				$column = new PageSearchResultColumn($this);
+				$column = new Column($this);
 				$column->setColumnSortable(true);
 				$column->setColumnKey('cIndexScore');
 				$column->setColumnTitle(t('Score'));

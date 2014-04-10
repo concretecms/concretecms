@@ -20,15 +20,17 @@ class Group extends TreeNode {
 		return $this->gID;
 	}
 	public function getTreeNodeGroupObject() {
-		return Group::getByID($this->gID);
+		return UserGroup::getByID($this->gID);
 	}
 	public function getTreeNodeDisplayName() {
 		if ($this->treeNodeParentID == 0) {
 			return t('All Groups');
 		}
 
-		$g = Group::getByID($this->gID);
-		return t($g->getGroupName());
+		$g = UserGroup::getByID($this->gID);
+		if (is_object($g)) {
+			return t($g->getGroupName());
+		}
 	}
 
 	public function loadDetails() {

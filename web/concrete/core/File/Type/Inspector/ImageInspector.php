@@ -1,8 +1,7 @@
 <?
-
 namespace Concrete\Core\File\Type\Inspector;
 use Loader;
-use \Concrete\Core\Attribute\Key\FileKey as FileAttributeKey;
+use FileAttributeKey;
 class ImageInspector extends Inspector {
 
 	public function inspect($fv) {

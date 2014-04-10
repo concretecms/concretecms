@@ -1,6 +1,9 @@
 <?
 namespace Concrete\Core\User\Group;
 use \Concrete\Core\Foundation\Object;
+use Loader;
+use Group;
+
 class GroupSet extends Object {
 	
 	public static function getList() {
@@ -8,7 +11,7 @@ class GroupSet extends Object {
 		$r = $db->Execute('select gsID from GroupSets order by gsName asc');
 		$list = array();
 		while ($row = $r->FetchRow()) {
-			$list[] = GroupSet::getByID($row['gsID']);
+			$list[] = static::getByID($row['gsID']);
 		}
 		return $list;
 	}	
@@ -17,7 +20,7 @@ class GroupSet extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select gsID, pkgID, gsName from GroupSets where gsID = ?', array($gsID));
 		if (isset($row['gsID'])) {
-			$gs = new GroupSet();
+			$gs = new static();
 			$gs->setPropertiesFromArray($row);
 			return $gs;
 		}
@@ -27,7 +30,7 @@ class GroupSet extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select gsID, pkgID, gsName from GroupSets where gsName = ?', array($gsName));
 		if (isset($row['gsID'])) {
-			$gs = new GroupSet();
+			$gs = new static();
 			$gs->setPropertiesFromArray($row);
 			return $gs;
 		}
@@ -38,7 +41,7 @@ class GroupSet extends Object {
 		$list = array();
 		$r = $db->Execute('select gsID from GroupSets where pkgID = ? order by gsID asc', array($pkg->getPackageID()));
 		while ($row = $r->FetchRow()) {
-			$list[] = GroupSet::getByID($row['gsID']);
+			$list[] = static::getByID($row['gsID']);
 		}
 		$r->Close();
 		return $list;

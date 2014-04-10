@@ -11,7 +11,7 @@ $(function() {
 
 	<h1 class="page-header"><?=t('Edit Profile')?></h1>
 
-	<form method="post" action="<?php echo $this->action('save')?>" enctype="multipart/form-data">
+	<form method="post" action="<?php echo $view->action('save')?>" enctype="multipart/form-data">
 	<?php  $attribs = UserAttributeKey::getEditableInProfileList(); 
 	$valt->output('profile_edit');
 	if(is_array($attribs) && count($attribs)) { 

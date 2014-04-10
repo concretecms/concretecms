@@ -17,7 +17,7 @@ $ctArray = CollectionType::getList();
 <? 
 if ($cap->canAccessComposer()) { ?>
 
-	<form class="form-vertical" method="post" action="<?=$this->action('save')?>">
+	<form class="form-vertical" method="post" action="<?=$view->action('save')?>">
 
 	<div class="ccm-pane-body">
 	<?=$form->hidden('ctID', $ct->getCollectionTypeID()); ?>
@@ -185,7 +185,7 @@ if ($cap->canAccessComposer()) { ?>
     
     <div class="ccm-pane-footer">
         <? print $ih->submit(t('Save'), 'update', 'right', 'primary'); ?>
-        <? print $ih->button(t('Back to Page Types'), $this->url('/dashboard/pages/types'), 'left'); ?>
+        <? print $ih->button(t('Back to Page Types'), $view->url('/dashboard/pages/types'), 'left'); ?>
     </div>
     
 	</form>
@@ -220,7 +220,7 @@ if ($cap->canAccessComposer()) { ?>
 			opacity: 0.5,
 			stop: function() {
 				var ualist = $(this).sortable('serialize');
-				$.post('<?=$this->action("save_content_items", $ct->getCollectionTypeID())?>', ualist, function(r) {
+				$.post('<?=$view->action("save_content_items", $ct->getCollectionTypeID())?>', ualist, function(r) {
 	
 				});
 			}
@@ -244,7 +244,7 @@ if ($cap->canAccessComposer()) { ?>
 	</div>
     
     <div class="ccm-pane-footer">
-        <? print $ih->button(t('Back to Page Types'), $this->url('/dashboard/pages/types'), 'left'); ?>
+        <? print $ih->button(t('Back to Page Types'), $view->url('/dashboard/pages/types'), 'left'); ?>
     </div>
     
 <? } ?>

@@ -6,14 +6,14 @@ $form = Loader::helper('form');
 if ($downloadableUpgradeAvailable) { ?>
 	<?=$h->getDashboardPaneHeaderWrapper(t('Download Update'), false, 'span8 offset2');?>
 	<? if (!defined('MULTI_SITE') || MULTI_SITE == false) { ?>
-		<a href="<?=$this->action('check_for_updates')?>" class="btn" style="float: right"><?=t('Check For Updates')?></a>
+		<a href="<?=$view->action('check_for_updates')?>" class="btn" style="float: right"><?=t('Check For Updates')?></a>
 	<? } ?>
 		<h2><?=t('Currently Running %s',config::get('SITE_APP_VERSION'))?></h2>
 		<div class="clearfix">
 		</div>
 		<br/>
 		<h2><?=t('Available Update')?></h2>
-		<form method="post" action="<?=$this->action('download_update')?>" id="ccm-download-update-form">
+		<form method="post" action="<?=$view->action('download_update')?>" id="ccm-download-update-form">
 		
 			<?=Loader::helper('validation/token')->output('download_update')?>
 			<?=Loader::helper('concrete/ui')->submit(t('Download'), 'ccm-download-update-form', 'right', 'primary')?>
@@ -31,7 +31,7 @@ if ($downloadableUpgradeAvailable) { ?>
 <? } else if (count($updates)) { ?>
 	<?=$h->getDashboardPaneHeaderWrapper(t('Install Local Update'),false,'span8 offset2',false);?>
 		<div class="ccm-pane-body">
-			<?print '<strong>' . t('Make sure you <a href="%s">backup your database</a> before updating.', $this->url('/dashboard/system/backup_restore/backup')) . '</strong><br/>';
+			<?print '<strong>' . t('Make sure you <a href="%s">backup your database</a> before updating.', $view->url('/dashboard/system/backup_restore/backup')) . '</strong><br/>';
 			$ih = Loader::helper('concrete/ui');
 
 			if (count($updates) == 1) { ?>
@@ -39,7 +39,7 @@ if ($downloadableUpgradeAvailable) { ?>
 					<span class="label"><?=t('Current Version %s',config::get('SITE_APP_VERSION'))?></span>
 				</div>
 				<div class="ccm-pane-footer">
-					<form method="post" action="<?=$this->action('do_update')?>" id="ccm-update-form">
+					<form method="post" action="<?=$view->action('do_update')?>" id="ccm-update-form">
 						<input type="hidden" name="updateVersion" value="<?=$updates[0]->getUpdateVersion()?>" />
 						<?=$ih->submit(t('Update'), 'maintenance-mode-form', 'right', 'primary')?>
 					</form>
@@ -47,7 +47,7 @@ if ($downloadableUpgradeAvailable) { ?>
 			<? } else { ?>
 				<p><?=t('Several updates are available. Please choose the desired update from the list below.')?></p>
 					<span class="label"><?=t('Current Version')?> <?=config::get('SITE_APP_VERSION')?></span>
-				<form method="post" action="<?=$this->action('do_update')?>" id="ccm-update-form">
+				<form method="post" action="<?=$view->action('do_update')?>" id="ccm-update-form">
 				<?  $checked = true;
 					foreach($updates as $upd) { ?>
 						<div class="ccm-dashboard-radio"><input type="radio" name="updateVersion" value="<?=$upd->getUpdateVersion()?>" <?=(!$checked?'':"checked")?> />
@@ -67,7 +67,7 @@ if ($downloadableUpgradeAvailable) { ?>
 <? } else { ?>
 	<?=$h->getDashboardPaneHeaderWrapper(t('Update concrete5'), false, 'span8 offset2');?>
 	<? if (!defined('MULTI_SITE') || MULTI_SITE == false) { ?>
-		<a href="<?=$this->action('check_for_updates')?>" class="btn" style="float: right"><?=t('Check For Updates')?></a>
+		<a href="<?=$view->action('check_for_updates')?>" class="btn" style="float: right"><?=t('Check For Updates')?></a>
 	<? } ?>
 		<h2><?=t('Currently Running %s',config::get('SITE_APP_VERSION'))?></h2>
 		<div class="clearfix">

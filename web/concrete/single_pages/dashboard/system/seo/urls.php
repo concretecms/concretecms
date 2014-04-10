@@ -5,7 +5,7 @@ $dh = Loader::helper('concrete/dashboard');
 echo $dh->getDashboardPaneHeaderWrapper(t('Pretty URLs'), t("Automatically translates your path-based concrete5 URLs so that they don't include %s.", DISPATCHER_FILENAME), 'span8 offset2', false);
 ?>
 
-<form method="post" action="<?php echo $this->action('update_rewriting'); ?>">
+<form method="post" action="<?php echo $view->action('update_rewriting'); ?>">
 	<div class="ccm-pane-body">	
 		<?php echo $this->controller->token->output('update_rewriting'); ?>
 		<div class="clearfix inputs-list">

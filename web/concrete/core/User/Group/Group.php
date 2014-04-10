@@ -7,13 +7,25 @@ use GroupTree;
 use GroupTreeNode;
 use Events;
 use \Concrete\Core\Package\PackageList;
-class Group extends Object {
+class Group extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
 	var $ctID;
 	var $permissionSet;
 	private $permissions = array(); // more advanced version of permissions
 
 	public function getPermissionObjectIdentifier() {return $this->gID;}
+
+	public function getPermissionResponseClassName() {
+		return 'Core\\Permission\\Response\\GroupResponse';
+	}
+
+	public function getPermissionAssignmentClassName() {
+		return false;
+	}
+	public function getPermissionObjectKeyCategoryHandle() {
+		return false;
+	}
+
 	/*
 	 * Takes the numeric id of a group and returns a group object
 	 * @parem string $gID

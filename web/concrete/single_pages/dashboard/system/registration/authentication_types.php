@@ -14,7 +14,7 @@ tbody tr {
 <?php 
 if ($editmode) {
 	?>
-	<form class='form-horizontal' method='post' action='<?=$this->action('save',$at->getAuthenticationTypeID())?>'>
+	<form class='form-horizontal' method='post' action='<?=$view->action('save',$at->getAuthenticationTypeID())?>'>
 	<?php
 }
 ?>
@@ -69,12 +69,12 @@ if ($editmode) {
 							var me = $(this);
 							order.push(me.attr('data-authID'));
 						});
-						$.post('<?=$this->action('reorder')?>',{order:order});
+						$.post('<?=$view->action('reorder')?>',{order:order});
 					}
 				});
 				$('tbody tr').click(function(){
 					var me = $(this);
-					location.href = "<?=$this->action('edit')?>"+me.attr('data-authID');
+					location.href = "<?=$view->action('edit')?>"+me.attr('data-authID');
 				});
 			});
 		})(jQuery,window.location);
@@ -95,9 +95,9 @@ if ($editmode) {
 if ($editmode) {
 	?>
 	<div class='ccm-pane-footer'>
-		<a href='<?=$this->action('')?>' class='btn pull-left'><?=t('Cancel')?></a>
+		<a href='<?=$view->action('')?>' class='btn pull-left'><?=t('Cancel')?></a>
 		<span class='pull-right'>
-			<a href='<?=$this->action($at->isEnabled()?'disable':'enable',$at->getAuthenticationTypeID())?>' class='btn btn-<?=$at->isEnabled()?'danger':'success'?>'>
+			<a href='<?=$view->action($at->isEnabled()?'disable':'enable',$at->getAuthenticationTypeID())?>' class='btn btn-<?=$at->isEnabled()?'danger':'success'?>'>
 				<?=$at->isEnabled()?t('Disable'):t('Enable')?></a>
 			<button class='btn btn-primary'><?=t('Save')?></button>
 		</span>

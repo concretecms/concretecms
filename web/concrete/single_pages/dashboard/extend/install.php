@@ -13,7 +13,7 @@ $pkgArray = Package::getInstalledList();?>
 if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScreen && $tp->canInstallPackages()) { ?>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Install %s', $pkg->getPackageName()), false, 'span10 offset1', false);?>
-<form method="post" action="<?=$this->action('install_package', $pkg->getPackageHandle())?>">
+<form method="post" action="<?=$view->action('install_package', $pkg->getPackageHandle())?>">
 <?=Loader::helper('validation/token')->output('install_options_selected')?>
 <div class="ccm-pane-body">
 <?=Loader::packageElement('dashboard/install', $pkg->getPackageHandle())?>
@@ -40,7 +40,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 <? } ?>
 </div>
 <div class="ccm-pane-footer">
-	<a href="<?=$this->url('/dashboard/extend/install')?>" class="btn pull-left"><?=t('Cancel')?></a>
+	<a href="<?=$view->url('/dashboard/extend/install')?>" class="btn pull-left"><?=t('Cancel')?></a>
 	<input type="submit" value="<?=t('Install %s', $pkg->getPackageName())?>" class="btn btn-primary pull-right" />
 </div>
 </form>
@@ -51,7 +51,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 <?
 	$removeBTConfirm = t('This will remove all elements associated with the %s package. This cannot be undone. Are you sure?', $pkg->getPackageHandle());
 ?>
-<form method="post" class="form-stacked" id="ccm-uninstall-form" action="<?=$this->action('do_uninstall_package')?>" onsubmit="return confirm('<?=$removeBTConfirm?>')">
+<form method="post" class="form-stacked" id="ccm-uninstall-form" action="<?=$view->action('do_uninstall_package')?>" onsubmit="return confirm('<?=$removeBTConfirm?>')">
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Uninstall Package'), false, 'span10 offset1', false);?>
 <div class="ccm-pane-body">
@@ -92,7 +92,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 </div>
 <div class="ccm-pane-footer">
 <? print $ch->submit(t('Uninstall'), 'ccm-uninstall-form', 'right', 'error'); ?>
-<? print $ch->button(t('Cancel'), $this->url('/dashboard/extend/install', 'inspect_package', $pkg->getPackageID()), ''); ?>
+<? print $ch->button(t('Cancel'), $view->url('/dashboard/extend/install', 'inspect_package', $pkg->getPackageID()), ''); ?>
 </div>
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper()?>
 </form>
@@ -138,7 +138,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 	}
 	
 
-	$thisURL = $this->url('/dashboard/extend/install');
+	$thisURL = $view->url('/dashboard/extend/install');
 	$availableArray = $pkgAvailableArray;
 	usort($availableArray, 'sortAvailableArray');
 	
@@ -196,7 +196,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 				<? foreach($blocks as $bt) {
 					$btIcon = $ci->getBlockTypeIconURL($bt);?>
 					<li class="ccm-block-type ccm-block-type-available">
-						<a style="background-image: url(<?=$btIcon?>)" class="ccm-block-type-inner" href="<?=$this->url('/dashboard/blocks/types', 'inspect', $bt->getBlockTypeID())?>"><?=t($bt->getBlockTypeName())?></a>
+						<a style="background-image: url(<?=$btIcon?>)" class="ccm-block-type-inner" href="<?=$view->url('/dashboard/blocks/types', 'inspect', $bt->getBlockTypeID())?>"><?=t($bt->getBlockTypeName())?></a>
 						<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeID()?>"><?=t($bt->getBlockTypeDescription())?></div>
 					</li>
 				<? } ?>
@@ -208,9 +208,9 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			<div class="ccm-pane-footer">
 			<? $tp = new TaskPermission();
 			if ($tp->canUninstallPackages()) {  ?>
-				<? print $ch->button(t('Uninstall Package'), $this->url('/dashboard/extend/install', 'uninstall', $pkg->getPackageID()), 'right'); ?>
+				<? print $ch->button(t('Uninstall Package'), $view->url('/dashboard/extend/install', 'uninstall', $pkg->getPackageID()), 'right'); ?>
 			<? } ?>
-				<a href="<?=$this->url('/dashboard/extend/install')?>" class="btn"><?=t('Back to Add Functionality')?></a>			
+				<a href="<?=$view->url('/dashboard/extend/install')?>" class="btn"><?=t('Back to Add Functionality')?></a>			
 			</div>
 			<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
 	<?
@@ -242,7 +242,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 		<? if ($updates > 0) { ?>
 			<div class="alert alert-info">
 			<h5><?=t('Add-On updates are available!')?></h5>
-			<a class="btn-xs btn-default btn pull-right" href="<?=$this->url('/dashboard/extend/update')?>"><?=t('Update Add-Ons')?></a>
+			<a class="btn-xs btn-default btn pull-right" href="<?=$view->url('/dashboard/extend/update')?>"><?=t('Update Add-Ons')?></a>
 			<? if ($updates == 1) { ?>
 				<p><?=t('There is currently <strong>1</strong> update available.')?></p>
 			<? } else { ?>
@@ -333,7 +333,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			<div class="well clearfix" style="padding:10px 20px;">
 				<h4><?=t('Connect to Community')?></h4>
 				<p><?=t('Your site is not connected to the concrete5 community. Connecting lets you easily extend a site with themes and add-ons.')?></p>
-				<p><a class="btn btn-primary pull-right" href="<?=$this->url('/dashboard/extend/connect', 'register_step1')?>"><?=t("Connect to Community")?></a></p>
+				<p><a class="btn btn-primary pull-right" href="<?=$view->url('/dashboard/extend/connect', 'register_step1')?>"><?=t("Connect to Community")?></a></p>
 			</div>
 		
 		<? } ?>

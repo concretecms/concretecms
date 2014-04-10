@@ -1,7 +1,7 @@
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper('Community Point Actions', false, false, false, array(), Page::getByPath('/dashboard/users/points', 'ACTIVE'))?>
 
 <?php if($showForm) { ?>
-<form method="post" action="<?=$this->action('save')?>" id="ccm-community-points-action" class="form-horizontal">
+<form method="post" action="<?=$view->action('save')?>" id="ccm-community-points-action" class="form-horizontal">
 <div class="ccm-pane-body">
 	<?php 
 		echo $form->hidden('upaID',$upaID);
@@ -58,13 +58,13 @@ if ($upaID > 0) {
 ?>
 
 <div class="ccm-pane-footer">
-	<a href="<?=$this->url('/dashboard/users/points/actions')?>" class="btn pull-left"><?=t('Back to List')?></a>
+	<a href="<?=$view->url('/dashboard/users/points/actions')?>" class="btn pull-left"><?=t('Back to List')?></a>
 	<button type="submit" class="btn btn-primary pull-right"><?=$label?> <i class="icon-white icon-ok"></i></button>
 </div>
 </form>		
 <?php } else { ?>
 	<div class="ccm-pane-options ccm-pane-options-permanent-search">
-		<a href="<?=$this->action('add')?>" class="btn btn-primary"><?=t('Add Action')?></a>
+		<a href="<?=$view->action('add')?>" class="btn btn-primary"><?=t('Add Action')?></a>
 	</div>
 	
 	<div class="ccm-pane-body">
@@ -99,9 +99,9 @@ if ($upaID > 0) {
 				<td><?= number_format($upa['upaDefaultPoints'])?></td>
 				<td><?php echo $upa['gName'];?></td>
 				<td style="text-align: right">
-					<?php echo $concrete_interface->button(t('Edit'),$this->action($upa['upaID']), '', 'btn btn-small')?>
+					<?php echo $concrete_interface->button(t('Edit'),$view->action($upa['upaID']), '', 'btn btn-small')?>
 
-					<?php echo $concrete_interface->button(t('Delete'),$this->action('delete',$upa['upaID']),
+					<?php echo $concrete_interface->button(t('Delete'),$view->action('delete',$upa['upaID']),
 						'', 'btn btn-small', array(),"return confirm('<?=t('Are you sure?')?>')"); ?>	
 
 				</td>

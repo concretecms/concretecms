@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Response;
-class TreeNodeResponse extends Response {
+abstract class TreeNodeResponse extends Response {
 
 	abstract public function canViewTreeNode();
 	abstract public function canDeleteTreeNode();

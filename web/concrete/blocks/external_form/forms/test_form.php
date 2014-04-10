@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 if (isset($response)) { ?>
 	<?=$response?>
 <? } ?>
-<form method="post" action="<?=$this->action('test_search')?>">
+<form method="post" action="<?=$view->action('test_search')?>">
 
 <p><?=t("This is just an example of how a custom form works.")?></p>
 

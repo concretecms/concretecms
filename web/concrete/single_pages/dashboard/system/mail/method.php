@@ -9,7 +9,7 @@ $form = Loader::helper('form');
 	
 
 	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('SMTP Method'), false, 'span8 offset2', false)?>
-	<form method="post" action="<?=$this->url('/dashboard/system/mail/method', 'save_settings')?>" class="form-horizontal" id="mail-settings-form">
+	<form method="post" action="<?=$view->url('/dashboard/system/mail/method', 'save_settings')?>" class="form-horizontal" id="mail-settings-form">
 	<?php Loader::helper('validation/token')->output('save_settings') ?>
 	<div class="ccm-pane-body">
 	<fieldset>
@@ -57,7 +57,7 @@ $form = Loader::helper('form');
 	</fieldset>	
 	</div>
 	<div class="ccm-pane-footer">
-		<a href="<?=$this->url('/dashboard/system/mail/method/test_settings')?>" class="btn"><?=t('Test Settings')?></a>
+		<a href="<?=$view->url('/dashboard/system/mail/method/test_settings')?>" class="btn"><?=t('Test Settings')?></a>
 		<?=$ih->submit(t('Save'), 'mail-settings-form','right','primary')?>
 	</div>
 	</form>

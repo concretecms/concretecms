@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Block\Search;
 use Loader;
-use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use CollectionAttributeKey;
 use \Concrete\Core\Page\Search\IndexedPageList;
 use \Concrete\Core\Block\BlockController;
 use Page;
