@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Dashboard_Reports_Surveys extends DashboardController {
+class Concrete5_Controller_Dashboard_Reports_Surveys extends DashboardPageController {
 
 	public function formatDate($inputTime) {
 		if(empty($inputTime)) {

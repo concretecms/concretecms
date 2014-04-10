@@ -1,6 +1,6 @@
 <?php
 
-class Concrete5_Controller_Page_Dashboard_Users_Points extends DashboardController {
+class Concrete5_Controller_Page_Dashboard_Users_Points extends DashboardPageController {
 
 	public $helpers = array('form','concrete/interface', 'concrete/urls', 'image', 'concrete/asset_library','form/user_selector');
 	

@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Page_Dashboard_System_BackupRestore_Database extends DashboardController {
+class Concrete5_Controller_Page_Dashboard_System_BackupRestore_Database extends DashboardPageController {
 	
 	public function view(){
 	}

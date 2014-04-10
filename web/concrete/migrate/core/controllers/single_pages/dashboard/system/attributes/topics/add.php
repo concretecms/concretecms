@@ -1,6 +1,6 @@
 <? 
 
-class Concrete5_Controller_Page_Dashboard_System_Attributes_Topics_Add extends DashboardController {
+class Concrete5_Controller_Page_Dashboard_System_Attributes_Topics_Add extends DashboardPageController {
 
 	public function submit() {
 		$vs = Loader::helper('validation/strings');

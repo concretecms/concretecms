@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_System_Conversations_Editor extends DashboardController {
+class Concrete5_Controller_Page_Dashboard_System_Conversations_Editor extends DashboardPageController {
 
 	public function view() {
 		$db = Loader::db();

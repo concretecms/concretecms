@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_System_Permissions_Tasks extends DashboardController {
+class Concrete5_Controller_Page_Dashboard_System_Permissions_Tasks extends DashboardPageController {
 	
 	public function save() {
 		if (Loader::helper('validation/token')->validate('save_permissions')) {

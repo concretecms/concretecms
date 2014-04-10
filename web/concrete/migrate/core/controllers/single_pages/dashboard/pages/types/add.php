@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Page_Dashboard_Pages_Types_Add extends DashboardController {
+class Concrete5_Controller_Page_Dashboard_Pages_Types_Add extends DashboardPageController {
 
 	public function submit() {
 		$vs = Loader::helper('validation/strings');

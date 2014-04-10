@@ -1,7 +1,11 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied."); 
+namespace \Concrete\Controller\SinglePage\Account\Members;
+use \Concrete\Core\Page\Controller\AccountPageController;
+use \Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
+use Loader;
+use UserList;
 
-class Concrete5_Controller_Page_Account_Members_Directory extends AccountPageController {
+class Directory extends AccountPageController {
 
 	public function on_start() {
 		parent::on_start();

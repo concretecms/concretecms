@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Page_Dashboard_System_Registration_AuthenticationTypes extends DashboardController {
+class Concrete5_Controller_Page_Dashboard_System_Registration_AuthenticationTypes extends DashboardPageController {
 
 	public function view($message = NULL) {
 

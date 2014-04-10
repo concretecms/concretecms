@@ -28,7 +28,8 @@ class ClassLoader  {
 		\Zend_Loader_Autoloader::getInstance();
 		$mapping = array(
 			'PasswordHash' => DIR_BASE_CORE . '/vendor/phpass/PasswordHash.php',
-			'URLify' => DIR_BASE_CORE . '/vendor/urlify/urlify.php'
+			'URLify' => DIR_BASE_CORE . '/vendor/urlify/urlify.php',
+			'Mobile_Detect' => DIR_BASE_CORE . '/vendor/mobile_detect/Mobile_Detect.php'
 		);
 
 		$loader = new SymfonyMapClassloader($mapping);

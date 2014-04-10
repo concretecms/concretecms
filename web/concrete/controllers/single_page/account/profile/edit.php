@@ -1,7 +1,14 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
+namespace Concrete\Controller\SinglePage\Profile;
+use \Concrete\Core\Page\Controller\AccountPageController;
+use UserInfo;
+use Exception;
+use \Concrete\Core\Authentication\AuthenticationType;
+use \Concrete\Core\Authentication\AuthenticationTypeFailureException;
+use Loader;
+use \Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
 
-class Concrete5_Controller_Page_Account_Profile_Edit extends AccountPageController {
+class Edit extends AccountPageController {
 	
 	public function view() {
 		$u = new User();

@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Page_Dashboard_Users_Add extends DashboardController {
+class Concrete5_Controller_Page_Dashboard_Users_Add extends DashboardPageController {
 
 	public function on_start() {
 		$this->set('form',Loader::helper('form'));

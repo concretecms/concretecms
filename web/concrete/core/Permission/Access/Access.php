@@ -31,7 +31,7 @@ class Access extends Object {
 	protected function deliverAccessListItems($q, $accessType, $filterEntities) {
 		$db = Loader::db();
 		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\ListItem\\' . helper('text')->camelcase($this->pk->getPermissionKeyCategoryHandle()) . 'ListItem');
-		if ($r['pkHasCustomClass']) {
+		if ($this->pk->permissionKeyHasCustomClass()) {
 			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\ListItem\\' . helper('text')->camelcase($this->pk->getPermissionKeyHandle() . '_' . $this->pk->getPermissionKeyCategoryHandle()) . 'ListItem');
 		}
 

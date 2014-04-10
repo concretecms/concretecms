@@ -1,8 +1,11 @@
 <?
 
-defined('C5_EXECUTE') or die("Access Denied.");
+namespace \Concrete\Controller\SinglePage;
+use \Concrete\Core\Page\Controller\PageController;
+use Loader;
+use User;
 
-class Concrete5_Controller_Page_PageForbidden extends Controller {
+class PageForbidden extends PageController {
 	
 	protected $viewPath = '/page_forbidden';
 

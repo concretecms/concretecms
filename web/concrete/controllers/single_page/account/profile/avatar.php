@@ -1,7 +1,9 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
+namespace Concrete\Controller\SinglePage\Profile
+use \Concrete\Controller\SinglePage\Profile\Edit as AccountProfileEditPageController;
+use Loader;
 
-class Concrete5_Controller_Page_Account_Profile_Avatar extends AccountProfileEditPageController {
+class Avatar extends AccountProfileEditPageController {
 	
 	public function view() {
 		parent::view();

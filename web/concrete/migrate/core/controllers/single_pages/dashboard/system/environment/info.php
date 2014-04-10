@@ -1,7 +1,7 @@
 <?php 
 
 defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_System_Environment_Info extends DashboardController {	
+class Concrete5_Controller_Page_Dashboard_System_Environment_Info extends DashboardPageController {	
 	
 	public function get_environment_info() {
 		$activeLocale = Localization::activeLocale();

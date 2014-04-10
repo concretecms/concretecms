@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Page_Dashboard_System_Seo_Excluded extends DashboardController {
+class Concrete5_Controller_Page_Dashboard_System_Seo_Excluded extends DashboardPageController {
 		
 	public function save() {
 		Config::save('SEO_EXCLUDE_WORDS',Loader::helper('security')->sanitizeString($this->post('SEO_EXCLUDE_WORDS')));

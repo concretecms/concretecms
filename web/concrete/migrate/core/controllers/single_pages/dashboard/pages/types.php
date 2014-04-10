@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 
-class Concrete5_Controller_Page_Dashboard_Pages_Types extends DashboardController {
+class Concrete5_Controller_Page_Dashboard_Pages_Types extends DashboardPageController {
 
 	public function page_type_added() {
 		$this->set('success', t('Page Type added successfully.'));

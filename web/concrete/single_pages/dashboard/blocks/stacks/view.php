@@ -1,4 +1,9 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<? 
+use \Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
+use \Concrete\Core\Workflow\Progress\PageProgress as PageWorkflowProgress;
+use \Concrete\Core\Block\View\BlockView;
+
+defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <? if ($this->controller->getTask() == 'view_details') { 
 	$sv = CollectionVersion::get($stack, 'ACTIVE');
@@ -156,12 +161,12 @@
 			$bv->setAreaObject($a); 
 			$p = new Permissions($b);
 			if ($p->canViewBlock()) {
-				$bv->renderElement('block_header', array( 'a' => $a, 'b' => $b, 'p' => $p ));
+				Loader::element('block_header', array( 'a' => $a, 'b' => $b, 'p' => $p ));
 				$bv->render('view');
-				$bv->renderElement('block_footer');
+				Loader::element('block_footer');
 			}
 		}
-		$bv->renderElement('block_area_footer_view', array('a' => $a));	
+		Loader::element('block_area_footer_view', array('a' => $a));	
 		print '</div>'; // instead  of loading block area footer view
 	?>	
 	</div>

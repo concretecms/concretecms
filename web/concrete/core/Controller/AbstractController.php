@@ -62,7 +62,6 @@ abstract class AbstractController {
 		if (isset($this->sets[$key])) {
 			return $this->sets[$key];
 		}
-		return Request::get($key, $defaultValue);
 	}
 
 	public function getTask() {

@@ -56,7 +56,7 @@ print $dh->getIntelligentSearchMenu();
 	<div class="ccm-panel-content-wrapper ccm-ui">
 		<div class="ccm-panel-content ccm-panel-content-visible">
 <?
-$cnt = new DashboardPanelController();
+$cnt = new \Concrete\Controller\Panel\Dashboard();
 $cnt->setPageObject($c);
 $cnt->view();
 $nav = $cnt->get('nav');

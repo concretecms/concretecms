@@ -1,6 +1,15 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_Blocks_Stacks extends DashboardController {
+namespace Concrete\Controller\SinglePage\Dashboard\Blocks;
+use \Concrete\Core\Page\Controller\DashboardPageController;
+use StackList, Stack;
+use Page;
+use Permissions;
+use Loader;
+use \Concrete\Workflow\Request\DeletePageRequest as DeletePagePageWorkflowRequest;
+use View;
+use Exception;
+
+class Stacks extends DashboardPageController {
 
 	
 	public function on_start() {

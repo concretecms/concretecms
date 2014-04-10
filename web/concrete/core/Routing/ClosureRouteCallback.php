@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Routing;
+use Response;
 class ClosureRouteCallback extends RouteCallback {
 
 	public function execute(\Concrete\Core\Http\Request $request, \Concrete\Core\Routing\Route $route, $parameters) {
@@ -9,7 +10,7 @@ class ClosureRouteCallback extends RouteCallback {
 	}
 
 	public static function getRouteAttributes($callback) {
-		$callback = new ClosureRouteCallback($callback);
+		$callback = new static($callback);
 		return array('callback' => $callback);
 	}
 

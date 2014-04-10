@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_System_Permissions_Site extends DashboardController {
+class Concrete5_Controller_Page_Dashboard_System_Permissions_Site extends DashboardPageController {
 	public function view() {
 		$editAccess = array();
 		if (PERMISSIONS_MODEL != 'simple') {

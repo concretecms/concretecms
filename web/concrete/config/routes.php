@@ -152,6 +152,13 @@ $rl->register('/system/panels/details/page/permissions/simple/submit', 'Controll
 $rl->register('/system/panels/details/page/permissions/advanced/submit', 'Controller\Panel\Detail\Page\Permissions::save_advanced');
 
 /** 
+ * Special Dashboard
+ */
+$rl->register('/dashboard/blocks/stacks/list', function() {
+	return Redirect::to('/');
+});
+
+/** 
  * Page Routes - these must come at the end.
  */
 $rl->register('/', 'dispatcher', 'home');

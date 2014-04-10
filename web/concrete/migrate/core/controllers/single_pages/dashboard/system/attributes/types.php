@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die('Access Denied');
 
-class Concrete5_Controller_Page_Dashboard_System_Attributes_Types extends DashboardController {
+class Concrete5_Controller_Page_Dashboard_System_Attributes_Types extends DashboardPageController {
 	
 	public function add_attribute_type() {
 		$pat = PendingAttributeType::getByHandle($this->post('atHandle'));

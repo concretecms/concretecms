@@ -99,13 +99,12 @@ class Dashboard {
 			if (count($trail) > 1 && (!is_object($upToPage))) {
 				$upToPage = Page::getByID($parent->getCollectionParentID());
 			}
-			Loader::block('autonav');
 			$subpages = array();
 			if ($navigatePages !== -1) { 
 				if (count($navigatePages) > 0) { 
 					$subpages = $navigatePages;
 				} else { 
-					$subpages = AutonavBlockController::getChildPages($parent);
+					$subpages = \Concrete\Block\Autonav\Controller::getChildPages($parent);
 				}
 			}
 			

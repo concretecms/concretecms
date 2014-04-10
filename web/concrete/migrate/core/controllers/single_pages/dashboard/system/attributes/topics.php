@@ -1,6 +1,6 @@
 <? 
 
-class Concrete5_Controller_Page_Dashboard_System_Attributes_Topics extends DashboardController {
+class Concrete5_Controller_Page_Dashboard_System_Attributes_Topics extends DashboardPageController {
 
 	public function view($treeID = false) {
 		$defaultTree = TopicTree::getDefault();
