@@ -144,7 +144,7 @@ if ($showTable) { ?>
 	<?else:?>
 
 	<div class="ccm-list-action-row">
-		<a id="ccm-export-results" href="<?=$this->action('excel', '?qsid=' . $questionSet)?>"><span></span><?=t('Export to Excel')?></a>
+		<a id="ccm-export-results" href="<?=$view->action('excel', '?qsid=' . $questionSet)?>"><span></span><?=t('Export to Excel')?></a>
 	</div>
 
 	<div class="form-results-container">

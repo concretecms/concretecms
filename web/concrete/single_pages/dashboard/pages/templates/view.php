@@ -8,7 +8,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
   
     <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Update Page Template'), false, false, false);?>
     
-    <form method="post" class="form-horizontal" id="update_page_template" action="<?=$this->url('/dashboard/pages/templates', 'update')?>">
+    <form method="post" class="form-horizontal" id="update_page_template" action="<?=$view->url('/dashboard/pages/templates', 'update')?>">
     <?=$this->controller->token->output('update_page_template')?>
     <input type="hidden" name="pTemplateID" value="<?=$template->getPageTemplateID()?>" />
     <div class="ccm-pane-body">
@@ -17,7 +17,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <script type="text/javascript">
         deleteTemplate = function() {
             if(confirm('<?=$confirmMsg?>')){ 
-                location.href="<?=$this->url('/dashboard/pages/templates/','delete',$template->getPageTemplateID(), $this->controller->token->generate('delete_page_template'))?>";
+                location.href="<?=$view->url('/dashboard/pages/templates/','delete',$template->getPageTemplateID(), $this->controller->token->generate('delete_page_template'))?>";
             }   
         }
         </script>
@@ -59,7 +59,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     </div>
     
     <div class="ccm-pane-footer">
-        <a href="<?=$this->url('/dashboard/pages/templates')?>" class="btn btn-default pull-left"><?=t("Cancel")?></a>
+        <a href="<?=$view->url('/dashboard/pages/templates')?>" class="btn btn-default pull-left"><?=t("Cancel")?></a>
         <div class="btn-toolbar pull-right">
             <button class="btn btn-danger" onclick="deleteTemplate()" type="button"><?=t('Delete Template')?></button>
             <button type="submit" class="btn btn-primary"><?=t('Update')?></button>
@@ -85,7 +85,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 <div style="text-align: center"><?=$pt->getPageTemplateIconImage()?></div>
                 <div class="caption">
                 <h4><?=$pt->getPageTemplateName()?></h4>
-                <p><a href="<?=$this->action('edit', $pt->getPageTemplateID())?>" class="btn btn-default"><?=t('Edit')?></a></p>
+                <p><a href="<?=$view->action('edit', $pt->getPageTemplateID())?>" class="btn btn-default"><?=t('Edit')?></a></p>
                 </div>
             </div>
           </div>
@@ -96,7 +96,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
     <? } ?>
     <br/>
-    <div class="clearfix"><a href="<?=$this->url('/dashboard/pages/templates/add')?>" class="btn btn-primary"><?=t('Add Template')?></a></div>
+    <div class="clearfix"><a href="<?=$view->url('/dashboard/pages/templates/add')?>" class="btn btn-primary"><?=t('Add Template')?></a></div>
 
     <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper()?>
 <? } ?>

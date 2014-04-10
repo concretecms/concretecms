@@ -5,11 +5,13 @@ use UserList;
 use \Concrete\Core\User\Search\ColumnSet\ColumnSet as UserSearchColumnSet;
 use \Concrete\Core\User\Search\Result\Result as UserSearchResult;
 use GroupList;
-use \Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
+use UserAttributeKey;
 use Permissions;
 use Loader;
 use GroupSet;
 use stdClass;
+use User;
+use URL;
 class Users extends Controller {
 
 	protected $fields = array();

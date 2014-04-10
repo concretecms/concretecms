@@ -19,7 +19,7 @@ $form = Loader::helper('form');
 
 			?>
 			<fieldset>
-				<form method="post" action="<?=$this->url('/login', 'fill_attributes')?>">
+				<form method="post" action="<?=$view->url('/login', 'fill_attributes')?>">
 					<?php
 					foreach ($required_attributes as $attribute) {
 						?>
@@ -70,7 +70,7 @@ $form = Loader::helper('form');
 						?>
 						<div data-authType='<?=$auth->getAuthenticationTypeHandle()?>' style='<?=$first?"display:block":"display:none"?>'>
 							<fieldset>
-								<form method='post' class='form-horizontal' action='<?=$this->url('/login', 'authenticate', $auth->getAuthenticationTypeHandle())?>'>
+								<form method='post' class='form-horizontal' action='<?=$view->url('/login', 'authenticate', $auth->getAuthenticationTypeHandle())?>'>
 									<div class='authForm'>
 										<?$auth->renderForm()?>
 									</div>

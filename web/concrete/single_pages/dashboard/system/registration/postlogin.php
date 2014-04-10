@@ -3,7 +3,7 @@
 <?php
 $h = Loader::helper('concrete/ui');
 ?>
-    <form method="post" id="login-redirect-form" action="<?php echo $this->url('/dashboard/system/registration/postlogin', 'update_login_redirect')?>">  
+    <form method="post" id="login-redirect-form" action="<?php echo $view->url('/dashboard/system/registration/postlogin', 'update_login_redirect')?>">  
     	<?php echo $this->controller->token->output('update_login_redirect')?>
     <div class="ccm-pane-body"> 
     	

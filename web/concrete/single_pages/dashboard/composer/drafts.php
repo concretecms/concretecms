@@ -22,7 +22,7 @@ foreach($drafts as $dr) {
 		$pageName = ($dr->getCollectionName()) ? $dr->getCollectionName() : t('(Untitled Page)');
 		?>
 	<tr>
-		<td><a href="<?=$this->url('/dashboard/composer/write', 'draft', $dr->getCollectionID())?>"><?=$pageName?></a></td>
+		<td><a href="<?=$view->url('/dashboard/composer/write', 'draft', $dr->getCollectionID())?>"><?=$pageName?></a></td>
 		<td><?
 		$ui = UserInfo::getByID($dr->getCollectionUserID());
 		if (is_object($ui)) {
@@ -48,7 +48,7 @@ foreach($drafts as $dr) {
 
 if ($num == 0) { ?>
 	
-	<p><?=t('There are no drafts. <a href="%s">Visit Composer &gt;</a>', $this->url('/dashboard/composer/write'))?></p>
+	<p><?=t('There are no drafts. <a href="%s">Visit Composer &gt;</a>', $view->url('/dashboard/composer/write'))?></p>
 
 <? } ?>
 

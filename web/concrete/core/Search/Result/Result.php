@@ -58,12 +58,12 @@ class Result {
 	}
 
 	public function getColumnDetails($column) {
-		$node = new SearchResultColumn($this, $column);
+		$node = new Column($this, $column);
 		return $node;
 	}
 
 	public function getItemDetails($item) {
-		$node = new SearchResultItem($this, $this->listColumns, $item);
+		$node = new Item($this, $this->listColumns, $item);
 		return $node;
 	}
 

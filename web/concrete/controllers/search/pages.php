@@ -4,11 +4,13 @@ use Controller;
 use PageList;
 use \Concrete\Core\Page\Search\ColumnSet\ColumnSet as PageSearchColumnSet;
 use \Concrete\Core\Page\Search\Result\Result as PageSearchResult;
-use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use CollectionAttributeKey;
 use Permissions;
 use Loader;
 use stdClass;
 use PageTheme;
+use URL;
+
 
 class Pages extends Controller {
 

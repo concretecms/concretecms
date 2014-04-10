@@ -1,5 +1,5 @@
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Assign Community Points'), false, false, false, array(), Page::getByPath('/dashboard/users/points', 'ACTIVE'))?>
-<form method="post" action="<?=$this->action('save')?>" id="ccm-community-point-entry" class="form-horizontal">
+<form method="post" action="<?=$view->action('save')?>" id="ccm-community-point-entry" class="form-horizontal">
 <div class="ccm-pane-body">
 	<?php if(isset($upID) && $upID > 0) {
 		echo $form->hidden('upID',$upID);
@@ -14,7 +14,7 @@
 	<div class="control-group">
 		<label class="control-label"><?php echo t('Action');?></label>
 		<div class="controls">
-			<?php echo $form->select('upaID',$userPointActions,$upaID,array('json-src'=>$this->action('getJsonDefaultPointAction'))); ?>
+			<?php echo $form->select('upaID',$userPointActions,$upaID,array('json-src'=>$view->action('getJsonDefaultPointAction'))); ?>
 		</div>
 	</div>
 	
@@ -42,7 +42,7 @@
 	</div>
 </div>
 <div class="ccm-pane-footer">
-	<a href="<?=$this->url('/dashboard/users/points')?>" class="btn pull-left"><?=t('Back to List')?></a>
+	<a href="<?=$view->url('/dashboard/users/points')?>" class="btn pull-left"><?=t('Back to List')?></a>
 	<button type="submit" class="btn btn-primary pull-right"><?=t('Assign')?> <i class="icon-white icon-ok"></i></button>
 </div>
 </form>

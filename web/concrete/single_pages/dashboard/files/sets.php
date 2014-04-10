@@ -4,7 +4,7 @@
 
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Set'), false, 'span10 offset1', false)?>
-	<form method="post" class="form-horizontal" id="file_sets_edit" action="<?=$this->url('/dashboard/files/sets', 'file_sets_edit')?>">
+	<form method="post" class="form-horizontal" id="file_sets_edit" action="<?=$view->url('/dashboard/files/sets', 'file_sets_edit')?>">
 		<?=$validation_token->output('file_sets_edit');?>
 
 	<div class="ccm-pane-body">
@@ -27,7 +27,7 @@
 		<script type="text/javascript">
 		deleteFileSet = function() {
 			if (confirm('<?=$delConfirmJS?>')) { 
-				location.href = "<?=$this->url('/dashboard/files/sets', 'delete', $fs->getFileSetID(), Loader::helper('validation/token')->generate('delete_file_set'))?>";				
+				location.href = "<?=$view->url('/dashboard/files/sets', 'delete', $fs->getFileSetID(), Loader::helper('validation/token')->generate('delete_file_set'))?>";				
 			}
 		}
 		</script>
@@ -144,7 +144,7 @@
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Sets'), false, 'span10 offset1', false)?>
 	<div class="ccm-pane-options">
 		
-		<form id="ccm-file-set-search" method="get" action="<?=$this->url('/dashboard/files/sets')?>" class="form-horizontal">
+		<form id="ccm-file-set-search" method="get" action="<?=$view->url('/dashboard/files/sets')?>" class="form-horizontal">
 		<div class="ccm-pane-options-permanent-search">
 
 		<div class="span4">
@@ -185,7 +185,7 @@
 		<? foreach ($fileSets as $fs) { ?>
 		
 			<div class="ccm-group">
-				<a class="ccm-group-inner" href="<?=$this->url('/dashboard/files/sets/', 'view_detail', $fs->getFileSetID())?>" style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=$fs->getFileSetName()?></a>
+				<a class="ccm-group-inner" href="<?=$view->url('/dashboard/files/sets/', 'view_detail', $fs->getFileSetID())?>" style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=$fs->getFileSetName()?></a>
 			</div>
 		
 		

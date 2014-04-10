@@ -13,12 +13,12 @@
 		</div>
 		<? if ($profile->hasAvatar()) { ?>
 			<br/><br/>
-			<a href="<?php echo $this->action('delete')?>" class="btn btn-danger"><?php echo t('Remove your user avatar')?> <i class="icon-trash icon-white"></i></a>
+			<a href="<?php echo $view->action('delete')?>" class="btn btn-danger"><?php echo t('Remove your user avatar')?> <i class="icon-trash icon-white"></i></a>
 		<? } ?>	
 			
 		<script type="text/javascript">
 		ThumbnailBuilder_onSaveCompleted = function() { 
-			window.location.href="<?php echo $this->url('/account/profile/avatar', 'saved')?>";
+			window.location.href="<?php echo $view->url('/account/profile/avatar', 'saved')?>";
 		};
 
 		/* <?php /* flashvars - options for the avatar/thumb picker  
@@ -47,7 +47,7 @@
 				width: '<?php echo AVATAR_WIDTH?>',
 				height: '<?php echo AVATAR_HEIGHT?>',
 				image: '<?php echo $av->getImagePath($profile)?>',
-				save: "<?php echo $this->url($c->getCollectionPath(), 'save_thumb')?>"    
+				save: "<?php echo $view->url($c->getCollectionPath(), 'save_thumb')?>"    
 			};
 			swfobject.embedSWF ("<?php echo ASSETS_URL_FLASH?>/thumbnail_editor_3.swf", "profile-avatar", "500", "400", "10,0,0,0", "includes/expressInstall.swf", flashvars, params);
 	

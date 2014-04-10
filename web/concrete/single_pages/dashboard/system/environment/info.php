@@ -5,7 +5,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	$('#ccm-dashboard-environment-info').load('<?php  echo $this->action('get_environment_info')?>');	
+	$('#ccm-dashboard-environment-info').load('<?php  echo $view->action('get_environment_info')?>');	
 });
 </script>
 

@@ -3,7 +3,7 @@ namespace \Concrete\Controller\Dialog\Page\Search;
 use \Concrete\Controller\Backend\UI as BackendInterfaceController;
 use \Concrete\Core\Page\Search\ColumnSet\ColumnSet as PageSearchColumnSet;
 use \Concrete\Core\Page\Search\ColumnSet\Available as PageSearchAvailableColumnSet;
-use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use CollectionAttributeKey;
 use \Concrete\Core\Page\Search\Result\Result as PageSearchResult;
 use \Concrete\Core\Search\Response as SearchResponse;
 

@@ -3,7 +3,7 @@ namespace \Concrete\Controller\Dialog\File;
 use \Concrete\Controller\Backend\UI\File as BackendInterfaceFileController;
 use \Concrete\Core\Http\ResponseAssetGroup;
 use Permissions;
-use \Concrete\Core\Attribute\Key\FileKey as FileAttributeKey;
+use FileAttributeKey;
 use \Concrete\Core\File\EditResponse as FileEditResponse;
 
 class Properties extends BackendInterfaceFileController {

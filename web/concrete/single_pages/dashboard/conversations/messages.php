@@ -86,7 +86,7 @@ $ip = Loader::helper('validation/ip'); ?>
 
 <div class="ccm-pane-options">
 	<div class="ccm-pane-options-permanent-search">
-		<form method="get" action="<?=$this->action('view')?>" class="form-inline">
+		<form method="get" action="<?=$view->action('view')?>" class="form-inline">
 			<div class="control-group">
 				<?=$form->text('cmpMessageKeywords', array("placeholder" => t('Search Messages')))?>
 				<?=$form->select('cmpMessageFilter', array('any'=>t('** Any')) + $cmpFilterTypes, array("class" => "span2"))?>
@@ -97,7 +97,7 @@ $ip = Loader::helper('validation/ip'); ?>
 	</div>
 </div>
 <div class="ccm-pane-body">
-	<form action="<?=$this->action('bulk_update')?>" method="post" id="ccm-conversation-messages-multiple-update">
+	<form action="<?=$view->action('bulk_update')?>" method="post" id="ccm-conversation-messages-multiple-update">
 	<? Loader::helper('validation/token')->output(); ?>
 	<div style="margin-bottom: 10px">
 		<select id="ccm-conversation-messages-multiple-operations" class="span3" disabled="">
@@ -228,15 +228,15 @@ $(function() {
 	
 	var attachButtonBindings = function(parentObj, targetSelector, selectedAction) {
 		var controllerActions = {};
-		controllerActions.approve = '<?php echo $this->action('approve'); ?>';
-		controllerActions.unapprove = '<?php echo $this->action('unapprove'); ?>';
-		controllerActions.markSpam = '<?php echo $this->action('markSpam'); ?>';
-		controllerActions.unmarkSpam = '<?php echo $this->action('unmarkSpam'); ?>';
-		controllerActions.deleteMessage = '<?php echo $this->action('deleteMessage'); ?>';
-		controllerActions.restoreMessage = '<?php echo $this->action('restoreMessage'); ?>';
-		controllerActions.markUser = '<?php echo $this->action('markUser'); ?>';
-		controllerActions.deactivateUser = '<?php echo $this->action('deactivateUser'); ?>';
-		controllerActions.blockUserIP = '<?php echo $this->action('blockUserIP'); ?>';
+		controllerActions.approve = '<?php echo $view->action('approve'); ?>';
+		controllerActions.unapprove = '<?php echo $view->action('unapprove'); ?>';
+		controllerActions.markSpam = '<?php echo $view->action('markSpam'); ?>';
+		controllerActions.unmarkSpam = '<?php echo $view->action('unmarkSpam'); ?>';
+		controllerActions.deleteMessage = '<?php echo $view->action('deleteMessage'); ?>';
+		controllerActions.restoreMessage = '<?php echo $view->action('restoreMessage'); ?>';
+		controllerActions.markUser = '<?php echo $view->action('markUser'); ?>';
+		controllerActions.deactivateUser = '<?php echo $view->action('deactivateUser'); ?>';
+		controllerActions.blockUserIP = '<?php echo $view->action('blockUserIP'); ?>';
 		var selectedButtons = parentObj.find(targetSelector);
 		if(selectedButtons){
 			selectedButtons.each(function(){

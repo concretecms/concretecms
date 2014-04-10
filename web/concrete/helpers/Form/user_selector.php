@@ -2,6 +2,7 @@
 namespace Concrete\Helper\Form;
 use UserInfo;
 use URL;
+use Loader;
 class UserSelector {
 
 	/**

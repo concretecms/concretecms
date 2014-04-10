@@ -1,8 +1,13 @@
 <?
 namespace Concrete\Controller\SinglePage\Dashboard\Files;
 use \Concrete\Core\Page\Controller\DashboardPageController;
+use \Concrete\Core\File\Set\SetList as FileSetList;
+use FileSet;
+use Permissions;
+use Loader;
+
 class Sets extends DashboardPageController {
-	public $helpers = array('form','validation/token','concrete/interface'); 
+	public $helpers = array('form','validation/token','concrete/ui'); 
 
 	public function view() {
 		

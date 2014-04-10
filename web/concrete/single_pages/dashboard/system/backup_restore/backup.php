@@ -64,7 +64,7 @@ $dh = Loader::helper('date');
 <div id="confirmDelete" style="display:none" class="ccm-ui">
 		<p><?= t('This action <strong>cannot be undone</strong>. Are you sure?') ?></p>
 		<div class="dialog-buttons">
-			<form method="post" action="<?= $this->action('delete_backup') ?>" style="display: inline">
+			<form method="post" action="<?= $view->action('delete_backup') ?>" style="display: inline">
 			<input type="hidden" name="backup_file" value="" />
 			<?= $interface->submit(t('Delete Backup'), false, 'right', 'error'); ?>
 	</form>
@@ -77,7 +77,7 @@ $dh = Loader::helper('date');
 <div id="confirmRestore" style="display:none" class="ccm-ui">
 		<p><?= t('This action <strong>cannot be undone</strong>. Are you sure?') ?></p>
 		<div class="dialog-buttons">
-			<form method="post" action="<?= $this->action('restore_backup') ?>" style="display: inline">	
+			<form method="post" action="<?= $view->action('restore_backup') ?>" style="display: inline">	
 			<input type="hidden" name="backup_file" value="" />
 			<?= $interface->submit(t('Restore Backup'), false, 'right', 'primary'); ?>
 		</form>
@@ -110,7 +110,7 @@ if ($tp->canBackup()) {
 							<td width="50%" style="white-space: nowrap"><?= $dh->date(DATE_APP_GENERIC_MDYT_FULL, strtotime($arr_bkupInf['date'])) ?></td>
 							<td width="50%"><?= $arr_bkupInf['file']; ?></td>
 							<td style="white-space: nowrap">
-								<?= $interface->button_js(t('Download'), 'window.location.href=\'' . $this->action('download', $arr_bkupInf['file']) . '\'', 'left', 'small'); ?>
+								<?= $interface->button_js(t('Download'), 'window.location.href=\'' . $view->action('download', $arr_bkupInf['file']) . '\'', 'left', 'small'); ?>
 								
 								<? print $interface->button_js(t("Restore"), "confirmRestore('" . $arr_bkupInf['file'] . "')", 'left','small'); ?>
 								
@@ -130,7 +130,7 @@ if ($tp->canBackup()) {
 				$crypt = Loader::helper('encryption');
 			?>
 			<h3><?=t('Create new Backup')?></h3>
-				<form method="post" action="<?= $this->action('run_backup') ?>">
+				<form method="post" action="<?= $view->action('run_backup') ?>">
 					<div class="ccm-buttons well">
 						<?= $interface->submit(t("Run Backup"), false, "left") ?>
 						<br/><br/>

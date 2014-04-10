@@ -7,7 +7,7 @@ use Cookie;
 use stdClass;
 use Permissions;
 use PageType;
-
+use Page;
 class Sitemap {
 
 

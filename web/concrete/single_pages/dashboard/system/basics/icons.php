@@ -2,7 +2,7 @@
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Bookmark Icons'), false, 'span10 offset1')?>
 
 
-	<form method="post" class="form-horizontal" id="favicon-form" action="<?=$this->action('update_favicon')?>" enctype="multipart/form-data" >
+	<form method="post" class="form-horizontal" id="favicon-form" action="<?=$view->action('update_favicon')?>" enctype="multipart/form-data" >
 
 
 	<?=$this->controller->token->output('update_favicon')?>
@@ -66,7 +66,7 @@
 	
 	<br/><br/>
 
-	<form method="post" id="iphone-form" class="form-horizontal" action="<?=$this->action('update_iphone_thumbnail')?>" enctype="multipart/form-data" >
+	<form method="post" id="iphone-form" class="form-horizontal" action="<?=$view->action('update_iphone_thumbnail')?>" enctype="multipart/form-data" >
 	<?=$this->controller->token->output('update_iphone_thumbnail')?>
 	<input id="remove-existing-iphone-thumbnail" name="remove_icon" type="hidden" value="0" />
 
@@ -125,7 +125,7 @@
 	
 	</form>
 
-	<form method="post" id="modern-form" class="form-horizontal" action="<?php echo $this->action('update_modern_thumbnail'); ?>" enctype="multipart/form-data">
+	<form method="post" id="modern-form" class="form-horizontal" action="<?php echo $view->action('update_modern_thumbnail'); ?>" enctype="multipart/form-data">
 		<?php echo $this->controller->token->output('update_modern_thumbnail'); ?>
 		<input id="remove-existing-modern-thumbnail" name="remove_icon" type="hidden" value="0" />
 		<fieldset>

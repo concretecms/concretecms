@@ -4,7 +4,7 @@ use \Concrete\Controller\Backend\UI as BackendInterfaceController;
 use Permissions;
 use Page;
 use \Concrete\Core\Http\ResponseAssetGroup;
-use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use CollectionAttributeKey;
 use \Concrete\Core\Page\EditResponse as PageEditResponse;
 
 class Properties extends BackendInterfaceController {

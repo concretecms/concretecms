@@ -147,7 +147,7 @@
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Move Multiple Groups" path="/dashboard/users/groups/bulk_update" filename="/dashboard/users/groups/bulk_update.php" pagetype="" description="" package="">
+        <page name="Move Multiple Groups" path="/dashboard/users/groups/bulkupdate" filename="/dashboard/users/groups/bulkupdate.php" pagetype="" description="" package="">
         </page>
         <page name="Group Sets" path="/dashboard/users/group_sets" filename="/dashboard/users/group_sets.php" pagetype="" description="" package="">
 			<attributes>
@@ -320,7 +320,7 @@
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Workflow List" path="/dashboard/workflow/list" filename="/dashboard/workflow/list.php" pagetype="" description="" package="">
+        <page name="Workflow List" path="/dashboard/workflow/workflows" filename="/dashboard/workflow/workflows.php" pagetype="" description="" package="">
         	<attributes>
 				<attributekey handle="icon_dashboard">
 					<value>icon-list</value>

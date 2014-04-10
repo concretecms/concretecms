@@ -1,7 +1,11 @@
 <?
 namespace Concrete\Core\Page\Workflow\Progress;
-use \Concrete\Core\Page\Page\List as PageList;
+use \Concrete\Core\Page\PageList as PageList;
 use Loader;
+use \Concrete\Core\Workflow\Progress\PageProgress as PageWorkflowProgress;
+use Permissions;
+use \Concrete\Core\Page\Page as ConcretePage;
+use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
 class ProgressList extends PageList {
 	
 	protected $autoSortColumns = array('wpDateLastAction', 'cvName', 'wpCurrentStatus');
@@ -20,7 +24,7 @@ class ProgressList extends PageList {
 		$_pages = DatabaseItemList::get($itemsToGet, $offset);
 		$pages = array();
 		foreach($_pages as $row) {
-			$c = Page::getByID($row['cID']);
+			$c = ConcretePage::getByID($row['cID']);
 			$cp = new Permissions($c);
 			if ($cp->canViewPageVersions()) { 
 				$c->loadVersionObject('RECENT');
@@ -28,7 +32,7 @@ class ProgressList extends PageList {
 				$c->loadVersionObject('ACTIVE');
 			}
 			$wp = PageWorkflowProgress::getByID($row['wpID']);
-			$pages[] = new PageWorkflowProgressPage($c, $wp);
+			$pages[] = new Page($c, $wp);
 		}
 		return $pages;
 	}

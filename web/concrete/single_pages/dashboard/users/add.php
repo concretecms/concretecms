@@ -16,7 +16,7 @@ $locales = Localization::getAvailableInterfaceLanguageDescriptions(ACTIVE_LOCALE
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add User'), false, false, false);?>
 
-<form method="post" enctype="multipart/form-data" id="ccm-user-form" action="<?=$this->url('/dashboard/users/add')?>">
+<form method="post" enctype="multipart/form-data" id="ccm-user-form" action="<?=$view->url('/dashboard/users/add')?>">
 	<?=$valt->output('create_account')?>
 
 	<input type="hidden" name="_disableLogin" value="1">
@@ -108,7 +108,7 @@ $locales = Localization::getAvailableInterfaceLanguageDescriptions(ACTIVE_LOCALE
 						<label>
 							<input type="checkbox" name="gID[]" value="<?=$g->getGroupID()?>" <?
                             if (is_array($_POST['gID'])) {
-                                if (in_array($g['gID'], $_POST['gID'])) {
+                                if (in_array($g->getGroupID(), $_POST['gID'])) {
                                     echo(' checked ');
                                 }
                             }

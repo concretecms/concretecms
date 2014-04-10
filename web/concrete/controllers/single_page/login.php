@@ -11,7 +11,7 @@ use Events;
 use Page;
 use Permissions;
 use UserInfo;
-use \Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
+use UserAttributeKey;
 
 class Login extends PageController {
 

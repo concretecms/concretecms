@@ -16,7 +16,7 @@ $txt = Loader::helper('text');?>
 			</div>	
 		<?php } ?>
 
-		<form class="" method="post" action="<?php echo $this->action('update_set')?>">
+		<form class="" method="post" action="<?php echo $view->action('update_set')?>">
 			<input type="hidden" name="asID" value="<?php echo $set->getAttributeSetID()?>" />
 			<?php echo Loader::helper('validation/token')->output('update_set')?>
 			<div class="clearfix">
@@ -48,7 +48,7 @@ $txt = Loader::helper('text');?>
 		<?php if (!$set->isAttributeSetLocked()) { ?>	
 			<h3><?=t('Delete Set')?></h3>
 			<p><?php echo t('Warning, this cannot be undone. No attributes will be deleted but they will no longer be grouped together.')?></p>
-			<form method="post" action="<?php echo $this->action('delete_set')?>" class="">
+			<form method="post" action="<?php echo $view->action('delete_set')?>" class="">
 				<input type="hidden" name="asID" value="<?php echo $set->getAttributeSetID()?>" />
 				<?php echo Loader::helper('validation/token')->output('delete_set')?>
 			
@@ -62,7 +62,7 @@ $txt = Loader::helper('text');?>
 		<div class="span-pane-half">
 		<h3><?=t('Add Attributes to Set')?></h3>
 	
-		<form class="" method="post" action="<?php echo $this->action('update_set_attributes')?>">
+		<form class="" method="post" action="<?php echo $view->action('update_set_attributes')?>">
 			<input type="hidden" name="asID" value="<?php echo $set->getAttributeSetID()?>" />
 			<?php echo Loader::helper('validation/token')->output('update_set_attributes')?>
 	
@@ -115,7 +115,7 @@ $txt = Loader::helper('text');?>
 <?php } else if($this->controller->getTask() == 'category' || $this->controller->getTask() == 'add_set'){ ?>
 
 	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($txt->unHandle($this->controller->category->getAttributeKeyCategoryHandle()).' '.t('Attribute Sets'), false, 'span6 offset3');?>
-	<form method="post" action="<?php echo $this->action('add_set')?>">
+	<form method="post" action="<?php echo $view->action('add_set')?>">
 
 
 	<?php if (count($sets) > 0) { ?>
@@ -125,7 +125,7 @@ $txt = Loader::helper('text');?>
 			<?php foreach($sets as $asl) { ?>
 				<div class="ccm-group" id="asID_<?php echo $asl->getAttributeSetID()?>">
 					<img class="ccm-group-sort" src="<?php echo ASSETS_URL_IMAGES?>/icons/up_down.png" width="14" height="14" />
-					<a class="ccm-group-inner" href="<?php echo $this->url('/dashboard/system/attributes/sets/', 'edit', $asl->getAttributeSetID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo $asl->getAttributeSetDisplayName()?></a>
+					<a class="ccm-group-inner" href="<?php echo $view->url('/dashboard/system/attributes/sets/', 'edit', $asl->getAttributeSetID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo $asl->getAttributeSetDisplayName()?></a>
 				</div>
 			<?php } ?>
 		</div>
@@ -169,7 +169,7 @@ $txt = Loader::helper('text');?>
 			if(count($categories) > 0) {
 				foreach($categories as $cat) { ?>
 					<div class="ccm-group" id="acID_<?php echo $cat->getAttributeKeyCategoryID()?>">
-						<a class="ccm-group-inner" href="<?php echo $this->url('/dashboard/system/attributes/sets/', 'category', $cat->getAttributeKeyCategoryID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo $txt->unhandle($cat->getAttributeKeyCategoryHandle())?></a>
+						<a class="ccm-group-inner" href="<?php echo $view->url('/dashboard/system/attributes/sets/', 'category', $cat->getAttributeKeyCategoryID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo $txt->unhandle($cat->getAttributeKeyCategoryHandle())?></a>
 					</div>
 				<?php } 
 			} else {

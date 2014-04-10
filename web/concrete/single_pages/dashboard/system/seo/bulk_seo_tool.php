@@ -86,7 +86,7 @@ $th = Loader::helper('text');
 			});
 		});
 		</script>
-<form action="<?=$this->action('view')?>">
+<form action="<?=$view->action('view')?>">
 	<div class="ccm-pane-options">
 			<label style="width: auto; margin-right: 1em; margin-left: 20px;"><?=t('Keywords'); ?></label><?php echo $form->text('keywords', '', array('style' => 'width: 130px')); ?><span style="margin-left: 30px;"><?=t(' # Per Page'); ?></span>
 			<?=$form->select('numResults', array(
@@ -245,7 +245,7 @@ if (count($pages) > 0) {
 	<script type="text/javascript">
 	$(document).ready(function() {
 		var options = { 
-			url: '<?php echo $this->action("saveRecord") ?>',
+			url: '<?php echo $view->action("saveRecord") ?>',
 			dataType: 'json',
 			success:function(res) {
 				if(res.success) {

@@ -52,7 +52,7 @@ class PageProgress extends Progress {
 	}
 
 	public function getPendingWorkflowProgressList() {
-		$list = new ProgressList();
+		$list = new \Concrete\Core\Page\Workflow\Progress\ProgressList();
 		$list->filter('wpApproved', 0);
 		$list->sortBy('wpDateLastAction', 'desc');
 		return $list;

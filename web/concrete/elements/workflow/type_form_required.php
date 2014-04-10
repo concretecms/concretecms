@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <? 
 $form = Loader::helper('form'); 
-$ih = Loader::helper("concrete/interface");
+$ih = Loader::helper("concrete/ui");
 $valt = Loader::helper('validation/token');
 
 $wfName = $workflow->getWorkflowName();
@@ -23,7 +23,7 @@ $type = $workflow->getWorkflowTypeObject();
 	<script type="text/javascript">
 	deleteWorkflow = function() {
 		if (confirm('<?=$delConfirmJS?>')) { 
-			location.href = "<?=$this->action('delete', $workflow->getWorkflowID(), $valt->generate('delete_workflow'))?>";				
+			location.href = "<?=$view->action('delete', $workflow->getWorkflowID(), $valt->generate('delete_workflow'))?>";				
 		}
 	}
 	</script>
@@ -45,12 +45,12 @@ if ($type->getPackageID() > 0) {
 
 </div>
 <div class="ccm-pane-footer">
-	<a href="<?=$this->url('/dashboard/workflow/list')?>" class="btn"><?=t('Back to List')?></a>
+	<a href="<?=$view->url('/dashboard/workflow/workflows')?>" class="btn"><?=t('Back to List')?></a>
 	<div style="float: right">
 <? 
 if ($type->getPackageID() > 0) {
 	Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle() . '/type_form_buttons', $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
 } ?>
-	<a href="<?=$this->action('edit_details', $workflow->getWorkflowID())?>" class="btn"><?=t('Edit Details')?></a>
+	<a href="<?=$view->action('edit_details', $workflow->getWorkflowID())?>" class="btn"><?=t('Edit Details')?></a>
 </div>
 </div>

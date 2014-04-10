@@ -5,7 +5,7 @@ use PermissionKey;
 use \Concrete\Core\Http\ResponseAssetGroup;
 use Permissions;
 use \Concrete\Core\User\EditResponse as UserEditResponse;
-use \Concrete\User\Attribute\Key\UserKey as UserAttributeKey;
+use UserAttributeKey;
 
 class Properties extends BackendInterfaceController {
 

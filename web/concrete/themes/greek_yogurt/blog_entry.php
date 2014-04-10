@@ -51,7 +51,7 @@ $nav = Loader::helper('navigation');
 				$uID = $vo->getVersionAuthorUserID();
 				$username = $vo->getVersionAuthorUserName();
 				if (Config::get("ENABLE_USER_PROFILES")) {
-					$profileLink= '<a href="' . $this->url('/profile/view/', $uID) . '">' . $username . '</a>';
+					$profileLink= '<a href="' . $view->url('/profile/view/', $uID) . '">' . $username . '</a>';
 				}else{ 
 					$profileLink = $username;
 				} ?>

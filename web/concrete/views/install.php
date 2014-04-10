@@ -28,7 +28,7 @@ $(function() {
 		<? if ($routine->getText() != '') { ?>
 			$("#install-progress-summary").html('<?=addslashes($routine->getText())?>');
 		<? } ?>
-		$.ajax('<?=$this->url("/install", "run_routine", $installPackage, $routine->getMethod())?>', {
+		$.ajax('<?=$view->url("/install", "run_routine", $installPackage, $routine->getMethod())?>', {
 			dataType: 'json',
 			error: function(r) {
 				$("#install-progress-wrapper").hide();
@@ -101,7 +101,7 @@ $(function() {
 <div id="install-progress-error-wrapper">
 <div id="install-progress-errors"></div>
 <div id="install-progress-back">
-<input type="button" class="btn" onclick="window.location.href='<?=$this->url('/install')?>'" value="<?=t('Back')?>" />
+<input type="button" class="btn" onclick="window.location.href='<?=$view->url('/install')?>'" value="<?=t('Back')?>" />
 </div>
 </div>
 </div>
@@ -131,7 +131,7 @@ $(function() {
 </div>
 
 
-<form action="<?=$this->url('/install', 'configure')?>" method="post" class="form-horizontal">
+<form action="<?=$view->url('/install', 'configure')?>" method="post" class="form-horizontal">
 
 <div class="row">
 <div class="col-md-5 col-md-offset-1">
@@ -289,7 +289,7 @@ $(function() {
 		$("#ccm-test-request-tooltip").show();
 		showFormOnTestCompletion = false;
 	});
-	$.getJSON('<?=$this->url("/install", "test_url", "20", "20")?>', function(json) {
+	$.getJSON('<?=$view->url("/install", "test_url", "20", "20")?>', function(json) {
 		// test url takes two numbers and adds them together. Basically we just need to make sure that
 		// our url() syntax works - we do this by sending a test url call to the server when we're certain 
 		// of what the output will be
@@ -416,7 +416,7 @@ $(function() {
 <div class="row">
 <div class="col-sm-10 col-sm-offset-1">
 <div class="well" id="install-success">
-	<form method="post" action="<?=$this->url('/install','setup')?>">
+	<form method="post" action="<?=$view->url('/install','setup')?>">
 	<input type="hidden" name="locale" value="<?=$locale?>" />
 	<a class="btn btn-large btn-primary" href="javascript:void(0)" onclick="$(this).parent().submit()"><?=t('Continue to Installation')?> <i class="icon-arrow-right icon-white"></i></a>
 	</form>
@@ -425,7 +425,7 @@ $(function() {
 <div class="alert alert-error" id="install-errors">
 	<p><?=t('There are problems with your installation environment. Please correct them and click the button below to re-run the pre-installation tests.')?></p>
 	<div class="block-actions">
-	<form method="post" action="<?=$this->url('/install')?>">
+	<form method="post" action="<?=$view->url('/install')?>">
 	<input type="hidden" name="locale" value="<?=$locale?>" />
 	<a class="btn" href="javascript:void(0)" onclick="$(this).parent().submit()"><?=t('Run Tests')?> <i class="icon-refresh"></i></a>
 	</form>
@@ -454,7 +454,7 @@ $(function() {
 
 <div id="ccm-install-intro">
 
-<form method="post" class="form-horizontal" action="<?=$this->url('/install', 'select_language')?>">
+<form method="post" class="form-horizontal" action="<?=$view->url('/install', 'select_language')?>">
 <fieldset>
 	<div class="form-group">
 	<label for="locale" class="control-label col-sm-3"><?=t('Language')?></label>

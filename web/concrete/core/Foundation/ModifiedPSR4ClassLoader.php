@@ -89,7 +89,7 @@ class ModifiedPsr4ClassLoader
 
             return true;
         }
-
+        
         return false;
     }
 

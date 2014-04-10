@@ -2,7 +2,7 @@
 namespace \Concrete\Controller\Dialog\User\Search;
 use \Concrete\Controller\Backend\UI as BackendInterfaceController;
 use User;
-use \Concrete\Core\Attribute\Key\UserKey as UserAttributeKey;
+use UserAttributeKey;
 
 class Customize extends BackendInterfaceController {
 

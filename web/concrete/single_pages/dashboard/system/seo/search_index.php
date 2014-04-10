@@ -1,7 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access Denied');
 
 echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Search Index'), t('Choose which areas on your site are indexed.'), 'span6 offset3', false); ?>
-	<form method="post" id="ccm-search-index-manage" action="<?=$this->action('')?>">
+	<form method="post" id="ccm-search-index-manage" action="<?=$view->action('')?>">
 		<div class="ccm-pane-body">
 			<?php echo $this->controller->token->output('update_search_index');?>
 			<fieldset>

@@ -2,7 +2,7 @@
 namespace Concrete\Core\Page\Type\Composer\Control\Type;
 use Loader;
 use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use CollectionAttributeKey;
 use \Concrete\Core\Page\Type\Composer\Control\CollectionAttributeControl;
 
 class CollectionAttributeType extends Type {

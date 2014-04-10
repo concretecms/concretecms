@@ -10,7 +10,7 @@ use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Key as AttributeKey;
 use \Concrete\Core\Permission\Key as PermissionKey;
 use \Concrete\Core\File\StorageLocation as FileStorageLocation;
-use \Concrete\Core\Attribute\Key\FileKey as FileAttributeKey;
+use FileAttributeKey;
 class File extends Object implements \Concrete\Core\Permission\ObjectInterface { 
 
 	const CREATE_NEW_VERSION_THRESHOLD = 300; // in seconds (5 minutes)

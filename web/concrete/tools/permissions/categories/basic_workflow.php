@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-$p = Page::getByPath('/dashboard/workflow/list');
+$p = Page::getByPath('/dashboard/workflow/workflows');
 $cp = new Permissions($p);
 $json = Loader::helper('json');
 $workflow = Workflow::getByID($_REQUEST['wfID']);

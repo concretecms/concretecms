@@ -2,7 +2,7 @@
 namespace Concrete\Core\Permission\Assignment;
 use Loader;
 use PermissionAccess;
-use \Concrete\Core\Permission\Category as PermissionKeyCategory;
+use PermissionKeyCategory;
 class Assignment {
 
 	protected $pk; // permissionkey

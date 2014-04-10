@@ -4,9 +4,11 @@ use \Concrete\Core\Foundation\Object;
 use Loader;
 use \File as ConcreteFile;
 use \Concrete\Core\File\Type\TypeList as FileTypeList;
-use \Concrete\Core\Attribute\Key\FileKey as FileAttributeKey;
+use FileAttributeKey;
 use \Concrete\Core\Attribute\Value\FileValue as FileAttributeValue;
-
+use stdClass;
+use Permissions;
+use View;
 
 class Version extends Object {
 

@@ -8,6 +8,7 @@ use Request;
 use \Concrete\Core\Authentication\AuthenticationType;
 use Events;
 use Page;
+use GroupList;
 use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 
 class User extends Object {

@@ -8,7 +8,7 @@
 </div>
 <div class="ccm-pane-footer">
 <p>
-<a href="<?php echo $this->url('/dashboard/system/backup_restore/database')?>" class="btn"><?php echo t('Return to Export Database XML')?></a>
+<a href="<?php echo $view->url('/dashboard/system/backup_restore/database')?>" class="btn"><?php echo t('Return to Export Database XML')?></a>
 </p>
 </div>
 
@@ -20,7 +20,7 @@
 
 <?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Database XML'), false, 'span10 offset1', false)?>
 	
-	<form method="post" class="form-stacked" id="export-db-form" action="<?php echo $this->url('/dashboard/system/backup_restore/database', 'export_database_schema')?>">
+	<form method="post" class="form-stacked" id="export-db-form" action="<?php echo $view->url('/dashboard/system/backup_restore/database', 'export_database_schema')?>">
 
 <div class="ccm-pane-body">
 
@@ -36,7 +36,7 @@
 
 </div>	
 	</form>
-	<form method="post" class="form-stacked" id="refresh-schema-form" action="<?php echo $this->url('/dashboard/system/backup_restore/database', 'refresh_database_schema')?>" class="form-stacked">
+	<form method="post" class="form-stacked" id="refresh-schema-form" action="<?php echo $view->url('/dashboard/system/backup_restore/database', 'refresh_database_schema')?>" class="form-stacked">
 
 <div class="ccm-pane-body ccm-pane-body-footer" style="padding-top: 0px; margin-top: 0px">
 

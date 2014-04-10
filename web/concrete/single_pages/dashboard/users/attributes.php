@@ -3,7 +3,7 @@
 <? if (isset($key)) { ?>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Attribute'), false, false, false)?>
-<form method="post" class="form-horizontal" action="<?=$this->action('edit')?>" id="ccm-attribute-key-form">
+<form method="post" class="form-horizontal" action="<?=$view->action('edit')?>" id="ccm-attribute-key-form">
 
 
 
@@ -21,7 +21,7 @@
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('User Attributes'), false, false, false)?>
 
 	<? if (isset($type)) { ?>
-		<form method="post" class="form-horizontal" action="<?=$this->action('add')?>" id="ccm-attribute-key-form">
+		<form method="post" class="form-horizontal" action="<?=$view->action('add')?>" id="ccm-attribute-key-form">
 	
 		<? Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type)); ?>
 	
@@ -43,7 +43,7 @@
 
 	<div class="ccm-pane-body ccm-pane-body-footer" style="margin-top: -25px">
 
-	<form method="get" class="form-inline" action="<?=$this->action('select_type')?>" id="ccm-attribute-type-form">
+	<form method="get" class="form-inline" action="<?=$view->action('select_type')?>" id="ccm-attribute-type-form">
 	<div class="control-group">
 	<?=$form->label('atID', t('Add Attribute'))?>
 	<div class="controls">

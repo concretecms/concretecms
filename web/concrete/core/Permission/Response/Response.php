@@ -5,6 +5,7 @@ use Page;
 use User;
 use Group;
 use PermissionKey;
+use PermissionKeyCategory;
 use Permissions;
 use \Concrete\Core\Permission\Cache as PermissionCache;
 class Response {
@@ -34,7 +35,9 @@ class Response {
 		}
 
 		$className = \Concrete\Core\Foundation\ClassLoader::getClassName($object->getPermissionResponseClassName());
-		$category = \Concrete\Core\Permission\Category::getByHandle($object->getPermissionObjectKeyCategoryHandle());
+		if ($object->getPermissionObjectKeyCategoryHandle()) {
+			$category = PermissionKeyCategory::getByHandle($object->getPermissionObjectKeyCategoryHandle());
+		}
 		$pr = new $className();
 		$pr->setPermissionCategoryObject($category);
 		$pr->setPermissionObject($object);

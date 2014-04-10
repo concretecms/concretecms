@@ -5,7 +5,7 @@ $dh = Loader::helper('concrete/dashboard');
 echo $dh->getDashboardPaneHeaderWrapper(t('Logging'), t('Enables saving records of emails being sent out. This will save records even if actual email delivery is disabled on your site.'), 'span6 offset3', false);
 ?>
 
-<form method="post" class="form-inline" action="<?php echo $this->action('update_logging'); ?>">
+<form method="post" class="form-inline" action="<?php echo $view->action('update_logging'); ?>">
 	<div class="ccm-pane-body">	
 		<?php echo $this->controller->token->output('update_logging'); ?>
 		

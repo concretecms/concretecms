@@ -2,7 +2,7 @@
 namespace Concrete\Block\Tags;
 use Loader;
 use \Concrete\Core\Block\BlockController;
-use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use CollectionAttributeKey;
 use Page;
 
 class Controller extends BlockController {

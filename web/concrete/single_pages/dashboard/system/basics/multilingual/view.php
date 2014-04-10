@@ -9,7 +9,7 @@ if (count($interfacelocales) <= 1) { ?>
 </div>
 <? } else { ?>
 
-<form method="post" class="form-horizontal" action="<?=$this->action('save_interface_language')?>">
+<form method="post" class="form-horizontal" action="<?=$view->action('save_interface_language')?>">
 <div class="ccm-pane-body">
 	
 	<div class="control-group">

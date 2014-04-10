@@ -10,7 +10,7 @@
 	        <div style="text-align: center"><?=$pt->getPageTemplateIconImage()?></div>
 	        <div class="caption">
 	        <h4><?=$pt->getPageTemplateName()?></h4>
-	        <p><a href="<?=$this->action('edit_defaults', $pagetype->getPageTypeID(), $pt->getPageTemplateID())?>" target="_blank" class="btn btn-default"><?=t('Edit Defaults')?></a></p>
+	        <p><a href="<?=$view->action('edit_defaults', $pagetype->getPageTypeID(), $pt->getPageTemplateID())?>" target="_blank" class="btn btn-default"><?=t('Edit Defaults')?></a></p>
 	        </div>
 	    </div>
 	  </div>

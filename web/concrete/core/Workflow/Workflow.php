@@ -21,7 +21,7 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 	public function getWorkflowID() {return $this->wfID;}
 	public function getWorkflowName() {return $this->wfName;}
 	public function getWorkflowTypeObject() {
-		return WorkflowType::getByID($this->wftID);
+		return Type::getByID($this->wftID);
 	}
 	public function getRestrictedToPermissionKeyHandles() {
 		return $this->restrictedToPermissionKeyHandles;
@@ -76,7 +76,7 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 		$db = Loader::db();
 		$r = $db->Execute("select wfID from Workflows order by wfName asc");
 		while ($row = $r->FetchRow()) {
-			$wf = Workflow::getByID($row['wfID']);
+			$wf = static::getByID($row['wfID']);
 			if (is_object($wf)) {
 				$workflows[] = $wf;
 			}	
@@ -84,7 +84,7 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 		return $workflows;
 	}
 	
-	public static function add(WorkflowType $wt, $name) {
+	public static function add(Type $wt, $name) {
 		$db = Loader::db();
 		$wfID = $db->getOne('SELECT wfID FROM Workflows WHERE wfName=?',array($name));
 		if (!$wfID) {
@@ -104,9 +104,9 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 		$db = Loader::db();
 		$r = $db->GetRow('select WorkflowTypes.wftHandle, WorkflowTypes.pkgID from Workflows inner join WorkflowTypes on Workflows.wftID = WorkflowTypes.wftID where Workflows.wfID = ?', array($wfID));
 		if ($r['wftHandle']) { 
-			$class = Loader::helper('text')->camelcase($r['wftHandle']) . 'Workflow';
+            $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Workflow\\' . helper('text')->camelcase($r['wftHandle']) . 'Workflow');
 			if (!class_exists($class)) {
-				exit;
+	            $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Workflow\\Workflow');
 			}
 			$obj = new $class();
 			$obj->load($wfID);

@@ -7,7 +7,7 @@ use Permissions;
 use Stack;
 use \Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
 use \Concrete\Core\Foundation\Object as Object;
-use \Concrete\Core\Attribute\Key\CollectionKey as CollectionAttributeKey;
+use CollectionAttributeKey;
 use \Concrete\Core\Attribute\Value\CollectionValue as CollectionAttributeValue;
 use User;
 use Block;

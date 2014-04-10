@@ -9,7 +9,7 @@ div[data-container=editable-fields] section {
 }
 </style>
 
-<form action="<?=$this->action('update_status', $user->getUserID())?>" method="post">
+<form action="<?=$view->action('update_status', $user->getUserID())?>" method="post">
 <?=Loader::helper('validation/token')->output()?>
 <div class="ccm-dashboard-header-buttons btn-group">
 	<? if (USER_VALIDATE_EMAIL == true && $canActivateUser) { ?>
@@ -57,7 +57,7 @@ div[data-container=editable-fields] section {
 		<div class="row">
 			<div class="col-md-4"><p><?=t('Profile Picture')?></p></div>
 			<div class="col-md-8"><p>
-				<div <? if ($canEditAvatar) { ?>data-editable-field-type="image" data-editable-field-inline-commands="true" data-url="<?=$this->action('update_avatar', $user->getUserID())?>"<? } ?>>
+				<div <? if ($canEditAvatar) { ?>data-editable-field-type="image" data-editable-field-inline-commands="true" data-url="<?=$view->action('update_avatar', $user->getUserID())?>"<? } ?>>
 					<ul class="ccm-edit-mode-inline-commands">
 						<li><a href="#" data-editable-field-command="clear"><i class="glyphicon glyphicon-trash"></i></a></li>
 					</ul>
@@ -195,7 +195,7 @@ $(function() {
 		_addGroupsTemplate({'groups': <?=$groupsJSON?>})
 	);
 	$('div[data-container=editable-fields]').concreteEditableFieldContainer({
-		url: '<?=$this->action('save', $user->getUserID())?>',
+		url: '<?=$view->action('save', $user->getUserID())?>',
 		data: {
 			ccm_token: '<?=Loader::helper('validation/token')->generate()?>'
 		}

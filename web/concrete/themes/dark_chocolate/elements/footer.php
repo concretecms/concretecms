@@ -9,14 +9,14 @@
 			if ($u->isRegistered()) { ?>
 				<? 
 				if (Config::get("ENABLE_USER_PROFILES")) {
-					$userName = '<a href="' . $this->url('/account/profile/public') . '">' . $u->getUserName() . '</a>';
+					$userName = '<a href="' . $view->url('/account/profile/public') . '">' . $u->getUserName() . '</a>';
 				} else {
 					$userName = $u->getUserName();
 				}
 				?>
-				<span class="sign-in"><?=t('Currently logged in as <b>%s</b>.', $userName)?> <a href="<?=$this->url('/login', 'logout')?>"><?=t('Sign Out')?></a></span>
+				<span class="sign-in"><?=t('Currently logged in as <b>%s</b>.', $userName)?> <a href="<?=$view->url('/login', 'logout')?>"><?=t('Sign Out')?></a></span>
 			<? } else { ?>
-				<span class="sign-in"><a href="<?=$this->url('/login')?>"><?=t('Sign In to Edit this Site')?></a></span>
+				<span class="sign-in"><a href="<?=$view->url('/login')?>"><?=t('Sign In to Edit this Site')?></a></span>
 			<? } ?>
             
 	</div>

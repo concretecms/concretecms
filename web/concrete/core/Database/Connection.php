@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Database;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
@@ -28,13 +27,16 @@ class Connection extends \Doctrine\DBAL\Connection {
 		if ($q instanceof \Doctrine\DBAL\Statement) {
 			return $q->execute($arguments);
 		} else {
+            if (!is_array($arguments)) {
+                $arguments = array($arguments); // adodb backward compatibility
+            }
 			return $this->executeQuery($q, $arguments);
 		}
 	}
 
     public function query() {
         $args = func_get_args();
-        if (isset($args) && isset($args[1]) && is_array($args[1])) {
+        if (isset($args) && isset($args[1]) && (is_string($args[1]) || is_array($args[1]))) {
             return $this->executeQuery($args[0], $args[1]);
         } else {
             return call_user_func_array('parent::query', $args);
@@ -45,6 +47,9 @@ class Connection extends \Doctrine\DBAL\Connection {
      * alias to old ADODB method
      */
     public function GetRow($q, $arguments = array()) {
+        if (!is_array($arguments)) {
+            $arguments = array($arguments); // adodb backward compatibility
+        }
         $r = $this->fetchAssoc($q, $arguments);
         if (!is_array($r)) {
             $r = array();
@@ -56,7 +61,18 @@ class Connection extends \Doctrine\DBAL\Connection {
      * @deprecated
      * alias to old ADODB method
      */
+    public function qstr($string) {
+        return $this->quote($string);
+    }
+
+    /** 
+     * @deprecated
+     * alias to old ADODB method
+     */
     public function GetOne($q, $arguments = array()) {
+        if (!is_array($arguments)) {
+            $arguments = array($arguments); // adodb backward compatibility
+        }
         return $this->fetchColumn($q, $arguments, 0);
     }
 
@@ -65,7 +81,18 @@ class Connection extends \Doctrine\DBAL\Connection {
      * alias to old ADODB method
      */
     public function GetAll($q, $arguments = array()) {
+        if (!is_array($arguments)) {
+            $arguments = array($arguments); // adodb backward compatibility
+        }
         return $this->fetchAll($q, $arguments);
+    }
+
+    /** 
+     * @deprecated
+     * alias to old ADODB method
+     */
+    public function GetArray($q, $arguments = array()) {
+        return $this->GetAll($q, $arguments);
     }
 
 

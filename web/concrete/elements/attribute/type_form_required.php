@@ -1,6 +1,8 @@
 <? 
+use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+
 $form = Loader::helper('form'); 
-$ih = Loader::helper("concrete/interface");
+$ih = Loader::helper("concrete/ui");
 $valt = Loader::helper('validation/token');
 $akName = '';
 $akIsSearchable = 1;
@@ -30,7 +32,7 @@ if (is_object($key)) {
 	<script type="text/javascript">
 	deleteAttribute = function() {
 		if (confirm('<?=$delConfirmJS?>')) { 
-			location.href = "<?=$this->action('delete', $key->getAttributeKeyID(), $valt->generate('delete_attribute'))?>";				
+			location.href = "<?=$view->action('delete', $key->getAttributeKeyID(), $valt->generate('delete_attribute'))?>";				
 		}
 	}
 	</script>

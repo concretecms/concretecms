@@ -53,7 +53,7 @@ if ($this->controller->getTask() == 'viewDetail') { ?>
 	</div>
     
     <div class="ccm-pane-footer">
-        <? print $ih->button(t('Back to List'), $this->action('view'), 'left'); ?>
+        <? print $ih->button(t('Back to List'), $view->action('view'), 'left'); ?>
     </div>
     
     <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
@@ -78,7 +78,7 @@ if ($this->controller->getTask() == 'viewDetail') { ?>
             <tbody>
 			<? foreach($surveys as $survey) { ?>
 					<tr>
-						<td><strong><a href="<?=$this->action('viewDetail', $survey['bID'], $survey['cID'])?>"><?=$survey['question'] ?></a></strong></td>
+						<td><strong><a href="<?=$view->action('viewDetail', $survey['bID'], $survey['cID'])?>"><?=$survey['question'] ?></a></strong></td>
 						<td><?=$survey['cvName'] ?></td>
 						<td><?=$this->controller->formatDate($survey['lastResponse']) ?></td>
 						<td><?=$survey['numberOfResponses'] ?></td>

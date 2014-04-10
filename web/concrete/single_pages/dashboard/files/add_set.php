@@ -2,7 +2,7 @@
 <? $ih = Loader::helper('concrete/ui'); ?>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Set'), false, 'span10 offset1', false)?>
-    <form method="post" class="form-horizontal" id="file-sets-add" action="<?=$this->url('/dashboard/files/add_set', 'do_add')?>">
+    <form method="post" class="form-horizontal" id="file-sets-add" action="<?=$view->url('/dashboard/files/add_set', 'do_add')?>">
 	<div class="ccm-pane-body">
     	
 		<?=$validation_token->output('file_sets_add');?>

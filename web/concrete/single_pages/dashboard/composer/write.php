@@ -27,7 +27,7 @@
 		$ccp = new Permissions($pt);
 		if ($ccp->canEditPageTypeInComposer()) { 
 		?>
-		<li class="item-select-page"><a href="<?=$this->url('/dashboard/composer/write', 'composer', $pt->getPageTypeID())?>"><?=$pt->getPageTypeName()?></a></li>
+		<li class="item-select-page"><a href="<?=$view->url('/dashboard/composer/write', 'composer', $pt->getPageTypeID())?>"><?=$pt->getPageTypeName()?></a></li>
 		<? } ?>
 	<? } ?>
 	</ul>

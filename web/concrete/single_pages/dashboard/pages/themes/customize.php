@@ -68,8 +68,8 @@ $ih = Loader::helper('concrete/ui');
     <div class="ccm-pane-body">  
     
     <?=$vt->output()?>
-    <?=$form->hidden('saveAction', $this->action('save')); ?>
-    <?=$form->hidden('resetAction', $this->action('reset')); ?>
+    <?=$form->hidden('saveAction', $view->action('save')); ?>
+    <?=$form->hidden('resetAction', $view->action('reset')); ?>
     <?=$form->hidden('themeID', $themeID)?>
 	<?=$form->hidden('ttask', 'preview_theme_customization')?>
     
@@ -94,7 +94,7 @@ $ih = Loader::helper('concrete/ui');
     </div><!-- END Pane body -->
     
     <div class="ccm-pane-footer">
-    	<? print $ih->button(t('Return to Themes'), $this->url('/dashboard/pages/themes'), 'left'); ?>
+    	<? print $ih->button(t('Return to Themes'), $view->url('/dashboard/pages/themes'), 'left'); ?>
         <? print $ih->button_js(t('Save'), 'saveCustomizedTheme()', 'right', 'primary'); ?>
         <? print $ih->button_js(t('Reset'), 'resetCustomizedTheme()', 'right'); ?>
     </div>
@@ -346,7 +346,7 @@ $ih = Loader::helper('concrete/ui');
         </div>
             
         <div class="ccm-pane-footer">
-            <? print $ih->button(t('Return to Themes'), $this->url('/dashboard/pages/themes'), 'left'); ?>
+            <? print $ih->button(t('Return to Themes'), $view->url('/dashboard/pages/themes'), 'left'); ?>
         </div>
 
     <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>

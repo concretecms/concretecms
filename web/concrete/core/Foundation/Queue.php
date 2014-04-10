@@ -1,5 +1,7 @@
 <?php
 namespace Concrete\Core\Foundation;
+use Loader;
+
 class Queue {
 
 	public static function get($name, $additionalConfig = array()) {

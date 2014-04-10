@@ -3,10 +3,29 @@ namespace Concrete\Core\User;
 use \Concrete\Core\Foundation\Object;
 use Loader;
 use Events;
-class UserInfo extends Object { 
+use User as ConcreteUser;
+use UserAttributeKey;
+use \Concrete\Core\Attribute\Value\UserValue as UserAttributeValue;
+use \Concrete\Core\Attribute\Key\Key as AttributeKey;
+use Group;
+
+class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
 	public function __toString() {
 		return 'UserInfo: ' . $this->getUserID();
+	}
+
+	public function getPermissionObjectIdentifier() {return $this->uID;}
+
+	public function getPermissionResponseClassName() {
+		return 'Core\\Permission\\Response\\UserInfoResponse';
+	}
+
+	public function getPermissionAssignmentClassName() {
+		return false;
+	}
+	public function getPermissionObjectKeyCategoryHandle() {
+		return false;
 	}
 
 	/* magic method for user attributes. This is db expensive but pretty damn cool */
@@ -296,7 +315,7 @@ class UserInfo extends Object {
 	 */
 	public function getUserObject() {
 		// returns a full user object - groups and everything - for this userinfo object
-		$nu = User::getByUserID($this->uID);
+		$nu = ConcreteUser::getByUserID($this->uID);
 		return $nu;
 	}
 
@@ -668,81 +687,6 @@ class UserInfo extends Object {
 		} else {
 			return $dh->date($datemask, strtotime($this->uDateAdded));
 		}
-	}
-
-	/* userinfo permissions modifications - since users can now have their own permissions on a collection, block ,etc..*/
-
-	function canRead() {
-		return strpos($this->permissionSet, 'r') > -1;
-	}
-
-	function canReadVersions() {
-		return strpos($this->permissionSet, 'rv') > -1;
-	}
-
-	function canLimitedWrite() {
-		return strpos($this->permissionSet, 'wu') > -1;
-	}
-
-	function canWrite() {
-		return strpos($this->permissionSet, 'wa') > -1;
-	}
-
-	function canDeleteBlock() {
-		return strpos($this->permissionSet, 'db') > -1;
-	}
-
-	function canDeleteCollection() {
-		return strpos($this->permissionSet, 'dc') > -1;
-	}
-
-	function canApproveCollection() {
-		return strpos($this->permissionSet, 'av') > -1;
-	}
-
-	function canAddSubContent() {
-		return strpos($this->permissionSet, 'as') > -1;
-	}
-
-	function canAddSubCollection() {
-		return strpos($this->permissionSet, 'ac') > -1;
-	}
-
-	function canAddBlock() {
-		return strpos($this->permissionSet, 'ab') > -1;
-	}
-
-	function canAdminCollection() {
-		return strpos($this->permissionSet, 'adm') > -1;
-	}
-
-	function canAdmin() {
-		return strpos($this->permissionSet, 'adm') > -1;
-	}
-
-	/** 
-	 * File manager permissions at the user level 
-	 */
-	public function canSearchFiles() {
-		return $this->permissions['canSearch'];
-	}
-	public function getFileReadLevel() {
-		return $this->permissions['canRead'];
-	}
-	public function getFileSearchLevel() {
-		return $this->permissions['canSearch'];
-	}
-	public function getFileWriteLevel() {
-		return $this->permissions['canWrite'];
-	}
-	public function getFileAdminLevel() {
-		return $this->permissions['canAdmin'];
-	}
-	public function getFileAddLevel() {
-		return $this->permissions['canAdd'];
-	}
-	public function getAllowedFileExtensions() {
-		return $this->permissions['canAddExtensions'];
 	}
 
 	function getUserStartDate($type = 'system') {

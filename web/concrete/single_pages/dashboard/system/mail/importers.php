@@ -11,7 +11,7 @@ $form = Loader::helper('form');
 <? if ($this->controller->getTask() == 'edit_importer') { ?>
 
 <?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Importer'), false, 'span8 offset2', false)?>
-<form method="post" id="mail-importer-form" class="form-horizontal" action="<?=$this->url('/dashboard/system/mail/importers', 'save_importer')?>">
+<form method="post" id="mail-importer-form" class="form-horizontal" action="<?=$view->url('/dashboard/system/mail/importers', 'save_importer')?>">
 <div class="ccm-pane-body">
 
 		<?php Loader::helper('validation/token')->output('save_importer') ?>
@@ -107,7 +107,7 @@ $form = Loader::helper('form');
 			<td><?=$mi->getMailImporterEmail()?></td>
 			<td><?=$mi->isMailImporterEnabled() ? t('Yes') : t('No')?></td>
 			<td width="60"><?
-				print $ih->button(t('Edit'), $this->url('/dashboard/system/mail/importers', 'edit_importer', $mi->getMailImporterID()), 'left');		
+				print $ih->button(t('Edit'), $view->url('/dashboard/system/mail/importers', 'edit_importer', $mi->getMailImporterID()), 'left');		
 			?>
 		</tr>
 	<? } ?>

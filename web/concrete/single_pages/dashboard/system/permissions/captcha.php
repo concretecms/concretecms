@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");?>
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Captcha Settings'), false, 'span10 offset1', (!is_object($activeCaptcha) || (!$activeCaptcha->hasOptionsForm())))?>
-<form method="post" id="site-form" action="<?=$this->action('update_captcha')?>">
+<form method="post" id="site-form" action="<?=$view->action('update_captcha')?>">
 <? if (is_object($activeCaptcha) && $activeCaptcha->hasOptionsForm()) { ?>
 	<div class="ccm-pane-body">
 <? } ?>

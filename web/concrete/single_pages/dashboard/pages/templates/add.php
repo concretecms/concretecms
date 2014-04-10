@@ -5,7 +5,7 @@ $form = Loader::helper('form');
   
     <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Page Template'), false, false, false);?>
 	
-    <form method="post" class="form-horizontal" id="add_page_template" action="<?=$this->url('/dashboard/pages/templates/add', 'add_page_template')?>">
+    <form method="post" class="form-horizontal" id="add_page_template" action="<?=$view->url('/dashboard/pages/templates/add', 'add_page_template')?>">
     <?=$this->controller->token->output('add_page_template')?>
     <?=$form->hidden('task', 'add'); ?>
 	
@@ -48,7 +48,7 @@ $form = Loader::helper('form');
     </div>
     
     <div class="ccm-pane-footer">
-        <a href="<?=$this->url('/dashboard/pages/templates')?>" class="btn pull-left"><?=t("Cancel")?></a>
+        <a href="<?=$view->url('/dashboard/pages/templates')?>" class="btn pull-left"><?=t("Cancel")?></a>
         <button type="submit" class="btn pull-right btn-primary"><?=t('Add')?></button>
     </div>
     

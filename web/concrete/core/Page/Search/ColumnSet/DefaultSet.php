@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Page\Search\ColumnSet;
 use Loader;
+use \Concrete\Core\Foundation\Collection\Database\Column\Column as DatabaseItemListColumn;
+use UserInfo;
 class DefaultSet extends \Concrete\Core\Foundation\Collection\Database\Column\Set {
 	protected $attributeClass = 'CollectionAttributeKey';	
 
@@ -23,9 +25,9 @@ class DefaultSet extends \Concrete\Core\Foundation\Collection\Database\Column\Se
 	public function __construct() {
 		$this->addColumn(new DatabaseItemListColumn('ptHandle', t('Type'), 'getPageTypeName', false));
 		$this->addColumn(new DatabaseItemListColumn('cvName', t('Name'), 'getCollectionName'));
-		$this->addColumn(new DatabaseItemListColumn('cvDatePublic', t('Date'), array('PageSearchDefaultColumnSet', 'getCollectionDatePublic')));
-		$this->addColumn(new DatabaseItemListColumn('cDateModified', t('Last Modified'), array('PageSearchDefaultColumnSet', 'getCollectionDateModified')));
-		$this->addColumn(new DatabaseItemListColumn('author', t('Author'), array('PageSearchDefaultColumnSet', 'getCollectionAuthor'), false));
+		$this->addColumn(new DatabaseItemListColumn('cvDatePublic', t('Date'), array('\Concrete\Core\Page\Search\ColumnSet\DefaultSet', 'getCollectionDatePublic')));
+		$this->addColumn(new DatabaseItemListColumn('cDateModified', t('Last Modified'), array('\Concrete\Core\Page\Search\ColumnSet\DefaultSet', 'getCollectionDateModified')));
+		$this->addColumn(new DatabaseItemListColumn('author', t('Author'), array('\Concrete\Core\Page\Search\ColumnSet\DefaultSet', 'getCollectionAuthor'), false));
 		$date = $this->getColumnByKey('cDateModified');
 		$this->setDefaultSortColumn($date, 'desc');
 	}

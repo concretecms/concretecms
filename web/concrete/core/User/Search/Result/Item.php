@@ -1,6 +1,8 @@
 <?
-namespace Concrete\Core\User\Result;
+namespace Concrete\Core\User\Search\Result;
 use \Concrete\Core\Search\Result\Item as SearchResultItem;
+use \Concrete\Core\Search\Result\Result as SearchResult;
+use \Concrete\Core\Foundation\Collection\Database\Column\Set as DatabaseItemListColumnSet;
 class Item extends SearchResultItem {
 
 	public $fID;

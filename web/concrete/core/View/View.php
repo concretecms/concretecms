@@ -277,6 +277,7 @@ class View extends AbstractView {
 			$collisions = null;
 			extract($args);
 		}
+		$view = self::getRequestInstance();
 
 		include(Environment::get()->getPath(DIRNAME_ELEMENTS . '/' . $_file . '.php', $_pkgHandle));
 	}

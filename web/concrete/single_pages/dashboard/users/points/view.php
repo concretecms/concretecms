@@ -5,7 +5,7 @@ Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Community
 	Page::getByPath('/dashboard/users/points/assign')
 
 ))?>
-<form class="form-inline" action="<?php echo $this->action('view')?>" method="get">
+<form class="form-inline" action="<?php echo $view->action('view')?>" method="get">
 <div class="ccm-pane-options">
 <div class="ccm-pane-options-permanent-search">
 

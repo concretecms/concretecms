@@ -10,7 +10,7 @@ $miniSurvey->frontEndMode = true;
 //Clean up variables from controller so html is easier to work with...
 $bID = intval($bID);
 $qsID = intval($survey->questionSetId);
-$formAction = $this->action('submit_form').'#'.$qsID;
+$formAction = $view->action('submit_form').'#'.$qsID;
 
 $questionsRS = $miniSurvey->loadQuestions($qsID, $bID);
 $questions = array();

@@ -2,7 +2,7 @@
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Storage Locations'), false, 'span6 offset3', false)?>
 
-	<form method="post" class="form-inline" id="file-access-storage" action="<?=$this->url('/dashboard/system/environment/file_storage_locations', 'save')?>">
+	<form method="post" class="form-inline" id="file-access-storage" action="<?=$view->url('/dashboard/system/environment/file_storage_locations', 'save')?>">
 	<div class="ccm-pane-body">
 			<?=$validation_token->output('file_storage');?>
 			<fieldset>

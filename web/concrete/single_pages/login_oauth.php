@@ -42,7 +42,7 @@ $form = Loader::helper('form');
 				?>
 				<div data-authType='<?=$auth->getAuthenticationTypeHandle()?>' style='<?=$first?"display:block":"display:none"?>'>
 					<fieldset>
-						<form method='post' class='form-horizontal' action='<?=$this->action('authenticate', $auth->getAuthenticationTypeHandle())?>'>
+						<form method='post' class='form-horizontal' action='<?=$view->action('authenticate', $auth->getAuthenticationTypeHandle())?>'>
 							<div class='authForm'>
 								<?$auth->renderForm()?>
 							</div>
@@ -59,7 +59,7 @@ $form = Loader::helper('form');
 			<div class='help-block'>
 				<?=t('Enter your email address below. We will send you instructions to reset your password.')?>
 			</div>
-			<form method="post" action="<?=$this->url('/login', 'forgot_password')?>" class="form-horizontal">
+			<form method="post" action="<?=$view->url('/login', 'forgot_password')?>" class="form-horizontal">
 				<div class='control-group'>
 					<label class='control-label' for='uEmail'><?=t('Email Address')?></label>
 					<div class='controls'>

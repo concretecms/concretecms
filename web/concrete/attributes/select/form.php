@@ -80,7 +80,7 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 	$(function() {
 		var availableTags = <?=$json->encode($opt_values);?>;
 		$("#newAttrValueRows<?php echo $attrKeyID?>").autocomplete({
-			source: "<?=$this->action('load_autocomplete_values')?>",
+			source: "<?=$view->action('load_autocomplete_values')?>",
 			select: function( event, ui ) {
 				ccmAttributeTypeSelectTagHelper<?php echo $attrKeyID?>.add(ui.item.value);
 				$(this).val('');

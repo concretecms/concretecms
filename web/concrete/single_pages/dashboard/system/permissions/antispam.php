@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");?>
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Spam Control'), false, 'span10 offset1', (!is_object($activeLibrary) || (!$activeLibrary->hasOptionsForm())))?>
-<form method="post" id="site-form" action="<?=$this->action('update_library')?>">
+<form method="post" id="site-form" action="<?=$view->action('update_library')?>">
 <? if (is_object($activeLibrary) && $activeLibrary->hasOptionsForm()) { ?>
 	<div class="ccm-pane-body">
 <? } ?>
@@ -39,7 +39,7 @@
 				<div class="input">
 				<ul class="inputs-list">
 					<li><label><?=$form->checkbox('ANTISPAM_LOG_SPAM', 1, Config::get('ANTISPAM_LOG_SPAM'))?> <span><?=t('Log entries marked as spam.')?></span></label>
-						<span class="help-block"><?=t('Logged entries can be found in <a href="%s" style="color: #bfbfbf; text-decoration: underline">Dashboard > Reports > Logs</a>', $this->url('/dashboard/reports/logs'))?></span>
+						<span class="help-block"><?=t('Logged entries can be found in <a href="%s" style="color: #bfbfbf; text-decoration: underline">Dashboard > Reports > Logs</a>', $view->url('/dashboard/reports/logs'))?></span>
 					</li>
 				</ul>
 				</div>
