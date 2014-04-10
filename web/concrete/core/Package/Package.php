@@ -6,6 +6,7 @@ use Loader;
 use Config;
 use Environment;
 use \Concrete\Core\Package\PackageList;
+use Localization;
 
 class Package extends Object {
 
@@ -148,7 +149,7 @@ class Package extends Object {
 	
 	}
 
-	public function getClass($pkgHandle) {
+	public static function getClass($pkgHandle) {
 		// loads and instantiates the object
 		$env = Environment::get();
 		$path = $env->getPath(FILENAME_PACKAGE_CONTROLLER, $pkgHandle);
@@ -515,7 +516,7 @@ class Package extends Object {
 		}
 	}
 	
-	public function testForInstall($package, $testForAlreadyInstalled = true) {
+	public static function testForInstall($package, $testForAlreadyInstalled = true) {
 		// this is the pre-test routine that packages run through before they are installed. Any errors that come here
 		// are to be returned in the form of an array so we can show the user. If it's all good we return true
 		$db = Loader::db();

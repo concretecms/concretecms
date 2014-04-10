@@ -8,6 +8,7 @@ use \Concrete\Core\Attribute\File\FileKey as FileAttributeKey;
 use Permissions;
 use Loader;
 use FileSet;
+use URL;
 use FilePermissions;
 use stdClass;
 

@@ -1,8 +1,9 @@
 <?php 
 namespace Concrete\Core\File;
-use \Concrete\Core\Foundation\Collection\DatabaseItemList;
+use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
 use Loader;
 use \File as ConcreteFile;
+use User;
 /**
 *
 * An object that allows a filtered list of files to be returned.
@@ -364,7 +365,6 @@ class FileList extends DatabaseItemList {
 	
 	public function getTotal(){
 		$files = array();
-		Loader::model('file');
 		$this->createQuery();
 		return parent::getTotal();
 	}

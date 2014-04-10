@@ -1,6 +1,6 @@
 <?php
 namespace Concrete\Core\User\Search\ColumnSet;
-class Default extends \Concrete\Core\Foundation\Collection\Database\Column\Set {
+class DefaultSet extends \Concrete\Core\Foundation\Collection\Database\Column\Set {
 	protected $attributeClass = 'UserAttributeKey';	
 	
 	public function getUserName($ui) {

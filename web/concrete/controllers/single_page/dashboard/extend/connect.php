@@ -1,7 +1,12 @@
 <?
 
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_Extend_Connect extends DashboardPageController {
+namespace Concrete\Controller\SinglePage\Dashboard\Extend;
+use \Concrete\Core\Page\Controller\DashboardPageController;
+use TaskPermission;
+use Config;
+use Loader;
+
+class Connect extends DashboardPageController {
 
 	public $helpers = array('form'); 
 

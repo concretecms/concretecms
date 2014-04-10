@@ -1,7 +1,13 @@
 <?
 
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Page_Dashboard_Extend_Addons extends DashboardPageController {
+namespace Concrete\Controller\SinglePage\Dashboard\Extend;
+use \Concrete\Core\Page\Controller\DashboardPageController;
+use TaskPermission;
+use Marketplace;
+use Loader;
+use \Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
+
+class Themes extends DashboardPageController {
 	
 	public function on_start() {
 		$this->error = Loader::helper('validation/error');
@@ -12,11 +18,10 @@ class Concrete5_Controller_Page_Dashboard_Extend_Addons extends DashboardPageCon
 		$tp = new TaskPermission();
 		$mi = Marketplace::getInstance();
 		if ($mi->isConnected() && $tp->canInstallPackages()) { 
-			
-			
+					
 			$mri = new MarketplaceRemoteItemList();
 			$mri->setItemsPerPage(9);
-			$sets = MarketplaceRemoteItemList::getItemSets('addons');
+			$sets = MarketplaceRemoteItemList::getItemSets('themes');
 
 			$setsel = array('' => t('All Items'), 'FEATURED' => t('Featured Items'));
 			if (is_array($sets)) {
@@ -70,7 +75,7 @@ class Concrete5_Controller_Page_Dashboard_Extend_Addons extends DashboardPageCon
 				$mri->filterBySet($set);
 			}
 			
-			$mri->setType('addons');
+			$mri->setType('themes');
 			$mri->execute();
 			
 			$items = $mri->getPage();
