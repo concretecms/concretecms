@@ -85,7 +85,7 @@ class Add extends DashboardPageController {
 						$e1 = $uak->validateAttributeForm();
 						if ($e1 == false) {
 							$this->error->add(t('The field "%s" is required', $uak->getAttributeKeyDisplayName()));
-						} else if ($e1 instanceof ValidationErrorHelper) {
+						} else if ($e1 instanceof \Concrete\Helper\Validation\Error) {
 							$this->error->add( $e1->getList() );
 						}
 					}

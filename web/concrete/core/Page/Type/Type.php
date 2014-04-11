@@ -16,6 +16,8 @@ use Collection;
 use Page;
 use \Concrete\Core\Page\Type\PublishTarget\Configuration\Configuration as PageTypePublishTargetConfiguration;
 use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
+use \Concrete\Core\Page\Collection\Version\VersionList;
+
 class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
 	protected $ptDraftVersionsToSave = 10;

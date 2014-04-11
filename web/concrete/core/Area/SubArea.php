@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\Area;
 use Loader;
+use Block;
+use Page;
+
 class SubArea extends Area {
 
 	const AREA_SUB_DELIMITER = ' : ';

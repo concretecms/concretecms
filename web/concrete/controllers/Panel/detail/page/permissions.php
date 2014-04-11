@@ -9,6 +9,7 @@ use GroupList;
 use PermissionAccess;
 use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Group;
+use View;
 
 class Permissions extends BackendInterfacePageController {
 

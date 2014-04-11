@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 <?
-$pk = BasicWorkflowPermissionKey::getByID($_REQUEST['pkID']);
+$pk = PermissionKey::getByID($_REQUEST['pkID']);
 $pk->setPermissionObject($workflow);
 ?>
 

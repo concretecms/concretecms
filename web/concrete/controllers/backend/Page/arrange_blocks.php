@@ -1,7 +1,12 @@
 <?
 namespace Concrete\Controller\Backend\Page;
-use Concrete\Controller\Backend;
-class ArrangeBlocks extends UI {
+use Concrete\Controller\Backend\UI\Page;
+use \Concrete\Core\Page\EditResponse as PageEditResponse;
+use Permissions;
+use Area;
+use Loader;
+use Block;
+class ArrangeBlocks extends Page {
 
 	public function canAccess() {
 		return $this->permissions->canEditPageContents();

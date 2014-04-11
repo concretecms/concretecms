@@ -1,5 +1,5 @@
 <?
-namespace \Concrete\Controller\Frontend;
+namespace Concrete\Controller\Frontend;
 use Controller;
 use Page;
 use Permissions;

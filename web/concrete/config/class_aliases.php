@@ -47,6 +47,7 @@ $list->registerMultiple(array(
 	'StackList' => 'Core\Page\Stack\StackList',
 	'View' => 'Core\View\View',
 	'Job' => 'Core\Job\Job',
+	'Workflow' => 'Core\Workflow\Workflow',
 	'JobSet' => 'Core\Job\Set',
 	'URL' => 'Core\Routing\URL',
 	'File' => 'Core\File\File',

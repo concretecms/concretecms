@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $c = $a->getAreaCollectionObject();
 ?>
 
-<? $pk = AreaPermissionKey::getByID($_REQUEST['pkID']); ?>
+<? $pk = PermissionKey::getByID($_REQUEST['pkID']); ?>
 <? $pk->setPermissionObject($a); ?>
 
 <? Loader::element("permission/detail", array('permissionKey' => $pk)); ?>

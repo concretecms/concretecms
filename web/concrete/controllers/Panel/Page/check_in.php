@@ -43,7 +43,7 @@ class CheckIn extends BackendInterfacePageController {
 						if ($oc->isPageTypeComposerFormControlRequiredOnThisRequest()) {
 							$oc->setPageObject($c);
 							$r = $oc->validate();
-							if ($r instanceof ValidationErrorHelper) {
+							if ($r instanceof \Concrete\Helper\Validation\Error) {
 								$e->add($r);
 							}
 						}						

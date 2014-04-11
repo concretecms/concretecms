@@ -2,10 +2,9 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $c = $b->getBlockCollectionObject();
 $arHandle = $b->getAreaHandle();
+$pk = PermissionKey::getByID($_REQUEST['pkID']);
+$pk->setPermissionObject($b);
 ?>
-
-<? $pk = BlockPermissionKey::getByID($_REQUEST['pkID']); ?>
-<? $pk->setPermissionObject($b); ?>
 
 <? Loader::element("permission/detail", array('permissionKey' => $pk)); ?>
 

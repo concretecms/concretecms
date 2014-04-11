@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Feature\Category;
+use Loader;
 class GatheringItemCategory extends Category {
 
 	public function assignmentIsInUse(\Concrete\Core\Feature\Assignment\Assignment $fa) {

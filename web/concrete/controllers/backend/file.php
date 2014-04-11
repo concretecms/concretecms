@@ -1,8 +1,8 @@
 <?
-namespace \Concrete\Core\Backend;
+namespace Concrete\Controller\Backend;
 use Controller;
 use FileSet;
-use File;
+use File as ConcreteFile;
 use \Concrete\Core\File\EditResponse as FileEditResponse;
 use Loader;
 use \Concrete\Core\File\Importer as FileImporter;
@@ -40,7 +40,7 @@ class File extends Controller {
 			$fv = $f->getApprovedVersion();
 			$resp = $fv->refreshAttributes();
 			switch($resp) {
-				case File::F_ERROR_FILE_NOT_FOUND:
+				case ConcreteFile::F_ERROR_FILE_NOT_FOUND:
 					$errorMessage .= t('File %s could not be found.', $fv->getFilename()) . '<br/>';
 					break;
 				default:
@@ -91,7 +91,7 @@ class File extends Controller {
 			$fileIDs[] = $_REQUEST['fID'];
 		}
 		foreach($fileIDs as $fID) {
-			$f = File::getByID($fID);
+			$f = ConcreteFile::getByID($fID);
 			$fp = new Permissions($f);
 			if ($fp->$permission()) {
 				$files[] = $f;

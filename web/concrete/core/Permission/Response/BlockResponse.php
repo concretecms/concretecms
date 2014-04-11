@@ -2,6 +2,7 @@
 namespace Concrete\Core\Permission\Response;
 use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use PermissionKey;
+use Group;
 class BlockResponse extends Response {
 	
 	// legacy support

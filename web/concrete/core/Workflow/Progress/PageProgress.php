@@ -2,7 +2,7 @@
 namespace Concrete\Core\Workflow\Progress;
 use Loader;
 use Page;
-use \Concrete\Core\Workflow\Workflow;
+use Workflow;
 use \Concrete\Core\Workflow\Request\PageRequest as PageWorkflowRequest;
 
 class PageProgress extends Progress {  

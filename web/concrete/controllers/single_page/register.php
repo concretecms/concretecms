@@ -119,7 +119,7 @@ class Register extends PageController {
 				$e1 = $uak->validateAttributeForm();
 				if ($e1 == false) {
 					$e->add(t('The field "%s" is required', $uak->getAttributeKeyDisplayName()));
-				} else if ($e1 instanceof ValidationErrorHelper) {
+				} else if ($e1 instanceof \Concrete\Helper\Validation\Error) {
 					$e->add($e1);
 				}
 			}
