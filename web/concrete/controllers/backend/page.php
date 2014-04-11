@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Controller\Backend;
 use Controller;
+use PageType, Permissions, Loader, Redirect;
+
 class Page extends Controller {
 
 	public function create($ptID) {

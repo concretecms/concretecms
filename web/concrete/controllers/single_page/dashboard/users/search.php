@@ -233,6 +233,7 @@ class Search extends DashboardPageController {
 						$this->error->add(t('A username may only contain letters numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'));
 					}
 				}
+				$uo = $this->user->getUserObject();
 				if (strcasecmp($uo->getUserName(), $username) && !Loader::Helper('concrete/validation')->isUniqueUsername($username)) {
 					$this->error->add(t("The username '%s' already exists. Please choose another",$username));
 				}

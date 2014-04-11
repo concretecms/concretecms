@@ -7,7 +7,9 @@ use \Concrete\Core\File\EditResponse as FileEditResponse;
 use Loader;
 use \Concrete\Core\File\Importer as FileImporter;
 use Exception;
-use Permissions;
+use Permissions as ConcretePermissions;
+use FilePermissions;
+use Concrete\Core\File\Version as FileVersion;
 
 class File extends Controller {
 
@@ -92,7 +94,7 @@ class File extends Controller {
 		}
 		foreach($fileIDs as $fID) {
 			$f = ConcreteFile::getByID($fID);
-			$fp = new Permissions($f);
+			$fp = new ConcretePermissions($f);
 			if ($fp->$permission()) {
 				$files[] = $f;
 			}

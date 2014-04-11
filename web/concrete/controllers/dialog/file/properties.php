@@ -5,7 +5,7 @@ use \Concrete\Core\Http\ResponseAssetGroup;
 use Permissions;
 use FileAttributeKey;
 use \Concrete\Core\File\EditResponse as FileEditResponse;
-
+use Loader;
 class Properties extends BackendInterfaceFileController {
 
 	protected $viewPath = '/system/dialogs/file/properties';

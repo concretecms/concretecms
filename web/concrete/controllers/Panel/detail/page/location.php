@@ -5,6 +5,7 @@ use PageEditResponse;
 use PermissionKey;
 use Exception;
 use Loader;
+use PageType;
 use Permissions;
 use Page;
 use \Concrete\Core\Workflow\Request\MovePageRequest as MovePagePageWorkflowRequest;

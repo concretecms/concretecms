@@ -9,6 +9,7 @@ use \Concrete\Core\Page\Collection\Version\EditResponse as PageEditVersionRespon
 use PageEditResponse;
 use \Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
 use \Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
+use User;
 
 class Versions extends BackendInterfacePageController {
 

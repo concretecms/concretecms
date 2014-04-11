@@ -6,6 +6,7 @@ use PageType;
 use View;
 use Loader;
 use PageTemplate;
+use User;
 
 class Composer extends BackendInterfacePageController {
 

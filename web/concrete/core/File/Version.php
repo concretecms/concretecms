@@ -8,6 +8,7 @@ use FileAttributeKey;
 use \Concrete\Core\Attribute\Value\FileValue as FileAttributeValue;
 use stdClass;
 use Permissions;
+use User;
 use View;
 
 class Version extends Object {
@@ -238,19 +239,19 @@ class Version extends Object {
 		$ga = $db->GetAll('select fvUpdateTypeID, fvUpdateTypeAttributeID from FileVersionLog where fID = ? and fvID = ? order by fvlID asc', array($this->getFileID(), $this->getFileVersionID()));
 		foreach($ga as $a) {
 			switch($a['fvUpdateTypeID']) {
-				case FileVersion::UT_REPLACE_FILE:
+				case self::UT_REPLACE_FILE:
 					$updates[] = t('File');
 					break;
-				case FileVersion::UT_TITLE:
+				case self::UT_TITLE:
 					$updates[] = t('Title');
 					break;
-				case FileVersion::UT_DESCRIPTION:
+				case self::UT_DESCRIPTION:
 					$updates[] = t('Description');
 					break;
-				case FileVersion::UT_TAGS:
+				case self::UT_TAGS:
 					$updates[] = t('Tags');
 					break;
-				case FileVersion::UT_EXTENDED_ATTRIBUTE:
+				case self::UT_EXTENDED_ATTRIBUTE:
 					$val = $db->GetOne("select akName from AttributeKeys where akID = ?", array($a['fvUpdateTypeAttributeID']));
 					if ($val != '') {
 						$updates[] = $val;
@@ -270,7 +271,7 @@ class Version extends Object {
 	public function updateTitle($title) {
 		$db = Loader::db();
 		$db->Execute("update FileVersions set fvTitle = ? where fID = ? and fvID = ?", array($title, $this->getFileID(), $this->getFileVersionID()));
-		$this->logVersionUpdate(FileVersion::UT_TITLE);
+		$this->logVersionUpdate(self::UT_TITLE);
 		$this->fvTitle = $title;
 		Events::fire('on_file_version_update_title', $this, $title);
 		$fo = $this->getFile();
@@ -279,9 +280,9 @@ class Version extends Object {
 
 	public function updateTags($tags) {
 		$db = Loader::db();
-		$tags = FileVersion::cleanTags($tags);
+		$tags = self::cleanTags($tags);
 		$db->Execute("update FileVersions set fvTags = ? where fID = ? and fvID = ?", array($tags, $this->getFileID(), $this->getFileVersionID()));
-		$this->logVersionUpdate(FileVersion::UT_TAGS);
+		$this->logVersionUpdate(self::UT_TAGS);
 		$this->fvTags = $tags;
 		Events::fire('on_file_version_update_tags', $this, $tags);
 		$fo = $this->getFile();
@@ -292,7 +293,7 @@ class Version extends Object {
 	public function updateDescription($descr) {
 		$db = Loader::db();
 		$db->Execute("update FileVersions set fvDescription = ? where fID = ? and fvID = ?", array($descr, $this->getFileID(), $this->getFileVersionID()));
-		$this->logVersionUpdate(FileVersion::UT_DESCRIPTION);
+		$this->logVersionUpdate(self::UT_DESCRIPTION);
 		$this->fvDescription = $descr;
 		Events::fire('on_file_version_update_description', $this, $descr);
 		$fo = $this->getFile();
@@ -302,7 +303,7 @@ class Version extends Object {
 	public function updateFile($filename, $prefix) {
 		$db = Loader::db();
 		$db->Execute("update FileVersions set fvFilename = ?, fvPrefix = ? where fID = ? and fvID = ?", array($filename, $prefix, $this->getFileID(), $this->getFileVersionID()));
-		$this->logVersionUpdate(FileVersion::UT_REPLACE_FILE);
+		$this->logVersionUpdate(self::UT_REPLACE_FILE);
 		$this->fvFilename = $filename;
 		$this->fvPrefix = $prefix;
 

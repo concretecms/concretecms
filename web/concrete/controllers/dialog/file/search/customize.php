@@ -6,7 +6,7 @@ use \Concrete\Core\File\Search\ColumnSet\Available as FileSearchAvailableColumnS
 use FileAttributeKey;
 use \Concrete\Core\File\Search\Result\Result as FileSearchResult;
 use \Concrete\Core\Search\Response as SearchResponse;
-
+use Loader;
 class Customize extends BackendInterfaceController {
 
 	protected $viewPath = '/system/dialogs/search/customize';

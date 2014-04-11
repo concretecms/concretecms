@@ -11,6 +11,7 @@ use CollectionAttributeKey;
 use \Concrete\Core\Attribute\Value\CollectionValue as CollectionAttributeValue;
 use User;
 use Block;
+use \Concrete\Core\Page\Collection\Version\VersionList;
 use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 
 	class Collection extends Object {

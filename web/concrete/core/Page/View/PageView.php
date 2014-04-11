@@ -8,6 +8,7 @@ use User;
 use Permissions;
 use PageCache;
 use PageTheme;
+use URL;
 
 class PageView extends View {
 

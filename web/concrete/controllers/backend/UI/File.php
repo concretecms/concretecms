@@ -1,6 +1,6 @@
 <?php
 namespace Concrete\Controller\Backend\UI;
-use File;
+use File as ConcreteFile;
 use Loader;
 use Permissions;
 use Exception;
@@ -14,7 +14,7 @@ abstract class File extends \Concrete\Controller\Backend\UI {
 		$request = $this->request;
 		$fID = Loader::helper('security')->sanitizeInt($request->query->get('fID'));
 		if ($fID) {
-			$file = File::getByID($fID);
+			$file = ConcreteFile::getByID($fID);
 			if (is_object($file) && !$file->isError()) {
 				$this->setFileObject($file);
 			} else {
@@ -23,7 +23,7 @@ abstract class File extends \Concrete\Controller\Backend\UI {
 		}
 	}
 
-	public function setFileObject(File $f) {
+	public function setFileObject(ConcreteFile $f) {
 		$this->file = $f;
 		$this->permissions = new Permissions($this->file);		
 		$this->set('f', $this->file);

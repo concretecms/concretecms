@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\File;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 class StorageLocation extends Object {
 
 	const ALTERNATE_ID = 1;

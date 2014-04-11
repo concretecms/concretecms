@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Core\Page\Workflow\Request;
+namespace Concrete\Core\Workflow\Request;
 use Loader;
 use \Concrete\Core\Workflow\Description as WorkflowDescription;
 use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;

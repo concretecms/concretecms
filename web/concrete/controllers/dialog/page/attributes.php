@@ -1,5 +1,5 @@
 <?
-namespace \Concrete\Controller\Dialog\Page;
+namespace Concrete\Controller\Dialog\Page;
 use \Concrete\Controller\Backend\UI as BackendInterfaceController;
 use \Concrete\Controller\Panel\Page\Attributes as PageAttributesPanelController;
 use \Concrete\Controller\Panel\Detail\Page\Attributes as PageAttributesPanelDetailController;

@@ -5,7 +5,8 @@ use Group;
 use \Concrete\Core\User\EditResponse as UserEditResponse;
 use Permissions;
 use UserInfo;
-use User;
+use Loader;
+use stdClass;
 use Exception;
 
 class User extends Controller {

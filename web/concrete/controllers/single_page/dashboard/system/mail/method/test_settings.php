@@ -1,6 +1,10 @@
 <?
-defined('C5_EXECUTE') or die("Access Denied.");
-class Concrete5_Controller_Dashboard_System_Mail_Method_TestSettings extends DashboardPageController {
+namespace Concrete\Controller\Dashboard\System\Mail\Method;
+use \Concrete\Core\Page\DashboardPageController;
+use Loader;
+use Exception;
+
+class TestSettings extends DashboardPageController {
 	protected $sendUndefinedTasksToView = false;
 	
 	public function successful($mailRecipient) {

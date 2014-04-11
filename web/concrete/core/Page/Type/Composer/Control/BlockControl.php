@@ -7,6 +7,7 @@ use Block;
 use BlockType;
 use Environment;
 use Page;
+use Area;
 use PageTemplate;
 use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
 
