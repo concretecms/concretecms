@@ -1,5 +1,4 @@
 <? 
-use \Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
 use \Concrete\Core\Workflow\Progress\PageProgress as PageWorkflowProgress;
 use \Concrete\Core\Block\View\BlockView;
 

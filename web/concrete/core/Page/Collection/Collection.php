@@ -5,7 +5,7 @@ use CacheLocal;
 use Page;
 use Permissions;
 use Stack;
-use \Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
+use CollectionVersion;
 use \Concrete\Core\Foundation\Object as Object;
 use CollectionAttributeKey;
 use \Concrete\Core\Attribute\Value\CollectionValue as CollectionAttributeValue;

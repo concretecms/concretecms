@@ -6,7 +6,7 @@ use CacheLocal;
 use \Concrete\Core\Attribute\Value\ValueList as AttributeValueList;
 use \Concrete\Core\Attribute\Value\FileValue as FileAttributeValue;
 use File;
-use \Concrete\Core\File\Version as FileVersion;
+use FileVersion;
 class FileKey extends Key {
 
 	public function getIndexedSearchTable() {
@@ -122,7 +122,7 @@ class FileKey extends Key {
 	/** 
 	 * @access private 
 	 */
-	public function get($akID) {
+	public static function get($akID) {
 		return static::getByID($akID);
 	}
 	

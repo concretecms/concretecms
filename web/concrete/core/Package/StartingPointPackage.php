@@ -19,7 +19,7 @@ use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccess
 use \Concrete\Core\Mail\Importer\MailImporter;
 use \Concrete\Core\User\Point\Action\Action as UserPointAction;
 use \Concrete\Core\Backup\ContentImporter;
-use \Concrete\Core\File\Importer as FileImporter;
+use FileImporter;
 class StartingPointPackage extends Package {
 
 

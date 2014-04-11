@@ -4,7 +4,7 @@ use \Concrete\Controller\Backend\UI\Page as BackendInterfacePageController;
 use Permissions;
 use Page;
 use Loader;
-use \Concrete\Core\Page\Collection\Version\VersionList;
+use CollectionVersion;
 use \Concrete\Core\Page\Collection\Version\EditResponse as PageEditVersionResponse;
 use PageEditResponse;
 use \Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
