@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Controller\Panel\Detail\Page;
 use \Concrete\Controller\Backend\UI\Page as BackendInterfacePageController;
-use \Concrete\Core\Page\EditResponse as PageEditResponse;
+use PageEditResponse;
 use PageType;
 use View;
 use Loader;

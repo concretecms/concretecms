@@ -28,7 +28,7 @@ class GatheringItemAssignment extends Assignment {
 		));
 		$list = array();
 		while ($row = $r->FetchRow()) {
-			$fa = FeatureAssignment::getByID($row['faID'], $item);
+			$fa = Assignment::getByID($row['faID'], $item);
 			if (is_object($fa)) {
 				$list[] = $fa;
 			}
@@ -42,7 +42,7 @@ class GatheringItemAssignment extends Assignment {
 			$item->getGatheringItemID(), $feHandle
 		));
 		if ($faID && $faID > 0) {
-			$fa = FeatureAssignment::getByID($faID, $item);
+			$fa = Assignment::getByID($faID, $item);
 			if (is_object($fa)) {
 				return $fa;
 			}

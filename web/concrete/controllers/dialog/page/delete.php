@@ -2,7 +2,7 @@
 namespace \Concrete\Controller\Dialog\Page;
 use \Concrete\Controller\Backend\UI as BackendInterfaceController;
 use \Concrete\Core\Workflow\Request\DeletePage as DeletePagePageWorkflowRequest;
-use \Concrete\Core\Page\EditResponse as PageEditResponse;
+use PageEditResponse;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
 class Delete extends BackendInterfacePageController {

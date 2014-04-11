@@ -1,4 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Core\Conversation\MessageList as ConversationMessageList;
+use \Concrete\Core\Conversation\ThreadedList as ConversationMessageThreadedList;
+
 $cnv = Conversation::getByID($_POST['cnvID']);
 if (is_object($cnv)) {
 	$enablePosting = ($_POST['enablePosting'] == 1) ? true : false;

@@ -8,7 +8,7 @@ use User;
 use Events;
 use CacheLocal;
 use CollectionAttributeKey;
-
+use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 class Version extends Object implements \Concrete\Core\Permission\ObjectInterface {
 	
 	var $cvIsApproved;
@@ -346,7 +346,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 			}
 		}
 		
-		$features = \Concrete\Core\Page\Collection\Version\FeatureAssignment::getList($this);
+		$features = CollectionVersionFeatureAssignment::getList($this);
 		foreach($features as $fa) {
 			$fa->delete();
 		}

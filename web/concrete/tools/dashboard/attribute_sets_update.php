@@ -1,5 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Core\Attribute\Set as AttributeSet;
 $canRead = false;
 $ch = Page::getByID($_REQUEST['cID']);
 $path = $ch->getCollectionPath();

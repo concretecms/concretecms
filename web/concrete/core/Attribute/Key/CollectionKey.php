@@ -114,7 +114,7 @@ class CollectionKey extends Key {
 		unset($av);
 	}
 	
-	public function add($at, $args, $pkg = false) {
+	public static function add($at, $args, $pkg = false) {
 
 		// legacy check
 		$fargs = func_get_args();

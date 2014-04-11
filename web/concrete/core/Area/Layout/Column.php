@@ -2,7 +2,9 @@
 namespace Concrete\Core\Area\Layout;
 use Loader;
 use \Concrete\Core\Foundation\Object;
-class Column extends Object {
+use \Concrete\Core\Area\SubArea;
+use Page, Area;
+abstract class Column extends Object {
 
 	abstract static public function getByID($arLayoutColumnID);
 	abstract public function getAreaLayoutColumnClass();

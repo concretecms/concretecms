@@ -11,7 +11,7 @@ use \Concrete\Helper\Validation\Error as ValidationErrorHelper;
 use Redirect;
 use \Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
-use \Concrete\Core\Page\EditResponse as PageEditResponse;
+use PageEditResponse;
 use \Concrete\Core\Page\Type\Composer\Control\Control as PageTypeComposerControl;
 class CheckIn extends BackendInterfacePageController {
 

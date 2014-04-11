@@ -9,7 +9,7 @@ class Preset extends Object {
 		$db->Execute('insert into AreaLayoutPresets (arLayoutID, arLayoutPresetName) values (?, ?)', array(
 			$arLayout->getAreaLayoutID(), $name
 		));
-		return AreaLayoutPreset::getByID($db->Insert_ID());
+		return static::getByID($db->Insert_ID());
 	}
 
 	public static function getList() {
@@ -17,7 +17,7 @@ class Preset extends Object {
 		$r = $db->Execute('select arLayoutPresetID from AreaLayoutPresets order by arLayoutPresetName asc');
 		$presets = array();
 		while ($row = $r->FetchRow()) {
-			$preset = AreaLayoutPreset::getByID($row['arLayoutPresetID']);
+			$preset = static::getByID($row['arLayoutPresetID']);
 			if (is_object($preset)) {
 				$presets[] = $preset;
 			}
@@ -31,7 +31,7 @@ class Preset extends Object {
 			$arLayoutPresetID
 		));
 		if (is_array($row) && $row['arLayoutPresetID']) {
-			$preset = new AreaLayoutPreset();
+			$preset = new static();
 			$preset->setPropertiesFromArray($row);
 			return $preset;
 		}
@@ -49,7 +49,7 @@ class Preset extends Object {
 	public function getAreaLayoutPresetName() {return $this->arLayoutPresetName;}
 	public function getAreaLayoutID() {return $this->arLayoutID;}
 	public function getAreaLayoutObject() {
-		return AreaLayout::getByID($this->arLayoutID);
+		return Layout::getByID($this->arLayoutID);
 	}
 	public function updateAreaLayoutObject(AreaLayout $arLayout) {
 		$db = Loader::db();

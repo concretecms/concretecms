@@ -6,8 +6,9 @@ use Page;
 use Loader;
 use \Concrete\Core\Page\Collection\Version\VersionList;
 use \Concrete\Core\Page\Collection\Version\EditResponse as PageEditVersionResponse;
-use \Concrete\Core\Page\EditResponse as PageEditResponse;
+use PageEditResponse;
 use \Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
+use \Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
 
 class Versions extends BackendInterfacePageController {
 

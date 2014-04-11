@@ -23,7 +23,7 @@ if ($canAdd) {
 	$u = new User();
 	$r = new stdClass;
 	if (Loader::helper('validation/token')->validate('access_quick_nav', $_REQUEST['token'])) {
-		$qn = ConcreteDashboardMenu::getMine();
+		$qn = \Concrete\Helper\Concrete\Dashboard\Menu::getMine();
 		if ($qn->contains($c)) {
 			$qn->remove($c);
 			$task = 'add';

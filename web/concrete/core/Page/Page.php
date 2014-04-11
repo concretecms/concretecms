@@ -21,6 +21,8 @@ use \Concrete\Core\Package\PackageList;
 use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use \Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombinationPermissionAccessEntity;
 use \Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
+use Area;
+use Queue;
 
 /**
 *
@@ -31,6 +33,7 @@ use \Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEn
 */
 class Page extends Collection implements \Concrete\Core\Permission\ObjectInterface {
 
+	protected $controller;
 	protected $blocksAliasedFromMasterCollection = null;
 
 	/**
@@ -143,6 +146,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 	}
 
 	public function getPageController() {
+		if (isset($this->controller)) {
+			return $this->controller;
+		}
+		
 		if ($this->getPageTypeID() > 0) {
 			/*
 			$ptHandle = $mixed->getPageTypeHandle();

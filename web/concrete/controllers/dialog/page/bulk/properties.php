@@ -5,7 +5,7 @@ use Permissions;
 use Page;
 use \Concrete\Core\Http\ResponseAssetGroup;
 use CollectionAttributeKey;
-use \Concrete\Core\Page\EditResponse as PageEditResponse;
+use PageEditResponse;
 
 class Properties extends BackendInterfaceController {
 

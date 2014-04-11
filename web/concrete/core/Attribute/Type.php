@@ -177,12 +177,12 @@ class Type extends Object {
 			$h = $this->getPackageHandle();
 			$url = (is_dir(DIR_PACKAGES . '/' . $h)) ? BASE_URL . DIR_REL : ASSETS_URL; 
 			$url = $url . '/' . DIRNAME_PACKAGES . '/' . $h . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' . $this->getAttributeTypeHandle() . $ff;
-		} else if (file_exists(DIR_MODELS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $this->getAttributeTypeHandle() . $ff)) {
-			$url = ASSETS_URL . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $this->getAttributeTypeHandle() . $ff;
-		} else if (file_exists(DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $this->getAttributeTypeHandle() . $ff)) {
-			$url = BASE_URL . DIR_REL . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $this->getAttributeTypeHandle() . $ff;
+		} else if (file_exists(DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES . '/' .  $this->getAttributeTypeHandle() . $ff)) {
+			$url = ASSETS_URL . '/' . DIRNAME_ATTRIBUTES . '/' .  $this->getAttributeTypeHandle() . $ff;
+		} else if (file_exists(DIR_BASE . '/' . DIRNAME_ATTRIBUTES . '/' .  $this->getAttributeTypeHandle() . $ff)) {
+			$url = BASE_URL . DIR_REL . '/' . DIRNAME_ATTRIBUTES . '/' .  $this->getAttributeTypeHandle() . $ff;
 		} else {
-			$url = ASSETS_URL . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/default' . $ff;		
+			$url = ASSETS_URL . '/' . DIRNAME_ATTRIBUTES . '/default' . $ff;		
 		}
 		return $url;
 	}
@@ -203,11 +203,11 @@ class Type extends Object {
 	
 	protected function mapAttributeTypeFilePath($_file) {
 		$atHandle = $this->atHandle;
-		if (file_exists(DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $_file)) {
-			$file = DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' .  $atHandle . '/' . $_file;
-			$url = BASE_URL . DIR_REL . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' .  $atHandle . '/' . $_file;
-		} else if ($_file == FILENAME_ATTRIBUTE_CONTROLLER && file_exists(DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '.php')) {
-			$file = DIR_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '.php';
+		if (file_exists(DIR_BASE . '/' . DIRNAME_ATTRIBUTES . '/' . $atHandle . '/' . $_file)) {
+			$file = DIR_BASE . '/' . DIRNAME_ATTRIBUTES . '/' . $atHandle . '/' . $_file;
+			$url = BASE_URL . DIR_REL . '/' . DIRNAME_ATTRIBUTES . '/' . $atHandle . '/' . $_file;
+		} else if ($_file == FILENAME_ATTRIBUTE_CONTROLLER && file_exists(DIR_BASE . '/' .  DIRNAME_ATTRIBUTES . '/' . $atHandle . '.php')) {
+			$file = DIR_BASE . '/' . DIRNAME_ATTRIBUTES . '/' .  $atHandle . '.php';
 		}
 		
 		$pkgID = $this->pkgID;

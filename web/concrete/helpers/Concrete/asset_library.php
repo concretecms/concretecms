@@ -2,6 +2,9 @@
 
 namespace Concrete\Helper\Concrete;
 use View;
+use Loader;
+use FileType;
+use File;
 class AssetLibrary {
 
 

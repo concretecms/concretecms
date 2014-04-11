@@ -536,7 +536,9 @@ use Page;
 		 */
 		public function getNavItems($ignore_exclude_nav = false) {
 			$c = Page::getCurrentPage();
-
+			if (!is_object($c)) {
+				return array();
+			}
 			//Create an array of parent cIDs so we can determine the "nav path" of the current page
 			$inspectC = $c;
 			$selectedPathCIDs = array($inspectC->getCollectionID());

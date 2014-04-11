@@ -2,6 +2,9 @@
 namespace Concrete\Block\Form;
 use Loader;
 use \Concrete\Core\Block\BlockController;
+use User;
+use Page;
+use UserInfo;
 class Controller extends BlockController {
 	public $btTable = 'btForm';
 	public $btQuestionsTablename = 'btFormQuestions';
@@ -236,7 +239,7 @@ class Controller extends BlockController {
 	function action_submit_form() { 
 	
 		$ip = Loader::helper('validation/ip');
-		
+		$this->view();
 		
 		if (!$ip->check()) {
 			$this->set('invalidIP', $ip->getErrorMessage());			

@@ -8,6 +8,8 @@ use Router;
 use Concrete\Core\Http\Request as Request;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
+use Loader;
+use Environment;
 
 class Dispatcher {
 
@@ -158,18 +160,14 @@ class Dispatcher {
 	}
 
 	public function shutdown() {
-		/*
-		$db = Loader::db(false, false, false, false, false, false);
-		if (is_object($db)) {
-			$db->disconnect();
-		}
+		$db = Loader::db();
+		$db->close();
 		if (defined('ENABLE_OVERRIDE_CACHE') && ENABLE_OVERRIDE_CACHE) {
 			Environment::saveCachedEnvironmentObject();
 		} else if (defined('ENABLE_OVERRIDE_CACHE') && (!ENABLE_OVERRIDE_CACHE)) {
 			$env = Environment::get();
 			$env->clearOverrideCache();
 		}
-		*/
 	}
 
 

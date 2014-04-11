@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Conversation\FlagType;
 use Loader;
+use ConversationFlagType;
 use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
 class FlagTypeList extends DatabaseItemList {
 
@@ -13,7 +14,7 @@ class FlagTypeList extends DatabaseItemList {
 		$r = parent::get(0, 0);
 		$flagTypes = array();
 		foreach($r as $row) {
-			$flagTypes[] = FlagType::getByID($row['cnvMessageFlagTypeID']);
+			$flagTypes[] = ConversationFlagType::getByID($row['cnvMessageFlagTypeID']);
 		}
 		return $flagTypes;
 	}

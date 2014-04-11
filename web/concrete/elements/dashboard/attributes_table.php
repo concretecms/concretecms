@@ -144,3 +144,16 @@ $(function() {
 <style type="text/css">
 div.ccm-attribute-sortable-set-list img.ccm-attribute-icon:hover {cursor: move}
 </style>
+
+<? $form = helper('form'); ?>
+<? if (isset($types) && is_array($types) && count($types) > 0) { ?>
+<form method="get" action="<?=$view->action('select_type')?>" id="ccm-attribute-type-form">
+	<label for="atID"><?=t('Add Attribute')?></label>
+	<div class="form-inline">
+	<div class="form-group">
+		<?=$form->select('atID', $types)?>
+	</div>
+	<button type="submit" class="btn btn-default"><?=t('Go')?></button>
+	</div>
+</form>
+<? } ?>

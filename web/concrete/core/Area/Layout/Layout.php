@@ -2,6 +2,8 @@
 namespace Concrete\Core\Area\Layout;
 use Loader;
 use \Concrete\Core\Foundation\Object;
+use Area;
+
 abstract class Layout extends Object {
 
 	public static function getByID($arLayoutID) {
@@ -9,9 +11,9 @@ abstract class Layout extends Object {
 		$row = $db->GetRow('select arLayoutID, arLayoutUsesThemeGridFramework from AreaLayouts where arLayoutID = ?', array($arLayoutID));
 		if (is_array($row) && $row['arLayoutID']) {
 			if ($row['arLayoutUsesThemeGridFramework']) {
-				$al = new ThemeGridAreaLayout();
+				$al = new ThemeGridLayout();
 			} else {
-				$al = new CustomAreaLayout();
+				$al = new CustomLayout();
 			}
 			$al->setPropertiesFromArray($row);
 			$al->arLayoutNumColumns = $db->GetOne('select count(arLayoutColumnID) as totalColumns from AreaLayoutColumns where arLayoutID = ?', array($arLayoutID));
@@ -45,7 +47,7 @@ abstract class Layout extends Object {
 		$db = Loader::db();
 		$r = $db->Execute('select arLayoutColumnID from AreaLayoutColumns where arLayoutID = ? order by arLayoutColumnIndex asc', array($this->arLayoutID));
 		$columns = array();
-		$class = Loader::helper('text')->camelcase($this->arLayoutType) . 'AreaLayoutColumn';
+		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Area\\Layout\\' . helper('text')->camelcase($this->arLayoutType) . 'Column');
 		while ($row = $r->FetchRow()) {
 			$column = call_user_func_array(array($class, 'getByID'), array($row['arLayoutColumnID']));
 			if (is_object($column)) {

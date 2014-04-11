@@ -187,7 +187,7 @@ class UserKey extends Key {
 		unset($uo);
 	}
 	
-	public function add($type, $args, $pkg = false) {
+	public static function add($type, $args, $pkg = false) {
 
 		CacheLocal::delete('user_attribute_key_by_handle', $args['akHandle']);
 

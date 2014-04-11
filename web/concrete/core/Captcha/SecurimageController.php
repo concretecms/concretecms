@@ -3,6 +3,8 @@
 namespace Concrete\Core\Captcha;
 use Loader;
 use \Concrete\Core\Foundation\Object;
+use Securimage;
+use Securimage_Color;
 
 class SecurimageController extends Controller {
 

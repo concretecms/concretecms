@@ -34,7 +34,7 @@ class CollectionVersionAssignment extends Assignment {
 			$feHandle
 		));
 		if ($faID && $faID > 0) {
-			$fa = FeatureAssignment::getByID($faID, $page);
+			$fa = Assignment::getByID($faID, $page);
 			if (is_object($fa)) {
 				return $fa;
 			}
@@ -49,7 +49,7 @@ class CollectionVersionAssignment extends Assignment {
 		));
 		$list = array();
 		while ($row = $r->FetchRow()) {
-			$fa = FeatureAssignment::getByID($row['faID'], $page);
+			$fa = Assignment::getByID($row['faID'], $page);
 			if (is_object($fa)) {
 				$list[] = $fa;
 			}

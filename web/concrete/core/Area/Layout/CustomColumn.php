@@ -1,13 +1,13 @@
 <?php
 namespace Concrete\Core\Area\Layout;
 use Loader;
-class CustomColumn extends Column;
+class CustomColumn extends Column {
 
 	public static function getByID($arLayoutColumnID) {
 		$db = Loader::db();
 		$row = $db->GetRow('select * from AreaLayoutCustomColumns where arLayoutColumnID = ?', array($arLayoutColumnID));
 		if (is_array($row) && $row['arLayoutColumnID']) {
-			$al = new CustomAreaLayoutColumn();
+			$al = new static();
 			$al->loadBasicInformation($arLayoutColumnID);
 			$al->setPropertiesFromArray($row);
 			return $al;
@@ -19,7 +19,7 @@ class CustomColumn extends Column;
 		$db = Loader::db();
 		$v = array($areaLayoutColumnID, $this->arLayoutColumnWidth);
 		$db->Execute('insert into AreaLayoutCustomColumns (arLayoutColumnID, arLayoutColumnWidth) values (?, ?)', $v);
-		$newAreaLayoutColumn = CustomAreaLayoutColumn::getByID($areaLayoutColumnID);
+		$newAreaLayoutColumn = CustomColumn::getByID($areaLayoutColumnID);
 		return $newAreaLayoutColumn;
 	}
 
