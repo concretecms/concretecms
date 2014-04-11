@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Core\Workflow\Request;
-use \Concrete\Core\Workflow\Workflow;
+use Workflow;
 use Loader;
 use Page;
 use PermissionKey;

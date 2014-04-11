@@ -1,5 +1,6 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
+	use \Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
 	# Filename: _process.php
 	# Author: Andrew Embler (andrew@concrete5.org)
 	# -------------------
@@ -7,9 +8,6 @@
 	# checks to see if a any submits are taking place. If they are, then
 	# _process makes sure that they're handled correctly
 
-
-	// Modification for step editing
-	$step = (isset($_REQUEST['step']) && $_REQUEST['step']) ? '&step=' . $_REQUEST['step'] : '';
 
 	// if we don't have a valid token we die
 	$valt = Loader::helper('validation/token');
@@ -398,7 +396,7 @@
 			case 'approve-recent':
 				if ($cp->canApprovePageVersions()) {
 					$u = new User();
-					$pkr = new ApprovePagePageWorkflowRequest();
+					$pkr = new \Concrete\Core\Workflow\Request\ApprovePageRequest();
 					$pkr->setRequestedPage($c);
 					$v = CollectionVersion::get($c, "RECENT");
 					$pkr->setRequestedVersionID($v->getVersionID());
@@ -483,7 +481,7 @@
 				$obj->arHandle = $a->getAreaHandle();
 				$obj->cID = $c->getCollectionID();
 
-				if ((!is_object($e)) || (($e instanceof ValidationErrorHelper) && (!$e->has()))) {
+				if ((!is_object($e)) || (($e instanceof \Concrete\Helper\Validation\Error) && (!$e->has()))) {
 					$bt = BlockType::getByHandle($b->getBlockTypeHandle());
 					if (!$bt->includeAll()) {
 						// we make sure to create a new version, if necessary

@@ -2,6 +2,7 @@
 namespace Concrete\Core\Permission\Access;
 use Loader;
 use \Concrete\Core\Permission\Duration as PermissionDuration;
+use \Concrete\Core\Permission\Key\UserKey as UserPermissionKey;
 class ViewUserAttributesUserAccess extends UserAccess {
 
 	public function save($args) {

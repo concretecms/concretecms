@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Core\Workflow\Request;
 use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Workflow\Workflow;
+use Workflow;
 use \Concrete\Core\Workflow\EmptyWorkflow;
 use Loader;
 use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;

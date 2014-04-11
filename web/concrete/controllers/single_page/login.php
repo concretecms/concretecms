@@ -205,7 +205,7 @@ class Login extends PageController {
 				$err = $attribute->validateAttributeForm();
 				if ($err == false) {
 					$this->error->add(t('The field "%s" is required', $attribute->getAttributeKeyDisplayName()));
-				} elseif ($err instanceof ValidationErrorHelper) {
+				} elseif ($err instanceof \Concrete\Helper\Validation\Error) {
 					$this->error->add($err);
 				} else {
 					$attribute->saveAttributeForm($ui);

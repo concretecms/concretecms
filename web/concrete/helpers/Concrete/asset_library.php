@@ -3,7 +3,7 @@
 namespace Concrete\Helper\Concrete;
 use View;
 use Loader;
-use FileType;
+use \Concrete\Core\File\Type\Type as FileType;
 use File;
 class AssetLibrary {
 

@@ -974,7 +974,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface 
 			$db->Execute($q, $v);
 
 			$q = "update CollectionVersionBlocks set cbDisplayOrder = ? where bID = ? and cID = ? and (cvID = ? or cbIncludeAll=1) and arHandle = ?";
-			$v = array(0, $this->getBlockID(), $c->getCollectionID(), $c->getVersionID(), $this->arHandle, $this->getBlockDisplayOrder());
+			$v = array(0, $this->getBlockID(), $c->getCollectionID(), $c->getVersionID(), $this->arHandle);
 			$db->Execute($q, $v);
 
 

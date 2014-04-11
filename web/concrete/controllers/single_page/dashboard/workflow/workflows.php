@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Workflow;
 use \Concrete\Core\Page\Controller\DashboardPageController;
-use \Concrete\Core\Workflow\Workflow;
+use Workflow;
 use Loader;
 use Exception;
 use \Concrete\Core\Workflow\Type as WorkflowType;

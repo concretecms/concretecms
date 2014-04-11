@@ -1,4 +1,7 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<? defined('C5_EXECUTE') or die("Access Denied."); 
+use \Concrete\Core\Area\SubArea; 
+
+?>
 <div class="ccm-ui">
 	<? 
 $enablePermissions = false;

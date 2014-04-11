@@ -1,6 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
+$c = Page::getCurrentPage();
 ?>
 <ul id="ccm-autonav-tabs" class="nav nav-tabs">
 	<li class="active"><a id="ccm-autonav-tab-add" href="javascript:void(0);"><?=t('Edit')?></a></li>
@@ -19,7 +20,7 @@ $form = Loader::helper('form');
 
 
 <input type="hidden" name="autonavCurrentCID" value="<?=$c->getCollectionID()?>" />
-<input type="hidden" name="autonavPreviewPane" value="<?=REL_DIR_FILES_TOOLS_BLOCKS?>/<?=$this->getBlockTypeHandle()?>/preview_pane.php" />
+<input type="hidden" name="autonavPreviewPane" value="<?=helper('concrete/urls')->getBlockTypeToolsURL($bt)?>/preview_pane" />
 
 <strong><?=t('Pages Should Appear')?></strong><br>
 <select name="orderBy">

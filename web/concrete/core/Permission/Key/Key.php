@@ -8,6 +8,7 @@ use \Concrete\Core\Package\PackageList;
 use \Concrete\Core\Permission\Assignment\Assignment as PermissionAssignment;
 use User;
 use \Concrete\Core\Permission\Cache as PermissionCache;
+use Environment;
 
 abstract class Key extends Object {
 	

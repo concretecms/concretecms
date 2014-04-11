@@ -1,5 +1,5 @@
 <?
-namespace \Concrete\Controller\Dialog\File\Bulk;
+namespace Concrete\Controller\Dialog\File\Bulk;
 use \Concrete\Controller\Backend\UI as BackendInterfaceController;
 use FilePermissions;
 use \Concrete\Core\Http\ResponseAssetGroup;

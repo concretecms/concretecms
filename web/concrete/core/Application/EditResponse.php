@@ -19,7 +19,7 @@ abstract class EditResponse {
 	}
 
 	public function __construct($e = false) {
-		if ($e instanceof ValidationErrorHelper && $e->has()) {
+		if ($e instanceof \Concrete\Helper\Validation\Error && $e->has()) {
 			$this->error = $e;
 		} else {
 			$this->error = Loader::helper('validation/error');

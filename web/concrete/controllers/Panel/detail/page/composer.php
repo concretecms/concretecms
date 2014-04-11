@@ -50,7 +50,7 @@ class Composer extends BackendInterfacePageController {
 		foreach($outputControls as $oc) {
 			if ($oc->isPageTypeComposerFormControlRequiredOnThisRequest()) {
 				$r = $oc->validate();
-				if ($r instanceof ValidationErrorHelper) {
+				if ($r instanceof \Concrete\Helper\Validation\Error) {
 					$e->add($r);
 				}
 			}
