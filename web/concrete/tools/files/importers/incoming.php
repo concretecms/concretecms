@@ -3,6 +3,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
 $fp = FilePermissions::getGlobal();
+use \Concrete\Core\File\EditResponse as FileEditResponse;
 if (!$fp->canAddFiles()) {
 	die(t("Unable to add files."));
 }

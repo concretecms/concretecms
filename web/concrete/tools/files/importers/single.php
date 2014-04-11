@@ -1,6 +1,8 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Core\File\EditResponse as FileEditResponse;
+
 $u = new User();
 $valt = Loader::helper('validation/token');
 $cf = Loader::helper('file');

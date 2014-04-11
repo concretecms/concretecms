@@ -5,11 +5,11 @@ use FileSet;
 use File as ConcreteFile;
 use \Concrete\Core\File\EditResponse as FileEditResponse;
 use Loader;
-use \Concrete\Core\File\Importer as FileImporter;
+use FileImporter;
 use Exception;
 use Permissions as ConcretePermissions;
 use FilePermissions;
-use Concrete\Core\File\Version as FileVersion;
+use FileVersion;
 
 class File extends Controller {
 

@@ -2,7 +2,7 @@
 namespace Concrete\Controller\Panel\Page;
 use \Concrete\Controller\Backend\UI\Page as BackendInterfacePageController;
 use Permissions;
-use \Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
+use CollectionVersion;
 use Loader;
 use Page;
 use User;

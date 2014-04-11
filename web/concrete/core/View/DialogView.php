@@ -1,11 +1,11 @@
 <?
 namespace Concrete\Core\View;
-use View;
+use View as ConcreteView;
 use \Concrete\Core\Asset\CssAsset;
 use \Concrete\Core\Asset\JavascriptAsset;
 use User;
 
-class DialogView extends View {
+class DialogView extends ConcreteView {
 	
 	protected function onBeforeGetContents() {
 		$this->markHeaderAssetPosition();

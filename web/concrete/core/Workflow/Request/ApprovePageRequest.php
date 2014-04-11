@@ -6,7 +6,7 @@ use \Concrete\Core\Workflow\Description as WorkflowDescription;
 use Permissions;
 use PermissionKey;
 use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
-use \Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
+use CollectionVersion;
 use Events;
 use \Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;

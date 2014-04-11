@@ -11,7 +11,7 @@ use \Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerContr
 use \Concrete\Core\Page\Type\Composer\Control\Control as PageTypeComposerControl;
 use \Concrete\Core\Backup\ContentImporter;
 use \Concrete\Core\Package\PackageList;
-use \Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
+use CollectionVersion;
 use Collection;
 use Page;
 use User;
