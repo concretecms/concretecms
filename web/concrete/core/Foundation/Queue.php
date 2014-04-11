@@ -23,7 +23,7 @@ class Queue {
 		);
 
 		$config = array_merge($config, $additionalConfig);
-		return new Zend_Queue('Concrete5', $config);
+		return new \Zend_Queue('Concrete5', $config);
 	}
 
 	public static function exists($name) {

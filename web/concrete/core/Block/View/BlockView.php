@@ -9,6 +9,8 @@ use User;
 use Page;
 use Block;
 use BlockType;
+use URL;
+
 class BlockView extends AbstractView {
 
 	protected $block;
@@ -285,11 +287,13 @@ class BlockView extends AbstractView {
 	 */
 	protected function getPassThruAction() {
 		$c = Page::getCurrentPage();
-		$cnt = $c->getController();
-		$parameters = $cnt->getParameters();
-		$action = $cnt->getAction();
-		if ($action == 'passthru' && $this->block->getBlockID() == $parameters[1]) {
-			return 'action_' . $parameters[2];
+		if (is_object($c)) {
+			$cnt = $c->getController();
+			$parameters = $cnt->getParameters();
+			$action = $cnt->getAction();
+			if ($action == 'passthru' && $this->block->getBlockID() == $parameters[1]) {
+				return 'action_' . $parameters[2];
+			}
 		}
 	}
 

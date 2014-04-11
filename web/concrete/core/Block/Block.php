@@ -11,14 +11,17 @@ use Events;
 use Cache;
 use \Concrete\Core\Package\PackageList;
 use \Concrete\Core\Block\View\BlockView;
+use \Concrete\Core\Feature\Assignment\Assignment as FeatureAssignment;
+use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 
 class Block extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
-	var $cID;
-	var $arHandle;
-	var $c;
+	protected $cID;
+	protected $arHandle;
+	protected $c;
 	protected $csrID;
 	protected $proxyBlock = false;
+	protected $bActionCID;
 
 	public static function populateManually($blockInfo, $c, $a) {
 		$b = new Block;

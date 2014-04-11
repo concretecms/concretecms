@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Area\Layout;
 use Loader;
+use \Concrete\Core\Area\SubArea;
+use Page, Area;
 class ThemeGridLayout extends Layout {
 
 	protected $arLayoutType = 'theme_grid';
@@ -60,7 +62,7 @@ class ThemeGridLayout extends Layout {
 		$db->Execute('insert into AreaLayouts (arLayoutMaxColumns, arLayoutUsesThemeGridFramework) values (?, ?)', $v);
 		$newAreaLayoutID = $db->Insert_ID();
 		if ($newAreaLayoutID) {
-			$newAreaLayout = AreaLayout::getByID($newAreaLayoutID);
+			$newAreaLayout = Layout::getByID($newAreaLayoutID);
 			$columns = $this->getAreaLayoutColumns();
 			foreach($columns as $col) {
 				$col->duplicate($newAreaLayout);
@@ -86,7 +88,7 @@ class ThemeGridLayout extends Layout {
 		$columnID = parent::addLayoutColumn();
 		$db = Loader::db();
 		$db->Execute('insert into AreaLayoutThemeGridColumns (arLayoutColumnID) values (?)', array($columnID));
-		return ThemeGridAreaLayoutColumn::getByID($columnID);
+		return ThemeGridColumn::getByID($columnID);
 	}
 
 	public static function add() {
@@ -94,7 +96,7 @@ class ThemeGridLayout extends Layout {
 		$db->Execute('insert into AreaLayouts (arLayoutSpacing, arLayoutIsCustom, arLayoutUsesThemeGridFramework) values (?, ?, ?)', array(0, 0, 1));
 		$arLayoutID = $db->Insert_ID();
 		if ($arLayoutID) {
-			$ar = ThemeGridAreaLayout::getByID($arLayoutID);
+			$ar = static::getByID($arLayoutID);
 			return $ar;
 		}
 	}

@@ -1,13 +1,17 @@
 <?
-namespace \Concrete\Controller\Dialog\Page;
+namespace Concrete\Controller\Dialog\Page;
 use \Concrete\Controller\Backend\UI\Page as BackendInterfacePageController;
 use BlockType;
 use Area;
 use Stack;
+use User;
 use Exception;
-use \Concrete\Core\Block\View\View as BlockView;
-use \Concrete\Core\Page\EditResponse as PageEditResponse;
-
+use \Concrete\Core\Block\View\BlockView;
+use PageEditResponse;
+use Page;
+use Loader;
+use Permissions;
+use Block;
 class AddBlock extends BackendInterfacePageController {
 
 	protected $viewPath = '/system/dialogs/page/add_block';
@@ -34,7 +38,7 @@ class AddBlock extends BackendInterfacePageController {
 		}
 		$this->areaPermissions = new Permissions($this->areaToModify);
 		$cnt = $this->blockType->getController();
-		if (!is_a($cnt, '\Concrete\Core\Block\Controller\Controller')) {
+		if (!is_a($cnt, '\Concrete\Core\Block\BlockController')) {
 			throw new Exception(t('Unable to load the controller for this block type. Perhaps it has been moved or removed.'));
 		}
 		$this->blockTypeController = $cnt;
@@ -66,7 +70,7 @@ class AddBlock extends BackendInterfacePageController {
 			$data['uID'] = $u->getUserID();
 
 			$e = $this->blockTypeController->validate($data);
-			if ((!is_object($e)) || (($e instanceof ValidationErrorHelper) && (!$e->has()))) {
+			if ((!is_object($e)) || (($e instanceof \Concrete\Helper\Validation\Error) && (!$e->has()))) {
 
 				if (!$bt->includeAll()) {
 					$nvc = $this->pageToModify->getVersionToModify();

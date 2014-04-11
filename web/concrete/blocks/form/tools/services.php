@@ -1,5 +1,6 @@
 <?php 
 defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Block\Form\Minisurvey;
 
 $miniSurvey= new Minisurvey();
 $bID = $_GET['bID'];

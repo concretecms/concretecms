@@ -1,5 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");  
+use \Concrete\Core\Block\View\BlockView;
 
 $c = Page::getByID($_REQUEST['cID'], 'RECENT');
 $a = Area::get($c, $_REQUEST['arHandle']);

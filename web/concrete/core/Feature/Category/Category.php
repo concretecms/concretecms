@@ -5,7 +5,7 @@ use Loader;
 use \Concrete\Core\Package\PackageList;
 abstract class Category extends Object {
 
-	abstract public function assignmentIsInUse(\Concrete\Core\Feature\Assignment $fa);
+	abstract public function assignmentIsInUse(\Concrete\Core\Feature\Assignment\Assignment $fa);
 	
 	public static function getByID($fcID) {
 		$db = Loader::db();

@@ -7,7 +7,7 @@ use stdClass;
 use PermissionKey;
 use \Concrete\Core\Page\Theme\EditableStyle\EditableStyle as PageThemeEditableStyle;
 use PageTheme;
-use \Concrete\Core\Page\EditResponse as PageEditResponse;
+use PageEditResponse;
 use Request;
 
 class Customize extends BackendInterfacePageController {

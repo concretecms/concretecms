@@ -36,7 +36,8 @@ class BlockController extends \Concrete\Core\Controller\AbstractController {
 	protected $btCacheBlockOutputLifetime = 0; //until manually updated or cleared
 	protected $btCacheBlockOutputOnPost = false;
 	protected $btCacheBlockOutputForRegisteredUsers = false;
-	
+	protected $bActionCID;
+
 	protected $btExportPageColumns = array();
 	protected $btExportFileColumns = array();
 	protected $btExportPageTypeColumns = array();
@@ -312,9 +313,18 @@ class BlockController extends \Concrete\Core\Controller\AbstractController {
 	}
 	
 	public function getCollectionObject() {
+		if (!$this->block) {
+			return false;
+		}
+
+		if (!isset($this->bActionCID)) {
+			$this->bActionCID = $this->block->getBlockActionCollectionID();
+		}
+
 		if ($this->bActionCID > 0) {
 			return Page::getByID($this->bActionCID);
 		} 
+
 		return Page::getCurrentPage();
 	}
 
@@ -415,7 +425,6 @@ class BlockController extends \Concrete\Core\Controller\AbstractController {
 			$this->identifier = 'BLOCK_' . $obj->getBlockID();
 			$this->bID = $b->getBlockID();
 			$this->btHandle = $obj->getBlockTypeHandle();
-			$this->bActionCID = $obj->getBlockActionCollectionID();
 			$this->btCachedBlockRecord = $obj->getBlockCachedRecord();
 			$this->setBlockObject($b);
 			$this->load();

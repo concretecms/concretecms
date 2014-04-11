@@ -1,13 +1,15 @@
 <?php
 namespace Concrete\Core\Area\Layout;
 use Loader;
+use \Concrete\Core\Area\SubArea;
+use Page, Area;
 class ThemeGridColumn extends Column;
 
 	public static function getByID($arLayoutColumnID) {
 		$db = Loader::db();
 		$row = $db->GetRow('select * from AreaLayoutThemeGridColumns where arLayoutColumnID = ?', array($arLayoutColumnID));
 		if (is_array($row) && $row['arLayoutColumnID']) {
-			$al = new ThemeGridAreaLayoutColumn();
+			$al = new static();
 			$al->loadBasicInformation($arLayoutColumnID);
 			$al->setPropertiesFromArray($row);
 			return $al;
@@ -19,7 +21,7 @@ class ThemeGridColumn extends Column;
 		$db = Loader::db();
 		$v = array($areaLayoutColumnID, $this->arLayoutColumnSpan, $this->arLayoutColumnOffset);
 		$db->Execute('insert into AreaLayoutThemeGridColumns (arLayoutColumnID, arLayoutColumnSpan, arLayoutColumnOffset) values (?, ?, ?)', $v);
-		$newAreaLayoutColumn = ThemeGridAreaLayoutColumn::getByID($areaLayoutColumnID);
+		$newAreaLayoutColumn = ThemeGridColumn::getByID($areaLayoutColumnID);
 		return $newAreaLayoutColumn;
 	}
 

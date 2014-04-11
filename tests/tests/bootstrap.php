@@ -25,6 +25,9 @@ require $DIR_BASE_CORE . '/startup/autoload.php';
 
 require realpath(dirname(__FILE__) . '/ConcreteDatabaseTestcase.php');
 
+PHPUnit_Framework_Error_Notice::$enabled = FALSE;
+error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+
 $app = Concrete\Core\Application\Dispatcher::get();
 $app->bootstrap();
 /*

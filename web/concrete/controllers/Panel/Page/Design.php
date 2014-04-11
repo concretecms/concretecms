@@ -5,7 +5,7 @@ use Permissions;
 use PageTemplate;
 use PageTheme;
 use Request;
-use \Concrete\Core\Page\EditResponse as PageEditResponse;
+use PageEditResponse;
 use Loader;
 use Response;
 use View;

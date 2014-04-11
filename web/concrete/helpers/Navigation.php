@@ -2,7 +2,7 @@
 namespace Concrete\Helper;
 use Loader;
 use Page;
-use URL;
+
 class Navigation {
 
 	/** 

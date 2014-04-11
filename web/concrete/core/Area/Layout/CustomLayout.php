@@ -25,7 +25,7 @@ class CustomLayout extends Layout {
 		$db->Execute('insert into AreaLayouts (arLayoutSpacing, arLayoutIsCustom) values (?, ?)', $v);
 		$newAreaLayoutID = $db->Insert_ID();
 		if ($newAreaLayoutID) {
-			$newAreaLayout = AreaLayout::getByID($newAreaLayoutID);
+			$newAreaLayout = Layout::getByID($newAreaLayoutID);
 			$columns = $this->getAreaLayoutColumns();
 			foreach($columns as $col) {
 				$col->duplicate($newAreaLayout);
@@ -70,7 +70,7 @@ class CustomLayout extends Layout {
 		$db->Execute('insert into AreaLayouts (arLayoutSpacing, arLayoutIsCustom, arLayoutUsesThemeGridFramework) values (?, ?, ?)', array($spacing, $iscustom, 0));
 		$arLayoutID = $db->Insert_ID();
 		if ($arLayoutID) {
-			$ar = CustomAreaLayout::getByID($arLayoutID);
+			$ar = static::getByID($arLayoutID);
 			return $ar;
 		}
 	}
@@ -79,7 +79,7 @@ class CustomLayout extends Layout {
 		$columnID = parent::addLayoutColumn();
 		$db = Loader::db();
 		$db->Execute('insert into AreaLayoutCustomColumns (arLayoutColumnID) values (?)', array($columnID));
-		return CustomAreaLayoutColumn::getByID($columnID);
+		return CustomColumn::getByID($columnID);
 	}
 
 

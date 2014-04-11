@@ -1,6 +1,6 @@
 <?php
 namespace Concrete\Core\Page\Collection\Version;
-use \Concrete\Core\Page\EditResponse as PageEditResponse;
+use PageEditResponse;
 use Loader;
 use Page;
 use Permissions;

@@ -147,7 +147,7 @@ class FileKey extends Key {
 		unset($f);
 	}
 
-	public function add($at, $args, $pkg = false) {
+	public static function add($at, $args, $pkg = false) {
 		CacheLocal::delete('file_attribute_key_by_handle', $args['akHandle']);
 		$ak = parent::add('file', $at, $args, $pkg);
 		return $ak;

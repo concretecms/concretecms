@@ -2,8 +2,7 @@
 namespace Concrete\Core\Conversation\Message;
 use Loader;
 use \Concrete\Core\Foundation\Collection\ItemList;
-use \Concrete\Core\Conversation\Conversation;
-use \Concrete\Core\Conversation\Conversation\Message\Message as ConversationMessage;
+use Conversation, ConversationMessage;
 class ThreadedList extends ItemList {
 
 	protected $sortBy = 'cnvMessageDateCreated';

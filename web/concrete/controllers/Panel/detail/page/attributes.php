@@ -1,11 +1,12 @@
 <?
 namespace Concrete\Controller\Panel\Detail\Page;
 use \Concrete\Controller\Backend\UI\Page as BackendInterfacePageController;
-use \Concrete\Core\Page\EditResponse as PageEditResponse;
+use PageEditResponse;
 use PermissionKey;
 use stdClass;
 use Loader;
 use CollectionAttributeKey;
+use \Concrete\Core\Attribute\View as AttributeTypeView;
 
 class Attributes extends BackendInterfacePageController {
 
@@ -22,7 +23,7 @@ class Attributes extends BackendInterfacePageController {
 		$this->assignment = $pk->getMyAssignment();
 	}
 
-	protected function getAttributeJSONRepresentation(AttributeKey $ak, $mode = 'edit') {
+	protected function getAttributeJSONRepresentation(CollectionAttributeKey $ak, $mode = 'edit') {
 		ob_start();
 		$av = new AttributeTypeView($ak);
 		if ($mode == 'edit') {

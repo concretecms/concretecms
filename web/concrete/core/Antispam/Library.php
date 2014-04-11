@@ -2,7 +2,9 @@
 
 namespace Concrete\Core\Antispam;
 use \Concrete\Core\Foundation\Object;
+use Loader;
 use \Concrete\Core\Package\PackageList;
+use Package;
 
 class Library extends Object {
 
@@ -19,7 +21,7 @@ class Library extends Object {
 		$db = Loader::db();
 		$saslHandle = $db->GetOne('select saslHandle from SystemAntispamLibraries where saslIsActive = 1');
 		if ($saslHandle) { 
-			return SystemAntispamLibrary::getByHandle($saslHandle);
+			return static::getByHandle($saslHandle);
 		}
 	}
 	
@@ -27,7 +29,7 @@ class Library extends Object {
 		$db = Loader::db();
 		$r = $db->GetRow('select saslHandle, saslIsActive, pkgID, saslName from SystemAntispamLibraries where saslHandle = ?', array($saslHandle));
 		if (is_array($r) && $r['saslHandle']) {
-			$sc = new SystemAntispamLibrary();
+			$sc = new static();
 			$sc->setPropertiesFromArray($r);
 			return $sc;
 		}
@@ -40,7 +42,7 @@ class Library extends Object {
 		}
 		$db = Loader::db();
 		$db->Execute('insert into SystemAntispamLibraries (saslHandle, saslName, pkgID) values (?, ?, ?)', array($saslHandle, $saslName, $pkgID));
-		return SystemAntispamLibrary::getByHandle($saslHandle);
+		return static::getByHandle($saslHandle);
 	}
 	
 	public function delete() {
@@ -64,7 +66,7 @@ class Library extends Object {
 		$saslHandles = $db->GetCol('select saslHandle from SystemAntispamLibraries order by saslHandle asc');
 		$libraries = array();
 		foreach($saslHandles as $saslHandle) {
-			$sasl = SystemAntispamLibrary::getByHandle($saslHandle);
+			$sasl = static::getByHandle($saslHandle);
 			$libraries[] = $sasl;
 		}
 		return $libraries;
@@ -75,7 +77,7 @@ class Library extends Object {
 		$saslHandles = $db->GetCol('select saslHandle from SystemAntispamLibraries where pkgID = ? order by saslHandle asc', array($pkg->getPackageID()));
 		$libraries = array();
 		foreach($saslHandles as $saslHandle) {
-			$sasl = SystemAntispamLibrary::getByHandle($saslHandle);
+			$sasl = static::getByHandle($saslHandle);
 			$libraries[] = $sasl;
 		}
 		return $libraries;

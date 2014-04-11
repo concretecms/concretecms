@@ -437,12 +437,17 @@ class BlockType {
 		} else { 
 			$uID = $u->getUserID();
 		}
+		$bName = '';
+		if (isset($data['bName'])) {
+			$bName = $data['bName'];
+		}
+
 		$btID = $this->btID;
 		$dh = Loader::helper('date');
 		$bDate = $dh->getSystemDateTime();
-		$bIsActive = ($this->btActiveWhenAdded == 1) ? 1 : 0;
+		$bIsActive = (isset($this->btActiveWhenAdded) && $this->btActiveWhenAdded == 1) ? 1 : 0;
 		
-		$v = array($_POST['bName'], $bDate, $bDate, $bIsActive, $btID, $uID);
+		$v = array($bName, $bDate, $bDate, $bIsActive, $btID, $uID);
 		$q = "insert into Blocks (bName, bDateAdded, bDateModified, bIsActive, btID, uID) values (?, ?, ?, ?, ?, ?)";
 		
 		$r = $db->prepare($q);

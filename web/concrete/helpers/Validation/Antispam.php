@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Helper\Validation;
 use Loader;
+use \Concrete\Core\Antispam\Library as SystemAntispamLibrary;
 class Antispam {
 	
 	protected $controller = false;
