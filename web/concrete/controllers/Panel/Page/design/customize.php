@@ -9,6 +9,9 @@ use \Concrete\Core\Page\Theme\EditableStyle\EditableStyle as PageThemeEditableSt
 use PageTheme;
 use PageEditResponse;
 use Request;
+use Loader;
+use User;
+use Response;
 
 class Customize extends BackendInterfacePageController {
 
@@ -111,7 +114,7 @@ class Customize extends BackendInterfacePageController {
 	public function preview($pThemeID) {
 		$req = Request::getInstance();
 		$req->setCurrentPage($this->page);
-		$controller = Loader::controller($this->page);
+		$controller = $this->page->getPageController();
 		$view = $controller->getViewObject();
 		$pt = PageTheme::getByID($pThemeID);
 		$view->setCustomPageTheme($pt);

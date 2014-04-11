@@ -23,7 +23,8 @@ use \Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombi
 use \Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
 use Area;
 use Queue;
-
+use Log;
+use \Concrete\Core\Page\Theme\EditableStyle\EditableStyle as PageThemeEditableStyle;
 /**
 *
 * The page object in Concrete encapsulates all the functionality used by a typical page and their contents

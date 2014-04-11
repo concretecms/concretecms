@@ -1,6 +1,8 @@
 <?
 
 namespace Concrete\Helper\Validation;
+use Loader;
+use stdClass;
 
 /**
  * @package Helpers

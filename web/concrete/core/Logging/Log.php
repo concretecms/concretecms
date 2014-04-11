@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Logging;
 use Loader;
+use User;
 class Log {
 
 	private $log;

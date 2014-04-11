@@ -6,6 +6,7 @@ use \Concrete\Core\Http\ResponseAssetGroup;
 use \Concrete\Core\File\EditResponse as FileEditResponse;
 use FileAttributeKey;
 use Permissions;
+use Loader;
 
 class Properties extends BackendInterfaceController {
 

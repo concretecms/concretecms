@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 
 $cParentID = 0;
-if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $this->getPageTypePublishTargetTypeID()) {
+if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $type->getPageTypePublishTargetTypeID()) {
 	$configuredTarget = $pagetype->getPageTypePublishTargetObject();
 	$cID = $configuredTarget->getParentPageID();
 }

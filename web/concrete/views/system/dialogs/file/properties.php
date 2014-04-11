@@ -1,5 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Core\File\StorageLocation as FileStorageLocation;
 ?>
 
 <div class="ccm-ui">

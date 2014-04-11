@@ -1,9 +1,10 @@
 <?
-namespace \Concrete\Controller\Dialog\Group;
+namespace Concrete\Controller\Dialog\Group;
 use \Concrete\Controller\Backend\UI as BackendInterfaceController;
-use \Concrete\Core\Search\Groups as SearchGroupsController;
+use \Concrete\Controller\Search\Groups as SearchGroupsController;
 use \Concrete\Core\Tree\Type\Group as GroupTree;
 use TaskPermission;
+use Loader;
 class Search extends BackendInterfaceController {
 
 	protected $viewPath = '/system/dialogs/group/search';

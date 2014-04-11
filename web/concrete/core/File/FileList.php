@@ -4,6 +4,8 @@ use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
 use Loader;
 use \File as ConcreteFile;
 use User;
+use FileAttributeKey;
+
 /**
 *
 * An object that allows a filtered list of files to be returned.

@@ -4,6 +4,8 @@ use Loader;
 use \Concrete\Core\Foundation\Object;
 use Controller;
 use CollectionAttributeKey;
+use Page;
+use Environment;
 class CollectionAttributeControl extends Control {
 	
 	protected $akID;

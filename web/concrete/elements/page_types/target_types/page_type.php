@@ -7,7 +7,7 @@ foreach($ctArray as $cta) {
     $types[$cta->getPageTypeID()] = $cta->getPageTypeName();
 }
 $ptID = 0;
-if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $this->getPageTypePublishTargetTypeID()) {
+if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $type->getPageTypePublishTargetTypeID()) {
 	$configuredTarget = $pagetype->getPageTypePublishTargetObject();
 	$ptID = $configuredTarget->getPageTypeID();
 }

@@ -1,10 +1,10 @@
 <?
-namespace \Concrete\Controller\Dialog\Page;
-use \Concrete\Controller\Backend\UI as BackendInterfaceController;
-use \Concrete\Core\Workflow\Request\DeletePage as DeletePagePageWorkflowRequest;
-use PageEditResponse;
+namespace Concrete\Controller\Dialog\Page;
+use \Concrete\Controller\Backend\UI\Page as BackendInterfacePageController;
+use \Concrete\Core\Workflow\Request\DeletePageRequest as DeletePagePageWorkflowRequest;
+use \Concrete\Core\Page\EditResponse as PageEditResponse;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
-
+use user;
 class Delete extends BackendInterfacePageController {
 
 	protected $viewPath = '/system/dialogs/page/delete';

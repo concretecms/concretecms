@@ -11,12 +11,16 @@ use \Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerContr
 use \Concrete\Core\Page\Type\Composer\Control\Control as PageTypeComposerControl;
 use \Concrete\Core\Backup\ContentImporter;
 use \Concrete\Core\Package\PackageList;
-use \Concrete\Core\Page\Collection\Version as CollectionVersion;
+use \Concrete\Core\Page\Collection\Version\Version as CollectionVersion;
 use Collection;
 use Page;
+use User;
+use \Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
+use CacheLocal;
 use \Concrete\Core\Page\Type\PublishTarget\Configuration\Configuration as PageTypePublishTargetConfiguration;
 use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
 use \Concrete\Core\Page\Collection\Version\VersionList;
+use \Concrete\Core\Page\Type\Composer\Control\CorePageProperty\CorePageProperty as CorePagePropertyPageTypeComposerControl;
 
 class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
