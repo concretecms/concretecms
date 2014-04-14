@@ -6,19 +6,7 @@ use Cache;
 use Config;
 class Update {
 
-	public static function getLatestAvailableVersionNumber() {
-		if (defined('MULTI_SITE') && MULTI_SITE == 1) {
-			$updates = Update::getLocalAvailableUpdates();
-			$multiSiteVersion = 0;
-			foreach($updates as $up) {
-				if (version_compare($up->getUpdateVersion(), $multiSiteVersion, '>')) {
-					$multiSiteVersion = $up->getUpdateVersion();
-				}	
-			}
-			Config::save('APP_VERSION_LATEST', $multiSiteVersion);
-			return $multiSiteVersion;
-		}
-		
+	public static function getLatestAvailableVersionNumber() {		
 		$d = Loader::helper('date');
 		// first, we check session
 		$queryWS = false;

@@ -27,11 +27,6 @@ class Concrete5_Controller_Page_Dashboard_System_BackupRestore_Update extends Da
 		$updates = $upd->getLocalAvailableUpdates();
 		$remote = $upd->getApplicationUpdateInformation();
 		$this->set('updates', $updates);
-		if (MULTI_SITE == 0) {
-			$this->set('showDownloadBox', true);
-		} else {
-			$this->set('showDownloadBox', false);
-		}
 		if (is_object($remote) && version_compare($remote->version, APP_VERSION, '>')) {
 			// loop through local updates
 			$downloadableUpgradeAvailable = true;
@@ -68,10 +63,6 @@ class Concrete5_Controller_Page_Dashboard_System_BackupRestore_Update extends Da
 	}
 	
 	public function download_update() {
-		if (MULTI_SITE == 1) {
-			return false;
-		}
-		
 		$vt = Loader::helper('validation/token');
 		if (!$vt->validate('download_update')) {
 			$this->error->add($vt->getErrorMessage());

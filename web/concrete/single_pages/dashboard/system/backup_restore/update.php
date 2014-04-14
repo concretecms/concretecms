@@ -5,9 +5,7 @@ $ih = Loader::helper('concrete/ui');
 $form = Loader::helper('form');
 if ($downloadableUpgradeAvailable) { ?>
 	<?=$h->getDashboardPaneHeaderWrapper(t('Download Update'), false, 'span8 offset2');?>
-	<? if (!defined('MULTI_SITE') || MULTI_SITE == false) { ?>
 		<a href="<?=$view->action('check_for_updates')?>" class="btn" style="float: right"><?=t('Check For Updates')?></a>
-	<? } ?>
 		<h2><?=t('Currently Running %s',config::get('SITE_APP_VERSION'))?></h2>
 		<div class="clearfix">
 		</div>
@@ -66,9 +64,7 @@ if ($downloadableUpgradeAvailable) { ?>
 	<div class="clearfix">&nbsp;</div>
 <? } else { ?>
 	<?=$h->getDashboardPaneHeaderWrapper(t('Update concrete5'), false, 'span8 offset2');?>
-	<? if (!defined('MULTI_SITE') || MULTI_SITE == false) { ?>
 		<a href="<?=$view->action('check_for_updates')?>" class="btn" style="float: right"><?=t('Check For Updates')?></a>
-	<? } ?>
 		<h2><?=t('Currently Running %s',config::get('SITE_APP_VERSION'))?></h2>
 		<div class="clearfix">
 		</div>

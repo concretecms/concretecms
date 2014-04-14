@@ -7,9 +7,6 @@ class Concrete5_Controller_Page_Dashboard_System_BackupRestore_Database extends 
 	}
 	
 	public function export_database_schema() {
-		if (!ENABLE_DEVELOPER_OPTIONS) { 
-			return false;
-		}
 		$db = Loader::db();
 		$ab = Database::getADOSChema();
 		$xml = $ab->ExtractSchema();
