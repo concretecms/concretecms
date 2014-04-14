@@ -1,8 +1,8 @@
 <?php 
 namespace Concrete\Core\Html;
-use \Concrete\Core\Foundation\Service\Group as ServiceGroup;
+use \Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
-class HtmlServiceGroup extends ServiceGroup {
+class HtmlServiceProvider extends ServiceProvider {
 
 	public function register() {
 		$singletons = array(
@@ -13,7 +13,7 @@ class HtmlServiceGroup extends ServiceGroup {
 		);
 
 		foreach($singletons as $key => $value) {
-			$this->locator->singleton($key, $value);
+			$this->app->singleton($key, $value);
 		}
 	}
 

@@ -1,8 +1,8 @@
 <?php 
 namespace Concrete\Core\Mail;
-use \Concrete\Core\Foundation\Service\Group as ServiceGroup;
+use \Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
-class MailServiceGroup extends ServiceGroup {
+class MailServiceProvider extends ServiceProvider {
 
 	public function register() {
 		$register = array(
@@ -10,7 +10,7 @@ class MailServiceGroup extends ServiceGroup {
 		);
 
 		foreach($register as $key => $value) {
-			$this->locator->register($key, $value);
+			$this->app->bind($key, $value);
 		}
 	}
 

@@ -1,8 +1,8 @@
 <?php 
 namespace Concrete\Core\Localization;
-use \Concrete\Core\Foundation\Service\Group as ServiceGroup;
+use \Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
-class LocalizationServiceGroup extends ServiceGroup {
+class LocalizationServiceProvider extends ServiceProvider {
 
 	public function register() {
 		$singletons = array(
@@ -15,7 +15,7 @@ class LocalizationServiceGroup extends ServiceGroup {
 		);
 
 		foreach($singletons as $key => $value) {
-			$this->locator->singleton($key, $value);
+			$this->app->singleton($key, $value);
 		}
 	}
 

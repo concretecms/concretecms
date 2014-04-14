@@ -166,9 +166,10 @@ class Login extends PageController {
 			$this->set('required_attributes', $unfilled);
 			$this->set('u', $u);
 			$this->error->add(t('Fill in these required settings in order to continue.'));
+		
+			Session::set('uRequiredAttributeUser', $u->getUserID());
+			Session::set('uRequiredAttributeUserAuthenticationType', $type->getAuthenticationTypeHandle());
 
-			$_SESSION['uRequiredAttributeUser'] = $u->getUserID();
-			$_SESSION['uRequiredAttributeUserAuthenticationType'] = $type->getAuthenticationTypeHandle();
 			$this->render('/login');
 		}
 
@@ -179,19 +180,19 @@ class Login extends PageController {
 
 	public function fill_attributes() {
 		try {
-			if (!isset($_SESSION['uRequiredAttributeUser']) ||
-			    intval($_SESSION['uRequiredAttributeUser']) < 1 ||
-			    !isset($_SESSION['uRequiredAttributeUserAuthenticationType']) ||
-			    !$_SESSION['uRequiredAttributeUserAuthenticationType']) {
-				unset($_SESSION['uRequiredAttributeUser']);
-				unset($_SESSION['uRequiredAttributeUserAuthenticationType']);
+			if (!Session::has('uRequiredAttributeUser') ||
+			    intval(Session::get('uRequiredAttributeUser')) < 1 ||
+			    !isset(Session::has('uRequiredAttributeUserAuthenticationType') ||
+			    !Session::get('uRequiredAttributeUserAuthenticationType')) {
+			    Session::remove('uRequiredAttributeUser');
+			    Session::remove('uRequiredAttributeUserAuthenticationType');
 				throw new \Exception(t('Invalid Request, please attempt login again.'));
 			}
-			User::loginByUserID($_SESSION['uRequiredAttributeUser']);
-			unset($_SESSION['uRequiredAttributeUser']);
+			User::loginByUserID(Session::get('uRequiredAttributeUser'));
+		    Session::remove('uRequiredAttributeUser');
 			$u = new User;
-			$at = AuthenticationType::getByHandle($_SESSION['uRequiredAttributeUserAuthenticationType']);
-			unset($_SESSION['uRequiredAttributeUserAuthenticationType']);
+			$at = AuthenticationType::getByHandle(Session::get('uRequiredAttributeUserAuthenticationType'));
+		    Session::remove('uRequiredAttributeUserAuthenticationType');
 			if (!$at) throw new \Exception(t("Invalid Authentication Type"));
 
 			$ui = UserInfo::getByID($u->getUserID());
@@ -235,8 +236,8 @@ class Login extends PageController {
 			}
 			do {
 				// redirect to original destination
-				if(isset($_SESSION['rcID'])) {
-					$rcID = $_SESSION['rcID'];
+				if(Session::has('rcID')) {
+					$rcID = Session::get('rcID');
 					if ($nh->integer($rcID)) {
 						$rc = Page::getByID($rcID);
 					} elseif (strlen($rcID)) {
@@ -302,7 +303,7 @@ class Login extends PageController {
 		$nh = Loader::helper('validation/numbers');
 		if ($nh->integer($cID) && intval($cID) > 0) {
 			$this->set('rcID', intval($cID));
-			$_SESSION['rcID'] = intval($cID);
+			Session::set('rcID', intval($cID));
 		}
 	}
 

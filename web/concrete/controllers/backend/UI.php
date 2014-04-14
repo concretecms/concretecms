@@ -3,6 +3,7 @@ namespace Concrete\Controller\Backend;
 use Controller;
 use \Concrete\Core\View\DialogView;
 use Request;
+use Loader;
 abstract class UI extends Controller {
 
 	abstract protected function canAccess();

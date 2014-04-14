@@ -22,11 +22,11 @@ class Set {
 	}
 
 	public function saveToSession() {
-		$_SESSION['savedPermissionSet'] = serialize($this);
+		Session::set('savedPermissionSet', serialize($this));
 	}
 	
 	public static function getSavedPermissionSetFromSession() {
-		$obj = unserialize($_SESSION['savedPermissionSet']);
+		$obj = unserialize(Session::get('savedPermissionSet'));
 		return $obj;
 	}
 }

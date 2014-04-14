@@ -1259,7 +1259,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 		// this is a bit weird...basically, when editing a master collection, we store the
 		// master collection ID in session, along with the collection ID we were looking at before
 		// moving to the master collection. This allows us to get back to that original collection
-		return $_SESSION['ocID'];
+		return Session::get('ocID');
 	}
 
 	function getNumChildren() {

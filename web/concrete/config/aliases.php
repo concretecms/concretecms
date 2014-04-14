@@ -1,12 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-$list = \Concrete\Core\Foundation\ClassAliasList::getInstance();
-
-$list->registerMultiple(array(
-	'Service' => 'Core\Application\API\Facade\ServiceFacade'
-));
-
-$list->registerMultiple(array(
+return array(
 	'Cache' => 'Core\Cache\Cache',
 	'CacheLocal' => 'Core\Cache\CacheLocal',
 	'Database' => 'Core\Database\Database',
@@ -79,5 +73,4 @@ $list->registerMultiple(array(
 	'FacebookAuthenticationTypeController' => 'Core\Authentication\Type\Facebook',
 	'GroupTree' => 'Core\Tree\Type\Group',
 	'GroupTreeNode' => 'Core\Tree\Node\Type\Group'
-
-));
+);

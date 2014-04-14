@@ -155,12 +155,15 @@ class Help {
 	}
 
 	protected function getIncrementDisplayCount($type, $identifier) {
-		if(!isset($_SESSION['ccm-help-messages'][$type.'|'.$identifier]['count'])) {
+		/*
+		 * need to refactor for new session library without multi level arrays
+		 if(!isset($_SESSION['ccm-help-messages'][$type.'|'.$identifier]['count'])) {
 			$_SESSION['ccm-help-messages'][$type.'|'.$identifier]['count'] = 1;
 		} else {
 			$_SESSION['ccm-help-messages'][$type.'|'.$identifier]['count']++;
 		}
 		return $_SESSION['ccm-help-messages'][$type.'|'.$identifier]['count'];
+		*/
 	}
 
 

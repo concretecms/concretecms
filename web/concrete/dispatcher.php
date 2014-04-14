@@ -21,9 +21,3 @@ require __DIR__ . '/bootstrap/autoload.php';
  * Begin concrete5 startup.
  */
 $cms = require __DIR__ . '/bootstrap/start.php';
-
-
-/**
- * Work with the $cms instance
- */
-require __DIR__ . '/bootstrap/start.php';

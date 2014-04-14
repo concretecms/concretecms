@@ -115,7 +115,7 @@ if (!$error) {
 				case "MOVE":
 					foreach($originalPages as $oc) {
 						$ocp = new Permissions($oc);
-						$_SESSION['movePageSaveOldPagePath'] = $_REQUEST['saveOldPagePath'];
+						Session::set('movePageSaveOldPagePath', $_REQUEST['saveOldPagePath']);
 						$pkr = new MovePagePageWorkflowRequest();
 						$pkr->setRequestedPage($oc);
 						$pkr->setRequestedTargetPage($dc);
@@ -197,7 +197,7 @@ if ($successMessage) {
 		<input type="radio" checked style="vertical-align: middle" id="ctaskMove" name="ctask" value="MOVE" />
 		<strong><?=t('Move')?></strong> <? if (count($originalPages) == 1) { ?>"<?=$oc->getCollectionName()?>"<? } ?> <?=t('beneath')?> "<?=$dc->getCollectionName()?>"
 		<div style="margin: 4px 0px 0px 20px">
-		<input type="checkbox" id="saveOldPagePath" name="saveOldPagePath" value="1" style="vertical-align: middle" <? if (isset($_SESSION['movePageSaveOldPagePath']) && $_SESSION['movePageSaveOldPagePath']) { ?> checked="checked" <? } ?> /> <?=t('Save old page path')?>
+		<input type="checkbox" id="saveOldPagePath" name="saveOldPagePath" value="1" style="vertical-align: middle" <? if (Session::has('movePageSaveOldPagePath') && Session::get('movePageSaveOldPagePath')) { ?> checked="checked" <? } ?> /> <?=t('Save old page path')?>
 		</div>
 		<br/>
 		

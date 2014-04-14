@@ -35,7 +35,7 @@ class Output extends DashboardPageController {
 		if (!$this->error->has()) {
 			// we load up the master template for this composer/template combination.
 			$c = $this->pagetype->getPageTypePageTemplateDefaultPageObject($template);
-			$_SESSION['mcEditID'] = $c->getCollectionID();
+			Session::set('mcEditID', $c->getCollectionID());
 			Redirect::url(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID())->send();
 		}
 

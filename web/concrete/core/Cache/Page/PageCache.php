@@ -34,7 +34,7 @@ abstract class PageCache {
 	 * Note: can't use the User object directly because it might query the database
 	 */
 	public function shouldCheckCache(Request $req) {
-		if ($_SESSION['uID'] > 0) {
+		if (Session::get('uID') > 0) {
 			return false;
 		}
 		return true;

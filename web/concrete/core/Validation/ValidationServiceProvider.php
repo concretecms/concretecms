@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Validation;
-use \Concrete\Core\Foundation\Service\Group as ServiceGroup;
-class ValidationServiceGroup extends ServiceGroup {
+use \Concrete\Core\Foundation\Service\Provider as ServiceProvider;
+class ValidationServiceProvider extends ServiceProvider {
 
 
 	public function register() {
@@ -24,10 +24,10 @@ class ValidationServiceGroup extends ServiceGroup {
 		);
 
 		foreach($singletons as $key => $value) {
-			$this->locator->singleton($key, $value);
+			$this->app->singleton($key, $value);
 		}
 		foreach($registers as $key => $value) {
-			$this->locator->register($key, $value);
+			$this->app->bind($key, $value);
 		}
 	}
 }
