@@ -22,7 +22,7 @@ abstract class Template extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select GatheringItemTemplates.*, GatheringItemTemplateTypes.gatTypeHandle from GatheringItemTemplates inner join GatheringItemTemplateTypes on GatheringItemTemplateTypes.gatTypeID = GatheringItemTemplates.gatTypeID where GatheringItemTemplates.gatID = ?', array($gatID));
 		if (isset($row['gatID'])) {
-			$ns = helper('text')->camelcase($row['gatTypeHandle']);
+			$ns = Loader::helper('text')->camelcase($row['gatTypeHandle']);
 			$class = 'Template';
 			if ($row['gatHasCustomClass']) {
 				$class = Loader::helper('text')->camelcase($row['gatHandle']) . $class;

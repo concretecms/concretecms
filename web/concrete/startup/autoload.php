@@ -7,11 +7,12 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 
 require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../vendor/zend/Loader/Autoloader.php';
 require __DIR__ . '/../core/Foundation/Classloader.php';
 require __DIR__ . '/../core/Foundation/ModifiedPsr4ClassLoader.php';
-require __DIR__ . '/../vendor/zend/Loader/Autoloader.php';
 
 /** 
  * Trigger the start of autoload
  */
+
 \Concrete\Core\Foundation\ClassLoader::getInstance();

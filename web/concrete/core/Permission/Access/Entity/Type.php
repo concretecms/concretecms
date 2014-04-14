@@ -10,7 +10,7 @@ class Type extends Object {
 	public function getAccessEntityTypeHandle() {return $this->petHandle;}
 	public function getAccessEntityTypeName() {return $this->petName;}
 	public function getAccessEntityTypeClass() {
-		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\Entity\\' . helper('text')->camelcase($this->petHandle) . 'Entity');
+		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\Entity\\' . Loader::helper('text')->camelcase($this->petHandle) . 'Entity');
 		return $class;
 	}
 

@@ -7,7 +7,7 @@ class Feature extends Object {
 
 	public function getFeatureDetailObject($mixed) {
 		if ($this->feHasCustomClass) {
-			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\Detail\\' . helper('text')->camelcase($this->feHandle) . 'Detail');
+			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\Detail\\' . Loader::helper('text')->camelcase($this->feHandle) . 'Detail');
 		} else {
 			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\Detail\\Detail');
 		}

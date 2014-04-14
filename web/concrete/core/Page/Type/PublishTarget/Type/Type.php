@@ -24,7 +24,7 @@ abstract class Type extends Object {
 		$db = Loader::db();
 		$r = $db->GetRow('select ptPublishTargetTypeID, ptPublishTargetTypeHandle, ptPublishTargetTypeName, pkgID from PageTypePublishTargetTypes where ptPublishTargetTypeID = ?', array($ptPublishTargetTypeID));
 		if (is_array($r) && $r['ptPublishTargetTypeHandle']) {
-			$txt = helper('text');
+			$txt = Loader::helper('text');
 			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Page\\Type\\PublishTarget\\Type\\' . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type');
 			$sc = new $class();
 			$sc->setPropertiesFromArray($r);
@@ -36,7 +36,7 @@ abstract class Type extends Object {
 		$db = Loader::db();
 		$r = $db->GetRow('select ptPublishTargetTypeID, ptPublishTargetTypeHandle, ptPublishTargetTypeName, pkgID from PageTypePublishTargetTypes where ptPublishTargetTypeHandle = ?', array($ptPublishTargetTypeHandle));
 		if (is_array($r) && $r['ptPublishTargetTypeHandle']) {
-			$txt = helper('text');
+			$txt = Loader::helper('text');
 			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Page\\Type\\PublishTarget\\Type\\' . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type');
 			$sc = new $class();
 			$sc->setPropertiesFromArray($r);

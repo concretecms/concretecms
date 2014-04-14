@@ -70,7 +70,7 @@ abstract class Progress extends Object {
 		if ($this->wrID > 0) { 
 			$cat = WorkflowProgressCategory::getByID($this->wpCategoryID);
 			$handle = $cat->getWorkflowProgressCategoryHandle();
-            $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Workflow\\Request\\' . helper('text')->camelcase($handle) . 'Request');
+            $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Workflow\\Request\\' . Loader::helper('text')->camelcase($handle) . 'Request');
 			$wr = call_user_func_array(array($class, 'getByID'), array($this->wrID));
 			if (is_object($wr)) {
 				$wr->setCurrentWorkflowProgressObject($this);

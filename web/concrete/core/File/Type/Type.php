@@ -65,7 +65,7 @@ class Type {
 	}
 	
 	public function getCustomInspector() {
-        $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\File\\Type\\Inspector\\' . helper('text')->camelcase($this->getCustomImporter()) . 'Inspector');
+        $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\File\\Type\\Inspector\\' . Loader::helper('text')->camelcase($this->getCustomImporter()) . 'Inspector');
 		$cl = new $class;
 		return $cl;
 	}

@@ -7,9 +7,12 @@
         <blocktype handle="core_scrapbook_display" package=""/>
         <blocktype handle="core_stack_display" package=""/>
         <blocktype handle="core_gathering_display" package=""/>
+        <!--
         <blocktype handle="core_conversation" package=""/>
         <blocktype handle="core_conversation_message" package=""/>
         <blocktype handle="core_gathering" package=""/>
+        //-->
+
         <blocktype handle="dashboard_featured_addon" package=""/>
         <blocktype handle="dashboard_featured_theme" package=""/>
         <blocktype handle="dashboard_newsflow_latest" package=""/>
@@ -51,7 +54,11 @@
         </blocktypeset>
         <blocktypeset handle="navigation" name="Navigation" package="">
             <blocktype handle="autonav"/>
+            <!--
             <blocktype handle="core_gathering"/>
+
+            //-->
+
             <blocktype handle="page_list"/>
             <blocktype handle="next_previous"/>
             <blocktype handle="date_nav"/>
@@ -65,7 +72,9 @@
         </blocktypeset>
         <blocktypeset handle="social" name="Social Networking" package="">
             <blocktype handle="survey"/>
+            <!--
             <blocktype handle="core_conversation" />
+            //-->
             <blocktype handle="discussion"/>
         </blocktypeset>
         <blocktypeset handle="multimedia" name="Multimedia" package="">

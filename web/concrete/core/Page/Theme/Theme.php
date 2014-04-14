@@ -390,7 +390,7 @@ class Theme extends Object {
 		$row = $db->GetRow("select pThemeID, pThemeHandle, pThemeDescription, pkgID, pThemeName, pThemeHasCustomClass from PageThemes where {$where}", $args);
 		if ($row['pThemeID']) {
 			if ($row['pThemeHasCustomClass']) {
-				$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Theme\\' . helper('text')->camelcase($row['pThemeHandle']));
+				$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Theme\\' . Loader::helper('text')->camelcase($row['pThemeHandle']));
 			} else {
 				$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Page\\Theme\\Theme');
 			}

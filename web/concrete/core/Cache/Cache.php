@@ -162,13 +162,13 @@ class Cache {
 
 		// flush the CSS cache
 		if (is_dir(DIR_FILES_CACHE . '/' . DIRNAME_CSS)) {
-			$fh = helper("file");
+			$fh = Loader::helper('file');
 			$fh->removeAll(DIR_FILES_CACHE . '/' . DIRNAME_CSS);
 		}
 
 		// flush the JS cache
 		if (is_dir(DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT)) {
-			$fh = helper("file");
+			$fh = Loader::helper('file');
 			$fh->removeAll(DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT);
 		}
 		

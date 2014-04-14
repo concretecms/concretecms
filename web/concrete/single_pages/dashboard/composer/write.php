@@ -6,10 +6,10 @@
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($pagetype->getPageTypeName(), false, false, false)?>
 	<form method="post" data-form="composer" class="form-horizontal">
 	<div class="ccm-pane-body">
-		<? Loader::helper('composer')->display($pagetype, $draft); ?>
+		<? Loader::helper('concrete/composer')->display($pagetype, $draft); ?>
 	</div>
 	<div class="ccm-pane-footer">
-		<? Loader::helper('composer')->displayButtons($pagetype, $draft); ?>
+		<? Loader::helper('concrete/composer')->displayButtons($pagetype, $draft); ?>
 	</div>
 
 	</form>

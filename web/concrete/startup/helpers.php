@@ -89,67 +89,62 @@ function h($input) {
 }
 
 
-/**
- * Global helper function
+/** 
+ *  Returns a concrete5 namespaced class
  */
-function helper($file, $pkgHandle = false) {
-	/*
+function core_class($class, $prefix = false) {
+	$class = trim($class, '\\');
+	if ($prefix) {
+		if ($prefix === true) {
+			$prefix = NAMESPACE_SEGMENT_APPLICATION;
+		} else {
+			$prefix = 'Concrete\\Package\\' . camelcase($prefix);
+		}
+	}
 
-	$class = Object::camelcase($file) . "Helper";
-	$siteclass = "Site" . Object::camelcase($file) . "Helper";
+	if (!$prefix) {
+		$prefix = 'Concrete';
+	}
 
-	if (array_key_exists($class, $instances)) {
-    	$instance = $instances[$class];
-	} else if (array_key_exists($siteclass, $instances)) {
-    	$instance = $instances[$siteclass];
-	} else {
+	$class = '\\' . $prefix . '\\' . $class;
+	return $class;
+}
 
-		$env = Environment::get();
-		$f1 = $env->getRecord(DIRNAME_HELPERS . '/' . $file . '.php', $pkgHandle);
-		require_once($f1->file);
-		if ($f1->override) {
-			if (class_exists($siteclass, false)) {
-				$class = $siteclass;
-			}
-		} else if ($pkgHandle) {
-			$pkgclass = Object::camelcase($pkgHandle . '_' . $file) . "Helper";
-			if (class_exists($pkgclass, false)) {
-				$class = $pkgclass;
+	/** 
+	 * Returns $string in CamelCase
+	 * @param  [string] $string
+	 * @return [string]
+	 */
+	function camelcase($string) {
+		// turns "asset_library" into "AssetLibrary"
+		$r1 = ucwords(str_replace(array('_', '-', '/'), ' ', $string));
+		$r2 = str_replace(' ', '', $r1);
+		return $r2;		
+	}
+
+
+	/** 
+	 * Returns CamelCase string as camel_case
+	 * @param  [string] $string
+	 * @return [string]
+	 */
+	function uncamelcase($string) {
+		$v = preg_split('/([A-Z])/', $string, false, PREG_SPLIT_DELIM_CAPTURE);
+		$a = array();
+		array_shift($v);
+		for($i = 0; $i < count($v); $i++) {
+			if ($i % 2) {
+				if (function_exists('mb_strtolower')) {
+					$a[] = mb_strtolower($v[$i - 1] . $v[$i], APP_CHARSET);
+				} else {
+					$a[] = strtolower($v[$i - 1] . $v[$i]);
+				}
 			}
 		}
+		return str_replace('__', '_', implode('_', $a));
+	}		
 
 
-		$instance = new $class();
-		if (!property_exists($instance, 'helperAlwaysCreateNewInstance') || $instance->helperAlwaysCreateNewInstance == false) {
-            $instances[$class] = $instance;
-        }
-	}
-	
-	if(method_exists($instance,'reset')) {
-		$instance->reset();
-	}
-	*/
 
-	static $instances = array();
-	$class = Object::camelcase($file);
 
-	if (array_key_exists($class, $instances)) {
-    	$instance = $instances[$class];
-	} else {
 
-		$file = str_replace('/', '\\', $file);
-		$className = Object::camelcase($file);
-		$loader = Concrete\Core\Foundation\ClassLoader::getInstance();
-		$class = $loader->getClassName('Helper\\' . $className);
-		$instance = new $class();
-		if (!property_exists($instance, 'helperAlwaysCreateNewInstance') || $instance->helperAlwaysCreateNewInstance == false) {
-	        $instances[$class] = $instance;
-	    }
-	}
-
-	if(method_exists($instance,'reset')) {
-		$instance->reset();
-	}
-
-	return $instance;
-}

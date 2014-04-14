@@ -104,7 +104,7 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 		$db = Loader::db();
 		$r = $db->GetRow('select WorkflowTypes.wftHandle, WorkflowTypes.pkgID from Workflows inner join WorkflowTypes on Workflows.wftID = WorkflowTypes.wftID where Workflows.wfID = ?', array($wfID));
 		if ($r['wftHandle']) { 
-            $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Workflow\\' . helper('text')->camelcase($r['wftHandle']) . 'Workflow');
+            $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Workflow\\' . Loader::helper('text')->camelcase($r['wftHandle']) . 'Workflow');
 			if (!class_exists($class)) {
 	            $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Workflow\\Workflow');
 			}

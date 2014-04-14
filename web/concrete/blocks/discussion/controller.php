@@ -31,7 +31,7 @@ class Controller extends BlockController {
 			if ($this->enableNewTopics && $this->ptID) {
 				$pt = PageType::getByID($this->ptID);
 				$this->set('pagetype', $pt);
-				Loader::helper('composer')->addAssetsToRequest($pt, $this);
+				Loader::helper('concrete/composer')->addAssetsToRequest($pt, $this);
 			}
 
 			$c = Page::getCurrentPage();

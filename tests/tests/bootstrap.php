@@ -22,14 +22,17 @@ require $DIR_BASE_CORE . '/startup/config_check.php';
 require $DIR_BASE_CORE . '/startup/updated_core_check.php';
 require $DIR_BASE_CORE . '/config/base.php';
 require $DIR_BASE_CORE . '/startup/autoload.php';
+require $DIR_BASE_CORE . '/startup/helpers.php';
+require $DIR_BASE_CORE . '/config/class_aliases.php';
 
 require realpath(dirname(__FILE__) . '/ConcreteDatabaseTestcase.php');
 
 PHPUnit_Framework_Error_Notice::$enabled = FALSE;
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 
-$app = Concrete\Core\Application\Dispatcher::get();
-$app->bootstrap();
+//$app = Concrete\Core\Application\Dispatcher::get();
+//$app->bootstrap();
+
 /*
 //causes dispatcher to skip the page rendering
 define('C5_ENVIRONMENT_ONLY', true);

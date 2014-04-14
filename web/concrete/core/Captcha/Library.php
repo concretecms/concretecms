@@ -117,7 +117,7 @@ class Library extends Object {
 	 * Returns the controller class for the currently selected captcha library
 	 */
 	public function getController() {
-		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Captcha\\' . helper('text')->camelcase($this->sclHandle) . 'Controller');
+		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Captcha\\' . Loader::helper('text')->camelcase($this->sclHandle) . 'Controller');
 		$cl = new $class();
 		return $cl;
 	}

@@ -26,7 +26,7 @@ abstract class Type extends Object {
 		$db = Loader::db();
 		$r = $db->GetRow('select ptComposerControlTypeID, ptComposerControlTypeHandle, ptComposerControlTypeName, pkgID from PageTypeComposerControlTypes where ptComposerControlTypeHandle = ?', array($ptComposerControlTypeHandle));
 		if (is_array($r) && $r['ptComposerControlTypeHandle']) {
-			$txt = helper('text');
+			$txt = Loader::helper('text');
 			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Page\\Type\\Composer\\Control\\Type\\' . $txt->camelcase($r['ptComposerControlTypeHandle']) . 'Type');
 			$sc = new $class();
 			$sc->setPropertiesFromArray($r);
@@ -37,7 +37,7 @@ abstract class Type extends Object {
 		$db = Loader::db();
 		$r = $db->GetRow('select ptComposerControlTypeID, ptComposerControlTypeHandle, ptComposerControlTypeName, pkgID from PageTypeComposerControlTypes where ptComposerControlTypeID = ?', array($ptComposerControlTypeID));
 		if (is_array($r) && $r['ptComposerControlTypeHandle']) {
-			$txt = helper('text');
+			$txt = Loader::helper('text');
 			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Page\\Type\\Composer\\Control\\Type\\' . $txt->camelcase($r['ptComposerControlTypeHandle']) . 'Type');
 			$sc = new $class();
 			$sc->setPropertiesFromArray($r);

@@ -110,7 +110,7 @@ abstract class Key extends Object {
 		$cl = new CacheLocal();
 		$db = Loader::db();
 		$permissionkeys = array();
-		$txt = helper('text');
+		$txt = Loader::helper('text');
 		$e = $db->Execute('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, pkHasCustomClass, PermissionKeys.pkCategoryID, pkCategoryHandle, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID');
 		while ($r = $e->FetchRow()) {
 			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Key\\' . $txt->camelcase($r['pkCategoryHandle']) . 'Key');
@@ -129,7 +129,7 @@ abstract class Key extends Object {
 
 	protected static function load($key, $loadBy = 'pkID') {
 		$db = Loader::db();
-		$txt = helper('text');
+		$txt = Loader::helper('text');
 		$r = $db->GetRow('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, pkHasCustomClass, PermissionKeys.pkCategoryID, pkCategoryHandle, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID where ' . $loadBy . ' = ?', array($key));
 		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Key\\' . $txt->camelcase($r['pkCategoryHandle']) . 'Key');
 		if (!is_array($r) && (!$r['pkID'])) { 

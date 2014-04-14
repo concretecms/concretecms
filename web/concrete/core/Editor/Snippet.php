@@ -32,7 +32,7 @@ abstract class Snippet extends Object {
 			if ($r['pkgID']) {
 				$pkgHandle = PackageList::getHandle($r['pkgID']);
 			}
-			$txt = helper('text');
+			$txt = Loader::helper('text');
 			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Editor\\' . $txt->camelcase($r['scsHandle'] . 'Snippet'));
 			$sc = new $class();
 			$sc->setPropertiesFromArray($r);

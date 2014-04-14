@@ -47,7 +47,7 @@ abstract class Layout extends Object {
 		$db = Loader::db();
 		$r = $db->Execute('select arLayoutColumnID from AreaLayoutColumns where arLayoutID = ? order by arLayoutColumnIndex asc', array($this->arLayoutID));
 		$columns = array();
-		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Area\\Layout\\' . helper('text')->camelcase($this->arLayoutType) . 'Column');
+		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Area\\Layout\\' . Loader::helper('text')->camelcase($this->arLayoutType) . 'Column');
 		while ($row = $r->FetchRow()) {
 			$column = call_user_func_array(array($class, 'getByID'), array($row['arLayoutColumnID']));
 			if (is_object($column)) {

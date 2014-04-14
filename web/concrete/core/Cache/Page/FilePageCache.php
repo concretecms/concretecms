@@ -43,7 +43,7 @@ class FilePageCache extends PageCache {
 	}
 
 	public function flush() {
-		$fh = helper("file");
+		$fh = Loader::helper('file');
 		$fh->removeAll(DIR_FILES_PAGE_CACHE);
 	}
 
