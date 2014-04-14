@@ -7,11 +7,8 @@ if ($library->shouldCheckCache($request)) {
     if ($record instanceof PageCacheRecord) {
     	if ($record->validate()) {
 	    	$library->deliver($record);
-			if (ob_get_level() == OB_INITIAL_LEVEL) {
-				require(DIR_BASE_CORE . '/startup/shutdown.php');
-				exit;
-			}
-	    	exit;
+			require(DIR_BASE_CORE . '/startup/shutdown.php');
+			exit;
 	    }
     }
 }

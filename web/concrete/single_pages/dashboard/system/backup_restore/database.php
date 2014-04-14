@@ -16,8 +16,6 @@
 
 <?php }else{?>
 
-<?php  if (ENABLE_DEVELOPER_OPTIONS) { ?>
-
 <?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Database XML'), false, 'span10 offset1', false)?>
 	
 	<form method="post" class="form-stacked" id="export-db-form" action="<?php echo $view->url('/dashboard/system/backup_restore/database', 'export_database_schema')?>">
@@ -87,17 +85,5 @@
 
 	</form>
 <?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>		
-	
 
-
-<?php  }else{ ?>
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Database XML'), false, 'span10 offset1', false)?>
-<div class="ccm-pane-body ccm-pane-body-footer">
-<div class="alert-message block-message error">       
-        <p><?php echo t('Developer options have been disabled in the config file.');?></p>
-</div>
-</div>
-
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>    
-<?php }?>
 <?php }?>

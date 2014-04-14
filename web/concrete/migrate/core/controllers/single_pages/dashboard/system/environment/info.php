@@ -37,14 +37,11 @@ class Concrete5_Controller_Page_Dashboard_System_Environment_Info extends Dashbo
 		$ovBlocks = $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES);
 		$ovControllers = $fh->getDirectoryContents(DIR_FILES_CONTROLLERS);
 		$ovElements = $fh->getDirectoryContents(DIR_FILES_ELEMENTS);
-		$ovHelpers = $fh->getDirectoryContents(DIR_HELPERS);
 		$ovJobs = $fh->getDirectoryContents(DIR_FILES_JOBS);
 		$ovCSS = $fh->getDirectoryContents(DIR_BASE . '/' . DIRNAME_CSS);
 		$ovJS = $fh->getDirectoryContents(DIR_BASE . '/' . DIRNAME_JAVASCRIPT);
 		$ovLng = $fh->getDirectoryContents(DIR_BASE . '/' . DIRNAME_LANGUAGES);
-		$ovLibs = $fh->getDirectoryContents(DIR_LIBRARIES);
 		$ovMail = $fh->getDirectoryContents(DIR_FILES_EMAIL_TEMPLATES);
-		$ovModels = $fh->getDirectoryContents(DIR_MODELS);
 		$ovSingle = $fh->getDirectoryContents(DIR_FILES_CONTENT);
 		$ovThemes = $fh->getDirectoryContents(DIR_FILES_THEMES);
 		$ovTools = $fh->getDirectoryContents(DIR_FILES_TOOLS);
@@ -58,9 +55,6 @@ class Concrete5_Controller_Page_Dashboard_System_Environment_Info extends Dashbo
 		foreach($ovElements as $ovb) {
 			$overrides[] = DIRNAME_ELEMENTS . '/' . $ovb;
 		}
-		foreach($ovHelpers as $ovb) {
-			$overrides[] = DIRNAME_HELPERS . '/' . $ovb;
-		}
 		foreach($ovJobs as $ovb) {
 			$overrides[] = DIRNAME_JOBS . '/' . $ovb;
 		}
@@ -73,14 +67,8 @@ class Concrete5_Controller_Page_Dashboard_System_Environment_Info extends Dashbo
 		foreach($ovLng as $ovb) {
 			$overrides[] = DIRNAME_LANGUAGES . '/' . $ovb;
 		}
-		foreach($ovLibs as $ovb) {
-			$overrides[] = DIRNAME_LIBRARIES . '/' . $ovb;
-		}
 		foreach($ovMail as $ovb) {
 			$overrides[] = DIRNAME_MAIL_TEMPLATES . '/' . $ovb;
-		}
-		foreach($ovModels as $ovb) {
-			$overrides[] = DIRNAME_MODELS . '/' . $ovb;
 		}
 		foreach($ovSingle as $ovb) {
 			$overrides[] = DIRNAME_PAGES . '/' . $ovb;
