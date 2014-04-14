@@ -342,7 +342,7 @@ class AuthenticationType extends Object {
 	protected function loadController() {
 		// local scope
 		$atHandle = $this->authTypeHandle;
-		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Authentication\\' . helper('text')->camelcase($this->authTypeHandle) . '\\Controller');
+		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Authentication\\' . Loader::helper('text')->camelcase($this->authTypeHandle) . '\\Controller');
 		$this->controller = new $className($this);
 	}
 

@@ -217,7 +217,7 @@ abstract class Job extends Object {
 	}
 
 	protected static function getClassName($jHandle) {
-		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Job\\' . helper('text')->camelcase($jHandle));
+		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Job\\' . Loader::helper('text')->camelcase($jHandle));
 		return $className;
 	}
 	

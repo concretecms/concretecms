@@ -145,7 +145,7 @@ $(function() {
 div.ccm-attribute-sortable-set-list img.ccm-attribute-icon:hover {cursor: move}
 </style>
 
-<? $form = helper('form'); ?>
+<? $form = Loader::helper('form'); ?>
 <? if (isset($types) && is_array($types) && count($types) > 0) { ?>
 <form method="get" action="<?=$view->action('select_type')?>" id="ccm-attribute-type-form">
 	<label for="atID"><?=t('Add Attribute')?></label>

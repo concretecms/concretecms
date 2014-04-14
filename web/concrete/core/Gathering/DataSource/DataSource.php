@@ -24,7 +24,7 @@ abstract class DataSource extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select gasID, gasHandle, pkgID, gasName from GatheringDataSources where gasID = ?', array($gasID));
 		if (isset($row['gasID'])) {
-			$txt = helper('text');
+			$txt = Loader::helper('text');
 			$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Gathering\\DataSource\\' . $txt->camelcase($row['gasHandle'] . 'DataSource'));
 			$gas = new $className();
 			$gas->setPropertiesFromArray($row);

@@ -49,7 +49,7 @@ abstract class Assignment extends Object {
 		$db = Loader::db();
 		$r = $db->GetRow('select faID, fa.fcID, fdObject, fa.feID, fe.feHandle, fc.fcHandle from FeatureAssignments fa inner join FeatureCategories fc on fa.fcID = fc.fcID inner join Features fe on fa.feID = fe.feID where faID = ?', array($faID));
 		if (is_array($r) && $r['faID'] == $faID) {
-            $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\Assignment\\' . helper('text')->camelcase($r['fcHandle']) . 'Assignment');
+            $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\Assignment\\' . Loader::helper('text')->camelcase($r['fcHandle']) . 'Assignment');
 			$fa = new $class();
 			$fa->setPropertiesFromArray($r);
 			$fa->fdObject = @unserialize($r['fdObject']);

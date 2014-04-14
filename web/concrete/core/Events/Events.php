@@ -27,15 +27,6 @@ class Events {
 	const EVENT_TYPE_GLOBAL = "global";
 	
 	/** 
-	 * Enables events if they haven't been enabled yet. This happens automatically if a particular 3rd party addon requires it
-	 */
-	public static function enableEvents() {
-		if (!defined("ENABLE_APPLICATION_EVENTS")) {
-			define("ENABLE_APPLICATION_EVENTS", true);
-		}
-	}
-	
-	/** 
 	 * Returns an instance of the systemwide Events object.
 	 */
 	public static function getInstance() {
@@ -55,7 +46,6 @@ class Events {
 	 * customization, used extend() below.
 	 */
 	public static function extendPageType($ctHandle, $event = false, $params = array()) {
-		static::enableEvents();
 		if ($event == false) {
 			// then we're registering ALL the page type events for this particular page type
 			static::extendPageType($ctHandle, 'on_page_add', $params);
@@ -97,7 +87,6 @@ class Events {
 	 * @return void
 	 */
 	public static function extend($event, $class, $method='', $filename='', $params = array(), $priority = 5) {
-		static::enableEvents();
 		$ce = static::getInstance();
 		$ce->registeredEvents[$event][] = array(
 			static::EVENT_TYPE_GLOBAL,
@@ -117,10 +106,7 @@ class Events {
 	 * @return void
 	 */
 	public static function fire($event) {
-		if ((!defined('ENABLE_APPLICATION_EVENTS')) || (ENABLE_APPLICATION_EVENTS == false)) {
-			return;
-		}
-		
+
 		// any additional arguments passed to the fire function will get passed FIRST to the method, with the method's own registered
 		// params coming at the end. e.g. if I fire Events::fire('on_login', $userObject) it will come in with user object first
 		$args = func_get_args();

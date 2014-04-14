@@ -8,9 +8,10 @@ class Loader {
 		return Database::getActiveConnection();
 	}
 	
-	public static function helper($helper, $pkgHandle = false) {
-		return helper($helper, $pkgHandle);
+	public static function helper($service, $pkgHandle = false) {
+		return Service::make($service);
 	}
+
 	public static function packageElement($file, $pkgHandle, $args = null) {
 		self::element($file, $args, $pkgHandle);
 	}

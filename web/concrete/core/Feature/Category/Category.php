@@ -11,7 +11,7 @@ abstract class Category extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select fcID, fcHandle, pkgID from FeatureCategories where fcID = ?', array($fcID));
 		if (isset($row['fcID'])) {
-			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\Category\\' . helper('text')->camelcase($row['fcHandle']) . 'Category');
+			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\Category\\' . Loader::helper('text')->camelcase($row['fcHandle']) . 'Category');
 			$fe = new $class();
 			$fe->setPropertiesFromArray($row);
 			return $fe;
@@ -22,7 +22,7 @@ abstract class Category extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select fcID, fcHandle, pkgID from FeatureCategories where fcHandle = ?', array($fcHandle));
 		if (isset($row['fcID'])) {
-			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\Category\\' . helper('text')->camelcase($row['fcHandle']) . 'Category');
+			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\Category\\' . Loader::helper('text')->camelcase($row['fcHandle']) . 'Category');
 			$fe = new $class();
 			$fe->setPropertiesFromArray($row);
 			return $fe;

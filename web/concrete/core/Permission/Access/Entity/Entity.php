@@ -33,7 +33,7 @@ abstract class Entity extends Object {
 			if (!is_object($pt)) {
 				return false;
 			}
-			$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\Entity\\' . helper('text')->camelcase($pt->getAccessEntityTypeHandle()) . 'Entity');
+			$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\Entity\\' . Loader::helper('text')->camelcase($pt->getAccessEntityTypeHandle()) . 'Entity');
 			$obj = new $className();
 			$r['petHandle'] = $pt->getAccessEntityTypeHandle();
 			$obj->setPropertiesFromArray($r);

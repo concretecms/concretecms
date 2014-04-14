@@ -53,9 +53,6 @@ class Dispatcher {
 		}
 		require(DIR_BASE_CORE . '/startup/url_check.php');
 		require(DIR_BASE_CORE . '/startup/encoding_check.php');
-		if (defined('ENABLE_APPLICATION_EVENTS') && ENABLE_APPLICATION_EVENTS == true &&  file_exists(DIR_CONFIG_SITE . '/site_events.php')) {
-			@include(DIR_CONFIG_SITE . '/site_events.php');
-		}
 		require(DIR_BASE_CORE . '/config/file_types.php');
 		if (file_exists(DIR_CONFIG_SITE . '/site_file_types.php')) {
 			@include(DIR_CONFIG_SITE . '/site_file_types.php');

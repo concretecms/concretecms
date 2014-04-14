@@ -18,7 +18,7 @@ class CorePagePropertyType extends Type {
 	}
 
 	public function getPageTypeComposerControlByIdentifier($identifier) {
-		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Page\\Type\\Composer\\Control\\CorePageProperty\\' . helper('text')->camelcase($identifier) . 'CorePageProperty');
+		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Page\\Type\\Composer\\Control\\CorePageProperty\\' . Loader::helper('text')->camelcase($identifier) . 'CorePageProperty');
 		$object = new $class();
 		return $object;
 	}

@@ -170,7 +170,7 @@ class Controller extends BlockController {
 					Loader::helper('overlay')->init(false);
 					if ($this->enablePostingFromGathering && $this->ptID) {
 						$pt = PageType::getByID($this->ptID);
-						Loader::helper('composer')->addAssetsToRequest($pt, $this);
+						Loader::helper('concrete/composer')->addAssetsToRequest($pt, $this);
 						$p = new Permissions($pt);
 						if ($p->canEditPageTypeInComposer()) {
 							$this->set('pagetype', $pt);

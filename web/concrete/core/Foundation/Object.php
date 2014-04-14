@@ -29,26 +29,11 @@ class Object {
 	}
 	
 	public static function camelcase($file) {
-		// turns "asset_library" into "AssetLibrary"
-		$r1 = ucwords(str_replace(array('_', '-', '/'), ' ', $file));
-		$r2 = str_replace(' ', '', $r1);
-		return $r2;		
+		return camelcase($file);
 	}
 
 	public static function uncamelcase($string) {
-		$v = preg_split('/([A-Z])/', $string, false, PREG_SPLIT_DELIM_CAPTURE);
-		$a = array();
-		array_shift($v);
-		for($i = 0; $i < count($v); $i++) {
-			if ($i % 2) {
-				if (function_exists('mb_strtolower')) {
-					$a[] = mb_strtolower($v[$i - 1] . $v[$i], APP_CHARSET);
-				} else {
-					$a[] = strtolower($v[$i - 1] . $v[$i]);
-				}
-			}
-		}
-		return str_replace('__', '_', implode('_', $a));
-	}		
+		return uncamelcase($string);
+	}
 
 }

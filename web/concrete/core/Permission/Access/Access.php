@@ -30,9 +30,9 @@ class Access extends Object {
 	
 	protected function deliverAccessListItems($q, $accessType, $filterEntities) {
 		$db = Loader::db();
-		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\ListItem\\' . helper('text')->camelcase($this->pk->getPermissionKeyCategoryHandle()) . 'ListItem');
+		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\ListItem\\' . Loader::helper('text')->camelcase($this->pk->getPermissionKeyCategoryHandle()) . 'ListItem');
 		if ($this->pk->permissionKeyHasCustomClass()) {
-			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\ListItem\\' . helper('text')->camelcase($this->pk->getPermissionKeyHandle() . '_' . $this->pk->getPermissionKeyCategoryHandle()) . 'ListItem');
+			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\ListItem\\' . Loader::helper('text')->camelcase($this->pk->getPermissionKeyHandle() . '_' . $this->pk->getPermissionKeyCategoryHandle()) . 'ListItem');
 		}
 
 		if (!class_exists($class)) {
@@ -227,7 +227,7 @@ class Access extends Object {
 			$handle = $pk->getPermissionKeyHandle() . '_' . $handle;
 		}
 
-		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\' . helper('text')->camelcase($handle) . 'Access');
+		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\' . Loader::helper('text')->camelcase($handle) . 'Access');
 
 		if ($checkPA) {
 			$row = $db->GetRow('select paID, paIsInUse from PermissionAccess where paID = ?', array($paID));

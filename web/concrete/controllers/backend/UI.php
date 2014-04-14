@@ -9,7 +9,7 @@ abstract class UI extends Controller {
 	protected $error;
 
 	public function __construct() {
-		$this->error = helper('validation/error');
+		$this->error = Loader::helper('validation/error');
 		$this->view = new DialogView($this->viewPath);
 		$this->view->setController($this);
 		$request = Request::getInstance();
@@ -37,7 +37,7 @@ abstract class UI extends Controller {
 
 	public function action() {
 		$url = call_user_func_array('parent::action', func_get_args());
-		$url .= '?ccm_token=' . helper('validation/token')->generate($this->getControllerActionPath());
+		$url .= '?ccm_token=' . Loader::helper('validation/token')->generate($this->getControllerActionPath());
 		return $url;
 	}
 

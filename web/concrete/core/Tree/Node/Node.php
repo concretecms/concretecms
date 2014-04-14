@@ -241,7 +241,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
 		if (!$treeNodeDisplayOrder) {
 			$treeNodeDisplayOrder = 0;
 		}
-		$treeNodeTypeHandle = helper('text')->uncamelcase(strrchr(get_called_class(), '\\'));
+		$treeNodeTypeHandle = Loader::helper('text')->uncamelcase(strrchr(get_called_class(), '\\'));
 
 		$type = TreeNodeType::getByHandle($treeNodeTypeHandle);
 		$db->Execute('insert into TreeNodes (treeNodeTypeID, treeNodeParentID, treeNodeDisplayOrder, inheritPermissionsFromTreeNodeID, treeID) values (?, ?, ?, ?, ?)', array(
