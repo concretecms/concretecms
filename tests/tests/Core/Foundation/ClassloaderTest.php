@@ -11,7 +11,7 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 
 	public function testPsr4AutoloadingCore() {
 		$this->assertTrue(class_exists('\Concrete\Core\Foundation\Object'));
-		$this->assertTrue(class_exists('\Concrete\Core\Application\Dispatcher'));
+		$this->assertTrue(class_exists('\Concrete\Core\Application\Application'));
 		$this->assertTrue(class_exists('\Concrete\Core\Http\Request'));
 	}
 
@@ -105,10 +105,10 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 	}
 */
 	public function testHelpers() {
-		$fh = helper('file');
+		$fh = Loader::helper('file');
 		$vh = Loader::helper('validation/error');
-		$this->assertTrue($fh instanceof \Concrete\Helper\File);
-		$this->assertTrue($vh instanceof \Concrete\Helper\Validation\Error);
+		$this->assertTrue($fh instanceof \Concrete\Core\File\Service\File);
+		$this->assertTrue($vh instanceof \Concrete\Core\Error\Error);
 	}
 
 	/*

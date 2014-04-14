@@ -14,12 +14,12 @@ class Controller extends AuthenticationTypeController {
 
 	public function status() {
 		$u = new User();
-		if (!isset($_SESSION['authFacebookStatus'])) {
+		if (!Session::has('authFacebookStatus')) {
 			return;
 			throw new \Exception(t('Something went wrong, please try again.'));
 		}
-		$status = $_SESSION['authFacebookStatus'];
-		unset($_SESSION['authFacebookStatus']);
+		$status = Session::get('authFacebookStatus');
+		Session::remove('authFacebookStatus');
 		if ($status == 1) {
 			$uname = (USER_REGISTRATION_WITH_EMAIL_ADDRESS?'Email':'Username');
 			$msg = t(/*i18n %s is the site name*/'<h2>Oh No!</h2>This facebook account isn\'t tied to any account of %1$s!', h(SITE)) . '<br />';
@@ -219,7 +219,7 @@ class Controller extends AuthenticationTypeController {
 	}
 
 	private function setSession($var=3) {
-		$_SESSION['authFacebookStatus'] = $var;
+		Session::set('authFacebookStatus', $var);
 		exit;
 	}
 

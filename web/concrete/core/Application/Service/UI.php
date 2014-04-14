@@ -180,7 +180,7 @@ class UI {
 	public function clearInterfaceItemsCache() {
 		$u = new ConcreteUser();
 		if ($u->isRegistered()) {
-			unset($_SESSION['dashboardMenus']);
+			Session::remove('dashboardMenus/' . Localization::activeLocale());
 		}
 	}
 	
@@ -188,7 +188,7 @@ class UI {
 		$u = new ConcreteUser();
 		if ($u->isRegistered()) {
 			$ch = Loader::helper('concrete/dashboard');
-			$_SESSION['dashboardMenus'][Localization::activeLocale()] = $ch->getIntelligentSearchMenu();
+			Session::set('dashboardMenus/' . Localization::activeLocale(), $ch->getIntelligentSearchMenu());
 		}
 	}
 	

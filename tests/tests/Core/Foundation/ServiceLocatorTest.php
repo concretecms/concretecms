@@ -2,8 +2,9 @@
 
 namespace Concrete\Tests\Core\Foundation;
 use Loader;
-use \Concrete\Core\Foundation\Service\Locator as ServiceLocator;
-use \Concrete\Core\Foundation\Service\Group as ServiceGroup;
+use \Concrete\Core\Application\Application as ServiceLocator;
+use \Concrete\Core\Foundation\Service\Provider as ServiceProvider;
+use \Concrete\Core\Foundation\Service\ProviderList;
 
 class TestClass {}
 
@@ -17,7 +18,7 @@ class ServiceLocatorTest extends \PHPUnit_Framework_TestCase {
 
 	public function testRegisterAndRetrieveNewClass() {
 
-		$this->sl->register('testclass', function() {
+		$this->sl->bind('testclass', function() {
 			return new \Concrete\Tests\Core\Foundation\TestClass();
 		});
 
@@ -73,25 +74,11 @@ class ServiceLocatorTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue($class3 == '\Application\Core\Page\Theme\Theme', 'class3 == ' . $class3);
 	}
 
+	public function testServiceProviders() {
+		$provider = new \Concrete\Core\Validation\ValidationServiceProvider($this->sl);
+		$provider->register();
 
-	public function testServiceLocatorArrays() {
-		$services = array(
-			'file' => '\Concrete\Core\File\Service\File',
-			'concrete/file' => '\Concrete\Core\File\Service\Application'
-		);
-
-		$this->sl->register($services);
-		$this->assertTrue($this->sl->isRegistered('file'));
-
-		$filehelper = $this->sl->make('concrete/file');
-		$this->assertTrue($filehelper instanceof \Concrete\Core\File\Service\Application);
-	}
-
-	public function testServiceGroup() {
-		$this->sl->registerGroup('\Concrete\Core\Validation\ValidationServiceGroup');
-		$this->sl->registerGroup('\Concrete\Core\Http\HttpServiceGroup');
-
-		$this->assertTrue($this->sl->isRegistered('validation/antispam'));
+		$this->assertTrue($this->sl->bound('validation/antispam'));
 		$bw1 = $this->sl->make('validation/banned_words');
 		$bw2 = $this->sl->make('validation/banned_words');
 		$this->assertTrue($bw1 === $bw2);
@@ -101,20 +88,15 @@ class ServiceLocatorTest extends \PHPUnit_Framework_TestCase {
 		$vt2 = $this->sl->make('validation/token');
 		$this->assertFalse($vt1 === $vt2);
 		$this->assertTrue($vt1 == $vt2);
-
-		$this->assertTrue($this->sl->make('ajax') instanceof \Concrete\Core\Http\Service\Ajax);
 	}
 
 	public function testOverrides() {
 		require('fixtures/MyFile.php');
-		$services = array(
-			'file' => '\Concrete\Core\File\Service\File'
-		);
 
-		$this->sl->register($services);
+		$this->sl->bind('file', '\Concrete\Core\File\Service\File');
 
 		$filehelper1 = $this->sl->make('file');
-		$this->sl->register('file', function() {
+		$this->sl->bind('file', function() {
 			return new \Application\Src\My\File;
 		});
 
@@ -131,7 +113,7 @@ class ServiceLocatorTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue($controller instanceof \Concrete\Block\Autonav\Controller);
 
 		$mockBlock = new \stdClass;
-		$this->sl->register('Concrete\Block\Autonav\Controller', function() use ($mockBlock) {
+		$this->sl->bind('Concrete\Block\Autonav\Controller', function() use ($mockBlock) {
 			return new \Application\Block\Autonav\Controller($mockBlock);
 		});
 
@@ -140,27 +122,29 @@ class ServiceLocatorTest extends \PHPUnit_Framework_TestCase {
 
 	}
 
-	public function testAllServiceGroups() {
+	public function testAllServiceProviders() {
 		$groups = array(
-			'\Concrete\Core\File\FileServiceGroup',
-			'\Concrete\Core\Encryption\EncryptionServiceGroup',
-			'\Concrete\Core\Validation\ValidationServiceGroup',
-			'\Concrete\Core\Localization\LocalizationServiceGroup',
-			'\Concrete\Core\Feed\FeedServiceGroup',
-			'\Concrete\Core\Html\HtmlServiceGroup',
-			'\Concrete\Core\Mail\MailServiceGroup',
-			'\Concrete\Core\Application\ApplicationServiceGroup',
-			'\Concrete\Core\Utility\UtilityServiceGroup',
-			'\Concrete\Core\Form\FormServiceGroup',
-			'\Concrete\Core\Http\HttpServiceGroup'
+			'\Concrete\Core\File\FileServiceProvider',
+			'\Concrete\Core\Encryption\EncryptionServiceProvider',
+			'\Concrete\Core\Validation\ValidationServiceProvider',
+			'\Concrete\Core\Localization\LocalizationServiceProvider',
+			'\Concrete\Core\Feed\FeedServiceProvider',
+			'\Concrete\Core\Html\HtmlServiceProvider',
+			'\Concrete\Core\Mail\MailServiceProvider',
+			'\Concrete\Core\Application\ApplicationServiceProvider',
+			'\Concrete\Core\Utility\UtilityServiceProvider',
+			'\Concrete\Core\Form\FormServiceProvider',
+			'\Concrete\Core\Http\HttpServiceProvider'
 		);
 
-		$this->sl->registerGroups($groups);
+		$gr = new ProviderList($this->sl);
+		$gr->registerProviders($groups);
 
-		$this->assertTrue($this->sl->isRegistered('concrete/ui'));
-		$this->assertTrue($this->sl->isRegistered('concrete/ui/help'));
-		$this->assertTrue($this->sl->isRegistered('concrete/asset_library'));
-		$this->assertTrue($this->sl->isRegistered('mime'));
+		$this->assertTrue($this->sl->bound('concrete/ui'));
+		$this->assertTrue($this->sl->bound('concrete/ui/help'));
+		$this->assertTrue($this->sl->bound('concrete/asset_library'));
+		$this->assertTrue($this->sl->bound('mime'));
+
 
 	}
 

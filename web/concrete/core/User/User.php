@@ -47,14 +47,15 @@ class User extends Object {
 			$nu->uGroups = $nu->_getUserGroups(true);
 			$nu->superUser = ($nu->getUserID() == USER_SUPER_ID);
 			if ($login) {
-				User::regenerateSession();
-				$_SESSION['uID'] = $row['uID'];
-				$_SESSION['uName'] = $row['uName'];
-				$_SESSION['uBlockTypesSet'] = false;
-				$_SESSION['uGroups'] = $nu->uGroups;
-				$_SESSION['uLastOnline'] = $row['uLastOnline'];
-				$_SESSION['uTimezone'] = $row['uTimezone'];
-				$_SESSION['uDefaultLanguage'] = $row['uDefaultLanguage'];
+				$session = Concrete::make('session');
+				$session->set('uID', $row['uID']);
+				$session->set('uName', $row['uID']);
+				$session->set('uBlockTypesSet', false);
+				$session->set('uGroups', $this->uGroups);
+				$session->set('uLastOnline', $row['uLastOnline']);
+				$session->set('uTimezone', $row['uTimezone']);
+				$session->set('uDefaultLanguage', $row['uDefaultLanguage']);
+				$session->set('uID', $row['uID']);
 				if ($cacheItemsOnLogin) {
 					Loader::helper('concrete/ui')->cacheInterfaceItems();
 				}
@@ -62,20 +63,6 @@ class User extends Object {
 			}
 		}
 		return $nu;
-	}
-
-	protected static function regenerateSession() {
-		unset($_SESSION['dashboardMenus']);
-		unset($_SESSION['ccmQuickNavRecentPages']);
-		unset($_SESSION['accessEntities']);
-
-		$tmpSession = $_SESSION; 
-		session_write_close(); 
-		@setcookie(session_name(), session_id(), time()-100000);
-		session_id(sha1(mt_rand())); 
-		@session_start(); 
-		$_SESSION = $tmpSession;
-
 	}
 
 	/**
@@ -87,30 +74,31 @@ class User extends Object {
 	}
 
 	public static function isLoggedIn() {
-		return isset($_SESSION['uID']) && $_SESSION['uID'] > 0 && isset($_SESSION['uName']) && $_SESSION['uName'] != '';
+		$session = Concrete::make('session');
+		return $session->has('uID') && $session->get('uID') > 0 && $session->has('uName') && $session->get('uName') != '';
 	}
 
 	public function checkLogin() {
 
 		
 		$aeu = Config::get('ACCESS_ENTITY_UPDATED');
-		if ($aeu && $aeu > $_SESSION['accessEntitiesUpdated']) {
+		if ($aeu && $aeu > Session::get('accessEntitiesUpdated')) {
 			User::refreshUserGroups();
 		}
 
-		if ($_SESSION['uID'] > 0) {
+		if (Session::get('uID') > 0) {
 			$db = Loader::db();
-			$row = $db->GetRow("select uID, uIsActive from Users where uID = ? and uName = ?", array($_SESSION['uID'], $_SESSION['uName']));
+			$row = $db->GetRow("select uID, uIsActive from Users where uID = ? and uName = ?", array(Session::get('uID'), Session::get('uName')));
 			$checkUID = $row['uID'];
-			if ($checkUID == $_SESSION['uID']) {
+			if ($checkUID == Session::get('uID') {
 				if (!$row['uIsActive']) {
 					return false;
 				}
-				$_SESSION['uOnlineCheck'] = time();
-				if (($_SESSION['uOnlineCheck'] - $_SESSION['uLastOnline']) > (ONLINE_NOW_TIMEOUT / 2)) {
+				Session::set('uOnlineCheck', time());
+				if ((Session::get('uOnlineCheck') - Session::get('uLastOnline') > (ONLINE_NOW_TIMEOUT / 2)) {
 					$db = Loader::db();
-					$db->query("update Users set uLastOnline = {$_SESSION['uOnlineCheck']} where uID = {$this->uID}");
-					$_SESSION['uLastOnline'] = $_SESSION['uOnlineCheck'];
+					$db->query("update Users set uLastOnline = ? where uID = ?", array(Session::get('uOnlineCheck'), $this->uID));
+					Session::set('uLastOnline', Session::get('uOnlineCheck'));
 				}
 				return true;
 			} else {
@@ -129,7 +117,7 @@ class User extends Object {
 			$username = $args[0];
 			$password = $args[1];
 			if (!$args[2]) {
-				$_SESSION['uGroups'] = false;
+				Session::remove('Ugroups');	
 			}
 			$v = array($username);
 			if (defined('USER_REGISTRATION_WITH_EMAIL_ADDRESS') && USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
@@ -159,14 +147,14 @@ class User extends Object {
 					}
 					$this->recordLogin();
 					if (!$args[2]) {
-						User::regenerateSession();
-						$_SESSION['uID'] = $row['uID'];
-						$_SESSION['uName'] = $row['uName'];
-						$_SESSION['superUser'] = $this->superUser;
-						$_SESSION['uBlockTypesSet'] = false;
-						$_SESSION['uGroups'] = $this->uGroups;
-						$_SESSION['uTimezone'] = $this->uTimezone;
-						$_SESSION['uDefaultLanguage'] = $this->uDefaultLanguage;
+						$session = Concrete::make('session');
+						$session->set('uID', $row['uID']);
+						$session->set('uName', $row['uID']);
+						$session->set('superUser', $this->superUser);
+						$session->set('uBlockTypesSet', false);
+						$session->set('uGroups', $this->uGroups);
+						$session->set('uTimezone', $this->uTimezone);
+						$session->set('uDefaultLanguage', $row['uDefaultLanguage']);
 						Loader::helper('concrete/ui')->cacheInterfaceItems();
 					}
 				} else if ($row['uID'] && !$row['uIsActive']) {
@@ -206,14 +194,14 @@ class User extends Object {
 					}
 					$this->uTimezone = $ux->getUserTimezone();
 				}
-			} else if (isset($_SESSION['uID'])) {
-				$this->uID = $_SESSION['uID'];
-				$this->uName = $_SESSION['uName'];
-				$this->uTimezone = $_SESSION['uTimezone'];
-				if (isset($_SESSION['uDefaultLanguage'])) {
-					$this->uDefaultLanguage = $_SESSION['uDefaultLanguage'];
+			} else if (Session::has('uID')) {
+				$this->uID = Session::get('uID');
+				$this->uName = Session::get('uName');
+				$this->uTimezone = Session::get('uTimezone');
+				if (Session::has('uDefaultLanguage')) {
+					$this->uDefaultLanguage = Session::get('uDefaultLanguage');
 				}
-				$this->superUser = ($_SESSION['uID'] == USER_SUPER_ID) ? true : false;
+				$this->superUser = (Session::get('uID') == USER_SUPER_ID) ? true : false;
 			} else {
 				$this->uID = null;
 				$this->uName = null;
@@ -223,7 +211,7 @@ class User extends Object {
 			}
 			$this->uGroups = $this->_getUserGroups();
 			if (!isset($args[2]) && !$req->hasCustomRequestUser()) {
-				$_SESSION['uGroups'] = $this->uGroups;
+				Session::set('uGroups', $this->uGroups);
 			}
 		}
 
@@ -383,7 +371,7 @@ class User extends Object {
 	public function setUserDefaultLanguage($lang) {
 		$db = Loader::db();
 		$this->uDefaultLanguage = $lang;
-		$_SESSION['uDefaultLanguage'] = $lang;
+		Session::set('uDefaultLanguage', $lang);
 		$db->Execute('update Users set uDefaultLanguage = ? where uID = ?', array($lang, $this->getUserID()));
 	}
 
@@ -395,10 +383,11 @@ class User extends Object {
 	}
 
 	function refreshUserGroups() {
-		unset($_SESSION['uGroups']);
-		unset($_SESSION['accessEntities']);
+		$session = Concrete::make('session');
+		$session->remove('uGroups');
+		$session->remove('accessEntities');
 		$ug = $this->_getUserGroups();
-		$_SESSION['uGroups'] = $ug;
+		$session->set('uGroups', $ug);
 		$this->uGroups = $ug;
 	}
 
@@ -410,26 +399,25 @@ class User extends Object {
 			return PermissionAccessEntity::getForUser($this);
 		}
 
-		if (isset($_SESSION['accessEntities'])) {
-			$entities = $_SESSION['accessEntities'];
+		if (Session::has('accessEntities')) {
+			$entities = Session::get('accessEntities');
 		} else {
 			$entities = PermissionAccessEntity::getForUser($this);
-			$_SESSION['accessEntities'] = $entities;
-			$_SESSION['accessEntitiesUpdated'] = time();
+			Session::set('accessEntities', $entities);
+			Session::set('accessEntitiesUpdated', time());
 		}
 		return $entities;
 	}
 
 	function _getUserGroups($disableLogin = false) {
 		$req = Request::getInstance();
-		if ((!empty($_SESSION['uGroups'])) && (!$disableLogin) && (!$req->hasCustomRequestUser())) {
-			$ug = $_SESSION['uGroups'];
+		if ((Session::has('uGroups')) && (!$disableLogin) && (!$req->hasCustomRequestUser())) {
+			$ug = Session::get('uGroups');
 		} else {
 			$db = Loader::db();
 			if ($this->uID) {
 				$ug[REGISTERED_GROUP_ID] = REGISTERED_GROUP_ID;
-				//$_SESSION['uGroups'][REGISTERED_GROUP_ID] = REGISTERED_GROUP_NAME;
-
+				
 				$uID = $this->uID;
 				$q = "select Groups.gID, Groups.gName, Groups.gUserExpirationIsEnabled, Groups.gUserExpirationSetDateTime, Groups.gUserExpirationInterval, Groups.gUserExpirationAction, Groups.gUserExpirationMethod, UserGroups.ugEntered from UserGroups inner join Groups on (UserGroups.gID = Groups.gID) where UserGroups.uID = '$uID'";
 				$r = $db->query($q);
@@ -535,8 +523,9 @@ class User extends Object {
 	function loadMasterCollectionEdit($mcID, $ocID) {
 		// basically, this function loads the master collection ID you're working on into session
 		// so you can work on it without the system failing because you're editing a template
-		$_SESSION['mcEditID'] = $mcID;
-		$_SESSION['ocID'] = $ocID;
+		Session::set('mcEditID', $mcID);
+		Session::set('ocID', $ocID);
+	
 	}
 
 	function loadCollectionEdit(&$c) {
@@ -557,7 +546,7 @@ class User extends Object {
 		if ($r) {
 			$row = $r->fetchRow();
 			if (!$row['cIsCheckedOut']) {
-				$_SESSION['editCID'] = $cID;
+				Session::set('editCID', $cID);
 				$uID = $this->getUserID();
 				$dh = Loader::helper('date');
 				$datetime = $dh->getSystemDateTime();
@@ -599,11 +588,11 @@ class User extends Object {
 	}
 
 	public function markPreviousFrontendPage(Page $c) {
-		$_SESSION['frontendPreviousPageID'] = $c->getCollectionID();
+		Session::set('frontendPreviousPageID', $c->getCollectionID());
 	}
 
 	public function getPreviousFrontendPageID() {
-		return $_SESSION['frontendPreviousPageID'];
+		return Session::get('frontendPreviousPageID');
 	}
 
 	public function saveConfig($cfKey, $cfValue) {

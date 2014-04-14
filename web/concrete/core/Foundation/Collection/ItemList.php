@@ -36,26 +36,29 @@ class ItemList {
 	}
 	
 	public function resetSearchRequest($namespace = '') {
-		$_SESSION[get_class($this) . $namespace . 'SearchFields'] = array();
+		$session = Session::all();
+		$session[get_class($this) . $namespace . 'SearchFields'] = array());
 	}
 	
 	public function addToSearchRequest($key, $value) {
-		$_SESSION[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'][$key] = $value;
+		$session = Session::all();
+		$session[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'][$key] = $value;
 	}
 	
 	public function getSearchRequest() {
+		$session = Session::all();
 		if ($this->enableStickySearchRequest) {
-			if (!is_array($_SESSION[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'])) {
-				$_SESSION[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'] = array();
+			if (!is_array($session[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'])) {
+				$session[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'] = array();
 			}
 			
 			// i don't believe we need this approach particularly, and it's a pain in the ass
 			//$validSearchKeys = array('fKeywords', 'numResults', 'fsIDNone', 'fsID', 'ccm_order_dir', 'ccm_order_by', 'size_from', 'size_to', 'type', 'extension', 'date_from', 'date_to', 'searchField', 'selectedSearchField', 'akID');
 			
 			foreach($_REQUEST as $key => $value) {
-				$_SESSION[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'][$key] = $value;
+				$session[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'][$key] = $value;
 			}		
-			return $_SESSION[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'];
+			return $session[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'];
 		} else {
 			return $_REQUEST;
 		}

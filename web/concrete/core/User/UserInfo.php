@@ -436,8 +436,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 			$uDefaultLanguage = $ux->getUserDefaultLanguage();				
 			if (isset($data['uDefaultLanguage']) && $data['uDefaultLanguage'] != '') {
 				$uDefaultLanguage = $data['uDefaultLanguage'];
-				if ($_SESSION['uID'] == $this->uID) {
-					$_SESSION['uDefaultLanguage'] = $uDefaultLanguage; // make sure to keep the new uDefaultLanguage in there
+				if (Session::get('uID') == $this->uID) {
+					Session::set('uDefaultLanguage', $uDefaultLanguage); // make sure to keep the new uDefaultLanguage in there
 				} 					
 			}
 			
@@ -461,8 +461,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 			}
 
 			// now we check to see if the user is updated his or her own logged in record
-			if (isset($_SESSION['uID']) && $_SESSION['uID'] == $this->uID) {
-				$_SESSION['uName'] = $uName; // make sure to keep the new uName in there
+			if (Session::has('uID') && Session::get('uID') == $this->uID) {
+				Session::set('uName', $uName); // make sure to keep the new uName in there
 			}
 
 			// run any internal event we have for user update

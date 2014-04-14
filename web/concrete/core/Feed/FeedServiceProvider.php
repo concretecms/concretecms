@@ -1,8 +1,8 @@
 <?php 
 namespace Concrete\Core\Feed;
-use \Concrete\Core\Foundation\Service\Group as ServiceGroup;
+use \Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
-class FeedServiceGroup extends ServiceGroup {
+class FeedServiceProvider extends ServiceProvider {
 
 	public function register() {
 		$singletons = array(
@@ -10,7 +10,7 @@ class FeedServiceGroup extends ServiceGroup {
 		);
 
 		foreach($singletons as $key => $value) {
-			$this->locator->singleton($key, $value);
+			$this->app->singleton($key, $value);
 		}
 	}
 

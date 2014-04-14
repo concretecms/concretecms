@@ -9,6 +9,10 @@ class ClosureRouteCallback extends RouteCallback {
 		return $r;
 	}
 
+	public function __sleep() {
+		unset($this->callback);
+	}
+
 	public static function getRouteAttributes($callback) {
 		$callback = new static($callback);
 		return array('callback' => $callback);

@@ -230,8 +230,8 @@ class Dashboard {
 	}
 
 	public function getIntelligentSearchMenu() {
-		if (isset($_SESSION['dashboardMenus'])) {
-			return $_SESSION['dashboardMenus'][Localization::activeLocale()];
+		if (Session::has('dashboardMenus')) {
+			return Session::get('dashboardMenus/' . Localization::activeLocale());
 		}			
 
 		ob_start(); ?>

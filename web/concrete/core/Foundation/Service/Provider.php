@@ -1,18 +1,19 @@
 <?
 namespace Concrete\Core\Foundation\Service;
+use \Concrete\Core\Application\Application;
 use Closure;
 
 /** 
  *  Extending this class allows groups of services to be registered at once.
  */
-abstract class Group {	
+abstract class Provider {	
 
-	public function __construct(Locator $locator) {
-		$this->locator = $locator;
+	public function __construct(Application $app) {
+		$this->app = $app;
 	}
 
 	/** 
-	 * Registers the services provided by this group.
+	 * Registers the services provided by this provider.
 	 * @return void
 	 */
 	abstract public function register();

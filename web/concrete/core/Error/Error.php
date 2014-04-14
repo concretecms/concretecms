@@ -1,10 +1,10 @@
 <?
 
-namespace Concrete\Helper\Error;
+namespace Concrete\Core\Error;
 use Loader;
 use stdClass;
 
-class Service {
+class Error {
 
 	protected $error = array();
 	public $helperAlwaysCreateNewInstance = true;

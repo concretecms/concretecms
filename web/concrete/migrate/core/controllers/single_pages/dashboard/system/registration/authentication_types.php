@@ -12,9 +12,9 @@ class Concrete5_Controller_Page_Dashboard_System_Registration_AuthenticationType
 		$errors = array();
 		$errors[0] = 'Invalid Error Code.';
 		$errors[1] = 'Invalid Authentication Type';
-		if (isset($_SESSION['authenticationTypesErrorCode'])) {
-			$atec = $_SESSION['authenticationTypesErrorCode'];
-			unset($_SESSION['authenticationTypesErrorCode']);
+		if (Session::has('authenticationTypesErrorCode')) {
+			$atec = Session::get('authenticationTypesErrorCode');
+			Session::remove('authenticationTypesErrorCode');
 			if (!isset($errors[$atec])) {
 				$atec = 0;
 			}
@@ -70,7 +70,7 @@ class Concrete5_Controller_Page_Dashboard_System_Registration_AuthenticationType
 				$this->set('error',$this->error);
 			}
 		} catch (Exception $e) {
-			$_SESSION['authenticationTypesErrorCode'] = 1;
+			Session::set('authenticationTypesErrorCode', 1);
 			$this->redirect('dashboard/system/registration/authentication_types/');
 			exit;
 		}
@@ -82,7 +82,7 @@ class Concrete5_Controller_Page_Dashboard_System_Registration_AuthenticationType
 		try {
 			$at = AuthenticationType::getByID($atid);
 		} catch (Exception $e) {
-			$_SESSION['authenticationTypesErrorCode'] = 1;
+			Session::set('authenticationTypesErrorCode', 1);
 			$this->redirect('dashboard/system/registration/authentication_types/');
 			exit;
 		}

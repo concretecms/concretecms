@@ -28,10 +28,10 @@ class Add extends BackendInterfacePageController {
 			$blockTypes[] = $bt;
 		}
 		if ($_REQUEST['tab']) {
-			$_SESSION['panels_page_add_block_tab'] = $_REQUEST['tab'];
+			Session::set('panels_page_add_block_tab', $_REQUEST['tab']);
 			$tab = $_REQUEST['tab'];
 		} else {
-			$tab = $_SESSION['panels_page_add_block_tab'];
+			$tab = Session::get('panels_page_add_block_tab');
 		}
 
 		$this->set('tab', $tab);

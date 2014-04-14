@@ -105,7 +105,7 @@ class PageResponse extends Response {
 	public function testForErrors() { 
 		if ($this->object->isMasterCollection()) {
 			$canEditMaster = TaskPermission::getByHandle('access_page_defaults')->can();
-			if (!($canEditMaster && $_SESSION['mcEditID'] == $this->object->getCollectionID())) {
+			if (!($canEditMaster && Session::get('mcEditID') == $this->object->getCollectionID())) {
 				return COLLECTION_FORBIDDEN;
 			}
 		} else {

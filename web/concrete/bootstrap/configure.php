@@ -35,7 +35,7 @@ defined('DIRNAME_UPDATES') or define('DIRNAME_UPDATES', 'updates');
  * going to need to render install.
  * ----------------------------------------------------------------------------
  */
-if (file_exists(CONFIG_FILE)) include(CONFIG_FILE);
+if (file_exists(CONFIG_FILE)) define('CONFIG_FILE_EXISTS', true) and include(CONFIG_FILE);
 
 
 
@@ -553,3 +553,25 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
  * ----------------------------------------------------------------------------
  */
 ini_set('include_path', DIR_BASE_CORE . DIRECTORY_SEPARATOR . DIRNAME_VENDOR . PATH_SEPARATOR . get_include_path());
+
+
+/**
+ * ----------------------------------------------------------------------------
+ * Load some helper functions
+ * ----------------------------------------------------------------------------
+ */
+require __DIR__ . '/helpers.php';
+
+
+
+/**
+ * ----------------------------------------------------------------------------
+ * Set the timezone
+ * ----------------------------------------------------------------------------
+ */
+if (defined('APP_TIMEZONE')) {
+	define('APP_TIMEZONE_SERVER', @date_default_timezone_get());
+	date_default_timezone_set(APP_TIMEZONE);
+} else {
+	date_default_timezone_set(@date_default_timezone_get());
+}

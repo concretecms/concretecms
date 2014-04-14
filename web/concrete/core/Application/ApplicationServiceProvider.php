@@ -1,8 +1,8 @@
 <?php 
 namespace Concrete\Core\Application;
-use \Concrete\Core\Foundation\Service\Group as ServiceGroup;
+use \Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
-class ApplicationServiceGroup extends ServiceGroup {
+class ApplicationServiceProvider extends ServiceProvider {
 
 	public function register() {
 		$singletons = array(
@@ -25,7 +25,7 @@ class ApplicationServiceGroup extends ServiceGroup {
 		);
 
 		foreach($singletons as $key => $value) {
-			$this->locator->singleton($key, $value);
+			$this->app->singleton($key, $value);
 		}
 	}
 
