@@ -20,6 +20,7 @@ use \Concrete\Core\Application\Application;
 use \Concrete\Core\Foundation\ClassAliasList;
 use \Concrete\Core\Foundation\Service\ProviderList;
 use \Concrete\Core\Support\Facade\Facade;
+use \Patchwork\Utf8\Bootup;
 
 /**
  * ----------------------------------------------------------------------------
@@ -63,6 +64,27 @@ $list->registerProviders(require DIR_BASE_CORE . '/config/services.php');
 
 /**
  * ----------------------------------------------------------------------------
+ * Handle trailing slashes/non trailing slashes in URL. Has to come after 
+ * we define our core services because our redirect routines use some of those
+ * services
+ * ----------------------------------------------------------------------------
+ */
+$cms->handleURLSlashes();
+$cms->handleBaseURLRedirection();
+
+
+
+/**
+ * ----------------------------------------------------------------------------
+ * Handle text encoding.
+ * ----------------------------------------------------------------------------
+ */
+Bootup::initAll();
+
+
+
+/**
+ * ----------------------------------------------------------------------------
  * Registries for theme paths, assets, routes and file types.
  * ----------------------------------------------------------------------------
  */
@@ -75,15 +97,53 @@ require DIR_BASE_CORE . '/config/file_types.php';
 
 /**
  * ----------------------------------------------------------------------------
- * Check the page cache in case we need to return a result early.
+ * Obtain the Request object.
  * ----------------------------------------------------------------------------
  */
 $request = Request::getInstance();
+
+
+
+/**
+ * ----------------------------------------------------------------------------
+ * If we haven't installed, then we need to reroute.
+ * ----------------------------------------------------------------------------
+ */
+if (!$cms->isInstalled() &&	!$request->matches('/install/*') && $request->getPath() != '/install') {
+	Redirect::to('/install')->send();
+}
+
+
+
+/**
+ * ----------------------------------------------------------------------------
+ * Check the page cache in case we need to return a result early.
+ * ----------------------------------------------------------------------------
+ */
 $response = $cms->checkPageCache($request);
 if ($response) {
 	$response->send();
 	$cms->shutdown();
 }
+
+
+
+/** 
+ * ----------------------------------------------------------------------------
+ * Get the response to the current request
+ * ----------------------------------------------------------------------------
+ */
+$response = $cms->dispatch($request);
+
+
+
+/** 
+ * ----------------------------------------------------------------------------
+ * Send it to the user
+ * ----------------------------------------------------------------------------
+ */
+$response->send();
+
 
 
 /**

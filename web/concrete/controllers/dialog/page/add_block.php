@@ -70,7 +70,7 @@ class AddBlock extends BackendInterfacePageController {
 			$data['uID'] = $u->getUserID();
 
 			$e = $this->blockTypeController->validate($data);
-			if ((!is_object($e)) || (($e instanceof \Concrete\Helper\Validation\Error) && (!$e->has()))) {
+			if ((!is_object($e)) || (($e instanceof \Concrete\Core\Error\Error) && (!$e->has()))) {
 
 				if (!$bt->includeAll()) {
 					$nvc = $this->pageToModify->getVersionToModify();

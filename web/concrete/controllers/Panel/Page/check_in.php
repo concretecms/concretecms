@@ -7,7 +7,7 @@ use Loader;
 use Page;
 use User;
 use Response;
-use \Concrete\Helper\Validation\Error as ValidationErrorHelper;
+use \Concrete\Core\Error\Error as ValidationErrorHelper;
 use Redirect;
 use \Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
@@ -43,7 +43,7 @@ class CheckIn extends BackendInterfacePageController {
 						if ($oc->isPageTypeComposerFormControlRequiredOnThisRequest()) {
 							$oc->setPageObject($c);
 							$r = $oc->validate();
-							if ($r instanceof \Concrete\Helper\Validation\Error) {
+							if ($r instanceof \Concrete\Core\Error\Error) {
 								$e->add($r);
 							}
 						}						

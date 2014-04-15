@@ -9,6 +9,7 @@ use \Concrete\Core\Authentication\AuthenticationType;
 use Events;
 use Page;
 use GroupList;
+use Session;
 use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 
 class User extends Object {
@@ -90,12 +91,12 @@ class User extends Object {
 			$db = Loader::db();
 			$row = $db->GetRow("select uID, uIsActive from Users where uID = ? and uName = ?", array(Session::get('uID'), Session::get('uName')));
 			$checkUID = $row['uID'];
-			if ($checkUID == Session::get('uID') {
+			if ($checkUID == Session::get('uID')) {
 				if (!$row['uIsActive']) {
 					return false;
 				}
 				Session::set('uOnlineCheck', time());
-				if ((Session::get('uOnlineCheck') - Session::get('uLastOnline') > (ONLINE_NOW_TIMEOUT / 2)) {
+				if ((Session::get('uOnlineCheck') - Session::get('uLastOnline') > (ONLINE_NOW_TIMEOUT / 2))) {
 					$db = Loader::db();
 					$db->query("update Users set uLastOnline = ? where uID = ?", array(Session::get('uOnlineCheck'), $this->uID));
 					Session::set('uLastOnline', Session::get('uOnlineCheck'));

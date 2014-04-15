@@ -322,7 +322,7 @@ class StartingPointPackage extends Package {
 	}
 
 	public static function getAvailableList() {
-		$fh = helper('file');
+		$fh = Loader::helper('file');
 		// first we check the root install directory. If it exists, then we only include stuff from there. Otherwise we get it from the core.
 		$available = array();
 		if (is_dir(DIR_STARTING_POINT_PACKAGES)) {

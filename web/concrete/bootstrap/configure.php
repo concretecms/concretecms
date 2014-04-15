@@ -80,7 +80,7 @@ defined('NAMESPACE_SEGMENT_APPLICATION') or define('NAMESPACE_SEGMENT_APPLICATIO
  * Base URL and Relative Directory
  * ----------------------------------------------------------------------------
  */
-defined('REDIRECT_TO_BASE_URL') or define('REDIRECT_TO_BASE_URL', true);
+defined('REDIRECT_TO_BASE_URL') or define('REDIRECT_TO_BASE_URL', false);
 if (!defined('BASE_URL')) {
 	if(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) {
 		define('BASE_URL', 'https://' . $_SERVER['HTTP_HOST']);

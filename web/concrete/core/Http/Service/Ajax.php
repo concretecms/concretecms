@@ -22,7 +22,7 @@ class Ajax {
 		if(@ob_get_length()) {
 			@ob_end_clean();
 		}
-		if ($error instanceof \Concrete\Helper\Validation\Error) {
+		if ($error instanceof \Concrete\Core\Error\Error) {
 			$error->outputJSON();
 		} else {
 			header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request', true, 400);

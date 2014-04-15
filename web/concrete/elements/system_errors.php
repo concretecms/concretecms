@@ -4,7 +4,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 if (isset($error) && $error != '') {
 	if ($error instanceof Exception) {
 		$_error[] = $error->getMessage();
-	} else if ($error instanceof \Concrete\Helper\Validation\Error) { 
+	} else if ($error instanceof \Concrete\Core\Error\Error) { 
 		$_error = $error->getList();
 	} else if (is_array($error)) {
 		$_error = $error;
