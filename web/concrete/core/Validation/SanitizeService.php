@@ -11,7 +11,7 @@
  */
 
 namespace Concrete\Core\Validation;
-class Sanitize {
+class SanitizeService {
 
     public function sanitizeString($string) {
         return filter_var($string, FILTER_SANITIZE_STRING);

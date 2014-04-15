@@ -1,7 +1,8 @@
 <?
 namespace Concrete\Core\Form\Service;
-use Validation;
+use Loader;
 /**
+ * 
  * @package Helpers
  * @subpackage Validation
  * @author Andrew Embler <andrew@concrete5.org>
@@ -18,7 +19,7 @@ use Validation;
  * @license    http://www.concrete5.org/license/     MIT License
  */
  
- 	class ValidationService {	
+ 	class Validation {	
 		
 		protected $fields = array();
 		protected $fieldsInvalid = array();
