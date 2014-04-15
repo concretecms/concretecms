@@ -7,6 +7,7 @@ use \Concrete\Core\Page\View\PageView;
 use Permissions;
 use User;
 use Loader;
+use Session;
 
 abstract class PageCache {
 

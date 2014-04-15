@@ -684,8 +684,7 @@
 			$parentP = new Permissions($parent);
 			if ($parentP->canAddExternalLink()) {
 				$ncID = $c->updateCollectionAliasExternal($_POST['cName'], $_POST['cExternalLink'], $_POST['cExternalLinkNewWindow']);
-				header('Location: ' . URL_SITEMAP);
-				exit;
+				Redirect::to('/dashboard/sitemap');
 			}
 		} else if ($_POST['add']) {
 			// adding a collection to a collection
@@ -735,8 +734,7 @@
 							header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $nc->getCollectionID() . '&mode=edit&ctask=check-out-first' . $step . $token);
 							exit;
 						} else {
-							header('Location: ' . URL_SITEMAP);
-							exit;
+							Redirect::to('/dashboard/sitemap');
 						}
 					} else {
 						header('Location: ' . BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $nc->getCollectionID() . '&mode=edit&ctask=check-out-first' . $step . $token);
@@ -749,8 +747,7 @@
 			
 			if ($cp->canAddExternalLink()) {
 				$ncID = $c->addCollectionAliasExternal($_POST['cName'], $_POST['cExternalLink'], $_POST['cExternalLinkNewWindow']);
-				header('Location: ' . URL_SITEMAP);
-				exit;
+				Redirect::to('/dashboard/sitemap');
 			}
 		}
 	}

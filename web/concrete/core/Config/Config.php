@@ -80,13 +80,15 @@ class Config extends Object {
 	* @param string $defaultValue
 	*/
 	public function getAndDefine($key, $defaultValue) {
-		$val = Config::get($key, true);
-		if (!$val) {
-			$val = $defaultValue;
-		} else {
-			$val = $val->value;
+		if (!defined($key)) {
+			$val = Config::get($key, true);
+			if (!$val) {
+				$val = $defaultValue;
+			} else {
+				$val = $val->value;
+			}
+			define($key, $val);
 		}
-		define($key, $val);
 	}
 	/**
 	* Clears a gived config key

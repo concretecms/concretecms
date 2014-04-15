@@ -37,7 +37,7 @@ class ItemList {
 	
 	public function resetSearchRequest($namespace = '') {
 		$session = Session::all();
-		$session[get_class($this) . $namespace . 'SearchFields'] = array());
+		$session[get_class($this) . $namespace . 'SearchFields'] = array();
 	}
 	
 	public function addToSearchRequest($key, $value) {

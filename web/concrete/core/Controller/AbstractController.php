@@ -50,7 +50,7 @@ abstract class AbstractController {
 	public function getHelperObjects() {
 		$helpers = array();
 		foreach($this->helpers as $handle) {
-			$h = Concrete::make($handle);
+			$h = Concrete::make('helper/' . $handle);
 			$helpers[(str_replace('/','_',$handle))] = $h;
 		}		
 		return $helpers;

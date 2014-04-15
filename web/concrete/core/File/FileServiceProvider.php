@@ -6,10 +6,10 @@ class FileServiceProvider extends ServiceProvider {
 
 	public function register() {
 		$singletons = array(
-			'file' => '\Concrete\Core\File\Service\File',
-			'concrete/file' => '\Concrete\Core\File\Service\Application',
-			'image' => '\Concrete\Core\File\Service\Image',
-			'mime' => '\Concrete\Core\File\Service\Mime'
+			'helper/file' => '\Concrete\Core\File\Service\File',
+			'helper/concrete/file' => '\Concrete\Core\File\Service\Application',
+			'helper/image' => '\Concrete\Core\File\Service\Image',
+			'helper/mime' => '\Concrete\Core\File\Service\Mime'
 		);
 
 		foreach($singletons as $key => $value) {

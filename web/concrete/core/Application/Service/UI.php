@@ -5,6 +5,10 @@ use Loader;
 use Page;
 use Localization;
 use Config;
+use Session;
+use \Concrete\Core\View\ErrorView;
+use stdClass;
+
 /**
  * @package Helpers
  * @subpackage Concrete
@@ -156,7 +160,7 @@ class UI {
 	public function showNewsflowOverlay() {
 		$tp = new \TaskPermission();
 		$c = Page::getCurrentPage();
-        if ((!defined(MOBILE_THEME_IS_ACTIVE) || MOBILE_THEME_IS_ACTIVE == false) && ENABLE_NEWSFLOW_OVERLAY == true && $tp->canViewNewsflow() && $c->getCollectionPath() != '/dashboard/news') {
+        if ((!defined(MOBILE_THEME_IS_ACTIVE) || MOBILE_THEME_IS_ACTIVE == false) && ENABLE_APP_NEWS_OVERLAY == true && $tp->canViewNewsflow() && $c->getCollectionPath() != '/dashboard/news') {
 			$u = new ConcreteUser;
 			$nf = $u->config('NEWSFLOW_LAST_VIEWED');
 			if ($nf == 'FIRSTRUN') {

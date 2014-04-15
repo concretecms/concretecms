@@ -1,6 +1,6 @@
 <?
 
-namespace Concrete\Core\Application\Service;
+namespace Concrete\Core\Application\Service\UI;
 use Controller;
 use \Concrete\Core\Foundation\Object;
 

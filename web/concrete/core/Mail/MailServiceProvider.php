@@ -6,7 +6,7 @@ class MailServiceProvider extends ServiceProvider {
 
 	public function register() {
 		$register = array(
-			'mail' => '\Concrete\Core\Mail\Service'
+			'helper/mail' => '\Concrete\Core\Mail\Service'
 		);
 
 		foreach($register as $key => $value) {

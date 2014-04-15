@@ -6,7 +6,7 @@ class FeedServiceProvider extends ServiceProvider {
 
 	public function register() {
 		$singletons = array(
-			'feed' => '\Concrete\Core\Feed\FeedService'
+			'helper/feed' => '\Concrete\Core\Feed\FeedService'
 		);
 
 		foreach($singletons as $key => $value) {

@@ -111,7 +111,7 @@ abstract class Progress extends Object {
 		if (!is_array($r) || (!$r['wpID'])) { 
 			return false;
 		}
-        $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Workflow\\Progress\\' . Concrete::make('text')->camelcase($r['wpCategoryHandle']) . 'Progress');
+        $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Workflow\\Progress\\' . Concrete::make('helper/text')->camelcase($r['wpCategoryHandle']) . 'Progress');
 		
 		$wp = new $class;
 		$wp->setPropertiesFromArray($r);

@@ -20,6 +20,7 @@ use \Concrete\Core\Application\Application;
 use \Concrete\Core\Foundation\ClassAliasList;
 use \Concrete\Core\Foundation\Service\ProviderList;
 use \Concrete\Core\Support\Facade\Facade;
+use \Concrete\Core\Permission\Key\Key as PermissionKey;
 use \Patchwork\Utf8\Bootup;
 
 /**
@@ -28,6 +29,7 @@ use \Patchwork\Utf8\Bootup;
  * ----------------------------------------------------------------------------
  */
 $cms = new Application();
+$cms->handleExceptions();
 $cms->instance('app', $cms);
 
 
@@ -66,12 +68,13 @@ $list->registerProviders(require DIR_BASE_CORE . '/config/services.php');
  * ----------------------------------------------------------------------------
  * Handle trailing slashes/non trailing slashes in URL. Has to come after 
  * we define our core services because our redirect routines use some of those
- * services
+ * services. Setup file cache directories. Has to come after we define services
+ * because we use the file service.
  * ----------------------------------------------------------------------------
  */
 $cms->handleURLSlashes();
 $cms->handleBaseURLRedirection();
-
+$cms->setupFilesystem();
 
 
 /**
@@ -117,13 +120,20 @@ $request = Request::getInstance();
 
 /**
  * ----------------------------------------------------------------------------
- * If we haven't installed, then we need to reroute.
+ * If we haven't installed, then we need to reroute. If we have, and we're 
+ * on the install page, and we haven't installed, then we need to dispatch
+ * early and exit.
  * ----------------------------------------------------------------------------
  */
-if (!$cms->isInstalled() && !$cms->isRunThroughCommandLineInterface() && !$request->matches('/install/*') && $request->getPath() != '/install') {
-	Redirect::to('/install')->send();
-}
+if (!$cms->isInstalled()) {
+	if (!$cms->isRunThroughCommandLineInterface() && !$request->matches('/install/*') && $request->getPath() != '/install') {
+		Redirect::to('/install')->send();
+	}
 
+	$response = $cms->dispatch($request);
+	$response->send();
+	$cms->shutdown();
+}
 
 
 /**
@@ -136,6 +146,47 @@ if ($response) {
 	$response->send();
 	$cms->shutdown();
 }
+
+
+
+/**
+ * ----------------------------------------------------------------------------
+ * Set the active language for the site, based either on the site locale, or the
+ * current user record. This can be changed later as well, during runtime.
+ * Start localization library.
+ * ----------------------------------------------------------------------------
+ */
+$u = new User();
+Localization::setLocale($u->getUserLanguageToDisplay());
+Localization::init();
+
+
+
+/**
+ * ----------------------------------------------------------------------------
+ * Load database-backed preferences, including items stored in the Config
+ * object, localization stuff and dates.
+ * ----------------------------------------------------------------------------
+ */
+require DIR_BASE_CORE . '/bootstrap/preferences.php';
+
+
+
+/**
+ * ----------------------------------------------------------------------------
+ * Now we load all installed packages, and run package events on them.
+ * ----------------------------------------------------------------------------
+ */
+$cms->setupPackages();
+
+
+
+/** 
+ * ----------------------------------------------------------------------------
+ * Load all permission keys into our local cache.
+ * ----------------------------------------------------------------------------
+ */
+PermissionKey::loadAll();
 
 
 

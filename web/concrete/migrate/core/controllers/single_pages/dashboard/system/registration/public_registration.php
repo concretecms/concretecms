@@ -6,7 +6,6 @@ class Concrete5_Controller_Page_Dashboard_System_Registration_PublicRegistration
 
 	public function update_registration_type() { 
 		if ($this->isPost()) {
-			Config::save('ENABLE_OPENID_AUTHENTICATION', ($this->post('enable_openID')?true:false));
 			Config::save('USER_REGISTRATION_WITH_EMAIL_ADDRESS', ($this->post('email_as_username')?true:false));
 			
 			Config::save('REGISTRATION_TYPE',$this->post('registration_type'));
@@ -16,7 +15,6 @@ class Concrete5_Controller_Page_Dashboard_System_Registration_PublicRegistration
 				case "enabled":
 					Config::save('ENABLE_REGISTRATION', true);
 					Config::save('USER_VALIDATE_EMAIL', false);	
-					Config::save('USER_VALIDATE_EMAIL_REQUIRED', false);
 					Config::save('USER_REGISTRATION_APPROVAL_REQUIRED', false);
 					Config::save('REGISTER_NOTIFICATION', $this->post('register_notification'));
 					Config::save('EMAIL_ADDRESS_REGISTER_NOTIFICATION', Loader::helper('security')->sanitizeString($this->post('register_notification_email')));
@@ -25,7 +23,6 @@ class Concrete5_Controller_Page_Dashboard_System_Registration_PublicRegistration
 				case "validate_email":
 					Config::save('ENABLE_REGISTRATION', true);
 					Config::save('USER_VALIDATE_EMAIL', true);	
-					Config::save('USER_VALIDATE_EMAIL_REQUIRED', true);
 					Config::save('USER_REGISTRATION_APPROVAL_REQUIRED', false);
 					Config::save('REGISTER_NOTIFICATION', $this->post('register_notification'));
 					Config::save('EMAIL_ADDRESS_REGISTER_NOTIFICATION', Loader::helper('security')->sanitizeString($this->post('register_notification_email')));
@@ -35,7 +32,6 @@ class Concrete5_Controller_Page_Dashboard_System_Registration_PublicRegistration
 					Config::save('ENABLE_REGISTRATION', true);
 					Config::save('USER_REGISTRATION_APPROVAL_REQUIRED', true);
 					Config::save('USER_VALIDATE_EMAIL', false);	
-					Config::save('USER_VALIDATE_EMAIL_REQUIRED', false);
 					Config::save('REGISTER_NOTIFICATION', $this->post('register_notification'));
 					Config::save('EMAIL_ADDRESS_REGISTER_NOTIFICATION', Loader::helper('security')->sanitizeString($this->post('register_notification_email')));
 				break;
@@ -57,7 +53,6 @@ class Concrete5_Controller_Page_Dashboard_System_Registration_PublicRegistration
 		}
     $this->token = Loader::helper('validation/token');
 
-    $this->set('enable_openID',ENABLE_OPENID_AUTHENTICATION);
     $this->set('email_as_username', USER_REGISTRATION_WITH_EMAIL_ADDRESS);
     $this->set('registration_type',REGISTRATION_TYPE);
     $this->set('user_timezones',ENABLE_USER_TIMEZONES);

@@ -77,10 +77,11 @@ defined('NAMESPACE_SEGMENT_APPLICATION') or define('NAMESPACE_SEGMENT_APPLICATIO
 
 /**
  * ----------------------------------------------------------------------------
- * Base URL and Relative Directory
+ * Base URL, Relative Directory and URL rewriting
  * ----------------------------------------------------------------------------
  */
 defined('REDIRECT_TO_BASE_URL') or define('REDIRECT_TO_BASE_URL', false);
+defined('URL_REWRITING_ALL') or define('URL_REWRITING_ALL', false);
 if (!defined('BASE_URL')) {
 	if(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) {
 		define('BASE_URL', 'https://' . $_SERVER['HTTP_HOST']);
@@ -165,6 +166,8 @@ define('DIRNAME_ELEMENTS_PAGE_TYPES_PUBLISH_TARGET_TYPES_FORM', 'form');
 define('DIRNAME_CONVERSATIONS', 'conversation');
 define('DIRNAME_CONVERSATION_EDITOR', 'editor');
 define('DIRNAME_VENDOR', 'vendor');
+define('DIRNAME_LANGUAGES_SITE_INTERFACE', 'site');
+
 
 
 /**
@@ -252,6 +255,7 @@ define('DIR_FILES_TRASH_STANDARD', DIR_BASE . '/files/trash');
 define('DIR_FILES_BACKUPS', DIR_BASE . '/files/backups');
 define('DIR_AL_ICONS', DIR_BASE_CORE . '/images/icons/filetypes');
 define('DIR_ORM_ENTITIES', DIR_BASE_CORE . '/config/entities');
+define('DIR_LANGUAGES_SITE_INTERFACE', DIR_LANGUAGES . '/' . DIRNAME_LANGUAGES_SITE_INTERFACE);
 
 
 
@@ -290,7 +294,8 @@ defined('CACHE_LIFETIME') or define('CACHE_LIFETIME', 21600); // 6 hours
 
 /**
  * ----------------------------------------------------------------------------
- * Relative paths to certain items
+ * Relative paths to certain directories and assets. Actually accesses file
+ * system
  * ----------------------------------------------------------------------------
  */
 define('REL_DIR_STARTING_POINT_PACKAGES', DIR_REL . '/config/install/packages');
@@ -306,6 +311,24 @@ define('REL_DIR_FILES_CACHE', REL_DIR_FILES_UPLOADED . '/cache');
 define('REL_DIR_AL_ICONS', ASSETS_URL_IMAGES . '/icons/filetypes');
 define('REL_DIR_FILES_AVATARS', REL_DIR_FILES_UPLOADED . '/avatars');
 define('REL_DIR_FILES_AVATARS_STOCK', REL_DIR_FILES_UPLOADED . '/stock_avatars');
+define('REL_DIR_LANGUAGES_SITE_INTERFACE', DIR_REL . '/' . DIRNAME_LANGUAGES . '/' . DIRNAME_LANGUAGES_SITE_INTERFACE);
+
+
+
+/**
+ * ----------------------------------------------------------------------------
+ * Relative paths to tools. Passes through concrete5.
+ * ----------------------------------------------------------------------------
+ */
+if (URL_REWRITING_ALL == true) {
+	define('REL_DIR_FILES_TOOLS', DIR_REL . '/tools');
+	define('REL_DIR_FILES_TOOLS_REQUIRED', DIR_REL . '/tools/required'); // front-end
+} else {
+	define('REL_DIR_FILES_TOOLS', DIR_REL . '/' . DISPATCHER_FILENAME . '/tools');
+	define('REL_DIR_FILES_TOOLS_REQUIRED', DIR_REL . '/' . DISPATCHER_FILENAME . '/tools/required'); // front-end
+}
+define('REL_DIR_FILES_TOOLS_BLOCKS', REL_DIR_FILES_TOOLS . '/blocks'); // this maps to the /tools/ directory in the blocks subdir
+define('REL_DIR_FILES_TOOLS_PACKAGES', REL_DIR_FILES_TOOLS . '/packages'); 
 
 
 
@@ -369,6 +392,7 @@ defined('SITEMAP_PAGES_LIMIT') or define('SITEMAP_PAGES_LIMIT', 100);
 defined('DELETE_PAGES_LIMIT') or define('DELETE_PAGES_LIMIT', 10);
 defined('COPY_PAGES_LIMIT') or define('COPY_PAGES_LIMIT', 10);
 defined('PAGE_SEARCH_INDEX_BATCH_SIZE') or define('PAGE_SEARCH_INDEX_BATCH_SIZE', 200);
+defined('JOB_QUEUE_BATCH_SIZE') or define('JOB_QUEUE_BATCH_SIZE', 10);
 
 
 
@@ -473,7 +497,7 @@ defined('USER_USERNAME_MINIMUM') or define('USER_USERNAME_MINIMUM', 3);
 defined('USER_USERNAME_MAXIMUM') or define('USER_USERNAME_MAXIMUM', 64);
 defined('USER_PASSWORD_MINIMUM') or define('USER_PASSWORD_MINIMUM', 5);
 defined('USER_PASSWORD_MAXIMUM') or define('USER_PASSWORD_MAXIMUM', 128);
-defined('USER_PASSWORD_MAXIMUM') or define('USER_PASSWORD_MAXIMUM', 128);
+defined('USER_USERNAME_ALLOW_SPACES') or define('USER_USERNAME_ALLOW_SPACES', false);
 defined('GROUP_BADGE_DEFAULT_POINT_VALUE') or define('GROUP_BADGE_DEFAULT_POINT_VALUE', 50);
 defined('NEWSFLOW_VIEWED_THRESHOLD') or define('NEWSFLOW_VIEWED_THRESHOLD', 86400); // once a day
 defined('AVATAR_WIDTH') or define('AVATAR_WIDTH', '80');
@@ -483,6 +507,11 @@ defined('SESSION') or define('SESSION', 'CONCRETE5');
 defined('USER_DELETED_CONVERSATION_ID') or define('USER_DELETED_CONVERSATION_ID', 0);
 defined('PASSWORD_HASH_PORTABLE') or define('PASSWORD_HASH_PORTABLE', false);
 defined('PASSWORD_HASH_COST_LOG2') or define('PASSWORD_HASH_COST_LOG2', 12);
+defined('USER_PRIVATE_MESSAGE_MAX') or define('USER_PRIVATE_MESSAGE_MAX', 20);
+defined('USER_PRIVATE_MESSAGE_MAX_TIME_SPAN') or define('USER_PRIVATE_MESSAGE_MAX_TIME_SPAN', '15'); // minutes;
+
+/* -- Jobs -- */
+defined('ENABLE_JOB_SCHEDULING') or define('ENABLE_JOB_SCHEDULING', true);
 
 
 
@@ -508,6 +537,9 @@ define('SESSION_MAX_LIFETIME', 7200); // 2 hours
 define('USER_FOREVER_COOKIE_LIFETIME', 1209600); // 14 days
 define('USER_CHANGE_PASSWORD_URL_LIFETIME',  7200);
 define('ONLINE_NOW_TIMEOUT', 300);
+define('UVTYPE_REGISTER', 0);
+define('UVTYPE_CHANGE_PASSWORD', 1);
+define('UVTYPE_LOGIN_FOREVER', 2);
 
 /* -- Pages -- */
 define('CHECKOUT_TIMEOUT', 300); // # in seconds.

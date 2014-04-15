@@ -133,7 +133,7 @@ class User extends Object {
 				$row = $r->fetchRow(); 
 				$pw_is_valid_legacy = (defined('PASSWORD_SALT') && User::legacyEncryptPassword($password) == $row['uPassword']);
 				$pw_is_valid = $pw_is_valid_legacy || $this->getUserPasswordHasher()->checkPassword($password, $row['uPassword']); 
-				if ($row['uID'] && $row['uIsValidated'] === '0' && defined('USER_VALIDATE_EMAIL_REQUIRED') && USER_VALIDATE_EMAIL_REQUIRED == TRUE) {
+				if ($row['uID'] && $row['uIsValidated'] === '0' && defined('USER_VALIDATE_EMAIL') && USER_VALIDATE_EMAIL == TRUE) {
 					$this->loadError(USER_NON_VALIDATED);
 				} else if ($row['uID'] && $row['uIsActive'] && $pw_is_valid) {
 					$this->uID = $row['uID'];
@@ -383,6 +383,21 @@ class User extends Object {
 	public function getUserDefaultLanguage() {
 		return $this->uDefaultLanguage;
 	}
+
+	/**
+	 * Checks to see if the current user object is registered. If so, it queries that records
+	 * default language. Otherwise, it falls back to sitewide settings.
+	 */
+	public function getUserLanguageToDisplay() {
+		if ($this->getUserDefaultLanguage() != '') {
+			return $this->getUserDefaultLanguage();
+		} else if (defined('LOCALE')) {
+			return LOCALE;
+		} else {
+			return SITE_LOCALE;
+		}
+	}
+
 
 	function refreshUserGroups() {
 		$session = Concrete::make('session');

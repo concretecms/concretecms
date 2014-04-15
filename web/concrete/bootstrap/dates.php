@@ -1,7 +1,10 @@
-<?
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die('Access Denied.');
 
-# New date constants
+/**
+ * ----------------------------------------------------------------------------
+ * Assets (Images, JS, etc....) URLs
+ * ----------------------------------------------------------------------------
+ */
 
 defined('DATE_APP_GENERIC_MDYT_FULL') or define('DATE_APP_GENERIC_MDYT_FULL', t('F d, Y \a\t g:i A'));
 defined('DATE_APP_GENERIC_MDYT_FULL_SECONDS') or define('DATE_APP_GENERIC_MDYT_FULL_SECONDS', t('F d, Y \a\t g:i:s A'));

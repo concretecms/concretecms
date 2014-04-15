@@ -9,6 +9,8 @@ use Router;
 use Request;
 use Environment;
 use Database;
+use User;
+use View;
 
 class Application extends Container {
 
@@ -21,23 +23,81 @@ class Application extends Container {
 		return $this->installed;
 	}
 
+	public function handleExceptions() {
+		$app = $this;
+		set_exception_handler(function() use ($app) {
+			// log if setup to do so
+			if (defined('ENABLE_LOG_ERRORS') && ENABLE_LOG_ERRORS) {
+				$db = Database::get();
+				if ($db->isConnected()) {
+					$l = new Log(LOG_TYPE_EXCEPTIONS, true, true);
+					$l->write(t('Exception Occurred: ') . sprintf("%s:%d %s (%d)\n", $e->getFile(), $e->getLine(), $e->getMessage(), $e->getCode()));
+					$l->write($e->getTraceAsString());
+					$l->close();
+				}
+			}
+
+			if (defined('SITE_DEBUG_LEVEL') && SITE_DEBUG_LEVEL == DEBUG_DISPLAY_ERRORS) {
+				View::renderError(t('An unexpected error occurred.'), $e->getMessage(), $e);		
+			} else {
+				View::renderError(t('An unexpected error occurred.'), t('An error occurred while processing this request.'), $e);
+			}
+
+			$app->shutdown();
+		});
+	}
+
 	/**
 	 * Checks to see whether we should deliver a concrete5 response from the page cache
 	 */
 	public function checkPageCache(Request $request) {
-		if ($this->isInstalled()) {
-			$library = PageCache::getLibrary();
-			if ($library->shouldCheckCache($request)) {
-			    $record = $library->getRecord($request);
-			    if ($record instanceof PageCacheRecord) {
-			    	if ($record->validate()) {
-				    	return $library->deliver($record);
-				    }
+		$library = PageCache::getLibrary();
+		if ($library->shouldCheckCache($request)) {
+		    $record = $library->getRecord($request);
+		    if ($record instanceof PageCacheRecord) {
+		    	if ($record->validate()) {
+			    	return $library->deliver($record);
 			    }
-			}	
-		}
+		    }
+		}	
 		return false;
 	}
+
+	/** 
+	 * Run startup and localization events on any installed packages.
+	 */
+	public function setupPackages() {
+		$pla = \Concrete\Core\Package\PackageList::get();
+		$pl = $pla->getPackages();
+		foreach($pl as $p) {
+			if ($p->isPackageInstalled()) {
+				$pkg = Loader::package($p->getPackageHandle());
+				if (is_object($pkg)) {
+					// handle updates
+					if (ENABLE_AUTO_UPDATE_PACKAGES) {
+						$pkgInstalledVersion = $p->getPackageVersion();
+						$pkgFileVersion = $pkg->getPackageVersion();
+						if (version_compare($pkgFileVersion, $pkgInstalledVersion, '>')) {
+							$currentLocale = Localization::activeLocale();
+							if ($currentLocale != 'en_US') {
+								Localization::changeLocale('en_US');
+							}
+							$p->upgradeCoreData();
+							$p->upgrade();
+							if ($currentLocale != 'en_US') {
+								Localization::changeLocale($currentLocale);
+							}
+						}
+					}
+					$pkg->setupPackageLocalization();
+					if (method_exists($pkg, 'on_start')) {
+						$pkg->on_start();
+					}
+				}
+			}
+		}
+	}
+
 
 	/**
 	 * Initializes concrete5
@@ -45,6 +105,26 @@ class Application extends Container {
 	public function __construct() {
 		if (defined('CONFIG_FILE_EXISTS')) {
 			$this->installed = true;
+		}
+	}
+
+	/**
+	 * Ensure we have a cache directory
+	 */
+	public function setupFilesystem() {
+		if (!defined('FILE_PERMISSIONS_MODE')) {
+			$perm = $this->make('helper/file')->getCreateFilePermissions()->file;
+			$perm ? define('FILE_PERMISSIONS_MODE', $perm) : define('FILE_PERMISSIONS_MODE', 0664);
+		}
+		if (!defined('DIRECTORY_PERMISSIONS_MODE')) {
+			$perm = $this->make('helper/file')->getCreateFilePermissions()->file;
+			$perm ? define('DIRECTORY_PERMISSIONS_MODE', $perm) : define('DIRECTORY_PERMISSIONS_MODE', 0775);
+		}
+		if (defined('DIR_FILES_CACHE') && !is_dir(DIR_FILES_CACHE)) {
+			@mkdir(DIR_FILES_CACHE);
+			@chmod(DIR_FILES_CACHE, DIRECTORY_PERMISSIONS_MODE);
+			@touch(DIR_FILES_CACHE . '/index.html');
+			@chmod(DIR_FILES_CACHE . '/index.html', FILE_PERMISSIONS_MODE);
 		}
 	}
 
@@ -102,10 +182,59 @@ class Application extends Container {
 		}
 	}
 
+	/**
+	 * If we have job scheduling running through the site, we check to see if it's time to go for it.
+	 */
+	protected function handleScheduledJobs() {
+		if ($this->isInstalled() && ENABLE_JOB_SCHEDULING) {
+			$c = Page::getCurrentPage();
+			if($c instanceof Page && !$c->isAdminArea()) {
+				// check for non dashboard page
+				$jobs = Job::getList(true);
+				$auth = Job::generateAuth();
+				$url = "";
+				// jobs
+				if(count($jobs)) {
+					foreach($jobs as $j) {
+						if($j->isScheduledForNow()) {
+							$url = BASE_URL . View::url('/tools/required/jobs/run_single?auth=' . $auth . '&jID=' . $j->getJobID());
+							break;
+						}
+					}
+				}
+			
+				// job sets
+				if(!strlen($url)) {
+					$jSets = JobSet::getList();
+					if(is_array($jSets) && count($jSets)) {
+						foreach($jSets as $set) {
+							if($set->isScheduledForNow()) {
+								$url = BASE_URL . View::url('/tools/required/jobs?auth=' . $auth . '&jsID=' . $set->getJobSetID());
+								break;
+							}
+						}
+					}
+				}
+			
+				if(strlen($url)) {
+					$ch = curl_init($url);
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+					curl_setopt($ch, CURLOPT_HEADER, 0);
+					curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,1);
+					curl_setopt($ch,CURLOPT_TIMEOUT,1);
+					$res = curl_exec($ch);
+				}
+			}
+		}
+	}
+
+
+
 	/** 
 	 * Turns off the lights.
 	 */
 	public function shutdown() {
+		$this->handleScheduledJobs();
 		$db = Database::get();
 		if ($db->isConnected()) {
 			$db->close();
@@ -117,6 +246,7 @@ class Application extends Container {
 			$env->clearOverrideCache();
 		}
 	}
+
 
 	/**
 	 * Inspects the request and determines what to serve.
@@ -139,6 +269,29 @@ class Application extends Container {
 			$response = $router->execute($route, $matched);
 		}
 		return $response;
+	}
+
+	protected function getEarlyDispatchResponse() {
+		if (!User::isLoggedIn()) {
+			User::verifyAuthTypeCookie();
+		}		
+		if (User::isLoggedIn()) {		
+			// check to see if this is a valid user account
+			$u = new User();
+			$valid = $u->checkLogin();
+			if (!$valid) {
+				$isActive = $u->isActive();
+				$u->logout();
+				if (!$isActive) {
+					return Redirect::to('/login', 'account_deactivated')->send();
+				} else {
+					$v = new View('/user_error');
+					$v->setViewTheme('concrete');
+					$contents = $v->render();
+					return new Response($contents, 403);
+				}
+			}
+		}
 	}
 
 

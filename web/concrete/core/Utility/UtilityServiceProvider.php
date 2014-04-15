@@ -6,11 +6,11 @@ class UtilityServiceProvider extends ServiceProvider {
 
 	public function register() {
 		$singletons = array(
-			'text' => '\Concrete\Core\Utility\Service\Text',
-			'arrays' => '\Concrete\Core\Utility\Service\Arrays',
-			'number' => '\Concrete\Core\Utility\Service\Number',
-			'xml' => '\Concrete\Core\Utility\Service\Xml',
-			'url' => '\Concrete\Core\Utility\Service\Url'
+			'helper/text' => '\Concrete\Core\Utility\Service\Text',
+			'helper/arrays' => '\Concrete\Core\Utility\Service\Arrays',
+			'helper/number' => '\Concrete\Core\Utility\Service\Number',
+			'helper/xml' => '\Concrete\Core\Utility\Service\Xml',
+			'helper/url' => '\Concrete\Core\Utility\Service\Url'
 
 		);
 

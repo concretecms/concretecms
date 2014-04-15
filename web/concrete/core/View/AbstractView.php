@@ -3,6 +3,8 @@ namespace Concrete\Core\View;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Request;
 use URL;
+use Loader;
+
 abstract class AbstractView {
 
 	protected static $requestInstance;

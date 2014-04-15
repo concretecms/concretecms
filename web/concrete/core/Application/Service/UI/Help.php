@@ -1,6 +1,6 @@
 <?
 
-namespace Concrete\Core\Application\Service;
+namespace Concrete\Core\Application\Service\UI;
 use User;
 
 class Help {

@@ -6,8 +6,8 @@ class HttpServiceProvider extends ServiceProvider {
 
 	public function register() {
 		$singletons = array(
-			'ajax' => '\Concrete\Core\Http\Service\Ajax',
-			'json' => '\Concrete\Core\Http\Service\Json'
+			'helper/ajax' => '\Concrete\Core\Http\Service\Ajax',
+			'helper/json' => '\Concrete\Core\Http\Service\Json'
 
 		);
 

@@ -9,7 +9,7 @@ class Loader {
 	}
 	
 	public static function helper($service, $pkgHandle = false) {
-		return Concrete::make($service);
+		return Concrete::make('helper/' . $service);
 	}
 
 	public static function packageElement($file, $pkgHandle, $args = null) {
