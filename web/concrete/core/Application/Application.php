@@ -49,6 +49,13 @@ class Application extends Container {
 	}
 
 	/**
+	 * Returns true if the app is run through the command line
+	 */
+	public function isRunThroughCommandLineInterface() {
+		return PHP_SAPI == 'cli';
+	}
+
+	/**
 	 * Using the configuration value, determines whether we need to redirect to a URL with
 	 * a trailing slash or not.
 	 * @return void 

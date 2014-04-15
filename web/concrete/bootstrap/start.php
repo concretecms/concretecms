@@ -97,6 +97,17 @@ require DIR_BASE_CORE . '/config/file_types.php';
 
 /**
  * ----------------------------------------------------------------------------
+ * If we are running through the command line, we don't proceed any further
+ * ----------------------------------------------------------------------------
+ */
+if ($cms->isRunThroughCommandLineInterface()) {
+	return $cms;
+}
+
+
+
+/**
+ * ----------------------------------------------------------------------------
  * Obtain the Request object.
  * ----------------------------------------------------------------------------
  */
@@ -109,7 +120,7 @@ $request = Request::getInstance();
  * If we haven't installed, then we need to reroute.
  * ----------------------------------------------------------------------------
  */
-if (!$cms->isInstalled() &&	!$request->matches('/install/*') && $request->getPath() != '/install') {
+if (!$cms->isInstalled() && !$cms->isRunThroughCommandLineInterface() && !$request->matches('/install/*') && $request->getPath() != '/install') {
 	Redirect::to('/install')->send();
 }
 

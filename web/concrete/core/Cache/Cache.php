@@ -7,6 +7,7 @@ use Zend_Cache;
 use Zend_Translate;
 use Environment;
 use CacheLocal as ConcreteCacheLocal;
+use Loader;
 
 class Cache {
 	

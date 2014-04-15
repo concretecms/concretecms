@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Cache\Page;
 use \Page as ConcretePage;
+use Loader;
 
 class FilePageCache extends PageCache {
 
