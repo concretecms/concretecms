@@ -6,22 +6,22 @@ class ApplicationServiceProvider extends ServiceProvider {
 
 	public function register() {
 		$singletons = array(
-			'concrete/asset_library' => '\Concrete\Core\Application\Service\FileManager',
-			'concrete/file_manager' => '\Concrete\Core\Application\Service\FileManager',
-			'concrete/avatar' => '\Concrete\Core\Application\Service\Composer',
-			'concrete/composer' => '\Concrete\Core\Application\Service\FileManager',
-			'concrete/dashboard' => '\Concrete\Core\Application\Service\Dashboard',
-			'concrete/dashboard/sitemap' => '\Concrete\Core\Application\Service\Dashboard\Sitemap',
-			'concrete/image' => '\Concrete\Core\Application\Service\Image',
-			'concrete/file_manager' => '\Concrete\Core\Application\Service\FileManager',
-			'concrete/ui' => '\Concrete\Core\Application\Service\UI',
-			'concrete/ui/menu' => '\Concrete\Core\Application\Service\UI\Menu',
-			'concrete/ui/help' => '\Concrete\Core\Application\Service\UI\Help',
-			'concrete/upgrade' => '\Concrete\Core\Application\Service\Upgrade',
-			'concrete/urls' => '\Concrete\Core\Application\Service\Urls',
-			'concrete/user' => '\Concrete\Core\Application\Service\User',
-			'concrete/validation' => '\Concrete\Core\Application\Service\Validation',
-			'rating' => '\Concrete\Attribute\Rating\Service'
+			'helper/concrete/asset_library' => '\Concrete\Core\Application\Service\FileManager',
+			'helper/concrete/file_manager' => '\Concrete\Core\Application\Service\FileManager',
+			'helper/concrete/avatar' => '\Concrete\Core\Application\Service\Composer',
+			'helper/concrete/composer' => '\Concrete\Core\Application\Service\FileManager',
+			'helper/concrete/dashboard' => '\Concrete\Core\Application\Service\Dashboard',
+			'helper/concrete/dashboard/sitemap' => '\Concrete\Core\Application\Service\Dashboard\Sitemap',
+			'helper/concrete/image' => '\Concrete\Core\Application\Service\Image',
+			'helper/concrete/file_manager' => '\Concrete\Core\Application\Service\FileManager',
+			'helper/concrete/ui' => '\Concrete\Core\Application\Service\UI',
+			'helper/concrete/ui/menu' => '\Concrete\Core\Application\Service\UI\Menu',
+			'helper/concrete/ui/help' => '\Concrete\Core\Application\Service\UI\Help',
+			'helper/concrete/upgrade' => '\Concrete\Core\Application\Service\Upgrade',
+			'helper/concrete/urls' => '\Concrete\Core\Application\Service\Urls',
+			'helper/concrete/user' => '\Concrete\Core\Application\Service\User',
+			'helper/concrete/validation' => '\Concrete\Core\Application\Service\Validation',
+			'helper/rating' => '\Concrete\Attribute\Rating\Service'
 		);
 
 		foreach($singletons as $key => $value) {

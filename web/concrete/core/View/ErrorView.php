@@ -1,9 +1,10 @@
 <?
 
 namespace Concrete\Core\View;
-use View;
+use View as CoreView;
+use Environment;
 
-class ErrorView extends View {
+class ErrorView extends CoreView {
 	
 	protected $error;
 
@@ -26,10 +27,6 @@ class ErrorView extends View {
 
 	public function getScopeItems() {
 		return array('innerContent' => $this->error->content, 'titleContent' => $this->error->title);
-	}
-	public function finishRender() {
-		require(DIR_BASE_CORE . '/startup/shutdown.php');
-		exit;
 	}
 
 }

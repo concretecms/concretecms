@@ -13,8 +13,8 @@ $v->addFooterItem('<script type="text/javascript">$(function() { ConcreteToolbar
 if (ENABLE_PROGRESSIVE_PAGE_REINDEX && Config::get('DO_PAGE_REINDEX_CHECK')) {
 	$v->addFooterItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
 }
-if (LANGUAGE != 'en') {
-	$v->addFooterItem($html->javascript('i18n/ui.datepicker-'.LANGUAGE.'.js'));
+if (Localization::activeLanguage() != 'en') {
+	$v->addFooterItem($html->javascript('i18n/ui.datepicker-'.Localization::activeLanguage().'.js'));
 }
 
 $valt = Loader::helper('validation/token');

@@ -7,6 +7,8 @@ use URL;
 use Localization;
 use User as ConcreteUser;
 use Permissions;
+use Session;
+
 class Dashboard {
 
 

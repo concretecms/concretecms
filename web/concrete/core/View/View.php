@@ -6,6 +6,8 @@ use Environment;
 use Events;
 use PageTheme;
 use Page;
+use Loader;
+
 class View extends AbstractView {
 
 	protected $viewPath;

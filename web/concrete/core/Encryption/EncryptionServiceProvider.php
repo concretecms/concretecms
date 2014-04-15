@@ -6,7 +6,7 @@ class EncryptionServiceProvider extends ServiceProvider {
 
 	public function register() {
 		$singletons = array(
-			'encryption' => '\Concrete\Core\Encryption\EncryptionService'
+			'helper/encryption' => '\Concrete\Core\Encryption\EncryptionService'
 		);
 
 		foreach($singletons as $key => $value) {

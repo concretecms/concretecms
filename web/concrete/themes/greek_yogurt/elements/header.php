@@ -1,6 +1,6 @@
 <?php  defined('C5_EXECUTE') or die("Access Denied."); ?>
 <!DOCTYPE html>
-<html lang="<?=LANGUAGE?>">
+<html lang="<?=Localization::activeLanguage()?>">
 
 <head>
 

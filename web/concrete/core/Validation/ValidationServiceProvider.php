@@ -6,21 +6,21 @@ class ValidationServiceProvider extends ServiceProvider {
 
 	public function register() {
 		$singletons = array(
-			'validation/antispam' => '\Concrete\Core\Antispam\Service',
-			'validation/captcha' => '\Concrete\Core\Captcha\Service',
-			'validation/error' => '\Concrete\Core\Error\Error',
-			'validation/file' => '\Concrete\Core\File\ValidationService',
-			'validation/form' => '\Concrete\Core\Form\Service\Validation',
-			'validation/identifier' => '\Concrete\Core\Utility\Service\Identifier',
-			'validation/ip' => '\Concrete\Core\Permission\IPService',
-			'validation/numbers' => '\Concrete\Core\Utility\Service\Validation\Numbers',
-			'validation/strings' => '\Concrete\Core\Utility\Service\Validation\Strings',
-			'validation/banned_words' => '\Concrete\Core\Validation\BannedWord\Service',
-			'security' => '\Concrete\Core\Validation\SanitizeService'
+			'helper/validation/antispam' => '\Concrete\Core\Antispam\Service',
+			'helper/validation/captcha' => '\Concrete\Core\Captcha\Service',
+			'helper/validation/error' => '\Concrete\Core\Error\Error',
+			'helper/validation/file' => '\Concrete\Core\File\ValidationService',
+			'helper/validation/form' => '\Concrete\Core\Form\Service\Validation',
+			'helper/validation/identifier' => '\Concrete\Core\Utility\Service\Identifier',
+			'helper/validation/ip' => '\Concrete\Core\Permission\IPService',
+			'helper/validation/numbers' => '\Concrete\Core\Utility\Service\Validation\Numbers',
+			'helper/validation/strings' => '\Concrete\Core\Utility\Service\Validation\Strings',
+			'helper/validation/banned_words' => '\Concrete\Core\Validation\BannedWord\Service',
+			'helper/security' => '\Concrete\Core\Validation\SanitizeService'
 
 		);
 		$registers = array(
-			'validation/token' => '\Concrete\Core\Validation\CSRF\Token'
+			'helper/validation/token' => '\Concrete\Core\Validation\CSRF\Token'
 		);
 
 		foreach($singletons as $key => $value) {
