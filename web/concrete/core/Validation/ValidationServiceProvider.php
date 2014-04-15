@@ -11,7 +11,7 @@ class ValidationServiceProvider extends ServiceProvider {
 			'validation/error' => '\Concrete\Core\Error\Error',
 			'validation/file' => '\Concrete\Core\File\ValidationService',
 			'validation/form' => '\Concrete\Core\Form\Service\Validation',
-			'validation/identifier' => '\Concrete\Core\Utility\IdentifierService',
+			'validation/identifier' => '\Concrete\Core\Utility\Service\Identifier',
 			'validation/ip' => '\Concrete\Core\Permission\IPService',
 			'validation/numbers' => '\Concrete\Core\Utility\Service\Validation\Numbers',
 			'validation/strings' => '\Concrete\Core\Utility\Service\Validation\Strings',

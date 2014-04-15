@@ -11,6 +11,7 @@ use Page;
 use GroupList;
 use Session;
 use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use Concrete;
 
 class User extends Object {
 
@@ -52,7 +53,7 @@ class User extends Object {
 				$session->set('uID', $row['uID']);
 				$session->set('uName', $row['uID']);
 				$session->set('uBlockTypesSet', false);
-				$session->set('uGroups', $this->uGroups);
+				$session->set('uGroups', $nu->uGroups);
 				$session->set('uLastOnline', $row['uLastOnline']);
 				$session->set('uTimezone', $row['uTimezone']);
 				$session->set('uDefaultLanguage', $row['uDefaultLanguage']);

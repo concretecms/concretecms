@@ -6,6 +6,7 @@ use \Page as ConcretePage;
 use \Concrete\Core\Page\View\PageView;
 use Permissions;
 use User;
+use Loader;
 
 abstract class PageCache {
 

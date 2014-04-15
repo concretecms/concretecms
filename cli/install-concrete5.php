@@ -113,22 +113,31 @@ if (file_exists(DIR_BASE . '/config/site.php')) {
 }		
 
 
-require $corePath . '/config/base_pre.php';
-require $corePath . '/startup/config_check.php';
-require $corePath . '/startup/updated_core_check.php';
-require $corePath . '/config/base.php';
-require $corePath . '/startup/autoload.php';
-require $corePath . '/config/class_aliases.php';
-require $corePath . '/startup/helpers.php';
-require $corePath . '/startup/file_permission_config.php';
-require $corePath . '/startup/magic_quotes_gpc_check.php';
-require $corePath . '/startup/timezone.php';
-require $corePath . '/startup/file_access_check.php';
-require $corePath . '/config/theme_paths.php';
-require $corePath . '/config/routes.php';
-require $corePath . '/startup/url_check.php';
-require $corePath . '/startup/encoding_check.php';
-require $corePath . '/config/file_types.php';
+/** 
+ * ----------------------------------------------------------------------------
+ * Set required constants, including directory names, attempt to include site configuration file with database
+ * information, attempt to determine if we ought to skip to an updated core, etc...
+ * ----------------------------------------------------------------------------
+ */
+require $corePath . '/bootstrap/configure.php';
+
+
+
+/**
+ * ----------------------------------------------------------------------------
+ * Include all autoloaders
+ * ----------------------------------------------------------------------------
+ */
+require $corePath . '/bootstrap/autoload.php';
+
+
+
+/**
+ * ----------------------------------------------------------------------------
+ * Begin concrete5 startup.
+ * ----------------------------------------------------------------------------
+ */
+$cms = require $corePath . '/bootstrap/start.php';
 
 if ($config['reinstall'] === 'yes') {
 
