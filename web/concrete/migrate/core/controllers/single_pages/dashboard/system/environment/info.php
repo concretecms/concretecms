@@ -38,9 +38,9 @@ class Concrete5_Controller_Page_Dashboard_System_Environment_Info extends Dashbo
 		$ovControllers = $fh->getDirectoryContents(DIR_FILES_CONTROLLERS);
 		$ovElements = $fh->getDirectoryContents(DIR_FILES_ELEMENTS);
 		$ovJobs = $fh->getDirectoryContents(DIR_FILES_JOBS);
-		$ovCSS = $fh->getDirectoryContents(DIR_BASE . '/' . DIRNAME_CSS);
-		$ovJS = $fh->getDirectoryContents(DIR_BASE . '/' . DIRNAME_JAVASCRIPT);
-		$ovLng = $fh->getDirectoryContents(DIR_BASE . '/' . DIRNAME_LANGUAGES);
+		$ovCSS = $fh->getDirectoryContents(DIR_APPLICATION . '/' . DIRNAME_CSS);
+		$ovJS = $fh->getDirectoryContents(DIR_APPLICATION . '/' . DIRNAME_JAVASCRIPT);
+		$ovLng = $fh->getDirectoryContents(DIR_APPLICATION . '/' . DIRNAME_LANGUAGES);
 		$ovMail = $fh->getDirectoryContents(DIR_FILES_EMAIL_TEMPLATES);
 		$ovSingle = $fh->getDirectoryContents(DIR_FILES_CONTENT);
 		$ovThemes = $fh->getDirectoryContents(DIR_FILES_THEMES);

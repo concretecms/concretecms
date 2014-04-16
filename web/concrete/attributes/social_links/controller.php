@@ -107,7 +107,7 @@ class Controller extends AttributeTypeController  {
 		$services = $this->getValue();
 		if (count($services) > 0) {
 			$env = Environment::get();
-			$url = $env->getURL(DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/social_links/view.css');
+			$url = $env->getURL(DIRNAME_ATTRIBUTES . '/social_links/view.css');
 			$this->addHeaderItem(Loader::helper('html')->css($url));
 			$html .=  '<div class="ccm-social-link-attribute-display">';
 			foreach($services as $service => $serviceInfo) {

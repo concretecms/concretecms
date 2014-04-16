@@ -15,6 +15,7 @@ return array(
 	'CollectionAttributeKey' => '\Concrete\Core\Attribute\Key\CollectionKey',
 	'FileAttributeKey' => '\Concrete\Core\Attribute\Key\FileKey',
 	'UserAttributeKey' => '\Concrete\Core\Attribute\Key\UserKey',
+	'AttributeSet' => '\Concrete\Core\Attribute\Set',
 	'AssetList' => '\Concrete\Core\Asset\AssetList',
 	'Router' => '\Concrete\Core\Routing\Router',
 	'RedirectResponse' => '\Concrete\Core\Routing\RedirectResponse',

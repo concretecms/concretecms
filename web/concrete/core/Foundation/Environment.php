@@ -72,20 +72,14 @@ class Environment {
 	 * Builds a list of all overrides
 	 */
 	protected function getOverrides() {
-		$check = array(DIR_FILES_BLOCK_TYPES, DIR_FILES_CONTROLLERS, DIR_FILES_ELEMENTS, 
-			DIR_FILES_JOBS, DIR_BASE . '/' . DIRNAME_CSS, DIR_BASE . '/' . DIRNAME_JAVASCRIPT, DIR_BASE . '/' . DIRNAME_LANGUAGES,
-			DIR_FILES_EMAIL_TEMPLATES, DIR_FILES_CONTENT, DIR_FILES_THEMES, DIR_FILES_TOOLS, DIR_BASE . '/' . DIRNAME_PAGE_TYPES);
-		foreach($check as $loc) {
-			if (is_dir($loc)) {
-				$contents = $this->getDirectoryContents($loc, array(), true);
-				foreach($contents as $f) {
-					if (preg_match('/^.+\.php$/i', $f) || is_dir($f)) {
-						$this->coreOverrides[] = str_replace(DIR_BASE . '/', '', $f);
-					}		
-				}
+
+		if (is_dir(DIR_APPLICATION)) {
+			$contents = $this->getDirectoryContents(DIR_APPLICATION, array(), true);
+			foreach($contents as $f) {
+				$this->coreOverrides[] = str_replace(DIR_APPLICATION . '/', '', $f);
 			}
-			
 		}
+
 		if (is_dir(DIR_PACKAGES_CORE)) { 
 			$this->corePackages = $this->getDirectoryContents(DIR_PACKAGES_CORE);
 		}
@@ -151,8 +145,8 @@ class Environment {
 		}
 			
 		if (in_array($segment, $this->coreOverrides)) {
-			$obj->file = DIR_BASE . '/' . $segment;
-			$obj->url = DIR_REL . '/' . $segment;
+			$obj->file = DIR_APPLICATION . '/' . $segment;
+			$obj->url = REL_DIR_APPLICATION . '/' . $segment;
 			$obj->override = true;
 			$this->cachedOverrides[$segment][''] = $obj;
 			return $obj;
@@ -184,8 +178,8 @@ class Environment {
 			$pkgHandle = $pkgHandle->getPackageHandle();
 		}
 		$obj->override = false;
-		if (file_exists(DIR_BASE . '/' . $segment)) {
-			$obj->file = DIR_BASE . '/' . $segment;
+		if (file_exists(DIR_APPLICATION . '/' . $segment)) {
+			$obj->file = DIR_APPLICATION . '/' . $segment;
 			$obj->override = true;
 		} else if ($pkgHandle) {
 			$dirp1 = DIR_PACKAGES . '/' . $pkgHandle . '/' . $segment;

@@ -12,6 +12,7 @@ use Page;
 use Permissions;
 use UserInfo;
 use UserAttributeKey;
+use Session;
 
 class Login extends PageController {
 
@@ -181,11 +182,11 @@ class Login extends PageController {
 	public function fill_attributes() {
 		try {
 			if (!Session::has('uRequiredAttributeUser') ||
-			    intval(Session::get('uRequiredAttributeUser')) < 1 ||
-			    !isset(Session::has('uRequiredAttributeUserAuthenticationType') ||
-			    !Session::get('uRequiredAttributeUserAuthenticationType')) {
-			    Session::remove('uRequiredAttributeUser');
-			    Session::remove('uRequiredAttributeUserAuthenticationType');
+		    intval(Session::get('uRequiredAttributeUser')) < 1 ||
+		    Session::has('uRequiredAttributeUserAuthenticationType') ||
+		    !Session::get('uRequiredAttributeUserAuthenticationType')) {
+		    	Session::remove('uRequiredAttributeUser');
+		    	Session::remove('uRequiredAttributeUserAuthenticationType');
 				throw new \Exception(t('Invalid Request, please attempt login again.'));
 			}
 			User::loginByUserID(Session::get('uRequiredAttributeUser'));

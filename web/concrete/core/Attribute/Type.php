@@ -4,6 +4,8 @@ use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\View as AttributeTypeView;
 use Loader;
 use \Concrete\Core\Package\PackageList;
+use Environment;
+use Package;
 use Core;
 class Type extends Object {
 
@@ -172,76 +174,27 @@ class Type extends Object {
 	}
 	
 	public function getAttributeTypeIconSRC() {
-		$ff = '/' . FILENAME_BLOCK_ICON;
-		if ($this->getPackageID() > 0) {
-			$db = Loader::db();
-			$h = $this->getPackageHandle();
-			$url = (is_dir(DIR_PACKAGES . '/' . $h)) ? BASE_URL . DIR_REL : ASSETS_URL; 
-			$url = $url . '/' . DIRNAME_PACKAGES . '/' . $h . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' . $this->getAttributeTypeHandle() . $ff;
-		} else if (file_exists(DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES . '/' .  $this->getAttributeTypeHandle() . $ff)) {
-			$url = ASSETS_URL . '/' . DIRNAME_ATTRIBUTES . '/' .  $this->getAttributeTypeHandle() . $ff;
-		} else if (file_exists(DIR_BASE . '/' . DIRNAME_ATTRIBUTES . '/' .  $this->getAttributeTypeHandle() . $ff)) {
-			$url = BASE_URL . DIR_REL . '/' . DIRNAME_ATTRIBUTES . '/' .  $this->getAttributeTypeHandle() . $ff;
-		} else {
-			$url = ASSETS_URL . '/' . DIRNAME_ATTRIBUTES . '/default' . $ff;		
-		}
+		$env = Environment::get();
+		$url = $env->getURL(implode('/', array(DIRNAME_ATTRIBUTES . '/' . $this->getAttributeTypeHandle() . '/' . FILENAME_BLOCK_ICON)), $this->getPackageHandle());
 		return $url;
 	}
 	
 	public function getAttributeTypeFilePath($_file) {
-		$f = $this->mapAttributeTypeFilePath($_file);
-		if (is_object($f)) {
-			return $f->file;
+		$env = Environment::get();
+		$r = $env->getRecord(implode('/', array(DIRNAME_ATTRIBUTES . '/' . $this->getAttributeTypeHandle() . '/' . $_file)), $this->getPackageHandle());
+		if ($r->exists()) {
+			return $r->file;
 		}
 	}
-	
+
 	public function getAttributeTypeFileURL($_file) {
-		$f = $this->mapAttributeTypeFilePath($_file);
-		if (is_object($f)) {
-			return $f->url;
+		$env = Environment::get();
+		$r = $env->getRecord(implode('/', array(DIRNAME_ATTRIBUTES . '/' . $this->getAttributeTypeHandle() . '/' . $_file)), $this->getPackageHandle());
+		if ($r->exists()) {
+			return $r->url;
 		}
 	}
-	
-	protected function mapAttributeTypeFilePath($_file) {
-		$atHandle = $this->atHandle;
-		if (file_exists(DIR_BASE . '/' . DIRNAME_ATTRIBUTES . '/' . $atHandle . '/' . $_file)) {
-			$file = DIR_BASE . '/' . DIRNAME_ATTRIBUTES . '/' . $atHandle . '/' . $_file;
-			$url = BASE_URL . DIR_REL . '/' . DIRNAME_ATTRIBUTES . '/' . $atHandle . '/' . $_file;
-		} else if ($_file == FILENAME_ATTRIBUTE_CONTROLLER && file_exists(DIR_BASE . '/' .  DIRNAME_ATTRIBUTES . '/' . $atHandle . '.php')) {
-			$file = DIR_BASE . '/' . DIRNAME_ATTRIBUTES . '/' .  $atHandle . '.php';
-		}
-		
-		$pkgID = $this->pkgID;
-		if (!isset($file) && $pkgID > 0) {
-			$pkgHandle = PackageList::getHandle($pkgID);
-			$dirp = is_dir(DIR_PACKAGES . '/' . $pkgHandle) ? DIR_PACKAGES . '/' . $pkgHandle : DIR_PACKAGES_CORE . '/' . $pkgHandle;
-			if (file_exists($dirp . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $_file)) {
-				$file = $dirp . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $_file;
-				$url = BASE_URL . DIR_REL . '/' .DIRNAME_PACKAGES. '/' .$pkgHandle . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' .  $atHandle . '/' . $_file;
-			} else if ($_file == FILENAME_ATTRIBUTE_CONTROLLER && file_exists($dirp . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '.php')) {
-				$file = $dirp . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '.php';
-			}
-		}
-		
-		if (!isset($file)) {
-			if (file_exists(DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $_file)) {
-				$file = DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '/' . $_file;
-				$url = ASSETS_URL . '/' . DIRNAME_MODELS . '/' . DIRNAME_ATTRIBUTES . '/' . DIRNAME_ATTRIBUTE_TYPES . '/' .  $atHandle . '/' . $_file;
-			} else if ($_file == FILENAME_ATTRIBUTE_CONTROLLER && file_exists(DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '.php')) {
-				$file = DIR_MODELS_CORE . '/' . DIRNAME_ATTRIBUTES . '/' .  DIRNAME_ATTRIBUTE_TYPES . '/' . $atHandle . '.php';
-			}
-		}
-		
-		if (isset($file)) {
-			$obj = new stdClass;
-			$obj->file = $file;
-			$obj->url = $url;
-			return $obj;
-		} else {
-			return false;
-		}
-	}
-	
+
 	public function loadController() { 
 		$atHandle = Core::make('helper/text')->camelcase($this->atHandle);
 		$class = core_class('Attribute\\' . $atHandle . '\\Controller');

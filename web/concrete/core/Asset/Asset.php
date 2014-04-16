@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Asset;
+use Environment;
 abstract class Asset {
 
 	protected $assetVersion = '0';
@@ -75,18 +76,10 @@ abstract class Asset {
 
 	public function mapAssetLocation($path) {
 		if ($this->isAssetLocal()) {
-			if (file_exists(DIR_BASE . '/' . $path)) {
-				$this->setAssetPath(DIR_BASE . '/' . $path);
-				$this->setAssetURL(BASE_URL . DIR_REL . '/' . $path);
-			} else if (is_object($this->pkg)) {
-				$pkgHandle = $this->pkg->getPackageHandle();
-				$dirp = is_dir(DIR_PACKAGES . '/' . $pkgHandle) ? DIR_PACKAGES . '/' . $pkgHandle : DIR_PACKAGES_CORE . '/' . $pkgHandle;
-				$this->setAssetPath($dirp . '/' . $path);
-				$this->setAssetURL(BASE_URL . DIR_REL . '/' . DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . $path);
-			} else {
-				$this->setAssetPath(DIR_BASE_CORE . '/' . $path);
-				$this->setAssetURL(ASSETS_URL . '/' . $path);
-			}	
+			$env = Environment::get();
+			$r = $env->getRecord($path);
+			$this->setAssetPath($r->file);
+			$this->setAssetURL($r->url);
 		} else {
 			$this->setAssetURL($path);
 		}	

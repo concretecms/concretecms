@@ -6,7 +6,7 @@ class UpdateArchive extends Archive {
 	
 	public function __construct() {
 		parent::__construct();
-		$this->targetDirectory = DIR_APP_UPDATES;
+		$this->targetDirectory = DIR_CORE_UPDATES;
 	}
 
 	public function install($file) {
@@ -67,10 +67,10 @@ class Concrete5_Controller_Page_Dashboard_System_BackupRestore_Update extends Da
 		if (!$vt->validate('download_update')) {
 			$this->error->add($vt->getErrorMessage());
 		}
-		if (!is_dir(DIR_APP_UPDATES)) {
-			$this->error->add(t('The directory %s does not exist.', DIR_APP_UPDATES));
-		} else if (!is_writable(DIR_APP_UPDATES)) {
-			$this->error->add(t('The directory %s must be writable by the web server.', DIR_APP_UPDATES));
+		if (!is_dir(DIR_CORE_UPDATES)) {
+			$this->error->add(t('The directory %s does not exist.', DIR_CORE_UPDATES));
+		} else if (!is_writable(DIR_CORE_UPDATES)) {
+			$this->error->add(t('The directory %s must be writable by the web server.', DIR_CORE_UPDATES));
 		}
 		
 		if (!$this->error->has()) {

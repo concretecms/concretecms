@@ -113,9 +113,9 @@ class Update {
 	public function getLocalAvailableUpdates() {
 		$fh = Loader::helper('file');
 		$updates = array();
-		$contents = @$fh->getDirectoryContents(DIR_APP_UPDATES);
+		$contents = @$fh->getDirectoryContents(DIR_CORE_UPDATES);
 		foreach($contents as $con) {
-			if (is_dir(DIR_APP_UPDATES . '/' . $con)) {
+			if (is_dir(DIR_CORE_UPDATES . '/' . $con)) {
 				$obj = ApplicationUpdate::get($con);
 				if (is_object($obj)) {
 					if (version_compare($obj->getUpdateVersion(), APP_VERSION, '>')) {

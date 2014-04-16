@@ -6,6 +6,7 @@ use Package;
 use Loader;
 use \Concrete\Core\Package\PackageList;
 use Core;
+use Environment;
 
 class AuthenticationType extends Object {
 
@@ -216,9 +217,9 @@ class AuthenticationType extends Object {
 			array($atHandle, $atName, 1, intval($order), $pkgID));
 		$id = $db->Insert_ID();
 		$est = AuthenticationType::getByID($id);
-		$path = $est->mapAuthenticationTypeFilePath(FILENAME_AUTHENTICATION_DB);
-		if ($path) {
-			Package::installDB($path);
+		$r = $est->mapAuthenticationTypeFilePath(FILENAME_AUTHENTICATION_DB);
+		if ($r->exists()) {
+			Package::installDB($r->file);
 		}
 
 		return $est;
@@ -232,8 +233,8 @@ class AuthenticationType extends Object {
 	 */
 	public function getAuthenticationTypeFilePath($_file) {
 		$f = $this->mapAuthenticationTypeFilePath($_file);
-		if ($f) {
-			return BASE_URL.DIR_REL.$f;
+		if ($f->exists()) {
+			return $r->url;
 		}
 		return false;
 	}
@@ -249,35 +250,12 @@ class AuthenticationType extends Object {
 	 * @param string $_file The filename you want.
 	 * @return string This will return false if the file is not found.
 	 */
-	public function mapAuthenticationTypeFilePath($_file) {
+	protected function mapAuthenticationTypeFilePath($_file) {
 		$atHandle = $this->getAuthenticationTypeHandle();
-
-		$locations = array();
-		$locations[] = implode('/',array(DIR_BASE,DIRNAME_AUTHENTICATION,DIRNAME_AUTHENTICATION_TYPES,$atHandle,$_file));
-		if ($_file == FILENAME_AUTHENTICATION_CONTROLLER) {
-			$locations[] = implode('/',array(DIR_BASE,DIRNAME_AUTHENTICATION,DIRNAME_AUTHENTICATION_TYPES,$atHandle)).".php";
-		}
-
-		if ($this->pkgID > 0) {
-			$pkgHandle = PackageList::getHandle($this->pkgID);
-			$dirp = is_dir(DIR_PACKAGES.'/'.$pkgHandle)?DIR_PACKAGES.'/'.$pkgHandle:DIR_PACKAGES_CORE.'/'.$pkgHandle;
-			$locations[] = implode('/',array($dirp,DIRNAME_AUTHENTICATION,$atHandle,$_file));
-			if ($_file == FILENAME_AUTHENTICATION_CONTROLLER) {
-				$locations[] = implode('/',array($dirp,DIRNAME_AUTHENTICATION,$atHandle)).".php";
-			}
-		}
-
-		$locations[] = implode('/',array(DIR_BASE_CORE,DIRNAME_AUTHENTICATION,$atHandle,$_file));
-		if ($_file == FILENAME_AUTHENTICATION_CONTROLLER) {
-			$locations[] = implode('/',array(DIR_BASE_CORE,DIRNAME_AUTHENTICATION,$atHandle)).".php";
-		}
-
-		foreach($locations as $location) {
-			if (file_exists($location)) {
-				return $location;
-			}
-		}
-		return false;
+		$env = Environment::get();
+		$pkgHandle = PackageList::getHandle($this->pkgID);
+		$r = $env->getRecord(implode('/',array(DIRNAME_AUTHENTICATION,$atHandle,$_file)), $pkgHandle);
+		return $r;
 	}
 
 	/**
@@ -289,11 +267,11 @@ class AuthenticationType extends Object {
 	 */
 	public function renderTypeForm() {
 		$form = $this->mapAuthenticationTypeFilePath('type_form.php');
-		if ($form) {
+		if ($form->exists()) {
 			ob_start();
 			$this->controller->edit();
 			extract($this->controller->getSets());
-			require_once($this->mapAuthenticationTypeFilePath('type_form.php')); // We use the $this method to prevent extract overwrite.
+			require_once($form->file); // We use the $this method to prevent extract overwrite.
 			$out = ob_get_contents();
 			ob_end_clean();
 			echo $out;
@@ -308,11 +286,11 @@ class AuthenticationType extends Object {
 	 */
 	public function renderForm($element = 'form') {
 		$form = $this->mapAuthenticationTypeFilePath($element.'.php');
-		if ($form) {
+		if ($form->exists()) {
 			ob_start();
 			$this->controller->view();
 			extract($this->controller->getSets());
-			require_once($this->mapAuthenticationTypeFilePath($element.'.php'));
+			require_once($form->file);
 			$out = ob_get_contents();
 			ob_end_clean();
 			echo $out;
@@ -326,11 +304,11 @@ class AuthenticationType extends Object {
 	 */
 	public function renderHook() {
 		$form = $this->mapAuthenticationTypeFilePath('hook.php');
-		if ($form) {
+		if ($form->exists()) {
 			ob_start();
 			$this->controller->hook();
 			extract($this->controller->getSets());
-			require_once($this->mapAuthenticationTypeFilePath('hook.php'));
+			require_once($form->file);
 			$out = ob_get_contents();
 			ob_end_clean();
 			echo $out;

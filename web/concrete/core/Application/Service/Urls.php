@@ -44,7 +44,7 @@ class Urls {
 			$url = REL_DIR_FILES_TOOLS_PACKAGES . '/' . $pkgHandle . '/' . $tool;
 			return $url;
 		} else {
-			if (file_exists(DIR_BASE . '/' . DIRNAME_TOOLS . '/' . $tool . '.php')) {
+			if (file_exists(DIR_APPLICATION . '/' . DIRNAME_TOOLS . '/' . $tool . '.php')) {
 				return REL_DIR_FILES_TOOLS . '/' . $tool;
 			} else {
 				return REL_DIR_FILES_TOOLS_REQUIRED . '/' . $tool;
@@ -78,7 +78,7 @@ class Urls {
 		}
 		
 		if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $bt->getBlockTypeHandle() . $ff)) {
-			$url = DIR_REL . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . $ff;
+			$url = REL_DIR_APPLICATION . '/' . DIRNAME_BLOCKS . '/' . $bt->getBlockTypeHandle() . $ff;
 		} else if ($bt->getPackageID() > 0) {
 			$db = Loader::db();
 			$h = $bt->getPackageHandle();

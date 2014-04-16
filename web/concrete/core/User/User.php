@@ -51,7 +51,7 @@ class User extends Object {
 			if ($login) {
 				$session = Core::make('session');
 				$session->set('uID', $row['uID']);
-				$session->set('uName', $row['uID']);
+				$session->set('uName', $row['uName']);
 				$session->set('uBlockTypesSet', false);
 				$session->set('uGroups', $nu->uGroups);
 				$session->set('uLastOnline', $row['uLastOnline']);
@@ -151,7 +151,7 @@ class User extends Object {
 					if (!$args[2]) {
 						$session = Core::make('session');
 						$session->set('uID', $row['uID']);
-						$session->set('uName', $row['uID']);
+						$session->set('uName', $row['uName']);
 						$session->set('superUser', $this->superUser);
 						$session->set('uBlockTypesSet', false);
 						$session->set('uGroups', $this->uGroups);
