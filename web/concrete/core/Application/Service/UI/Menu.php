@@ -103,7 +103,7 @@ class MenuItem {
 		$handle = $this->handle;
 		if (file_exists(DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $handle . '/' . $_file)) {
 			$file = DIR_FILES_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $handle . '/' . $_file;
-			$url = DIR_REL . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $handle . '/' . $_file;
+			$url = REL_DIR_APPLICATION . '/' . DIRNAME_ELEMENTS . '/' . DIRNAME_ELEMENTS_HEADER_MENU . '/' . $handle . '/' . $_file;
 		}
 		
 		if ($this->pkgHandle) {

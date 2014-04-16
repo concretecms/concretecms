@@ -14,7 +14,7 @@ class ToolController extends Controller {
 		$env = Environment::get();
 		$query = false;
 		if (substr($tool, 0, 9) != 'required/') {
-			if (file_exists(DIR_BASE . '/' . DIRNAME_TOOLS . '/' . $tool . '.php')) {
+			if (file_exists(DIR_APPLICATION . '/' . DIRNAME_TOOLS . '/' . $tool . '.php')) {
 				$query = $tool;
 			}
 		} else {

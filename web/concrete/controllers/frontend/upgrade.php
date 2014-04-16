@@ -29,14 +29,14 @@ class Upgrade extends Controller {
 
 	public function secCheck() {
 		$fh = Loader::helper('file');
-		$updates = $fh->getDirectoryContents(DIR_APP_UPDATES);
+		$updates = $fh->getDirectoryContents(DIR_CORE_UPDATES);
 		foreach($updates as $upd) {
-			if (is_dir(DIR_APP_UPDATES . '/' . $upd) && is_writable(DIR_APP_UPDATES . '/' . $upd)) {
-				if (file_exists(DIR_APP_UPDATES . '/' . $upd . '/' . DISPATCHER_FILENAME) && is_writable(DIR_APP_UPDATES . '/' . $upd . '/' . DISPATCHER_FILENAME)) {
-					unlink(DIR_APP_UPDATES . '/' . $upd . '/' . DISPATCHER_FILENAME);
+			if (is_dir(DIR_CORE_UPDATES . '/' . $upd) && is_writable(DIR_CORE_UPDATES . '/' . $upd)) {
+				if (file_exists(DIR_CORE_UPDATES . '/' . $upd . '/' . DISPATCHER_FILENAME) && is_writable(DIR_CORE_UPDATES . '/' . $upd . '/' . DISPATCHER_FILENAME)) {
+					unlink(DIR_CORE_UPDATES . '/' . $upd . '/' . DISPATCHER_FILENAME);
 				}
-				if (!file_exists(DIR_APP_UPDATES . '/' . $upd . '/index.html')) {
-					touch(DIR_APP_UPDATES . '/' . $upd . '/index.html');
+				if (!file_exists(DIR_CORE_UPDATES . '/' . $upd . '/index.html')) {
+					touch(DIR_CORE_UPDATES . '/' . $upd . '/index.html');
 				}
 			}
 		}

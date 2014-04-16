@@ -133,7 +133,7 @@ if (isset($group)) {
 		<div class="alert alert-info">
 			<?
 			$path = $g->getGroupAutomationControllerFile();
-			print t('Make sure a code file exists at %s', str_replace(array(DIR_BASE, DIR_BASE_CORE), '', $path));
+			print t('Make sure a code file exists at %s', str_replace(array(DIR_APPLICATION, DIR_BASE_CORE), '', $path));
 			?>
 		</div>
 	</div>

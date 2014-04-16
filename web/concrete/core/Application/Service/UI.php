@@ -130,7 +130,7 @@ class UI {
 	}
 	
 	public function showWhiteLabelMessage() {
-		return ((defined('WHITE_LABEL_LOGO_SRC') && WHITE_LABEL_LOGO_SRC != '')  || file_exists(DIR_BASE . '/' . DIRNAME_IMAGES . '/logo_menu.png'));
+		return ((defined('WHITE_LABEL_LOGO_SRC') && WHITE_LABEL_LOGO_SRC != '')  || file_exists(DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/logo_menu.png'));
 	}
 	
 	public function getToolbarLogoSRC() {
@@ -145,9 +145,9 @@ class UI {
 		}
 		if (!$src) {
 			$filename = 'logo.png';
-			if (file_exists(DIR_BASE . '/' . DIRNAME_IMAGES . '/' . $filename)) {
-				$src = DIR_REL . '/' . DIRNAME_IMAGES . '/' . $filename;
-				$d = getimagesize(DIR_BASE . '/' . DIRNAME_IMAGES . '/' . $filename);
+			if (file_exists(DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . $filename)) {
+				$src = REL_DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . $filename;
+				$d = getimagesize(DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . $filename);
 				$dimensions = $d[3];
 			} else {
 				$src = ASSETS_URL_IMAGES . '/' . $filename;

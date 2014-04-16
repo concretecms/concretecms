@@ -13,6 +13,7 @@ use User;
 use View;
 use Log;
 use Page;
+use Redirect;
 use Job, JobSet;
 
 class Application extends Container {
@@ -40,7 +41,7 @@ class Application extends Container {
 				}
 			}
 
-			if (defined('SITE_DEBUG_LEVEL') && SITE_DEBUG_LEVEL == DEBUG_DISPLAY_ERRORS) {
+			if (defined('SITE_DEBUG_LEVEL') && SITE_DEBUG_LEVEL == DEBUG_DISPLAY_ERRORS || (!defined('SITE_DEBUG_LEVEL'))) {
 				View::renderError(t('An unexpected error occurred.'), $e->getMessage(), $e);		
 			} else {
 				View::renderError(t('An unexpected error occurred.'), t('An error occurred while processing this request.'), $e);
@@ -248,6 +249,7 @@ class Application extends Container {
 			$env = Environment::get();
 			$env->clearOverrideCache();
 		}
+		exit;
 	}
 
 

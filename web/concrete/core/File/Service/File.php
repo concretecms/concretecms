@@ -164,14 +164,14 @@ class File {
 			return DIR_TMP;
 		}
 		
-		if (!is_dir(DIR_BASE . '/files/tmp')) { 
-			@mkdir(DIR_BASE . '/files/tmp', DIRECTORY_PERMISSIONS_MODE);
-			@chmod(DIR_BASE . '/files/tmp', DIRECTORY_PERMISSIONS_MODE);
-			@touch(DIR_BASE . '/files/tmp/index.html');
+		if (!is_dir(DIR_FILES_UPLOADED . '/tmp')) { 
+			@mkdir(DIR_FILES_UPLOADED . '/tmp', DIRECTORY_PERMISSIONS_MODE);
+			@chmod(DIR_FILES_UPLOADED . '/tmp', DIRECTORY_PERMISSIONS_MODE);
+			@touch(DIR_FILES_UPLOADED. '/tmp/index.html');
 		}
 
-		if (is_dir(DIR_BASE . '/files/tmp') && is_writable(DIR_BASE . '/files/tmp')) {
-			return DIR_BASE . '/files/tmp';
+		if (is_dir(DIR_FILES_UPLOADED . '/tmp') && is_writable(DIR_FILES_UPLOADED . '/tmp')) {
+			return DIR_FILES_UPLOADED . '/tmp';
 		}
 
 		if ($temp=getenv('TMP')) {
@@ -321,7 +321,7 @@ class File {
 	public function getCreateFilePermissions($path = NULL) {
 		try {
 			if(!isset($path)) {
-				$path = DIR_BASE."/files";
+				$path = DIR_FILES_UPLOADED_STANDARD;
 			}
 			
 			if(!is_dir($path)) {

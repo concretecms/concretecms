@@ -29,9 +29,9 @@ class Concrete5_Controller_Page_Dashboard_System_BackupRestore_Database extends 
 			
 			if ($this->post('refresh_local_schema')) {
 				// refresh concrete/config/db.xml and all installed blocks
-				if (file_exists('config/' . FILENAME_LOCAL_DB)) {
+				if (file_exists(DIR_CONFIG_SITE . '/' . FILENAME_LOCAL_DB)) {
 					try {
-						Package::installDB(DIR_BASE . '/config/' . FILENAME_LOCAL_DB);
+						Package::installDB(DIR_CONFIG_SITE . '/' . FILENAME_LOCAL_DB);
 						$msg .= ' ' . t('Local database file refreshed.');
 					} catch(Exception $e) {
 						$this->set('error', $e);

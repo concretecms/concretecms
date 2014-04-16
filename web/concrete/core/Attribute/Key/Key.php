@@ -8,6 +8,7 @@ use Package;
 use CacheLocal;
 use Core;
 use User;
+use AttributeSet;
 use \Concrete\Core\Attribute\Value\Value as AttributeValue;
 use \Concrete\Core\Package\PackageList;
 

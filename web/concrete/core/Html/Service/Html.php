@@ -31,20 +31,20 @@ class Html {
 			$asset->setAssetIsLocal(false);
 		} else if (substr($file, 0, 1) == '/') {
 			$asset->setAssetURL($file);
-			$asset->setAssetPath(DIR_BASE . $file);
+			$asset->setAssetPath(DIR_APPLICATION . $file);
 		} else {
 			$v = View::getInstance();
 			// checking the theme directory for it. It's just in the root.
 			if ($v instanceof View && $v->getThemeDirectory() != '' && file_exists($v->getThemeDirectory() . '/' . $file)) {
 				$asset->setAssetURL($v->getThemePath() . '/' . $file);
 				$asset->setAssetPath($v->getThemeDirectory() . '/' . $file);
-			} else if (file_exists(DIR_BASE . '/' . DIRNAME_CSS . '/' . $file)) {
-				$asset->setAssetURL(DIR_REL . '/' . DIRNAME_CSS . '/' . $file);
-				$asset->setAssetPath(DIR_BASE . '/' . DIRNAME_CSS . '/' . $file);
+			} else if (file_exists(DIR_APPLICATION . '/' . DIRNAME_CSS . '/' . $file)) {
+				$asset->setAssetURL(REL_DIR_APPLICATION . '/' . DIRNAME_CSS . '/' . $file);
+				$asset->setAssetPath(DIR_APPLICATION . '/' . DIRNAME_CSS . '/' . $file);
 			} else if ($pkgHandle != null) {
-				if (file_exists(DIR_BASE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file)) {
-					$asset->setAssetURL(DIR_REL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file);
-					$asset->setAssetPath(DIR_BASE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file);
+				if (file_exists(DIR_APPLICATION . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file)) {
+					$asset->setAssetURL(REL_DIR_APPLICATION . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file);
+					$asset->setAssetPath(DIR_APPLICATION . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file);
 				} else if (file_exists(DIR_BASE_CORE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file)) {
 					$asset->setAssetURL(ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file);
 					$asset->setAssetPath(DIR_BASE_CORE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file);
@@ -67,15 +67,15 @@ class Html {
 			$asset->setAssetIsLocal(false);
 		} else if (substr($file, 0, 1) == '/') {
 			$asset->setAssetURL($file);
-			$asset->setAssetPath(DIR_BASE . $file);
+			$asset->setAssetPath(DIR_APPLICATION . $file);
 		} else {
-			if (file_exists(DIR_BASE . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {
-				$asset->setAssetURL(DIR_REL . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
-				$asset->setAssetPath(DIR_BASE . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
+			if (file_exists(DIR_APPLICATION . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {
+				$asset->setAssetURL(REL_DIR_APPLICATION . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
+				$asset->setAssetPath(DIR_APPLICATION . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
 			} else if ($pkgHandle != null) {
-				if (file_exists(DIR_BASE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {
-					$asset->setAssetURL(DIR_REL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
-					$asset->setAssetPath(DIR_BASE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
+				if (file_exists(DIR_APPLICATION . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {
+					$asset->setAssetURL(REL_DIR_APPLICATION . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
+					$asset->setAssetPath(DIR_APPLICATION . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
 				} else if (file_exists(DIR_BASE_CORE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {
 					$asset->setAssetURL(ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
 					$asset->setAssetPath(DIR_BASE_CORE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
@@ -124,15 +124,15 @@ class Html {
 				$width = $s[0];
 				$height = $s[1];
 				$src = $v->getThemePath() . '/' . DIRNAME_IMAGES . '/' . $src;
-			} else if (file_exists(DIR_BASE . '/' . $src)) {
-				$s = getimagesize(DIR_BASE . '/' . $src);
+			} else if (file_exists(DIR_APPLICATION . '/' . $src)) {
+				$s = getimagesize(DIR_APPLICATION . '/' . $src);
 				$width = $s[0];
 				$height = $s[1];
-			} else if (file_exists(DIR_BASE . '/' . DIRNAME_IMAGES . '/' . $src)) {
-				$s = getimagesize(DIR_BASE . '/'  . DIRNAME_IMAGES . '/' . $src);
+			} else if (file_exists(DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . $src)) {
+				$s = getimagesize(DIR_APPLICATION . '/'  . DIRNAME_IMAGES . '/' . $src);
 				$width = $s[0];
 				$height = $s[1];
-				$src = DIR_REL . '/' . DIRNAME_IMAGES . '/' . $src;
+				$src = REL_DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/' . $src;
 			} else if (file_exists(DIR_BASE_CORE . '/' . DIRNAME_IMAGES . '/' . $src)) {
 				$s = getimagesize(DIR_BASE_CORE . '/'  . DIRNAME_IMAGES . '/' . $src);
 				$width = $s[0];

@@ -5,11 +5,11 @@ __MACOSX
 ._*
 
 # ignore the site.php
-/web/config/site.php
+/web/application/config/site.php
 
 #ignore everything but the index.html
-/web/files/*
-!/web/files/index.html
+/web/application/files/*
+!/web/application/files/index.html
 
 # ignore updates folder
 /web/updates/*
@@ -19,14 +19,14 @@ __MACOSX
 /web/concrete/packages/*
 
 # more stuff
-/web/css/*
-/web/js/*
-/web/blocks/*
-/web/languages/*
-/web/tools/*
-/web/controllers/*
-/web/single_pages/*
-/web/models/*
+/web/application/css/*
+/web/application/js/*
+/web/application/blocks/*
+/web/application/languages/*
+/web/application/tools/*
+/web/application/controllers/*
+/web/application/single_pages/*
+/web/application/models/*
 
 # ignore sitemap.xml
 /web/sitemap.xml
