@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Core\Application\Service;
+namespace Concrete\Core\Application\Service\Dashboard;
 use Loader;
 use PageList;
 use TaskPermission;
