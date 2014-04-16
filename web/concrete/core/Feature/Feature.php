@@ -3,15 +3,16 @@ namespace Concrete\Core\Feature;
 use \Concrete\Core\Foundation\Object;
 use Loader;
 use \Concrete\Core\Package\PackageList;
+use Core;
 class Feature extends Object {
 
 	public function getFeatureDetailObject($mixed) {
 		if ($this->feHasCustomClass) {
-			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\Detail\\' . Loader::helper('text')->camelcase($this->feHandle) . 'Detail');
+			$class = '\\Concrete\\Core\\Feature\\Detail\\' . Loader::helper('text')->camelcase($this->feHandle) . 'Detail';
 		} else {
-			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\Detail\\Detail');
+			$class = '\\Concrete\\Core\\Feature\\Detail\\Detail';
 		}
-		$o = new $class($mixed);
+		$o = Core::make($class, array($mixed));
 		return $o;
 	}
 
@@ -23,8 +24,8 @@ class Feature extends Object {
 			if ($row['feHasCustomClass']) {
 				$class = Loader::helper('text')->camelcase($row['feHandle']) . $class;
 			}
-			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\' . $class);
-			$fe = new $class;
+			$class = '\\Concrete\\Core\\Feature\\' . $class;
+			$fe = Core::make($class);
 			$fe->setPropertiesFromArray($row);
 			return $fe;
 		}
@@ -38,8 +39,8 @@ class Feature extends Object {
 			if ($row['feHasCustomClass']) {
 				$class = Loader::helper('text')->camelcase($row['feHandle']) . $class;
 			}
-			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\' . $class);
-			$fe = new $class;
+			$class = '\\Concrete\\Core\\Feature\\' . $class;
+			$fe = Core::make($class);
 			$fe->setPropertiesFromArray($row);
 			return $fe;
 		}

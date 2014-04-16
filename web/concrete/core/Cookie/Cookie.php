@@ -10,10 +10,10 @@ class Cookie {
 	protected $cookies = array();
 
 	public static function getInstance() {
-		if (null === self::$pantry) {
-			self::$pantry = new Cookie();
+		if (!isset(static::$pantry)) {
+			static::$pantry = new static();
 		}
-		return self::$pantry;
+		return static::$pantry;
 	}
 
 	public static function set($name, $value = null, $expire = 0, $path = '/', $domain = null, $secure = false, $httpOnly = true) {

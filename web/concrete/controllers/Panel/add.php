@@ -3,6 +3,7 @@ namespace Concrete\Controller\Panel;
 use \Concrete\Controller\Backend\UI\Page as BackendInterfacePageController;
 use BlockTypeList;
 use Loader;
+use Session;
 use BlockType;
 
 class Add extends BackendInterfacePageController {

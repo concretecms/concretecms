@@ -4,6 +4,7 @@ use \Concrete\Core\Foundation\Object;
 use Loader;
 use PermissionAccess;
 use CacheLocal;
+use Core;
 abstract class Entity extends Object {
 	
 	public function getAccessEntityTypeID() {return $this->petID;}
@@ -33,8 +34,9 @@ abstract class Entity extends Object {
 			if (!is_object($pt)) {
 				return false;
 			}
-			$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\Entity\\' . Loader::helper('text')->camelcase($pt->getAccessEntityTypeHandle()) . 'Entity');
-			$obj = new $className();
+			
+			$className = '\\Concrete\\Core\\Permission\\Access\\Entity\\' . Loader::helper('text')->camelcase($pt->getAccessEntityTypeHandle()) . 'Entity';
+			$obj = Core::make($className);
 			$r['petHandle'] = $pt->getAccessEntityTypeHandle();
 			$obj->setPropertiesFromArray($r);
 			$obj->load();

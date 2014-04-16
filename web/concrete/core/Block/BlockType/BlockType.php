@@ -76,7 +76,7 @@ class BlockType {
 	 */
 	protected function loadController() {
 		if (!isset($this->controller)) {
-			$class = static::getBlockTypeMappedClass($this->getBlockTypeHandle());
+			$class = static::getBlockTypeMappedClass($this->getBlockTypeHandle(), $this->pkgHandle);
 			$this->controller = new $class($this);
 		}
 	}
@@ -182,7 +182,7 @@ class BlockType {
 	 * Returns the class for the current block type.
 	 */
 	public function getBlockTypeClass() {
-		return static::getBlockTypeMappedClass($this->btHandle);
+		return static::getBlockTypeMappedClass($this->btHandle, $this->pkgHandle);
 	}
 
 	/**
@@ -197,10 +197,13 @@ class BlockType {
 	 * Return the class file that this BlockType uses
 	 * @return string
 	 */
-	public static function getBlockTypeMappedClass($btHandle) {
+	public static function getBlockTypeMappedClass($btHandle, $pkgHandle = false) {
+		$env = Environment::get();
 		$txt = Loader::helper('text');
-		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Block\\' . $txt->camelcase($btHandle) . '\\Controller');
-		return $className;
+		$r = $env->getRecord(DIRNAME_BLOCKS . '/' . $btHandle . '/'. FILENAME_CONTROLLER);
+		$prefix = $r->override ? true : $pkgHandle;
+		$class = core_class('Block\\' . $txt->camelcase($btHandle) . '\\Controller', $prefix);
+		return $class;
 	}
 	
 	/** 

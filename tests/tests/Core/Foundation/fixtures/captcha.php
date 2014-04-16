@@ -1,6 +1,6 @@
 <?
-namespace Application\Helper\Validation;
-class Captcha extends \Concrete\Helper\Validation\Captcha {
+namespace Application\Core\Captcha;
+class Service extends \Concrete\Core\Captcha\Service {
 	
 	
 }

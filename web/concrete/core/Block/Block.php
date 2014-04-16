@@ -45,11 +45,11 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface 
 	}
 
 	public function getPermissionResponseClassName() {
-		return 'Core\\Permission\\Response\\BlockResponse';
+		return '\\Concrete\\Core\\Permission\\Response\\BlockResponse';
 	}
 
 	public function getPermissionAssignmentClassName() {
-		return 'Core\\Permission\\Assignment\\BlockAssignment';	
+		return '\\Concrete\\Core\\Permission\\Assignment\\BlockAssignment';	
 	}
 	public function getPermissionObjectKeyCategoryHandle() {
 		return 'block';
@@ -354,7 +354,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface 
 		if (ENABLE_BLOCK_CACHE && $this->instance->cacheBlockRecord() && is_object($this->instance->getBlockControllerData())) {
 			$this->instance->__construct();
 		} else {
-			$class = BlockType::getBlockTypeMappedClass($this->btHandle);
+			$class = BlockType::getBlockTypeMappedClass($this->btHandle, $this->pkgHandle);
 			$this->instance = new $class($this);
 		}		
 		$this->instance->setBlockObject($this);

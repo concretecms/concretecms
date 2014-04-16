@@ -2,6 +2,8 @@
 
 namespace Concrete\Tests\Core\Foundation;
 use Loader;
+use Core;
+use Environment;
 
 class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 	
@@ -37,26 +39,29 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 
 	public function testRouteController() {
 		$request = new \Concrete\Core\Http\Request();
-		$request->attributes->set('_controller', 'Controller\Install::view');
+		$request->attributes->set('_controller', '\Concrete\Controller\Install::view');
 		$resolver = new \Concrete\Core\Controller\ControllerResolver();
 	    $callback = $resolver->getController($request);
 		$this->assertTrue($callback[0] instanceof \Concrete\Controller\Install);
 
 		$request = new \Concrete\Core\Http\Request();
-		$request->attributes->set('_controller', 'Controller\Panel\Page\Design::preview_contents');
+		$request->attributes->set('_controller', '\Concrete\Controller\Panel\Page\Design::preview_contents');
 		$resolver = new \Concrete\Core\Controller\ControllerResolver();
 	    $callback = $resolver->getController($request);
 		$this->assertTrue($callback[0] instanceof \Concrete\Controller\Panel\Page\Design);
 	}
 
-	/*
 	public function testRouteControllerOverride() {
 		$root = dirname(DIR_BASE_CORE . '../');
 		mkdir($root . '/controllers/panel/page/', 0777, true);
 		copy(dirname(__FILE__) . '/fixtures/design.php', $root . '/controllers/panel/page/design.php');
 
+		Core::bind('\Concrete\Controller\Panel\Page\Design', function() {
+			return new \Application\Controller\Panel\Page\Design();
+		});
+
 		$request = new \Concrete\Core\Http\Request();
-		$request->attributes->set('_controller', 'Controller\Panel\Page\Design::preview_contents');
+		$request->attributes->set('_controller', '\Concrete\Controller\Panel\Page\Design::preview_contents');
 		$resolver = new \Concrete\Core\Controller\ControllerResolver();
 	    $callback = $resolver->getController($request);
 
@@ -68,7 +73,6 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue($callback[0] instanceof \Concrete\Controller\Panel\Page\Design);
 
 	}
-	*/
 
 	public function testAttributes() {
 		$at = new \Concrete\Core\Attribute\Type();
@@ -86,34 +90,43 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue($classExists);
 
 	}
-/*
+
 	public function testBlockControllerOverride() {
+		$env = Environment::get();
+		$env->clearOverrideCache();
+
 		$root = dirname(DIR_BASE_CORE . '../');
-		mkdir($root . '/blocks/CoreAreaLayout/', 0777, true);
-		copy(dirname(__FILE__) . '/fixtures/CoreAreaLayoutController.php', $root . '/blocks/CoreAreaLayout/Controller.php');
+		mkdir($root . '/blocks/core_area_layout/', 0777, true);
+		copy(dirname(__FILE__) . '/fixtures/CoreAreaLayoutController.php', $root . '/blocks/core_area_layout/controller.php');
 
 		$bt = new \BlockType();
 		$bt->setBlockTypeHandle('core_area_layout');
 		$class = $bt->getBlockTypeClass();
 		$classExists = class_exists($class);
 
-		unlink($root . '/blocks/CoreAreaLayout/controller.php');
-		rmdir($root . '/blocks/CoreAreaLayout');
+		unlink($root . '/blocks/core_area_layout/controller.php');
+		rmdir($root . '/blocks/core_area_layout');
 
 		$this->assertTrue($class == '\Application\Block\CoreAreaLayout\Controller');
 		$this->assertTrue($classExists);
 	}
-*/
-	public function testHelpers() {
+
+
+	public function testLegacyHelpers() {
 		$fh = Loader::helper('file');
 		$vh = Loader::helper('validation/error');
 		$this->assertTrue($fh instanceof \Concrete\Core\File\Service\File);
 		$this->assertTrue($vh instanceof \Concrete\Core\Error\Error);
 	}
 
-	/*
+	
 
 	public function testHelperOverrides() {
+		require('fixtures/captcha.php');
+		Core::bind('helper/validation/captcha', function() {
+			return new \Application\Core\Captcha\Service();
+		});
+
 		$root = dirname(DIR_BASE_CORE . '../');
 		mkdir($root . '/helpers/validation/', 0777, true);
 		copy(dirname(__FILE__) . '/fixtures/captcha.php', $root . '/helpers/validation/captcha.php');
@@ -123,10 +136,9 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 		unlink($root . '/helpers/validation/captcha.php');
 		rmdir($root . '/helpers/validation');
 
-		$this->assertTrue($fh instanceof \Application\Helper\Validation\Captcha);
-		$this->assertTrue($fh instanceof \Concrete\Helper\Validation\Captcha);
+		$this->assertTrue($fh instanceof \Application\Core\Captcha\Service);
+		$this->assertTrue($fh instanceof \Concrete\Core\Captcha\Service);
 	}
 
-	*/
-
+	
 }

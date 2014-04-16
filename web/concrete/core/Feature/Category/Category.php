@@ -3,6 +3,7 @@ namespace Concrete\Core\Feature\Category;
 use \Concrete\Core\Foundation\Object;
 use Loader;
 use \Concrete\Core\Package\PackageList;
+use Core;
 abstract class Category extends Object {
 
 	abstract public function assignmentIsInUse(\Concrete\Core\Feature\Assignment\Assignment $fa);
@@ -11,8 +12,8 @@ abstract class Category extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select fcID, fcHandle, pkgID from FeatureCategories where fcID = ?', array($fcID));
 		if (isset($row['fcID'])) {
-			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\Category\\' . Loader::helper('text')->camelcase($row['fcHandle']) . 'Category');
-			$fe = new $class();
+			$class = '\\Concrete\\Core\\Feature\\Category\\' . Loader::helper('text')->camelcase($row['fcHandle']) . 'Category';
+			$fe = Core::make($class);
 			$fe->setPropertiesFromArray($row);
 			return $fe;
 		}
@@ -22,8 +23,8 @@ abstract class Category extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select fcID, fcHandle, pkgID from FeatureCategories where fcHandle = ?', array($fcHandle));
 		if (isset($row['fcID'])) {
-			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Feature\\Category\\' . Loader::helper('text')->camelcase($row['fcHandle']) . 'Category');
-			$fe = new $class();
+			$class = '\\Concrete\\Core\\Feature\\Category\\' . Loader::helper('text')->camelcase($row['fcHandle']) . 'Category';
+			$fe = Core::make($class);
 			$fe->setPropertiesFromArray($row);
 			return $fe;
 		}

@@ -3,12 +3,12 @@ namespace Concrete\Core\Session;
 use \Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 use \Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use \Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
-use Concrete;
+use Core;
 
 class Session {
 
 	public static function start() {
-		$app = Concrete::make('app');
+		$app = Core::make('app');
 		if ($app->isRunThroughCommandLineInterface()) {
 			$storage = new MockArraySessionStorage();
 		} else {

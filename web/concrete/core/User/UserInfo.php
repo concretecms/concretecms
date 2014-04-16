@@ -18,7 +18,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 	public function getPermissionObjectIdentifier() {return $this->uID;}
 
 	public function getPermissionResponseClassName() {
-		return 'Core\\Permission\\Response\\UserInfoResponse';
+		return '\\Concrete\\Core\\Permission\\Response\\UserInfoResponse';
 	}
 
 	public function getPermissionAssignmentClassName() {

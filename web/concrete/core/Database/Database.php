@@ -8,7 +8,6 @@ class Database {
 	protected static $activeConnection;
 	protected static $connections = array();
 
-	public static function get() {return static::getActiveConnection();}
 	public static function getActiveConnection() {
 		if (!isset(static::$activeConnection)) {
 			static::$connections['default'] = static::createDefaultConnection();

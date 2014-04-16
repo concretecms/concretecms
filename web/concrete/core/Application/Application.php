@@ -11,6 +11,9 @@ use Environment;
 use Database;
 use User;
 use View;
+use Log;
+use Page;
+use Job, JobSet;
 
 class Application extends Container {
 
@@ -25,7 +28,7 @@ class Application extends Container {
 
 	public function handleExceptions() {
 		$app = $this;
-		set_exception_handler(function() use ($app) {
+		set_exception_handler(function($e) use ($app) {
 			// log if setup to do so
 			if (defined('ENABLE_LOG_ERRORS') && ENABLE_LOG_ERRORS) {
 				$db = Database::get();

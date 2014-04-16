@@ -64,14 +64,14 @@ class Category extends Object {
 
 	public function getPermissionKeyByHandle($pkHandle) {
 		$txt = Loader::helper('text');
-		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Key\\' . Loader::helper('text')->camelcase($this->pkCategoryHandle) . 'Key');
+		$className = '\\Concrete\\Core\\Permission\\Key\\' . Loader::helper('text')->camelcase($this->pkCategoryHandle) . 'Key';
 		$ak = call_user_func(array($className, 'getByHandle'), $pkHandle);
 		return $ak;
 	}
 
 	public function getPermissionKeyByID($pkID) {
 		$txt = Loader::helper('text');
-		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Key\\' . Loader::helper('text')->camelcase($this->pkCategoryHandle) . 'Key');
+		$className = '\\Concrete\\Core\\Permission\\Key\\' . Loader::helper('text')->camelcase($this->pkCategoryHandle) . 'Key';
 		$ak = call_user_func(array($className, 'getByID'), $pkID);
 		return $ak;
 	}

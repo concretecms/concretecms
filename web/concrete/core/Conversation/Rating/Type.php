@@ -3,6 +3,7 @@ namespace Concrete\Core\Conversation\Rating;
 use \Concrete\Core\Foundation\Object;
 use Loader;
 use \Concrete\Core\Package\PackageList;
+use Core;
 abstract class Type extends Object {
 
 	abstract public function outputRatingTypeHTML();
@@ -37,8 +38,8 @@ abstract class Type extends Object {
 		$r = $db->GetRow('select cnvRatingTypeID, cnvRatingTypeHandle, cnvRatingTypeName, cnvRatingTypeCommunityPoints, pkgID from ConversationRatingTypes where cnvRatingTypeHandle = ?', array($cnvRatingTypeHandle));
 		
 		if (is_array($r) && $r['cnvRatingTypeHandle']) {
-            $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Conversation\\Rating\\' . Loader::helper('text')->camelcase($r['cnvRatingTypeHandle']) . 'Type');
-			$sc = new $class();
+            $class = '\\Concrete\\Core\\Conversation\\Rating\\' . Loader::helper('text')->camelcase($r['cnvRatingTypeHandle']) . 'Type';
+			$sc = Core::make($class);
 			$sc->setPropertiesFromArray($r);
 			return $sc;
 		}
@@ -49,8 +50,8 @@ abstract class Type extends Object {
 		$r = $db->GetRow('select cnvRatingTypeID, cnvRatingTypeHandle, cnvRatingTypeName, cnvRatingTypeCommunityPoints, pkgID from ConversationRatingTypes where cnvRatingTypeID = ?', array($cnvRatingTypeID));
 		
 		if (is_array($r) && $r['cnvRatingTypeHandle']) {
-            $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Conversation\\Rating\\' . Loader::helper('text')->camelcase($r['cnvRatingTypeHandle']) . 'Type');
-			$sc = new $class();
+            $class = '\\Concrete\\Core\\Conversation\\Rating\\' . Loader::helper('text')->camelcase($r['cnvRatingTypeHandle']) . 'Type';
+			$sc = Core::make($class);
 			$sc->setPropertiesFromArray($r);
 			return $sc;
 		}

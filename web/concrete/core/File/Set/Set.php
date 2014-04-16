@@ -46,11 +46,11 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 	}
 
 	public function getPermissionResponseClassName() {
-		return 'Core\\Permission\\Response\\FileSetResponse';
+		return '\\Concrete\\Core\\Permission\\Response\\FileSetResponse';
 	}
 
 	public function getPermissionAssignmentClassName() {
-		return 'Core\\Permission\\Assignment\\FileSetAssignment';	
+		return '\\Concrete\\Core\\Permission\\Assignment\\FileSetAssignment';	
 	}
 	public function getPermissionObjectKeyCategoryHandle() {
 		return 'file_set';

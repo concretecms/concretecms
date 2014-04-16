@@ -3,6 +3,7 @@ namespace Concrete\Core\Permission\Access\Entity;
 use \Concrete\Core\Foundation\Object;
 use Loader;
 use Config;
+use Core;
 use \Concrete\Core\Package\PackageList;
 class Type extends Object {
 
@@ -10,7 +11,7 @@ class Type extends Object {
 	public function getAccessEntityTypeHandle() {return $this->petHandle;}
 	public function getAccessEntityTypeName() {return $this->petName;}
 	public function getAccessEntityTypeClass() {
-		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\Entity\\' . Loader::helper('text')->camelcase($this->petHandle) . 'Entity');
+		$class = '\\Concrete\\Core\\Permission\\Access\\Entity\\' . Loader::helper('text')->camelcase($this->petHandle) . 'Entity';
 		return $class;
 	}
 
@@ -42,7 +43,7 @@ class Type extends Object {
 	}
 	
 	public function __call($method, $args) {
-		$obj = $this->getAccessEntityTypeClass();
+		$obj = Core::make($this->getAccessEntityTypeClass());
 		$o = new $obj();
 		return call_user_func_array(array($obj, $method), $args);
 	}

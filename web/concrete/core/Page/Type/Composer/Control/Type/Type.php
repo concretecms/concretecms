@@ -1,6 +1,7 @@
 <?php 
 namespace Concrete\Core\Page\Type\Composer\Control\Type;
 use Loader;
+use Core;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
 use \Concrete\Core\Page\Type\Composer\Control\Control as PageTypeComposerFormLayoutSetControl;
@@ -27,8 +28,8 @@ abstract class Type extends Object {
 		$r = $db->GetRow('select ptComposerControlTypeID, ptComposerControlTypeHandle, ptComposerControlTypeName, pkgID from PageTypeComposerControlTypes where ptComposerControlTypeHandle = ?', array($ptComposerControlTypeHandle));
 		if (is_array($r) && $r['ptComposerControlTypeHandle']) {
 			$txt = Loader::helper('text');
-			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Page\\Type\\Composer\\Control\\Type\\' . $txt->camelcase($r['ptComposerControlTypeHandle']) . 'Type');
-			$sc = new $class();
+			$class = '\\Concrete\\Core\\Page\\Type\\Composer\\Control\\Type\\' . $txt->camelcase($r['ptComposerControlTypeHandle']) . 'Type';
+			$sc = Core::make($class);
 			$sc->setPropertiesFromArray($r);
 			return $sc;
 		}
@@ -38,8 +39,8 @@ abstract class Type extends Object {
 		$r = $db->GetRow('select ptComposerControlTypeID, ptComposerControlTypeHandle, ptComposerControlTypeName, pkgID from PageTypeComposerControlTypes where ptComposerControlTypeID = ?', array($ptComposerControlTypeID));
 		if (is_array($r) && $r['ptComposerControlTypeHandle']) {
 			$txt = Loader::helper('text');
-			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Page\\Type\\Composer\\Control\\Type\\' . $txt->camelcase($r['ptComposerControlTypeHandle']) . 'Type');
-			$sc = new $class();
+			$class = '\\Concrete\\Core\\Page\\Type\\Composer\\Control\\Type\\' . $txt->camelcase($r['ptComposerControlTypeHandle']) . 'Type';
+			$sc = Core::make($class);
 			$sc->setPropertiesFromArray($r);
 			return $sc;
 		}

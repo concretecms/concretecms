@@ -12,6 +12,7 @@ use Group;
 use PageTheme;
 use Loader;
 use Job;
+use Core;
 use JobSet;
 use PageTemplate;
 use CollectionAttributeKey;
@@ -625,8 +626,7 @@ class ContentImporter {
 				$pkc = PermissionKeyCategory::getByHandle((string) $pk['category']);
 				$pkg = static::getPackageObject($pk['package']);
 				$txt = Loader::helper('text');
-				$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Key\\' . $txt->camelcase($pkc->getPermissionKeyCategoryHandle()));
-				$c1 = $className . 'Key';
+				$c1 = '\\Concrete\\Core\\Permission\\Key\\' . $txt->camelcase($pkc->getPermissionKeyCategoryHandle()) . 'Key';
 				$pkx = call_user_func(array($c1, 'import'), $pk);
 				if (isset($pk->access)) {
 					foreach($pk->access->children() as $ch) {
@@ -689,8 +689,7 @@ class ContentImporter {
 				$pkg = static::getPackageObject($ak['package']);
 				$type = AttributeType::getByHandle($ak['type']);
 				$txt = Loader::helper('text');
-				$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Attribute\\Key\\' . $txt->camelcase($akc->getAttributeKeyCategoryHandle()));
-				$c1 = $className . 'Key';
+				$c1 = '\\Concrete\\Core\\Attribute\\Key\\' . $txt->camelcase($akc->getAttributeKeyCategoryHandle()) . 'Key';
 				$ak = call_user_func(array($c1, 'import'), $ak);
 			}
 		}

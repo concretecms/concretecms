@@ -4,6 +4,7 @@ use \Concrete\Core\Http\ResponseAssetGroup;
 use Loader;
 use Page;
 use Environment;
+use Core;
 use \Concrete\Core\Page\Theme\File as PageThemeFile;
 use \Concrete\Core\Package\PackageList;
 use \Concrete\Core\Foundation\Object;
@@ -390,11 +391,11 @@ class Theme extends Object {
 		$row = $db->GetRow("select pThemeID, pThemeHandle, pThemeDescription, pkgID, pThemeName, pThemeHasCustomClass from PageThemes where {$where}", $args);
 		if ($row['pThemeID']) {
 			if ($row['pThemeHasCustomClass']) {
-				$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Theme\\' . Loader::helper('text')->camelcase($row['pThemeHandle']));
+				$class = '\\Concrete\Core\\Theme\\' . Loader::helper('text')->camelcase($row['pThemeHandle']);
 			} else {
-				$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Page\\Theme\\Theme');
+				$class = '\\Concrete\Core\\Page\\Theme\\Theme';
 			}
-			$pl = new $class();
+			$pl = Core::make($class);
 			$pl->setPropertiesFromArray($row);
 			$pkgHandle = $pl->getPackageHandle();
 			$env = Environment::get();

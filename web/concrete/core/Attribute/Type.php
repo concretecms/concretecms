@@ -4,6 +4,7 @@ use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\View as AttributeTypeView;
 use Loader;
 use \Concrete\Core\Package\PackageList;
+use Core;
 class Type extends Object {
 
 	protected $atID;
@@ -242,9 +243,9 @@ class Type extends Object {
 	}
 	
 	public function loadController() { 
-		$txt = Loader::helper('text');
-		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Attribute\\' . $txt->camelcase($this->atHandle) . '\\Controller');
-		$this->controller = new $className($this);
+		$atHandle = Core::make('helper/text')->camelcase($this->atHandle);
+		$class = core_class('Attribute\\' . $atHandle . '\\Controller');
+		$this->controller = Core::make($class, array($this));
 	}
 	
 }

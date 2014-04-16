@@ -2,7 +2,7 @@
 namespace Concrete\Core\File\Type;
 use Loader;
 use \Concrete\Core\Package\PackageList;
-
+use Core;
 class Type {
 
 	// File Type Constants
@@ -65,8 +65,8 @@ class Type {
 	}
 	
 	public function getCustomInspector() {
-        $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\File\\Type\\Inspector\\' . Loader::helper('text')->camelcase($this->getCustomImporter()) . 'Inspector');
-		$cl = new $class;
+        $class = '\\Concrete\\Core\\File\\Type\\Inspector\\' . Loader::helper('text')->camelcase($this->getCustomImporter()) . 'Inspector';
+		$cl = Core::make($class);
 		return $cl;
 	}
 	

@@ -5,6 +5,8 @@ use Exception;
 use Package;
 use Loader;
 use \Concrete\Core\Package\PackageList;
+use Core;
+
 class AuthenticationType extends Object {
 
 	public function getAuthenticationTypeID() {return $this->authTypeID;}
@@ -341,9 +343,9 @@ class AuthenticationType extends Object {
 	 */
 	protected function loadController() {
 		// local scope
-		$atHandle = $this->authTypeHandle;
-		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Authentication\\' . Loader::helper('text')->camelcase($this->authTypeHandle) . '\\Controller');
-		$this->controller = new $className($this);
+		$authTypeHandle = Core::make('helper/text')->camelcase($this->authTypeHandle);
+		$class = core_class('Authentication\\' . $authTypeHandle . '\\Controller');
+		$this->controller = Core::make($class, array($this));
 	}
 
 }

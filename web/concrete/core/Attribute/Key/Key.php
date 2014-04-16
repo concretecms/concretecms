@@ -6,6 +6,7 @@ use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use Loader;
 use Package;
 use CacheLocal;
+use Core;
 use User;
 use \Concrete\Core\Attribute\Value\Value as AttributeValue;
 use \Concrete\Core\Package\PackageList;
@@ -157,7 +158,7 @@ class Key extends Object {
 		$list = array();
 		$txt = Loader::helper('text');
 		
-		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key');
+		$className = '\\Concrete\\Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key';
 		while ($row = $r->FetchRow()) {
 			$c1a = call_user_func(array($className, 'getByID'), $row['akID']);
 			if (is_object($c1a)) {
@@ -303,8 +304,8 @@ class Key extends Object {
 			//certain adodb drivers (like mysqli) will fail and return 0
 			$akID = $db->Insert_ID();
 			$category = AttributeKeyCategory::getByID($akCategoryID);
-			$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key');
-			$ak = new $className();
+			$className = '\\Concrete\\Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle) . 'Key';
+			$ak = Core::make($className);
 			$ak->load($akID);
 			switch($category->allowAttributeSets()) {
 				case AttributeKeyCategory::ASET_ALLOW_SINGLE:

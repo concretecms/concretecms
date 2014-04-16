@@ -2,6 +2,7 @@
 namespace Concrete\Core\Tree;
 use \Concrete\Core\Foundation\Object;
 use Loader;
+use Core;
 abstract class Tree extends Object {
 
 	protected $treeNodeSelectedID = 0;
@@ -95,7 +96,7 @@ abstract class Tree extends Object {
 		if (is_array($row) && $row['treeID']) {
 			$tt = TreeType::getByID($row['treeTypeID']);
 			$class = $tt->getTreeTypeClass();
-			$tree = new $class();
+			$tree = Core::make($class);
 			$tree->setPropertiesFromArray($row);
 			$tree->loadDetails();
 			return $tree;

@@ -3,6 +3,7 @@ namespace Concrete\Core\Editor;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Package\PackageList;
+use Core;
 abstract class Snippet extends Object {
 
 	/** 
@@ -33,8 +34,8 @@ abstract class Snippet extends Object {
 				$pkgHandle = PackageList::getHandle($r['pkgID']);
 			}
 			$txt = Loader::helper('text');
-			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Editor\\' . $txt->camelcase($r['scsHandle'] . 'Snippet'));
-			$sc = new $class();
+			$class = '\\Concrete\\Core\\Editor\\' . $txt->camelcase($r['scsHandle']) . 'Snippet';
+			$sc = Core::make($class);
 			$sc->setPropertiesFromArray($r);
 			return $sc;
 		}

@@ -93,11 +93,11 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface {
 	}
 
 	public function getPermissionResponseClassName() {
-		return 'Core\\Permission\\Response\\AreaResponse';
+		return '\\Concrete\\Core\\Permission\\Response\\AreaResponse';
 	}
 
 	public function getPermissionAssignmentClassName() {
-		return 'Core\\Permission\\Assignment\\AreaAssignment';	
+		return '\\Concrete\\Core\\Permission\\Assignment\\AreaAssignment';	
 	}
 	public function getPermissionObjectKeyCategoryHandle() {
 		return 'area';

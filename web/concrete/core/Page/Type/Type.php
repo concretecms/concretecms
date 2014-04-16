@@ -40,11 +40,11 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		return $this->getPageTypeID();
 	}
 	public function getPermissionResponseClassName() {
-		return 'Core\\Permission\\Response\\PageTypeResponse';
+		return '\\Concrete\\Core\\Permission\\Response\\PageTypeResponse';
 	}
 
 	public function getPermissionAssignmentClassName() {
-		return 'Core\\Permission\\Assignment\\PageTypeAssignment';	
+		return '\\Concrete\\Core\\Permission\\Assignment\\PageTypeAssignment';	
 	}
 	public function getPermissionObjectKeyCategoryHandle() {
 		return 'page_type';
