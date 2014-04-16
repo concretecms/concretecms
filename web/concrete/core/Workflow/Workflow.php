@@ -28,11 +28,11 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 	}
 
 	public function getPermissionResponseClassName() {
-		return 'Core\\Permission\\Response\\Workflow';
+		return '\\Concrete\\Core\\Permission\\Response\\Workflow';
 	}
 
 	public function getPermissionAssignmentClassName() {
-		return 'Core\\Permission\\Assignment\\WorkflowAssignment';	
+		return '\\Concrete\\Core\\Permission\\Assignment\\WorkflowAssignment';	
 	}
 	public function getPermissionObjectKeyCategoryHandle() {
 		return 'page';
@@ -104,11 +104,11 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 		$db = Loader::db();
 		$r = $db->GetRow('select WorkflowTypes.wftHandle, WorkflowTypes.pkgID from Workflows inner join WorkflowTypes on Workflows.wftID = WorkflowTypes.wftID where Workflows.wfID = ?', array($wfID));
 		if ($r['wftHandle']) { 
-            $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Workflow\\' . Loader::helper('text')->camelcase($r['wftHandle']) . 'Workflow');
+            $class = '\\Concrete\\Core\\Workflow\\' . Loader::helper('text')->camelcase($r['wftHandle']) . 'Workflow';
 			if (!class_exists($class)) {
-	            $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Workflow\\Workflow');
+	            $class = '\\Concrete\\Core\\Workflow\\Workflow';
 			}
-			$obj = new $class();
+			$obj = Core::make($class);
 			$obj->load($wfID);
 			if ($obj->getWorkflowID() > 0) { 
 				$obj->loadDetails();

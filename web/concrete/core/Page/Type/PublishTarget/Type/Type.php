@@ -5,6 +5,7 @@ use PageType;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Package\PackageList;
 use Environment;
+use Core;
 
 abstract class Type extends Object {
 
@@ -25,8 +26,8 @@ abstract class Type extends Object {
 		$r = $db->GetRow('select ptPublishTargetTypeID, ptPublishTargetTypeHandle, ptPublishTargetTypeName, pkgID from PageTypePublishTargetTypes where ptPublishTargetTypeID = ?', array($ptPublishTargetTypeID));
 		if (is_array($r) && $r['ptPublishTargetTypeHandle']) {
 			$txt = Loader::helper('text');
-			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Page\\Type\\PublishTarget\\Type\\' . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type');
-			$sc = new $class();
+			$class = '\\Concrete\\Core\\Page\\Type\\PublishTarget\\Type\\' . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type';
+			$sc = Core::make($class);
 			$sc->setPropertiesFromArray($r);
 			return $sc;
 		}
@@ -37,8 +38,8 @@ abstract class Type extends Object {
 		$r = $db->GetRow('select ptPublishTargetTypeID, ptPublishTargetTypeHandle, ptPublishTargetTypeName, pkgID from PageTypePublishTargetTypes where ptPublishTargetTypeHandle = ?', array($ptPublishTargetTypeHandle));
 		if (is_array($r) && $r['ptPublishTargetTypeHandle']) {
 			$txt = Loader::helper('text');
-			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Page\\Type\\PublishTarget\\Type\\' . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type');
-			$sc = new $class();
+			$class = '\\Concrete\\Core\\Page\\Type\\PublishTarget\\Type\\' . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type';
+			$sc = Core::make($class);
 			$sc->setPropertiesFromArray($r);
 			return $sc;
 		}

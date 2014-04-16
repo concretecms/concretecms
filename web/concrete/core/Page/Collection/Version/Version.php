@@ -21,11 +21,11 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 	}
 
 	public function getPermissionResponseClassName() {
-		return 'Core\\Permission\\Response\\CollectionVersionResponse';
+		return '\\Concrete\\Core\\Permission\\Response\\CollectionVersionResponse';
 	}
 
 	public function getPermissionAssignmentClassName() {
-		return 'Core\\Permission\\Assignment\\PageAssignment';	
+		return '\\Concrete\\Core\\Permission\\Assignment\\PageAssignment';	
 	}
 	public function getPermissionObjectKeyCategoryHandle() {
 		return 'page';

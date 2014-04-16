@@ -5,6 +5,7 @@ use Loader;
 use CacheLocal;
 use PermissionKey;
 use User;
+use Core;
 use \Concrete\Core\Permission\Cache as PermissionCache;
 use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use \Concrete\Core\Permission\Duration as PermissionDuration;
@@ -30,13 +31,13 @@ class Access extends Object {
 	
 	protected function deliverAccessListItems($q, $accessType, $filterEntities) {
 		$db = Loader::db();
-		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\ListItem\\' . Loader::helper('text')->camelcase($this->pk->getPermissionKeyCategoryHandle()) . 'ListItem');
+		$class = '\\Concrete\\Core\\Permission\\Access\\ListItem\\' . Loader::helper('text')->camelcase($this->pk->getPermissionKeyCategoryHandle()) . 'ListItem';
 		if ($this->pk->permissionKeyHasCustomClass()) {
-			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\ListItem\\' . Loader::helper('text')->camelcase($this->pk->getPermissionKeyHandle() . '_' . $this->pk->getPermissionKeyCategoryHandle()) . 'ListItem');
+			$class = '\\Concrete\\Core\\Permission\\Access\\ListItem\\' . Loader::helper('text')->camelcase($this->pk->getPermissionKeyHandle() . '_' . $this->pk->getPermissionKeyCategoryHandle()) . 'ListItem';
 		}
 
 		if (!class_exists($class)) {
-			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\ListItem\\ListItem');
+			$class = '\\Concrete\\Core\\Permission\\Access\\ListItem\\ListItem';
 		}
 
 		$filterString = $this->buildAssignmentFilterString($accessType, $filterEntities);
@@ -44,7 +45,7 @@ class Access extends Object {
  		$list = array();
  		$r = $db->Execute($q);
 		while ($row = $r->FetchRow()) {
-			$obj = new $class();
+			$obj = Core::make($class);
 			$obj->setPropertiesFromArray($row);
 			if ($row['pdID']) {
 				$obj->loadPermissionDurationObject($row['pdID']);
@@ -227,16 +228,16 @@ class Access extends Object {
 			$handle = $pk->getPermissionKeyHandle() . '_' . $handle;
 		}
 
-		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Access\\' . Loader::helper('text')->camelcase($handle) . 'Access');
+		$class = '\\Concrete\\Core\\Permission\\Access\\' . Loader::helper('text')->camelcase($handle) . 'Access';
 
 		if ($checkPA) {
 			$row = $db->GetRow('select paID, paIsInUse from PermissionAccess where paID = ?', array($paID));
 			if ($row['paID']) {
-				$obj = new $class();
+				$obj = Core::make($class);
 				$obj->setPropertiesFromArray($row);
 			}
 		} else { // we got here from an assignment object so we already know its in use.
-			$obj = new $class();
+			$obj = Core::make($class);
 			$obj->paID = $paID;
 			$obj->paIsInUse = true;
 		}

@@ -2,6 +2,7 @@
 namespace Concrete\Core\Gathering\Item\Template;
 use Loader;
 use \Concrete\Core\Package\PackageList;
+use Core;
 use \Concrete\Core\Foundation\Object;
 abstract class Template extends Object {
 
@@ -27,8 +28,8 @@ abstract class Template extends Object {
 			if ($row['gatHasCustomClass']) {
 				$class = Loader::helper('text')->camelcase($row['gatHandle']) . $class;
 			}
-			$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Gathering\\Item\\Template\\' . $ns . '\\' . $class);
-			$agt = new $className();
+			$className = '\\Concrete\\Core\\Gathering\\Item\\Template\\' . $ns . '\\' . $class;
+			$agt = Core::make($className);
 			$agt->setPropertiesFromArray($row);
 			return $agt;
 		}

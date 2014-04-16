@@ -8,12 +8,12 @@ class HttpServiceProvider extends ServiceProvider {
 		$singletons = array(
 			'helper/ajax' => '\Concrete\Core\Http\Service\Ajax',
 			'helper/json' => '\Concrete\Core\Http\Service\Json'
-
 		);
 
 		foreach($singletons as $key => $value) {
 			$this->app->singleton($key, $value);
 		}
+
 	}
 
 

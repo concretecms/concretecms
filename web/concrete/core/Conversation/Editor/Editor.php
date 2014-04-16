@@ -2,6 +2,7 @@
 namespace Concrete\Core\Conversation\Editor;
 use Loader;
 use \Concrete\Core\Package\PackageList;
+use Core;
 use \Concrete\Core\Foundation\Object;
 abstract class Editor extends Object {
 
@@ -87,8 +88,8 @@ abstract class Editor extends Object {
 		$db = Loader::db();
 		$r = $db->GetRow('select cnvEditorHandle, cnvEditorIsActive, pkgID, cnvEditorName from ConversationEditors where cnvEditorHandle = ?', array($cnvEditorHandle));
 		if (is_array($r) && $r['cnvEditorHandle']) {
-            $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Conversation\\Editor\\' . Loader::helper('text')->camelcase($r['cnvEditorHandle']) . 'Editor');
-			$sc = new $class();
+            $class = '\\Concrete\\Core\\Conversation\\Editor\\' . Loader::helper('text')->camelcase($r['cnvEditorHandle']) . 'Editor';
+			$sc = Core::make($class);
 			$sc->setPropertiesFromArray($r);
 			return $sc;
 		}

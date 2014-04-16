@@ -49,14 +49,14 @@ class Category extends Object {
 	
 	public function getAttributeKeyByHandle($akHandle) {
 		$txt = Loader::helper('text');
-		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Attribute\\Key\\' . $txt->camelcase($this->akCategoryHandle) . 'Key');
+		$className = '\\Concrete\\Core\\Attribute\\Key\\' . $txt->camelcase($this->akCategoryHandle) . 'Key';
 		$ak = call_user_func(array($className, 'getByHandle'), $akHandle);
 		return $ak;
 	}
 
 	public function getAttributeKeyByID($akID) {
 		$txt = Loader::helper('text');
-		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Attribute\\Key\\' . $txt->camelcase($this->akCategoryHandle) . 'Key');
+		$className = '\\Concrete\\Core\\Attribute\\Key\\' . $txt->camelcase($this->akCategoryHandle) . 'Key';
 		$ak = call_user_func(array($className, 'getByID'), $akID);
 		return $ak;
 	}
@@ -157,7 +157,7 @@ class Category extends Object {
 		$id = $db->Insert_ID();
 		
 		$txt = Loader::helper("text");
-		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle). 'Key');
+		$class = '\\Concrete\\Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle). 'Key';
 		$obj = new $class;
 		$obj->createIndexedSearchTable();
 		

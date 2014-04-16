@@ -4,6 +4,9 @@ use \Concrete\Core\Foundation\Object;
 use Loader;
 use \Concrete\Core\Package\PackageList;
 use Environment;
+use Config;
+use Core;
+
 abstract class Job extends Object {
 
 	const JOB_SUCCESS = 0;
@@ -204,7 +207,7 @@ abstract class Job extends Object {
 			$path=$jobClassLocation.'/'.$jHandle.'.php';	
 			if( file_exists($path) ){ 
 				$className = static::getClassName($jHandle);
-				$j = new $className();
+				$j = Core::make($className);
 				$j->jHandle=$jHandle;
 				if(intval($jobData['jID'])>0){
 					$j->setPropertiesFromArray($jobData);
@@ -217,7 +220,7 @@ abstract class Job extends Object {
 	}
 
 	protected static function getClassName($jHandle) {
-		$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Job\\' . Loader::helper('text')->camelcase($jHandle));
+		$className = '\\Concrete\\Job\\' . Loader::helper('text')->camelcase($jHandle);
 		return $className;
 	}
 	
@@ -255,7 +258,7 @@ abstract class Job extends Object {
 						
 						$jHandle = substr($file,0,strlen($file)-4);
 						$className = static::getClassName($jHandle);
-						$jobObjs[$jHandle]=new $className();
+						$jobObjs[$jHandle] = Core::make($className);
 					}
 					closedir($dh);
 				}
@@ -327,7 +330,7 @@ abstract class Job extends Object {
 		$dir = is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle()) ? DIR_PACKAGES . '/' . $pkg->getPackageHandle() : DIR_PACKAGES_CORE . '/' . $pkg->getPackageHandle();
 		$className = static::getClassName($jHandle);
 		if(class_exists($className)){
-			$j = new $className();
+			$j = Core::make($className);
 			$db = Loader::db();
 			$db->Execute('insert into Jobs (jName, jDescription, jDateInstalled, jNotUninstallable, jHandle, pkgID) values (?, ?, ?, ?, ?, ?)', 
 				array($j->getJobName(), $j->getJobDescription(), Loader::helper('date')->getLocalDateTime(), 0, $jHandle, $pkg->getPackageID()));

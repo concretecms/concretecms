@@ -11,11 +11,11 @@ class Gathering extends Object implements \Concrete\Core\Permission\ObjectInterf
 
 
 	public function getPermissionResponseClassName() {
-		return 'Core\\Permission\\Response\\GatheringResponse';
+		return '\\Concrete\\Core\\Permission\\Response\\GatheringResponse';
 	}
 
 	public function getPermissionAssignmentClassName() {
-		return 'Core\\Permission\\Assignment\\GatheringAssignment';	
+		return '\\Concrete\\Core\\Permission\\Assignment\\GatheringAssignment';	
 	}
 	public function getPermissionObjectKeyCategoryHandle() {
 		return 'gathering';

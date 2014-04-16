@@ -2,6 +2,7 @@
 namespace Concrete\Core\Captcha;
 use \Concrete\Core\Foundation\Object;
 use Loader;
+use Core;
 use \Concrete\Core\Package\PackageList;
 class Library extends Object {
 
@@ -117,8 +118,8 @@ class Library extends Object {
 	 * Returns the controller class for the currently selected captcha library
 	 */
 	public function getController() {
-		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Captcha\\' . Loader::helper('text')->camelcase($this->sclHandle) . 'Controller');
-		$cl = new $class();
+		$class = '\\Concrete\\Core\\Captcha\\' . Loader::helper('text')->camelcase($this->sclHandle) . 'Controller';
+		$cl = Core::make($class);
 		return $cl;
 	}
 

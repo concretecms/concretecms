@@ -1,6 +1,7 @@
 <?php 
 namespace Concrete\Core\Page\Type\Composer\Control\Type;
 use Loader;
+use Core;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Page\Type\Composer\Control\CorePageProperty\CorePageProperty as CorePagePropertyControl;
 
@@ -18,8 +19,8 @@ class CorePagePropertyType extends Type {
 	}
 
 	public function getPageTypeComposerControlByIdentifier($identifier) {
-		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Page\\Type\\Composer\\Control\\CorePageProperty\\' . Loader::helper('text')->camelcase($identifier) . 'CorePageProperty');
-		$object = new $class();
+		$class = '\\Concrete\\Core\\Page\\Type\\Composer\\Control\\CorePageProperty\\' . Loader::helper('text')->camelcase($identifier) . 'CorePageProperty';
+		$object = Core::make($class);
 		return $object;
 	}
 

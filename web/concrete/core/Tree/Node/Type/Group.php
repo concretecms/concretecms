@@ -6,11 +6,11 @@ use Group as UserGroup;
 class Group extends TreeNode {
 
 	public function getPermissionResponseClassName() {
-		return 'Core\\Permission\\Response\\GroupTreeNodeResponse';
+		return '\\Concrete\\Core\\Permission\\Response\\GroupTreeNodeResponse';
 	}
 
 	public function getPermissionAssignmentClassName() {
-		return 'Core\\Permission\\Assignment\\GroupTreeNodeAssignment';	
+		return '\\Concrete\\Core\\Permission\\Assignment\\GroupTreeNodeAssignment';	
 	}
 	public function getPermissionObjectKeyCategoryHandle() {
 		return 'group_tree_node';

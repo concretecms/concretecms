@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Gathering\DataSource;
 use Loader;
+use Core;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Gathering\DataSource\Configuration\Configuration as GatheringDataSourceConfiguration;
 use \Concrete\Core\Package\PackageList;
@@ -25,8 +26,8 @@ abstract class DataSource extends Object {
 		$row = $db->GetRow('select gasID, gasHandle, pkgID, gasName from GatheringDataSources where gasID = ?', array($gasID));
 		if (isset($row['gasID'])) {
 			$txt = Loader::helper('text');
-			$className = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Gathering\\DataSource\\' . $txt->camelcase($row['gasHandle'] . 'DataSource'));
-			$gas = new $className();
+			$className = '\\Concrete\\Core\\Gathering\\DataSource\\' . $txt->camelcase($row['gasHandle']) . 'DataSource';
+			$gas = Core::make($className);
 			$gas->setPropertiesFromArray($row);
 			return $gas;
 		}

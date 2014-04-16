@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Core\Foundation\Collection;
 use Loader;
+use Session;
+
 class ItemList {
 
 	protected $total = -1; // initial state == unknown

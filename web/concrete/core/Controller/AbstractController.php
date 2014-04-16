@@ -4,7 +4,7 @@ namespace Concrete\Core\Controller;
 use Request;
 use View;
 use \Concrete\Core\Http\ResponseAssetGroup;
-use Concrete;
+use Core;
 abstract class AbstractController {
 
 	protected $helpers = array();
@@ -50,7 +50,7 @@ abstract class AbstractController {
 	public function getHelperObjects() {
 		$helpers = array();
 		foreach($this->helpers as $handle) {
-			$h = Concrete::make('helper/' . $handle);
+			$h = Core::make('helper/' . $handle);
 			$helpers[(str_replace('/','_',$handle))] = $h;
 		}		
 		return $helpers;

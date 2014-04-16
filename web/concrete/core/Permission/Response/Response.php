@@ -7,6 +7,7 @@ use Group;
 use PermissionKey;
 use PermissionKeyCategory;
 use Permissions;
+use Core;
 use \Concrete\Core\Permission\Cache as PermissionCache;
 class Response {
 
@@ -34,11 +35,11 @@ class Response {
 			return $r;
 		}
 
-		$className = \Concrete\Core\Foundation\ClassLoader::getClassName($object->getPermissionResponseClassName());
+		$className = $object->getPermissionResponseClassName();
 		if ($object->getPermissionObjectKeyCategoryHandle()) {
 			$category = PermissionKeyCategory::getByHandle($object->getPermissionObjectKeyCategoryHandle());
 		}
-		$pr = new $className();
+		$pr = Core::make($className);
 		$pr->setPermissionCategoryObject($category);
 		$pr->setPermissionObject($object);
 		PermissionCache::addResponse($object, $pr);

@@ -9,7 +9,7 @@ use \Concrete\Core\Permission\Assignment\Assignment as PermissionAssignment;
 use User;
 use \Concrete\Core\Permission\Cache as PermissionCache;
 use Environment;
-
+use Core;
 abstract class Key extends Object {
 	
 	const ACCESS_TYPE_INCLUDE = 10;
@@ -113,11 +113,11 @@ abstract class Key extends Object {
 		$txt = Loader::helper('text');
 		$e = $db->Execute('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, pkHasCustomClass, PermissionKeys.pkCategoryID, pkCategoryHandle, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID');
 		while ($r = $e->FetchRow()) {
-			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Key\\' . $txt->camelcase($r['pkCategoryHandle']) . 'Key');
+			$class = '\\Concrete\\Core\\Permission\\Key\\' . $txt->camelcase($r['pkCategoryHandle']) . 'Key';
 			if ($r['pkHasCustomClass']) {
-				$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Key\\' . $txt->camelcase($r['pkHandle'] . '_' . $r['pkCategoryHandle']) . 'Key');
+				$class = '\\Concrete\\Core\\Permission\\Key\\' . $txt->camelcase($r['pkHandle'] . '_' . $r['pkCategoryHandle']) . 'Key';
 			}
-			$pk = new $class();
+			$pk = Core::make($class);
 			$pk->setPropertiesFromArray($r);
 
 			$permissionkeys[$r['pkHandle']] = $pk;
@@ -131,16 +131,16 @@ abstract class Key extends Object {
 		$db = Loader::db();
 		$txt = Loader::helper('text');
 		$r = $db->GetRow('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, pkHasCustomClass, PermissionKeys.pkCategoryID, pkCategoryHandle, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID where ' . $loadBy . ' = ?', array($key));
-		$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Key\\' . $txt->camelcase($r['pkCategoryHandle']) . 'Key');
+		$class = '\\Concrete\\Core\\Permission\\Key\\' . $txt->camelcase($r['pkCategoryHandle']) . 'Key';
 		if (!is_array($r) && (!$r['pkID'])) { 
 			return false;
 		}
 
 		if ($r['pkHasCustomClass']) {
-			$class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Permission\\Key\\' . $txt->camelcase($r['pkHandle'] . $r['pkCategoryHandle']) . 'Key');
+			$class = '\\Concrete\\Core\\Permission\\Key\\' . $txt->camelcase($r['pkHandle'] . '_' . $r['pkCategoryHandle']) . 'Key';
 		}
 				
-		$pk = new $class();
+		$pk = Core::make($class);
 		$pk->setPropertiesFromArray($r);
 		return $pk;
 	}
@@ -347,8 +347,8 @@ abstract class Key extends Object {
 
 	public function getPermissionAssignmentObject() {
 		if (is_object($this->permissionObject)) {
-			$className = \Concrete\Core\Foundation\ClassLoader::getClassName($this->permissionObject->getPermissionAssignmentClassName());
-			$targ = new $className();
+			$className = $this->permissionObject->getPermissionAssignmentClassName();
+			$targ = Core::make($className);
 			$targ->setPermissionObject($this->permissionObject);
 		} else {
 			$targ = new PermissionAssignment();

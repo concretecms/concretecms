@@ -5,6 +5,7 @@ use Loader;
 use \Concrete\Core\Tree\Node\NodeType as TreeNodeType;
 use PermissionKey;
 use Permissions;
+use Core;
 use stdClass;
 abstract class Node extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
@@ -311,8 +312,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
 		$row = $db->GetRow('select * from TreeNodes where treeNodeID = ?', array($treeNodeID));
 		if (is_array($row) && $row['treeNodeID']) {
 			$tt = TreeNodeType::getByID($row['treeNodeTypeID']);
-			$class = $tt->getTreeNodeTypeClass();
-			$node = new $class();
+			$node = Core::make($tt->getTreeNodeTypeClass());
 			$node->setPropertiesFromArray($row);
 			$node->loadDetails();
 			return $node;

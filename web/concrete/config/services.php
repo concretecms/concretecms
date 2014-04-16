@@ -10,6 +10,7 @@ return array(
 	'\Concrete\Core\Mail\MailServiceProvider',
 	'\Concrete\Core\Application\ApplicationServiceProvider',
 	'\Concrete\Core\Utility\UtilityServiceProvider',
+	'\Concrete\Core\Database\DatabaseServiceProvider',
 	'\Concrete\Core\Form\FormServiceProvider',
 	'\Concrete\Core\Session\SessionServiceProvider',
 	'\Concrete\Core\Http\HttpServiceProvider'

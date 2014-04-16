@@ -5,11 +5,11 @@ use Loader;
 class Topic extends TreeNode {
 
 	public function getPermissionResponseClassName() {
-		return 'Core\\Permission\\Response\\TopicTreeNodeResponse';
+		return '\\Concrete\\Core\\Permission\\Response\\TopicTreeNodeResponse';
 	}
 
 	public function getPermissionAssignmentClassName() {
-		return 'Core\\Permission\\Assignment\\TopicTreeNodeAssignment';	
+		return '\\Concrete\\Core\\Permission\\Assignment\\TopicTreeNodeAssignment';	
 	}
 	public function getPermissionObjectKeyCategoryHandle() {
 		return 'topic_tree_node';

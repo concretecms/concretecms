@@ -11,7 +11,7 @@ use Page;
 use GroupList;
 use Session;
 use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
-use Concrete;
+use Core;
 
 class User extends Object {
 
@@ -49,7 +49,7 @@ class User extends Object {
 			$nu->uGroups = $nu->_getUserGroups(true);
 			$nu->superUser = ($nu->getUserID() == USER_SUPER_ID);
 			if ($login) {
-				$session = Concrete::make('session');
+				$session = Core::make('session');
 				$session->set('uID', $row['uID']);
 				$session->set('uName', $row['uID']);
 				$session->set('uBlockTypesSet', false);
@@ -76,7 +76,7 @@ class User extends Object {
 	}
 
 	public static function isLoggedIn() {
-		$session = Concrete::make('session');
+		$session = Core::make('session');
 		return $session->has('uID') && $session->get('uID') > 0 && $session->has('uName') && $session->get('uName') != '';
 	}
 
@@ -149,7 +149,7 @@ class User extends Object {
 					}
 					$this->recordLogin();
 					if (!$args[2]) {
-						$session = Concrete::make('session');
+						$session = Core::make('session');
 						$session->set('uID', $row['uID']);
 						$session->set('uName', $row['uID']);
 						$session->set('superUser', $this->superUser);
@@ -400,7 +400,7 @@ class User extends Object {
 
 
 	function refreshUserGroups() {
-		$session = Concrete::make('session');
+		$session = Core::make('session');
 		$session->remove('uGroups');
 		$session->remove('accessEntities');
 		$ug = $this->_getUserGroups();

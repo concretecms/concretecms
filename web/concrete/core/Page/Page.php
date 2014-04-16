@@ -8,6 +8,7 @@ use \Concrete\Core\Page\Statistics as PageStatistics;
 use PageCache;
 use PageTemplate;
 use \Events;
+use Core;
 use Config;
 use PageController;
 use User;
@@ -136,11 +137,11 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 	}
 
 	public function getPermissionResponseClassName() {
-		return 'Core\\Permission\\Response\\PageResponse';
+		return '\\Concrete\\Core\\Permission\\Response\\PageResponse';
 	}
 
 	public function getPermissionAssignmentClassName() {
-		return 'Core\\Permission\\Assignment\\PageAssignment';	
+		return '\\Concrete\\Core\\Permission\\Assignment\\PageAssignment';	
 	}
 	public function getPermissionObjectKeyCategoryHandle() {
 		return 'page';
@@ -168,13 +169,13 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 				$path = substr($file, 0, strpos($file, '.php'));
 			}
 			$path = trim(str_replace(' ', '\\', ucwords(str_replace(array('/', '_'), ' ', $path))), '\\');
-			$class = \Concrete\Core\Foundation\Classloader::getClassName('Controller\\SinglePage\\' . $path);
+			$class = '\\Concrete\\Controller\\SinglePage\\' . $path;
 		}
 
 		if (isset($class) && class_exists($class)) {
-			return new $class($this);
+			return Core::make($class, array($this));
 		} else {
-			return new PageController($this);
+			return Core::make('\\Concrete\\Core\\Page\\Controller\\PageController', array($this));
 		}
 	}
 

@@ -243,11 +243,11 @@ class UI {
 
 
 	public function renderError($title, $error) {
-		$ve = new ErrorView();
 		$o = new stdClass;
 		$o->title = $title;
 		$o->content = $error;
-		$ve->render($o);
-
+		$ve = new ErrorView($o);
+		$response = $ve->render($o);
+		print $response;
 	}
 }

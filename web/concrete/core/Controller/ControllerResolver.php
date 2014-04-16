@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Controller;
 use Concrete\Core\Foundation\ClassLoader;
+use Core;
 
 class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\ControllerResolver {
 
@@ -14,14 +15,9 @@ class ControllerResolver extends \Symfony\Component\HttpKernel\Controller\Contro
         list($class, $method) = explode('::', $controller, 2);
 
         // now we do some concrete5 magic to route the controller into the right name space.
-        $cl = ClassLoader::getInstance();
-        $class = $cl->getClassName($class);
+        $object = Core::make($class);
 
-        if (!class_exists($class)) {
-            throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
-        }
-
-        return array(new $class(), $method);
+        return array(new $object, $method);
     }
 
 

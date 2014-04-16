@@ -16,7 +16,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface 
 	public function getPermissionObjectIdentifier() {return $this->gID;}
 
 	public function getPermissionResponseClassName() {
-		return 'Core\\Permission\\Response\\GroupResponse';
+		return '\\Concrete\\Core\\Permission\\Response\\GroupResponse';
 	}
 
 	public function getPermissionAssignmentClassName() {

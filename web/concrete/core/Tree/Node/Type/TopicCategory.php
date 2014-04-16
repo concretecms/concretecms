@@ -3,11 +3,11 @@ namespace Concrete\Core\Tree\Node\Type;
 class TopicCategory extends Category {
 
 	public function getPermissionResponseClassName() {
-		return 'Core\\Permission\\Response\\TopicCategoryTreeNodeResponse';
+		return '\\Concrete\\Core\\Permission\\Response\\TopicCategoryTreeNodeResponse';
 	}
 
 	public function getPermissionAssignmentClassName() {
-		return 'Core\\Permission\\Assignment\\TopicCategoryTreeNodeAssignment';	
+		return '\\Concrete\\Core\\Permission\\Assignment\\TopicCategoryTreeNodeAssignment';	
 	}
 	public function getPermissionObjectKeyCategoryHandle() {
 		return 'topic_category_tree_node';

@@ -6,6 +6,7 @@ use \Concrete\Core\Workflow\Request\Request as WorkflowRequest;
 use \Concrete\Core\Workflow\EmptyWorkflow;
 use \Concrete\Core\Workflow\Progress\Category as WorkflowProgressCategory;
 use Loader;
+use Core;
 abstract class Progress extends Object {  
 
 	protected $wpID;
@@ -70,7 +71,7 @@ abstract class Progress extends Object {
 		if ($this->wrID > 0) { 
 			$cat = WorkflowProgressCategory::getByID($this->wpCategoryID);
 			$handle = $cat->getWorkflowProgressCategoryHandle();
-            $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Workflow\\Request\\' . Loader::helper('text')->camelcase($handle) . 'Request');
+            $class = '\\Concrete\\Core\\Workflow\\Request\\' . Loader::helper('text')->camelcase($handle) . 'Request';
 			$wr = call_user_func_array(array($class, 'getByID'), array($this->wrID));
 			if (is_object($wr)) {
 				$wr->setCurrentWorkflowProgressObject($this);
@@ -111,9 +112,9 @@ abstract class Progress extends Object {
 		if (!is_array($r) || (!$r['wpID'])) { 
 			return false;
 		}
-        $class = \Concrete\Core\Foundation\ClassLoader::getClassName('Core\\Workflow\\Progress\\' . Concrete::make('helper/text')->camelcase($r['wpCategoryHandle']) . 'Progress');
+        $class = '\\Concrete\\Core\\Workflow\\Progress\\' . Core::make('helper/text')->camelcase($r['wpCategoryHandle']) . 'Progress';
 		
-		$wp = new $class;
+		$wp = Core::make($class);
 		$wp->setPropertiesFromArray($r);
 		$wp->loadDetails();
 		return $wp;

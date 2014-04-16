@@ -4,10 +4,11 @@ use Symfony\Component\HttpKernel;
 use Response;
 use View;
 use Concrete\Controller;
+use Request;
 
 class ControllerRouteCallback extends RouteCallback {
 
-	public function execute(\Concrete\Core\Http\Request $request, \Concrete\Core\Routing\Route $route, $parameters) {
+	public function execute(Request $request, \Concrete\Core\Routing\Route $route, $parameters) {
 		$resolver = new \Concrete\Core\Controller\ControllerResolver();
 	    $callback = $resolver->getController($request);
 	    $arguments = $resolver->getArguments($request, $callback);

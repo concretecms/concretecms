@@ -46,11 +46,11 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 	}
 
 	public function getPermissionResponseClassName() {
-		return 'Core\\Permission\\Response\\FileResponse';
+		return '\\Concrete\\Core\\Permission\\Response\\FileResponse';
 	}
 
 	public function getPermissionAssignmentClassName() {
-		return 'Core\\Permission\\Assignment\\FileAssignment';	
+		return '\\Concrete\\Core\\Permission\\Assignment\\FileAssignment';	
 	}
 	public function getPermissionObjectKeyCategoryHandle() {
 		return 'file';
