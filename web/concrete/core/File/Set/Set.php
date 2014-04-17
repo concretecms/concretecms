@@ -9,6 +9,7 @@ use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccess
 use \Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombinationPermissionAccessEntity;
 use \Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
 use PermissionKey;
+use Permissions;
 use PermissionAccess;
 
 class Set implements \Concrete\Core\Permission\ObjectInterface {
@@ -36,10 +37,10 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 		$db = Loader::db();
 		$sets = array();
 		$u = new User();
-		$r = $db->Execute('select * from FileSets where fsType = ? and uID = ? order by fsName asc', array(FileSet::TYPE_SAVED_SEARCH, $u->getUserID()));
+		$r = $db->Execute('select * from FileSets where fsType = ? and uID = ? order by fsName asc', array(Set::TYPE_SAVED_SEARCH, $u->getUserID()));
 		while ($row = $r->FetchRow()) {
 			$fs = new static();
-			$fs->Set($row);
+			$fs = array_to_object($fs, $row);
 			$sets[] = $fs;
 		}
 		return $sets;
@@ -69,7 +70,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 		$r = $db->Execute('select * from FileSets where fsType = ? or (fsType in (?, ?) and uID = ?) order by fsName asc', array(static::TYPE_PUBLIC, static::TYPE_STARRED, static::TYPE_PRIVATE, $u->getUserID()));
 		while ($row = $r->FetchRow()) {
 			$fs = new static();
-			$fs->Set($row);
+			$fs = array_to_object($fs, $row);
 			$fsp = new Permissions($fs);
 			if ($fsp->canSearchFiles()) {
 				$sets[] = $fs;
@@ -100,7 +101,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 		$row = $db->GetRow('select * from FileSets where fsID = ?', array($fsID));
 		if (is_array($row)) {
 			$fs = new static();
-			$fs->Set($row);
+			$fs = array_to_object($fs, $row);
 			if ($row['fsType'] == static::TYPE_SAVED_SEARCH) {
 				$row2 = $db->GetRow('select fsSearchRequest, fsResultColumns from FileSetSavedSearches where fsID = ?', array($fsID));
 				$fs->fsSearchRequest = @unserialize($row2['fsSearchRequest']);
@@ -120,7 +121,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 		$row = $db->GetRow('select * from FileSets where fsName = ?', array($fsName));
 		if (is_array($row) && count($row)) {
 			$fs = new static();
-			$fs->Set($row);
+			$fs = array_to_object($fs, $row);
 			return $fs;
 		}
 	}			
@@ -152,35 +153,48 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 			$u = new User();
 			$fs_uid = $u->uID;
 		}
-		
-		$file_set = new static();
-		$criteria = array($fs_name,$fs_type,$fs_uid);
-		$matched_sets = $file_set->Find('fsName=? AND fsType=? and uID=?',$criteria);
-		
-		if (1 === count($matched_sets) ) {
-			return $matched_sets[0];
-		}
-		else if (1 < count($matched_sets)) {
-			return $matched_sets;
-		}
-		else{
-			//AS: Adodb Active record is complaining a ?/value array mismatch unless
-			//we explicatly set the primary key ID field to null					
-			$file_set->fsID		= null;
-			$file_set->fsName 	= $fs_name;
-			$file_set->fsOverrideGlobalPermissions = 0;
-			$file_set->fsType 	= $fs_type;
-			$file_set->uID		= $fs_uid;
-			$file_set->save();
 
-			$db = Loader::db();
-			$fsID = $db->Insert_Id();
-			$fs = FileSet::getByID($fsID);
-			Events::fire('on_file_set_add', $fs);
+		$db = Loader::db();
+		$criteria = array($fs_name,$fs_type,$fs_uid);
+		$fsID = $db->GetOne('select fsID from FileSets where fsName=? AND fsType=? and uID=?', $criteria);
+		if ($fsID > 0) {
+			return static::getByID($fsID);
+		} else {
+			$fs = static::add($fs_name, 0, $fs_uid, $fs_type);		
 			return $fs;
 		}			
 	}
-	
+
+	/**
+	 * Adds a file set
+	 */
+	public static function add($setName, $fsOverrideGlobalPermissions = 0, $u = false, $type = Set::TYPE_PUBLIC) {
+		if (is_object($u) && $u->isRegistered()) {
+			$uID = $u->getUserID();
+		} else if ($u) {
+			$uID = $u;
+		} else {
+			$uID = 0;
+		}
+
+		$db = Loader::db();
+		$db->insert("FileSets", array('fsType' => $type, 'fsOverrideGlobalPermissions' => $fsOverrideGlobalPermissions, 'uID' => $uID, 'fsName' => $setName));
+		$fsID = $db->lastInsertId();
+		$fs = static::getByID($fsID);
+		Events::fire('on_file_set_add', $fs);
+		return $fs;
+
+	}
+
+	/**
+	 * Updates a file set.
+	 */
+	public function update($setName, $fsOverrideGlobalPermissions = 0) {
+		$db = Loader::db();
+		$db->update('FileSets', array('fsName' => $setName, 'fsOverrideGlobalPermissions' => $fsOverrideGlobalPermissions), array('fsID' => $this->fsID));
+		return static::getByID($this->fsID);
+	}
+
 	/**
 	* Adds the file to the set
 	* @param type $fID  //accepts an ID or a File object
@@ -219,9 +233,8 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 	* Can obsolete this when we get version of ADOdB with one/many support
 	* @return type $var_name
 	*/		
-	private function populateFiles(){			
-		$utility 			= new File();
-		$this->fileSetFiles = $utility->Find('fsID = ? ORDER BY fsDisplayOrder', array($this->fsID));
+	private function populateFiles() {
+		$this->fileSetFiles = File::getFileSetFiles($this);		
 	}
 	
 	public function hasFileID($f_id){
@@ -277,8 +290,8 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 	}
 	
 	public function delete() {
-		parent::delete();
 		$db = Loader::db();
+		$db->delete('FileSets', array('fsID' => $this->fsID));
 		$db->Execute('delete from FileSetSavedSearches where fsID = ?', array($this->fsID));
 	}
 	

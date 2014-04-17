@@ -38,9 +38,7 @@ class Sets extends DashboardPageController {
 	}
 	
 	public function delete($fsID, $token = '') {
-
-		$u=new User();
-		
+	
 		$fs = FileSet::getByID($fsID);
 		
 			
@@ -61,8 +59,6 @@ class Sets extends DashboardPageController {
 	public function view_detail($fsID, $action = false) {
 		
 		$fs = FileSet::getByID($fsID);
-		$ph = Loader::controller('/dashboard/system/permissions/files');
-		$this->set('ph', $ph);		
 		$this->set('fs', $fs);	
 		if ($action == 'file_set_updated') {
 			$this->set('message', t('File set updated successfully.'));
@@ -97,9 +93,8 @@ class Sets extends DashboardPageController {
 			return;
 		}
 
-		$file_set = new FileSet();
-		$file_set->Load('fsID = ?', $this->post('fsID'));		
-		$file_set->fsName = $setName;
+		$file_set = FileSet::getByID($this->post('fsID'));
+
 		$copyPermissionsFromBase = false;
 		if ($file_set->fsOverrideGlobalPermissions == 0 && $this->post('fsOverrideGlobalPermissions') == 1) {
 			// we are checking the checkbox for the first time
@@ -120,9 +115,9 @@ class Sets extends DashboardPageController {
 				}		
 			}			
 		}
-		$file_set->fsOverrideGlobalPermissions = ($this->post('fsOverrideGlobalPermissions') == 1) ? 1 : 0;
-		$file_set->save();
-		
+
+		$fsOverrideGlobalPermissions = ($this->post('fsOverrideGlobalPermissions') == 1) ? 1 : 0;
+		$file_set->update($setName, $fsOverrideGlobalPermissions);	
 		$file_set->updateFileSetDisplayOrder($this->post('fsDisplayOrder'));
 
 		if ($file_set->fsOverrideGlobalPermissions == 0) {

@@ -147,4 +147,14 @@ function uncamelcase($string) {
 		}
 	}
 	return str_replace('__', '_', implode('_', $a));
-}		
+}
+
+/**
+ * Fills an object properties from an array
+ */
+function array_to_object($o, $array) {
+    foreach ($array as $property => $value) {
+    	$o->$property = $value;
+    }
+    return $o;
+}
