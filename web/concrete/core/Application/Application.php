@@ -121,7 +121,7 @@ class Application extends Container {
 			$perm ? define('FILE_PERMISSIONS_MODE', $perm) : define('FILE_PERMISSIONS_MODE', 0664);
 		}
 		if (!defined('DIRECTORY_PERMISSIONS_MODE')) {
-			$perm = $this->make('helper/file')->getCreateFilePermissions()->file;
+			$perm = $this->make('helper/file')->getCreateFilePermissions()->dir;
 			$perm ? define('DIRECTORY_PERMISSIONS_MODE', $perm) : define('DIRECTORY_PERMISSIONS_MODE', 0775);
 		}
 		if (defined('DIR_FILES_CACHE') && !is_dir(DIR_FILES_CACHE)) {
