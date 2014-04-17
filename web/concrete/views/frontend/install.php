@@ -350,6 +350,13 @@ $(function() {
 	</td>
 	<td><img id="ccm-test-request-tooltip" src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" class="launch-tooltip" title="<?=t('concrete5 cannot parse the PATH_INFO or ORIG_PATH_INFO information provided by your server.')?>" /></td>
 </tr>
+<tr>
+	<td><? if ($jsonTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/error.png" /><? } ?></td>
+	<td width="100%"><?=t('JSON Extension Enabled')?>
+	</td>
+	<td><? if (!$jsonTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" class="launch-tooltip" title="<?=t('You must enable PHP\'s JSON support. This should be enabled by default in PHP 5.2 and above.')?>" /><? } ?></td>
+</tr>
+
 </table>
 
 </div>

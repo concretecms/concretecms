@@ -8,6 +8,7 @@ use UserAttributeKey;
 use \Concrete\Core\Attribute\Value\UserValue as UserAttributeValue;
 use \Concrete\Core\Attribute\Key\Key as AttributeKey;
 use Group;
+use \Hautelook\Phpass\PasswordHash;
 
 class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
@@ -134,7 +135,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		$db = Loader::db();
 		$dh = Loader::helper('date');
 		$uDateAdded = $dh->getSystemDateTime();
-		$hasher = new \PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
+		$hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
 		
 		if ($data['uIsValidated'] == 1) {
 			$uIsValidated = 1;

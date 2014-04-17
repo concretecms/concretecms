@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.9.4" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0     http://pear.php.net/dtd/tasks-1.0.xsd     http://pear.php.net/dtd/package-2.0     http://pear.php.net/dtd/package-2.0.xsd">
+ <name>JShrink</name>
+ <channel>pear.tedivm.com</channel>
+ <summary>The javascript minifier for php.</summary>
+ <description>JShrink is a php class that minifies javascript so that it can be delivered to the client quicker. This code can be used by any product looking to minify their javascript on the fly (although caching the results is suggested for performance reasons). Unlike many other products this is not a port into php but a native application, resulting in better performance.</description>
+ <lead>
+  <name>Robert Hafner</name>
+  <user>tedivm</user>
+  <email>tedivm@tedivm.com</email>
+  <active>yes</active>
+ </lead>
+ <date>2012-11-25</date>
+ <time>21:06:12</time>
+ <version>
+  <release>0.5.1</release>
+  <api>0.5.1</api>
+ </version>
+ <stability>
+  <release>beta</release>
+  <api>beta</api>
+ </stability>
+ <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD Style</license>
+ <notes>
+-
+ </notes>
+ <contents>
+  <dir baseinstalldir="/" name="/">
+   <file baseinstalldir="/" md5sum="d245eafc47812bd47bf18fb4ede5508d" name="src/JShrink/Minifier.php" role="php" />
+   <file baseinstalldir="/" md5sum="50b7c44386897145a8108a2bd80f22a5" name="tests/JShrink.php" role="test" />
+   <file baseinstalldir="/" md5sum="861a40254d65e2fa99052828d7d25cdd" name="tests/minify/jshrink/expect/preserve-strings.js" role="test" />
+   <file baseinstalldir="/" md5sum="1bb1610e70168b05a983c55b460ecdfb" name="tests/minify/jshrink/test/preserve-strings.js" role="test" />
+   <file baseinstalldir="/" md5sum="37f807922560557ae587388bae54a15f" name="tests/minify/uglify/README" role="test" />
+   <file baseinstalldir="/" md5sum="5e15883a73b35ad90c1bfa08591c883c" name="tests/minify/uglify/expect/array1.js" role="test" />
+   <file baseinstalldir="/" md5sum="3b7a9937e340906633643581ee89e5f6" name="tests/minify/uglify/expect/array2.js" role="test" />
+   <file baseinstalldir="/" md5sum="c79204c6826b37a920650c03f733acfd" name="tests/minify/uglify/expect/array3.js" role="test" />
+   <file baseinstalldir="/" md5sum="b086f1e82f4ef0031b4222e29179d692" name="tests/minify/uglify/expect/array4.js" role="test" />
+   <file baseinstalldir="/" md5sum="7c0c3d645fe45eb40c17e9e0cd1f8509" name="tests/minify/uglify/expect/assignment.js" role="test" />
+   <file baseinstalldir="/" md5sum="53b7ae9feae42c1a5e5391b2273eca2d" name="tests/minify/uglify/expect/concatstring.js" role="test" />
+   <file baseinstalldir="/" md5sum="8675c75a3d42aad8a3f358b265bfa874" name="tests/minify/uglify/expect/empty-blocks.js" role="test" />
+   <file baseinstalldir="/" md5sum="0fb7ba8e2ab989becf60d282251b9d99" name="tests/minify/uglify/expect/forstatement.js" role="test" />
+   <file baseinstalldir="/" md5sum="e3e0834ec1d59723068020d308c01fc4" name="tests/minify/uglify/expect/if.js" role="test" />
+   <file baseinstalldir="/" md5sum="63840e22d8fd58ab912e15b7e1b73114" name="tests/minify/uglify/expect/ifreturn.js" role="test" />
+   <file baseinstalldir="/" md5sum="49b8ceec0c5a8eff21a957985c0bc414" name="tests/minify/uglify/expect/ifreturn2.js" role="test" />
+   <file baseinstalldir="/" md5sum="4d6b64dda2296c7bec896841d2cb1a88" name="tests/minify/uglify/expect/null_string.js" role="test" />
+   <file baseinstalldir="/" md5sum="d9b77de8bd995898777aca3a75ff6945" name="tests/minify/uglify/expect/strict-equals.js" role="test" />
+   <file baseinstalldir="/" md5sum="b79db273677d1427543ce55ab8d543b2" name="tests/minify/uglify/expect/var.js" role="test" />
+   <file baseinstalldir="/" md5sum="9d8538709667cbd14872c5d68cfe15cd" name="tests/minify/uglify/expect/whitespace.js" role="test" />
+   <file baseinstalldir="/" md5sum="aaba354b3cb0be4cf980fff39a2f2755" name="tests/minify/uglify/expect/with.js" role="test" />
+   <file baseinstalldir="/" md5sum="e2fe5a88c44d86672416fd657f97b45d" name="tests/minify/uglify/test/array1.js" role="test" />
+   <file baseinstalldir="/" md5sum="b703cf94ff1237321a21644cb96373a6" name="tests/minify/uglify/test/array2.js" role="test" />
+   <file baseinstalldir="/" md5sum="790790dca46491ae289dee723eab5011" name="tests/minify/uglify/test/array3.js" role="test" />
+   <file baseinstalldir="/" md5sum="8442eaa5f5581c87d44901ea4b067ace" name="tests/minify/uglify/test/array4.js" role="test" />
+   <file baseinstalldir="/" md5sum="0a9c0de0ce69025d17d910f5ecc64512" name="tests/minify/uglify/test/assignment.js" role="test" />
+   <file baseinstalldir="/" md5sum="e61b10bfa22b3e9c4e4bb3b70096718b" name="tests/minify/uglify/test/concatstring.js" role="test" />
+   <file baseinstalldir="/" md5sum="da55c4f4d602025f3e37e3f1a8895d01" name="tests/minify/uglify/test/empty-blocks.js" role="test" />
+   <file baseinstalldir="/" md5sum="d338577b65d72471df30d29aafea7af6" name="tests/minify/uglify/test/forstatement.js" role="test" />
+   <file baseinstalldir="/" md5sum="2306b1c65039a9db7fd790655769b429" name="tests/minify/uglify/test/if.js" role="test" />
+   <file baseinstalldir="/" md5sum="74dedc1fd2c28a81bd155826bb7649b6" name="tests/minify/uglify/test/ifreturn.js" role="test" />
+   <file baseinstalldir="/" md5sum="70f98372986bfcad3e7725fbc9e6bb37" name="tests/minify/uglify/test/ifreturn2.js" role="test" />
+   <file baseinstalldir="/" md5sum="f93f9bc6ec724c88a22be4641ddd29e0" name="tests/minify/uglify/test/null_string.js" role="test" />
+   <file baseinstalldir="/" md5sum="9f30b1ce545640d958ee92852fadbb0e" name="tests/minify/uglify/test/strict-equals.js" role="test" />
+   <file baseinstalldir="/" md5sum="1e3b0283b7b26fe978d32247286890b9" name="tests/minify/uglify/test/var.js" role="test" />
+   <file baseinstalldir="/" md5sum="bd342844a56d9b6d38ecdffe05153998" name="tests/minify/uglify/test/whitespace.js" role="test" />
+   <file baseinstalldir="/" md5sum="c28cbd9979f5d969c5a49ad97b66c94c" name="tests/minify/uglify/test/with.js" role="test" />
+   <file baseinstalldir="/" md5sum="b7603f6ba06352f101cc74dc6b72c5b1" name="composer.json" role="data" />
+   <file baseinstalldir="/" md5sum="0a8fd596034db85a8ae22c1d2330edfb" name="LICENSE" role="doc" />
+   <file baseinstalldir="/" md5sum="57a8f87308e7b475d9b34689d8c1f381" name="README.md" role="data" />
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.3.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <phprelease />
+ <changelog>
+  <release>
+   <version>
+    <release>0.5.1</release>
+    <api>0.5.1</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2012-11-25</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD Style</license>
+   <notes>
+-
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.9.0</release>
+    <api>0.9.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2012-11-25</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD Style</license>
+   <notes>
+-
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>0.10.1</release>
+    <api>0.10.1</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2012-11-25</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD Style</license>
+   <notes>
+-
+   </notes>
+  </release>
+ </changelog>
+</package>
