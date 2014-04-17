@@ -151,6 +151,15 @@ if ($response) {
 
 /**
  * ----------------------------------------------------------------------------
+ * Include our local config/app.php for any customizations, events, etc...
+ * ----------------------------------------------------------------------------
+ */
+if (file_exists(DIR_CONFIG_SITE)) include DIR_CONFIG_SITE . '/app.php';
+
+
+
+/**
+ * ----------------------------------------------------------------------------
  * Set the active language for the site, based either on the site locale, or the
  * current user record. This can be changed later as well, during runtime.
  * Start localization library.
