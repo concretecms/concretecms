@@ -12,7 +12,7 @@ class UserEntity extends Entity {
 		return array($this->getUserObject());
 	}
 	public function getAccessEntityTypeLinkHTML() {
-		$html = '<a href="' . URL::to('/system/dialogs/user/search', 'multiple') . '" dialog-modal="false" dialog-width="90%" dialog-title="' . t('Add User') . '" class="dialog-launch" dialog-height="70%"">' . tc('PermissionAccessEntityTypeName', 'User') . '</a>';
+		$html = '<a href="' . URL::to('/ccm/system/dialogs/user/search', 'multiple') . '" dialog-modal="false" dialog-width="90%" dialog-title="' . t('Add User') . '" class="dialog-launch" dialog-height="70%"">' . tc('PermissionAccessEntityTypeName', 'User') . '</a>';
 		return $html;		
 	}
 

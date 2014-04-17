@@ -2,7 +2,7 @@
 namespace Concrete\Core\File\Search\ColumnSet;
 use \Concrete\Core\Foundation\Collection\Database\Column\Column as DatabaseItemListColumn;
 use Loader;
-class Available extends \Concrete\Core\Foundation\Collection\Database\Column\Set {
+class Available extends DefaultSet {
 	protected $attributeClass = 'FileAttributeKey';
 	public function __construct() {
 		parent::__construct();

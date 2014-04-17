@@ -5,7 +5,7 @@ use Loader;
 
 class Versions extends BackendInterfacePageController {
 
-	protected $viewPath = '/system/panels/details/page/versions';
+	protected $viewPath = '/panels/details/page/versions';
 
 	public function canAccess() {
 		return $this->permissions->canViewPageVersions();

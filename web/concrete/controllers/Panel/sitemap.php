@@ -7,7 +7,7 @@ use Page;
 use Permissions;
 class Sitemap extends BackendInterfacePageController {
 
-	protected $viewPath = '/system/panels/sitemap';
+	protected $viewPath = '/panels/sitemap';
 	protected $pagetypes = array();
 
 	protected function canAccess() {

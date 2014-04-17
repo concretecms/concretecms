@@ -73,7 +73,7 @@ class DispatcherRouteCallback extends RouteCallback {
 		if ((!$c->isAdminArea()) && ($c->getCollectionPath() != '/login')) {
 			$smm = Config::get('SITE_MAINTENANCE_MODE');
 			if ($smm == 1 && ($_SERVER['REQUEST_METHOD'] != 'POST' || Loader::helper('validation/token')->validate() == false)) {
-				$v = new View('/maintenance_mode');
+				$v = new View('/frontend/maintenance_mode');
 				$v->setViewTheme(VIEW_CORE_THEME);
 				return $this->sendResponse($v);
 			}

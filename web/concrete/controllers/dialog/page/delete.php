@@ -5,9 +5,10 @@ use \Concrete\Core\Workflow\Request\DeletePageRequest as DeletePagePageWorkflowR
 use \Concrete\Core\Page\EditResponse as PageEditResponse;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 use user;
+use Loader;
 class Delete extends BackendInterfacePageController {
 
-	protected $viewPath = '/system/dialogs/page/delete';
+	protected $viewPath = '/dialogs/page/delete';
 
 	protected function canAccess() {
 		return $this->permissions->canDeletePage();

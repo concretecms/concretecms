@@ -15,7 +15,7 @@ use Response;
 
 class Customize extends BackendInterfacePageController {
 
-	protected $viewPath = '/system/panels/page/design/customize';
+	protected $viewPath = '/panels/page/design/customize';
 	protected $helpers = array('form');
 
 	public function canAccess() {

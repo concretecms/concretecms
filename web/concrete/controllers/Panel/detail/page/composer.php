@@ -10,7 +10,7 @@ use User;
 
 class Composer extends BackendInterfacePageController {
 
-	protected $viewPath = '/system/panels/details/page/composer';
+	protected $viewPath = '/panels/details/page/composer';
 
 	protected function canAccess() {
 		return $this->permissions->canEditPageContents();

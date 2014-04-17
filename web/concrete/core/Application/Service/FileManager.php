@@ -5,7 +5,7 @@ use View;
 use Loader;
 use \Concrete\Core\File\Type\Type as FileType;
 use File;
-class AssetLibrary {
+class FileManager {
 
 
 	/** 

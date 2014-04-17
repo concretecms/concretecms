@@ -1,5 +1,5 @@
 <?
-namespace \Concrete\Core\Page;
+namespace Concrete\Core\Page;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 class CustomStylePreset extends Object {

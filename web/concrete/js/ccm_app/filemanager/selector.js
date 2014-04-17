@@ -27,7 +27,7 @@
 			$.fn.dialog.open({
 				width: w,
 				height: '100%',
-				href: CCM_DISPATCHER_FILENAME + '/system/dialogs/file/search',
+				href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/search',
 				modal: true,
 				title: ccmi18n_filemanager.title,
 				onOpen: function() {
@@ -63,7 +63,7 @@
 			$.ajax({
 				type: 'post',
 				dataType: 'json',
-				url: CCM_DISPATCHER_FILENAME + '/system/file/get_json',
+				url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/get_json',
 				data: {'fID': fID},
 				error: function(r) {
 	    			ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');

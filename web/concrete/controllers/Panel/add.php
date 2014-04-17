@@ -8,7 +8,7 @@ use BlockType;
 
 class Add extends BackendInterfacePageController {
 
-	protected $viewPath = '/system/panels/add';
+	protected $viewPath = '/panels/add';
 	protected $pagetypes = array();
 
 	protected function canAccess() {

@@ -168,7 +168,7 @@ class Pages extends Controller {
 			}
 		}
 
-		$ilr = new PageSearchResult($columns, $this->pageList, URL::to('/system/search/pages/submit'), $this->fields);
+		$ilr = new PageSearchResult($columns, $this->pageList, URL::to('/ccm/system/search/pages/submit'), $this->fields);
 		$this->result = $ilr;
 	}
 

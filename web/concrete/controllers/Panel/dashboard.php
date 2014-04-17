@@ -10,7 +10,7 @@ use UserInfo;
 
 class Dashboard extends BackendInterfacePageController {
 
-	protected $viewPath = '/system/panels/dashboard';
+	protected $viewPath = '/panels/dashboard';
 
 	protected function canAccess() {
 		$dh = Loader::helper('concrete/dashboard');

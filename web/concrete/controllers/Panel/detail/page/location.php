@@ -13,7 +13,7 @@ use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
 class Location extends BackendInterfacePageController {
 
-	protected $viewPath = '/system/panels/details/page/location';
+	protected $viewPath = '/panels/details/page/location';
 
 	protected function canAccess() {
 		return ($this->page->getCollectionID() != HOME_CID && is_object($this->asl) && $this->asl->allowEditPaths());

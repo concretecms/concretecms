@@ -13,7 +13,7 @@ use User;
 
 class Versions extends BackendInterfacePageController {
 
-	protected $viewPath = '/system/panels/page/versions';
+	protected $viewPath = '/panels/page/versions';
 	public function canAccess() {
 		return $this->permissions->canViewPageVersions() || $this->permissions->canEditPageVersions();
 	}

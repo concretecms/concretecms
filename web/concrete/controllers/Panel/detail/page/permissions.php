@@ -13,7 +13,7 @@ use View;
 
 class Permissions extends BackendInterfacePageController {
 
-	protected $viewPath = '/system/panels/details/page/permissions/simple';
+	protected $viewPath = '/panels/details/page/permissions/simple';
 
 	protected function canAccess() {
 		return $this->permissions->canEditPagePermissions();
@@ -21,7 +21,7 @@ class Permissions extends BackendInterfacePageController {
 
 	public function view() {
 		if (PERMISSIONS_MODEL != 'simple') {
-			$this->setViewObject(new View('/system/panels/details/page/permissions/advanced'));
+			$this->setViewObject(new View('/panels/details/page/permissions/advanced'));
 			$this->set('editPermissions', false);
 			if ($this->page->getCollectionInheritance() == 'OVERRIDE') { 
 				$this->set('editPermissions', true);

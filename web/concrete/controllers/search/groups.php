@@ -37,7 +37,7 @@ class Groups extends Controller {
 		$this->groupList->sortBy('gID', 'asc');
 
 		$columns = new GroupSearchColumnSet();
-		$ilr = new SearchResult($columns, $this->groupList, URL::to('/system/search/groups/submit'));
+		$ilr = new SearchResult($columns, $this->groupList, URL::to('/ccm/system/search/groups/submit'));
 		$this->result = $ilr;
 	}
 

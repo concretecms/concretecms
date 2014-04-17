@@ -16,7 +16,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 
 <div data-search="groups">
 <script type="text/template" data-template="search-form">
-<form role="form" data-search-form="groups" action="<?=URL::to('/system/search/groups/submit')?>" class="form-inline ccm-search-fields">
+<form role="form" data-search-form="groups" action="<?=URL::to('/ccm/system/search/groups/submit')?>" class="form-inline ccm-search-fields">
 	<input type="hidden" name="filter" value="<?=$searchRequest['filter']?>" />
 	<div class="ccm-search-fields-row">
 	<div class="form-group">

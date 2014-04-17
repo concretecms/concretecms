@@ -1,13 +1,15 @@
 <?
-namespace \Concrete\Controller\Dialog\User\Search;
+namespace Concrete\Controller\Dialog\User\Search;
 use \Concrete\Controller\Backend\UI as BackendInterfaceController;
 use User;
 use UserAttributeKey;
+use Loader;
+use UserList;
+use URL;
 
 class Customize extends BackendInterfaceController {
 
-	protected $viewPath = '/system/dialogs/search/customize';
-	protected $controllerActionPath = '/system/dialogs/user/search/customize';
+	protected $viewPath = '/dialogs/search/customize';
 
 	protected function canAccess() {
 		$sh = Loader::helper('concrete/user');
@@ -44,8 +46,8 @@ class Customize extends BackendInterfaceController {
 			$col = $columns->getDefaultSortColumn();	
 			$userList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
 
-			$ilr = new \Concrete\Search\Result\Result($columns, $userList, URL::to('/system/search/users/submit'));
-			$r = new \Concrete\Search\Response();
+			$ilr = new \Concrete\Core\User\Search\Result\Result($columns, $userList, URL::to('/search/users/submit'));
+			$r = new \Concrete\Core\Search\Response();
 			$r->setMessage(t('User search columns saved successfully.'));
 			$r->setSearchResult($ilr);
 			$r->outputJSON();

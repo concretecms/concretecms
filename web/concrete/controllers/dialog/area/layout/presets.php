@@ -1,5 +1,5 @@
 <?
-namespace \Concrete\Controller\Dialog\Area\Layout;
+namespace Concrete\Controller\Dialog\Area\Layout;
 use \Concrete\Controller\Backend\UI as BackendInterfaceController;
 use PermissionKey;
 use Exception;
@@ -11,7 +11,7 @@ use \Concrete\Core\Page\EditReponse as PageEditResponse;
 
 class Presets extends BackendInterfaceController {
 
-	protected $viewPath = '/system/dialogs/area/layout/presets';
+	protected $viewPath = '/dialogs/area/layout/presets';
 
 	protected function canAccess() {
 		$pk = PermissionKey::getByHandle('manage_layout_presets');

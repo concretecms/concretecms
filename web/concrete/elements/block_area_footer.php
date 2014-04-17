@@ -87,7 +87,7 @@ $class = 'ccm-area-footer';
 				<? if ($pk->validate()) { 
 					$btc = $bx->getController();
 					$arLayout = $btc->getAreaLayoutObject(); ?>
-					<li><a class="dialog-launch" href="<?=URL::to('/system/dialogs/area/layout/presets', $arLayout->getAreaLayoutID(), Loader::helper('validation/token')->generate('layout_presets'))?>" dialog-width="360" dialog-height="240" dialog-modal="true"><?=t("Save Layout as Preset")?></a></li>
+					<li><a class="dialog-launch" href="<?=URL::to('/ccm/system/dialogs/area/layout/presets', $arLayout->getAreaLayoutID(), Loader::helper('validation/token')->generate('layout_presets'))?>" dialog-width="360" dialog-height="240" dialog-modal="true"><?=t("Save Layout as Preset")?></a></li>
 				<? } ?>
 			<? } ?>
 		<? }

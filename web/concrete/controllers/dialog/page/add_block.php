@@ -14,7 +14,7 @@ use Permissions;
 use Block;
 class AddBlock extends BackendInterfacePageController {
 
-	protected $viewPath = '/system/dialogs/page/add_block';
+	protected $viewPath = '/dialogs/page/add_block';
 
 	protected function canAccess() {
 		return $this->areaPermissions->canAddBlock($this->blockType);

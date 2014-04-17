@@ -1,15 +1,16 @@
 <?
-namespace \Concrete\Controller\Dialog\User\Bulk;
+namespace Concrete\Controller\Dialog\User\Bulk;
 use \Concrete\Controller\Backend\UI as BackendInterfaceController;
 use PermissionKey;
 use \Concrete\Core\Http\ResponseAssetGroup;
 use Permissions;
 use \Concrete\Core\User\EditResponse as UserEditResponse;
 use UserAttributeKey;
+use Loader;
 
 class Properties extends BackendInterfaceController {
 
-	protected $viewPath = '/system/dialogs/user/bulk/properties';
+	protected $viewPath = '/dialogs/user/bulk/properties';
 	protected $users = array();
 	protected $canEdit = false;
 

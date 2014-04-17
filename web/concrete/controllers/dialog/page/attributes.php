@@ -4,10 +4,11 @@ use \Concrete\Controller\Backend\UI as BackendInterfaceController;
 use \Concrete\Controller\Panel\Page\Attributes as PageAttributesPanelController;
 use \Concrete\Controller\Panel\Detail\Page\Attributes as PageAttributesPanelDetailController;
 use \Concrete\Controller\Backend\UI\Page as BackendInterfacePageController;
+use Loader;
 
 class Attributes extends BackendInterfacePageController {
 
-	protected $viewPath = '/system/dialogs/page/attributes';
+	protected $viewPath = '/dialogs/page/attributes';
 
 	protected function canAccess() {
 		return $this->permissions->canEditPageProperties();

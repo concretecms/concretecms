@@ -1,5 +1,5 @@
 <?
-namespace \Concrete\Core\Page\Style;
+namespace Concrete\Core\Page\Style;
 use \Concrete\Core\Foundation\Object;
 use Loader;
 class CustomStyleRule extends Object {

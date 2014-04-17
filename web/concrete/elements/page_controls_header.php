@@ -38,11 +38,11 @@ if (!$dh->inDashboard()) {
 			$launchPageComposer = "$('a[data-launch-panel=page]').toggleClass('ccm-launch-panel-active'); ConcretePanelManager.getByIdentifier('page').show();";
 		}
 	}
-	$panelDashboard = URL::to('/system/panels/dashboard');
-	$panelPage = URL::to('/system/panels/page');
-	$panelSitemap = URL::to('/system/panels/sitemap');
-	$panelAdd = URL::to('/system/panels/add');
-	$panelCheckIn = URL::to('/system/panels/page/check_in');
+	$panelDashboard = URL::to('/ccm/system/panels/dashboard');
+	$panelPage = URL::to('/ccm/system/panels/page');
+	$panelSitemap = URL::to('/ccm/system/panels/sitemap');
+	$panelAdd = URL::to('/ccm/system/panels/add');
+	$panelCheckIn = URL::to('/ccm/system/panels/page/check_in');
 
 	$js = <<<EOL
 <script type="text/javascript" src="{$tools}/i18n_js"></script>

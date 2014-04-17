@@ -46,7 +46,7 @@
 		var my = this,
 			$fileUploader = $('#ccm-file-manager-upload'),
 			arguments = {
-	    		url: CCM_DISPATCHER_FILENAME + '/system/file/upload',
+	    		url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/upload',
 	    		dataType: 'json',
 	    		formData: {'ccm_token': CCM_SECURITY_TOKEN},
 				error: function(r) {
@@ -159,7 +159,7 @@
 				'<% if (item.canEditFile) { %>' +
 					'<li><a class="dialog-launch" dialog-modal="true" dialog-width="90%" dialog-height="70%" dialog-title="' + ccmi18n_filemanager.edit + '" href="' + CCM_TOOLS_PATH + '/files/edit?fID=<%=item.fID%>">' + ccmi18n_filemanager.edit + '</a></li>' +
 				'<% } %>' +
-				'<li><a class="dialog-launch" dialog-modal="true" dialog-width="680" dialog-height="450" dialog-title="' + ccmi18n_filemanager.properties + '" href="' + CCM_DISPATCHER_FILENAME + '/system/dialogs/file/properties?fID=<%=item.fID%>">' + ccmi18n_filemanager.properties + '</a></li>' +
+				'<li><a class="dialog-launch" dialog-modal="true" dialog-width="680" dialog-height="450" dialog-title="' + ccmi18n_filemanager.properties + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/properties?fID=<%=item.fID%>">' + ccmi18n_filemanager.properties + '</a></li>' +
 				'<% if (item.canReplaceFile) { %>' +
 					'<li><a class="dialog-launch" dialog-modal="true" dialog-width="300" dialog-height="320" dialog-title="' + ccmi18n_filemanager.replace + '" href="' + CCM_TOOLS_PATH + '/files/replace?fID=<%=item.fID%>">' + ccmi18n_filemanager.replace + '</a></li>' +
 				'<% } %>' +

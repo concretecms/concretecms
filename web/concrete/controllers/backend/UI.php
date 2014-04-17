@@ -29,8 +29,8 @@ abstract class UI extends Controller {
 	}
 
 	protected function validateAction() {
-		if (!helper('validation/token')->validate($this->getControllerActionPath())) {
-			$this->error->add(helper('validation/token')->getErrorMessage());
+		if (!Loader::helper('validation/token')->validate(get_class($this))) {
+			$this->error->add(Loader::helper('validation/token')->getErrorMessage());
 			return false;
 		}
 		return true;
@@ -38,7 +38,7 @@ abstract class UI extends Controller {
 
 	public function action() {
 		$url = call_user_func_array('parent::action', func_get_args());
-		$url .= '?ccm_token=' . Loader::helper('validation/token')->generate($this->getControllerActionPath());
+		$url .= '?ccm_token=' . Loader::helper('validation/token')->generate(get_class($this));
 		return $url;
 	}
 
