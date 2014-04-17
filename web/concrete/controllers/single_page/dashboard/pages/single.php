@@ -4,6 +4,7 @@ use \Concrete\Core\Page\Controller\DashboardPageController;
 use \Concrete\Core\Page\Single as SinglePage;
 use Permissions;
 use Package;
+use Loader;
 
 class Single extends DashboardPageController {
 

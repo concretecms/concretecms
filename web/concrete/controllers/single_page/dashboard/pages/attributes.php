@@ -4,6 +4,7 @@ use \Concrete\Core\Page\Controller\DashboardPageController;
 use \Concrete\Core\Attribute\Type as AttributeType;
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use CollectionAttributeKey;
+use Loader;
 use Exception;
 class Attributes extends DashboardPageController {
 	

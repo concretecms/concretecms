@@ -42,12 +42,6 @@ class Controller extends AbstractController {
 
 		$request = Request::getInstance();
 		return $request->getPathInfo();
-
-		/*
-		if (is_object($this->view)) {
-			return $this->view->getViewPath();
-		}
-		*/
 	}
 
 	public function __construct() {

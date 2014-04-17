@@ -4,23 +4,22 @@ namespace Concrete\Core\Database\Schema\Parser;
 
 class ArrayParser {
 
-	protected $definition = array();
-
-	public function __construct($definition) {
-		$this->definition = $definition;
+	public function addColumns(\Doctrine\DBAL\Schema\Table $table, $columns) {
+		foreach($columns as $column) {
+			$field = $table->addColumn($column['name'], $column['type'], $column['options']);				
+		}
+		return $table;
 	}
 
-	public function parse(\Concrete\Core\Database\Connection $db) {
+	public function parse($definition, \Concrete\Core\Database\Connection $db) {
 		$tables = $db->MetaTables();
 		$schema = new \Doctrine\DBAL\Schema\Schema();
-		foreach($this->definition as $table => $details) {
+		foreach($definition as $table => $details) {
 			if (in_array($table, $tables)) {
 				continue;
 			}
 			$table = $schema->createTable($table);
-			foreach($details['columns'] as $column) {
-				$field = $table->addColumn($column['name'], $column['type'], $column['options']);				
-			}
+			$table = $this->addColumns($table, $details['columns']);
 			$table->setPrimaryKey($details['primary']);
 		}
 
