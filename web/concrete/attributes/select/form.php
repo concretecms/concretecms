@@ -41,7 +41,7 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 		<h6><?=t('Selected Options')?></h6>
 		<?php
 		foreach($selectedOptions as $optID) {
-			$opt = SelectAttributeTypeOption::getByID($optID);
+			$opt = Concrete\Attribute\Select\Option::getByID($optID);
 
 			?>
 			<div class="existingAttrValue">

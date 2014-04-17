@@ -1,21 +1,11 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <?
-$upToPage = Page::getByPath("/dashboard");
-?>
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('System &amp; Settings'), false, false, true, -1, $upToPage); ?>
-
-<?
 for ($i = 0; $i < count($categories); $i++) {
 	$cat = $categories[$i];
 	?>
 
-	<div class="dashboard-icon-list">
-	<div class="well" style="visibility: hidden">
-
-
-	<ul class="nav nav-list">
-	<li class="nav-header"><?=t($cat->getCollectionName())?></li>
+	<h4><?=t($cat->getCollectionName())?></h4>
 
 	
 	<?
@@ -32,32 +22,21 @@ for ($i = 0; $i < count($categories); $i++) {
 	if (count($show) > 0) { ?>
 	
 	
+	<ol class="breadcrumb">
+
 	<? foreach($show as $subcat) { ?>
 	
-	<li>
-	<a href="<?=Loader::helper('navigation')->getLinkToCollection($subcat, false, true)?>"><i class="<?=$subcat->getAttribute('icon_dashboard')?>"></i> <?=t($subcat->getCollectionName())?></a>
-	</li>
+	<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($subcat, false, true)?>"><i class="<?=$subcat->getAttribute('icon_dashboard')?>"></i> <?=t($subcat->getCollectionName())?></a></li>
 	
 	<? } ?>
-	
-	
+		
 	<? } else { ?>
-	
-	<li>
-		<a href="<?=Loader::helper('navigation')->getLinkToCollection($cat, false, true)?>"><i class="<?=$cat->getAttribute('icon_dashboard')?>"></i> <?=t('Home')?></a>
-	</li>
+
+	<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($cat, false, true)?>"><i class="<?=$cat->getAttribute('icon_dashboard')?>"></i> <?=t('Home')?></a</li>
 			
 	<? } ?>
 	
-	</ul>
+	</ol>
 
-	</div>
-	</div>
-	
+	<br/>
 <? } ?>
-
-
-	<div class="clearfix">
-	</div>
-
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>

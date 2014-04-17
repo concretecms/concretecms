@@ -17,10 +17,15 @@
  * 	 return new \Application\Core\CustomFeedHelper();
  * });
  *
+ * Core::bind('\Concrete\Attribute\Boolean\Controller', function($app, $params) {
+ * 	return new \Application\Attribute\Boolean\Controller($params[0]);
+ * });
  * 
  * ## Register Events.
  * 
- * - Example forthcoming.
+ * Events::addListener('on_page_view', function($event) {
+ * 	$page = $event->getPageObject();
+ * });
  *
  * 
  * ## Register some custom MVC Routes
@@ -35,5 +40,4 @@
  * 
  * ----------------------------------------------------------------------------
  */
-
 
