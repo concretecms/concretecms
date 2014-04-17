@@ -1,12 +1,17 @@
 <?
 namespace Concrete\Core\Workflow\Progress;
+use Loader;
 class BasicData   {
 	
-	public $_table = 'BasicWorkflowProgressData';
-	
 	public function __construct($wp) {
-		parent::__construct();
-		$this->load('wpID=' . $wp->getWorkflowProgressID());
+		$db = Loader::db();
+		$r = $db->GetRow('select * from BasicWorkflowProgressData where wpID = ?', array($wp->getWorkflowProgressID()));
+		if (is_array($r) && $r['wpID'])) {
+			$this->uIDStarted = $r['uIDStarted'];
+			$this->uIDCompleted = $r['uIDCompleted'];
+			$this->wpDateCompleted = $r['wpDateCompleted'];
+			$this->wpID = $wp->getWorkflowProgressID();
+		}
 	}
 	
 	public function getUserStartedID() {return $this->uIDStarted;}
@@ -14,9 +19,10 @@ class BasicData   {
 	public function getDateCompleted() {return $this->wpDateCompleted;}
 	
 	public function markCompleted($u) {
+		$db = Loader::db();
 		$this->wpDateCompleted = Loader::helper('date')->getLocalDateTime();
 		$this->uIDCompleted = $u->getUserID();
-		$this->save();
+		$db->update('BasicWorkflowProgressData', array('wpDateCompleted' => $this->wpDateCompleted, 'uIDCompleted' => $this->uIDCompleted), array('wpID' => $this->wpID)));
 	}
 		
 }

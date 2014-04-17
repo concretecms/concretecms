@@ -2,8 +2,7 @@
 namespace Concrete\Core\User\Point;
 use Loader;
 class Entry {
-	public $_table = 'UserPointHistory'; 
-	
+
 	public $upID;
 	public $upuID;
 	public $upaID = 0;
@@ -12,7 +11,40 @@ class Entry {
 	
 	public function load($upID) {
 		$db = Loader::db();
-		parent::load('upID='.$db->quote($upID));
+		$row = $db->GetRow('select * from UserPointHistory where upID = ?', array($upID));
+		if (is_array($row) && $row['upID']) {
+			$this->upID = $row['upID'];
+			$this->upuID = $row['upuID'];
+			$this->upaID = $row['upaID'];
+			$this->upPoints = $row['upPoints'];
+			$this->timestamp = $row['timestamp'];
+		}
+	}
+
+	public function save() {
+		$db = Loader::db();
+		if ($this->upID) {
+			$db->update('UserPointHistory', array(
+				'upID' => $this->upID,
+				'upuID' => $this->upuID,
+				'upaID' => $this->upaID,
+				'upPoints' => $this->upPoints,
+				'timestamp' => date('Y-m-d H:i:s')
+			), array('upID' => $this->upID));
+		} else {
+			$db->insert('UserPointHistory', array(
+				'upID' => $this->upID,
+				'upuID' => $this->upuID,
+				'upaID' => $this->upaID,
+				'upPoints' => $this->upPoints,
+				'timestamp' => date('Y-m-d H:i:s')
+			));
+		}
+	}
+	
+	public function delete() {
+		$db = Loader::db();
+		$db->delete('UserPointHistory', array('upID' => $this->upID));
 	}
 	
 	public function	getUserPointEntryID() {

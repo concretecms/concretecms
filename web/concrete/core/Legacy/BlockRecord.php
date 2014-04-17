@@ -47,16 +47,6 @@ class BlockRecord {
 	public function Insert() {
 		$db = Loader::db();
 		$data = array();
-		/*
-		$primaryKeys = array();
-		$sm = $db->getSchemaManager();
-		$details = $sm->listTableDetails($this->_table);
-		$index = $details->getPrimaryKey();
-		$columns = $index->getColumns();
-		foreach($columns as $column) {
-			$primaryKeys[] = $column;
-		}
-		*/
 
 		foreach($this as $key => $value) {
 			if (!in_array($key, array('_table'))) {

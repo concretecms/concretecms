@@ -3,8 +3,6 @@ namespace Concrete\Core\User;
 use Loader;
 class UserBannedIp {	
 	
-	public $_table = 'UserBannedIPs';
-	
 	protected $unique_keys;
 	public function __construct ($db_name=false,$keys=false) {
 		if (!$keys) {
@@ -49,6 +47,29 @@ class UserBannedIp {
 		}
 	}
 	
+	public function Find($where) {
+		$db = Loader::db();
+		$r = $db->Execute('select * from UserBannedIPs where ' . $where);
+		$ips = array();
+		while ($row = $r->FetchRow()) {
+			$ip = new UserBannedIp();
+			$ip = array_to_object(new UserBannedIp, $row);
+			$ips[] = $ip;
+		}
+		return $ips;
+	}
+	
+	public function save() {
+		$db = Loader::db();
+		$db->Replace('UserBannedIPs', array(
+			'ipFrom' => $this->ipFrom,
+			'ipTo' => $this->ipTo,
+			'banCode' => $this->banCode,
+			'expires' => $this->expires,
+			'isManual' => $this->isManual
+		), array('ipFrom', 'ipTo'));
+	}
+
 	const IP_BAN_CODE_REGISTRATION_THROTTLE = 1;	
 	public function getCodeText($code) {
 		switch ($code) {

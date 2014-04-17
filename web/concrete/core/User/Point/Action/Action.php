@@ -5,7 +5,6 @@ use Environment;
 use \Concrete\Core\Package\PackageList;
 
 class Action {
-	public $_table = 'UserPointActions';
 	
 	public $upaID;
 	public $upaHandle;
@@ -15,9 +14,15 @@ class Action {
 	
 	public function load($upaID) {
 		$db = Loader::db();
-		parent::load('upaID='.$db->quote($upaID));
+		$row = $db->GetRow('select * from UserPointActions where upaID = ?', array($upaID));
+		$this->setDataFromArray($row);
 	}
 	
+	public function delete() {
+		$db = Loader::db();
+		$db->delete('UserPointActions', array('upaID' => $this->upaID));
+
+	}
 	/**
 	 * @param $upaID
 	 * @return UserPointAction
@@ -245,6 +250,18 @@ class Action {
 		}
 		
 		return true;
+	}
+
+	public function save() {
+		$db = Loader::db();
+		$db->update('UserPointActions', array(
+			'upaHandle' => $this->upaHandle,
+			'upaName' => $this->upaName,
+			'upaDefaultPoints' => $this->upaDefaultPoints,
+			'upaHasCustomClass' => $this->upaHasCustomClass,
+			'upaIsActive' => $this->upaIsActive,
+			'gBadgeID' => $this->gBadgeID
+		), array("upaID" => $this->upaID));
 	}
 		
 }
