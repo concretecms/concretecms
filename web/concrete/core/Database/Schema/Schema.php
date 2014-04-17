@@ -15,8 +15,8 @@ class Schema {
 	}
 
 	public static function loadFromArray($array, \Concrete\Core\Database\Connection $connection) {
-		$parser = new \Concrete\Core\Database\Schema\Parser\ArrayParser($array);
-		return $parser->parse($connection);
+		$parser = new \Concrete\Core\Database\Schema\Parser\ArrayParser();
+		return $parser->parse($array, $connection);
 	}
 
 	protected static function getSchemaParser(\SimpleXMLElement $sx) {

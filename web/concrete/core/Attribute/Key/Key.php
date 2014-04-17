@@ -464,36 +464,33 @@ class Key extends Object {
 		}
 		
 		$fields = array();
-		if (!is_array($cnt->getSearchIndexFieldDefinition())) {
-			$fields[] = $this->akHandle . ' ' . $cnt->getSearchIndexFieldDefinition();
+		$definition = $cnt->getSearchIndexFieldDefinition();
+		$prefix = $this->akHandle;
+		if ($prevHandle) {
+			$prefix = $prevHandle;
+		}
+		if (isset($definition['type'])) {
+			$fields[] = array('name' => 'ak_' . $prefix,  'type' => $definition['type'], 'options' => $definition['options']);
 		} else {
-			foreach($cnt->getSearchIndexFieldDefinition() as $col => $def) {
-				$fields[$col] = $this->akHandle . '_' . $col . ' ' . $def;
+			foreach($definition as $column) {
+				$fields[] = array('name' => 'ak_' . $prefix . '_' . $column['name'],  'type' => $column['type'], 'options' => $column['options']);
 			}
 		}
-		
+
 		$db = Loader::db();
-		$columns = $db->MetaColumns($this->getIndexedSearchTable());
+		$columns = $db->MetaColumnNames($this->getIndexedSearchTable());
+		$platform = $db->getDatabasePlatform();
+		$sm = $db->getSchemaManager();
 		
+		$fromTable = $sm->listTableDetails($this->getIndexedSearchTable());
+		$toTable = $sm->listTableDetails($this->getIndexedSearchTable());
+		$parser = new \Concrete\Core\Database\Schema\Parser\ArrayParser();
+		$comparator = new \Doctrine\DBAL\Schema\Comparator();
+
 		foreach($fields as $col => $field) {
 
 			$addColumn = true;
 
-			$field = 'ak_' . $field;
-			
-			if (!is_int($col)) {
-				$column = 'ak_' . $this->akHandle . '_' . $col;
-			} else {
-				$column = 'ak_' . $this->akHandle;
-			}
-			if ($prevHandle != false) {
-				if (!is_int($col)) {
-					$prevColumn = 'ak_' . $prevHandle . '_' . $col;
-				} else {
-					$prevColumn = 'ak_' . $prevHandle;
-				}
-			}
-			
 			if ($prevColumn != false) {
 				if ($columns[strtoupper($prevColumn)]) {
 					$q = $dba->RenameColumnSQL($this->getIndexedSearchTable(), $prevColumn, $column, $field);
@@ -503,9 +500,13 @@ class Key extends Object {
 			}
 			
 			if ($addColumn) {
-				if (!$columns[strtoupper($column)]) {
-					$q = $dba->AddColumnSQL($this->getIndexedSearchTable(), $field);
-					$db->Execute($q[0]);
+				if (!in_array($column, $columns)) {
+					$toTable = $parser->addColumns($toTable, $fields);
+					$diff = $comparator->diffTable($fromTable, $toTable);
+					$sql = $platform->getAlterTableSQL($diff);
+					foreach($sql as $q) {
+						$db->exec($q);
+					}
 				}
 			}			
 		}
@@ -521,25 +522,30 @@ class Key extends Object {
 		$db->Execute('delete from AttributeKeys where akID = ?', array($this->getAttributeKeyID()));
 		$db->Execute('delete from AttributeSetKeys where akID = ?', array($this->getAttributeKeyID()));
 
-		return;
-
 		if ($this->getIndexedSearchTable()) {
-			$columns = $db->MetaColumns($this->getIndexedSearchTable());
-			$dba = NewDataDictionary($db, DB_TYPE);
-			
-			$fields = array();
-			if (!is_array($cnt->getSearchIndexFieldDefinition())) {
-				$dropColumns[] = 'ak_' . $this->akHandle;
+
+			$definition = $cnt->getSearchIndexFieldDefinition();
+			$prefix = $this->akHandle;
+			$sm = $db->getSchemaManager();	
+			$platform = $db->getDatabasePlatform();
+			$fromTable = $sm->listTableDetails($this->getIndexedSearchTable());
+			$toTable = $sm->listTableDetails($this->getIndexedSearchTable());
+			$dropColumns = array();
+			if (isset($definition['type'])) {
+				$dropColumns[] = 'ak_' . $prefix;
 			} else {
-				foreach($cnt->getSearchIndexFieldDefinition() as $col => $def) {
-					$dropColumns[] = 'ak_' . $this->akHandle . '_' . $col;
+				foreach($definition as $column) {
+					$dropColumns[] = 'ak_' . $prefix . '_' . $column['name'];
 				}
 			}
-			
+			$comparator = new \Doctrine\DBAL\Schema\Comparator();
+
 			foreach($dropColumns as $dc) {
-				if ($columns[strtoupper($dc)]) {
-					$q = $dba->DropColumnSQL($this->getIndexedSearchTable(), $dc);
-					$db->Execute($q[0]);
+				$toTable->dropColumn($dc);
+				$diff = $comparator->diffTable($fromTable, $toTable);
+				$sql = $platform->getAlterTableSQL($diff);
+				foreach($sql as $q) {
+					$db->exec($q);
 				}
 			}
 		}

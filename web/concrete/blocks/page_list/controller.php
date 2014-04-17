@@ -100,8 +100,8 @@ class Controller extends BlockController {
 			$pl->filterByPageTypeID($row['ptID']);
 		}
 		
-		$columns = $db->MetaColumns(CollectionAttributeKey::getIndexedSearchTable());
-		if (isset($columns['AK_EXCLUDE_PAGE_LIST'])) {
+		$columns = $db->MetaColumnNames(CollectionAttributeKey::getIndexedSearchTable());
+		if (isset($columns['ak_exclude_page_list'])) {
 			$pl->filter(false, '(ak_exclude_page_list = 0 or ak_exclude_page_list is null)');
 		}
 		

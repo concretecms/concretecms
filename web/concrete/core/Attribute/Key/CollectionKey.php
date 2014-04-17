@@ -143,7 +143,6 @@ class CollectionKey extends Key {
 			$db->Execute('delete from AttributeValues where avID = ?', array($row['avID']));
 		}
 		$db->Execute('delete from CollectionAttributeValues where akID = ?', array($this->getAttributeKeyID()));
-		$db->Execute('delete from PageTypeAttributes where akID = ?', array($this->getAttributeKeyID()));
 	}
 
 }

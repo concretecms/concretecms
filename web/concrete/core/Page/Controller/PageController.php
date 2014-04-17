@@ -47,6 +47,16 @@ class PageController extends Controller {
 		return $this->parameters;
 	}
 
+	public function getControllerActionPath() {
+		if (isset($this->controllerActionPath)) {
+			return $this->controllerActionPath;
+		}
+
+		if (is_object($this->view)) {
+			return $this->view->getViewPath();
+		}
+	}
+
 	public function passthru($arHandle = false, $bID = false, $action = false) {
 		$args = func_get_args();
 		$args = array_slice(func_get_args(), 3);

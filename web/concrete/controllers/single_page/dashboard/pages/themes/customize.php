@@ -1,8 +1,8 @@
 <?
-
 namespace Concrete\Controller\SinglePage\Dashboard\Pages\Themes;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use PageTheme;
+use Loader;
 use Cache;
 use View;
 class Customize extends DashboardPageController {
