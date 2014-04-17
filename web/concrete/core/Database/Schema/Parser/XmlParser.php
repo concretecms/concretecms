@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Database\Schema\Parser;
 
-abstract class Parser {
+abstract class XmlParser {
 
 	protected $rawXML;
 

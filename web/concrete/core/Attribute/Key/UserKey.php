@@ -13,7 +13,12 @@ class UserKey extends Key {
 		return 'UserSearchIndexAttributes';
 	}
 
-	protected $searchIndexFieldDefinition = 'uID I(11) UNSIGNED NOTNULL DEFAULT 0 PRIMARY';
+	protected $searchIndexFieldDefinition = array(
+		'columns' => array(
+			array('name' => 'uID', 'type' => 'integer', 'options' => array('unsigned' => true, 'default' => 0, 'notnull' => true))
+		),
+		'primary' => array('uID')
+	);
 
 	public function getAttributes($uID, $method = 'getValue') {
 		$db = Loader::db();

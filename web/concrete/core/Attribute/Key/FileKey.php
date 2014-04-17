@@ -13,7 +13,12 @@ class FileKey extends Key {
 		return 'FileSearchIndexAttributes';
 	}
 
-	protected $searchIndexFieldDefinition = 'fID I(11) UNSIGNED NOTNULL DEFAULT 0 PRIMARY';
+	protected $searchIndexFieldDefinition = array(
+		'columns' => array(
+			array('name' => 'fID', 'type' => 'integer', 'options' => array('unsigned' => true, 'default' => 0, 'notnull' => true))
+		),
+		'primary' => array('fID')
+	);
 	
 	/** 
 	 * Returns an attribute value list of attributes and values (duh) which a collection version can store 

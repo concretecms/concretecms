@@ -3,11 +3,13 @@ namespace Concrete\Core\Attribute\Key;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Type as AttributeType;
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use \Concrete\Core\Database\Schema\Schema;
 use Loader;
 use Package;
 use CacheLocal;
 use Core;
 use User;
+use Database;
 use AttributeSet;
 use \Concrete\Core\Attribute\Value\Value as AttributeValue;
 use \Concrete\Core\Package\PackageList;
@@ -452,8 +454,6 @@ class Key extends Object {
 	
 	public function updateSearchIndex($prevHandle = false) {
 
-		return;
-
 		$type = $this->getAttributeType();
 		$cnt = $type->getController();
 		if ($this->getIndexedSearchTable() == false) {
@@ -474,7 +474,6 @@ class Key extends Object {
 		
 		$db = Loader::db();
 		$columns = $db->MetaColumns($this->getIndexedSearchTable());
-		$dba = NewDataDictionary($db, DB_TYPE);
 		
 		foreach($fields as $col => $field) {
 
@@ -508,8 +507,7 @@ class Key extends Object {
 					$q = $dba->AddColumnSQL($this->getIndexedSearchTable(), $field);
 					$db->Execute($q[0]);
 				}
-			}
-			
+			}			
 		}
 	}
 	
@@ -644,13 +642,16 @@ class Key extends Object {
 
 
 	public function createIndexedSearchTable() {
-		return;
 
 		if ($this->getIndexedSearchTable() != false) {
-			$db = Loader::db();
-			$dba = NewDataDictionary($db, DB_TYPE);
-			$sqa = $dba->CreateTableSQL($this->getIndexedSearchTable(), $this->searchIndexFieldDefinition);
-			$dba->ExecuteSQLArray($sqa);
+			$db = Database::get();
+			$platform = $db->getDatabasePlatform();
+			$array[$this->getIndexedSearchTable()] = $this->searchIndexFieldDefinition;
+			$schema = Schema::loadFromArray($array, $db);
+			$queries = $schema->toSql($platform);
+			foreach($queries as $query) {
+				$db->query($query);
+			}
 		}
 	}
 
