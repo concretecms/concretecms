@@ -18,6 +18,7 @@ class Item extends SearchResultItem {
 		foreach($obj as $key => $value) {
 			$this->{$key} = $value;
 		}
+		$this->isStarred = $item->isStarred();
 	}
 
 
