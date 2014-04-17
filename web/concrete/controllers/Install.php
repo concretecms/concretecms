@@ -8,6 +8,7 @@ use \Concrete\Core\Foundation\Environment as Environment;
 use View;
 use Exception;
 use Database as DB;
+use \Hautelook\Phpass\PasswordHash;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 ini_set('display_errors', 1);
@@ -114,6 +115,7 @@ class Install extends Controller {
 	private function setRequiredItems() {
 		$this->set('imageTest', function_exists('imagecreatetruecolor'));
 		$this->set('mysqlTest', function_exists('mysql_connect'));
+		$this->set('jsonTest', function_exists('json_encode'));
 		$this->set('xmlTest', function_exists('xml_parse') && function_exists('simplexml_load_file'));
 		$this->set('fileWriteTest', $this->testFileWritePermissions());	
 		$phpVmin = '5.3.0';
@@ -317,7 +319,7 @@ class Install extends Controller {
 				}
 
 				if ($this->fpu) {
-					$hasher = new \PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
+					$hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
 					$configuration = "<?php\n";
 					$configuration .= "define('INSTALL_USER_EMAIL', '" . $_POST['uEmail'] . "');\n";
 					$configuration .= "define('INSTALL_USER_PASSWORD_HASH', '" . $hasher->HashPassword($_POST['uPassword']) . "');\n";

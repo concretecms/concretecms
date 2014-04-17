@@ -10,6 +10,7 @@ use Events;
 use Page;
 use GroupList;
 use Session;
+use \Hautelook\Phpass\PasswordHash;
 use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Core;
 
@@ -649,7 +650,7 @@ class User extends Object {
 		if (isset($this->hasher)) {
 			return $this->hasher;
 		}
-		$this->hasher = new \PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
+		$this->hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
 		return $this->hasher;
 	}
 

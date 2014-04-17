@@ -25,12 +25,7 @@ class Json {
 	 * @return mixed
 	 */
 	public function decode($string, $assoc = false) {
-		if (function_exists('json_decode')) {
-			return json_decode($string, $assoc);
-		} else {
-			$sjs = new \Services_JSON($assoc ? SERVICES_JSON_LOOSE_TYPE : 0);
-			return $sjs->decode($string);
-		}
+		return json_decode($string, $assoc);
 	}
 	
 	
@@ -40,12 +35,7 @@ class Json {
 	 * @return string
 	 */
 	public function encode($mixed) {
-		if (function_exists('json_encode')) {
-			return json_encode($mixed);
-		} else {
-			$sjs = new \Services_JSON();
-			return $sjs->encode($mixed);
-		}
+		return json_encode($mixed);
 	}
 	
 

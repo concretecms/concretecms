@@ -19,23 +19,8 @@ class ClassLoader  {
 
 	public function __construct() {
 		$this->setupFileAutoloader();
-		$this->setupThirdPartyAutoloader();
 		$this->setupAliasAutoloader();
 		$this->setupLegacyAutoloader();
-	}
-
-	protected function setupThirdPartyAutoloader() {
-		\Zend_Loader_Autoloader::getInstance();
-		$mapping = array(
-			'PasswordHash' => DIR_BASE_CORE . '/vendor/phpass/PasswordHash.php',
-			'URLify' => DIR_BASE_CORE . '/vendor/urlify/urlify.php',
-			'Mobile_Detect' => DIR_BASE_CORE . '/vendor/mobile_detect/Mobile_Detect.php',
-			'Securimage' => DIR_BASE_CORE . '/vendor/securimage/securimage.php',
-			'Securimage_Color' => DIR_BASE_CORE . '/vendor/securimage/securimage_color.php'
-		);
-
-		$loader = new SymfonyMapClassloader($mapping);
-		$loader->register();
 	}
 
 	protected function setupLegacyAutoloader() {

@@ -761,12 +761,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/ClassLoader.git",
-            "reference": "53bae88d2d89ce9fb130f6968b74d31d4a2c732e"
+            "reference": "09e38e4d228c1f7f997f3dc7068d9d2fba9a10b0"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/ClassLoader/zipball/53bae88d2d89ce9fb130f6968b74d31d4a2c732e",
-            "reference": "53bae88d2d89ce9fb130f6968b74d31d4a2c732e",
+            "url": "https://api.github.com/repos/symfony/ClassLoader/zipball/09e38e4d228c1f7f997f3dc7068d9d2fba9a10b0",
+            "reference": "09e38e4d228c1f7f997f3dc7068d9d2fba9a10b0",
             "shasum": ""
         },
         "require": {
@@ -775,7 +775,7 @@
         "require-dev": {
             "symfony/finder": "~2.0"
         },
-        "time": "2014-04-03 05:23:50",
+        "time": "2014-04-16 10:36:34",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -943,54 +943,6 @@
         ]
     },
     {
-        "name": "illuminate/container",
-        "version": "v4.1.25",
-        "version_normalized": "4.1.25.0",
-        "target-dir": "Illuminate/Container",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/illuminate/container.git",
-            "reference": "51d590fd7e301f56c567459a26343a8288330f69"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/illuminate/container/zipball/51d590fd7e301f56c567459a26343a8288330f69",
-            "reference": "51d590fd7e301f56c567459a26343a8288330f69",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "4.0.*"
-        },
-        "time": "2014-03-22 20:29:54",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "4.1-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Illuminate\\Container": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Taylor Otwell",
-                "email": "taylorotwell@gmail.com",
-                "homepage": "https://github.com/taylorotwell",
-                "role": "Developer"
-            }
-        ]
-    },
-    {
         "name": "patchwork/utf8",
         "version": "v1.1.21",
         "version_normalized": "1.1.21.0",
@@ -1041,6 +993,1078 @@
             "unicode",
             "utf-8",
             "utf8"
+        ]
+    },
+    {
+        "name": "illuminate/container",
+        "version": "v4.1.28",
+        "version_normalized": "4.1.28.0",
+        "target-dir": "Illuminate/Container",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/illuminate/container.git",
+            "reference": "51d590fd7e301f56c567459a26343a8288330f69"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/illuminate/container/zipball/51d590fd7e301f56c567459a26343a8288330f69",
+            "reference": "51d590fd7e301f56c567459a26343a8288330f69",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "4.0.*"
+        },
+        "time": "2014-03-22 20:29:54",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "4.1-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Illuminate\\Container": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Taylor Otwell",
+                "email": "taylorotwell@gmail.com",
+                "homepage": "https://github.com/taylorotwell",
+                "role": "Developer"
+            }
+        ]
+    },
+    {
+        "name": "innogames/cssmin",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/innogames/CssMin.git",
+            "reference": "6d3aa76c53c47ddbaf02d5bd2e0d1d5ecd0ade7a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/innogames/CssMin/zipball/6d3aa76c53c47ddbaf02d5bd2e0d1d5ecd0ade7a",
+            "reference": "6d3aa76c53c47ddbaf02d5bd2e0d1d5ecd0ade7a",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.0"
+        },
+        "time": "2013-10-08 13:59:22",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Joe Scylla",
+                "email": "joe.scylla@gmail.com",
+                "homepage": "https://profiles.google.com/joe.scylla"
+            }
+        ],
+        "description": "Minifying CSS",
+        "homepage": "http://code.google.com/p/cssmin/",
+        "keywords": [
+            "css",
+            "minify"
+        ]
+    },
+    {
+        "name": "facebook/php-sdk",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/facebook/facebook-php-sdk.git",
+            "reference": "8a992afce97122556c4e42b0f1c1d60b9d49276d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/facebook/facebook-php-sdk/zipball/8a992afce97122556c4e42b0f1c1d60b9d49276d",
+            "reference": "8a992afce97122556c4e42b0f1c1d60b9d49276d",
+            "shasum": ""
+        },
+        "require": {
+            "ext-curl": "*",
+            "ext-json": "*",
+            "php": ">=5.2.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "3.7.*"
+        },
+        "time": "2014-04-04 02:27:38",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "src"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache2"
+        ],
+        "authors": [
+            {
+                "name": "Facebook",
+                "homepage": "https://github.com/facebook/facebook-php-sdk/contributors"
+            }
+        ],
+        "description": "Facebook PHP SDK",
+        "homepage": "https://github.com/facebook/facebook-php-sdk",
+        "keywords": [
+            "facebook",
+            "sdk"
+        ]
+    },
+    {
+        "name": "htmlawed/htmlawed",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/kesar/HTMLawed.git",
+            "reference": "9d292af5f4c288aa68f38b87f5d88c8214f5f233"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/kesar/HTMLawed/zipball/9d292af5f4c288aa68f38b87f5d88c8214f5f233",
+            "reference": "9d292af5f4c288aa68f38b87f5d88c8214f5f233",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">4.4.0"
+        },
+        "time": "2014-01-05 13:06:52",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "files": [
+                "htmLawed.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "GPL-2.0+",
+            "LGPL-3.0"
+        ],
+        "description": "htmLawed - Process text with HTML markup to make it more compliant with HTML  standards and administrative policies",
+        "homepage": "http://www.bioinformatics.org/phplabware/internal_utilities/htmLawed/",
+        "keywords": [
+            "HTMLtidy",
+            "html",
+            "sanitize",
+            "strip",
+            "tags"
+        ]
+    },
+    {
+        "name": "mobiledetect/mobiledetectlib",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/serbanghita/Mobile-Detect.git",
+            "reference": "d70de7bfd0641d4d32a6f9c71e1f5d2839a5331e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/d70de7bfd0641d4d32a6f9c71e1f5d2839a5331e",
+            "reference": "d70de7bfd0641d4d32a6f9c71e1f5d2839a5331e",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.0.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "*"
+        },
+        "time": "2014-03-17 13:02:05",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "Mobile_Detect.php"
+            ],
+            "psr-0": {
+                "Detection": "namespaced/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Serban Ghita",
+                "email": "serbanghita@gmail.com",
+                "homepage": "http://ghita.org",
+                "role": "Developer"
+            }
+        ],
+        "description": "Mobile_Detect is a lightweight PHP class for detecting mobile devices. It uses the User-Agent string combined with specific HTTP headers to detect the mobile environment.",
+        "homepage": "https://github.com/serbanghita/Mobile-Detect",
+        "keywords": [
+            "detect mobile devices",
+            "mobile",
+            "mobile detect",
+            "mobile detector",
+            "php mobile detect"
+        ]
+    },
+    {
+        "name": "hautelook/phpass",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/hautelook/phpass.git",
+            "reference": "94845c6e7eecdc025e8b33dd272d03db06c87f2a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/hautelook/phpass/zipball/94845c6e7eecdc025e8b33dd272d03db06c87f2a",
+            "reference": "94845c6e7eecdc025e8b33dd272d03db06c87f2a",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "time": "2012-08-31 00:00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Hautelook": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Public Domain"
+        ],
+        "authors": [
+            {
+                "name": "Solar Designer",
+                "email": "solar@openwall.com",
+                "homepage": "http://openwall.com/phpass/"
+            }
+        ],
+        "description": "Portable PHP password hashing framework",
+        "homepage": "http://github.com/hautelook/phpass/",
+        "keywords": [
+            "blowfish",
+            "crypt",
+            "password",
+            "security"
+        ]
+    },
+    {
+        "name": "dapphp/securimage",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/dapphp/securimage.git",
+            "reference": "9289657235a3525408c79005848eef6578106ce6"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/dapphp/securimage/zipball/9289657235a3525408c79005848eef6578106ce6",
+            "reference": "9289657235a3525408c79005848eef6578106ce6",
+            "shasum": ""
+        },
+        "require": {
+            "ext-gd": "*",
+            "php": ">=5.2.0"
+        },
+        "time": "2014-03-17 21:57:50",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "securimage.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD"
+        ],
+        "authors": [
+            {
+                "name": "Drew Phillips",
+                "email": "drew@drew-phillips.com"
+            }
+        ],
+        "description": "PHP CAPTCHA Script",
+        "homepage": "http://phpcaptcha.org",
+        "keywords": [
+            "captcha",
+            "security"
+        ]
+    },
+    {
+        "name": "kertz/twitteroauth",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/kertz/twitteroauth.git",
+            "reference": "97b677ca030e7de7dcade797aabb4af8a3aa463f"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/kertz/twitteroauth/zipball/97b677ca030e7de7dcade797aabb4af8a3aa463f",
+            "reference": "97b677ca030e7de7dcade797aabb4af8a3aa463f",
+            "shasum": ""
+        },
+        "require": {
+            "ext-curl": "*",
+            "php": ">=5.3.0"
+        },
+        "time": "2014-02-23 11:27:58",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "twitteroauth"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/"
+    },
+    {
+        "name": "simplepie/simplepie",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/simplepie/simplepie.git",
+            "reference": "5f00e77b5feb96605cbcea4dcfb555e87c2fed24"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/simplepie/simplepie/zipball/5f00e77b5feb96605cbcea4dcfb555e87c2fed24",
+            "reference": "5f00e77b5feb96605cbcea4dcfb555e87c2fed24",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.0"
+        },
+        "time": "2013-10-24 06:37:55",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "SimplePie": "library"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Ryan Parman",
+                "homepage": "http://ryanparman.com/",
+                "role": "Creator, alumnus developer"
+            },
+            {
+                "name": "Geoffrey Sneddon",
+                "homepage": "http://gsnedders.com/",
+                "role": "Alumnus developer"
+            },
+            {
+                "name": "Ryan McCue",
+                "email": "me@ryanmccue.info",
+                "homepage": "http://ryanmccue.info/",
+                "role": "Developer"
+            }
+        ],
+        "description": "A simple Atom/RSS parsing library for PHP",
+        "homepage": "http://simplepie.org/",
+        "keywords": [
+            "atom",
+            "feeds",
+            "rss"
+        ]
+    },
+    {
+        "name": "zf1/zend-exception",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zf1/zend-exception.git",
+            "reference": "6e607d8b112a06965938a5ffbee410e49c683942"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zf1/zend-exception/zipball/6e607d8b112a06965938a5ffbee410e49c683942",
+            "reference": "6e607d8b112a06965938a5ffbee410e49c683942",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.11"
+        },
+        "time": "2014-01-02 14:05:54",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Zend_Exception": "library/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "Zend Framework 1 Exception package",
+        "homepage": "http://framework.zend.com/",
+        "keywords": [
+            "ZF1",
+            "exception",
+            "framework",
+            "zend"
+        ]
+    },
+    {
+        "name": "zf1/zend-cache",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zf1/zend-cache.git",
+            "reference": "7816cdb612634050794cc10d553346bcd7dd561c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zf1/zend-cache/zipball/7816cdb612634050794cc10d553346bcd7dd561c",
+            "reference": "7816cdb612634050794cc10d553346bcd7dd561c",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.11",
+            "zf1/zend-exception": "self.version"
+        },
+        "suggest": {
+            "zf1/zend-log": "Used in special situations or with special adapters"
+        },
+        "time": "2014-01-02 14:05:51",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Zend_Cache": "library/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "Zend Framework 1 Cache package",
+        "homepage": "http://framework.zend.com/",
+        "keywords": [
+            "ZF1",
+            "cache",
+            "framework",
+            "zend"
+        ]
+    },
+    {
+        "name": "zf1/zend-locale",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zf1/zend-locale.git",
+            "reference": "765c86d4624e13d228e8cdfbebe42b7e87639f3b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zf1/zend-locale/zipball/765c86d4624e13d228e8cdfbebe42b7e87639f3b",
+            "reference": "765c86d4624e13d228e8cdfbebe42b7e87639f3b",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.11",
+            "zf1/zend-exception": "self.version"
+        },
+        "suggest": {
+            "zf1/zend-registry": "Used in special situations or with special adapters"
+        },
+        "time": "2014-01-02 14:06:05",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Zend_Locale": "library/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "Zend Framework 1 Locale package",
+        "homepage": "http://framework.zend.com/",
+        "keywords": [
+            "ZF1",
+            "framework",
+            "locale",
+            "zend"
+        ]
+    },
+    {
+        "name": "zf1/zend-loader",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zf1/zend-loader.git",
+            "reference": "50b048d3237a3d42943df3bb850c3900d9d29595"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zf1/zend-loader/zipball/50b048d3237a3d42943df3bb850c3900d9d29595",
+            "reference": "50b048d3237a3d42943df3bb850c3900d9d29595",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.11",
+            "zf1/zend-exception": "self.version"
+        },
+        "time": "2014-01-02 14:06:01",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Zend_Loader": "library/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "Zend Framework 1 Loader package",
+        "homepage": "http://framework.zend.com/",
+        "keywords": [
+            "ZF1",
+            "framework",
+            "loader",
+            "zend"
+        ]
+    },
+    {
+        "name": "zf1/zend-translate",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zf1/zend-translate.git",
+            "reference": "b69f653060bc7d83c02fa47813ac2d28ab28e0cf"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zf1/zend-translate/zipball/b69f653060bc7d83c02fa47813ac2d28ab28e0cf",
+            "reference": "b69f653060bc7d83c02fa47813ac2d28ab28e0cf",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.11",
+            "zf1/zend-exception": "self.version",
+            "zf1/zend-loader": "self.version",
+            "zf1/zend-locale": "self.version"
+        },
+        "time": "2014-01-02 14:06:10",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Zend_Translate": "library/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "Zend Framework 1 Translate package",
+        "homepage": "http://framework.zend.com/",
+        "keywords": [
+            "ZF1",
+            "framework",
+            "translate",
+            "zend"
+        ]
+    },
+    {
+        "name": "zf1/zend-currency",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zf1/zend-currency.git",
+            "reference": "278108731281cdfda811fa016252799629eac4ab"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zf1/zend-currency/zipball/278108731281cdfda811fa016252799629eac4ab",
+            "reference": "278108731281cdfda811fa016252799629eac4ab",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.11",
+            "zf1/zend-exception": "self.version",
+            "zf1/zend-locale": "self.version"
+        },
+        "time": "2014-01-02 14:05:53",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Zend_Currency": "library/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "Zend Framework 1 Currency package",
+        "homepage": "http://framework.zend.com/",
+        "keywords": [
+            "ZF1",
+            "currency",
+            "framework",
+            "zend"
+        ]
+    },
+    {
+        "name": "zf1/zend-date",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zf1/zend-date.git",
+            "reference": "7d26d89c02169983ccd2fbe9fcfc7360dd27ff36"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zf1/zend-date/zipball/7d26d89c02169983ccd2fbe9fcfc7360dd27ff36",
+            "reference": "7d26d89c02169983ccd2fbe9fcfc7360dd27ff36",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.11",
+            "zf1/zend-exception": "self.version",
+            "zf1/zend-locale": "self.version"
+        },
+        "time": "2014-01-02 14:05:53",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Zend_Date": "library/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "Zend Framework 1 Date package",
+        "homepage": "http://framework.zend.com/",
+        "keywords": [
+            "ZF1",
+            "date",
+            "framework",
+            "zend"
+        ]
+    },
+    {
+        "name": "zf1/zend-validate",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zf1/zend-validate.git",
+            "reference": "1e73b67d47e8cd82a678f21107f4de9b7b3893fc"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zf1/zend-validate/zipball/1e73b67d47e8cd82a678f21107f4de9b7b3893fc",
+            "reference": "1e73b67d47e8cd82a678f21107f4de9b7b3893fc",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.11",
+            "zf1/zend-exception": "self.version",
+            "zf1/zend-loader": "self.version",
+            "zf1/zend-locale": "self.version"
+        },
+        "suggest": {
+            "zf1/zend-date": "Used in special situations or with special adapters",
+            "zf1/zend-filter": "Used in special situations or with special adapters",
+            "zf1/zend-registry": "Used in special situations or with special adapters"
+        },
+        "time": "2014-01-02 14:06:11",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Zend_Validate": "library/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "Zend Framework 1 Validate package",
+        "homepage": "http://framework.zend.com/",
+        "keywords": [
+            "ZF1",
+            "framework",
+            "validate",
+            "zend"
+        ]
+    },
+    {
+        "name": "zf1/zend-queue",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zf1/zend-queue.git",
+            "reference": "5c8959c256e697150a0a8d4fd17b5784f0d97f76"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zf1/zend-queue/zipball/5c8959c256e697150a0a8d4fd17b5784f0d97f76",
+            "reference": "5c8959c256e697150a0a8d4fd17b5784f0d97f76",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.11",
+            "zf1/zend-exception": "self.version",
+            "zf1/zend-validate": "self.version"
+        },
+        "suggest": {
+            "zf1/zend-config": "Used in special situations or with special adapters",
+            "zf1/zend-db": "Used in special situations or with special adapters",
+            "zf1/zend-loader": "Used in special situations or with special adapters"
+        },
+        "time": "2014-01-02 14:06:15",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Zend_Queue": "library/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "Zend Framework 1 Queue package",
+        "homepage": "http://framework.zend.com/",
+        "keywords": [
+            "ZF1",
+            "framework",
+            "queue",
+            "zend"
+        ]
+    },
+    {
+        "name": "zf1/zend-mime",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zf1/zend-mime.git",
+            "reference": "958693d1252e74631c974fb46487ff4af675de65"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zf1/zend-mime/zipball/958693d1252e74631c974fb46487ff4af675de65",
+            "reference": "958693d1252e74631c974fb46487ff4af675de65",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.11",
+            "zf1/zend-exception": "self.version"
+        },
+        "time": "2014-01-02 14:06:05",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Zend_Mime": "library/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "Zend Framework 1 Mime package",
+        "homepage": "http://framework.zend.com/",
+        "keywords": [
+            "ZF1",
+            "framework",
+            "mime",
+            "zend"
+        ]
+    },
+    {
+        "name": "zf1/zend-mail",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zf1/zend-mail.git",
+            "reference": "a1bf1454c2ad66b9eb0934f8baf88de5c13ac239"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zf1/zend-mail/zipball/a1bf1454c2ad66b9eb0934f8baf88de5c13ac239",
+            "reference": "a1bf1454c2ad66b9eb0934f8baf88de5c13ac239",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.11",
+            "zf1/zend-exception": "self.version",
+            "zf1/zend-loader": "self.version",
+            "zf1/zend-mime": "self.version",
+            "zf1/zend-validate": "self.version"
+        },
+        "time": "2014-01-02 14:06:05",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Zend_Mail": "library/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "Zend Framework 1 Mail package",
+        "homepage": "http://framework.zend.com/",
+        "keywords": [
+            "ZF1",
+            "framework",
+            "mail",
+            "zend"
+        ]
+    },
+    {
+        "name": "tedivm/jshrink",
+        "version": "v0.5.2",
+        "version_normalized": "0.5.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/tedivm/JShrink.git",
+            "reference": "4b48e3d051cf0ab145db9df20d3292d91485bb60"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/tedivm/JShrink/zipball/4b48e3d051cf0ab145db9df20d3292d91485bb60",
+            "reference": "4b48e3d051cf0ab145db9df20d3292d91485bb60",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2014-01-14 22:23:53",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "JShrink": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Robert Hafner",
+                "email": "tedivm@tedivm.com"
+            }
+        ],
+        "description": "Javascript Minifier built in PHP",
+        "homepage": "http://github.com/tedivm/JShrink",
+        "keywords": [
+            "javascript",
+            "minifier"
+        ]
+    },
+    {
+        "name": "michelf/php-markdown",
+        "version": "dev-lib",
+        "version_normalized": "dev-lib",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/michelf/php-markdown.git",
+            "reference": "6f952ee180e9bd345f3dd6005aa11e0f5dcbd1b8"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/michelf/php-markdown/zipball/6f952ee180e9bd345f3dd6005aa11e0f5dcbd1b8",
+            "reference": "6f952ee180e9bd345f3dd6005aa11e0f5dcbd1b8",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2013-11-29 21:49:31",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-lib": "1.4.x-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Michelf": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Michel Fortin",
+                "email": "michel.fortin@michelf.ca",
+                "homepage": "http://michelf.ca/",
+                "role": "Developer"
+            },
+            {
+                "name": "John Gruber",
+                "homepage": "http://daringfireball.net/"
+            }
+        ],
+        "description": "PHP Markdown",
+        "homepage": "http://michelf.ca/projects/php-markdown/",
+        "keywords": [
+            "markdown"
+        ]
+    },
+    {
+        "name": "voku/urlify",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/voku/urlify.git",
+            "reference": "57d3c6a6a1061f646f93aab3eea3081703b10e05"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/voku/urlify/zipball/57d3c6a6a1061f646f93aab3eea3081703b10e05",
+            "reference": "57d3c6a6a1061f646f93aab3eea3081703b10e05",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3"
+        },
+        "time": "2014-04-08 12:50:28",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "URLify": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Lars Moelleken",
+                "email": "lars@moelleken.org",
+                "homepage": "http://moelleken.org/"
+            }
+        ],
+        "description": "PHP port of URLify.js from the Django project. Transliterates non-ascii characters for use in URLs.",
+        "homepage": "https://github.com/voku/urlify",
+        "keywords": [
+            "encode",
+            "iconv",
+            "link",
+            "slug",
+            "translit",
+            "transliterate",
+            "transliteration",
+            "url",
+            "urlify"
+        ]
+    },
+    {
+        "name": "zf1/zend-db",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zf1/zend-db.git",
+            "reference": "73aa68ce9947509fd22d5a1bcd83ce6b9740e401"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zf1/zend-db/zipball/73aa68ce9947509fd22d5a1bcd83ce6b9740e401",
+            "reference": "73aa68ce9947509fd22d5a1bcd83ce6b9740e401",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.11",
+            "zf1/zend-exception": "self.version",
+            "zf1/zend-loader": "self.version"
+        },
+        "suggest": {
+            "zf1/zend-registry": "Used in special situations or with special adapters",
+            "zf1/zend-wildfire": "Used in special situations or with special adapters"
+        },
+        "time": "2014-01-02 14:05:53",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Zend_Db": "library/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "Zend Framework 1 Db package",
+        "homepage": "http://framework.zend.com/",
+        "keywords": [
+            "ZF1",
+            "db",
+            "framework",
+            "zend"
         ]
     }
 ]

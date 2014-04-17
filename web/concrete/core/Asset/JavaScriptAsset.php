@@ -60,7 +60,7 @@ class JavaScriptAsset extends Asset {
 
 	public function minify($assets) {
 		return self::process($assets, function($js, $assetPath, $targetPath) {
-			return JSMin::minify($js);
+			return \JShrink\Minifier::minify($js);
 		});
 	}
 

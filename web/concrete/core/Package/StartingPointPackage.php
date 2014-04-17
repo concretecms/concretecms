@@ -15,6 +15,8 @@ use Config;
 use FileSet;
 use PermissionKey;
 use PermissionAccess;
+use \Hautelook\Phpass\PasswordHash;
+
 use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use \Concrete\Core\Mail\Importer\MailImporter;
 use \Concrete\Core\User\Point\Action\Action as UserPointAction;

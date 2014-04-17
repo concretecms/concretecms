@@ -60,7 +60,7 @@ class Psr4ClassLoader
     /**
      * @param string $class
      *
-     * @return Boolean
+     * @return bool
      */
     public function loadClass($class)
     {
@@ -77,7 +77,7 @@ class Psr4ClassLoader
     /**
      * Registers this instance as an autoloader.
      *
-     * @param Boolean $prepend
+     * @param bool    $prepend
      */
     public function register($prepend = false)
     {
