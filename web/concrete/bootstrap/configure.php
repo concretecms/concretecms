@@ -274,7 +274,6 @@ define('ASSETS_URL', $ap);
 define('ASSETS_URL_CSS', $ap . '/css');
 define('ASSETS_URL_JAVASCRIPT', $ap . '/js');
 define('ASSETS_URL_IMAGES', $ap . '/images');
-define('ASSETS_URL_FLASH', $ap . '/flash');
 
 
 

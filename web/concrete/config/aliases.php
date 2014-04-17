@@ -39,7 +39,6 @@ return array(
 	'BlockType' => '\Concrete\Core\Block\BlockType\BlockType',
 	'BlockTypeList' => '\Concrete\Core\Block\BlockType\BlockTypeList',
 	'BlockTypeSet' => '\Concrete\Core\Block\BlockType\Set',
-	'Conversation' => '\Concrete\Core\Conversation\Conversation',
 	'Package' => '\Concrete\Core\Package\Package',
 	'Collection' => '\Concrete\Core\Page\Collection\Collection',
 	'CollectionVersion' => '\Concrete\Core\Page\Collection\Version\Version',

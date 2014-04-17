@@ -435,7 +435,7 @@
 			</attributes>
         </page>
 		  <page name="Basics" path="/dashboard/system/basics" filename="/dashboard/system/basics/view.php" pagetype="" description="Basic information about your website." package=""/>
-        <page name="Site Name" path="/dashboard/system/basics/site_name" filename="/dashboard/system/basics/site_name.php" pagetype="" description="" package="">
+        <page name="Site Name" path="/dashboard/system/basics/name" filename="/dashboard/system/basics/name.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>website name, title</value>
@@ -470,7 +470,7 @@
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Interface Preferences" path="/dashboard/system/basics/interface" filename="/dashboard/system/basics/interface.php" pagetype="" description="" package="">
+        <page name="Interface Preferences" path="/dashboard/system/basics/images" filename="/dashboard/system/basics/images.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>interface, quick nav, dashboard background, background image</value>
@@ -486,14 +486,14 @@
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Bulk SEO Updater" path="/dashboard/system/seo/bulk_seo_tool" filename="/dashboard/system/seo/bulk_seo_tool.php" pagetype="" description="" package="">
+        <page name="Bulk SEO Updater" path="/dashboard/system/seo/bulk" filename="/dashboard/system/seo/bulk.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>bulk, seo, change keywords, engine, optimization, search</value>
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Tracking Codes" path="/dashboard/system/seo/tracking_codes" filename="/dashboard/system/seo/tracking_codes.php" pagetype="" description="" package="">
+        <page name="Tracking Codes" path="/dashboard/system/seo/codes" filename="/dashboard/system/seo/codes.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>traffic, statistics, google analytics, quant, pageviews, hits</value>
@@ -514,7 +514,7 @@
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Search Index" path="/dashboard/system/seo/search_index" filename="/dashboard/system/seo/search_index.php" pagetype="" description="" package="">
+        <page name="Search Index" path="/dashboard/system/seo/searchindex" filename="/dashboard/system/seo/searchindex.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>configure search, site search, search option</value>
@@ -529,7 +529,7 @@
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Clear Cache" path="/dashboard/system/optimization/clear_cache" filename="/dashboard/system/optimization/clear_cache.php" pagetype="" description="" package="">
+        <page name="Clear Cache" path="/dashboard/system/optimization/clearcache" filename="/dashboard/system/optimization/clearcache.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>cache option, turn off cache, no cache, page cache, caching</value>
@@ -559,7 +559,7 @@
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Allowed File Types" path="/dashboard/system/permissions/file_types" filename="/dashboard/system/permissions/file_types.php" pagetype="" description="" package="">
+        <page name="Allowed File Types" path="/dashboard/system/permissions/filetypes" filename="/dashboard/system/permissions/filetypes.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>security, files, media, extension, manager, upload</value>
@@ -577,7 +577,7 @@
         </page>
         <page name="Advanced Permissions" path="/dashboard/system/permissions/advanced" filename="/dashboard/system/permissions/advanced.php" pagetype="" description="" package="">
         </page>
-        <page name="IP Blacklist" path="/dashboard/system/permissions/ip_blacklist" filename="/dashboard/system/permissions/ip_blacklist.php" pagetype="" description="" package="">
+        <page name="IP Blacklist" path="/dashboard/system/permissions/blacklist" filename="/dashboard/system/permissions/blacklist.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>security, lock ip, lock out, block ip, address, restrict, access</value>
@@ -598,7 +598,7 @@
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Maintenance Mode" path="/dashboard/system/permissions/maintenance_mode" filename="/dashboard/system/permissions/maintenance_mode.php" pagetype="" description="" package="">
+        <page name="Maintenance Mode" path="/dashboard/system/permissions/maintenance" filename="/dashboard/system/permissions/maintenance.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>lock site, under construction, hide, hidden</value>
@@ -621,14 +621,14 @@
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Public Registration" path="/dashboard/system/registration/public_registration" filename="/dashboard/system/registration/public_registration.php" pagetype="" description="" package="">
+        <page name="Public Registration" path="/dashboard/system/registration/public" filename="/dashboard/system/registration/public.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>signup, new user, community</value>
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Authentication Types" path="/dashboard/system/registration/authentication_types" filename="/dashboard/system/registration/authentication_types.php" pagetype="" description="" package="">
+        <page name="Authentication Types" path="/dashboard/system/registration/authentication" filename="/dashboard/system/registration/authentication.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>auth, authentication, types, oauth, facebook, login, registration</value>
@@ -650,7 +650,7 @@
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Test Mail Settings" path="/dashboard/system/mail/method/test_settings" filename="/dashboard/system/mail/method/test_settings.php" pagetype="" description="" package="">
+        <page name="Test Mail Settings" path="/dashboard/system/mail/method/test" filename="/dashboard/system/mail/method/test.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>test smtp, test mail</value>
@@ -679,14 +679,14 @@
 				</attributekey>
 			</attributes>
 		</page>
-		<page name="Community Points" path="/dashboard/system/conversations/community_points" filename="/dashboard/system/conversations/community_points.php" pagetype="" description="" package="">
+		<page name="Community Points" path="/dashboard/system/conversations/points" filename="/dashboard/system/conversations/points.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>conversations ratings, ratings, community, community points</value>
 				</attributekey>
 			</attributes>
 		</page>
-		<page name="Banned Words" path="/dashboard/system/conversations/banned_words" filename="/dashboard/system/conversations/banned_words.php" pagetype="" description="" package="">
+		<page name="Banned Words" path="/dashboard/system/conversations/bannedwords" filename="/dashboard/system/conversations/bannedwords.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>conversations bad words, banned words, banned, bad words, bad, words, list</value>
@@ -752,7 +752,7 @@
 				</attributekey>
 			</attributes>
         </page>
-        <page name="File Storage Locations" path="/dashboard/system/environment/file_storage_locations" filename="/dashboard/system/environment/file_storage_locations.php" pagetype="" description="" package="">
+        <page name="File Storage Locations" path="/dashboard/system/environment/storage" filename="/dashboard/system/environment/storage.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>security, alternate storage, hide files</value>
@@ -768,29 +768,21 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Backup &amp; Restore" path="/dashboard/system/backup_restore" filename="/dashboard/system/backup_restore/view.php" pagetype="" description="Backup or restore your website." package="">
+        <page name="Backup &amp; Restore" path="/dashboard/system/backup" filename="/dashboard/system/backup/view.php" pagetype="" description="Backup or restore your website." package="">
         	<attributes>
 				<attributekey handle="meta_keywords">
 					<value>export, backup, database, sql, mysql, encryption, restore</value>
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Backup Database" path="/dashboard/system/backup_restore/backup" filename="/dashboard/system/backup_restore/backup.php" pagetype="" description="" package=""/>
-        <page name="Update concrete5" path="/dashboard/system/backup_restore/update" filename="/dashboard/system/backup_restore/update.php" pagetype="" description="" package="">
+        <page name="Backup Database" path="/dashboard/system/backup/backup" filename="/dashboard/system/backup/backup.php" pagetype="" description="" package=""/>
+        <page name="Update concrete5" path="/dashboard/system/backup/update" filename="/dashboard/system/backup/update.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>upgrade, new version, update</value>
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Database XML" path="/dashboard/system/backup_restore/database" filename="/dashboard/system/backup_restore/database.php" pagetype="" description="" package="">
-			<attributes>
-				<attributekey handle="meta_keywords">
-					<value>export, database, xml, starting, points, schema, refresh, custom, tables</value>
-				</attributekey>
-			</attributes>
-		</page>
-	
 
     </singlepages>
     <pagetypes>
