@@ -74,6 +74,7 @@ class Environment {
 	protected function getOverrides() {
 
 		$check = array(DIR_FILES_BLOCK_TYPES, DIR_FILES_CONTROLLERS, DIR_FILES_ELEMENTS, 
+			DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES, DIR_APPLICATION . '/' . DIRNAME_AUTHENTICATION,
 			DIR_FILES_JOBS, DIR_APPLICATION . '/' . DIRNAME_CSS, DIR_APPLICATION . '/' . DIRNAME_JAVASCRIPT, DIR_APPLICATION . '/' . DIRNAME_LANGUAGES,
 			DIR_FILES_EMAIL_TEMPLATES, DIR_FILES_CONTENT, DIR_FILES_THEMES, DIR_FILES_TOOLS, DIR_APPLICATION . '/' . DIRNAME_PAGE_TYPES);
 		foreach($check as $loc) {
@@ -87,6 +88,7 @@ class Environment {
 			}
 
 		}
+
 		if (is_dir(DIR_PACKAGES_CORE)) { 
 			$this->corePackages = $this->getDirectoryContents(DIR_PACKAGES_CORE);
 		}

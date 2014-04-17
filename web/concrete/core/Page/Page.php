@@ -679,7 +679,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 		// returns a fully qualified image link for this page's icon, either based on its collection type or if icon.png appears in its view directory
 		$icon = '';
 
-		$icon = Events::fire('on_page_get_icon', $this);
+		$pe = new Event($this);
+		Events::dispatch('on_page_get_icon', $pe);
 
 		if ($icon) {
 			return $icon;
@@ -1343,7 +1344,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 			$cache = PageCache::getLibrary();
 			$cache->purge($this);
 
-			$ret = Events::fire('on_page_update', $this);
+			$pe = new Event($this);
+			Events::dispatch('on_page_update', $pe);
+
 		}
 	}
 
@@ -1553,7 +1556,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
 		$this->refreshCache();
 
-		$ret = Events::fire('on_page_update', $this);
+		$pe = new Event($this);
+		Events::dispatch('on_page_update', $pe);
 	}
 
 	public function uniquifyPagePath($origPath) {
@@ -1951,7 +1955,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 		$db = Loader::db();
 
 		// run any internal event we have for page deletion
-		$ret = Events::fire('on_page_delete', $this);
+		$pe = new Event($this);
+		Events::dispatch('on_page_delete', $pe);
 
 		if ($ret < 0) {
 			return false;
@@ -2012,7 +2017,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 	public function moveToTrash() {
 
 		// run any internal event we have for page trashing
-		$ret = Events::fire('on_page_move_to_trash', $this);
+		$pe = new Event($this);
+		Events::dispatch('on_page_move_to_trash', $pe);
 
 		if ($ret < 0) {
 			return false;
@@ -2465,7 +2471,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 			$pc = Page::getByID($newCID, 'RECENT');
 
 			// run any internal event we have for page addition
-			Events::fire('on_page_add', $pc);
+			$pe = new Event($this);
+			Events::dispatch('on_page_add', $pe);
+
 			$pc->rescanCollectionPath();
 
 

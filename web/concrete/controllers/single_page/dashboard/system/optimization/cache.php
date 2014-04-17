@@ -3,7 +3,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Optimization;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
-use Cache;
+use Cache as ConcreteCache;
 use User;
 
 class Cache extends DashboardPageController {
@@ -20,7 +20,7 @@ class Cache extends DashboardPageController {
 				$eca = $this->post('ENABLE_BLOCK_CACHE') == 1 ? 1 : 0; 
 				$eoc = $this->post('ENABLE_OVERRIDE_CACHE') == 1 ? 1 : 0; 
 				$eac = $this->post('ENABLE_ASSET_CACHE') == 1 ? 1 : 0; 
-				Cache::flush();
+				ConcreteCache::flush();
 				Config::save('ENABLE_BLOCK_CACHE', $eca);
 				Config::save('ENABLE_ASSET_CACHE', $eac);
 				Config::save('ENABLE_OVERRIDE_CACHE', $eoc);

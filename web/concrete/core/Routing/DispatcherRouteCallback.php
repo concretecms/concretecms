@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Routing;
+use \Concrete\Core\Page\Event as PageEvent;
 use Request;
 use User;
 use Events;
@@ -127,7 +128,9 @@ class DispatcherRouteCallback extends RouteCallback {
 		}
 
 		## Fire the on_page_view Eventclass
-		Events::fire('on_page_view', $c, $u);
+		$pe = new PageEvent($c);
+		$pe->setUser($u);
+		Events::dispatch('on_page_view', $pe);
 
 		$controller = $c->getPageController();
 		$controller->on_start();
