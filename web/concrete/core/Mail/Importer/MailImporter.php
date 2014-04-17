@@ -188,12 +188,6 @@ class MailImporter extends Object {
 		$messages = array();
 		// connect to the server to grab all messages 
 		
-		if ($this->miConnectionMethod == 'IMAP') { 
-			Loader::library('3rdparty/Zend/Mail/Storage/Imap');
-		} else {
-			Loader::library('3rdparty/Zend/Mail/Storage/Pop3');
-		}
-		
 		$args = array('host' => $this->miServer, 'user' => $this->miUsername, 'password' => $this->miPassword);
 		if ($this->miEncryption != '') {
 			$args['ssl'] = $this->miEncryption;

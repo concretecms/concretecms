@@ -50,7 +50,6 @@ class Service {
 		$response['mail'] = new Zend_Mail(APP_CHARSET);
 	
 		if (MAIL_SEND_METHOD == "SMTP") {
-			Loader::library('3rdparty/Zend/Mail/Transport/Smtp');
 			$config = array();
 			
 			$username = Config::get('MAIL_SEND_METHOD_SMTP_USERNAME');
