@@ -6,7 +6,7 @@ use Loader;
 use \Concrete\Controller\Search\Files as SearchFilesController;
 class Search extends BackendInterfaceController {
 
-	protected $viewPath = '/system/dialogs/file/search';
+	protected $viewPath = '/dialogs/file/search';
 
 	protected function canAccess() {
 		$cp = FilePermissions::getGlobal();

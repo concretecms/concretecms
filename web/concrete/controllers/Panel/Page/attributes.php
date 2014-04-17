@@ -9,7 +9,7 @@ use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 
 class Attributes extends BackendInterfacePageController {
 
-	protected $viewPath = '/system/panels/page/attributes';
+	protected $viewPath = '/panels/page/attributes';
 
 	public function canAccess() {
 		return $this->permissions->canEditPageProperties();

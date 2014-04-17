@@ -26,13 +26,13 @@ $searchRequest = $controller->getSearchRequest();
 ?>
 
 <script type="text/template" data-template="search-form">
-<form role="form" data-search-form="users" action="<?=URL::to('/system/search/users/submit')?>" class="form-inline ccm-search-fields">
+<form role="form" data-search-form="users" action="<?=URL::to('/ccm/system/search/users/submit')?>" class="form-inline ccm-search-fields">
 	<div class="ccm-search-fields-row">
 	<div class="form-group">
 		<select data-bulk-action="users" disabled class="ccm-search-bulk-action form-control">
 			<option value=""><?=t('Items Selected')?></option>
 			<? if ($ek->validate()) { ?>
-				<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Edit Properties')?>" data-bulk-action-url="<?=URL::to('/system/dialogs/user/bulk/properties')?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?=t('Edit Properties')?></option>
+				<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Edit Properties')?>" data-bulk-action-url="<?=URL::to('/ccm/system/dialogs/user/bulk/properties')?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?=t('Edit Properties')?></option>
 			<? } ?>
 			<? if ($ik->validate()) { ?>
 				<option value="activate"><?=t('Activate')?></option>
@@ -57,7 +57,7 @@ $searchRequest = $controller->getSearchRequest();
 	</div>
 	<ul class="ccm-search-form-advanced list-inline">
 		<li><a href="#" data-search-toggle="advanced"><?=t('Advanced Search')?></a>
-		<li><a href="#" data-search-toggle="customize" data-search-column-customize-url="<?=URL::to('/system/dialogs/user/search/customize')?>"><?=t('Customize Results')?></a>
+		<li><a href="#" data-search-toggle="customize" data-search-column-customize-url="<?=URL::to('/ccm/system/dialogs/user/search/customize')?>"><?=t('Customize Results')?></a>
 	</ul>
 	</div>
 	<div class="ccm-search-fields-row">
@@ -91,7 +91,7 @@ $searchRequest = $controller->getSearchRequest();
 	<select name="field[]" class="ccm-search-choose-field" data-search-field="users">
 		<option value=""><?=t('Choose Field')?></option>
 		<? foreach($searchFields as $key => $value) { ?>
-			<option value="<?=$key?>" <% if (typeof(field) != 'undefined' && field.field == '<?=$key?>') { %>selected<% } %> data-search-field-url="<?=URL::to('/system/search/users/field', $key)?>"><?=$value?></option>
+			<option value="<?=$key?>" <% if (typeof(field) != 'undefined' && field.field == '<?=$key?>') { %>selected<% } %> data-search-field-url="<?=URL::to('/ccm/system/search/users/field', $key)?>"><?=$value?></option>
 		<? } ?>
 	</select>
 	<div class="ccm-search-field-content"><% if (typeof(field) != 'undefined') { %><%=field.html%><% } %></div>

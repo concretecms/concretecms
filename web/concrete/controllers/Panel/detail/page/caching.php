@@ -6,7 +6,7 @@ use PageCache;
 
 class Caching extends BackendInterfacePageController {
 
-	protected $viewPath = '/system/panels/details/page/caching';
+	protected $viewPath = '/panels/details/page/caching';
 
 	protected function canAccess() {
 		return $this->permissions->canEditPageSpeedSettings();

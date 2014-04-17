@@ -7,7 +7,7 @@ use TaskPermission;
 use Loader;
 class Search extends BackendInterfaceController {
 
-	protected $viewPath = '/system/dialogs/group/search';
+	protected $viewPath = '/dialogs/group/search';
 
 	protected function canAccess() {
 		$tp = new TaskPermission();

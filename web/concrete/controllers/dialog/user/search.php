@@ -1,9 +1,10 @@
 <?
-namespace \Concrete\Controller\Dialog\User;
+namespace Concrete\Controller\Dialog\User;
 use \Concrete\Controller\Backend\UI as BackendInterfaceController;
+use Loader;
 class Search extends BackendInterfaceController {
 
-	protected $viewPath = '/system/dialogs/user/search';
+	protected $viewPath = '/dialogs/user/search';
 
 	protected function canAccess() {
 		$tp = Loader::helper('concrete/user');

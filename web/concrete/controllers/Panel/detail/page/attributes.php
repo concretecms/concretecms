@@ -10,7 +10,7 @@ use \Concrete\Core\Attribute\View as AttributeTypeView;
 
 class Attributes extends BackendInterfacePageController {
 
-	protected $viewPath = '/system/panels/details/page/attributes';
+	protected $viewPath = '/panels/details/page/attributes';
 
 	protected function canAccess() {
 		return $this->permissions->canEditPageProperties();

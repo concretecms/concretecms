@@ -7,7 +7,7 @@ use PermissionKey;
 
 class Seo extends BackendInterfacePageController {
 
-	protected $viewPath = '/system/panels/details/page/seo';
+	protected $viewPath = '/panels/details/page/seo';
 
 	protected function canAccess() {
 		return $this->permissions->canEditPageContents() || $this->asl->allowEditPaths();
@@ -28,7 +28,9 @@ class Seo extends BackendInterfacePageController {
 	}
 
 	public function submit() {
+		print '1';
 		if ($this->validateAction()) {
+			print '2';
 			$nvc = $this->page->getVersionToModify();
 
 			if ($this->asl->allowEditPaths()) {
@@ -46,6 +48,7 @@ class Seo extends BackendInterfacePageController {
 			$r->setMessage(t('The SEO information has been saved.'));
 			$r->outputJSON();
 		}
+		exit;
 	}
 
 }

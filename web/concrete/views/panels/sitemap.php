@@ -5,7 +5,7 @@
 	<h5><?=t('New Page')?></h5>
 	<ul class="ccm-panel-sitemap-list">
 	<? foreach($pagetypes as $pt) { ?> 
-		<li><a href="<?=URL::to('/system/page/', 'create', $pt->getPageTypeID())?>"><?=$pt->getPageTypeName()?></a></li>
+		<li><a href="<?=URL::to('/ccm/system/page/', 'create', $pt->getPageTypeID())?>"><?=$pt->getPageTypeName()?></a></li>
 	<? } ?>
 	</ul>
 <? } ?>

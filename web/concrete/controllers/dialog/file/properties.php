@@ -9,7 +9,7 @@ use \Concrete\Core\File\EditResponse as FileEditResponse;
 use Loader;
 class Properties extends BackendInterfaceFileController {
 
-	protected $viewPath = '/system/dialogs/file/properties';
+	protected $viewPath = '/dialogs/file/properties';
 
 	protected function canAccess() {
 		return $this->permissions->canViewFileInFileManager();

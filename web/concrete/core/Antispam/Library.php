@@ -5,6 +5,7 @@ use \Concrete\Core\Foundation\Object;
 use Loader;
 use \Concrete\Core\Package\PackageList;
 use Package;
+use PackageList;
 
 class Library extends Object {
 
@@ -122,24 +123,8 @@ class Library extends Object {
 	 * Returns the controller class for the currently selected captcha library
 	 */
 	public function getController() {
-		$path = DIRNAME_SYSTEM . '/' . DIRNAME_SYSTEM_ANTISPAM . '/' . DIRNAME_SYSTEM_TYPES . '/' . $this->saslHandle . '/' . FILENAME_CONTROLLER;
-		if (file_exists(DIR_MODELS . '/' . $path)) {
-			require_once(DIR_MODELS . '/' . $path);
-		} else if ($this->pkgID > 0) {
-			$pkgHandle = $this->getPackageHandle();
-			$dp = DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . $path;
-			$dpc = DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . DIRNAME_MODELS . '/' . $path;
-			if (file_exists($dp)) {
-				require_once($dp);
-			} else {
-				require_once($dpc);
-			}
-		} else {
-			require_once(DIR_MODELS_CORE . '/' . $path);
-		}
-		$txt = Loader::helper('text');
-		$class = $txt->camelcase($this->saslHandle) . 'SystemAntispamTypeController';
-		$cl = new $class();
+		$class = core_class('Core\\Antispam\\' . Concrete::make('helper/text')->camelcase($this->saslHandle) . 'Controller', $this->getPackageHandle());
+		$cl = Core::make($class);
 		return $cl;
 	}
 

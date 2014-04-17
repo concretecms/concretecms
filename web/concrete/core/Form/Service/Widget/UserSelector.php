@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Core\Form\Widget;
+namespace Concrete\Core\Form\Service\Widget;
 use UserInfo;
 use URL;
 use Loader;
@@ -29,7 +29,7 @@ class UserSelector {
 			$html .= $ui->getUserName();
 		}
 		$html .= '</strong></div>';
-		$html .= '<a class="ccm-sitemap-select-item" id="ccm-user-selector-' . $fieldName . '" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="' . URL::to('/system/dialogs/user/search') . '">' . t('Select User') . '</a>';
+		$html .= '<a class="ccm-sitemap-select-item" id="ccm-user-selector-' . $fieldName . '" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="' . URL::to('/ccm/system/dialogs/user/search') . '">' . t('Select User') . '</a>';
 		$html .= '<input type="hidden" name="' . $fieldName . '" value="' . $selectedUID . '">';
 		$html .= '</div>';
 		$html .= <<<EOL
@@ -85,7 +85,7 @@ EOL;
 		$html .= '<tr>';
 		$html .= '<th>' . t('Username') . '</th>';
 		$html .= '<th>' . t('Email Address') . '</th>';
-		$html .= '<th><a class="ccm-user-select-item dialog-launch" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="'. URL::to('/system/dialogs/user/search') . '"><img src="' . ASSETS_URL_IMAGES . '/icons/add.png" width="16" height="16" /></a></th>';
+		$html .= '<th><a class="ccm-user-select-item dialog-launch" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="'. URL::to('/ccm/system/dialogs/user/search') . '"><img src="' . ASSETS_URL_IMAGES . '/icons/add.png" width="16" height="16" /></a></th>';
 		$html .= '</tr><tbody id="ccmUserSelect' . $fieldName . '_body" >';
 		/* for ($i = 0; $i < $ul->getTotal(); $i++ ) {
 			$ui = $ul1[$i];

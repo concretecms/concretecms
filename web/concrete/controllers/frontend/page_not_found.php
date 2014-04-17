@@ -4,7 +4,7 @@ use Controller;
 class PageNotFound extends Controller {
 	
 	
-	protected $viewPath = '/page_not_found';
+	protected $viewPath = '/frontend/page_not_found';
 
 	
 }

@@ -24,13 +24,13 @@ $searchRequest = $controller->getSearchRequest();
 ?>
 
 <script type="text/template" data-template="search-form">
-<form role="form" data-search-form="files" action="<?=URL::to('/system/search/files/submit')?>" class="form-inline ccm-search-fields">
+<form role="form" data-search-form="files" action="<?=URL::to('/ccm/system/search/files/submit')?>" class="form-inline ccm-search-fields">
 	<div class="ccm-search-fields-row">
 	<div class="form-group">
 		<select data-bulk-action="files" disabled class="ccm-search-bulk-action form-control">
 			<option value=""><?=t('Items Selected')?></option>
 			<option value="download"><?=t('Download')?></option>
-			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Edit Properties')?>" data-bulk-action-url="<?=URL::to('/system/dialogs/file/bulk/properties')?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?=t('Edit Properties')?></option>
+			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Edit Properties')?>" data-bulk-action-url="<?=URL::to('/ccm/system/dialogs/file/bulk/properties')?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?=t('Edit Properties')?></option>
 			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Sets')?>" data-bulk-action-url="<?=Loader::helper('concrete/urls')->getToolsURL('files/add_to')?>" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?=t('Sets')?></option>
 			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Rescan')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/rescan" data-bulk-action-dialog-width="350" data-bulk-action-dialog-height="200"><?=t('Rescan')?></option>
 			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Duplicate')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/duplicate" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?=t('Copy')?></option>
@@ -46,7 +46,7 @@ $searchRequest = $controller->getSearchRequest();
 	</div>
 	<ul class="ccm-search-form-advanced list-inline">
 		<li><a href="#" data-search-toggle="advanced"><?=t('Advanced Search')?></a>
-		<li><a href="#" data-search-toggle="customize" data-search-column-customize-url="<?=URL::to('/system/dialogs/file/search/customize')?>"><?=t('Customize Results')?></a>
+		<li><a href="#" data-search-toggle="customize" data-search-column-customize-url="<?=URL::to('/ccm/system/dialogs/file/search/customize')?>"><?=t('Customize Results')?></a>
 		<?
 		$fp = FilePermissions::getGlobal();
 		if ($fp->canAddFile()) { ?>
@@ -85,7 +85,7 @@ $searchRequest = $controller->getSearchRequest();
 	<select name="field[]" class="ccm-search-choose-field" data-search-field="files">
 		<option value=""><?=t('Choose Field')?></option>
 		<? foreach($searchFields as $key => $value) { ?>
-			<option value="<?=$key?>" <% if (typeof(field) != 'undefined' && field.field == '<?=$key?>') { %>selected<% } %> data-search-field-url="<?=URL::to('/system/search/files/field', $key)?>"><?=$value?></option>
+			<option value="<?=$key?>" <% if (typeof(field) != 'undefined' && field.field == '<?=$key?>') { %>selected<% } %> data-search-field-url="<?=URL::to('/ccm/system/search/files/field', $key)?>"><?=$value?></option>
 		<? } ?>
 	</select>
 	<div class="ccm-search-field-content"><% if (typeof(field) != 'undefined') { %><%=field.html%><% } %></div>
@@ -97,7 +97,7 @@ $searchRequest = $controller->getSearchRequest();
 <% _.each(items, function(file) {%>
 <tr data-launch-search-menu="<%=file.fID%>" data-file-manager-file="<%=file.fID%>">
 	<td><span class="ccm-search-results-checkbox"><input type="checkbox" data-search-checkbox="individual" value="<%=file.fID%>" /></span></td>
-	<td class="ccm-file-manager-search-results-star <% if (file.isStarred) { %>ccm-file-manager-search-results-star-active<% } %>"><a href="#" data-search-toggle="star" data-search-toggle-url="<?=URL::to('/system/file/star')?>" data-search-toggle-file-id="<%=file.fID%>"><i class="glyphicon glyphicon-star"></i></a></td>
+	<td class="ccm-file-manager-search-results-star <% if (file.isStarred) { %>ccm-file-manager-search-results-star-active<% } %>"><a href="#" data-search-toggle="star" data-search-toggle-url="<?=URL::to('/ccm/system/file/star')?>" data-search-toggle-file-id="<%=file.fID%>"><i class="glyphicon glyphicon-star"></i></a></td>
 	<td class="ccm-file-manager-search-results-thumbnail"><img src="<%=file.thumbnailLevel1%>" /></td>
 	<% for(i = 0; i < file.columns.length; i++) {
 		var column = file.columns[i]; %>

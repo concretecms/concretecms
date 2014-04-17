@@ -1,15 +1,16 @@
 <?
-namespace \Concrete\Controller\Dialog\Page\Bulk;
+namespace Concrete\Controller\Dialog\Page\Bulk;
 use \Concrete\Controller\Backend\UI as BackendInterfaceController;
 use Permissions;
 use Page;
 use \Concrete\Core\Http\ResponseAssetGroup;
 use CollectionAttributeKey;
 use PageEditResponse;
+use Loader;
 
 class Properties extends BackendInterfaceController {
 
-	protected $viewPath = '/system/dialogs/page/bulk/properties';
+	protected $viewPath = '/dialogs/page/bulk/properties';
 	protected $pages = array();
 	protected $canEdit = false;
 

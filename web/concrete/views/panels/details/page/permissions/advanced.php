@@ -142,7 +142,7 @@ ccm_refreshPagePermissions = function() {
 	var panel = ConcretePanelManager.getByIdentifier('page');
 	panel.openPanelDetail({
 		'identifier': 'page-permissions',
-		'url': '<?=URL::to("/system/panels/details/page/permissions")?>'
+		'url': '<?=URL::to("/ccm/system/panels/details/page/permissions")?>'
 	});
 }
 

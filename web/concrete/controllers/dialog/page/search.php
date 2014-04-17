@@ -1,9 +1,10 @@
 <?
-namespace \Concrete\Controller\Dialog\Page;
+namespace Concrete\Controller\Dialog\Page;
 use \Concrete\Controller\Backend\UI as BackendInterfaceController;
+use Loader;
 class Search extends BackendInterfaceController {
 
-	protected $viewPath = '/system/dialogs/page/search';
+	protected $viewPath = '/dialogs/page/search';
 
 	protected function canAccess() {
 		$sh = Loader::helper('concrete/dashboard/sitemap');

@@ -1,5 +1,5 @@
 <?
-namespace \Concrete\Controller\SinglePage;
+namespace Concrete\Controller\SinglePage;
 use \Concrete\Core\Page\Controller\PageController;
 use Loader;
 use User;

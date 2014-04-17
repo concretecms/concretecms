@@ -15,7 +15,7 @@ use PageEditResponse;
 use \Concrete\Core\Page\Type\Composer\Control\Control as PageTypeComposerControl;
 class CheckIn extends BackendInterfacePageController {
 
-	protected $viewPath = '/system/panels/page/check_in';
+	protected $viewPath = '/panels/page/check_in';
 	public function canAccess() {
 		return $this->permissions->canApprovePageVersions() || $this->permissions->canViewPageVersions();
 	}

@@ -10,7 +10,7 @@ use Loader;
 
 class Properties extends BackendInterfaceController {
 
-	protected $viewPath = '/system/dialogs/file/bulk/properties';
+	protected $viewPath = '/dialogs/file/bulk/properties';
 	protected $files = array();
 	protected $canEdit = false;
 

@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Core\Form\Widget;
+namespace Concrete\Core\Form\Service\Widget;
 use Page;
 use \Concrete\Core\Http\ResponseAssetGroup;
 use Loader;

@@ -11,7 +11,7 @@ use Response;
 use View;
 class Design extends BackendUIPageController {
 
-	protected $viewPath = '/system/panels/page/design';
+	protected $viewPath = '/panels/page/design';
 	public function canAccess() {
 		return $this->permissions->canEditPageTemplate() || $this->permissions->canEditPageTheme();
 	}
@@ -80,7 +80,7 @@ class Design extends BackendUIPageController {
 	}
 
 	public function preview() {
-		$this->setViewObject(new View('/system/panels/details/page/preview'));
+		$this->setViewObject(new View('/panels/details/page/preview'));
 	}
 
 	public function preview_contents() {

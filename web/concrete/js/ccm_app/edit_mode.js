@@ -125,7 +125,7 @@
       });
       $.ajax({
         type: 'GET',
-        url: CCM_DISPATCHER_FILENAME + '/system/dialogs/page/add_block',
+        url: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add_block',
         data: postData,
         success: function(r) {
           var $container = $('<div id="a' + area.getId() + '-bt' + btID + '" class="ccm-block-edit-inline-active">' + r + '</div>');
@@ -212,7 +212,7 @@
       }, 150);
 
       $.concreteAjax({
-        url: CCM_DISPATCHER_FILENAME + '/system/page/arrange_blocks?cID=' + CCM_CID,
+        url: CCM_DISPATCHER_FILENAME + '/ccm/system/page/arrange_blocks?cID=' + CCM_CID,
         data: data,
         success: function(r) {
           $.fn.dialog.hideLoader();
@@ -1139,7 +1139,7 @@
             width: parseInt(elem.data('dialog-width'), 10),
             height: parseInt(elem.data('dialog-height'), 10) + 20,
             title: elem.data('dialog-title'),
-            href: CCM_DISPATCHER_FILENAME + '/system/dialogs/page/add_block?cID=' + CCM_CID + '&btID=' + block_type_id + '&arHandle=' + encodeURIComponent(area_handle)
+            href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add_block?cID=' + CCM_CID + '&btID=' + block_type_id + '&arHandle=' + encodeURIComponent(area_handle)
           });
         }
       }

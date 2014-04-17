@@ -189,7 +189,7 @@ if (count($attribs) > 0) { ?>
 			</td>
 			<td width="100">
 				<div style="width: 150px; word-wrap: break-word">
-				<a href="<?=URL::to('/system/dialogs/file/properties')?>?fID=<?=$f->getFileID()?>&amp;fvID=<?=$fvv->getFileVersionID()?>" dialog-modal="false" dialog-width="630" dialog-height="450" dialog-title="<?=t('Preview File')?>" class="dialog-launch">
+				<a href="<?=URL::to('/ccm/system/dialogs/file/properties')?>?fID=<?=$f->getFileID()?>&amp;fvID=<?=$fvv->getFileVersionID()?>" dialog-modal="false" dialog-width="630" dialog-height="450" dialog-title="<?=t('Preview File')?>" class="dialog-launch">
 					<?=$fvv->getFilename()?>
 				</a>
 				</div>
@@ -336,7 +336,7 @@ ConcreteFilePropertiesDialog.prototype = {
 		var my = this;
 		$('a[data-action=rescan]').on('click', function() {
 			$.concreteAjax({
-				url: '<?=URL::to('/system/file/rescan')?>',
+				url: '<?=URL::to('/ccm/system/file/rescan')?>',
 				data: {'fID': '<?=$f->getFileID()?>'},
 				success: function(r) {
 					my.handleAjaxResponse(r);
@@ -352,7 +352,7 @@ ConcreteFilePropertiesDialog.prototype = {
 		$versions.on('click', 'input[name=fvID]', function() {
 			var fvID = $(this).val();
 			$.concreteAjax({
-				url: '<?=URL::to('/system/file/approve_version')?>',
+				url: '<?=URL::to('/ccm/system/file/approve_version')?>',
 				data: {'fID': '<?=$f->getFileID()?>', 'fvID': fvID},
 				success: function(r) {
 					my.handleAjaxResponse(r, function() {
@@ -365,7 +365,7 @@ ConcreteFilePropertiesDialog.prototype = {
 		$versions.on('click', 'a[data-action=delete-version]', function() {
 			var fvID = $(this).attr('data-file-version-id');
 			$.concreteAjax({
-				url: '<?=URL::to('/system/file/delete_version')?>',
+				url: '<?=URL::to('/ccm/system/file/delete_version')?>',
 				data: {'fID': '<?=$f->getFileID()?>', 'fvID': fvID},
 				success: function(r) {
 					my.handleAjaxResponse(r, function() {

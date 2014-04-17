@@ -6,6 +6,7 @@ use StartingPointPackage;
 use \Concrete\Core\Localization\Localization as Localization;
 use \Concrete\Core\Foundation\Environment as Environment;
 use View;
+use Exception;
 use Database as DB;
 
 defined('C5_EXECUTE') or die("Access Denied.");
@@ -42,7 +43,7 @@ class Install extends Controller {
 	public $helpers = array('form', 'html');
 	
 	public function getViewObject() {
-		$v = new View('/install');
+		$v = new View('/frontend/install');
 		$v->setViewTheme('concrete');
 		return $v;
 	}

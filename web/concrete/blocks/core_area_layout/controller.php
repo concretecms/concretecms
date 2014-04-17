@@ -134,7 +134,7 @@ class Controller extends BlockController {
 					$this->render('view_grid');
 				} else {
 					$asset = new CSSAsset();
-					$asset->setAssetURL(URL::to('/system/css/layout', $this->bID));
+					$asset->setAssetURL(URL::to('/ccm/system/css/layout', $this->bID));
 					$asset->setAssetSupportsMinification(false);
 					$this->requireAsset($asset);
 					$this->render('view');

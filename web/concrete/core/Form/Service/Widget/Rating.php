@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Core\Form\Widget;
+namespace Concrete\Core\Form\Service\Widget;
 class Rating {
 	
 	public function rating($prefix, $value = null, $includeJS = true) {

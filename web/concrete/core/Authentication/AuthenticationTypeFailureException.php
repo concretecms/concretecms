@@ -1,5 +1,5 @@
 <?
 
-namespace \Concrete\Core\Authentication;
+namespace Concrete\Core\Authentication;
 class AuthenticationTypeFailureException extends \Exception {}
 

@@ -1,5 +1,5 @@
 <?php
-namespace \Concrete\Controller\SinglePage\Account\Members;
+namespace Concrete\Controller\SinglePage\Account\Members;
 use \Concrete\Core\Page\Controller\AccountPageController;
 use UserAttributeKey;
 use Loader;

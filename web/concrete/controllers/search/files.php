@@ -143,7 +143,7 @@ class Files extends Controller {
 			$this->fileList->setItemsPerPage(intval($req['numResults']));
 		}
 
-		$ilr = new FileSearchResult($columns, $this->fileList, URL::to('/system/search/files/submit'), $this->fields);
+		$ilr = new FileSearchResult($columns, $this->fileList, URL::to('/ccm/system/search/files/submit'), $this->fields);
 		$this->result = $ilr;
 	}
 

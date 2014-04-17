@@ -5,7 +5,7 @@ use Controller;
 use User;
 class PageForbidden extends Controller {
 	
-	protected $viewPath = '/page_forbidden';
+	protected $viewPath = '/frontend/page_forbidden';
 
 	public function view() {
 		$u = new User();

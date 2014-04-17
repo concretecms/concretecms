@@ -31,7 +31,7 @@
 		});
 		$menu.find('a[data-file-manager-action=duplicate]').on('click', function() {
 			$.concreteAjax({
-				url: CCM_DISPATCHER_FILENAME + '/system/file/duplicate',
+				url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/duplicate',
 				data: {fID: fID},
 				success: function(r) {
 					if (typeof(container.refreshResults) != 'undefined') {

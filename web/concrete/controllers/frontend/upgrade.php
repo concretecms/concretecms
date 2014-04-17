@@ -17,7 +17,7 @@ class Upgrade extends Controller {
 	private $site_version = null;
 	public $upgrade_db = true;
 	
-	protected $viewPath = '/upgrade';
+	protected $viewPath = '/frontend/upgrade';
 	
 	public function on_start() {
 		$this->secCheck();

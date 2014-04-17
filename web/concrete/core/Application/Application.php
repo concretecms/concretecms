@@ -252,6 +252,14 @@ class Application extends Container {
 		exit;
 	}
 
+	/**
+	 *  Adds a few required routes to the dispatcher that must come at the end.
+	 */
+	protected function addRequiredRoutes() {
+		$rl = Router::getInstance();
+		$rl->register('/', 'dispatcher', 'home');
+		$rl->register('{path}', 'dispatcher', 'page', array('path' => '.+'));
+	}
 
 	/**
 	 * Inspects the request and determines what to serve.
@@ -261,6 +269,7 @@ class Application extends Container {
 			$response = $this->getEarlyDispatchResponse();
 		}
 		if (!isset($response)) {
+			$this->addRequiredRoutes();
 			$collection = Router::getInstance()->getList();
 			$router = Router::getInstance();
 			$context = new \Symfony\Component\Routing\RequestContext();
@@ -290,7 +299,7 @@ class Application extends Container {
 				if (!$isActive) {
 					return Redirect::to('/login', 'account_deactivated')->send();
 				} else {
-					$v = new View('/user_error');
+					$v = new View('/frontend/user_error');
 					$v->setViewTheme('concrete');
 					$contents = $v->render();
 					return new Response($contents, 403);
