@@ -14,6 +14,11 @@ class Schema {
 		return $parser->parse($connection);
 	}
 
+	public static function loadFromArray($array, \Concrete\Core\Database\Connection $connection) {
+		$parser = new \Concrete\Core\Database\Schema\Parser\ArrayParser($array);
+		return $parser->parse($connection);
+	}
+
 	protected static function getSchemaParser(\SimpleXMLElement $sx) {
 		switch($sx['version']) {
 			case '0.3':

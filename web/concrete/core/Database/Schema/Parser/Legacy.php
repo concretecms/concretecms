@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Database\Schema\Parser;
 
-class Legacy extends Parser {
+class Legacy extends XmlParser {
 
 	/** 
 	 * Transforms the XML from Adodb XML into 

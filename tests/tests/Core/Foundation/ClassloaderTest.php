@@ -53,8 +53,8 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 
 	public function testRouteControllerOverride() {
 		$root = dirname(DIR_BASE_CORE . '../');
-		mkdir($root . '/controllers/panel/page/', 0777, true);
-		copy(dirname(__FILE__) . '/fixtures/design.php', $root . '/controllers/panel/page/design.php');
+		mkdir($root . '/application/controllers/panel/page/', 0777, true);
+		copy(dirname(__FILE__) . '/fixtures/design.php', $root . '/application/controllers/panel/page/design.php');
 
 		Core::bind('\Concrete\Controller\Panel\Page\Design', function() {
 			return new \Application\Controller\Panel\Page\Design();
@@ -65,9 +65,9 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 		$resolver = new \Concrete\Core\Controller\ControllerResolver();
 	    $callback = $resolver->getController($request);
 
-		unlink($root . '/controllers/panel/page/design.php');
-		rmdir($root . '/controllers/panel/page');
-		rmdir($root . '/controllers/panel');
+		unlink($root . '/application/controllers/panel/page/design.php');
+		rmdir($root . '/application/controllers/panel/page');
+		rmdir($root . '/application/controllers/panel');
 
 		$this->assertTrue($callback[0] instanceof \Application\Controller\Panel\Page\Design);
 		$this->assertTrue($callback[0] instanceof \Concrete\Controller\Panel\Page\Design);
@@ -96,16 +96,16 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 		$env->clearOverrideCache();
 
 		$root = dirname(DIR_BASE_CORE . '../');
-		mkdir($root . '/blocks/core_area_layout/', 0777, true);
-		copy(dirname(__FILE__) . '/fixtures/CoreAreaLayoutController.php', $root . '/blocks/core_area_layout/controller.php');
-
+		mkdir($root . '/application/blocks/core_area_layout/', 0777, true);
+		copy(dirname(__FILE__) . '/fixtures/CoreAreaLayoutController.php', $root . '/application/blocks/core_area_layout/controller.php');
+		
 		$bt = new \BlockType();
 		$bt->setBlockTypeHandle('core_area_layout');
 		$class = $bt->getBlockTypeClass();
 		$classExists = class_exists($class);
 
-		unlink($root . '/blocks/core_area_layout/controller.php');
-		rmdir($root . '/blocks/core_area_layout');
+		unlink($root . '/application/blocks/core_area_layout/controller.php');
+		rmdir($root . '/application/blocks/core_area_layout');
 
 		$this->assertTrue($class == '\Application\Block\CoreAreaLayout\Controller');
 		$this->assertTrue($classExists);
@@ -120,25 +120,6 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	
-
-	public function testHelperOverrides() {
-		require('fixtures/captcha.php');
-		Core::bind('helper/validation/captcha', function() {
-			return new \Application\Core\Captcha\Service();
-		});
-
-		$root = dirname(DIR_BASE_CORE . '../');
-		mkdir($root . '/helpers/validation/', 0777, true);
-		copy(dirname(__FILE__) . '/fixtures/captcha.php', $root . '/helpers/validation/captcha.php');
-
-		$fh = Loader::helper('validation/captcha');
-
-		unlink($root . '/helpers/validation/captcha.php');
-		rmdir($root . '/helpers/validation');
-
-		$this->assertTrue($fh instanceof \Application\Core\Captcha\Service);
-		$this->assertTrue($fh instanceof \Concrete\Core\Captcha\Service);
-	}
 
 	
 }

@@ -77,13 +77,10 @@ class Environment {
 			DIR_FILES_JOBS, DIR_APPLICATION . '/' . DIRNAME_CSS, DIR_APPLICATION . '/' . DIRNAME_JAVASCRIPT, DIR_APPLICATION . '/' . DIRNAME_LANGUAGES,
 			DIR_FILES_EMAIL_TEMPLATES, DIR_FILES_CONTENT, DIR_FILES_THEMES, DIR_FILES_TOOLS, DIR_APPLICATION . '/' . DIRNAME_PAGE_TYPES);
 		foreach($check as $loc) {
-
 			if (is_dir($loc)) {
 				$contents = $this->getDirectoryContents($loc, array(), true);
 				foreach($contents as $f) {
-					if (preg_match('/^.+\.php$/i', $f) || is_dir($f)) {
-						$this->coreOverrides[] = str_replace(DIR_BASE . '/', '', $f);
-					}		
+					$this->coreOverrides[] = str_replace(DIR_BASE . '/', '', $f);
 				}
 			}
 
