@@ -92,11 +92,8 @@ class IPService {
 	public function logSignupRequest($ignoreConfig=false) {		
 		
 		if (Config::get('IP_BAN_LOCK_IP_ENABLE') == 1) {
-			$signupRequest = new SignupRequest();
-			$signupRequest->id = null;
-			$signupRequest->date_access = null;
-			$signupRequest->ipFrom = ip2long($this->getRequestIP());
-			$signupRequest->save();
+			$db = Loader::db();
+			$db->insert('SignupRequests', array('date_access' => date('Y-m-d H:i:s'), 'ipFrom' => ip2long($this->getRequestIP())));
 		}
 	}
 	
