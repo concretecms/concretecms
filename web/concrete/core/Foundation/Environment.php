@@ -80,7 +80,9 @@ class Environment {
 			if (is_dir($loc)) {
 				$contents = $this->getDirectoryContents($loc, array(), true);
 				foreach($contents as $f) {
-					$this->coreOverrides[] = str_replace(DIR_BASE . '/', '', $f);
+					$item = str_replace(DIR_APPLICATION . '/', '', $f);
+					$item = str_replace(DIR_BASE . '/', '', $item);				
+					$this->coreOverrides[] = $item;
 				}
 			}
 
