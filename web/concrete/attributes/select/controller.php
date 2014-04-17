@@ -10,7 +10,7 @@ class Controller extends AttributeTypeController  {
 	private $akSelectAllowOtherValues;
 	private $akSelectOptionDisplayOrder;
 
-	protected $searchIndexFieldDefinition = 'X NULL';
+	protected $searchIndexFieldDefinition = array('type' => 'string', 'options' => array('default' => null, 'notnull' => false));
 	
 	public function type_form() {
 		$this->set('form', Loader::helper('form'));		

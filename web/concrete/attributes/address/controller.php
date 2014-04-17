@@ -50,12 +50,12 @@ class Controller extends AttributeTypeController  {
 	}
 
 	protected $searchIndexFieldDefinition = array(
-		'address1' => 'C 255 NULL',
-		'address2' => 'C 255 NULL',
-		'city' => 'C 255 NULL',
-		'state_province' => 'C 255 NULL',
-		'country' => 'C 255 NULL',
-		'postal_code' => 'C 255 NULL'
+		'address1' => array('type' => 'string', 'options' => array('length' => '255', 'default' => '', 'notnull' => false)),
+		'address2' => array('type' => 'string', 'options' => array('length' => '255', 'default' => '', 'notnull' => false)),
+		'city' => array('type' => 'string', 'options' => array('length' => '255', 'default' => '', 'notnull' => false)),
+		'state_province' => array('type' => 'string', 'options' => array('length' => '255', 'default' => '', 'notnull' => false)),
+		'country' => array('type' => 'string', 'options' => array('length' => '255', 'default' => '', 'notnull' => false)),
+		'postal_code' => array('type' => 'string', 'options' => array('length' => '255', 'default' => '', 'notnull' => false)),
 	);
 	
 	public function search() {

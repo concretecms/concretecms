@@ -6,7 +6,7 @@ use \Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController  {
 
-	protected $searchIndexFieldDefinition = 'I DEFAULT 0 NULL';
+	protected $searchIndexFieldDefinition = array('type' => 'integer', 'options' => array('default' => 0, 'notnull' => false));
 
 	public function getValue() {
 		$db = Loader::db();
