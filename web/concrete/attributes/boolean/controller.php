@@ -8,7 +8,7 @@ class Controller extends AttributeTypeController  {
 	// Field definition in the ADODB Format. We omit the first column (name) though, since it's
 	// automatically generated
 	
-	protected $searchIndexFieldDefinition = 'I1 DEFAULT 0 NULL';
+	protected $searchIndexFieldDefinition = array('type' => 'boolean', 'options' => array('default' => 0, 'notnull' => false));
 	
 	public function searchForm($list) {
 		$list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), 1);

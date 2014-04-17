@@ -8,7 +8,7 @@ class Controller extends AttributeTypeController  {
 
 	public $helpers = array('form');
 	
-	protected $searchIndexFieldDefinition = 'T NULL';
+	protected $searchIndexFieldDefinition = array('type' => 'datetime', 'options' => array('default' => '', 'notnull' => false));
 
 	public function saveKey($data) {
 		$akDateDisplayMode = $data['akDateDisplayMode'];

@@ -5,7 +5,8 @@ use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Controller as AttributeTypeController;
 class Controller extends AttributeTypeController  {
 
-	protected $searchIndexFieldDefinition = 'X NULL';
+	protected $searchIndexFieldDefinition = array('type' => 'text', 'options' => array('length' => 4294967295, 'default' => null, 'notnull' => false));
+
 	public $helpers = array('form');
 	
 	public function saveKey($data) {
