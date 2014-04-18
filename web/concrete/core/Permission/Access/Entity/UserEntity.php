@@ -3,6 +3,7 @@ namespace Concrete\Core\Permission\Access\Entity;
 use Loader;
 use PermissionAccess;
 use Config;
+use URL;
 class UserEntity extends Entity {
 
 	protected $user;

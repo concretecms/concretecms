@@ -1,5 +1,8 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
+
 $c = Page::getByID($_REQUEST['cID']);
 $a = Area::get($c, $_GET['arHandle']);
 $ax = $a; 
@@ -12,7 +15,7 @@ if (is_object($a)) {
 	$ap = new Permissions($a);
 	if ($ap->canEditAreaPermissions()) { 
 		if ($_REQUEST['task'] == 'add_access_entity' && Loader::helper("validation/token")->validate('add_access_entity')) {
-			$pk = AreaPermissionKey::getByID($_REQUEST['pkID']);
+			$pk = PermissionKey::getByID($_REQUEST['pkID']);
 			$pk->setPermissionObject($ax);
 			$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 			$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
@@ -29,7 +32,7 @@ if (is_object($a)) {
 		}
 	
 		if ($_REQUEST['task'] == 'remove_access_entity' && Loader::helper("validation/token")->validate('remove_access_entity')) {
-			$pk = AreaPermissionKey::getByID($_REQUEST['pkID']);
+			$pk = PermissionKey::getByID($_REQUEST['pkID']);
 			$pk->setPermissionObject($ax);
 			$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 			$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
@@ -37,7 +40,7 @@ if (is_object($a)) {
 		}
 	
 		if ($_REQUEST['task'] == 'save_permission' && Loader::helper("validation/token")->validate('save_permission')) {
-			$pk = AreaPermissionKey::getByID($_REQUEST['pkID']);
+			$pk = PermissionKey::getByID($_REQUEST['pkID']);
 			$pk->setPermissionObject($ax);
 			$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 			$pa->save($_POST);

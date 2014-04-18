@@ -4,8 +4,9 @@ use \Concrete\Controller\Backend\UI\Page as BackendInterfacePageController;
 use \Concrete\Core\Workflow\Request\DeletePageRequest as DeletePagePageWorkflowRequest;
 use \Concrete\Core\Page\EditResponse as PageEditResponse;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
-use user;
+use User;
 use Loader;
+use Page;
 class Delete extends BackendInterfacePageController {
 
 	protected $viewPath = '/dialogs/page/delete';

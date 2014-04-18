@@ -14,6 +14,7 @@ use View;
 use Log;
 use Page;
 use Redirect;
+use Core;
 use Job, JobSet;
 
 class Application extends Container {
@@ -42,9 +43,9 @@ class Application extends Container {
 			}
 
 			if (defined('SITE_DEBUG_LEVEL') && SITE_DEBUG_LEVEL == DEBUG_DISPLAY_ERRORS || (!defined('SITE_DEBUG_LEVEL'))) {
-				View::renderError(t('An unexpected error occurred.'), $e->getMessage(), $e);		
+				Core::make('helper/concrete/ui')->renderError(t('An unexpected error occurred.'), $e->getMessage(), $e);
 			} else {
-				View::renderError(t('An unexpected error occurred.'), t('An error occurred while processing this request.'), $e);
+				Core::make('helper/concrete/ui')->renderError(t('An unexpected error occurred.'), t('An error occurred while processing this request.'));
 			}
 
 			$app->shutdown();

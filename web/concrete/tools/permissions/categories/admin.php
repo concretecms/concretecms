@@ -1,5 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
 $p = new Permissions();
 if ($p->canAccessTaskPermissions()) { 
 
@@ -8,7 +10,7 @@ if ($p->canAccessTaskPermissions()) {
 		$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 		$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
 		$pd = PermissionDuration::getByID($_REQUEST['pdID']);
-		$pa->addListITem($pe, $pd, $_REQUEST['accessType']);
+		$pa->addListItem($pe, $pd, $_REQUEST['accessType']);
 	}
 
 	if ($_REQUEST['task'] == 'remove_access_entity' && Loader::helper("validation/token")->validate('remove_access_entity')) {

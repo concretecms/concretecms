@@ -213,8 +213,8 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 		
 		$nv = static::get($c, $newVID);
 
-		$ev = \Concrete\Core\Page\Collection\Version\Event($c);
-		$ev->setCollectionVersionObject(nvv);
+		$ev = new Event($c);
+		$ev->setCollectionVersionObject($nv);
 		Events::dispatch('on_page_version_add', $ev);
 
 		$nv->refreshCache();
@@ -280,7 +280,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 			$db->Execute('update Pages set cInheritPermissionsFromCID = ? where cID = ?', array($masterC->getCollectionID(), $c->getCollectioniD()));
 		}
 
-		$ev = \Concrete\Core\Page\Collection\Version\Event($c);
+		$ev = new Event($c);
 		$ev->setCollectionVersionObject($this);
 		Events::dispatch('on_page_version_approve', $ev);
 

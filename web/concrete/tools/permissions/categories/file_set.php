@@ -1,5 +1,9 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
+use \Concrete\Core\Workflow\Workflow as Workflow;
+
 if ($_REQUEST['fsID'] > 0) {
 	$fs = FileSet::getByID($_REQUEST['fsID']);
 } else {
@@ -9,7 +13,7 @@ $fsp = new Permissions($fs);
 if ($fsp->canEditFileSetPermissions()) {
 
 	if ($_REQUEST['task'] == 'add_access_entity' && Loader::helper("validation/token")->validate('add_access_entity')) {
-		$pk = FileSetPermissionKey::getByID($_REQUEST['pkID']);
+		$pk = PermissionKey::getByID($_REQUEST['pkID']);
 		$pk->setPermissionObject($fs);
 		$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 		$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
@@ -18,7 +22,7 @@ if ($fsp->canEditFileSetPermissions()) {
 	}
 
 	if ($_REQUEST['task'] == 'remove_access_entity' && Loader::helper("validation/token")->validate('remove_access_entity')) {
-		$pk = FileSetPermissionKey::getByID($_REQUEST['pkID']);
+		$pk = PermissionKey::getByID($_REQUEST['pkID']);
 		$pk->setPermissionObject($fs);
 		$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 		$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
@@ -26,14 +30,14 @@ if ($fsp->canEditFileSetPermissions()) {
 	}
 
 	if ($_REQUEST['task'] == 'save_permission' && Loader::helper("validation/token")->validate('save_permission')) {
-		$pk = FileSetPermissionKey::getByID($_REQUEST['pkID']);
+		$pk = PermissionKey::getByID($_REQUEST['pkID']);
 		$pk->setPermissionObject($fs);
 		$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 		$pa->save($_POST);
 	}
 
 	if ($_REQUEST['task'] == 'save_workflows' && Loader::helper("validation/token")->validate('save_workflows')) {
-		$pk = FileSetPermissionKey::getByID($_REQUEST['pkID']);
+		$pk = PermissionKey::getByID($_REQUEST['pkID']);
 		$pk->setPermissionObject($fs);
 		$pk->clearWorkflows();
 		foreach($_POST['wfID'] as $wfID) {

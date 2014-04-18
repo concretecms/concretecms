@@ -18,7 +18,7 @@
 	<? } ?>
 	</div>
 	<div class="ccm-pane-footer">
-		<a href="<?=$view->url('/dashboard/blocks/permissions')?>" class="btn pull-left"><?=t('Cancel')?></a>
+		<a href="<?=$view->url('/dashboard/blocks/permissions')?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
 		<button type="submit" value="<?=t('Save')?>" class="btn btn-primary pull-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
 	</div>
 	</form>

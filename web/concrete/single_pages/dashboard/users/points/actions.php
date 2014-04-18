@@ -58,7 +58,7 @@ if ($upaID > 0) {
 ?>
 
 <div class="ccm-pane-footer">
-	<a href="<?=$view->url('/dashboard/users/points/actions')?>" class="btn pull-left"><?=t('Back to List')?></a>
+	<a href="<?=$view->url('/dashboard/users/points/actions')?>" class="btn btn-default pull-left"><?=t('Back to List')?></a>
 	<button type="submit" class="btn btn-primary pull-right"><?=$label?> <i class="icon-white icon-ok"></i></button>
 </div>
 </form>		

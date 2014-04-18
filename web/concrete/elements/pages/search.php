@@ -33,7 +33,7 @@ $searchRequest = $controller->getSearchRequest();
 		<select data-bulk-action="pages" disabled class="ccm-search-bulk-action form-control">
 			<option value=""><?=t('Items Selected')?></option>
 			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Page Properties')?>" data-bulk-action-url="<?=URL::to('/ccm/system/dialogs/page/bulk/properties')?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?=t('Edit Properties')?></option>
-			<option value="movecopy" data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Move/Copy')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_search_selector" data-bulk-action-dialog-width="90%" data-bulk-action-dialog-height="70%"><?=t('Move/Copy')?></option>
+			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Move/Copy')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_search_selector" data-bulk-action-dialog-width="90%" data-bulk-action-dialog-height="70%"><?=t('Move/Copy')?></option>
 			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Speed Settings')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/speed_settings" data-bulk-action-dialog-width="610" data-bulk-action-dialog-height="340"><?=t('Speed Settings')?></option>
 			<? if (PERMISSIONS_MODEL == 'advanced') { ?>
 				<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Change Permissions')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/permissions" data-bulk-action-dialog-width="430" data-bulk-action-dialog-height="630"><?=t('Change Permissions')?></option>

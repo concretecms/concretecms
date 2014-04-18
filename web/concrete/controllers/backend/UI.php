@@ -25,7 +25,7 @@ abstract class UI extends Controller {
 		if ($this->canAccess()) {
 			return parent::getViewObject();
 		}
-		throw new Exception(t('Access Denied'));
+		throw new \Exception(t('Access Denied'));
 	}
 
 	protected function validateAction() {

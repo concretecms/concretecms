@@ -22,6 +22,9 @@
         </page>
         <page name="Flat View" path="/dashboard/sitemap/explore" filename="/dashboard/sitemap/explore.php" pagetype="" description="" package="">
 			<attributes>
+				<attributekey handle="exclude_nav">
+					<value><![CDATA[1]]></value>
+				</attributekey>
 				<attributekey handle="meta_keywords">
 					<value>pages, add page, delete page, copy, move, alias, bulk</value>
 				</attributekey>

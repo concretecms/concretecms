@@ -1,13 +1,18 @@
 <?
-namespace Concrete\Core\Page\Workflow\Request;
+namespace Concrete\Core\Workflow\Request;
+use Workflow;
 use Loader;
-use \Concrete\Core\Page\Collection\Version as CollectionVersion;
-use Stack;
-use EVents;
-use \Concrete\Workflow\Workflow\Progress\Response as WorkflowProgressResponse;
-use \Concrete\Workflow\Workflow\Progress\Response as WorkflowProgressResponse;
+use Page;
+use \Concrete\Core\Workflow\Description as WorkflowDescription;
+use Permissions;
+use PermissionKey;
+use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
+use CollectionVersion;
+use Events;
+use \Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
+use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
-class ApproveStackRequest extends Request {
+class ApproveStackRequest extends PageRequest {
 
 	public function approve(WorkflowProgress $wp) {
 		$s = Stack::getByID($this->getRequestedPageID());
@@ -19,7 +24,7 @@ class ApproveStackRequest extends Request {
 			$s->update(array('stackName' => $v->getVersionName()));
 		}
 
-		$ev = \Concrete\Core\Page\Collection\Version\Event($s);
+		$ev = new \Concrete\Core\Page\Collection\Version\Event($s);
 		$ev->setCollectionVersionObject($v);
 		Events::dispatch('on_page_version_submit_approve', $ev);
 

@@ -13,7 +13,7 @@
 	<? Loader::element("workflow/edit_type_form_required", array('workflow' => $wf)); ?>
 </div>
 <div class="ccm-pane-footer">
-	<a href="<?=$view->url('/dashboard/workflow/workflows/view_detail', $wf->getWorkflowID())?>" class="btn pull-left"><?=t("Cancel")?></a>
+	<a href="<?=$view->url('/dashboard/workflow/workflows/view_detail', $wf->getWorkflowID())?>" class="btn btn-default pull-left"><?=t("Cancel")?></a>
 	<input type="submit" name="submit" value="<?=t('Save')?>" class="btn btn-primary pull-right" />
 </div>
 </form>
@@ -72,7 +72,7 @@
 
 	</div>
 	<div class="ccm-pane-footer">
-	<a href="<?=$view->url('/dashboard/workflow/workflows')?>" class="btn pull-left"><?=t("Cancel")?></a>
+	<a href="<?=$view->url('/dashboard/workflow/workflows')?>" class="btn btn-default pull-left"><?=t("Cancel")?></a>
 	<input type="submit" name="submit" value="<?=t('Add')?>" class="btn btn-primary pull-right" />
 	</div>	
 	</form>

@@ -4,6 +4,7 @@ use Loader;
 use Group;
 use Config;
 use PermissionAccess;
+use URL;
 class GroupEntity extends Entity {
 
 	protected $group = false;

@@ -108,7 +108,9 @@
 					'<% } %>' +
 					'<% if (item.canEditPageProperties) { %>' + 
 						'<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="640" dialog-height="360" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.seo + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/panels/details/page/seo?cID=<%=item.cID%>">' + ccmi18n_sitemap.seo + '</a></li>' + 
-						'<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="500" dialog-height="500" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageLocationTitle + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/panels/details/page/location?cID=<%=item.cID%>">' + ccmi18n_sitemap.pageLocation + '</a></li>' + 
+						'<% if (item.cID > 1) { %>' + 
+							'<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="500" dialog-height="500" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageLocationTitle + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/panels/details/page/location?cID=<%=item.cID%>">' + ccmi18n_sitemap.pageLocation + '</a></li>' + 
+						'<% } %>' + 
 						'<li class="divider"></li>' + 
 						'<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageAttributesTitle + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/attributes?cID=<%=item.cID%>">' + ccmi18n_sitemap.pageAttributes + '</a></li>' + 
 					'<% } %>' +
@@ -125,7 +127,7 @@
 						'<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="640" dialog-height="340" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.pageVersions + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/panels/page/versions?cID=<%=item.cID%>">' + ccmi18n_sitemap.pageVersions + '</a></li>' + 
 					'<% } %>' +
 					'<% if (item.canDeletePage) { %>' + 
-						'<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="360" dialog-height="150" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.deletePage + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/delete?cID=<%=item.cID%>">' + ccmi18n_sitemap.deletePage + '</a></li>' + 
+						'<li><a class="dialog-launch" dialog-on-close="ConcreteSitemap.exitEditMode(<%=item.cID%>)" dialog-width="360" dialog-height="250" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.deletePage + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/delete?cID=<%=item.cID%>">' + ccmi18n_sitemap.deletePage + '</a></li>' + 
 					'<% } %>' +
 					'<li class="divider" data-sitemap-mode="explore"></li>' + 
 					'<li data-sitemap-mode="explore"><a class="dialog-launch" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.moveCopyPage + '" href="' + CCM_TOOLS_PATH + '/sitemap_search_selector?sitemap_select_mode=move_copy_delete&cID=<%=item.cID%>">' + ccmi18n_sitemap.moveCopyPage + '</a></li>' +
@@ -136,10 +138,10 @@
 						'<li><a href="' + CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/search/?selectedSearchField[]=parent&cParentAll=1&cParentIDSearchField=<%=item.cID%>">' + ccmi18n_sitemap.searchPages + '</a></li>' +
 						'<li><a href="' + CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/explore/-/<%=item.cID%>">' + ccmi18n_sitemap.explorePages + '</a></li>' +
 					'<% } %>' +
-					'<% if (item.canAddExternalLinks) { %>' + 
-						'<li class="divider"></li>' + 
-						'<li><a class="dialog-launch" dialog-width="350" dialog-modal="false" dialog-height="170" dialog-title="' + ccmi18n_sitemap.addExternalLink + '" dialog-modal="false" href="' + CCM_TOOLS_PATH + '/edit_collection_popup?rel=SITEMAP&cID=<%=item.cID%>&ctask=add_external">' + ccmi18n_sitemap.addExternalLink + '</a></li>' +
-					'<% } %>' +
+					//'<% if (item.canAddExternalLinks) { %>' + 
+					//	'<li class="divider"></li>' + 
+					//	'<li><a class="dialog-launch" dialog-width="350" dialog-modal="false" dialog-height="260" dialog-title="' + ccmi18n_sitemap.addExternalLink + '" dialog-modal="false" href="' + CCM_TOOLS_PATH + '/edit_collection_popup?rel=SITEMAP&cID=<%=item.cID%>&ctask=add_external">' + ccmi18n_sitemap.addExternalLink + '</a></li>' +
+					//'<% } %>' +
 				'<% } %>' +
 		'</ul></div></div>';
 		}

@@ -27,7 +27,7 @@ if (is_object($selectedTemplate)) {
 
 
 	<div class="dialog-buttons">
-	<button class="btn pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
+	<button class="btn btn-default pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
 	<button type="button" data-dialog-action="submit" class="btn btn-primary pull-right"><?=t('Save')?></button>
 	</div>
 

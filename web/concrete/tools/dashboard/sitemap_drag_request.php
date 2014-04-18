@@ -1,6 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Core\Workflow\Request\MovePageRequest as MovePagePageWorkflowRequest;
 $sh = Loader::helper('concrete/dashboard/sitemap');
 if (!$sh->canRead()) {
 	die(t('Access Denied'));
@@ -123,7 +124,7 @@ if (!$error) {
 						$pkr->setRequesterUserID($u->getUserID());
 						$u->unloadCollectionEdit($oc);
 						$r = $pkr->trigger();
-						if ($r instanceof WorkflowProgressResponse) { 
+						if ($r instanceof \Concrete\Core\Workflow\Progress\Response) { 
 							$successMessage .= '"' . $oc->getCollectionName() . '" '.t('was moved beneath').' "' . $dc->getCollectionName() . '." ';
 						} else { 
 							$successMessage .= t("Your request to move \"%s\" beneath \"%s\" has been stored. Someone with approval rights will have to activate the change.\n", $oc->getCollectionName() , $dc->getCollectionName() );

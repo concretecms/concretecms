@@ -21,8 +21,8 @@ for ($i = 1; $i <= 12; $i++) {
 	$repeatMonths[$i] = $i;
 }
 
-
-$list = Zend_Locale::getTranslationList('Days', ACTIVE_LOCALE);
+$loc = Localization::getInstance();
+$list = Zend_Locale::getTranslationList('Days', $loc->activeLocale());
 
 
 $pdStartDate = false;

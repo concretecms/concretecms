@@ -1,5 +1,11 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
+use \Concrete\Core\Permission\Key\UserKey as UserPermissionKey;
+use \Concrete\Core\Workflow\Workflow as Workflow;
+
 $p = new Permissions();
 if ($p->canAccessTaskPermissions()) { 
 

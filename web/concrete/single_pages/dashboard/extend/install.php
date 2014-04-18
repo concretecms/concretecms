@@ -40,7 +40,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 <? } ?>
 </div>
 <div class="ccm-pane-footer">
-	<a href="<?=$view->url('/dashboard/extend/install')?>" class="btn pull-left"><?=t('Cancel')?></a>
+	<a href="<?=$view->url('/dashboard/extend/install')?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
 	<input type="submit" value="<?=t('Install %s', $pkg->getPackageName())?>" class="btn btn-primary pull-right" />
 </div>
 </form>

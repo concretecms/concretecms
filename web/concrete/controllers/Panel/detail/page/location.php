@@ -7,6 +7,7 @@ use Exception;
 use Loader;
 use PageType;
 use Permissions;
+use User;
 use Page;
 use \Concrete\Core\Workflow\Request\MovePageRequest as MovePagePageWorkflowRequest;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;

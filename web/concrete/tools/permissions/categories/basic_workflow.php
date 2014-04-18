@@ -1,5 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
 $p = Page::getByPath('/dashboard/workflow/workflows');
 $cp = new Permissions($p);
 $json = Loader::helper('json');
@@ -8,7 +10,7 @@ $workflow = Workflow::getByID($_REQUEST['wfID']);
 if ($cp->canViewPage()) { 
 
 	if ($_REQUEST['task'] == 'add_access_entity' && Loader::helper("validation/token")->validate('add_access_entity')) {
-		$pk = BasicWorkflowPermissionKey::getByID($_REQUEST['pkID']);
+		$pk = PermissionKey::getByID($_REQUEST['pkID']);
 		$pk->setPermissionObject($workflow);
 		$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 		$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
@@ -17,7 +19,7 @@ if ($cp->canViewPage()) {
 	}
 
 	if ($_REQUEST['task'] == 'remove_access_entity' && Loader::helper("validation/token")->validate('remove_access_entity')) {
-		$pk = BasicWorkflowPermissionKey::getByID($_REQUEST['pkID']);
+		$pk = PermissionKey::getByID($_REQUEST['pkID']);
 		$pk->setPermissionObject($workflow);
 		$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 		$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
@@ -25,7 +27,7 @@ if ($cp->canViewPage()) {
 	}
 
 	if ($_REQUEST['task'] == 'save_permission' && Loader::helper("validation/token")->validate('save_permission')) {
-		$pk = BasicWorkflowPermissionKey::getByID($_REQUEST['pkID']);
+		$pk = PermissionKey::getByID($_REQUEST['pkID']);
 		$pk->setPermissionObject($workflow);
 		$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 		$pa->save($_POST);

@@ -10,7 +10,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Excl
 	</div>
 	<div class="ccm-pane-footer">
 	<? if (count($SEO_EXCLUDE_WORDS_ORIGINAL_ARRAY) != count($SEO_EXCLUDE_WORDS_ARRAY) || !$SEO_EXCLUDE_WORDS) { ?>
-		<a href="<?=$view->action('reset')?>" class="btn pull-left"><?=t('Reset To Default')?></a>
+		<a href="<?=$view->action('reset')?>" class="btn btn-default pull-left"><?=t('Reset To Default')?></a>
 	<? } ?>
 		<?php echo $interface->submit(t('Save'), null, 'right', 'primary');?>
 	</div>

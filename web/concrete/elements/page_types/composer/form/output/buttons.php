@@ -24,7 +24,7 @@ if (is_object($c) && $c->getCollectionPath() == '/dashboard/composer/write') { ?
 <? } ?>
 
 <? if (PERMISSIONS_MODEL != 'simple' && $cmpp->canEditPageTypePermissions($pagetype)) { ?>
-	<button type="button" data-page-type-composer-form-btn="permissions" class="btn pull-left"><?=t('Permissions')?></button>
+	<button type="button" data-page-type-composer-form-btn="permissions" class="btn btn-default pull-left"><?=t('Permissions')?></button>
 <? } ?>
 
 

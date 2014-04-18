@@ -242,10 +242,13 @@ class UI {
 	}
 
 
-	public function renderError($title, $error) {
+	public function renderError($title, $error, $exception = false) {
 		$o = new stdClass;
 		$o->title = $title;
 		$o->content = $error;
+		if ($exception) {
+			$o->content .= $exception->getTraceAsString();
+		}
 		$ve = new ErrorView($o);
 		$response = $ve->render($o);
 		print $response;
