@@ -35,7 +35,7 @@ foreach($list as $pa) {
 <?=Loader::element('permission/duration', array('pd' => $pd)); ?>
 
 <div class="dialog-buttons">
-	<input type="button" onclick="jQuery.fn.dialog.closeTop()" value="<?=t('Cancel')?>" class="btn pull-left" />
+	<input type="button" onclick="jQuery.fn.dialog.closeTop()" value="<?=t('Cancel')?>" class="btn btn-default pull-left" />
 	<input type="submit" onclick="$('#ccm-permissions-timed-guest-access-form').submit()" value="<?=t('Save')?>" class="btn btn-primary pull-right" />
 </div>
 

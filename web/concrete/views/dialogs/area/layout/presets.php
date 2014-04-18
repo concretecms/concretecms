@@ -43,7 +43,7 @@
 	<div class="alert alert-warning" id="ccm-layout-save-preset-override"><?=t('Note: this will override the selected preset with the new preset. It will not update any layouts already in use.')?></div>
 
 	<div class="dialog-buttons">
-	<button class="btn pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
+	<button class="btn btn-default pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
 	<button type="button" data-dialog-action="submit" class="btn btn-success pull-right"><?=t('Save Preset')?></button>
 	</div>
 

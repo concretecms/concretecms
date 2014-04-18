@@ -2,6 +2,7 @@
 namespace Concrete\Core\Permission\Access\Entity;
 use Loader;
 use PermissionAccess;
+use URL;
 use Config;
 class GroupSetEntity extends Entity {
 	

@@ -9,8 +9,8 @@ $assignment = PermissionKey::getByHandle('edit_user_properties')->getMyAssignmen
 $gl = new GroupList();
 $gl->setItemsPerPage(10000);
 $gArray = $gl->getPage();
-
-$locales = Localization::getAvailableInterfaceLanguageDescriptions(ACTIVE_LOCALE);
+$loc = Localization::getInstance();
+$locales = Localization::getAvailableInterfaceLanguageDescriptions($loc->activeLocale());
 
 ?>
 

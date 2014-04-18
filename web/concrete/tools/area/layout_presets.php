@@ -107,7 +107,7 @@ if (Loader::helper('validation/token')->validate('layout_presets')) {
 	<div class="alert alert-warning" id="ccm-layout-save-preset-override"><?=t('Note: this will override the selected preset with the new preset. It will not update any layouts already in use.')?></div>
 
 	<div class="dialog-buttons">
-		<button class="btn pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t("Cancel")?></button>
+		<button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t("Cancel")?></button>
 		<button class="btn btn-primary pull-right" onclick="$('#ccm-layout-save-preset-form').submit()"><?=t("Save")?></button>
 	</div>
 

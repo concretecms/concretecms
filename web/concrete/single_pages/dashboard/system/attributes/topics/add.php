@@ -18,7 +18,7 @@ Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Topic
 </div>
 
 <div class="ccm-pane-footer">
-	<a href="<?=$view->url('/dashboard/system/attributes/topics')?>" class="btn pull-left"><?=t("Cancel")?></a>
+	<a href="<?=$view->url('/dashboard/system/attributes/topics')?>" class="btn btn-default pull-left"><?=t("Cancel")?></a>
 	<button type="submit" class="btn btn-primary pull-right"><?=t('Add Topic Tree')?></button>
 </div>
 </form>

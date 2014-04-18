@@ -11,6 +11,9 @@ use \Concrete\Core\Attribute\View as AttributeTypeView;
 class Attributes extends BackendInterfacePageController {
 
 	protected $viewPath = '/panels/details/page/attributes';
+	// we need this extra because this controller gets called by another page
+	// and that page needs to know how to submit it.
+	protected $controllerActionPath = '/ccm/system/panels/details/page/attributes';
 
 	protected function canAccess() {
 		return $this->permissions->canEditPageProperties();

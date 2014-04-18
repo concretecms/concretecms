@@ -4,6 +4,7 @@ use Loader;
 use Marketplace;
 use Cache;
 use Config;
+use Localization;
 class Update {
 
 	public static function getLatestAvailableVersionNumber() {		
@@ -81,7 +82,8 @@ class Update {
 			@curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
 			@curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
 			@curl_setopt($curl_handle, CURLOPT_POST, true);
-			@curl_setopt($curl_handle, CURLOPT_POSTFIELDS, 'LOCALE=' . ACTIVE_LOCALE . '&BASE_URL_FULL=' . BASE_URL . '/' . DIR_REL . '&APP_VERSION=' . APP_VERSION);
+			$loc = Localization::getInstance();
+			@curl_setopt($curl_handle, CURLOPT_POSTFIELDS, 'LOCALE=' . $loc->activeLocale() . '&BASE_URL_FULL=' . BASE_URL . '/' . DIR_REL . '&APP_VERSION=' . APP_VERSION);
 			$resp = @curl_exec($curl_handle);
 			
 			$xml = @simplexml_load_string($resp);

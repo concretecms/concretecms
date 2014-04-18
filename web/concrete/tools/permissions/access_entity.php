@@ -1,6 +1,10 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper("form");
+use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use \Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
+
 $tp = new TaskPermission();
 $tu = Loader::helper('concrete/user');
 $dt = Loader::helper('form/date_time');
@@ -65,7 +69,7 @@ if ($_POST['task'] == 'save_permissions') {
 <? if (!is_object($pae)) { ?>
 
 <div class="btn-group">
-	<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+	<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" href="#">
 	<i class="icon-plus-sign"></i> <?=t('Select')?>
 	<span class="caret"></span>
 		</a>
@@ -105,7 +109,7 @@ if ($_POST['task'] == 'save_permissions') {
 <? } ?>
 
 <div class="dialog-buttons">
-	<input type="button" onclick="jQuery.fn.dialog.closeTop()" value="<?=t('Cancel')?>" class="btn pull-left" />
+	<input type="button" onclick="jQuery.fn.dialog.closeTop()" value="<?=t('Cancel')?>" class="btn btn-default pull-left" />
 	<input type="submit" onclick="$('#ccm-permissions-access-entity-form').submit()" value="<?=t('Save')?>" class="btn btn-primary pull-right" />
 </div>
 

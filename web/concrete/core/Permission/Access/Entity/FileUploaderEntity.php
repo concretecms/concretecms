@@ -2,6 +2,7 @@
 namespace Concrete\Core\Permission\Access\Entity;
 use Loader;
 use PermissionAccess;
+use URL;
 use Config;
 use UserInfo;
 use \Concrete\Core\Permission\Access\FileSetAccess as FileSetPermissionAccess;

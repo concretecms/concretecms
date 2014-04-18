@@ -90,7 +90,7 @@ ccm_permissionLaunchDialog = function(link) {
 <div id="ccm-page-permissions-confirm-dialog" style="display: none">
 <?=t('Changing this setting will affect this page immediately. Are you sure?')?>
 <div id="dialog-buttons-start">
-	<input type="button" class="btn pull-left" value="Cancel" onclick="jQuery.fn.dialog.closeTop()" />
+	<input type="button" class="btn btn-default pull-left" value="Cancel" onclick="jQuery.fn.dialog.closeTop()" />
 	<input type="button" class="btn btn-primary pull-right" value="Ok" onclick="ccm_pagePermissionsConfirmInheritanceChange()" />
 </div>
 </div>
@@ -98,8 +98,8 @@ ccm_permissionLaunchDialog = function(link) {
 
  <? if ($editPermissions) { ?>
 <div class="dialog-buttons">
-	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn pull-left"><?=t('Cancel')?></a>
-	<button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary pull-right"><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
+	<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="btn btn-default pull-left"><?=t('Cancel')?></a>
+	<button onclick="$('#ccm-permission-list-form').submit()" class="btn btn-primary pull-right"><?=t('Save')?> <i class="glyphicon glyphicon-ok-sign icon-white"></i></button>
 </div>
 <? } ?>
 

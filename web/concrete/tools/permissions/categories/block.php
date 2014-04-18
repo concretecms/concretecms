@@ -1,5 +1,11 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+
+use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
+use \Concrete\Core\Workflow\Workflow as Workflow;
+
 $c = Page::getByID($_REQUEST['cID']);
 $a = Area::get($c, $_REQUEST['arHandle']);
 if (is_object($a)) {
@@ -22,7 +28,7 @@ if (is_object($a)) {
 		$b->loadNewCollection($nvc);
 
 		if ($_REQUEST['task'] == 'add_access_entity' && Loader::helper("validation/token")->validate('add_access_entity')) {
-			$pk = BlockPermissionKey::getByID($_REQUEST['pkID']);
+			$pk = PermissionKey::getByID($_REQUEST['pkID']);
 			$pk->setPermissionObject($b);
 			$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 			$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
@@ -39,7 +45,7 @@ if (is_object($a)) {
 		}
 	
 		if ($_REQUEST['task'] == 'remove_access_entity' && Loader::helper("validation/token")->validate('remove_access_entity')) {
-			$pk = BlockPermissionKey::getByID($_REQUEST['pkID']);
+			$pk = PermissionKey::getByID($_REQUEST['pkID']);
 			$pk->setPermissionObject($b);
 			$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 			$pe = PermissionAccessEntity::getByID($_REQUEST['peID']);
@@ -47,7 +53,7 @@ if (is_object($a)) {
 		}
 	
 		if ($_REQUEST['task'] == 'save_permission' && Loader::helper("validation/token")->validate('save_permission')) {
-			$pk = BlockPermissionKey::getByID($_REQUEST['pkID']);
+			$pk = PermissionKey::getByID($_REQUEST['pkID']);
 			$pk->setPermissionObject($b);
 			$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 			$pa->save($_POST);
@@ -93,7 +99,7 @@ if (is_object($a)) {
 
 			$pe = GroupPermissionAccessEntity::getOrCreate(Group::getByID(GUEST_GROUP_ID));
 			$pd = PermissionDuration::translateFromRequest();
-			$pa->addListItem($pe, $pd, BlockPermissionKey::ACCESS_TYPE_INCLUDE);
+			$pa->addListItem($pe, $pd, PermissionKey::ACCESS_TYPE_INCLUDE);
 			$pt = $pk->getPermissionAssignmentObject();
 			$pt->assignPermissionAccess($pa);
 		}

@@ -148,8 +148,7 @@ $rl->register('/ccm/system/panels/details/page/caching', '\Concrete\Controller\P
 $rl->register('/ccm/system/panels/details/page/caching/submit', '\Concrete\Controller\Panel\Detail\Page\Caching::submit');
 $rl->register('/ccm/system/panels/details/page/caching/purge', '\Concrete\Controller\Panel\Detail\Page\Caching::purge');
 $rl->register('/ccm/system/panels/details/page/permissions', '\Concrete\Controller\Panel\Detail\Page\Permissions::view');
-$rl->register('/ccm/system/panels/details/page/permissions/simple/submit', '\Concrete\Controller\Panel\Detail\Page\Permissions::save_simple');
-$rl->register('/ccm/system/panels/details/page/permissions/advanced/submit', '\Concrete\Controller\Panel\Detail\Page\Permissions::save_advanced');
+$rl->register('/ccm/system/panels/details/page/permissions/save_simple', '\Concrete\Controller\Panel\Detail\Page\Permissions::save_simple');
 
 /** 
  * Special Dashboard

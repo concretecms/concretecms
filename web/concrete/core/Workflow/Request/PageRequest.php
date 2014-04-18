@@ -3,10 +3,16 @@ namespace Concrete\Core\Workflow\Request;
 use Workflow;
 use Loader;
 use Page;
+use \Concrete\Core\Workflow\Description as WorkflowDescription;
+use Permissions;
 use PermissionKey;
 use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
+use CollectionVersion;
+use Events;
+use \Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
+use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 use \Concrete\Core\Workflow\Progress\PageProgress as PageWorkflowProgress;
-use \Concrete\Workflow\Workflow\Progress\Response as WorkflowProgressResponse;
+
 abstract class PageRequest extends Request {  
 	
 	public function setRequestedPage($c) {

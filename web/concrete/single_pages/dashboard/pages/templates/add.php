@@ -48,7 +48,7 @@ $form = Loader::helper('form');
     </div>
     
     <div class="ccm-pane-footer">
-        <a href="<?=$view->url('/dashboard/pages/templates')?>" class="btn pull-left"><?=t("Cancel")?></a>
+        <a href="<?=$view->url('/dashboard/pages/templates')?>" class="btn btn-default pull-left"><?=t("Cancel")?></a>
         <button type="submit" class="btn pull-right btn-primary"><?=t('Add')?></button>
     </div>
     

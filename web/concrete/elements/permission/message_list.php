@@ -5,7 +5,7 @@
 <? if (isset($_REQUEST['message'])) { ?>
 
 
-<div class="alert-message success" id="ccm-permissions-message-list">
+<div class="alert alert-success" id="ccm-permissions-message-list">
 <?
 if ($_REQUEST['message'] == 'custom_options_saved') { ?>
 	<?=t('Custom Options saved.')?>

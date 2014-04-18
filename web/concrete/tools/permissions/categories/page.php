@@ -1,5 +1,14 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
+use \Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
+use \Concrete\Core\Workflow\Workflow as Workflow;
+use \Concrete\Core\Workflow\Request\ChangePagePermissionsRequest as ChangePagePermissionsPageWorkflowRequest;
+use \Concrete\Core\Workflow\Request\ChangePagePermissionsInheritanceRequest as ChangePagePermissionsInheritancePageWorkflowRequest;
+use \Concrete\Core\Workflow\Request\ChangeSubpageDefaultsInheritanceRequest as ChangeSubpageDefaultsInheritancePageWorkflowRequest;
+use \Concrete\Core\Permission\Set as PermissionSet;
+
 $pages = array();
 if (is_array($_REQUEST['cID'])) {
 	foreach($_REQUEST['cID'] as $cID) { 
@@ -68,7 +77,7 @@ if (count($pages) > 0) {
 			$pkr->setPagePermissionsInheritance($_REQUEST['mode']);
 			$pkr->setRequesterUserID($u->getUserID());
 			$response = $pkr->trigger();
-			if (!($response instanceof WorkflowProgressResponse)) {
+			if (!($response instanceof \Concrete\Core\Workflow\Progress\Response)) {
 				$deferred = true;
 			}
 		}
@@ -87,7 +96,7 @@ if (count($pages) > 0) {
 			$pkr->setPagePermissionsInheritance($_REQUEST['inherit']);
 			$pkr->setRequesterUserID($u->getUserID());
 			$response = $pkr->trigger();
-			if (!($response instanceof WorkflowProgressResponse)) {
+			if (!($response instanceof \Concrete\Core\Workflow\Progress\Response)) {
 				$deferred = true;
 			}
 		}
@@ -122,12 +131,12 @@ if (count($pages) > 0) {
 			$pkr->setRequesterUserID($u->getUserID());
 			$u->unloadCollectionEdit($c);
 			$response = $pkr->trigger();
-			if (!($response instanceof WorkflowProgressResponse)) {
+			if (!($response instanceof \Concrete\Core\Workflow\Progress\Response)) {
 				$deferred = true;
 			}
 		}
 
-		$r = new PageEditVersionResponse();
+		$r = new PageEditResponse();
 		$r->setPage($c);
 		if ($deferred) {
 			$r->setMessage(t('Page permissions request saved successfully. You must approve this workflow request before the permissions are changed.'));
@@ -172,7 +181,7 @@ if (count($pages) > 0) {
 				$pkr->setRequesterUserID($u->getUserID());
 				$u->unloadCollectionEdit($c);
 				$response = $pkr->trigger();
-				if (!($response instanceof WorkflowProgressResponse)) {
+				if (!($response instanceof \Concrete\Core\Workflow\Progress\Response)) {
 					$deferred = true;
 				}
 			}		
@@ -234,7 +243,7 @@ if (count($pages) > 0) {
 					$pkr->setRequesterUserID($u->getUserID());
 					$u->unloadCollectionEdit($c);
 					$response = $pkr->trigger();
-					if (!($response instanceof WorkflowProgressResponse)) {
+					if (!($response instanceof \Concrete\Core\Workflow\Progress\Response)) {
 						$deferred = true;
 					}
 				}

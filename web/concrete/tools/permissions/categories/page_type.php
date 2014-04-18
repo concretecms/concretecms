@@ -1,5 +1,8 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
+use \Concrete\Core\Permission\Duration as PermissionDuration;
+
 if ($_REQUEST['ptID'] > 0) {
 	$pt = PageType::getByID($_REQUEST['ptID']);
 }

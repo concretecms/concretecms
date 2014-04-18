@@ -3,19 +3,11 @@
 <? foreach($accessTypes as $accessType => $title) { 
 	$list = $permissionAccess->getAccessListItems($accessType); 
 	?>
-	<h3><?=$title?></h3>
+	<a style="float: right" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/access_entity?accessType=<?=$accessType?>&pkCategoryHandle=<?=$pkCategoryHandle?>" dialog-width="500" dialog-height="500" dialog-title="<?=t('Add Access Entity')?>" class="dialog-launch btn btn-xs btn-default"><?=t('Add')?></a>
+
+	<h4><?=$title?></h4>
 
 <table class="ccm-permission-access-list table">
-<tr>
-	<th colspan="3">
-		<div style="position: relative">
-		<a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/permissions/access_entity?accessType=<?=$accessType?>&pkCategoryHandle=<?=$pkCategoryHandle?>" dialog-width="500" dialog-height="500" dialog-title="<?=t('Add Access Entity')?>" class="dialog-launch"><?=t('Add')?> <i class="icon-plus"></i> </a>
-		
-
-	<?=t('Access')?>
-	</div>
-	</th>
-</tr>
 <? if (count($list) > 0) { ?>
 
 <? foreach($list as $pa) {

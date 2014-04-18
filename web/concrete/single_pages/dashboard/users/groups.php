@@ -216,7 +216,7 @@ if (isset($group)) {
 </div>
 <div class="ccm-pane-footer">
 	<button class="btn pull-right btn-primary" style="margin-left: 10px" type="submit"><?=t('Update Group')?></button>
-	<a href="<?=$view->url('/dashboard/users/groups')?>" class="btn pull-left"><?=t('Cancel')?></a>
+	<a href="<?=$view->url('/dashboard/users/groups')?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
 	<? if ($u->isSuperUser()) { ?>
 		<? print $ih->button_js(t('Delete'), "deleteGroup()", 'right', 'error');?>
 		<? } ?>

@@ -165,9 +165,11 @@ if (file_exists(DIR_CONFIG_SITE)) include DIR_CONFIG_SITE . '/app.php';
  * Start localization library.
  * ----------------------------------------------------------------------------
  */
+Config::getOrDefine('SITE_LOCALE', 'en_US');
 $u = new User();
-Localization::setLocale($u->getUserLanguageToDisplay());
-Localization::init();
+$lan = $u->getUserLanguageToDisplay();
+$loc = Localization::getInstance();
+$loc->setLocale($lan);
 
 
 

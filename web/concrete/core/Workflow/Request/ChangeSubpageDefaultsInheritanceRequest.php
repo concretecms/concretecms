@@ -1,10 +1,18 @@
 <?
-namespace Concrete\Core\Page\Workflow\Request;
+namespace Concrete\Core\Workflow\Request;
+use Workflow;
 use Loader;
+use Page;
+use \Concrete\Core\Workflow\Description as WorkflowDescription;
+use Permissions;
 use PermissionKey;
-use \Concrete\Workflow\Workflow\Progress\Response as WorkflowProgressResponse;
+use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
+use CollectionVersion;
+use Events;
+use \Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
+use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
-class ChangeSubpageDefaultsInheritanceRequest extends Request {
+class ChangeSubpageDefaultsInheritanceRequest extends PageRequest {
 	
 	protected $wrStatusNum = 30;
 

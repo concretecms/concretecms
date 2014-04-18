@@ -3,6 +3,7 @@ namespace Concrete\Core\Permission\Access\Entity;
 use Loader;
 use PermissionAccess;
 use Config;
+use URL;
 use UserInfo;
 use \Concrete\Core\Permission\Access\PageAccess as PagePermissionAccess;
 use \Concrete\Core\Permission\Access\AreaAccess as AreaPermissionAccess;

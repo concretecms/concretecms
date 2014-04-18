@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission;
+use Session;
 class Set {
 
 	protected $permissions;

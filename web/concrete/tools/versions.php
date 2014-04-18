@@ -100,7 +100,7 @@
 						$u->unloadCollectionEdit($c);
 						$response = $pkr->trigger();
 						$cvID = Loader::helper('security')->sanitizeInt($_GET['cvID']);
-						if (!($response instanceof WorkflowProgressResponse)) {
+						if (!($response instanceof \Concrete\Core\Workflow\Progress\Response)) {
 							header("Location: " . REL_DIR_FILES_TOOLS_REQUIRED . "/versions.php?forcereload=1&deferred=true&cID=" . $cID . "&cvID=" . $cvID);
 							exit;
 						} else {

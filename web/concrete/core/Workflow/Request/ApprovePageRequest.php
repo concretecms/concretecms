@@ -1,5 +1,6 @@
 <?php 
 namespace Concrete\Core\Workflow\Request;
+use Workflow;
 use Loader;
 use Page;
 use \Concrete\Core\Workflow\Description as WorkflowDescription;
@@ -82,7 +83,7 @@ class ApprovePageRequest extends PageRequest {
 	public function cancel(WorkflowProgress $wp) {
 		$c = Page::getByID($this->getRequestedPageID(), $this->cvID);
 
-		$ev = \Concrete\Core\Page\Collection\Version\Event($c);
+		$ev = new \Concrete\Core\Page\Collection\Version\Event($c);
 		$v = $c->getVersionObject();
 		$ev->setCollectionVersionObject($v);
 		Events::dispatch('on_page_version_deny', $ev);
@@ -95,7 +96,7 @@ class ApprovePageRequest extends PageRequest {
 		$v = CollectionVersion::get($c, $this->cvID);
 		$v->approve(false);
 
-		$ev = \Concrete\Core\Page\Collection\Version\Event($c);
+		$ev = new \Concrete\Core\Page\Collection\Version\Event($c);
 		$ev->setCollectionVersionObject($v);
 		Events::dispatch('on_page_version_submit_approve', $ev);
 

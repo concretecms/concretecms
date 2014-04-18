@@ -43,16 +43,11 @@ class Localization {
 	protected $translate;
 
 	public function __construct() {
-		
-		$locale = defined('ACTIVE_LOCALE') ? ACTIVE_LOCALE : 'en_US';
-		$this->setLocale($locale);
 		\Zend_Date::setOptions(array('format_type' => 'php'));
-		if (ENABLE_TRANSLATE_LOCALE_EN_US || $locale != 'en_US') {
-			$cache = Cache::getLibrary();
-			if (is_object($cache)) {
-				\Zend_Translate::setCache($cache);
-				\Zend_Date::setOptions(array('cache'=>$cache));
-			}
+		$cache = Cache::getLibrary();
+		if (is_object($cache)) {
+			\Zend_Translate::setCache($cache);
+			\Zend_Date::setOptions(array('cache'=>$cache));
 		}
 	}
 
@@ -65,7 +60,7 @@ class Localization {
 		if (!(ENABLE_TRANSLATE_LOCALE_EN_US || $locale != 'en_US')) {
 			return;
 		}
-
+		
 		if (is_dir(DIR_LANGUAGES . '/' . $locale)) {
 			$languageDir = DIR_LANGUAGES . '/' . $locale;
 		} elseif (is_dir(DIR_LANGUAGES_CORE . '/' . $locale)) {

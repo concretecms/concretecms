@@ -4,6 +4,7 @@ use \Concrete\Core\Foundation\Object;
 use Loader;
 use Config;
 use Core;
+use URL;
 use \Concrete\Core\Package\PackageList;
 class Type extends Object {
 

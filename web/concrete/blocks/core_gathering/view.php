@@ -11,7 +11,7 @@ if ($enablePostingFromGathering && is_object($composer)) { ?>
 			<form data-form="composer">
 			<?=Loader::helper('concrete/composer')->display($composer)?>
 			<div class="dialog-buttons">
-			<button type="button" data-composer-btn="exit" class="btn pull-left"><?=t('Cancel')?></button>
+			<button type="button" data-composer-btn="exit" class="btn btn-default pull-left"><?=t('Cancel')?></button>
 			<button type="button" data-composer-btn="publish" class="btn btn-primary pull-right"><?=t('Post')?></button>
 			</div>
 			</form>
