@@ -20,7 +20,7 @@ $c = Page::getCurrentPage();
 
 
 <input type="hidden" name="autonavCurrentCID" value="<?=$c->getCollectionID()?>" />
-<input type="hidden" name="autonavPreviewPane" value="<?=helper('concrete/urls')->getBlockTypeToolsURL($bt)?>/preview_pane" />
+<input type="hidden" name="autonavPreviewPane" value="<?=Loader::helper('concrete/urls')->getBlockTypeToolsURL($bt)?>/preview_pane" />
 
 <strong><?=t('Pages Should Appear')?></strong><br>
 <select name="orderBy">
