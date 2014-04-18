@@ -3,6 +3,7 @@ namespace Concrete\Core\Application;
 
 use \Illuminate\Container\Container;
 use \Concrete\Core\Cache\Page\PageCache;
+use \Concrete\Core\Foundation\ClassLoader;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Router;
@@ -16,6 +17,8 @@ use Page;
 use Redirect;
 use Core;
 use Job, JobSet;
+use Loader;
+use Package;
 
 class Application extends Container {
 
@@ -74,10 +77,12 @@ class Application extends Container {
 	public function setupPackages() {
 		$pla = \Concrete\Core\Package\PackageList::get();
 		$pl = $pla->getPackages();
+		$cl = ClassLoader::getInstance();
 		foreach($pl as $p) {
 			if ($p->isPackageInstalled()) {
-				$pkg = Loader::package($p->getPackageHandle());
+				$pkg = Package::getClass($p->getPackageHandle());
 				if (is_object($pkg)) {
+					$cl->registerPackage($pkg);
 					// handle updates
 					if (ENABLE_AUTO_UPDATE_PACKAGES) {
 						$pkgInstalledVersion = $p->getPackageVersion();

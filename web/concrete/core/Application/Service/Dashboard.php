@@ -365,7 +365,7 @@ class DashboardMenu {
 	protected $items;
 	public function getItems($sort = true) {
 		if ($sort) {
-			usort($this->items, array('Menu', 'sortItems'));
+			usort($this->items, array('\Concrete\Core\Application\Service\DashboardMenu', 'sortItems'));
 		}
 		return $this->items;
 	}

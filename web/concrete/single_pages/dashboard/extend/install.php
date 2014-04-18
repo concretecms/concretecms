@@ -192,11 +192,11 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			
 			if (count($blocks) > 0) { ?>
 				<h5><?=$pkg->getPackageItemsCategoryDisplayName('block_types')?></h5>
-				<ul id="ccm-block-type-list">
+				<ul>
 				<? foreach($blocks as $bt) {
 					$btIcon = $ci->getBlockTypeIconURL($bt);?>
-					<li class="ccm-block-type ccm-block-type-available">
-						<a style="background-image: url(<?=$btIcon?>)" class="ccm-block-type-inner" href="<?=$view->url('/dashboard/blocks/types', 'inspect', $bt->getBlockTypeID())?>"><?=t($bt->getBlockTypeName())?></a>
+					<li>
+						<a href="<?=$view->url('/dashboard/blocks/types', 'inspect', $bt->getBlockTypeID())?>"><?=t($bt->getBlockTypeName())?></a>
 						<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeID()?>"><?=t($bt->getBlockTypeDescription())?></div>
 					</li>
 				<? } ?>

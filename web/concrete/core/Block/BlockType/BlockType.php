@@ -60,6 +60,30 @@ class BlockType {
 		return $bt;
 	}
 
+	/**
+	 * gets the available composer templates
+	 * used for editing instances of the BlockType while in the composer ui in the dashboard
+	 * @return TemplateFile[]
+	 */
+	function getBlockTypeComposerTemplates() {
+		$btHandle = $this->getBlockTypeHandle();
+		$files = array();
+		$fh = Loader::helper('file');
+		$dir = DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES_COMPOSER;
+		if(is_dir($dir)) {
+			$files = array_merge($files, $fh->getDirectoryContents($dir));
+		}
+		$dir = DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES_COMPOSER;
+		if (file_exists($dir)) {
+			$files = array_merge($files, $fh->getDirectoryContents($dir));
+		}
+		$templates = array();
+		foreach(array_unique($files) as $file) {
+			$templates[] = new TemplateFile($this, $file);
+		}
+		return TemplateFile::sortTemplateFileList($templates);
+	}
+
 	/** 
 	 * Retrieves a BlockType object based on its btID
 	 * @return BlockType
@@ -76,7 +100,7 @@ class BlockType {
 	 */
 	protected function loadController() {
 		if (!isset($this->controller)) {
-			$class = static::getBlockTypeMappedClass($this->getBlockTypeHandle(), $this->pkgHandle);
+			$class = static::getBlockTypeMappedClass($this->getBlockTypeHandle(), $this->getPackageHandle());
 			$this->controller = new $class($this);
 		}
 	}
@@ -182,7 +206,7 @@ class BlockType {
 	 * Returns the class for the current block type.
 	 */
 	public function getBlockTypeClass() {
-		return static::getBlockTypeMappedClass($this->btHandle, $this->pkgHandle);
+		return static::getBlockTypeMappedClass($this->btHandle, $this->getPackageHandle());
 	}
 
 	/**
@@ -362,13 +386,17 @@ class BlockType {
 
 	public static function installBlockType($btHandle, $pkg = false) {
 		$env = Environment::get();
-		$class = static::getBlockTypeMappedClass($btHandle);
+		$pkgHandle = false;
+		if (is_object($pkg)){
+			$pkgHandle = $pkg->getPackageHandle();
+		}
+		$class = static::getBlockTypeMappedClass($btHandle, $pkgHandle);
 		$bta = new $class;
-		$path = dirname($env->getPath(DIRNAME_BLOCKS . '/' . $btHandle . '/'. FILENAME_CONTROLLER));
+		$path = dirname($env->getPath(DIRNAME_BLOCKS . '/' . $btHandle . '/'. FILENAME_CONTROLLER, $pkgHandle));
 		
 		//Attempt to run the subclass methods (install schema from db.xml, etc.)
 		$r = $bta->install($path);
-	
+
 		$currentLocale = Localization::activeLocale();
 		if ($currentLocale != 'en_US') {
 			// Prevent the database records being stored in wrong language
@@ -396,7 +424,7 @@ class BlockType {
 		if ($currentLocale != 'en_US') {
 			Localization::changeLocale($currentLocale);
 		}
-
+		
 		$em = DB::get()->getEntityManager();
 		$em->persist($bt);
 		$em->flush();
@@ -420,7 +448,7 @@ class BlockType {
         }
 
         $em = $db->getEntityManager();
-        $em->remove($bt);
+        $em->remove($this);
         $em->flush();  
         
         //Remove gaps in display order numbering (to avoid future sorting errors)

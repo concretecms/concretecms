@@ -124,7 +124,7 @@ div[data-container=editable-fields] section {
 			<?
 			if ($canAddGroup) { ?>
 			<hr>
-				<a class="btn btn-default btn-xs" data-button="assign-groups" dialog-width="640" dialog-height="480" dialog-modal="true" href="<?=URL::to('/system/dialogs/group/search')?>?filter=assign" dialog-title="<?=t('Add Groups')?>" dialog-modal="false"><?=t('Add Group')?></a>
+				<a class="btn btn-default btn-xs" data-button="assign-groups" dialog-width="640" dialog-height="480" dialog-modal="true" href="<?=URL::to('/ccm/system/dialogs/group/search')?>?filter=assign" dialog-title="<?=t('Add Groups')?>" dialog-modal="false"><?=t('Add Group')?></a>
 			<? } ?>
 		</div>
 
@@ -210,7 +210,7 @@ $(function() {
 	});
 	ConcreteEvent.subscribe('SelectGroup', function(e, data) {
 		$.concreteAjax({
-			url: "<?=URL::to('/system/user/add_group')?>",
+			url: "<?=URL::to('/ccm/system/user/add_group')?>",
 			data: {
 				gID: data.gID,
 				uID: '<?=$user->getUserID()?>'
@@ -241,7 +241,7 @@ $(function() {
 
 	$('div[data-container=editable-fields]').on('click', 'a[data-button=delete-group]', function() {
 		$.concreteAjax({
-			url: "<?=URL::to('/system/user/remove_group')?>",
+			url: "<?=URL::to('/ccm/system/user/remove_group')?>",
 			data: {
 				gID: $(this).attr('data-group-id'),
 				uID: '<?=$user->getUserID()?>'
@@ -269,6 +269,10 @@ $(function() {
 
 	$tp = Loader::helper('concrete/user');
 	if ($tp->canAccessUserSearchInterface()) { ?>
+
+		<div class="ccm-dashboard-header-buttons">
+			<a href="<?php echo View::url('/dashboard/users/add')?>" class="btn btn-primary"><?php echo t("Add User")?></a>
+		</div>
 
 		<div class="ccm-dashboard-content-full" data-search="users">
 		<? Loader::element('users/search', array('controller' => $searchController))?>

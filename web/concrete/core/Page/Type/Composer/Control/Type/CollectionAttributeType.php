@@ -4,6 +4,7 @@ use Loader;
 use \Concrete\Core\Foundation\Object;
 use CollectionAttributeKey;
 use \Concrete\Core\Page\Type\Composer\Control\CollectionAttributeControl;
+use \Concrete\Core\Attribute\Key\Key as AttributeKey;
 
 class CollectionAttributeType extends Type {
 

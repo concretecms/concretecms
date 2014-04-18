@@ -220,7 +220,7 @@ class Controller extends BlockController {
 					$table = (string) $data['table'];
 					if (isset($data->record)) {
 						foreach($data->record as $record) {
-							$aar = new ADODB_Active_Record($table);
+							$aar = new \Concrete\Core\Legacy\BlockRecord($table);
 							$aar->bID = $b->getBlockID();
 							foreach($record->children() as $node) {
 								$nodeName = $node->getName();

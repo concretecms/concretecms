@@ -12,6 +12,8 @@ use GroupSet;
 use stdClass;
 use User;
 use URL;
+use Group;
+
 class Users extends Controller {
 
 	protected $fields = array();

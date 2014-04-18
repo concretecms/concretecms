@@ -126,7 +126,7 @@ class Theme extends Object {
 		if (is_dir($dirt)) {
 			$res = static::getThemeNameAndDescription($dirt);
 	
-			$th = new PageTheme;
+			$th = new static;
 			$th->pThemeHandle = $handle;
 			$th->pThemeDirectory = $dirt;
 			$th->pThemeName = $res->pThemeName;

@@ -20,6 +20,13 @@ class Loader {
 		return View::element($_file, $args, $_pkgHandle);
 	}
 
+	public static function model($model, $pkgHandle = false) {
+		return false;
+	}
+
+	public static function library($library, $pkgHandle = false) {
+		return false;
+	}
 
 
 }

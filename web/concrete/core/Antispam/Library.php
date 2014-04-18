@@ -3,7 +3,6 @@
 namespace Concrete\Core\Antispam;
 use \Concrete\Core\Foundation\Object;
 use Loader;
-use \Concrete\Core\Package\PackageList;
 use Package;
 use PackageList;
 

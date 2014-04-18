@@ -212,14 +212,14 @@ class Key extends Object {
 		$db = Loader::db();
 		$list = array();
 		$tina[] = '-1';
-		$tinb = $db->GetCol('select atID from AttributeTypes where pkgID = ?', $pkg->getPackageID());
+		$tinb = $db->GetCol('select atID from AttributeTypes where pkgID = ?', array($pkg->getPackageID()));
 		if (is_array($tinb)) {
 			$tina = array_merge($tina, $tinb);
 		}
 		$tinstr = implode(',', $tina);
 
 		$kina[] = '-1';
-		$kinb = $db->GetCol('select akCategoryID from AttributeKeyCategories where pkgID = ?', $pkg->getPackageID());
+		$kinb = $db->GetCol('select akCategoryID from AttributeKeyCategories where pkgID = ?', array($pkg->getPackageID()));
 		if (is_array($kinb)) {
 			$kina = array_merge($kina, $kinb);
 		}
@@ -390,18 +390,14 @@ class Key extends Object {
 	 * Duplicates an attribute key 
 	 */
 	public function duplicate($args = array()) {
-		$ar = new ADODB_Active_Record('AttributeKeys');
-		$ar->Load('akID=?', array($this->akID));
-		
-		$ar2 = clone $ar;
-		$ar2->akID = null;
-		foreach($args as $key=>$value) {
-			$ar2->{$key} = $value;
-		}
-		$ar2->Insert();
 		$db = Loader::db();
+		$r1 = $db->GetRow('select * from AttributeKeys where akID = ?', array($this->akID));
+		unset($r1['akID']);
+		$r2 = $db->insert('AttributeKeys', $r1);
+		$newAKID = $db->LastInsertId();
+
 		$ak = new AttributeKey();
-		$ak->load($db->Insert_ID());
+		$ak->load($newAKID);
 		
 		// now we duplicate the specific category fields
 		$this->getController()->duplicateKey($ak);

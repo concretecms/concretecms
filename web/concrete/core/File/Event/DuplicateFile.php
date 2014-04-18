@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Core\File\Event;
 
-class DuplicateFile extends Event {
+class DuplicateFile extends File {
 
 	protected $newFile;
 

@@ -1,7 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <? $ih = Loader::helper('concrete/ui'); ?>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Set'), false, 'span10 offset1', false)?>
     <form method="post" class="form-horizontal" id="file-sets-add" action="<?=$view->url('/dashboard/files/add_set', 'do_add')?>">
 	<div class="ccm-pane-body">
     	
@@ -14,8 +13,11 @@
 			</div>
 		</div>
 	</div>
-	<div class="ccm-pane-footer">
-			<?=Loader::helper("form")->submit('add', t('Add'), array('class' => 'btn btn-primary pull-right'))?>
+
+	<div class="ccm-dashboard-form-actions-wrapper">
+	<div class="ccm-dashboard-form-actions">
+		<a href="<?=View::url('/dashboard/files/sets')?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
+		<?=Loader::helper("form")->submit('add', t('Add'), array('class' => 'btn btn-primary pull-right'))?>
+	</div>
 	</div>
     </form>
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>

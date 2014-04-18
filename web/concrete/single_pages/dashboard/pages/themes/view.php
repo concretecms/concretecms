@@ -78,23 +78,24 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 				</td>
                 
                 <td width="100%" style="vertical-align:middle;">
-                
-                    <p class="ccm-themes-name"><strong><?=$t->getThemeDisplayName()?></strong></p>
-                    <p class="ccm-themes-description"><em><?=$t->getThemeDisplayDescription()?></em></p>
-                    
-                    <div class="ccm-themes-button-row clearfix">
+
+                    <div class="btn-group" style="float: right">
                     <? if ($siteThemeID == $t->getThemeID()) { ?>
                         <?=$bt->button_js(t("Activate"), "alert('" . $alreadyActiveMessage . "')", 'left', 'primary ccm-button-inactive', array('disabled'=>'disabled'));?>
                     <? } else { ?>
                         <?=$bt->button(t("Activate"), $view->url('/dashboard/pages/themes','activate', $t->getThemeID()), 'left', 'primary');?>
                     <? } ?>
-                        <?=$bt->button_js(t("Preview"), "ccm_previewInternalTheme(1, " . intval($t->getThemeID()) . ",'" . addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeDisplayName())) . "')", 'left');?>
+                        <?//$bt->button_js(t("Preview"), "ccm_previewInternalTheme(1, " . intval($t->getThemeID()) . ",'" . addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeDisplayName())) . "')", 'left');?>
                         <?=$bt->button(t("Inspect"), $view->url('/dashboard/pages/themes/inspect', $t->getThemeID()), 'left');?>
-                        <?=$bt->button(t("Customize"), $view->url('/dashboard/pages/themes/customize', $t->getThemeID()), 'left');?>
+                        <?//$bt->button(t("Customize"), $view->url('/dashboard/pages/themes/customize', $t->getThemeID()), 'left');?>
                     
-                        <?=$bt->button(t("Remove"), $view->url('/dashboard/pages/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), 'right', 'error');?>
+                        <?=$bt->button(t("Remove"), $view->url('/dashboard/pages/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), 'right', 'btn-danger');?>
                     </div>
+                    
                 
+                    <p class="ccm-themes-name"><strong><?=$t->getThemeDisplayName()?></strong></p>
+                    <p class="ccm-themes-description"><em><?=$t->getThemeDisplayDescription()?></em></p>
+                    
                 </td>
             </tr>
             

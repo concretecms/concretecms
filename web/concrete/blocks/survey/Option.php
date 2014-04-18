@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Block\Survey;
+use Loader;
 /**
  * An object that represents an option in a survey. 
  *

@@ -14,6 +14,7 @@ class BlockTypeList extends DatabaseItemList {
 	
 	function __construct() {
 		$this->setQuery("select btID from BlockTypes");
+		$this->filter('btIsInternal', false);
 		$this->sortByMultiple('btDisplayOrder asc', 'btName asc', 'btID asc');
 	}
 

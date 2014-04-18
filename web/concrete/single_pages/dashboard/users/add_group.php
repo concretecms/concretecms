@@ -16,7 +16,6 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 
 ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add Group'), false, false, false)?>
 <form class="form-horizontal" method="post" id="add-group-form" action="<?=$view->url('/dashboard/users/add_group/', 'do_add')?>">
 <div class="ccm-pane-body">
 <?=$valt->output('add_or_update_group')?>
@@ -216,12 +215,16 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 </fieldset>
 </div>
 
-<div class="ccm-pane-footer">
-<input type="hidden" name="add" value="1" /><input type="submit" name="submit" value="<?=t('Add')?>" class="btn btn-primary pull-right" />
+
+<div class="ccm-dashboard-form-actions-wrapper">
+<div class="ccm-dashboard-form-actions">
+	<a href="<?=View::url('/dashboard/users/groups')?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
+	<?=Loader::helper("form")->submit('add', t('Add Group'), array('class' => 'btn btn-primary pull-right'))?>
+</div>
 </div>
 
+
 </form>	
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
 
 <script type="text/javascript">
 ccm_checkGroupExpirationOptions = function() {

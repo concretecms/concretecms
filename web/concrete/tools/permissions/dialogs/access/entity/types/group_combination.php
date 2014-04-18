@@ -1,6 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 $tp = new TaskPermission();
+use \Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
 $dt = Loader::helper('form/date_time');
 if (!$tp->canAccessGroupSearch()) {
 	die(t("You do not have group search permissions."));
@@ -31,7 +32,7 @@ $url = $type->getAccessEntityTypeToolsURL(); ?>
 
 </form>
 
-<input type="button" class="btn btn-small pull-right dialog-launch" dialog-width="640" dialog-height="480" id="ccm-permissions-access-entity-members-add-group" href="<?=URL::to('/system/dialogs/group/search')?>" dialog-modal="false" dialog-title="<?=t('Add Group')?>" value="<?=t('Add Group')?>" />
+<input type="button" class="btn btn-small pull-right dialog-launch" dialog-width="640" dialog-height="480" id="ccm-permissions-access-entity-members-add-group" href="<?=URL::to('/ccm/system/dialogs/group/search')?>" dialog-modal="false" dialog-title="<?=t('Add Group')?>" value="<?=t('Add Group')?>" />
 
 </div>
 

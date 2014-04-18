@@ -245,12 +245,18 @@
 				<attributekey handle="meta_keywords">
 					<value>page types</value>
 				</attributekey>
+			<attributekey handle="exclude_nav">
+				<value><![CDATA[1]]></value>
+			</attributekey>
 			</attributes>
 		</page>
         <page name="Customize" path="/dashboard/pages/themes/customize" filename="/dashboard/pages/themes/customize.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>custom theme, change theme, custom css, css</value>
+				</attributekey>
+				<attributekey handle="exclude_nav">
+					<value><![CDATA[1]]></value>
 				</attributekey>
 			</attributes>
         </page>
@@ -260,15 +266,36 @@
         </page>
 
         <page name="Add Page Type" path="/dashboard/pages/types/add" filename="/dashboard/pages/types/add.php" pagetype="" description="" package="">
+			<attributes>
+			<attributekey handle="exclude_nav">
+				<value><![CDATA[1]]></value>
+			</attributekey>
+			</attributes>
+
         </page>
 
         <page name="Compose Form" path="/dashboard/pages/types/form" filename="/dashboard/pages/types/form.php" pagetype="" description="" package="">
+			<attributes>
+			<attributekey handle="exclude_nav">
+				<value><![CDATA[1]]></value>
+			</attributekey>
+			</attributes>
         </page>
 
         <page name="Defaults and Output" path="/dashboard/pages/types/output" filename="/dashboard/pages/types/output.php" pagetype="" description="" package="">
+			<attributes>
+			<attributekey handle="exclude_nav">
+				<value><![CDATA[1]]></value>
+			</attributekey>
+			</attributes>
         </page>
 
         <page name="Page Type Permissions" path="/dashboard/pages/types/permissions" filename="/dashboard/pages/types/permissions.php" pagetype="" description="" package="">
+			<attributes>
+			<attributekey handle="exclude_nav">
+				<value><![CDATA[1]]></value>
+			</attributekey>
+			</attributes>
         </page>
 
         <page name="Page Templates" path="/dashboard/pages/templates" filename="/dashboard/pages/templates/view.php" pagetype="" description="Form factors for pages in your site." package="">
@@ -278,7 +305,13 @@
 				</attributekey>
 			</attributes>
         </page>
-		<page name="Add Page Template" path="/dashboard/pages/templates/add" filename="/dashboard/pages/templates/add.php" pagetype="" description="Add page templates to your site." package=""/>		
+		<page name="Add Page Template" path="/dashboard/pages/templates/add" filename="/dashboard/pages/templates/add.php" pagetype="" description="Add page templates to your site." package="">
+			<attributes>
+			<attributekey handle="exclude_nav">
+				<value><![CDATA[1]]></value>
+			</attributekey>
+			</attributes>
+		</page>		
         <page name="Attributes" path="/dashboard/pages/attributes" filename="/dashboard/pages/attributes.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
@@ -358,8 +391,6 @@
 				<attributekey handle="exclude_search_index">
 					<value><![CDATA[1]]></value>
 				</attributekey>
-			</attributes>
-			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>edit stacks, view stacks, all stacks</value>
 				</attributekey>

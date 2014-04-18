@@ -1,5 +1,6 @@
 <? 
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+$c = Page::getCurrentPage();
 
 $form = Loader::helper('form'); 
 $ih = Loader::helper("concrete/ui");
@@ -36,8 +37,11 @@ if (is_object($key)) {
 		}
 	}
 	</script>
-	
-	<? print $ih->button_js(t('Delete Attribute'), "deleteAttribute()", 'right', 'error');?>
+
+<div class="ccm-dashboard-header-buttons">
+	<button type="button" class="btn btn-danger" onclick="deleteAttribute()"><?=t('Delete Attribute')?></button>
+</div>
+
 <? } ?>
 
 
@@ -121,10 +125,11 @@ if ($category->getPackageID() > 0) {
 
 <div class="ccm-dashboard-form-actions-wrapper">
 <div class="ccm-dashboard-form-actions">
+	<a href="<?=URL::page($c)?>" class="btn pull-left btn-default"><?=t('Back')?></a>
 <? if (is_object($key)) { ?>
-	<?=$ih->submit(t('Save'), 'ccm-attribute-key-form', 'right', 'primary')?>
+	<button type="submit" class="btn btn-primary pull-right"><?=t('Save')?></button>
 <? } else { ?>
-	<?=$ih->submit(t('Add'), 'ccm-attribute-key-form', 'right', 'primary')?>
+	<button type="submit" class="btn btn-primary pull-right"><?=t('Add')?></button>
 <? } ?>
 </div>
 </div>

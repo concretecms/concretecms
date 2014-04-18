@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Pages\Types;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
+use PageType;
 use PageTemplate;
 use \Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
 class Add extends DashboardPageController {

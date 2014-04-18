@@ -123,7 +123,7 @@ class Legacy extends XmlParser {
 		if ($type == 'I8') {
 			return 'bigint';
 		}
-		if ($type == 'I1') {
+		if ($type == 'I1' || $type == 'L') {
 			return 'boolean';
 		}
 		if ($type == 'I2') {

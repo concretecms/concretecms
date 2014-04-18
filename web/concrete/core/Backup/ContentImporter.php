@@ -142,7 +142,7 @@ class ContentImporter {
 		if (isset($sx->singlepages)) {
 			foreach($sx->singlepages->page as $p) {
 				$pkg = static::getPackageObject($p['package']);
-				$spl = SinglePage::addSinglePage($p['path'], $pkg);
+				$spl = SinglePage::add($p['path'], $pkg);
 				if (is_object($spl)) {
 					if (isset($p['root']) && $p['root'] == true) {
 						$spl->moveToRoot();

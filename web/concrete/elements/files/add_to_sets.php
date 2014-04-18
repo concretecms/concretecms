@@ -74,7 +74,7 @@ foreach($s1 as $fs) {
 
 if ($_POST['task'] == 'add_to_sets') {
 	
-	$r = new FileEditResponse();
+	$r = new \Concrete\Core\File\EditResponse();
 	$r->setFiles($files);
 	$r->setMessage(t('File sets saved successfully.'));
 

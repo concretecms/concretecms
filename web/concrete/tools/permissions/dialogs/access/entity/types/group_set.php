@@ -1,6 +1,7 @@
 <?
 
 defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
 
 $type = PermissionAccessEntityType::getByHandle('group_set');
 $url = $type->getAccessEntityTypeToolsURL();

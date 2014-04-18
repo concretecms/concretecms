@@ -51,5 +51,4 @@ $customOptions = array(
 	</div>
 	</div>
 </div>
-</div>
 </fieldset>

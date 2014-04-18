@@ -3,6 +3,8 @@ namespace Concrete\Core\Page\Type\Composer\Control\Type;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use BlockType as ConcreteBlockType;
+use BlockTypeList;
+use Environment;
 use \Concrete\Core\Page\Type\Composer\Control\BlockControl;
 
 class BlockType extends Type {
@@ -10,7 +12,7 @@ class BlockType extends Type {
 	public function getPageTypeComposerControlObjects() {
 		$objects = array();
 		$btl = new BlockTypeList();
-		$blockTypes = $btl->getBlockTypeList();
+		$blockTypes = $btl->get();
 		$ci = Loader::helper('concrete/urls');
 
 		$env = Environment::get();

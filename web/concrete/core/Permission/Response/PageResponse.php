@@ -7,6 +7,7 @@ use Group;
 use PermissionKey;
 use Permissions;
 use Area;
+use Session;
 use TaskPermission;
 class PageResponse extends Response {
 	

@@ -33,6 +33,17 @@ defined('CONFIG_FILE') or define('CONFIG_FILE', DIR_CONFIG_SITE . '/site.php');
 
 /**
  * ----------------------------------------------------------------------------
+ * Developer preview constants.
+ * ----------------------------------------------------------------------------
+ */
+define('ENABLE_MARKETPLACE_SUPPORT', false);
+define('ENABLE_APP_NEWS_OVERLAY', false);
+define('ENABLE_APP_NEWS', false);
+
+
+
+/**
+ * ----------------------------------------------------------------------------
  * Now we test to see if we have a valid site configuration file. If not, we're 
  * going to need to render install.
  * ----------------------------------------------------------------------------
