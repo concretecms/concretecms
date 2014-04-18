@@ -175,7 +175,10 @@ class Login extends PageController {
 		}
 
 		$u->setLastAuthType($type);
-		Events::fire('on_user_login', $this);
+
+		$ue = new \Concrete\Core\User\Event\User($u);
+		Events::dispatch('on_user_login', $ue);
+
 		$this->chooseRedirect();
 	}
 

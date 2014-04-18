@@ -5,6 +5,7 @@ use Loader;
 use CacheLocal;
 use GroupTree;
 use GroupTreeNode;
+use Environment;
 use Events;
 use \Concrete\Core\Package\PackageList;
 class Group extends Object implements \Concrete\Core\Permission\ObjectInterface {
@@ -123,8 +124,9 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface 
 		}
 
 		// run any internal event we have for group deletion
-		$ret = Events::fire('on_group_delete', $this);
-		if ($ret < 0) {
+		$ge = new DeleteEvent($this);
+		$ge = Events::dispatch('on_group_delete', $ge);
+		if (!$ge->proceed()) {
 			return false;
 		}
 
@@ -396,7 +398,9 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface 
 			$res = $db->Execute($r, $v);
 			$group = Group::getByID($this->gID);
 			$group->rescanGroupPath();
-	        Events::fire('on_group_update', $this);
+
+			$ge = new Event($this);
+			Events::dispatch('on_group_update', $ge);
 
     		return $group;
 		}
@@ -431,7 +435,9 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface 
 
 			GroupTreeNode::add($ng, $node);
 
-			Events::fire('on_group_add', $ng);
+			$ge = new Event($ng);
+			Events::dispatch('on_group_add', $ge);
+
 			$ng->rescanGroupPath();
 			return $ng;
 		}

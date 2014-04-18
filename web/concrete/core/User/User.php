@@ -309,7 +309,9 @@ class User extends Object {
 		if ($hard == true) {
 			@session_destroy();
 		}
-		Events::fire('on_user_logout');
+
+		Events::dispatch('on_user_logout');
+
 		if (isset($_COOKIE['ccmUserHash']) && $_COOKIE['ccmUserHash']) {
 			setcookie("ccmUserHash", "", 315532800, DIR_REL . '/',
 			(defined('SESSION_COOKIE_PARAM_DOMAIN')?SESSION_COOKIE_PARAM_DOMAIN:''),
@@ -513,7 +515,10 @@ class User extends Object {
 					$mh->sendMail();						
 				}
 
-				Events::fire('on_user_enter_group', $this, $g);
+				$ue = new \Concrete\Core\User\Event\UserGroup($this);
+				$ue->setGroupObject($g);
+				Events::dispatch('on_user_enter_group', $ue);
+
 			}
 		}
 	}
@@ -525,7 +530,11 @@ class User extends Object {
 			$gID = $g->getGroupID();
 			$db = Loader::db();
 
-			$ret = Events::fire('on_user_exit_group', $this, $g);
+
+			$ue = new \Concrete\Core\User\Event\UserGroup($this);
+			$ue->setGroupObject($g);
+			Events::dispatch('on_user_exit_group', $ue);
+
 			$q = "delete from UserGroups where uID = '{$this->uID}' and gID = '{$gID}'";
 			$r = $db->query($q);
 		}

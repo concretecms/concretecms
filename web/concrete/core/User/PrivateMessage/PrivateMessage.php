@@ -63,7 +63,9 @@ class PrivateMessage extends Object {
 		
 		$db = Loader::db();
 		if ($this->uID != $this->uAuthorID) {
-			Events::fire('on_private_message_marked_as_read', $this);
+			$ue = new Event($this);
+			Events::dispatch('on_private_message_marked_as_read', $ue);
+
 			$db->Execute('update UserPrivateMessagesTo set msgIsUnread = 0 where msgID = ?', array($this->msgID, $this->msgMailboxID, $this->uID));
 		}
 	}
@@ -109,10 +111,13 @@ class PrivateMessage extends Object {
 		if (!$this->uID) {
 			return false;
 		}
-		$ret = Events::fire('on_private_message_delete', $this);
-		if($ret < 0) {
+
+		$ue = new Event($this);
+		$ue = Events::dispatch('on_private_message_delete', $ue);
+		if (!$ue) {
 			return;
 		}
+		
 		$db->Execute('delete from UserPrivateMessagesTo where uID = ? and msgID = ?', array($this->uID, $this->msgID));
 	}
 	

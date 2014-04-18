@@ -18,7 +18,11 @@ class ApproveStackRequest extends Request {
 			// update that for the stack object as well.
 			$s->update(array('stackName' => $v->getVersionName()));
 		}
-		Events::fire('on_page_version_submit_approve', $s);
+
+		$ev = \Concrete\Core\Page\Collection\Version\Event($s);
+		$ev->setCollectionVersionObject($v);
+		Events::dispatch('on_page_version_submit_approve', $ev);
+
 		$wpr = new WorkflowProgressResponse();
 		$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $s->getCollectionID());
 		return $wpr;

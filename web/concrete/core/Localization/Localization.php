@@ -99,7 +99,9 @@ class Localization {
 			$this->translate->setLocale($locale);
 		}
 		if($localeNeededLoading) {
-			Events::fire('on_locale_load', $locale);
+			$event = new \Symfony\Component\EventDispatcher\GenericEvent();
+			$event->setArgument('locale', $locale);
+			$ret = Events::dispatch('on_locale_load', $event);
 		}
 	}
 

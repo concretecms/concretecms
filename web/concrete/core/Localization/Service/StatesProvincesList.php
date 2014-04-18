@@ -492,14 +492,14 @@ class StatesProvincesList {
 
 	public function __construct() {
 		$this->stateProvinces['GB'] = $this->stateProvinces['UK'];
-		$stateProvincesFromEvent = Events::fire('on_get_states_provinces_list', $this->stateProvinces);
-		if(is_array($stateProvincesFromEvent)) {
-			$this->stateProvinces = $stateProvincesFromEvent;
-		} else {
-			foreach(array_keys($this->stateProvinces) as $country) {
-				asort($this->stateProvinces[$country]);
-			}
+		foreach(array_keys($this->stateProvinces) as $country) {
+			asort($this->stateProvinces[$country]);
 		}
+
+		$event = new \Symfony\Component\EventDispatcher\GenericEvent();
+		$event->setArgument('provinces', $this->stateProvinces);
+		$event = Events::dispatch('on_get_states_provinces_list', $event);
+		$this->stateProvinces = $event->getArgument('provinces');
 	}
 
 	/** Returns the list of States/Provinces for some countries (States/Provinces are sorted alphabetically).

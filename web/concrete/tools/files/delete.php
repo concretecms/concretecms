@@ -1,5 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Core\File\EditResponse as FileEditResponse;
 $u = new User();
 $form = Loader::helper('form');
 $fp = FilePermissions::getGlobal();

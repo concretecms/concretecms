@@ -1,5 +1,9 @@
 <?
 namespace Concrete\Core\Localization\Service;
+use Zend_Locale;
+use Localization;
+use Events;
+
 class CountryList {
 
 	protected $countries = array();
@@ -25,12 +29,13 @@ class CountryList {
 			$countries['VD'], // North Vietnam (merged with South Vietnam into Socialist Republic of Vietnam in 1976)
 			$countries['YD']  // People's Democratic Republic of Yemen (no more existing since 1990)
 		);
-		$countriesFromEvent = Events::fire('on_get_countries_list', $countries);
-		if(is_array($countriesFromEvent)) {
-			$countries = $countriesFromEvent;
-		} else {
-			asort($countries, SORT_LOCALE_STRING);
-		}
+
+		asort($countries, SORT_LOCALE_STRING);
+		$event = new \Symfony\Component\EventDispatcher\GenericEvent();
+		$event->setArgument('countries', $countries);
+		$event = Events::dispatch('on_get_countries_list', $event);
+		$countries = $event->getArgument('countries');
+
 		$this->countries = $countries;
 	}
 
