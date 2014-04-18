@@ -28,7 +28,7 @@ class Single extends DashboardPageController {
 					// now we check to see if this is already added
 					$pc = Page::getByPath('/' . $path, 'RECENT');
 					if ($pc->getError() == COLLECTION_NOT_FOUND) {
-						SinglePage::addSinglePage($this->post('pageURL'));
+						SinglePage::add($this->post('pageURL'));
 						$this->redirect('/dashboard/pages/single', 'single_page_added');
 					}
 					else {
@@ -48,7 +48,7 @@ class Single extends DashboardPageController {
 				$p = SinglePage::getByID($cID);
 				$cp = new Permissions($p);
 				if($cp->canAdmin()) {
-					$p->refresh();
+					SinglePage::refresh($p);
 					$this->redirect('/dashboard/pages/single', 'single_page_refreshed');
 				}
 				else {

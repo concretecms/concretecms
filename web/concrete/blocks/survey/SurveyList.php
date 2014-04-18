@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Block\Survey;
+use Loader;
 use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
 
 /**

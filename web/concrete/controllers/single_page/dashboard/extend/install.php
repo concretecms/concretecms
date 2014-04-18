@@ -131,7 +131,7 @@ class Install extends DashboardPageController {
 								$this->set('showInstallOptionsScreen', true);
 								$this->set('pkg', $p);
 							}
-							$this->set('error', $e);
+							$this->error = $e;
 						}
 					}
 				} else {
@@ -141,7 +141,6 @@ class Install extends DashboardPageController {
 			}
 		} else {
 			$this->error->add(t('You do not have permission to install add-ons.'));
-			$this->set('error', $this->error);
 		}
 	}
 

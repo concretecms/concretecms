@@ -4,6 +4,8 @@ use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
 use Loader;
 use File;
 use FileSet;
+use User;
+
 class SetList extends DatabaseItemList {
 
 	protected $itemsPerPage = 10;

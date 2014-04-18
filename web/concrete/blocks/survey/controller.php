@@ -3,6 +3,8 @@ namespace Concrete\Block\Survey;
 use Loader;
 use \Concrete\Core\Block\BlockController;
 use Page;
+use User;
+
 class Controller extends BlockController {
 	 
 	protected $btTable = 'btSurvey';
@@ -38,7 +40,7 @@ class Controller extends BlockController {
 			$this->options = array();
 			if ($r) {
 				while ($row = $r->fetchRow()) {
-					$opt = new BlockPollOption;
+					$opt = new Option;
 					$opt->optionID = $row['optionID'];
 					$opt->cID = $this->cID;
 					$opt->optionName = $row['optionName'];

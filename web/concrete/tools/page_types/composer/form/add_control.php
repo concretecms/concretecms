@@ -1,5 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?
+use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
+use \Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;
+
+
 $c = Page::getByPath('/dashboard/pages/types/form');
 $cp = new Permissions($c);
 $ih = Loader::helper('concrete/ui');

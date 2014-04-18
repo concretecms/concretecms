@@ -4,6 +4,8 @@ use \Concrete\Core\Page\Controller\DashboardPageController;
 use \Concrete\Core\File\Set\SetList as FileSetList;
 use FileSet;
 use Permissions;
+use PermissionKey;
+use PermissionAccess;
 use Loader;
 
 class Sets extends DashboardPageController {

@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
-<? $pk = FilePermissionKey::getByID($_REQUEST['pkID']);
+<? $pk = PermissionKey::getByID($_REQUEST['pkID']);
 $pk->setPermissionObject($f);
 ?>
 

@@ -58,11 +58,11 @@ foreach($files as $f) {
 	<p><?=t("You do not have permission to delete any of the selected files."); ?><p>
 <? } else { ?>
 
-	<p><?=t('Are you sure you want to delete the following files?')?></p>
+	<div class="alert alert-warning"><?=t('Are you sure you want to delete the following files?')?></div>
 
 	<form data-dialog-form="delete-file" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete">
 	<?=$form->hidden('task', 'delete_files')?>
-	<table border="0" cellspacing="0" cellpadding="0" width="100%" class="table table-bordered">
+	<table border="0" cellspacing="0" cellpadding="0" width="100%" class="table table-striped">
 
 	<? foreach($files as $f) {
 		$fp = new Permissions($f);

@@ -5,6 +5,7 @@ use \Concrete\Core\Attribute\Type as AttributeType;
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use FileAttributeKey;
 use Exception;
+use Loader;
 
 class Attributes extends DashboardPageController {
 	

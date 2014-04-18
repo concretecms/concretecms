@@ -15,6 +15,7 @@ use CollectionVersion;
 use Collection;
 use Page;
 use User;
+use Package;
 use \Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
 use CacheLocal;
 use \Concrete\Core\Page\Type\PublishTarget\Configuration\Configuration as PageTypePublishTargetConfiguration;

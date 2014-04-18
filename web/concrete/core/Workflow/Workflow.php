@@ -3,6 +3,7 @@ namespace Concrete\Core\Workflow;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use Loader;
+use Core;
 /**
  * @package Workflow
  * @author Andrew Embler <andrew@concrete5.org>

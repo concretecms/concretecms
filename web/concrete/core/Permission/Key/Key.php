@@ -208,7 +208,7 @@ abstract class Key extends Object {
 		$db = Loader::db();
 
 		$kina[] = '-1';
-		$kinb = $db->GetCol('select pkCategoryID from PermissionKeyCategories where pkgID = ?', $pkg->getPackageID());
+		$kinb = $db->GetCol('select pkCategoryID from PermissionKeyCategories where pkgID = ?', array($pkg->getPackageID()));
 		if (is_array($kinb)) {
 			$kina = array_merge($kina, $kinb);
 		}

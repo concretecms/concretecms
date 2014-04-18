@@ -8,9 +8,10 @@ use Events;
 use Page;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Key as AttributeKey;
-use \Concrete\Core\Permission\Key as PermissionKey;
 use \Concrete\Core\File\StorageLocation as FileStorageLocation;
 use FileAttributeKey;
+use PermissionKey;
+
 class File extends Object implements \Concrete\Core\Permission\ObjectInterface { 
 
 	const CREATE_NEW_VERSION_THRESHOLD = 300; // in seconds (5 minutes)
@@ -130,7 +131,7 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 	
 	public function setPassword($pw) {
 
-		$fe = \Concrete\Core\File\Event\FileWithPassword($this);
+		$fe = new \Concrete\Core\File\Event\FileWithPassword($this);
 		$fe->setFilePassword($pw);
 		Events::dispatch('on_file_set_password', $fe);
 
@@ -255,26 +256,20 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		$db = Loader::db();
 		$date = $dh->getSystemDateTime(); 
 
-		$far = new ADODB_Active_Record('Files');
-		$far->Load('fID=?', array($this->fID));
-		
-		$far2 = clone $far;
-		$far2->fID = null;
-		$far2->fDateAdded = $date;
-		$far2->Insert();
-		$fIDNew = $db->Insert_ID();
+		$r1 = $db->GetRow('select * from Files where fID = ?', array($this->fID));
+		unset($r1['fID']);
+		$r1['fDateAdded'] = $date;
 
-		$fvIDs = $db->GetCol('select fvID from FileVersions where fID = ?', $this->fID);
-		foreach($fvIDs as $fvID) {
-			$farv = new ADODB_Active_Record('FileVersions');
-			$farv->Load('fID=? and fvID = ?', array($this->fID, $fvID));
-	
-			$farv2 = clone $farv;
-			$farv2->fID = $fIDNew;
-			$farv2->fvActivateDatetime = $date;
-			$farv2->fvDateAdded = $date;
-			$farv2->Insert();
-		}		
+		$r2 = $db->insert('Files', $r1);
+		$fIDNew = $db->LastInsertId();
+
+		$versions = $db->GetAll('select * from FileVersions where fID = ?', $this->fID);
+		foreach($versions as $fileversion) {
+			$fileversion['fID'] = $fIDNew;
+			$fileversion['fvActivateDatetime'] = $date;
+			$fileversion['fvDateAdded'] = $date;
+			$r2 = $db->insert('FileVersions', $fileversion);
+		}
 
 		$r = $db->Execute('select fvID, akID, avID from FileAttributeValues where fID = ?', array($this->getFileID()));
 		while ($row = $r->fetchRow()) {
@@ -298,7 +293,7 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		// return the new file object
 		$nf = static::getByID($fIDNew);
 
-		$fe = \Concrete\Core\File\Event\DuplicateFile($this);
+		$fe = new \Concrete\Core\File\Event\DuplicateFile($this);
 		$fe->setNewFileObject($nf);
 		Events::dispatch('on_file_duplicate', $fe);
 

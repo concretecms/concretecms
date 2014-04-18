@@ -5,6 +5,8 @@ use Loader;
 use PageTemplate;
 use PageType;
 use Redirect;
+use Session;
+
 class Output extends DashboardPageController {
 
 	public function view($ptID = false) {

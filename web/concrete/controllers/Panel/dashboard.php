@@ -38,7 +38,7 @@ class Dashboard extends BackendInterfacePageController {
 			$this->set('nav', $bt);
 		} else {
 			$dh = Loader::helper('concrete/dashboard');
-			$qn = Concrete\Helper\Concrete\DashboardMenu::getMine();
+			$qn = \Concrete\Core\Application\Service\DashboardMenu::getMine();
 			foreach($qn->getItems() as $path) {
 				$c = Page::getByPath($path, 'ACTIVE');
 				if (is_object($c) && !$c->isError()) {

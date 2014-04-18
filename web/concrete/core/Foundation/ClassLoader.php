@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Foundation;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Package\Package;
 use \Concrete\Core\Foundation\ModifiedPSR4ClassLoader as SymfonyClassloader;
 use \Symfony\Component\ClassLoader\MapClassLoader as SymfonyMapClassloader;
 
@@ -50,6 +51,18 @@ class ClassLoader  {
 				class_alias($fullClass, $class);
 			}
 		});
+	}
+
+	public function registerPackage(Package $pkg) {
+		$symfonyLoader = new SymfonyClassloader();
+		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Attribute', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_ATTRIBUTES);
+		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Authentication', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_AUTHENTICATION);
+		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Block', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_BLOCKS);
+		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Theme', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_THEMES);
+		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Controller', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_CONTROLLERS);
+		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Job', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_JOBS);
+		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()), DIR_PACKAGES . '/' . $pkg->getPackageHandle());
+		$symfonyLoader->register();
 	}
 
 	protected function setupFileAutoloader() {

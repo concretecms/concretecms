@@ -69,7 +69,7 @@ class TemplateFile {
 	* @return TemplateFile[]
 	*/
 	public static function sortTemplateFileList($list) {
-		usort($list, 'TemplateFile::sortTemplateFileListSorter');
+		usort($list, '\Concrete\Core\Filesystem\TemplateFile::sortTemplateFileListSorter');
 		return $list;
 	}
 	/** Callable function used by sortTemplateFileList.

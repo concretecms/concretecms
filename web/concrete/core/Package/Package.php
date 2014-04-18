@@ -1,8 +1,58 @@
 <? namespace Concrete\Core\Package;
+use Page;
+use Stack;
+use SinglePage;
+use UserInfo;
+use PageType;
+use BlockType;
+use Block;
+use Group;
+use PageTheme;
+use Loader;
+use Job;
+use Core;
+use JobSet;
+use PageTemplate;
+use CollectionAttributeKey;
+use \Concrete\Core\Block\BlockType\Set as BlockTypeSet;
+use \Concrete\Core\Attribute\Type as AttributeType;
+use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use \Concrete\Core\Attribute\Key\Key as AttributeKey;
+use \Concrete\Core\Attribute\Set as AttributeSet;
+use GroupSet;
+use BlockTypeList;
+use \Concrete\Core\Workflow\Type as WorkflowType;
+use PermissionKey;
+use \Concrete\Core\User\Point\Action\Action as UserPointAction;
+use \Concrete\Core\Antispam\Library as SystemAntispamLibrary;
+use \Concrete\Core\Mail\Importer\MailImporter;
+use PermissionKeyCategory;
+use \Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
+use \Concrete\Core\Workflow\Progress\Category as WorkflowProgressCategory;
+use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
+use PermissionAccess;
+use \Concrete\Core\Captcha\Library as SystemCaptchaLibrary;
+use \Concrete\Core\Editor\Snippet as SystemContentEditorSnippet;
+use \Concrete\Core\Feature\Feature;
+use \Concrete\Core\Feature\Category\Category as FeatureCategory;
+use \Concrete\Core\Gathering\DataSource\DataSource as GatheringDataSource;
+use \Concrete\Core\Gathering\Item\Template\Template as GatheringItemTemplate;
+use \Concrete\Core\Gathering\Item\Template\Type as GatheringItemTemplateType;
+use \Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;
+use \Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
+use \Concrete\Core\Conversation\Editor\Editor as ConversationEditor;
+use \Concrete\Core\Conversation\Rating\Type as ConversationRatingType;
+use \Concrete\Core\ImageEditor\ControlSet as SystemImageEditorControlSet;
+use \Concrete\Core\ImageEditor\Filter as SystemImageEditorFilter;
+use \Concrete\Core\ImageEditor\Component as SystemImageEditorComponent;
+use \Concrete\Core\Conversation\FlagType\FlagType as ConversationFlagType;
+use \Concrete\Core\Validation\BannedWord\BannedWord as BannedWord;
+use \Concrete\Core\Config\ConfigStore;
+use FileImporter;
+use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
 use Concrete\Core\Foundation\Object;
 use Database;
 use \Concrete\Core\Database\Schema\Schema;
-use Loader;
 use Config;
 use Environment;
 use \Concrete\Core\Package\PackageList;
@@ -158,7 +208,7 @@ class Package extends Object {
 		}
 		$class = Object::camelcase($pkgHandle) . "Package";
 		if (class_exists($class)) {
-			$cl = new $class;
+			$cl = Core::make($class);
 			return $cl;
 		}
 	}
@@ -334,7 +384,7 @@ class Package extends Object {
 			return $item->getPageTemplateName();
 		} else if ($item instanceof MailImporter) {
 			return $item->getMailImporterName();		
-		} else if ($item instanceof SinglePage) {
+		} else if ($item instanceof Page) {
 			return $item->getCollectionPath();
 		} else if ($item instanceof AttributeType) {
 			return $item->getAttributeTypeDisplayName();
@@ -409,7 +459,7 @@ class Package extends Object {
 						case 'PageTheme':
 							$item->uninstall();	
 							break;
-						case 'SinglePage':
+						case 'Page':
 							@$item->delete(); // we suppress errors because sometimes the wrapper pages can delete first.
 							break;
 						case 'SystemCaptchaLibrary':
@@ -597,7 +647,7 @@ class Package extends Object {
 	 * @param int $pkgID
 	 * @return Package
 	 */
-	public function getByID($pkgID) {
+	public static function getByID($pkgID) {
 		$db = Loader::db();
 		$row = $db->GetRow("select * from Packages where pkgID = ?", array($pkgID));
 		if ($row) {
@@ -614,7 +664,7 @@ class Package extends Object {
 	 * @param string $pkgHandle
 	 * @return Package
 	 */
-	public function getByHandle($pkgHandle) {
+	public static function getByHandle($pkgHandle) {
 		$db = Loader::db();
 		$row = $db->GetRow("select * from Packages where pkgHandle = ?", array($pkgHandle));
 		if ($row) {
@@ -630,6 +680,9 @@ class Package extends Object {
 	 * @return Package
 	 */
 	public function install() {
+		$cl = \Concrete\Core\Foundation\ClassLoader::getInstance();
+		$cl->registerPackage($this);
+
 		PackageList::refreshCache();
 		$db = Loader::db();
 		$dh = Loader::helper('date');
@@ -642,7 +695,8 @@ class Package extends Object {
 		$env->clearOverrideCache();
 		return $pkg;
 	}
-	
+
+
 	public function updateAvailableVersionNumber($vNum) {
 		$db = Loader::db();
 		$v = array($vNum, $this->getPackageID());

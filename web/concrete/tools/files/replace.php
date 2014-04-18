@@ -22,6 +22,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 	<h4><?=t('Add From Computer')?></h4>
 	<input type="file" name="Filedata" class="form-control" style="width: 195px" />
 	<?=$valt->output('upload');?>
+	<?= $form->hidden('fID', $f->getFileID()); ?>
 	<button type="submit" class="btn btn-default btn-sm"><?=t('Upload')?></button>
 </form>
 

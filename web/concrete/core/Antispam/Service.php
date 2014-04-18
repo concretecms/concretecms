@@ -1,13 +1,12 @@
 <?
 namespace Concrete\Core\Antispam;
-use Library as SystemAntispamLibrary;
 class Service {
 	
 	protected $controller = false;
 	
 	public function __construct() {
 		
-		$library = SystemAntispamLibrary::getActive();
+		$library = Library::getActive();
 		if (is_object($library)) { 
 			$this->controller = $library->getController();
 		}

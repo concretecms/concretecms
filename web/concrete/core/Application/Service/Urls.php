@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Core\Application\Service;
+use Loader;
+
 /**
  * @package Helpers
  * @category Concrete

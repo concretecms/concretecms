@@ -7,6 +7,7 @@ use \Concrete\Core\File\EditResponse as FileEditResponse;
 use FileAttributeKey;
 use Permissions;
 use Loader;
+use File;
 
 class Properties extends BackendInterfaceController {
 

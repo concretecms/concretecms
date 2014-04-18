@@ -8,7 +8,7 @@ use Exception;
 use User;
 use Loader;
 use \Concrete\Core\Tree\Type\Group as GroupTree;
-
+use Page;
 class Groups extends DashboardPageController {
 
 
@@ -20,6 +20,10 @@ class Groups extends DashboardPageController {
 		$cnt = new SearchGroupsController();
 		$cnt->search();
 		$this->set('searchController', $cnt);
+
+		$c = Page::getByPath('/dashboard/users/add_group');
+		$cp = new Permissions($c);
+		$this->set('canAddGroup', $cp->canViewPage());
 	}	
 
 	public function edit($gID = false) {

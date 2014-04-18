@@ -8,6 +8,7 @@ use BlockType;
 use Page;
 use Area;
 use Events;
+use Core;
 use Cache;
 use \Concrete\Core\Package\PackageList;
 use \Concrete\Core\Block\View\BlockView;
@@ -354,7 +355,8 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface 
 		if (ENABLE_BLOCK_CACHE && $this->instance->cacheBlockRecord() && is_object($this->instance->getBlockControllerData())) {
 			$this->instance->__construct();
 		} else {
-			$class = BlockType::getBlockTypeMappedClass($this->btHandle, $this->pkgHandle);
+			$bt = $this->getBlockTypeObject();
+			$class = $bt->getBlockTypeClass();
 			$this->instance = new $class($this);
 		}		
 		$this->instance->setBlockObject($this);

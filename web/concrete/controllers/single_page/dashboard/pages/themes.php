@@ -6,6 +6,7 @@ use Config;
 use Loader;
 use View;
 use Package;
+use Exception;
 class Themes extends DashboardPageController {
 
 	protected $helpers = array('html');

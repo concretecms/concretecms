@@ -10,6 +10,8 @@ use stdClass;
 use Permissions;
 use User;
 use View;
+use Page;
+use Events;
 
 class Version extends Object {
 
@@ -180,15 +182,13 @@ class Version extends Object {
 		$i = 0;
 		$data2 = array();
 		foreach($data as $key => $value) {
-			if (!is_integer($key)) {
-				$data2[$key] = $value;
-			}
+			$data2[] = $value;
 		}
 
-		foreach($data2 as $key => $value) {
+		foreach($data as $key => $value) {
 			$fields .= $key;
 			$questions .= '?';
-			if (($i + 1) < count($data2)) {
+			if (($i + 1) < count($data)) {
 				$fields .= ',';
 				$questions .= ',';
 			}
@@ -196,7 +196,6 @@ class Version extends Object {
 		}
 
 		$db->Execute("insert into FileVersions (" . $fields . ") values (" . $questions . ")", $data2);
-
 
 		$this->deny();
 
@@ -210,7 +209,7 @@ class Version extends Object {
 			));
 		}
 		$fv2 = $f->getVersion($fvID);
-		$fe = \Concrete\Core\File\Event\FileVersion($fv2);
+		$fe = new \Concrete\Core\File\Event\FileVersion($fv2);
 		Events::dispatch('on_file_version_duplicate', $fe);
 
 		return $fv2;
@@ -276,7 +275,7 @@ class Version extends Object {
 		$this->logVersionUpdate(self::UT_TITLE);
 		$this->fvTitle = $title;
 
-		$fe = \Concrete\Core\File\Event\FileVersion($this);
+		$fe = new \Concrete\Core\File\Event\FileVersion($this);
 		Events::dispatch('on_file_version_update_title', $fe);
 
 		$fo = $this->getFile();
@@ -290,7 +289,7 @@ class Version extends Object {
 		$this->logVersionUpdate(self::UT_TAGS);
 		$this->fvTags = $tags;
 
-		$fe = \Concrete\Core\File\Event\FileVersion($this);
+		$fe = new \Concrete\Core\File\Event\FileVersion($this);
 		Events::dispatch('on_file_version_update_tags', $fe);
 
 		$fo = $this->getFile();
@@ -304,7 +303,7 @@ class Version extends Object {
 		$this->logVersionUpdate(self::UT_DESCRIPTION);
 		$this->fvDescription = $descr;
 
-		$fe = \Concrete\Core\File\Event\FileVersion($this);
+		$fe = new \Concrete\Core\File\Event\FileVersion($this);
 		Events::dispatch('on_file_version_update_description', $fe);
 
 		$fo = $this->getFile();
@@ -328,7 +327,7 @@ class Version extends Object {
 		$db->Execute("update FileVersions set fvIsApproved = 0 where fID = ?", array($this->getFileID()));
 		$db->Execute("update FileVersions set fvIsApproved = 1 where fID = ? and fvID = ?", array($this->getFileID(), $this->getFileVersionID()));
 
-		$fe = \Concrete\Core\File\Event\FileVersion($this);
+		$fe = new \Concrete\Core\File\Event\FileVersion($this);
 		Events::dispatch('on_file_version_approve', $fe);
 
 		$fo = $this->getFile();
@@ -341,7 +340,7 @@ class Version extends Object {
 		$db = Loader::db();
 		$db->Execute("update FileVersions set fvIsApproved = 0 where fID = ? and fvID = ?", array($this->getFileID(), $this->getFileVersionID()));
 
-		$fe = \Concrete\Core\File\Event\FileVersion($this);
+		$fe = new \Concrete\Core\File\Event\FileVersion($this);
 		Events::dispatch('on_file_version_deny', $fe);
 	
 		$fo = $this->getFile();

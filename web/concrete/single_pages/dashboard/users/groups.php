@@ -14,7 +14,6 @@ if (isset($group)) {
 
 	?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Group'), false, false, false)?>
 <form method="post"  class="form-horizontal" id="update-group-form" action="<?=$view->url('/dashboard/users/groups/', 'update_group')?>">
 <?=$valt->output('add_or_update_group')?>
 <div class="ccm-pane-body">
@@ -272,9 +271,14 @@ $(function() {
 </script>
 <? } else { ?>
 
+	<? if ($canAddGroup) { ?>
+	<div class="ccm-dashboard-header-buttons">
+		<a href="<?php echo View::url('/dashboard/users/add_group')?>" class="btn btn-primary"><?php echo t("Add Group")?></a>
+	</div>
+	<? } ?>
+
+
 <? Loader::element('group/search', array('controller' => $searchController, 'selectMode' => false))?>
 
 
 <? } ?>
-
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>

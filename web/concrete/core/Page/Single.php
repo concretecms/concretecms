@@ -15,7 +15,7 @@ use CacheLocal;
 * @package Pages
 *
 */
-class Single extends CorePage {
+class Single {
 
 	// These are pages that you're allowed to override with templates set in themes
 	public static function getThemeableCorePages() {
@@ -25,10 +25,10 @@ class Single extends CorePage {
 
 	public static function getListByPackage($pkg) {
 		$db = Loader::db();
-		$r = $db->Execute("select cID from Pages where cFilename is not null and pkgID = ?", $pkg->getPackageID());
+		$r = $db->Execute("select cID from Pages where cFilename is not null and pkgID = ?", array($pkg->getPackageID()));
 		$singlePages = array();
 		while ($row = $r->FetchRow()) {
-			$singlePages[] = static::getByID($row['cID']);
+			$singlePages[] = CorePage::getByID($row['cID']);
 		}
 		return $singlePages;
 	}
@@ -88,38 +88,32 @@ class Single extends CorePage {
 
 	}
 	
-	public function refresh() {
+	public static function refresh(CorePage $c) {
 		// takes a generated collection and refreshes it - updates its path, it's cDateModified
 		// it's name, it's permissions
 		
-		if (!$this->isGeneratedCollection()) {
+		if (!$c->isGeneratedCollection()) {
 			return false;
 		}
 		
-		$pkg = Package::getByID($this->getPackageID());
-		$currentPath = $this->getCollectionPath();
+		$pkg = Package::getByID($c->getPackageID());
+		$currentPath = $c->getCollectionPath();
 		$pathToFile = static::getPathToNode($currentPath, $pkg);
-		$pxml = static::obtainPermissionsXML($currentPath, $pkg);
 
 		$txt = Loader::helper('text');
 
 		$data = array();
-		$data['cName'] = $txt->unhandle($this->getCollectionHandle());
+		$data['cName'] = $txt->unhandle($c->getCollectionHandle());
 		$data['cFilename'] = $pathToFile;
 		
-		$this->update($data);	
-		if ($pxml) {
-			$this->assignPermissionSet($pxml); // pass it an array
-		}
+		$c->update($data);	
 		$env = Environment::get();
 		$env->clearOverrideCache();
 
 	}
 
 	public static function getByID($cID, $version = 'RECENT') {
-		$where = "where Pages.cID = ? and Pages.cFilename is not null";
-		$c = new static;
-		$c->populatePage($cID, $where, $version);
+		$c = Page::getByID($cID, $version);
 		return $c;
 	}
 	
@@ -129,7 +123,7 @@ class Single extends CorePage {
 	 * @param Package $pkg
 	 * @return Page
 	 */
-	public static function addSinglePage($cPath, $pkg = null) {
+	public static function add($cPath, $pkg = null) {
 		// if we get to this point, we create a special collection 
 		// without a specific type. This collection has a special cFilename that
 		// points to the passed node
@@ -173,11 +167,6 @@ class Single extends CorePage {
 				$newC = $parent->addStatic($data);	
 				$parent = $newC;
 				
-				$pxml = static::obtainPermissionsXML($currentPath, $pkg);
-				
-				if ($pxml) {
-					$newC->assignPermissionSet($pxml); // pass it an array
-				}					
 				
 			} else {
 				$parent = $c;
@@ -191,107 +180,14 @@ class Single extends CorePage {
 		
 	}
 	
-	private static function checkPermissionsXML($doc, $node) {
-		$dom = simplexml_load_file($doc);
-		$n = $dom->xpath('//node[@handle=\'' . $node . '\']');
-		if ($n != false) {
-			return $n[0];
-		}
-		return null;
-	}
-	
-	public static function obtainPermissionsXML($node, $pkg = null) {
-		// this function reads a file in, and grabs all the various filesystem permissions xml that applies to that file
-		// and returns it in a DOM object
-		
-		$node = static::sanitizePath($node);
-		
-		
-		// first, we operate on this if it's not in a package
-		
-		if (!is_object($pkg)) {
-			
-			if (is_dir(DIR_FILES_CONTROLLERS . '/' . DIRNAME_PAGES . '/' . $node) || is_dir(DIR_FILES_CONTROLLERS_REQUIRED . '/' . DIRNAME_PAGES . '/' . $node)) {
-				if (is_dir(DIR_FILES_CONTROLLERS . '/' . DIRNAME_PAGES . '/' . $node)) {
-					$pathToPerms = DIR_FILES_CONTROLLERS . '/' . DIRNAME_PAGES . '/' . $node;
-					if (file_exists($pathToPerms . '/' . FILENAME_COLLECTION_ACCESS)) {
-						$xmlweb = $pathToPerms . '/' . FILENAME_COLLECTION_ACCESS;
-					}
-				}
-				
-				if (is_dir(DIR_FILES_CONTROLLERS_REQUIRED . '/' . DIRNAME_PAGES . '/' . $node)) {
-					$pathToPerms = DIR_FILES_CONTROLLERS_REQUIRED . '/' . DIRNAME_PAGES . '/' . $node;
-					if (file_exists($pathToPerms . '/' . FILENAME_COLLECTION_ACCESS)) {
-						$xmlcore = $pathToPerms . '/' . FILENAME_COLLECTION_ACCESS;
-					}
-				}
-			} else {
-				if (strpos($node, '/') === false) {
-					if (file_exists(DIR_FILES_CONTROLLERS . '/' . DIRNAME_PAGES . '/' . FILENAME_COLLECTION_ACCESS)) {
-						$xmlweb = DIR_FILES_CONTROLLERS . '/' . DIRNAME_PAGES . '/' . FILENAME_COLLECTION_ACCESS;
-					} else if (file_exists(DIR_FILES_CONTROLLERS_REQUIRED . '/' . DIRNAME_PAGES . '/' . FILENAME_COLLECTION_ACCESS)) {
-						$xmlcore = DIR_FILES_CONTROLLERS_REQUIRED . '/' . DIRNAME_PAGES . '/' . FILENAME_COLLECTION_ACCESS;
-					}
-				}			
-			}
-				
-			
-			if (isset($xmlweb)) {
-				$perms = static::checkPermissionsXML($xmlweb, $node);
-				if ($perms != null) {
-					return $perms;
-				}
-			} 
-
-			
-			if (isset($xmlcore)) {
-				$perms = static::checkPermissionsXML($xmlcore, $node);
-				if ($perms != null) {
-					return $perms;
-				}
-			}
-
-		} else {
-		
-			if (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle())) {
-				$dirp = DIR_PACKAGES;			
-			} else {
-				$dirp = DIR_PACKAGES_CORE;
-			}
-
-			$file1 = $dirp . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_PAGES . '/' . $node . '/' . FILENAME_COLLECTION_VIEW;
-			$file2 = $dirp . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_PAGES . '/' . $node . '.php';
-			if (file_exists($file1)) {
-				$pathToPerms = $dirp . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . '/' . $node;
-			} else if (file_exists($file2)) {
-				$pathNode = '/' . substr($node, 0, strrpos($node, '/'));
-				$pathToPerms = $dirp . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . $pathNode;
-			}
-			
-			if (file_exists($pathToPerms . '/' . FILENAME_COLLECTION_ACCESS)) {
-				$xml = $pathToPerms . '/' . FILENAME_COLLECTION_ACCESS;
-			}
-			
-			if (isset($xml)) {
-				$perms = static::checkPermissionsXML($xml, $node);
-				if ($perms != null) {
-					return $perms;
-				}
-			}
-		}
-
-		return false;
-	}
-	
 	// returns all pages in the site that are "single" 
 	public static function getList() {
 		$db = Loader::db();
 		$r = $db->query("select Pages.cID from Pages inner join Collections on Pages.cID = Collections.cID where cFilename is not null order by cDateModified desc");
 		$pages = array();
 		while ($row = $r->fetchRow()) {
-			$p = new static;
-			$p->populatePage($row['cID'], 'where Pages.cID = ?', 'RECENT');
-			$pages[] = $p;
+			$c = Page::getByID($row['cID']);
+			$pages[] = $c;
 		}
 		return $pages;
 	}

@@ -20,7 +20,7 @@ if (is_object($category) && $category->allowAttributeSets()) {
 		<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($c)?>?asGroupAttributes=0"><?=t('In One List')?></a></li>
 		</ul>
 	<? } ?>
-	<a href="<?=URL::to('/dashboard/ccm/system/attributes/sets', 'category', $category->getAttributeKeyCategoryID())?>" class="btn btn-default"><?=t('Manage Sets')?></a>
+	<a href="<?=URL::to('/dashboard/system/attributes/sets', 'category', $category->getAttributeKeyCategoryID())?>" class="btn btn-default"><?=t('Manage Sets')?></a>
 </div>
 
 <?
