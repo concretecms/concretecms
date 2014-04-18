@@ -5,6 +5,7 @@ use \Concrete\Controller\Search\Groups as SearchGroupsController;
 use Permissions;
 use Group;
 use Exception;
+use User;
 use Loader;
 use \Concrete\Core\Tree\Type\Group as GroupTree;
 

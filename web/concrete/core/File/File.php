@@ -129,7 +129,11 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 	}
 	
 	public function setPassword($pw) {
-		Events::fire('on_file_set_password', $this, $pw);
+
+		$fe = \Concrete\Core\File\Event\FileWithPassword($this);
+		$fe->setFilePassword($pw);
+		Events::dispatch('on_file_set_password', $fe);
+
 		$db = Loader::db();
 		$db->Execute("update Files set fPassword = ? where fID = ?", array($pw, $this->getFileID()));
 		$this->fPassword = $pw;
@@ -293,7 +297,11 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		
 		// return the new file object
 		$nf = static::getByID($fIDNew);
-		Events::fire('on_file_duplicate', $this, $nf);
+
+		$fe = \Concrete\Core\File\Event\DuplicateFile($this);
+		$fe->setNewFileObject($nf);
+		Events::dispatch('on_file_duplicate', $fe);
+
 		return $nf;		
 	}
 	
@@ -317,7 +325,9 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		$f = static::getByID($fID);
 		
 		$fv = $f->addVersion($filename, $prefix, $data);
-		Events::fire('on_file_add', $f, $fv);
+
+		$fve = new \Concrete\Core\File\Event\FileVersion($fv);
+		Events::dispatch('on_file_add', $fve);
 		
 		$entities = $u->getUserAccessEntityObjects();
 		$hasUploader = false;
@@ -373,7 +383,10 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 			''));;
 			
 		$fv = $this->getVersion($fvID);
-		Events::fire('on_file_version_add', $fv);
+
+		$fve = new \Concrete\Core\File\Event\FileVersion($fv);
+		Events::dispatch('on_file_version_add', $fve);
+
 		return $fv;
 	}
 	
@@ -395,8 +408,9 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		$db = Loader::db();
 		
 		// fire an on_page_delete event
-		$ret = Events::fire('on_file_delete', $this);
-		if ($ret < 0) {
+		$fve = new \Concrete\Core\File\Event\DeleteFile($this);
+		$fve = Events::dispatch('on_file_delete', $fve);
+		if (!$fve->proceed()) {
 			return false;
 		}
 		
@@ -537,7 +551,10 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		if(!isset($rcID) || !is_numeric($rcID)) {
 			$rcID = 0;
 		}
-		Events::fire('on_file_download', $fv, $u);
+
+		$fve = new \Concrete\Core\File\Event\FileAccess($fv);
+		Events::dispatch('on_file_download', $fve);
+
 		$db = Loader::db();
 		$db->Execute('insert into DownloadStatistics (fID, fvID, uID, rcID) values (?, ?, ?, ?)',  array( $this->fID, intval($fvID), $uID, $rcID ) );		
 	}

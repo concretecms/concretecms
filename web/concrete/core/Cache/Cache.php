@@ -199,7 +199,11 @@ class Cache {
 			$cache->setOption('caching', true);
 			$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
 		}
-		Events::fire('on_cache_flush', $cache);
+
+		$event = new \Symfony\Component\EventDispatcher\GenericEvent();
+		$event->setArgument('cache', $cache);
+		$ret = Events::dispatch('on_cache_flush', $event);
+
 		return true;
 	}
 		

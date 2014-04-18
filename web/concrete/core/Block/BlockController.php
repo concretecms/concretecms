@@ -399,10 +399,12 @@ class BlockController extends \Concrete\Core\Controller\AbstractController {
 			}
 		}
 
-		$ret = Events::fire('on_block_load', $this->record, $this->btHandle, $this->bID);
-		if ($ret && is_object($ret)){
-			$this->record = $ret;
-		}
+		$event = new \Symfony\Component\EventDispatcher\GenericEvent();
+		$event->setArgument('record', $this->record);
+		$event->setArgument('btHandle', $this->btHandle);
+		$event->setArgument('bID', $this->bID);
+		$ret = Events::dispatch('on_page_output', $event);
+		$this->record = $ret->getArgument('record');
 
 		if (is_object($this->record)) {
 			foreach($this->record as $key => $value) {

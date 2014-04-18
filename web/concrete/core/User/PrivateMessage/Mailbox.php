@@ -24,7 +24,10 @@ class Mailbox extends Object {
 	public function removeNewStatus() {
 		$db = Loader::db();
 		$user = UserInfo::getByID($this->uID);
-		Events::fire('on_private_message_marked_not_new', $this);
+
+		$ue = new \Concrete\Core\User\Event\UserInfo($user);
+		Events::dispatch('on_private_message_marked_not_new', $ue);
+
 		$db->Execute('update UserPrivateMessagesTo set msgIsNew = 0 where msgMailboxID = ? and uID = ?', array($this->msgMailboxID, $user->getUserID()));
 	}
 

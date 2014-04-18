@@ -108,13 +108,17 @@ class View extends AbstractView {
 	}
 
 	public function startRender() {
-		// First the starting gun.
-		Events::fire('on_start', $this);
+		$event = new \Symfony\Component\EventDispatcher\GenericEvent();
+		$event->setArgument('view', $this);
+		Events::dispatch('on_start', $event);
 		parent::startRender();
 	}
 
 	protected function onBeforeGetContents() {
-		Events::fire('on_before_render', $this);
+		$event = new \Symfony\Component\EventDispatcher\GenericEvent();
+		$event->setArgument('view', $this);
+		Events::dispatch('on_before_render', $event);
+
 		if ($this->themeHandle == VIEW_CORE_THEME) {
 			$_pt = new \Concrete\Theme\Concrete\PageTheme();
 			$_pt->registerAssets();
@@ -146,11 +150,14 @@ class View extends AbstractView {
 	}
 
 	public function finishRender($contents) {
-		$ret = Events::fire('on_page_output', $contents);
-		if($ret != '') {
-			$contents = $ret;
-		}
-		Events::fire('on_render_complete', $this);
+		$event = new \Symfony\Component\EventDispatcher\GenericEvent();
+		$event->setArgument('contents', $contents);
+		Events::dispatch('on_page_output', $event);
+
+		$event = new \Symfony\Component\EventDispatcher\GenericEvent();
+		$event->setArgument('view', $this);
+		Events::dispatch('on_render_complete', $event);
+
 		return $contents;
 	}
 

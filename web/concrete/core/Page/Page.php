@@ -1838,7 +1838,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
 		$newParent = Page::getByID($newCParentID, 'RECENT');
 
-		$ret = Events::fire('on_page_move', $this, $oldParent, $newParent);
+		$pe = new MovePageEvent($this);
+		$pe->setOldParentPageObject($oldParent);
+		$pe->setNewParentPageObject($newParent);
+		Events::dispatch('on_page_move', $pe);
 
 		// now that we've moved the collection, we rescan its path
 		$this->rescanCollectionPath($retainOldPagePath);
@@ -1937,7 +1940,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 			// arguments for event
 			// 1. new page
 			// 2. old page
-			$ret = Events::fire('on_page_duplicate', $nc2, $this);
+			$pe = new DuplicatePageEvent($this);
+			$pe->setNewPageObject($nc2);
+			Events::dispatch('on_page_duplicate', $pe);
 
 			$nc2->rescanCollectionPath();
 

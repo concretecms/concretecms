@@ -11,8 +11,9 @@ class Jobs extends DashboardPageController {
 
 	function on_start() {
 		parent::on_start();
+		$installed = Job::getList();
 		$this->set('availableJobs', Job::getAvailableList(0)); 
-		$this->set('installedJobs', Job::getList()); 
+		$this->set('installedJobs', $installed); 
 		$this->set('jobSets', JobSet::getList());
 		$this->set('auth', Job::generateAuth());
 	}

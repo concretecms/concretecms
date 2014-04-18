@@ -168,7 +168,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 			
 			if (is_object($ui) && !in_array(self::ADD_OPTIONS_SKIP_CALLBACK,$options)) {
 				// run any internal event we have for user add
-				Events::fire('on_user_add', $ui, $data['uPassword']);
+				$ue = new \Concrete\Core\User\Event\UserInfoWithPassword($ui);
+				$ue->setUserPassword($data['uPassword']);
+				Events::dispatch('on_user_add', $ue);
 			}
 			
 			return $ui;
@@ -202,8 +204,10 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		}
 
 		// run any internal event we have for user deletion
-		$ret = Events::fire('on_user_delete', $this);
-		if ($ret < 0) {
+
+		$ue = new \Concrete\Core\User\Event\DeleteUser($this);
+		$ue = Events::dispatch('on_user_delete', $ue);
+		if (!$ue->proceed()) {
 			return false;
 		}
 		
@@ -468,10 +472,12 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
 			// run any internal event we have for user update
 			$ui = UserInfo::getByID($this->uID);
-			Events::fire('on_user_update', $ui);
+			$ue = new \Concrete\Core\User\Event\UserInfo($ui);
+			Events::dispatch('on_user_update', $ue);
 			
 			if ($testChange) {
-				Events::fire('on_user_change_password', $ui, $data['uPassword']);
+				$ue = new \Concrete\Core\User\Event\UserInfoWithPassword($ui);
+				Events::dispatch('on_user_change_password', $ue);
 			}				
 			return $res;
 		}
@@ -513,7 +519,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		foreach ($existingGIDArray as $gID) {
 			$group = Group::getByID($gID);
 			if ($group) {
-				Events::fire('on_user_exit_group', $this->getUserObject(), $group);
+				$ue = new \Concrete\Core\User\Event\UserGroup($this->getUserObject());
+				$ue->setGroupObject($group);
+				Events::dispatch('on_user_exit_group', $ue);
 			}
 		}
 
@@ -524,7 +532,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 			$r2 = $db->query($q2);
 			// fire the user group removal event for each of the groups we've deleted
 			foreach($existingGIDArray as $gID) {
-				Events::fire('on_user_exit_group', $this->getUserObject(), Group::getByID($gID));
+				$ue = new \Concrete\Core\User\Event\UserGroup($this->getUserObject());
+				$ue->setGroupObject(Group::getByID($gID));
+				Events::dispatch('on_user_exit_group', $ue);
 			}
 
 		}
@@ -564,7 +574,10 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		$v = array($this->uID);
 		$db->query("update Users set uIsValidated = 1, uIsFullRecord = 1 where uID = ?", $v);
 		$db->query("update UserValidationHashes set uDateRedeemed = " . time() . " where uID = ?", $v);
-		Events::fire('on_user_validate', $this);
+
+		$ue = new \Concrete\Core\User\Event\UserInfo($this);
+		Events::dispatch('on_user_validate', $ue);
+
 		return true;
 	}
 	
@@ -576,7 +589,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 			$r = $db->prepare($q);
 			$res = $db->execute($r, $v);
 
-			Events::fire('on_user_change_password', $this, $newPassword);
+			$ue = new \Concrete\Core\User\Event\UserInfoWithPassword($this);
+			$ue->setUserPassword($newPassword);
+			Events::dispatch('on_user_change_password', $ue);
 
 			return $res;
 		}
@@ -586,14 +601,16 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		$db = Loader::db();
 		$q = "update Users set uIsActive = 1 where uID = '{$this->uID}'";
 		$r = $db->query($q);
-		Events::fire('on_user_activate', $this);
+		$ue = new \Concrete\Core\User\Event\UserInfo($this);
+		Events::dispatch('on_user_activate', $ue);
 	}
 
 	function deactivate() {
 		$db = Loader::db();
 		$q = "update Users set uIsActive = 0 where uID = '{$this->uID}'";
 		$r = $db->query($q);
-		Events::fire('on_user_deactivate', $this);
+		$ue = new \Concrete\Core\User\Event\UserInfo($this);
+		Events::dispatch('on_user_deactivate', $ue);
 	}
 	
 	

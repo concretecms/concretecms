@@ -33,7 +33,11 @@ class Limit {
 	
 	protected function notifyAdmin($offenderID) {
 		$offender = UserInfo::getByID($offenderID);
-		Events::fire('on_private_message_over_limit', $offender);
+
+
+		$ue = new \Concrete\Core\User\Event\UserInfo($offender);
+		Events::dispatch('on_private_message_over_limit', $ue);
+
 		$admin = UserInfo::getByID(USER_SUPER_ID);
 		
 		Log::addEntry(t("User: %s has tried to send more than %s private messages within %s minutes", $offender->getUserName(), USER_PRIVATE_MESSAGE_MAX, USER_PRIVATE_MESSAGE_MAX_TIME_SPAN),t('warning'));

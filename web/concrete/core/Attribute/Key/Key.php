@@ -456,6 +456,11 @@ class Key extends Object {
 
 		$type = $this->getAttributeType();
 		$cnt = $type->getController();
+
+		if ($this->akHandle == $prevHandle) {
+			return false;
+		}
+
 		if ($this->getIndexedSearchTable() == false) {
 			return false;
 		}
@@ -464,21 +469,28 @@ class Key extends Object {
 		}
 		
 		$fields = array();
+		$dropColumns = array();
 		$definition = $cnt->getSearchIndexFieldDefinition();
-		$prefix = $this->akHandle;
+
 		if ($prevHandle) {
-			$prefix = $prevHandle;
+			if (isset($definition['type'])) {
+				$dropColumns[] = 'ak_' . $prevHandle;
+			} else {
+				foreach($definition as $name => $column) {
+					$dropColumns[] = 'ak_' . $prevHandle . '_' . $name;
+				}
+			}
 		}
+
 		if (isset($definition['type'])) {
-			$fields[] = array('name' => 'ak_' . $prefix,  'type' => $definition['type'], 'options' => $definition['options']);
+			$fields[] = array('name' => 'ak_' . $this->akHandle,  'type' => $definition['type'], 'options' => $definition['options']);
 		} else {
-			foreach($definition as $column) {
-				$fields[] = array('name' => 'ak_' . $prefix . '_' . $column['name'],  'type' => $column['type'], 'options' => $column['options']);
+			foreach($definition as $name => $column) {
+				$fields[] = array('name' => 'ak_' . $this->akHandle . '_' . $name,  'type' => $column['type'], 'options' => $column['options']);
 			}
 		}
 
 		$db = Loader::db();
-		$columns = $db->MetaColumnNames($this->getIndexedSearchTable());
 		$platform = $db->getDatabasePlatform();
 		$sm = $db->getSchemaManager();
 		
@@ -487,29 +499,20 @@ class Key extends Object {
 		$parser = new \Concrete\Core\Database\Schema\Parser\ArrayParser();
 		$comparator = new \Doctrine\DBAL\Schema\Comparator();
 
-		foreach($fields as $col => $field) {
 
-			$addColumn = true;
-
-			if ($prevColumn != false) {
-				if ($columns[strtoupper($prevColumn)]) {
-					$q = $dba->RenameColumnSQL($this->getIndexedSearchTable(), $prevColumn, $column, $field);
-					$db->Execute($q[0]);
-					$addColumn = false;
-				}
+		if ($prevHandle != false) {
+			foreach($dropColumns as $column) {
+				$toTable->dropColumn($column);
 			}
-			
-			if ($addColumn) {
-				if (!in_array($column, $columns)) {
-					$toTable = $parser->addColumns($toTable, $fields);
-					$diff = $comparator->diffTable($fromTable, $toTable);
-					$sql = $platform->getAlterTableSQL($diff);
-					foreach($sql as $q) {
-						$db->exec($q);
-					}
-				}
-			}			
 		}
+
+		$toTable = $parser->addColumns($toTable, $fields);
+		$diff = $comparator->diffTable($fromTable, $toTable);
+		$sql = $platform->getAlterTableSQL($diff);
+		foreach($sql as $q) {
+			$db->exec($q);
+		}
+
 	}
 	
 	public function delete() {
@@ -534,15 +537,18 @@ class Key extends Object {
 			if (isset($definition['type'])) {
 				$dropColumns[] = 'ak_' . $prefix;
 			} else {
-				foreach($definition as $column) {
-					$dropColumns[] = 'ak_' . $prefix . '_' . $column['name'];
+				foreach($definition as $name => $column) {
+					$dropColumns[] = 'ak_' . $prefix . '_' . $name;
 				}
 			}
 			$comparator = new \Doctrine\DBAL\Schema\Comparator();
 
 			foreach($dropColumns as $dc) {
 				$toTable->dropColumn($dc);
-				$diff = $comparator->diffTable($fromTable, $toTable);
+			}
+
+			$diff = $comparator->diffTable($fromTable, $toTable);
+			if ($diff) {
 				$sql = $platform->getAlterTableSQL($diff);
 				foreach($sql as $q) {
 					$db->exec($q);

@@ -61,7 +61,7 @@ if (isset($group)) {
 		<div class="control-group">
 		<div class="controls">
 		<label class="checkbox">
-		<?=$form->checkbox('gIsBadge', 1, $g->isGroupBadge())?>
+		<?=$form->checkbox('gIsBadge', 1, $group->isGroupBadge())?>
 		<span><?=t('This group is a badge.')?> <i class="icon-question-sign" title="<?=t('Badges are publicly viewable in user profiles, and display pictures and a custom description. Badges can be automatically assigned or given out by administrators.')?>"></i> </span>
 		</label>
 		</div>
@@ -74,7 +74,7 @@ if (isset($group)) {
 				<?
 
 				$af = Loader::helper('concrete/asset_library');
-				print $af->image('gBadgeFID', 'gBadgeFID', t('Choose Badge Image'), $g->getGroupBadgeImageObject());
+				print $af->image('gBadgeFID', 'gBadgeFID', t('Choose Badge Image'), $group->getGroupBadgeImageObject());
 				?>
 
 			</div>
@@ -83,14 +83,14 @@ if (isset($group)) {
 		<div class="control-group">
 		<?=$form->label('gBadgeDescription', t('Badge Description'))?>
 		<div class="controls">
-			<?=$form->textarea('gBadgeDescription', $g->getGroupBadgeDescription(), array('rows' => 6, 'class' =>'span6'))?>
+			<?=$form->textarea('gBadgeDescription', $group->getGroupBadgeDescription(), array('rows' => 6, 'class' =>'span6'))?>
 		</div>
 		</div>
 
 		<div class="control-group">
 		<?=$form->label('gBadgeCommunityPointValue', t('Community Points'))?>
 		<div class="controls">
-			<?=$form->text('gBadgeCommunityPointValue', $g->getGroupBadgeCommunityPointValue(), array('class' => 'span1'))?>
+			<?=$form->text('gBadgeCommunityPointValue', $group->getGroupBadgeCommunityPointValue(), array('class' => 'span1'))?>
 		</div>
 		</div>
 
@@ -105,7 +105,7 @@ if (isset($group)) {
 		<div class="control-group">
 		<div class="controls">
 		<label class="checkbox">
-		<?=$form->checkbox('gIsAutomated', 1, $g->isGroupAutomated())?>
+		<?=$form->checkbox('gIsAutomated', 1, $group->isGroupAutomated())?>
 		<span><?=t('This group is automatically entered.')?> <i class="icon-question-sign" title="<?=t("Automated Groups aren't assigned by administrators. They are checked against code at certain times that determines whether users should enter them.")?>"></i> </span>
 		</label>
 		</div>
@@ -116,15 +116,15 @@ if (isset($group)) {
 		<label class="control-label"><?=t('Check Group')?></label>
 		<div class="controls">
 			<label class="checkbox">
-				<?=$form->checkbox('gCheckAutomationOnRegister', 1, $g->checkGroupAutomationOnRegister())?>
+				<?=$form->checkbox('gCheckAutomationOnRegister', 1, $group->checkGroupAutomationOnRegister())?>
 				<span><?=t('When a user registers.')?></span>
 			</label>
 			<label class="checkbox">
-				<?=$form->checkbox('gCheckAutomationOnLogin', 1, $g->checkGroupAutomationOnLogin())?>
+				<?=$form->checkbox('gCheckAutomationOnLogin', 1, $group->checkGroupAutomationOnLogin())?>
 				<span><?=t('When a user signs in.')?></span>
 			</label>
 			<label class="checkbox">
-				<?=$form->checkbox('gCheckAutomationOnJobRun', 1, $g->checkGroupAutomationOnJobRun())?>
+				<?=$form->checkbox('gCheckAutomationOnJobRun', 1, $group->checkGroupAutomationOnJobRun())?>
 				<span><?=t('When the "Check Automated Groups" Job runs.')?></span>
 			</label>
 		</div>
@@ -132,7 +132,7 @@ if (isset($group)) {
 
 		<div class="alert alert-info">
 			<?
-			$path = $g->getGroupAutomationControllerFile();
+			$path = $group->getGroupAutomationControllerFile();
 			print t('Make sure a code file exists at %s', str_replace(array(DIR_APPLICATION, DIR_BASE_CORE), '', $path));
 			?>
 		</div>

@@ -181,7 +181,10 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 		$db->insert("FileSets", array('fsType' => $type, 'fsOverrideGlobalPermissions' => $fsOverrideGlobalPermissions, 'uID' => $uID, 'fsName' => $setName));
 		$fsID = $db->lastInsertId();
 		$fs = static::getByID($fsID);
-		Events::fire('on_file_set_add', $fs);
+
+		$fe = new \Concrete\Core\File\Event\FileSet($fs);
+		Events::dispatch('on_file_set_add', $fe);
+
 		return $fs;
 
 	}
@@ -205,7 +208,10 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 			$f_id = $f_id->getFileID();
 		}			
 		$file_set_file = File::createAndGetFile($f_id,$this->fsID);
-		Events::fire('on_file_added_to_set', $f_id, $this->getFileSetID());
+
+		$fe = new \Concrete\Core\File\Event\FileSetFile($file_set_file);
+		Events::dispatch('on_file_added_to_set', $fe);
+
 		return $file_set_file;
 	}
 	
@@ -217,14 +223,21 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 		return $this->fsResultColumns;
 	}
 	public function removeFileFromSet($f_id){
+
 		if (is_object($f_id)) {
 			$f_id = $f_id->fID;
 		}
+
+		$file_set_file = File::createAndGetFile($f_id,$this->fsID);
+
 		$db = Loader::db();
 		$db->Execute('DELETE FROM FileSetFiles 
 		WHERE fID = ? 
 		AND   fsID = ?', array($f_id, $this->getFileSetID()));
-		Events::fire('on_file_removed_from_set', $f_id, $this->getFileSetID());
+
+		$fe = new \Concrete\Core\File\Event\FileSetFile($file_set_file);
+		Events::dispatch('on_file_removed_from_set', $fe);
+
 	}
 
 	/**

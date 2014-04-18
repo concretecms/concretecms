@@ -81,7 +81,12 @@ class ApprovePageRequest extends PageRequest {
 
 	public function cancel(WorkflowProgress $wp) {
 		$c = Page::getByID($this->getRequestedPageID(), $this->cvID);
-		Events::fire('on_page_version_deny', $c);
+
+		$ev = \Concrete\Core\Page\Collection\Version\Event($c);
+		$v = $c->getVersionObject();
+		$ev->setCollectionVersionObject($v);
+		Events::dispatch('on_page_version_deny', $ev);
+
 		parent::cancel($wp);
 	}
 
@@ -89,7 +94,11 @@ class ApprovePageRequest extends PageRequest {
 		$c = Page::getByID($this->getRequestedPageID());
 		$v = CollectionVersion::get($c, $this->cvID);
 		$v->approve(false);
-		Events::fire('on_page_version_submit_approve', $c);
+
+		$ev = \Concrete\Core\Page\Collection\Version\Event($c);
+		$ev->setCollectionVersionObject($v);
+		Events::dispatch('on_page_version_submit_approve', $ev);
+
 		$wpr = new WorkflowProgressResponse();
 		$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
 		return $wpr;

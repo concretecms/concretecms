@@ -36,7 +36,6 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 		CacheLocal::delete('page', $this->getCollectionID() . ':' . $this->getVersionID());
 		CacheLocal::delete('page', $this->getCollectionID() . ':' . 'RECENT');
 		CacheLocal::delete('page', $this->getCollectionID() . ':' . 'ACTIVE');
-		Events::fire('on_page_version_refresh_cache', $this);
 	}
 	
 	public static function get(&$c, $cvID) {
@@ -213,7 +212,11 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 		
 		
 		$nv = static::get($c, $newVID);
-		Events::fire('on_page_version_add', $c, $nv);
+
+		$ev = \Concrete\Core\Page\Collection\Version\Event($c);
+		$ev->setCollectionVersionObject(nvv);
+		Events::dispatch('on_page_version_add', $ev);
+
 		$nv->refreshCache();
 		// now we return it
 		return $nv;
@@ -277,7 +280,10 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 			$db->Execute('update Pages set cInheritPermissionsFromCID = ? where cID = ?', array($masterC->getCollectionID(), $c->getCollectioniD()));
 		}
 
-		Events::fire('on_page_version_approve', $c);
+		$ev = \Concrete\Core\Page\Collection\Version\Event($c);
+		$ev->setCollectionVersionObject($this);
+		Events::dispatch('on_page_version_approve', $ev);
+
 		$c->reindex(false, $doReindexImmediately);
 		$c->writePageThemeCustomizations();
 		$this->refreshCache();

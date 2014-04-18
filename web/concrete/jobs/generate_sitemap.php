@@ -48,7 +48,11 @@ class GenerateSitemap extends AbstractJob {
 				self::addPage($xmlDoc, intval($row['cID']), $instances);
 			}
 			$rs->Close();
-			Events::fire('on_sitemap_xml_ready', $xmlDoc);
+
+			$event = new \Symfony\Component\EventDispatcher\GenericEvent();
+			$event->setArgument('xmlDoc', $xmlDoc);
+			Events::dispatch('on_sitemap_xml_ready', $event);
+
 			$dom = dom_import_simplexml($xmlDoc)->ownerDocument;
 			$dom->formatOutput = true;
 			$addedPages = count($xmlDoc->url);
@@ -130,7 +134,12 @@ class GenerateSitemap extends AbstractJob {
 		$xmlNode->addChild('lastmod', $lastmod->format(DateTime::ATOM));
 		$xmlNode->addChild('changefreq', empty($changefreq) ? SITEMAPXML_DEFAULT_CHANGEFREQ : $changefreq);
 		$xmlNode->addChild('priority', is_numeric($priority) ? $priority : SITEMAPXML_DEFAULT_PRIORITY);
-		$ret = Events::fire('on_sitemap_xml_addingpage', $xmlNode, $page);
+
+		$event = new \Symfony\Component\EventDispatcher\GenericEvent();
+		$event->setArgument('xmlNode', $xmlNode);
+		$event->setArgument('page', $page);
+		Events::dispatch('on_sitemap_xml_addingpage', $event);
+
 		if((!empty($ret)) && ($ret < 0)) {
 			for($i = count($xmlDoc->url) - 1; $i >= 0; $i--) {
 				if($xmlDoc->url[$i] == $xmlNode) {

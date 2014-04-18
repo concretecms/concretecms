@@ -6,6 +6,7 @@ use \Concrete\Core\Package\PackageList;
 use Environment;
 use Config;
 use Core;
+use Events;
 
 abstract class Job extends Object {
 
@@ -133,7 +134,10 @@ abstract class Job extends Object {
 	}
 
 	public function markStarted(){
-		Events::fire('on_before_job_execute', $this);
+
+		$je = new Event($this);
+		Events::dispatch('on_before_job_execute', $je);
+
 		$db = Loader::db();
 		$timestampH =date('Y-m-d g:i:s A');
 		$timestamp=date('Y-m-d H:i:s');
@@ -156,7 +160,9 @@ abstract class Job extends Object {
 		$timestamp=date('Y-m-d H:i:s');
 		$rs = $db->query( "UPDATE Jobs SET jStatus=?, jLastStatusCode = ?, jLastStatusText=? WHERE jHandle=?", array( $jStatus, $resultCode, $resultMsg, $this->jHandle ) );
 		$rs = $db->query( "INSERT INTO JobsLog (jID, jlMessage, jlTimestamp, jlError) VALUES(?,?,?,?)", array( $this->jID, $resultMsg, $timestamp, $resultCode ) );
-		Events::fire('on_job_execute', $this);
+
+		$je = new Event($this);
+		Events::dispatch('on_job_execute', $je);
 
 		$obj = new stdClass;
 		$obj->error = $resultCode;
@@ -259,6 +265,7 @@ abstract class Job extends Object {
 						$jHandle = substr($file,0,strlen($file)-4);
 						$className = static::getClassName($jHandle);
 						$jobObjs[$jHandle] = Core::make($className);
+						$jobObjs[$jHandle]->jHandle = $jHandle;
 					}
 					closedir($dh);
 				}
@@ -294,7 +301,10 @@ abstract class Job extends Object {
 			$resultMsg=$e->getMessage();
 			$error = static::JOB_ERROR_EXCEPTION_GENERAL;
 		}
-		Events::fire('on_job_execute', $this);
+
+		$je = new Event($this);
+		Events::dispatch('on_job_execute', $je);
+
 		$obj = $this->markCompleted($error, $resultMsg);
 		return $obj;
 	}
@@ -309,7 +319,8 @@ abstract class Job extends Object {
  	 public static function installByHandle($jHandle=''){
 		$availableJobs=static::getAvailableList();
 		foreach( $availableJobs as $availableJobHandle=>$availableJobObj ){
-			if( $availableJobObj->jHandle!=$jHandle ) continue;
+
+			if( $availableJobHandle!=$jHandle ) continue;
 			$availableJobObj->install();
 		}
 	}
@@ -334,7 +345,10 @@ abstract class Job extends Object {
 			$db = Loader::db();
 			$db->Execute('insert into Jobs (jName, jDescription, jDateInstalled, jNotUninstallable, jHandle, pkgID) values (?, ?, ?, ?, ?, ?)', 
 				array($j->getJobName(), $j->getJobDescription(), Loader::helper('date')->getLocalDateTime(), 0, $jHandle, $pkg->getPackageID()));
-			Events::fire('on_job_install', $j);
+
+			$je = new Event($j);
+			Events::dispatch('on_job_install', $je);
+
 			return $j;
 		}
 	}
@@ -349,14 +363,20 @@ abstract class Job extends Object {
 		}else{
 			$db->query('INSERT INTO Jobs (jName, jDescription, jDateInstalled, jNotUninstallable, jHandle) VALUES(?,?,?,?,?)',$vals);
 		}
-		Events::fire('on_job_install', $this);
+
+		$je = new Event($this);
+		Events::dispatch('on_job_install', $je);
+
 	}
  
 	public function uninstall(){
-		$ret = Events::fire('on_job_uninstall', $this);
-		if($ret < 0) {
-			return $ret;
+
+		$je = new Event($this);
+		$je = Events::dispatch('on_job_uninstall', $je);
+		if (!$je) {
+			return false;
 		}
+
 		$db = Loader::db();
 		$db->query( 'DELETE FROM Jobs WHERE jHandle=?', array($this->jHandle) );
 	}
