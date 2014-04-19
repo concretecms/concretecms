@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Core\Log\Logging;
+namespace Concrete\Core\Logging;
 use Concrete\Core\Foundation\Object;
 use Loader;
 class LogEntry {
@@ -27,8 +27,8 @@ class LogEntry {
 		$r = $db->Execute("select * from Logs where logID = ?", array($logID));
 		if ($r) {
 			$row = $r->FetchRow();
-			$obj = new LogEntry();
-			$obj->setPropertiesFromArray($row);
+			$obj = new static();
+			$obj = array_to_object($obj, $row);
 			return $obj;
 		}
 	}

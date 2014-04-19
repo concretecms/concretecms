@@ -121,7 +121,9 @@ $set = $sets[$i];
 	<header><?=t('Other')?></header>
 	<ul>
 	<? $blocktypes = $types['Other']; 
-	foreach($blocktypes as $bt) { ?>
+	foreach($blocktypes as $bt) { 
+		$btIcon = $ci->getBlockTypeIconURL($bt);
+		?>
 
 	<li data-block-type-sets="<?=$sets?>">
 		<a data-panel-add-block-drag-item="block" class="ccm-panel-add-block-draggable-block-type"  data-cID="<?=$c->getCollectionID()?>" data-block-type-handle="<?=$bt->getBlockTypeHandle()?>" data-dialog-title="<?=t('Add %s', $bt->getBlockTypeName())?>" data-dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" data-dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" data-has-add-template="<?=$bt->hasAddTemplate()?>" data-supports-inline-add="<?=$bt->supportsInlineAdd()?>" data-btID="<?=$bt->getBlockTypeID()?>" href="javascript:void(0)"><p><img src="<?=$btIcon?>" /><span><?=$bt->getBlockTypeName()?></span></p></a>

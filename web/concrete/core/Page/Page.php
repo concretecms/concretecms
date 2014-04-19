@@ -25,6 +25,7 @@ use \Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEn
 use Area;
 use Queue;
 use Log;
+use Environment;
 use \Concrete\Core\Page\Theme\EditableStyle\EditableStyle as PageThemeEditableStyle;
 /**
 *
@@ -151,6 +152,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 		if (isset($this->controller)) {
 			return $this->controller;
 		}
+
+		$env = Environment::get();
 		
 		if ($this->getPageTypeID() > 0) {
 			/*
@@ -163,13 +166,17 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 			*/
 		} else if ($this->isGeneratedCollection()) {
 			$file = $this->getCollectionFilename();
+			$r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . $file, $this->getPackageHandle());
+			$prefix = $r->override ? true : $this->getPackageHandle();
+
 			if (strpos($file, '/' . FILENAME_COLLECTION_VIEW) !== false) {
 				$path = substr($file, 0, strpos($file, '/'. FILENAME_COLLECTION_VIEW));
 			} else {
 				$path = substr($file, 0, strpos($file, '.php'));
 			}
-			$path = trim(str_replace(' ', '\\', ucwords(str_replace(array('/', '_'), ' ', $path))), '\\');
-			$class = '\\Concrete\\Controller\\SinglePage\\' . $path;
+
+			$class = core_class('Controller\\SinglePage\\' . str_replace('/','\\', camelcase($path, true)), $prefix);
+
 		}
 
 		if (isset($class) && class_exists($class)) {
