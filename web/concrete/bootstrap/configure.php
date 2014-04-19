@@ -168,6 +168,7 @@ define('DIRNAME_SYSTEM_ANTISPAM', 'antispam');
 define('DIRNAME_SYSTEM', 'system');
 define('DIRNAME_PANELS', 'panels');
 define('DIRNAME_CONTROLLERS', 'controllers');
+define('DIRNAME_PAGE_CONTROLLERS', 'single_page');
 define('DIRNAME_GATHERING', 'gathering');
 define('DIRNAME_GATHERING_DATA_SOURCES', 'data_sources');
 define('DIRNAME_GATHERING_ITEM_TEMPLATES', 'templates');

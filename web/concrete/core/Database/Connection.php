@@ -80,6 +80,18 @@ class Connection extends \Doctrine\DBAL\Connection {
      * @deprecated
      * alias to old ADODB method
      */
+    public function ErrorMsg() {
+        if ($this->errorCode() > 0) {
+            return $this->errorCode();
+        }
+        
+        return false;
+    }
+
+    /** 
+     * @deprecated
+     * alias to old ADODB method
+     */
     public function GetAll($q, $arguments = array()) {
         if (!is_array($arguments)) {
             $arguments = array($arguments); // adodb backward compatibility

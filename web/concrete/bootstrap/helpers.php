@@ -120,11 +120,29 @@ function core_class($class, $prefix = false) {
  * @param  [string] $string
  * @return [string]
  */
-function camelcase($string) {
-	// turns "asset_library" into "AssetLibrary"
-	$r1 = ucwords(str_replace(array('_', '-', '/'), ' ', $string));
-	$r2 = str_replace(' ', '', $r1);
-	return $r2;		
+function camelcase($string, $leaveSlashes = false) {
+	$return = '';
+	$string = trim($string, '_-/\\');
+	if (strpos($string, '/')) {
+		$segments = explode('/', $string);
+		foreach($segments as $segment) {
+			$subsegments = preg_split("/[_-]/", $segment);
+			foreach($subsegments as $subsegment) {
+				$return .= ucfirst($subsegment);
+			}
+			if ($leaveSlashes) {
+				$return .= '/';
+			}
+		}
+		$return = trim($return, '/');
+	} else {
+		$segments = preg_split("/[_-]/", $string);
+		foreach($segments as $segment) {
+			$return .= ucfirst($segment);
+		}
+	}
+
+	return $return;
 }
 
 

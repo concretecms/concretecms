@@ -10,6 +10,7 @@ abstract class AbstractController {
 	protected $helpers = array();
 	protected $sets = array();
 	protected $action;
+	protected $request;
 	protected $parameters;
 
 	public function requireAsset() {
@@ -60,9 +61,18 @@ abstract class AbstractController {
 		if ($key == null) {
 			return $_GET;
 		}
+
 		if (isset($this->sets[$key])) {
 			return $this->sets[$key];
 		}
+
+		if (!isset($this->request)) {
+			$this->request = Request::createFromGlobals();
+		}
+
+		$val = $this->request->get($key, $defaultValue);
+		return $val;
+
 	}
 
 	public function getTask() {
