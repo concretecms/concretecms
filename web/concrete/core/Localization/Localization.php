@@ -3,19 +3,16 @@ namespace Concrete\Core\Localization;
 
 use Loader;
 use Cache;
+use Events;
 
 class Localization {
 	private static $loc 
 	= null;
 
-	public function init() {
-		$loc = Localization::getInstance();
-		$loc->getTranslate();
-	}
-
 	public static function getInstance() {
 		if (null === self::$loc) {
 			self::$loc = new self;
+
 		}
 		return self::$loc;
 	}
@@ -71,7 +68,7 @@ class Localization {
 		}
 
 		$options = array(
-			'adapter' => 'gettext',
+			'adapter' => 'Zend_Translate_Adapter_Gettext',
 			'content' => $languageDir,
 			'locale'  => $locale,
 			'disableNotices'  => true

@@ -35,6 +35,7 @@ class Dashboard extends BackendInterfacePageController {
 			$bt->controller->orderBy = 'display_asc';
 			$bt->controller->displaySubPages = 'relevant'; 
 			$bt->controller->displaySubPageLevels = 'all';
+			$bt->controller->set('translate', true);
 			$this->set('nav', $bt);
 		} else {
 			$dh = Loader::helper('concrete/dashboard');

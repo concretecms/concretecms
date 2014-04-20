@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Localization\Service;
+use Events;
 class StatesProvincesList {
 
 	protected $stateProvinces = array(

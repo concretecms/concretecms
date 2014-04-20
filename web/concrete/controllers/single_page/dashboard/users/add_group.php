@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Controller\SinglePage\Dashboard\Users\Add;
+namespace Concrete\Controller\SinglePage\Dashboard\Users;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use \Concrete\Core\Tree\Type\Group as GroupTree;
 use \Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
@@ -7,7 +7,7 @@ use Loader;
 use \Concrete\Core\Tree\Node\Node as TreeNode;
 use Group as ConcreteGroup;
 
-class Group extends DashboardPageController {
+class AddGroup extends DashboardPageController {
 
 	public function checkExpirationOptions($g) {
 		if ($_POST['gUserExpirationIsEnabled']) {

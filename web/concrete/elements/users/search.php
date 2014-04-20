@@ -74,7 +74,7 @@ $searchRequest = $controller->getSearchRequest();
 					$gp = new Permissions($g);
 					if ($gp->canSearchUsersInGroup($g)) {
 						?>
-					<option value="<?=$gRow['gID']?>"  <? if (is_array($_REQUEST['gID']) && in_array($gRow['gID'], $_REQUEST['gID'])) { ?> selected="selected" <? } ?>><?=$g->getGroupDisplayName()?></option>
+					<option value="<?=$g->getGroupID()?>"  <? if (is_array($searchRequest['gID']) && in_array($g->getGroupID(), $searchRequest['gID'])) { ?> selected="selected" <? } ?>><?=$g->getGroupDisplayName()?></option>
 				<? 
 					}
 				} ?>

@@ -1,6 +1,9 @@
 <?
 namespace Concrete\Core\Localization\Service;
 use Request;
+use Zend_Date;
+use Zend_Locale;
+use Cache;
 use Localization;
 class Date {
 

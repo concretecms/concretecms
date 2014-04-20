@@ -69,8 +69,8 @@ class Users extends Controller {
 		}
 		
 		$filterGIDs = array();
-		if (isset($_REQUEST['gID']) && is_array($_REQUEST['gID'])) {
-			foreach($_REQUEST['gID'] as $gID) {
+		if (isset($req['gID']) && is_array($req['gID'])) {
+			foreach($req['gID'] as $gID) {
 				$g = Group::getByID($gID);
 				if (is_object($g)) {
 					$gp = new Permissions($g);

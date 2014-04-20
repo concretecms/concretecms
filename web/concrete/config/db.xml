@@ -4109,9 +4109,6 @@
     <field name="queue_id" type="I" size="10">
       <NOTNULL/>
       <UNSIGNED/>
-		<CONSTRAINT platform="mysql">
-		, FOREIGN KEY (`queue_id`) REFERENCES `Queues` (`queue_id`) ON DELETE CASCADE ON UPDATE CASCADE      
-		</CONSTRAINT>
     </field>
     <field name="handle" type="C" size="32"/>
     <field name="body" type="C" size="8192">

@@ -1,141 +1,72 @@
-<?
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<? $ih = Loader::helper('concrete/ui'); ?>
 
-$th = Loader::helper('text');
-
-
-$attribs = UserAttributeKey::getRegistrationList();
-$assignment = PermissionKey::getByHandle('edit_user_properties')->getMyAssignment();
-$gl = new GroupList();
-$gl->setItemsPerPage(10000);
-$gArray = $gl->getPage();
-$loc = Localization::getInstance();
-$locales = Localization::getAvailableInterfaceLanguageDescriptions($loc->activeLocale());
-
-?>
-
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Add User'), false, false, false);?>
-
-<form method="post" enctype="multipart/form-data" id="ccm-user-form" action="<?=$view->url('/dashboard/users/add')?>">
-	<?=$valt->output('create_account')?>
-
-	<input type="hidden" name="_disableLogin" value="1">
-
-	<div class="ccm-pane-body">
-
-    	<table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th colspan="2"><?=t('User Information')?></th>
-                </tr>
-            </thead>
-            <tbody>
-            	<tr>
-                    <td><?=t('Username')?> <span class="required">*</span></td>
-                    <td><?=t('Password')?> <span class="required">*</span></td>
-                </tr>
-                <tr>
-					<td><input type="text" name="uName" autocomplete="off" value="<?=$th->entities($_POST['uName'])?>" style="width: 95%"></td>
-					<td><input type="password" autocomplete="off" name="uPassword" value="" style="width: 95%"></td>
-				</tr>
-                <tr>
-                    <td><?=t('Email Address')?> <span class="required">*</span></td>
-                    <td><? if ($assignment->allowEditAvatar()) { ?><?=t('User Avatar')?><? } ?></td>
-                </tr>
-                <tr>
-					<td><input type="text" name="uEmail" autocomplete="off" value="<?=$th->entities($_POST['uEmail'])?>" style="width: 95%"></td>
-					<td><? if ($assignment->allowEditAvatar()) { ?><input type="file" name="uAvatar" style="width: 95%"/><? } ?></td>
-				</tr>
-                
-                
-				<? if (count($locales) > 1) { // "> 1" because en_US is always available ?>
+    <form method="post" class="form-horizontal" action="<?=$view->action('submit')?>">
+		<div class="container">
+		<fieldset>
+    		<legend><?=t('Basic Details')?></legend>
 			
-				<tr>
-					<td colspan="2"><?=t('Language')?></td>
-				</tr>
-				<tr>
-					<td colspan="2">
+			<div class="row">
+				<div class="form-group">
+					<label for="uName" class="control-label col-sm-2"><?=t('Username')?></label>
+					<div class="col-sm-8">
+						<div class="input-group">
+						<?=$form->text('uName', array('autocomplete' => 'off'))?>
+						<span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i></span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="form-group">
+					<label for="uPassword" class="control-label col-sm-2"><?=t('Password')?></label>
+					<div class="col-sm-8">
+						<div class="input-group">
+						<?=$form->password('uPassword')?>
+						<span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i></span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="form-group">
+					<label for="uEmail" class="control-label col-sm-2"><?=t('Email Address')?></label>
+					<div class="col-sm-8">
+						<div class="input-group">
+						<?=$form->email('uEmail')?>
+						<span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i></span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<? if (count($locales)) { // "> 1" because en_US is always available ?>
+		
+			<div class="row">
+				<div class="form-group">
+					<label for="uEmail" class="control-label col-sm-2"><?=t('Language')?></label>
+					<div class="col-sm-8">
 					<? print $form->select('uDefaultLanguage', $locales, Localization::activeLocale()); ?>
-					</td>
-				</tr>
-
-				<? } ?>
-
-			</tbody>
-		</table>
-
-	<? if (count($attribs) > 0) { ?>
-
-        <table class="table table-striped">
-        	<thead>
-	        	<tr>
-            		<th><?=t('Registration Data')?></th>
-	        	</tr>
-			</thead>
-            <tbody>
-
-			<? foreach($attribs as $ak) {
-				if (in_array($ak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) {
-				?>
-                <tr>
-                    <td class="clearfix">
-                    	<label><?=$ak->getAttributeKeyDisplayName()?> <? if ($ak->isAttributeKeyRequiredOnRegister()) { ?><span class="required">*</span><? } ?></label>
-                        <? $ak->render('form', $caValue, false)?>
-                    </td>
-                </tr>
-                <? } ?>
-            <? } // END Foreach ?>
-
-			</tbody>
-        </table>
-
-	<? } ?>
-
-		<table class="inputs-list table-striped table">
-        	<thead>
-				<tr>
-					<th><?=t('Groups')?></th>
-				</tr>
-        	</thead>
-            <tbody>
-				<tr>
-					<td>
-					<? 
-					foreach ($gArray as $g) {
-						$gp = new Permissions($g);
-						if ($gp->canAssignGroup()) {
-						?>
-						<label>
-							<input type="checkbox" name="gID[]" value="<?=$g->getGroupID()?>" <?
-                            if (is_array($_POST['gID'])) {
-                                if (in_array($g->getGroupID(), $_POST['gID'])) {
-                                    echo(' checked ');
-                                }
-                            }
-                        ?> />
-							<span><?=$g->getGroupDisplayName()?></span>
-						</label>
-                    <? }
+					</div>
+				</div>
+			</div>
 
 
-                } ?>
+			<? } ?>
 
-					<div id="ccm-additional-groups"></div>
 
-					</td>
-				</tr>
-			</tbody>
-		</table>
 
+    	</fieldset>
 	</div>
 
-    <div class="ccm-pane-footer">
-        <div class="ccm-buttons">
-            <input type="hidden" name="create" value="1" />
-            <? print $ih->submit(t('Add'), 'ccm-user-form', 'right', 'primary'); ?>
-        </div>
-    </div>
+	<?=$token->output('submit');?>
 
-</form>
-
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
+	<div class="ccm-dashboard-form-actions-wrapper">
+	<div class="ccm-dashboard-form-actions">
+		<a href="<?=View::url('/dashboard/users/search')?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
+		<?=Loader::helper("form")->submit('add', t('Add'), array('class' => 'btn btn-primary pull-right'))?>
+	</div>
+	</div>
+    </form>

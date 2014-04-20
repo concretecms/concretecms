@@ -25,6 +25,7 @@ class DashboardPageController extends PageController {
 		if (!$pageTitle) {
 			$this->set('pageTitle', $this->c->getCollectionName());
 		}
+		$this->set('token', $this->token);
 		$this->set('error', $this->error);
 	}
 

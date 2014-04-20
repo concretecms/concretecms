@@ -100,7 +100,7 @@ class Controller extends AttributeTypeController  {
 	
 	public function saveValue($data) {
 		$db = Loader::db();
-		if ($data instanceof AddressAttributeTypeValue) {
+		if ($data instanceof Value) {
 			$data = (array) $data;
 		}
 		extract($data);
@@ -117,7 +117,7 @@ class Controller extends AttributeTypeController  {
 	}
 
 	public function getValue() {
-		$val = AddressAttributeTypeValue::getByID($this->getAttributeValueID());		
+		$val = Value::getByID($this->getAttributeValueID());		
 		return $val;
 	}
 	
@@ -290,19 +290,19 @@ class Controller extends AttributeTypeController  {
 			$this->set('country', $value->getCountry());
 			$this->set('postal_code', $value->getPostalCode());
 		}
-		$this->addHeaderItem(Loader::helper('html')->javascript($this->getView()->action('load_provinces_js')));
-		$this->addHeaderItem(Loader::helper('html')->javascript($this->attributeType->getAttributeTypeFileURL('country_state.js')));
+		$this->addFooterItem(Loader::helper('html')->javascript($this->getView()->action('load_provinces_js')));
+		$this->addFooterItem(Loader::helper('html')->javascript($this->attributeType->getAttributeTypeFileURL('country_state.js')));
 		$this->set('key', $this->attributeKey);
 	}
 
 }
 
-class Concrete5_Model_AddressAttributeTypeValue extends Object {
+class Value extends Object {
 	
 	public static function getByID($avID) {
 		$db = Loader::db();
 		$value = $db->GetRow("select avID, address1, address2, city, state_province, postal_code, country from atAddress where avID = ?", array($avID));
-		$aa = new AddressAttributeTypeValue();
+		$aa = new Value();
 		$aa->setPropertiesFromArray($value);
 		if ($value['avID']) {
 			return $aa;
