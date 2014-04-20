@@ -2,17 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
 $ih = Loader::helper('concrete/ui');
-if (isset($group)) { 
-
-	if ($_POST['update']) {
-		$gName = $_POST['gName'];
-		$gDescription = $_POST['gDescription'];
-	} else {
-		$gName = $group->getGroupName();
-		$gDescription = $group->getGroupDescription();
-	}
-
-	?>
+if (isset($group)) { ?>
 
 <form method="post"  class="form-horizontal" id="update-group-form" action="<?=$view->url('/dashboard/users/groups/', 'update_group')?>">
 <?=$valt->output('add_or_update_group')?>

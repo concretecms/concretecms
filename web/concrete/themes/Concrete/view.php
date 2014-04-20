@@ -41,6 +41,7 @@ if (is_object($c)) {
 <?php Loader::element('system_errors', array('format' => 'block', 'error' => $error, 'success' => $success, 'message' => $message)); ?>
 </div>
 </div>
+
 <?php print $innerContent ?>
 
 </div>

@@ -8,8 +8,8 @@
 			
 			<div class="row">
 				<div class="form-group">
-					<label for="uName" class="control-label col-sm-2"><?=t('Username')?></label>
-					<div class="col-sm-8">
+					<label for="uName" class="control-label col-sm-3"><?=t('Username')?></label>
+					<div class="col-sm-7">
 						<div class="input-group">
 						<?=$form->text('uName', array('autocomplete' => 'off'))?>
 						<span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i></span>
@@ -20,8 +20,8 @@
 
 			<div class="row">
 				<div class="form-group">
-					<label for="uPassword" class="control-label col-sm-2"><?=t('Password')?></label>
-					<div class="col-sm-8">
+					<label for="uPassword" class="control-label col-sm-3"><?=t('Password')?></label>
+					<div class="col-sm-7">
 						<div class="input-group">
 						<?=$form->password('uPassword')?>
 						<span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i></span>
@@ -32,8 +32,8 @@
 
 			<div class="row">
 				<div class="form-group">
-					<label for="uEmail" class="control-label col-sm-2"><?=t('Email Address')?></label>
-					<div class="col-sm-8">
+					<label for="uEmail" class="control-label col-sm-3"><?=t('Email Address')?></label>
+					<div class="col-sm-7">
 						<div class="input-group">
 						<?=$form->email('uEmail')?>
 						<span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i></span>
@@ -46,8 +46,8 @@
 		
 			<div class="row">
 				<div class="form-group">
-					<label for="uEmail" class="control-label col-sm-2"><?=t('Language')?></label>
-					<div class="col-sm-8">
+					<label for="uEmail" class="control-label col-sm-3"><?=t('Language')?></label>
+					<div class="col-sm-7">
 					<? print $form->select('uDefaultLanguage', $locales, Localization::activeLocale()); ?>
 					</div>
 				</div>
@@ -55,10 +55,54 @@
 
 
 			<? } ?>
-
-
-
     	</fieldset>
+
+	   	<? if (count($attribs) > 0) { ?>
+
+	   		<fieldset>
+	   			<legend><?=t('Registration Data')?></legend>
+
+				<? foreach($attribs as $ak) {
+					if (in_array($ak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) {
+					?>
+					<div class="row">
+	                	<div class="form-group">
+	                    	<label class="control-label col-sm-3"><?=$ak->getAttributeKeyDisplayName()?></label>
+	                    	<div class="col-sm-7">
+		                        <? $ak->render('form', $caValue, false)?>
+		                    </div>
+		                </div>
+		            </div>
+	                <? } ?>
+	            <? } ?>
+
+
+	   		</fieldset>
+
+		<? } ?>
+
+
+		<fieldset>
+			<legend><?=t('Groups')?></legend>
+			<? foreach ($gArray as $g) {
+				$gp = new Permissions($g);
+				if ($gp->canAssignGroup()) {
+				?>
+				<div class="row">
+				<div class="col-sm-3"></div>
+				<div class="col-sm-7">
+					<div class="checkbox">
+					<label>
+						<input type="checkbox" name="gID[]" value="<?=$g->getGroupID()?>" <? if (is_array($_POST['gID']) && in_array($g->getGroupID(), $_POST['gID'])) { ?> checked <? } ?>>
+						<?=$g->getGroupDisplayName()?>
+					</label>
+					</div>
+				</div>
+				</div>
+	        <? }
+
+	       } ?>
+        </fieldset>
 	</div>
 
 	<?=$token->output('submit');?>
