@@ -72,7 +72,7 @@ class Install extends Controller {
 	 */
 	public function on_start() {
 		if (isset($_POST['locale']) && $_POST['locale']) {
-			define("ACTIVE_LOCALE", $_POST['locale']);
+			$loc = Localization::changeLocale($_POST['locale']);
 			$this->set('locale', $_POST['locale']);
 		}
 		Cache::disableCache();
@@ -92,8 +92,8 @@ class Install extends Controller {
 		if (file_exists(DIR_CONFIG_SITE . '/site_install_user.php')) {
 			require(DIR_CONFIG_SITE . '/site_install.php');
 			@include(DIR_CONFIG_SITE . '/site_install_user.php');
-			if (defined('ACTIVE_LOCALE') && Localization::activeLocale() !== ACTIVE_LOCALE) {
-				Localization::changeLocale(ACTIVE_LOCALE);
+			if (defined('SITE_INSTALL_LOCALE') && Localization::activeLocale() !== SITE_INSTALL_LOCALE) {
+				Localization::changeLocale(SITE_INSTALL_LOCALE);
 			}
 			$e = Loader::helper('validation/error');
 			$e = $this->validateDatabase($e);
@@ -325,8 +325,8 @@ class Install extends Controller {
 					$configuration .= "define('INSTALL_USER_PASSWORD_HASH', '" . $hasher->HashPassword($_POST['uPassword']) . "');\n";
 					$configuration .= "define('INSTALL_STARTING_POINT', '" . $this->post('SAMPLE_CONTENT') . "');\n";
 					$configuration .= "define('SITE', '" . addslashes($_POST['SITE']) . "');\n";
-					if (defined('ACTIVE_LOCALE') && ACTIVE_LOCALE != '' && ACTIVE_LOCALE != 'en_US') {
-						$configuration .= "define('ACTIVE_LOCALE', '" . ACTIVE_LOCALE . "');\n";
+					if (Localization::activeLocale() != '' && Localization::activeLocale() != 'en_US') {
+						$configuration .= "define('SITE_INSTALL_LOCALE', '" . Localization::activeLocale() . "');\n";
 					}
 					$res = fwrite($this->fpu, $configuration);
 					fclose($this->fpu);

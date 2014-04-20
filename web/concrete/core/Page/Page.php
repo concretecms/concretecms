@@ -178,7 +178,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 			$class = core_class('Controller\\SinglePage\\' . str_replace('/','\\', camelcase($path, true)), $prefix);
 
 		}
-
+		
 		if (isset($class) && class_exists($class)) {
 			return Core::make($class, array($this));
 		} else {

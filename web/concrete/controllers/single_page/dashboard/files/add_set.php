@@ -1,10 +1,10 @@
 <?
-namespace Concrete\Controller\SinglePage\Dashboard\Files\Add;
+namespace Concrete\Controller\SinglePage\Dashboard\Files;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use User;
 use FileSet;
 use Loader;
-class Set extends DashboardPageController {
+class AddSet extends DashboardPageController {
 
 	public $helpers = array('form','validation/token','concrete/ui'); 
 

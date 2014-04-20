@@ -37,30 +37,38 @@ class ItemList {
 		return $this->queryStringSortDirectionVariable;
 	}
 	
+	protected function getStickySearchNameSpace() {
+		return get_class($this) . $namespace . 'SearchFields';
+	}
+
 	public function resetSearchRequest($namespace = '') {
-		$session = Session::all();
-		$session[get_class($this) . $namespace . 'SearchFields'] = array();
+		Session::set($this->getStickySearchNameSpace(), array());
 	}
 	
 	public function addToSearchRequest($key, $value) {
-		$session = Session::all();
-		$session[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'][$key] = $value;
+		$data = Session::get($this->getStickySearchNameSpace());
+		if (!is_array($data)) {
+			$data = array();
+		}
+		$data[$key] = $value;
+		Session::set($this->getStickySearchNameSpace(), $data);
 	}
 	
 	public function getSearchRequest() {
-		$session = Session::all();
 		if ($this->enableStickySearchRequest) {
-			if (!is_array($session[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'])) {
-				$session[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'] = array();
+			$data = Session::get($this->getStickySearchNameSpace());
+			if (!is_array($data)) {
+				$data = array();
 			}
 			
 			// i don't believe we need this approach particularly, and it's a pain in the ass
 			//$validSearchKeys = array('fKeywords', 'numResults', 'fsIDNone', 'fsID', 'ccm_order_dir', 'ccm_order_by', 'size_from', 'size_to', 'type', 'extension', 'date_from', 'date_to', 'searchField', 'selectedSearchField', 'akID');
 			
 			foreach($_REQUEST as $key => $value) {
-				$session[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'][$key] = $value;
+				$data[$key] = $value;
 			}		
-			return $session[get_class($this) . $this->stickySearchRequestNameSpace . 'SearchFields'];
+			Session::set($this->getStickySearchNameSpace(), $data);
+			return $data;
 		} else {
 			return $_REQUEST;
 		}

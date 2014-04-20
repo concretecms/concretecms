@@ -22,7 +22,7 @@ foreach($parents as $pc) {
 				$active = ($cc->getCollectionID() == $c->getCollectionID() || (in_array($cc->getCollectionID(), $pageIDs)));
 				$cp = new Permissions($cc);
 				if ($cp->canViewPage()) { ?>
-					<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($cc)?>" <? if ($active) { ?>class="ccm-panel-dashboard-nav-active"<? } ?>><?=$cc->getCollectionName()?></a></li>
+					<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($cc)?>" <? if ($active) { ?>class="ccm-panel-dashboard-nav-active"<? } ?>><?=t($cc->getCollectionName())?></a></li>
 				<? } ?>
 			<? } ?>
 			</menu>

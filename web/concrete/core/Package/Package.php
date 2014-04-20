@@ -224,7 +224,7 @@ class Package extends Object {
 		if (is_object($translate)) {
 			$path = $this->getPackagePath() . '/' . DIRNAME_LANGUAGES;
 			if(!isset($locale) || !strlen($locale)) {
-				$locale = ACTIVE_LOCALE;
+				$locale = Localization::activeLocale();
 			}
 			
 			if(!isset($key)) {

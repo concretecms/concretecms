@@ -170,8 +170,10 @@ class StartingPointPackage extends Package {
 
 	protected function indexAdditionalDatabaseFields() {
 		$db = Loader::db();
+
 		$db->Execute('alter table PagePaths add index (`cPath` (255))');
 		$db->Execute('alter table Groups add index (`gPath` (255))');
+		$db->Execute('alter table QueueMessages add FOREIGN KEY (`queue_id`) REFERENCES `Queues` (`queue_id`) ON DELETE CASCADE ON UPDATE CASCADE');
 	}
 
 	public function add_users() {
@@ -259,8 +261,8 @@ class StartingPointPackage extends Package {
 
 		$fs->assignPermissions($g1, array('view_file_set_file'));
 		$fs->assignPermissions($g3, array('view_file_set_file', 'search_file_set', 'edit_file_set_file_properties', 'edit_file_set_file_contents', 'copy_file_set_files', 'edit_file_set_permissions', 'delete_file_set_files', 'delete_file_set', 'add_file'));
-		if (defined('ACTIVE_LOCALE') && ACTIVE_LOCALE != '' && ACTIVE_LOCALE != 'en_US') {
-			Config::save('SITE_LOCALE', ACTIVE_LOCALE);
+		if (defined('SITE_INSTALL_LOCALE') && SITE_INSTALL_LOCALE != '' && SITE_INSTALL_LOCALE != 'en_US') {
+			Config::save('SITE_LOCALE', SITE_INSTALL_LOCALE);
 		}
 		Config::save('SITE', SITE);
 		Config::save('SITE_APP_VERSION', APP_VERSION);
