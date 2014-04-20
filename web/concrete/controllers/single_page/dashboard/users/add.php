@@ -8,20 +8,30 @@ use Permissions;
 use UserAttributeKey;
 use Group;
 use Localization;
+use GroupList;
 
 class Add extends DashboardPageController {
 
 	public function view() {
+
+		$loc = Localization::getInstance();
+		$locales = Localization::getAvailableInterfaceLanguageDescriptions($loc->activeLocale());
+		$attribs = UserAttributeKey::getRegistrationList();
+		$assignment = PermissionKey::getByHandle('edit_user_properties')->getMyAssignment();
+		$gl = new GroupList();
+		$gl->setItemsPerPage(10000);
+		$gArray = $gl->getPage();
+
 		$this->set('form',Loader::helper('form'));
 		$this->set('valt',Loader::helper('validation/token'));
 		$this->set('valc',Loader::helper('concrete/validation'));
 		$this->set('ih',Loader::helper('concrete/ui'));
 		$this->set('av',Loader::helper('concrete/avatar'));
 		$this->set('dtt',Loader::helper('form/date_time'));
-
-		$loc = Localization::getInstance();
-		$locales = Localization::getAvailableInterfaceLanguageDescriptions($loc->activeLocale());
+		$this->set('gArray', $gArray);
+		$this->set('assignment', $assignment);
 		$this->set('locales', $locales);
+		$this->set('attribs', $attribs);
 	}
 
 	public function submit(){
@@ -76,7 +86,7 @@ class Add extends DashboardPageController {
 			$this->error->add(t('A password may not contain ", \', >, <, or any spaces.'));
 		}
 	
-		if (!$valt->validate('create_account')) {
+		if (!$valt->validate('submit')) {
 			$this->error->add($valt->getErrorMessage());
 		}
 	

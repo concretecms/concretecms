@@ -399,6 +399,9 @@ class Search extends DashboardPageController {
 				case 'deactivated':
 					$this->set('message', t('User deactivated successfully.'));
 					break;
+				case 'created':
+					$this->set('message', t('User created successfully.'));
+					break;
 				case 'email_validated':
 					$this->set('message', t('Email marked as valid.'));
 					break;
