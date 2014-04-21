@@ -144,7 +144,9 @@ switch(FULL_PAGE_CACHE_LIFETIME) {
 			jQuery.fn.dialog.showLoader();
 			$.getJSON('<?=$controller->action("purge")?>', function(r) { 
 				jQuery.fn.dialog.hideLoader();
-				ConcreteAlert.showResponseNotification(r.message, 'ok', 'success');
+				ConcreteAlert.notify({
+				'message': r.message
+				});
 				ConcretePanelManager.exitPanelMode();
 			});
 		});

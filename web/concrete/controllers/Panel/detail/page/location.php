@@ -73,6 +73,8 @@ class Location extends BackendInterfacePageController {
 			}
 
 			$r = new PageEditResponse();
+			$r->setTitle(t('Page Updated'));
+			$r->setMessage(t('Page location information saved successfully.'));
 			$r->setPage($this->page);
 			$nc = Page::getByID($this->page->getCollectionID(), 'ACTIVE');
 			$r->outputJSON();

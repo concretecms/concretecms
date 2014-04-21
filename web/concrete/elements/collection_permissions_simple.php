@@ -99,7 +99,10 @@ $(function() {
 			if (r != null && r.rel == 'SITEMAP') {
 				$.fn.ccmsitemap('triggerEvent', 'updateRequestComplete', [r.cID, r.name]);
 			}
-			ConcreteAlert.hud(ccmi18n_sitemap.setPagePermissionsMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
+			ConcreteAlert.notify({
+			'message': ccmi18n_sitemap.setPagePermissionsMsg,
+			'title': ccmi18n_sitemap.setPagePermissions
+			});
 		}
 	});
 });

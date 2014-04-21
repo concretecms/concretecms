@@ -2,15 +2,15 @@
 namespace Concrete\Core\Workflow;
 use \Concrete\Core\Foundation\Object;
 use Loader;
-use Workflow as ConcreteWorkflow;
 use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use PermissionKey;
 use UserInfo, User;
 use \Concrete\Core\Workflow\Progress\BasicData as BasicWorkflowProgressData;
 use \Concrete\Core\Workflow\Progress\Action\ApprovalAction as WorkflowProgressApprovalAction;
 use \Concrete\Core\Workflow\Progress\Action\CancelAction as WorkflowProgressCancelAction;
+use \Concrete\Core\Workflow\HistoryEntry\BasicHistoryEntry as BasicWorkflowHistoryEntry;
 
-class BasicWorkflow extends ConcreteWorkflow  {
+class BasicWorkflow extends \Concrete\Core\Workflow\Workflow  {
 	
 	public function updateDetails($post) {
 		$permissions = PermissionKey::getList('basic_workflow');

@@ -162,7 +162,6 @@ $(function() {
 			} else {
 				jQuery.fn.dialog.closeTop();
 			}
-			ConcreteAlert.hud(ccmi18n_sitemap.pageDesignMsg, 2000, 'success', ccmi18n_sitemap.pageDesign);
 		}
 	});
 

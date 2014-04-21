@@ -44,7 +44,9 @@
 
 						node.remove();
 					}
-					ConcreteAlert.hud(ccmi18n_sitemap.deletePageSuccessMsg, 2000);
+					ConcreteAlert.notify({
+					'message': ccmi18n_sitemap.deletePageSuccessMsg,
+					});
 				}
 			);
 			return false;

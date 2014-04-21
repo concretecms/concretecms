@@ -14,7 +14,8 @@
 			'menuActiveParentClass': 'ccm-parent-menu-item-active',
 			'menuLauncherHoverClass': 'ccm-menu-item-hover',
 			'menuLauncherHoverParentClass': 'ccm-parent-menu-item-hover',
-			'enabled': true
+			'enabled': true,
+			'onHide': false
 		}, options);
 
 		my.$element = $element;
@@ -214,6 +215,11 @@
 			global.$highlighter.css(reset);
 
 			ConcreteMenuManager.activeMenu = false;
+
+			if(my.options.onHide) {
+				my.options.onHide(my);
+			}
+
 		}
 
 	}

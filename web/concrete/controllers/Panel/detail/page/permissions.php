@@ -124,7 +124,8 @@ class Permissions extends BackendInterfacePageController {
 
 			$r = new PageEditResponse();
 			$r->setPage($this->page);
-			$r->setMessage(t('Page permissions saved successfully.'));
+			$r->setTitle(t('Page Updated'));
+			$r->setMessage(t('Page permissions have been saved.'));
 			$r->outputJSON();
 
 		}

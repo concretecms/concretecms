@@ -9,6 +9,7 @@ use \Concrete\Core\Attribute\Value\UserValue as UserAttributeValue;
 use \Concrete\Core\Attribute\Key\Key as AttributeKey;
 use Group;
 use \Hautelook\Phpass\PasswordHash;
+use Session;
 
 class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterface {
 

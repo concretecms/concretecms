@@ -45,6 +45,7 @@ class Seo extends BackendInterfacePageController {
 			}
 			$r = new PageEditResponse($e);
 			$r->setPage($this->page);
+			$r->setTitle(t('Page Updated'));
 			$r->setMessage(t('The SEO information has been saved.'));
 			$r->outputJSON();
 		}

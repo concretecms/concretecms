@@ -170,10 +170,16 @@ if ($_REQUEST['task'] == 'remove') {
 					jQuery.fn.dialog.hideLoader();
 					jQuery.fn.dialog.closeTop();
 					if (!r.deferred) {
-						ConcreteAlert.hud(ccmi18n_sitemap.setPagePermissionsMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
+						ConcreteAlert.notify({
+						'message': ccmi18n_sitemap.setPagePermissionsMsg,
+						'title': ccmi18n_sitemap.setPagePermissions
+						});
 					} else {
 						jQuery.fn.dialog.closeTop();
-						ConcreteAlert.hud(ccmi18n.setPermissionsDeferredMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
+						ConcreteAlert.notify({
+						'message': ccmi18n_sitemap.setPermissionsDeferredMsg,
+						'title': ccmi18n_sitemap.setPagePermissions
+						});
 					}
 
 				}		

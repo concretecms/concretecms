@@ -78,7 +78,12 @@ ccm_userBulkActivate = function() {
 		jQuery.fn.dialog.closeTop();
 		jQuery.fn.dialog.hideLoader();
 		ccm_deactivateSearchResults('<?=$searchInstance?>');
-		ConcreteAlert.hud(ccmi18n.saveUserSettingsMsg, 2000, 'success', ccmi18n.user_delete);
+
+		ConcreteAlert.notify({
+		'message': ccmi18n.saveUserSettingsMsg,
+		'title': ccmi18n.user_delete
+		});
+
 		$("#ccm-<?=$searchInstance?>-advanced-search").ajaxSubmit(function(r) {
 		       ccm_parseAdvancedSearchResponse(r, '<?=$searchInstance?>');
 		});

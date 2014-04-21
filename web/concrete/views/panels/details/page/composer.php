@@ -85,12 +85,7 @@ ConcretePageComposerDetail = {
 			my.$form.concreteAjaxForm({
 				url: '<?=$controller->action('publish')?>',
 				success: function(r) {
-					submitSuccess = true;
-					ConcreteAlert.showResponseNotification(r.message, 'ok', 'success');
-					ConcretePanelManager.exitPanelMode();
-					setTimeout(function() {
-						window.location.href = r.redirectURL;
-					}, 1000);
+					window.location.href = r.redirectURL;
 				},
 				complete: function() {
 					if (!submitSuccess) {

@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Core\Workflow\Request;
-use Workflow;
+use \Concrete\Core\Workflow\Workflow;
 use Loader;
 use Page;
 use \Concrete\Core\Workflow\Description as WorkflowDescription;

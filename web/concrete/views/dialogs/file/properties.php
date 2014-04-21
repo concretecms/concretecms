@@ -283,15 +283,20 @@ if (count($attribs) > 0) { ?>
 <style type="text/css">
 #ccm-file-properties-response #ccm-notification-hud {
 	position: relative;
-	padding: 10px 10px 10px 30px;
 	margin-bottom: 20px;
 	top: 0px;
 	left: 0px;
 }
 
+#ccm-file-properties-response #ccm-notification-hud .ccm-notification-inner {
+	padding: 15px 10px 5px 60px;
+	color: #fff;
+}
+
 #ccm-file-properties-response #ccm-notification-hud i {
-	top: 11px;
+	top: 2px;
 	left: 8px;
+	border: 0px;
 }
 
 tr.success a[data-action=delete-version] {
@@ -323,12 +328,13 @@ var ConcreteFilePropertiesDialog = function() {
 ConcreteFilePropertiesDialog.prototype = {
 
 	handleAjaxResponse: function(r, callback) {
-		if (r.error) {
-			ConcreteAlert.showResponseNotification(r.message, 'exclamation-sign', '#ccm-file-properties-response');
-		} else if (callback) {
+		if (callback) {
 			callback(r);
 		} else {
-			ConcreteAlert.showResponseNotification('<?=t('File recanned successfully.')?>', 'pencil', 'success', '#ccm-file-properties-response');
+			ConcreteAlert.notify({
+			'message': '<?=t("File rescanned successfully.")?>',
+			'appendTo': '#ccm-file-properties-response'
+			});
 		}
 	},
 

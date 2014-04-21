@@ -36,8 +36,6 @@ defined('C5_EXECUTE') or die("Access Denied."); ?>
 	
 	<style type="text/css">
 	div.ccm-block {border: 2px dotted #efefef; clear: both; overflow: hidden; margin: 0px 0px 4px 0px; padding: 2px}
-	div#ccm-stack-status-bar div#ccm-page-status-bar {position: static; height: auto; margin-bottom: 20px;}
-	div#ccm-stack-status-bar div#ccm-page-status-bar div.ccm-page-status-bar-buttons {display: block; margin-top: 10px; position: static;}
 	</style>
 	
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($sv->getVersionName(), false, 'span10 offset1', false)?>

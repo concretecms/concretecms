@@ -26,17 +26,6 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 		}
 	}
 
-
-	if ($c->isEditMode()) { 
-		if ($vo->isNew()) {
-			$publishToggle = '#ccm-exit-edit-mode-comment';
-		} else {
-			$publishToggle = '#ccm-exit-edit-mode-direct';
-		}
-	} else {
-		$publishToggle = '#ccm-toolbar-menu-page-edit';
-	}
-
 	?>
 
 	<div id="ccm-page-controls-wrapper" class="ccm-ui">
@@ -112,33 +101,40 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 	?>
 
 	<? if ($pageInUseBySomeoneElse) { ?>
-		<div id="ccm-page-status-bar">
-			<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button> <span><?= t("%s is currently editing this page.", $c->getCollectionCheckedOutUserName())?></span></div>
-		</div>
+		<?=Loader::helper('concrete/ui')->notify(array(
+			'title' => t('Editing Unavailable.'),
+			'message' => t("%s is currently editing this page.", $c->getCollectionCheckedOutUserName()),
+			'type' => 'info',
+			'icon' => 'exclamation-sign'
+		))?>
 	<? } else { ?>
 
 	<? if ($c->getCollectionPointerID() > 0) { ?>
 
-		<div id="ccm-page-status-bar">
-			<div class="alert alert-info">
-				<button type="button" class="close" data-dismiss="alert">×</button>
-				<span><?= t("This page is an alias of one that actually appears elsewhere.")?></span>
-				<div class="ccm-page-status-bar-buttons">
-					<a href="<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID()?>" class="btn btn-mini"><?=t('View/Edit Original')?></a>
-					<? if ($canApprovePageVersions) { ?>
-						<a href="<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionPointerOriginalID() . "&ctask=remove-alias" . $token?>" class="btn btn-mini btn-danger"><?=t('Remove Alias')?></a>
-					<? } ?>
-				</div>
-			</div>
-		</div>
+		<?
+		$buttons = array();
+		$buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . '" class="btn btn-default btn-xs">' . t('View/Edit Original') . '</a>';
+		if ($canApprovePageVersions) {
+			$buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionPointerOriginalID() . '&ctask=remove-alias' . $token .'" class="btn btn-xs btn-danger">' . t('Remove Alias') . '</a>';
+		}
+
+		print Loader::helper('concrete/ui')->notify(array(
+			'title' => t('Page Alias.'),
+			'message' => t("This page is an alias of one that actually appears elsewhere."),
+			'type' => 'info',
+			'icon' => 'info-sign',
+			'buttons' => $buttons
+		))?>
 
 	<? }
 
-	if ($c->isMasterCollection()) { ?>
-
-		<div id="ccm-page-status-bar">
-			<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button> <span><?= t('Page Defaults for %s Page Type. All edits take effect immediately.', $c->getPageTypeName()) ?></span></div>
-		</div>
+	if ($c->isMasterCollection()) {
+		print Loader::helper('concrete/ui')->notify(array(
+			'title' => t('Page Type Template.'),
+			'message' => t('Page Defaults for %s Page Type. All edits take effect immediately.', $c->getPageTypeName()),
+			'type' => 'info',
+			'icon' => 'info-sign',
+		))?>
 
 	<? }
 	
@@ -146,20 +142,19 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 	
 	if ($canViewToolbar) { ?>
 		<? if (is_array($workflowList) && count($workflowList) > 0) { ?>
-			<div id="ccm-page-status-bar">
+			<div id="ccm-notification-page-alert" class="ccm-notification ccm-notification-info">
+			<div class="ccm-notification-inner-wrapper">
 			<? foreach($workflowList as $i => $wl) { ?>
 				<? $wr = $wl->getWorkflowRequestObject(); 
-				$wrk = $wr->getWorkflowRequestPermissionKeyObject(); 
-				if ($wrk->getPermissionKeyHandle() == 'approve_page_versions') {
-					$hasPendingPageApproval = true;
-				}
-				?>
-				<? $wf = $wl->getWorkflowObject(); ?>
-				<form method="post" action="<?=$wl->getWorkflowProgressFormAction()?>" id="ccm-status-bar-form-<?=$i?>" class="ccm-status-bar-ajax-form">
-					<div class="alert alert-<?=$wr->getWorkflowRequestStyleClass()?>"><button type="button" class="close" data-dismiss="alert">×</button> <span><?=$wf->getWorkflowProgressCurrentDescription($wl)?></span>
+				$wf = $wl->getWorkflowObject(); ?>
+				
+				<form method="post" action="<?=$wl->getWorkflowProgressFormAction()?>" id="ccm-notification-page-alert-form-<?=$i?>">
+					<i class="glyphicon glyphicon-info-sign"></i>
+					<div class="ccm-notification-inner">
+						<p><?=$wf->getWorkflowProgressCurrentDescription($wl)?></p>
 					<? $actions = $wl->getWorkflowProgressActions(); ?>
 					<? if (count($actions) > 0) { ?>
-						<div class="ccm-page-status-bar-buttons">
+						<div class="ccm-notification-inner-buttons">
 						<? foreach($actions as $act) { ?>
 							<? if ($act->getWorkflowProgressActionURL() != '') { ?>
 								<a href="<?=$act->getWorkflowProgressActionURL()?>" 
@@ -185,38 +180,43 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 					</div>				
 				</form>
 				<? } ?>
+				</div>
+				<div class="ccm-notification-actions"><a href="#" data-dismiss-alert="page-alert"><?=t('Hide')?></a></div></div>
 			</div>
 		<? } ?>
 	<? }
 
-	if (!$c->getCollectionPointerID() && !$hasPendingPageApproval) {
+	if (!$c->getCollectionPointerID() && (!is_array($workflowList) || count($workflowList) == 0)) {
 		if (is_object($vo)) {
 			if (!$vo->isApproved() && !$c->isEditMode()) { ?>
 
-			<div id="ccm-page-status-bar">
-				<div class="alert alert-info">
-					<button type="button" class="close" data-dismiss="alert">×</button>
-					<span><?= t("This page is pending approval.")?></span>
-					<? if ($canApprovePageVersions && !$c->isCheckedOut()) { ?>
-					<div class="ccm-page-status-bar-buttons">
-						<?
-						$pk = \Concrete\Core\Permission\Key\PageKey::getByHandle('approve_page_versions');
-						$pk->setPermissionObject($c);
-						$pa = $pk->getPermissionAccessObject();
-						if (is_object($pa)) {
-							if (count($pa->getWorkflows()) > 0) {
-								$appLabel = t('Submit for Approval');
-							}
-						}
-						if (!$appLabel) {
-							$appLabel = t('Approve Version');
-						}
-						?>
-						<a href="<?=DIR_REL . "/" . DISPATCHER_FILENAME . "?cID=" . $c->getCollectionID() . "&ctask=approve-recent" . $token?>" class="btn btn-default btn-xs"><?=$appLabel?> <i class="glyphicon glyphicon-thumbs-up"></i></a>
-					</div>
-					<? } ?>
-				</div>
-			</div>
+			<?
+			$buttons = array();
+			if ($canApprovePageVersions && !$c->isCheckedOut()) {
+				$pk = \Concrete\Core\Permission\Key\PageKey::getByHandle('approve_page_versions');
+				$pk->setPermissionObject($c);
+				$pa = $pk->getPermissionAccessObject();
+				if (is_object($pa)) {
+					if (count($pa->getWorkflows()) > 0) {
+						$appLabel = t('Submit for Approval');
+					}
+				}
+				if (!$appLabel) {
+					$appLabel = t('Approve Version');
+				}
+
+				$buttons[] = '<a href="' . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID() . '&ctask=approve-recent' . $token . '" class="btn btn-primary btn-xs">' . $appLabel . '</a>';
+
+			}
+
+			print Loader::helper('concrete/ui')->notify(array(
+				'title' => t('Page is Pending Approval.'),
+				'message' => t("This page is newer than what appears to visitors on your live site."),
+				'type' => 'info',
+				'icon' => 'cog',
+				'buttons' => $buttons
+			))?>
+
 			<? }
 		}
 	} ?>	

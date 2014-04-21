@@ -60,7 +60,11 @@ if ($_REQUEST['approveImmediately'] == 1) {
 						} else {
 							ConcreteToolbar.disableDirectExit();
 						}
-						ConcreteAlert.hud(ccmi18n.savePropertiesMsg, 2000, 'success', ccmi18n.properties);
+						ConcreteAlert.notify({
+						'message': ccmi18n.savePropertiesMsg,
+						'title': ccmi18n.properties
+						});
+
 					} catch(e) {
 						alert(r);
 					}

@@ -21,6 +21,7 @@ class Caching extends BackendInterfacePageController {
 		$cache->purge($this->page);
 		$r = new PageEditResponse();
 		$r->setPage($this->page);
+		$r->setTitle(t('Page Updated'));
 		$r->setMessage(t('This page has been purged from the full page cache.'));
 		$r->outputJSON();
 	}
@@ -34,7 +35,8 @@ class Caching extends BackendInterfacePageController {
 			$this->page->update($data);
 			$r = new PageEditResponse();
 			$r->setPage($this->page);
-			$r->setMessage(t('Cache settings saved.'));
+			$r->setTitle(t('Page Updated'));
+			$r->setMessage(t('Full page caching settings saved.'));
 			$r->outputJSON();
 		}
 	}

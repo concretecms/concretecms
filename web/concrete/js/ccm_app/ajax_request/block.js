@@ -58,7 +58,10 @@
 						// we have to destroy the old menu and create it anew
 						area.bindMenu();
 					}
-					ConcreteAlert.hud(ccmi18n.addBlockMsg, 2000, 'ok', ccmi18n.addBlock);
+					ConcreteAlert.notify({
+					'message': ccmi18n.addBlockMsg,
+					'title': ccmi18n.addBlock
+					});
 					jQuery.fn.dialog.closeAll();
 
 					if (my.options.btSupportsInlineAdd) {
@@ -72,7 +75,10 @@
 					// remove old block from area
 					var block = area.getBlockByID(my.options.bID);
 					var newBlock = block.replace(resp.bID, r);
-		            ConcreteAlert.hud(ccmi18n.updateBlockMsg, 2000, 'ok', ccmi18n.updateBlock);
+					ConcreteAlert.notify({
+					'message': ccmi18n.updateBlockMsg,
+					'title': ccmi18n.updateBlock
+					});					
 	
 					if (my.options.btSupportsInlineEdit) {
 						editor.destroyInlineEditModeToolbars();

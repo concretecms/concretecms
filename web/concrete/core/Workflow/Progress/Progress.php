@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Core\Workflow\Progress;
 use \Concrete\Core\Foundation\Object;
-use Workflow;
+use \Concrete\Core\Workflow\Workflow;
 use \Concrete\Core\Workflow\Request\Request as WorkflowRequest;
 use \Concrete\Core\Workflow\EmptyWorkflow;
 use \Concrete\Core\Workflow\Progress\Category as WorkflowProgressCategory;
@@ -159,8 +159,8 @@ abstract class Progress extends Object {
 			$wpr = call_user_func_array(array($wf, $task), array($this, $args));
 			$this->updateOnAction($wf);
 		}
-		if (!($wpr instanceof WorkflowProgressResponse)) {
-			$wpr = new WorkflowProgressResponse();
+		if (!($wpr instanceof Response)) {
+			$wpr = new Response();
 		}
 		return $wpr;
 	}
