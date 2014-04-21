@@ -39,12 +39,12 @@
 		},
 
 		error: function(r, my) {
-			ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+			ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
 		},
 
 		validateResponse: function(r) {
 			if (r.error) {
-				ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.errors.join("<br>") + '</div>');
+				ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.errors.join("<br>") + '</div>');
 				return false;
 			}
 			return true;

@@ -50,7 +50,7 @@
 	    		dataType: 'json',
 	    		formData: {'ccm_token': CCM_SECURITY_TOKEN},
 				error: function(r) {
-					ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+					ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
 				},
 				progress: function(e, data) {
 				    var progress = parseInt(data.loaded / data.total * 100, 10);

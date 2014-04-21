@@ -115,7 +115,8 @@ class Attributes extends BackendInterfacePageController {
 
 			$r = new PageEditResponse();
 			$r->setPage($c);
-			$r->setMessage(t('Page attributes saved.'));
+			$r->setTitle(t('Page Updated'));
+			$r->setMessage(t('Page Attributes have been saved.'));
 			$r->outputJSON();
 		}
 	}

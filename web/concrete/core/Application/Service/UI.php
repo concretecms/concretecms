@@ -253,4 +253,38 @@ class UI {
 		$response = $ve->render($o);
 		print $response;
 	}
+
+	public function notify($arguments) {
+		$defaults = array(
+			'type' => 'success',
+			'icon' => 'ok',
+			'title' => false,
+			'message' => false,
+			'buttons' => array()
+		);
+
+		// overwrite all the defaults with the arguments
+		$arguments = array_merge($defaults, $arguments);
+
+        if ($arguments['title']) {
+            $messageText = '<h3>' . $arguments['title'] . '</h3>' . $arguments['message'];
+        } else {
+            $messageText = '<h3>' . $arguments['message'] . '</h3>';
+        }
+
+        if (count($arguments['buttons']) > 0) { 
+        	$messageText .= '<div class="ccm-notification-inner-buttons">';
+        	foreach($arguments['buttons'] as $button) { 
+        		$messageText .= $button;
+        	}
+        	$messageText .= '</div>';
+        }
+
+        $content = '<div id="ccm-notification-page-alert" class="ccm-ui ccm-notification ccm-notification-' . $arguments['type'] . '">';
+        $content .= '<i class="glyphicon glyphicon-' . $arguments['icon'] . '"></i><div class="ccm-notification-inner">' . $messageText . '</div>';
+		$content .= '<div class="ccm-notification-actions"><a href="#" data-dismiss-alert="page-alert">' . t('Hide') . '</a></div></div>';
+        return $content;
+
+	}
+
 }

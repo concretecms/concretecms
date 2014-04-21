@@ -10,6 +10,10 @@ use stdClass;
 use Permissions;
 use PermissionKey;
 use UserAttributeKey;
+use Localization;
+use Zend_Locale;
+use Zend_Locale_Data;
+use Cache;
 use \Concrete\Controller\Search\Users as SearchUsersController;
 use \Concrete\Core\User\EditResponse as UserEditResponse;
 

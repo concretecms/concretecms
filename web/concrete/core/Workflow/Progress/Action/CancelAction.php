@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Core\Workflow\Progress
+namespace Concrete\Core\Workflow\Progress\Action;
 use \Concrete\Core\Foundation\Object;
 class CancelAction extends Action {
 	

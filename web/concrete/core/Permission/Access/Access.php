@@ -9,6 +9,8 @@ use Core;
 use \Concrete\Core\Permission\Cache as PermissionCache;
 use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use \Concrete\Core\Permission\Duration as PermissionDuration;
+use \Concrete\Core\Workflow\Workflow;
+
 class Access extends Object {
 	
 	protected $paID;

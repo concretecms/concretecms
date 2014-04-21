@@ -90,10 +90,15 @@
 							methods.private.triggerEvent(my.options.requestID, 'onSelectNode', [node]); */
 
 						} else {
-							var menu = new ConcretePageMenu($(node.span), {
+							var menu = new ConcretePageMenu($(node.span).find('>a'), {
 								menuOptions: my.options,
 								data: node.data,
-								sitemap: my
+								sitemap: my,
+								onHide: function(menu) {
+									menu.$launcher.each(function() {
+										$(this).unbind('mousemove.concreteMenu');
+									});									
+								}
 							});
 							menu.show(e);
 						}
@@ -173,7 +178,10 @@
 				url: CCM_TOOLS_PATH + '/dashboard/sitemap_update',
 				success: function(r) {
 					node.setLazyNodeStatus(DTNodeStatus_Ok);
-					ConcreteAlert.hud(r.message, 'success');
+					ConcreteAlert.notify({
+					'message': r.message
+					});
+
 				}
 			});
     	},
@@ -344,7 +352,10 @@
 				ccm_parseJSON(resp, function() {
 					jQuery.fn.dialog.closeAll();
 					jQuery.fn.dialog.hideLoader();
-		 			ConcreteAlert.hud(resp.message, 2000);
+					ConcreteAlert.notify({
+					'message': resp.message
+					});
+
 					ConcreteEvent.publish('SitemapDragRequestComplete', {'task': ctask});
 					jQuery.fn.dialog.closeTop();
 					jQuery.fn.dialog.closeTop();

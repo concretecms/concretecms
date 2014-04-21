@@ -53,7 +53,10 @@ $(function() {
 			ccm_mainNavDisableDirectExit();
 			jQuery.fn.dialog.hideLoader();
 			jQuery.fn.dialog.closeTop();
-			ConcreteAlert.hud(ccmi18n.scheduleGuestAccessSuccess, 2000, 'success', ccmi18n.scheduleGuestAccess);
+			ConcreteAlert.notify({
+			'message': ccmi18n.scheduleGuestAccessSuccess,
+			'title': ccmi18n.scheduleGuestAccess
+			});
 		}
 	});
 });

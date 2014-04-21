@@ -55,6 +55,9 @@ $al->registerGroup('jquery/fileupload', array(
 
 // swfobject
 $al->register('javascript', 'swfobject', 'js/swfobject.js');
+$al->registerGroup('swfobject', array(
+	'javascript', 'swfobject'
+));
 
 // redactor
 $al->register('javascript', 'redactor', 'js/redactor.js', array('minify' => false));

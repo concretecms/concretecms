@@ -63,7 +63,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 </script>
 
 <script type="text/javascript">
-var CCMPageVersionList = {
+var ConcretePageVersionList = {
 
 	sendRequest: function(url, data, onComplete) {
 		var _data = [];
@@ -79,11 +79,11 @@ var CCMPageVersionList = {
 				jQuery.fn.dialog.showLoader();
 			},
 			error: function(r) {
-		      ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+		      ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
 		  	},
 			success: function(r) {
 				if (r.error) {
-					ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.errors.join("<br>") + '</div>');
+					ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.errors.join("<br>") + '</div>');
 				} else {
 					if (onComplete) {
 						onComplete(r);
@@ -151,25 +151,31 @@ var CCMPageVersionList = {
 			switch($(this).attr('data-version-menu-task')) {
 				case 'delete':
 
-					CCMPageVersionList.sendRequest('<?=$controller->action("delete")?>', [{'name': 'cvID[]', 'value': cvID}], function(r) {
-						ConcreteAlert.showResponseNotification(r.message, 'ok', 'success');
-						CCMPageVersionList.handleVersionRemovalResponse(r);
+					ConcretePageVersionList.sendRequest('<?=$controller->action("delete")?>', [{'name': 'cvID[]', 'value': cvID}], function(r) {
+						ConcreteAlert.notify({
+						'message': r.message
+						});
+						ConcretePageVersionList.handleVersionRemovalResponse(r);
 					});
 					break;
 				case 'approve':
-					CCMPageVersionList.sendRequest('<?=$controller->action("approve")?>', [{'name': 'cvID', 'value': cvID}], function(r) {
-						ConcreteAlert.showResponseNotification(r.message, 'ok', 'success');
-						CCMPageVersionList.handleVersionUpdateResponse(r);
+					ConcretePageVersionList.sendRequest('<?=$controller->action("approve")?>', [{'name': 'cvID', 'value': cvID}], function(r) {
+						ConcreteAlert.notify({
+						'message': r.message
+						});
+						ConcretePageVersionList.handleVersionUpdateResponse(r);
 					});
 					break;
 				case 'duplicate':
-					CCMPageVersionList.sendRequest('<?=$controller->action("duplicate")?>', [{'name': 'cvID', 'value': cvID}], function(r) {
-						ConcreteAlert.showResponseNotification(r.message, 'ok', 'success');
-						CCMPageVersionList.handleVersionUpdateResponse(r);
+					ConcretePageVersionList.sendRequest('<?=$controller->action("duplicate")?>', [{'name': 'cvID', 'value': cvID}], function(r) {
+						ConcreteAlert.notify({
+						'message': r.message
+						});
+						ConcretePageVersionList.handleVersionUpdateResponse(r);
 					});
 					break;
 				case 'new-page':
-					CCMPageVersionList.sendRequest('<?=$controller->action("new_page")?>', [{'name': 'cvID', 'value': cvID}], function(r) {
+					ConcretePageVersionList.sendRequest('<?=$controller->action("new_page")?>', [{'name': 'cvID', 'value': cvID}], function(r) {
 						window.location.href = r.redirectURL;
 					});
 					break;
@@ -202,7 +208,7 @@ $('#ccm-panel-page-versions table tfoot').html(
 );
 
 $(function() {
-	CCMPageVersionList.setupMenus();
+	ConcretePageVersionList.setupMenus();
 	$('#ccm-panel-page-versions tbody').on('click', 'tr', function() {
 		var $cb = $(this).find('input[type=checkbox]');
 		if (!$cb.is(':checked')) {
@@ -238,14 +244,14 @@ $(function() {
 		if (checkboxes.length > 0 && !checkboxes.filter('[data-version-active=true]').length) {
 			$('button[data-version-action=delete').prop('disabled', false);
 		}
-		CCMPageVersionList.previewSelectedVersions(checkboxes);
+		ConcretePageVersionList.previewSelectedVersions(checkboxes);
 
 	});
 
 	$('#ccm-panel-page-versions tfoot').on('click', 'a', function() {
 		var pageNum = $(this).attr('data-version-navigation');
 		if (pageNum) {
-			CCMPageVersionList.sendRequest('<?=$controller->action("get_json")?>', [{'name': 'currentPage', 'value': $(this).attr('data-version-navigation')}], function(r) {
+			ConcretePageVersionList.sendRequest('<?=$controller->action("get_json")?>', [{'name': 'currentPage', 'value': $(this).attr('data-version-navigation')}], function(r) {
 				$('#ccm-panel-page-versions table tbody').html(
 					templateBody(r)
 		    	);
@@ -264,8 +270,8 @@ $(function() {
 		$.each(checkboxes, function(i, cb) {
 			cvIDs.push({'name': 'cvID[]', 'value': $(cb).val()});
 		});
-		CCMPageVersionList.sendRequest('<?=$controller->action("delete")?>', cvIDs, function(r) {
-			CCMPageVersionList.handleVersionRemovalResponse(r);
+		ConcretePageVersionList.sendRequest('<?=$controller->action("delete")?>', cvIDs, function(r) {
+			ConcretePageVersionList.handleVersionRemovalResponse(r);
 		});
 	});
 

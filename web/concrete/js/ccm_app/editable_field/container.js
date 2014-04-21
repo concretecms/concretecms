@@ -110,7 +110,7 @@
 		        	my.updateImageField(r, $field);
 		        },
 		        error: function(r) {
-					ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+					ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
 		        },
 		        complete: function(r) {
 		        	jQuery.fn.dialog.hideLoader();
@@ -124,7 +124,9 @@
         	if (ConcreteAjaxRequest.validateResponse(r)) {
 	        	$field.find('.editable-image-display').html(r.imageHTML);
 	        	my.setupImageField($field);
-				ConcreteAlert.showResponseNotification(r.message, 'ok', 'success');
+				ConcreteAlert.notify({
+				'message': r.message
+				});	        	
         	}
 		},
 

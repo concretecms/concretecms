@@ -8,7 +8,7 @@
 
     var ConcreteAlert = {
         
-        notice : function(title, message, onCloseFn) {
+        dialog : function(title, message, onCloseFn) {
             $('<div id="ccm-popup-alert" class="ccm-ui"><div id="ccm-popup-alert-message" class="alert alert-danger">' + message + '</div></div>').dialog({
                 title: title,
                 modal: true,
@@ -16,27 +16,26 @@
             });
         },
 
-        hud: function(message, time, icon, title) {
-            if (title == null) {    
-                var messageText = message;
+        notify: function(defaults) {
+            var options = $.extend({
+                'type': 'success',
+                'icon': 'ok',
+                'title': false,
+                'message': false,
+                'appendTo': false,
+            }, defaults);
+            
+            var messageText = '',
+                $appendTo = (options.appendTo) ? $(options.appendTo) : $(document.body);
+
+            if (options.title) {
+                messageText = '<h3>' + options.title + '</h3>' + options.message;
             } else {
-                var messageText = '<strong>' + title + '</strong><br/><br/>' + message;
-            }
-            if (icon == null) {
-                var icon = 'pencil';
+                messageText = '<h3>' + options.message + '</h3>';
             }
 
-            var style ='info';
-            ConcreteAlert.showResponseNotification(messageText, icon, style);
-        },
 
-        showResponseNotification: function(message, icon, class, appendTo) {
-            if (appendTo) {
-                var $appendTo = $(appendTo);
-            } else {
-                var $appendTo = $(document.body);
-            }
-            $('<div id="ccm-notification-hud" class="ccm-ui ccm-notification ccm-notification-' + class + '"><i class="glyphicon glyphicon-' + icon + '"></i><div class="ccm-notification-inner">' + message + '</div></div>').
+            $('<div id="ccm-notification-hud" class="ccm-ui ccm-notification ccm-notification-' + options.type + '"><i class="glyphicon glyphicon-' + options.icon + '"></i><div class="ccm-notification-inner">' + messageText + '</div></div>').
             appendTo($appendTo).delay(5).queue(function() {
                 $(this).addClass('animated fadeIn');
                 $(this).dequeue();
@@ -51,23 +50,7 @@
                 $(this).dequeue();
             });
         }
-        /*
-        showLoader: function() {
-            var $lm = $('<div id="ccm-modal-overlay"><div id="ccm-loader"></div></div>').appendTo($(document.body));
-            $lm.delay(1).queue(function() {
-                $lm.addClass("ccm-modal-overlay-active");
-                $(this).dequeue();
-            }).delay(300).queue(function() {
-                $('#ccm-loader').addClass('ccm-loader-active');
-                $(this).dequeue();
-            });
-        },
-
-
-        hideLoader: function() {
-            $('#ccm-modal-overlay').remove();
-        }
-        */
+    
     }
 
     global.ConcreteAlert = ConcreteAlert;

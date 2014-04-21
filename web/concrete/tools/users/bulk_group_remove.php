@@ -107,7 +107,11 @@ ccm_userBulkGroupRemove = function() {
 		jQuery.fn.dialog.closeTop();
 		jQuery.fn.dialog.hideLoader();
 		ccm_deactivateSearchResults('<?=$searchInstance?>');
-		ConcreteAlert.hud(ccmi18n.saveUserSettingsMsg, 2000, 'success', ccmi18n.user_group_remove);
+		ConcreteAlert.notify({
+		'message': ccmi18n.saveUserSettingsMsg,
+		'title': ccmi18n.user_group_remove
+		});
+
 		$("#ccm-<?=$searchInstance?>-advanced-search").ajaxSubmit(function(r) {
 		       ccm_parseAdvancedSearchResponse(r, '<?=$searchInstance?>');
 		});

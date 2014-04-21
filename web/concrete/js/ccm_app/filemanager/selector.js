@@ -66,7 +66,7 @@
 				url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/get_json',
 				data: {'fID': fID},
 				error: function(r) {
-	    			ConcreteAlert.notice('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+	    			ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
 				},
 				success: function(r) {
 					var file = r.files[0];

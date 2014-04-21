@@ -39,6 +39,14 @@ abstract class EditResponse {
 		return $this->message;
 	}
 
+	public function setTitle($title) {
+		$this->title = $title;
+	}
+
+	public function getTitle() {
+		return $this->title;
+	}
+
 	public function getJSON() {
 		return Loader::helper('json')->encode($this->getJSONObject());
 	}
@@ -52,6 +60,7 @@ abstract class EditResponse {
 	public function getBaseJSONObject() {
 		$o = new stdClass;
 		$o->message = $this->message;
+		$o->title = $this->title;
 		$o->time = $this->time;
 		$o->redirectURL = $this->redirectURL;
 		foreach($this->additionalData as $key => $value) {

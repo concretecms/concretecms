@@ -8,7 +8,6 @@ class ValidationServiceProvider extends ServiceProvider {
 		$singletons = array(
 			'helper/validation/antispam' => '\Concrete\Core\Antispam\Service',
 			'helper/validation/captcha' => '\Concrete\Core\Captcha\Service',
-			'helper/validation/error' => '\Concrete\Core\Error\Error',
 			'helper/validation/file' => '\Concrete\Core\File\ValidationService',
 			'helper/validation/form' => '\Concrete\Core\Form\Service\Validation',
 			'helper/validation/identifier' => '\Concrete\Core\Utility\Service\Identifier',
@@ -20,7 +19,8 @@ class ValidationServiceProvider extends ServiceProvider {
 
 		);
 		$registers = array(
-			'helper/validation/token' => '\Concrete\Core\Validation\CSRF\Token'
+			'helper/validation/token' => '\Concrete\Core\Validation\CSRF\Token',
+			'helper/validation/error' => '\Concrete\Core\Error\Error'
 		);
 
 		foreach($singletons as $key => $value) {

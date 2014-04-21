@@ -184,7 +184,10 @@ ccm_permissionLaunchDialog = function(link) {
 			if (r.deferred) {
 				jQuery.fn.dialog.closeAll();
 				jQuery.fn.dialog.hideLoader();
-				ConcreteAlert.hud(ccmi18n.setPermissionsDeferredMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
+				ConcreteAlert.notify({
+				'message': ccmi18n_sitemap.setPermissionsDeferredMsg,
+				'title': ccmi18n_sitemap.setPagePermissions
+				});
 			} else {
 				jQuery.fn.dialog.closeTop();
 				ccm_refreshPagePermissions();
@@ -206,10 +209,16 @@ ccm_permissionLaunchDialog = function(link) {
 				jQuery.fn.dialog.hideLoader();
 				jQuery.fn.dialog.closeTop();
 				if (!r.deferred) {
-					ConcreteAlert.hud(ccmi18n_sitemap.setPagePermissionsMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
+					ConcreteAlert.notify({
+					'message': ccmi18n_sitemap.setPagePermissionsMsg,
+					'title': ccmi18n_sitemap.setPagePermissions
+					});
 				} else {
 					jQuery.fn.dialog.closeTop();
-					ConcreteAlert.hud(ccmi18n.setPermissionsDeferredMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
+					ConcreteAlert.notify({
+					'message': ccmi18n_sitemap.setPermissionsDeferredMsg,
+					'title': ccmi18n_sitemap.setPagePermissions
+					});
 				}
 	
 			}		
@@ -239,7 +248,10 @@ ccm_permissionLaunchDialog = function(link) {
 				if (r.deferred) {
 					jQuery.fn.dialog.closeTop();
 					jQuery.fn.dialog.hideLoader();
-					ConcreteAlert.hud(ccmi18n.setPermissionsDeferredMsg, 2000, 'success', ccmi18n_sitemap.setPagePermissions);
+					ConcreteAlert.notify({
+					'message': ccmi18n_sitemap.setPermissionsDeferredMsg,
+					'title': ccmi18n_sitemap.setPagePermissions
+					});
 				} else {
 					ccm_refreshPagePermissions();
 				}

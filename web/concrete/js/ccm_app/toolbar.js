@@ -13,7 +13,7 @@ var ConcreteToolbar = function() {
 		$(document.body).on('click', 'a[data-dismiss]', function() {
 			var action = ($(this).attr('data-dismiss') == 'help-all') ? 'all' : 'this';
 			$(this).parentsUntil('.ccm-notification-help').parent().queue(function() {
-				$(this).css("opacity", 0);
+				$(this).addClass('animated fadeOut');
 				$(this).dequeue();
 			}).delay(500).queue(function() {
 				$(this).remove();
@@ -31,8 +31,38 @@ var ConcreteToolbar = function() {
 				url: CCM_TOOLS_PATH + '/help/dismiss',
 				success: function(r) {}
 			});
+			return false;
 		});
 	}
+
+	setupPageAlerts = function() {
+		$(document.body).on('click', 'a[data-dismiss-alert=page-alert]', function(e) {
+			e.stopPropagation();
+
+			$('#ccm-notification-page-alert').queue(function() {
+				$(this).addClass('animated fadeOut');
+				$(this).dequeue();
+			}).delay(500).queue(function() {
+				$(this).remove();
+				$(this).dequeue();
+			});
+			return false;
+		});
+
+		$('#ccm-notification-page-alert form').ajaxForm({
+			dataType: 'json',
+			beforeSubmit: function() {
+				jQuery.fn.dialog.showLoader();
+			},
+			success: function(r) {
+				if (r.redirect) {
+					window.location.href = r.redirect;
+				}
+			}
+		});
+
+	}
+
 	setupTooltips = function() {
 		if ($("#ccm-tooltip-holder").length == 0) {
 			$('<div />').attr('id','ccm-tooltip-holder').attr('class', 'ccm-ui').prependTo(document.body);
@@ -70,28 +100,6 @@ var ConcreteToolbar = function() {
 			$('a[data-toolbar-action=check-in]').unbind('click.close-check-in');
 		});
 
-	}
-
-	setupStatusBar = function() {
-		$('#ccm-page-status-bar .alert').bind('closed', function() {
-			$(this).remove();
-			var visi = $('#ccm-page-status-bar .alert:visible').length;
-			if (visi == 0) {
-				$('#ccm-page-status-bar').remove();
-			}
-		});
-
-		$('#ccm-page-status-bar .ccm-status-bar-ajax-form').ajaxForm({
-			dataType: 'json',
-			beforeSubmit: function() {
-				jQuery.fn.dialog.showLoader();
-			},
-			success: function(r) {
-				if (r.redirect) {
-					window.location.href = r.redirect;
-				}
-			}
-		});
 	}
 
 	setupIntelligentSearch = function() {
@@ -256,11 +264,11 @@ var ConcreteToolbar = function() {
 
 				$toolbar.find('.dialog-launch').dialog();
 
-				setupStatusBar();
 				setupIntelligentSearch();
 				setupPanels();
 				setupTooltips();
 				setupChosen();
+				setupPageAlerts();
 				setupHelpNotifications();
 
 				// make sure that dashboard dropdown doesn't get dismissed if you mis-click inside it;

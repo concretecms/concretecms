@@ -58,7 +58,10 @@
 					if (my.$form.attr('data-dialog-form')) {
 						jQuery.fn.dialog.closeTop();
 					}
-					ConcreteAlert.showResponseNotification(r.message, 'ok', 'success');
+					ConcreteAlert.notify({
+					'message': r.message,
+					'title': r.title
+					});					
 					ConcretePanelManager.exitPanelMode();
 				}
 			}

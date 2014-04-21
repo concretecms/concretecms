@@ -120,7 +120,8 @@ class User extends Object {
 			$username = $args[0];
 			$password = $args[1];
 			if (!$args[2]) {
-				Session::remove('Ugroups');	
+				Session::remove('uGroups');	
+				Session::remove('accessEntities');
 			}
 			$v = array($username);
 			if (defined('USER_REGISTRATION_WITH_EMAIL_ADDRESS') && USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {

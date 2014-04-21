@@ -378,12 +378,12 @@ function ConcretePanel(options) {
                     $(this).dequeue();
                 });
                 obj.onPanelLoad(element);
+                obj.isOpen = true;
                 Concrete.event.publish('PanelOpen', {panel: obj, element: element});
             });
             ConcretePanelManager.showOverlay(obj.options.translucent);
             $('[data-launch-panel=\'' + obj.getIdentifier() + '\']').addClass('ccm-launch-panel-active');
             $('html').addClass(obj.getPositionClass());
-            obj.isOpen = true;
             $(this).dequeue();
         });
     };

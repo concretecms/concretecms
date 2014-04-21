@@ -150,7 +150,6 @@ class Sitemap {
 		$cAlias = $c->isAlias();
 		$cPointerID = $c->getCollectionPointerID();
 		if ($cAlias) {
-			/*
 			if ($cPointerID > 0) {
 				$cIcon = ASSETS_URL_IMAGES . '/icons/alias.png';
 				$cAlias = 'POINTER';
@@ -158,7 +157,7 @@ class Sitemap {
 			} else {
 				$cIcon = ASSETS_URL_IMAGES . '/icons/alias_external.png';
 				$cAlias = 'LINK';
-			}*/
+			}
 
 		}
 

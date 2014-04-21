@@ -216,7 +216,7 @@ $(function() {
 				uID: '<?=$user->getUserID()?>'
 			},
 			success: function(r) {
-				ConcreteAlert.hud('<?=t('Group added successfully.')?>');
+
 				$('div[data-container=group-list]').append(
 					_addGroupsTemplate({'groups': r.groups})
 				);
@@ -247,7 +247,6 @@ $(function() {
 				uID: '<?=$user->getUserID()?>'
 			},
 			success: function(r) {
-				ConcreteAlert.hud('<?=t('Group removed successfully.')?>');
 				$('div[data-container=group-list] div[data-group-id=' + r.group.gID + ']').queue(function() {
 					$(this).addClass('animated bounceOutLeft');
 					$(this).dequeue();
