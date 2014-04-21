@@ -116,6 +116,7 @@ $set = $sets[$i];
 
 <? } ?>
 
+<? if (is_array($types['Other'])) { ?>
 
 <div class="ccm-panel-add-block-set">
 	<header><?=t('Other')?></header>
@@ -133,6 +134,7 @@ $set = $sets[$i];
 	</ul>	
 
 </div>
+<? } ?>
 
 </div>
 

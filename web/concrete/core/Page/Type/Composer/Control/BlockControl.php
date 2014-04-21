@@ -138,7 +138,7 @@ class BlockControl extends Control {
 	                } else {
 	                	$name = $txt->unhandle($tpl);
 	                }
-					$templates[] = new PageTypeComposerControlCustomTemplate($tpl, $name);
+					$templates[] = new CustomTemplate($tpl, $name);
 				}
 			}
 		}

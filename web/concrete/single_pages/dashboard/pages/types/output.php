@@ -1,21 +1,17 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="container">
-<div class="row">
+
+    <table class="table table-striped">
 
 <? foreach($pagetype->getPageTypePageTemplateObjects() as $pt) { ?>
 	
-	  <div class="col-md-3">
-	    <div class="thumbnail" style="text-align: center">
-	        <div style="text-align: center"><?=$pt->getPageTemplateIconImage()?></div>
-	        <div class="caption">
-	        <h4><?=$pt->getPageTemplateName()?></h4>
-	        <p><a href="<?=$view->action('edit_defaults', $pagetype->getPageTypeID(), $pt->getPageTemplateID())?>" target="_blank" class="btn btn-default"><?=t('Edit Defaults')?></a></p>
-	        </div>
-	    </div>
-	  </div>
+
+    <tr>
+        <td><a href="<?=$view->action('edit', $pt->getPageTemplateID())?>"><?=$pt->getPageTemplateIconImage()?></a></td>
+        <td style="width: 100%; vertical-align: middle"><p class="lead" style="margin-bottom: 0px"><?=$pt->getPageTemplateName()?></p></td>
+        <td style="vertical-align: middle"><a href="<?=$view->action('edit_defaults', $pagetype->getPageTypeID(), $pt->getPageTemplateID())?>" target="_blank" class="btn btn-default"><?=t('Edit Defaults')?></a></td>
+    </tr>
 
 <? } ?>
 
-</div>
-</div>
+</table>

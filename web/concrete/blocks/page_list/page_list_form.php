@@ -3,15 +3,17 @@
 
 <div class="ccm-ui"><!-- Open C5 UI Wrapper -->
 
-	<ul id="ccm-pagelist-tabs" class="unstyled ccm-dialog-tabs">
-		<li class="ccm-nav-active"><a id="ccm-pagelist-tab-add" href="javascript:void(0);"><?=($bID>0)? t('Edit') : t('Add') ?></a></li>
-		<li class=""><a id="ccm-pagelist-tab-preview"  href="javascript:void(0);"><?=t('Preview')?></a></li>
-	</ul>
-	
+	<?=Loader::helper('concrete/ui')->tabs(array(
+		array('page-list-edit', t('Edit'), true),
+		array('page-list-preview', t('Preview'))
+	));
+	?>
 	<input type="hidden" name="pageListToolsDir" value="<?=$uh->getBlockTypeToolsURL($bt)?>/" />
-	<div id="ccm-pagelistPane-add" class="ccm-pagelistPane">
-		<div class="ccm-block-field-group">
-		  <h2><?=t('Number and Type of Pages')?></h2>
+
+	<div class="ccm-tab-content" id="ccm-tab-content-page-list-edit">
+		<fieldset>
+		  <legend><?=t('Number and Type of Pages')?></legend>
+		  <p>
 		  <?=t('Display')?>
 		  <input type="text" name="num" value="<?=$num?>" style="width: 30px">
 		  <?=t('pages of type')?>
@@ -28,36 +30,40 @@
 			<? } ?>
 		  </select>
 		  <? } ?>
-		</div>
-		<div class="ccm-block-field-group">  
-		  <h2><?=t('Filter')?></h2>
+			</p>
+		</fieldset>
+		<fieldset>
+		  <legend><?=t('Filter')?></legend>
 		  
 		  <?
 		  
 		  $cadf = CollectionAttributeKey::getByHandle('is_featured');
 		  ?>
-		  <label class="checkbox">
+		  <div class="checkbox"><label>
 			  <input <? if (!is_object($cadf)) { ?> disabled <? } ?> type="checkbox" name="displayFeaturedOnly" value="1" <? if ($displayFeaturedOnly == 1) { ?> checked <? } ?> style="vertical-align: middle" />
 			  <?=t('Featured pages only.')?>
 				<? if (!is_object($cadf)) { ?>
 					 <span><?=t('(<strong>Note</strong>: You must create the "is_featured" page attribute first.)');?></span>
 				<? } ?>
-		  </label>
-		  <label class="checkbox">
+			  </label>
+			</div>
+		  <div class="checkbox"><label>
 			<input type="checkbox" name="displayAliases" value="1" <? if ($displayAliases == 1) { ?> checked <? } ?> />
 			<?=t('Display page aliases.')?>
-		  </label>
+			</label>
+		  </div>
 			
-		</div>
-		<div class="ccm-block-field-group">
-			<h2><?=t('Pagination')?></h2>
+		</fieldset>
+		<Fieldset>
+			<legend><?=t('Pagination')?></legend>
 			<label class="checkbox">
 				<input type="checkbox" name="paginate" value="1" <? if ($paginate == 1) { ?> checked <? } ?> />
 				<?=t('Display pagination interface if more items are available than are displayed.')?>
 			</label>
-		</div>
-		<div class="ccm-block-field-group">
-		  <h2><?=t('Location in Website')?></h2>
+		</fieldset>
+		<fieldset>
+
+		  <legend><?=t('Location in Website')?></legend>
 		  <?=t('Display pages that are located')?>:<br/>
 		  <br/>
 		  	<label class="radio inline">
@@ -93,9 +99,9 @@
 						<?php echo t('Include all child pages') ?>
 					</label>
 				</div>
-		</div>
-		<div class="ccm-block-field-group">
-		  <h2><?=t('Sort Pages')?></h2>
+		</fieldset>
+		<fieldset>
+		  <legend><?=t('Sort Pages')?></legend>
 		  <?=t('Pages should appear')?>
 		  <select name="orderBy">
 			<option value="display_asc" <? if ($orderBy == 'display_asc') { ?> selected <? } ?>><?=t('in their sitemap order')?></option>
@@ -104,10 +110,10 @@
 			<option value="alpha_asc" <? if ($orderBy == 'alpha_asc') { ?> selected <? } ?>><?=t('in alphabetical order')?></option>
 			<option value="alpha_desc" <? if ($orderBy == 'alpha_desc') { ?> selected <? } ?>><?=t('in reverse alphabetical order')?></option>
 		  </select>
-		</div>
+		</fieldset>
 		
-		<div class="ccm-block-field-group">
-		  <h2><?=t('Provide RSS Feed')?></h2>
+		<fieldset>
+		  <legend><?=t('Provide RSS Feed')?></legend>
 		   <label class="radio inline">
 			   <input id="ccm-pagelist-rssSelectorOn" type="radio" name="rss" class="rssSelector" value="1" <?=($rss?"checked=\"checked\"":"")?>/> <?=t('Yes')?>   
 		   </label>
@@ -120,26 +126,22 @@
 			   <strong><?=t('RSS Feed Description')?></strong><br />
 			   <textarea name="rssDescription" style="width:250px" ><?=$rssDescription?></textarea>
 		   </div>
-		</div>
-		
-		<style type="text/css">
-		#ccm-pagelist-truncateTxt.faintText{ color:#999; }
-		<? if($truncateChars==0 && !$truncateSummaries) $truncateChars=128; ?>
-		</style>
-		<div class="ccm-block-field-group">
-		   <h2><?=t('Truncate Summaries')?></h2>	  
+		</fieldset>
+
+		<fieldset>
+		   <legend><?=t('Truncate Summaries')?></legend>	  
 		   <input id="ccm-pagelist-truncateSummariesOn" name="truncateSummaries" type="checkbox" value="1" <?=($truncateSummaries?"checked=\"checked\"":"")?> /> 
 		   <span id="ccm-pagelist-truncateTxt" <?=($truncateSummaries?"":"class=\"faintText\"")?>>
 		   		<?=t('Truncate descriptions after')?> 
 				<input id="ccm-pagelist-truncateChars" <?=($truncateSummaries?"":"disabled=\"disabled\"")?> type="text" name="truncateChars" size="3" value="<?=intval($truncateChars)?>" /> 
 				<?=t('characters')?>
 		   </span>
-		</div>
+		</fieldset>
 		
 	</div>
 	
-	<div id="ccm-pagelistPane-preview" style="display:none" class="ccm-preview-pane ccm-pagelistPane">
-		<div id="pagelist-preview-content"><?=t('Preview Pane')?></div>
+	<div id="ccm-tab-content-page-list-preview" class="ccm-tab-content">
+
 	</div>
 
 </div><!-- Close C5 UI Wrapper -->

@@ -1,5 +1,9 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?
+use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
+use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
+use \Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;
+
 $c = Page::getByPath('/dashboard/pages/types/form');
 $cp = new Permissions($c);
 $ih = Loader::helper('concrete/ui');
@@ -13,7 +17,7 @@ $object = $control->getPageTypeComposerControlObject();
 $customTemplates = $object->getPageTypeComposerControlCustomTemplates();
 $templates = array('' => t('** None'));
 foreach($customTemplates as $template) {
-	$templates[$template->getPageTypeComposerControlCustomTemplateFilename()] = $template->getPageTypeComposerControlCustomTemplateName();
+	$templates[(string)$template->getPageTypeComposerControlCustomTemplateFilename()] = $template->getPageTypeComposerControlCustomTemplateName();
 }
 
 if ($cp->canViewPage()) { 

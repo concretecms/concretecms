@@ -1,11 +1,12 @@
 <?
 namespace Concrete\Core\Page\Theme\GridFramework;
 use Loader;
-abstract class PageThemeGridFramework {
+use Core;
+abstract class GridFramework {
 
 	public static function getByHandle($pThemeGridFrameworkHandle) {
-		$class = Loader::helper('text')->camelcase($pThemeGridFrameworkHandle) . 'PageThemeGridFramework';
-		$cl = new $class();
+		$class = '\\Concrete\\Core\\Page\\Theme\\GridFramework\\Type\\' . $pThemeGridFrameworkHandle;
+		$cl = Core::make($class);
 		return $cl;
 	}
 

@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Core\Filesystem;
+use Loader;
+
 class TemplateFile {
 	/** Stores the parent object of this template file
 	* @var BlockType

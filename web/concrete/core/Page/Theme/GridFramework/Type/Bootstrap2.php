@@ -1,8 +1,8 @@
 <?
 namespace Concrete\Core\Page\Theme\GridFramework\Type;
 use Loader;
-use Concrete\Core\Page\Theme\GridFramework;
-class Bootstrap2 extends PageThemeGridFramework {
+use Concrete\Core\Page\Theme\GridFramework\GridFramework;
+class Bootstrap2 extends GridFramework {
 
 	public function getPageThemeGridFrameworkName() {
 		return t('Twitter Bootstrap');

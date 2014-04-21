@@ -4,6 +4,8 @@ use Loader;
 use PageList;
 use Page;
 use CollectionAttributeKey;
+use BlockType;
+
 use \Concrete\Core\Block\BlockController;
 class Controller extends BlockController {
 	protected $btTable = 'btPageList';
