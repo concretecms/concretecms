@@ -724,18 +724,16 @@
         cID = CCM_CID,
         arHandle = area.getHandle();
 
-      if (confirm(msg)) {
-        ConcreteToolbar.disableDirectExit();
-        area.removeBlock(block);
-        ConcreteAlert.hud(ccmi18n.deleteBlockMsg, 2000, 'delete_small', ccmi18n.deleteBlock);
-        $.ajax({
-          type: 'POST',
-          url: CCM_DISPATCHER_FILENAME,
-          data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&isAjax=true&btask=remove&bID=' + bID + '&arHandle=' + encodeURIComponent(arHandle)
-        });
-        if (typeof(callback) == 'function') {
-          callback();
-        }
+      ConcreteToolbar.disableDirectExit();
+      area.removeBlock(block);
+      ConcreteAlert.hud(ccmi18n.deleteBlockMsg, 2000, 'delete_small', ccmi18n.deleteBlock);
+      $.ajax({
+        type: 'POST',
+        url: CCM_DISPATCHER_FILENAME,
+        data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&isAjax=true&btask=remove&bID=' + bID + '&arHandle=' + encodeURIComponent(arHandle)
+      });
+      if (typeof(callback) == 'function') {
+        callback();
       }
     },
 

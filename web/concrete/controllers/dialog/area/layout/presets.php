@@ -57,7 +57,7 @@ class Presets extends BackendInterfaceController {
 			} else {
 				$pr->setMessage(t('Area layout preset saved successfully.'));
 			}
-			Loader::helper('ajax')->sendResult($pr);
+			$pr->outputJSON();
 			
 		}		
 	}

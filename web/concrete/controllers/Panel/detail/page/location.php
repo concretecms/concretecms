@@ -69,21 +69,11 @@ class Location extends BackendInterfacePageController {
 					$u->unloadCollectionEdit($oc);
 					$r = $pkr->trigger();
 					$r->setRedirectURL(Loader::helper('navigation')->getLinkToCollection($nc));
-					if ($r instanceof WorkflowProgressResponse) { 
-						$successMessage .= '"' . $oc->getCollectionName() . '" '.t('was moved beneath').' "' . $dc->getCollectionName() . '." ';
-					} else { 
-						$successMessage .= t("Your request to move \"%s\" beneath \"%s\" has been stored. Someone with approval rights will have to activate the change.\n", $oc->getCollectionName() , $dc->getCollectionName() );
-					}
 				}
-			}
-
-			if (!$successMessage) {
-				$successMessage = t('Page location saved successfully.');
 			}
 
 			$r = new PageEditResponse();
 			$r->setPage($this->page);
-			$r->setMessage($successMessage);
 			$nc = Page::getByID($this->page->getCollectionID(), 'ACTIVE');
 			$r->outputJSON();
 		}

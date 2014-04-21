@@ -55,7 +55,7 @@ $this->inc('elements/header.php'); ?>
 					$userName = $u->getUserName();
 				}
 				?>
-				<span class="sign-in"><?=t('Currently logged in as <b>%s</b>.', $userName)?> <a href="<?=$view->url('/login', 'logout')?>"><?=t('Sign Out')?></a></span>
+				<span class="sign-in"><?=t('Currently logged in as <b>%s</b>.', $userName)?> <a href="<?=$view->url('/login', 'logout', Loader::helper('validation/token')->generate('logout'))?>"><?=t('Sign Out')?></a></span>
 			<? } else { ?>
 				<span class="sign-in"><a href="<?=$view->url('/login')?>"><?=t('Sign In to Edit this Site')?></a></span>
 			<? } ?>

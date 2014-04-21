@@ -61,7 +61,6 @@ class Composer extends BackendInterfacePageController {
 
 		if (!$e->has()) {
 			$pagetype->publish($c);
-			$ptr->setMessage(t('Page published on %s', $ptr->time));
 			$ptr->setRedirectURL(Loader::helper('navigation')->getLinkToCollection($c));
 		}
 		$ptr->outputJSON();

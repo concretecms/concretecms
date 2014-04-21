@@ -71,15 +71,9 @@ class CheckIn extends BackendInterfacePageController {
 					$pkr->setRequesterUserID($u->getUserID());
 					$u->unloadCollectionEdit($c);
 					$response = $pkr->trigger();
-					$pr->setMessage(t('Page approved!'));
-					if ($response instanceof WorkflowProgressResponse) {
-						// we only get this response if we have skipped workflows and jumped straight in to an approve() step.
-						$pr->setMessage(t('Page approval requested. You must complete this workflow to approve the page.'));
-					}
 
 					if ($c->isPageDraft()) {
 						$pagetype->publish($c);
-						$pr->setMessage(t('Page published'));
 					}
 				}
 			} else if ($this->request->request->get('action') == 'discard') {
@@ -87,14 +81,11 @@ class CheckIn extends BackendInterfacePageController {
 					$this->page->delete();
 					$u = new User();
 					$cID = $u->getPreviousFrontendPageID();
-					$pr->setMessage(t('Draft discarded.'));
 					$pr->setRedirectURL(DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $cID);
 				} else if ($v->canDiscard()) {
 					$v->discard();
-					$pr->setMessage(t('Page version discarded.'));
 				}
 			} else {
-				$pr->setMessage(t('Page saved.'));
 				$v->removeNewStatus();
 			}
 			$nc = Page::getByID($c->getCollectionID(), $v->getVersionID());
