@@ -297,10 +297,12 @@ class Login extends PageController {
 		}
 	}
 
-	public function logout() {
-		$u = new User();
-		$u->logout();
-		$this->redirect('/');
+	public function logout($token = false) {
+		if (Loader::helper('validation/token')->validate('logout', $token)) {
+			$u = new User();
+			$u->logout();
+			$this->redirect('/');
+		}
 	}
 
 	public function forward($cID = 0) {

@@ -83,7 +83,7 @@ class Controller extends BlockController {
 					$link = Loader::helper('navigation')->getLinkToCollection($nc, true);
 					$r->setRedirectURL($link);
 				}
-				print Loader::helper('ajax')->sendResult($r);
+				$r->outputJSON();
 			}
 		}
 		exit;

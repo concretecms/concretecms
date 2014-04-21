@@ -52,15 +52,14 @@
 			} else {
 				// if we get a success function passed through, we use it. Otherwise we use the standard
 				ConcreteEvent.publish('AjaxFormSubmitSuccess', {response: r, form: my.$form.attr('data-dialog-form')});
-				if (my.$form.attr('data-dialog-form')) {
-					jQuery.fn.dialog.closeTop();
-				}
-				ConcreteAlert.showResponseNotification(r.message, 'ok', 'success');
-				ConcretePanelManager.exitPanelMode();
 				if (r.redirectURL) {
-					setTimeout(function() {
-						window.location.href = r.redirectURL;
-					}, 2000);
+					window.location.href = r.redirectURL;
+				} else {
+					if (my.$form.attr('data-dialog-form')) {
+						jQuery.fn.dialog.closeTop();
+					}
+					ConcreteAlert.showResponseNotification(r.message, 'ok', 'success');
+					ConcretePanelManager.exitPanelMode();
 				}
 			}
 		}

@@ -66,7 +66,6 @@ class Customize extends BackendInterfacePageController {
 			$nvc->updateCustomThemeStyles($values);
 			$r = new PageEditResponse();
 			$r->setPage($this->page);
-			$r->setMessage(t('Page theme updated successfully.'));
 			$r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $this->page->getCollectionID());
 			$r->outputJSON();
 		}
@@ -78,7 +77,6 @@ class Customize extends BackendInterfacePageController {
 			$nvc->resetCustomThemeStyles();
 			$r = new PageEditResponse();
 			$r->setPage($this->page);
-			$r->setMessage(t('Page theme reset successfully.'));
 			$r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $this->page->getCollectionID());
 			$r->outputJSON();
 		}
@@ -90,7 +88,6 @@ class Customize extends BackendInterfacePageController {
 			$pt->reset();
 			$r = new PageEditResponse();
 			$r->setPage($this->page);
-			$r->setMessage(t('Theme updated successfully. This will take effect for the entire site.'));
 			$r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $this->page->getCollectionID());
 			$r->outputJSON();
 		}
@@ -105,7 +102,6 @@ class Customize extends BackendInterfacePageController {
 			$pt->saveEditableStyles($values);
 			$r = new PageEditResponse();
 			$r->setPage($this->page);
-			$r->setMessage(t('Theme updated successfully. This will take effect for the entire site.'));
 			$r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $this->page->getCollectionID());
 			$r->outputJSON();
 		}

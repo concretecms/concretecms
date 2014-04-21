@@ -147,7 +147,6 @@ class Design extends BackendUIPageController {
 
 			$r = new PageEditResponse();
 			$r->setPage($c);
-			$r->setMessage(t('Page design successfully.'));
 			$r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
 			$r->outputJSON();
 		}
