@@ -11,6 +11,7 @@ use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Page\Theme\EditableStyle\EditableStyle;
 use \Concrete\Core\Page\Theme\EditableStyle\FontEditableStyle;
 use PageTemplate;
+use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 use \Concrete\Core\Page\Single as SinglePage;
 
 /**
@@ -76,7 +77,7 @@ class Theme extends Object {
 
 	public function getThemeGridFrameworkObject() {
 		if ($this->pThemeGridFrameworkHandle) {
-			$pTheme = PageThemeGridFramework::getByHandle($this->pThemeGridFrameworkHandle);
+			$pTheme = GridFramework::getByHandle($this->pThemeGridFrameworkHandle);
 			return $pTheme;
 		}
 	}
@@ -391,7 +392,7 @@ class Theme extends Object {
 		$row = $db->GetRow("select pThemeID, pThemeHandle, pThemeDescription, pkgID, pThemeName, pThemeHasCustomClass from PageThemes where {$where}", $args);
 		if ($row['pThemeID']) {
 			if ($row['pThemeHasCustomClass']) {
-				$class = '\\Concrete\Core\\Theme\\' . Loader::helper('text')->camelcase($row['pThemeHandle']);
+				$class = '\\Concrete\\Theme\\' . Loader::helper('text')->camelcase($row['pThemeHandle'] . '\\PageTheme');
 			} else {
 				$class = '\\Concrete\Core\\Page\\Theme\\Theme';
 			}
@@ -516,7 +517,7 @@ class Theme extends Object {
 	public function updateThemeCustomClass() {
 		$env = Environment::get();
 		$db = Loader::db();
-		$r = $env->getRecord(DIRNAME_MODELS . '/' . DIRNAME_PAGE_THEME . '/' . DIRNAME_PAGE_THEME_CUSTOM . '/' . $this->pThemeHandle . '.php', $this->getPackageHandle());
+		$r = $env->getRecord(DIRNAME_THEMES . '/' . '/' . $this->pThemeHandle . '/' . FILENAME_THEMES_CLASS, $this->getPackageHandle());
 		if ($r->exists()) {
 			$db->Execute("update PageThemes set pThemeHasCustomClass = 1 where pThemeID = ?", array($this->pThemeID));
 			$this->pThemeHasCustomClass = true;

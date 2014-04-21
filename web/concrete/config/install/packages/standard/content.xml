@@ -5,9 +5,9 @@
     </blocktypes>
     <pagetemplates>
         <pagetemplate handle="right_sidebar" name="Right Sidebar" icon="right_sidebar.png" package="" />
-        <pagetemplate handle="left_sidebar" name="Left Sidebar" icon="template1.png" package="" />
-        <pagetemplate handle="full" name="Full" icon="main.png" package="" />
-        <pagetemplate handle="blog_entry" name="Blog Entry" icon="template1.png" package="" />
+        <pagetemplate handle="left_sidebar" name="Left Sidebar" icon="left_sidebar.png" package="" />
+        <pagetemplate handle="full" name="Full" icon="full.png" package="" />
+        <pagetemplate handle="blog_entry" name="Blog Entry" icon="leftlist.png" package="" />
     </pagetemplates>
     <attributekeys>
         <attributekey handle="tags" name="Tags" package="" searchable="1" indexed="1" type="select" category="collection">

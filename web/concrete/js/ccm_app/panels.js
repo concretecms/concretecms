@@ -43,8 +43,8 @@ function ConcretePanel(options) {
     };
 
     this.onPanelLoad = function(element) {
-        this.setupPanelDetails();
         this.setupSubPanels();
+        this.setupPanelDetails();
     };
 
     this.hide = function() {
@@ -80,6 +80,7 @@ function ConcretePanel(options) {
         var $panel = $('#' + this.getDOMID());
         var obj = this;
         $panel.find('[data-launch-sub-panel-url]').unbind('.sub').on('click.sub', function() {
+            obj.closePanelDetailImmediately();
             var url = $(this).attr('data-launch-sub-panel-url');
             $('<div />', {'class': 'ccm-panel-content ccm-panel-content-appearing'}).appendTo($panel.find('.ccm-panel-content-wrapper')).load(url + '?cID=' + CCM_CID, function() {
                 $panel.find('.ccm-panel-content-visible').removeClass('ccm-panel-content-visible').addClass('ccm-panel-slide-left');

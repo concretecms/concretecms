@@ -5,8 +5,8 @@
     </themes>
     <pagetemplates>
         <pagetemplate handle="right_sidebar" name="Right Sidebar" icon="right_sidebar.png" package="" />
-        <pagetemplate handle="two_column" name="Two Column" icon="main.png" package="" />
-        <pagetemplate handle="full" name="Full" icon="main.png" package="" />
+        <pagetemplate handle="two_column" name="Two Column" icon="2col" package="" />
+        <pagetemplate handle="full" name="Full" icon="full.png" package="" />
     </pagetemplates>
     <pagetypes>
     <pagetype name="Page" handle="page" launch-in-composer="0">

@@ -4,7 +4,7 @@ use Loader;
 use \Concrete\Core\Foundation\Object;
 use PageTemplate;
 use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
-
+use PageType;
 class OutputControl extends Object {
 
 	public function getPageTypeComposerOutputControlID() {return $this->ptComposerOutputControlID;}

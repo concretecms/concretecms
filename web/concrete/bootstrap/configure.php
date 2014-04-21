@@ -217,6 +217,7 @@ define('FILENAME_CONTROLLER', 'controller.php');
 define('FILENAME_THEMES_DESCRIPTION', 'description.txt');
 define('FILENAME_THEMES_DEFAULT', 'default.php');
 define('FILENAME_THEMES_VIEW', 'view.php');
+define('FILENAME_THEMES_CLASS', 'page_theme.php');
 define('FILENAME_THEMES_THUMBNAIL', 'thumbnail.png');
 define('FILENAME_THEMES_ERROR', 'error');
 define('FILENAME_GATHERING_DATA_SOURCE_OPTIONS', 'options.php');

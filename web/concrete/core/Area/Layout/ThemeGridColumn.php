@@ -2,8 +2,9 @@
 namespace Concrete\Core\Area\Layout;
 use Loader;
 use \Concrete\Core\Area\SubArea;
-use Page, Area;
-class ThemeGridColumn extends Column;
+use Page;
+use Area;
+class ThemeGridColumn extends Column {
 
 	public static function getByID($arLayoutColumnID) {
 		$db = Loader::db();

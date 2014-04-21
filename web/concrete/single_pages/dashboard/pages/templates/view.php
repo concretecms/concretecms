@@ -5,13 +5,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <? if (is_object($template) && ($this->controller->getTask() == 'edit' || $this->controller->getTask() == 'update')) {
     $form = Loader::helper('form');
 ?>
-  
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Update Page Template'), false, false, false);?>
-    
+      
     <form method="post" class="form-horizontal" id="update_page_template" action="<?=$view->url('/dashboard/pages/templates', 'update')?>">
     <?=$this->controller->token->output('update_page_template')?>
     <input type="hidden" name="pTemplateID" value="<?=$template->getPageTemplateID()?>" />
-    <div class="ccm-pane-body">
 
         <? $confirmMsg = t('Are you sure?'); ?>
         <script type="text/javascript">
@@ -55,48 +52,42 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <? } ?>
             </div>
         </div>
-  
-    </div>
-    
-    <div class="ccm-pane-footer">
+      
+    <div class="ccm-dashboard-form-actions-wrapper">
+    <div class="ccm-dashboard-form-actions">
         <a href="<?=$view->url('/dashboard/pages/templates')?>" class="btn btn-default pull-left"><?=t("Cancel")?></a>
         <div class="btn-toolbar pull-right">
             <button class="btn btn-danger" onclick="deleteTemplate()" type="button"><?=t('Delete Template')?></button>
             <button type="submit" class="btn btn-primary"><?=t('Update')?></button>
         </div>
     </div>
-    
+    </div> 
+
     </form>
     
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
 
 <? } else { ?>
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Page Types'), false, false);?>
+
+    <div class="ccm-dashboard-header-buttons">
+        <a href="<?php echo View::url('/dashboard/pages/templates/add')?>" class="btn btn-primary"><?php echo t("Add Template")?></a>
+    </div>
 
     <? if (count($templates) == 0) { ?>
         <br/><strong><?=t('No page types found.')?></strong><br/><br>
     <? } else { ?>
 
-    <div class="row">
+        <table class="table table-striped">
 
-        <? foreach($templates as $pt) { ?>
-          <div class="col-md-2">
-            <div class="thumbnail" style="text-align: center">
-                <div style="text-align: center"><?=$pt->getPageTemplateIconImage()?></div>
-                <div class="caption">
-                <h4><?=$pt->getPageTemplateName()?></h4>
-                <p><a href="<?=$view->action('edit', $pt->getPageTemplateID())?>" class="btn btn-default"><?=t('Edit')?></a></p>
-                </div>
-            </div>
-          </div>
+    <? foreach($templates as $pt) { ?>
+        <tr>
+            <td><a href="<?=$view->action('edit', $pt->getPageTemplateID())?>"><?=$pt->getPageTemplateIconImage()?></a></td>
+            <td style="width: 100%; vertical-align: middle"><a href="<?=$view->action('edit', $pt->getPageTemplateID())?>"><p class="lead" style="margin-bottom: 0px"><?=$pt->getPageTemplateName()?></p></a></td>
+        </tr>
+    <? } ?>
 
-        <? } ?>
 
-    </div>
+        </table>
 
     <? } ?>
-    <br/>
-    <div class="clearfix"><a href="<?=$view->url('/dashboard/pages/templates/add')?>" class="btn btn-primary"><?=t('Add Template')?></a></div>
 
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper()?>
 <? } ?>
