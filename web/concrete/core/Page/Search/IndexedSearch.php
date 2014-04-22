@@ -2,6 +2,10 @@
 namespace Concrete\Core\Page\Search;
 use Loader;
 use Config;
+use Cache;
+use PageList;
+use Collection;
+use stdClass;
 class IndexedSearch {
 
 	public $searchBatchSize = PAGE_SEARCH_INDEX_BATCH_SIZE;

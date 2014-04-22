@@ -3,6 +3,7 @@ namespace Concrete\Core\Job;
 use \Job as AbstractJob;
 use Loader;
 use Environment;
+use Queue;
 /**
 *
 * Contains the job class.
@@ -57,8 +58,8 @@ abstract class QueueableJob extends AbstractJob {
 		}
 		return $obj;
 	}
-	
-	/** 
+
+	/**
 	 * Executejob for queueable jobs actually starts the queue, runs, and ends all in one function. This happens if we run a job in legacy mode.
 	 */
 
