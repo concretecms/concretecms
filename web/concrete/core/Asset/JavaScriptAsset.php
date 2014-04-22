@@ -44,7 +44,7 @@ class JavaScriptAsset extends Asset {
 				@file_put_contents($cacheFile, $js);
 			}
 			
-			$asset = new JavascriptAsset();
+			$asset = new JavaScriptAsset();
 			$asset->setAssetURL(self::getRelativeOutputDirectory() . '/' . $filename . '.js');
 			$asset->setAssetPath($directory . '/' . $filename . '.js');
 			return array($asset);
