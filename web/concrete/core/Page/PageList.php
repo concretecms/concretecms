@@ -7,6 +7,7 @@ use User;
 use \Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
 use PermissionKey;
 use Permissions;
+use CollectionAttributeKey;
 /**
 *
 * An object that allows a filtered list of pages to be returned.
@@ -28,9 +29,9 @@ class PageList extends DatabaseItemList {
 	protected $autoSortColumns = array('cvName', 'cvDatePublic', 'cDateAdded', 'cDateModified');
 	protected $indexedSearch = false;
 	protected $viewPagePermissionKeyHandle = 'view_page';
-	
+
 	/* magic method for filtering by page attributes. */
-	
+
 	public function __call($nm, $a) {
 		if (substr($nm, 0, 8) == 'filterBy') {
 			$txt = Loader::helper('text');
@@ -40,7 +41,7 @@ class PageList extends DatabaseItemList {
 			} else {
 				$this->filterByAttribute($attrib, $a[0]);
 			}
-		}		
+		}
         if (substr($nm, 0, 6) == 'sortBy') {
 			$txt = Loader::helper('text');
 			$attrib = $txt->uncamelcase(substr($nm, 6));
@@ -48,11 +49,11 @@ class PageList extends DatabaseItemList {
                 $this->sortBy($attrib, $a[0]);
             }
             else {
-                $this->sortBy($attrib);                
+                $this->sortBy($attrib);
             }
         }
 	}
-	
+
 	public function setViewPagePermissionKeyHandle($pkHandle) {
 		$this->viewPagePermissionKeyHandle = $pkHandle;
 	}
@@ -60,11 +61,11 @@ class PageList extends DatabaseItemList {
 	public function includeInactivePages() {
 		$this->displayOnlyActivePages = false;
 	}
-	
+
 	public function ignorePermissions() {
 		$this->ignorePermissions = true;
 	}
-	
+
 	public function ignoreAliases() {
 		$this->includeAliases = false;
 	}
@@ -72,29 +73,29 @@ class PageList extends DatabaseItemList {
 	public function includeSystemPages() {
 		$this->includeSystemPages = true;
 	}
-	
+
 	public function displayUnapprovedPages() {
 		$this->displayOnlyApprovedPages = false;
 	}
-	
+
 	public function isIndexedSearch() {return $this->indexedSearch;}
-	/** 
+	/**
 	 * Filters by "keywords" (which searches everything including filenames, title, tags, users who uploaded the file, tags)
 	 */
 	public function filterByKeywords($keywords, $simple = false) {
 		$db = Loader::db();
 		$kw = $db->quote($keywords);
 		$qk = $db->quote('%' . $keywords . '%');
-				
+
 		$keys = CollectionAttributeKey::getSearchableIndexedList();
 		$attribsStr = '';
 		foreach ($keys as $ak) {
-			$cnt = $ak->getController();			
+			$cnt = $ak->getController();
 			$attribsStr.=' OR ' . $cnt->searchKeywords($keywords);
 		}
 
 		if ($simple || $this->indexModeSimple) { // $this->indexModeSimple is set by the IndexedPageList class
-			$this->filter(false, "(psi.cName like $qk or psi.cDescription like $qk or psi.content like $qk {$attribsStr})");		
+			$this->filter(false, "(psi.cName like $qk or psi.cDescription like $qk or psi.content like $qk {$attribsStr})");
 		} else {
 			$this->indexedSearch = true;
 			$this->indexedKeywords = $keywords;
@@ -108,33 +109,33 @@ class PageList extends DatabaseItemList {
 			$this->filter('cvName', $name, '=');
 		} else {
 			$this->filter('cvName', '%' . $name . '%', 'like');
-		}	
+		}
 	}
-	
+
 	public function filterByPath($path, $includeAllChildren = true) {
 		if (!$includeAllChildren) {
 			$this->filter('PagePaths.cPath', $path, '=');
 		} else {
 			$this->filter('PagePaths.cPath', $path . '/%', 'like');
-		}	
+		}
 		$this->filter('PagePaths.ppIsCanonical', 1);
 	}
-	
-	/** 
-	 * Sets up a list to only return items the proper user can access 
+
+	/**
+	 * Sets up a list to only return items the proper user can access
 	 */
 	public function setupPermissions() {
-		
+
 		$u = new User();
 		if ($u->isSuperUser() || ($this->ignorePermissions)) {
 			return; // super user always sees everything. no need to limit
 		}
-		
+
 		$accessEntities = $u->getUserAccessEntityObjects();
 		foreach($accessEntities as $pae) {
 			$peIDs[] = $pae->getAccessEntityID();
 		}
-		
+
 		$owpae = PageOwnerPermissionAccessEntity::getOrCreate();
 		// now we retrieve a list of permission duration object IDs that are attached view_page or view_page_version
 		// against any of these access entity objects. We just get'em all.
@@ -151,7 +152,7 @@ class PageList extends DatabaseItemList {
 			foreach($pdIDs as $pdID) {
 				$pd = PermissionDuration::getByID($pdID);
 				if ($pd->isActive()) {
-					$activePDIDs[] = $pd->getPermissionDurationID();	
+					$activePDIDs[] = $pd->getPermissionDurationID();
 				}
 			}
 		}
@@ -166,25 +167,25 @@ class PageList extends DatabaseItemList {
 		if ($this->displayOnlyApprovedPages) {
 			$cvIsApproved = ' and cv.cvIsApproved = 1';
 		}
-		
+
 		$uID = 0;
 		if ($u->isRegistered()) {
 			$uID = $u->getUserID();
 		}
-		
+
 		/*
 		$this->filter(false, "((select count(cID) from PagePermissionAssignments ppa1 inner join PermissionAccessList pa1 on ppa1.paID = pa1.paID where ppa1.cID = {$cInheritPermissionsFromCID} and pa1.accessType = " . PermissionKey::ACCESS_TYPE_INCLUDE . " and pa1.pdID in (" . implode(',', $activePDIDs) . ")
 			and pa1.peID in (" . implode(',', $peIDs) . ") and (if(pa1.peID = " . $owpae->getAccessEntityID() . " and p1.uID <>" . $uID . ", false, true)) and (ppa1.pkID = " . $vpPKID . $cvIsApproved . " or ppa1.pkID = " . $vpvPKID . ")) > 0
 			or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL))");
 		$this->filter(false, "((select count(cID) from PagePermissionAssignments ppaExclude inner join PermissionAccessList paExclude on ppaExclude.paID = paExclude.paID where ppaExclude.cID = {$cInheritPermissionsFromCID} and accessType = " . PermissionKey::ACCESS_TYPE_EXCLUDE . " and pdID in (" . implode(',', $activePDIDs) . ")
-			and paExclude.peID in (" . implode(',', $peIDs) . ") and (if(paExclude.peID = " . $owpae->getAccessEntityID() . " and p1.uID <>" . $uID . ", false, true)) and (ppaExclude.pkID = " . $vpPKID . $cvIsApproved . " or ppaExclude.pkID = " . $vpvPKID . ")) = 0)");		
+			and paExclude.peID in (" . implode(',', $peIDs) . ") and (if(paExclude.peID = " . $owpae->getAccessEntityID() . " and p1.uID <>" . $uID . ", false, true)) and (ppaExclude.pkID = " . $vpPKID . $cvIsApproved . " or ppaExclude.pkID = " . $vpvPKID . ")) = 0)");
 			*/
 
 		$this->filter(false, "((select count(cID) from PagePermissionAssignments ppa1 inner join PermissionAccessList pa1 on ppa1.paID = pa1.paID where ppa1.cID = {$cInheritPermissionsFromCID} and pa1.accessType = " . PermissionKey::ACCESS_TYPE_INCLUDE . " and pa1.pdID in (" . implode(',', $activePDIDs) . ")
 			and pa1.peID in (" . implode(',', $peIDs) . ") and (if(pa1.peID = " . $owpae->getAccessEntityID() . " and p1.uID <>" . $uID . ", false, true)) and (ppa1.pkID = " . $vpPKID . $cvIsApproved . ")) > 0
 			or (p1.cPointerExternalLink !='' AND p1.cPointerExternalLink IS NOT NULL))");
 		$this->filter(false, "((select count(cID) from PagePermissionAssignments ppaExclude inner join PermissionAccessList paExclude on ppaExclude.paID = paExclude.paID where ppaExclude.cID = {$cInheritPermissionsFromCID} and accessType = " . PermissionKey::ACCESS_TYPE_EXCLUDE . " and pdID in (" . implode(',', $activePDIDs) . ")
-			and paExclude.peID in (" . implode(',', $peIDs) . ") and (if(paExclude.peID = " . $owpae->getAccessEntityID() . " and p1.uID <>" . $uID . ", false, true)) and (ppaExclude.pkID = " . $vpPKID . $cvIsApproved . ")) = 0)");		
+			and paExclude.peID in (" . implode(',', $peIDs) . ") and (if(paExclude.peID = " . $owpae->getAccessEntityID() . " and p1.uID <>" . $uID . ", false, true)) and (ppaExclude.pkID = " . $vpPKID . $cvIsApproved . ")) = 0)");
 
 	}
 
@@ -193,17 +194,17 @@ class PageList extends DatabaseItemList {
 			parent::sortBy('cIndexScore', 'desc');
 		}
 	}
-	
 
-	/** 
-	 * Sorts this list by display order 
+
+	/**
+	 * Sorts this list by display order
 	 */
 	public function sortByDisplayOrder() {
 		parent::sortBy('p1.cDisplayOrder', 'asc');
 	}
-	
-	/** 
-	 * Sorts this list by display order descending 
+
+	/**
+	 * Sorts this list by display order descending
 	 */
 	public function sortByDisplayOrderDescending() {
 		parent::sortBy('p1.cDisplayOrder', 'desc');
@@ -212,37 +213,37 @@ class PageList extends DatabaseItemList {
 	public function sortByCollectionIDAscending() {
 		parent::sortBy('p1.cID', 'asc');
 	}
-	
-	/** 
-	 * Sorts this list by public date ascending order 
+
+	/**
+	 * Sorts this list by public date ascending order
 	 */
 	public function sortByPublicDate() {
 		parent::sortBy('cvDatePublic', 'asc');
 	}
-	
-	/** 
-	 * Sorts this list by name 
+
+	/**
+	 * Sorts this list by name
 	 */
 	public function sortByName() {
 		parent::sortBy('cvName', 'asc');
 	}
-	
-	/** 
+
+	/**
 	 * Sorts this list by name descending order
 	 */
 	public function sortByNameDescending() {
 		parent::sortBy('cvName', 'desc');
 	}
 
-	/** 
-	 * Sorts this list by public date descending order 
+	/**
+	 * Sorts this list by public date descending order
 	 */
 	public function sortByPublicDateDescending() {
 		parent::sortBy('cvDatePublic', 'desc');
-	}	
-	
-	/** 
-	 * Sets the parent ID that we will grab pages from. 
+	}
+
+	/**
+	 * Sets the parent ID that we will grab pages from.
 	 * @param mixed $cParentID
 	 */
 	public function filterByParentID($cParentID) {
@@ -262,8 +263,8 @@ class PageList extends DatabaseItemList {
 			$this->filter('p1.cParentID', $cParentID);
 		}
 	}
-	
-	/** 
+
+	/**
 	 * Filters by type of collection (using the ID field)
 	 * @param mixed $ptID
 	 */
@@ -285,14 +286,14 @@ class PageList extends DatabaseItemList {
 		}
 	}
 
-	/** 
+	/**
 	 * @deprecated
 	 */
 	public function filterByCollectionTypeID($ctID) {
 		$this->filterByPageTypeID($ctID);
 	}
-	
-	/** 
+
+	/**
 	 * Filters by user ID of collection (using the uID field)
 	 * @param mixed $uID
 	 */
@@ -305,9 +306,9 @@ class PageList extends DatabaseItemList {
 	}
 
 	public function filterByIsApproved($cvIsApproved) {
-		$this->filter('cv.cvIsApproved', $cvIsApproved);	
+		$this->filter('cv.cvIsApproved', $cvIsApproved);
 	}
-	
+
 	public function filterByIsAlias($ia) {
 		if ($this->includeAliases) {
 			if ($ia == true) {
@@ -317,8 +318,8 @@ class PageList extends DatabaseItemList {
 			}
 		}
 	}
-	
-	/** 
+
+	/**
 	 * Filters by type of collection (using the handle field)
 	 * @param mixed $ptHandle
 	 */
@@ -346,14 +347,14 @@ class PageList extends DatabaseItemList {
 
 
 
-	/** 
+	/**
 	 * Filters by date added
 	 * @param string $date
 	 */
 	public function filterByDateAdded($date, $comparison = '=') {
 		$this->filter('c.cDateAdded', $date, $comparison);
 	}
-	
+
 	public function filterByNumberOfChildren($num, $comparison = '>') {
 		if (!Loader::helper('validation/numbers')->integer($num)) {
 			$num = 0;
@@ -369,14 +370,14 @@ class PageList extends DatabaseItemList {
 		$this->filter('c.cDateModified', $date, $comparison);
 	}
 
-	/** 
+	/**
 	 * Filters by public date
 	 * @param string $date
 	 */
 	public function filterByPublicDate($date, $comparison = '=') {
 		$this->filter('cv.cvDatePublic', $date, $comparison);
 	}
-		
+
 	/***
 	 * Like filterByAttribute(), but wraps values properly for "select" type attributes.
 	 * Accepts either a single value, or an array of values.
@@ -387,12 +388,12 @@ class PageList extends DatabaseItemList {
 		if (empty($value)) {
 			return;
 		}
-		
+
 		//Determine if this attribute allows multiple selections
 		$ak = CollectionAttributeKey::getByHandle($akHandle);
 		$akc = $ak->getController();
 		$isMultiSelect = $akc->getAllowMultipleValues();
-		
+
 		//Explanation of query logic: "select" attributes wrap each value in newline characters when
 		// saving to the db, which allows parsing of individual values within a "multi-select" attribute.
 		//
@@ -424,8 +425,8 @@ class PageList extends DatabaseItemList {
 			$this->filterByAttribute($akHandle, "\n{$value}\n");
 		}
 	}
-	
-	/** 
+
+	/**
 	 * If true, pages will be checked for permissions prior to being returned
 	 * @param bool $checkForPermissions
 	 */
@@ -436,18 +437,18 @@ class PageList extends DatabaseItemList {
 			$this->ignorePermissions = true;
 		}
 	}
-	
+
 	protected function setBaseQuery($additionalFields = '') {
 		if ($this->isIndexedSearch()) {
 			$db = Loader::db();
 			$ik = ', match(psi.cName, psi.cDescription, psi.content) against (' . $db->quote($this->indexedKeywords) . ') as cIndexScore ';
 		}
-	
+
 		if (!$this->includeAliases) {
 			$this->filter(false, '(p1.cPointerID < 1 or p1.cPointerID is null)');
 		}
-		
-		$cvID = '(select max(cvID) from CollectionVersions where cID = cv.cID)';		
+
+		$cvID = '(select max(cvID) from CollectionVersions where cID = cv.cID)';
 		if ($this->displayOnlyApprovedPages) {
 			$cvID = '(select cvID from CollectionVersions where cvIsApproved = 1 and cID = cv.cID)';
 			$this->filter('cvIsApproved', 1);
@@ -458,61 +459,61 @@ class PageList extends DatabaseItemList {
 		} else {
 			$this->setQuery('select p1.cID, pt.ptHandle ' . $ik . $additionalFields . ' from Pages p1 left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = p1.cID) inner join CollectionVersions cv on (cv.cID = p1.cID and cvID = ' . $cvID . ') left join PageTypes pt on (pt.ptID = p1.ptID)  inner join Collections c on (c.cID = p1.cID)');
 		}
-		
+
 		if ($this->includeAliases) {
 			$this->filter(false, "(p1.cIsTemplate = 0 or p2.cIsTemplate = 0)");
 		} else {
 			$this->filter('p1.cIsTemplate', 0);
 		}
-		
+
 		$this->setupPermissions();
-		
+
 		if ($this->includeAliases) {
 			$this->setupAttributeFilters("left join CollectionSearchIndexAttributes on (CollectionSearchIndexAttributes.cID = if (p2.cID is null, p1.cID, p2.cID))");
 		} else {
 			$this->setupAttributeFilters("left join CollectionSearchIndexAttributes on (CollectionSearchIndexAttributes.cID = p1.cID)");
 		}
-		
+
 		if ($this->displayOnlyActivePages) {
 			$this->filter('p1.cIsActive', 1);
 		}
 		$this->setupSystemPagesToExclude();
-		
+
 	}
-	
+
 	protected function setupSystemPagesToExclude() {
 		if ($this->includeSystemPages || $this->filterByCParentID > 1 || $this->filterByPageType == true) {
 			return false;
 		}
 		if ($this->includeAliases) {
-			$this->filter(false, "(p1.cIsSystemPage = 0 or p2.cIsSystemPage = 0)");	
+			$this->filter(false, "(p1.cIsSystemPage = 0 or p2.cIsSystemPage = 0)");
 		} else {
-			$this->filter(false, "(p1.cIsSystemPage = 0)");	
+			$this->filter(false, "(p1.cIsSystemPage = 0)");
 		}
 	}
-	
+
 	protected function loadPageID($cID, $versionOrig = 'RECENT') {
 		return ConcretePage::getByID($cID, $versionOrig);
 	}
-	
+
 	public function getTotal() {
 		if ($this->getQuery() == '') {
 			$this->setBaseQuery();
-		}		
+		}
 		return parent::getTotal();
 	}
-	
-	/** 
+
+	/**
 	 * Returns an array of page objects based on current settings
 	 */
 	public function get($itemsToGet = 0, $offset = 0) {
 		$pages = array();
 		if ($this->getQuery() == '') {
 			$this->setBaseQuery();
-		}		
-		
+		}
+
 		$this->setItemsPerPage($itemsToGet);
-		
+
 		$r = parent::get($itemsToGet, $offset);
 		foreach($r as $row) {
 			$nc = $this->loadPageID($row['cID'], 'ACTIVE');
