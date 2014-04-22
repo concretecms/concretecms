@@ -99,9 +99,8 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 		public function getFeatureAssignments() {
 			if (is_object($this->vObj)) {
 				return CollectionVersionFeatureAssignment::getList($this);
-			} else {
-				return array();
 			}
+			return array();
 		}
 
 
