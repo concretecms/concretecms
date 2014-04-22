@@ -8,12 +8,19 @@ use Request;
 
 class ControllerRouteCallback extends RouteCallback {
 
-	public function execute(Request $request, \Concrete\Core\Routing\Route $route, $parameters) {
-		$resolver = new \Concrete\Core\Controller\ControllerResolver();
-	    $callback = $resolver->getController($request);
-	    $arguments = $resolver->getArguments($request, $callback);
-	    $controller = $callback[0];
-	    $method = $callback[1];
+
+	/**
+	 * @param Request $request
+	 * @param Route $route
+	 * @param array $parameters
+	 * @return Response
+	 */
+	public function execute(Request $request, Route $route, $parameters) {
+		$resolver = new HttpKernel\Controller\ControllerResolver();
+		$callback = $resolver->getController($request);
+		$arguments = $resolver->getArguments($request, $callback);
+		$controller = $callback[0];
+		$method = $callback[1];
 		$controller->on_start();
 		$response = $controller->runAction($method, $arguments);
 		if ($response instanceof Response || $response instanceof RedirectResponse) {
@@ -21,9 +28,9 @@ class ControllerRouteCallback extends RouteCallback {
 			return $response;
 		}
 
-	    $view = $controller->getViewObject();
-	    if (is_object($view)) {
-		    $view->setController($controller);
+		$view = $controller->getViewObject();
+		if (is_object($view)) {
+			$view->setController($controller);
 			if (isset($view) && $view instanceof View) {
 				$content = $view->render();
 			}
@@ -33,6 +40,9 @@ class ControllerRouteCallback extends RouteCallback {
 		return $response;
 	}
 
+	/**
+	 * @return array
+	 */
 	public static function getRouteAttributes($callback) {
 		$attributes = array();
 		$attributes['_controller'] = $callback;

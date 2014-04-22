@@ -64,7 +64,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 	 */
 	public static function getByID($cID, $version = 'RECENT', $class = 'Page') {
 
-		$c = CacheLocal::getEntry('page', $cID . ':' . $version);
+		$c = CacheLocal::getEntry('page', $cID . ':' . $version . ':' . $class);
 		if ($c instanceof $class) {
 			return $c;
 		}
@@ -74,7 +74,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 		$c->populatePage($cID, $where, $version);
 
 		// must use cID instead of c->getCollectionID() because cID may be the pointer to another page
-		CacheLocal::set('page', $cID . ':' . $version, $c);
+		CacheLocal::set('page', $cID . ':' . $version . ':' . $class, $c);
 
 		return $c;
 	}
@@ -425,7 +425,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 	 */
 	function isGeneratedCollection() {
 		// generated collections are collections without types, that have special cFilename attributes
-		return $this->cFilename != null && $this->vObj->ptID == 0;
+		return $this->cFilename && !$this->vObj->ptID;
 	}
 
 	public function assignPermissions($userOrGroup, $permissions = array(), $accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE) {
@@ -2065,15 +2065,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
 	function getNextSubPageDisplayOrder() {
 		$db = Loader::db();
-		$max = $db->getOne("select max(cDisplayOrder) from Pages where cParentID = " . $this->getCollectionID());
-		if ($max == "" || $max == null) {
-			return 0;
-		} else if (!$max) {
-			return 1;
-		} else {
-			return $max + 1;
-		}
-
+		$max = $db->getOne("select max(cDisplayOrder) from Pages where cParentID = ?", array($this->getCollectionID()));
+		return is_numeric($max) ? ($max + 1) : 0;
 	}
 
 	function rescanCollectionPath($retainOldPagePath = false) {
