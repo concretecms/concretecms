@@ -2,7 +2,7 @@
 namespace Concrete\Core\Page;
 use User;
 
-class MovePageEvent extends Event {
+class DuplicatePageEvent extends Event {
 
 	protected $newPage;
 
