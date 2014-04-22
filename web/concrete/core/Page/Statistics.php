@@ -13,9 +13,8 @@ class Statistics {
 		$db = Loader::db();
 		if ($date != null) {
 			return $db->GetOne("select count(pstID) from PageStatistics where date = ?", array($date));
-		} else {
-			return $db->GetOne("select count(pstID) from PageStatistics");
 		}
+		return $db->GetOne("select count(pstID) from PageStatistics");
 	}
 
 	/**
@@ -29,10 +28,9 @@ class Statistics {
 		if ($date != null) {
 			$v = array($u->getUserID(), $date);
 			return $db->GetOne("select count(pstID) from PageStatistics where uID <> ? and date = ?", $v);
-		} else {
-			$v = array($u->getUserID());
-			return $db->GetOne("select count(pstID) from PageStatistics where uID <> ?", $v);
 		}
+		$v = array($u->getUserID());
+		return $db->GetOne("select count(pstID) from PageStatistics where uID <> ?", $v);
 	}
 
 	/**
@@ -44,7 +42,7 @@ class Statistics {
 		$db = Loader::db();
 		return $db->GetOne("select count(cvID) from CollectionVersions");
 	}
-	
+
 	/**
 	 * Returns the datetime of the last edit to the site. Used in the dashboard
 	 * @return datetime
@@ -55,11 +53,10 @@ class Statistics {
 		if(ENABLE_USER_TIMEZONES && $type == 'user') {
 			$dh = Loader::helper('date');
 			return $dh->getLocalDateTime($cDateModified);
-		} else {
-			return $cDateModified;
 		}
+		return $cDateModified;
 	}
-	
+
 	/**
 	 * Gets the total number of pages currently in edit mode
 	 * @return int
@@ -68,8 +65,8 @@ class Statistics {
 		$db = Loader::db();
 		return $db->GetOne("select count(cID) from Pages where cIsCheckedOut = 1");
 	}
-	
-	
+
+
 	/** 
 	 * For a particular page ID, grabs all the pages of this page, and increments the cTotalChildren number for them
 	 */
@@ -99,14 +96,14 @@ class Statistics {
 		}
 
 		$q = "update Pages set cChildren = ? where cID = ?";
-		
+
 		$cpc = Page::getByID($cParentID);
 		$cpc->refreshCache();
-		
+
 		$r = $db->query($q, array($cChildren, $cParentID));
 
 	}
-	
+
 	/** 
 	 * Returns the total number of pages created for a given date 
 	 */
@@ -115,4 +112,6 @@ class Statistics {
 		$num = $db->GetOne('select count(Pages.cID) from Pages inner join Collections on Pages.cID = Collections.cID where cDateAdded >= ? and cDateAdded <= ? and cIsSystemPage = 0 and cIsTemplate = 0', array($date . ' 00:00:00', $date . ' 23:59:59'));
 		return $num;
 	}
+
+
 }
