@@ -6,7 +6,7 @@ use CacheLocal;
 use AssetList;
 use View;
 use \Concrete\Core\Package\PackageList;
-use \Concrete\Core\Asset\JavaScriptAsset;
+use \Concrete\Core\Asset\JavascriptAsset;
 use \Concrete\Core\Asset\CSSAsset;
 
 class BlockViewTemplate {
@@ -180,7 +180,7 @@ class BlockViewTemplate {
 							$v->requireAsset('css', 'blocks/'. $this->btHandle);
 							break;
 						case 'JAVASCRIPT':
-							$asset = new JavaScriptAsset('blocks/'. $this->btHandle);
+							$asset = new JavascriptAsset('blocks/'. $this->btHandle);
 							$asset->setAssetURL($this->getBaseURL() . '/' . $i);
 							$asset->setAssetPath($this->basePath . '/' . $i);
 							$al->registerAsset($asset);
@@ -205,7 +205,7 @@ class BlockViewTemplate {
 			if (count($js) > 0) {
 				foreach($js as $i) {
 					if (substr($i,-3)=='.js') {
-						$asset = new JavaScriptAsset('blocks/'. $this->btHandle . '/'. substr($i, 0, -3));
+						$asset = new JavascriptAsset('blocks/'. $this->btHandle . '/'. substr($i, 0, -3));
 						$asset->setAssetURL($this->getBaseURL() . '/' . DIRNAME_JAVASCRIPT . '/' . $i);
 						$asset->setAssetPath($this->basePath . '/' . DIRNAME_JAVASCRIPT . '/' . $i);
 						$al->registerAsset($asset);
