@@ -184,7 +184,7 @@
         Concrete.event.fire('EditModeContenders', contenders);
         my.selectContender(pep, block, contenders, data.event);
       });
-    }, 250, true));
+    }, 250, {trailing: false}));
 
     Concrete.event.bind('EditModeBlockDragStop', function editModeEditModeBlockDragStopEventHandler() {
       Concrete.event.fire('EditModeContenders', []);
