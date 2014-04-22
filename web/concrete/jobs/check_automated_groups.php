@@ -1,6 +1,11 @@
 <?
 namespace Concrete\Job;
+use Loader;
 use QueueableJob;
+use Group;
+use User;
+use Zend_Queue;
+use Zend_Queue_Message;
 class CheckAutomatedGroups extends QueueableJob {
 
 	public $jSupportsQueue = true;
@@ -8,7 +13,7 @@ class CheckAutomatedGroups extends QueueableJob {
 	public function getJobName() {
 		return t("Check Automated Groups");
 	}
-	
+
 	public function getJobDescription() {
 		return t("Automatically add users to groups and assign badges..");
 	}
@@ -20,7 +25,7 @@ class CheckAutomatedGroups extends QueueableJob {
 			$q->send($row['uID']);
 		}
 	}
-	
+
 	public function finish(Zend_Queue $q) {
 		return t('Active users updated.');
 	}
