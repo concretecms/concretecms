@@ -1,29 +1,31 @@
 <?
 namespace Concrete\Job;
 use \Job as AbstractJob;
+use Config;
+use PageList;
 class RemoveOldPageVersions extends AbstractJob {
 
 	public function getJobName() {
 		return t("Remove Old Page Versions");
 	}
-	
+
 	public function getJobDescription() {
 		return t("Removes all except the 10 most recent page versions for each page.");
 	}
-		
+
 	public function run() {
 
 		$cfg = new Config;
 		$pNum = (int) $cfg->get('OLD_VERSION_JOB_PAGE_NUM');
 		$pNum = $pNum < 0 ? 1 : $pNum + 1;
-		
+
 		$pl = new PageList;
 		$pl->setItemsPerPage(3);
-		/* probably want to keep a record of pages that have been gone through 
+		/* probably want to keep a record of pages that have been gone through
 		 * so you don't start from the beginning each time..
 		 */
 		$pages = $pl->getPage($pNum);
-		
+
 		if(!count($pages)) {
 			$cfg->save('OLD_VERSION_JOB_PAGE_NUM',0);
 			return t("All pages have been processed, starting from beginning on next run.");
