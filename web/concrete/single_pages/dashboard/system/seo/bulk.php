@@ -1,5 +1,5 @@
 <?php  defined('C5_EXECUTE') or die('Access Denied');?>
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Bulk SEO Updater'), t('Manage Search Engine Optimization (SEO) Related Page Properties.'), false, false); 
+<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Bulk SEO Updater'), t('Manage Search Engine Optimization (SEO) Related Page Properties.'), false, false);
 $pageSelector = Loader::helper('form/page_selector');
 $nh = Loader::helper('navigation');
 $th = Loader::helper('text');
@@ -10,12 +10,12 @@ $th = Loader::helper('text');
 			padding: 15px;
 			position: relative;
 		}
-	
+
 		.rowHolder div {
 			float: left;
 			min-height: 100px;
 		}
-		
+
 		.rowHolder div.metaInput {
 			float: none;
 			margin: 0px;
@@ -24,20 +24,20 @@ $th = Loader::helper('text');
 		.rowHolder div.headings {
 			min-height: 50px;
 		}
-	
+
 		.rowHolder.stripe {
 			background: #eee;
 		}
-		
+
 		.rowHolder.stripe .help-inline {
 			color: #999;
 		}
-		
-		
+
+
 		.updateButton {
 			float: right;
 		}
-		
+
 		.headingsContainer {
 			float: left;
 			width: 150px;
@@ -45,27 +45,27 @@ $th = Loader::helper('text');
 			border: 1px solid #ddd;
 			border-radius: 10px;
 		}
-		
+
 		.headings {
 			float: left;
 			clear: both;
 		}
-		
+
 		.metaFieldContainer {
 			float: left;
 			width: 650px;
 			padding-left: 30px;
 		}
-		
+
 		.metaFieldContainer div {
 			margin: 0px 10px 10px 10px;
 		}
-		
+
 		div.updateButton {
 			float: right;
 			min-height: 0;
 		}
-		
+
 		a.url-path {
 			word-wrap: break-word;
 			width: 300px;
@@ -96,7 +96,7 @@ $th = Loader::helper('text');
 				'100' => '100',
 				'500' => '500'
 			), Loader::helper('text')->specialchars($searchRequest['numResults']), array('style' => 'width:65px; margin: 0px 10px 0px 10px;'))?>
-			<?php print $concrete_interface->submit(t('Search'), $formID, $buttonAlign = 'left', 'searchSubmit'); ?><br />
+			<?php print $form->submit(t('Search'), $formID, $buttonAlign = 'left', 'searchSubmit'); ?><br />
 			<a href="javascript:void(0)" class="ccm-icon-option-closed" id="searchUnderParent"><?php echo t('Advanced Search'); ?></a>
 			<div id="parentOptions" style="margin-left: 25px; display: <?php echo $parentDialogOpen ? 'block' : 'none'; ?>">
 			<div id="pageSelectorHolder" style="float: left; width: 400px; margin-top: 15px;">
@@ -131,7 +131,7 @@ if (count($pages) > 0) {
 				<div class="rowHolder <?php echo $stripe; ?> ccm-seoRow-<?php echo $cID; ?>" style="float: left;">
 					<form id="seoForm<?php echo $cID; ?>" action="<?php echo View::url('/dashboard/system/seo/page_data/', 'saveRecord')?>" method="post" class="pageForm">
 						<div class="headingsContainer">
-						
+
 							<div class="headings">
 								<?php echo $form->hidden('cID', $cID) ?>
 								<strong><?php echo t('Page Name'); ?></strong>
@@ -141,7 +141,7 @@ if (count($pages) > 0) {
 								<br />
 								<br />
 							</div>
-						
+
 							<div class="headings">
 								<strong><?php echo t('Page Type'); ?></strong>
 								<br />
@@ -150,7 +150,7 @@ if (count($pages) > 0) {
 								<br />
 								<br />
 							</div>
-								
+
 							<div class="headings"><strong><?php echo t('Modified'); ?></strong>
 								<br />
 								<br />
@@ -158,10 +158,10 @@ if (count($pages) > 0) {
 								<br />
 								<br />
 							</div>
-								
+
 						</div>
-						
-						
+
+
 						<div class="metaFieldContainer">
 							<div><strong><?php echo t('Meta Title'); ?></strong>
 							<br />
@@ -172,38 +172,38 @@ if (count($pages) > 0) {
 									$autoTitle = sprintf(PAGE_TITLE_FORMAT, SITE, $pageTitle);
 									$titleInfo = array('title' => $cID);
 									if(strlen($cobj->getAttribute('meta_title')) <= 0) {
-										 $titleInfo[style] = 'background: whiteSmoke'; 
+										 $titleInfo[style] = 'background: whiteSmoke';
 									}
-									echo $form->text('meta_title', $cobj->getAttribute('meta_title') ? $cobj->getAttribute('meta_title') : $autoTitle, $titleInfo); 
+									echo $form->text('meta_title', $cobj->getAttribute('meta_title') ? $cobj->getAttribute('meta_title') : $autoTitle, $titleInfo);
 									echo $titleInfo[style] ? '<br /><span class="help-inline">' . t('Default value. Click to edit.') . '</span>' : '' ?>
 								</div>
 							</div>
-								
+
 							<div style="margin-left: 30px;"><strong><?php echo t('Meta Description'); ?></strong>
 							<br />
 							<br />
 								<div class="metaInput">
 									<?php $pageDescription = $cobj->getCollectionDescription();
 									$autoDesc = htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET);
-									$descInfo = array('title' => $cID); 
+									$descInfo = array('title' => $cID);
 									if(strlen($cobj -> getAttribute('meta_description')) <= 0) {
-										$descInfo[style] = 'background: whiteSmoke'; 
+										$descInfo[style] = 'background: whiteSmoke';
 									}
-									echo $form->textarea('meta_description', $cobj->getAttribute('meta_description') ? $cobj->getAttribute('meta_description') : $autoDesc, $descInfo); 
+									echo $form->textarea('meta_description', $cobj->getAttribute('meta_description') ? $cobj->getAttribute('meta_description') : $autoDesc, $descInfo);
 									echo $descInfo[style] ? '<br /><span class="help-inline">' . t('Default value. Click to edit.') . '</span>' : '';
 									 ?>
 								</div>
 							</div>
-								
+
 							<div>
 								<strong><?php echo t('Meta Keywords'); ?></strong>
 								<br />
 								<br />
 								<?php echo $form->textarea('meta_keywords', $cobj->getAttribute('meta_keywords'), array('title' => $cID)); ?>
 							</div>
-								
+
 							<? if ($cobj->getCollectionID() != HOME_CID) { ?>
-							
+
 							<div style="margin-left: 30px;">
 								<strong><?php echo t('Slug'); ?></strong>
 								<br />
@@ -221,11 +221,11 @@ if (count($pages) > 0) {
 								?>
 							</div>
 							<? } ?>
-									
+
 							<div class="updateButton">
 								<br />
 								<br />
-								<?php print $concrete_interface->submit(t('Save'), $formID, $buttonAlign = 'right', 'seoSubmit update' . $cID, array('title' => $cID)); ?>
+								<?php print $form->submit(t('Save'), $formID, $buttonAlign = 'right', 'seoSubmit update' . $cID, array('title' => $cID)); ?>
 							</div>
 							<div>
 								<img style="display: none; position: absolute; top: 20px; right: 20px;" id="throbber<?php echo $cID ?>"  class="throbber<?php echo $cID ?>" src="<?php echo ASSETS_URL_IMAGES . '/throbber_white_32.gif' ?>" />
@@ -234,17 +234,17 @@ if (count($pages) > 0) {
 					</form>
 				</div>
 			</div>
-			<div style="clear: left"></div>	
+			<div style="clear: left"></div>
 		<?php } ?>
 	<?php } else { ?>
 		<div class="ccm-results-list-none"><?php echo t('No pages found.')?></div>
 	<?php  }
-	print $concrete_interface->button(t('Update All'), 'javascript:void(0)', $buttonAlign='right', $innerClass=null, $args = array('id'=>'allSeoSubmit'));
+	print $form->button(t('Update All'), 'javascript:void(0)', $buttonAlign='right', $innerClass=null, $args = array('id'=>'allSeoSubmit'));
  	?>
 	<div style="clear: left;"></div>
 	<script type="text/javascript">
 	$(document).ready(function() {
-		var options = { 
+		var options = {
 			url: '<?php echo $view->action("saveRecord") ?>',
 			dataType: 'json',
 			success:function(res) {
@@ -266,28 +266,28 @@ if (count($pages) > 0) {
 				}
 			}
 		};
-		
-		$('.rowHolder input[type="text"], .rowHolder textarea' ).change(function() { 
+
+		$('.rowHolder input[type="text"], .rowHolder textarea' ).change(function() {
 			var identifier =  $(this).attr('title');
-			$('.seoSubmit[title= ' + identifier + ']').addClass('success').addClass('valueChanged'); 
+			$('.seoSubmit[title= ' + identifier + ']').addClass('success').addClass('valueChanged');
 		});
-		
-		$('.seoSubmit').click(function() { 
-			var iterator = $(this).attr('title'); 
-			$('#seoForm' + iterator).ajaxForm(options); 
+
+		$('.seoSubmit').click(function() {
+			var iterator = $(this).attr('title');
+			$('#seoForm' + iterator).ajaxForm(options);
 			$('#throbber'+iterator).show();
 		});
-		
+
 		$('#allSeoSubmit').click(function() {
 			$('.valueChanged').click();
 		});
-		
+
 		$('.metaInput').click(function(){
 			$(this).children().css({'background' : 'white'});
 			$(this).children('.help-inline').hide();
 		})
 	});
-	
+
 	</script>
 	<?php $pageList->displaySummary(); ?>
 </div>
