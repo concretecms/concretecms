@@ -1,14 +1,13 @@
 <?php
 namespace Concrete\Core\Area;
 use Loader;
-use Area;
 use Page;
 use Permissions;
 use Stack;
 class GlobalArea extends Area {
 
 	public function isGlobalArea() {return true;}
-	
+
 	public function create($c, $arHandle) {
 		$db = Loader::db();
 		Stack::getOrCreateGlobalArea($arHandle);
@@ -81,12 +80,12 @@ class GlobalArea extends Area {
 	 * Note that this function does not delete the global area's stack.
 	 * You probably want to call the "delete" method of the Stack model instead.
 	 */
-	public static function deleteByName($arHandle) { 
+	public static function deleteByName($arHandle) {
 		$db = Loader::db();
 		$r = $db->Execute('select cID from Areas where arHandle = ? and arIsGlobal = 1', array($arHandle));
 		$db->Execute('delete from Areas where arHandle = ? and arIsGlobal = 1', array($arHandle));
 	}
-	
+
 
 
 }
