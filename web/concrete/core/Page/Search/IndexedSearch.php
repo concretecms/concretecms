@@ -1,14 +1,15 @@
 <?
 namespace Concrete\Core\Page\Search;
 use Loader;
+use Config;
 class IndexedSearch {
-	
+
 	public $searchBatchSize = PAGE_SEARCH_INDEX_BATCH_SIZE;
 	public $searchReindexTimeout = PAGE_SEARCH_INDEX_LIFETIME;
 
 	private $cPathSections = array();
 	private $searchableAreaNames;
-	
+
 	public function getSearchableAreaAction() {
 		$action = Config::get('SEARCH_INDEX_AREA_METHOD');
 		if (!strlen($action)) {
@@ -16,7 +17,7 @@ class IndexedSearch {
 		}
 		return $action;
 	}
-	
+
 	public function getSavedSearchableAreas() {
 		$areas = Config::get('SEARCH_INDEX_AREA_LIST');
 		$areas = unserialize($areas);
@@ -25,7 +26,7 @@ class IndexedSearch {
 		}
 		return $areas;
 	}
-	
+
 	public function clearSearchIndex() {
 		$db = Loader::db();
 		$db->Execute('truncate table PageSearchIndex');
@@ -56,27 +57,27 @@ class IndexedSearch {
 
 		return false;
 	}
-	
+
 	public function reindexPage($page) {
-		$db = Loader::db();			
+		$db = Loader::db();
 		if (is_object($page) && ($page instanceof Collection) && ($page->getAttribute('exclude_search_index') != 1)) {
 			$datetime = Loader::helper('date')->getSystemDateTime();
 			$db->Replace('PageSearchIndex', array(
-				'cID' => $page->getCollectionID(), 
-				'cName' => $page->getCollectionName(), 
-				'cDescription' => $page->getCollectionDescription(), 
+				'cID' => $page->getCollectionID(),
+				'cName' => $page->getCollectionName(),
+				'cDescription' => $page->getCollectionDescription(),
 				'cPath' => $page->getCollectionPath(),
-				'cDatePublic' => $page->getCollectionDatePublic(), 
+				'cDatePublic' => $page->getCollectionDatePublic(),
 				'content' => $this->getBodyContentFromPage($page),
 				'cDateLastIndexed' => $datetime
-			), array('cID'), true);			
+			), array('cID'), true);
 		} else {
 			$db->Execute('delete from PageSearchIndex where cID = ?', array($page->getCollectionID()));
 		}
-	}	
-	
+	}
+
 	public function getBodyContentFromPage($c) {
-		
+
 		$text = '';
 
 		$tagsToSpaces=array('<br>','<br/>','<br />','<p>','</p>','</ p>','<div>','</div>','</ div>','&nbsp;');
@@ -93,31 +94,31 @@ class IndexedSearch {
 				$bi = $b->getInstance();
 				$bi->bActionCID = $c->getCollectionID();
 				if(method_exists($bi,'getSearchableContent')){
-					$searchableContent = $bi->getSearchableContent();  
-					if(strlen(trim($searchableContent))) 					
+					$searchableContent = $bi->getSearchableContent();
+					if(strlen(trim($searchableContent)))
 						$text .= $th->decodeEntities(strip_tags(str_ireplace($tagsToSpaces,' ',$searchableContent)), ENT_QUOTES, APP_CHARSET).' ';
 				}
 				unset($b);
 				unset($bi);
-			}		
+			}
 		}
-		
+
 		return $text;
 	}
-	
-	/** 
+
+	/**
 	 * Reindexes the search engine.
 	 */
 	public function reindexAll($fullReindex = false) {
 		Cache::disableLocalCache();
-		
+
 		$db = Loader::db();
-		
-		
+
+
 		if ($fullReindex) {
 			$db->Execute("truncate table PageSearchIndex");
 		}
-		
+
 		$pl = new PageList();
 		$pl->ignoreAliases();
 		$pl->ignorePermissions();
@@ -125,24 +126,24 @@ class IndexedSearch {
 		$pl->filter(false, '(c.cDateModified > psi.cDateLastIndexed or UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(psi.cDateLastIndexed) > ' . $this->searchReindexTimeout . ' or psi.cID is null or psi.cDateLastIndexed is null)');
 		$pl->filter(false, '(ak_exclude_search_index is null or ak_exclude_search_index = 0)');
 		$pages = $pl->get($this->searchBatchSize);
-		
+
 		$num = 0;
-		foreach($pages as $c) { 
-			
+		foreach($pages as $c) {
+
 			// make sure something is approved
 			$cv = $c->getVersionObject();
-			if(!$cv->cvIsApproved) { 
+			if(!$cv->cvIsApproved) {
 				continue;
-			}		
+			}
 
 			$c->reindex($this, true);
-			$num++;		
+			$num++;
 			unset($c);
 		}
-		
+
 		$pnum = Collection::reindexPendingPages();
 		$num = $num + $pnum;
-		
+
 		Cache::enableLocalCache();
 		$result = new stdClass;
 		$result->count = $num;
