@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 $rl = Router::getInstance();
 
-/** 
+/**
  * Install
  */
 $rl->register('/install', '\Concrete\Controller\Install::view');
@@ -14,13 +14,13 @@ $rl->register('/install/configure', '\Concrete\Controller\Install::configure');
 $rl->register('/install/run_routine/{pkgHandle}/{routine}', '\Concrete\Controller\Install::run_routine');
 
 
-/** 
+/**
  * Tools - legacy
  */
-$rl->register('/tools/blocks/{btHandle}/{tool}', '\Concrete\Core\Legacy\Controller\ToolController::displayBlock', 'blockTool', array('tool' => '[A-Za-z0-9_/]+'));
-$rl->register('/tools/{tool}', '\Concrete\Core\Legacy\Controller\ToolController::display', 'tool', array('tool' => '[A-Za-z0-9_/]+'));
+$rl->register('/tools/blocks/{btHandle}/{tool}', '\Concrete\Core\Legacy\Controller\ToolController::displayBlock', 'blockTool', array('tool' => '[A-Za-z0-9_/.]+'));
+$rl->register('/tools/{tool}', '\Concrete\Core\Legacy\Controller\ToolController::display', 'tool', array('tool' => '[A-Za-z0-9_/.]+'));
 
-/** 
+/**
  * Dialog
  */
 
@@ -69,7 +69,7 @@ $rl->register('/ccm/system/file/duplicate', '\Concrete\Controller\Backend\File::
 $rl->register('/ccm/system/file/upload', '\Concrete\Controller\Backend\File::upload');
 
 
-/** 
+/**
  * Users
  */
 $rl->register('/ccm/system/user/add_group', '\Concrete\Controller\Backend\User::addGroup');
@@ -83,13 +83,13 @@ $rl->register('/ccm/system/page/create/{ptID}', '\Concrete\Controller\Backend\Pa
 $rl->register('/ccm/system/page/arrange_blocks/', '\Concrete\Controller\Backend\Page\ArrangeBlocks::arrange');
 
 
-/** 
+/**
  * Misc
  */
 $rl->register('/ccm/system/css/page/{cID}/{cvID}/{stylesheet}', '\Concrete\Controller\Frontend\Stylesheet::page');
 $rl->register('/ccm/system/css/layout/{bID}', '\Concrete\Controller\Frontend\Stylesheet::layout');
 
-/** 
+/**
  * Search Routes
  */
 $rl->register('/ccm/system/search/pages/submit', '\Concrete\Controller\Search\Pages::submit');
@@ -101,7 +101,7 @@ $rl->register('/ccm/system/search/users/field/{field}', '\Concrete\Controller\Se
 $rl->register('/ccm/system/search/groups/submit', '\Concrete\Controller\Search\Groups::submit');
 
 
-/** 
+/**
  * Panels - top level
  */
 $rl->register('/ccm/system/panels/dashboard', '\Concrete\Controller\Panel\Dashboard::view');
@@ -127,7 +127,7 @@ $rl->register('/ccm/system/panels/page/versions/new_page', '\Concrete\Controller
 $rl->register('/ccm/system/panels/page/versions/delete', '\Concrete\Controller\Panel\Page\Versions::delete');
 $rl->register('/ccm/system/panels/page/versions/approve', '\Concrete\Controller\Panel\Page\Versions::approve');
 
-/** 
+/**
  * Panel Details
  */
 
@@ -150,7 +150,7 @@ $rl->register('/ccm/system/panels/details/page/caching/purge', '\Concrete\Contro
 $rl->register('/ccm/system/panels/details/page/permissions', '\Concrete\Controller\Panel\Detail\Page\Permissions::view');
 $rl->register('/ccm/system/panels/details/page/permissions/save_simple', '\Concrete\Controller\Panel\Detail\Page\Permissions::save_simple');
 
-/** 
+/**
  * Special Dashboard
  */
 $rl->register('/dashboard/blocks/stacks/list', function() {

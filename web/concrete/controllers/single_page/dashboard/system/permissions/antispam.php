@@ -5,8 +5,8 @@ use Config;
 use Loader;
 use \Concrete\Core\Antispam\Library as SystemAntispamLibrary;
 
-class Concrete5_Controller_Page_Dashboard_System_Permissions_Antispam extends DashboardPageController {
-	
+class Antispam extends DashboardPageController {
+
 	public function view() {
 		$list = SystemAntispamLibrary::getList();
 		$libraries = array('' => t('** None Activated'));
@@ -17,7 +17,7 @@ class Concrete5_Controller_Page_Dashboard_System_Permissions_Antispam extends Da
 		$this->set('activeLibrary', $scl);
 		$this->set('libraries', $libraries);
 
-		$db = Loader::db(); 
+		$db = Loader::db();
 		$groups = array('-1'=>'** None Selected');
 		$groupquery = $db->query('SELECT gID, gName from Groups');
 		while ($group = $groupquery->fetchRow()) {
@@ -27,7 +27,7 @@ class Concrete5_Controller_Page_Dashboard_System_Permissions_Antispam extends Da
 		$this->set('groups',$groups);
 		$this->set('whitelistGroup',Config::get('SPAM_WHITELIST_GROUP'));
 	}
-	
+
 	public function saved() {
 		$this->set('message', t('Anti-spam settings saved.'));
 		$this->view();
@@ -45,7 +45,7 @@ class Concrete5_Controller_Page_Dashboard_System_Permissions_Antispam extends Da
 	public function update_library() {
 		$this->save();
 		if (!$this->error->has() && Loader::helper("validation/token")->validate('update_library')) {
-			if ($this->post('activeLibrary')) { 
+			if ($this->post('activeLibrary')) {
 				$scl = SystemAntispamLibrary::getByHandle($this->post('activeLibrary'));
 				if (is_object($scl)) {
 					$scl->activate();

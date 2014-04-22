@@ -4,13 +4,14 @@ use Loader;
 use \Concrete\Core\Foundation\Object;
 use Block;
 use Page;
+use Permissions;
 use User;
 use Events;
 use CacheLocal;
 use CollectionAttributeKey;
 use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 class Version extends Object implements \Concrete\Core\Permission\ObjectInterface {
-	
+
 	var $cvIsApproved;
 	var $cID;
 	protected $attributes = array();
@@ -25,19 +26,19 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 	}
 
 	public function getPermissionAssignmentClassName() {
-		return '\\Concrete\\Core\\Permission\\Assignment\\PageAssignment';	
+		return '\\Concrete\\Core\\Permission\\Assignment\\PageAssignment';
 	}
 	public function getPermissionObjectKeyCategoryHandle() {
 		return 'page';
 	}
 
-	
+
 	public function refreshCache() {
 		CacheLocal::delete('page', $this->getCollectionID() . ':' . $this->getVersionID());
 		CacheLocal::delete('page', $this->getCollectionID() . ':' . 'RECENT');
 		CacheLocal::delete('page', $this->getCollectionID() . ':' . 'ACTIVE');
 	}
-	
+
 	public static function get(&$c, $cvID) {
 		$db = Loader::db();
 
@@ -46,8 +47,8 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 		} else {
 			$v = array($c->getCollectionID());
 		}
-		
-		
+
+
 		$q = "select cvID, cvIsApproved, cvIsNew, cvHandle, cvName, cvDescription, cvDateCreated, cvDatePublic, pTemplateID, cvAuthorUID, cvApproverUID, cvComments, pThemeID from CollectionVersions where cID = ?";
 		if ($cvID == 'ACTIVE') {
 			$q .= ' and cvIsApproved = 1';
@@ -66,7 +67,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 		}
 
 		// load the attributes for a particular version object
-		$cv->cID = $c->getCollectionID();			
+		$cv->cID = $c->getCollectionID();
 		return $cv;
 	}
 
@@ -108,7 +109,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 	function isNew() {return $this->cvIsNew;}
 	function getVersionID() {return $this->cvID;}
 	function getCollectionID() {return $this->cID;}
-	function getVersionName() {return $this->cvName;}	
+	function getVersionName() {return $this->cvName;}
 	function getVersionComments() {return $this->cvComments;}
 	function getVersionAuthorUserID() {return $this->cvAuthorUID;}
 	function getVersionApproverUserID() {return $this->cvApproverUID;}
@@ -136,12 +137,12 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 		}
 		return $this->customAreaStyles;
 	}
-	
+
 	/**
-	 * Gets the date the collection version was created 
+	 * Gets the date the collection version was created
 	 * if user is specified, returns in the current user's timezone
 	 * @param string $type (system || user)
-	 * @return string date formated like: 2009-01-01 00:00:00 
+	 * @return string date formated like: 2009-01-01 00:00:00
 	*/
 	function getVersionDateCreated($type = 'system') {
 		if(ENABLE_USER_TIMEZONES && $type == 'user') {
@@ -151,9 +152,9 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 			return $this->cvDateCreated;
 		}
 	}
-	
+
 	function canWrite() {return $this->cvCanWrite;}
-	
+
 	function setComment($comment) {
 		$thisCVID = $this->getVersionID();
 		$comment = ($comment != null) ? $comment : "Version {$thisCVID}";
@@ -161,10 +162,10 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 		$db = Loader::db();
 		$q = "update CollectionVersions set cvComments = ? where cvID = ? and cID = ?";
 		$r = $db->query($q, $v);
-		
+
 		$this->versionComments = $comment;
 	}
-	
+
 	function createNew($versionComments) {
 		$db = Loader::db();
 		$highestVID = $db->GetOne('select max(cvID) from CollectionVersions where cID = ?', array($this->cID));
@@ -181,7 +182,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 		$v = array($this->cID, $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getSystemDateTime(), $versionComments, $u->getUserID(), $cvIsNew, $this->pThemeID, $this->pTemplateID);
 		$q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsNew, pThemeID, pTemplateID)
 			values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			
+
 		$r = $db->prepare($q);
 		$res = $db->execute($r, $v);
 
@@ -191,7 +192,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 		while ($row2 = $r2->fetchRow()) {
 			$v3 = array(intval($c->getCollectionID()), $newVID, $row2['akID'], $row2['avID']);
 			$recordExists = intval($db->getOne('SELECT count(*) FROM CollectionAttributeValues WHERE cID=? AND cvID=? AND akID=? AND avID=?',$v3))?1:0;
-			if(!$recordExists) $db->query("insert into CollectionAttributeValues (cID, cvID, akID, avID) values (?, ?, ?, ?)", $v3); 
+			if(!$recordExists) $db->query("insert into CollectionAttributeValues (cID, cvID, akID, avID) values (?, ?, ?, ?)", $v3);
 		}
 
 		$q3 = "select faID from CollectionVersionFeatureAssignments where cID = ? and cvID = ?";
@@ -199,7 +200,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 		$r3 = $db->query($q3, $v3);
 		while ($row3 = $r3->fetchRow()) {
 			$v3 = array(intval($c->getCollectionID()), $newVID, $row3['faID']);
-			$db->query("insert into CollectionVersionFeatureAssignments (cID, cvID, faID) values (?, ?, ?)", $v3); 
+			$db->query("insert into CollectionVersionFeatureAssignments (cID, cvID, faID) values (?, ?, ?)", $v3);
 		}
 
 		$q4 = "select pThemeID, pThemeStyleHandle, pThemeStyleValue, pThemeStyleType from CollectionVersionThemeStyles where cID = ? and cvID = ?";
@@ -207,10 +208,10 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 		$r4 = $db->query($q4, $v4);
 		while ($row4 = $r4->fetchRow()) {
 			$v4 = array(intval($c->getCollectionID()), $newVID, $row4['pThemeID'], $row4['pThemeStyleHandle'], $row4['pThemeStyleValue'], $row4['pThemeStyleType']);
-			$db->query("insert into CollectionVersionThemeStyles (cID, cvID, pThemeID, pThemeStyleHandle, pThemeStyleValue, pThemeStyleType) values (?, ?, ?, ?, ?, ?)", $v4); 
+			$db->query("insert into CollectionVersionThemeStyles (cID, cvID, pThemeID, pThemeStyleHandle, pThemeStyleValue, pThemeStyleType) values (?, ?, ?, ?, ?, ?)", $v4);
 		}
-		
-		
+
+
 		$nv = static::get($c, $newVID);
 
 		$ev = new Event($c);
@@ -221,8 +222,8 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 		// now we return it
 		return $nv;
 	}
-	
-	
+
+
 	function approve($doReindexImmediately = true) {
 		$db = Loader::db();
 		$u = new User();
@@ -230,12 +231,12 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 		$cvID = $this->cvID;
 		$cID = $this->cID;
 		$c = Page::getByID($cID, $this->cvID);
-		
+
 		$ov = Page::getByID($cID, 'ACTIVE');
-		
+
 		$oldHandle = $ov->getCollectionHandle();
 		$newHandle = $this->cvHandle;
-		
+
 		// update a collection updated record
 		$dh = Loader::helper('date');
 		$db->query('update Collections set cDateModified = ? where cID = ?', array($dh->getLocalDateTime(), $cID));
@@ -245,20 +246,20 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 		$q = "update CollectionVersions set cvIsApproved = 0 where cID = ?";
 		$r = $db->query($q, $v);
 		$ov->refreshCache();
-		
+
 		// now we approve our version
 		$v2 = array($uID, $cID, $cvID);
 		$q2 = "update CollectionVersions set cvIsNew = 0, cvIsApproved = 1, cvApproverUID = ? where cID = ? and cvID = ?";
 		$r = $db->query($q2, $v2);
-		
+
 		// next, we rescan our collection paths for the particular collection, but only if this isn't a generated collection
 		// I don't know why but this just isn't reliable. It might be a race condition with the cached page objects?
 		/*
 		if ((($oldHandle != $newHandle) || $oldHandle == '') && (!$c->isGeneratedCollection())) {
 		*/
-		
+
 		$c->rescanCollectionPath();
-		
+
 		//}
 
 		// check for related version edits. This only gets applied when we edit global areas.
@@ -288,7 +289,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 		$c->writePageThemeCustomizations();
 		$this->refreshCache();
 	}
-	
+
 	public function discard() {
 		// discard's my most recent edit that is pending
 		$u = new User();
@@ -297,47 +298,47 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 		}
 		$this->refreshCache();
 	}
-	
+
 	public function canDiscard() {
 		$db = Loader::db();
 		$total = $db->GetOne('select count(cvID) from CollectionVersions where cID = ?', array($this->cID));
 		return $this->isNew() && $total > 1;
 	}
-	
+
 	public function removeNewStatus() {
 		$db = Loader::db();
 		$db->query("update CollectionVersions set cvIsNew = 0 where cID = ? and cvID = ?", array($this->cID, $this->cvID));
 		$this->refreshCache();
 	}
-	
+
 	function deny() {
 		$db = Loader::db();
 		$cvID = $this->cvID;
 		$cID = $this->cID;
-		
+
 		// first we update a collection updated record
 		$dh = Loader::helper('date');
 		$db->query('update Collections set cDateModified = ? where cID = ?', array($dh->getLocalDateTime(), $cID));
-		
+
 		// first we remove approval for all versions of this collection
 		$v = array($cID);
 		$q = "update CollectionVersions set cvIsApproved = 0 where cID = ?";
 		$r = $db->query($q, $v);
-		
+
 		// now we deny our version
 		$v2 = array($cID, $cvID);
 		$q2 = "update CollectionVersions set cvIsApproved = 0, cvApproverUID = 0 where cID = ? and cvID = ?";
 		$r2 = $db->query($q2, $v2);
 		$this->refreshCache();
 	}
-	
+
 	function delete() {
 		$db = Loader::db();
-		
+
 		$cvID = $this->cvID;
 		$c = Page::getByID($this->cID, $cvID);
 		$cID = $c->getCollectionID();
-		
+
 		$q = "select bID, arHandle from CollectionVersionBlocks where cID = ? and cvID = ?";
 		$r = $db->query($q, array($cID, $cvID));
 		if ($r) {
@@ -351,7 +352,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 				unset($b);
 			}
 		}
-		
+
 		$features = CollectionVersionFeatureAssignment::getList($this);
 		foreach($features as $fa) {
 			$fa->delete();
@@ -365,12 +366,12 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 				$cav->delete();
 			}
 		}
-		
+
 		$db->Execute('delete from CollectionVersionBlockStyles where cID = ? and cvID = ?', array($cID, $cvID));
 		$db->Execute('delete from CollectionVersionThemeStyles where cID = ? and cvID = ?', array($cID, $cvID));
 		$db->Execute('delete from CollectionVersionRelatedEdits where cID = ? and cvID = ?', array($cID, $cvID));
 		$db->Execute('delete from CollectionVersionAreaStyles where cID = ? and cvID = ?', array($cID, $cvID));
-		
+
 		$q = "delete from CollectionVersions where cID = '{$cID}' and cvID='{$cvID}'";
 		$r = $db->query($q);
 		$this->refreshCache();

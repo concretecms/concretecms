@@ -1,4 +1,5 @@
 <?php defined('C5_EXECUTE') or die('Access Denied');
+use \Concrete\Core\Page\Search\IndexedSearch;
 
 echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Search Index'), t('Choose which areas on your site are indexed.'), 'span6 offset3', false); ?>
 	<form method="post" id="ccm-search-index-manage" action="<?=$view->action('')?>">
@@ -14,10 +15,10 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sear
 			print $form->select('SEARCH_INDEX_AREA_METHOD', $methods, IndexedSearch::getSearchableAreaAction(), array('class'=>'xlarge'));?>
 			</div>
 			</fieldset>
-			
+
 			<fieldset>
 			<legend><?=t('Areas')?></legend>
-			<div class="control-group">	
+			<div class="control-group">
 
 			<? foreach($areas as $a) { ?>
 				<label class="checkbox"><?=$form->checkbox('arHandle[]', $a, in_array($a, $selectedAreas))?> <?=$a?></label>

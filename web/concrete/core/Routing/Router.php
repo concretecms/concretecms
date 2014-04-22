@@ -11,7 +11,7 @@ class Router {
 	protected $request;
 	public $routes = array();
 
-	public function __construct() {
+	protected function __construct() {
 		$this->collection = new SymfonyRouteCollection();
 	}
 
@@ -23,11 +23,15 @@ class Router {
 		$this->request = $req;
 	}
 	
+	/** 
+	 * Returns an instance of the Router object
+	 * @return Router
+	 */
 	public static function getInstance() {
-		if (null == self::$instance) {
-			self::$instance = new static;
+		if (null === static::$instance) {
+			static::$instance = new static;
 		}
-		return self::$instance;
+		return static::$instance;
 	}
 
 	public function register($rtPath, $callback, $rtHandle = null, $additionalAttributes = array()) {
@@ -72,23 +76,19 @@ class Router {
 
 	/**
 	 * This grabs the theme for a particular path, if one exists in the themePaths array 
-	 * @access private
-     * @param string $path
-	 * @return string $theme
+	 * @param string $path
+	 * @return string|boolean
 	*/
 	public function getThemeByRoute($path) {
 		// there's probably a more efficient way to do this
-		$theme = false;
 		$txt = Loader::helper('text');
-		foreach($this->themePaths as $lp => $layout) {
+		foreach ($this->themePaths as $lp => $layout) {
 			if ($txt->fnmatch($lp, $path)) {
-				$theme = $layout;
-				break;
+				return $layout;
 			}
 		}
-		return $theme;
+		return false;
 	}
-
 
 
 

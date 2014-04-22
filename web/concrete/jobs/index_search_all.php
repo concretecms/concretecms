@@ -1,6 +1,10 @@
 <?
 namespace Concrete\Job;
 use QueueableJob;
+use \Concrete\Core\Page\Search\IndexedSearch;
+use CollectionAttributeKey;
+use FileAttributeKey;
+use UserAttributeKey;
 class IndexSearchAll extends QueueableJob {
 
 	public $jNotUninstallable=1;
@@ -9,7 +13,7 @@ class IndexSearchAll extends QueueableJob {
 	public function getJobName() {
 		return t("Index Search Engine - All");
 	}
-	
+
 	public function getJobDescription() {
 		return t("Empties the page search index and reindexes all pages.");
 	}
@@ -31,7 +35,7 @@ class IndexSearchAll extends QueueableJob {
 			$q->send($row['cID']);
 		}
 	}
-	
+
 	public function finish(\Zend_Queue $q) {
 		$db = Loader::db();
 		$total = $db->GetOne('select count(*) from PageSearchIndex');
