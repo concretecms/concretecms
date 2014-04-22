@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Core\Asset;
-class JavaScriptAsset extends Asset {
+class JavascriptAsset extends Asset {
 	
 	protected $assetSupportsMinification = true;
 	protected $assetSupportsCombination = true;
@@ -44,7 +44,7 @@ class JavaScriptAsset extends Asset {
 				@file_put_contents($cacheFile, $js);
 			}
 			
-			$asset = new JavaScriptAsset();
+			$asset = new JavascriptAsset();
 			$asset->setAssetURL(self::getRelativeOutputDirectory() . '/' . $filename . '.js');
 			$asset->setAssetPath($directory . '/' . $filename . '.js');
 			return array($asset);

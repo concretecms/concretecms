@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Core\Html\Service;
 use Concrete\Core\Asset\CSSAsset;
-use Concrete\Core\Asset\JavaScriptAsset;
+use Concrete\Core\Asset\JavascriptAsset;
 use View;
 
 /**
@@ -60,7 +60,7 @@ class Html {
 	}
 
 	public function javascript($file, $pkgHandle = null) {
-		$asset = new JavaScriptAsset();		
+		$asset = new JavascriptAsset();		
 		// if the first character is a / then that means we just go right through, it's a direct path
 		if (substr($file, 0, 4) == 'http' || substr($file, 0, 2) == '//') {
 			$asset->setAssetURL($file);

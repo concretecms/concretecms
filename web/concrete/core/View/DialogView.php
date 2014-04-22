@@ -2,7 +2,7 @@
 namespace Concrete\Core\View;
 use View as ConcreteView;
 use \Concrete\Core\Asset\CssAsset;
-use \Concrete\Core\Asset\JavaScriptAsset;
+use \Concrete\Core\Asset\JavascriptAsset;
 use User;
 
 class DialogView extends ConcreteView {
@@ -17,7 +17,7 @@ class DialogView extends ConcreteView {
 			$str .= '<script type="text/javascript">';	
 			$str .= 'ccm_addHeaderItem("' . $item->getAssetURL() . '", "CSS")';
 			$str .= '</script>';
-		} else if ($item instanceof JavaScriptAsset) {
+		} else if ($item instanceof JavascriptAsset) {
 			$str .= '<script type="text/javascript">';	
 			$str .= 'ccm_addHeaderItem("' . $item->getAssetURL() . '", "JAVASCRIPT")';
 			$str .= '</script>';
