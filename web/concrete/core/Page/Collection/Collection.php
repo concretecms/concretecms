@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Collection;
 use Loader;
 use CacheLocal;
+use Config;
 use Page;
 use Permissions;
 use Stack;
@@ -15,7 +16,7 @@ use \Concrete\Core\Page\Collection\Version\VersionList;
 use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 
 	class Collection extends Object {
-		
+
 		public $cID;
 		protected $attributes = array();
 		/* version specific stuff */
@@ -23,7 +24,7 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 		function loadVersionObject($cvID = 'ACTIVE') {
 			$this->vObj = CollectionVersion::get($this, $cvID);
 		}
-		
+
 		function getVersionToModify() {
 			// first, we check to see if the version we're modifying has the same
 			// author uID associated with it as we currently have, and if it's inactive
@@ -46,8 +47,8 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 			$c = Page::getByID($this->getCollectionID(), 'ACTIVE');
 			$cvID = $c->getVersionID();
 			return t("Version %d", $cvID + 1);
-		}      
-      
+		}
+
 
 		public function cloneVersion($versionComments) {
 			// first, we run the version object's createNew() command, which returns a new
@@ -79,7 +80,7 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 					}
 				}
 			}
-			
+
 			// duplicate any area styles
 			$q = "select csrID, arHandle from CollectionVersionAreaStyles where cID = '$cID' and cvID = '$cvID'";
 			$r = $db->query($q);
@@ -91,25 +92,24 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 					$row['csrID']
 				));
 			}
-			
+
 			return $nc;
 		}
 
 		public function getFeatureAssignments() {
 			if (is_object($this->vObj)) {
 				return CollectionVersionFeatureAssignment::getList($this);
-			} else {
-				return array();
 			}
+			return array();
 		}
 
-		
+
 		/* attribute stuff */
-		
+
 		/**
 		 * Returns the value of the attribute with the handle $ak
 		 * of the current object.
-		 * 
+		 *
 		 * $displayMode makes it possible to get the correct output
 		 * value. When you need the raw attribute value or object, use
 		 * this:
@@ -117,20 +117,20 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 		 * $c = Page::getCurrentPage();
 		 * $attributeValue = $c->getAttribute('attribute_handle');
 		 * </code>
-		 * 
+		 *
 		 * But if you need the formatted output supported by some
 		 * attribute, use this:
 		 * <code>
 		 * $c = Page::getCurrentPage();
 		 * $attributeValue = $c->getAttribute('attribute_handle', 'display');
 		 * </code>
-		 * 
+		 *
 		 * An attribute type like "date" will then return the date in
 		 * the correct format just like other attributes will show
 		 * you a nicely formatted output and not just a simple value
 		 * or object.
-		 * 
-		 * 
+		 *
+		 *
 		 * @param string|object $akHandle
 		 * @param boolean $displayMode
 		 * @return type
@@ -140,7 +140,7 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 				return $this->vObj->getAttribute($akHandle, $this, $displayMode);
 			}
 		}
-		
+
 		public function getCollectionAttributeValue($ak) {
 			if (is_object($this->vObj)) {
 				return $this->vObj->getAttribute($ak, $this);
@@ -162,40 +162,40 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 			}
 			$this->reindex();
 		}
-		
+
 		public static function reindexPendingPages() {
 			$num = 0;
 			$db = Loader::db();
 			$r = $db->Execute("select cID from PageSearchIndex where cRequiresReindex = 1");
-			while ($row = $r->FetchRow()) { 
+			while ($row = $r->FetchRow()) {
 				$pc = Page::getByID($row['cID']);
 				$pc->reindex($this, true);
 				$num++;
 			}
 			Config::save('DO_PAGE_REINDEX_CHECK', false);
-			return $num;		
+			return $num;
 		}
-				
+
 		public function reindex($index = false, $actuallyDoReindex = true) {
 			return false;
 
 			if ($this->isAlias()) {
 				return false;
 			}
-			if ($actuallyDoReindex || ENABLE_PROGRESSIVE_PAGE_REINDEX == false) { 
+			if ($actuallyDoReindex || ENABLE_PROGRESSIVE_PAGE_REINDEX == false) {
 				$db = Loader::db();
-				
+
 				$attribs = CollectionAttributeKey::getAttributes($this->getCollectionID(), $this->getVersionID(), 'getSearchIndexValue');
-		
+
 				$db->Execute('delete from CollectionSearchIndexAttributes where cID = ?', array($this->getCollectionID()));
 				$searchableAttributes = array('cID' => $this->getCollectionID());
 				$rs = $db->Execute('select * from CollectionSearchIndexAttributes where cID = -1');
 				AttributeKey::reindex('CollectionSearchIndexAttributes', $searchableAttributes, $attribs, $rs);
-				
+
 				if ($index == false) {
 					$index = new IndexedSearch();
 				}
-				
+
 				$index->reindexPage($this);
 				$db->Replace('PageSearchIndex', array('cID' => $this->getCollectionID(), 'cRequiresReindex' => 0), array('cID'), false);
 
@@ -211,13 +211,13 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 					$it->assignFeatureAssignments($c);
 				}
 
-			} else { 			
+			} else {
 				$db = Loader::db();
 				Config::save('DO_PAGE_REINDEX_CHECK', true);
 				$db->Replace('PageSearchIndex', array('cID' => $this->getCollectionID(), 'cRequiresReindex' => 1), array('cID'), false);
 			}
 		}
-		
+
 		public function getAttributeValueObject($ak, $createIfNotFound = false) {
 			$db = Loader::db();
 			$av = false;
@@ -233,25 +233,25 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 					$av->setAttributeKey($ak);
 				}
 			}
-			
+
 			if ($createIfNotFound) {
 				$cnt = 0;
-			
+
 				// Is this avID in use ?
 				if (is_object($av)) {
 					$cnt = $db->GetOne("select count(avID) from CollectionAttributeValues where avID = ?", $av->getAttributeValueID());
 				}
-				
+
 				if ((!is_object($av)) || ($cnt > 1)) {
 					$newAV = $ak->addAttributeValue();
 					$av = CollectionAttributeValue::getByID($newAV->getAttributeValueID());
 					$av->setCollection($this);
 				}
 			}
-			
+
 			return $av;
 		}
-		
+
 		public function setAttribute($ak, $value) {
 			if (!is_object($ak)) {
 				$ak = CollectionAttributeKey::getByHandle($ak);
@@ -269,7 +269,7 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 			}
 			$this->reindex();
 		}
-		
+
 		// get's an array of collection attribute objects that are attached to this collection. Does not get values
 		public function getSetCollectionAttributes() {
 			$db = Loader::db();
@@ -286,7 +286,7 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 		}
 
 		/* area stuff */
-		
+
 		function getArea($arHandle) {
 			return Area::get($this, $arHandle);
 		}
@@ -320,11 +320,11 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 
 
 		/* basic CRUD */
-		
+
 		function getCollectionID() {
 			return $this->cID;
 		}
-		
+
 		function getCollectionDateLastModified($mask = null, $type="system") {
 			$dh = Loader::helper('date');
 			if(ENABLE_USER_TIMEZONES && $type == 'user') {
@@ -365,7 +365,7 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 			// shortcut
 			return $this->vObj->cvID;
 		}
-		
+
 	public function __destruct() {
 		unset($this->vObj);
 	}
@@ -401,13 +401,13 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 			}
 		}
 	}
-	
-	/** 
+
+	/**
 	 * Retrieves all custom style rules that should be inserted into the header on a page, whether they are defined in areas
 	 * or blocks
 	 */
-	public function outputCustomStyleHeaderItems($return = false) {	
-		
+	public function outputCustomStyleHeaderItems($return = false) {
+
 		$db = Loader::db();
 		$csrs = array();
 		$txt = Loader::helper('text');
@@ -437,7 +437,7 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 				CacheLocal::set('csrObject', $this->getCollectionID(). ':' . $this->getVersionID() . ':' . $r['arHandle'], $obj);
 			}
 		}
-		
+
 		// grab all the header block style rules for items in global areas on this page
 		$rs = $db->GetCol('select arHandle from Areas where arIsGlobal = 1 and cID = ?', array($this->getCollectionID()));
 		if (count($rs) > 0) {
@@ -466,13 +466,13 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 			}
 		}
 		//get the header style rules
-		$styleHeader = ''; 
-		foreach($csrs as $st) { 
-			if ($st->getCustomStyleRuleCSSID(true)) { 
-				$styleHeader .= '#'.$st->getCustomStyleRuleCSSID(1).' {'. $st->getCustomStyleRuleText(). "} \r\n";  
+		$styleHeader = '';
+		foreach($csrs as $st) {
+			if ($st->getCustomStyleRuleCSSID(true)) {
+				$styleHeader .= '#'.$st->getCustomStyleRuleCSSID(1).' {'. $st->getCustomStyleRuleText(). "} \r\n";
 			}
-		} 		
-		  
+		}
+
 		if(strlen(trim($styleHeader))) {
 			if ($return == true) {
 				return $styleHeader;
@@ -481,7 +481,7 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 				$v->addHeaderItem("<style type=\"text/css\"> \r\n".$styleHeader.'</style>', 'VIEW');
 			}
 		}
-	} 
+	}
 
 	public function getAreaCustomStyleRule($area) {
 		$db = Loader::db();
@@ -493,12 +493,12 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 			return false;
 		}
 
-		$styles = $this->vObj->getCustomAreaStyles();		
+		$styles = $this->vObj->getCustomAreaStyles();
 		$csrID = $styles[$area->getAreaHandle()];
-		
+
 		if ($csrID > 0) {
 			$txt = Loader::helper('text');
-			$arHandle = $txt->filterNonAlphaNum($area->getAreaHandle());			
+			$arHandle = $txt->filterNonAlphaNum($area->getAreaHandle());
 			$csr = CustomStyleRule::getByID($csrID);
 			if (is_object($csr)) {
 				$csr->setCustomStyleNameSpace('areaStyle' . $arHandle);
@@ -515,15 +515,15 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 			$area->getAreaHandle()
 		));
 	}
-	
+
 	public function setAreaCustomStyle($area, $csr) {
 		$db = Loader::db();
-		$db->Replace('CollectionVersionAreaStyles', 
+		$db->Replace('CollectionVersionAreaStyles',
 			array('cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID(), 'arHandle' => $area->getAreaHandle(), 'csrID' => $csr->getCustomStyleRuleID()),
 			array('cID', 'cvID', 'arHandle'), true
 		);
 	}
-	
+
 	public function relateVersionEdits($oc) {
 		$db = Loader::db();
 		$v = array(
@@ -539,13 +539,13 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 			$db->Execute('insert into CollectionVersionRelatedEdits (cID, cvID, cRelationID, cvRelationID) values (?, ?, ?, ?)', $v);
 		}
 	}
-	
+
 	function getCollectionTypeID() {return false;}
-	
+
 	function getPageTypeID() {
 		return false;
-	}	
-	
+	}
+
 	public function rescanDisplayOrder($areaName) {
 		// this collection function fixes the display order properties for all the blocks within the collection/area. We select all the items
 		// order by display order, and fix the sequence
@@ -566,40 +566,40 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 			$r->free();
 		}
 	}
-	
+
 
 		/* new cleaned up API below */
 
 		/**
 		 * @param int $cID
-		 * @param mixed $version 'RECENT'|'ACTIVE'|version id  
+		 * @param mixed $version 'RECENT'|'ACTIVE'|version id
 		 * @return Collection
 		 */
 		public static function getByID($cID, $version = 'RECENT') {
-			$db = Loader::db(); 
+			$db = Loader::db();
 			$q = "select Collections.cDateAdded, Collections.cDateModified, Collections.cID from Collections where cID = ?";
 			$row = $db->getRow($q, array($cID));
-			
+
 			$c = new Collection;
 			$c->setPropertiesFromArray($row);
-			
+
 			if ($version != false) {
 				// we don't do this on the front page
 				$c->loadVersionObject($version);
-			}			
+			}
 
 			return $c;
-		}	
-		
-		/* This function is slightly misnamed: it should be getOrCreateByHandle($handle) but I wanted to keep it brief 
+		}
+
+		/* This function is slightly misnamed: it should be getOrCreateByHandle($handle) but I wanted to keep it brief
 		 * @param string $handle
 		 * @return Collection
 		 */
 		public static function getByHandle($handle) {
 			$db = Loader::db();
-			
-			// first we ensure that this does NOT appear in the Pages table. This is not a page. It is more basic than that 
-			
+
+			// first we ensure that this does NOT appear in the Pages table. This is not a page. It is more basic than that
+
 			$r = $db->query("select Collections.cID, Pages.cID as pcID from Collections left join Pages on Collections.cID = Pages.cID where Collections.cHandle = ?", array($handle));
 			if ($r->numRows() == 0) {
 
@@ -610,24 +610,24 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 
 			} else {
 				$row = $r->fetchRow();
-				if ($row['cID'] > 0 && $row['pcID'] == null) {			
+				if ($row['cID'] > 0 && $row['pcID'] == null) {
 
 					// there is a collection, but it is not a page. so we grab it
 					$cObj = Collection::getByID($row['cID']);
-					
+
 				}
 			}
-			
+
 			if (isset($cObj)) {
 				return $cObj;
 			}
-			
+
 		}
-		
+
 		public function refreshCache() {
 			CacheLocal::flush();
 		}
-		
+
 		public function getGlobalBlocks() {
 			$db = Loader::db();
 			$v = array( Stack::ST_TYPE_GLOBAL_AREA );
@@ -647,10 +647,10 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 					}
 				}
 			}
-			
+
 			return $blocks;
 		}
-		
+
 		/**
 		 * List the block IDs in a collection or area within a collection
 		 * @param string $arHandle. If specified, returns just the blocks in an area
@@ -659,7 +659,7 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 		public function getBlockIDs($arHandle = false) {
 			$blockIDs = CacheLocal::getEntry('collection_block_ids', $this->getCollectionID() . ':' . $this->getVersionID());
 			$blocks = array();
-		
+
 			if (!is_array($blockIDs)) {
 				$v = array($this->getCollectionID(), $this->getVersionID());
 				$db = Loader::db();
@@ -673,7 +673,7 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 				}
 				CacheLocal::set('collection_block_ids', $this->getCollectionID() . ':'. $this->getVersionID(), $blockIDs);
 			}
-			
+
 
 			if ($arHandle != false) {
 				$blockIDsTmp = $blockIDs[strtolower($arHandle)];
@@ -691,7 +691,7 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 			}
 			return $blockIDs;
 		}
-			
+
 		/**
 		 * List the blocks in a collection or area within a collection
 		 * @param string $arHandle. If specified, returns just the blocks in an area
@@ -713,22 +713,22 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 			return $blocks;
 		}
 
-		
+
 		public function addBlock($bt, $a, $data) {
 			$db = Loader::db();
-			
+
 			// first we add the block to the system
 			$nb = $bt->add($data, $this, $a);
 
 			// now that we have a block, we add it to the collectionversions table
-			
+
 			$arHandle = (is_object($a)) ? $a->getAreaHandle() : $a;
 			$cID = $this->getCollectionID();
 			$vObj = $this->getVersionObject();
-	
+
 			if ($bt->includeAll()) {
 				// normally, display order is dependant on a per area, per version basis. However, since this block
-				// is not aliased across versions, then we want to get display order simply based on area, NOT based 
+				// is not aliased across versions, then we want to get display order simply based on area, NOT based
 				// on area + version
 				$newBlockDisplayOrder = $this->getCollectionAreaDisplayOrder($arHandle, true); // second argument is "ignoreVersions"
 			} else {
@@ -744,20 +744,20 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 			$features = $controller->getBlockTypeFeatureObjects();
 			if (count($features) > 0) {
 				foreach($features as $fe) {
-					$fd = $fe->getFeatureDetailObject($controller);	
+					$fd = $fe->getFeatureDetailObject($controller);
 					$fa = CollectionVersionFeatureAssignment::add($fe, $fd, $this);
 					$db->Execute('insert into BlockFeatureAssignments (cID, cvID, bID, faID) values (?, ?, ?, ?)', array(
 						$this->getCollectionID(), $this->getVersionID(), $nb->getBlockID(), $fa->getFeatureAssignmentID()
 					));
 				}
 			}
-			
+
 			return Block::getByID($nb->getBlockID(), $this, $a);
 		}
-		
+
 		public function addFeature(Feature $fe) {
 			$db = Loader::db();
-			$db->Replace('CollectionVersionFeatures', 
+			$db->Replace('CollectionVersionFeatures',
 				array('cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID(), 'feID' => $fe->getFeatureID()),
 				array('cID', 'cvID', 'feID'), true);
 		}
@@ -765,9 +765,9 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 		public function addCollection($data) {
 			$db = Loader::db();
 			$dh = Loader::helper('date');
-			$cDate = $dh->getSystemDateTime(); 
+			$cDate = $dh->getSystemDateTime();
 			$cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : $cDate;
-			
+
 			if (isset($data['cID'])) {
 				$res = $db->query("insert into Collections (cID, cHandle, cDateAdded, cDateModified) values (?, ?, ?, ?)", array($data['cID'], $data['handle'], $cDate, $cDate));
 				$newCID = $data['cID'];
@@ -775,7 +775,7 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 				$res = $db->query("insert into Collections (cHandle, cDateAdded, cDateModified) values (?, ?, ?)", array($data['handle'], $cDate, $cDate));
 				$newCID = $db->Insert_ID();
 			}
-			
+
 			$cvIsApproved = (isset($data['cvIsApproved']) && $data['cvIsApproved'] == 0) ? 0 : 1;
 			$cvIsNew = 1;
 			if ($cvIsApproved) {
@@ -803,11 +803,11 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 				$r2 = $db->prepare($q2);
 				$res2 = $db->execute($r2, $v2);
 			}
-			
+
 			$nc = Collection::getByID($newCID);
 			return $nc;
 		}
-		
+
 		public function markModified() {
 			// marks this collection as newly modified
 			$db = Loader::db();
@@ -819,22 +819,22 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 			$r = $db->prepare($q);
 			$res = $db->execute($r, $v);
 		}
-		
+
 		public function delete() {
 			if ($this->cID > 0) {
 				$db = Loader::db();
-	
+
 				// First we delete all versions
 				$vl = new VersionList($this);
 				$vl->setItemsPerPage(-1);
 				$vlArray = $vl->getPage();
-		
+
 				foreach($vlArray as $v) {
 					$v->delete();
 				}
-		
+
 				$cID = $this->getCollectionID();
-		
+
 				$q = "delete from CollectionAttributeValues where cID = {$cID}";
 				$db->query($q);
 
@@ -846,25 +846,25 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 
 			}
 		}
-		
+
 		public function duplicateCollection() {
 			$db = Loader::db();
 			$dh = Loader::helper('date');
 			$cDate = $dh->getSystemDateTime();
-			
+
 			$v = array($cDate, $cDate, $this->cHandle);
 			$r = $db->query("insert into Collections (cDateAdded, cDateModified, cHandle) values (?, ?, ?)", $v);
 			$newCID = $db->Insert_ID();
-			
+
 			if ($r) {
 
 				// first, we get the creation date of the active version in this collection
 				//$q = "select cvDateCreated from CollectionVersions where cvIsApproved = 1 and cID = {$this->cID}";
 				//$dcOriginal = $db->getOne($q);
 				// now we create the query that will grab the versions we're going to copy
-				
+
 				$qv = "select * from CollectionVersions where cID = '{$this->cID}' order by cvDateCreated asc";
-	
+
 				// now we grab all of the current versions
 				$rv = $db->query($qv);
 				$cvList = array();
@@ -876,22 +876,22 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 					$qv = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved, pThemeID, pTemplateID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 					$db->query($qv, $vv);
 				}
-				
+
 				$ql = "select * from CollectionVersionBlockStyles where cID = '{$this->cID}'";
 				$rl = $db->query($ql);
-				while ($row = $rl->fetchRow()) { 
+				while ($row = $rl->fetchRow()) {
 					$vl = array( $newCID, $row['cvID'], $row['bID'], $row['arHandle'], $row['csrID'] );
 					$ql = "insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, csrID) values (?, ?, ?, ?, ?)";
 					$db->query($ql, $vl);
 				}
 				$ql = "select * from CollectionVersionAreaStyles where cID = '{$this->cID}'";
 				$rl = $db->query($ql);
-				while ($row = $rl->fetchRow()) { 
+				while ($row = $rl->fetchRow()) {
 					$vl = array( $newCID, $row['cvID'], $row['arHandle'], $row['csrID'] );
 					$ql = "insert into CollectionVersionAreaStyles (cID, cvID, arHandle, csrID) values (?, ?, ?, ?)";
 					$db->query($ql, $vl);
 				}
-	
+
 				// now we grab all the blocks we're going to need
 				$cvList = implode(',',$cvList);
 				$q = "select bID, cvID, arHandle, cbDisplayOrder, cbOverrideAreaPermissions, cbIncludeAll from CollectionVersionBlocks where cID = '{$this->cID}' and cvID in ({$cvList})";
@@ -904,26 +904,26 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 						$q2 = "select paID, pkID from BlockPermissionAssignments where cID = '{$this->cID}' and bID = '{$row['bID']}' and cvID = '{$row['cvID']}'";
 						$r2 = $db->query($q2);
 						while ($row2 = $r2->fetchRow()) {
-							$db->Replace('BlockPermissionAssignments', 
+							$db->Replace('BlockPermissionAssignments',
 								array('cID' => $newCID, 'cvID' => $row['cvID'], 'bID' => $row['bID'], 'paID' => $row2['paID'], 'pkID' => $row2['pkID']),
 								array('cID', 'cvID', 'bID', 'paID', 'pkID'), true);
 						}
 					}
 				}
-	
+
 				// duplicate any attributes belonging to the collection
-				
+
 				$v = array($this->getCollectionID());
 				$q = "select akID, cvID, avID from CollectionAttributeValues where cID = ?";
 				$r = $db->query($q, $v);
 				while ($row = $r->fetchRow()) {
 					$v2 = array($row['akID'], $row['cvID'], $row['avID'], $newCID);
 					$db->query("insert into CollectionAttributeValues (akID, cvID, avID, cID) values (?, ?, ?, ?)", $v2);
-				}			
+				}
 				return Collection::getByID($newCID);
 			}
-			
+
 		}
-		
+
 
 	}

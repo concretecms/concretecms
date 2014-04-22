@@ -16,7 +16,7 @@
 			<? } ?>
 	</div>
 	<div class="ccm-pane-footer">
-		<? print $concrete_interface->submit(t('Save'), 'file-access-extensions', 'right', 'primary'); ?>
+		<? print $form->submit(t('Save'), 'file-access-extensions', 'right', 'primary'); ?>
 	</div>
 	</form>
 

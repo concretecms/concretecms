@@ -1,18 +1,19 @@
 <?
 namespace Concrete\Job;
 use \Job as AbstractJob;
+use \Concrete\Core\Mail\Importer\MailImporter;
 class ProcessEmail extends AbstractJob {
 
 	public function getJobName() {
 		return t("Process Email Posts");
 	}
-	
+
 	public function getJobDescription() {
 		return t("Polls an email account and grabs private messages/postings that are sent there..");
 	}
-	
+
 	public function run() {
-	
+
 		$list = MailImporter::getEnabledList();
 		foreach($list as $mi) {
 			// for each one, we connect and retrieve any mail messages we haven't seen

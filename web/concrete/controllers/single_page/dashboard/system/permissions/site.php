@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
@@ -8,6 +8,7 @@ use TaskPermission;
 use PermissionAccess;
 use GroupList;
 use Cache;
+use Page;
 
 class Site extends DashboardPageController {
 	public function view() {
@@ -15,8 +16,8 @@ class Site extends DashboardPageController {
 		if (PERMISSIONS_MODEL != 'simple') {
 			return;
 		}
-		
-		
+
+
 		$home = Page::getByID(1, "RECENT");
 		$pk = PermissionKey::getByHandle('view_page');
 		$pk->setPermissionObject($home);
@@ -29,7 +30,7 @@ class Site extends DashboardPageController {
 				$this->set('registeredCanRead', true);
 			}
 		}
-		
+
 		$gl = new GroupList();
 		$gl->filter('gID', REGISTERED_GROUP_ID, '>');
 		$gIDs = $gl->get();
@@ -54,10 +55,10 @@ class Site extends DashboardPageController {
 		$this->set('home', $home);
 		$this->set('gArray', $gArray);
 		$this->set('editAccess', $editAccess);
-		
+
 		if ($this->isPost()) {
 			if ($this->token->validate('site_permissions_code')) {
-				
+
 				switch($_POST['view']) {
 					case "ANYONE":
 						$viewObj = GroupPermissionAccessEntity::getOrCreate(Group::getByID(GUEST_GROUP_ID));
@@ -67,10 +68,10 @@ class Site extends DashboardPageController {
 						break;
 					case "PRIVATE":
 						$viewObj = GroupPermissionAccessEntity::getOrCreate(Group::getByID(ADMIN_GROUP_ID));
-						break;							
+						break;
 				}
-				
-				
+
+
 				$pk = PermissionKey::getByHandle('view_page');
 				$pk->setPermissionObject($home);
 				$pt = $pk->getPermissionAssignmentObject();
@@ -78,14 +79,14 @@ class Site extends DashboardPageController {
 				$pa = PermissionAccess::create($pk);
 				$pa->addListItem($viewObj);
 				$pt->assignPermissionAccess($pa);
-				
+
 				$editAccessEntities = array();
 				if (is_array($_POST['gID'])) {
 					foreach($_POST['gID'] as $gID) {
 						$editAccessEntities[] = GroupPermissionAccessEntity::getOrCreate(Group::getByID($gID));
 					}
 				}
-				
+
 				$editPermissions = array(
 					'view_page_versions',
 					'edit_page_properties',
@@ -102,7 +103,7 @@ class Site extends DashboardPageController {
 					'add_subpage',
 					'move_or_copy_page',
 				);
-				foreach($editPermissions as $pkHandle) { 
+				foreach($editPermissions as $pkHandle) {
 					$pk = PermissionKey::getByHandle($pkHandle);
 					$pk->setPermissionObject($home);
 					$pt = $pk->getPermissionAssignmentObject();
@@ -130,7 +131,7 @@ class Site extends DashboardPageController {
 					$pa->addListItem($editObj);
 				}
 				$pt->assignPermissionAccess($pa);
-				
+
 				Cache::flush();
 				$this->redirect('/dashboard/system/permissions/site/', 'saved');
 			} else {
@@ -138,7 +139,7 @@ class Site extends DashboardPageController {
 			}
 		}
 	}
-	
+
 	public function saved() {
 		$this->view();
 		$this->set('message', t('Permissions saved'));

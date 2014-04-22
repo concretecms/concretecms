@@ -1,26 +1,28 @@
 <?
 namespace Concrete\Job;
 use \Job as AbstractJob;
+use Cache;
+use \Concrete\Core\Page\Search\IndexedSearch;
 class IndexSearch extends AbstractJob {
 
 	public $jNotUninstallable=1;
-	
+
 	public function getJobName() {
 		return t("Index Search Engine - Updates");
 	}
-	
+
 	public function getJobDescription() {
 		return t("Index the site to allow searching to work quickly and accurately. Only reindexes pages that have changed since last indexing.");
 	}
-	
+
 	public function run() {
 		Cache::disableCache();
-	
+
 		$is = new IndexedSearch();
 		if ($_GET['force'] == 1) {
-			
-			
-			
+
+
+
 			$attributes = CollectionAttributeKey::getList();
 			$attributes = array_merge($attributes, FileAttributeKey::getList());
 			$attributes = array_merge($attributes, UserAttributeKey::getList());

@@ -1,6 +1,16 @@
 <?
 namespace Concrete\Job;
 use \Job as AbstractJob;
+use Cache;
+use Loader;
+use PermissionKey;
+use Group;
+use DateTime;
+use CollectionAttributeKey;
+use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
+use SimpleXMLElement;
+use Page;
+use Events;
 class GenerateSitemap extends AbstractJob {
 
 	/** The end-of-line terminator.
