@@ -21,7 +21,7 @@
 
 	ConcreteEditableFieldContainer.prototype = {
 
-		/** 
+		/**
 		 * returns either the options.url or a url from the field. This is the default behavior for x editable so we don't have
 		 * to do this there
 		 */
@@ -110,7 +110,7 @@
 		        	my.updateImageField(r, $field);
 		        },
 		        error: function(r) {
-					ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+					ConcreteAlert.dialog('Error', r.responseText);
 		        },
 		        complete: function(r) {
 		        	jQuery.fn.dialog.hideLoader();
@@ -126,7 +126,7 @@
 	        	my.setupImageField($field);
 				ConcreteAlert.notify({
 				'message': r.message
-				});	        	
+				});
         	}
 		},
 
@@ -142,7 +142,7 @@
 		initializeClearCommands: function() {
 			var my = this;
 			my.$element.on('click', '[data-editable-field-command=clear]', function() {
-				var $icon = $(this), 
+				var $icon = $(this),
 					$field = $icon.closest('[data-editable-field-type]'),
 					method = 'update'  + $field.attr('data-editable-field-type').charAt(0).toUpperCase() + $field.attr('data-editable-field-type').slice(1) + 'Field',
 					data = my.options.data;
@@ -152,7 +152,7 @@
 				var url = my.getAjaxURL($field);
 				return new ConcreteAjaxRequest({
 					url: url,
-					data: data, 
+					data: data,
 					success: function(r) {
 						my[method](r, $field);
 
@@ -175,10 +175,10 @@
 				});
 
 				ajaxData.push({'name': 'akID', 'value': akID});
-				
+
 				return new ConcreteAjaxRequest({
 					url: url,
-					data: ajaxData, 
+					data: ajaxData,
 					success: function(r) {
      					$('[data-key-id=' + akID + '][data-editable-field-type=xeditableAttribute]').editable('setValue', '');
 					}
