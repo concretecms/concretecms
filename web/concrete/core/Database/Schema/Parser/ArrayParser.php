@@ -12,13 +12,12 @@ class ArrayParser {
 	}
 
 	public function parse($definition, \Concrete\Core\Database\Connection $db) {
-		$tables = $db->MetaTables();
 		$schema = new \Doctrine\DBAL\Schema\Schema();
-		foreach($definition as $table => $details) {
-			if (in_array($table, $tables)) {
+		foreach($definition as $tableName => $details) {
+			if ($db->tableExists($tableName)) {
 				continue;
 			}
-			$table = $schema->createTable($table);
+			$table = $schema->createTable($tableName);
 			$table = $this->addColumns($table, $details['columns']);
 			$table->setPrimaryKey($details['primary']);
 		}

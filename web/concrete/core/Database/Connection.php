@@ -20,6 +20,20 @@ class Connection extends \Doctrine\DBAL\Connection {
         return static::$entityManager;
     }
 
+    /**
+     * Returns true if a table exists – is NOT case sensitive.
+     * @return boolean
+     */
+    public function tableExists($tableName) {
+        $sm = $this->getSchemaManager();
+        $schemaTables = $sm->listTables();
+        $tables = array();
+        foreach($schemaTables as $table) {
+            $tables[] = (string) $table->getName();
+        }
+        return array_search(strtolower($tableName), array_map('strtolower', $tables));
+    }
+    
 	/** 
 	 * @deprecated
 	 */
