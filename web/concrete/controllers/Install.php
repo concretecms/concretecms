@@ -118,7 +118,7 @@ class Install extends Controller {
 		$this->set('jsonTest', function_exists('json_encode'));
 		$this->set('xmlTest', function_exists('xml_parse') && function_exists('simplexml_load_file'));
 		$this->set('fileWriteTest', $this->testFileWritePermissions());	
-		$phpVmin = '5.3.0';
+		$phpVmin = '5.3.3';
 		if (version_compare(PHP_VERSION, $phpVmin, '>=')) {
 			$phpVtest = true;
 		} else {
