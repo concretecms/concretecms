@@ -3,6 +3,7 @@ namespace Concrete\Core\Permission\Key;
 use Loader;
 use User;
 use \Concrete\Core\Permission\Duration as PermissionDuration;
+use PermissionKey;
 class FileKey extends Key {
 
 
@@ -15,7 +16,7 @@ class FileKey extends Key {
 		if (!is_object($pae)) {
 			return false;
 		}
-		
+
 		$accessEntities = $u->getUserAccessEntityObjects();
 		$accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
 		$valid = false;
@@ -29,10 +30,10 @@ class FileKey extends Key {
 				$valid = false;
 			}
 		}
-		return $valid;		
+		return $valid;
 	}
-	
-	
+
+
 	public function copyFromFileSetToFile() {
 		$db = Loader::db();
 		$paID = $this->getPermissionAccessID();
@@ -48,9 +49,9 @@ class FileKey extends Key {
 		if ($paID) {
 			$db = Loader::db();
 			$db->Replace('FilePermissionAssignments', array(
-				'fID' => $this->permissionObject->getFileID(), 
+				'fID' => $this->permissionObject->getFileID(),
 				'pkID' => $this->getPermissionKeyID(),
-				'paID' => $paID), array('fID', 'paID', 'pkID'), true);				
+				'paID' => $paID), array('fID', 'paID', 'pkID'), true);
 
 		}
 	}
