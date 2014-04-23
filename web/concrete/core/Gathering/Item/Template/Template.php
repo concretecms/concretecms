@@ -207,7 +207,7 @@ abstract class Template extends Object {
 			$pkgID = $pkg->getPackageID();
 		}
 
-		$db->Execute('insert into GatheringItemTemplates (gatTypeID, gatHandle, gatName, gatFixedSlotWidth, gatFixedSlotHeight, gatHasCustomClass, gatForceDefault, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?)', array($type->getGatheringItemTemplateTypeID(), $gatHandle, $gatName, $gatFixedSlotWidth, $gatFixedSlotHeight, $gatHasCustomClass, $gatForceDefault, $pkgID));
+		$db->Execute('insert into GatheringItemTemplates (gatTypeID, gatHandle, gatName, gatFixedSlotWidth, gatFixedSlotHeight, gatHasCustomClass, gatForceDefault, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?)', array($type->getGatheringItemTemplateTypeID(), $gatHandle, $gatName, $gatFixedSlotWidth, $gatFixedSlotHeight, intval($gatHasCustomClass), intval($gatForceDefault), $pkgID));
 		$id = $db->Insert_ID();
 		
 		$agt = static::getByID($id);

@@ -25,17 +25,22 @@ class Legacy extends XmlParser {
 			}
 			$table = $schema->createTable((string) $t['name']);
 			foreach($t->field as $f) {
-				$options = $this->_getColumnOptions($f);
-				$field = $table->addColumn((string) $f['name'], $this->_getColumnType($f), $options);				
+				$options = $this->_getColumnOptions($db, $f);
+				$version = (isset($options['version']) && $options['version']) ? true : false;
+				unset($options['version']);
+				$field = $table->addColumn((string) $f['name'], $this->_getColumnType($f), $options);			
+				if ($version) {
+					$field->setPlatformOption('version', true);
+				}
 			}
-			$this->_setPrimaryKeys($t, $table);
-			$this->_setIndexes($t, $table);
-			$this->_setTableOpts($t, $table);
+			$this->_setPrimaryKeys($db, $t, $table);
+			$this->_setIndexes($db, $t, $table);
+			$this->_setTableOpts($db, $t, $table);
 		}
 		return $schema;
 	}
 
-	protected function _setTableOpts(\SimpleXMLElement $table, $schemaTable) {
+	protected function _setTableOpts(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $table, $schemaTable) {
 		if ($table->opt) {
 			$opt = $table->opt->__toString();
 			 if ($opt == 'ENGINE=MYISAM') {
@@ -44,7 +49,7 @@ class Legacy extends XmlParser {
 		}
 	}
 
-	protected function _setPrimaryKeys(\SimpleXMLElement $table, $schemaTable) {
+	protected function _setPrimaryKeys(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $table, $schemaTable) {
 		$primaryKeys = array();
 		foreach($table->field as $column) {
 			if ($column->autoincrement || $column->AUTOINCREMENT || $column->key || $column->KEY) {
@@ -56,7 +61,7 @@ class Legacy extends XmlParser {
 		}
 	}	
 
-	protected function _setIndexes(\SimpleXMLElement $table, $schemaTable) {
+	protected function _setIndexes(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $table, $schemaTable) {
 		foreach($table->index as $index) {
 			$name = (string) $index['name'];
 			$fields = array();
@@ -77,7 +82,7 @@ class Legacy extends XmlParser {
 	}	
 
 
-	protected function _getColumnOptions(\SimpleXMLElement $column) {
+	protected function _getColumnOptions(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $column) {
 		$type = (string) $column['type'];
 		$size = (string) $column['size'];
 		$options = array();
@@ -110,6 +115,11 @@ class Legacy extends XmlParser {
 		}
 		if ($column->autoincrement || $column->AUTOINCREMENT) {
 			$options['autoincrement'] = true;
+		}
+		if ($type == 'T' && isset($column->deftimestamp) || isset($column->DEFTIMESTAMP)) {
+			$platform = $db->getDatabasePlatform();
+			$options['default'] = $platform->getCurrentTimestampSQL();
+			$options['version'] = true;
 		}
 		return $options;
 	}

@@ -118,9 +118,9 @@ class FormLayoutSetControl extends Object {
 	public function updateFormLayoutSetControlRequired($required) {
 		$db = Loader::db();
 		$db->Execute('update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlRequired = ? where ptComposerFormLayoutSetControlID = ?', array(
-			$required, $this->ptComposerFormLayoutSetControlID
+			intval($required), $this->ptComposerFormLayoutSetControlID
 		));
-		$this->ptComposerFormLayoutSetControlRequired = $label;
+		$this->ptComposerFormLayoutSetControlRequired = $required;
 	}
 
 	public function updateFormLayoutSetControlCustomTemplate($template) {

@@ -735,7 +735,7 @@ use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionV
 				$newBlockDisplayOrder = $this->getCollectionAreaDisplayOrder($arHandle);
 			}
 
-			$v = array($cID, $vObj->getVersionID(), $nb->getBlockID(), $arHandle, $newBlockDisplayOrder, 1, $bt->includeAll());
+			$v = array($cID, $vObj->getVersionID(), $nb->getBlockID(), $arHandle, $newBlockDisplayOrder, 1, intval($bt->includeAll()));
 			$q = "insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbIncludeAll) values (?, ?, ?, ?, ?, ?, ?)";
 
 			$res = $db->Execute($q, $v);
