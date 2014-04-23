@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Tree\Node\Type;
+use Permissions;
 class TopicCategory extends Category {
 
 	public function getPermissionResponseClassName() {
