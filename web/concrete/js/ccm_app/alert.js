@@ -1,4 +1,4 @@
-/** 
+/**
  * Simple alert using dialog class.
  */
 
@@ -7,7 +7,7 @@
     'use strict';
 
     var ConcreteAlert = {
-        
+
         dialog : function(title, message, onCloseFn) {
             $('<div id="ccm-popup-alert" class="ccm-ui"><div id="ccm-popup-alert-message" class="alert alert-danger">' + message + '</div></div>').dialog({
                 title: title,
@@ -24,7 +24,7 @@
                 'message': false,
                 'appendTo': false,
             }, defaults);
-            
+
             var messageText = '',
                 $appendTo = (options.appendTo) ? $(options.appendTo) : $(document.body);
 
@@ -50,7 +50,7 @@
                 $(this).dequeue();
             });
         }
-    
+
     }
 
     global.ConcreteAlert = ConcreteAlert;
