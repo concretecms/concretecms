@@ -159,7 +159,6 @@ class Cache {
 	 */	
 	public function flush() {
 		$db = DB::get();
-		$r = $db->MetaTables();
 
 		// flush the CSS cache
 		if (is_dir(DIR_FILES_CACHE . '/' . DIRNAME_CSS)) {
@@ -178,7 +177,7 @@ class Cache {
 			$pageCache->flush();
 		}
 		
-		if (in_array('Config', $r)) {
+		if ($db->tableExists('Config')) {
 			// clear the environment overrides cache
 			$env = Environment::get();
 			$env->clearOverrideCache();
@@ -186,7 +185,7 @@ class Cache {
 			if(in_array('btCachedBlockRecord', $db->MetaColumnNames('Blocks'))) {
 				$db->Execute('update Blocks set btCachedBlockRecord = null');
 			}
-			if (in_array('CollectionVersionBlocksOutputCache', $r)) {
+			if ($db->tableExists('CollectionVersionBlocksOutputCache')) {
 				$db->Execute('truncate table CollectionVersionBlocksOutputCache');
 			}
 		}
