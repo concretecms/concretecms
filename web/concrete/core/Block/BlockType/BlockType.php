@@ -365,18 +365,18 @@ class BlockType {
 	 * @return void
 	 */
 	public function refresh() {
-		if ($this->getPackageID() > 0) {
-			$pkg = Package::getByID($this->getPackageID());
-			$resp = BlockType::installBlockTypeFromPackage($this->getBlockTypeHandle(), $pkg, $this->getBlockTypeID());			
-			if ($resp != '') {
-				throw new Exception($resp);
-			}
-		} else {
-			$resp = BlockType::installBlockType($this->getBlockTypeHandle(), $this->getBlockTypeID());			
-			if ($resp != '') {
-				throw new Exception($resp);
-			}
+		$pkgHandle = false;
+		if ($this->pkgID > 0) {
+			$pkgHandle = $this->getPackageHandle();
 		}
+
+		$class = static::getBlockTypeMappedClass($this->btHandle, $pkgHandle);
+		$bta = new $class;
+		$this->loadFromController($bta);
+
+		$em = DB::get()->getEntityManager();
+		$em->persist($this);
+		$em->flush();
 	}
 	
 
@@ -405,22 +405,13 @@ class BlockType {
 
 		//Install the block
 		$bt = new static();
-		$bt->btHandle = $btHandle;
+		$bt->loadFromController($bta);
 		if ($pkg instanceof Package) {
 			$bt->pkgID = $pkg->getPackageID();
 		} else {
 			$bt->pkgID = 0;
 		}
 		$bt->btHandle = $btHandle;
-		$bt->btName = $bta->getBlockTypeName();
-		$bt->btDescription = $bta->getBlockTypeDescription();
-		$bt->btCopyWhenPropagate = $bta->isCopiedWhenPropagated();
-		$bt->btIncludeAll = $bta->includeAll();
-		$bt->btIsInternal = $bta->isBlockTypeInternal();
-		$bt->btSupportsInlineEdit = $bta->supportsInlineEdit();
-		$bt->btSupportsInlineAdd = $bta->supportsInlineAdd();
-		$bt->btInterfaceHeight = $bta->getInterfaceHeight();
-		$bt->btInterfaceWidth = $bta->getInterfaceWidth();
 		if ($currentLocale != 'en_US') {
 			Localization::changeLocale($currentLocale);
 		}
@@ -430,6 +421,18 @@ class BlockType {
 		$em->flush();
 
 		return $bt;
+	}
+
+	protected function loadFromController($bta) {
+		$this->btName = $bta->getBlockTypeName();
+		$this->btDescription = $bta->getBlockTypeDescription();
+		$this->btCopyWhenPropagate = $bta->isCopiedWhenPropagated();
+		$this->btIncludeAll = $bta->includeAll();
+		$this->btIsInternal = $bta->isBlockTypeInternal();
+		$this->btSupportsInlineEdit = $bta->supportsInlineEdit();
+		$this->btSupportsInlineAdd = $bta->supportsInlineAdd();
+		$this->btInterfaceHeight = $bta->getInterfaceHeight();
+		$this->btInterfaceWidth = $bta->getInterfaceWidth();
 	}
 
     /** 
