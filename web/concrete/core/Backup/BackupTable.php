@@ -1,7 +1,8 @@
 <?
 namespace Concrete\Core\Backup;
+use Loader;
 class BackupTable {
-   
+
    //Public Class members
 	public $str_createTableSql= "";
 	public $str_insertionSql= "";
@@ -12,7 +13,7 @@ class BackupTable {
 	private $arr_fieldtypes = Array();
 	private $rs_table;
 	/**
-	* @desc class constructor, should load up the table information and create table sql and 
+	* @desc class constructor, should load up the table information and create table sql and
 	* insert statements
 	* @param string $table case sensitive table name of the table to be processed
 	**/
@@ -33,14 +34,14 @@ class BackupTable {
 				 for ($f_it=0; $f_it<$this->rs_table->FieldCount();$f_it++) {
 				  $obj_fld = $this->rs_table->FetchField($f_it);
 				  $str_fieldtype = $this->rs_table->MetaType($obj_fld->type);
-//				 }	
+//				 }
 			}
 			$this->generateCreateTableSql();
 			$this->generateDataInsertionSql();
 			$this->rs_table->Close();
 		}
 	}
-	
+
 	/**
 	* @desc determines weather or not a adodb field type is a quoted type
 	* @param string $type the adodb field type specifier (C,X,B,D,T,L,I,N,R) see manual
@@ -60,7 +61,7 @@ class BackupTable {
 		}
 	}
 		/**
-		 * generateCreateTableSql  
+		 * generateCreateTableSql
 		 * @desc Queries table for creation SQL and sets class variable
 		 * @access public
 		 * @return void
@@ -75,9 +76,9 @@ class BackupTable {
 			$rs_createsql->close();
 		}
 	}
-	
+
 	public function generateDataInsertionSql() {
-		$this->rs_table->MoveFirst(); // Just in case 
+		$this->rs_table->MoveFirst(); // Just in case
 		while (!$this->rs_table->EOF) {
 			$arr_rowData = Array();
 			for($int_cflds = 0;$int_cflds < $this->rs_table->FieldCount();$int_cflds++) {
@@ -88,7 +89,7 @@ class BackupTable {
 					if ($str_fieldData == "") {
 					   $str_fieldData = "''";
 					}
-				} 
+				}
 				else {
 					$str_fieldData = $this->rs_table->fields[$obj_fld->name];
 					if ($str_fieldData == "") {
@@ -99,7 +100,7 @@ class BackupTable {
 			}
 			if ($this->str_insertionSql == "") {
 				$this->str_insertionSql = "INSERT INTO ". $this->str_tablename ." VALUES(".implode(",",$arr_rowData).")";
-			}  
+			}
 			else {
 				$this->str_insertionSql .= "\n ,(".implode(",",$arr_rowData).")";
 			}
