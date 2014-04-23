@@ -123,7 +123,7 @@ class Image {
 			$crop_src_y = round(($oHeight - ($height * $oWidth / $width)) * 0.5);
 		}
 		
-		if(!class_exists("Imagick")) {
+		if(!class_exists("\\Imagick")) {
 			//create "canvas" to put new resized and/or cropped image into
 			if ($crop) {
 				$image = @imageCreateTrueColor($width, $height);
@@ -198,7 +198,7 @@ class Image {
 				}
 			}
 		} else {
-			$image = new Imagick();
+			$image = new \Imagick();
 			if ($crop) {
 				$image->setSize($finalWidth, $finalHeight);
 				$image->readImage($originalPath);
@@ -208,7 +208,7 @@ class Image {
 				$image->readImage($originalPath);
 				$image->thumbnailImage($width, $height, true);
 			}
-			if($image->getCompression() == imagick::COMPRESSION_JPEG) {
+			if($image->getCompression() == \Imagick::COMPRESSION_JPEG) {
 				$image->setCompressionQuality($this->jpegCompression);
 			}
 			$image->writeImage($newPath);

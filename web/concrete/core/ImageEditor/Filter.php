@@ -108,9 +108,10 @@ class Filter {
 	 */
 	public static function add($scsHandle, $scsDisplayName, $pkg = false) {
 		$db = Loader::db();
+		$pkgID = (is_object($pkg)) ? $pkg->getPackageID() : 0;
 		$db->execute('INSERT INTO SystemImageEditorFilters
 						(scsHandle,scsDisplayName,pkgID) VALUES (?,?,?)',
-						array($scsHandle,$scsDisplayName,$pkg));
+						array($scsHandle,$scsDisplayName,$pkgID));
 		return self::getByHandle($scsHandle);
 	}
 
