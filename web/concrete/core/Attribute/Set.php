@@ -11,12 +11,7 @@ class Set extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select asID, asHandle, pkgID, asName, akCategoryID, asIsLocked  from AttributeSets where asID = ?', array($asID));
 		if (isset($row['asID'])) {
-			if (function_exists('get_called_class')) {
-				$class = get_called_class(); // using this for an add-on that requires 5.3
-			} else {
-				$class = 'AttributeSet';
-			}
-			$akc = new $class();
+			$akc = new static();
 			$akc->setPropertiesFromArray($row);
 			return $akc;
 		}
@@ -26,12 +21,7 @@ class Set extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select asID, asHandle, pkgID, asName, akCategoryID, asIsLocked from AttributeSets where asHandle = ?', array($asHandle));
 		if (isset($row['asID'])) {
-			if (function_exists('get_called_class')) {
-				$class = get_called_class(); // using this for an add-on that requires 5.3
-			} else {
-				$class = 'AttributeSet';
-			}
-			$akc = new $class();
+			$akc = new static();
 			$akc->setPropertiesFromArray($row);
 			return $akc;
 		}
@@ -42,7 +32,7 @@ class Set extends Object {
 		$list = array();
 		$r = $db->Execute('select asID from AttributeSets where pkgID = ? order by asID asc', array($pkg->getPackageID()));
 		while ($row = $r->FetchRow()) {
-			$list[] = AttributeSet::getByID($row['asID']);
+			$list[] = static::getByID($row['asID']);
 		}
 		$r->Close();
 		return $list;
@@ -121,7 +111,7 @@ class Set extends Object {
 		$r = $db->Execute('select asID from AttributeSets order by asID asc');
 		$list = array();
 		while ($row = $r->FetchRow()) {
-			$list[] = AttributeSet::getByID($row['asID']);
+			$list[] = static::getByID($row['asID']);
 		}
 		foreach($list as $as) {
 			$as->export($axml);
