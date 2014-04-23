@@ -25,11 +25,11 @@
 			var my = this,
 				options = my.options,
 				successCallback = options.success;
-			
+
 			options.success = function(r) {
 				my.success(r, my, successCallback);
 			}
-			
+
 			my.before();
 			$.ajax(options);
 		},
@@ -39,12 +39,12 @@
 		},
 
 		error: function(r, my) {
-			ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.responseText + '</div>');
+			ConcreteAlert.dialog('Error', r.responseText);
 		},
 
 		validateResponse: function(r) {
 			if (r.error) {
-				ConcreteAlert.dialog('Error', '<div class="alert alert-danger">' + r.errors.join("<br>") + '</div>');
+				ConcreteAlert.dialog('Error', r.errors.join("<br/>"));
 				return false;
 			}
 			return true;
