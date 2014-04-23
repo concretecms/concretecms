@@ -4,10 +4,13 @@ thumbs.db
 __MACOSX
 ._*
 
+# ignore composer.phar
+composer.phar
+
 # ignore the site.php
 /web/application/config/site.php
 
-#ignore everything but the index.html
+# ignore everything but the index.html
 /web/application/files/*
 !/web/application/files/index.html
 
