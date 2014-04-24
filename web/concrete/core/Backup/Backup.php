@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Backup;
+use Loader;
 class Backup {
 
 	public function execute($encrypt = false) {
@@ -11,7 +12,7 @@ class Backup {
 		$str_bkupfile = "dbu_". time() .".sql";
 		$arr_tables = $db->getCol("SHOW TABLES FROM `" . DB_DATABASE . "`");
 		foreach ($arr_tables as $bkuptable) {
-			$tableobj = new Concrete5_Library_Backup_BackupTable($bkuptable);
+			$tableobj = new BackupTable($bkuptable);
 			$str_backupdata .= "DROP TABLE IF EXISTS $bkuptable;\n\n";
 			$str_backupdata .= $tableobj->str_createTableSql . "\n\n";
 			if ($tableobj->str_createTableSql != "" ) {
@@ -32,5 +33,5 @@ class Backup {
 		//for security
 		chmod(DIR_FILES_BACKUPS . "/". $str_bkupfile,000);
 	}
-	
+
 }
