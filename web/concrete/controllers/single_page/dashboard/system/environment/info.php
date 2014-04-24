@@ -1,13 +1,14 @@
-<?php 
+<?php
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Environment;
 use \Concrete\Core\Page\Controller\DashboardPageController;
+use \Concrete\Core\Package\PackageList;
 use Config;
 use Loader;
 use Localization;
 
-class Info extends DashboardPageController {	
-	
+class Info extends DashboardPageController {
+
 	public function get_environment_info() {
 		$activeLocale = Localization::activeLocale();
 		if($activeLocale != 'en_US') {
@@ -15,7 +16,7 @@ class Info extends DashboardPageController {
 		}
 		$maxExecutionTime = ini_get('max_execution_time');
 		set_time_limit(5);
-		
+
 		$environmentMessage = "# concrete5 Version\n" . APP_VERSION . "\n\n";
 		$environmentMessage .= "# concrete5 Packages\n";
 		$pla = PackageList::get();
@@ -24,7 +25,7 @@ class Info extends DashboardPageController {
 		foreach($pl as $p) {
 			if ($p->isPackageInstalled()) {
 				$packages[] =$p->getPackageName() . ' (' . $p->getPackageVersion() . ')';
-			}			
+			}
 		}
 		if (count($packages) > 0) {
 			natcasesort($packages);
@@ -34,7 +35,7 @@ class Info extends DashboardPageController {
 			$environmentMessage .= "None\n";
 		}
 		$environmentMessage .= "\n";
-		
+
 		// overrides
 		$environmentMessage .= "# concrete5 Overrides\n";
 		$fh = Loader::helper('file');
@@ -94,7 +95,7 @@ class Info extends DashboardPageController {
 		$environmentMessage .= "\n";
 
 		print $environmentMessage;
-                                
+
 		// cache
 		$environmentMessage = "# concrete5 Cache Settings\n";
 		$environmentMessage .= sprintf("Block Cache - %s\n", ENABLE_BLOCK_CACHE ? 'On' : 'Off');
@@ -105,7 +106,7 @@ class Info extends DashboardPageController {
 		}
 		$environmentMessage .= "\n";
 		print $environmentMessage;
-		
+
 		$environmentMessage = "# Server Software\n" . $_SERVER['SERVER_SOFTWARE'] . "\n\n";
 		$environmentMessage .= "# Server API\n" . php_sapi_name() . "\n\n";
 		$environmentMessage .= "# PHP Version\n" . PHP_VERSION . "\n\n";
@@ -133,7 +134,7 @@ class Info extends DashboardPageController {
 			} else {
 				$phpinfo[end(array_keys($phpinfo))][] = $match[2];
 			}
-		}		
+		}
 		$environmentMessage = "\n# PHP Settings\n";
 		$environmentMessage .= "max_execution_time - $maxExecutionTime\n";
 		foreach($phpinfo as $name => $section) {
@@ -153,7 +154,7 @@ class Info extends DashboardPageController {
 				}
 			}
 		}
-		
+
 		print $environmentMessage;
 		exit;
 	}
