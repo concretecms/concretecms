@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Controller\Panel\Page;
-use \Concrete\Controller\Backend\UI\Page as BackendInterfacePageController;
+use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Permissions;
 use Page;
 use stdClass;

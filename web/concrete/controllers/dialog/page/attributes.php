@@ -1,9 +1,9 @@
 <?
 namespace Concrete\Controller\Dialog\Page;
-use \Concrete\Controller\Backend\UI as BackendInterfaceController;
+use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use \Concrete\Controller\Panel\Page\Attributes as PageAttributesPanelController;
 use \Concrete\Controller\Panel\Detail\Page\Attributes as PageAttributesPanelDetailController;
-use \Concrete\Controller\Backend\UI\Page as BackendInterfacePageController;
+use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Loader;
 
 class Attributes extends BackendInterfacePageController {

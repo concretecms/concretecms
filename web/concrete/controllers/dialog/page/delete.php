@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Controller\Dialog\Page;
-use \Concrete\Controller\Backend\UI\Page as BackendInterfacePageController;
+use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use \Concrete\Core\Workflow\Request\DeletePageRequest as DeletePagePageWorkflowRequest;
 use \Concrete\Core\Page\EditResponse as PageEditResponse;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;

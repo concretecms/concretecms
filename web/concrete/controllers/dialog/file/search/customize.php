@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Controller\Dialog\File\Search;
-use \Concrete\Controller\Backend\UI as BackendInterfaceController;
+use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use \Concrete\Core\File\Search\ColumnSet\ColumnSet as FileSearchColumnSet;
 use \Concrete\Core\File\Search\ColumnSet\Available as FileSearchAvailableColumnSet;
 use FileAttributeKey;

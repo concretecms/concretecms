@@ -1,6 +1,6 @@
-<?
+\UserInterface<?
 namespace Concrete\Controller\Panel\Detail\Page;
-use \Concrete\Controller\Backend\UI\Page as BackendInterfacePageController;
+use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Loader;
 
 class Versions extends BackendInterfacePageController {

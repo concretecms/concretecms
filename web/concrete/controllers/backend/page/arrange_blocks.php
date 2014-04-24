@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Controller\Backend\Page;
-use Concrete\Controller\Backend\UI\Page;
+use Concrete\Controller\Backend\UserInterface\Page;
 use \Concrete\Core\Page\EditResponse as PageEditResponse;
 use Permissions;
 use Area;

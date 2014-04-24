@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Controller\Dialog\File;
-use \Concrete\Controller\Backend\UI as BackendInterfaceController;
+use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use FilePermissions;
 use Loader;
 use \Concrete\Controller\Search\Files as SearchFilesController;

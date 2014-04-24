@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Controller\Dialog\File\Bulk;
-use \Concrete\Controller\Backend\UI as BackendInterfaceController;
+use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use FilePermissions;
 use \Concrete\Core\Http\ResponseAssetGroup;
 use \Concrete\Core\File\EditResponse as FileEditResponse;

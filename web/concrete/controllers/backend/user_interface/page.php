@@ -1,9 +1,9 @@
 <?php
-namespace Concrete\Controller\Backend\UI;
+namespace Concrete\Controller\Backend\UserInterface;
 use Page as ConcretePage;
 use Permissions;
 use Exception;
-abstract class Page extends \Concrete\Controller\Backend\UI {
+abstract class Page extends \Concrete\Controller\Backend\UserInterface {
 
 	protected $page;
 

@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Controller\Dialog\User\Search;
-use \Concrete\Controller\Backend\UI as BackendInterfaceController;
+use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use User;
 use UserAttributeKey;
 use Loader;

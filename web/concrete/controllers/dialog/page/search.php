@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Controller\Dialog\Page;
-use \Concrete\Controller\Backend\UI as BackendInterfaceController;
+use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use Loader;
 class Search extends BackendInterfaceController {
 

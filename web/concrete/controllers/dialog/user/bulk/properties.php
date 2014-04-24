@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Controller\Dialog\User\Bulk;
-use \Concrete\Controller\Backend\UI as BackendInterfaceController;
+use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use PermissionKey;
 use \Concrete\Core\Http\ResponseAssetGroup;
 use Permissions;

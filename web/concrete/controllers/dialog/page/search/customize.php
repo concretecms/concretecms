@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Controller\Dialog\Page\Search;
-use \Concrete\Controller\Backend\UI as BackendInterfaceController;
+use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use \Concrete\Core\Page\Search\ColumnSet\ColumnSet as PageSearchColumnSet;
 use \Concrete\Core\Page\Search\ColumnSet\Available as PageSearchAvailableColumnSet;
 use CollectionAttributeKey;
