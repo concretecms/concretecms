@@ -78,7 +78,7 @@ class CustomLayout extends Layout {
 	public function addLayoutColumn() {
 		$columnID = parent::addLayoutColumn();
 		$db = Loader::db();
-		$db->Execute('insert into AreaLayoutCustomColumns (arLayoutColumnID) values (?)', array($columnID));
+		$db->Execute('insert into AreaLayoutCustomColumns (arLayoutColumnID, arLayoutColumnWidth) values (?, 0)', array($columnID));
 		return CustomColumn::getByID($columnID);
 	}
 
