@@ -73,7 +73,7 @@ class Log {
 	public function close() {
 		$u = new User();
 
-		$v = array($this->log, htmlentities($this->sessionText, ENT_COMPAT, APP_CHARSET), $this->isInternal, $u->getUserID());
+		$v = array($this->log, htmlentities($this->sessionText, ENT_COMPAT, APP_CHARSET), intval($this->isInternal), $u->getUserID());
 		$db = Loader::db();
 		$db->Execute("insert into Logs (logType, logText, logIsInternal, logUserID) values (?, ?, ?, ?)", $v);
 		$this->sessionText = '';
