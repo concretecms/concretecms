@@ -13,6 +13,7 @@ use \Concrete\Core\Filesystem\TemplateFile;
 use \Concrete\Core\Package\PackageList;
 use \Concrete\Core\Block\View\BlockView;
 use BlockTypeSet;
+use Page;
 
 class BlockType {
 

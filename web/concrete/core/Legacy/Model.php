@@ -14,18 +14,22 @@ class Model {
 		}
 	}
 
-	public function load($where) {
+	public function load($where, $args = array()) {
 		$db = Loader::db();
-		$r = $db->GetRow('select * from ' . $this->_table . ' where ' . $where);
+		$r = $db->GetRow('select * from ' . $this->_table . ' where ' . $where, $args);
 		foreach($r as $key => $value) {
 			$this->{$key} = $value;
 		}
+		if ($r && count(array_keys($r) > 0)) {
+			return true;
+		}
+		return false;
 	}
 
-	public function Find($where) {
+	public function Find($where, $args = array()) {
 		$db = Loader::db();
 		$return = array();
-		$r = $db->GetAll('select * from ' . $this->_table . ' where ' . $where);
+		$r = $db->GetAll('select * from ' . $this->_table . ' where ' . $where, $args);
 		foreach($r as $row) {
 			$o = new $this;
 			$o = array_to_object($o, $row);
