@@ -40,7 +40,7 @@ class Database {
 		$doctrineConfiguration = $configuration;
 		$doctrineConfiguration['dbname'] = $configuration['database'];
 		if (!isset($doctrineConfiguration['driver'])) {
-			$doctrineConfiguration['driverClass'] = '\Concrete\Core\Database\Driver\PDOMysqlConcrete5\Driver';
+			$doctrineConfiguration['driverClass'] = '\Concrete\Core\Database\Driver\PDOMySqlConcrete5\Driver';
 		}
 		$doctrineConfiguration['wrapperClass'] = '\Concrete\Core\Database\Connection';
 		$connection = \Doctrine\DBAL\DriverManager::getConnection($doctrineConfiguration, $config);
