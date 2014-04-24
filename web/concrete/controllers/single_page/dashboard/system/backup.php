@@ -2,7 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 
-class BackupRestore extends DashboardPageController {
+class Backup extends DashboardPageController {
 	/**
 	* Dashboard view - automatically redirects to a default
 	* page in the category
