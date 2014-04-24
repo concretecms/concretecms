@@ -31,7 +31,7 @@ class Connection extends \Doctrine\DBAL\Connection {
         foreach($schemaTables as $table) {
             $tables[] = (string) $table->getName();
         }
-        return array_search(strtolower($tableName), array_map('strtolower', $tables));
+        return in_array(strtolower($tableName), array_map('strtolower', $tables));
     }
     
 	/** 
