@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Controller\Panel;
-use \Concrete\Controller\Backend\UI\Page as BackendInterfacePageController;
+use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Cookie;
 use Loader;
 use Page;

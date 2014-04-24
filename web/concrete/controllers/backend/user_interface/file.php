@@ -1,11 +1,11 @@
 <?php
-namespace Concrete\Controller\Backend\UI;
+namespace Concrete\Controller\Backend\UserInterface;
 use File as ConcreteFile;
 use Loader;
 use Permissions;
 use Exception;
 
-abstract class File extends \Concrete\Controller\Backend\UI {
+abstract class File extends \Concrete\Controller\Backend\UserInterface {
 
 	protected $file;
 

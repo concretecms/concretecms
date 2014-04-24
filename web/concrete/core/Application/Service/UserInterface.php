@@ -26,7 +26,7 @@ use stdClass;
  * @license    http://www.concrete5.org/license/     MIT License
  */
 
-class UI {
+class UserInterface {
 
 	static $menuItems = array();
 	
