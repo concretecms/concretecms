@@ -2,6 +2,7 @@
 namespace Concrete\Authentication\Concrete;
 use \Concrete\Core\Authentication\AuthenticationTypeController;
 use User;
+use Loader;
 class Controller extends AuthenticationTypeController {
 
 	public $apiMethods = array('forgot_password', 'change_password');
