@@ -10,5 +10,8 @@
 		<testsuite name="CoreDatabase">
 			<directory>tests/Core/Database/</directory>
 		</testsuite>
+		<testsuite name="CoreStyle">
+			<directory>tests/Core/Style/</directory>
+		</testsuite>
 	</testsuites>
 </phpunit>
