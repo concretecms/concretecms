@@ -78,14 +78,14 @@ class ServiceLocatorTest extends \PHPUnit_Framework_TestCase {
 		$provider = new \Concrete\Core\Validation\ValidationServiceProvider($this->sl);
 		$provider->register();
 
-		$this->assertTrue($this->sl->bound('validation/antispam'));
-		$bw1 = $this->sl->make('validation/banned_words');
-		$bw2 = $this->sl->make('validation/banned_words');
+		$this->assertTrue($this->sl->bound('helper/validation/antispam'));
+		$bw1 = $this->sl->make('helper/validation/banned_words');
+		$bw2 = $this->sl->make('helper/validation/banned_words');
 		$this->assertTrue($bw1 === $bw2);
 
 		// test a non singleton.
-		$vt1 = $this->sl->make('validation/token');
-		$vt2 = $this->sl->make('validation/token');
+		$vt1 = $this->sl->make('helper/validation/token');
+		$vt2 = $this->sl->make('helper/validation/token');
 		$this->assertFalse($vt1 === $vt2);
 		$this->assertTrue($vt1 == $vt2);
 	}
@@ -133,17 +133,21 @@ class ServiceLocatorTest extends \PHPUnit_Framework_TestCase {
 			'\Concrete\Core\Mail\MailServiceProvider',
 			'\Concrete\Core\Application\ApplicationServiceProvider',
 			'\Concrete\Core\Utility\UtilityServiceProvider',
+			'\Concrete\Core\Database\DatabaseServiceProvider',
 			'\Concrete\Core\Form\FormServiceProvider',
-			'\Concrete\Core\Http\HttpServiceProvider'
+			'\Concrete\Core\Session\SessionServiceProvider',
+			'\Concrete\Core\Http\HttpServiceProvider',
+			'\Concrete\Core\Events\EventsServiceProvider'
 		);
 
 		$gr = new ProviderList($this->sl);
 		$gr->registerProviders($groups);
 
-		$this->assertTrue($this->sl->bound('concrete/ui'));
-		$this->assertTrue($this->sl->bound('concrete/ui/help'));
-		$this->assertTrue($this->sl->bound('concrete/asset_library'));
-		$this->assertTrue($this->sl->bound('mime'));
+		$this->assertTrue($this->sl->bound('helper/concrete/ui'));
+		$this->assertTrue($this->sl->bound('helper/concrete/ui/help'));
+		$this->assertTrue($this->sl->bound('helper/concrete/asset_library'));
+		$this->assertTrue($this->sl->bound('helper/mime'));
+		$this->assertTrue($this->sl->bound('director'));
 
 
 	}

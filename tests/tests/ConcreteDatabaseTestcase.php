@@ -26,6 +26,7 @@ class ConcreteDatabaseTestcase extends PHPUnit_Extensions_Database_TestCase {
 					'database' => DB_DATABASE
 				));
 	            $this->conn = $this->createDefaultDBConnection($db->getWrappedConnection(), 'test');
+	            $this->db = $db;
 	        } catch (PDOException $e) {
 	            echo $e->getMessage();
 	        }

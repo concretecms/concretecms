@@ -43,6 +43,11 @@ abstract class BlockTypeTestCase extends ConcreteDatabaseTestcase {
 
 	}
 
+	public function tearDown() {
+		parent::tearDown();
+		$db = Loader::db();
+		$db->getEntityManager()->clear();
+	}
 
 
 

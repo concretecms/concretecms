@@ -5,15 +5,19 @@ use Doctrine\DBAL\Configuration as DoctrineConfiguration;
 
 class Database {
 
-	protected static $activeConnection;
+	protected static $activeConnection = false;
 	protected static $connections = array();
 
 	public static function getActiveConnection() {
-		if (!isset(static::$activeConnection)) {
+		if (!static::$activeConnection) {
 			static::$connections['default'] = static::createDefaultConnection();
 			static::$activeConnection = 'default';
 		}
 		return static::$connections[static::$activeConnection];
+	}
+
+	public function setActiveConnection($name) {
+		static::$activeConnection = $name;
 	}
 
 	protected static function createDefaultConnection() {

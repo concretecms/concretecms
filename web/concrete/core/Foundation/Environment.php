@@ -190,16 +190,20 @@ class Environment {
 		if (file_exists(DIR_APPLICATION . '/' . $segment)) {
 			$obj->file = DIR_APPLICATION . '/' . $segment;
 			$obj->override = true;
+			$obj->url = REL_DIR_APPLICATION . '/' . $segment;
 		} else if ($pkgHandle) {
 			$dirp1 = DIR_PACKAGES . '/' . $pkgHandle . '/' . $segment;
 			$dirp2 = DIR_PACKAGES_CORE . '/' . $pkgHandle . '/' . $segment;
 			if (file_exists($dirp2)) {
 				$obj->file = $dirp2;
+				$obj->url = ASSETS_URL . '/' . DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . $segment;
 			} else if (file_exists($dirp1)) {
 				$obj->file = $dirp1;
+				$obj->url = DIR_REL . '/' . DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . $segment;
 			}
 		} else {
 			$obj->file = DIR_BASE_CORE . '/' . $segment;
+			$obj->url = ASSETS_URL . '/' . $segment;
 		}
 		return $obj;
 	}
