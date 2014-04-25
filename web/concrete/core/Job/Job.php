@@ -298,7 +298,7 @@ abstract class Job extends Object {
 			if(strlen($resultMsg)==0) {
 				$resultMsg= t('The Job was run successfully.');
 			}
-		}catch(Exception $e){
+		}catch(\Exception $e){
 			$resultMsg=$e->getMessage();
 			$error = static::JOB_ERROR_EXCEPTION_GENERAL;
 		}
