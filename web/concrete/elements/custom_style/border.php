@@ -48,7 +48,7 @@
 					<?=t('Color')?>:
 				</td>
 				<td>
-					<?=$fh->output( 'border_color', '', $cssData['border_color']) ?> 
+					<?=$fh->output( 'border_color', $cssData['border_color']) ?> 
 				</td> 
 			</tr>
 		</table>	  

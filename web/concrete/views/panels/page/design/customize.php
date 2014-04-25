@@ -1,6 +1,5 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Core\Page\Theme\EditableStyle\EditableStyle as PageThemeEditableStyle;
 $pk = PermissionKey::getByHandle('customize_themes');
 ?>
 
@@ -12,26 +11,13 @@ $pk = PermissionKey::getByHandle('customize_themes');
 	<div id="ccm-panel-page-design-customize-list">
 	<? foreach($styleSets as $set) { ?>
 		<div class="ccm-panel-page-design-customize-style-set">
-			<h5><?=$set->title?></h5>
+			<h5><?=$set->getName()?></h5>
 			<ul class="list-unstyled">
-			<? foreach($set->styles as $st) { ?>
-				<li>
-				<?
-				switch($st->getType()) {
-					case PageThemeEditableStyle::TSTYPE_COLOR: ?>
-						<?=Loader::helper('form/color')->output($st->getFormFieldInputName(), $st->getName(), $st->getValue());?>
-					<? 
-						break;
-					case PageThemeEditableStyle::TSTYPE_FONT: ?>
-						<label><?=$st->getName()?></label>
-						<input type="hidden" name="<?=$st->getFormFieldInputName()?>" value="<?=$st->getShortValue()?>" />
-						<div class="ccm-page-design-customize-font-swatch" id="<?=$st->getFormFieldInputName()?>" font-panel-font="<?=$st->getFamily()?>" font-panel-weight="<?=$st->getWeight()?>" font-panel-style="<?=$st->getStyle()?>" font-panel-size="<?=$st->getSize()?>" id="theme_style_<?=$st->getHandle()?>_<?=$st->getType()?>"><span style="font-family: <?=$st->getFamily()?>; font-weight: <?=$st->getWeight()?>; font-style: <?=$st->getStyle()?>; font-size: <?=$st->getSize()?>">T</span></div>
-					<? 
-						break;
-				}
-				?>
-				<?//=$st->getName()?></li>
-			<? } ?>
+            <? foreach($set->getStyles() as $style) { ?>
+                <li><?=$style->getName()?>
+                <?=$style->render()?>
+                </li>
+            <? } ?>
 			</ul>
 		</div>
 

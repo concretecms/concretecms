@@ -4,7 +4,7 @@
 		<h3><?php echo t('Background')?></h3> 
 		<table border="0" cellspacing="0" cellpadding="0" class="table ccm-style-property-table">
 			<tr>
-				<td><?=$fh->output( 'background_color', t('Background Color'), $cssData['background_color']) ?></td>
+				<td><?=$fh->output( 'background_color', $cssData['background_color']) ?></td>
 				<? 
 				$bf = false;
 				if ($cssData['background_image'] > 0) {

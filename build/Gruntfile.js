@@ -134,9 +134,9 @@ module.exports = function(grunt) {
 			src: '<%= DIR_BASE %>/concrete/js/ccm_app/jquery.form.js'
 		},
 
-		jquery_colorpicker: {
-			dest: '<%= DIR_BASE %>/concrete/js/jquery.colorpicker.js',
-			src: '<%= DIR_BASE %>/concrete/js/ccm_app/colorpicker.js'
+		spectrum: {
+			dest: '<%= DIR_BASE %>/concrete/js/spectrum.js',
+			src: '<%= DIR_BASE %>/concrete/js/spectrum/spectrum.js'
 		},
 
 		kinetic: {
@@ -253,7 +253,7 @@ module.exports = function(grunt) {
 		'<%= DIR_BASE %>/concrete/css/jquery.rating.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/jquery.rating.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.default.theme.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.default.theme.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.dashboard.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.dashboard.less',
-		'<%= DIR_BASE %>/concrete/css/ccm.colorpicker.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.colorpicker.less',
+		'<%= DIR_BASE %>/concrete/css/spectrum.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/spectrum.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.app.mobile.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.app.mobile.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.composer.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.composer.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.image_editor.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.image_editor.less',

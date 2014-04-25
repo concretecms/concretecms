@@ -5,7 +5,6 @@ use Permissions;
 use Page;
 use stdClass;
 use PermissionKey;
-use \Concrete\Core\Page\Theme\EditableStyle\EditableStyle as PageThemeEditableStyle;
 use PageTheme;
 use PageEditResponse;
 use Request;
@@ -24,40 +23,16 @@ class Customize extends BackendInterfacePageController {
 
 	public function view($pThemeID) {
 		$pt = PageTheme::getByID($pThemeID);
-		$styles = false;
-		if ($this->page->hasPageThemeCustomizations()) {
-			$styles = $this->page->getCustomThemeStyles();
+		if (is_object($pt) && $pt->isThemeCustomizable()) {
+			$styleList = $pt->getThemeCustomizableStyleList();
+			$this->set('styleSets', $styleList->getSets());
+			$this->set('theme', $pt);
+		} else {
+			throw new \Exception(t('Invalid or non-customizable theme.'));
 		}
-
-		$styles = $pt->getEditableStylesList($styles);
-
-
-		$sets = array();
-		$type = 0;
-		foreach($styles as $style) {
-			if ($style->getType() == PageThemeEditableStyle::TSTYPE_CUSTOM) {
-				continue;
-			}
-			if ($style->getType() != $type) {
-				if (is_object($set)) {
-					$sets[] = $set;
-				}
-				$set = new stdClass;
-				$set->title = $style->getTypeHeaderName();	
-				$set->styles = array();
-			}
-			$set->styles[] = $style;
-			$type = $style->getType();
-		}
-		if (is_object($set)) {
-			$sets[] = $set;
-		}
-
-		$this->set('styleSets', $sets);
-		$this->set('theme', $pt);
-		$this->set('styles', $styles);
 	}
 
+	/*
 	public function apply_to_page($pThemeID) {
 		if ($this->validateAction()) {
 			$pt = PageTheme::getByID($pThemeID);
@@ -131,12 +106,12 @@ class Customize extends BackendInterfacePageController {
 			$r = file_put_contents($cacheFile, ob_get_contents());
 			ob_end_clean();
 		}
-		$view->setCustomStyleMap($styleMap);
 		$req->setCustomRequestUser(-1);
 		$response = new Response();
 		$content = $view->render();
 		$response->setContent($content);
 		return $response;
 	}
+	*/
 
 }

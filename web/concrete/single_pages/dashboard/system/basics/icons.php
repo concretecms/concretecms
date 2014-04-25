@@ -170,7 +170,7 @@
 				<div class="control-group">
 					<label for="modern_favicon_bgcolor" class="control-label"><?php echo t('Background Color'); ?></label>
 					<div class="controls">
-						<?php echo Loader::helper('form/color')->output('favicon_bgcolor', '', 	strval(Config::get('MODERN_TILE_THUMBNAIL_BGCOLOR'))); ?>
+						<?php echo Loader::helper('form/color')->output('favicon_bgcolor', strval(Config::get('MODERN_TILE_THUMBNAIL_BGCOLOR'))); ?>
 					</div>
 				</div>
 				<div class="control-group">

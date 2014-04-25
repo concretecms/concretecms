@@ -15,8 +15,9 @@ class Stylesheet extends Controller {
 			if ($cp->canViewPageVersions()) {
 				$c->loadVersionObject($cvID);
 				$pt = $c->getCollectionThemeObject();
-				$values = $c->getCustomThemeStyles();
-				$content = $pt->parseStyleSheet($stylesheet, $values);
+
+				
+				
 				$response = new Response();
 				$response->headers->set('Content-Type', 'text/css');
 				$response->setContent($content);

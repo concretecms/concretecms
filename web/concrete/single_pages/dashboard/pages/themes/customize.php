@@ -4,7 +4,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 // HELPERS
 $vt = Loader::helper('validation/token');
 $ih = Loader::helper('concrete/ui');
-use \Concrete\Core\Page\Theme\EditableStyle\EditableStyle as PageThemeEditableStyle;
 ?>
 
 	<? if (count($styles) > 0) {

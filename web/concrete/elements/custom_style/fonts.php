@@ -39,7 +39,7 @@
 					<?=t('Color')?>:
 				</td>
 				<td>
-					<?=$fh->output( 'color', '', $cssData['color']) ?> 
+					<?=$fh->output( 'color', $cssData['color']) ?> 
 				</td>
 
 			</tr>											

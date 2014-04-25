@@ -8,8 +8,6 @@ use Core;
 use \Concrete\Core\Page\Theme\File as PageThemeFile;
 use \Concrete\Core\Package\PackageList;
 use \Concrete\Core\Foundation\Object;
-use \Concrete\Core\Page\Theme\EditableStyle\EditableStyle;
-use \Concrete\Core\Page\Theme\EditableStyle\FontEditableStyle;
 use PageTemplate;
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 use \Concrete\Core\Page\Single as SinglePage;
@@ -140,231 +138,28 @@ class Theme extends Object {
 			return $th;
 		}
 	}
-	
-	/** 
-	 * Looks into the current theme and outputs the contents of the stylesheet.
-	 * This function will eventually check to see if a cached version is available, as well as tie the dynamic areas of the stylesheet to whatever they have been saved.
-	 * @param string $file
+
+	/**
+	 * Checks the theme for a styles.xml file (which is how customizations happen.)
+	 * @return boolean 
+	 * 
 	 */
-	public function outputStyleSheet($file, $styles = false) {
-		print $this->parseStyleSheet($file, $styles);
-	}
-	
-	public function parseStyleSheet($file, $styles = false) {
-		$env = Environment::get();
-		$themeRec = $env->getUncachedRecord(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . $file, $this->getPackageHandle());
-		if ($themeRec->exists()) {
-			$fh = Loader::helper('file');
-			$contents = $fh->getContents($themeRec->file);
-			
-			// replace all url( instances with url starting with path to theme
-			$contents = preg_replace('/(url\(\')([^\)]*)/', '$1' . $this->getThemeURL() . '/$2', $contents);
-         	$contents = preg_replace('/(url\(")([^\)]*)/', '$1' . $this->getThemeURL() . '/$2', $contents);
-            $contents = preg_replace('/(url\((?![\'"]))([^\)]*)/', '$1' . $this->getThemeURL() . '/$2', $contents);
-			$contents = str_replace('url(' . $this->getThemeURL() . '/data:image', 'url(data:image', $contents);
-
-			
-			// load up all tokens from the db for this stylesheet.
-			// if a replacement style array is passed then we use that instead of the database (as is the case when previewing)
-			if (!is_array($styles)) {			
-				$db = Loader::db();
-				$ptes = $db->GetAll("select pThemeStyleHandle, pThemeStyleValue, pThemeStyleType from PageThemeStyles where pThemeID = ?", array($this->getThemeID()));
-				$styles = array();
-				foreach($ptes as $p) {
-					$pts = new EditableStyle($p['pThemeStyleValue']);
-					$pts->setPropertiesFromArray($p);
-					$styles[] = $pts;
-				}
-			}
-
-			$replacements = array();
-			$searches = array();
-			
-			foreach($styles as $p) {
-				if ($p->getType() == EditableStyle::TSTYPE_CUSTOM) {
-					$contents = preg_replace("/\/\*[\s]?customize_" . $p->getHandle() . "[\s]?\*\/(.*)\/\*[\s]?customize_" . $p->getHandle() . "[\s]?\*\//i", 
-						"/* customize_" . $p->getHandle() . " */ " . $p->getValue() . " /* customize_" . $p->getHandle() . " */"
-					, $contents);	
-				} else {
-					$contents = preg_replace("/\/\*[\s]?customize_" . $p->getHandle() . "[\s]?\*\/[\s]?" . $p->getProperty() . "(.*)\/\*[\s]?customize_" . $p->getHandle() . "[\s]?\*\//i", 
-						"/* customize_" . $p->getHandle() . " */ " . $p->getValue() . " /* customize_" . $p->getHandle() . " */"
-					, $contents);				
-				}
-			}
-
-			return $contents;
-		}
-	}
-	
-	
-	public function mergeStylesFromPost($post) {
-		$values = array();
-		$styles = $this->getEditableStylesList();
-		foreach($styles as $st) {
-			$ptes = new EditableStyle();
-			$ptes->pThemeStyleHandle = $st->getHandle();
-			$ptes->pThemeStyleType = $st->getType();
-			$ptes->pThemeStyleProperty = $st->getProperty();
-			
-			switch($st->getType()) {
-				case EditableStyle::TSTYPE_COLOR:
-					if (isset($post[$st->getFormFieldInputName()])) {
-						$ptes->pThemeStyleValue = $ptes->getProperty() . ':' . $post[$st->getFormFieldInputName()] . ';';
-						$values[] = $ptes;
-					}
-					break;
-				case EditableStyle::TSTYPE_CUSTOM:
-					if (isset($post[$st->getFormFieldInputName()])) {
-						$ptes->pThemeStyleValue = $post[$st->getFormFieldInputName()];
-						$values[] = $ptes;
-					}
-					break;
-				case EditableStyle::TSTYPE_FONT:
-					if (isset($post[$st->getFormFieldInputName()])) {
-						$value = $post[$st->getFormFieldInputName()];
-						// now we transform it from it's post, which has pipes and separators and crap
-						$fv = explode('|', $value);
-						$ptes->pThemeStyleValue = $ptes->getProperty() . ':' . $fv[0] . ' ' . $fv[1] . ' ' . $fv[2] . 'px ' . $fv[3] . ';';
-						$values[] = $ptes;
-					}
-					break;
-			}
-		}
-		
-		return $values;
-	}
-	
-	
-	/** 
-	 * Removes any custom styles by clearing them out of the database
-	 * @return void
-	 */
-	public function reset() {
-		$db = Loader::db();
-		$db->Execute('delete from PageThemeStyles where pThemeID = ?', array($this->pThemeID));	
-		
-		// now we reset all cached css files in this theme
-		$sheets = $this->getStyleSheets();
-		foreach($sheets as $s) {
-			if (file_exists(DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle() . '/' . $s)) {
-				unlink(DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle() . '/' . $s);
-			}
-		}
-	}
-	
-	/** 
-	 * Takes an associative array of pagethemeeditablestyle objects and saves it to the PageThemeStyles table
-	 * @param array $styles
-	 */
-	public function saveEditableStyles($styles) {
-		$db = Loader::db();
-		foreach($styles as $ptes) {
-			$db->Replace('PageThemeStyles', array(
-				'pThemeID' => $this->getThemeID(),
-				'pThemeStyleHandle' => $ptes->getHandle(),
-				'pThemeStyleValue' => $ptes->getValue(),
-				'pThemeStyleType' => $ptes->getType()
-			),
-			array('pThemeID', 'pThemeStyleHandle', 'pThemeStyleType'), true);
-		}
-
-		// now we reset all cached css files in this theme
-		$sheets = $this->getStyleSheets();
-		foreach($sheets as $s) {
-			if (file_exists(DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle() . '/' . $s)) {
-				unlink(DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle() . '/' . $s);
-			}
-		}
-	}
-	
-	public function getStyleSheets() {
-		$fh = Loader::helper('file');
-		$files = $fh->getDirectoryContents($this->getThemeDirectory());
-		$sheets = array();
-		foreach($files as $f) {
-			$pos = strrpos($f, '.');
-			$ext = substr($f, $pos + 1);
-			if ($ext == static::FILENAME_EXTENSION_CSS) {
-				$sheets[] = $f;
-			}
-		}
-		return $sheets;
-	}
-	
-	/** 
-	 * Parses the style declaration found in the stylesheet to return the type of editable style
-	 */
-	private function getEditableStyleType($value) {
-		// thx yamanoi
-		if (preg_match('/^\s*font\s*:/',$value)) {
-			return EditableStyle::TSTYPE_FONT;
-		}
-		if (preg_match('/^\s*([a-z]+-)*color\s*:/',$value)) {
-			return EditableStyle::TSTYPE_COLOR;
-		}
-		return EditableStyle::TSTYPE_CUSTOM;
-
-	}
-
 	public function isThemeCustomizable() {
-		$styles = $this->getEditableStylesList();
-		return count($styles) > 0;
+		$env = Environment::get();
+		$r = $env->getRecord(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . FILENAME_STYLE_CUSTOMIZER_STYLES);
+		return $r->exists();
 	}
-	
-	/** 
-	 * Retrieves an array of editable style objects from the current them. This is accomplished by locating all style sheets in the root of the theme, parsing all their contents
-	 * @param string $file
-	 * @return array
+
+	/**
+	 * Gets the style list object for this theme.
+	 * @return \Concrete\Core\StyleCustomizer\StyleList 
 	 */
-	public function getEditableStylesList($mergeStyles = false) {
-		$sheets = $this->getStyleSheets();
-
-		$styles = array();
-		foreach($sheets as $file) {		
-			$ss = $this->parseStyleSheet($file, $mergeStyles);
-
-			// match all tokens
-			$matches = array();
-			 
-			//REGEX NEW LINE BUG!
-			//currently this doesn't capture customize_ tags that span multiple lines
-			//you can easily make the .* dot character match multiple lines by adding the "s" modifiers to the end of the expression...
-			//but this introduces another bug where you can't have two tags with the same name within a style sheet
-			//Any regex wizards out there wanting to give it a shot?
-			preg_match_all("/\/\*[\s]?customize_(.*)[\s]?\*\/(.*)\/\*[\s]?customize_\\1[\s]?\*\//isU", $ss, $matches); 
-	
-			// the format of the $matches array is [1] = the handle of the editable style object, [2] = the value (which we need to trim)
-			// handles are unique.
-			$handles = $matches[1];
-			$values = $matches[2];
-			for($i = 0 ; $i < count($handles); $i++) {
-				$type = $this->getEditableStyleType($values[$i]);
-				if ($type == EditableStyle::TSTYPE_FONT) {
-					$pte = new FontEditableStyle(trim($values[$i]));
-				} else {
-					$pte = new EditableStyle(trim($values[$i]));
-				}
-				$pte->pThemeStyleHandle = trim($handles[$i]);
-				$pte->pThemeStyleType = $type;
-				
-				// returns a nested associative array that's
-				// $styles[$handle'][] = style 1, $styles[$handle'][] = 'style 2', etc...
-				$styles[] = $pte;
-			}
-		}
-
-		usort($styles, function($a, $b) {
-			if ($a->getType() > $b->getType()) {
-				return 1;
-			} else if ($b->getType() > $a->getType()) {
-				return -1;
-			} else {
-				return 0;
-			}
-		});
-		return $styles;
+	public function getThemeCustomizableStyleList() {
+		$env = Environment::get();
+		$r = $env->getRecord(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . FILENAME_STYLE_CUSTOMIZER_STYLES);
+		$styleList = \Concrete\Core\StyleCustomizer\StyleList::loadFromXMLFile($r->file);
+		return $styleList;
 	}
-	
 	/**
 	 * @param string $pThemeHandle
 	 * @return PageTheme
