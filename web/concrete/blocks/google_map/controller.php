@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Block\GoogleMap;
 use Loader;
+use Page;
 use \Concrete\Core\Block\BlockController;
 class Controller extends BlockController {
 	
