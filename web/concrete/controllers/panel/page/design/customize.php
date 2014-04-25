@@ -17,6 +17,7 @@ class Customize extends BackendInterfacePageController {
 
 	protected $viewPath = '/panels/page/design/customize';
 	protected $helpers = array('form');
+	protected $controllerActionPath = '/ccm/system/panels/page/design/customize';
 
 	public function canAccess() {
 		return $this->permissions->canEditPageTheme();
@@ -43,7 +44,7 @@ class Customize extends BackendInterfacePageController {
 					$sets[] = $set;
 				}
 				$set = new stdClass;
-				$set->title = $style->getTypeHeaderName();	
+				$set->title = $style->getTypeHeaderName();
 				$set->styles = array();
 			}
 			$set->styles[] = $style;
@@ -117,7 +118,7 @@ class Customize extends BackendInterfacePageController {
 		$sheets = $pt->getStyleSheets();
 		$styleMap = array();
 		$u = new User();
-		$date = date('Y-m-d H:i');		
+		$date = date('Y-m-d H:i');
 		foreach($sheets as $file) {
 			ob_start();
 			$values = $pt->mergeStylesFromPost($_POST);
