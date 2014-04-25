@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "1684528e05b4af80c6411c4613b623d2",
+    "hash": "5b26bef365d46bdfe2cc289adbc7cedc",
     "packages": [
         {
             "name": "dapphp/securimage",
@@ -895,12 +895,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/serbanghita/Mobile-Detect.git",
-                "reference": "d70de7bfd0641d4d32a6f9c71e1f5d2839a5331e"
+                "reference": "914ed97d2ef5dab8405d3ad947539f91c6e36de8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/d70de7bfd0641d4d32a6f9c71e1f5d2839a5331e",
-                "reference": "d70de7bfd0641d4d32a6f9c71e1f5d2839a5331e",
+                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/914ed97d2ef5dab8405d3ad947539f91c6e36de8",
+                "reference": "914ed97d2ef5dab8405d3ad947539f91c6e36de8",
                 "shasum": ""
             },
             "require": {
@@ -926,7 +926,7 @@
                 {
                     "name": "Serban Ghita",
                     "email": "serbanghita@gmail.com",
-                    "homepage": "http://ghita.org",
+                    "homepage": "http://mobiledetect.net",
                     "role": "Developer"
                 }
             ],
@@ -939,7 +939,66 @@
                 "mobile detector",
                 "php mobile detect"
             ],
-            "time": "2014-03-17 13:02:05"
+            "time": "2014-04-21 18:24:47"
+        },
+        {
+            "name": "oyejorge/less.php",
+            "version": "v1.7.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/oyejorge/less.php.git",
+                "reference": "958476be9e47a13db0579397f0164af1776bdbee"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/oyejorge/less.php/zipball/958476be9e47a13db0579397f0164af1776bdbee",
+                "reference": "958476be9e47a13db0579397f0164af1776bdbee",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2"
+            },
+            "bin": [
+                "bin/lessc"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Less": "lib/"
+                },
+                "classmap": [
+                    "lessc.inc.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Agar",
+                    "homepage": "https://github.com/agar"
+                },
+                {
+                    "name": "Martin Jantošovič",
+                    "homepage": "https://github.com/Mordred"
+                },
+                {
+                    "name": "Josh Schmidt",
+                    "homepage": "https://github.com/oyejorge"
+                }
+            ],
+            "description": "PHP port of the Javascript version of LESS http://lesscss.org",
+            "homepage": "http://lessphp.gpeasy.com",
+            "keywords": [
+                "css",
+                "less",
+                "less.js",
+                "lesscss",
+                "php",
+                "stylesheet"
+            ],
+            "time": "2014-03-17 04:51:51"
         },
         {
             "name": "patchwork/utf8",
@@ -1459,12 +1518,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/voku/urlify.git",
-                "reference": "57d3c6a6a1061f646f93aab3eea3081703b10e05"
+                "reference": "9c96ab320153278982e6fb6d6e1d197c934b4d7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/voku/urlify/zipball/57d3c6a6a1061f646f93aab3eea3081703b10e05",
-                "reference": "57d3c6a6a1061f646f93aab3eea3081703b10e05",
+                "url": "https://api.github.com/repos/voku/urlify/zipball/9c96ab320153278982e6fb6d6e1d197c934b4d7c",
+                "reference": "9c96ab320153278982e6fb6d6e1d197c934b4d7c",
                 "shasum": ""
             },
             "require": {
@@ -1505,7 +1564,7 @@
                 "url",
                 "urlify"
             ],
-            "time": "2014-04-08 12:50:28"
+            "time": "2014-04-22 15:27:41"
         },
         {
             "name": "zf1/zend-cache",
@@ -2027,7 +2086,7 @@
         "zf1/zend-mail": 20
     },
     "platform": {
-        "php": ">=5.3.0"
+        "php": ">=5.3.3"
     },
     "platform-dev": [
 

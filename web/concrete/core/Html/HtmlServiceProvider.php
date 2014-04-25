@@ -7,6 +7,7 @@ class HtmlServiceProvider extends ServiceProvider {
 	public function register() {
 		$singletons = array(
 			'helper/html' => '\Concrete\Core\Html\Service\Html',
+			'helper/css' => '\Concrete\Core\Html\Service\Css',
 			'helper/overlay' => '\Concrete\Core\Html\Service\Overlay',
 			'helper/navigation' => '\Concrete\Core\Html\Service\Navigation',
 			'helper/pagination' => '\Concrete\Core\Html\Service\Pagination'
