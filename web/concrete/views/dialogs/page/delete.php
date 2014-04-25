@@ -5,11 +5,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <div class="ccm-ui">
 <? if ($c->getCollectionID() == 1) {  ?>
 	<div class="alert alert-error"><?=t('You may not delete the home page.');?></div>
-	<div class="dialog-buttons"><input type="button" class="btn" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" /></div>
+	<div class="dialog-buttons"><input type="button" class="btn btn-default" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" /></div>
 
 <? }  else if ($numChildren > 0 && !$u->isSuperUser()) { ?>
 	<div class="alert alert-error"><?=t('Before you can delete this page, you must delete all of its child pages.')?></div>
-	<div class="dialog-buttons"><input type="button" class="btn" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" /></div>
+	<div class="dialog-buttons"><input type="button" class="btn btn-default" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" /></div>
 <? } else { ?>
 	<form method="post" data-dialog-form="delete-page" action="<?=$controller->action('submit')?>">
 		<input type="hidden" name="rel" value="<?php echo h($request_rel); ?>" />
