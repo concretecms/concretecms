@@ -4,6 +4,8 @@ module.exports = function(grunt, config, parameters, done) {
 	var execFile = require('child_process').execFile;
 	var https = require('https');
 	var path = require('path');
+	var StringDecoder = require('string_decoder').StringDecoder;
+	var decoder = new StringDecoder('utf8');
 
 	function mkdir(dir, mode) {
 		try {
@@ -69,7 +71,7 @@ module.exports = function(grunt, config, parameters, done) {
 					.on('data', function(chunk) {
 						if(fd) {
 							try {
-								fs.writeSync(fd, chunk.toString());
+								fs.writeSync(fd, decoder.write(chunk));
 							}
 							catch(e) {
 								cleanup(false);
