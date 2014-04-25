@@ -73,20 +73,20 @@ class GenerateSitemap extends AbstractJob {
 				@touch($osName);
 			}
 			if(!is_writable($osName)) {
-				throw new Exception(t('The file %s is not writable', $osName));
+				throw new \Exception(t('The file %s is not writable', $osName));
 			}
 			if(!$hFile = @fopen($osName, 'w')) {
-				throw new Exception(t('Cannot open file %s', $osName));
+				throw new \Exception(t('Cannot open file %s', $osName));
 			}
 			if(!@fprintf($hFile, $dom->saveXML())) {
-				throw new Exception(t('Error writing to file %s', $osName));
+				throw new \Exception(t('Error writing to file %s', $osName));
 			}
 			@fflush($hFile);
 			@fclose($hFile);
 			unset($hFile);
 			return t('%1$s file saved (%2$d pages).', sprintf('<a href="%s" target="_blank">%s</a>', $urlName, preg_replace('/^https?:\/\//i', '', $urlName)), $addedPages);
 		}
-		catch(Exception $x) {
+		catch(\Exception $x) {
 			if(isset($hFile) && $hFile) {
 				@fflush($hFile);
 				@ftruncate($hFile, 0);
