@@ -180,6 +180,8 @@ define('DIRNAME_CONVERSATIONS', 'conversation');
 define('DIRNAME_CONVERSATION_EDITOR', 'editor');
 define('DIRNAME_VENDOR', 'vendor');
 define('DIRNAME_LANGUAGES_SITE_INTERFACE', 'site');
+define('DIRNAME_STYLE_CUSTOMIZER', 'style_customizer');
+define('DIRNAME_STYLE_CUSTOMIZER_TYPES', 'types');
 
 
 
@@ -225,6 +227,7 @@ define('FILENAME_GATHERING_ITEM_TEMPLATE_ICON', 'icon.png');
 define('FILENAME_CONVERSATION_EDITOR_OPTIONS', 'options.php');
 define('FILENAME_CONVERSATION_EDITOR_FORM_MESSAGE', 'message.php');
 define('FILENAME_CONVERSATION_EDITOR_FORM_REPLY', 'reply.php');
+define('FILENAME_STYLE_CUSTOMIZER_STYLES', 'styles.xml');
 
 
 

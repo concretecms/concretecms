@@ -40,11 +40,12 @@ $al->registerGroup('jquery/rating', array(
 ));
 
 // jquery color picker
-$al->register('javascript', 'jquery/colorpicker', 'js/jquery.colorpicker.js');
-$al->register('css', 'jquery/colorpicker', 'css/jquery.colorpicker.css', array('minify' => false));
-$al->registerGroup('jquery/colorpicker', array(
-	array('javascript', 'jquery/colorpicker'),
-	array('css', 'jquery/colorpicker')
+$al->register('javascript', 'spectrum', 'js/spectrum.js', array('minify' => false));
+$al->register('css', 'spectrum', 'css/spectrum.css', array('minify' => false));
+$al->registerGroup('core/colorpicker', array(
+	array('javascript', 'jquery'),
+	array('javascript', 'spectrum'),
+	array('css', 'spectrum')
 ));
 
 // jquery file uploader

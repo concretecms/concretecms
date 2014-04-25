@@ -119,63 +119,10 @@ class PageView extends View {
 	}
 
 	/** 
-	 * Takes an array of original stylesheets => temporary preview stylesheets. Used by theme customizer
-	 */
-	public function setCustomStyleMap($styleMap) {
-		$this->customStyleMap = $styleMap;
-	}
-
-	/** 
-	 * Returns a stylesheet found in a themes directory - but FIRST passes it through the tools CSS handler
-	 * in order to make certain style attributes found inside editable
-	 * @param string $stylesheet
+	 * @deprecated
 	 */
 	public function getStyleSheet($stylesheet) {
-		if (isset($this->customStyleMap) && array_key_exists($stylesheet, $this->customStyleMap)) {
-			// this is used by preview
-			return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle . '/' . $this->customStyleMap[$stylesheet];
-		}
-		if ($this->cp->canViewPageVersions() && $this->c->hasPageThemeCustomizations()) {
-			return URL::to('/ccm/system/css/page', $this->c->getCollectionID(), $this->c->getVersionID(), $stylesheet);
-		}
-		$env = Environment::get();
-		$themeRec = $env->getUncachedRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $stylesheet, $this->themePkgHandle);
-		$themeRecExists = $themeRec->exists();
-
-		$pageCacheFile = DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle . '/' . $this->c->getCollectionID() . '/' . $stylesheet;
-		if (file_exists($pageCacheFile) && $themeRecExists) {
-			if (filemtime($pageCacheFile) > filemtime($pageCacheFile->file)) {
-				return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle . '/' . $this->c->getCollectionID() . '/' . $stylesheet;
-			}
-		}
-
-		$cacheFile = DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle . '/' . $stylesheet;
-		if (file_exists($cacheFile) && $themeRecExists) {
-			if (filemtime($cacheFile) > filemtime($themeRec->file)) {
-				return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle . '/' . $stylesheet;
-			}
-		}
-		if ($themeRec->exists()) {
-			$themeFile = $themeRec->file;
-			if (!file_exists(DIR_FILES_CACHE . '/' . DIRNAME_CSS)) {
-				@mkdir(DIR_FILES_CACHE . '/' . DIRNAME_CSS);
-			}
-			if (!file_exists(DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle)) {
-				@mkdir(DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle);
-			}
-			$fh = Loader::helper('file');
-			$stat = filemtime($themeFile);
-			if (!file_exists(dirname($cacheFile))) {
-				@mkdir(dirname($cacheFile), DIRECTORY_PERMISSIONS_MODE, true);
-			}
-			$style = $this->themeObject->parseStyleSheet($stylesheet);
-			$r = @file_put_contents($cacheFile, $style);
-			if ($r) {
-				return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $this->themeHandle . '/' . $stylesheet;
-			} else {
-				return $this->getThemePath() . '/' . $stylesheet;
-			}
-		}
+		return $stylesheet;
 	}
 
 	/** 

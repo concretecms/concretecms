@@ -2,53 +2,33 @@
 namespace Concrete\Core\Form\Service\Widget;
 use Loader;
 use View;
+use Request;
 class Color {
 
 	
 	/** 
 	 * Creates form fields and JavaScript includes to add a color picker widget.
 	 * <code>
-	 *     $dh->datetime('yourStartDate', '2008-07-12 3:00:00');
+	 *     $dh->output('background-color', '#f00');
 	 * </code>
 	 * @param string $fieldFormName
 	 * @param string $fieldLabel
 	 * @param string $value
 	 * @param bool $includeJavaScript
 	 */
-	
-	public function output($fieldFormName, $fieldLabel, $value = null, $includeJavaScript = true) {
+	public function output($inputName, $value = null) {
 		$html = '';
-		$form = Loader::helper('form');
 		$view = View::getInstance();
-		$view->requireAsset('jquery/colorpicker');
-		$html .= '<div class="ccm-color-swatch-wrapper"><div class="ccm-color-swatch"><div id="f' . $fieldFormName . '" hex-color="' . $value . '" style="background-color:' . $value . '"></div></div></div>';
-		$html .= $form->hidden($fieldFormName, $value);
-		$html .= $form->label($fieldFormName, $fieldLabel);
-
-		if ($includeJavaScript) { 
-			$html .= "<script type=\"text/javascript\">
-				$(function() {
-					var f" .$fieldFormName. "Div =$('div#f" .$fieldFormName. "');
-					var c" .$fieldFormName. " = f" .$fieldFormName. "Div.attr('hex-color'); 
-					f" .$fieldFormName. "Div.ColorPicker({
-						color: c" .$fieldFormName. ",  
-						onSubmit: function(hsb, hex, rgb, cal) {
-							$('input[name=" . $fieldFormName . "]').val('#' + hex);				
-							$('input[name=".$fieldFormName."]').trigger('change');
-							$('div#f" . $fieldFormName. "').css('backgroundColor', '#' + hex); 
-							cal.hide();
-						},  
-						onNone: function(cal) {  
-							$('input[name=" . $fieldFormName . "]').val('');		
-							$('div#f" . $fieldFormName. "').css('backgroundColor',''); 
-						}
-					});
-				
-				});
-				</script>";
+		$view->requireAsset('core/colorpicker');
+		$form = Loader::helper('form');
+		$r = Request::getInstance();
+		if ($r->request->has($inputName)) {
+			$value = h($r->request->get($inputName));
 		}
-		return $html;		
-		
+		print "<input type=\"text\" name=\"{$inputName}\" value=\"{$value}\" id=\"ccm-colorpicker-{$inputName}\" />";
+		print "<script type=\"text/javascript\">";
+		print "$(function() { $('#ccm-colorpicker-{$inputName}').spectrum(); })";
+		print "</script>";
 	}
 	
 	
