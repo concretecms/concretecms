@@ -171,7 +171,7 @@ div#ccm-panel-page-design-themes {
 					cursor: pointer;
 					right: 30px;
 					left: auto;
-					top: 13px;
+					top: 16px; 
 					height: 28px;
 					width: 28px;
 					text-align: center;
@@ -190,25 +190,37 @@ div#ccm-panel-page-design-themes {
 					top: 20px;
 				}
 
-				div.ccm-color-swatch-wrapper {
-					position: absolute;
-					float: none;
-					right: 30px;
-					left: auto;
-					top: 13px;
-					height: 28px;
-					width: 28px;
+				div.sp-replacer {
 
-					div.ccm-color-swatch {
-						background-image: none;
+					padding: 0px;
+					border: 0px;
+					background: transparent;
+					position: absolute;
+					top: 16px; 
+					right: 30px;
+
+					div.sp-dd {
+						display: none;
+					}
+
+					div.sp-preview {
+						width: 28px;
+						height: 28px;
+						.border-radius(4px);
+						margin-right: 0px;
 						border: 0px;
 
-						div {
+						div.sp-preview-inner {
+							width: 28px;
+							height: 28px;
 							.border-radius(4px);
-							background-image: none;
+							&:hover {
+								border: 1px solid #999;
+							}
 						}
 					}
 				}
+
 			}
 		}
 	}
