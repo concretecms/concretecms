@@ -28,16 +28,14 @@ class Seo extends BackendInterfacePageController {
 	}
 
 	public function submit() {
-		print '1';
 		if ($this->validateAction()) {
-			print '2';
 			$nvc = $this->page->getVersionToModify();
 
 			if ($this->asl->allowEditPaths()) {
 				$data = array('cHandle' => $_POST['cHandle']);
 				$nvc->update($data);
 			}
-			
+
 			$as = AttributeSet::getByHandle('seo');
 			$attributes = $as->getAttributeKeys();
 			foreach($attributes as $ak) {
