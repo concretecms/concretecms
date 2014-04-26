@@ -85,7 +85,9 @@ var ccmi18n = {
 	user_delete: "<?=t('Delete')?>",
 	user_group_remove: "<?=t('Remove From Group')?>",
 	user_group_add: "<?=t('Add to Group')?>",
-	none: "<?=t('None')?>"
+	none: "<?=t('None')?>",
+	editModeMsg: "<?=t("Let's start editing a page.")?>",
+	editMode: "<?=t('Edit Mode')?>"
 }
 
 var ccmi18n_editor = {
