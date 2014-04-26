@@ -686,9 +686,8 @@ div.ccm-panel-header-accordion-dropdown-visible {
 /** 
  * Panel check boxes
  */
-
-.ccm-panel {	
-	input[type=checkbox], input[type=radio] {
+.ccm-ui {
+	input.ccm-flat-checkbox, input.ccm-flat-radio {
 		appearance: none;
 		-webkit-appearance: none;
 		padding: 9px;
@@ -775,11 +774,11 @@ div.ccm-panel-header-accordion-dropdown-visible {
  */
 .ccm-panel-dark() {
 
-	input[type=checkbox], input[type=radio] {
-		border: 1px solid #24272c;
+	input.ccm-flat-checkbox, input.ccm-flat-radio {
+		border: 1px solid #444;
 	}
 
-	input[type=checkbox]:checked:after, input[type=radio]:checked:after {
+	input.ccm-flat-checkbox:checked:after, input.ccm-flat-radio:checked:after {
 		color: #3baaf7;
 	}
 

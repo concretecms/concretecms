@@ -3,11 +3,11 @@ namespace Concrete\Core\Form\Service\Widget;
 use Loader;
 use View;
 use Request;
-class Color {
+class Font {
 
 	
 	/** 
-	 * Creates form fields and JavaScript includes to add a color picker widget.
+	 * Creates form fields and JavaScript includes to add a font picker widget.
 	 * <code>
 	 *     $dh->output('background-color', '#f00');
 	 * </code>
@@ -19,24 +19,22 @@ class Color {
 	public function output($inputName, $value = null, $options = array()) {
 		$html = '';
 		$view = View::getInstance();
-		$view->requireAsset('core/colorpicker');
-		$form = Loader::helper('form');
-		$r = Request::getInstance();
-		if ($r->request->has($inputName)) {
-			$value = h($r->request->get($inputName));
-		}
+		$view->requireAsset('core/fontpicker');
+
 		$strOptions = '';
 		$i = 0;
+		$options['inputName'] = $inputName;
 		foreach($options as $key => $value) {
 			if ($i == 0) $strOptions = '{';
 			$strOptions .= $key . ':\'' . $value . '\'';
 			if (($i + 1) == count($strOptions)) $strOptions .= '}';
 		}
 
-		print "<input type=\"text\" name=\"{$inputName}\" value=\"{$value}\" id=\"ccm-colorpicker-{$inputName}\" />";
+		print '<span data-font-selector="' . $inputName . '"></span>';
 		print "<script type=\"text/javascript\">";
-		print "$(function() { $('#ccm-colorpicker-{$inputName}').spectrum({$strOptions}); })";
+		print "$(function() { $('span[data-font-selector={$inputName}]').concreteFontSelector({$strOptions}); })";
 		print "</script>";
+
 	}
 	
 	

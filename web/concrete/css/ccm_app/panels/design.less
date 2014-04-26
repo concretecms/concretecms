@@ -166,7 +166,7 @@ div#ccm-panel-page-design-themes {
 				color: #737c8e;
 				border-bottom: 1px solid #1f2022;
 
-				div.ccm-style-customize-swatch-font {
+				div.ccm-font-selector-select-wrapper {
 					position: absolute;
 					cursor: pointer;
 					right: 30px;
@@ -174,6 +174,7 @@ div#ccm-panel-page-design-themes {
 					top: 16px; 
 					height: 28px;
 					width: 28px;
+					padding: 0px;
 					text-align: center;
 					.border-radius(4px);
 					background-color: #8d8d8d;
@@ -189,43 +190,54 @@ div#ccm-panel-page-design-themes {
 					right: 30px;
 					top: 20px;
 				}
-
-				div.sp-replacer {
-
-					padding: 0px;
-					border: 0px;
-					background: transparent;
-					position: absolute;
-					top: 16px; 
-					right: 30px;
-
-					div.sp-dd {
-						display: none;
-					}
-
-					div.sp-preview {
-						width: 28px;
-						height: 28px;
-						.border-radius(4px);
-						margin-right: 0px;
-						border: 0px;
-
-						div.sp-preview-inner {
-							width: 28px;
-							height: 28px;
-							.border-radius(4px);
-							&:hover {
-								border: 1px solid #999;
-							}
-						}
-					}
-				}
-
 			}
 		}
 	}
 
 }
+
+
+
+#ccm-panel-page-design-customize, div.ccm-font-selector-widget {
+	div.sp-replacer {
+
+		padding: 0px;
+		border: 0px;
+		background: transparent;
+		position: absolute;
+
+		div.sp-dd {
+			display: none;
+		}
+
+		div.sp-preview {
+			width: 28px;
+			height: 28px;
+			.border-radius(4px);
+			margin-right: 0px;
+			border: 0px;
+
+			div.sp-preview-inner {
+				width: 28px;
+				height: 28px;
+				.border-radius(4px);
+				border: 1px solid #444;
+				&:hover {
+					border: 1px solid #999;
+				}
+			}
+		}
+	}
+
+}
+
+#ccm-panel-page-design-customize {
+	div.sp-replacer {
+		top: 16px; 
+		right: 30px;
+	}
+}
+
 
 #ccm-panel-confirmation-page-design-customize-apply {
 	div.ccm-panel-confirmation {
@@ -255,95 +267,3 @@ div#ccm-panel-detail-page-design {
 	}
 }
 
-		/* font panel */
-		
-		div#jquery-font-panel input, div#jquery-custom-panel input {
-			font-size: 10px;
-		}
-
-		div#jquery-font-panel, div#jquery-custom-panel {
-			display: none;
-			position: absolute;
-			top: 0px; left: 0px;
-			width: 356px;
-			height: 176px;
-			overflow: hidden;
-			background: url(../images/widgets/font/background.png) no-repeat;
-			font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
-			display: none;
-			z-index:@index-level-panel-hover;
-		}
-
-		div#jquery-custom-panel div#jquery-custom-panel-save {
-			padding-top: 5px;
-			padding-right: 11px;
-			text-align: right;
-		}
-
-		div#jquery-custom-panel textarea {
-			margin-top: 10px;
-			margin-left: 10px;
-			border: 1px solid #dedede;
-			padding: 4px;
-			width: 325px;
-			height: 115px;
-		}
-
-		div#jquery-font-panel div.jquery-font-panel-list {
-			overflow: auto;
-			border: 2px solid #bfbfbf;
-			height: 152px;
-		}
-
-		div#jquery-font-panel div#jquery-font-panel-list-fonts {
-			position: absolute;
-			top: 10px;
-			left: 10px;
-			width: 180px;
-		}
-
-		div#jquery-font-panel div#jquery-font-panel-list-sizes {
-			position: absolute;
-			top: 10px;
-			left: 205px;
-			width: 60px;
-		}
-
-		div#jquery-font-panel div#jquery-font-panel-list-styles {
-			position: absolute;
-			top: 10px;
-			left: 280px;
-			width: 65px;
-			height: 50px;
-		}
-
-		div#jquery-font-panel div#jquery-font-panel-list-weights {
-			position: absolute;
-			top: 68px;
-			left: 280px;
-			width: 65px;
-			height: 50px;
-		}
-
-		div#jquery-font-panel div#jquery-font-panel-save {
-			position: absolute;
-			top: 130px;
-			left: 295px;
-		}
-
-		div#jquery-font-panel-save input, div#jquery-custom-panel-save input {
-			width: 36px;
-			padding: 0px;
-			text-align: center;
-		}
-
-		div#jquery-font-panel div.jquery-font-panel-list div {
-			padding: 4px;
-			border-bottom: 2px solid #e1e1e1;
-			background-color: #fefefe;
-			font-size: 12px;
-			color: #787878;
-			cursor: pointer;
-		}
-
-		div#jquery-font-panel div.jquery-font-panel-list div.font-panel-list-selected {background-color: #E6EBED; color: #333}

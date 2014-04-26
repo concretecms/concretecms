@@ -35,56 +35,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
 
 
 <script type="text/javascript">
-    jQuery.CustomPanel = {
-        activePanel: false,
-        init: function() {
-            var html = '<div id="jquery-custom-panel"><textarea><\/textarea><div id="jquery-custom-panel-save"><input type="button" name="save" value="<?=t('Ok')?>" /><\/<div><\/div>';
-            
-            if ($('#jquery-custom-panel').length == 0) {
-                $(document.body).append(html);
-            }
-    
-            this.setupSubmit();
-    
-        },
-        
-        showPanel: function(parent) {
-            var content = $("#input_" + $(parent).attr('id')).val();
-            $("#jquery-custom-panel textarea").val(content);
-            this.activePanel = parent;
-            var jcp = $('#jquery-custom-panel');
-            var dim = $(parent).offset();
-            jcp.css('top', dim.top + 36);
-            jcp.css('left', dim.left + 5);
-            jcp.bind('mousedown', function(e) {
-                e.stopPropagation();
-            });
-    
-            $(document).bind('mousedown', function() {
-                jQuery.CustomPanel.hidePanel()
-            });
-            jcp.show();		
-    
-        },
-    
-        hidePanel: function() {
-            var jcp = $('#jquery-custom-panel');
-            $(document).unbind('mousedown');
-            jcp.hide();
-        },
-        
-        setupSubmit: function() {
-            var jcp = this;
-            $('div#jquery-custom-panel-save input').click(function() {
-                var content = $('div#jquery-custom-panel textarea').get(0).value;
-                var afp = $(jQuery.CustomPanel.activePanel);		
-                $("#" + afp.attr('id')).val(content);
-                //$("#customize-form").get(0).submit()
-                jcp.hidePanel();
-            });
-        }
-        
-    }
+    /*
     
     jQuery.FontPanel = {
         fonts: new Array('Arial','Helvetica', 'Georgia', 'Verdana', 'Trebuchet MS', 'Book Antiqua', 'Tahoma', 'Times New Roman', 'Courier New', 'Arial Black', 'Comic Sans MS'),
@@ -201,21 +152,15 @@ $pk = PermissionKey::getByHandle('customize_themes');
     
     }
     
-    jQuery.fn.CustomPanel = function() {
-        jQuery.CustomPanel.init();
-        $(this).click(function() {
-            jQuery.CustomPanel.showPanel(this);
-        });
-    }
-    
     jQuery.fn.FontPanel = function() {
         jQuery.FontPanel.init();
         $(this).click(function() {
             jQuery.FontPanel.showPanel(this);
         });
     }
-    
-    CCMPageDesignPanel = {
+    */
+   
+    ConcretePageDesignPanel = {
 
         applyDesignToPage: function() {
             var $form = $('form[data-form=panel-page-design-customize]'),
@@ -265,27 +210,27 @@ $pk = PermissionKey::getByHandle('customize_themes');
         $('button[data-panel-detail-action=submit]').unbind().on('click', function() {
             <? if ($pk->can()) { ?>
                 panel.showPanelConfirmationMessage('page-design-customize-apply', "<?=t('Apply this design to just this page, or your entire site?')?>", [
-                    {'class': 'btn btn-primary pull-right', 'onclick': 'CCMPageDesignPanel.applyDesignToSite()', 'style': 'margin-left: 10px', 'text': '<?=t("Entire Site")?>'},
-                    {'class': 'btn btn-default pull-right', 'onclick': 'CCMPageDesignPanel.applyDesignToPage()', 'text': '<?=t("This Page")?>'}
+                    {'class': 'btn btn-primary pull-right', 'onclick': 'ConcretePageDesignPanel.applyDesignToSite()', 'style': 'margin-left: 10px', 'text': '<?=t("Entire Site")?>'},
+                    {'class': 'btn btn-default pull-right', 'onclick': 'ConcretePageDesignPanel.applyDesignToPage()', 'text': '<?=t("This Page")?>'}
                 ]);
             <? } else { ?>
-                CCMPageDesignPanel.applyDesignToPage();
+                ConcretePageDesignPanel.applyDesignToPage();
             <? } ?>
             return false;
         });
         $('button[data-panel-detail-action=reset]').unbind().on('click', function() {
             <? if ($pk->can()) { ?>
                 panel.showPanelConfirmationMessage('page-design-customize-apply', "<?=t('Reset the theme customizations for just this page, or your entire site?')?>", [
-                    {'class': 'btn btn-primary pull-right', 'onclick': 'CCMPageDesignPanel.resetSiteDesign()', 'style': 'margin-left: 10px', 'text': '<?=t("Entire Site")?>'},
-                    {'class': 'btn btn-default pull-right', 'onclick': 'CCMPageDesignPanel.resetPageDesign()', 'text': '<?=t("This Page")?>'}
+                    {'class': 'btn btn-primary pull-right', 'onclick': 'ConcretePageDesignPanel.resetSiteDesign()', 'style': 'margin-left: 10px', 'text': '<?=t("Entire Site")?>'},
+                    {'class': 'btn btn-default pull-right', 'onclick': 'ConcretePageDesignPanel.resetPageDesign()', 'text': '<?=t("This Page")?>'}
                 ]);
             <? } else { ?>
-                CCMPageDesignPanel.resetPageDesign();
+                ConcretePageDesignPanel.resetPageDesign();
             <? } ?>
             return false;
         });
 
-        $('div.ccm-page-design-customize-font-swatch').FontPanel();
+       // $('div.ccm-page-design-customize-font-swatch').FontPanel();
         //$('div.ccm-theme-style-custom').CustomPanel();
         $('.ccm-panel-page-design-customize-style-set input[type=hidden]').on('change', function() {
             $('form[data-form=panel-page-design-customize]').submit();

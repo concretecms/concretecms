@@ -48,6 +48,20 @@ $al->registerGroup('core/colorpicker', array(
 	array('css', 'spectrum')
 ));
 
+// concrete5 font picker
+$al->register('javascript', 'core/fontpicker', 'js/font-selector.js', array('minify' => false));
+$al->register('css', 'core/fontpicker', 'css/font-selector.css', array('minify' => false));
+$al->registerGroup('core/fontpicker', array(
+	array('javascript', 'jquery'),
+	array('javascript', 'jqueryui'),
+	array('javascript', 'core/colorpicker'),
+	array('javascript', 'core/fontpicker'),
+	array('css', 'jqueryui'),
+	array('css', 'core/colorpicker'),
+	array('css', 'core/fontpicker')
+));
+
+
 // jquery file uploader
 $al->register('javascript', 'jquery/fileupload', 'js/jquery.fileupload.js');
 $al->registerGroup('jquery/fileupload', array(

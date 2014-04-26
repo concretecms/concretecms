@@ -139,6 +139,11 @@ module.exports = function(grunt) {
 			src: '<%= DIR_BASE %>/concrete/js/spectrum/spectrum.js'
 		},
 
+		ccm_fontpicker: {
+			dest: '<%= DIR_BASE %>/concrete/js/font-selector.js',
+			src: '<%= DIR_BASE %>/concrete/js/build/core/font-selector.js'
+		},
+
 		kinetic: {
 			dest: '<%= DIR_BASE %>/concrete/js/kinetic.js',
 			src: '<%= DIR_BASE %>/concrete/js/image_editor/build/kinetic.js'
@@ -253,6 +258,7 @@ module.exports = function(grunt) {
 		'<%= DIR_BASE %>/concrete/css/jquery.rating.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/jquery.rating.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.default.theme.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.default.theme.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.dashboard.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.dashboard.less',
+		'<%= DIR_BASE %>/concrete/css/font-selector.css': '<%= DIR_BASE %>/concrete/css/build/core/font-selector.less',
 		'<%= DIR_BASE %>/concrete/css/spectrum.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/spectrum.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.app.mobile.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.app.mobile.less',
 		'<%= DIR_BASE %>/concrete/css/ccm.composer.css': '<%= DIR_BASE %>/concrete/css/ccm_app/build/ccm.composer.less',
