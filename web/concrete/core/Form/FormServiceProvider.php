@@ -9,6 +9,7 @@ class FormServiceProvider extends ServiceProvider {
 			'helper/form' => '\Concrete\Core\Form\Service\Form',
 			'helper/form/attribute' => '\Concrete\Core\Form\Service\Widget\Attribute',
 			'helper/form/color' => '\Concrete\Core\Form\Service\Widget\Color',
+			'helper/form/font' => '\Concrete\Core\Form\Service\Widget\Font',
 			'helper/form/date_time' => '\Concrete\Core\Form\Service\Widget\DateTime',
 			'helper/form/page_selector' => '\Concrete\Core\Form\Service\Widget\PageSelector',
 			'helper/form/rating' => '\Concrete\Core\Form\Service\Widget\Rating',
