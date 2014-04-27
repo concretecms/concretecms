@@ -236,7 +236,7 @@ class CustomStyleRule extends Object
     public static function add($id, $class, $custom, $keys)
     {
         $obj = self::sanitize($id, $class, $custom, $keys);
-        $db = Loader::db;
+        $db = Loader::db();
         $db->execute('insert into CustomStyleRules (css_id, css_class, css_custom, css_serialized) values (?, ?, ?, ?)', array($obj->id, $obj->class, $obj->custom, $obj->cssData));
         $csrID = $db->Insert_ID();
         return CustomStyleRule::getByID($csrID);
