@@ -9,10 +9,10 @@ use Loader;
  * Class CustomStyleRule
  * @property int csrID
  * @property int|null cspID
- * @property string css_id
- * @property string css_class
- * @property string css_serialized
- * @property string css_custom
+ * @property string $css_id
+ * @property string $css_class
+ * @property string $css_serialized
+ * @property string $css_custom
  *
  * @package Concrete\Core\Page\Style
  */
