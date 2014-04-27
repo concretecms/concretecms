@@ -1,5 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Core\Page\Style\CustomStyleRule;
+use \Concrete\Core\Page\Style\CustomStylePreset;
 if (ENABLE_CUSTOM_DESIGN == false) {
 	die(t('Custom design options have been disabled.'));
 }
@@ -17,12 +19,12 @@ if (isset($_REQUEST['cspID']) && $_REQUEST['cspID'] > 0) {
 		$style = $csp->getCustomStylePresetRuleObject();
 	}
 } else if (is_object($style)) {
-	$selectedCsrID = $style->getCustomStyleRuleID();
+	$selectedCsrID = $style->getId();
 }
 
 if(!$style) $style = new CustomStyleRule();
 
-$cssData = $style->getCustomStyleRuleCustomStylesArray();
+$cssData = $style->getCustomStylesArray();
 
 $presets = CustomStylePreset::getList();
 $presetsArray = array();
@@ -34,7 +36,7 @@ $presetsArray[0] = t('** Custom (No Preset)');
 ksort($presetsArray);
 
 if (!isset($_REQUEST['csrID'])) {
-	$cspID = $style->getCustomStylePresetID();
+	$cspID = $style->getPresetId();
 }
 
 if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
