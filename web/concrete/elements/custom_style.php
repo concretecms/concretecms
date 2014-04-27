@@ -1,5 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Core\Page\Style\CustomStyleRule;
+use \Concrete\Core\Page\Style\CustomStylePreset;
 if (ENABLE_CUSTOM_DESIGN == false) {
 	die(t('Custom design options have been disabled.'));
 }
