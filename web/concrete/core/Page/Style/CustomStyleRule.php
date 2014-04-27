@@ -8,7 +8,7 @@ use Loader;
 /**
  * Class CustomStyleRule
  * @property int csrID
- * @property int cspID
+ * @property int|null cspID
  * @property string css_id
  * @property string css_class
  * @property string css_serialized
@@ -67,7 +67,7 @@ class CustomStyleRule extends Object
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getPresetId()
     {
@@ -290,7 +290,7 @@ class CustomStyleRule extends Object
 
     /**
      * @deprecated replaced by getPresetId function
-     * @return int
+     * @return int|null
      */
     public function getCustomStylePresetID()
     {
@@ -335,7 +335,7 @@ class CustomStyleRule extends Object
     }
 
     /**
-     * @deprecated replaced by getTex
+     * @deprecated replaced by getText
      * @return string
      */
     public function getCustomStyleRuleText()
