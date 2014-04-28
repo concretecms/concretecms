@@ -14,6 +14,7 @@ use User;
 use Block;
 use \Concrete\Core\Page\Collection\Version\VersionList;
 use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
+use \Concrete\Core\Page\Style\CustomStyleRule;
 
 	class Collection extends Object {
 
