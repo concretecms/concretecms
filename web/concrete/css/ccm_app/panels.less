@@ -492,33 +492,32 @@ div#ccm-panel-detail-page-location {
  * Panel Detail swap
  */
 div.ccm-panel-detail.ccm-panel-detail-transition-swap {
-	backface-visibility: hidden;
-	-webkit-backface-visibility: hidden;
+	.backface-visibility(hidden);
 	display: block;
+	.rotate
 	transform: rotateY(180deg);
 	-webkit-transform: rotateY(180deg);
 	-webkit-transition-duration: 0.5s;
-	transition-duration: 0.5s;
-	transition-easing: none;
+	.duration(0.5s);
 	-webkit-transition-easing: none;
+	transition-easing: none;
 }
 
 div.ccm-panel-detail.ccm-panel-detail-transition-swap.ccm-panel-detail-transition-swap-apply {
-	transform: rotateY(0deg);
 	-webkit-transform: rotateY(0deg);
-	-webkit-transition-duration: 0.5s;
-	transition-duration: 0.5s;
-	transition-easing: none;
+	-moz-transform: rotateY(0deg);
+	transform: rotateY(0deg);
+	.duration(0.5s);
 	-webkit-transition-easing: none;
+	transition-easing: none;
 }
 
 div.ccm-panel-detail.ccm-panel-detail-transition-swap.ccm-panel-detail-transition-swap-remove {
-	transform: rotateY(180deg);
 	-webkit-transform: rotateY(180deg);
-	-webkit-transition-duration: 0.5s;
-	transition-duration: 0.5s;
-	transition-easing: none;
+	transform: rotateY(180deg);
+	.duration(0.5s);
 	-webkit-transition-easing: none;
+	transition-easing: none;
 }
 
 /** 
@@ -554,8 +553,7 @@ html.ccm-panel-right div.ccm-page.ccm-panel-detail-transition-swap {
 html.ccm-panel-ready div.ccm-page.ccm-panel-detail-transition-swap {
 	transform: rotateY(0deg);
 	-webkit-transform: rotateY(0deg);
-	-webkit-transition-duration: 0.5s;
-	transition-duration: 0.5s;
+	.duration(0.5s);
 	transition-easing: none;
 	-webkit-transition-easing: none;
 }
@@ -563,8 +561,7 @@ html.ccm-panel-ready div.ccm-page.ccm-panel-detail-transition-swap {
 html.ccm-panel-ready div.ccm-page.ccm-panel-detail-transition-swap.ccm-panel-detail-transition-swap-apply {
 	transform: rotateY(180deg);
 	-webkit-transform: rotateY(180deg);
-	-webkit-transition-duration: 0.5s;
-	transition-duration: 0.5s;
+	.duration(0.5s);
 	transition-easing: none;
 	-webkit-transition-easing: none;
 }
@@ -689,8 +686,8 @@ div.ccm-panel-header-accordion-dropdown-visible {
 
 .ccm-panel {	
 	input[type=checkbox], input[type=radio] {
-		appearance: none;
 		-webkit-appearance: none;
+		appearance: none;
 		padding: 9px;
 		margin-right: 10px;
 		margin-top: -1px;
