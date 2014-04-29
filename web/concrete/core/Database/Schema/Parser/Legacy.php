@@ -20,7 +20,7 @@ class Legacy extends XmlParser {
 		$schema = new \Doctrine\DBAL\Schema\Schema();
 		foreach($x->table as $t) {
 
-			if (in_array((string) $t['name'], $existingTables)) {
+            if (in_array(strtolower((string) $t['name']), array_map('strtolower', $existingTables))) {
 				continue;
 			}
 			$table = $schema->createTable((string) $t['name']);
