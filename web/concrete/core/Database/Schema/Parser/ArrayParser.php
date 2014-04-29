@@ -2,19 +2,16 @@
 
 namespace Concrete\Core\Database\Schema\Parser;
 
-class ArrayParser
-{
+class ArrayParser {
 
-	public function addColumns(\Doctrine\DBAL\Schema\Table $table, $columns)
-	{
+	public function addColumns(\Doctrine\DBAL\Schema\Table $table, $columns) {
 		foreach ($columns as $column) {
 			$field = $table->addColumn($column['name'], $column['type'], $column['options']);
 		}
 		return $table;
 	}
 
-	public function parse($definition, \Concrete\Core\Database\Connection $db)
-	{
+	public function parse($definition, \Concrete\Core\Database\Connection $db) {
 		$schema = new \Doctrine\DBAL\Schema\Schema();
 		foreach ($definition as $tableName => $details) {
 			if ($db->tableExists($tableName)) {

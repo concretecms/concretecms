@@ -2,15 +2,13 @@
 
 namespace Concrete\Core\Database\Schema\Parser;
 
-class Legacy extends XmlParser
-{
+class Legacy extends XmlParser {
 
 	/**
 	 * Transforms the XML from Adodb XML into
 	 * Doctrine DBAL Schema
 	 */
-	public function parse(\Concrete\Core\Database\Connection $db)
-	{
+	public function parse(\Concrete\Core\Database\Connection $db) {
 		$sm = $db->getSchemaManager();
 		$schemaTables = $sm->listTables();
 		$existingTables = array();
@@ -42,8 +40,7 @@ class Legacy extends XmlParser
 		return $schema;
 	}
 
-	protected function _setTableOpts(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $table, $schemaTable)
-	{
+	protected function _setTableOpts(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $table, $schemaTable) {
 		if ($table->opt) {
 			$opt = $table->opt->__toString();
 			if ($opt == 'ENGINE=MYISAM') {
@@ -52,8 +49,7 @@ class Legacy extends XmlParser
 		}
 	}
 
-	protected function _setPrimaryKeys(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $table, $schemaTable)
-	{
+	protected function _setPrimaryKeys(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $table, $schemaTable) {
 		$primaryKeys = array();
 		foreach ($table->field as $column) {
 			if ($column->autoincrement || $column->AUTOINCREMENT || $column->key || $column->KEY) {
@@ -65,8 +61,7 @@ class Legacy extends XmlParser
 		}
 	}
 
-	protected function _setIndexes(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $table, $schemaTable)
-	{
+	protected function _setIndexes(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $table, $schemaTable) {
 		foreach ($table->index as $index) {
 			$name = (string)$index['name'];
 			$fields = array();
@@ -87,8 +82,7 @@ class Legacy extends XmlParser
 	}
 
 
-	protected function _getColumnOptions(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $column)
-	{
+	protected function _getColumnOptions(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $column) {
 		$type = (string)$column['type'];
 		$size = (string)$column['size'];
 		$options = array();
@@ -130,8 +124,7 @@ class Legacy extends XmlParser
 		return $options;
 	}
 
-	protected function _getColumnType(\SimpleXMLElement $column)
-	{
+	protected function _getColumnType(\SimpleXMLElement $column) {
 		$type = (string)$column['type'];
 		$size = (string)$column['size'];
 		if ($type == 'I') {

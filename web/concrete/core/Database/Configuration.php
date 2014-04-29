@@ -7,7 +7,6 @@ use Doctrine\DBAL\Configuration as DoctrineConfiguration;
  * Class Configuration
  * @package Concrete\Core\Database
  */
-class Configuration extends DoctrineConfiguration
-{
+class Configuration extends DoctrineConfiguration {
 
 }

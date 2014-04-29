@@ -25,15 +25,13 @@ namespace Concrete\Core\Database\Driver;
  *
  * @since 2.0
  */
-class PDOStatement extends \Doctrine\DBAL\Driver\PDOStatement
-{
+class PDOStatement extends \Doctrine\DBAL\Driver\PDOStatement {
 
 	/**
 	 * @deprecated
 	 * alias to old ADODB result method
 	 */
-	public function FetchRow()
-	{
+	public function FetchRow() {
 		return $this->fetch();
 	}
 
@@ -42,8 +40,7 @@ class PDOStatement extends \Doctrine\DBAL\Driver\PDOStatement
 	 * @deprecated
 	 * alias to old ADODB method
 	 */
-	public function Close()
-	{
+	public function Close() {
 		return $this->closeCursor();
 	}
 
@@ -51,8 +48,7 @@ class PDOStatement extends \Doctrine\DBAL\Driver\PDOStatement
 	 * @deprecated
 	 * alias to old ADODB method
 	 */
-	public function free()
-	{
+	public function free() {
 		return $this->closeCursor();
 	}
 
@@ -60,8 +56,7 @@ class PDOStatement extends \Doctrine\DBAL\Driver\PDOStatement
 	 * @deprecated
 	 * alias to old ADODB result method
 	 */
-	public function NumRows()
-	{
+	public function NumRows() {
 		return $this->rowCount();
 	}
 

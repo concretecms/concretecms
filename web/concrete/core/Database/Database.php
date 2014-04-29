@@ -7,13 +7,11 @@ use \Doctrine\DBAL\DriverManager;
  * Class Database
  * @package Concrete\Core\Database
  */
-class Database
-{
+class Database {
 	protected $_activeConnection = null;
 	protected $_connections = array();
 
-	public function __construct()
-	{
+	public function __construct() {
 		$this->_connections['default'] = static::createDefaultConnection();
 		$this->_activeConnection = 'default';
 	}
@@ -21,13 +19,11 @@ class Database
 	/**
 	 * @return \Doctrine\DBAL\Connection
 	 */
-	public function getActiveConnection()
-	{
+	public function getActiveConnection() {
 		return $this->_connections[$this->_activeConnection];
 	}
 
-	protected static function createDefaultConnection()
-	{
+	protected static function createDefaultConnection() {
 		return static::connect(array(
 			'host' => DB_SERVER,
 			'user' => DB_USERNAME,
@@ -40,8 +36,7 @@ class Database
 	 * @param array $configuration
 	 * @return \Doctrine\DBAL\Connection
 	 */
-	public static function connect($configuration)
-	{
+	public static function connect($configuration) {
 		$defaults = array(
 			'host' => 'localhost',
 			'charset' => DB_CHARSET
@@ -68,40 +63,35 @@ class Database
 	/**
 	 * @deprecated
 	 */
-	public static function getADOSChema()
-	{
+	public static function getADOSChema() {
 		return false;
 	}
 
 	/**
 	 * @deprecated
 	 */
-	public function setDebug($_debug)
-	{
+	public function setDebug($_debug) {
 		return false;
 	}
 
 	/**
 	 * @deprecated
 	 */
-	public function getDebug()
-	{
+	public function getDebug() {
 		return false;
 	}
 
 	/**
 	 * @deprecated
 	 */
-	public function setLogging($log)
-	{
+	public function setLogging($log) {
 		return false;
 	}
 
 	/**
 	 * @deprecated
 	 */
-	public static function ensureEncoding()
-	{
+	public static function ensureEncoding() {
 		return false;
 	}
 

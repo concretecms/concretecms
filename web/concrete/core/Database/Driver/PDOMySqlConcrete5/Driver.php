@@ -26,11 +26,9 @@ use Doctrine\DBAL\Connection;
  *
  * @since 2.0
  */
-class Driver extends \Doctrine\DBAL\Driver\PDOMySql\Driver
-{
+class Driver extends \Doctrine\DBAL\Driver\PDOMySql\Driver {
 
-	public function connect(array $params, $username = null, $password = null, array $driverOptions = array())
-	{
+	public function connect(array $params, $username = null, $password = null, array $driverOptions = array()) {
 		$conn = new \Concrete\Core\Database\Driver\PDOConnection(
 			$this->_constructPdoDsn($params),
 			$username,
@@ -49,8 +47,7 @@ class Driver extends \Doctrine\DBAL\Driver\PDOMySql\Driver
 	 *
 	 * @return string The DSN.
 	 */
-	private function _constructPdoDsn(array $params)
-	{
+	private function _constructPdoDsn(array $params) {
 		$dsn = 'mysql:';
 		if (isset($params['host']) && $params['host'] != '') {
 			$dsn .= 'host=' . $params['host'] . ';';

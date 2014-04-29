@@ -8,8 +8,7 @@ use Doctrine\ORM\EntityManager;
  * Class Connection
  * @package Concrete\Core\Database
  */
-class Connection extends \Doctrine\DBAL\Connection
-{
+class Connection extends \Doctrine\DBAL\Connection {
 
 	/** @var EntityManager $entityManager */
 	protected $_entityManager = null;
@@ -18,8 +17,7 @@ class Connection extends \Doctrine\DBAL\Connection
 	 * Returns the entity manager for use with Doctrine ORM
 	 * @return EntityManager
 	 */
-	public function getEntityManager()
-	{
+	public function getEntityManager() {
 		if ($this->_entityManager === null) {
 			$devMode = true;
 			$config = Setup::createXMLMetadataConfiguration(array(DIR_ORM_ENTITIES), $devMode);
@@ -34,8 +32,7 @@ class Connection extends \Doctrine\DBAL\Connection
 	 * @param string $tableName
 	 * @return boolean Returns true if the table exists, false if it does not.
 	 */
-	public function tableExists($tableName)
-	{
+	public function tableExists($tableName) {
 		$sm = $this->getSchemaManager();
 		$schemaTables = $sm->listTables();
 		$tables = array();
@@ -48,8 +45,7 @@ class Connection extends \Doctrine\DBAL\Connection
 	/**
 	 * @return \Doctrine\DBAL\Driver\Statement|mixed
 	 */
-	public function query()
-	{
+	public function query() {
 		$args = func_get_args();
 		if (isset($args) && isset($args[1]) && (is_string($args[1]) || is_array($args[1]))) {
 			return $this->executeQuery($args[0], $args[1]);
@@ -68,8 +64,7 @@ class Connection extends \Doctrine\DBAL\Connection
 	 * @param array $arguments
 	 * @return bool|\Doctrine\DBAL\Driver\Statement
 	 */
-	public function Execute($q, $arguments = array())
-	{
+	public function Execute($q, $arguments = array()) {
 		if ($q instanceof \Doctrine\DBAL\Statement) {
 			return $q->execute($arguments);
 		} else {
@@ -87,8 +82,7 @@ class Connection extends \Doctrine\DBAL\Connection
 	 * @param array $arguments
 	 * @return array
 	 */
-	public function GetRow($q, $arguments = array())
-	{
+	public function GetRow($q, $arguments = array()) {
 		if (!is_array($arguments)) {
 			$arguments = array($arguments); // adodb backward compatibility
 		}
@@ -105,8 +99,7 @@ class Connection extends \Doctrine\DBAL\Connection
 	 * @param $string
 	 * @return string
 	 */
-	public function qstr($string)
-	{
+	public function qstr($string) {
 		return $this->quote($string);
 	}
 
@@ -117,8 +110,7 @@ class Connection extends \Doctrine\DBAL\Connection
 	 * @param array $arguments
 	 * @return mixed
 	 */
-	public function GetOne($q, $arguments = array())
-	{
+	public function GetOne($q, $arguments = array()) {
 		if (!is_array($arguments)) {
 			$arguments = array($arguments); // adodb backward compatibility
 		}
@@ -130,8 +122,7 @@ class Connection extends \Doctrine\DBAL\Connection
 	 * @deprecated
 	 * @return bool|int If the error code is greater than zero then return the error code number, otherwise return false
 	 */
-	public function ErrorMsg()
-	{
+	public function ErrorMsg() {
 		if ($this->errorCode() > 0) {
 			return $this->errorCode();
 		}
@@ -146,8 +137,7 @@ class Connection extends \Doctrine\DBAL\Connection
 	 * @param array|string $arguments
 	 * @return array
 	 */
-	public function GetAll($q, $arguments = array())
-	{
+	public function GetAll($q, $arguments = array()) {
 		if (!is_array($arguments)) {
 			$arguments = array($arguments); // adodb backward compatibility
 		}
@@ -161,8 +151,7 @@ class Connection extends \Doctrine\DBAL\Connection
 	 * @param array|string $arguments
 	 * @return array
 	 */
-	public function GetArray($q, $arguments = array())
-	{
+	public function GetArray($q, $arguments = array()) {
 		return $this->GetAll($q, $arguments);
 	}
 
@@ -172,8 +161,7 @@ class Connection extends \Doctrine\DBAL\Connection
 	 * @param string $table the name of the table
 	 * @return array
 	 */
-	public function MetaColumnNames($table)
-	{
+	public function MetaColumnNames($table) {
 		$sm = $this->getSchemaManager();
 		$columnNames = array();
 		$columns = $sm->listTableColumns($table);
@@ -191,8 +179,7 @@ class Connection extends \Doctrine\DBAL\Connection
 	 * @param string|array $keyCol
 	 * @param bool $autoQuote
 	 */
-	public function Replace($table, $fieldArray, $keyCol, $autoQuote = true)
-	{
+	public function Replace($table, $fieldArray, $keyCol, $autoQuote = true) {
 		$qb = $this->createQueryBuilder();
 		$qb->select('count(*)')->from($table, 't');
 		$where = $qb->expr()->andX();
@@ -224,8 +211,7 @@ class Connection extends \Doctrine\DBAL\Connection
 	 * @param array $arguments
 	 * @return array
 	 */
-	public function GetCol($q, $arguments = array())
-	{
+	public function GetCol($q, $arguments = array()) {
 		$r = $this->fetchAll($q, $arguments);
 		$return = array();
 
@@ -240,8 +226,7 @@ class Connection extends \Doctrine\DBAL\Connection
 	 * @deprecated
 	 * alias to old ADODB method
 	 */
-	public function Insert_ID()
-	{
+	public function Insert_ID() {
 		return $this->lastInsertId();
 	}
 
@@ -249,8 +234,7 @@ class Connection extends \Doctrine\DBAL\Connection
 	 * @deprecated
 	 * @return array
 	 */
-	public function MetaTables()
-	{
+	public function MetaTables() {
 		$sm = $this->getSchemaManager();
 		$schemaTables = $sm->listTables();
 		$tables = array();
@@ -265,8 +249,7 @@ class Connection extends \Doctrine\DBAL\Connection
 	 * @param $table
 	 * @return \Doctrine\DBAL\Schema\Column[]
 	 */
-	public function MetaColumns($table)
-	{
+	public function MetaColumns($table) {
 		$sm = $this->getSchemaManager();
 		$schemaColumns = $sm->listTableColumns($table);
 		return $schemaColumns;
