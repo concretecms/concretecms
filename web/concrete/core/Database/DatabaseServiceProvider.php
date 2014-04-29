@@ -9,12 +9,12 @@ use \Concrete\Core\Foundation\Service\Provider as ServiceProvider;
  */
 class DatabaseServiceProvider extends ServiceProvider
 {
-    /**
-     * Used to create a singleton instance of our database class
-     */
-    public function register()
-    {
-        $this->app->singleton('database', '\Concrete\Core\Database\Database');
-    }
+	/**
+	 * Used to create a singleton instance of our database class
+	 */
+	public function register()
+	{
+		$this->app->singleton('database', '\Concrete\Core\Database\Database');
+	}
 
 }
