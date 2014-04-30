@@ -146,7 +146,7 @@ class Theme extends Object {
 	 */
 	public function isThemeCustomizable() {
 		$env = Environment::get();
-		$r = $env->getRecord(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . FILENAME_STYLE_CUSTOMIZER_STYLES);
+		$r = $env->getRecord(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_CSS . '/' . FILENAME_STYLE_CUSTOMIZER_STYLES);
 		return $r->exists();
 	}
 
@@ -156,7 +156,7 @@ class Theme extends Object {
 	 */
 	public function getThemeCustomizableStyleList() {
 		$env = Environment::get();
-		$r = $env->getRecord(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . FILENAME_STYLE_CUSTOMIZER_STYLES);
+		$r = $env->getRecord(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_CSS . '/' . FILENAME_STYLE_CUSTOMIZER_STYLES);
 		$styleList = \Concrete\Core\StyleCustomizer\StyleList::loadFromXMLFile($r->file);
 		return $styleList;
 	}

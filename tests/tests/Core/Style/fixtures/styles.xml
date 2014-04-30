@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <styles version="1.0">
-	<set name="Colors">
-		<style name="Background" variable="background-color" type="color" />
-		<style name="Top Header Bar" variable="top-header-bar-color" type="color" />
-	</set>
-	<set name="Typography">
-		<style name="Heading 1" variable="font-heading-1" type="font" />
-	</set>
-	<set name="Spacing">
-		<style name="Header Height" variable="header-height" type="size" />
-	</set>
+    <set name="Colors">
+        <style name="Background" variable="background-color" type="color" />
+        <style name="Top Header Bar" variable="top-header-bar-color" type="color" />
+    </set>
+    <set name="Typography">
+        <style name="Heading 1" variable="font-heading-1" type="type" />
+    </set>
+    <set name="Spacing">
+        <style name="Header Height" variable="header-height" type="size" />
+    </set>
 </styles>
