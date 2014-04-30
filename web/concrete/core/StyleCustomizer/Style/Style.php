@@ -7,6 +7,7 @@ abstract class Style {
 	protected $name;
 	
 	abstract public function render();
+	abstract public function getValueFromList(\Concrete\Core\StyleCustomizer\Style\ValueList $list);
 
 	public function setName($name) {
 		$this->name = $name;
