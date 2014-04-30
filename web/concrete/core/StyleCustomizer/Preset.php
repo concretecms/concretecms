@@ -11,13 +11,17 @@ class Preset {
     const PRESET_RULE_NAME = '@preset-name';
     const PRESET_RULE_ICON = '@preset-icon';
     const PRESET_RULE_ICON_FUNCTION = 'concrete-icon';
+    protected $styleValueList;
 
     /**
-     * @return @StyleCustomizer
+     * @return Preset
      */
-    public static function getFromFile($lessFile) {
+    public static function getFromFile($lessFile, $urlroot) {
         $o = new static();
+        $o->file = $lessFile;
+        $o->urlroot = $urlroot;
         $o->filename = basename($lessFile);
+        $o->handle = substr($o->filename, 0, strrpos($o->filename, '.'));
 
         $l = new Less_Parser();
         $parser = $l->parseFile($lessFile, false, true);
@@ -42,6 +46,18 @@ class Preset {
         return $o;
     }
 
+    /**
+     * Gets the style value list object for this preset.
+     * @return \Concrete\Core\StyleCustomizer\Style\ValueList
+     */
+    public function getStyleValueList()
+    {
+        if (!isset($this->styleValueList)) {
+            $this->styleValueList = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($this->file, $this->urlroot);
+        }
+        return $this->styleValueList;
+    }
+
     public function getPresetFilename()
     {
         return $this->filename;
@@ -55,6 +71,11 @@ class Preset {
     public function isDefaultPreset()
     {
         return $this->filename == FILENAME_STYLE_CUSTOMIZER_DEFAULT_PRESET_NAME;
+    }
+
+    public function getPresetHandle()
+    {
+        return $this->handle;
     }
 
     public function getPresetColor1()

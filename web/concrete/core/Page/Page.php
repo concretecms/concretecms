@@ -1370,19 +1370,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $db->Execute('delete from CollectionVersionThemeStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
     }
 
-    /**
-     * Returns the style value object for a particular style based on this page. If this page
-     * doesn't have any customizations yet, we look to the theme.
-     * @param  \Concrete\Core\StyleCustomizer\Style\Style $style
-     * @return \Concrete\Core\StyleCustomizer\Style\Value\Value
-     */
     public function getCustomStyleValueObject(\Concrete\Core\StyleCustomizer\Style\Style $style) {
-        // first we check to see if the page has overridden customizations
-
-        // otherwise, we get the defaults style list for this theme
-        $pt = $this->getCollectionThemeObject();
-        $valueList = $pt->getThemeCustomizableStyleValueList();
-        return $style->getValueFromList($valueList);
+        return false;
     }
 
     public function writePageThemeCustomizations() {
