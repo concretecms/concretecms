@@ -44,6 +44,7 @@ $al->register('javascript', 'spectrum', 'js/spectrum.js', array('minify' => fals
 $al->register('css', 'spectrum', 'css/spectrum.css', array('minify' => false));
 $al->registerGroup('core/colorpicker', array(
     array('javascript', 'jquery'),
+    array('javascript', 'core/observer'),
     array('javascript', 'spectrum'),
     array('css', 'spectrum')
 ));

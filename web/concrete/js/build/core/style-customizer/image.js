@@ -37,16 +37,13 @@
     }
 
     ConcreteStyleCustomizerImageSelector.prototype.updateSwatch = function() {
-        var my = this,
-            $swatch = my.$element.find('div.ccm-style-customizer-size');
 
-        $swatch.html(my.getValue('size') + my.options.unit);
     }
 
     ConcreteStyleCustomizerImageSelector.prototype.save = function (e) {
         var my = this;
-        my.setValue('size', my.$widget.find('div[data-style-customizer-field=size] div.ccm-style-customizer-slider').slider('value'));
         my.updateSwatch();
+        ConcreteEvent.publish('StyleCustomizerSave');
         my.closeSelector(e);
     }
 
