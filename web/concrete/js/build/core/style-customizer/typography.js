@@ -10,6 +10,7 @@
         var my = this,
             options = $.extend({
                 'inputName': false,
+                'value': {}
             }, options);
 
         ConcreteStyleCustomizerPalette.call(my, $element, options);
@@ -22,14 +23,15 @@
             max: 64,
             value: 0,
             create: function (e, ui) {
-                $(this).parent().find('span').html('0');
+                $(this).parent().find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-number').html('0');
             },
             slide: function (e, ui) {
-                $(this).parent().find('span').html(ui.value);
+                $(this).parent().find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-number').html(ui.value);
             }
         });
 
-        my.$widget.find('input[data-style-customizer-field=color]').spectrum({
+        my.$colorpicker = my.$widget.find('input[data-style-customizer-field=color]');
+        my.$colorpicker.spectrum({
             'preferredFormat': 'rgb',
             'showAlpha': true
         });
@@ -42,6 +44,65 @@
         $.each(my.fonts, function(i, font) {
             my.$fontMenu.append('<option value="' + font + '">' + font + '</option>');
         });
+
+        if (my.options.value.fontFamily) {
+            my.$fontMenu.val(my.options.value.fontFamily);
+            my.setValue('font-family', my.options.value.fontFamily);
+        }
+
+        if (my.options.value.color) {
+            my.$colorpicker.spectrum('set', my.options.value.color);
+            my.setValue('color', my.options.value.color);
+        }
+
+        if (my.options.value.underline) {
+            my.$widget.find('input[data-style-customizer-field=underline]').prop('checked', true);
+            my.setValue('underline', '1');
+        }
+
+        if (my.options.value.uppercase) {
+            my.$widget.find('input[data-style-customizer-field=uppercase]').prop('checked', true);
+            my.setValue('uppercase', '1');
+        }
+
+        if (my.options.value.italic) {
+            my.$widget.find('input[data-style-customizer-field=italic]').prop('checked', true);
+            my.setValue('italic', '1');
+        }
+
+        if (my.options.value.bold) {
+            my.$widget.find('input[data-style-customizer-field=bold]').prop('checked', true);
+            my.setValue('bold', '1');
+        }
+
+        if (my.options.value.fontSize) {
+            var $field = my.$widget.find('div[data-style-customizer-field=font-size]');
+            var $slider = $field.find('div.ccm-style-customizer-slider');
+            $slider.slider('value', my.options.value.fontSize.value);
+            $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-number').html(my.options.value.fontSize.value);
+            $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-unit').html(my.options.value.fontSize.unit);
+            my.setValue('font-size', my.options.value.fontSize.value);
+        }
+        if (my.options.value.letterSpacing) {
+            var $field = my.$widget.find('div[data-style-customizer-field=letter-spacing]');
+            var $slider = $field.find('div.ccm-style-customizer-slider');
+            $slider.slider('value', my.options.value.letterSpacing.value);
+            $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-number').html(my.options.value.letterSpacing.value);
+            $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-unit').html(my.options.value.letterSpacing.unit);
+            my.setValue('letter-spacing', my.options.value.letterSpacing.value);
+        }
+
+        if (my.options.value.lineHeight) {
+            var $field = my.$widget.find('div[data-style-customizer-field=line-height]');
+            var $slider = $field.find('div.ccm-style-customizer-slider');
+            $slider.slider('value', my.options.value.lineHeight.value);
+            $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-number').html(my.options.value.lineHeight.value);
+            $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-unit').html(my.options.value.lineHeight.unit);
+            my.setValue('line-height', my.options.value.lineHeight.value);
+        }
+
+        my.updateSwatch();
+
     }
 
     ConcreteTypographySelector.prototype = Object.create(ConcreteStyleCustomizerPalette.prototype);
@@ -65,9 +126,9 @@
         '<div class="checkbox"><label><input type="checkbox" class="ccm-flat-checkbox" data-style-customizer-field="italic"> Italic</label></div>' +
         '<div class="checkbox"><label><input type="checkbox" class="ccm-flat-checkbox" data-style-customizer-field="underline"> Underline</label></div>' +
         '<div class="checkbox"><label><input type="checkbox" class="ccm-flat-checkbox" data-style-customizer-field="uppercase"> Uppercase</label></div>' +
-        '<div><label>Font Size</label><div data-style-customizer-field="font-size"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"></span></div></div>' +
-        '<div><label>Letter Spacing</label><div data-style-customizer-field="letter-spacing"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"></span></div></div>' +
-        '<div><label>Line Height</label><div data-style-customizer-field="line-height"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"></span></div></div>' +
+        '<div><label>Font Size</label><div data-style-customizer-field="font-size"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><span class="ccm-style-customizer-number"></span><span class="ccm-style-customizer-unit">px</span></span></div></div>' +
+        '<div><label>Letter Spacing</label><div data-style-customizer-field="letter-spacing"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><span class="ccm-style-customizer-number"></span><span class="ccm-style-customizer-unit">px</span></span></div></div>' +
+        '<div><label>Line Height</label><div data-style-customizer-field="line-height"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><span class="ccm-style-customizer-number"></span><span class="ccm-style-customizer-unit">px</span></span></div></div>' +
         '<div class="ccm-style-customizer-palette-actions"><button class="btn btn-primary">Save</button></div>' +
         '</div>';
 

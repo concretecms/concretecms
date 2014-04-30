@@ -17,5 +17,9 @@ class SizeValue extends Value {
     public function getSize() {return $this->size;}
     public function getUnit() {return $this->unit;}
     public function getUnits() {return $this->getUnit();}
-    
+
+    public function toStyleString() {
+        return $this->size . $this->unit;
+    }
+
 }

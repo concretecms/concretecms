@@ -5,19 +5,18 @@ use Less_Tree_Dimension;
 
 class SizeStyle extends Style {
 
-    public function render() {
+    public function render($value = false) {
         $r = \Concrete\Core\Http\ResponseAssetGroup::get();
         $r->requireAsset('core/style-customizer');
 
         $strOptions = '';
         $i = 0;
-        $options['inputName'] = $this->getVariable();
-        foreach($options as $key => $value) {
-            if ($i == 0) $strOptions = '{';
-            $strOptions .= $key . ':\'' . $value . '\'';
-            if (($i + 1) == count($strOptions)) $strOptions .= '}';
+        if (is_object($value)) {
+            $options['unit'] = $value->getUnit();
+            $options['value'] = $value->getSize();
         }
-
+        $options['inputName'] = $this->getVariable();
+        $strOptions = json_encode($options);
         print '<div data-size-selector="' . $this->getVariable() . '"></div>';
         print "<script type=\"text/javascript\">";
         print "$(function() { $('div[data-size-selector=" . $this->getVariable() . "]').concreteSizeSelector({$strOptions}); });";

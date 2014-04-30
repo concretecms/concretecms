@@ -8,7 +8,7 @@ class ColorValue extends Value {
     protected $g;
     protected $b;
     protected $a;
-    
+
     public function __construct($r, $g, $b, $a = false)
     {
         $this->r = $r;
@@ -25,5 +25,14 @@ class ColorValue extends Value {
     public function getBlue() {return $this->b;}
     public function getAlpha() {return $this->a;}
     public function hasAlpha() {return $this->a != false;}
+
+    public function toStyleString()
+    {
+        if ($this->hasAlpha()) {
+            return sprintf('rgba(%s, %s, %s, %s)', $this->r, $this->g, $this->b, $this->a);
+        } else {
+            return sprintf('rgb(%s, %s, %s)', $this->r, $this->g, $this->b);
+        }
+    }
 
 }

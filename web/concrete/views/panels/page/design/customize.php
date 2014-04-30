@@ -5,24 +5,41 @@ $pk = PermissionKey::getByHandle('customize_themes');
 
 
 <section id="ccm-panel-page-design-customize">
-	<form data-form="panel-page-design-customize" target="ccm-page-preview-frame" method="post" action="<?=$controller->action("preview", $theme->getThemeID())?>">
+    <form data-form="panel-page-design-customize" target="ccm-page-preview-frame" method="post" action="<?=$controller->action("preview", $theme->getThemeID())?>">
     <header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="glyphicon glyphicon-chevron-left"></span></a> <?=t('Customize Theme')?></header>
 
-	<div id="ccm-panel-page-design-customize-list">
-	<? foreach($styleSets as $set) { ?>
-		<div class="ccm-panel-page-design-customize-style-set">
-			<h5><?=$set->getName()?></h5>
-			<ul class="list-unstyled">
+    <div class="ccm-panel-content-inner">
+
+    <div class="list-group">
+        <div class="list-group-item list-group-item-header"><?=t('Preset')?></div>
+        <?
+        foreach($presets as $preset) { ?>
+            <label class="list-group-item"><input type="radio" class="ccm-flat-radio" value="<?=$preset->getPresetFilename()?>" name="ptPresetID" <? if ($preset->isDefaultPreset()) { ?>checked="checked"<? } ?> /> <?=$preset->getPresetName()?>
+                <?=$preset->getPresetIconHTML()?>
+            </label>
+        <? } ?>
+    </div>
+
+    </div>
+
+    <div id="ccm-panel-page-design-customize-list">
+    <? foreach($styleSets as $set) { ?>
+        <div class="ccm-panel-page-design-customize-style-set">
+            <h5><?=$set->getName()?></h5>
+            <ul class="list-unstyled">
             <? foreach($set->getStyles() as $style) { ?>
                 <li><?=$style->getName()?>
-                <?=$style->render()?>
+                <?
+                $value = $c->getCustomStyleValueObject($style);
+                ?>
+                <?=$style->render($value)?>
                 </li>
             <? } ?>
-			</ul>
-		</div>
+            </ul>
+        </div>
 
-	<? } ?>
-	</div>
+    <? } ?>
+    </div>
 
     <div style="text-align: center">
         <br/>
@@ -35,7 +52,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
 
 
 <script type="text/javascript">
-   
+
     ConcretePageDesignPanel = {
 
         applyDesignToPage: function() {

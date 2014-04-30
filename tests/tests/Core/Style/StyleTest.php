@@ -90,6 +90,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($value1->getFontWeight() == 'normal');
         $this->assertTrue($value1->getTextDecoration() == 'none');
         $this->assertTrue($value1->getTextTransform() == 'uppercase');
+        $this->assertTrue($value1->getFontStyle() == 'italic');
 
         $this->assertTrue($value1->getColor() instanceof \Concrete\Core\StyleCustomizer\Style\Value\ColorValue);
         $c1 = $value1->getColor();
@@ -126,7 +127,7 @@ public function testLessVariableImages() {
         $ts = new \Concrete\Core\StyleCustomizer\Style\ImageStyle();
         $ts->setVariable('header-background');
         $value = $ts->getValueFromList($list);
-        $this->assertTrue($value->getPath() == 'images/logo.png');
+        $this->assertTrue($value->getUrl() == 'images/logo.png');
 
     }
 

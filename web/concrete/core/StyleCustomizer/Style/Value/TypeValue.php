@@ -8,12 +8,18 @@ class TypeValue extends Value
     protected $color = -1;
     protected $lineHeight = -1;
     protected $letterSpacing = -1;
+    protected $fontStyle = 'normal';
     protected $fontWeight = 'normal';
     protected $textDecoration = 'none';
     protected $textTransform = 'none';
 
     public function setFontFamily($fontFamily) {
         $this->fontFamily = $fontFamily;
+    }
+
+    public function setFontStyle($fontStyle)
+    {
+        $this->fontStyle = $fontStyle;
     }
 
     public function setFontSize(\Concrete\Core\StyleCustomizer\Style\Value\SizeValue $fontSize)
@@ -81,6 +87,11 @@ class TypeValue extends Value
         return $this->textTransform;
     }
 
+    public function getFontStyle()
+    {
+        return $this->fontStyle;
+    }
+
     public function getLetterSpacing()
     {
         return $this->letterSpacing;
@@ -89,6 +100,10 @@ class TypeValue extends Value
     public function getLineHeight()
     {
         return $this->lineHeight;
+    }
+
+    public function toStyleString() {
+        return '';
     }
 
 }

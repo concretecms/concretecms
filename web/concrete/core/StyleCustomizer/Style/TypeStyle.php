@@ -11,10 +11,34 @@ use Core;
 
 class TypeStyle extends Style {
 
-    public function render()
+    public function render($style = false)
     {
         $fh = Core::make('helper/form/font');
-        print $fh->output($this->getVariable(), '', array());
+        $args = array();
+        if (is_object($style)) {
+            $args['fontFamily'] = $style->getFontFamily();
+            $color = $style->getColor();
+            if (is_object($color)) {
+                $args['color'] = $color->toStyleString();
+            }
+            $args['bold'] = $style->getFontWeight() == 'bold' ? true : false;
+            $args['italic'] = $style->getFontStyle() == 'italic' ? true : false;
+            $args['underline'] = $style->getTextDecoration() == 'underline' ? true : false;
+            $args['uppercase'] = $style->getTextTransform() == 'uppercase' ? true : false;
+            $fontSize = $style->getFontSize();
+            if (is_object($fontSize)) {
+                $args['fontSize'] = array('value' => $fontSize->getSize(), 'unit' => $fontSize->getUnit());
+            }
+            $letterSpacing = $style->getLetterSpacing();
+            if (is_object($letterSpacing)) {
+                $args['letterSpacing'] = array('value' => $letterSpacing->getSize(), 'unit' => $letterSpacing->getUnit());
+            }
+            $lineHeight = $style->getLineHeight();
+            if (is_object($lineHeight)) {
+                $args['lineHeight'] = array('value' => $lineHeight->getSize(), 'unit' => $lineHeight->getUnit());
+            }
+        }
+        print $fh->output($this->getVariable(), $args, array());
     }
 
     protected function ruleMatches($rule, $variable) {
@@ -53,6 +77,13 @@ class TypeStyle extends Style {
                 }
                 $value = $rule->value->value[0]->value[0]->value;
                 $fv->setTextTransform($value);
+            }
+            if ($this->ruleMatches($rule, 'font-style')) {
+                if (!$fv) {
+                    $fv = new TypeValue();
+                }
+                $value = $rule->value->value[0]->value[0]->value;
+                $fv->setFontStyle($value);
             }
             if ($this->ruleMatches($rule, 'color')) {
                 if (!$fv) {

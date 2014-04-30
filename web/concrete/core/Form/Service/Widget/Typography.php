@@ -16,7 +16,7 @@ class Typography {
      * @param string $value
      * @param bool $includeJavaScript
      */
-    public function output($inputName, $value = null, $options = array()) {
+    public function output($inputName, $args = array(), $options = array()) {
         $html = '';
         $view = View::getInstance();
         $view->requireAsset('core/style-customizer');
@@ -24,11 +24,8 @@ class Typography {
         $strOptions = '';
         $i = 0;
         $options['inputName'] = $inputName;
-        foreach($options as $key => $value) {
-            if ($i == 0) $strOptions = '{';
-            $strOptions .= $key . ':\'' . $value . '\'';
-            if (($i + 1) == count($strOptions)) $strOptions .= '}';
-        }
+        $options['value'] = $args;
+        $strOptions = json_encode($options);
 
         print '<span data-font-selector="' . $inputName . '"></span>';
         print "<script type=\"text/javascript\">";
