@@ -2,16 +2,20 @@
 namespace Concrete\Core\StyleCustomizer\Style\Value;
 class ImageValue extends Value {
 
-    protected $imagePath;
+    protected $imageUrl;
 
-    public function setPath($path)
+    public function setUrl($url)
     {
-        $this->imagePath = $path;
+        $this->imageUrl = $url;
     }
 
-    public function getPath()
+    public function getUrl()
     {
-        return $this->imagePath;
+        return $this->imageUrl;
     }
 
+    public function toStyleString()
+    {
+        return '';
+    }
 }

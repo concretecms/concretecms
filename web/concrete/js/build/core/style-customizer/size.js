@@ -22,7 +22,7 @@
             max: 400,
             value: my.options.value,
             create: function (e, ui) {
-                $(this).parent().find('span').html('0' + my.options.unit);
+                $(this).parent().find('span').html(my.options.value + my.options.unit);
             },
             slide: function (e, ui) {
                 $(this).parent().find('span').html(ui.value + my.options.unit);
@@ -37,7 +37,7 @@
         '<div class="ccm-style-customizer-size"><%=options.value + options.unit%></div></div>';
 
     ConcreteSizeSelector.prototype.selectorWidgetTemplate = '<div class="ccm-ui ccm-style-customizer-palette">' +
-        '<div><label>Size</label><div data-style-customizer-field="size"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"></span></div></div>' +
+        '<div><label>Size</label><div data-style-customizer-field="size"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><%=options.value%><%=options.unit%></span></div></div>' +
         '<div class="ccm-style-customizer-palette-actions"><button class="btn btn-primary">Save</button></div>' +
         '</div>';
 

@@ -9,14 +9,15 @@
     <set name="Header">
         <style name="Navigation Link Color" variable="navigation-links" type="color" />
         <style name="Navigation Background Hover" variable="navigation-links-hover-background" type="color" />
-        <style name="Site Title" variable="site-title-color" type="color" />
+        <style name="Site Title" variable="site-title" type="color" />
     </set>
     <set name="Body">
         <style name="Link Color" variable="body-link" type="color" />
-        <style name="Headings" variable="headings" type="color" />
+        <style name="Headings" variable="body-headings" type="color" />
         <style name="Typography" variable="body" type="type" />
     </set>
     <set name="Footer">
+        <style name="Top Margin" variable="footer-top-margin" type="size" />
         <style name="Color" variable="footer-text" type="color" />
         <style name="Background Image" variable="footer-background" type="image" />
     </set>

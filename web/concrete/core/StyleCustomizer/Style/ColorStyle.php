@@ -7,9 +7,13 @@ use Less_Tree_Call;
 use Less_Tree_Dimension;
 class ColorStyle extends Style {
 
-    public function render() {
+    public function render($value = false) {
         $fh = Core::make('helper/form/color');
-        print $fh->output($this->getVariable(), '#f00', array(
+        $color = '';
+        if ($value) {
+            $color = $value->toStyleString();
+        }
+        print $fh->output($this->getVariable(), $color, array(
             'showAlpha' => true
         ));
     }

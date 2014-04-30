@@ -11,10 +11,10 @@ defined('C5_EXECUTE') or define('C5_EXECUTE', md5(uniqid()));
 
 /**
  * ----------------------------------------------------------------------------
- * The following constants need to load very early, because they're used 
- * if we determine that we have an updated core, and they're also used to 
- * determine where we grab our site config file from. So first we load them, 
- * then we attempt to load the site config, then we pass through to an updated 
+ * The following constants need to load very early, because they're used
+ * if we determine that we have an updated core, and they're also used to
+ * determine where we grab our site config file from. So first we load them,
+ * then we attempt to load the site config, then we pass through to an updated
  * core, should our site config point to that new core. Only then after that
  * do we continue loading this instance of concrete5.
  * ----------------------------------------------------------------------------
@@ -44,7 +44,7 @@ define('ENABLE_APP_NEWS', false);
 
 /**
  * ----------------------------------------------------------------------------
- * Now we test to see if we have a valid site configuration file. If not, we're 
+ * Now we test to see if we have a valid site configuration file. If not, we're
  * going to need to render install.
  * ----------------------------------------------------------------------------
  */
@@ -54,29 +54,29 @@ if (file_exists(CONFIG_FILE)) define('CONFIG_FILE_EXISTS', true) and include(CON
 
 /**
  * ----------------------------------------------------------------------------
- * Now that we've had the opportunity to load our config file, we know if we 
- * have a DIRNAME_CORE_UPDATED constant, which lives in that file, and which 
- * points to another core. If we have this constant, we exit this file 
+ * Now that we've had the opportunity to load our config file, we know if we
+ * have a DIRNAME_CORE_UPDATED constant, which lives in that file, and which
+ * points to another core. If we have this constant, we exit this file
  * immeditely and proceed into the updated core.
  * ----------------------------------------------------------------------------
  */
 if (defined('DIRNAME_CORE_UPDATED') && (!defined('APP_UPDATED_PASSTHRU'))) {
-	define('APP_UPDATED_PASSTHRU', true);
-	if (is_dir(DIR_BASE . '/' . DIRNAME_UPDATES . '/' . DIRNAME_CORE_UPDATED)) {
-		require(DIR_BASE . '/' . DIRNAME_UPDATES . '/' . DIRNAME_CORE_UPDATED . '/' . DIRNAME_CORE . '/' . 'dispatcher.php');
-	} else if(file_exists(DIRNAME_UPDATES . '/' . DIRNAME_CORE_UPDATED . '/' . DIRNAME_CORE . '/' . 'dispatcher.php')){
-		require(DIRNAME_UPDATES . '/' . DIRNAME_CORE_UPDATED . '/' . DIRNAME_CORE . '/' . 'dispatcher.php');
-	} else {
-		die(sprintf('Invalid "%s" defined. Please remove it from %s.','DIRNAME_CORE_UPDATED', CONFIG_FILE));
-	}
-	exit;
+    define('APP_UPDATED_PASSTHRU', true);
+    if (is_dir(DIR_BASE . '/' . DIRNAME_UPDATES . '/' . DIRNAME_CORE_UPDATED)) {
+        require(DIR_BASE . '/' . DIRNAME_UPDATES . '/' . DIRNAME_CORE_UPDATED . '/' . DIRNAME_CORE . '/' . 'dispatcher.php');
+    } else if(file_exists(DIRNAME_UPDATES . '/' . DIRNAME_CORE_UPDATED . '/' . DIRNAME_CORE . '/' . 'dispatcher.php')){
+        require(DIRNAME_UPDATES . '/' . DIRNAME_CORE_UPDATED . '/' . DIRNAME_CORE . '/' . 'dispatcher.php');
+    } else {
+        die(sprintf('Invalid "%s" defined. Please remove it from %s.','DIRNAME_CORE_UPDATED', CONFIG_FILE));
+    }
+    exit;
 }
 
 
 
 /**
  * ----------------------------------------------------------------------------
- * ## If we're still here, we're proceeding through this concrete directory, 
+ * ## If we're still here, we're proceeding through this concrete directory,
  * and it's time to load the rest of our hard-coded configuration options –
  * the one we don't need a database to tell us about.
  *
@@ -96,22 +96,22 @@ defined('NAMESPACE_SEGMENT_APPLICATION') or define('NAMESPACE_SEGMENT_APPLICATIO
 defined('REDIRECT_TO_BASE_URL') or define('REDIRECT_TO_BASE_URL', false);
 defined('URL_REWRITING_ALL') or define('URL_REWRITING_ALL', false);
 if (!defined('BASE_URL')) {
-	if(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) {
-		define('BASE_URL', 'https://' . $_SERVER['HTTP_HOST']);
-	} else if (isset($_SERVER['HTTP_HOST'])) {
-		define('BASE_URL', 'http://' . $_SERVER['HTTP_HOST']);
-	} else {
-		define('BASE_URL', false);
-	}
+    if(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) {
+        define('BASE_URL', 'https://' . $_SERVER['HTTP_HOST']);
+    } else if (isset($_SERVER['HTTP_HOST'])) {
+        define('BASE_URL', 'http://' . $_SERVER['HTTP_HOST']);
+    } else {
+        define('BASE_URL', false);
+    }
 }
 
 if (!defined('DIR_REL')) {
-	$pos = stripos($_SERVER['SCRIPT_NAME'], DISPATCHER_FILENAME);
-	if($pos > 0) { //we do this because in CLI circumstances (and some random ones) we would end up with index.ph instead of index.php
-		$pos = $pos - 1;
-	}
-	$uri = substr($_SERVER['SCRIPT_NAME'], 0, $pos);
-	define('DIR_REL', $uri);
+    $pos = stripos($_SERVER['SCRIPT_NAME'], DISPATCHER_FILENAME);
+    if($pos > 0) { //we do this because in CLI circumstances (and some random ones) we would end up with index.ph instead of index.php
+        $pos = $pos - 1;
+    }
+    $uri = substr($_SERVER['SCRIPT_NAME'], 0, $pos);
+    define('DIR_REL', $uri);
 }
 
 
@@ -182,6 +182,7 @@ define('DIRNAME_VENDOR', 'vendor');
 define('DIRNAME_LANGUAGES_SITE_INTERFACE', 'site');
 define('DIRNAME_STYLE_CUSTOMIZER', 'style_customizer');
 define('DIRNAME_STYLE_CUSTOMIZER_TYPES', 'types');
+define('DIRNAME_STYLE_CUSTOMIZER_PRESETS', 'presets');
 
 
 
@@ -228,6 +229,7 @@ define('FILENAME_CONVERSATION_EDITOR_OPTIONS', 'options.php');
 define('FILENAME_CONVERSATION_EDITOR_FORM_MESSAGE', 'message.php');
 define('FILENAME_CONVERSATION_EDITOR_FORM_REPLY', 'reply.php');
 define('FILENAME_STYLE_CUSTOMIZER_STYLES', 'styles.xml');
+define('FILENAME_STYLE_CUSTOMIZER_DEFAULT_PRESET_NAME', 'defaults.less');
 
 
 
@@ -282,9 +284,9 @@ define('DIR_LANGUAGES_SITE_INTERFACE', DIR_LANGUAGES . '/' . DIRNAME_LANGUAGES_S
  * ----------------------------------------------------------------------------
  */
 if (defined('DIRNAME_CORE_UPDATED')) {
- 	$ap = DIR_REL . '/' . DIRNAME_UPDATES . '/' . DIRNAME_CORE_UPDATED . '/' . DIRNAME_CORE;
+    $ap = DIR_REL . '/' . DIRNAME_UPDATES . '/' . DIRNAME_CORE_UPDATED . '/' . DIRNAME_CORE;
 } else {
-	$ap = DIR_REL . '/' . DIRNAME_CORE;
+    $ap = DIR_REL . '/' . DIRNAME_CORE;
 }
 define('ASSETS_URL', $ap);
 define('ASSETS_URL_CSS', $ap . '/css');
@@ -337,14 +339,14 @@ define('REL_DIR_LANGUAGES_SITE_INTERFACE', REL_DIR_APPLICATION . '/' . DIRNAME_L
  * ----------------------------------------------------------------------------
  */
 if (URL_REWRITING_ALL == true) {
-	define('REL_DIR_FILES_TOOLS', DIR_REL . '/tools');
-	define('REL_DIR_FILES_TOOLS_REQUIRED', DIR_REL . '/tools/required'); // front-end
+    define('REL_DIR_FILES_TOOLS', DIR_REL . '/tools');
+    define('REL_DIR_FILES_TOOLS_REQUIRED', DIR_REL . '/tools/required'); // front-end
 } else {
-	define('REL_DIR_FILES_TOOLS', DIR_REL . '/' . DISPATCHER_FILENAME . '/tools');
-	define('REL_DIR_FILES_TOOLS_REQUIRED', DIR_REL . '/' . DISPATCHER_FILENAME . '/tools/required'); // front-end
+    define('REL_DIR_FILES_TOOLS', DIR_REL . '/' . DISPATCHER_FILENAME . '/tools');
+    define('REL_DIR_FILES_TOOLS_REQUIRED', DIR_REL . '/' . DISPATCHER_FILENAME . '/tools/required'); // front-end
 }
 define('REL_DIR_FILES_TOOLS_BLOCKS', REL_DIR_FILES_TOOLS . '/blocks'); // this maps to the /tools/ directory in the blocks subdir
-define('REL_DIR_FILES_TOOLS_PACKAGES', REL_DIR_FILES_TOOLS . '/packages'); 
+define('REL_DIR_FILES_TOOLS_PACKAGES', REL_DIR_FILES_TOOLS . '/packages');
 
 
 
@@ -392,8 +394,8 @@ define('STACKS_PAGE_TYPE', 'core_stack');
  * ----------------------------------------------------------------------------
  */
 defined('ENABLE_EMAILS') or define('ENABLE_EMAILS', true);
-defined('EMAIL_DEFAULT_FROM_ADDRESS') or define('EMAIL_DEFAULT_FROM_ADDRESS', 
-	'concrete5-noreply@' . str_replace(array('http://www.', 'https://www.', 'http://', 'https://'), '', BASE_URL)
+defined('EMAIL_DEFAULT_FROM_ADDRESS') or define('EMAIL_DEFAULT_FROM_ADDRESS',
+    'concrete5-noreply@' . str_replace(array('http://www.', 'https://www.', 'http://', 'https://'), '', BASE_URL)
 );
 defined('EMAIL_DEFAULT_FROM_NAME') or define('EMAIL_DEFAULT_FROM_NAME', '');
 
@@ -618,8 +620,8 @@ require __DIR__ . '/helpers.php';
  * ----------------------------------------------------------------------------
  */
 if (defined('APP_TIMEZONE')) {
-	define('APP_TIMEZONE_SERVER', @date_default_timezone_get());
-	date_default_timezone_set(APP_TIMEZONE);
+    define('APP_TIMEZONE_SERVER', @date_default_timezone_get());
+    date_default_timezone_set(APP_TIMEZONE);
 } else {
-	date_default_timezone_set(@date_default_timezone_get());
+    date_default_timezone_set(@date_default_timezone_get());
 }

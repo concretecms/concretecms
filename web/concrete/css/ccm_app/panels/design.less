@@ -1,11 +1,44 @@
-/**
- * Add block
- */
 
 #ccm-panel-page-design {
 
     div.ccm-panel-content-inner {
         padding: 20px;
+    }
+}
+
+
+#ccm-panel-page-design-customize {
+
+    div.ccm-panel-content-inner {
+        padding: 20px 20px 0px 20px;
+    }
+
+    .list-group-item {
+        ul.ccm-style-preset-icon {
+            width: 24px;
+            height: 16px;
+            position: absolute;
+            top: 13px;
+            right: 12px;
+            padding: 0px;
+            margin: 0px;
+            list-style-type: none;
+        }
+
+        li {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            padding: 0px;
+            margin: 0px;
+        }
+
+        li:first-child {
+            .border-left-radius(3px);
+        }
+        li:last-child {
+            .border-right-radius(3px);
+        }
     }
 }
 
@@ -23,6 +56,7 @@ div#ccm-panel-page-design-page-templates {
         }
     }
 }
+
 
 div#ccm-panel-page-design-themes {
 
