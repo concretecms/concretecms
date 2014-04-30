@@ -5,17 +5,28 @@ use \Concrete\Core\StyleCustomizer\Style\Value\ColorValue;
 use Less_Tree_Color;
 use Less_Tree_Call;
 use Less_Tree_Dimension;
+use View;
+use Request;
 class ColorStyle extends Style {
 
     public function render($value = false) {
-        $fh = Core::make('helper/form/color');
         $color = '';
         if ($value) {
             $color = $value->toStyleString();
         }
-        print $fh->output($this->getVariable(), $color, array(
-            'showAlpha' => true
-        ));
+        $inputName = $this->getVariable();
+        $r = Request::getInstance();
+        if ($r->request->has($inputName)) {
+            $color = h($r->request->get($inputName));
+        }
+
+        $view = View::getInstance();
+        $view->requireAsset('core/colorpicker');
+
+        print "<input type=\"text\" name=\"{$inputName}\" value=\"{$color}\" id=\"ccm-colorpicker-{$inputName}\" />";
+        print "<script type=\"text/javascript\">";
+        print "$(function() { $('#ccm-colorpicker-{$inputName}').spectrum({showAlpha: true, value: '{$color}', change: function() {ConcreteEvent.publish('StyleCustomizerSave');}});});";
+        print "</script>";
     }
 
     public static function parse($value) {

@@ -54,6 +54,10 @@ $pk = PermissionKey::getByHandle('customize_themes');
     </form>
 </section>
 
+<div class="ccm-panel-detail-form-actions">
+    <button class="pull-right btn btn-success" type="button" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
+</div>
+
 
 <script type="text/javascript">
 
@@ -143,10 +147,8 @@ $pk = PermissionKey::getByHandle('customize_themes');
             return false;
         });
 
-       // $('div.ccm-page-design-customize-font-swatch').FontPanel();
-        //$('div.ccm-theme-style-custom').CustomPanel();
-        $('.ccm-panel-page-design-customize-style-set input[type=hidden]').on('change', function() {
+        ConcreteEvent.subscribe('StyleCustomizerSave', function() {
             $('form[data-form=panel-page-design-customize]').submit();
-        });
+        })
     });
 </script>

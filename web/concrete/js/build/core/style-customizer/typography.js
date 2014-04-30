@@ -173,6 +173,7 @@
         my.setValue('letter-spacing', my.$widget.find('div[data-style-customizer-field=letter-spacing] div.ccm-style-customizer-slider').slider('value'));
         my.setValue('line-height', my.$widget.find('div[data-style-customizer-field=line-height] div.ccm-style-customizer-slider').slider('value'));
         my.updateSwatch();
+        ConcreteEvent.publish('StyleCustomizerSave');
         my.closeSelector(e);
     }
 
