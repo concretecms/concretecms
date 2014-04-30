@@ -10,11 +10,11 @@ $pk = PermissionKey::getByHandle('customize_themes');
 
     <div class="ccm-panel-content-inner">
 
-    <div class="list-group">
+    <div class="list-group" data-list-group="design-presets">
         <div class="list-group-item list-group-item-header"><?=t('Preset')?></div>
         <?
         foreach($presets as $preset) { ?>
-            <label class="list-group-item"><input type="radio" class="ccm-flat-radio" value="<?=$preset->getPresetFilename()?>" name="ptPresetID" <? if ($preset->isDefaultPreset()) { ?>checked="checked"<? } ?> /> <?=$preset->getPresetName()?>
+            <label class="list-group-item"><input type="radio" class="ccm-flat-radio" value="<?=$preset->getPresetHandle()?>" name="handle" <? if ($selectedPreset->getPresetHandle() == $preset->getPresetHandle()) { ?>checked="checked"<? } ?> /> <?=$preset->getPresetName()?>
                 <?=$preset->getPresetIconHTML()?>
             </label>
         <? } ?>
@@ -31,6 +31,10 @@ $pk = PermissionKey::getByHandle('customize_themes');
                 <li><?=$style->getName()?>
                 <?
                 $value = $c->getCustomStyleValueObject($style);
+                if (!is_object($value)) {
+                    $valueList = $selectedPreset->getStyleValueList();
+                    $value = $style->getValueFromList($valueList);
+                }
                 ?>
                 <?=$style->render($value)?>
                 </li>
@@ -110,6 +114,22 @@ $pk = PermissionKey::getByHandle('customize_themes');
                 ConcretePageDesignPanel.applyDesignToPage();
             <? } ?>
             return false;
+        });
+        $('div[data-list-group=design-presets]').on('change', $('input[type=radio]'), function() {
+            var panel = ConcretePanelManager.getByIdentifier('page');
+            var $panel = $('#' + panel.getDOMID());
+            panel.closePanelDetailImmediately();
+            var url = "<?=URL::to('/ccm/system/panels/page/design/customize', $theme->getThemeID())?>?cID=<?=$c->getCollectionID()?>";
+            var content = $(this).closest('div.ccm-panel-content');
+            $.concreteAjax({
+                url: url,
+                dataType: 'html',
+                data: {'handle': $(this).find(':checked').val()},
+                success: function(r) {
+                    content.html(r);
+                    panel.onPanelLoad(this);
+                }
+            });
         });
         $('button[data-panel-detail-action=reset]').unbind().on('click', function() {
             <? if ($pk->can()) { ?>

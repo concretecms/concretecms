@@ -24,8 +24,23 @@ class Customize extends BackendInterfacePageController {
     public function view($pThemeID) {
         $pt = PageTheme::getByID($pThemeID);
         if (is_object($pt) && $pt->isThemeCustomizable()) {
+            $presets = $pt->getThemeCustomizableStylePresets();
+            foreach($presets as $preset) {
+                if ($preset->isDefaultPreset()) {
+                    $selectedPreset = $preset;
+                }
+            }
+
+            if ($this->request->request->has('handle')) {
+                $preset = $pt->getThemeCustomizablePreset($this->request->request->get('handle'));
+                if (is_object($preset)) {
+                    $selectedPreset = $preset;
+                }
+            }
+
             $styleList = $pt->getThemeCustomizableStyleList();
-            $this->set('presets', $pt->getThemeCustomizableStylePresets());
+            $this->set('presets', $presets);
+            $this->set('selectedPreset', $selectedPreset);
             $this->set('styleSets', $styleList->getSets());
             $this->set('theme', $pt);
         } else {

@@ -166,18 +166,20 @@ class Theme extends Object {
     }
 
     /**
-     * Gets the style value list object for this theme.
-     * @return \Concrete\Core\StyleCustomizer\Style\ValueList
+     * Gets a preset for this theme by handle
      */
-    public function getThemeCustomizableStyleValueList($preset = false) {
-        if (!isset($this->styleValueList)) {
-            $env = Environment::get();
-            $r = $env->getRecord(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_CSS . '/' . DIRNAME_STYLE_CUSTOMIZER_PRESETS . '/' . FILENAME_STYLE_CUSTOMIZER_DEFAULT_PRESET_NAME, $this->getPackageHandle());
-            $urlroot = $env->getURL(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_CSS, $this->getPackageHandle());
-            $this->styleValueList = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($r->file, $urlroot);
+    public function getThemeCustomizablePreset($handle) {
+        $env = Environment::get();
+        if ($this->isThemeCustomizable()) {
+            $file = $env->getRecord(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_CSS . '/' . DIRNAME_STYLE_CUSTOMIZER_PRESETS . '/' . $handle . static::THEME_PRESET_EXTENSION, $this->getPackageHandle());
+            if ($file->exists()) {
+                $urlroot = $env->getURL(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_CSS, $this->getPackageHandle());
+                $preset = Preset::getFromFile($file->file, $urlroot);
+                return $preset;
+            }
         }
-        return $this->styleValueList;
     }
+
 
     /**
      * Gets all presets available to this theme.
@@ -187,11 +189,12 @@ class Theme extends Object {
         $env = Environment::get();
         if ($this->isThemeCustomizable()) {
             $directory = $env->getPath(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_CSS . '/' . DIRNAME_STYLE_CUSTOMIZER_PRESETS, $this->getPackageHandle());
+            $urlroot = $env->getURL(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_CSS, $this->getPackageHandle());
             $dh = Loader::helper('file');
             $files = $dh->getDirectoryContents($directory);
             foreach($files as $f) {
                 if (strrchr($f, '.') == static::THEME_PRESET_EXTENSION) {
-                    $preset = Preset::getFromFile($directory . '/' . $f);
+                    $preset = Preset::getFromFile($directory . '/' . $f, $urlroot);
                     if (is_object($preset)) {
                         $presets[] = $preset;
                     }
