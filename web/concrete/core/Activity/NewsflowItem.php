@@ -7,7 +7,8 @@ use Concrete\Core\Http\Service\Json;
  * Class NewsflowItem
  * @package Concrete\Core\Activity
  */
-class NewsflowItem {
+class NewsflowItem
+{
 
     protected $id;
     protected $title;
@@ -88,7 +89,7 @@ class NewsflowItem {
      */
     public static function parseResponse($response)
     {
-		try {
+        try {
             $json = new Json();
             $obj = $json->decode($response);
             if (is_object($obj) && isset($obj->id) && isset($obj->title) && isset($obj->content)
@@ -106,7 +107,7 @@ class NewsflowItem {
             }
         } catch (\Exception $e) {
             throw new \Exception(t('Unable to parse news response.'));
-		}
-	}
-	
+        }
+    }
+
 }
