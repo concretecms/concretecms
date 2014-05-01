@@ -33,7 +33,8 @@
     ConcreteSizeSelector.prototype = Object.create(ConcreteStyleCustomizerPalette.prototype);
 
     ConcreteSizeSelector.prototype.chooseTemplate = '<div data-launch="style-customizer-palette">' +
-        '<input type="hidden" name="<%=options.inputName%>[size]" data-style-customizer-input="size" />' +
+        '<input type="hidden" name="<%=options.inputName%>[size]" value="<%=options.value%>" data-style-customizer-input="size" />' +
+        '<input type="hidden" name="<%=options.inputName%>[unit]" value="<%=options.unit%>" />' +
         '<div class="ccm-style-customizer-size"><%=options.value + options.unit%></div></div>';
 
     ConcreteSizeSelector.prototype.selectorWidgetTemplate = '<div class="ccm-ui ccm-style-customizer-palette">' +

@@ -23,7 +23,7 @@ class ColorStyle extends Style {
         $view = View::getInstance();
         $view->requireAsset('core/colorpicker');
 
-        print "<input type=\"text\" name=\"{$inputName}\" value=\"{$color}\" id=\"ccm-colorpicker-{$inputName}\" />";
+        print "<input type=\"text\" name=\"{$inputName}[color]\" value=\"{$color}\" id=\"ccm-colorpicker-{$inputName}\" />";
         print "<script type=\"text/javascript\">";
         print "$(function() { $('#ccm-colorpicker-{$inputName}').spectrum({showAlpha: true, value: '{$color}', change: function() {ConcreteEvent.publish('StyleCustomizerSave');}});});";
         print "</script>";
@@ -53,6 +53,18 @@ class ColorStyle extends Style {
         return $cv;
     }
 
+    public function getValueFromRequest(\Symfony\Component\HttpFoundation\ParameterBag $request)
+    {
+        $color = $request->get($this->getVariable());
+        $cv = new \Primal\Color\Parser($color['color']);
+        $result = $cv->getResult();
+        $alpha = false;
+        if ($result->alpha && $result->alpha < 1) {
+            $alpha = $result->alpha;
+        }
+        $cv = new ColorValue($result->red, $result->green, $result->blue, $alpha);
+        return $cv;
+    }
 
     public function getValueFromList(\Concrete\Core\StyleCustomizer\Style\ValueList $list) {
         foreach($list->getRules() as $rule) {

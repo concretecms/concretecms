@@ -55,7 +55,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
 </section>
 
 <div class="ccm-panel-detail-form-actions">
-    <button class="pull-right btn btn-success" type="button" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
+    <button class="pull-right btn btn-success" type="button" data-panel-detail-action="customize-design-submit"><?=t('Save Changes')?></button>
 </div>
 
 
@@ -108,7 +108,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
 
     $(function() {
         panel = ConcretePanelManager.getByIdentifier('page');
-        $('button[data-panel-detail-action=submit]').unbind().on('click', function() {
+        $('button[data-panel-detail-action=customize-design-submit]').on('click', function() {
             <? if ($pk->can()) { ?>
                 panel.showPanelConfirmationMessage('page-design-customize-apply', "<?=t('Apply this design to just this page, or your entire site?')?>", [
                     {'class': 'btn btn-primary pull-right', 'onclick': 'ConcretePageDesignPanel.applyDesignToSite()', 'style': 'margin-left: 10px', 'text': '<?=t("Entire Site")?>'},

@@ -45,6 +45,11 @@ class TypeStyle extends Style {
         return $rule->name == '@' . $this->getVariable() . '-type-' . $variable;
     }
 
+    public function getValueFromRequest(\Symfony\Component\HttpFoundation\ParameterBag $request)
+    {
+
+    }
+
     public function getValueFromList(\Concrete\Core\StyleCustomizer\Style\ValueList $list)
     {
         $fv = false;

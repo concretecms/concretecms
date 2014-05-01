@@ -8,6 +8,7 @@ abstract class Style {
 
     abstract public function render($value = false);
     abstract public function getValueFromList(\Concrete\Core\StyleCustomizer\Style\ValueList $list);
+    abstract public function getValueFromRequest(\Symfony\Component\HttpFoundation\ParameterBag $request);
 
     public function setName($name) {
         $this->name = $name;

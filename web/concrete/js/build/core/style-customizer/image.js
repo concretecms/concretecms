@@ -14,12 +14,17 @@
         my.$widget.find('div[data-style-customizer-field=image]').concreteFileSelector({
             inputName: my.options.inputName
         });
+
+        ConcreteEvent.subscribe('FileManagerBeforeSelectFile', function(e, data) {
+            my.setValue('fID', data.fID);
+        });
+
     }
 
     ConcreteStyleCustomizerImageSelector.prototype = Object.create(ConcreteStyleCustomizerPalette.prototype);
 
     ConcreteStyleCustomizerImageSelector.prototype.chooseTemplate = '<div data-launch="style-customizer-palette">' +
-        '<input type="hidden" name="<%=options.inputName%>[image]" data-style-customizer-input="image" />' +
+        '<input type="hidden" name="<%=options.inputName%>[fID]" data-style-customizer-input="fID" />' +
         '<div class="ccm-style-customizer-image ccm-ui"><i class="glyphicon glyphicon-picture"</div></div>';
 
     ConcreteStyleCustomizerImageSelector.prototype.selectorWidgetTemplate = '<div class="ccm-ui ccm-style-customizer-palette">' +
@@ -36,13 +41,8 @@
         return dim;
     }
 
-    ConcreteStyleCustomizerImageSelector.prototype.updateSwatch = function() {
-
-    }
-
     ConcreteStyleCustomizerImageSelector.prototype.save = function (e) {
         var my = this;
-        my.updateSwatch();
         ConcreteEvent.publish('StyleCustomizerSave');
         my.closeSelector(e);
     }
