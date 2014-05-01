@@ -15,6 +15,7 @@ use Response;
 class Customize extends BackendInterfacePageController {
 
     protected $viewPath = '/panels/page/design/customize';
+    protected $controllerActionPath = '/ccm/system/panels/page/design/customize';
     protected $helpers = array('form');
 
     public function canAccess() {
@@ -46,6 +47,18 @@ class Customize extends BackendInterfacePageController {
         } else {
             throw new \Exception(t('Invalid or non-customizable theme.'));
         }
+    }
+
+    public function preview($pThemeID) {
+        $pt = PageTheme::getByID($pThemeID);
+        $styles = $pt->getThemeCustomizableStyleList();
+        // now we loop through all the styles and get values from the post.
+        foreach($styles->getSets() as $set) {
+            foreach($set->getStyles() as $style) {
+                $value = $style->getValueFromRequest($this->request->request);
+            }
+        }
+        exit;
     }
 
     /*

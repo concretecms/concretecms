@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "5b26bef365d46bdfe2cc289adbc7cedc",
+    "hash": "063faafd79fd1087b4a3ff8a73fa17e7",
     "packages": [
         {
             "name": "dapphp/securimage",
@@ -1052,17 +1052,63 @@
             "time": "2014-03-26 10:52:02"
         },
         {
+            "name": "primal/color",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrimalPHP/Color.git",
+                "reference": "2adf015e5b6d70e7e629e2a53f335f0e372040b9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrimalPHP/Color/zipball/2adf015e5b6d70e7e629e2a53f335f0e372040b9",
+                "reference": "2adf015e5b6d70e7e629e2a53f335f0e372040b9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.10"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Primal\\Color": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jarvis Badgley",
+                    "email": "primal@chipersoft.com",
+                    "homepage": "http://chipersoft.com"
+                }
+            ],
+            "description": "Collection of classes for converting and manipulating colors",
+            "homepage": "http://github.com/PrimalPHP/Color",
+            "keywords": [
+                "color"
+            ],
+            "time": "2014-03-05 14:59:05"
+        },
+        {
             "name": "simplepie/simplepie",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simplepie/simplepie.git",
-                "reference": "5f00e77b5feb96605cbcea4dcfb555e87c2fed24"
+                "reference": "9a9faaa0d563426cf6d897c169373c5b62f1b252"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/simplepie/simplepie/zipball/5f00e77b5feb96605cbcea4dcfb555e87c2fed24",
-                "reference": "5f00e77b5feb96605cbcea4dcfb555e87c2fed24",
+                "url": "https://api.github.com/repos/simplepie/simplepie/zipball/9a9faaa0d563426cf6d897c169373c5b62f1b252",
+                "reference": "9a9faaa0d563426cf6d897c169373c5b62f1b252",
                 "shasum": ""
             },
             "require": {
@@ -1103,7 +1149,7 @@
                 "feeds",
                 "rss"
             ],
-            "time": "2013-10-24 06:37:55"
+            "time": "2014-04-28 12:50:39"
         },
         {
             "name": "symfony/class-loader",
@@ -1159,17 +1205,17 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.4.3",
+            "version": "v2.4.4",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "ef20f1f58d7f693ee888353962bd2db336e3bbcb"
+                "reference": "2e452005b1e1d003d23702d227e23614679eb5ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/ef20f1f58d7f693ee888353962bd2db336e3bbcb",
-                "reference": "ef20f1f58d7f693ee888353962bd2db336e3bbcb",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/2e452005b1e1d003d23702d227e23614679eb5ca",
+                "reference": "2e452005b1e1d003d23702d227e23614679eb5ca",
                 "shasum": ""
             },
             "require": {
@@ -1210,7 +1256,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2014-03-01 17:35:04"
+            "time": "2014-04-27 13:34:57"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -2080,6 +2126,7 @@
         "zf1/zend-translate": 20,
         "zf1/zend-locale": 20,
         "zf1/zend-currency": 20,
+        "primal/color": 20,
         "zf1/zend-date": 20,
         "zf1/zend-queue": 20,
         "zf1/zend-mime": 20,

@@ -23,6 +23,13 @@ class SizeStyle extends Style {
         print "</script>";
     }
 
+    public function getValueFromRequest(\Symfony\Component\HttpFoundation\ParameterBag $request)
+    {
+        $size = $request->get($this->getVariable());
+        $sv = new SizeValue($size['size'], $size['unit']);
+        return $sv;
+    }
+
     public static function parse($value) {
         if ($value instanceof Less_Tree_Dimension) {
             $unit = 'px';

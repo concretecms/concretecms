@@ -2,6 +2,9 @@
 namespace Concrete\Core\StyleCustomizer\Style;
 use \Concrete\Core\StyleCustomizer\Style\Value\ImageValue;
 use Less_Environment;
+use File;
+use Permissions;
+
 class ImageStyle extends Style {
 
     public function render($value = false) {
@@ -20,6 +23,24 @@ class ImageStyle extends Style {
         print "<script type=\"text/javascript\">";
         print "$(function() { $('div[data-image-selector=" . $this->getVariable() . "]').concreteStyleCustomizerImageSelector({$strOptions}); });";
         print "</script>";
+    }
+
+    public function getValueFromRequest(\Symfony\Component\HttpFoundation\ParameterBag $request)
+    {
+        $image = $request->get($this->getVariable());
+        $fID = $image['fID'];
+        if ($fID) {
+            $f = File::getByID($fID);
+            if (is_object($f)) {
+                $fp = new Permissions($f);
+                if ($fp->canViewFile()) {
+                    $iv = new ImageValue();
+                    $iv->setFileID($fID);
+                    $iv->setUrl($f->getRelativePath());
+                    return $iv;
+                }
+            }
+        }
     }
 
     public function getValueFromList(\Concrete\Core\StyleCustomizer\Style\ValueList $list) {
