@@ -4,6 +4,11 @@ use Loader;
 use \Concrete\Core\Block\BlockController;
 use \Concrete\Core\Activity\Newsflow;
 
+/**
+ * @property mixed $slot
+ * Class Controller
+ * @package Concrete\Block\DashboardNewsflowLatest
+ */
 class Controller extends BlockController {
 
 	protected $btCacheBlockRecord = true;
@@ -21,16 +26,16 @@ class Controller extends BlockController {
 	public function getBlockTypeName() {
 		return t("Dashboard Newsflow Latest");
 	}
-	
-	public function view() {
+
+    public function view() {
 		// get the latest data as well
-		$slots = Newsflow::getSlotContents();
+		$slots = Newsflow::getInstance()->getSlotContents();
 		$this->set('slot', $slots[$this->slot]);
 		
 		// this is kind of a hack
 		if ($this->slot == 'C') { 
-			$ni = Newsflow::getEditionByPath('/newsflow');
-			if (is_object($ni)) { 
+			$ni = Newsflow::getInstance()->getEditionByPath('/newsflow');
+			if ($ni !== false) {
 				$this->set('editionTitle', $ni->getTitle());
 				$this->set('editionDescription', $ni->getDescription());
 				$this->set('editionDate', $ni->getDate());
