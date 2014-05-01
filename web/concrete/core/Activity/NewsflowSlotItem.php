@@ -3,17 +3,22 @@ namespace Concrete\Core\Activity;
 
 use Concrete\Core\Http\Service\Json;
 
-class NewsflowSlotItem {
-	
-	protected $content;
+/**
+ * Class NewsflowSlotItem
+ * @package Concrete\Core\Activity
+ */
+class NewsflowSlotItem
+{
+
+    protected $content;
 
     /**
      * @param $content
      */
     public function __construct($content)
     {
-		$this->content = $content;
-	}
+        $this->content = $content;
+    }
 
     /**
      * @return mixed
@@ -36,22 +41,23 @@ class NewsflowSlotItem {
      * </code>
      * @return NewsflowSlotItem[] Returns an associative array of NewsflowSlotItems
      */
-    public static function parseResponse($response) {
-		$slots = array();
-		try {
+    public static function parseResponse($response)
+    {
+        $slots = array();
+        try {
             $json = new Json();
             $obj = $json->decode($response);
-			if (is_object($obj)) {
-				if (is_object($obj->slots)) {
-					foreach($obj->slots as $key => $content) {
-						$cn = new NewsflowSlotItem($content);
-						$slots[$key] = $cn;
-					}
-				}
-			}
+            if (is_object($obj)) {
+                if (is_object($obj->slots)) {
+                    foreach ($obj->slots as $key => $content) {
+                        $cn = new NewsflowSlotItem($content);
+                        $slots[$key] = $cn;
+                    }
+                }
+            }
         } catch (\Exception $e) {
         }
-		return $slots;
+        return $slots;
+    }
 
-	}
 }
