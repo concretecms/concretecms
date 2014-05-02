@@ -120,7 +120,7 @@ class StyleTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($value->getTextTransform() == 'none');
     }
 
-public function testLessVariableImages() {
+    public function testLessVariableImages() {
         $defaults = dirname(__FILE__) . '/fixtures/defaults.less';
         $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
 
@@ -128,7 +128,35 @@ public function testLessVariableImages() {
         $ts->setVariable('header-background');
         $value = $ts->getValueFromList($list);
         $this->assertTrue($value->getUrl() == 'images/logo.png');
-
     }
 
+    public function testCustomizableStyleSheetObjects() {
+        $defaults = dirname(__FILE__) . '/fixtures/greekyogurt.less';
+        $list = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromLessFile($defaults);
+        $env = Environment::get();
+
+        $pt = new PageTheme();
+        $pt->setThemeHandle('greek_yogurt');
+        $pt->setThemeDirectory($env->getPath(DIRNAME_THEMES . '/greek_yogurt'));
+        $pt->setThemeURL($env->getURL(DIRNAME_THEMES . '/greek_yogurt'));
+
+        $sheets = $pt->getThemeCustomizableStyleSheets();
+        $this->assertTrue(count($sheets) == 1);
+        $this->assertTrue($sheets[0] instanceof \Concrete\Core\StyleCustomizer\Stylesheet);
+
+        $css = $sheets[0]->getCss();
+        $r = preg_match('/background-image: url\(\'(.+)\'\);/i', $css, $matches);
+        $this->assertTrue(trim($matches[1]) == '/concrete/themes/greek_yogurt/images/spacer.gif');
+
+        $sheets[0]->setValueList($list);
+        $css = $sheets[0]->getCss();
+        $r = preg_match('/background-image: url\(\'(.+)\'\);/i', $css, $matches);
+        $this->assertTrue(trim($matches[1]) == '/concrete/themes/greek_yogurt/images/testingit.jpg');
+
+        $sheet = $pt->getStylesheetObject('typography.less');
+        $sheet->setValueList($list);
+        $this->assertTrue($sheet->getOutputPath() == DIR_BASE . '/application/files/cache/css/greek_yogurt/typography.css');
+        $this->assertTrue($sheet->getOutputRelativePath() == DIR_REL . '/application/files/cache/css/greek_yogurt/typography.css');
+
+    }
 }

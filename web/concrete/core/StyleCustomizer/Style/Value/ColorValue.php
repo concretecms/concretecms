@@ -7,17 +7,22 @@ class ColorValue extends Value {
     protected $r;
     protected $g;
     protected $b;
-    protected $a;
+    protected $a = false;
 
-    public function __construct($r, $g, $b, $a = false)
-    {
+    public function setRed($r) {
         $this->r = $r;
-        $this->g = $g;
-        $this->b = $b;
-        if ($a != false) {
-            $this->a = $a;
-        }
+    }
 
+    public function setGreen($g) {
+        $this->g = $g;
+    }
+
+    public function setBlue($b) {
+        $this->b = $b;
+    }
+
+    public function setAlpha($a) {
+        $this->a = $a;
     }
 
     public function getRed() {return $this->r;}
@@ -33,6 +38,11 @@ class ColorValue extends Value {
         } else {
             return sprintf('rgb(%s, %s, %s)', $this->r, $this->g, $this->b);
         }
+    }
+
+    public function toLessVariablesArray()
+    {
+        return array($this->getVariable() . '-color' => $this->toStyleString());
     }
 
 }

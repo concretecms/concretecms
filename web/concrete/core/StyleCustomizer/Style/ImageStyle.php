@@ -34,7 +34,7 @@ class ImageStyle extends Style {
             if (is_object($f)) {
                 $fp = new Permissions($f);
                 if ($fp->canViewFile()) {
-                    $iv = new ImageValue();
+                    $iv = new ImageValue($this->getVariable());
                     $iv->setFileID($fID);
                     $iv->setUrl($f->getRelativePath());
                     return $iv;
@@ -43,19 +43,23 @@ class ImageStyle extends Style {
         }
     }
 
-    public function getValueFromList(\Concrete\Core\StyleCustomizer\Style\ValueList $list) {
-        foreach($list->getRules() as $rule) {
-            if ($rule->name == '@' . $this->getVariable() . '-image') {
+    public function getValuesFromVariables($rules = array()) {
+        $values = array();
+        foreach($rules as $rule) {
+            if (preg_match('/@(.+)\-image/i', $rule->name, $matches)) {
                 $entryURI = $rule->value->value[0]->value[0]->currentFileInfo['entryUri'];
                 $value = $rule->value->value[0]->value[0]->value;
                 if ($entryURI) {
                     $value = Less_Environment::normalizePath($entryURI . $value);
                 }
-                $iv = new ImageValue();
+                $iv = new ImageValue($matches[1]);
                 $iv->setUrl($value);
-                return $iv;
+                if (is_object($iv)) {
+                    $values[] = $iv;
+                }
             }
         }
+        return $values;
     }
 
 

@@ -122,7 +122,6 @@ $pk = PermissionKey::getByHandle('customize_themes');
         $('div[data-list-group=design-presets]').on('change', $('input[type=radio]'), function() {
             var panel = ConcretePanelManager.getByIdentifier('page');
             var $panel = $('#' + panel.getDOMID());
-            panel.closePanelDetailImmediately();
             var url = "<?=URL::to('/ccm/system/panels/page/design/customize', $theme->getThemeID())?>?cID=<?=$c->getCollectionID()?>";
             var content = $(this).closest('div.ccm-panel-content');
             $.concreteAjax({
@@ -132,6 +131,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
                 success: function(r) {
                     content.html(r);
                     panel.onPanelLoad(this);
+                    ConcreteEvent.publish('StyleCustomizerSave');
                 }
             });
         });
@@ -147,6 +147,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
             return false;
         });
 
+        ConcreteEvent.unsubscribe('StyleCustomizerSave');
         ConcreteEvent.subscribe('StyleCustomizerSave', function() {
             $('form[data-form=panel-page-design-customize]').submit();
         })

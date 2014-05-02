@@ -59,8 +59,6 @@
         getPosition: function($element) {
             var my = this;
             var dim = $element.offset();
-            dim.left += $element.width() + 10;
-            dim.top -= 180;
             return dim;
         },
 

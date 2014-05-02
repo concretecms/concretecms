@@ -26,30 +26,37 @@ class SizeStyle extends Style {
     public function getValueFromRequest(\Symfony\Component\HttpFoundation\ParameterBag $request)
     {
         $size = $request->get($this->getVariable());
-        $sv = new SizeValue($size['size'], $size['unit']);
+        $sv = new SizeValue($this->getVariable());
+        $sv->setSize($size['size']);
+        $sv->setUnit($size['unit']);
         return $sv;
     }
 
-    public static function parse($value) {
+    public static function parse($value, $variable = false) {
         if ($value instanceof Less_Tree_Dimension) {
             $unit = 'px';
             if (isset($value->unit->numerator[0])) {
                 $unit = $value->unit->numerator[0];
             }
-
-            $sv = new SizeValue($value->value, $unit);
+            $sv = new SizeValue($variable);
+            $sv->setSize($value->value);
+            $sv->setUnit($unit);
         }
         return $sv;
     }
 
-    public function getValueFromList(\Concrete\Core\StyleCustomizer\Style\ValueList $list) {
-        foreach($list->getRules() as $rule) {
-            if ($rule->name == '@' . $this->getVariable() . '-size') {
+    public function getValuesFromVariables($rules = array()) {
+        $values = array();
+        foreach($rules as $rule) {
+            if (preg_match('/@(.+)\-size/i', $rule->name, $matches)) {
                 $value = $rule->value->value[0]->value[0];
-                $sv = static::parse($value);
-                return $sv;
+                $sv = static::parse($value, $matches[1]);
+                if (is_object($sv)) {
+                    $values[] = $sv;
+                }
             }
         }
+        return $values;
     }
 
 

@@ -16,15 +16,13 @@ class Typography {
      * @param string $value
      * @param bool $includeJavaScript
      */
-    public function output($inputName, $args = array(), $options = array()) {
+    public function output($inputName, $value = array(), $options = array()) {
         $html = '';
         $view = View::getInstance();
         $view->requireAsset('core/style-customizer');
 
-        $strOptions = '';
-        $i = 0;
         $options['inputName'] = $inputName;
-        $options['value'] = $args;
+        $options = array_merge($options, $value);
         $strOptions = json_encode($options);
 
         print '<span data-font-selector="' . $inputName . '"></span>';

@@ -42,14 +42,6 @@
         '<div class="ccm-style-customizer-palette-actions"><button class="btn btn-primary">Save</button></div>' +
         '</div>';
 
-    ConcreteSizeSelector.prototype.getPosition = function($element) {
-        var my = this;
-        var dim = $element.offset();
-        dim.left += $element.width() + 10;
-        dim.top -= 20;
-        return dim;
-    }
-
     ConcreteSizeSelector.prototype.updateSwatch = function() {
         var my = this,
             $swatch = my.$element.find('div.ccm-style-customizer-size');

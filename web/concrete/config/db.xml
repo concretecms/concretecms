@@ -77,7 +77,7 @@
       <default value="0" />
     </field>
   </table>
-  
+
   <table name="PageTypePublishTargetTypes">
     <field name="ptPublishTargetTypeID" type="I" size="10">
       <key/>
@@ -489,7 +489,7 @@
   <field name="gatForceDefault" type="I" size="10">
       <unsigned/>
       <default value="0" />
-    </field>    
+    </field>
     <field name="pkgID" type="I" size="10">
       <unsigned/>
     </field>
@@ -653,7 +653,7 @@
       <default value="0"/>
     </field>
     <field name="cnvMessageTotalRatingScore" type="I8">
-    	<default value="0" />
+        <default value="0" />
     </field>
     <index name="cnvID">
       <col>cnvID</col>
@@ -710,46 +710,46 @@
     </field>
     <field name="cnvMessageID" type="I" size="11">
     </field>
-  	<field name="fID" type="I" size="11">
-  	</field>
+    <field name="fID" type="I" size="11">
+    </field>
   </table>
   <table name="ConversationMessageRatings">
-		<field name="cnvMessageID" type="I"  size="10">
-			<unsigned />
-		</field>
-		<field name="cnvRatingTypeID" type="I" size="10">
-			<notnull />
-			<default value="0" />
-			<unsigned />
-		</field>
+        <field name="cnvMessageID" type="I"  size="10">
+            <unsigned />
+        </field>
+        <field name="cnvRatingTypeID" type="I" size="10">
+            <notnull />
+            <default value="0" />
+            <unsigned />
+        </field>
     <field name="cnvMessageRatingIP" type="I8" size="10">
       <notnull/>
       <default value="0"/>
     </field>
-		<field name="timestamp" type="T" />
-		<field name="uID" type="I" size="10">
-			<notnull />
-			<default value="0" />
-			<unsigned />
-		</field>
-	</table>
-	<table name="ConversationRatingTypes">
-		<field name="cnvRatingTypeID" type="I" size="10">
-		  <key/>
-		  <autoincrement/>
-		  <unsigned/>
-		</field>
-		<field name="cnvRatingTypeHandle" type="C" size="255">
-		</field>
-		<field name="cnvRatingTypeName" type="C" size="10"/>
-		<field name="cnvRatingTypeCommunityPoints" type="I" size="10">
-		</field>
+        <field name="timestamp" type="T" />
+        <field name="uID" type="I" size="10">
+            <notnull />
+            <default value="0" />
+            <unsigned />
+        </field>
+    </table>
+    <table name="ConversationRatingTypes">
+        <field name="cnvRatingTypeID" type="I" size="10">
+          <key/>
+          <autoincrement/>
+          <unsigned/>
+        </field>
+        <field name="cnvRatingTypeHandle" type="C" size="255">
+        </field>
+        <field name="cnvRatingTypeName" type="C" size="10"/>
+        <field name="cnvRatingTypeCommunityPoints" type="I" size="10">
+        </field>
     <field name="pkgID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
     </field>
-	</table>
+    </table>
   <table name="PermissionAssignments">
     <field name="paID" type="I" size="10">
       <key/>
@@ -1021,7 +1021,7 @@
       <notnull/>
       <default value="0"/>
       <unsigned/>
-    </field>    
+    </field>
     <index name="arIsGlobal">
       <col>arIsGlobal</col>
     </index>
@@ -1053,21 +1053,21 @@
     </field>
   </table>
 <table name="AreaLayouts">
-	<field name="arLayoutID" type="I">
-		<key />
-		<unsigned />
-	    <autoincrement/>
-	</field>
-	<field name="arLayoutSpacing" type="I">
-		<unsigned />
-		<notnull />
-		<default value="0" />
-	</field>
-	<field name="arLayoutIsCustom" type="I1">
-		<unsigned />
-		<notnull />
-		<default value="0" />
-	</field>
+    <field name="arLayoutID" type="I">
+        <key />
+        <unsigned />
+        <autoincrement/>
+    </field>
+    <field name="arLayoutSpacing" type="I">
+        <unsigned />
+        <notnull />
+        <default value="0" />
+    </field>
+    <field name="arLayoutIsCustom" type="I1">
+        <unsigned />
+        <notnull />
+        <default value="0" />
+    </field>
   <field name="arLayoutMaxColumns" type="I">
     <unsigned />
     <notnull />
@@ -1094,26 +1094,26 @@
   </field>
 </table>
 <table name="AreaLayoutColumns">
-	<field name="arLayoutColumnID" type="I">
-		<key />
-		<unsigned />
-		<autoincrement/>
-	</field>
-	<field name="arLayoutID" type="I">
-		<unsigned />
-		<notnull />
-		<default value="0" />
-	</field>
-	<field name="arLayoutColumnIndex" type="I">
-		<unsigned />
-		<notnull />
-		<default value="0" />
-	</field>
-	<field name="arID" type="I">
-		<unsigned />
-		<notnull />
-		<default value="0" />
-	</field>
+    <field name="arLayoutColumnID" type="I">
+        <key />
+        <unsigned />
+        <autoincrement/>
+    </field>
+    <field name="arLayoutID" type="I">
+        <unsigned />
+        <notnull />
+        <default value="0" />
+    </field>
+    <field name="arLayoutColumnIndex" type="I">
+        <unsigned />
+        <notnull />
+        <default value="0" />
+    </field>
+    <field name="arID" type="I">
+        <unsigned />
+        <notnull />
+        <default value="0" />
+    </field>
   <field name="arLayoutColumnDisplayID" type="I">
     <default value="0" />
   </field>
@@ -1271,7 +1271,7 @@
     <index name="atHandle">
       <UNIQUE/>
       <col>atHandle</col>
-    </index>    
+    </index>
   </table>
   <table name="AttributeValues">
     <field name="avID" type="I" size="10">
@@ -1460,7 +1460,7 @@
       <unsigned/>
     </field>
  <field name="btCachedBlockRecord" type="X2"></field>
-  </table> 
+  </table>
   <table name="CollectionVersionBlocksOutputCache">
     <field name="cID" type="I" size="10">
       <KEY/>
@@ -1890,6 +1890,24 @@
     <field name="css_class" type="C" size="128"/>
     <field name="css_serialized" type="X"/>
     <field name="css_custom" type="X"/>
+  </table>
+  <table name="StyleCustomizerValueLists">
+    <field name="scvlID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+  </table>
+  <table name="StyleCustomizerValues">
+    <field name="scvID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="scvlID" type="I" size="10">
+      <unsigned/>
+    </field>
+    <field name="value" type="X" />
   </table>
   <table name="PermissionKeys">
     <field name="pkID" type="I" size="10">
@@ -2684,7 +2702,7 @@
       <deftimestamp/>
     </field>
   </table>
-  
+
 
   <table name="UserPointActions">
     <field name="upaID" type="I" size="11">
@@ -2745,7 +2763,7 @@
       <unsigned/>
     </field>
   </table>
-  
+
   <table name="SystemContentEditorSnippets">
     <field name="scsHandle" type="C" size="64">
       <key/>
