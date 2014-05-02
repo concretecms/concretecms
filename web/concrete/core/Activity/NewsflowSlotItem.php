@@ -10,7 +10,7 @@ class NewsflowSlotItem {
     /**
      * @param $content
      */
-    public function __construct($content)
+    public function __construct($content = null)
     {
 		$this->content = $content;
 	}
@@ -36,7 +36,7 @@ class NewsflowSlotItem {
      * </code>
      * @return NewsflowSlotItem[] Returns an associative array of NewsflowSlotItems
      */
-    public static function parseResponse($response) {
+    public function parseResponse($response) {
 		$slots = array();
 		try {
             $json = new Json();

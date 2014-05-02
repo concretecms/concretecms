@@ -63,7 +63,7 @@ class NewsflowItem {
      * @param mixed $date todo: needs type fixed
      * @param string $description
      */
-    public function __construct($id, $title, $content, $date, $description)
+    public function __construct($id = null, $title = null, $content = null, $date = null, $description = null)
     {
         $this->id = $id;
         $this->title = $title;
@@ -83,10 +83,10 @@ class NewsflowItem {
      *  'description': value
      * }
      * </code>
-     * @return NewsflowItem Returns the NewsflowItem if one could be created from the response, otherwise throws an exception
+     * @return NewsflowItem Returns a new NewsflowItem if one could be created from the response, otherwise throws an exception
      * @throws \Exception
      */
-    public static function parseResponse($response)
+    public function parseResponse($response)
     {
 		try {
             $json = new Json();
