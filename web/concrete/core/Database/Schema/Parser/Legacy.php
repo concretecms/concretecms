@@ -9,18 +9,11 @@ class Legacy extends XmlParser {
 	 * Doctrine DBAL Schema
 	 */
 	public function parse(\Concrete\Core\Database\Connection $db) {
-        $sm = $db->getSchemaManager();
-        $schemaTables = $sm->listTables();
-        $existingTables = array();
-        foreach($schemaTables as $table) {
-            $existingTables[] = $table->getName();
-        }
-
 		$x = $this->rawXML;
 		$schema = new \Doctrine\DBAL\Schema\Schema();
 		foreach($x->table as $t) {
 
-            if (in_array(strtolower((string) $t['name']), array_map('strtolower', $existingTables))) {
+            if ($db->tableExists($t['name'])) {
 				continue;
 			}
 			$table = $schema->createTable((string) $t['name']);
