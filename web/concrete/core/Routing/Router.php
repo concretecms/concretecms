@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Routing;
 use \Symfony\Component\Routing\RouteCollection as SymfonyRouteCollection;
 use Request;
@@ -6,32 +6,21 @@ use Loader;
 
 class Router {
 
-	static $instance = null;
 	protected $collection;
 	protected $request;
+	protected $themePaths = array();
 	public $routes = array();
 
-	protected function __construct() {
+	public function __construct() {
 		$this->collection = new SymfonyRouteCollection();
 	}
 
 	public function getList() {
 		return $this->collection;
 	}
-	
+
 	public function setRequest(Request $req) {
 		$this->request = $req;
-	}
-	
-	/** 
-	 * Returns an instance of the Router object
-	 * @return Router
-	 */
-	public static function getInstance() {
-		if (null === static::$instance) {
-			static::$instance = new static;
-		}
-		return static::$instance;
 	}
 
 	public function register($rtPath, $callback, $rtHandle = null, $additionalAttributes = array()) {
@@ -75,7 +64,7 @@ class Router {
 	}
 
 	/**
-	 * This grabs the theme for a particular path, if one exists in the themePaths array 
+	 * This grabs the theme for a particular path, if one exists in the themePaths array
 	 * @param string $path
 	 * @return string|boolean
 	*/
