@@ -6,6 +6,8 @@ use Package;
 use Environment;
 use Marketplace;
 use Concrete\Core\File\Service\File;
+use Concrete\Core\Activity\NewsflowItem;
+use Concrete\Core\Activity\NewsflowSlotItem;
 
 /**
  * Class Newsflow
@@ -24,36 +26,12 @@ class Newsflow
     protected $connectionError = false;
     protected $slots = null;
 
-    /**
-     * @return self Returns a singleton for this class
-     */
-    public static function getInstance()
-    {
-        static $instance = null;
-        if ($instance === null) {
-            $m = __CLASS__;
-            $instance = new $m;
-        }
-        return $instance;
-    }
-
-    /**
-     * protected constructor to prevent instances other than the singleton
-     */
-    protected function __construct()
+    public function __construct()
     {
         if (defined('ENABLE_APP_NEWS') && ENABLE_APP_NEWS == false) {
             $this->connectionError = Newsflow::E_NEWSFLOW_SUPPORT_MANUALLY_DISABLED;
             return;
         }
-    }
-
-    /**
-     * protected clone function to prevent instances other than the singleton
-     */
-    protected function __clone()
-    {
-        //we don't want clones of our singleton running around
     }
 
     /**
@@ -84,7 +62,8 @@ class Newsflow
             $cfToken = Marketplace::getSiteToken();
             $path = NEWSFLOW_URL . '/' . DISPATCHER_FILENAME . '/?_ccm_view_external=1&cID=' . rawurlencode($cID) . '&cfToken=' . rawurlencode($cfToken);
             $response = $fileService->getContents($path);
-            $obj = NewsflowItem::parseResponse($response);
+            $ni = new NewsflowItem();
+            $obj = $ni->parseResponse($response);
             return $obj;
         }
         return false;
@@ -97,14 +76,14 @@ class Newsflow
      */
     public function getEditionByPath($cPath)
     {
-        $ni = self::getInstance();
         $cPath = trim($cPath, '/');
-        if (!$ni->hasConnectionError()) {
+        if (!$this->hasConnectionError()) {
             $fileService = new File();
             $cfToken = Marketplace::getSiteToken();
             $path = NEWSFLOW_URL . '/' . DISPATCHER_FILENAME . '/' . $cPath . '/-/view_external?cfToken=' . rawurlencode($cfToken);
             $response = $fileService->getContents($path);
-            $obj = NewsflowItem::parseResponse($response);
+            $ni = new NewsflowItem();
+            $obj = $ni->parseResponse($response);
             return $obj;
         }
         return false;
@@ -121,7 +100,8 @@ class Newsflow
             $cfToken = Marketplace::getSiteToken();
             $path = NEWSFLOW_SLOT_CONTENT_URL . '?cfToken=' . rawurlencode($cfToken);
             $response = $fileService->getContents($path);
-            $this->slots = NewsflowSlotItem::parseResponse($response);
+            $nsi = new NewsflowSlotItem();
+            $this->slots = $nsi->parseResponse($response);
         }
         return $this->slots;
     }

@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Block\DashboardNewsflowLatest;
+use Concrete\Controller\SinglePage\Dashboard\News;
 use Loader;
 use \Concrete\Core\Block\BlockController;
 use \Concrete\Core\Activity\Newsflow;
@@ -28,13 +29,14 @@ class Controller extends BlockController {
 	}
 
     public function view() {
+        $newsflow = new Newsflow();
 		// get the latest data as well
-		$slots = Newsflow::getInstance()->getSlotContents();
+		$slots = $newsflow->getSlotContents();
 		$this->set('slot', $slots[$this->slot]);
 		
 		// this is kind of a hack
 		if ($this->slot == 'C') { 
-			$ni = Newsflow::getInstance()->getEditionByPath('/newsflow');
+			$ni = $newsflow->getEditionByPath('/newsflow');
 			if ($ni !== false) {
 				$this->set('editionTitle', $ni->getTitle());
 				$this->set('editionDescription', $ni->getDescription());
