@@ -86,5 +86,133 @@ div.ccm-style-customizer-palette {
         text-align: center;
         padding: 8px 0px 8px 0px;
     }
+}
+
+
+div.ccm-widget-colorpicker {
+
+    &.sp-container {
+        .border-radius(4px);
+        border: 0px;
+        background-color: rgba(0,0,0,0.95);
+
+        .sp-picker-container {
+            border-left: 0px;
+
+            .sp-color,
+            .sp-alpha,
+            .sp-initial,
+            .sp-hue {
+                border: 2px solid #232323;
+                .border-radius(4px);
+
+                .sp-alpha-inner {
+                    border: 0px;
+                }
+            }
+
+            .sp-slider {
+                .border-radius(6px);
+            }
+
+            .sp-alpha {
+                height: 4px;
+                background-color: #232323;
+                background-image: none;
+            }
+
+            .sp-input-container {
+                float: none;
+                width: 100%;
+
+                .sp-input {
+                    outline: 0px;
+                    border: 1px solid #666;
+
+                    &:focus {
+                        border: 1px solid #666;
+                        .box-shadow(none);
+                        outline: 0px;
+                    }
+                }
+            }
+
+            .sp-alpha-handle {
+                border: none;
+                .border-radius(6px);
+                width: 12px;
+                height: 12px;
+                top: -4px;
+                background-color: #888 !important;
+                outline: none !important;
+                background-image: none;
+
+            }
+
+            a.sp-cancel {
+                float: left;
+                color: #777 !important;
+                font-weight: bold;
+                font-size: 12px;
+                font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                text-transform: capitalize;
+
+                &:hover {
+                    text-decoration: none;
+                    color: rgb(235, 54, 54) !important;
+                }
+            }
+
+            .sp-button-container {
+                display: block;
+                padding-top: 5px;
+                float: none;
+
+                button.sp-choose {
+                    float: right;
+                    color: #777;
+                    font-weight: bold;
+                    font-size: 12px;
+                    border: none !important;
+                    text-shadow: none !important;
+                    background-color: transparent !important;
+                    background-image: none !important;
+                    padding: 0px;
+                    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                    text-transform: capitalize;
+
+                    &:hover {
+                        text-decoration: none;
+                        color: #0c6;
+                    }
+
+                    &:focus {
+                        outline: none;
+                    }
+
+                    &:active {
+                        outline: none;
+                    }
+                }
+            }
+
+            .sp-initial {
+
+                span {
+                    width: 172px;
+                    .border-radius(4px);
+                }
+                float: none;
+                width: 100%;
+
+                div.sp-palette-row-initial {
+                    > span:first-child {
+                        display: none;
+                    }
+                }
+
+            }
+        }
+    }
 
 }

@@ -28,6 +28,9 @@ class Color {
         $strOptions = '';
         $i = 0;
         $options['value'] = $value;
+        $options['className'] = 'ccm-widget-colorpicker';
+        $options['showInitial'] = true;
+        $options['showInput'] = true;
         $strOptions = json_encode($options);
 
         print "<input type=\"text\" name=\"{$inputName}\" value=\"{$value}\" id=\"ccm-colorpicker-{$inputName}\" />";
