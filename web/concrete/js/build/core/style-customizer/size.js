@@ -58,7 +58,7 @@
         var my = this;
         my.setValue('size', my.$widget.find('div[data-style-customizer-field=size] div.ccm-style-customizer-slider').slider('value'));
         my.updateSwatch();
-        ConcreteEvent.publish('StyleCustomizerSave');
+        ConcreteEvent.publish('StyleCustomizerControlUpdate');
         my.closeSelector(e);
     }
 

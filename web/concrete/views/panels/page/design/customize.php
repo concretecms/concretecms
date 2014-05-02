@@ -128,20 +128,23 @@ $pk = PermissionKey::getByHandle('customize_themes');
             return false;
         });
         $('div[data-panel-menu-id=page-design-presets]').on('change', $('input[type=radio]'), function() {
-            var panel = ConcretePanelManager.getByIdentifier('page');
-            var $panel = $('#' + panel.getDOMID());
-            var url = "<?=URL::to('/ccm/system/panels/page/design/customize', $theme->getThemeID())?>?cID=<?=$c->getCollectionID()?>";
-            var content = $(this).closest('div.ccm-panel-content');
-            $.concreteAjax({
-                url: url,
-                dataType: 'html',
-                data: {'handle': $(this).find(':checked').val()},
-                success: function(r) {
-                    content.html(r);
-                    panel.onPanelLoad(this);
-                    ConcreteEvent.publish('StyleCustomizerSave');
-                }
-            });
+            var selectedpreset = $('div[data-panel-menu-id=page-design-presets] input[type=radio]:checked');
+            if (selectedpreset.length) {
+                var panel = ConcretePanelManager.getByIdentifier('page');
+                var $panel = $('#' + panel.getDOMID());
+                var url = "<?=URL::to('/ccm/system/panels/page/design/customize', $theme->getThemeID())?>?cID=<?=$c->getCollectionID()?>";
+                var content = $(this).closest('div.ccm-panel-content');
+                $.concreteAjax({
+                    url: url,
+                    dataType: 'html',
+                    data: {'handle': $(this).find(':checked').val()},
+                    success: function(r) {
+                        content.html(r);
+                        panel.onPanelLoad(this);
+                        $('form[data-form=panel-page-design-customize]').submit();
+                    }
+                });
+            }
         });
         $('div.ccm-panel-page-design-customize-style-set').on('click', 'h5', function() {
             var $list = $(this).parent().find('> ul');
@@ -191,9 +194,10 @@ $pk = PermissionKey::getByHandle('customize_themes');
             return false;
         });
 
-        ConcreteEvent.unsubscribe('StyleCustomizerSave');
-        ConcreteEvent.subscribe('StyleCustomizerSave', function() {
+        ConcreteEvent.unsubscribe('StyleCustomizerControlUpdate');
+        ConcreteEvent.subscribe('StyleCustomizerControlUpdate', function() {
             $('form[data-form=panel-page-design-customize]').submit();
+            $('div[data-panel-menu-id=page-design-presets] input[type=radio]').prop('checked', false);
         })
     });
 </script>

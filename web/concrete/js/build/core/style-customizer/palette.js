@@ -105,7 +105,7 @@
             var my = this;
             my.updateSwatch();
             my.closeSelector(e);
-            ConcreteEvent.publish('StyleCustomizerSave');
+            ConcreteEvent.publish('StyleCustomizerControlUpdate');
         }
     }
 
