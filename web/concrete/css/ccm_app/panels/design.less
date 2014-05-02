@@ -200,27 +200,33 @@ div#ccm-panel-page-design-themes {
                 color: #737c8e;
                 border-bottom: 1px solid #1f2022;
 
-                div.ccm-style-customizer-typography-swatch-wrapper,
-                div.ccm-style-customizer-image {
+                span.ccm-style-customizer-display-swatch-wrapper {
                     position: absolute;
                     cursor: pointer;
                     right: 30px;
-                    left: auto;
                     top: 16px;
                     height: 28px;
                     width: 28px;
-                    padding: 0px;
-                    text-align: center;
-                    .border-radius(4px);
-                    background-color: #8d8d8d;
-                    color: #1d1d1b;
-                    line-height: 28px;
-                    span {
-                        vertical-align: middle;
-                    }
-                    border: 1px solid #333;
-                    &:hover {
-                        border: 1px solid #fff;
+                    display: inline-block;
+
+                    span.ccm-style-customizer-display-swatch {
+                        display: inline-block;
+                        width: 28px;
+                        height: 28px;
+                        padding: 0px;
+                        text-align: center;
+                        .border-radius(4px);
+                        background-color: #8d8d8d;
+                        color: #1d1d1b;
+                        span, i{
+                            line-height: 28px;
+                            vertical-align: middle;
+                        }
+                        border: 1px solid #333;
+                        &:hover {
+                            border: 1px solid #fff;
+                        }
+
                     }
                 }
 

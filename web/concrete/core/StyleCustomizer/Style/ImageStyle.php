@@ -19,9 +19,9 @@ class ImageStyle extends Style {
         }
         $strOptions = json_encode($options);
 
-        print '<div data-image-selector="' . $this->getVariable() . '"></div>';
+        print '<span class="ccm-style-customizer-display-swatch-wrapper" data-image-selector="' . $this->getVariable() . '"></span>';
         print "<script type=\"text/javascript\">";
-        print "$(function() { $('div[data-image-selector=" . $this->getVariable() . "]').concreteStyleCustomizerImageSelector({$strOptions}); });";
+        print "$(function() { $('span[data-image-selector=" . $this->getVariable() . "]').concreteStyleCustomizerImageSelector({$strOptions}); });";
         print "</script>";
     }
 

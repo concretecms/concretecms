@@ -13,13 +13,18 @@
                 'unit': 'px',
                 'value': 0,
                 'appendTo': document.body
-            }, options);
+            }, options),
+            step = 1;
 
         ConcreteStyleCustomizerPalette.call(my, $element, options);
         my.$slider = my.$widget.find('div.ccm-style-customizer-slider');
+        if (my.options.unit == 'em') {
+            step = 0.1;
+        }
         my.$slider.slider({
             min: 0,
             max: 400,
+            step: step,
             value: my.options.value,
             create: function (e, ui) {
                 $(this).parent().find('span').html(my.options.value + my.options.unit);
@@ -32,19 +37,19 @@
 
     ConcreteSizeSelector.prototype = Object.create(ConcreteStyleCustomizerPalette.prototype);
 
-    ConcreteSizeSelector.prototype.chooseTemplate = '<div data-launch="style-customizer-palette">' +
+    ConcreteSizeSelector.prototype.chooseTemplate = '<span data-launch="style-customizer-palette">' +
         '<input type="hidden" name="<%=options.inputName%>[size]" value="<%=options.value%>" data-style-customizer-input="size" />' +
         '<input type="hidden" name="<%=options.inputName%>[unit]" value="<%=options.unit%>" />' +
-        '<div class="ccm-style-customizer-size"><%=options.value + options.unit%></div></div>';
+        '<span><%=options.value + options.unit%></span></span>';
 
-    ConcreteSizeSelector.prototype.selectorWidgetTemplate = '<div class="ccm-ui ccm-style-customizer-palette">' +
+    ConcreteSizeSelector.prototype.selectorWidgetTemplate = '<div class="ccm-ui ccm-style-customizer-palette ccm-style-customizer-palette-large">' +
         '<div><label>Size</label><div data-style-customizer-field="size"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><%=options.value%><%=options.unit%></span></div></div>' +
         '<div class="ccm-style-customizer-palette-actions"><button class="btn btn-primary">Save</button></div>' +
         '</div>';
 
     ConcreteSizeSelector.prototype.updateSwatch = function() {
         var my = this,
-            $swatch = my.$element.find('div.ccm-style-customizer-size');
+            $swatch = my.$element.find('span[data-launch=style-customizer-palette] span');
 
         $swatch.html(my.getValue('size') + my.options.unit);
     }

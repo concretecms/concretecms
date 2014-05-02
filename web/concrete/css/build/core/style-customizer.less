@@ -4,12 +4,21 @@
 @import "../../ccm_app/mixins.less";
 
 div.ccm-style-customizer-palette {
+
+    &.ccm-style-customizer-palette-large {
+        width: 500px;
+
+        div.ccm-style-customizer-slider {
+            width: 440px;
+        }
+    }
+
     border: 1px solid black;
     width: 220px;
     padding: 10px;
     z-index: @index-level-panel-select-widget;
     display: none;
-    position: fixed;
+    position: absolute;
     top: 0px;
     left: 0px;
     background-color: #020202;
