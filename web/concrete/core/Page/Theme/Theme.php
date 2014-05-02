@@ -238,6 +238,10 @@ class Theme extends Object {
         $r = $env->getRecord(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_CSS . '/' . $stylesheet, $this->getPackageHandle());
 
         $stylesheet = new \Concrete\Core\StyleCustomizer\Stylesheet($stylesheet, $r->file, $r->url, $output, $relative);
+        $scl = $this->getThemeCustomStyleValueList();
+        if (is_object($scl)) {
+            $stylesheet->setValueList($scl);
+        }
         return $stylesheet;
     }
     /**
@@ -252,6 +256,36 @@ class Theme extends Object {
             $stylesheet->output();
         }
         return $stylesheet->getOutputRelativePath();
+    }
+
+    /**
+     * Saves a custom value list against a theme.
+     */
+    public function saveThemeCustomValueList(\Concrete\Core\StyleCustomizer\Style\ValueList $valueList) {
+        $db = Loader::db();
+        $db->delete('PageThemeCustomStyles', array('pThemeID' => $this->getThemeID()));
+        $db->insert('PageThemeCustomStyles', array('pThemeID' => $this->getThemeID(), 'scvlID' => $valueList->getValueListID()));
+
+        // now we reset all cached css files in this theme
+        $sheets = $this->getThemeCustomizableStyleSheets();
+        foreach($sheets as $s) {
+            $s->clearOutputFile();
+        }
+
+    }
+
+    /**
+     * Returns a custom ValueList of style customizer values for this theme.
+     */
+    public function getThemeCustomStyleValueList() {
+        $db = Loader::db();
+        $scvlID = $db->GetOne('select scvlID from PageThemeCustomStyles where pThemeID = ?', array($this->getThemeID()));
+        if ($scvlID > 0) {
+            $scl = \Concrete\Core\StyleCustomizer\Style\ValueList::getByID($scvlID);
+            if (is_object($scl)) {
+                return $scl;
+            }
+        }
     }
 
     /**

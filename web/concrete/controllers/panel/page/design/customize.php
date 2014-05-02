@@ -54,6 +54,11 @@ class Customize extends BackendInterfacePageController {
             });
 
             $styleList = $pt->getThemeCustomizableStyleList();
+            $valueList = $pt->getThemeCustomStyleValueList();
+            if (!is_object($valueList) || $this->request->request->has('handle')) {
+                $valueList = $selectedPreset->getStyleValueList();
+            }
+            $this->set('valueList', $valueList);
             $this->set('presets', $presets);
             $this->set('selectedPreset', $selectedPreset);
             $this->set('styleSets', $styleList->getSets());
@@ -63,7 +68,7 @@ class Customize extends BackendInterfacePageController {
         }
     }
 
-    public function preview($pThemeID) {
+    protected function getValueListFromRequest($pThemeID) {
         $pt = PageTheme::getByID($pThemeID);
         $styles = $pt->getThemeCustomizableStyleList();
         // now we loop through all the styles and get values from the post.
@@ -77,7 +82,11 @@ class Customize extends BackendInterfacePageController {
                 }
             }
         }
+        return $vl;
+    }
 
+    public function preview($pThemeID) {
+        $vl = $this->getValueListFromRequest($pThemeID);
         $pt = PageTheme::getByID($pThemeID);
         $pt->setStylesheetCacheRelativePath(REL_DIR_FILES_CACHE . '/preview');
         $pt->setStylesheetCachePath(DIR_FILES_CACHE . '/preview');
@@ -101,6 +110,20 @@ class Customize extends BackendInterfacePageController {
         $content = $view->render();
         $response->setContent($content);
         return $response;
+    }
+
+    public function apply_to_site($pThemeID) {
+        $pk = PermissionKey::getByHandle('customize_themes');
+        if ($this->validateAction() && $pk->can()) {
+            $vl = $this->getValueListFromRequest($pThemeID);
+            $pt = PageTheme::getByID($pThemeID);
+            $vl->save();
+            $pt->saveThemeCustomValueList($vl);
+            $r = new PageEditResponse();
+            $r->setPage($this->page);
+            $r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $this->page->getCollectionID());
+            $r->outputJSON();
+        }
     }
 
     /*
@@ -139,50 +162,6 @@ class Customize extends BackendInterfacePageController {
         }
     }
 
-
-    public function apply_to_site($pThemeID) {
-        $pk = PermissionKey::getByHandle('customize_themes');
-        if ($this->validateAction() && $pk->can()) {
-            $pt = PageTheme::getByID($pThemeID);
-            $values = $pt->mergeStylesFromPost($_POST);
-            $pt->saveEditableStyles($values);
-            $r = new PageEditResponse();
-            $r->setPage($this->page);
-            $r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $this->page->getCollectionID());
-            $r->outputJSON();
-        }
-    }
-
-    public function preview($pThemeID) {
-        $req = Request::getInstance();
-        $req->setCurrentPage($this->page);
-        $controller = $this->page->getPageController();
-        $view = $controller->getViewObject();
-        $pt = PageTheme::getByID($pThemeID);
-        $view->setCustomPageTheme($pt);
-        $sheets = $pt->getStyleSheets();
-        $styleMap = array();
-        $u = new User();
-        $date = date('Y-m-d H:i');
-        foreach($sheets as $file) {
-            ob_start();
-            $values = $pt->mergeStylesFromPost($_POST);
-            $pt->outputStyleSheet($file, $values);
-            $tmpFile = md5($u->getUserID() . ':' . $date . ':' . $file) . '.css';
-            $styleMap[$file] = DIRNAME_PREVIEW . '/' . $tmpFile . '?' . time();
-            $cacheFile = DIR_FILES_CACHE . '/' . DIRNAME_CSS . '/' . $pt->getThemeHandle() . '/' . DIRNAME_PREVIEW . '/' . $tmpFile;
-            if (!file_exists(dirname($cacheFile))) {
-                mkdir(dirname($cacheFile), DIRECTORY_PERMISSIONS_MODE, true);
-            }
-            $r = file_put_contents($cacheFile, ob_get_contents());
-            ob_end_clean();
-        }
-        $req->setCustomRequestUser(-1);
-        $response = new Response();
-        $content = $view->render();
-        $response->setContent($content);
-        return $response;
-    }
     */
 
 }

@@ -42,11 +42,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
             <? foreach($set->getStyles() as $style) { ?>
                 <li><?=$style->getName()?>
                 <?
-                $value = $c->getCustomStyleValueObject($style);
-                if (!is_object($value)) {
-                    $valueList = $selectedPreset->getStyleValueList();
-                    $value = $style->getValueFromList($valueList);
-                }
+                $value = $style->getValueFromList($valueList);
                 ?>
                 <?=$style->render($value)?>
                 </li>

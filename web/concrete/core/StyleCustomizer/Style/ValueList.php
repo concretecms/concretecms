@@ -11,6 +11,11 @@ class ValueList {
         return $this->values;
     }
 
+    public function getValueListID()
+    {
+        return $this->scvlID;
+    }
+
     public static function loadFromLessFile($file, $urlroot = false) {
         $l = new Less_Parser();
         $parser = $l->parseFile($file, $urlroot, true);
@@ -25,9 +30,19 @@ class ValueList {
         return $vl;
     }
 
-    public function addValue(\Concrete\Core\StyleCustomizer\Style\Value\Value $value)
+    public static function getByID($scvlID)
     {
-        $this->values[] = $value;
+        $db = Database::get();
+        $scvlID = $db->GetOne('select scvlID from StyleCustomizerValueLists where scvlID = ?', array($scvlID));
+        if ($scvlID) {
+            $o = new static();
+            $o->scvlID = $scvlID;
+            $rows = $db->fetchAll('select * from StyleCustomizerValues where scvlID = ?', array($scvlID));
+            foreach($rows as $row) {
+                $o->addValue(unserialize($row['value']));
+            }
+        }
+        return $o;
     }
 
     public function save()
@@ -43,6 +58,11 @@ class ValueList {
         foreach($this->values as $value) {
             $db->insert('StyleCustomizerValues', array('value' => serialize($value), 'scvlID' => $this->scvlID));
         }
+    }
+
+    public function addValue(\Concrete\Core\StyleCustomizer\Style\Value\Value $value)
+    {
+        $this->values[] = $value;
     }
 
     public function addValues($values) {

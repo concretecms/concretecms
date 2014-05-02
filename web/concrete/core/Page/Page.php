@@ -1370,10 +1370,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $db->Execute('delete from CollectionVersionThemeStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
     }
 
-    public function getCustomStyleValueObject(\Concrete\Core\StyleCustomizer\Style\Style $style) {
-        return false;
-    }
-
     public function writePageThemeCustomizations() {
         return false;
     }

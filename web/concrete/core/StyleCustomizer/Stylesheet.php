@@ -49,6 +49,10 @@ class Stylesheet {
         file_put_contents($this->getOutputPath(), $css);
     }
 
+    public function clearOutputFile() {
+        unlink($this->getOutputPath());
+    }
+
     public function outputFileExists() {
         return file_exists($this->getOutputPath());
     }
