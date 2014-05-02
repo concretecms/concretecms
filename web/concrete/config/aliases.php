@@ -73,5 +73,8 @@ return array(
 	'FacebookAuthenticationTypeController' => '\Concrete\Core\Authentication\Type\Facebook',
 	'GroupTree' => '\Concrete\Core\Tree\Type\Group',
 	'GroupTreeNode' => '\Concrete\Core\Tree\Node\Type\Group',
-	'Zend_Queue_Adapter_Concrete5' => '\Concrete\Core\Utility\ZendQueueAdapter'
+	'Zend_Queue_Adapter_Concrete5' => '\Concrete\Core\Utility\ZendQueueAdapter',
+	'Loader' => '\Concrete\Core\Legacy\Loader',
+	'TaskPermission' => '\Concrete\Core\Legacy\TaskPermission',
+	'FilePermissions' => '\Concrete\Core\Legacy\FilePermissions'
 );
