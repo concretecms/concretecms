@@ -25,7 +25,7 @@ class ColorStyle extends Style {
 
         print "<input type=\"text\" name=\"{$inputName}[color]\" value=\"{$color}\" id=\"ccm-colorpicker-{$inputName}\" />";
         print "<script type=\"text/javascript\">";
-        print "$(function() { $('#ccm-colorpicker-{$inputName}').spectrum({showAlpha: true, value: '{$color}', change: function() {ConcreteEvent.publish('StyleCustomizerSave');}});});";
+        print "$(function() { $('#ccm-colorpicker-{$inputName}').spectrum({showInput: true, showInitial: true, className: 'ccm-widget-colorpicker', showAlpha: true, value: '{$color}', change: function() {ConcreteEvent.publish('StyleCustomizerSave');}});});";
         print "</script>";
     }
 

@@ -44,7 +44,10 @@
         my.$colorpicker = my.$widget.find('input[data-style-customizer-field=color]');
         my.$colorpicker.spectrum({
             'preferredFormat': 'rgb',
-            'showAlpha': true
+            'showAlpha': true,
+            'className': 'ccm-widget-colorpicker',
+            'showInitial': true,
+            'showInput': true
         });
 
         my.$fontMenu.on('change', function() {
