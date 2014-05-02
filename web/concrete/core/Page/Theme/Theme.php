@@ -33,9 +33,11 @@ class Theme extends Object {
 
     const E_THEME_INSTALLED = 1;
     const THEME_EXTENSION = ".php";
-    const THEME_PRESET_EXTENSION = ".less";
+    const THEME_CUSTOMIZABLE_STYLESHEET_EXTENSION = ".less";
     const FILENAME_TYPOGRAPHY_CSS = "typography.css";
-    const FILENAME_EXTENSION_CSS = "css";
+
+    protected $stylesheetCachePath = DIR_FILES_CACHE;
+    protected $stylesheetCacheRelativePath = REL_DIR_FILES_CACHE;
 
     public function registerAssets() {}
 
@@ -171,7 +173,7 @@ class Theme extends Object {
     public function getThemeCustomizablePreset($handle) {
         $env = Environment::get();
         if ($this->isThemeCustomizable()) {
-            $file = $env->getRecord(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_CSS . '/' . DIRNAME_STYLE_CUSTOMIZER_PRESETS . '/' . $handle . static::THEME_PRESET_EXTENSION, $this->getPackageHandle());
+            $file = $env->getRecord(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_CSS . '/' . DIRNAME_STYLE_CUSTOMIZER_PRESETS . '/' . $handle . static::THEME_CUSTOMIZABLE_STYLESHEET_EXTENSION, $this->getPackageHandle());
             if ($file->exists()) {
                 $urlroot = $env->getURL(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_CSS, $this->getPackageHandle());
                 $preset = Preset::getFromFile($file->file, $urlroot);
@@ -193,7 +195,7 @@ class Theme extends Object {
             $dh = Loader::helper('file');
             $files = $dh->getDirectoryContents($directory);
             foreach($files as $f) {
-                if (strrchr($f, '.') == static::THEME_PRESET_EXTENSION) {
+                if (strrchr($f, '.') == static::THEME_CUSTOMIZABLE_STYLESHEET_EXTENSION) {
                     $preset = Preset::getFromFile($directory . '/' . $f, $urlroot);
                     if (is_object($preset)) {
                         $presets[] = $preset;
@@ -210,6 +212,48 @@ class Theme extends Object {
         });
         return $presets;
     }
+
+
+
+    public function getThemeCustomizableStyleSheets() {
+        $sheets = array();
+        $env = Environment::get();
+        if ($this->isThemeCustomizable()) {
+            $directory = $env->getPath(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_CSS, $this->getPackageHandle());
+            $dh = Loader::helper('file');
+            $files = $dh->getDirectoryContents($directory);
+            foreach($files as $f) {
+                if (strrchr($f, '.') == static::THEME_CUSTOMIZABLE_STYLESHEET_EXTENSION) {
+                    $sheets[] = $this->getStylesheetObject($f);
+                }
+            }
+        }
+        return $sheets;
+    }
+
+    public function getStylesheetObject($stylesheet) {
+        $env = Environment::get();
+        $output = $this->getStylesheetCachePath() . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle();
+        $relative = $this->getStylesheetCacheRelativePath() . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle();
+        $r = $env->getRecord(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_CSS . '/' . $stylesheet, $this->getPackageHandle());
+
+        $stylesheet = new \Concrete\Core\StyleCustomizer\Stylesheet($stylesheet, $r->file, $r->url, $output, $relative);
+        return $stylesheet;
+    }
+    /**
+     * Looks into the current CSS directory and returns a fully compiled stylesheet
+     * when passed a LESS stylesheet
+     * @param  string $stylesheet The LESS stylesheet to compile
+     * @return string             The path to the stylesheet.
+     */
+    public function getStylesheet($stylesheet) {
+        $stylesheet = $this->getStylesheetObject($stylesheet);
+        if (!$stylesheet->outputFileExists()) {
+            $stylesheet->output();
+        }
+        return $stylesheet->getOutputRelativePath();
+    }
+
     /**
      * @param string $pThemeHandle
      * @return PageTheme
@@ -428,6 +472,34 @@ class Theme extends Object {
     public function getThemeDirectory() {return $this->pThemeDirectory;}
     public function getThemeURL() {return $this->pThemeURL;}
     public function getThemeEditorCSS() {return $this->pThemeURL . '/' . static::FILENAME_TYPOGRAPHY_CSS;}
+
+    public function setThemeURL($pThemeURL) {
+        $this->pThemeURL = $pThemeURL;
+    }
+
+    public function setThemeDirectory($pThemeDirectory) {
+        $this->pThemeDirectory = $pThemeDirectory;
+    }
+
+    public function setThemeHandle($pThemeHandle) {
+        $this->pThemeHandle = $pThemeHandle;
+    }
+
+    public function setStylesheetCachePath($path) {
+        $this->stylesheetCachePath = $path;
+    }
+
+    public function setStylesheetCacheRelativePath($path) {
+        $this->stylesheetCacheRelativePath = $path;
+    }
+
+    public function getStylesheetCachePath() {
+        return $this->stylesheetCachePath;
+    }
+
+    public function getStylesheetCacheRelativePath() {
+        return $this->stylesheetCacheRelativePath;
+    }
 
     public function isUninstallable() {
         return ($this->pThemeDirectory != DIR_FILES_THEMES_CORE . '/' . $this->getThemeHandle());

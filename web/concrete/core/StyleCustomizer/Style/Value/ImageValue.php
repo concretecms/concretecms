@@ -27,6 +27,12 @@ class ImageValue extends Value {
 
     public function toStyleString()
     {
-        return '';
+        return 'background-image: url(' . $this->getUrl() . ')';
     }
+
+    public function toLessVariablesArray()
+    {
+        return array($this->getVariable() . '-image' => '\'' . $this->getUrl() . '\'');
+    }
+
 }

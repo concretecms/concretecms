@@ -10,285 +10,287 @@ use Loader;
 
 class View extends AbstractView {
 
-	protected $viewPath;
-	protected $innerContentFile;
-	protected $themeHandle;
-	protected $themeObject;
-	protected $themeRelativePath;
-	protected $themeAbsolutePath;
-	protected $themePkgHandle;
-	protected $viewRootDirectoryName = DIRNAME_VIEWS;
+    protected $viewPath;
+    protected $innerContentFile;
+    protected $themeHandle;
+    protected $themeObject;
+    protected $themeRelativePath;
+    protected $themeAbsolutePath;
+    protected $themePkgHandle;
+    protected $viewRootDirectoryName = DIRNAME_VIEWS;
 
-	protected function constructView($path = false) {
-		$path = '/' . trim($path, '/');
-		$this->viewPath = $path;
-	}
+    protected function constructView($path = false) {
+        $path = '/' . trim($path, '/');
+        $this->viewPath = $path;
+    }
 
-	public function getThemeDirectory() {return $this->themeAbsolutePath;}
-	public function getViewPath() {return $this->viewPath;}
-	/**
-	 * gets the relative theme path for use in templates
-	 * @access public
-	 * @return string $themePath
-	*/
-	public function getThemePath() { return $this->themeRelativePath; }
-	public function getThemeHandle() {return $this->themeHandle;}
-	
-	public function setInnerContentFile($innerContentFile) {
-		$this->innerContentFile = $innerContentFile;
-	}
+    public function getThemeDirectory() {return $this->themeAbsolutePath;}
+    public function getViewPath() {return $this->viewPath;}
+    /**
+     * gets the relative theme path for use in templates
+     * @access public
+     * @return string $themePath
+    */
+    public function getThemePath() { return $this->themeRelativePath; }
+    public function getThemeHandle() {return $this->themeHandle;}
 
-	public function setViewRootDirectoryName($directory) {
-		$this->viewRootDirectoryName = $directory;
-	}
+    public function setInnerContentFile($innerContentFile) {
+        $this->innerContentFile = $innerContentFile;
+    }
 
-	public function inc($file, $args = array()) {
-		extract($args);
-		extract($this->getScopeItems());
-		$env = Environment::get();
-		include($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $file, $this->themePkgHandle));
-	}
+    public function setViewRootDirectoryName($directory) {
+        $this->viewRootDirectoryName = $directory;
+    }
 
-	/**
-	 * A shortcut to posting back to the current page with a task and optional parameters. Only works in the context of 
-	 * @param string $action
-	 * @param string $task
-	 * @return string $url
-	 */
-	public function action($action) {
-		$a = func_get_args();
-		$controllerPath = $this->controller->getControllerActionPath();
-		array_unshift($a, $controllerPath);
-		$ret = call_user_func_array(array($this, 'url'), $a);
-		return $ret;
-	}
+    public function inc($file, $args = array()) {
+        extract($args);
+        extract($this->getScopeItems());
+        $env = Environment::get();
+        include($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $file, $this->themePkgHandle));
+    }
 
-	public function setViewTheme($theme) {
-		if (is_object($theme)) {
-			$this->themeHandle = $theme->getPageThemeHandle();
-		} else {
-			$this->themeHandle = $theme;
-		}
-	}
+    /**
+     * A shortcut to posting back to the current page with a task and optional parameters. Only works in the context of
+     * @param string $action
+     * @param string $task
+     * @return string $url
+     */
+    public function action($action) {
+        $a = func_get_args();
+        $controllerPath = $this->controller->getControllerActionPath();
+        array_unshift($a, $controllerPath);
+        $ret = call_user_func_array(array($this, 'url'), $a);
+        return $ret;
+    }
 
-	/** 
-	 * Load all the theme-related variables for which theme to use for this request.
-	 */
-	protected function loadViewThemeObject() {
-		$env = Environment::get();	
-		if ($this->themeHandle) {
-			if ($this->themeHandle != VIEW_CORE_THEME && $this->themeHandle != 'dashboard') {
-				$this->themeObject = PageTheme::getByHandle($this->themeHandle);
-				$this->themePkgHandle = $this->themeObject->getPackageHandle();
-			}
-			$this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle, $this->themePkgHandle);
-			$this->themeRelativePath = $env->getURL(DIRNAME_THEMES . '/' . $this->themeHandle, $this->themePkgHandle);
-		}
-	}
+    public function setViewTheme($theme) {
+        if (is_object($theme)) {
+            $this->themeHandle = $theme->getPageThemeHandle();
+        } else {
+            $this->themeHandle = $theme;
+        }
+    }
 
-	/** 
-	 * Begin the render
-	 */
-	public function start($state) {}
+    /**
+     * Load all the theme-related variables for which theme to use for this request.
+     */
+    protected function loadViewThemeObject() {
+        $env = Environment::get();
+        if ($this->themeHandle) {
+            if ($this->themeHandle != VIEW_CORE_THEME && $this->themeHandle != 'dashboard') {
+                if (!isset($this->themeObject)) {
+                    $this->themeObject = PageTheme::getByHandle($this->themeHandle);
+                    $this->themePkgHandle = $this->themeObject->getPackageHandle();
+                }
+            }
+            $this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle, $this->themePkgHandle);
+            $this->themeRelativePath = $env->getURL(DIRNAME_THEMES . '/' . $this->themeHandle, $this->themePkgHandle);
+        }
+    }
 
-	public function setupRender() {
-		// Set the theme object that we should use for this requested page.
-		// Only run setup if the theme is unset. Usually it will be but if we set it
-		// programmatically we already have a theme.
-		$this->loadViewThemeObject();
-		$env = Environment::get();
-		$this->setInnerContentFile($env->getPath($this->viewRootDirectoryName . '/' . trim($this->viewPath, '/') . '.php', $this->themePkgHandle));
-		if ($this->themeHandle) {
-			if (file_exists(DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php')) {
-				$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php'));
-			} else {
-				$this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $this->themePkgHandle));
-			}
-		}
-	}
+    /**
+     * Begin the render
+     */
+    public function start($state) {}
 
-	public function startRender() {
-		$event = new \Symfony\Component\EventDispatcher\GenericEvent();
-		$event->setArgument('view', $this);
-		Events::dispatch('on_start', $event);
-		parent::startRender();
-	}
+    public function setupRender() {
+        // Set the theme object that we should use for this requested page.
+        // Only run setup if the theme is unset. Usually it will be but if we set it
+        // programmatically we already have a theme.
+        $this->loadViewThemeObject();
+        $env = Environment::get();
+        $this->setInnerContentFile($env->getPath($this->viewRootDirectoryName . '/' . trim($this->viewPath, '/') . '.php', $this->themePkgHandle));
+        if ($this->themeHandle) {
+            if (file_exists(DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php')) {
+                $this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php'));
+            } else {
+                $this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $this->themePkgHandle));
+            }
+        }
+    }
 
-	protected function onBeforeGetContents() {
-		$event = new \Symfony\Component\EventDispatcher\GenericEvent();
-		$event->setArgument('view', $this);
-		Events::dispatch('on_before_render', $event);
+    public function startRender() {
+        $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+        $event->setArgument('view', $this);
+        Events::dispatch('on_start', $event);
+        parent::startRender();
+    }
 
-		if ($this->themeHandle == VIEW_CORE_THEME) {
-			$_pt = new \Concrete\Theme\Concrete\PageTheme();
-			$_pt->registerAssets();
-		} else if (is_object($this->themeObject)) {
-			$this->themeObject->registerAssets();
-		}
-	}
+    protected function onBeforeGetContents() {
+        $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+        $event->setArgument('view', $this);
+        Events::dispatch('on_before_render', $event);
 
-	public function renderViewContents($scopeItems) {
-		extract($scopeItems);
-		if ($this->innerContentFile) {
-			ob_start();
-			include($this->innerContentFile);
-			$innerContent = ob_get_contents();
-			ob_end_clean();
-		}
+        if ($this->themeHandle == VIEW_CORE_THEME) {
+            $_pt = new \Concrete\Theme\Concrete\PageTheme();
+            $_pt->registerAssets();
+        } else if (is_object($this->themeObject)) {
+            $this->themeObject->registerAssets();
+        }
+    }
 
-		if (file_exists($this->template)) {
-			ob_start();
-			$this->onBeforeGetContents();
-			include($this->template);
-			$contents = ob_get_contents();
-			$this->onAfterGetContents();
-			ob_end_clean();
-			return $contents;
-		} else {
-			return $innerContent;
-		}
-	}
+    public function renderViewContents($scopeItems) {
+        extract($scopeItems);
+        if ($this->innerContentFile) {
+            ob_start();
+            include($this->innerContentFile);
+            $innerContent = ob_get_contents();
+            ob_end_clean();
+        }
 
-	public function finishRender($contents) {
-		$event = new \Symfony\Component\EventDispatcher\GenericEvent();
-		$event->setArgument('contents', $contents);
-		Events::dispatch('on_page_output', $event);
+        if (file_exists($this->template)) {
+            ob_start();
+            $this->onBeforeGetContents();
+            include($this->template);
+            $contents = ob_get_contents();
+            $this->onAfterGetContents();
+            ob_end_clean();
+            return $contents;
+        } else {
+            return $innerContent;
+        }
+    }
 
-		$event = new \Symfony\Component\EventDispatcher\GenericEvent();
-		$event->setArgument('view', $this);
-		Events::dispatch('on_render_complete', $event);
+    public function finishRender($contents) {
+        $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+        $event->setArgument('contents', $contents);
+        Events::dispatch('on_page_output', $event);
 
-		return $contents;
-	}
+        $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+        $event->setArgument('view', $this);
+        Events::dispatch('on_render_complete', $event);
 
-	/** 
-	 * Function responsible for outputting header items
-	 * @access private
-	 */
-	public function markHeaderAssetPosition() {
-		print '<!--ccm:assets:' . Asset::ASSET_POSITION_HEADER . '//-->';
-	}
-	
-	/** 
-	 * Function responsible for outputting footer items
-	 * @access private
-	 */
-	public function markFooterAssetPosition() {
-		print '<!--ccm:assets:' . Asset::ASSET_POSITION_FOOTER . '//-->';
-	}
+        return $contents;
+    }
 
-	public function postProcessViewContents($contents) {
-		$responseGroup = ResponseAssetGroup::get();
-		$assets = $responseGroup->getAssetsToOutput();
+    /**
+     * Function responsible for outputting header items
+     * @access private
+     */
+    public function markHeaderAssetPosition() {
+        print '<!--ccm:assets:' . Asset::ASSET_POSITION_HEADER . '//-->';
+    }
 
-		$contents = $this->replaceAssetPlaceholders($assets, $contents);
+    /**
+     * Function responsible for outputting footer items
+     * @access private
+     */
+    public function markFooterAssetPosition() {
+        print '<!--ccm:assets:' . Asset::ASSET_POSITION_FOOTER . '//-->';
+    }
 
-		// replace any empty placeholders
-		$contents = $this->replaceEmptyAssetPlaceholders($contents);
+    public function postProcessViewContents($contents) {
+        $responseGroup = ResponseAssetGroup::get();
+        $assets = $responseGroup->getAssetsToOutput();
 
-		return $contents;
-	}
+        $contents = $this->replaceAssetPlaceholders($assets, $contents);
 
-	protected function postProcessAssets($assets) {
-		$c = Page::getCurrentPage();
-		if (!ENABLE_ASSET_CACHE) {
-			return $assets;
-		}
+        // replace any empty placeholders
+        $contents = $this->replaceEmptyAssetPlaceholders($contents);
 
-		if (!count($assets)) {
-			return array();
-		}
+        return $contents;
+    }
 
-		// goes through all assets in this list, creating new URLs and post-processing them where possible.
-		$segment = 0;
+    protected function postProcessAssets($assets) {
+        $c = Page::getCurrentPage();
+        if (!ENABLE_ASSET_CACHE) {
+            return $assets;
+        }
 
-		for ($i = 0; $i < count($assets); $i++) {
+        if (!count($assets)) {
+            return array();
+        }
 
-			$asset = $assets[$i];
-			$nextasset = $assets[$i+1];
+        // goes through all assets in this list, creating new URLs and post-processing them where possible.
+        $segment = 0;
 
-			$groupedAssets[$segment][] = $asset;
-			if (!($asset instanceof Asset) || !($nextasset instanceof Asset)) {
-				$segment++;
-				continue;
-			}
+        for ($i = 0; $i < count($assets); $i++) {
 
-			if ($asset->getAssetType() != $nextasset->getAssetType()) {
-				$segment++;
-				continue;
-			}
+            $asset = $assets[$i];
+            $nextasset = $assets[$i+1];
 
-			if ($asset->assetSupportsMinification() != $nextasset->assetSupportsMinification()) {
-				$segment++;
-				continue;
-			}
+            $groupedAssets[$segment][] = $asset;
+            if (!($asset instanceof Asset) || !($nextasset instanceof Asset)) {
+                $segment++;
+                continue;
+            }
 
-			if ($asset->assetSupportsCombination() != $nextasset->assetSupportsCombination()) {
-				$segment++;
-				continue;
-			}
+            if ($asset->getAssetType() != $nextasset->getAssetType()) {
+                $segment++;
+                continue;
+            }
 
-		}
+            if ($asset->assetSupportsMinification() != $nextasset->assetSupportsMinification()) {
+                $segment++;
+                continue;
+            }
 
-		$return = array();
-		// now we have a sub assets array with different segments split by whether they can be combined.
+            if ($asset->assetSupportsCombination() != $nextasset->assetSupportsCombination()) {
+                $segment++;
+                continue;
+            }
 
-		foreach($groupedAssets as $segment => $assets) {
-			if ($assets[0] instanceof Asset && $assets[0]->assetSupportsMinification()) {
-				// this entire segment can be post processed together
-				$class = Loader::helper('text')->camelcase($assets[0]->getAssetType()) . 'Asset';
-				$assets = call_user_func(array($class, 'minify'), $assets);
-			} else if ($assets[0] instanceof Asset && $assets[0]->assetSupportsCombination()) {
-				$class = Loader::helper('text')->camelcase($assets[0]->getAssetType()) . 'Asset';
-				$assets = call_user_func(array($class, 'combine'), $assets);
-			}
-			$return = array_merge($return, $assets);
-		}
-		
-		return $return;
-	}
+        }
 
-	protected function replaceEmptyAssetPlaceholders($pageContent) {
-		foreach(array('<!--ccm:assets:' . Asset::ASSET_POSITION_HEADER . '//-->', '<!--ccm:assets:' . Asset::ASSET_POSITION_FOOTER . '//-->') as $comment) {
-			$pageContent = str_replace($comment, '', $pageContent);
-		}
-		return $pageContent;
-	}
+        $return = array();
+        // now we have a sub assets array with different segments split by whether they can be combined.
 
-	protected function replaceAssetPlaceholders($outputAssets, $pageContent) {
-		$outputItems = array();
-		foreach($outputAssets as $position => $assets) {
-			$output = '';
-			$transformed = $this->postProcessAssets($assets);
-			foreach($transformed as $item) {
-				$itemstring = (string) $item;
-				if (!in_array($itemstring, $outputItems)) {
-					$output .= $this->outputAssetIntoView($item);
-					$outputItems[] = $itemstring;
-				}
-			}
-			$pageContent = str_replace('<!--ccm:assets:' . $position . '//-->', $output, $pageContent);
-		}
-		return $pageContent;				
-	}
-	
-	protected function outputAssetIntoView($item) {
-		return $item . "\n";			
-	}
+        foreach($groupedAssets as $segment => $assets) {
+            if ($assets[0] instanceof Asset && $assets[0]->assetSupportsMinification()) {
+                // this entire segment can be post processed together
+                $class = Loader::helper('text')->camelcase($assets[0]->getAssetType()) . 'Asset';
+                $assets = call_user_func(array($class, 'minify'), $assets);
+            } else if ($assets[0] instanceof Asset && $assets[0]->assetSupportsCombination()) {
+                $class = Loader::helper('text')->camelcase($assets[0]->getAssetType()) . 'Asset';
+                $assets = call_user_func(array($class, 'combine'), $assets);
+            }
+            $return = array_merge($return, $assets);
+        }
 
-	public static function element($_file, $args = null, $_pkgHandle= null) {
+        return $return;
+    }
 
-		if (is_array($args)) {
-			$collisions = array_intersect(array('_file', '_pkgHandle'), array_keys($args));
-			if ($collisions) {
-				throw new Exception(t("Illegal variable name '%s' in element args.", implode(', ', $collisions)));
-			}
-			$collisions = null;
-			extract($args);
-		}
-		$view = self::getRequestInstance();
+    protected function replaceEmptyAssetPlaceholders($pageContent) {
+        foreach(array('<!--ccm:assets:' . Asset::ASSET_POSITION_HEADER . '//-->', '<!--ccm:assets:' . Asset::ASSET_POSITION_FOOTER . '//-->') as $comment) {
+            $pageContent = str_replace($comment, '', $pageContent);
+        }
+        return $pageContent;
+    }
 
-		include(Environment::get()->getPath(DIRNAME_ELEMENTS . '/' . $_file . '.php', $_pkgHandle));
-	}
+    protected function replaceAssetPlaceholders($outputAssets, $pageContent) {
+        $outputItems = array();
+        foreach($outputAssets as $position => $assets) {
+            $output = '';
+            $transformed = $this->postProcessAssets($assets);
+            foreach($transformed as $item) {
+                $itemstring = (string) $item;
+                if (!in_array($itemstring, $outputItems)) {
+                    $output .= $this->outputAssetIntoView($item);
+                    $outputItems[] = $itemstring;
+                }
+            }
+            $pageContent = str_replace('<!--ccm:assets:' . $position . '//-->', $output, $pageContent);
+        }
+        return $pageContent;
+    }
+
+    protected function outputAssetIntoView($item) {
+        return $item . "\n";
+    }
+
+    public static function element($_file, $args = null, $_pkgHandle= null) {
+
+        if (is_array($args)) {
+            $collisions = array_intersect(array('_file', '_pkgHandle'), array_keys($args));
+            if ($collisions) {
+                throw new Exception(t("Illegal variable name '%s' in element args.", implode(', ', $collisions)));
+            }
+            $collisions = null;
+            extract($args);
+        }
+        $view = self::getRequestInstance();
+
+        include(Environment::get()->getPath(DIRNAME_ELEMENTS . '/' . $_file . '.php', $_pkgHandle));
+    }
 
 }

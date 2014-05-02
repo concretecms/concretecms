@@ -7,8 +7,24 @@ abstract class Style {
     protected $name;
 
     abstract public function render($value = false);
-    abstract public function getValueFromList(\Concrete\Core\StyleCustomizer\Style\ValueList $list);
+    abstract public function getValuesFromVariables($rules = array());
     abstract public function getValueFromRequest(\Symfony\Component\HttpFoundation\ParameterBag $request);
+
+    public function getValueFromList(\Concrete\Core\StyleCustomizer\Style\ValueList $list) {
+        $type = static::getTypeFromClass($this);
+        foreach($list->getValues() as $value) {
+            if ($value->getVariable() == $this->getVariable() && $type == static::getTypeFromClass($value, 'Value')) {
+                return $value;
+            }
+        }
+    }
+
+    protected static function getTypeFromClass($class, $suffix = 'Style') {
+        $class = get_class($class);
+        $class = substr($class, strrpos($class, '\\') + 1);
+        $type = uncamelcase(substr($class, 0, strrpos($class, $suffix)));
+        return $type;
+    }
 
     public function setName($name) {
         $this->name = $name;

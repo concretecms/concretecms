@@ -27,116 +27,174 @@ class TypeStyle extends Style {
             $args['uppercase'] = $style->getTextTransform() == 'uppercase' ? true : false;
             $fontSize = $style->getFontSize();
             if (is_object($fontSize)) {
-                $args['fontSize'] = array('value' => $fontSize->getSize(), 'unit' => $fontSize->getUnit());
+                $args['fontSizeValue'] = $fontSize->getSize();
+                $args['fontSizeUnit'] = $fontSize->getUnit();
             }
             $letterSpacing = $style->getLetterSpacing();
             if (is_object($letterSpacing)) {
-                $args['letterSpacing'] = array('value' => $letterSpacing->getSize(), 'unit' => $letterSpacing->getUnit());
+                $args['letterSpacingValue'] = $letterSpacing->getSize();
+                $args['letterSpacingUnit'] = $letterSpacing->getUnit();
             }
             $lineHeight = $style->getLineHeight();
             if (is_object($lineHeight)) {
-                $args['lineHeight'] = array('value' => $lineHeight->getSize(), 'unit' => $lineHeight->getUnit());
+                $args['lineHeightValue'] = $lineHeight->getSize();
+                $args['lineHeightUnit'] = $lineHeight->getUnit();
             }
+
         }
         print $fh->output($this->getVariable(), $args, array());
     }
 
-    protected function ruleMatches($rule, $variable) {
-        return $rule->name == '@' . $this->getVariable() . '-type-' . $variable;
-    }
-
     public function getValueFromRequest(\Symfony\Component\HttpFoundation\ParameterBag $request)
     {
+        $type = $request->get($this->getVariable());
+        $tv = new TypeValue($this->getVariable());
+        $tv->setFontFamily($type['font-family']);
+        if ($type['bold']) {
+            $tv->setFontWeight('bold');
+        }
+        if ($type['italic']) {
+            $tv->setFontStyle('italic');
+        }
+        if ($type['underline']) {
+            $tv->setTextDecoration('underline');
+        }
+        if ($type['uppercase']) {
+            $tv->setTextTransform('uppercase');
+        }
 
+        if ($type['color']) {
+            $cv = new \Primal\Color\Parser($type['color']);
+            $result = $cv->getResult();
+            $alpha = false;
+            if ($result->alpha && $result->alpha < 1) {
+                $alpha = $result->alpha;
+            }
+            $cvv = new ColorValue();
+            $cvv->setRed($result->red);
+            $cvv->setGreen($result->green);
+            $cvv->setBlue($result->blue);
+            $cvv->setAlpha($alpha);
+            $tv->setColor($cvv);
+        }
+
+        if ($type['font-size']) {
+            $sv = new SizeValue();
+            $sv->setSize($type['font-size']['size']);
+            if ($type['font-size']['unit']) {
+                $sv->setUnit($type['font-size']['unit']);
+            }
+            $tv->setFontSize($sv);
+        }
+
+        if ($type['letter-spacing']) {
+            $sv = new SizeValue();
+            $sv->setSize($type['letter-spacing']['size']);
+            if ($type['letter-spacing']['unit']) {
+                $sv->setUnit($type['letter-spacing']['unit']);
+            }
+            $tv->setLetterSpacing($sv);
+        }
+
+        if ($type['line-height']) {
+            $sv = new SizeValue();
+            $sv->setSize($type['line-height']['size']);
+            if ($type['line-height']['unit']) {
+                $sv->setUnit($type['line-height']['unit']);
+            }
+            $tv->setLineHeight($sv);
+        }
+
+        return $tv;
     }
 
-    public function getValueFromList(\Concrete\Core\StyleCustomizer\Style\ValueList $list)
+    public function getValuesFromVariables($rules = array())
     {
-        $fv = false;
-        foreach($list->getRules() as $rule) {
-            if ($this->ruleMatches($rule, 'font-family')) {
-                if (!$fv) {
-                    $fv = new TypeValue();
+        $values = array();
+
+        foreach($rules as $rule) {
+            if (preg_match('/@(.+)\-type-font-family/i', $rule->name, $matches)) {
+                if (!$values[$matches[1]]) {
+                    $values[$matches[1]] = new TypeValue($matches[1]);
                 }
                 $value = $rule->value->value[0]->value[0]->value;
-                $fv->setFontFamily($value);
+                $values[$matches[1]]->setFontFamily($value);
             }
-            if ($this->ruleMatches($rule, 'font-weight')) {
-                if (!$fv) {
-                    $fv = new TypeValue();
+            if (preg_match('/@(.+)\-type-font-weight/i', $rule->name, $matches)) {
+                if (!$values[$matches[1]]) {
+                    $values[$matches[1]] = new TypeValue($matches[1]);
                 }
                 $value = $rule->value->value[0]->value[0]->value;
-                $fv->setFontWeight($value);
+                $values[$matches[1]]->setFontWeight($value);
             }
-            if ($this->ruleMatches($rule, 'text-decoration')) {
-                if (!$fv) {
-                    $fv = new TypeValue();
+            if (preg_match('/@(.+)\-type-text-decoration/i', $rule->name, $matches)) {
+                if (!$values[$matches[1]]) {
+                    $values[$matches[1]] = new TypeValue($matches[1]);
                 }
                 $value = $rule->value->value[0]->value[0]->value;
-                $fv->setTextDecoration($value);
+                $values[$matches[1]]->setTextDecoration($value);
             }
 
-            if ($this->ruleMatches($rule, 'text-transform')) {
-                if (!$fv) {
-                    $fv = new TypeValue();
+            if (preg_match('/@(.+)\-type-text-transform/i', $rule->name, $matches)) {
+                if (!$values[$matches[1]]) {
+                    $values[$matches[1]] = new TypeValue($matches[1]);
                 }
                 $value = $rule->value->value[0]->value[0]->value;
-                $fv->setTextTransform($value);
+                $values[$matches[1]]->setTextTransform($value);
             }
-            if ($this->ruleMatches($rule, 'font-style')) {
-                if (!$fv) {
-                    $fv = new TypeValue();
+            if (preg_match('/@(.+)\-type-font-style/i', $rule->name, $matches)) {
+                if (!$values[$matches[1]]) {
+                    $values[$matches[1]] = new TypeValue($matches[1]);
                 }
                 $value = $rule->value->value[0]->value[0]->value;
-                $fv->setFontStyle($value);
+                $values[$matches[1]]->setFontStyle($value);
             }
-            if ($this->ruleMatches($rule, 'color')) {
-                if (!$fv) {
-                    $fv = new TypeValue();
+            if (preg_match('/@(.+)\-type-color/i', $rule->name, $matches)) {
+                if (!$values[$matches[1]]) {
+                    $values[$matches[1]] = new TypeValue($matches[1]);
                 }
                 $value = $rule->value->value[0]->value[0];
                 $cv = ColorStyle::parse($value);
                 if ($cv instanceof ColorValue) {
-                    $fv->setColor($cv);
+                    $values[$matches[1]]->setColor($cv);
                 }
             }
 
-            if ($this->ruleMatches($rule, 'font-size')) {
-                if (!$fv) {
-                    $fv = new TypeValue();
+            if (preg_match('/@(.+)\-type-font-size/i', $rule->name, $matches)) {
+                if (!$values[$matches[1]]) {
+                    $values[$matches[1]] = new TypeValue($matches[1]);
                 }
                 $value = $rule->value->value[0]->value[0];
                 $sv = SizeStyle::parse($value);
                 if ($sv instanceof SizeValue) {
-                    $fv->setFontSize($sv);
+                    $values[$matches[1]]->setFontSize($sv);
                 }
             }
 
-            if ($this->ruleMatches($rule, 'letter-spacing')) {
-                if (!$fv) {
-                    $fv = new TypeValue();
+            if (preg_match('/@(.+)\-type-letter-spacing/i', $rule->name, $matches)) {
+                if (!$values[$matches[1]]) {
+                    $values[$matches[1]] = new TypeValue($matches[1]);
                 }
                 $value = $rule->value->value[0]->value[0];
                 $sv = SizeStyle::parse($value);
                 if ($sv instanceof SizeValue) {
-                    $fv->setLetterSpacing($sv);
+                    $values[$matches[1]]->setLetterSpacing($sv);
                 }
             }
 
-            if ($this->ruleMatches($rule, 'line-height')) {
-                if (!$fv) {
-                    $fv = new TypeValue();
+            if (preg_match('/@(.+)\-type-line-height/i', $rule->name, $matches)) {
+                if (!$values[$matches[1]]) {
+                    $values[$matches[1]] = new TypeValue($matches[1]);
                 }
                 $value = $rule->value->value[0]->value[0];
                 $sv = SizeStyle::parse($value);
                 if ($sv instanceof SizeValue) {
-                    $fv->setLineHeight($sv);
+                    $values[$matches[1]]->setLineHeight($sv);
                 }
             }
-
-
         }
-        return $fv;
+
+        return $values;
     }
 
 

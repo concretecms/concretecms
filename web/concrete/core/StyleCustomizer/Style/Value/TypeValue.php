@@ -106,4 +106,28 @@ class TypeValue extends Value
         return '';
     }
 
+    public function toLessVariablesArray()
+    {
+
+        $variables = array();
+        $variables[$this->getVariable() . '-type-font-family'] = $this->getFontFamily();
+        if (is_object($this->color)) {
+            $variables[$this->getVariable() . '-type-color'] = $this->color->toStyleString();
+        }
+        $variables[$this->getVariable() . '-type-text-decoration'] = $this->getTextDecoration();
+        $variables[$this->getVariable() . '-type-text-tranform'] = $this->getTextTransform();
+        $variables[$this->getVariable() . '-type-font-style'] = $this->getFontStyle();
+        $variables[$this->getVariable() . '-type-font-weight'] = $this->getFontWeight();
+        if (is_object($this->fontSize) && $this->fontSize->getSize()) {
+            $variables[$this->getVariable() . '-font-size'] = $this->fontSize->toStyleString();
+        }
+        if (is_object($this->lineHeight) && $this->lineHeight->getSize()) {
+            $variables[$this->getVariable() . '-line-height'] = $this->lineHeight->toStyleString();
+        }
+        if (is_object($this->letterSpacing) && $this->letterSpacing->getSize()) {
+            $variables[$this->getVariable() . '-letter-spacing'] = $this->letterSpacing->toStyleString();
+        }
+        return $variables;
+    }
+
 }

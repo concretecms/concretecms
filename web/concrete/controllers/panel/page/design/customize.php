@@ -11,6 +11,7 @@ use Request;
 use Loader;
 use User;
 use Response;
+use Core;
 
 class Customize extends BackendInterfacePageController {
 
@@ -53,12 +54,40 @@ class Customize extends BackendInterfacePageController {
         $pt = PageTheme::getByID($pThemeID);
         $styles = $pt->getThemeCustomizableStyleList();
         // now we loop through all the styles and get values from the post.
+        $values = array();
+        $vl = new \Concrete\Core\StyleCustomizer\Style\ValueList();
         foreach($styles->getSets() as $set) {
             foreach($set->getStyles() as $style) {
                 $value = $style->getValueFromRequest($this->request->request);
+                if (is_object($value)) {
+                    $vl->addValue($value);
+                }
             }
         }
-        exit;
+
+        $pt = PageTheme::getByID($pThemeID);
+        $pt->setStylesheetCacheRelativePath(REL_DIR_FILES_CACHE . '/preview');
+        $pt->setStylesheetCachePath(DIR_FILES_CACHE . '/preview');
+        $sheets = $pt->getThemeCustomizableStyleSheets();
+        // for each customizable stylesheet in the theme, we take the value list
+        // and send its variables through the LESS parser.
+        foreach($sheets as $sheet) {
+            $sheet->setValueList($vl);
+            // we save each sheet to the preview location.
+            $sheet->output();
+        }
+
+        // and finally, we pass our modified theme into the updated view, which we send back in the iframe.
+        $req = Request::getInstance();
+        $req->setCurrentPage($this->page);
+        $controller = $this->page->getPageController();
+        $view = $controller->getViewObject();
+        $view->setCustomPageTheme($pt);
+        $req->setCustomRequestUser(-1);
+        $response = new Response();
+        $content = $view->render();
+        $response->setContent($content);
+        return $response;
     }
 
     /*

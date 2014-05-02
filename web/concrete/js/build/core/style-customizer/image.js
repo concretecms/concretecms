@@ -15,10 +15,6 @@
             inputName: my.options.inputName
         });
 
-        ConcreteEvent.subscribe('FileManagerBeforeSelectFile', function(e, data) {
-            my.setValue('fID', data.fID);
-        });
-
     }
 
     ConcreteStyleCustomizerImageSelector.prototype = Object.create(ConcreteStyleCustomizerPalette.prototype);
@@ -33,16 +29,15 @@
         '<div class="ccm-style-customizer-palette-actions"><button class="btn btn-primary">Save</button></div>' +
         '</div>';
 
-    ConcreteStyleCustomizerImageSelector.prototype.getPosition = function($element) {
-        var my = this;
-        var dim = $element.offset();
-        dim.left += $element.width() + 10;
-        dim.top -= 20;
-        return dim;
-    }
-
     ConcreteStyleCustomizerImageSelector.prototype.save = function (e) {
-        var my = this;
+        var my = this,
+            fID = 0;
+
+        var $selector = my.$widget.find('div.ccm-file-selector-file-selected');
+        if ($selector.length) {
+            fID = $selector.find('input[type=hidden]').val();
+        }
+        my.setValue('fID', fID);
         ConcreteEvent.publish('StyleCustomizerSave');
         my.closeSelector(e);
     }

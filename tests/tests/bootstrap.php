@@ -9,6 +9,8 @@ define('DB_PASSWORD', 'phpunitTesting');
 define('DB_DATABASE', 'phpunitTesting');
 define('DB_SERVER', 'localhost');
 
+define('BASE_URL', 'http://www.dummyco.com');
+
 // support classes for tests
 require realpath(dirname(__FILE__) . '/ConcreteDatabaseTestcase.php');
 
@@ -34,7 +36,7 @@ $cms = require $DIR_BASE_CORE . '/bootstrap/start.php';
 
 
 
-/** 
+/**
  * Kill this because it plays hell with phpunit.
  */
 unset($cms);

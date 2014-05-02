@@ -10,7 +10,18 @@
         var my = this,
             options = $.extend({
                 'inputName': false,
-                'value': {}
+                'fontFamily': false,
+                'color': false,
+                'bold': false,
+                'italic': false,
+                'underline': false,
+                'uppercase': false,
+                'fontSizeValue': false,
+                'fontSizeUnit': 'px',
+                'letterSpacingValue': false,
+                'letterSpacingUnit': 'px',
+                'lineHeightValue': false,
+                'lineHeightUnit': 'px'
             }, options);
 
         ConcreteStyleCustomizerPalette.call(my, $element, options);
@@ -45,60 +56,61 @@
             my.$fontMenu.append('<option value="' + font + '">' + font + '</option>');
         });
 
-        if (my.options.value.fontFamily) {
-            my.$fontMenu.val(my.options.value.fontFamily);
-            my.setValue('font-family', my.options.value.fontFamily);
+        // set defaults
+        if (my.options.fontFamily) {
+            my.$fontMenu.val(my.options.fontFamily);
+            my.setValue('font-family', my.options.fontFamily);
         }
 
-        if (my.options.value.color) {
-            my.$colorpicker.spectrum('set', my.options.value.color);
-            my.setValue('color', my.options.value.color);
+        if (my.options.color) {
+            my.$colorpicker.spectrum('set', my.options.color);
+            my.setValue('color', my.options.color);
         }
 
-        if (my.options.value.underline) {
+        if (my.options.underline) {
             my.$widget.find('input[data-style-customizer-field=underline]').prop('checked', true);
             my.setValue('underline', '1');
         }
 
-        if (my.options.value.uppercase) {
+        if (my.options.uppercase) {
             my.$widget.find('input[data-style-customizer-field=uppercase]').prop('checked', true);
             my.setValue('uppercase', '1');
         }
 
-        if (my.options.value.italic) {
+        if (my.options.italic) {
             my.$widget.find('input[data-style-customizer-field=italic]').prop('checked', true);
             my.setValue('italic', '1');
         }
 
-        if (my.options.value.bold) {
+        if (my.options.bold) {
             my.$widget.find('input[data-style-customizer-field=bold]').prop('checked', true);
             my.setValue('bold', '1');
         }
 
-        if (my.options.value.fontSize) {
+        if (my.options.fontSizeValue) {
             var $field = my.$widget.find('div[data-style-customizer-field=font-size]');
             var $slider = $field.find('div.ccm-style-customizer-slider');
-            $slider.slider('value', my.options.value.fontSize.value);
-            $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-number').html(my.options.value.fontSize.value);
-            $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-unit').html(my.options.value.fontSize.unit);
-            my.setValue('font-size', my.options.value.fontSize.value);
+            $slider.slider('value', my.options.fontSizeValue);
+            $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-number').html(my.options.fontSizeValue);
+            $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-unit').html(my.options.fontSizeUnit);
+            my.setValue('font-size', my.options.fontSizeValue);
         }
-        if (my.options.value.letterSpacing) {
+        if (my.options.letterSpacingValue) {
             var $field = my.$widget.find('div[data-style-customizer-field=letter-spacing]');
             var $slider = $field.find('div.ccm-style-customizer-slider');
-            $slider.slider('value', my.options.value.letterSpacing.value);
-            $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-number').html(my.options.value.letterSpacing.value);
-            $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-unit').html(my.options.value.letterSpacing.unit);
-            my.setValue('letter-spacing', my.options.value.letterSpacing.value);
+            $slider.slider('value', my.options.letterSpacingValue);
+            $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-number').html(my.options.letterSpacingValue);
+            $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-unit').html(my.options.letterSpacingUnit);
+            my.setValue('letter-spacing', my.options.letterSpacingValue);
         }
 
-        if (my.options.value.lineHeight) {
+        if (my.options.lineHeightValue) {
             var $field = my.$widget.find('div[data-style-customizer-field=line-height]');
             var $slider = $field.find('div.ccm-style-customizer-slider');
-            $slider.slider('value', my.options.value.lineHeight.value);
-            $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-number').html(my.options.value.lineHeight.value);
-            $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-unit').html(my.options.value.lineHeight.unit);
-            my.setValue('line-height', my.options.value.lineHeight.value);
+            $slider.slider('value', my.options.lineHeightValue);
+            $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-number').html(my.options.lineHeightValue);
+            $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-unit').html(my.options.lineHeightUnit);
+            my.setValue('line-height', my.options.lineHeightValue);
         }
 
         my.updateSwatch();
@@ -115,9 +127,12 @@
         '<input type="hidden" name="<%=options.inputName%>[italic]" data-style-customizer-input="italic" />' +
         '<input type="hidden" name="<%=options.inputName%>[underline]" data-style-customizer-input="underline" />' +
         '<input type="hidden" name="<%=options.inputName%>[uppercase]" data-style-customizer-input="uppercase" />' +
-        '<input type="hidden" name="<%=options.inputName%>[font-size]" data-style-customizer-input="font-size" />' +
-        '<input type="hidden" name="<%=options.inputName%>[letter-spacing]" data-style-customizer-input="letter-spacing" />' +
-        '<input type="hidden" name="<%=options.inputName%>[line-height]" data-style-customizer-input="line-height" />' +
+        '<input type="hidden" name="<%=options.inputName%>[font-size][size]" data-style-customizer-input="font-size" />' +
+        '<input type="hidden" name="<%=options.inputName%>[font-size][unit]" value="<%=options.fontSizeUnit%>" />' +
+        '<input type="hidden" name="<%=options.inputName%>[letter-spacing][size]" data-style-customizer-input="letter-spacing" />' +
+        '<input type="hidden" name="<%=options.inputName%>[letter-spacing][unit]" value="<%=options.letterSpacingUnit%>" />' +
+        '<input type="hidden" name="<%=options.inputName%>[line-height][size]" data-style-customizer-input="line-height" />' +
+        '<input type="hidden" name="<%=options.inputName%>[line-height][unit]" value="<%=options.lineHeightUnit%>" />' +
         '<span class="ccm-style-customizer-typography-swatch">T</span></div>',
 
     ConcreteTypographySelector.prototype.selectorWidgetTemplate = '<div class="ccm-ui ccm-style-customizer-palette">' +
