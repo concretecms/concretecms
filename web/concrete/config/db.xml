@@ -3041,18 +3041,16 @@
       <col>pThemeHandle</col>
     </index>
   </table>
-  <table name="PageThemeStyles">
+  <table name="PageThemeCustomStyles">
     <field name="pThemeID" type="I" size="10">
       <key/>
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="pThemeStyleHandle" type="C" size="128">
+    <field name="scvlID" type="I" size="10">
       <key/>
-    </field>
-    <field name="pThemeStyleValue" type="X2" />
-    <field name="pThemeStyleType" type="C" size="32">
-      <key/>
+      <default value="0"/>
+      <unsigned/>
     </field>
   </table>
   <table name="PageTemplates">
