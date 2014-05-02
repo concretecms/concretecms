@@ -10,14 +10,26 @@ $pk = PermissionKey::getByHandle('customize_themes');
 
     <div class="ccm-panel-content-inner">
 
-    <div class="list-group" data-list-group="design-presets">
+    <div class="list-group" data-panel-menu-id="page-design-presets"  data-panel-menu="collapsible-list-group">
         <div class="list-group-item list-group-item-header"><?=t('Preset')?></div>
         <?
-        foreach($presets as $preset) { ?>
-            <label class="list-group-item"><input type="radio" class="ccm-flat-radio" value="<?=$preset->getPresetHandle()?>" name="handle" <? if ($selectedPreset->getPresetHandle() == $preset->getPresetHandle()) { ?>checked="checked"<? } ?> /> <?=$preset->getPresetName()?>
+        foreach($presets as $preset) {
+            $selected = false;
+            if ($selectedPreset->getPresetHandle() == $preset->getPresetHandle()) {
+                $selected = true;
+            }
+            ?>
+            <label class="list-group-item"><input type="radio" class="ccm-flat-radio" value="<?=$preset->getPresetHandle()?>" name="handle" <? if ($selected) { ?>checked="checked"<? } ?> /> <?=$preset->getPresetName()?>
                 <?=$preset->getPresetIconHTML()?>
             </label>
+            <? if ($selected) { ?>
+                <div class="list-group-item-collapse-wrapper">
+            <? } ?>
         <? } ?>
+        <? if ($selectedPreset) { ?>
+            </div>
+        <? } ?>
+        <a class="list-group-item list-group-item-collapse" href="#"><span><?=t('Expand')?></span></a>
     </div>
 
     </div>
@@ -25,7 +37,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
     <div id="ccm-panel-page-design-customize-list">
     <? foreach($styleSets as $set) { ?>
         <div class="ccm-panel-page-design-customize-style-set">
-            <h5><?=$set->getName()?></h5>
+            <h5 class="ccm-panel-page-design-customize-style-set-collapse"><?=$set->getName()?></h5>
             <ul class="list-unstyled">
             <? foreach($set->getStyles() as $style) { ?>
                 <li><?=$style->getName()?>
@@ -119,7 +131,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
             <? } ?>
             return false;
         });
-        $('div[data-list-group=design-presets]').on('change', $('input[type=radio]'), function() {
+        $('div[data-panel-menu-id=page-design-presets]').on('change', $('input[type=radio]'), function() {
             var panel = ConcretePanelManager.getByIdentifier('page');
             var $panel = $('#' + panel.getDOMID());
             var url = "<?=URL::to('/ccm/system/panels/page/design/customize', $theme->getThemeID())?>?cID=<?=$c->getCollectionID()?>";
@@ -134,6 +146,42 @@ $pk = PermissionKey::getByHandle('customize_themes');
                     ConcreteEvent.publish('StyleCustomizerSave');
                 }
             });
+        });
+        $('div.ccm-panel-page-design-customize-style-set').on('click', 'h5', function() {
+            var $list = $(this).parent().find('> ul');
+            var height = $list.height();
+            var $header = $(this);
+            if ($(this).hasClass('ccm-panel-page-design-customize-style-set-expand')) {
+                $list.queue(function() {
+                    $(this).css('height', 0);
+                    $(this).show();
+                    $(this).dequeue();
+                }).
+                delay(5).
+                queue(function() {
+                    $(this).css('height', height);
+                    $header.removeClass('ccm-panel-page-design-customize-style-set-expand').addClass('ccm-panel-page-design-customize-style-set-collapse');
+                    $(this).dequeue();
+                });
+            } else {
+                $list.css('height', height);
+                $list.queue(function() {
+                    $(this).css('height', height);
+                    $(this).dequeue();
+                }).
+                delay(0).
+                queue(function() {
+                    $(this).css('height', 0);
+                    $header.removeClass('ccm-panel-page-design-customize-style-set-collapse').addClass('ccm-panel-page-design-customize-style-set-expand');
+                    $(this).dequeue();
+                }).
+                delay(305).
+                queue(function() {
+                    $(this).hide();
+                    $(this).css('height', 'auto');
+                    $(this).dequeue();
+                });
+            }
         });
         $('button[data-panel-detail-action=reset]').unbind().on('click', function() {
             <? if ($pk->can()) { ?>

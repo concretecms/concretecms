@@ -40,6 +40,19 @@ class Customize extends BackendInterfacePageController {
                 }
             }
 
+            // finally, we sort the presets so that the selected
+            // preset is at the top
+            usort($presets, function($a, $b) use ($selectedPreset) {
+                if ($selectedPreset->getPresetHandle() == $a->getPresetHandle()) {
+                    return -1;
+                }
+                if ($selectedPreset->getPresetHandle() == $b->getPresetHandle()) {
+                    return 1;
+                }
+
+                return strcasecmp($a->getPresetName(), $b->getPresetName());
+            });
+
             $styleList = $pt->getThemeCustomizableStyleList();
             $this->set('presets', $presets);
             $this->set('selectedPreset', $selectedPreset);
