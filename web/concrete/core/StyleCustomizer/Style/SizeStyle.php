@@ -17,9 +17,9 @@ class SizeStyle extends Style {
         }
         $options['inputName'] = $this->getVariable();
         $strOptions = json_encode($options);
-        print '<div data-size-selector="' . $this->getVariable() . '"></div>';
+        print '<span class="ccm-style-customizer-display-swatch-wrapper" data-size-selector="' . $this->getVariable() . '"></span>';
         print "<script type=\"text/javascript\">";
-        print "$(function() { $('div[data-size-selector=" . $this->getVariable() . "]').concreteSizeSelector({$strOptions}); });";
+        print "$(function() { $('span[data-size-selector=" . $this->getVariable() . "]').concreteSizeSelector({$strOptions}); });";
         print "</script>";
     }
 

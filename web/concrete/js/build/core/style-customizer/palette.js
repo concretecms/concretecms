@@ -32,11 +32,11 @@
             return false;
         });
 
-        my.$element.on('click.style-customizer-palette', 'div[data-launch=style-customizer-palette]', function(e) {
+        my.$element.on('click.style-customizer-palette', '[data-launch=style-customizer-palette]', function(e) {
             if (my.opened) {
                 my.closeSelector(e);
             } else {
-                var dim = my.getPosition($(this));
+                var dim = my.getPosition();
                 my.$widget.css({'top': dim.top, 'left': dim.left}).show().on('click.style-customizer-palette', function(e) {
                     e.stopPropagation();
                 });
@@ -56,10 +56,33 @@
             my.$element.find('input[data-style-customizer-input=' + field + ']').val(value);
         },
 
-        getPosition: function($element) {
+        getPosition: function() {
             var my = this;
-            var dim = $element.offset();
-            return dim;
+            var offset = my.getOffset(my.$widget, my.$element);
+            return offset;
+        },
+
+        getOffset: function(picker, input) {
+            var extraY = -5;
+            var dpWidth = picker.outerWidth();
+            var dpHeight = picker.outerHeight();
+            var inputHeight = input.outerHeight();
+            var doc = picker[0].ownerDocument;
+            var docElem = doc.documentElement;
+            var viewWidth = docElem.clientWidth + $(doc).scrollLeft();
+            var viewHeight = docElem.clientHeight + $(doc).scrollTop();
+            var offset = input.offset();
+            offset.top += inputHeight;
+
+            offset.left -=
+                Math.min(offset.left, (offset.left + dpWidth > viewWidth && viewWidth > dpWidth) ?
+                Math.abs(offset.left + dpWidth - viewWidth) : 0);
+
+            offset.top -=
+                Math.min(offset.top, ((offset.top + dpHeight > viewHeight && viewHeight > dpHeight) ?
+                Math.abs(dpHeight + inputHeight - extraY) : extraY));
+
+            return offset;
         },
 
         getValue: function(field) {

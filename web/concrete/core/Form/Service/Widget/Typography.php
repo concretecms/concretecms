@@ -25,7 +25,7 @@ class Typography {
         $options = array_merge($options, $value);
         $strOptions = json_encode($options);
 
-        print '<span data-font-selector="' . $inputName . '"></span>';
+        print '<span class="ccm-style-customizer-display-swatch-wrapper" data-font-selector="' . $inputName . '"></span>';
         print "<script type=\"text/javascript\">";
         print "$(function() { $('span[data-font-selector={$inputName}]').concreteTypographySelector({$strOptions}); })";
         print "</script>";

@@ -58,8 +58,11 @@
 
         // set defaults
         if (my.options.fontFamily) {
-            my.$fontMenu.val(my.options.fontFamily);
             my.setValue('font-family', my.options.fontFamily);
+            if (_.indexOf(my.fonts, my.options.fontFamily) < 0) {
+                my.$fontMenu.append($('<option>', {'value': my.options.fontFamily, 'text': my.options.fontFamily}));
+            }
+            my.$fontMenu.val(my.options.fontFamily);
         }
 
         if (my.options.color) {
@@ -91,6 +94,10 @@
             var $field = my.$widget.find('div[data-style-customizer-field=font-size]');
             var $slider = $field.find('div.ccm-style-customizer-slider');
             $slider.slider('value', my.options.fontSizeValue);
+            if (my.options.fontSizeUnit == 'em') {
+                $slider.slider('option', 'step', 0.1);
+                $slider.slider('option', 'max', 10);
+            }
             $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-number').html(my.options.fontSizeValue);
             $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-unit').html(my.options.fontSizeUnit);
             my.setValue('font-size', my.options.fontSizeValue);
@@ -99,6 +106,10 @@
             var $field = my.$widget.find('div[data-style-customizer-field=letter-spacing]');
             var $slider = $field.find('div.ccm-style-customizer-slider');
             $slider.slider('value', my.options.letterSpacingValue);
+            if (my.options.letterSpacingUnit == 'em') {
+                $slider.slider('option', 'step', 0.1);
+                $slider.slider('option', 'max', 10);
+            }
             $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-number').html(my.options.letterSpacingValue);
             $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-unit').html(my.options.letterSpacingUnit);
             my.setValue('letter-spacing', my.options.letterSpacingValue);
@@ -108,6 +119,10 @@
             var $field = my.$widget.find('div[data-style-customizer-field=line-height]');
             var $slider = $field.find('div.ccm-style-customizer-slider');
             $slider.slider('value', my.options.lineHeightValue);
+            if (my.options.lineHeightUnit == 'em') {
+                $slider.slider('option', 'step', 0.1);
+                $slider.slider('option', 'max', 10);
+            }
             $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-number').html(my.options.lineHeightValue);
             $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-unit').html(my.options.lineHeightUnit);
             my.setValue('line-height', my.options.lineHeightValue);
@@ -120,7 +135,7 @@
     ConcreteTypographySelector.prototype = Object.create(ConcreteStyleCustomizerPalette.prototype);
 
     ConcreteTypographySelector.prototype.fonts = ['Arial','Helvetica', 'Georgia', 'Verdana', 'Trebuchet MS', 'Book Antiqua', 'Tahoma', 'Times New Roman', 'Courier New', 'Arial Black', 'Comic Sans MS'],
-    ConcreteTypographySelector.prototype.chooseTemplate = '<div class="ccm-style-customizer-typography-swatch-wrapper" data-launch="style-customizer-palette">' +
+    ConcreteTypographySelector.prototype.chooseTemplate = '<span class="ccm-style-customizer-display-swatch" data-launch="style-customizer-palette">' +
         '<input type="hidden" name="<%=options.inputName%>[font-family]" data-style-customizer-input="font-family" />' +
         '<input type="hidden" name="<%=options.inputName%>[color]" data-style-customizer-input="color" />' +
         '<input type="hidden" name="<%=options.inputName%>[bold]" data-style-customizer-input="bold" />' +
@@ -133,7 +148,7 @@
         '<input type="hidden" name="<%=options.inputName%>[letter-spacing][unit]" value="<%=options.letterSpacingUnit%>" />' +
         '<input type="hidden" name="<%=options.inputName%>[line-height][size]" data-style-customizer-input="line-height" />' +
         '<input type="hidden" name="<%=options.inputName%>[line-height][unit]" value="<%=options.lineHeightUnit%>" />' +
-        '<span class="ccm-style-customizer-typography-swatch">T</span></div>',
+        '<span>T</span></span>',
 
     ConcreteTypographySelector.prototype.selectorWidgetTemplate = '<div class="ccm-ui ccm-style-customizer-palette">' +
         '<div><select data-style-customizer-field="font"><option value="">Choose Font</option></select> <input type="text" data-style-customizer-field="color"></div>' +
@@ -149,7 +164,7 @@
 
     ConcreteTypographySelector.prototype.updateSwatch = function() {
         var my = this,
-            $swatch = my.$element.find('span.ccm-style-customizer-typography-swatch');
+            $swatch = my.$element.find('span.ccm-style-customizer-display-swatch');
 
         $swatch.css('font-family', my.getValue('font-family'));
         $swatch.css('color', my.getValue('color'));
@@ -170,7 +185,7 @@
         if (my.getValue('uppercase') === '1') {
             $swatch.css('text-transform', 'uppercase');
         }
-        $swatch.css('line-height', my.getValue('line-height') + my.options.unit);
+        //$swatch.css('line-height', my.getValue('line-height') + my.options.unit);
         $swatch.css('letter-spacing', my.getValue('letter-spacing') + my.options.unit);
         $swatch.css('font-size', my.getValue('font-size') + my.options.unit);
 
