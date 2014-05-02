@@ -1,6 +1,6 @@
-<?
+<?php
 namespace Concrete\Core\Legacy;
-use Loader;
+
 /**
  * @deprecated
  */
@@ -95,6 +95,5 @@ class Model {
 			$db->delete($this->_table, $data);
 		}
 	}
-
 
 }

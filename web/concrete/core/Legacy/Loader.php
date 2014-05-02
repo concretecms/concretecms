@@ -1,4 +1,9 @@
-<?
+<?php
+namespace Concrete\Core\Legacy;
+use Database;
+use Core;
+use View;
+
 /**
  * @deprecated
  */
@@ -7,7 +12,7 @@ class Loader {
 	public static function db() {
 		return Database::getActiveConnection();
 	}
-	
+
 	public static function helper($service, $pkgHandle = false) {
 		return Core::make('helper/' . $service);
 	}
@@ -27,6 +32,5 @@ class Loader {
 	public static function library($library, $pkgHandle = false) {
 		return false;
 	}
-
 
 }
