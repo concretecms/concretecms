@@ -238,20 +238,20 @@ class Theme extends Object {
         $r = $env->getRecord(DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_CSS . '/' . $stylesheet, $this->getPackageHandle());
 
         $stylesheet = new \Concrete\Core\StyleCustomizer\Stylesheet($stylesheet, $r->file, $r->url, $output, $relative);
-        $scl = $this->getThemeCustomStyleValueList();
-        if (is_object($scl)) {
-            $stylesheet->setValueList($scl);
-        }
         return $stylesheet;
     }
     /**
      * Looks into the current CSS directory and returns a fully compiled stylesheet
-     * when passed a LESS stylesheet
+     * when passed a LESS stylesheet. Also serves up custom value list values for the stylesheet if they exist.
      * @param  string $stylesheet The LESS stylesheet to compile
      * @return string             The path to the stylesheet.
      */
     public function getStylesheet($stylesheet) {
         $stylesheet = $this->getStylesheetObject($stylesheet);
+        $scl = $this->getThemeCustomStyleValueList();
+        if (is_object($scl)) {
+            $stylesheet->setValueList($scl);
+        }
         if (!$stylesheet->outputFileExists()) {
             $stylesheet->output();
         }

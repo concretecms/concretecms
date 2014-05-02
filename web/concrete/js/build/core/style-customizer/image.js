@@ -38,7 +38,7 @@
             fID = $selector.find('input[type=hidden]').val();
         }
         my.setValue('fID', fID);
-        ConcreteEvent.publish('StyleCustomizerSave');
+        ConcreteEvent.publish('StyleCustomizerControlUpdate');
         my.closeSelector(e);
     }
 
