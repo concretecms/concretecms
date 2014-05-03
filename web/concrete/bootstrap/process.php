@@ -1,5 +1,7 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
+    use \Concrete\Core\Page\Style\CustomStyleRule;
+    use \Concrete\Core\Page\Style\CustomStylePreset;
 
 	# Filename: _process.php
 	# Author: Andrew Embler (andrew@concrete5.org)

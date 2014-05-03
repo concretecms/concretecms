@@ -34,6 +34,7 @@
         "zf1/zend-date": "dev-master",
         "zf1/zend-queue": "dev-master",
         "zf1/zend-mime": "dev-master",
-        "zf1/zend-mail": "dev-master"
+        "zf1/zend-mail": "dev-master",
+        "nesbot/carbon": "dev-master"
     }
 }
