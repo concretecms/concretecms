@@ -20,7 +20,7 @@ class Schema {
 	}
 
 	protected static function getSchemaParser(\SimpleXMLElement $sx) {
-		switch($sx['version']) {
+		switch ($sx['version']) {
 			case '0.3':
 				$parser = new \Concrete\Core\Database\Schema\Parser\Legacy($sx);
 				break;

@@ -4,31 +4,31 @@ namespace Concrete\Core\Database\Schema\Parser;
 
 class Legacy extends XmlParser {
 
-	/** 
-	 * Transforms the XML from Adodb XML into 
+	/**
+	 * Transforms the XML from Adodb XML into
 	 * Doctrine DBAL Schema
 	 */
 	public function parse(\Concrete\Core\Database\Connection $db) {
-        $sm = $db->getSchemaManager();
-        $schemaTables = $sm->listTables();
-        $existingTables = array();
-        foreach($schemaTables as $table) {
-            $existingTables[] = $table->getName();
-        }
+		$sm = $db->getSchemaManager();
+		$schemaTables = $sm->listTables();
+		$existingTables = array();
+		foreach ($schemaTables as $table) {
+			$existingTables[] = $table->getName();
+		}
 
 		$x = $this->rawXML;
 		$schema = new \Doctrine\DBAL\Schema\Schema();
-		foreach($x->table as $t) {
+		foreach ($x->table as $t) {
 
-			if (in_array((string) $t['name'], $existingTables)) {
+			if (in_array((string)$t['name'], $existingTables)) {
 				continue;
 			}
-			$table = $schema->createTable((string) $t['name']);
-			foreach($t->field as $f) {
+			$table = $schema->createTable((string)$t['name']);
+			foreach ($t->field as $f) {
 				$options = $this->_getColumnOptions($db, $f);
 				$version = (isset($options['version']) && $options['version']) ? true : false;
 				unset($options['version']);
-				$field = $table->addColumn((string) $f['name'], $this->_getColumnType($f), $options);			
+				$field = $table->addColumn((string)$f['name'], $this->_getColumnType($f), $options);
 				if ($version) {
 					$field->setPlatformOption('version', true);
 				}
@@ -43,34 +43,34 @@ class Legacy extends XmlParser {
 	protected function _setTableOpts(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $table, $schemaTable) {
 		if ($table->opt) {
 			$opt = $table->opt->__toString();
-			 if ($opt == 'ENGINE=MYISAM') {
-			 	$schemaTable->addOption('engine', 'MYISAM');
-			 }
+			if ($opt == 'ENGINE=MYISAM') {
+				$schemaTable->addOption('engine', 'MYISAM');
+			}
 		}
 	}
 
 	protected function _setPrimaryKeys(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $table, $schemaTable) {
 		$primaryKeys = array();
-		foreach($table->field as $column) {
+		foreach ($table->field as $column) {
 			if ($column->autoincrement || $column->AUTOINCREMENT || $column->key || $column->KEY) {
-				$primaryKeys[] = (string) $column['name'];
+				$primaryKeys[] = (string)$column['name'];
 			}
-		}	
+		}
 		if (count($primaryKeys) > 0) {
 			$schemaTable->setPrimaryKey($primaryKeys);
 		}
-	}	
+	}
 
 	protected function _setIndexes(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $table, $schemaTable) {
-		foreach($table->index as $index) {
-			$name = (string) $index['name'];
+		foreach ($table->index as $index) {
+			$name = (string)$index['name'];
 			$fields = array();
 			$flags = array();
 			if ($index->UNIQUE || $index->unique) {
 				$fields[] = $index->col->__toString();
 				$schemaTable->addUniqueIndex($fields, $name);
 			} else {
-				foreach($index->col as $col) {
+				foreach ($index->col as $col) {
 					$fields[] = $col->__toString();
 				}
 				if ($index->fulltext || $index->FULLTEXT) {
@@ -78,13 +78,13 @@ class Legacy extends XmlParser {
 				}
 				$schemaTable->addIndex($fields, $name, $flags);
 			}
-		}	
-	}	
+		}
+	}
 
 
 	protected function _getColumnOptions(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $column) {
-		$type = (string) $column['type'];
-		$size = (string) $column['size'];
+		$type = (string)$column['type'];
+		$size = (string)$column['size'];
 		$options = array();
 		if ($size) {
 			$options['length'] = $size;
@@ -94,19 +94,19 @@ class Legacy extends XmlParser {
 		}
 		if ($column->default) {
 			if (isset($column->default['value'])) {
-				$options['default'] = (string) $column->default['value'];
+				$options['default'] = (string)$column->default['value'];
 			}
 			if (isset($column->default['VALUE'])) {
-				$options['default'] = (string) $column->default['VALUE'];
-			}			
+				$options['default'] = (string)$column->default['VALUE'];
+			}
 		}
 		if ($column->DEFAULT) {
 			if (isset($column->DEFAULT['value'])) {
-				$options['default'] = (string) $column->DEFAULT['value'];
+				$options['default'] = (string)$column->DEFAULT['value'];
 			}
 			if (isset($column->DEFAULT['VALUE'])) {
-				$options['default'] = (string) $column->DEFAULT['VALUE'];
-			}			
+				$options['default'] = (string)$column->DEFAULT['VALUE'];
+			}
 		}
 		if ($column->notnull || $column->NOTNULL) {
 			$options['notnull'] = true;
@@ -125,8 +125,8 @@ class Legacy extends XmlParser {
 	}
 
 	protected function _getColumnType(\SimpleXMLElement $column) {
-		$type = (string) $column['type'];
-		$size = (string) $column['size'];
+		$type = (string)$column['type'];
+		$size = (string)$column['size'];
 		if ($type == 'I') {
 			return 'integer';
 		}
