@@ -115,8 +115,7 @@
 	}
 
 	table {
-		user-select: none;
-		-webkit-user-select: none;
+		.user-select(none);
 		width: 100%;
 		th, td {
 			font-size: 13px;
@@ -170,8 +169,8 @@
 			}
 
 			tr {
-				-webkit-transform: translate3d(0, 0, 0);
-				.transition(-webkit-transform 0.2s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+				.translate3d(0, 0, 0);
+				.transition-transform(cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.2s);
 			}
 
 

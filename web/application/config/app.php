@@ -7,8 +7,7 @@
  *
  * ## Set a theme by route:
  *
- * $router = Router::getInstance();
- * $router->setThemeByRoute('/login', 'greek_yogurt');
+ * Route::setThemeByRoute('/login', 'greek_yogurt');
  *
  *
  * ## Register a class override.
@@ -30,13 +29,12 @@
  *
  * ## Register some custom MVC Routes
  *
- * $router = Router::getInstance();
- * $router->register('/test', function() {
+ * Route::register('/test', function() {
  * 	print 'This is a contrived example.';
  * });
  *
- * $router->register('/custom/view', '\My\Custom\Controller::view');
- * $router->register('/custom/add', '\My\Custom\Controller::add');
+ * Route::register('/custom/view', '\My\Custom\Controller::view');
+ * Route::register('/custom/add', '\My\Custom\Controller::add');
  *
  * ----------------------------------------------------------------------------
  */
