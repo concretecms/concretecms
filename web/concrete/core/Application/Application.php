@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Application;
 
 use \Illuminate\Container\Container;
@@ -6,7 +6,6 @@ use \Concrete\Core\Cache\Page\PageCache;
 use \Concrete\Core\Foundation\ClassLoader;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
-use Router;
 use Request;
 use Environment;
 use Database;
@@ -19,6 +18,7 @@ use Core;
 use Job, JobSet;
 use Loader;
 use Package;
+use Route;
 
 class Application extends Container {
 
@@ -67,11 +67,11 @@ class Application extends Container {
 			    	return $library->deliver($record);
 			    }
 		    }
-		}	
+		}
 		return false;
 	}
 
-	/** 
+	/**
 	 * Run startup and localization events on any installed packages.
 	 */
 	public function setupPackages() {
@@ -148,7 +148,7 @@ class Application extends Container {
 	/**
 	 * Using the configuration value, determines whether we need to redirect to a URL with
 	 * a trailing slash or not.
-	 * @return void 
+	 * @return void
 	 */
 	public function handleURLSlashes() {
 		$r = Request::getInstance();
@@ -185,10 +185,10 @@ class Application extends Container {
 			}
 
 			if (($base_url != $protocol . $_SERVER['HTTP_HOST']) && ($base_url . ':' . $_SERVER['SERVER_PORT'] != 'https://' . $_SERVER['HTTP_HOST'])) {
-				header('HTTP/1.1 301 Moved Permanently');  
+				header('HTTP/1.1 301 Moved Permanently');
 				header('Location: ' . $base_url . $uri);
 				exit;
-			}	
+			}
 		}
 	}
 
@@ -212,7 +212,7 @@ class Application extends Container {
 						}
 					}
 				}
-			
+
 				// job sets
 				if(!strlen($url)) {
 					$jSets = JobSet::getList();
@@ -225,7 +225,7 @@ class Application extends Container {
 						}
 					}
 				}
-			
+
 				if(strlen($url)) {
 					$ch = curl_init($url);
 					curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -240,7 +240,7 @@ class Application extends Container {
 
 
 
-	/** 
+	/**
 	 * Turns off the lights.
 	 */
 	public function shutdown() {
@@ -262,22 +262,20 @@ class Application extends Container {
 	 *  Adds a few required routes to the dispatcher that must come at the end.
 	 */
 	protected function addRequiredRoutes() {
-		$rl = Router::getInstance();
-		$rl->register('/', 'dispatcher', 'home');
-		$rl->register('{path}', 'dispatcher', 'page', array('path' => '.+'));
+		Route::register('/', 'dispatcher', 'home');
+		Route::register('{path}', 'dispatcher', 'page', array('path' => '.+'));
 	}
 
 	/**
 	 * Inspects the request and determines what to serve.
 	 */
 	public function dispatch(Request $request) {
-		if ($this->installed) { 
+		if ($this->installed) {
 			$response = $this->getEarlyDispatchResponse();
 		}
 		if (!isset($response)) {
 			$this->addRequiredRoutes();
-			$collection = Router::getInstance()->getList();
-			$router = Router::getInstance();
+			$collection = Route::getList();
 			$context = new \Symfony\Component\Routing\RequestContext();
 			$context->fromRequest($request);
 			$matcher = new UrlMatcher($collection, $context);
@@ -285,8 +283,8 @@ class Application extends Container {
 		    $request->attributes->add($matcher->match($path));
 			$matched = $matcher->match($path);
 			$route = $collection->get($matched['_route']);
-			$router->setRequest($request);
-			$response = $router->execute($route, $matched);
+			Route::setRequest($request);
+			$response = Route::execute($route, $matched);
 		}
 		return $response;
 	}
@@ -294,8 +292,8 @@ class Application extends Container {
 	protected function getEarlyDispatchResponse() {
 		if (!User::isLoggedIn()) {
 			User::verifyAuthTypeCookie();
-		}		
-		if (User::isLoggedIn()) {		
+		}
+		if (User::isLoggedIn()) {
 			// check to see if this is a valid user account
 			$u = new User();
 			$valid = $u->checkLogin();
