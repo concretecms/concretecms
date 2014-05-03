@@ -5,13 +5,13 @@ use Config;
 use Loader;
 
 class Debug extends DashboardPageController {
-	
+
 	public function view() {
-		
+
 		$debug_level = Config::get('SITE_DEBUG_LEVEL');
-		$this->set('debug_level', $debug_level);		
+		$this->set('debug_level', $debug_level);
 	}
-	
+
 	public function update_debug() {
 		if ($this->token->validate("update_debug")) {
 			if ($this->isPost()) {
@@ -23,10 +23,10 @@ class Debug extends DashboardPageController {
 			$this->set('error', array($this->token->getErrorMessage()));
 		}
 	}
-	
+
 	public function debug_saved(){
-		$this->set('message', t('Debug configuration saved.'));	
+		$this->set('message', t('Debug configuration saved.'));
 		$this->view();
 	}
-		
+
 }
