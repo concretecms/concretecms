@@ -5,13 +5,10 @@ use Doctrine\ORM\EntityManager;
 
 class Connection extends \Doctrine\DBAL\Connection {
 
-    protected static $entityManager;
-
-    protected function __construct() {}
+    static $entityManager;
 
     /** 
      * Returns the entity manager for use with Doctrine ORM
-     * @return EntityManager
      */
     public function getEntityManager() {
         if (!isset(static::$entityManager)) {
