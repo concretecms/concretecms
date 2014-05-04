@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Validation\BannedWord;
 use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
-class List extends DatabaseItemList {
+class BannedWordList extends DatabaseItemList {
 
 	public function __construct() {
 		$this->setQuery('select * from BannedWords');
