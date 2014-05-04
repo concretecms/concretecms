@@ -41,7 +41,7 @@ class SymbolGenerator {
      * @return string
      */
     public function render() {
-        $rendered = "<?php\nnamespace {\n\tdie('Intended for use with IDE symbol matching only.');\n";
+        $rendered = "<?php\nnamespace {\n    die('Intended for use with IDE symbol matching only.');\n";
         foreach ($this->classes as $class) {
             $rendered_class = explode("\n", $class->render());
             $rendered .= "\n" . implode("\n", array_map(function($val) {
