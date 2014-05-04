@@ -41,7 +41,7 @@ class MethodSymbol {
      */
     public function render() {
         $method = $this->reflectionMethod;
-        if ($method->isPrivate() || $method->getName() === '__clone' || $method->isAbstract()) {
+        if ($method->isPrivate() || substr($method->getName(), 0, 2) === '__' || $method->isAbstract()) {
             return '';
         }
         $rendered = "\n" . implode("\n", array_map(trim, explode("\n", $method->getDocComment()))) . "\n";
