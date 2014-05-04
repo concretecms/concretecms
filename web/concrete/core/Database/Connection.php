@@ -7,8 +7,6 @@ class Connection extends \Doctrine\DBAL\Connection {
 
     protected static $entityManager;
 
-    protected function __construct() {}
-
     /** 
      * Returns the entity manager for use with Doctrine ORM
      * @return EntityManager
