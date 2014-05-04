@@ -114,7 +114,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
 		return $node;
 	}
 
-	protected function duplicateChildren(TreeNode $node) {
+	protected function duplicateChildren(TreeNodeType $node) {
 		if ($this->overrideParentTreeNodePermissions()) {
 			$node->setTreeNodePermissionsToOverride();
 		}
@@ -186,7 +186,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
 		$this->treeID = $treeID;
 	}
 
-	public function move(TreeNode $newParent) {
+	public function move(TreeNodeType $newParent) {
 		$db = Loader::db();
 		$treeNodeDisplayOrder = $db->GetOne('select count(treeNodeDisplayOrder) from TreeNodes where treeNodeParentID = ?', array($newParent->getTreeNodeID()));
 		if (!$treeNodeDisplayOrder) {

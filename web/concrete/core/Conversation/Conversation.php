@@ -3,7 +3,7 @@ namespace Concrete\Core\Conversation;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use Page;
-use \Concrete\Core\Conversation\Message\List as ConversationMessageList;
+use \Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
 
 class Conversation extends Object {
 
@@ -39,7 +39,7 @@ class Conversation extends Object {
 	}
 
 	public function updateConversationSummary() {
-		$db = Loader::db();		
+		$db = Loader::db();
 		$date = $db->GetOne('select max(cnvMessageDateCreated) from ConversationMessages where cnvID =  ? and cnvIsMessageDeleted = 0 and cnvIsMessageApproved = 1', array(
 			$this->getConversationID()
 		));

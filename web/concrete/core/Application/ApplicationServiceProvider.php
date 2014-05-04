@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Concrete\Core\Application;
 use \Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
@@ -27,6 +27,5 @@ class ApplicationServiceProvider extends ServiceProvider {
 			$this->app->singleton($key, $value);
 		}
 	}
-
 
 }

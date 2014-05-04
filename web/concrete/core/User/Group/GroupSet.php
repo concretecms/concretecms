@@ -1,11 +1,10 @@
-<?
+<?php
 namespace Concrete\Core\User\Group;
 use \Concrete\Core\Foundation\Object;
 use Loader;
-use Group;
 
 class GroupSet extends Object {
-	
+
 	public static function getList() {
 		$db = Loader::db();
 		$r = $db->Execute('select gsID from GroupSets order by gsName asc');
@@ -14,7 +13,7 @@ class GroupSet extends Object {
 			$list[] = static::getByID($row['gsID']);
 		}
 		return $list;
-	}	
+	}
 
 	public static function getByID($gsID) {
 		$db = Loader::db();
@@ -34,7 +33,7 @@ class GroupSet extends Object {
 			$gs->setPropertiesFromArray($row);
 			return $gs;
 		}
-	}  
+	}
 
 	public static function getListByPackage($pkg) {
 		$db = Loader::db();
@@ -46,7 +45,7 @@ class GroupSet extends Object {
 		$r->Close();
 		return $list;
 	}
-	
+
 	public function getGroupSetID() {return $this->gsID;}
 	public function getGroupSetName() {return $this->gsName;}
 	public function getPackageID() {return $this->pkgID;}
@@ -109,24 +108,24 @@ class GroupSet extends Object {
 				$groups[] = $g;
 			}
 		}
-		return $groups;		
+		return $groups;
 	}
-	
+
 	public function contains(Group $g) {
 		$db = Loader::db();
 		$r = $db->GetOne('select count(gID) from GroupSetGroups where gsID = ? and gID = ?', array($this->getGroupSetID(), $g->getGroupID()));
 		return $r > 0;
-	}	
-	
+	}
+
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from GroupSets where gsID = ?', array($this->getGroupSetID()));
 		$db->Execute('delete from GroupSetGroups where gsID = ?', array($this->getGroupSetID()));
 	}
-	
+
 	public function removeGroup(Group $g) {
 		$db = Loader::db();
 		$db->Execute('delete from GroupSetGroups where gsID = ? and gID = ?', array($this->getGroupSetID(), $g->getGroupID()));
 	}
-		
+
 }

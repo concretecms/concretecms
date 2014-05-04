@@ -5,7 +5,7 @@ use Cache;
 use Concrete\Core\Foundation\Object;
 use AuthenticationType;
 use Loader;
-use Package;
+use Package as BasePackage;
 use GroupTree;
 use Group;
 use Page;
@@ -22,7 +22,7 @@ use \Concrete\Core\Mail\Importer\MailImporter;
 use \Concrete\Core\User\Point\Action\Action as UserPointAction;
 use \Concrete\Core\Backup\ContentImporter;
 use FileImporter;
-class StartingPointPackage extends Package {
+class StartingPointPackage extends BasePackage {
 
 
 	protected $DIR_PACKAGES_CORE = DIR_STARTING_POINT_PACKAGES_CORE;
@@ -197,7 +197,7 @@ class StartingPointPackage extends Package {
 
 		// insert admin user into the user table
 		if (defined('INSTALL_USER_PASSWORD')) {
-			
+
 			$hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
 			$uPassword = INSTALL_USER_PASSWORD;
 			$uPasswordEncrypted = $hasher->HashPassword($uPassword);
