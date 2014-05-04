@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Page\Collection;
+use Concrete\Core\Feature\Feature;
 use Loader;
 use CacheLocal;
 use Config;
