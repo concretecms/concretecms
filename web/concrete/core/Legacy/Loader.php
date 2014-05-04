@@ -14,7 +14,11 @@ class Loader {
 	}
 
 	public static function helper($service, $pkgHandle = false) {
-		return Core::make('helper/' . $service);
+		if ($pkgHandle !== false) {
+			return Core::make('/packages/' . $pkgHandle . '/helper/' . $service);
+		} else {
+			return Core::make('helper/' . $service);
+		}
 	}
 
 	public static function packageElement($file, $pkgHandle, $args = null) {
