@@ -10,8 +10,6 @@ class Storage extends DashboardPageController {
 	var $helpers = array('form','concrete/ui','validation/token', 'concrete/file');
 	
 	public function view($updated=false) {
-		$helper_file = Loader::helper('concrete/file');
-		
 		$fsl = FileStorageLocation::getByID(FileStorageLocation::ALTERNATE_ID);
 		if (is_object($fsl)) {
 			$this->set('fsl', $fsl);
