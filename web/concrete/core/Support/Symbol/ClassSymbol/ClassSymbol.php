@@ -74,20 +74,10 @@ class ClassSymbol {
     }
 
     /**
-     * Render Class
-     * @return string
-     */
-    public function render() {
-        $rendered = "\n" . implode("\n", array_map(trim, explode("\n", $this->comment))) . "\n";
-        $rendered .= 'class ' . $this->alias . ' extends ' . $this->fqn . " {}";
-        return $rendered;
-    }
-
-    /**
      * Render Class with methods.
      * @return string
      */
-    public function renderWithMethods() {
+    public function render() {
         $rendered = "\n" . implode("\n", array_map(trim, explode("\n", $this->comment))) . "\n";
         $rendered .= 'class ' . $this->alias . ' extends ' . $this->fqn . "\n{\n";
         foreach($this->methods as $method) {

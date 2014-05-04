@@ -41,6 +41,9 @@ class MethodSymbol {
      */
     public function render() {
         $method = $this->reflectionMethod;
+        if ($method->isPrivate() || $method->getName() === '__clone' || $method->isAbstract()) {
+            return '';
+        }
         $rendered = "\n" . implode("\n", array_map(trim, explode("\n", $method->getDocComment()))) . "\n";
         $visibility = \Reflection::getModifierNames($method->getModifiers());
         $visibility[] = 'static';
@@ -71,6 +74,8 @@ class MethodSymbol {
                     } else {
                         $param .= ' = ' . $default;
                     }
+                } else if ($parameter->allowsNull()) {
+                    $param .= ' = null';
                 } else {
                     $param .= ' = ""';
                 }
