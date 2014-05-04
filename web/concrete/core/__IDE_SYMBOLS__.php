@@ -106,25 +106,6 @@ namespace {
         }
 
         /**
-         * Constructor.
-         *
-         * @param array  $query      The GET parameters
-         * @param array  $request    The POST parameters
-         * @param array  $attributes The request attributes (parameters parsed from the PATH_INFO, ...)
-         * @param array  $cookies    The COOKIE parameters
-         * @param array  $files      The FILES parameters
-         * @param array  $server     The SERVER parameters
-         * @param string $content    The raw body data
-         *
-         * @api
-         */
-        public static function __construct(array $query = "", array $request = "", array $attributes = "", array $cookies = "", array $files = "", array $server = "", $content = null)
-        {
-            // Symfony\Component\HttpFoundation\Request::__construct();
-            Symfony\Component\HttpFoundation\Request::__construct($query, $request, $attributes, $cookies, $files, $server, $content);
-        }
-
-        /**
          * Sets the parameters for this request.
          *
          * This method also re-initializes all properties.
@@ -197,17 +178,6 @@ namespace {
         {
             // Symfony\Component\HttpFoundation\Request::duplicate();
             Symfony\Component\HttpFoundation\Request::duplicate($query, $request, $attributes, $cookies, $files, $server);
-        }
-
-        /**
-         * Returns the request as a string.
-         *
-         * @return string The request
-         */
-        public static function __toString()
-        {
-            // Symfony\Component\HttpFoundation\Request::__toString();
-            Symfony\Component\HttpFoundation\Request::__toString();
         }
 
         /**
@@ -1181,12 +1151,6 @@ namespace {
             Concrete\Core\Localization\Localization::activeLanguage();
         }
 
-        public static function __construct()
-        {
-            // Concrete\Core\Localization\Localization::__construct();
-            Concrete\Core\Localization\Localization::__construct();
-        }
-
         public static function setLocale($locale)
         {
             // Concrete\Core\Localization\Localization::setLocale();
@@ -1338,19 +1302,6 @@ namespace {
             Concrete\Core\Support\Facade\Facade::setFacadeApplication($app);
         }
 
-        /**
-         * Handle dynamic, static calls to the object.
-         *
-         * @param  string  $method
-         * @param  array   $args
-         * @return mixed
-         */
-        public static function __callStatic($method, $args)
-        {
-            // Concrete\Core\Support\Facade\Facade::__callStatic();
-            Concrete\Core\Support\Facade\Facade::__callStatic($method, $args);
-        }
-
     }
 
     class Response extends \Concrete\Core\Http\Response
@@ -1360,23 +1311,6 @@ namespace {
         {
             // Concrete\Core\Http\Response::send();
             Concrete\Core\Http\Response::send();
-        }
-
-        /**
-         * Constructor.
-         *
-         * @param string  $content The response content
-         * @param integer $status  The response status code
-         * @param array   $headers An array of response headers
-         *
-         * @throws \InvalidArgumentException When the HTTP status code is not valid
-         *
-         * @api
-         */
-        public static function __construct($content = null, $status = 200, $headers = null)
-        {
-            // Symfony\Component\HttpFoundation\Response::__construct();
-            Symfony\Component\HttpFoundation\Response::__construct($content, $status, $headers);
         }
 
         /**
@@ -1397,23 +1331,6 @@ namespace {
         {
             // Symfony\Component\HttpFoundation\Response::create();
             Symfony\Component\HttpFoundation\Response::create($content, $status, $headers);
-        }
-
-        /**
-         * Returns the Response as an HTTP string.
-         *
-         * The string representation of the Response is the same as the
-         * one that will be sent to the client only if the prepare() method
-         * has been called before.
-         *
-         * @return string The Response as an HTTP string
-         *
-         * @see prepare()
-         */
-        public static function __toString()
-        {
-            // Symfony\Component\HttpFoundation\Response::__toString();
-            Symfony\Component\HttpFoundation\Response::__toString();
         }
 
         /**
@@ -2208,12 +2125,6 @@ namespace {
     class Log extends \Concrete\Core\Logging\Log
     {
 
-        public static function __construct($log = null, $session = "1", $internal = null)
-        {
-            // Concrete\Core\Logging\Log::__construct();
-            Concrete\Core\Logging\Log::__construct($log, $session, $internal);
-        }
-
         public static function write($message)
         {
             // Concrete\Core\Logging\Log::write();
@@ -2873,12 +2784,6 @@ namespace {
             Concrete\Core\Attribute\Key\Key::render($view, $value, $return);
         }
 
-        public static function __destruct()
-        {
-            // Concrete\Core\Attribute\Key\Key::__destruct();
-            Concrete\Core\Attribute\Key\Key::__destruct();
-        }
-
         public static function validateAttributeForm($h = null)
         {
             // Concrete\Core\Attribute\Key\Key::validateAttributeForm();
@@ -3378,12 +3283,6 @@ namespace {
         {
             // Concrete\Core\Attribute\Key\Key::render();
             Concrete\Core\Attribute\Key\Key::render($view, $value, $return);
-        }
-
-        public static function __destruct()
-        {
-            // Concrete\Core\Attribute\Key\Key::__destruct();
-            Concrete\Core\Attribute\Key\Key::__destruct();
         }
 
         public static function validateAttributeForm($h = null)
@@ -3972,12 +3871,6 @@ namespace {
             Concrete\Core\Attribute\Key\Key::render($view, $value, $return);
         }
 
-        public static function __destruct()
-        {
-            // Concrete\Core\Attribute\Key\Key::__destruct();
-            Concrete\Core\Attribute\Key\Key::__destruct();
-        }
-
         public static function validateAttributeForm($h = null)
         {
             // Concrete\Core\Attribute\Key\Key::validateAttributeForm();
@@ -4334,12 +4227,6 @@ namespace {
     class Router extends \Concrete\Core\Routing\Router
     {
 
-        public static function __construct()
-        {
-            // Concrete\Core\Routing\Router::__construct();
-            Concrete\Core\Routing\Router::__construct();
-        }
-
         public static function getList()
         {
             // Concrete\Core\Routing\Router::getList();
@@ -4400,23 +4287,6 @@ namespace {
         }
 
         /**
-         * Creates a redirect response so that it conforms to the rules defined for a redirect status code.
-         *
-         * @param string  $url     The URL to redirect to
-         * @param integer $status  The status code (302 by default)
-         * @param array   $headers The headers (Location is always set to the given url)
-         *
-         * @see http://tools.ietf.org/html/rfc2616#section-10.3
-         *
-         * @api
-         */
-        public static function __construct($url, $status = 302, $headers = null)
-        {
-            // Symfony\Component\HttpFoundation\RedirectResponse::__construct();
-            Symfony\Component\HttpFoundation\RedirectResponse::__construct($url, $status, $headers);
-        }
-
-        /**
          * {@inheritDoc}
          */
         public static function create($url = null, $status = 302, $headers = null)
@@ -4447,23 +4317,6 @@ namespace {
         {
             // Symfony\Component\HttpFoundation\RedirectResponse::setTargetUrl();
             Symfony\Component\HttpFoundation\RedirectResponse::setTargetUrl($url);
-        }
-
-        /**
-         * Returns the Response as an HTTP string.
-         *
-         * The string representation of the Response is the same as the
-         * one that will be sent to the client only if the prepare() method
-         * has been called before.
-         *
-         * @return string The Response as an HTTP string
-         *
-         * @see prepare()
-         */
-        public static function __toString()
-        {
-            // Symfony\Component\HttpFoundation\Response::__toString();
-            Symfony\Component\HttpFoundation\Response::__toString();
         }
 
         /**
@@ -5258,12 +5111,6 @@ namespace {
         {
             // Concrete\Core\Page\Page::getByID();
             Concrete\Core\Page\Page::getByID($cID, $version, $class);
-        }
-
-        public static function __construct()
-        {
-            // Concrete\Core\Page\Page::__construct();
-            Concrete\Core\Page\Page::__construct();
         }
 
         /**
@@ -6108,12 +5955,6 @@ namespace {
             Concrete\Core\Page\Page::acquirePagePermissions($permissionsCollectionID);
         }
 
-        public static function __destruct()
-        {
-            // Concrete\Core\Page\Page::__destruct();
-            Concrete\Core\Page\Page::__destruct();
-        }
-
         public static function updateGroupsSubCollection($cParentIDString)
         {
             // Concrete\Core\Page\Page::updateGroupsSubCollection();
@@ -6738,12 +6579,6 @@ namespace {
             Concrete\Core\Application\EditResponse::getRedirectURL();
         }
 
-        public static function __construct($e = null)
-        {
-            // Concrete\Core\Application\EditResponse::__construct();
-            Concrete\Core\Application\EditResponse::__construct($e);
-        }
-
         public static function setError($error)
         {
             // Concrete\Core\Application\EditResponse::setError();
@@ -6825,12 +6660,6 @@ namespace {
         {
             // Concrete\Core\Controller\Controller::getControllerActionPath();
             Concrete\Core\Controller\Controller::getControllerActionPath();
-        }
-
-        public static function __construct()
-        {
-            // Concrete\Core\Controller\Controller::__construct();
-            Concrete\Core\Controller\Controller::__construct();
         }
 
         public static function getViewObject()
@@ -6975,12 +6804,6 @@ namespace {
         {
             // Concrete\Core\Page\Controller\PageController::supportsPageCache();
             Concrete\Core\Page\Controller\PageController::supportsPageCache();
-        }
-
-        public static function __construct(Concrete\Core\Page\Page $c)
-        {
-            // Concrete\Core\Page\Controller\PageController::__construct();
-            Concrete\Core\Page\Controller\PageController::__construct($c);
         }
 
         public static function getPageObject()
@@ -8166,12 +7989,6 @@ namespace {
     class PageList extends \Concrete\Core\Page\PageList
     {
 
-        public static function __call($nm, $a)
-        {
-            // Concrete\Core\Page\PageList::__call();
-            Concrete\Core\Page\PageList::__call($nm, $a);
-        }
-
         public static function setViewPagePermissionKeyHandle($pkHandle)
         {
             // Concrete\Core\Page\PageList::setViewPagePermissionKeyHandle();
@@ -8913,12 +8730,6 @@ namespace {
             Concrete\Core\Conversation\FlagType\FlagType::getConversationFlagTypeID();
         }
 
-        public static function __construct($id = null, $handle = null)
-        {
-            // Concrete\Core\Conversation\FlagType\FlagType::__construct();
-            Concrete\Core\Conversation\FlagType\FlagType::__construct($id, $handle);
-        }
-
         public static function init($id, $handle)
         {
             // Concrete\Core\Conversation\FlagType\FlagType::init();
@@ -9265,12 +9076,6 @@ namespace {
             Concrete\Core\Block\Block::resetBlockCustomStyle($updateAll);
         }
 
-        public static function __destruct()
-        {
-            // Concrete\Core\Block\Block::__destruct();
-            Concrete\Core\Block\Block::__destruct();
-        }
-
         public static function setBlockCustomStyle($csr, $updateAll = null)
         {
             // Concrete\Core\Block\Block::setBlockCustomStyle();
@@ -9556,12 +9361,6 @@ namespace {
         {
             // Concrete\Core\Marketplace\Marketplace::getInstance();
             Concrete\Core\Marketplace\Marketplace::getInstance();
-        }
-
-        public static function __construct()
-        {
-            // Concrete\Core\Marketplace\Marketplace::__construct();
-            Concrete\Core\Marketplace\Marketplace::__construct();
         }
 
         public static function isConnected()
@@ -9990,12 +9789,6 @@ namespace {
 
     class BlockTypeList extends \Concrete\Core\Block\BlockType\BlockTypeList
     {
-
-        public static function __construct()
-        {
-            // Concrete\Core\Block\BlockType\BlockTypeList::__construct();
-            Concrete\Core\Block\BlockType\BlockTypeList::__construct();
-        }
 
         public static function get($itemsToGet = 100, $offset = null)
         {
@@ -11039,12 +10832,6 @@ namespace {
             Concrete\Core\Page\Collection\Collection::getVersionID();
         }
 
-        public static function __destruct()
-        {
-            // Concrete\Core\Page\Collection\Collection::__destruct();
-            Concrete\Core\Page\Collection\Collection::__destruct();
-        }
-
         public static function getCollectionAreaDisplayOrder($arHandle, $ignoreVersions = null)
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionAreaDisplayOrder();
@@ -11476,21 +11263,6 @@ namespace {
             Concrete\Core\Area\Area::getAreaDisplayName();
         }
 
-        /**
-         * The constructor is used primarily on page templates to create areas of content that are editable within the cms.
-         * ex: $a = new Area('Main'); $a->display($c)
-         * We actually use Collection::getArea() when we want to interact with a fully
-         * qualified Area object when dealing with a Page/Collection object
-         *
-         * @param string
-         * @return void
-         */
-        public static function __construct($arHandle)
-        {
-            // Concrete\Core\Area\Area::__construct();
-            Concrete\Core\Area\Area::__construct($arHandle);
-        }
-
         public static function getPermissionObjectIdentifier()
         {
             // Concrete\Core\Area\Area::getPermissionObjectIdentifier();
@@ -11732,12 +11504,6 @@ namespace {
             Concrete\Core\Area\Area::revertToPagePermissions();
         }
 
-        public static function __destruct()
-        {
-            // Concrete\Core\Area\Area::__destruct();
-            Concrete\Core\Area\Area::__destruct();
-        }
-
         /**
          * Rescans the current Area's permissions ensuring that it's enheriting permissions properly up the chain
          * @return void
@@ -11957,21 +11723,6 @@ namespace {
             Concrete\Core\Area\Area::getAreaGridColumnSpan();
         }
 
-        /**
-         * The constructor is used primarily on page templates to create areas of content that are editable within the cms.
-         * ex: $a = new Area('Main'); $a->display($c)
-         * We actually use Collection::getArea() when we want to interact with a fully
-         * qualified Area object when dealing with a Page/Collection object
-         *
-         * @param string
-         * @return void
-         */
-        public static function __construct($arHandle)
-        {
-            // Concrete\Core\Area\Area::__construct();
-            Concrete\Core\Area\Area::__construct($arHandle);
-        }
-
         public static function getPermissionObjectIdentifier()
         {
             // Concrete\Core\Area\Area::getPermissionObjectIdentifier();
@@ -12173,12 +11924,6 @@ namespace {
         {
             // Concrete\Core\Area\Area::revertToPagePermissions();
             Concrete\Core\Area\Area::revertToPagePermissions();
-        }
-
-        public static function __destruct()
-        {
-            // Concrete\Core\Area\Area::__destruct();
-            Concrete\Core\Area\Area::__destruct();
         }
 
         /**
@@ -12398,12 +12143,6 @@ namespace {
         {
             // Concrete\Core\Page\Page::getByPath();
             Concrete\Core\Page\Page::getByPath($path, $version);
-        }
-
-        public static function __construct()
-        {
-            // Concrete\Core\Page\Page::__construct();
-            Concrete\Core\Page\Page::__construct();
         }
 
         /**
@@ -13236,12 +12975,6 @@ namespace {
             Concrete\Core\Page\Page::acquirePagePermissions($permissionsCollectionID);
         }
 
-        public static function __destruct()
-        {
-            // Concrete\Core\Page\Page::__destruct();
-            Concrete\Core\Page\Page::__destruct();
-        }
-
         public static function updateGroupsSubCollection($cParentIDString)
         {
             // Concrete\Core\Page\Page::updateGroupsSubCollection();
@@ -13824,12 +13557,6 @@ namespace {
     class StackList extends \Concrete\Core\Page\Stack\StackList
     {
 
-        public static function __construct()
-        {
-            // Concrete\Core\Page\Stack\StackList::__construct();
-            Concrete\Core\Page\Stack\StackList::__construct();
-        }
-
         public static function filterByGlobalAreas()
         {
             // Concrete\Core\Page\Stack\StackList::filterByGlobalAreas();
@@ -13852,12 +13579,6 @@ namespace {
         {
             // Concrete\Core\Page\Stack\StackList::get();
             Concrete\Core\Page\Stack\StackList::get($itemsToGet, $offset);
-        }
-
-        public static function __call($nm, $a)
-        {
-            // Concrete\Core\Page\PageList::__call();
-            Concrete\Core\Page\PageList::__call($nm, $a);
         }
 
         public static function setViewPagePermissionKeyHandle($pkHandle)
@@ -14604,12 +14325,6 @@ namespace {
             Concrete\Core\View\AbstractView::getRequestInstance();
         }
 
-        public static function __construct($mixed = null)
-        {
-            // Concrete\Core\View\AbstractView::__construct();
-            Concrete\Core\View\AbstractView::__construct($mixed);
-        }
-
         protected static function setRequestInstance(Concrete\Core\View\View $v)
         {
             // Concrete\Core\View\AbstractView::setRequestInstance();
@@ -15331,15 +15046,6 @@ namespace {
         {
             // Concrete\Core\File\File::getByID();
             Concrete\Core\File\File::getByID($fID);
-        }
-
-        /**
-         * For all methods that file does not implement, we pass through to the currently active file version object
-         */
-        public static function __call($nm, $a)
-        {
-            // Concrete\Core\File\File::__call();
-            Concrete\Core\File\File::__call($nm, $a);
         }
 
         public static function getPermissionResponseClassName()
@@ -16856,12 +16562,6 @@ namespace {
     class GroupSetList extends \Concrete\Core\User\Group\GroupSetList
     {
 
-        public static function __construct()
-        {
-            // Concrete\Core\User\Group\GroupSetList::__construct();
-            Concrete\Core\User\Group\GroupSetList::__construct();
-        }
-
         public static function get()
         {
             // Concrete\Core\User\Group\GroupSetList::get();
@@ -17184,12 +16884,6 @@ namespace {
             Concrete\Core\User\Group\GroupList::updateItemsPerPage($num);
         }
 
-        public static function __construct()
-        {
-            // Concrete\Core\User\Group\GroupList::__construct();
-            Concrete\Core\User\Group\GroupList::__construct();
-        }
-
         public static function get($itemsToGet = 100, $offset = null)
         {
             // Concrete\Core\User\Group\GroupList::get();
@@ -17487,12 +17181,6 @@ namespace {
      */
     class FileList extends \Concrete\Core\File\FileList
     {
-
-        public static function __call($nm, $a)
-        {
-            // Concrete\Core\File\FileList::__call();
-            Concrete\Core\File\FileList::__call($nm, $a);
-        }
 
         /**
          * Filters by file extension
@@ -18250,26 +17938,10 @@ namespace {
             Concrete\Core\Permission\Checker::getOriginalObject();
         }
 
-        public static function __construct($object = null)
-        {
-            // Concrete\Core\Permission\Checker::__construct();
-            Concrete\Core\Permission\Checker::__construct($object);
-        }
-
         public static function getResponseObject()
         {
             // Concrete\Core\Permission\Checker::getResponseObject();
             Concrete\Core\Permission\Checker::getResponseObject();
-        }
-
-        /**
-         * We take any permissions function run on the permissions class and send it into the category
-         * object
-         */
-        public static function __call($f, $a)
-        {
-            // Concrete\Core\Permission\Checker::__call();
-            Concrete\Core\Permission\Checker::__call($f, $a);
         }
 
     }
@@ -18931,12 +18603,6 @@ namespace {
             Concrete\Core\User\User::checkLogin();
         }
 
-        public static function __construct()
-        {
-            // Concrete\Core\User\User::__construct();
-            Concrete\Core\User\User::__construct();
-        }
-
         public static function recordLogin()
         {
             // Concrete\Core\User\User::recordLogin();
@@ -19237,12 +18903,6 @@ namespace {
     class UserInfo extends \Concrete\Core\User\UserInfo
     {
 
-        public static function __toString()
-        {
-            // Concrete\Core\User\UserInfo::__toString();
-            Concrete\Core\User\UserInfo::__toString();
-        }
-
         public static function getPermissionObjectIdentifier()
         {
             // Concrete\Core\User\UserInfo::getPermissionObjectIdentifier();
@@ -19265,12 +18925,6 @@ namespace {
         {
             // Concrete\Core\User\UserInfo::getPermissionObjectKeyCategoryHandle();
             Concrete\Core\User\UserInfo::getPermissionObjectKeyCategoryHandle();
-        }
-
-        public static function __call($nm, $a)
-        {
-            // Concrete\Core\User\UserInfo::__call();
-            Concrete\Core\User\UserInfo::__call($nm, $a);
         }
 
         /**
@@ -19763,12 +19417,6 @@ namespace {
             Concrete\Core\User\UserList::setBaseQuery();
         }
 
-        public static function __call($nm, $a)
-        {
-            // Concrete\Core\User\UserList::__call();
-            Concrete\Core\User\UserList::__call($nm, $a);
-        }
-
         public static function debug($dbg = "1")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug();
@@ -20053,12 +19701,6 @@ namespace {
         {
             // Concrete\Core\Package\StartingPointPackage::getInstallRoutines();
             Concrete\Core\Package\StartingPointPackage::getInstallRoutines();
-        }
-
-        public static function __construct()
-        {
-            // Concrete\Core\Package\StartingPointPackage::__construct();
-            Concrete\Core\Package\StartingPointPackage::__construct();
         }
 
         public static function add_home_page()
@@ -21324,12 +20966,6 @@ namespace {
     class Zend_Queue_Adapter_Concrete5 extends \Concrete\Core\Utility\ZendQueueAdapter
     {
 
-        public static function __construct($options, Zend_Queue $queue = null)
-        {
-            // Concrete\Core\Utility\ZendQueueAdapter::__construct();
-            Concrete\Core\Utility\ZendQueueAdapter::__construct($options, $queue);
-        }
-
         /**
          * Initialize Db adapter using 'driverOptions' section of the _options array
          *
@@ -21621,26 +21257,10 @@ namespace {
             Concrete\Core\Permission\Checker::getOriginalObject();
         }
 
-        public static function __construct($object = null)
-        {
-            // Concrete\Core\Permission\Checker::__construct();
-            Concrete\Core\Permission\Checker::__construct($object);
-        }
-
         public static function getResponseObject()
         {
             // Concrete\Core\Permission\Checker::getResponseObject();
             Concrete\Core\Permission\Checker::getResponseObject();
-        }
-
-        /**
-         * We take any permissions function run on the permissions class and send it into the category
-         * object
-         */
-        public static function __call($f, $a)
-        {
-            // Concrete\Core\Permission\Checker::__call();
-            Concrete\Core\Permission\Checker::__call($f, $a);
         }
 
     }
@@ -21737,19 +21357,6 @@ namespace {
             Concrete\Core\Support\Facade\Facade::setFacadeApplication($app);
         }
 
-        /**
-         * Handle dynamic, static calls to the object.
-         *
-         * @param  string  $method
-         * @param  array   $args
-         * @return mixed
-         */
-        public static function __callStatic($method, $args)
-        {
-            // Concrete\Core\Support\Facade\Facade::__callStatic();
-            Concrete\Core\Support\Facade\Facade::__callStatic($method, $args);
-        }
-
     }
 
     class Session extends \Concrete\Core\Support\Facade\Session
@@ -21828,19 +21435,6 @@ namespace {
         {
             // Concrete\Core\Support\Facade\Facade::setFacadeApplication();
             Concrete\Core\Support\Facade\Facade::setFacadeApplication($app);
-        }
-
-        /**
-         * Handle dynamic, static calls to the object.
-         *
-         * @param  string  $method
-         * @param  array   $args
-         * @return mixed
-         */
-        public static function __callStatic($method, $args)
-        {
-            // Concrete\Core\Support\Facade\Facade::__callStatic();
-            Concrete\Core\Support\Facade\Facade::__callStatic($method, $args);
         }
 
     }
@@ -21929,29 +21523,10 @@ namespace {
             Concrete\Core\Support\Facade\Facade::setFacadeApplication($app);
         }
 
-        /**
-         * Handle dynamic, static calls to the object.
-         *
-         * @param  string  $method
-         * @param  array   $args
-         * @return mixed
-         */
-        public static function __callStatic($method, $args)
-        {
-            // Concrete\Core\Support\Facade\Facade::__callStatic();
-            Concrete\Core\Support\Facade\Facade::__callStatic($method, $args);
-        }
-
     }
 
     class Route extends \Concrete\Core\Routing\Router
     {
-
-        public static function __construct()
-        {
-            // Concrete\Core\Routing\Router::__construct();
-            Concrete\Core\Routing\Router::__construct();
-        }
 
         public static function getList()
         {
