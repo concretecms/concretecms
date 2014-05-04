@@ -5,20 +5,20 @@ use Doctrine\ORM\EntityManager;
 
 class Connection extends \Doctrine\DBAL\Connection {
 
-    protected static $entityManager;
+    protected $entityManager;
 
     /** 
      * Returns the entity manager for use with Doctrine ORM
      * @return EntityManager
      */
     public function getEntityManager() {
-        if (!isset(static::$entityManager)) {
+        if (!isset($this->entityManager)) {
             $devMode = true;
             $config = Setup::createXMLMetadataConfiguration(array(DIR_ORM_ENTITIES), $devMode);
             $conn = $this->getParams();
-            static::$entityManager = EntityManager::create($conn, $config);
+            $this->entityManager = EntityManager::create($conn, $config);
         }
-        return static::$entityManager;
+        return $this->entityManager;
     }
 
     /**
