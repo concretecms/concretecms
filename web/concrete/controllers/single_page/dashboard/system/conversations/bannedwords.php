@@ -4,7 +4,7 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Conversations;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
-use \Concrete\Core\Validation\BannedWord;
+use \Concrete\Core\Validation\BannedWord\BannedWordList;
 
 class Bannedwords extends DashboardPageController {
 
