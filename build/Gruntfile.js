@@ -17,6 +17,7 @@ module.exports = function(grunt) {
 
 	config.DIR_REL = ('DIR_REL' in parameters) ? parameters.DIR_REL : '';
 	config.DIR_BASE = ('DIR_BASE' in parameters) ? parameters.DIR_BASE : '../web';
+	config.DIR_CLI = ('DIR_CLI' in parameters) ? parameters.DIR_CLI : '../cli';
 
 	// Options for the tool that will merge the files
 	var concatOptions = {
@@ -369,6 +370,10 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('remove-short-tags', 'Remove short tags.', function() {
 		require('./tasks/remove-short-tags.js')(grunt, config, parameters, this.async());
+	});
+
+	grunt.registerTask('generate-symbols', 'Generate IDE symbols', function() {
+		require('./tasks/generate-symbols.js')(grunt, config, parameters, this.async());
 	});
 
 	grunt.registerTask('build-release-start', 'Create concrete5 release from Git, run various required functions.', function() {
