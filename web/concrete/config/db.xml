@@ -1508,7 +1508,7 @@
       <col>cvID</col>
     </index>
   </table>
-  <table name="CollectionVersionThemeStyles">
+  <table name="CollectionVersionThemeCustomStyles">
     <field name="cID" type="I" size="10">
       <KEY/>
       <DEFAULT value="0"/>
@@ -1524,12 +1524,15 @@
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="pThemeStyleHandle" type="C" size="128">
-      <key/>
+    <field name="scvlID" type="I" size="10">
+      <default value="0"/>
+      <unsigned/>
     </field>
-    <field name="pThemeStyleValue" type="X2" />
-    <field name="pThemeStyleType" type="C" size="32">
-      <key/>
+    <field name="preset" type="C" size="255">
+    </field>
+    <field name="sccRecordID" type="I" size="10">
+      <default value="0"/>
+      <unsigned/>
     </field>
   </table>
 
@@ -1897,6 +1900,14 @@
       <autoincrement/>
       <unsigned/>
     </field>
+  </table>
+  <table name="StyleCustomizerCustomCssRecords">
+    <field name="sccRecordID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="value" type="X2"/>
   </table>
   <table name="StyleCustomizerValues">
     <field name="scvID" type="I" size="10">
@@ -3048,7 +3059,12 @@
       <unsigned/>
     </field>
     <field name="scvlID" type="I" size="10">
-      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+  <field name="preset" type="C" size="255">
+  </field>
+    <field name="sccRecordID" type="I" size="10">
       <default value="0"/>
       <unsigned/>
     </field>

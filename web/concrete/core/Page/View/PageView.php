@@ -88,6 +88,31 @@ class PageView extends View {
         }
     }
 
+    public function getStyleSheet($stylesheet)
+    {
+        if ($this->themeObject->isThemePreviewRequest()) {
+            return $this->themeObject->getStylesheet($stylesheet);
+        }
+
+        if ($this->cp->canViewPageVersions() && $this->c->hasPageThemeCustomizations()) {
+            // this means that we're potentially viewing customizations that haven't been approved yet. So we're going to
+            // pipe them all through a handler script, basically uncaching them.
+            return URL::to('/ccm/system/css/page', $this->c->getCollectionID(), $this->c->getVersionID(), $stylesheet);
+        }
+
+        $env = Environment::get();
+        $output = DIR_FILES_CACHE . '/pages/' . $this->c->getCollectionID() . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle();
+        $relative = REL_DIR_FILES_CACHE . '/pages/' . $this->c->getCollectionID() . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle();
+        $r = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeObject->getThemeHandle() . '/' . DIRNAME_CSS . '/' . $stylesheet,
+            $this->themeObject->getPackageHandle());
+        $sheetObject = new \Concrete\Core\StyleCustomizer\Stylesheet($stylesheet, $r->file, $r->url, $output, $relative);
+        if ($sheetObject->outputFileExists()) {
+            return $sheetObject->getOutputRelativePath();
+        }
+
+        return $this->themeObject->getStylesheet($stylesheet);
+    }
+
     public function startRender() {
         parent::startRender();
         $this->c->outputCustomStyleHeaderItems();
@@ -118,13 +143,6 @@ class PageView extends View {
             $cache->set($this->c, $contents);
         }
         return $contents;
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getStyleSheet($stylesheet) {
-        return $this->themeObject->getStyleSheet($stylesheet);
     }
 
     /**

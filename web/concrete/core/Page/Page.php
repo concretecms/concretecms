@@ -22,6 +22,7 @@ use \Concrete\Core\Package\PackageList;
 use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use \Concrete\Core\Permission\Access\Entity\GroupCombinationEntity as GroupCombinationPermissionAccessEntity;
 use \Concrete\Core\Permission\Access\Entity\UserEntity as UserPermissionAccessEntity;
+use \Concrete\Core\StyleCustomizer\CustomCssRecord;
 use Area;
 use Queue;
 use Log;
@@ -1360,18 +1361,72 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     public function hasPageThemeCustomizations() {
         $db = Loader::db();
-        return ($db->GetOne('select count(cID) from CollectionVersionThemeStyles where cID = ? and cvID = ?', array(
+        return ($db->GetOne('select count(cID) from CollectionVersionThemeCustomStyles where cID = ? and cvID = ?', array(
             $this->cID, $this->getVersionID()
         )) > 0);
     }
 
     public function resetCustomThemeStyles() {
         $db = Loader::db();
-        $db->Execute('delete from CollectionVersionThemeStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
+        $db->Execute('delete from CollectionVersionThemeCustomStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
+        $this->writePageThemeCustomizations();
+    }
+
+    public function setCustomStyleObject(\Concrete\Core\Page\Theme\Theme $pt, \Concrete\Core\StyleCustomizer\Style\ValueList $valueList, $selectedPreset = false, $customCssRecord = false)
+    {
+        $db = Loader::db();
+        $db->delete('CollectionVersionThemeCustomStyles', array('cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID()));
+        $sccRecordID = 0;
+        if ($customCssRecord instanceof CustomCssRecord) {
+            $sccRecordID = $customCssRecord->getRecordID();
+        }
+        $preset = false;
+        if ($selectedPreset) {
+            $preset = $selectedPreset->getPresetHandle();
+        }
+        if ($customCssRecord instanceof CustomCssRecord) {
+            $sccRecordID = $customCssRecord->getRecordID();
+        }
+        $db->insert(
+            'CollectionVersionThemeCustomStyles',
+            array(
+                'cID' => $this->getCollectionID(),
+                'cvID' => $this->getVersionID(),
+                'pThemeID' => $pt->getThemeID(),
+                'sccRecordID' => $sccRecordID,
+                'preset' => $preset,
+                'scvlID' => $valueList->getValueListID()
+            )
+        );
+
+        $scc = new \Concrete\Core\Page\CustomStyle();
+        $scc->setThemeID($pt->getThemeID());
+        $scc->setValueListID($valueList->getValueListID());
+        $scc->setPresetHandle($preset);
+        $scc->setCustomCssRecordID($sccRecordID);
+        return $scc;
     }
 
     public function writePageThemeCustomizations() {
-        return false;
+        $env = Environment::get();
+        $style = $this->getCustomStyleObject();
+        if (is_object($style)) {
+            $scl = $style->getValueList();
+        }
+
+        $theme = $this->getCollectionThemeObject();
+        $theme->setStylesheetCachePath(DIR_FILES_CACHE . '/pages/' . $this->getCollectionID());
+        $theme->setStylesheetCacheRelativePath(REL_DIR_FILES_CACHE . '/pages/' . $this->getCollectionID());
+        $sheets = $theme->getThemeCustomizableStyleSheets();
+        foreach($sheets as $sheet) {
+            if (is_object($scl)) {
+                $sheet->setValueList($scl);
+                $sheet->output();
+            } else {
+                $sheet->clearOutputFile();
+            }
+        }
+
     }
 
     function update($data) {
@@ -2440,6 +2495,21 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         return $pc;
     }
+
+    public function getCustomStyleObject()
+    {
+        $db = Loader::db();
+        $row = $db->FetchAssoc('select * from CollectionVersionThemeCustomStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->getVersionID()));
+        if (isset($row['cID'])) {
+            $o = new \Concrete\Core\Page\CustomStyle();
+            $o->setThemeID($row['pThemeID']);
+            $o->setValueListID($row['scvlID']);
+            $o->setPresetHandle($row['preset']);
+            $o->setCustomCssRecordID($row['sccRecordID']);
+            return $o;
+        }
+    }
+
 
     public function getCollectionFullPageCaching() {
         return $this->cCacheFullPageContent;

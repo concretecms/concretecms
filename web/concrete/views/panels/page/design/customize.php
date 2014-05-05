@@ -13,22 +13,24 @@ $pk = PermissionKey::getByHandle('customize_themes');
     <div class="list-group" data-panel-menu-id="page-design-presets"  data-panel-menu="collapsible-list-group">
         <div class="list-group-item list-group-item-header"><?=t('Preset')?></div>
         <?
+        $i = 0;
         foreach($presets as $preset) {
             $selected = false;
-            if ($selectedPreset->getPresetHandle() == $preset->getPresetHandle()) {
+            if (is_object($selectedPreset) && $selectedPreset->getPresetHandle() == $preset->getPresetHandle()) {
                 $selected = true;
             }
             ?>
             <label class="list-group-item"><input type="radio" class="ccm-flat-radio" value="<?=$preset->getPresetHandle()?>" name="handle" <? if ($selected) { ?>checked="checked"<? } ?> /> <?=$preset->getPresetName()?>
                 <?=$preset->getPresetIconHTML()?>
             </label>
-            <? if ($selected) { ?>
+            <? if ($i == 0) { ?>
                 <div class="list-group-item-collapse-wrapper">
             <? } ?>
-        <? } ?>
-        <? if ($selectedPreset) { ?>
+        <?  $i++;
+            } ?>
+
             </div>
-        <? } ?>
+
         <a class="list-group-item list-group-item-collapse" href="#"><span><?=t('Expand')?></span></a>
     </div>
 
@@ -55,6 +57,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
         <ul class="list-unstyled">
             <li>
                 <?=t('Custom CSS')?>
+                <input type="hidden" name="sccRecordID" value="<?=$sccRecordID?>" />
                 <span class="ccm-style-customizer-display-swatch-wrapper" data-custom-css-selector="custom"><span class="ccm-style-customizer-display-swatch"><i class="glyphicon glyphicon-cog"></i></span></span>
             </li>
         </ul>
@@ -191,12 +194,13 @@ $pk = PermissionKey::getByHandle('customize_themes');
             }
         });
         $('span[data-custom-css-selector=custom]').on('click', function() {
+            var sccRecordID = $('form[data-form=panel-page-design-customize] input[name=sccRecordID]').val();
             jQuery.fn.dialog.open({
                 title: '<?=t('Custom CSS')?>',
-                href: '<?=URL::to('/ccm/system/dialogs/page/design/css')?>?cID=<?=$c->getCollectionID()?>',
+                href: '<?=URL::to('/ccm/system/dialogs/page/design/css')?>?cID=<?=$c->getCollectionID()?>&sccRecordID=' + sccRecordID,
                 modal: false,
-                width: 500,
-                height: 380
+                width: 640,
+                height: 500
             });
 
         })

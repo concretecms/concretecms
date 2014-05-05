@@ -14,13 +14,17 @@ class Stylesheet extends Controller {
 			$cp = new Permissions($c);
 			if ($cp->canViewPageVersions()) {
 				$c->loadVersionObject($cvID);
-				$pt = $c->getCollectionThemeObject();
 
-				
-				
+                $theme = $c->getCollectionThemeObject();
+                $stylesheet = $theme->getStylesheetObject($stylesheet);
+                $style = $c->getCustomStyleObject();
+                if (is_object($style)) {
+                    $scl = $style->getValueList();
+                    $stylesheet->setValueList($scl);
+                }
 				$response = new Response();
 				$response->headers->set('Content-Type', 'text/css');
-				$response->setContent($content);
+				$response->setContent($stylesheet->getCss());
 				return $response;
 			}
 		}
