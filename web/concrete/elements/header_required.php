@@ -32,6 +32,18 @@ if (is_object($c)) {
 	$isEditMode = ($c->isEditMode()) ? "true" : "false";
 	$isArrangeMode = ($c->isArrangeMode()) ? "true" : "false";
 
+
+    if ($c->hasPageThemeCustomizations()) {
+        $styleObject = $c->getCustomStyleObject();
+    } else {
+        $pt = $c->getCollectionThemeObject();
+        $styleObject = $pt->getThemeCustomStyleObject();
+    }
+
+    if (is_object($styleObject)) {
+        $scc = $styleObject->getCustomCssRecord();
+    }
+
 } else {
 	$cID = 1;
 }
@@ -82,6 +94,12 @@ var CCM_BASE_URL = "<?php echo BASE_URL?>";
 var CCM_REL = "<?php echo DIR_REL?>";
 
 </script>
+
+<? if (is_object($scc)) { ?>
+    <style type="text/css">
+        <? print $scc->getValue();?>
+    </style>
+<? } ?>
 
 <?php
 

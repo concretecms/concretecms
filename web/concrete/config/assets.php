@@ -90,6 +90,12 @@ $al->registerGroup('redactor', array(
     array('css', 'redactor')
 ));
 
+// ace editor
+$al->register('javascript', 'ace', 'js/ace/ace.js', array('minify' => false));
+$al->registerGroup('ace', array(
+    array('javascript', 'ace')
+));
+
 // backstretch
 $al->register('javascript', 'backstretch', 'js/jquery.backstretch.js');
 

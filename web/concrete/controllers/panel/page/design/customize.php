@@ -26,23 +26,48 @@ class Customize extends BackendInterfacePageController {
     public function view($pThemeID) {
         $pt = PageTheme::getByID($pThemeID);
         if (is_object($pt) && $pt->isThemeCustomizable()) {
+
             $presets = $pt->getThemeCustomizableStylePresets();
             foreach($presets as $preset) {
                 if ($preset->isDefaultPreset()) {
-                    $selectedPreset = $preset;
+                    $defaultPreset = $preset;
                 }
+            }
+
+            // load the defaults for the panel, before we get to any
+            // request-based tomfoolery.
+            if ($this->page->hasPageThemeCustomizations()) {
+                $object = $this->page->getCustomStyleObject();
+            } else {
+                $object = $pt->getThemeCustomStyleObject();
+            }
+
+            if (is_object($object)) {
+                $handle = $object->getPresetHandle();
+                if ($handle) {
+                    $selectedPreset = $pt->getThemeCustomizablePreset($handle);
+                }
+                $valueList = $object->getValueList();
+                $sccRecord = $object->getCustomCssRecord();
+            } else {
+                $selectedPreset = $defaultPreset;
+                $valueList = $defaultPreset->getStyleValueList();
             }
 
             if ($this->request->request->has('handle')) {
                 $preset = $pt->getThemeCustomizablePreset($this->request->request->get('handle'));
                 if (is_object($preset)) {
                     $selectedPreset = $preset;
+                    $valueList = $preset->getStyleValueList();
                 }
             }
 
             // finally, we sort the presets so that the selected
             // preset is at the top
             usort($presets, function($a, $b) use ($selectedPreset) {
+                if (!$selectedPreset) {
+                    return -1;
+                }
                 if ($selectedPreset->getPresetHandle() == $a->getPresetHandle()) {
                     return -1;
                 }
@@ -54,10 +79,11 @@ class Customize extends BackendInterfacePageController {
             });
 
             $styleList = $pt->getThemeCustomizableStyleList();
-            $valueList = $pt->getThemeCustomStyleValueList();
-            if (!is_object($valueList) || $this->request->request->has('handle')) {
-                $valueList = $selectedPreset->getStyleValueList();
+            $sccRecordID = 0;
+            if ($sccRecord) {
+                $sccRecordID = $sccRecord->getRecordID();
             }
+            $this->set('sccRecordID', $sccRecordID);
             $this->set('valueList', $valueList);
             $this->set('presets', $presets);
             $this->set('selectedPreset', $selectedPreset);
@@ -88,8 +114,7 @@ class Customize extends BackendInterfacePageController {
     public function preview($pThemeID) {
         $vl = $this->getValueListFromRequest($pThemeID);
         $pt = PageTheme::getByID($pThemeID);
-        $pt->setStylesheetCacheRelativePath(REL_DIR_FILES_CACHE . '/preview');
-        $pt->setStylesheetCachePath(DIR_FILES_CACHE . '/preview');
+        $pt->enablePreviewRequest();
         $sheets = $pt->getThemeCustomizableStyleSheets();
         // for each customizable stylesheet in the theme, we take the value list
         // and send its variables through the LESS parser.
@@ -118,7 +143,16 @@ class Customize extends BackendInterfacePageController {
             $vl = $this->getValueListFromRequest($pThemeID);
             $pt = PageTheme::getByID($pThemeID);
             $vl->save();
-            $pt->saveThemeCustomValueList($vl);
+            $sccRecord = false;
+            if ($this->request->request->has('sccRecordID')) {
+                $sccRecord = \Concrete\Core\StyleCustomizer\CustomCssRecord::getByID($this->request->request->get('sccRecordID'));
+            }
+            $preset = false;
+            if ($this->request->request->has('handle')) {
+                $preset = $pt->getThemeCustomizablePreset($this->request->request->get('handle'));
+            }
+
+            $pt->setCustomStyleObject($vl, $preset, $sccRecord);
             $r = new PageEditResponse();
             $r->setPage($this->page);
             $r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $this->page->getCollectionID());
@@ -126,13 +160,24 @@ class Customize extends BackendInterfacePageController {
         }
     }
 
-    /*
+
     public function apply_to_page($pThemeID) {
         if ($this->validateAction()) {
+            $vl = $this->getValueListFromRequest($pThemeID);
             $pt = PageTheme::getByID($pThemeID);
+            $vl->save();
+            $sccRecord = false;
+            if ($this->request->request->has('sccRecordID')) {
+                $sccRecord = \Concrete\Core\StyleCustomizer\CustomCssRecord::getByID($this->request->request->get('sccRecordID'));
+            }
+            $preset = false;
+            if ($this->request->request->has('handle')) {
+                $preset = $pt->getThemeCustomizablePreset($this->request->request->get('handle'));
+            }
+
             $nvc = $this->page->getVersionToModify();
-            $values = $pt->mergeStylesFromPost($_POST);
-            $nvc->updateCustomThemeStyles($values);
+            $nvc->setCustomStyleObject($pt, $vl, $preset, $sccRecord);
+
             $r = new PageEditResponse();
             $r->setPage($this->page);
             $r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $this->page->getCollectionID());
@@ -154,13 +199,11 @@ class Customize extends BackendInterfacePageController {
     public function reset_site_customizations($pThemeID) {
         if ($this->validateAction()) {
             $pt = PageTheme::getByID($pThemeID);
-            $pt->reset();
+            $pt->resetThemeCustomStyles();
             $r = new PageEditResponse();
             $r->setPage($this->page);
             $r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $this->page->getCollectionID());
             $r->outputJSON();
         }
     }
-
-    */
 }

@@ -50,7 +50,7 @@ class Stylesheet {
     }
 
     public function clearOutputFile() {
-        unlink($this->getOutputPath());
+        @unlink($this->getOutputPath());
     }
 
     public function outputFileExists() {

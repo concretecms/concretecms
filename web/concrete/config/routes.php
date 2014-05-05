@@ -33,6 +33,8 @@ Route::register('/ccm/system/dialogs/page/design/submit', '\Concrete\Controller\
 Route::register('/ccm/system/dialogs/user/search', '\Concrete\Controller\Dialog\User\Search::view');
 Route::register('/ccm/system/dialogs/group/search', '\Concrete\Controller\Dialog\Group\Search::view');
 Route::register('/ccm/system/dialogs/file/search', '\Concrete\Controller\Dialog\File\Search::view');
+Route::register('/ccm/system/dialogs/page/design/css', '\Concrete\Controller\Dialog\Page\Design\Css::view');
+Route::register('/ccm/system/dialogs/page/design/css/submit', '\Concrete\Controller\Dialog\Page\Design\Css::submit');
 Route::register('/ccm/system/dialogs/page/search', '\Concrete\Controller\Dialog\Page\Search::view');
 Route::register('/ccm/system/dialogs/page/attributes', '\Concrete\Controller\Dialog\Page\Attributes::view');
 Route::register('/ccm/system/dialogs/user/bulk/properties', '\Concrete\Controller\Dialog\User\Bulk\Properties::view');
@@ -151,5 +153,5 @@ Route::register('/ccm/system/panels/details/page/permissions/save_simple', '\Con
  * Special Dashboard
  */
 Route::register('/dashboard/blocks/stacks/list', function() {
-	return Redirect::to('/');
+    return Redirect::to('/');
 });

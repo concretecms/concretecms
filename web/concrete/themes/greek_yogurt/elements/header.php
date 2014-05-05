@@ -10,7 +10,7 @@
 $this->addHeaderItem(Loader::helper('html')->css('css/text.css'));
 $this->addHeaderItem(Loader::helper('html')->css('css/960_24_col.css'));
 $this->addHeaderItem(Loader::helper('html')->css('css/main.css'));
-$this->addHeaderItem(Loader::helper('html')->css($theme->getStylesheet('typography.less')));
+$this->addHeaderItem(Loader::helper('html')->css($view->getStylesheet('typography.less')));
 $this->addHeaderItem(Loader::helper('html')->css('//fonts.googleapis.com/css?family=Merriweather:400,700,900,300'));
 
 Loader::element('header_required'); ?>

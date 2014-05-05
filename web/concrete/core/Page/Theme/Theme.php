@@ -12,6 +12,7 @@ use PageTemplate;
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
 use \Concrete\Core\Page\Single as SinglePage;
 use \Concrete\Core\StyleCustomizer\Preset;
+use \Concrete\Core\StyleCustomizer\CustomCssRecord;
 
 /**
 *
@@ -30,6 +31,7 @@ class Theme extends Object {
     protected $pThemeHandle;
     protected $pThemeURL;
     protected $pThemeGridFrameworkHandle = false;
+    protected $pThemeIsPreview = false;
 
     const E_THEME_INSTALLED = 1;
     const THEME_EXTENSION = ".php";
@@ -213,7 +215,27 @@ class Theme extends Object {
         return $presets;
     }
 
+    public function enablePreviewRequest()
+    {
+        $this->setStylesheetCacheRelativePath(REL_DIR_FILES_CACHE . '/preview');
+        $this->setStylesheetCachePath(DIR_FILES_CACHE . '/preview');
+        $this->pThemeIsPreview = true;
+    }
 
+    public function resetThemeCustomStyles()
+    {
+        $db = Loader::db();
+        $db->delete('PageThemeCustomStyles', array('pThemeID' => $this->getThemeID()));
+        $sheets = $this->getThemeCustomizableStyleSheets();
+        foreach($sheets as $sheet) {
+            $sheet->clearOutputFile();
+        }
+
+    }
+    public function isThemePreviewRequest()
+    {
+        return $this->pThemeIsPreview;
+    }
 
     public function getThemeCustomizableStyleSheets() {
         $sheets = array();
@@ -248,8 +270,9 @@ class Theme extends Object {
      */
     public function getStylesheet($stylesheet) {
         $stylesheet = $this->getStylesheetObject($stylesheet);
-        $scl = $this->getThemeCustomStyleValueList();
-        if (is_object($scl)) {
+        $style = $this->getThemeCustomStyleObject();
+        if (is_object($style)) {
+            $scl = $style->getValueList();
             $stylesheet->setValueList($scl);
         }
         if (!$stylesheet->outputFileExists()) {
@@ -259,12 +282,47 @@ class Theme extends Object {
     }
 
     /**
-     * Saves a custom value list against a theme.
+     * Returns a Custom Style Object for the theme if one exists.
      */
-    public function saveThemeCustomValueList(\Concrete\Core\StyleCustomizer\Style\ValueList $valueList) {
+    public function getThemeCustomStyleObject()
+    {
+        $db = Loader::db();
+        $row = $db->FetchAssoc('select * from PageThemeCustomStyles where pThemeID = ?', array($this->getThemeID()));
+        if (isset($row['pThemeID'])) {
+            $o = new \Concrete\Core\Page\CustomStyle();
+            $o->setThemeID($this->getThemeID());
+            $o->setValueListID($row['scvlID']);
+            $o->setPresetHandle($row['preset']);
+            $o->setCustomCssRecordID($row['sccRecordID']);
+            return $o;
+        }
+    }
+
+
+    public function setCustomStyleObject(\Concrete\Core\StyleCustomizer\Style\ValueList $valueList, $selectedPreset = false, $customCssRecord = false)
+    {
         $db = Loader::db();
         $db->delete('PageThemeCustomStyles', array('pThemeID' => $this->getThemeID()));
-        $db->insert('PageThemeCustomStyles', array('pThemeID' => $this->getThemeID(), 'scvlID' => $valueList->getValueListID()));
+        $sccRecordID = 0;
+        if ($customCssRecord instanceof CustomCssRecord) {
+            $sccRecordID = $customCssRecord->getRecordID();
+        }
+        $preset = false;
+        if ($selectedPreset) {
+            $preset = $selectedPreset->getPresetHandle();
+        }
+        if ($customCssRecord instanceof CustomCssRecord) {
+            $sccRecordID = $customCssRecord->getRecordID();
+        }
+        $db->insert(
+            'PageThemeCustomStyles',
+            array(
+                'pThemeID' => $this->getThemeID(),
+                'sccRecordID' => $sccRecordID,
+                'preset' => $preset,
+                'scvlID' => $valueList->getValueListID()
+            )
+        );
 
         // now we reset all cached css files in this theme
         $sheets = $this->getThemeCustomizableStyleSheets();
@@ -272,20 +330,12 @@ class Theme extends Object {
             $s->clearOutputFile();
         }
 
-    }
-
-    /**
-     * Returns a custom ValueList of style customizer values for this theme.
-     */
-    public function getThemeCustomStyleValueList() {
-        $db = Loader::db();
-        $scvlID = $db->GetOne('select scvlID from PageThemeCustomStyles where pThemeID = ?', array($this->getThemeID()));
-        if ($scvlID > 0) {
-            $scl = \Concrete\Core\StyleCustomizer\Style\ValueList::getByID($scvlID);
-            if (is_object($scl)) {
-                return $scl;
-            }
-        }
+        $scc = new \Concrete\Core\Page\CustomStyle();
+        $scc->setThemeID($this->getThemeID());
+        $scc->setValueListID($valueList->getValueListID());
+        $scc->setPresetHandle($preset);
+        $scc->setCustomCssRecordID($sccRecordID);
+        return $scc;
     }
 
     /**

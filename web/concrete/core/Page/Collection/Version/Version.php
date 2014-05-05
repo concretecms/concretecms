@@ -203,12 +203,12 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 			$db->query("insert into CollectionVersionFeatureAssignments (cID, cvID, faID) values (?, ?, ?)", $v3);
 		}
 
-		$q4 = "select pThemeID, pThemeStyleHandle, pThemeStyleValue, pThemeStyleType from CollectionVersionThemeStyles where cID = ? and cvID = ?";
+		$q4 = "select pThemeID, scvlID, preset, sccRecordID from CollectionVersionThemeCustomStyles where cID = ? and cvID = ?";
 		$v4 = array($c->getCollectionID(), $this->getVersionID());
 		$r4 = $db->query($q4, $v4);
 		while ($row4 = $r4->fetchRow()) {
-			$v4 = array(intval($c->getCollectionID()), $newVID, $row4['pThemeID'], $row4['pThemeStyleHandle'], $row4['pThemeStyleValue'], $row4['pThemeStyleType']);
-			$db->query("insert into CollectionVersionThemeStyles (cID, cvID, pThemeID, pThemeStyleHandle, pThemeStyleValue, pThemeStyleType) values (?, ?, ?, ?, ?, ?)", $v4);
+			$v4 = array(intval($c->getCollectionID()), $newVID, $row4['pThemeID'], $row4['scvlID'], $row4['preset'], $row4['sccRecordID']);
+			$db->query("insert into CollectionVersionThemeCustomStyles (cID, cvID, pThemeID, scvlID, preset, sccRecordID) values (?, ?, ?, ?, ?, ?)", $v4);
 		}
 
 
@@ -368,7 +368,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 		}
 
 		$db->Execute('delete from CollectionVersionBlockStyles where cID = ? and cvID = ?', array($cID, $cvID));
-		$db->Execute('delete from CollectionVersionThemeStyles where cID = ? and cvID = ?', array($cID, $cvID));
+		$db->Execute('delete from CollectionVersionThemeCustomStyles where cID = ? and cvID = ?', array($cID, $cvID));
 		$db->Execute('delete from CollectionVersionRelatedEdits where cID = ? and cvID = ?', array($cID, $cvID));
 		$db->Execute('delete from CollectionVersionAreaStyles where cID = ? and cvID = ?', array($cID, $cvID));
 
