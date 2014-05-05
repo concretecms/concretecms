@@ -8,6 +8,8 @@ module.exports = {
 	DIR_REL: '',
 	// The path to the web folder, relative to this Gruntfile
 	DIR_BASE: '../web',
+	// The path to the cli folder, relative to this Gruntfile
+	DIR_CLI: '../cli',
 
 	// Your Transifex login.
 	// It's needed only if you have to run tasks that interact with Transifex.
