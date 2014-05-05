@@ -1,5 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+use \Concrete\Core\Page\Style;
 
 if (!Loader::helper('validation/numbers')->integer($_REQUEST['cID'])) {
 	die(t('Access Denied'));

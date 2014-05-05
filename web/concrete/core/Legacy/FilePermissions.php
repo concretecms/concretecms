@@ -1,8 +1,11 @@
-<?
+<?php
+namespace Concrete\Core\Legacy;
+use FileSet;
+use Permissions;
+
 /**
  * @deprecated
  */
-
 final class FilePermissions {
 
 	public static function getGlobal() {
@@ -10,4 +13,5 @@ final class FilePermissions {
 		$fsp = new Permissions($fs);
 		return $fsp;
 	}
+
 }

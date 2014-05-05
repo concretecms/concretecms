@@ -1,10 +1,10 @@
 <?
 
 namespace Concrete\Core\Controller;
-use Router;
 use Request;
 use PageTheme;
 use View;
+use Route;
 
 class Controller extends AbstractController {
 
@@ -27,8 +27,7 @@ class Controller extends AbstractController {
 
 	public function getTheme() {
 		if (is_object($this->view)) {
-			$rl = Router::getInstance();
-			$tmpTheme = $rl->getThemeByRoute($this->view->getViewPath());
+			$tmpTheme = Route::getThemeByRoute($this->view->getViewPath());
 			if ($tmpTheme) {
 				return $tmpTheme[0];
 			}

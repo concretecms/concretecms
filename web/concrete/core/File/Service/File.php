@@ -2,6 +2,7 @@
 namespace Concrete\Core\File\Service;
 use Environment;
 use Loader;
+use Config;
 
 /**
  * File helper

@@ -2,13 +2,13 @@
 
 div.ccm-gathering-item:hover {
   ul.ccm-gathering-item-inline-commands {
-    opacity: 1;
+    .opacity(1);
   }
 
   div.ui-resizable-handle {
      background-color: rgba(255,255,255,1);
      .border-top-left-radius(3px);
-     opacity: 1;
+     .opacity(1);
   }
 
 }
@@ -21,7 +21,8 @@ div.ccm-gathering-item-drop-active {
 .ccm-gathering-resize-helper {
   background-color: #B9E1FF;
   border: 1px solid #6FB0DB;
-  opacity: 0.7;
+  .opacity(0.7);
+  transition: width 0.1s linear, height 0.1s linear;
   -webkit-transition: width 0.1s linear, height 0.1s linear;
 }
 
@@ -33,12 +34,12 @@ ul.ccm-overlay-icon-item-grid-list a.ccm-gathering-item-template-selected {
 div.ccm-gathering-edit {
 
   div.ui-resizable-handle {
-    opacity: 0;
+    .opacity(0);
     .transition(opacity 0.1s linear);
   }
 
   ul.ccm-gathering-item-inline-commands {
-    opacity: 0;
+    .opacity(0);
     padding: 0px !important;
     margin: 0px !important;
     .transition(opacity 0.1s linear);
@@ -97,7 +98,7 @@ div.ccm-gathering-edit {
 
 
     &.ccm-parent-menu-item-active {
-      opacity:1;
+      .opacity(1);
     }
 
   }
@@ -109,7 +110,7 @@ div.ccm-gathering-wrapper {
 }
 
 div.ccm-gathering-grid {
-  opacity: 0;
+  .opacity(0);
 
   > div.ccm-gathering-item {
     overflow: hidden;
