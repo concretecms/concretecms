@@ -24,7 +24,7 @@ class Controller extends BlockController {
 	}
 	
 	public function getBlockTypeName() {
-		return t("Stack Display (Core)");
+		return t("Stack Display");
 	}
 	
 	public function getOriginalBlockID() {
