@@ -202,7 +202,7 @@
             </access>
         </permissionkey>
 
-        <permissionkey handle="add_topic_tree" name="Add Topic Treee" package="" category="admin">
+        <permissionkey handle="add_topic_tree" name="Add Topic Tree" package="" category="admin">
             <access>
                 <group name="Administrators"/>
             </access>
