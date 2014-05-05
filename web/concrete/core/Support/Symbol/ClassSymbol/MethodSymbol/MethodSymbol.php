@@ -86,7 +86,7 @@ class MethodSymbol {
         }
         $rendered .= implode(', ', $params) . ")\n{\n";
         $rendered .= '    // ' . $method->getDeclaringClass()->getName() . '::' . $method->getName() . "();\n";
-        $rendered .= '    ' .
+        $rendered .= '    return ' .
             $method->getDeclaringClass()->getName() .
             '::' .
             $method->getName() .

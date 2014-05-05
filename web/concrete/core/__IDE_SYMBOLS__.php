@@ -17,19 +17,19 @@ namespace {
         public static function getCurrentPage()
         {
             // Concrete\Core\Http\Request::getCurrentPage();
-            Concrete\Core\Http\Request::getCurrentPage();
+            return Concrete\Core\Http\Request::getCurrentPage();
         }
 
         public static function setCurrentPage(Concrete\Core\Page\Page $c)
         {
             // Concrete\Core\Http\Request::setCurrentPage();
-            Concrete\Core\Http\Request::setCurrentPage($c);
+            return Concrete\Core\Http\Request::setCurrentPage($c);
         }
 
         public static function getInstance()
         {
             // Concrete\Core\Http\Request::getInstance();
-            Concrete\Core\Http\Request::getInstance();
+            return Concrete\Core\Http\Request::getInstance();
         }
 
         /**
@@ -38,37 +38,37 @@ namespace {
         public static function getPath()
         {
             // Concrete\Core\Http\Request::getPath();
-            Concrete\Core\Http\Request::getPath();
+            return Concrete\Core\Http\Request::getPath();
         }
 
         public static function setCustomRequestUser($ui)
         {
             // Concrete\Core\Http\Request::setCustomRequestUser();
-            Concrete\Core\Http\Request::setCustomRequestUser($ui);
+            return Concrete\Core\Http\Request::setCustomRequestUser($ui);
         }
 
         public static function getCustomRequestUser()
         {
             // Concrete\Core\Http\Request::getCustomRequestUser();
-            Concrete\Core\Http\Request::getCustomRequestUser();
+            return Concrete\Core\Http\Request::getCustomRequestUser();
         }
 
         public static function hasCustomRequestUser()
         {
             // Concrete\Core\Http\Request::hasCustomRequestUser();
-            Concrete\Core\Http\Request::hasCustomRequestUser();
+            return Concrete\Core\Http\Request::hasCustomRequestUser();
         }
 
         public static function getCustomRequestDateTime()
         {
             // Concrete\Core\Http\Request::getCustomRequestDateTime();
-            Concrete\Core\Http\Request::getCustomRequestDateTime();
+            return Concrete\Core\Http\Request::getCustomRequestDateTime();
         }
 
         public static function setCustomRequestDateTime($date)
         {
             // Concrete\Core\Http\Request::setCustomRequestDateTime();
-            Concrete\Core\Http\Request::setCustomRequestDateTime($date);
+            return Concrete\Core\Http\Request::setCustomRequestDateTime($date);
         }
 
         /**
@@ -77,7 +77,7 @@ namespace {
         public static function matches($pattern)
         {
             // Concrete\Core\Http\Request::matches();
-            Concrete\Core\Http\Request::matches($pattern);
+            return Concrete\Core\Http\Request::matches($pattern);
         }
 
         /**
@@ -90,19 +90,19 @@ namespace {
         public static function post($key = null, $defaultValue = null)
         {
             // Concrete\Core\Http\Request::post();
-            Concrete\Core\Http\Request::post($key, $defaultValue);
+            return Concrete\Core\Http\Request::post($key, $defaultValue);
         }
 
         public static function request($key = null)
         {
             // Concrete\Core\Http\Request::request();
-            Concrete\Core\Http\Request::request($key);
+            return Concrete\Core\Http\Request::request($key);
         }
 
         public static function isPost()
         {
             // Concrete\Core\Http\Request::isPost();
-            Concrete\Core\Http\Request::isPost();
+            return Concrete\Core\Http\Request::isPost();
         }
 
         /**
@@ -123,7 +123,7 @@ namespace {
         public static function initialize(array $query = "", array $request = "", array $attributes = "", array $cookies = "", array $files = "", array $server = "", $content = null)
         {
             // Symfony\Component\HttpFoundation\Request::initialize();
-            Symfony\Component\HttpFoundation\Request::initialize($query, $request, $attributes, $cookies, $files, $server, $content);
+            return Symfony\Component\HttpFoundation\Request::initialize($query, $request, $attributes, $cookies, $files, $server, $content);
         }
 
         /**
@@ -136,7 +136,7 @@ namespace {
         public static function createFromGlobals()
         {
             // Symfony\Component\HttpFoundation\Request::createFromGlobals();
-            Symfony\Component\HttpFoundation\Request::createFromGlobals();
+            return Symfony\Component\HttpFoundation\Request::createFromGlobals();
         }
 
         /**
@@ -157,7 +157,7 @@ namespace {
         public static function create($uri, $method = "GET", $parameters = null, $cookies = null, $files = null, $server = null, $content = null)
         {
             // Symfony\Component\HttpFoundation\Request::create();
-            Symfony\Component\HttpFoundation\Request::create($uri, $method, $parameters, $cookies, $files, $server, $content);
+            return Symfony\Component\HttpFoundation\Request::create($uri, $method, $parameters, $cookies, $files, $server, $content);
         }
 
         /**
@@ -177,7 +177,7 @@ namespace {
         public static function duplicate(array $query = null, array $request = null, array $attributes = null, array $cookies = null, array $files = null, array $server = null)
         {
             // Symfony\Component\HttpFoundation\Request::duplicate();
-            Symfony\Component\HttpFoundation\Request::duplicate($query, $request, $attributes, $cookies, $files, $server);
+            return Symfony\Component\HttpFoundation\Request::duplicate($query, $request, $attributes, $cookies, $files, $server);
         }
 
         /**
@@ -191,7 +191,7 @@ namespace {
         public static function overrideGlobals()
         {
             // Symfony\Component\HttpFoundation\Request::overrideGlobals();
-            Symfony\Component\HttpFoundation\Request::overrideGlobals();
+            return Symfony\Component\HttpFoundation\Request::overrideGlobals();
         }
 
         /**
@@ -202,7 +202,7 @@ namespace {
         public static function trustProxyData()
         {
             // Symfony\Component\HttpFoundation\Request::trustProxyData();
-            Symfony\Component\HttpFoundation\Request::trustProxyData();
+            return Symfony\Component\HttpFoundation\Request::trustProxyData();
         }
 
         /**
@@ -217,7 +217,7 @@ namespace {
         public static function setTrustedProxies(array $proxies)
         {
             // Symfony\Component\HttpFoundation\Request::setTrustedProxies();
-            Symfony\Component\HttpFoundation\Request::setTrustedProxies($proxies);
+            return Symfony\Component\HttpFoundation\Request::setTrustedProxies($proxies);
         }
 
         /**
@@ -230,7 +230,7 @@ namespace {
         public static function setTrustedHosts(array $hostPatterns)
         {
             // Symfony\Component\HttpFoundation\Request::setTrustedHosts();
-            Symfony\Component\HttpFoundation\Request::setTrustedHosts($hostPatterns);
+            return Symfony\Component\HttpFoundation\Request::setTrustedHosts($hostPatterns);
         }
 
         /**
@@ -241,7 +241,7 @@ namespace {
         public static function getTrustedHosts()
         {
             // Symfony\Component\HttpFoundation\Request::getTrustedHosts();
-            Symfony\Component\HttpFoundation\Request::getTrustedHosts();
+            return Symfony\Component\HttpFoundation\Request::getTrustedHosts();
         }
 
         /**
@@ -262,7 +262,7 @@ namespace {
         public static function setTrustedHeaderName($key, $value)
         {
             // Symfony\Component\HttpFoundation\Request::setTrustedHeaderName();
-            Symfony\Component\HttpFoundation\Request::setTrustedHeaderName($key, $value);
+            return Symfony\Component\HttpFoundation\Request::setTrustedHeaderName($key, $value);
         }
 
         /**
@@ -274,7 +274,7 @@ namespace {
         public static function isProxyTrusted()
         {
             // Symfony\Component\HttpFoundation\Request::isProxyTrusted();
-            Symfony\Component\HttpFoundation\Request::isProxyTrusted();
+            return Symfony\Component\HttpFoundation\Request::isProxyTrusted();
         }
 
         /**
@@ -290,7 +290,7 @@ namespace {
         public static function normalizeQueryString($qs)
         {
             // Symfony\Component\HttpFoundation\Request::normalizeQueryString();
-            Symfony\Component\HttpFoundation\Request::normalizeQueryString($qs);
+            return Symfony\Component\HttpFoundation\Request::normalizeQueryString($qs);
         }
 
         /**
@@ -317,7 +317,7 @@ namespace {
         public static function get($key, $default = null, $deep = null)
         {
             // Symfony\Component\HttpFoundation\Request::get();
-            Symfony\Component\HttpFoundation\Request::get($key, $default, $deep);
+            return Symfony\Component\HttpFoundation\Request::get($key, $default, $deep);
         }
 
         /**
@@ -330,7 +330,7 @@ namespace {
         public static function getSession()
         {
             // Symfony\Component\HttpFoundation\Request::getSession();
-            Symfony\Component\HttpFoundation\Request::getSession();
+            return Symfony\Component\HttpFoundation\Request::getSession();
         }
 
         /**
@@ -344,7 +344,7 @@ namespace {
         public static function hasPreviousSession()
         {
             // Symfony\Component\HttpFoundation\Request::hasPreviousSession();
-            Symfony\Component\HttpFoundation\Request::hasPreviousSession();
+            return Symfony\Component\HttpFoundation\Request::hasPreviousSession();
         }
 
         /**
@@ -361,7 +361,7 @@ namespace {
         public static function hasSession()
         {
             // Symfony\Component\HttpFoundation\Request::hasSession();
-            Symfony\Component\HttpFoundation\Request::hasSession();
+            return Symfony\Component\HttpFoundation\Request::hasSession();
         }
 
         /**
@@ -374,7 +374,7 @@ namespace {
         public static function setSession(Symfony\Component\HttpFoundation\Session\SessionInterface $session)
         {
             // Symfony\Component\HttpFoundation\Request::setSession();
-            Symfony\Component\HttpFoundation\Request::setSession($session);
+            return Symfony\Component\HttpFoundation\Request::setSession($session);
         }
 
         /**
@@ -401,7 +401,7 @@ namespace {
         public static function getClientIp()
         {
             // Symfony\Component\HttpFoundation\Request::getClientIp();
-            Symfony\Component\HttpFoundation\Request::getClientIp();
+            return Symfony\Component\HttpFoundation\Request::getClientIp();
         }
 
         /**
@@ -414,7 +414,7 @@ namespace {
         public static function getScriptName()
         {
             // Symfony\Component\HttpFoundation\Request::getScriptName();
-            Symfony\Component\HttpFoundation\Request::getScriptName();
+            return Symfony\Component\HttpFoundation\Request::getScriptName();
         }
 
         /**
@@ -436,7 +436,7 @@ namespace {
         public static function getPathInfo()
         {
             // Symfony\Component\HttpFoundation\Request::getPathInfo();
-            Symfony\Component\HttpFoundation\Request::getPathInfo();
+            return Symfony\Component\HttpFoundation\Request::getPathInfo();
         }
 
         /**
@@ -456,7 +456,7 @@ namespace {
         public static function getBasePath()
         {
             // Symfony\Component\HttpFoundation\Request::getBasePath();
-            Symfony\Component\HttpFoundation\Request::getBasePath();
+            return Symfony\Component\HttpFoundation\Request::getBasePath();
         }
 
         /**
@@ -474,7 +474,7 @@ namespace {
         public static function getBaseUrl()
         {
             // Symfony\Component\HttpFoundation\Request::getBaseUrl();
-            Symfony\Component\HttpFoundation\Request::getBaseUrl();
+            return Symfony\Component\HttpFoundation\Request::getBaseUrl();
         }
 
         /**
@@ -487,7 +487,7 @@ namespace {
         public static function getScheme()
         {
             // Symfony\Component\HttpFoundation\Request::getScheme();
-            Symfony\Component\HttpFoundation\Request::getScheme();
+            return Symfony\Component\HttpFoundation\Request::getScheme();
         }
 
         /**
@@ -508,7 +508,7 @@ namespace {
         public static function getPort()
         {
             // Symfony\Component\HttpFoundation\Request::getPort();
-            Symfony\Component\HttpFoundation\Request::getPort();
+            return Symfony\Component\HttpFoundation\Request::getPort();
         }
 
         /**
@@ -519,7 +519,7 @@ namespace {
         public static function getUser()
         {
             // Symfony\Component\HttpFoundation\Request::getUser();
-            Symfony\Component\HttpFoundation\Request::getUser();
+            return Symfony\Component\HttpFoundation\Request::getUser();
         }
 
         /**
@@ -530,7 +530,7 @@ namespace {
         public static function getPassword()
         {
             // Symfony\Component\HttpFoundation\Request::getPassword();
-            Symfony\Component\HttpFoundation\Request::getPassword();
+            return Symfony\Component\HttpFoundation\Request::getPassword();
         }
 
         /**
@@ -541,7 +541,7 @@ namespace {
         public static function getUserInfo()
         {
             // Symfony\Component\HttpFoundation\Request::getUserInfo();
-            Symfony\Component\HttpFoundation\Request::getUserInfo();
+            return Symfony\Component\HttpFoundation\Request::getUserInfo();
         }
 
         /**
@@ -556,7 +556,7 @@ namespace {
         public static function getHttpHost()
         {
             // Symfony\Component\HttpFoundation\Request::getHttpHost();
-            Symfony\Component\HttpFoundation\Request::getHttpHost();
+            return Symfony\Component\HttpFoundation\Request::getHttpHost();
         }
 
         /**
@@ -569,7 +569,7 @@ namespace {
         public static function getRequestUri()
         {
             // Symfony\Component\HttpFoundation\Request::getRequestUri();
-            Symfony\Component\HttpFoundation\Request::getRequestUri();
+            return Symfony\Component\HttpFoundation\Request::getRequestUri();
         }
 
         /**
@@ -583,7 +583,7 @@ namespace {
         public static function getSchemeAndHttpHost()
         {
             // Symfony\Component\HttpFoundation\Request::getSchemeAndHttpHost();
-            Symfony\Component\HttpFoundation\Request::getSchemeAndHttpHost();
+            return Symfony\Component\HttpFoundation\Request::getSchemeAndHttpHost();
         }
 
         /**
@@ -598,7 +598,7 @@ namespace {
         public static function getUri()
         {
             // Symfony\Component\HttpFoundation\Request::getUri();
-            Symfony\Component\HttpFoundation\Request::getUri();
+            return Symfony\Component\HttpFoundation\Request::getUri();
         }
 
         /**
@@ -613,7 +613,7 @@ namespace {
         public static function getUriForPath($path)
         {
             // Symfony\Component\HttpFoundation\Request::getUriForPath();
-            Symfony\Component\HttpFoundation\Request::getUriForPath($path);
+            return Symfony\Component\HttpFoundation\Request::getUriForPath($path);
         }
 
         /**
@@ -629,7 +629,7 @@ namespace {
         public static function getQueryString()
         {
             // Symfony\Component\HttpFoundation\Request::getQueryString();
-            Symfony\Component\HttpFoundation\Request::getQueryString();
+            return Symfony\Component\HttpFoundation\Request::getQueryString();
         }
 
         /**
@@ -651,7 +651,7 @@ namespace {
         public static function isSecure()
         {
             // Symfony\Component\HttpFoundation\Request::isSecure();
-            Symfony\Component\HttpFoundation\Request::isSecure();
+            return Symfony\Component\HttpFoundation\Request::isSecure();
         }
 
         /**
@@ -674,7 +674,7 @@ namespace {
         public static function getHost()
         {
             // Symfony\Component\HttpFoundation\Request::getHost();
-            Symfony\Component\HttpFoundation\Request::getHost();
+            return Symfony\Component\HttpFoundation\Request::getHost();
         }
 
         /**
@@ -687,7 +687,7 @@ namespace {
         public static function setMethod($method)
         {
             // Symfony\Component\HttpFoundation\Request::setMethod();
-            Symfony\Component\HttpFoundation\Request::setMethod($method);
+            return Symfony\Component\HttpFoundation\Request::setMethod($method);
         }
 
         /**
@@ -702,7 +702,7 @@ namespace {
         public static function getMethod()
         {
             // Symfony\Component\HttpFoundation\Request::getMethod();
-            Symfony\Component\HttpFoundation\Request::getMethod();
+            return Symfony\Component\HttpFoundation\Request::getMethod();
         }
 
         /**
@@ -717,7 +717,7 @@ namespace {
         public static function getMimeType($format)
         {
             // Symfony\Component\HttpFoundation\Request::getMimeType();
-            Symfony\Component\HttpFoundation\Request::getMimeType($format);
+            return Symfony\Component\HttpFoundation\Request::getMimeType($format);
         }
 
         /**
@@ -732,7 +732,7 @@ namespace {
         public static function getFormat($mimeType)
         {
             // Symfony\Component\HttpFoundation\Request::getFormat();
-            Symfony\Component\HttpFoundation\Request::getFormat($mimeType);
+            return Symfony\Component\HttpFoundation\Request::getFormat($mimeType);
         }
 
         /**
@@ -746,7 +746,7 @@ namespace {
         public static function setFormat($format, $mimeTypes)
         {
             // Symfony\Component\HttpFoundation\Request::setFormat();
-            Symfony\Component\HttpFoundation\Request::setFormat($format, $mimeTypes);
+            return Symfony\Component\HttpFoundation\Request::setFormat($format, $mimeTypes);
         }
 
         /**
@@ -767,7 +767,7 @@ namespace {
         public static function getRequestFormat($default = "html")
         {
             // Symfony\Component\HttpFoundation\Request::getRequestFormat();
-            Symfony\Component\HttpFoundation\Request::getRequestFormat($default);
+            return Symfony\Component\HttpFoundation\Request::getRequestFormat($default);
         }
 
         /**
@@ -780,7 +780,7 @@ namespace {
         public static function setRequestFormat($format)
         {
             // Symfony\Component\HttpFoundation\Request::setRequestFormat();
-            Symfony\Component\HttpFoundation\Request::setRequestFormat($format);
+            return Symfony\Component\HttpFoundation\Request::setRequestFormat($format);
         }
 
         /**
@@ -793,7 +793,7 @@ namespace {
         public static function getContentType()
         {
             // Symfony\Component\HttpFoundation\Request::getContentType();
-            Symfony\Component\HttpFoundation\Request::getContentType();
+            return Symfony\Component\HttpFoundation\Request::getContentType();
         }
 
         /**
@@ -806,7 +806,7 @@ namespace {
         public static function setDefaultLocale($locale)
         {
             // Symfony\Component\HttpFoundation\Request::setDefaultLocale();
-            Symfony\Component\HttpFoundation\Request::setDefaultLocale($locale);
+            return Symfony\Component\HttpFoundation\Request::setDefaultLocale($locale);
         }
 
         /**
@@ -819,7 +819,7 @@ namespace {
         public static function setLocale($locale)
         {
             // Symfony\Component\HttpFoundation\Request::setLocale();
-            Symfony\Component\HttpFoundation\Request::setLocale($locale);
+            return Symfony\Component\HttpFoundation\Request::setLocale($locale);
         }
 
         /**
@@ -830,7 +830,7 @@ namespace {
         public static function getLocale()
         {
             // Symfony\Component\HttpFoundation\Request::getLocale();
-            Symfony\Component\HttpFoundation\Request::getLocale();
+            return Symfony\Component\HttpFoundation\Request::getLocale();
         }
 
         /**
@@ -843,7 +843,7 @@ namespace {
         public static function isMethod($method)
         {
             // Symfony\Component\HttpFoundation\Request::isMethod();
-            Symfony\Component\HttpFoundation\Request::isMethod($method);
+            return Symfony\Component\HttpFoundation\Request::isMethod($method);
         }
 
         /**
@@ -856,7 +856,7 @@ namespace {
         public static function isMethodSafe()
         {
             // Symfony\Component\HttpFoundation\Request::isMethodSafe();
-            Symfony\Component\HttpFoundation\Request::isMethodSafe();
+            return Symfony\Component\HttpFoundation\Request::isMethodSafe();
         }
 
         /**
@@ -869,7 +869,7 @@ namespace {
         public static function getContent($asResource = null)
         {
             // Symfony\Component\HttpFoundation\Request::getContent();
-            Symfony\Component\HttpFoundation\Request::getContent($asResource);
+            return Symfony\Component\HttpFoundation\Request::getContent($asResource);
         }
 
         /**
@@ -880,7 +880,7 @@ namespace {
         public static function getETags()
         {
             // Symfony\Component\HttpFoundation\Request::getETags();
-            Symfony\Component\HttpFoundation\Request::getETags();
+            return Symfony\Component\HttpFoundation\Request::getETags();
         }
 
         /**
@@ -889,7 +889,7 @@ namespace {
         public static function isNoCache()
         {
             // Symfony\Component\HttpFoundation\Request::isNoCache();
-            Symfony\Component\HttpFoundation\Request::isNoCache();
+            return Symfony\Component\HttpFoundation\Request::isNoCache();
         }
 
         /**
@@ -904,7 +904,7 @@ namespace {
         public static function getPreferredLanguage(array $locales = null)
         {
             // Symfony\Component\HttpFoundation\Request::getPreferredLanguage();
-            Symfony\Component\HttpFoundation\Request::getPreferredLanguage($locales);
+            return Symfony\Component\HttpFoundation\Request::getPreferredLanguage($locales);
         }
 
         /**
@@ -917,7 +917,7 @@ namespace {
         public static function getLanguages()
         {
             // Symfony\Component\HttpFoundation\Request::getLanguages();
-            Symfony\Component\HttpFoundation\Request::getLanguages();
+            return Symfony\Component\HttpFoundation\Request::getLanguages();
         }
 
         /**
@@ -930,7 +930,7 @@ namespace {
         public static function getCharsets()
         {
             // Symfony\Component\HttpFoundation\Request::getCharsets();
-            Symfony\Component\HttpFoundation\Request::getCharsets();
+            return Symfony\Component\HttpFoundation\Request::getCharsets();
         }
 
         /**
@@ -943,7 +943,7 @@ namespace {
         public static function getAcceptableContentTypes()
         {
             // Symfony\Component\HttpFoundation\Request::getAcceptableContentTypes();
-            Symfony\Component\HttpFoundation\Request::getAcceptableContentTypes();
+            return Symfony\Component\HttpFoundation\Request::getAcceptableContentTypes();
         }
 
         /**
@@ -960,7 +960,7 @@ namespace {
         public static function isXmlHttpRequest()
         {
             // Symfony\Component\HttpFoundation\Request::isXmlHttpRequest();
-            Symfony\Component\HttpFoundation\Request::isXmlHttpRequest();
+            return Symfony\Component\HttpFoundation\Request::isXmlHttpRequest();
         }
 
         /**
@@ -973,13 +973,13 @@ namespace {
         public static function splitHttpAcceptHeader($header)
         {
             // Symfony\Component\HttpFoundation\Request::splitHttpAcceptHeader();
-            Symfony\Component\HttpFoundation\Request::splitHttpAcceptHeader($header);
+            return Symfony\Component\HttpFoundation\Request::splitHttpAcceptHeader($header);
         }
 
         protected static function prepareRequestUri()
         {
             // Symfony\Component\HttpFoundation\Request::prepareRequestUri();
-            Symfony\Component\HttpFoundation\Request::prepareRequestUri();
+            return Symfony\Component\HttpFoundation\Request::prepareRequestUri();
         }
 
         /**
@@ -990,7 +990,7 @@ namespace {
         protected static function prepareBaseUrl()
         {
             // Symfony\Component\HttpFoundation\Request::prepareBaseUrl();
-            Symfony\Component\HttpFoundation\Request::prepareBaseUrl();
+            return Symfony\Component\HttpFoundation\Request::prepareBaseUrl();
         }
 
         /**
@@ -1001,7 +1001,7 @@ namespace {
         protected static function prepareBasePath()
         {
             // Symfony\Component\HttpFoundation\Request::prepareBasePath();
-            Symfony\Component\HttpFoundation\Request::prepareBasePath();
+            return Symfony\Component\HttpFoundation\Request::prepareBasePath();
         }
 
         /**
@@ -1012,7 +1012,7 @@ namespace {
         protected static function preparePathInfo()
         {
             // Symfony\Component\HttpFoundation\Request::preparePathInfo();
-            Symfony\Component\HttpFoundation\Request::preparePathInfo();
+            return Symfony\Component\HttpFoundation\Request::preparePathInfo();
         }
 
         /**
@@ -1021,7 +1021,7 @@ namespace {
         protected static function initializeFormats()
         {
             // Symfony\Component\HttpFoundation\Request::initializeFormats();
-            Symfony\Component\HttpFoundation\Request::initializeFormats();
+            return Symfony\Component\HttpFoundation\Request::initializeFormats();
         }
 
     }
@@ -1039,25 +1039,25 @@ namespace {
         public static function get()
         {
             // Concrete\Core\Foundation\Environment::get();
-            Concrete\Core\Foundation\Environment::get();
+            return Concrete\Core\Foundation\Environment::get();
         }
 
         public static function saveCachedEnvironmentObject()
         {
             // Concrete\Core\Foundation\Environment::saveCachedEnvironmentObject();
-            Concrete\Core\Foundation\Environment::saveCachedEnvironmentObject();
+            return Concrete\Core\Foundation\Environment::saveCachedEnvironmentObject();
         }
 
         public static function clearOverrideCache()
         {
             // Concrete\Core\Foundation\Environment::clearOverrideCache();
-            Concrete\Core\Foundation\Environment::clearOverrideCache();
+            return Concrete\Core\Foundation\Environment::clearOverrideCache();
         }
 
         public static function reset()
         {
             // Concrete\Core\Foundation\Environment::reset();
-            Concrete\Core\Foundation\Environment::reset();
+            return Concrete\Core\Foundation\Environment::reset();
         }
 
         /**
@@ -1066,25 +1066,25 @@ namespace {
         protected static function getOverrides()
         {
             // Concrete\Core\Foundation\Environment::getOverrides();
-            Concrete\Core\Foundation\Environment::getOverrides();
+            return Concrete\Core\Foundation\Environment::getOverrides();
         }
 
         public static function getDirectoryContents($dir, $ignoreFilesArray = null, $recursive = null)
         {
             // Concrete\Core\Foundation\Environment::getDirectoryContents();
-            Concrete\Core\Foundation\Environment::getDirectoryContents($dir, $ignoreFilesArray, $recursive);
+            return Concrete\Core\Foundation\Environment::getDirectoryContents($dir, $ignoreFilesArray, $recursive);
         }
 
         public static function overrideCoreByPackage($segment, $pkgOrHandle)
         {
             // Concrete\Core\Foundation\Environment::overrideCoreByPackage();
-            Concrete\Core\Foundation\Environment::overrideCoreByPackage($segment, $pkgOrHandle);
+            return Concrete\Core\Foundation\Environment::overrideCoreByPackage($segment, $pkgOrHandle);
         }
 
         public static function getRecord($segment, $pkgHandle = null)
         {
             // Concrete\Core\Foundation\Environment::getRecord();
-            Concrete\Core\Foundation\Environment::getRecord($segment, $pkgHandle);
+            return Concrete\Core\Foundation\Environment::getRecord($segment, $pkgHandle);
         }
 
         /**
@@ -1093,7 +1093,7 @@ namespace {
         public static function getUncachedRecord($segment, $pkgHandle = null)
         {
             // Concrete\Core\Foundation\Environment::getUncachedRecord();
-            Concrete\Core\Foundation\Environment::getUncachedRecord($segment, $pkgHandle);
+            return Concrete\Core\Foundation\Environment::getUncachedRecord($segment, $pkgHandle);
         }
 
         /**
@@ -1102,7 +1102,7 @@ namespace {
         public static function getPath($subpath, $pkgIdentifier = null)
         {
             // Concrete\Core\Foundation\Environment::getPath();
-            Concrete\Core\Foundation\Environment::getPath($subpath, $pkgIdentifier);
+            return Concrete\Core\Foundation\Environment::getPath($subpath, $pkgIdentifier);
         }
 
         /**
@@ -1111,7 +1111,7 @@ namespace {
         public static function getURL($subpath, $pkgIdentifier = null)
         {
             // Concrete\Core\Foundation\Environment::getURL();
-            Concrete\Core\Foundation\Environment::getURL($subpath, $pkgIdentifier);
+            return Concrete\Core\Foundation\Environment::getURL($subpath, $pkgIdentifier);
         }
 
     }
@@ -1122,13 +1122,13 @@ namespace {
         public static function getInstance()
         {
             // Concrete\Core\Localization\Localization::getInstance();
-            Concrete\Core\Localization\Localization::getInstance();
+            return Concrete\Core\Localization\Localization::getInstance();
         }
 
         public static function changeLocale($locale)
         {
             // Concrete\Core\Localization\Localization::changeLocale();
-            Concrete\Core\Localization\Localization::changeLocale($locale);
+            return Concrete\Core\Localization\Localization::changeLocale($locale);
         }
 
         /** Returns the currently active locale
@@ -1138,7 +1138,7 @@ namespace {
         public static function activeLocale()
         {
             // Concrete\Core\Localization\Localization::activeLocale();
-            Concrete\Core\Localization\Localization::activeLocale();
+            return Concrete\Core\Localization\Localization::activeLocale();
         }
 
         /** Returns the language for the currently active locale
@@ -1148,43 +1148,43 @@ namespace {
         public static function activeLanguage()
         {
             // Concrete\Core\Localization\Localization::activeLanguage();
-            Concrete\Core\Localization\Localization::activeLanguage();
+            return Concrete\Core\Localization\Localization::activeLanguage();
         }
 
         public static function setLocale($locale)
         {
             // Concrete\Core\Localization\Localization::setLocale();
-            Concrete\Core\Localization\Localization::setLocale($locale);
+            return Concrete\Core\Localization\Localization::setLocale($locale);
         }
 
         public static function getLocale()
         {
             // Concrete\Core\Localization\Localization::getLocale();
-            Concrete\Core\Localization\Localization::getLocale();
+            return Concrete\Core\Localization\Localization::getLocale();
         }
 
         public static function getActiveTranslateObject()
         {
             // Concrete\Core\Localization\Localization::getActiveTranslateObject();
-            Concrete\Core\Localization\Localization::getActiveTranslateObject();
+            return Concrete\Core\Localization\Localization::getActiveTranslateObject();
         }
 
         public static function addSiteInterfaceLanguage($language)
         {
             // Concrete\Core\Localization\Localization::addSiteInterfaceLanguage();
-            Concrete\Core\Localization\Localization::addSiteInterfaceLanguage($language);
+            return Concrete\Core\Localization\Localization::addSiteInterfaceLanguage($language);
         }
 
         public static function getTranslate()
         {
             // Concrete\Core\Localization\Localization::getTranslate();
-            Concrete\Core\Localization\Localization::getTranslate();
+            return Concrete\Core\Localization\Localization::getTranslate();
         }
 
         public static function getAvailableInterfaceLanguages()
         {
             // Concrete\Core\Localization\Localization::getAvailableInterfaceLanguages();
-            Concrete\Core\Localization\Localization::getAvailableInterfaceLanguages();
+            return Concrete\Core\Localization\Localization::getAvailableInterfaceLanguages();
         }
 
         /**
@@ -1200,7 +1200,7 @@ namespace {
         public static function getAvailableInterfaceLanguageDescriptions($displayLocale = null)
         {
             // Concrete\Core\Localization\Localization::getAvailableInterfaceLanguageDescriptions();
-            Concrete\Core\Localization\Localization::getAvailableInterfaceLanguageDescriptions($displayLocale);
+            return Concrete\Core\Localization\Localization::getAvailableInterfaceLanguageDescriptions($displayLocale);
         }
 
         /**
@@ -1213,7 +1213,7 @@ namespace {
         public static function getLanguageDescription($locale, $displayLocale = null)
         {
             // Concrete\Core\Localization\Localization::getLanguageDescription();
-            Concrete\Core\Localization\Localization::getLanguageDescription($locale, $displayLocale);
+            return Concrete\Core\Localization\Localization::getLanguageDescription($locale, $displayLocale);
         }
 
     }
@@ -1224,13 +1224,13 @@ namespace {
         public static function getFacadeAccessor()
         {
             // Concrete\Core\Support\Facade\Events::getFacadeAccessor();
-            Concrete\Core\Support\Facade\Events::getFacadeAccessor();
+            return Concrete\Core\Support\Facade\Events::getFacadeAccessor();
         }
 
         public static function fire($eventName, $event = null)
         {
             // Concrete\Core\Support\Facade\Events::fire();
-            Concrete\Core\Support\Facade\Events::fire($eventName, $event);
+            return Concrete\Core\Support\Facade\Events::fire($eventName, $event);
         }
 
         /**
@@ -1241,7 +1241,7 @@ namespace {
         public static function getFacadeRoot()
         {
             // Concrete\Core\Support\Facade\Facade::getFacadeRoot();
-            Concrete\Core\Support\Facade\Facade::getFacadeRoot();
+            return Concrete\Core\Support\Facade\Facade::getFacadeRoot();
         }
 
         /**
@@ -1253,7 +1253,7 @@ namespace {
         protected static function resolveFacadeInstance($name)
         {
             // Concrete\Core\Support\Facade\Facade::resolveFacadeInstance();
-            Concrete\Core\Support\Facade\Facade::resolveFacadeInstance($name);
+            return Concrete\Core\Support\Facade\Facade::resolveFacadeInstance($name);
         }
 
         /**
@@ -1265,7 +1265,7 @@ namespace {
         public static function clearResolvedInstance($name)
         {
             // Concrete\Core\Support\Facade\Facade::clearResolvedInstance();
-            Concrete\Core\Support\Facade\Facade::clearResolvedInstance($name);
+            return Concrete\Core\Support\Facade\Facade::clearResolvedInstance($name);
         }
 
         /**
@@ -1276,7 +1276,7 @@ namespace {
         public static function clearResolvedInstances()
         {
             // Concrete\Core\Support\Facade\Facade::clearResolvedInstances();
-            Concrete\Core\Support\Facade\Facade::clearResolvedInstances();
+            return Concrete\Core\Support\Facade\Facade::clearResolvedInstances();
         }
 
         /**
@@ -1287,7 +1287,7 @@ namespace {
         public static function getFacadeApplication()
         {
             // Concrete\Core\Support\Facade\Facade::getFacadeApplication();
-            Concrete\Core\Support\Facade\Facade::getFacadeApplication();
+            return Concrete\Core\Support\Facade\Facade::getFacadeApplication();
         }
 
         /**
@@ -1299,7 +1299,7 @@ namespace {
         public static function setFacadeApplication($app)
         {
             // Concrete\Core\Support\Facade\Facade::setFacadeApplication();
-            Concrete\Core\Support\Facade\Facade::setFacadeApplication($app);
+            return Concrete\Core\Support\Facade\Facade::setFacadeApplication($app);
         }
 
     }
@@ -1310,7 +1310,7 @@ namespace {
         public static function send()
         {
             // Concrete\Core\Http\Response::send();
-            Concrete\Core\Http\Response::send();
+            return Concrete\Core\Http\Response::send();
         }
 
         /**
@@ -1330,7 +1330,7 @@ namespace {
         public static function create($content = null, $status = 200, $headers = null)
         {
             // Symfony\Component\HttpFoundation\Response::create();
-            Symfony\Component\HttpFoundation\Response::create($content, $status, $headers);
+            return Symfony\Component\HttpFoundation\Response::create($content, $status, $headers);
         }
 
         /**
@@ -1347,7 +1347,7 @@ namespace {
         public static function prepare(Symfony\Component\HttpFoundation\Request $request)
         {
             // Symfony\Component\HttpFoundation\Response::prepare();
-            Symfony\Component\HttpFoundation\Response::prepare($request);
+            return Symfony\Component\HttpFoundation\Response::prepare($request);
         }
 
         /**
@@ -1358,7 +1358,7 @@ namespace {
         public static function sendHeaders()
         {
             // Symfony\Component\HttpFoundation\Response::sendHeaders();
-            Symfony\Component\HttpFoundation\Response::sendHeaders();
+            return Symfony\Component\HttpFoundation\Response::sendHeaders();
         }
 
         /**
@@ -1369,7 +1369,7 @@ namespace {
         public static function sendContent()
         {
             // Symfony\Component\HttpFoundation\Response::sendContent();
-            Symfony\Component\HttpFoundation\Response::sendContent();
+            return Symfony\Component\HttpFoundation\Response::sendContent();
         }
 
         /**
@@ -1386,7 +1386,7 @@ namespace {
         public static function setContent($content)
         {
             // Symfony\Component\HttpFoundation\Response::setContent();
-            Symfony\Component\HttpFoundation\Response::setContent($content);
+            return Symfony\Component\HttpFoundation\Response::setContent($content);
         }
 
         /**
@@ -1399,7 +1399,7 @@ namespace {
         public static function getContent()
         {
             // Symfony\Component\HttpFoundation\Response::getContent();
-            Symfony\Component\HttpFoundation\Response::getContent();
+            return Symfony\Component\HttpFoundation\Response::getContent();
         }
 
         /**
@@ -1414,7 +1414,7 @@ namespace {
         public static function setProtocolVersion($version)
         {
             // Symfony\Component\HttpFoundation\Response::setProtocolVersion();
-            Symfony\Component\HttpFoundation\Response::setProtocolVersion($version);
+            return Symfony\Component\HttpFoundation\Response::setProtocolVersion($version);
         }
 
         /**
@@ -1427,7 +1427,7 @@ namespace {
         public static function getProtocolVersion()
         {
             // Symfony\Component\HttpFoundation\Response::getProtocolVersion();
-            Symfony\Component\HttpFoundation\Response::getProtocolVersion();
+            return Symfony\Component\HttpFoundation\Response::getProtocolVersion();
         }
 
         /**
@@ -1448,7 +1448,7 @@ namespace {
         public static function setStatusCode($code, $text = null)
         {
             // Symfony\Component\HttpFoundation\Response::setStatusCode();
-            Symfony\Component\HttpFoundation\Response::setStatusCode($code, $text);
+            return Symfony\Component\HttpFoundation\Response::setStatusCode($code, $text);
         }
 
         /**
@@ -1461,7 +1461,7 @@ namespace {
         public static function getStatusCode()
         {
             // Symfony\Component\HttpFoundation\Response::getStatusCode();
-            Symfony\Component\HttpFoundation\Response::getStatusCode();
+            return Symfony\Component\HttpFoundation\Response::getStatusCode();
         }
 
         /**
@@ -1476,7 +1476,7 @@ namespace {
         public static function setCharset($charset)
         {
             // Symfony\Component\HttpFoundation\Response::setCharset();
-            Symfony\Component\HttpFoundation\Response::setCharset($charset);
+            return Symfony\Component\HttpFoundation\Response::setCharset($charset);
         }
 
         /**
@@ -1489,7 +1489,7 @@ namespace {
         public static function getCharset()
         {
             // Symfony\Component\HttpFoundation\Response::getCharset();
-            Symfony\Component\HttpFoundation\Response::getCharset();
+            return Symfony\Component\HttpFoundation\Response::getCharset();
         }
 
         /**
@@ -1508,7 +1508,7 @@ namespace {
         public static function isCacheable()
         {
             // Symfony\Component\HttpFoundation\Response::isCacheable();
-            Symfony\Component\HttpFoundation\Response::isCacheable();
+            return Symfony\Component\HttpFoundation\Response::isCacheable();
         }
 
         /**
@@ -1525,7 +1525,7 @@ namespace {
         public static function isFresh()
         {
             // Symfony\Component\HttpFoundation\Response::isFresh();
-            Symfony\Component\HttpFoundation\Response::isFresh();
+            return Symfony\Component\HttpFoundation\Response::isFresh();
         }
 
         /**
@@ -1539,7 +1539,7 @@ namespace {
         public static function isValidateable()
         {
             // Symfony\Component\HttpFoundation\Response::isValidateable();
-            Symfony\Component\HttpFoundation\Response::isValidateable();
+            return Symfony\Component\HttpFoundation\Response::isValidateable();
         }
 
         /**
@@ -1554,7 +1554,7 @@ namespace {
         public static function setPrivate()
         {
             // Symfony\Component\HttpFoundation\Response::setPrivate();
-            Symfony\Component\HttpFoundation\Response::setPrivate();
+            return Symfony\Component\HttpFoundation\Response::setPrivate();
         }
 
         /**
@@ -1569,7 +1569,7 @@ namespace {
         public static function setPublic()
         {
             // Symfony\Component\HttpFoundation\Response::setPublic();
-            Symfony\Component\HttpFoundation\Response::setPublic();
+            return Symfony\Component\HttpFoundation\Response::setPublic();
         }
 
         /**
@@ -1587,7 +1587,7 @@ namespace {
         public static function mustRevalidate()
         {
             // Symfony\Component\HttpFoundation\Response::mustRevalidate();
-            Symfony\Component\HttpFoundation\Response::mustRevalidate();
+            return Symfony\Component\HttpFoundation\Response::mustRevalidate();
         }
 
         /**
@@ -1602,7 +1602,7 @@ namespace {
         public static function getDate()
         {
             // Symfony\Component\HttpFoundation\Response::getDate();
-            Symfony\Component\HttpFoundation\Response::getDate();
+            return Symfony\Component\HttpFoundation\Response::getDate();
         }
 
         /**
@@ -1617,7 +1617,7 @@ namespace {
         public static function setDate(DateTime $date)
         {
             // Symfony\Component\HttpFoundation\Response::setDate();
-            Symfony\Component\HttpFoundation\Response::setDate($date);
+            return Symfony\Component\HttpFoundation\Response::setDate($date);
         }
 
         /**
@@ -1628,7 +1628,7 @@ namespace {
         public static function getAge()
         {
             // Symfony\Component\HttpFoundation\Response::getAge();
-            Symfony\Component\HttpFoundation\Response::getAge();
+            return Symfony\Component\HttpFoundation\Response::getAge();
         }
 
         /**
@@ -1641,7 +1641,7 @@ namespace {
         public static function expire()
         {
             // Symfony\Component\HttpFoundation\Response::expire();
-            Symfony\Component\HttpFoundation\Response::expire();
+            return Symfony\Component\HttpFoundation\Response::expire();
         }
 
         /**
@@ -1654,7 +1654,7 @@ namespace {
         public static function getExpires()
         {
             // Symfony\Component\HttpFoundation\Response::getExpires();
-            Symfony\Component\HttpFoundation\Response::getExpires();
+            return Symfony\Component\HttpFoundation\Response::getExpires();
         }
 
         /**
@@ -1671,7 +1671,7 @@ namespace {
         public static function setExpires(DateTime $date = null)
         {
             // Symfony\Component\HttpFoundation\Response::setExpires();
-            Symfony\Component\HttpFoundation\Response::setExpires($date);
+            return Symfony\Component\HttpFoundation\Response::setExpires($date);
         }
 
         /**
@@ -1688,7 +1688,7 @@ namespace {
         public static function getMaxAge()
         {
             // Symfony\Component\HttpFoundation\Response::getMaxAge();
-            Symfony\Component\HttpFoundation\Response::getMaxAge();
+            return Symfony\Component\HttpFoundation\Response::getMaxAge();
         }
 
         /**
@@ -1705,7 +1705,7 @@ namespace {
         public static function setMaxAge($value)
         {
             // Symfony\Component\HttpFoundation\Response::setMaxAge();
-            Symfony\Component\HttpFoundation\Response::setMaxAge($value);
+            return Symfony\Component\HttpFoundation\Response::setMaxAge($value);
         }
 
         /**
@@ -1722,7 +1722,7 @@ namespace {
         public static function setSharedMaxAge($value)
         {
             // Symfony\Component\HttpFoundation\Response::setSharedMaxAge();
-            Symfony\Component\HttpFoundation\Response::setSharedMaxAge($value);
+            return Symfony\Component\HttpFoundation\Response::setSharedMaxAge($value);
         }
 
         /**
@@ -1740,7 +1740,7 @@ namespace {
         public static function getTtl()
         {
             // Symfony\Component\HttpFoundation\Response::getTtl();
-            Symfony\Component\HttpFoundation\Response::getTtl();
+            return Symfony\Component\HttpFoundation\Response::getTtl();
         }
 
         /**
@@ -1757,7 +1757,7 @@ namespace {
         public static function setTtl($seconds)
         {
             // Symfony\Component\HttpFoundation\Response::setTtl();
-            Symfony\Component\HttpFoundation\Response::setTtl($seconds);
+            return Symfony\Component\HttpFoundation\Response::setTtl($seconds);
         }
 
         /**
@@ -1774,7 +1774,7 @@ namespace {
         public static function setClientTtl($seconds)
         {
             // Symfony\Component\HttpFoundation\Response::setClientTtl();
-            Symfony\Component\HttpFoundation\Response::setClientTtl($seconds);
+            return Symfony\Component\HttpFoundation\Response::setClientTtl($seconds);
         }
 
         /**
@@ -1789,7 +1789,7 @@ namespace {
         public static function getLastModified()
         {
             // Symfony\Component\HttpFoundation\Response::getLastModified();
-            Symfony\Component\HttpFoundation\Response::getLastModified();
+            return Symfony\Component\HttpFoundation\Response::getLastModified();
         }
 
         /**
@@ -1806,7 +1806,7 @@ namespace {
         public static function setLastModified(DateTime $date = null)
         {
             // Symfony\Component\HttpFoundation\Response::setLastModified();
-            Symfony\Component\HttpFoundation\Response::setLastModified($date);
+            return Symfony\Component\HttpFoundation\Response::setLastModified($date);
         }
 
         /**
@@ -1819,7 +1819,7 @@ namespace {
         public static function getEtag()
         {
             // Symfony\Component\HttpFoundation\Response::getEtag();
-            Symfony\Component\HttpFoundation\Response::getEtag();
+            return Symfony\Component\HttpFoundation\Response::getEtag();
         }
 
         /**
@@ -1835,7 +1835,7 @@ namespace {
         public static function setEtag($etag = null, $weak = null)
         {
             // Symfony\Component\HttpFoundation\Response::setEtag();
-            Symfony\Component\HttpFoundation\Response::setEtag($etag, $weak);
+            return Symfony\Component\HttpFoundation\Response::setEtag($etag, $weak);
         }
 
         /**
@@ -1852,7 +1852,7 @@ namespace {
         public static function setCache(array $options)
         {
             // Symfony\Component\HttpFoundation\Response::setCache();
-            Symfony\Component\HttpFoundation\Response::setCache($options);
+            return Symfony\Component\HttpFoundation\Response::setCache($options);
         }
 
         /**
@@ -1870,7 +1870,7 @@ namespace {
         public static function setNotModified()
         {
             // Symfony\Component\HttpFoundation\Response::setNotModified();
-            Symfony\Component\HttpFoundation\Response::setNotModified();
+            return Symfony\Component\HttpFoundation\Response::setNotModified();
         }
 
         /**
@@ -1883,7 +1883,7 @@ namespace {
         public static function hasVary()
         {
             // Symfony\Component\HttpFoundation\Response::hasVary();
-            Symfony\Component\HttpFoundation\Response::hasVary();
+            return Symfony\Component\HttpFoundation\Response::hasVary();
         }
 
         /**
@@ -1896,7 +1896,7 @@ namespace {
         public static function getVary()
         {
             // Symfony\Component\HttpFoundation\Response::getVary();
-            Symfony\Component\HttpFoundation\Response::getVary();
+            return Symfony\Component\HttpFoundation\Response::getVary();
         }
 
         /**
@@ -1912,7 +1912,7 @@ namespace {
         public static function setVary($headers, $replace = "1")
         {
             // Symfony\Component\HttpFoundation\Response::setVary();
-            Symfony\Component\HttpFoundation\Response::setVary($headers, $replace);
+            return Symfony\Component\HttpFoundation\Response::setVary($headers, $replace);
         }
 
         /**
@@ -1931,7 +1931,7 @@ namespace {
         public static function isNotModified(Symfony\Component\HttpFoundation\Request $request)
         {
             // Symfony\Component\HttpFoundation\Response::isNotModified();
-            Symfony\Component\HttpFoundation\Response::isNotModified($request);
+            return Symfony\Component\HttpFoundation\Response::isNotModified($request);
         }
 
         /**
@@ -1944,7 +1944,7 @@ namespace {
         public static function isInvalid()
         {
             // Symfony\Component\HttpFoundation\Response::isInvalid();
-            Symfony\Component\HttpFoundation\Response::isInvalid();
+            return Symfony\Component\HttpFoundation\Response::isInvalid();
         }
 
         /**
@@ -1957,7 +1957,7 @@ namespace {
         public static function isInformational()
         {
             // Symfony\Component\HttpFoundation\Response::isInformational();
-            Symfony\Component\HttpFoundation\Response::isInformational();
+            return Symfony\Component\HttpFoundation\Response::isInformational();
         }
 
         /**
@@ -1970,7 +1970,7 @@ namespace {
         public static function isSuccessful()
         {
             // Symfony\Component\HttpFoundation\Response::isSuccessful();
-            Symfony\Component\HttpFoundation\Response::isSuccessful();
+            return Symfony\Component\HttpFoundation\Response::isSuccessful();
         }
 
         /**
@@ -1983,7 +1983,7 @@ namespace {
         public static function isRedirection()
         {
             // Symfony\Component\HttpFoundation\Response::isRedirection();
-            Symfony\Component\HttpFoundation\Response::isRedirection();
+            return Symfony\Component\HttpFoundation\Response::isRedirection();
         }
 
         /**
@@ -1996,7 +1996,7 @@ namespace {
         public static function isClientError()
         {
             // Symfony\Component\HttpFoundation\Response::isClientError();
-            Symfony\Component\HttpFoundation\Response::isClientError();
+            return Symfony\Component\HttpFoundation\Response::isClientError();
         }
 
         /**
@@ -2009,7 +2009,7 @@ namespace {
         public static function isServerError()
         {
             // Symfony\Component\HttpFoundation\Response::isServerError();
-            Symfony\Component\HttpFoundation\Response::isServerError();
+            return Symfony\Component\HttpFoundation\Response::isServerError();
         }
 
         /**
@@ -2022,7 +2022,7 @@ namespace {
         public static function isOk()
         {
             // Symfony\Component\HttpFoundation\Response::isOk();
-            Symfony\Component\HttpFoundation\Response::isOk();
+            return Symfony\Component\HttpFoundation\Response::isOk();
         }
 
         /**
@@ -2035,7 +2035,7 @@ namespace {
         public static function isForbidden()
         {
             // Symfony\Component\HttpFoundation\Response::isForbidden();
-            Symfony\Component\HttpFoundation\Response::isForbidden();
+            return Symfony\Component\HttpFoundation\Response::isForbidden();
         }
 
         /**
@@ -2048,7 +2048,7 @@ namespace {
         public static function isNotFound()
         {
             // Symfony\Component\HttpFoundation\Response::isNotFound();
-            Symfony\Component\HttpFoundation\Response::isNotFound();
+            return Symfony\Component\HttpFoundation\Response::isNotFound();
         }
 
         /**
@@ -2063,7 +2063,7 @@ namespace {
         public static function isRedirect($location = null)
         {
             // Symfony\Component\HttpFoundation\Response::isRedirect();
-            Symfony\Component\HttpFoundation\Response::isRedirect($location);
+            return Symfony\Component\HttpFoundation\Response::isRedirect($location);
         }
 
         /**
@@ -2076,7 +2076,7 @@ namespace {
         public static function isEmpty()
         {
             // Symfony\Component\HttpFoundation\Response::isEmpty();
-            Symfony\Component\HttpFoundation\Response::isEmpty();
+            return Symfony\Component\HttpFoundation\Response::isEmpty();
         }
 
     }
@@ -2090,7 +2090,7 @@ namespace {
         protected static function createRedirectResponse($url, $code, $headers)
         {
             // Concrete\Core\Routing\Redirect::createRedirectResponse();
-            Concrete\Core\Routing\Redirect::createRedirectResponse($url, $code, $headers);
+            return Concrete\Core\Routing\Redirect::createRedirectResponse($url, $code, $headers);
         }
 
         /**
@@ -2099,7 +2099,7 @@ namespace {
         public static function to()
         {
             // Concrete\Core\Routing\Redirect::to();
-            Concrete\Core\Routing\Redirect::to();
+            return Concrete\Core\Routing\Redirect::to();
         }
 
         /**
@@ -2108,7 +2108,7 @@ namespace {
         public static function page(Concrete\Core\Page\Page $c, $code = 302, $headers = null)
         {
             // Concrete\Core\Routing\Redirect::page();
-            Concrete\Core\Routing\Redirect::page($c, $code, $headers);
+            return Concrete\Core\Routing\Redirect::page($c, $code, $headers);
         }
 
         /**
@@ -2117,7 +2117,7 @@ namespace {
         public static function url($url, $code = 302, $headers = null)
         {
             // Concrete\Core\Routing\Redirect::url();
-            Concrete\Core\Routing\Redirect::url($url, $code, $headers);
+            return Concrete\Core\Routing\Redirect::url($url, $code, $headers);
         }
 
     }
@@ -2128,13 +2128,13 @@ namespace {
         public static function write($message)
         {
             // Concrete\Core\Logging\Log::write();
-            Concrete\Core\Logging\Log::write($message);
+            return Concrete\Core\Logging\Log::write($message);
         }
 
         public static function addEntry($message, $namespace = null)
         {
             // Concrete\Core\Logging\Log::addEntry();
-            Concrete\Core\Logging\Log::addEntry($message, $namespace);
+            return Concrete\Core\Logging\Log::addEntry($message, $namespace);
         }
 
         /**
@@ -2143,7 +2143,7 @@ namespace {
         public static function clearCustom()
         {
             // Concrete\Core\Logging\Log::clearCustom();
-            Concrete\Core\Logging\Log::clearCustom();
+            return Concrete\Core\Logging\Log::clearCustom();
         }
 
         /**
@@ -2153,13 +2153,13 @@ namespace {
         public static function clearByType($type)
         {
             // Concrete\Core\Logging\Log::clearByType();
-            Concrete\Core\Logging\Log::clearByType($type);
+            return Concrete\Core\Logging\Log::clearByType($type);
         }
 
         public static function clearInternal()
         {
             // Concrete\Core\Logging\Log::clearInternal();
-            Concrete\Core\Logging\Log::clearInternal();
+            return Concrete\Core\Logging\Log::clearInternal();
         }
 
         /**
@@ -2168,13 +2168,13 @@ namespace {
         public static function clearAll()
         {
             // Concrete\Core\Logging\Log::clearAll();
-            Concrete\Core\Logging\Log::clearAll();
+            return Concrete\Core\Logging\Log::clearAll();
         }
 
         public static function close()
         {
             // Concrete\Core\Logging\Log::close();
-            Concrete\Core\Logging\Log::close();
+            return Concrete\Core\Logging\Log::close();
         }
 
         /**
@@ -2183,7 +2183,7 @@ namespace {
         public static function archive()
         {
             // Concrete\Core\Logging\Log::archive();
-            Concrete\Core\Logging\Log::archive();
+            return Concrete\Core\Logging\Log::archive();
         }
 
         /**
@@ -2192,7 +2192,7 @@ namespace {
         public static function getTotal($keywords, $type)
         {
             // Concrete\Core\Logging\Log::getTotal();
-            Concrete\Core\Logging\Log::getTotal($keywords, $type);
+            return Concrete\Core\Logging\Log::getTotal($keywords, $type);
         }
 
         /**
@@ -2201,7 +2201,7 @@ namespace {
         public static function getList($keywords, $type, $limit)
         {
             // Concrete\Core\Logging\Log::getList();
-            Concrete\Core\Logging\Log::getList($keywords, $type, $limit);
+            return Concrete\Core\Logging\Log::getList($keywords, $type, $limit);
         }
 
         /**
@@ -2210,13 +2210,13 @@ namespace {
         public static function getTypeList()
         {
             // Concrete\Core\Logging\Log::getTypeList();
-            Concrete\Core\Logging\Log::getTypeList();
+            return Concrete\Core\Logging\Log::getTypeList();
         }
 
         public static function getName()
         {
             // Concrete\Core\Logging\Log::getName();
-            Concrete\Core\Logging\Log::getName();
+            return Concrete\Core\Logging\Log::getName();
         }
 
         /**
@@ -2225,7 +2225,7 @@ namespace {
         public static function getLogs()
         {
             // Concrete\Core\Logging\Log::getLogs();
-            Concrete\Core\Logging\Log::getLogs();
+            return Concrete\Core\Logging\Log::getLogs();
         }
 
     }
@@ -2236,19 +2236,19 @@ namespace {
         public static function isValidURL($path)
         {
             // Concrete\Core\Routing\URL::isValidURL();
-            Concrete\Core\Routing\URL::isValidURL($path);
+            return Concrete\Core\Routing\URL::isValidURL($path);
         }
 
         public static function page(Concrete\Core\Page\Page $c, $action = null)
         {
             // Concrete\Core\Routing\URL::page();
-            Concrete\Core\Routing\URL::page($c, $action);
+            return Concrete\Core\Routing\URL::page($c, $action);
         }
 
         public static function to($path, $action = null)
         {
             // Concrete\Core\Routing\URL::to();
-            Concrete\Core\Routing\URL::to($path, $action);
+            return Concrete\Core\Routing\URL::to($path, $action);
         }
 
     }
@@ -2259,31 +2259,31 @@ namespace {
         public static function getInstance()
         {
             // Concrete\Core\Cookie\Cookie::getInstance();
-            Concrete\Core\Cookie\Cookie::getInstance();
+            return Concrete\Core\Cookie\Cookie::getInstance();
         }
 
         public static function set($name, $value = null, $expire = null, $path = "/", $domain = null, $secure = null, $httpOnly = "1")
         {
             // Concrete\Core\Cookie\Cookie::set();
-            Concrete\Core\Cookie\Cookie::set($name, $value, $expire, $path, $domain, $secure, $httpOnly);
+            return Concrete\Core\Cookie\Cookie::set($name, $value, $expire, $path, $domain, $secure, $httpOnly);
         }
 
         public static function add($cookie)
         {
             // Concrete\Core\Cookie\Cookie::add();
-            Concrete\Core\Cookie\Cookie::add($cookie);
+            return Concrete\Core\Cookie\Cookie::add($cookie);
         }
 
         public static function get($name, $fullObject = null)
         {
             // Concrete\Core\Cookie\Cookie::get();
-            Concrete\Core\Cookie\Cookie::get($name, $fullObject);
+            return Concrete\Core\Cookie\Cookie::get($name, $fullObject);
         }
 
         public static function getCookies()
         {
             // Concrete\Core\Cookie\Cookie::getCookies();
-            Concrete\Core\Cookie\Cookie::getCookies();
+            return Concrete\Core\Cookie\Cookie::getCookies();
         }
 
     }
@@ -2294,43 +2294,43 @@ namespace {
         public static function key($type, $id)
         {
             // Concrete\Core\Cache\Cache::key();
-            Concrete\Core\Cache\Cache::key($type, $id);
+            return Concrete\Core\Cache\Cache::key($type, $id);
         }
 
         public static function getLibrary()
         {
             // Concrete\Core\Cache\Cache::getLibrary();
-            Concrete\Core\Cache\Cache::getLibrary();
+            return Concrete\Core\Cache\Cache::getLibrary();
         }
 
         public static function startup()
         {
             // Concrete\Core\Cache\Cache::startup();
-            Concrete\Core\Cache\Cache::startup();
+            return Concrete\Core\Cache\Cache::startup();
         }
 
         public static function disableCache()
         {
             // Concrete\Core\Cache\Cache::disableCache();
-            Concrete\Core\Cache\Cache::disableCache();
+            return Concrete\Core\Cache\Cache::disableCache();
         }
 
         public static function enableCache()
         {
             // Concrete\Core\Cache\Cache::enableCache();
-            Concrete\Core\Cache\Cache::enableCache();
+            return Concrete\Core\Cache\Cache::enableCache();
         }
 
         public static function disableLocalCache()
         {
             // Concrete\Core\Cache\Cache::disableLocalCache();
-            Concrete\Core\Cache\Cache::disableLocalCache();
+            return Concrete\Core\Cache\Cache::disableLocalCache();
         }
 
         public static function enableLocalCache()
         {
             // Concrete\Core\Cache\Cache::enableLocalCache();
-            Concrete\Core\Cache\Cache::enableLocalCache();
+            return Concrete\Core\Cache\Cache::enableLocalCache();
         }
 
         /**
@@ -2340,7 +2340,7 @@ namespace {
         public static function set($type, $id, $obj, $expire = null)
         {
             // Concrete\Core\Cache\Cache::set();
-            Concrete\Core\Cache\Cache::set($type, $id, $obj, $expire);
+            return Concrete\Core\Cache\Cache::set($type, $id, $obj, $expire);
         }
 
         /**
@@ -2349,7 +2349,7 @@ namespace {
         public static function get($type, $id, $mustBeNewerThan = null)
         {
             // Concrete\Core\Cache\Cache::get();
-            Concrete\Core\Cache\Cache::get($type, $id, $mustBeNewerThan);
+            return Concrete\Core\Cache\Cache::get($type, $id, $mustBeNewerThan);
         }
 
         /**
@@ -2358,7 +2358,7 @@ namespace {
         public static function delete($type, $id)
         {
             // Concrete\Core\Cache\Cache::delete();
-            Concrete\Core\Cache\Cache::delete($type, $id);
+            return Concrete\Core\Cache\Cache::delete($type, $id);
         }
 
         /**
@@ -2367,7 +2367,7 @@ namespace {
         public static function flush()
         {
             // Concrete\Core\Cache\Cache::flush();
-            Concrete\Core\Cache\Cache::flush();
+            return Concrete\Core\Cache\Cache::flush();
         }
 
     }
@@ -2378,37 +2378,37 @@ namespace {
         public static function getEntries()
         {
             // Concrete\Core\Cache\CacheLocal::getEntries();
-            Concrete\Core\Cache\CacheLocal::getEntries();
+            return Concrete\Core\Cache\CacheLocal::getEntries();
         }
 
         public static function get()
         {
             // Concrete\Core\Cache\CacheLocal::get();
-            Concrete\Core\Cache\CacheLocal::get();
+            return Concrete\Core\Cache\CacheLocal::get();
         }
 
         public static function getEntry($type, $id)
         {
             // Concrete\Core\Cache\CacheLocal::getEntry();
-            Concrete\Core\Cache\CacheLocal::getEntry($type, $id);
+            return Concrete\Core\Cache\CacheLocal::getEntry($type, $id);
         }
 
         public static function flush()
         {
             // Concrete\Core\Cache\CacheLocal::flush();
-            Concrete\Core\Cache\CacheLocal::flush();
+            return Concrete\Core\Cache\CacheLocal::flush();
         }
 
         public static function delete($type, $id)
         {
             // Concrete\Core\Cache\CacheLocal::delete();
-            Concrete\Core\Cache\CacheLocal::delete($type, $id);
+            return Concrete\Core\Cache\CacheLocal::delete($type, $id);
         }
 
         public static function set($type, $id, $object)
         {
             // Concrete\Core\Cache\CacheLocal::set();
-            Concrete\Core\Cache\CacheLocal::set($type, $id, $object);
+            return Concrete\Core\Cache\CacheLocal::set($type, $id, $object);
         }
 
     }
@@ -2419,7 +2419,7 @@ namespace {
         public static function getIndexedSearchTable()
         {
             // Concrete\Core\Attribute\Key\CollectionKey::getIndexedSearchTable();
-            Concrete\Core\Attribute\Key\CollectionKey::getIndexedSearchTable();
+            return Concrete\Core\Attribute\Key\CollectionKey::getIndexedSearchTable();
         }
 
         /**
@@ -2430,49 +2430,49 @@ namespace {
         public static function getAttributes($cID, $cvID, $method = "getValue")
         {
             // Concrete\Core\Attribute\Key\CollectionKey::getAttributes();
-            Concrete\Core\Attribute\Key\CollectionKey::getAttributes($cID, $cvID, $method);
+            return Concrete\Core\Attribute\Key\CollectionKey::getAttributes($cID, $cvID, $method);
         }
 
         public static function getColumnHeaderList()
         {
             // Concrete\Core\Attribute\Key\CollectionKey::getColumnHeaderList();
-            Concrete\Core\Attribute\Key\CollectionKey::getColumnHeaderList();
+            return Concrete\Core\Attribute\Key\CollectionKey::getColumnHeaderList();
         }
 
         public static function getSearchableIndexedList()
         {
             // Concrete\Core\Attribute\Key\CollectionKey::getSearchableIndexedList();
-            Concrete\Core\Attribute\Key\CollectionKey::getSearchableIndexedList();
+            return Concrete\Core\Attribute\Key\CollectionKey::getSearchableIndexedList();
         }
 
         public static function getSearchableList()
         {
             // Concrete\Core\Attribute\Key\CollectionKey::getSearchableList();
-            Concrete\Core\Attribute\Key\CollectionKey::getSearchableList();
+            return Concrete\Core\Attribute\Key\CollectionKey::getSearchableList();
         }
 
         public static function getAttributeValue($avID, $method = "getValue")
         {
             // Concrete\Core\Attribute\Key\CollectionKey::getAttributeValue();
-            Concrete\Core\Attribute\Key\CollectionKey::getAttributeValue($avID, $method);
+            return Concrete\Core\Attribute\Key\CollectionKey::getAttributeValue($avID, $method);
         }
 
         public static function getByID($akID)
         {
             // Concrete\Core\Attribute\Key\CollectionKey::getByID();
-            Concrete\Core\Attribute\Key\CollectionKey::getByID($akID);
+            return Concrete\Core\Attribute\Key\CollectionKey::getByID($akID);
         }
 
         public static function getByHandle($akHandle)
         {
             // Concrete\Core\Attribute\Key\CollectionKey::getByHandle();
-            Concrete\Core\Attribute\Key\CollectionKey::getByHandle($akHandle);
+            return Concrete\Core\Attribute\Key\CollectionKey::getByHandle($akHandle);
         }
 
         public static function getList()
         {
             // Concrete\Core\Attribute\Key\CollectionKey::getList();
-            Concrete\Core\Attribute\Key\CollectionKey::getList();
+            return Concrete\Core\Attribute\Key\CollectionKey::getList();
         }
 
         /**
@@ -2481,31 +2481,31 @@ namespace {
         public static function get($akID)
         {
             // Concrete\Core\Attribute\Key\CollectionKey::get();
-            Concrete\Core\Attribute\Key\CollectionKey::get($akID);
+            return Concrete\Core\Attribute\Key\CollectionKey::get($akID);
         }
 
         protected static function saveAttribute($nvc, $value = null)
         {
             // Concrete\Core\Attribute\Key\CollectionKey::saveAttribute();
-            Concrete\Core\Attribute\Key\CollectionKey::saveAttribute($nvc, $value);
+            return Concrete\Core\Attribute\Key\CollectionKey::saveAttribute($nvc, $value);
         }
 
         public static function add($at, $args, $pkg = null)
         {
             // Concrete\Core\Attribute\Key\CollectionKey::add();
-            Concrete\Core\Attribute\Key\CollectionKey::add($at, $args, $pkg);
+            return Concrete\Core\Attribute\Key\CollectionKey::add($at, $args, $pkg);
         }
 
         public static function delete()
         {
             // Concrete\Core\Attribute\Key\CollectionKey::delete();
-            Concrete\Core\Attribute\Key\CollectionKey::delete();
+            return Concrete\Core\Attribute\Key\CollectionKey::delete();
         }
 
         public static function getSearchIndexFieldDefinition()
         {
             // Concrete\Core\Attribute\Key\Key::getSearchIndexFieldDefinition();
-            Concrete\Core\Attribute\Key\Key::getSearchIndexFieldDefinition();
+            return Concrete\Core\Attribute\Key\Key::getSearchIndexFieldDefinition();
         }
 
         /**
@@ -2514,7 +2514,7 @@ namespace {
         public static function getAttributeKeyName()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyName();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyName();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyName();
         }
 
         /** Returns the display name for this attribute (localized and escaped accordingly to $format)
@@ -2526,7 +2526,7 @@ namespace {
         public static function getAttributeKeyDisplayName($format = "html")
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyDisplayName();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyDisplayName($format);
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyDisplayName($format);
         }
 
         /**
@@ -2535,7 +2535,7 @@ namespace {
         public static function getAttributeKeyHandle()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyHandle();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyHandle();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyHandle();
         }
 
         /**
@@ -2544,7 +2544,7 @@ namespace {
         public static function getAttributeKeyDisplayHandle()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyDisplayHandle();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyDisplayHandle();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyDisplayHandle();
         }
 
         /**
@@ -2553,13 +2553,13 @@ namespace {
         public static function getAttributeKeyID()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyID();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyID();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyID();
         }
 
         public static function getAttributeKeyCategoryID()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyCategoryID();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyCategoryID();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyCategoryID();
         }
 
         /**
@@ -2568,7 +2568,7 @@ namespace {
         public static function isAttributeKeySearchable()
         {
             // Concrete\Core\Attribute\Key\Key::isAttributeKeySearchable();
-            Concrete\Core\Attribute\Key\Key::isAttributeKeySearchable();
+            return Concrete\Core\Attribute\Key\Key::isAttributeKeySearchable();
         }
 
         /**
@@ -2577,7 +2577,7 @@ namespace {
         public static function isAttributeKeyInternal()
         {
             // Concrete\Core\Attribute\Key\Key::isAttributeKeyInternal();
-            Concrete\Core\Attribute\Key\Key::isAttributeKeyInternal();
+            return Concrete\Core\Attribute\Key\Key::isAttributeKeyInternal();
         }
 
         /**
@@ -2586,7 +2586,7 @@ namespace {
         public static function isAttributeKeyContentIndexed()
         {
             // Concrete\Core\Attribute\Key\Key::isAttributeKeyContentIndexed();
-            Concrete\Core\Attribute\Key\Key::isAttributeKeyContentIndexed();
+            return Concrete\Core\Attribute\Key\Key::isAttributeKeyContentIndexed();
         }
 
         /**
@@ -2595,7 +2595,7 @@ namespace {
         public static function isAttributeKeyAutoCreated()
         {
             // Concrete\Core\Attribute\Key\Key::isAttributeKeyAutoCreated();
-            Concrete\Core\Attribute\Key\Key::isAttributeKeyAutoCreated();
+            return Concrete\Core\Attribute\Key\Key::isAttributeKeyAutoCreated();
         }
 
         /**
@@ -2604,7 +2604,7 @@ namespace {
         public static function isAttributeKeyColumnHeader()
         {
             // Concrete\Core\Attribute\Key\Key::isAttributeKeyColumnHeader();
-            Concrete\Core\Attribute\Key\Key::isAttributeKeyColumnHeader();
+            return Concrete\Core\Attribute\Key\Key::isAttributeKeyColumnHeader();
         }
 
         /**
@@ -2613,7 +2613,7 @@ namespace {
         public static function isAttributeKeyEditable()
         {
             // Concrete\Core\Attribute\Key\Key::isAttributeKeyEditable();
-            Concrete\Core\Attribute\Key\Key::isAttributeKeyEditable();
+            return Concrete\Core\Attribute\Key\Key::isAttributeKeyEditable();
         }
 
         /**
@@ -2622,25 +2622,25 @@ namespace {
         protected static function load($akIdentifier, $loadBy = "akID")
         {
             // Concrete\Core\Attribute\Key\Key::load();
-            Concrete\Core\Attribute\Key\Key::load($akIdentifier, $loadBy);
+            return Concrete\Core\Attribute\Key\Key::load($akIdentifier, $loadBy);
         }
 
         public static function getPackageID()
         {
             // Concrete\Core\Attribute\Key\Key::getPackageID();
-            Concrete\Core\Attribute\Key\Key::getPackageID();
+            return Concrete\Core\Attribute\Key\Key::getPackageID();
         }
 
         public static function getPackageHandle()
         {
             // Concrete\Core\Attribute\Key\Key::getPackageHandle();
-            Concrete\Core\Attribute\Key\Key::getPackageHandle();
+            return Concrete\Core\Attribute\Key\Key::getPackageHandle();
         }
 
         public static function getInstanceByID($akID)
         {
             // Concrete\Core\Attribute\Key\Key::getInstanceByID();
-            Concrete\Core\Attribute\Key\Key::getInstanceByID($akID);
+            return Concrete\Core\Attribute\Key\Key::getInstanceByID($akID);
         }
 
         /**
@@ -2649,7 +2649,7 @@ namespace {
         public static function getAttributeType()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeType();
-            Concrete\Core\Attribute\Key\Key::getAttributeType();
+            return Concrete\Core\Attribute\Key\Key::getAttributeType();
         }
 
         /**
@@ -2658,25 +2658,25 @@ namespace {
         public static function getAttributeTypeHandle()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeTypeHandle();
-            Concrete\Core\Attribute\Key\Key::getAttributeTypeHandle();
+            return Concrete\Core\Attribute\Key\Key::getAttributeTypeHandle();
         }
 
         public static function getAttributeKeyType()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyType();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyType();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyType();
         }
 
         public static function export($axml, $exporttype = "full")
         {
             // Concrete\Core\Attribute\Key\Key::export();
-            Concrete\Core\Attribute\Key\Key::export($axml, $exporttype);
+            return Concrete\Core\Attribute\Key\Key::export($axml, $exporttype);
         }
 
         public static function exportList($xml)
         {
             // Concrete\Core\Attribute\Key\Key::exportList();
-            Concrete\Core\Attribute\Key\Key::exportList($xml);
+            return Concrete\Core\Attribute\Key\Key::exportList($xml);
         }
 
         /**
@@ -2688,19 +2688,19 @@ namespace {
         public static function getListByPackage($pkg)
         {
             // Concrete\Core\Attribute\Key\Key::getListByPackage();
-            Concrete\Core\Attribute\Key\Key::getListByPackage($pkg);
+            return Concrete\Core\Attribute\Key\Key::getListByPackage($pkg);
         }
 
         public static function import(SimpleXMLElement $ak)
         {
             // Concrete\Core\Attribute\Key\Key::import();
-            Concrete\Core\Attribute\Key\Key::import($ak);
+            return Concrete\Core\Attribute\Key\Key::import($ak);
         }
 
         public static function refreshCache()
         {
             // Concrete\Core\Attribute\Key\Key::refreshCache();
-            Concrete\Core\Attribute\Key\Key::refreshCache();
+            return Concrete\Core\Attribute\Key\Key::refreshCache();
         }
 
         /**
@@ -2709,7 +2709,7 @@ namespace {
         public static function update($args)
         {
             // Concrete\Core\Attribute\Key\Key::update();
-            Concrete\Core\Attribute\Key\Key::update($args);
+            return Concrete\Core\Attribute\Key\Key::update($args);
         }
 
         /**
@@ -2718,37 +2718,37 @@ namespace {
         public static function duplicate($args = null)
         {
             // Concrete\Core\Attribute\Key\Key::duplicate();
-            Concrete\Core\Attribute\Key\Key::duplicate($args);
+            return Concrete\Core\Attribute\Key\Key::duplicate($args);
         }
 
         public static function inAttributeSet($as)
         {
             // Concrete\Core\Attribute\Key\Key::inAttributeSet();
-            Concrete\Core\Attribute\Key\Key::inAttributeSet($as);
+            return Concrete\Core\Attribute\Key\Key::inAttributeSet($as);
         }
 
         public static function setAttributeKeyColumnHeader($r)
         {
             // Concrete\Core\Attribute\Key\Key::setAttributeKeyColumnHeader();
-            Concrete\Core\Attribute\Key\Key::setAttributeKeyColumnHeader($r);
+            return Concrete\Core\Attribute\Key\Key::setAttributeKeyColumnHeader($r);
         }
 
         public static function reindex($tbl, $columnHeaders, $attribs, $rs)
         {
             // Concrete\Core\Attribute\Key\Key::reindex();
-            Concrete\Core\Attribute\Key\Key::reindex($tbl, $columnHeaders, $attribs, $rs);
+            return Concrete\Core\Attribute\Key\Key::reindex($tbl, $columnHeaders, $attribs, $rs);
         }
 
         public static function updateSearchIndex($prevHandle = null)
         {
             // Concrete\Core\Attribute\Key\Key::updateSearchIndex();
-            Concrete\Core\Attribute\Key\Key::updateSearchIndex($prevHandle);
+            return Concrete\Core\Attribute\Key\Key::updateSearchIndex($prevHandle);
         }
 
         public static function getAttributeValueIDList()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeValueIDList();
-            Concrete\Core\Attribute\Key\Key::getAttributeValueIDList();
+            return Concrete\Core\Attribute\Key\Key::getAttributeValueIDList();
         }
 
         /**
@@ -2757,19 +2757,19 @@ namespace {
         public static function addAttributeValue()
         {
             // Concrete\Core\Attribute\Key\Key::addAttributeValue();
-            Concrete\Core\Attribute\Key\Key::addAttributeValue();
+            return Concrete\Core\Attribute\Key\Key::addAttributeValue();
         }
 
         public static function getAttributeKeyIconSRC()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyIconSRC();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyIconSRC();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyIconSRC();
         }
 
         public static function getController()
         {
             // Concrete\Core\Attribute\Key\Key::getController();
-            Concrete\Core\Attribute\Key\Key::getController();
+            return Concrete\Core\Attribute\Key\Key::getController();
         }
 
         /**
@@ -2781,37 +2781,37 @@ namespace {
         public static function render($view = "view", $value = null, $return = null)
         {
             // Concrete\Core\Attribute\Key\Key::render();
-            Concrete\Core\Attribute\Key\Key::render($view, $value, $return);
+            return Concrete\Core\Attribute\Key\Key::render($view, $value, $return);
         }
 
         public static function validateAttributeForm($h = null)
         {
             // Concrete\Core\Attribute\Key\Key::validateAttributeForm();
-            Concrete\Core\Attribute\Key\Key::validateAttributeForm($h);
+            return Concrete\Core\Attribute\Key\Key::validateAttributeForm($h);
         }
 
         public static function createIndexedSearchTable()
         {
             // Concrete\Core\Attribute\Key\Key::createIndexedSearchTable();
-            Concrete\Core\Attribute\Key\Key::createIndexedSearchTable();
+            return Concrete\Core\Attribute\Key\Key::createIndexedSearchTable();
         }
 
         public static function setAttributeSet($as)
         {
             // Concrete\Core\Attribute\Key\Key::setAttributeSet();
-            Concrete\Core\Attribute\Key\Key::setAttributeSet($as);
+            return Concrete\Core\Attribute\Key\Key::setAttributeSet($as);
         }
 
         public static function clearAttributeSets()
         {
             // Concrete\Core\Attribute\Key\Key::clearAttributeSets();
-            Concrete\Core\Attribute\Key\Key::clearAttributeSets();
+            return Concrete\Core\Attribute\Key\Key::clearAttributeSets();
         }
 
         public static function getAttributeSets()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeSets();
-            Concrete\Core\Attribute\Key\Key::getAttributeSets();
+            return Concrete\Core\Attribute\Key\Key::getAttributeSets();
         }
 
         /**
@@ -2820,7 +2820,7 @@ namespace {
         public static function saveAttributeForm($obj)
         {
             // Concrete\Core\Attribute\Key\Key::saveAttributeForm();
-            Concrete\Core\Attribute\Key\Key::saveAttributeForm($obj);
+            return Concrete\Core\Attribute\Key\Key::saveAttributeForm($obj);
         }
 
         /**
@@ -2829,7 +2829,7 @@ namespace {
         public static function setAttribute($obj, $value)
         {
             // Concrete\Core\Attribute\Key\Key::setAttribute();
-            Concrete\Core\Attribute\Key\Key::setAttribute($obj, $value);
+            return Concrete\Core\Attribute\Key\Key::setAttribute($obj, $value);
         }
 
         /**
@@ -2837,13 +2837,13 @@ namespace {
         public static function outputSearchHTML()
         {
             // Concrete\Core\Attribute\Key\Key::outputSearchHTML();
-            Concrete\Core\Attribute\Key\Key::outputSearchHTML();
+            return Concrete\Core\Attribute\Key\Key::outputSearchHTML();
         }
 
         public static function getKeyName()
         {
             // Concrete\Core\Attribute\Key\Key::getKeyName();
-            Concrete\Core\Attribute\Key\Key::getKeyName();
+            return Concrete\Core\Attribute\Key\Key::getKeyName();
         }
 
         /**
@@ -2852,7 +2852,7 @@ namespace {
         public static function getKeyHandle()
         {
             // Concrete\Core\Attribute\Key\Key::getKeyHandle();
-            Concrete\Core\Attribute\Key\Key::getKeyHandle();
+            return Concrete\Core\Attribute\Key\Key::getKeyHandle();
         }
 
         /**
@@ -2861,43 +2861,43 @@ namespace {
         public static function getKeyID()
         {
             // Concrete\Core\Attribute\Key\Key::getKeyID();
-            Concrete\Core\Attribute\Key\Key::getKeyID();
+            return Concrete\Core\Attribute\Key\Key::getKeyID();
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -2908,7 +2908,7 @@ namespace {
         public static function getIndexedSearchTable()
         {
             // Concrete\Core\Attribute\Key\FileKey::getIndexedSearchTable();
-            Concrete\Core\Attribute\Key\FileKey::getIndexedSearchTable();
+            return Concrete\Core\Attribute\Key\FileKey::getIndexedSearchTable();
         }
 
         /**
@@ -2919,55 +2919,55 @@ namespace {
         public static function getAttributes($fID, $fvID, $method = "getValue")
         {
             // Concrete\Core\Attribute\Key\FileKey::getAttributes();
-            Concrete\Core\Attribute\Key\FileKey::getAttributes($fID, $fvID, $method);
+            return Concrete\Core\Attribute\Key\FileKey::getAttributes($fID, $fvID, $method);
         }
 
         public static function getAttributeValue($avID, $method = "getValue")
         {
             // Concrete\Core\Attribute\Key\FileKey::getAttributeValue();
-            Concrete\Core\Attribute\Key\FileKey::getAttributeValue($avID, $method);
+            return Concrete\Core\Attribute\Key\FileKey::getAttributeValue($avID, $method);
         }
 
         public static function getByHandle($akHandle)
         {
             // Concrete\Core\Attribute\Key\FileKey::getByHandle();
-            Concrete\Core\Attribute\Key\FileKey::getByHandle($akHandle);
+            return Concrete\Core\Attribute\Key\FileKey::getByHandle($akHandle);
         }
 
         public static function getByID($akID)
         {
             // Concrete\Core\Attribute\Key\FileKey::getByID();
-            Concrete\Core\Attribute\Key\FileKey::getByID($akID);
+            return Concrete\Core\Attribute\Key\FileKey::getByID($akID);
         }
 
         public static function getList()
         {
             // Concrete\Core\Attribute\Key\FileKey::getList();
-            Concrete\Core\Attribute\Key\FileKey::getList();
+            return Concrete\Core\Attribute\Key\FileKey::getList();
         }
 
         public static function getSearchableList()
         {
             // Concrete\Core\Attribute\Key\FileKey::getSearchableList();
-            Concrete\Core\Attribute\Key\FileKey::getSearchableList();
+            return Concrete\Core\Attribute\Key\FileKey::getSearchableList();
         }
 
         public static function getSearchableIndexedList()
         {
             // Concrete\Core\Attribute\Key\FileKey::getSearchableIndexedList();
-            Concrete\Core\Attribute\Key\FileKey::getSearchableIndexedList();
+            return Concrete\Core\Attribute\Key\FileKey::getSearchableIndexedList();
         }
 
         public static function getImporterList($fv = null)
         {
             // Concrete\Core\Attribute\Key\FileKey::getImporterList();
-            Concrete\Core\Attribute\Key\FileKey::getImporterList($fv);
+            return Concrete\Core\Attribute\Key\FileKey::getImporterList($fv);
         }
 
         public static function getUserAddedList()
         {
             // Concrete\Core\Attribute\Key\FileKey::getUserAddedList();
-            Concrete\Core\Attribute\Key\FileKey::getUserAddedList();
+            return Concrete\Core\Attribute\Key\FileKey::getUserAddedList();
         }
 
         /**
@@ -2976,37 +2976,37 @@ namespace {
         public static function get($akID)
         {
             // Concrete\Core\Attribute\Key\FileKey::get();
-            Concrete\Core\Attribute\Key\FileKey::get($akID);
+            return Concrete\Core\Attribute\Key\FileKey::get($akID);
         }
 
         protected static function saveAttribute($f, $value = null)
         {
             // Concrete\Core\Attribute\Key\FileKey::saveAttribute();
-            Concrete\Core\Attribute\Key\FileKey::saveAttribute($f, $value);
+            return Concrete\Core\Attribute\Key\FileKey::saveAttribute($f, $value);
         }
 
         public static function add($at, $args, $pkg = null)
         {
             // Concrete\Core\Attribute\Key\FileKey::add();
-            Concrete\Core\Attribute\Key\FileKey::add($at, $args, $pkg);
+            return Concrete\Core\Attribute\Key\FileKey::add($at, $args, $pkg);
         }
 
         public static function getColumnHeaderList()
         {
             // Concrete\Core\Attribute\Key\FileKey::getColumnHeaderList();
-            Concrete\Core\Attribute\Key\FileKey::getColumnHeaderList();
+            return Concrete\Core\Attribute\Key\FileKey::getColumnHeaderList();
         }
 
         public static function delete()
         {
             // Concrete\Core\Attribute\Key\FileKey::delete();
-            Concrete\Core\Attribute\Key\FileKey::delete();
+            return Concrete\Core\Attribute\Key\FileKey::delete();
         }
 
         public static function getSearchIndexFieldDefinition()
         {
             // Concrete\Core\Attribute\Key\Key::getSearchIndexFieldDefinition();
-            Concrete\Core\Attribute\Key\Key::getSearchIndexFieldDefinition();
+            return Concrete\Core\Attribute\Key\Key::getSearchIndexFieldDefinition();
         }
 
         /**
@@ -3015,7 +3015,7 @@ namespace {
         public static function getAttributeKeyName()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyName();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyName();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyName();
         }
 
         /** Returns the display name for this attribute (localized and escaped accordingly to $format)
@@ -3027,7 +3027,7 @@ namespace {
         public static function getAttributeKeyDisplayName($format = "html")
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyDisplayName();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyDisplayName($format);
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyDisplayName($format);
         }
 
         /**
@@ -3036,7 +3036,7 @@ namespace {
         public static function getAttributeKeyHandle()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyHandle();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyHandle();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyHandle();
         }
 
         /**
@@ -3045,7 +3045,7 @@ namespace {
         public static function getAttributeKeyDisplayHandle()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyDisplayHandle();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyDisplayHandle();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyDisplayHandle();
         }
 
         /**
@@ -3054,13 +3054,13 @@ namespace {
         public static function getAttributeKeyID()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyID();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyID();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyID();
         }
 
         public static function getAttributeKeyCategoryID()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyCategoryID();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyCategoryID();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyCategoryID();
         }
 
         /**
@@ -3069,7 +3069,7 @@ namespace {
         public static function isAttributeKeySearchable()
         {
             // Concrete\Core\Attribute\Key\Key::isAttributeKeySearchable();
-            Concrete\Core\Attribute\Key\Key::isAttributeKeySearchable();
+            return Concrete\Core\Attribute\Key\Key::isAttributeKeySearchable();
         }
 
         /**
@@ -3078,7 +3078,7 @@ namespace {
         public static function isAttributeKeyInternal()
         {
             // Concrete\Core\Attribute\Key\Key::isAttributeKeyInternal();
-            Concrete\Core\Attribute\Key\Key::isAttributeKeyInternal();
+            return Concrete\Core\Attribute\Key\Key::isAttributeKeyInternal();
         }
 
         /**
@@ -3087,7 +3087,7 @@ namespace {
         public static function isAttributeKeyContentIndexed()
         {
             // Concrete\Core\Attribute\Key\Key::isAttributeKeyContentIndexed();
-            Concrete\Core\Attribute\Key\Key::isAttributeKeyContentIndexed();
+            return Concrete\Core\Attribute\Key\Key::isAttributeKeyContentIndexed();
         }
 
         /**
@@ -3096,7 +3096,7 @@ namespace {
         public static function isAttributeKeyAutoCreated()
         {
             // Concrete\Core\Attribute\Key\Key::isAttributeKeyAutoCreated();
-            Concrete\Core\Attribute\Key\Key::isAttributeKeyAutoCreated();
+            return Concrete\Core\Attribute\Key\Key::isAttributeKeyAutoCreated();
         }
 
         /**
@@ -3105,7 +3105,7 @@ namespace {
         public static function isAttributeKeyColumnHeader()
         {
             // Concrete\Core\Attribute\Key\Key::isAttributeKeyColumnHeader();
-            Concrete\Core\Attribute\Key\Key::isAttributeKeyColumnHeader();
+            return Concrete\Core\Attribute\Key\Key::isAttributeKeyColumnHeader();
         }
 
         /**
@@ -3114,7 +3114,7 @@ namespace {
         public static function isAttributeKeyEditable()
         {
             // Concrete\Core\Attribute\Key\Key::isAttributeKeyEditable();
-            Concrete\Core\Attribute\Key\Key::isAttributeKeyEditable();
+            return Concrete\Core\Attribute\Key\Key::isAttributeKeyEditable();
         }
 
         /**
@@ -3123,25 +3123,25 @@ namespace {
         protected static function load($akIdentifier, $loadBy = "akID")
         {
             // Concrete\Core\Attribute\Key\Key::load();
-            Concrete\Core\Attribute\Key\Key::load($akIdentifier, $loadBy);
+            return Concrete\Core\Attribute\Key\Key::load($akIdentifier, $loadBy);
         }
 
         public static function getPackageID()
         {
             // Concrete\Core\Attribute\Key\Key::getPackageID();
-            Concrete\Core\Attribute\Key\Key::getPackageID();
+            return Concrete\Core\Attribute\Key\Key::getPackageID();
         }
 
         public static function getPackageHandle()
         {
             // Concrete\Core\Attribute\Key\Key::getPackageHandle();
-            Concrete\Core\Attribute\Key\Key::getPackageHandle();
+            return Concrete\Core\Attribute\Key\Key::getPackageHandle();
         }
 
         public static function getInstanceByID($akID)
         {
             // Concrete\Core\Attribute\Key\Key::getInstanceByID();
-            Concrete\Core\Attribute\Key\Key::getInstanceByID($akID);
+            return Concrete\Core\Attribute\Key\Key::getInstanceByID($akID);
         }
 
         /**
@@ -3150,7 +3150,7 @@ namespace {
         public static function getAttributeType()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeType();
-            Concrete\Core\Attribute\Key\Key::getAttributeType();
+            return Concrete\Core\Attribute\Key\Key::getAttributeType();
         }
 
         /**
@@ -3159,25 +3159,25 @@ namespace {
         public static function getAttributeTypeHandle()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeTypeHandle();
-            Concrete\Core\Attribute\Key\Key::getAttributeTypeHandle();
+            return Concrete\Core\Attribute\Key\Key::getAttributeTypeHandle();
         }
 
         public static function getAttributeKeyType()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyType();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyType();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyType();
         }
 
         public static function export($axml, $exporttype = "full")
         {
             // Concrete\Core\Attribute\Key\Key::export();
-            Concrete\Core\Attribute\Key\Key::export($axml, $exporttype);
+            return Concrete\Core\Attribute\Key\Key::export($axml, $exporttype);
         }
 
         public static function exportList($xml)
         {
             // Concrete\Core\Attribute\Key\Key::exportList();
-            Concrete\Core\Attribute\Key\Key::exportList($xml);
+            return Concrete\Core\Attribute\Key\Key::exportList($xml);
         }
 
         /**
@@ -3189,19 +3189,19 @@ namespace {
         public static function getListByPackage($pkg)
         {
             // Concrete\Core\Attribute\Key\Key::getListByPackage();
-            Concrete\Core\Attribute\Key\Key::getListByPackage($pkg);
+            return Concrete\Core\Attribute\Key\Key::getListByPackage($pkg);
         }
 
         public static function import(SimpleXMLElement $ak)
         {
             // Concrete\Core\Attribute\Key\Key::import();
-            Concrete\Core\Attribute\Key\Key::import($ak);
+            return Concrete\Core\Attribute\Key\Key::import($ak);
         }
 
         public static function refreshCache()
         {
             // Concrete\Core\Attribute\Key\Key::refreshCache();
-            Concrete\Core\Attribute\Key\Key::refreshCache();
+            return Concrete\Core\Attribute\Key\Key::refreshCache();
         }
 
         /**
@@ -3210,7 +3210,7 @@ namespace {
         public static function update($args)
         {
             // Concrete\Core\Attribute\Key\Key::update();
-            Concrete\Core\Attribute\Key\Key::update($args);
+            return Concrete\Core\Attribute\Key\Key::update($args);
         }
 
         /**
@@ -3219,37 +3219,37 @@ namespace {
         public static function duplicate($args = null)
         {
             // Concrete\Core\Attribute\Key\Key::duplicate();
-            Concrete\Core\Attribute\Key\Key::duplicate($args);
+            return Concrete\Core\Attribute\Key\Key::duplicate($args);
         }
 
         public static function inAttributeSet($as)
         {
             // Concrete\Core\Attribute\Key\Key::inAttributeSet();
-            Concrete\Core\Attribute\Key\Key::inAttributeSet($as);
+            return Concrete\Core\Attribute\Key\Key::inAttributeSet($as);
         }
 
         public static function setAttributeKeyColumnHeader($r)
         {
             // Concrete\Core\Attribute\Key\Key::setAttributeKeyColumnHeader();
-            Concrete\Core\Attribute\Key\Key::setAttributeKeyColumnHeader($r);
+            return Concrete\Core\Attribute\Key\Key::setAttributeKeyColumnHeader($r);
         }
 
         public static function reindex($tbl, $columnHeaders, $attribs, $rs)
         {
             // Concrete\Core\Attribute\Key\Key::reindex();
-            Concrete\Core\Attribute\Key\Key::reindex($tbl, $columnHeaders, $attribs, $rs);
+            return Concrete\Core\Attribute\Key\Key::reindex($tbl, $columnHeaders, $attribs, $rs);
         }
 
         public static function updateSearchIndex($prevHandle = null)
         {
             // Concrete\Core\Attribute\Key\Key::updateSearchIndex();
-            Concrete\Core\Attribute\Key\Key::updateSearchIndex($prevHandle);
+            return Concrete\Core\Attribute\Key\Key::updateSearchIndex($prevHandle);
         }
 
         public static function getAttributeValueIDList()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeValueIDList();
-            Concrete\Core\Attribute\Key\Key::getAttributeValueIDList();
+            return Concrete\Core\Attribute\Key\Key::getAttributeValueIDList();
         }
 
         /**
@@ -3258,19 +3258,19 @@ namespace {
         public static function addAttributeValue()
         {
             // Concrete\Core\Attribute\Key\Key::addAttributeValue();
-            Concrete\Core\Attribute\Key\Key::addAttributeValue();
+            return Concrete\Core\Attribute\Key\Key::addAttributeValue();
         }
 
         public static function getAttributeKeyIconSRC()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyIconSRC();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyIconSRC();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyIconSRC();
         }
 
         public static function getController()
         {
             // Concrete\Core\Attribute\Key\Key::getController();
-            Concrete\Core\Attribute\Key\Key::getController();
+            return Concrete\Core\Attribute\Key\Key::getController();
         }
 
         /**
@@ -3282,37 +3282,37 @@ namespace {
         public static function render($view = "view", $value = null, $return = null)
         {
             // Concrete\Core\Attribute\Key\Key::render();
-            Concrete\Core\Attribute\Key\Key::render($view, $value, $return);
+            return Concrete\Core\Attribute\Key\Key::render($view, $value, $return);
         }
 
         public static function validateAttributeForm($h = null)
         {
             // Concrete\Core\Attribute\Key\Key::validateAttributeForm();
-            Concrete\Core\Attribute\Key\Key::validateAttributeForm($h);
+            return Concrete\Core\Attribute\Key\Key::validateAttributeForm($h);
         }
 
         public static function createIndexedSearchTable()
         {
             // Concrete\Core\Attribute\Key\Key::createIndexedSearchTable();
-            Concrete\Core\Attribute\Key\Key::createIndexedSearchTable();
+            return Concrete\Core\Attribute\Key\Key::createIndexedSearchTable();
         }
 
         public static function setAttributeSet($as)
         {
             // Concrete\Core\Attribute\Key\Key::setAttributeSet();
-            Concrete\Core\Attribute\Key\Key::setAttributeSet($as);
+            return Concrete\Core\Attribute\Key\Key::setAttributeSet($as);
         }
 
         public static function clearAttributeSets()
         {
             // Concrete\Core\Attribute\Key\Key::clearAttributeSets();
-            Concrete\Core\Attribute\Key\Key::clearAttributeSets();
+            return Concrete\Core\Attribute\Key\Key::clearAttributeSets();
         }
 
         public static function getAttributeSets()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeSets();
-            Concrete\Core\Attribute\Key\Key::getAttributeSets();
+            return Concrete\Core\Attribute\Key\Key::getAttributeSets();
         }
 
         /**
@@ -3321,7 +3321,7 @@ namespace {
         public static function saveAttributeForm($obj)
         {
             // Concrete\Core\Attribute\Key\Key::saveAttributeForm();
-            Concrete\Core\Attribute\Key\Key::saveAttributeForm($obj);
+            return Concrete\Core\Attribute\Key\Key::saveAttributeForm($obj);
         }
 
         /**
@@ -3330,7 +3330,7 @@ namespace {
         public static function setAttribute($obj, $value)
         {
             // Concrete\Core\Attribute\Key\Key::setAttribute();
-            Concrete\Core\Attribute\Key\Key::setAttribute($obj, $value);
+            return Concrete\Core\Attribute\Key\Key::setAttribute($obj, $value);
         }
 
         /**
@@ -3338,13 +3338,13 @@ namespace {
         public static function outputSearchHTML()
         {
             // Concrete\Core\Attribute\Key\Key::outputSearchHTML();
-            Concrete\Core\Attribute\Key\Key::outputSearchHTML();
+            return Concrete\Core\Attribute\Key\Key::outputSearchHTML();
         }
 
         public static function getKeyName()
         {
             // Concrete\Core\Attribute\Key\Key::getKeyName();
-            Concrete\Core\Attribute\Key\Key::getKeyName();
+            return Concrete\Core\Attribute\Key\Key::getKeyName();
         }
 
         /**
@@ -3353,7 +3353,7 @@ namespace {
         public static function getKeyHandle()
         {
             // Concrete\Core\Attribute\Key\Key::getKeyHandle();
-            Concrete\Core\Attribute\Key\Key::getKeyHandle();
+            return Concrete\Core\Attribute\Key\Key::getKeyHandle();
         }
 
         /**
@@ -3362,43 +3362,43 @@ namespace {
         public static function getKeyID()
         {
             // Concrete\Core\Attribute\Key\Key::getKeyID();
-            Concrete\Core\Attribute\Key\Key::getKeyID();
+            return Concrete\Core\Attribute\Key\Key::getKeyID();
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -3409,115 +3409,115 @@ namespace {
         public static function getIndexedSearchTable()
         {
             // Concrete\Core\Attribute\Key\UserKey::getIndexedSearchTable();
-            Concrete\Core\Attribute\Key\UserKey::getIndexedSearchTable();
+            return Concrete\Core\Attribute\Key\UserKey::getIndexedSearchTable();
         }
 
         public static function getAttributes($uID, $method = "getValue")
         {
             // Concrete\Core\Attribute\Key\UserKey::getAttributes();
-            Concrete\Core\Attribute\Key\UserKey::getAttributes($uID, $method);
+            return Concrete\Core\Attribute\Key\UserKey::getAttributes($uID, $method);
         }
 
         public static function getAttributeKeyDisplayOrder()
         {
             // Concrete\Core\Attribute\Key\UserKey::getAttributeKeyDisplayOrder();
-            Concrete\Core\Attribute\Key\UserKey::getAttributeKeyDisplayOrder();
+            return Concrete\Core\Attribute\Key\UserKey::getAttributeKeyDisplayOrder();
         }
 
         public static function load($akID)
         {
             // Concrete\Core\Attribute\Key\UserKey::load();
-            Concrete\Core\Attribute\Key\UserKey::load($akID);
+            return Concrete\Core\Attribute\Key\UserKey::load($akID);
         }
 
         public static function getAttributeValue($avID, $method = "getValue")
         {
             // Concrete\Core\Attribute\Key\UserKey::getAttributeValue();
-            Concrete\Core\Attribute\Key\UserKey::getAttributeValue($avID, $method);
+            return Concrete\Core\Attribute\Key\UserKey::getAttributeValue($avID, $method);
         }
 
         public static function getByID($akID)
         {
             // Concrete\Core\Attribute\Key\UserKey::getByID();
-            Concrete\Core\Attribute\Key\UserKey::getByID($akID);
+            return Concrete\Core\Attribute\Key\UserKey::getByID($akID);
         }
 
         public static function getByHandle($akHandle)
         {
             // Concrete\Core\Attribute\Key\UserKey::getByHandle();
-            Concrete\Core\Attribute\Key\UserKey::getByHandle($akHandle);
+            return Concrete\Core\Attribute\Key\UserKey::getByHandle($akHandle);
         }
 
         public static function export($axml)
         {
             // Concrete\Core\Attribute\Key\UserKey::export();
-            Concrete\Core\Attribute\Key\UserKey::export($axml);
+            return Concrete\Core\Attribute\Key\UserKey::export($axml);
         }
 
         public static function import(SimpleXMLElement $ak)
         {
             // Concrete\Core\Attribute\Key\UserKey::import();
-            Concrete\Core\Attribute\Key\UserKey::import($ak);
+            return Concrete\Core\Attribute\Key\UserKey::import($ak);
         }
 
         public static function isAttributeKeyDisplayedOnProfile()
         {
             // Concrete\Core\Attribute\Key\UserKey::isAttributeKeyDisplayedOnProfile();
-            Concrete\Core\Attribute\Key\UserKey::isAttributeKeyDisplayedOnProfile();
+            return Concrete\Core\Attribute\Key\UserKey::isAttributeKeyDisplayedOnProfile();
         }
 
         public static function isAttributeKeyEditableOnProfile()
         {
             // Concrete\Core\Attribute\Key\UserKey::isAttributeKeyEditableOnProfile();
-            Concrete\Core\Attribute\Key\UserKey::isAttributeKeyEditableOnProfile();
+            return Concrete\Core\Attribute\Key\UserKey::isAttributeKeyEditableOnProfile();
         }
 
         public static function isAttributeKeyRequiredOnProfile()
         {
             // Concrete\Core\Attribute\Key\UserKey::isAttributeKeyRequiredOnProfile();
-            Concrete\Core\Attribute\Key\UserKey::isAttributeKeyRequiredOnProfile();
+            return Concrete\Core\Attribute\Key\UserKey::isAttributeKeyRequiredOnProfile();
         }
 
         public static function isAttributeKeyEditableOnRegister()
         {
             // Concrete\Core\Attribute\Key\UserKey::isAttributeKeyEditableOnRegister();
-            Concrete\Core\Attribute\Key\UserKey::isAttributeKeyEditableOnRegister();
+            return Concrete\Core\Attribute\Key\UserKey::isAttributeKeyEditableOnRegister();
         }
 
         public static function isAttributeKeyRequiredOnRegister()
         {
             // Concrete\Core\Attribute\Key\UserKey::isAttributeKeyRequiredOnRegister();
-            Concrete\Core\Attribute\Key\UserKey::isAttributeKeyRequiredOnRegister();
+            return Concrete\Core\Attribute\Key\UserKey::isAttributeKeyRequiredOnRegister();
         }
 
         public static function isAttributeKeyDisplayedOnMemberList()
         {
             // Concrete\Core\Attribute\Key\UserKey::isAttributeKeyDisplayedOnMemberList();
-            Concrete\Core\Attribute\Key\UserKey::isAttributeKeyDisplayedOnMemberList();
+            return Concrete\Core\Attribute\Key\UserKey::isAttributeKeyDisplayedOnMemberList();
         }
 
         public static function isAttributeKeyActive()
         {
             // Concrete\Core\Attribute\Key\UserKey::isAttributeKeyActive();
-            Concrete\Core\Attribute\Key\UserKey::isAttributeKeyActive();
+            return Concrete\Core\Attribute\Key\UserKey::isAttributeKeyActive();
         }
 
         public static function activate()
         {
             // Concrete\Core\Attribute\Key\UserKey::activate();
-            Concrete\Core\Attribute\Key\UserKey::activate();
+            return Concrete\Core\Attribute\Key\UserKey::activate();
         }
 
         public static function deactivate()
         {
             // Concrete\Core\Attribute\Key\UserKey::deactivate();
-            Concrete\Core\Attribute\Key\UserKey::deactivate();
+            return Concrete\Core\Attribute\Key\UserKey::deactivate();
         }
 
         public static function getList()
         {
             // Concrete\Core\Attribute\Key\UserKey::getList();
-            Concrete\Core\Attribute\Key\UserKey::getList();
+            return Concrete\Core\Attribute\Key\UserKey::getList();
         }
 
         /**
@@ -3526,103 +3526,103 @@ namespace {
         public static function get($akID)
         {
             // Concrete\Core\Attribute\Key\UserKey::get();
-            Concrete\Core\Attribute\Key\UserKey::get($akID);
+            return Concrete\Core\Attribute\Key\UserKey::get($akID);
         }
 
         protected static function saveAttribute($uo, $value = null)
         {
             // Concrete\Core\Attribute\Key\UserKey::saveAttribute();
-            Concrete\Core\Attribute\Key\UserKey::saveAttribute($uo, $value);
+            return Concrete\Core\Attribute\Key\UserKey::saveAttribute($uo, $value);
         }
 
         public static function add($type, $args, $pkg = null)
         {
             // Concrete\Core\Attribute\Key\UserKey::add();
-            Concrete\Core\Attribute\Key\UserKey::add($type, $args, $pkg);
+            return Concrete\Core\Attribute\Key\UserKey::add($type, $args, $pkg);
         }
 
         public static function update($args)
         {
             // Concrete\Core\Attribute\Key\UserKey::update();
-            Concrete\Core\Attribute\Key\UserKey::update($args);
+            return Concrete\Core\Attribute\Key\UserKey::update($args);
         }
 
         public static function delete()
         {
             // Concrete\Core\Attribute\Key\UserKey::delete();
-            Concrete\Core\Attribute\Key\UserKey::delete();
+            return Concrete\Core\Attribute\Key\UserKey::delete();
         }
 
         public static function getColumnHeaderList()
         {
             // Concrete\Core\Attribute\Key\UserKey::getColumnHeaderList();
-            Concrete\Core\Attribute\Key\UserKey::getColumnHeaderList();
+            return Concrete\Core\Attribute\Key\UserKey::getColumnHeaderList();
         }
 
         public static function getEditableList()
         {
             // Concrete\Core\Attribute\Key\UserKey::getEditableList();
-            Concrete\Core\Attribute\Key\UserKey::getEditableList();
+            return Concrete\Core\Attribute\Key\UserKey::getEditableList();
         }
 
         public static function getSearchableList()
         {
             // Concrete\Core\Attribute\Key\UserKey::getSearchableList();
-            Concrete\Core\Attribute\Key\UserKey::getSearchableList();
+            return Concrete\Core\Attribute\Key\UserKey::getSearchableList();
         }
 
         public static function getSearchableIndexedList()
         {
             // Concrete\Core\Attribute\Key\UserKey::getSearchableIndexedList();
-            Concrete\Core\Attribute\Key\UserKey::getSearchableIndexedList();
+            return Concrete\Core\Attribute\Key\UserKey::getSearchableIndexedList();
         }
 
         public static function getImporterList()
         {
             // Concrete\Core\Attribute\Key\UserKey::getImporterList();
-            Concrete\Core\Attribute\Key\UserKey::getImporterList();
+            return Concrete\Core\Attribute\Key\UserKey::getImporterList();
         }
 
         public static function getPublicProfileList()
         {
             // Concrete\Core\Attribute\Key\UserKey::getPublicProfileList();
-            Concrete\Core\Attribute\Key\UserKey::getPublicProfileList();
+            return Concrete\Core\Attribute\Key\UserKey::getPublicProfileList();
         }
 
         public static function getRegistrationList()
         {
             // Concrete\Core\Attribute\Key\UserKey::getRegistrationList();
-            Concrete\Core\Attribute\Key\UserKey::getRegistrationList();
+            return Concrete\Core\Attribute\Key\UserKey::getRegistrationList();
         }
 
         public static function getMemberListList()
         {
             // Concrete\Core\Attribute\Key\UserKey::getMemberListList();
-            Concrete\Core\Attribute\Key\UserKey::getMemberListList();
+            return Concrete\Core\Attribute\Key\UserKey::getMemberListList();
         }
 
         public static function getEditableInProfileList()
         {
             // Concrete\Core\Attribute\Key\UserKey::getEditableInProfileList();
-            Concrete\Core\Attribute\Key\UserKey::getEditableInProfileList();
+            return Concrete\Core\Attribute\Key\UserKey::getEditableInProfileList();
         }
 
         public static function getUserAddedList()
         {
             // Concrete\Core\Attribute\Key\UserKey::getUserAddedList();
-            Concrete\Core\Attribute\Key\UserKey::getUserAddedList();
+            return Concrete\Core\Attribute\Key\UserKey::getUserAddedList();
         }
 
         public static function updateAttributesDisplayOrder($uats)
         {
             // Concrete\Core\Attribute\Key\UserKey::updateAttributesDisplayOrder();
-            Concrete\Core\Attribute\Key\UserKey::updateAttributesDisplayOrder($uats);
+            return Concrete\Core\Attribute\Key\UserKey::updateAttributesDisplayOrder($uats);
         }
 
         public static function getSearchIndexFieldDefinition()
         {
             // Concrete\Core\Attribute\Key\Key::getSearchIndexFieldDefinition();
-            Concrete\Core\Attribute\Key\Key::getSearchIndexFieldDefinition();
+            return Concrete\Core\Attribute\Key\Key::getSearchIndexFieldDefinition();
         }
 
         /**
@@ -3631,7 +3631,7 @@ namespace {
         public static function getAttributeKeyName()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyName();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyName();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyName();
         }
 
         /** Returns the display name for this attribute (localized and escaped accordingly to $format)
@@ -3643,7 +3643,7 @@ namespace {
         public static function getAttributeKeyDisplayName($format = "html")
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyDisplayName();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyDisplayName($format);
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyDisplayName($format);
         }
 
         /**
@@ -3652,7 +3652,7 @@ namespace {
         public static function getAttributeKeyHandle()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyHandle();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyHandle();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyHandle();
         }
 
         /**
@@ -3661,7 +3661,7 @@ namespace {
         public static function getAttributeKeyDisplayHandle()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyDisplayHandle();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyDisplayHandle();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyDisplayHandle();
         }
 
         /**
@@ -3670,13 +3670,13 @@ namespace {
         public static function getAttributeKeyID()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyID();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyID();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyID();
         }
 
         public static function getAttributeKeyCategoryID()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyCategoryID();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyCategoryID();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyCategoryID();
         }
 
         /**
@@ -3685,7 +3685,7 @@ namespace {
         public static function isAttributeKeySearchable()
         {
             // Concrete\Core\Attribute\Key\Key::isAttributeKeySearchable();
-            Concrete\Core\Attribute\Key\Key::isAttributeKeySearchable();
+            return Concrete\Core\Attribute\Key\Key::isAttributeKeySearchable();
         }
 
         /**
@@ -3694,7 +3694,7 @@ namespace {
         public static function isAttributeKeyInternal()
         {
             // Concrete\Core\Attribute\Key\Key::isAttributeKeyInternal();
-            Concrete\Core\Attribute\Key\Key::isAttributeKeyInternal();
+            return Concrete\Core\Attribute\Key\Key::isAttributeKeyInternal();
         }
 
         /**
@@ -3703,7 +3703,7 @@ namespace {
         public static function isAttributeKeyContentIndexed()
         {
             // Concrete\Core\Attribute\Key\Key::isAttributeKeyContentIndexed();
-            Concrete\Core\Attribute\Key\Key::isAttributeKeyContentIndexed();
+            return Concrete\Core\Attribute\Key\Key::isAttributeKeyContentIndexed();
         }
 
         /**
@@ -3712,7 +3712,7 @@ namespace {
         public static function isAttributeKeyAutoCreated()
         {
             // Concrete\Core\Attribute\Key\Key::isAttributeKeyAutoCreated();
-            Concrete\Core\Attribute\Key\Key::isAttributeKeyAutoCreated();
+            return Concrete\Core\Attribute\Key\Key::isAttributeKeyAutoCreated();
         }
 
         /**
@@ -3721,7 +3721,7 @@ namespace {
         public static function isAttributeKeyColumnHeader()
         {
             // Concrete\Core\Attribute\Key\Key::isAttributeKeyColumnHeader();
-            Concrete\Core\Attribute\Key\Key::isAttributeKeyColumnHeader();
+            return Concrete\Core\Attribute\Key\Key::isAttributeKeyColumnHeader();
         }
 
         /**
@@ -3730,25 +3730,25 @@ namespace {
         public static function isAttributeKeyEditable()
         {
             // Concrete\Core\Attribute\Key\Key::isAttributeKeyEditable();
-            Concrete\Core\Attribute\Key\Key::isAttributeKeyEditable();
+            return Concrete\Core\Attribute\Key\Key::isAttributeKeyEditable();
         }
 
         public static function getPackageID()
         {
             // Concrete\Core\Attribute\Key\Key::getPackageID();
-            Concrete\Core\Attribute\Key\Key::getPackageID();
+            return Concrete\Core\Attribute\Key\Key::getPackageID();
         }
 
         public static function getPackageHandle()
         {
             // Concrete\Core\Attribute\Key\Key::getPackageHandle();
-            Concrete\Core\Attribute\Key\Key::getPackageHandle();
+            return Concrete\Core\Attribute\Key\Key::getPackageHandle();
         }
 
         public static function getInstanceByID($akID)
         {
             // Concrete\Core\Attribute\Key\Key::getInstanceByID();
-            Concrete\Core\Attribute\Key\Key::getInstanceByID($akID);
+            return Concrete\Core\Attribute\Key\Key::getInstanceByID($akID);
         }
 
         /**
@@ -3757,7 +3757,7 @@ namespace {
         public static function getAttributeType()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeType();
-            Concrete\Core\Attribute\Key\Key::getAttributeType();
+            return Concrete\Core\Attribute\Key\Key::getAttributeType();
         }
 
         /**
@@ -3766,19 +3766,19 @@ namespace {
         public static function getAttributeTypeHandle()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeTypeHandle();
-            Concrete\Core\Attribute\Key\Key::getAttributeTypeHandle();
+            return Concrete\Core\Attribute\Key\Key::getAttributeTypeHandle();
         }
 
         public static function getAttributeKeyType()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyType();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyType();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyType();
         }
 
         public static function exportList($xml)
         {
             // Concrete\Core\Attribute\Key\Key::exportList();
-            Concrete\Core\Attribute\Key\Key::exportList($xml);
+            return Concrete\Core\Attribute\Key\Key::exportList($xml);
         }
 
         /**
@@ -3790,13 +3790,13 @@ namespace {
         public static function getListByPackage($pkg)
         {
             // Concrete\Core\Attribute\Key\Key::getListByPackage();
-            Concrete\Core\Attribute\Key\Key::getListByPackage($pkg);
+            return Concrete\Core\Attribute\Key\Key::getListByPackage($pkg);
         }
 
         public static function refreshCache()
         {
             // Concrete\Core\Attribute\Key\Key::refreshCache();
-            Concrete\Core\Attribute\Key\Key::refreshCache();
+            return Concrete\Core\Attribute\Key\Key::refreshCache();
         }
 
         /**
@@ -3805,37 +3805,37 @@ namespace {
         public static function duplicate($args = null)
         {
             // Concrete\Core\Attribute\Key\Key::duplicate();
-            Concrete\Core\Attribute\Key\Key::duplicate($args);
+            return Concrete\Core\Attribute\Key\Key::duplicate($args);
         }
 
         public static function inAttributeSet($as)
         {
             // Concrete\Core\Attribute\Key\Key::inAttributeSet();
-            Concrete\Core\Attribute\Key\Key::inAttributeSet($as);
+            return Concrete\Core\Attribute\Key\Key::inAttributeSet($as);
         }
 
         public static function setAttributeKeyColumnHeader($r)
         {
             // Concrete\Core\Attribute\Key\Key::setAttributeKeyColumnHeader();
-            Concrete\Core\Attribute\Key\Key::setAttributeKeyColumnHeader($r);
+            return Concrete\Core\Attribute\Key\Key::setAttributeKeyColumnHeader($r);
         }
 
         public static function reindex($tbl, $columnHeaders, $attribs, $rs)
         {
             // Concrete\Core\Attribute\Key\Key::reindex();
-            Concrete\Core\Attribute\Key\Key::reindex($tbl, $columnHeaders, $attribs, $rs);
+            return Concrete\Core\Attribute\Key\Key::reindex($tbl, $columnHeaders, $attribs, $rs);
         }
 
         public static function updateSearchIndex($prevHandle = null)
         {
             // Concrete\Core\Attribute\Key\Key::updateSearchIndex();
-            Concrete\Core\Attribute\Key\Key::updateSearchIndex($prevHandle);
+            return Concrete\Core\Attribute\Key\Key::updateSearchIndex($prevHandle);
         }
 
         public static function getAttributeValueIDList()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeValueIDList();
-            Concrete\Core\Attribute\Key\Key::getAttributeValueIDList();
+            return Concrete\Core\Attribute\Key\Key::getAttributeValueIDList();
         }
 
         /**
@@ -3844,19 +3844,19 @@ namespace {
         public static function addAttributeValue()
         {
             // Concrete\Core\Attribute\Key\Key::addAttributeValue();
-            Concrete\Core\Attribute\Key\Key::addAttributeValue();
+            return Concrete\Core\Attribute\Key\Key::addAttributeValue();
         }
 
         public static function getAttributeKeyIconSRC()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeKeyIconSRC();
-            Concrete\Core\Attribute\Key\Key::getAttributeKeyIconSRC();
+            return Concrete\Core\Attribute\Key\Key::getAttributeKeyIconSRC();
         }
 
         public static function getController()
         {
             // Concrete\Core\Attribute\Key\Key::getController();
-            Concrete\Core\Attribute\Key\Key::getController();
+            return Concrete\Core\Attribute\Key\Key::getController();
         }
 
         /**
@@ -3868,37 +3868,37 @@ namespace {
         public static function render($view = "view", $value = null, $return = null)
         {
             // Concrete\Core\Attribute\Key\Key::render();
-            Concrete\Core\Attribute\Key\Key::render($view, $value, $return);
+            return Concrete\Core\Attribute\Key\Key::render($view, $value, $return);
         }
 
         public static function validateAttributeForm($h = null)
         {
             // Concrete\Core\Attribute\Key\Key::validateAttributeForm();
-            Concrete\Core\Attribute\Key\Key::validateAttributeForm($h);
+            return Concrete\Core\Attribute\Key\Key::validateAttributeForm($h);
         }
 
         public static function createIndexedSearchTable()
         {
             // Concrete\Core\Attribute\Key\Key::createIndexedSearchTable();
-            Concrete\Core\Attribute\Key\Key::createIndexedSearchTable();
+            return Concrete\Core\Attribute\Key\Key::createIndexedSearchTable();
         }
 
         public static function setAttributeSet($as)
         {
             // Concrete\Core\Attribute\Key\Key::setAttributeSet();
-            Concrete\Core\Attribute\Key\Key::setAttributeSet($as);
+            return Concrete\Core\Attribute\Key\Key::setAttributeSet($as);
         }
 
         public static function clearAttributeSets()
         {
             // Concrete\Core\Attribute\Key\Key::clearAttributeSets();
-            Concrete\Core\Attribute\Key\Key::clearAttributeSets();
+            return Concrete\Core\Attribute\Key\Key::clearAttributeSets();
         }
 
         public static function getAttributeSets()
         {
             // Concrete\Core\Attribute\Key\Key::getAttributeSets();
-            Concrete\Core\Attribute\Key\Key::getAttributeSets();
+            return Concrete\Core\Attribute\Key\Key::getAttributeSets();
         }
 
         /**
@@ -3907,7 +3907,7 @@ namespace {
         public static function saveAttributeForm($obj)
         {
             // Concrete\Core\Attribute\Key\Key::saveAttributeForm();
-            Concrete\Core\Attribute\Key\Key::saveAttributeForm($obj);
+            return Concrete\Core\Attribute\Key\Key::saveAttributeForm($obj);
         }
 
         /**
@@ -3916,7 +3916,7 @@ namespace {
         public static function setAttribute($obj, $value)
         {
             // Concrete\Core\Attribute\Key\Key::setAttribute();
-            Concrete\Core\Attribute\Key\Key::setAttribute($obj, $value);
+            return Concrete\Core\Attribute\Key\Key::setAttribute($obj, $value);
         }
 
         /**
@@ -3924,13 +3924,13 @@ namespace {
         public static function outputSearchHTML()
         {
             // Concrete\Core\Attribute\Key\Key::outputSearchHTML();
-            Concrete\Core\Attribute\Key\Key::outputSearchHTML();
+            return Concrete\Core\Attribute\Key\Key::outputSearchHTML();
         }
 
         public static function getKeyName()
         {
             // Concrete\Core\Attribute\Key\Key::getKeyName();
-            Concrete\Core\Attribute\Key\Key::getKeyName();
+            return Concrete\Core\Attribute\Key\Key::getKeyName();
         }
 
         /**
@@ -3939,7 +3939,7 @@ namespace {
         public static function getKeyHandle()
         {
             // Concrete\Core\Attribute\Key\Key::getKeyHandle();
-            Concrete\Core\Attribute\Key\Key::getKeyHandle();
+            return Concrete\Core\Attribute\Key\Key::getKeyHandle();
         }
 
         /**
@@ -3948,43 +3948,43 @@ namespace {
         public static function getKeyID()
         {
             // Concrete\Core\Attribute\Key\Key::getKeyID();
-            Concrete\Core\Attribute\Key\Key::getKeyID();
+            return Concrete\Core\Attribute\Key\Key::getKeyID();
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -3995,61 +3995,61 @@ namespace {
         public static function getByID($asID)
         {
             // Concrete\Core\Attribute\Set::getByID();
-            Concrete\Core\Attribute\Set::getByID($asID);
+            return Concrete\Core\Attribute\Set::getByID($asID);
         }
 
         public static function getByHandle($asHandle)
         {
             // Concrete\Core\Attribute\Set::getByHandle();
-            Concrete\Core\Attribute\Set::getByHandle($asHandle);
+            return Concrete\Core\Attribute\Set::getByHandle($asHandle);
         }
 
         public static function getListByPackage($pkg)
         {
             // Concrete\Core\Attribute\Set::getListByPackage();
-            Concrete\Core\Attribute\Set::getListByPackage($pkg);
+            return Concrete\Core\Attribute\Set::getListByPackage($pkg);
         }
 
         public static function getAttributeSetID()
         {
             // Concrete\Core\Attribute\Set::getAttributeSetID();
-            Concrete\Core\Attribute\Set::getAttributeSetID();
+            return Concrete\Core\Attribute\Set::getAttributeSetID();
         }
 
         public static function getAttributeSetHandle()
         {
             // Concrete\Core\Attribute\Set::getAttributeSetHandle();
-            Concrete\Core\Attribute\Set::getAttributeSetHandle();
+            return Concrete\Core\Attribute\Set::getAttributeSetHandle();
         }
 
         public static function getAttributeSetName()
         {
             // Concrete\Core\Attribute\Set::getAttributeSetName();
-            Concrete\Core\Attribute\Set::getAttributeSetName();
+            return Concrete\Core\Attribute\Set::getAttributeSetName();
         }
 
         public static function getPackageID()
         {
             // Concrete\Core\Attribute\Set::getPackageID();
-            Concrete\Core\Attribute\Set::getPackageID();
+            return Concrete\Core\Attribute\Set::getPackageID();
         }
 
         public static function getPackageHandle()
         {
             // Concrete\Core\Attribute\Set::getPackageHandle();
-            Concrete\Core\Attribute\Set::getPackageHandle();
+            return Concrete\Core\Attribute\Set::getPackageHandle();
         }
 
         public static function getAttributeSetKeyCategoryID()
         {
             // Concrete\Core\Attribute\Set::getAttributeSetKeyCategoryID();
-            Concrete\Core\Attribute\Set::getAttributeSetKeyCategoryID();
+            return Concrete\Core\Attribute\Set::getAttributeSetKeyCategoryID();
         }
 
         public static function isAttributeSetLocked()
         {
             // Concrete\Core\Attribute\Set::isAttributeSetLocked();
-            Concrete\Core\Attribute\Set::isAttributeSetLocked();
+            return Concrete\Core\Attribute\Set::isAttributeSetLocked();
         }
 
         /** Returns the display name for this attribute set (localized and escaped accordingly to $format)
@@ -4061,55 +4061,55 @@ namespace {
         public static function getAttributeSetDisplayName($format = "html")
         {
             // Concrete\Core\Attribute\Set::getAttributeSetDisplayName();
-            Concrete\Core\Attribute\Set::getAttributeSetDisplayName($format);
+            return Concrete\Core\Attribute\Set::getAttributeSetDisplayName($format);
         }
 
         public static function updateAttributeSetName($asName)
         {
             // Concrete\Core\Attribute\Set::updateAttributeSetName();
-            Concrete\Core\Attribute\Set::updateAttributeSetName($asName);
+            return Concrete\Core\Attribute\Set::updateAttributeSetName($asName);
         }
 
         public static function updateAttributeSetHandle($asHandle)
         {
             // Concrete\Core\Attribute\Set::updateAttributeSetHandle();
-            Concrete\Core\Attribute\Set::updateAttributeSetHandle($asHandle);
+            return Concrete\Core\Attribute\Set::updateAttributeSetHandle($asHandle);
         }
 
         public static function addKey($ak)
         {
             // Concrete\Core\Attribute\Set::addKey();
-            Concrete\Core\Attribute\Set::addKey($ak);
+            return Concrete\Core\Attribute\Set::addKey($ak);
         }
 
         public static function clearAttributeKeys()
         {
             // Concrete\Core\Attribute\Set::clearAttributeKeys();
-            Concrete\Core\Attribute\Set::clearAttributeKeys();
+            return Concrete\Core\Attribute\Set::clearAttributeKeys();
         }
 
         public static function export($axml)
         {
             // Concrete\Core\Attribute\Set::export();
-            Concrete\Core\Attribute\Set::export($axml);
+            return Concrete\Core\Attribute\Set::export($axml);
         }
 
         public static function exportList($xml)
         {
             // Concrete\Core\Attribute\Set::exportList();
-            Concrete\Core\Attribute\Set::exportList($xml);
+            return Concrete\Core\Attribute\Set::exportList($xml);
         }
 
         public static function getAttributeKeys()
         {
             // Concrete\Core\Attribute\Set::getAttributeKeys();
-            Concrete\Core\Attribute\Set::getAttributeKeys();
+            return Concrete\Core\Attribute\Set::getAttributeKeys();
         }
 
         public static function contains($ak)
         {
             // Concrete\Core\Attribute\Set::contains();
-            Concrete\Core\Attribute\Set::contains($ak);
+            return Concrete\Core\Attribute\Set::contains($ak);
         }
 
         /**
@@ -4118,61 +4118,61 @@ namespace {
         public static function delete()
         {
             // Concrete\Core\Attribute\Set::delete();
-            Concrete\Core\Attribute\Set::delete();
+            return Concrete\Core\Attribute\Set::delete();
         }
 
         public static function deleteKey($ak)
         {
             // Concrete\Core\Attribute\Set::deleteKey();
-            Concrete\Core\Attribute\Set::deleteKey($ak);
+            return Concrete\Core\Attribute\Set::deleteKey($ak);
         }
 
         protected static function rescanDisplayOrder()
         {
             // Concrete\Core\Attribute\Set::rescanDisplayOrder();
-            Concrete\Core\Attribute\Set::rescanDisplayOrder();
+            return Concrete\Core\Attribute\Set::rescanDisplayOrder();
         }
 
         public static function updateAttributesDisplayOrder($uats)
         {
             // Concrete\Core\Attribute\Set::updateAttributesDisplayOrder();
-            Concrete\Core\Attribute\Set::updateAttributesDisplayOrder($uats);
+            return Concrete\Core\Attribute\Set::updateAttributesDisplayOrder($uats);
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -4183,43 +4183,43 @@ namespace {
         public static function getRegisteredAssets()
         {
             // Concrete\Core\Asset\AssetList::getRegisteredAssets();
-            Concrete\Core\Asset\AssetList::getRegisteredAssets();
+            return Concrete\Core\Asset\AssetList::getRegisteredAssets();
         }
 
         public static function getInstance()
         {
             // Concrete\Core\Asset\AssetList::getInstance();
-            Concrete\Core\Asset\AssetList::getInstance();
+            return Concrete\Core\Asset\AssetList::getInstance();
         }
 
         public static function register($assetType, $assetHandle, $filename, $args = null, $pkg = null)
         {
             // Concrete\Core\Asset\AssetList::register();
-            Concrete\Core\Asset\AssetList::register($assetType, $assetHandle, $filename, $args, $pkg);
+            return Concrete\Core\Asset\AssetList::register($assetType, $assetHandle, $filename, $args, $pkg);
         }
 
         public static function registerAsset(Concrete\Core\Asset\Asset $asset)
         {
             // Concrete\Core\Asset\AssetList::registerAsset();
-            Concrete\Core\Asset\AssetList::registerAsset($asset);
+            return Concrete\Core\Asset\AssetList::registerAsset($asset);
         }
 
         public static function registerGroup($assetGroupHandle, $assetHandles, $customClass = null)
         {
             // Concrete\Core\Asset\AssetList::registerGroup();
-            Concrete\Core\Asset\AssetList::registerGroup($assetGroupHandle, $assetHandles, $customClass);
+            return Concrete\Core\Asset\AssetList::registerGroup($assetGroupHandle, $assetHandles, $customClass);
         }
 
         public static function getAsset($assetType, $assetHandle)
         {
             // Concrete\Core\Asset\AssetList::getAsset();
-            Concrete\Core\Asset\AssetList::getAsset($assetType, $assetHandle);
+            return Concrete\Core\Asset\AssetList::getAsset($assetType, $assetHandle);
         }
 
         public static function getAssetGroup($assetGroupHandle)
         {
             // Concrete\Core\Asset\AssetList::getAssetGroup();
-            Concrete\Core\Asset\AssetList::getAssetGroup($assetGroupHandle);
+            return Concrete\Core\Asset\AssetList::getAssetGroup($assetGroupHandle);
         }
 
     }
@@ -4230,25 +4230,25 @@ namespace {
         public static function getList()
         {
             // Concrete\Core\Routing\Router::getList();
-            Concrete\Core\Routing\Router::getList();
+            return Concrete\Core\Routing\Router::getList();
         }
 
         public static function setRequest(Concrete\Core\Http\Request $req)
         {
             // Concrete\Core\Routing\Router::setRequest();
-            Concrete\Core\Routing\Router::setRequest($req);
+            return Concrete\Core\Routing\Router::setRequest($req);
         }
 
         public static function register($rtPath, $callback, $rtHandle = null, $additionalAttributes = null)
         {
             // Concrete\Core\Routing\Router::register();
-            Concrete\Core\Routing\Router::register($rtPath, $callback, $rtHandle, $additionalAttributes);
+            return Concrete\Core\Routing\Router::register($rtPath, $callback, $rtHandle, $additionalAttributes);
         }
 
         public static function execute(Concrete\Core\Routing\Route $route, $parameters)
         {
             // Concrete\Core\Routing\Router::execute();
-            Concrete\Core\Routing\Router::execute($route, $parameters);
+            return Concrete\Core\Routing\Router::execute($route, $parameters);
         }
 
         /**
@@ -4261,7 +4261,7 @@ namespace {
         public static function setThemeByRoute($path, $theme = null, $wrapper = "view.php")
         {
             // Concrete\Core\Routing\Router::setThemeByRoute();
-            Concrete\Core\Routing\Router::setThemeByRoute($path, $theme, $wrapper);
+            return Concrete\Core\Routing\Router::setThemeByRoute($path, $theme, $wrapper);
         }
 
         /**
@@ -4272,7 +4272,7 @@ namespace {
         public static function getThemeByRoute($path)
         {
             // Concrete\Core\Routing\Router::getThemeByRoute();
-            Concrete\Core\Routing\Router::getThemeByRoute($path);
+            return Concrete\Core\Routing\Router::getThemeByRoute($path);
         }
 
     }
@@ -4283,7 +4283,7 @@ namespace {
         public static function setRequest(Concrete\Core\Http\Request $r)
         {
             // Concrete\Core\Routing\RedirectResponse::setRequest();
-            Concrete\Core\Routing\RedirectResponse::setRequest($r);
+            return Concrete\Core\Routing\RedirectResponse::setRequest($r);
         }
 
         /**
@@ -4292,7 +4292,7 @@ namespace {
         public static function create($url = null, $status = 302, $headers = null)
         {
             // Symfony\Component\HttpFoundation\RedirectResponse::create();
-            Symfony\Component\HttpFoundation\RedirectResponse::create($url, $status, $headers);
+            return Symfony\Component\HttpFoundation\RedirectResponse::create($url, $status, $headers);
         }
 
         /**
@@ -4303,7 +4303,7 @@ namespace {
         public static function getTargetUrl()
         {
             // Symfony\Component\HttpFoundation\RedirectResponse::getTargetUrl();
-            Symfony\Component\HttpFoundation\RedirectResponse::getTargetUrl();
+            return Symfony\Component\HttpFoundation\RedirectResponse::getTargetUrl();
         }
 
         /**
@@ -4316,7 +4316,7 @@ namespace {
         public static function setTargetUrl($url)
         {
             // Symfony\Component\HttpFoundation\RedirectResponse::setTargetUrl();
-            Symfony\Component\HttpFoundation\RedirectResponse::setTargetUrl($url);
+            return Symfony\Component\HttpFoundation\RedirectResponse::setTargetUrl($url);
         }
 
         /**
@@ -4333,7 +4333,7 @@ namespace {
         public static function prepare(Symfony\Component\HttpFoundation\Request $request)
         {
             // Symfony\Component\HttpFoundation\Response::prepare();
-            Symfony\Component\HttpFoundation\Response::prepare($request);
+            return Symfony\Component\HttpFoundation\Response::prepare($request);
         }
 
         /**
@@ -4344,7 +4344,7 @@ namespace {
         public static function sendHeaders()
         {
             // Symfony\Component\HttpFoundation\Response::sendHeaders();
-            Symfony\Component\HttpFoundation\Response::sendHeaders();
+            return Symfony\Component\HttpFoundation\Response::sendHeaders();
         }
 
         /**
@@ -4355,7 +4355,7 @@ namespace {
         public static function sendContent()
         {
             // Symfony\Component\HttpFoundation\Response::sendContent();
-            Symfony\Component\HttpFoundation\Response::sendContent();
+            return Symfony\Component\HttpFoundation\Response::sendContent();
         }
 
         /**
@@ -4368,7 +4368,7 @@ namespace {
         public static function send()
         {
             // Symfony\Component\HttpFoundation\Response::send();
-            Symfony\Component\HttpFoundation\Response::send();
+            return Symfony\Component\HttpFoundation\Response::send();
         }
 
         /**
@@ -4385,7 +4385,7 @@ namespace {
         public static function setContent($content)
         {
             // Symfony\Component\HttpFoundation\Response::setContent();
-            Symfony\Component\HttpFoundation\Response::setContent($content);
+            return Symfony\Component\HttpFoundation\Response::setContent($content);
         }
 
         /**
@@ -4398,7 +4398,7 @@ namespace {
         public static function getContent()
         {
             // Symfony\Component\HttpFoundation\Response::getContent();
-            Symfony\Component\HttpFoundation\Response::getContent();
+            return Symfony\Component\HttpFoundation\Response::getContent();
         }
 
         /**
@@ -4413,7 +4413,7 @@ namespace {
         public static function setProtocolVersion($version)
         {
             // Symfony\Component\HttpFoundation\Response::setProtocolVersion();
-            Symfony\Component\HttpFoundation\Response::setProtocolVersion($version);
+            return Symfony\Component\HttpFoundation\Response::setProtocolVersion($version);
         }
 
         /**
@@ -4426,7 +4426,7 @@ namespace {
         public static function getProtocolVersion()
         {
             // Symfony\Component\HttpFoundation\Response::getProtocolVersion();
-            Symfony\Component\HttpFoundation\Response::getProtocolVersion();
+            return Symfony\Component\HttpFoundation\Response::getProtocolVersion();
         }
 
         /**
@@ -4447,7 +4447,7 @@ namespace {
         public static function setStatusCode($code, $text = null)
         {
             // Symfony\Component\HttpFoundation\Response::setStatusCode();
-            Symfony\Component\HttpFoundation\Response::setStatusCode($code, $text);
+            return Symfony\Component\HttpFoundation\Response::setStatusCode($code, $text);
         }
 
         /**
@@ -4460,7 +4460,7 @@ namespace {
         public static function getStatusCode()
         {
             // Symfony\Component\HttpFoundation\Response::getStatusCode();
-            Symfony\Component\HttpFoundation\Response::getStatusCode();
+            return Symfony\Component\HttpFoundation\Response::getStatusCode();
         }
 
         /**
@@ -4475,7 +4475,7 @@ namespace {
         public static function setCharset($charset)
         {
             // Symfony\Component\HttpFoundation\Response::setCharset();
-            Symfony\Component\HttpFoundation\Response::setCharset($charset);
+            return Symfony\Component\HttpFoundation\Response::setCharset($charset);
         }
 
         /**
@@ -4488,7 +4488,7 @@ namespace {
         public static function getCharset()
         {
             // Symfony\Component\HttpFoundation\Response::getCharset();
-            Symfony\Component\HttpFoundation\Response::getCharset();
+            return Symfony\Component\HttpFoundation\Response::getCharset();
         }
 
         /**
@@ -4507,7 +4507,7 @@ namespace {
         public static function isCacheable()
         {
             // Symfony\Component\HttpFoundation\Response::isCacheable();
-            Symfony\Component\HttpFoundation\Response::isCacheable();
+            return Symfony\Component\HttpFoundation\Response::isCacheable();
         }
 
         /**
@@ -4524,7 +4524,7 @@ namespace {
         public static function isFresh()
         {
             // Symfony\Component\HttpFoundation\Response::isFresh();
-            Symfony\Component\HttpFoundation\Response::isFresh();
+            return Symfony\Component\HttpFoundation\Response::isFresh();
         }
 
         /**
@@ -4538,7 +4538,7 @@ namespace {
         public static function isValidateable()
         {
             // Symfony\Component\HttpFoundation\Response::isValidateable();
-            Symfony\Component\HttpFoundation\Response::isValidateable();
+            return Symfony\Component\HttpFoundation\Response::isValidateable();
         }
 
         /**
@@ -4553,7 +4553,7 @@ namespace {
         public static function setPrivate()
         {
             // Symfony\Component\HttpFoundation\Response::setPrivate();
-            Symfony\Component\HttpFoundation\Response::setPrivate();
+            return Symfony\Component\HttpFoundation\Response::setPrivate();
         }
 
         /**
@@ -4568,7 +4568,7 @@ namespace {
         public static function setPublic()
         {
             // Symfony\Component\HttpFoundation\Response::setPublic();
-            Symfony\Component\HttpFoundation\Response::setPublic();
+            return Symfony\Component\HttpFoundation\Response::setPublic();
         }
 
         /**
@@ -4586,7 +4586,7 @@ namespace {
         public static function mustRevalidate()
         {
             // Symfony\Component\HttpFoundation\Response::mustRevalidate();
-            Symfony\Component\HttpFoundation\Response::mustRevalidate();
+            return Symfony\Component\HttpFoundation\Response::mustRevalidate();
         }
 
         /**
@@ -4601,7 +4601,7 @@ namespace {
         public static function getDate()
         {
             // Symfony\Component\HttpFoundation\Response::getDate();
-            Symfony\Component\HttpFoundation\Response::getDate();
+            return Symfony\Component\HttpFoundation\Response::getDate();
         }
 
         /**
@@ -4616,7 +4616,7 @@ namespace {
         public static function setDate(DateTime $date)
         {
             // Symfony\Component\HttpFoundation\Response::setDate();
-            Symfony\Component\HttpFoundation\Response::setDate($date);
+            return Symfony\Component\HttpFoundation\Response::setDate($date);
         }
 
         /**
@@ -4627,7 +4627,7 @@ namespace {
         public static function getAge()
         {
             // Symfony\Component\HttpFoundation\Response::getAge();
-            Symfony\Component\HttpFoundation\Response::getAge();
+            return Symfony\Component\HttpFoundation\Response::getAge();
         }
 
         /**
@@ -4640,7 +4640,7 @@ namespace {
         public static function expire()
         {
             // Symfony\Component\HttpFoundation\Response::expire();
-            Symfony\Component\HttpFoundation\Response::expire();
+            return Symfony\Component\HttpFoundation\Response::expire();
         }
 
         /**
@@ -4653,7 +4653,7 @@ namespace {
         public static function getExpires()
         {
             // Symfony\Component\HttpFoundation\Response::getExpires();
-            Symfony\Component\HttpFoundation\Response::getExpires();
+            return Symfony\Component\HttpFoundation\Response::getExpires();
         }
 
         /**
@@ -4670,7 +4670,7 @@ namespace {
         public static function setExpires(DateTime $date = null)
         {
             // Symfony\Component\HttpFoundation\Response::setExpires();
-            Symfony\Component\HttpFoundation\Response::setExpires($date);
+            return Symfony\Component\HttpFoundation\Response::setExpires($date);
         }
 
         /**
@@ -4687,7 +4687,7 @@ namespace {
         public static function getMaxAge()
         {
             // Symfony\Component\HttpFoundation\Response::getMaxAge();
-            Symfony\Component\HttpFoundation\Response::getMaxAge();
+            return Symfony\Component\HttpFoundation\Response::getMaxAge();
         }
 
         /**
@@ -4704,7 +4704,7 @@ namespace {
         public static function setMaxAge($value)
         {
             // Symfony\Component\HttpFoundation\Response::setMaxAge();
-            Symfony\Component\HttpFoundation\Response::setMaxAge($value);
+            return Symfony\Component\HttpFoundation\Response::setMaxAge($value);
         }
 
         /**
@@ -4721,7 +4721,7 @@ namespace {
         public static function setSharedMaxAge($value)
         {
             // Symfony\Component\HttpFoundation\Response::setSharedMaxAge();
-            Symfony\Component\HttpFoundation\Response::setSharedMaxAge($value);
+            return Symfony\Component\HttpFoundation\Response::setSharedMaxAge($value);
         }
 
         /**
@@ -4739,7 +4739,7 @@ namespace {
         public static function getTtl()
         {
             // Symfony\Component\HttpFoundation\Response::getTtl();
-            Symfony\Component\HttpFoundation\Response::getTtl();
+            return Symfony\Component\HttpFoundation\Response::getTtl();
         }
 
         /**
@@ -4756,7 +4756,7 @@ namespace {
         public static function setTtl($seconds)
         {
             // Symfony\Component\HttpFoundation\Response::setTtl();
-            Symfony\Component\HttpFoundation\Response::setTtl($seconds);
+            return Symfony\Component\HttpFoundation\Response::setTtl($seconds);
         }
 
         /**
@@ -4773,7 +4773,7 @@ namespace {
         public static function setClientTtl($seconds)
         {
             // Symfony\Component\HttpFoundation\Response::setClientTtl();
-            Symfony\Component\HttpFoundation\Response::setClientTtl($seconds);
+            return Symfony\Component\HttpFoundation\Response::setClientTtl($seconds);
         }
 
         /**
@@ -4788,7 +4788,7 @@ namespace {
         public static function getLastModified()
         {
             // Symfony\Component\HttpFoundation\Response::getLastModified();
-            Symfony\Component\HttpFoundation\Response::getLastModified();
+            return Symfony\Component\HttpFoundation\Response::getLastModified();
         }
 
         /**
@@ -4805,7 +4805,7 @@ namespace {
         public static function setLastModified(DateTime $date = null)
         {
             // Symfony\Component\HttpFoundation\Response::setLastModified();
-            Symfony\Component\HttpFoundation\Response::setLastModified($date);
+            return Symfony\Component\HttpFoundation\Response::setLastModified($date);
         }
 
         /**
@@ -4818,7 +4818,7 @@ namespace {
         public static function getEtag()
         {
             // Symfony\Component\HttpFoundation\Response::getEtag();
-            Symfony\Component\HttpFoundation\Response::getEtag();
+            return Symfony\Component\HttpFoundation\Response::getEtag();
         }
 
         /**
@@ -4834,7 +4834,7 @@ namespace {
         public static function setEtag($etag = null, $weak = null)
         {
             // Symfony\Component\HttpFoundation\Response::setEtag();
-            Symfony\Component\HttpFoundation\Response::setEtag($etag, $weak);
+            return Symfony\Component\HttpFoundation\Response::setEtag($etag, $weak);
         }
 
         /**
@@ -4851,7 +4851,7 @@ namespace {
         public static function setCache(array $options)
         {
             // Symfony\Component\HttpFoundation\Response::setCache();
-            Symfony\Component\HttpFoundation\Response::setCache($options);
+            return Symfony\Component\HttpFoundation\Response::setCache($options);
         }
 
         /**
@@ -4869,7 +4869,7 @@ namespace {
         public static function setNotModified()
         {
             // Symfony\Component\HttpFoundation\Response::setNotModified();
-            Symfony\Component\HttpFoundation\Response::setNotModified();
+            return Symfony\Component\HttpFoundation\Response::setNotModified();
         }
 
         /**
@@ -4882,7 +4882,7 @@ namespace {
         public static function hasVary()
         {
             // Symfony\Component\HttpFoundation\Response::hasVary();
-            Symfony\Component\HttpFoundation\Response::hasVary();
+            return Symfony\Component\HttpFoundation\Response::hasVary();
         }
 
         /**
@@ -4895,7 +4895,7 @@ namespace {
         public static function getVary()
         {
             // Symfony\Component\HttpFoundation\Response::getVary();
-            Symfony\Component\HttpFoundation\Response::getVary();
+            return Symfony\Component\HttpFoundation\Response::getVary();
         }
 
         /**
@@ -4911,7 +4911,7 @@ namespace {
         public static function setVary($headers, $replace = "1")
         {
             // Symfony\Component\HttpFoundation\Response::setVary();
-            Symfony\Component\HttpFoundation\Response::setVary($headers, $replace);
+            return Symfony\Component\HttpFoundation\Response::setVary($headers, $replace);
         }
 
         /**
@@ -4930,7 +4930,7 @@ namespace {
         public static function isNotModified(Symfony\Component\HttpFoundation\Request $request)
         {
             // Symfony\Component\HttpFoundation\Response::isNotModified();
-            Symfony\Component\HttpFoundation\Response::isNotModified($request);
+            return Symfony\Component\HttpFoundation\Response::isNotModified($request);
         }
 
         /**
@@ -4943,7 +4943,7 @@ namespace {
         public static function isInvalid()
         {
             // Symfony\Component\HttpFoundation\Response::isInvalid();
-            Symfony\Component\HttpFoundation\Response::isInvalid();
+            return Symfony\Component\HttpFoundation\Response::isInvalid();
         }
 
         /**
@@ -4956,7 +4956,7 @@ namespace {
         public static function isInformational()
         {
             // Symfony\Component\HttpFoundation\Response::isInformational();
-            Symfony\Component\HttpFoundation\Response::isInformational();
+            return Symfony\Component\HttpFoundation\Response::isInformational();
         }
 
         /**
@@ -4969,7 +4969,7 @@ namespace {
         public static function isSuccessful()
         {
             // Symfony\Component\HttpFoundation\Response::isSuccessful();
-            Symfony\Component\HttpFoundation\Response::isSuccessful();
+            return Symfony\Component\HttpFoundation\Response::isSuccessful();
         }
 
         /**
@@ -4982,7 +4982,7 @@ namespace {
         public static function isRedirection()
         {
             // Symfony\Component\HttpFoundation\Response::isRedirection();
-            Symfony\Component\HttpFoundation\Response::isRedirection();
+            return Symfony\Component\HttpFoundation\Response::isRedirection();
         }
 
         /**
@@ -4995,7 +4995,7 @@ namespace {
         public static function isClientError()
         {
             // Symfony\Component\HttpFoundation\Response::isClientError();
-            Symfony\Component\HttpFoundation\Response::isClientError();
+            return Symfony\Component\HttpFoundation\Response::isClientError();
         }
 
         /**
@@ -5008,7 +5008,7 @@ namespace {
         public static function isServerError()
         {
             // Symfony\Component\HttpFoundation\Response::isServerError();
-            Symfony\Component\HttpFoundation\Response::isServerError();
+            return Symfony\Component\HttpFoundation\Response::isServerError();
         }
 
         /**
@@ -5021,7 +5021,7 @@ namespace {
         public static function isOk()
         {
             // Symfony\Component\HttpFoundation\Response::isOk();
-            Symfony\Component\HttpFoundation\Response::isOk();
+            return Symfony\Component\HttpFoundation\Response::isOk();
         }
 
         /**
@@ -5034,7 +5034,7 @@ namespace {
         public static function isForbidden()
         {
             // Symfony\Component\HttpFoundation\Response::isForbidden();
-            Symfony\Component\HttpFoundation\Response::isForbidden();
+            return Symfony\Component\HttpFoundation\Response::isForbidden();
         }
 
         /**
@@ -5047,7 +5047,7 @@ namespace {
         public static function isNotFound()
         {
             // Symfony\Component\HttpFoundation\Response::isNotFound();
-            Symfony\Component\HttpFoundation\Response::isNotFound();
+            return Symfony\Component\HttpFoundation\Response::isNotFound();
         }
 
         /**
@@ -5062,7 +5062,7 @@ namespace {
         public static function isRedirect($location = null)
         {
             // Symfony\Component\HttpFoundation\Response::isRedirect();
-            Symfony\Component\HttpFoundation\Response::isRedirect($location);
+            return Symfony\Component\HttpFoundation\Response::isRedirect($location);
         }
 
         /**
@@ -5075,7 +5075,7 @@ namespace {
         public static function isEmpty()
         {
             // Symfony\Component\HttpFoundation\Response::isEmpty();
-            Symfony\Component\HttpFoundation\Response::isEmpty();
+            return Symfony\Component\HttpFoundation\Response::isEmpty();
         }
 
     }
@@ -5098,7 +5098,7 @@ namespace {
         public static function getByPath($path, $version = "RECENT")
         {
             // Concrete\Core\Page\Page::getByPath();
-            Concrete\Core\Page\Page::getByPath($path, $version);
+            return Concrete\Core\Page\Page::getByPath($path, $version);
         }
 
         /**
@@ -5110,7 +5110,7 @@ namespace {
         public static function getByID($cID, $version = "RECENT", $class = "Page")
         {
             // Concrete\Core\Page\Page::getByID();
-            Concrete\Core\Page\Page::getByID($cID, $version, $class);
+            return Concrete\Core\Page\Page::getByID($cID, $version, $class);
         }
 
         /**
@@ -5119,37 +5119,37 @@ namespace {
         protected static function populatePage($cInfo, $where, $cvID)
         {
             // Concrete\Core\Page\Page::populatePage();
-            Concrete\Core\Page\Page::populatePage($cInfo, $where, $cvID);
+            return Concrete\Core\Page\Page::populatePage($cInfo, $where, $cvID);
         }
 
         public static function getPermissionResponseClassName()
         {
             // Concrete\Core\Page\Page::getPermissionResponseClassName();
-            Concrete\Core\Page\Page::getPermissionResponseClassName();
+            return Concrete\Core\Page\Page::getPermissionResponseClassName();
         }
 
         public static function getPermissionAssignmentClassName()
         {
             // Concrete\Core\Page\Page::getPermissionAssignmentClassName();
-            Concrete\Core\Page\Page::getPermissionAssignmentClassName();
+            return Concrete\Core\Page\Page::getPermissionAssignmentClassName();
         }
 
         public static function getPermissionObjectKeyCategoryHandle()
         {
             // Concrete\Core\Page\Page::getPermissionObjectKeyCategoryHandle();
-            Concrete\Core\Page\Page::getPermissionObjectKeyCategoryHandle();
+            return Concrete\Core\Page\Page::getPermissionObjectKeyCategoryHandle();
         }
 
         public static function getPageController()
         {
             // Concrete\Core\Page\Page::getPageController();
-            Concrete\Core\Page\Page::getPageController();
+            return Concrete\Core\Page\Page::getPageController();
         }
 
         public static function getPermissionObjectIdentifier()
         {
             // Concrete\Core\Page\Page::getPermissionObjectIdentifier();
-            Concrete\Core\Page\Page::getPermissionObjectIdentifier();
+            return Concrete\Core\Page\Page::getPermissionObjectIdentifier();
         }
 
         /**
@@ -5159,7 +5159,7 @@ namespace {
         public static function isEditMode()
         {
             // Concrete\Core\Page\Page::isEditMode();
-            Concrete\Core\Page\Page::isEditMode();
+            return Concrete\Core\Page\Page::isEditMode();
         }
 
         /**
@@ -5169,7 +5169,7 @@ namespace {
         public static function getPackageID()
         {
             // Concrete\Core\Page\Page::getPackageID();
-            Concrete\Core\Page\Page::getPackageID();
+            return Concrete\Core\Page\Page::getPackageID();
         }
 
         /**
@@ -5179,7 +5179,7 @@ namespace {
         public static function getPackageHandle()
         {
             // Concrete\Core\Page\Page::getPackageHandle();
-            Concrete\Core\Page\Page::getPackageHandle();
+            return Concrete\Core\Page\Page::getPackageHandle();
         }
 
         /**
@@ -5189,7 +5189,7 @@ namespace {
         public static function isArrangeMode()
         {
             // Concrete\Core\Page\Page::isArrangeMode();
-            Concrete\Core\Page\Page::isArrangeMode();
+            return Concrete\Core\Page\Page::isArrangeMode();
         }
 
         /**
@@ -5198,7 +5198,7 @@ namespace {
         public static function forceCheckIn()
         {
             // Concrete\Core\Page\Page::forceCheckIn();
-            Concrete\Core\Page\Page::forceCheckIn();
+            return Concrete\Core\Page\Page::forceCheckIn();
         }
 
         /**
@@ -5208,7 +5208,7 @@ namespace {
         public static function isAdminArea()
         {
             // Concrete\Core\Page\Page::isAdminArea();
-            Concrete\Core\Page\Page::isAdminArea();
+            return Concrete\Core\Page\Page::isAdminArea();
         }
 
         /**
@@ -5218,13 +5218,13 @@ namespace {
         public static function getFromRequest(Concrete\Core\Http\Request $request)
         {
             // Concrete\Core\Page\Page::getFromRequest();
-            Concrete\Core\Page\Page::getFromRequest($request);
+            return Concrete\Core\Page\Page::getFromRequest($request);
         }
 
         public static function processArrangement($area_id, $moved_block_id, $block_order)
         {
             // Concrete\Core\Page\Page::processArrangement();
-            Concrete\Core\Page\Page::processArrangement($area_id, $moved_block_id, $block_order);
+            return Concrete\Core\Page\Page::processArrangement($area_id, $moved_block_id, $block_order);
         }
 
         /**
@@ -5234,7 +5234,7 @@ namespace {
         public static function isCheckedOut()
         {
             // Concrete\Core\Page\Page::isCheckedOut();
-            Concrete\Core\Page\Page::isCheckedOut();
+            return Concrete\Core\Page\Page::isCheckedOut();
         }
 
         /**
@@ -5244,7 +5244,7 @@ namespace {
         public static function getCollectionCheckedOutUserName()
         {
             // Concrete\Core\Page\Page::getCollectionCheckedOutUserName();
-            Concrete\Core\Page\Page::getCollectionCheckedOutUserName();
+            return Concrete\Core\Page\Page::getCollectionCheckedOutUserName();
         }
 
         /**
@@ -5254,7 +5254,7 @@ namespace {
         public static function isCheckedOutByMe()
         {
             // Concrete\Core\Page\Page::isCheckedOutByMe();
-            Concrete\Core\Page\Page::isCheckedOutByMe();
+            return Concrete\Core\Page\Page::isCheckedOutByMe();
         }
 
         /**
@@ -5264,31 +5264,31 @@ namespace {
         public static function isGeneratedCollection()
         {
             // Concrete\Core\Page\Page::isGeneratedCollection();
-            Concrete\Core\Page\Page::isGeneratedCollection();
+            return Concrete\Core\Page\Page::isGeneratedCollection();
         }
 
         public static function assignPermissions($userOrGroup, $permissions = null, $accessType = 10)
         {
             // Concrete\Core\Page\Page::assignPermissions();
-            Concrete\Core\Page\Page::assignPermissions($userOrGroup, $permissions, $accessType);
+            return Concrete\Core\Page\Page::assignPermissions($userOrGroup, $permissions, $accessType);
         }
 
         public static function getDrafts()
         {
             // Concrete\Core\Page\Page::getDrafts();
-            Concrete\Core\Page\Page::getDrafts();
+            return Concrete\Core\Page\Page::getDrafts();
         }
 
         public static function isPageDraft()
         {
             // Concrete\Core\Page\Page::isPageDraft();
-            Concrete\Core\Page\Page::isPageDraft();
+            return Concrete\Core\Page\Page::isPageDraft();
         }
 
         public static function setController($controller)
         {
             // Concrete\Core\Page\Page::setController();
-            Concrete\Core\Page\Page::setController($controller);
+            return Concrete\Core\Page\Page::setController($controller);
         }
 
         /**
@@ -5297,7 +5297,7 @@ namespace {
         public static function getController()
         {
             // Concrete\Core\Page\Page::getController();
-            Concrete\Core\Page\Page::getController();
+            return Concrete\Core\Page\Page::getController();
         }
 
         /**
@@ -5306,7 +5306,7 @@ namespace {
         public static function assignPermissionSet($px)
         {
             // Concrete\Core\Page\Page::assignPermissionSet();
-            Concrete\Core\Page\Page::assignPermissionSet($px);
+            return Concrete\Core\Page\Page::assignPermissionSet($px);
         }
 
         /**
@@ -5317,7 +5317,7 @@ namespace {
         public static function addCollectionAlias($c)
         {
             // Concrete\Core\Page\Page::addCollectionAlias();
-            Concrete\Core\Page\Page::addCollectionAlias($c);
+            return Concrete\Core\Page\Page::addCollectionAlias($c);
         }
 
         /**
@@ -5329,7 +5329,7 @@ namespace {
         public static function updateCollectionAliasExternal($cName, $cLink, $newWindow = null)
         {
             // Concrete\Core\Page\Page::updateCollectionAliasExternal();
-            Concrete\Core\Page\Page::updateCollectionAliasExternal($cName, $cLink, $newWindow);
+            return Concrete\Core\Page\Page::updateCollectionAliasExternal($cName, $cLink, $newWindow);
         }
 
         /**
@@ -5342,7 +5342,7 @@ namespace {
         public static function addCollectionAliasExternal($cName, $cLink, $newWindow = null)
         {
             // Concrete\Core\Page\Page::addCollectionAliasExternal();
-            Concrete\Core\Page\Page::addCollectionAliasExternal($cName, $cLink, $newWindow);
+            return Concrete\Core\Page\Page::addCollectionAliasExternal($cName, $cLink, $newWindow);
         }
 
         /**
@@ -5352,7 +5352,7 @@ namespace {
         public static function isSystemPage()
         {
             // Concrete\Core\Page\Page::isSystemPage();
-            Concrete\Core\Page\Page::isSystemPage();
+            return Concrete\Core\Page\Page::isSystemPage();
         }
 
         /**
@@ -5362,7 +5362,7 @@ namespace {
         public static function getCollectionIcon()
         {
             // Concrete\Core\Page\Page::getCollectionIcon();
-            Concrete\Core\Page\Page::getCollectionIcon();
+            return Concrete\Core\Page\Page::getCollectionIcon();
         }
 
         /**
@@ -5372,49 +5372,49 @@ namespace {
         public static function removeThisAlias()
         {
             // Concrete\Core\Page\Page::removeThisAlias();
-            Concrete\Core\Page\Page::removeThisAlias();
+            return Concrete\Core\Page\Page::removeThisAlias();
         }
 
         public static function populateRecursivePages($pages, $pageRow, $cParentID, $level, $includeThisPage = "1")
         {
             // Concrete\Core\Page\Page::populateRecursivePages();
-            Concrete\Core\Page\Page::populateRecursivePages($pages, $pageRow, $cParentID, $level, $includeThisPage);
+            return Concrete\Core\Page\Page::populateRecursivePages($pages, $pageRow, $cParentID, $level, $includeThisPage);
         }
 
         public static function queueForDeletionSort($a, $b)
         {
             // Concrete\Core\Page\Page::queueForDeletionSort();
-            Concrete\Core\Page\Page::queueForDeletionSort($a, $b);
+            return Concrete\Core\Page\Page::queueForDeletionSort($a, $b);
         }
 
         public static function queueForDuplicationSort($a, $b)
         {
             // Concrete\Core\Page\Page::queueForDuplicationSort();
-            Concrete\Core\Page\Page::queueForDuplicationSort($a, $b);
+            return Concrete\Core\Page\Page::queueForDuplicationSort($a, $b);
         }
 
         public static function queueForDeletion()
         {
             // Concrete\Core\Page\Page::queueForDeletion();
-            Concrete\Core\Page\Page::queueForDeletion();
+            return Concrete\Core\Page\Page::queueForDeletion();
         }
 
         public static function queueForDeletionRequest()
         {
             // Concrete\Core\Page\Page::queueForDeletionRequest();
-            Concrete\Core\Page\Page::queueForDeletionRequest();
+            return Concrete\Core\Page\Page::queueForDeletionRequest();
         }
 
         public static function queueForDuplication($destination, $includeParent = "1")
         {
             // Concrete\Core\Page\Page::queueForDuplication();
-            Concrete\Core\Page\Page::queueForDuplication($destination, $includeParent);
+            return Concrete\Core\Page\Page::queueForDuplication($destination, $includeParent);
         }
 
         public static function export($pageNode, $includePublicDate = null)
         {
             // Concrete\Core\Page\Page::export();
-            Concrete\Core\Page\Page::export($pageNode, $includePublicDate);
+            return Concrete\Core\Page\Page::export($pageNode, $includePublicDate);
         }
 
         /**
@@ -5424,7 +5424,7 @@ namespace {
         public static function getCollectionCheckedOutUserID()
         {
             // Concrete\Core\Page\Page::getCollectionCheckedOutUserID();
-            Concrete\Core\Page\Page::getCollectionCheckedOutUserID();
+            return Concrete\Core\Page\Page::getCollectionCheckedOutUserID();
         }
 
         /**
@@ -5434,7 +5434,7 @@ namespace {
         public static function getCollectionPath()
         {
             // Concrete\Core\Page\Page::getCollectionPath();
-            Concrete\Core\Page\Page::getCollectionPath();
+            return Concrete\Core\Page\Page::getCollectionPath();
         }
 
         /**
@@ -5444,7 +5444,7 @@ namespace {
         public static function getCollectionLink($appendBaseURL = null, $ignoreUrlRewriting = null)
         {
             // Concrete\Core\Page\Page::getCollectionLink();
-            Concrete\Core\Page\Page::getCollectionLink($appendBaseURL, $ignoreUrlRewriting);
+            return Concrete\Core\Page\Page::getCollectionLink($appendBaseURL, $ignoreUrlRewriting);
         }
 
         /**
@@ -5455,7 +5455,7 @@ namespace {
         public static function getCollectionPathFromID($cID)
         {
             // Concrete\Core\Page\Page::getCollectionPathFromID();
-            Concrete\Core\Page\Page::getCollectionPathFromID($cID);
+            return Concrete\Core\Page\Page::getCollectionPathFromID($cID);
         }
 
         /**
@@ -5465,7 +5465,7 @@ namespace {
         public static function getCollectionUserID()
         {
             // Concrete\Core\Page\Page::getCollectionUserID();
-            Concrete\Core\Page\Page::getCollectionUserID();
+            return Concrete\Core\Page\Page::getCollectionUserID();
         }
 
         /**
@@ -5475,7 +5475,7 @@ namespace {
         public static function getCollectionHandle()
         {
             // Concrete\Core\Page\Page::getCollectionHandle();
-            Concrete\Core\Page\Page::getCollectionHandle();
+            return Concrete\Core\Page\Page::getCollectionHandle();
         }
 
         /**
@@ -5484,13 +5484,13 @@ namespace {
         public static function getCollectionTypeName()
         {
             // Concrete\Core\Page\Page::getCollectionTypeName();
-            Concrete\Core\Page\Page::getCollectionTypeName();
+            return Concrete\Core\Page\Page::getCollectionTypeName();
         }
 
         public static function getPageTypeName()
         {
             // Concrete\Core\Page\Page::getPageTypeName();
-            Concrete\Core\Page\Page::getPageTypeName();
+            return Concrete\Core\Page\Page::getPageTypeName();
         }
 
         /**
@@ -5499,7 +5499,7 @@ namespace {
         public static function getCollectionTypeID()
         {
             // Concrete\Core\Page\Page::getCollectionTypeID();
-            Concrete\Core\Page\Page::getCollectionTypeID();
+            return Concrete\Core\Page\Page::getCollectionTypeID();
         }
 
         /**
@@ -5509,13 +5509,13 @@ namespace {
         public static function getPageTypeID()
         {
             // Concrete\Core\Page\Page::getPageTypeID();
-            Concrete\Core\Page\Page::getPageTypeID();
+            return Concrete\Core\Page\Page::getPageTypeID();
         }
 
         public static function getPageTypeObject()
         {
             // Concrete\Core\Page\Page::getPageTypeObject();
-            Concrete\Core\Page\Page::getPageTypeObject();
+            return Concrete\Core\Page\Page::getPageTypeObject();
         }
 
         /**
@@ -5525,7 +5525,7 @@ namespace {
         public static function getPageTemplateID()
         {
             // Concrete\Core\Page\Page::getPageTemplateID();
-            Concrete\Core\Page\Page::getPageTemplateID();
+            return Concrete\Core\Page\Page::getPageTemplateID();
         }
 
         /**
@@ -5535,13 +5535,13 @@ namespace {
         public static function getPageTypeHandle()
         {
             // Concrete\Core\Page\Page::getPageTypeHandle();
-            Concrete\Core\Page\Page::getPageTypeHandle();
+            return Concrete\Core\Page\Page::getPageTypeHandle();
         }
 
         public static function getCollectionTypeHandle()
         {
             // Concrete\Core\Page\Page::getCollectionTypeHandle();
-            Concrete\Core\Page\Page::getCollectionTypeHandle();
+            return Concrete\Core\Page\Page::getCollectionTypeHandle();
         }
 
         /**
@@ -5551,7 +5551,7 @@ namespace {
         public static function getCollectionThemeID()
         {
             // Concrete\Core\Page\Page::getCollectionThemeID();
-            Concrete\Core\Page\Page::getCollectionThemeID();
+            return Concrete\Core\Page\Page::getCollectionThemeID();
         }
 
         /**
@@ -5562,7 +5562,7 @@ namespace {
         public static function isBlockAliasedFromMasterCollection($b)
         {
             // Concrete\Core\Page\Page::isBlockAliasedFromMasterCollection();
-            Concrete\Core\Page\Page::isBlockAliasedFromMasterCollection($b);
+            return Concrete\Core\Page\Page::isBlockAliasedFromMasterCollection($b);
         }
 
         /**
@@ -5572,7 +5572,7 @@ namespace {
         public static function getCollectionThemeObject()
         {
             // Concrete\Core\Page\Page::getCollectionThemeObject();
-            Concrete\Core\Page\Page::getCollectionThemeObject();
+            return Concrete\Core\Page\Page::getCollectionThemeObject();
         }
 
         /**
@@ -5582,7 +5582,7 @@ namespace {
         public static function getCollectionName()
         {
             // Concrete\Core\Page\Page::getCollectionName();
-            Concrete\Core\Page\Page::getCollectionName();
+            return Concrete\Core\Page\Page::getCollectionName();
         }
 
         /**
@@ -5592,7 +5592,7 @@ namespace {
         public static function getCollectionPointerID()
         {
             // Concrete\Core\Page\Page::getCollectionPointerID();
-            Concrete\Core\Page\Page::getCollectionPointerID();
+            return Concrete\Core\Page\Page::getCollectionPointerID();
         }
 
         /**
@@ -5602,7 +5602,7 @@ namespace {
         public static function getCollectionPointerExternalLink()
         {
             // Concrete\Core\Page\Page::getCollectionPointerExternalLink();
-            Concrete\Core\Page\Page::getCollectionPointerExternalLink();
+            return Concrete\Core\Page\Page::getCollectionPointerExternalLink();
         }
 
         /**
@@ -5612,7 +5612,7 @@ namespace {
         public static function openCollectionPointerExternalLinkInNewWindow()
         {
             // Concrete\Core\Page\Page::openCollectionPointerExternalLinkInNewWindow();
-            Concrete\Core\Page\Page::openCollectionPointerExternalLinkInNewWindow();
+            return Concrete\Core\Page\Page::openCollectionPointerExternalLinkInNewWindow();
         }
 
         /**
@@ -5622,7 +5622,7 @@ namespace {
         public static function isAlias()
         {
             // Concrete\Core\Page\Page::isAlias();
-            Concrete\Core\Page\Page::isAlias();
+            return Concrete\Core\Page\Page::isAlias();
         }
 
         /**
@@ -5632,7 +5632,7 @@ namespace {
         public static function isExternalLink()
         {
             // Concrete\Core\Page\Page::isExternalLink();
-            Concrete\Core\Page\Page::isExternalLink();
+            return Concrete\Core\Page\Page::isExternalLink();
         }
 
         /**
@@ -5642,7 +5642,7 @@ namespace {
         public static function getCollectionPointerOriginalID()
         {
             // Concrete\Core\Page\Page::getCollectionPointerOriginalID();
-            Concrete\Core\Page\Page::getCollectionPointerOriginalID();
+            return Concrete\Core\Page\Page::getCollectionPointerOriginalID();
         }
 
         /**
@@ -5652,7 +5652,7 @@ namespace {
         public static function getCollectionFilename()
         {
             // Concrete\Core\Page\Page::getCollectionFilename();
-            Concrete\Core\Page\Page::getCollectionFilename();
+            return Concrete\Core\Page\Page::getCollectionFilename();
         }
 
         /**
@@ -5665,7 +5665,7 @@ namespace {
         public static function getCollectionDatePublic($mask = null, $type = "system")
         {
             // Concrete\Core\Page\Page::getCollectionDatePublic();
-            Concrete\Core\Page\Page::getCollectionDatePublic($mask, $type);
+            return Concrete\Core\Page\Page::getCollectionDatePublic($mask, $type);
         }
 
         /**
@@ -5675,7 +5675,7 @@ namespace {
         public static function getCollectionDescription()
         {
             // Concrete\Core\Page\Page::getCollectionDescription();
-            Concrete\Core\Page\Page::getCollectionDescription();
+            return Concrete\Core\Page\Page::getCollectionDescription();
         }
 
         /**
@@ -5685,7 +5685,7 @@ namespace {
         public static function getCollectionParentID()
         {
             // Concrete\Core\Page\Page::getCollectionParentID();
-            Concrete\Core\Page\Page::getCollectionParentID();
+            return Concrete\Core\Page\Page::getCollectionParentID();
         }
 
         /**
@@ -5696,7 +5696,7 @@ namespace {
         public static function getCollectionParentIDFromChildID($cID)
         {
             // Concrete\Core\Page\Page::getCollectionParentIDFromChildID();
-            Concrete\Core\Page\Page::getCollectionParentIDFromChildID($cID);
+            return Concrete\Core\Page\Page::getCollectionParentIDFromChildID($cID);
         }
 
         /**
@@ -5706,7 +5706,7 @@ namespace {
         public static function getCollectionParentIDs()
         {
             // Concrete\Core\Page\Page::getCollectionParentIDs();
-            Concrete\Core\Page\Page::getCollectionParentIDs();
+            return Concrete\Core\Page\Page::getCollectionParentIDs();
         }
 
         /**
@@ -5716,7 +5716,7 @@ namespace {
         public static function isMasterCollection()
         {
             // Concrete\Core\Page\Page::isMasterCollection();
-            Concrete\Core\Page\Page::isMasterCollection();
+            return Concrete\Core\Page\Page::isMasterCollection();
         }
 
         /**
@@ -5726,7 +5726,7 @@ namespace {
         public static function overrideTemplatePermissions()
         {
             // Concrete\Core\Page\Page::overrideTemplatePermissions();
-            Concrete\Core\Page\Page::overrideTemplatePermissions();
+            return Concrete\Core\Page\Page::overrideTemplatePermissions();
         }
 
         /**
@@ -5736,7 +5736,7 @@ namespace {
         public static function getCollectionDisplayOrder()
         {
             // Concrete\Core\Page\Page::getCollectionDisplayOrder();
-            Concrete\Core\Page\Page::getCollectionDisplayOrder();
+            return Concrete\Core\Page\Page::getCollectionDisplayOrder();
         }
 
         /**
@@ -5746,7 +5746,7 @@ namespace {
         public static function setTheme($pl)
         {
             // Concrete\Core\Page\Page::setTheme();
-            Concrete\Core\Page\Page::setTheme($pl);
+            return Concrete\Core\Page\Page::setTheme($pl);
         }
 
         /**
@@ -5755,7 +5755,7 @@ namespace {
         public static function setPermissionsInheritanceToTemplate()
         {
             // Concrete\Core\Page\Page::setPermissionsInheritanceToTemplate();
-            Concrete\Core\Page\Page::setPermissionsInheritanceToTemplate();
+            return Concrete\Core\Page\Page::setPermissionsInheritanceToTemplate();
         }
 
         /**
@@ -5764,31 +5764,31 @@ namespace {
         public static function setPermissionsInheritanceToOverride()
         {
             // Concrete\Core\Page\Page::setPermissionsInheritanceToOverride();
-            Concrete\Core\Page\Page::setPermissionsInheritanceToOverride();
+            return Concrete\Core\Page\Page::setPermissionsInheritanceToOverride();
         }
 
         public static function getPermissionsCollectionID()
         {
             // Concrete\Core\Page\Page::getPermissionsCollectionID();
-            Concrete\Core\Page\Page::getPermissionsCollectionID();
+            return Concrete\Core\Page\Page::getPermissionsCollectionID();
         }
 
         public static function getCollectionInheritance()
         {
             // Concrete\Core\Page\Page::getCollectionInheritance();
-            Concrete\Core\Page\Page::getCollectionInheritance();
+            return Concrete\Core\Page\Page::getCollectionInheritance();
         }
 
         public static function getParentPermissionsCollectionID()
         {
             // Concrete\Core\Page\Page::getParentPermissionsCollectionID();
-            Concrete\Core\Page\Page::getParentPermissionsCollectionID();
+            return Concrete\Core\Page\Page::getParentPermissionsCollectionID();
         }
 
         public static function getPermissionsCollectionObject()
         {
             // Concrete\Core\Page\Page::getPermissionsCollectionObject();
-            Concrete\Core\Page\Page::getPermissionsCollectionObject();
+            return Concrete\Core\Page\Page::getPermissionsCollectionObject();
         }
 
         /**
@@ -5797,25 +5797,25 @@ namespace {
         public static function getMasterCollectionID()
         {
             // Concrete\Core\Page\Page::getMasterCollectionID();
-            Concrete\Core\Page\Page::getMasterCollectionID();
+            return Concrete\Core\Page\Page::getMasterCollectionID();
         }
 
         public static function getOriginalCollectionID()
         {
             // Concrete\Core\Page\Page::getOriginalCollectionID();
-            Concrete\Core\Page\Page::getOriginalCollectionID();
+            return Concrete\Core\Page\Page::getOriginalCollectionID();
         }
 
         public static function getNumChildren()
         {
             // Concrete\Core\Page\Page::getNumChildren();
-            Concrete\Core\Page\Page::getNumChildren();
+            return Concrete\Core\Page\Page::getNumChildren();
         }
 
         public static function getNumChildrenDirect()
         {
             // Concrete\Core\Page\Page::getNumChildrenDirect();
-            Concrete\Core\Page\Page::getNumChildrenDirect();
+            return Concrete\Core\Page\Page::getNumChildrenDirect();
         }
 
         /**
@@ -5826,151 +5826,151 @@ namespace {
         public static function getFirstChild($sortColumn = "cDisplayOrder asc", $excludeSystemPages = null)
         {
             // Concrete\Core\Page\Page::getFirstChild();
-            Concrete\Core\Page\Page::getFirstChild($sortColumn, $excludeSystemPages);
+            return Concrete\Core\Page\Page::getFirstChild($sortColumn, $excludeSystemPages);
         }
 
         public static function getCollectionChildrenArray($oneLevelOnly = null)
         {
             // Concrete\Core\Page\Page::getCollectionChildrenArray();
-            Concrete\Core\Page\Page::getCollectionChildrenArray($oneLevelOnly);
+            return Concrete\Core\Page\Page::getCollectionChildrenArray($oneLevelOnly);
         }
 
         public static function _getNumChildren($cID, $oneLevelOnly = null, $sortColumn = "cDisplayOrder asc")
         {
             // Concrete\Core\Page\Page::_getNumChildren();
-            Concrete\Core\Page\Page::_getNumChildren($cID, $oneLevelOnly, $sortColumn);
+            return Concrete\Core\Page\Page::_getNumChildren($cID, $oneLevelOnly, $sortColumn);
         }
 
         public static function canMoveCopyTo($cobj)
         {
             // Concrete\Core\Page\Page::canMoveCopyTo();
-            Concrete\Core\Page\Page::canMoveCopyTo($cobj);
+            return Concrete\Core\Page\Page::canMoveCopyTo($cobj);
         }
 
         public static function updateCollectionName($name)
         {
             // Concrete\Core\Page\Page::updateCollectionName();
-            Concrete\Core\Page\Page::updateCollectionName($name);
+            return Concrete\Core\Page\Page::updateCollectionName($name);
         }
 
         public static function hasPageThemeCustomizations()
         {
             // Concrete\Core\Page\Page::hasPageThemeCustomizations();
-            Concrete\Core\Page\Page::hasPageThemeCustomizations();
+            return Concrete\Core\Page\Page::hasPageThemeCustomizations();
         }
 
         public static function resetCustomThemeStyles()
         {
             // Concrete\Core\Page\Page::resetCustomThemeStyles();
-            Concrete\Core\Page\Page::resetCustomThemeStyles();
+            return Concrete\Core\Page\Page::resetCustomThemeStyles();
         }
 
         public static function getCustomThemeStyles()
         {
             // Concrete\Core\Page\Page::getCustomThemeStyles();
-            Concrete\Core\Page\Page::getCustomThemeStyles();
+            return Concrete\Core\Page\Page::getCustomThemeStyles();
         }
 
         public static function updateCustomThemeStyles($styles)
         {
             // Concrete\Core\Page\Page::updateCustomThemeStyles();
-            Concrete\Core\Page\Page::updateCustomThemeStyles($styles);
+            return Concrete\Core\Page\Page::updateCustomThemeStyles($styles);
         }
 
         public static function writePageThemeCustomizations()
         {
             // Concrete\Core\Page\Page::writePageThemeCustomizations();
-            Concrete\Core\Page\Page::writePageThemeCustomizations();
+            return Concrete\Core\Page\Page::writePageThemeCustomizations();
         }
 
         public static function update($data)
         {
             // Concrete\Core\Page\Page::update();
-            Concrete\Core\Page\Page::update($data);
+            return Concrete\Core\Page\Page::update($data);
         }
 
         public static function uniquifyPagePath($origPath)
         {
             // Concrete\Core\Page\Page::uniquifyPagePath();
-            Concrete\Core\Page\Page::uniquifyPagePath($origPath);
+            return Concrete\Core\Page\Page::uniquifyPagePath($origPath);
         }
 
         public static function rescanPagePaths($newPaths)
         {
             // Concrete\Core\Page\Page::rescanPagePaths();
-            Concrete\Core\Page\Page::rescanPagePaths($newPaths);
+            return Concrete\Core\Page\Page::rescanPagePaths($newPaths);
         }
 
         public static function clearPagePermissions()
         {
             // Concrete\Core\Page\Page::clearPagePermissions();
-            Concrete\Core\Page\Page::clearPagePermissions();
+            return Concrete\Core\Page\Page::clearPagePermissions();
         }
 
         public static function inheritPermissionsFromParent()
         {
             // Concrete\Core\Page\Page::inheritPermissionsFromParent();
-            Concrete\Core\Page\Page::inheritPermissionsFromParent();
+            return Concrete\Core\Page\Page::inheritPermissionsFromParent();
         }
 
         public static function inheritPermissionsFromDefaults()
         {
             // Concrete\Core\Page\Page::inheritPermissionsFromDefaults();
-            Concrete\Core\Page\Page::inheritPermissionsFromDefaults();
+            return Concrete\Core\Page\Page::inheritPermissionsFromDefaults();
         }
 
         public static function setPermissionsToManualOverride()
         {
             // Concrete\Core\Page\Page::setPermissionsToManualOverride();
-            Concrete\Core\Page\Page::setPermissionsToManualOverride();
+            return Concrete\Core\Page\Page::setPermissionsToManualOverride();
         }
 
         public static function rescanAreaPermissions()
         {
             // Concrete\Core\Page\Page::rescanAreaPermissions();
-            Concrete\Core\Page\Page::rescanAreaPermissions();
+            return Concrete\Core\Page\Page::rescanAreaPermissions();
         }
 
         public static function setOverrideTemplatePermissions($cOverrideTemplatePermissions)
         {
             // Concrete\Core\Page\Page::setOverrideTemplatePermissions();
-            Concrete\Core\Page\Page::setOverrideTemplatePermissions($cOverrideTemplatePermissions);
+            return Concrete\Core\Page\Page::setOverrideTemplatePermissions($cOverrideTemplatePermissions);
         }
 
         public static function updatePermissionsCollectionID($cParentIDString, $npID)
         {
             // Concrete\Core\Page\Page::updatePermissionsCollectionID();
-            Concrete\Core\Page\Page::updatePermissionsCollectionID($cParentIDString, $npID);
+            return Concrete\Core\Page\Page::updatePermissionsCollectionID($cParentIDString, $npID);
         }
 
         public static function acquireAreaPermissions($permissionsCollectionID)
         {
             // Concrete\Core\Page\Page::acquireAreaPermissions();
-            Concrete\Core\Page\Page::acquireAreaPermissions($permissionsCollectionID);
+            return Concrete\Core\Page\Page::acquireAreaPermissions($permissionsCollectionID);
         }
 
         public static function acquirePagePermissions($permissionsCollectionID)
         {
             // Concrete\Core\Page\Page::acquirePagePermissions();
-            Concrete\Core\Page\Page::acquirePagePermissions($permissionsCollectionID);
+            return Concrete\Core\Page\Page::acquirePagePermissions($permissionsCollectionID);
         }
 
         public static function updateGroupsSubCollection($cParentIDString)
         {
             // Concrete\Core\Page\Page::updateGroupsSubCollection();
-            Concrete\Core\Page\Page::updateGroupsSubCollection($cParentIDString);
+            return Concrete\Core\Page\Page::updateGroupsSubCollection($cParentIDString);
         }
 
         public static function move($nc, $retainOldPagePath = null)
         {
             // Concrete\Core\Page\Page::move();
-            Concrete\Core\Page\Page::move($nc, $retainOldPagePath);
+            return Concrete\Core\Page\Page::move($nc, $retainOldPagePath);
         }
 
         public static function duplicateAll($nc, $preserveUserID = null)
         {
             // Concrete\Core\Page\Page::duplicateAll();
-            Concrete\Core\Page\Page::duplicateAll($nc, $preserveUserID);
+            return Concrete\Core\Page\Page::duplicateAll($nc, $preserveUserID);
         }
 
         /**
@@ -5979,157 +5979,157 @@ namespace {
         public static function _duplicateAll($cParent, $cNewParent, $preserveUserID = null)
         {
             // Concrete\Core\Page\Page::_duplicateAll();
-            Concrete\Core\Page\Page::_duplicateAll($cParent, $cNewParent, $preserveUserID);
+            return Concrete\Core\Page\Page::_duplicateAll($cParent, $cNewParent, $preserveUserID);
         }
 
         public static function duplicate($nc, $preserveUserID = null)
         {
             // Concrete\Core\Page\Page::duplicate();
-            Concrete\Core\Page\Page::duplicate($nc, $preserveUserID);
+            return Concrete\Core\Page\Page::duplicate($nc, $preserveUserID);
         }
 
         public static function delete()
         {
             // Concrete\Core\Page\Page::delete();
-            Concrete\Core\Page\Page::delete();
+            return Concrete\Core\Page\Page::delete();
         }
 
         public static function moveToTrash()
         {
             // Concrete\Core\Page\Page::moveToTrash();
-            Concrete\Core\Page\Page::moveToTrash();
+            return Concrete\Core\Page\Page::moveToTrash();
         }
 
         public static function rescanChildrenDisplayOrder()
         {
             // Concrete\Core\Page\Page::rescanChildrenDisplayOrder();
-            Concrete\Core\Page\Page::rescanChildrenDisplayOrder();
+            return Concrete\Core\Page\Page::rescanChildrenDisplayOrder();
         }
 
         public static function getNextSubPageDisplayOrder()
         {
             // Concrete\Core\Page\Page::getNextSubPageDisplayOrder();
-            Concrete\Core\Page\Page::getNextSubPageDisplayOrder();
+            return Concrete\Core\Page\Page::getNextSubPageDisplayOrder();
         }
 
         public static function rescanCollectionPath($retainOldPagePath = null)
         {
             // Concrete\Core\Page\Page::rescanCollectionPath();
-            Concrete\Core\Page\Page::rescanCollectionPath($retainOldPagePath);
+            return Concrete\Core\Page\Page::rescanCollectionPath($retainOldPagePath);
         }
 
         public static function updateDisplayOrder($do, $cID = null)
         {
             // Concrete\Core\Page\Page::updateDisplayOrder();
-            Concrete\Core\Page\Page::updateDisplayOrder($do, $cID);
+            return Concrete\Core\Page\Page::updateDisplayOrder($do, $cID);
         }
 
         public static function movePageDisplayOrderToTop()
         {
             // Concrete\Core\Page\Page::movePageDisplayOrderToTop();
-            Concrete\Core\Page\Page::movePageDisplayOrderToTop();
+            return Concrete\Core\Page\Page::movePageDisplayOrderToTop();
         }
 
         public static function movePageDisplayOrderToBottom()
         {
             // Concrete\Core\Page\Page::movePageDisplayOrderToBottom();
-            Concrete\Core\Page\Page::movePageDisplayOrderToBottom();
+            return Concrete\Core\Page\Page::movePageDisplayOrderToBottom();
         }
 
         public static function movePageDisplayOrderToSibling(Concrete\Core\Page\Page $c, $position = "before")
         {
             // Concrete\Core\Page\Page::movePageDisplayOrderToSibling();
-            Concrete\Core\Page\Page::movePageDisplayOrderToSibling($c, $position);
+            return Concrete\Core\Page\Page::movePageDisplayOrderToSibling($c, $position);
         }
 
         public static function rescanCollectionPathIndividual($cID, $cPath, $retainOldPagePath = null)
         {
             // Concrete\Core\Page\Page::rescanCollectionPathIndividual();
-            Concrete\Core\Page\Page::rescanCollectionPathIndividual($cID, $cPath, $retainOldPagePath);
+            return Concrete\Core\Page\Page::rescanCollectionPathIndividual($cID, $cPath, $retainOldPagePath);
         }
 
         public static function rescanSystemPageStatus()
         {
             // Concrete\Core\Page\Page::rescanSystemPageStatus();
-            Concrete\Core\Page\Page::rescanSystemPageStatus();
+            return Concrete\Core\Page\Page::rescanSystemPageStatus();
         }
 
         public static function isInTrash()
         {
             // Concrete\Core\Page\Page::isInTrash();
-            Concrete\Core\Page\Page::isInTrash();
+            return Concrete\Core\Page\Page::isInTrash();
         }
 
         public static function moveToRoot()
         {
             // Concrete\Core\Page\Page::moveToRoot();
-            Concrete\Core\Page\Page::moveToRoot();
+            return Concrete\Core\Page\Page::moveToRoot();
         }
 
         public static function rescanSystemPages()
         {
             // Concrete\Core\Page\Page::rescanSystemPages();
-            Concrete\Core\Page\Page::rescanSystemPages();
+            return Concrete\Core\Page\Page::rescanSystemPages();
         }
 
         public static function deactivate()
         {
             // Concrete\Core\Page\Page::deactivate();
-            Concrete\Core\Page\Page::deactivate();
+            return Concrete\Core\Page\Page::deactivate();
         }
 
         public static function activate()
         {
             // Concrete\Core\Page\Page::activate();
-            Concrete\Core\Page\Page::activate();
+            return Concrete\Core\Page\Page::activate();
         }
 
         public static function isActive()
         {
             // Concrete\Core\Page\Page::isActive();
-            Concrete\Core\Page\Page::isActive();
+            return Concrete\Core\Page\Page::isActive();
         }
 
         public static function setPageIndexScore($score)
         {
             // Concrete\Core\Page\Page::setPageIndexScore();
-            Concrete\Core\Page\Page::setPageIndexScore($score);
+            return Concrete\Core\Page\Page::setPageIndexScore($score);
         }
 
         public static function getPageIndexScore()
         {
             // Concrete\Core\Page\Page::getPageIndexScore();
-            Concrete\Core\Page\Page::getPageIndexScore();
+            return Concrete\Core\Page\Page::getPageIndexScore();
         }
 
         public static function getPageIndexContent()
         {
             // Concrete\Core\Page\Page::getPageIndexContent();
-            Concrete\Core\Page\Page::getPageIndexContent();
+            return Concrete\Core\Page\Page::getPageIndexContent();
         }
 
         public static function rescanCollectionPathChildren($cID, $cPath)
         {
             // Concrete\Core\Page\Page::rescanCollectionPathChildren();
-            Concrete\Core\Page\Page::rescanCollectionPathChildren($cID, $cPath);
+            return Concrete\Core\Page\Page::rescanCollectionPathChildren($cID, $cPath);
         }
 
         public static function getCollectionAction()
         {
             // Concrete\Core\Page\Page::getCollectionAction();
-            Concrete\Core\Page\Page::getCollectionAction();
+            return Concrete\Core\Page\Page::getCollectionAction();
         }
 
         public static function _associateMasterCollectionBlocks($newCID, $masterCID)
         {
             // Concrete\Core\Page\Page::_associateMasterCollectionBlocks();
-            Concrete\Core\Page\Page::_associateMasterCollectionBlocks($newCID, $masterCID);
+            return Concrete\Core\Page\Page::_associateMasterCollectionBlocks($newCID, $masterCID);
         }
 
         public static function _associateMasterCollectionAttributes($newCID, $masterCID)
         {
             // Concrete\Core\Page\Page::_associateMasterCollectionAttributes();
-            Concrete\Core\Page\Page::_associateMasterCollectionAttributes($newCID, $masterCID);
+            return Concrete\Core\Page\Page::_associateMasterCollectionAttributes($newCID, $masterCID);
         }
 
         /**
@@ -6139,7 +6139,7 @@ namespace {
         public static function addHomePage()
         {
             // Concrete\Core\Page\Page::addHomePage();
-            Concrete\Core\Page\Page::addHomePage();
+            return Concrete\Core\Page\Page::addHomePage();
         }
 
         /**
@@ -6156,49 +6156,49 @@ namespace {
         public static function add($pt, $data, $template = null)
         {
             // Concrete\Core\Page\Page::add();
-            Concrete\Core\Page\Page::add($pt, $data, $template);
+            return Concrete\Core\Page\Page::add($pt, $data, $template);
         }
 
         public static function getCollectionFullPageCaching()
         {
             // Concrete\Core\Page\Page::getCollectionFullPageCaching();
-            Concrete\Core\Page\Page::getCollectionFullPageCaching();
+            return Concrete\Core\Page\Page::getCollectionFullPageCaching();
         }
 
         public static function getCollectionFullPageCachingLifetime()
         {
             // Concrete\Core\Page\Page::getCollectionFullPageCachingLifetime();
-            Concrete\Core\Page\Page::getCollectionFullPageCachingLifetime();
+            return Concrete\Core\Page\Page::getCollectionFullPageCachingLifetime();
         }
 
         public static function getCollectionFullPageCachingLifetimeCustomValue()
         {
             // Concrete\Core\Page\Page::getCollectionFullPageCachingLifetimeCustomValue();
-            Concrete\Core\Page\Page::getCollectionFullPageCachingLifetimeCustomValue();
+            return Concrete\Core\Page\Page::getCollectionFullPageCachingLifetimeCustomValue();
         }
 
         public static function getCollectionFullPageCachingLifetimeValue()
         {
             // Concrete\Core\Page\Page::getCollectionFullPageCachingLifetimeValue();
-            Concrete\Core\Page\Page::getCollectionFullPageCachingLifetimeValue();
+            return Concrete\Core\Page\Page::getCollectionFullPageCachingLifetimeValue();
         }
 
         public static function addStatic($data)
         {
             // Concrete\Core\Page\Page::addStatic();
-            Concrete\Core\Page\Page::addStatic($data);
+            return Concrete\Core\Page\Page::addStatic($data);
         }
 
         public static function getPagePaths()
         {
             // Concrete\Core\Page\Page::getPagePaths();
-            Concrete\Core\Page\Page::getPagePaths();
+            return Concrete\Core\Page\Page::getPagePaths();
         }
 
         public static function getCurrentPage()
         {
             // Concrete\Core\Page\Page::getCurrentPage();
-            Concrete\Core\Page\Page::getCurrentPage();
+            return Concrete\Core\Page\Page::getCurrentPage();
         }
 
         /**
@@ -6207,19 +6207,19 @@ namespace {
         public static function getTotalPageViews($date = null)
         {
             // Concrete\Core\Page\Page::getTotalPageViews();
-            Concrete\Core\Page\Page::getTotalPageViews($date);
+            return Concrete\Core\Page\Page::getTotalPageViews($date);
         }
 
         public static function getPageDraftTargetParentPageID()
         {
             // Concrete\Core\Page\Page::getPageDraftTargetParentPageID();
-            Concrete\Core\Page\Page::getPageDraftTargetParentPageID();
+            return Concrete\Core\Page\Page::getPageDraftTargetParentPageID();
         }
 
         public static function setPageDraftTargetParentPageID($cParentID)
         {
             // Concrete\Core\Page\Page::setPageDraftTargetParentPageID();
-            Concrete\Core\Page\Page::setPageDraftTargetParentPageID($cParentID);
+            return Concrete\Core\Page\Page::setPageDraftTargetParentPageID($cParentID);
         }
 
         /**
@@ -6228,37 +6228,37 @@ namespace {
         public static function getPageStatistics($limit = 20)
         {
             // Concrete\Core\Page\Page::getPageStatistics();
-            Concrete\Core\Page\Page::getPageStatistics($limit);
+            return Concrete\Core\Page\Page::getPageStatistics($limit);
         }
 
         public static function loadVersionObject($cvID = "ACTIVE")
         {
             // Concrete\Core\Page\Collection\Collection::loadVersionObject();
-            Concrete\Core\Page\Collection\Collection::loadVersionObject($cvID);
+            return Concrete\Core\Page\Collection\Collection::loadVersionObject($cvID);
         }
 
         public static function getVersionToModify()
         {
             // Concrete\Core\Page\Collection\Collection::getVersionToModify();
-            Concrete\Core\Page\Collection\Collection::getVersionToModify();
+            return Concrete\Core\Page\Collection\Collection::getVersionToModify();
         }
 
         public static function getNextVersionComments()
         {
             // Concrete\Core\Page\Collection\Collection::getNextVersionComments();
-            Concrete\Core\Page\Collection\Collection::getNextVersionComments();
+            return Concrete\Core\Page\Collection\Collection::getNextVersionComments();
         }
 
         public static function cloneVersion($versionComments)
         {
             // Concrete\Core\Page\Collection\Collection::cloneVersion();
-            Concrete\Core\Page\Collection\Collection::cloneVersion($versionComments);
+            return Concrete\Core\Page\Collection\Collection::cloneVersion($versionComments);
         }
 
         public static function getFeatureAssignments()
         {
             // Concrete\Core\Page\Collection\Collection::getFeatureAssignments();
-            Concrete\Core\Page\Collection\Collection::getFeatureAssignments();
+            return Concrete\Core\Page\Collection\Collection::getFeatureAssignments();
         }
 
         /**
@@ -6293,109 +6293,109 @@ namespace {
         public static function getAttribute($akHandle, $displayMode = null)
         {
             // Concrete\Core\Page\Collection\Collection::getAttribute();
-            Concrete\Core\Page\Collection\Collection::getAttribute($akHandle, $displayMode);
+            return Concrete\Core\Page\Collection\Collection::getAttribute($akHandle, $displayMode);
         }
 
         public static function getCollectionAttributeValue($ak)
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionAttributeValue();
-            Concrete\Core\Page\Collection\Collection::getCollectionAttributeValue($ak);
+            return Concrete\Core\Page\Collection\Collection::getCollectionAttributeValue($ak);
         }
 
         public static function clearCollectionAttributes($retainAKIDs = null)
         {
             // Concrete\Core\Page\Collection\Collection::clearCollectionAttributes();
-            Concrete\Core\Page\Collection\Collection::clearCollectionAttributes($retainAKIDs);
+            return Concrete\Core\Page\Collection\Collection::clearCollectionAttributes($retainAKIDs);
         }
 
         public static function reindexPendingPages()
         {
             // Concrete\Core\Page\Collection\Collection::reindexPendingPages();
-            Concrete\Core\Page\Collection\Collection::reindexPendingPages();
+            return Concrete\Core\Page\Collection\Collection::reindexPendingPages();
         }
 
         public static function reindex($index = null, $actuallyDoReindex = "1")
         {
             // Concrete\Core\Page\Collection\Collection::reindex();
-            Concrete\Core\Page\Collection\Collection::reindex($index, $actuallyDoReindex);
+            return Concrete\Core\Page\Collection\Collection::reindex($index, $actuallyDoReindex);
         }
 
         public static function getAttributeValueObject($ak, $createIfNotFound = null)
         {
             // Concrete\Core\Page\Collection\Collection::getAttributeValueObject();
-            Concrete\Core\Page\Collection\Collection::getAttributeValueObject($ak, $createIfNotFound);
+            return Concrete\Core\Page\Collection\Collection::getAttributeValueObject($ak, $createIfNotFound);
         }
 
         public static function setAttribute($ak, $value)
         {
             // Concrete\Core\Page\Collection\Collection::setAttribute();
-            Concrete\Core\Page\Collection\Collection::setAttribute($ak, $value);
+            return Concrete\Core\Page\Collection\Collection::setAttribute($ak, $value);
         }
 
         public static function clearAttribute($ak)
         {
             // Concrete\Core\Page\Collection\Collection::clearAttribute();
-            Concrete\Core\Page\Collection\Collection::clearAttribute($ak);
+            return Concrete\Core\Page\Collection\Collection::clearAttribute($ak);
         }
 
         public static function getSetCollectionAttributes()
         {
             // Concrete\Core\Page\Collection\Collection::getSetCollectionAttributes();
-            Concrete\Core\Page\Collection\Collection::getSetCollectionAttributes();
+            return Concrete\Core\Page\Collection\Collection::getSetCollectionAttributes();
         }
 
         public static function addAttribute($ak, $value)
         {
             // Concrete\Core\Page\Collection\Collection::addAttribute();
-            Concrete\Core\Page\Collection\Collection::addAttribute($ak, $value);
+            return Concrete\Core\Page\Collection\Collection::addAttribute($ak, $value);
         }
 
         public static function getArea($arHandle)
         {
             // Concrete\Core\Page\Collection\Collection::getArea();
-            Concrete\Core\Page\Collection\Collection::getArea($arHandle);
+            return Concrete\Core\Page\Collection\Collection::getArea($arHandle);
         }
 
         public static function hasAliasedContent()
         {
             // Concrete\Core\Page\Collection\Collection::hasAliasedContent();
-            Concrete\Core\Page\Collection\Collection::hasAliasedContent();
+            return Concrete\Core\Page\Collection\Collection::hasAliasedContent();
         }
 
         public static function getCollectionID()
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionID();
-            Concrete\Core\Page\Collection\Collection::getCollectionID();
+            return Concrete\Core\Page\Collection\Collection::getCollectionID();
         }
 
         public static function getCollectionDateLastModified($mask = null, $type = "system")
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionDateLastModified();
-            Concrete\Core\Page\Collection\Collection::getCollectionDateLastModified($mask, $type);
+            return Concrete\Core\Page\Collection\Collection::getCollectionDateLastModified($mask, $type);
         }
 
         public static function getVersionObject()
         {
             // Concrete\Core\Page\Collection\Collection::getVersionObject();
-            Concrete\Core\Page\Collection\Collection::getVersionObject();
+            return Concrete\Core\Page\Collection\Collection::getVersionObject();
         }
 
         public static function getCollectionDateAdded($mask = null, $type = "system")
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionDateAdded();
-            Concrete\Core\Page\Collection\Collection::getCollectionDateAdded($mask, $type);
+            return Concrete\Core\Page\Collection\Collection::getCollectionDateAdded($mask, $type);
         }
 
         public static function getVersionID()
         {
             // Concrete\Core\Page\Collection\Collection::getVersionID();
-            Concrete\Core\Page\Collection\Collection::getVersionID();
+            return Concrete\Core\Page\Collection\Collection::getVersionID();
         }
 
         public static function getCollectionAreaDisplayOrder($arHandle, $ignoreVersions = null)
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionAreaDisplayOrder();
-            Concrete\Core\Page\Collection\Collection::getCollectionAreaDisplayOrder($arHandle, $ignoreVersions);
+            return Concrete\Core\Page\Collection\Collection::getCollectionAreaDisplayOrder($arHandle, $ignoreVersions);
         }
 
         /**
@@ -6405,55 +6405,55 @@ namespace {
         public static function outputCustomStyleHeaderItems($return = null)
         {
             // Concrete\Core\Page\Collection\Collection::outputCustomStyleHeaderItems();
-            Concrete\Core\Page\Collection\Collection::outputCustomStyleHeaderItems($return);
+            return Concrete\Core\Page\Collection\Collection::outputCustomStyleHeaderItems($return);
         }
 
         public static function getAreaCustomStyleRule($area)
         {
             // Concrete\Core\Page\Collection\Collection::getAreaCustomStyleRule();
-            Concrete\Core\Page\Collection\Collection::getAreaCustomStyleRule($area);
+            return Concrete\Core\Page\Collection\Collection::getAreaCustomStyleRule($area);
         }
 
         public static function resetAreaCustomStyle($area)
         {
             // Concrete\Core\Page\Collection\Collection::resetAreaCustomStyle();
-            Concrete\Core\Page\Collection\Collection::resetAreaCustomStyle($area);
+            return Concrete\Core\Page\Collection\Collection::resetAreaCustomStyle($area);
         }
 
         public static function setAreaCustomStyle($area, $csr)
         {
             // Concrete\Core\Page\Collection\Collection::setAreaCustomStyle();
-            Concrete\Core\Page\Collection\Collection::setAreaCustomStyle($area, $csr);
+            return Concrete\Core\Page\Collection\Collection::setAreaCustomStyle($area, $csr);
         }
 
         public static function relateVersionEdits($oc)
         {
             // Concrete\Core\Page\Collection\Collection::relateVersionEdits();
-            Concrete\Core\Page\Collection\Collection::relateVersionEdits($oc);
+            return Concrete\Core\Page\Collection\Collection::relateVersionEdits($oc);
         }
 
         public static function rescanDisplayOrder($areaName)
         {
             // Concrete\Core\Page\Collection\Collection::rescanDisplayOrder();
-            Concrete\Core\Page\Collection\Collection::rescanDisplayOrder($areaName);
+            return Concrete\Core\Page\Collection\Collection::rescanDisplayOrder($areaName);
         }
 
         public static function getByHandle($handle)
         {
             // Concrete\Core\Page\Collection\Collection::getByHandle();
-            Concrete\Core\Page\Collection\Collection::getByHandle($handle);
+            return Concrete\Core\Page\Collection\Collection::getByHandle($handle);
         }
 
         public static function refreshCache()
         {
             // Concrete\Core\Page\Collection\Collection::refreshCache();
-            Concrete\Core\Page\Collection\Collection::refreshCache();
+            return Concrete\Core\Page\Collection\Collection::refreshCache();
         }
 
         public static function getGlobalBlocks()
         {
             // Concrete\Core\Page\Collection\Collection::getGlobalBlocks();
-            Concrete\Core\Page\Collection\Collection::getGlobalBlocks();
+            return Concrete\Core\Page\Collection\Collection::getGlobalBlocks();
         }
 
         /**
@@ -6464,7 +6464,7 @@ namespace {
         public static function getBlockIDs($arHandle = null)
         {
             // Concrete\Core\Page\Collection\Collection::getBlockIDs();
-            Concrete\Core\Page\Collection\Collection::getBlockIDs($arHandle);
+            return Concrete\Core\Page\Collection\Collection::getBlockIDs($arHandle);
         }
 
         /**
@@ -6475,73 +6475,73 @@ namespace {
         public static function getBlocks($arHandle = null)
         {
             // Concrete\Core\Page\Collection\Collection::getBlocks();
-            Concrete\Core\Page\Collection\Collection::getBlocks($arHandle);
+            return Concrete\Core\Page\Collection\Collection::getBlocks($arHandle);
         }
 
         public static function addBlock($bt, $a, $data)
         {
             // Concrete\Core\Page\Collection\Collection::addBlock();
-            Concrete\Core\Page\Collection\Collection::addBlock($bt, $a, $data);
+            return Concrete\Core\Page\Collection\Collection::addBlock($bt, $a, $data);
         }
 
         public static function addFeature(Concrete\Core\Feature\Feature $fe)
         {
             // Concrete\Core\Page\Collection\Collection::addFeature();
-            Concrete\Core\Page\Collection\Collection::addFeature($fe);
+            return Concrete\Core\Page\Collection\Collection::addFeature($fe);
         }
 
         public static function addCollection($data)
         {
             // Concrete\Core\Page\Collection\Collection::addCollection();
-            Concrete\Core\Page\Collection\Collection::addCollection($data);
+            return Concrete\Core\Page\Collection\Collection::addCollection($data);
         }
 
         public static function markModified()
         {
             // Concrete\Core\Page\Collection\Collection::markModified();
-            Concrete\Core\Page\Collection\Collection::markModified();
+            return Concrete\Core\Page\Collection\Collection::markModified();
         }
 
         public static function duplicateCollection()
         {
             // Concrete\Core\Page\Collection\Collection::duplicateCollection();
-            Concrete\Core\Page\Collection\Collection::duplicateCollection();
+            return Concrete\Core\Page\Collection\Collection::duplicateCollection();
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -6552,85 +6552,85 @@ namespace {
         public static function setPage(Concrete\Core\Page\Page $page)
         {
             // Concrete\Core\Page\EditResponse::setPage();
-            Concrete\Core\Page\EditResponse::setPage($page);
+            return Concrete\Core\Page\EditResponse::setPage($page);
         }
 
         public static function setPages($pages)
         {
             // Concrete\Core\Page\EditResponse::setPages();
-            Concrete\Core\Page\EditResponse::setPages($pages);
+            return Concrete\Core\Page\EditResponse::setPages($pages);
         }
 
         public static function getJSONObject()
         {
             // Concrete\Core\Page\EditResponse::getJSONObject();
-            Concrete\Core\Page\EditResponse::getJSONObject();
+            return Concrete\Core\Page\EditResponse::getJSONObject();
         }
 
         public static function setRedirectURL($url)
         {
             // Concrete\Core\Application\EditResponse::setRedirectURL();
-            Concrete\Core\Application\EditResponse::setRedirectURL($url);
+            return Concrete\Core\Application\EditResponse::setRedirectURL($url);
         }
 
         public static function getRedirectURL()
         {
             // Concrete\Core\Application\EditResponse::getRedirectURL();
-            Concrete\Core\Application\EditResponse::getRedirectURL();
+            return Concrete\Core\Application\EditResponse::getRedirectURL();
         }
 
         public static function setError($error)
         {
             // Concrete\Core\Application\EditResponse::setError();
-            Concrete\Core\Application\EditResponse::setError($error);
+            return Concrete\Core\Application\EditResponse::setError($error);
         }
 
         public static function setMessage($message)
         {
             // Concrete\Core\Application\EditResponse::setMessage();
-            Concrete\Core\Application\EditResponse::setMessage($message);
+            return Concrete\Core\Application\EditResponse::setMessage($message);
         }
 
         public static function getMessage()
         {
             // Concrete\Core\Application\EditResponse::getMessage();
-            Concrete\Core\Application\EditResponse::getMessage();
+            return Concrete\Core\Application\EditResponse::getMessage();
         }
 
         public static function setTitle($title)
         {
             // Concrete\Core\Application\EditResponse::setTitle();
-            Concrete\Core\Application\EditResponse::setTitle($title);
+            return Concrete\Core\Application\EditResponse::setTitle($title);
         }
 
         public static function getTitle()
         {
             // Concrete\Core\Application\EditResponse::getTitle();
-            Concrete\Core\Application\EditResponse::getTitle();
+            return Concrete\Core\Application\EditResponse::getTitle();
         }
 
         public static function getJSON()
         {
             // Concrete\Core\Application\EditResponse::getJSON();
-            Concrete\Core\Application\EditResponse::getJSON();
+            return Concrete\Core\Application\EditResponse::getJSON();
         }
 
         public static function setAdditionalDataAttribute($key, $value)
         {
             // Concrete\Core\Application\EditResponse::setAdditionalDataAttribute();
-            Concrete\Core\Application\EditResponse::setAdditionalDataAttribute($key, $value);
+            return Concrete\Core\Application\EditResponse::setAdditionalDataAttribute($key, $value);
         }
 
         public static function getBaseJSONObject()
         {
             // Concrete\Core\Application\EditResponse::getBaseJSONObject();
-            Concrete\Core\Application\EditResponse::getBaseJSONObject();
+            return Concrete\Core\Application\EditResponse::getBaseJSONObject();
         }
 
         public static function outputJSON()
         {
             // Concrete\Core\Application\EditResponse::outputJSON();
-            Concrete\Core\Application\EditResponse::outputJSON();
+            return Concrete\Core\Application\EditResponse::outputJSON();
         }
 
     }
@@ -6641,43 +6641,43 @@ namespace {
         public static function setViewObject(Concrete\Core\View\View $view)
         {
             // Concrete\Core\Controller\Controller::setViewObject();
-            Concrete\Core\Controller\Controller::setViewObject($view);
+            return Concrete\Core\Controller\Controller::setViewObject($view);
         }
 
         public static function setTheme($mixed)
         {
             // Concrete\Core\Controller\Controller::setTheme();
-            Concrete\Core\Controller\Controller::setTheme($mixed);
+            return Concrete\Core\Controller\Controller::setTheme($mixed);
         }
 
         public static function getTheme()
         {
             // Concrete\Core\Controller\Controller::getTheme();
-            Concrete\Core\Controller\Controller::getTheme();
+            return Concrete\Core\Controller\Controller::getTheme();
         }
 
         public static function getControllerActionPath()
         {
             // Concrete\Core\Controller\Controller::getControllerActionPath();
-            Concrete\Core\Controller\Controller::getControllerActionPath();
+            return Concrete\Core\Controller\Controller::getControllerActionPath();
         }
 
         public static function getViewObject()
         {
             // Concrete\Core\Controller\Controller::getViewObject();
-            Concrete\Core\Controller\Controller::getViewObject();
+            return Concrete\Core\Controller\Controller::getViewObject();
         }
 
         public static function action()
         {
             // Concrete\Core\Controller\Controller::action();
-            Concrete\Core\Controller\Controller::action();
+            return Concrete\Core\Controller\Controller::action();
         }
 
         public static function requireAsset()
         {
             // Concrete\Core\Controller\AbstractController::requireAsset();
-            Concrete\Core\Controller\AbstractController::requireAsset();
+            return Concrete\Core\Controller\AbstractController::requireAsset();
         }
 
         /**
@@ -6688,7 +6688,7 @@ namespace {
         public static function addHeaderItem($item)
         {
             // Concrete\Core\Controller\AbstractController::addHeaderItem();
-            Concrete\Core\Controller\AbstractController::addHeaderItem($item);
+            return Concrete\Core\Controller\AbstractController::addHeaderItem($item);
         }
 
         /**
@@ -6699,67 +6699,67 @@ namespace {
         public static function addFooterItem($item)
         {
             // Concrete\Core\Controller\AbstractController::addFooterItem();
-            Concrete\Core\Controller\AbstractController::addFooterItem($item);
+            return Concrete\Core\Controller\AbstractController::addFooterItem($item);
         }
 
         public static function set($key, $val)
         {
             // Concrete\Core\Controller\AbstractController::set();
-            Concrete\Core\Controller\AbstractController::set($key, $val);
+            return Concrete\Core\Controller\AbstractController::set($key, $val);
         }
 
         public static function getSets()
         {
             // Concrete\Core\Controller\AbstractController::getSets();
-            Concrete\Core\Controller\AbstractController::getSets();
+            return Concrete\Core\Controller\AbstractController::getSets();
         }
 
         public static function getHelperObjects()
         {
             // Concrete\Core\Controller\AbstractController::getHelperObjects();
-            Concrete\Core\Controller\AbstractController::getHelperObjects();
+            return Concrete\Core\Controller\AbstractController::getHelperObjects();
         }
 
         public static function get($key = null, $defaultValue = null)
         {
             // Concrete\Core\Controller\AbstractController::get();
-            Concrete\Core\Controller\AbstractController::get($key, $defaultValue);
+            return Concrete\Core\Controller\AbstractController::get($key, $defaultValue);
         }
 
         public static function getTask()
         {
             // Concrete\Core\Controller\AbstractController::getTask();
-            Concrete\Core\Controller\AbstractController::getTask();
+            return Concrete\Core\Controller\AbstractController::getTask();
         }
 
         public static function getAction()
         {
             // Concrete\Core\Controller\AbstractController::getAction();
-            Concrete\Core\Controller\AbstractController::getAction();
+            return Concrete\Core\Controller\AbstractController::getAction();
         }
 
         public static function getParameters()
         {
             // Concrete\Core\Controller\AbstractController::getParameters();
-            Concrete\Core\Controller\AbstractController::getParameters();
+            return Concrete\Core\Controller\AbstractController::getParameters();
         }
 
         public static function runAction($action, $parameters = null)
         {
             // Concrete\Core\Controller\AbstractController::runAction();
-            Concrete\Core\Controller\AbstractController::runAction($action, $parameters);
+            return Concrete\Core\Controller\AbstractController::runAction($action, $parameters);
         }
 
         public static function on_start()
         {
             // Concrete\Core\Controller\AbstractController::on_start();
-            Concrete\Core\Controller\AbstractController::on_start();
+            return Concrete\Core\Controller\AbstractController::on_start();
         }
 
         public static function on_before_render()
         {
             // Concrete\Core\Controller\AbstractController::on_before_render();
-            Concrete\Core\Controller\AbstractController::on_before_render();
+            return Concrete\Core\Controller\AbstractController::on_before_render();
         }
 
         /**
@@ -6768,31 +6768,31 @@ namespace {
         public static function isPost()
         {
             // Concrete\Core\Controller\AbstractController::isPost();
-            Concrete\Core\Controller\AbstractController::isPost();
+            return Concrete\Core\Controller\AbstractController::isPost();
         }
 
         public static function post($key = null)
         {
             // Concrete\Core\Controller\AbstractController::post();
-            Concrete\Core\Controller\AbstractController::post($key);
+            return Concrete\Core\Controller\AbstractController::post($key);
         }
 
         public static function redirect()
         {
             // Concrete\Core\Controller\AbstractController::redirect();
-            Concrete\Core\Controller\AbstractController::redirect();
+            return Concrete\Core\Controller\AbstractController::redirect();
         }
 
         public static function runTask($action, $parameters)
         {
             // Concrete\Core\Controller\AbstractController::runTask();
-            Concrete\Core\Controller\AbstractController::runTask($action, $parameters);
+            return Concrete\Core\Controller\AbstractController::runTask($action, $parameters);
         }
 
         public static function request($key = null)
         {
             // Concrete\Core\Controller\AbstractController::request();
-            Concrete\Core\Controller\AbstractController::request($key);
+            return Concrete\Core\Controller\AbstractController::request($key);
         }
 
     }
@@ -6803,85 +6803,85 @@ namespace {
         public static function supportsPageCache()
         {
             // Concrete\Core\Page\Controller\PageController::supportsPageCache();
-            Concrete\Core\Page\Controller\PageController::supportsPageCache();
+            return Concrete\Core\Page\Controller\PageController::supportsPageCache();
         }
 
         public static function getPageObject()
         {
             // Concrete\Core\Page\Controller\PageController::getPageObject();
-            Concrete\Core\Page\Controller\PageController::getPageObject();
+            return Concrete\Core\Page\Controller\PageController::getPageObject();
         }
 
         public static function getTheme()
         {
             // Concrete\Core\Page\Controller\PageController::getTheme();
-            Concrete\Core\Page\Controller\PageController::getTheme();
+            return Concrete\Core\Page\Controller\PageController::getTheme();
         }
 
         public static function getRequestAction()
         {
             // Concrete\Core\Page\Controller\PageController::getRequestAction();
-            Concrete\Core\Page\Controller\PageController::getRequestAction();
+            return Concrete\Core\Page\Controller\PageController::getRequestAction();
         }
 
         public static function getRequestActionParameters()
         {
             // Concrete\Core\Page\Controller\PageController::getRequestActionParameters();
-            Concrete\Core\Page\Controller\PageController::getRequestActionParameters();
+            return Concrete\Core\Page\Controller\PageController::getRequestActionParameters();
         }
 
         public static function getControllerActionPath()
         {
             // Concrete\Core\Page\Controller\PageController::getControllerActionPath();
-            Concrete\Core\Page\Controller\PageController::getControllerActionPath();
+            return Concrete\Core\Page\Controller\PageController::getControllerActionPath();
         }
 
         public static function passthru($arHandle = null, $bID = null, $action = null)
         {
             // Concrete\Core\Page\Controller\PageController::passthru();
-            Concrete\Core\Page\Controller\PageController::passthru($arHandle, $bID, $action);
+            return Concrete\Core\Page\Controller\PageController::passthru($arHandle, $bID, $action);
         }
 
         public static function setupRequestActionAndParameters(Concrete\Core\Http\Request $request)
         {
             // Concrete\Core\Page\Controller\PageController::setupRequestActionAndParameters();
-            Concrete\Core\Page\Controller\PageController::setupRequestActionAndParameters($request);
+            return Concrete\Core\Page\Controller\PageController::setupRequestActionAndParameters($request);
         }
 
         public static function validateRequest()
         {
             // Concrete\Core\Page\Controller\PageController::validateRequest();
-            Concrete\Core\Page\Controller\PageController::validateRequest();
+            return Concrete\Core\Page\Controller\PageController::validateRequest();
         }
 
         public static function setViewObject(Concrete\Core\View\View $view)
         {
             // Concrete\Core\Controller\Controller::setViewObject();
-            Concrete\Core\Controller\Controller::setViewObject($view);
+            return Concrete\Core\Controller\Controller::setViewObject($view);
         }
 
         public static function setTheme($mixed)
         {
             // Concrete\Core\Controller\Controller::setTheme();
-            Concrete\Core\Controller\Controller::setTheme($mixed);
+            return Concrete\Core\Controller\Controller::setTheme($mixed);
         }
 
         public static function getViewObject()
         {
             // Concrete\Core\Controller\Controller::getViewObject();
-            Concrete\Core\Controller\Controller::getViewObject();
+            return Concrete\Core\Controller\Controller::getViewObject();
         }
 
         public static function action()
         {
             // Concrete\Core\Controller\Controller::action();
-            Concrete\Core\Controller\Controller::action();
+            return Concrete\Core\Controller\Controller::action();
         }
 
         public static function requireAsset()
         {
             // Concrete\Core\Controller\AbstractController::requireAsset();
-            Concrete\Core\Controller\AbstractController::requireAsset();
+            return Concrete\Core\Controller\AbstractController::requireAsset();
         }
 
         /**
@@ -6892,7 +6892,7 @@ namespace {
         public static function addHeaderItem($item)
         {
             // Concrete\Core\Controller\AbstractController::addHeaderItem();
-            Concrete\Core\Controller\AbstractController::addHeaderItem($item);
+            return Concrete\Core\Controller\AbstractController::addHeaderItem($item);
         }
 
         /**
@@ -6903,67 +6903,67 @@ namespace {
         public static function addFooterItem($item)
         {
             // Concrete\Core\Controller\AbstractController::addFooterItem();
-            Concrete\Core\Controller\AbstractController::addFooterItem($item);
+            return Concrete\Core\Controller\AbstractController::addFooterItem($item);
         }
 
         public static function set($key, $val)
         {
             // Concrete\Core\Controller\AbstractController::set();
-            Concrete\Core\Controller\AbstractController::set($key, $val);
+            return Concrete\Core\Controller\AbstractController::set($key, $val);
         }
 
         public static function getSets()
         {
             // Concrete\Core\Controller\AbstractController::getSets();
-            Concrete\Core\Controller\AbstractController::getSets();
+            return Concrete\Core\Controller\AbstractController::getSets();
         }
 
         public static function getHelperObjects()
         {
             // Concrete\Core\Controller\AbstractController::getHelperObjects();
-            Concrete\Core\Controller\AbstractController::getHelperObjects();
+            return Concrete\Core\Controller\AbstractController::getHelperObjects();
         }
 
         public static function get($key = null, $defaultValue = null)
         {
             // Concrete\Core\Controller\AbstractController::get();
-            Concrete\Core\Controller\AbstractController::get($key, $defaultValue);
+            return Concrete\Core\Controller\AbstractController::get($key, $defaultValue);
         }
 
         public static function getTask()
         {
             // Concrete\Core\Controller\AbstractController::getTask();
-            Concrete\Core\Controller\AbstractController::getTask();
+            return Concrete\Core\Controller\AbstractController::getTask();
         }
 
         public static function getAction()
         {
             // Concrete\Core\Controller\AbstractController::getAction();
-            Concrete\Core\Controller\AbstractController::getAction();
+            return Concrete\Core\Controller\AbstractController::getAction();
         }
 
         public static function getParameters()
         {
             // Concrete\Core\Controller\AbstractController::getParameters();
-            Concrete\Core\Controller\AbstractController::getParameters();
+            return Concrete\Core\Controller\AbstractController::getParameters();
         }
 
         public static function runAction($action, $parameters = null)
         {
             // Concrete\Core\Controller\AbstractController::runAction();
-            Concrete\Core\Controller\AbstractController::runAction($action, $parameters);
+            return Concrete\Core\Controller\AbstractController::runAction($action, $parameters);
         }
 
         public static function on_start()
         {
             // Concrete\Core\Controller\AbstractController::on_start();
-            Concrete\Core\Controller\AbstractController::on_start();
+            return Concrete\Core\Controller\AbstractController::on_start();
         }
 
         public static function on_before_render()
         {
             // Concrete\Core\Controller\AbstractController::on_before_render();
-            Concrete\Core\Controller\AbstractController::on_before_render();
+            return Concrete\Core\Controller\AbstractController::on_before_render();
         }
 
         /**
@@ -6972,31 +6972,31 @@ namespace {
         public static function isPost()
         {
             // Concrete\Core\Controller\AbstractController::isPost();
-            Concrete\Core\Controller\AbstractController::isPost();
+            return Concrete\Core\Controller\AbstractController::isPost();
         }
 
         public static function post($key = null)
         {
             // Concrete\Core\Controller\AbstractController::post();
-            Concrete\Core\Controller\AbstractController::post($key);
+            return Concrete\Core\Controller\AbstractController::post($key);
         }
 
         public static function redirect()
         {
             // Concrete\Core\Controller\AbstractController::redirect();
-            Concrete\Core\Controller\AbstractController::redirect();
+            return Concrete\Core\Controller\AbstractController::redirect();
         }
 
         public static function runTask($action, $parameters)
         {
             // Concrete\Core\Controller\AbstractController::runTask();
-            Concrete\Core\Controller\AbstractController::runTask($action, $parameters);
+            return Concrete\Core\Controller\AbstractController::runTask($action, $parameters);
         }
 
         public static function request($key = null)
         {
             // Concrete\Core\Controller\AbstractController::request();
-            Concrete\Core\Controller\AbstractController::request($key);
+            return Concrete\Core\Controller\AbstractController::request($key);
         }
 
     }
@@ -7014,49 +7014,49 @@ namespace {
         public static function getThemeableCorePages()
         {
             // Concrete\Core\Page\Single::getThemeableCorePages();
-            Concrete\Core\Page\Single::getThemeableCorePages();
+            return Concrete\Core\Page\Single::getThemeableCorePages();
         }
 
         public static function getListByPackage($pkg)
         {
             // Concrete\Core\Page\Single::getListByPackage();
-            Concrete\Core\Page\Single::getListByPackage($pkg);
+            return Concrete\Core\Page\Single::getListByPackage($pkg);
         }
 
         public static function sanitizePath($path)
         {
             // Concrete\Core\Page\Single::sanitizePath();
-            Concrete\Core\Page\Single::sanitizePath($path);
+            return Concrete\Core\Page\Single::sanitizePath($path);
         }
 
         public static function getPathToNode($node, $pkg)
         {
             // Concrete\Core\Page\Single::getPathToNode();
-            Concrete\Core\Page\Single::getPathToNode($node, $pkg);
+            return Concrete\Core\Page\Single::getPathToNode($node, $pkg);
         }
 
         public static function refresh(Concrete\Core\Page\Page $c)
         {
             // Concrete\Core\Page\Single::refresh();
-            Concrete\Core\Page\Single::refresh($c);
+            return Concrete\Core\Page\Single::refresh($c);
         }
 
         public static function getByID($cID, $version = "RECENT")
         {
             // Concrete\Core\Page\Single::getByID();
-            Concrete\Core\Page\Single::getByID($cID, $version);
+            return Concrete\Core\Page\Single::getByID($cID, $version);
         }
 
         public static function add($cPath, $pkg = null)
         {
             // Concrete\Core\Page\Single::add();
-            Concrete\Core\Page\Single::add($cPath, $pkg);
+            return Concrete\Core\Page\Single::add($cPath, $pkg);
         }
 
         public static function getList()
         {
             // Concrete\Core\Page\Single::getList();
-            Concrete\Core\Page\Single::getList();
+            return Concrete\Core\Page\Single::getList();
         }
 
     }
@@ -7067,7 +7067,7 @@ namespace {
         public static function setStore(Concrete\Core\Config\ConfigStore $store)
         {
             // Concrete\Core\Config\Config::setStore();
-            Concrete\Core\Config\Config::setStore($store);
+            return Concrete\Core\Config\Config::setStore($store);
         }
 
         /**
@@ -7076,13 +7076,13 @@ namespace {
         protected static function getStore()
         {
             // Concrete\Core\Config\Config::getStore();
-            Concrete\Core\Config\Config::getStore();
+            return Concrete\Core\Config\Config::getStore();
         }
 
         public static function setPackageObject($pkg)
         {
             // Concrete\Core\Config\Config::setPackageObject();
-            Concrete\Core\Config\Config::setPackageObject($pkg);
+            return Concrete\Core\Config\Config::setPackageObject($pkg);
         }
 
         /**
@@ -7094,7 +7094,7 @@ namespace {
         public static function get($cfKey, $getFullObject = null)
         {
             // Concrete\Core\Config\Config::get();
-            Concrete\Core\Config\Config::get($cfKey, $getFullObject);
+            return Concrete\Core\Config\Config::get($cfKey, $getFullObject);
         }
 
         /**
@@ -7105,13 +7105,13 @@ namespace {
         public static function getListByPackage($pkg)
         {
             // Concrete\Core\Config\Config::getListByPackage();
-            Concrete\Core\Config\Config::getListByPackage($pkg);
+            return Concrete\Core\Config\Config::getListByPackage($pkg);
         }
 
         public static function getOrDefine($key, $defaultValue)
         {
             // Concrete\Core\Config\Config::getOrDefine();
-            Concrete\Core\Config\Config::getOrDefine($key, $defaultValue);
+            return Concrete\Core\Config\Config::getOrDefine($key, $defaultValue);
         }
 
         /**
@@ -7123,7 +7123,7 @@ namespace {
         public static function getAndDefine($key, $defaultValue)
         {
             // Concrete\Core\Config\Config::getAndDefine();
-            Concrete\Core\Config\Config::getAndDefine($key, $defaultValue);
+            return Concrete\Core\Config\Config::getAndDefine($key, $defaultValue);
         }
 
         /**
@@ -7133,7 +7133,7 @@ namespace {
         public static function clear($cfKey)
         {
             // Concrete\Core\Config\Config::clear();
-            Concrete\Core\Config\Config::clear($cfKey);
+            return Concrete\Core\Config\Config::clear($cfKey);
         }
 
         /**
@@ -7144,49 +7144,49 @@ namespace {
         public static function save($cfKey, $cfValue)
         {
             // Concrete\Core\Config\Config::save();
-            Concrete\Core\Config\Config::save($cfKey, $cfValue);
+            return Concrete\Core\Config\Config::save($cfKey, $cfValue);
         }
 
         public static function exportList($x)
         {
             // Concrete\Core\Config\Config::exportList();
-            Concrete\Core\Config\Config::exportList($x);
+            return Concrete\Core\Config\Config::exportList($x);
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -7197,277 +7197,277 @@ namespace {
         public static function getPageTypeID()
         {
             // Concrete\Core\Page\Type\Type::getPageTypeID();
-            Concrete\Core\Page\Type\Type::getPageTypeID();
+            return Concrete\Core\Page\Type\Type::getPageTypeID();
         }
 
         public static function getPageTypeName()
         {
             // Concrete\Core\Page\Type\Type::getPageTypeName();
-            Concrete\Core\Page\Type\Type::getPageTypeName();
+            return Concrete\Core\Page\Type\Type::getPageTypeName();
         }
 
         public static function getPageTypeHandle()
         {
             // Concrete\Core\Page\Type\Type::getPageTypeHandle();
-            Concrete\Core\Page\Type\Type::getPageTypeHandle();
+            return Concrete\Core\Page\Type\Type::getPageTypeHandle();
         }
 
         public static function getPageTypePublishTargetTypeID()
         {
             // Concrete\Core\Page\Type\Type::getPageTypePublishTargetTypeID();
-            Concrete\Core\Page\Type\Type::getPageTypePublishTargetTypeID();
+            return Concrete\Core\Page\Type\Type::getPageTypePublishTargetTypeID();
         }
 
         public static function getPageTypePublishTargetObject()
         {
             // Concrete\Core\Page\Type\Type::getPageTypePublishTargetObject();
-            Concrete\Core\Page\Type\Type::getPageTypePublishTargetObject();
+            return Concrete\Core\Page\Type\Type::getPageTypePublishTargetObject();
         }
 
         public static function getPageTypeAllowedPageTemplates()
         {
             // Concrete\Core\Page\Type\Type::getPageTypeAllowedPageTemplates();
-            Concrete\Core\Page\Type\Type::getPageTypeAllowedPageTemplates();
+            return Concrete\Core\Page\Type\Type::getPageTypeAllowedPageTemplates();
         }
 
         public static function getPageTypeDefaultPageTemplateID()
         {
             // Concrete\Core\Page\Type\Type::getPageTypeDefaultPageTemplateID();
-            Concrete\Core\Page\Type\Type::getPageTypeDefaultPageTemplateID();
+            return Concrete\Core\Page\Type\Type::getPageTypeDefaultPageTemplateID();
         }
 
         public static function getPageTypeDefaultPageTemplateObject()
         {
             // Concrete\Core\Page\Type\Type::getPageTypeDefaultPageTemplateObject();
-            Concrete\Core\Page\Type\Type::getPageTypeDefaultPageTemplateObject();
+            return Concrete\Core\Page\Type\Type::getPageTypeDefaultPageTemplateObject();
         }
 
         public static function getPermissionObjectIdentifier()
         {
             // Concrete\Core\Page\Type\Type::getPermissionObjectIdentifier();
-            Concrete\Core\Page\Type\Type::getPermissionObjectIdentifier();
+            return Concrete\Core\Page\Type\Type::getPermissionObjectIdentifier();
         }
 
         public static function getPermissionResponseClassName()
         {
             // Concrete\Core\Page\Type\Type::getPermissionResponseClassName();
-            Concrete\Core\Page\Type\Type::getPermissionResponseClassName();
+            return Concrete\Core\Page\Type\Type::getPermissionResponseClassName();
         }
 
         public static function getPermissionAssignmentClassName()
         {
             // Concrete\Core\Page\Type\Type::getPermissionAssignmentClassName();
-            Concrete\Core\Page\Type\Type::getPermissionAssignmentClassName();
+            return Concrete\Core\Page\Type\Type::getPermissionAssignmentClassName();
         }
 
         public static function getPermissionObjectKeyCategoryHandle()
         {
             // Concrete\Core\Page\Type\Type::getPermissionObjectKeyCategoryHandle();
-            Concrete\Core\Page\Type\Type::getPermissionObjectKeyCategoryHandle();
+            return Concrete\Core\Page\Type\Type::getPermissionObjectKeyCategoryHandle();
         }
 
         public static function isPageTypeInternal()
         {
             // Concrete\Core\Page\Type\Type::isPageTypeInternal();
-            Concrete\Core\Page\Type\Type::isPageTypeInternal();
+            return Concrete\Core\Page\Type\Type::isPageTypeInternal();
         }
 
         public static function doesPageTypeLaunchInComposer()
         {
             // Concrete\Core\Page\Type\Type::doesPageTypeLaunchInComposer();
-            Concrete\Core\Page\Type\Type::doesPageTypeLaunchInComposer();
+            return Concrete\Core\Page\Type\Type::doesPageTypeLaunchInComposer();
         }
 
         public static function getPackageID()
         {
             // Concrete\Core\Page\Type\Type::getPackageID();
-            Concrete\Core\Page\Type\Type::getPackageID();
+            return Concrete\Core\Page\Type\Type::getPackageID();
         }
 
         public static function getPackageHandle()
         {
             // Concrete\Core\Page\Type\Type::getPackageHandle();
-            Concrete\Core\Page\Type\Type::getPackageHandle();
+            return Concrete\Core\Page\Type\Type::getPackageHandle();
         }
 
         protected static function stripEmptyPageTypeComposerControls(Concrete\Core\Page\Page $c)
         {
             // Concrete\Core\Page\Type\Type::stripEmptyPageTypeComposerControls();
-            Concrete\Core\Page\Type\Type::stripEmptyPageTypeComposerControls($c);
+            return Concrete\Core\Page\Type\Type::stripEmptyPageTypeComposerControls($c);
         }
 
         public static function publish(Concrete\Core\Page\Page $c)
         {
             // Concrete\Core\Page\Type\Type::publish();
-            Concrete\Core\Page\Type\Type::publish($c);
+            return Concrete\Core\Page\Type\Type::publish($c);
         }
 
         public static function savePageTypeComposerForm(Concrete\Core\Page\Page $c)
         {
             // Concrete\Core\Page\Type\Type::savePageTypeComposerForm();
-            Concrete\Core\Page\Type\Type::savePageTypeComposerForm($c);
+            return Concrete\Core\Page\Type\Type::savePageTypeComposerForm($c);
         }
 
         public static function getPageTypeSelectedPageTemplateObjects()
         {
             // Concrete\Core\Page\Type\Type::getPageTypeSelectedPageTemplateObjects();
-            Concrete\Core\Page\Type\Type::getPageTypeSelectedPageTemplateObjects();
+            return Concrete\Core\Page\Type\Type::getPageTypeSelectedPageTemplateObjects();
         }
 
         public static function getByDefaultsPage(Concrete\Core\Page\Page $c)
         {
             // Concrete\Core\Page\Type\Type::getByDefaultsPage();
-            Concrete\Core\Page\Type\Type::getByDefaultsPage($c);
+            return Concrete\Core\Page\Type\Type::getByDefaultsPage($c);
         }
 
         public static function getPageTypePageTemplateDefaultPageObject(Concrete\Core\Page\Template $template)
         {
             // Concrete\Core\Page\Type\Type::getPageTypePageTemplateDefaultPageObject();
-            Concrete\Core\Page\Type\Type::getPageTypePageTemplateDefaultPageObject($template);
+            return Concrete\Core\Page\Type\Type::getPageTypePageTemplateDefaultPageObject($template);
         }
 
         public static function getPageTypePageTemplateObjects()
         {
             // Concrete\Core\Page\Type\Type::getPageTypePageTemplateObjects();
-            Concrete\Core\Page\Type\Type::getPageTypePageTemplateObjects();
+            return Concrete\Core\Page\Type\Type::getPageTypePageTemplateObjects();
         }
 
         public static function importTargets($node)
         {
             // Concrete\Core\Page\Type\Type::importTargets();
-            Concrete\Core\Page\Type\Type::importTargets($node);
+            return Concrete\Core\Page\Type\Type::importTargets($node);
         }
 
         public static function import($node)
         {
             // Concrete\Core\Page\Type\Type::import();
-            Concrete\Core\Page\Type\Type::import($node);
+            return Concrete\Core\Page\Type\Type::import($node);
         }
 
         public static function importContent($node)
         {
             // Concrete\Core\Page\Type\Type::importContent();
-            Concrete\Core\Page\Type\Type::importContent($node);
+            return Concrete\Core\Page\Type\Type::importContent($node);
         }
 
         public static function exportList($xml)
         {
             // Concrete\Core\Page\Type\Type::exportList();
-            Concrete\Core\Page\Type\Type::exportList($xml);
+            return Concrete\Core\Page\Type\Type::exportList($xml);
         }
 
         public static function rescanPageTypeComposerOutputControlObjects()
         {
             // Concrete\Core\Page\Type\Type::rescanPageTypeComposerOutputControlObjects();
-            Concrete\Core\Page\Type\Type::rescanPageTypeComposerOutputControlObjects();
+            return Concrete\Core\Page\Type\Type::rescanPageTypeComposerOutputControlObjects();
         }
 
         public static function add($data, $pkg = null)
         {
             // Concrete\Core\Page\Type\Type::add();
-            Concrete\Core\Page\Type\Type::add($data, $pkg);
+            return Concrete\Core\Page\Type\Type::add($data, $pkg);
         }
 
         public static function update($data)
         {
             // Concrete\Core\Page\Type\Type::update();
-            Concrete\Core\Page\Type\Type::update($data);
+            return Concrete\Core\Page\Type\Type::update($data);
         }
 
         public static function getList($includeInternal = null)
         {
             // Concrete\Core\Page\Type\Type::getList();
-            Concrete\Core\Page\Type\Type::getList($includeInternal);
+            return Concrete\Core\Page\Type\Type::getList($includeInternal);
         }
 
         public static function getListByPackage(Concrete\Core\Package\Package $pkg)
         {
             // Concrete\Core\Page\Type\Type::getListByPackage();
-            Concrete\Core\Page\Type\Type::getListByPackage($pkg);
+            return Concrete\Core\Page\Type\Type::getListByPackage($pkg);
         }
 
         public static function getByID($ptID)
         {
             // Concrete\Core\Page\Type\Type::getByID();
-            Concrete\Core\Page\Type\Type::getByID($ptID);
+            return Concrete\Core\Page\Type\Type::getByID($ptID);
         }
 
         public static function getByHandle($ptHandle)
         {
             // Concrete\Core\Page\Type\Type::getByHandle();
-            Concrete\Core\Page\Type\Type::getByHandle($ptHandle);
+            return Concrete\Core\Page\Type\Type::getByHandle($ptHandle);
         }
 
         public static function delete()
         {
             // Concrete\Core\Page\Type\Type::delete();
-            Concrete\Core\Page\Type\Type::delete();
+            return Concrete\Core\Page\Type\Type::delete();
         }
 
         public static function setConfiguredPageTypePublishTargetObject(Concrete\Core\Page\Type\PublishTarget\Configuration\Configuration $configuredTarget)
         {
             // Concrete\Core\Page\Type\Type::setConfiguredPageTypePublishTargetObject();
-            Concrete\Core\Page\Type\Type::setConfiguredPageTypePublishTargetObject($configuredTarget);
+            return Concrete\Core\Page\Type\Type::setConfiguredPageTypePublishTargetObject($configuredTarget);
         }
 
         public static function rescanFormLayoutSetDisplayOrder()
         {
             // Concrete\Core\Page\Type\Type::rescanFormLayoutSetDisplayOrder();
-            Concrete\Core\Page\Type\Type::rescanFormLayoutSetDisplayOrder();
+            return Concrete\Core\Page\Type\Type::rescanFormLayoutSetDisplayOrder();
         }
 
         public static function addPageTypeComposerFormLayoutSet($ptComposerFormLayoutSetName)
         {
             // Concrete\Core\Page\Type\Type::addPageTypeComposerFormLayoutSet();
-            Concrete\Core\Page\Type\Type::addPageTypeComposerFormLayoutSet($ptComposerFormLayoutSetName);
+            return Concrete\Core\Page\Type\Type::addPageTypeComposerFormLayoutSet($ptComposerFormLayoutSetName);
         }
 
         public static function validateCreateDraftRequest($pt)
         {
             // Concrete\Core\Page\Type\Type::validateCreateDraftRequest();
-            Concrete\Core\Page\Type\Type::validateCreateDraftRequest($pt);
+            return Concrete\Core\Page\Type\Type::validateCreateDraftRequest($pt);
         }
 
         public static function createDraft(Concrete\Core\Page\Template $pt, $u = null)
         {
             // Concrete\Core\Page\Type\Type::createDraft();
-            Concrete\Core\Page\Type\Type::createDraft($pt, $u);
+            return Concrete\Core\Page\Type\Type::createDraft($pt, $u);
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -7478,139 +7478,139 @@ namespace {
         public static function exportList($xml)
         {
             // Concrete\Core\Page\Template::exportList();
-            Concrete\Core\Page\Template::exportList($xml);
+            return Concrete\Core\Page\Template::exportList($xml);
         }
 
         public static function getPageTemplateID()
         {
             // Concrete\Core\Page\Template::getPageTemplateID();
-            Concrete\Core\Page\Template::getPageTemplateID();
+            return Concrete\Core\Page\Template::getPageTemplateID();
         }
 
         public static function getPageTemplateName()
         {
             // Concrete\Core\Page\Template::getPageTemplateName();
-            Concrete\Core\Page\Template::getPageTemplateName();
+            return Concrete\Core\Page\Template::getPageTemplateName();
         }
 
         public static function getPageTemplateHandle()
         {
             // Concrete\Core\Page\Template::getPageTemplateHandle();
-            Concrete\Core\Page\Template::getPageTemplateHandle();
+            return Concrete\Core\Page\Template::getPageTemplateHandle();
         }
 
         public static function isPageTemplateInternal()
         {
             // Concrete\Core\Page\Template::isPageTemplateInternal();
-            Concrete\Core\Page\Template::isPageTemplateInternal();
+            return Concrete\Core\Page\Template::isPageTemplateInternal();
         }
 
         public static function getPageTemplateIcon()
         {
             // Concrete\Core\Page\Template::getPageTemplateIcon();
-            Concrete\Core\Page\Template::getPageTemplateIcon();
+            return Concrete\Core\Page\Template::getPageTemplateIcon();
         }
 
         public static function getPackageID()
         {
             // Concrete\Core\Page\Template::getPackageID();
-            Concrete\Core\Page\Template::getPackageID();
+            return Concrete\Core\Page\Template::getPackageID();
         }
 
         public static function getPackageHandle()
         {
             // Concrete\Core\Page\Template::getPackageHandle();
-            Concrete\Core\Page\Template::getPackageHandle();
+            return Concrete\Core\Page\Template::getPackageHandle();
         }
 
         public static function getByHandle($pTemplateHandle)
         {
             // Concrete\Core\Page\Template::getByHandle();
-            Concrete\Core\Page\Template::getByHandle($pTemplateHandle);
+            return Concrete\Core\Page\Template::getByHandle($pTemplateHandle);
         }
 
         public static function setPropertiesFromArray($row)
         {
             // Concrete\Core\Page\Template::setPropertiesFromArray();
-            Concrete\Core\Page\Template::setPropertiesFromArray($row);
+            return Concrete\Core\Page\Template::setPropertiesFromArray($row);
         }
 
         public static function getByID($pTemplateID)
         {
             // Concrete\Core\Page\Template::getByID();
-            Concrete\Core\Page\Template::getByID($pTemplateID);
+            return Concrete\Core\Page\Template::getByID($pTemplateID);
         }
 
         public static function delete()
         {
             // Concrete\Core\Page\Template::delete();
-            Concrete\Core\Page\Template::delete();
+            return Concrete\Core\Page\Template::delete();
         }
 
         public static function getListByPackage($pkg)
         {
             // Concrete\Core\Page\Template::getListByPackage();
-            Concrete\Core\Page\Template::getListByPackage($pkg);
+            return Concrete\Core\Page\Template::getListByPackage($pkg);
         }
 
         public static function getList($includeInternal = null)
         {
             // Concrete\Core\Page\Template::getList();
-            Concrete\Core\Page\Template::getList($includeInternal);
+            return Concrete\Core\Page\Template::getList($includeInternal);
         }
 
         public static function add($pTemplateHandle, $pTemplateName, $pTemplateIcon = "main.png", $pkg = null, $pTemplateIsInternal = null)
         {
             // Concrete\Core\Page\Template::add();
-            Concrete\Core\Page\Template::add($pTemplateHandle, $pTemplateName, $pTemplateIcon, $pkg, $pTemplateIsInternal);
+            return Concrete\Core\Page\Template::add($pTemplateHandle, $pTemplateName, $pTemplateIcon, $pkg, $pTemplateIsInternal);
         }
 
         public static function update($pTemplateHandle, $pTemplateName, $pTemplateIcon = "main.png")
         {
             // Concrete\Core\Page\Template::update();
-            Concrete\Core\Page\Template::update($pTemplateHandle, $pTemplateName, $pTemplateIcon);
+            return Concrete\Core\Page\Template::update($pTemplateHandle, $pTemplateName, $pTemplateIcon);
         }
 
         public static function getIcons()
         {
             // Concrete\Core\Page\Template::getIcons();
-            Concrete\Core\Page\Template::getIcons();
+            return Concrete\Core\Page\Template::getIcons();
         }
 
         public static function getPageTemplateIconImage()
         {
             // Concrete\Core\Page\Template::getPageTemplateIconImage();
-            Concrete\Core\Page\Template::getPageTemplateIconImage();
+            return Concrete\Core\Page\Template::getPageTemplateIconImage();
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -7628,67 +7628,67 @@ namespace {
         public static function registerAssets()
         {
             // Concrete\Core\Page\Theme\Theme::registerAssets();
-            Concrete\Core\Page\Theme\Theme::registerAssets();
+            return Concrete\Core\Page\Theme\Theme::registerAssets();
         }
 
         public static function getGlobalList()
         {
             // Concrete\Core\Page\Theme\Theme::getGlobalList();
-            Concrete\Core\Page\Theme\Theme::getGlobalList();
+            return Concrete\Core\Page\Theme\Theme::getGlobalList();
         }
 
         public static function getLocalList()
         {
             // Concrete\Core\Page\Theme\Theme::getLocalList();
-            Concrete\Core\Page\Theme\Theme::getLocalList();
+            return Concrete\Core\Page\Theme\Theme::getLocalList();
         }
 
         public static function getListByPackage($pkg)
         {
             // Concrete\Core\Page\Theme\Theme::getListByPackage();
-            Concrete\Core\Page\Theme\Theme::getListByPackage($pkg);
+            return Concrete\Core\Page\Theme\Theme::getListByPackage($pkg);
         }
 
         public static function getList($where = null)
         {
             // Concrete\Core\Page\Theme\Theme::getList();
-            Concrete\Core\Page\Theme\Theme::getList($where);
+            return Concrete\Core\Page\Theme\Theme::getList($where);
         }
 
         public static function getInstalledHandles()
         {
             // Concrete\Core\Page\Theme\Theme::getInstalledHandles();
-            Concrete\Core\Page\Theme\Theme::getInstalledHandles();
+            return Concrete\Core\Page\Theme\Theme::getInstalledHandles();
         }
 
         public static function supportsGridFramework()
         {
             // Concrete\Core\Page\Theme\Theme::supportsGridFramework();
-            Concrete\Core\Page\Theme\Theme::supportsGridFramework();
+            return Concrete\Core\Page\Theme\Theme::supportsGridFramework();
         }
 
         public static function getThemeGridFrameworkObject()
         {
             // Concrete\Core\Page\Theme\Theme::getThemeGridFrameworkObject();
-            Concrete\Core\Page\Theme\Theme::getThemeGridFrameworkObject();
+            return Concrete\Core\Page\Theme\Theme::getThemeGridFrameworkObject();
         }
 
         public static function providesAsset($assetType, $assetHandle)
         {
             // Concrete\Core\Page\Theme\Theme::providesAsset();
-            Concrete\Core\Page\Theme\Theme::providesAsset($assetType, $assetHandle);
+            return Concrete\Core\Page\Theme\Theme::providesAsset($assetType, $assetHandle);
         }
 
         public static function getAvailableThemes($filterInstalled = "1")
         {
             // Concrete\Core\Page\Theme\Theme::getAvailableThemes();
-            Concrete\Core\Page\Theme\Theme::getAvailableThemes($filterInstalled);
+            return Concrete\Core\Page\Theme\Theme::getAvailableThemes($filterInstalled);
         }
 
         public static function getByFileHandle($handle, $dir = "/git/concrete5-5.7.0/web/application/themes")
         {
             // Concrete\Core\Page\Theme\Theme::getByFileHandle();
-            Concrete\Core\Page\Theme\Theme::getByFileHandle($handle, $dir);
+            return Concrete\Core\Page\Theme\Theme::getByFileHandle($handle, $dir);
         }
 
         /**
@@ -7699,19 +7699,19 @@ namespace {
         public static function outputStyleSheet($file, $styles = null)
         {
             // Concrete\Core\Page\Theme\Theme::outputStyleSheet();
-            Concrete\Core\Page\Theme\Theme::outputStyleSheet($file, $styles);
+            return Concrete\Core\Page\Theme\Theme::outputStyleSheet($file, $styles);
         }
 
         public static function parseStyleSheet($file, $styles = null)
         {
             // Concrete\Core\Page\Theme\Theme::parseStyleSheet();
-            Concrete\Core\Page\Theme\Theme::parseStyleSheet($file, $styles);
+            return Concrete\Core\Page\Theme\Theme::parseStyleSheet($file, $styles);
         }
 
         public static function mergeStylesFromPost($post)
         {
             // Concrete\Core\Page\Theme\Theme::mergeStylesFromPost();
-            Concrete\Core\Page\Theme\Theme::mergeStylesFromPost($post);
+            return Concrete\Core\Page\Theme\Theme::mergeStylesFromPost($post);
         }
 
         /**
@@ -7721,7 +7721,7 @@ namespace {
         public static function reset()
         {
             // Concrete\Core\Page\Theme\Theme::reset();
-            Concrete\Core\Page\Theme\Theme::reset();
+            return Concrete\Core\Page\Theme\Theme::reset();
         }
 
         /**
@@ -7731,19 +7731,19 @@ namespace {
         public static function saveEditableStyles($styles)
         {
             // Concrete\Core\Page\Theme\Theme::saveEditableStyles();
-            Concrete\Core\Page\Theme\Theme::saveEditableStyles($styles);
+            return Concrete\Core\Page\Theme\Theme::saveEditableStyles($styles);
         }
 
         public static function getStyleSheets()
         {
             // Concrete\Core\Page\Theme\Theme::getStyleSheets();
-            Concrete\Core\Page\Theme\Theme::getStyleSheets();
+            return Concrete\Core\Page\Theme\Theme::getStyleSheets();
         }
 
         public static function isThemeCustomizable()
         {
             // Concrete\Core\Page\Theme\Theme::isThemeCustomizable();
-            Concrete\Core\Page\Theme\Theme::isThemeCustomizable();
+            return Concrete\Core\Page\Theme\Theme::isThemeCustomizable();
         }
 
         /**
@@ -7754,7 +7754,7 @@ namespace {
         public static function getEditableStylesList($mergeStyles = null)
         {
             // Concrete\Core\Page\Theme\Theme::getEditableStylesList();
-            Concrete\Core\Page\Theme\Theme::getEditableStylesList($mergeStyles);
+            return Concrete\Core\Page\Theme\Theme::getEditableStylesList($mergeStyles);
         }
 
         /**
@@ -7764,7 +7764,7 @@ namespace {
         public static function getByHandle($pThemeHandle)
         {
             // Concrete\Core\Page\Theme\Theme::getByHandle();
-            Concrete\Core\Page\Theme\Theme::getByHandle($pThemeHandle);
+            return Concrete\Core\Page\Theme\Theme::getByHandle($pThemeHandle);
         }
 
         /**
@@ -7774,55 +7774,55 @@ namespace {
         public static function getByID($pThemeID)
         {
             // Concrete\Core\Page\Theme\Theme::getByID();
-            Concrete\Core\Page\Theme\Theme::getByID($pThemeID);
+            return Concrete\Core\Page\Theme\Theme::getByID($pThemeID);
         }
 
         protected static function populateThemeQuery($where, $args)
         {
             // Concrete\Core\Page\Theme\Theme::populateThemeQuery();
-            Concrete\Core\Page\Theme\Theme::populateThemeQuery($where, $args);
+            return Concrete\Core\Page\Theme\Theme::populateThemeQuery($where, $args);
         }
 
         public static function add($pThemeHandle, $pkg = null)
         {
             // Concrete\Core\Page\Theme\Theme::add();
-            Concrete\Core\Page\Theme\Theme::add($pThemeHandle, $pkg);
+            return Concrete\Core\Page\Theme\Theme::add($pThemeHandle, $pkg);
         }
 
         public static function getFilesInTheme()
         {
             // Concrete\Core\Page\Theme\Theme::getFilesInTheme();
-            Concrete\Core\Page\Theme\Theme::getFilesInTheme();
+            return Concrete\Core\Page\Theme\Theme::getFilesInTheme();
         }
 
         public static function exportList($xml)
         {
             // Concrete\Core\Page\Theme\Theme::exportList();
-            Concrete\Core\Page\Theme\Theme::exportList($xml);
+            return Concrete\Core\Page\Theme\Theme::exportList($xml);
         }
 
         protected static function install($dir, $pThemeHandle, $pkgID)
         {
             // Concrete\Core\Page\Theme\Theme::install();
-            Concrete\Core\Page\Theme\Theme::install($dir, $pThemeHandle, $pkgID);
+            return Concrete\Core\Page\Theme\Theme::install($dir, $pThemeHandle, $pkgID);
         }
 
         public static function updateThemeCustomClass()
         {
             // Concrete\Core\Page\Theme\Theme::updateThemeCustomClass();
-            Concrete\Core\Page\Theme\Theme::updateThemeCustomClass();
+            return Concrete\Core\Page\Theme\Theme::updateThemeCustomClass();
         }
 
         public static function getThemeID()
         {
             // Concrete\Core\Page\Theme\Theme::getThemeID();
-            Concrete\Core\Page\Theme\Theme::getThemeID();
+            return Concrete\Core\Page\Theme\Theme::getThemeID();
         }
 
         public static function getThemeName()
         {
             // Concrete\Core\Page\Theme\Theme::getThemeName();
-            Concrete\Core\Page\Theme\Theme::getThemeName();
+            return Concrete\Core\Page\Theme\Theme::getThemeName();
         }
 
         /** Returns the display name for this theme (localized and escaped accordingly to $format)
@@ -7834,19 +7834,19 @@ namespace {
         public static function getThemeDisplayName($format = "html")
         {
             // Concrete\Core\Page\Theme\Theme::getThemeDisplayName();
-            Concrete\Core\Page\Theme\Theme::getThemeDisplayName($format);
+            return Concrete\Core\Page\Theme\Theme::getThemeDisplayName($format);
         }
 
         public static function getPackageID()
         {
             // Concrete\Core\Page\Theme\Theme::getPackageID();
-            Concrete\Core\Page\Theme\Theme::getPackageID();
+            return Concrete\Core\Page\Theme\Theme::getPackageID();
         }
 
         public static function getPackageHandle()
         {
             // Concrete\Core\Page\Theme\Theme::getPackageHandle();
-            Concrete\Core\Page\Theme\Theme::getPackageHandle();
+            return Concrete\Core\Page\Theme\Theme::getPackageHandle();
         }
 
         /**
@@ -7855,127 +7855,127 @@ namespace {
         public static function hasCustomClass()
         {
             // Concrete\Core\Page\Theme\Theme::hasCustomClass();
-            Concrete\Core\Page\Theme\Theme::hasCustomClass();
+            return Concrete\Core\Page\Theme\Theme::hasCustomClass();
         }
 
         public static function getThemeHandle()
         {
             // Concrete\Core\Page\Theme\Theme::getThemeHandle();
-            Concrete\Core\Page\Theme\Theme::getThemeHandle();
+            return Concrete\Core\Page\Theme\Theme::getThemeHandle();
         }
 
         public static function getThemeDescription()
         {
             // Concrete\Core\Page\Theme\Theme::getThemeDescription();
-            Concrete\Core\Page\Theme\Theme::getThemeDescription();
+            return Concrete\Core\Page\Theme\Theme::getThemeDescription();
         }
 
         public static function getThemeDisplayDescription($format = "html")
         {
             // Concrete\Core\Page\Theme\Theme::getThemeDisplayDescription();
-            Concrete\Core\Page\Theme\Theme::getThemeDisplayDescription($format);
+            return Concrete\Core\Page\Theme\Theme::getThemeDisplayDescription($format);
         }
 
         public static function getThemeDirectory()
         {
             // Concrete\Core\Page\Theme\Theme::getThemeDirectory();
-            Concrete\Core\Page\Theme\Theme::getThemeDirectory();
+            return Concrete\Core\Page\Theme\Theme::getThemeDirectory();
         }
 
         public static function getThemeURL()
         {
             // Concrete\Core\Page\Theme\Theme::getThemeURL();
-            Concrete\Core\Page\Theme\Theme::getThemeURL();
+            return Concrete\Core\Page\Theme\Theme::getThemeURL();
         }
 
         public static function getThemeEditorCSS()
         {
             // Concrete\Core\Page\Theme\Theme::getThemeEditorCSS();
-            Concrete\Core\Page\Theme\Theme::getThemeEditorCSS();
+            return Concrete\Core\Page\Theme\Theme::getThemeEditorCSS();
         }
 
         public static function isUninstallable()
         {
             // Concrete\Core\Page\Theme\Theme::isUninstallable();
-            Concrete\Core\Page\Theme\Theme::isUninstallable();
+            return Concrete\Core\Page\Theme\Theme::isUninstallable();
         }
 
         public static function getThemeThumbnail()
         {
             // Concrete\Core\Page\Theme\Theme::getThemeThumbnail();
-            Concrete\Core\Page\Theme\Theme::getThemeThumbnail();
+            return Concrete\Core\Page\Theme\Theme::getThemeThumbnail();
         }
 
         public static function applyToSite()
         {
             // Concrete\Core\Page\Theme\Theme::applyToSite();
-            Concrete\Core\Page\Theme\Theme::applyToSite();
+            return Concrete\Core\Page\Theme\Theme::applyToSite();
         }
 
         public static function getSiteTheme()
         {
             // Concrete\Core\Page\Theme\Theme::getSiteTheme();
-            Concrete\Core\Page\Theme\Theme::getSiteTheme();
+            return Concrete\Core\Page\Theme\Theme::getSiteTheme();
         }
 
         public static function uninstall()
         {
             // Concrete\Core\Page\Theme\Theme::uninstall();
-            Concrete\Core\Page\Theme\Theme::uninstall();
+            return Concrete\Core\Page\Theme\Theme::uninstall();
         }
 
         public static function getThemeGatheringGridItemMargin()
         {
             // Concrete\Core\Page\Theme\Theme::getThemeGatheringGridItemMargin();
-            Concrete\Core\Page\Theme\Theme::getThemeGatheringGridItemMargin();
+            return Concrete\Core\Page\Theme\Theme::getThemeGatheringGridItemMargin();
         }
 
         public static function getThemeGatheringGridItemWidth()
         {
             // Concrete\Core\Page\Theme\Theme::getThemeGatheringGridItemWidth();
-            Concrete\Core\Page\Theme\Theme::getThemeGatheringGridItemWidth();
+            return Concrete\Core\Page\Theme\Theme::getThemeGatheringGridItemWidth();
         }
 
         public static function getThemeGatheringGridItemHeight()
         {
             // Concrete\Core\Page\Theme\Theme::getThemeGatheringGridItemHeight();
-            Concrete\Core\Page\Theme\Theme::getThemeGatheringGridItemHeight();
+            return Concrete\Core\Page\Theme\Theme::getThemeGatheringGridItemHeight();
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -7992,43 +7992,43 @@ namespace {
         public static function setViewPagePermissionKeyHandle($pkHandle)
         {
             // Concrete\Core\Page\PageList::setViewPagePermissionKeyHandle();
-            Concrete\Core\Page\PageList::setViewPagePermissionKeyHandle($pkHandle);
+            return Concrete\Core\Page\PageList::setViewPagePermissionKeyHandle($pkHandle);
         }
 
         public static function includeInactivePages()
         {
             // Concrete\Core\Page\PageList::includeInactivePages();
-            Concrete\Core\Page\PageList::includeInactivePages();
+            return Concrete\Core\Page\PageList::includeInactivePages();
         }
 
         public static function ignorePermissions()
         {
             // Concrete\Core\Page\PageList::ignorePermissions();
-            Concrete\Core\Page\PageList::ignorePermissions();
+            return Concrete\Core\Page\PageList::ignorePermissions();
         }
 
         public static function ignoreAliases()
         {
             // Concrete\Core\Page\PageList::ignoreAliases();
-            Concrete\Core\Page\PageList::ignoreAliases();
+            return Concrete\Core\Page\PageList::ignoreAliases();
         }
 
         public static function includeSystemPages()
         {
             // Concrete\Core\Page\PageList::includeSystemPages();
-            Concrete\Core\Page\PageList::includeSystemPages();
+            return Concrete\Core\Page\PageList::includeSystemPages();
         }
 
         public static function displayUnapprovedPages()
         {
             // Concrete\Core\Page\PageList::displayUnapprovedPages();
-            Concrete\Core\Page\PageList::displayUnapprovedPages();
+            return Concrete\Core\Page\PageList::displayUnapprovedPages();
         }
 
         public static function isIndexedSearch()
         {
             // Concrete\Core\Page\PageList::isIndexedSearch();
-            Concrete\Core\Page\PageList::isIndexedSearch();
+            return Concrete\Core\Page\PageList::isIndexedSearch();
         }
 
         /**
@@ -8037,19 +8037,19 @@ namespace {
         public static function filterByKeywords($keywords, $simple = null)
         {
             // Concrete\Core\Page\PageList::filterByKeywords();
-            Concrete\Core\Page\PageList::filterByKeywords($keywords, $simple);
+            return Concrete\Core\Page\PageList::filterByKeywords($keywords, $simple);
         }
 
         public static function filterByName($name, $exact = null)
         {
             // Concrete\Core\Page\PageList::filterByName();
-            Concrete\Core\Page\PageList::filterByName($name, $exact);
+            return Concrete\Core\Page\PageList::filterByName($name, $exact);
         }
 
         public static function filterByPath($path, $includeAllChildren = "1")
         {
             // Concrete\Core\Page\PageList::filterByPath();
-            Concrete\Core\Page\PageList::filterByPath($path, $includeAllChildren);
+            return Concrete\Core\Page\PageList::filterByPath($path, $includeAllChildren);
         }
 
         /**
@@ -8058,13 +8058,13 @@ namespace {
         public static function setupPermissions()
         {
             // Concrete\Core\Page\PageList::setupPermissions();
-            Concrete\Core\Page\PageList::setupPermissions();
+            return Concrete\Core\Page\PageList::setupPermissions();
         }
 
         public static function sortByRelevance()
         {
             // Concrete\Core\Page\PageList::sortByRelevance();
-            Concrete\Core\Page\PageList::sortByRelevance();
+            return Concrete\Core\Page\PageList::sortByRelevance();
         }
 
         /**
@@ -8073,7 +8073,7 @@ namespace {
         public static function sortByDisplayOrder()
         {
             // Concrete\Core\Page\PageList::sortByDisplayOrder();
-            Concrete\Core\Page\PageList::sortByDisplayOrder();
+            return Concrete\Core\Page\PageList::sortByDisplayOrder();
         }
 
         /**
@@ -8082,13 +8082,13 @@ namespace {
         public static function sortByDisplayOrderDescending()
         {
             // Concrete\Core\Page\PageList::sortByDisplayOrderDescending();
-            Concrete\Core\Page\PageList::sortByDisplayOrderDescending();
+            return Concrete\Core\Page\PageList::sortByDisplayOrderDescending();
         }
 
         public static function sortByCollectionIDAscending()
         {
             // Concrete\Core\Page\PageList::sortByCollectionIDAscending();
-            Concrete\Core\Page\PageList::sortByCollectionIDAscending();
+            return Concrete\Core\Page\PageList::sortByCollectionIDAscending();
         }
 
         /**
@@ -8097,7 +8097,7 @@ namespace {
         public static function sortByPublicDate()
         {
             // Concrete\Core\Page\PageList::sortByPublicDate();
-            Concrete\Core\Page\PageList::sortByPublicDate();
+            return Concrete\Core\Page\PageList::sortByPublicDate();
         }
 
         /**
@@ -8106,7 +8106,7 @@ namespace {
         public static function sortByName()
         {
             // Concrete\Core\Page\PageList::sortByName();
-            Concrete\Core\Page\PageList::sortByName();
+            return Concrete\Core\Page\PageList::sortByName();
         }
 
         /**
@@ -8115,7 +8115,7 @@ namespace {
         public static function sortByNameDescending()
         {
             // Concrete\Core\Page\PageList::sortByNameDescending();
-            Concrete\Core\Page\PageList::sortByNameDescending();
+            return Concrete\Core\Page\PageList::sortByNameDescending();
         }
 
         /**
@@ -8124,7 +8124,7 @@ namespace {
         public static function sortByPublicDateDescending()
         {
             // Concrete\Core\Page\PageList::sortByPublicDateDescending();
-            Concrete\Core\Page\PageList::sortByPublicDateDescending();
+            return Concrete\Core\Page\PageList::sortByPublicDateDescending();
         }
 
         /**
@@ -8134,7 +8134,7 @@ namespace {
         public static function filterByParentID($cParentID)
         {
             // Concrete\Core\Page\PageList::filterByParentID();
-            Concrete\Core\Page\PageList::filterByParentID($cParentID);
+            return Concrete\Core\Page\PageList::filterByParentID($cParentID);
         }
 
         /**
@@ -8144,7 +8144,7 @@ namespace {
         public static function filterByPageTypeID($ptID)
         {
             // Concrete\Core\Page\PageList::filterByPageTypeID();
-            Concrete\Core\Page\PageList::filterByPageTypeID($ptID);
+            return Concrete\Core\Page\PageList::filterByPageTypeID($ptID);
         }
 
         /**
@@ -8153,7 +8153,7 @@ namespace {
         public static function filterByCollectionTypeID($ctID)
         {
             // Concrete\Core\Page\PageList::filterByCollectionTypeID();
-            Concrete\Core\Page\PageList::filterByCollectionTypeID($ctID);
+            return Concrete\Core\Page\PageList::filterByCollectionTypeID($ctID);
         }
 
         /**
@@ -8163,19 +8163,19 @@ namespace {
         public static function filterByUserID($uID)
         {
             // Concrete\Core\Page\PageList::filterByUserID();
-            Concrete\Core\Page\PageList::filterByUserID($uID);
+            return Concrete\Core\Page\PageList::filterByUserID($uID);
         }
 
         public static function filterByIsApproved($cvIsApproved)
         {
             // Concrete\Core\Page\PageList::filterByIsApproved();
-            Concrete\Core\Page\PageList::filterByIsApproved($cvIsApproved);
+            return Concrete\Core\Page\PageList::filterByIsApproved($cvIsApproved);
         }
 
         public static function filterByIsAlias($ia)
         {
             // Concrete\Core\Page\PageList::filterByIsAlias();
-            Concrete\Core\Page\PageList::filterByIsAlias($ia);
+            return Concrete\Core\Page\PageList::filterByIsAlias($ia);
         }
 
         /**
@@ -8185,13 +8185,13 @@ namespace {
         public static function filterByPageTypeHandle($ptHandle)
         {
             // Concrete\Core\Page\PageList::filterByPageTypeHandle();
-            Concrete\Core\Page\PageList::filterByPageTypeHandle($ptHandle);
+            return Concrete\Core\Page\PageList::filterByPageTypeHandle($ptHandle);
         }
 
         public static function filterByCollectionTypeHandle($ctHandle)
         {
             // Concrete\Core\Page\PageList::filterByCollectionTypeHandle();
-            Concrete\Core\Page\PageList::filterByCollectionTypeHandle($ctHandle);
+            return Concrete\Core\Page\PageList::filterByCollectionTypeHandle($ctHandle);
         }
 
         /**
@@ -8201,19 +8201,19 @@ namespace {
         public static function filterByDateAdded($date, $comparison = "=")
         {
             // Concrete\Core\Page\PageList::filterByDateAdded();
-            Concrete\Core\Page\PageList::filterByDateAdded($date, $comparison);
+            return Concrete\Core\Page\PageList::filterByDateAdded($date, $comparison);
         }
 
         public static function filterByNumberOfChildren($num, $comparison = ">")
         {
             // Concrete\Core\Page\PageList::filterByNumberOfChildren();
-            Concrete\Core\Page\PageList::filterByNumberOfChildren($num, $comparison);
+            return Concrete\Core\Page\PageList::filterByNumberOfChildren($num, $comparison);
         }
 
         public static function filterByDateLastModified($date, $comparison = "=")
         {
             // Concrete\Core\Page\PageList::filterByDateLastModified();
-            Concrete\Core\Page\PageList::filterByDateLastModified($date, $comparison);
+            return Concrete\Core\Page\PageList::filterByDateLastModified($date, $comparison);
         }
 
         /**
@@ -8223,13 +8223,13 @@ namespace {
         public static function filterByPublicDate($date, $comparison = "=")
         {
             // Concrete\Core\Page\PageList::filterByPublicDate();
-            Concrete\Core\Page\PageList::filterByPublicDate($date, $comparison);
+            return Concrete\Core\Page\PageList::filterByPublicDate($date, $comparison);
         }
 
         public static function filterBySelectAttribute($akHandle, $value)
         {
             // Concrete\Core\Page\PageList::filterBySelectAttribute();
-            Concrete\Core\Page\PageList::filterBySelectAttribute($akHandle, $value);
+            return Concrete\Core\Page\PageList::filterBySelectAttribute($akHandle, $value);
         }
 
         /**
@@ -8239,31 +8239,31 @@ namespace {
         public static function displayOnlyPermittedPages($checkForPermissions)
         {
             // Concrete\Core\Page\PageList::displayOnlyPermittedPages();
-            Concrete\Core\Page\PageList::displayOnlyPermittedPages($checkForPermissions);
+            return Concrete\Core\Page\PageList::displayOnlyPermittedPages($checkForPermissions);
         }
 
         protected static function setBaseQuery($additionalFields = null)
         {
             // Concrete\Core\Page\PageList::setBaseQuery();
-            Concrete\Core\Page\PageList::setBaseQuery($additionalFields);
+            return Concrete\Core\Page\PageList::setBaseQuery($additionalFields);
         }
 
         protected static function setupSystemPagesToExclude()
         {
             // Concrete\Core\Page\PageList::setupSystemPagesToExclude();
-            Concrete\Core\Page\PageList::setupSystemPagesToExclude();
+            return Concrete\Core\Page\PageList::setupSystemPagesToExclude();
         }
 
         protected static function loadPageID($cID, $versionOrig = "RECENT")
         {
             // Concrete\Core\Page\PageList::loadPageID();
-            Concrete\Core\Page\PageList::loadPageID($cID, $versionOrig);
+            return Concrete\Core\Page\PageList::loadPageID($cID, $versionOrig);
         }
 
         public static function getTotal()
         {
             // Concrete\Core\Page\PageList::getTotal();
-            Concrete\Core\Page\PageList::getTotal();
+            return Concrete\Core\Page\PageList::getTotal();
         }
 
         /**
@@ -8272,55 +8272,55 @@ namespace {
         public static function get($itemsToGet = null, $offset = null)
         {
             // Concrete\Core\Page\PageList::get();
-            Concrete\Core\Page\PageList::get($itemsToGet, $offset);
+            return Concrete\Core\Page\PageList::get($itemsToGet, $offset);
         }
 
         public static function debug($dbg = "1")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
         }
 
         protected static function setQuery($query)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery($query);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery($query);
         }
 
         protected static function getQuery()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
         }
 
         public static function addToQuery($query)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery($query);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery($query);
         }
 
         protected static function setupAutoSort()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
         }
 
         protected static function executeBase()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
         }
 
         protected static function setupSortByString()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
         }
 
         protected static function setupAttributeSort()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
         }
 
         /**
@@ -8329,121 +8329,121 @@ namespace {
         public static function filter($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter($column, $value, $comparison);
         }
 
         public static function getSearchResultsClass($field)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass($field);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass($field);
         }
 
         public static function sortBy($key, $dir = "asc")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy($key, $dir);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy($key, $dir);
         }
 
         public static function groupBy($key)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy($key);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy($key);
         }
 
         public static function having($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
         }
 
         public static function getSortByURL($column, $dir = "asc", $baseURL = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
         }
 
         protected static function setupAttributeFilters($join)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters($join);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters($join);
         }
 
         public static function filterByAttribute($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
         }
 
         public static function enableStickySearchRequest($namespace = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
+            return Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
         }
 
         public static function getQueryStringPagingVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
         }
 
         public static function getQueryStringSortVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
         }
 
         public static function getQueryStringSortDirectionVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
         }
 
         protected static function getStickySearchNameSpace()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
-            Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
+            return Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
         }
 
         public static function resetSearchRequest($namespace = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
+            return Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
         }
 
         public static function addToSearchRequest($key, $value)
         {
             // Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest($key, $value);
+            return Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest($key, $value);
         }
 
         public static function getSearchRequest()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
+            return Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
         }
 
         public static function setItemsPerPage($num)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage();
-            Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage($num);
+            return Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage($num);
         }
 
         public static function getItemsPerPage()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
-            Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
+            return Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
         }
 
         public static function setItems($items)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setItems();
-            Concrete\Core\Foundation\Collection\ItemList::setItems($items);
+            return Concrete\Core\Foundation\Collection\ItemList::setItems($items);
         }
 
         public static function setNameSpace($ns)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setNameSpace();
-            Concrete\Core\Foundation\Collection\ItemList::setNameSpace($ns);
+            return Concrete\Core\Foundation\Collection\ItemList::setNameSpace($ns);
         }
 
         /**
@@ -8452,13 +8452,13 @@ namespace {
         public static function getPage($page = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPage();
-            Concrete\Core\Foundation\Collection\ItemList::getPage($page);
+            return Concrete\Core\Foundation\Collection\ItemList::getPage($page);
         }
 
         protected static function setCurrentPage($page = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setCurrentPage();
-            Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
+            return Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
         }
 
         /**
@@ -8467,37 +8467,37 @@ namespace {
         public static function displaySummary($right_content = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displaySummary();
-            Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
+            return Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
         }
 
         public static function isActiveSortColumn($column)
         {
             // Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn();
-            Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn($column);
+            return Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn($column);
         }
 
         public static function getActiveSortColumn()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
-            Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
+            return Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
         }
 
         public static function getActiveSortDirection()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
-            Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
+            return Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
         }
 
         public static function requiresPaging()
         {
             // Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
-            Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
+            return Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
         }
 
         public static function getPagination($url = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPagination();
-            Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
         }
 
         /**
@@ -8505,7 +8505,7 @@ namespace {
         public static function displayPagingV2($script = null, $return = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPagingV2();
-            Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
         }
 
         /**
@@ -8513,7 +8513,7 @@ namespace {
         public static function displayPaging($script = null, $return = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPaging();
-            Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
         }
 
         /**
@@ -8522,19 +8522,19 @@ namespace {
         public static function getSummary()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSummary();
-            Concrete\Core\Foundation\Collection\ItemList::getSummary();
+            return Concrete\Core\Foundation\Collection\ItemList::getSummary();
         }
 
         public static function getSortBy()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSortBy();
-            Concrete\Core\Foundation\Collection\ItemList::getSortBy();
+            return Concrete\Core\Foundation\Collection\ItemList::getSortBy();
         }
 
         public static function getSortByDirection()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
-            Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
+            return Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
         }
 
         /**
@@ -8547,7 +8547,7 @@ namespace {
         public static function sortByMultiple()
         {
             // Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
-            Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
+            return Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
         }
 
     }
@@ -8558,13 +8558,13 @@ namespace {
         public static function deliver(Concrete\Core\Cache\Page\PageCacheRecord $record)
         {
             // Concrete\Core\Cache\Page\PageCache::deliver();
-            Concrete\Core\Cache\Page\PageCache::deliver($record);
+            return Concrete\Core\Cache\Page\PageCache::deliver($record);
         }
 
         public static function getLibrary()
         {
             // Concrete\Core\Cache\Page\PageCache::getLibrary();
-            Concrete\Core\Cache\Page\PageCache::getLibrary();
+            return Concrete\Core\Cache\Page\PageCache::getLibrary();
         }
 
         /**
@@ -8573,31 +8573,31 @@ namespace {
         public static function shouldCheckCache(Concrete\Core\Http\Request $req)
         {
             // Concrete\Core\Cache\Page\PageCache::shouldCheckCache();
-            Concrete\Core\Cache\Page\PageCache::shouldCheckCache($req);
+            return Concrete\Core\Cache\Page\PageCache::shouldCheckCache($req);
         }
 
         public static function outputCacheHeaders(Concrete\Core\Page\Page $c)
         {
             // Concrete\Core\Cache\Page\PageCache::outputCacheHeaders();
-            Concrete\Core\Cache\Page\PageCache::outputCacheHeaders($c);
+            return Concrete\Core\Cache\Page\PageCache::outputCacheHeaders($c);
         }
 
         public static function getCacheHeaders(Concrete\Core\Page\Page $c)
         {
             // Concrete\Core\Cache\Page\PageCache::getCacheHeaders();
-            Concrete\Core\Cache\Page\PageCache::getCacheHeaders($c);
+            return Concrete\Core\Cache\Page\PageCache::getCacheHeaders($c);
         }
 
         public static function shouldAddToCache(Concrete\Core\Page\View\PageView $v)
         {
             // Concrete\Core\Cache\Page\PageCache::shouldAddToCache();
-            Concrete\Core\Cache\Page\PageCache::shouldAddToCache($v);
+            return Concrete\Core\Cache\Page\PageCache::shouldAddToCache($v);
         }
 
         public static function getCacheKey($mixed)
         {
             // Concrete\Core\Cache\Page\PageCache::getCacheKey();
-            Concrete\Core\Cache\Page\PageCache::getCacheKey($mixed);
+            return Concrete\Core\Cache\Page\PageCache::getCacheKey($mixed);
         }
 
     }
@@ -8608,109 +8608,109 @@ namespace {
         public static function getConversationID()
         {
             // Concrete\Core\Conversation\Conversation::getConversationID();
-            Concrete\Core\Conversation\Conversation::getConversationID();
+            return Concrete\Core\Conversation\Conversation::getConversationID();
         }
 
         public static function getConversationParentMessageID()
         {
             // Concrete\Core\Conversation\Conversation::getConversationParentMessageID();
-            Concrete\Core\Conversation\Conversation::getConversationParentMessageID();
+            return Concrete\Core\Conversation\Conversation::getConversationParentMessageID();
         }
 
         public static function getConversationDateCreated()
         {
             // Concrete\Core\Conversation\Conversation::getConversationDateCreated();
-            Concrete\Core\Conversation\Conversation::getConversationDateCreated();
+            return Concrete\Core\Conversation\Conversation::getConversationDateCreated();
         }
 
         public static function getConversationDateLastMessage()
         {
             // Concrete\Core\Conversation\Conversation::getConversationDateLastMessage();
-            Concrete\Core\Conversation\Conversation::getConversationDateLastMessage();
+            return Concrete\Core\Conversation\Conversation::getConversationDateLastMessage();
         }
 
         public static function getConversationMessagesTotal()
         {
             // Concrete\Core\Conversation\Conversation::getConversationMessagesTotal();
-            Concrete\Core\Conversation\Conversation::getConversationMessagesTotal();
+            return Concrete\Core\Conversation\Conversation::getConversationMessagesTotal();
         }
 
         public static function getByID($cnvID)
         {
             // Concrete\Core\Conversation\Conversation::getByID();
-            Concrete\Core\Conversation\Conversation::getByID($cnvID);
+            return Concrete\Core\Conversation\Conversation::getByID($cnvID);
         }
 
         public static function getConversationPageObject()
         {
             // Concrete\Core\Conversation\Conversation::getConversationPageObject();
-            Concrete\Core\Conversation\Conversation::getConversationPageObject();
+            return Concrete\Core\Conversation\Conversation::getConversationPageObject();
         }
 
         public static function setConversationPageObject($c)
         {
             // Concrete\Core\Conversation\Conversation::setConversationPageObject();
-            Concrete\Core\Conversation\Conversation::setConversationPageObject($c);
+            return Concrete\Core\Conversation\Conversation::setConversationPageObject($c);
         }
 
         public static function updateConversationSummary()
         {
             // Concrete\Core\Conversation\Conversation::updateConversationSummary();
-            Concrete\Core\Conversation\Conversation::updateConversationSummary();
+            return Concrete\Core\Conversation\Conversation::updateConversationSummary();
         }
 
         public static function getConversationMessageUsers()
         {
             // Concrete\Core\Conversation\Conversation::getConversationMessageUsers();
-            Concrete\Core\Conversation\Conversation::getConversationMessageUsers();
+            return Concrete\Core\Conversation\Conversation::getConversationMessageUsers();
         }
 
         public static function setConversationParentMessageID($cnvParentMessageID)
         {
             // Concrete\Core\Conversation\Conversation::setConversationParentMessageID();
-            Concrete\Core\Conversation\Conversation::setConversationParentMessageID($cnvParentMessageID);
+            return Concrete\Core\Conversation\Conversation::setConversationParentMessageID($cnvParentMessageID);
         }
 
         public static function add()
         {
             // Concrete\Core\Conversation\Conversation::add();
-            Concrete\Core\Conversation\Conversation::add();
+            return Concrete\Core\Conversation\Conversation::add();
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -8721,79 +8721,79 @@ namespace {
         public static function getConversationFlagTypeHandle()
         {
             // Concrete\Core\Conversation\FlagType\FlagType::getConversationFlagTypeHandle();
-            Concrete\Core\Conversation\FlagType\FlagType::getConversationFlagTypeHandle();
+            return Concrete\Core\Conversation\FlagType\FlagType::getConversationFlagTypeHandle();
         }
 
         public static function getConversationFlagTypeID()
         {
             // Concrete\Core\Conversation\FlagType\FlagType::getConversationFlagTypeID();
-            Concrete\Core\Conversation\FlagType\FlagType::getConversationFlagTypeID();
+            return Concrete\Core\Conversation\FlagType\FlagType::getConversationFlagTypeID();
         }
 
         public static function init($id, $handle)
         {
             // Concrete\Core\Conversation\FlagType\FlagType::init();
-            Concrete\Core\Conversation\FlagType\FlagType::init($id, $handle);
+            return Concrete\Core\Conversation\FlagType\FlagType::init($id, $handle);
         }
 
         public static function delete()
         {
             // Concrete\Core\Conversation\FlagType\FlagType::delete();
-            Concrete\Core\Conversation\FlagType\FlagType::delete();
+            return Concrete\Core\Conversation\FlagType\FlagType::delete();
         }
 
         public static function getByID($id)
         {
             // Concrete\Core\Conversation\FlagType\FlagType::getByID();
-            Concrete\Core\Conversation\FlagType\FlagType::getByID($id);
+            return Concrete\Core\Conversation\FlagType\FlagType::getByID($id);
         }
 
         public static function getByhandle($handle)
         {
             // Concrete\Core\Conversation\FlagType\FlagType::getByhandle();
-            Concrete\Core\Conversation\FlagType\FlagType::getByhandle($handle);
+            return Concrete\Core\Conversation\FlagType\FlagType::getByhandle($handle);
         }
 
         public static function add($handle)
         {
             // Concrete\Core\Conversation\FlagType\FlagType::add();
-            Concrete\Core\Conversation\FlagType\FlagType::add($handle);
+            return Concrete\Core\Conversation\FlagType\FlagType::add($handle);
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -8804,13 +8804,13 @@ namespace {
         public static function get($name, $additionalConfig = null)
         {
             // Concrete\Core\Foundation\Queue::get();
-            Concrete\Core\Foundation\Queue::get($name, $additionalConfig);
+            return Concrete\Core\Foundation\Queue::get($name, $additionalConfig);
         }
 
         public static function exists($name)
         {
             // Concrete\Core\Foundation\Queue::exists();
-            Concrete\Core\Foundation\Queue::exists($name);
+            return Concrete\Core\Foundation\Queue::exists($name);
         }
 
     }
@@ -8821,37 +8821,37 @@ namespace {
         public static function populateManually($blockInfo, $c, $a)
         {
             // Concrete\Core\Block\Block::populateManually();
-            Concrete\Core\Block\Block::populateManually($blockInfo, $c, $a);
+            return Concrete\Core\Block\Block::populateManually($blockInfo, $c, $a);
         }
 
         public static function getPermissionObjectIdentifier()
         {
             // Concrete\Core\Block\Block::getPermissionObjectIdentifier();
-            Concrete\Core\Block\Block::getPermissionObjectIdentifier();
+            return Concrete\Core\Block\Block::getPermissionObjectIdentifier();
         }
 
         public static function getPermissionResponseClassName()
         {
             // Concrete\Core\Block\Block::getPermissionResponseClassName();
-            Concrete\Core\Block\Block::getPermissionResponseClassName();
+            return Concrete\Core\Block\Block::getPermissionResponseClassName();
         }
 
         public static function getPermissionAssignmentClassName()
         {
             // Concrete\Core\Block\Block::getPermissionAssignmentClassName();
-            Concrete\Core\Block\Block::getPermissionAssignmentClassName();
+            return Concrete\Core\Block\Block::getPermissionAssignmentClassName();
         }
 
         public static function getPermissionObjectKeyCategoryHandle()
         {
             // Concrete\Core\Block\Block::getPermissionObjectKeyCategoryHandle();
-            Concrete\Core\Block\Block::getPermissionObjectKeyCategoryHandle();
+            return Concrete\Core\Block\Block::getPermissionObjectKeyCategoryHandle();
         }
 
         public static function getByID($bID, $c = null, $a = null)
         {
             // Concrete\Core\Block\Block::getByID();
-            Concrete\Core\Block\Block::getByID($bID, $c, $a);
+            return Concrete\Core\Block\Block::getByID($bID, $c, $a);
         }
 
         /**
@@ -8860,187 +8860,187 @@ namespace {
         public static function getByName($globalBlockName)
         {
             // Concrete\Core\Block\Block::getByName();
-            Concrete\Core\Block\Block::getByName($globalBlockName);
+            return Concrete\Core\Block\Block::getByName($globalBlockName);
         }
 
         public static function setProxyBlock($block)
         {
             // Concrete\Core\Block\Block::setProxyBlock();
-            Concrete\Core\Block\Block::setProxyBlock($block);
+            return Concrete\Core\Block\Block::setProxyBlock($block);
         }
 
         public static function getProxyBlock()
         {
             // Concrete\Core\Block\Block::getProxyBlock();
-            Concrete\Core\Block\Block::getProxyBlock();
+            return Concrete\Core\Block\Block::getProxyBlock();
         }
 
         public static function display($view = "view")
         {
             // Concrete\Core\Block\Block::display();
-            Concrete\Core\Block\Block::display($view);
+            return Concrete\Core\Block\Block::display($view);
         }
 
         public static function isAlias($c = null)
         {
             // Concrete\Core\Block\Block::isAlias();
-            Concrete\Core\Block\Block::isAlias($c);
+            return Concrete\Core\Block\Block::isAlias($c);
         }
 
         public static function isAliasOfMasterCollection()
         {
             // Concrete\Core\Block\Block::isAliasOfMasterCollection();
-            Concrete\Core\Block\Block::isAliasOfMasterCollection();
+            return Concrete\Core\Block\Block::isAliasOfMasterCollection();
         }
 
         public static function isGlobal()
         {
             // Concrete\Core\Block\Block::isGlobal();
-            Concrete\Core\Block\Block::isGlobal();
+            return Concrete\Core\Block\Block::isGlobal();
         }
 
         public static function isBlockInStack()
         {
             // Concrete\Core\Block\Block::isBlockInStack();
-            Concrete\Core\Block\Block::isBlockInStack();
+            return Concrete\Core\Block\Block::isBlockInStack();
         }
 
         public static function getBlockCachedRecord()
         {
             // Concrete\Core\Block\Block::getBlockCachedRecord();
-            Concrete\Core\Block\Block::getBlockCachedRecord();
+            return Concrete\Core\Block\Block::getBlockCachedRecord();
         }
 
         public static function getBlockCachedOutput($area)
         {
             // Concrete\Core\Block\Block::getBlockCachedOutput();
-            Concrete\Core\Block\Block::getBlockCachedOutput($area);
+            return Concrete\Core\Block\Block::getBlockCachedOutput($area);
         }
 
         public static function setBlockCachedOutput($content, $lifetime, $area)
         {
             // Concrete\Core\Block\Block::setBlockCachedOutput();
-            Concrete\Core\Block\Block::setBlockCachedOutput($content, $lifetime, $area);
+            return Concrete\Core\Block\Block::setBlockCachedOutput($content, $lifetime, $area);
         }
 
         public static function inc($file)
         {
             // Concrete\Core\Block\Block::inc();
-            Concrete\Core\Block\Block::inc($file);
+            return Concrete\Core\Block\Block::inc($file);
         }
 
         public static function revertToAreaPermissions()
         {
             // Concrete\Core\Block\Block::revertToAreaPermissions();
-            Concrete\Core\Block\Block::revertToAreaPermissions();
+            return Concrete\Core\Block\Block::revertToAreaPermissions();
         }
 
         public static function getBlockPath()
         {
             // Concrete\Core\Block\Block::getBlockPath();
-            Concrete\Core\Block\Block::getBlockPath();
+            return Concrete\Core\Block\Block::getBlockPath();
         }
 
         public static function loadNewCollection(&$c)
         {
             // Concrete\Core\Block\Block::loadNewCollection();
-            Concrete\Core\Block\Block::loadNewCollection($c);
+            return Concrete\Core\Block\Block::loadNewCollection($c);
         }
 
         public static function setBlockAreaObject(&$a)
         {
             // Concrete\Core\Block\Block::setBlockAreaObject();
-            Concrete\Core\Block\Block::setBlockAreaObject($a);
+            return Concrete\Core\Block\Block::setBlockAreaObject($a);
         }
 
         public static function getBlockAreaObject()
         {
             // Concrete\Core\Block\Block::getBlockAreaObject();
-            Concrete\Core\Block\Block::getBlockAreaObject();
+            return Concrete\Core\Block\Block::getBlockAreaObject();
         }
 
         public static function disableBlockVersioning()
         {
             // Concrete\Core\Block\Block::disableBlockVersioning();
-            Concrete\Core\Block\Block::disableBlockVersioning();
+            return Concrete\Core\Block\Block::disableBlockVersioning();
         }
 
         public static function getOriginalCollection()
         {
             // Concrete\Core\Block\Block::getOriginalCollection();
-            Concrete\Core\Block\Block::getOriginalCollection();
+            return Concrete\Core\Block\Block::getOriginalCollection();
         }
 
         public static function getNumChildren()
         {
             // Concrete\Core\Block\Block::getNumChildren();
-            Concrete\Core\Block\Block::getNumChildren();
+            return Concrete\Core\Block\Block::getNumChildren();
         }
 
         public static function getInstance()
         {
             // Concrete\Core\Block\Block::getInstance();
-            Concrete\Core\Block\Block::getInstance();
+            return Concrete\Core\Block\Block::getInstance();
         }
 
         public static function getController()
         {
             // Concrete\Core\Block\Block::getController();
-            Concrete\Core\Block\Block::getController();
+            return Concrete\Core\Block\Block::getController();
         }
 
         public static function getCollectionList()
         {
             // Concrete\Core\Block\Block::getCollectionList();
-            Concrete\Core\Block\Block::getCollectionList();
+            return Concrete\Core\Block\Block::getCollectionList();
         }
 
         public static function update($data)
         {
             // Concrete\Core\Block\Block::update();
-            Concrete\Core\Block\Block::update($data);
+            return Concrete\Core\Block\Block::update($data);
         }
 
         public static function isActive()
         {
             // Concrete\Core\Block\Block::isActive();
-            Concrete\Core\Block\Block::isActive();
+            return Concrete\Core\Block\Block::isActive();
         }
 
         public static function deactivate()
         {
             // Concrete\Core\Block\Block::deactivate();
-            Concrete\Core\Block\Block::deactivate();
+            return Concrete\Core\Block\Block::deactivate();
         }
 
         public static function activate()
         {
             // Concrete\Core\Block\Block::activate();
-            Concrete\Core\Block\Block::activate();
+            return Concrete\Core\Block\Block::activate();
         }
 
         public static function getPackageID()
         {
             // Concrete\Core\Block\Block::getPackageID();
-            Concrete\Core\Block\Block::getPackageID();
+            return Concrete\Core\Block\Block::getPackageID();
         }
 
         public static function getPackageHandle()
         {
             // Concrete\Core\Block\Block::getPackageHandle();
-            Concrete\Core\Block\Block::getPackageHandle();
+            return Concrete\Core\Block\Block::getPackageHandle();
         }
 
         public static function updateBlockName($name, $force = null)
         {
             // Concrete\Core\Block\Block::updateBlockName();
-            Concrete\Core\Block\Block::updateBlockName($name, $force);
+            return Concrete\Core\Block\Block::updateBlockName($name, $force);
         }
 
         public static function alias($c)
         {
             // Concrete\Core\Block\Block::alias();
-            Concrete\Core\Block\Block::alias($c);
+            return Concrete\Core\Block\Block::alias($c);
         }
 
         /**
@@ -9049,115 +9049,115 @@ namespace {
         public static function move($nc, $area)
         {
             // Concrete\Core\Block\Block::move();
-            Concrete\Core\Block\Block::move($nc, $area);
+            return Concrete\Core\Block\Block::move($nc, $area);
         }
 
         public static function duplicate($nc, $isCopyFromMasterCollectionPropagation = null)
         {
             // Concrete\Core\Block\Block::duplicate();
-            Concrete\Core\Block\Block::duplicate($nc, $isCopyFromMasterCollectionPropagation);
+            return Concrete\Core\Block\Block::duplicate($nc, $isCopyFromMasterCollectionPropagation);
         }
 
         public static function getBlockCustomStyleRule()
         {
             // Concrete\Core\Block\Block::getBlockCustomStyleRule();
-            Concrete\Core\Block\Block::getBlockCustomStyleRule();
+            return Concrete\Core\Block\Block::getBlockCustomStyleRule();
         }
 
         public static function getBlockCustomStyleRuleID()
         {
             // Concrete\Core\Block\Block::getBlockCustomStyleRuleID();
-            Concrete\Core\Block\Block::getBlockCustomStyleRuleID();
+            return Concrete\Core\Block\Block::getBlockCustomStyleRuleID();
         }
 
         public static function resetBlockCustomStyle($updateAll = null)
         {
             // Concrete\Core\Block\Block::resetBlockCustomStyle();
-            Concrete\Core\Block\Block::resetBlockCustomStyle($updateAll);
+            return Concrete\Core\Block\Block::resetBlockCustomStyle($updateAll);
         }
 
         public static function setBlockCustomStyle($csr, $updateAll = null)
         {
             // Concrete\Core\Block\Block::setBlockCustomStyle();
-            Concrete\Core\Block\Block::setBlockCustomStyle($csr, $updateAll);
+            return Concrete\Core\Block\Block::setBlockCustomStyle($csr, $updateAll);
         }
 
         public static function getBlockCollectionObject()
         {
             // Concrete\Core\Block\Block::getBlockCollectionObject();
-            Concrete\Core\Block\Block::getBlockCollectionObject();
+            return Concrete\Core\Block\Block::getBlockCollectionObject();
         }
 
         public static function setBlockCollectionObject($c)
         {
             // Concrete\Core\Block\Block::setBlockCollectionObject();
-            Concrete\Core\Block\Block::setBlockCollectionObject($c);
+            return Concrete\Core\Block\Block::setBlockCollectionObject($c);
         }
 
         public static function getBlockCollectionID()
         {
             // Concrete\Core\Block\Block::getBlockCollectionID();
-            Concrete\Core\Block\Block::getBlockCollectionID();
+            return Concrete\Core\Block\Block::getBlockCollectionID();
         }
 
         public static function getBlockTypeName()
         {
             // Concrete\Core\Block\Block::getBlockTypeName();
-            Concrete\Core\Block\Block::getBlockTypeName();
+            return Concrete\Core\Block\Block::getBlockTypeName();
         }
 
         public static function getBlockTypeHandle()
         {
             // Concrete\Core\Block\Block::getBlockTypeHandle();
-            Concrete\Core\Block\Block::getBlockTypeHandle();
+            return Concrete\Core\Block\Block::getBlockTypeHandle();
         }
 
         public static function getBlockFilename()
         {
             // Concrete\Core\Block\Block::getBlockFilename();
-            Concrete\Core\Block\Block::getBlockFilename();
+            return Concrete\Core\Block\Block::getBlockFilename();
         }
 
         public static function getBlockDisplayOrder()
         {
             // Concrete\Core\Block\Block::getBlockDisplayOrder();
-            Concrete\Core\Block\Block::getBlockDisplayOrder();
+            return Concrete\Core\Block\Block::getBlockDisplayOrder();
         }
 
         public static function getBlockID()
         {
             // Concrete\Core\Block\Block::getBlockID();
-            Concrete\Core\Block\Block::getBlockID();
+            return Concrete\Core\Block\Block::getBlockID();
         }
 
         public static function getBlockTypeID()
         {
             // Concrete\Core\Block\Block::getBlockTypeID();
-            Concrete\Core\Block\Block::getBlockTypeID();
+            return Concrete\Core\Block\Block::getBlockTypeID();
         }
 
         public static function getBlockTypeObject()
         {
             // Concrete\Core\Block\Block::getBlockTypeObject();
-            Concrete\Core\Block\Block::getBlockTypeObject();
+            return Concrete\Core\Block\Block::getBlockTypeObject();
         }
 
         public static function getAreaHandle()
         {
             // Concrete\Core\Block\Block::getAreaHandle();
-            Concrete\Core\Block\Block::getAreaHandle();
+            return Concrete\Core\Block\Block::getAreaHandle();
         }
 
         public static function getBlockUserID()
         {
             // Concrete\Core\Block\Block::getBlockUserID();
-            Concrete\Core\Block\Block::getBlockUserID();
+            return Concrete\Core\Block\Block::getBlockUserID();
         }
 
         public static function getBlockName()
         {
             // Concrete\Core\Block\Block::getBlockName();
-            Concrete\Core\Block\Block::getBlockName();
+            return Concrete\Core\Block\Block::getBlockName();
         }
 
         /**
@@ -9169,25 +9169,25 @@ namespace {
         public static function getBlockDateAdded($type = "system")
         {
             // Concrete\Core\Block\Block::getBlockDateAdded();
-            Concrete\Core\Block\Block::getBlockDateAdded($type);
+            return Concrete\Core\Block\Block::getBlockDateAdded($type);
         }
 
         public static function getBlockDateLastModified()
         {
             // Concrete\Core\Block\Block::getBlockDateLastModified();
-            Concrete\Core\Block\Block::getBlockDateLastModified();
+            return Concrete\Core\Block\Block::getBlockDateLastModified();
         }
 
         public static function _getBlockAction()
         {
             // Concrete\Core\Block\Block::_getBlockAction();
-            Concrete\Core\Block\Block::_getBlockAction();
+            return Concrete\Core\Block\Block::_getBlockAction();
         }
 
         public static function setBlockActionCollectionID($bActionCID)
         {
             // Concrete\Core\Block\Block::setBlockActionCollectionID();
-            Concrete\Core\Block\Block::setBlockActionCollectionID($bActionCID);
+            return Concrete\Core\Block\Block::setBlockActionCollectionID($bActionCID);
         }
 
         /**
@@ -9196,97 +9196,97 @@ namespace {
         public static function getBlockActionCollectionID()
         {
             // Concrete\Core\Block\Block::getBlockActionCollectionID();
-            Concrete\Core\Block\Block::getBlockActionCollectionID();
+            return Concrete\Core\Block\Block::getBlockActionCollectionID();
         }
 
         public static function getBlockEditAction()
         {
             // Concrete\Core\Block\Block::getBlockEditAction();
-            Concrete\Core\Block\Block::getBlockEditAction();
+            return Concrete\Core\Block\Block::getBlockEditAction();
         }
 
         public static function getBlockUpdateInformationAction()
         {
             // Concrete\Core\Block\Block::getBlockUpdateInformationAction();
-            Concrete\Core\Block\Block::getBlockUpdateInformationAction();
+            return Concrete\Core\Block\Block::getBlockUpdateInformationAction();
         }
 
         public static function getBlockMasterCollectionAliasAction()
         {
             // Concrete\Core\Block\Block::getBlockMasterCollectionAliasAction();
-            Concrete\Core\Block\Block::getBlockMasterCollectionAliasAction();
+            return Concrete\Core\Block\Block::getBlockMasterCollectionAliasAction();
         }
 
         public static function getBlockUpdateCssAction()
         {
             // Concrete\Core\Block\Block::getBlockUpdateCssAction();
-            Concrete\Core\Block\Block::getBlockUpdateCssAction();
+            return Concrete\Core\Block\Block::getBlockUpdateCssAction();
         }
 
         public static function isEditable()
         {
             // Concrete\Core\Block\Block::isEditable();
-            Concrete\Core\Block\Block::isEditable();
+            return Concrete\Core\Block\Block::isEditable();
         }
 
         public static function overrideAreaPermissions()
         {
             // Concrete\Core\Block\Block::overrideAreaPermissions();
-            Concrete\Core\Block\Block::overrideAreaPermissions();
+            return Concrete\Core\Block\Block::overrideAreaPermissions();
         }
 
         public static function delete($forceDelete = null)
         {
             // Concrete\Core\Block\Block::delete();
-            Concrete\Core\Block\Block::delete($forceDelete);
+            return Concrete\Core\Block\Block::delete($forceDelete);
         }
 
         public static function deleteBlock($forceDelete = null)
         {
             // Concrete\Core\Block\Block::deleteBlock();
-            Concrete\Core\Block\Block::deleteBlock($forceDelete);
+            return Concrete\Core\Block\Block::deleteBlock($forceDelete);
         }
 
         public static function setOriginalBlockID($originalBID)
         {
             // Concrete\Core\Block\Block::setOriginalBlockID();
-            Concrete\Core\Block\Block::setOriginalBlockID($originalBID);
+            return Concrete\Core\Block\Block::setOriginalBlockID($originalBID);
         }
 
         public static function moveBlockToDisplayOrderPosition($afterBlock)
         {
             // Concrete\Core\Block\Block::moveBlockToDisplayOrderPosition();
-            Concrete\Core\Block\Block::moveBlockToDisplayOrderPosition($afterBlock);
+            return Concrete\Core\Block\Block::moveBlockToDisplayOrderPosition($afterBlock);
         }
 
         public static function setAbsoluteBlockDisplayOrder($do)
         {
             // Concrete\Core\Block\Block::setAbsoluteBlockDisplayOrder();
-            Concrete\Core\Block\Block::setAbsoluteBlockDisplayOrder($do);
+            return Concrete\Core\Block\Block::setAbsoluteBlockDisplayOrder($do);
         }
 
         public static function doOverrideAreaPermissions()
         {
             // Concrete\Core\Block\Block::doOverrideAreaPermissions();
-            Concrete\Core\Block\Block::doOverrideAreaPermissions();
+            return Concrete\Core\Block\Block::doOverrideAreaPermissions();
         }
 
         public static function setCustomTemplate($template)
         {
             // Concrete\Core\Block\Block::setCustomTemplate();
-            Concrete\Core\Block\Block::setCustomTemplate($template);
+            return Concrete\Core\Block\Block::setCustomTemplate($template);
         }
 
         public static function setName($name)
         {
             // Concrete\Core\Block\Block::setName();
-            Concrete\Core\Block\Block::setName($name);
+            return Concrete\Core\Block\Block::setName($name);
         }
 
         public static function refreshBlockOutputCache()
         {
             // Concrete\Core\Block\Block::refreshBlockOutputCache();
-            Concrete\Core\Block\Block::refreshBlockOutputCache();
+            return Concrete\Core\Block\Block::refreshBlockOutputCache();
         }
 
         /**
@@ -9295,61 +9295,61 @@ namespace {
         public static function refreshCache()
         {
             // Concrete\Core\Block\Block::refreshCache();
-            Concrete\Core\Block\Block::refreshCache();
+            return Concrete\Core\Block\Block::refreshCache();
         }
 
         public static function refreshCacheAll()
         {
             // Concrete\Core\Block\Block::refreshCacheAll();
-            Concrete\Core\Block\Block::refreshCacheAll();
+            return Concrete\Core\Block\Block::refreshCacheAll();
         }
 
         public static function export($node, $exportType = "full")
         {
             // Concrete\Core\Block\Block::export();
-            Concrete\Core\Block\Block::export($node, $exportType);
+            return Concrete\Core\Block\Block::export($node, $exportType);
         }
 
         public static function updateBlockInformation($data)
         {
             // Concrete\Core\Block\Block::updateBlockInformation();
-            Concrete\Core\Block\Block::updateBlockInformation($data);
+            return Concrete\Core\Block\Block::updateBlockInformation($data);
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -9360,61 +9360,61 @@ namespace {
         public static function getInstance()
         {
             // Concrete\Core\Marketplace\Marketplace::getInstance();
-            Concrete\Core\Marketplace\Marketplace::getInstance();
+            return Concrete\Core\Marketplace\Marketplace::getInstance();
         }
 
         public static function isConnected()
         {
             // Concrete\Core\Marketplace\Marketplace::isConnected();
-            Concrete\Core\Marketplace\Marketplace::isConnected();
+            return Concrete\Core\Marketplace\Marketplace::isConnected();
         }
 
         public static function hasConnectionError()
         {
             // Concrete\Core\Marketplace\Marketplace::hasConnectionError();
-            Concrete\Core\Marketplace\Marketplace::hasConnectionError();
+            return Concrete\Core\Marketplace\Marketplace::hasConnectionError();
         }
 
         public static function getConnectionError()
         {
             // Concrete\Core\Marketplace\Marketplace::getConnectionError();
-            Concrete\Core\Marketplace\Marketplace::getConnectionError();
+            return Concrete\Core\Marketplace\Marketplace::getConnectionError();
         }
 
         public static function generateSiteToken()
         {
             // Concrete\Core\Marketplace\Marketplace::generateSiteToken();
-            Concrete\Core\Marketplace\Marketplace::generateSiteToken();
+            return Concrete\Core\Marketplace\Marketplace::generateSiteToken();
         }
 
         public static function getSiteToken()
         {
             // Concrete\Core\Marketplace\Marketplace::getSiteToken();
-            Concrete\Core\Marketplace\Marketplace::getSiteToken();
+            return Concrete\Core\Marketplace\Marketplace::getSiteToken();
         }
 
         public static function getSitePageURL()
         {
             // Concrete\Core\Marketplace\Marketplace::getSitePageURL();
-            Concrete\Core\Marketplace\Marketplace::getSitePageURL();
+            return Concrete\Core\Marketplace\Marketplace::getSitePageURL();
         }
 
         public static function downloadRemoteFile($file)
         {
             // Concrete\Core\Marketplace\Marketplace::downloadRemoteFile();
-            Concrete\Core\Marketplace\Marketplace::downloadRemoteFile($file);
+            return Concrete\Core\Marketplace\Marketplace::downloadRemoteFile($file);
         }
 
         public static function getMarketplaceFrame($width = "100%", $height = 300, $completeURL = null, $connectMethod = "view")
         {
             // Concrete\Core\Marketplace\Marketplace::getMarketplaceFrame();
-            Concrete\Core\Marketplace\Marketplace::getMarketplaceFrame($width, $height, $completeURL, $connectMethod);
+            return Concrete\Core\Marketplace\Marketplace::getMarketplaceFrame($width, $height, $completeURL, $connectMethod);
         }
 
         public static function getMarketplacePurchaseFrame($mp, $width = "100%", $height = 530)
         {
             // Concrete\Core\Marketplace\Marketplace::getMarketplacePurchaseFrame();
-            Concrete\Core\Marketplace\Marketplace::getMarketplacePurchaseFrame($mp, $width, $height);
+            return Concrete\Core\Marketplace\Marketplace::getMarketplacePurchaseFrame($mp, $width, $height);
         }
 
         /**
@@ -9423,13 +9423,13 @@ namespace {
         public static function checkPackageUpdates()
         {
             // Concrete\Core\Marketplace\Marketplace::checkPackageUpdates();
-            Concrete\Core\Marketplace\Marketplace::checkPackageUpdates();
+            return Concrete\Core\Marketplace\Marketplace::checkPackageUpdates();
         }
 
         public static function getAvailableMarketplaceItems($filterInstalled = "1")
         {
             // Concrete\Core\Marketplace\Marketplace::getAvailableMarketplaceItems();
-            Concrete\Core\Marketplace\Marketplace::getAvailableMarketplaceItems($filterInstalled);
+            return Concrete\Core\Marketplace\Marketplace::getAvailableMarketplaceItems($filterInstalled);
         }
 
     }
@@ -9443,7 +9443,7 @@ namespace {
         public static function setBlockTypeHandle($btHandle)
         {
             // Concrete\Core\Block\BlockType\BlockType::setBlockTypeHandle();
-            Concrete\Core\Block\BlockType\BlockType::setBlockTypeHandle($btHandle);
+            return Concrete\Core\Block\BlockType\BlockType::setBlockTypeHandle($btHandle);
         }
 
         /**
@@ -9453,7 +9453,7 @@ namespace {
         public static function hasAddTemplate()
         {
             // Concrete\Core\Block\BlockType\BlockType::hasAddTemplate();
-            Concrete\Core\Block\BlockType\BlockType::hasAddTemplate();
+            return Concrete\Core\Block\BlockType\BlockType::hasAddTemplate();
         }
 
         /**
@@ -9463,7 +9463,7 @@ namespace {
         public static function getByHandle($btHandle)
         {
             // Concrete\Core\Block\BlockType\BlockType::getByHandle();
-            Concrete\Core\Block\BlockType\BlockType::getByHandle($btHandle);
+            return Concrete\Core\Block\BlockType\BlockType::getByHandle($btHandle);
         }
 
         /**
@@ -9474,7 +9474,7 @@ namespace {
         public static function getBlockTypeComposerTemplates()
         {
             // Concrete\Core\Block\BlockType\BlockType::getBlockTypeComposerTemplates();
-            Concrete\Core\Block\BlockType\BlockType::getBlockTypeComposerTemplates();
+            return Concrete\Core\Block\BlockType\BlockType::getBlockTypeComposerTemplates();
         }
 
         /**
@@ -9484,7 +9484,7 @@ namespace {
         public static function getByID($btID)
         {
             // Concrete\Core\Block\BlockType\BlockType::getByID();
-            Concrete\Core\Block\BlockType\BlockType::getByID($btID);
+            return Concrete\Core\Block\BlockType\BlockType::getByID($btID);
         }
 
         /**
@@ -9493,7 +9493,7 @@ namespace {
         protected static function loadController()
         {
             // Concrete\Core\Block\BlockType\BlockType::loadController();
-            Concrete\Core\Block\BlockType\BlockType::loadController();
+            return Concrete\Core\Block\BlockType\BlockType::loadController();
         }
 
         /**
@@ -9504,7 +9504,7 @@ namespace {
         public static function isBlockTypeInternal()
         {
             // Concrete\Core\Block\BlockType\BlockType::isBlockTypeInternal();
-            Concrete\Core\Block\BlockType\BlockType::isBlockTypeInternal();
+            return Concrete\Core\Block\BlockType\BlockType::isBlockTypeInternal();
         }
 
         /**
@@ -9514,7 +9514,7 @@ namespace {
         public static function supportsInlineEdit()
         {
             // Concrete\Core\Block\BlockType\BlockType::supportsInlineEdit();
-            Concrete\Core\Block\BlockType\BlockType::supportsInlineEdit();
+            return Concrete\Core\Block\BlockType\BlockType::supportsInlineEdit();
         }
 
         /**
@@ -9524,7 +9524,7 @@ namespace {
         public static function supportsInlineAdd()
         {
             // Concrete\Core\Block\BlockType\BlockType::supportsInlineAdd();
-            Concrete\Core\Block\BlockType\BlockType::supportsInlineAdd();
+            return Concrete\Core\Block\BlockType\BlockType::supportsInlineAdd();
         }
 
         /**
@@ -9534,7 +9534,7 @@ namespace {
         public static function isInternalBlockType()
         {
             // Concrete\Core\Block\BlockType\BlockType::isInternalBlockType();
-            Concrete\Core\Block\BlockType\BlockType::isInternalBlockType();
+            return Concrete\Core\Block\BlockType\BlockType::isInternalBlockType();
         }
 
         /**
@@ -9544,7 +9544,7 @@ namespace {
         public static function getBlockTypeInterfaceWidth()
         {
             // Concrete\Core\Block\BlockType\BlockType::getBlockTypeInterfaceWidth();
-            Concrete\Core\Block\BlockType\BlockType::getBlockTypeInterfaceWidth();
+            return Concrete\Core\Block\BlockType\BlockType::getBlockTypeInterfaceWidth();
         }
 
         /**
@@ -9554,7 +9554,7 @@ namespace {
         public static function getBlockTypeInterfaceHeight()
         {
             // Concrete\Core\Block\BlockType\BlockType::getBlockTypeInterfaceHeight();
-            Concrete\Core\Block\BlockType\BlockType::getBlockTypeInterfaceHeight();
+            return Concrete\Core\Block\BlockType\BlockType::getBlockTypeInterfaceHeight();
         }
 
         /**
@@ -9564,7 +9564,7 @@ namespace {
         public static function getPackageID()
         {
             // Concrete\Core\Block\BlockType\BlockType::getPackageID();
-            Concrete\Core\Block\BlockType\BlockType::getPackageID();
+            return Concrete\Core\Block\BlockType\BlockType::getPackageID();
         }
 
         /**
@@ -9574,7 +9574,7 @@ namespace {
         public static function getPackageHandle()
         {
             // Concrete\Core\Block\BlockType\BlockType::getPackageHandle();
-            Concrete\Core\Block\BlockType\BlockType::getPackageHandle();
+            return Concrete\Core\Block\BlockType\BlockType::getPackageHandle();
         }
 
         /**
@@ -9584,7 +9584,7 @@ namespace {
         public static function getBlockTypeDescription()
         {
             // Concrete\Core\Block\BlockType\BlockType::getBlockTypeDescription();
-            Concrete\Core\Block\BlockType\BlockType::getBlockTypeDescription();
+            return Concrete\Core\Block\BlockType\BlockType::getBlockTypeDescription();
         }
 
         /**
@@ -9593,7 +9593,7 @@ namespace {
         public static function getBlockTypeID()
         {
             // Concrete\Core\Block\BlockType\BlockType::getBlockTypeID();
-            Concrete\Core\Block\BlockType\BlockType::getBlockTypeID();
+            return Concrete\Core\Block\BlockType\BlockType::getBlockTypeID();
         }
 
         /**
@@ -9602,7 +9602,7 @@ namespace {
         public static function getBlockTypeHandle()
         {
             // Concrete\Core\Block\BlockType\BlockType::getBlockTypeHandle();
-            Concrete\Core\Block\BlockType\BlockType::getBlockTypeHandle();
+            return Concrete\Core\Block\BlockType\BlockType::getBlockTypeHandle();
         }
 
         /**
@@ -9611,7 +9611,7 @@ namespace {
         public static function getBlockTypeName()
         {
             // Concrete\Core\Block\BlockType\BlockType::getBlockTypeName();
-            Concrete\Core\Block\BlockType\BlockType::getBlockTypeName();
+            return Concrete\Core\Block\BlockType\BlockType::getBlockTypeName();
         }
 
         /**
@@ -9620,7 +9620,7 @@ namespace {
         public static function isCopiedWhenPropagated()
         {
             // Concrete\Core\Block\BlockType\BlockType::isCopiedWhenPropagated();
-            Concrete\Core\Block\BlockType\BlockType::isCopiedWhenPropagated();
+            return Concrete\Core\Block\BlockType\BlockType::isCopiedWhenPropagated();
         }
 
         /**
@@ -9630,7 +9630,7 @@ namespace {
         public static function includeAll()
         {
             // Concrete\Core\Block\BlockType\BlockType::includeAll();
-            Concrete\Core\Block\BlockType\BlockType::includeAll();
+            return Concrete\Core\Block\BlockType\BlockType::includeAll();
         }
 
         /**
@@ -9639,7 +9639,7 @@ namespace {
         public static function getBlockTypeClass()
         {
             // Concrete\Core\Block\BlockType\BlockType::getBlockTypeClass();
-            Concrete\Core\Block\BlockType\BlockType::getBlockTypeClass();
+            return Concrete\Core\Block\BlockType\BlockType::getBlockTypeClass();
         }
 
         /**
@@ -9648,7 +9648,7 @@ namespace {
         public static function getBlockTypeClassFromHandle()
         {
             // Concrete\Core\Block\BlockType\BlockType::getBlockTypeClassFromHandle();
-            Concrete\Core\Block\BlockType\BlockType::getBlockTypeClassFromHandle();
+            return Concrete\Core\Block\BlockType\BlockType::getBlockTypeClassFromHandle();
         }
 
         /**
@@ -9658,7 +9658,7 @@ namespace {
         public static function getBlockTypeMappedClass($btHandle, $pkgHandle = null)
         {
             // Concrete\Core\Block\BlockType\BlockType::getBlockTypeMappedClass();
-            Concrete\Core\Block\BlockType\BlockType::getBlockTypeMappedClass($btHandle, $pkgHandle);
+            return Concrete\Core\Block\BlockType\BlockType::getBlockTypeMappedClass($btHandle, $pkgHandle);
         }
 
         /**
@@ -9667,7 +9667,7 @@ namespace {
         public static function getBlockTypeSets()
         {
             // Concrete\Core\Block\BlockType\BlockType::getBlockTypeSets();
-            Concrete\Core\Block\BlockType\BlockType::getBlockTypeSets();
+            return Concrete\Core\Block\BlockType\BlockType::getBlockTypeSets();
         }
 
         /**
@@ -9679,7 +9679,7 @@ namespace {
         public static function getCount($ignoreUnapprovedVersions = null)
         {
             // Concrete\Core\Block\BlockType\BlockType::getCount();
-            Concrete\Core\Block\BlockType\BlockType::getCount($ignoreUnapprovedVersions);
+            return Concrete\Core\Block\BlockType\BlockType::getCount($ignoreUnapprovedVersions);
         }
 
         /**
@@ -9689,7 +9689,7 @@ namespace {
         public static function canUnInstall()
         {
             // Concrete\Core\Block\BlockType\BlockType::canUnInstall();
-            Concrete\Core\Block\BlockType\BlockType::canUnInstall();
+            return Concrete\Core\Block\BlockType\BlockType::canUnInstall();
         }
 
         /**
@@ -9700,7 +9700,7 @@ namespace {
         public static function render($view = "view")
         {
             // Concrete\Core\Block\BlockType\BlockType::render();
-            Concrete\Core\Block\BlockType\BlockType::render($view);
+            return Concrete\Core\Block\BlockType\BlockType::render($view);
         }
 
         /**
@@ -9710,7 +9710,7 @@ namespace {
         public static function getController()
         {
             // Concrete\Core\Block\BlockType\BlockType::getController();
-            Concrete\Core\Block\BlockType\BlockType::getController();
+            return Concrete\Core\Block\BlockType\BlockType::getController();
         }
 
         /**
@@ -9720,7 +9720,7 @@ namespace {
         public static function getBlockTypeCustomTemplates()
         {
             // Concrete\Core\Block\BlockType\BlockType::getBlockTypeCustomTemplates();
-            Concrete\Core\Block\BlockType\BlockType::getBlockTypeCustomTemplates();
+            return Concrete\Core\Block\BlockType\BlockType::getBlockTypeCustomTemplates();
         }
 
         /**
@@ -9729,7 +9729,7 @@ namespace {
         public static function setBlockTypeDisplayOrder($displayOrder)
         {
             // Concrete\Core\Block\BlockType\BlockType::setBlockTypeDisplayOrder();
-            Concrete\Core\Block\BlockType\BlockType::setBlockTypeDisplayOrder($displayOrder);
+            return Concrete\Core\Block\BlockType\BlockType::setBlockTypeDisplayOrder($displayOrder);
         }
 
         /**
@@ -9738,7 +9738,7 @@ namespace {
         public static function installBlockTypeFromPackage($btHandle, $pkg)
         {
             // Concrete\Core\Block\BlockType\BlockType::installBlockTypeFromPackage();
-            Concrete\Core\Block\BlockType\BlockType::installBlockTypeFromPackage($btHandle, $pkg);
+            return Concrete\Core\Block\BlockType\BlockType::installBlockTypeFromPackage($btHandle, $pkg);
         }
 
         /**
@@ -9748,7 +9748,7 @@ namespace {
         public static function refresh()
         {
             // Concrete\Core\Block\BlockType\BlockType::refresh();
-            Concrete\Core\Block\BlockType\BlockType::refresh();
+            return Concrete\Core\Block\BlockType\BlockType::refresh();
         }
 
         /**
@@ -9757,13 +9757,13 @@ namespace {
         public static function installBlockType($btHandle, $pkg = null)
         {
             // Concrete\Core\Block\BlockType\BlockType::installBlockType();
-            Concrete\Core\Block\BlockType\BlockType::installBlockType($btHandle, $pkg);
+            return Concrete\Core\Block\BlockType\BlockType::installBlockType($btHandle, $pkg);
         }
 
         protected static function loadFromController($bta)
         {
             // Concrete\Core\Block\BlockType\BlockType::loadFromController();
-            Concrete\Core\Block\BlockType\BlockType::loadFromController($bta);
+            return Concrete\Core\Block\BlockType\BlockType::loadFromController($bta);
         }
 
         /**
@@ -9772,7 +9772,7 @@ namespace {
         public static function delete()
         {
             // Concrete\Core\Block\BlockType\BlockType::delete();
-            Concrete\Core\Block\BlockType\BlockType::delete();
+            return Concrete\Core\Block\BlockType\BlockType::delete();
         }
 
         /**
@@ -9782,7 +9782,7 @@ namespace {
         public static function add($data, $c = null, $a = null)
         {
             // Concrete\Core\Block\BlockType\BlockType::add();
-            Concrete\Core\Block\BlockType\BlockType::add($data, $c, $a);
+            return Concrete\Core\Block\BlockType\BlockType::add($data, $c, $a);
         }
 
     }
@@ -9793,13 +9793,13 @@ namespace {
         public static function get($itemsToGet = 100, $offset = null)
         {
             // Concrete\Core\Block\BlockType\BlockTypeList::get();
-            Concrete\Core\Block\BlockType\BlockTypeList::get($itemsToGet, $offset);
+            return Concrete\Core\Block\BlockType\BlockTypeList::get($itemsToGet, $offset);
         }
 
         public static function filterByPackage(Concrete\Core\Package\Package $pkg)
         {
             // Concrete\Core\Block\BlockType\BlockTypeList::filterByPackage();
-            Concrete\Core\Block\BlockType\BlockTypeList::filterByPackage($pkg);
+            return Concrete\Core\Block\BlockType\BlockTypeList::filterByPackage($pkg);
         }
 
         /**
@@ -9810,7 +9810,7 @@ namespace {
         public static function exportList($xml)
         {
             // Concrete\Core\Block\BlockType\BlockTypeList::exportList();
-            Concrete\Core\Block\BlockType\BlockTypeList::exportList($xml);
+            return Concrete\Core\Block\BlockType\BlockTypeList::exportList($xml);
         }
 
         /**
@@ -9820,7 +9820,7 @@ namespace {
         public static function getDashboardBlockTypes()
         {
             // Concrete\Core\Block\BlockType\BlockTypeList::getDashboardBlockTypes();
-            Concrete\Core\Block\BlockType\BlockTypeList::getDashboardBlockTypes();
+            return Concrete\Core\Block\BlockType\BlockTypeList::getDashboardBlockTypes();
         }
 
         /**
@@ -9831,7 +9831,7 @@ namespace {
         public static function getAvailableList()
         {
             // Concrete\Core\Block\BlockType\BlockTypeList::getAvailableList();
-            Concrete\Core\Block\BlockType\BlockTypeList::getAvailableList();
+            return Concrete\Core\Block\BlockType\BlockTypeList::getAvailableList();
         }
 
         /**
@@ -9841,67 +9841,67 @@ namespace {
         public static function getInstalledList()
         {
             // Concrete\Core\Block\BlockType\BlockTypeList::getInstalledList();
-            Concrete\Core\Block\BlockType\BlockTypeList::getInstalledList();
+            return Concrete\Core\Block\BlockType\BlockTypeList::getInstalledList();
         }
 
         public static function resetBlockTypeDisplayOrder($column = "btID")
         {
             // Concrete\Core\Block\BlockType\BlockTypeList::resetBlockTypeDisplayOrder();
-            Concrete\Core\Block\BlockType\BlockTypeList::resetBlockTypeDisplayOrder($column);
+            return Concrete\Core\Block\BlockType\BlockTypeList::resetBlockTypeDisplayOrder($column);
         }
 
         public static function getTotal()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getTotal();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getTotal();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getTotal();
         }
 
         public static function debug($dbg = "1")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
         }
 
         protected static function setQuery($query)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery($query);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery($query);
         }
 
         protected static function getQuery()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
         }
 
         public static function addToQuery($query)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery($query);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery($query);
         }
 
         protected static function setupAutoSort()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
         }
 
         protected static function executeBase()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
         }
 
         protected static function setupSortByString()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
         }
 
         protected static function setupAttributeSort()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
         }
 
         /**
@@ -9910,121 +9910,121 @@ namespace {
         public static function filter($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter($column, $value, $comparison);
         }
 
         public static function getSearchResultsClass($field)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass($field);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass($field);
         }
 
         public static function sortBy($key, $dir = "asc")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy($key, $dir);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy($key, $dir);
         }
 
         public static function groupBy($key)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy($key);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy($key);
         }
 
         public static function having($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
         }
 
         public static function getSortByURL($column, $dir = "asc", $baseURL = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
         }
 
         protected static function setupAttributeFilters($join)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters($join);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters($join);
         }
 
         public static function filterByAttribute($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
         }
 
         public static function enableStickySearchRequest($namespace = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
+            return Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
         }
 
         public static function getQueryStringPagingVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
         }
 
         public static function getQueryStringSortVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
         }
 
         public static function getQueryStringSortDirectionVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
         }
 
         protected static function getStickySearchNameSpace()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
-            Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
+            return Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
         }
 
         public static function resetSearchRequest($namespace = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
+            return Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
         }
 
         public static function addToSearchRequest($key, $value)
         {
             // Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest($key, $value);
+            return Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest($key, $value);
         }
 
         public static function getSearchRequest()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
+            return Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
         }
 
         public static function setItemsPerPage($num)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage();
-            Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage($num);
+            return Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage($num);
         }
 
         public static function getItemsPerPage()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
-            Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
+            return Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
         }
 
         public static function setItems($items)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setItems();
-            Concrete\Core\Foundation\Collection\ItemList::setItems($items);
+            return Concrete\Core\Foundation\Collection\ItemList::setItems($items);
         }
 
         public static function setNameSpace($ns)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setNameSpace();
-            Concrete\Core\Foundation\Collection\ItemList::setNameSpace($ns);
+            return Concrete\Core\Foundation\Collection\ItemList::setNameSpace($ns);
         }
 
         /**
@@ -10033,13 +10033,13 @@ namespace {
         public static function getPage($page = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPage();
-            Concrete\Core\Foundation\Collection\ItemList::getPage($page);
+            return Concrete\Core\Foundation\Collection\ItemList::getPage($page);
         }
 
         protected static function setCurrentPage($page = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setCurrentPage();
-            Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
+            return Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
         }
 
         /**
@@ -10048,37 +10048,37 @@ namespace {
         public static function displaySummary($right_content = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displaySummary();
-            Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
+            return Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
         }
 
         public static function isActiveSortColumn($column)
         {
             // Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn();
-            Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn($column);
+            return Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn($column);
         }
 
         public static function getActiveSortColumn()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
-            Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
+            return Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
         }
 
         public static function getActiveSortDirection()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
-            Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
+            return Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
         }
 
         public static function requiresPaging()
         {
             // Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
-            Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
+            return Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
         }
 
         public static function getPagination($url = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPagination();
-            Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
         }
 
         /**
@@ -10086,7 +10086,7 @@ namespace {
         public static function displayPagingV2($script = null, $return = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPagingV2();
-            Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
         }
 
         /**
@@ -10094,7 +10094,7 @@ namespace {
         public static function displayPaging($script = null, $return = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPaging();
-            Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
         }
 
         /**
@@ -10103,19 +10103,19 @@ namespace {
         public static function getSummary()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSummary();
-            Concrete\Core\Foundation\Collection\ItemList::getSummary();
+            return Concrete\Core\Foundation\Collection\ItemList::getSummary();
         }
 
         public static function getSortBy()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSortBy();
-            Concrete\Core\Foundation\Collection\ItemList::getSortBy();
+            return Concrete\Core\Foundation\Collection\ItemList::getSortBy();
         }
 
         public static function getSortByDirection()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
-            Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
+            return Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
         }
 
         /**
@@ -10128,7 +10128,7 @@ namespace {
         public static function sortByMultiple()
         {
             // Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
-            Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
+            return Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
         }
 
     }
@@ -10139,169 +10139,169 @@ namespace {
         public static function getByID($btsID)
         {
             // Concrete\Core\Block\BlockType\Set::getByID();
-            Concrete\Core\Block\BlockType\Set::getByID($btsID);
+            return Concrete\Core\Block\BlockType\Set::getByID($btsID);
         }
 
         public static function getByHandle($btsHandle)
         {
             // Concrete\Core\Block\BlockType\Set::getByHandle();
-            Concrete\Core\Block\BlockType\Set::getByHandle($btsHandle);
+            return Concrete\Core\Block\BlockType\Set::getByHandle($btsHandle);
         }
 
         public static function getListByPackage($pkg)
         {
             // Concrete\Core\Block\BlockType\Set::getListByPackage();
-            Concrete\Core\Block\BlockType\Set::getListByPackage($pkg);
+            return Concrete\Core\Block\BlockType\Set::getListByPackage($pkg);
         }
 
         public static function getList()
         {
             // Concrete\Core\Block\BlockType\Set::getList();
-            Concrete\Core\Block\BlockType\Set::getList();
+            return Concrete\Core\Block\BlockType\Set::getList();
         }
 
         public static function getBlockTypeSetID()
         {
             // Concrete\Core\Block\BlockType\Set::getBlockTypeSetID();
-            Concrete\Core\Block\BlockType\Set::getBlockTypeSetID();
+            return Concrete\Core\Block\BlockType\Set::getBlockTypeSetID();
         }
 
         public static function getBlockTypeSetHandle()
         {
             // Concrete\Core\Block\BlockType\Set::getBlockTypeSetHandle();
-            Concrete\Core\Block\BlockType\Set::getBlockTypeSetHandle();
+            return Concrete\Core\Block\BlockType\Set::getBlockTypeSetHandle();
         }
 
         public static function getBlockTypeSetName()
         {
             // Concrete\Core\Block\BlockType\Set::getBlockTypeSetName();
-            Concrete\Core\Block\BlockType\Set::getBlockTypeSetName();
+            return Concrete\Core\Block\BlockType\Set::getBlockTypeSetName();
         }
 
         public static function getPackageID()
         {
             // Concrete\Core\Block\BlockType\Set::getPackageID();
-            Concrete\Core\Block\BlockType\Set::getPackageID();
+            return Concrete\Core\Block\BlockType\Set::getPackageID();
         }
 
         public static function getPackageHandle()
         {
             // Concrete\Core\Block\BlockType\Set::getPackageHandle();
-            Concrete\Core\Block\BlockType\Set::getPackageHandle();
+            return Concrete\Core\Block\BlockType\Set::getPackageHandle();
         }
 
         public static function updateBlockTypeSetName($btsName)
         {
             // Concrete\Core\Block\BlockType\Set::updateBlockTypeSetName();
-            Concrete\Core\Block\BlockType\Set::updateBlockTypeSetName($btsName);
+            return Concrete\Core\Block\BlockType\Set::updateBlockTypeSetName($btsName);
         }
 
         public static function updateBlockTypeSetHandle($btsHandle)
         {
             // Concrete\Core\Block\BlockType\Set::updateBlockTypeSetHandle();
-            Concrete\Core\Block\BlockType\Set::updateBlockTypeSetHandle($btsHandle);
+            return Concrete\Core\Block\BlockType\Set::updateBlockTypeSetHandle($btsHandle);
         }
 
         public static function addBlockType(Concrete\Core\Block\BlockType\BlockType $bt)
         {
             // Concrete\Core\Block\BlockType\Set::addBlockType();
-            Concrete\Core\Block\BlockType\Set::addBlockType($bt);
+            return Concrete\Core\Block\BlockType\Set::addBlockType($bt);
         }
 
         public static function clearBlockTypes()
         {
             // Concrete\Core\Block\BlockType\Set::clearBlockTypes();
-            Concrete\Core\Block\BlockType\Set::clearBlockTypes();
+            return Concrete\Core\Block\BlockType\Set::clearBlockTypes();
         }
 
         public static function add($btsHandle, $btsName, $pkg = null)
         {
             // Concrete\Core\Block\BlockType\Set::add();
-            Concrete\Core\Block\BlockType\Set::add($btsHandle, $btsName, $pkg);
+            return Concrete\Core\Block\BlockType\Set::add($btsHandle, $btsName, $pkg);
         }
 
         public static function export($axml)
         {
             // Concrete\Core\Block\BlockType\Set::export();
-            Concrete\Core\Block\BlockType\Set::export($axml);
+            return Concrete\Core\Block\BlockType\Set::export($axml);
         }
 
         public static function exportList($xml)
         {
             // Concrete\Core\Block\BlockType\Set::exportList();
-            Concrete\Core\Block\BlockType\Set::exportList($xml);
+            return Concrete\Core\Block\BlockType\Set::exportList($xml);
         }
 
         public static function getBlockTypes()
         {
             // Concrete\Core\Block\BlockType\Set::getBlockTypes();
-            Concrete\Core\Block\BlockType\Set::getBlockTypes();
+            return Concrete\Core\Block\BlockType\Set::getBlockTypes();
         }
 
         public static function get()
         {
             // Concrete\Core\Block\BlockType\Set::get();
-            Concrete\Core\Block\BlockType\Set::get();
+            return Concrete\Core\Block\BlockType\Set::get();
         }
 
         public static function contains($bt)
         {
             // Concrete\Core\Block\BlockType\Set::contains();
-            Concrete\Core\Block\BlockType\Set::contains($bt);
+            return Concrete\Core\Block\BlockType\Set::contains($bt);
         }
 
         public static function delete()
         {
             // Concrete\Core\Block\BlockType\Set::delete();
-            Concrete\Core\Block\BlockType\Set::delete();
+            return Concrete\Core\Block\BlockType\Set::delete();
         }
 
         public static function deleteKey($bt)
         {
             // Concrete\Core\Block\BlockType\Set::deleteKey();
-            Concrete\Core\Block\BlockType\Set::deleteKey($bt);
+            return Concrete\Core\Block\BlockType\Set::deleteKey($bt);
         }
 
         protected static function rescanDisplayOrder()
         {
             // Concrete\Core\Block\BlockType\Set::rescanDisplayOrder();
-            Concrete\Core\Block\BlockType\Set::rescanDisplayOrder();
+            return Concrete\Core\Block\BlockType\Set::rescanDisplayOrder();
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -10312,31 +10312,31 @@ namespace {
         public static function getRelativePath()
         {
             // Concrete\Core\Package\Package::getRelativePath();
-            Concrete\Core\Package\Package::getRelativePath();
+            return Concrete\Core\Package\Package::getRelativePath();
         }
 
         public static function getPackageID()
         {
             // Concrete\Core\Package\Package::getPackageID();
-            Concrete\Core\Package\Package::getPackageID();
+            return Concrete\Core\Package\Package::getPackageID();
         }
 
         public static function getPackageName()
         {
             // Concrete\Core\Package\Package::getPackageName();
-            Concrete\Core\Package\Package::getPackageName();
+            return Concrete\Core\Package\Package::getPackageName();
         }
 
         public static function getPackageDescription()
         {
             // Concrete\Core\Package\Package::getPackageDescription();
-            Concrete\Core\Package\Package::getPackageDescription();
+            return Concrete\Core\Package\Package::getPackageDescription();
         }
 
         public static function getPackageHandle()
         {
             // Concrete\Core\Package\Package::getPackageHandle();
-            Concrete\Core\Package\Package::getPackageHandle();
+            return Concrete\Core\Package\Package::getPackageHandle();
         }
 
         /**
@@ -10348,31 +10348,31 @@ namespace {
         public static function getPackageDateInstalled($type = "system")
         {
             // Concrete\Core\Package\Package::getPackageDateInstalled();
-            Concrete\Core\Package\Package::getPackageDateInstalled($type);
+            return Concrete\Core\Package\Package::getPackageDateInstalled($type);
         }
 
         public static function getPackageVersion()
         {
             // Concrete\Core\Package\Package::getPackageVersion();
-            Concrete\Core\Package\Package::getPackageVersion();
+            return Concrete\Core\Package\Package::getPackageVersion();
         }
 
         public static function getPackageVersionUpdateAvailable()
         {
             // Concrete\Core\Package\Package::getPackageVersionUpdateAvailable();
-            Concrete\Core\Package\Package::getPackageVersionUpdateAvailable();
+            return Concrete\Core\Package\Package::getPackageVersionUpdateAvailable();
         }
 
         public static function isPackageInstalled()
         {
             // Concrete\Core\Package\Package::isPackageInstalled();
-            Concrete\Core\Package\Package::isPackageInstalled();
+            return Concrete\Core\Package\Package::isPackageInstalled();
         }
 
         public static function getChangelogContents()
         {
             // Concrete\Core\Package\Package::getChangelogContents();
-            Concrete\Core\Package\Package::getChangelogContents();
+            return Concrete\Core\Package\Package::getChangelogContents();
         }
 
         /**
@@ -10382,49 +10382,49 @@ namespace {
         public static function getPackageCurrentlyInstalledVersion()
         {
             // Concrete\Core\Package\Package::getPackageCurrentlyInstalledVersion();
-            Concrete\Core\Package\Package::getPackageCurrentlyInstalledVersion();
+            return Concrete\Core\Package\Package::getPackageCurrentlyInstalledVersion();
         }
 
         public static function getApplicationVersionRequired()
         {
             // Concrete\Core\Package\Package::getApplicationVersionRequired();
-            Concrete\Core\Package\Package::getApplicationVersionRequired();
+            return Concrete\Core\Package\Package::getApplicationVersionRequired();
         }
 
         public static function hasInstallNotes()
         {
             // Concrete\Core\Package\Package::hasInstallNotes();
-            Concrete\Core\Package\Package::hasInstallNotes();
+            return Concrete\Core\Package\Package::hasInstallNotes();
         }
 
         public static function hasInstallPostScreen()
         {
             // Concrete\Core\Package\Package::hasInstallPostScreen();
-            Concrete\Core\Package\Package::hasInstallPostScreen();
+            return Concrete\Core\Package\Package::hasInstallPostScreen();
         }
 
         public static function allowsFullContentSwap()
         {
             // Concrete\Core\Package\Package::allowsFullContentSwap();
-            Concrete\Core\Package\Package::allowsFullContentSwap();
+            return Concrete\Core\Package\Package::allowsFullContentSwap();
         }
 
         public static function showInstallOptionsScreen()
         {
             // Concrete\Core\Package\Package::showInstallOptionsScreen();
-            Concrete\Core\Package\Package::showInstallOptionsScreen();
+            return Concrete\Core\Package\Package::showInstallOptionsScreen();
         }
 
         public static function installDB($xmlFile)
         {
             // Concrete\Core\Package\Package::installDB();
-            Concrete\Core\Package\Package::installDB($xmlFile);
+            return Concrete\Core\Package\Package::installDB($xmlFile);
         }
 
         public static function getClass($pkgHandle)
         {
             // Concrete\Core\Package\Package::getClass();
-            Concrete\Core\Package\Package::getClass($pkgHandle);
+            return Concrete\Core\Package\Package::getClass($pkgHandle);
         }
 
         /**
@@ -10436,7 +10436,7 @@ namespace {
         public static function setupPackageLocalization($locale = null, $key = null)
         {
             // Concrete\Core\Package\Package::setupPackageLocalization();
-            Concrete\Core\Package\Package::setupPackageLocalization($locale, $key);
+            return Concrete\Core\Package\Package::setupPackageLocalization($locale, $key);
         }
 
         /**
@@ -10445,7 +10445,7 @@ namespace {
         public static function getPackageItems()
         {
             // Concrete\Core\Package\Package::getPackageItems();
-            Concrete\Core\Package\Package::getPackageItems();
+            return Concrete\Core\Package\Package::getPackageItems();
         }
 
         /** Returns the display name of a category of package items (localized and escaped accordingly to $format)
@@ -10456,13 +10456,13 @@ namespace {
         public static function getPackageItemsCategoryDisplayName($categoryHandle, $format = "html")
         {
             // Concrete\Core\Package\Package::getPackageItemsCategoryDisplayName();
-            Concrete\Core\Package\Package::getPackageItemsCategoryDisplayName($categoryHandle, $format);
+            return Concrete\Core\Package\Package::getPackageItemsCategoryDisplayName($categoryHandle, $format);
         }
 
         public static function getItemName($item)
         {
             // Concrete\Core\Package\Package::getItemName();
-            Concrete\Core\Package\Package::getItemName($item);
+            return Concrete\Core\Package\Package::getItemName($item);
         }
 
         /**
@@ -10471,37 +10471,37 @@ namespace {
         public static function uninstall()
         {
             // Concrete\Core\Package\Package::uninstall();
-            Concrete\Core\Package\Package::uninstall();
+            return Concrete\Core\Package\Package::uninstall();
         }
 
         protected static function validateClearSiteContents($options)
         {
             // Concrete\Core\Package\Package::validateClearSiteContents();
-            Concrete\Core\Package\Package::validateClearSiteContents($options);
+            return Concrete\Core\Package\Package::validateClearSiteContents($options);
         }
 
         public static function swapContent($options)
         {
             // Concrete\Core\Package\Package::swapContent();
-            Concrete\Core\Package\Package::swapContent($options);
+            return Concrete\Core\Package\Package::swapContent($options);
         }
 
         public static function testForInstall($package, $testForAlreadyInstalled = "1")
         {
             // Concrete\Core\Package\Package::testForInstall();
-            Concrete\Core\Package\Package::testForInstall($package, $testForAlreadyInstalled);
+            return Concrete\Core\Package\Package::testForInstall($package, $testForAlreadyInstalled);
         }
 
         public static function mapError($testResults)
         {
             // Concrete\Core\Package\Package::mapError();
-            Concrete\Core\Package\Package::mapError($testResults);
+            return Concrete\Core\Package\Package::mapError($testResults);
         }
 
         public static function getPackagePath()
         {
             // Concrete\Core\Package\Package::getPackagePath();
-            Concrete\Core\Package\Package::getPackagePath();
+            return Concrete\Core\Package\Package::getPackagePath();
         }
 
         /**
@@ -10512,7 +10512,7 @@ namespace {
         public static function getByID($pkgID)
         {
             // Concrete\Core\Package\Package::getByID();
-            Concrete\Core\Package\Package::getByID($pkgID);
+            return Concrete\Core\Package\Package::getByID($pkgID);
         }
 
         /**
@@ -10523,7 +10523,7 @@ namespace {
         public static function getByHandle($pkgHandle)
         {
             // Concrete\Core\Package\Package::getByHandle();
-            Concrete\Core\Package\Package::getByHandle($pkgHandle);
+            return Concrete\Core\Package\Package::getByHandle($pkgHandle);
         }
 
         /**
@@ -10532,37 +10532,37 @@ namespace {
         public static function install()
         {
             // Concrete\Core\Package\Package::install();
-            Concrete\Core\Package\Package::install();
+            return Concrete\Core\Package\Package::install();
         }
 
         public static function updateAvailableVersionNumber($vNum)
         {
             // Concrete\Core\Package\Package::updateAvailableVersionNumber();
-            Concrete\Core\Package\Package::updateAvailableVersionNumber($vNum);
+            return Concrete\Core\Package\Package::updateAvailableVersionNumber($vNum);
         }
 
         public static function upgradeCoreData()
         {
             // Concrete\Core\Package\Package::upgradeCoreData();
-            Concrete\Core\Package\Package::upgradeCoreData();
+            return Concrete\Core\Package\Package::upgradeCoreData();
         }
 
         public static function upgrade()
         {
             // Concrete\Core\Package\Package::upgrade();
-            Concrete\Core\Package\Package::upgrade();
+            return Concrete\Core\Package\Package::upgrade();
         }
 
         public static function getInstalledHandles()
         {
             // Concrete\Core\Package\Package::getInstalledHandles();
-            Concrete\Core\Package\Package::getInstalledHandles();
+            return Concrete\Core\Package\Package::getInstalledHandles();
         }
 
         public static function getInstalledList()
         {
             // Concrete\Core\Package\Package::getInstalledList();
-            Concrete\Core\Package\Package::getInstalledList();
+            return Concrete\Core\Package\Package::getInstalledList();
         }
 
         /**
@@ -10572,13 +10572,13 @@ namespace {
         public static function getLocalUpgradeablePackages()
         {
             // Concrete\Core\Package\Package::getLocalUpgradeablePackages();
-            Concrete\Core\Package\Package::getLocalUpgradeablePackages();
+            return Concrete\Core\Package\Package::getLocalUpgradeablePackages();
         }
 
         public static function getRemotelyUpgradeablePackages()
         {
             // Concrete\Core\Package\Package::getRemotelyUpgradeablePackages();
-            Concrete\Core\Package\Package::getRemotelyUpgradeablePackages();
+            return Concrete\Core\Package\Package::getRemotelyUpgradeablePackages();
         }
 
         /**
@@ -10587,7 +10587,7 @@ namespace {
         public static function backup()
         {
             // Concrete\Core\Package\Package::backup();
-            Concrete\Core\Package\Package::backup();
+            return Concrete\Core\Package\Package::backup();
         }
 
         /**
@@ -10597,67 +10597,67 @@ namespace {
         public static function restore()
         {
             // Concrete\Core\Package\Package::restore();
-            Concrete\Core\Package\Package::restore();
+            return Concrete\Core\Package\Package::restore();
         }
 
         public static function config($cfKey, $getFullObject = null)
         {
             // Concrete\Core\Package\Package::config();
-            Concrete\Core\Package\Package::config($cfKey, $getFullObject);
+            return Concrete\Core\Package\Package::config($cfKey, $getFullObject);
         }
 
         public static function saveConfig($cfKey, $value)
         {
             // Concrete\Core\Package\Package::saveConfig();
-            Concrete\Core\Package\Package::saveConfig($cfKey, $value);
+            return Concrete\Core\Package\Package::saveConfig($cfKey, $value);
         }
 
         public static function clearConfig($cfKey)
         {
             // Concrete\Core\Package\Package::clearConfig();
-            Concrete\Core\Package\Package::clearConfig($cfKey);
+            return Concrete\Core\Package\Package::clearConfig($cfKey);
         }
 
         public static function getAvailablePackages($filterInstalled = "1")
         {
             // Concrete\Core\Package\Package::getAvailablePackages();
-            Concrete\Core\Package\Package::getAvailablePackages($filterInstalled);
+            return Concrete\Core\Package\Package::getAvailablePackages($filterInstalled);
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -10668,31 +10668,31 @@ namespace {
         public static function loadVersionObject($cvID = "ACTIVE")
         {
             // Concrete\Core\Page\Collection\Collection::loadVersionObject();
-            Concrete\Core\Page\Collection\Collection::loadVersionObject($cvID);
+            return Concrete\Core\Page\Collection\Collection::loadVersionObject($cvID);
         }
 
         public static function getVersionToModify()
         {
             // Concrete\Core\Page\Collection\Collection::getVersionToModify();
-            Concrete\Core\Page\Collection\Collection::getVersionToModify();
+            return Concrete\Core\Page\Collection\Collection::getVersionToModify();
         }
 
         public static function getNextVersionComments()
         {
             // Concrete\Core\Page\Collection\Collection::getNextVersionComments();
-            Concrete\Core\Page\Collection\Collection::getNextVersionComments();
+            return Concrete\Core\Page\Collection\Collection::getNextVersionComments();
         }
 
         public static function cloneVersion($versionComments)
         {
             // Concrete\Core\Page\Collection\Collection::cloneVersion();
-            Concrete\Core\Page\Collection\Collection::cloneVersion($versionComments);
+            return Concrete\Core\Page\Collection\Collection::cloneVersion($versionComments);
         }
 
         public static function getFeatureAssignments()
         {
             // Concrete\Core\Page\Collection\Collection::getFeatureAssignments();
-            Concrete\Core\Page\Collection\Collection::getFeatureAssignments();
+            return Concrete\Core\Page\Collection\Collection::getFeatureAssignments();
         }
 
         /**
@@ -10727,115 +10727,115 @@ namespace {
         public static function getAttribute($akHandle, $displayMode = null)
         {
             // Concrete\Core\Page\Collection\Collection::getAttribute();
-            Concrete\Core\Page\Collection\Collection::getAttribute($akHandle, $displayMode);
+            return Concrete\Core\Page\Collection\Collection::getAttribute($akHandle, $displayMode);
         }
 
         public static function getCollectionAttributeValue($ak)
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionAttributeValue();
-            Concrete\Core\Page\Collection\Collection::getCollectionAttributeValue($ak);
+            return Concrete\Core\Page\Collection\Collection::getCollectionAttributeValue($ak);
         }
 
         public static function clearCollectionAttributes($retainAKIDs = null)
         {
             // Concrete\Core\Page\Collection\Collection::clearCollectionAttributes();
-            Concrete\Core\Page\Collection\Collection::clearCollectionAttributes($retainAKIDs);
+            return Concrete\Core\Page\Collection\Collection::clearCollectionAttributes($retainAKIDs);
         }
 
         public static function reindexPendingPages()
         {
             // Concrete\Core\Page\Collection\Collection::reindexPendingPages();
-            Concrete\Core\Page\Collection\Collection::reindexPendingPages();
+            return Concrete\Core\Page\Collection\Collection::reindexPendingPages();
         }
 
         public static function reindex($index = null, $actuallyDoReindex = "1")
         {
             // Concrete\Core\Page\Collection\Collection::reindex();
-            Concrete\Core\Page\Collection\Collection::reindex($index, $actuallyDoReindex);
+            return Concrete\Core\Page\Collection\Collection::reindex($index, $actuallyDoReindex);
         }
 
         public static function getAttributeValueObject($ak, $createIfNotFound = null)
         {
             // Concrete\Core\Page\Collection\Collection::getAttributeValueObject();
-            Concrete\Core\Page\Collection\Collection::getAttributeValueObject($ak, $createIfNotFound);
+            return Concrete\Core\Page\Collection\Collection::getAttributeValueObject($ak, $createIfNotFound);
         }
 
         public static function setAttribute($ak, $value)
         {
             // Concrete\Core\Page\Collection\Collection::setAttribute();
-            Concrete\Core\Page\Collection\Collection::setAttribute($ak, $value);
+            return Concrete\Core\Page\Collection\Collection::setAttribute($ak, $value);
         }
 
         public static function clearAttribute($ak)
         {
             // Concrete\Core\Page\Collection\Collection::clearAttribute();
-            Concrete\Core\Page\Collection\Collection::clearAttribute($ak);
+            return Concrete\Core\Page\Collection\Collection::clearAttribute($ak);
         }
 
         public static function getSetCollectionAttributes()
         {
             // Concrete\Core\Page\Collection\Collection::getSetCollectionAttributes();
-            Concrete\Core\Page\Collection\Collection::getSetCollectionAttributes();
+            return Concrete\Core\Page\Collection\Collection::getSetCollectionAttributes();
         }
 
         public static function addAttribute($ak, $value)
         {
             // Concrete\Core\Page\Collection\Collection::addAttribute();
-            Concrete\Core\Page\Collection\Collection::addAttribute($ak, $value);
+            return Concrete\Core\Page\Collection\Collection::addAttribute($ak, $value);
         }
 
         public static function getArea($arHandle)
         {
             // Concrete\Core\Page\Collection\Collection::getArea();
-            Concrete\Core\Page\Collection\Collection::getArea($arHandle);
+            return Concrete\Core\Page\Collection\Collection::getArea($arHandle);
         }
 
         public static function hasAliasedContent()
         {
             // Concrete\Core\Page\Collection\Collection::hasAliasedContent();
-            Concrete\Core\Page\Collection\Collection::hasAliasedContent();
+            return Concrete\Core\Page\Collection\Collection::hasAliasedContent();
         }
 
         public static function getCollectionID()
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionID();
-            Concrete\Core\Page\Collection\Collection::getCollectionID();
+            return Concrete\Core\Page\Collection\Collection::getCollectionID();
         }
 
         public static function getCollectionDateLastModified($mask = null, $type = "system")
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionDateLastModified();
-            Concrete\Core\Page\Collection\Collection::getCollectionDateLastModified($mask, $type);
+            return Concrete\Core\Page\Collection\Collection::getCollectionDateLastModified($mask, $type);
         }
 
         public static function getVersionObject()
         {
             // Concrete\Core\Page\Collection\Collection::getVersionObject();
-            Concrete\Core\Page\Collection\Collection::getVersionObject();
+            return Concrete\Core\Page\Collection\Collection::getVersionObject();
         }
 
         public static function getCollectionHandle()
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionHandle();
-            Concrete\Core\Page\Collection\Collection::getCollectionHandle();
+            return Concrete\Core\Page\Collection\Collection::getCollectionHandle();
         }
 
         public static function getCollectionDateAdded($mask = null, $type = "system")
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionDateAdded();
-            Concrete\Core\Page\Collection\Collection::getCollectionDateAdded($mask, $type);
+            return Concrete\Core\Page\Collection\Collection::getCollectionDateAdded($mask, $type);
         }
 
         public static function getVersionID()
         {
             // Concrete\Core\Page\Collection\Collection::getVersionID();
-            Concrete\Core\Page\Collection\Collection::getVersionID();
+            return Concrete\Core\Page\Collection\Collection::getVersionID();
         }
 
         public static function getCollectionAreaDisplayOrder($arHandle, $ignoreVersions = null)
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionAreaDisplayOrder();
-            Concrete\Core\Page\Collection\Collection::getCollectionAreaDisplayOrder($arHandle, $ignoreVersions);
+            return Concrete\Core\Page\Collection\Collection::getCollectionAreaDisplayOrder($arHandle, $ignoreVersions);
         }
 
         /**
@@ -10845,49 +10845,49 @@ namespace {
         public static function outputCustomStyleHeaderItems($return = null)
         {
             // Concrete\Core\Page\Collection\Collection::outputCustomStyleHeaderItems();
-            Concrete\Core\Page\Collection\Collection::outputCustomStyleHeaderItems($return);
+            return Concrete\Core\Page\Collection\Collection::outputCustomStyleHeaderItems($return);
         }
 
         public static function getAreaCustomStyleRule($area)
         {
             // Concrete\Core\Page\Collection\Collection::getAreaCustomStyleRule();
-            Concrete\Core\Page\Collection\Collection::getAreaCustomStyleRule($area);
+            return Concrete\Core\Page\Collection\Collection::getAreaCustomStyleRule($area);
         }
 
         public static function resetAreaCustomStyle($area)
         {
             // Concrete\Core\Page\Collection\Collection::resetAreaCustomStyle();
-            Concrete\Core\Page\Collection\Collection::resetAreaCustomStyle($area);
+            return Concrete\Core\Page\Collection\Collection::resetAreaCustomStyle($area);
         }
 
         public static function setAreaCustomStyle($area, $csr)
         {
             // Concrete\Core\Page\Collection\Collection::setAreaCustomStyle();
-            Concrete\Core\Page\Collection\Collection::setAreaCustomStyle($area, $csr);
+            return Concrete\Core\Page\Collection\Collection::setAreaCustomStyle($area, $csr);
         }
 
         public static function relateVersionEdits($oc)
         {
             // Concrete\Core\Page\Collection\Collection::relateVersionEdits();
-            Concrete\Core\Page\Collection\Collection::relateVersionEdits($oc);
+            return Concrete\Core\Page\Collection\Collection::relateVersionEdits($oc);
         }
 
         public static function getCollectionTypeID()
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionTypeID();
-            Concrete\Core\Page\Collection\Collection::getCollectionTypeID();
+            return Concrete\Core\Page\Collection\Collection::getCollectionTypeID();
         }
 
         public static function getPageTypeID()
         {
             // Concrete\Core\Page\Collection\Collection::getPageTypeID();
-            Concrete\Core\Page\Collection\Collection::getPageTypeID();
+            return Concrete\Core\Page\Collection\Collection::getPageTypeID();
         }
 
         public static function rescanDisplayOrder($areaName)
         {
             // Concrete\Core\Page\Collection\Collection::rescanDisplayOrder();
-            Concrete\Core\Page\Collection\Collection::rescanDisplayOrder($areaName);
+            return Concrete\Core\Page\Collection\Collection::rescanDisplayOrder($areaName);
         }
 
         /**
@@ -10898,25 +10898,25 @@ namespace {
         public static function getByID($cID, $version = "RECENT")
         {
             // Concrete\Core\Page\Collection\Collection::getByID();
-            Concrete\Core\Page\Collection\Collection::getByID($cID, $version);
+            return Concrete\Core\Page\Collection\Collection::getByID($cID, $version);
         }
 
         public static function getByHandle($handle)
         {
             // Concrete\Core\Page\Collection\Collection::getByHandle();
-            Concrete\Core\Page\Collection\Collection::getByHandle($handle);
+            return Concrete\Core\Page\Collection\Collection::getByHandle($handle);
         }
 
         public static function refreshCache()
         {
             // Concrete\Core\Page\Collection\Collection::refreshCache();
-            Concrete\Core\Page\Collection\Collection::refreshCache();
+            return Concrete\Core\Page\Collection\Collection::refreshCache();
         }
 
         public static function getGlobalBlocks()
         {
             // Concrete\Core\Page\Collection\Collection::getGlobalBlocks();
-            Concrete\Core\Page\Collection\Collection::getGlobalBlocks();
+            return Concrete\Core\Page\Collection\Collection::getGlobalBlocks();
         }
 
         /**
@@ -10927,7 +10927,7 @@ namespace {
         public static function getBlockIDs($arHandle = null)
         {
             // Concrete\Core\Page\Collection\Collection::getBlockIDs();
-            Concrete\Core\Page\Collection\Collection::getBlockIDs($arHandle);
+            return Concrete\Core\Page\Collection\Collection::getBlockIDs($arHandle);
         }
 
         /**
@@ -10938,79 +10938,79 @@ namespace {
         public static function getBlocks($arHandle = null)
         {
             // Concrete\Core\Page\Collection\Collection::getBlocks();
-            Concrete\Core\Page\Collection\Collection::getBlocks($arHandle);
+            return Concrete\Core\Page\Collection\Collection::getBlocks($arHandle);
         }
 
         public static function addBlock($bt, $a, $data)
         {
             // Concrete\Core\Page\Collection\Collection::addBlock();
-            Concrete\Core\Page\Collection\Collection::addBlock($bt, $a, $data);
+            return Concrete\Core\Page\Collection\Collection::addBlock($bt, $a, $data);
         }
 
         public static function addFeature(Concrete\Core\Feature\Feature $fe)
         {
             // Concrete\Core\Page\Collection\Collection::addFeature();
-            Concrete\Core\Page\Collection\Collection::addFeature($fe);
+            return Concrete\Core\Page\Collection\Collection::addFeature($fe);
         }
 
         public static function addCollection($data)
         {
             // Concrete\Core\Page\Collection\Collection::addCollection();
-            Concrete\Core\Page\Collection\Collection::addCollection($data);
+            return Concrete\Core\Page\Collection\Collection::addCollection($data);
         }
 
         public static function markModified()
         {
             // Concrete\Core\Page\Collection\Collection::markModified();
-            Concrete\Core\Page\Collection\Collection::markModified();
+            return Concrete\Core\Page\Collection\Collection::markModified();
         }
 
         public static function delete()
         {
             // Concrete\Core\Page\Collection\Collection::delete();
-            Concrete\Core\Page\Collection\Collection::delete();
+            return Concrete\Core\Page\Collection\Collection::delete();
         }
 
         public static function duplicateCollection()
         {
             // Concrete\Core\Page\Collection\Collection::duplicateCollection();
-            Concrete\Core\Page\Collection\Collection::duplicateCollection();
+            return Concrete\Core\Page\Collection\Collection::duplicateCollection();
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -11021,115 +11021,115 @@ namespace {
         public static function getPermissionObjectIdentifier()
         {
             // Concrete\Core\Page\Collection\Version\Version::getPermissionObjectIdentifier();
-            Concrete\Core\Page\Collection\Version\Version::getPermissionObjectIdentifier();
+            return Concrete\Core\Page\Collection\Version\Version::getPermissionObjectIdentifier();
         }
 
         public static function getPermissionResponseClassName()
         {
             // Concrete\Core\Page\Collection\Version\Version::getPermissionResponseClassName();
-            Concrete\Core\Page\Collection\Version\Version::getPermissionResponseClassName();
+            return Concrete\Core\Page\Collection\Version\Version::getPermissionResponseClassName();
         }
 
         public static function getPermissionAssignmentClassName()
         {
             // Concrete\Core\Page\Collection\Version\Version::getPermissionAssignmentClassName();
-            Concrete\Core\Page\Collection\Version\Version::getPermissionAssignmentClassName();
+            return Concrete\Core\Page\Collection\Version\Version::getPermissionAssignmentClassName();
         }
 
         public static function getPermissionObjectKeyCategoryHandle()
         {
             // Concrete\Core\Page\Collection\Version\Version::getPermissionObjectKeyCategoryHandle();
-            Concrete\Core\Page\Collection\Version\Version::getPermissionObjectKeyCategoryHandle();
+            return Concrete\Core\Page\Collection\Version\Version::getPermissionObjectKeyCategoryHandle();
         }
 
         public static function refreshCache()
         {
             // Concrete\Core\Page\Collection\Version\Version::refreshCache();
-            Concrete\Core\Page\Collection\Version\Version::refreshCache();
+            return Concrete\Core\Page\Collection\Version\Version::refreshCache();
         }
 
         public static function get(&$c, $cvID)
         {
             // Concrete\Core\Page\Collection\Version\Version::get();
-            Concrete\Core\Page\Collection\Version\Version::get($c, $cvID);
+            return Concrete\Core\Page\Collection\Version\Version::get($c, $cvID);
         }
 
         public static function getAttribute($ak, $c, $displayMode = null)
         {
             // Concrete\Core\Page\Collection\Version\Version::getAttribute();
-            Concrete\Core\Page\Collection\Version\Version::getAttribute($ak, $c, $displayMode);
+            return Concrete\Core\Page\Collection\Version\Version::getAttribute($ak, $c, $displayMode);
         }
 
         public static function isApproved()
         {
             // Concrete\Core\Page\Collection\Version\Version::isApproved();
-            Concrete\Core\Page\Collection\Version\Version::isApproved();
+            return Concrete\Core\Page\Collection\Version\Version::isApproved();
         }
 
         public static function isMostRecent()
         {
             // Concrete\Core\Page\Collection\Version\Version::isMostRecent();
-            Concrete\Core\Page\Collection\Version\Version::isMostRecent();
+            return Concrete\Core\Page\Collection\Version\Version::isMostRecent();
         }
 
         public static function isNew()
         {
             // Concrete\Core\Page\Collection\Version\Version::isNew();
-            Concrete\Core\Page\Collection\Version\Version::isNew();
+            return Concrete\Core\Page\Collection\Version\Version::isNew();
         }
 
         public static function getVersionID()
         {
             // Concrete\Core\Page\Collection\Version\Version::getVersionID();
-            Concrete\Core\Page\Collection\Version\Version::getVersionID();
+            return Concrete\Core\Page\Collection\Version\Version::getVersionID();
         }
 
         public static function getCollectionID()
         {
             // Concrete\Core\Page\Collection\Version\Version::getCollectionID();
-            Concrete\Core\Page\Collection\Version\Version::getCollectionID();
+            return Concrete\Core\Page\Collection\Version\Version::getCollectionID();
         }
 
         public static function getVersionName()
         {
             // Concrete\Core\Page\Collection\Version\Version::getVersionName();
-            Concrete\Core\Page\Collection\Version\Version::getVersionName();
+            return Concrete\Core\Page\Collection\Version\Version::getVersionName();
         }
 
         public static function getVersionComments()
         {
             // Concrete\Core\Page\Collection\Version\Version::getVersionComments();
-            Concrete\Core\Page\Collection\Version\Version::getVersionComments();
+            return Concrete\Core\Page\Collection\Version\Version::getVersionComments();
         }
 
         public static function getVersionAuthorUserID()
         {
             // Concrete\Core\Page\Collection\Version\Version::getVersionAuthorUserID();
-            Concrete\Core\Page\Collection\Version\Version::getVersionAuthorUserID();
+            return Concrete\Core\Page\Collection\Version\Version::getVersionAuthorUserID();
         }
 
         public static function getVersionApproverUserID()
         {
             // Concrete\Core\Page\Collection\Version\Version::getVersionApproverUserID();
-            Concrete\Core\Page\Collection\Version\Version::getVersionApproverUserID();
+            return Concrete\Core\Page\Collection\Version\Version::getVersionApproverUserID();
         }
 
         public static function getVersionAuthorUserName()
         {
             // Concrete\Core\Page\Collection\Version\Version::getVersionAuthorUserName();
-            Concrete\Core\Page\Collection\Version\Version::getVersionAuthorUserName();
+            return Concrete\Core\Page\Collection\Version\Version::getVersionAuthorUserName();
         }
 
         public static function getVersionApproverUserName()
         {
             // Concrete\Core\Page\Collection\Version\Version::getVersionApproverUserName();
-            Concrete\Core\Page\Collection\Version\Version::getVersionApproverUserName();
+            return Concrete\Core\Page\Collection\Version\Version::getVersionApproverUserName();
         }
 
         public static function getCustomAreaStyles()
         {
             // Concrete\Core\Page\Collection\Version\Version::getCustomAreaStyles();
-            Concrete\Core\Page\Collection\Version\Version::getCustomAreaStyles();
+            return Concrete\Core\Page\Collection\Version\Version::getCustomAreaStyles();
         }
 
         /**
@@ -11141,97 +11141,97 @@ namespace {
         public static function getVersionDateCreated($type = "system")
         {
             // Concrete\Core\Page\Collection\Version\Version::getVersionDateCreated();
-            Concrete\Core\Page\Collection\Version\Version::getVersionDateCreated($type);
+            return Concrete\Core\Page\Collection\Version\Version::getVersionDateCreated($type);
         }
 
         public static function canWrite()
         {
             // Concrete\Core\Page\Collection\Version\Version::canWrite();
-            Concrete\Core\Page\Collection\Version\Version::canWrite();
+            return Concrete\Core\Page\Collection\Version\Version::canWrite();
         }
 
         public static function setComment($comment)
         {
             // Concrete\Core\Page\Collection\Version\Version::setComment();
-            Concrete\Core\Page\Collection\Version\Version::setComment($comment);
+            return Concrete\Core\Page\Collection\Version\Version::setComment($comment);
         }
 
         public static function createNew($versionComments)
         {
             // Concrete\Core\Page\Collection\Version\Version::createNew();
-            Concrete\Core\Page\Collection\Version\Version::createNew($versionComments);
+            return Concrete\Core\Page\Collection\Version\Version::createNew($versionComments);
         }
 
         public static function approve($doReindexImmediately = "1")
         {
             // Concrete\Core\Page\Collection\Version\Version::approve();
-            Concrete\Core\Page\Collection\Version\Version::approve($doReindexImmediately);
+            return Concrete\Core\Page\Collection\Version\Version::approve($doReindexImmediately);
         }
 
         public static function discard()
         {
             // Concrete\Core\Page\Collection\Version\Version::discard();
-            Concrete\Core\Page\Collection\Version\Version::discard();
+            return Concrete\Core\Page\Collection\Version\Version::discard();
         }
 
         public static function canDiscard()
         {
             // Concrete\Core\Page\Collection\Version\Version::canDiscard();
-            Concrete\Core\Page\Collection\Version\Version::canDiscard();
+            return Concrete\Core\Page\Collection\Version\Version::canDiscard();
         }
 
         public static function removeNewStatus()
         {
             // Concrete\Core\Page\Collection\Version\Version::removeNewStatus();
-            Concrete\Core\Page\Collection\Version\Version::removeNewStatus();
+            return Concrete\Core\Page\Collection\Version\Version::removeNewStatus();
         }
 
         public static function deny()
         {
             // Concrete\Core\Page\Collection\Version\Version::deny();
-            Concrete\Core\Page\Collection\Version\Version::deny();
+            return Concrete\Core\Page\Collection\Version\Version::deny();
         }
 
         public static function delete()
         {
             // Concrete\Core\Page\Collection\Version\Version::delete();
-            Concrete\Core\Page\Collection\Version\Version::delete();
+            return Concrete\Core\Page\Collection\Version\Version::delete();
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -11242,49 +11242,49 @@ namespace {
         public static function setAreaDisplayName($arDisplayName)
         {
             // Concrete\Core\Area\Area::setAreaDisplayName();
-            Concrete\Core\Area\Area::setAreaDisplayName($arDisplayName);
+            return Concrete\Core\Area\Area::setAreaDisplayName($arDisplayName);
         }
 
         public static function setAreaGridColumnSpan($cspan)
         {
             // Concrete\Core\Area\Area::setAreaGridColumnSpan();
-            Concrete\Core\Area\Area::setAreaGridColumnSpan($cspan);
+            return Concrete\Core\Area\Area::setAreaGridColumnSpan($cspan);
         }
 
         public static function getAreaGridColumnSpan()
         {
             // Concrete\Core\Area\Area::getAreaGridColumnSpan();
-            Concrete\Core\Area\Area::getAreaGridColumnSpan();
+            return Concrete\Core\Area\Area::getAreaGridColumnSpan();
         }
 
         public static function getAreaDisplayName()
         {
             // Concrete\Core\Area\Area::getAreaDisplayName();
-            Concrete\Core\Area\Area::getAreaDisplayName();
+            return Concrete\Core\Area\Area::getAreaDisplayName();
         }
 
         public static function getPermissionObjectIdentifier()
         {
             // Concrete\Core\Area\Area::getPermissionObjectIdentifier();
-            Concrete\Core\Area\Area::getPermissionObjectIdentifier();
+            return Concrete\Core\Area\Area::getPermissionObjectIdentifier();
         }
 
         public static function getPermissionResponseClassName()
         {
             // Concrete\Core\Area\Area::getPermissionResponseClassName();
-            Concrete\Core\Area\Area::getPermissionResponseClassName();
+            return Concrete\Core\Area\Area::getPermissionResponseClassName();
         }
 
         public static function getPermissionAssignmentClassName()
         {
             // Concrete\Core\Area\Area::getPermissionAssignmentClassName();
-            Concrete\Core\Area\Area::getPermissionAssignmentClassName();
+            return Concrete\Core\Area\Area::getPermissionAssignmentClassName();
         }
 
         public static function getPermissionObjectKeyCategoryHandle()
         {
             // Concrete\Core\Area\Area::getPermissionObjectKeyCategoryHandle();
-            Concrete\Core\Area\Area::getPermissionObjectKeyCategoryHandle();
+            return Concrete\Core\Area\Area::getPermissionObjectKeyCategoryHandle();
         }
 
         /**
@@ -11294,7 +11294,7 @@ namespace {
         public static function getCollectionID()
         {
             // Concrete\Core\Area\Area::getCollectionID();
-            Concrete\Core\Area\Area::getCollectionID();
+            return Concrete\Core\Area\Area::getCollectionID();
         }
 
         /**
@@ -11304,7 +11304,7 @@ namespace {
         public static function getAreaCollectionObject()
         {
             // Concrete\Core\Area\Area::getAreaCollectionObject();
-            Concrete\Core\Area\Area::getAreaCollectionObject();
+            return Concrete\Core\Area\Area::getAreaCollectionObject();
         }
 
         /**
@@ -11314,7 +11314,7 @@ namespace {
         public static function isGlobalArea()
         {
             // Concrete\Core\Area\Area::isGlobalArea();
-            Concrete\Core\Area\Area::isGlobalArea();
+            return Concrete\Core\Area\Area::isGlobalArea();
         }
 
         /**
@@ -11324,7 +11324,7 @@ namespace {
         public static function getAreaID()
         {
             // Concrete\Core\Area\Area::getAreaID();
-            Concrete\Core\Area\Area::getAreaID();
+            return Concrete\Core\Area\Area::getAreaID();
         }
 
         /**
@@ -11334,7 +11334,7 @@ namespace {
         public static function getAreaHandle()
         {
             // Concrete\Core\Area\Area::getAreaHandle();
-            Concrete\Core\Area\Area::getAreaHandle();
+            return Concrete\Core\Area\Area::getAreaHandle();
         }
 
         /**
@@ -11344,7 +11344,7 @@ namespace {
         public static function getCustomTemplates()
         {
             // Concrete\Core\Area\Area::getCustomTemplates();
-            Concrete\Core\Area\Area::getCustomTemplates();
+            return Concrete\Core\Area\Area::getCustomTemplates();
         }
 
         /**
@@ -11355,7 +11355,7 @@ namespace {
         public static function setCustomTemplate($btHandle, $view)
         {
             // Concrete\Core\Area\Area::setCustomTemplate();
-            Concrete\Core\Area\Area::setCustomTemplate($btHandle, $view);
+            return Concrete\Core\Area\Area::setCustomTemplate($btHandle, $view);
         }
 
         /**
@@ -11365,7 +11365,7 @@ namespace {
         public static function getTotalBlocksInArea($c = null)
         {
             // Concrete\Core\Area\Area::getTotalBlocksInArea();
-            Concrete\Core\Area\Area::getTotalBlocksInArea($c);
+            return Concrete\Core\Area\Area::getTotalBlocksInArea($c);
         }
 
         /**
@@ -11374,7 +11374,7 @@ namespace {
         public static function getTotalBlocksInAreaEditMode()
         {
             // Concrete\Core\Area\Area::getTotalBlocksInAreaEditMode();
-            Concrete\Core\Area\Area::getTotalBlocksInAreaEditMode();
+            return Concrete\Core\Area\Area::getTotalBlocksInAreaEditMode();
         }
 
         /**
@@ -11384,7 +11384,7 @@ namespace {
         public static function overrideCollectionPermissions()
         {
             // Concrete\Core\Area\Area::overrideCollectionPermissions();
-            Concrete\Core\Area\Area::overrideCollectionPermissions();
+            return Concrete\Core\Area\Area::overrideCollectionPermissions();
         }
 
         /**
@@ -11393,7 +11393,7 @@ namespace {
         public static function getAreaCollectionInheritID()
         {
             // Concrete\Core\Area\Area::getAreaCollectionInheritID();
-            Concrete\Core\Area\Area::getAreaCollectionInheritID();
+            return Concrete\Core\Area\Area::getAreaCollectionInheritID();
         }
 
         /**
@@ -11404,7 +11404,7 @@ namespace {
         public static function setBlockLimit($num)
         {
             // Concrete\Core\Area\Area::setBlockLimit();
-            Concrete\Core\Area\Area::setBlockLimit($num);
+            return Concrete\Core\Area\Area::setBlockLimit($num);
         }
 
         /**
@@ -11414,7 +11414,7 @@ namespace {
         public static function disableControls()
         {
             // Concrete\Core\Area\Area::disableControls();
-            Concrete\Core\Area\Area::disableControls();
+            return Concrete\Core\Area\Area::disableControls();
         }
 
         /**
@@ -11424,7 +11424,7 @@ namespace {
         public static function getMaximumBlocks()
         {
             // Concrete\Core\Area\Area::getMaximumBlocks();
-            Concrete\Core\Area\Area::getMaximumBlocks();
+            return Concrete\Core\Area\Area::getMaximumBlocks();
         }
 
         /**
@@ -11434,7 +11434,7 @@ namespace {
         public static function getAreaUpdateAction($task = "update", $alternateHandler = null)
         {
             // Concrete\Core\Area\Area::getAreaUpdateAction();
-            Concrete\Core\Area\Area::getAreaUpdateAction($task, $alternateHandler);
+            return Concrete\Core\Area\Area::getAreaUpdateAction($task, $alternateHandler);
         }
 
         /**
@@ -11447,7 +11447,7 @@ namespace {
         final public static function get(&$c, $arHandle)
         {
             // Concrete\Core\Area\Area::get();
-            Concrete\Core\Area\Area::get($c, $arHandle);
+            return Concrete\Core\Area\Area::get($c, $arHandle);
         }
 
         /**
@@ -11456,13 +11456,13 @@ namespace {
         public static function create($c, $arHandle)
         {
             // Concrete\Core\Area\Area::create();
-            Concrete\Core\Area\Area::create($c, $arHandle);
+            return Concrete\Core\Area\Area::create($c, $arHandle);
         }
 
         public static function getAreaHandleFromID($arID)
         {
             // Concrete\Core\Area\Area::getAreaHandleFromID();
-            Concrete\Core\Area\Area::getAreaHandleFromID($arID);
+            return Concrete\Core\Area\Area::getAreaHandleFromID($arID);
         }
 
         /**
@@ -11473,7 +11473,7 @@ namespace {
         public static function getAreaBlocksArray($c = null)
         {
             // Concrete\Core\Area\Area::getAreaBlocksArray();
-            Concrete\Core\Area\Area::getAreaBlocksArray($c);
+            return Concrete\Core\Area\Area::getAreaBlocksArray($c);
         }
 
         /**
@@ -11484,13 +11484,13 @@ namespace {
         public static function getHandleList()
         {
             // Concrete\Core\Area\Area::getHandleList();
-            Concrete\Core\Area\Area::getHandleList();
+            return Concrete\Core\Area\Area::getHandleList();
         }
 
         public static function getListOnPage(Concrete\Core\Page\Page $c)
         {
             // Concrete\Core\Area\Area::getListOnPage();
-            Concrete\Core\Area\Area::getListOnPage($c);
+            return Concrete\Core\Area\Area::getListOnPage($c);
         }
 
         /**
@@ -11501,7 +11501,7 @@ namespace {
         public static function revertToPagePermissions()
         {
             // Concrete\Core\Area\Area::revertToPagePermissions();
-            Concrete\Core\Area\Area::revertToPagePermissions();
+            return Concrete\Core\Area\Area::revertToPagePermissions();
         }
 
         /**
@@ -11511,7 +11511,7 @@ namespace {
         public static function rescanAreaPermissionsChain()
         {
             // Concrete\Core\Area\Area::rescanAreaPermissionsChain();
-            Concrete\Core\Area\Area::rescanAreaPermissionsChain();
+            return Concrete\Core\Area\Area::rescanAreaPermissionsChain();
         }
 
         /**
@@ -11523,7 +11523,7 @@ namespace {
         public static function rescanSubAreaPermissions($cIDToCheck = null)
         {
             // Concrete\Core\Area\Area::rescanSubAreaPermissions();
-            Concrete\Core\Area\Area::rescanSubAreaPermissions($cIDToCheck);
+            return Concrete\Core\Area\Area::rescanSubAreaPermissions($cIDToCheck);
         }
 
         /**
@@ -11534,25 +11534,25 @@ namespace {
         public static function rescanSubAreaPermissionsMasterCollection($masterCollection)
         {
             // Concrete\Core\Area\Area::rescanSubAreaPermissionsMasterCollection();
-            Concrete\Core\Area\Area::rescanSubAreaPermissionsMasterCollection($masterCollection);
+            return Concrete\Core\Area\Area::rescanSubAreaPermissionsMasterCollection($masterCollection);
         }
 
         public static function getOrCreate($c, $arHandle)
         {
             // Concrete\Core\Area\Area::getOrCreate();
-            Concrete\Core\Area\Area::getOrCreate($c, $arHandle);
+            return Concrete\Core\Area\Area::getOrCreate($c, $arHandle);
         }
 
         public static function load($c)
         {
             // Concrete\Core\Area\Area::load();
-            Concrete\Core\Area\Area::load($c);
+            return Concrete\Core\Area\Area::load($c);
         }
 
         protected static function getAreaBlocks()
         {
             // Concrete\Core\Area\Area::getAreaBlocks();
-            Concrete\Core\Area\Area::getAreaBlocks();
+            return Concrete\Core\Area\Area::getAreaBlocks();
         }
 
         /**
@@ -11565,7 +11565,7 @@ namespace {
         public static function display($c, $alternateBlockArray = null)
         {
             // Concrete\Core\Area\Area::display();
-            Concrete\Core\Area\Area::display($c, $alternateBlockArray);
+            return Concrete\Core\Area\Area::display($c, $alternateBlockArray);
         }
 
         /**
@@ -11575,7 +11575,7 @@ namespace {
         public static function export($p, $page)
         {
             // Concrete\Core\Area\Area::export();
-            Concrete\Core\Area\Area::export($p, $page);
+            return Concrete\Core\Area\Area::export($p, $page);
         }
 
         /**
@@ -11586,7 +11586,7 @@ namespace {
         public static function setBlockWrapperStart($html)
         {
             // Concrete\Core\Area\Area::setBlockWrapperStart();
-            Concrete\Core\Area\Area::setBlockWrapperStart($html);
+            return Concrete\Core\Area\Area::setBlockWrapperStart($html);
         }
 
         /**
@@ -11597,49 +11597,49 @@ namespace {
         public static function setBlockWrapperEnd($html)
         {
             // Concrete\Core\Area\Area::setBlockWrapperEnd();
-            Concrete\Core\Area\Area::setBlockWrapperEnd($html);
+            return Concrete\Core\Area\Area::setBlockWrapperEnd($html);
         }
 
         public static function overridePagePermissions()
         {
             // Concrete\Core\Area\Area::overridePagePermissions();
-            Concrete\Core\Area\Area::overridePagePermissions();
+            return Concrete\Core\Area\Area::overridePagePermissions();
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -11650,49 +11650,49 @@ namespace {
         public static function isGlobalArea()
         {
             // Concrete\Core\Area\GlobalArea::isGlobalArea();
-            Concrete\Core\Area\GlobalArea::isGlobalArea();
+            return Concrete\Core\Area\GlobalArea::isGlobalArea();
         }
 
         public static function create($c, $arHandle)
         {
             // Concrete\Core\Area\GlobalArea::create();
-            Concrete\Core\Area\GlobalArea::create($c, $arHandle);
+            return Concrete\Core\Area\GlobalArea::create($c, $arHandle);
         }
 
         public static function getAreaDisplayName()
         {
             // Concrete\Core\Area\GlobalArea::getAreaDisplayName();
-            Concrete\Core\Area\GlobalArea::getAreaDisplayName();
+            return Concrete\Core\Area\GlobalArea::getAreaDisplayName();
         }
 
         public static function getTotalBlocksInArea()
         {
             // Concrete\Core\Area\GlobalArea::getTotalBlocksInArea();
-            Concrete\Core\Area\GlobalArea::getTotalBlocksInArea();
+            return Concrete\Core\Area\GlobalArea::getTotalBlocksInArea();
         }
 
         protected static function getGlobalAreaStackObject()
         {
             // Concrete\Core\Area\GlobalArea::getGlobalAreaStackObject();
-            Concrete\Core\Area\GlobalArea::getGlobalAreaStackObject();
+            return Concrete\Core\Area\GlobalArea::getGlobalAreaStackObject();
         }
 
         public static function getTotalBlocksInAreaEditMode()
         {
             // Concrete\Core\Area\GlobalArea::getTotalBlocksInAreaEditMode();
-            Concrete\Core\Area\GlobalArea::getTotalBlocksInAreaEditMode();
+            return Concrete\Core\Area\GlobalArea::getTotalBlocksInAreaEditMode();
         }
 
         public static function getAreaBlocks()
         {
             // Concrete\Core\Area\GlobalArea::getAreaBlocks();
-            Concrete\Core\Area\GlobalArea::getAreaBlocks();
+            return Concrete\Core\Area\GlobalArea::getAreaBlocks();
         }
 
         public static function display()
         {
             // Concrete\Core\Area\GlobalArea::display();
-            Concrete\Core\Area\GlobalArea::display();
+            return Concrete\Core\Area\GlobalArea::display();
         }
 
         /**
@@ -11702,49 +11702,49 @@ namespace {
         public static function deleteByName($arHandle)
         {
             // Concrete\Core\Area\GlobalArea::deleteByName();
-            Concrete\Core\Area\GlobalArea::deleteByName($arHandle);
+            return Concrete\Core\Area\GlobalArea::deleteByName($arHandle);
         }
 
         public static function setAreaDisplayName($arDisplayName)
         {
             // Concrete\Core\Area\Area::setAreaDisplayName();
-            Concrete\Core\Area\Area::setAreaDisplayName($arDisplayName);
+            return Concrete\Core\Area\Area::setAreaDisplayName($arDisplayName);
         }
 
         public static function setAreaGridColumnSpan($cspan)
         {
             // Concrete\Core\Area\Area::setAreaGridColumnSpan();
-            Concrete\Core\Area\Area::setAreaGridColumnSpan($cspan);
+            return Concrete\Core\Area\Area::setAreaGridColumnSpan($cspan);
         }
 
         public static function getAreaGridColumnSpan()
         {
             // Concrete\Core\Area\Area::getAreaGridColumnSpan();
-            Concrete\Core\Area\Area::getAreaGridColumnSpan();
+            return Concrete\Core\Area\Area::getAreaGridColumnSpan();
         }
 
         public static function getPermissionObjectIdentifier()
         {
             // Concrete\Core\Area\Area::getPermissionObjectIdentifier();
-            Concrete\Core\Area\Area::getPermissionObjectIdentifier();
+            return Concrete\Core\Area\Area::getPermissionObjectIdentifier();
         }
 
         public static function getPermissionResponseClassName()
         {
             // Concrete\Core\Area\Area::getPermissionResponseClassName();
-            Concrete\Core\Area\Area::getPermissionResponseClassName();
+            return Concrete\Core\Area\Area::getPermissionResponseClassName();
         }
 
         public static function getPermissionAssignmentClassName()
         {
             // Concrete\Core\Area\Area::getPermissionAssignmentClassName();
-            Concrete\Core\Area\Area::getPermissionAssignmentClassName();
+            return Concrete\Core\Area\Area::getPermissionAssignmentClassName();
         }
 
         public static function getPermissionObjectKeyCategoryHandle()
         {
             // Concrete\Core\Area\Area::getPermissionObjectKeyCategoryHandle();
-            Concrete\Core\Area\Area::getPermissionObjectKeyCategoryHandle();
+            return Concrete\Core\Area\Area::getPermissionObjectKeyCategoryHandle();
         }
 
         /**
@@ -11754,7 +11754,7 @@ namespace {
         public static function getCollectionID()
         {
             // Concrete\Core\Area\Area::getCollectionID();
-            Concrete\Core\Area\Area::getCollectionID();
+            return Concrete\Core\Area\Area::getCollectionID();
         }
 
         /**
@@ -11764,7 +11764,7 @@ namespace {
         public static function getAreaCollectionObject()
         {
             // Concrete\Core\Area\Area::getAreaCollectionObject();
-            Concrete\Core\Area\Area::getAreaCollectionObject();
+            return Concrete\Core\Area\Area::getAreaCollectionObject();
         }
 
         /**
@@ -11774,7 +11774,7 @@ namespace {
         public static function getAreaID()
         {
             // Concrete\Core\Area\Area::getAreaID();
-            Concrete\Core\Area\Area::getAreaID();
+            return Concrete\Core\Area\Area::getAreaID();
         }
 
         /**
@@ -11784,7 +11784,7 @@ namespace {
         public static function getAreaHandle()
         {
             // Concrete\Core\Area\Area::getAreaHandle();
-            Concrete\Core\Area\Area::getAreaHandle();
+            return Concrete\Core\Area\Area::getAreaHandle();
         }
 
         /**
@@ -11794,7 +11794,7 @@ namespace {
         public static function getCustomTemplates()
         {
             // Concrete\Core\Area\Area::getCustomTemplates();
-            Concrete\Core\Area\Area::getCustomTemplates();
+            return Concrete\Core\Area\Area::getCustomTemplates();
         }
 
         /**
@@ -11805,7 +11805,7 @@ namespace {
         public static function setCustomTemplate($btHandle, $view)
         {
             // Concrete\Core\Area\Area::setCustomTemplate();
-            Concrete\Core\Area\Area::setCustomTemplate($btHandle, $view);
+            return Concrete\Core\Area\Area::setCustomTemplate($btHandle, $view);
         }
 
         /**
@@ -11815,7 +11815,7 @@ namespace {
         public static function overrideCollectionPermissions()
         {
             // Concrete\Core\Area\Area::overrideCollectionPermissions();
-            Concrete\Core\Area\Area::overrideCollectionPermissions();
+            return Concrete\Core\Area\Area::overrideCollectionPermissions();
         }
 
         /**
@@ -11824,7 +11824,7 @@ namespace {
         public static function getAreaCollectionInheritID()
         {
             // Concrete\Core\Area\Area::getAreaCollectionInheritID();
-            Concrete\Core\Area\Area::getAreaCollectionInheritID();
+            return Concrete\Core\Area\Area::getAreaCollectionInheritID();
         }
 
         /**
@@ -11835,7 +11835,7 @@ namespace {
         public static function setBlockLimit($num)
         {
             // Concrete\Core\Area\Area::setBlockLimit();
-            Concrete\Core\Area\Area::setBlockLimit($num);
+            return Concrete\Core\Area\Area::setBlockLimit($num);
         }
 
         /**
@@ -11845,7 +11845,7 @@ namespace {
         public static function disableControls()
         {
             // Concrete\Core\Area\Area::disableControls();
-            Concrete\Core\Area\Area::disableControls();
+            return Concrete\Core\Area\Area::disableControls();
         }
 
         /**
@@ -11855,7 +11855,7 @@ namespace {
         public static function getMaximumBlocks()
         {
             // Concrete\Core\Area\Area::getMaximumBlocks();
-            Concrete\Core\Area\Area::getMaximumBlocks();
+            return Concrete\Core\Area\Area::getMaximumBlocks();
         }
 
         /**
@@ -11865,7 +11865,7 @@ namespace {
         public static function getAreaUpdateAction($task = "update", $alternateHandler = null)
         {
             // Concrete\Core\Area\Area::getAreaUpdateAction();
-            Concrete\Core\Area\Area::getAreaUpdateAction($task, $alternateHandler);
+            return Concrete\Core\Area\Area::getAreaUpdateAction($task, $alternateHandler);
         }
 
         /**
@@ -11878,13 +11878,13 @@ namespace {
         final public static function get(&$c, $arHandle)
         {
             // Concrete\Core\Area\Area::get();
-            Concrete\Core\Area\Area::get($c, $arHandle);
+            return Concrete\Core\Area\Area::get($c, $arHandle);
         }
 
         public static function getAreaHandleFromID($arID)
         {
             // Concrete\Core\Area\Area::getAreaHandleFromID();
-            Concrete\Core\Area\Area::getAreaHandleFromID($arID);
+            return Concrete\Core\Area\Area::getAreaHandleFromID($arID);
         }
 
         /**
@@ -11895,7 +11895,7 @@ namespace {
         public static function getAreaBlocksArray($c = null)
         {
             // Concrete\Core\Area\Area::getAreaBlocksArray();
-            Concrete\Core\Area\Area::getAreaBlocksArray($c);
+            return Concrete\Core\Area\Area::getAreaBlocksArray($c);
         }
 
         /**
@@ -11906,13 +11906,13 @@ namespace {
         public static function getHandleList()
         {
             // Concrete\Core\Area\Area::getHandleList();
-            Concrete\Core\Area\Area::getHandleList();
+            return Concrete\Core\Area\Area::getHandleList();
         }
 
         public static function getListOnPage(Concrete\Core\Page\Page $c)
         {
             // Concrete\Core\Area\Area::getListOnPage();
-            Concrete\Core\Area\Area::getListOnPage($c);
+            return Concrete\Core\Area\Area::getListOnPage($c);
         }
 
         /**
@@ -11923,7 +11923,7 @@ namespace {
         public static function revertToPagePermissions()
         {
             // Concrete\Core\Area\Area::revertToPagePermissions();
-            Concrete\Core\Area\Area::revertToPagePermissions();
+            return Concrete\Core\Area\Area::revertToPagePermissions();
         }
 
         /**
@@ -11933,7 +11933,7 @@ namespace {
         public static function rescanAreaPermissionsChain()
         {
             // Concrete\Core\Area\Area::rescanAreaPermissionsChain();
-            Concrete\Core\Area\Area::rescanAreaPermissionsChain();
+            return Concrete\Core\Area\Area::rescanAreaPermissionsChain();
         }
 
         /**
@@ -11945,7 +11945,7 @@ namespace {
         public static function rescanSubAreaPermissions($cIDToCheck = null)
         {
             // Concrete\Core\Area\Area::rescanSubAreaPermissions();
-            Concrete\Core\Area\Area::rescanSubAreaPermissions($cIDToCheck);
+            return Concrete\Core\Area\Area::rescanSubAreaPermissions($cIDToCheck);
         }
 
         /**
@@ -11956,19 +11956,19 @@ namespace {
         public static function rescanSubAreaPermissionsMasterCollection($masterCollection)
         {
             // Concrete\Core\Area\Area::rescanSubAreaPermissionsMasterCollection();
-            Concrete\Core\Area\Area::rescanSubAreaPermissionsMasterCollection($masterCollection);
+            return Concrete\Core\Area\Area::rescanSubAreaPermissionsMasterCollection($masterCollection);
         }
 
         public static function getOrCreate($c, $arHandle)
         {
             // Concrete\Core\Area\Area::getOrCreate();
-            Concrete\Core\Area\Area::getOrCreate($c, $arHandle);
+            return Concrete\Core\Area\Area::getOrCreate($c, $arHandle);
         }
 
         public static function load($c)
         {
             // Concrete\Core\Area\Area::load();
-            Concrete\Core\Area\Area::load($c);
+            return Concrete\Core\Area\Area::load($c);
         }
 
         /**
@@ -11978,7 +11978,7 @@ namespace {
         public static function export($p, $page)
         {
             // Concrete\Core\Area\Area::export();
-            Concrete\Core\Area\Area::export($p, $page);
+            return Concrete\Core\Area\Area::export($p, $page);
         }
 
         /**
@@ -11989,7 +11989,7 @@ namespace {
         public static function setBlockWrapperStart($html)
         {
             // Concrete\Core\Area\Area::setBlockWrapperStart();
-            Concrete\Core\Area\Area::setBlockWrapperStart($html);
+            return Concrete\Core\Area\Area::setBlockWrapperStart($html);
         }
 
         /**
@@ -12000,49 +12000,49 @@ namespace {
         public static function setBlockWrapperEnd($html)
         {
             // Concrete\Core\Area\Area::setBlockWrapperEnd();
-            Concrete\Core\Area\Area::setBlockWrapperEnd($html);
+            return Concrete\Core\Area\Area::setBlockWrapperEnd($html);
         }
 
         public static function overridePagePermissions()
         {
             // Concrete\Core\Area\Area::overridePagePermissions();
-            Concrete\Core\Area\Area::overridePagePermissions();
+            return Concrete\Core\Area\Area::overridePagePermissions();
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -12053,85 +12053,85 @@ namespace {
         public static function getStackName()
         {
             // Concrete\Core\Page\Stack\Stack::getStackName();
-            Concrete\Core\Page\Stack\Stack::getStackName();
+            return Concrete\Core\Page\Stack\Stack::getStackName();
         }
 
         public static function getStackType()
         {
             // Concrete\Core\Page\Stack\Stack::getStackType();
-            Concrete\Core\Page\Stack\Stack::getStackType();
+            return Concrete\Core\Page\Stack\Stack::getStackType();
         }
 
         public static function getStackTypeExportText()
         {
             // Concrete\Core\Page\Stack\Stack::getStackTypeExportText();
-            Concrete\Core\Page\Stack\Stack::getStackTypeExportText();
+            return Concrete\Core\Page\Stack\Stack::getStackTypeExportText();
         }
 
         public static function mapImportTextToType($type)
         {
             // Concrete\Core\Page\Stack\Stack::mapImportTextToType();
-            Concrete\Core\Page\Stack\Stack::mapImportTextToType($type);
+            return Concrete\Core\Page\Stack\Stack::mapImportTextToType($type);
         }
 
         protected static function isValidStack($stack)
         {
             // Concrete\Core\Page\Stack\Stack::isValidStack();
-            Concrete\Core\Page\Stack\Stack::isValidStack($stack);
+            return Concrete\Core\Page\Stack\Stack::isValidStack($stack);
         }
 
         public static function addStack($stackName, $type = null)
         {
             // Concrete\Core\Page\Stack\Stack::addStack();
-            Concrete\Core\Page\Stack\Stack::addStack($stackName, $type);
+            return Concrete\Core\Page\Stack\Stack::addStack($stackName, $type);
         }
 
         public static function duplicate($nc = null, $preserveUserID = null)
         {
             // Concrete\Core\Page\Stack\Stack::duplicate();
-            Concrete\Core\Page\Stack\Stack::duplicate($nc, $preserveUserID);
+            return Concrete\Core\Page\Stack\Stack::duplicate($nc, $preserveUserID);
         }
 
         public static function getByName($stackName, $cvID = "RECENT")
         {
             // Concrete\Core\Page\Stack\Stack::getByName();
-            Concrete\Core\Page\Stack\Stack::getByName($stackName, $cvID);
+            return Concrete\Core\Page\Stack\Stack::getByName($stackName, $cvID);
         }
 
         public static function update($data)
         {
             // Concrete\Core\Page\Stack\Stack::update();
-            Concrete\Core\Page\Stack\Stack::update($data);
+            return Concrete\Core\Page\Stack\Stack::update($data);
         }
 
         public static function delete()
         {
             // Concrete\Core\Page\Stack\Stack::delete();
-            Concrete\Core\Page\Stack\Stack::delete();
+            return Concrete\Core\Page\Stack\Stack::delete();
         }
 
         public static function display()
         {
             // Concrete\Core\Page\Stack\Stack::display();
-            Concrete\Core\Page\Stack\Stack::display();
+            return Concrete\Core\Page\Stack\Stack::display();
         }
 
         public static function getOrCreateGlobalArea($stackName)
         {
             // Concrete\Core\Page\Stack\Stack::getOrCreateGlobalArea();
-            Concrete\Core\Page\Stack\Stack::getOrCreateGlobalArea($stackName);
+            return Concrete\Core\Page\Stack\Stack::getOrCreateGlobalArea($stackName);
         }
 
         public static function getByID($cID, $cvID = "RECENT")
         {
             // Concrete\Core\Page\Stack\Stack::getByID();
-            Concrete\Core\Page\Stack\Stack::getByID($cID, $cvID);
+            return Concrete\Core\Page\Stack\Stack::getByID($cID, $cvID);
         }
 
         public static function export($pageNode)
         {
             // Concrete\Core\Page\Stack\Stack::export();
-            Concrete\Core\Page\Stack\Stack::export($pageNode);
+            return Concrete\Core\Page\Stack\Stack::export($pageNode);
         }
 
         /**
@@ -12142,7 +12142,7 @@ namespace {
         public static function getByPath($path, $version = "RECENT")
         {
             // Concrete\Core\Page\Page::getByPath();
-            Concrete\Core\Page\Page::getByPath($path, $version);
+            return Concrete\Core\Page\Page::getByPath($path, $version);
         }
 
         /**
@@ -12151,37 +12151,37 @@ namespace {
         protected static function populatePage($cInfo, $where, $cvID)
         {
             // Concrete\Core\Page\Page::populatePage();
-            Concrete\Core\Page\Page::populatePage($cInfo, $where, $cvID);
+            return Concrete\Core\Page\Page::populatePage($cInfo, $where, $cvID);
         }
 
         public static function getPermissionResponseClassName()
         {
             // Concrete\Core\Page\Page::getPermissionResponseClassName();
-            Concrete\Core\Page\Page::getPermissionResponseClassName();
+            return Concrete\Core\Page\Page::getPermissionResponseClassName();
         }
 
         public static function getPermissionAssignmentClassName()
         {
             // Concrete\Core\Page\Page::getPermissionAssignmentClassName();
-            Concrete\Core\Page\Page::getPermissionAssignmentClassName();
+            return Concrete\Core\Page\Page::getPermissionAssignmentClassName();
         }
 
         public static function getPermissionObjectKeyCategoryHandle()
         {
             // Concrete\Core\Page\Page::getPermissionObjectKeyCategoryHandle();
-            Concrete\Core\Page\Page::getPermissionObjectKeyCategoryHandle();
+            return Concrete\Core\Page\Page::getPermissionObjectKeyCategoryHandle();
         }
 
         public static function getPageController()
         {
             // Concrete\Core\Page\Page::getPageController();
-            Concrete\Core\Page\Page::getPageController();
+            return Concrete\Core\Page\Page::getPageController();
         }
 
         public static function getPermissionObjectIdentifier()
         {
             // Concrete\Core\Page\Page::getPermissionObjectIdentifier();
-            Concrete\Core\Page\Page::getPermissionObjectIdentifier();
+            return Concrete\Core\Page\Page::getPermissionObjectIdentifier();
         }
 
         /**
@@ -12191,7 +12191,7 @@ namespace {
         public static function isEditMode()
         {
             // Concrete\Core\Page\Page::isEditMode();
-            Concrete\Core\Page\Page::isEditMode();
+            return Concrete\Core\Page\Page::isEditMode();
         }
 
         /**
@@ -12201,7 +12201,7 @@ namespace {
         public static function getPackageID()
         {
             // Concrete\Core\Page\Page::getPackageID();
-            Concrete\Core\Page\Page::getPackageID();
+            return Concrete\Core\Page\Page::getPackageID();
         }
 
         /**
@@ -12211,7 +12211,7 @@ namespace {
         public static function getPackageHandle()
         {
             // Concrete\Core\Page\Page::getPackageHandle();
-            Concrete\Core\Page\Page::getPackageHandle();
+            return Concrete\Core\Page\Page::getPackageHandle();
         }
 
         /**
@@ -12221,7 +12221,7 @@ namespace {
         public static function isArrangeMode()
         {
             // Concrete\Core\Page\Page::isArrangeMode();
-            Concrete\Core\Page\Page::isArrangeMode();
+            return Concrete\Core\Page\Page::isArrangeMode();
         }
 
         /**
@@ -12230,7 +12230,7 @@ namespace {
         public static function forceCheckIn()
         {
             // Concrete\Core\Page\Page::forceCheckIn();
-            Concrete\Core\Page\Page::forceCheckIn();
+            return Concrete\Core\Page\Page::forceCheckIn();
         }
 
         /**
@@ -12240,7 +12240,7 @@ namespace {
         public static function isAdminArea()
         {
             // Concrete\Core\Page\Page::isAdminArea();
-            Concrete\Core\Page\Page::isAdminArea();
+            return Concrete\Core\Page\Page::isAdminArea();
         }
 
         /**
@@ -12250,13 +12250,13 @@ namespace {
         public static function getFromRequest(Concrete\Core\Http\Request $request)
         {
             // Concrete\Core\Page\Page::getFromRequest();
-            Concrete\Core\Page\Page::getFromRequest($request);
+            return Concrete\Core\Page\Page::getFromRequest($request);
         }
 
         public static function processArrangement($area_id, $moved_block_id, $block_order)
         {
             // Concrete\Core\Page\Page::processArrangement();
-            Concrete\Core\Page\Page::processArrangement($area_id, $moved_block_id, $block_order);
+            return Concrete\Core\Page\Page::processArrangement($area_id, $moved_block_id, $block_order);
         }
 
         /**
@@ -12266,7 +12266,7 @@ namespace {
         public static function isCheckedOut()
         {
             // Concrete\Core\Page\Page::isCheckedOut();
-            Concrete\Core\Page\Page::isCheckedOut();
+            return Concrete\Core\Page\Page::isCheckedOut();
         }
 
         /**
@@ -12276,7 +12276,7 @@ namespace {
         public static function getCollectionCheckedOutUserName()
         {
             // Concrete\Core\Page\Page::getCollectionCheckedOutUserName();
-            Concrete\Core\Page\Page::getCollectionCheckedOutUserName();
+            return Concrete\Core\Page\Page::getCollectionCheckedOutUserName();
         }
 
         /**
@@ -12286,7 +12286,7 @@ namespace {
         public static function isCheckedOutByMe()
         {
             // Concrete\Core\Page\Page::isCheckedOutByMe();
-            Concrete\Core\Page\Page::isCheckedOutByMe();
+            return Concrete\Core\Page\Page::isCheckedOutByMe();
         }
 
         /**
@@ -12296,31 +12296,31 @@ namespace {
         public static function isGeneratedCollection()
         {
             // Concrete\Core\Page\Page::isGeneratedCollection();
-            Concrete\Core\Page\Page::isGeneratedCollection();
+            return Concrete\Core\Page\Page::isGeneratedCollection();
         }
 
         public static function assignPermissions($userOrGroup, $permissions = null, $accessType = 10)
         {
             // Concrete\Core\Page\Page::assignPermissions();
-            Concrete\Core\Page\Page::assignPermissions($userOrGroup, $permissions, $accessType);
+            return Concrete\Core\Page\Page::assignPermissions($userOrGroup, $permissions, $accessType);
         }
 
         public static function getDrafts()
         {
             // Concrete\Core\Page\Page::getDrafts();
-            Concrete\Core\Page\Page::getDrafts();
+            return Concrete\Core\Page\Page::getDrafts();
         }
 
         public static function isPageDraft()
         {
             // Concrete\Core\Page\Page::isPageDraft();
-            Concrete\Core\Page\Page::isPageDraft();
+            return Concrete\Core\Page\Page::isPageDraft();
         }
 
         public static function setController($controller)
         {
             // Concrete\Core\Page\Page::setController();
-            Concrete\Core\Page\Page::setController($controller);
+            return Concrete\Core\Page\Page::setController($controller);
         }
 
         /**
@@ -12329,7 +12329,7 @@ namespace {
         public static function getController()
         {
             // Concrete\Core\Page\Page::getController();
-            Concrete\Core\Page\Page::getController();
+            return Concrete\Core\Page\Page::getController();
         }
 
         /**
@@ -12338,7 +12338,7 @@ namespace {
         public static function assignPermissionSet($px)
         {
             // Concrete\Core\Page\Page::assignPermissionSet();
-            Concrete\Core\Page\Page::assignPermissionSet($px);
+            return Concrete\Core\Page\Page::assignPermissionSet($px);
         }
 
         /**
@@ -12349,7 +12349,7 @@ namespace {
         public static function addCollectionAlias($c)
         {
             // Concrete\Core\Page\Page::addCollectionAlias();
-            Concrete\Core\Page\Page::addCollectionAlias($c);
+            return Concrete\Core\Page\Page::addCollectionAlias($c);
         }
 
         /**
@@ -12361,7 +12361,7 @@ namespace {
         public static function updateCollectionAliasExternal($cName, $cLink, $newWindow = null)
         {
             // Concrete\Core\Page\Page::updateCollectionAliasExternal();
-            Concrete\Core\Page\Page::updateCollectionAliasExternal($cName, $cLink, $newWindow);
+            return Concrete\Core\Page\Page::updateCollectionAliasExternal($cName, $cLink, $newWindow);
         }
 
         /**
@@ -12374,7 +12374,7 @@ namespace {
         public static function addCollectionAliasExternal($cName, $cLink, $newWindow = null)
         {
             // Concrete\Core\Page\Page::addCollectionAliasExternal();
-            Concrete\Core\Page\Page::addCollectionAliasExternal($cName, $cLink, $newWindow);
+            return Concrete\Core\Page\Page::addCollectionAliasExternal($cName, $cLink, $newWindow);
         }
 
         /**
@@ -12384,7 +12384,7 @@ namespace {
         public static function isSystemPage()
         {
             // Concrete\Core\Page\Page::isSystemPage();
-            Concrete\Core\Page\Page::isSystemPage();
+            return Concrete\Core\Page\Page::isSystemPage();
         }
 
         /**
@@ -12394,7 +12394,7 @@ namespace {
         public static function getCollectionIcon()
         {
             // Concrete\Core\Page\Page::getCollectionIcon();
-            Concrete\Core\Page\Page::getCollectionIcon();
+            return Concrete\Core\Page\Page::getCollectionIcon();
         }
 
         /**
@@ -12404,43 +12404,43 @@ namespace {
         public static function removeThisAlias()
         {
             // Concrete\Core\Page\Page::removeThisAlias();
-            Concrete\Core\Page\Page::removeThisAlias();
+            return Concrete\Core\Page\Page::removeThisAlias();
         }
 
         public static function populateRecursivePages($pages, $pageRow, $cParentID, $level, $includeThisPage = "1")
         {
             // Concrete\Core\Page\Page::populateRecursivePages();
-            Concrete\Core\Page\Page::populateRecursivePages($pages, $pageRow, $cParentID, $level, $includeThisPage);
+            return Concrete\Core\Page\Page::populateRecursivePages($pages, $pageRow, $cParentID, $level, $includeThisPage);
         }
 
         public static function queueForDeletionSort($a, $b)
         {
             // Concrete\Core\Page\Page::queueForDeletionSort();
-            Concrete\Core\Page\Page::queueForDeletionSort($a, $b);
+            return Concrete\Core\Page\Page::queueForDeletionSort($a, $b);
         }
 
         public static function queueForDuplicationSort($a, $b)
         {
             // Concrete\Core\Page\Page::queueForDuplicationSort();
-            Concrete\Core\Page\Page::queueForDuplicationSort($a, $b);
+            return Concrete\Core\Page\Page::queueForDuplicationSort($a, $b);
         }
 
         public static function queueForDeletion()
         {
             // Concrete\Core\Page\Page::queueForDeletion();
-            Concrete\Core\Page\Page::queueForDeletion();
+            return Concrete\Core\Page\Page::queueForDeletion();
         }
 
         public static function queueForDeletionRequest()
         {
             // Concrete\Core\Page\Page::queueForDeletionRequest();
-            Concrete\Core\Page\Page::queueForDeletionRequest();
+            return Concrete\Core\Page\Page::queueForDeletionRequest();
         }
 
         public static function queueForDuplication($destination, $includeParent = "1")
         {
             // Concrete\Core\Page\Page::queueForDuplication();
-            Concrete\Core\Page\Page::queueForDuplication($destination, $includeParent);
+            return Concrete\Core\Page\Page::queueForDuplication($destination, $includeParent);
         }
 
         /**
@@ -12450,7 +12450,7 @@ namespace {
         public static function getCollectionCheckedOutUserID()
         {
             // Concrete\Core\Page\Page::getCollectionCheckedOutUserID();
-            Concrete\Core\Page\Page::getCollectionCheckedOutUserID();
+            return Concrete\Core\Page\Page::getCollectionCheckedOutUserID();
         }
 
         /**
@@ -12460,7 +12460,7 @@ namespace {
         public static function getCollectionPath()
         {
             // Concrete\Core\Page\Page::getCollectionPath();
-            Concrete\Core\Page\Page::getCollectionPath();
+            return Concrete\Core\Page\Page::getCollectionPath();
         }
 
         /**
@@ -12470,7 +12470,7 @@ namespace {
         public static function getCollectionLink($appendBaseURL = null, $ignoreUrlRewriting = null)
         {
             // Concrete\Core\Page\Page::getCollectionLink();
-            Concrete\Core\Page\Page::getCollectionLink($appendBaseURL, $ignoreUrlRewriting);
+            return Concrete\Core\Page\Page::getCollectionLink($appendBaseURL, $ignoreUrlRewriting);
         }
 
         /**
@@ -12481,7 +12481,7 @@ namespace {
         public static function getCollectionPathFromID($cID)
         {
             // Concrete\Core\Page\Page::getCollectionPathFromID();
-            Concrete\Core\Page\Page::getCollectionPathFromID($cID);
+            return Concrete\Core\Page\Page::getCollectionPathFromID($cID);
         }
 
         /**
@@ -12491,7 +12491,7 @@ namespace {
         public static function getCollectionUserID()
         {
             // Concrete\Core\Page\Page::getCollectionUserID();
-            Concrete\Core\Page\Page::getCollectionUserID();
+            return Concrete\Core\Page\Page::getCollectionUserID();
         }
 
         /**
@@ -12501,7 +12501,7 @@ namespace {
         public static function getCollectionHandle()
         {
             // Concrete\Core\Page\Page::getCollectionHandle();
-            Concrete\Core\Page\Page::getCollectionHandle();
+            return Concrete\Core\Page\Page::getCollectionHandle();
         }
 
         /**
@@ -12510,13 +12510,13 @@ namespace {
         public static function getCollectionTypeName()
         {
             // Concrete\Core\Page\Page::getCollectionTypeName();
-            Concrete\Core\Page\Page::getCollectionTypeName();
+            return Concrete\Core\Page\Page::getCollectionTypeName();
         }
 
         public static function getPageTypeName()
         {
             // Concrete\Core\Page\Page::getPageTypeName();
-            Concrete\Core\Page\Page::getPageTypeName();
+            return Concrete\Core\Page\Page::getPageTypeName();
         }
 
         /**
@@ -12525,7 +12525,7 @@ namespace {
         public static function getCollectionTypeID()
         {
             // Concrete\Core\Page\Page::getCollectionTypeID();
-            Concrete\Core\Page\Page::getCollectionTypeID();
+            return Concrete\Core\Page\Page::getCollectionTypeID();
         }
 
         /**
@@ -12535,13 +12535,13 @@ namespace {
         public static function getPageTypeID()
         {
             // Concrete\Core\Page\Page::getPageTypeID();
-            Concrete\Core\Page\Page::getPageTypeID();
+            return Concrete\Core\Page\Page::getPageTypeID();
         }
 
         public static function getPageTypeObject()
         {
             // Concrete\Core\Page\Page::getPageTypeObject();
-            Concrete\Core\Page\Page::getPageTypeObject();
+            return Concrete\Core\Page\Page::getPageTypeObject();
         }
 
         /**
@@ -12551,7 +12551,7 @@ namespace {
         public static function getPageTemplateID()
         {
             // Concrete\Core\Page\Page::getPageTemplateID();
-            Concrete\Core\Page\Page::getPageTemplateID();
+            return Concrete\Core\Page\Page::getPageTemplateID();
         }
 
         /**
@@ -12561,13 +12561,13 @@ namespace {
         public static function getPageTypeHandle()
         {
             // Concrete\Core\Page\Page::getPageTypeHandle();
-            Concrete\Core\Page\Page::getPageTypeHandle();
+            return Concrete\Core\Page\Page::getPageTypeHandle();
         }
 
         public static function getCollectionTypeHandle()
         {
             // Concrete\Core\Page\Page::getCollectionTypeHandle();
-            Concrete\Core\Page\Page::getCollectionTypeHandle();
+            return Concrete\Core\Page\Page::getCollectionTypeHandle();
         }
 
         /**
@@ -12577,7 +12577,7 @@ namespace {
         public static function getCollectionThemeID()
         {
             // Concrete\Core\Page\Page::getCollectionThemeID();
-            Concrete\Core\Page\Page::getCollectionThemeID();
+            return Concrete\Core\Page\Page::getCollectionThemeID();
         }
 
         /**
@@ -12588,7 +12588,7 @@ namespace {
         public static function isBlockAliasedFromMasterCollection($b)
         {
             // Concrete\Core\Page\Page::isBlockAliasedFromMasterCollection();
-            Concrete\Core\Page\Page::isBlockAliasedFromMasterCollection($b);
+            return Concrete\Core\Page\Page::isBlockAliasedFromMasterCollection($b);
         }
 
         /**
@@ -12598,7 +12598,7 @@ namespace {
         public static function getCollectionThemeObject()
         {
             // Concrete\Core\Page\Page::getCollectionThemeObject();
-            Concrete\Core\Page\Page::getCollectionThemeObject();
+            return Concrete\Core\Page\Page::getCollectionThemeObject();
         }
 
         /**
@@ -12608,7 +12608,7 @@ namespace {
         public static function getCollectionName()
         {
             // Concrete\Core\Page\Page::getCollectionName();
-            Concrete\Core\Page\Page::getCollectionName();
+            return Concrete\Core\Page\Page::getCollectionName();
         }
 
         /**
@@ -12618,7 +12618,7 @@ namespace {
         public static function getCollectionPointerID()
         {
             // Concrete\Core\Page\Page::getCollectionPointerID();
-            Concrete\Core\Page\Page::getCollectionPointerID();
+            return Concrete\Core\Page\Page::getCollectionPointerID();
         }
 
         /**
@@ -12628,7 +12628,7 @@ namespace {
         public static function getCollectionPointerExternalLink()
         {
             // Concrete\Core\Page\Page::getCollectionPointerExternalLink();
-            Concrete\Core\Page\Page::getCollectionPointerExternalLink();
+            return Concrete\Core\Page\Page::getCollectionPointerExternalLink();
         }
 
         /**
@@ -12638,7 +12638,7 @@ namespace {
         public static function openCollectionPointerExternalLinkInNewWindow()
         {
             // Concrete\Core\Page\Page::openCollectionPointerExternalLinkInNewWindow();
-            Concrete\Core\Page\Page::openCollectionPointerExternalLinkInNewWindow();
+            return Concrete\Core\Page\Page::openCollectionPointerExternalLinkInNewWindow();
         }
 
         /**
@@ -12648,7 +12648,7 @@ namespace {
         public static function isAlias()
         {
             // Concrete\Core\Page\Page::isAlias();
-            Concrete\Core\Page\Page::isAlias();
+            return Concrete\Core\Page\Page::isAlias();
         }
 
         /**
@@ -12658,7 +12658,7 @@ namespace {
         public static function isExternalLink()
         {
             // Concrete\Core\Page\Page::isExternalLink();
-            Concrete\Core\Page\Page::isExternalLink();
+            return Concrete\Core\Page\Page::isExternalLink();
         }
 
         /**
@@ -12668,7 +12668,7 @@ namespace {
         public static function getCollectionPointerOriginalID()
         {
             // Concrete\Core\Page\Page::getCollectionPointerOriginalID();
-            Concrete\Core\Page\Page::getCollectionPointerOriginalID();
+            return Concrete\Core\Page\Page::getCollectionPointerOriginalID();
         }
 
         /**
@@ -12678,7 +12678,7 @@ namespace {
         public static function getCollectionFilename()
         {
             // Concrete\Core\Page\Page::getCollectionFilename();
-            Concrete\Core\Page\Page::getCollectionFilename();
+            return Concrete\Core\Page\Page::getCollectionFilename();
         }
 
         /**
@@ -12691,7 +12691,7 @@ namespace {
         public static function getCollectionDatePublic($mask = null, $type = "system")
         {
             // Concrete\Core\Page\Page::getCollectionDatePublic();
-            Concrete\Core\Page\Page::getCollectionDatePublic($mask, $type);
+            return Concrete\Core\Page\Page::getCollectionDatePublic($mask, $type);
         }
 
         /**
@@ -12701,7 +12701,7 @@ namespace {
         public static function getCollectionDescription()
         {
             // Concrete\Core\Page\Page::getCollectionDescription();
-            Concrete\Core\Page\Page::getCollectionDescription();
+            return Concrete\Core\Page\Page::getCollectionDescription();
         }
 
         /**
@@ -12711,7 +12711,7 @@ namespace {
         public static function getCollectionParentID()
         {
             // Concrete\Core\Page\Page::getCollectionParentID();
-            Concrete\Core\Page\Page::getCollectionParentID();
+            return Concrete\Core\Page\Page::getCollectionParentID();
         }
 
         /**
@@ -12722,7 +12722,7 @@ namespace {
         public static function getCollectionParentIDFromChildID($cID)
         {
             // Concrete\Core\Page\Page::getCollectionParentIDFromChildID();
-            Concrete\Core\Page\Page::getCollectionParentIDFromChildID($cID);
+            return Concrete\Core\Page\Page::getCollectionParentIDFromChildID($cID);
         }
 
         /**
@@ -12732,7 +12732,7 @@ namespace {
         public static function getCollectionParentIDs()
         {
             // Concrete\Core\Page\Page::getCollectionParentIDs();
-            Concrete\Core\Page\Page::getCollectionParentIDs();
+            return Concrete\Core\Page\Page::getCollectionParentIDs();
         }
 
         /**
@@ -12742,7 +12742,7 @@ namespace {
         public static function isMasterCollection()
         {
             // Concrete\Core\Page\Page::isMasterCollection();
-            Concrete\Core\Page\Page::isMasterCollection();
+            return Concrete\Core\Page\Page::isMasterCollection();
         }
 
         /**
@@ -12752,7 +12752,7 @@ namespace {
         public static function overrideTemplatePermissions()
         {
             // Concrete\Core\Page\Page::overrideTemplatePermissions();
-            Concrete\Core\Page\Page::overrideTemplatePermissions();
+            return Concrete\Core\Page\Page::overrideTemplatePermissions();
         }
 
         /**
@@ -12762,7 +12762,7 @@ namespace {
         public static function getCollectionDisplayOrder()
         {
             // Concrete\Core\Page\Page::getCollectionDisplayOrder();
-            Concrete\Core\Page\Page::getCollectionDisplayOrder();
+            return Concrete\Core\Page\Page::getCollectionDisplayOrder();
         }
 
         /**
@@ -12772,7 +12772,7 @@ namespace {
         public static function setTheme($pl)
         {
             // Concrete\Core\Page\Page::setTheme();
-            Concrete\Core\Page\Page::setTheme($pl);
+            return Concrete\Core\Page\Page::setTheme($pl);
         }
 
         /**
@@ -12781,7 +12781,7 @@ namespace {
         public static function setPermissionsInheritanceToTemplate()
         {
             // Concrete\Core\Page\Page::setPermissionsInheritanceToTemplate();
-            Concrete\Core\Page\Page::setPermissionsInheritanceToTemplate();
+            return Concrete\Core\Page\Page::setPermissionsInheritanceToTemplate();
         }
 
         /**
@@ -12790,31 +12790,31 @@ namespace {
         public static function setPermissionsInheritanceToOverride()
         {
             // Concrete\Core\Page\Page::setPermissionsInheritanceToOverride();
-            Concrete\Core\Page\Page::setPermissionsInheritanceToOverride();
+            return Concrete\Core\Page\Page::setPermissionsInheritanceToOverride();
         }
 
         public static function getPermissionsCollectionID()
         {
             // Concrete\Core\Page\Page::getPermissionsCollectionID();
-            Concrete\Core\Page\Page::getPermissionsCollectionID();
+            return Concrete\Core\Page\Page::getPermissionsCollectionID();
         }
 
         public static function getCollectionInheritance()
         {
             // Concrete\Core\Page\Page::getCollectionInheritance();
-            Concrete\Core\Page\Page::getCollectionInheritance();
+            return Concrete\Core\Page\Page::getCollectionInheritance();
         }
 
         public static function getParentPermissionsCollectionID()
         {
             // Concrete\Core\Page\Page::getParentPermissionsCollectionID();
-            Concrete\Core\Page\Page::getParentPermissionsCollectionID();
+            return Concrete\Core\Page\Page::getParentPermissionsCollectionID();
         }
 
         public static function getPermissionsCollectionObject()
         {
             // Concrete\Core\Page\Page::getPermissionsCollectionObject();
-            Concrete\Core\Page\Page::getPermissionsCollectionObject();
+            return Concrete\Core\Page\Page::getPermissionsCollectionObject();
         }
 
         /**
@@ -12823,25 +12823,25 @@ namespace {
         public static function getMasterCollectionID()
         {
             // Concrete\Core\Page\Page::getMasterCollectionID();
-            Concrete\Core\Page\Page::getMasterCollectionID();
+            return Concrete\Core\Page\Page::getMasterCollectionID();
         }
 
         public static function getOriginalCollectionID()
         {
             // Concrete\Core\Page\Page::getOriginalCollectionID();
-            Concrete\Core\Page\Page::getOriginalCollectionID();
+            return Concrete\Core\Page\Page::getOriginalCollectionID();
         }
 
         public static function getNumChildren()
         {
             // Concrete\Core\Page\Page::getNumChildren();
-            Concrete\Core\Page\Page::getNumChildren();
+            return Concrete\Core\Page\Page::getNumChildren();
         }
 
         public static function getNumChildrenDirect()
         {
             // Concrete\Core\Page\Page::getNumChildrenDirect();
-            Concrete\Core\Page\Page::getNumChildrenDirect();
+            return Concrete\Core\Page\Page::getNumChildrenDirect();
         }
 
         /**
@@ -12852,145 +12852,145 @@ namespace {
         public static function getFirstChild($sortColumn = "cDisplayOrder asc", $excludeSystemPages = null)
         {
             // Concrete\Core\Page\Page::getFirstChild();
-            Concrete\Core\Page\Page::getFirstChild($sortColumn, $excludeSystemPages);
+            return Concrete\Core\Page\Page::getFirstChild($sortColumn, $excludeSystemPages);
         }
 
         public static function getCollectionChildrenArray($oneLevelOnly = null)
         {
             // Concrete\Core\Page\Page::getCollectionChildrenArray();
-            Concrete\Core\Page\Page::getCollectionChildrenArray($oneLevelOnly);
+            return Concrete\Core\Page\Page::getCollectionChildrenArray($oneLevelOnly);
         }
 
         public static function _getNumChildren($cID, $oneLevelOnly = null, $sortColumn = "cDisplayOrder asc")
         {
             // Concrete\Core\Page\Page::_getNumChildren();
-            Concrete\Core\Page\Page::_getNumChildren($cID, $oneLevelOnly, $sortColumn);
+            return Concrete\Core\Page\Page::_getNumChildren($cID, $oneLevelOnly, $sortColumn);
         }
 
         public static function canMoveCopyTo($cobj)
         {
             // Concrete\Core\Page\Page::canMoveCopyTo();
-            Concrete\Core\Page\Page::canMoveCopyTo($cobj);
+            return Concrete\Core\Page\Page::canMoveCopyTo($cobj);
         }
 
         public static function updateCollectionName($name)
         {
             // Concrete\Core\Page\Page::updateCollectionName();
-            Concrete\Core\Page\Page::updateCollectionName($name);
+            return Concrete\Core\Page\Page::updateCollectionName($name);
         }
 
         public static function hasPageThemeCustomizations()
         {
             // Concrete\Core\Page\Page::hasPageThemeCustomizations();
-            Concrete\Core\Page\Page::hasPageThemeCustomizations();
+            return Concrete\Core\Page\Page::hasPageThemeCustomizations();
         }
 
         public static function resetCustomThemeStyles()
         {
             // Concrete\Core\Page\Page::resetCustomThemeStyles();
-            Concrete\Core\Page\Page::resetCustomThemeStyles();
+            return Concrete\Core\Page\Page::resetCustomThemeStyles();
         }
 
         public static function getCustomThemeStyles()
         {
             // Concrete\Core\Page\Page::getCustomThemeStyles();
-            Concrete\Core\Page\Page::getCustomThemeStyles();
+            return Concrete\Core\Page\Page::getCustomThemeStyles();
         }
 
         public static function updateCustomThemeStyles($styles)
         {
             // Concrete\Core\Page\Page::updateCustomThemeStyles();
-            Concrete\Core\Page\Page::updateCustomThemeStyles($styles);
+            return Concrete\Core\Page\Page::updateCustomThemeStyles($styles);
         }
 
         public static function writePageThemeCustomizations()
         {
             // Concrete\Core\Page\Page::writePageThemeCustomizations();
-            Concrete\Core\Page\Page::writePageThemeCustomizations();
+            return Concrete\Core\Page\Page::writePageThemeCustomizations();
         }
 
         public static function uniquifyPagePath($origPath)
         {
             // Concrete\Core\Page\Page::uniquifyPagePath();
-            Concrete\Core\Page\Page::uniquifyPagePath($origPath);
+            return Concrete\Core\Page\Page::uniquifyPagePath($origPath);
         }
 
         public static function rescanPagePaths($newPaths)
         {
             // Concrete\Core\Page\Page::rescanPagePaths();
-            Concrete\Core\Page\Page::rescanPagePaths($newPaths);
+            return Concrete\Core\Page\Page::rescanPagePaths($newPaths);
         }
 
         public static function clearPagePermissions()
         {
             // Concrete\Core\Page\Page::clearPagePermissions();
-            Concrete\Core\Page\Page::clearPagePermissions();
+            return Concrete\Core\Page\Page::clearPagePermissions();
         }
 
         public static function inheritPermissionsFromParent()
         {
             // Concrete\Core\Page\Page::inheritPermissionsFromParent();
-            Concrete\Core\Page\Page::inheritPermissionsFromParent();
+            return Concrete\Core\Page\Page::inheritPermissionsFromParent();
         }
 
         public static function inheritPermissionsFromDefaults()
         {
             // Concrete\Core\Page\Page::inheritPermissionsFromDefaults();
-            Concrete\Core\Page\Page::inheritPermissionsFromDefaults();
+            return Concrete\Core\Page\Page::inheritPermissionsFromDefaults();
         }
 
         public static function setPermissionsToManualOverride()
         {
             // Concrete\Core\Page\Page::setPermissionsToManualOverride();
-            Concrete\Core\Page\Page::setPermissionsToManualOverride();
+            return Concrete\Core\Page\Page::setPermissionsToManualOverride();
         }
 
         public static function rescanAreaPermissions()
         {
             // Concrete\Core\Page\Page::rescanAreaPermissions();
-            Concrete\Core\Page\Page::rescanAreaPermissions();
+            return Concrete\Core\Page\Page::rescanAreaPermissions();
         }
 
         public static function setOverrideTemplatePermissions($cOverrideTemplatePermissions)
         {
             // Concrete\Core\Page\Page::setOverrideTemplatePermissions();
-            Concrete\Core\Page\Page::setOverrideTemplatePermissions($cOverrideTemplatePermissions);
+            return Concrete\Core\Page\Page::setOverrideTemplatePermissions($cOverrideTemplatePermissions);
         }
 
         public static function updatePermissionsCollectionID($cParentIDString, $npID)
         {
             // Concrete\Core\Page\Page::updatePermissionsCollectionID();
-            Concrete\Core\Page\Page::updatePermissionsCollectionID($cParentIDString, $npID);
+            return Concrete\Core\Page\Page::updatePermissionsCollectionID($cParentIDString, $npID);
         }
 
         public static function acquireAreaPermissions($permissionsCollectionID)
         {
             // Concrete\Core\Page\Page::acquireAreaPermissions();
-            Concrete\Core\Page\Page::acquireAreaPermissions($permissionsCollectionID);
+            return Concrete\Core\Page\Page::acquireAreaPermissions($permissionsCollectionID);
         }
 
         public static function acquirePagePermissions($permissionsCollectionID)
         {
             // Concrete\Core\Page\Page::acquirePagePermissions();
-            Concrete\Core\Page\Page::acquirePagePermissions($permissionsCollectionID);
+            return Concrete\Core\Page\Page::acquirePagePermissions($permissionsCollectionID);
         }
 
         public static function updateGroupsSubCollection($cParentIDString)
         {
             // Concrete\Core\Page\Page::updateGroupsSubCollection();
-            Concrete\Core\Page\Page::updateGroupsSubCollection($cParentIDString);
+            return Concrete\Core\Page\Page::updateGroupsSubCollection($cParentIDString);
         }
 
         public static function move($nc, $retainOldPagePath = null)
         {
             // Concrete\Core\Page\Page::move();
-            Concrete\Core\Page\Page::move($nc, $retainOldPagePath);
+            return Concrete\Core\Page\Page::move($nc, $retainOldPagePath);
         }
 
         public static function duplicateAll($nc, $preserveUserID = null)
         {
             // Concrete\Core\Page\Page::duplicateAll();
-            Concrete\Core\Page\Page::duplicateAll($nc, $preserveUserID);
+            return Concrete\Core\Page\Page::duplicateAll($nc, $preserveUserID);
         }
 
         /**
@@ -12999,145 +12999,145 @@ namespace {
         public static function _duplicateAll($cParent, $cNewParent, $preserveUserID = null)
         {
             // Concrete\Core\Page\Page::_duplicateAll();
-            Concrete\Core\Page\Page::_duplicateAll($cParent, $cNewParent, $preserveUserID);
+            return Concrete\Core\Page\Page::_duplicateAll($cParent, $cNewParent, $preserveUserID);
         }
 
         public static function moveToTrash()
         {
             // Concrete\Core\Page\Page::moveToTrash();
-            Concrete\Core\Page\Page::moveToTrash();
+            return Concrete\Core\Page\Page::moveToTrash();
         }
 
         public static function rescanChildrenDisplayOrder()
         {
             // Concrete\Core\Page\Page::rescanChildrenDisplayOrder();
-            Concrete\Core\Page\Page::rescanChildrenDisplayOrder();
+            return Concrete\Core\Page\Page::rescanChildrenDisplayOrder();
         }
 
         public static function getNextSubPageDisplayOrder()
         {
             // Concrete\Core\Page\Page::getNextSubPageDisplayOrder();
-            Concrete\Core\Page\Page::getNextSubPageDisplayOrder();
+            return Concrete\Core\Page\Page::getNextSubPageDisplayOrder();
         }
 
         public static function rescanCollectionPath($retainOldPagePath = null)
         {
             // Concrete\Core\Page\Page::rescanCollectionPath();
-            Concrete\Core\Page\Page::rescanCollectionPath($retainOldPagePath);
+            return Concrete\Core\Page\Page::rescanCollectionPath($retainOldPagePath);
         }
 
         public static function updateDisplayOrder($do, $cID = null)
         {
             // Concrete\Core\Page\Page::updateDisplayOrder();
-            Concrete\Core\Page\Page::updateDisplayOrder($do, $cID);
+            return Concrete\Core\Page\Page::updateDisplayOrder($do, $cID);
         }
 
         public static function movePageDisplayOrderToTop()
         {
             // Concrete\Core\Page\Page::movePageDisplayOrderToTop();
-            Concrete\Core\Page\Page::movePageDisplayOrderToTop();
+            return Concrete\Core\Page\Page::movePageDisplayOrderToTop();
         }
 
         public static function movePageDisplayOrderToBottom()
         {
             // Concrete\Core\Page\Page::movePageDisplayOrderToBottom();
-            Concrete\Core\Page\Page::movePageDisplayOrderToBottom();
+            return Concrete\Core\Page\Page::movePageDisplayOrderToBottom();
         }
 
         public static function movePageDisplayOrderToSibling(Concrete\Core\Page\Page $c, $position = "before")
         {
             // Concrete\Core\Page\Page::movePageDisplayOrderToSibling();
-            Concrete\Core\Page\Page::movePageDisplayOrderToSibling($c, $position);
+            return Concrete\Core\Page\Page::movePageDisplayOrderToSibling($c, $position);
         }
 
         public static function rescanCollectionPathIndividual($cID, $cPath, $retainOldPagePath = null)
         {
             // Concrete\Core\Page\Page::rescanCollectionPathIndividual();
-            Concrete\Core\Page\Page::rescanCollectionPathIndividual($cID, $cPath, $retainOldPagePath);
+            return Concrete\Core\Page\Page::rescanCollectionPathIndividual($cID, $cPath, $retainOldPagePath);
         }
 
         public static function rescanSystemPageStatus()
         {
             // Concrete\Core\Page\Page::rescanSystemPageStatus();
-            Concrete\Core\Page\Page::rescanSystemPageStatus();
+            return Concrete\Core\Page\Page::rescanSystemPageStatus();
         }
 
         public static function isInTrash()
         {
             // Concrete\Core\Page\Page::isInTrash();
-            Concrete\Core\Page\Page::isInTrash();
+            return Concrete\Core\Page\Page::isInTrash();
         }
 
         public static function moveToRoot()
         {
             // Concrete\Core\Page\Page::moveToRoot();
-            Concrete\Core\Page\Page::moveToRoot();
+            return Concrete\Core\Page\Page::moveToRoot();
         }
 
         public static function rescanSystemPages()
         {
             // Concrete\Core\Page\Page::rescanSystemPages();
-            Concrete\Core\Page\Page::rescanSystemPages();
+            return Concrete\Core\Page\Page::rescanSystemPages();
         }
 
         public static function deactivate()
         {
             // Concrete\Core\Page\Page::deactivate();
-            Concrete\Core\Page\Page::deactivate();
+            return Concrete\Core\Page\Page::deactivate();
         }
 
         public static function activate()
         {
             // Concrete\Core\Page\Page::activate();
-            Concrete\Core\Page\Page::activate();
+            return Concrete\Core\Page\Page::activate();
         }
 
         public static function isActive()
         {
             // Concrete\Core\Page\Page::isActive();
-            Concrete\Core\Page\Page::isActive();
+            return Concrete\Core\Page\Page::isActive();
         }
 
         public static function setPageIndexScore($score)
         {
             // Concrete\Core\Page\Page::setPageIndexScore();
-            Concrete\Core\Page\Page::setPageIndexScore($score);
+            return Concrete\Core\Page\Page::setPageIndexScore($score);
         }
 
         public static function getPageIndexScore()
         {
             // Concrete\Core\Page\Page::getPageIndexScore();
-            Concrete\Core\Page\Page::getPageIndexScore();
+            return Concrete\Core\Page\Page::getPageIndexScore();
         }
 
         public static function getPageIndexContent()
         {
             // Concrete\Core\Page\Page::getPageIndexContent();
-            Concrete\Core\Page\Page::getPageIndexContent();
+            return Concrete\Core\Page\Page::getPageIndexContent();
         }
 
         public static function rescanCollectionPathChildren($cID, $cPath)
         {
             // Concrete\Core\Page\Page::rescanCollectionPathChildren();
-            Concrete\Core\Page\Page::rescanCollectionPathChildren($cID, $cPath);
+            return Concrete\Core\Page\Page::rescanCollectionPathChildren($cID, $cPath);
         }
 
         public static function getCollectionAction()
         {
             // Concrete\Core\Page\Page::getCollectionAction();
-            Concrete\Core\Page\Page::getCollectionAction();
+            return Concrete\Core\Page\Page::getCollectionAction();
         }
 
         public static function _associateMasterCollectionBlocks($newCID, $masterCID)
         {
             // Concrete\Core\Page\Page::_associateMasterCollectionBlocks();
-            Concrete\Core\Page\Page::_associateMasterCollectionBlocks($newCID, $masterCID);
+            return Concrete\Core\Page\Page::_associateMasterCollectionBlocks($newCID, $masterCID);
         }
 
         public static function _associateMasterCollectionAttributes($newCID, $masterCID)
         {
             // Concrete\Core\Page\Page::_associateMasterCollectionAttributes();
-            Concrete\Core\Page\Page::_associateMasterCollectionAttributes($newCID, $masterCID);
+            return Concrete\Core\Page\Page::_associateMasterCollectionAttributes($newCID, $masterCID);
         }
 
         /**
@@ -13147,7 +13147,7 @@ namespace {
         public static function addHomePage()
         {
             // Concrete\Core\Page\Page::addHomePage();
-            Concrete\Core\Page\Page::addHomePage();
+            return Concrete\Core\Page\Page::addHomePage();
         }
 
         /**
@@ -13164,49 +13164,49 @@ namespace {
         public static function add($pt, $data, $template = null)
         {
             // Concrete\Core\Page\Page::add();
-            Concrete\Core\Page\Page::add($pt, $data, $template);
+            return Concrete\Core\Page\Page::add($pt, $data, $template);
         }
 
         public static function getCollectionFullPageCaching()
         {
             // Concrete\Core\Page\Page::getCollectionFullPageCaching();
-            Concrete\Core\Page\Page::getCollectionFullPageCaching();
+            return Concrete\Core\Page\Page::getCollectionFullPageCaching();
         }
 
         public static function getCollectionFullPageCachingLifetime()
         {
             // Concrete\Core\Page\Page::getCollectionFullPageCachingLifetime();
-            Concrete\Core\Page\Page::getCollectionFullPageCachingLifetime();
+            return Concrete\Core\Page\Page::getCollectionFullPageCachingLifetime();
         }
 
         public static function getCollectionFullPageCachingLifetimeCustomValue()
         {
             // Concrete\Core\Page\Page::getCollectionFullPageCachingLifetimeCustomValue();
-            Concrete\Core\Page\Page::getCollectionFullPageCachingLifetimeCustomValue();
+            return Concrete\Core\Page\Page::getCollectionFullPageCachingLifetimeCustomValue();
         }
 
         public static function getCollectionFullPageCachingLifetimeValue()
         {
             // Concrete\Core\Page\Page::getCollectionFullPageCachingLifetimeValue();
-            Concrete\Core\Page\Page::getCollectionFullPageCachingLifetimeValue();
+            return Concrete\Core\Page\Page::getCollectionFullPageCachingLifetimeValue();
         }
 
         public static function addStatic($data)
         {
             // Concrete\Core\Page\Page::addStatic();
-            Concrete\Core\Page\Page::addStatic($data);
+            return Concrete\Core\Page\Page::addStatic($data);
         }
 
         public static function getPagePaths()
         {
             // Concrete\Core\Page\Page::getPagePaths();
-            Concrete\Core\Page\Page::getPagePaths();
+            return Concrete\Core\Page\Page::getPagePaths();
         }
 
         public static function getCurrentPage()
         {
             // Concrete\Core\Page\Page::getCurrentPage();
-            Concrete\Core\Page\Page::getCurrentPage();
+            return Concrete\Core\Page\Page::getCurrentPage();
         }
 
         /**
@@ -13215,19 +13215,19 @@ namespace {
         public static function getTotalPageViews($date = null)
         {
             // Concrete\Core\Page\Page::getTotalPageViews();
-            Concrete\Core\Page\Page::getTotalPageViews($date);
+            return Concrete\Core\Page\Page::getTotalPageViews($date);
         }
 
         public static function getPageDraftTargetParentPageID()
         {
             // Concrete\Core\Page\Page::getPageDraftTargetParentPageID();
-            Concrete\Core\Page\Page::getPageDraftTargetParentPageID();
+            return Concrete\Core\Page\Page::getPageDraftTargetParentPageID();
         }
 
         public static function setPageDraftTargetParentPageID($cParentID)
         {
             // Concrete\Core\Page\Page::setPageDraftTargetParentPageID();
-            Concrete\Core\Page\Page::setPageDraftTargetParentPageID($cParentID);
+            return Concrete\Core\Page\Page::setPageDraftTargetParentPageID($cParentID);
         }
 
         /**
@@ -13236,37 +13236,37 @@ namespace {
         public static function getPageStatistics($limit = 20)
         {
             // Concrete\Core\Page\Page::getPageStatistics();
-            Concrete\Core\Page\Page::getPageStatistics($limit);
+            return Concrete\Core\Page\Page::getPageStatistics($limit);
         }
 
         public static function loadVersionObject($cvID = "ACTIVE")
         {
             // Concrete\Core\Page\Collection\Collection::loadVersionObject();
-            Concrete\Core\Page\Collection\Collection::loadVersionObject($cvID);
+            return Concrete\Core\Page\Collection\Collection::loadVersionObject($cvID);
         }
 
         public static function getVersionToModify()
         {
             // Concrete\Core\Page\Collection\Collection::getVersionToModify();
-            Concrete\Core\Page\Collection\Collection::getVersionToModify();
+            return Concrete\Core\Page\Collection\Collection::getVersionToModify();
         }
 
         public static function getNextVersionComments()
         {
             // Concrete\Core\Page\Collection\Collection::getNextVersionComments();
-            Concrete\Core\Page\Collection\Collection::getNextVersionComments();
+            return Concrete\Core\Page\Collection\Collection::getNextVersionComments();
         }
 
         public static function cloneVersion($versionComments)
         {
             // Concrete\Core\Page\Collection\Collection::cloneVersion();
-            Concrete\Core\Page\Collection\Collection::cloneVersion($versionComments);
+            return Concrete\Core\Page\Collection\Collection::cloneVersion($versionComments);
         }
 
         public static function getFeatureAssignments()
         {
             // Concrete\Core\Page\Collection\Collection::getFeatureAssignments();
-            Concrete\Core\Page\Collection\Collection::getFeatureAssignments();
+            return Concrete\Core\Page\Collection\Collection::getFeatureAssignments();
         }
 
         /**
@@ -13301,109 +13301,109 @@ namespace {
         public static function getAttribute($akHandle, $displayMode = null)
         {
             // Concrete\Core\Page\Collection\Collection::getAttribute();
-            Concrete\Core\Page\Collection\Collection::getAttribute($akHandle, $displayMode);
+            return Concrete\Core\Page\Collection\Collection::getAttribute($akHandle, $displayMode);
         }
 
         public static function getCollectionAttributeValue($ak)
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionAttributeValue();
-            Concrete\Core\Page\Collection\Collection::getCollectionAttributeValue($ak);
+            return Concrete\Core\Page\Collection\Collection::getCollectionAttributeValue($ak);
         }
 
         public static function clearCollectionAttributes($retainAKIDs = null)
         {
             // Concrete\Core\Page\Collection\Collection::clearCollectionAttributes();
-            Concrete\Core\Page\Collection\Collection::clearCollectionAttributes($retainAKIDs);
+            return Concrete\Core\Page\Collection\Collection::clearCollectionAttributes($retainAKIDs);
         }
 
         public static function reindexPendingPages()
         {
             // Concrete\Core\Page\Collection\Collection::reindexPendingPages();
-            Concrete\Core\Page\Collection\Collection::reindexPendingPages();
+            return Concrete\Core\Page\Collection\Collection::reindexPendingPages();
         }
 
         public static function reindex($index = null, $actuallyDoReindex = "1")
         {
             // Concrete\Core\Page\Collection\Collection::reindex();
-            Concrete\Core\Page\Collection\Collection::reindex($index, $actuallyDoReindex);
+            return Concrete\Core\Page\Collection\Collection::reindex($index, $actuallyDoReindex);
         }
 
         public static function getAttributeValueObject($ak, $createIfNotFound = null)
         {
             // Concrete\Core\Page\Collection\Collection::getAttributeValueObject();
-            Concrete\Core\Page\Collection\Collection::getAttributeValueObject($ak, $createIfNotFound);
+            return Concrete\Core\Page\Collection\Collection::getAttributeValueObject($ak, $createIfNotFound);
         }
 
         public static function setAttribute($ak, $value)
         {
             // Concrete\Core\Page\Collection\Collection::setAttribute();
-            Concrete\Core\Page\Collection\Collection::setAttribute($ak, $value);
+            return Concrete\Core\Page\Collection\Collection::setAttribute($ak, $value);
         }
 
         public static function clearAttribute($ak)
         {
             // Concrete\Core\Page\Collection\Collection::clearAttribute();
-            Concrete\Core\Page\Collection\Collection::clearAttribute($ak);
+            return Concrete\Core\Page\Collection\Collection::clearAttribute($ak);
         }
 
         public static function getSetCollectionAttributes()
         {
             // Concrete\Core\Page\Collection\Collection::getSetCollectionAttributes();
-            Concrete\Core\Page\Collection\Collection::getSetCollectionAttributes();
+            return Concrete\Core\Page\Collection\Collection::getSetCollectionAttributes();
         }
 
         public static function addAttribute($ak, $value)
         {
             // Concrete\Core\Page\Collection\Collection::addAttribute();
-            Concrete\Core\Page\Collection\Collection::addAttribute($ak, $value);
+            return Concrete\Core\Page\Collection\Collection::addAttribute($ak, $value);
         }
 
         public static function getArea($arHandle)
         {
             // Concrete\Core\Page\Collection\Collection::getArea();
-            Concrete\Core\Page\Collection\Collection::getArea($arHandle);
+            return Concrete\Core\Page\Collection\Collection::getArea($arHandle);
         }
 
         public static function hasAliasedContent()
         {
             // Concrete\Core\Page\Collection\Collection::hasAliasedContent();
-            Concrete\Core\Page\Collection\Collection::hasAliasedContent();
+            return Concrete\Core\Page\Collection\Collection::hasAliasedContent();
         }
 
         public static function getCollectionID()
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionID();
-            Concrete\Core\Page\Collection\Collection::getCollectionID();
+            return Concrete\Core\Page\Collection\Collection::getCollectionID();
         }
 
         public static function getCollectionDateLastModified($mask = null, $type = "system")
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionDateLastModified();
-            Concrete\Core\Page\Collection\Collection::getCollectionDateLastModified($mask, $type);
+            return Concrete\Core\Page\Collection\Collection::getCollectionDateLastModified($mask, $type);
         }
 
         public static function getVersionObject()
         {
             // Concrete\Core\Page\Collection\Collection::getVersionObject();
-            Concrete\Core\Page\Collection\Collection::getVersionObject();
+            return Concrete\Core\Page\Collection\Collection::getVersionObject();
         }
 
         public static function getCollectionDateAdded($mask = null, $type = "system")
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionDateAdded();
-            Concrete\Core\Page\Collection\Collection::getCollectionDateAdded($mask, $type);
+            return Concrete\Core\Page\Collection\Collection::getCollectionDateAdded($mask, $type);
         }
 
         public static function getVersionID()
         {
             // Concrete\Core\Page\Collection\Collection::getVersionID();
-            Concrete\Core\Page\Collection\Collection::getVersionID();
+            return Concrete\Core\Page\Collection\Collection::getVersionID();
         }
 
         public static function getCollectionAreaDisplayOrder($arHandle, $ignoreVersions = null)
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionAreaDisplayOrder();
-            Concrete\Core\Page\Collection\Collection::getCollectionAreaDisplayOrder($arHandle, $ignoreVersions);
+            return Concrete\Core\Page\Collection\Collection::getCollectionAreaDisplayOrder($arHandle, $ignoreVersions);
         }
 
         /**
@@ -13413,55 +13413,55 @@ namespace {
         public static function outputCustomStyleHeaderItems($return = null)
         {
             // Concrete\Core\Page\Collection\Collection::outputCustomStyleHeaderItems();
-            Concrete\Core\Page\Collection\Collection::outputCustomStyleHeaderItems($return);
+            return Concrete\Core\Page\Collection\Collection::outputCustomStyleHeaderItems($return);
         }
 
         public static function getAreaCustomStyleRule($area)
         {
             // Concrete\Core\Page\Collection\Collection::getAreaCustomStyleRule();
-            Concrete\Core\Page\Collection\Collection::getAreaCustomStyleRule($area);
+            return Concrete\Core\Page\Collection\Collection::getAreaCustomStyleRule($area);
         }
 
         public static function resetAreaCustomStyle($area)
         {
             // Concrete\Core\Page\Collection\Collection::resetAreaCustomStyle();
-            Concrete\Core\Page\Collection\Collection::resetAreaCustomStyle($area);
+            return Concrete\Core\Page\Collection\Collection::resetAreaCustomStyle($area);
         }
 
         public static function setAreaCustomStyle($area, $csr)
         {
             // Concrete\Core\Page\Collection\Collection::setAreaCustomStyle();
-            Concrete\Core\Page\Collection\Collection::setAreaCustomStyle($area, $csr);
+            return Concrete\Core\Page\Collection\Collection::setAreaCustomStyle($area, $csr);
         }
 
         public static function relateVersionEdits($oc)
         {
             // Concrete\Core\Page\Collection\Collection::relateVersionEdits();
-            Concrete\Core\Page\Collection\Collection::relateVersionEdits($oc);
+            return Concrete\Core\Page\Collection\Collection::relateVersionEdits($oc);
         }
 
         public static function rescanDisplayOrder($areaName)
         {
             // Concrete\Core\Page\Collection\Collection::rescanDisplayOrder();
-            Concrete\Core\Page\Collection\Collection::rescanDisplayOrder($areaName);
+            return Concrete\Core\Page\Collection\Collection::rescanDisplayOrder($areaName);
         }
 
         public static function getByHandle($handle)
         {
             // Concrete\Core\Page\Collection\Collection::getByHandle();
-            Concrete\Core\Page\Collection\Collection::getByHandle($handle);
+            return Concrete\Core\Page\Collection\Collection::getByHandle($handle);
         }
 
         public static function refreshCache()
         {
             // Concrete\Core\Page\Collection\Collection::refreshCache();
-            Concrete\Core\Page\Collection\Collection::refreshCache();
+            return Concrete\Core\Page\Collection\Collection::refreshCache();
         }
 
         public static function getGlobalBlocks()
         {
             // Concrete\Core\Page\Collection\Collection::getGlobalBlocks();
-            Concrete\Core\Page\Collection\Collection::getGlobalBlocks();
+            return Concrete\Core\Page\Collection\Collection::getGlobalBlocks();
         }
 
         /**
@@ -13472,7 +13472,7 @@ namespace {
         public static function getBlockIDs($arHandle = null)
         {
             // Concrete\Core\Page\Collection\Collection::getBlockIDs();
-            Concrete\Core\Page\Collection\Collection::getBlockIDs($arHandle);
+            return Concrete\Core\Page\Collection\Collection::getBlockIDs($arHandle);
         }
 
         /**
@@ -13483,73 +13483,73 @@ namespace {
         public static function getBlocks($arHandle = null)
         {
             // Concrete\Core\Page\Collection\Collection::getBlocks();
-            Concrete\Core\Page\Collection\Collection::getBlocks($arHandle);
+            return Concrete\Core\Page\Collection\Collection::getBlocks($arHandle);
         }
 
         public static function addBlock($bt, $a, $data)
         {
             // Concrete\Core\Page\Collection\Collection::addBlock();
-            Concrete\Core\Page\Collection\Collection::addBlock($bt, $a, $data);
+            return Concrete\Core\Page\Collection\Collection::addBlock($bt, $a, $data);
         }
 
         public static function addFeature(Concrete\Core\Feature\Feature $fe)
         {
             // Concrete\Core\Page\Collection\Collection::addFeature();
-            Concrete\Core\Page\Collection\Collection::addFeature($fe);
+            return Concrete\Core\Page\Collection\Collection::addFeature($fe);
         }
 
         public static function addCollection($data)
         {
             // Concrete\Core\Page\Collection\Collection::addCollection();
-            Concrete\Core\Page\Collection\Collection::addCollection($data);
+            return Concrete\Core\Page\Collection\Collection::addCollection($data);
         }
 
         public static function markModified()
         {
             // Concrete\Core\Page\Collection\Collection::markModified();
-            Concrete\Core\Page\Collection\Collection::markModified();
+            return Concrete\Core\Page\Collection\Collection::markModified();
         }
 
         public static function duplicateCollection()
         {
             // Concrete\Core\Page\Collection\Collection::duplicateCollection();
-            Concrete\Core\Page\Collection\Collection::duplicateCollection();
+            return Concrete\Core\Page\Collection\Collection::duplicateCollection();
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -13560,67 +13560,67 @@ namespace {
         public static function filterByGlobalAreas()
         {
             // Concrete\Core\Page\Stack\StackList::filterByGlobalAreas();
-            Concrete\Core\Page\Stack\StackList::filterByGlobalAreas();
+            return Concrete\Core\Page\Stack\StackList::filterByGlobalAreas();
         }
 
         public static function filterByUserAdded()
         {
             // Concrete\Core\Page\Stack\StackList::filterByUserAdded();
-            Concrete\Core\Page\Stack\StackList::filterByUserAdded();
+            return Concrete\Core\Page\Stack\StackList::filterByUserAdded();
         }
 
         public static function export(SimpleXMLElement $x)
         {
             // Concrete\Core\Page\Stack\StackList::export();
-            Concrete\Core\Page\Stack\StackList::export($x);
+            return Concrete\Core\Page\Stack\StackList::export($x);
         }
 
         public static function get($itemsToGet = null, $offset = null)
         {
             // Concrete\Core\Page\Stack\StackList::get();
-            Concrete\Core\Page\Stack\StackList::get($itemsToGet, $offset);
+            return Concrete\Core\Page\Stack\StackList::get($itemsToGet, $offset);
         }
 
         public static function setViewPagePermissionKeyHandle($pkHandle)
         {
             // Concrete\Core\Page\PageList::setViewPagePermissionKeyHandle();
-            Concrete\Core\Page\PageList::setViewPagePermissionKeyHandle($pkHandle);
+            return Concrete\Core\Page\PageList::setViewPagePermissionKeyHandle($pkHandle);
         }
 
         public static function includeInactivePages()
         {
             // Concrete\Core\Page\PageList::includeInactivePages();
-            Concrete\Core\Page\PageList::includeInactivePages();
+            return Concrete\Core\Page\PageList::includeInactivePages();
         }
 
         public static function ignorePermissions()
         {
             // Concrete\Core\Page\PageList::ignorePermissions();
-            Concrete\Core\Page\PageList::ignorePermissions();
+            return Concrete\Core\Page\PageList::ignorePermissions();
         }
 
         public static function ignoreAliases()
         {
             // Concrete\Core\Page\PageList::ignoreAliases();
-            Concrete\Core\Page\PageList::ignoreAliases();
+            return Concrete\Core\Page\PageList::ignoreAliases();
         }
 
         public static function includeSystemPages()
         {
             // Concrete\Core\Page\PageList::includeSystemPages();
-            Concrete\Core\Page\PageList::includeSystemPages();
+            return Concrete\Core\Page\PageList::includeSystemPages();
         }
 
         public static function displayUnapprovedPages()
         {
             // Concrete\Core\Page\PageList::displayUnapprovedPages();
-            Concrete\Core\Page\PageList::displayUnapprovedPages();
+            return Concrete\Core\Page\PageList::displayUnapprovedPages();
         }
 
         public static function isIndexedSearch()
         {
             // Concrete\Core\Page\PageList::isIndexedSearch();
-            Concrete\Core\Page\PageList::isIndexedSearch();
+            return Concrete\Core\Page\PageList::isIndexedSearch();
         }
 
         /**
@@ -13629,19 +13629,19 @@ namespace {
         public static function filterByKeywords($keywords, $simple = null)
         {
             // Concrete\Core\Page\PageList::filterByKeywords();
-            Concrete\Core\Page\PageList::filterByKeywords($keywords, $simple);
+            return Concrete\Core\Page\PageList::filterByKeywords($keywords, $simple);
         }
 
         public static function filterByName($name, $exact = null)
         {
             // Concrete\Core\Page\PageList::filterByName();
-            Concrete\Core\Page\PageList::filterByName($name, $exact);
+            return Concrete\Core\Page\PageList::filterByName($name, $exact);
         }
 
         public static function filterByPath($path, $includeAllChildren = "1")
         {
             // Concrete\Core\Page\PageList::filterByPath();
-            Concrete\Core\Page\PageList::filterByPath($path, $includeAllChildren);
+            return Concrete\Core\Page\PageList::filterByPath($path, $includeAllChildren);
         }
 
         /**
@@ -13650,13 +13650,13 @@ namespace {
         public static function setupPermissions()
         {
             // Concrete\Core\Page\PageList::setupPermissions();
-            Concrete\Core\Page\PageList::setupPermissions();
+            return Concrete\Core\Page\PageList::setupPermissions();
         }
 
         public static function sortByRelevance()
         {
             // Concrete\Core\Page\PageList::sortByRelevance();
-            Concrete\Core\Page\PageList::sortByRelevance();
+            return Concrete\Core\Page\PageList::sortByRelevance();
         }
 
         /**
@@ -13665,7 +13665,7 @@ namespace {
         public static function sortByDisplayOrder()
         {
             // Concrete\Core\Page\PageList::sortByDisplayOrder();
-            Concrete\Core\Page\PageList::sortByDisplayOrder();
+            return Concrete\Core\Page\PageList::sortByDisplayOrder();
         }
 
         /**
@@ -13674,13 +13674,13 @@ namespace {
         public static function sortByDisplayOrderDescending()
         {
             // Concrete\Core\Page\PageList::sortByDisplayOrderDescending();
-            Concrete\Core\Page\PageList::sortByDisplayOrderDescending();
+            return Concrete\Core\Page\PageList::sortByDisplayOrderDescending();
         }
 
         public static function sortByCollectionIDAscending()
         {
             // Concrete\Core\Page\PageList::sortByCollectionIDAscending();
-            Concrete\Core\Page\PageList::sortByCollectionIDAscending();
+            return Concrete\Core\Page\PageList::sortByCollectionIDAscending();
         }
 
         /**
@@ -13689,7 +13689,7 @@ namespace {
         public static function sortByPublicDate()
         {
             // Concrete\Core\Page\PageList::sortByPublicDate();
-            Concrete\Core\Page\PageList::sortByPublicDate();
+            return Concrete\Core\Page\PageList::sortByPublicDate();
         }
 
         /**
@@ -13698,7 +13698,7 @@ namespace {
         public static function sortByName()
         {
             // Concrete\Core\Page\PageList::sortByName();
-            Concrete\Core\Page\PageList::sortByName();
+            return Concrete\Core\Page\PageList::sortByName();
         }
 
         /**
@@ -13707,7 +13707,7 @@ namespace {
         public static function sortByNameDescending()
         {
             // Concrete\Core\Page\PageList::sortByNameDescending();
-            Concrete\Core\Page\PageList::sortByNameDescending();
+            return Concrete\Core\Page\PageList::sortByNameDescending();
         }
 
         /**
@@ -13716,7 +13716,7 @@ namespace {
         public static function sortByPublicDateDescending()
         {
             // Concrete\Core\Page\PageList::sortByPublicDateDescending();
-            Concrete\Core\Page\PageList::sortByPublicDateDescending();
+            return Concrete\Core\Page\PageList::sortByPublicDateDescending();
         }
 
         /**
@@ -13726,7 +13726,7 @@ namespace {
         public static function filterByParentID($cParentID)
         {
             // Concrete\Core\Page\PageList::filterByParentID();
-            Concrete\Core\Page\PageList::filterByParentID($cParentID);
+            return Concrete\Core\Page\PageList::filterByParentID($cParentID);
         }
 
         /**
@@ -13736,7 +13736,7 @@ namespace {
         public static function filterByPageTypeID($ptID)
         {
             // Concrete\Core\Page\PageList::filterByPageTypeID();
-            Concrete\Core\Page\PageList::filterByPageTypeID($ptID);
+            return Concrete\Core\Page\PageList::filterByPageTypeID($ptID);
         }
 
         /**
@@ -13745,7 +13745,7 @@ namespace {
         public static function filterByCollectionTypeID($ctID)
         {
             // Concrete\Core\Page\PageList::filterByCollectionTypeID();
-            Concrete\Core\Page\PageList::filterByCollectionTypeID($ctID);
+            return Concrete\Core\Page\PageList::filterByCollectionTypeID($ctID);
         }
 
         /**
@@ -13755,19 +13755,19 @@ namespace {
         public static function filterByUserID($uID)
         {
             // Concrete\Core\Page\PageList::filterByUserID();
-            Concrete\Core\Page\PageList::filterByUserID($uID);
+            return Concrete\Core\Page\PageList::filterByUserID($uID);
         }
 
         public static function filterByIsApproved($cvIsApproved)
         {
             // Concrete\Core\Page\PageList::filterByIsApproved();
-            Concrete\Core\Page\PageList::filterByIsApproved($cvIsApproved);
+            return Concrete\Core\Page\PageList::filterByIsApproved($cvIsApproved);
         }
 
         public static function filterByIsAlias($ia)
         {
             // Concrete\Core\Page\PageList::filterByIsAlias();
-            Concrete\Core\Page\PageList::filterByIsAlias($ia);
+            return Concrete\Core\Page\PageList::filterByIsAlias($ia);
         }
 
         /**
@@ -13777,13 +13777,13 @@ namespace {
         public static function filterByPageTypeHandle($ptHandle)
         {
             // Concrete\Core\Page\PageList::filterByPageTypeHandle();
-            Concrete\Core\Page\PageList::filterByPageTypeHandle($ptHandle);
+            return Concrete\Core\Page\PageList::filterByPageTypeHandle($ptHandle);
         }
 
         public static function filterByCollectionTypeHandle($ctHandle)
         {
             // Concrete\Core\Page\PageList::filterByCollectionTypeHandle();
-            Concrete\Core\Page\PageList::filterByCollectionTypeHandle($ctHandle);
+            return Concrete\Core\Page\PageList::filterByCollectionTypeHandle($ctHandle);
         }
 
         /**
@@ -13793,19 +13793,19 @@ namespace {
         public static function filterByDateAdded($date, $comparison = "=")
         {
             // Concrete\Core\Page\PageList::filterByDateAdded();
-            Concrete\Core\Page\PageList::filterByDateAdded($date, $comparison);
+            return Concrete\Core\Page\PageList::filterByDateAdded($date, $comparison);
         }
 
         public static function filterByNumberOfChildren($num, $comparison = ">")
         {
             // Concrete\Core\Page\PageList::filterByNumberOfChildren();
-            Concrete\Core\Page\PageList::filterByNumberOfChildren($num, $comparison);
+            return Concrete\Core\Page\PageList::filterByNumberOfChildren($num, $comparison);
         }
 
         public static function filterByDateLastModified($date, $comparison = "=")
         {
             // Concrete\Core\Page\PageList::filterByDateLastModified();
-            Concrete\Core\Page\PageList::filterByDateLastModified($date, $comparison);
+            return Concrete\Core\Page\PageList::filterByDateLastModified($date, $comparison);
         }
 
         /**
@@ -13815,13 +13815,13 @@ namespace {
         public static function filterByPublicDate($date, $comparison = "=")
         {
             // Concrete\Core\Page\PageList::filterByPublicDate();
-            Concrete\Core\Page\PageList::filterByPublicDate($date, $comparison);
+            return Concrete\Core\Page\PageList::filterByPublicDate($date, $comparison);
         }
 
         public static function filterBySelectAttribute($akHandle, $value)
         {
             // Concrete\Core\Page\PageList::filterBySelectAttribute();
-            Concrete\Core\Page\PageList::filterBySelectAttribute($akHandle, $value);
+            return Concrete\Core\Page\PageList::filterBySelectAttribute($akHandle, $value);
         }
 
         /**
@@ -13831,79 +13831,79 @@ namespace {
         public static function displayOnlyPermittedPages($checkForPermissions)
         {
             // Concrete\Core\Page\PageList::displayOnlyPermittedPages();
-            Concrete\Core\Page\PageList::displayOnlyPermittedPages($checkForPermissions);
+            return Concrete\Core\Page\PageList::displayOnlyPermittedPages($checkForPermissions);
         }
 
         protected static function setBaseQuery($additionalFields = null)
         {
             // Concrete\Core\Page\PageList::setBaseQuery();
-            Concrete\Core\Page\PageList::setBaseQuery($additionalFields);
+            return Concrete\Core\Page\PageList::setBaseQuery($additionalFields);
         }
 
         protected static function setupSystemPagesToExclude()
         {
             // Concrete\Core\Page\PageList::setupSystemPagesToExclude();
-            Concrete\Core\Page\PageList::setupSystemPagesToExclude();
+            return Concrete\Core\Page\PageList::setupSystemPagesToExclude();
         }
 
         protected static function loadPageID($cID, $versionOrig = "RECENT")
         {
             // Concrete\Core\Page\PageList::loadPageID();
-            Concrete\Core\Page\PageList::loadPageID($cID, $versionOrig);
+            return Concrete\Core\Page\PageList::loadPageID($cID, $versionOrig);
         }
 
         public static function getTotal()
         {
             // Concrete\Core\Page\PageList::getTotal();
-            Concrete\Core\Page\PageList::getTotal();
+            return Concrete\Core\Page\PageList::getTotal();
         }
 
         public static function debug($dbg = "1")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
         }
 
         protected static function setQuery($query)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery($query);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery($query);
         }
 
         protected static function getQuery()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
         }
 
         public static function addToQuery($query)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery($query);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery($query);
         }
 
         protected static function setupAutoSort()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
         }
 
         protected static function executeBase()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
         }
 
         protected static function setupSortByString()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
         }
 
         protected static function setupAttributeSort()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
         }
 
         /**
@@ -13912,121 +13912,121 @@ namespace {
         public static function filter($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter($column, $value, $comparison);
         }
 
         public static function getSearchResultsClass($field)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass($field);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass($field);
         }
 
         public static function sortBy($key, $dir = "asc")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy($key, $dir);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy($key, $dir);
         }
 
         public static function groupBy($key)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy($key);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy($key);
         }
 
         public static function having($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
         }
 
         public static function getSortByURL($column, $dir = "asc", $baseURL = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
         }
 
         protected static function setupAttributeFilters($join)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters($join);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters($join);
         }
 
         public static function filterByAttribute($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
         }
 
         public static function enableStickySearchRequest($namespace = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
+            return Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
         }
 
         public static function getQueryStringPagingVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
         }
 
         public static function getQueryStringSortVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
         }
 
         public static function getQueryStringSortDirectionVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
         }
 
         protected static function getStickySearchNameSpace()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
-            Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
+            return Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
         }
 
         public static function resetSearchRequest($namespace = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
+            return Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
         }
 
         public static function addToSearchRequest($key, $value)
         {
             // Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest($key, $value);
+            return Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest($key, $value);
         }
 
         public static function getSearchRequest()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
+            return Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
         }
 
         public static function setItemsPerPage($num)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage();
-            Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage($num);
+            return Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage($num);
         }
 
         public static function getItemsPerPage()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
-            Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
+            return Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
         }
 
         public static function setItems($items)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setItems();
-            Concrete\Core\Foundation\Collection\ItemList::setItems($items);
+            return Concrete\Core\Foundation\Collection\ItemList::setItems($items);
         }
 
         public static function setNameSpace($ns)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setNameSpace();
-            Concrete\Core\Foundation\Collection\ItemList::setNameSpace($ns);
+            return Concrete\Core\Foundation\Collection\ItemList::setNameSpace($ns);
         }
 
         /**
@@ -14035,13 +14035,13 @@ namespace {
         public static function getPage($page = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPage();
-            Concrete\Core\Foundation\Collection\ItemList::getPage($page);
+            return Concrete\Core\Foundation\Collection\ItemList::getPage($page);
         }
 
         protected static function setCurrentPage($page = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setCurrentPage();
-            Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
+            return Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
         }
 
         /**
@@ -14050,37 +14050,37 @@ namespace {
         public static function displaySummary($right_content = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displaySummary();
-            Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
+            return Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
         }
 
         public static function isActiveSortColumn($column)
         {
             // Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn();
-            Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn($column);
+            return Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn($column);
         }
 
         public static function getActiveSortColumn()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
-            Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
+            return Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
         }
 
         public static function getActiveSortDirection()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
-            Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
+            return Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
         }
 
         public static function requiresPaging()
         {
             // Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
-            Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
+            return Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
         }
 
         public static function getPagination($url = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPagination();
-            Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
         }
 
         /**
@@ -14088,7 +14088,7 @@ namespace {
         public static function displayPagingV2($script = null, $return = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPagingV2();
-            Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
         }
 
         /**
@@ -14096,7 +14096,7 @@ namespace {
         public static function displayPaging($script = null, $return = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPaging();
-            Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
         }
 
         /**
@@ -14105,19 +14105,19 @@ namespace {
         public static function getSummary()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSummary();
-            Concrete\Core\Foundation\Collection\ItemList::getSummary();
+            return Concrete\Core\Foundation\Collection\ItemList::getSummary();
         }
 
         public static function getSortBy()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSortBy();
-            Concrete\Core\Foundation\Collection\ItemList::getSortBy();
+            return Concrete\Core\Foundation\Collection\ItemList::getSortBy();
         }
 
         public static function getSortByDirection()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
-            Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
+            return Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
         }
 
         /**
@@ -14130,7 +14130,7 @@ namespace {
         public static function sortByMultiple()
         {
             // Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
-            Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
+            return Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
         }
 
     }
@@ -14141,19 +14141,19 @@ namespace {
         protected static function constructView($path = null)
         {
             // Concrete\Core\View\View::constructView();
-            Concrete\Core\View\View::constructView($path);
+            return Concrete\Core\View\View::constructView($path);
         }
 
         public static function getThemeDirectory()
         {
             // Concrete\Core\View\View::getThemeDirectory();
-            Concrete\Core\View\View::getThemeDirectory();
+            return Concrete\Core\View\View::getThemeDirectory();
         }
 
         public static function getViewPath()
         {
             // Concrete\Core\View\View::getViewPath();
-            Concrete\Core\View\View::getViewPath();
+            return Concrete\Core\View\View::getViewPath();
         }
 
         /**
@@ -14164,31 +14164,31 @@ namespace {
         public static function getThemePath()
         {
             // Concrete\Core\View\View::getThemePath();
-            Concrete\Core\View\View::getThemePath();
+            return Concrete\Core\View\View::getThemePath();
         }
 
         public static function getThemeHandle()
         {
             // Concrete\Core\View\View::getThemeHandle();
-            Concrete\Core\View\View::getThemeHandle();
+            return Concrete\Core\View\View::getThemeHandle();
         }
 
         public static function setInnerContentFile($innerContentFile)
         {
             // Concrete\Core\View\View::setInnerContentFile();
-            Concrete\Core\View\View::setInnerContentFile($innerContentFile);
+            return Concrete\Core\View\View::setInnerContentFile($innerContentFile);
         }
 
         public static function setViewRootDirectoryName($directory)
         {
             // Concrete\Core\View\View::setViewRootDirectoryName();
-            Concrete\Core\View\View::setViewRootDirectoryName($directory);
+            return Concrete\Core\View\View::setViewRootDirectoryName($directory);
         }
 
         public static function inc($file, $args = null)
         {
             // Concrete\Core\View\View::inc();
-            Concrete\Core\View\View::inc($file, $args);
+            return Concrete\Core\View\View::inc($file, $args);
         }
 
         /**
@@ -14200,13 +14200,13 @@ namespace {
         public static function action($action)
         {
             // Concrete\Core\View\View::action();
-            Concrete\Core\View\View::action($action);
+            return Concrete\Core\View\View::action($action);
         }
 
         public static function setViewTheme($theme)
         {
             // Concrete\Core\View\View::setViewTheme();
-            Concrete\Core\View\View::setViewTheme($theme);
+            return Concrete\Core\View\View::setViewTheme($theme);
         }
 
         /**
@@ -14215,7 +14215,7 @@ namespace {
         protected static function loadViewThemeObject()
         {
             // Concrete\Core\View\View::loadViewThemeObject();
-            Concrete\Core\View\View::loadViewThemeObject();
+            return Concrete\Core\View\View::loadViewThemeObject();
         }
 
         /**
@@ -14224,37 +14224,37 @@ namespace {
         public static function start($state)
         {
             // Concrete\Core\View\View::start();
-            Concrete\Core\View\View::start($state);
+            return Concrete\Core\View\View::start($state);
         }
 
         public static function setupRender()
         {
             // Concrete\Core\View\View::setupRender();
-            Concrete\Core\View\View::setupRender();
+            return Concrete\Core\View\View::setupRender();
         }
 
         public static function startRender()
         {
             // Concrete\Core\View\View::startRender();
-            Concrete\Core\View\View::startRender();
+            return Concrete\Core\View\View::startRender();
         }
 
         protected static function onBeforeGetContents()
         {
             // Concrete\Core\View\View::onBeforeGetContents();
-            Concrete\Core\View\View::onBeforeGetContents();
+            return Concrete\Core\View\View::onBeforeGetContents();
         }
 
         public static function renderViewContents($scopeItems)
         {
             // Concrete\Core\View\View::renderViewContents();
-            Concrete\Core\View\View::renderViewContents($scopeItems);
+            return Concrete\Core\View\View::renderViewContents($scopeItems);
         }
 
         public static function finishRender($contents)
         {
             // Concrete\Core\View\View::finishRender();
-            Concrete\Core\View\View::finishRender($contents);
+            return Concrete\Core\View\View::finishRender($contents);
         }
 
         /**
@@ -14264,7 +14264,7 @@ namespace {
         public static function markHeaderAssetPosition()
         {
             // Concrete\Core\View\View::markHeaderAssetPosition();
-            Concrete\Core\View\View::markHeaderAssetPosition();
+            return Concrete\Core\View\View::markHeaderAssetPosition();
         }
 
         /**
@@ -14274,103 +14274,103 @@ namespace {
         public static function markFooterAssetPosition()
         {
             // Concrete\Core\View\View::markFooterAssetPosition();
-            Concrete\Core\View\View::markFooterAssetPosition();
+            return Concrete\Core\View\View::markFooterAssetPosition();
         }
 
         public static function postProcessViewContents($contents)
         {
             // Concrete\Core\View\View::postProcessViewContents();
-            Concrete\Core\View\View::postProcessViewContents($contents);
+            return Concrete\Core\View\View::postProcessViewContents($contents);
         }
 
         protected static function postProcessAssets($assets)
         {
             // Concrete\Core\View\View::postProcessAssets();
-            Concrete\Core\View\View::postProcessAssets($assets);
+            return Concrete\Core\View\View::postProcessAssets($assets);
         }
 
         protected static function replaceEmptyAssetPlaceholders($pageContent)
         {
             // Concrete\Core\View\View::replaceEmptyAssetPlaceholders();
-            Concrete\Core\View\View::replaceEmptyAssetPlaceholders($pageContent);
+            return Concrete\Core\View\View::replaceEmptyAssetPlaceholders($pageContent);
         }
 
         protected static function replaceAssetPlaceholders($outputAssets, $pageContent)
         {
             // Concrete\Core\View\View::replaceAssetPlaceholders();
-            Concrete\Core\View\View::replaceAssetPlaceholders($outputAssets, $pageContent);
+            return Concrete\Core\View\View::replaceAssetPlaceholders($outputAssets, $pageContent);
         }
 
         protected static function outputAssetIntoView($item)
         {
             // Concrete\Core\View\View::outputAssetIntoView();
-            Concrete\Core\View\View::outputAssetIntoView($item);
+            return Concrete\Core\View\View::outputAssetIntoView($item);
         }
 
         public static function element($_file, $args = null, $_pkgHandle = null)
         {
             // Concrete\Core\View\View::element();
-            Concrete\Core\View\View::element($_file, $args, $_pkgHandle);
+            return Concrete\Core\View\View::element($_file, $args, $_pkgHandle);
         }
 
         public static function addScopeItems($items)
         {
             // Concrete\Core\View\AbstractView::addScopeItems();
-            Concrete\Core\View\AbstractView::addScopeItems($items);
+            return Concrete\Core\View\AbstractView::addScopeItems($items);
         }
 
         public static function getRequestInstance()
         {
             // Concrete\Core\View\AbstractView::getRequestInstance();
-            Concrete\Core\View\AbstractView::getRequestInstance();
+            return Concrete\Core\View\AbstractView::getRequestInstance();
         }
 
         protected static function setRequestInstance(Concrete\Core\View\View $v)
         {
             // Concrete\Core\View\AbstractView::setRequestInstance();
-            Concrete\Core\View\AbstractView::setRequestInstance($v);
+            return Concrete\Core\View\AbstractView::setRequestInstance($v);
         }
 
         protected static function revertRequestInstance()
         {
             // Concrete\Core\View\AbstractView::revertRequestInstance();
-            Concrete\Core\View\AbstractView::revertRequestInstance();
+            return Concrete\Core\View\AbstractView::revertRequestInstance();
         }
 
         public static function addHeaderAsset($asset)
         {
             // Concrete\Core\View\AbstractView::addHeaderAsset();
-            Concrete\Core\View\AbstractView::addHeaderAsset($asset);
+            return Concrete\Core\View\AbstractView::addHeaderAsset($asset);
         }
 
         public static function addFooterAsset($asset)
         {
             // Concrete\Core\View\AbstractView::addFooterAsset();
-            Concrete\Core\View\AbstractView::addFooterAsset($asset);
+            return Concrete\Core\View\AbstractView::addFooterAsset($asset);
         }
 
         public static function addOutputAsset($asset)
         {
             // Concrete\Core\View\AbstractView::addOutputAsset();
-            Concrete\Core\View\AbstractView::addOutputAsset($asset);
+            return Concrete\Core\View\AbstractView::addOutputAsset($asset);
         }
 
         public static function requireAsset($assetType, $assetHandle = null)
         {
             // Concrete\Core\View\AbstractView::requireAsset();
-            Concrete\Core\View\AbstractView::requireAsset($assetType, $assetHandle);
+            return Concrete\Core\View\AbstractView::requireAsset($assetType, $assetHandle);
         }
 
         public static function setController($controller)
         {
             // Concrete\Core\View\AbstractView::setController();
-            Concrete\Core\View\AbstractView::setController($controller);
+            return Concrete\Core\View\AbstractView::setController($controller);
         }
 
         public static function setViewTemplate($template)
         {
             // Concrete\Core\View\AbstractView::setViewTemplate();
-            Concrete\Core\View\AbstractView::setViewTemplate($template);
+            return Concrete\Core\View\AbstractView::setViewTemplate($template);
         }
 
         /**
@@ -14382,25 +14382,25 @@ namespace {
         public static function post($key)
         {
             // Concrete\Core\View\AbstractView::post();
-            Concrete\Core\View\AbstractView::post($key);
+            return Concrete\Core\View\AbstractView::post($key);
         }
 
         protected static function onAfterGetContents()
         {
             // Concrete\Core\View\AbstractView::onAfterGetContents();
-            Concrete\Core\View\AbstractView::onAfterGetContents();
+            return Concrete\Core\View\AbstractView::onAfterGetContents();
         }
 
         public static function getScopeItems()
         {
             // Concrete\Core\View\AbstractView::getScopeItems();
-            Concrete\Core\View\AbstractView::getScopeItems();
+            return Concrete\Core\View\AbstractView::getScopeItems();
         }
 
         public static function render($state = null)
         {
             // Concrete\Core\View\AbstractView::render();
-            Concrete\Core\View\AbstractView::render($state);
+            return Concrete\Core\View\AbstractView::render($state);
         }
 
         /**
@@ -14413,19 +14413,19 @@ namespace {
         public static function url($action, $task = null)
         {
             // Concrete\Core\View\AbstractView::url();
-            Concrete\Core\View\AbstractView::url($action, $task);
+            return Concrete\Core\View\AbstractView::url($action, $task);
         }
 
         public static function setThemeByPath($path, $theme = null, $wrapper = "view.php")
         {
             // Concrete\Core\View\AbstractView::setThemeByPath();
-            Concrete\Core\View\AbstractView::setThemeByPath($path, $theme, $wrapper);
+            return Concrete\Core\View\AbstractView::setThemeByPath($path, $theme, $wrapper);
         }
 
         public static function renderError($title, $error, $errorObj = null)
         {
             // Concrete\Core\View\AbstractView::renderError();
-            Concrete\Core\View\AbstractView::renderError($title, $error, $errorObj);
+            return Concrete\Core\View\AbstractView::renderError($title, $error, $errorObj);
         }
 
         /**
@@ -14434,7 +14434,7 @@ namespace {
         public static function addHeaderItem($item)
         {
             // Concrete\Core\View\AbstractView::addHeaderItem();
-            Concrete\Core\View\AbstractView::addHeaderItem($item);
+            return Concrete\Core\View\AbstractView::addHeaderItem($item);
         }
 
         /**
@@ -14443,7 +14443,7 @@ namespace {
         public static function addFooterItem($item)
         {
             // Concrete\Core\View\AbstractView::addFooterItem();
-            Concrete\Core\View\AbstractView::addFooterItem($item);
+            return Concrete\Core\View\AbstractView::addFooterItem($item);
         }
 
         /**
@@ -14452,7 +14452,7 @@ namespace {
         public static function getInstance()
         {
             // Concrete\Core\View\AbstractView::getInstance();
-            Concrete\Core\View\AbstractView::getInstance();
+            return Concrete\Core\View\AbstractView::getInstance();
         }
 
     }
@@ -14463,181 +14463,181 @@ namespace {
         public static function getJobHandle()
         {
             // Concrete\Core\Job\Job::getJobHandle();
-            Concrete\Core\Job\Job::getJobHandle();
+            return Concrete\Core\Job\Job::getJobHandle();
         }
 
         public static function getJobID()
         {
             // Concrete\Core\Job\Job::getJobID();
-            Concrete\Core\Job\Job::getJobID();
+            return Concrete\Core\Job\Job::getJobID();
         }
 
         public static function getPackageHandle()
         {
             // Concrete\Core\Job\Job::getPackageHandle();
-            Concrete\Core\Job\Job::getPackageHandle();
+            return Concrete\Core\Job\Job::getPackageHandle();
         }
 
         public static function getJobLastStatusCode()
         {
             // Concrete\Core\Job\Job::getJobLastStatusCode();
-            Concrete\Core\Job\Job::getJobLastStatusCode();
+            return Concrete\Core\Job\Job::getJobLastStatusCode();
         }
 
         public static function didFail()
         {
             // Concrete\Core\Job\Job::didFail();
-            Concrete\Core\Job\Job::didFail();
+            return Concrete\Core\Job\Job::didFail();
         }
 
         public static function canUninstall()
         {
             // Concrete\Core\Job\Job::canUninstall();
-            Concrete\Core\Job\Job::canUninstall();
+            return Concrete\Core\Job\Job::canUninstall();
         }
 
         public static function supportsQueue()
         {
             // Concrete\Core\Job\Job::supportsQueue();
-            Concrete\Core\Job\Job::supportsQueue();
+            return Concrete\Core\Job\Job::supportsQueue();
         }
 
         public static function jobClassLocations()
         {
             // Concrete\Core\Job\Job::jobClassLocations();
-            Concrete\Core\Job\Job::jobClassLocations();
+            return Concrete\Core\Job\Job::jobClassLocations();
         }
 
         public static function getJobDateLastRun()
         {
             // Concrete\Core\Job\Job::getJobDateLastRun();
-            Concrete\Core\Job\Job::getJobDateLastRun();
+            return Concrete\Core\Job\Job::getJobDateLastRun();
         }
 
         public static function getJobStatus()
         {
             // Concrete\Core\Job\Job::getJobStatus();
-            Concrete\Core\Job\Job::getJobStatus();
+            return Concrete\Core\Job\Job::getJobStatus();
         }
 
         public static function getJobLastStatusText()
         {
             // Concrete\Core\Job\Job::getJobLastStatusText();
-            Concrete\Core\Job\Job::getJobLastStatusText();
+            return Concrete\Core\Job\Job::getJobLastStatusText();
         }
 
         public static function authenticateRequest($auth)
         {
             // Concrete\Core\Job\Job::authenticateRequest();
-            Concrete\Core\Job\Job::authenticateRequest($auth);
+            return Concrete\Core\Job\Job::authenticateRequest($auth);
         }
 
         public static function generateAuth()
         {
             // Concrete\Core\Job\Job::generateAuth();
-            Concrete\Core\Job\Job::generateAuth();
+            return Concrete\Core\Job\Job::generateAuth();
         }
 
         public static function exportList($xml)
         {
             // Concrete\Core\Job\Job::exportList();
-            Concrete\Core\Job\Job::exportList($xml);
+            return Concrete\Core\Job\Job::exportList($xml);
         }
 
         public static function getList($scheduledOnly = null)
         {
             // Concrete\Core\Job\Job::getList();
-            Concrete\Core\Job\Job::getList($scheduledOnly);
+            return Concrete\Core\Job\Job::getList($scheduledOnly);
         }
 
         public static function reset()
         {
             // Concrete\Core\Job\Job::reset();
-            Concrete\Core\Job\Job::reset();
+            return Concrete\Core\Job\Job::reset();
         }
 
         public static function markStarted()
         {
             // Concrete\Core\Job\Job::markStarted();
-            Concrete\Core\Job\Job::markStarted();
+            return Concrete\Core\Job\Job::markStarted();
         }
 
         public static function markCompleted($resultCode = null, $resultMsg = null)
         {
             // Concrete\Core\Job\Job::markCompleted();
-            Concrete\Core\Job\Job::markCompleted($resultCode, $resultMsg);
+            return Concrete\Core\Job\Job::markCompleted($resultCode, $resultMsg);
         }
 
         public static function getByID($jID = null)
         {
             // Concrete\Core\Job\Job::getByID();
-            Concrete\Core\Job\Job::getByID($jID);
+            return Concrete\Core\Job\Job::getByID($jID);
         }
 
         public static function getByHandle($jHandle = null)
         {
             // Concrete\Core\Job\Job::getByHandle();
-            Concrete\Core\Job\Job::getByHandle($jHandle);
+            return Concrete\Core\Job\Job::getByHandle($jHandle);
         }
 
         public static function getJobObjByHandle($jHandle = null, $jobData = null)
         {
             // Concrete\Core\Job\Job::getJobObjByHandle();
-            Concrete\Core\Job\Job::getJobObjByHandle($jHandle, $jobData);
+            return Concrete\Core\Job\Job::getJobObjByHandle($jHandle, $jobData);
         }
 
         protected static function getClassName($jHandle)
         {
             // Concrete\Core\Job\Job::getClassName();
-            Concrete\Core\Job\Job::getClassName($jHandle);
+            return Concrete\Core\Job\Job::getClassName($jHandle);
         }
 
         public static function getAvailableList($includeConcreteDirJobs = 1)
         {
             // Concrete\Core\Job\Job::getAvailableList();
-            Concrete\Core\Job\Job::getAvailableList($includeConcreteDirJobs);
+            return Concrete\Core\Job\Job::getAvailableList($includeConcreteDirJobs);
         }
 
         public static function executeJob()
         {
             // Concrete\Core\Job\Job::executeJob();
-            Concrete\Core\Job\Job::executeJob();
+            return Concrete\Core\Job\Job::executeJob();
         }
 
         public static function setJobStatus($jStatus = "ENABLED")
         {
             // Concrete\Core\Job\Job::setJobStatus();
-            Concrete\Core\Job\Job::setJobStatus($jStatus);
+            return Concrete\Core\Job\Job::setJobStatus($jStatus);
         }
 
         public static function installByHandle($jHandle = null)
         {
             // Concrete\Core\Job\Job::installByHandle();
-            Concrete\Core\Job\Job::installByHandle($jHandle);
+            return Concrete\Core\Job\Job::installByHandle($jHandle);
         }
 
         public static function getListByPackage($pkg)
         {
             // Concrete\Core\Job\Job::getListByPackage();
-            Concrete\Core\Job\Job::getListByPackage($pkg);
+            return Concrete\Core\Job\Job::getListByPackage($pkg);
         }
 
         public static function installByPackage($jHandle, $pkg)
         {
             // Concrete\Core\Job\Job::installByPackage();
-            Concrete\Core\Job\Job::installByPackage($jHandle, $pkg);
+            return Concrete\Core\Job\Job::installByPackage($jHandle, $pkg);
         }
 
         public static function install()
         {
             // Concrete\Core\Job\Job::install();
-            Concrete\Core\Job\Job::install();
+            return Concrete\Core\Job\Job::install();
         }
 
         public static function uninstall()
         {
             // Concrete\Core\Job\Job::uninstall();
-            Concrete\Core\Job\Job::uninstall();
+            return Concrete\Core\Job\Job::uninstall();
         }
 
         /**
@@ -14646,55 +14646,55 @@ namespace {
         public static function clearLog()
         {
             // Concrete\Core\Job\Job::clearLog();
-            Concrete\Core\Job\Job::clearLog();
+            return Concrete\Core\Job\Job::clearLog();
         }
 
         public static function isScheduledForNow()
         {
             // Concrete\Core\Job\Job::isScheduledForNow();
-            Concrete\Core\Job\Job::isScheduledForNow();
+            return Concrete\Core\Job\Job::isScheduledForNow();
         }
 
         public static function setSchedule($scheduled, $interval, $value)
         {
             // Concrete\Core\Job\Job::setSchedule();
-            Concrete\Core\Job\Job::setSchedule($scheduled, $interval, $value);
+            return Concrete\Core\Job\Job::setSchedule($scheduled, $interval, $value);
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -14712,151 +14712,151 @@ namespace {
         public static function getAllowedTasks()
         {
             // Concrete\Core\Workflow\Workflow::getAllowedTasks();
-            Concrete\Core\Workflow\Workflow::getAllowedTasks();
+            return Concrete\Core\Workflow\Workflow::getAllowedTasks();
         }
 
         public static function getWorkflowID()
         {
             // Concrete\Core\Workflow\Workflow::getWorkflowID();
-            Concrete\Core\Workflow\Workflow::getWorkflowID();
+            return Concrete\Core\Workflow\Workflow::getWorkflowID();
         }
 
         public static function getWorkflowName()
         {
             // Concrete\Core\Workflow\Workflow::getWorkflowName();
-            Concrete\Core\Workflow\Workflow::getWorkflowName();
+            return Concrete\Core\Workflow\Workflow::getWorkflowName();
         }
 
         public static function getWorkflowTypeObject()
         {
             // Concrete\Core\Workflow\Workflow::getWorkflowTypeObject();
-            Concrete\Core\Workflow\Workflow::getWorkflowTypeObject();
+            return Concrete\Core\Workflow\Workflow::getWorkflowTypeObject();
         }
 
         public static function getRestrictedToPermissionKeyHandles()
         {
             // Concrete\Core\Workflow\Workflow::getRestrictedToPermissionKeyHandles();
-            Concrete\Core\Workflow\Workflow::getRestrictedToPermissionKeyHandles();
+            return Concrete\Core\Workflow\Workflow::getRestrictedToPermissionKeyHandles();
         }
 
         public static function getPermissionResponseClassName()
         {
             // Concrete\Core\Workflow\Workflow::getPermissionResponseClassName();
-            Concrete\Core\Workflow\Workflow::getPermissionResponseClassName();
+            return Concrete\Core\Workflow\Workflow::getPermissionResponseClassName();
         }
 
         public static function getPermissionAssignmentClassName()
         {
             // Concrete\Core\Workflow\Workflow::getPermissionAssignmentClassName();
-            Concrete\Core\Workflow\Workflow::getPermissionAssignmentClassName();
+            return Concrete\Core\Workflow\Workflow::getPermissionAssignmentClassName();
         }
 
         public static function getPermissionObjectKeyCategoryHandle()
         {
             // Concrete\Core\Workflow\Workflow::getPermissionObjectKeyCategoryHandle();
-            Concrete\Core\Workflow\Workflow::getPermissionObjectKeyCategoryHandle();
+            return Concrete\Core\Workflow\Workflow::getPermissionObjectKeyCategoryHandle();
         }
 
         public static function getPermissionObjectIdentifier()
         {
             // Concrete\Core\Workflow\Workflow::getPermissionObjectIdentifier();
-            Concrete\Core\Workflow\Workflow::getPermissionObjectIdentifier();
+            return Concrete\Core\Workflow\Workflow::getPermissionObjectIdentifier();
         }
 
         public static function delete()
         {
             // Concrete\Core\Workflow\Workflow::delete();
-            Concrete\Core\Workflow\Workflow::delete();
+            return Concrete\Core\Workflow\Workflow::delete();
         }
 
         public static function getWorkflowProgressCurrentStatusNum(Concrete\Core\Workflow\Progress\Progress $wp)
         {
             // Concrete\Core\Workflow\Workflow::getWorkflowProgressCurrentStatusNum();
-            Concrete\Core\Workflow\Workflow::getWorkflowProgressCurrentStatusNum($wp);
+            return Concrete\Core\Workflow\Workflow::getWorkflowProgressCurrentStatusNum($wp);
         }
 
         public static function getList()
         {
             // Concrete\Core\Workflow\Workflow::getList();
-            Concrete\Core\Workflow\Workflow::getList();
+            return Concrete\Core\Workflow\Workflow::getList();
         }
 
         public static function add(Concrete\Core\Workflow\Type $wt, $name)
         {
             // Concrete\Core\Workflow\Workflow::add();
-            Concrete\Core\Workflow\Workflow::add($wt, $name);
+            return Concrete\Core\Workflow\Workflow::add($wt, $name);
         }
 
         protected static function load($wfID)
         {
             // Concrete\Core\Workflow\Workflow::load();
-            Concrete\Core\Workflow\Workflow::load($wfID);
+            return Concrete\Core\Workflow\Workflow::load($wfID);
         }
 
         public static function getByID($wfID)
         {
             // Concrete\Core\Workflow\Workflow::getByID();
-            Concrete\Core\Workflow\Workflow::getByID($wfID);
+            return Concrete\Core\Workflow\Workflow::getByID($wfID);
         }
 
         public static function getWorkflowToolsURL($task)
         {
             // Concrete\Core\Workflow\Workflow::getWorkflowToolsURL();
-            Concrete\Core\Workflow\Workflow::getWorkflowToolsURL($task);
+            return Concrete\Core\Workflow\Workflow::getWorkflowToolsURL($task);
         }
 
         public static function updateName($wfName)
         {
             // Concrete\Core\Workflow\Workflow::updateName();
-            Concrete\Core\Workflow\Workflow::updateName($wfName);
+            return Concrete\Core\Workflow\Workflow::updateName($wfName);
         }
 
         public static function getPermissionAccessObject()
         {
             // Concrete\Core\Workflow\Workflow::getPermissionAccessObject();
-            Concrete\Core\Workflow\Workflow::getPermissionAccessObject();
+            return Concrete\Core\Workflow\Workflow::getPermissionAccessObject();
         }
 
         public static function validateTrigger(Concrete\Core\Workflow\Request\Request $req)
         {
             // Concrete\Core\Workflow\Workflow::validateTrigger();
-            Concrete\Core\Workflow\Workflow::validateTrigger($req);
+            return Concrete\Core\Workflow\Workflow::validateTrigger($req);
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -14867,49 +14867,49 @@ namespace {
         public static function getList()
         {
             // Concrete\Core\Job\Set::getList();
-            Concrete\Core\Job\Set::getList();
+            return Concrete\Core\Job\Set::getList();
         }
 
         public static function getByID($jsID)
         {
             // Concrete\Core\Job\Set::getByID();
-            Concrete\Core\Job\Set::getByID($jsID);
+            return Concrete\Core\Job\Set::getByID($jsID);
         }
 
         public static function getByName($jsName)
         {
             // Concrete\Core\Job\Set::getByName();
-            Concrete\Core\Job\Set::getByName($jsName);
+            return Concrete\Core\Job\Set::getByName($jsName);
         }
 
         public static function getListByPackage($pkg)
         {
             // Concrete\Core\Job\Set::getListByPackage();
-            Concrete\Core\Job\Set::getListByPackage($pkg);
+            return Concrete\Core\Job\Set::getListByPackage($pkg);
         }
 
         public static function getDefault()
         {
             // Concrete\Core\Job\Set::getDefault();
-            Concrete\Core\Job\Set::getDefault();
+            return Concrete\Core\Job\Set::getDefault();
         }
 
         public static function getJobSetID()
         {
             // Concrete\Core\Job\Set::getJobSetID();
-            Concrete\Core\Job\Set::getJobSetID();
+            return Concrete\Core\Job\Set::getJobSetID();
         }
 
         public static function getJobSetName()
         {
             // Concrete\Core\Job\Set::getJobSetName();
-            Concrete\Core\Job\Set::getJobSetName();
+            return Concrete\Core\Job\Set::getJobSetName();
         }
 
         public static function getPackageID()
         {
             // Concrete\Core\Job\Set::getPackageID();
-            Concrete\Core\Job\Set::getPackageID();
+            return Concrete\Core\Job\Set::getPackageID();
         }
 
         /** Returns the display name for this job set (localized and escaped accordingly to $format)
@@ -14921,115 +14921,115 @@ namespace {
         public static function getJobSetDisplayName($format = "html")
         {
             // Concrete\Core\Job\Set::getJobSetDisplayName();
-            Concrete\Core\Job\Set::getJobSetDisplayName($format);
+            return Concrete\Core\Job\Set::getJobSetDisplayName($format);
         }
 
         public static function updateJobSetName($jsName)
         {
             // Concrete\Core\Job\Set::updateJobSetName();
-            Concrete\Core\Job\Set::updateJobSetName($jsName);
+            return Concrete\Core\Job\Set::updateJobSetName($jsName);
         }
 
         public static function addJob(Concrete\Core\Job\Job $j)
         {
             // Concrete\Core\Job\Set::addJob();
-            Concrete\Core\Job\Set::addJob($j);
+            return Concrete\Core\Job\Set::addJob($j);
         }
 
         public static function add($jsName, $pkg = null)
         {
             // Concrete\Core\Job\Set::add();
-            Concrete\Core\Job\Set::add($jsName, $pkg);
+            return Concrete\Core\Job\Set::add($jsName, $pkg);
         }
 
         public static function clearJobs()
         {
             // Concrete\Core\Job\Set::clearJobs();
-            Concrete\Core\Job\Set::clearJobs();
+            return Concrete\Core\Job\Set::clearJobs();
         }
 
         public static function getJobs()
         {
             // Concrete\Core\Job\Set::getJobs();
-            Concrete\Core\Job\Set::getJobs();
+            return Concrete\Core\Job\Set::getJobs();
         }
 
         public static function markStarted()
         {
             // Concrete\Core\Job\Set::markStarted();
-            Concrete\Core\Job\Set::markStarted();
+            return Concrete\Core\Job\Set::markStarted();
         }
 
         public static function contains(Concrete\Core\Job\Job $j)
         {
             // Concrete\Core\Job\Set::contains();
-            Concrete\Core\Job\Set::contains($j);
+            return Concrete\Core\Job\Set::contains($j);
         }
 
         public static function delete()
         {
             // Concrete\Core\Job\Set::delete();
-            Concrete\Core\Job\Set::delete();
+            return Concrete\Core\Job\Set::delete();
         }
 
         public static function canDelete()
         {
             // Concrete\Core\Job\Set::canDelete();
-            Concrete\Core\Job\Set::canDelete();
+            return Concrete\Core\Job\Set::canDelete();
         }
 
         public static function removeJob(Concrete\Core\Job\Job $j)
         {
             // Concrete\Core\Job\Set::removeJob();
-            Concrete\Core\Job\Set::removeJob($j);
+            return Concrete\Core\Job\Set::removeJob($j);
         }
 
         public static function isScheduledForNow()
         {
             // Concrete\Core\Job\Set::isScheduledForNow();
-            Concrete\Core\Job\Set::isScheduledForNow();
+            return Concrete\Core\Job\Set::isScheduledForNow();
         }
 
         public static function setSchedule($scheduled, $interval, $value)
         {
             // Concrete\Core\Job\Set::setSchedule();
-            Concrete\Core\Job\Set::setSchedule($scheduled, $interval, $value);
+            return Concrete\Core\Job\Set::setSchedule($scheduled, $interval, $value);
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -15045,133 +15045,133 @@ namespace {
         public static function getByID($fID)
         {
             // Concrete\Core\File\File::getByID();
-            Concrete\Core\File\File::getByID($fID);
+            return Concrete\Core\File\File::getByID($fID);
         }
 
         public static function getPermissionResponseClassName()
         {
             // Concrete\Core\File\File::getPermissionResponseClassName();
-            Concrete\Core\File\File::getPermissionResponseClassName();
+            return Concrete\Core\File\File::getPermissionResponseClassName();
         }
 
         public static function getPermissionAssignmentClassName()
         {
             // Concrete\Core\File\File::getPermissionAssignmentClassName();
-            Concrete\Core\File\File::getPermissionAssignmentClassName();
+            return Concrete\Core\File\File::getPermissionAssignmentClassName();
         }
 
         public static function getPermissionObjectKeyCategoryHandle()
         {
             // Concrete\Core\File\File::getPermissionObjectKeyCategoryHandle();
-            Concrete\Core\File\File::getPermissionObjectKeyCategoryHandle();
+            return Concrete\Core\File\File::getPermissionObjectKeyCategoryHandle();
         }
 
         public static function getPermissionObjectIdentifier()
         {
             // Concrete\Core\File\File::getPermissionObjectIdentifier();
-            Concrete\Core\File\File::getPermissionObjectIdentifier();
+            return Concrete\Core\File\File::getPermissionObjectIdentifier();
         }
 
         public static function getPath()
         {
             // Concrete\Core\File\File::getPath();
-            Concrete\Core\File\File::getPath();
+            return Concrete\Core\File\File::getPath();
         }
 
         public static function getPassword()
         {
             // Concrete\Core\File\File::getPassword();
-            Concrete\Core\File\File::getPassword();
+            return Concrete\Core\File\File::getPassword();
         }
 
         public static function getStorageLocationID()
         {
             // Concrete\Core\File\File::getStorageLocationID();
-            Concrete\Core\File\File::getStorageLocationID();
+            return Concrete\Core\File\File::getStorageLocationID();
         }
 
         public static function refreshCache()
         {
             // Concrete\Core\File\File::refreshCache();
-            Concrete\Core\File\File::refreshCache();
+            return Concrete\Core\File\File::refreshCache();
         }
 
         public static function reindex()
         {
             // Concrete\Core\File\File::reindex();
-            Concrete\Core\File\File::reindex();
+            return Concrete\Core\File\File::reindex();
         }
 
         public static function getRelativePathFromID($fID)
         {
             // Concrete\Core\File\File::getRelativePathFromID();
-            Concrete\Core\File\File::getRelativePathFromID($fID);
+            return Concrete\Core\File\File::getRelativePathFromID($fID);
         }
 
         public static function setStorageLocation($item)
         {
             // Concrete\Core\File\File::setStorageLocation();
-            Concrete\Core\File\File::setStorageLocation($item);
+            return Concrete\Core\File\File::setStorageLocation($item);
         }
 
         public static function setPassword($pw)
         {
             // Concrete\Core\File\File::setPassword();
-            Concrete\Core\File\File::setPassword($pw);
+            return Concrete\Core\File\File::setPassword($pw);
         }
 
         public static function setOriginalPage($ocID)
         {
             // Concrete\Core\File\File::setOriginalPage();
-            Concrete\Core\File\File::setOriginalPage($ocID);
+            return Concrete\Core\File\File::setOriginalPage($ocID);
         }
 
         public static function getOriginalPageObject()
         {
             // Concrete\Core\File\File::getOriginalPageObject();
-            Concrete\Core\File\File::getOriginalPageObject();
+            return Concrete\Core\File\File::getOriginalPageObject();
         }
 
         public static function overrideFileSetPermissions()
         {
             // Concrete\Core\File\File::overrideFileSetPermissions();
-            Concrete\Core\File\File::overrideFileSetPermissions();
+            return Concrete\Core\File\File::overrideFileSetPermissions();
         }
 
         public static function resetPermissions($fOverrideSetPermissions = null)
         {
             // Concrete\Core\File\File::resetPermissions();
-            Concrete\Core\File\File::resetPermissions($fOverrideSetPermissions);
+            return Concrete\Core\File\File::resetPermissions($fOverrideSetPermissions);
         }
 
         public static function getUserID()
         {
             // Concrete\Core\File\File::getUserID();
-            Concrete\Core\File\File::getUserID();
+            return Concrete\Core\File\File::getUserID();
         }
 
         public static function setUserID($uID)
         {
             // Concrete\Core\File\File::setUserID();
-            Concrete\Core\File\File::setUserID($uID);
+            return Concrete\Core\File\File::setUserID($uID);
         }
 
         public static function getFileSets()
         {
             // Concrete\Core\File\File::getFileSets();
-            Concrete\Core\File\File::getFileSets();
+            return Concrete\Core\File\File::getFileSets();
         }
 
         public static function isStarred($u = null)
         {
             // Concrete\Core\File\File::isStarred();
-            Concrete\Core\File\File::isStarred($u);
+            return Concrete\Core\File\File::isStarred($u);
         }
 
         public static function getDateAdded()
         {
             // Concrete\Core\File\File::getDateAdded();
-            Concrete\Core\File\File::getDateAdded();
+            return Concrete\Core\File\File::getDateAdded();
         }
 
         /**
@@ -15180,43 +15180,43 @@ namespace {
         public static function getVersionToModify($forceCreateNew = null)
         {
             // Concrete\Core\File\File::getVersionToModify();
-            Concrete\Core\File\File::getVersionToModify($forceCreateNew);
+            return Concrete\Core\File\File::getVersionToModify($forceCreateNew);
         }
 
         public static function getFileID()
         {
             // Concrete\Core\File\File::getFileID();
-            Concrete\Core\File\File::getFileID();
+            return Concrete\Core\File\File::getFileID();
         }
 
         public static function duplicate()
         {
             // Concrete\Core\File\File::duplicate();
-            Concrete\Core\File\File::duplicate();
+            return Concrete\Core\File\File::duplicate();
         }
 
         public static function add($filename, $prefix, $data = null)
         {
             // Concrete\Core\File\File::add();
-            Concrete\Core\File\File::add($filename, $prefix, $data);
+            return Concrete\Core\File\File::add($filename, $prefix, $data);
         }
 
         public static function addVersion($filename, $prefix, $data = null)
         {
             // Concrete\Core\File\File::addVersion();
-            Concrete\Core\File\File::addVersion($filename, $prefix, $data);
+            return Concrete\Core\File\File::addVersion($filename, $prefix, $data);
         }
 
         public static function getApprovedVersion()
         {
             // Concrete\Core\File\File::getApprovedVersion();
-            Concrete\Core\File\File::getApprovedVersion();
+            return Concrete\Core\File\File::getApprovedVersion();
         }
 
         public static function inFileSet($fs)
         {
             // Concrete\Core\File\File::inFileSet();
-            Concrete\Core\File\File::inFileSet($fs);
+            return Concrete\Core\File\File::inFileSet($fs);
         }
 
         /**
@@ -15225,7 +15225,7 @@ namespace {
         public static function delete()
         {
             // Concrete\Core\File\File::delete();
-            Concrete\Core\File\File::delete();
+            return Concrete\Core\File\File::delete();
         }
 
         /**
@@ -15235,7 +15235,7 @@ namespace {
         public static function getRecentVersion()
         {
             // Concrete\Core\File\File::getRecentVersion();
-            Concrete\Core\File\File::getRecentVersion();
+            return Concrete\Core\File\File::getRecentVersion();
         }
 
         /**
@@ -15247,7 +15247,7 @@ namespace {
         public static function getVersion($fvID = null)
         {
             // Concrete\Core\File\File::getVersion();
-            Concrete\Core\File\File::getVersion($fvID);
+            return Concrete\Core\File\File::getVersion($fvID);
         }
 
         /**
@@ -15256,19 +15256,19 @@ namespace {
         public static function getVersionList()
         {
             // Concrete\Core\File\File::getVersionList();
-            Concrete\Core\File\File::getVersionList();
+            return Concrete\Core\File\File::getVersionList();
         }
 
         public static function getTotalDownloads()
         {
             // Concrete\Core\File\File::getTotalDownloads();
-            Concrete\Core\File\File::getTotalDownloads();
+            return Concrete\Core\File\File::getTotalDownloads();
         }
 
         public static function getDownloadStatistics($limit = 20)
         {
             // Concrete\Core\File\File::getDownloadStatistics();
-            Concrete\Core\File\File::getDownloadStatistics($limit);
+            return Concrete\Core\File\File::getDownloadStatistics($limit);
         }
 
         /**
@@ -15279,43 +15279,43 @@ namespace {
         public static function trackDownload($rcID = null)
         {
             // Concrete\Core\File\File::trackDownload();
-            Concrete\Core\File\File::trackDownload($rcID);
+            return Concrete\Core\File\File::trackDownload($rcID);
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -15326,55 +15326,55 @@ namespace {
         public static function getFileID()
         {
             // Concrete\Core\File\Version::getFileID();
-            Concrete\Core\File\Version::getFileID();
+            return Concrete\Core\File\Version::getFileID();
         }
 
         public static function getFileVersionID()
         {
             // Concrete\Core\File\Version::getFileVersionID();
-            Concrete\Core\File\Version::getFileVersionID();
+            return Concrete\Core\File\Version::getFileVersionID();
         }
 
         public static function getPrefix()
         {
             // Concrete\Core\File\Version::getPrefix();
-            Concrete\Core\File\Version::getPrefix();
+            return Concrete\Core\File\Version::getPrefix();
         }
 
         public static function getFileName()
         {
             // Concrete\Core\File\Version::getFileName();
-            Concrete\Core\File\Version::getFileName();
+            return Concrete\Core\File\Version::getFileName();
         }
 
         public static function getTitle()
         {
             // Concrete\Core\File\Version::getTitle();
-            Concrete\Core\File\Version::getTitle();
+            return Concrete\Core\File\Version::getTitle();
         }
 
         public static function getTags()
         {
             // Concrete\Core\File\Version::getTags();
-            Concrete\Core\File\Version::getTags();
+            return Concrete\Core\File\Version::getTags();
         }
 
         public static function getDescription()
         {
             // Concrete\Core\File\Version::getDescription();
-            Concrete\Core\File\Version::getDescription();
+            return Concrete\Core\File\Version::getDescription();
         }
 
         public static function isApproved()
         {
             // Concrete\Core\File\Version::isApproved();
-            Concrete\Core\File\Version::isApproved();
+            return Concrete\Core\File\Version::isApproved();
         }
 
         public static function getGenericTypeText()
         {
             // Concrete\Core\File\Version::getGenericTypeText();
-            Concrete\Core\File\Version::getGenericTypeText();
+            return Concrete\Core\File\Version::getGenericTypeText();
         }
 
         /**
@@ -15384,13 +15384,13 @@ namespace {
         public static function getFile()
         {
             // Concrete\Core\File\Version::getFile();
-            Concrete\Core\File\Version::getFile();
+            return Concrete\Core\File\Version::getFile();
         }
 
         public static function getTagsList()
         {
             // Concrete\Core\File\Version::getTagsList();
-            Concrete\Core\File\Version::getTagsList();
+            return Concrete\Core\File\Version::getTagsList();
         }
 
         /**
@@ -15399,7 +15399,7 @@ namespace {
         public static function getAttributeList()
         {
             // Concrete\Core\File\Version::getAttributeList();
-            Concrete\Core\File\Version::getAttributeList();
+            return Concrete\Core\File\Version::getAttributeList();
         }
 
         /**
@@ -15409,37 +15409,37 @@ namespace {
         public static function getAttribute($ak, $mode = null)
         {
             // Concrete\Core\File\Version::getAttribute();
-            Concrete\Core\File\Version::getAttribute($ak, $mode);
+            return Concrete\Core\File\Version::getAttribute($ak, $mode);
         }
 
         public static function getMimeType()
         {
             // Concrete\Core\File\Version::getMimeType();
-            Concrete\Core\File\Version::getMimeType();
+            return Concrete\Core\File\Version::getMimeType();
         }
 
         public static function getSize()
         {
             // Concrete\Core\File\Version::getSize();
-            Concrete\Core\File\Version::getSize();
+            return Concrete\Core\File\Version::getSize();
         }
 
         public static function getFullSize()
         {
             // Concrete\Core\File\Version::getFullSize();
-            Concrete\Core\File\Version::getFullSize();
+            return Concrete\Core\File\Version::getFullSize();
         }
 
         public static function getAuthorName()
         {
             // Concrete\Core\File\Version::getAuthorName();
-            Concrete\Core\File\Version::getAuthorName();
+            return Concrete\Core\File\Version::getAuthorName();
         }
 
         public static function getAuthorUserID()
         {
             // Concrete\Core\File\Version::getAuthorUserID();
-            Concrete\Core\File\Version::getAuthorUserID();
+            return Concrete\Core\File\Version::getAuthorUserID();
         }
 
         /**
@@ -15451,19 +15451,19 @@ namespace {
         public static function getDateAdded($type = "system")
         {
             // Concrete\Core\File\Version::getDateAdded();
-            Concrete\Core\File\Version::getDateAdded($type);
+            return Concrete\Core\File\Version::getDateAdded($type);
         }
 
         public static function getExtension()
         {
             // Concrete\Core\File\Version::getExtension();
-            Concrete\Core\File\Version::getExtension();
+            return Concrete\Core\File\Version::getExtension();
         }
 
         public static function logVersionUpdate($updateTypeID, $updateTypeAttributeID = null)
         {
             // Concrete\Core\File\Version::logVersionUpdate();
-            Concrete\Core\File\Version::logVersionUpdate($updateTypeID, $updateTypeAttributeID);
+            return Concrete\Core\File\Version::logVersionUpdate($updateTypeID, $updateTypeAttributeID);
         }
 
         /**
@@ -15472,19 +15472,19 @@ namespace {
         public static function duplicate()
         {
             // Concrete\Core\File\Version::duplicate();
-            Concrete\Core\File\Version::duplicate();
+            return Concrete\Core\File\Version::duplicate();
         }
 
         public static function getType()
         {
             // Concrete\Core\File\Version::getType();
-            Concrete\Core\File\Version::getType();
+            return Concrete\Core\File\Version::getType();
         }
 
         public static function getTypeObject()
         {
             // Concrete\Core\File\Version::getTypeObject();
-            Concrete\Core\File\Version::getTypeObject();
+            return Concrete\Core\File\Version::getTypeObject();
         }
 
         /**
@@ -15493,49 +15493,49 @@ namespace {
         public static function getVersionLogComments()
         {
             // Concrete\Core\File\Version::getVersionLogComments();
-            Concrete\Core\File\Version::getVersionLogComments();
+            return Concrete\Core\File\Version::getVersionLogComments();
         }
 
         public static function updateTitle($title)
         {
             // Concrete\Core\File\Version::updateTitle();
-            Concrete\Core\File\Version::updateTitle($title);
+            return Concrete\Core\File\Version::updateTitle($title);
         }
 
         public static function updateTags($tags)
         {
             // Concrete\Core\File\Version::updateTags();
-            Concrete\Core\File\Version::updateTags($tags);
+            return Concrete\Core\File\Version::updateTags($tags);
         }
 
         public static function updateDescription($descr)
         {
             // Concrete\Core\File\Version::updateDescription();
-            Concrete\Core\File\Version::updateDescription($descr);
+            return Concrete\Core\File\Version::updateDescription($descr);
         }
 
         public static function updateFile($filename, $prefix)
         {
             // Concrete\Core\File\Version::updateFile();
-            Concrete\Core\File\Version::updateFile($filename, $prefix);
+            return Concrete\Core\File\Version::updateFile($filename, $prefix);
         }
 
         public static function approve()
         {
             // Concrete\Core\File\Version::approve();
-            Concrete\Core\File\Version::approve();
+            return Concrete\Core\File\Version::approve();
         }
 
         public static function deny()
         {
             // Concrete\Core\File\Version::deny();
-            Concrete\Core\File\Version::deny();
+            return Concrete\Core\File\Version::deny();
         }
 
         public static function setAttribute($ak, $value)
         {
             // Concrete\Core\File\Version::setAttribute();
-            Concrete\Core\File\Version::setAttribute($ak, $value);
+            return Concrete\Core\File\Version::setAttribute($ak, $value);
         }
 
         /**
@@ -15544,7 +15544,7 @@ namespace {
         public static function delete()
         {
             // Concrete\Core\File\Version::delete();
-            Concrete\Core\File\Version::delete();
+            return Concrete\Core\File\Version::delete();
         }
 
         /**
@@ -15553,7 +15553,7 @@ namespace {
         public static function getPath()
         {
             // Concrete\Core\File\Version::getPath();
-            Concrete\Core\File\Version::getPath();
+            return Concrete\Core\File\Version::getPath();
         }
 
         /**
@@ -15562,7 +15562,7 @@ namespace {
         public static function getURL()
         {
             // Concrete\Core\File\Version::getURL();
-            Concrete\Core\File\Version::getURL();
+            return Concrete\Core\File\Version::getURL();
         }
 
         /**
@@ -15571,7 +15571,7 @@ namespace {
         public static function getDownloadURL()
         {
             // Concrete\Core\File\Version::getDownloadURL();
-            Concrete\Core\File\Version::getDownloadURL();
+            return Concrete\Core\File\Version::getDownloadURL();
         }
 
         /**
@@ -15580,43 +15580,43 @@ namespace {
         public static function getForceDownloadURL()
         {
             // Concrete\Core\File\Version::getForceDownloadURL();
-            Concrete\Core\File\Version::getForceDownloadURL();
+            return Concrete\Core\File\Version::getForceDownloadURL();
         }
 
         public static function getRelativePath($fullurl = null)
         {
             // Concrete\Core\File\Version::getRelativePath();
-            Concrete\Core\File\Version::getRelativePath($fullurl);
+            return Concrete\Core\File\Version::getRelativePath($fullurl);
         }
 
         public static function getThumbnailPath($level)
         {
             // Concrete\Core\File\Version::getThumbnailPath();
-            Concrete\Core\File\Version::getThumbnailPath($level);
+            return Concrete\Core\File\Version::getThumbnailPath($level);
         }
 
         public static function getThumbnailSRC($level)
         {
             // Concrete\Core\File\Version::getThumbnailSRC();
-            Concrete\Core\File\Version::getThumbnailSRC($level);
+            return Concrete\Core\File\Version::getThumbnailSRC($level);
         }
 
         public static function hasThumbnail($level)
         {
             // Concrete\Core\File\Version::hasThumbnail();
-            Concrete\Core\File\Version::hasThumbnail($level);
+            return Concrete\Core\File\Version::hasThumbnail($level);
         }
 
         public static function getThumbnail($level, $fullImageTag = "1")
         {
             // Concrete\Core\File\Version::getThumbnail();
-            Concrete\Core\File\Version::getThumbnail($level, $fullImageTag);
+            return Concrete\Core\File\Version::getThumbnail($level, $fullImageTag);
         }
 
         public static function refreshThumbnails($refreshCache = "1")
         {
             // Concrete\Core\File\Version::refreshThumbnails();
-            Concrete\Core\File\Version::refreshThumbnails($refreshCache);
+            return Concrete\Core\File\Version::refreshThumbnails($refreshCache);
         }
 
         /**
@@ -15627,13 +15627,13 @@ namespace {
         public static function refreshAttributes($firstRun = null)
         {
             // Concrete\Core\File\Version::refreshAttributes();
-            Concrete\Core\File\Version::refreshAttributes($firstRun);
+            return Concrete\Core\File\Version::refreshAttributes($firstRun);
         }
 
         public static function createThumbnailDirectories()
         {
             // Concrete\Core\File\Version::createThumbnailDirectories();
-            Concrete\Core\File\Version::createThumbnailDirectories();
+            return Concrete\Core\File\Version::createThumbnailDirectories();
         }
 
         /**
@@ -15642,31 +15642,31 @@ namespace {
         public static function canView()
         {
             // Concrete\Core\File\Version::canView();
-            Concrete\Core\File\Version::canView();
+            return Concrete\Core\File\Version::canView();
         }
 
         public static function canEdit()
         {
             // Concrete\Core\File\Version::canEdit();
-            Concrete\Core\File\Version::canEdit();
+            return Concrete\Core\File\Version::canEdit();
         }
 
         public static function clearAttribute($ak)
         {
             // Concrete\Core\File\Version::clearAttribute();
-            Concrete\Core\File\Version::clearAttribute($ak);
+            return Concrete\Core\File\Version::clearAttribute($ak);
         }
 
         public static function getAttributeValueObject($ak, $createIfNotFound = null)
         {
             // Concrete\Core\File\Version::getAttributeValueObject();
-            Concrete\Core\File\Version::getAttributeValueObject($ak, $createIfNotFound);
+            return Concrete\Core\File\Version::getAttributeValueObject($ak, $createIfNotFound);
         }
 
         public static function cleanTags($tagsStr)
         {
             // Concrete\Core\File\Version::cleanTags();
-            Concrete\Core\File\Version::cleanTags($tagsStr);
+            return Concrete\Core\File\Version::cleanTags($tagsStr);
         }
 
         /**
@@ -15675,43 +15675,43 @@ namespace {
         public static function getJSONObject()
         {
             // Concrete\Core\File\Version::getJSONObject();
-            Concrete\Core\File\Version::getJSONObject();
+            return Concrete\Core\File\Version::getJSONObject();
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -15726,61 +15726,61 @@ namespace {
         public static function getGlobal()
         {
             // Concrete\Core\File\Set\Set::getGlobal();
-            Concrete\Core\File\Set\Set::getGlobal();
+            return Concrete\Core\File\Set\Set::getGlobal();
         }
 
         public static function getFileSetUserID()
         {
             // Concrete\Core\File\Set\Set::getFileSetUserID();
-            Concrete\Core\File\Set\Set::getFileSetUserID();
+            return Concrete\Core\File\Set\Set::getFileSetUserID();
         }
 
         public static function getFileSetType()
         {
             // Concrete\Core\File\Set\Set::getFileSetType();
-            Concrete\Core\File\Set\Set::getFileSetType();
+            return Concrete\Core\File\Set\Set::getFileSetType();
         }
 
         public static function getSavedSearches()
         {
             // Concrete\Core\File\Set\Set::getSavedSearches();
-            Concrete\Core\File\Set\Set::getSavedSearches();
+            return Concrete\Core\File\Set\Set::getSavedSearches();
         }
 
         public static function getPermissionResponseClassName()
         {
             // Concrete\Core\File\Set\Set::getPermissionResponseClassName();
-            Concrete\Core\File\Set\Set::getPermissionResponseClassName();
+            return Concrete\Core\File\Set\Set::getPermissionResponseClassName();
         }
 
         public static function getPermissionAssignmentClassName()
         {
             // Concrete\Core\File\Set\Set::getPermissionAssignmentClassName();
-            Concrete\Core\File\Set\Set::getPermissionAssignmentClassName();
+            return Concrete\Core\File\Set\Set::getPermissionAssignmentClassName();
         }
 
         public static function getPermissionObjectKeyCategoryHandle()
         {
             // Concrete\Core\File\Set\Set::getPermissionObjectKeyCategoryHandle();
-            Concrete\Core\File\Set\Set::getPermissionObjectKeyCategoryHandle();
+            return Concrete\Core\File\Set\Set::getPermissionObjectKeyCategoryHandle();
         }
 
         public static function getPermissionObjectIdentifier()
         {
             // Concrete\Core\File\Set\Set::getPermissionObjectIdentifier();
-            Concrete\Core\File\Set\Set::getPermissionObjectIdentifier();
+            return Concrete\Core\File\Set\Set::getPermissionObjectIdentifier();
         }
 
         public static function getMySets($u = null)
         {
             // Concrete\Core\File\Set\Set::getMySets();
-            Concrete\Core\File\Set\Set::getMySets($u);
+            return Concrete\Core\File\Set\Set::getMySets($u);
         }
 
         public static function updateFileSetDisplayOrder($files)
         {
             // Concrete\Core\File\Set\Set::updateFileSetDisplayOrder();
-            Concrete\Core\File\Set\Set::updateFileSetDisplayOrder($files);
+            return Concrete\Core\File\Set\Set::updateFileSetDisplayOrder($files);
         }
 
         /**
@@ -15791,7 +15791,7 @@ namespace {
         public static function getByID($fsID)
         {
             // Concrete\Core\File\Set\Set::getByID();
-            Concrete\Core\File\Set\Set::getByID($fsID);
+            return Concrete\Core\File\Set\Set::getByID($fsID);
         }
 
         /**
@@ -15802,25 +15802,25 @@ namespace {
         public static function getByName($fsName)
         {
             // Concrete\Core\File\Set\Set::getByName();
-            Concrete\Core\File\Set\Set::getByName($fsName);
+            return Concrete\Core\File\Set\Set::getByName($fsName);
         }
 
         public static function getFileSetID()
         {
             // Concrete\Core\File\Set\Set::getFileSetID();
-            Concrete\Core\File\Set\Set::getFileSetID();
+            return Concrete\Core\File\Set\Set::getFileSetID();
         }
 
         public static function overrideGlobalPermissions()
         {
             // Concrete\Core\File\Set\Set::overrideGlobalPermissions();
-            Concrete\Core\File\Set\Set::overrideGlobalPermissions();
+            return Concrete\Core\File\Set\Set::overrideGlobalPermissions();
         }
 
         public static function getFileSetName()
         {
             // Concrete\Core\File\Set\Set::getFileSetName();
-            Concrete\Core\File\Set\Set::getFileSetName();
+            return Concrete\Core\File\Set\Set::getFileSetName();
         }
 
         /**
@@ -15838,7 +15838,7 @@ namespace {
         public static function createAndGetSet($fs_name, $fs_type, $fs_uid = null)
         {
             // Concrete\Core\File\Set\Set::createAndGetSet();
-            Concrete\Core\File\Set\Set::createAndGetSet($fs_name, $fs_type, $fs_uid);
+            return Concrete\Core\File\Set\Set::createAndGetSet($fs_name, $fs_type, $fs_uid);
         }
 
         /**
@@ -15847,7 +15847,7 @@ namespace {
         public static function add($setName, $fsOverrideGlobalPermissions = null, $u = null, $type = 1)
         {
             // Concrete\Core\File\Set\Set::add();
-            Concrete\Core\File\Set\Set::add($setName, $fsOverrideGlobalPermissions, $u, $type);
+            return Concrete\Core\File\Set\Set::add($setName, $fsOverrideGlobalPermissions, $u, $type);
         }
 
         /**
@@ -15856,7 +15856,7 @@ namespace {
         public static function update($setName, $fsOverrideGlobalPermissions = null)
         {
             // Concrete\Core\File\Set\Set::update();
-            Concrete\Core\File\Set\Set::update($setName, $fsOverrideGlobalPermissions);
+            return Concrete\Core\File\Set\Set::update($setName, $fsOverrideGlobalPermissions);
         }
 
         /**
@@ -15867,31 +15867,31 @@ namespace {
         public static function addFileToSet($f_id)
         {
             // Concrete\Core\File\Set\Set::addFileToSet();
-            Concrete\Core\File\Set\Set::addFileToSet($f_id);
+            return Concrete\Core\File\Set\Set::addFileToSet($f_id);
         }
 
         public static function getSavedSearchRequest()
         {
             // Concrete\Core\File\Set\Set::getSavedSearchRequest();
-            Concrete\Core\File\Set\Set::getSavedSearchRequest();
+            return Concrete\Core\File\Set\Set::getSavedSearchRequest();
         }
 
         public static function getSavedSearchColumns()
         {
             // Concrete\Core\File\Set\Set::getSavedSearchColumns();
-            Concrete\Core\File\Set\Set::getSavedSearchColumns();
+            return Concrete\Core\File\Set\Set::getSavedSearchColumns();
         }
 
         public static function removeFileFromSet($f_id)
         {
             // Concrete\Core\File\Set\Set::removeFileFromSet();
-            Concrete\Core\File\Set\Set::removeFileFromSet($f_id);
+            return Concrete\Core\File\Set\Set::removeFileFromSet($f_id);
         }
 
         public static function hasFileID($f_id)
         {
             // Concrete\Core\File\Set\Set::hasFileID();
-            Concrete\Core\File\Set\Set::hasFileID($f_id);
+            return Concrete\Core\File\Set\Set::hasFileID($f_id);
         }
 
         /**
@@ -15901,7 +15901,7 @@ namespace {
         public static function getFiles()
         {
             // Concrete\Core\File\Set\Set::getFiles();
-            Concrete\Core\File\Set\Set::getFiles();
+            return Concrete\Core\File\Set\Set::getFiles();
         }
 
         /**
@@ -15912,7 +15912,7 @@ namespace {
         public static function getFilesBySetID($fsID)
         {
             // Concrete\Core\File\Set\Set::getFilesBySetID();
-            Concrete\Core\File\Set\Set::getFilesBySetID($fsID);
+            return Concrete\Core\File\Set\Set::getFilesBySetID($fsID);
         }
 
         /**
@@ -15923,31 +15923,31 @@ namespace {
         public static function getFilesBySetName($fsName)
         {
             // Concrete\Core\File\Set\Set::getFilesBySetName();
-            Concrete\Core\File\Set\Set::getFilesBySetName($fsName);
+            return Concrete\Core\File\Set\Set::getFilesBySetName($fsName);
         }
 
         public static function delete()
         {
             // Concrete\Core\File\Set\Set::delete();
-            Concrete\Core\File\Set\Set::delete();
+            return Concrete\Core\File\Set\Set::delete();
         }
 
         public static function resetPermissions()
         {
             // Concrete\Core\File\Set\Set::resetPermissions();
-            Concrete\Core\File\Set\Set::resetPermissions();
+            return Concrete\Core\File\Set\Set::resetPermissions();
         }
 
         public static function acquireBaseFileSetPermissions()
         {
             // Concrete\Core\File\Set\Set::acquireBaseFileSetPermissions();
-            Concrete\Core\File\Set\Set::acquireBaseFileSetPermissions();
+            return Concrete\Core\File\Set\Set::acquireBaseFileSetPermissions();
         }
 
         public static function assignPermissions($userOrGroup, $permissions = null, $accessType = 10)
         {
             // Concrete\Core\File\Set\Set::assignPermissions();
-            Concrete\Core\File\Set\Set::assignPermissions($userOrGroup, $permissions, $accessType);
+            return Concrete\Core\File\Set\Set::assignPermissions($userOrGroup, $permissions, $accessType);
         }
 
     }
@@ -15961,19 +15961,19 @@ namespace {
         public static function getErrorMessage($code)
         {
             // Concrete\Core\File\Importer::getErrorMessage();
-            Concrete\Core\File\Importer::getErrorMessage($code);
+            return Concrete\Core\File\Importer::getErrorMessage($code);
         }
 
         protected static function generatePrefix()
         {
             // Concrete\Core\File\Importer::generatePrefix();
-            Concrete\Core\File\Importer::generatePrefix();
+            return Concrete\Core\File\Importer::generatePrefix();
         }
 
         protected static function storeFile($prefix, $pointer, $filename, $fr = null)
         {
             // Concrete\Core\File\Importer::storeFile();
-            Concrete\Core\File\Importer::storeFile($prefix, $pointer, $filename, $fr);
+            return Concrete\Core\File\Importer::storeFile($prefix, $pointer, $filename, $fr);
         }
 
         /**
@@ -15989,7 +15989,7 @@ namespace {
         public static function import($pointer, $filename = null, $fr = null)
         {
             // Concrete\Core\File\Importer::import();
-            Concrete\Core\File\Importer::import($pointer, $filename, $fr);
+            return Concrete\Core\File\Importer::import($pointer, $filename, $fr);
         }
 
     }
@@ -16000,67 +16000,67 @@ namespace {
         public static function getPermissionObjectIdentifier()
         {
             // Concrete\Core\User\Group\Group::getPermissionObjectIdentifier();
-            Concrete\Core\User\Group\Group::getPermissionObjectIdentifier();
+            return Concrete\Core\User\Group\Group::getPermissionObjectIdentifier();
         }
 
         public static function getPermissionResponseClassName()
         {
             // Concrete\Core\User\Group\Group::getPermissionResponseClassName();
-            Concrete\Core\User\Group\Group::getPermissionResponseClassName();
+            return Concrete\Core\User\Group\Group::getPermissionResponseClassName();
         }
 
         public static function getPermissionAssignmentClassName()
         {
             // Concrete\Core\User\Group\Group::getPermissionAssignmentClassName();
-            Concrete\Core\User\Group\Group::getPermissionAssignmentClassName();
+            return Concrete\Core\User\Group\Group::getPermissionAssignmentClassName();
         }
 
         public static function getPermissionObjectKeyCategoryHandle()
         {
             // Concrete\Core\User\Group\Group::getPermissionObjectKeyCategoryHandle();
-            Concrete\Core\User\Group\Group::getPermissionObjectKeyCategoryHandle();
+            return Concrete\Core\User\Group\Group::getPermissionObjectKeyCategoryHandle();
         }
 
         public static function getByID($gID)
         {
             // Concrete\Core\User\Group\Group::getByID();
-            Concrete\Core\User\Group\Group::getByID($gID);
+            return Concrete\Core\User\Group\Group::getByID($gID);
         }
 
         public static function getByName($gName)
         {
             // Concrete\Core\User\Group\Group::getByName();
-            Concrete\Core\User\Group\Group::getByName($gName);
+            return Concrete\Core\User\Group\Group::getByName($gName);
         }
 
         public static function getByPath($gPath)
         {
             // Concrete\Core\User\Group\Group::getByPath();
-            Concrete\Core\User\Group\Group::getByPath($gPath);
+            return Concrete\Core\User\Group\Group::getByPath($gPath);
         }
 
         public static function getGroupMembers()
         {
             // Concrete\Core\User\Group\Group::getGroupMembers();
-            Concrete\Core\User\Group\Group::getGroupMembers();
+            return Concrete\Core\User\Group\Group::getGroupMembers();
         }
 
         public static function getGroupMemberIDs()
         {
             // Concrete\Core\User\Group\Group::getGroupMemberIDs();
-            Concrete\Core\User\Group\Group::getGroupMemberIDs();
+            return Concrete\Core\User\Group\Group::getGroupMemberIDs();
         }
 
         public static function setPermissionsForObject($obj)
         {
             // Concrete\Core\User\Group\Group::setPermissionsForObject();
-            Concrete\Core\User\Group\Group::setPermissionsForObject($obj);
+            return Concrete\Core\User\Group\Group::setPermissionsForObject($obj);
         }
 
         public static function getGroupMembersNum()
         {
             // Concrete\Core\User\Group\Group::getGroupMembersNum();
-            Concrete\Core\User\Group\Group::getGroupMembersNum();
+            return Concrete\Core\User\Group\Group::getGroupMembersNum();
         }
 
         /**
@@ -16070,79 +16070,79 @@ namespace {
         public static function delete()
         {
             // Concrete\Core\User\Group\Group::delete();
-            Concrete\Core\User\Group\Group::delete();
+            return Concrete\Core\User\Group\Group::delete();
         }
 
         public static function rescanGroupPath()
         {
             // Concrete\Core\User\Group\Group::rescanGroupPath();
-            Concrete\Core\User\Group\Group::rescanGroupPath();
+            return Concrete\Core\User\Group\Group::rescanGroupPath();
         }
 
         public static function rescanGroupPathRecursive()
         {
             // Concrete\Core\User\Group\Group::rescanGroupPathRecursive();
-            Concrete\Core\User\Group\Group::rescanGroupPathRecursive();
+            return Concrete\Core\User\Group\Group::rescanGroupPathRecursive();
         }
 
         public static function inGroup()
         {
             // Concrete\Core\User\Group\Group::inGroup();
-            Concrete\Core\User\Group\Group::inGroup();
+            return Concrete\Core\User\Group\Group::inGroup();
         }
 
         public static function getGroupDateTimeEntered($user)
         {
             // Concrete\Core\User\Group\Group::getGroupDateTimeEntered();
-            Concrete\Core\User\Group\Group::getGroupDateTimeEntered($user);
+            return Concrete\Core\User\Group\Group::getGroupDateTimeEntered($user);
         }
 
         public static function getGroupID()
         {
             // Concrete\Core\User\Group\Group::getGroupID();
-            Concrete\Core\User\Group\Group::getGroupID();
+            return Concrete\Core\User\Group\Group::getGroupID();
         }
 
         public static function getGroupName()
         {
             // Concrete\Core\User\Group\Group::getGroupName();
-            Concrete\Core\User\Group\Group::getGroupName();
+            return Concrete\Core\User\Group\Group::getGroupName();
         }
 
         public static function getGroupPath()
         {
             // Concrete\Core\User\Group\Group::getGroupPath();
-            Concrete\Core\User\Group\Group::getGroupPath();
+            return Concrete\Core\User\Group\Group::getGroupPath();
         }
 
         public static function getParentGroups()
         {
             // Concrete\Core\User\Group\Group::getParentGroups();
-            Concrete\Core\User\Group\Group::getParentGroups();
+            return Concrete\Core\User\Group\Group::getParentGroups();
         }
 
         public static function getChildGroups()
         {
             // Concrete\Core\User\Group\Group::getChildGroups();
-            Concrete\Core\User\Group\Group::getChildGroups();
+            return Concrete\Core\User\Group\Group::getChildGroups();
         }
 
         public static function getParentGroup()
         {
             // Concrete\Core\User\Group\Group::getParentGroup();
-            Concrete\Core\User\Group\Group::getParentGroup();
+            return Concrete\Core\User\Group\Group::getParentGroup();
         }
 
         public static function getGroupDisplayName($includeHTML = "1")
         {
             // Concrete\Core\User\Group\Group::getGroupDisplayName();
-            Concrete\Core\User\Group\Group::getGroupDisplayName($includeHTML);
+            return Concrete\Core\User\Group\Group::getGroupDisplayName($includeHTML);
         }
 
         public static function getGroupDescription()
         {
             // Concrete\Core\User\Group\Group::getGroupDescription();
-            Concrete\Core\User\Group\Group::getGroupDescription();
+            return Concrete\Core\User\Group\Group::getGroupDescription();
         }
 
         /**
@@ -16154,7 +16154,7 @@ namespace {
         public static function getGroupStartDate($type = "system")
         {
             // Concrete\Core\User\Group\Group::getGroupStartDate();
-            Concrete\Core\User\Group\Group::getGroupStartDate($type);
+            return Concrete\Core\User\Group\Group::getGroupStartDate($type);
         }
 
         /**
@@ -16166,133 +16166,133 @@ namespace {
         public static function getGroupEndDate($type = "system")
         {
             // Concrete\Core\User\Group\Group::getGroupEndDate();
-            Concrete\Core\User\Group\Group::getGroupEndDate($type);
+            return Concrete\Core\User\Group\Group::getGroupEndDate($type);
         }
 
         public static function isGroupBadge()
         {
             // Concrete\Core\User\Group\Group::isGroupBadge();
-            Concrete\Core\User\Group\Group::isGroupBadge();
+            return Concrete\Core\User\Group\Group::isGroupBadge();
         }
 
         public static function getGroupBadgeDescription()
         {
             // Concrete\Core\User\Group\Group::getGroupBadgeDescription();
-            Concrete\Core\User\Group\Group::getGroupBadgeDescription();
+            return Concrete\Core\User\Group\Group::getGroupBadgeDescription();
         }
 
         public static function getGroupBadgeCommunityPointValue()
         {
             // Concrete\Core\User\Group\Group::getGroupBadgeCommunityPointValue();
-            Concrete\Core\User\Group\Group::getGroupBadgeCommunityPointValue();
+            return Concrete\Core\User\Group\Group::getGroupBadgeCommunityPointValue();
         }
 
         public static function getGroupBadgeImageID()
         {
             // Concrete\Core\User\Group\Group::getGroupBadgeImageID();
-            Concrete\Core\User\Group\Group::getGroupBadgeImageID();
+            return Concrete\Core\User\Group\Group::getGroupBadgeImageID();
         }
 
         public static function isGroupAutomated()
         {
             // Concrete\Core\User\Group\Group::isGroupAutomated();
-            Concrete\Core\User\Group\Group::isGroupAutomated();
+            return Concrete\Core\User\Group\Group::isGroupAutomated();
         }
 
         public static function checkGroupAutomationOnRegister()
         {
             // Concrete\Core\User\Group\Group::checkGroupAutomationOnRegister();
-            Concrete\Core\User\Group\Group::checkGroupAutomationOnRegister();
+            return Concrete\Core\User\Group\Group::checkGroupAutomationOnRegister();
         }
 
         public static function checkGroupAutomationOnLogin()
         {
             // Concrete\Core\User\Group\Group::checkGroupAutomationOnLogin();
-            Concrete\Core\User\Group\Group::checkGroupAutomationOnLogin();
+            return Concrete\Core\User\Group\Group::checkGroupAutomationOnLogin();
         }
 
         public static function checkGroupAutomationOnJobRun()
         {
             // Concrete\Core\User\Group\Group::checkGroupAutomationOnJobRun();
-            Concrete\Core\User\Group\Group::checkGroupAutomationOnJobRun();
+            return Concrete\Core\User\Group\Group::checkGroupAutomationOnJobRun();
         }
 
         public static function getGroupAutomationController()
         {
             // Concrete\Core\User\Group\Group::getGroupAutomationController();
-            Concrete\Core\User\Group\Group::getGroupAutomationController();
+            return Concrete\Core\User\Group\Group::getGroupAutomationController();
         }
 
         public static function getGroupAutomationControllerFile()
         {
             // Concrete\Core\User\Group\Group::getGroupAutomationControllerFile();
-            Concrete\Core\User\Group\Group::getGroupAutomationControllerFile();
+            return Concrete\Core\User\Group\Group::getGroupAutomationControllerFile();
         }
 
         public static function getGroupBadgeImageObject()
         {
             // Concrete\Core\User\Group\Group::getGroupBadgeImageObject();
-            Concrete\Core\User\Group\Group::getGroupBadgeImageObject();
+            return Concrete\Core\User\Group\Group::getGroupBadgeImageObject();
         }
 
         public static function isGroupExpirationEnabled()
         {
             // Concrete\Core\User\Group\Group::isGroupExpirationEnabled();
-            Concrete\Core\User\Group\Group::isGroupExpirationEnabled();
+            return Concrete\Core\User\Group\Group::isGroupExpirationEnabled();
         }
 
         public static function getGroupExpirationMethod()
         {
             // Concrete\Core\User\Group\Group::getGroupExpirationMethod();
-            Concrete\Core\User\Group\Group::getGroupExpirationMethod();
+            return Concrete\Core\User\Group\Group::getGroupExpirationMethod();
         }
 
         public static function getGroupExpirationDateTime()
         {
             // Concrete\Core\User\Group\Group::getGroupExpirationDateTime();
-            Concrete\Core\User\Group\Group::getGroupExpirationDateTime();
+            return Concrete\Core\User\Group\Group::getGroupExpirationDateTime();
         }
 
         public static function getGroupExpirationAction()
         {
             // Concrete\Core\User\Group\Group::getGroupExpirationAction();
-            Concrete\Core\User\Group\Group::getGroupExpirationAction();
+            return Concrete\Core\User\Group\Group::getGroupExpirationAction();
         }
 
         public static function getGroupExpirationIntervalDays()
         {
             // Concrete\Core\User\Group\Group::getGroupExpirationIntervalDays();
-            Concrete\Core\User\Group\Group::getGroupExpirationIntervalDays();
+            return Concrete\Core\User\Group\Group::getGroupExpirationIntervalDays();
         }
 
         public static function getGroupExpirationIntervalHours()
         {
             // Concrete\Core\User\Group\Group::getGroupExpirationIntervalHours();
-            Concrete\Core\User\Group\Group::getGroupExpirationIntervalHours();
+            return Concrete\Core\User\Group\Group::getGroupExpirationIntervalHours();
         }
 
         public static function getGroupExpirationIntervalMinutes()
         {
             // Concrete\Core\User\Group\Group::getGroupExpirationIntervalMinutes();
-            Concrete\Core\User\Group\Group::getGroupExpirationIntervalMinutes();
+            return Concrete\Core\User\Group\Group::getGroupExpirationIntervalMinutes();
         }
 
         public static function getPackageID()
         {
             // Concrete\Core\User\Group\Group::getPackageID();
-            Concrete\Core\User\Group\Group::getPackageID();
+            return Concrete\Core\User\Group\Group::getPackageID();
         }
 
         public static function getPackageHandle()
         {
             // Concrete\Core\User\Group\Group::getPackageHandle();
-            Concrete\Core\User\Group\Group::getPackageHandle();
+            return Concrete\Core\User\Group\Group::getPackageHandle();
         }
 
         public static function update($gName, $gDescription)
         {
             // Concrete\Core\User\Group\Group::update();
-            Concrete\Core\User\Group\Group::update($gName, $gDescription);
+            return Concrete\Core\User\Group\Group::update($gName, $gDescription);
         }
 
         /** Creates a new user group.
@@ -16303,115 +16303,115 @@ namespace {
         public static function add($gName, $gDescription, $parentGroup = null, $pkg = null, $gID = null)
         {
             // Concrete\Core\User\Group\Group::add();
-            Concrete\Core\User\Group\Group::add($gName, $gDescription, $parentGroup, $pkg, $gID);
+            return Concrete\Core\User\Group\Group::add($gName, $gDescription, $parentGroup, $pkg, $gID);
         }
 
         public static function getBadges()
         {
             // Concrete\Core\User\Group\Group::getBadges();
-            Concrete\Core\User\Group\Group::getBadges();
+            return Concrete\Core\User\Group\Group::getBadges();
         }
 
         protected static function getAutomationControllers($column, $excludeUser = null)
         {
             // Concrete\Core\User\Group\Group::getAutomationControllers();
-            Concrete\Core\User\Group\Group::getAutomationControllers($column, $excludeUser);
+            return Concrete\Core\User\Group\Group::getAutomationControllers($column, $excludeUser);
         }
 
         public static function getAutomatedOnRegisterGroupControllers($u = null)
         {
             // Concrete\Core\User\Group\Group::getAutomatedOnRegisterGroupControllers();
-            Concrete\Core\User\Group\Group::getAutomatedOnRegisterGroupControllers($u);
+            return Concrete\Core\User\Group\Group::getAutomatedOnRegisterGroupControllers($u);
         }
 
         public static function getAutomatedOnLoginGroupControllers($u = null)
         {
             // Concrete\Core\User\Group\Group::getAutomatedOnLoginGroupControllers();
-            Concrete\Core\User\Group\Group::getAutomatedOnLoginGroupControllers($u);
+            return Concrete\Core\User\Group\Group::getAutomatedOnLoginGroupControllers($u);
         }
 
         public static function getAutomatedOnJobRunGroupControllers()
         {
             // Concrete\Core\User\Group\Group::getAutomatedOnJobRunGroupControllers();
-            Concrete\Core\User\Group\Group::getAutomatedOnJobRunGroupControllers();
+            return Concrete\Core\User\Group\Group::getAutomatedOnJobRunGroupControllers();
         }
 
         public static function clearBadgeOptions()
         {
             // Concrete\Core\User\Group\Group::clearBadgeOptions();
-            Concrete\Core\User\Group\Group::clearBadgeOptions();
+            return Concrete\Core\User\Group\Group::clearBadgeOptions();
         }
 
         public static function clearAutomationOptions()
         {
             // Concrete\Core\User\Group\Group::clearAutomationOptions();
-            Concrete\Core\User\Group\Group::clearAutomationOptions();
+            return Concrete\Core\User\Group\Group::clearAutomationOptions();
         }
 
         public static function removeGroupExpiration()
         {
             // Concrete\Core\User\Group\Group::removeGroupExpiration();
-            Concrete\Core\User\Group\Group::removeGroupExpiration();
+            return Concrete\Core\User\Group\Group::removeGroupExpiration();
         }
 
         public static function setBadgeOptions($gBadgeFID, $gBadgeDescription, $gBadgeCommunityPointValue)
         {
             // Concrete\Core\User\Group\Group::setBadgeOptions();
-            Concrete\Core\User\Group\Group::setBadgeOptions($gBadgeFID, $gBadgeDescription, $gBadgeCommunityPointValue);
+            return Concrete\Core\User\Group\Group::setBadgeOptions($gBadgeFID, $gBadgeDescription, $gBadgeCommunityPointValue);
         }
 
         public static function setAutomationOptions($gCheckAutomationOnRegister, $gCheckAutomationOnLogin, $gCheckAutomationOnJobRun)
         {
             // Concrete\Core\User\Group\Group::setAutomationOptions();
-            Concrete\Core\User\Group\Group::setAutomationOptions($gCheckAutomationOnRegister, $gCheckAutomationOnLogin, $gCheckAutomationOnJobRun);
+            return Concrete\Core\User\Group\Group::setAutomationOptions($gCheckAutomationOnRegister, $gCheckAutomationOnLogin, $gCheckAutomationOnJobRun);
         }
 
         public static function setGroupExpirationByDateTime($datetime, $action)
         {
             // Concrete\Core\User\Group\Group::setGroupExpirationByDateTime();
-            Concrete\Core\User\Group\Group::setGroupExpirationByDateTime($datetime, $action);
+            return Concrete\Core\User\Group\Group::setGroupExpirationByDateTime($datetime, $action);
         }
 
         public static function setGroupExpirationByInterval($days, $hours, $minutes, $action)
         {
             // Concrete\Core\User\Group\Group::setGroupExpirationByInterval();
-            Concrete\Core\User\Group\Group::setGroupExpirationByInterval($days, $hours, $minutes, $action);
+            return Concrete\Core\User\Group\Group::setGroupExpirationByInterval($days, $hours, $minutes, $action);
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -16422,43 +16422,43 @@ namespace {
         public static function getList()
         {
             // Concrete\Core\User\Group\GroupSet::getList();
-            Concrete\Core\User\Group\GroupSet::getList();
+            return Concrete\Core\User\Group\GroupSet::getList();
         }
 
         public static function getByID($gsID)
         {
             // Concrete\Core\User\Group\GroupSet::getByID();
-            Concrete\Core\User\Group\GroupSet::getByID($gsID);
+            return Concrete\Core\User\Group\GroupSet::getByID($gsID);
         }
 
         public static function getByName($gsName)
         {
             // Concrete\Core\User\Group\GroupSet::getByName();
-            Concrete\Core\User\Group\GroupSet::getByName($gsName);
+            return Concrete\Core\User\Group\GroupSet::getByName($gsName);
         }
 
         public static function getListByPackage($pkg)
         {
             // Concrete\Core\User\Group\GroupSet::getListByPackage();
-            Concrete\Core\User\Group\GroupSet::getListByPackage($pkg);
+            return Concrete\Core\User\Group\GroupSet::getListByPackage($pkg);
         }
 
         public static function getGroupSetID()
         {
             // Concrete\Core\User\Group\GroupSet::getGroupSetID();
-            Concrete\Core\User\Group\GroupSet::getGroupSetID();
+            return Concrete\Core\User\Group\GroupSet::getGroupSetID();
         }
 
         public static function getGroupSetName()
         {
             // Concrete\Core\User\Group\GroupSet::getGroupSetName();
-            Concrete\Core\User\Group\GroupSet::getGroupSetName();
+            return Concrete\Core\User\Group\GroupSet::getGroupSetName();
         }
 
         public static function getPackageID()
         {
             // Concrete\Core\User\Group\GroupSet::getPackageID();
-            Concrete\Core\User\Group\GroupSet::getPackageID();
+            return Concrete\Core\User\Group\GroupSet::getPackageID();
         }
 
         /** Returns the display name for this group set (localized and escaped accordingly to $format)
@@ -16470,91 +16470,91 @@ namespace {
         public static function getGroupSetDisplayName($format = "html")
         {
             // Concrete\Core\User\Group\GroupSet::getGroupSetDisplayName();
-            Concrete\Core\User\Group\GroupSet::getGroupSetDisplayName($format);
+            return Concrete\Core\User\Group\GroupSet::getGroupSetDisplayName($format);
         }
 
         public static function updateGroupSetName($gsName)
         {
             // Concrete\Core\User\Group\GroupSet::updateGroupSetName();
-            Concrete\Core\User\Group\GroupSet::updateGroupSetName($gsName);
+            return Concrete\Core\User\Group\GroupSet::updateGroupSetName($gsName);
         }
 
         public static function addGroup(Concrete\Core\User\Group\Group $g)
         {
             // Concrete\Core\User\Group\GroupSet::addGroup();
-            Concrete\Core\User\Group\GroupSet::addGroup($g);
+            return Concrete\Core\User\Group\GroupSet::addGroup($g);
         }
 
         public static function add($gsName, $pkg = null)
         {
             // Concrete\Core\User\Group\GroupSet::add();
-            Concrete\Core\User\Group\GroupSet::add($gsName, $pkg);
+            return Concrete\Core\User\Group\GroupSet::add($gsName, $pkg);
         }
 
         public static function clearGroups()
         {
             // Concrete\Core\User\Group\GroupSet::clearGroups();
-            Concrete\Core\User\Group\GroupSet::clearGroups();
+            return Concrete\Core\User\Group\GroupSet::clearGroups();
         }
 
         public static function getGroups()
         {
             // Concrete\Core\User\Group\GroupSet::getGroups();
-            Concrete\Core\User\Group\GroupSet::getGroups();
+            return Concrete\Core\User\Group\GroupSet::getGroups();
         }
 
         public static function contains(Concrete\Core\User\Group\Group $g)
         {
             // Concrete\Core\User\Group\GroupSet::contains();
-            Concrete\Core\User\Group\GroupSet::contains($g);
+            return Concrete\Core\User\Group\GroupSet::contains($g);
         }
 
         public static function delete()
         {
             // Concrete\Core\User\Group\GroupSet::delete();
-            Concrete\Core\User\Group\GroupSet::delete();
+            return Concrete\Core\User\Group\GroupSet::delete();
         }
 
         public static function removeGroup(Concrete\Core\User\Group\Group $g)
         {
             // Concrete\Core\User\Group\GroupSet::removeGroup();
-            Concrete\Core\User\Group\GroupSet::removeGroup($g);
+            return Concrete\Core\User\Group\GroupSet::removeGroup($g);
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -16565,61 +16565,61 @@ namespace {
         public static function get()
         {
             // Concrete\Core\User\Group\GroupSetList::get();
-            Concrete\Core\User\Group\GroupSetList::get();
+            return Concrete\Core\User\Group\GroupSetList::get();
         }
 
         public static function getTotal()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getTotal();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getTotal();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getTotal();
         }
 
         public static function debug($dbg = "1")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
         }
 
         protected static function setQuery($query)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery($query);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery($query);
         }
 
         protected static function getQuery()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
         }
 
         public static function addToQuery($query)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery($query);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery($query);
         }
 
         protected static function setupAutoSort()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
         }
 
         protected static function executeBase()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
         }
 
         protected static function setupSortByString()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
         }
 
         protected static function setupAttributeSort()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
         }
 
         /**
@@ -16628,121 +16628,121 @@ namespace {
         public static function filter($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter($column, $value, $comparison);
         }
 
         public static function getSearchResultsClass($field)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass($field);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass($field);
         }
 
         public static function sortBy($key, $dir = "asc")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy($key, $dir);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy($key, $dir);
         }
 
         public static function groupBy($key)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy($key);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy($key);
         }
 
         public static function having($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
         }
 
         public static function getSortByURL($column, $dir = "asc", $baseURL = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
         }
 
         protected static function setupAttributeFilters($join)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters($join);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters($join);
         }
 
         public static function filterByAttribute($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
         }
 
         public static function enableStickySearchRequest($namespace = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
+            return Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
         }
 
         public static function getQueryStringPagingVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
         }
 
         public static function getQueryStringSortVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
         }
 
         public static function getQueryStringSortDirectionVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
         }
 
         protected static function getStickySearchNameSpace()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
-            Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
+            return Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
         }
 
         public static function resetSearchRequest($namespace = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
+            return Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
         }
 
         public static function addToSearchRequest($key, $value)
         {
             // Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest($key, $value);
+            return Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest($key, $value);
         }
 
         public static function getSearchRequest()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
+            return Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
         }
 
         public static function setItemsPerPage($num)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage();
-            Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage($num);
+            return Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage($num);
         }
 
         public static function getItemsPerPage()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
-            Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
+            return Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
         }
 
         public static function setItems($items)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setItems();
-            Concrete\Core\Foundation\Collection\ItemList::setItems($items);
+            return Concrete\Core\Foundation\Collection\ItemList::setItems($items);
         }
 
         public static function setNameSpace($ns)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setNameSpace();
-            Concrete\Core\Foundation\Collection\ItemList::setNameSpace($ns);
+            return Concrete\Core\Foundation\Collection\ItemList::setNameSpace($ns);
         }
 
         /**
@@ -16751,13 +16751,13 @@ namespace {
         public static function getPage($page = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPage();
-            Concrete\Core\Foundation\Collection\ItemList::getPage($page);
+            return Concrete\Core\Foundation\Collection\ItemList::getPage($page);
         }
 
         protected static function setCurrentPage($page = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setCurrentPage();
-            Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
+            return Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
         }
 
         /**
@@ -16766,37 +16766,37 @@ namespace {
         public static function displaySummary($right_content = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displaySummary();
-            Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
+            return Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
         }
 
         public static function isActiveSortColumn($column)
         {
             // Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn();
-            Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn($column);
+            return Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn($column);
         }
 
         public static function getActiveSortColumn()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
-            Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
+            return Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
         }
 
         public static function getActiveSortDirection()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
-            Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
+            return Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
         }
 
         public static function requiresPaging()
         {
             // Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
-            Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
+            return Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
         }
 
         public static function getPagination($url = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPagination();
-            Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
         }
 
         /**
@@ -16804,7 +16804,7 @@ namespace {
         public static function displayPagingV2($script = null, $return = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPagingV2();
-            Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
         }
 
         /**
@@ -16812,7 +16812,7 @@ namespace {
         public static function displayPaging($script = null, $return = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPaging();
-            Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
         }
 
         /**
@@ -16821,19 +16821,19 @@ namespace {
         public static function getSummary()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSummary();
-            Concrete\Core\Foundation\Collection\ItemList::getSummary();
+            return Concrete\Core\Foundation\Collection\ItemList::getSummary();
         }
 
         public static function getSortBy()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSortBy();
-            Concrete\Core\Foundation\Collection\ItemList::getSortBy();
+            return Concrete\Core\Foundation\Collection\ItemList::getSortBy();
         }
 
         public static function getSortByDirection()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
-            Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
+            return Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
         }
 
         /**
@@ -16846,7 +16846,7 @@ namespace {
         public static function sortByMultiple()
         {
             // Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
-            Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
+            return Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
         }
 
     }
@@ -16857,91 +16857,91 @@ namespace {
         public static function includeAllGroups()
         {
             // Concrete\Core\User\Group\GroupList::includeAllGroups();
-            Concrete\Core\User\Group\GroupList::includeAllGroups();
+            return Concrete\Core\User\Group\GroupList::includeAllGroups();
         }
 
         public static function filterByKeywords($kw)
         {
             // Concrete\Core\User\Group\GroupList::filterByKeywords();
-            Concrete\Core\User\Group\GroupList::filterByKeywords($kw);
+            return Concrete\Core\User\Group\GroupList::filterByKeywords($kw);
         }
 
         public static function filterByAssignable()
         {
             // Concrete\Core\User\Group\GroupList::filterByAssignable();
-            Concrete\Core\User\Group\GroupList::filterByAssignable();
+            return Concrete\Core\User\Group\GroupList::filterByAssignable();
         }
 
         public static function filterByUserID($uID)
         {
             // Concrete\Core\User\Group\GroupList::filterByUserID();
-            Concrete\Core\User\Group\GroupList::filterByUserID($uID);
+            return Concrete\Core\User\Group\GroupList::filterByUserID($uID);
         }
 
         public static function updateItemsPerPage($num)
         {
             // Concrete\Core\User\Group\GroupList::updateItemsPerPage();
-            Concrete\Core\User\Group\GroupList::updateItemsPerPage($num);
+            return Concrete\Core\User\Group\GroupList::updateItemsPerPage($num);
         }
 
         public static function get($itemsToGet = 100, $offset = null)
         {
             // Concrete\Core\User\Group\GroupList::get();
-            Concrete\Core\User\Group\GroupList::get($itemsToGet, $offset);
+            return Concrete\Core\User\Group\GroupList::get($itemsToGet, $offset);
         }
 
         public static function getTotal()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getTotal();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getTotal();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getTotal();
         }
 
         public static function debug($dbg = "1")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
         }
 
         protected static function setQuery($query)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery($query);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery($query);
         }
 
         protected static function getQuery()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
         }
 
         public static function addToQuery($query)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery($query);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery($query);
         }
 
         protected static function setupAutoSort()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
         }
 
         protected static function executeBase()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
         }
 
         protected static function setupSortByString()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
         }
 
         protected static function setupAttributeSort()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
         }
 
         /**
@@ -16950,121 +16950,121 @@ namespace {
         public static function filter($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter($column, $value, $comparison);
         }
 
         public static function getSearchResultsClass($field)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass($field);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass($field);
         }
 
         public static function sortBy($key, $dir = "asc")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy($key, $dir);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy($key, $dir);
         }
 
         public static function groupBy($key)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy($key);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy($key);
         }
 
         public static function having($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
         }
 
         public static function getSortByURL($column, $dir = "asc", $baseURL = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
         }
 
         protected static function setupAttributeFilters($join)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters($join);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters($join);
         }
 
         public static function filterByAttribute($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
         }
 
         public static function enableStickySearchRequest($namespace = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
+            return Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
         }
 
         public static function getQueryStringPagingVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
         }
 
         public static function getQueryStringSortVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
         }
 
         public static function getQueryStringSortDirectionVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
         }
 
         protected static function getStickySearchNameSpace()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
-            Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
+            return Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
         }
 
         public static function resetSearchRequest($namespace = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
+            return Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
         }
 
         public static function addToSearchRequest($key, $value)
         {
             // Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest($key, $value);
+            return Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest($key, $value);
         }
 
         public static function getSearchRequest()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
+            return Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
         }
 
         public static function setItemsPerPage($num)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage();
-            Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage($num);
+            return Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage($num);
         }
 
         public static function getItemsPerPage()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
-            Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
+            return Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
         }
 
         public static function setItems($items)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setItems();
-            Concrete\Core\Foundation\Collection\ItemList::setItems($items);
+            return Concrete\Core\Foundation\Collection\ItemList::setItems($items);
         }
 
         public static function setNameSpace($ns)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setNameSpace();
-            Concrete\Core\Foundation\Collection\ItemList::setNameSpace($ns);
+            return Concrete\Core\Foundation\Collection\ItemList::setNameSpace($ns);
         }
 
         /**
@@ -17073,13 +17073,13 @@ namespace {
         public static function getPage($page = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPage();
-            Concrete\Core\Foundation\Collection\ItemList::getPage($page);
+            return Concrete\Core\Foundation\Collection\ItemList::getPage($page);
         }
 
         protected static function setCurrentPage($page = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setCurrentPage();
-            Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
+            return Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
         }
 
         /**
@@ -17088,37 +17088,37 @@ namespace {
         public static function displaySummary($right_content = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displaySummary();
-            Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
+            return Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
         }
 
         public static function isActiveSortColumn($column)
         {
             // Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn();
-            Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn($column);
+            return Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn($column);
         }
 
         public static function getActiveSortColumn()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
-            Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
+            return Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
         }
 
         public static function getActiveSortDirection()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
-            Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
+            return Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
         }
 
         public static function requiresPaging()
         {
             // Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
-            Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
+            return Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
         }
 
         public static function getPagination($url = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPagination();
-            Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
         }
 
         /**
@@ -17126,7 +17126,7 @@ namespace {
         public static function displayPagingV2($script = null, $return = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPagingV2();
-            Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
         }
 
         /**
@@ -17134,7 +17134,7 @@ namespace {
         public static function displayPaging($script = null, $return = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPaging();
-            Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
         }
 
         /**
@@ -17143,19 +17143,19 @@ namespace {
         public static function getSummary()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSummary();
-            Concrete\Core\Foundation\Collection\ItemList::getSummary();
+            return Concrete\Core\Foundation\Collection\ItemList::getSummary();
         }
 
         public static function getSortBy()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSortBy();
-            Concrete\Core\Foundation\Collection\ItemList::getSortBy();
+            return Concrete\Core\Foundation\Collection\ItemList::getSortBy();
         }
 
         public static function getSortByDirection()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
-            Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
+            return Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
         }
 
         /**
@@ -17168,7 +17168,7 @@ namespace {
         public static function sortByMultiple()
         {
             // Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
-            Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
+            return Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
         }
 
     }
@@ -17189,7 +17189,7 @@ namespace {
         public static function filterByExtension($ext)
         {
             // Concrete\Core\File\FileList::filterByExtension();
-            Concrete\Core\File\FileList::filterByExtension($ext);
+            return Concrete\Core\File\FileList::filterByExtension($ext);
         }
 
         /**
@@ -17199,7 +17199,7 @@ namespace {
         public static function filterByType($type)
         {
             // Concrete\Core\File\FileList::filterByType();
-            Concrete\Core\File\FileList::filterByType($type);
+            return Concrete\Core\File\FileList::filterByType($type);
         }
 
         /**
@@ -17208,31 +17208,31 @@ namespace {
         public static function filterByKeywords($keywords)
         {
             // Concrete\Core\File\FileList::filterByKeywords();
-            Concrete\Core\File\FileList::filterByKeywords($keywords);
+            return Concrete\Core\File\FileList::filterByKeywords($keywords);
         }
 
         public static function filterBySet($fs)
         {
             // Concrete\Core\File\FileList::filterBySet();
-            Concrete\Core\File\FileList::filterBySet($fs);
+            return Concrete\Core\File\FileList::filterBySet($fs);
         }
 
         public static function export($xml)
         {
             // Concrete\Core\File\FileList::export();
-            Concrete\Core\File\FileList::export($xml);
+            return Concrete\Core\File\FileList::export($xml);
         }
 
         public static function exportArchive($archive)
         {
             // Concrete\Core\File\FileList::exportArchive();
-            Concrete\Core\File\FileList::exportArchive($archive);
+            return Concrete\Core\File\FileList::exportArchive($archive);
         }
 
         protected static function setupFileSetFilters()
         {
             // Concrete\Core\File\FileList::setupFileSetFilters();
-            Concrete\Core\File\FileList::setupFileSetFilters();
+            return Concrete\Core\File\FileList::setupFileSetFilters();
         }
 
         /**
@@ -17241,7 +17241,7 @@ namespace {
         public static function filterBySize($from, $to)
         {
             // Concrete\Core\File\FileList::filterBySize();
-            Concrete\Core\File\FileList::filterBySize($from, $to);
+            return Concrete\Core\File\FileList::filterBySize($from, $to);
         }
 
         /**
@@ -17251,13 +17251,13 @@ namespace {
         public static function filterByDateAdded($date, $comparison = "=")
         {
             // Concrete\Core\File\FileList::filterByDateAdded();
-            Concrete\Core\File\FileList::filterByDateAdded($date, $comparison);
+            return Concrete\Core\File\FileList::filterByDateAdded($date, $comparison);
         }
 
         public static function filterByOriginalPageID($ocID)
         {
             // Concrete\Core\File\FileList::filterByOriginalPageID();
-            Concrete\Core\File\FileList::filterByOriginalPageID($ocID);
+            return Concrete\Core\File\FileList::filterByOriginalPageID($ocID);
         }
 
         /**
@@ -17269,7 +17269,7 @@ namespace {
         public static function filterByApproverUID($uID)
         {
             // Concrete\Core\File\FileList::filterByApproverUID();
-            Concrete\Core\File\FileList::filterByApproverUID($uID);
+            return Concrete\Core\File\FileList::filterByApproverUID($uID);
         }
 
         /**
@@ -17281,13 +17281,13 @@ namespace {
         public static function filterByAuthorUID($uID)
         {
             // Concrete\Core\File\FileList::filterByAuthorUID();
-            Concrete\Core\File\FileList::filterByAuthorUID($uID);
+            return Concrete\Core\File\FileList::filterByAuthorUID($uID);
         }
 
         public static function setPermissionLevel($plevel)
         {
             // Concrete\Core\File\FileList::setPermissionLevel();
-            Concrete\Core\File\FileList::setPermissionLevel($plevel);
+            return Concrete\Core\File\FileList::setPermissionLevel($plevel);
         }
 
         /**
@@ -17297,19 +17297,19 @@ namespace {
         public static function filterByTag($tag = null)
         {
             // Concrete\Core\File\FileList::filterByTag();
-            Concrete\Core\File\FileList::filterByTag($tag);
+            return Concrete\Core\File\FileList::filterByTag($tag);
         }
 
         protected static function setBaseQuery()
         {
             // Concrete\Core\File\FileList::setBaseQuery();
-            Concrete\Core\File\FileList::setBaseQuery();
+            return Concrete\Core\File\FileList::setBaseQuery();
         }
 
         protected static function setupFilePermissions()
         {
             // Concrete\Core\File\FileList::setupFilePermissions();
-            Concrete\Core\File\FileList::setupFilePermissions();
+            return Concrete\Core\File\FileList::setupFilePermissions();
         }
 
         /**
@@ -17318,91 +17318,91 @@ namespace {
         public static function get($itemsToGet = null, $offset = null)
         {
             // Concrete\Core\File\FileList::get();
-            Concrete\Core\File\FileList::get($itemsToGet, $offset);
+            return Concrete\Core\File\FileList::get($itemsToGet, $offset);
         }
 
         public static function getTotal()
         {
             // Concrete\Core\File\FileList::getTotal();
-            Concrete\Core\File\FileList::getTotal();
+            return Concrete\Core\File\FileList::getTotal();
         }
 
         protected static function createQuery()
         {
             // Concrete\Core\File\FileList::createQuery();
-            Concrete\Core\File\FileList::createQuery();
+            return Concrete\Core\File\FileList::createQuery();
         }
 
         public static function sortByAttributeKey($key, $order = "asc")
         {
             // Concrete\Core\File\FileList::sortByAttributeKey();
-            Concrete\Core\File\FileList::sortByAttributeKey($key, $order);
+            return Concrete\Core\File\FileList::sortByAttributeKey($key, $order);
         }
 
         public static function sortByFileSetDisplayOrder()
         {
             // Concrete\Core\File\FileList::sortByFileSetDisplayOrder();
-            Concrete\Core\File\FileList::sortByFileSetDisplayOrder();
+            return Concrete\Core\File\FileList::sortByFileSetDisplayOrder();
         }
 
         public static function getExtensionList()
         {
             // Concrete\Core\File\FileList::getExtensionList();
-            Concrete\Core\File\FileList::getExtensionList();
+            return Concrete\Core\File\FileList::getExtensionList();
         }
 
         public static function getTypeList()
         {
             // Concrete\Core\File\FileList::getTypeList();
-            Concrete\Core\File\FileList::getTypeList();
+            return Concrete\Core\File\FileList::getTypeList();
         }
 
         public static function debug($dbg = "1")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
         }
 
         protected static function setQuery($query)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery($query);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery($query);
         }
 
         protected static function getQuery()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
         }
 
         public static function addToQuery($query)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery($query);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery($query);
         }
 
         protected static function setupAutoSort()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
         }
 
         protected static function executeBase()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
         }
 
         protected static function setupSortByString()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
         }
 
         protected static function setupAttributeSort()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
         }
 
         /**
@@ -17411,121 +17411,121 @@ namespace {
         public static function filter($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter($column, $value, $comparison);
         }
 
         public static function getSearchResultsClass($field)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass($field);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass($field);
         }
 
         public static function sortBy($key, $dir = "asc")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy($key, $dir);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy($key, $dir);
         }
 
         public static function groupBy($key)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy($key);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy($key);
         }
 
         public static function having($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
         }
 
         public static function getSortByURL($column, $dir = "asc", $baseURL = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
         }
 
         protected static function setupAttributeFilters($join)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters($join);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters($join);
         }
 
         public static function filterByAttribute($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
         }
 
         public static function enableStickySearchRequest($namespace = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
+            return Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
         }
 
         public static function getQueryStringPagingVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
         }
 
         public static function getQueryStringSortVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
         }
 
         public static function getQueryStringSortDirectionVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
         }
 
         protected static function getStickySearchNameSpace()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
-            Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
+            return Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
         }
 
         public static function resetSearchRequest($namespace = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
+            return Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
         }
 
         public static function addToSearchRequest($key, $value)
         {
             // Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest($key, $value);
+            return Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest($key, $value);
         }
 
         public static function getSearchRequest()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
+            return Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
         }
 
         public static function setItemsPerPage($num)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage();
-            Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage($num);
+            return Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage($num);
         }
 
         public static function getItemsPerPage()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
-            Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
+            return Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
         }
 
         public static function setItems($items)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setItems();
-            Concrete\Core\Foundation\Collection\ItemList::setItems($items);
+            return Concrete\Core\Foundation\Collection\ItemList::setItems($items);
         }
 
         public static function setNameSpace($ns)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setNameSpace();
-            Concrete\Core\Foundation\Collection\ItemList::setNameSpace($ns);
+            return Concrete\Core\Foundation\Collection\ItemList::setNameSpace($ns);
         }
 
         /**
@@ -17534,13 +17534,13 @@ namespace {
         public static function getPage($page = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPage();
-            Concrete\Core\Foundation\Collection\ItemList::getPage($page);
+            return Concrete\Core\Foundation\Collection\ItemList::getPage($page);
         }
 
         protected static function setCurrentPage($page = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setCurrentPage();
-            Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
+            return Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
         }
 
         /**
@@ -17549,37 +17549,37 @@ namespace {
         public static function displaySummary($right_content = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displaySummary();
-            Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
+            return Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
         }
 
         public static function isActiveSortColumn($column)
         {
             // Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn();
-            Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn($column);
+            return Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn($column);
         }
 
         public static function getActiveSortColumn()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
-            Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
+            return Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
         }
 
         public static function getActiveSortDirection()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
-            Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
+            return Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
         }
 
         public static function requiresPaging()
         {
             // Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
-            Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
+            return Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
         }
 
         public static function getPagination($url = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPagination();
-            Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
         }
 
         /**
@@ -17587,7 +17587,7 @@ namespace {
         public static function displayPagingV2($script = null, $return = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPagingV2();
-            Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
         }
 
         /**
@@ -17595,7 +17595,7 @@ namespace {
         public static function displayPaging($script = null, $return = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPaging();
-            Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
         }
 
         /**
@@ -17604,19 +17604,19 @@ namespace {
         public static function getSummary()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSummary();
-            Concrete\Core\Foundation\Collection\ItemList::getSummary();
+            return Concrete\Core\Foundation\Collection\ItemList::getSummary();
         }
 
         public static function getSortBy()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSortBy();
-            Concrete\Core\Foundation\Collection\ItemList::getSortBy();
+            return Concrete\Core\Foundation\Collection\ItemList::getSortBy();
         }
 
         public static function getSortByDirection()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
-            Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
+            return Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
         }
 
         /**
@@ -17629,7 +17629,7 @@ namespace {
         public static function sortByMultiple()
         {
             // Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
-            Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
+            return Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
         }
 
     }
@@ -17650,37 +17650,37 @@ namespace {
         public static function getJobQueueBatchSize()
         {
             // Concrete\Core\Job\QueueableJob::getJobQueueBatchSize();
-            Concrete\Core\Job\QueueableJob::getJobQueueBatchSize();
+            return Concrete\Core\Job\QueueableJob::getJobQueueBatchSize();
         }
 
         public static function run()
         {
             // Concrete\Core\Job\QueueableJob::run();
-            Concrete\Core\Job\QueueableJob::run();
+            return Concrete\Core\Job\QueueableJob::run();
         }
 
         public static function getQueueObject()
         {
             // Concrete\Core\Job\QueueableJob::getQueueObject();
-            Concrete\Core\Job\QueueableJob::getQueueObject();
+            return Concrete\Core\Job\QueueableJob::getQueueObject();
         }
 
         public static function reset()
         {
             // Concrete\Core\Job\QueueableJob::reset();
-            Concrete\Core\Job\QueueableJob::reset();
+            return Concrete\Core\Job\QueueableJob::reset();
         }
 
         public static function markStarted()
         {
             // Concrete\Core\Job\QueueableJob::markStarted();
-            Concrete\Core\Job\QueueableJob::markStarted();
+            return Concrete\Core\Job\QueueableJob::markStarted();
         }
 
         public static function markCompleted($code = null, $message = null)
         {
             // Concrete\Core\Job\QueueableJob::markCompleted();
-            Concrete\Core\Job\QueueableJob::markCompleted($code, $message);
+            return Concrete\Core\Job\QueueableJob::markCompleted($code, $message);
         }
 
         /**
@@ -17689,163 +17689,163 @@ namespace {
         public static function executeJob()
         {
             // Concrete\Core\Job\QueueableJob::executeJob();
-            Concrete\Core\Job\QueueableJob::executeJob();
+            return Concrete\Core\Job\QueueableJob::executeJob();
         }
 
         public static function getJobHandle()
         {
             // Concrete\Core\Job\Job::getJobHandle();
-            Concrete\Core\Job\Job::getJobHandle();
+            return Concrete\Core\Job\Job::getJobHandle();
         }
 
         public static function getJobID()
         {
             // Concrete\Core\Job\Job::getJobID();
-            Concrete\Core\Job\Job::getJobID();
+            return Concrete\Core\Job\Job::getJobID();
         }
 
         public static function getPackageHandle()
         {
             // Concrete\Core\Job\Job::getPackageHandle();
-            Concrete\Core\Job\Job::getPackageHandle();
+            return Concrete\Core\Job\Job::getPackageHandle();
         }
 
         public static function getJobLastStatusCode()
         {
             // Concrete\Core\Job\Job::getJobLastStatusCode();
-            Concrete\Core\Job\Job::getJobLastStatusCode();
+            return Concrete\Core\Job\Job::getJobLastStatusCode();
         }
 
         public static function didFail()
         {
             // Concrete\Core\Job\Job::didFail();
-            Concrete\Core\Job\Job::didFail();
+            return Concrete\Core\Job\Job::didFail();
         }
 
         public static function canUninstall()
         {
             // Concrete\Core\Job\Job::canUninstall();
-            Concrete\Core\Job\Job::canUninstall();
+            return Concrete\Core\Job\Job::canUninstall();
         }
 
         public static function supportsQueue()
         {
             // Concrete\Core\Job\Job::supportsQueue();
-            Concrete\Core\Job\Job::supportsQueue();
+            return Concrete\Core\Job\Job::supportsQueue();
         }
 
         public static function jobClassLocations()
         {
             // Concrete\Core\Job\Job::jobClassLocations();
-            Concrete\Core\Job\Job::jobClassLocations();
+            return Concrete\Core\Job\Job::jobClassLocations();
         }
 
         public static function getJobDateLastRun()
         {
             // Concrete\Core\Job\Job::getJobDateLastRun();
-            Concrete\Core\Job\Job::getJobDateLastRun();
+            return Concrete\Core\Job\Job::getJobDateLastRun();
         }
 
         public static function getJobStatus()
         {
             // Concrete\Core\Job\Job::getJobStatus();
-            Concrete\Core\Job\Job::getJobStatus();
+            return Concrete\Core\Job\Job::getJobStatus();
         }
 
         public static function getJobLastStatusText()
         {
             // Concrete\Core\Job\Job::getJobLastStatusText();
-            Concrete\Core\Job\Job::getJobLastStatusText();
+            return Concrete\Core\Job\Job::getJobLastStatusText();
         }
 
         public static function authenticateRequest($auth)
         {
             // Concrete\Core\Job\Job::authenticateRequest();
-            Concrete\Core\Job\Job::authenticateRequest($auth);
+            return Concrete\Core\Job\Job::authenticateRequest($auth);
         }
 
         public static function generateAuth()
         {
             // Concrete\Core\Job\Job::generateAuth();
-            Concrete\Core\Job\Job::generateAuth();
+            return Concrete\Core\Job\Job::generateAuth();
         }
 
         public static function exportList($xml)
         {
             // Concrete\Core\Job\Job::exportList();
-            Concrete\Core\Job\Job::exportList($xml);
+            return Concrete\Core\Job\Job::exportList($xml);
         }
 
         public static function getList($scheduledOnly = null)
         {
             // Concrete\Core\Job\Job::getList();
-            Concrete\Core\Job\Job::getList($scheduledOnly);
+            return Concrete\Core\Job\Job::getList($scheduledOnly);
         }
 
         public static function getByID($jID = null)
         {
             // Concrete\Core\Job\Job::getByID();
-            Concrete\Core\Job\Job::getByID($jID);
+            return Concrete\Core\Job\Job::getByID($jID);
         }
 
         public static function getByHandle($jHandle = null)
         {
             // Concrete\Core\Job\Job::getByHandle();
-            Concrete\Core\Job\Job::getByHandle($jHandle);
+            return Concrete\Core\Job\Job::getByHandle($jHandle);
         }
 
         public static function getJobObjByHandle($jHandle = null, $jobData = null)
         {
             // Concrete\Core\Job\Job::getJobObjByHandle();
-            Concrete\Core\Job\Job::getJobObjByHandle($jHandle, $jobData);
+            return Concrete\Core\Job\Job::getJobObjByHandle($jHandle, $jobData);
         }
 
         protected static function getClassName($jHandle)
         {
             // Concrete\Core\Job\Job::getClassName();
-            Concrete\Core\Job\Job::getClassName($jHandle);
+            return Concrete\Core\Job\Job::getClassName($jHandle);
         }
 
         public static function getAvailableList($includeConcreteDirJobs = 1)
         {
             // Concrete\Core\Job\Job::getAvailableList();
-            Concrete\Core\Job\Job::getAvailableList($includeConcreteDirJobs);
+            return Concrete\Core\Job\Job::getAvailableList($includeConcreteDirJobs);
         }
 
         public static function setJobStatus($jStatus = "ENABLED")
         {
             // Concrete\Core\Job\Job::setJobStatus();
-            Concrete\Core\Job\Job::setJobStatus($jStatus);
+            return Concrete\Core\Job\Job::setJobStatus($jStatus);
         }
 
         public static function installByHandle($jHandle = null)
         {
             // Concrete\Core\Job\Job::installByHandle();
-            Concrete\Core\Job\Job::installByHandle($jHandle);
+            return Concrete\Core\Job\Job::installByHandle($jHandle);
         }
 
         public static function getListByPackage($pkg)
         {
             // Concrete\Core\Job\Job::getListByPackage();
-            Concrete\Core\Job\Job::getListByPackage($pkg);
+            return Concrete\Core\Job\Job::getListByPackage($pkg);
         }
 
         public static function installByPackage($jHandle, $pkg)
         {
             // Concrete\Core\Job\Job::installByPackage();
-            Concrete\Core\Job\Job::installByPackage($jHandle, $pkg);
+            return Concrete\Core\Job\Job::installByPackage($jHandle, $pkg);
         }
 
         public static function install()
         {
             // Concrete\Core\Job\Job::install();
-            Concrete\Core\Job\Job::install();
+            return Concrete\Core\Job\Job::install();
         }
 
         public static function uninstall()
         {
             // Concrete\Core\Job\Job::uninstall();
-            Concrete\Core\Job\Job::uninstall();
+            return Concrete\Core\Job\Job::uninstall();
         }
 
         /**
@@ -17854,55 +17854,55 @@ namespace {
         public static function clearLog()
         {
             // Concrete\Core\Job\Job::clearLog();
-            Concrete\Core\Job\Job::clearLog();
+            return Concrete\Core\Job\Job::clearLog();
         }
 
         public static function isScheduledForNow()
         {
             // Concrete\Core\Job\Job::isScheduledForNow();
-            Concrete\Core\Job\Job::isScheduledForNow();
+            return Concrete\Core\Job\Job::isScheduledForNow();
         }
 
         public static function setSchedule($scheduled, $interval, $value)
         {
             // Concrete\Core\Job\Job::setSchedule();
-            Concrete\Core\Job\Job::setSchedule($scheduled, $interval, $value);
+            return Concrete\Core\Job\Job::setSchedule($scheduled, $interval, $value);
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -17916,7 +17916,7 @@ namespace {
         public static function isError()
         {
             // Concrete\Core\Permission\Checker::isError();
-            Concrete\Core\Permission\Checker::isError();
+            return Concrete\Core\Permission\Checker::isError();
         }
 
         /**
@@ -17925,7 +17925,7 @@ namespace {
         public static function getError()
         {
             // Concrete\Core\Permission\Checker::getError();
-            Concrete\Core\Permission\Checker::getError();
+            return Concrete\Core\Permission\Checker::getError();
         }
 
         /**
@@ -17935,13 +17935,13 @@ namespace {
         public static function getOriginalObject()
         {
             // Concrete\Core\Permission\Checker::getOriginalObject();
-            Concrete\Core\Permission\Checker::getOriginalObject();
+            return Concrete\Core\Permission\Checker::getOriginalObject();
         }
 
         public static function getResponseObject()
         {
             // Concrete\Core\Permission\Checker::getResponseObject();
-            Concrete\Core\Permission\Checker::getResponseObject();
+            return Concrete\Core\Permission\Checker::getResponseObject();
         }
 
     }
@@ -17952,7 +17952,7 @@ namespace {
         public static function getSupportedAccessTypes()
         {
             // Concrete\Core\Permission\Key\Key::getSupportedAccessTypes();
-            Concrete\Core\Permission\Key\Key::getSupportedAccessTypes();
+            return Concrete\Core\Permission\Key\Key::getSupportedAccessTypes();
         }
 
         /**
@@ -17961,7 +17961,7 @@ namespace {
         public static function canPermissionKeyTriggerWorkflow()
         {
             // Concrete\Core\Permission\Key\Key::canPermissionKeyTriggerWorkflow();
-            Concrete\Core\Permission\Key\Key::canPermissionKeyTriggerWorkflow();
+            return Concrete\Core\Permission\Key\Key::canPermissionKeyTriggerWorkflow();
         }
 
         /**
@@ -17970,7 +17970,7 @@ namespace {
         public static function permissionKeyHasCustomClass()
         {
             // Concrete\Core\Permission\Key\Key::permissionKeyHasCustomClass();
-            Concrete\Core\Permission\Key\Key::permissionKeyHasCustomClass();
+            return Concrete\Core\Permission\Key\Key::permissionKeyHasCustomClass();
         }
 
         /**
@@ -17979,7 +17979,7 @@ namespace {
         public static function getPermissionKeyName()
         {
             // Concrete\Core\Permission\Key\Key::getPermissionKeyName();
-            Concrete\Core\Permission\Key\Key::getPermissionKeyName();
+            return Concrete\Core\Permission\Key\Key::getPermissionKeyName();
         }
 
         /** Returns the display name for this permission key (localized and escaped accordingly to $format)
@@ -17991,7 +17991,7 @@ namespace {
         public static function getPermissionKeyDisplayName($format = "html")
         {
             // Concrete\Core\Permission\Key\Key::getPermissionKeyDisplayName();
-            Concrete\Core\Permission\Key\Key::getPermissionKeyDisplayName($format);
+            return Concrete\Core\Permission\Key\Key::getPermissionKeyDisplayName($format);
         }
 
         /**
@@ -18000,7 +18000,7 @@ namespace {
         public static function getPermissionKeyHandle()
         {
             // Concrete\Core\Permission\Key\Key::getPermissionKeyHandle();
-            Concrete\Core\Permission\Key\Key::getPermissionKeyHandle();
+            return Concrete\Core\Permission\Key\Key::getPermissionKeyHandle();
         }
 
         /**
@@ -18009,7 +18009,7 @@ namespace {
         public static function getPermissionKeyDescription()
         {
             // Concrete\Core\Permission\Key\Key::getPermissionKeyDescription();
-            Concrete\Core\Permission\Key\Key::getPermissionKeyDescription();
+            return Concrete\Core\Permission\Key\Key::getPermissionKeyDescription();
         }
 
         /** Returns the display description for this permission key (localized and escaped accordingly to $format)
@@ -18021,7 +18021,7 @@ namespace {
         public static function getPermissionKeyDisplayDescription($format = "html")
         {
             // Concrete\Core\Permission\Key\Key::getPermissionKeyDisplayDescription();
-            Concrete\Core\Permission\Key\Key::getPermissionKeyDisplayDescription($format);
+            return Concrete\Core\Permission\Key\Key::getPermissionKeyDisplayDescription($format);
         }
 
         /**
@@ -18030,67 +18030,67 @@ namespace {
         public static function getPermissionKeyID()
         {
             // Concrete\Core\Permission\Key\Key::getPermissionKeyID();
-            Concrete\Core\Permission\Key\Key::getPermissionKeyID();
+            return Concrete\Core\Permission\Key\Key::getPermissionKeyID();
         }
 
         public static function getPermissionKeyCategoryID()
         {
             // Concrete\Core\Permission\Key\Key::getPermissionKeyCategoryID();
-            Concrete\Core\Permission\Key\Key::getPermissionKeyCategoryID();
+            return Concrete\Core\Permission\Key\Key::getPermissionKeyCategoryID();
         }
 
         public static function getPermissionKeyCategoryHandle()
         {
             // Concrete\Core\Permission\Key\Key::getPermissionKeyCategoryHandle();
-            Concrete\Core\Permission\Key\Key::getPermissionKeyCategoryHandle();
+            return Concrete\Core\Permission\Key\Key::getPermissionKeyCategoryHandle();
         }
 
         public static function setPermissionObject($object)
         {
             // Concrete\Core\Permission\Key\Key::setPermissionObject();
-            Concrete\Core\Permission\Key\Key::setPermissionObject($object);
+            return Concrete\Core\Permission\Key\Key::setPermissionObject($object);
         }
 
         public static function getPermissionObjectToCheck()
         {
             // Concrete\Core\Permission\Key\Key::getPermissionObjectToCheck();
-            Concrete\Core\Permission\Key\Key::getPermissionObjectToCheck();
+            return Concrete\Core\Permission\Key\Key::getPermissionObjectToCheck();
         }
 
         public static function getPermissionObject()
         {
             // Concrete\Core\Permission\Key\Key::getPermissionObject();
-            Concrete\Core\Permission\Key\Key::getPermissionObject();
+            return Concrete\Core\Permission\Key\Key::getPermissionObject();
         }
 
         public static function loadAll()
         {
             // Concrete\Core\Permission\Key\Key::loadAll();
-            Concrete\Core\Permission\Key\Key::loadAll();
+            return Concrete\Core\Permission\Key\Key::loadAll();
         }
 
         protected static function load($key, $loadBy = "pkID")
         {
             // Concrete\Core\Permission\Key\Key::load();
-            Concrete\Core\Permission\Key\Key::load($key, $loadBy);
+            return Concrete\Core\Permission\Key\Key::load($key, $loadBy);
         }
 
         public static function hasCustomOptionsForm()
         {
             // Concrete\Core\Permission\Key\Key::hasCustomOptionsForm();
-            Concrete\Core\Permission\Key\Key::hasCustomOptionsForm();
+            return Concrete\Core\Permission\Key\Key::hasCustomOptionsForm();
         }
 
         public static function getPackageID()
         {
             // Concrete\Core\Permission\Key\Key::getPackageID();
-            Concrete\Core\Permission\Key\Key::getPackageID();
+            return Concrete\Core\Permission\Key\Key::getPackageID();
         }
 
         public static function getPackageHandle()
         {
             // Concrete\Core\Permission\Key\Key::getPackageHandle();
-            Concrete\Core\Permission\Key\Key::getPackageHandle();
+            return Concrete\Core\Permission\Key\Key::getPackageHandle();
         }
 
         /**
@@ -18099,19 +18099,19 @@ namespace {
         public static function getList($pkCategoryHandle, $filters = null)
         {
             // Concrete\Core\Permission\Key\Key::getList();
-            Concrete\Core\Permission\Key\Key::getList($pkCategoryHandle, $filters);
+            return Concrete\Core\Permission\Key\Key::getList($pkCategoryHandle, $filters);
         }
 
         public static function export($axml)
         {
             // Concrete\Core\Permission\Key\Key::export();
-            Concrete\Core\Permission\Key\Key::export($axml);
+            return Concrete\Core\Permission\Key\Key::export($axml);
         }
 
         public static function exportList($xml)
         {
             // Concrete\Core\Permission\Key\Key::exportList();
-            Concrete\Core\Permission\Key\Key::exportList($xml);
+            return Concrete\Core\Permission\Key\Key::exportList($xml);
         }
 
         /**
@@ -18121,25 +18121,25 @@ namespace {
         public static function getListByPackage($pkg)
         {
             // Concrete\Core\Permission\Key\Key::getListByPackage();
-            Concrete\Core\Permission\Key\Key::getListByPackage($pkg);
+            return Concrete\Core\Permission\Key\Key::getListByPackage($pkg);
         }
 
         public static function import(SimpleXMLElement $pk)
         {
             // Concrete\Core\Permission\Key\Key::import();
-            Concrete\Core\Permission\Key\Key::import($pk);
+            return Concrete\Core\Permission\Key\Key::import($pk);
         }
 
         public static function getByID($pkID)
         {
             // Concrete\Core\Permission\Key\Key::getByID();
-            Concrete\Core\Permission\Key\Key::getByID($pkID);
+            return Concrete\Core\Permission\Key\Key::getByID($pkID);
         }
 
         public static function getByHandle($pkHandle)
         {
             // Concrete\Core\Permission\Key\Key::getByHandle();
-            Concrete\Core\Permission\Key\Key::getByHandle($pkHandle);
+            return Concrete\Core\Permission\Key\Key::getByHandle($pkHandle);
         }
 
         /**
@@ -18148,7 +18148,7 @@ namespace {
         public static function add($pkCategoryHandle, $pkHandle, $pkName, $pkDescription, $pkCanTriggerWorkflow, $pkHasCustomClass, $pkg = null)
         {
             // Concrete\Core\Permission\Key\Key::add();
-            Concrete\Core\Permission\Key\Key::add($pkCategoryHandle, $pkHandle, $pkName, $pkDescription, $pkCanTriggerWorkflow, $pkHasCustomClass, $pkg);
+            return Concrete\Core\Permission\Key\Key::add($pkCategoryHandle, $pkHandle, $pkName, $pkDescription, $pkCanTriggerWorkflow, $pkHasCustomClass, $pkg);
         }
 
         /**
@@ -18158,19 +18158,19 @@ namespace {
         public static function can()
         {
             // Concrete\Core\Permission\Key\Key::can();
-            Concrete\Core\Permission\Key\Key::can();
+            return Concrete\Core\Permission\Key\Key::can();
         }
 
         public static function validate()
         {
             // Concrete\Core\Permission\Key\Key::validate();
-            Concrete\Core\Permission\Key\Key::validate();
+            return Concrete\Core\Permission\Key\Key::validate();
         }
 
         public static function delete()
         {
             // Concrete\Core\Permission\Key\Key::delete();
-            Concrete\Core\Permission\Key\Key::delete();
+            return Concrete\Core\Permission\Key\Key::delete();
         }
 
         /**
@@ -18179,67 +18179,67 @@ namespace {
         public static function getAccessListItems()
         {
             // Concrete\Core\Permission\Key\Key::getAccessListItems();
-            Concrete\Core\Permission\Key\Key::getAccessListItems();
+            return Concrete\Core\Permission\Key\Key::getAccessListItems();
         }
 
         public static function getPermissionAssignmentObject()
         {
             // Concrete\Core\Permission\Key\Key::getPermissionAssignmentObject();
-            Concrete\Core\Permission\Key\Key::getPermissionAssignmentObject();
+            return Concrete\Core\Permission\Key\Key::getPermissionAssignmentObject();
         }
 
         public static function getPermissionAccessObject()
         {
             // Concrete\Core\Permission\Key\Key::getPermissionAccessObject();
-            Concrete\Core\Permission\Key\Key::getPermissionAccessObject();
+            return Concrete\Core\Permission\Key\Key::getPermissionAccessObject();
         }
 
         public static function getPermissionAccessID()
         {
             // Concrete\Core\Permission\Key\Key::getPermissionAccessID();
-            Concrete\Core\Permission\Key\Key::getPermissionAccessID();
+            return Concrete\Core\Permission\Key\Key::getPermissionAccessID();
         }
 
         public static function exportAccess($pxml)
         {
             // Concrete\Core\Permission\Key\Key::exportAccess();
-            Concrete\Core\Permission\Key\Key::exportAccess($pxml);
+            return Concrete\Core\Permission\Key\Key::exportAccess($pxml);
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -18250,145 +18250,145 @@ namespace {
         public static function getByID($pkCategoryID)
         {
             // Concrete\Core\Permission\Category::getByID();
-            Concrete\Core\Permission\Category::getByID($pkCategoryID);
+            return Concrete\Core\Permission\Category::getByID($pkCategoryID);
         }
 
         protected static function populateCategories()
         {
             // Concrete\Core\Permission\Category::populateCategories();
-            Concrete\Core\Permission\Category::populateCategories();
+            return Concrete\Core\Permission\Category::populateCategories();
         }
 
         public static function getByHandle($pkCategoryHandle)
         {
             // Concrete\Core\Permission\Category::getByHandle();
-            Concrete\Core\Permission\Category::getByHandle($pkCategoryHandle);
+            return Concrete\Core\Permission\Category::getByHandle($pkCategoryHandle);
         }
 
         public static function handleExists($pkHandle)
         {
             // Concrete\Core\Permission\Category::handleExists();
-            Concrete\Core\Permission\Category::handleExists($pkHandle);
+            return Concrete\Core\Permission\Category::handleExists($pkHandle);
         }
 
         public static function exportList($xml)
         {
             // Concrete\Core\Permission\Category::exportList();
-            Concrete\Core\Permission\Category::exportList($xml);
+            return Concrete\Core\Permission\Category::exportList($xml);
         }
 
         public static function getListByPackage($pkg)
         {
             // Concrete\Core\Permission\Category::getListByPackage();
-            Concrete\Core\Permission\Category::getListByPackage($pkg);
+            return Concrete\Core\Permission\Category::getListByPackage($pkg);
         }
 
         public static function getPermissionKeyByHandle($pkHandle)
         {
             // Concrete\Core\Permission\Category::getPermissionKeyByHandle();
-            Concrete\Core\Permission\Category::getPermissionKeyByHandle($pkHandle);
+            return Concrete\Core\Permission\Category::getPermissionKeyByHandle($pkHandle);
         }
 
         public static function getPermissionKeyByID($pkID)
         {
             // Concrete\Core\Permission\Category::getPermissionKeyByID();
-            Concrete\Core\Permission\Category::getPermissionKeyByID($pkID);
+            return Concrete\Core\Permission\Category::getPermissionKeyByID($pkID);
         }
 
         public static function getToolsURL($task = null)
         {
             // Concrete\Core\Permission\Category::getToolsURL();
-            Concrete\Core\Permission\Category::getToolsURL($task);
+            return Concrete\Core\Permission\Category::getToolsURL($task);
         }
 
         public static function getPermissionKeyCategoryID()
         {
             // Concrete\Core\Permission\Category::getPermissionKeyCategoryID();
-            Concrete\Core\Permission\Category::getPermissionKeyCategoryID();
+            return Concrete\Core\Permission\Category::getPermissionKeyCategoryID();
         }
 
         public static function getPermissionKeyCategoryHandle()
         {
             // Concrete\Core\Permission\Category::getPermissionKeyCategoryHandle();
-            Concrete\Core\Permission\Category::getPermissionKeyCategoryHandle();
+            return Concrete\Core\Permission\Category::getPermissionKeyCategoryHandle();
         }
 
         public static function getPackageID()
         {
             // Concrete\Core\Permission\Category::getPackageID();
-            Concrete\Core\Permission\Category::getPackageID();
+            return Concrete\Core\Permission\Category::getPackageID();
         }
 
         public static function getPackageHandle()
         {
             // Concrete\Core\Permission\Category::getPackageHandle();
-            Concrete\Core\Permission\Category::getPackageHandle();
+            return Concrete\Core\Permission\Category::getPackageHandle();
         }
 
         public static function delete()
         {
             // Concrete\Core\Permission\Category::delete();
-            Concrete\Core\Permission\Category::delete();
+            return Concrete\Core\Permission\Category::delete();
         }
 
         public static function associateAccessEntityType(Concrete\Core\Permission\Access\Entity\Type $pt)
         {
             // Concrete\Core\Permission\Category::associateAccessEntityType();
-            Concrete\Core\Permission\Category::associateAccessEntityType($pt);
+            return Concrete\Core\Permission\Category::associateAccessEntityType($pt);
         }
 
         public static function clearAccessEntityTypeCategories()
         {
             // Concrete\Core\Permission\Category::clearAccessEntityTypeCategories();
-            Concrete\Core\Permission\Category::clearAccessEntityTypeCategories();
+            return Concrete\Core\Permission\Category::clearAccessEntityTypeCategories();
         }
 
         public static function getList()
         {
             // Concrete\Core\Permission\Category::getList();
-            Concrete\Core\Permission\Category::getList();
+            return Concrete\Core\Permission\Category::getList();
         }
 
         public static function add($pkCategoryHandle, $pkg = null)
         {
             // Concrete\Core\Permission\Category::add();
-            Concrete\Core\Permission\Category::add($pkCategoryHandle, $pkg);
+            return Concrete\Core\Permission\Category::add($pkCategoryHandle, $pkg);
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -18399,169 +18399,169 @@ namespace {
         public static function setPermissionKey($permissionKey)
         {
             // Concrete\Core\Permission\Access\Access::setPermissionKey();
-            Concrete\Core\Permission\Access\Access::setPermissionKey($permissionKey);
+            return Concrete\Core\Permission\Access\Access::setPermissionKey($permissionKey);
         }
 
         public static function getPermissionObject()
         {
             // Concrete\Core\Permission\Access\Access::getPermissionObject();
-            Concrete\Core\Permission\Access\Access::getPermissionObject();
+            return Concrete\Core\Permission\Access\Access::getPermissionObject();
         }
 
         public static function getPermissionObjectToCheck()
         {
             // Concrete\Core\Permission\Access\Access::getPermissionObjectToCheck();
-            Concrete\Core\Permission\Access\Access::getPermissionObjectToCheck();
+            return Concrete\Core\Permission\Access\Access::getPermissionObjectToCheck();
         }
 
         public static function getPermissionAccessID()
         {
             // Concrete\Core\Permission\Access\Access::getPermissionAccessID();
-            Concrete\Core\Permission\Access\Access::getPermissionAccessID();
+            return Concrete\Core\Permission\Access\Access::getPermissionAccessID();
         }
 
         public static function isPermissionAccessInUse()
         {
             // Concrete\Core\Permission\Access\Access::isPermissionAccessInUse();
-            Concrete\Core\Permission\Access\Access::isPermissionAccessInUse();
+            return Concrete\Core\Permission\Access\Access::isPermissionAccessInUse();
         }
 
         protected static function deliverAccessListItems($q, $accessType, $filterEntities)
         {
             // Concrete\Core\Permission\Access\Access::deliverAccessListItems();
-            Concrete\Core\Permission\Access\Access::deliverAccessListItems($q, $accessType, $filterEntities);
+            return Concrete\Core\Permission\Access\Access::deliverAccessListItems($q, $accessType, $filterEntities);
         }
 
         public static function validateAndFilterAccessEntities($accessEntities)
         {
             // Concrete\Core\Permission\Access\Access::validateAndFilterAccessEntities();
-            Concrete\Core\Permission\Access\Access::validateAndFilterAccessEntities($accessEntities);
+            return Concrete\Core\Permission\Access\Access::validateAndFilterAccessEntities($accessEntities);
         }
 
         public static function validateAccessEntities($accessEntities)
         {
             // Concrete\Core\Permission\Access\Access::validateAccessEntities();
-            Concrete\Core\Permission\Access\Access::validateAccessEntities($accessEntities);
+            return Concrete\Core\Permission\Access\Access::validateAccessEntities($accessEntities);
         }
 
         public static function validate()
         {
             // Concrete\Core\Permission\Access\Access::validate();
-            Concrete\Core\Permission\Access\Access::validate();
+            return Concrete\Core\Permission\Access\Access::validate();
         }
 
         public static function createByMerge($permissions)
         {
             // Concrete\Core\Permission\Access\Access::createByMerge();
-            Concrete\Core\Permission\Access\Access::createByMerge($permissions);
+            return Concrete\Core\Permission\Access\Access::createByMerge($permissions);
         }
 
         public static function getAccessListItems($accessType = 10, $filterEntities = null)
         {
             // Concrete\Core\Permission\Access\Access::getAccessListItems();
-            Concrete\Core\Permission\Access\Access::getAccessListItems($accessType, $filterEntities);
+            return Concrete\Core\Permission\Access\Access::getAccessListItems($accessType, $filterEntities);
         }
 
         protected static function buildAssignmentFilterString($accessType, $filterEntities)
         {
             // Concrete\Core\Permission\Access\Access::buildAssignmentFilterString();
-            Concrete\Core\Permission\Access\Access::buildAssignmentFilterString($accessType, $filterEntities);
+            return Concrete\Core\Permission\Access\Access::buildAssignmentFilterString($accessType, $filterEntities);
         }
 
         public static function clearWorkflows()
         {
             // Concrete\Core\Permission\Access\Access::clearWorkflows();
-            Concrete\Core\Permission\Access\Access::clearWorkflows();
+            return Concrete\Core\Permission\Access\Access::clearWorkflows();
         }
 
         public static function attachWorkflow(Concrete\Core\Workflow\Workflow $wf)
         {
             // Concrete\Core\Permission\Access\Access::attachWorkflow();
-            Concrete\Core\Permission\Access\Access::attachWorkflow($wf);
+            return Concrete\Core\Permission\Access\Access::attachWorkflow($wf);
         }
 
         public static function getWorkflows()
         {
             // Concrete\Core\Permission\Access\Access::getWorkflows();
-            Concrete\Core\Permission\Access\Access::getWorkflows();
+            return Concrete\Core\Permission\Access\Access::getWorkflows();
         }
 
         public static function duplicate($newPA = null)
         {
             // Concrete\Core\Permission\Access\Access::duplicate();
-            Concrete\Core\Permission\Access\Access::duplicate($newPA);
+            return Concrete\Core\Permission\Access\Access::duplicate($newPA);
         }
 
         public static function markAsInUse()
         {
             // Concrete\Core\Permission\Access\Access::markAsInUse();
-            Concrete\Core\Permission\Access\Access::markAsInUse();
+            return Concrete\Core\Permission\Access\Access::markAsInUse();
         }
 
         public static function addListItem(Concrete\Core\Permission\Access\Entity\Entity $pae, $durationObject = null, $accessType = 10)
         {
             // Concrete\Core\Permission\Access\Access::addListItem();
-            Concrete\Core\Permission\Access\Access::addListItem($pae, $durationObject, $accessType);
+            return Concrete\Core\Permission\Access\Access::addListItem($pae, $durationObject, $accessType);
         }
 
         public static function removeListItem(Concrete\Core\Permission\Access\Entity\Entity $pe)
         {
             // Concrete\Core\Permission\Access\Access::removeListItem();
-            Concrete\Core\Permission\Access\Access::removeListItem($pe);
+            return Concrete\Core\Permission\Access\Access::removeListItem($pe);
         }
 
         public static function save()
         {
             // Concrete\Core\Permission\Access\Access::save();
-            Concrete\Core\Permission\Access\Access::save();
+            return Concrete\Core\Permission\Access\Access::save();
         }
 
         public static function create(Concrete\Core\Permission\Key\Key $pk)
         {
             // Concrete\Core\Permission\Access\Access::create();
-            Concrete\Core\Permission\Access\Access::create($pk);
+            return Concrete\Core\Permission\Access\Access::create($pk);
         }
 
         public static function getByID($paID, Concrete\Core\Permission\Key\Key $pk, $checkPA = "1")
         {
             // Concrete\Core\Permission\Access\Access::getByID();
-            Concrete\Core\Permission\Access\Access::getByID($paID, $pk, $checkPA);
+            return Concrete\Core\Permission\Access\Access::getByID($paID, $pk, $checkPA);
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -18578,7 +18578,7 @@ namespace {
         public static function getByUserID($uID, $login = null, $cacheItemsOnLogin = "1")
         {
             // Concrete\Core\User\User::getByUserID();
-            Concrete\Core\User\User::getByUserID($uID, $login, $cacheItemsOnLogin);
+            return Concrete\Core\User\User::getByUserID($uID, $login, $cacheItemsOnLogin);
         }
 
         /**
@@ -18588,127 +18588,127 @@ namespace {
         public static function loginByUserID($uID)
         {
             // Concrete\Core\User\User::loginByUserID();
-            Concrete\Core\User\User::loginByUserID($uID);
+            return Concrete\Core\User\User::loginByUserID($uID);
         }
 
         public static function isLoggedIn()
         {
             // Concrete\Core\User\User::isLoggedIn();
-            Concrete\Core\User\User::isLoggedIn();
+            return Concrete\Core\User\User::isLoggedIn();
         }
 
         public static function checkLogin()
         {
             // Concrete\Core\User\User::checkLogin();
-            Concrete\Core\User\User::checkLogin();
+            return Concrete\Core\User\User::checkLogin();
         }
 
         public static function recordLogin()
         {
             // Concrete\Core\User\User::recordLogin();
-            Concrete\Core\User\User::recordLogin();
+            return Concrete\Core\User\User::recordLogin();
         }
 
         public static function recordView($c)
         {
             // Concrete\Core\User\User::recordView();
-            Concrete\Core\User\User::recordView($c);
+            return Concrete\Core\User\User::recordView($c);
         }
 
         public static function encryptPassword($uPassword, $salt = null)
         {
             // Concrete\Core\User\User::encryptPassword();
-            Concrete\Core\User\User::encryptPassword($uPassword, $salt);
+            return Concrete\Core\User\User::encryptPassword($uPassword, $salt);
         }
 
         public static function legacyEncryptPassword($uPassword)
         {
             // Concrete\Core\User\User::legacyEncryptPassword();
-            Concrete\Core\User\User::legacyEncryptPassword($uPassword);
+            return Concrete\Core\User\User::legacyEncryptPassword($uPassword);
         }
 
         public static function isActive()
         {
             // Concrete\Core\User\User::isActive();
-            Concrete\Core\User\User::isActive();
+            return Concrete\Core\User\User::isActive();
         }
 
         public static function isSuperUser()
         {
             // Concrete\Core\User\User::isSuperUser();
-            Concrete\Core\User\User::isSuperUser();
+            return Concrete\Core\User\User::isSuperUser();
         }
 
         public static function getLastOnline()
         {
             // Concrete\Core\User\User::getLastOnline();
-            Concrete\Core\User\User::getLastOnline();
+            return Concrete\Core\User\User::getLastOnline();
         }
 
         public static function getUserName()
         {
             // Concrete\Core\User\User::getUserName();
-            Concrete\Core\User\User::getUserName();
+            return Concrete\Core\User\User::getUserName();
         }
 
         public static function isRegistered()
         {
             // Concrete\Core\User\User::isRegistered();
-            Concrete\Core\User\User::isRegistered();
+            return Concrete\Core\User\User::isRegistered();
         }
 
         public static function getUserID()
         {
             // Concrete\Core\User\User::getUserID();
-            Concrete\Core\User\User::getUserID();
+            return Concrete\Core\User\User::getUserID();
         }
 
         public static function getUserTimezone()
         {
             // Concrete\Core\User\User::getUserTimezone();
-            Concrete\Core\User\User::getUserTimezone();
+            return Concrete\Core\User\User::getUserTimezone();
         }
 
         public static function setAuthTypeCookie($authType)
         {
             // Concrete\Core\User\User::setAuthTypeCookie();
-            Concrete\Core\User\User::setAuthTypeCookie($authType);
+            return Concrete\Core\User\User::setAuthTypeCookie($authType);
         }
 
         public static function setLastAuthType(Concrete\Core\Authentication\AuthenticationType $at)
         {
             // Concrete\Core\User\User::setLastAuthType();
-            Concrete\Core\User\User::setLastAuthType($at);
+            return Concrete\Core\User\User::setLastAuthType($at);
         }
 
         public static function getLastAuthType()
         {
             // Concrete\Core\User\User::getLastAuthType();
-            Concrete\Core\User\User::getLastAuthType();
+            return Concrete\Core\User\User::getLastAuthType();
         }
 
         public static function unloadAuthenticationTypes()
         {
             // Concrete\Core\User\User::unloadAuthenticationTypes();
-            Concrete\Core\User\User::unloadAuthenticationTypes();
+            return Concrete\Core\User\User::unloadAuthenticationTypes();
         }
 
         public static function logout($hard = "1")
         {
             // Concrete\Core\User\User::logout();
-            Concrete\Core\User\User::logout($hard);
+            return Concrete\Core\User\User::logout($hard);
         }
 
         public static function checkUserForeverCookie()
         {
             // Concrete\Core\User\User::checkUserForeverCookie();
-            Concrete\Core\User\User::checkUserForeverCookie();
+            return Concrete\Core\User\User::checkUserForeverCookie();
         }
 
         public static function verifyAuthTypeCookie()
         {
             // Concrete\Core\User\User::verifyAuthTypeCookie();
-            Concrete\Core\User\User::verifyAuthTypeCookie();
+            return Concrete\Core\User\User::verifyAuthTypeCookie();
         }
 
         /**
@@ -18718,19 +18718,19 @@ namespace {
         public static function setUserForeverCookie()
         {
             // Concrete\Core\User\User::setUserForeverCookie();
-            Concrete\Core\User\User::setUserForeverCookie();
+            return Concrete\Core\User\User::setUserForeverCookie();
         }
 
         public static function getUserGroupObjects()
         {
             // Concrete\Core\User\User::getUserGroupObjects();
-            Concrete\Core\User\User::getUserGroupObjects();
+            return Concrete\Core\User\User::getUserGroupObjects();
         }
 
         public static function getUserGroups()
         {
             // Concrete\Core\User\User::getUserGroups();
-            Concrete\Core\User\User::getUserGroups();
+            return Concrete\Core\User\User::getUserGroups();
         }
 
         /**
@@ -18739,7 +18739,7 @@ namespace {
         public static function setUserDefaultLanguage($lang)
         {
             // Concrete\Core\User\User::setUserDefaultLanguage();
-            Concrete\Core\User\User::setUserDefaultLanguage($lang);
+            return Concrete\Core\User\User::setUserDefaultLanguage($lang);
         }
 
         /**
@@ -18748,7 +18748,7 @@ namespace {
         public static function getUserDefaultLanguage()
         {
             // Concrete\Core\User\User::getUserDefaultLanguage();
-            Concrete\Core\User\User::getUserDefaultLanguage();
+            return Concrete\Core\User\User::getUserDefaultLanguage();
         }
 
         /**
@@ -18758,97 +18758,97 @@ namespace {
         public static function getUserLanguageToDisplay()
         {
             // Concrete\Core\User\User::getUserLanguageToDisplay();
-            Concrete\Core\User\User::getUserLanguageToDisplay();
+            return Concrete\Core\User\User::getUserLanguageToDisplay();
         }
 
         public static function refreshUserGroups()
         {
             // Concrete\Core\User\User::refreshUserGroups();
-            Concrete\Core\User\User::refreshUserGroups();
+            return Concrete\Core\User\User::refreshUserGroups();
         }
 
         public static function getUserAccessEntityObjects()
         {
             // Concrete\Core\User\User::getUserAccessEntityObjects();
-            Concrete\Core\User\User::getUserAccessEntityObjects();
+            return Concrete\Core\User\User::getUserAccessEntityObjects();
         }
 
         public static function _getUserGroups($disableLogin = null)
         {
             // Concrete\Core\User\User::_getUserGroups();
-            Concrete\Core\User\User::_getUserGroups($disableLogin);
+            return Concrete\Core\User\User::_getUserGroups($disableLogin);
         }
 
         public static function enterGroup($g)
         {
             // Concrete\Core\User\User::enterGroup();
-            Concrete\Core\User\User::enterGroup($g);
+            return Concrete\Core\User\User::enterGroup($g);
         }
 
         public static function exitGroup($g)
         {
             // Concrete\Core\User\User::exitGroup();
-            Concrete\Core\User\User::exitGroup($g);
+            return Concrete\Core\User\User::exitGroup($g);
         }
 
         public static function inGroup($g)
         {
             // Concrete\Core\User\User::inGroup();
-            Concrete\Core\User\User::inGroup($g);
+            return Concrete\Core\User\User::inGroup($g);
         }
 
         public static function loadMasterCollectionEdit($mcID, $ocID)
         {
             // Concrete\Core\User\User::loadMasterCollectionEdit();
-            Concrete\Core\User\User::loadMasterCollectionEdit($mcID, $ocID);
+            return Concrete\Core\User\User::loadMasterCollectionEdit($mcID, $ocID);
         }
 
         public static function loadCollectionEdit(&$c)
         {
             // Concrete\Core\User\User::loadCollectionEdit();
-            Concrete\Core\User\User::loadCollectionEdit($c);
+            return Concrete\Core\User\User::loadCollectionEdit($c);
         }
 
         public static function unloadCollectionEdit($removeCache = "1")
         {
             // Concrete\Core\User\User::unloadCollectionEdit();
-            Concrete\Core\User\User::unloadCollectionEdit($removeCache);
+            return Concrete\Core\User\User::unloadCollectionEdit($removeCache);
         }
 
         public static function config($cfKey)
         {
             // Concrete\Core\User\User::config();
-            Concrete\Core\User\User::config($cfKey);
+            return Concrete\Core\User\User::config($cfKey);
         }
 
         public static function markPreviousFrontendPage(Concrete\Core\Page\Page $c)
         {
             // Concrete\Core\User\User::markPreviousFrontendPage();
-            Concrete\Core\User\User::markPreviousFrontendPage($c);
+            return Concrete\Core\User\User::markPreviousFrontendPage($c);
         }
 
         public static function getPreviousFrontendPageID()
         {
             // Concrete\Core\User\User::getPreviousFrontendPageID();
-            Concrete\Core\User\User::getPreviousFrontendPageID();
+            return Concrete\Core\User\User::getPreviousFrontendPageID();
         }
 
         public static function saveConfig($cfKey, $cfValue)
         {
             // Concrete\Core\User\User::saveConfig();
-            Concrete\Core\User\User::saveConfig($cfKey, $cfValue);
+            return Concrete\Core\User\User::saveConfig($cfKey, $cfValue);
         }
 
         public static function refreshCollectionEdit(&$c)
         {
             // Concrete\Core\User\User::refreshCollectionEdit();
-            Concrete\Core\User\User::refreshCollectionEdit($c);
+            return Concrete\Core\User\User::refreshCollectionEdit($c);
         }
 
         public static function forceCollectionCheckInAll()
         {
             // Concrete\Core\User\User::forceCollectionCheckInAll();
-            Concrete\Core\User\User::forceCollectionCheckInAll();
+            return Concrete\Core\User\User::forceCollectionCheckInAll();
         }
 
         /**
@@ -18859,43 +18859,43 @@ namespace {
         public static function getUserPasswordHasher()
         {
             // Concrete\Core\User\User::getUserPasswordHasher();
-            Concrete\Core\User\User::getUserPasswordHasher();
+            return Concrete\Core\User\User::getUserPasswordHasher();
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -18906,25 +18906,25 @@ namespace {
         public static function getPermissionObjectIdentifier()
         {
             // Concrete\Core\User\UserInfo::getPermissionObjectIdentifier();
-            Concrete\Core\User\UserInfo::getPermissionObjectIdentifier();
+            return Concrete\Core\User\UserInfo::getPermissionObjectIdentifier();
         }
 
         public static function getPermissionResponseClassName()
         {
             // Concrete\Core\User\UserInfo::getPermissionResponseClassName();
-            Concrete\Core\User\UserInfo::getPermissionResponseClassName();
+            return Concrete\Core\User\UserInfo::getPermissionResponseClassName();
         }
 
         public static function getPermissionAssignmentClassName()
         {
             // Concrete\Core\User\UserInfo::getPermissionAssignmentClassName();
-            Concrete\Core\User\UserInfo::getPermissionAssignmentClassName();
+            return Concrete\Core\User\UserInfo::getPermissionAssignmentClassName();
         }
 
         public static function getPermissionObjectKeyCategoryHandle()
         {
             // Concrete\Core\User\UserInfo::getPermissionObjectKeyCategoryHandle();
-            Concrete\Core\User\UserInfo::getPermissionObjectKeyCategoryHandle();
+            return Concrete\Core\User\UserInfo::getPermissionObjectKeyCategoryHandle();
         }
 
         /**
@@ -18935,7 +18935,7 @@ namespace {
         public static function getByID($uID)
         {
             // Concrete\Core\User\UserInfo::getByID();
-            Concrete\Core\User\UserInfo::getByID($uID);
+            return Concrete\Core\User\UserInfo::getByID($uID);
         }
 
         /**
@@ -18946,7 +18946,7 @@ namespace {
         public static function getByUserName($uName)
         {
             // Concrete\Core\User\UserInfo::getByUserName();
-            Concrete\Core\User\UserInfo::getByUserName($uName);
+            return Concrete\Core\User\UserInfo::getByUserName($uName);
         }
 
         /**
@@ -18957,7 +18957,7 @@ namespace {
         public static function getByEmail($uEmail)
         {
             // Concrete\Core\User\UserInfo::getByEmail();
-            Concrete\Core\User\UserInfo::getByEmail($uEmail);
+            return Concrete\Core\User\UserInfo::getByEmail($uEmail);
         }
 
         /**
@@ -18968,7 +18968,7 @@ namespace {
         public static function getByOpenID($uOpenID)
         {
             // Concrete\Core\User\UserInfo::getByOpenID();
-            Concrete\Core\User\UserInfo::getByOpenID($uOpenID);
+            return Concrete\Core\User\UserInfo::getByOpenID($uOpenID);
         }
 
         /**
@@ -18979,13 +18979,13 @@ namespace {
         public static function getByValidationHash($uHash, $unredeemedHashesOnly = "1")
         {
             // Concrete\Core\User\UserInfo::getByValidationHash();
-            Concrete\Core\User\UserInfo::getByValidationHash($uHash, $unredeemedHashesOnly);
+            return Concrete\Core\User\UserInfo::getByValidationHash($uHash, $unredeemedHashesOnly);
         }
 
         public static function getUserBadges()
         {
             // Concrete\Core\User\UserInfo::getUserBadges();
-            Concrete\Core\User\UserInfo::getUserBadges();
+            return Concrete\Core\User\UserInfo::getUserBadges();
         }
 
         /**
@@ -18996,13 +18996,13 @@ namespace {
         public static function add($data, $options = null)
         {
             // Concrete\Core\User\UserInfo::add();
-            Concrete\Core\User\UserInfo::add($data, $options);
+            return Concrete\Core\User\UserInfo::add($data, $options);
         }
 
         public static function addSuperUser($uPasswordEncrypted, $uEmail)
         {
             // Concrete\Core\User\UserInfo::addSuperUser();
-            Concrete\Core\User\UserInfo::addSuperUser($uPasswordEncrypted, $uEmail);
+            return Concrete\Core\User\UserInfo::addSuperUser($uPasswordEncrypted, $uEmail);
         }
 
         /**
@@ -19012,7 +19012,7 @@ namespace {
         public static function delete()
         {
             // Concrete\Core\User\UserInfo::delete();
-            Concrete\Core\User\UserInfo::delete();
+            return Concrete\Core\User\UserInfo::delete();
         }
 
         /**
@@ -19023,25 +19023,25 @@ namespace {
         public static function setGroupMemberType($type)
         {
             // Concrete\Core\User\UserInfo::setGroupMemberType();
-            Concrete\Core\User\UserInfo::setGroupMemberType($type);
+            return Concrete\Core\User\UserInfo::setGroupMemberType($type);
         }
 
         public static function getGroupMemberType()
         {
             // Concrete\Core\User\UserInfo::getGroupMemberType();
-            Concrete\Core\User\UserInfo::getGroupMemberType();
+            return Concrete\Core\User\UserInfo::getGroupMemberType();
         }
 
         public static function canReadPrivateMessage($msg)
         {
             // Concrete\Core\User\UserInfo::canReadPrivateMessage();
-            Concrete\Core\User\UserInfo::canReadPrivateMessage($msg);
+            return Concrete\Core\User\UserInfo::canReadPrivateMessage($msg);
         }
 
         public static function sendPrivateMessage($recipient, $subject, $text, $inReplyTo = null)
         {
             // Concrete\Core\User\UserInfo::sendPrivateMessage();
-            Concrete\Core\User\UserInfo::sendPrivateMessage($recipient, $subject, $text, $inReplyTo);
+            return Concrete\Core\User\UserInfo::sendPrivateMessage($recipient, $subject, $text, $inReplyTo);
         }
 
         /**
@@ -19051,7 +19051,7 @@ namespace {
         public static function getUserObject()
         {
             // Concrete\Core\User\UserInfo::getUserObject();
-            Concrete\Core\User\UserInfo::getUserObject();
+            return Concrete\Core\User\UserInfo::getUserObject();
         }
 
         /**
@@ -19060,19 +19060,19 @@ namespace {
         public static function setAttribute($ak, $value)
         {
             // Concrete\Core\User\UserInfo::setAttribute();
-            Concrete\Core\User\UserInfo::setAttribute($ak, $value);
+            return Concrete\Core\User\UserInfo::setAttribute($ak, $value);
         }
 
         public static function clearAttribute($ak)
         {
             // Concrete\Core\User\UserInfo::clearAttribute();
-            Concrete\Core\User\UserInfo::clearAttribute($ak);
+            return Concrete\Core\User\UserInfo::clearAttribute($ak);
         }
 
         public static function reindex()
         {
             // Concrete\Core\User\UserInfo::reindex();
-            Concrete\Core\User\UserInfo::reindex();
+            return Concrete\Core\User\UserInfo::reindex();
         }
 
         /**
@@ -19081,31 +19081,31 @@ namespace {
         public static function getAttribute($ak, $displayMode = null)
         {
             // Concrete\Core\User\UserInfo::getAttribute();
-            Concrete\Core\User\UserInfo::getAttribute($ak, $displayMode);
+            return Concrete\Core\User\UserInfo::getAttribute($ak, $displayMode);
         }
 
         public static function getAttributeField($ak)
         {
             // Concrete\Core\User\UserInfo::getAttributeField();
-            Concrete\Core\User\UserInfo::getAttributeField($ak);
+            return Concrete\Core\User\UserInfo::getAttributeField($ak);
         }
 
         public static function getAttributeValueObject($ak, $createIfNotFound = null)
         {
             // Concrete\Core\User\UserInfo::getAttributeValueObject();
-            Concrete\Core\User\UserInfo::getAttributeValueObject($ak, $createIfNotFound);
+            return Concrete\Core\User\UserInfo::getAttributeValueObject($ak, $createIfNotFound);
         }
 
         public static function update($data)
         {
             // Concrete\Core\User\UserInfo::update();
-            Concrete\Core\User\UserInfo::update($data);
+            return Concrete\Core\User\UserInfo::update($data);
         }
 
         public static function updateGroups($groupArray)
         {
             // Concrete\Core\User\UserInfo::updateGroups();
-            Concrete\Core\User\UserInfo::updateGroups($groupArray);
+            return Concrete\Core\User\UserInfo::updateGroups($groupArray);
         }
 
         /**
@@ -19115,133 +19115,133 @@ namespace {
         public static function register($data)
         {
             // Concrete\Core\User\UserInfo::register();
-            Concrete\Core\User\UserInfo::register($data);
+            return Concrete\Core\User\UserInfo::register($data);
         }
 
         public static function setupValidation()
         {
             // Concrete\Core\User\UserInfo::setupValidation();
-            Concrete\Core\User\UserInfo::setupValidation();
+            return Concrete\Core\User\UserInfo::setupValidation();
         }
 
         public static function markValidated()
         {
             // Concrete\Core\User\UserInfo::markValidated();
-            Concrete\Core\User\UserInfo::markValidated();
+            return Concrete\Core\User\UserInfo::markValidated();
         }
 
         public static function changePassword($newPassword)
         {
             // Concrete\Core\User\UserInfo::changePassword();
-            Concrete\Core\User\UserInfo::changePassword($newPassword);
+            return Concrete\Core\User\UserInfo::changePassword($newPassword);
         }
 
         public static function activate()
         {
             // Concrete\Core\User\UserInfo::activate();
-            Concrete\Core\User\UserInfo::activate();
+            return Concrete\Core\User\UserInfo::activate();
         }
 
         public static function deactivate()
         {
             // Concrete\Core\User\UserInfo::deactivate();
-            Concrete\Core\User\UserInfo::deactivate();
+            return Concrete\Core\User\UserInfo::deactivate();
         }
 
         public static function resetUserPassword()
         {
             // Concrete\Core\User\UserInfo::resetUserPassword();
-            Concrete\Core\User\UserInfo::resetUserPassword();
+            return Concrete\Core\User\UserInfo::resetUserPassword();
         }
 
         public static function hasAvatar()
         {
             // Concrete\Core\User\UserInfo::hasAvatar();
-            Concrete\Core\User\UserInfo::hasAvatar();
+            return Concrete\Core\User\UserInfo::hasAvatar();
         }
 
         public static function getLastLogin()
         {
             // Concrete\Core\User\UserInfo::getLastLogin();
-            Concrete\Core\User\UserInfo::getLastLogin();
+            return Concrete\Core\User\UserInfo::getLastLogin();
         }
 
         public static function getLastIPAddress()
         {
             // Concrete\Core\User\UserInfo::getLastIPAddress();
-            Concrete\Core\User\UserInfo::getLastIPAddress();
+            return Concrete\Core\User\UserInfo::getLastIPAddress();
         }
 
         public static function getPreviousLogin()
         {
             // Concrete\Core\User\UserInfo::getPreviousLogin();
-            Concrete\Core\User\UserInfo::getPreviousLogin();
+            return Concrete\Core\User\UserInfo::getPreviousLogin();
         }
 
         public static function isActive()
         {
             // Concrete\Core\User\UserInfo::isActive();
-            Concrete\Core\User\UserInfo::isActive();
+            return Concrete\Core\User\UserInfo::isActive();
         }
 
         public static function isValidated()
         {
             // Concrete\Core\User\UserInfo::isValidated();
-            Concrete\Core\User\UserInfo::isValidated();
+            return Concrete\Core\User\UserInfo::isValidated();
         }
 
         public static function isFullRecord()
         {
             // Concrete\Core\User\UserInfo::isFullRecord();
-            Concrete\Core\User\UserInfo::isFullRecord();
+            return Concrete\Core\User\UserInfo::isFullRecord();
         }
 
         public static function getNumLogins()
         {
             // Concrete\Core\User\UserInfo::getNumLogins();
-            Concrete\Core\User\UserInfo::getNumLogins();
+            return Concrete\Core\User\UserInfo::getNumLogins();
         }
 
         public static function getUserID()
         {
             // Concrete\Core\User\UserInfo::getUserID();
-            Concrete\Core\User\UserInfo::getUserID();
+            return Concrete\Core\User\UserInfo::getUserID();
         }
 
         public static function getUserName()
         {
             // Concrete\Core\User\UserInfo::getUserName();
-            Concrete\Core\User\UserInfo::getUserName();
+            return Concrete\Core\User\UserInfo::getUserName();
         }
 
         public static function getUserDisplayName()
         {
             // Concrete\Core\User\UserInfo::getUserDisplayName();
-            Concrete\Core\User\UserInfo::getUserDisplayName();
+            return Concrete\Core\User\UserInfo::getUserDisplayName();
         }
 
         public static function getUserPassword()
         {
             // Concrete\Core\User\UserInfo::getUserPassword();
-            Concrete\Core\User\UserInfo::getUserPassword();
+            return Concrete\Core\User\UserInfo::getUserPassword();
         }
 
         public static function getUserEmail()
         {
             // Concrete\Core\User\UserInfo::getUserEmail();
-            Concrete\Core\User\UserInfo::getUserEmail();
+            return Concrete\Core\User\UserInfo::getUserEmail();
         }
 
         public static function getUserTimezone()
         {
             // Concrete\Core\User\UserInfo::getUserTimezone();
-            Concrete\Core\User\UserInfo::getUserTimezone();
+            return Concrete\Core\User\UserInfo::getUserTimezone();
         }
 
         public static function getUserDefaultLanguage()
         {
             // Concrete\Core\User\UserInfo::getUserDefaultLanguage();
-            Concrete\Core\User\UserInfo::getUserDefaultLanguage();
+            return Concrete\Core\User\UserInfo::getUserDefaultLanguage();
         }
 
         /**
@@ -19253,13 +19253,13 @@ namespace {
         public static function getUserDateAdded($type = "system", $datemask = "Y-m-d H:i:s")
         {
             // Concrete\Core\User\UserInfo::getUserDateAdded();
-            Concrete\Core\User\UserInfo::getUserDateAdded($type, $datemask);
+            return Concrete\Core\User\UserInfo::getUserDateAdded($type, $datemask);
         }
 
         public static function getUserStartDate($type = "system")
         {
             // Concrete\Core\User\UserInfo::getUserStartDate();
-            Concrete\Core\User\UserInfo::getUserStartDate($type);
+            return Concrete\Core\User\UserInfo::getUserStartDate($type);
         }
 
         /**
@@ -19271,49 +19271,49 @@ namespace {
         public static function getLastOnline($type = "system")
         {
             // Concrete\Core\User\UserInfo::getLastOnline();
-            Concrete\Core\User\UserInfo::getLastOnline($type);
+            return Concrete\Core\User\UserInfo::getLastOnline($type);
         }
 
         public static function getUserEndDate($type = "system")
         {
             // Concrete\Core\User\UserInfo::getUserEndDate();
-            Concrete\Core\User\UserInfo::getUserEndDate($type);
+            return Concrete\Core\User\UserInfo::getUserEndDate($type);
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -19333,13 +19333,13 @@ namespace {
         public static function filterByUserName($username)
         {
             // Concrete\Core\User\UserList::filterByUserName();
-            Concrete\Core\User\UserList::filterByUserName($username);
+            return Concrete\Core\User\UserList::filterByUserName($username);
         }
 
         public static function filterByKeywords($keywords)
         {
             // Concrete\Core\User\UserList::filterByKeywords();
-            Concrete\Core\User\UserList::filterByKeywords($keywords);
+            return Concrete\Core\User\UserList::filterByKeywords($keywords);
         }
 
         /**
@@ -19351,25 +19351,25 @@ namespace {
         public static function filterByGroup($group = null, $inGroup = "1")
         {
             // Concrete\Core\User\UserList::filterByGroup();
-            Concrete\Core\User\UserList::filterByGroup($group, $inGroup);
+            return Concrete\Core\User\UserList::filterByGroup($group, $inGroup);
         }
 
         public static function excludeUsers($uo)
         {
             // Concrete\Core\User\UserList::excludeUsers();
-            Concrete\Core\User\UserList::excludeUsers($uo);
+            return Concrete\Core\User\UserList::excludeUsers($uo);
         }
 
         public static function filterByGroupID($gID)
         {
             // Concrete\Core\User\UserList::filterByGroupID();
-            Concrete\Core\User\UserList::filterByGroupID($gID);
+            return Concrete\Core\User\UserList::filterByGroupID($gID);
         }
 
         public static function filterByDateAdded($date, $comparison = "=")
         {
             // Concrete\Core\User\UserList::filterByDateAdded();
-            Concrete\Core\User\UserList::filterByDateAdded($date, $comparison);
+            return Concrete\Core\User\UserList::filterByDateAdded($date, $comparison);
         }
 
         /**
@@ -19379,7 +19379,7 @@ namespace {
         public static function get($itemsToGet = 100, $offset = null)
         {
             // Concrete\Core\User\UserList::get();
-            Concrete\Core\User\UserList::get($itemsToGet, $offset);
+            return Concrete\Core\User\UserList::get($itemsToGet, $offset);
         }
 
         /**
@@ -19390,79 +19390,79 @@ namespace {
         public static function getUserIDs($itemsToGet = 100, $offset = null)
         {
             // Concrete\Core\User\UserList::getUserIDs();
-            Concrete\Core\User\UserList::getUserIDs($itemsToGet, $offset);
+            return Concrete\Core\User\UserList::getUserIDs($itemsToGet, $offset);
         }
 
         public static function getTotal()
         {
             // Concrete\Core\User\UserList::getTotal();
-            Concrete\Core\User\UserList::getTotal();
+            return Concrete\Core\User\UserList::getTotal();
         }
 
         public static function filterByIsActive($val)
         {
             // Concrete\Core\User\UserList::filterByIsActive();
-            Concrete\Core\User\UserList::filterByIsActive($val);
+            return Concrete\Core\User\UserList::filterByIsActive($val);
         }
 
         protected static function createQuery()
         {
             // Concrete\Core\User\UserList::createQuery();
-            Concrete\Core\User\UserList::createQuery();
+            return Concrete\Core\User\UserList::createQuery();
         }
 
         protected static function setBaseQuery()
         {
             // Concrete\Core\User\UserList::setBaseQuery();
-            Concrete\Core\User\UserList::setBaseQuery();
+            return Concrete\Core\User\UserList::setBaseQuery();
         }
 
         public static function debug($dbg = "1")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
         }
 
         protected static function setQuery($query)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery($query);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setQuery($query);
         }
 
         protected static function getQuery()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getQuery();
         }
 
         public static function addToQuery($query)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery($query);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::addToQuery($query);
         }
 
         protected static function setupAutoSort()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAutoSort();
         }
 
         protected static function executeBase()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::executeBase();
         }
 
         protected static function setupSortByString()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupSortByString();
         }
 
         protected static function setupAttributeSort()
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeSort();
         }
 
         /**
@@ -19471,121 +19471,121 @@ namespace {
         public static function filter($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filter($column, $value, $comparison);
         }
 
         public static function getSearchResultsClass($field)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass($field);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSearchResultsClass($field);
         }
 
         public static function sortBy($key, $dir = "asc")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy($key, $dir);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::sortBy($key, $dir);
         }
 
         public static function groupBy($key)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy($key);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::groupBy($key);
         }
 
         public static function having($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
         }
 
         public static function getSortByURL($column, $dir = "asc", $baseURL = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
         }
 
         protected static function setupAttributeFilters($join)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters($join);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::setupAttributeFilters($join);
         }
 
         public static function filterByAttribute($column, $value, $comparison = "=")
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute();
-            Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
+            return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
         }
 
         public static function enableStickySearchRequest($namespace = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
+            return Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
         }
 
         public static function getQueryStringPagingVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringPagingVariable();
         }
 
         public static function getQueryStringSortVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortVariable();
         }
 
         public static function getQueryStringSortDirectionVariable()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
-            Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
+            return Concrete\Core\Foundation\Collection\ItemList::getQueryStringSortDirectionVariable();
         }
 
         protected static function getStickySearchNameSpace()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
-            Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
+            return Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
         }
 
         public static function resetSearchRequest($namespace = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
+            return Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
         }
 
         public static function addToSearchRequest($key, $value)
         {
             // Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest($key, $value);
+            return Concrete\Core\Foundation\Collection\ItemList::addToSearchRequest($key, $value);
         }
 
         public static function getSearchRequest()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
-            Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
+            return Concrete\Core\Foundation\Collection\ItemList::getSearchRequest();
         }
 
         public static function setItemsPerPage($num)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage();
-            Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage($num);
+            return Concrete\Core\Foundation\Collection\ItemList::setItemsPerPage($num);
         }
 
         public static function getItemsPerPage()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
-            Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
+            return Concrete\Core\Foundation\Collection\ItemList::getItemsPerPage();
         }
 
         public static function setItems($items)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setItems();
-            Concrete\Core\Foundation\Collection\ItemList::setItems($items);
+            return Concrete\Core\Foundation\Collection\ItemList::setItems($items);
         }
 
         public static function setNameSpace($ns)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setNameSpace();
-            Concrete\Core\Foundation\Collection\ItemList::setNameSpace($ns);
+            return Concrete\Core\Foundation\Collection\ItemList::setNameSpace($ns);
         }
 
         /**
@@ -19594,13 +19594,13 @@ namespace {
         public static function getPage($page = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPage();
-            Concrete\Core\Foundation\Collection\ItemList::getPage($page);
+            return Concrete\Core\Foundation\Collection\ItemList::getPage($page);
         }
 
         protected static function setCurrentPage($page = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setCurrentPage();
-            Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
+            return Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
         }
 
         /**
@@ -19609,37 +19609,37 @@ namespace {
         public static function displaySummary($right_content = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displaySummary();
-            Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
+            return Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
         }
 
         public static function isActiveSortColumn($column)
         {
             // Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn();
-            Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn($column);
+            return Concrete\Core\Foundation\Collection\ItemList::isActiveSortColumn($column);
         }
 
         public static function getActiveSortColumn()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
-            Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
+            return Concrete\Core\Foundation\Collection\ItemList::getActiveSortColumn();
         }
 
         public static function getActiveSortDirection()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
-            Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
+            return Concrete\Core\Foundation\Collection\ItemList::getActiveSortDirection();
         }
 
         public static function requiresPaging()
         {
             // Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
-            Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
+            return Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
         }
 
         public static function getPagination($url = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPagination();
-            Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
         }
 
         /**
@@ -19647,7 +19647,7 @@ namespace {
         public static function displayPagingV2($script = null, $return = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPagingV2();
-            Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
         }
 
         /**
@@ -19655,7 +19655,7 @@ namespace {
         public static function displayPaging($script = null, $return = null, $additionalVars = null)
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPaging();
-            Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
+            return Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
         }
 
         /**
@@ -19664,19 +19664,19 @@ namespace {
         public static function getSummary()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSummary();
-            Concrete\Core\Foundation\Collection\ItemList::getSummary();
+            return Concrete\Core\Foundation\Collection\ItemList::getSummary();
         }
 
         public static function getSortBy()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSortBy();
-            Concrete\Core\Foundation\Collection\ItemList::getSortBy();
+            return Concrete\Core\Foundation\Collection\ItemList::getSortBy();
         }
 
         public static function getSortByDirection()
         {
             // Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
-            Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
+            return Concrete\Core\Foundation\Collection\ItemList::getSortByDirection();
         }
 
         /**
@@ -19689,7 +19689,7 @@ namespace {
         public static function sortByMultiple()
         {
             // Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
-            Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
+            return Concrete\Core\Foundation\Collection\ItemList::sortByMultiple();
         }
 
     }
@@ -19700,187 +19700,187 @@ namespace {
         public static function getInstallRoutines()
         {
             // Concrete\Core\Package\StartingPointPackage::getInstallRoutines();
-            Concrete\Core\Package\StartingPointPackage::getInstallRoutines();
+            return Concrete\Core\Package\StartingPointPackage::getInstallRoutines();
         }
 
         public static function add_home_page()
         {
             // Concrete\Core\Package\StartingPointPackage::add_home_page();
-            Concrete\Core\Package\StartingPointPackage::add_home_page();
+            return Concrete\Core\Package\StartingPointPackage::add_home_page();
         }
 
         public static function precache()
         {
             // Concrete\Core\Package\StartingPointPackage::precache();
-            Concrete\Core\Package\StartingPointPackage::precache();
+            return Concrete\Core\Package\StartingPointPackage::precache();
         }
 
         public static function install_attributes()
         {
             // Concrete\Core\Package\StartingPointPackage::install_attributes();
-            Concrete\Core\Package\StartingPointPackage::install_attributes();
+            return Concrete\Core\Package\StartingPointPackage::install_attributes();
         }
 
         public static function install_dashboard()
         {
             // Concrete\Core\Package\StartingPointPackage::install_dashboard();
-            Concrete\Core\Package\StartingPointPackage::install_dashboard();
+            return Concrete\Core\Package\StartingPointPackage::install_dashboard();
         }
 
         public static function install_gathering()
         {
             // Concrete\Core\Package\StartingPointPackage::install_gathering();
-            Concrete\Core\Package\StartingPointPackage::install_gathering();
+            return Concrete\Core\Package\StartingPointPackage::install_gathering();
         }
 
         public static function install_page_types()
         {
             // Concrete\Core\Package\StartingPointPackage::install_page_types();
-            Concrete\Core\Package\StartingPointPackage::install_page_types();
+            return Concrete\Core\Package\StartingPointPackage::install_page_types();
         }
 
         public static function install_page_templates()
         {
             // Concrete\Core\Package\StartingPointPackage::install_page_templates();
-            Concrete\Core\Package\StartingPointPackage::install_page_templates();
+            return Concrete\Core\Package\StartingPointPackage::install_page_templates();
         }
 
         public static function install_required_single_pages()
         {
             // Concrete\Core\Package\StartingPointPackage::install_required_single_pages();
-            Concrete\Core\Package\StartingPointPackage::install_required_single_pages();
+            return Concrete\Core\Package\StartingPointPackage::install_required_single_pages();
         }
 
         public static function install_image_editor()
         {
             // Concrete\Core\Package\StartingPointPackage::install_image_editor();
-            Concrete\Core\Package\StartingPointPackage::install_image_editor();
+            return Concrete\Core\Package\StartingPointPackage::install_image_editor();
         }
 
         public static function install_blocktypes()
         {
             // Concrete\Core\Package\StartingPointPackage::install_blocktypes();
-            Concrete\Core\Package\StartingPointPackage::install_blocktypes();
+            return Concrete\Core\Package\StartingPointPackage::install_blocktypes();
         }
 
         public static function install_themes()
         {
             // Concrete\Core\Package\StartingPointPackage::install_themes();
-            Concrete\Core\Package\StartingPointPackage::install_themes();
+            return Concrete\Core\Package\StartingPointPackage::install_themes();
         }
 
         public static function install_jobs()
         {
             // Concrete\Core\Package\StartingPointPackage::install_jobs();
-            Concrete\Core\Package\StartingPointPackage::install_jobs();
+            return Concrete\Core\Package\StartingPointPackage::install_jobs();
         }
 
         public static function install_config()
         {
             // Concrete\Core\Package\StartingPointPackage::install_config();
-            Concrete\Core\Package\StartingPointPackage::install_config();
+            return Concrete\Core\Package\StartingPointPackage::install_config();
         }
 
         public static function import_files()
         {
             // Concrete\Core\Package\StartingPointPackage::import_files();
-            Concrete\Core\Package\StartingPointPackage::import_files();
+            return Concrete\Core\Package\StartingPointPackage::import_files();
         }
 
         public static function install_content()
         {
             // Concrete\Core\Package\StartingPointPackage::install_content();
-            Concrete\Core\Package\StartingPointPackage::install_content();
+            return Concrete\Core\Package\StartingPointPackage::install_content();
         }
 
         public static function install_database()
         {
             // Concrete\Core\Package\StartingPointPackage::install_database();
-            Concrete\Core\Package\StartingPointPackage::install_database();
+            return Concrete\Core\Package\StartingPointPackage::install_database();
         }
 
         protected static function indexAdditionalDatabaseFields()
         {
             // Concrete\Core\Package\StartingPointPackage::indexAdditionalDatabaseFields();
-            Concrete\Core\Package\StartingPointPackage::indexAdditionalDatabaseFields();
+            return Concrete\Core\Package\StartingPointPackage::indexAdditionalDatabaseFields();
         }
 
         public static function add_users()
         {
             // Concrete\Core\Package\StartingPointPackage::add_users();
-            Concrete\Core\Package\StartingPointPackage::add_users();
+            return Concrete\Core\Package\StartingPointPackage::add_users();
         }
 
         public static function make_directories()
         {
             // Concrete\Core\Package\StartingPointPackage::make_directories();
-            Concrete\Core\Package\StartingPointPackage::make_directories();
+            return Concrete\Core\Package\StartingPointPackage::make_directories();
         }
 
         public static function finish()
         {
             // Concrete\Core\Package\StartingPointPackage::finish();
-            Concrete\Core\Package\StartingPointPackage::finish();
+            return Concrete\Core\Package\StartingPointPackage::finish();
         }
 
         public static function install_permissions()
         {
             // Concrete\Core\Package\StartingPointPackage::install_permissions();
-            Concrete\Core\Package\StartingPointPackage::install_permissions();
+            return Concrete\Core\Package\StartingPointPackage::install_permissions();
         }
 
         public static function set_site_permissions()
         {
             // Concrete\Core\Package\StartingPointPackage::set_site_permissions();
-            Concrete\Core\Package\StartingPointPackage::set_site_permissions();
+            return Concrete\Core\Package\StartingPointPackage::set_site_permissions();
         }
 
         public static function hasCustomList()
         {
             // Concrete\Core\Package\StartingPointPackage::hasCustomList();
-            Concrete\Core\Package\StartingPointPackage::hasCustomList();
+            return Concrete\Core\Package\StartingPointPackage::hasCustomList();
         }
 
         public static function getClass($pkgHandle)
         {
             // Concrete\Core\Package\StartingPointPackage::getClass();
-            Concrete\Core\Package\StartingPointPackage::getClass($pkgHandle);
+            return Concrete\Core\Package\StartingPointPackage::getClass($pkgHandle);
         }
 
         public static function getAvailableList()
         {
             // Concrete\Core\Package\StartingPointPackage::getAvailableList();
-            Concrete\Core\Package\StartingPointPackage::getAvailableList();
+            return Concrete\Core\Package\StartingPointPackage::getAvailableList();
         }
 
         public static function getRelativePath()
         {
             // Concrete\Core\Package\Package::getRelativePath();
-            Concrete\Core\Package\Package::getRelativePath();
+            return Concrete\Core\Package\Package::getRelativePath();
         }
 
         public static function getPackageID()
         {
             // Concrete\Core\Package\Package::getPackageID();
-            Concrete\Core\Package\Package::getPackageID();
+            return Concrete\Core\Package\Package::getPackageID();
         }
 
         public static function getPackageName()
         {
             // Concrete\Core\Package\Package::getPackageName();
-            Concrete\Core\Package\Package::getPackageName();
+            return Concrete\Core\Package\Package::getPackageName();
         }
 
         public static function getPackageDescription()
         {
             // Concrete\Core\Package\Package::getPackageDescription();
-            Concrete\Core\Package\Package::getPackageDescription();
+            return Concrete\Core\Package\Package::getPackageDescription();
         }
 
         public static function getPackageHandle()
         {
             // Concrete\Core\Package\Package::getPackageHandle();
-            Concrete\Core\Package\Package::getPackageHandle();
+            return Concrete\Core\Package\Package::getPackageHandle();
         }
 
         /**
@@ -19892,31 +19892,31 @@ namespace {
         public static function getPackageDateInstalled($type = "system")
         {
             // Concrete\Core\Package\Package::getPackageDateInstalled();
-            Concrete\Core\Package\Package::getPackageDateInstalled($type);
+            return Concrete\Core\Package\Package::getPackageDateInstalled($type);
         }
 
         public static function getPackageVersion()
         {
             // Concrete\Core\Package\Package::getPackageVersion();
-            Concrete\Core\Package\Package::getPackageVersion();
+            return Concrete\Core\Package\Package::getPackageVersion();
         }
 
         public static function getPackageVersionUpdateAvailable()
         {
             // Concrete\Core\Package\Package::getPackageVersionUpdateAvailable();
-            Concrete\Core\Package\Package::getPackageVersionUpdateAvailable();
+            return Concrete\Core\Package\Package::getPackageVersionUpdateAvailable();
         }
 
         public static function isPackageInstalled()
         {
             // Concrete\Core\Package\Package::isPackageInstalled();
-            Concrete\Core\Package\Package::isPackageInstalled();
+            return Concrete\Core\Package\Package::isPackageInstalled();
         }
 
         public static function getChangelogContents()
         {
             // Concrete\Core\Package\Package::getChangelogContents();
-            Concrete\Core\Package\Package::getChangelogContents();
+            return Concrete\Core\Package\Package::getChangelogContents();
         }
 
         /**
@@ -19926,43 +19926,43 @@ namespace {
         public static function getPackageCurrentlyInstalledVersion()
         {
             // Concrete\Core\Package\Package::getPackageCurrentlyInstalledVersion();
-            Concrete\Core\Package\Package::getPackageCurrentlyInstalledVersion();
+            return Concrete\Core\Package\Package::getPackageCurrentlyInstalledVersion();
         }
 
         public static function getApplicationVersionRequired()
         {
             // Concrete\Core\Package\Package::getApplicationVersionRequired();
-            Concrete\Core\Package\Package::getApplicationVersionRequired();
+            return Concrete\Core\Package\Package::getApplicationVersionRequired();
         }
 
         public static function hasInstallNotes()
         {
             // Concrete\Core\Package\Package::hasInstallNotes();
-            Concrete\Core\Package\Package::hasInstallNotes();
+            return Concrete\Core\Package\Package::hasInstallNotes();
         }
 
         public static function hasInstallPostScreen()
         {
             // Concrete\Core\Package\Package::hasInstallPostScreen();
-            Concrete\Core\Package\Package::hasInstallPostScreen();
+            return Concrete\Core\Package\Package::hasInstallPostScreen();
         }
 
         public static function allowsFullContentSwap()
         {
             // Concrete\Core\Package\Package::allowsFullContentSwap();
-            Concrete\Core\Package\Package::allowsFullContentSwap();
+            return Concrete\Core\Package\Package::allowsFullContentSwap();
         }
 
         public static function showInstallOptionsScreen()
         {
             // Concrete\Core\Package\Package::showInstallOptionsScreen();
-            Concrete\Core\Package\Package::showInstallOptionsScreen();
+            return Concrete\Core\Package\Package::showInstallOptionsScreen();
         }
 
         public static function installDB($xmlFile)
         {
             // Concrete\Core\Package\Package::installDB();
-            Concrete\Core\Package\Package::installDB($xmlFile);
+            return Concrete\Core\Package\Package::installDB($xmlFile);
         }
 
         /**
@@ -19974,7 +19974,7 @@ namespace {
         public static function setupPackageLocalization($locale = null, $key = null)
         {
             // Concrete\Core\Package\Package::setupPackageLocalization();
-            Concrete\Core\Package\Package::setupPackageLocalization($locale, $key);
+            return Concrete\Core\Package\Package::setupPackageLocalization($locale, $key);
         }
 
         /**
@@ -19983,7 +19983,7 @@ namespace {
         public static function getPackageItems()
         {
             // Concrete\Core\Package\Package::getPackageItems();
-            Concrete\Core\Package\Package::getPackageItems();
+            return Concrete\Core\Package\Package::getPackageItems();
         }
 
         /** Returns the display name of a category of package items (localized and escaped accordingly to $format)
@@ -19994,13 +19994,13 @@ namespace {
         public static function getPackageItemsCategoryDisplayName($categoryHandle, $format = "html")
         {
             // Concrete\Core\Package\Package::getPackageItemsCategoryDisplayName();
-            Concrete\Core\Package\Package::getPackageItemsCategoryDisplayName($categoryHandle, $format);
+            return Concrete\Core\Package\Package::getPackageItemsCategoryDisplayName($categoryHandle, $format);
         }
 
         public static function getItemName($item)
         {
             // Concrete\Core\Package\Package::getItemName();
-            Concrete\Core\Package\Package::getItemName($item);
+            return Concrete\Core\Package\Package::getItemName($item);
         }
 
         /**
@@ -20009,37 +20009,37 @@ namespace {
         public static function uninstall()
         {
             // Concrete\Core\Package\Package::uninstall();
-            Concrete\Core\Package\Package::uninstall();
+            return Concrete\Core\Package\Package::uninstall();
         }
 
         protected static function validateClearSiteContents($options)
         {
             // Concrete\Core\Package\Package::validateClearSiteContents();
-            Concrete\Core\Package\Package::validateClearSiteContents($options);
+            return Concrete\Core\Package\Package::validateClearSiteContents($options);
         }
 
         public static function swapContent($options)
         {
             // Concrete\Core\Package\Package::swapContent();
-            Concrete\Core\Package\Package::swapContent($options);
+            return Concrete\Core\Package\Package::swapContent($options);
         }
 
         public static function testForInstall($package, $testForAlreadyInstalled = "1")
         {
             // Concrete\Core\Package\Package::testForInstall();
-            Concrete\Core\Package\Package::testForInstall($package, $testForAlreadyInstalled);
+            return Concrete\Core\Package\Package::testForInstall($package, $testForAlreadyInstalled);
         }
 
         public static function mapError($testResults)
         {
             // Concrete\Core\Package\Package::mapError();
-            Concrete\Core\Package\Package::mapError($testResults);
+            return Concrete\Core\Package\Package::mapError($testResults);
         }
 
         public static function getPackagePath()
         {
             // Concrete\Core\Package\Package::getPackagePath();
-            Concrete\Core\Package\Package::getPackagePath();
+            return Concrete\Core\Package\Package::getPackagePath();
         }
 
         /**
@@ -20050,7 +20050,7 @@ namespace {
         public static function getByID($pkgID)
         {
             // Concrete\Core\Package\Package::getByID();
-            Concrete\Core\Package\Package::getByID($pkgID);
+            return Concrete\Core\Package\Package::getByID($pkgID);
         }
 
         /**
@@ -20061,7 +20061,7 @@ namespace {
         public static function getByHandle($pkgHandle)
         {
             // Concrete\Core\Package\Package::getByHandle();
-            Concrete\Core\Package\Package::getByHandle($pkgHandle);
+            return Concrete\Core\Package\Package::getByHandle($pkgHandle);
         }
 
         /**
@@ -20070,37 +20070,37 @@ namespace {
         public static function install()
         {
             // Concrete\Core\Package\Package::install();
-            Concrete\Core\Package\Package::install();
+            return Concrete\Core\Package\Package::install();
         }
 
         public static function updateAvailableVersionNumber($vNum)
         {
             // Concrete\Core\Package\Package::updateAvailableVersionNumber();
-            Concrete\Core\Package\Package::updateAvailableVersionNumber($vNum);
+            return Concrete\Core\Package\Package::updateAvailableVersionNumber($vNum);
         }
 
         public static function upgradeCoreData()
         {
             // Concrete\Core\Package\Package::upgradeCoreData();
-            Concrete\Core\Package\Package::upgradeCoreData();
+            return Concrete\Core\Package\Package::upgradeCoreData();
         }
 
         public static function upgrade()
         {
             // Concrete\Core\Package\Package::upgrade();
-            Concrete\Core\Package\Package::upgrade();
+            return Concrete\Core\Package\Package::upgrade();
         }
 
         public static function getInstalledHandles()
         {
             // Concrete\Core\Package\Package::getInstalledHandles();
-            Concrete\Core\Package\Package::getInstalledHandles();
+            return Concrete\Core\Package\Package::getInstalledHandles();
         }
 
         public static function getInstalledList()
         {
             // Concrete\Core\Package\Package::getInstalledList();
-            Concrete\Core\Package\Package::getInstalledList();
+            return Concrete\Core\Package\Package::getInstalledList();
         }
 
         /**
@@ -20110,13 +20110,13 @@ namespace {
         public static function getLocalUpgradeablePackages()
         {
             // Concrete\Core\Package\Package::getLocalUpgradeablePackages();
-            Concrete\Core\Package\Package::getLocalUpgradeablePackages();
+            return Concrete\Core\Package\Package::getLocalUpgradeablePackages();
         }
 
         public static function getRemotelyUpgradeablePackages()
         {
             // Concrete\Core\Package\Package::getRemotelyUpgradeablePackages();
-            Concrete\Core\Package\Package::getRemotelyUpgradeablePackages();
+            return Concrete\Core\Package\Package::getRemotelyUpgradeablePackages();
         }
 
         /**
@@ -20125,7 +20125,7 @@ namespace {
         public static function backup()
         {
             // Concrete\Core\Package\Package::backup();
-            Concrete\Core\Package\Package::backup();
+            return Concrete\Core\Package\Package::backup();
         }
 
         /**
@@ -20135,67 +20135,67 @@ namespace {
         public static function restore()
         {
             // Concrete\Core\Package\Package::restore();
-            Concrete\Core\Package\Package::restore();
+            return Concrete\Core\Package\Package::restore();
         }
 
         public static function config($cfKey, $getFullObject = null)
         {
             // Concrete\Core\Package\Package::config();
-            Concrete\Core\Package\Package::config($cfKey, $getFullObject);
+            return Concrete\Core\Package\Package::config($cfKey, $getFullObject);
         }
 
         public static function saveConfig($cfKey, $value)
         {
             // Concrete\Core\Package\Package::saveConfig();
-            Concrete\Core\Package\Package::saveConfig($cfKey, $value);
+            return Concrete\Core\Package\Package::saveConfig($cfKey, $value);
         }
 
         public static function clearConfig($cfKey)
         {
             // Concrete\Core\Package\Package::clearConfig();
-            Concrete\Core\Package\Package::clearConfig($cfKey);
+            return Concrete\Core\Package\Package::clearConfig($cfKey);
         }
 
         public static function getAvailablePackages($filterInstalled = "1")
         {
             // Concrete\Core\Package\Package::getAvailablePackages();
-            Concrete\Core\Package\Package::getAvailablePackages($filterInstalled);
+            return Concrete\Core\Package\Package::getAvailablePackages($filterInstalled);
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -20206,49 +20206,49 @@ namespace {
         public static function getAuthenticationTypeID()
         {
             // Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypeID();
-            Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypeID();
+            return Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypeID();
         }
 
         public static function getAuthenticationTypeHandle()
         {
             // Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypeHandle();
-            Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypeHandle();
+            return Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypeHandle();
         }
 
         public static function getAuthenticationTypeName()
         {
             // Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypeName();
-            Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypeName();
+            return Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypeName();
         }
 
         public static function getAuthenticationTypeStatus()
         {
             // Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypeStatus();
-            Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypeStatus();
+            return Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypeStatus();
         }
 
         public static function getAuthenticationTypeDisplayOrder()
         {
             // Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypeDisplayOrder();
-            Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypeDisplayOrder();
+            return Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypeDisplayOrder();
         }
 
         public static function getAuthenticationTypePackageID()
         {
             // Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypePackageID();
-            Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypePackageID();
+            return Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypePackageID();
         }
 
         public static function isEnabled()
         {
             // Concrete\Core\Authentication\AuthenticationType::isEnabled();
-            Concrete\Core\Authentication\AuthenticationType::isEnabled();
+            return Concrete\Core\Authentication\AuthenticationType::isEnabled();
         }
 
         public static function getController()
         {
             // Concrete\Core\Authentication\AuthenticationType::getController();
-            Concrete\Core\Authentication\AuthenticationType::getController();
+            return Concrete\Core\Authentication\AuthenticationType::getController();
         }
 
         /**
@@ -20260,7 +20260,7 @@ namespace {
         public static function setAuthenticationTypeDisplayOrder($order)
         {
             // Concrete\Core\Authentication\AuthenticationType::setAuthenticationTypeDisplayOrder();
-            Concrete\Core\Authentication\AuthenticationType::setAuthenticationTypeDisplayOrder($order);
+            return Concrete\Core\Authentication\AuthenticationType::setAuthenticationTypeDisplayOrder($order);
         }
 
         /**
@@ -20270,7 +20270,7 @@ namespace {
         public static function getByID($authTypeID)
         {
             // Concrete\Core\Authentication\AuthenticationType::getByID();
-            Concrete\Core\Authentication\AuthenticationType::getByID($authTypeID);
+            return Concrete\Core\Authentication\AuthenticationType::getByID($authTypeID);
         }
 
         /**
@@ -20282,7 +20282,7 @@ namespace {
         public static function load($arr)
         {
             // Concrete\Core\Authentication\AuthenticationType::load();
-            Concrete\Core\Authentication\AuthenticationType::load($arr);
+            return Concrete\Core\Authentication\AuthenticationType::load($arr);
         }
 
         /**
@@ -20294,13 +20294,13 @@ namespace {
         public static function getList($sorted = null)
         {
             // Concrete\Core\Authentication\AuthenticationType::getList();
-            Concrete\Core\Authentication\AuthenticationType::getList($sorted);
+            return Concrete\Core\Authentication\AuthenticationType::getList($sorted);
         }
 
         public static function getListSorted()
         {
             // Concrete\Core\Authentication\AuthenticationType::getListSorted();
-            Concrete\Core\Authentication\AuthenticationType::getListSorted();
+            return Concrete\Core\Authentication\AuthenticationType::getListSorted();
         }
 
         /**
@@ -20312,13 +20312,13 @@ namespace {
         public static function getActiveList($sorted = null)
         {
             // Concrete\Core\Authentication\AuthenticationType::getActiveList();
-            Concrete\Core\Authentication\AuthenticationType::getActiveList($sorted);
+            return Concrete\Core\Authentication\AuthenticationType::getActiveList($sorted);
         }
 
         public static function getActiveListSorted()
         {
             // Concrete\Core\Authentication\AuthenticationType::getActiveListSorted();
-            Concrete\Core\Authentication\AuthenticationType::getActiveListSorted();
+            return Concrete\Core\Authentication\AuthenticationType::getActiveListSorted();
         }
 
         /**
@@ -20328,7 +20328,7 @@ namespace {
         public static function disable()
         {
             // Concrete\Core\Authentication\AuthenticationType::disable();
-            Concrete\Core\Authentication\AuthenticationType::disable();
+            return Concrete\Core\Authentication\AuthenticationType::disable();
         }
 
         /**
@@ -20338,7 +20338,7 @@ namespace {
         public static function enable()
         {
             // Concrete\Core\Authentication\AuthenticationType::enable();
-            Concrete\Core\Authentication\AuthenticationType::enable();
+            return Concrete\Core\Authentication\AuthenticationType::enable();
         }
 
         /**
@@ -20348,7 +20348,7 @@ namespace {
         public static function toggle()
         {
             // Concrete\Core\Authentication\AuthenticationType::toggle();
-            Concrete\Core\Authentication\AuthenticationType::toggle();
+            return Concrete\Core\Authentication\AuthenticationType::toggle();
         }
 
         /**
@@ -20358,7 +20358,7 @@ namespace {
         public static function delete()
         {
             // Concrete\Core\Authentication\AuthenticationType::delete();
-            Concrete\Core\Authentication\AuthenticationType::delete();
+            return Concrete\Core\Authentication\AuthenticationType::delete();
         }
 
         /**
@@ -20370,7 +20370,7 @@ namespace {
         public static function getListByPackage(Concrete\Core\Package\Package $pkg)
         {
             // Concrete\Core\Authentication\AuthenticationType::getListByPackage();
-            Concrete\Core\Authentication\AuthenticationType::getListByPackage($pkg);
+            return Concrete\Core\Authentication\AuthenticationType::getListByPackage($pkg);
         }
 
         /**
@@ -20380,7 +20380,7 @@ namespace {
         public static function getPackageHandle()
         {
             // Concrete\Core\Authentication\AuthenticationType::getPackageHandle();
-            Concrete\Core\Authentication\AuthenticationType::getPackageHandle();
+            return Concrete\Core\Authentication\AuthenticationType::getPackageHandle();
         }
 
         /**
@@ -20392,7 +20392,7 @@ namespace {
         public static function getByHandle($atHandle)
         {
             // Concrete\Core\Authentication\AuthenticationType::getByHandle();
-            Concrete\Core\Authentication\AuthenticationType::getByHandle($atHandle);
+            return Concrete\Core\Authentication\AuthenticationType::getByHandle($atHandle);
         }
 
         /**
@@ -20407,7 +20407,7 @@ namespace {
         public static function add($atHandle, $atName, $order = null, $pkg = null)
         {
             // Concrete\Core\Authentication\AuthenticationType::add();
-            Concrete\Core\Authentication\AuthenticationType::add($atHandle, $atName, $order, $pkg);
+            return Concrete\Core\Authentication\AuthenticationType::add($atHandle, $atName, $order, $pkg);
         }
 
         /**
@@ -20419,7 +20419,7 @@ namespace {
         public static function getAuthenticationTypeFilePath($_file)
         {
             // Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypeFilePath();
-            Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypeFilePath($_file);
+            return Concrete\Core\Authentication\AuthenticationType::getAuthenticationTypeFilePath($_file);
         }
 
         /**
@@ -20436,7 +20436,7 @@ namespace {
         protected static function mapAuthenticationTypeFilePath($_file)
         {
             // Concrete\Core\Authentication\AuthenticationType::mapAuthenticationTypeFilePath();
-            Concrete\Core\Authentication\AuthenticationType::mapAuthenticationTypeFilePath($_file);
+            return Concrete\Core\Authentication\AuthenticationType::mapAuthenticationTypeFilePath($_file);
         }
 
         /**
@@ -20449,7 +20449,7 @@ namespace {
         public static function renderTypeForm()
         {
             // Concrete\Core\Authentication\AuthenticationType::renderTypeForm();
-            Concrete\Core\Authentication\AuthenticationType::renderTypeForm();
+            return Concrete\Core\Authentication\AuthenticationType::renderTypeForm();
         }
 
         /**
@@ -20459,7 +20459,7 @@ namespace {
         public static function renderForm($element = "form")
         {
             // Concrete\Core\Authentication\AuthenticationType::renderForm();
-            Concrete\Core\Authentication\AuthenticationType::renderForm($element);
+            return Concrete\Core\Authentication\AuthenticationType::renderForm($element);
         }
 
         /**
@@ -20470,7 +20470,7 @@ namespace {
         public static function renderHook()
         {
             // Concrete\Core\Authentication\AuthenticationType::renderHook();
-            Concrete\Core\Authentication\AuthenticationType::renderHook();
+            return Concrete\Core\Authentication\AuthenticationType::renderHook();
         }
 
         /**
@@ -20480,43 +20480,43 @@ namespace {
         protected static function loadController()
         {
             // Concrete\Core\Authentication\AuthenticationType::loadController();
-            Concrete\Core\Authentication\AuthenticationType::loadController();
+            return Concrete\Core\Authentication\AuthenticationType::loadController();
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -20527,145 +20527,145 @@ namespace {
         public static function getTreeDisplayName()
         {
             // Concrete\Core\Tree\Type\Group::getTreeDisplayName();
-            Concrete\Core\Tree\Type\Group::getTreeDisplayName();
+            return Concrete\Core\Tree\Type\Group::getTreeDisplayName();
         }
 
         public static function get()
         {
             // Concrete\Core\Tree\Type\Group::get();
-            Concrete\Core\Tree\Type\Group::get();
+            return Concrete\Core\Tree\Type\Group::get();
         }
 
         protected static function deleteDetails()
         {
             // Concrete\Core\Tree\Type\Group::deleteDetails();
-            Concrete\Core\Tree\Type\Group::deleteDetails();
+            return Concrete\Core\Tree\Type\Group::deleteDetails();
         }
 
         public static function add()
         {
             // Concrete\Core\Tree\Type\Group::add();
-            Concrete\Core\Tree\Type\Group::add();
+            return Concrete\Core\Tree\Type\Group::add();
         }
 
         protected static function loadDetails()
         {
             // Concrete\Core\Tree\Type\Group::loadDetails();
-            Concrete\Core\Tree\Type\Group::loadDetails();
+            return Concrete\Core\Tree\Type\Group::loadDetails();
         }
 
         public static function ensureGroupNodes()
         {
             // Concrete\Core\Tree\Type\Group::ensureGroupNodes();
-            Concrete\Core\Tree\Type\Group::ensureGroupNodes();
+            return Concrete\Core\Tree\Type\Group::ensureGroupNodes();
         }
 
         public static function setSelectedTreeNodeID($nodeID)
         {
             // Concrete\Core\Tree\Tree::setSelectedTreeNodeID();
-            Concrete\Core\Tree\Tree::setSelectedTreeNodeID($nodeID);
+            return Concrete\Core\Tree\Tree::setSelectedTreeNodeID($nodeID);
         }
 
         public static function getSelectedTreeNodeID()
         {
             // Concrete\Core\Tree\Tree::getSelectedTreeNodeID();
-            Concrete\Core\Tree\Tree::getSelectedTreeNodeID();
+            return Concrete\Core\Tree\Tree::getSelectedTreeNodeID();
         }
 
         public static function getTreeTypeID()
         {
             // Concrete\Core\Tree\Tree::getTreeTypeID();
-            Concrete\Core\Tree\Tree::getTreeTypeID();
+            return Concrete\Core\Tree\Tree::getTreeTypeID();
         }
 
         public static function getTreeTypeObject()
         {
             // Concrete\Core\Tree\Tree::getTreeTypeObject();
-            Concrete\Core\Tree\Tree::getTreeTypeObject();
+            return Concrete\Core\Tree\Tree::getTreeTypeObject();
         }
 
         public static function getTreeTypeHandle()
         {
             // Concrete\Core\Tree\Tree::getTreeTypeHandle();
-            Concrete\Core\Tree\Tree::getTreeTypeHandle();
+            return Concrete\Core\Tree\Tree::getTreeTypeHandle();
         }
 
         public static function getTreeID()
         {
             // Concrete\Core\Tree\Tree::getTreeID();
-            Concrete\Core\Tree\Tree::getTreeID();
+            return Concrete\Core\Tree\Tree::getTreeID();
         }
 
         public static function getRootTreeNodeObject()
         {
             // Concrete\Core\Tree\Tree::getRootTreeNodeObject();
-            Concrete\Core\Tree\Tree::getRootTreeNodeObject();
+            return Concrete\Core\Tree\Tree::getRootTreeNodeObject();
         }
 
         public static function setRequest($data)
         {
             // Concrete\Core\Tree\Tree::setRequest();
-            Concrete\Core\Tree\Tree::setRequest($data);
+            return Concrete\Core\Tree\Tree::setRequest($data);
         }
 
         public static function delete()
         {
             // Concrete\Core\Tree\Tree::delete();
-            Concrete\Core\Tree\Tree::delete();
+            return Concrete\Core\Tree\Tree::delete();
         }
 
         public static function duplicate()
         {
             // Concrete\Core\Tree\Tree::duplicate();
-            Concrete\Core\Tree\Tree::duplicate();
+            return Concrete\Core\Tree\Tree::duplicate();
         }
 
         public static function getJSON()
         {
             // Concrete\Core\Tree\Tree::getJSON();
-            Concrete\Core\Tree\Tree::getJSON();
+            return Concrete\Core\Tree\Tree::getJSON();
         }
 
         final public static function getByID($treeID)
         {
             // Concrete\Core\Tree\Tree::getByID();
-            Concrete\Core\Tree\Tree::getByID($treeID);
+            return Concrete\Core\Tree\Tree::getByID($treeID);
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -20676,157 +20676,157 @@ namespace {
         public static function getPermissionResponseClassName()
         {
             // Concrete\Core\Tree\Node\Type\Group::getPermissionResponseClassName();
-            Concrete\Core\Tree\Node\Type\Group::getPermissionResponseClassName();
+            return Concrete\Core\Tree\Node\Type\Group::getPermissionResponseClassName();
         }
 
         public static function getPermissionAssignmentClassName()
         {
             // Concrete\Core\Tree\Node\Type\Group::getPermissionAssignmentClassName();
-            Concrete\Core\Tree\Node\Type\Group::getPermissionAssignmentClassName();
+            return Concrete\Core\Tree\Node\Type\Group::getPermissionAssignmentClassName();
         }
 
         public static function getPermissionObjectKeyCategoryHandle()
         {
             // Concrete\Core\Tree\Node\Type\Group::getPermissionObjectKeyCategoryHandle();
-            Concrete\Core\Tree\Node\Type\Group::getPermissionObjectKeyCategoryHandle();
+            return Concrete\Core\Tree\Node\Type\Group::getPermissionObjectKeyCategoryHandle();
         }
 
         public static function getTreeNodeGroupID()
         {
             // Concrete\Core\Tree\Node\Type\Group::getTreeNodeGroupID();
-            Concrete\Core\Tree\Node\Type\Group::getTreeNodeGroupID();
+            return Concrete\Core\Tree\Node\Type\Group::getTreeNodeGroupID();
         }
 
         public static function getTreeNodeGroupObject()
         {
             // Concrete\Core\Tree\Node\Type\Group::getTreeNodeGroupObject();
-            Concrete\Core\Tree\Node\Type\Group::getTreeNodeGroupObject();
+            return Concrete\Core\Tree\Node\Type\Group::getTreeNodeGroupObject();
         }
 
         public static function getTreeNodeDisplayName()
         {
             // Concrete\Core\Tree\Node\Type\Group::getTreeNodeDisplayName();
-            Concrete\Core\Tree\Node\Type\Group::getTreeNodeDisplayName();
+            return Concrete\Core\Tree\Node\Type\Group::getTreeNodeDisplayName();
         }
 
         public static function loadDetails()
         {
             // Concrete\Core\Tree\Node\Type\Group::loadDetails();
-            Concrete\Core\Tree\Node\Type\Group::loadDetails();
+            return Concrete\Core\Tree\Node\Type\Group::loadDetails();
         }
 
         public static function move(Concrete\Core\Tree\Node\Node $newParent)
         {
             // Concrete\Core\Tree\Node\Type\Group::move();
-            Concrete\Core\Tree\Node\Type\Group::move($newParent);
+            return Concrete\Core\Tree\Node\Type\Group::move($newParent);
         }
 
         public static function getTreeNodeByGroupID($gID)
         {
             // Concrete\Core\Tree\Node\Type\Group::getTreeNodeByGroupID();
-            Concrete\Core\Tree\Node\Type\Group::getTreeNodeByGroupID($gID);
+            return Concrete\Core\Tree\Node\Type\Group::getTreeNodeByGroupID($gID);
         }
 
         public static function deleteDetails()
         {
             // Concrete\Core\Tree\Node\Type\Group::deleteDetails();
-            Concrete\Core\Tree\Node\Type\Group::deleteDetails();
+            return Concrete\Core\Tree\Node\Type\Group::deleteDetails();
         }
 
         public static function getTreeNodeJSON()
         {
             // Concrete\Core\Tree\Node\Type\Group::getTreeNodeJSON();
-            Concrete\Core\Tree\Node\Type\Group::getTreeNodeJSON();
+            return Concrete\Core\Tree\Node\Type\Group::getTreeNodeJSON();
         }
 
         public static function setTreeNodeGroup(Concrete\Core\User\Group\Group $g)
         {
             // Concrete\Core\Tree\Node\Type\Group::setTreeNodeGroup();
-            Concrete\Core\Tree\Node\Type\Group::setTreeNodeGroup($g);
+            return Concrete\Core\Tree\Node\Type\Group::setTreeNodeGroup($g);
         }
 
         public static function add($group = null, $parent = null)
         {
             // Concrete\Core\Tree\Node\Type\Group::add();
-            Concrete\Core\Tree\Node\Type\Group::add($group, $parent);
+            return Concrete\Core\Tree\Node\Type\Group::add($group, $parent);
         }
 
         public static function getPermissionObjectIdentifier()
         {
             // Concrete\Core\Tree\Node\Node::getPermissionObjectIdentifier();
-            Concrete\Core\Tree\Node\Node::getPermissionObjectIdentifier();
+            return Concrete\Core\Tree\Node\Node::getPermissionObjectIdentifier();
         }
 
         public static function getTreeNodeID()
         {
             // Concrete\Core\Tree\Node\Node::getTreeNodeID();
-            Concrete\Core\Tree\Node\Node::getTreeNodeID();
+            return Concrete\Core\Tree\Node\Node::getTreeNodeID();
         }
 
         public static function getTreeNodeParentID()
         {
             // Concrete\Core\Tree\Node\Node::getTreeNodeParentID();
-            Concrete\Core\Tree\Node\Node::getTreeNodeParentID();
+            return Concrete\Core\Tree\Node\Node::getTreeNodeParentID();
         }
 
         public static function getTreeNodeParentObject()
         {
             // Concrete\Core\Tree\Node\Node::getTreeNodeParentObject();
-            Concrete\Core\Tree\Node\Node::getTreeNodeParentObject();
+            return Concrete\Core\Tree\Node\Node::getTreeNodeParentObject();
         }
 
         public static function getTreeObject()
         {
             // Concrete\Core\Tree\Node\Node::getTreeObject();
-            Concrete\Core\Tree\Node\Node::getTreeObject();
+            return Concrete\Core\Tree\Node\Node::getTreeObject();
         }
 
         public static function getTreeID()
         {
             // Concrete\Core\Tree\Node\Node::getTreeID();
-            Concrete\Core\Tree\Node\Node::getTreeID();
+            return Concrete\Core\Tree\Node\Node::getTreeID();
         }
 
         public static function getTreeNodeTypeID()
         {
             // Concrete\Core\Tree\Node\Node::getTreeNodeTypeID();
-            Concrete\Core\Tree\Node\Node::getTreeNodeTypeID();
+            return Concrete\Core\Tree\Node\Node::getTreeNodeTypeID();
         }
 
         public static function getTreeNodeTypeObject()
         {
             // Concrete\Core\Tree\Node\Node::getTreeNodeTypeObject();
-            Concrete\Core\Tree\Node\Node::getTreeNodeTypeObject();
+            return Concrete\Core\Tree\Node\Node::getTreeNodeTypeObject();
         }
 
         public static function getTreeNodeTypeHandle()
         {
             // Concrete\Core\Tree\Node\Node::getTreeNodeTypeHandle();
-            Concrete\Core\Tree\Node\Node::getTreeNodeTypeHandle();
+            return Concrete\Core\Tree\Node\Node::getTreeNodeTypeHandle();
         }
 
         public static function getChildNodes()
         {
             // Concrete\Core\Tree\Node\Node::getChildNodes();
-            Concrete\Core\Tree\Node\Node::getChildNodes();
+            return Concrete\Core\Tree\Node\Node::getChildNodes();
         }
 
         public static function overrideParentTreeNodePermissions()
         {
             // Concrete\Core\Tree\Node\Node::overrideParentTreeNodePermissions();
-            Concrete\Core\Tree\Node\Node::overrideParentTreeNodePermissions();
+            return Concrete\Core\Tree\Node\Node::overrideParentTreeNodePermissions();
         }
 
         public static function getTreeNodePermissionsNodeID()
         {
             // Concrete\Core\Tree\Node\Node::getTreeNodePermissionsNodeID();
-            Concrete\Core\Tree\Node\Node::getTreeNodePermissionsNodeID();
+            return Concrete\Core\Tree\Node\Node::getTreeNodePermissionsNodeID();
         }
 
         public static function getTreeNodeChildCount()
         {
             // Concrete\Core\Tree\Node\Node::getTreeNodeChildCount();
-            Concrete\Core\Tree\Node\Node::getTreeNodeChildCount();
+            return Concrete\Core\Tree\Node\Node::getTreeNodeChildCount();
         }
 
         /**
@@ -20835,7 +20835,7 @@ namespace {
         public static function transformNode($treeNodeType)
         {
             // Concrete\Core\Tree\Node\Node::transformNode();
-            Concrete\Core\Tree\Node\Node::transformNode($treeNodeType);
+            return Concrete\Core\Tree\Node\Node::transformNode($treeNodeType);
         }
 
         /**
@@ -20844,121 +20844,121 @@ namespace {
         public static function getTreeNodeParentArray()
         {
             // Concrete\Core\Tree\Node\Node::getTreeNodeParentArray();
-            Concrete\Core\Tree\Node\Node::getTreeNodeParentArray();
+            return Concrete\Core\Tree\Node\Node::getTreeNodeParentArray();
         }
 
         public static function selectChildrenNodesByID($nodeID)
         {
             // Concrete\Core\Tree\Node\Node::selectChildrenNodesByID();
-            Concrete\Core\Tree\Node\Node::selectChildrenNodesByID($nodeID);
+            return Concrete\Core\Tree\Node\Node::selectChildrenNodesByID($nodeID);
         }
 
         public static function duplicate($parent = null)
         {
             // Concrete\Core\Tree\Node\Node::duplicate();
-            Concrete\Core\Tree\Node\Node::duplicate($parent);
+            return Concrete\Core\Tree\Node\Node::duplicate($parent);
         }
 
         protected static function duplicateChildren(Concrete\Core\Tree\Node\NodeType $node)
         {
             // Concrete\Core\Tree\Node\Node::duplicateChildren();
-            Concrete\Core\Tree\Node\Node::duplicateChildren($node);
+            return Concrete\Core\Tree\Node\Node::duplicateChildren($node);
         }
 
         public static function setTreeNodePermissionsToGlobal()
         {
             // Concrete\Core\Tree\Node\Node::setTreeNodePermissionsToGlobal();
-            Concrete\Core\Tree\Node\Node::setTreeNodePermissionsToGlobal();
+            return Concrete\Core\Tree\Node\Node::setTreeNodePermissionsToGlobal();
         }
 
         public static function setTreeNodePermissionsToOverride()
         {
             // Concrete\Core\Tree\Node\Node::setTreeNodePermissionsToOverride();
-            Concrete\Core\Tree\Node\Node::setTreeNodePermissionsToOverride();
+            return Concrete\Core\Tree\Node\Node::setTreeNodePermissionsToOverride();
         }
 
         public static function getAllChildNodeIDs()
         {
             // Concrete\Core\Tree\Node\Node::getAllChildNodeIDs();
-            Concrete\Core\Tree\Node\Node::getAllChildNodeIDs();
+            return Concrete\Core\Tree\Node\Node::getAllChildNodeIDs();
         }
 
         public static function setTreeNodeTreeID($treeID)
         {
             // Concrete\Core\Tree\Node\Node::setTreeNodeTreeID();
-            Concrete\Core\Tree\Node\Node::setTreeNodeTreeID($treeID);
+            return Concrete\Core\Tree\Node\Node::setTreeNodeTreeID($treeID);
         }
 
         protected static function rescanChildrenDisplayOrder()
         {
             // Concrete\Core\Tree\Node\Node::rescanChildrenDisplayOrder();
-            Concrete\Core\Tree\Node\Node::rescanChildrenDisplayOrder();
+            return Concrete\Core\Tree\Node\Node::rescanChildrenDisplayOrder();
         }
 
         public static function saveChildOrder($orderedIDs)
         {
             // Concrete\Core\Tree\Node\Node::saveChildOrder();
-            Concrete\Core\Tree\Node\Node::saveChildOrder($orderedIDs);
+            return Concrete\Core\Tree\Node\Node::saveChildOrder($orderedIDs);
         }
 
         public static function populateChildren()
         {
             // Concrete\Core\Tree\Node\Node::populateChildren();
-            Concrete\Core\Tree\Node\Node::populateChildren();
+            return Concrete\Core\Tree\Node\Node::populateChildren();
         }
 
         public static function populateDirectChildrenOnly()
         {
             // Concrete\Core\Tree\Node\Node::populateDirectChildrenOnly();
-            Concrete\Core\Tree\Node\Node::populateDirectChildrenOnly();
+            return Concrete\Core\Tree\Node\Node::populateDirectChildrenOnly();
         }
 
         public static function delete()
         {
             // Concrete\Core\Tree\Node\Node::delete();
-            Concrete\Core\Tree\Node\Node::delete();
+            return Concrete\Core\Tree\Node\Node::delete();
         }
 
         public static function getByID($treeNodeID)
         {
             // Concrete\Core\Tree\Node\Node::getByID();
-            Concrete\Core\Tree\Node\Node::getByID($treeNodeID);
+            return Concrete\Core\Tree\Node\Node::getByID($treeNodeID);
         }
 
         public static function loadError($error)
         {
             // Concrete\Core\Foundation\Object::loadError();
-            Concrete\Core\Foundation\Object::loadError($error);
+            return Concrete\Core\Foundation\Object::loadError($error);
         }
 
         public static function isError()
         {
             // Concrete\Core\Foundation\Object::isError();
-            Concrete\Core\Foundation\Object::isError();
+            return Concrete\Core\Foundation\Object::isError();
         }
 
         public static function getError()
         {
             // Concrete\Core\Foundation\Object::getError();
-            Concrete\Core\Foundation\Object::getError();
+            return Concrete\Core\Foundation\Object::getError();
         }
 
         public static function setPropertiesFromArray($arr)
         {
             // Concrete\Core\Foundation\Object::setPropertiesFromArray();
-            Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
+            return Concrete\Core\Foundation\Object::setPropertiesFromArray($arr);
         }
 
         public static function camelcase($file)
         {
             // Concrete\Core\Foundation\Object::camelcase();
-            Concrete\Core\Foundation\Object::camelcase($file);
+            return Concrete\Core\Foundation\Object::camelcase($file);
         }
 
         public static function uncamelcase($string)
         {
             // Concrete\Core\Foundation\Object::uncamelcase();
-            Concrete\Core\Foundation\Object::uncamelcase($string);
+            return Concrete\Core\Foundation\Object::uncamelcase($string);
         }
 
     }
@@ -20977,7 +20977,7 @@ namespace {
         protected static function _initDbAdapter()
         {
             // Zend_Queue_Adapter_Db::_initDbAdapter();
-            Zend_Queue_Adapter_Db::_initDbAdapter();
+            return Zend_Queue_Adapter_Db::_initDbAdapter();
         }
 
         /**
@@ -20994,7 +20994,7 @@ namespace {
         public static function isExists($name)
         {
             // Zend_Queue_Adapter_Db::isExists();
-            Zend_Queue_Adapter_Db::isExists($name);
+            return Zend_Queue_Adapter_Db::isExists($name);
         }
 
         /**
@@ -21013,7 +21013,7 @@ namespace {
         public static function create($name, $timeout = null)
         {
             // Zend_Queue_Adapter_Db::create();
-            Zend_Queue_Adapter_Db::create($name, $timeout);
+            return Zend_Queue_Adapter_Db::create($name, $timeout);
         }
 
         /**
@@ -21028,13 +21028,13 @@ namespace {
         public static function delete($name)
         {
             // Zend_Queue_Adapter_Db::delete();
-            Zend_Queue_Adapter_Db::delete($name);
+            return Zend_Queue_Adapter_Db::delete($name);
         }
 
         public static function getQueues()
         {
             // Zend_Queue_Adapter_Db::getQueues();
-            Zend_Queue_Adapter_Db::getQueues();
+            return Zend_Queue_Adapter_Db::getQueues();
         }
 
         /**
@@ -21047,7 +21047,7 @@ namespace {
         public static function count(Zend_Queue $queue = null)
         {
             // Zend_Queue_Adapter_Db::count();
-            Zend_Queue_Adapter_Db::count($queue);
+            return Zend_Queue_Adapter_Db::count($queue);
         }
 
         /**
@@ -21061,7 +21061,7 @@ namespace {
         public static function send($message, Zend_Queue $queue = null)
         {
             // Zend_Queue_Adapter_Db::send();
-            Zend_Queue_Adapter_Db::send($message, $queue);
+            return Zend_Queue_Adapter_Db::send($message, $queue);
         }
 
         /**
@@ -21076,7 +21076,7 @@ namespace {
         public static function receive($maxMessages = null, $timeout = null, Zend_Queue $queue = null)
         {
             // Zend_Queue_Adapter_Db::receive();
-            Zend_Queue_Adapter_Db::receive($maxMessages, $timeout, $queue);
+            return Zend_Queue_Adapter_Db::receive($maxMessages, $timeout, $queue);
         }
 
         /**
@@ -21092,7 +21092,7 @@ namespace {
         public static function deleteMessage(Zend_Queue_Message $message)
         {
             // Zend_Queue_Adapter_Db::deleteMessage();
-            Zend_Queue_Adapter_Db::deleteMessage($message);
+            return Zend_Queue_Adapter_Db::deleteMessage($message);
         }
 
         /**
@@ -21107,7 +21107,7 @@ namespace {
         public static function getCapabilities()
         {
             // Zend_Queue_Adapter_Db::getCapabilities();
-            Zend_Queue_Adapter_Db::getCapabilities();
+            return Zend_Queue_Adapter_Db::getCapabilities();
         }
 
         /**
@@ -21122,7 +21122,7 @@ namespace {
         protected static function getQueueId($name)
         {
             // Zend_Queue_Adapter_Db::getQueueId();
-            Zend_Queue_Adapter_Db::getQueueId($name);
+            return Zend_Queue_Adapter_Db::getQueueId($name);
         }
 
         /**
@@ -21133,7 +21133,7 @@ namespace {
         public static function getQueue()
         {
             // Zend_Queue_Adapter_AdapterAbstract::getQueue();
-            Zend_Queue_Adapter_AdapterAbstract::getQueue();
+            return Zend_Queue_Adapter_AdapterAbstract::getQueue();
         }
 
         /**
@@ -21145,7 +21145,7 @@ namespace {
         public static function setQueue(Zend_Queue $queue)
         {
             // Zend_Queue_Adapter_AdapterAbstract::setQueue();
-            Zend_Queue_Adapter_AdapterAbstract::setQueue($queue);
+            return Zend_Queue_Adapter_AdapterAbstract::setQueue($queue);
         }
 
         /**
@@ -21156,7 +21156,7 @@ namespace {
         public static function getOptions()
         {
             // Zend_Queue_Adapter_AdapterAbstract::getOptions();
-            Zend_Queue_Adapter_AdapterAbstract::getOptions();
+            return Zend_Queue_Adapter_AdapterAbstract::getOptions();
         }
 
         /**
@@ -21168,7 +21168,7 @@ namespace {
         public static function isSupported($name)
         {
             // Zend_Queue_Adapter_AdapterAbstract::isSupported();
-            Zend_Queue_Adapter_AdapterAbstract::isSupported($name);
+            return Zend_Queue_Adapter_AdapterAbstract::isSupported($name);
         }
 
     }
@@ -21182,37 +21182,37 @@ namespace {
         public static function db()
         {
             // Concrete\Core\Legacy\Loader::db();
-            Concrete\Core\Legacy\Loader::db();
+            return Concrete\Core\Legacy\Loader::db();
         }
 
         public static function helper($service, $pkgHandle = null)
         {
             // Concrete\Core\Legacy\Loader::helper();
-            Concrete\Core\Legacy\Loader::helper($service, $pkgHandle);
+            return Concrete\Core\Legacy\Loader::helper($service, $pkgHandle);
         }
 
         public static function packageElement($file, $pkgHandle, $args = null)
         {
             // Concrete\Core\Legacy\Loader::packageElement();
-            Concrete\Core\Legacy\Loader::packageElement($file, $pkgHandle, $args);
+            return Concrete\Core\Legacy\Loader::packageElement($file, $pkgHandle, $args);
         }
 
         public static function element($_file, $args = null, $_pkgHandle = null)
         {
             // Concrete\Core\Legacy\Loader::element();
-            Concrete\Core\Legacy\Loader::element($_file, $args, $_pkgHandle);
+            return Concrete\Core\Legacy\Loader::element($_file, $args, $_pkgHandle);
         }
 
         public static function model($model, $pkgHandle = null)
         {
             // Concrete\Core\Legacy\Loader::model();
-            Concrete\Core\Legacy\Loader::model($model, $pkgHandle);
+            return Concrete\Core\Legacy\Loader::model($model, $pkgHandle);
         }
 
         public static function library($library, $pkgHandle = null)
         {
             // Concrete\Core\Legacy\Loader::library();
-            Concrete\Core\Legacy\Loader::library($library, $pkgHandle);
+            return Concrete\Core\Legacy\Loader::library($library, $pkgHandle);
         }
 
     }
@@ -21226,7 +21226,7 @@ namespace {
         public static function getByHandle($handle)
         {
             // Concrete\Core\Legacy\TaskPermission::getByHandle();
-            Concrete\Core\Legacy\TaskPermission::getByHandle($handle);
+            return Concrete\Core\Legacy\TaskPermission::getByHandle($handle);
         }
 
         /**
@@ -21235,7 +21235,7 @@ namespace {
         public static function isError()
         {
             // Concrete\Core\Permission\Checker::isError();
-            Concrete\Core\Permission\Checker::isError();
+            return Concrete\Core\Permission\Checker::isError();
         }
 
         /**
@@ -21244,7 +21244,7 @@ namespace {
         public static function getError()
         {
             // Concrete\Core\Permission\Checker::getError();
-            Concrete\Core\Permission\Checker::getError();
+            return Concrete\Core\Permission\Checker::getError();
         }
 
         /**
@@ -21254,13 +21254,13 @@ namespace {
         public static function getOriginalObject()
         {
             // Concrete\Core\Permission\Checker::getOriginalObject();
-            Concrete\Core\Permission\Checker::getOriginalObject();
+            return Concrete\Core\Permission\Checker::getOriginalObject();
         }
 
         public static function getResponseObject()
         {
             // Concrete\Core\Permission\Checker::getResponseObject();
-            Concrete\Core\Permission\Checker::getResponseObject();
+            return Concrete\Core\Permission\Checker::getResponseObject();
         }
 
     }
@@ -21274,7 +21274,7 @@ namespace {
         public static function getGlobal()
         {
             // Concrete\Core\Legacy\FilePermissions::getGlobal();
-            Concrete\Core\Legacy\FilePermissions::getGlobal();
+            return Concrete\Core\Legacy\FilePermissions::getGlobal();
         }
 
     }
@@ -21285,7 +21285,7 @@ namespace {
         public static function getFacadeAccessor()
         {
             // Concrete\Core\Support\Facade\Application::getFacadeAccessor();
-            Concrete\Core\Support\Facade\Application::getFacadeAccessor();
+            return Concrete\Core\Support\Facade\Application::getFacadeAccessor();
         }
 
         /**
@@ -21296,7 +21296,7 @@ namespace {
         public static function getFacadeRoot()
         {
             // Concrete\Core\Support\Facade\Facade::getFacadeRoot();
-            Concrete\Core\Support\Facade\Facade::getFacadeRoot();
+            return Concrete\Core\Support\Facade\Facade::getFacadeRoot();
         }
 
         /**
@@ -21308,7 +21308,7 @@ namespace {
         protected static function resolveFacadeInstance($name)
         {
             // Concrete\Core\Support\Facade\Facade::resolveFacadeInstance();
-            Concrete\Core\Support\Facade\Facade::resolveFacadeInstance($name);
+            return Concrete\Core\Support\Facade\Facade::resolveFacadeInstance($name);
         }
 
         /**
@@ -21320,7 +21320,7 @@ namespace {
         public static function clearResolvedInstance($name)
         {
             // Concrete\Core\Support\Facade\Facade::clearResolvedInstance();
-            Concrete\Core\Support\Facade\Facade::clearResolvedInstance($name);
+            return Concrete\Core\Support\Facade\Facade::clearResolvedInstance($name);
         }
 
         /**
@@ -21331,7 +21331,7 @@ namespace {
         public static function clearResolvedInstances()
         {
             // Concrete\Core\Support\Facade\Facade::clearResolvedInstances();
-            Concrete\Core\Support\Facade\Facade::clearResolvedInstances();
+            return Concrete\Core\Support\Facade\Facade::clearResolvedInstances();
         }
 
         /**
@@ -21342,7 +21342,7 @@ namespace {
         public static function getFacadeApplication()
         {
             // Concrete\Core\Support\Facade\Facade::getFacadeApplication();
-            Concrete\Core\Support\Facade\Facade::getFacadeApplication();
+            return Concrete\Core\Support\Facade\Facade::getFacadeApplication();
         }
 
         /**
@@ -21354,7 +21354,7 @@ namespace {
         public static function setFacadeApplication($app)
         {
             // Concrete\Core\Support\Facade\Facade::setFacadeApplication();
-            Concrete\Core\Support\Facade\Facade::setFacadeApplication($app);
+            return Concrete\Core\Support\Facade\Facade::setFacadeApplication($app);
         }
 
     }
@@ -21365,7 +21365,7 @@ namespace {
         public static function getFacadeAccessor()
         {
             // Concrete\Core\Support\Facade\Session::getFacadeAccessor();
-            Concrete\Core\Support\Facade\Session::getFacadeAccessor();
+            return Concrete\Core\Support\Facade\Session::getFacadeAccessor();
         }
 
         /**
@@ -21376,7 +21376,7 @@ namespace {
         public static function getFacadeRoot()
         {
             // Concrete\Core\Support\Facade\Facade::getFacadeRoot();
-            Concrete\Core\Support\Facade\Facade::getFacadeRoot();
+            return Concrete\Core\Support\Facade\Facade::getFacadeRoot();
         }
 
         /**
@@ -21388,7 +21388,7 @@ namespace {
         protected static function resolveFacadeInstance($name)
         {
             // Concrete\Core\Support\Facade\Facade::resolveFacadeInstance();
-            Concrete\Core\Support\Facade\Facade::resolveFacadeInstance($name);
+            return Concrete\Core\Support\Facade\Facade::resolveFacadeInstance($name);
         }
 
         /**
@@ -21400,7 +21400,7 @@ namespace {
         public static function clearResolvedInstance($name)
         {
             // Concrete\Core\Support\Facade\Facade::clearResolvedInstance();
-            Concrete\Core\Support\Facade\Facade::clearResolvedInstance($name);
+            return Concrete\Core\Support\Facade\Facade::clearResolvedInstance($name);
         }
 
         /**
@@ -21411,7 +21411,7 @@ namespace {
         public static function clearResolvedInstances()
         {
             // Concrete\Core\Support\Facade\Facade::clearResolvedInstances();
-            Concrete\Core\Support\Facade\Facade::clearResolvedInstances();
+            return Concrete\Core\Support\Facade\Facade::clearResolvedInstances();
         }
 
         /**
@@ -21422,7 +21422,7 @@ namespace {
         public static function getFacadeApplication()
         {
             // Concrete\Core\Support\Facade\Facade::getFacadeApplication();
-            Concrete\Core\Support\Facade\Facade::getFacadeApplication();
+            return Concrete\Core\Support\Facade\Facade::getFacadeApplication();
         }
 
         /**
@@ -21434,7 +21434,7 @@ namespace {
         public static function setFacadeApplication($app)
         {
             // Concrete\Core\Support\Facade\Facade::setFacadeApplication();
-            Concrete\Core\Support\Facade\Facade::setFacadeApplication($app);
+            return Concrete\Core\Support\Facade\Facade::setFacadeApplication($app);
         }
 
     }
@@ -21445,13 +21445,13 @@ namespace {
         public static function getFacadeAccessor()
         {
             // Concrete\Core\Support\Facade\Database::getFacadeAccessor();
-            Concrete\Core\Support\Facade\Database::getFacadeAccessor();
+            return Concrete\Core\Support\Facade\Database::getFacadeAccessor();
         }
 
         public static function get()
         {
             // Concrete\Core\Support\Facade\Database::get();
-            Concrete\Core\Support\Facade\Database::get();
+            return Concrete\Core\Support\Facade\Database::get();
         }
 
         /**
@@ -21462,7 +21462,7 @@ namespace {
         public static function getFacadeRoot()
         {
             // Concrete\Core\Support\Facade\Facade::getFacadeRoot();
-            Concrete\Core\Support\Facade\Facade::getFacadeRoot();
+            return Concrete\Core\Support\Facade\Facade::getFacadeRoot();
         }
 
         /**
@@ -21474,7 +21474,7 @@ namespace {
         protected static function resolveFacadeInstance($name)
         {
             // Concrete\Core\Support\Facade\Facade::resolveFacadeInstance();
-            Concrete\Core\Support\Facade\Facade::resolveFacadeInstance($name);
+            return Concrete\Core\Support\Facade\Facade::resolveFacadeInstance($name);
         }
 
         /**
@@ -21486,7 +21486,7 @@ namespace {
         public static function clearResolvedInstance($name)
         {
             // Concrete\Core\Support\Facade\Facade::clearResolvedInstance();
-            Concrete\Core\Support\Facade\Facade::clearResolvedInstance($name);
+            return Concrete\Core\Support\Facade\Facade::clearResolvedInstance($name);
         }
 
         /**
@@ -21497,7 +21497,7 @@ namespace {
         public static function clearResolvedInstances()
         {
             // Concrete\Core\Support\Facade\Facade::clearResolvedInstances();
-            Concrete\Core\Support\Facade\Facade::clearResolvedInstances();
+            return Concrete\Core\Support\Facade\Facade::clearResolvedInstances();
         }
 
         /**
@@ -21508,7 +21508,7 @@ namespace {
         public static function getFacadeApplication()
         {
             // Concrete\Core\Support\Facade\Facade::getFacadeApplication();
-            Concrete\Core\Support\Facade\Facade::getFacadeApplication();
+            return Concrete\Core\Support\Facade\Facade::getFacadeApplication();
         }
 
         /**
@@ -21520,7 +21520,7 @@ namespace {
         public static function setFacadeApplication($app)
         {
             // Concrete\Core\Support\Facade\Facade::setFacadeApplication();
-            Concrete\Core\Support\Facade\Facade::setFacadeApplication($app);
+            return Concrete\Core\Support\Facade\Facade::setFacadeApplication($app);
         }
 
     }
@@ -21531,25 +21531,25 @@ namespace {
         public static function getList()
         {
             // Concrete\Core\Routing\Router::getList();
-            Concrete\Core\Routing\Router::getList();
+            return Concrete\Core\Routing\Router::getList();
         }
 
         public static function setRequest(Concrete\Core\Http\Request $req)
         {
             // Concrete\Core\Routing\Router::setRequest();
-            Concrete\Core\Routing\Router::setRequest($req);
+            return Concrete\Core\Routing\Router::setRequest($req);
         }
 
         public static function register($rtPath, $callback, $rtHandle = null, $additionalAttributes = null)
         {
             // Concrete\Core\Routing\Router::register();
-            Concrete\Core\Routing\Router::register($rtPath, $callback, $rtHandle, $additionalAttributes);
+            return Concrete\Core\Routing\Router::register($rtPath, $callback, $rtHandle, $additionalAttributes);
         }
 
         public static function execute(Concrete\Core\Routing\Route $route, $parameters)
         {
             // Concrete\Core\Routing\Router::execute();
-            Concrete\Core\Routing\Router::execute($route, $parameters);
+            return Concrete\Core\Routing\Router::execute($route, $parameters);
         }
 
         /**
@@ -21562,7 +21562,7 @@ namespace {
         public static function setThemeByRoute($path, $theme = null, $wrapper = "view.php")
         {
             // Concrete\Core\Routing\Router::setThemeByRoute();
-            Concrete\Core\Routing\Router::setThemeByRoute($path, $theme, $wrapper);
+            return Concrete\Core\Routing\Router::setThemeByRoute($path, $theme, $wrapper);
         }
 
         /**
@@ -21573,7 +21573,7 @@ namespace {
         public static function getThemeByRoute($path)
         {
             // Concrete\Core\Routing\Router::getThemeByRoute();
-            Concrete\Core\Routing\Router::getThemeByRoute($path);
+            return Concrete\Core\Routing\Router::getThemeByRoute($path);
         }
 
     }
