@@ -1,9 +1,8 @@
-<?
-
-namespace Concrete\Core\Cache\Page
+<?php
+namespace Concrete\Core\Cache\Page;
 
 class PageCacheRecord {
-	
+
 	public function __construct(Page $c, $content, $lifetime) {
 		$cache = PageCache::getLibrary();
 		$this->setCacheRecordLifetime($lifetime);
@@ -55,6 +54,6 @@ class PageCacheRecord {
 			$cache->purgeByRecord($this);
 		}
 	}
-	
+
 
 }
