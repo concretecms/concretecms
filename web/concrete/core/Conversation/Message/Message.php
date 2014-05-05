@@ -31,7 +31,7 @@ class Message extends Object {
 		$db = Loader::db();
 		$children = $db->getCol('SELECT cnvMessageID as cnt FROM ConversationMessages WHERE cnvMessageParentID=?',array($this->cnvMessageID));
 		foreach ($children as $childID) {
-			$child = static:;getByID($childID);
+			$child = static::getByID($childID);
 			if (($child->isConversationMessageApproved() && !$child->isConversationMessageDeleted()) || $child->conversationMessageHasActiveChildren()) {
 				return true;
 			}
