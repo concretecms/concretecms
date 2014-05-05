@@ -343,12 +343,18 @@ module.exports = function(grunt) {
 	config.watch = {
 		javascript: {
            	files: watchJS,
-            tasks: ['js']
+            tasks: ['js:debug'],
+            options: {
+              livereload: true
+            }
         },
 
 		css: {
            	files: '<%=DIR_BASE%>/concrete/css/**/*.less',
-            tasks: ['css']
+            tasks: ['css:debug'],
+            options: {
+              livereload: true
+            }
         }
 	};
 
