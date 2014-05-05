@@ -22,7 +22,7 @@ use \Concrete\Core\Block\BlockController;
 		}
 		
 		public function getBlockTypeName() {
-			return t("Scrapbook Display (Core)");
+			return t("Scrapbook Display");
 		}
 		
 		public function getOriginalBlockID() {
