@@ -152,7 +152,7 @@ class Theme extends Object
             $th->pThemeDescription = $res->pThemeDescription;
             switch ($dir) {
                 case DIR_FILES_THEMES:
-                    $th->pThemeURL = DIR_REL . '/' . DIRNAME_THEMES . '/' . $handle;
+                    $th->pThemeURL = DIR_REL . '/' . DIRNAME_APPLICATION . '/' . DIRNAME_THEMES . '/' . $handle;
                     break;
             }
             return $th;
