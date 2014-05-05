@@ -42,7 +42,7 @@ class Delete extends BackendInterfacePageController {
 							// we only get this response if we have skipped workflows and jumped straight in to an approve() step.
 							$pr->setMessage(t('Page deleted successfully.'));
 						} else {
-							$pr->setMessage(t('Page request saved. This action will have to be approved before the page is deleted.'));
+							$pr->setMessage(t('Page deletion request saved. This action will have to be approved before the page is deleted.'));
 						}
 						$pr->outputJSON();
 					}
