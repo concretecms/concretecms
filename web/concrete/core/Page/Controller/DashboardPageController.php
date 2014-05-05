@@ -18,6 +18,7 @@ class DashboardPageController extends PageController {
 		$this->token = Loader::helper('validation/token');
 		$this->error = Loader::helper('validation/error');
 		$this->set('interface', Loader::helper('concrete/ui'));
+		$this->set('dashboard', Loader::helper('concrete/dashboard'));
 	}
 	
 	public function on_before_render() {

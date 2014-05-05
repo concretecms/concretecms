@@ -19,25 +19,25 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 	const TYPE_SAVED_SEARCH = 3;
 	protected $fileSetFiles;
 
-	/** 
+	/**
 	 * Returns an object mapping to the global file set, fsID = 0.
 	 * This is really only used for permissions mapping
 	 */
-	 
+
 	public static function getGlobal() {
 		$fs = new static;
 		$fs->fsID = 0;
 		return $fs;
 	}
-	
+
 	public function getFileSetUserID() {return $this->uID;}
 	public function getFileSetType() {return $this->fsType;}
-	
+
 	public function getSavedSearches() {
 		$db = Loader::db();
 		$sets = array();
 		$u = new User();
-		$r = $db->Execute('select * from FileSets where fsType = ? and uID = ? order by fsName asc', array(Set::TYPE_SAVED_SEARCH, $u->getUserID()));
+		$r = $db->Execute('select * from FileSets where fsType = ? and uID = ? order by fsName asc', array(self::TYPE_SAVED_SEARCH, $u->getUserID()));
 		while ($row = $r->FetchRow()) {
 			$fs = new static();
 			$fs = array_to_object($fs, $row);
@@ -51,7 +51,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 	}
 
 	public function getPermissionAssignmentClassName() {
-		return '\\Concrete\\Core\\Permission\\Assignment\\FileSetAssignment';	
+		return '\\Concrete\\Core\\Permission\\Assignment\\FileSetAssignment';
 	}
 	public function getPermissionObjectKeyCategoryHandle() {
 		return 'file_set';
@@ -60,14 +60,14 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 	public function getPermissionObjectIdentifier() {
 		return $this->getFileSetID();
 	}
-	
+
 	public function getMySets($u = false) {
 		if ($u == false) {
 			$u = new User();
 		}
 		$db = Loader::db();
 		$sets = array();
-		$r = $db->Execute('select * from FileSets where fsType = ? or (fsType in (?, ?) and uID = ?) order by fsName asc', array(static::TYPE_PUBLIC, static::TYPE_STARRED, static::TYPE_PRIVATE, $u->getUserID()));
+		$r = $db->Execute('select * from FileSets where fsType = ? or (fsType in (?, ?) and uID = ?) order by fsName asc', array(self::TYPE_PUBLIC, self::TYPE_STARRED, self::TYPE_PRIVATE, $u->getUserID()));
 		while ($row = $r->FetchRow()) {
 			$fs = new static();
 			$fs = array_to_object($fs, $row);
@@ -78,19 +78,19 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 		}
 		return $sets;
 	}
-	
+
 	public function updateFileSetDisplayOrder($files) {
 		$db = Loader::db();
 		$db->Execute('update FileSetFiles set fsDisplayOrder = 0 where fsID = ?', $this->getFileSetID());
 		$i = 0;
-		if (is_array($files)) { 
+		if (is_array($files)) {
 			foreach($files as $fID) {
 				$db->Execute('update FileSetFiles set fsDisplayOrder = ? where fsID = ? and fID = ?', array($i, $this->getFileSetID(), $fID));
 				$i++;
 			}
 		}
 	}
-	
+
 	/**
 	 * Get a file set object by a file set's id
 	 * @param int $fsID
@@ -110,7 +110,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 			return $fs;
 		}
 	}
-	
+
 	/**
 	 * Get a file set object by a file name
 	 * @param string $fsName
@@ -124,8 +124,8 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 			$fs = array_to_object($fs, $row);
 			return $fs;
 		}
-	}			
-	
+	}
+
 	public function getFileSetID() {
 		if ($this->fsID) {
 			return $this->fsID;
@@ -133,9 +133,9 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 		return 0;
 	}
 	public function overrideGlobalPermissions() {return $this->fsOverrideGlobalPermissions;}
-	
-	public function getFileSetName() {return $this->fsName;}	
-	
+
+	public function getFileSetName() {return $this->fsName;}
+
 	/**
 	 * Creats a new fileset if set doesn't exists
 	 *
@@ -144,10 +144,10 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 	 * @param string $fs_name
 	 * @param int $fs_type
 	 * @param int $fs_uid
-	 * @return Mixed 
+	 * @return Mixed
 	 *
-	 * Dev Note: This will create duplicate sets with the same name if a set exists owned by another user!!! 
-	 */		
+	 * Dev Note: This will create duplicate sets with the same name if a set exists owned by another user!!!
+	 */
 	public static function createAndGetSet($fs_name, $fs_type, $fs_uid=false) {
 		if (!$fs_uid) {
 			$u = new User();
@@ -160,15 +160,15 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 		if ($fsID > 0) {
 			return static::getByID($fsID);
 		} else {
-			$fs = static::add($fs_name, 0, $fs_uid, $fs_type);		
+			$fs = static::add($fs_name, 0, $fs_uid, $fs_type);
 			return $fs;
-		}			
+		}
 	}
 
 	/**
 	 * Adds a file set
 	 */
-	public static function add($setName, $fsOverrideGlobalPermissions = 0, $u = false, $type = Set::TYPE_PUBLIC) {
+	public static function add($setName, $fsOverrideGlobalPermissions = 0, $u = false, $type = self::TYPE_PUBLIC) {
 		if (is_object($u) && $u->isRegistered()) {
 			$uID = $u->getUserID();
 		} else if ($u) {
@@ -202,11 +202,11 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 	* Adds the file to the set
 	* @param type $fID  //accepts an ID or a File object
 	* @return object
-	*/		
+	*/
 	public function addFileToSet($f_id) {
 		if (is_object($f_id)) {
 			$f_id = $f_id->getFileID();
-		}			
+		}
 		$file_set_file = File::createAndGetFile($f_id,$this->fsID);
 
 		$fe = new \Concrete\Core\File\Event\FileSetFile($file_set_file);
@@ -214,11 +214,11 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 
 		return $file_set_file;
 	}
-	
+
 	public function getSavedSearchRequest() {
 		return $this->fsSearchRequest;
 	}
-	
+
 	public function getSavedSearchColumns() {
 		return $this->fsResultColumns;
 	}
@@ -231,8 +231,8 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 		$file_set_file = File::createAndGetFile($f_id,$this->fsID);
 
 		$db = Loader::db();
-		$db->Execute('DELETE FROM FileSetFiles 
-		WHERE fID = ? 
+		$db->Execute('DELETE FROM FileSetFiles
+		WHERE fID = ?
 		AND   fsID = ?', array($f_id, $this->getFileSetID()));
 
 		$fe = new \Concrete\Core\File\Event\FileSetFile($file_set_file);
@@ -245,15 +245,15 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 	*
 	* Can obsolete this when we get version of ADOdB with one/many support
 	* @return type $var_name
-	*/		
+	*/
 	private function populateFiles() {
-		$this->fileSetFiles = File::getFileSetFiles($this);		
+		$this->fileSetFiles = File::getFileSetFiles($this);
 	}
-	
+
 	public function hasFileID($f_id){
 		if (!is_array($this->fileSetFiles)) {
 			$this->populateFiles();
-		}			
+		}
 		foreach ($this->fileSetFiles as $file) {
 			if($file->fID == $f_id){
 				return true;
@@ -301,18 +301,18 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 			}
 		}
 	}
-	
+
 	public function delete() {
 		$db = Loader::db();
 		$db->delete('FileSets', array('fsID' => $this->fsID));
 		$db->Execute('delete from FileSetSavedSearches where fsID = ?', array($this->fsID));
 	}
-	
+
 	public function resetPermissions() {
 		$db = Loader::db();
 		$db->Execute('delete from FileSetPermissionAssignments where fsID = ?', array($this->fsID));
 	}
-	
+
 	public function acquireBaseFileSetPermissions() {
 		$this->resetPermissions();
 
@@ -327,25 +327,25 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 		}
 
 	}
-	
+
 	public function assignPermissions($userOrGroup, $permissions = array(), $accessType = FileSetPermissionKey::ACCESS_TYPE_INCLUDE) {
 		$db = Loader::db();
-		if ($this->fsID > 0) { 
+		if ($this->fsID > 0) {
 			$db->Execute("update FileSets set fsOverrideGlobalPermissions = 1 where fsID = ?", array($this->fsID));
 			$this->fsOverrideGlobalPermissions = true;
 		}
-		
-		if (is_array($userOrGroup)) { 
+
+		if (is_array($userOrGroup)) {
 			$pe = GroupCombinationPermissionAccessEntity::getOrCreate($userOrGroup);
 			// group combination
-		} else if ($userOrGroup instanceof User || $userOrGroup instanceof UserInfo) { 
+		} else if ($userOrGroup instanceof User || $userOrGroup instanceof UserInfo) {
 			$pe = UserPermissionAccessEntity::getOrCreate($userOrGroup);
-		} else { 
+		} else {
 			// group;
 			$pe = GroupPermissionAccessEntity::getOrCreate($userOrGroup);
 		}
-		
-		foreach($permissions as $pkHandle) { 
+
+		foreach($permissions as $pkHandle) {
 			$pk = PermissionKey::getByHandle($pkHandle);
 			$pk->setPermissionObject($this);
 			$pa = $pk->getPermissionAccessObject();
@@ -362,4 +362,4 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 
 
 }
-	
+

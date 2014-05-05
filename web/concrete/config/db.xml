@@ -3530,7 +3530,7 @@
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="email" type="C" size="255">
+    <field name="email" type="C" size="254">
       <notnull/>
     </field>
     <field name="mHash" type="C" size="128">
@@ -3570,7 +3570,7 @@
     <field name="uName" type="C" size="64">
       <notnull/>
     </field>
-    <field name="uEmail" type="C" size="64">
+    <field name="uEmail" type="C" size="254">
       <notnull/>
     </field>
     <field name="uPassword" type="C" size="255">

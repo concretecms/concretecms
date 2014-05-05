@@ -13,7 +13,7 @@
 		&nbsp;
 		<?=t('Fade Duration')?>: <input type="text" name="fadeDuration[]" value="<?=intval($imgInfo['fadeDuration'])?>" style="vertical-align: middle; width: 30px" />
 		&nbsp;
-		<?=t('Set Number')?>: <input type="text" name="groupSet[]" value="<?=intval($imgInfo['groupSet'])?>" style="vertical-align: middle; width: 30px" /><br/>
+		<?=tc('Number of the set', 'Set Number')?>: <input type="text" name="groupSet[]" value="<?=intval($imgInfo['groupSet'])?>" style="vertical-align: middle; width: 30px" /><br/>
 		<div style="margin-top:4px">
 		<?=t('Link URL (optional)')?>: <input type="text" name="url[]" value="<?=$imgInfo['url']?>" style="vertical-align: middle; font-size: 10px; width: 140px" />
 		<input type="hidden" name="imgFIDs[]" value="<?=$imgInfo['fID']?>">

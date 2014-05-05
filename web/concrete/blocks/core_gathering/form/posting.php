@@ -21,7 +21,7 @@ foreach($pagetypes as $pt) {
 			</label>
 			<label class="radio">
 				<?=$form->radio('enablePostingFromGathering', 1, $enablePostingFromGathering)?>
-				<span><?=t('Yes, this gathering can be posted to from the front-end.')?></span>
+				<span><?=t('Yes, this gathering can be posted to the front-end.')?></span>
 			</label>
 		</div>
 	</div>
