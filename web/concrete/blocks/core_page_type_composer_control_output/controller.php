@@ -18,7 +18,7 @@ class Controller extends BlockController {
 	}
 	
 	public function getBlockTypeName() {
-		return t("Composer Control (Core)");
+		return t("Composer Control");
 	}
 
 	public function export(\SimpleXMLElement $blockNode) {			

@@ -23,7 +23,7 @@ use \Concrete\Core\Block\BlockController;
 		}
 		
 		public function getBlockTypeName() {
-			return t("Gathering Display (Core)");
+			return t("Gathering Display");
 		}
 
 		public function view() {
