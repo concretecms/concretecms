@@ -49,8 +49,16 @@ $pk = PermissionKey::getByHandle('customize_themes');
             <? } ?>
             </ul>
         </div>
-
     <? } ?>
+    <div class="ccm-panel-page-design-customize-style-set">
+        <h5 class="ccm-panel-page-design-customize-style-set-collapse"><?=t('Advanced')?></h5>
+        <ul class="list-unstyled">
+            <li>
+                <?=t('Custom CSS')?>
+                <span class="ccm-style-customizer-display-swatch-wrapper" data-custom-css-selector="custom"><span class="ccm-style-customizer-display-swatch"><i class="glyphicon glyphicon-cog"></i></span></span>
+            </li>
+        </ul>
+    </div>
     </div>
 
     <div style="text-align: center">
@@ -182,6 +190,16 @@ $pk = PermissionKey::getByHandle('customize_themes');
                 });
             }
         });
+        $('span[data-custom-css-selector=custom]').on('click', function() {
+            jQuery.fn.dialog.open({
+                title: '<?=t('Custom CSS')?>',
+                href: '<?=URL::to('/ccm/system/dialogs/page/design/css')?>?cID=<?=$c->getCollectionID()?>',
+                modal: false,
+                width: 500,
+                height: 380
+            });
+
+        })
         $('button[data-panel-detail-action=reset]').unbind().on('click', function() {
             <? if ($pk->can()) { ?>
                 panel.showPanelConfirmationMessage('page-design-customize-apply', "<?=t('Reset the theme customizations for just this page, or your entire site?')?>", [
