@@ -53,7 +53,7 @@ class Versions extends BackendInterfacePageController {
 			$nc = $this->page->cloneVersion(t('Copy of Version: %s', $this->page->getVersionID()));
 			$v = $nc->getVersionObject();
 			$r = new PageEditVersionResponse();
-			$r->setMessage(t('Version %s copied successfully into. New version %s.', $this->request->request->get('cvID'), $v->getVersionID()));
+			$r->setMessage(t('Version %s copied successfully. New version is %s.', $this->request->request->get('cvID'), $v->getVersionID()));
 			$r->addCollectionVersion($v);
 			$r->outputJSON();
 		}
