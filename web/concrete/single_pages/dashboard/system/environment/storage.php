@@ -31,10 +31,7 @@
 			</fieldset>
 	</div>
 	<div class="ccm-pane-footer">
-		<?php		
-			$b1 = $concrete_interface->submit(t('Save'), 'file-storage', 'right', 'primary');
-			print $b1;
-		?>		
+		<?= $interface->submit(t('Save'), 'file-storage', 'right', 'primary') ?>		
 		<? if (is_object($fsl)) { ?>
 			<button type="submit" name="delete" value="1" onclick="return confirm('<?=t('Are you sure? (Note: this will not remove any files, it will simply remove the pointer to the directory, and reset any files that are set to this location.)')?>')" class="pull-right btn btn-danger"><?=t('Delete Alternate')?></button>
 		<? } ?>
