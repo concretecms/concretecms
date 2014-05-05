@@ -146,7 +146,7 @@ class Login extends PageController {
 		$u = new User();
 		if ($u->getUserID() == 1 && $type->getAuthenticationTypeHandle() != 'concrete') {
 			$u->logout();
-			throw new \Exception(t('You can only identify as the root user using the concrete login.'));
+			throw new \Exception(t('You can only identify as the admin user using the concrete login.'));
 		}
 
 		$ui = UserInfo::getByID($u->getUserID());
