@@ -23,7 +23,7 @@ class Controller extends BlockController {
 		}
 		
 		public function getBlockTypeName() {
-			return t("Area Layout (Core)");
+			return t("Area Layout");
 		}
 
 		public function duplicate($newBID) {
