@@ -706,7 +706,7 @@
 				</attributekey>
 			</attributes>
 		</page>
-		<page name="Editor" path="/dashboard/system/conversations/editor" filename="/dashboard/system/conversations/editor.php" pagetype="" description="" package="">
+		<page name="Conversations Editor" path="/dashboard/system/conversations/editor" filename="/dashboard/system/conversations/editor.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>conversations editor, editor</value>
