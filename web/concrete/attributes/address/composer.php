@@ -44,7 +44,7 @@ if ($creq != false) {
 	</div>
 </div>
 
-<? 
+<?
 
 if (!$country && !$search) {
 	if ($akDefaultCountry != '') {
@@ -52,7 +52,7 @@ if (!$country && !$search) {
 	} else {
 		$country = 'US';
 	}
-} 
+}
 
 $countriesTmp = $co->getCountries();
 $countries = array();

@@ -40,6 +40,11 @@ class View extends AbstractView {
 
 	public function start($state) {
 		$this->viewToRender = $state;
+        $env = Environment::get();
+        $r = $env->getRecord(DIRNAME_ATTRIBUTES . '/' . $atHandle . '/' . $this->viewToRender . '.php', $this->attributePkgHandle);
+        if ($this->viewToRender == 'composer' && !$r->exists()) {
+            $this->viewToRender = 'form';
+        }
 	}
 
 	public function startRender() {
@@ -52,19 +57,15 @@ class View extends AbstractView {
 		if ($css != false) { 
 			$this->addOutputAsset($html->css($css));
 		}
-	}		
+	}
 	
 	public function setupRender() {
 		$this->runControllerTask();
 		$atHandle = $this->attributeType->getAttributeTypeHandle();
 		$env = Environment::get();
 		$r = $env->getRecord(DIRNAME_ATTRIBUTES . '/' . $atHandle . '/' . $this->viewToRender . '.php', $this->attributePkgHandle);
-		if ($this->viewToRender == 'composer' && !$r->exists()) {
-			$this->render('form');
-		} else {
-			$file = $r->file;
-			$this->setViewTemplate($file);
-		}
+		$file = $r->file;
+		$this->setViewTemplate($file);
 	}
 
 	public function setupController() {
@@ -80,7 +81,11 @@ class View extends AbstractView {
 
 	public function runControllerTask() {
 		$this->controller->on_start();
-		$this->controller->runAction($this->viewToRender);
+        $action = $this->viewToRender;
+        if ($action == 'composer') {
+            $action = 'form';
+        }
+		$this->controller->runAction($action);
 		$this->controller->on_before_render();
 	}
 	
