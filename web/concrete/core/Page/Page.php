@@ -460,7 +460,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     }
 
-    public function getDrafts() {
+    public static function getDrafts() {
         $db = Loader::db();
         $u = new User();
         $nc = Page::getByPath(PAGE_DRAFTS_PAGE_PATH);
