@@ -59,12 +59,8 @@ class View extends AbstractView {
 		$atHandle = $this->attributeType->getAttributeTypeHandle();
 		$env = Environment::get();
 		$r = $env->getRecord(DIRNAME_ATTRIBUTES . '/' . $atHandle . '/' . $this->viewToRender . '.php', $this->attributePkgHandle);
-		if ($this->viewToRender == 'composer' && !$r->exists()) {
-			$this->render('form');
-		} else {
-			$file = $r->file;
-			$this->setViewTemplate($file);
-		}
+		$file = $r->file;
+		$this->setViewTemplate($file);
 	}
 
 	public function setupController() {
