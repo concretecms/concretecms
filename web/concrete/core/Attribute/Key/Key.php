@@ -13,6 +13,7 @@ use Database;
 use AttributeSet;
 use \Concrete\Core\Attribute\Value\Value as AttributeValue;
 use \Concrete\Core\Package\PackageList;
+use Environment;
 
 
 class Key extends Object {
@@ -599,6 +600,13 @@ class Key extends Object {
 	 * is printed in the corresponding $view function in the attribute's controller is printed out.
 	 */
 	public function render($view = 'view', $value = false, $return = false) {
+		if ($view === 'composer') {
+			$env = Environment::get();
+			$r = $env->getRecord(DIRNAME_ATTRIBUTES . '/' . $this->getAttributeTypeHandle() . '/' . 'composer.php', $this->getPackageHandle());
+			if (!$r->exists()) {
+				$view = 'form';
+			}
+		}
 		$at = AttributeType::getByHandle($this->atHandle);
 		$resp = $at->render($view, $this, $value, $return);
 		if ($return) {
