@@ -15,7 +15,7 @@ class Cache {
 		return md5($type . $id);
 	}
 	
-	public function getLibrary() {
+	public static function getLibrary() {
 		static $cache;
 		if (!isset($cache) && defined('DIR_FILES_CACHE')) {
 			if (is_dir(DIR_FILES_CACHE) && is_writable(DIR_FILES_CACHE)) {
