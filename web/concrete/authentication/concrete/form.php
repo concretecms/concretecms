@@ -27,5 +27,5 @@ $form = Loader::helper('form');
 	</div>
 </div>
 <div class='actions'>
-	<button class='btn primary'>Sign In</button>
+	<button class='btn primary'><?=t('Sign In')</button>
 </div>
