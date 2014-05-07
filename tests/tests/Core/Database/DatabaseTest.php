@@ -74,6 +74,13 @@ class DatabaseTest extends ConcreteDatabaseTestcase {
 		$this->assertTrue($uEmail == 'andrew@concrete5.org');
 	}
 
+    public function testTableExists() {
+        $db = Loader::db();
+        $this->assertTrue($db->tableExists('users'));
+        $this->assertTrue($db->tableExists('Users'));
+        $this->assertFalse($db->tableExists('DummyTable'));
+    }
+
 	public function testLegacyConcreteApi() {
 		
 		$db = Loader::db();
