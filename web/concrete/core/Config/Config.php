@@ -33,13 +33,8 @@ class Config extends Object {
 	*/
 	public function get($cfKey, $getFullObject = false) {
 		$pkgID = null;
-		/*
-		 * We need to check that it is an instance of Concrete5_Model_Config
-		 * becuase Config::get() is called statically and if the object calling
-		 * Config::get() has a property $pkg that is an object we'll actually
-		 * get that instead of what we want
-		 */
-		if (isset($this) && $this instanceof Concrete5_Model_Config && is_object($this->pkg)) {
+
+		if (isset($this) && is_object($this->pkg)) {
 			$pkgID = $this->pkg->getPackageID();
 		}
 		
@@ -99,7 +94,7 @@ class Config extends Object {
 		/*
 		 * See Config::get() for info on why instanceof is needed etc
 		 */
-		if (isset($this) && $this instanceof Concrete5_Model_Config && is_object($this->pkg)) {
+		if (isset($this) && is_object($this->pkg)) {
 			$pkgID = $this->pkg->getPackageID();
 		}
 		self::getStore()->delete($cfKey, $pkgID);

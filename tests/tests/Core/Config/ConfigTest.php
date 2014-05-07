@@ -1,9 +1,12 @@
 <?php
+use \Concrete\Core\Config\Config;
+use \Concrete\Core\Config\ConfigValue;
+
 class ConfigTest extends PHPUnit_Framework_TestCase {
 
 	private function getStoreMock() {
 		return $this->getMock(
-			'ConfigStore',
+			'\Concrete\Core\Config\ConfigStore',
 			array('get', 'load', 'getListByPackage', 'delete', 'set'),
 			array(),
 			'',

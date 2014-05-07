@@ -7,6 +7,12 @@
 		<testsuite name="CoreFoundation">
 			<directory>tests/Core/Foundation/</directory>
 		</testsuite>
+        <testsuite name="CoreConfig">
+            <directory>tests/Core/Config/</directory>
+        </testsuite>
+        <testsuite name="CoreUtility">
+            <directory>tests/Core/Utility/</directory>
+        </testsuite>
 		<testsuite name="CoreDatabase">
 			<directory>tests/Core/Database/</directory>
 		</testsuite>
