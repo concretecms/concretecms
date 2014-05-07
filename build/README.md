@@ -43,6 +43,10 @@ And you can simply launch `grunt taskname`
 - For production: `grunt js:release` (or simply `grunt js`)
 	- SourceMap files won't be generated.  
 
+## Building with Grunt Watch & Livereload
+
+- Running `grunt watch` from this directory and saving `.less` and `.js` files with trigger the `css:debug` and `js:debug` tasks
+- Install the Livereload plugins for [Firefox](https://addons.mozilla.org/en-US/firefox/addon/livereload/) and [Chrome](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei) in order to have the browser automatically refresh after build completes
 
 ## Building everything
 
