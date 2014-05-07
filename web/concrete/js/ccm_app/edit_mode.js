@@ -234,7 +234,11 @@
     Concrete.getEditMode = function() {
       return my;
     }
-
+    
+    ConcreteAlert.notify({
+      'message': ccmi18n.editModeMsg,
+      'title': ccmi18n.editMode
+    });
 
   };
 
