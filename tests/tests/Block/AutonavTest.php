@@ -1,6 +1,6 @@
 <?php
-require_once(realpath(dirname(__FILE__) . '/../BlockTypeTestCase.php'));
-class AutonavTest extends BlockTypeTestcase {
+require_once('BlockTypeTestCase.php');
+class AutonavTest extends BlockTypeTestCase {
 	
 	protected $btHandle = 'autonav';
 	protected $requestData = array(

@@ -11,13 +11,11 @@ define('DB_SERVER', 'localhost');
 
 define('BASE_URL', 'http://www.dummyco.com');
 
-// support classes for tests
-require realpath(dirname(__FILE__) . '/ConcreteDatabaseTestcase.php');
-
 // error reporting
 PHPUnit_Framework_Error_Notice::$enabled = FALSE;
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 
+set_include_path(get_include_path() . PATH_SEPARATOR . realpath(dirname(__FILE__)));
 
 define('DIR_BASE', realpath(dirname(__FILE__) . '/../../web'));
 $DIR_BASE_CORE = realpath(dirname(__FILE__) . '/../../web/concrete');
