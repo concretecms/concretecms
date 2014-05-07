@@ -7,7 +7,7 @@ class Connection extends \Doctrine\DBAL\Connection {
 
     static $entityManager;
 
-    /** 
+    /**
      * Returns the entity manager for use with Doctrine ORM
      */
     public function getEntityManager() {
@@ -26,27 +26,23 @@ class Connection extends \Doctrine\DBAL\Connection {
      */
     public function tableExists($tableName) {
         $sm = $this->getSchemaManager();
-        $schemaTables = $sm->listTables();
-        $tables = array();
-        foreach($schemaTables as $table) {
-            $tables[] = (string) $table->getName();
-        }
-        return in_array(strtolower($tableName), array_map('strtolower', $tables));
+        $schemaTables = $sm->listTableNames();
+        return in_array(strtolower($tableName), array_map('strtolower', $schemaTables));
     }
-    
-	/** 
-	 * @deprecated
-	 */
-	public function Execute($q, $arguments = array()) {
-		if ($q instanceof \Doctrine\DBAL\Statement) {
-			return $q->execute($arguments);
-		} else {
+
+    /**
+     * @deprecated
+     */
+    public function Execute($q, $arguments = array()) {
+        if ($q instanceof \Doctrine\DBAL\Statement) {
+            return $q->execute($arguments);
+        } else {
             if (!is_array($arguments)) {
                 $arguments = array($arguments); // adodb backward compatibility
             }
-			return $this->executeQuery($q, $arguments);
-		}
-	}
+            return $this->executeQuery($q, $arguments);
+        }
+    }
 
     public function query() {
         $args = func_get_args();
@@ -56,7 +52,7 @@ class Connection extends \Doctrine\DBAL\Connection {
             return call_user_func_array('parent::query', $args);
         }
     }
-    /** 
+    /**
      * @deprecated
      * alias to old ADODB method
      */
@@ -71,7 +67,7 @@ class Connection extends \Doctrine\DBAL\Connection {
         return $r;
     }
 
-    /** 
+    /**
      * @deprecated
      * alias to old ADODB method
      */
@@ -79,7 +75,7 @@ class Connection extends \Doctrine\DBAL\Connection {
         return $this->quote($string);
     }
 
-    /** 
+    /**
      * @deprecated
      * alias to old ADODB method
      */
@@ -90,7 +86,7 @@ class Connection extends \Doctrine\DBAL\Connection {
         return $this->fetchColumn($q, $arguments, 0);
     }
 
-    /** 
+    /**
      * @deprecated
      * alias to old ADODB method
      */
@@ -98,11 +94,11 @@ class Connection extends \Doctrine\DBAL\Connection {
         if ($this->errorCode() > 0) {
             return $this->errorCode();
         }
-        
+
         return false;
     }
 
-    /** 
+    /**
      * @deprecated
      * alias to old ADODB method
      */
@@ -113,7 +109,7 @@ class Connection extends \Doctrine\DBAL\Connection {
         return $this->fetchAll($q, $arguments);
     }
 
-    /** 
+    /**
      * @deprecated
      * alias to old ADODB method
      */
@@ -122,7 +118,7 @@ class Connection extends \Doctrine\DBAL\Connection {
     }
 
 
-    /** 
+    /**
      * @deprecated
      * Returns an associative array of all columns in a table
      */
@@ -136,7 +132,7 @@ class Connection extends \Doctrine\DBAL\Connection {
         return $columnNames;
     }
 
-    /** 
+    /**
      * @deprecated
      * Alias to old ADODB Replace() method.
      */
@@ -166,14 +162,14 @@ class Connection extends \Doctrine\DBAL\Connection {
     }
 
 
-    /** 
+    /**
      * @deprecated -
      * alias to old ADODB method
      */
     public function GetCol($q, $arguments = array()) {
         $r = $this->fetchAll($q, $arguments);
         $return = array();
-        
+
         foreach($r as $value) {
             $return[] = $value[key($value)];
         }
@@ -181,15 +177,15 @@ class Connection extends \Doctrine\DBAL\Connection {
     }
 
 
-    /** 
+    /**
      * @deprecated
      * alias to old ADODB method
      */
     public function Insert_ID() {
-    	return $this->lastInsertId();
+        return $this->lastInsertId();
     }
 
-    /** 
+    /**
      * @deprecated
      */
     public function MetaTables() {
@@ -202,7 +198,7 @@ class Connection extends \Doctrine\DBAL\Connection {
         return $tables;
     }
 
-    /** 
+    /**
      * @deprecated
      */
     public function MetaColumns($table) {
