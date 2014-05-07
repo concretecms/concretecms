@@ -111,51 +111,51 @@ class Message extends Object {
 		return $this->cnvMessageDateCreated;
 	}
 	public function getConversationMessageDateTimeOutput($format = 'default') {
-		if(is_array($format)) {  // custom date format
+		if(is_array($format)) { // custom date format
 			return t('Posted on %s', Loader::helper('date')->date($format[0], strtotime($this->cnvMessageDateCreated)));
 		}
 		switch($format) {
-			case 'elapsed':   // 3 seconds ago, 4 days ago, etc.
+			case 'elapsed': // 3 seconds ago, 4 days ago, etc.
 				$timestamp = strtotime($this->cnvMessageDateCreated);
 				$time = array(
-					12 * 30 * 24 * 60 * 60  => array(t('year'), t('years')),
-	                30 * 24 * 60 * 60  => array(t('month'), t('months')),
-	                24 * 60 * 60  => array(t('day'), t('days')),
-	                60 * 60  => array(t('hour'), t('hours')),
-	                60  => array(t('minute'), t('minutes')),
-	                1   => array(t('second'), t('seconds'))                                   
-                );
-		                                                         
-		        $ptime = time() - $timestamp;
-		                        
-				foreach ($time as $seconds => $str) {
-			        $elp = $ptime / $seconds;
-			        if($elp <= 0) {
-			                return t('0 seconds ago');
-			        }
-			        if($elp >= 1) {
-			        
-			            $rounded = round($elp);
-						if($rounded > 1)  {
-							$str = $str[1]; // plural
-			             } else {
-			             	$str = $str[0]; // singular
-			             }
-						 
-						 $ago = t('ago');
-
-			            $elapsed =  sprintf('%s %s %s', $rounded, $str, $ago);
-			            return $elapsed;
-			        }
+					12 * 30 * 24 * 60 * 60 => 'Y',
+					30 * 24 * 60 * 60 => 'M',
+					24 * 60 * 60 => 'D',
+					60 * 60 => 'h',
+					60 => 'm',
+					1 => 's'
+				);
+				$ptime = time() - $timestamp;
+				foreach ($time as $seconds => $unit) {
+					$elp = $ptime / $seconds;
+					if($elp <= 0) {
+						return t2('%d second ago', '%d seconds ago', 0);
+					}
+					if($elp >= 1) {
+						$rounded = round($elp);
+						switch($unit) {
+							case 'Y':
+								return t2('%d year ago', '%d years ago', $rounded);
+							case 'M':
+								return t2('%d month ago', '%d months ago', $rounded);
+							case 'D':
+								return t2('%d day ago', '%d days ago', $rounded);
+							case 'h':
+								return t2('%d hour ago', '%d hours ago', $rounded);
+							case 'm':
+								return t2('%d minute ago', '%d minutes ago', $rounded);
+							case 's':
+								return t2('%d second ago', '%d seconds ago', $rounded);
+						}
+					}
 				}
-			break;
+				break;
 			case 'mdy':
-				return t('Posted on %s', Loader::helper('date')->date(DATE_APP_GENERIC_MDY, strtotime($this->cnvMessageDateCreated))); 
+				return tc('Message posted date', 'Posted on %s', Loader::helper('date')->date(DATE_APP_GENERIC_MDY, strtotime($this->cnvMessageDateCreated)));
 			case 'mdy_full':
-				return t('Posted on %s', Loader::helper('date')->date(DATE_APP_GENERIC_MDY_FULL, strtotime($this->cnvMessageDateCreated))); 
+				return tc('Message posted date', 'Posted on %s', Loader::helper('date')->date(DATE_APP_GENERIC_MDY_FULL, strtotime($this->cnvMessageDateCreated)));
 			default:
-				return t('Posted on %s', Loader::helper('date')->date(DATE_APP_GENERIC_MDY_FULL, strtotime($this->cnvMessageDateCreated))); 
-			 	//return t('Posted on %s', Loader::helper('date')->date('F d, Y \a\t g:i a', strtotime($this->cnvMessageDateCreated)));
+				return tc('Message posted date', 'Posted on %s', Loader::helper('date')->date(DATE_APP_GENERIC_MDY_FULL, strtotime($this->cnvMessageDateCreated)));
 				break;
 		}
 	}
