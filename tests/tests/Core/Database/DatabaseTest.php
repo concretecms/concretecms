@@ -1,4 +1,5 @@
 <?php
+require_once('ConcreteDatabaseTestCase.php');
 class DatabaseTest extends ConcreteDatabaseTestcase {
 	protected $fixtures = array(
 		'Users'

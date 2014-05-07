@@ -1,5 +1,5 @@
 <?php
-class ConcreteDatabaseTestcase extends PHPUnit_Extensions_Database_TestCase {
+class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase {
 
 	private $conn = null;
 	protected $tables = array();
