@@ -28,7 +28,7 @@ foreach($drafts as $dr) {
 		if (is_object($ui)) {
 			print $ui->getUserDisplayName();
 		} else {
-			print t('(Unknown)');
+			print t('(Unknown author)');
 		}
 		?>
 		</td>
