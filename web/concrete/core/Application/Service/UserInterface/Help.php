@@ -204,7 +204,7 @@ EOT;
 	}
 
 	public function disableThisHelpNotification(User $u, $type, $identifier) {
-		$message = $this->getMessage($type, $identifier);
+		$message = $this->getMessage($type, $identifier, $this->getIncrementDisplayCount($type, $identifier));
 		if ($message) {
 			$disabledHelpNotifications = $u->config('DISABLED_HELP_NOTIFICATIONS');
 			if ($disabledHelpNotifications && $disabledHelpNotifications != 'all') {
