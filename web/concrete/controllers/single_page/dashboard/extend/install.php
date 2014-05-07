@@ -138,6 +138,9 @@ class Install extends DashboardPageController {
 					$this->set('showInstallOptionsScreen', true);
 					$this->set('pkg', $p);
 				}
+			} else {
+				$this->error->add(t('Package controller file not found.'));
+				$this->set('error', $this->error);
 			}
 		} else {
 			$this->error->add(t('You do not have permission to install add-ons.'));
