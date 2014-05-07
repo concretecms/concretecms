@@ -22,7 +22,7 @@ $form = Loader::helper('form');
 	</div>
 	<?=$form->hidden('rcID', $rcID); ?>
 	<div class='span3 offset1'>
-		<label class='checkbox'><?=$form->checkbox('uMaintainLogin',1)?> Remain logged in to website.</label>
+		<label class='checkbox'><?=$form->checkbox('uMaintainLogin',1)?> <?=t('Remain logged in to website.')?></label>
 		<div class="help-block"><a href="<?=View::url('/login', 'concrete', 'forgot_password')?>"><?=t('Forgot Password?')?></a></div>
 	</div>
 </div>
