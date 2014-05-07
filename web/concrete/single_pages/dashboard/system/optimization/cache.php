@@ -1,117 +1,118 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<form method="post" class="ccm-dashboard-content-form" action="<?php echo $view->url('/dashboard/system/optimization/cache', 'update_cache')?>">
-        <?php echo $this->controller->token->output('update_cache')?>
+<form method="post" class="ccm-dashboard-content-form" action="<?=$view->url('/dashboard/system/optimization/cache', 'update_cache')?>">
+    <?=$this->controller->token->output('update_cache')?>
         
-    <fieldset>
-        <legend><?php echo t('Block Cache')?></legend>
-    	<div class="control-group">
-            <div class="controls">
-            <label class="radio">
-                <input type="radio" name="ENABLE_BLOCK_CACHE" value="0" <?php  if (ENABLE_BLOCK_CACHE == false) { ?> checked <?php  } ?> />
-                <span><?php echo t('Off - Good for development of custom blocks.')?></span>
-            </label>
-            </div>
-            <div class="controls">
-            <label class="radio">
-                <input type="radio" name="ENABLE_BLOCK_CACHE" value="1" <?php  if (ENABLE_BLOCK_CACHE == true) { ?> checked <?php  } ?> />
-                <span><?php echo t('On - Helps speed up a live site.')?></span>
-            </label>
-            </div>
-        </div>
+    <fieldset style="margin-bottom: 15px">
+    <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Stores the output of blocks which support block caching')?>"><?=t('Block Cache')?></legend>
+
+    <div class="radio">
+        <label for="ENABLE_BLOCK_CACHE">
+            <input type="radio" name="ENABLE_BLOCK_CACHE" value="0" <?php if (ENABLE_BLOCK_CACHE == false) { ?> checked <?php  } ?> />
+            <span><?=t('Off - Good for development of custom blocks.')?></span>
+        </label>
+    </div>
+
+    <div class="radio">
+        <label for="ENABLE_BLOCK_CACHE">
+            <input type="radio" name="ENABLE_BLOCK_CACHE" value="1" <?php if (ENABLE_BLOCK_CACHE == true) { ?> checked <?php  } ?> />
+            <span><?=t('On - Helps speed up a live site.')?></span>
+        </label>
+    </div>
     </fieldset>
 
-    <fieldset>
-        <legend style="margin-bottom: 0px"><?php echo t('CSS and JavaScript Cache')?></legend>
-        <div class="control-group">
-            <div class="controls">
-            <label class="radio">
-                <input type="radio" name="ENABLE_ASSET_CACHE" value="0" <?php  if (ENABLE_ASSET_CACHE == false) { ?> checked <?php  } ?> />
-                <span><?php echo t('Off - Good for active theme and block development.')?></span>
+    <fieldset style="margin-bottom: 15px">
+        <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Stores the generation of CSS and JavaScript assets')?>"><?=t('CSS and JavaScript Cache')?></legend>
+
+        <div class="radio">
+            <label for="ENABLE_ASSET_CACHE">
+                <input type="radio" name="ENABLE_ASSET_CACHE" value="0" <?php if (ENABLE_ASSET_CACHE == false) { ?> checked <?php  } ?> />
+                <span><?=t('Off - Good for active theme and block development.')?></span>
             </label>
-            </div>
-            <div class="controls">
-            <label class="radio">
+        </div>
+
+        <div class="radio">
+            <label for="ENABLE_ASSET_CACHE">
                 <input type="radio" name="ENABLE_ASSET_CACHE" value="1" <?php  if (ENABLE_ASSET_CACHE == true) { ?> checked <?php  } ?> />
-                <span><?php echo t('On - Helps speed up a live site.')?></span>
+                <span><?=t('On - Helps speed up a live site.')?></span>
             </label>
-            </div>
         </div>
     </fieldset>
 
+    <fieldset style="margin-bottom: 15px">
+        <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Stores the location and existence of source code files')?>"><?=t('Overrides Cache')?></legend>
 
-    <fieldset>
-        <legend style="margin-bottom: 0px"><?php echo t('Overrides Cache')?></legend>
-        <div class="control-group">
-            <div class="controls">
-            <label class="radio">
+        <div class="radio">
+            <label for="ENABLE_OVERRIDE_CACHE">
                 <input type="radio" name="ENABLE_OVERRIDE_CACHE" value="0" <?php  if (ENABLE_OVERRIDE_CACHE == false) { ?> checked <?php  } ?> />
-                <span><?php echo t('Off - Good for development.')?></span>
+                <span><?=t('Off - Good for development.')?></span>
             </label>
-            </div>
-            <div class="controls">
-            <label class="radio">
+        </div>
+
+        <div class="radio">
+            <label for="ENABLE_OVERRIDE_CACHE">
                 <input type="radio" name="ENABLE_OVERRIDE_CACHE" value="1" <?php  if (ENABLE_OVERRIDE_CACHE == true) { ?> checked <?php  } ?> />
-                <span><?php echo t('On - Helps speed up a live site.')?></span>
+                <span><?=t('On - Helps speed up a live site.')?></span>
             </label>
-            </div>
         </div>
     </fieldset>
 
-    <fieldset>
-        <legend style="margin-bottom: 0px"><?php echo t('Full Page Caching')?></legend>
-        <div class="control-group">
-            <div class="controls">
-            <label class="radio">
+    <fieldset style="margin-bottom: 15px">
+        <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Stores the output of an entire page')?>"><?=t('Full Page Caching')?></legend>
+        <div class="radio">
+            <label for="FULL_PAGE_CACHE_GLOBAL">
                 <input type="radio" name="FULL_PAGE_CACHE_GLOBAL" value="0" <?php  if (FULL_PAGE_CACHE_GLOBAL == 0) { ?> checked <?php  } ?> />
-                <span><?php echo t('Off - Turn it on by hand for specific pages.')?></span>
+                <span><?=t('Off - Turn it on by hand for specific pages.')?></span>
             </label>
-            </div>
-            <div class="controls">
-            <label class="radio">
+        </div>
+
+        <div class="radio">
+            <label for="FULL_PAGE_CACHE_GLOBAL">
                 <input type="radio" name="FULL_PAGE_CACHE_GLOBAL" value="blocks" <?php  if (FULL_PAGE_CACHE_GLOBAL == 'blocks') { ?> checked <?php  } ?> />
-                <span><?php echo t('On - If blocks on the particular page allow it.')?></span>
+                <span><?=t('On - If blocks on the particular page allow it.')?></span>
             </label>
-            </div>
-            <div class="controls">
-            <label class="radio">
+        </div>
+
+        <div class="radio">
+            <label for="FULL_PAGE_CACHE_GLOBAL">
                 <input type="radio" name="FULL_PAGE_CACHE_GLOBAL" value="all" <?php  if (FULL_PAGE_CACHE_GLOBAL == 'all') { ?> checked <?php  } ?> />
-                <span><?php echo t('On - In all cases.')?></span>
+                <span><?=t('On - In all cases.')?></span>
             </label>
-            </div>
         </div>    
+    </fieldset>
 
-        <div class="control-group">
-            <label class="control-label"><?=t('Expire Pages from Cache')?></label>
-            <div class="controls">
-            <label class="radio">
-                <input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="default" <?php  if (FULL_PAGE_CACHE_LIFETIME == 'default') { ?> checked <?php  } ?> />
-                <span><?php echo t('Every %s (default setting).', Loader::helper('date')->timeSince(time()-CACHE_LIFETIME))?></span>
-            </label>
-            </div>
-            <div class="controls">
-            <label class="radio">
+    <fieldset>
+        <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Sets the amount of time to store the page output before generating a new version')?>"><?=t('Expire Pages from Cache')?></legend>
+
+        <div class="radio">
+          <label for="FULL_PAGE_CACHE_LIFETIME">
+              <input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="default" <?php  if (FULL_PAGE_CACHE_LIFETIME == 'default') { ?> checked <?php  } ?> />
+              <span><?=t('Every %s (default setting).', Loader::helper('date')->timeSince(time()-CACHE_LIFETIME))?></span>
+          </label>
+        </div>
+
+        <div class="radio">
+            <label for="FULL_PAGE_CACHE_LIFETIME">
                 <input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="forever" <?php  if (FULL_PAGE_CACHE_LIFETIME == 'forever') { ?> checked <?php  } ?> />
-                <span><?php echo t('Only when manually removed or the cache is cleared.')?></span>
+                <span><?=t('Only when manually removed or the cache is cleared.')?></span>
             </label>
-            </div>
+        </div>
 
-            <div class="controls">
-            <label class="radio">
-                <input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="custom" style="margin-bottom:1px; vertical-align:text-bottom;" <?php  if (FULL_PAGE_CACHE_LIFETIME == 'custom') { ?> checked <?php  } ?> />
+        <div class="radio">
+            <label for="FULL_PAGE_CACHE_LIFETIME">
+                <input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="custom" style="margin-bottom:1px; vertical-align:text-bottom;" <?php if (FULL_PAGE_CACHE_LIFETIME == 'custom') { ?> checked <?php  } ?> />
                 <span>
-                    <?php echo t('Every ')?>
-                    <?php echo $form->text('FULL_PAGE_CACHE_LIFETIME_CUSTOM', Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM'), array('style' => 'width: 40px;text-align:center;'))?>
-                    <?php echo t(' minutes.')?>
+                    <?=t('Every ')?>
+                    <input type="text" name="FULL_PAGE_CACHE_LIFETIME_CUSTOM" value="<?= h(Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM')) ?>" size="4" />
+                    <?=t(' minutes.')?>
                 </span>
             </label>
-            </div>
-        </div>    
-
+        </div>
     </fieldset>
+
     <div class="ccm-dashboard-form-actions-wrapper">
-    <div class="ccm-dashboard-form-actions">
-        <button class="pull-right btn btn-success" type="submit" ><?=t('Save')?></button>
-    </div>
+        <div class="ccm-dashboard-form-actions">
+            <button class="pull-right btn btn-success" type="submit" ><?=t('Save')?></button>
+        </div>
     </div>
 
 </form>
