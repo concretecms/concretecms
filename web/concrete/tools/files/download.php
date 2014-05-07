@@ -19,7 +19,7 @@ if (isset($_REQUEST['item']) && is_array($_REQUEST['item'])) {
 	// zipem up
 	
 	$filename = $fh->getTemporaryDirectory() . '/' . $vh->getString() . '.zip';
-	$files = '';
+	$files = array();
 	$filenames = array();
 	foreach($_REQUEST['item'] as $fID) {
 		$f = File::getByID(intval($fID));
@@ -29,17 +29,38 @@ if (isset($_REQUEST['item']) && is_array($_REQUEST['item'])) {
 		$fp = new Permissions($f);
 		if ($fp->canViewFile()) {
 			if (!in_array(basename($f->getPath()), $filenames)) {
-				$files .= "'" . addslashes($f->getPath()) . "' ";
+				$files[] = $f->getPath();
 			}
 			$f->trackDownload();
 			$filenames[] = basename($f->getPath());
 		}
 	}
-	if(!strlen($files)) {
+	if(empty($files)) {
 		die(t("None of the requested files could be found."));
 	}
-	exec(DIR_FILES_BIN_ZIP . ' -j \'' . addslashes($filename) . '\' ' . $files);
-	$ci->forceDownload($filename);	
+	if(class_exists('ZipArchive', false)) {
+		$zip = new ZipArchive;
+		$res = $zip->open($filename, ZipArchive::CREATE);
+		if($res !== true) {
+			throw new Exception(t('Could not open with ZipArchive::CREATE'));
+		}
+		foreach($files as $f) {
+			$zip->addFile($f, basename($f));
+		}
+		$zip->close();
+	}
+	else {
+		$exec = escapeshellarg(DIR_FILES_BIN_ZIP) . ' -j ' . escapeshellarg($filename);
+		foreach($files as $f) {
+			$exec .= ' ' . escapeshellarg($f);
+		}
+		$exec .= ' 2>&1';
+		@exec($exec, $output, $rc);
+		if($rc !== 0) {
+			throw new Exception(t('External zip failed. Error description: %s', implode("\n", $outout)));
+		}
+	}
+	$ci->forceDownload($filename);
 
 } else if($_REQUEST['fID']) {
 	
