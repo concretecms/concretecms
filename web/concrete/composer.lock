@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "063faafd79fd1087b4a3ff8a73fa17e7",
+    "hash": "5f271dc3ccb2744f29e4ac8fcf8c4aa5",
     "packages": [
         {
             "name": "dapphp/securimage",
@@ -600,12 +600,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/facebook/facebook-php-sdk.git",
-                "reference": "8a992afce97122556c4e42b0f1c1d60b9d49276d"
+                "reference": "b31c5a7911773a0684e89c7d1d84b0ca575e6cc8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/facebook-php-sdk/zipball/8a992afce97122556c4e42b0f1c1d60b9d49276d",
-                "reference": "8a992afce97122556c4e42b0f1c1d60b9d49276d",
+                "url": "https://api.github.com/repos/facebook/facebook-php-sdk/zipball/b31c5a7911773a0684e89c7d1d84b0ca575e6cc8",
+                "reference": "b31c5a7911773a0684e89c7d1d84b0ca575e6cc8",
                 "shasum": ""
             },
             "require": {
@@ -638,7 +638,57 @@
                 "facebook",
                 "sdk"
             ],
-            "time": "2014-04-04 02:27:38"
+            "time": "2014-05-01 04:58:13"
+        },
+        {
+            "name": "filp/whoops",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/filp/whoops.git",
+                "reference": "f68ba5df072f068f3cbec0956db54086d70b955f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/f68ba5df072f068f3cbec0956db54086d70b955f",
+                "reference": "f68ba5df072f068f3cbec0956db54086d70b955f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "dev-master",
+                "silex/silex": "1.0.*@dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Whoops": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Filipe Dobreira",
+                    "homepage": "https://github.com/filp",
+                    "role": "Developer"
+                }
+            ],
+            "description": "php error handling for cool kids",
+            "homepage": "https://github.com/filp/whoops",
+            "keywords": [
+                "error",
+                "exception",
+                "handling",
+                "library",
+                "silex-provider",
+                "whoops"
+            ],
+            "time": "2013-04-09 14:34:25"
         },
         {
             "name": "hautelook/phpass",
@@ -844,12 +894,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/michelf/php-markdown.git",
-                "reference": "6f952ee180e9bd345f3dd6005aa11e0f5dcbd1b8"
+                "reference": "de9a19c7bf352d41cc99ed86c3c0ef17e87394b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/michelf/php-markdown/zipball/6f952ee180e9bd345f3dd6005aa11e0f5dcbd1b8",
-                "reference": "6f952ee180e9bd345f3dd6005aa11e0f5dcbd1b8",
+                "url": "https://api.github.com/repos/michelf/php-markdown/zipball/de9a19c7bf352d41cc99ed86c3c0ef17e87394b6",
+                "reference": "de9a19c7bf352d41cc99ed86c3c0ef17e87394b6",
                 "shasum": ""
             },
             "require": {
@@ -887,7 +937,7 @@
             "keywords": [
                 "markdown"
             ],
-            "time": "2013-11-29 21:49:31"
+            "time": "2014-05-05 02:43:50"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -895,12 +945,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/serbanghita/Mobile-Detect.git",
-                "reference": "914ed97d2ef5dab8405d3ad947539f91c6e36de8"
+                "reference": "c54e8e194d31357411d27711a6bba802e4b074fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/914ed97d2ef5dab8405d3ad947539f91c6e36de8",
-                "reference": "914ed97d2ef5dab8405d3ad947539f91c6e36de8",
+                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/c54e8e194d31357411d27711a6bba802e4b074fa",
+                "reference": "c54e8e194d31357411d27711a6bba802e4b074fa",
                 "shasum": ""
             },
             "require": {
@@ -939,79 +989,66 @@
                 "mobile detector",
                 "php mobile detect"
             ],
-            "time": "2014-04-21 18:24:47"
+            "time": "2014-05-07 20:24:07"
         },
         {
-            "name": "oyejorge/less.php",
-            "version": "v1.7.0.1",
+            "name": "nesbot/carbon",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/oyejorge/less.php.git",
-                "reference": "958476be9e47a13db0579397f0164af1776bdbee"
+                "url": "https://github.com/briannesbitt/Carbon.git",
+                "reference": "21c4cb4301969c7d85aee8a62eefdfa881413af0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/oyejorge/less.php/zipball/958476be9e47a13db0579397f0164af1776bdbee",
-                "reference": "958476be9e47a13db0579397f0164af1776bdbee",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/21c4cb4301969c7d85aee8a62eefdfa881413af0",
+                "reference": "21c4cb4301969c7d85aee8a62eefdfa881413af0",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.2"
+                "php": ">=5.3.0"
             },
-            "bin": [
-                "bin/lessc"
-            ],
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "Less": "lib/"
-                },
-                "classmap": [
-                    "lessc.inc.php"
-                ]
+                    "Carbon": "src"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "Apache-2.0"
+                "MIT"
             ],
             "authors": [
                 {
-                    "name": "Matt Agar",
-                    "homepage": "https://github.com/agar"
-                },
-                {
-                    "name": "Martin Jantošovič",
-                    "homepage": "https://github.com/Mordred"
-                },
-                {
-                    "name": "Josh Schmidt",
-                    "homepage": "https://github.com/oyejorge"
+                    "name": "Brian Nesbitt",
+                    "email": "brian@nesbot.com",
+                    "homepage": "http://nesbot.com"
                 }
             ],
-            "description": "PHP port of the Javascript version of LESS http://lesscss.org",
-            "homepage": "http://lessphp.gpeasy.com",
+            "description": "A simple API extension for DateTime.",
+            "homepage": "https://github.com/briannesbitt/Carbon",
             "keywords": [
-                "css",
-                "less",
-                "less.js",
-                "lesscss",
-                "php",
-                "stylesheet"
+                "date",
+                "datetime",
+                "time"
             ],
-            "time": "2014-03-17 04:51:51"
+            "time": "2014-01-07 05:10:44"
         },
         {
             "name": "patchwork/utf8",
-            "version": "v1.1.21",
+            "version": "v1.1.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nicolas-grekas/Patchwork-UTF8.git",
-                "reference": "f45ba8bc7962b7356847724989a6949b68d975a2"
+                "reference": "156e66249f48e439a31df2347290bb9ab1d3d242"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nicolas-grekas/Patchwork-UTF8/zipball/f45ba8bc7962b7356847724989a6949b68d975a2",
-                "reference": "f45ba8bc7962b7356847724989a6949b68d975a2",
+                "url": "https://api.github.com/repos/nicolas-grekas/Patchwork-UTF8/zipball/156e66249f48e439a31df2347290bb9ab1d3d242",
+                "reference": "156e66249f48e439a31df2347290bb9ab1d3d242",
                 "shasum": ""
             },
             "require": {
@@ -1049,53 +1086,7 @@
                 "utf-8",
                 "utf8"
             ],
-            "time": "2014-03-26 10:52:02"
-        },
-        {
-            "name": "primal/color",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PrimalPHP/Color.git",
-                "reference": "2adf015e5b6d70e7e629e2a53f335f0e372040b9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PrimalPHP/Color/zipball/2adf015e5b6d70e7e629e2a53f335f0e372040b9",
-                "reference": "2adf015e5b6d70e7e629e2a53f335f0e372040b9",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.10"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Primal\\Color": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jarvis Badgley",
-                    "email": "primal@chipersoft.com",
-                    "homepage": "http://chipersoft.com"
-                }
-            ],
-            "description": "Collection of classes for converting and manipulating colors",
-            "homepage": "http://github.com/PrimalPHP/Color",
-            "keywords": [
-                "color"
-            ],
-            "time": "2014-03-05 14:59:05"
+            "time": "2014-05-06 15:47:10"
         },
         {
             "name": "simplepie/simplepie",
@@ -2099,12 +2090,8 @@
             "time": "2014-01-02 14:06:11"
         }
     ],
-    "packages-dev": [
-
-    ],
-    "aliases": [
-
-    ],
+    "packages-dev": [],
+    "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
         "symfony/class-loader": 20,
@@ -2126,16 +2113,14 @@
         "zf1/zend-translate": 20,
         "zf1/zend-locale": 20,
         "zf1/zend-currency": 20,
-        "primal/color": 20,
         "zf1/zend-date": 20,
         "zf1/zend-queue": 20,
         "zf1/zend-mime": 20,
-        "zf1/zend-mail": 20
+        "zf1/zend-mail": 20,
+        "nesbot/carbon": 20
     },
     "platform": {
         "php": ">=5.3.3"
     },
-    "platform-dev": [
-
-    ]
+    "platform-dev": []
 }
