@@ -6,7 +6,7 @@ use \Concrete\Core\Package\PackageList;
 class ControlSet {
 	public $scsID;
 	public $scsHandle;
-	public $scsDisplayName;
+	public $scsName;
 	public $scsDisplayOrder;
 	public $pkgID;
 
@@ -89,7 +89,7 @@ class ControlSet {
 		return $this->scsHandle;
 	}
 	public function getImageEditorControlSetName() {
-		return $this->scsDisplayName;
+		return $this->scsName;
 	}
 	public function getImageEditorControlSetDisplayOrder() {
 		return $this->scsDisplayOrder;
@@ -107,12 +107,12 @@ class ControlSet {
 	/**
 	 * Basic management of these objects
 	 */
-	public static function add($scsHandle, $scsDisplayName, $pkg = false) {
+	public static function add($scsHandle, $scsName, $pkg = false) {
 		$db = Loader::db();
 		$pkgID = (is_object($pkg)) ? $pkg->getPackageID() : 0;
 		$db->execute('INSERT INTO SystemImageEditorControlSets
-						(scsHandle,scsDisplayName,pkgID) VALUES (?,?,?)',
-						array($scsHandle,$scsDisplayName,$pkgID));
+						(scsHandle,scsName,pkgID) VALUES (?,?,?)',
+						array($scsHandle,$scsName,$pkgID));
 		return self::getByHandle($scsHandle);
 	}
 
