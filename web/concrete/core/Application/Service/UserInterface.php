@@ -184,15 +184,14 @@ class UserInterface {
 	public function clearInterfaceItemsCache() {
 		$u = new ConcreteUser();
 		if ($u->isRegistered()) {
-			Session::remove('dashboardMenus/' . Localization::activeLocale());
+			Session::remove('dashboardMenus');
 		}
 	}
 	
 	public function cacheInterfaceItems() {
 		$u = new ConcreteUser();
 		if ($u->isRegistered()) {
-			$ch = Loader::helper('concrete/dashboard');
-			Session::set('dashboardMenus/' . Localization::activeLocale(), $ch->getIntelligentSearchMenu());
+			Loader::helper('concrete/dashboard')->getIntelligentSearchMenu();
 		}
 	}
 	
