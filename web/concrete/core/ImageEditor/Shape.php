@@ -5,7 +5,7 @@ use \Concrete\Core\Package\PackageList;
 class Shape {
 	public $scsID;
 	public $scsHandle;
-	public $scsDisplayName;
+	public $scsName;
 	public $scsDisplayOrder;
 	public $pkgID;
 
@@ -88,7 +88,7 @@ class Shape {
 		return $this->scsHandle;
 	}
 	public function getImageEditorShapeName() {
-		return $this->scsDisplayName;
+		return $this->scsName;
 	}
 	public function getImageEditorShapeDisplayOrder() {
 		return $this->scsDisplayOrder;
@@ -106,11 +106,11 @@ class Shape {
 	/**
 	 * Basic management of these objects
 	 */
-	public static function add($scsHandle, $scsDisplayName, $pkg = false) {
+	public static function add($scsHandle, $scsName, $pkg = false) {
 		$db = Loader::db();
 		$db->execute('INSERT INTO SystemImageEditorShapes
-						(scsHandle,scsDisplayName,pkgID) VALUES (?,?,?)',
-						array($scsHandle,$scsDisplayName,$pkg));
+						(scsHandle,scsName,pkgID) VALUES (?,?,?)',
+						array($scsHandle,$scsName,$pkg));
 		return self::getByHandle($scsHandle);
 	}
 
