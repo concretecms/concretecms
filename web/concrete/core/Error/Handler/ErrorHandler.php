@@ -24,7 +24,8 @@ class ErrorHandler extends PrettyPageHandler
      */
     public function handle()
     {
-        if (Config::get('SITE_DEBUG_LEVEL') === DEBUG_DISPLAY_ERRORS) {
+        $debug = defined('SITE_DEBUG_LEVEL') ? SITE_DEBUG_LEVEL : Config::get('SITE_DEBUG_LEVEL');
+        if ($debug === DEBUG_DISPLAY_ERRORS) {
             $this->addDetails();
             return parent::handle();
         }
