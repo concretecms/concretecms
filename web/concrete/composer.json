@@ -16,6 +16,7 @@
         "innogames/cssmin": "dev-master",
         "tedivm/jshrink": "0.5.*",
         "michelf/php-markdown": "1.4.*@dev",
+        "filp/whoops": "1",
         "facebook/php-sdk": "dev-master",
         "htmlawed/htmlawed": "dev-master",
         "mobiledetect/mobiledetectlib": "dev-master",
