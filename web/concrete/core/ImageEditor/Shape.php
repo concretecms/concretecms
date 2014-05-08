@@ -90,6 +90,20 @@ class Shape {
 	public function getImageEditorShapeName() {
 		return $this->scsName;
 	}
+	/** Returns the display name for this instance (localized and escaped accordingly to $format)
+	* @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+	* @return string
+	*/
+	public function getImageEditorShapeDisplayName($format = 'html') {
+		$value = tc('ImageEditorShapeName', $this->scsName);
+		switch($format) {
+			case 'html':
+				return h($value);
+			case 'text':
+			default:
+				return $value;
+		}
+	}
 	public function getImageEditorShapeDisplayOrder() {
 		return $this->scsDisplayOrder;
 	}
