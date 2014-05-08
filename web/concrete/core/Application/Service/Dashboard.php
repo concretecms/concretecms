@@ -232,8 +232,10 @@ class Dashboard {
 	}
 
 	public function getIntelligentSearchMenu() {
-		if (Session::has('dashboardMenus')) {
-			return Session::get('dashboardMenus/' . Localization::activeLocale());
+		$dashboardMenus = Session::get('dashboardMenus', array());
+		$dashboardMenusKey = Localization::activeLocale();
+		if (array_key_exists($dashboardMenusKey, $dashboardMenus)) {
+			return $dashboardMenus[$dashboardMenusKey];
 		}			
 
 		ob_start(); ?>
@@ -351,8 +353,9 @@ class Dashboard {
 		<?
 			$html = ob_get_contents();
 			ob_end_clean();
-			
-		return str_replace(array("\n", "\r", "\t"), "", $html);
+		$dashboardMenus[$dashboardMenusKey] = str_replace(array("\n", "\r", "\t"), "", $html);
+		Session::set('dashboardMenus', $dashboardMenus);
+		return $dashboardMenus[$dashboardMenusKey];
 	}	
 
 
