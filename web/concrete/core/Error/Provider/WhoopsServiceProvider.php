@@ -15,7 +15,6 @@ class WhoopsServiceProvider extends Provider
 
         $run->pushHandler($handler);
         $run->register();
-        throw new \Exception('derp');
     }
 
 }
