@@ -24,10 +24,11 @@ class ErrorHandler extends PrettyPageHandler
      */
     public function handle()
     {
-        if (!defined('SITE_DEBUG_LEVEL') || SITE_DEBUG_LEVEL == DEBUG_DISPLAY_ERRORS) {
+        if (Config::get('SITE_DEBUG_LEVEL') === DEBUG_DISPLAY_ERRORS) {
             $this->addDetails();
             return parent::handle();
         }
+
         Core::make('helper/concrete/ui')->renderError(
             t('An unexpected error occurred.'),
             t('An error occurred while processing this request.')
