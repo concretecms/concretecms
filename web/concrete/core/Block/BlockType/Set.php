@@ -55,6 +55,21 @@ class Set extends Object {
 	public function getPackageID() {return $this->pkgID;}
 	public function getPackageHandle() {return PackageList::getHandle($this->pkgID);}
 	
+	/** Returns the display name for this instance (localized and escaped accordingly to $format)
+	* @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+	* @return string
+	*/
+	public function getBlockTypeSetDisplayName($format = 'html')
+	{
+		$value = tc('BlockTypeSetName', $this->btsName);
+		switch($format) {
+			case 'html':
+				return h($value);
+			case 'text':
+			default:
+				return $value;
+		}
+	}
 	public function updateBlockTypeSetName($btsName) {
 		$this->btsName = $btsName;
 		$db = Loader::db();
