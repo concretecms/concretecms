@@ -373,7 +373,7 @@ class Package extends Object {
 		} else if ($item instanceof GatheringItemTemplate) {
 			return $item->getGatheringItemTemplateName();
 		} else if ($item instanceof BlockTypeSet) {
-			return $item->getBlockTypeSetName();
+			return $item->getBlockTypeSetDisplayName();
 		} else if ($item instanceof PageTypeComposerControlType) {
 			return $item->getPageTypeComposerControlTypeName();
 		} else if ($item instanceof PageTypePublishTargetType) {
