@@ -7,6 +7,7 @@ php:
 
 before_script:
   - echo 'short_open_tag = On' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - mysql -e 'CREATE DATABASE concrete5_tests;'
   - cd web/concrete
   - composer install
   - cd ../../tests

@@ -4,9 +4,9 @@
  */
 
 // testing credentials
-define('DB_USERNAME', 'phpunitTesting');
-define('DB_PASSWORD', 'phpunitTesting');
-define('DB_DATABASE', 'phpunitTesting');
+define('DB_USERNAME', 'travis');
+define('DB_PASSWORD', '');
+define('DB_DATABASE', 'concrete5_tests');
 define('DB_SERVER', 'localhost');
 
 define('BASE_URL', 'http://www.dummyco.com');
