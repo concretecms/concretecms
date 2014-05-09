@@ -2,8 +2,11 @@
 namespace Concrete\Core\Error\Handler;
 
 use Concrete\Core\Config\Config;
+use Concrete\Core\Logging\Log;
 use Concrete\Core\Package\PackageList;
+use Concrete\Core\Support\Facade\Database;
 use Core;
+use Whoops\Example\Exception;
 use Whoops\Handler\PrettyPageHandler;
 
 /**
@@ -24,7 +27,28 @@ class ErrorHandler extends PrettyPageHandler
      */
     public function handle()
     {
-        $debug = defined('SITE_DEBUG_LEVEL') ? SITE_DEBUG_LEVEL : Config::get('SITE_DEBUG_LEVEL');
+        if (defined('ENABLE_LOG_ERRORS') && ENABLE_LOG_ERRORS) {
+            try {
+                $e = $this->getInspector()->getException();
+                $db = Database::get();
+                if ($db->isConnected()) {
+                    $l = new Log(LOG_TYPE_EXCEPTIONS, true, true);
+                    $l->write(
+                      t('Exception Occurred: ') . sprintf(
+                          "%s:%d %s (%d)\n",
+                          $e->getFile(),
+                          $e->getLine(),
+                          $e->getMessage(),
+                          $e->getCode()
+                      )
+                    );
+                    $l->write($e->getTraceAsString());
+                    $l->close();
+                }
+            } catch (Exception $e) {}
+        }
+
+        $debug = intval(defined('SITE_DEBUG_LEVEL') ? SITE_DEBUG_LEVEL : Config::get('SITE_DEBUG_LEVEL'));
         if ($debug === DEBUG_DISPLAY_ERRORS) {
             $this->addDetails();
             return parent::handle();
@@ -34,6 +58,7 @@ class ErrorHandler extends PrettyPageHandler
             t('An unexpected error occurred.'),
             t('An error occurred while processing this request.')
         );
+        Core::shutdown();
 
     }
 

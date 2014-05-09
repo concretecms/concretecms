@@ -35,51 +35,6 @@ class Application extends Container
         }
     }
 
-    public function handleExceptions()
-    {
-        $app = $this;
-        set_exception_handler(
-            function ($e) use ($app) {
-                // log if setup to do so
-                if (defined('ENABLE_LOG_ERRORS') && ENABLE_LOG_ERRORS) {
-                    $db = Database::get();
-                    if ($db->isConnected()) {
-                        $l = new Log(LOG_TYPE_EXCEPTIONS, true, true);
-                        $l->write(
-                          t('Exception Occurred: ') . sprintf(
-                              "%s:%d %s (%d)\n",
-                              $e->getFile(),
-                              $e->getLine(),
-                              $e->getMessage(),
-                              $e->getCode()
-                          )
-                        );
-                        $l->write($e->getTraceAsString());
-                        $l->close();
-                    }
-                }
-
-                if (defined('SITE_DEBUG_LEVEL') && SITE_DEBUG_LEVEL == DEBUG_DISPLAY_ERRORS || (!defined(
-                        'SITE_DEBUG_LEVEL'
-                    ))
-                ) {
-                    Core::make('helper/concrete/ui')->renderError(
-                        t('An unexpected error occurred.'),
-                        $e->getMessage(),
-                        $e
-                    );
-                } else {
-                    Core::make('helper/concrete/ui')->renderError(
-                        t('An unexpected error occurred.'),
-                        t('An error occurred while processing this request.')
-                    );
-                }
-
-                $app->shutdown();
-            }
-        );
-    }
-
     /**
      * Turns off the lights.
      */
