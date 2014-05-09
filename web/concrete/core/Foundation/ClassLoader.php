@@ -21,10 +21,10 @@ class ClassLoader  {
 	public function __construct() {
 		$this->setupFileAutoloader();
 		$this->setupAliasAutoloader();
-		$this->setupLegacyAutoloader();
+		$this->setupMapClassAutoloader();
 	}
 
-	protected function setupLegacyAutoloader() {
+	protected function setupMapClassAutoloader() {
 		$mapping = array(
 		    'Loader' => DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Legacy/Loader.php',
 		    'TaskPermission' => DIR_BASE_CORE . '/' . DIRNAME_CLASSES . '/Legacy/TaskPermission.php',
