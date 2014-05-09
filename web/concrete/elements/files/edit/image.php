@@ -45,7 +45,7 @@ $filters = SystemImageEditorFilter::getList();
                 <div class='controlset {$handle}'".
                  " data-namespace='{$handle}'".
                  " data-src='/concrete/js/image_editor/control_sets/{$handle}.js'>".
-                    "<h4>".$controlset->getImageEditorControlSetName()."</h4>".
+                    "<h4>".$controlset->getImageEditorControlSetDisplayName()."</h4>".
                     "<div class='control'><div class='contents'>";
                       echo Loader::element('image_editor/control_sets/'.$handle,array('editorid'=>$editorid));
                     echo "</div></div>".
@@ -63,7 +63,7 @@ $filters = SystemImageEditorFilter::getList();
                 <div class='component {$handle}'".
                  " data-namespace='{$handle}'".
                  " data-src='/concrete/js/image_editor/components/{$handle}.js'>".
-                    "<h4>".$component->getImageEditorComponentName()."</h4>".
+                    "<h4>".$component->getImageEditorComponentDisplayName()."</h4>".
                     "<div class='control'><div class='contents'>";
                       echo Loader::element('image_editor/components/'.$handle,array('editorid'=>$editorid));
                     echo "</div></div>".
@@ -101,7 +101,7 @@ $(function(){
       $fnames = array();
       foreach ($filters as $filter) {
         $handle = $filter->getImageEditorFilterHandle();
-        $fnames[$handle] = array("src"=>"/concrete/js/image_editor/filters/{$handle}.js","name"=>$filter->getImageEditorFilterName());
+        $fnames[$handle] = array("src"=>"/concrete/js/image_editor/filters/{$handle}.js","name"=>$filter->getImageEditorFilterDisplayName('text'));
       }
       echo Loader::helper('json')->encode($fnames);
     ?>;
