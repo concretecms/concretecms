@@ -1,7 +1,5 @@
 <?php
 define('ENABLE_BLOCK_CACHE', false);
-require_once('ConcreteDatabaseTestCase.php');
-
 use \Concrete\Core\Block\View\BlockView;
 abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase {
 	
