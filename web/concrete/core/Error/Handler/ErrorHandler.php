@@ -48,7 +48,7 @@ class ErrorHandler extends PrettyPageHandler
             } catch (Exception $e) {}
         }
 
-        $debug = intval(defined('SITE_DEBUG_LEVEL') ? SITE_DEBUG_LEVEL : Config::get('SITE_DEBUG_LEVEL'));
+        $debug = intval(defined('SITE_DEBUG_LEVEL') ? SITE_DEBUG_LEVEL : Config::get('SITE_DEBUG_LEVEL'), 10);
         if ($debug === DEBUG_DISPLAY_ERRORS) {
             $this->addDetails();
             return parent::handle();
