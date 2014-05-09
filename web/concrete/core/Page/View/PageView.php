@@ -105,12 +105,22 @@ class PageView extends View {
         $relative = REL_DIR_FILES_CACHE . '/pages/' . $this->c->getCollectionID() . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle();
         $r = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeObject->getThemeHandle() . '/' . DIRNAME_CSS . '/' . $stylesheet,
             $this->themeObject->getPackageHandle());
-        $sheetObject = new \Concrete\Core\StyleCustomizer\Stylesheet($stylesheet, $r->file, $r->url, $output, $relative);
-        if ($sheetObject->outputFileExists()) {
-            return $sheetObject->getOutputRelativePath();
+        if ($r->exists()) {
+            $sheetObject = new \Concrete\Core\StyleCustomizer\Stylesheet($stylesheet, $r->file, $r->url, $output, $relative);
+            if ($sheetObject->outputFileExists()) {
+                return $sheetObject->getOutputRelativePath();
+            }
+
+            return $this->themeObject->getStylesheet($stylesheet);
         }
 
-        return $this->themeObject->getStylesheet($stylesheet);
+        /**
+         * deprecated - but this is for backward compatibility. If we don't have a stylesheet in the css/
+         * directory we just pass through and return the passed file in the current directory.
+         */
+        return $env->getURL(DIRNAME_THEMES . '/' . $this->themeObject->getThemeHandle() . '/' . $stylesheet,
+            $this->themeObject->getPackageHandle()
+        );
     }
 
     public function startRender() {
