@@ -2803,7 +2803,7 @@
       <notnull/>
       <default value=""/>
     </field>
-    <field name="scsDisplayName" type="C" size="255">
+    <field name="scsName" type="C" size="255">
       <notnull/>
       <default value=""/>
     </field>
@@ -2829,7 +2829,7 @@
       <notnull/>
       <default value=""/>
     </field>
-    <field name="scsDisplayName" type="C" size="255">
+    <field name="scsName" type="C" size="255">
       <notnull/>
       <default value=""/>
     </field>
@@ -2855,7 +2855,7 @@
       <notnull/>
       <default value=""/>
     </field>
-    <field name="scsDisplayName" type="C" size="255">
+    <field name="scsName" type="C" size="255">
       <notnull/>
       <default value=""/>
     </field>
@@ -2881,7 +2881,7 @@
       <notnull/>
       <default value=""/>
     </field>
-    <field name="scsDisplayName" type="C" size="255">
+    <field name="scsName" type="C" size="255">
       <notnull/>
       <default value=""/>
     </field>
