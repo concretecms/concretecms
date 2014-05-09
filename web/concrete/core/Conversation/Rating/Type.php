@@ -10,6 +10,9 @@ abstract class Type extends Object {
 	abstract public function adjustConversationMessageRatingTotalScore(ConversationMessage $message);
 	abstract public function rateMessage();
 	
+	/** Returns the list of all conversation rating types
+	* @return array[Type]
+	*/
 	public static function getList() {
 		$db = Loader::db();
 		$handles = $db->GetCol('select cnvRatingTypeHandle from ConversationRatingTypes order by cnvRatingTypeHandle asc');
@@ -98,5 +101,19 @@ abstract class Type extends Object {
 		return PackageList::getHandle($this->pkgID);
 	}
 	public function getPackageObject() {return Package::getByID($this->pkgID);}
-
+    /** Returns the display name for this instance (localized and escaped accordingly to $format)
+    * @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+    * @return string
+    */
+    public function getConversationRatingTypeDisplayName($format = 'html')
+    {
+        $value = tc('ConversationRatingTypeName', $this->btsName);
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
+    }
 }
