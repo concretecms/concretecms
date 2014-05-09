@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $this->inc('elements/header.php'); 
 ?>
 
-<header><h1><?=$pageTitle?></h1></header>
+<header><h1><?=t($pageTitle)?></h1></header>
 
 <?
 if (isset($error)) {
