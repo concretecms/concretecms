@@ -17,6 +17,8 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 
 set_include_path(get_include_path() . PATH_SEPARATOR . realpath(dirname(__FILE__)));
 
+print get_include_path();
+
 require_once('BlockTypeTestCase.php');
 require_once('ConcreteDatabaseTestCase.php');
 
