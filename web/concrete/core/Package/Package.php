@@ -411,7 +411,7 @@ class Package extends Object {
 		} else if ($item instanceof SystemAntispamLibrary) {
 			return $item->getSystemAntispamLibraryName();
 		} else if ($item instanceof ConversationRatingType) {
-			return $item->getConversationRatingTypeName();
+			return $item->getConversationRatingTypeDisplayName();
 		} else if ($item instanceof SystemContentEditorSnippet) {
 			return $item->getSystemContentEditorSnippetName();
 		} else if (is_a($item, 'PermissionKey')) {
