@@ -13,7 +13,7 @@ use View;
  */
 
 /**
- * Functions to help with using HTML. Does not include form elements - those have their own helper. 
+ * Functions to help with using HTML. Does not include form elements - those have their own helper.
  * @package Helpers
  * @category Concrete
  * @author Andrew Embler <andrew@concrete5.org>
@@ -22,9 +22,9 @@ use View;
  */
 
 class Html {
-	
+
 	public function css($file, $pkgHandle = null) {
-		$asset = new CSSAsset();		
+		$asset = new CSSAsset();
 		// if the first character is a / then that means we just go right through, it's a direct path
 		if (substr($file, 0, 4) == 'http' || substr($file, 0, 2) == '//') {
 			$asset->setAssetURL($file);
@@ -42,9 +42,9 @@ class Html {
 				$asset->setAssetURL(REL_DIR_APPLICATION . '/' . DIRNAME_CSS . '/' . $file);
 				$asset->setAssetPath(DIR_APPLICATION . '/' . DIRNAME_CSS . '/' . $file);
 			} else if ($pkgHandle != null) {
-				if (file_exists(DIR_APPLICATION . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file)) {
-					$asset->setAssetURL(REL_DIR_APPLICATION . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file);
-					$asset->setAssetPath(DIR_APPLICATION . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file);
+				if (file_exists(DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file)) {
+					$asset->setAssetURL(REL_DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file);
+					$asset->setAssetPath(DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS. '/' . $file);
 				} else if (file_exists(DIR_BASE_CORE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file)) {
 					$asset->setAssetURL(ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file);
 					$asset->setAssetPath(DIR_BASE_CORE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_CSS . '/' . $file);
@@ -54,13 +54,13 @@ class Html {
 
 		if (!$asset->getAssetURL()) {
 			$asset->setAssetURL(ASSETS_URL_CSS . '/' . $file);
-			$asset->setAssetPath(DIR_BASE_CORE . '/' . DIRNAME_CSS . '/' . $file);	
+			$asset->setAssetPath(DIR_BASE_CORE . '/' . DIRNAME_CSS . '/' . $file);
 		}
 		return $asset;
 	}
 
 	public function javascript($file, $pkgHandle = null) {
-		$asset = new JavascriptAsset();		
+		$asset = new JavascriptAsset();
 		// if the first character is a / then that means we just go right through, it's a direct path
 		if (substr($file, 0, 4) == 'http' || substr($file, 0, 2) == '//') {
 			$asset->setAssetURL($file);
@@ -73,9 +73,9 @@ class Html {
 				$asset->setAssetURL(REL_DIR_APPLICATION . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
 				$asset->setAssetPath(DIR_APPLICATION . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
 			} else if ($pkgHandle != null) {
-				if (file_exists(DIR_APPLICATION . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {
-					$asset->setAssetURL(REL_DIR_APPLICATION . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
-					$asset->setAssetPath(DIR_APPLICATION . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
+				if (file_exists(DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {
+					$asset->setAssetURL(REL_DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
+					$asset->setAssetPath(DIR_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
 				} else if (file_exists(DIR_BASE_CORE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file)) {
 					$asset->setAssetURL(ASSETS_URL . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
 					$asset->setAssetPath(DIR_BASE_CORE . '/' . DIRNAME_PACKAGES . '/' . $pkgHandle . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
@@ -85,13 +85,13 @@ class Html {
 
 		if (!$asset->getAssetURL()) {
 			$asset->setAssetURL(ASSETS_URL_JAVASCRIPT . '/' . $file);
-			$asset->setAssetPath(DIR_BASE_CORE . '/' . DIRNAME_JAVASCRIPT . '/' . $file);	
+			$asset->setAssetPath(DIR_BASE_CORE . '/' . DIRNAME_JAVASCRIPT . '/' . $file);
 		}
 		return $asset;
 	}
 
-	
-	/** 
+
+	/**
 	 * Includes an image file when given a src, width and height. Optional attribs array specifies style, other properties.
 	 * First checks the PATH off the root of the site
 	 * Then checks the PATH off the images directory at the root of the site.
@@ -104,18 +104,18 @@ class Html {
 	public function image($src, $width = false, $height = false, $attribs = null) {
 		$image = parse_url($src);
 		$attribsStr = '';
-		
+
 		if (is_array($width) && $height == false) {
 			$attribs = $width;
 			$width = false;
 		}
-		
+
 		if (is_array($attribs)) {
 			foreach($attribs as $key => $at) {
 				$attribsStr .= " {$key}=\"{$at}\" ";
 			}
 		}
-		
+
 		if ($width == false && $height == false && (!isset($image['scheme']))) {
 			// if our file is not local we DON'T do getimagesize() on it. too slow
 			$v = View::getInstance();
@@ -140,14 +140,12 @@ class Html {
 				$src = ASSETS_URL_IMAGES . '/' . $src;
 			}
 		}
-		
+
 		if ($width > 0) {
 			$str = '<img src="' . $src . '" width="' . $width . '" border="0" height="' . $height . '" ' . $attribsStr . ' />';
 		} else {
 			$str = '<img src="' . $src . '" border="0" ' . $attribsStr . ' />';
 		}
 		return $str;
-	}	
-	
-	
+	}
 }
