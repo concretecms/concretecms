@@ -1,19 +1,19 @@
 <?
 namespace Concrete\Core\User\Group;
 use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
-use GroupSet;
+
 class GroupSetList extends DatabaseItemList {
 
 	public function __construct() {
 		$this->setQuery('select gsID from GroupSets');
 		$this->sortBy('gsName', 'asc');
 	}
-	
+
 	public function get() {
 		$r = parent::get(0, 0);
 		$groupsets = array();
 		foreach($r as $row) {
-			$groupsets[] = GroupSet::getByID($row['gsID']);	
+			$groupsets[] = GroupSet::getByID($row['gsID']);
 		}
 		return $groupsets;
 	}

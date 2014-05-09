@@ -388,6 +388,10 @@ module.exports = function(grunt) {
         require('./tasks/remove-short-tags.js')(grunt, config, parameters, this.async());
     });
 
+    grunt.registerTask('generate-symbols', 'Generate IDE symbols', function() {
+        require('./tasks/generate-symbols.js')(grunt, config, parameters, this.async());
+    });
+
     grunt.registerTask('build-release-start', 'Create concrete5 release from Git, run various required functions.', function() {
         require('./tasks/build-release/start.js')(grunt, config, parameters, this.async());
     });
