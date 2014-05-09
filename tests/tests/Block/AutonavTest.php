@@ -1,5 +1,4 @@
 <?php
-require_once('BlockTypeTestCase.php');
 class AutonavTest extends BlockTypeTestCase {
 	
 	protected $btHandle = 'autonav';

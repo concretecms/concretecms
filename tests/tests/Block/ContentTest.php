@@ -1,5 +1,4 @@
 <?php
-require_once('BlockTypeTestCase.php');
 class ContentTest extends BlockTypeTestCase {
 	
 	protected $btHandle = 'content';
