@@ -107,7 +107,7 @@ abstract class Type extends Object {
     */
     public function getConversationRatingTypeDisplayName($format = 'html')
     {
-        $value = tc('ConversationRatingTypeName', $this->btsName);
+        $value = tc('ConversationRatingTypeName', $this->cnvRatingTypeName);
         switch ($format) {
             case 'html':
                 return h($value);
