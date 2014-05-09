@@ -5,7 +5,7 @@ use \Concrete\Core\Package\PackageList;
 class Shape {
 	public $scsID;
 	public $scsHandle;
-	public $scsDisplayName;
+	public $scsName;
 	public $scsDisplayOrder;
 	public $pkgID;
 
@@ -88,7 +88,21 @@ class Shape {
 		return $this->scsHandle;
 	}
 	public function getImageEditorShapeName() {
-		return $this->scsDisplayName;
+		return $this->scsName;
+	}
+	/** Returns the display name for this instance (localized and escaped accordingly to $format)
+	* @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+	* @return string
+	*/
+	public function getImageEditorShapeDisplayName($format = 'html') {
+		$value = tc('ImageEditorShapeName', $this->scsName);
+		switch($format) {
+			case 'html':
+				return h($value);
+			case 'text':
+			default:
+				return $value;
+		}
 	}
 	public function getImageEditorShapeDisplayOrder() {
 		return $this->scsDisplayOrder;
@@ -106,11 +120,11 @@ class Shape {
 	/**
 	 * Basic management of these objects
 	 */
-	public static function add($scsHandle, $scsDisplayName, $pkg = false) {
+	public static function add($scsHandle, $scsName, $pkg = false) {
 		$db = Loader::db();
 		$db->execute('INSERT INTO SystemImageEditorShapes
-						(scsHandle,scsDisplayName,pkgID) VALUES (?,?,?)',
-						array($scsHandle,$scsDisplayName,$pkg));
+						(scsHandle,scsName,pkgID) VALUES (?,?,?)',
+						array($scsHandle,$scsName,$pkg));
 		return self::getByHandle($scsHandle);
 	}
 
