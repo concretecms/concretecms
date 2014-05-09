@@ -299,7 +299,9 @@ class PageList extends DatabaseItemList {
 	 */
 	public function filterByUserID($uID) {
 		if ($this->includeAliases) {
-			$this->filter(false, "(p1.uID = $uID or p2.uID = $uID)");
+			$db = Loader::db();
+			$quID = $db->quote($uID);
+			$this->filter(false, "(p1.uID = {$quID} or p2.uID = {$quID})");
 		} else {
 			$this->filter('p1.uID', $uID);
 		}
