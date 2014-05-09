@@ -17,16 +17,12 @@ use Whoops\Handler\PrettyPageHandler;
 class ErrorHandler extends PrettyPageHandler
 {
 
-    public function __construct()
-    {
-        $this->setPageTitle("concrete5 has encountered an issue.");
-    }
-
     /**
      * {@inheritDoc}
      */
     public function handle()
     {
+        $this->setPageTitle("concrete5 has encountered an issue.");
         if (defined('ENABLE_LOG_ERRORS') && ENABLE_LOG_ERRORS) {
             try {
                 $e = $this->getInspector()->getException();
