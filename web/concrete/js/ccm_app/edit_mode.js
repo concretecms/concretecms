@@ -1,3 +1,7 @@
+/* jshint browser: true, unused:vars, undef:true */
+/* global escape, jQuery, _, Concrete, CCM_CID, CCM_TOOLS_PATH, ConcreteEvent, ConcreteMenuManager, ConcreteToolbar,
+	CCM_DISPATCHER_FILENAME, ConcreteAlert, ccmi18n, ConcreteMenu, CCM_SECURITY_TOKEN, ConcretePanelManager,
+	CCM_DISPATCHER_FILENAME, CCMEditMode */
 /**
  * concrete5 in context editing
  */
@@ -52,7 +56,7 @@
       Concrete.event.bind('EditModeExitInline', function(e) {
         e.stopPropagation();
         var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + CCM_CID + '&bID=' + block.getId() + '&arHandle=' + escape(area.getHandle()) + '&btask=view_edit_mode';
-        jQuery.fn.dialog.showLoader();
+        $.fn.dialog.showLoader();
         $.get(action,
           function(r) {
             var block = area.getBlockByID(bID);
@@ -79,7 +83,7 @@
         success: function(r) {
           $container.html(r);
           my.loadInlineEditModeToolbars($container);
-          jQuery.fn.dialog.hideLoader();
+          $.fn.dialog.hideLoader();
         }
       });
     });
@@ -112,7 +116,7 @@
 
       $('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
 
-      jQuery.fn.dialog.showLoader();
+      $.fn.dialog.showLoader();
 
       if (area.menu) {
         area.menu.destroy();
@@ -141,7 +145,7 @@
           my.loadInlineEditModeToolbars($container);
         },
         complete: function() {
-          jQuery.fn.dialog.hideLoader();
+          $.fn.dialog.hideLoader();
         }
       });
     });
@@ -163,7 +167,7 @@
     });
 
     Concrete.event.bind('EditModeBlockDelete', function(event, data) {
-      var block = data.block, area = block.getArea(), message = data.message;
+      var block = data.block;
       block.delete(data.message);
       ConcreteEvent.fire('EditModeBlockDeleteComplete', {
         block: block
@@ -196,7 +200,7 @@
       var block = data.block,
           targetArea = data.targetArea,
           sourceArea = data.sourceArea,
-          data = {
+          send = {
             ccm_token: window.CCM_SECURITY_TOKEN,
             btask: 'ajax_do_arrange',
             area: targetArea.getId(),
@@ -206,7 +210,7 @@
           };
 
       _(targetArea.getBlocks()).each(function(block, key){
-        data.blocks[key] = block.getId();
+      	send.blocks[key] = block.getId();
       });
       block.bindMenu();
       var loading = false, timeout = setTimeout(function() {
@@ -216,7 +220,7 @@
 
       $.concreteAjax({
         url: CCM_DISPATCHER_FILENAME + '/ccm/system/page/arrange_blocks?cID=' + CCM_CID,
-        data: data,
+        data: send,
         success: function(r) {
           $.fn.dialog.hideLoader();
           clearTimeout(timeout);
@@ -233,7 +237,7 @@
 
     Concrete.getEditMode = function() {
       return my;
-    }
+    };
     
     ConcreteAlert.notify({
       'message': ccmi18n.editModeMsg,
@@ -335,7 +339,9 @@
 
   var BlockType = Concrete.BlockType = function BlockType(elem, edit_mode, dragger) {
     var my = this;
-
+    Concrete.createGetterSetters.call(my, {
+   	 placeholder: elem.html()
+    });
     Block.call(my, elem, edit_mode, dragger);
   };
 
@@ -484,7 +490,7 @@
 
       $(window).unbind('scroll.inline-toolbar');
       ConcreteToolbar.enable();
-      jQuery.fn.dialog.hideLoader();
+      $.fn.dialog.hideLoader();
     },
 
     loadInlineEditModeToolbars: function($container) {
@@ -541,9 +547,9 @@
       var my = this,
           elem = my.getElem(),
           totalBlocks = my.getTotalBlocks(),
-          menuHandle = (totalBlocks == 0) ?
-            'div[data-area-menu-handle=' + my.getId() + ']'
-            : '#area-menu-footer-' + my.getId(),
+          menuHandle = totalBlocks ?
+         	 '#area-menu-footer-' + my.getId()
+            : 'div[data-area-menu-handle=' + my.getId() + ']',
           $menuElem = my.getMenuElem();
 
       if (my.menu) {
@@ -607,7 +613,6 @@
     },
 
     setTotalBlocks: function(totalBlocks) {
-      var my = this;
       this.setAttr('totalBlocks', totalBlocks);
       this.getElem().attr('data-total-blocks', totalBlocks);
     },
@@ -628,7 +633,7 @@
 
       // any blocks with indexes higher than this one need to have them incremented
       if (totalHigherBlocks > 0) {
-        var updateBlocksArray = []
+        var updateBlocksArray = [];
         for (var i = 0; i < blocks.length; i++) {
           if (i >= index) {
             updateBlocksArray[i+1] = blocks[i]; 
@@ -671,7 +676,7 @@
         my.setDragAreas(_(my.getDragAreas()).without(drag_area));
       }
 
-      if (my.getTotalBlocks() == 0) {
+      if (!my.getTotalBlocks()) {
         // we have to destroy the old menu and create it anew
         my.bindMenu();
       }
@@ -726,7 +731,6 @@
     delete: function(msg, callback) {
       var my = this, bID = my.getId(),
         area = my.getArea(),
-        aID = area.getId(),
         block = area.getBlockByID(bID),
         cID = CCM_CID,
         arHandle = area.getHandle();
@@ -752,7 +756,7 @@
      * replaces a block in an area with a new block by ID and content 
      */
     replace: function(bID, content) {
-      var my = this, editor = Concrete.getEditMode(), oldBID = my.getId(), area = my.getArea(), totalBlocks = area.getTotalBlocks();
+      var my = this, editor = Concrete.getEditMode(), oldBID = my.getId(), area = my.getArea(), totalBlocks = area.getTotalBlocks(), i, b;
 
       my.getElem().next('.ccm-area-drag-area').remove();
       my.getElem().data('block-id', bID); // it's super lame that i have to do this.
@@ -768,8 +772,8 @@
 
       // now we go through all the block registries and replace the old one with this one.
       var editorBlocks = editor.getBlocks();
-      for(var i = 0; i < editorBlocks.length; i++) {
-        var b = editorBlocks[i];
+      for(i = 0; i < editorBlocks.length; i++) {
+        b = editorBlocks[i];
         if (b.getId() == oldBID) {
           editorBlocks[i] = newBlock;
         }
@@ -778,8 +782,8 @@
 
       // area specific
       var areaBlocks = area.getBlocks(), total = areaBlocks.length;
-      for(var i = 0; i < total; i++) {
-        var b = areaBlocks[i];
+      for(i = 0; i < total; i++) {
+        b = areaBlocks[i];
         if (b.getId() == oldBID) {
           area.addBlockToIndex(newBlock, i);
         }
@@ -840,16 +844,20 @@
      * @return {jQuery} dragger
      */
     getDragger: function blockgetDragger() {
-      var my = this;
+       var my = this;
 
-      if (!my.getAttr('dragger')) {
-        var dragger = $('<a><p><img src="/concrete/blocks/content/icon.png"><span>Content</span></p></a>').addClass('ccm-block-edit-drag').addClass('ccm-panel-add-block-draggable-block-type');
-        my.setAttr('dragger', dragger.css({
-          width: my.getElem().width(),
-          height: my.getElem().height()
-        }));
-      }
-      return my.getAttr('dragger');
+       if (!my.getAttr('dragger')) {
+           var placeholder = ('getPlaceholder' in my) ? my.getPlaceholder() : '<p><img src="/concrete/blocks/content/icon.png"><span>Content</span></p>',
+               dragger = $('<a />')
+                   .html(placeholder)
+         	  	    .addClass('ccm-block-edit-drag ccm-panel-add-block-draggable-block-type')
+           ;
+           my.setAttr('dragger', dragger.css({
+              width: my.getElem().width(),
+              height: my.getElem().height()
+           }));
+       }
+       return my.getAttr('dragger');
     },
 
     /**
@@ -1019,7 +1027,8 @@
         sourceArea.removeBlock(my);
         var targetArea = my.getSelected().getArea();
         my.getSelected().getElem().after(my.getElem());
-        if (selected_block = my.getSelected().getBlock()) {
+        selected_block = my.getSelected().getBlock();
+        if (selected_block) {
           my.getSelected().getArea().addBlock(my, selected_block);
         } else {
           my.getSelected().getArea().addBlockToIndex(my, 0);
@@ -1101,14 +1110,13 @@
         var block_type_id = elem.data('btid'),
             area = my.getSelected().getArea(),
             area_handle = area.getHandle(),
-            area_id = area.getId(),
             dragAreaBlockID = 0,
             dragAreaBlock = my.getSelected().getBlock(),
             is_inline = !!elem.data('supports-inline-add'),
             has_add = !!elem.data('has-add-template');
 
         if (dragAreaBlock) {
-          var dragAreaBlockID = dragAreaBlock.getId();
+          dragAreaBlockID = dragAreaBlock.getId();
         }
 
         ConcretePanelManager.exitPanelMode();
@@ -1124,7 +1132,7 @@
             ccm_token: CCM_SECURITY_TOKEN
           }, function(response) {
             CCMEditMode.parseBlockResponse(response, false, 'add');
-          })
+          });
         } else if (is_inline) {
           ConcreteEvent.fire('EditModeBlockAddInline', {
             'selected': my.getSelected(),
@@ -1133,9 +1141,9 @@
             'dragAreaBlockID': dragAreaBlockID
           });
         } else {
-          jQuery.fn.dialog.open({
+          $.fn.dialog.open({
             onClose: function() {
-              jQuery.fn.dialog.closeAll();
+              $.fn.dialog.closeAll();
             },
             onOpen: function() {
               $(function() {
@@ -1212,9 +1220,9 @@
     setIsContender: function dragAreaSetIsContender(is_contender) {
       var my = this;
       if (is_contender && !my.getIsContender()) {
-        _.defer(function() { my.getElem().addClass('ccm-area-drag-area-contender')});
+        _.defer(function() { my.getElem().addClass('ccm-area-drag-area-contender'); });
       } else if (!is_contender && my.getIsContender()) {
-        _.defer(function() { my.getElem().removeClass('ccm-area-drag-area-contender')});
+        _.defer(function() { my.getElem().removeClass('ccm-area-drag-area-contender'); });
       }
       my.setAttr('isContender', is_contender);
       return true;
