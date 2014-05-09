@@ -10,7 +10,10 @@ class WhoopsServiceProvider extends Provider
 
     public function register()
     {
-        $run     = new Run;
+        if (function_exists('ini_set')) {
+            ini_set('display_errors', 0);
+        }
+        $run = new Run;
         $handler = new ErrorHandler();
 
         $run->pushHandler($handler);
