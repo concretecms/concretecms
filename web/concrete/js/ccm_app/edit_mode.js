@@ -1,7 +1,7 @@
 /* jshint browser: true, unused:vars, undef:true */
 /* global escape, jQuery, _, Concrete, CCM_CID, CCM_TOOLS_PATH, ConcreteEvent, ConcreteMenuManager, ConcreteToolbar,
-	CCM_DISPATCHER_FILENAME, ConcreteAlert, ccmi18n, ConcreteMenu, CCM_SECURITY_TOKEN, ConcretePanelManager,
-	CCM_DISPATCHER_FILENAME, CCMEditMode */
+  CCM_DISPATCHER_FILENAME, ConcreteAlert, ccmi18n, ConcreteMenu, CCM_SECURITY_TOKEN, ConcretePanelManager,
+  CCM_DISPATCHER_FILENAME, CCMEditMode */
 /**
  * concrete5 in context editing
  */
@@ -158,11 +158,11 @@
         type: 'POST',
         url: CCM_TOOLS_PATH + '/pile_manager',
         data: 'cID=' + CCM_CID + '&bID=' + block.getId() + '&arHandle=' + encodeURIComponent(area.getHandle()) + '&btask=add&scrapbookName=userScrapbook',
-       success: function(resp) {
-		ConcreteAlert.notify({
-		'message': ccmi18n.copyBlockToScrapbookMsg,
-		'title': ccmi18n.copyBlockToScrapbook
-		});
+        success: function(resp) {
+          ConcreteAlert.notify({
+            'message': ccmi18n.copyBlockToScrapbookMsg,
+            'title': ccmi18n.copyBlockToScrapbook
+          });
       }});
     });
 
@@ -210,7 +210,7 @@
           };
 
       _(targetArea.getBlocks()).each(function(block, key){
-      	send.blocks[key] = block.getId();
+        send.blocks[key] = block.getId();
       });
       block.bindMenu();
       var loading = false, timeout = setTimeout(function() {
@@ -238,7 +238,7 @@
     Concrete.getEditMode = function() {
       return my;
     };
-    
+
     ConcreteAlert.notify({
       'message': ccmi18n.editModeMsg,
       'title': ccmi18n.editMode
@@ -340,7 +340,7 @@
   var BlockType = Concrete.BlockType = function BlockType(elem, edit_mode, dragger) {
     var my = this;
     Concrete.createGetterSetters.call(my, {
-   	 placeholder: elem.html()
+      placeholder: elem.html()
     });
     Block.call(my, elem, edit_mode, dragger);
   };
@@ -547,11 +547,14 @@
       var my = this,
           elem = my.getElem(),
           totalBlocks = my.getTotalBlocks(),
-          menuHandle = totalBlocks ?
-         	 '#area-menu-footer-' + my.getId()
-            : 'div[data-area-menu-handle=' + my.getId() + ']',
-          $menuElem = my.getMenuElem();
+          $menuElem = my.getMenuElem(),
+          menuHandle;
 
+      if(totalBlocks > 0) {
+        menuHandle = '#area-menu-footer-' + my.getId();
+      } else {
+        menuHandle = 'div[data-area-menu-handle=' + my.getId() + ']';
+      }
       if (my.menu) {
         my.menu.destroy();
       }
@@ -636,7 +639,7 @@
         var updateBlocksArray = [];
         for (var i = 0; i < blocks.length; i++) {
           if (i >= index) {
-            updateBlocksArray[i+1] = blocks[i]; 
+            updateBlocksArray[i+1] = blocks[i];
           } else {
             updateBlocksArray[i] = blocks[i];
           }
@@ -737,10 +740,10 @@
 
       ConcreteToolbar.disableDirectExit();
       area.removeBlock(block);
-		ConcreteAlert.notify({
-		'message': ccmi18n.deleteBlockMsg,
-		'title': ccmi18n.deleteBlock
-		});
+      ConcreteAlert.notify({
+        'message': ccmi18n.deleteBlockMsg,
+        'title': ccmi18n.deleteBlock
+      });
 
       $.ajax({
         type: 'POST',
@@ -752,8 +755,8 @@
       }
     },
 
-    /** 
-     * replaces a block in an area with a new block by ID and content 
+    /**
+     * replaces a block in an area with a new block by ID and content
      */
     replace: function(bID, content) {
       var my = this, editor = Concrete.getEditMode(), oldBID = my.getId(), area = my.getArea(), totalBlocks = area.getTotalBlocks(), i, b;
@@ -850,7 +853,7 @@
            var placeholder = ('getPlaceholder' in my) ? my.getPlaceholder() : '<p><img src="/concrete/blocks/content/icon.png"><span>Content</span></p>',
                dragger = $('<a />')
                    .html(placeholder)
-         	  	    .addClass('ccm-block-edit-drag ccm-panel-add-block-draggable-block-type')
+                   .addClass('ccm-block-edit-drag ccm-panel-add-block-draggable-block-type')
            ;
            my.setAttr('dragger', dragger.css({
               width: my.getElem().width(),
