@@ -67,14 +67,22 @@ if ($isAlias) {
 
 ?>
 
-<div custom-style="<?=$b->getBlockCustomStyleRuleID()?>" data-area-id="<?=$a->getAreaID()?>" data-block-id="<?=$b->getBlockID()?>" class="<?=$class?>" data-block-type-handle="<?=$btHandle?>" data-launch-block-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>" 
-		<? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?> data-block-menu-handle="none"<? } ?>>
-		<ul class="ccm-edit-mode-inline-commands ccm-ui">
-		<? if ($p->canEditBlock() && $btw->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY && (!$a->isGlobalArea())) {  ?>
-			<li><a data-inline-command="move-block" href="#"><i class="glyphicon glyphicon-move"></i></a></li>
-		<? } ?>
-		</ul>
-		
+<div
+    custom-style="<?=$b->getBlockCustomStyleRuleID()?>"
+    data-area-id="<?=$a->getAreaID()?>"
+    data-block-id="<?=$b->getBlockID()?>"
+    class="<?=$class?>"
+    data-block-type-handle="<?=$btHandle?>"
+    data-launch-block-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"
+    data-placeholder="<?=h('<p><img src="' . Loader::helper('concrete/urls')->getBlockTypeIconURL($btw) . '" /><span>' . t($btw->getBlockTypeName()) . '</span></p>')?>"
+    <? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?> data-block-menu-handle="none"<? } ?>
+>
+    <ul class="ccm-edit-mode-inline-commands ccm-ui">
+        <? if ($p->canEditBlock() && $btw->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY && (!$a->isGlobalArea())) {  ?>
+            <li><a data-inline-command="move-block" href="#"><i class="glyphicon glyphicon-move"></i></a></li>
+        <? } ?>
+    </ul>
+
 <div class="ccm-ui">
 
 <div class="popover fade" data-block-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>">
