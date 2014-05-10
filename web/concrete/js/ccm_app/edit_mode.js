@@ -850,15 +850,20 @@
        var my = this;
 
        if (!my.getAttr('dragger')) {
-           var placeholder = ('getPlaceholder' in my) ? my.getPlaceholder() : '<p><img src="/concrete/blocks/content/icon.png"><span>Content</span></p>',
-               dragger = $('<a />')
-                   .html(placeholder)
-                   .addClass('ccm-block-edit-drag ccm-panel-add-block-draggable-block-type')
-           ;
-           my.setAttr('dragger', dragger.css({
-              width: my.getElem().width(),
-              height: my.getElem().height()
-           }));
+         var placeholder, dragger;
+         if ('getPlaceholder' in my) {
+           placeholder = my.getPlaceholder();
+         } else {
+           placeholder = my.getElem().data('placeholder') || ('<p><img src="/concrete/blocks/content/icon.png"><span>' + ccmi18n.content + '</span></p>');
+         }
+         dragger = $('<a />')
+           .html(placeholder)
+           .addClass('ccm-block-edit-drag ccm-panel-add-block-draggable-block-type')
+         ;
+         my.setAttr('dragger', dragger.css({
+           width: my.getElem().width(),
+           height: my.getElem().height()
+         }));
        }
        return my.getAttr('dragger');
     },
