@@ -13,8 +13,8 @@ $cmp = new Permissions($pagetype);
 
 <? foreach($fieldsets as $cfl) { ?>
 	<fieldset>
-		<? if ($cfl->getPageTypeComposerFormLayoutSetName()) { ?>
-			<legend><?=$cfl->getPageTypeComposerFormLayoutSetName()?></legend>
+		<? if ($cfl->getPageTypeComposerFormLayoutSetDisplayName()) { ?>
+			<legend><?=$cfl->getPageTypeComposerFormLayoutSetDisplayName()?></legend>
 		<? } ?>
 		<? $controls = PageTypeComposerFormLayoutSetControl::getList($cfl);
 
