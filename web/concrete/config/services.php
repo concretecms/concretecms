@@ -13,8 +13,7 @@ return array(
 	'\Concrete\Core\Database\DatabaseServiceProvider',
 	'\Concrete\Core\Form\FormServiceProvider',
 	'\Concrete\Core\Session\SessionServiceProvider',
-    '\Concrete\Core\Logging\LoggingServiceProvider',
 	'\Concrete\Core\Http\HttpServiceProvider',
-	'\Concrete\Core\Events\EventsServiceProvider'
-
+	'\Concrete\Core\Events\EventsServiceProvider',
+    '\Concrete\Core\Logging\LoggingServiceProvider'
 );
