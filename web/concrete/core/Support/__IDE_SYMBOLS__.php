@@ -120,7 +120,7 @@ namespace {
          *
          * @api
          */
-        public static function initialize(array $query = "", array $request = "", array $attributes = "", array $cookies = "", array $files = "", array $server = "", $content = null)
+        public static function initialize(array $query = array(), array $request = array(), array $attributes = array(), array $cookies = array(), array $files = array(), array $server = array(), $content = null)
         {
             // Symfony\Component\HttpFoundation\Request::initialize();
             return Symfony\Component\HttpFoundation\Request::initialize($query, $request, $attributes, $cookies, $files, $server, $content);
@@ -154,7 +154,7 @@ namespace {
          *
          * @api
          */
-        public static function create($uri, $method = "GET", $parameters = null, $cookies = null, $files = null, $server = null, $content = null)
+        public static function create($uri, $method = "GET", $parameters = array(), $cookies = array(), $files = array(), $server = array(), $content = null)
         {
             // Symfony\Component\HttpFoundation\Request::create();
             return Symfony\Component\HttpFoundation\Request::create($uri, $method, $parameters, $cookies, $files, $server, $content);
@@ -314,7 +314,7 @@ namespace {
          *
          * @return mixed
          */
-        public static function get($key, $default = null, $deep = null)
+        public static function get($key, $default = null, $deep = false)
         {
             // Symfony\Component\HttpFoundation\Request::get();
             return Symfony\Component\HttpFoundation\Request::get($key, $default, $deep);
@@ -866,7 +866,7 @@ namespace {
          *
          * @return string|resource The request body content or a resource to read the body stream.
          */
-        public static function getContent($asResource = null)
+        public static function getContent($asResource = false)
         {
             // Symfony\Component\HttpFoundation\Request::getContent();
             return Symfony\Component\HttpFoundation\Request::getContent($asResource);
@@ -1069,7 +1069,7 @@ namespace {
             return Concrete\Core\Foundation\Environment::getOverrides();
         }
 
-        public static function getDirectoryContents($dir, $ignoreFilesArray = null, $recursive = null)
+        public static function getDirectoryContents($dir, $ignoreFilesArray = array(), $recursive = false)
         {
             // Concrete\Core\Foundation\Environment::getDirectoryContents();
             return Concrete\Core\Foundation\Environment::getDirectoryContents($dir, $ignoreFilesArray, $recursive);
@@ -1081,7 +1081,7 @@ namespace {
             return Concrete\Core\Foundation\Environment::overrideCoreByPackage($segment, $pkgOrHandle);
         }
 
-        public static function getRecord($segment, $pkgHandle = null)
+        public static function getRecord($segment, $pkgHandle = false)
         {
             // Concrete\Core\Foundation\Environment::getRecord();
             return Concrete\Core\Foundation\Environment::getRecord($segment, $pkgHandle);
@@ -1090,7 +1090,7 @@ namespace {
         /**
          * Bypasses overrides cache to get record
          */
-        public static function getUncachedRecord($segment, $pkgHandle = null)
+        public static function getUncachedRecord($segment, $pkgHandle = false)
         {
             // Concrete\Core\Foundation\Environment::getUncachedRecord();
             return Concrete\Core\Foundation\Environment::getUncachedRecord($segment, $pkgHandle);
@@ -1099,7 +1099,7 @@ namespace {
         /**
          * Returns a full path to the subpath segment. Returns false if not found
          */
-        public static function getPath($subpath, $pkgIdentifier = null)
+        public static function getPath($subpath, $pkgIdentifier = false)
         {
             // Concrete\Core\Foundation\Environment::getPath();
             return Concrete\Core\Foundation\Environment::getPath($subpath, $pkgIdentifier);
@@ -1108,7 +1108,7 @@ namespace {
         /**
          * Returns  a public URL to the subpath item. Returns false if not found
          */
-        public static function getURL($subpath, $pkgIdentifier = null)
+        public static function getURL($subpath, $pkgIdentifier = false)
         {
             // Concrete\Core\Foundation\Environment::getURL();
             return Concrete\Core\Foundation\Environment::getURL($subpath, $pkgIdentifier);
@@ -1327,7 +1327,7 @@ namespace {
          *
          * @return Response
          */
-        public static function create($content = null, $status = 200, $headers = null)
+        public static function create($content = "", $status = 200, $headers = array())
         {
             // Symfony\Component\HttpFoundation\Response::create();
             return Symfony\Component\HttpFoundation\Response::create($content, $status, $headers);
@@ -1832,7 +1832,7 @@ namespace {
          *
          * @api
          */
-        public static function setEtag($etag = null, $weak = null)
+        public static function setEtag($etag = null, $weak = false)
         {
             // Symfony\Component\HttpFoundation\Response::setEtag();
             return Symfony\Component\HttpFoundation\Response::setEtag($etag, $weak);
@@ -1909,7 +1909,7 @@ namespace {
          *
          * @api
          */
-        public static function setVary($headers, $replace = "1")
+        public static function setVary($headers, $replace = true)
         {
             // Symfony\Component\HttpFoundation\Response::setVary();
             return Symfony\Component\HttpFoundation\Response::setVary($headers, $replace);
@@ -2105,7 +2105,7 @@ namespace {
         /**
          * Redirect to a page
          */
-        public static function page(Concrete\Core\Page\Page $c, $code = 302, $headers = null)
+        public static function page(Concrete\Core\Page\Page $c, $code = 302, $headers = array())
         {
             // Concrete\Core\Routing\Redirect::page();
             return Concrete\Core\Routing\Redirect::page($c, $code, $headers);
@@ -2114,7 +2114,7 @@ namespace {
         /**
          * Redirects to a URL.
          */
-        public static function url($url, $code = 302, $headers = null)
+        public static function url($url, $code = 302, $headers = array())
         {
             // Concrete\Core\Routing\Redirect::url();
             return Concrete\Core\Routing\Redirect::url($url, $code, $headers);
@@ -2131,7 +2131,7 @@ namespace {
             return Concrete\Core\Logging\Log::write($message);
         }
 
-        public static function addEntry($message, $namespace = null)
+        public static function addEntry($message, $namespace = false)
         {
             // Concrete\Core\Logging\Log::addEntry();
             return Concrete\Core\Logging\Log::addEntry($message, $namespace);
@@ -2239,13 +2239,13 @@ namespace {
             return Concrete\Core\Routing\URL::isValidURL($path);
         }
 
-        public static function page(Concrete\Core\Page\Page $c, $action = null)
+        public static function page(Concrete\Core\Page\Page $c, $action = false)
         {
             // Concrete\Core\Routing\URL::page();
             return Concrete\Core\Routing\URL::page($c, $action);
         }
 
-        public static function to($path, $action = null)
+        public static function to($path, $action = false)
         {
             // Concrete\Core\Routing\URL::to();
             return Concrete\Core\Routing\URL::to($path, $action);
@@ -2262,7 +2262,7 @@ namespace {
             return Concrete\Core\Cookie\Cookie::getInstance();
         }
 
-        public static function set($name, $value = null, $expire = null, $path = "/", $domain = null, $secure = null, $httpOnly = "1")
+        public static function set($name, $value = null, $expire = 0, $path = "/", $domain = null, $secure = false, $httpOnly = true)
         {
             // Concrete\Core\Cookie\Cookie::set();
             return Concrete\Core\Cookie\Cookie::set($name, $value, $expire, $path, $domain, $secure, $httpOnly);
@@ -2274,7 +2274,7 @@ namespace {
             return Concrete\Core\Cookie\Cookie::add($cookie);
         }
 
-        public static function get($name, $fullObject = null)
+        public static function get($name, $fullObject = false)
         {
             // Concrete\Core\Cookie\Cookie::get();
             return Concrete\Core\Cookie\Cookie::get($name, $fullObject);
@@ -2337,7 +2337,7 @@ namespace {
          * Inserts or updates an item to the cache
          * the cache must always be enabled for (getting remote data, etc..)
          */
-        public static function set($type, $id, $obj, $expire = null)
+        public static function set($type, $id, $obj, $expire = false)
         {
             // Concrete\Core\Cache\Cache::set();
             return Concrete\Core\Cache\Cache::set($type, $id, $obj, $expire);
@@ -2346,7 +2346,7 @@ namespace {
         /**
          * Retrieves an item from the cache
          */
-        public static function get($type, $id, $mustBeNewerThan = null)
+        public static function get($type, $id, $mustBeNewerThan = false)
         {
             // Concrete\Core\Cache\Cache::get();
             return Concrete\Core\Cache\Cache::get($type, $id, $mustBeNewerThan);
@@ -2484,13 +2484,13 @@ namespace {
             return Concrete\Core\Attribute\Key\CollectionKey::get($akID);
         }
 
-        protected static function saveAttribute($nvc, $value = null)
+        protected static function saveAttribute($nvc, $value = false)
         {
             // Concrete\Core\Attribute\Key\CollectionKey::saveAttribute();
             return Concrete\Core\Attribute\Key\CollectionKey::saveAttribute($nvc, $value);
         }
 
-        public static function add($at, $args, $pkg = null)
+        public static function add($at, $args, $pkg = false)
         {
             // Concrete\Core\Attribute\Key\CollectionKey::add();
             return Concrete\Core\Attribute\Key\CollectionKey::add($at, $args, $pkg);
@@ -2715,7 +2715,7 @@ namespace {
         /**
          * Duplicates an attribute key
          */
-        public static function duplicate($args = null)
+        public static function duplicate($args = array())
         {
             // Concrete\Core\Attribute\Key\Key::duplicate();
             return Concrete\Core\Attribute\Key\Key::duplicate($args);
@@ -2739,7 +2739,7 @@ namespace {
             return Concrete\Core\Attribute\Key\Key::reindex($tbl, $columnHeaders, $attribs, $rs);
         }
 
-        public static function updateSearchIndex($prevHandle = null)
+        public static function updateSearchIndex($prevHandle = false)
         {
             // Concrete\Core\Attribute\Key\Key::updateSearchIndex();
             return Concrete\Core\Attribute\Key\Key::updateSearchIndex($prevHandle);
@@ -2778,13 +2778,13 @@ namespace {
          * Additionally, an attribute does not have to have its own interface. If it doesn't, then whatever
          * is printed in the corresponding $view function in the attribute's controller is printed out.
          */
-        public static function render($view = "view", $value = null, $return = null)
+        public static function render($view = "view", $value = false, $return = false)
         {
             // Concrete\Core\Attribute\Key\Key::render();
             return Concrete\Core\Attribute\Key\Key::render($view, $value, $return);
         }
 
-        public static function validateAttributeForm($h = null)
+        public static function validateAttributeForm($h = false)
         {
             // Concrete\Core\Attribute\Key\Key::validateAttributeForm();
             return Concrete\Core\Attribute\Key\Key::validateAttributeForm($h);
@@ -2958,7 +2958,7 @@ namespace {
             return Concrete\Core\Attribute\Key\FileKey::getSearchableIndexedList();
         }
 
-        public static function getImporterList($fv = null)
+        public static function getImporterList($fv = false)
         {
             // Concrete\Core\Attribute\Key\FileKey::getImporterList();
             return Concrete\Core\Attribute\Key\FileKey::getImporterList($fv);
@@ -2979,13 +2979,13 @@ namespace {
             return Concrete\Core\Attribute\Key\FileKey::get($akID);
         }
 
-        protected static function saveAttribute($f, $value = null)
+        protected static function saveAttribute($f, $value = false)
         {
             // Concrete\Core\Attribute\Key\FileKey::saveAttribute();
             return Concrete\Core\Attribute\Key\FileKey::saveAttribute($f, $value);
         }
 
-        public static function add($at, $args, $pkg = null)
+        public static function add($at, $args, $pkg = false)
         {
             // Concrete\Core\Attribute\Key\FileKey::add();
             return Concrete\Core\Attribute\Key\FileKey::add($at, $args, $pkg);
@@ -3216,7 +3216,7 @@ namespace {
         /**
          * Duplicates an attribute key
          */
-        public static function duplicate($args = null)
+        public static function duplicate($args = array())
         {
             // Concrete\Core\Attribute\Key\Key::duplicate();
             return Concrete\Core\Attribute\Key\Key::duplicate($args);
@@ -3240,7 +3240,7 @@ namespace {
             return Concrete\Core\Attribute\Key\Key::reindex($tbl, $columnHeaders, $attribs, $rs);
         }
 
-        public static function updateSearchIndex($prevHandle = null)
+        public static function updateSearchIndex($prevHandle = false)
         {
             // Concrete\Core\Attribute\Key\Key::updateSearchIndex();
             return Concrete\Core\Attribute\Key\Key::updateSearchIndex($prevHandle);
@@ -3279,13 +3279,13 @@ namespace {
          * Additionally, an attribute does not have to have its own interface. If it doesn't, then whatever
          * is printed in the corresponding $view function in the attribute's controller is printed out.
          */
-        public static function render($view = "view", $value = null, $return = null)
+        public static function render($view = "view", $value = false, $return = false)
         {
             // Concrete\Core\Attribute\Key\Key::render();
             return Concrete\Core\Attribute\Key\Key::render($view, $value, $return);
         }
 
-        public static function validateAttributeForm($h = null)
+        public static function validateAttributeForm($h = false)
         {
             // Concrete\Core\Attribute\Key\Key::validateAttributeForm();
             return Concrete\Core\Attribute\Key\Key::validateAttributeForm($h);
@@ -3529,13 +3529,13 @@ namespace {
             return Concrete\Core\Attribute\Key\UserKey::get($akID);
         }
 
-        protected static function saveAttribute($uo, $value = null)
+        protected static function saveAttribute($uo, $value = false)
         {
             // Concrete\Core\Attribute\Key\UserKey::saveAttribute();
             return Concrete\Core\Attribute\Key\UserKey::saveAttribute($uo, $value);
         }
 
-        public static function add($type, $args, $pkg = null)
+        public static function add($type, $args, $pkg = false)
         {
             // Concrete\Core\Attribute\Key\UserKey::add();
             return Concrete\Core\Attribute\Key\UserKey::add($type, $args, $pkg);
@@ -3802,7 +3802,7 @@ namespace {
         /**
          * Duplicates an attribute key
          */
-        public static function duplicate($args = null)
+        public static function duplicate($args = array())
         {
             // Concrete\Core\Attribute\Key\Key::duplicate();
             return Concrete\Core\Attribute\Key\Key::duplicate($args);
@@ -3826,7 +3826,7 @@ namespace {
             return Concrete\Core\Attribute\Key\Key::reindex($tbl, $columnHeaders, $attribs, $rs);
         }
 
-        public static function updateSearchIndex($prevHandle = null)
+        public static function updateSearchIndex($prevHandle = false)
         {
             // Concrete\Core\Attribute\Key\Key::updateSearchIndex();
             return Concrete\Core\Attribute\Key\Key::updateSearchIndex($prevHandle);
@@ -3865,13 +3865,13 @@ namespace {
          * Additionally, an attribute does not have to have its own interface. If it doesn't, then whatever
          * is printed in the corresponding $view function in the attribute's controller is printed out.
          */
-        public static function render($view = "view", $value = null, $return = null)
+        public static function render($view = "view", $value = false, $return = false)
         {
             // Concrete\Core\Attribute\Key\Key::render();
             return Concrete\Core\Attribute\Key\Key::render($view, $value, $return);
         }
 
-        public static function validateAttributeForm($h = null)
+        public static function validateAttributeForm($h = false)
         {
             // Concrete\Core\Attribute\Key\Key::validateAttributeForm();
             return Concrete\Core\Attribute\Key\Key::validateAttributeForm($h);
@@ -4192,7 +4192,7 @@ namespace {
             return Concrete\Core\Asset\AssetList::getInstance();
         }
 
-        public static function register($assetType, $assetHandle, $filename, $args = null, $pkg = null)
+        public static function register($assetType, $assetHandle, $filename, $args = array(), $pkg = false)
         {
             // Concrete\Core\Asset\AssetList::register();
             return Concrete\Core\Asset\AssetList::register($assetType, $assetHandle, $filename, $args, $pkg);
@@ -4204,7 +4204,7 @@ namespace {
             return Concrete\Core\Asset\AssetList::registerAsset($asset);
         }
 
-        public static function registerGroup($assetGroupHandle, $assetHandles, $customClass = null)
+        public static function registerGroup($assetGroupHandle, $assetHandles, $customClass = false)
         {
             // Concrete\Core\Asset\AssetList::registerGroup();
             return Concrete\Core\Asset\AssetList::registerGroup($assetGroupHandle, $assetHandles, $customClass);
@@ -4239,7 +4239,7 @@ namespace {
             return Concrete\Core\Routing\Router::setRequest($req);
         }
 
-        public static function register($rtPath, $callback, $rtHandle = null, $additionalAttributes = null)
+        public static function register($rtPath, $callback, $rtHandle = null, $additionalAttributes = array())
         {
             // Concrete\Core\Routing\Router::register();
             return Concrete\Core\Routing\Router::register($rtPath, $callback, $rtHandle, $additionalAttributes);
@@ -4258,7 +4258,7 @@ namespace {
          * @param $theme object, if null site theme is default
          * @return void
          */
-        public static function setThemeByRoute($path, $theme = null, $wrapper = "view.php")
+        public static function setThemeByRoute($path, $theme = null, $wrapper = FILENAME_THEMES_VIEW)
         {
             // Concrete\Core\Routing\Router::setThemeByRoute();
             return Concrete\Core\Routing\Router::setThemeByRoute($path, $theme, $wrapper);
@@ -4289,7 +4289,7 @@ namespace {
         /**
          * {@inheritDoc}
          */
-        public static function create($url = null, $status = 302, $headers = null)
+        public static function create($url = "", $status = 302, $headers = array())
         {
             // Symfony\Component\HttpFoundation\RedirectResponse::create();
             return Symfony\Component\HttpFoundation\RedirectResponse::create($url, $status, $headers);
@@ -4831,7 +4831,7 @@ namespace {
          *
          * @api
          */
-        public static function setEtag($etag = null, $weak = null)
+        public static function setEtag($etag = null, $weak = false)
         {
             // Symfony\Component\HttpFoundation\Response::setEtag();
             return Symfony\Component\HttpFoundation\Response::setEtag($etag, $weak);
@@ -4908,7 +4908,7 @@ namespace {
          *
          * @api
          */
-        public static function setVary($headers, $replace = "1")
+        public static function setVary($headers, $replace = true)
         {
             // Symfony\Component\HttpFoundation\Response::setVary();
             return Symfony\Component\HttpFoundation\Response::setVary($headers, $replace);
@@ -5267,7 +5267,7 @@ namespace {
             return Concrete\Core\Page\Page::isGeneratedCollection();
         }
 
-        public static function assignPermissions($userOrGroup, $permissions = null, $accessType = 10)
+        public static function assignPermissions($userOrGroup, $permissions = array(), $accessType = Concrete\Core\Permission\Key\PageKey::ACCESS_TYPE_INCLUDE)
         {
             // Concrete\Core\Page\Page::assignPermissions();
             return Concrete\Core\Page\Page::assignPermissions($userOrGroup, $permissions, $accessType);
@@ -5326,7 +5326,7 @@ namespace {
          * @param string $cLink
          * @param bool $newWindow
          */
-        public static function updateCollectionAliasExternal($cName, $cLink, $newWindow = null)
+        public static function updateCollectionAliasExternal($cName, $cLink, $newWindow = 0)
         {
             // Concrete\Core\Page\Page::updateCollectionAliasExternal();
             return Concrete\Core\Page\Page::updateCollectionAliasExternal($cName, $cLink, $newWindow);
@@ -5339,7 +5339,7 @@ namespace {
          * @param bool $newWindow
          * @return int $newCID
          */
-        public static function addCollectionAliasExternal($cName, $cLink, $newWindow = null)
+        public static function addCollectionAliasExternal($cName, $cLink, $newWindow = 0)
         {
             // Concrete\Core\Page\Page::addCollectionAliasExternal();
             return Concrete\Core\Page\Page::addCollectionAliasExternal($cName, $cLink, $newWindow);
@@ -5375,7 +5375,7 @@ namespace {
             return Concrete\Core\Page\Page::removeThisAlias();
         }
 
-        public static function populateRecursivePages($pages, $pageRow, $cParentID, $level, $includeThisPage = "1")
+        public static function populateRecursivePages($pages, $pageRow, $cParentID, $level, $includeThisPage = true)
         {
             // Concrete\Core\Page\Page::populateRecursivePages();
             return Concrete\Core\Page\Page::populateRecursivePages($pages, $pageRow, $cParentID, $level, $includeThisPage);
@@ -5405,13 +5405,13 @@ namespace {
             return Concrete\Core\Page\Page::queueForDeletionRequest();
         }
 
-        public static function queueForDuplication($destination, $includeParent = "1")
+        public static function queueForDuplication($destination, $includeParent = true)
         {
             // Concrete\Core\Page\Page::queueForDuplication();
             return Concrete\Core\Page\Page::queueForDuplication($destination, $includeParent);
         }
 
-        public static function export($pageNode, $includePublicDate = null)
+        public static function export($pageNode, $includePublicDate = false)
         {
             // Concrete\Core\Page\Page::export();
             return Concrete\Core\Page\Page::export($pageNode, $includePublicDate);
@@ -5441,7 +5441,7 @@ namespace {
          * Returns full url for the current page
          * @return string
          */
-        public static function getCollectionLink($appendBaseURL = null, $ignoreUrlRewriting = null)
+        public static function getCollectionLink($appendBaseURL = false, $ignoreUrlRewriting = false)
         {
             // Concrete\Core\Page\Page::getCollectionLink();
             return Concrete\Core\Page\Page::getCollectionLink($appendBaseURL, $ignoreUrlRewriting);
@@ -5823,19 +5823,19 @@ namespace {
          * @param string $sortColumn
          * @return Page
          */
-        public static function getFirstChild($sortColumn = "cDisplayOrder asc", $excludeSystemPages = null)
+        public static function getFirstChild($sortColumn = "cDisplayOrder asc", $excludeSystemPages = false)
         {
             // Concrete\Core\Page\Page::getFirstChild();
             return Concrete\Core\Page\Page::getFirstChild($sortColumn, $excludeSystemPages);
         }
 
-        public static function getCollectionChildrenArray($oneLevelOnly = null)
+        public static function getCollectionChildrenArray($oneLevelOnly = 0)
         {
             // Concrete\Core\Page\Page::getCollectionChildrenArray();
             return Concrete\Core\Page\Page::getCollectionChildrenArray($oneLevelOnly);
         }
 
-        public static function _getNumChildren($cID, $oneLevelOnly = null, $sortColumn = "cDisplayOrder asc")
+        public static function _getNumChildren($cID, $oneLevelOnly = 0, $sortColumn = "cDisplayOrder asc")
         {
             // Concrete\Core\Page\Page::_getNumChildren();
             return Concrete\Core\Page\Page::_getNumChildren($cID, $oneLevelOnly, $sortColumn);
@@ -5865,16 +5865,10 @@ namespace {
             return Concrete\Core\Page\Page::resetCustomThemeStyles();
         }
 
-        public static function getCustomThemeStyles()
+        public static function setCustomStyleObject(Concrete\Core\Page\Theme\Theme $pt, Concrete\Core\StyleCustomizer\Style\ValueList $valueList, $selectedPreset = false, $customCssRecord = false)
         {
-            // Concrete\Core\Page\Page::getCustomThemeStyles();
-            return Concrete\Core\Page\Page::getCustomThemeStyles();
-        }
-
-        public static function updateCustomThemeStyles($styles)
-        {
-            // Concrete\Core\Page\Page::updateCustomThemeStyles();
-            return Concrete\Core\Page\Page::updateCustomThemeStyles($styles);
+            // Concrete\Core\Page\Page::setCustomStyleObject();
+            return Concrete\Core\Page\Page::setCustomStyleObject($pt, $valueList, $selectedPreset, $customCssRecord);
         }
 
         public static function writePageThemeCustomizations()
@@ -5961,13 +5955,13 @@ namespace {
             return Concrete\Core\Page\Page::updateGroupsSubCollection($cParentIDString);
         }
 
-        public static function move($nc, $retainOldPagePath = null)
+        public static function move($nc, $retainOldPagePath = false)
         {
             // Concrete\Core\Page\Page::move();
             return Concrete\Core\Page\Page::move($nc, $retainOldPagePath);
         }
 
-        public static function duplicateAll($nc, $preserveUserID = null)
+        public static function duplicateAll($nc, $preserveUserID = false)
         {
             // Concrete\Core\Page\Page::duplicateAll();
             return Concrete\Core\Page\Page::duplicateAll($nc, $preserveUserID);
@@ -5976,13 +5970,13 @@ namespace {
         /**
          * @access private
          **/
-        public static function _duplicateAll($cParent, $cNewParent, $preserveUserID = null)
+        public static function _duplicateAll($cParent, $cNewParent, $preserveUserID = false)
         {
             // Concrete\Core\Page\Page::_duplicateAll();
             return Concrete\Core\Page\Page::_duplicateAll($cParent, $cNewParent, $preserveUserID);
         }
 
-        public static function duplicate($nc, $preserveUserID = null)
+        public static function duplicate($nc, $preserveUserID = false)
         {
             // Concrete\Core\Page\Page::duplicate();
             return Concrete\Core\Page\Page::duplicate($nc, $preserveUserID);
@@ -6012,13 +6006,13 @@ namespace {
             return Concrete\Core\Page\Page::getNextSubPageDisplayOrder();
         }
 
-        public static function rescanCollectionPath($retainOldPagePath = null)
+        public static function rescanCollectionPath($retainOldPagePath = false)
         {
             // Concrete\Core\Page\Page::rescanCollectionPath();
             return Concrete\Core\Page\Page::rescanCollectionPath($retainOldPagePath);
         }
 
-        public static function updateDisplayOrder($do, $cID = null)
+        public static function updateDisplayOrder($do, $cID = 0)
         {
             // Concrete\Core\Page\Page::updateDisplayOrder();
             return Concrete\Core\Page\Page::updateDisplayOrder($do, $cID);
@@ -6042,7 +6036,7 @@ namespace {
             return Concrete\Core\Page\Page::movePageDisplayOrderToSibling($c, $position);
         }
 
-        public static function rescanCollectionPathIndividual($cID, $cPath, $retainOldPagePath = null)
+        public static function rescanCollectionPathIndividual($cID, $cPath, $retainOldPagePath = false)
         {
             // Concrete\Core\Page\Page::rescanCollectionPathIndividual();
             return Concrete\Core\Page\Page::rescanCollectionPathIndividual($cID, $cPath, $retainOldPagePath);
@@ -6153,10 +6147,16 @@ namespace {
          * @param array $data
          * @return page
          **/
-        public static function add($pt, $data, $template = null)
+        public static function add($pt, $data, $template = false)
         {
             // Concrete\Core\Page\Page::add();
             return Concrete\Core\Page\Page::add($pt, $data, $template);
+        }
+
+        public static function getCustomStyleObject()
+        {
+            // Concrete\Core\Page\Page::getCustomStyleObject();
+            return Concrete\Core\Page\Page::getCustomStyleObject();
         }
 
         public static function getCollectionFullPageCaching()
@@ -6290,7 +6290,7 @@ namespace {
          * @param boolean $displayMode
          * @return type
          */
-        public static function getAttribute($akHandle, $displayMode = null)
+        public static function getAttribute($akHandle, $displayMode = false)
         {
             // Concrete\Core\Page\Collection\Collection::getAttribute();
             return Concrete\Core\Page\Collection\Collection::getAttribute($akHandle, $displayMode);
@@ -6302,7 +6302,7 @@ namespace {
             return Concrete\Core\Page\Collection\Collection::getCollectionAttributeValue($ak);
         }
 
-        public static function clearCollectionAttributes($retainAKIDs = null)
+        public static function clearCollectionAttributes($retainAKIDs = array())
         {
             // Concrete\Core\Page\Collection\Collection::clearCollectionAttributes();
             return Concrete\Core\Page\Collection\Collection::clearCollectionAttributes($retainAKIDs);
@@ -6314,13 +6314,13 @@ namespace {
             return Concrete\Core\Page\Collection\Collection::reindexPendingPages();
         }
 
-        public static function reindex($index = null, $actuallyDoReindex = "1")
+        public static function reindex($index = false, $actuallyDoReindex = true)
         {
             // Concrete\Core\Page\Collection\Collection::reindex();
             return Concrete\Core\Page\Collection\Collection::reindex($index, $actuallyDoReindex);
         }
 
-        public static function getAttributeValueObject($ak, $createIfNotFound = null)
+        public static function getAttributeValueObject($ak, $createIfNotFound = false)
         {
             // Concrete\Core\Page\Collection\Collection::getAttributeValueObject();
             return Concrete\Core\Page\Collection\Collection::getAttributeValueObject($ak, $createIfNotFound);
@@ -6392,7 +6392,7 @@ namespace {
             return Concrete\Core\Page\Collection\Collection::getVersionID();
         }
 
-        public static function getCollectionAreaDisplayOrder($arHandle, $ignoreVersions = null)
+        public static function getCollectionAreaDisplayOrder($arHandle, $ignoreVersions = false)
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionAreaDisplayOrder();
             return Concrete\Core\Page\Collection\Collection::getCollectionAreaDisplayOrder($arHandle, $ignoreVersions);
@@ -6402,7 +6402,7 @@ namespace {
          * Retrieves all custom style rules that should be inserted into the header on a page, whether they are defined in areas
          * or blocks
          */
-        public static function outputCustomStyleHeaderItems($return = null)
+        public static function outputCustomStyleHeaderItems($return = false)
         {
             // Concrete\Core\Page\Collection\Collection::outputCustomStyleHeaderItems();
             return Concrete\Core\Page\Collection\Collection::outputCustomStyleHeaderItems($return);
@@ -6461,7 +6461,7 @@ namespace {
          * @param string $arHandle. If specified, returns just the blocks in an area
          * @return array
          */
-        public static function getBlockIDs($arHandle = null)
+        public static function getBlockIDs($arHandle = false)
         {
             // Concrete\Core\Page\Collection\Collection::getBlockIDs();
             return Concrete\Core\Page\Collection\Collection::getBlockIDs($arHandle);
@@ -6472,7 +6472,7 @@ namespace {
          * @param string $arHandle. If specified, returns just the blocks in an area
          * @return array
          */
-        public static function getBlocks($arHandle = null)
+        public static function getBlocks($arHandle = false)
         {
             // Concrete\Core\Page\Collection\Collection::getBlocks();
             return Concrete\Core\Page\Collection\Collection::getBlocks($arHandle);
@@ -6744,7 +6744,7 @@ namespace {
             return Concrete\Core\Controller\AbstractController::getParameters();
         }
 
-        public static function runAction($action, $parameters = null)
+        public static function runAction($action, $parameters = array())
         {
             // Concrete\Core\Controller\AbstractController::runAction();
             return Concrete\Core\Controller\AbstractController::runAction($action, $parameters);
@@ -6836,7 +6836,7 @@ namespace {
             return Concrete\Core\Page\Controller\PageController::getControllerActionPath();
         }
 
-        public static function passthru($arHandle = null, $bID = null, $action = null)
+        public static function passthru($arHandle = false, $bID = false, $action = false)
         {
             // Concrete\Core\Page\Controller\PageController::passthru();
             return Concrete\Core\Page\Controller\PageController::passthru($arHandle, $bID, $action);
@@ -6948,7 +6948,7 @@ namespace {
             return Concrete\Core\Controller\AbstractController::getParameters();
         }
 
-        public static function runAction($action, $parameters = null)
+        public static function runAction($action, $parameters = array())
         {
             // Concrete\Core\Controller\AbstractController::runAction();
             return Concrete\Core\Controller\AbstractController::runAction($action, $parameters);
@@ -7091,7 +7091,7 @@ namespace {
          * @param bool $getFullObject
          * @return string or full object $cv
          */
-        public static function get($cfKey, $getFullObject = null)
+        public static function get($cfKey, $getFullObject = false)
         {
             // Concrete\Core\Config\Config::get();
             return Concrete\Core\Config\Config::get($cfKey, $getFullObject);
@@ -7362,7 +7362,7 @@ namespace {
             return Concrete\Core\Page\Type\Type::rescanPageTypeComposerOutputControlObjects();
         }
 
-        public static function add($data, $pkg = null)
+        public static function add($data, $pkg = false)
         {
             // Concrete\Core\Page\Type\Type::add();
             return Concrete\Core\Page\Type\Type::add($data, $pkg);
@@ -7374,7 +7374,7 @@ namespace {
             return Concrete\Core\Page\Type\Type::update($data);
         }
 
-        public static function getList($includeInternal = null)
+        public static function getList($includeInternal = false)
         {
             // Concrete\Core\Page\Type\Type::getList();
             return Concrete\Core\Page\Type\Type::getList($includeInternal);
@@ -7428,7 +7428,7 @@ namespace {
             return Concrete\Core\Page\Type\Type::validateCreateDraftRequest($pt);
         }
 
-        public static function createDraft(Concrete\Core\Page\Template $pt, $u = null)
+        public static function createDraft(Concrete\Core\Page\Template $pt, $u = false)
         {
             // Concrete\Core\Page\Type\Type::createDraft();
             return Concrete\Core\Page\Type\Type::createDraft($pt, $u);
@@ -7553,19 +7553,19 @@ namespace {
             return Concrete\Core\Page\Template::getListByPackage($pkg);
         }
 
-        public static function getList($includeInternal = null)
+        public static function getList($includeInternal = false)
         {
             // Concrete\Core\Page\Template::getList();
             return Concrete\Core\Page\Template::getList($includeInternal);
         }
 
-        public static function add($pTemplateHandle, $pTemplateName, $pTemplateIcon = "main.png", $pkg = null, $pTemplateIsInternal = null)
+        public static function add($pTemplateHandle, $pTemplateName, $pTemplateIcon = FILENAME_PAGE_TEMPLATE_DEFAULT_ICON, $pkg = null, $pTemplateIsInternal = false)
         {
             // Concrete\Core\Page\Template::add();
             return Concrete\Core\Page\Template::add($pTemplateHandle, $pTemplateName, $pTemplateIcon, $pkg, $pTemplateIsInternal);
         }
 
-        public static function update($pTemplateHandle, $pTemplateName, $pTemplateIcon = "main.png")
+        public static function update($pTemplateHandle, $pTemplateName, $pTemplateIcon = FILENAME_PAGE_TEMPLATE_DEFAULT_ICON)
         {
             // Concrete\Core\Page\Template::update();
             return Concrete\Core\Page\Template::update($pTemplateHandle, $pTemplateName, $pTemplateIcon);
@@ -7679,67 +7679,23 @@ namespace {
             return Concrete\Core\Page\Theme\Theme::providesAsset($assetType, $assetHandle);
         }
 
-        public static function getAvailableThemes($filterInstalled = "1")
+        public static function getAvailableThemes($filterInstalled = true)
         {
             // Concrete\Core\Page\Theme\Theme::getAvailableThemes();
             return Concrete\Core\Page\Theme\Theme::getAvailableThemes($filterInstalled);
         }
 
-        public static function getByFileHandle($handle, $dir = "/git/concrete5-5.7.0/web/application/themes")
+        public static function getByFileHandle($handle, $dir = DIR_FILES_THEMES)
         {
             // Concrete\Core\Page\Theme\Theme::getByFileHandle();
             return Concrete\Core\Page\Theme\Theme::getByFileHandle($handle, $dir);
         }
 
         /**
-         * Looks into the current theme and outputs the contents of the stylesheet.
-         * This function will eventually check to see if a cached version is available, as well as tie the dynamic areas of the stylesheet to whatever they have been saved.
-         * @param string $file
+         * Checks the theme for a styles.xml file (which is how customizations happen.)
+         * @return boolean
+         *
          */
-        public static function outputStyleSheet($file, $styles = null)
-        {
-            // Concrete\Core\Page\Theme\Theme::outputStyleSheet();
-            return Concrete\Core\Page\Theme\Theme::outputStyleSheet($file, $styles);
-        }
-
-        public static function parseStyleSheet($file, $styles = null)
-        {
-            // Concrete\Core\Page\Theme\Theme::parseStyleSheet();
-            return Concrete\Core\Page\Theme\Theme::parseStyleSheet($file, $styles);
-        }
-
-        public static function mergeStylesFromPost($post)
-        {
-            // Concrete\Core\Page\Theme\Theme::mergeStylesFromPost();
-            return Concrete\Core\Page\Theme\Theme::mergeStylesFromPost($post);
-        }
-
-        /**
-         * Removes any custom styles by clearing them out of the database
-         * @return void
-         */
-        public static function reset()
-        {
-            // Concrete\Core\Page\Theme\Theme::reset();
-            return Concrete\Core\Page\Theme\Theme::reset();
-        }
-
-        /**
-         * Takes an associative array of pagethemeeditablestyle objects and saves it to the PageThemeStyles table
-         * @param array $styles
-         */
-        public static function saveEditableStyles($styles)
-        {
-            // Concrete\Core\Page\Theme\Theme::saveEditableStyles();
-            return Concrete\Core\Page\Theme\Theme::saveEditableStyles($styles);
-        }
-
-        public static function getStyleSheets()
-        {
-            // Concrete\Core\Page\Theme\Theme::getStyleSheets();
-            return Concrete\Core\Page\Theme\Theme::getStyleSheets();
-        }
-
         public static function isThemeCustomizable()
         {
             // Concrete\Core\Page\Theme\Theme::isThemeCustomizable();
@@ -7747,14 +7703,88 @@ namespace {
         }
 
         /**
-         * Retrieves an array of editable style objects from the current them. This is accomplished by locating all style sheets in the root of the theme, parsing all their contents
-         * @param string $file
-         * @return array
+         * Gets the style list object for this theme.
+         * @return \Concrete\Core\StyleCustomizer\StyleList
          */
-        public static function getEditableStylesList($mergeStyles = null)
+        public static function getThemeCustomizableStyleList()
         {
-            // Concrete\Core\Page\Theme\Theme::getEditableStylesList();
-            return Concrete\Core\Page\Theme\Theme::getEditableStylesList($mergeStyles);
+            // Concrete\Core\Page\Theme\Theme::getThemeCustomizableStyleList();
+            return Concrete\Core\Page\Theme\Theme::getThemeCustomizableStyleList();
+        }
+
+        /**
+         * Gets a preset for this theme by handle
+         */
+        public static function getThemeCustomizablePreset($handle)
+        {
+            // Concrete\Core\Page\Theme\Theme::getThemeCustomizablePreset();
+            return Concrete\Core\Page\Theme\Theme::getThemeCustomizablePreset($handle);
+        }
+
+        /**
+         * Gets all presets available to this theme.
+         */
+        public static function getThemeCustomizableStylePresets()
+        {
+            // Concrete\Core\Page\Theme\Theme::getThemeCustomizableStylePresets();
+            return Concrete\Core\Page\Theme\Theme::getThemeCustomizableStylePresets();
+        }
+
+        public static function enablePreviewRequest()
+        {
+            // Concrete\Core\Page\Theme\Theme::enablePreviewRequest();
+            return Concrete\Core\Page\Theme\Theme::enablePreviewRequest();
+        }
+
+        public static function resetThemeCustomStyles()
+        {
+            // Concrete\Core\Page\Theme\Theme::resetThemeCustomStyles();
+            return Concrete\Core\Page\Theme\Theme::resetThemeCustomStyles();
+        }
+
+        public static function isThemePreviewRequest()
+        {
+            // Concrete\Core\Page\Theme\Theme::isThemePreviewRequest();
+            return Concrete\Core\Page\Theme\Theme::isThemePreviewRequest();
+        }
+
+        public static function getThemeCustomizableStyleSheets()
+        {
+            // Concrete\Core\Page\Theme\Theme::getThemeCustomizableStyleSheets();
+            return Concrete\Core\Page\Theme\Theme::getThemeCustomizableStyleSheets();
+        }
+
+        public static function getStylesheetObject($stylesheet)
+        {
+            // Concrete\Core\Page\Theme\Theme::getStylesheetObject();
+            return Concrete\Core\Page\Theme\Theme::getStylesheetObject($stylesheet);
+        }
+
+        /**
+         * Looks into the current CSS directory and returns a fully compiled stylesheet
+         * when passed a LESS stylesheet. Also serves up custom value list values for the stylesheet if they exist.
+         * @param  string $stylesheet The LESS stylesheet to compile
+         * @return string             The path to the stylesheet.
+         */
+        public static function getStylesheet($stylesheet)
+        {
+            // Concrete\Core\Page\Theme\Theme::getStylesheet();
+            return Concrete\Core\Page\Theme\Theme::getStylesheet($stylesheet);
+        }
+
+        /**
+         * Returns a Custom Style Object for the theme if one exists.
+         */
+        public static function getThemeCustomStyleObject()
+        {
+            // Concrete\Core\Page\Theme\Theme::getThemeCustomStyleObject();
+            return Concrete\Core\Page\Theme\Theme::getThemeCustomStyleObject();
+        }
+
+        public static function setCustomStyleObject(Concrete\Core\StyleCustomizer\Style\ValueList $valueList, $selectedPreset = false, $customCssRecord = false)
+        {
+            // Concrete\Core\Page\Theme\Theme::setCustomStyleObject();
+            return Concrete\Core\Page\Theme\Theme::setCustomStyleObject($valueList, $selectedPreset, $customCssRecord);
         }
 
         /**
@@ -7827,8 +7857,8 @@ namespace {
 
         /** Returns the display name for this theme (localized and escaped accordingly to $format)
          * @param string $format = 'html'
-         *	Escape the result in html format (if $format is 'html').
-         *	If $format is 'text' or any other value, the display name won't be escaped.
+         *   Escape the result in html format (if $format is 'html').
+         *   If $format is 'text' or any other value, the display name won't be escaped.
          * @return string
          */
         public static function getThemeDisplayName($format = "html")
@@ -7892,6 +7922,48 @@ namespace {
         {
             // Concrete\Core\Page\Theme\Theme::getThemeEditorCSS();
             return Concrete\Core\Page\Theme\Theme::getThemeEditorCSS();
+        }
+
+        public static function setThemeURL($pThemeURL)
+        {
+            // Concrete\Core\Page\Theme\Theme::setThemeURL();
+            return Concrete\Core\Page\Theme\Theme::setThemeURL($pThemeURL);
+        }
+
+        public static function setThemeDirectory($pThemeDirectory)
+        {
+            // Concrete\Core\Page\Theme\Theme::setThemeDirectory();
+            return Concrete\Core\Page\Theme\Theme::setThemeDirectory($pThemeDirectory);
+        }
+
+        public static function setThemeHandle($pThemeHandle)
+        {
+            // Concrete\Core\Page\Theme\Theme::setThemeHandle();
+            return Concrete\Core\Page\Theme\Theme::setThemeHandle($pThemeHandle);
+        }
+
+        public static function setStylesheetCachePath($path)
+        {
+            // Concrete\Core\Page\Theme\Theme::setStylesheetCachePath();
+            return Concrete\Core\Page\Theme\Theme::setStylesheetCachePath($path);
+        }
+
+        public static function setStylesheetCacheRelativePath($path)
+        {
+            // Concrete\Core\Page\Theme\Theme::setStylesheetCacheRelativePath();
+            return Concrete\Core\Page\Theme\Theme::setStylesheetCacheRelativePath($path);
+        }
+
+        public static function getStylesheetCachePath()
+        {
+            // Concrete\Core\Page\Theme\Theme::getStylesheetCachePath();
+            return Concrete\Core\Page\Theme\Theme::getStylesheetCachePath();
+        }
+
+        public static function getStylesheetCacheRelativePath()
+        {
+            // Concrete\Core\Page\Theme\Theme::getStylesheetCacheRelativePath();
+            return Concrete\Core\Page\Theme\Theme::getStylesheetCacheRelativePath();
         }
 
         public static function isUninstallable()
@@ -8034,19 +8106,19 @@ namespace {
         /**
          * Filters by "keywords" (which searches everything including filenames, title, tags, users who uploaded the file, tags)
          */
-        public static function filterByKeywords($keywords, $simple = null)
+        public static function filterByKeywords($keywords, $simple = false)
         {
             // Concrete\Core\Page\PageList::filterByKeywords();
             return Concrete\Core\Page\PageList::filterByKeywords($keywords, $simple);
         }
 
-        public static function filterByName($name, $exact = null)
+        public static function filterByName($name, $exact = false)
         {
             // Concrete\Core\Page\PageList::filterByName();
             return Concrete\Core\Page\PageList::filterByName($name, $exact);
         }
 
-        public static function filterByPath($path, $includeAllChildren = "1")
+        public static function filterByPath($path, $includeAllChildren = true)
         {
             // Concrete\Core\Page\PageList::filterByPath();
             return Concrete\Core\Page\PageList::filterByPath($path, $includeAllChildren);
@@ -8242,7 +8314,7 @@ namespace {
             return Concrete\Core\Page\PageList::displayOnlyPermittedPages($checkForPermissions);
         }
 
-        protected static function setBaseQuery($additionalFields = null)
+        protected static function setBaseQuery($additionalFields = "")
         {
             // Concrete\Core\Page\PageList::setBaseQuery();
             return Concrete\Core\Page\PageList::setBaseQuery($additionalFields);
@@ -8269,13 +8341,13 @@ namespace {
         /**
          * Returns an array of page objects based on current settings
          */
-        public static function get($itemsToGet = null, $offset = null)
+        public static function get($itemsToGet = 0, $offset = 0)
         {
             // Concrete\Core\Page\PageList::get();
             return Concrete\Core\Page\PageList::get($itemsToGet, $offset);
         }
 
-        public static function debug($dbg = "1")
+        public static function debug($dbg = true)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug();
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
@@ -8356,7 +8428,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
         }
 
-        public static function getSortByURL($column, $dir = "asc", $baseURL = null, $additionalVars = null)
+        public static function getSortByURL($column, $dir = "asc", $baseURL = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL();
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
@@ -8374,7 +8446,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
         }
 
-        public static function enableStickySearchRequest($namespace = null)
+        public static function enableStickySearchRequest($namespace = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest();
             return Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
@@ -8404,7 +8476,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
         }
 
-        public static function resetSearchRequest($namespace = null)
+        public static function resetSearchRequest($namespace = "")
         {
             // Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest();
             return Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
@@ -8449,13 +8521,13 @@ namespace {
         /**
          * Returns an array of object by "page"
          */
-        public static function getPage($page = null)
+        public static function getPage($page = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPage();
             return Concrete\Core\Foundation\Collection\ItemList::getPage($page);
         }
 
-        protected static function setCurrentPage($page = null)
+        protected static function setCurrentPage($page = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setCurrentPage();
             return Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
@@ -8464,7 +8536,7 @@ namespace {
         /**
          * Displays summary text about a list
          */
-        public static function displaySummary($right_content = null)
+        public static function displaySummary($right_content = "")
         {
             // Concrete\Core\Foundation\Collection\ItemList::displaySummary();
             return Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
@@ -8494,7 +8566,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
         }
 
-        public static function getPagination($url = null, $additionalVars = null)
+        public static function getPagination($url = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPagination();
             return Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
@@ -8502,7 +8574,7 @@ namespace {
 
         /**
          * Gets paging that works in our new format */
-        public static function displayPagingV2($script = null, $return = null, $additionalVars = null)
+        public static function displayPagingV2($script = false, $return = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPagingV2();
             return Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
@@ -8510,7 +8582,7 @@ namespace {
 
         /**
          * Gets standard HTML to display paging */
-        public static function displayPaging($script = null, $return = null, $additionalVars = null)
+        public static function displayPaging($script = false, $return = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPaging();
             return Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
@@ -8801,7 +8873,7 @@ namespace {
     class Queue extends \Concrete\Core\Foundation\Queue
     {
 
-        public static function get($name, $additionalConfig = null)
+        public static function get($name, $additionalConfig = array())
         {
             // Concrete\Core\Foundation\Queue::get();
             return Concrete\Core\Foundation\Queue::get($name, $additionalConfig);
@@ -9031,7 +9103,7 @@ namespace {
             return Concrete\Core\Block\Block::getPackageHandle();
         }
 
-        public static function updateBlockName($name, $force = null)
+        public static function updateBlockName($name, $force = 0)
         {
             // Concrete\Core\Block\Block::updateBlockName();
             return Concrete\Core\Block\Block::updateBlockName($name, $force);
@@ -9052,7 +9124,7 @@ namespace {
             return Concrete\Core\Block\Block::move($nc, $area);
         }
 
-        public static function duplicate($nc, $isCopyFromMasterCollectionPropagation = null)
+        public static function duplicate($nc, $isCopyFromMasterCollectionPropagation = false)
         {
             // Concrete\Core\Block\Block::duplicate();
             return Concrete\Core\Block\Block::duplicate($nc, $isCopyFromMasterCollectionPropagation);
@@ -9070,13 +9142,13 @@ namespace {
             return Concrete\Core\Block\Block::getBlockCustomStyleRuleID();
         }
 
-        public static function resetBlockCustomStyle($updateAll = null)
+        public static function resetBlockCustomStyle($updateAll = false)
         {
             // Concrete\Core\Block\Block::resetBlockCustomStyle();
             return Concrete\Core\Block\Block::resetBlockCustomStyle($updateAll);
         }
 
-        public static function setBlockCustomStyle($csr, $updateAll = null)
+        public static function setBlockCustomStyle($csr, $updateAll = false)
         {
             // Concrete\Core\Block\Block::setBlockCustomStyle();
             return Concrete\Core\Block\Block::setBlockCustomStyle($csr, $updateAll);
@@ -9235,13 +9307,13 @@ namespace {
             return Concrete\Core\Block\Block::overrideAreaPermissions();
         }
 
-        public static function delete($forceDelete = null)
+        public static function delete($forceDelete = false)
         {
             // Concrete\Core\Block\Block::delete();
             return Concrete\Core\Block\Block::delete($forceDelete);
         }
 
-        public static function deleteBlock($forceDelete = null)
+        public static function deleteBlock($forceDelete = false)
         {
             // Concrete\Core\Block\Block::deleteBlock();
             return Concrete\Core\Block\Block::deleteBlock($forceDelete);
@@ -9405,13 +9477,13 @@ namespace {
             return Concrete\Core\Marketplace\Marketplace::downloadRemoteFile($file);
         }
 
-        public static function getMarketplaceFrame($width = "100%", $height = 300, $completeURL = null, $connectMethod = "view")
+        public static function getMarketplaceFrame($width = "100%", $height = "300", $completeURL = false, $connectMethod = "view")
         {
             // Concrete\Core\Marketplace\Marketplace::getMarketplaceFrame();
             return Concrete\Core\Marketplace\Marketplace::getMarketplaceFrame($width, $height, $completeURL, $connectMethod);
         }
 
-        public static function getMarketplacePurchaseFrame($mp, $width = "100%", $height = 530)
+        public static function getMarketplacePurchaseFrame($mp, $width = "100%", $height = "530")
         {
             // Concrete\Core\Marketplace\Marketplace::getMarketplacePurchaseFrame();
             return Concrete\Core\Marketplace\Marketplace::getMarketplacePurchaseFrame($mp, $width, $height);
@@ -9426,7 +9498,7 @@ namespace {
             return Concrete\Core\Marketplace\Marketplace::checkPackageUpdates();
         }
 
-        public static function getAvailableMarketplaceItems($filterInstalled = "1")
+        public static function getAvailableMarketplaceItems($filterInstalled = true)
         {
             // Concrete\Core\Marketplace\Marketplace::getAvailableMarketplaceItems();
             return Concrete\Core\Marketplace\Marketplace::getAvailableMarketplaceItems($filterInstalled);
@@ -9655,7 +9727,7 @@ namespace {
          * Return the class file that this BlockType uses
          * @return string
          */
-        public static function getBlockTypeMappedClass($btHandle, $pkgHandle = null)
+        public static function getBlockTypeMappedClass($btHandle, $pkgHandle = false)
         {
             // Concrete\Core\Block\BlockType\BlockType::getBlockTypeMappedClass();
             return Concrete\Core\Block\BlockType\BlockType::getBlockTypeMappedClass($btHandle, $pkgHandle);
@@ -9676,7 +9748,7 @@ namespace {
          * @param boolean specify true if you only want to see the number of blocks in active pages
          * @return int
          */
-        public static function getCount($ignoreUnapprovedVersions = null)
+        public static function getCount($ignoreUnapprovedVersions = false)
         {
             // Concrete\Core\Block\BlockType\BlockType::getCount();
             return Concrete\Core\Block\BlockType\BlockType::getCount($ignoreUnapprovedVersions);
@@ -9754,7 +9826,7 @@ namespace {
         /**
          * Installs a BlockType that is passed via a btHandle string. The core or override directories are parsed.
          */
-        public static function installBlockType($btHandle, $pkg = null)
+        public static function installBlockType($btHandle, $pkg = false)
         {
             // Concrete\Core\Block\BlockType\BlockType::installBlockType();
             return Concrete\Core\Block\BlockType\BlockType::installBlockType($btHandle, $pkg);
@@ -9779,7 +9851,7 @@ namespace {
          * Adds a block to the system without adding it to a collection.
          * Passes page and area data along if it is available, however.
          */
-        public static function add($data, $c = null, $a = null)
+        public static function add($data, $c = false, $a = false)
         {
             // Concrete\Core\Block\BlockType\BlockType::add();
             return Concrete\Core\Block\BlockType\BlockType::add($data, $c, $a);
@@ -9790,7 +9862,7 @@ namespace {
     class BlockTypeList extends \Concrete\Core\Block\BlockType\BlockTypeList
     {
 
-        public static function get($itemsToGet = 100, $offset = null)
+        public static function get($itemsToGet = 100, $offset = 0)
         {
             // Concrete\Core\Block\BlockType\BlockTypeList::get();
             return Concrete\Core\Block\BlockType\BlockTypeList::get($itemsToGet, $offset);
@@ -9856,7 +9928,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getTotal();
         }
 
-        public static function debug($dbg = "1")
+        public static function debug($dbg = true)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug();
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
@@ -9937,7 +10009,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
         }
 
-        public static function getSortByURL($column, $dir = "asc", $baseURL = null, $additionalVars = null)
+        public static function getSortByURL($column, $dir = "asc", $baseURL = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL();
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
@@ -9955,7 +10027,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
         }
 
-        public static function enableStickySearchRequest($namespace = null)
+        public static function enableStickySearchRequest($namespace = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest();
             return Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
@@ -9985,7 +10057,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
         }
 
-        public static function resetSearchRequest($namespace = null)
+        public static function resetSearchRequest($namespace = "")
         {
             // Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest();
             return Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
@@ -10030,13 +10102,13 @@ namespace {
         /**
          * Returns an array of object by "page"
          */
-        public static function getPage($page = null)
+        public static function getPage($page = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPage();
             return Concrete\Core\Foundation\Collection\ItemList::getPage($page);
         }
 
-        protected static function setCurrentPage($page = null)
+        protected static function setCurrentPage($page = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setCurrentPage();
             return Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
@@ -10045,7 +10117,7 @@ namespace {
         /**
          * Displays summary text about a list
          */
-        public static function displaySummary($right_content = null)
+        public static function displaySummary($right_content = "")
         {
             // Concrete\Core\Foundation\Collection\ItemList::displaySummary();
             return Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
@@ -10075,7 +10147,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
         }
 
-        public static function getPagination($url = null, $additionalVars = null)
+        public static function getPagination($url = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPagination();
             return Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
@@ -10083,7 +10155,7 @@ namespace {
 
         /**
          * Gets paging that works in our new format */
-        public static function displayPagingV2($script = null, $return = null, $additionalVars = null)
+        public static function displayPagingV2($script = false, $return = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPagingV2();
             return Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
@@ -10091,7 +10163,7 @@ namespace {
 
         /**
          * Gets standard HTML to display paging */
-        public static function displayPaging($script = null, $return = null, $additionalVars = null)
+        public static function displayPaging($script = false, $return = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPaging();
             return Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
@@ -10190,6 +10262,16 @@ namespace {
             return Concrete\Core\Block\BlockType\Set::getPackageHandle();
         }
 
+        /** Returns the display name for this instance (localized and escaped accordingly to $format)
+         * @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+         * @return string
+         */
+        public static function getBlockTypeSetDisplayName($format = "html")
+        {
+            // Concrete\Core\Block\BlockType\Set::getBlockTypeSetDisplayName();
+            return Concrete\Core\Block\BlockType\Set::getBlockTypeSetDisplayName($format);
+        }
+
         public static function updateBlockTypeSetName($btsName)
         {
             // Concrete\Core\Block\BlockType\Set::updateBlockTypeSetName();
@@ -10214,7 +10296,7 @@ namespace {
             return Concrete\Core\Block\BlockType\Set::clearBlockTypes();
         }
 
-        public static function add($btsHandle, $btsName, $pkg = null)
+        public static function add($btsHandle, $btsName, $pkg = false)
         {
             // Concrete\Core\Block\BlockType\Set::add();
             return Concrete\Core\Block\BlockType\Set::add($btsHandle, $btsName, $pkg);
@@ -10486,7 +10568,7 @@ namespace {
             return Concrete\Core\Package\Package::swapContent($options);
         }
 
-        public static function testForInstall($package, $testForAlreadyInstalled = "1")
+        public static function testForInstall($package, $testForAlreadyInstalled = true)
         {
             // Concrete\Core\Package\Package::testForInstall();
             return Concrete\Core\Package\Package::testForInstall($package, $testForAlreadyInstalled);
@@ -10600,7 +10682,7 @@ namespace {
             return Concrete\Core\Package\Package::restore();
         }
 
-        public static function config($cfKey, $getFullObject = null)
+        public static function config($cfKey, $getFullObject = false)
         {
             // Concrete\Core\Package\Package::config();
             return Concrete\Core\Package\Package::config($cfKey, $getFullObject);
@@ -10618,7 +10700,7 @@ namespace {
             return Concrete\Core\Package\Package::clearConfig($cfKey);
         }
 
-        public static function getAvailablePackages($filterInstalled = "1")
+        public static function getAvailablePackages($filterInstalled = true)
         {
             // Concrete\Core\Package\Package::getAvailablePackages();
             return Concrete\Core\Package\Package::getAvailablePackages($filterInstalled);
@@ -10724,7 +10806,7 @@ namespace {
          * @param boolean $displayMode
          * @return type
          */
-        public static function getAttribute($akHandle, $displayMode = null)
+        public static function getAttribute($akHandle, $displayMode = false)
         {
             // Concrete\Core\Page\Collection\Collection::getAttribute();
             return Concrete\Core\Page\Collection\Collection::getAttribute($akHandle, $displayMode);
@@ -10736,7 +10818,7 @@ namespace {
             return Concrete\Core\Page\Collection\Collection::getCollectionAttributeValue($ak);
         }
 
-        public static function clearCollectionAttributes($retainAKIDs = null)
+        public static function clearCollectionAttributes($retainAKIDs = array())
         {
             // Concrete\Core\Page\Collection\Collection::clearCollectionAttributes();
             return Concrete\Core\Page\Collection\Collection::clearCollectionAttributes($retainAKIDs);
@@ -10748,13 +10830,13 @@ namespace {
             return Concrete\Core\Page\Collection\Collection::reindexPendingPages();
         }
 
-        public static function reindex($index = null, $actuallyDoReindex = "1")
+        public static function reindex($index = false, $actuallyDoReindex = true)
         {
             // Concrete\Core\Page\Collection\Collection::reindex();
             return Concrete\Core\Page\Collection\Collection::reindex($index, $actuallyDoReindex);
         }
 
-        public static function getAttributeValueObject($ak, $createIfNotFound = null)
+        public static function getAttributeValueObject($ak, $createIfNotFound = false)
         {
             // Concrete\Core\Page\Collection\Collection::getAttributeValueObject();
             return Concrete\Core\Page\Collection\Collection::getAttributeValueObject($ak, $createIfNotFound);
@@ -10832,7 +10914,7 @@ namespace {
             return Concrete\Core\Page\Collection\Collection::getVersionID();
         }
 
-        public static function getCollectionAreaDisplayOrder($arHandle, $ignoreVersions = null)
+        public static function getCollectionAreaDisplayOrder($arHandle, $ignoreVersions = false)
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionAreaDisplayOrder();
             return Concrete\Core\Page\Collection\Collection::getCollectionAreaDisplayOrder($arHandle, $ignoreVersions);
@@ -10842,7 +10924,7 @@ namespace {
          * Retrieves all custom style rules that should be inserted into the header on a page, whether they are defined in areas
          * or blocks
          */
-        public static function outputCustomStyleHeaderItems($return = null)
+        public static function outputCustomStyleHeaderItems($return = false)
         {
             // Concrete\Core\Page\Collection\Collection::outputCustomStyleHeaderItems();
             return Concrete\Core\Page\Collection\Collection::outputCustomStyleHeaderItems($return);
@@ -10924,7 +11006,7 @@ namespace {
          * @param string $arHandle. If specified, returns just the blocks in an area
          * @return array
          */
-        public static function getBlockIDs($arHandle = null)
+        public static function getBlockIDs($arHandle = false)
         {
             // Concrete\Core\Page\Collection\Collection::getBlockIDs();
             return Concrete\Core\Page\Collection\Collection::getBlockIDs($arHandle);
@@ -10935,7 +11017,7 @@ namespace {
          * @param string $arHandle. If specified, returns just the blocks in an area
          * @return array
          */
-        public static function getBlocks($arHandle = null)
+        public static function getBlocks($arHandle = false)
         {
             // Concrete\Core\Page\Collection\Collection::getBlocks();
             return Concrete\Core\Page\Collection\Collection::getBlocks($arHandle);
@@ -11054,7 +11136,7 @@ namespace {
             return Concrete\Core\Page\Collection\Version\Version::get($c, $cvID);
         }
 
-        public static function getAttribute($ak, $c, $displayMode = null)
+        public static function getAttribute($ak, $c, $displayMode = false)
         {
             // Concrete\Core\Page\Collection\Version\Version::getAttribute();
             return Concrete\Core\Page\Collection\Version\Version::getAttribute($ak, $c, $displayMode);
@@ -11162,7 +11244,7 @@ namespace {
             return Concrete\Core\Page\Collection\Version\Version::createNew($versionComments);
         }
 
-        public static function approve($doReindexImmediately = "1")
+        public static function approve($doReindexImmediately = true)
         {
             // Concrete\Core\Page\Collection\Version\Version::approve();
             return Concrete\Core\Page\Collection\Version\Version::approve($doReindexImmediately);
@@ -11362,7 +11444,7 @@ namespace {
          * Returns the total number of blocks in an area.
          * @param Page $c must be passed if the display() method has not been run on the area object yet.
          */
-        public static function getTotalBlocksInArea($c = null)
+        public static function getTotalBlocksInArea($c = false)
         {
             // Concrete\Core\Area\Area::getTotalBlocksInArea();
             return Concrete\Core\Area\Area::getTotalBlocksInArea($c);
@@ -11470,7 +11552,7 @@ namespace {
          * @param Page|Collection $c
          * @return Block[]
          */
-        public static function getAreaBlocksArray($c = null)
+        public static function getAreaBlocksArray($c = false)
         {
             // Concrete\Core\Area\Area::getAreaBlocksArray();
             return Concrete\Core\Area\Area::getAreaBlocksArray($c);
@@ -11892,7 +11974,7 @@ namespace {
          * @param Page|Collection $c
          * @return Block[]
          */
-        public static function getAreaBlocksArray($c = null)
+        public static function getAreaBlocksArray($c = false)
         {
             // Concrete\Core\Area\Area::getAreaBlocksArray();
             return Concrete\Core\Area\Area::getAreaBlocksArray($c);
@@ -12080,13 +12162,13 @@ namespace {
             return Concrete\Core\Page\Stack\Stack::isValidStack($stack);
         }
 
-        public static function addStack($stackName, $type = null)
+        public static function addStack($stackName, $type = 0)
         {
             // Concrete\Core\Page\Stack\Stack::addStack();
             return Concrete\Core\Page\Stack\Stack::addStack($stackName, $type);
         }
 
-        public static function duplicate($nc = null, $preserveUserID = null)
+        public static function duplicate($nc = null, $preserveUserID = false)
         {
             // Concrete\Core\Page\Stack\Stack::duplicate();
             return Concrete\Core\Page\Stack\Stack::duplicate($nc, $preserveUserID);
@@ -12299,7 +12381,7 @@ namespace {
             return Concrete\Core\Page\Page::isGeneratedCollection();
         }
 
-        public static function assignPermissions($userOrGroup, $permissions = null, $accessType = 10)
+        public static function assignPermissions($userOrGroup, $permissions = array(), $accessType = Concrete\Core\Permission\Key\PageKey::ACCESS_TYPE_INCLUDE)
         {
             // Concrete\Core\Page\Page::assignPermissions();
             return Concrete\Core\Page\Page::assignPermissions($userOrGroup, $permissions, $accessType);
@@ -12358,7 +12440,7 @@ namespace {
          * @param string $cLink
          * @param bool $newWindow
          */
-        public static function updateCollectionAliasExternal($cName, $cLink, $newWindow = null)
+        public static function updateCollectionAliasExternal($cName, $cLink, $newWindow = 0)
         {
             // Concrete\Core\Page\Page::updateCollectionAliasExternal();
             return Concrete\Core\Page\Page::updateCollectionAliasExternal($cName, $cLink, $newWindow);
@@ -12371,7 +12453,7 @@ namespace {
          * @param bool $newWindow
          * @return int $newCID
          */
-        public static function addCollectionAliasExternal($cName, $cLink, $newWindow = null)
+        public static function addCollectionAliasExternal($cName, $cLink, $newWindow = 0)
         {
             // Concrete\Core\Page\Page::addCollectionAliasExternal();
             return Concrete\Core\Page\Page::addCollectionAliasExternal($cName, $cLink, $newWindow);
@@ -12407,7 +12489,7 @@ namespace {
             return Concrete\Core\Page\Page::removeThisAlias();
         }
 
-        public static function populateRecursivePages($pages, $pageRow, $cParentID, $level, $includeThisPage = "1")
+        public static function populateRecursivePages($pages, $pageRow, $cParentID, $level, $includeThisPage = true)
         {
             // Concrete\Core\Page\Page::populateRecursivePages();
             return Concrete\Core\Page\Page::populateRecursivePages($pages, $pageRow, $cParentID, $level, $includeThisPage);
@@ -12437,7 +12519,7 @@ namespace {
             return Concrete\Core\Page\Page::queueForDeletionRequest();
         }
 
-        public static function queueForDuplication($destination, $includeParent = "1")
+        public static function queueForDuplication($destination, $includeParent = true)
         {
             // Concrete\Core\Page\Page::queueForDuplication();
             return Concrete\Core\Page\Page::queueForDuplication($destination, $includeParent);
@@ -12467,7 +12549,7 @@ namespace {
          * Returns full url for the current page
          * @return string
          */
-        public static function getCollectionLink($appendBaseURL = null, $ignoreUrlRewriting = null)
+        public static function getCollectionLink($appendBaseURL = false, $ignoreUrlRewriting = false)
         {
             // Concrete\Core\Page\Page::getCollectionLink();
             return Concrete\Core\Page\Page::getCollectionLink($appendBaseURL, $ignoreUrlRewriting);
@@ -12849,19 +12931,19 @@ namespace {
          * @param string $sortColumn
          * @return Page
          */
-        public static function getFirstChild($sortColumn = "cDisplayOrder asc", $excludeSystemPages = null)
+        public static function getFirstChild($sortColumn = "cDisplayOrder asc", $excludeSystemPages = false)
         {
             // Concrete\Core\Page\Page::getFirstChild();
             return Concrete\Core\Page\Page::getFirstChild($sortColumn, $excludeSystemPages);
         }
 
-        public static function getCollectionChildrenArray($oneLevelOnly = null)
+        public static function getCollectionChildrenArray($oneLevelOnly = 0)
         {
             // Concrete\Core\Page\Page::getCollectionChildrenArray();
             return Concrete\Core\Page\Page::getCollectionChildrenArray($oneLevelOnly);
         }
 
-        public static function _getNumChildren($cID, $oneLevelOnly = null, $sortColumn = "cDisplayOrder asc")
+        public static function _getNumChildren($cID, $oneLevelOnly = 0, $sortColumn = "cDisplayOrder asc")
         {
             // Concrete\Core\Page\Page::_getNumChildren();
             return Concrete\Core\Page\Page::_getNumChildren($cID, $oneLevelOnly, $sortColumn);
@@ -12891,16 +12973,10 @@ namespace {
             return Concrete\Core\Page\Page::resetCustomThemeStyles();
         }
 
-        public static function getCustomThemeStyles()
+        public static function setCustomStyleObject(Concrete\Core\Page\Theme\Theme $pt, Concrete\Core\StyleCustomizer\Style\ValueList $valueList, $selectedPreset = false, $customCssRecord = false)
         {
-            // Concrete\Core\Page\Page::getCustomThemeStyles();
-            return Concrete\Core\Page\Page::getCustomThemeStyles();
-        }
-
-        public static function updateCustomThemeStyles($styles)
-        {
-            // Concrete\Core\Page\Page::updateCustomThemeStyles();
-            return Concrete\Core\Page\Page::updateCustomThemeStyles($styles);
+            // Concrete\Core\Page\Page::setCustomStyleObject();
+            return Concrete\Core\Page\Page::setCustomStyleObject($pt, $valueList, $selectedPreset, $customCssRecord);
         }
 
         public static function writePageThemeCustomizations()
@@ -12981,13 +13057,13 @@ namespace {
             return Concrete\Core\Page\Page::updateGroupsSubCollection($cParentIDString);
         }
 
-        public static function move($nc, $retainOldPagePath = null)
+        public static function move($nc, $retainOldPagePath = false)
         {
             // Concrete\Core\Page\Page::move();
             return Concrete\Core\Page\Page::move($nc, $retainOldPagePath);
         }
 
-        public static function duplicateAll($nc, $preserveUserID = null)
+        public static function duplicateAll($nc, $preserveUserID = false)
         {
             // Concrete\Core\Page\Page::duplicateAll();
             return Concrete\Core\Page\Page::duplicateAll($nc, $preserveUserID);
@@ -12996,7 +13072,7 @@ namespace {
         /**
          * @access private
          **/
-        public static function _duplicateAll($cParent, $cNewParent, $preserveUserID = null)
+        public static function _duplicateAll($cParent, $cNewParent, $preserveUserID = false)
         {
             // Concrete\Core\Page\Page::_duplicateAll();
             return Concrete\Core\Page\Page::_duplicateAll($cParent, $cNewParent, $preserveUserID);
@@ -13020,13 +13096,13 @@ namespace {
             return Concrete\Core\Page\Page::getNextSubPageDisplayOrder();
         }
 
-        public static function rescanCollectionPath($retainOldPagePath = null)
+        public static function rescanCollectionPath($retainOldPagePath = false)
         {
             // Concrete\Core\Page\Page::rescanCollectionPath();
             return Concrete\Core\Page\Page::rescanCollectionPath($retainOldPagePath);
         }
 
-        public static function updateDisplayOrder($do, $cID = null)
+        public static function updateDisplayOrder($do, $cID = 0)
         {
             // Concrete\Core\Page\Page::updateDisplayOrder();
             return Concrete\Core\Page\Page::updateDisplayOrder($do, $cID);
@@ -13050,7 +13126,7 @@ namespace {
             return Concrete\Core\Page\Page::movePageDisplayOrderToSibling($c, $position);
         }
 
-        public static function rescanCollectionPathIndividual($cID, $cPath, $retainOldPagePath = null)
+        public static function rescanCollectionPathIndividual($cID, $cPath, $retainOldPagePath = false)
         {
             // Concrete\Core\Page\Page::rescanCollectionPathIndividual();
             return Concrete\Core\Page\Page::rescanCollectionPathIndividual($cID, $cPath, $retainOldPagePath);
@@ -13161,10 +13237,16 @@ namespace {
          * @param array $data
          * @return page
          **/
-        public static function add($pt, $data, $template = null)
+        public static function add($pt, $data, $template = false)
         {
             // Concrete\Core\Page\Page::add();
             return Concrete\Core\Page\Page::add($pt, $data, $template);
+        }
+
+        public static function getCustomStyleObject()
+        {
+            // Concrete\Core\Page\Page::getCustomStyleObject();
+            return Concrete\Core\Page\Page::getCustomStyleObject();
         }
 
         public static function getCollectionFullPageCaching()
@@ -13298,7 +13380,7 @@ namespace {
          * @param boolean $displayMode
          * @return type
          */
-        public static function getAttribute($akHandle, $displayMode = null)
+        public static function getAttribute($akHandle, $displayMode = false)
         {
             // Concrete\Core\Page\Collection\Collection::getAttribute();
             return Concrete\Core\Page\Collection\Collection::getAttribute($akHandle, $displayMode);
@@ -13310,7 +13392,7 @@ namespace {
             return Concrete\Core\Page\Collection\Collection::getCollectionAttributeValue($ak);
         }
 
-        public static function clearCollectionAttributes($retainAKIDs = null)
+        public static function clearCollectionAttributes($retainAKIDs = array())
         {
             // Concrete\Core\Page\Collection\Collection::clearCollectionAttributes();
             return Concrete\Core\Page\Collection\Collection::clearCollectionAttributes($retainAKIDs);
@@ -13322,13 +13404,13 @@ namespace {
             return Concrete\Core\Page\Collection\Collection::reindexPendingPages();
         }
 
-        public static function reindex($index = null, $actuallyDoReindex = "1")
+        public static function reindex($index = false, $actuallyDoReindex = true)
         {
             // Concrete\Core\Page\Collection\Collection::reindex();
             return Concrete\Core\Page\Collection\Collection::reindex($index, $actuallyDoReindex);
         }
 
-        public static function getAttributeValueObject($ak, $createIfNotFound = null)
+        public static function getAttributeValueObject($ak, $createIfNotFound = false)
         {
             // Concrete\Core\Page\Collection\Collection::getAttributeValueObject();
             return Concrete\Core\Page\Collection\Collection::getAttributeValueObject($ak, $createIfNotFound);
@@ -13400,7 +13482,7 @@ namespace {
             return Concrete\Core\Page\Collection\Collection::getVersionID();
         }
 
-        public static function getCollectionAreaDisplayOrder($arHandle, $ignoreVersions = null)
+        public static function getCollectionAreaDisplayOrder($arHandle, $ignoreVersions = false)
         {
             // Concrete\Core\Page\Collection\Collection::getCollectionAreaDisplayOrder();
             return Concrete\Core\Page\Collection\Collection::getCollectionAreaDisplayOrder($arHandle, $ignoreVersions);
@@ -13410,7 +13492,7 @@ namespace {
          * Retrieves all custom style rules that should be inserted into the header on a page, whether they are defined in areas
          * or blocks
          */
-        public static function outputCustomStyleHeaderItems($return = null)
+        public static function outputCustomStyleHeaderItems($return = false)
         {
             // Concrete\Core\Page\Collection\Collection::outputCustomStyleHeaderItems();
             return Concrete\Core\Page\Collection\Collection::outputCustomStyleHeaderItems($return);
@@ -13469,7 +13551,7 @@ namespace {
          * @param string $arHandle. If specified, returns just the blocks in an area
          * @return array
          */
-        public static function getBlockIDs($arHandle = null)
+        public static function getBlockIDs($arHandle = false)
         {
             // Concrete\Core\Page\Collection\Collection::getBlockIDs();
             return Concrete\Core\Page\Collection\Collection::getBlockIDs($arHandle);
@@ -13480,7 +13562,7 @@ namespace {
          * @param string $arHandle. If specified, returns just the blocks in an area
          * @return array
          */
-        public static function getBlocks($arHandle = null)
+        public static function getBlocks($arHandle = false)
         {
             // Concrete\Core\Page\Collection\Collection::getBlocks();
             return Concrete\Core\Page\Collection\Collection::getBlocks($arHandle);
@@ -13575,7 +13657,7 @@ namespace {
             return Concrete\Core\Page\Stack\StackList::export($x);
         }
 
-        public static function get($itemsToGet = null, $offset = null)
+        public static function get($itemsToGet = 0, $offset = 0)
         {
             // Concrete\Core\Page\Stack\StackList::get();
             return Concrete\Core\Page\Stack\StackList::get($itemsToGet, $offset);
@@ -13626,19 +13708,19 @@ namespace {
         /**
          * Filters by "keywords" (which searches everything including filenames, title, tags, users who uploaded the file, tags)
          */
-        public static function filterByKeywords($keywords, $simple = null)
+        public static function filterByKeywords($keywords, $simple = false)
         {
             // Concrete\Core\Page\PageList::filterByKeywords();
             return Concrete\Core\Page\PageList::filterByKeywords($keywords, $simple);
         }
 
-        public static function filterByName($name, $exact = null)
+        public static function filterByName($name, $exact = false)
         {
             // Concrete\Core\Page\PageList::filterByName();
             return Concrete\Core\Page\PageList::filterByName($name, $exact);
         }
 
-        public static function filterByPath($path, $includeAllChildren = "1")
+        public static function filterByPath($path, $includeAllChildren = true)
         {
             // Concrete\Core\Page\PageList::filterByPath();
             return Concrete\Core\Page\PageList::filterByPath($path, $includeAllChildren);
@@ -13834,7 +13916,7 @@ namespace {
             return Concrete\Core\Page\PageList::displayOnlyPermittedPages($checkForPermissions);
         }
 
-        protected static function setBaseQuery($additionalFields = null)
+        protected static function setBaseQuery($additionalFields = "")
         {
             // Concrete\Core\Page\PageList::setBaseQuery();
             return Concrete\Core\Page\PageList::setBaseQuery($additionalFields);
@@ -13858,7 +13940,7 @@ namespace {
             return Concrete\Core\Page\PageList::getTotal();
         }
 
-        public static function debug($dbg = "1")
+        public static function debug($dbg = true)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug();
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
@@ -13939,7 +14021,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
         }
 
-        public static function getSortByURL($column, $dir = "asc", $baseURL = null, $additionalVars = null)
+        public static function getSortByURL($column, $dir = "asc", $baseURL = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL();
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
@@ -13957,7 +14039,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
         }
 
-        public static function enableStickySearchRequest($namespace = null)
+        public static function enableStickySearchRequest($namespace = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest();
             return Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
@@ -13987,7 +14069,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
         }
 
-        public static function resetSearchRequest($namespace = null)
+        public static function resetSearchRequest($namespace = "")
         {
             // Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest();
             return Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
@@ -14032,13 +14114,13 @@ namespace {
         /**
          * Returns an array of object by "page"
          */
-        public static function getPage($page = null)
+        public static function getPage($page = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPage();
             return Concrete\Core\Foundation\Collection\ItemList::getPage($page);
         }
 
-        protected static function setCurrentPage($page = null)
+        protected static function setCurrentPage($page = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setCurrentPage();
             return Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
@@ -14047,7 +14129,7 @@ namespace {
         /**
          * Displays summary text about a list
          */
-        public static function displaySummary($right_content = null)
+        public static function displaySummary($right_content = "")
         {
             // Concrete\Core\Foundation\Collection\ItemList::displaySummary();
             return Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
@@ -14077,7 +14159,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
         }
 
-        public static function getPagination($url = null, $additionalVars = null)
+        public static function getPagination($url = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPagination();
             return Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
@@ -14085,7 +14167,7 @@ namespace {
 
         /**
          * Gets paging that works in our new format */
-        public static function displayPagingV2($script = null, $return = null, $additionalVars = null)
+        public static function displayPagingV2($script = false, $return = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPagingV2();
             return Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
@@ -14093,7 +14175,7 @@ namespace {
 
         /**
          * Gets standard HTML to display paging */
-        public static function displayPaging($script = null, $return = null, $additionalVars = null)
+        public static function displayPaging($script = false, $return = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPaging();
             return Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
@@ -14138,7 +14220,7 @@ namespace {
     class View extends \Concrete\Core\View\View
     {
 
-        protected static function constructView($path = null)
+        protected static function constructView($path = false)
         {
             // Concrete\Core\View\View::constructView();
             return Concrete\Core\View\View::constructView($path);
@@ -14185,7 +14267,7 @@ namespace {
             return Concrete\Core\View\View::setViewRootDirectoryName($directory);
         }
 
-        public static function inc($file, $args = null)
+        public static function inc($file, $args = array())
         {
             // Concrete\Core\View\View::inc();
             return Concrete\Core\View\View::inc($file, $args);
@@ -14355,7 +14437,7 @@ namespace {
             return Concrete\Core\View\AbstractView::addOutputAsset($asset);
         }
 
-        public static function requireAsset($assetType, $assetHandle = null)
+        public static function requireAsset($assetType, $assetHandle = false)
         {
             // Concrete\Core\View\AbstractView::requireAsset();
             return Concrete\Core\View\AbstractView::requireAsset($assetType, $assetHandle);
@@ -14397,7 +14479,7 @@ namespace {
             return Concrete\Core\View\AbstractView::getScopeItems();
         }
 
-        public static function render($state = null)
+        public static function render($state = false)
         {
             // Concrete\Core\View\AbstractView::render();
             return Concrete\Core\View\AbstractView::render($state);
@@ -14416,7 +14498,7 @@ namespace {
             return Concrete\Core\View\AbstractView::url($action, $task);
         }
 
-        public static function setThemeByPath($path, $theme = null, $wrapper = "view.php")
+        public static function setThemeByPath($path, $theme = null, $wrapper = FILENAME_THEMES_VIEW)
         {
             // Concrete\Core\View\AbstractView::setThemeByPath();
             return Concrete\Core\View\AbstractView::setThemeByPath($path, $theme, $wrapper);
@@ -14544,7 +14626,7 @@ namespace {
             return Concrete\Core\Job\Job::exportList($xml);
         }
 
-        public static function getList($scheduledOnly = null)
+        public static function getList($scheduledOnly = false)
         {
             // Concrete\Core\Job\Job::getList();
             return Concrete\Core\Job\Job::getList($scheduledOnly);
@@ -14562,25 +14644,25 @@ namespace {
             return Concrete\Core\Job\Job::markStarted();
         }
 
-        public static function markCompleted($resultCode = null, $resultMsg = null)
+        public static function markCompleted($resultCode = 0, $resultMsg = false)
         {
             // Concrete\Core\Job\Job::markCompleted();
             return Concrete\Core\Job\Job::markCompleted($resultCode, $resultMsg);
         }
 
-        public static function getByID($jID = null)
+        public static function getByID($jID = 0)
         {
             // Concrete\Core\Job\Job::getByID();
             return Concrete\Core\Job\Job::getByID($jID);
         }
 
-        public static function getByHandle($jHandle = null)
+        public static function getByHandle($jHandle = "")
         {
             // Concrete\Core\Job\Job::getByHandle();
             return Concrete\Core\Job\Job::getByHandle($jHandle);
         }
 
-        public static function getJobObjByHandle($jHandle = null, $jobData = null)
+        public static function getJobObjByHandle($jHandle = "", $jobData = array())
         {
             // Concrete\Core\Job\Job::getJobObjByHandle();
             return Concrete\Core\Job\Job::getJobObjByHandle($jHandle, $jobData);
@@ -14610,7 +14692,7 @@ namespace {
             return Concrete\Core\Job\Job::setJobStatus($jStatus);
         }
 
-        public static function installByHandle($jHandle = null)
+        public static function installByHandle($jHandle = "")
         {
             // Concrete\Core\Job\Job::installByHandle();
             return Concrete\Core\Job\Job::installByHandle($jHandle);
@@ -14936,7 +15018,7 @@ namespace {
             return Concrete\Core\Job\Set::addJob($j);
         }
 
-        public static function add($jsName, $pkg = null)
+        public static function add($jsName, $pkg = false)
         {
             // Concrete\Core\Job\Set::add();
             return Concrete\Core\Job\Set::add($jsName, $pkg);
@@ -15138,7 +15220,7 @@ namespace {
             return Concrete\Core\File\File::overrideFileSetPermissions();
         }
 
-        public static function resetPermissions($fOverrideSetPermissions = null)
+        public static function resetPermissions($fOverrideSetPermissions = 0)
         {
             // Concrete\Core\File\File::resetPermissions();
             return Concrete\Core\File\File::resetPermissions($fOverrideSetPermissions);
@@ -15162,7 +15244,7 @@ namespace {
             return Concrete\Core\File\File::getFileSets();
         }
 
-        public static function isStarred($u = null)
+        public static function isStarred($u = false)
         {
             // Concrete\Core\File\File::isStarred();
             return Concrete\Core\File\File::isStarred($u);
@@ -15177,7 +15259,7 @@ namespace {
         /**
          * Returns a file version object that is to be written to. Computes whether we can use the current most recent version, OR a new one should be created
          */
-        public static function getVersionToModify($forceCreateNew = null)
+        public static function getVersionToModify($forceCreateNew = false)
         {
             // Concrete\Core\File\File::getVersionToModify();
             return Concrete\Core\File\File::getVersionToModify($forceCreateNew);
@@ -15195,13 +15277,13 @@ namespace {
             return Concrete\Core\File\File::duplicate();
         }
 
-        public static function add($filename, $prefix, $data = null)
+        public static function add($filename, $prefix, $data = array())
         {
             // Concrete\Core\File\File::add();
             return Concrete\Core\File\File::add($filename, $prefix, $data);
         }
 
-        public static function addVersion($filename, $prefix, $data = null)
+        public static function addVersion($filename, $prefix, $data = array())
         {
             // Concrete\Core\File\File::addVersion();
             return Concrete\Core\File\File::addVersion($filename, $prefix, $data);
@@ -15406,7 +15488,7 @@ namespace {
          * Gets an attribute for the file. If "nice mode" is set, we display it nicely
          * for use in the file attributes table
          */
-        public static function getAttribute($ak, $mode = null)
+        public static function getAttribute($ak, $mode = false)
         {
             // Concrete\Core\File\Version::getAttribute();
             return Concrete\Core\File\Version::getAttribute($ak, $mode);
@@ -15460,7 +15542,7 @@ namespace {
             return Concrete\Core\File\Version::getExtension();
         }
 
-        public static function logVersionUpdate($updateTypeID, $updateTypeAttributeID = null)
+        public static function logVersionUpdate($updateTypeID, $updateTypeAttributeID = 0)
         {
             // Concrete\Core\File\Version::logVersionUpdate();
             return Concrete\Core\File\Version::logVersionUpdate($updateTypeID, $updateTypeAttributeID);
@@ -15583,7 +15665,7 @@ namespace {
             return Concrete\Core\File\Version::getForceDownloadURL();
         }
 
-        public static function getRelativePath($fullurl = null)
+        public static function getRelativePath($fullurl = false)
         {
             // Concrete\Core\File\Version::getRelativePath();
             return Concrete\Core\File\Version::getRelativePath($fullurl);
@@ -15607,13 +15689,13 @@ namespace {
             return Concrete\Core\File\Version::hasThumbnail($level);
         }
 
-        public static function getThumbnail($level, $fullImageTag = "1")
+        public static function getThumbnail($level, $fullImageTag = true)
         {
             // Concrete\Core\File\Version::getThumbnail();
             return Concrete\Core\File\Version::getThumbnail($level, $fullImageTag);
         }
 
-        public static function refreshThumbnails($refreshCache = "1")
+        public static function refreshThumbnails($refreshCache = true)
         {
             // Concrete\Core\File\Version::refreshThumbnails();
             return Concrete\Core\File\Version::refreshThumbnails($refreshCache);
@@ -15624,7 +15706,7 @@ namespace {
          * This will run any type-based import routines, and store those attributes, generate thumbnails,
          * etc...
          */
-        public static function refreshAttributes($firstRun = null)
+        public static function refreshAttributes($firstRun = false)
         {
             // Concrete\Core\File\Version::refreshAttributes();
             return Concrete\Core\File\Version::refreshAttributes($firstRun);
@@ -15657,7 +15739,7 @@ namespace {
             return Concrete\Core\File\Version::clearAttribute($ak);
         }
 
-        public static function getAttributeValueObject($ak, $createIfNotFound = null)
+        public static function getAttributeValueObject($ak, $createIfNotFound = false)
         {
             // Concrete\Core\File\Version::getAttributeValueObject();
             return Concrete\Core\File\Version::getAttributeValueObject($ak, $createIfNotFound);
@@ -15771,7 +15853,7 @@ namespace {
             return Concrete\Core\File\Set\Set::getPermissionObjectIdentifier();
         }
 
-        public static function getMySets($u = null)
+        public static function getMySets($u = false)
         {
             // Concrete\Core\File\Set\Set::getMySets();
             return Concrete\Core\File\Set\Set::getMySets($u);
@@ -15835,7 +15917,7 @@ namespace {
          *
          * Dev Note: This will create duplicate sets with the same name if a set exists owned by another user!!!
          */
-        public static function createAndGetSet($fs_name, $fs_type, $fs_uid = null)
+        public static function createAndGetSet($fs_name, $fs_type, $fs_uid = false)
         {
             // Concrete\Core\File\Set\Set::createAndGetSet();
             return Concrete\Core\File\Set\Set::createAndGetSet($fs_name, $fs_type, $fs_uid);
@@ -15844,7 +15926,7 @@ namespace {
         /**
          * Adds a file set
          */
-        public static function add($setName, $fsOverrideGlobalPermissions = null, $u = null, $type = 1)
+        public static function add($setName, $fsOverrideGlobalPermissions = 0, $u = false, $type = self::TYPE_PUBLIC)
         {
             // Concrete\Core\File\Set\Set::add();
             return Concrete\Core\File\Set\Set::add($setName, $fsOverrideGlobalPermissions, $u, $type);
@@ -15853,7 +15935,7 @@ namespace {
         /**
          * Updates a file set.
          */
-        public static function update($setName, $fsOverrideGlobalPermissions = null)
+        public static function update($setName, $fsOverrideGlobalPermissions = 0)
         {
             // Concrete\Core\File\Set\Set::update();
             return Concrete\Core\File\Set\Set::update($setName, $fsOverrideGlobalPermissions);
@@ -15944,7 +16026,7 @@ namespace {
             return Concrete\Core\File\Set\Set::acquireBaseFileSetPermissions();
         }
 
-        public static function assignPermissions($userOrGroup, $permissions = null, $accessType = 10)
+        public static function assignPermissions($userOrGroup, $permissions = array(), $accessType = Concrete\Core\Permission\Key\FileSetKey::ACCESS_TYPE_INCLUDE)
         {
             // Concrete\Core\File\Set\Set::assignPermissions();
             return Concrete\Core\File\Set\Set::assignPermissions($userOrGroup, $permissions, $accessType);
@@ -15970,7 +16052,7 @@ namespace {
             return Concrete\Core\File\Importer::generatePrefix();
         }
 
-        protected static function storeFile($prefix, $pointer, $filename, $fr = null)
+        protected static function storeFile($prefix, $pointer, $filename, $fr = false)
         {
             // Concrete\Core\File\Importer::storeFile();
             return Concrete\Core\File\Importer::storeFile($prefix, $pointer, $filename, $fr);
@@ -15986,7 +16068,7 @@ namespace {
          * @param FileRecord $fr
          * @return number Error Code | FileVersion
          */
-        public static function import($pointer, $filename = null, $fr = null)
+        public static function import($pointer, $filename = false, $fr = false)
         {
             // Concrete\Core\File\Importer::import();
             return Concrete\Core\File\Importer::import($pointer, $filename, $fr);
@@ -16133,7 +16215,7 @@ namespace {
             return Concrete\Core\User\Group\Group::getParentGroup();
         }
 
-        public static function getGroupDisplayName($includeHTML = "1")
+        public static function getGroupDisplayName($includeHTML = true)
         {
             // Concrete\Core\User\Group\Group::getGroupDisplayName();
             return Concrete\Core\User\Group\Group::getGroupDisplayName($includeHTML);
@@ -16300,7 +16382,7 @@ namespace {
          * @param string $gDescription
          * @return Group
          */
-        public static function add($gName, $gDescription, $parentGroup = null, $pkg = null, $gID = null)
+        public static function add($gName, $gDescription, $parentGroup = false, $pkg = null, $gID = null)
         {
             // Concrete\Core\User\Group\Group::add();
             return Concrete\Core\User\Group\Group::add($gName, $gDescription, $parentGroup, $pkg, $gID);
@@ -16312,19 +16394,19 @@ namespace {
             return Concrete\Core\User\Group\Group::getBadges();
         }
 
-        protected static function getAutomationControllers($column, $excludeUser = null)
+        protected static function getAutomationControllers($column, $excludeUser = false)
         {
             // Concrete\Core\User\Group\Group::getAutomationControllers();
             return Concrete\Core\User\Group\Group::getAutomationControllers($column, $excludeUser);
         }
 
-        public static function getAutomatedOnRegisterGroupControllers($u = null)
+        public static function getAutomatedOnRegisterGroupControllers($u = false)
         {
             // Concrete\Core\User\Group\Group::getAutomatedOnRegisterGroupControllers();
             return Concrete\Core\User\Group\Group::getAutomatedOnRegisterGroupControllers($u);
         }
 
-        public static function getAutomatedOnLoginGroupControllers($u = null)
+        public static function getAutomatedOnLoginGroupControllers($u = false)
         {
             // Concrete\Core\User\Group\Group::getAutomatedOnLoginGroupControllers();
             return Concrete\Core\User\Group\Group::getAutomatedOnLoginGroupControllers($u);
@@ -16485,7 +16567,7 @@ namespace {
             return Concrete\Core\User\Group\GroupSet::addGroup($g);
         }
 
-        public static function add($gsName, $pkg = null)
+        public static function add($gsName, $pkg = false)
         {
             // Concrete\Core\User\Group\GroupSet::add();
             return Concrete\Core\User\Group\GroupSet::add($gsName, $pkg);
@@ -16574,7 +16656,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getTotal();
         }
 
-        public static function debug($dbg = "1")
+        public static function debug($dbg = true)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug();
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
@@ -16655,7 +16737,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
         }
 
-        public static function getSortByURL($column, $dir = "asc", $baseURL = null, $additionalVars = null)
+        public static function getSortByURL($column, $dir = "asc", $baseURL = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL();
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
@@ -16673,7 +16755,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
         }
 
-        public static function enableStickySearchRequest($namespace = null)
+        public static function enableStickySearchRequest($namespace = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest();
             return Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
@@ -16703,7 +16785,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
         }
 
-        public static function resetSearchRequest($namespace = null)
+        public static function resetSearchRequest($namespace = "")
         {
             // Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest();
             return Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
@@ -16748,13 +16830,13 @@ namespace {
         /**
          * Returns an array of object by "page"
          */
-        public static function getPage($page = null)
+        public static function getPage($page = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPage();
             return Concrete\Core\Foundation\Collection\ItemList::getPage($page);
         }
 
-        protected static function setCurrentPage($page = null)
+        protected static function setCurrentPage($page = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setCurrentPage();
             return Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
@@ -16763,7 +16845,7 @@ namespace {
         /**
          * Displays summary text about a list
          */
-        public static function displaySummary($right_content = null)
+        public static function displaySummary($right_content = "")
         {
             // Concrete\Core\Foundation\Collection\ItemList::displaySummary();
             return Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
@@ -16793,7 +16875,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
         }
 
-        public static function getPagination($url = null, $additionalVars = null)
+        public static function getPagination($url = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPagination();
             return Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
@@ -16801,7 +16883,7 @@ namespace {
 
         /**
          * Gets paging that works in our new format */
-        public static function displayPagingV2($script = null, $return = null, $additionalVars = null)
+        public static function displayPagingV2($script = false, $return = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPagingV2();
             return Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
@@ -16809,7 +16891,7 @@ namespace {
 
         /**
          * Gets standard HTML to display paging */
-        public static function displayPaging($script = null, $return = null, $additionalVars = null)
+        public static function displayPaging($script = false, $return = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPaging();
             return Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
@@ -16884,7 +16966,7 @@ namespace {
             return Concrete\Core\User\Group\GroupList::updateItemsPerPage($num);
         }
 
-        public static function get($itemsToGet = 100, $offset = null)
+        public static function get($itemsToGet = 100, $offset = 0)
         {
             // Concrete\Core\User\Group\GroupList::get();
             return Concrete\Core\User\Group\GroupList::get($itemsToGet, $offset);
@@ -16896,7 +16978,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getTotal();
         }
 
-        public static function debug($dbg = "1")
+        public static function debug($dbg = true)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug();
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
@@ -16977,7 +17059,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
         }
 
-        public static function getSortByURL($column, $dir = "asc", $baseURL = null, $additionalVars = null)
+        public static function getSortByURL($column, $dir = "asc", $baseURL = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL();
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
@@ -16995,7 +17077,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
         }
 
-        public static function enableStickySearchRequest($namespace = null)
+        public static function enableStickySearchRequest($namespace = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest();
             return Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
@@ -17025,7 +17107,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
         }
 
-        public static function resetSearchRequest($namespace = null)
+        public static function resetSearchRequest($namespace = "")
         {
             // Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest();
             return Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
@@ -17070,13 +17152,13 @@ namespace {
         /**
          * Returns an array of object by "page"
          */
-        public static function getPage($page = null)
+        public static function getPage($page = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPage();
             return Concrete\Core\Foundation\Collection\ItemList::getPage($page);
         }
 
-        protected static function setCurrentPage($page = null)
+        protected static function setCurrentPage($page = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setCurrentPage();
             return Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
@@ -17085,7 +17167,7 @@ namespace {
         /**
          * Displays summary text about a list
          */
-        public static function displaySummary($right_content = null)
+        public static function displaySummary($right_content = "")
         {
             // Concrete\Core\Foundation\Collection\ItemList::displaySummary();
             return Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
@@ -17115,7 +17197,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
         }
 
-        public static function getPagination($url = null, $additionalVars = null)
+        public static function getPagination($url = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPagination();
             return Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
@@ -17123,7 +17205,7 @@ namespace {
 
         /**
          * Gets paging that works in our new format */
-        public static function displayPagingV2($script = null, $return = null, $additionalVars = null)
+        public static function displayPagingV2($script = false, $return = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPagingV2();
             return Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
@@ -17131,7 +17213,7 @@ namespace {
 
         /**
          * Gets standard HTML to display paging */
-        public static function displayPaging($script = null, $return = null, $additionalVars = null)
+        public static function displayPaging($script = false, $return = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPaging();
             return Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
@@ -17294,7 +17376,7 @@ namespace {
          * Filters by tag
          * @param string $tag
          */
-        public static function filterByTag($tag = null)
+        public static function filterByTag($tag = "")
         {
             // Concrete\Core\File\FileList::filterByTag();
             return Concrete\Core\File\FileList::filterByTag($tag);
@@ -17315,7 +17397,7 @@ namespace {
         /**
          * Returns an array of file objects based on current settings
          */
-        public static function get($itemsToGet = null, $offset = null)
+        public static function get($itemsToGet = 0, $offset = 0)
         {
             // Concrete\Core\File\FileList::get();
             return Concrete\Core\File\FileList::get($itemsToGet, $offset);
@@ -17357,7 +17439,7 @@ namespace {
             return Concrete\Core\File\FileList::getTypeList();
         }
 
-        public static function debug($dbg = "1")
+        public static function debug($dbg = true)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug();
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
@@ -17438,7 +17520,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
         }
 
-        public static function getSortByURL($column, $dir = "asc", $baseURL = null, $additionalVars = null)
+        public static function getSortByURL($column, $dir = "asc", $baseURL = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL();
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
@@ -17456,7 +17538,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
         }
 
-        public static function enableStickySearchRequest($namespace = null)
+        public static function enableStickySearchRequest($namespace = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest();
             return Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
@@ -17486,7 +17568,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
         }
 
-        public static function resetSearchRequest($namespace = null)
+        public static function resetSearchRequest($namespace = "")
         {
             // Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest();
             return Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
@@ -17531,13 +17613,13 @@ namespace {
         /**
          * Returns an array of object by "page"
          */
-        public static function getPage($page = null)
+        public static function getPage($page = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPage();
             return Concrete\Core\Foundation\Collection\ItemList::getPage($page);
         }
 
-        protected static function setCurrentPage($page = null)
+        protected static function setCurrentPage($page = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setCurrentPage();
             return Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
@@ -17546,7 +17628,7 @@ namespace {
         /**
          * Displays summary text about a list
          */
-        public static function displaySummary($right_content = null)
+        public static function displaySummary($right_content = "")
         {
             // Concrete\Core\Foundation\Collection\ItemList::displaySummary();
             return Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
@@ -17576,7 +17658,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
         }
 
-        public static function getPagination($url = null, $additionalVars = null)
+        public static function getPagination($url = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPagination();
             return Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
@@ -17584,7 +17666,7 @@ namespace {
 
         /**
          * Gets paging that works in our new format */
-        public static function displayPagingV2($script = null, $return = null, $additionalVars = null)
+        public static function displayPagingV2($script = false, $return = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPagingV2();
             return Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
@@ -17592,7 +17674,7 @@ namespace {
 
         /**
          * Gets standard HTML to display paging */
-        public static function displayPaging($script = null, $return = null, $additionalVars = null)
+        public static function displayPaging($script = false, $return = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPaging();
             return Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
@@ -17677,7 +17759,7 @@ namespace {
             return Concrete\Core\Job\QueueableJob::markStarted();
         }
 
-        public static function markCompleted($code = null, $message = null)
+        public static function markCompleted($code = 0, $message = false)
         {
             // Concrete\Core\Job\QueueableJob::markCompleted();
             return Concrete\Core\Job\QueueableJob::markCompleted($code, $message);
@@ -17776,25 +17858,25 @@ namespace {
             return Concrete\Core\Job\Job::exportList($xml);
         }
 
-        public static function getList($scheduledOnly = null)
+        public static function getList($scheduledOnly = false)
         {
             // Concrete\Core\Job\Job::getList();
             return Concrete\Core\Job\Job::getList($scheduledOnly);
         }
 
-        public static function getByID($jID = null)
+        public static function getByID($jID = 0)
         {
             // Concrete\Core\Job\Job::getByID();
             return Concrete\Core\Job\Job::getByID($jID);
         }
 
-        public static function getByHandle($jHandle = null)
+        public static function getByHandle($jHandle = "")
         {
             // Concrete\Core\Job\Job::getByHandle();
             return Concrete\Core\Job\Job::getByHandle($jHandle);
         }
 
-        public static function getJobObjByHandle($jHandle = null, $jobData = null)
+        public static function getJobObjByHandle($jHandle = "", $jobData = array())
         {
             // Concrete\Core\Job\Job::getJobObjByHandle();
             return Concrete\Core\Job\Job::getJobObjByHandle($jHandle, $jobData);
@@ -17818,7 +17900,7 @@ namespace {
             return Concrete\Core\Job\Job::setJobStatus($jStatus);
         }
 
-        public static function installByHandle($jHandle = null)
+        public static function installByHandle($jHandle = "")
         {
             // Concrete\Core\Job\Job::installByHandle();
             return Concrete\Core\Job\Job::installByHandle($jHandle);
@@ -18096,7 +18178,7 @@ namespace {
         /**
          * Returns a list of all permissions of this category
          */
-        public static function getList($pkCategoryHandle, $filters = null)
+        public static function getList($pkCategoryHandle, $filters = array())
         {
             // Concrete\Core\Permission\Key\Key::getList();
             return Concrete\Core\Permission\Key\Key::getList($pkCategoryHandle, $filters);
@@ -18145,7 +18227,7 @@ namespace {
         /**
          * Adds an permission key.
          */
-        public static function add($pkCategoryHandle, $pkHandle, $pkName, $pkDescription, $pkCanTriggerWorkflow, $pkHasCustomClass, $pkg = null)
+        public static function add($pkCategoryHandle, $pkHandle, $pkName, $pkDescription, $pkCanTriggerWorkflow, $pkHasCustomClass, $pkg = false)
         {
             // Concrete\Core\Permission\Key\Key::add();
             return Concrete\Core\Permission\Key\Key::add($pkCategoryHandle, $pkHandle, $pkName, $pkDescription, $pkCanTriggerWorkflow, $pkHasCustomClass, $pkg);
@@ -18295,7 +18377,7 @@ namespace {
             return Concrete\Core\Permission\Category::getPermissionKeyByID($pkID);
         }
 
-        public static function getToolsURL($task = null)
+        public static function getToolsURL($task = false)
         {
             // Concrete\Core\Permission\Category::getToolsURL();
             return Concrete\Core\Permission\Category::getToolsURL($task);
@@ -18349,7 +18431,7 @@ namespace {
             return Concrete\Core\Permission\Category::getList();
         }
 
-        public static function add($pkCategoryHandle, $pkg = null)
+        public static function add($pkCategoryHandle, $pkg = false)
         {
             // Concrete\Core\Permission\Category::add();
             return Concrete\Core\Permission\Category::add($pkCategoryHandle, $pkg);
@@ -18456,7 +18538,7 @@ namespace {
             return Concrete\Core\Permission\Access\Access::createByMerge($permissions);
         }
 
-        public static function getAccessListItems($accessType = 10, $filterEntities = null)
+        public static function getAccessListItems($accessType = PermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array())
         {
             // Concrete\Core\Permission\Access\Access::getAccessListItems();
             return Concrete\Core\Permission\Access\Access::getAccessListItems($accessType, $filterEntities);
@@ -18486,7 +18568,7 @@ namespace {
             return Concrete\Core\Permission\Access\Access::getWorkflows();
         }
 
-        public static function duplicate($newPA = null)
+        public static function duplicate($newPA = false)
         {
             // Concrete\Core\Permission\Access\Access::duplicate();
             return Concrete\Core\Permission\Access\Access::duplicate($newPA);
@@ -18498,7 +18580,7 @@ namespace {
             return Concrete\Core\Permission\Access\Access::markAsInUse();
         }
 
-        public static function addListItem(Concrete\Core\Permission\Access\Entity\Entity $pae, $durationObject = null, $accessType = 10)
+        public static function addListItem(Concrete\Core\Permission\Access\Entity\Entity $pae, $durationObject = false, $accessType = PermissionKey::ACCESS_TYPE_INCLUDE)
         {
             // Concrete\Core\Permission\Access\Access::addListItem();
             return Concrete\Core\Permission\Access\Access::addListItem($pae, $durationObject, $accessType);
@@ -18522,7 +18604,7 @@ namespace {
             return Concrete\Core\Permission\Access\Access::create($pk);
         }
 
-        public static function getByID($paID, Concrete\Core\Permission\Key\Key $pk, $checkPA = "1")
+        public static function getByID($paID, Concrete\Core\Permission\Key\Key $pk, $checkPA = true)
         {
             // Concrete\Core\Permission\Access\Access::getByID();
             return Concrete\Core\Permission\Access\Access::getByID($paID, $pk, $checkPA);
@@ -18575,7 +18657,7 @@ namespace {
          * @param boolean $cacheItemsOnLogin = false Set to true to cache some items when $login is true
          * @return User|null
          */
-        public static function getByUserID($uID, $login = null, $cacheItemsOnLogin = "1")
+        public static function getByUserID($uID, $login = false, $cacheItemsOnLogin = true)
         {
             // Concrete\Core\User\User::getByUserID();
             return Concrete\Core\User\User::getByUserID($uID, $login, $cacheItemsOnLogin);
@@ -18693,7 +18775,7 @@ namespace {
             return Concrete\Core\User\User::unloadAuthenticationTypes();
         }
 
-        public static function logout($hard = "1")
+        public static function logout($hard = true)
         {
             // Concrete\Core\User\User::logout();
             return Concrete\Core\User\User::logout($hard);
@@ -18773,7 +18855,7 @@ namespace {
             return Concrete\Core\User\User::getUserAccessEntityObjects();
         }
 
-        public static function _getUserGroups($disableLogin = null)
+        public static function _getUserGroups($disableLogin = false)
         {
             // Concrete\Core\User\User::_getUserGroups();
             return Concrete\Core\User\User::_getUserGroups($disableLogin);
@@ -18809,7 +18891,7 @@ namespace {
             return Concrete\Core\User\User::loadCollectionEdit($c);
         }
 
-        public static function unloadCollectionEdit($removeCache = "1")
+        public static function unloadCollectionEdit($removeCache = true)
         {
             // Concrete\Core\User\User::unloadCollectionEdit();
             return Concrete\Core\User\User::unloadCollectionEdit($removeCache);
@@ -18976,7 +19058,7 @@ namespace {
          * @param boolean $unredeemedHashesOnly
          * @return UserInfo
          */
-        public static function getByValidationHash($uHash, $unredeemedHashesOnly = "1")
+        public static function getByValidationHash($uHash, $unredeemedHashesOnly = true)
         {
             // Concrete\Core\User\UserInfo::getByValidationHash();
             return Concrete\Core\User\UserInfo::getByValidationHash($uHash, $unredeemedHashesOnly);
@@ -18993,7 +19075,7 @@ namespace {
          * @param array | false $options
          * @return UserInfo
          */
-        public static function add($data, $options = null)
+        public static function add($data, $options = false)
         {
             // Concrete\Core\User\UserInfo::add();
             return Concrete\Core\User\UserInfo::add($data, $options);
@@ -19038,7 +19120,7 @@ namespace {
             return Concrete\Core\User\UserInfo::canReadPrivateMessage($msg);
         }
 
-        public static function sendPrivateMessage($recipient, $subject, $text, $inReplyTo = null)
+        public static function sendPrivateMessage($recipient, $subject, $text, $inReplyTo = false)
         {
             // Concrete\Core\User\UserInfo::sendPrivateMessage();
             return Concrete\Core\User\UserInfo::sendPrivateMessage($recipient, $subject, $text, $inReplyTo);
@@ -19078,7 +19160,7 @@ namespace {
         /**
          * Gets the value of the attribute for the user
          */
-        public static function getAttribute($ak, $displayMode = null)
+        public static function getAttribute($ak, $displayMode = false)
         {
             // Concrete\Core\User\UserInfo::getAttribute();
             return Concrete\Core\User\UserInfo::getAttribute($ak, $displayMode);
@@ -19090,7 +19172,7 @@ namespace {
             return Concrete\Core\User\UserInfo::getAttributeField($ak);
         }
 
-        public static function getAttributeValueObject($ak, $createIfNotFound = null)
+        public static function getAttributeValueObject($ak, $createIfNotFound = false)
         {
             // Concrete\Core\User\UserInfo::getAttributeValueObject();
             return Concrete\Core\User\UserInfo::getAttributeValueObject($ak, $createIfNotFound);
@@ -19348,7 +19430,7 @@ namespace {
          * @param boolean $inGroup
          * @return void
          */
-        public static function filterByGroup($group = null, $inGroup = "1")
+        public static function filterByGroup($group = "", $inGroup = true)
         {
             // Concrete\Core\User\UserList::filterByGroup();
             return Concrete\Core\User\UserList::filterByGroup($group, $inGroup);
@@ -19376,7 +19458,7 @@ namespace {
          * Returns an array of userInfo objects based on current filter settings
          * @return UserInfo[]
          */
-        public static function get($itemsToGet = 100, $offset = null)
+        public static function get($itemsToGet = 100, $offset = 0)
         {
             // Concrete\Core\User\UserList::get();
             return Concrete\Core\User\UserList::get($itemsToGet, $offset);
@@ -19387,7 +19469,7 @@ namespace {
          * much faster than getting a UserInfo object for each result if all you need is the user's id
          * @return array $userIDs
          */
-        public static function getUserIDs($itemsToGet = 100, $offset = null)
+        public static function getUserIDs($itemsToGet = 100, $offset = 0)
         {
             // Concrete\Core\User\UserList::getUserIDs();
             return Concrete\Core\User\UserList::getUserIDs($itemsToGet, $offset);
@@ -19417,7 +19499,7 @@ namespace {
             return Concrete\Core\User\UserList::setBaseQuery();
         }
 
-        public static function debug($dbg = "1")
+        public static function debug($dbg = true)
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug();
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::debug($dbg);
@@ -19498,7 +19580,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::having($column, $value, $comparison);
         }
 
-        public static function getSortByURL($column, $dir = "asc", $baseURL = null, $additionalVars = null)
+        public static function getSortByURL($column, $dir = "asc", $baseURL = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL();
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::getSortByURL($column, $dir, $baseURL, $additionalVars);
@@ -19516,7 +19598,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\Database\DatabaseItemList::filterByAttribute($column, $value, $comparison);
         }
 
-        public static function enableStickySearchRequest($namespace = null)
+        public static function enableStickySearchRequest($namespace = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest();
             return Concrete\Core\Foundation\Collection\ItemList::enableStickySearchRequest($namespace);
@@ -19546,7 +19628,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\ItemList::getStickySearchNameSpace();
         }
 
-        public static function resetSearchRequest($namespace = null)
+        public static function resetSearchRequest($namespace = "")
         {
             // Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest();
             return Concrete\Core\Foundation\Collection\ItemList::resetSearchRequest($namespace);
@@ -19591,13 +19673,13 @@ namespace {
         /**
          * Returns an array of object by "page"
          */
-        public static function getPage($page = null)
+        public static function getPage($page = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPage();
             return Concrete\Core\Foundation\Collection\ItemList::getPage($page);
         }
 
-        protected static function setCurrentPage($page = null)
+        protected static function setCurrentPage($page = false)
         {
             // Concrete\Core\Foundation\Collection\ItemList::setCurrentPage();
             return Concrete\Core\Foundation\Collection\ItemList::setCurrentPage($page);
@@ -19606,7 +19688,7 @@ namespace {
         /**
          * Displays summary text about a list
          */
-        public static function displaySummary($right_content = null)
+        public static function displaySummary($right_content = "")
         {
             // Concrete\Core\Foundation\Collection\ItemList::displaySummary();
             return Concrete\Core\Foundation\Collection\ItemList::displaySummary($right_content);
@@ -19636,7 +19718,7 @@ namespace {
             return Concrete\Core\Foundation\Collection\ItemList::requiresPaging();
         }
 
-        public static function getPagination($url = null, $additionalVars = null)
+        public static function getPagination($url = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::getPagination();
             return Concrete\Core\Foundation\Collection\ItemList::getPagination($url, $additionalVars);
@@ -19644,7 +19726,7 @@ namespace {
 
         /**
          * Gets paging that works in our new format */
-        public static function displayPagingV2($script = null, $return = null, $additionalVars = null)
+        public static function displayPagingV2($script = false, $return = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPagingV2();
             return Concrete\Core\Foundation\Collection\ItemList::displayPagingV2($script, $return, $additionalVars);
@@ -19652,7 +19734,7 @@ namespace {
 
         /**
          * Gets standard HTML to display paging */
-        public static function displayPaging($script = null, $return = null, $additionalVars = null)
+        public static function displayPaging($script = false, $return = false, $additionalVars = array())
         {
             // Concrete\Core\Foundation\Collection\ItemList::displayPaging();
             return Concrete\Core\Foundation\Collection\ItemList::displayPaging($script, $return, $additionalVars);
@@ -20024,7 +20106,7 @@ namespace {
             return Concrete\Core\Package\Package::swapContent($options);
         }
 
-        public static function testForInstall($package, $testForAlreadyInstalled = "1")
+        public static function testForInstall($package, $testForAlreadyInstalled = true)
         {
             // Concrete\Core\Package\Package::testForInstall();
             return Concrete\Core\Package\Package::testForInstall($package, $testForAlreadyInstalled);
@@ -20138,7 +20220,7 @@ namespace {
             return Concrete\Core\Package\Package::restore();
         }
 
-        public static function config($cfKey, $getFullObject = null)
+        public static function config($cfKey, $getFullObject = false)
         {
             // Concrete\Core\Package\Package::config();
             return Concrete\Core\Package\Package::config($cfKey, $getFullObject);
@@ -20156,7 +20238,7 @@ namespace {
             return Concrete\Core\Package\Package::clearConfig($cfKey);
         }
 
-        public static function getAvailablePackages($filterInstalled = "1")
+        public static function getAvailablePackages($filterInstalled = true)
         {
             // Concrete\Core\Package\Package::getAvailablePackages();
             return Concrete\Core\Package\Package::getAvailablePackages($filterInstalled);
@@ -20291,7 +20373,7 @@ namespace {
          *
          * @param bool $sorted true: Sort by installed order, false: Sort by display order
          */
-        public static function getList($sorted = null)
+        public static function getList($sorted = false)
         {
             // Concrete\Core\Authentication\AuthenticationType::getList();
             return Concrete\Core\Authentication\AuthenticationType::getList($sorted);
@@ -20309,7 +20391,7 @@ namespace {
          *
          * @param bool $sorted true: Sort by installed order, false: Sort by display order
          */
-        public static function getActiveList($sorted = null)
+        public static function getActiveList($sorted = false)
         {
             // Concrete\Core\Authentication\AuthenticationType::getActiveList();
             return Concrete\Core\Authentication\AuthenticationType::getActiveList($sorted);
@@ -20404,7 +20486,7 @@ namespace {
          * @param	Package	$pkg		Package object to which this AuthenticationType is associated.
          * @return	AuthenticationType	Returns a loaded authentication type.
          */
-        public static function add($atHandle, $atName, $order = null, $pkg = null)
+        public static function add($atHandle, $atName, $order = 0, $pkg = false)
         {
             // Concrete\Core\Authentication\AuthenticationType::add();
             return Concrete\Core\Authentication\AuthenticationType::add($atHandle, $atName, $order, $pkg);
@@ -20745,7 +20827,7 @@ namespace {
             return Concrete\Core\Tree\Node\Type\Group::setTreeNodeGroup($g);
         }
 
-        public static function add($group = null, $parent = null)
+        public static function add($group = false, $parent = false)
         {
             // Concrete\Core\Tree\Node\Type\Group::add();
             return Concrete\Core\Tree\Node\Type\Group::add($group, $parent);
@@ -20853,13 +20935,13 @@ namespace {
             return Concrete\Core\Tree\Node\Node::selectChildrenNodesByID($nodeID);
         }
 
-        public static function duplicate($parent = null)
+        public static function duplicate($parent = false)
         {
             // Concrete\Core\Tree\Node\Node::duplicate();
             return Concrete\Core\Tree\Node\Node::duplicate($parent);
         }
 
-        protected static function duplicateChildren(Concrete\Core\Tree\Node\NodeType $node)
+        protected static function duplicateChildren(Concrete\Core\Tree\Node\Node $node)
         {
             // Concrete\Core\Tree\Node\Node::duplicateChildren();
             return Concrete\Core\Tree\Node\Node::duplicateChildren($node);
@@ -21185,7 +21267,7 @@ namespace {
             return Concrete\Core\Legacy\Loader::db();
         }
 
-        public static function helper($service, $pkgHandle = null)
+        public static function helper($service, $pkgHandle = false)
         {
             // Concrete\Core\Legacy\Loader::helper();
             return Concrete\Core\Legacy\Loader::helper($service, $pkgHandle);
@@ -21203,13 +21285,13 @@ namespace {
             return Concrete\Core\Legacy\Loader::element($_file, $args, $_pkgHandle);
         }
 
-        public static function model($model, $pkgHandle = null)
+        public static function model($model, $pkgHandle = false)
         {
             // Concrete\Core\Legacy\Loader::model();
             return Concrete\Core\Legacy\Loader::model($model, $pkgHandle);
         }
 
-        public static function library($library, $pkgHandle = null)
+        public static function library($library, $pkgHandle = false)
         {
             // Concrete\Core\Legacy\Loader::library();
             return Concrete\Core\Legacy\Loader::library($library, $pkgHandle);
@@ -21540,7 +21622,7 @@ namespace {
             return Concrete\Core\Routing\Router::setRequest($req);
         }
 
-        public static function register($rtPath, $callback, $rtHandle = null, $additionalAttributes = null)
+        public static function register($rtPath, $callback, $rtHandle = null, $additionalAttributes = array())
         {
             // Concrete\Core\Routing\Router::register();
             return Concrete\Core\Routing\Router::register($rtPath, $callback, $rtHandle, $additionalAttributes);
@@ -21559,7 +21641,7 @@ namespace {
          * @param $theme object, if null site theme is default
          * @return void
          */
-        public static function setThemeByRoute($path, $theme = null, $wrapper = "view.php")
+        public static function setThemeByRoute($path, $theme = null, $wrapper = FILENAME_THEMES_VIEW)
         {
             // Concrete\Core\Routing\Router::setThemeByRoute();
             return Concrete\Core\Routing\Router::setThemeByRoute($path, $theme, $wrapper);
