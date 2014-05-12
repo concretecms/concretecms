@@ -67,18 +67,42 @@ class MethodSymbol {
             $param .= '$' . $parameter->getName();
 
             if ($parameter->isOptional()) {
-                if ($parameter->getDefaultValue()) {
-                    $default = $parameter->getDefaultValue();
-                    if (!is_numeric($default)) {
-                        $param .= ' = "' . $default . '"';
-                    } else {
-                        $param .= ' = ' . $default;
+                
+                if (method_exists($parameter, 'getDefaultValueConstantName') && $parameter->getDefaultValueConstantName()) {
+                    $defaultValue = $parameter->getDefaultValueConstantName();
+                    // Strip out wrong namespaces.
+                    if(preg_match('/.\\\\(\\w+)$/', $defaultValue, $matches) && defined($matches[1])) {
+                        $defaultValue = $matches[1];
                     }
-                } else if ($parameter->allowsNull()) {
-                    $param .= ' = null';
-                } else {
-                    $param .= ' = ""';
                 }
+                else {
+                    $v = $parameter->getDefaultValue();
+                    switch(gettype($v)) {
+                        case 'boolean':
+                        case 'integer':
+                        case 'double':
+                        case 'NULL':
+                            $defaultValue = json_encode($v);
+                            break;
+                        case 'string':
+                            $defaultValue = '"' . addslashes($v) . '"';
+                            break;
+                        case 'array':
+                            if(count($v)) {
+                                $defaultValue = trim(var_export($v, true));
+                            }
+                            else {
+                                $defaultValue = 'array()';
+                            }
+                            break;
+                        case 'object':
+                        case 'resource':
+                        default:
+                            $defaultValue = trim(var_export($v, true));
+                            break;
+                    }
+                }
+                $param .= ' = ' . $defaultValue;
             }
 
             $params[] = $param;
