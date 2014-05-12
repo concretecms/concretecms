@@ -84,7 +84,7 @@ if (is_object($pagetype)) {
 					$selected = $pagetype->getPageTypePublishTargetTypeID();
 				}
 				?>
-				<label class="radio"><?=$form->radio('ptPublishTargetTypeID', $t->getPageTypePublishTargetTypeID(), $selected)?> <span><?=$t->getPageTypePublishTargetTypeName()?></label>
+				<label class="radio"><?=$form->radio('ptPublishTargetTypeID', $t->getPageTypePublishTargetTypeID(), $selected)?> <span><?=$t->getPageTypePublishTargetTypeDisplayName()?></label>
 			<? } ?>
 		</div>
 	</div>
