@@ -117,6 +117,7 @@ $set = $sets[$i];
 			data-supports-inline-add="<?=$bt->supportsInlineAdd()?>"
 			data-btID="<?=$bt->getBlockTypeID()?>"
 			data-dragging-avatar="<?=h('<p><img src="' . $btIcon . '" /><span>' . t($bt->getBlockTypeName()) . '</span></p>')?>"
+			title="<?=t($bt->getBlockTypeName())?>"
 			href="javascript:void(0)"
 		>
 			<p><img src="<?=$btIcon?>" /><span><?=t($bt->getBlockTypeName())?></span></p>
@@ -152,6 +153,7 @@ $set = $sets[$i];
 			data-supports-inline-add="<?=$bt->supportsInlineAdd()?>"
 			data-btID="<?=$bt->getBlockTypeID()?>"
 			data-dragging-avatar="<?=h('<p><img src="' . $btIcon . '" /><span>' . t($bt->getBlockTypeName()) . '</span></p>')?>"
+			title="<?=t($bt->getBlockTypeName())?>"
 			href="javascript:void(0)"
 		><p><img src="<?=$btIcon?>" /><span><?=t($bt->getBlockTypeName())?></span></p></a>
 	</li>
