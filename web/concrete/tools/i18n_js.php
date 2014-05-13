@@ -32,6 +32,7 @@ var ccmi18n = {
 	updateBlock: "<?=t('Update Block')?>",
 	updateBlockMsg: "<?=t('The block has been saved successfully.')?>",
 	copyBlockToScrapbookMsg: "<?=t('The block has been added to your clipboard.')?>",
+	content: "<?=t('Content')?>",
 	closeWindow: "<?=t('Close')?>",
 	editBlock: "<?=t('Edit')?>",
 	editBlockWithName: "<?=tc('%s is a block type name', 'Edit %s')?>",
