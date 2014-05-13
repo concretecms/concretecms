@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Stack\Pile;
 use Loader;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\User\User;
 /**
 *
 * Essentially a user's scrapbook, a pile is an object used for clumping bits of content together around a user account.
