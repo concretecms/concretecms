@@ -74,7 +74,7 @@ if ($isAlias) {
     class="<?=$class?>"
     data-block-type-handle="<?=$btHandle?>"
     data-launch-block-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>"
-    data-placeholder="<?=h('<p><img src="' . Loader::helper('concrete/urls')->getBlockTypeIconURL($btw) . '" /><span>' . t($btw->getBlockTypeName()) . '</span></p>')?>"
+    data-dragging-avatar="<?=h('<p><img src="' . Loader::helper('concrete/urls')->getBlockTypeIconURL($btw) . '" /><span>' . t($btw->getBlockTypeName()) . '</span></p>')?>"
     <? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?> data-block-menu-handle="none"<? } ?>
 >
     <ul class="ccm-edit-mode-inline-commands ccm-ui">

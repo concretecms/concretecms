@@ -339,9 +339,6 @@
 
   var BlockType = Concrete.BlockType = function BlockType(elem, edit_mode, dragger) {
     var my = this;
-    Concrete.createGetterSetters.call(my, {
-      placeholder: elem.html()
-    });
     Block.call(my, elem, edit_mode, dragger);
   };
 
@@ -850,14 +847,8 @@
        var my = this;
 
        if (!my.getAttr('dragger')) {
-         var placeholder, dragger;
-         if ('getPlaceholder' in my) {
-           placeholder = my.getPlaceholder();
-         } else {
-           placeholder = my.getElem().data('placeholder') || ('<p><img src="/concrete/blocks/content/icon.png"><span>' + ccmi18n.content + '</span></p>');
-         }
-         dragger = $('<a />')
-           .html(placeholder)
+         var dragger = $('<a />')
+           .html(my.getElem().data('dragging-avatar') || ('<p><img src="/concrete/blocks/content/icon.png"><span>' + ccmi18n.content + '</span></p>'))
            .addClass('ccm-block-edit-drag ccm-panel-add-block-draggable-block-type')
          ;
          my.setAttr('dragger', dragger.css({
