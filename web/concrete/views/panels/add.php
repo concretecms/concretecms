@@ -105,7 +105,20 @@ $set = $sets[$i];
 		?>
 
 	<li>
-		<a data-panel-add-block-drag-item="block" class="ccm-panel-add-block-draggable-block-type"  data-cID="<?=$c->getCollectionID()?>" data-block-type-handle="<?=$bt->getBlockTypeHandle()?>" data-dialog-title="<?=t('Add %s', t($bt->getBlockTypeName()))?>" data-dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" data-dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" data-has-add-template="<?=$bt->hasAddTemplate()?>" data-supports-inline-add="<?=$bt->supportsInlineAdd()?>" data-btID="<?=$bt->getBlockTypeID()?>" href="javascript:void(0)">
+		<a
+			data-panel-add-block-drag-item="block"
+			class="ccm-panel-add-block-draggable-block-type"
+			data-cID="<?=$c->getCollectionID()?>"
+			data-block-type-handle="<?=$bt->getBlockTypeHandle()?>"
+			data-dialog-title="<?=t('Add %s', t($bt->getBlockTypeName()))?>"
+			data-dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>"
+			data-dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>"
+			data-has-add-template="<?=$bt->hasAddTemplate()?>"
+			data-supports-inline-add="<?=$bt->supportsInlineAdd()?>"
+			data-btID="<?=$bt->getBlockTypeID()?>"
+			data-dragging-avatar="<?=h('<p><img src="' . $btIcon . '" /><span>' . t($bt->getBlockTypeName()) . '</span></p>')?>"
+			href="javascript:void(0)"
+		>
 			<p><img src="<?=$btIcon?>" /><span><?=t($bt->getBlockTypeName())?></span></p>
 		</a>
 	</li>
@@ -127,7 +140,20 @@ $set = $sets[$i];
 		?>
 
 	<li data-block-type-sets="<?=$sets?>">
-		<a data-panel-add-block-drag-item="block" class="ccm-panel-add-block-draggable-block-type"  data-cID="<?=$c->getCollectionID()?>" data-block-type-handle="<?=$bt->getBlockTypeHandle()?>" data-dialog-title="<?=t('Add %s', t($bt->getBlockTypeName()))?>" data-dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>" data-dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>" data-has-add-template="<?=$bt->hasAddTemplate()?>" data-supports-inline-add="<?=$bt->supportsInlineAdd()?>" data-btID="<?=$bt->getBlockTypeID()?>" href="javascript:void(0)"><p><img src="<?=$btIcon?>" /><span><?=$bt->getBlockTypeName()?></span></p></a>
+		<a
+			data-panel-add-block-drag-item="block"
+			class="ccm-panel-add-block-draggable-block-type"
+			data-cID="<?=$c->getCollectionID()?>"
+			data-block-type-handle="<?=$bt->getBlockTypeHandle()?>"
+			data-dialog-title="<?=t('Add %s', t($bt->getBlockTypeName()))?>"
+			data-dialog-width="<?=$bt->getBlockTypeInterfaceWidth()?>"
+			data-dialog-height="<?=$bt->getBlockTypeInterfaceHeight()?>"
+			data-has-add-template="<?=$bt->hasAddTemplate()?>"
+			data-supports-inline-add="<?=$bt->supportsInlineAdd()?>"
+			data-btID="<?=$bt->getBlockTypeID()?>"
+			data-dragging-avatar="<?=h('<p><img src="' . $btIcon . '" /><span>' . t($bt->getBlockTypeName()) . '</span></p>')?>"
+			href="javascript:void(0)"
+		><p><img src="<?=$btIcon?>" /><span><?=t($bt->getBlockTypeName())?></span></p></a>
 	</li>
 
 	<? } ?>
