@@ -20,7 +20,20 @@ abstract class Type extends Object {
 		return PackageList::getHandle($this->pkgID);
 	}
 	public function getPackageObject() {return Package::getByID($this->pkgID);}
-
+	/** Returns the display name for this instance (localized and escaped accordingly to $format)
+	* @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+	* @return string
+	*/
+	public function getPageTypePublishTargetTypeDisplayName($format = 'html') {
+		$value = tc('PageTypePublishTargetTypeName', $this->ptPublishTargetTypeName);
+		switch ($format) {
+			case 'html':
+				return h($value);
+			case 'text':
+			default:
+				return $value;
+		}
+	}
 	public static function getByID($ptPublishTargetTypeID) {
 		$db = Loader::db();
 		$r = $db->GetRow('select ptPublishTargetTypeID, ptPublishTargetTypeHandle, ptPublishTargetTypeName, pkgID from PageTypePublishTargetTypes where ptPublishTargetTypeID = ?', array($ptPublishTargetTypeID));
@@ -68,7 +81,7 @@ abstract class Type extends Object {
 	
 	public static function getList() {
 		$db = Loader::db();
-		$ids = $db->GetCol('select ptPublishTargetTypeID from PageTypePublishTargetTypes order by ptPublishTargetTypeName asc');
+		$ids = $db->GetCol('select ptPublishTargetTypeID from PageTypePublishTargetTypes');
 		$types = array();
 		foreach($ids as $id) {
 			$type = static::getByID($id);
@@ -76,12 +89,15 @@ abstract class Type extends Object {
 				$types[] = $type;
 			}
 		}
+		usort($types, function(Type $a, Type $b) {
+		  return strcasecmp($a->getPageTypePublishTargetTypeDisplayName(), $b->getPageTypePublishTargetTypeDisplayName());
+		});
 		return $types;
 	}
 
 	public static function getListByPackage($pkg) {
 		$db = Loader::db();
-		$ids = $db->GetCol('select ptPublishTargetTypeID from PageTypePublishTargetTypes where pkgID = ? order by ptPublishTargetTypeName asc', array($pkg->getPackageID()));
+		$ids = $db->GetCol('select ptPublishTargetTypeID from PageTypePublishTargetTypes where pkgID = ?', array($pkg->getPackageID()));
 		$types = array();
 		foreach($ids as $id) {
 			$type = static::getByID($id);
@@ -89,6 +105,9 @@ abstract class Type extends Object {
 				$types[] = $type;
 			}
 		}
+		usort($types, function(Type $a, Type $b) {
+			return strcasecmp($a->getPageTypePublishTargetTypeDisplayName(), $b->getPageTypePublishTargetTypeDisplayName());
+		});
 		return $types;
 	}
 	

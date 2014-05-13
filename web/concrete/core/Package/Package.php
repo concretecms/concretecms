@@ -377,7 +377,7 @@ class Package extends Object {
 		} else if ($item instanceof PageTypeComposerControlType) {
 			return $item->getPageTypeComposerControlTypeName();
 		} else if ($item instanceof PageTypePublishTargetType) {
-			return $item->getPageTypePublishTargetTypeName();
+			return $item->getPageTypePublishTargetTypeDisplayName();
 		} else if ($item instanceof PageType) {
 			return $item->getPageTypeName();
 		} else if ($item instanceof PageTemplate) {
