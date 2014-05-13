@@ -13,7 +13,7 @@ class Points extends DashboardPageController
     }
     public function success() {
         $this->view();
-        $this->set('message', t('Rating type updated.'));
+        $this->set('message', t('Rating types updated.'));
     }
     public function save() {
         $db = Loader::db();
