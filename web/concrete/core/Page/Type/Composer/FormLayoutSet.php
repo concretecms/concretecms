@@ -10,7 +10,20 @@ class FormLayoutSet extends Object {
 	public function getPageTypeComposerFormLayoutSetDisplayOrder() {return $this->ptComposerFormLayoutSetDisplayOrder;}
 	public function getPageTypeID() {return $this->ptID;}
 	public function getPageTypeObject() {return PageType::getByID($this->ptID);}
-
+	/** Returns the display name for this instance (localized and escaped accordingly to $format)
+	* @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+	* @return string
+	*/
+	public function getPageTypeComposerFormLayoutSetDisplayName($format = 'html') {
+		$value = tc('PageTypeComposerFormLayoutSetName', $this->ptComposerFormLayoutSetName);
+		switch ($format) {
+			case 'html':
+				return h($value);
+			case 'text':
+			default:
+				return $value;
+		}
+	}
 	public static function getList(PageType $pagetype) {
 		$db = Loader::db();
 		$ptComposerFormLayoutSetIDs = $db->GetCol('select ptComposerFormLayoutSetID from PageTypeComposerFormLayoutSets where ptID = ? order by ptComposerFormLayoutSetDisplayOrder asc', array($pagetype->getPageTypeID()));
