@@ -1,10 +1,10 @@
 <?
 namespace Concrete\Controller\SinglePage\Dashboard\System\Mail;
-use \Concrete\Core\Page\DashboardPageController;
+use \Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use Config;
 use Exception;
-use \Concrete\Core\Mail\Importer\Importer as MailImporter;
+use \Concrete\Core\Mail\Importer\MailImporter;
 
 class Importers extends DashboardPageController {
 	protected $sendUndefinedTasksToView = false;

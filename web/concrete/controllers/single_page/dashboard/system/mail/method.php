@@ -1,6 +1,6 @@
 <?
-namespace Concrete\Controller\Dashboard\System\Mail;
-use \Concrete\Core\Page\DashboardPageController;
+namespace Concrete\Controller\SinglePage\Dashboard\System\Mail;
+use \Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use Config;
 use Exception;
