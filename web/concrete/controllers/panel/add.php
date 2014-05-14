@@ -5,6 +5,7 @@ use BlockTypeList;
 use Loader;
 use Session;
 use BlockType;
+use \Concrete\Core\Page\Stack\Pile\Pile;
 
 class Add extends BackendInterfacePageController {
 
@@ -33,8 +34,11 @@ class Add extends BackendInterfacePageController {
 			$tab = $_REQUEST['tab'];
 		} else {
 			$tab = Session::get('panels_page_add_block_tab');
-		}
+    }
+    $sp = Pile::getDefault();
+    $contents = $sp->getPileContentObjects('date_desc');
 
+		$this->set('contents', $contents);
 		$this->set('tab', $tab);
 		$this->set('blockTypes', $blockTypes);
 		$this->set('ih', Loader::helper('concrete/ui'));
