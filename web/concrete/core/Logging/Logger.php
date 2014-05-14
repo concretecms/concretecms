@@ -63,7 +63,7 @@ class Logger extends MonologLogger
     public function getChannels()
     {
         $db = Database::get();
-        $channels = (array) $db->FetchAssoc('select distinct channel from Logs order by channel asc');
+        $channels = (array) $db->GetCol('select distinct channel from Logs order by channel asc');
         return $channels;
     }
 

@@ -34,7 +34,7 @@ class LogEntry
 
     public function getUserID()
     {
-        return $this->logUserID;
+        return $this->uID;
     }
 
     public function getUserObject()

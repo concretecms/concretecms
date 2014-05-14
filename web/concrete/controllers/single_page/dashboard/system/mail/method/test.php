@@ -1,6 +1,6 @@
 <?
-namespace Concrete\Controller\Dashboard\System\Mail\Method;
-use \Concrete\Core\Page\DashboardPageController;
+namespace Concrete\Controller\SinglePage\Dashboard\System\Mail\Method;
+use \Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use Exception;
 
@@ -11,8 +11,8 @@ class Test extends DashboardPageController {
 		$this->set('mailRecipient', $mailRecipient);
 		$this->set("message", t('The test email has been successfully sent to %s.', $mailRecipient) . "\n" . t('You will receive a test message from %s', EMAIL_DEFAULT_FROM_ADDRESS));
 	}
-	
-	public function test() {
+
+	public function do_test() {
 		if (!Loader::helper('validation/token')->validate('test')) {
 			$this->error->add(t('Invalid Token.'));
 			return;
