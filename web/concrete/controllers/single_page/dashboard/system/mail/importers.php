@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Controller\Dashboard\System\Mail;
+namespace Concrete\Controller\SinglePage\Dashboard\System\Mail;
 use \Concrete\Core\Page\DashboardPageController;
 use Loader;
 use Config;
