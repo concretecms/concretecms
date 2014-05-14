@@ -39,8 +39,6 @@ switch($tab) {
 <div id="ccm-panel-add-block-clipboard-list">
 <?
 
-$sp = Pile::getDefault();
-$contents = $sp->getPileContentObjects('date_desc');
 foreach($contents as $obj) { 
 	$item = $obj->getObject();
 	if (is_object($item)) {
