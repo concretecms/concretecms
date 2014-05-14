@@ -81,6 +81,7 @@ class ClassLoader  {
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Theme', DIR_APPLICATION . '/' . DIRNAME_THEMES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Controller', DIR_APPLICATION . '/' . DIRNAME_CONTROLLERS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Job', DIR_APPLICATION . '/' . DIRNAME_JOBS);
+		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Core', DIR_APPLICATION . '/' . DIRNAME_CLASSES);
 
 		$symfonyLoader->register();
 	}
