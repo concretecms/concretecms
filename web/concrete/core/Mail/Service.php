@@ -436,7 +436,7 @@ class Service {
 		
 		// add email to log
 		if (ENABLE_LOG_EMAILS && !$this->getTesting()) {
-            $l = new GroupLogger(LOG_TYPE_EXCEPTIONS, Logger::INFO);
+            $l = new GroupLogger(LOG_TYPE_EMAILS, Logger::INFO);
 			if (ENABLE_EMAILS) {
 				$l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL WAS SENT TO mail()') . '**');
 			} else {
