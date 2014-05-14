@@ -20,5 +20,10 @@ class LogList extends DatabaseItemList {
 		}
 		return $entries;
 	}
+
+    public function filterByChannel($channel)
+    {
+        $this->filter('channel', $channel);
+    }
 	
 }

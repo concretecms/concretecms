@@ -29,16 +29,20 @@ $areEntries = count($entries) > 0 ? true : false;
     <? } else { ?>
     
     <div class="ccm-pane-options ccm-pane-options-permanent-search">
-    	<form class="form-inline" method="post" id="ccm-log-search"  action="<?=$pageBase?>">
+    	<form class="form-inline" method="get" id="ccm-log-search"  action="<?=$controller->action('view')?>">
 		<div class="control-inline">
 			<label for="keywords"><?=t('Keywords')?></label>
 			<?=$form->text('keywords', $keywords, array('style'=>'width:180px;'))?>
 		</div>
 		<div class="control-inline">
-			<label for="logType"><?=t('Type')?></label>
-			<?=$form->select('logType', $logTypes, array('style'=>'width:180px;'))?>
-			<?=$form->submit('search',t('Search') )?>
+			<label for="level"><?=t('Level')?></label>
+			<?=$form->select('level', $levels, array('style'=>'width:180px;'))?>
 		</div>
+        <div class="control-inline">
+            <label for="channel"><?=t('Channel')?></label>
+            <?=$form->select('channel', $channels, array('style'=>'width:180px;'))?>
+            <?=$form->submit('search',t('Search') )?>
+        </div>
         </form>
     </div>
         
@@ -48,24 +52,20 @@ $areEntries = count($entries) > 0 ? true : false;
         	<thead>
                 <tr>
                     <th class="subheaderActive"><?=t('Date/Time')?></th>
-                    <th class="subheader"><?=t('Type')?></th>
+                    <th class="subheader"><?=t('Level')?></th>
+                    <th class="subheader"><?=t('Channel')?></th>
                     <th class="subheader"><?=t('User')?></th>
-                    <th class="subheader"><input style="float: right" class="btn error btn-mini" type="button" onclick="if (confirm('<?=t("Are you sure you want to clear this log?")?>')) { location.href='<?=$view->url('/dashboard/reports/logs', 'clear', $valt->generate(), $_POST['logType'])?>'}" value="<?=t('Clear Log')?>" /><?=t('Text')?></th>
+                    <th class="subheader"><input style="float: right" class="btn error btn-mini" type="button" onclick="if (confirm('<?=t("Are you sure you want to clear this log?")?>')) { location.href='<?=$view->url('/dashboard/reports/logs', 'clear', $valt->generate(), $_REQUEST['channel'])?>'}" value="<?=t('Clear Log')?>" /><?=t('Text')?></th>
                 </tr>
 			</thead>
             <tbody>
 				<? foreach($entries as $ent) { ?>
                 <tr>
                     <td valign="top" style="white-space: nowrap" class="active"><?php
-                        if (date('m-d-y') == date('m-d-y', strtotime($ent->getTimestamp('user')))) {
-                            echo t(/*i18n %s is a time*/'Today at %s', $dh->date(DATE_APP_GENERIC_TS, strtotime($ent->getTimestamp('user'))));
-                        }
-                        else {
-                            echo $dh->date(DATE_APP_GENERIC_MDYT, strtotime($ent->getTimestamp('user')));
-                        }
-                        
+                        print $ent->getTimestamp();
                     ?></td>
-                    <td valign="top"><strong><?=$ent->getType()?></strong></td>
+                    <td valign="top"><strong><?=$ent->getLevel()?></strong></td>
+                    <td valign="top"><strong><?=$ent->getChannel()?></strong></td>
                     <td valign="top"><strong><?php
                     if($ent->getUserID() == NULL){
                         echo t("Guest");
@@ -75,7 +75,7 @@ $areEntries = count($entries) > 0 ? true : false;
                         echo $u->getUserName();
                     }
                     ?></strong></td>
-                    <td style="width: 100%"><?=$th->makenice($ent->getText())?></td>
+                    <td style="width: 100%"><?=$th->makenice($ent->getMessage())?></td>
                 </tr>
                 <? } ?>
 			</tbody>
