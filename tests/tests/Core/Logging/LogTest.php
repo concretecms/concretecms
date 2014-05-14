@@ -2,6 +2,8 @@
 
 use \Concrete\Core\Logging\Logger;
 use \Concrete\Core\Logging\Event;
+use \Concrete\Core\Logging\LogEntry;
+use \Concrete\Core\Logging\GroupLogger;
 
 class LogTest extends ConcreteDatabaseTestCase {
 
@@ -75,6 +77,7 @@ class LogTest extends ConcreteDatabaseTestCase {
             unlink(dirname(__FILE__) . '/test.log');
         }
 
+
     }
 
     public function testOverringDefaultFunctionalityWithEvents()
@@ -85,7 +88,7 @@ class LogTest extends ConcreteDatabaseTestCase {
         $this->assertEquals(count(Log::getHandlers()), 2);// this should still have the same stream handler from last test.
 
         $handler = new \Monolog\Handler\TestHandler(Logger::CRITICAL, false);
-        Events::addListener('on_logger_create', function($event) use ($handler) {
+        $listener = Events::addListener('on_logger_create', function($event) use ($handler) {
             $logger = $event->getLogger();
             $formatter = new \Monolog\Formatter\LineFormatter();
             $handler->setFormatter($formatter);
@@ -116,7 +119,58 @@ class LogTest extends ConcreteDatabaseTestCase {
         $this->assertEquals($records[1]['level'], Logger::ALERT);
         $this->assertEquals($records[2]['level'], Logger::EMERGENCY);
         $this->assertEquals($records[2]['message'], 'Get out of bed.');
+
+        $listeners = Events::getListeners('on_logger_create');
+        Events::removeListener('on_logger_create', $listeners[0]);
+        // AND we pop the stream handler from the previous test
+        Log::popHandler();
+
     }
 
+    public function testLogEntryObject()
+    {
+        Log::info('This is an info');
+        $db = Database::get();
+        $le = LogEntry::getByID(1);
+        $this->assertEquals($le->getID(), 1);
+        $this->assertEquals($le->getLevel(), Logger::INFO);
+        $this->assertEquals($le->getLevelName(), 'INFO');
+        $this->assertEquals($le->getMessage(), 'This is an info');
+    }
+
+    public function testLegacyLogSupport()
+    {
+        Log::addEntry("this is my log entry.");
+        $le = LogEntry::getByID(1);
+        $this->assertEquals($le->getLevel(), Logger::DEBUG);
+        $this->assertEquals($le->getLevelName(), 'DEBUG');
+        $this->assertEquals($le->getMessage(), 'this is my log entry.');
+
+        /*
+         * old format here:
+        $l = new Log(LOG_TYPE_EMAILS, true, true);
+        $l->write('This is line one.');
+        $l->write('This is line two');
+        $l->close();
+        */
+
+        $l = new GroupLogger(LOG_TYPE_EMAILS, Logger::DEBUG);
+        $l->write('This is line one.');
+        $l->write('This is line two.');
+
+
+        $l2 = new GroupLogger('test', Logger::CRITICAL);
+        $l2->write('OMG!');
+        $l2->close();
+
+        $l->close();
+
+        $le2 = LogEntry::getByID(2);
+        $le3 = LogEntry::getByID(3);
+        $this->assertEquals($le2->getLevel(), Logger::CRITICAL);
+        $this->assertEquals($le3->getLevel(), Logger::DEBUG);
+        $this->assertEquals($le3->getMessage(), "This is line one.\nThis is line two.");
+        $this->assertEquals($le2->getMessage(), "OMG!");
+    }
 
 }

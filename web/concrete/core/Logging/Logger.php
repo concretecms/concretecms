@@ -28,7 +28,7 @@ class Logger extends MonologLogger
         $handler = new DatabaseHandler();
         // set a more basic formatter.
         $output = "%message%";
-        $formatter = new LineFormatter($output);
+        $formatter = new LineFormatter($output, null, true);
         $handler->setFormatter($formatter);
         $this->pushHandler($handler);
     }
