@@ -10,7 +10,7 @@ use Illuminate\Container\Container;
 use Job;
 use JobSet;
 use Loader;
-use Log;
+use \Concrete\Core\Logging\GroupLogger;
 use Package;
 use Page;
 use Redirect;
@@ -63,7 +63,7 @@ class Application extends Container
                 if (defined('ENABLE_LOG_ERRORS') && ENABLE_LOG_ERRORS) {
                     $db = Database::get();
                     if ($db->isConnected()) {
-                        $l = new Log(LOG_TYPE_EXCEPTIONS, true, true);
+                        $l = new GroupLogger(LOG_TYPE_EXCEPTIONS, Logger::CRITICAL);
                         $l->write(
                           t('Exception Occurred: ') . sprintf(
                               "%s:%d %s (%d)\n",
