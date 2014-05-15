@@ -281,7 +281,7 @@ class User extends Object {
 		$cookie = array($this->getUserID(),$authType);
 		$at = AuthenticationType::getByHandle($authType);
 		$cookie[] = $at->controller->buildHash($this);
-		setcookie("ccmAuthUserHash", implode(':',$cookie), time() + 1209600, DIR_REL . '/', SESSION_COOKIE_PARAM_DOMAIN);
+		setcookie("ccmAuthUserHash", implode(':',$cookie), time() + 1209600, DIR_REL . '/');
 	}
 
 	public function setLastAuthType(AuthenticationType $at) {
