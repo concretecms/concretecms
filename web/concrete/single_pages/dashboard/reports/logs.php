@@ -36,7 +36,7 @@ $areEntries = count($entries) > 0 ? true : false;
         <form role="form" data-search-form="logs" action="<?=$controller->action('view')?>" class="form-inline ccm-search-fields">
         <div class="ccm-search-fields-row">
 		<div class="form-group">
-            <?=$form->label('level', t('Level'))?>
+            <?=$form->label('keywords', t('Search'))?>
             <div class="ccm-search-field-content">
             <div class="ccm-search-main-lookup-field">
                 <i class="glyphicon glyphicon-search"></i>
