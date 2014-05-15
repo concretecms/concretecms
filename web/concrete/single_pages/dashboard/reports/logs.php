@@ -13,59 +13,81 @@ $dh = Loader::helper('date');
 $areEntries = count($entries) > 0 ? true : false;
 
 ?>
-
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Logs'), false, false, false);?>
-    
     <? if(!$areEntries) { ?>
     
     <div class="ccm-pane-body ccm-pane-body-footer">
     
-    	<p><?=t('There are no log entries to show at the moment.')?></p>
+    	<p><?=t('No log entries found.')?></p>
     
     </div>
     
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
-    
-    <? } else { ?>
-    
-    <div class="ccm-pane-options ccm-pane-options-permanent-search">
-    	<form class="form-inline" method="get" id="ccm-log-search"  action="<?=$controller->action('view')?>">
-		<div class="control-inline">
-			<label for="keywords"><?=t('Keywords')?></label>
-			<?=$form->text('keywords', $keywords, array('style'=>'width:180px;'))?>
-		</div>
-		<div class="control-inline">
-			<label for="level"><?=t('Level')?></label>
-			<?=$form->select('level', $levels, array('style'=>'width:180px;'))?>
-		</div>
-        <div class="control-inline">
-            <label for="channel"><?=t('Channel')?></label>
-            <?=$form->select('channel', $channels, array('style'=>'width:180px;'))?>
-            <?=$form->submit('search',t('Search') )?>
-        </div>
-        </form>
-    </div>
-        
-	<div class="ccm-pane-body <? if(!$paginator || !strlen($paginator->getPages())>0) { ?>ccm-pane-body-footer <? } ?>">
 
-        <table class="table table-bordered">
-        	<thead>
+    <? } else { ?>
+
+<div class="ccm-dashboard-content-full">
+
+    <script type="text/javascript">
+        $(function() {
+            $('#level').chosen();
+        });
+    </script>
+
+    <div data-search-element="wrapper">
+        <form role="form" data-search-form="logs" action="<?=$controller->action('view')?>" class="form-inline ccm-search-fields">
+        <div class="ccm-search-fields-row">
+		<div class="form-group">
+            <?=$form->label('level', t('Level'))?>
+            <div class="ccm-search-field-content">
+            <div class="ccm-search-main-lookup-field">
+                <i class="glyphicon glyphicon-search"></i>
+                <?=$form->search('keywords', array('placeholder' => t('Keywords')))?>
+                <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
+            </div>
+            </div>
+		</div>
+        </div>
+        <div class="ccm-search-fields-row">
+        <div class="form-group">
+            <?=$form->label('channel', t('Channel'))?>
+            <div class="ccm-search-field-content">
+            <?=$form->select('channel', $channels, array('style'=>'width:180px;'))?>
+            </div>
+        </div>
+        </div>
+
+        <div class="ccm-search-fields-row">
+            <div class="form-group" style="width: 95%">
+                <?=$form->label('level', t('Level'))?>
+                <div class="ccm-search-field-content">
+                <?=$form->selectMultiple('level', $levels, array_keys($levels))?>
+                </div>
+            </div>
+        </div>
+
+        </form>
+
+    </div>
+
+    <div data-search-element="results">
+
+        <table class="ccm-search-results-table">
+            <thead>
                 <tr>
-                    <th class="subheaderActive"><?=t('Date/Time')?></th>
-                    <th class="subheader"><?=t('Level')?></th>
-                    <th class="subheader"><?=t('Channel')?></th>
-                    <th class="subheader"><?=t('User')?></th>
-                    <th class="subheader"><input style="float: right" class="btn error btn-mini" type="button" onclick="if (confirm('<?=t("Are you sure you want to clear this log?")?>')) { location.href='<?=$view->url('/dashboard/reports/logs', 'clear', $valt->generate(), $_REQUEST['channel'])?>'}" value="<?=t('Clear Log')?>" /><?=t('Text')?></th>
+                    <th><a href=""><?=t('Date/Time')?></a></th>
+                    <th><a href=""><?=t('Level')?></a></th>
+                    <th><span><?=t('Channel')?></span></th>
+                    <th><span><?=t('User')?></span></th>
+                    <th><span><?=t('Message')?></span></th>
                 </tr>
-			</thead>
+            </thead>
             <tbody>
-				<? foreach($entries as $ent) { ?>
+                <? foreach($entries as $ent) { ?>
                 <tr>
                     <td valign="top" style="white-space: nowrap" class="active"><?php
                         print $ent->getTimestamp();
                     ?></td>
-                    <td valign="top"><strong><?=$ent->getLevel()?></strong></td>
-                    <td valign="top"><strong><?=$ent->getChannel()?></strong></td>
+                    <td valign="top" style="text-align: center"><?=$ent->getLevelIcon()?></td>
+                    <td valign="top" style="white-space: nowrap"><?=$ent->getChannelDisplay()?></td>
                     <td valign="top"><strong><?php
                     if($ent->getUserID() == NULL){
                         echo t("Guest");
@@ -78,30 +100,15 @@ $areEntries = count($entries) > 0 ? true : false;
                     <td style="width: 100%"><?=$th->makenice($ent->getMessage())?></td>
                 </tr>
                 <? } ?>
-			</tbody>
-		</table>
-    
+            </tbody>
+        </table>
+
     </div>
+
     <!-- END Body Pane -->
-    
-	<? if($paginator && strlen($paginator->getPages())>0){ ?>
-    <div class="ccm-pane-footer">
-        
-        	<div class="pagination">
-              <ul>
-                  <li class="prev"><?=$paginator->getPrevious()?></li>
-                  
-                  <? // Call to pagination helper's 'getPages' method with new $wrapper var ?>
-                  <?=$paginator->getPages('li')?>
-                  
-                  <li class="next"><?=$paginator->getNext()?></li>
-              </ul>
-			</div>
+    <?=$list->displayPagingV2()?>
+
+</div>
 
 
-	</div>
-        <? } // PAGINATOR ?>
-    
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
-    
-    <? } ?>
+<? } ?>

@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Logging;
 use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use Database;
 class LogList extends DatabaseItemList {
 
 	protected $autoSortColumns = array('time', 'logID');
@@ -20,6 +21,12 @@ class LogList extends DatabaseItemList {
 		}
 		return $entries;
 	}
+
+    public function filterByKeywords($keywords)
+    {
+        $db = Database::get();
+        $this->filter(false, "message like " . $db->qstr('%' . $keywords . '%'));
+    }
 
     public function filterByChannel($channel)
     {
