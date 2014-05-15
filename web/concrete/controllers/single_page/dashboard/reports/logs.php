@@ -26,7 +26,7 @@ class Logs extends DashboardPageController {
 	public function view($page = 0) {
 		$list = new LogList();
 
-        $levels = array('' => 'All Levels');
+        $levels = array();
         foreach(Log::getLevels() as $level) {
             $levels[$level] = ucfirst(strtolower(Log::getLevelName($level)));
         }
@@ -38,6 +38,9 @@ class Logs extends DashboardPageController {
         $r = Request::getInstance();
         if ($r->query->has('channel') && $r->query->get('channel') != '') {
             $list->filterByChannel($r->query->get('channel'));
+        }
+        if ($r->query->has('keywords') && $r->query->get('keywords') != '') {
+            $list->filterByKeywords($r->query->get('keywords'));
         }
 
         $entries = $list->getPage();
