@@ -112,7 +112,7 @@ class Message extends Object {
 	}
 	public function getConversationMessageDateTimeOutput($format = 'default') {
 		if(is_array($format)) { // custom date format
-			return t('Posted on %s', Loader::helper('date')->date($format[0], strtotime($this->cnvMessageDateCreated)));
+			return tc('Message posted date', 'Posted on %s', Loader::helper('date')->date($format[0], strtotime($this->cnvMessageDateCreated)));
 		}
 		switch($format) {
 			case 'elapsed': // 3 seconds ago, 4 days ago, etc.
