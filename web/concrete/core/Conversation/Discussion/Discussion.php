@@ -32,7 +32,7 @@ class Discussion extends Object {
 		return $this->cnvDiscussionDateCreated;
 	}
 	public function getConversationDiscussionDateTimeOutput() {
-		return t('Posted on %s', Loader::helper('date')->date('F d, Y \a\t g:i a', strtotime($this->cnvDiscussionDateCreated)));
+		return tc('Message posted date', 'Posted on %s', Loader::helper('date')->date('F d, Y \a\t g:i a', strtotime($this->cnvDiscussionDateCreated)));
 	}
 
 	public static function getByID($cnvDiscussionID) {
