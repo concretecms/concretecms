@@ -1,71 +1,80 @@
 <? 
 defined('C5_EXECUTE') or die("Access Denied.");
-
-// HELPERS
 $valt = Loader::helper('validation/token');
 $th = Loader::helper('text');
-$dh = Loader::helper('date');
 
-
-// VARIABLES
-
-// Check if entries to show, assign to boolean var.
-$areEntries = count($entries) > 0 ? true : false;
 
 ?>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Logs'), false, false, false);?>
-    
-    <? if(!$areEntries) { ?>
-    
-    <div class="ccm-pane-body ccm-pane-body-footer">
-    
-    	<p><?=t('There are no log entries to show at the moment.')?></p>
-    
-    </div>
-    
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
-    
-    <? } else { ?>
-    
-    <div class="ccm-pane-options ccm-pane-options-permanent-search">
-    	<form class="form-inline" method="post" id="ccm-log-search"  action="<?=$pageBase?>">
-		<div class="control-inline">
-			<label for="keywords"><?=t('Keywords')?></label>
-			<?=$form->text('keywords', $keywords, array('style'=>'width:180px;'))?>
-		</div>
-		<div class="control-inline">
-			<label for="logType"><?=t('Type')?></label>
-			<?=$form->select('logType', $logTypes, array('style'=>'width:180px;'))?>
-			<?=$form->submit('search',t('Search') )?>
-		</div>
-        </form>
-    </div>
-        
-	<div class="ccm-pane-body <? if(!$paginator || !strlen($paginator->getPages())>0) { ?>ccm-pane-body-footer <? } ?>">
+<div class="ccm-dashboard-content-full">
 
-        <table class="table table-bordered">
-        	<thead>
+    <script type="text/javascript">
+        $(function() {
+            $('#level').chosen();
+        });
+    </script>
+
+    <div data-search-element="wrapper">
+        <form role="form" data-search-form="logs" action="<?=$controller->action('view')?>" class="form-inline ccm-search-fields">
+        <div class="ccm-search-fields-row">
+		<div class="form-group">
+            <?=$form->label('keywords', t('Search'))?>
+            <div class="ccm-search-field-content">
+            <div class="ccm-search-main-lookup-field">
+                <i class="glyphicon glyphicon-search"></i>
+                <?=$form->search('keywords', array('placeholder' => t('Keywords')))?>
+                <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
+            </div>
+            </div>
+		</div>
+        </div>
+        <div class="ccm-search-fields-row">
+        <div class="form-group">
+            <?=$form->label('channel', t('Channel'))?>
+            <div class="ccm-search-field-content">
+            <?=$form->select('channel', $channels, array('style'=>'width:180px;'))?>
+            <? if ($selectedChannel) { ?>
+                <a href="<?=$controller->action('clear', $valt->generate(), $selectedChannel)?>" class="btn btn-default btn-sm"><?=t('Clear all %s', $th->unhandle($selectedChannel))?></a>
+            <? } else { ?>
+                <a href="<?=$controller->action('clear', $valt->generate())?>" class="btn btn-default btn-sm"><?=t('Clear all')?></a>
+             <? } ?>
+            </div>
+        </div>
+        </div>
+
+        <div class="ccm-search-fields-row">
+            <div class="form-group" style="width: 95%">
+                <?=$form->label('level', t('Level'))?>
+                <div class="ccm-search-field-content">
+                <?=$form->selectMultiple('level', $levels, array_keys($levels))?>
+                </div>
+            </div>
+        </div>
+
+        </form>
+
+    </div>
+
+    <div data-search-element="results">
+
+        <table class="ccm-search-results-table">
+            <thead>
                 <tr>
-                    <th class="subheaderActive"><?=t('Date/Time')?></th>
-                    <th class="subheader"><?=t('Type')?></th>
-                    <th class="subheader"><?=t('User')?></th>
-                    <th class="subheader"><input style="float: right" class="btn error btn-mini" type="button" onclick="if (confirm('<?=t("Are you sure you want to clear this log?")?>')) { location.href='<?=$view->url('/dashboard/reports/logs', 'clear', $valt->generate(), $_POST['logType'])?>'}" value="<?=t('Clear Log')?>" /><?=t('Text')?></th>
+                    <th class="<?=$list->getSearchResultsClass('time')?>"><a href="<?=$list->getSortByURL('time', 'desc')?>"><?=t('Date/Time')?></a></th>
+                    <th class="<?=$list->getSearchResultsClass('level')?>"><a href="<?=$list->getSortByURL('level', 'desc')?>"><?=t('Level')?></a></th>
+                    <th><span><?=t('Channel')?></span></th>
+                    <th><span><?=t('User')?></span></th>
+                    <th><span><?=t('Message')?></span></th>
                 </tr>
-			</thead>
+            </thead>
             <tbody>
-				<? foreach($entries as $ent) { ?>
+                <? foreach($entries as $ent) { ?>
                 <tr>
                     <td valign="top" style="white-space: nowrap" class="active"><?php
-                        if (date('m-d-y') == date('m-d-y', strtotime($ent->getTimestamp('user')))) {
-                            echo t(/*i18n %s is a time*/'Today at %s', $dh->date(DATE_APP_GENERIC_TS, strtotime($ent->getTimestamp('user'))));
-                        }
-                        else {
-                            echo $dh->date(DATE_APP_GENERIC_MDYT, strtotime($ent->getTimestamp('user')));
-                        }
-                        
+                        print $ent->getDisplayTimestamp();
                     ?></td>
-                    <td valign="top"><strong><?=$ent->getType()?></strong></td>
+                    <td valign="top" style="text-align: center"><?=$ent->getLevelIcon()?></td>
+                    <td valign="top" style="white-space: nowrap"><?=$ent->getChannelDisplay()?></td>
                     <td valign="top"><strong><?php
                     if($ent->getUserID() == NULL){
                         echo t("Guest");
@@ -75,33 +84,15 @@ $areEntries = count($entries) > 0 ? true : false;
                         echo $u->getUserName();
                     }
                     ?></strong></td>
-                    <td style="width: 100%"><?=$th->makenice($ent->getText())?></td>
+                    <td style="width: 100%"><?=$th->makenice($ent->getMessage())?></td>
                 </tr>
                 <? } ?>
-			</tbody>
-		</table>
-    
+            </tbody>
+        </table>
+
     </div>
+
     <!-- END Body Pane -->
-    
-	<? if($paginator && strlen($paginator->getPages())>0){ ?>
-    <div class="ccm-pane-footer">
-        
-        	<div class="pagination">
-              <ul>
-                  <li class="prev"><?=$paginator->getPrevious()?></li>
-                  
-                  <? // Call to pagination helper's 'getPages' method with new $wrapper var ?>
-                  <?=$paginator->getPages('li')?>
-                  
-                  <li class="next"><?=$paginator->getNext()?></li>
-              </ul>
-			</div>
+    <?=$list->displayPagingV2()?>
 
-
-	</div>
-        <? } // PAGINATOR ?>
-    
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
-    
-    <? } ?>
+</div>
