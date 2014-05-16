@@ -4,7 +4,9 @@ use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
 use Database;
 class LogList extends DatabaseItemList {
 
-	protected $autoSortColumns = array('time', 'logID');
+	protected $autoSortColumns = array('time', 'logID', 'level');
+    protected $sortBy = 'time';
+    protected $sortByDirection = 'desc';
 
 	function __construct() {
 		$this->setQuery("select Logs.logID from Logs");
@@ -32,5 +34,20 @@ class LogList extends DatabaseItemList {
     {
         $this->filter('channel', $channel);
     }
-	
+
+    public function filterByLevels($levels)
+    {
+        $db = Database::get();
+        if (is_array($levels)) {
+            $lth = '(';
+            for ($i = 0; $i < count($levels); $i++) {
+                if ($i > 0) {
+                    $lth .= ',';
+                }
+                $lth .= $db->quote($levels[$i]);
+            }
+            $lth .= ')';
+            $this->filter(false, "(level in {$lth})");
+        }
+    }
 }

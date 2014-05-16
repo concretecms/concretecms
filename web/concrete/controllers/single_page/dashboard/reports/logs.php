@@ -21,6 +21,7 @@ class Logs extends DashboardPageController {
         } else {
             $this->redirect('/dashboard/reports/logs');
         }
+        $this->view();
     }
 
 	public function view($page = 0) {
@@ -38,6 +39,13 @@ class Logs extends DashboardPageController {
         $r = Request::getInstance();
         if ($r->query->has('channel') && $r->query->get('channel') != '') {
             $list->filterByChannel($r->query->get('channel'));
+            $this->set('selectedChannel', $r->query->get('channel'));
+        }
+        if ($r->query->has('level')) {
+            $selectedlevels = $r->get('level');
+            if (is_array($selectedlevels) && count($selectedlevels) != 8) {
+                $list->filterByLevels($selectedlevels);
+            }
         }
         if ($r->query->has('keywords') && $r->query->get('keywords') != '') {
             $list->filterByKeywords($r->query->get('keywords'));
