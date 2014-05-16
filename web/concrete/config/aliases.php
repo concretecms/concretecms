@@ -6,7 +6,6 @@ return array(
     'Events' => '\Concrete\Core\Events\Events',
     'Response' => '\Concrete\Core\Http\Response',
     'Redirect' => '\Concrete\Core\Routing\Redirect',
-    'Log' => '\Concrete\Core\Logging\Log',
     'URL' => '\Concrete\Core\Routing\URL',
     'Cookie' => '\Concrete\Core\Cookie\Cookie',
     'Cache' => '\Concrete\Core\Cache\Cache',

@@ -3483,27 +3483,19 @@
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="logType" type="C" size="64">
-      <notnull/>
+    <field name="channel" type="C" size="255">
     </field>
-    <field name="timestamp" type="T">
+    <field name="time" type="I" size="10">
       <notnull/>
-      <deftimestamp/>
-    </field>
-    <field name="logText" type="X2" />
-    <field name="logUserID" type="I" size="10">
       <unsigned/>
     </field>
-    <field name="logIsInternal" type="I1" size="1">
-      <notnull/>
-      <default value="0"/>
+    <field name="message" type="X2" />
+    <field name="uID" type="I" size="10">
+      <unsigned/>
     </field>
-    <index name="logType">
-      <col>logType</col>
-    </index>
-    <index name="logIsInternal">
-      <col>logIsInternal</col>
-    </index>
+    <field name="level" type="I" size="10">
+      <notnull/>
+    </field>
   </table>
   <table name="MailImporters">
     <field name="miID" type="I" size="10">

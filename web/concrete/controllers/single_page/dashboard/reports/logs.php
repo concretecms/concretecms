@@ -2,57 +2,62 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\Reports;
 use \Concrete\Core\Page\Controller\DashboardPageController;
-use View;
-use Loader;
-use \Concrete\Core\Logging\Log;
+use \Concrete\Core\Logging\LogList;
+use Log;
+use Core;
+use Request;
+
 class Logs extends DashboardPageController {
-	
-	public $helpers = array('form', 'html');
-	
-	public function clear($token = '', $type = false) {
-		$valt = Loader::helper('validation/token');
-		if ($valt->validate('', $token)) {
-			if (!$type) { 
-				Log::clearAll();
-			} else {
-				Log::clearByType($type);
-			}
-			$this->redirect('/dashboard/reports/logs');
-		} else {
-			$this->redirect('/dashboard/reports/logs');
-		}
-	}
-	
+
+    public function clear($token = '', $channel = false) {
+        $valt = Core::make('helper/validation/token');
+        if ($valt->validate('', $token)) {
+            if (!$channel) {
+                Log::clearAll();
+            } else {
+                Log::clearByChannel($channel);
+            }
+            $this->redirect('/dashboard/reports/logs');
+        } else {
+            $this->redirect('/dashboard/reports/logs');
+        }
+        $this->view();
+    }
+
 	public function view($page = 0) {
-		$this->set('title', t('Logs'));
-		$pageBase = View::url('/dashboard/reports/logs', 'view');
-		$paginator = Loader::helper('pagination');
-		
-		$total = Log::getTotal($_REQUEST['keywords'], $_REQUEST['logType']);
-		$paginator->init(intval($page), $total, $pageBase . '%pageNum%/?keywords=' . $_REQUEST['keywords'] . '&logType=' . $_REQUEST['logType'], 10);
-		$limit=$paginator->getLIMIT();
+		$list = new LogList();
 
-		$types = Log::getTypeList();
-		$txt = Loader::helper('text');
-		$logTypes = array();
-		$logTypes[''] = '** ' . t('All');
-		foreach($types as $t) {
-			if ($t == '') {
-				$logTypes[''] = '** ' . t('All');
-			} else {
-				$logTypes[$t] = $txt->unhandle($t);
-			}
-		}
+        $levels = array();
+        foreach(Log::getLevels() as $level) {
+            $levels[$level] = ucfirst(strtolower(Log::getLevelName($level)));
+        }
+        $this->set('levels', $levels);
+        $channels = array('' => t('All Channels'));
+        foreach(Log::getChannels() as $channel) {
+            $channels[$channel] = Core::make('helper/text')->unhandle($channel);
+        }
+        $r = Request::getInstance();
+        if ($r->query->has('channel') && $r->query->get('channel') != '') {
+            $list->filterByChannel($r->query->get('channel'));
+            $this->set('selectedChannel', $r->query->get('channel'));
+        }
+        if ($r->query->has('level')) {
+            $selectedlevels = $r->get('level');
+            if (is_array($selectedlevels) && count($selectedlevels) != 8) {
+                $list->filterByLevels($selectedlevels);
+            }
+        }
+        if ($r->query->has('keywords') && $r->query->get('keywords') != '') {
+            $list->filterByKeywords($r->query->get('keywords'));
+        }
 
-		$entries = Log::getList($_REQUEST['keywords'], $_REQUEST['logType'], $limit);
-		$this->set('keywords', $keywords);
-		$this->set('pageBase', $pageBase);
-		$this->set('entries', $entries);
-		$this->set('paginator', $paginator);
-		$this->set('logTypes', $logTypes);
-			
+        $entries = $list->getPage();
+        $this->set('list', $list);
+        $this->set('entries', $entries);
 
-	}
+        $this->set('levels', $levels);
+        $this->set('channels', $channels);
+
+       }
 	
 }
-?>

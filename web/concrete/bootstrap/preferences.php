@@ -6,7 +6,6 @@
  * ----------------------------------------------------------------------------
  */
 Config::getOrDefine('SITE_DEBUG_LEVEL', DEBUG_DISPLAY_ERRORS);
-ini_set('display_errors', SITE_DEBUG_LEVEL == DEBUG_DISPLAY_ERRORS);
 
 
 
@@ -40,10 +39,10 @@ define('ENABLE_ALTERNATE_DEFAULT_STORAGE', DIR_FILES_UPLOADED != DIR_FILES_UPLOA
  * Default cache settings.
  * ----------------------------------------------------------------------------
  */
-Config::getOrDefine('ENABLE_OVERRIDE_CACHE', false); 
-Config::getOrDefine('ENABLE_BLOCK_CACHE', false); 
-Config::getOrDefine('ENABLE_ASSET_CACHE', false); 
-Config::getOrDefine('FULL_PAGE_CACHE_GLOBAL', false); 
+Config::getOrDefine('ENABLE_OVERRIDE_CACHE', false);
+Config::getOrDefine('ENABLE_BLOCK_CACHE', false);
+Config::getOrDefine('ENABLE_ASSET_CACHE', false);
+Config::getOrDefine('FULL_PAGE_CACHE_GLOBAL', false);
 Config::getOrDefine('FULL_PAGE_CACHE_LIFETIME', 'default');
 
 
@@ -53,7 +52,7 @@ Config::getOrDefine('FULL_PAGE_CACHE_LIFETIME', 'default');
  * Logging settings.
  * ----------------------------------------------------------------------------
  */
-Config::getOrDefine('ENABLE_LOG_EMAILS', true); 
+Config::getOrDefine('ENABLE_LOG_EMAILS', true);
 Config::getOrDefine('ENABLE_LOG_ERRORS', true);
 
 
@@ -104,15 +103,15 @@ Config::getOrDefine('URL_REWRITING', false);
 Config::getOrDefine('ENABLE_REGISTRATION_CAPTCHA', true);
 Config::getOrDefine('ENABLE_USER_PROFILES', false);
 Config::getOrDefine('USER_REGISTRATION_WITH_EMAIL_ADDRESS', false);
-Config::getOrDefine('USER_VALIDATE_EMAIL', false);	
+Config::getOrDefine('USER_VALIDATE_EMAIL', false);
 Config::getOrDefine('USER_REGISTRATION_APPROVAL_REQUIRED', false);
 Config::getOrDefine('REGISTER_NOTIFICATION', false);
 Config::getOrDefine('EMAIL_ADDRESS_REGISTER_NOTIFICATION', false);
-Config::getOrDefine('REGISTRATION_TYPE', 'disabled');	
+Config::getOrDefine('REGISTRATION_TYPE', 'disabled');
 define('ENABLE_REGISTRATION', REGISTRATION_TYPE != 'disabled');
 
 /** -- Profile settings -- **/
-Config::getOrDefine('ENABLE_USER_TIMEZONES', false);	
+Config::getOrDefine('ENABLE_USER_TIMEZONES', false);
 
 
 
@@ -126,7 +125,7 @@ Config::getOrDefine('PERMISSIONS_MODEL', 'simple');
 Config::getOrDefine('ENABLE_AREA_LAYOUTS', true);
 Config::getOrDefine('ENABLE_CUSTOM_DESIGN', true);
 Config::getOrDefine('FORBIDDEN_SHOW_LOGIN', true);
-define('PAGE_PERMISSION_IDENTIFIER_USE_PERMISSION_COLLECTION_ID', 
+define('PAGE_PERMISSION_IDENTIFIER_USE_PERMISSION_COLLECTION_ID',
 	\Concrete\Core\Permission\Access\PageAccess::usePermissionCollectionIDForIdentifier());
 
 
@@ -167,7 +166,7 @@ if (!defined('DATE_APP_SURVEY_RESULTS')) {
  * ----------------------------------------------------------------------------
  */
 Config::getOrDefine('SITE', 'concrete5');
-Config::getOrDefine('STATISTICS_TRACK_PAGE_VIEWS', true); 
+Config::getOrDefine('STATISTICS_TRACK_PAGE_VIEWS', true);
 Config::getOrDefine('ENABLE_PROGRESSIVE_PAGE_REINDEX', true);
 Config::getOrDefine('MAIL_SEND_METHOD', 'PHP_MAIL');
 Config::getOrDefine('SEO_EXCLUDE_WORDS', 'a, an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, since, than, the, this, that, to, up, via, with');
