@@ -76,6 +76,12 @@ class LogEntry
         }
     }
 
+    public function getDisplayTimestamp()
+    {
+        $dh = Core::make('helper/date');
+        return $dh->date(DATE_APP_GENERIC_MDYT_FULL_SECONDS, $this->time);
+    }
+
     public function getTimestamp()
     {
         return $this->time;

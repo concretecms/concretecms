@@ -1,28 +1,10 @@
 <? 
 defined('C5_EXECUTE') or die("Access Denied.");
-
-// HELPERS
 $valt = Loader::helper('validation/token');
 $th = Loader::helper('text');
-$dh = Loader::helper('date');
 
-
-// VARIABLES
-
-// Check if entries to show, assign to boolean var.
-$areEntries = count($entries) > 0 ? true : false;
 
 ?>
-    <? if(!$areEntries) { ?>
-    
-    <div class="ccm-pane-body ccm-pane-body-footer">
-    
-    	<p><?=t('No log entries found.')?></p>
-    
-    </div>
-    
-
-    <? } else { ?>
 
 <div class="ccm-dashboard-content-full">
 
@@ -51,6 +33,11 @@ $areEntries = count($entries) > 0 ? true : false;
             <?=$form->label('channel', t('Channel'))?>
             <div class="ccm-search-field-content">
             <?=$form->select('channel', $channels, array('style'=>'width:180px;'))?>
+            <? if ($selectedChannel) { ?>
+                <a href="<?=$controller->action('clear', $valt->generate(), $selectedChannel)?>" class="btn btn-default btn-sm"><?=t('Clear all %s', $th->unhandle($selectedChannel))?></a>
+            <? } else { ?>
+                <a href="<?=$controller->action('clear', $valt->generate())?>" class="btn btn-default btn-sm"><?=t('Clear all')?></a>
+             <? } ?>
             </div>
         </div>
         </div>
@@ -73,8 +60,8 @@ $areEntries = count($entries) > 0 ? true : false;
         <table class="ccm-search-results-table">
             <thead>
                 <tr>
-                    <th><a href=""><?=t('Date/Time')?></a></th>
-                    <th><a href=""><?=t('Level')?></a></th>
+                    <th class="<?=$list->getSearchResultsClass('time')?>"><a href="<?=$list->getSortByURL('time', 'desc')?>"><?=t('Date/Time')?></a></th>
+                    <th class="<?=$list->getSearchResultsClass('level')?>"><a href="<?=$list->getSortByURL('level', 'desc')?>"><?=t('Level')?></a></th>
                     <th><span><?=t('Channel')?></span></th>
                     <th><span><?=t('User')?></span></th>
                     <th><span><?=t('Message')?></span></th>
@@ -84,7 +71,7 @@ $areEntries = count($entries) > 0 ? true : false;
                 <? foreach($entries as $ent) { ?>
                 <tr>
                     <td valign="top" style="white-space: nowrap" class="active"><?php
-                        print $ent->getTimestamp();
+                        print $ent->getDisplayTimestamp();
                     ?></td>
                     <td valign="top" style="text-align: center"><?=$ent->getLevelIcon()?></td>
                     <td valign="top" style="white-space: nowrap"><?=$ent->getChannelDisplay()?></td>
@@ -109,6 +96,3 @@ $areEntries = count($entries) > 0 ? true : false;
     <?=$list->displayPagingV2()?>
 
 </div>
-
-
-<? } ?>
