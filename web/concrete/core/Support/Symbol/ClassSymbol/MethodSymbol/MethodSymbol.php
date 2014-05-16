@@ -67,9 +67,11 @@ class MethodSymbol {
             $param .= '$' . $parameter->getName();
 
             if ($parameter->isOptional()) {
-                
-                if (method_exists($parameter, 'getDefaultValueConstantName') && $parameter->getDefaultValueConstantName()) {
+                $defaultValue = null;
+                if (method_exists($parameter, 'getDefaultValueConstantName')) {
                     $defaultValue = $parameter->getDefaultValueConstantName();
+                }
+                if ($defaultValue) {
                     // Strip out wrong namespaces.
                     if(preg_match('/.\\\\(\\w+)$/', $defaultValue, $matches) && defined($matches[1])) {
                         $defaultValue = $matches[1];
