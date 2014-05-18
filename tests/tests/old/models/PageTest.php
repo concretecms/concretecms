@@ -2,26 +2,8 @@
 
 class PageTest extends PHPUnit_Framework_TestCase {
 
-	private static function createPage($name, $handle=null) {
-		Loader::model('page');
-		Loader::model('collection_types');
-		$ct = CollectionType::getByHandle('left_sidebar'); //everything's got a default..
-		//$this->assertInstanceOf('CollectionType', $ct); //kind of weird to check this but hey
-
-		$home = Page::getByID(HOME_CID);
-		$page = $home->add($ct,array(
-			'uID'=>1,
-			'cName'=>$name,
-			'cHandle'=>$handle
-		));
-		return $page;
-	}
 
 	public function testPageOperations() {
-		Loader::model('page');
-		Loader::model('collection_types');
-		$ct = CollectionType::getByHandle('left_sidebar'); //everything's got a default..
-		$this->assertInstanceOf('CollectionType', $ct); //kind of weird to check this but hey
 
 		$home = Page::getByID(HOME_CID);
 		$pageName = "My Cool Page";
@@ -29,20 +11,6 @@ class PageTest extends PHPUnit_Framework_TestCase {
 			//The actual add function does some transforms on the handles if they are not
 			//set.
 		
-		$badPage = Page::getByID(42069);
-		try {
-			$page = $badPage->add($ct,array(
-				'uID'=>1,
-				'cName'=>$pageName,
-				'cHandle'=>$pageHandle
-			));
-		} catch(Exception $e) {
-			$caught = true;
-		}
-
-		if(!$caught) {
-			$this->fail('Added a page to a non-page');
-		}
 
 		$page = self::createPage($pageName,$pageHandle);
 
