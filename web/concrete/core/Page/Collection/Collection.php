@@ -843,8 +843,12 @@ use \Concrete\Core\Page\Style\CustomStyleRule;
 				$q = "delete from Collections where cID = '{$cID}'";
 				$r = $db->query($q);
 
-				$q = "delete from CollectionSearchIndexAttributes where cID = {$cID}";
-				$db->query($q);
+                try {
+    				$q = "delete from CollectionSearchIndexAttributes where cID = {$cID}";
+	    			$db->query($q);
+                } catch(\Exception $e) {
+
+                }
 
 			}
 		}
