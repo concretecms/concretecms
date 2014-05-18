@@ -1,5 +1,0 @@
-{
-	"require-dev" : {
-		"concrete5/concrete5-cli" : "dev-master"
-	}
-}
