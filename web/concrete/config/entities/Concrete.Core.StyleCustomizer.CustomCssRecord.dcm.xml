@@ -3,6 +3,6 @@
     <id name="sccRecordID" type="integer">
         <generator strategy="AUTO" />
       </id>
-    <field name="value" length="text" />
+    <field name="value" type="text" />
   </entity>
 </doctrine-mapping>
