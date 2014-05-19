@@ -3,7 +3,7 @@
 class PagePathTest extends ConcreteDatabaseTestCase {
 
     protected $fixtures = array();
-    protected $tables = array('PagePaths', 'Pages', 'PermissionKeys', 'PermissionKeyCategories', 'PageTypes',
+    protected $tables = array('PagePaths', 'Pages', 'PageThemes', 'PermissionKeys', 'PermissionKeyCategories', 'PageTypes',
         'PageTemplates', 'Collections', 'CollectionVersions'); // so brutal
 
     public function setUp() {
@@ -48,6 +48,27 @@ class PagePathTest extends ConcreteDatabaseTestCase {
         $this->assertEquals($path->isPagePathCanonical(), true);
     }
 
+    /**
+     * Set a canonical page path.
+     */
+    public function testSettingCanonicalPagePaths()
+    {
+        $home = Page::getByID(HOME_CID);
+        $pt = PageType::getByID(1);
+        $template = PageTemplate::getByID(1);
+        $page = $home->add($pt, array(
+            'uID'=>1,
+            'cName'=> 'My fair page.',
+            'pTemplateID' => $template->getPageTemplateID()
+        ));
+
+        $page->setCanonicalPagePath('/a-completely-new-canonical-page-path');
+        $path = $page->getCollectionPathObject();
+
+        $this->assertEquals('/a-completely-new-canonical-page-path', $path->getPagePath());
+        $this->assertEquals('my-fair-page', $page->getCollectionHandle());
+    }
+
     public function testNonCanonicalPagePaths()
     {
         $home = Page::getByID(HOME_CID);
@@ -78,4 +99,37 @@ class PagePathTest extends ConcreteDatabaseTestCase {
         $this->assertEquals(0, count($pathArray));
     }
 
+    public function testPagePathUpdate()
+    {
+        $home = Page::getByID(HOME_CID);
+        $pt = PageType::getByID(1);
+        $template = PageTemplate::getByID(1);
+        $page = $home->add($pt, array(
+            'uID'=>1,
+            'cName'=> 'Here\'s a twist',
+            'pTemplateID' => $template->getPageTemplateID()
+        ));
+
+        $nc = $page->getVersionToModify();
+        $nc->addAdditionalPagePath('/something/cool', false);
+        $nc->addAdditionalPagePath('/something/rad', true);
+        $nc->update(array('cName' => 'My new name', 'cHandle' => false));
+        $nv = $nc->getVersionObject();
+        $nv->approve();
+
+        $nc2 = Page::getByID(2);
+        $this->assertEquals('/my-new-name', $nc2->getCollectionPath());
+        $this->assertEquals('my-new-name', $nc2->getCollectionHandle());
+        $this->assertEquals(2, $nc2->getVersionID());
+        $path = $nc2->getCollectionPathObject();
+
+        $this->assertInstanceOf('\Concrete\Core\Page\PagePath', $path);
+        $this->assertEquals('/my-new-name', $path->getPagePath());
+        $this->assertEquals(true, $path->isPagePathCanonical());
+        $additionalPaths = $nc2->getAdditionalPagePaths();
+        $this->assertEquals(2, count($additionalPaths));
+        $this->assertEquals('/something/rad', $additionalPaths[1]->getPagePath());
+        $this->assertEquals(false, $additionalPaths[1]->isPagePathCanonical());
+
+    }
 }

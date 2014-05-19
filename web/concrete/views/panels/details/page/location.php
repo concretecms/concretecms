@@ -36,19 +36,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<hr/>
 		<p class="lead"><?=t('Other URLs that should redirect to this page')?></p>
 
-		<?php
-			$paths = $c->getPagePaths();
-			foreach ($paths as $path) {
-				if (!$path['ppIsCanonical']) {
-					$ppID = $path['ppID'];
-					$cPath = $path['cPath'];
-					echo '<div class="input ccm-meta-path">' .
-		     			'<input type="text" name="ppURL-' . $ppID . '" class="ccm-input-text" value="' . $cPath . '" id="ppID-'. $ppID . '"> ' .
-		     			'<a href="javascript:void(0)" class="ccm-meta-path-del">' . t('Remove Path') . '</a></div>'."\n";
-				}
-			}
-		?>
-
 		<div id="ccm-panel-detail-location-page-paths">
 
 		</div>
