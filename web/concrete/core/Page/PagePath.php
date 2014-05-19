@@ -1,13 +1,34 @@
 <?php
 
 namespace Concrete\Core\Page;
-
+/**
+ * @Entity
+ * @Table(name="PagePaths")
+ */
 class PagePath {
 
+    /**
+     * @Column(type="text")
+     */
     protected $cPath;
+
+    /**
+     * @Id @Column(type="integer")
+     * @GeneratedValue
+     */
     protected $ppID;
+
+
+    /**
+     * @Column(columnDefinition="integer unsigned")
+     * @GeneratedValue(strategy="IDENTITY")
+     */
     protected $cID;
-    protected $ppIsCanonical = 0;
+
+    /**
+     * @Column(type="boolean")
+     */
+    protected $ppIsCanonical = false;
 
     public function getPagePathID()
     {

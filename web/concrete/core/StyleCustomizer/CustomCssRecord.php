@@ -3,10 +3,22 @@ namespace Concrete\Core\StyleCustomizer;
 
 use Database;
 
+/**
+ * @Entity
+ * @Table(name="StyleCustomizerCustomCssRecords")
+ */
 class CustomCssRecord
 {
 
+    /**
+     * @Column(type="text")
+     */
     protected $value;
+
+    /**
+     * @Id @Column(type="integer")
+     * @GeneratedValue
+     */
     protected $sccRecordID;
 
     public function setValue($value)
