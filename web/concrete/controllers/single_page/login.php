@@ -13,6 +13,7 @@ use Permissions;
 use UserInfo;
 use UserAttributeKey;
 use Session;
+use Cache;
 
 class Login extends PageController {
 
