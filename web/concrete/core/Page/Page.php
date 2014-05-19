@@ -934,6 +934,25 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $path;
     }
 
+    /**
+     * Sets the canonical page path for a page.
+     * @return void
+     */
+    public function setCanonicalPagePath($cPath)
+    {
+        $em = Loader::db()->getEntityManager();
+        $path = $this->getCollectionPathObject();
+        if (is_object($path)) {
+            $path->setPagePath($cPath);
+        } else {
+            $path = new \Concrete\Core\Page\PagePath();
+            $path->setPagePath($cPath);
+            $path->setPageObject($this);
+        }
+        $em->persist($path);
+        $em->flush();
+    }
+
     public function getAdditionalPagePaths()
     {
         $db = Loader::db();
@@ -1460,25 +1479,26 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     public function writePageThemeCustomizations() {
-        $env = Environment::get();
-        $style = $this->getCustomStyleObject();
-        if (is_object($style)) {
-            $scl = $style->getValueList();
-        }
-
         $theme = $this->getCollectionThemeObject();
-        $theme->setStylesheetCachePath(DIR_FILES_CACHE . '/pages/' . $this->getCollectionID());
-        $theme->setStylesheetCacheRelativePath(REL_DIR_FILES_CACHE . '/pages/' . $this->getCollectionID());
-        $sheets = $theme->getThemeCustomizableStyleSheets();
-        foreach($sheets as $sheet) {
-            if (is_object($scl)) {
-                $sheet->setValueList($scl);
-                $sheet->output();
-            } else {
-                $sheet->clearOutputFile();
+        if (is_object($theme) && $theme->isThemeCustomizable()) {
+            $env = Environment::get();
+            $style = $this->getCustomStyleObject();
+            if (is_object($style)) {
+                $scl = $style->getValueList();
+            }
+
+            $theme->setStylesheetCachePath(DIR_FILES_CACHE . '/pages/' . $this->getCollectionID());
+            $theme->setStylesheetCacheRelativePath(REL_DIR_FILES_CACHE . '/pages/' . $this->getCollectionID());
+            $sheets = $theme->getThemeCustomizableStyleSheets();
+            foreach($sheets as $sheet) {
+                if (is_object($scl)) {
+                    $sheet->setValueList($scl);
+                    $sheet->output();
+                } else {
+                    $sheet->clearOutputFile();
+                }
             }
         }
-
     }
 
     function update($data) {
@@ -1648,6 +1668,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $newPath;
     }
 
+    /*
     public function rescanPagePaths($newPaths) {
         $db = Loader::db();
         $txt = Loader::helper('text');
@@ -1697,6 +1718,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $r = $db->query($q, $v);
         }
     }
+    */
 
     function clearPagePermissions() {
         $db = Loader::db();
@@ -2642,22 +2664,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $pc->rescanCollectionPath();
         return $pc;
 
-    }
-
-    function getPagePaths() {
-        $db = Loader::db();
-
-        $q = "select ppID, cPath, ppIsCanonical from PagePaths where cID = ?";
-        $r = $db->query($q, array($this->cID));
-        $paths = array();
-        if ($r) {
-            while ($row = $r->fetchRow()) {
-                $paths[] = $row;
-            }
-            $r->free();
-        }
-
-        return $paths;
     }
 
     /*
