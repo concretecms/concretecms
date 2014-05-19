@@ -905,6 +905,58 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
+     * Returns the PagePath object for the current page.
+     */
+    public function getCollectionPathObject()
+    {
+        $db = Loader::db();
+        $em = $db->getEntityManager();
+        $path = $em->getRepository('\Concrete\Core\Page\PagePath')->findOneBy(
+            array('cID' => $this->getCollectionID(), 'ppIsCanonical' => true
+        ));
+        return $path;
+    }
+
+    /**
+     * Adds a non-canonical page path to the current page.
+     */
+    public function addAdditionalPagePath($cPath, $commit = true)
+    {
+        $db = Loader::db();
+        $em = $db->getEntityManager();
+        $path = new \Concrete\Core\Page\PagePath();
+        $path->setPagePath($cPath);
+        $path->setPageObject($this);
+        $em->persist($path);
+        if ($commit) {
+            $em->flush();
+        }
+        return $path;
+    }
+
+    public function getAdditionalPagePaths()
+    {
+        $db = Loader::db();
+        $em = $db->getEntityManager();
+        return $em->getRepository('\Concrete\Core\Page\PagePath')->findBy(
+            array('cID' => $this->getCollectionID(), 'ppIsCanonical' => false
+        ));
+    }
+
+    /**
+     * Clears all additional page paths for a page.
+     */
+    public function clearAdditionalPagePaths()
+    {
+        $em = Loader::db()->getEntityManager();
+        $paths = $this->getAdditionalPagePaths();
+        foreach($paths as $path) {
+            $em->remove($path);
+        }
+        $em->flush();
+    }
+
+    /**
      * Returns full url for the current page
      * @return string
      */
