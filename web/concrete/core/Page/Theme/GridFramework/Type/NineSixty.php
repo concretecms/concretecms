@@ -2,7 +2,7 @@
 namespace Concrete\Core\Page\Theme\GridFramework\Type;
 use Loader;
 use Concrete\Core\Page\Theme\GridFramework\GridFramework;
-class NineSixty extends GridFamework {
+class NineSixty extends GridFramework {
 
 	public function getPageThemeGridFrameworkName() {
 		return t('Nine Sixty Grid System');
