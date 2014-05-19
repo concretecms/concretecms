@@ -15,20 +15,73 @@ use \Concrete\Core\Block\View\BlockView;
 use BlockTypeSet;
 use Page;
 
+/**
+ * @Entity
+ * @Table(name="BlockTypes")
+ */
 class BlockType {
 
-	protected $btID;
+    /**
+     * @Id @Column(type="integer")
+     * @GeneratedValue
+     */
+    protected $btID;
+
+    /**
+     * @Column(type="string", length=128)
+     */
 	protected $btHandle;
+
+    /**
+     * @Column(type="string", length=128)
+     */
 	protected $btName;
+
+    /**
+     * @Column(type="text")
+     */
 	protected $btDescription;
-	protected $btCopyWhenPropagate;
-	protected $btIncludeAll;
-	protected $btIsInternal;
-	protected $btSupportsInlineEdit;
-	protected $btSupportsInlineAdd;
+
+    /**
+     * @Column(type="boolean")
+     */
+	protected $btCopyWhenPropagate = false;
+
+    /**
+     * @Column(type="boolean")
+     */
+	protected $btIncludeAll = false;
+
+    /**
+     * @Column(type="boolean")
+     */
+	protected $btIsInternal = false;
+
+    /**
+     * @Column(type="boolean")
+     */
+	protected $btSupportsInlineEdit = false;
+
+    /**
+     * @Column(type="boolean")
+     */
+	protected $btSupportsInlineAdd = false;
+
+    /**
+     * @Column(type="integer")
+     */
 	protected $btInterfaceHeight;
+
+    /**
+     * @Column(type="integer")
+     */
 	protected $btInterfaceWidth;
-	protected $pkgID;
+
+    /**
+     * @Column(columnDefinition="integer unsigned")
+     */
+	protected $pkgID = 0;
+
 	public $controller;
 	/** 
 	 * Sets the block type handle

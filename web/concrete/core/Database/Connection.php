@@ -12,8 +12,7 @@ class Connection extends \Doctrine\DBAL\Connection {
      */
     public function getEntityManager() {
         if (!isset(static::$entityManager)) {
-            $devMode = true;
-            $config = Setup::createXMLMetadataConfiguration(array(DIR_ORM_ENTITIES), $devMode);
+            $config = Setup::createAnnotationMetadataConfiguration(array(DIR_BASE_CORE), true);
             $conn = $this->getParams();
             static::$entityManager = EntityManager::create($conn, $config);
         }
