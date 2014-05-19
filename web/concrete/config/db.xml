@@ -3619,7 +3619,6 @@
       <default value="0"/>
     </field>
     <field name="uPreviousLogin" type="I" size="10">
-      <notnull/>
       <default value="0"/>
       <unsigned/>
     </field>
