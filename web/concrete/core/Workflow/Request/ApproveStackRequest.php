@@ -12,7 +12,7 @@ use Events;
 use \Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
-class ApproveStackRequest extends PageRequest {
+abstract class ApproveStackRequest extends PageRequest {
 
 	public function approve(WorkflowProgress $wp) {
 		$s = Stack::getByID($this->getRequestedPageID());
