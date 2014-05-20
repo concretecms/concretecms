@@ -97,21 +97,21 @@ class Logger extends MonologLogger
         if (array_key_exists($level, static::$levels)) {
             switch (static::$levels[$level]) {
                 case 'DEBUG':
-                    return tc('Log level', 'Debug');
+                    return tc(/*i18n: Detailed debug information */ 'Log level', 'Debug');
                 case 'INFO':
-                    return tc('Log level', 'Info');
+                    return tc(/*i18n: Interesting events */ 'Log level', 'Info');
                 case 'NOTICE':
-                    return tc('Log level', 'Notice');
+                    return tc(/*i18n: Uncommon events */ 'Log level', 'Notice');
                 case 'WARNING':
-                    return tc('Log level', 'Warning');
+                    return tc(/*i18n: Exceptional occurrences that are not errors */ 'Log level', 'Warning');
                 case 'ERROR':
-                    return tc('Log level', 'Error');
+                    return tc(/*i18n: Runtime errors */ 'Log level', 'Error');
                 case 'CRITICAL':
-                    return tc('Log level', 'Critical');
+                    return tc(/*i18n: Critical conditions */ 'Log level', 'Critical');
                 case 'ALERT':
-                    return tc('Log level', 'Alert');
+                    return tc(/*i18n: Action must be taken immediately */ 'Log level', 'Alert');
                 case 'EMERGENCY':
-                    return tc('Log level', 'Emergency');
+                    return tc(/*i18n: Urgent alert */ 'Log level', 'Emergency');
             }
         }
         return parent::getLevelName($level);
