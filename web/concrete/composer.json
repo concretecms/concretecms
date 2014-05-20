@@ -10,7 +10,6 @@
         "symfony/event-dispatcher": "2.1.*",
         "symfony/serializer": "2.1.*",
         "illuminate/container": "4.1.*",
-        "illuminate/container": "4.1.*",
         "patchwork/utf8": "1.1.*",
         "oyejorge/less.php": "~1.5",
         "innogames/cssmin": "dev-master",
