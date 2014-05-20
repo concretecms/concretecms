@@ -86,4 +86,35 @@ class Logger extends MonologLogger
         $db->delete('Logs', array('channel' => $channel));
     }
 
+    /**
+     * Gets the name of the logging level.
+     *
+     * @param  integer $level
+     * @return string
+     */
+    public static function getLevelName($level)
+    {
+        if (array_key_exists($level, static::$levels)) {
+            switch (static::$levels[$level]) {
+                case 'DEBUG':
+                    return tc('Log level', 'Debug');
+                case 'INFO':
+                    return tc('Log level', 'Info');
+                case 'NOTICE':
+                    return tc('Log level', 'Notice');
+                case 'WARNING':
+                    return tc('Log level', 'Warning');
+                case 'ERROR':
+                    return tc('Log level', 'Error');
+                case 'CRITICAL':
+                    return tc('Log level', 'Critical');
+                case 'ALERT':
+                    return tc('Log level', 'Alert');
+                case 'EMERGENCY':
+                    return tc('Log level', 'Emergency');
+            }
+        }
+        return parent::getLevelName($level);
+    }
+
 }

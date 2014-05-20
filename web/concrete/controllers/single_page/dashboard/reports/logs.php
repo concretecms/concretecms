@@ -29,7 +29,7 @@ class Logs extends DashboardPageController {
 
         $levels = array();
         foreach(Log::getLevels() as $level) {
-            $levels[$level] = ucfirst(strtolower(Log::getLevelName($level)));
+            $levels[$level] = Log::getLevelName($level);
         }
         $this->set('levels', $levels);
         $channels = array('' => t('All Channels'));
