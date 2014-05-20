@@ -949,6 +949,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $path->setPagePath($cPath);
             $path->setPageObject($this);
         }
+        $path->setPagePathIsCanonical(true);
         $em->persist($path);
         $em->flush();
     }
@@ -1648,26 +1649,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         Events::dispatch('on_page_update', $pe);
     }
 
-    public function uniquifyPagePath($origPath) {
-        $db = Loader::db();
-
-        $proceed = false;
-        $suffix = 0;
-        while ($proceed != true) {
-            $newPath = ($suffix == 0) ? $origPath : $origPath . $suffix;
-            $v = array($newPath, $this->cID);
-            $q = "select cID from PagePaths where cPath = ? and cID <> ?";
-            $r = $db->query($q, $v);
-            if ($r->numRows() == 0) {
-                $proceed = true;
-            } else {
-                $suffix++;
-            }
-        }
-
-        return $newPath;
-    }
-
     /*
     public function rescanPagePaths($newPaths) {
         $db = Loader::db();
@@ -1934,7 +1915,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         Events::dispatch('on_page_move', $pe);
 
         // now that we've moved the collection, we rescan its path
-        $this->rescanCollectionPath($retainOldPagePath);
+        $this->rescanCollectionPath();
     }
 
     function duplicateAll($nc, $preserveUserID = false) {
@@ -2152,22 +2133,56 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return is_numeric($max) ? ($max + 1) : 0;
     }
 
-    function rescanCollectionPath($retainOldPagePath = false) {
+    /**
+     * Recalculates the canonical page path for the current page, based on its current version, URL slug, etc..
+     */
+    public function rescanCollectionPath() {
+        $em = Loader::db()->getEntityManager();
         if ($this->cParentID > 0) {
-            $db = Loader::db();
-            // first, we grab the path of the parent, if such a thing exists, for our prefix
-            $q = "select PagePaths.cPath as cPathParent from PagePaths left join Pages on (Pages.cParentID = PagePaths.cID and PagePaths.ppIsCanonical = 1) where Pages.cID = '{$this->cID}'";
-            $cPath = $db->getOne($q);
-
-            // Now we perform the collection path function on the current cID
-            $np = $this->rescanCollectionPathIndividual($this->cID, $cPath, $retainOldPagePath);
-            $this->cPath = $np;
-
-            // Now we start with the recursive collection path scanning, armed with our prefix (from the level above what we're scanning)
-            if ($np) {
-                $this->rescanCollectionPathChildren($this->cID, $np);
+            $pathString = $this->computeCanonicalPagePath();
+            // ensure that the path is unique
+            $proceed = false;
+            $suffix = 0;
+            while ($proceed != true) {
+                $newPath = ($suffix == 0) ? $pathString : $pathString . PAGE_PATH_SEPARATOR . $suffix;
+                $path = $em->getRepository('\Concrete\Core\Page\PagePath')->findOneBy(
+                    array('cPath' => $newPath)
+                );
+                if (!is_object($path)) {
+                    $proceed = true;
+                } else {
+                    $suffix++;
+                }
             }
+
+            // now our $newPath variable is guaranteed to be unique at the level and good.
+            // we set the canonical page path to be this new path.
+            $this->setCanonicalPagePath($newPath);
+            $this->cPath = $newPath;
         }
+    }
+
+    /**
+     * For the curret page, return the text that will be used for that pages canonical path. This happens before
+     * any uniqueness checks get run.
+     * @return string
+     */
+    protected function computeCanonicalPagePath()
+    {
+        $parent = Page::getByID($this->cParentID);
+        $parentPath = $parent->getCollectionPathObject();
+        $path = '';
+        if ($parentPath instanceof PagePath) {
+            $path = $parentPath->getPagePath();
+        }
+        $path .= '/';
+        $path .= $this->getCollectionHandle() ? $this->getCollectionHandle() : $this->getCollectionID();
+
+        $event = new PagePathEvent($this);
+        $event->setPagePath($path);
+        $event = Events::dispatch('on_compute_canonical_page_path', $event);
+        return $event->getPagePath();
+
     }
 
     function updateDisplayOrder($do,$cID=0) {
@@ -2222,6 +2237,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $displayOrder++;
         }
     }
+
+    /*
 
     function rescanCollectionPathIndividual($cID, $cPath, $retainOldPagePath = false) {
         $db = Loader::db();
@@ -2281,6 +2298,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
         $r->free();
     }
+    */
 
     public function rescanSystemPageStatus() {
         $cID = $this->getCollectionID();
@@ -2344,6 +2362,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $db->GetOne('select content from PageSearchIndex where cID = ?', array($this->cID));
     }
 
+    /*
 
     function rescanCollectionPathChildren($cID, $cPath) {
         $db = Loader::db();
@@ -2357,6 +2376,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $r->free();
         }
     }
+
+    */
 
     function getCollectionAction() {
         $cID = $this->cID;
