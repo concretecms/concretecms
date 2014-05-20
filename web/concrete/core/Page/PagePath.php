@@ -49,6 +49,11 @@ class PagePath {
         $this->cID = $c->getCollectionID();
     }
 
+    public function setPagePathIsCanonical($ppIsCanonical)
+    {
+        $this->ppIsCanonical = $ppIsCanonical;
+    }
+
     public function isPagePathCanonical()
     {
         return $this->ppIsCanonical;
