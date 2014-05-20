@@ -20,7 +20,7 @@ class LogEntry
 
     public function getLevelDisplayName()
     {
-        return ucfirst(strtolower(Logger::getLevelName($this->level)));
+        return Logger::getLevelDisplayName($this->level);
     }
 
     public function getMessage()
@@ -33,9 +33,9 @@ class LogEntry
         return $this->channel;
     }
 
-    public function getChannelDisplay()
+    public function getChannelDisplayName()
     {
-        return Core::make('helper/text')->unhandle($this->channel);
+        return Logger::getChannelDisplayName($this->channel);
     }
 
     public function getID()

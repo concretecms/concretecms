@@ -92,7 +92,7 @@ class Logger extends MonologLogger
      * @param  integer $level
      * @return string
      */
-    public static function getLevelName($level)
+    public static function getLevelDisplayName($level)
     {
         if (array_key_exists($level, static::$levels)) {
             switch (static::$levels[$level]) {
@@ -114,7 +114,19 @@ class Logger extends MonologLogger
                     return tc(/*i18n: Urgent alert */ 'Log level', 'Emergency');
             }
         }
-        return parent::getLevelName($level);
+        return tc(/*i18n: Urgent alert */ 'Log level', ucfirst(strtolower($level)));
     }
-
+    public static function getChannelDisplayName($channel)
+    {
+        switch ($channel) {
+            case 'application':
+                return tc('Log channel', 'Application');
+            case LOG_TYPE_EMAILS:
+                return tc('Log channel', 'Sent Emails');
+            case LOG_TYPE_EXCEPTIONS:
+                return tc('Log channel', 'Exceptions');
+            default:
+                return tc('Log channel', Core::make('helper/text')->unhandle($channel));
+        }
+    }
 }
