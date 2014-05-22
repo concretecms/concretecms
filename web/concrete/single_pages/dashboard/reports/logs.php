@@ -74,7 +74,7 @@ $th = Loader::helper('text');
                         print $ent->getDisplayTimestamp();
                     ?></td>
                     <td valign="top" style="text-align: center"><?=$ent->getLevelIcon()?></td>
-                    <td valign="top" style="white-space: nowrap"><?=$ent->getChannelDisplay()?></td>
+                    <td valign="top" style="white-space: nowrap"><?=$ent->getChannelDisplayName()?></td>
                     <td valign="top"><strong><?php
                     if($ent->getUserID() == NULL){
                         echo t("Guest");
