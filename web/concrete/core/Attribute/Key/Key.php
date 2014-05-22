@@ -533,9 +533,11 @@ class Key extends Object {
 			if (isset($definition['type'])) {
 				$dropColumns[] = 'ak_' . $prefix;
 			} else {
-				foreach($definition as $name => $column) {
-					$dropColumns[] = 'ak_' . $prefix . '_' . $name;
-				}
+			    if(is_array($definition)){
+    				foreach($definition as $name => $column) {
+    					$dropColumns[] = 'ak_' . $prefix . '_' . $name;
+    				}
+                }
 			}
 			$comparator = new \Doctrine\DBAL\Schema\Comparator();
 
