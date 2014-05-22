@@ -1386,6 +1386,26 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $this->childrenCIDArray;
     }
 
+    /**
+     * Returns the immediate children of the current page.
+     */
+    public function getCollectionChildren()
+    {
+        $children = array();
+        $db = Loader::db();
+        $q = "select cID from Pages where cParentID = ? and cIsTemplate = 0 order by cDisplayOrder asc";
+        $r = $db->query($q, array($this->getCollectionID()));
+        if ($r) {
+            while ($row = $r->fetchRow()) {
+                if ($row['cID'] > 0) {
+                    $c = Page::getByID($row['cID']);
+                    $children[] = $c;
+                }
+            }
+        }
+        return $children;
+    }
+
     function _getNumChildren($cID,$oneLevelOnly=0, $sortColumn = 'cDisplayOrder asc') {
         $db = Loader::db();
         $q = "select cID from Pages where cParentID = {$cID} and cIsTemplate = 0 order by {$sortColumn}";
@@ -1562,10 +1582,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $cHandle = str_replace('-', PAGE_PATH_SEPARATOR, $cHandle);
         }
         $cName = $txt->sanitize($cName);
-
-        // Update the non-canonical page paths
-        if (isset($data['ppURL']))
-            $this->rescanPagePaths($data['ppURL']);
 
         if ($this->isGeneratedCollection()) {
             if (isset($data['cFilename'])) {
@@ -1853,7 +1869,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
-    function move($nc, $retainOldPagePath = false) {
+    function move($nc) {
         $db = Loader::db();
         $newCParentID = $nc->getCollectionID();
         $dh = Loader::helper('date');
@@ -2137,6 +2153,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * Recalculates the canonical page path for the current page, based on its current version, URL slug, etc..
      */
     public function rescanCollectionPath() {
+        $db = Loader::db();
         $em = Loader::db()->getEntityManager();
         if ($this->cParentID > 0) {
             $pathString = $this->computeCanonicalPagePath();
@@ -2159,6 +2176,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             // we set the canonical page path to be this new path.
             $this->setCanonicalPagePath($newPath);
             $this->cPath = $newPath;
+            $this->refreshCache();
+
+            $children = $this->getCollectionChildren();
+            if (count($children) > 0) {
+                foreach($children as $child) {
+                    $child->rescanCollectionPath();
+                }
+            }
         }
     }
 
@@ -2238,68 +2263,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
-    /*
-
-    function rescanCollectionPathIndividual($cID, $cPath, $retainOldPagePath = false) {
-        $db = Loader::db();
-        $q = "select CollectionVersions.cID, CollectionVersions.cvHandle, CollectionVersions.cvID, PagePaths.cID as cpcID from CollectionVersions left join PagePaths on (PagePaths.cID = CollectionVersions.cID) where CollectionVersions.cID = '{$cID}' and CollectionVersions.cvIsApproved = 1";
-        $r = $db->query($q);
-        if (!$r) return;
-
-        $row = $r->fetchRow();
-        if (!$row['cvHandle']) {
-            $row['cvHandle'] = $row['cID'];
-        }
-        if ($row['cvHandle']) {
-            $origPath = $cPath . '/' . $row['cvHandle'];
-
-            // first, we check to see if this path already exists
-            $proceed = false;
-            $suffix = 0;
-            while ($proceed != true) {
-                $newPath = ($suffix == 0) ? $origPath : $origPath . $suffix;
-                $v2 = array($newPath);
-                $q2 = "select cID from PagePaths where cPath = ? and cID <> {$cID}";
-                $r2 = $db->query($q2, $v2);
-                if ($r2->numRows() == 0) {
-                    $proceed = true;
-                } else {
-                    $suffix++;
-                }
-            }
-
-            if ($row['cpcID']) {
-                if ($retainOldPagePath) {
-                    $db->query("update PagePaths set ppIsCanonical = 0 where cID = {$cID}");
-                } else {
-                    $db->query('delete from PagePaths where ppIsCanonical = 1 and cID = ?', array($row['cpcID']));
-                }
-            }
-
-            // Check to see if a non-canonical page path already exists for the new location.
-            $v = array($cID, $newPath);
-            $rc = $db->query("select cID from PagePaths where cID = ? and cPath = ?", $v);
-            if ($rc->numRows() > 0) {
-                // Update the non-canonical path to be canonical.
-                $q3 = "update PagePaths set ppIsCanonical = 1 where cID = ? and cPath = ?";
-            } else {
-                // Create a new page path for the new location.
-                $q3 = "insert into PagePaths (cID, cPath) values (?, ?)";
-            }
-            $rc->free();
-            $r3 = $db->prepare($q3);
-            $res3 = $db->execute($r3, $v);
-
-            if ($res3) {
-                $np = Page::getByID($cID, $row['cvID']);
-                $np->rescanSystemPageStatus();
-                return $newPath;
-            }
-        }
-        $r->free();
-    }
-    */
-
     public function rescanSystemPageStatus() {
         $cID = $this->getCollectionID();
         $db = Loader::db();
@@ -2361,23 +2324,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $db = Loader::db();
         return $db->GetOne('select content from PageSearchIndex where cID = ?', array($this->cID));
     }
-
-    /*
-
-    function rescanCollectionPathChildren($cID, $cPath) {
-        $db = Loader::db();
-        $q = "select cID from Pages where cParentID = $cID";
-        $r = $db->query($q);
-        if ($r) {
-            while ($row = $r->fetchRow()) {
-                $np = $this->rescanCollectionPathIndividual($row['cID'], $cPath);
-                $this->rescanCollectionPathChildren($row['cID'], $np);
-            }
-            $r->free();
-        }
-    }
-
-    */
 
     function getCollectionAction() {
         $cID = $this->cID;
