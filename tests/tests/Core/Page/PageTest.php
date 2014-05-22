@@ -157,6 +157,44 @@ class PageTest extends ConcreteDatabaseTestCase {
         $realNewPage->delete();
     }
 
+    public function testPageUpdateSubpagePaths()
+    {
+        $about = self::createPage('About');
+        $me = self::createPage('Me', $about);
+        foreach(array('Interests', 'Social', 'Foo', 'Other', 'Page') as $name) {
+            self::createPage($name, $me);
+        }
+
+        $foo = Page::getByPath('/about/me/foo');
+        self::createPage('Bar', $foo);
+
+        $social = Page::getByPath('/about/me/social');
+        $this->assertFalse($social->isError());
+        $this->assertEquals(5, $social->getCollectionID());
+
+        $nvc = $me->getVersionToModify();
+        $this->assertEquals(2, $nvc->getVersionID());
+        $nvc->update(array("cHandle" => 'about-me'));
+
+        $test = Page::getByPath('/about/me');
+        $this->assertFalse($test->isError());
+        $this->assertEquals(3, $test->getCollectionID());
+        $this->assertEquals('/about/me', $test->getCollectionPath());
+
+        $v = CollectionVersion::get($nvc, $nvc->getVersionID());
+        $v->approve(false);
+
+        $test = Page::getByPath('/about/me');
+        $this->assertEquals(COLLECTION_NOT_FOUND, $test->isError());
+        $test = Page::getByPath('/about/about-me');
+        $this->assertFalse($test->isError());
+        $this->assertEquals('/about/about-me', $test->getCollectionPath());
+        $subpage = Page::getByPath('/about/about-me/foo/bar');
+        $this->assertFalse($subpage->isError());
+        $this->assertEquals('/about/about-me/foo/bar', $subpage->getCollectionPath());
+    }
+
+
     /**
      * Add a page and check its canonical path.
      */
