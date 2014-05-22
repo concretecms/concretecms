@@ -28,6 +28,7 @@
         "zf1/zend-exception": "dev-master",
         "zf1/zend-loader": "dev-master",
         "zf1/zend-validate": "dev-master",
+        "zf1/zend-xml": "dev-master",
         "zf1/zend-cache": "dev-master",
         "zf1/zend-db": "dev-master",
         "zf1/zend-translate": "dev-master",
