@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "0d89c6370e1461053d357aaeb3cb797f",
+    "hash": "88fd4cae588c7a46783a7a33c4069df3",
     "packages": [
         {
             "name": "dapphp/securimage",
@@ -2065,17 +2065,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zf1/zend-locale.git",
-                "reference": "765c86d4624e13d228e8cdfbebe42b7e87639f3b"
+                "reference": "e09d6768b56136bb724b130274bcd5fd8a902176"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-locale/zipball/765c86d4624e13d228e8cdfbebe42b7e87639f3b",
-                "reference": "765c86d4624e13d228e8cdfbebe42b7e87639f3b",
+                "url": "https://api.github.com/repos/zf1/zend-locale/zipball/e09d6768b56136bb724b130274bcd5fd8a902176",
+                "reference": "e09d6768b56136bb724b130274bcd5fd8a902176",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.11",
-                "zf1/zend-exception": "self.version"
+                "zf1/zend-cache": "self.version",
+                "zf1/zend-exception": "self.version",
+                "zf1/zend-xml": "self.version"
             },
             "suggest": {
                 "zf1/zend-registry": "Used in special situations or with special adapters"
@@ -2098,7 +2100,7 @@
                 "locale",
                 "zend"
             ],
-            "time": "2014-01-02 14:06:05"
+            "time": "2014-05-21 16:06:13"
         },
         {
             "name": "zf1/zend-mail",
@@ -2229,19 +2231,20 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zf1/zend-translate.git",
-                "reference": "b69f653060bc7d83c02fa47813ac2d28ab28e0cf"
+                "reference": "bef6b0dfdafb3401a60f2fa87987024fa70d925c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-translate/zipball/b69f653060bc7d83c02fa47813ac2d28ab28e0cf",
-                "reference": "b69f653060bc7d83c02fa47813ac2d28ab28e0cf",
+                "url": "https://api.github.com/repos/zf1/zend-translate/zipball/bef6b0dfdafb3401a60f2fa87987024fa70d925c",
+                "reference": "bef6b0dfdafb3401a60f2fa87987024fa70d925c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.11",
                 "zf1/zend-exception": "self.version",
                 "zf1/zend-loader": "self.version",
-                "zf1/zend-locale": "self.version"
+                "zf1/zend-locale": "self.version",
+                "zf1/zend-xml": "self.version"
             },
             "type": "library",
             "autoload": {
@@ -2261,7 +2264,7 @@
                 "translate",
                 "zend"
             ],
-            "time": "2014-01-02 14:06:10"
+            "time": "2014-05-21 15:17:49"
         },
         {
             "name": "zf1/zend-validate",
@@ -2307,6 +2310,44 @@
                 "zend"
             ],
             "time": "2014-01-02 14:06:11"
+        },
+        {
+            "name": "zf1/zend-xml",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zf1/zend-xml.git",
+                "reference": "f24c8b2e53c9bd67177d77c3e976f01fe806a079"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zf1/zend-xml/zipball/f24c8b2e53c9bd67177d77c3e976f01fe806a079",
+                "reference": "f24c8b2e53c9bd67177d77c3e976f01fe806a079",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.11",
+                "zf1/zend-exception": "self.version"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Zend_Xml": "library/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Zend Framework 1 Xml package",
+            "homepage": "http://framework.zend.com/",
+            "keywords": [
+                "ZF1",
+                "framework",
+                "xml",
+                "zend"
+            ],
+            "time": "2014-05-21 15:52:59"
         }
     ],
     "packages-dev": [
@@ -2331,6 +2372,7 @@
         "zf1/zend-exception": 20,
         "zf1/zend-loader": 20,
         "zf1/zend-validate": 20,
+        "zf1/zend-xml": 20,
         "zf1/zend-cache": 20,
         "zf1/zend-db": 20,
         "zf1/zend-translate": 20,
