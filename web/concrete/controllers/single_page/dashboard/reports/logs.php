@@ -29,12 +29,12 @@ class Logs extends DashboardPageController {
 
         $levels = array();
         foreach(Log::getLevels() as $level) {
-            $levels[$level] = Log::getLevelName($level);
+            $levels[$level] = Log::getLevelDisplayName($level);
         }
         $this->set('levels', $levels);
         $channels = array('' => t('All Channels'));
         foreach(Log::getChannels() as $channel) {
-            $channels[$channel] = Core::make('helper/text')->unhandle($channel);
+            $channels[$channel] = Log::getChannelDisplayName($channel);
         }
         $r = Request::getInstance();
         if ($r->query->has('channel') && $r->query->get('channel') != '') {
