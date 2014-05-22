@@ -30,7 +30,7 @@ class PageAttributeExistenceTest extends PHPUnit_Framework_TestCase {
 		$page->reindex();
 		$page->refreshCache();
 		$attribute = $page->getAttribute($handle);
-	
+
 		if($secondStatic != null){
 			$this->assertSame($attribute,$secondStatic);
 		} else {
