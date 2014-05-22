@@ -214,6 +214,39 @@ class PageTest extends ConcreteDatabaseTestCase {
         $this->assertEquals('my-fair-page', $page->getCollectionHandle());
     }
 
+    public function testPageDuplications()
+    {
+        $page1 = self::createPage('Page 1');
+        $page2 = self::createPage('Page 2');
+        $page3 = self::createPage('Page 3');
+        $page4 = self::createPage('Page 4');
+
+        $subpageA = self::createPage('Subpage A', $page2);
+        self::createPage('Subpage B', $page2);
+        self::createPage('Subpage C', $page2);
+
+        $page1->duplicate($subpageA);
+        $page2->duplicateAll($page4);
+        $page3->duplicate($page1);
+
+
+        // it's a little lame that we have to re-get the objects
+        // in order for them to be in sync but fixing this is outside of what I want to do right now.
+        $page1 = Page::getByPath('/page-1');
+        $page2 = Page::getByPath('/page-2');
+        $page4 = Page::getByPath('/page-4');
+        $this->assertEquals(1, $page1->getNumChildren());
+        $this->assertEquals(3, $page2->getNumChildren());
+        $this->assertEquals(1, $page4->getNumChildren()); // direct children.
+
+        $page = Page::getByPath('/page-4/page-2/subpage-a/page-1');
+        $this->assertFalse($page->isError());
+        $pagePath = $page->getCollectionPathObject();
+        $this->assertInstanceOf('\Concrete\Core\Page\PagePath', $pagePath);
+        $this->assertEquals('/page-4/page-2/subpage-a/page-1', $pagePath->getPagePath());
+        $this->assertTrue($pagePath->isPagePathCanonical());
+    }
+
     public function testNonCanonicalPagePaths()
     {
         $home = Page::getByID(HOME_CID);
