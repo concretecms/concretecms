@@ -354,7 +354,7 @@ class Search extends DashboardPageController {
 		$languages = Localization::getAvailableInterfaceLanguages();
 		array_unshift($languages, 'en_US');
 		$obj = new stdClass;
-		$obj->text = t('** Default');
+		$obj->text = tc('Default locale', '** Default');
 		$obj->value = '';
 		$result = array($obj);
 		
