@@ -9,6 +9,8 @@ use PageType;
 use Permissions;
 use User;
 use Page;
+use Request;
+use Database;
 use \Concrete\Core\Workflow\Request\MovePageRequest as MovePagePageWorkflowRequest;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
@@ -36,9 +38,11 @@ class Location extends BackendInterfacePageController {
 		}
 		$this->set('parent', Page::getByID($cParentID, 'ACTIVE'));
 		$this->set('cParentID', $cParentID);
+        $this->set('additionalPaths', $c->getAdditionalPagePaths());
 	}
 
 	public function submit() {
+        $r = new PageEditResponse();
 		if ($this->validateAction()) {
 			$oc = $this->page;
 			$successMessage = false;
@@ -60,19 +64,34 @@ class Location extends BackendInterfacePageController {
 				if ($oc->isPageDraft()) { 
 					$oc->setPageDraftTargetParentPageID($dc->getCollectionID());
 				} else {
+                    $u = new User();
 					$pkr = new MovePagePageWorkflowRequest();
 					$pkr->setRequestedPage($oc);
 					$pkr->setRequestedTargetPage($dc);
 					$pkr->setSaveOldPagePath(false);
-					$u = new User();
 					$pkr->setRequesterUserID($u->getUserID());
 					$u->unloadCollectionEdit($oc);
-					$r = $pkr->trigger();
-					$r->setRedirectURL(Loader::helper('navigation')->getLinkToCollection($nc));
+			        $response = $pkr->trigger();
+                    if ($response instanceof WorkflowProgressResponse) {
+                        $nc = Page::getByID($oc->getCollectionID());
+                        $r->setRedirectURL(Loader::helper('navigation')->getLinkToCollection($nc));
+                    }
 				}
 			}
 
-			$r = new PageEditResponse();
+            // now we do additional page URLs
+            $oc->clearAdditionalPagePaths();
+
+            $req = Request::getInstance();
+            if ($req->request->has('additionalPath')) {
+                $additionalPath = (array) $req->request->get('additionalPath');
+                foreach($additionalPath as $path) {
+                    $oc->addAdditionalPagePath($path, false);
+                }
+            }
+
+            Database::get()->getEntityManager()->flush();
+
 			$r->setTitle(t('Page Updated'));
 			$r->setMessage(t('Page location information saved successfully.'));
 			$r->setPage($this->page);

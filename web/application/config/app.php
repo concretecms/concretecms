@@ -39,3 +39,19 @@
  * ----------------------------------------------------------------------------
  */
 
+Events::addListener('on_compute_canonical_page_path', function($event) {
+    $page = $event->getPageObject();
+    $parent = Page::getByID($page->getCollectionParentID());
+    if ($parent->getCollectionPath() == '/blog') {
+        // strip off the handle
+        $path = substr($event->getPagePath(), 0, strrpos($event->getPagePath(), '/'));
+        $y = date('Y', strtotime($page->getCollectionDatePublic()));
+        $m = date('m', strtotime($page->getCollectionDatePublic()));
+        $d = date('d', strtotime($page->getCollectionDatePublic()));
+        $path .= sprintf('/%s/%s/%s/', $y, $m, $d);
+        $path .= $page->getCollectionHandle();
+        $event->setPagePath($path);
+        return $event;
+    }
+});
+

@@ -73,7 +73,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <script type="text/template" class="pagePath">
 <div class="ccm-panel-detail-location-page-path">
-	<input class="control-input" type="text" name="ppURL[]" value="<%=ppPath%>" />
+	<input class="control-input" type="text" name="additionalPath[]" value="<%=path%>" />
 	<a href="#"><i class="glyphicon glyphicon-minus-sign" /></a>
 </div>
 </script>
@@ -109,12 +109,18 @@ $(function() {
 	$('button[name=addRedirect]').on('click', function() {
 		$('#ccm-panel-detail-location-page-paths').append(
 			renderPagePath({
-				ppPath: ''
+				path: ''
 			})
 		);
 	});
 
-	ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
+    <? foreach($additionalPaths as $path) { ?>
+    $('#ccm-panel-detail-location-page-paths').append(
+        renderPagePath({path: '<?=$path->getPagePath()?>'})
+    );
+    <? } ?>
+
+    ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
 		$('#ccm-panel-detail-location-display').html(renderBreadcrumb({
 			parentLink: '<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=' + data.cID,
 			parentName: data.title,
