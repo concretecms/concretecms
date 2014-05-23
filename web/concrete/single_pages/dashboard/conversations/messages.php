@@ -155,7 +155,13 @@ $ip = Loader::helper('validation/ip'); ?>
 		</td>
 		<td>
 			<?=$msg->getConversationMessageDateTimeOutput(array(DATE_APP_GENERIC_MDY_FULL . ' H:i:s'));?> 
-			<p><?=t('By')?> <? if (!is_object($ui)) { ?><?=t('Anonymous')?><? } else { ?><?=$ui->getUserDisplayName()?><? } ?></p>
+			<p><?
+				if(is_object($ui)) {
+					echo tc(/*i18n: %s is the name of the author */ 'Authored', 'By %s', $ui->getUserDisplayName());
+				} else {
+					echo t(/*i18n: when the author of a message is anonymous */ 'By Anonymous');
+				}
+			?></p>
 
 			<?
 			$cnv = $msg->getConversationObject();
