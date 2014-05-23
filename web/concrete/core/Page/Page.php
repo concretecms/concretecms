@@ -38,7 +38,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     protected $controller;
     protected $blocksAliasedFromMasterCollection = null;
-
+    protected $cIsSystemPage = false;
     /**
      * @param string $path /path/to/page
      * @param string $version ACTIVE or RECENT
@@ -675,7 +675,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @return bool
      */
     public function isSystemPage() {
-        return $this->cIsSystemPage;
+        return (bool) $this->cIsSystemPage;
     }
 
     /**
@@ -1915,7 +1915,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             }
         }
 
-        $this->rescanSystemPageStatus();
         $this->cParentID = $newCParentID;
         $this->movePageDisplayOrderToBottom();
         // run any event we have for page move. Arguments are
@@ -2175,6 +2174,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             // now our $newPath variable is guaranteed to be unique at the level and good.
             // we set the canonical page path to be this new path.
             $this->setCanonicalPagePath($newPath);
+            $this->rescanSystemPageStatus();
             $this->cPath = $newPath;
             $this->refreshCache();
 
@@ -2274,6 +2274,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         foreach($systemPages as $sp) {
             if ($th->fnmatch($sp, $newPath)) {
                 $db->Execute('update Pages set cIsSystemPage = 1 where cID = ?', array($cID));
+                $this->cIsSystemPage = true;
             }
         }
     }

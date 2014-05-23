@@ -51,6 +51,50 @@ class PageTest extends PageTestCase {
         $this->assertEquals($page1->getCollectionPath(), '/awesome-page-2/awesome-page');
     }
 
+    public function testSinglePagesPath()
+    {
+        SinglePage::add('/dashboard/reports');
+        SinglePage::add('/dashboard/system/attributes');
+        $reportsPage = Page::getByPath('/dashboard/reports');
+        $attrPage = Page::getByPath('/dashboard/system/attributes');
+        $this->assertInstanceOf('\Concrete\Core\Page\Page', $reportsPage);
+        $this->assertTrue($reportsPage->getCollectionID() > 0);
+        $this->assertEquals('/dashboard/reports.php', $reportsPage->getCollectionFilename());
+        $this->assertInstanceOf('\Concrete\Core\Page\Page', $attrPage);
+        $this->assertTrue($attrPage->getCollectionID() > 0);
+        $this->assertEquals('/dashboard/system/attributes/view.php', $attrPage->getCollectionFilename());
+    }
+
+    public function testSinglePagesController() {
+        $reportsPage = SinglePage::add('/dashboard/reports');
+        $reportsPage = Page::getByPath('/dashboard/reports');
+        ob_start();
+        // want to not display the redirect that comes from reports.
+        $controller = $reportsPage->getController();
+        ob_end_clean();
+        $this->assertInstanceOf('\Concrete\Controller\SinglePage\Dashboard\Reports', $controller);
+    }
+
+    public function testSystemPageBoolean()
+    {
+        SinglePage::add('/dashboard/reports');
+        $reportsPage = Page::getByPath('/dashboard/reports');
+        $this->assertEquals(true, $reportsPage->isSystemPage());
+
+        $page2 = self::createPage('Awesome Page 2');
+        $this->assertEquals(false, $page2->isSystemPage());
+
+        $account = SinglePage::add('/account');
+        SinglePage::add('/account/profile');
+        $profile = Page::getByPath('/account/profile');
+        $this->assertEquals(true, $account->isSystemPage());
+        $this->assertEquals(true, $profile->isSystemPage());
+        $page2->move($profile);
+        $this->assertEquals(true, $page2->isSystemPage());
+        $page2 = Page::getByPath('/account/profile/awesome-page-2');
+        $this->assertEquals(true, $page2->isSystemPage());
+    }
+
     public function testDelete()
     {
         $db = Database::get();
