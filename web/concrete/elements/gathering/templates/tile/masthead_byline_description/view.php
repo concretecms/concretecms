@@ -7,7 +7,7 @@ $nh = Loader::helper('navigation');
 <div class="ccm-gathering-masthead-byline-description">
 	<div class="ccm-gathering-tile-title-description">
 		<div class="ccm-gathering-tile-headline"><a href="<?=$link?>"><?=$title?></a></div>
-		<div class="ccm-gathering-tile-byline"><?php echo t('by '). '<span class="author-name">' .$ownerName. '</span>' ?></div>
+		<div class="ccm-gathering-tile-byline"><?php echo tc(/*i18n: %s is the name of the author */ 'Authored', 'by %s', '<span class="author-name">' . $ownerName . '</span>'); ?></div>
 		<div class="ccm-gathering-tile-description">
 		<?=$description?>
 		</div>
