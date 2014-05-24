@@ -49,6 +49,12 @@ $al->registerGroup('core/colorpicker', array(
     array('css', 'spectrum')
 ));
 
+// font awesome
+$al->register('css', 'font-awesome', 'css/font-awesome.css', array('minify' => false));
+$al->registerGroup('font-awesome', array(
+        array('css', 'font-awesome')
+    ));
+
 // concrete5 style customizer palettes
 $al->register('javascript', 'core/style-customizer', 'js/style-customizer.js', array('minify' => false));
 $al->register('css', 'core/style-customizer', 'css/style-customizer.css', array('minify' => false));
