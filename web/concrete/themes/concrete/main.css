@@ -1,5 +1,4 @@
-.clear_float:before,.clear_float:after{content:" ";display:table;}
-.clear_float:after{clear:both}
+
 .container{margin-right:auto;margin-left:auto}.container:before,.container:after{content:" ";display:table;}
 .container:after{clear:both}
 .row:before,.row:after{content:" ";display:table;}

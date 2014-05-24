@@ -1,7 +1,7 @@
 <? 
 defined('C5_EXECUTE') or die("Access Denied."); ?> 
 
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.install.css";</style>
+<style type="text/css">@import "<?=ASSETS_URL_CSS?>/views/install.css";</style>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/bootstrap.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.cookie.js"></script>
 <script type="text/javascript">
@@ -249,7 +249,7 @@ $(function() {
 <div class="col-sm-10 col-sm-offset-1">
 
 <div class="well">
-	<button class="btn btn-large btn-primary" type="submit"><?=t('Install concrete5')?> <i class="icon-thumbs-up icon-white"></i></button>
+	<button class="btn btn-large btn-primary" type="submit"><?=t('Install concrete5')?> <i class="fa fa-thumbs-up fa-white"></i></button>
 </div>
 
 </div>
@@ -274,12 +274,12 @@ $(function() {
 
 
 $(function() {
-	$(".ccm-test-js img").hide();
+	$(".ccm-test-js i").hide();
 	$("#ccm-test-js-success").show();
 	if ($.cookie('CONCRETE5_INSTALL_TEST')) {
-		$("#ccm-test-cookies-enabled-loading").attr('src', '<?=ASSETS_URL_IMAGES?>/icons/success.png');
+		$("#ccm-test-cookies-enabled-loading").attr('class', 'fa fa-check');
 	} else {
-		$("#ccm-test-cookies-enabled-loading").attr('src', '<?=ASSETS_URL_IMAGES?>/icons/error.png');
+        $("#ccm-test-cookies-enabled-loading").attr('class', 'fa fa-exclamation-circle');
 		$("#ccm-test-cookies-enabled-tooltip").show();
 		$("#install-errors").show();
 		showFormOnTestCompletion = false;
@@ -294,14 +294,15 @@ $(function() {
 		// our url() syntax works - we do this by sending a test url call to the server when we're certain 
 		// of what the output will be
 		if (json.response == 40) {
-			$("#ccm-test-request-loading").attr('src', '<?=ASSETS_URL_IMAGES?>/icons/success.png');
+			$("#ccm-test-request-loading").attr('class', 'fa fa-check');
 			if (showFormOnTestCompletion) {
 				$("#install-success").show();
 			} else {
 				$("#install-errors").show();
 			}
+            $("#ccm-test-request-tooltip").hide();
 		} else {
-			$("#ccm-test-request-loading").attr('src', '<?=ASSETS_URL_IMAGES?>/icons/error.png');
+			$("#ccm-test-request-loading").attr('class', 'fa fa-exclamation-circle');
 			$("#ccm-test-request-tooltip").show();
 			$("#install-errors").show();
 		}
@@ -328,33 +329,33 @@ $(function() {
 <table class="table table-striped requirements-table">
 <tbody>
 <tr>
-	<td class="ccm-test-phpversion"><? if ($phpVtest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/error.png" /><? } ?></td>
+	<td class="ccm-test-phpversion"><? if ($phpVtest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
 	<td width="100%"><?=t(/*i18n: %s is the php version*/'PHP %s', $phpVmin)?></td>
-	<td><? if (!$phpVtest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" class="launch-tooltip" title="<?=t('concrete5 requires at least PHP %s', $phpVmin)?>" /><? } ?></td>
+	<td><? if (!$phpVtest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('concrete5 requires at least PHP %s', $phpVmin)?>"></i><? } ?></td>
 </tr>
 <tr>
-	<td class="ccm-test-js"><img id="ccm-test-js-success" src="<?=ASSETS_URL_IMAGES?>/icons/success.png" style="display: none" />
-	<img src="<?=ASSETS_URL_IMAGES?>/icons/error.png" /></td>
+	<td class="ccm-test-js"><i id="ccm-test-js-success" class="fa fa-check" style="display: none"></i>
+	<i class="fa fa-exclamation-circle"></i></td>
 	<td width="100%"><?=t('JavaScript Enabled')?></td>
-	<td class="ccm-test-js"><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" class="launch-tooltip" title="<?=t('Please enable JavaScript in your browser.')?>" /></td>
+	<td class="ccm-test-js"><i class="fa fa-question-circle launch-tooltip" title="<?=t('Please enable JavaScript in your browser.')?>"></i></td>
 </tr>
 <tr>
-	<td><? if ($mysqlTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/error.png" /><? } ?></td>
+	<td><? if ($mysqlTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
 	<td width="100%"><?=t('MySQL Available')?>
 	</td>
-	<td><? if (!$mysqlTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" class="launch-tooltip" title="<?=$this->controller->getDBErrorMsg()?>" /><? } ?></td>
+	<td><? if (!$mysqlTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=$this->controller->getDBErrorMsg()?>"></i><? } ?></td>
 </tr>
 <tr>
-	<td><img id="ccm-test-request-loading"  src="<?=ASSETS_URL_IMAGES?>/dashboard/sitemap/loading.gif" /></td>
+	<td><i id="ccm-test-request-loading"  class="fa fa-spinner fa-spin"></i></td>
 	<td width="100%"><?=t('Supports concrete5 request URLs')?>
 	</td>
-	<td><img id="ccm-test-request-tooltip" src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" class="launch-tooltip" title="<?=t('concrete5 cannot parse the PATH_INFO or ORIG_PATH_INFO information provided by your server.')?>" /></td>
+	<td><i id="ccm-test-request-tooltip" class="fa fa-question-circle launch-tooltip" title="<?=t('concrete5 cannot parse the PATH_INFO or ORIG_PATH_INFO information provided by your server.')?>"></i></td>
 </tr>
 <tr>
-	<td><? if ($jsonTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/error.png" /><? } ?></td>
+	<td><? if ($jsonTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
 	<td width="100%"><?=t('JSON Extension Enabled')?>
 	</td>
-	<td><? if (!$jsonTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" class="launch-tooltip" title="<?=t('You must enable PHP\'s JSON support. This should be enabled by default in PHP 5.2 and above.')?>" /><? } ?></td>
+	<td><? if (!$jsonTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('You must enable PHP\'s JSON support. This should be enabled by default in PHP 5.2 and above.')?>"></i><? } ?></td>
 </tr>
 
 </table>
@@ -365,28 +366,28 @@ $(function() {
 <table class="table table-striped requirements-table">
 
 <tr>
-	<td><? if ($imageTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/error.png" /><? } ?></td>
+	<td><? if ($imageTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
 	<td width="100%"><?=t('Image Manipulation Available')?>
 	</td>
-	<td><? if (!$imageTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" class="launch-tooltip" title="<?=t('concrete5 requires GD library 2.0.1 or greater')?>" /><? } ?></td>
+	<td><? if (!$imageTest) { ?><i class="fa fa-question-circlee launch-tooltip" title="<?=t('concrete5 requires GD library 2.0.1 or greater')?>"></i><? } ?></td>
 </tr>
 <tr>
-	<td><? if ($xmlTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/error.png" /><? } ?></td>
+	<td><? if ($xmlTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
 	<td width="100%"><?=t('XML Support')?>
 	</td>
-	<td><? if (!$xmlTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" class="launch-tooltip" title="<?=t('concrete5 requires PHP XML Parser and SimpleXML extensions')?>" /><? } ?></td>
+	<td><? if (!$xmlTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('concrete5 requires PHP XML Parser and SimpleXML extensions')?>"></i><? } ?></td>
 </tr>
 <tr>
-	<td><? if ($fileWriteTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/error.png" /><? } ?></td>
+	<td><? if ($fileWriteTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
 	<td width="100%"><?=t('Writable Files and Configuration Directories')?>
 	</td>
-	<td><? if (!$fileWriteTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" class="launch-tooltip" title="<?=t('The config/, packages/ and files/ directories must be writable by your web server.')?>" /><? } ?></td>
+	<td><? if (!$fileWriteTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('The config/, packages/ and files/ directories must be writable by your web server.')?>"></i><? } ?></td>
 </tr>
 <tr>
-	<td><img id="ccm-test-cookies-enabled-loading"  src="<?=ASSETS_URL_IMAGES?>/dashboard/sitemap/loading.gif" /></td>
+	<td><i id="ccm-test-cookies-enabled-loading" class="fa fa-spinner fa-spin"></i></td>
 	<td width="100%"><?=t('Cookies Enabled')?>
 	</td>
-	<td><img id="ccm-test-cookies-enabled-tooltip" src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" class="launch-tooltip" title="<?=t('Cookies must be enabled in your browser to install concrete5.')?>" /></td>
+	<td><i id="ccm-test-cookies-enabled-tooltip" class="fa fa-question-circle launch-tooltip" title="<?=t('Cookies must be enabled in your browser to install concrete5.')?>"></i></td>
 </tr>
 
 </tbody>
@@ -410,7 +411,7 @@ $(function() {
 <table class="table table-striped requirements-table">
 <tbody>
 <tr>
-	<td><? if ($remoteFileUploadTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/warning.png" /><? } ?></td>
+	<td><? if ($remoteFileUploadTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-warning"></i><? } ?></td>
 	<td width="100%"><?=t('Remote File Importing Available')?>
 	</td>
 	<td><? if (!$remoteFileUploadTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" class="launch-tooltip" title="<?=t('Remote file importing through the file manager requires the iconv PHP extension.')?>" /><? } ?></td>
@@ -425,18 +426,16 @@ $(function() {
 <div class="well" id="install-success">
 	<form method="post" action="<?=$view->url('/install','setup')?>">
 	<input type="hidden" name="locale" value="<?=$locale?>" />
-	<a class="btn btn-large btn-primary" href="javascript:void(0)" onclick="$(this).parent().submit()"><?=t('Continue to Installation')?> <i class="icon-arrow-right icon-white"></i></a>
+	<a class="btn btn-large btn-primary" href="javascript:void(0)" onclick="$(this).parent().submit()"><?=t('Continue to Installation')?> <i class="fa fa-arrow-right fa-white"></i></a>
 	</form>
 </div>
 
 <div class="alert alert-error" id="install-errors">
-	<p><?=t('There are problems with your installation environment. Please correct them and click the button below to re-run the pre-installation tests.')?></p>
-	<div class="block-actions">
+	<?=t('There are problems with your installation environment. Please correct them and click the button below to re-run the pre-installation tests.')?>
+    <br/><br/>
 	<form method="post" action="<?=$view->url('/install')?>">
-	<input type="hidden" name="locale" value="<?=$locale?>" />
-	<a class="btn" href="javascript:void(0)" onclick="$(this).parent().submit()"><?=t('Run Tests')?> <i class="icon-refresh"></i></a>
+	<button class="btn btn-default" type="submit"><?=t('Run Tests')?> <i class="fa fa-refresh"></i></button>
 	</form>
-	</div>	
 </div>
 
 <div class="alert alert-info">
