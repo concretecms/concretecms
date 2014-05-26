@@ -13,12 +13,12 @@ $al = AssetList::getInstance();
 $al->register('javascript', 'jquery', 'js/jquery.js', array('position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false));
 
 // jquery ui
-$al->register('javascript', 'jqueryui', 'js/jquery.ui.js', array('minify' => false, 'combine' => false));
-$al->register('css', 'jqueryui', 'css/jquery.ui.css', array('minify' => false));
+$al->register('javascript', 'jquery/ui', 'js/jquery-ui.js', array('minify' => false, 'combine' => false));
+$al->register('css', 'jquery/ui', 'css/jquery-ui.css', array('minify' => false));
 
-$al->registerGroup('jqueryui', array(
-    array('javascript', 'jqueryui'),
-    array('css', 'jqueryui')
+$al->registerGroup('jquery/ui', array(
+    array('javascript', 'jquery/ui'),
+    array('css', 'jquery/ui')
 ));
 
 // Underscore
@@ -28,11 +28,11 @@ $al->register('javascript', 'underscore', 'js/underscore.js', array('minify' => 
 $al->register('javascript', 'dropzone', 'js/dropzone.js');
 
 // jquery form
-$al->register('javascript', 'jquery/form', 'js/jquery.form.js');
+$al->register('javascript', 'jquery/form', 'js/jquery-form.js');
 
 // jquery rating
 $al->register('javascript', 'jquery/rating', 'js/jquery.rating.js');
-$al->register('css', 'jquery/rating', 'css/jquery.rating.css', array('minify' => false));
+$al->register('css', 'jquery/rating', 'css/jquery-rating.css', array('minify' => false));
 $al->registerGroup('jquery/rating', array(
     array('javascript', 'jquery/metadata'),
     array('javascript', 'jquery/rating'),
@@ -44,15 +44,15 @@ $al->register('javascript', 'spectrum', 'js/spectrum.js', array('minify' => fals
 $al->register('css', 'spectrum', 'css/spectrum.css', array('minify' => false));
 $al->registerGroup('core/colorpicker', array(
     array('javascript', 'jquery'),
-    array('javascript', 'core/observer'),
+    array('javascript', 'core/events'),
     array('javascript', 'spectrum'),
     array('css', 'spectrum')
 ));
 
 // font awesome
-$al->register('css', 'font-awesome', 'css/font-awesome.css', array('minify' => false));
-$al->registerGroup('font-awesome', array(
-        array('css', 'font-awesome')
+$al->register('css', 'fontawesome', 'css/font-awesome.css', array('minify' => false));
+$al->registerGroup('fontawesome', array(
+        array('css', 'fontawesome')
     ));
 
 // concrete5 style customizer palettes
@@ -60,16 +60,16 @@ $al->register('javascript', 'core/style-customizer', 'js/style-customizer.js', a
 $al->register('css', 'core/style-customizer', 'css/style-customizer.css', array('minify' => false));
 $al->registerGroup('core/style-customizer', array(
     array('javascript', 'jquery'),
-    array('javascript', 'jqueryui'),
-    array('javascript', 'core/observer'),
+    array('javascript', 'jquery/ui'),
+    array('javascript', 'core/events'),
     array('javascript', 'underscore'),
     array('javascript', 'core/colorpicker'),
     array('javascript', 'core/app'),
-    array('javascript', 'core/filemanager'),
+    array('javascript', 'core/file-manager'),
     array('javascript', 'core/style-customizer'),
     array('css', 'core/app'),
-    array('css', 'core/filemanager'),
-    array('css', 'jqueryui'),
+    array('css', 'core/file-manager'),
+    array('css', 'jquery/ui'),
     array('css', 'core/colorpicker'),
     array('css', 'core/style-customizer')
 ));
@@ -93,7 +93,8 @@ $al->register('javascript', 'redactor', 'js/redactor.js', array('minify' => fals
 $al->register('css', 'redactor', 'css/redactor.css');
 $al->registerGroup('redactor', array(
     array('javascript', 'redactor'),
-    array('css', 'redactor')
+    array('css', 'redactor'),
+    array('css', 'fontawesome')
 ));
 
 // ace editor
@@ -103,7 +104,7 @@ $al->registerGroup('ace', array(
 ));
 
 // backstretch
-$al->register('javascript', 'backstretch', 'js/jquery.backstretch.js');
+$al->register('javascript', 'backstretch', 'js/backstretch.js');
 
 // dynatree
 $al->register('javascript', 'dynatree', 'js/dynatree.js', array('minify' => false));
@@ -113,9 +114,6 @@ $al->registerGroup('dynatree', array(
     array('css', 'dynatree')
 ));
 
-// hoverIntent
-$al->register('javascript', 'hoverintent', 'js/ccm_app/jquery.hoverIntent.js');
-
 // bootstrap
 $al->register('javascript', 'bootstrap/dropdown', 'js/bootstrap/dropdown.js');
 $al->register('javascript', 'bootstrap/tooltip', 'js/bootstrap/tooltip.js'); // has to come before popover
@@ -123,46 +121,47 @@ $al->register('javascript', 'bootstrap/popover', 'js/bootstrap/popover.js');
 $al->register('javascript', 'bootstrap/alert', 'js/bootstrap/alert.js');
 $al->register('javascript', 'bootstrap/button', 'js/bootstrap/button.js');
 $al->register('javascript', 'bootstrap/transition', 'js/bootstrap/transition.js');
-$al->register('css', 'bootstrap/dropdown', 'css/ccm.app.css', array('minify' => false));
-$al->register('css', 'bootstrap/tooltip', 'css/ccm.app.css', array('minify' => false));
-$al->register('css', 'bootstrap/popover', 'css/ccm.app.css', array('minify' => false));
-$al->register('css', 'bootstrap/alert', 'css/ccm.app.css', array('minify' => false));
-$al->register('css', 'bootstrap/transition', 'css/ccm.app.css', array('minify' => false));
-$al->register('css', 'bootstrap/button', 'css/ccm.app.css', array('minify' => false));
-$al->register('css', 'bootstrap', 'css/ccm.app.css', array('minify' => false));
+$al->register('css', 'bootstrap/dropdown', 'css/app.css', array('minify' => false));
+$al->register('css', 'bootstrap/tooltip', 'css/app.css', array('minify' => false));
+$al->register('css', 'bootstrap/popover', 'css/app.css', array('minify' => false));
+$al->register('css', 'bootstrap/alert', 'css/app.css', array('minify' => false));
+$al->register('css', 'bootstrap/transition', 'css/app.css', array('minify' => false));
+$al->register('css', 'bootstrap/button', 'css/app.css', array('minify' => false));
+$al->register('css', 'bootstrap', 'css/app.css', array('minify' => false));
 
 /**
  * ## Core functionality and styles
  */
 
 // JS Events
-$al->register('javascript', 'core/observer', 'js/ccm.pubsub.js', array('minify' => false));
+$al->register('javascript', 'core/events', 'js/events.js', array('minify' => false));
 
 // Core App
-$al->register('css', 'core/app', 'css/ccm.app.css', array('minify' => false));
-$al->register('javascript', 'core/app', 'js/ccm.app.js', array('minify' => false, 'combine' => false));
+$al->register('css', 'core/app', 'css/app.css', array('minify' => false));
+$al->register('javascript', 'core/app', 'js/app.js', array('minify' => false, 'combine' => false));
 $al->registerGroup('core/app', array(
     array('javascript', 'jquery'),
-    array('javascript', 'core/observer'),
+    array('javascript', 'core/events'),
     array('javascript', 'underscore'),
     array('javascript', 'bootstrap/dropdown'),
     array('javascript', 'bootstrap/tooltip'),
     array('javascript', 'bootstrap/popover'),
-    array('javascript', 'jqueryui'),
+    array('javascript', 'jquery/ui'),
     array('javascript', 'core/app'),
     array('css', 'core/app'),
-    array('css', 'jqueryui')
+    array('css', 'fontawesome'),
+    array('css', 'jquery/ui')
 ));
 
 $al->register('javascript', 'bootstrap-editable', 'js/bootstrap-editable.js', array('minify' => false));
-$al->register('css', 'core/app/editable-fields', 'css/ccm.editable.fields.css', array('minify' => false));
+$al->register('css', 'core/app/editable-fields', 'css/editable-fields.css', array('minify' => false));
 $al->registerGroup('core/app/editable-fields', array(
     array('javascript', 'jquery'),
     array('javascript', 'bootstrap/dropdown'),
     array('javascript', 'bootstrap/tooltip'),
     array('javascript', 'bootstrap/popover'),
-    array('javascript', 'jqueryui'),
-    array('javascript', 'core/observer'),
+    array('javascript', 'jquery/ui'),
+    array('javascript', 'core/events'),
     array('javascript', 'underscore'),
     array('javascript', 'core/app'),
     array('javascript', 'bootstrap-editable'),
@@ -172,8 +171,8 @@ $al->registerGroup('core/app/editable-fields', array(
 
 // Image Editor
 $al->register('javascript', 'kinetic', 'js/kinetic.js');
-$al->register('css', 'core/imageeditor', 'css/ccm.image_editor.css');
-$al->register('javascript', 'core/imageeditor', 'js/ccm.imageeditor.js');
+$al->register('css', 'core/imageeditor', 'css/image-editor.css');
+$al->register('javascript', 'core/imageeditor', 'js/image-editor.js');
 $al->registerGroup('core/imageeditor', array(
     array('javascript', 'kinetic'),
     array('javascript', 'core/imageeditor'),
@@ -182,14 +181,13 @@ $al->registerGroup('core/imageeditor', array(
 
 
 // Dashboard
-$al->register('css', 'dashboard', 'css/ccm.dashboard.css');
-$al->register('javascript', 'dashboard', 'js/ccm.dashboard.js');
+$al->register('javascript', 'dashboard', 'js/dashboard.js');
 $al->registerGroup('dashboard', array(
     array('javascript', 'jquery'),
-    array('javascript', 'jqueryui'),
+    array('javascript', 'jquery/ui'),
     array('javascript', 'underscore'),
     array('javascript', 'dashboard'),
-    array('javascript', 'core/observer'),
+    array('javascript', 'core/events'),
     array('javascript', 'bootstrap/dropdown'),
     array('javascript', 'bootstrap/tooltip'),
     array('javascript', 'bootstrap/popover'),
@@ -199,8 +197,7 @@ $al->registerGroup('dashboard', array(
     array('javascript', 'redactor'),
     array('css', 'core/app'),
     array('css', 'redactor'),
-    array('css', 'jqueryui'),
-    array('css', 'dashboard')
+    array('css', 'jquery/ui'),
 ));
 
 
@@ -210,25 +207,25 @@ $al->register('css', 'core/frontend/pagination', 'css/frontend/pagination.css');
 $al->register('css', 'core/frontend/errors', 'css/frontend/errors.css');
 
 // File Manager
-$al->register('javascript', 'core/filemanager', 'js/ccm.filemanager.js', array('minify' => false));
-$al->register('css', 'core/filemanager', 'css/ccm.filemanager.css', array('minify' => false));
-$al->registerGroup('core/filemanager', array(
+$al->register('javascript', 'core/file-manager', 'js/file-manager.js', array('minify' => false));
+$al->register('css', 'core/file-manager', 'css/file-manager.css', array('minify' => false));
+$al->registerGroup('core/file-manager', array(
     array('css', 'core/app'),
-    array('css', 'core/filemanager'),
-    array('javascript', 'core/observer'),
+    array('css', 'core/file-manager'),
+    array('javascript', 'core/events'),
     array('javascript', 'underscore'),
-    array('javascript', 'jqueryui'),
+    array('javascript', 'jquery/ui'),
     array('javascript', 'core/app'),
-    array('javascript', 'core/filemanager')
+    array('javascript', 'core/file-manager')
 ));
 
 // Sitemap
-$al->register('javascript', 'core/sitemap', 'js/ccm.sitemap.js', array('minify' => false));
-$al->register('css', 'core/sitemap', 'css/ccm.sitemap.css', array('minify' => false));
+$al->register('javascript', 'core/sitemap', 'js/sitemap.js', array('minify' => false));
+$al->register('css', 'core/sitemap', 'css/sitemap.css', array('minify' => false));
 $al->registerGroup('core/sitemap', array(
-    array('javascript', 'core/observer'),
+    array('javascript', 'core/events'),
     array('javascript', 'underscore'),
-    array('javascript', 'jqueryui'),
+    array('javascript', 'jquery/ui'),
     array('javascript', 'dynatree'),
     array('javascript', 'core/app'),
     array('javascript', 'core/sitemap'),
@@ -237,11 +234,11 @@ $al->registerGroup('core/sitemap', array(
 ));
 
 // Topics
-$al->register('javascript', 'core/topics', 'js/ccm.topics.js', array('minify' => false));
-$al->register('css', 'core/topics', 'css/ccm.topics.css', array('minify' => false));
+$al->register('javascript', 'core/topics', 'js/topics.js', array('minify' => false));
+$al->register('css', 'core/topics', 'css/topics.css', array('minify' => false));
 $al->registerGroup('core/topics', array(
-    array('javascript', 'core/observer'),
-    array('javascript', 'jqueryui'),
+    array('javascript', 'core/events'),
+    array('javascript', 'jquery/ui'),
     array('javascript', 'dynatree'),
     array('javascript', 'core/topics'),
     array('css', 'dynatree'),
@@ -249,26 +246,21 @@ $al->registerGroup('core/topics', array(
 ));
 
 // Groups (Group Tree)
-$al->register('javascript', 'core/groups', 'js/ccm.groups.js', array('minify' => false));
+$al->register('javascript', 'core/groups', 'js/groups.js', array('minify' => false));
 $al->registerGroup('core/groups', array(
-    array('javascript', 'core/observer'),
+    array('javascript', 'core/events'),
     array('javascript', 'underscore'),
-    array('javascript', 'jqueryui'),
+    array('javascript', 'jquery/ui'),
     array('javascript', 'dynatree'),
     array('javascript', 'core/groups'),
     array('css', 'dynatree')
 ));
 
-// Page Type Compose Form
-$al->register('css', 'core/composer', 'css/ccm.composer.css', array('minify' => false));
-$al->registerGroup('core/composer', array(
-    array('css', 'core/composer')
-));
 
 // Gathering
-$al->register('javascript', 'core/gathering', 'js/ccm.gathering.js');
-$al->register('css', 'core/gathering/display', 'css/ccm.gathering.display.css');
-$al->register('css', 'core/gathering/base', 'css/ccm.gathering.base.css');
+$al->register('javascript', 'core/gathering', 'js/gathering.js');
+$al->register('css', 'core/gathering/display', 'css/gathering/display.css');
+$al->register('css', 'core/gathering/base', 'css/gathering/base.css');
 $al->registerGroup('core/gathering', array(
     array('javascript', 'core/gathering'),
     array('javascript', 'redactor'),
@@ -279,28 +271,28 @@ $al->registerGroup('core/gathering', array(
 ));
 
 // Conversation
-$al->register('javascript', 'core/conversation', 'js/ccm.conversations.js');
-$al->register('css', 'core/conversation', 'css/ccm.conversations.css');
+$al->register('javascript', 'core/conversation', 'js/conversations.js');
+$al->register('css', 'core/conversation', 'css/conversations.css');
 $al->registerGroup('core/conversation', array(
     array('javascript', 'dropzone'),
     array('javascript', 'bootstrap/dropdown'),
-    array('javascript', 'core/observer'),
+    array('javascript', 'core/events'),
     array('javascript', 'core/conversation'),
     array('css', 'core/conversation'),
     array('css', 'bootstrap/dropdown')
 ), true);
 
 // Overlay
-$al->register('javascript', 'core/overlay', 'js/overlay/jquery.magnific-popup.js');
-$al->register('css', 'core/overlay', 'css/overlay/jquery.magnific-popup.css');
+$al->register('javascript', 'core/overlay', 'js/overlay/jquery-magnific-popup.js');
+$al->register('css', 'core/overlay', 'css/overlay/jquery-magnific-popup.css');
 $al->registerGroup('core/overlay', array(
     array('javascript', 'core/overlay'),
     array('css', 'core/overlay')
 ));
 
 // My Account
-$al->register('javascript', 'core/account', 'js/ccm.profile.js');
-$al->register('css', 'core/account', 'css/ccm.account.css');
+$al->register('javascript', 'core/account', 'js/account.js');
+$al->register('css', 'core/account', 'css/account.css');
 $al->registerGroup('core/account', array(
     array('javascript', 'core/account'),
     array('javascript', 'bootstrap/dropdown'),

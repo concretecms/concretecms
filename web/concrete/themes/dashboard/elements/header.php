@@ -5,6 +5,7 @@ if ($_GET['_ccm_dashboard_external']) {
 $html = Loader::helper('html');
 ?><!DOCTYPE html>
 <head>
+    <link rel="stylesheet" type="text/css" href="<?=$this->getThemePath()?>/main.css" />
 <?
 $v = View::getInstance();
 $v->requireAsset('dashboard');
