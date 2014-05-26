@@ -22,7 +22,7 @@ class FileManager {
 		$resetDisplay = 'block';
 		$fileID = 0;
 		$v = View::getInstance();
-		$v->requireAsset('core/filemanager');
+		$v->requireAsset('core/file-manager');
 		
 		/**
 		 * If $_POST[$postname] is a valid File ID

@@ -22,7 +22,7 @@ if ($tp->canInstallPackages()) {
 			<? } ?>
 		</script>
 	<? } else { ?>
-		<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery.postmessage.js"></script>
+		<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery-postmessage.js"></script>
 	<?
 		$completeURL = BASE_URL . REL_DIR_FILES_TOOLS_REQUIRED . '/marketplace/frame?complete=1&task=' . $_REQUEST['task'] . '&mpID=' . $_REQUEST['mpID'];
 		print $mi->getMarketplaceFrame('100%', '100%', $completeURL);
