@@ -111,7 +111,7 @@ abstract class Item extends Object {
 		}
 	}
 
-	protected static function getListByKey(GatheringDataSource $ags, $gaiKey) {
+	protected static function getListByKey($ags, $gaiKey) {
 		$db = Loader::db();
 		$r = $db->Execute('select gaiID from GatheringItems where gasID = ? and gaiKey = ?', array(
 			$ags->getGatheringDataSourceID(), $gaiKey

@@ -13,6 +13,8 @@ use Database;
 use AttributeSet;
 use \Concrete\Core\Attribute\Value\Value as AttributeValue;
 use \Concrete\Core\Package\PackageList;
+use Concrete\Core\Attribute\Value\CollectionValue;
+use Whoops\Exception\ErrorException;
 
 
 class Key extends Object {
@@ -274,23 +276,29 @@ class Key extends Object {
 		}
 		
 		extract($args);
-		
+
 		$_akIsSearchable = 1;
 		$_akIsSearchableIndexed = 1;
 		$_akIsAutoCreated = 1;
 		$_akIsEditable = 1;
 		$_akIsInternal = 0;
-		
-		if (!$akIsSearchable) {
+
+        if(!isset($akHandle)){
+            throw new ErrorException('No attribute key handle set.');
+        }
+        if(!isset($akName)){
+            throw new ErrorException('No Attribute Key name set.');
+        }
+		if (isset($akIsSearchable) && !$akIsSearchable) {
 			$_akIsSearchable = 0;
 		}
-		if ($akIsInternal) {
+		if (isset($akIsInternal) && $akIsInternal) {
 			$_akIsInternal = 1;
 		}
-		if (!$akIsSearchableIndexed) {
+		if (isset($akIsSearchableIndexed) && !$akIsSearchableIndexed) {
 			$_akIsSearchableIndexed = 0;
 		}
-		if (!$akIsAutoCreated) {
+		if (isset($akIsAutoCreated) && !$akIsAutoCreated) {
 			$_akIsAutoCreated = 0;
 		}
 		if (isset($akIsEditable) && (!$akIsEditable)) {
@@ -312,7 +320,7 @@ class Key extends Object {
 			$ak->load($akID);
 			switch($category->allowAttributeSets()) {
 				case AttributeKeyCategory::ASET_ALLOW_SINGLE:
-					if ($asID > 0) {
+					if (isset($asID) && $asID > 0) {
 						$ak->setAttributeSet(AttributeSet::getByID($asID));			
 					}
 					break;
@@ -343,10 +351,16 @@ class Key extends Object {
 
 		extract($args);
 
-		if (!$akIsSearchable) {
+        if(!isset($akHandle)){
+            throw new ErrorException('No attribute key handle set.');
+        }
+        if(!isset($akName)){
+            throw new ErrorException('No Attribute Key name set.');
+        }
+		if (isset($akIsSearchable) && !$akIsSearchable) {
 			$akIsSearchable = 0;
 		}
-		if (!$akIsSearchableIndexed) {
+		if (isset($akIsSearchableIndexed) && !$akIsSearchableIndexed) {
 			$akIsSearchableIndexed = 0;
 		}
 		$db = Loader::db();
@@ -358,7 +372,7 @@ class Key extends Object {
 		$category = AttributeKeyCategory::getByID($this->akCategoryID);
 		switch($category->allowAttributeSets()) {
 			case AttributeKeyCategory::ASET_ALLOW_SINGLE:
-				if ($asID > 0) {
+				if (isset($asID) && $asID > 0) {
 					$as = AttributeSet::getByID($asID);
 					if ((!$this->inAttributeSet($as)) && is_object($as)) {
 						$this->clearAttributeSets();
@@ -416,14 +430,18 @@ class Key extends Object {
 		$r = ($r == true) ? 1 : 0;
 		$db->Execute('update AttributeKeys set akIsColumnHeader = ? where akID = ?', array($r, $this->getAttributeKeyID()));
 	}
-	
-	public function reindex($tbl, $columnHeaders, $attribs, $rs) {
 
-		return;
-		
+    /**
+     * @param $tbl
+     * @param $columnHeaders
+     * @param \Concrete\Core\Attribute\Value\ValueList $attribs
+     * @param $rs
+     */
+    public function reindex($tbl, $columnHeaders, $attribs, $rs) {
 		$db = Loader::db();
 		$columns = $db->MetaColumns($tbl);
-		
+
+        //todo: nothing from here down is actually functional
 		foreach($attribs as $akHandle => $value) {
 			if (is_array($value)) {
 				foreach($value as $key => $v) {
@@ -439,7 +457,7 @@ class Key extends Object {
 				}
 			}
 		}
-		
+
 		//this shouldn't be necessary, but i had a saying telling me that the static variable 'db' was protected, 
 		//even though it was declared as public 
 		$q = $db->GetInsertSQL($rs, $columnHeaders);
@@ -504,11 +522,14 @@ class Key extends Object {
 
 		$toTable = $parser->addColumns($toTable, $fields);
 		$diff = $comparator->diffTable($fromTable, $toTable);
-		$sql = $platform->getAlterTableSQL($diff);
-		foreach($sql as $q) {
-			$db->exec($q);
-		}
-
+        if($diff !== false) {
+            $sql = $platform->getAlterTableSQL($diff);
+            $arr = array();
+            foreach($sql as $q) {
+                $arr[] = $q;
+                $db->exec($q);
+            }
+        }
 	}
 	
 	public function delete() {
@@ -609,28 +630,36 @@ class Key extends Object {
 			print $resp;
 		}
 	}
-	
-	/** 
-	 * Calls the functions necessary to save this attribute to the database. If no passed value is passed, then we save it via the stock form.
-	 * NOTE: this code is screwy because all code ever written that EXTENDS this code creates an attribute value object and passes it in, like
-	 * this code implies. But if you call this code directly it passes the object that you're messing with (Page, User, etc...) in as the $attributeValue
-	 * object, which is obviously not right. So we're going to do a little procedural if/then checks in this to ensure we're passing the right
-	 * stuff
-	 */
+
+    /**
+     * Calls the functions necessary to save this attribute to the database. If no passed value is passed, then we save it via the stock form.
+     * NOTE: this code is screwy because all code ever written that EXTENDS this code creates an attribute value object and passes it in, like
+     * this code implies. But if you call this code directly it passes the object that you're messing with (Page, User, etc...) in as the $attributeValue
+     * object, which is obviously not right. So we're going to do a little procedural if/then checks in this to ensure we're passing the right
+     * stuff
+     *
+     * @param CollectionValue|mixed $mixed
+     * @param mixed $passedValue
+     */
 	protected function saveAttribute($mixed, $passedValue = false) {
+        /** @var \Concrete\Core\Attribute\Type $at */
 		$at = $this->getAttributeType();
-		$at->controller->setAttributeKey($this);
+
+
+		$at->getController()->setAttributeKey($this);
+
 		if ($mixed instanceof AttributeValue) {
 			$attributeValue = $mixed;
 		} else {
 			// $mixed is ACTUALLY the object that we're setting the attribute against
+            //todo: figure out what $nvc should really be since it doesn't exist in this scope
 			$attributeValue = $nvc->getAttributeValueObject($mixed, true);
 		}
-		$at->controller->setAttributeValue($attributeValue);
+		$at->getController()->setAttributeValue($attributeValue);
 		if ($passedValue) {
-			$at->controller->saveValue($passedValue);
+			$at->getController()->saveValue($passedValue);
 		} else {
-			$at->controller->saveForm($at->controller->post());
+			$at->getController()->saveForm($at->getController()->post());
 		}
 		$at->__destruct();
 		unset($at);

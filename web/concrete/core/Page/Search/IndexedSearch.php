@@ -5,7 +5,11 @@ use Config;
 use Cache;
 use PageList;
 use Collection;
+use Area;
+use Concrete\Core\Area\SubArea;
+use Block;
 use stdClass;
+
 class IndexedSearch {
 
 	public $searchBatchSize = PAGE_SEARCH_INDEX_BATCH_SIZE;
@@ -52,7 +56,7 @@ class IndexedSearch {
 		}
 
 		foreach($this->searchableAreaNames as $sarHandle) {
-			if (preg_match('/^' . $sarHandle . Concrete5_Model_SubArea::AREA_SUB_DELIMITER . '.+/i', $arHandle)) {
+			if (preg_match('/^' . $sarHandle . SubArea::AREA_SUB_DELIMITER . '.+/i', $arHandle)) {
 				return true;
 			} else if (in_array($arHandle, $this->searchableAreaNames)) {
 				return true;
@@ -96,7 +100,6 @@ class IndexedSearch {
 					continue;
 				}
 				$bi = $b->getInstance();
-				$bi->bActionCID = $c->getCollectionID();
 				if(method_exists($bi,'getSearchableContent')){
 					$searchableContent = $bi->getSearchableContent();
 					if(strlen(trim($searchableContent)))

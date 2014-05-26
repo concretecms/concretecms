@@ -6,7 +6,11 @@ class ArrayParser {
 
 	public function addColumns(\Doctrine\DBAL\Schema\Table $table, $columns) {
 		foreach($columns as $column) {
-			$field = $table->addColumn($column['name'], $column['type'], $column['options']);				
+            try {
+                $field = $table->addColumn($column['name'], $column['type'], $column['options']);
+            } catch( \Doctrine\DBAL\Schema\SchemaException $e) {
+                //carry on... this field is probably already in the list
+            }
 		}
 		return $table;
 	}

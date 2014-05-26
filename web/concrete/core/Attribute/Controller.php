@@ -187,7 +187,7 @@ class Controller extends AbstractController {
 			$error->add($valt->getErrorMessage());
 		}
 		
-		if(preg_match("/[^A-Za-z0-9\_]/", $args['akHandle'])) {
+		if(preg_match("/[^A-Za-z0-9\\_]/", $args['akHandle'])) {
 			$error->add(t('Attribute handles may only contain letters, numbers and underscore "_" characters'));
 		}
 		
@@ -197,10 +197,10 @@ class Controller extends AbstractController {
 				if (is_object($this->attributeKey)) {
 					$ak2 = $akc->getAttributeKeyByHandle($args['akHandle']);
 					if ($ak2->getAttributeKeyID() != $this->attributeKey->getAttributeKeyID()) {
-						$error->add(t("An attribute with the handle %s already exists.", $akHandle));
+						$error->add(t("An attribute with the handle %s already exists.", $args['akHandle']));
 					}
 				} else {
-					$error->add(t("An attribute with the handle %s already exists.", $akHandle));
+					$error->add(t("An attribute with the handle %s already exists.", $args['akHandle']));
 				}
 			}
 		} else {

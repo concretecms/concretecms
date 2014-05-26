@@ -1,10 +1,13 @@
 <?
 namespace Concrete\Job;
+use Loader;
 use QueueableJob;
 use \Concrete\Core\Page\Search\IndexedSearch;
 use CollectionAttributeKey;
 use FileAttributeKey;
 use UserAttributeKey;
+use Page;
+
 class IndexSearchAll extends QueueableJob {
 
 	public $jNotUninstallable=1;

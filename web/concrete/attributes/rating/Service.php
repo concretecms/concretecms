@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Attribute\Rating;
+use Loader;
+
 class Service {
 	
 	public function outputDisplay($value) {

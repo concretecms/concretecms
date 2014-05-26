@@ -16,6 +16,10 @@ use Block;
 use \Concrete\Core\Page\Collection\Version\VersionList;
 use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use \Concrete\Core\Page\Style\CustomStyleRule;
+use Concrete\Core\Attribute\Key\Key;
+use Concrete\Core\Page\Search\IndexedSearch;
+use PageCache;
+use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
 
 	class Collection extends Object {
 
@@ -179,7 +183,6 @@ use \Concrete\Core\Page\Style\CustomStyleRule;
 		}
 
 		public function reindex($index = false, $actuallyDoReindex = true) {
-			return false;
 
 			if ($this->isAlias()) {
 				return false;
@@ -192,7 +195,8 @@ use \Concrete\Core\Page\Style\CustomStyleRule;
 				$db->Execute('delete from CollectionSearchIndexAttributes where cID = ?', array($this->getCollectionID()));
 				$searchableAttributes = array('cID' => $this->getCollectionID());
 				$rs = $db->Execute('select * from CollectionSearchIndexAttributes where cID = -1');
-				AttributeKey::reindex('CollectionSearchIndexAttributes', $searchableAttributes, $attribs, $rs);
+                $key = new Key();
+                $key->reindex('CollectionSearchIndexAttributes', $searchableAttributes, $attribs, $rs);
 
 				if ($index == false) {
 					$index = new IndexedSearch();
