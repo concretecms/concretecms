@@ -45,7 +45,7 @@ foreach($contents as $obj) {
 		$bt = $item->getBlockTypeObject();
 		?>
 		<div class="ccm-panel-add-block-clipboard-item" data-clipboard-item-id="<?=$obj->getPileContentID()?>" data-cID="<?=$c->getCollectionID()?>"  data-block-type-handle="<?=$item->getBlockTypeHandle()?>" data-panel-add-block-drag-item="clipboard-item">
-			<a href="javascript:void(0)" data-delete="clipboard-item"><i class="glyphicon glyphicon-trash"></i></a>
+			<a href="javascript:void(0)" data-delete="clipboard-item"><i class="fa fa-trash"></i></a>
 			<div class="ccm-panel-add-block-clipboard-item-inner">
 			<?	
 			try {

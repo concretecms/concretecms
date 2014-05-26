@@ -198,6 +198,7 @@ $al->registerGroup('dashboard', array(
     array('css', 'core/app'),
     array('css', 'redactor'),
     array('css', 'jquery/ui'),
+    array('css', 'fontawesome')
 ));
 
 

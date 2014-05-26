@@ -62,7 +62,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 								$thumb = $im->getThumbnail($file, '90', '90', true); ?>
 						  <div class="image-popover-hover" data-full-image="<?php echo $file->getURL() ?>">
 						  	<div class="glyph-container">
-						  		<i class="glyphicon glyphiconicon-search glyphicon-white"></i>
+						  		<i class="fa faicon-search fa-white"></i>
 						  	</div>
 						  </div>
 						  <div class="attachment-preview-container">

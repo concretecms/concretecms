@@ -21,7 +21,7 @@ $th = Loader::helper('text');
             <?=$form->label('keywords', t('Search'))?>
             <div class="ccm-search-field-content">
             <div class="ccm-search-main-lookup-field">
-                <i class="glyphicon glyphicon-search"></i>
+                <i class="fa fa-search"></i>
                 <?=$form->search('keywords', array('placeholder' => t('Keywords')))?>
                 <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
             </div>

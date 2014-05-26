@@ -5,8 +5,8 @@ controlBar.attr('unselectable', 'on');
 
 var zoom = {};
 
-zoom.zoomIn = getElem("<div class='bottombarbutton plus'><i class='glyphicon glyphicon-plus'></i></div>");
-zoom.zoomOut = getElem("<div class='bottombarbutton'><i class='glyphicon glyphicon-minus'></i></div>");
+zoom.zoomIn = getElem("<div class='bottombarbutton plus'><i class='fa fa-plus'></i></div>");
+zoom.zoomOut = getElem("<div class='bottombarbutton'><i class='fa fa-minus'></i></div>");
 
 zoom.zoomIn.appendTo(controlBar);
 zoom.zoomOut.appendTo(controlBar);

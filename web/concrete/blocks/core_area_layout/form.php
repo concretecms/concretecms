@@ -49,19 +49,19 @@
 		<label for="columns"><?=t("Spacing:")?></label>
 		<input name="spacing" id="spacing" type="text" style="width: 40px" data-input="number" data-minimum="0" data-maximum="1000" value="<?=$spacing?>" />
 	</li>
-	<li data-grid-form-view="custom" class="ccm-inline-toolbar-icon-cell <? if (!$iscustom) { ?>ccm-inline-toolbar-icon-selected<? } ?>"><a href="#" data-layout-button="toggleautomated"><i class="glyphicon glyphicon-lock"></i></a>
+	<li data-grid-form-view="custom" class="ccm-inline-toolbar-icon-cell <? if (!$iscustom) { ?>ccm-inline-toolbar-icon-selected<? } ?>"><a href="#" data-layout-button="toggleautomated"><i class="fa fa-lock"></i></a>
 		<input type="hidden" name="isautomated" value="<? if ($iscustom) { ?>0<? } else {?>1<? } ?>" />
 	</li>
 	<? if ($controller->getTask() == 'edit') {
 		$bp = new Permissions($b); ?>
 
-		<li class="ccm-inline-toolbar-glyphicon glyphicon-cell"><a href="#" data-layout-command="move-block"><i class="glyphicon glyphicon-move"></i></a></li>
+		<li class="ccm-inline-toolbar-fa fa-cell"><a href="#" data-layout-command="move-block"><i class="fa fa-move"></i></a></li>
 
 		<?
 		if ($bp->canDeleteBlock()) { 
 			$deleteMessage = t('Do you want to delete this layout? This will remove all blocks inside it.');
 			?>
-			<li class="ccm-inline-toolbar-icon-cell"><a href="#" data-menu-action="delete-layout"><i class="glyphicon glyphicon-trash"></i></a></li>
+			<li class="ccm-inline-toolbar-icon-cell"><a href="#" data-menu-action="delete-layout"><i class="fa fa-trash"></i></a></li>
 		<? } ?>
 	<? } ?>
 
