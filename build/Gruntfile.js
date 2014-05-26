@@ -68,7 +68,7 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/concrete5.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-liveupdate/jquery-liveupdate.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/chosen/chosen.jquery.js',
-                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-pep/jquery.pep.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-pep/jquery-pep.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/base.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/ajax-request/base.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/ajax-request/form.js',
@@ -361,7 +361,7 @@ module.exports = function(grunt) {
         options: cssOptions,
         debug: {
             options: {
-                compress: true,
+                compress: false,
                 yuicompress: false
             },
             files: css
