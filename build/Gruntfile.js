@@ -102,17 +102,37 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/file-manager/menu.js'
             ]
         },
-        bootstrap: {
-            dest: '<%= DIR_BASE %>/concrete/js/bootstrap.js',
-            src: [
-                '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/alert.js',
-                '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/button.js',
-                '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/tooltip.js',
-                '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/dropdown.js',
-                '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/popover.js',
-                '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/transitions.js',
-            ]
+
+        bootstrap_alert: {
+            dest: '<%= DIR_BASE %>/concrete/js/bootstrap/alert.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/alert.js'
         },
+
+        bootstrap_button: {
+            dest: '<%= DIR_BASE %>/concrete/js/bootstrap/button.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/button.js'
+        },
+
+        bootstrap_dropdown: {
+            dest: '<%= DIR_BASE %>/concrete/js/bootstrap/dropdown.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/dropdown.js'
+        },
+
+        bootstrap_popover: {
+            dest: '<%= DIR_BASE %>/concrete/js/bootstrap/popover.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/popover.js'
+        },
+
+        bootstrap_tooltip: {
+            dest: '<%= DIR_BASE %>/concrete/js/bootstrap/tooltip.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/tooltip.js'
+        },
+
+        bootstrap_transition: {
+            dest: '<%= DIR_BASE %>/concrete/js/bootstrap/transition.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/bootstrap/transition.js'
+        },
+
         underscore: {
             dest: '<%= DIR_BASE %>/concrete/js/underscore.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/underscore/underscore.js'
