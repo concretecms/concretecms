@@ -1,8 +1,8 @@
 <? 
-defined('C5_EXECUTE') or die("Access Denied."); ?> 
+defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/views/install.css";</style>
-<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/bootstrap.js"></script>
+<script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/bootstrap/tooltip.js"></script>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/jquery-cookie.js"></script>
 <script type="text/javascript">
 $(function() {
