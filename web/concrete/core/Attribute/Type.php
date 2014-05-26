@@ -9,6 +9,11 @@ use Package;
 use Core;
 class Type extends Object {
 
+    /** @var  \Concrete\Core\Attribute\Controller */
+    public $controller;
+    public $atName;
+    public $atHandle;
+
 	protected $atID;
 	
 	public function getAttributeTypeID() {return $this->atID;}
