@@ -39,7 +39,7 @@ $searchRequest = $controller->getSearchRequest();
 	</div>
 	<div class="form-group">
 		<div class="ccm-search-main-lookup-field">
-			<i class="glyphicon glyphicon-search"></i>
+			<i class="fa fa-search"></i>
 			<?=$form->search('fKeywords', $searchRequest['fKeywords'], array('placeholder' => t('Keywords')))?>
 			<button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
 		</div>
@@ -89,7 +89,7 @@ $searchRequest = $controller->getSearchRequest();
 		<? } ?>
 	</select>
 	<div class="ccm-search-field-content"><% if (typeof(field) != 'undefined') { %><%=field.html%><% } %></div>
-	<a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="glyphicon glyphicon-minus-sign"></i></a>
+	<a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="fa fa-minus-sign"></i></a>
 </div>
 </script>
 
@@ -97,7 +97,7 @@ $searchRequest = $controller->getSearchRequest();
 <% _.each(items, function(file) {%>
 <tr data-launch-search-menu="<%=file.fID%>" data-file-manager-file="<%=file.fID%>">
 	<td><span class="ccm-search-results-checkbox"><input type="checkbox" data-search-checkbox="individual" value="<%=file.fID%>" /></span></td>
-	<td class="ccm-file-manager-search-results-star <% if (file.isStarred) { %>ccm-file-manager-search-results-star-active<% } %>"><a href="#" data-search-toggle="star" data-search-toggle-url="<?=URL::to('/ccm/system/file/star')?>" data-search-toggle-file-id="<%=file.fID%>"><i class="glyphicon glyphicon-star"></i></a></td>
+	<td class="ccm-file-manager-search-results-star <% if (file.isStarred) { %>ccm-file-manager-search-results-star-active<% } %>"><a href="#" data-search-toggle="star" data-search-toggle-url="<?=URL::to('/ccm/system/file/star')?>" data-search-toggle-file-id="<%=file.fID%>"><i class="fa fa-star"></i></a></td>
 	<td class="ccm-file-manager-search-results-thumbnail"><img src="<%=file.thumbnailLevel1%>" /></td>
 	<% for(i = 0; i < file.columns.length; i++) {
 		var column = file.columns[i]; %>
@@ -133,7 +133,7 @@ $searchRequest = $controller->getSearchRequest();
 <script type="text/template" data-template="search-results-table-head">
 <tr>
 	<th><span class="ccm-search-results-checkbox"><input type="checkbox" data-search-checkbox="select-all" /></span></th>
-	<th class="ccm-file-manager-search-results-star"><span><i class="glyphicon glyphicon-star"></i></span></th>
+	<th class="ccm-file-manager-search-results-star"><span><i class="fa fa-star"></i></span></th>
 	<th><span><?=t('Thumbnail')?></th>
 	<%
 	for (i = 0; i < columns.length; i++) {

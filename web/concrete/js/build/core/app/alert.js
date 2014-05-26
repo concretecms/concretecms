@@ -35,7 +35,7 @@
             }
 
 
-            $('<div id="ccm-notification-hud" class="ccm-ui ccm-notification ccm-notification-' + options.type + '"><i class="glyphicon glyphicon-' + options.icon + '"></i><div class="ccm-notification-inner">' + messageText + '</div></div>').
+            $('<div id="ccm-notification-hud" class="ccm-ui ccm-notification ccm-notification-' + options.type + '"><i class="fa fa-' + options.icon + '"></i><div class="ccm-notification-inner">' + messageText + '</div></div>').
             appendTo($appendTo).delay(5).queue(function() {
                 $(this).addClass('animated fadeIn');
                 $(this).dequeue();

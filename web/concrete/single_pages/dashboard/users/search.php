@@ -59,7 +59,7 @@ div[data-container=editable-fields] section {
 			<div class="col-md-8"><p>
 				<div <? if ($canEditAvatar) { ?>data-editable-field-type="image" data-editable-field-inline-commands="true" data-url="<?=$view->action('update_avatar', $user->getUserID())?>"<? } ?>>
 					<ul class="ccm-edit-mode-inline-commands">
-						<li><a href="#" data-editable-field-command="clear"><i class="glyphicon glyphicon-trash"></i></a></li>
+						<li><a href="#" data-editable-field-command="clear"><i class="fa fa-trash"></i></a></li>
 					</ul>
 	                <span class="editable-image-wrapper">
 	                    <input type="file" id="file-avatar" name="avatar" />
@@ -179,7 +179,7 @@ div[data-container=editable-fields] section {
 <% _.each(groups, function(group) { %>
 	<div class="row" data-editable-field-inline-commands="true" data-group-id="<%=group.gID%>">
 		<ul class="ccm-edit-mode-inline-commands">
-			<li><a href="#" data-group-id="<%=group.gID%>" data-button="delete-group"><i class="glyphicon glyphicon-trash"></i></a></li>
+			<li><a href="#" data-group-id="<%=group.gID%>" data-button="delete-group"><i class="fa fa-trash"></i></a></li>
 		</ul>
 		<div class="col-md-6"><p><%=group.gDisplayName%></p></div>
 		<div class="col-md-6"><p><%=group.gDateTimeEntered%></p></div>

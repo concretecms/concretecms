@@ -240,7 +240,7 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
 		} else {
 			var helpText = 'Help';
 		}
-		$dialog.parent().find('.ui-dialog-titlebar').addClass('ccm-ui').append('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"><i class="glyphicon glyphicon-info-sign"></i></button>');
+		$dialog.parent().find('.ui-dialog-titlebar').addClass('ccm-ui').append('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"><i class="fa fa-info-sign"></i></button>');
 		$dialog.parent().find('.ui-dialog-titlebar .ccm-menu-help-trigger').popover({content: function() {
 			return helpContent;
 		}, placement: 'bottom', html: true, container: '#ccm-tooltip-holder', trigger: 'click'});
