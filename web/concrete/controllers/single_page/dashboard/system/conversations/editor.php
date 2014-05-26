@@ -14,7 +14,7 @@ class Editor extends DashboardPageController {
 		$active = false;
 		while ($row = $q->fetchRow()) {
 			if ($row['cnvEditorIsActive'] == 1) $active = $row['cnvEditorHandle'];
-			$editors[$row['cnvEditorHandle']] = $row['cnvEditorName'];
+			$editors[$row['cnvEditorHandle']] = tc('ConversationEditorName', $row['cnvEditorName']);
 		}
 		if (!$active) $active = array_pop(array_reverse($editors));
 		$this->set('active',$active);
@@ -24,12 +24,12 @@ class Editor extends DashboardPageController {
 
 	public function success() {
 		$this->view();
-		$this->set('message','Updated active editor.');
+		$this->set('message', t('The active editor has been updated.'));
 	}
 
 	public function error() {
 		$this->error = Loader::helper('validation/error');
-		$this->error->add('Invalid Editor Handle.');
+		$this->error->add(t('Invalid editor handle.'));
 		$this->view();
 		$this->set('error',$this->error);
 	}
