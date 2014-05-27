@@ -79,7 +79,6 @@ var ccmi18n = {
 	scheduleGuestAccess: "<?=t('Schedule Guest Access')?>",
 	scheduleGuestAccessSuccess: "<?=t('Timed Access for Guest Users Updated Successfully.')?>",
 	newsflowLoading: "<?=t("Checking for updates.")?>",
-	authoredBy: "<?=t('by')?>",
 	x: "<?=t('x')?>",
 	user_activate: "<?=t('Activate Users')?>",
 	user_deactivate: "<?=t('Deactivate Users')?>",
