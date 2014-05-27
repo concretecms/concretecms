@@ -48,14 +48,14 @@ abstract class Style
      */
     public function getDisplayName($format = 'html')
     {
-    	$value = tc('StyleName', $this->getName());
-    	switch($format) {
-    		case 'html':
-    			return h($value);
-    		case 'text':
-    		default:
-    			return $value;
-    	}
+        $value = tc('StyleName', $this->getName());
+        switch($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
     }
 
     public function setVariable($variable)
