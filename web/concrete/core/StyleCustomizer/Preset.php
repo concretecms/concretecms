@@ -70,19 +70,19 @@ class Preset {
 
     /** Returns the display name for this preset (localized and escaped accordingly to $format)
      * @param string $format = 'html'
-     *	Escape the result in html format (if $format is 'html').
-     *	If $format is 'text' or any other value, the display name won't be escaped.
+     *   Escape the result in html format (if $format is 'html').
+     *   If $format is 'text' or any other value, the display name won't be escaped.
      * @return string
      */
     public function getPresetDisplayName($format = 'html') {
-    	$value = tc('PresetName', $this->getPresetName());
-    	switch($format) {
-    		case 'html':
-    			return h($value);
-    		case 'text':
-    		default:
-    			return $value;
-    	}
+        $value = tc('PresetName', $this->getPresetName());
+        switch($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
     }
 
     public function isDefaultPreset()
