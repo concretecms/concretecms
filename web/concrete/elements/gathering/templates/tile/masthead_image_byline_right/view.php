@@ -10,7 +10,7 @@ $ownerName = $u->getUserName();
 <div class="ccm-gathering-masthead-image-right ccm-gathering-masthead-image ccm-gathering-scaled-image">
 	<div class="ccm-gathering-tile-title-description float-left">
 		<div class="ccm-gathering-tile-headline"><a href="<?=$link?>"><?=$title?></a></div>
-		<div class="ccm-gathering-tile-byline"><?php echo t('By '). '<span class="author-name">' .$ownerName. '</span>' ?></div>
+		<div class="ccm-gathering-tile-byline"><?php echo tc(/*i18n: %s is the name of the author */ 'Authored', 'By %s', '<span class="author-name">' . $ownerName . '</span>'); ?></div>
 		<div class="ccm-gathering-tile-description">
 		<?=$description?>
 		</div>
