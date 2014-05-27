@@ -20,7 +20,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
                 $selected = true;
             }
             ?>
-            <label class="list-group-item"><input type="radio" class="ccm-flat-radio" value="<?=$preset->getPresetHandle()?>" name="handle" <? if ($selected) { ?>checked="checked"<? } ?> /> <?=$preset->getPresetName()?>
+            <label class="list-group-item"><input type="radio" class="ccm-flat-radio" value="<?=$preset->getPresetHandle()?>" name="handle" <? if ($selected) { ?>checked="checked"<? } ?> /> <?=$preset->getPresetDisplayName()?>
                 <?=$preset->getPresetIconHTML()?>
             </label>
             <? if ($i == 0) { ?>
