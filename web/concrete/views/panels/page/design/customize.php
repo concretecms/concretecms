@@ -39,10 +39,10 @@ $pk = PermissionKey::getByHandle('customize_themes');
     <div id="ccm-panel-page-design-customize-list">
     <? foreach($styleSets as $set) { ?>
         <div class="ccm-panel-page-design-customize-style-set">
-            <h5 class="ccm-panel-page-design-customize-style-set-collapse"><?=$set->getName()?></h5>
+            <h5 class="ccm-panel-page-design-customize-style-set-collapse"><?=$set->getDisplayName()?></h5>
             <ul class="list-unstyled">
             <? foreach($set->getStyles() as $style) { ?>
-                <li><?=$style->getName()?>
+                <li><?=$style->getDisplayName()?>
                 <?
                 $value = $style->getValueFromList($valueList);
                 ?>
