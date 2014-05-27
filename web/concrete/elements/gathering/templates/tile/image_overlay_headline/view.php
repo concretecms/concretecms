@@ -9,7 +9,7 @@ if (is_array($image)) {
 		<img src="<?=$image->getPath()?>" alt="<?php echo t('Preview Image') ?>" />
 	<div class="ccm-gathering-tile-image-overlay-headline-byline-description">
 		<p class="overlay-title"><?=$title; ?></p>
-		<p class="overlay-byline"><?= t('by ') . $author ?></p>
+		<p class="overlay-byline"><?php echo tc(/*i18n: %s is the name of the author */ 'Authored', 'by %s', $author); ?></p>
 	</div>
 	<div class="clearfix" style="clear: both;"></div>
 </div>
