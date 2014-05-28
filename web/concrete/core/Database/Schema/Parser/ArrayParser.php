@@ -6,9 +6,7 @@ class ArrayParser {
 
 	public function addColumns(\Doctrine\DBAL\Schema\Table $table, $columns) {
 		foreach($columns as $column) {
-            if(!$table->hasColumn($column['name'])){
-                $field = $table->addColumn($column['name'], $column['type'], $column['options']);
-            }
+            $field = $table->addColumn($column['name'], $column['type'], $column['options']);
 		}
 		return $table;
 	}
