@@ -60,6 +60,15 @@ module.exports = function(grunt) {
 
     // List of the JavaScripts to be generated
     var js = {
+
+        redactor: {
+            dest: '<%= DIR_BASE %>/concrete/js/redactor.js',
+            src: [
+                '<%= DIR_BASE %>/concrete/js/build/vendor/redactor/redactor.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/redactor/plugin.js'
+            ]
+        },
+
         ccm_app: {
             dest: '<%= DIR_BASE %>/concrete/js/app.js',
             src: [
@@ -251,13 +260,6 @@ module.exports = function(grunt) {
         dynatree: {
             dest: '<%= DIR_BASE %>/concrete/js/dynatree.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/dynatree/dynatree.js'
-        },
-        redactor: {
-            dest: '<%= DIR_BASE %>/concrete/js/redactor.js',
-            src: [
-                '<%= DIR_BASE %>/concrete/js/build/vendor/redactor/redactor.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/redactor/plugin.js'
-            ]
         },
         account: {
             dest: '<%= DIR_BASE %>/concrete/js/account.js',

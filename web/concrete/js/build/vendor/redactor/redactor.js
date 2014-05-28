@@ -7353,7 +7353,24 @@
         		width: width,
         		height: 'auto',
         		title: title,
-        		resizable: false
+        		resizable: false,
+                open: function() {
+                    var $dialog = $(this);
+                    if ($dialog.find('footer').length > 0) {
+                        $dialog.jqdialog('option', 'buttons', [{}]);
+                        $dialog.parent().find(".ui-dialog-buttonset").remove();
+                        $dialog.parent().find(".ui-dialog-buttonpane").html('');
+                        $dialog.find('footer').removeClass().appendTo($dialog.parent().find('.ui-dialog-buttonpane').addClass("ccm-ui"));
+
+                        $dialog.parent().find('button.redactor_btn_modal_close').on('click', function() {
+                            $dialog.dialog('close');
+                            return false;
+                        });
+                    }
+                    if (typeof callback  === 'function') {
+                        callback();
+                    }
+                }
         	});
         	
         	/*
@@ -7548,6 +7565,12 @@
                 return false;
             }
         },
+
+        modalClose: function() {
+            $('button.redactor_btn_modal_close').trigger('click');
+        },
+        /* concrete5 */
+        /*
         modalClose: function()
         {
             $('#redactor_modal_close').off('click', this.modalClose);
@@ -7595,6 +7618,7 @@
 
             return false;
         },
+        */
         modalSetTab: function(num)
         {
             $('.redactor_tab').hide();
