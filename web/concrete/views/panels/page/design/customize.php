@@ -20,7 +20,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
                 $selected = true;
             }
             ?>
-            <label class="list-group-item"><input type="radio" class="ccm-flat-radio" value="<?=$preset->getPresetHandle()?>" name="handle" <? if ($selected) { ?>checked="checked"<? } ?> /> <?=$preset->getPresetName()?>
+            <label class="list-group-item"><input type="radio" class="ccm-flat-radio" value="<?=$preset->getPresetHandle()?>" name="handle" <? if ($selected) { ?>checked="checked"<? } ?> /> <?=$preset->getPresetDisplayName()?>
                 <?=$preset->getPresetIconHTML()?>
             </label>
             <? if ($i == 0) { ?>
@@ -39,10 +39,10 @@ $pk = PermissionKey::getByHandle('customize_themes');
     <div id="ccm-panel-page-design-customize-list">
     <? foreach($styleSets as $set) { ?>
         <div class="ccm-panel-page-design-customize-style-set">
-            <h5 class="ccm-panel-page-design-customize-style-set-collapse"><?=$set->getName()?></h5>
+            <h5 class="ccm-panel-page-design-customize-style-set-collapse"><?=$set->getDisplayName()?></h5>
             <ul class="list-unstyled">
             <? foreach($set->getStyles() as $style) { ?>
-                <li><?=$style->getName()?>
+                <li><?=$style->getDisplayName()?>
                 <?
                 $value = $style->getValueFromList($valueList);
                 ?>
