@@ -175,7 +175,7 @@ use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
 			$r = $db->Execute("select cID from PageSearchIndex where cRequiresReindex = 1");
 			while ($row = $r->FetchRow()) {
 				$pc = Page::getByID($row['cID']);
-				$pc->reindex($this, true);
+				$pc->reindex($pc, true);
 				$num++;
 			}
 			Config::save('DO_PAGE_REINDEX_CHECK', false);
@@ -194,9 +194,8 @@ use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
 
 				$db->Execute('delete from CollectionSearchIndexAttributes where cID = ?', array($this->getCollectionID()));
 				$searchableAttributes = array('cID' => $this->getCollectionID());
-				$rs = $db->Execute('select * from CollectionSearchIndexAttributes where cID = -1');
                 $key = new Key();
-                $key->reindex('CollectionSearchIndexAttributes', $searchableAttributes, $attribs, $rs);
+                $key->reindex('CollectionSearchIndexAttributes', $searchableAttributes, $attribs);
 
 				if ($index == false) {
 					$index = new IndexedSearch();

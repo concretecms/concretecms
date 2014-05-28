@@ -432,38 +432,38 @@ class Key extends Object {
 	}
 
     /**
-     * @param $tbl
-     * @param $columnHeaders
+     * @param string $table
+     * @param array $columnHeaders
      * @param \Concrete\Core\Attribute\Value\ValueList $attribs
-     * @param $rs
+     * @param mixed $rs this is a legacy parameter, not actually used anymore
      */
-    public function reindex($tbl, $columnHeaders, $attribs, $rs) {
+    public function reindex($table, $columnHeaders, $attribs, $rs = null) {
+        /** @var \Concrete\Core\Database\Connection $db */
 		$db = Loader::db();
-		$columns = $db->MetaColumns($tbl);
+        $sm = $db->getSchemaManager();
+        /** @var \Doctrine\DBAL\Schema\Column[] $columns */
+        $columns = $sm->listTableColumns($table);
 
-        //todo: nothing from here down is actually functional
-		foreach($attribs as $akHandle => $value) {
-			if (is_array($value)) {
-				foreach($value as $key => $v) {
-					$column = 'ak_' . $akHandle . '_' . $key;
-					if (isset($columns[strtoupper($column)])) {
-						$columnHeaders[$column] = $v;
-					}
-				}
-			} else {
-				$column = 'ak_' . $akHandle;
-				if (isset($columns[strtoupper($column)])) {
-					$columnHeaders[$column] = $value;
-				}
-			}
-		}
+        $attribs->rewind();
+        while($attribs->valid()) {
+            $column = 'ak_'.$attribs->key();
+            if(is_array($attribs->current())) {
+                foreach($attribs->current() as $key => $value) {
+                    $column .= '_'. $key;
+                    if(isset($columns[strtolower($column)])) {
+                        $columnHeaders[$column] = $value;
+                    }
+                }
+            } else {
+                if (isset($columns[strtolower($column)])) {
+                    $columnHeaders[$column] = $attribs->current();
+                }
+            }
 
-		//this shouldn't be necessary, but i had a saying telling me that the static variable 'db' was protected, 
-		//even though it was declared as public 
-		$q = $db->GetInsertSQL($rs, $columnHeaders);
-		$r = $db->Execute($q);
-		$r->Close();
-		$rs->Close();
+            $attribs->next();
+        }
+
+        $db->insert($table, $columnHeaders);
 	}
 	
 	public function updateSearchIndex($prevHandle = false) {

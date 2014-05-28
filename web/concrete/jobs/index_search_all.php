@@ -7,6 +7,7 @@ use CollectionAttributeKey;
 use FileAttributeKey;
 use UserAttributeKey;
 use Page;
+use Database;
 
 class IndexSearchAll extends QueueableJob {
 
