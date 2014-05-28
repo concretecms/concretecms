@@ -97,9 +97,9 @@ module.exports = function(grunt) {
             src: [
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupuload/jquery-iframe-transport.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-fileupload/jquery-fileupload.js',
-                '<%= DIR_BASE %>/concrete/js/build/file-manager/search.js',
-                '<%= DIR_BASE %>/concrete/js/build/file-manager/selector.js',
-                '<%= DIR_BASE %>/concrete/js/build/file-manager/menu.js'
+                '<%= DIR_BASE %>/concrete/js/build/core/file-manager/search.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/file-manager/selector.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/file-manager/menu.js'
             ]
         },
 

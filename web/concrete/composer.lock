@@ -263,16 +263,16 @@
         },
         {
             "name": "doctrine/common",
-            "version": "v2.4.1",
+            "version": "v2.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/common.git",
-                "reference": "ceb18cf9b0230f3ea208b6238130fd415abda0a7"
+                "reference": "5db6ab40e4c531f14dad4ca96a394dfce5d4255b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/common/zipball/ceb18cf9b0230f3ea208b6238130fd415abda0a7",
-                "reference": "ceb18cf9b0230f3ea208b6238130fd415abda0a7",
+                "url": "https://api.github.com/repos/doctrine/common/zipball/5db6ab40e4c531f14dad4ca96a394dfce5d4255b",
+                "reference": "5db6ab40e4c531f14dad4ca96a394dfce5d4255b",
                 "shasum": ""
             },
             "require": {
@@ -282,6 +282,9 @@
                 "doctrine/inflector": "1.*",
                 "doctrine/lexer": "1.*",
                 "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~3.7"
             },
             "type": "library",
             "extra": {
@@ -334,7 +337,7 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2013-09-07 10:20:34"
+            "time": "2014-05-21 19:28:51"
         },
         {
             "name": "doctrine/dbal",
@@ -783,17 +786,17 @@
         },
         {
             "name": "illuminate/container",
-            "version": "v4.1.28",
+            "version": "v4.1.29",
             "target-dir": "Illuminate/Container",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
-                "reference": "51d590fd7e301f56c567459a26343a8288330f69"
+                "reference": "1bc5798b2241219ec76c57736ab139527cc2d3ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/container/zipball/51d590fd7e301f56c567459a26343a8288330f69",
-                "reference": "51d590fd7e301f56c567459a26343a8288330f69",
+                "url": "https://api.github.com/repos/illuminate/container/zipball/1bc5798b2241219ec76c57736ab139527cc2d3ad",
+                "reference": "1bc5798b2241219ec76c57736ab139527cc2d3ad",
                 "shasum": ""
             },
             "require": {
@@ -822,10 +825,10 @@
                     "name": "Taylor Otwell",
                     "email": "taylorotwell@gmail.com",
                     "homepage": "https://github.com/taylorotwell",
-                    "role": "Developer"
+                    "role": "Creator of Laravel"
                 }
             ],
-            "time": "2014-03-22 20:29:54"
+            "time": "2014-04-21 18:20:26"
         },
         {
             "name": "innogames/cssmin",
@@ -902,12 +905,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/michelf/php-markdown.git",
-                "reference": "de9a19c7bf352d41cc99ed86c3c0ef17e87394b6"
+                "reference": "123c43a65c783e7535384cfbec640d9702204c22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/michelf/php-markdown/zipball/de9a19c7bf352d41cc99ed86c3c0ef17e87394b6",
-                "reference": "de9a19c7bf352d41cc99ed86c3c0ef17e87394b6",
+                "url": "https://api.github.com/repos/michelf/php-markdown/zipball/123c43a65c783e7535384cfbec640d9702204c22",
+                "reference": "123c43a65c783e7535384cfbec640d9702204c22",
                 "shasum": ""
             },
             "require": {
@@ -945,7 +948,7 @@
             "keywords": [
                 "markdown"
             ],
-            "time": "2014-05-05 02:43:50"
+            "time": "2014-05-15 19:49:30"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -953,12 +956,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/serbanghita/Mobile-Detect.git",
-                "reference": "c54e8e194d31357411d27711a6bba802e4b074fa"
+                "reference": "3e39e197309db5f33361329d4f951937eb4ac596"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/c54e8e194d31357411d27711a6bba802e4b074fa",
-                "reference": "c54e8e194d31357411d27711a6bba802e4b074fa",
+                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/3e39e197309db5f33361329d4f951937eb4ac596",
+                "reference": "3e39e197309db5f33361329d4f951937eb4ac596",
                 "shasum": ""
             },
             "require": {
@@ -997,7 +1000,7 @@
                 "mobile detector",
                 "php mobile detect"
             ],
-            "time": "2014-05-07 20:24:07"
+            "time": "2014-05-27 11:19:54"
         },
         {
             "name": "monolog/monolog",
@@ -1174,16 +1177,16 @@
         },
         {
             "name": "patchwork/utf8",
-            "version": "v1.1.22",
+            "version": "v1.1.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nicolas-grekas/Patchwork-UTF8.git",
-                "reference": "156e66249f48e439a31df2347290bb9ab1d3d242"
+                "reference": "c1edbc82aed49ff2bdef0a0f659bf69e3f7b14cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nicolas-grekas/Patchwork-UTF8/zipball/156e66249f48e439a31df2347290bb9ab1d3d242",
-                "reference": "156e66249f48e439a31df2347290bb9ab1d3d242",
+                "url": "https://api.github.com/repos/nicolas-grekas/Patchwork-UTF8/zipball/c1edbc82aed49ff2bdef0a0f659bf69e3f7b14cc",
+                "reference": "c1edbc82aed49ff2bdef0a0f659bf69e3f7b14cc",
                 "shasum": ""
             },
             "require": {
@@ -1221,7 +1224,7 @@
                 "utf-8",
                 "utf8"
             ],
-            "time": "2014-05-06 15:47:10"
+            "time": "2014-05-22 13:59:09"
         },
         {
             "name": "primal/color",
@@ -1415,17 +1418,17 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.4.4",
+            "version": "v2.4.5",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "2e452005b1e1d003d23702d227e23614679eb5ca"
+                "reference": "24f723436e62598c9dddee2a8573d6992504dc5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/2e452005b1e1d003d23702d227e23614679eb5ca",
-                "reference": "2e452005b1e1d003d23702d227e23614679eb5ca",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/24f723436e62598c9dddee2a8573d6992504dc5d",
+                "reference": "24f723436e62598c9dddee2a8573d6992504dc5d",
                 "shasum": ""
             },
             "require": {
@@ -1466,7 +1469,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2014-04-27 13:34:57"
+            "time": "2014-05-14 21:48:29"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -1828,12 +1831,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zf1/zend-cache.git",
-                "reference": "7816cdb612634050794cc10d553346bcd7dd561c"
+                "reference": "466c3e48b559f3b3c6475170e84ad93bb79dad74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-cache/zipball/7816cdb612634050794cc10d553346bcd7dd561c",
-                "reference": "7816cdb612634050794cc10d553346bcd7dd561c",
+                "url": "https://api.github.com/repos/zf1/zend-cache/zipball/466c3e48b559f3b3c6475170e84ad93bb79dad74",
+                "reference": "466c3e48b559f3b3c6475170e84ad93bb79dad74",
                 "shasum": ""
             },
             "require": {
@@ -1861,7 +1864,7 @@
                 "framework",
                 "zend"
             ],
-            "time": "2014-01-02 14:05:51"
+            "time": "2014-05-21 16:06:11"
         },
         {
             "name": "zf1/zend-currency",
@@ -1869,12 +1872,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zf1/zend-currency.git",
-                "reference": "278108731281cdfda811fa016252799629eac4ab"
+                "reference": "c54edaca863d1d9296e111632d4e051ea0c0db39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-currency/zipball/278108731281cdfda811fa016252799629eac4ab",
-                "reference": "278108731281cdfda811fa016252799629eac4ab",
+                "url": "https://api.github.com/repos/zf1/zend-currency/zipball/c54edaca863d1d9296e111632d4e051ea0c0db39",
+                "reference": "c54edaca863d1d9296e111632d4e051ea0c0db39",
                 "shasum": ""
             },
             "require": {
@@ -1900,7 +1903,7 @@
                 "framework",
                 "zend"
             ],
-            "time": "2014-01-02 14:05:53"
+            "time": "2014-05-21 15:17:49"
         },
         {
             "name": "zf1/zend-date",
@@ -1908,12 +1911,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zf1/zend-date.git",
-                "reference": "7d26d89c02169983ccd2fbe9fcfc7360dd27ff36"
+                "reference": "5fb1769de16f224b36a3405a66c9eb9de5fe5925"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-date/zipball/7d26d89c02169983ccd2fbe9fcfc7360dd27ff36",
-                "reference": "7d26d89c02169983ccd2fbe9fcfc7360dd27ff36",
+                "url": "https://api.github.com/repos/zf1/zend-date/zipball/5fb1769de16f224b36a3405a66c9eb9de5fe5925",
+                "reference": "5fb1769de16f224b36a3405a66c9eb9de5fe5925",
                 "shasum": ""
             },
             "require": {
@@ -1939,7 +1942,7 @@
                 "framework",
                 "zend"
             ],
-            "time": "2014-01-02 14:05:53"
+            "time": "2014-05-21 16:06:11"
         },
         {
             "name": "zf1/zend-db",
@@ -1947,12 +1950,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zf1/zend-db.git",
-                "reference": "73aa68ce9947509fd22d5a1bcd83ce6b9740e401"
+                "reference": "93e45ef0ef6c3f7b9d462f665bdb4943f737eaa0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-db/zipball/73aa68ce9947509fd22d5a1bcd83ce6b9740e401",
-                "reference": "73aa68ce9947509fd22d5a1bcd83ce6b9740e401",
+                "url": "https://api.github.com/repos/zf1/zend-db/zipball/93e45ef0ef6c3f7b9d462f665bdb4943f737eaa0",
+                "reference": "93e45ef0ef6c3f7b9d462f665bdb4943f737eaa0",
                 "shasum": ""
             },
             "require": {
@@ -1982,7 +1985,7 @@
                 "framework",
                 "zend"
             ],
-            "time": "2014-01-02 14:05:53"
+            "time": "2014-05-21 16:06:12"
         },
         {
             "name": "zf1/zend-exception",
@@ -1990,12 +1993,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zf1/zend-exception.git",
-                "reference": "6e607d8b112a06965938a5ffbee410e49c683942"
+                "reference": "ee61f139d1ad7070c1ff4d0f4bd7ccd441172f11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-exception/zipball/6e607d8b112a06965938a5ffbee410e49c683942",
-                "reference": "6e607d8b112a06965938a5ffbee410e49c683942",
+                "url": "https://api.github.com/repos/zf1/zend-exception/zipball/ee61f139d1ad7070c1ff4d0f4bd7ccd441172f11",
+                "reference": "ee61f139d1ad7070c1ff4d0f4bd7ccd441172f11",
                 "shasum": ""
             },
             "require": {
@@ -2019,7 +2022,7 @@
                 "framework",
                 "zend"
             ],
-            "time": "2014-01-02 14:05:54"
+            "time": "2014-05-21 15:17:51"
         },
         {
             "name": "zf1/zend-loader",
@@ -2027,12 +2030,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zf1/zend-loader.git",
-                "reference": "50b048d3237a3d42943df3bb850c3900d9d29595"
+                "reference": "433adcc69b7c6517495d137f7733983bb2399301"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-loader/zipball/50b048d3237a3d42943df3bb850c3900d9d29595",
-                "reference": "50b048d3237a3d42943df3bb850c3900d9d29595",
+                "url": "https://api.github.com/repos/zf1/zend-loader/zipball/433adcc69b7c6517495d137f7733983bb2399301",
+                "reference": "433adcc69b7c6517495d137f7733983bb2399301",
                 "shasum": ""
             },
             "require": {
@@ -2057,7 +2060,7 @@
                 "loader",
                 "zend"
             ],
-            "time": "2014-01-02 14:06:01"
+            "time": "2014-05-21 16:06:11"
         },
         {
             "name": "zf1/zend-locale",
@@ -2108,12 +2111,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zf1/zend-mail.git",
-                "reference": "a1bf1454c2ad66b9eb0934f8baf88de5c13ac239"
+                "reference": "a4782ec0185f3998abdada146a8c373e839cb110"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-mail/zipball/a1bf1454c2ad66b9eb0934f8baf88de5c13ac239",
-                "reference": "a1bf1454c2ad66b9eb0934f8baf88de5c13ac239",
+                "url": "https://api.github.com/repos/zf1/zend-mail/zipball/a4782ec0185f3998abdada146a8c373e839cb110",
+                "reference": "a4782ec0185f3998abdada146a8c373e839cb110",
                 "shasum": ""
             },
             "require": {
@@ -2141,7 +2144,7 @@
                 "mail",
                 "zend"
             ],
-            "time": "2014-01-02 14:06:05"
+            "time": "2014-05-21 15:17:58"
         },
         {
             "name": "zf1/zend-mime",
@@ -2149,12 +2152,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zf1/zend-mime.git",
-                "reference": "958693d1252e74631c974fb46487ff4af675de65"
+                "reference": "0a1894ef0d4fedc9d895e6c46ae3713198916b1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-mime/zipball/958693d1252e74631c974fb46487ff4af675de65",
-                "reference": "958693d1252e74631c974fb46487ff4af675de65",
+                "url": "https://api.github.com/repos/zf1/zend-mime/zipball/0a1894ef0d4fedc9d895e6c46ae3713198916b1b",
+                "reference": "0a1894ef0d4fedc9d895e6c46ae3713198916b1b",
                 "shasum": ""
             },
             "require": {
@@ -2179,7 +2182,7 @@
                 "mime",
                 "zend"
             ],
-            "time": "2014-01-02 14:06:05"
+            "time": "2014-05-21 15:17:49"
         },
         {
             "name": "zf1/zend-queue",
@@ -2187,12 +2190,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zf1/zend-queue.git",
-                "reference": "5c8959c256e697150a0a8d4fd17b5784f0d97f76"
+                "reference": "f0015ce0a0e6c21fc238a679bb3a3c7d72786563"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-queue/zipball/5c8959c256e697150a0a8d4fd17b5784f0d97f76",
-                "reference": "5c8959c256e697150a0a8d4fd17b5784f0d97f76",
+                "url": "https://api.github.com/repos/zf1/zend-queue/zipball/f0015ce0a0e6c21fc238a679bb3a3c7d72786563",
+                "reference": "f0015ce0a0e6c21fc238a679bb3a3c7d72786563",
                 "shasum": ""
             },
             "require": {
@@ -2223,7 +2226,7 @@
                 "queue",
                 "zend"
             ],
-            "time": "2014-01-02 14:06:15"
+            "time": "2014-05-21 15:18:01"
         },
         {
             "name": "zf1/zend-translate",
@@ -2272,12 +2275,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/zf1/zend-validate.git",
-                "reference": "1e73b67d47e8cd82a678f21107f4de9b7b3893fc"
+                "reference": "7ba6a6b33d49b75424fa79a73d45d8f12fd3081d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-validate/zipball/1e73b67d47e8cd82a678f21107f4de9b7b3893fc",
-                "reference": "1e73b67d47e8cd82a678f21107f4de9b7b3893fc",
+                "url": "https://api.github.com/repos/zf1/zend-validate/zipball/7ba6a6b33d49b75424fa79a73d45d8f12fd3081d",
+                "reference": "7ba6a6b33d49b75424fa79a73d45d8f12fd3081d",
                 "shasum": ""
             },
             "require": {
@@ -2309,7 +2312,7 @@
                 "validate",
                 "zend"
             ],
-            "time": "2014-01-02 14:06:11"
+            "time": "2014-05-21 15:52:57"
         },
         {
             "name": "zf1/zend-xml",
