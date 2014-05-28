@@ -1,9 +1,10 @@
 /*
     Icon font
 */
+/*
 @font-face {
   font-family: 'RedactorFont';
-  src: url('fonts/redactor-font.eot');
+  src: url('redactor-font.eot');
 }
 @font-face {
   font-family: 'RedactorFont';
@@ -11,6 +12,8 @@
   font-weight: normal;
   font-style: normal;
 }
+*/
+
 /* =Selection
 -----------------------------------------------------------------------------*/
 .redactor_box ::selection {
@@ -59,7 +62,6 @@
   outline: none;
 }
 .redactor_box,
-.redactor_toolbar,
 .redactor_box textarea {
   z-index: auto !important;
 }
@@ -420,118 +422,127 @@ body .redactor_air .redactor_toolbar {
   background-color: #ccc;
   color: #444;
 }
+
 .re-icon {
-  font-family: 'RedactorFont';
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-.re-icon i:before {
-  position: relative;
-  font-size: 14px;
-}
-.re-video:before {
-  content: "\e600";
-}
-.re-unorderedlist:before {
-  content: "\e601";
-}
-.re-undo:before {
-  content: "\e602";
-}
-.re-underline:before {
-  content: "\e603";
-}
-.re-textdirection:before {
-  content: "\e604";
-}
-.re-fontcolor:before {
-  content: "\e605";
-}
-.re-table:before {
-  content: "\e606";
-}
-.re-redo:before {
-  content: "\e607";
-}
-.re-quote:before {
-  content: "\e608";
-}
-.re-outdent:before {
-  content: "\e609";
-}
-.re-orderedlist:before {
-  content: "\e60a";
-}
-.re-link:before {
-  content: "\e60b";
-}
-.re-horizontalrule:before {
-  content: "\e60c";
-}
-.re-italic:before {
-  content: "\e60d";
-}
-.re-indent:before {
-  content: "\e60e";
-}
-.re-image:before {
-  content: "\e60f";
-}
-.re-fullscreen:before {
-  content: "\e610";
-}
-.re-normalscreen:before {
-  content: "\e611";
-}
-.re-formatting:before {
-  content: "\e612";
-}
-.re-fontsize:before {
-  content: "\e613";
-}
-.re-fontfamily:before {
-  content: "\e614";
-}
-.re-deleted:before {
-  content: "\e615";
-}
-.re-html:before {
-  content: "\e616";
-}
-.re-clips:before {
-  content: "\e617";
-}
-.re-bold:before {
-  content: "\e618";
-}
-.re-backcolor:before {
-  content: "\e619";
-}
-.re-file:before {
-  content: "\e61a";
-}
-.re-alignright:before {
-  content: "\e61b";
-}
-.re-alignment:before,
-.re-alignleft:before {
-  content: "\e61c";
-}
-.re-alignjustify:before {
-  content: "\e61d";
-}
-.re-aligncenter:before {
-  content: "\e61e";
-}
-.re-gallery:before {
-  content: "\e61f";
-}
+  /*
+    font-family: 'RedactorFont';
+    */
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+/* concrete5 */
+  .re-icon:before {
+    position: relative;
+    font-size: 14px;
+  }
+
+/*
+  .re-video:before {
+    content: "\e600";
+  }
+  .re-unorderedlist:before {
+    content: "\e601";
+  }
+  .re-undo:before {
+    content: "\e602";
+  }
+  .re-underline:before {
+    content: "\e603";
+  }
+  .re-textdirection:before {
+    content: "\e604";
+  }
+  .re-fontcolor:before {
+    content: "\e605";
+  }
+  .re-table:before {
+    content: "\e606";
+  }
+  .re-redo:before {
+    content: "\e607";
+  }
+  .re-quote:before {
+    content: "\e608";
+  }
+  .re-outdent:before {
+    content: "\e609";
+  }
+  .re-orderedlist:before {
+    content: "\e60a";
+  }
+  .re-link:before {
+    content: "\e60b";
+  }
+  .re-horizontalrule:before {
+    content: "\e60c";
+  }
+  .re-italic:before {
+    content: "\e60d";
+  }
+  .re-indent:before {
+    content: "\e60e";
+  }
+  .re-image:before {
+    content: "\e60f";
+  }
+  .re-fullscreen:before {
+    content: "\e610";
+  }
+  .re-normalscreen:before {
+    content: "\e611";
+  }
+  .re-formatting:before {
+    content: "\e612";
+  }
+  .re-fontsize:before {
+    content: "\e613";
+  }
+  .re-fontfamily:before {
+    content: "\e614";
+  }
+  .re-deleted:before {
+    content: "\e615";
+  }
+  .re-html:before {
+    content: "\e616";
+  }
+  .re-clips:before {
+    content: "\e617";
+  }
+  .re-bold:before {
+    content: "\e618";
+  }
+  .re-backcolor:before {
+    content: "\e619";
+  }
+  .re-file:before {
+    content: "\e61a";
+  }
+  .re-alignright:before {
+    content: "\e61b";
+  }
+  .re-alignment:before,
+  .re-alignleft:before {
+    content: "\e61c";
+  }
+  .re-alignjustify:before {
+    content: "\e61d";
+  }
+  .re-aligncenter:before {
+    content: "\e61e";
+  }
+  .re-gallery:before {
+    content: "\e61f";
+  }
+  */
+
 /*
     Toolbar classes
 */
