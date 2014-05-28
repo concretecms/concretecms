@@ -381,7 +381,7 @@ class Package extends Object {
 		} else if ($item instanceof PageType) {
 			return $item->getPageTypeName();
 		} else if ($item instanceof PageTemplate) {
-			return $item->getPageTemplateName();
+			return $item->getPageTemplateDisplayName();
 		} else if ($item instanceof MailImporter) {
 			return $item->getMailImporterName();		
 		} else if ($item instanceof Page) {
