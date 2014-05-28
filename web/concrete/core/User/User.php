@@ -328,16 +328,6 @@ class User extends Object {
 			(defined('SESSION_COOKIE_PARAM_HTTPONLY')?SESSION_COOKIE_PARAM_HTTPONLY:false));
 		}
 	}
-	
-	static function checkUserForeverCookie() {
-		if (isset($_COOKIE['ccmUserHash']) && $_COOKIE['ccmUserHash']) {
-			$hash = $_COOKIE['ccmUserHash'];
-			$uID = UserValidationHash::getUserID($hash, UVTYPE_LOGIN_FOREVER);
-			if (is_numeric($uID) && $uID > 0) {
-				User::loginByUserID($uID);
-			}
-		}
-	}
 
 	function verifyAuthTypeCookie() {
 		if ($_COOKIE['ccmAuthUserHash']) {
@@ -351,22 +341,6 @@ class User extends Object {
 				User::loginByUserID($_uID);
 			}
 		}
-	}
-
-	/**
-	 * authenticatiion types will handle this
-	 * @depricated since before 5.6.3
-	*/
-	function setUserForeverCookie() {
-		$uHash = UserValidationHash::add($this->getUserID(), UVTYPE_LOGIN_FOREVER);
-		setcookie("ccmUserHash",
-			$uHash, 
-			time() + USER_FOREVER_COOKIE_LIFETIME, 
-			DIR_REL . '/', 
-			(defined('SESSION_COOKIE_PARAM_DOMAIN')?SESSION_COOKIE_PARAM_DOMAIN:''),
-			(defined('SESSION_COOKIE_PARAM_SECURE')?SESSION_COOKIE_PARAM_SECURE:false),
-			(defined('SESSION_COOKIE_PARAM_HTTPONLY')?SESSION_COOKIE_PARAM_HTTPONLY:false)
-			);
 	}
 
 	public function getUserGroupObjects() {
