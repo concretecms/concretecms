@@ -214,7 +214,7 @@ class Controller extends AbstractController
             $error->add($valt->getErrorMessage());
         }
 
-        if (preg_match("/[^A-Za-z0-9\\_]/", $args['akHandle'])) {
+        if (preg_match("/[^A-Za-z0-9_]/", $args['akHandle'])) {
             $error->add(t('Attribute handles may only contain letters, numbers and underscore "_" characters'));
         }
 
