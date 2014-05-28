@@ -12,7 +12,7 @@ $ownerName = $u->getUserName();
 		<img src="<?=$image->getPath()?>" alt="<?php echo t('Preview Image') ?>" />
 	</a>
 	<div class="ccm-gathering-tile-title-description">
-		<div class="ccm-gathering-tile-byline"><?php echo t('By '). '<span class="author-name">' .$ownerName. '</span>' ?></div>
+		<div class="ccm-gathering-tile-byline"><?php echo tc(/*i18n: %s is the name of the author */ 'Authored', 'By %s', '<span class="author-name">' . $ownerName . '</span>'); ?></div>
 		<div class="ccm-gathering-tile-description">
 		<?=$description?>
 		</div>

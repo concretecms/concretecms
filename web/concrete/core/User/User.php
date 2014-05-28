@@ -281,7 +281,15 @@ class User extends Object {
 		$cookie = array($this->getUserID(),$authType);
 		$at = AuthenticationType::getByHandle($authType);
 		$cookie[] = $at->controller->buildHash($this);
-		setcookie("ccmAuthUserHash", implode(':',$cookie), time() + 1209600, DIR_REL . '/', SESSION_COOKIE_PARAM_DOMAIN);
+		setcookie(
+			'ccmAuthUserHash',
+			implode(':', $cookie),
+			time() + USER_FOREVER_COOKIE_LIFETIME,
+			DIR_REL . '/',
+			defined('SESSION_COOKIE_PARAM_DOMAIN') ? SESSION_COOKIE_PARAM_DOMAIN : '',
+			defined('SESSION_COOKIE_PARAM_SECURE') ? SESSION_COOKIE_PARAM_SECURE : false,
+			defined('SESSION_COOKIE_PARAM_HTTPONLY') ? SESSION_COOKIE_PARAM_HTTPONLY : false
+		);
 	}
 
 	public function setLastAuthType(AuthenticationType $at) {

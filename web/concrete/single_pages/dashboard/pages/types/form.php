@@ -12,7 +12,7 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 		<form method="post" class="form-stacked" action="<?=$view->action('add_set', $pagetype->getPageTypeID())?>">
 			<?=Loader::helper('validation/token')->output('add_set')?>
 			<div class="control-group">
-				<?=$form->label('ptComposerFormLayoutSetName', t('Set Name'))?>
+				<?=$form->label('ptComposerFormLayoutSetName', tc('Name of a set', 'Set Name'))?>
 				<div class="controls">
 					<?=$form->text('ptComposerFormLayoutSetName')?>
 				</div>
@@ -58,7 +58,7 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 					<div data-edit-set-dialog="<?=$set->getPageTypeComposerFormLayoutSetID()?>">
 						<form data-edit-set-form="<?=$set->getPageTypeComposerFormLayoutSetID()?>" action="<?=$view->action('update_set', $set->getPageTypeComposerFormLayoutSetID())?>" method="post">
 						<div class="control-group">
-							<?=$form->label('ptComposerFormLayoutSetName', t('Set Name'))?>
+							<?=$form->label('ptComposerFormLayoutSetName', tc('Name of a set', 'Set Name'))?>
 							<div class="controls">
 								<?=$form->text('ptComposerFormLayoutSetName', $set->getPageTypeComposerFormLayoutSetName())?>
 							</div>
