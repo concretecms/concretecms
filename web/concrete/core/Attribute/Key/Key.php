@@ -486,6 +486,12 @@ class Key extends Object {
 		$dropColumns = array();
 		$definition = $cnt->getSearchIndexFieldDefinition();
 
+        /** @var \Concrete\Core\Database\Connection $db */
+        $db = Loader::db();
+        $platform = $db->getDatabasePlatform();
+        $sm = $db->getSchemaManager();
+        $toTable = $sm->listTableDetails($this->getIndexedSearchTable());
+
 		if ($prevHandle) {
 			if (isset($definition['type'])) {
 				$dropColumns[] = 'ak_' . $prevHandle;
@@ -497,19 +503,26 @@ class Key extends Object {
 		}
 
 		if (isset($definition['type'])) {
-			$fields[] = array('name' => 'ak_' . $this->akHandle,  'type' => $definition['type'], 'options' => $definition['options']);
+            if(!$toTable->hasColumn('ak_' . $this->akHandle)){
+                $fields[] = array(
+                    'name' => 'ak_' . $this->akHandle,
+                    'type' => $definition['type'],
+                    'options' => $definition['options']
+                );
+            }
 		} else {
 			foreach($definition as $name => $column) {
-				$fields[] = array('name' => 'ak_' . $this->akHandle . '_' . $name,  'type' => $column['type'], 'options' => $column['options']);
+                if(!$toTable->hasColumn('ak_' . $this->akHandle. '_' . $name)) {
+                    $fields[] = array(
+                        'name' => 'ak_' . $this->akHandle . '_' . $name,
+                        'type' => $column['type'],
+                        'options' => $column['options']
+                    );
+                }
 			}
 		}
-
-		$db = Loader::db();
-		$platform = $db->getDatabasePlatform();
-		$sm = $db->getSchemaManager();
 		
 		$fromTable = $sm->listTableDetails($this->getIndexedSearchTable());
-		$toTable = $sm->listTableDetails($this->getIndexedSearchTable());
 		$parser = new \Concrete\Core\Database\Schema\Parser\ArrayParser();
 		$comparator = new \Doctrine\DBAL\Schema\Comparator();
 
