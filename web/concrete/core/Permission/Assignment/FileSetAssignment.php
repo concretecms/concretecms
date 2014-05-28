@@ -5,6 +5,11 @@ use FileSet;
 use Loader;
 class FileSetAssignment extends Assignment {
 	
+	public function __construct(FileSet $fs)
+	{
+		$this->setPermissionObject($fs);
+	}
+
 	public function setPermissionObject(FileSet $fs) {
 		$this->permissionObject = $fs;
 		

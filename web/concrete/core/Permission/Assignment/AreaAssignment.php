@@ -25,6 +25,11 @@ class AreaAssignment extends Assignment {
 		'add_stack_to_area' => 'add_stack'
 	);
 
+	public function __construct(Area $a)
+	{
+		$this->setPermissionObject($a);
+	}
+
 	public function setPermissionObject(Area $a) {
 		$ax = $a;
 		if ($a->isGlobalArea()) {
