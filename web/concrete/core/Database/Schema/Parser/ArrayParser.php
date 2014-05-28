@@ -6,10 +6,8 @@ class ArrayParser {
 
 	public function addColumns(\Doctrine\DBAL\Schema\Table $table, $columns) {
 		foreach($columns as $column) {
-            try {
+            if(!$table->hasColumn($column['name'])){
                 $field = $table->addColumn($column['name'], $column['type'], $column['options']);
-            } catch( \Doctrine\DBAL\Schema\SchemaException $e) {
-                //carry on... this field is probably already in the list
             }
 		}
 		return $table;

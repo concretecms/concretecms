@@ -18,7 +18,7 @@ class Controller extends AttributeTypeController  {
 		$value = $this->getValue();
 		$rt = Loader::helper('rating');
 		$this->requireAsset('css', 'jquery/rating');
-		return $rt->output($akHandle . time(), $value);
+		return $rt->output($this->attributeKey->getAttributeKeyHandle() . time(), $value);
 	}
 
 	public function form() {
