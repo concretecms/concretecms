@@ -2,6 +2,7 @@
 namespace Concrete\Core\Gathering\Item;
 use Loader;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Gathering\DataSource\DataSource as GatheringDataSource;
 abstract class Item extends Object {
 
 	abstract public function loadDetails();
@@ -111,7 +112,7 @@ abstract class Item extends Object {
 		}
 	}
 
-	protected static function getListByKey($ags, $gaiKey) {
+	protected static function getListByKey(GatheringDataSource $ags, $gaiKey) {
 		$db = Loader::db();
 		$r = $db->Execute('select gaiID from GatheringItems where gasID = ? and gaiKey = ?', array(
 			$ags->getGatheringDataSourceID(), $gaiKey
@@ -131,9 +132,9 @@ abstract class Item extends Object {
 		$gaiDateTimeCreated = Loader::helper('date')->getSystemDateTime();
 		$r = $db->Execute('insert into GatheringItems (gaID, gasID, gaiDateTimeCreated, gaiPublicDateTime, gaiTitle, gaiKey, gaiSlotWidth, gaiSlotHeight) values (?, ?, ?, ?, ?, ?, ?, ?)', array(
 			$ag->getGatheringID(),
-			$ags->getGatheringDataSourceID(), 
+			$ags->getGatheringDataSourceID(),
 			$gaiDateTimeCreated,
-			$gaiPublicDateTime, 
+			$gaiPublicDateTime,
 			$gaiTitle,
 			$gaiKey,
 			$gaiSlotWidth,
@@ -146,9 +147,9 @@ abstract class Item extends Object {
 	public function duplicate(Gathering $gathering) {
 		$db = Loader::db();
 		$gaID = $gathering->getGatheringID();
-		$db->Execute('insert into GatheringItems (gaID, gasID, gaiDateTimeCreated, gaiPublicDateTime, gaiTitle, gaiKey, gaiSlotWidth, gaiSlotHeight, gaiBatchTimestamp, gaiBatchDisplayOrder) 
+		$db->Execute('insert into GatheringItems (gaID, gasID, gaiDateTimeCreated, gaiPublicDateTime, gaiTitle, gaiKey, gaiSlotWidth, gaiSlotHeight, gaiBatchTimestamp, gaiBatchDisplayOrder)
 			values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', array(
-				$gaID, $this->getGatheringDataSourceID(), $this->gaiDateTimeCreated, $this->gaiPublicDateTime, 
+				$gaID, $this->getGatheringDataSourceID(), $this->gaiDateTimeCreated, $this->gaiPublicDateTime,
 				$this->gaiTitle, $this->gaiKey, $this->gaiSlotWidth, $this->gaiSlotHeight, $this->gaiBatchTimestamp, $this->gaiBatchDisplayOrder
 			)
 		);
@@ -174,7 +175,7 @@ abstract class Item extends Object {
 		$assignments = GatheringItemFeatureAssignment::getList($this);
 		foreach($assignments as $as) {
 			$as->delete();
-		}		
+		}
 	}
 
 	public function addFeatureAssignment($feHandle, $mixed) {
