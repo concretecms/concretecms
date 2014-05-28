@@ -2,27 +2,29 @@
  * block ajax
  */
 
-!function(global, $) {
+/* jshint unused:vars, undef:true, browser:true */
+/* global $, _, ConcreteEvent, ConcreteStyleCustomizerPalette */
+
+(function(global, $) {
     'use strict';
 
     function ConcreteTypographySelector($element, options) {
-        'use strict';
-        var my = this,
-            options = $.extend({
-                'inputName': false,
-                'fontFamily': false,
-                'color': false,
-                'bold': false,
-                'italic': false,
-                'underline': false,
-                'uppercase': false,
-                'fontSizeValue': false,
-                'fontSizeUnit': 'px',
-                'letterSpacingValue': false,
-                'letterSpacingUnit': 'px',
-                'lineHeightValue': false,
-                'lineHeightUnit': 'px'
-            }, options);
+        var my = this, $field, $slider;
+        options = $.extend({
+            'inputName': false,
+            'fontFamily': false,
+            'color': false,
+            'bold': false,
+            'italic': false,
+            'underline': false,
+            'uppercase': false,
+            'fontSizeValue': false,
+            'fontSizeUnit': 'px',
+            'letterSpacingValue': false,
+            'letterSpacingUnit': 'px',
+            'lineHeightValue': false,
+            'lineHeightUnit': 'px'
+        }, options);
 
         ConcreteStyleCustomizerPalette.call(my, $element, options);
 
@@ -94,8 +96,8 @@
         }
 
         if (my.options.fontSizeValue) {
-            var $field = my.$widget.find('div[data-style-customizer-field=font-size]');
-            var $slider = $field.find('div.ccm-style-customizer-slider');
+            $field = my.$widget.find('div[data-style-customizer-field=font-size]');
+            $slider = $field.find('div.ccm-style-customizer-slider');
             $slider.slider('value', my.options.fontSizeValue);
             if (my.options.fontSizeUnit == 'em') {
                 $slider.slider('option', 'step', 0.1);
@@ -106,8 +108,8 @@
             my.setValue('font-size', my.options.fontSizeValue);
         }
         if (my.options.letterSpacingValue) {
-            var $field = my.$widget.find('div[data-style-customizer-field=letter-spacing]');
-            var $slider = $field.find('div.ccm-style-customizer-slider');
+            $field = my.$widget.find('div[data-style-customizer-field=letter-spacing]');
+            $slider = $field.find('div.ccm-style-customizer-slider');
             $slider.slider('value', my.options.letterSpacingValue);
             if (my.options.letterSpacingUnit == 'em') {
                 $slider.slider('option', 'step', 0.1);
@@ -119,8 +121,8 @@
         }
 
         if (my.options.lineHeightValue) {
-            var $field = my.$widget.find('div[data-style-customizer-field=line-height]');
-            var $slider = $field.find('div.ccm-style-customizer-slider');
+            $field = my.$widget.find('div[data-style-customizer-field=line-height]');
+            $slider = $field.find('div.ccm-style-customizer-slider');
             $slider.slider('value', my.options.lineHeightValue);
             if (my.options.lineHeightUnit == 'em') {
                 $slider.slider('option', 'step', 0.1);
@@ -137,7 +139,7 @@
 
     ConcreteTypographySelector.prototype = Object.create(ConcreteStyleCustomizerPalette.prototype);
 
-    ConcreteTypographySelector.prototype.fonts = ['Arial','Helvetica', 'Georgia', 'Verdana', 'Trebuchet MS', 'Book Antiqua', 'Tahoma', 'Times New Roman', 'Courier New', 'Arial Black', 'Comic Sans MS'],
+    ConcreteTypographySelector.prototype.fonts = ['Arial','Helvetica', 'Georgia', 'Verdana', 'Trebuchet MS', 'Book Antiqua', 'Tahoma', 'Times New Roman', 'Courier New', 'Arial Black', 'Comic Sans MS'];
     ConcreteTypographySelector.prototype.chooseTemplate = '<span class="ccm-style-customizer-display-swatch" data-launch="style-customizer-palette">' +
         '<input type="hidden" name="<%=options.inputName%>[font-family]" data-style-customizer-input="font-family" />' +
         '<input type="hidden" name="<%=options.inputName%>[color]" data-style-customizer-input="color" />' +
@@ -151,18 +153,18 @@
         '<input type="hidden" name="<%=options.inputName%>[letter-spacing][unit]" value="<%=options.letterSpacingUnit%>" />' +
         '<input type="hidden" name="<%=options.inputName%>[line-height][size]" data-style-customizer-input="line-height" />' +
         '<input type="hidden" name="<%=options.inputName%>[line-height][unit]" value="<%=options.lineHeightUnit%>" />' +
-        '<span>T</span></span>',
+        '<span>T</span></span>';
 
     ConcreteTypographySelector.prototype.selectorWidgetTemplate = '<div class="ccm-ui ccm-style-customizer-palette">' +
-        '<div><select data-style-customizer-field="font"><option value="">Choose Font</option></select> <input type="text" data-style-customizer-field="color"></div>' +
-        '<div class="checkbox"><label><input type="checkbox" class="ccm-flat-checkbox" data-style-customizer-field="bold"> Bold</label></div>' +
-        '<div class="checkbox"><label><input type="checkbox" class="ccm-flat-checkbox" data-style-customizer-field="italic"> Italic</label></div>' +
-        '<div class="checkbox"><label><input type="checkbox" class="ccm-flat-checkbox" data-style-customizer-field="underline"> Underline</label></div>' +
-        '<div class="checkbox"><label><input type="checkbox" class="ccm-flat-checkbox" data-style-customizer-field="uppercase"> Uppercase</label></div>' +
-        '<div><label>Font Size</label><div data-style-customizer-field="font-size"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><span class="ccm-style-customizer-number"></span><span class="ccm-style-customizer-unit">px</span></span></div></div>' +
-        '<div><label>Letter Spacing</label><div data-style-customizer-field="letter-spacing"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><span class="ccm-style-customizer-number"></span><span class="ccm-style-customizer-unit">px</span></span></div></div>' +
-        '<div><label>Line Height</label><div data-style-customizer-field="line-height"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><span class="ccm-style-customizer-number"></span><span class="ccm-style-customizer-unit">px</span></span></div></div>' +
-        '<div class="ccm-style-customizer-palette-actions"><button class="btn btn-primary">Save</button></div>' +
+        '<div><select data-style-customizer-field="font"><option value=""><%=i18n.chooseFont%></option></select> <input type="text" data-style-customizer-field="color"></div>' +
+        '<div class="checkbox"><label><input type="checkbox" class="ccm-flat-checkbox" data-style-customizer-field="bold"> <%=i18n.bold%></label></div>' +
+        '<div class="checkbox"><label><input type="checkbox" class="ccm-flat-checkbox" data-style-customizer-field="italic"> <%=i18n.italic%></label></div>' +
+        '<div class="checkbox"><label><input type="checkbox" class="ccm-flat-checkbox" data-style-customizer-field="underline"> <%=i18n.underline%></label></div>' +
+        '<div class="checkbox"><label><input type="checkbox" class="ccm-flat-checkbox" data-style-customizer-field="uppercase"> <%=i18n.uppercase%></label></div>' +
+        '<div><label><%=i18n.fontSize%></label><div data-style-customizer-field="font-size"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><span class="ccm-style-customizer-number"></span><span class="ccm-style-customizer-unit">px</span></span></div></div>' +
+        '<div><label><%=i18n.letterSpacing%></label><div data-style-customizer-field="letter-spacing"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><span class="ccm-style-customizer-number"></span><span class="ccm-style-customizer-unit">px</span></span></div></div>' +
+        '<div><label><%=i18n.lineHeight%></label><div data-style-customizer-field="line-height"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><span class="ccm-style-customizer-number"></span><span class="ccm-style-customizer-unit">px</span></span></div></div>' +
+        '<div class="ccm-style-customizer-palette-actions"><button class="btn btn-primary"><%=i18n.save%></button></div>' +
         '</div>';
 
     ConcreteTypographySelector.prototype.updateSwatch = function() {
@@ -192,7 +194,7 @@
         $swatch.css('letter-spacing', my.getValue('letter-spacing') + my.options.unit);
         $swatch.css('font-size', my.getValue('font-size') + my.options.unit);
 
-    }
+    };
 
     ConcreteTypographySelector.prototype.save = function (e) {
         var my = this;
@@ -208,15 +210,15 @@
         my.updateSwatch();
         ConcreteEvent.publish('StyleCustomizerControlUpdate');
         my.closeSelector(e);
-    }
+    };
 
     // jQuery Plugin
     $.fn.concreteTypographySelector = function(options) {
         return $.each($(this), function(i, obj) {
             new ConcreteTypographySelector($(this), options);
         });
-    }
+    };
 
     global.ConcreteTypographySelector = ConcreteTypographySelector;
 
-}(this, $);
+})(this, $);
