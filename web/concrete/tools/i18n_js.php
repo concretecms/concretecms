@@ -87,7 +87,19 @@ var ccmi18n = {
 	user_group_add: "<?=t('Add to Group')?>",
 	none: "<?=t('None')?>",
 	editModeMsg: "<?=t("Let's start editing a page.")?>",
-	editMode: "<?=t('Edit Mode')?>"
+	editMode: "<?=t('Edit Mode')?>",
+	save: "<?=t('Save')?>",
+	currentImage: "<?=t('Current Image')?>",
+	image: "<?=t('Image')?>",
+	size: "<?=t('Size')?>",
+	chooseFont: "<?=t('Choose Font')?>",
+	bold: "<?=t('Bold')?>",
+	italic: "<?=t('Italic')?>",
+	underline: "<?=t('Underline')?>",
+	uppercase: "<?=t('Uppercase')?>",
+	fontSize: "<?=t('Font Size')?>",
+	letterSpacing: "<?=t('Letter spacing')?>",
+	lineHeight: "<?=t('Line Height')?>"
 }
 
 var ccmi18n_editor = {
