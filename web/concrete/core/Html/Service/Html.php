@@ -31,7 +31,7 @@ class Html {
 			$asset->setAssetIsLocal(false);
 		} else if (substr($file, 0, 1) == '/') {
 			$asset->setAssetURL($file);
-			$asset->setAssetPath(DIR_APPLICATION . $file);
+			$asset->setAssetPath(DIR_BASE . $file);
 		} else {
 			$v = View::getInstance();
 			// checking the theme directory for it. It's just in the root.
