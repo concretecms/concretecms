@@ -11,7 +11,11 @@ class Page extends Item {
 
 	public static function getListByItem($mixed) {
 		$ags = GatheringDataSource::getByHandle('page');
-		return Item::getListByKey($ags, $mixed->getCollectionID());
+        if (is_object($ags)) {
+    		return Item::getListByKey($ags, $mixed->getCollectionID());
+        } else {
+            return array();
+        }
 	}
 
 	public static function add(GatheringDataSourceConfiguration $configuration, Page $c) {
