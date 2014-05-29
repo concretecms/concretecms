@@ -45,6 +45,7 @@ function ConcretePanel(options) {
     this.onPanelLoad = function(element) {
         this.setupSubPanels();
         this.setupPanelDetails();
+        ConcretePanelManager.checkShadowVisibility();
     };
 
     this.hide = function() {
@@ -459,7 +460,34 @@ var ConcretePanelManager = (function ConcretePanelManagerGenerator() {
                     return panels[i];
                 }
             }
+        },
+
+        checkShadowVisibility: function() {
+           $.each(panels, function() {
+              if((this.options.position != 'left')) {
+                 return;
+              }
+              var $panel = $('#' + this.getDOMID());
+              if(!$panel.is(':visible')) {
+            	  return;
+              }
+              var $panelContent = $panel.find('.ccm-panel-content');
+              if(!$panelContent.length) {
+            	  return;
+              }
+              var $shadow = $panel.closest('.ccm-panel').find('.ccm-panel-shadow-layer');
+              if($panelContent.get(0).scrollHeight > $panelContent.innerHeight()) {
+            	  $shadow.hide();
+              }
+              else {
+            	  $shadow.show();
+              }
+           });
         }
 
     };
 }());
+
+$(window).on('resize', function() {
+	ConcretePanelManager.checkShadowVisibility();
+});
