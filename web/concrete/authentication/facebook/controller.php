@@ -1,7 +1,12 @@
 <?php
 namespace Concrete\Authentication\Facebook;
+
 use \Concrete\Core\Authentication\AuthenticationTypeController;
 use User;
+use Loader;
+use View;
+use Session;
+
 class Controller extends AuthenticationTypeController {
 
 	public $apiMethods = array('callback','status','detachUser');
@@ -40,9 +45,9 @@ class Controller extends AuthenticationTypeController {
 		$this->completeAuthentication();
 	}
 
-	public function config($key,$value=false) {
+	public function config($key, $value = false) {
 		$db = Loader::db();
-		if (!$value) {
+		if ($value === false) {
 			return $db->getOne('SELECT value FROM authTypeFacebookSettings WHERE setting=?',array($key));
 		}
 		$db->execute('DELETE FROM authTypeFacebookSettings WHERE setting=?',array($key));
@@ -125,7 +130,7 @@ class Controller extends AuthenticationTypeController {
 		$config = array();
 		$config['appId'] = $this->config('apikey');
 		$config['secret'] = $this->config('apisecret');
-		$this->_consumer = new Facebook($config);
+		$this->_consumer = new \Facebook($config);
 		return $this->getConsumer();
 	}
 
@@ -133,7 +138,7 @@ class Controller extends AuthenticationTypeController {
 		$consumer = $this->getConsumer();
 		$params = array(
 		  'scope' => 'email,user_birthday,user_location,user_photos,user_status,user_website',
-		  'redirect_uri' => BASE_URL.view::url('/login','callback','facebook'),
+		  'redirect_uri' => BASE_URL . View::url('/login','callback','facebook'),
 		  'display' => 'popup'
 		);
 		$loginUrl = $consumer->getLoginUrl($params);
