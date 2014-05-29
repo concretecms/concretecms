@@ -3,7 +3,7 @@
 <div class='control-group'>
     <?=$form->label('apikey', t('Api Key'))?>
     <div class='controls'>
-        <?=$form->text('apikey',$apikey)?>
+        <?=$form->text('apikey', $apikey)?>
     </div>
 </div>
 <div class='control-group'>
@@ -12,3 +12,4 @@
         <?=$form->text('apisecret', $apisecret)?>
     </div>
 </div>
+<p><?php echo t('<a href="%s" target="_blank">Click here</a> to obtain your access keys.', 'https://developers.facebook.com/apps/'); ?></p>
