@@ -4,16 +4,18 @@ use Concrete\Core\Attribute\Key\Category;
 class CollectionAttributeTest extends AttributeTestCase {
 	
 	protected $fixtures = array();
+    protected $category;
     protected $keys = array(
         'exclude_nav' => array('akName' => 'Exclude from Nav', 'type' => 'boolean'),
         'exclude_page_list' => array('akName' => 'Exclude from Page List', 'type' => 'boolean'),
-        'exclude_search_index' => array('akName' => 'Exclude from Search Index', 'type' => 'boolean'),
         'exclude_sitemapxml' => array('akName' => 'Exclude from Sitemap XML', 'type' => 'boolean'),
         'header_extra_content' => array('akName' => 'Header Extra Content', 'type' => 'textarea'),
         'meta_keywords' => array('akName' => 'Header Extra Content', 'type' => 'text'),
         'meta_description' => array('akName' => 'Header Extra Content', 'type' => 'text'),
         'meta_title' => array('akName' => 'Meta Title', 'type' => 'text')
     );
+
+    protected $indexQuery = 'select * from CollectionSearchIndexAttributes where cID = 1';
 
     protected function getAttributeKeyClass()
     {
@@ -31,12 +33,19 @@ class CollectionAttributeTest extends AttributeTestCase {
             'Collections',
             'CollectionAttributeValues',
             'Pages',
+            'PagePaths',
+            'PageSearchIndex',
             'CollectionSearchIndexAttributes',
-            'CollectionVersions')
+            'CollectionVersions',
+            'CollectionVersionBlocks',
+            'GatheringDataSources')
         );
-        Category::add('collection');
-        $this->object = Page::addHomePage();
         parent::setUp();
+    }
+
+    protected function installAttributeCategoryAndObject() {
+        $this->category = Category::add('collection');
+        $this->object = Page::addHomePage();
     }
 
     public function attributeValues() {
@@ -48,12 +57,6 @@ class CollectionAttributeTest extends AttributeTestCase {
                 '0'
             ),
             array('exclude_page_list',
-                true,
-                false,
-                '1',
-                '0'
-            ),
-            array('exclude_search_index',
                 true,
                 false,
                 '1',
@@ -84,11 +87,28 @@ class CollectionAttributeTest extends AttributeTestCase {
         );
     }
 
+    public function attributeIndexTableValues()
+    {
+        return array(
+            array('exclude_nav',
+                true,
+                array(
+                    'ak_exclude_nav' => '1'
+                )
+            ),
+            array('meta_title',
+                'Fun Page',
+                array(
+                    'ak_meta_title' => 'Fun Page'
+                )
+            )
+        );
+    }
+
     public function attributeHandles() {
         return array(
             array('exclude_nav'),
             array('exclude_page_list'),
-            array('exclude_search_index'),
             array('exclude_sitemapxml'),
             array('header_extra_content'),
             array('meta_keywords'),
