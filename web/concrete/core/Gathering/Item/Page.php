@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Gathering\Item;
 use Loader;
+use Concrete\Core\Gathering\DataSource\DataSource as GatheringDataSource;
 class Page extends Item {
 
 	public function canViewGatheringItem() {
@@ -10,7 +11,7 @@ class Page extends Item {
 
 	public static function getListByItem($mixed) {
 		$ags = GatheringDataSource::getByHandle('page');
-		return GatheringItem::getListByKey($ags, $mixed->getCollectionID());
+		return Item::getListByKey($ags, $mixed->getCollectionID());
 	}
 
 	public static function add(GatheringDataSourceConfiguration $configuration, Page $c) {
