@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\StyleCustomizer\Style;
+
 use Core;
 use \Concrete\Core\StyleCustomizer\Style\Value\ColorValue;
 use Less_Tree_Color;
@@ -7,6 +8,8 @@ use Less_Tree_Call;
 use Less_Tree_Dimension;
 use View;
 use Request;
+use \Concrete\Core\Http\Service\Json;
+
 class ColorStyle extends Style {
 
     public function render($value = false) {
@@ -23,9 +26,21 @@ class ColorStyle extends Style {
         $view = View::getInstance();
         $view->requireAsset('core/colorpicker');
 
+        $json = new Json();
+
         print "<input type=\"text\" name=\"{$inputName}[color]\" value=\"{$color}\" id=\"ccm-colorpicker-{$inputName}\" />";
         print "<script type=\"text/javascript\">";
-        print "$(function() { $('#ccm-colorpicker-{$inputName}').spectrum({showInput: true, showInitial: true, className: 'ccm-widget-colorpicker', showAlpha: true, value: '{$color}', change: function() {ConcreteEvent.publish('StyleCustomizerControlUpdate');}});});";
+        print "$(function() { $('#ccm-colorpicker-{$inputName}').spectrum({
+            showInput: true,
+            showInitial: true,
+            className: 'ccm-widget-colorpicker',
+            showAlpha: true,
+            value: " . $json->encode($color) . ",
+            cancelText: " . $json->encode(t('Cancel')) . ",
+            chooseText: " . $json->encode(t('Choose')) . ",
+            clearText: " . $json->encode(t('Clear Color Selection')) . ",
+            change: function() {ConcreteEvent.publish('StyleCustomizerControlUpdate');}
+        });});";
         print "</script>";
     }
 

@@ -4,6 +4,9 @@
 		<testsuite name="BlockTypes">
 			<directory>tests/Block/</directory>
 		</testsuite>
+        <testsuite name="Attributes">
+            <directory>tests/Attribute/</directory>
+        </testsuite>
 		<testsuite name="Core">
 			<directory>tests/Core/</directory>
 		</testsuite>

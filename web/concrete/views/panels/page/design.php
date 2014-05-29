@@ -21,7 +21,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     $selected = true;
                 }
                 ?>
-                <label class="list-group-item"><input type="radio" class="ccm-flat-radio" value="<?=$tmp->getPageTemplateID()?>" name="pTemplateID" <? if ($selected) { ?>checked<? } ?> /> <?=$tmp->getPageTemplateName()?>
+                <label class="list-group-item"><input type="radio" class="ccm-flat-radio" value="<?=$tmp->getPageTemplateID()?>" name="pTemplateID" <? if ($selected) { ?>checked<? } ?> /> <?=$tmp->getPageTemplateDisplayName()?>
                     <?=$tmp->getPageTemplateIconImage()?>
                 </label>
                 <? if ($selected) { ?>
