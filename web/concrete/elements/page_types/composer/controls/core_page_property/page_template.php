@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $templates = array();
 $pagetype = $set->getPagetypeObject();
 foreach($pagetype->getPageTypePageTemplateObjects() as $template) {
-	$templates[$template->getPageTemplateID()] = $template->getPageTemplateName();
+	$templates[$template->getPageTemplateID()] = $template->getPageTemplateDisplayName();
 }
 $ptComposerPageTemplateID = $control->getPageTypeComposerControlDraftValue();
 if (!$ptComposerPageTemplateID) {

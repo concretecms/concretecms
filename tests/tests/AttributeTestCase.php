@@ -24,6 +24,7 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase {
     abstract protected function getAttributeKeyClass();
     abstract public function attributeValues();
     abstract public function attributeHandles();
+    abstract protected function installAttributeCategoryAndObject();
 
     protected function getAttributeObjectForSet()
     {
@@ -38,6 +39,7 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase {
 
     protected function setUp() {
         parent::setUp();
+        $this->installAttributeCategoryAndObject();
         AttributeType::add('boolean', 'Boolean');
         AttributeType::add('textarea', 'Textarea');
         AttributeType::add('text', 'text');
@@ -56,9 +58,9 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase {
         $this->getAttributeObjectForSet()->setAttribute($handle,$first);
         $attribute = $this->getAttributeObjectForGet()->getAttribute($handle);
         if($firstStatic != null){
-            $this->assertSame($attribute,$firstStatic);
+            $this->assertSame($firstStatic, $attribute);
         } else {
-            $this->assertSame($attribute,$first);
+            $this->assertSame($first, $attribute);
         }
     }
 
@@ -76,6 +78,25 @@ abstract class AttributeTestCase extends ConcreteDatabaseTestCase {
             $this->assertSame($attribute,$secondStatic);
         } else {
             $this->assertSame($attribute,$second);
+        }
+    }
+
+    /**
+     *  @dataProvider attributeIndexTableValues
+     */
+    public function testReindexing($handle, $value, $columns)
+    {
+        $object = $this->getAttributeObjectForSet();
+        $object->setAttribute($handle, $value);
+        $object = $this->getAttributeObjectForGet();
+        $object->reindex();
+
+        $db = Database::get();
+        $r = $db->query($this->indexQuery);
+        $row = $r->fetch();
+        foreach($columns as $column => $value) {
+            $this->assertTrue(isset($row[$column]));
+            $this->assertEquals($value, $row[$column]);
         }
     }
 

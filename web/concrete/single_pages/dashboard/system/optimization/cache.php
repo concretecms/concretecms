@@ -6,14 +6,14 @@
     <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Stores the output of blocks which support block caching')?>"><?=t('Block Cache')?></legend>
 
     <div class="radio">
-        <label for="ENABLE_BLOCK_CACHE">
+        <label>
             <input type="radio" name="ENABLE_BLOCK_CACHE" value="0" <?php if (ENABLE_BLOCK_CACHE == false) { ?> checked <?php  } ?> />
             <span><?=t('Off - Good for development of custom blocks.')?></span>
         </label>
     </div>
 
     <div class="radio">
-        <label for="ENABLE_BLOCK_CACHE">
+        <label>
             <input type="radio" name="ENABLE_BLOCK_CACHE" value="1" <?php if (ENABLE_BLOCK_CACHE == true) { ?> checked <?php  } ?> />
             <span><?=t('On - Helps speed up a live site.')?></span>
         </label>
@@ -24,14 +24,14 @@
         <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Stores the generation of CSS and JavaScript assets')?>"><?=t('CSS and JavaScript Cache')?></legend>
 
         <div class="radio">
-            <label for="ENABLE_ASSET_CACHE">
+            <label>
                 <input type="radio" name="ENABLE_ASSET_CACHE" value="0" <?php if (ENABLE_ASSET_CACHE == false) { ?> checked <?php  } ?> />
                 <span><?=t('Off - Good for active theme and block development.')?></span>
             </label>
         </div>
 
         <div class="radio">
-            <label for="ENABLE_ASSET_CACHE">
+            <label>
                 <input type="radio" name="ENABLE_ASSET_CACHE" value="1" <?php  if (ENABLE_ASSET_CACHE == true) { ?> checked <?php  } ?> />
                 <span><?=t('On - Helps speed up a live site.')?></span>
             </label>
@@ -42,14 +42,14 @@
         <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Stores the location and existence of source code files')?>"><?=t('Overrides Cache')?></legend>
 
         <div class="radio">
-            <label for="ENABLE_OVERRIDE_CACHE">
+            <label>
                 <input type="radio" name="ENABLE_OVERRIDE_CACHE" value="0" <?php  if (ENABLE_OVERRIDE_CACHE == false) { ?> checked <?php  } ?> />
                 <span><?=t('Off - Good for development.')?></span>
             </label>
         </div>
 
         <div class="radio">
-            <label for="ENABLE_OVERRIDE_CACHE">
+            <label>
                 <input type="radio" name="ENABLE_OVERRIDE_CACHE" value="1" <?php  if (ENABLE_OVERRIDE_CACHE == true) { ?> checked <?php  } ?> />
                 <span><?=t('On - Helps speed up a live site.')?></span>
             </label>
@@ -59,21 +59,21 @@
     <fieldset style="margin-bottom: 15px">
         <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Stores the output of an entire page')?>"><?=t('Full Page Caching')?></legend>
         <div class="radio">
-            <label for="FULL_PAGE_CACHE_GLOBAL">
+            <label>
                 <input type="radio" name="FULL_PAGE_CACHE_GLOBAL" value="0" <?php  if (FULL_PAGE_CACHE_GLOBAL == 0) { ?> checked <?php  } ?> />
                 <span><?=t('Off - Turn it on by hand for specific pages.')?></span>
             </label>
         </div>
 
         <div class="radio">
-            <label for="FULL_PAGE_CACHE_GLOBAL">
+            <label>
                 <input type="radio" name="FULL_PAGE_CACHE_GLOBAL" value="blocks" <?php  if (FULL_PAGE_CACHE_GLOBAL == 'blocks') { ?> checked <?php  } ?> />
                 <span><?=t('On - If blocks on the particular page allow it.')?></span>
             </label>
         </div>
 
         <div class="radio">
-            <label for="FULL_PAGE_CACHE_GLOBAL">
+            <label>
                 <input type="radio" name="FULL_PAGE_CACHE_GLOBAL" value="all" <?php  if (FULL_PAGE_CACHE_GLOBAL == 'all') { ?> checked <?php  } ?> />
                 <span><?=t('On - In all cases.')?></span>
             </label>
@@ -84,21 +84,21 @@
         <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Sets the amount of time to store the page output before generating a new version')?>"><?=t('Expire Pages from Cache')?></legend>
 
         <div class="radio">
-          <label for="FULL_PAGE_CACHE_LIFETIME">
+          <label>
               <input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="default" <?php  if (FULL_PAGE_CACHE_LIFETIME == 'default') { ?> checked <?php  } ?> />
               <span><?=t('Every %s (default setting).', Loader::helper('date')->timeSince(time()-CACHE_LIFETIME))?></span>
           </label>
         </div>
 
         <div class="radio">
-            <label for="FULL_PAGE_CACHE_LIFETIME">
+            <label>
                 <input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="forever" <?php  if (FULL_PAGE_CACHE_LIFETIME == 'forever') { ?> checked <?php  } ?> />
                 <span><?=t('Only when manually removed or the cache is cleared.')?></span>
             </label>
         </div>
 
         <div class="radio">
-            <label for="FULL_PAGE_CACHE_LIFETIME">
+            <label>
                 <input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="custom" style="margin-bottom:1px; vertical-align:text-bottom;" <?php if (FULL_PAGE_CACHE_LIFETIME == 'custom') { ?> checked <?php  } ?> />
                 <span>
                     <?=t('Every ')?>
