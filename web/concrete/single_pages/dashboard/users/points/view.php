@@ -13,7 +13,7 @@ Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Community
 <?php echo $form_user_selector->quickSelect('uName',$_GET['uName']);?>
 
 	
-<input type="submit" value="Search" class="btn" />
+<input type="submit" value="<?=t('Search')?>" class="btn" />
 <a href="<?=View::url('/dashboard/users/points/assign')?>" class="btn btn-primary"><?=t('Add')?></a>
 
 </div>
