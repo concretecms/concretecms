@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Core\Support\Symbol\ClassSymbol\MethodSymbol;
 
-class MethodSymbol {
+class MethodSymbol
+{
 
     /**
      * @var \ReflectionMethod
@@ -29,7 +30,8 @@ class MethodSymbol {
     /**
      * @param \ReflectionMethod $method
      */
-    public function __construct(\ReflectionMethod $method) {
+    public function __construct(\ReflectionMethod $method)
+    {
         $this->reflectionMethod = $method;
         $this->parameters = $method->getParameters();
         $this->handle = $method->getName();
@@ -39,7 +41,8 @@ class MethodSymbol {
      * Render the Method
      * @return string
      */
-    public function render() {
+    public function render()
+    {
         $method = $this->reflectionMethod;
         if ($method->isPrivate() || substr($method->getName(), 0, 2) === '__' || $method->isAbstract()) {
             return '';
@@ -121,6 +124,5 @@ class MethodSymbol {
         $rendered .= "\n}\n";
         return $rendered;
     }
-
 
 }
