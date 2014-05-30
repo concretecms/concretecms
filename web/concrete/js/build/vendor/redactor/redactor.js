@@ -173,7 +173,7 @@
             buttonSource: true,
 
             buttons: ['html', 'formatting', 'bold', 'italic', 'deleted', 'unorderedlist', 'orderedlist',
-                      'outdent', 'indent', 'image', 'video', 'file', 'table', 'link', 'alignment', '|',
+                      'outdent', 'indent', 'image', /* concrete5* /* 'video', */ 'file', 'table', 'link', 'alignment', '|',
                       'horizontalrule'], // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
             buttonsHideOnMobile: [],
 
@@ -2752,6 +2752,10 @@
                     return 'fa fa-font';
                 case 'fontsize':
                     return 'fa fa-text-height';
+                case 'fontcolor':
+                    return 'fa fa-tint';
+                case 'backcolor':
+                    return 'fa fa-tint';
                 default:
                     return 'fa fa-' + btnName;
 
