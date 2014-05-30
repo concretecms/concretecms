@@ -1,4 +1,4 @@
-// Spectrum Colorpicker v1.2.0
+// Spectrum Colorpicker v1.3.4
 // https://github.com/bgrins/spectrum
 // Author: Brian Grinstead
 // License: MIT
@@ -29,11 +29,14 @@
         maxSelectionSize: 7,
         cancelText: "cancel",
         chooseText: "choose",
+        clearText: "Clear Color Selection",
         preferredFormat: false,
-        className: "",
+        className: "", // Deprecated - use containerClassName and replacerClassName instead.
+        containerClassName: "",
+        replacerClassName: "",
         showAlpha: false,
         theme: "sp-light",
-        palette: ['fff', '000'],
+        palette: [["#ffffff", "#000000", "#ff0000", "#ff8000", "#ffff00", "#008000", "#0000ff", "#4b0082", "#9400d3"]],
         selectionPalette: [],
         disabled: false
     },
@@ -86,7 +89,7 @@
                                     "</div>",
                                 "</div>",
                             "</div>",
-                            "<div class='sp-clear sp-clear-display' title='Clear Color Selection'>",
+                            "<div class='sp-clear sp-clear-display'>",
                             "</div>",
                             "<div class='sp-hue'>",
                                 "<div class='sp-slider'></div>",
@@ -101,14 +104,14 @@
                     "<div class='sp-initial sp-thumb sp-cf'></div>",
                     "<div class='sp-button-container sp-cf'>",
                         "<a class='sp-cancel' href='#'></a>",
-                        "<button class='sp-choose'></button>",
+                        "<button type='button' class='sp-choose'></button>",
                     "</div>",
                 "</div>",
             "</div>"
         ].join("");
     })();
 
-    function paletteTemplate (p, color, className) {
+    function paletteTemplate (p, color, className, tooltipFormat) {
         var html = [];
         for (var i = 0; i < p.length; i++) {
             var current = p[i];
@@ -117,8 +120,9 @@
                 var c = tiny.toHsl().l < 0.5 ? "sp-thumb-el sp-thumb-dark" : "sp-thumb-el sp-thumb-light";
                 c += (tinycolor.equals(color, current)) ? " sp-thumb-active" : "";
 
+                var formattedString = tiny.toString(tooltipFormat || "rgb");
                 var swatchStyle = rgbaSupport ? ("background-color:" + tiny.toRgbString()) : "filter:" + tiny.toFilter();
-                html.push('<span title="' + tiny.toRgbString() + '" data-color="' + tiny.toRgbString() + '" class="' + c + '"><span class="sp-thumb-inner" style="' + swatchStyle + ';" /></span>');
+                html.push('<span title="' + formattedString + '" data-color="' + tiny.toRgbString() + '" class="' + c + '"><span class="sp-thumb-inner" style="' + swatchStyle + ';" /></span>');
             } else {
                 var cls = 'sp-clear-display';
                 html.push('<span title="No Color Selected" data-color="" style="background-color:transparent;" class="' + cls + '"></span>');
@@ -172,6 +176,7 @@
             currentAlpha = 1,
             palette = [],
             paletteArray = [],
+            paletteLookup = {},
             selectionPalette = opts.selectionPalette.slice(0),
             maxSelectionSize = opts.maxSelectionSize,
             draggingClass = "sp-dragging",
@@ -198,7 +203,7 @@
             isInput = boundElement.is("input"),
             isInputTypeColor = isInput && inputTypeColorSupport && boundElement.attr("type") === "color",
             shouldReplace = isInput && !flat,
-            replacer = (shouldReplace) ? $(replaceInput).addClass(theme).addClass(opts.className) : $([]),
+            replacer = (shouldReplace) ? $(replaceInput).addClass(theme).addClass(opts.className).addClass(opts.replacerClassName) : $([]),
             offsetElement = (shouldReplace) ? replacer : boundElement,
             previewElement = replacer.find(".sp-preview-inner"),
             initialColor = opts.color || (isInput && boundElement.val()),
@@ -218,6 +223,13 @@
             if (opts.palette) {
                 palette = opts.palette.slice(0);
                 paletteArray = $.isArray(palette[0]) ? palette : [palette];
+                paletteLookup = {};
+                for (var i = 0; i < paletteArray.length; i++) {
+                    for (var j = 0; j < paletteArray[i].length; j++) {
+                        var rgb = tinycolor(paletteArray[i][j]).toRgbString();
+                        paletteLookup[rgb] = true;
+                    }
+                }
             }
 
             container.toggleClass("sp-flat", flat);
@@ -228,7 +240,7 @@
             container.toggleClass("sp-palette-disabled", !opts.showPalette);
             container.toggleClass("sp-palette-only", opts.showPaletteOnly);
             container.toggleClass("sp-initial-disabled", !opts.showInitial);
-            container.addClass(opts.className);
+            container.addClass(opts.className).addClass(opts.containerClassName);
 
             reflow();
         }
@@ -262,25 +274,7 @@
                 appendTo.append(container);
             }
 
-            if (localStorageKey && window.localStorage) {
-
-                // Migrate old palettes over to new format.  May want to remove this eventually.
-                try {
-                    var oldPalette = window.localStorage[localStorageKey].split(",#");
-                    if (oldPalette.length > 1) {
-                        delete window.localStorage[localStorageKey];
-                        $.each(oldPalette, function(i, c) {
-                             addColorToSelectionPalette(c);
-                        });
-                    }
-                }
-                catch(e) { }
-
-                try {
-                    selectionPalette = window.localStorage[localStorageKey].split(";");
-                }
-                catch (e) { }
-            }
+            updateSelectionPaletteFromStorage();
 
             offsetElement.bind("click.spectrum touchstart.spectrum", function (e) {
                 if (!disabled) {
@@ -315,20 +309,18 @@
                 hide("cancel");
             });
 
-
+            clearButton.attr("title", opts.clearText);
             clearButton.bind("click.spectrum", function (e) {
                 e.stopPropagation();
                 e.preventDefault();
-
-               isEmpty = true;
-
+                isEmpty = true;
                 move();
+
                 if(flat) {
                     //for the flat style, this is a change event
                     updateOriginalInput(true);
                 }
             });
-
 
             chooseButton.text(opts.chooseText);
             chooseButton.bind("click.spectrum", function (e) {
@@ -349,11 +341,14 @@
                 }
 
                 move();
-            });
+            }, dragStart, dragStop);
 
             draggable(slider, function (dragX, dragY) {
                 currentHue = parseFloat(dragY / slideHeight);
                 isEmpty = false;
+                if (!opts.showAlpha) {
+                    currentAlpha = 1;
+                }
                 move();
             }, dragStart, dragStop);
 
@@ -382,6 +377,9 @@
                 }
 
                 isEmpty = false;
+                if (!opts.showAlpha) {
+                    currentAlpha = 1;
+                }
 
                 move();
 
@@ -412,8 +410,8 @@
                 }
                 else {
                     set($(this).data("color"));
-                    updateOriginalInput(true);
                     move();
+                    updateOriginalInput(true);
                     hide();
                 }
 
@@ -425,11 +423,34 @@
             initialColorContainer.delegate(".sp-thumb-el:nth-child(1)", paletteEvent, { ignore: true }, palletElementClick);
         }
 
+        function updateSelectionPaletteFromStorage() {
+
+            if (localStorageKey && window.localStorage) {
+
+                // Migrate old palettes over to new format.  May want to remove this eventually.
+                try {
+                    var oldPalette = window.localStorage[localStorageKey].split(",#");
+                    if (oldPalette.length > 1) {
+                        delete window.localStorage[localStorageKey];
+                        $.each(oldPalette, function(i, c) {
+                             addColorToSelectionPalette(c);
+                        });
+                    }
+                }
+                catch(e) { }
+
+                try {
+                    selectionPalette = window.localStorage[localStorageKey].split(";");
+                }
+                catch (e) { }
+            }
+        }
+
         function addColorToSelectionPalette(color) {
             if (showSelectionPalette) {
-                var colorRgb = tinycolor(color).toRgbString();
-                if ($.inArray(colorRgb, selectionPalette) === -1) {
-                    selectionPalette.push(colorRgb);
+                var rgb = tinycolor(color).toRgbString();
+                if (!paletteLookup[rgb] && $.inArray(rgb, selectionPalette) === -1) {
+                    selectionPalette.push(rgb);
                     while(selectionPalette.length > maxSelectionSize) {
                         selectionPalette.shift();
                     }
@@ -446,25 +467,12 @@
 
         function getUniqueSelectionPalette() {
             var unique = [];
-            var p = selectionPalette;
-            var paletteLookup = {};
-            var rgb;
-
             if (opts.showPalette) {
+                for (i = 0; i < selectionPalette.length; i++) {
+                    var rgb = tinycolor(selectionPalette[i]).toRgbString();
 
-                for (var i = 0; i < paletteArray.length; i++) {
-                    for (var j = 0; j < paletteArray[i].length; j++) {
-                        rgb = tinycolor(paletteArray[i][j]).toRgbString();
-                        paletteLookup[rgb] = true;
-                    }
-                }
-
-                for (i = 0; i < p.length; i++) {
-                    rgb = tinycolor(p[i]).toRgbString();
-
-                    if (!paletteLookup.hasOwnProperty(rgb)) {
-                        unique.push(p[i]);
-                        paletteLookup[rgb] = true;
+                    if (!paletteLookup[rgb]) {
+                        unique.push(selectionPalette[i]);
                     }
                 }
             }
@@ -477,11 +485,13 @@
             var currentColor = get();
 
             var html = $.map(paletteArray, function (palette, i) {
-                return paletteTemplate(palette, currentColor, "sp-palette-row sp-palette-row-" + i);
+                return paletteTemplate(palette, currentColor, "sp-palette-row sp-palette-row-" + i, opts.preferredFormat);
             });
 
+            updateSelectionPaletteFromStorage();
+
             if (selectionPalette) {
-                html.push(paletteTemplate(getUniqueSelectionPalette(), currentColor, "sp-palette-row sp-palette-row-selection"));
+                html.push(paletteTemplate(getUniqueSelectionPalette(), currentColor, "sp-palette-row sp-palette-row-selection", opts.preferredFormat));
             }
 
             paletteContainer.html(html.join(""));
@@ -491,7 +501,7 @@
             if (opts.showInitial) {
                 var initial = colorOnShow;
                 var current = get();
-                initialColorContainer.html(paletteTemplate([initial, current], current, "sp-palette-row-initial"));
+                initialColorContainer.html(paletteTemplate([initial, current], current, "sp-palette-row-initial", opts.preferredFormat));
             }
         }
 
@@ -501,10 +511,12 @@
             }
             container.addClass(draggingClass);
             shiftMovementDirection = null;
+            boundElement.trigger('dragstart.spectrum', [ get() ]);
         }
 
         function dragStop() {
             container.removeClass(draggingClass);
+            boundElement.trigger('dragstop.spectrum', [ get() ]);
         }
 
         function setFromTextInput() {
@@ -513,11 +525,13 @@
 
             if ((value === null || value === "") && allowEmpty) {
                 set(null);
+                updateOriginalInput(true);
             }
             else {
                 var tiny = tinycolor(value);
                 if (tiny.ok) {
                     set(tiny);
+                    updateOriginalInput(true);
                 }
                 else {
                     textInput.addClass("sp-validation-error");
@@ -602,16 +616,19 @@
 
         function set(color, ignoreFormatChange) {
             if (tinycolor.equals(color, get())) {
+                // Update UI just in case a validation error needs
+                // to be cleared.
+                updateUI();
                 return;
             }
 
-            var newColor;
+            var newColor, newHsv;
             if (!color && allowEmpty) {
                 isEmpty = true;
             } else {
                 isEmpty = false;
                 newColor = tinycolor(color);
-                var newHsv = newColor.toHsv();
+                newHsv = newColor.toHsv();
 
                 currentHue = (newHsv.h % 360) / 360;
                 currentSaturation = newHsv.s;
@@ -663,7 +680,7 @@
 
             // Get a format that alpha will be included in (hex and names ignore alpha)
             var format = currentPreferredFormat;
-            if (currentAlpha < 1) {
+            if (currentAlpha < 1 && !(currentAlpha === 0 && format === "name")) {
                 if (format === "hex" || format === "hex3" || format === "hex6" || format === "name") {
                     format = "rgb";
                 }
@@ -681,7 +698,7 @@
                 previewElement.addClass("sp-clear-display");
             }
             else {
-               var realHex = realColor.toHexString(),
+                var realHex = realColor.toHexString(),
                     realRgb = realColor.toRgbString();
 
                 // Update the replaced elements background color (with actual selected color)
@@ -706,12 +723,15 @@
                         alphaSliderInner.css("background", "-webkit-" + gradient);
                         alphaSliderInner.css("background", "-moz-" + gradient);
                         alphaSliderInner.css("background", "-ms-" + gradient);
-                        alphaSliderInner.css("background", gradient);
+                        // Use current syntax gradient on unprefixed property.
+                        alphaSliderInner.css("background",
+                            "linear-gradient(to right, " + realAlpha + ", " + realHex + ")");
                     }
                 }
 
                 displayColor = realColor.toString(format);
             }
+
             // Update the text entry input as it changes happen
             if (opts.showInput) {
                 textInput.val(displayColor);
@@ -752,19 +772,19 @@
                     Math.min(dragHeight - dragHelperHeight, dragY - dragHelperHeight)
                 );
                 dragHelper.css({
-                    "top": dragY,
-                    "left": dragX
+                    "top": dragY + "px",
+                    "left": dragX + "px"
                 });
 
                 var alphaX = currentAlpha * alphaWidth;
                 alphaSlideHelper.css({
-                    "left": alphaX - (alphaSlideHelperWidth / 2)
+                    "left": (alphaX - (alphaSlideHelperWidth / 2)) + "px"
                 });
 
                 // Where to show the bar that displays your current selected hue
                 var slideY = (currentHue) * slideHeight;
                 slideHelper.css({
-                    "top": slideY - slideHelperHeight
+                    "top": (slideY - slideHelperHeight) + "px"
                 });
             }
         }
@@ -774,7 +794,7 @@
                 displayColor = '',
                 hasChanged = !tinycolor.equals(color, colorOnShow);
 
-            if(color) {
+            if (color) {
                 displayColor = color.toString(currentPreferredFormat);
                 // Update the selection palette with the current color
                 addColorToSelectionPalette(color);
@@ -812,6 +832,8 @@
             if (opts.showPalette) {
                 drawPalette();
             }
+
+            boundElement.trigger('reflow.spectrum');
         }
 
         function destroy() {
@@ -977,6 +999,7 @@
                 onmove.apply(element, [dragX, dragY, e]);
             }
         }
+
         function start(e) {
             var rightclick = (e.which) ? (e.which == 3) : (e.button == 2);
             var touches = e.originalEvent.touches;
@@ -999,6 +1022,7 @@
                 }
             }
         }
+
         function stop() {
             if (dragging) {
                 $(doc).unbind(duringDragEvents);
@@ -1024,7 +1048,6 @@
         };
     }
 
-
     function log(){/* jshint -W021 */if(window.console){if(Function.prototype.bind)log=Function.prototype.bind.call(console.log,console);else log=function(){Function.prototype.apply.call(console.log,console,arguments);};log.apply(this,arguments);}}
 
     /**
@@ -1041,7 +1064,6 @@
             this.each(function () {
                 var spect = spectrums[$(this).data(dataID)];
                 if (spect) {
-
                     var method = spect[opts];
                     if (!method) {
                         throw new Error( "Spectrum: no such method: '" + opts + "'" );
@@ -1071,7 +1093,8 @@
 
         // Initializing a new instance of spectrum
         return this.spectrum("destroy").each(function () {
-            var spect = spectrum(this, opts);
+            var options = $.extend({}, opts, $(this).data());
+            var spect = spectrum(this, options);
             $(this).data(dataID, spect.id);
         });
     };
@@ -1093,7 +1116,7 @@
         }
     };
 
-    // TinyColor v0.9.16
+    // TinyColor v0.9.17
     // https://github.com/bgrins/TinyColor
     // 2013-08-10, Brian Grinstead, MIT License
 
@@ -1172,7 +1195,13 @@
                 return rgbToHex(r, g, b, allow3Char);
             },
             toHexString: function(allow3Char) {
-                return '#' + rgbToHex(r, g, b, allow3Char);
+                return '#' + this.toHex(allow3Char);
+            },
+            toHex8: function() {
+                return rgbaToHex(r, g, b, a);
+            },
+            toHex8String: function() {
+                return '#' + this.toHex8();
             },
             toRgb: function() {
                 return { r: mathRound(r), g: mathRound(g), b: mathRound(b), a: a };
@@ -1198,19 +1227,16 @@
                 return hexNames[rgbToHex(r, g, b, true)] || false;
             },
             toFilter: function(secondColor) {
-                var hex = rgbToHex(r, g, b);
-                var secondHex = hex;
-                var alphaHex = Math.round(parseFloat(a) * 255).toString(16);
-                var secondAlphaHex = alphaHex;
+                var hex8String = '#' + rgbaToHex(r, g, b, a);
+                var secondHex8String = hex8String;
                 var gradientType = opts && opts.gradientType ? "GradientType = 1, " : "";
 
                 if (secondColor) {
                     var s = tinycolor(secondColor);
-                    secondHex = s.toHex();
-                    secondAlphaHex = Math.round(parseFloat(s.alpha) * 255).toString(16);
+                    secondHex8String = s.toHex8String();
                 }
 
-                return "progid:DXImageTransform.Microsoft.gradient("+gradientType+"startColorstr=#" + pad2(alphaHex) + hex + ",endColorstr=#" + pad2(secondAlphaHex) + secondHex + ")";
+                return "progid:DXImageTransform.Microsoft.gradient("+gradientType+"startColorstr="+hex8String+",endColorstr="+secondHex8String+")";
             },
             toString: function(format) {
                 var formatSet = !!format;
@@ -1231,6 +1257,9 @@
                 }
                 if (format === "hex3") {
                     formattedString = this.toHexString(true);
+                }
+                if (format === "hex8") {
+                    formattedString = this.toHex8String();
                 }
                 if (format === "name") {
                     formattedString = this.toName();
@@ -1278,6 +1307,7 @@
     //     "red"
     //     "#f00" or "f00"
     //     "#ff0000" or "ff0000"
+    //     "#ff000000" or "ff000000"
     //     "rgb 255 0 0" or "rgb (255, 0, 0)"
     //     "rgb 1.0 0 0" or "rgb (1, 0, 0)"
     //     "rgba (255, 0, 0, 1)" or "rgba 255, 0, 0, 1"
@@ -1492,6 +1522,21 @@
 
         return hex.join("");
     }
+        // `rgbaToHex`
+        // Converts an RGBA color plus alpha transparency to hex
+        // Assumes r, g, b and a are contained in the set [0, 255]
+        // Returns an 8 character hex
+        function rgbaToHex(r, g, b, a) {
+
+            var hex = [
+                pad2(convertDecimalToHex(a)),
+                pad2(mathRound(r).toString(16)),
+                pad2(mathRound(g).toString(16)),
+                pad2(mathRound(b).toString(16))
+            ];
+
+            return hex.join("");
+        }
 
     // `equals`
     // Can be called with any tinycolor input
@@ -1888,8 +1933,8 @@
         return mathMin(1, mathMax(0, val));
     }
 
-    // Parse an integer into hex
-    function parseHex(val) {
+    // Parse a base-16 hex value into a base-10 integer
+    function parseIntFromHex(val) {
         return parseInt(val, 16);
     }
 
@@ -1918,6 +1963,15 @@
         return n;
     }
 
+    // Converts a decimal to a hex value
+    function convertDecimalToHex(d) {
+        return Math.round(parseFloat(d) * 255).toString(16);
+    }
+    // Converts a hex value to a decimal
+    function convertHexToDecimal(h) {
+        return (parseIntFromHex(h) / 255);
+    }
+
     var matchers = (function() {
 
         // <http://www.w3.org/TR/css3-values/#integers>
@@ -1942,7 +1996,8 @@
             hsla: new RegExp("hsla" + PERMISSIVE_MATCH4),
             hsv: new RegExp("hsv" + PERMISSIVE_MATCH3),
             hex3: /^([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,
-            hex6: /^([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/
+            hex6: /^([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/,
+            hex8: /^([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/
         };
     })();
 
@@ -1981,19 +2036,28 @@
         if ((match = matchers.hsv.exec(color))) {
             return { h: match[1], s: match[2], v: match[3] };
         }
+        if ((match = matchers.hex8.exec(color))) {
+            return {
+                a: convertHexToDecimal(match[1]),
+                r: parseIntFromHex(match[2]),
+                g: parseIntFromHex(match[3]),
+                b: parseIntFromHex(match[4]),
+                format: named ? "name" : "hex8"
+            };
+        }
         if ((match = matchers.hex6.exec(color))) {
             return {
-                r: parseHex(match[1]),
-                g: parseHex(match[2]),
-                b: parseHex(match[3]),
+                r: parseIntFromHex(match[1]),
+                g: parseIntFromHex(match[2]),
+                b: parseIntFromHex(match[3]),
                 format: named ? "name" : "hex"
             };
         }
         if ((match = matchers.hex3.exec(color))) {
             return {
-                r: parseHex(match[1] + '' + match[1]),
-                g: parseHex(match[2] + '' + match[2]),
-                b: parseHex(match[3] + '' + match[3]),
+                r: parseIntFromHex(match[1] + '' + match[1]),
+                g: parseIntFromHex(match[2] + '' + match[2]),
+                b: parseIntFromHex(match[3] + '' + match[3]),
                 format: named ? "name" : "hex"
             };
         }
