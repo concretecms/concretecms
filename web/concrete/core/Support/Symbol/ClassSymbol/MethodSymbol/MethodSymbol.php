@@ -76,8 +76,7 @@ class MethodSymbol {
                     if(preg_match('/.\\\\(\\w+)$/', $defaultValue, $matches) && defined($matches[1])) {
                         $defaultValue = $matches[1];
                     }
-                }
-                else {
+                } else {
                     $v = $parameter->getDefaultValue();
                     switch(gettype($v)) {
                         case 'boolean':
@@ -92,8 +91,7 @@ class MethodSymbol {
                         case 'array':
                             if(count($v)) {
                                 $defaultValue = trim(var_export($v, true));
-                            }
-                            else {
+                            } else {
                                 $defaultValue = 'array()';
                             }
                             break;
