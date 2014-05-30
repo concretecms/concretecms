@@ -2614,10 +2614,16 @@
                 if (!btnObject.className) btnObject.className = '';
 
                 var $item;
-                if (btnObject.name === 'separator') $item = $('<a class="redactor_separator_drop">');
+                /* concrete5 */
+                //if (btnObject.name === 'separator') $item = $('<a class="redactor_separator_drop">');
+                if (btnObject.name === 'separator') $item = $('<li class="divider"></li>');
+                /* end concrete5 */
                 else
                 {
-                    $item = $('<a href="#" class="' + btnObject.className + ' redactor_dropdown_' + btnName + '">' + btnObject.title + '</a>');
+                    /* concrete5 */
+                    //$item = $('<a href="#" class="' + btnObject.className + ' redactor_dropdown_' + btnName + '">' + btnObject.title + '</a>');
+                    $item = $('<li><a href="#" class="' + btnObject.className + ' redactor_dropdown_' + btnName + '">' + btnObject.title + '</a></li>');
+                    /* end concrete5 */
                     $item.on('click', $.proxy(function(e)
                     {
                         if (e.preventDefault) e.preventDefault();
@@ -2648,7 +2654,14 @@
             var $button = this.buttonGet(key);
 
             // Always re-append it to the end of <body> so it always has the highest sub-z-index.
-            var $dropdown  = $button.data('dropdown').appendTo(document.body);
+            /* concrete5 */
+            //var $dropdown  = $button.data('dropdown').appendTo(document.body);
+            if ($('#redactor-dropdown-holder').length == 0) {
+                $(document.body).append('<div id="redactor-dropdown-holder" class="ccm-ui" />')
+            }
+            var ccmUI = $('#redactor-dropdown-holder');
+            var $dropdown= $button.data('dropdown').appendTo(ccmUI);
+            /* end concrete5 */
 
             if ($button.hasClass('dropact')) this.dropdownHideAll();
             else
@@ -2700,7 +2713,10 @@
         dropdownHideAll: function()
         {
             this.$toolbar.find('a.dropact').removeClass('redactor_act').removeClass('dropact');
-            $('.redactor_dropdown').hide();
+            /* concrete5 */
+            //$('.redactor_dropdown').hide();
+            $('ul.dropdown-menu').hide();
+            /* end concrete5 */
             this.callback('dropdownHide');
         },
         dropdownHide: function (e, $dropdown)
@@ -2732,6 +2748,10 @@
                     return 'fa fa-minus';
                 case 'deleted':
                     return 'fa fa-strikethrough';
+                case 'fontfamily':
+                    return 'fa fa-font';
+                case 'fontsize':
+                    return 'fa fa-text-height';
                 default:
                     return 'fa fa-' + btnName;
 
@@ -2792,7 +2812,10 @@
             // dropdown
             if (btnObject.dropdown)
             {
-                var $dropdown = $('<div class="redactor_dropdown redactor_dropdown_box_' + btnName + '" style="display: none;">');
+                /* concrete5 */
+                //var $dropdown = $('<div class="redactor_dropdown redactor_dropdown_box_' + btnName + '" style="display: none;">');
+                var $dropdown = $('<ul class="dropdown-menu redactor_dropdown_box_' + btnName + '" style="display: none;">');
+                /* end concrete5 */
                 $button.data('dropdown', $dropdown);
                 this.dropdownBuild($dropdown, btnObject.dropdown);
             }
@@ -7275,18 +7298,34 @@
                     + '</select>'
                 + '</section>'
                 + '<footer>'
+                /* concrete5
                     + '<button id="redactor_image_delete_btn" class="redactor_modal_btn redactor_modal_delete_btn">' + this.opts.curLang._delete + '</button>'
                     + '<button class="redactor_modal_btn redactor_btn_modal_close">' + this.opts.curLang.cancel + '</button>'
                     + '<button id="redactorSaveBtn" class="redactor_modal_btn redactor_modal_action_btn">' + this.opts.curLang.save + '</button>'
+                    */
+                    + '<button id="redactor_image_delete_btn" class="btn btn-danger pull-left redactor_modal_btn redactor_modal_delete_btn">' + this.opts.curLang._delete + '</button>'
+                    + '<button class="btn btn-default pull-right redactor_modal_btn redactor_btn_modal_close">' + this.opts.curLang.cancel + '</button>'
+                    + '<button id="redactorSaveBtn" class="btn btn-primary pull-right redactor_modal_btn redactor_modal_action_btn">' + this.opts.curLang.save + '</button>'
+
+                   /* end concrete5 */
                 + '</footer>',
 
                 modal_image: String()
                 + '<section id="redactor-modal-image-insert">'
+                    /* concrete5 */
+                    /*
                     + '<div id="redactor_tabs">'
                         + '<a href="#" id="redactor-tab-control-1" class="redactor_tabs_act">' + this.opts.curLang.upload + '</a>'
                         + '<a href="#" id="redactor-tab-control-2">' + this.opts.curLang.choose + '</a>'
                         + '<a href="#" id="redactor-tab-control-3">' + this.opts.curLang.link + '</a>'
                     + '</div>'
+                    */
+                    + '<ul class="nav nav-tabs" id="redactor_tabs">'
+                        + '<li id="redactor-tab-control-1" class="active"><a href="#">' + this.opts.curLang.upload + '</a></li>'
+                        + '<li id="redactor-tab-control-2"><a href="#">' + this.opts.curLang.choose + '</a></li>'
+                        + '<li id="redactor-tab-control-3"><a href="#">' + this.opts.curLang.link + '</a></li>'
+                    + '</ul>'
+                    /* end concrete5 */
                     + '<form id="redactorInsertImageForm" method="post" action="" enctype="multipart/form-data">'
                         + '<div id="redactor_tab1" class="redactor_tab">'
                             + '<input type="file" id="redactor_file" name="' + this.opts.imageUploadParam + '" />'
@@ -7320,8 +7359,13 @@
                     + '<label><input type="checkbox" id="redactor_link_blank"> ' + this.opts.curLang.link_new_tab + '</label>'
                 + '</section>'
                 + '<footer>'
+                /* concrete5
                     + '<button class="redactor_modal_btn redactor_btn_modal_close">' + this.opts.curLang.cancel + '</button>'
                     + '<button id="redactor_insert_link_btn" class="redactor_modal_btn redactor_modal_action_btn">' + this.opts.curLang.insert + '</button>'
+                */
+                    + '<button class="btn btn-default pull-left redactor_modal_btn redactor_btn_modal_close">' + this.opts.curLang.cancel + '</button>'
+                    + '<button id="redactor_insert_link_btn" class="btn btn-primary pull-right redactor_modal_btn redactor_modal_action_btn">' + this.opts.curLang.insert + '</button>'
+                /* end concrete5 */
                 + '</footer>',
 
                 modal_table: String()
@@ -7332,8 +7376,13 @@
                     + '<input type="text" size="5" value="3" id="redactor_table_columns" />'
                 + '</section>'
                 + '<footer>'
+                /* concrete5
                     + '<button class="redactor_modal_btn redactor_btn_modal_close">' + this.opts.curLang.cancel + '</button>'
                     + '<button id="redactor_insert_table_btn" class="redactor_modal_btn redactor_modal_action_btn">' + this.opts.curLang.insert + '</button>'
+                */
+                    + '<button class="btn btn-default pull-left redactor_modal_btn redactor_btn_modal_close">' + this.opts.curLang.cancel + '</button>'
+                    + '<button id="redactor_insert_table_btn" class="btn btn-primary pull-right redactor_modal_btn redactor_modal_action_btn">' + this.opts.curLang.insert + '</button>'
+                /* end concrete5 */
                 + '</footer>',
 
                 modal_video: String()
@@ -7344,8 +7393,13 @@
                     + '</form>'
                 + '</section>'
                 + '<footer>'
+                /* concrete5
                     + '<button class="redactor_modal_btn redactor_btn_modal_close">' + this.opts.curLang.cancel + '</button>'
                     + '<button id="redactor_insert_video_btn" class="redactor_modal_btn redactor_modal_action_btn">' + this.opts.curLang.insert + '</button>'
+                */
+                    + '<button class="btn btn-default pull-left redactor_modal_btn redactor_btn_modal_close">' + this.opts.curLang.cancel + '</button>'
+                    + '<button id="redactor_insert_video_btn" class="btn btn-primary pull-right redactor_modal_btn redactor_modal_action_btn">' + this.opts.curLang.insert + '</button>'
+               /* end concrete5 */
                 + '</footer>'
 
             });
@@ -7529,15 +7583,22 @@
             if (!$redactor_tabs.length) return false;
 
             var that = this;
-            $redactor_tabs.find('a').each(function(i, s)
+            /* concrete5 */
+            // $redactor_tabs.find('a').each(function(i, s)
+            $redactor_tabs.find('li').each(function(i, s)
+            /* end concrete5 */
             {
                 i++;
                 $(s).on('click', function(e)
                 {
                     e.preventDefault();
 
-                    $redactor_tabs.find('a').removeClass('redactor_tabs_act');
-                    $(this).addClass('redactor_tabs_act');
+                    /* concrete5 */
+                    //$redactor_tabs.find('a').removeClass('redactor_tabs_act');
+                    //$(this).addClass('redactor_tabs_act');
+                    $redactor_tabs.find('li').removeClass('active');
+                    $(this).addClass('active');
+                    /* end concrete5 */
                     $('.redactor_tab').hide();
                     $('#redactor_tab' + i ).show();
                     $('#redactor_tab_selected').val(i);
@@ -7612,8 +7673,14 @@
         },
         modalSetTab: function(num)
         {
+            /* concrete5 */
+            /*
             $('.redactor_tab').hide();
             $('#redactor_tabs').find('a').removeClass('redactor_tabs_act').eq(num - 1).addClass('redactor_tabs_act');
+            */
+            $('.nav-tabs li').hide();
+            $('#redactor_tabs').find('li').removeClass('active').eq(num - 1).addClass('active');
+            /* end concrete5 */
             $('#redactor_tab' + num).show();
         },
 
