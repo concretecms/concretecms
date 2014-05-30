@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\View;
+
 use Concrete\Core\Asset\Asset;
 use Concrete\Core\Http\ResponseAssetGroup;
 use Environment;
@@ -238,10 +239,10 @@ class View extends AbstractView {
         foreach($groupedAssets as $segment => $assets) {
             if ($assets[0] instanceof Asset && $assets[0]->assetSupportsMinification()) {
                 // this entire segment can be post processed together
-                $class = Loader::helper('text')->camelcase($assets[0]->getAssetType()) . 'Asset';
+                $class = get_class($assets[0]);
                 $assets = call_user_func(array($class, 'minify'), $assets);
             } else if ($assets[0] instanceof Asset && $assets[0]->assetSupportsCombination()) {
-                $class = Loader::helper('text')->camelcase($assets[0]->getAssetType()) . 'Asset';
+                $class = get_class($assets[0]);
                 $assets = call_user_func(array($class, 'combine'), $assets);
             }
             $return = array_merge($return, $assets);
