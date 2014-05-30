@@ -7301,8 +7301,13 @@
                     + '</div>'
                 + '</section>'
                 + '<footer>'
+                    /* concrete5
                     + '<button class="redactor_btn_modal_close">' + this.opts.curLang.cancel + '</button>'
                     + '<button class="redactor_modal_action_btn" id="redactor_upload_btn">' + this.opts.curLang.insert + '</button>'
+                    */
+                    + '<button class="btn btn-default pull-left redactor_btn_modal_close">' + this.opts.curLang.cancel + '</button>'
+                    + '<button class="btn btn-primary pull-right redactor_modal_action_btn" id="redactor_upload_btn">' + this.opts.curLang.insert + '</button>'
+                    /* end concrete5 */
                 + '</footer>',
 
                 modal_link: String()
@@ -7364,6 +7369,7 @@
                 this.$redactorModal.appendTo(document.body);
                 /* concrete5 */
                 var $rm = this.$redactorModal;
+                $rm.addClass('ccm-ui');
                 this.$redactorModal.find('#redactor_modal_close').on('mouseover', function() {
                     $rm.find('#redactor_modal_close button').addClass('ui-state-active');
                 }).on('mouseout', function() {
@@ -7380,7 +7386,10 @@
             this.modalSetDraggable();
             this.modalLoadTabs();
             this.modalOnCloseButton();
+            /* concrete5 */
+            /*
             this.modalSetButtonsWidth();
+            */
 
             this.saveModalScroll = this.document.body.scrollTop;
             if (this.opts.autoresize === false)
@@ -7428,7 +7437,11 @@
                 left: '50%',
                 width: this.$redactorModalWidth + 'px',
                 marginLeft: '-' + (this.$redactorModalWidth / 2) + 'px'
+            /* concrete5 */
+            /*
             }).show();
+            */
+            }).show().addClass('animated fadeIn');
 
             this.modalSaveBodyOveflow = $(document.body).css('overflow');
             $(document.body).css('overflow', 'hidden');
@@ -7547,14 +7560,13 @@
             }
         },
 
-        modalClose: function() {
-            $('button.redactor_btn_modal_close').trigger('click');
-        },
         modalClose: function()
         {
             $('#redactor_modal_close').off('click', this.modalClose);
-            $('#redactor_modal').fadeOut('fast', $.proxy(function()
-            {
+            /* concrete5 */
+            //$('#redactor_modal').fadeOut('fast', $.proxy(function()
+            $('#redactor_modal').hide();
+            //{
                 var redactorModalInner = $('#redactor_modal_inner');
 
                 if (this.modalcontent !== false)
@@ -7586,8 +7598,9 @@
                 }
 
                 this.callback('modalClosed');
-
-            }, this));
+            /* concrete5 */
+            //}, this));
+            /* end concrete5 */
 
 
             if (this.isMobile() === false)
