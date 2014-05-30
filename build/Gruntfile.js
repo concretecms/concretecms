@@ -65,6 +65,9 @@ module.exports = function(grunt) {
             dest: '<%= DIR_BASE %>/concrete/js/redactor.js',
             src: [
                 '<%= DIR_BASE %>/concrete/js/build/vendor/redactor/redactor.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/redactor/fontcolor.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/redactor/fontfamily.js',
+                '<%= DIR_BASE %>/concrete/js/build/vendor/redactor/fontsize.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/redactor/plugin.js'
             ]
         },
