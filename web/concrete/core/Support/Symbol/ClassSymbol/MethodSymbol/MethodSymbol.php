@@ -54,15 +54,17 @@ class MethodSymbol
 
         $params = array();
         $calling_params = array();
-        foreach($this->parameters as $parameter) {
+        foreach ($this->parameters as $parameter) {
             $param = '';
 
             if ($parameter->isArray()) {
                 $param .= 'array ';
             } /*else if ($parameter->isCallable()) { // This should be enabled for php 5.4
                 $param .= 'callable ';
-            } */else if ($parameter->getClass()) {
-                $param .= $parameter->getClass()->getName() . ' ';
+            } */ else {
+                if ($parameter->getClass()) {
+                    $param .= $parameter->getClass()->getName() . ' ';
+                }
             }
             if ($parameter->isPassedByReference()) {
                 $param .= "&";
@@ -76,12 +78,12 @@ class MethodSymbol
                 }
                 if ($defaultValue) {
                     // Strip out wrong namespaces.
-                    if(preg_match('/.\\\\(\\w+)$/', $defaultValue, $matches) && defined($matches[1])) {
+                    if (preg_match('/.\\\\(\\w+)$/', $defaultValue, $matches) && defined($matches[1])) {
                         $defaultValue = $matches[1];
                     }
                 } else {
                     $v = $parameter->getDefaultValue();
-                    switch(gettype($v)) {
+                    switch (gettype($v)) {
                         case 'boolean':
                         case 'integer':
                         case 'double':
@@ -92,7 +94,7 @@ class MethodSymbol
                             $defaultValue = '"' . addslashes($v) . '"';
                             break;
                         case 'array':
-                            if(count($v)) {
+                            if (count($v)) {
                                 $defaultValue = trim(var_export($v, true));
                             } else {
                                 $defaultValue = 'array()';
@@ -122,6 +124,7 @@ class MethodSymbol
             ');';
 
         $rendered .= "\n}\n";
+        
         return $rendered;
     }
 
