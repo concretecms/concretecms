@@ -1,7 +1,8 @@
 <?php
 namespace Concrete\Core\Support\Symbol\ClassSymbol\MethodSymbol;
 
-class MethodSymbol {
+class MethodSymbol
+{
 
     /**
      * @var \ReflectionMethod
@@ -29,7 +30,8 @@ class MethodSymbol {
     /**
      * @param \ReflectionMethod $method
      */
-    public function __construct(\ReflectionMethod $method) {
+    public function __construct(\ReflectionMethod $method)
+    {
         $this->reflectionMethod = $method;
         $this->parameters = $method->getParameters();
         $this->handle = $method->getName();
@@ -39,7 +41,8 @@ class MethodSymbol {
      * Render the Method
      * @return string
      */
-    public function render() {
+    public function render()
+    {
         $method = $this->reflectionMethod;
         if ($method->isPrivate() || substr($method->getName(), 0, 2) === '__' || $method->isAbstract()) {
             return '';
@@ -51,15 +54,17 @@ class MethodSymbol {
 
         $params = array();
         $calling_params = array();
-        foreach($this->parameters as $parameter) {
+        foreach ($this->parameters as $parameter) {
             $param = '';
 
             if ($parameter->isArray()) {
                 $param .= 'array ';
             } /*else if ($parameter->isCallable()) { // This should be enabled for php 5.4
                 $param .= 'callable ';
-            } */else if ($parameter->getClass()) {
-                $param .= $parameter->getClass()->getName() . ' ';
+            } */ else {
+                if ($parameter->getClass()) {
+                    $param .= $parameter->getClass()->getName() . ' ';
+                }
             }
             if ($parameter->isPassedByReference()) {
                 $param .= "&";
@@ -67,18 +72,42 @@ class MethodSymbol {
             $param .= '$' . $parameter->getName();
 
             if ($parameter->isOptional()) {
-                if ($parameter->getDefaultValue()) {
-                    $default = $parameter->getDefaultValue();
-                    if (!is_numeric($default)) {
-                        $param .= ' = "' . $default . '"';
-                    } else {
-                        $param .= ' = ' . $default;
-                    }
-                } else if ($parameter->allowsNull()) {
-                    $param .= ' = null';
-                } else {
-                    $param .= ' = ""';
+                $defaultValue = null;
+                if (method_exists($parameter, 'getDefaultValueConstantName')) {
+                    $defaultValue = $parameter->getDefaultValueConstantName();
                 }
+                if ($defaultValue) {
+                    // Strip out wrong namespaces.
+                    if (preg_match('/.\\\\(\\w+)$/', $defaultValue, $matches) && defined($matches[1])) {
+                        $defaultValue = $matches[1];
+                    }
+                } else {
+                    $v = $parameter->getDefaultValue();
+                    switch (gettype($v)) {
+                        case 'boolean':
+                        case 'integer':
+                        case 'double':
+                        case 'NULL':
+                            $defaultValue = json_encode($v);
+                            break;
+                        case 'string':
+                            $defaultValue = '"' . addslashes($v) . '"';
+                            break;
+                        case 'array':
+                            if (count($v)) {
+                                $defaultValue = trim(var_export($v, true));
+                            } else {
+                                $defaultValue = 'array()';
+                            }
+                            break;
+                        case 'object':
+                        case 'resource':
+                        default:
+                            $defaultValue = trim(var_export($v, true));
+                            break;
+                    }
+                }
+                $param .= ' = ' . $defaultValue;
             }
 
             $params[] = $param;
@@ -95,8 +124,8 @@ class MethodSymbol {
             ');';
 
         $rendered .= "\n}\n";
+        
         return $rendered;
     }
-
 
 }
