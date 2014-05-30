@@ -1,3 +1,9 @@
+/* concrete5 */
+@import "../../core/include/variables.less";
+@import "../../core/include/mixins.less"; // Modify this for custom colors, font-sizes, etc
+@import "../bootstrap/variables.less"; // Modify this for custom colors, font-sizes, etc
+@import "../bootstrap/mixins.less";
+
 /*
     Icon font
 */
@@ -68,11 +74,15 @@
 .redactor_box_fullscreen {
   z-index: 99 !important;
 }
+/* concrete5 */
+/*
 #redactor_modal_overlay,
 #redactor_modal,
 .redactor_dropdown {
   z-index: 100 !important;
 }
+*/
+
 /*
     AIR
 
@@ -732,26 +742,62 @@ body .redactor_air .redactor_toolbar {
   margin: auto;
   width: 100%;
   height: 100%;
-  background-color: #000 !important;
+  /* concrete5 */
+  /*
   filter: alpha(opacity=30);
   -moz-opacity: 0.3;
   opacity: 0.3;
+  background-color: #000 !important;
+  */
+  background-color: rgba(255, 255, 255, 0.85);
+  z-index: @index-level-dialog-overlay !important;
+  /* end concrete5 */
 }
+
 #redactor_modal {
   position: fixed;
   top: 50%;
   left: 50%;
   padding: 0;
+  /* concrete5 */
+  outline: 0;
+  background-clip: padding-box;
+  background-color: #FFFFFF;
+  border: 1px solid #a9b7c2;
+  .border-radius(4px);
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+  outline: medium none;
+  z-index: @index-level-dialog;
+  -webkit-transform: translate3d(0px, 0, 0);
+  /* end concrete5 */
   background: #fff;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  /* concrete5 */
+  /*
   color: #000;
   font-size: 12px !important;
   font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif;
   box-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+  */
 }
 #redactor_modal header {
+  /* concrete5 */
+  /*
   padding: 20px 30px 5px 30px;
   font-size: 16px;
+  */
+  .border-top-radius(4px);
+  padding: 19px 26px 19px 26px;
+  font-size: 18px;
+  line-height: 18px;
+  #gradient > .vertical(#fff, #e3e3e3);
+  border-bottom:1px solid #ccc;
+  color:#404040;
+  font-weight:bold;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
+
 #redactor_modal section {
   padding: 20px 30px;
 }
@@ -807,6 +853,8 @@ body .redactor_air .redactor_toolbar {
   box-shadow: 0 0 0 2px rgba(70, 161, 231, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2) inset;
 }
 #redactor_modal_close {
+  /* concrete5 */
+  /*
   position: absolute;
   top: 5px;
   right: 3px;
@@ -815,9 +863,28 @@ body .redactor_air .redactor_toolbar {
   color: #999;
   font-size: 26px;
   cursor: pointer;
+  */
+  button {
+  position: absolute;
+  opacity: 0.5;
+  right: 17px;
+  top: 19px;
+  background:none;
+  border-width: 0;
+  border:none;
+  box-shadow: none;
+  }
 }
+
 #redactor_modal_close:hover {
+  /* concrete5 */
+  /*
   color: #000;
+  */
+  button {
+  opacity: 0.9;
+  }
+  /* end concrete5 */
 }
 .redactor_input {
   width: 99%;

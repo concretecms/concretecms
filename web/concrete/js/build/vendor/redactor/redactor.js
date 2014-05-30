@@ -6431,7 +6431,6 @@
             {
                 return;
             }
-
             this.linkInsertPressed = true;
             var target = '', targetBlank = '';
 
@@ -6493,6 +6492,7 @@
                     {
                         $(this.insert_link_node).removeAttr('target');
                     }
+
                 }
                 else
                 {
@@ -6505,7 +6505,6 @@
                     {
                         if (this.className == '') $(this).removeAttr('class');
                     });
-
                 }
 
                 this.sync();
@@ -7302,8 +7301,8 @@
                     + '</div>'
                 + '</section>'
                 + '<footer>'
-                    + '<button class="btn-default btn redactor_btn_modal_close">' + this.opts.curLang.cancel + '</button>'
-                    + '<button class="btn-primary pull-right btn redactor_modal_action_btn" id="redactor_upload_btn">' + this.opts.curLang.insert + '</button>'
+                    + '<button class="redactor_btn_modal_close">' + this.opts.curLang.cancel + '</button>'
+                    + '<button class="redactor_modal_action_btn" id="redactor_upload_btn">' + this.opts.curLang.insert + '</button>'
                 + '</footer>',
 
                 modal_link: String()
@@ -7348,32 +7347,6 @@
         },
         modalInit: function(title, content, width, callback)
         {
-        	/* concrete5 */
-        	$('<div />').html(content).jqdialog({
-        		width: width,
-        		height: 'auto',
-        		title: title,
-        		resizable: false,
-                open: function() {
-                    var $dialog = $(this);
-                    if ($dialog.find('footer').length > 0) {
-                        $dialog.jqdialog('option', 'buttons', [{}]);
-                        $dialog.parent().find(".ui-dialog-buttonset").remove();
-                        $dialog.parent().find(".ui-dialog-buttonpane").html('');
-                        $dialog.find('footer').removeClass().appendTo($dialog.parent().find('.ui-dialog-buttonpane').addClass("ccm-ui"));
-
-                        $dialog.parent().find('button.redactor_btn_modal_close').on('click', function() {
-                            $dialog.dialog('close');
-                            return false;
-                        });
-                    }
-                    if (typeof callback  === 'function') {
-                        callback();
-                    }
-                }
-        	});
-        	
-        	/*
             this.modalSetOverlay();
 
             this.$redactorModalWidth = width;
@@ -7382,10 +7355,20 @@
             if (!this.$redactorModal.length)
             {
                 this.$redactorModal = $('<div id="redactor_modal" style="display: none;" />');
-                this.$redactorModal.append($('<div id="redactor_modal_close">&times;</div>'));
+                /* concrete5 */
+                //this.$redactorModal.append($('<div id="redactor_modal_close">&times;</div>'));
+                this.$redactorModal.append($('<div id="redactor_modal_close"><button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close" role="button"><span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span><span class="ui-button-text">close</span></button></div>'));
+                /* end concrete5 */
                 this.$redactorModal.append($('<header id="redactor_modal_header" />'));
                 this.$redactorModal.append($('<div id="redactor_modal_inner" />'));
                 this.$redactorModal.appendTo(document.body);
+                /* concrete5 */
+                var $rm = this.$redactorModal;
+                this.$redactorModal.find('#redactor_modal_close').on('mouseover', function() {
+                    $rm.find('#redactor_modal_close button').addClass('ui-state-active');
+                }).on('mouseout', function() {
+                    $rm.find('#redactor_modal_close button').removeClass('ui-state-active');
+                })
             }
 
             $('#redactor_modal_close').on('click', $.proxy(this.modalClose, this));
@@ -7433,10 +7416,8 @@
                     e.preventDefault();
                 }
             }, this));
-		
-            return this.$redactorModal;
 
-			*/
+            return this.$redactorModal;
 
         },
         modalShowOnDesktop: function()
@@ -7569,8 +7550,6 @@
         modalClose: function() {
             $('button.redactor_btn_modal_close').trigger('click');
         },
-        /* concrete5 */
-        /*
         modalClose: function()
         {
             $('#redactor_modal_close').off('click', this.modalClose);
@@ -7618,7 +7597,6 @@
 
             return false;
         },
-        */
         modalSetTab: function(num)
         {
             $('.redactor_tab').hide();
