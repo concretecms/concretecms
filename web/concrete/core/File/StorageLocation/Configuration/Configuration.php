@@ -5,6 +5,6 @@ abstract class Configuration
 {
 
     abstract public function loadFromRequest(\Concrete\Core\Http\Request $req);
-		
+	abstract public function getAdapter();
 
 }

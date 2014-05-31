@@ -27,6 +27,11 @@ class StorageLocation
      */
     protected $fslID;
 
+    /**
+     * @Column(type="boolean")
+     */
+    protected $fslIsDefault = false;
+
     public function getID()
     {
         return $this->fslID;
@@ -42,12 +47,18 @@ class StorageLocation
         return $this->fslConfiguration;
     }
 
-    public static function add(Configuration $configuration, $fslName)
+    public function isDefault()
+    {
+        return $this->fslIsDefault;
+    }
+
+    public static function add(Configuration $configuration, $fslName, $fslIsDefault = false)
     {
         $db = Database::get();
         $em = $db->getEntityManager();
         $o = new static();
         $o->fslName = $fslName;
+        $o->fslIsDefault = $fslIsDefault;
         $o->fslConfiguration = $configuration;
         $em->persist($o);
         $em->flush();
@@ -62,7 +73,34 @@ class StorageLocation
         return $r;
     }
 
+    public static function getDefault()
+    {
+        $db = Database::get();
+        $em = $db->getEntityManager();
+        $location = $em->getRepository('\Concrete\Core\File\StorageLocation\StorageLocation')->findOneBy(
+            array('fslIsDefault' => true
+            ));
+        return $location;
+    }
 
+    /**
+     * Returns the proper file system object for the current storage location, by mapping
+     * it through Gaufrette
+     * @return \Gaufrette\Filesystem;
+     */
+    public function getFileSystemObject()
+    {
+        $adapter = $this->fslConfiguration->getAdapter();
+        $filesystem = new \Gaufrette\Filesystem($adapter);
+        return $filesystem;
+    }
 
+    public function save()
+    {
+        $db = Database::get();
+        $em = $db->getEntityManager();
+        $em->persist($this);
+        $em->flush();
+    }
 
 }
