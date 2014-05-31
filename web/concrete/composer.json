@@ -7,6 +7,7 @@
         "symfony/routing": "2.1.*",
         "symfony/http-kernel": "2.1.*",
         "doctrine/orm": "2.4",
+        "knplabs/gaufrette": "0.1.*",
         "symfony/event-dispatcher": "2.1.*",
         "symfony/serializer": "2.1.*",
         "illuminate/container": "4.1.*",
