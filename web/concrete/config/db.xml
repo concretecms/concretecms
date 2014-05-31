@@ -2475,6 +2475,10 @@
       <field name="fslConfiguration" type="X2">
           <notnull/>
       </field>
+      <field name="fslIsDefault" type="I1" size="1">
+          <notnull/>
+          <default value="0" />
+      </field>
   </table>
   <table name="Files">
     <field name="fID" type="I" size="10">
