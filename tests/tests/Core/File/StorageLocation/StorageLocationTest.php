@@ -2,49 +2,9 @@
 namespace Concrete\Tests\Core\File\StorageLocation;
 use \Concrete\Core\File\StorageLocation\Type\Type;
 use \Concrete\Core\File\StorageLocation\StorageLocation;
+use \Gaufrette\Stream\Local as LocalStream;
 
-class StorageLocationTest extends \ConcreteDatabaseTestCase {
-
-    protected $fixtures = array();
-    protected $tables = array(
-        'FileStorageLocationTypes',
-        'FileStorageLocations',
-    );
-
-    protected function getStorageDirectory()
-    {
-        return dirname(__FILE__) . '/files';
-    }
-
-    protected function cleanup()
-    {
-        if (is_dir($this->getStorageDirectory())) {
-            $files = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator($this->getStorageDirectory(), \RecursiveDirectoryIterator::SKIP_DOTS),
-                \RecursiveIteratorIterator::CHILD_FIRST
-            );
-
-            foreach ($files as $fileinfo) {
-                $todo = ($fileinfo->isDir() ? 'rmdir' : 'unlink');
-                $todo($fileinfo->getRealPath());
-            }
-
-            rmdir($this->getStorageDirectory());
-        }
-    }
-
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->cleanup();
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        $this->cleanup();
-    }
-
+class StorageLocationTest extends \FileStorageTestCase {
 
     public function testCreateStorageLocations()
     {
@@ -62,14 +22,6 @@ class StorageLocationTest extends \ConcreteDatabaseTestCase {
 
     }
 
-    protected function getStorageLocation()
-    {
-        $type = Type::add('local', t('Local Storage'));
-        $configuration = $type->getConfigurationObject();
-        $configuration->setRootPath($this->getStorageDirectory());
-        return StorageLocation::add($configuration, 'Default', true);
-
-    }
     public function testGetFilesystemObject()
     {
         $location = $this->getStorageLocation();
@@ -93,6 +45,34 @@ class StorageLocationTest extends \ConcreteDatabaseTestCase {
         $this->assertEquals('This is a text file.', $contents->getContent());
     }
 
+
+    public function testBasicStreamFile()
+    {
+        $file = dirname(__FILE__) . '/fixtures/sample.txt';
+        $starterSize = filesize($file);
+        mkdir($this->getStorageDirectory());
+        print $this->getStorageDirectory();
+
+        $location = $this->getStorageLocation();
+        $filesystem = $location->getFileSystemObject();
+        $dst = $filesystem->createStream('sample2.txt');
+        $src = new LocalStream($file);
+
+        $src->open(new \Gaufrette\StreamMode('rb+'));
+        $dst->open(new \Gaufrette\StreamMode('ab+'));
+        while (!$src->eof()) {
+            $data = $src->read(10000);
+            $dst->write($data);
+        }
+        $dst->close();
+        $src->close();
+        // now we should have the file in there.
+
+        $this->assertTrue($filesystem->has('sample2.txt'));
+        $fo = $filesystem->get('sample2.txt');
+        $this->assertEquals($starterSize, $fo->getSize());
+    }
+
     public function testGetByDefault()
     {
         $this->getStorageLocation();
@@ -111,7 +91,6 @@ class StorageLocationTest extends \ConcreteDatabaseTestCase {
         $this->assertEquals(false, $alternate->isDefault());
         $this->assertEquals('Other Storage', $alternate->getName());
     }
-
 
 }
  
