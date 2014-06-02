@@ -34,13 +34,14 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase {
     }
 
     /**
-     * @return \Gaufrette\Filesystem
+     * @return \Concrete\Core\File\StorageLocation\StorageLocation
      */
     protected function getStorageLocation()
     {
         $type = Type::add('local', t('Local Storage'));
         $configuration = $type->getConfigurationObject();
         $configuration->setRootPath($this->getStorageDirectory());
+        $configuration->setWebRootRelativePath('/application/files');
         return StorageLocation::add($configuration, 'Default', true);
     }
 

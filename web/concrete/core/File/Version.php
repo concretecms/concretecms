@@ -12,6 +12,7 @@ use User;
 use View;
 use Page;
 use Events;
+use Core;
 
 class Version extends Object {
 
@@ -377,38 +378,39 @@ class Version extends Object {
 
 
 	/**
-	 * Returns a full filesystem path to the file on disk.
+	 * Returns an abstracted File object for the resource. NOT a concrete5 file object.
+     * @return \League\Flysystem\File
 	 */
-	public function getPath() {
-		$f = Loader::helper('concrete/file');
-		if ($this->fslID > 0) {
-			
-			$fsl = FileStorageLocation::getByID($this->fslID);
-			$path = $f->mapSystemPath($this->fvPrefix, $this->fvFilename, false, $fsl->getDirectory());
-		} else {
-			$path = $f->getSystemPath($this->fvPrefix, $this->fvFilename);
-		}
-		return $path;
-	}
+	public function getFileResource()
+    {
+        $cf = Core::make('helper/concrete/file');
+        $fs = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        $fo = $fs->get($cf->prefix($this->fvPrefix, $this->fvFilename));
+        return $fo;
+    }
+
 
 	/**
 	 * Returns a full URL to the file on disk
 	 */
-	public function getURL() {
-		return BASE_URL . $this->getRelativePath();
-	}
+    public function getURL() {
+        $cf = Core::make('helper/concrete/file');
+        $fsl = $this->getFile()->getFileStorageLocationObject();
+        if (is_object($fsl)) {
+            $configuration = $fsl->getConfigurationObject();
+            if ($configuration->hasPublicURL()) {
+                return $configuration->getPublicURLToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
+            }
+        }
+    }
 
 	/**
 	 * Returns a URL that can be used to download the file. This passes through the download_file single page.
 	 */
 	public function getDownloadURL() {
 		$c = Page::getCurrentPage();
-		if($c instanceof Page) {
-			$cID = $c->getCollectionID();
-		} else {
-			$cID = 0;
-		}
-		return BASE_URL . View::url('/download_file',$this->getFileID(),$cID);
+        $cID = ($c instanceof Page) ? $c->getCollectionID() : 0;
+		return BASE_URL . View::url('/download_file',$this->getFileID(), $cID);
 	}
 	
 	/**
@@ -416,33 +418,20 @@ class Version extends Object {
 	 */
 	public function getForceDownloadURL() {
 		$c = Page::getCurrentPage();
-		if($c instanceof Page) {
-			$cID = $c->getCollectionID();
-		} else {
-			$cID = 0;
-		}
-		return BASE_URL . View::url('/download_file','force', $this->getFileID(),$cID);
+        $cID = ($c instanceof Page) ? $c->getCollectionID() : 0;
+		return BASE_URL . View::url('/download_file','force', $this->getFileID(), $cID);
 	}
 	
 
-	public function getRelativePath($fullurl = false) {
-		$f = Loader::helper('concrete/file');
-		if ($this->fslID > 0) {
-			$c = Page::getCurrentPage();
-			if($c instanceof Page) {
-				$cID = $c->getCollectionID();
-			} else {
-				$cID = 0;
-			}
-			$path = BASE_URL . View::url('/download_file', 'view_inline', $this->getFileID(),$cID);
-		} else {
-			if ($fullurl) {
-				$path = BASE_URL . $f->getFileRelativePath($this->fvPrefix, $this->fvFilename );
-			} else {
-				$path = $f->getFileRelativePath($this->fvPrefix, $this->fvFilename );
-			}
-		}
-		return $path;
+	public function getRelativePath() {
+        $cf = Core::make('helper/concrete/file');
+        $fsl = $this->getFile()->getFileStorageLocationObject();
+        if (is_object($fsl)) {
+            $configuration = $fsl->getConfigurationObject();
+            if ($configuration->hasRelativePath()) {
+                return $configuration->getRelativePathToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
+            }
+        }
 	}
 
 	public function getThumbnailPath($level) {
@@ -477,25 +466,6 @@ class Version extends Object {
 		}
 	}
 
-	//
-	public function refreshThumbnails($refreshCache = true) {
-		$db = Loader::db();
-		$f = Loader::helper('concrete/file');
-		for ($i = 1; $i <= $this->numThumbnailLevels; $i++) {
-			$path = $f->getThumbnailSystemPath($this->fvPrefix, $this->fvFilename, $i);
-			$hasThumbnail = 0;
-			if (file_exists($path)) {
-				$hasThumbnail = 1;
-			}
-			$db->Execute("update FileVersions set fvHasThumbnail" . $i . "= ? where fID = ? and fvID = ?", array($hasThumbnail, $this->fID, $this->fvID));
-		}
-
-		if ($refreshCache) {
-			$fo = $this->getFile();
-			$fo->refreshCache();
-		}
-	}
-
 	// update types
 	const UT_NEW = 0;
 
@@ -511,11 +481,12 @@ class Version extends Object {
 		$ftl = FileTypeList::getType($ext);
 		$db = Loader::db();
 
-		if (!file_exists($this->getPath())) {
+        $fsr = $this->getFileResource();
+        if (!$fsr->isFile()) {
 			return ConcreteFile::F_ERROR_FILE_NOT_FOUND;
 		}
 
-		$size = filesize($this->getPath());
+        $size = $fsr->getSize();
 
 		$title = ($firstRun) ? $this->getFilename() : $this->getTitle();
 
@@ -535,17 +506,9 @@ class Version extends Object {
 
 			}
 		}
-		$this->refreshThumbnails(false);
 		$f = $this->getFile();
 		$f->refreshCache();
 		$f->reindex();
-	}
-
-	public function createThumbnailDirectories(){
-		$f = Loader::helper('concrete/file');
-		for ($i = 1; $i <= $this->numThumbnailLevels; $i++) {
-			$path = $f->getThumbnailSystemPath($this->fvPrefix, $this->fvFilename, $i, true);
-		}
 	}
 
 

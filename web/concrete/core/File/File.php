@@ -8,7 +8,7 @@ use Events;
 use Page;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Key as AttributeKey;
-use \Concrete\Core\File\StorageLocation as FileStorageLocation;
+use \Concrete\Core\File\StorageLocation\StorageLocation;
 use FileAttributeKey;
 use PermissionKey;
 
@@ -73,7 +73,16 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 	public function getStorageLocationID() {
 		return $this->fslID;
 	}
-	
+
+    /**
+     * @return \Concrete\Core\File\StorageLocation\StorageLocation
+     */
+    public function getFileStorageLocationObject()
+    {
+        $fsl = StorageLocation::getByID($this->fslID);
+        return $fsl;
+    }
+
 	public function refreshCache() {
 		// NOT NECESSARY
 	}
@@ -104,7 +113,7 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		return $path;
 	}
 
-	
+	/*
 	public function setStorageLocation($item) {
 		if ($item == 0) {
 			// set to default
@@ -128,7 +137,8 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 			$db->Execute('update Files set fslID = ? where fID = ?', array($itemID, $this->fID));
 		}
 	}
-	
+	*/
+
 	public function setPassword($pw) {
 
 		$fe = new \Concrete\Core\File\Event\FileWithPassword($this);
@@ -300,11 +310,15 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		return $nf;		
 	}
 	
-	public static function add($filename, $prefix, $data = array()) {
+	public static function add($filename, $prefix, $data = array(), $fsl = false) {
 		$db = Loader::db();
 		$dh = Loader::helper('date');
 		$date = $dh->getSystemDateTime(); 
-		
+
+        if (!is_object($fsl)) {
+            $fsl = StorageLocation::getDefault();
+        }
+
 		$uID = 0;
 		$u = new User();
 		if (isset($data['uID'])) {
@@ -313,7 +327,7 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 			$uID = $u->getUserID();
 		}
 		
-		$db->Execute('insert into Files (fDateAdded, uID) values (?, ?)', array($date, $uID));
+		$db->Execute('insert into Files (fDateAdded, uID, fslID) values (?, ?, ?)', array($date, $uID, $fsl->getID()));
 		
 		$fID = $db->Insert_ID();
 		
