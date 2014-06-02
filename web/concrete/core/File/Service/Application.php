@@ -4,13 +4,21 @@ namespace Concrete\Core\File\Service;
 use Loader;
 class Application {
 
+    public function prefix($prefix, $filename)
+    {
+        $apr = str_split($prefix, 4);
+        return sprintf('/%s/%s/%s/%s', $apr[0], $apr[1], $apr[2], $filename);
+    }
+
 	/** 
 	 * Given a file's prefix and its name, returns a path to the.
 	 * Can optionally create the path if this is the first time doing this operation for this version.
 	 */
+	 /*
 	public function getSystemPath($prefix, $filename, $createDirectories = false) {
 		return $this->mapSystemPath($prefix, $filename, $createDirectories);
 	}
+	 */
 	
 	public function getThumbnailSystemPath($prefix, $filename, $level, $createDirectories = false) {
 		switch($level) {
@@ -67,7 +75,7 @@ class Application {
 		$path = $this->mapSystemPath($prefix, $filename, $createDirectories, $rel);
 		return $path;
 	}
-	
+	/*
 	public function mapSystemPath($prefix, $filename, $createDirectories = false, $base = DIR_FILES_UPLOADED) {
 		if ($prefix == null) {
 			$path = $base . '/' . $filename;
@@ -103,7 +111,8 @@ class Application {
 		}
 		return $path;
 	}
-	
+	*/
+
 	public function getIncomingDirectoryContents() {
 		$incoming_file_information = array();
 		

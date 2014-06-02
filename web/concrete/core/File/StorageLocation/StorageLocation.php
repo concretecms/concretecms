@@ -15,7 +15,6 @@ class StorageLocation
      */
     protected $fslName;
 
-
     /**
      * @Column(type="object")
      */
@@ -42,6 +41,9 @@ class StorageLocation
         return $this->fslName;
     }
 
+    /**
+     * @return \Concrete\Core\File\StorageLocation\Configuration\Configuration
+     */
     public function getConfigurationObject()
     {
         return $this->fslConfiguration;
@@ -50,6 +52,11 @@ class StorageLocation
     public function isDefault()
     {
         return $this->fslIsDefault;
+    }
+
+    public function setConfigurationObject($configuration)
+    {
+        $this->fslConfiguration = $configuration;
     }
 
     public static function add(Configuration $configuration, $fslName, $fslIsDefault = false)
@@ -85,13 +92,13 @@ class StorageLocation
 
     /**
      * Returns the proper file system object for the current storage location, by mapping
-     * it through Gaufrette
-     * @return \Gaufrette\Filesystem;
+     * it through Flysystem
+     * @return \League\Flysystem\Filesystem
      */
     public function getFileSystemObject()
     {
         $adapter = $this->fslConfiguration->getAdapter();
-        $filesystem = new \Gaufrette\Filesystem($adapter);
+        $filesystem = new \League\Flysystem\Filesystem($adapter);
         return $filesystem;
     }
 

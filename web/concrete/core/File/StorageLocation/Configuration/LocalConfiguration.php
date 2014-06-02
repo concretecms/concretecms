@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Core\File\StorageLocation\Configuration;
-use \Gaufrette\Adapter\Local;
+use \League\Flysystem\Adapter\Local;
 
 class LocalConfiguration extends Configuration
 {
@@ -15,6 +15,31 @@ class LocalConfiguration extends Configuration
     public function getRootPath()
     {
         return $this->path;
+    }
+
+    public function setWebRootRelativePath($relativePath)
+    {
+        $this->relativePath = $relativePath;
+    }
+
+    public function hasPublicURL()
+    {
+        return $this->hasRelativePath();
+    }
+
+    public function hasRelativePath()
+    {
+        return $this->relativePath != '';
+    }
+
+    public function getRelativePathToFile($file)
+    {
+        return $this->relativePath . $file;
+    }
+
+    public function getPublicURLToFile($file)
+    {
+        return BASE_URL . $this->getRelativePathToFile($file);
     }
 
     public function loadFromRequest(\Concrete\Core\Http\Request $req)

@@ -2,7 +2,6 @@
 namespace Concrete\Tests\Core\File\StorageLocation;
 use \Concrete\Core\File\StorageLocation\Type\Type;
 use \Concrete\Core\File\StorageLocation\StorageLocation;
-use \Gaufrette\Stream\Local as LocalStream;
 
 class StorageLocationTest extends \FileStorageTestCase {
 
@@ -19,14 +18,31 @@ class StorageLocationTest extends \FileStorageTestCase {
 
         $configuration = $loc2->getConfigurationObject();
         $this->assertEquals($this->getStorageDirectory(), $configuration->getRootPath());
-
     }
+
+    public function testStorageLocationPublicURLs()
+    {
+        $location = $this->getStorageLocation();
+        $configuration = $location->getConfigurationObject();
+        $this->assertEquals(true, $configuration->hasPublicURL());
+        $this->assertEquals(true, $configuration->hasRelativePath());
+
+        $configuration = $location->getConfigurationObject();
+        $configuration->setWebRootRelativePath(null);
+        $location->setConfigurationObject($configuration);
+        $location->save();
+
+        $configuration = $location->getConfigurationObject();
+        $this->assertEquals(false, $configuration->hasPublicURL());
+        $this->assertEquals(false, $configuration->hasRelativePath());
+    }
+
 
     public function testGetFilesystemObject()
     {
         $location = $this->getStorageLocation();
         $filesystem = $location->getFileSystemObject();
-        $this->assertInstanceOf('\Gaufrette\Filesystem', $filesystem);
+        $this->assertInstanceOf('\League\Flysystem\Filesystem', $filesystem);
     }
 
     /**
@@ -42,7 +58,7 @@ class StorageLocationTest extends \FileStorageTestCase {
         $this->assertTrue($filesystem->has('foo.txt'));
 
         $contents = $filesystem->get('foo.txt');
-        $this->assertEquals('This is a text file.', $contents->getContent());
+        $this->assertEquals('This is a text file.', $contents->read());
     }
 
 
@@ -51,21 +67,13 @@ class StorageLocationTest extends \FileStorageTestCase {
         $file = dirname(__FILE__) . '/fixtures/sample.txt';
         $starterSize = filesize($file);
         mkdir($this->getStorageDirectory());
-        print $this->getStorageDirectory();
+
+        $src = fopen($file, 'rb+');
 
         $location = $this->getStorageLocation();
         $filesystem = $location->getFileSystemObject();
-        $dst = $filesystem->createStream('sample2.txt');
-        $src = new LocalStream($file);
+        $filesystem->writeStream('sample2.txt', $src);
 
-        $src->open(new \Gaufrette\StreamMode('rb+'));
-        $dst->open(new \Gaufrette\StreamMode('ab+'));
-        while (!$src->eof()) {
-            $data = $src->read(10000);
-            $dst->write($data);
-        }
-        $dst->close();
-        $src->close();
         // now we should have the file in there.
 
         $this->assertTrue($filesystem->has('sample2.txt'));

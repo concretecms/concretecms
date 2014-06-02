@@ -3,7 +3,7 @@ namespace Concrete\Core\File;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use Loader;
 use \File as ConcreteFile;
-use \Gaufrette\Stream\Local as LocalStream;
+use Core;
 
 class Importer {
 	
@@ -108,6 +108,7 @@ class Importer {
 		
 		$fh = Loader::helper('validation/file');
 		$fi = Loader::helper('file');
+        $cf = Core::make('helper/concrete/file');
 		$sanitizedFilename = $fi->sanitize($filename);
 		
 		// test if file is valid, else return FileImporter::E_FILE_INVALID
@@ -133,24 +134,15 @@ class Importer {
         $prefix = $this->generatePrefix();
 
         try {
-            $apr = str_split($prefix, 4);
-            $dst = $filesystem->createStream(sprintf('%s/%s/%s/%s', $apr[0], $apr[1], $apr[2], $sanitizedFilename));
-            $src = new LocalStream($pointer);
-            $src->open(new \Gaufrette\StreamMode('rb+'));
-            $dst->open(new \Gaufrette\StreamMode('ab+'));
-            while (!$src->eof()) {
-                $data = $src->read(10000);
-                $dst->write($data);
-            }
-            $dst->close();
-            $src->close();
+            $src = fopen($pointer, 'rb+');
+            $filesystem->writeStream($cf->prefix($prefix, $sanitizedFilename), $src);
         } catch (\Exception $e) {
             return self::E_FILE_UNABLE_TO_STORE;
         }
 
 		if (!($fr instanceof File)) {
 			// we have to create a new file object for this file version
-			$fv = ConcreteFile::add($sanitizedFilename, $prefix, array('fvTitle'=>$filename));
+			$fv = ConcreteFile::add($sanitizedFilename, $prefix, array('fvTitle'=>$filename), $fsl);
 			$fv->refreshAttributes();
 			$fr = $fv->getFile();
 		} else {
