@@ -19,27 +19,23 @@ class Application {
 		return $this->mapSystemPath($prefix, $filename, $createDirectories);
 	}
 	 */
-	
-	public function getThumbnailSystemPath($prefix, $filename, $level, $createDirectories = false) {
+
+	public function getThumbnailFilePath($prefix, $filename, $level) {
 		switch($level) {
 			case 2:
-				$base = DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2;
+				$base = REL_DIR_FILES_THUMBNAILS_LEVEL2;
 				break;
 			case 3:
-				$base = DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3;
+				$base = REL_DIR_FILES_THUMBNAILS_LEVEL3;
 				break;
 			default: // level 1
-				$base = DIR_FILES_UPLOADED_THUMBNAILS;
+				$base = REL_DIR_FILES_THUMBNAILS;
 				break;
 		}
-		
-		$hi = Loader::helper('file');
-		$path = $this->mapSystemPath($prefix, $filename, $createDirectories, $base);
-		if (!file_exists($path)) {
-			$filename = $hi->replaceExtension($filename, 'jpg');
-			$path = $this->mapSystemPath($prefix, $filename, $createDirectories, $base);
-		}
-		return $path;
+
+        $hi = Loader::helper('file');
+        $filename = $hi->replaceExtension($filename, 'jpg');
+        return $base . $this->prefix($prefix, $filename);
 	}
 
 	public function getRelativePath($prefix, $filename ) { 
