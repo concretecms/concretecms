@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\File\StorageLocation;
 use Concrete\Core\File\StorageLocation\Configuration\Configuration;
+use Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface;
 use Database;
 use Core;
 /**
@@ -42,7 +43,7 @@ class StorageLocation
     }
 
     /**
-     * @return \Concrete\Core\File\StorageLocation\Configuration\Configuration
+     * @return \Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface
      */
     public function getConfigurationObject()
     {
@@ -59,7 +60,7 @@ class StorageLocation
         $this->fslConfiguration = $configuration;
     }
 
-    public static function add(Configuration $configuration, $fslName, $fslIsDefault = false)
+    public static function add(ConfigurationInterface $configuration, $fslName, $fslIsDefault = false)
     {
         $db = Database::get();
         $em = $db->getEntityManager();
@@ -78,6 +79,15 @@ class StorageLocation
         $em = $db->getEntityManager();
         $r = $em->find('\Concrete\Core\File\StorageLocation\StorageLocation', $id);
         return $r;
+    }
+
+    public static function getList()
+    {
+        $db = Database::get();
+        $em = $db->getEntityManager();
+        return $em->getRepository('\Concrete\Core\File\StorageLocation\StorageLocation')->findBy(
+            array(), array('fslID' => 'asc')
+        );
     }
 
     public static function getDefault()

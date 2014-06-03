@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\File\EditResponse as FileEditResponse;
-use \Concrete\Core\File\StorageLocation as FileStorageLocation;
+use \Concrete\Core\File\StorageLocation\StorageLocation as FileStorageLocation;
 
 $u = new User();
 $form = Loader::helper('form');
@@ -95,12 +95,10 @@ if ($_POST['task'] == 'set_location') {
 
 <?=$form->hidden('task', 'set_location')?>
 <?=$form->hidden('fID', $f->getFileID())?>
-<label class="radio"><?=$form->radio('fslID', 0, $f->getStorageLocationID()) ?> <?=t('Default Location')?> (<?=DIR_FILES_UPLOADED?>)</label>
-
 <?
-$fsl = FileStorageLocation::getByID(FileStorageLocation::ALTERNATE_ID);
-if (is_object($fsl)) { ?>
-	<label class="radio"><?=$form->radio('fslID', FileStorageLocation::ALTERNATE_ID, $f->getStorageLocationID()) ?> <?=$fsl->getName()?> (<?=$fsl->getDirectory()?>)</label>
+$locations = FileStorageLocation::getList();
+foreach($locations as $fsl) { ?>
+    <label class="radio"><?=$form->radio('fslID', $fsl->getID(), $f->getStorageLocationID() == $fsl->getID()) ?> <?=$fsl->getName()?></label>
 <? } ?>
 </form>
 

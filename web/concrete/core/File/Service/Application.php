@@ -46,7 +46,8 @@ class Application {
 	public function getFileRelativePath($prefix, $filename ) { 	
 		return $this->getRelativePath($prefix, $filename);
 	}
-	
+
+	/*
 	public function getThumbnailRelativePath($prefix, $filename, $level) {
 		switch($level) {
 			case 2:
@@ -71,6 +72,7 @@ class Application {
 		$path = $this->mapSystemPath($prefix, $filename, $createDirectories, $rel);
 		return $path;
 	}
+	*/
 	/*
 	public function mapSystemPath($prefix, $filename, $createDirectories = false, $base = DIR_FILES_UPLOADED) {
 		if ($prefix == null) {

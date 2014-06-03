@@ -7,12 +7,14 @@ use FileAttributeKey;
 class FlvInspector extends Inspector {
 	
 	public function inspect($fv) {
-		
-		$path = $fv->getPath();
+
 		$at1 = FileAttributeKey::getByHandle('duration');
 		$at2 = FileAttributeKey::getByHandle('width');
 		$at3 = FileAttributeKey::getByHandle('height');
-		
+
+        // we killed $path here because the file might be hosted remotely.
+        // @TODO add in support for streams through the $filesystem object.
+
 		$fp = @fopen($path,'r');
 		@fseek($fp,27);
 		$onMetaData = fread($fp,10);

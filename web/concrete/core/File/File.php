@@ -61,10 +61,12 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		return $this->getFileID();
 	}
 
+    /*
 	public function getPath() {
 		$fv = $this->getVersion();
 		return $fv->getPath();
 	}
+    */
 
 	public function getPassword() {
 		return $this->fPassword;
@@ -488,7 +490,7 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 	 * returns the FileVersion object for the provided fvID
 	 * if none provided returns the approved version
 	 * @param int $fvID
-	 * @return FileVersion
+	 * @return Version
 	 */
 	public function getVersion($fvID = null) {
 

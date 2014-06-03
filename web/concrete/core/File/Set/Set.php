@@ -61,7 +61,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 		return $this->getFileSetID();
 	}
 
-	public function getMySets($u = false) {
+	public static function getMySets($u = false) {
 		if ($u == false) {
 			$u = new User();
 		}
