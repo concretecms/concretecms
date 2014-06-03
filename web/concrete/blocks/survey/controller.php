@@ -9,7 +9,7 @@ class Controller extends BlockController {
 	 
 	protected $btTable = 'btSurvey';
 	protected $btInterfaceWidth = "420";
-	protected $btInterfaceHeight = "300";	
+	protected $btInterfaceHeight = "400";
 	protected $btExportTables = array('btSurvey','btSurveyOptions','btSurveyResults');
 	
 	public $options = array();
