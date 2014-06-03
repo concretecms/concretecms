@@ -131,16 +131,16 @@ class File {
 		header("Cache-Control: private",false);
 		header("Content-Transfer-Encoding: binary");
 		header("Content-Encoding: plainbinary");  
-		
+
 		// This code isn't ready yet. It will allow us to no longer force download
-		
+
 		/*
 		$h = Loader::helper('mime');
 		$mimeType = $h->mimeFromExtension($this->getExtension($file));
 		header('Content-type: ' . $mimeType);
 		*/
-		
-	
+
+
 		$buffer = '';
 		$chunk = 1024*1024;
 		$handle = fopen($file, 'rb');

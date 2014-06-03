@@ -134,7 +134,7 @@ class Importer {
         $prefix = $this->generatePrefix();
 
         try {
-            $src = fopen($pointer, 'rb+');
+            $src = fopen($pointer, 'rb');
             $filesystem->writeStream($cf->prefix($prefix, $sanitizedFilename), $src);
         } catch (\Exception $e) {
             return self::E_FILE_UNABLE_TO_STORE;

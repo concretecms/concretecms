@@ -5,6 +5,18 @@ use \Concrete\Core\File\StorageLocation\StorageLocation;
 
 class StorageLocationTest extends \FileStorageTestCase {
 
+    public function testDefaultStorageLocation()
+    {
+        $type = Type::add('default', t('Default'));
+        $configuration = $type->getConfigurationObject();
+        $fsl = StorageLocation::add($configuration, 'Default', true);
+
+        $fsl = StorageLocation::getByID(1);
+        $configuration = $fsl->getConfigurationObject();
+        $this->assertEquals(DIR_FILES_UPLOADED_STANDARD, $configuration->getRootPath());
+        $this->assertEquals(BASE_URL . '/application/files/test.txt', $configuration->getPublicURLToFile('/test.txt'));
+    }
+
     public function testCreateStorageLocations()
     {
         $location = $this->getStorageLocation();

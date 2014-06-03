@@ -83,6 +83,6 @@ if (isset($_REQUEST['item']) && is_array($_REQUEST['item'])) {
 			$fv = $f->getApprovedVersion();
 		}
 		$f->trackDownload();
-		$ci->forceDownload($fv->getPath());
+        $f->forceDownload();
 	}
 }

@@ -50,11 +50,21 @@ class Type
         return $this->pkgID;
     }
 
+    /**
+     * @return \Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface
+     */
     public function getConfigurationObject()
     {
         return Core::make('\\Concrete\\Core\\File\\StorageLocation\\Configuration\\'
         . camelcase($this->getHandle()) . 'Configuration');
     }
+
+    /**
+     * @param $fslTypeHandle
+     * @param $fslTypeName
+     * @param int $pkgID
+     * @return \Concrete\Core\File\StorageLocation\Type\Type
+     */
     public static function add($fslTypeHandle, $fslTypeName, $pkgID = 0)
     {
         $db = Database::get();

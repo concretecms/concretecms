@@ -138,6 +138,16 @@ class ImporterTest extends \FileStorageTestCase {
         $fo = $fi->import($file, 'Aspens.png');
         $type = $fo->getTypeObject();
         $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
+
+        $this->assertTrue((bool) $fo->hasThumbnail(1));
+        $this->assertTrue((bool) $fo->hasThumbnail(2));
+        $this->assertFalse((bool) $fo->hasThumbnail(3));
+
+        $cf = Core::make('helper/concrete/file');
+        $fh = Core::make('helper/file');
+        $this->assertEquals('http://www.dummyco.com/application/files/thumbnails/level2'
+            . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), 'jpg'), 2),
+            $fo->getThumbnailURL(2));
     }
 
     public function testFileReplace()

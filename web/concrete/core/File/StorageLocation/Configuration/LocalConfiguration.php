@@ -2,10 +2,11 @@
 namespace Concrete\Core\File\StorageLocation\Configuration;
 use \League\Flysystem\Adapter\Local;
 
-class LocalConfiguration extends Configuration
+class LocalConfiguration implements ConfigurationInterface
 {
 
     protected $path;
+    protected $relativePath;
 
     public function setRootPath($path)
     {

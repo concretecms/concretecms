@@ -10,7 +10,6 @@ class ImageInspector extends Inspector {
 	public function inspect($fv) {
 
         $fr = $fv->getFileResource();
-        $fo = $fv->getFile();
         $image = Image::load($fr->read());
         $data = $image->getSize();
 
@@ -21,18 +20,7 @@ class ImageInspector extends Inspector {
 		$fv->setAttribute($at1, $data->getWidth());
 		$fv->setAttribute($at2, $data->getHeight());
 
-        $fsl = $fo->getFileStorageLocationObject();
-        $filesystem = $fsl->getFileSystemObject();
-
-
-        $helper = Core::make('helper/concrete/file');
-        $filesystem->write(
-            $helper->getThumbnailFilePath($fv->getPrefix(), $fv->getFilename(), 1),
-            $image->thumbnail(new Box(AL_THUMBNAIL_WIDTH, AL_THUMBNAIL_HEIGHT))
-        );
-        $filesystem->write(
-            $helper->getThumbnailFilePath($fv->getPrefix(), $fv->getFilename(), 2),
-            $image->thumbnail(new Box(AL_THUMBNAIL_WIDTH_LEVEL2, AL_THUMBNAIL_HEIGHT_LEVEL2))
-        );
+        $fv->rescanThumbnail(1);
+        $fv->rescanThumbnail(2);
     }
 }

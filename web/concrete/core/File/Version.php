@@ -18,6 +18,9 @@ class Version extends Object {
 
 	protected $numThumbnailLevels = 3;
 	protected $attributes = array();
+    protected $fvHasThumbnail1 = false;
+    protected $fvHasThumbnail2 = false;
+    protected $fvHasThumbnail3 = false;
 
 	// Update type constants
 	const UT_REPLACE_FILE = 1;
@@ -98,10 +101,8 @@ class Version extends Object {
 
 
 	public function getMimeType() {
-		$h = Loader::helper('mime');
-		$fh = Loader::helper('file');
-		$ext = $fh->getExtension($this->fvFilename);
-		return $h->mimeFromExtension($ext);
+        $fre = $this->getFileResource();
+        return $fre->getMimetype();
 	}
 
 	public function getSize() {
@@ -389,6 +390,18 @@ class Version extends Object {
         return $fo;
     }
 
+    /*
+    public function getPath()
+    {
+        $cf = Core::make('helper/concrete/file');
+        $fsl = $this->getFile()->getFileStorageLocationObject();
+        if (is_object($fsl)) {
+            $configuration = $fsl->getConfigurationObject();
+            $filesystem = $configuration->getFileSystemObject();
+            return $filesystem->get($cf->prefix($this->fvPrefix, $this->fvFilename));
+        }
+    }
+    */
 
 	/**
 	 * Returns a full URL to the file on disk
@@ -404,7 +417,19 @@ class Version extends Object {
         }
     }
 
-	/**
+    /**
+     * Return the contents of a file
+     */
+    public function getFileContents()
+    {
+        $cf = Core::make('helper/concrete/file');
+        $fsl = $this->getFile()->getFileStorageLocationObject();
+        if (is_object($fsl)) {
+            return $fsl->getFileSystemObject()->read($cf->prefix($this->fvPrefix, $this->fvFilename));
+        }
+    }
+
+    /**
 	 * Returns a URL that can be used to download the file. This passes through the download_file single page.
 	 */
 	public function getDownloadURL() {
@@ -434,13 +459,64 @@ class Version extends Object {
         }
 	}
 
-	public function getThumbnailSRC($level) {
+	public function getThumbnailURL($level)
+    {
 		if ($this->{"fvHasThumbnail{$level}"}) {
+            $fsl = $this->getFile()->getFileStorageLocationObject();
+            $configuration = $fsl->getConfigurationObject();
 			$f = Loader::helper('concrete/file');
-			$path = $f->getThumbnailRelativePath($this->fvPrefix, $this->fvFilename, $level);
-			return $path;
+            $path = $f->getThumbnailFilePath($this->getPrefix(), $this->getFilename(), $level);
+			return $configuration->getPublicURLToFile($path);
 		}
 	}
+
+    public function rescanThumbnail($level)
+    {
+
+        $fr = $this->getFileResource();
+        $image = \Image::load($fr->read());
+
+        $filesystem = $this->getFile()
+            ->getFileStorageLocationObject()
+            ->getFileSystemObject();
+
+        switch($level) {
+            case 1:
+                $width = AL_THUMBNAIL_WIDTH;
+                $height = AL_THUMBNAIL_HEIGHT;
+                break;
+            case 2:
+                $width = AL_THUMBNAIL_WIDTH_LEVEL2;
+                $height = AL_THUMBNAIL_HEIGHT_LEVEL2;
+                break;
+            case 3:
+                $width = AL_THUMBNAIL_WIDTH_LEVEL3;
+                $height = AL_THUMBNAIL_HEIGHT_LEVEL3;
+        }
+
+        $helper = Loader::helper('concrete/file');
+
+        $filesystem->write(
+            $helper->getThumbnailFilePath($this->getPrefix(), $this->getFilename(), $level),
+            $image->thumbnail(new \Imagine\Image\Box($width, $height))
+        );
+
+        $db = Loader::db();
+        $db->update('FileVersions', array('fvHasThumbnail' . $level => true),
+            array('fID' => $this->getFileID(), 'fvID' => $this->getFileVersionID())
+        );
+        switch($level) {
+            case 1:
+                $this->fvHasThumbnail1 = true;
+                break;
+            case 2:
+                $this->fvHasThumbnail2 = true;
+                break;
+            case 3:
+                $this->fvHasThumbnail3 = true;
+                break;
+        }
+    }
 
 	public function hasThumbnail($level) {
 		return $this->{"fvHasThumbnail{$level}"};
@@ -450,19 +526,15 @@ class Version extends Object {
 		$html = Loader::helper('html');
 		if ($this->{"fvHasThumbnail{$level}"}) {
 			if ($fullImageTag) {
-				return $html->image($this->getThumbnailSRC($level));
+				return $html->image($this->getThumbnailURL($level));
 			} else {
-				return $this->getThumbnailSRC($level);
+				return $this->getThumbnailURL($level);
 			}
 		} else {
 			$ft = FileTypeList::getType($this->fvFilename);
 			return $ft->getThumbnail($level, $fullImageTag);
 		}
 	}
-
-	// update types
-	const UT_NEW = 0;
-
 
 	/**
 	 * Responsible for taking a particular version of a file and rescanning all its attributes
@@ -598,9 +670,9 @@ class Version extends Object {
 		$r->title = $this->getTitle();
 		$r->description = $this->getDescription();
 		$r->fileName = $this->getFilename();
-		$r->thumbnailLevel1 = $this->getThumbnailSRC(1);
-		$r->thumbnailLevel2 = $this->getThumbnailSRC(2);
-		$r->thumbnailLevel3 = $this->getThumbnailSRC(3);
+		$r->thumbnailLevel1 = $this->getThumbnailURL(1);
+		$r->thumbnailLevel2 = $this->getThumbnailURL(2);
+		$r->thumbnailLevel3 = $this->getThumbnailURL(3);
 		$r->fID = $this->getFileID();
 		foreach($ats as $key => $value) {
 			$r->{$key} = $value;
