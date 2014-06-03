@@ -66,13 +66,14 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 
 		?>
 	</div>
-	<span style="position: relative">
-
-	<?php
-	echo $form->text('newAttrValueRows'.$attrKeyID, array('class' => 'ccm-attribute-type-select-autocomplete-text', 'style'=>'position:relative; width: 200px'));
-	?>
-	<input type="button" class="btn ccm-input-button" value="<?=t('Add')?>" onclick="ccmAttributeTypeSelectTagHelper<?=$attrKeyID?>.addButtonClick(); return false" />
-	</span>
+    <div class="input-group">
+        <?php
+        echo $form->text('newAttrValueRows'.$attrKeyID, array('class' => 'ccm-attribute-type-select-autocomplete-text', 'style'=>'position:relative;'));
+        ?>
+        <span class="input-group-btn">
+        <input type="button" class="btn ccm-input-button btn-default" value="<?=t('Add')?>" onclick="ccmAttributeTypeSelectTagHelper<?=$attrKeyID?>.addButtonClick(); return false" />
+        </span>
+    </div>
 </div>
 
 	<script type="text/javascript">
