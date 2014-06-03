@@ -434,12 +434,6 @@ class Version extends Object {
         }
 	}
 
-	public function getThumbnailPath($level) {
-		$f = Loader::helper('concrete/file');
-		$path = $f->getThumbnailSystemPath($this->fvPrefix, $this->fvFilename, $level);
-		return $path;
-	}
-
 	public function getThumbnailSRC($level) {
 		if ($this->{"fvHasThumbnail{$level}"}) {
 			$f = Loader::helper('concrete/file');

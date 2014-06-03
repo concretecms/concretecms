@@ -13,6 +13,7 @@
         "illuminate/container": "4.1.*",
         "patchwork/utf8": "1.1.*",
         "oyejorge/less.php": "~1.5",
+        "imagine/imagine": "0.6.*@dev",
         "innogames/cssmin": "dev-master",
         "tedivm/jshrink": "0.5.*",
         "michelf/php-markdown": "1.4.*@dev",

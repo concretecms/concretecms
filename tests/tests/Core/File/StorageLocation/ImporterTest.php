@@ -6,6 +6,7 @@ use \Concrete\Core\File\StorageLocation\StorageLocation;
 use \Concrete\Core\File\Importer;
 use \Concrete\Core\Attribute\Type as AttributeType;
 use \Concrete\Core\Attribute\Key\FileKey;
+use Core;
 use \Concrete\Core\Attribute\Key\Category;
 
 class ImporterTest extends \FileStorageTestCase {
@@ -116,17 +117,27 @@ class ImporterTest extends \FileStorageTestCase {
 
     }
 
+    public function testThumbnailStorageLocation()
+    {
+        mkdir($this->getStorageDirectory());
+        $fsl = $this->getStorageLocation();
+
+        $helper = Core::make('helper/concrete/file');
+        $path = $helper->getThumbnailFilePath('137803870092', 'testing.gif', 1);
+        $this->assertEquals('/thumbnails/1378/0387/0092/testing.jpg', $path);
+    }
+
     public function testImageImport()
     {
         // create the default storage location first.
         mkdir($this->getStorageDirectory());
         $this->getStorageLocation();
 
-        $file = DIR_BASE . '/concrete/images/logo.png';
+        $file = DIR_BASE . '/concrete/themes/default/images/inneroptics_dot_net_aspens.jpg';
         $fi = new Importer();
-        $fo = $fi->import($file, 'My Logo.png');
+        $fo = $fi->import($file, 'Aspens.png');
         $type = $fo->getTypeObject();
-        
+        $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
     }
 
     public function testFileReplace()

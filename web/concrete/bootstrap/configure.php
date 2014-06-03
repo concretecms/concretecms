@@ -183,6 +183,10 @@ define('DIRNAME_LANGUAGES_SITE_INTERFACE', 'site');
 define('DIRNAME_STYLE_CUSTOMIZER', 'style_customizer');
 define('DIRNAME_STYLE_CUSTOMIZER_TYPES', 'types');
 define('DIRNAME_STYLE_CUSTOMIZER_PRESETS', 'presets');
+define('REL_DIR_FILES_THUMBNAILS', '/thumbnails');
+define('REL_DIR_FILES_THUMBNAILS_LEVEL2', '/thumbnails/level2');
+define('REL_DIR_FILES_THUMBNAILS_LEVEL3', '/thumbnails/level3');
+
 
 
 
@@ -321,9 +325,6 @@ define('REL_DIR_PACKAGES', DIR_REL . '/packages');
 define('REL_DIR_PACKAGES_CORE', ASSETS_URL . '/packages');
 define('REL_DIR_FILES_PAGE_TEMPLATE_ICONS', ASSETS_URL_IMAGES . '/icons/page_templates');
 define('REL_DIR_FILES_UPLOADED', REL_DIR_APPLICATION . '/files');
-define('REL_DIR_FILES_UPLOADED_THUMBNAILS', REL_DIR_APPLICATION . '/files/thumbnails');
-define('REL_DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2', REL_DIR_APPLICATION . '/files/thumbnails/level2');
-define('REL_DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', REL_DIR_APPLICATION . '/files/thumbnails/level3');
 define('REL_DIR_FILES_CACHE', REL_DIR_FILES_UPLOADED . '/cache');
 define('REL_DIR_AL_ICONS', ASSETS_URL_IMAGES . '/icons/filetypes');
 define('REL_DIR_FILES_AVATARS', REL_DIR_FILES_UPLOADED . '/avatars');
