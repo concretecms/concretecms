@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Stack\Pile;
 use Loader;
 use \Concrete\Core\Foundation\Object;
+use Block;
 class PileContent extends Object {
 
 	var $p, $pID, $pcID, $itemID, $itemType, $quantity, $timestamp, $displayOrder;

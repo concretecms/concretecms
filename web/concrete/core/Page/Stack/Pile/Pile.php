@@ -341,17 +341,7 @@ class Pile extends Object
         $currentDO = $db->getOne($q1, $v1);
         $displayOrder = $currentDO + 1;
         if (!$existingPCID) {
-            switch (strtolower(get_class($obj))) {
-                case "page":
-                    $v = array($this->pID, $obj->getCollectionID(), "COLLECTION", $quantity, $displayOrder);
-                    break;
-                case "block":
-                    $v = array($this->pID, $obj->getBlockID(), "BLOCK", $quantity, $displayOrder);
-                    break;
-                case "pilecontent":
-                    $v = array($this->pID, $obj->getItemID(), $obj->getItemType(), $obj->getQuantity(), $displayOrder);
-                    break;
-            }
+            $v = array($this->pID, $obj->getBlockID(), "BLOCK", $quantity, $displayOrder);
             $q = "insert into PileContents (pID, itemID, itemType, quantity, displayOrder) values (?, ?, ?, ?, ?)";
             $r = $db->query($q, $v);
             if ($r) {
