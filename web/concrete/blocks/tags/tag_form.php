@@ -16,12 +16,12 @@ if(!$ak instanceof CollectionAttributeKey) {?>
     <div class="form-group">
         <div class="radio">
             <label>
-                <?php echo $form->radio('displayMode','page',$displayMode)?><?php echo t('Display Tags for the current page')?>
+                <?php echo $form->radio('displayMode','page',$displayMode)?><?php echo t('Current Page')?>
             </label>
         </div>
         <div class="radio">
             <label>
-                <?php echo $form->radio('displayMode','cloud',$displayMode)?><?php echo t('Display available tags')?>
+                <?php echo $form->radio('displayMode','cloud',$displayMode)?><?php echo t('All Available Tags')?>
             </label>
         </div>
     </div>
@@ -47,7 +47,7 @@ if(!$ak instanceof CollectionAttributeKey) {?>
 
 
 	<div class="clearfix">
-	<label style="margin-bottom: 0px;"><?=t('Link Tags to Page')?></label>
+	<label style="margin-bottom: 0px;"><?=t('Link Tags')?></label>
 	<div class="input">
 		<?php
 		$form_selector = Loader::helper('form/page_selector');
