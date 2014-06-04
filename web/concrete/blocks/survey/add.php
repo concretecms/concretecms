@@ -18,29 +18,31 @@ var currentOption = 0;
     <label for="questionEntry"><?=t('Question')?></label>
     <input type="text" style="width: 320px" name="question" value="" class="form-control" />
 </div>
-<br/>
-<label for="requiresRegistration"><?=t('Open to all site visitors?')?></label><br/>
+<label for="requiresRegistration"><?=t('Target Audience')?></label>
 <div class="radio">
     <label>
-        <input id="requiresRegistration" type="radio" value="0" name="requiresRegistration" style="vertical-align: middle" checked />&nbsp;<?=t('Yes')?>
+        <input id="requiresRegistration" type="radio" value="0" name="requiresRegistration" style="vertical-align: middle" checked />&nbsp;<?=t('Public')?>
     </label>
 </div>
 <div class="radio">
     <label>
-        <input type="radio" value="1" name="requiresRegistration" style="vertical-align: middle" />&nbsp;<?=t('No. Registration is required to answer.')?>
+        <input type="radio" value="1" name="requiresRegistration" style="vertical-align: middle" />&nbsp;<?=t('Only Registered Users')?>
     </label>
 </div>
-<strong><?=t('Options')?></strong>
-<div id="pollOptions">
-<?=t('None')?>
+<hr />
+<label><?=t('Answer Options')?></label>
+<div class="form-group">
+    <div id="pollOptions">
+    <?=t('None')?>
+    </div>
 </div>
-
-<br/>
 <label for="optionEntry"><?=t('Add Option')?></label>
-<div class="input-group">
-    <input type="text" name="optionValue" id="ccm-survey-optionValue" class="form-control"/>
-<span class="input-group-btn">
-<button class="btn btn-default" type="button" value="Add" onclick="addOption()"><?php echo t('Add'); ?></button>
-</span>
+<div class="form-group">
+    <div class="input-group">
+        <input type="text" name="optionValue" id="ccm-survey-optionValue" class="form-control"/>
+    <span class="input-group-btn">
+    <button class="btn btn-default" type="button" value="Add" onclick="addOption()"><?php echo t('Add'); ?></button>
+    </span>
+    </div>
 </div>
 </div>
