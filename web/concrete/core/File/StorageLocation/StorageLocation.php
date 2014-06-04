@@ -62,6 +62,8 @@ class StorageLocation
 
     public static function add(ConfigurationInterface $configuration, $fslName, $fslIsDefault = false)
     {
+        $default = self::getDefault();
+
         $db = Database::get();
         $em = $db->getEntityManager();
         $o = new static();
@@ -69,7 +71,14 @@ class StorageLocation
         $o->fslIsDefault = $fslIsDefault;
         $o->fslConfiguration = $configuration;
         $em->persist($o);
+
+        if ($fslIsDefault) {
+            $default->fslIsDefault = false;
+            $em->persist($default);
+        }
+
         $em->flush();
+
         return $o;
     }
 

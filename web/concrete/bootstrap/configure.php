@@ -183,6 +183,7 @@ define('DIRNAME_LANGUAGES_SITE_INTERFACE', 'site');
 define('DIRNAME_STYLE_CUSTOMIZER', 'style_customizer');
 define('DIRNAME_STYLE_CUSTOMIZER_TYPES', 'types');
 define('DIRNAME_STYLE_CUSTOMIZER_PRESETS', 'presets');
+define('DIRNAME_FILE_STORAGE_LOCATION_TYPES', 'storage_location_types');
 define('REL_DIR_FILES_THUMBNAILS', '/thumbnails');
 define('REL_DIR_FILES_THUMBNAILS_LEVEL2', '/thumbnails/level2');
 define('REL_DIR_FILES_THUMBNAILS_LEVEL3', '/thumbnails/level3');
@@ -234,7 +235,6 @@ define('FILENAME_CONVERSATION_EDITOR_FORM_MESSAGE', 'message.php');
 define('FILENAME_CONVERSATION_EDITOR_FORM_REPLY', 'reply.php');
 define('FILENAME_STYLE_CUSTOMIZER_STYLES', 'styles.xml');
 define('FILENAME_STYLE_CUSTOMIZER_DEFAULT_PRESET_NAME', 'defaults.less');
-
 
 
 /**
@@ -347,16 +347,6 @@ if (URL_REWRITING_ALL == true) {
 }
 define('REL_DIR_FILES_TOOLS_BLOCKS', REL_DIR_FILES_TOOLS . '/blocks'); // this maps to the /tools/ directory in the blocks subdir
 define('REL_DIR_FILES_TOOLS_PACKAGES', REL_DIR_FILES_TOOLS . '/packages');
-
-
-
-/**
- * ----------------------------------------------------------------------------
- * Server binaries
- * ----------------------------------------------------------------------------
- */
-defined('DIR_FILES_BIN_UNZIP') or define('DIR_FILES_BIN_UNZIP', '/usr/bin/unzip');
-defined('DIR_FILES_BIN_ZIP') or define('DIR_FILES_BIN_ZIP', '/usr/bin/zip');
 
 
 

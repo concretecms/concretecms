@@ -1,7 +1,10 @@
 <?php
 namespace Concrete\Core\File\StorageLocation\Type;
+use Concrete\Core\Package\PackageList;
 use Database;
 use Core;
+use Environment;
+
 /**
  * @Entity
  * @Table(name="FileStorageLocationTypes")
@@ -48,6 +51,11 @@ class Type
     public function getPackageID()
     {
         return $this->pkgID;
+    }
+
+    public function getPackageHandle()
+    {
+        return PackageList::getHandle($this->pkgID);
     }
 
     /**
@@ -115,6 +123,24 @@ class Type
         return $em->getRepository('\Concrete\Core\File\StorageLocation\Type\Type')->findBy(
             array(), array('fslTypeID' => 'asc')
         );
+    }
+
+    public function hasOptionsForm() {
+        $env = Environment::get();
+        $rec = $env->getRecord(DIRNAME_ELEMENTS .
+            '/' . DIRNAME_FILE_STORAGE_LOCATION_TYPES .
+            '/' . $this->getHandle() . '.php',
+        $this->getPackageHandle());
+        return $rec->exists();
+    }
+
+    public function includeOptionsForm($location = false) {
+        \View::element(DIRNAME_FILE_STORAGE_LOCATION_TYPES . '/' . $this->getHandle(),
+        array(
+            'type' => $this,
+            'location' => $location,
+            'configuration' => $location->getConfigurationObject
+        ), $this->getPackageHandle());
     }
 
 

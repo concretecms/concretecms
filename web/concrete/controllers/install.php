@@ -132,6 +132,7 @@ class Install extends Controller {
 		// no longer need lucene
 		//$this->set('searchTest', function_exists('iconv') && function_exists('mb_strtolower') && (@preg_match('/\pL/u', 'a') == 1));
 		$this->set('remoteFileUploadTest', function_exists('iconv'));
+        $this->set('fileZipTest', class_exists('ZipArchive'));
 	}
 	
 	public function passedRequiredItems() {

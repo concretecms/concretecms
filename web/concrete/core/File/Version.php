@@ -699,6 +699,7 @@ class Version extends Object {
 		$r->title = $this->getTitle();
 		$r->description = $this->getDescription();
 		$r->fileName = $this->getFilename();
+        $r->resultsThumbnail = $this->getThumbnail(1, false);
 		$r->thumbnailLevel1 = $this->getThumbnailURL(1);
 		$r->thumbnailLevel2 = $this->getThumbnailURL(2);
 		$r->thumbnailLevel3 = $this->getThumbnailURL(3);
