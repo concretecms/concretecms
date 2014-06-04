@@ -3,19 +3,14 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Environment;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
-use \Concrete\Core\File\StorageLocation as FileStorageLocation;
+use \Concrete\Core\File\StorageLocation\StorageLocation as FileStorageLocation;
 
 class Storage extends DashboardPageController {
 
 	var $helpers = array('form','concrete/ui','validation/token', 'concrete/file');
 	
 	public function view($updated=false) {
-		$fsl = FileStorageLocation::getByID(FileStorageLocation::ALTERNATE_ID);
-		if (is_object($fsl)) {
-			$this->set('fsl', $fsl);
-			$this->set('fslName', $fsl->getName());
-			$this->set('fslDirectory', $fsl->getDirectory());
-		}
+        $this->set('locations', FileStorageLocation::getList());
 	}
 	
 

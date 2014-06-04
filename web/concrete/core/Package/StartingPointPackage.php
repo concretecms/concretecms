@@ -140,6 +140,7 @@ class StartingPointPackage extends BasePackage {
 
 	public function import_files() {
         $type = \Concrete\Core\File\StorageLocation\Type\Type::add('default', t('Default'));
+        \Concrete\Core\File\StorageLocation\Type\Type::add('local', t('Local'));
         $configuration = $type->getConfigurationObject();
         $fsl = \Concrete\Core\File\StorageLocation\StorageLocation::add($configuration, t('Default'), true);
 
