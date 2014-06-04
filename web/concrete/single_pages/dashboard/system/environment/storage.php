@@ -1,21 +1,10 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<? if (isset($location)) { ?>
-
-    <form method="post" action="<?=$view->action('edit')?>" id="ccm-attribute-key-form">
-
-
-
-    </form>
-
-
-
-
-
-<? } else if ($this->controller->getTask() == 'select_type' || $this->controller->getTask() == 'add' || $this->controller->getTask() == 'edit') { ?>
+<? if ($this->controller->getTask() == 'select_type' || $this->controller->getTask() == 'add' || $this->controller->getTask() == 'edit') { ?>
 
     <? if (isset($type)) { ?>
         <form method="post" action="<?=$view->action('add')?>" id="ccm-attribute-key-form">
+
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
                     <a href="<?=URL::page($c)?>" class="btn pull-left btn-default"><?=t('Back')?></a>
