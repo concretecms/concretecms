@@ -102,38 +102,21 @@ class FileList extends DatabaseItemList {
 	public static function exportArchive($archive) {
 		$fl = new FileList();
 		$files = $fl->get();
-		$filestring = '';
 		$fh = Loader::helper('file');
-		$filenames = array();
 		$filename = $fh->getTemporaryDirectory() . '/' . $archive . '.zip';
 		if (count($files) > 0) {
 			try {
-				if (class_exists('ZipArchive', false)) {
-					$zip = new ZipArchive;
-					$res = $zip->open($filename, ZipArchive::CREATE);
-					if ($res === TRUE) {
-						foreach($files as $f) {
-							$file = $f->getPath();
-							if (!in_array(basename($file), $filenames)) {
-								$filenames[] = basename($file);
-								$zip->addFile(addslashes($file), basename($file));
-							}
-						}
-						$zip->close();
-					} else {
-						throw new Exception(t('Could not open with ZipArchive::CREATE'));
-					}
-				} else {
-					$filestring = "'" . addslashes($filename) . "' ";
-					foreach($files as $f) {
-						$file = $f->getPath();
-						if (!in_array(basename($file), $filenames)) {
-							$filenames[] = basename($file);
-							$filestring .= "'" . addslashes($file) . "' ";
-						}
-					}
-					exec(DIR_FILES_BIN_ZIP . ' -j ' . $filestring);
-				}
+                $zip = new ZipArchive;
+                $res = $zip->open($filename, ZipArchive::CREATE);
+                if ($res === TRUE) {
+                    foreach($files as $f) {
+                        $zip->addFromString($f->getFilename(), $f->getFileContents());
+                    }
+                    $zip->close();
+                    $fh->forceDownload($filename);
+                } else {
+                    throw new Exception(t('Could not open with ZipArchive::CREATE'));
+                }
 			} catch(Exception $e) {
 				throw new Exception(t('Failed to create zip file as "%s": %s', $filename, $e->getMessage()));
 			}

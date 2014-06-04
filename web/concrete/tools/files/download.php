@@ -28,11 +28,8 @@ if (isset($_REQUEST['item']) && is_array($_REQUEST['item'])) {
 		}
 		$fp = new Permissions($f);
 		if ($fp->canViewFile()) {
-			if (!in_array(basename($f->getPath()), $filenames)) {
-				$files[] = $f->getPath();
-			}
+            $files[] = $f;
 			$f->trackDownload();
-			$filenames[] = basename($f->getPath());
 		}
 	}
 	if(empty($files)) {
@@ -45,22 +42,13 @@ if (isset($_REQUEST['item']) && is_array($_REQUEST['item'])) {
 			throw new Exception(t('Could not open with ZipArchive::CREATE'));
 		}
 		foreach($files as $f) {
-			$zip->addFile($f, basename($f));
+			$zip->addFromString($f->getFilename(), $f->getFileContents());
 		}
 		$zip->close();
+        $ci->forceDownload($filename);
+	} else {
+	    throw new Exception('Unable to zip files using ZipArchive. Please ensure the Zip extension is installed.');
 	}
-	else {
-		$exec = escapeshellarg(DIR_FILES_BIN_ZIP) . ' -j ' . escapeshellarg($filename);
-		foreach($files as $f) {
-			$exec .= ' ' . escapeshellarg($f);
-		}
-		$exec .= ' 2>&1';
-		@exec($exec, $output, $rc);
-		if($rc !== 0) {
-			throw new Exception(t('External zip failed. Error description: %s', implode("\n", $outout)));
-		}
-	}
-	$ci->forceDownload($filename);
 
 } else if($_REQUEST['fID']) {
 	

@@ -418,6 +418,21 @@ $(function() {
 </table>
 
 </div>
+
+<div class="col-sm-5">
+
+    <table class="table table-striped requirements-table">
+        <tbody>
+        <tr>
+            <td><? if ($fileZipTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/success.png" /><? } else { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/warning.png" /><? } ?></td>
+            <td width="100%"><?=t('Zip Support')?>
+            </td>
+            <td><? if (!fileZipTest) { ?><img src="<?=ASSETS_URL_IMAGES?>/icons/tooltip.png" class="launch-tooltip" title="<?=t('Downloading zipped files from the file manager and remote updating requires the Zip extension.')?>" /><? } ?></td>
+        </tr>
+    </table>
+
+</div>
+
 </div>
 
 <div class="row">

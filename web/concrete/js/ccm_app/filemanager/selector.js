@@ -53,7 +53,7 @@
         chooseTemplate: '<div class="ccm-file-selector-choose-new"><%=options.chooseText%></div>',
         loadingTemplate: '<div class="ccm-file-selector-loading"><img src="' + CCM_IMAGE_PATH + '/throbber_white_16.gif" /></div>',
         fileLoadedTemplate: '<div class="ccm-file-selector-file-selected"><input type="hidden" name="<%=inputName%>" value="<%=file.fID%>" />' +
-            '<div class="ccm-file-selector-file-selected-thumbnail"><img src="<%=file.thumbnailLevel1%>" /></div>' +
+            '<div class="ccm-file-selector-file-selected-thumbnail"><img src="<%=file.resultsThumbnail%>" /></div>' +
             '<div class="ccm-file-selector-file-selected-title"><div><%=file.title%></div></div><div class="clearfix"></div>' +
             '</div>',
 

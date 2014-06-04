@@ -26,8 +26,8 @@ class ConfigurationTest extends \ConcreteDatabaseTestCase {
         $req = new \Concrete\Core\Http\Request;
         $req->setMethod('POST');
         $data = array();
-        $data['local']['path'] = '/foo/bar/path';
-        $req->request->set('fslData', $data);
+        $data['path'] = '/foo/bar/path';
+        $req->request->set('fslType', $data);
         $configuration->loadFromRequest($req);
 
         $this->assertEquals('/foo/bar/path', $configuration->getRootPath());

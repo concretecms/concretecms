@@ -52,7 +52,7 @@ foreach($contents as $obj) {
 				$bv = new BlockView($item);
 				$bv->render('scrapbook');
 			} catch(Exception $e) {
-				print t('This block is no longer available.');
+				print t('This block is no longer available.');`
 			}	
 			?>
 			</div>
