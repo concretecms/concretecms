@@ -1,42 +1,48 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Storage Locations'), false, 'span6 offset3', false)?>
+<? if (isset($location)) { ?>
 
-	<form method="post" class="form-inline" id="file-access-storage" action="<?=$view->url('/dashboard/system/environment/storage', 'save')?>">
-	<div class="ccm-pane-body">
-			<?=$validation_token->output('file_storage');?>
-			<fieldset>
-			<legend><?=t('Standard File Location')?></legend>
-			<div class="control-group">
-			<label class="control-label" for="DIR_FILES_UPLOADED"><?=t('Path')?></label>
-			<div class="controls">
-			<?=$form->text('DIR_FILES_UPLOADED', DIR_FILES_UPLOADED, array('rows'=>'2','class' => 'span5'))?>
-			</div>
-			</div>
-			
-			</fieldset>
-			<fieldset>
-			<legend><?=t('Alternate Storage Directory')?></legend>
-			
-			<div class="control-group">
-			<label for="fslName" class="control-label"><?=t('Location Name')?></label>
-			<div class="controls">
-			<?=$form->text('fslName', $fslName, array('class' => 'span5'))?>
-			</div></div>
-			<div class="control-group">
-			<label for="fslDirectory" class="control-label"><?=t('Path')?></label>
-			<div class="controls">
-			<?=$form->text('fslDirectory', $fslDirectory, array('rows' => '2', 'class' => 'span5'))?>
-			</div></div>
-			</fieldset>
-	</div>
-	<div class="ccm-pane-footer">
-		<?= $interface->submit(t('Save'), 'file-storage', 'right', 'primary') ?>		
-		<? if (is_object($fsl)) { ?>
-			<button type="submit" name="delete" value="1" onclick="return confirm('<?=t('Are you sure? (Note: this will not remove any files, it will simply remove the pointer to the directory, and reset any files that are set to this location.)')?>')" class="pull-right btn btn-danger"><?=t('Delete Alternate')?></button>
-		<? } ?>
+    <form method="post" action="<?=$view->action('edit')?>" id="ccm-attribute-key-form">
 
-	</div>
-	</form>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
+
+    </form>
+
+
+
+
+
+<? } else if ($this->controller->getTask() == 'select_type' || $this->controller->getTask() == 'add' || $this->controller->getTask() == 'edit') { ?>
+
+    <? if (isset($type)) { ?>
+        <form method="post" action="<?=$view->action('add')?>" id="ccm-attribute-key-form">
+            <div class="ccm-dashboard-form-actions-wrapper">
+                <div class="ccm-dashboard-form-actions">
+                    <a href="<?=URL::page($c)?>" class="btn pull-left btn-default"><?=t('Back')?></a>
+                    <? if (is_object($location)) { ?>
+                        <button type="submit" class="btn btn-primary pull-right"><?=t('Save')?></button>
+                    <? } else { ?>
+                        <button type="submit" class="btn btn-primary pull-right"><?=t('Add')?></button>
+                    <? } ?>
+                </div>
+            </div>
+        </form>
+    <? } ?>
+
+<? } else { ?>
+
+    <form method="get" action="<?=$view->action('select_type')?>" id="ccm-file-storage-location-type-form">
+        <fieldset>
+
+            <legend><?=t('Add Location')?></legend>
+            <label for="atID"><?=t('Choose Type')?></label>
+            <div class="form-inline">
+                <div class="form-group">
+                    <?=$form->select('fslTypeID', $types)?>
+                </div>
+                <button type="submit" class="btn btn-default"><?=t('Go')?></button>
+            </div>
+        </fieldset>
+    </form>
+
+<? } ?>
