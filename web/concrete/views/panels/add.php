@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
@@ -49,7 +49,7 @@ foreach($contents as $obj) {
 			<div class="ccm-panel-add-block-clipboard-item-inner">
 			<?	
 			try {
-				$bv = new BlockView($item);
+				$bv = new \Concrete\Core\Block\View\BlockView($item);
 				$bv->render('scrapbook');
 			} catch(Exception $e) {
 				print t('This block is no longer available.');
