@@ -4,6 +4,7 @@ use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
 use \Concrete\Core\File\StorageLocation\StorageLocation as FileStorageLocation;
+use Concrete\Core\File\StorageLocation\Type\Type;
 
 class Storage extends DashboardPageController {
 
@@ -11,10 +12,25 @@ class Storage extends DashboardPageController {
 	
 	public function view($updated=false) {
         $this->set('locations', FileStorageLocation::getList());
+        $types = array();
+        $storageLocationTypes = Type::getList();
+        foreach($storageLocationTypes as $type) {
+            if ($type->getHandle() == 'default') {
+                continue;
+            }
+            $types[$type->getID()] = $type->getName();
+        }
+        $this->set('types', $types);
 	}
-	
 
-	public function storage_saved() {
+    public function select_type() {
+        $fslTypeID = $this->request('fslTypeID');
+        $type = Type::getByID($fslTypeID);
+        $this->set('type', $type);
+    }
+
+
+    public function storage_saved() {
 		$this->set('message', t('File storage locations saved.'));
 		$this->view();
 	}

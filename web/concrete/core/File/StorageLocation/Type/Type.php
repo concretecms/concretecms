@@ -84,7 +84,7 @@ class Type
     {
         $db = Database::get();
         $em = $db->getEntityManager();
-        $r = $em->find('\Concrete\Core\File\StorageLocation\Type', $id);
+        $r = $em->find('\Concrete\Core\File\StorageLocation\Type\Type', $id);
         return $r;
     }
 
@@ -104,6 +104,18 @@ class Type
     }
 
 
+    /**
+     * Returns an array of \Concrete\Core\File\StorageLocation\Type\Type objects.
+     * @return array
+     */
+    public static function getList()
+    {
+        $db = Database::get();
+        $em = $db->getEntityManager();
+        return $em->getRepository('\Concrete\Core\File\StorageLocation\Type\Type')->findBy(
+            array(), array('fslTypeID' => 'asc')
+        );
+    }
 
 
 }
