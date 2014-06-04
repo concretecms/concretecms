@@ -14,21 +14,33 @@ div.survey-block-option img {
 var currentOption = 0;
 </script>
 <div class="ccm-ui">
-<strong><?=t('Question')?></strong><br/>
-<input type="text" style="width: 320px" name="question" value="" />
-<br><br>
-<strong><?=t('Open to all site visitors?')?></strong><br/>
-<input type="radio" value="0" name="requiresRegistration" style="vertical-align: middle" checked />&nbsp;<?=t('Yes')?>
-&nbsp;&nbsp;
-<input type="radio" value="1" name="requiresRegistration" style="vertical-align: middle" />&nbsp;<?=t('No. Registration is required to answer.')?>
-<br><br>
+<div class="form-group">
+    <label for="questionEntry"><?=t('Question')?></label>
+    <input type="text" style="width: 320px" name="question" value="" class="form-control" />
+</div>
+<br/>
+<label for="requiresRegistration"><?=t('Open to all site visitors?')?></label><br/>
+<div class="radio">
+    <label>
+        <input id="requiresRegistration" type="radio" value="0" name="requiresRegistration" style="vertical-align: middle" checked />&nbsp;<?=t('Yes')?>
+    </label>
+</div>
+<div class="radio">
+    <label>
+        <input type="radio" value="1" name="requiresRegistration" style="vertical-align: middle" />&nbsp;<?=t('No. Registration is required to answer.')?>
+    </label>
+</div>
 <strong><?=t('Options')?></strong>
 <div id="pollOptions">
 <?=t('None')?>
 </div>
 
-<br/><br/>
-<strong><?=t('Add option')?></strong><br/>
-<input type="text" name="optionValue" id="ccm-survey-optionValue" style="width: 320px" />
-<input type="button" onclick="addOption()" value="<?=t('Add')?>" class="btn small" />
+<br/>
+<label for="optionEntry"><?=t('Add Option')?></label>
+<div class="input-group">
+    <input type="text" name="optionValue" id="ccm-survey-optionValue" class="form-control"/>
+<span class="input-group-btn">
+<button class="btn btn-default" type="button" value="Add" onclick="addOption()"><?php echo t('Add'); ?></button>
+</span>
+</div>
 </div>
