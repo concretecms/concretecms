@@ -413,6 +413,8 @@ class Version extends Object {
             $configuration = $fsl->getConfigurationObject();
             if ($configuration->hasPublicURL()) {
                 return $configuration->getPublicURLToFile($cf->prefix($this->fvPrefix, $this->fvFilename));
+            } else {
+                return $this->getDownloadURL();
             }
         }
     }
@@ -446,7 +448,34 @@ class Version extends Object {
         $cID = ($c instanceof Page) ? $c->getCollectionID() : 0;
 		return BASE_URL . View::url('/download_file','force', $this->getFileID(), $cID);
 	}
-	
+
+    /**
+     * Forces the download of a file.
+     * @return void
+     */
+    public function forceDownload() {
+        session_write_close();
+        $fre = $this->getFileResource();
+        ob_clean();
+        header('Content-type: application/octet-stream');
+        header("Content-Disposition: attachment; filename=\"" . $this->getFilename() . "\"");
+        header('Content-Length: ' . $fre->getSize());
+        header("Pragma: public");
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Cache-Control: private",false);
+        header("Content-Transfer-Encoding: binary");
+        header("Content-Encoding: plainbinary");
+
+        $fs = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+
+        $stream = $fs->readStream($fre->getPath());
+        $contents = stream_get_contents($stream);
+        fclose($stream);
+
+        print $contents;
+        exit;
+    }
 
 	public function getRelativePath() {
         $cf = Core::make('helper/concrete/file');

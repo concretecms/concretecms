@@ -83,10 +83,6 @@ if (is_object($fsl)) { ?>
     </div>
 <? } ?>
 <div class="row">
-	<div class="col-md-3"><p><?=t('Location')?></p></div>
-	<div class="col-md-9"><p><?=$sli?></p></div>
-</div>
-<div class="row">
 	<div class="col-md-3"><p><?=t('Title')?></p></div>
 	<div class="col-md-9"><p><span <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable" data-type="text" data-name="fvTitle"<? } ?>><?=$fv->getTitle()?></span></p></div>
 </div>
