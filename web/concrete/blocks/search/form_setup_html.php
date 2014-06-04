@@ -21,7 +21,7 @@ if (is_object($basePostPage) && $basePostPage->isError()) {
 ?>
 
 <? if (!$controller->indexExists()) { ?>
-    <div class="ccm-error"><?=t('The search index does not appear to exist. This block will not function until the reindex job has been run at least once in the dashboard.')?><br/><br/></div>
+    <div class="ccm-error"><?=t('The search index does not appear to exist. This block will not function until the reindex job has been run at least once in the dashboard.')?></div>
 <? } ?>
 
 <fieldset>
@@ -35,7 +35,6 @@ if (is_object($basePostPage) && $basePostPage->isError()) {
         <label for='buttonText'><?=t('Button Text')?>:</label>
         <?=$form->text('buttonText',$searchObj->buttonText);?>
     </div>
-    <br/>
     <div class='form-group'>
         <label for='title' style="margin-bottom: 0px;"><?=t('Search for Pages')?>:</label>
         <div class="radio">
@@ -72,7 +71,6 @@ if (is_object($basePostPage) && $basePostPage->isError()) {
             </label>
         </div>
     </div>
-    <br/>
     <div class='form-group'>
         <label for='title' style="margin-bottom: 0px;"><?=t('Results Page')?>:</label>
         <div class="checkbox">

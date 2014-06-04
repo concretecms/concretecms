@@ -22,12 +22,12 @@ if ($akSelectAllowMultipleValues && $akSelectAllowOtherValues) { // display auto
 			line-height: 20px;
 		}
 		.ccm-ui .ccm-attribute-type-select-autocomplete h6 {
+            margin-top: 0px;
 			margin-bottom: 2px;
 		}
 		.ccm-ui .ccm-attribute-type-select-autocomplete .well {
 			margin-bottom: 5px;
 			max-width: 500px;
-			padding-bottom: 12px;
 		}
 		.ccm-ui .ccm-attribute-type-select-autocomplete .text-error {
 			color: #b94a48 !important;
