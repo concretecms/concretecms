@@ -25,14 +25,10 @@ if ($_POST['task'] == 'set_password') {
 
 
 if ($_POST['task'] == 'set_location') {
-	if ($_POST['fslID'] == 0) {
-		$f->setStorageLocation(0);
-	} else {
-		$fsl = FileStorageLocation::getByID($_POST['fslID']);
-		if (is_object($fsl)) {
-			$f->setStorageLocation($fsl);
-		}
-	}
+    $fsl = FileStorageLocation::getByID($_POST['fslID']);
+    if (is_object($fsl)) {
+        $f->setFileStorageLocation($fsl);
+    }
 	$r->setMessage(t('File storage location saved successfully.'));
 	$r->outputJSON();
 

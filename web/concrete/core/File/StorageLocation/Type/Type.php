@@ -89,6 +89,10 @@ class Type
     }
 
 
+    /**
+     * @param $fslTypeHandle
+     * @return \Concrete\Core\File\StorageLocation\Type\Type
+     */
     public static function getByHandle($fslTypeHandle)
     {
         $db = Database::get();

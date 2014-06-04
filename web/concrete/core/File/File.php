@@ -115,31 +115,27 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		return $path;
 	}
 
-	/*
-	public function setStorageLocation($item) {
-		if ($item == 0) {
-			// set to default
-			$itemID = 0;
-			$path = DIR_FILES_UPLOADED;
-		} else {
-			$itemID = $item->getID();
-			$path = $item->getDirectory();
-		}
-		
-		if ($itemID != $this->getStorageLocationID()) {
-			// retrieve all versions of a file and move its stuff
-			$list = $this->getVersionList();
-			$fh = Loader::helper('concrete/file');
-			foreach($list as $fv) {
-				$newPath = $fh->mapSystemPath($fv->getPrefix(), $fv->getFileName(), true, $path);
-				$currPath = $fv->getPath();
-				rename($currPath, $newPath);
-			}			
-			$db = Loader::db();
-			$db->Execute('update Files set fslID = ? where fID = ?', array($itemID, $this->fID));
-		}
+	public function setFileStorageLocation(StorageLocation $newLocation)
+    {
+        $fh = Loader::helper('concrete/file');
+        $currentLocation = $this->getFileStorageLocationObject();
+        $currentFilesystem = $currentLocation->getFileSystemObject();
+
+        $newFileSystem = $newLocation->getFileSystemObject();
+
+        $list = $this->getVersionList();
+        foreach($list as $fv) {
+            $contents = $fv->getFileContents();
+            $newFileSystem->put($fh->prefix($fv->getPrefix(), $fv->getFilename()), $contents);
+            $currentFilesystem->delete($fh->prefix($fv->getPrefix(), $fv->getFilename()));
+        }
+
+        $db = Loader::db();
+        $db->Execute('update Files set fslID = ? where fID = ?', array(
+            $newLocation->getID(), $this->getFileID()
+        ));
+        $this->fslID = $newLocation->getID();
 	}
-	*/
 
 	public function setPassword($pw) {
 
