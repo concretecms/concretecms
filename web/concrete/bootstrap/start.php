@@ -110,6 +110,7 @@ if (!$cms->isInstalled()) {
     if (!$cms->isRunThroughCommandLineInterface() && !$request->matches('/install/*') && $request->getPath(
         ) != '/install'
     ) {
+
         Redirect::to('/install')->send();
     }
 

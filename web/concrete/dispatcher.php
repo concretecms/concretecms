@@ -24,14 +24,12 @@ require __DIR__ . '/bootstrap/configure.php';
 require __DIR__ . '/bootstrap/autoload.php';
 
 
-
 /**
  * ----------------------------------------------------------------------------
  * Begin concrete5 startup.
  * ----------------------------------------------------------------------------
  */
 $cms = require __DIR__ . '/bootstrap/start.php';
-
 
 
 /**

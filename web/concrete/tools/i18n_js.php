@@ -3,8 +3,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\File\Type\Type as FileType;
 header('Content-type: text/javascript'); ?>
 
-var ccmi18n = { 
-	
+var ccmi18n = {
+
 	expand: "<?=t('Expand')?>",
 	cancel: "<?=t('Cancel')?>",
 	collapse: "<?=t('Collapse')?>",
@@ -14,18 +14,19 @@ var ccmi18n = {
 	addBlock: "<?=t('Add Block')?>",
 	addBlockNew: "<?=t('Add Block')?>",
 	addBlockStack: "<?=t('Add Stack')?>",
+    addBlockStackMsg: "<?=t('The stack has been added successfully')?>",
 	addBlockPaste: "<?=t('Paste from Clipboard')?>",
 	changeAreaCSS: "<?=t('Design')?>",
 	editAreaLayout: "<?=t('Edit Layout')?>",
 	addAreaLayout: "<?=t('Add Layout')?>",
 	moveLayoutUp: "<?=t('Move Up')?>",
 	moveLayoutDown: "<?=t('Move Down')?>",
-	moveLayoutAtBoundary: "<?=t('This layout section can not be moved further in this direction.')?>", 
-	areaLayoutPresets: "<?=t('Layout Presets')?>", 
-	lockAreaLayout: "<?=t('Lock Layout')?>", 
-	unlockAreaLayout: "<?=t('Unlock Layout')?>", 
+	moveLayoutAtBoundary: "<?=t('This layout section can not be moved further in this direction.')?>",
+	areaLayoutPresets: "<?=t('Layout Presets')?>",
+	lockAreaLayout: "<?=t('Lock Layout')?>",
+	unlockAreaLayout: "<?=t('Unlock Layout')?>",
 	deleteLayout: "<?=t('Delete')?>",
-	deleteLayoutOptsTitle: "<?=t('Delete Layout')?>", 
+	deleteLayoutOptsTitle: "<?=t('Delete Layout')?>",
 	confirmLayoutPresetDelete: "<?=t('Are you sure you want to delete this layout preset?')?>",
 	setAreaPermissions: "<?=t('Set Permissions')?>",
 	addBlockMsg: "<?=t('The block has been added successfully.')?>",
@@ -122,10 +123,10 @@ var ccmi18n_sitemap = {
 	addExternalLink: "<?=t('Add External Link')?>",
 	sendToTop: "<?=t('Send To Top')?>",
 	sendToBottom: "<?=t('Send To Bottom')?>",
-	emptyTrash: "<?=t('Empty Trash')?>", 
-	restorePage: "<?=t('Restore Page')?>", 
-	deletePageForever: "<?=t('Delete Forever')?>", 
-	previewPage: "<?=t('Preview')?>", 
+	emptyTrash: "<?=t('Empty Trash')?>",
+	restorePage: "<?=t('Restore Page')?>",
+	deletePageForever: "<?=t('Delete Forever')?>",
+	previewPage: "<?=t('Preview')?>",
 	visitPage: "<?=t('Visit')?>",
 	pageAttributes: "<?=t('Attributes')?>",
 	speedSettings: "<?=t('Caching')?>",
@@ -147,7 +148,7 @@ var ccmi18n_sitemap = {
 	reorderPageMessage: "<?=t('Move or reorder pages by dragging their icons.')?>",
 	moveCopyPageMessage: "<?=t('Choose a new parent page from the sitemap.')?>",
 	editInComposer: "<?=t('Edit in Composer')?>",
-	
+
 	searchPages: "<?=t('Search Pages')?>",
 	explorePages: "<?=t('Flat View')?>",
 	backToSitemap: "<?=t('Back to Sitemap')?>",
@@ -161,26 +162,26 @@ var ccmi18n_sitemap = {
 	areYouSure: "<?=t('Are you sure?')?>",
 	loadError: "<?=t('Unable to load sitemap data. Response received: ')?>",
 	loadErrorTitle: "<?=t('Unable to load sitemap data.')?>",
-	on: "<?=t('on')?>"	
-	
+	on: "<?=t('on')?>"
+
 }
 
 var ccmi18n_spellchecker = {
 
 	resumeEditing: "<?=t('Resume Editing')?>",
 	noSuggestions: "<?=t('No Suggestions')?>"
-	
+
 }
 
 var ccmi18n_groups = {
 
 	editGroup: "<?=t('Edit Group')?>",
 	editPermissions: "<?=t('Edit Permissions')?>"
-	
+
 }
 
 var ccmi18n_filemanager = {
-	
+
 	view: "<?=t('View')?>",
 	download: "<?=t('Download')?>",
 	select: "<?=t('Choose')?>",
@@ -205,13 +206,13 @@ var ccmi18n_filemanager = {
 	PTYPE_NONE: "<?//=FilePermissions::PTYPE_NONE?>",
 	PTYPE_ALL: "<?//=FilePermissions::PTYPE_ALL?>",
 
-	FTYPE_IMAGE: "<?=FileType::T_IMAGE?>",	
-	FTYPE_VIDEO: "<?=FileType::T_VIDEO?>",	
-	FTYPE_TEXT: "<?=FileType::T_TEXT?>",	
-	FTYPE_AUDIO: "<?=FileType::T_AUDIO?>",	
-	FTYPE_DOCUMENT: "<?=FileType::T_DOCUMENT?>",	
+	FTYPE_IMAGE: "<?=FileType::T_IMAGE?>",
+	FTYPE_VIDEO: "<?=FileType::T_VIDEO?>",
+	FTYPE_TEXT: "<?=FileType::T_TEXT?>",
+	FTYPE_AUDIO: "<?=FileType::T_AUDIO?>",
+	FTYPE_DOCUMENT: "<?=FileType::T_DOCUMENT?>",
 	FTYPE_APPLICATION: "<?=FileType::T_APPLICATION?>"
-	
+
 }
 
 var ccmi18n_chosen = {

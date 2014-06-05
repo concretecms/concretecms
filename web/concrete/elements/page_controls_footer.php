@@ -12,7 +12,7 @@ $workflowList = \Concrete\Core\Workflow\Progress\PageProgress::getList($c);
 
 $canViewToolbar = $cp->canViewToolbar();
 
-if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) { 
+if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 
 	$canApprovePageVersions = $cp->canApprovePageVersions();
 	$u = new User();
@@ -56,19 +56,19 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 							<a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$cID?>&ctask=check-out-add-block<?=$token?>"><i class="glyphicon glyphicon-plus"></i></a>
 						<? } ?>
 					</li>
-				<? } 
+				<? }
 
-					
+
 				$items = $ihm->getPageHeaderMenuItems('left');
 				foreach($items as $ih) {
-					$cnt = $ih->getController(); 
+					$cnt = $ih->getController();
 					if ($cnt->displayItem()) {
 					?>
 						<li class="pull-left"><?=$cnt->getMenuLinkHTML()?></li>
 					<?
 					}
 				}
-				
+
 				if (Loader::helper('concrete/ui')->showWhiteLabelMessage()) { ?>
 					<li class="pull-left" id="ccm-white-label-message"><?=t('Powered by <a href="%s">concrete5</a>.', CONCRETE5_ORG_URL)?></li>
 				<? }?>
@@ -82,7 +82,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 				<?
 				$items = $ihm->getPageHeaderMenuItems('right');
 				foreach($items as $ih) {
-					$cnt = $ih->getController(); 
+					$cnt = $ih->getController();
 					if ($cnt->displayItem()) {
 					?>
 						<li class="pull-right"><?=$cnt->getMenuLinkHTML()?></li>
@@ -134,37 +134,39 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 			'message' => t('Page Defaults for %s Page Type. All edits take effect immediately.', $c->getPageTypeName()),
 			'type' => 'info',
 			'icon' => 'info-sign',
-		))?>
+		));
+    }
 
-	<? }
-	
 	$hasPendingPageApproval = false;
-	
-	if ($canViewToolbar) { ?>
-		<? if (is_array($workflowList) && count($workflowList) > 0) { ?>
+
+	if ($canViewToolbar) {
+        if (is_array($workflowList) && count($workflowList) > 0) {
+            ?>
 			<div id="ccm-notification-page-alert" class="ccm-notification ccm-notification-info">
 			<div class="ccm-notification-inner-wrapper">
-			<? foreach($workflowList as $i => $wl) { ?>
-				<? $wr = $wl->getWorkflowRequestObject(); 
-				$wf = $wl->getWorkflowObject(); ?>
-				
+			<?php
+            foreach($workflowList as $i => $wl) {
+				$wr = $wl->getWorkflowRequestObject();
+				$wf = $wl->getWorkflowObject();
+                $actions = $wl->getWorkflowProgressActions();
+                ?>
+
 				<form method="post" action="<?=$wl->getWorkflowProgressFormAction()?>" id="ccm-notification-page-alert-form-<?=$i?>">
 					<i class="glyphicon glyphicon-info-sign"></i>
 					<div class="ccm-notification-inner">
 						<p><?=$wf->getWorkflowProgressCurrentDescription($wl)?></p>
-					<? $actions = $wl->getWorkflowProgressActions(); ?>
 					<? if (count($actions) > 0) { ?>
 						<div class="ccm-notification-inner-buttons">
 						<? foreach($actions as $act) { ?>
 							<? if ($act->getWorkflowProgressActionURL() != '') { ?>
-								<a href="<?=$act->getWorkflowProgressActionURL()?>" 
+								<a href="<?=$act->getWorkflowProgressActionURL()?>"
 							<? } else { ?>
-								<button type="submit" name="action_<?=$act->getWorkflowProgressActionTask()?>" 
+								<button type="submit" name="action_<?=$act->getWorkflowProgressActionTask()?>"
 							<? } ?>
 
 							<? if (count($act->getWorkflowProgressActionExtraButtonParameters()) > 0) { ?>
 								<? foreach($act->getWorkflowProgressActionExtraButtonParameters() as $key => $value) { ?>
-									<?=$key?>="<?=$value?>" 
+									<?=$key?>="<?=$value?>"
 								<? } ?>
 							<? } ?>
 
@@ -176,8 +178,8 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 							<? } ?>
 						<? } ?>
 						</div>
-					<? } ?>	
-					</div>				
+					<? } ?>
+					</div>
 				</form>
 				<? } ?>
 				</div>
@@ -219,9 +221,9 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 
 			<? }
 		}
-	} ?>	
+	} ?>
 
-	<? } ?>	
+	<? } ?>
 	</div>
 
 <? }
