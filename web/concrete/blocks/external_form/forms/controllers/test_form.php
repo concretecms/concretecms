@@ -1,11 +1,17 @@
-<?
-defined('C5_EXECUTE') or die("Access Denied.");
-class TestFormExternalFormBlockController extends BlockController {
+<?php
+use Concrete\Core\Block\BlockController;
 
-	public function action_test_search() {
-		$this->set('response', t('Thanks!'));
-		return true;
-		
-	}
-	
+/**
+ * Class TestFormExternalFormBlockController
+ * @todo Namespace this class, it currently isn't because ExternalFormBlockController is loading in a non-standard way.
+ */
+class TestFormExternalFormBlockController extends BlockController
+{
+
+    public function action_test_search()
+    {
+        $this->set('response', t('Thanks!'));
+        return true;
+    }
+
 }
