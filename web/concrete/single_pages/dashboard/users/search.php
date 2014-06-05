@@ -6,6 +6,7 @@ div[data-container=editable-fields] section {
 	position: relative;
 	border-bottom: 1px solid #f1f1f1;
 	padding-bottom: 30px;
+    clear: both;
 }
 </style>
 

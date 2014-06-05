@@ -23,20 +23,8 @@
 
         my.$element.append(my._chooseTemplate);
         my.$element.on('click', 'div.ccm-file-selector-choose-new', function() {
-            var w = $(window).width() - 53;
-            $.fn.dialog.open({
-                width: w,
-                height: '100%',
-                href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/search',
-                modal: true,
-                title: ccmi18n_filemanager.title,
-                onOpen: function() {
-                    ConcreteEvent.unsubscribe('FileManagerSelectFile');
-                    ConcreteEvent.subscribe('FileManagerSelectFile', function(e, data) {
-                        jQuery.fn.dialog.closeTop();
-                        my.loadFile(data.fID);
-                    });
-                }
+            ConcreteFileManager.launchDialog(function(data) {
+                my.loadFile(data.fID);
             });
             return false;
         });

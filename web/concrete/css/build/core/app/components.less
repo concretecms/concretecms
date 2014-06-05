@@ -1,7 +1,7 @@
-/** 
+/**
  * Reusable UI components for things like add block overlay, group selector, etc..
  */
- 
+
  /* Newsflow dialog - move into ccm.menus.css */
 
 div.newsflow {z-index:@index-level-dialog; width:940px; /* height: 590px; overflow: hidden; */ min-height: 590px; margin: 0px auto 0px auto; position: relative; background-color:#ffffff; border:1px solid #666;  .border-radius(6px); -webkit-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);-moz-box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);}
@@ -33,10 +33,10 @@ div#ccm-dashboard-welcome-back {margin: -13px -10px 0px -12px; overflow: hidden;
 div#ccm-dashboard-welcome-back h1 {font-size: 48px; color: #666; }
 #newsflow-header-first-run {margin: -14px -10px -12px -11px; font-size: 48px; padding: 120px 0px 40px 270px; background: transparent url(../images/newsflow_logo_welcome_first_run.png) no-repeat 0 0}
 #newsflow-header-first-run h1, div#newsflow-header h1 {font-size: 48px; margin-bottom: 10px;}
-div#newsflow-header {background-color: #f1f1f1; padding: 40px 30px 10px 60px; background-clip: padding-box; .border-radius-top-only(5px); border-bottom: 1px solid #d1d1d1; 
-	-webkit-box-shadow:0 1px 5px rgba(0, 0, 0, 0.2);
-	-moz-box-shadow:0 1px 5px rgba(0, 0, 0, 0.2);
-	box-shadow:0 1px 5px rgba(0, 0, 0, 0.2)
+div#newsflow-header {background-color: #f1f1f1; padding: 40px 30px 10px 60px; background-clip: padding-box; .border-radius-top-only(5px); border-bottom: 1px solid #d1d1d1;
+    -webkit-box-shadow:0 1px 5px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow:0 1px 5px rgba(0, 0, 0, 0.2);
+    box-shadow:0 1px 5px rgba(0, 0, 0, 0.2)
 }
 #newsflow-header-first-run h2, #newsflow-header h2 {font-size: 18px; line-height: 24px; color: #09f;}
 .newsflow-column-first-run h3 {line-height: 28px !important; margin-bottom: 10px; font-weight: normal; font-size: 24px; color: #09f;}
@@ -60,7 +60,7 @@ div#newsflow-main {z-index: @index-level-base !important;}
 #newsflow-wizard-content {padding: 48px 530px 20px 60px; background-repeat: no-repeat; background-position: right bottom;}
 /* Newsflow block in dashboard */
 td.newsflow-latest-edition-wrapper {
-	#gradient > .vertical(#F3FAFC,#E7F7FF);
+    #gradient > .vertical(#F3FAFC,#E7F7FF);
 }
 
 /* Dialog Panes */
@@ -90,7 +90,7 @@ td.newsflow-latest-edition-wrapper {
 div.ccm-pane-dialog-pagination div.pagination, .ccm-pane-footer div.pagination {margin-top: 0px !important; margin-bottom: 0px !important}
 
 body.ccm-loading *, body.ccm-loading {
-	cursor: progress !important;
+    cursor: progress !important;
 }
 
 /* page selector in blocks */
@@ -117,7 +117,7 @@ ul#ccm-block-type-list li {margin-left: 0px; list-style-type: none; display: non
 .ccm-block-type div.ccm-block-type-description {display: none; padding-left: 30px; color: #aaa; font-size: 12px; padding-top: 2px; padding-bottom: 6px}
 .ccm-block-type.ccm-external-block-type li.ccm-block-price{ float:right; margin:10px 10px 0px 10px; font-weight: bold; color: #205334; text-transform: uppercase}
 .ccm-block-type.ccm-external-block-type .ccm-block-type-description{display:block; padding-left: 0px;}
- 
+
 /* general overlay select list */
 ul.item-select-list {padding: 2px 0px 0px 0px; margin: 0px; list-style-type: none !important;}
 ul.item-select-list li a, ul.item-select-list li span {background-repeat: no-repeat; background-position: 8px 8px; color: #666; display: block; font-size: 14px; padding: 8px 8px 8px 30px; text-decoration: none; border: 1px solid transparent}
@@ -179,28 +179,35 @@ div.ccm-workflow a {background-repeat: no-repeat; background-position: 8px 11px;
 div.ccm-workflow {position: relative; padding: 0px 0px 2px 0px; border-bottom: 1px solid #dedede; margin-bottom: 2px}
 div.ccm-workflow a:hover {background-color: #d9e7ff; border: 1px solid #94a7c7; text-decoration: none; color: #666}
 
-/* Tooltips - in dashboard and in panels */
-.ccm-ui .launch-tooltip {
-	border-bottom: 1px dotted #50e568;
+/* icon coloring */
+a.icon-link i.fa {
+    color: @text-color;
+    text-decoration: none;
 }
 
-.ccm-ui i.glyphicon.launch-tooltip {
-  border-bottom: 0px;
+/* Tooltips - in dashboard and in panels */
+.ccm-ui .launch-tooltip {
+    border-bottom: 1px dotted #50e568;
 }
-/** 
+
+.ccm-ui i.fa.launch-tooltip {
+  border-bottom: 0px;
+  text-decoration: none;
+}
+/**
  * Tooltips
  */
 div#ccm-tooltip-holder {
-	z-index: @index-level-tooltip-holder;
-	position: relative;
+    z-index: @index-level-tooltip-holder;
+    position: relative;
 }
 
 .ccm-ui {
-	div.tooltip-inner {
-		font-size: 14px;
-		line-height: 20px;
-		font-weight: 300;
-		padding: 20px 10px;
-		max-width: 250px;
-	}
+    div.tooltip-inner {
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 300;
+        padding: 20px 10px;
+        max-width: 250px;
+    }
 }

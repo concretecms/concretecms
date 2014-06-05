@@ -144,6 +144,27 @@
         });
     }
 
+    /**
+     * Static Method
+     */
+    ConcreteFileManager.launchDialog = function(callback) {
+        var w = $(window).width() - 53;
+        $.fn.dialog.open({
+            width: w,
+            height: '100%',
+            href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/file/search',
+            modal: true,
+            title: ccmi18n_filemanager.title,
+            onOpen: function() {
+                ConcreteEvent.unsubscribe('FileManagerSelectFile');
+                ConcreteEvent.subscribe('FileManagerSelectFile', function(e, data) {
+                    jQuery.fn.dialog.closeTop();
+                    callback(data);
+                });
+            }
+        });
+    }
+
     var ConcreteFileManagerMenu = {
 
         get: function() {

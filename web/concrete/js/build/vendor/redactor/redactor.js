@@ -6778,6 +6778,14 @@
                     }, 200);
                 }
 
+                /* concrete5 */
+                $('a[data-action=choose-image-from-file-manager]').on('click', function(e) {
+                    e.preventDefault();
+                    ConcreteFileManager.launchDialog(function(data) {
+                        console.log(data);
+                    });
+                });
+
             }, this);
 
             this.modalInit(this.opts.curLang.image, this.opts.modal_image, 610, callback);
@@ -7339,8 +7347,14 @@
                         + '</div>'
                     + '</form>'
                     + '<div id="redactor_tab3" class="redactor_tab" style="display: none;">'
+                        /* concrete5 */
+                        + '<div class="form-group">'
                         + '<label>' + this.opts.curLang.image_web_link + '</label>'
-                        + '<input type="text" name="redactor_file_link" id="redactor_file_link" class="redactor_input"  /><br><br>'
+                        + '<div class="input-group">'
+                        + '<input type="text" name="redactor_file_link" id="redactor_file_link" class="form-control"  />'
+                        + '<span class="input-group-addon"><a href="#" data-action="choose-image-from-file-manager" class="icon-link"><i class="fa fa-search"></i></a></span>'
+                        + '</div></div>'
+                        /* end concrete5 */
                     + '</div>'
                 + '</section>'
                 + '<footer>'
