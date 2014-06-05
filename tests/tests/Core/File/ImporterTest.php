@@ -94,7 +94,7 @@ class ImporterTest extends \FileStorageTestCase {
         $this->assertInstanceOf('\Concrete\Core\File\StorageLocation\StorageLocation', $fsl);
         $apr = str_split($r->getPrefix(), 4);
 
-        $this->assertEquals(REL_DIR_FILES_UPLOADED . '/' . $apr[0] . '/' . $apr[1] . '/' . $apr[2] . '/test.txt',
+        $this->assertEquals(REL_DIR_FILES_UPLOADED_STANDARD . '/' . $apr[0] . '/' . $apr[1] . '/' . $apr[2] . '/test.txt',
             $r->getRelativePath()
         );
 

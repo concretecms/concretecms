@@ -61,14 +61,7 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		return $this->getFileID();
 	}
 
-    /*
-	public function getPath() {
-		$fv = $this->getVersion();
-		return $fv->getPath();
-	}
-    */
-
-	public function getPassword() {
+    public function getPassword() {
 		return $this->fPassword;
 	}
 	

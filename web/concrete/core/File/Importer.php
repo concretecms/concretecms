@@ -59,38 +59,13 @@ class Importer {
 		return $msg;
 	}
 
-	protected function generatePrefix() {
+	protected function generatePrefix()
+    {
 		$prefix = rand(10, 99) . time();
 		return $prefix;
 	}
 
-    /*
-	protected function storeFile($prefix, $pointer, $filename, $fr = false) {
-		// assumes prefix are 12 digits
-		$fi = Loader::helper('concrete/file');
-		$path = false;
-		if ($fr instanceof File) {
-			if ($fr->getStorageLocationID() > 0) {
-				$fsl = StorageLocation::getByID($fr->getStorageLocationID());
-				$path = $fi->mapSystemPath($prefix, $filename, true, $fsl->getDirectory());
-			}
-		}
-		
-		if ($path == false) {
-			$path = $fi->mapSystemPath($prefix, $filename, true);
-		}
-		$r = @copy($pointer, $path);
-		@chmod($path, FILE_PERMISSIONS_MODE);
-		return $r;
-	}
-	*/
-
-    protected function storeFile(StorageLocation $fsl, $source, $filename)
-    {
-
-    }
-
-	/** 
+	/**
 	 * Imports a local file into the system. The file must be added to this path
 	 * somehow. That's what happens in tools/files/importers/.
 	 * If a $fr (FileRecord) object is passed, we assign the newly imported FileVersion

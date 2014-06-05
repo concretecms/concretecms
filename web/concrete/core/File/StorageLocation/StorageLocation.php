@@ -116,6 +116,9 @@ class StorageLocation
         );
     }
 
+    /**
+     * @return StorageLocation
+     */
     public static function getDefault()
     {
         $db = Database::get();

@@ -11,31 +11,12 @@ use Database as DB;
 use \Hautelook\Phpass\PasswordHash;
 
 defined('C5_EXECUTE') or die("Access Denied.");
-ini_set('display_errors', 1);
+
 if (!ini_get('safe_mode')) {
 	@set_time_limit(300);
 }
 
-// The higher this is the longer it will take to create password hashes, to check them, and to crack them.
-if(!defined('PASSWORD_HASH_COST_LOG2')) {
-	define('PASSWORD_HASH_COST_LOG2', 12);
-}
-
-date_default_timezone_set(@date_default_timezone_get());
-
 define('UPLOAD_FILE_EXTENSIONS_ALLOWED','*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;*.pptx;*.kml;*.xml');
-if (!defined('DIR_FILES_UPLOADED')) {
-	define('DIR_FILES_UPLOADED', DIR_FILES_UPLOADED_STANDARD);
-}
-if (!defined('DIR_FILES_TRASH')) {
-	define('DIR_FILES_TRASH', DIR_FILES_TRASH_STANDARD);
-}
-
-define('DIR_FILES_INCOMING', DIR_FILES_UPLOADED . '/incoming');
-define('DIR_FILES_UPLOADED_THUMBNAILS', DIR_FILES_UPLOADED . '/thumbnails');
-define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2', DIR_FILES_UPLOADED . '/thumbnails/level2');
-define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', DIR_FILES_UPLOADED . '/thumbnails/level3');
-define('DIR_FILES_AVATARS', DIR_FILES_UPLOADED . '/avatars');
 define('ENABLE_ASSET_CACHE', false);
 
 use Controller;
@@ -147,7 +128,7 @@ class Install extends Controller {
 			$e->add(t('Your configuration directory config/ does not appear to be writable by the web server.'));
 		}
 
-		if (!is_writable(DIR_FILES_UPLOADED)) {
+		if (!is_writable(DIR_FILES_UPLOADED_STANDARD)) {
 			$e->add(t('Your files directory files/ does not appear to be writable by the web server.'));
 		}
 		
