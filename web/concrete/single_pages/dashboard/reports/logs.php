@@ -46,7 +46,7 @@ $th = Loader::helper('text');
             <div class="form-group" style="width: 95%">
                 <?=$form->label('level', t('Level'))?>
                 <div class="ccm-search-field-content">
-                <?=$form->selectMultiple('level', $levels, array_keys($levels))?>
+                <?=$form->selectMultiple('level', $levels, array_keys($levels), array('style' => 'width: 380px'))?>
                 </div>
             </div>
         </div>
