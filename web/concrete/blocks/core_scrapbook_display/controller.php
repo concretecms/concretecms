@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Block\CoreScrapbookDisplay;
+use Block;
+use Concrete\Core\Block\View\BlockViewTemplate;
 use Loader;
 use \Concrete\Core\Block\BlockController;
 /**
@@ -16,23 +18,23 @@ use \Concrete\Core\Block\BlockController;
 
 		protected $btCacheBlockRecord = true;
 		protected $btTable = 'btCoreScrapbookDisplay';
-		protected $btIsInternal = true;		
+		protected $btIsInternal = true;
 		public function getBlockTypeDescription() {
 			return t("Proxy block for blocks pasted through the scrapbook.");
 		}
-		
+
 		public function getBlockTypeName() {
 			return t("Scrapbook Display");
 		}
-		
+
 		public function getOriginalBlockID() {
 			return $this->bOriginalID;
 		}
-		
+
 		public function getSearchableContent() {
 			$b = Block::getByID($this->bOriginalID);
 			$bc = ($b) ? $b->getInstance() : false;
-			
+
 			if ($bc && method_exists($bc, 'getSearchableContent')) {
 				return $bc->getSearchableContent();
 			}
@@ -52,6 +54,6 @@ use \Concrete\Core\Block\BlockController;
 			$bvt = new BlockViewTemplate($b);
 			$bvt->registerTemplateAssets();
 		}
-		
-		
+
+
 	}

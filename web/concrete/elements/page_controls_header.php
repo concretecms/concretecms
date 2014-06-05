@@ -6,7 +6,7 @@ $html = Loader::helper('html');
 $dh = Loader::helper('concrete/dashboard');
 
 if (isset($cp)) {
-	if ($cp->canViewToolbar()) { 
+	if ($cp->canViewToolbar()) {
 
 ?>
 
@@ -26,11 +26,11 @@ $v = View::getInstance();
 if (!$dh->inDashboard()) {
 
 	$v->requireAsset('core/app');
-	
+
 	$editMode = $c->isEditMode();
 	$tools = REL_DIR_FILES_TOOLS_REQUIRED;
 	if ($c->isEditMode()) {
-		$startEditMode = 'new Concrete.EditMode();';
+		$startEditMode = 'Concrete.editMode = new Concrete.EditMode();';
 	}
 	if ($cp->canEditPageContents() && $_REQUEST['ctask'] == 'check-out-first') {
 		$pagetype = $c->getPageTypeObject();
@@ -88,5 +88,5 @@ EOL;
 }
 
 	}
-	
+
 }
