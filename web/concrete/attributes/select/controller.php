@@ -155,8 +155,7 @@ class Controller extends AttributeTypeController  {
 		}
 		$this->set('selectedOptionValues',$selectedOptionValues);
 		$this->set('selectedOptions', $selectedOptions);
-		$this->addFooterItem(Loader::helper('html')->javascript('jquery.ui.js'));
-		$this->addHeaderItem(Loader::helper('html')->css('jquery.ui.css'));
+        $this->requireAsset('jquery/ui');
 	}
 	
 	public function search() {

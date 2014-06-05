@@ -16,7 +16,7 @@ $ownerName = $u->getUserName();
 		</div>
 	</div>
 	<a href="#" data-overlay="gathering-item">
-		<img class="float-left" src="<?=$image->getPath()?>" alt="<?php echo t('Preview Image') ?>" />
+		<img class="float-left" src="<?=$image->getSrc()?>" alt="<?php echo t('Preview Image') ?>" />
 	</a>
 	<div class="clearfix" style="clear: both;"></div>
 </div>

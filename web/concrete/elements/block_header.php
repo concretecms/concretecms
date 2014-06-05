@@ -79,7 +79,7 @@ if ($isAlias) {
 >
     <ul class="ccm-edit-mode-inline-commands ccm-ui">
         <? if ($p->canEditBlock() && $btw->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY && (!$a->isGlobalArea())) {  ?>
-            <li><a data-inline-command="move-block" href="#"><i class="glyphicon glyphicon-move"></i></a></li>
+            <li><a data-inline-command="move-block" href="#"><i class="fa fa-move"></i></a></li>
         <? } ?>
     </ul>
 

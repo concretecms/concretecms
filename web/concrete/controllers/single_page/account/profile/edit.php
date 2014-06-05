@@ -1,11 +1,12 @@
 <?
-namespace Concrete\Controller\SinglePage\Profile;
+namespace Concrete\Controller\SinglePage\Account\Profile;
 use \Concrete\Core\Page\Controller\AccountPageController;
 use UserInfo;
 use Exception;
 use \Concrete\Core\Authentication\AuthenticationType;
 use \Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Loader;
+use User;
 use UserAttributeKey;
 
 class Edit extends AccountPageController {
@@ -20,11 +21,6 @@ class Edit extends AccountPageController {
 		}
 	}
 	
-	public function on_start() {
-		parent::on_start();
-		$this->set('valt', Loader::helper('validation/token'));
-	}
-
 	public function callback($type,$method='callback') {
 		$at = AuthenticationType::getByHandle($type);
 		$this->view();

@@ -13,7 +13,7 @@
 		<input />
 	</div>
 	<div class='center btn btn-default'>
-		<span class='glyphicon glyphicon-screenshot'></span>
+		<span class='fa fa-screenshot'></span>
 	</div>
 	<hr>
 </div>
@@ -40,14 +40,14 @@
 		</div>
 	</div>
 	<div class='locked btn btn-default'>
-		<span class='glyphicon glyphicon-lock'></span>
+		<span class='fa fa-lock'></span>
 	</div>
 </div>
 <hr>
 <div class="btn-group">
-  <button type="button" class="rot btn btn-default" style='padding:9px 12px 3px 12px'><span class="glyphicon glyphicon-repeat"></span></button>
-  <button type="button" class="hflip btn btn-default" style='padding:9px 12px 3px 12px'><span class="glyphicon glyphicon-resize-horizontal"></span></button>
-  <button type="button" class="vflip btn btn-default" style='padding:9px 12px 3px 12px'><span class="glyphicon glyphicon-resize-vertical"></span></button>
+  <button type="button" class="rot btn btn-default" style='padding:9px 12px 3px 12px'><span class="fa fa-repeat"></span></button>
+  <button type="button" class="hflip btn btn-default" style='padding:9px 12px 3px 12px'><span class="fa fa-resize-horizontal"></span></button>
+  <button type="button" class="vflip btn btn-default" style='padding:9px 12px 3px 12px'><span class="fa fa-resize-vertical"></span></button>
 </div>
 
 <div class='anglelabel'>

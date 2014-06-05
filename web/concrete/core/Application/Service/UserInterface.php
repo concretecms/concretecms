@@ -280,7 +280,7 @@ class UserInterface {
         }
 
         $content = '<div id="ccm-notification-page-alert" class="ccm-ui ccm-notification ccm-notification-' . $arguments['type'] . '">';
-        $content .= '<i class="glyphicon glyphicon-' . $arguments['icon'] . '"></i><div class="ccm-notification-inner">' . $messageText . '</div>';
+        $content .= '<i class="fa fa-' . $arguments['icon'] . '"></i><div class="ccm-notification-inner">' . $messageText . '</div>';
 		$content .= '<div class="ccm-notification-actions"><a href="#" data-dismiss-alert="page-alert">' . t('Hide') . '</a></div></div>';
         return $content;
 

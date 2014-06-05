@@ -45,7 +45,8 @@ class DownloadFile extends PageController {
 				$this->set('rcID',$rcID);
 				$this->set('fID', $fID);
 				$this->set('filename', $file->getFilename());
-				$this->set('filesize', filesize( $file->getPath() ) );
+                $fre = $file->getFileResource();
+				$this->set('filesize', $fre->getSize());
 			}
 		}
 	}
@@ -63,11 +64,11 @@ class DownloadFile extends PageController {
 				return false;
 			}
 
-			$mimeType = $file->getMimeType();
-			$fc = Loader::helper('file');
-			$contents = $fc->getContents($file->getPath());
+            $fre = $file->getFileResource();
+            $fsl = $file->getFileStorageLocationObject()->getFileSystemObject();
+            $mimeType = $file->getMimeType();
 			header("Content-type: $mimeType");
-			print $contents;
+			print $file->getFileContents();
 			exit;
 		}
 	}
@@ -95,25 +96,24 @@ class DownloadFile extends PageController {
 		}
 	}
 
-	protected function download($file, $rcID=NULL) {
-		//$mime_type = finfo_file(DIR_FILES_UPLOADED."/".$filename);
-		//header('Content-type: $mime_type');
-		// everything else lets just download
+	protected function download(\Concrete\Core\File\File $file, $rcID=NULL) {
 		$filename = $file->getFilename();
 		$file->trackDownload($rcID);
 		$ci = Loader::helper('file');
-		if ($file->getStorageLocationID() > 0) {
-			$ci->forceDownload($file->getPath());
-		} else {
-			header('Location: ' . $file->getRelativePath(true));
-			exit;
-		}
+        $fsl = $file->getFileStorageLocationObject();
+        $configuration = $fsl->getConfigurationObject();
+        $fv = $file->getVersion();
+        if ($configuration->hasPublicURL()) {
+            return \Redirect::url($fv->getURL())->send();
+        } else {
+            return $fv->forceDownload();
+        }
 	}
 
 	protected function force_download($file, $rcID=NULL) {
 		$file->trackDownload($rcID);
 		$ci = Loader::helper('file');
-		$ci->forceDownload($file->getPath());
+        return $file->forceDownload();
 	}
 
 }

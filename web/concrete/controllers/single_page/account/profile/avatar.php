@@ -1,13 +1,13 @@
 <?
-namespace Concrete\Controller\SinglePage\Profile
-use \Concrete\Controller\SinglePage\Profile\Edit as AccountProfileEditPageController;
+namespace Concrete\Controller\SinglePage\Account\Profile;
+use \Concrete\Controller\SinglePage\Account\Profile\Edit as AccountProfileEditPageController;
 use Loader;
 
 class Avatar extends AccountProfileEditPageController {
 	
 	public function view() {
 		parent::view();
-		$this->requireAsset('swfobject');
+		$this->requireAsset('javascript', 'swfobject');
 	}
 
 	public function on_start() {
@@ -23,15 +23,10 @@ class Avatar extends AccountProfileEditPageController {
 		}
 		
 		if(isset($_POST['thumbnail']) && strlen($_POST['thumbnail'])) {
-			$thumb = base64_decode($_POST['thumbnail']);
-			$fp = fopen(DIR_FILES_AVATARS."/".$profile->getUserID().".jpg","w");
-			if($fp) {
-				fwrite($fp,base64_decode($_POST['thumbnail']));
-				fclose($fp);
-				$data['uHasAvatar'] = 1;
-				$profile->update($data);
-			}
-		}	
+            $thumb = base64_decode($_POST['thumbnail']);
+            $image = \Image::load($thumb);
+            $profile->updateUserAvatar($image);
+        }
 
 		$this->redirect('/account/profile/avatar', 'saved');
 	}

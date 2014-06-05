@@ -19,19 +19,6 @@ Config::getOrDefine('SITE_DEBUG_LEVEL', DEBUG_DISPLAY_ERRORS);
 define('UPLOAD_FILE_EXTENSIONS_CONFIGURABLE', !defined('UPLOAD_FILE_EXTENSIONS_ALLOWED'));
 Config::getOrDefine('UPLOAD_FILE_EXTENSIONS_ALLOWED','*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.3gp;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;*.pptx;*.kml;*.xml;*.svg;*.webm;*.ogg;*.ogv');
 
-/* -- Default directory -- */
-Config::getOrDefine('DIR_FILES_UPLOADED', DIR_FILES_UPLOADED_STANDARD);
-
-/* -- Now that we have default directory, we can set the other directories based on it -- */
-define('DIR_FILES_UPLOADED_THUMBNAILS', DIR_FILES_UPLOADED . '/thumbnails');
-define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2', DIR_FILES_UPLOADED . '/thumbnails/level2');
-define('DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', DIR_FILES_UPLOADED . '/thumbnails/level3');
-define('DIR_FILES_AVATARS', DIR_FILES_UPLOADED . '/avatars');
-define('DIR_FILES_INCOMING', DIR_FILES_UPLOADED . '/incoming');
-define('DIR_FILES_AVATARS_STOCK', DIR_FILES_UPLOADED . '/stock_avatars');
-define('DIR_FILES_TRASH', DIR_FILES_UPLOADED . '/trash');
-define('ENABLE_ALTERNATE_DEFAULT_STORAGE', DIR_FILES_UPLOADED != DIR_FILES_UPLOADED_STANDARD);
-
 
 
 /**
