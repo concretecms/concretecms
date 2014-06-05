@@ -1,5 +1,6 @@
 # ignore system files
 .DS_Store
+.idea
 thumbs.db
 __MACOSX
 ._*
