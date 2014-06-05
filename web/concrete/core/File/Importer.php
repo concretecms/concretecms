@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\File;
 use Concrete\Core\File\StorageLocation\StorageLocation;
+use League\Flysystem\AdapterInterface;
 use Loader;
 use \File as ConcreteFile;
 use Core;
@@ -135,7 +136,7 @@ class Importer {
 
         try {
             $src = fopen($pointer, 'rb');
-            $filesystem->writeStream($cf->prefix($prefix, $sanitizedFilename), $src);
+            $filesystem->writeStream($cf->prefix($prefix, $sanitizedFilename), $src, AdapterInterface::VISIBILITY_PUBLIC);
         } catch (\Exception $e) {
             return self::E_FILE_UNABLE_TO_STORE;
         }

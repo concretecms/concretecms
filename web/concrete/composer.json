@@ -41,6 +41,7 @@
         "zf1/zend-queue": "dev-master",
         "zf1/zend-mime": "dev-master",
         "zf1/zend-mail": "dev-master",
-        "nesbot/carbon": "dev-master"
+        "nesbot/carbon": "dev-master",
+        "aws/aws-sdk-php": "2.6.6"
     }
 }

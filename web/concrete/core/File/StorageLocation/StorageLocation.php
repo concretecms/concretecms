@@ -42,6 +42,16 @@ class StorageLocation
         return $this->fslName;
     }
 
+    public function setName($fslName)
+    {
+        $this->fslName = $fslName;
+    }
+
+    public function setIsDefault($fslIsDefault)
+    {
+        $this->fslIsDefault = $fslIsDefault;
+    }
+
     /**
      * @return \Concrete\Core\File\StorageLocation\Configuration\ConfigurationInterface
      */
@@ -58,6 +68,13 @@ class StorageLocation
     public function setConfigurationObject($configuration)
     {
         $this->fslConfiguration = $configuration;
+    }
+
+    public function getTypeObject()
+    {
+        $configuration = $this->getConfigurationObject();
+        $type = $configuration->getTypeObject();
+        return $type;
     }
 
     public static function add(ConfigurationInterface $configuration, $fslName, $fslIsDefault = false)
@@ -86,7 +103,7 @@ class StorageLocation
     {
         $db = Database::get();
         $em = $db->getEntityManager();
-        $r = $em->find('\Concrete\Core\File\StorageLocation\StorageLocation', $id);
+        $r = $em->find('\Concrete\Core\File\StorageLocation\StorageLocation', intval($id));
         return $r;
     }
 
@@ -121,11 +138,37 @@ class StorageLocation
         return $filesystem;
     }
 
+    public function delete()
+    {
+        $default = self::getDefault();
+        $db = Database::get();
+
+        $fIDs = $db->GetCol('select fID from Files where fslID = ?', array($this->getID()));
+        foreach($fIDs as $fID) {
+            $file = \File::getByID($fID);
+            if (is_object($file)) {
+                $file->setFileStorageLocation($default);
+            }
+        }
+
+        $em = $db->getEntityManager();
+        $em->remove($this);
+        $em->flush();
+    }
+
     public function save()
     {
+        $default = self::getDefault();
+
         $db = Database::get();
         $em = $db->getEntityManager();
         $em->persist($this);
+
+        if ($this->isDefault() && $default->getID() != $this->getID()) {
+            $default->setIsDefault(false);
+            $em->persist($default);
+        }
+
         $em->flush();
     }
 

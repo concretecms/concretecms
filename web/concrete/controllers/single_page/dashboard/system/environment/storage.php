@@ -34,12 +34,28 @@ class Storage extends DashboardPageController {
 		$this->view();
 	}
 
-	public function storage_deleted() {
-		$this->set('message', t('File storage location removed. Files using this location have been reset.'));
-		$this->view();
-	}
+    public function storage_location_deleted() {
+        $this->set('message', t('File storage location removed.'));
+        $this->view();
+    }
 
-    public function add()
+    public function storage_locaton_updated() {
+        $this->set('message', t('File storage location saved.'));
+        $this->view();
+    }
+
+    public function edit($fslID = false)
+    {
+        $location = FileStorageLocation::getByID($fslID);
+        if (is_object($location)) {
+            $this->set('location', $location);
+            $this->set('type', $location->getTypeObject());
+        } else {
+            $this->redirect('/dashboard/system/environment/storage');
+        }
+    }
+
+    protected function validateStorageRequest()
     {
         $request = \Request::getInstance();
         $val = Loader::helper('validation/strings');
@@ -53,16 +69,68 @@ class Storage extends DashboardPageController {
                 $this->error->add($e);
             }
         }
-        if (!$this->error->has()) {
-            if (!$val->notempty($request->request->get('fslName'))) {
-                $this->error->add(t('Your file storage location must have a name.'));
-            }
+
+        if (!$val->notempty($request->request->get('fslName'))) {
+            $this->error->add(t('Your file storage location must have a name.'));
         }
+
+        return array($request, $type);
+    }
+
+    public function update()
+    {
+        list($request, $type) = $this->validateStorageRequest();
+
+        $fsl = FileStorageLocation::getByID($request->request->get('fslID'));
+        if (!Loader::helper('validation/token')->validate('update')) {
+            $this->error->add(Loader::helper('validation/token')->getErrorMessage());
+        }
+        if (!is_object($fsl)) {
+            $this->error->add(t('Invalid file storage location object.'));
+        }
+        if (!$this->error->has()) {
+            $configuration = $type->getConfigurationObject();
+            $configuration->loadFromRequest($request);
+            $fsl->setName($request->request->get('fslName'));
+            if (!$fsl->isDefault()) {
+                $fsl->setIsDefault($request->request->get('fslIsDefault'));
+            }
+            $fsl->save();
+            $this->redirect('/dashboard/system/environment/storage', 'storage_location_updated');
+        }
+
+        $this->edit($request->request->get('fslID'));
+    }
+
+    public function delete()
+    {
+        $request = \Request::getInstance();
+
+        if (!Loader::helper('validation/token')->validate('delete')) {
+            $this->error->add(Loader::helper('validation/token')->getErrorMessage());
+        }
+        $fsl = FileStorageLocation::getByID($request->request->get('fslID'));
+        if (!is_object($fsl)) {
+            $this->error->add(t('Invalid file storage location object.'));
+        }
+        if ($fsl->isDefault()) {
+            $this->error->add(t('You may not delete the default file storage location.'));
+        }
+
+        if (!$this->error->has()) {
+            $fsl->delete();
+            $this->redirect('/dashboard/system/environment/storage', 'storage_location_deleted');
+        }
+        $this->edit($request->request->get('fslID'));
+
+    }
+
+    public function add()
+    {
+        list($request, $type) = $this->validateStorageRequest();
         if (!Loader::helper('validation/token')->validate('add')) {
             $this->error->add(Loader::helper('validation/token')->getErrorMessage());
         }
-
-
         if (!$this->error->has()) {
             $configuration = $type->getConfigurationObject();
             $configuration->loadFromRequest($request);
@@ -74,7 +142,7 @@ class Storage extends DashboardPageController {
             $this->redirect('/dashboard/system/environment/storage', 'storage_location_added');
         }
 
-        $this->select_type($request->get('fslTypeID'));
+        $this->set('type', $type);
     }
 
 }
