@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\File;
 use \Concrete\Core\Foundation\Object;
+use League\Flysystem\AdapterInterface;
 use Loader;
 use \File as ConcreteFile;
 use \Concrete\Core\File\Type\TypeList as FileTypeList;
@@ -525,9 +526,19 @@ class Version extends Object {
 
         $helper = Loader::helper('concrete/file');
 
+        $thumbnail = $image->thumbnail(new \Imagine\Image\Box($width, $height));
+
+        $o = new stdClass;
+        $o->visibility = AdapterInterface::VISIBILITY_PUBLIC;
+        $o->mimetype = 'image/jpeg';
+
         $filesystem->write(
             $helper->getThumbnailFilePath($this->getPrefix(), $this->getFilename(), $level),
-            $image->thumbnail(new \Imagine\Image\Box($width, $height))
+            $thumbnail,
+            array(
+                'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+                'mimetype' => 'image/jpeg'
+            )
         );
 
         $db = Loader::db();

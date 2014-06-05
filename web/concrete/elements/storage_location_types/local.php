@@ -1,7 +1,7 @@
 <?
 if (is_object($configuration)) {
 	$path = $configuration->getRootPath();
-	$relativePath = $path->getWebRootRelativePath();
+	$relativePath = $configuration->getWebRootRelativePath();
 }
 ?>
 <? $form = Loader::helper('form'); ?>

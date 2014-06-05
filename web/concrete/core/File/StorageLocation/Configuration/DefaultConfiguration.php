@@ -18,6 +18,11 @@ class DefaultConfiguration extends LocalConfiguration
         $this->setWebRootRelativePath(REL_DIR_FILES_UPLOADED);
     }
 
+    public function validateRequest(\Concrete\Core\Http\Request $req)
+    {
+        return false;
+    }
+
     public function loadFromRequest(\Concrete\Core\Http\Request $req)
     {
         return false;

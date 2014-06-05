@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\File\StorageLocation\Type;
+use Concrete\Core\File\StorageLocation\StorageLocation;
 use Concrete\Core\Package\PackageList;
 use Database;
 use Core;
@@ -63,8 +64,13 @@ class Type
      */
     public function getConfigurationObject()
     {
-        return Core::make('\\Concrete\\Core\\File\\StorageLocation\\Configuration\\'
-        . camelcase($this->getHandle()) . 'Configuration');
+        if ($this->getPackageID()) {
+            return Core::make('\\Concrete\\Package\\' . camelcase($this->getPackageHandle()) . '\\Core\\File\\StorageLocation\\Configuration\\'
+                . camelcase($this->getHandle()) . 'Configuration');
+        } else {
+            return Core::make('\\Concrete\\Core\\File\\StorageLocation\\Configuration\\'
+                . camelcase($this->getHandle()) . 'Configuration');
+        }
     }
 
     /**
@@ -73,15 +79,15 @@ class Type
      * @param int $pkgID
      * @return \Concrete\Core\File\StorageLocation\Type\Type
      */
-    public static function add($fslTypeHandle, $fslTypeName, $pkgID = 0)
+    public static function add($fslTypeHandle, $fslTypeName, $pkg = false)
     {
         $db = Database::get();
         $em = $db->getEntityManager();
         $o = new static();
         $o->fslTypeHandle = $fslTypeHandle;
         $o->fslTypeName = $fslTypeName;
-        if ($pkgID > 0) {
-            $o->pkgID = $pkgID;
+        if ($pkg instanceof \Concrete\Core\Package\Package) {
+            $o->pkgID = $pkg->getPackageID();
         }
         $em->persist($o);
         $em->flush();
@@ -135,11 +141,15 @@ class Type
     }
 
     public function includeOptionsForm($location = false) {
+        $configuration = $this->getConfigurationObject();
+        if ($location instanceof StorageLocation) {
+            $configuration = $location->getConfigurationObject();
+        }
         \View::element(DIRNAME_FILE_STORAGE_LOCATION_TYPES . '/' . $this->getHandle(),
         array(
             'type' => $this,
             'location' => $location,
-            'configuration' => $location->getConfigurationObject
+            'configuration' => $configuration
         ), $this->getPackageHandle());
     }
 
