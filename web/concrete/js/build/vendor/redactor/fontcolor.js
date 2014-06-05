@@ -59,7 +59,10 @@ RedactorPlugins.fontcolor = {
             $swatch.on('click', onSwatch);
         }
 
-        var $elNone = $('<a href="#" style="display: block; clear: both; padding: 4px 0; font-size: 11px; line-height: 1;"></a>')
+        /**
+         * concrete5
+         */
+        /* var $elNone = $('<a href="#" style="display: block; clear: both; padding: 4px 0; font-size: 11px; line-height: 1;"></a>')
         .html(this.opts.curLang.none)
         .on('click', function(e)
         {
@@ -68,6 +71,7 @@ RedactorPlugins.fontcolor = {
         });
 
         $dropdown.append($elNone);
+        */
     },
     pickerSet: function(rule, type)
     {

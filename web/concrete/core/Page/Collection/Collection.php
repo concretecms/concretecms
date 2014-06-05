@@ -195,7 +195,7 @@ class Collection extends Object
         $r = $db->Execute("select cID from PageSearchIndex where cRequiresReindex = 1");
         while ($row = $r->FetchRow()) {
             $pc = Page::getByID($row['cID']);
-            $pc->reindex($pc, true);
+            $pc->reindex(false, true);
             $num++;
         }
         Config::save('DO_PAGE_REINDEX_CHECK', false);

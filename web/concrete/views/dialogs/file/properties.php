@@ -18,7 +18,7 @@ if (!$previewMode) {
 ?>
 
 <? if (!$previewMode) { ?>
-<div class="ccm-tab-content container" id="ccm-tab-content-details" data-container="editable-fields">
+<div class="ccm-tab-content" id="ccm-tab-content-details" data-container="editable-fields">
 <? } else { ?>
 <div class="container">
 <? } ?>
