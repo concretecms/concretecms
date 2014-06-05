@@ -129,6 +129,3 @@ class Controller extends BlockController
     }
 
 }
-
->>>>>>>
-Fix External Form
