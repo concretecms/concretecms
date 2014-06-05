@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Tests\Core\File\StorageLocation;
+namespace Concrete\Tests\Core\File;
 use Concrete\Core\Cache\CacheLocal;
 use \Concrete\Core\File\StorageLocation\Type\Type;
 use \Concrete\Core\File\StorageLocation\StorageLocation;
@@ -150,6 +150,23 @@ class ImporterTest extends \FileStorageTestCase {
             $fo->getThumbnailURL(2));
     }
 
+    public function testImporterMimeType()
+    {
+        mkdir($this->getStorageDirectory());
+        $this->getStorageLocation();
+
+        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
+        $fi = new Importer();
+        $fo1 = $fi->import($sample, 'sample.txt');
+
+        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/gummies.txt';
+        $fi = new Importer();
+        $fo2 = $fi->import($sample, 'gummies.txt');
+
+        $this->assertEquals('text/plain', $fo1->getMimeType());
+        $this->assertEquals('image/jpeg', $fo2->getMimeType());
+    }
+
     public function testFileReplace()
     {
 
@@ -163,7 +180,7 @@ class ImporterTest extends \FileStorageTestCase {
         $fo = $fi->import($file, 'test.txt');
         $fo = $fo->getFile();
 
-        $sample = dirname(__FILE__) . '/fixtures/sample.txt';
+        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
         $r = $fi->import($sample, 'sample.txt', $fo);
 
         $this->assertInstanceOf('\Concrete\Core\File\Version', $r);

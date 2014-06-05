@@ -89,7 +89,7 @@ class StorageLocation
         $o->fslConfiguration = $configuration;
         $em->persist($o);
 
-        if ($fslIsDefault) {
+        if ($fslIsDefault && is_object($default)) {
             $default->fslIsDefault = false;
             $em->persist($default);
         }
@@ -164,7 +164,7 @@ class StorageLocation
         $em = $db->getEntityManager();
         $em->persist($this);
 
-        if ($this->isDefault() && $default->getID() != $this->getID()) {
+        if ($this->isDefault() && is_object($default) && $default->getID() != $this->getID()) {
             $default->setIsDefault(false);
             $em->persist($default);
         }
