@@ -150,6 +150,27 @@ class ImporterTest extends \FileStorageTestCase {
             $fo->getThumbnailURL(2));
     }
 
+    public function testFileVersionDelete()
+    {
+        mkdir($this->getStorageDirectory());
+        $this->getStorageLocation();
+
+        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
+        $fi = new Importer();
+        $fi->import($sample, 'sample.txt');
+
+        $f = \File::getByID(1);
+        $fv = $f->getVersion(1);
+        $this->assertEquals('sample.txt', $fv->getFilename());
+        $fv->delete();
+
+        CacheLocal::flush();
+
+        $fv2 = $f->getVersion(1);
+        $this->assertFalse($fv2);
+
+    }
+
     public function testImporterMimeType()
     {
         mkdir($this->getStorageDirectory());

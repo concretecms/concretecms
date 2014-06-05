@@ -367,15 +367,16 @@ class Version extends Object {
 	 * Removes a version of a file. Note, does NOT remove the file because we don't know where the file might elsewhere be used/referenced.
 	 */
 	public function delete() {
-		if ($this->fvIsApproved == 1) {
-			return false; // can only delete non-live files
-		}
 
 		$db = Loader::db();
 		// now from the DB
 		$db->Execute("delete from FileVersions where fID = ? and fvID = ?", array($this->fID, $this->fvID));
 		$db->Execute("delete from FileAttributeValues where fID = ? and fvID = ?", array($this->fID, $this->fvID));
 		$db->Execute("delete from FileVersionLog where fID = ? and fvID = ?", array($this->fID, $this->fvID));
+
+        $fre = $this->getFileResource();
+        $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        $fsl->delete($fre->getPath());
 	}
 
 
@@ -493,11 +494,13 @@ class Version extends Object {
     {
 		if ($this->{"fvHasThumbnail{$level}"}) {
             $fsl = $this->getFile()->getFileStorageLocationObject();
-            $configuration = $fsl->getConfigurationObject();
-			$f = Loader::helper('concrete/file');
-            $path = $f->getThumbnailFilePath($this->getPrefix(), $this->getFilename(), $level);
-			return $configuration->getPublicURLToFile($path);
-		}
+            if ($fsl) {
+                $configuration = $fsl->getConfigurationObject();
+                $f = Loader::helper('concrete/file');
+                $path = $f->getThumbnailFilePath($this->getPrefix(), $this->getFilename(), $level);
+                return $configuration->getPublicURLToFile($path);
+            }
+        }
 	}
 
     public function rescanThumbnail($level)
