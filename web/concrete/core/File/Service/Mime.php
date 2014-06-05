@@ -88,8 +88,8 @@ class Mime {
 	 */
 	public function mimeFromExtension($ext) {
 		$ext = strtolower($ext);
-		if (array_key_exists($ext, MimeHelper::$mime_types_and_extensions)) {
-			return MimeHelper::$mime_types_and_extensions[$ext];
+		if (array_key_exists($ext, self::$mime_types_and_extensions)) {
+			return self::$mime_types_and_extensions[$ext];
 		}
 		return false;
 	}
@@ -102,7 +102,7 @@ class Mime {
 	 */
 	public function mimeToExtension($mimeType) {
 		$mimeType = strtolower($mimeType);
-		$mime = array_search($mimeType, MimeHelper::$mime_types_and_extensions);
+		$mime = array_search($mimeType, self::$mime_types_and_extensions);
 		return $mime;
 	}
 	

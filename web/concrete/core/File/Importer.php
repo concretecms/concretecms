@@ -136,7 +136,10 @@ class Importer {
 
         try {
             $src = fopen($pointer, 'rb');
-            $filesystem->writeStream($cf->prefix($prefix, $sanitizedFilename), $src, AdapterInterface::VISIBILITY_PUBLIC);
+            $filesystem->writeStream($cf->prefix($prefix, $sanitizedFilename), $src, array(
+                'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+                'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($sanitizedFilename))
+            ));
         } catch (\Exception $e) {
             return self::E_FILE_UNABLE_TO_STORE;
         }
