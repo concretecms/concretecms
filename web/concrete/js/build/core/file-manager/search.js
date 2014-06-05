@@ -148,7 +148,7 @@
     }
 
     /**
-     * Static Method
+     * Static Methods
      */
     ConcreteFileManager.launchDialog = function(callback) {
         var w = $(window).width() - 53;
@@ -164,6 +164,21 @@
                     jQuery.fn.dialog.closeTop();
                     callback(data);
                 });
+            }
+        });
+    }
+
+    ConcreteFileManager.getFileDetails = function(fID, callback) {
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/get_json',
+            data: {'fID': fID},
+            error: function(r) {
+                ConcreteAlert.dialog('Error', r.responseText);
+            },
+            success: function(r) {
+                callback(r);
             }
         });
     }

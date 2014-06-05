@@ -23,7 +23,7 @@ ConcreteEvent.bind('FileManagerFileSelected',function(e, data){
 				im.addElement(image,'image');
 				im.hideLoader();
 			};
-			img.src = data[0].filePathDirect;
+			img.src = data[0].url;
 		});
 	}
 });

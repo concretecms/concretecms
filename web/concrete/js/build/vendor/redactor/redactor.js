@@ -6447,6 +6447,39 @@
 
                 }, 200);
 
+                /* concrete5 */
+                $('a[data-action=choose-file-from-file-manager]').on('click', function(e) {
+                    e.preventDefault();
+                    ConcreteFileManager.launchDialog(function(data) {
+                        jQuery.fn.dialog.showLoader();
+                        ConcreteFileManager.getFileDetails(data.fID, function(r) {
+                            jQuery.fn.dialog.hideLoader();
+                            var file = r.files[0];
+                            $('#redactor_link_url').val(file.urlDownload);
+                        });
+                    });
+                });
+
+                /* concrete5 */
+                $('a[data-action=choose-link-from-sitemap]').on('click', function(e) {
+                    e.preventDefault();
+                    jQuery.fn.dialog.open({
+                        width: '90%',
+                        height: '70%',
+                        modal: false,
+                        title: ccmi18n_sitemap.choosePage,
+                        href: CCM_TOOLS_PATH + '/sitemap_search_selector'
+                    });
+                    ConcreteEvent.unsubscribe('SitemapSelectPage');
+                    ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
+                        jQuery.fn.dialog.closeTop();
+                        var url = CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + data.cID;
+                        $('#redactor_link_url').val(url);
+                    });
+
+                });
+
+
             }, this);
 
             this.modalInit(this.opts.curLang.link, this.opts.modal_link, 460, callback);
@@ -6782,7 +6815,12 @@
                 $('a[data-action=choose-image-from-file-manager]').on('click', function(e) {
                     e.preventDefault();
                     ConcreteFileManager.launchDialog(function(data) {
-                        console.log(data);
+                        jQuery.fn.dialog.showLoader();
+                        ConcreteFileManager.getFileDetails(data.fID, function(r) {
+                            jQuery.fn.dialog.hideLoader();
+                            var file = r.files[0];
+                            $('#redactor_file_link').val(file.urlInline);
+                        });
                     });
                 });
 
@@ -6831,6 +6869,26 @@
                     this.imageSave($el);
 
                 }, this));
+
+                /* concrete5 */
+                $('a[data-action=choose-link-from-sitemap]').on('click', function(e) {
+                    e.preventDefault();
+                    jQuery.fn.dialog.open({
+                        width: '90%',
+                        height: '70%',
+                        modal: false,
+                        title: ccmi18n_sitemap.choosePage,
+                        href: CCM_TOOLS_PATH + '/sitemap_search_selector'
+                    });
+                    ConcreteEvent.unsubscribe('SitemapSelectPage');
+                    ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
+                        jQuery.fn.dialog.closeTop();
+                        var url = CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + data.cID;
+                        $('#redactor_file_link').val(url);
+                    });
+
+                });
+
 
             }, this);
 
@@ -7296,18 +7354,28 @@
 
                 modal_image_edit: String()
                 + '<section id="redactor-modal-image-edit">'
+                /* concrete5 */
+                    + '<div class="form-group">'
                     + '<label>' + this.opts.curLang.title + '</label>'
-                    + '<input type="text" id="redactor_file_alt" class="redactor_input" />'
+                    + '<input type="text" id="redactor_file_alt" class="form-control" />'
+                    + '</div>'
+                    + '<div class="form-group">'
                     + '<label>' + this.opts.curLang.link + '</label>'
-                    + '<input type="text" id="redactor_file_link" class="redactor_input" />'
-                    + '<label><input type="checkbox" id="redactor_link_blank"> ' + this.opts.curLang.link_new_tab + '</label>'
+                    + '<div class="input-group">'
+                    + '<input type="text" name="redactor_file_link" id="redactor_file_link" class="form-control"  />'
+                    + '<span class="input-group-addon"><a href="#" data-action="choose-link-from-sitemap" class="icon-link"><i class="fa fa-search"></i></a></span>'
+                    + '</div></div>'
+                    + '<div class="form-group">'
+                    + '<div class="checkbox"><label><input type="checkbox" id="redactor_link_blank"> ' + this.opts.curLang.link_new_tab + '</label></div>'
+                    + '<div class="form-group">'
                     + '<label>' + this.opts.curLang.image_position + '</label>'
-                    + '<select id="redactor_form_image_align">'
+                    + '<select id="redactor_form_image_align" class="form-control">'
                         + '<option value="none">' + this.opts.curLang.none + '</option>'
                         + '<option value="left">' + this.opts.curLang.left + '</option>'
                         + '<option value="center">' + this.opts.curLang.center + '</option>'
                         + '<option value="right">' + this.opts.curLang.right + '</option>'
                     + '</select>'
+                    + '</div>'
                 + '</section>'
                 + '<footer>'
                 /* concrete5
@@ -7316,8 +7384,8 @@
                     + '<button id="redactorSaveBtn" class="redactor_modal_btn redactor_modal_action_btn">' + this.opts.curLang.save + '</button>'
                     */
                     + '<button id="redactor_image_delete_btn" class="btn btn-danger pull-left redactor_modal_btn redactor_modal_delete_btn">' + this.opts.curLang._delete + '</button>'
+                    + '<button id="redactorSaveBtn" style="margin-left: 10px" class="btn btn-primary pull-right redactor_modal_btn redactor_modal_action_btn">' + this.opts.curLang.save + '</button>'
                     + '<button class="btn btn-default pull-right redactor_modal_btn redactor_btn_modal_close">' + this.opts.curLang.cancel + '</button>'
-                    + '<button id="redactorSaveBtn" class="btn btn-primary pull-right redactor_modal_btn redactor_modal_action_btn">' + this.opts.curLang.save + '</button>'
 
                    /* end concrete5 */
                 + '</footer>',
@@ -7369,12 +7437,19 @@
 
                 modal_link: String()
                 + '<section id="redactor-modal-link-insert">'
-                    + '<select id="redactor-predefined-links" style="width: 99.5%; display: none;"></select>'
+                /* concrete5 */
+                    + '<select id="redactor-predefined-links" class="form-control" style="width: 99.5%; display: none;"></select>'
+                    + '<div class="form-group">'
                     + '<label>URL</label>'
-                    + '<input type="text" class="redactor_input" id="redactor_link_url" />'
+                    + '<div class="input-group">'
+                    + '<input type="text" class="form-control" id="redactor_link_url" />'
+                    + '<span class="input-group-addon"><a href="#" data-action="choose-link-from-sitemap" class="icon-link"><i class="fa fa-sitemap"></i></a></span>'
+                    + '<span class="input-group-addon"><a href="#" data-action="choose-file-from-file-manager" class="icon-link"><i class="fa fa-file"></i></a></span>'
+                    + '</div></div>'
+                    + '<div class="form-group">'
                     + '<label>' + this.opts.curLang.text + '</label>'
-                    + '<input type="text" class="redactor_input" id="redactor_link_url_text" />'
-                    + '<label><input type="checkbox" id="redactor_link_blank"> ' + this.opts.curLang.link_new_tab + '</label>'
+                    + '<input type="text" class="form-control" id="redactor_link_url_text" />'
+                    + '</div>'
                 + '</section>'
                 + '<footer>'
                 /* concrete5

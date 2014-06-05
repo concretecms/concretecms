@@ -718,9 +718,9 @@ class Version extends Object {
 		$r->canReplaceFile = $fp->canEditFileContents();
 		$r->canViewFile = $this->canView();
 		$r->canEditFile = $this->canEdit();
-		$r->filePathDirect = $this->getRelativePath();
-		$r->filePathInline = View::url('/download_file', 'view_inline', $this->getFileID());
-		$r->filePath = View::url('/download_file', 'view', $this->getFileID());
+		$r->url = $this->getURL();
+		$r->urlInline = View::url('/download_file', 'view_inline', $this->getFileID());
+		$r->urlDownload = View::url('/download_file', 'view', $this->getFileID());
 		$r->title = $this->getTitle();
 		$r->description = $this->getDescription();
 		$r->fileName = $this->getFilename();

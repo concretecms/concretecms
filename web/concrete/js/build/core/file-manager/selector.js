@@ -48,24 +48,15 @@
         loadFile: function(fID) {
             var my = this;
             my.$element.html(my._loadingTemplate);
-            $.ajax({
-                type: 'post',
-                dataType: 'json',
-                url: CCM_DISPATCHER_FILENAME + '/ccm/system/file/get_json',
-                data: {'fID': fID},
-                error: function(r) {
-                    ConcreteAlert.dialog('Error', r.responseText);
-                },
-                success: function(r) {
-                    var file = r.files[0];
-                    my.$element.html(my._fileLoadedTemplate({'inputName': my.options.inputName, 'file': file}));
-                    my.$element.append(my._fileMenuTemplate({'displayClear': true, 'item': file}));
-                    my.$element.find('.ccm-file-selector-file-selected').concreteFileMenu({
-                        'container': my,
-                        'menu': $('[data-search-file-menu=' + file.fID + ']'),
-                        'menuLauncherHoverClass': 'ccm-file-manager-menu-item-hover'
-                    });
-                }
+            ConcreteFileManager.getFileDetails(fID, function(r) {
+                var file = r.files[0];
+                my.$element.html(my._fileLoadedTemplate({'inputName': my.options.inputName, 'file': file}));
+                my.$element.append(my._fileMenuTemplate({'displayClear': true, 'item': file}));
+                my.$element.find('.ccm-file-selector-file-selected').concreteFileMenu({
+                    'container': my,
+                    'menu': $('[data-search-file-menu=' + file.fID + ']'),
+                    'menuLauncherHoverClass': 'ccm-file-manager-menu-item-hover'
+                });
             });
         }
 
