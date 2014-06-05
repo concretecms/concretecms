@@ -52,6 +52,7 @@ error_log
 
 # ignore JavaScript source maps
 /web/concrete/js/*.js.map
+/web/concrete/js/bootstrap/*.js.map
 
 # ignore node modules used for building
 /build/node_modules
