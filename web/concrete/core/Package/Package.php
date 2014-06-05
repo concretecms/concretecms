@@ -777,7 +777,7 @@ class Package extends Object {
 		// you can only backup root level packages.
 		// Need to figure something else out for core level
 		if ($this->pkgHandle != '' && is_dir(DIR_PACKAGES . '/' . $this->pkgHandle)) {
-			$trashName = DIR_FILES_TRASH . '/' . $this->pkgHandle . '_' . date('YmdHis');
+			$trashName = DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_TRASH_STANDARD. '/' . $this->pkgHandle . '_' . date('YmdHis');
 			$ret = @rename(DIR_PACKAGES . '/' . $this->pkgHandle, $trashName);
 			if (!$ret) {
 				return array(Package::E_PACKAGE_MIGRATE_BACKUP);

@@ -1,20 +1,12 @@
 <?
 
 namespace Concrete\Core\Application\Service;
+use Concrete\Core\File\StorageLocation\StorageLocation;
 use Loader;
 use Config;
 use \Concrete\Core\Authentication\AuthenticationType;
 class Avatar {
 
-	/**
-	* Gets the default avatar
-	* @return array $aDir
-	*/
-	function getStockAvatars() {
-		$f = Loader::helper('file');
-		$aDir = $f->getDirectoryContents(DIR_FILES_AVATARS_STOCK);
-		return $aDir;
-	}
 	/**
 	* Outputs the final user avatar
 	* @param user object $uo
@@ -24,23 +16,15 @@ class Avatar {
 	function outputUserAvatar($uo, $suppressNone = false, $aspectRatio = 1.0) {	
 		if (is_object($uo)) {
 			$ati = $this->getAuthTypeImagePath($uo);
+            $width = AVATAR_WIDTH * $aspectRatio;
+            $height = AVATAR_HEIGHT * $aspectRatio;
+
 			if ($uo->hasAvatar()) {
-				if (file_exists(DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg')) {
-					$size = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg';
-					$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg';
-				} else {
-					// legacy
-					$size = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
-					$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
-				}
-				if (file_exists($size)) {
-					$isize = getimagesize($size);
-					$isize[0] = round($isize[0]*$aspectRatio);
-					$isize[1] = round($isize[1]*$aspectRatio);
-					
-					$str = '<img class="u-avatar" src="' . $src . '" width="' . $isize[0] . '" height="' . $isize[1] . '" alt="' . $uo->getUserName() . '" />';
-					return $str;
-				}
+                $src = $this->getImagePath($uo);
+                $str = '<img class="u-avatar" src="' . $src . '" width="' . $width . '" height="' . $height . '" '
+                    . 'alt="' . $uo->getUserName() . '" />';
+
+                return $str;
 			} else {
 				if ($ati) {
 					return "<img class='u-authType-avatar' src='$ati'>";
@@ -81,21 +65,16 @@ class Avatar {
 		if (!$uo->hasAvatar()) {
 			return false;
 		}
+        $fsl = StorageLocation::getDefault();
+        $fs = $fsl->getFileSystemObject();
+        if ($fs->has(REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg')) {
+            $configuration = $fsl->getConfigurationObject();
+            $src = $configuration->getPublicURLToFile(REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg');
+            $cacheStr = "?" . time();
+            if($withNoCacheStr) $src .= $cacheStr;
 
-		$cacheStr = "?" . time();
-		if (file_exists(DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg')) {
-			$base = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg';
-			$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.jpg';
-		} else {
-			$base = DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
-			$src = REL_DIR_FILES_AVATARS . '/' . $uo->getUserID() . '.gif';
-		}
-		if($withNoCacheStr) $src .= $cacheStr;
-		if (!file_exists($base)) {
-			return "";
-		} else {
-			return $src;
-		}
+            return $src;
+        }
 	}
 
 	/**
@@ -109,74 +88,6 @@ class Avatar {
 	}
 
 	/**
-	* Makes the provided image the avatar for the user
-	* It needs to make some various sizes of the image
-	* @param string $pointer
-	* @param int $uID
-	* @return int $uHasAvatar
-	*/
-	function processUploadedAvatar($pointer, $uID) {
-		$uHasAvatar = 0;
-		$imageSize = getimagesize($pointer);
-		$oWidth = $imageSize[0];
-		$oHeight = $imageSize[1];
-
-
-		$finalWidth = 0;
-		$finalHeight = 0;
-
-		// first, if what we're uploading is actually smaller than width and height, we do nothing
-		if ($oWidth < AVATAR_WIDTH && $oHeight < AVATAR_HEIGHT) {
-			$finalWidth = $oWidth;
-			$finalHeight = $oHeight;
-		} else {
-			// otherwise, we do some complicated stuff
-			// first, we subtract width and height from original width and height, and find which difference is g$
-			$wDiff = $oWidth - AVATAR_WIDTH;
-			$hDiff = $oHeight - AVATAR_HEIGHT;
-			if ($wDiff > $hDiff) {
-				// there's more of a difference between width than height, so if we constrain to width, we sh$
-				$finalWidth = AVATAR_WIDTH;
-				$finalHeight = $oHeight / ($oWidth / AVATAR_WIDTH);
-			} else {
-				// more of a difference in height, so we do the opposite
-				$finalWidth = $oWidth / ($oHeight / AVATAR_HEIGHT);
-				$finalHeight = AVATAR_HEIGHT;
-			}
-		}
-
-		$image = imageCreateTrueColor($finalWidth, $finalHeight);
-		$white = imagecolorallocate($image, 255, 255, 255);
-		imagefill($image, 0, 0, $white);
-
-		switch($imageSize[2]) {
-			case IMAGETYPE_GIF:
-				$im = imageCreateFromGIF($pointer);
-				break;
-			case IMAGETYPE_JPEG:
-				$im = imageCreateFromJPEG($pointer);
-				break;
-			case IMAGETYPE_PNG:
-				$im = imageCreateFromPNG($pointer);
-				break;
-		}
-
-
-		$newPath = DIR_FILES_AVATARS . '/' . $uID . '.jpg';
-
-		if ($im) {
-			$res = imageCopyResampled($image, $im, 0, 0, 0, 0, $finalWidth, $finalHeight, $oWidth, $oHeight);
-			if ($res) {
-				$res2 = imageJPEG($image, $newPath, Loader::helper('image')->defaultJpegCompression());
-				if ($res2) {
-					$uHasAvatar = 1;
-				}
-			}
-		}
-
-		return $uHasAvatar;
-	}
-	/**
 	* Removes the avatar for the given user
 	* @param user object $ui
 	*/
@@ -188,32 +99,6 @@ class Avatar {
 		}
 		$db = Loader::db();
 		$db->query("update Users set uHasAvatar = 0 where uID = ?", array($uID));
-	}
-	/**
-	* Updates the avatar for the given user with the image given in $pointer
-	* @param string $pointer
-	* @param int $uID
-	* @return int $uHasAvatar
-	*/
-	function updateUserAvatar($pointer, $uID) {
-		$uHasAvatar = $this->processUploadedAvatar($pointer, $uID);
-		$db = Loader::db();
-		$db->query("update Users set uHasAvatar = {$uHasAvatar} where uID = ?", array($uID));
-		return $uHasAvatar;
-	}
-	/**
-	* Updates the avatar for the given user with a stock image thats given with $pointer
-	* @param string $pointer
-	* @param int $uID
-	*/
-	function updateUserAvatarWithStock($pointer, $uID) {
-		if ($pointer != "") {
-			if (file_exists(DIR_FILES_AVATARS_STOCK . '/' . $pointer)) {
-				$uHasAvatar = $this->processUploadedAvatar(DIR_FILES_AVATARS_STOCK . '/' . $pointer, $uID);
-				$db = Loader::db();
-				$db->query("update Users set uHasAvatar = {$uHasAvatar} where uID = ?", $uID);
-			}
-		}
 	}
 
   /**

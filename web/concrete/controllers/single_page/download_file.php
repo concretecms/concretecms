@@ -97,9 +97,6 @@ class DownloadFile extends PageController {
 	}
 
 	protected function download(\Concrete\Core\File\File $file, $rcID=NULL) {
-		//$mime_type = finfo_file(DIR_FILES_UPLOADED."/".$filename);
-		//header('Content-type: $mime_type');
-		// everything else lets just download
 		$filename = $file->getFilename();
 		$file->trackDownload($rcID);
 		$ci = Loader::helper('file');

@@ -1,6 +1,9 @@
 <?php
 namespace Concrete\Core\User;
+use Concrete\Core\File\StorageLocation\StorageLocation;
 use \Concrete\Core\Foundation\Object;
+use Imagine\Image\ImageInterface;
+use League\Flysystem\AdapterInterface;
 use Loader;
 use Events;
 use User as ConcreteUser;
@@ -252,6 +255,28 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 	public function canReadPrivateMessage($msg) {
 		return $msg->getMessageUserID() == $this->getUserID();
 	}
+
+    public function updateUserAvatar(ImageInterface $image)
+    {
+        $fsl = StorageLocation::getDefault()->getFileSystemObject();
+        $image = $image->get('jpg');
+        $file = REL_DIR_FILES_AVATARS . '/' . $this->getUserID() . '.jpg';
+        if ($fsl->has($file)) {
+            $fsl->delete($file);
+        }
+
+        $fsl->write(
+            $file,
+            $image,
+            array(
+                'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+                'mimetype' => 'image/jpeg'
+            )
+        );
+
+		$db = Loader::db();
+		$db->query("update Users set uHasAvatar = 1 where uID = ?", array($this->getUserID()));
+    }
 	
 	public function sendPrivateMessage($recipient, $subject, $text, $inReplyTo = false) {
 		if(UserPrivateMessageLimit::isOverLimit($this->getUserID())) {

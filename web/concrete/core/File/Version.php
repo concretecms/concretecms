@@ -374,13 +374,31 @@ class Version extends Object {
 		$db->Execute("delete from FileAttributeValues where fID = ? and fvID = ?", array($this->fID, $this->fvID));
 		$db->Execute("delete from FileVersionLog where fID = ? and fvID = ?", array($this->fID, $this->fvID));
 
-        $fre = $this->getFileResource();
+        foreach(array(1, 2, 3) as $level) {
+            if ($this->{"fvHasThumbnail{$level}"}) {
+                $this->deleteThumbnail($level);
+            }
+        }
+
         $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        $fre = $this->getFileResource();
         $fsl->delete($fre->getPath());
 	}
 
+    /**
+     * Deletes the thumbnail for the particular level.
+     */
+    public function deleteThumbnail($level)
+    {
+        $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        $fh = Loader::helper('concrete/file');
+        $path = $fh->getThumbnailFilePath($this->getPrefix(), $this->getFilename(), $level);
+        if ($path) {
+            $fsl->delete($path);
+        }
+    }
 
-	/**
+    /**
 	 * Returns an abstracted File object for the resource. NOT a concrete5 file object.
      * @return \League\Flysystem\File
 	 */
@@ -391,19 +409,6 @@ class Version extends Object {
         $fo = $fs->get($cf->prefix($this->fvPrefix, $this->fvFilename));
         return $fo;
     }
-
-    /*
-    public function getPath()
-    {
-        $cf = Core::make('helper/concrete/file');
-        $fsl = $this->getFile()->getFileStorageLocationObject();
-        if (is_object($fsl)) {
-            $configuration = $fsl->getConfigurationObject();
-            $filesystem = $configuration->getFileSystemObject();
-            return $filesystem->get($cf->prefix($this->fvPrefix, $this->fvFilename));
-        }
-    }
-    */
 
 	/**
 	 * Returns a full URL to the file on disk
@@ -507,6 +512,12 @@ class Version extends Object {
     {
 
         $fr = $this->getFileResource();
+
+        // delete the file if it exists
+        if ($this->hasThumbnail($level)) {
+            $this->deleteThumbnail($level);
+        }
+
         $image = \Image::load($fr->read());
 
         $filesystem = $this->getFile()

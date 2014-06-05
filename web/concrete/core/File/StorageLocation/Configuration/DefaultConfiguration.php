@@ -9,13 +9,13 @@ class DefaultConfiguration extends LocalConfiguration
     public function __construct()
     {
         $this->setRootPath(DIR_FILES_UPLOADED_STANDARD);
-        $this->setWebRootRelativePath(REL_DIR_FILES_UPLOADED);
+        $this->setWebRootRelativePath(REL_DIR_FILES_UPLOADED_STANDARD);
     }
 
     public function __wakeup()
     {
         $this->setRootPath(DIR_FILES_UPLOADED_STANDARD);
-        $this->setWebRootRelativePath(REL_DIR_FILES_UPLOADED);
+        $this->setWebRootRelativePath(REL_DIR_FILES_UPLOADED_STANDARD);
     }
 
     public function validateRequest(\Concrete\Core\Http\Request $req)
