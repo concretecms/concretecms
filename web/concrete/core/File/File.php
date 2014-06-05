@@ -420,52 +420,15 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		if (!$fve->proceed()) {
 			return false;
 		}
-		
-		$pathbase = false;
-		$r = $db->GetAll('select fvFilename, fvPrefix from FileVersions where fID = ?', array($this->fID));
-		$h = Loader::helper('concrete/file');
-		if ($this->getStorageLocationID() > 0) {
-			$fsl = FileStorageLocation::getByID($this->getStorageLocationID());
-			$pathbase = $fsl->getDirectory();
-		}
-		foreach($r as $val) {
-			
-			// Now, we make sure this file isn't referenced by something else. If it is we don't delete the file from the drive
-			$cnt = $db->GetOne('select count(*) as total from FileVersions where fID <> ? and fvFilename = ? and fvPrefix = ?', array(
-				$this->fID,
-				$val['fvFilename'],
-				$val['fvPrefix']
-			));
-			if ($cnt == 0) {
-				if ($pathbase != false) {
-					$path = $h->mapSystemPath($val['fvPrefix'], $val['fvFilename'], false, $pathbase);
-				} else {
-					$path = $h->mapSystemPath($val['fvPrefix'], $val['fvFilename'], false);
-				}
-				$t1 = $h->getThumbnailSystemPath($val['fvPrefix'], $val['fvFilename'], 1);
-				$t2 = $h->getThumbnailSystemPath($val['fvPrefix'], $val['fvFilename'], 2);
-				$t3 = $h->getThumbnailSystemPath($val['fvPrefix'], $val['fvFilename'], 3);
-				if (file_exists($path)) {
-					unlink($path);
-				}
-				if (file_exists($t1)) {
-					unlink($t1);
-				}
-				if (file_exists($t2)) {
-					unlink($t2);
-				}
-				if (file_exists($t3)) {
-					unlink($t3);
-				}
-			}
-		}
-		
+
+        $versions = $this->getVersionList();
+        foreach($versions as $fv) {
+            $fv->delete();
+        }
+
 		// now from the DB
 		$db->Execute("delete from Files where fID = ?", array($this->fID));
-		$db->Execute("delete from FileVersions where fID = ?", array($this->fID));
-		$db->Execute("delete from FileAttributeValues where fID = ?", array($this->fID));
 		$db->Execute("delete from FileSetFiles where fID = ?", array($this->fID));
-		$db->Execute("delete from FileVersionLog where fID = ?", array($this->fID));
 		$db->Execute("delete from FileSearchIndexAttributes where fID = ?", array($this->fID));
 		$db->Execute("delete from DownloadStatistics where fID = ?", array($this->fID));
 		$db->Execute("delete from FilePermissionAssignments where fID = ?", array($this->fID));		
@@ -504,11 +467,14 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		$db = Loader::db();
 		$row = $db->GetRow("select * from FileVersions where fvID = ? and fID = ?", array($fvID, $this->fID));
 		$row['fvAuthorName'] = $db->GetOne("select uName from Users where uID = ?", array($row['fvAuthorUID']));
-		
-		$fv = new Version();
-		$row['fslID'] = $this->fslID;
-		$fv->setPropertiesFromArray($row);
-		
+
+        $fv = false;
+        if ($row['fvID']) {
+            $fv = new Version();
+            $row['fslID'] = $this->fslID;
+            $fv->setPropertiesFromArray($row);
+        }
+
 		CacheLocal::set('file', $this->getFileID() . ':' . $fvID, $fv);
 		return $fv;
 	}
