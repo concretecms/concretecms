@@ -23,7 +23,6 @@ if ($c->isEditMode()) { ?>
 	<?
 	
 	
-	//echo mime_content_type(DIR_FILES_UPLOADED.'/'.$file->getFilename()).'<br>';
 	if( strstr(strtolower($file->getFilename()),'.flv') ){   ?>
 		
 		<script type="text/javascript">

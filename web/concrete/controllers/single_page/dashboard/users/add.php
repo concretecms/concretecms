@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 use \Concrete\Core\Page\Controller\DashboardPageController;
+use Imagine\Image\Box;
 use Loader;
 use UserInfo;
 use PermissionKey;
@@ -113,7 +114,9 @@ class Add extends DashboardPageController {
 				$av = Loader::helper('concrete/avatar'); 
 				if ($assignment->allowEditAvatar()) {
 					if (is_uploaded_file($_FILES['uAvatar']['tmp_name'])) {
-						$uHasAvatar = $av->updateUserAvatar($_FILES['uAvatar']['tmp_name'], $uo->getUserID());
+                        $image = \Image::open($_FILES['uAvatar']['tmp_name']);
+                        $image = $image->thumbnail(new Box(AVATAR_WIDTH, AVATAR_HEIGHT));
+                        $uo->updateUserAvatar($image);
 					}
 				}
 				

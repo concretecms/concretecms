@@ -12,7 +12,6 @@ class ApplicationServiceProvider extends ServiceProvider {
 			'helper/concrete/composer' => '\Concrete\Core\Application\Service\Composer',
 			'helper/concrete/dashboard' => '\Concrete\Core\Application\Service\Dashboard',
 			'helper/concrete/dashboard/sitemap' => '\Concrete\Core\Application\Service\Dashboard\Sitemap',
-			'helper/concrete/image' => '\Concrete\Core\Application\Service\Image',
 			'helper/concrete/ui' => '\Concrete\Core\Application\Service\UserInterface',
 			'helper/concrete/ui/menu' => '\Concrete\Core\Application\Service\UserInterface\Menu',
 			'helper/concrete/ui/help' => '\Concrete\Core\Application\Service\UserInterface\Help',

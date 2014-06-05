@@ -38,9 +38,12 @@ if (!$previewMode) {
 	<div class="col-md-3"><p><?=t('Filename')?></p></div>
 	<div class="col-md-9"><p><?=$fv->getFileName()?></p></div>
 </div>
+<?
+$url = $fv->getURL();
+?>
 <div class="row">
 	<div class="col-md-3"><p><?=t('URL to File')?></p></div>
-	<div class="col-md-9"><p><?=$fv->getRelativePath(true)?></p></div>
+	<div class="col-md-9"><p><?=$url?></p></div>
 </div>
 <?
 $oc = $f->getOriginalPageObject();
@@ -72,21 +75,13 @@ if (is_object($oc)) {
 	<div class="col-md-9"><p><?=t('Added by <strong>%s</strong> on %s', $fv->getAuthorName(), $dateHelper->date(DATE_APP_FILE_PROPERTIES, strtotime($f->getDateAdded())))?></p></div>
 </div>
 <?
-
-$fsl = FileStorageLocation::getByID(FileStorageLocation::ALTERNATE_ID);
-if (is_object($fsl)) {
-	if ($f->getStorageLocationID() > 0) {
-		$sli = $fsl->getName() . ' <span style="color: #afafaf">(' . $fsl->getDirectory() . ')</span>';;
-	}
-}
-if (!isset($sli)) {
-	$sli = t('Default Location') . ' <span style="color: #afafaf">(' . DIR_FILES_UPLOADED . ')</span>';
-}
-?>
-<div class="row">
-	<div class="col-md-3"><p><?=t('Location')?></p></div>
-	<div class="col-md-9"><p><?=$sli?></p></div>
-</div>
+$fsl = $f->getFileStorageLocationObject();
+if (is_object($fsl)) { ?>
+    <div class="row">
+        <div class="col-md-3"><p><?=t('Storage Location')?></p></div>
+        <div class="col-md-9"><p><?=$fsl->getName()?></div>
+    </div>
+<? } ?>
 <div class="row">
 	<div class="col-md-3"><p><?=t('Title')?></p></div>
 	<div class="col-md-9"><p><span <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable" data-type="text" data-name="fvTitle"<? } ?>><?=$fv->getTitle()?></span></p></div>

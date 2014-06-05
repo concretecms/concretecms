@@ -35,36 +35,26 @@ class Controller extends BlockController {
 		$bID = $this->bID;
 		
 		$f = File::getByID($this->fID);
-		$fullPath = $f->getPath();
-		$relPath = $f->getRelativePath();			
-		$size = @getimagesize($fullPath);
-		//if (empty($size)) {
-			//echo t( 'Image Not Found. ');
-			 //return '';
-			//maybe Log::addEntry('Image not found for area bla on page bla/bla/bla');
-		//}	
+		$relPath = $f->getRelativePath();
 
-		
-		if ($this->maxWidth == $size[0] && $this->maxHeight == $size[1]) {
-			$sizeStr = $size[3];
+		if ($this->maxWidth == $f->getAttribute('width') && $this->maxHeight == $f->getAttribute('height')) {
+			$sizeStr = 'width="' . $f->getAttribute('width') . '" height="' . $f->getAttribute('height') . '"';
 		} else if (!$this->forceImageToMatchDimensions && ($this->maxWidth > 0 || $this->maxHeight > 0)) { 
 			$ih = Loader::helper('image');
 			$thumb = $ih->getThumbnail($f, $this->maxWidth, $this->maxHeight);
 			$sizeStr = ' width="' . $thumb->width . '" height="' . $thumb->height . '"';
 			$relPath = $thumb->src;
 		} else {
-			$sizeStr = $size[3];
-		}
+            $sizeStr = 'width="' . $f->getAttribute('width') . '" height="' . $f->getAttribute('height') . '"';
+        }
 
 		if($this->fOnstateID > 0) {
 			$fos = File::getByID($this->fOnstateID);
-			$fullPathOnstate = $f->getPath();
-			$sizehover = @getimagesize($fullPathOnstate);
 
-			if ($this->maxWidth == $sizehover[0] && $this->maxHeight == $sizehover[1]) {
+			if ($this->maxWidth == $fos->getAttribute('width') && $this->maxHeight == $fos->getAttribute('height')) {
 				$relPathHover = $fos->getRelativePath();
 			} else if (!$this->forceImageToMatchDimensions && ($this->maxWidth > 0 || $this->maxHeight > 0)) {
-				$thumbHover = $ih->getThumbnail($fos, $mw, $mh);				
+				$thumbHover = $ih->getThumbnail($fos, $this->maxWidth, $this->maxHeight);
 				$relPathHover = $thumbHover->src;
 			} else {
 				$relPathHover = $fos->getRelativePath();
@@ -170,66 +160,4 @@ class Controller extends BlockController {
 		parent::save($args);
 	}
 
-
-	//DEPRECATED.
-	public function getContentAndGenerate($align = false, $style = false, $id = null) {
-		$c = Page::getCurrentPage();
-		$bID = $this->bID;
-		
-		$f = $this->getFileObject();
-		$fullPath = $f->getPath();
-		$relPath = $f->getRelativePath();			
-		$size = @getimagesize($fullPath);
-		if (empty($size)) {
-			echo t( 'Image Not Found. ');
-		    return '';
-		}	
-		
-		if ($this->maxWidth == $size[0] && $this->maxHeight == $size[1]) {
-			$sizeStr = $size[3];
-		} else if (!$this->forceImageToMatchDimensions && ($this->maxWidth > 0 || $this->maxHeight > 0)) { 
-			$mw = $this->maxWidth > 0 ? $this->maxWidth : $size[0];
-			$mh = $this->maxHeight > 0 ? $this->maxHeight : $size[1];
-			$ih = Loader::helper('image');
-			$thumb = $ih->getThumbnail($f, $mw, $mh);
-			$sizeStr = ' width="' . $thumb->width . '" height="' . $thumb->height . '"';
-			$relPath = $thumb->src;
-		} else {
-			$sizeStr = $size[3];
-		}
-		
-		$img = "<img border=\"0\" class=\"ccm-image-block\" alt=\"{$this->altText}\" src=\"{$relPath}\" {$sizeStr} ";
-		$img .= ($align) ? "align=\"{$align}\" " : '';
-		
-		$img .= ($style) ? "style=\"{$style}\" " : '';
-		if($this->fOnstateID != 0) {
-			$fos = $this->getFileOnstateObject();
-			$fullPathOnstate = $f->getPath();
-			$sizehover = @getimagesize($fullPathOnstate);
-
-			if ($this->maxWidth == $sizehover[0] && $this->maxHeight == $sizehover[1]) {
-				$relPathHover = $fos->getRelativePath();
-			} else if (!$this->forceImageToMatchDimensions && ($this->maxWidth > 0 || $this->maxHeight > 0)) {
-				$thumbHover = $ih->getThumbnail($fos, $mw, $mh);				
-				$relPathHover = $thumbHover->src;
-			} else {
-				$relPathHover = $fos->getRelativePath();
-			}
-
-			$img .= " onmouseover=\"this.src = '{$relPathHover}'\" ";
-			$img .= " onmouseout=\"this.src = '{$relPath}'\" ";
-		}
-		
-		$img .= ($id) ? "id=\"{$id}\" " : "";
-		$img .= "/>";
-		
-		$linkURL = $this->getLinkURL();
-		if (!empty($linkURL)) {
-			$img = "<a href=\"{$linkURL}\">" . $img ."</a>";
-		}
-		return $img;
-	}
-
 }
-
-?>

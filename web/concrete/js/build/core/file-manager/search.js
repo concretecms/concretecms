@@ -36,7 +36,10 @@
     ConcreteFileManager.prototype.setupFileDownloads = function() {
         var my = this;
         if (!$('#ccm-file-manager-download-target').length) {
-            my.$downloadTarget = $('<iframe />', {'id': 'ccm-file-manager-download-target'}).appendTo(document.body);
+            my.$downloadTarget = $('<iframe />', {
+                'name': 'ccm-file-manager-download-target',
+                'id': 'ccm-file-manager-download-target'
+            }).appendTo(document.body);
         } else {
             my.$downloadTarget = $('#ccm-file-manager-download-target');
         }

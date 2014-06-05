@@ -7,11 +7,13 @@
         "symfony/routing": "2.1.*",
         "symfony/http-kernel": "2.1.*",
         "doctrine/orm": "2.4",
+        "league/flysystem": "0.4.*",
         "symfony/event-dispatcher": "2.1.*",
         "symfony/serializer": "2.1.*",
         "illuminate/container": "4.1.*",
         "patchwork/utf8": "1.1.*",
         "oyejorge/less.php": "~1.5",
+        "imagine/imagine": "0.6.*@dev",
         "innogames/cssmin": "dev-master",
         "tedivm/jshrink": "0.5.*",
         "michelf/php-markdown": "1.4.*@dev",
@@ -39,6 +41,7 @@
         "zf1/zend-queue": "dev-master",
         "zf1/zend-mime": "dev-master",
         "zf1/zend-mail": "dev-master",
-        "nesbot/carbon": "dev-master"
+        "nesbot/carbon": "dev-master",
+        "aws/aws-sdk-php": "2.6.6"
     }
 }
