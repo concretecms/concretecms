@@ -23,7 +23,6 @@ $components = SystemImageEditorComponent::getList();
 $filters = SystemImageEditorFilter::getList();
 
 ?>
-<link rel="stylesheet" href="<?=ASSETS_URL_CSS?>/ccm.image_editor.css?f=<?=sha1(filemtime(".".ASSETS_URL_CSS."/ccm.image_editor.css"))?>">
 <div class='table ccm-ui'>
   <div class='editorcontainer'>
     <div id='<?=$editorid?>' class='Editor'></div>
@@ -41,10 +40,10 @@ $filters = SystemImageEditorFilter::getList();
           if (!$controlsets) echo "&nbsp;";
           foreach($controlsets as $controlset) {
             $handle = $controlset->getImageEditorControlSetHandle();
-            echo "<link rel='stylesheet' href='/concrete/css/image_editor/control_sets/{$handle}.css?d=".sha1(rand(1,500000))."'>
+            echo "<link rel='stylesheet' href='/concrete/css/build/core/image-editor/control-sets/{$handle}.css?d=".sha1(rand(1,500000))."'>
                 <div class='controlset {$handle}'".
                  " data-namespace='{$handle}'".
-                 " data-src='/concrete/js/image_editor/control_sets/{$handle}.js'>".
+                 " data-src='/concrete/js/image-editor/control-sets/{$handle}.js'>".
                     "<h4>".$controlset->getImageEditorControlSetDisplayName()."</h4>".
                     "<div class='control'><div class='contents'>";
                       echo Loader::element('image_editor/control_sets/'.$handle,array('editorid'=>$editorid));
@@ -101,7 +100,7 @@ $(function(){
       $fnames = array();
       foreach ($filters as $filter) {
         $handle = $filter->getImageEditorFilterHandle();
-        $fnames[$handle] = array("src"=>"/concrete/js/image_editor/filters/{$handle}.js","name"=>$filter->getImageEditorFilterDisplayName('text'));
+        $fnames[$handle] = array("src"=>"/concrete/js/image-editor/filters/{$handle}.js","name"=>$filter->getImageEditorFilterDisplayName('text'));
       }
       echo Loader::helper('json')->encode($fnames);
     ?>;

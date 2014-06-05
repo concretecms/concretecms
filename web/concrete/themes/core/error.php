@@ -4,8 +4,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=<?=APP_CHARSET?>" />
 <!-- insert CSS for Default Concrete Theme //-->
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.default.theme.css";</style>
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/ccm.app.css";</style>
+<style type="text/css">@import "<?=ASSETS_URL_CSS?>/app.css";</style>
 
 </head>
 <body>

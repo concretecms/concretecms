@@ -72,11 +72,11 @@ class Controller extends AttributeTypeController  {
 				print $form->text($this->field('value'), $this->getDisplayValue());
 				break;
 			case 'date':
-				$this->requireAsset('jqueryui');
+				$this->requireAsset('jquery/ui');
 				print $dt->date($this->field('value'), $caValue);
 				break;
 			default:
-				$this->requireAsset('jqueryui');
+				$this->requireAsset('jquery/ui');
 				print $dt->datetime($this->field('value'), $caValue);
 				break;
 		}

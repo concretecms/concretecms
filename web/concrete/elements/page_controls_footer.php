@@ -33,17 +33,17 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 			<ul>
 				<li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></span></li>
 				<? if ($c->isMasterCollection()) { ?>
-					<li class="pull-left"><a href="<?=View::url('/dashboard/pages/types')?>"><i class="glyphicon glyphicon-arrow-left"></i></a>
+					<li class="pull-left"><a href="<?=View::url('/dashboard/pages/types')?>"><i class="fa fa-arrow-left"></i></a>
 				<? } ?>
 				<? if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) { ?>
 
 				<? if ($c->isEditMode()) { ?>
-					<li class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit pull-left"><a data-toolbar-action="check-in" <? if ($vo->isNew()) { ?>href="javascript:void(0)" data-launch-panel="check-in"<? } else { ?>href="<?=URL::to('/ccm/system/page/check_in', $c->getCollectionID(), Loader::helper('validation/token')->generate())?>"<? } ?> data-panel-url="<?=URL::to('/ccm/system/panels/page/check_in')?>"><i class="glyphicon glyphicon-pencil"></i></a></li>
+					<li class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit pull-left"><a data-toolbar-action="check-in" <? if ($vo->isNew()) { ?>href="javascript:void(0)" data-launch-panel="check-in"<? } else { ?>href="<?=URL::to('/ccm/system/page/check_in', $c->getCollectionID(), Loader::helper('validation/token')->generate())?>"<? } ?> data-panel-url="<?=URL::to('/ccm/system/panels/page/check_in')?>"><i class="fa fa-pencil"></i></a></li>
 				<? } else { ?>
-					<li class="ccm-toolbar-page-edit pull-left"><a data-toolbar-action="check-out" href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?>"><i class="glyphicon glyphicon-pencil"></i></a></li>
+					<li class="ccm-toolbar-page-edit pull-left"><a data-toolbar-action="check-out" href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?>"><i class="fa fa-pencil"></i></a></li>
 				<? } ?>
 
-				<li class="pull-left"><a href="#" data-launch-panel="page" data-panel-url="<?=URL::to('/ccm/system/panels/page')?>"><i class="glyphicon glyphicon-cog"></i></a>
+				<li class="pull-left"><a href="#" data-launch-panel="page" data-panel-url="<?=URL::to('/ccm/system/panels/page')?>"><i class="fa fa-cog"></i></a>
 
 				</li>
 				<? }
@@ -51,9 +51,9 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 				if ($cp->canEditPageContents() && (!$pageInUseBySomeoneElse)) { ?>
 					<li class="ccm-toolbar-add pull-left">
 						<? if ($c->isEditMode()) { ?>
-							<a href="#" data-launch-panel="add-block" data-panel-url="<?=URL::to('/ccm/system/panels/add')?>"><i class="glyphicon glyphicon-plus"></i></a>
+							<a href="#" data-launch-panel="add-block" data-panel-url="<?=URL::to('/ccm/system/panels/add')?>"><i class="fa fa-plus"></i></a>
 						<? } else { ?>
-							<a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$cID?>&ctask=check-out-add-block<?=$token?>"><i class="glyphicon glyphicon-plus"></i></a>
+							<a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$cID?>&ctask=check-out-add-block<?=$token?>"><i class="fa fa-plus"></i></a>
 						<? } ?>
 					</li>
 				<? } 
@@ -73,12 +73,12 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 					<li class="pull-left" id="ccm-white-label-message"><?=t('Powered by <a href="%s">concrete5</a>.', CONCRETE5_ORG_URL)?></li>
 				<? }?>
 
-				<li class="pull-right"><a href="<?=URL::to('/dashboard')?>" data-launch-panel="dashboard"><i class="glyphicon glyphicon-th-large"></i></a>
+				<li class="pull-right"><a href="<?=URL::to('/dashboard')?>" data-launch-panel="dashboard"><i class="fa fa-th-large"></i></a>
 
-				<li class="pull-right"><a href="#" data-panel-url="<?=URL::to('/ccm/system/panels/sitemap')?>" data-launch-panel="sitemap"><i class="glyphicon glyphicon-list-alt"></i></a>
+				<li class="pull-right"><a href="#" data-panel-url="<?=URL::to('/ccm/system/panels/sitemap')?>" data-launch-panel="sitemap"><i class="fa fa-list-alt"></i></a>
 
 					</li>
-				<li class="ccm-toolbar-search pull-right"><i class="glyphicon glyphicon-search"></i> <input type="search" id="ccm-nav-intelligent-search" tabindex="1" /></li>
+				<li class="ccm-toolbar-search pull-right"><i class="fa fa-search"></i> <input type="search" id="ccm-nav-intelligent-search" tabindex="1" /></li>
 				<?
 				$items = $ihm->getPageHeaderMenuItems('right');
 				foreach($items as $ih) {
@@ -149,7 +149,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 				$wf = $wl->getWorkflowObject(); ?>
 				
 				<form method="post" action="<?=$wl->getWorkflowProgressFormAction()?>" id="ccm-notification-page-alert-form-<?=$i?>">
-					<i class="glyphicon glyphicon-info-sign"></i>
+					<i class="fa fa-info-sign"></i>
 					<div class="ccm-notification-inner">
 						<p><?=$wf->getWorkflowProgressCurrentDescription($wl)?></p>
 					<? $actions = $wl->getWorkflowProgressActions(); ?>

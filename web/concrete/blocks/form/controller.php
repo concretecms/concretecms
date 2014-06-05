@@ -84,8 +84,8 @@ class Controller extends BlockController {
 	
 	public function view() {
 		if ($this->viewRequiresJqueryUI()) {
-			$this->requireAsset('css', 'jqueryui');
-			$this->requireAsset('javascript', 'jqueryui');
+			$this->requireAsset('css', 'jquery/ui');
+			$this->requireAsset('javascript', 'jquery/ui');
 		}
 		$this->requireAsset('css', 'core/frontend/errors');
 		if ($this->displayCaptcha) {

@@ -46,7 +46,7 @@ $searchRequest = $controller->getSearchRequest();
 	</div>
 	<div class="form-group">
 		<div class="ccm-search-main-lookup-field">
-			<i class="glyphicon glyphicon-search"></i>
+			<i class="fa fa-search"></i>
 			<?=$form->search('cvName', $searchRequest['cvName'], array('placeholder' => t('Page Name')))?>
 			<button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
 		</div>
@@ -69,7 +69,7 @@ $searchRequest = $controller->getSearchRequest();
 		<? } ?>
 	</select>
 	<div class="ccm-search-field-content"><% if (typeof(field) != 'undefined') { %><%=field.html%><% } %></div>
-	<a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="glyphicon glyphicon-minus-sign"></i></a>
+	<a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="fa fa-minus-sign"></i></a>
 </div>
 </script>
 

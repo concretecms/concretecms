@@ -21,8 +21,6 @@ class Composer {
 	}
 
 	public function addAssetsToRequest(PageType $pt, Controller $cnt) {
-		$r = ResponseAssetGroup::get();
-		$r->requireAsset('core/composer');
 		$list = PageTypeComposerControl::getList($pt);
 		foreach($list as $l) {
 			$l->addAssetsToRequest($cnt);
