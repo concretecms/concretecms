@@ -8,7 +8,7 @@ use Events;
 use Page;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Key as AttributeKey;
-use \Concrete\Core\File\StorageLocation as FileStorageLocation;
+use \Concrete\Core\File\StorageLocation\StorageLocation;
 use FileAttributeKey;
 use PermissionKey;
 
@@ -61,19 +61,23 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		return $this->getFileID();
 	}
 
-	public function getPath() {
-		$fv = $this->getVersion();
-		return $fv->getPath();
-	}
-
-	public function getPassword() {
+    public function getPassword() {
 		return $this->fPassword;
 	}
 	
 	public function getStorageLocationID() {
 		return $this->fslID;
 	}
-	
+
+    /**
+     * @return \Concrete\Core\File\StorageLocation\StorageLocation
+     */
+    public function getFileStorageLocationObject()
+    {
+        $fsl = StorageLocation::getByID($this->fslID);
+        return $fsl;
+    }
+
 	public function refreshCache() {
 		// NOT NECESSARY
 	}
@@ -104,31 +108,28 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		return $path;
 	}
 
-	
-	public function setStorageLocation($item) {
-		if ($item == 0) {
-			// set to default
-			$itemID = 0;
-			$path = DIR_FILES_UPLOADED;
-		} else {
-			$itemID = $item->getID();
-			$path = $item->getDirectory();
-		}
-		
-		if ($itemID != $this->getStorageLocationID()) {
-			// retrieve all versions of a file and move its stuff
-			$list = $this->getVersionList();
-			$fh = Loader::helper('concrete/file');
-			foreach($list as $fv) {
-				$newPath = $fh->mapSystemPath($fv->getPrefix(), $fv->getFileName(), true, $path);
-				$currPath = $fv->getPath();
-				rename($currPath, $newPath);
-			}			
-			$db = Loader::db();
-			$db->Execute('update Files set fslID = ? where fID = ?', array($itemID, $this->fID));
-		}
+	public function setFileStorageLocation(StorageLocation $newLocation)
+    {
+        $fh = Loader::helper('concrete/file');
+        $currentLocation = $this->getFileStorageLocationObject();
+        $currentFilesystem = $currentLocation->getFileSystemObject();
+
+        $newFileSystem = $newLocation->getFileSystemObject();
+
+        $list = $this->getVersionList();
+        foreach($list as $fv) {
+            $contents = $fv->getFileContents();
+            $newFileSystem->put($fh->prefix($fv->getPrefix(), $fv->getFilename()), $contents);
+            $currentFilesystem->delete($fh->prefix($fv->getPrefix(), $fv->getFilename()));
+        }
+
+        $db = Loader::db();
+        $db->Execute('update Files set fslID = ? where fID = ?', array(
+            $newLocation->getID(), $this->getFileID()
+        ));
+        $this->fslID = $newLocation->getID();
 	}
-	
+
 	public function setPassword($pw) {
 
 		$fe = new \Concrete\Core\File\Event\FileWithPassword($this);
@@ -300,11 +301,15 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		return $nf;		
 	}
 	
-	public static function add($filename, $prefix, $data = array()) {
+	public static function add($filename, $prefix, $data = array(), $fsl = false) {
 		$db = Loader::db();
 		$dh = Loader::helper('date');
 		$date = $dh->getSystemDateTime(); 
-		
+
+        if (!is_object($fsl)) {
+            $fsl = StorageLocation::getDefault();
+        }
+
 		$uID = 0;
 		$u = new User();
 		if (isset($data['uID'])) {
@@ -313,7 +318,7 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 			$uID = $u->getUserID();
 		}
 		
-		$db->Execute('insert into Files (fDateAdded, uID) values (?, ?)', array($date, $uID));
+		$db->Execute('insert into Files (fDateAdded, uID, fslID) values (?, ?, ?)', array($date, $uID, $fsl->getID()));
 		
 		$fID = $db->Insert_ID();
 		
@@ -408,52 +413,15 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		if (!$fve->proceed()) {
 			return false;
 		}
-		
-		$pathbase = false;
-		$r = $db->GetAll('select fvFilename, fvPrefix from FileVersions where fID = ?', array($this->fID));
-		$h = Loader::helper('concrete/file');
-		if ($this->getStorageLocationID() > 0) {
-			$fsl = FileStorageLocation::getByID($this->getStorageLocationID());
-			$pathbase = $fsl->getDirectory();
-		}
-		foreach($r as $val) {
-			
-			// Now, we make sure this file isn't referenced by something else. If it is we don't delete the file from the drive
-			$cnt = $db->GetOne('select count(*) as total from FileVersions where fID <> ? and fvFilename = ? and fvPrefix = ?', array(
-				$this->fID,
-				$val['fvFilename'],
-				$val['fvPrefix']
-			));
-			if ($cnt == 0) {
-				if ($pathbase != false) {
-					$path = $h->mapSystemPath($val['fvPrefix'], $val['fvFilename'], false, $pathbase);
-				} else {
-					$path = $h->mapSystemPath($val['fvPrefix'], $val['fvFilename'], false);
-				}
-				$t1 = $h->getThumbnailSystemPath($val['fvPrefix'], $val['fvFilename'], 1);
-				$t2 = $h->getThumbnailSystemPath($val['fvPrefix'], $val['fvFilename'], 2);
-				$t3 = $h->getThumbnailSystemPath($val['fvPrefix'], $val['fvFilename'], 3);
-				if (file_exists($path)) {
-					unlink($path);
-				}
-				if (file_exists($t1)) {
-					unlink($t1);
-				}
-				if (file_exists($t2)) {
-					unlink($t2);
-				}
-				if (file_exists($t3)) {
-					unlink($t3);
-				}
-			}
-		}
-		
+
+        $versions = $this->getVersionList();
+        foreach($versions as $fv) {
+            $fv->delete();
+        }
+
 		// now from the DB
 		$db->Execute("delete from Files where fID = ?", array($this->fID));
-		$db->Execute("delete from FileVersions where fID = ?", array($this->fID));
-		$db->Execute("delete from FileAttributeValues where fID = ?", array($this->fID));
 		$db->Execute("delete from FileSetFiles where fID = ?", array($this->fID));
-		$db->Execute("delete from FileVersionLog where fID = ?", array($this->fID));
 		$db->Execute("delete from FileSearchIndexAttributes where fID = ?", array($this->fID));
 		$db->Execute("delete from DownloadStatistics where fID = ?", array($this->fID));
 		$db->Execute("delete from FilePermissionAssignments where fID = ?", array($this->fID));		
@@ -474,7 +442,7 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 	 * returns the FileVersion object for the provided fvID
 	 * if none provided returns the approved version
 	 * @param int $fvID
-	 * @return FileVersion
+	 * @return Version
 	 */
 	public function getVersion($fvID = null) {
 
@@ -492,11 +460,14 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		$db = Loader::db();
 		$row = $db->GetRow("select * from FileVersions where fvID = ? and fID = ?", array($fvID, $this->fID));
 		$row['fvAuthorName'] = $db->GetOne("select uName from Users where uID = ?", array($row['fvAuthorUID']));
-		
-		$fv = new Version();
-		$row['fslID'] = $this->fslID;
-		$fv->setPropertiesFromArray($row);
-		
+
+        $fv = false;
+        if ($row['fvID']) {
+            $fv = new Version();
+            $row['fslID'] = $this->fslID;
+            $fv->setPropertiesFromArray($row);
+        }
+
 		CacheLocal::set('file', $this->getFileID() . ':' . $fvID, $fv);
 		return $fv;
 	}

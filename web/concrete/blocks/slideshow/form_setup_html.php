@@ -45,12 +45,12 @@ $ah = Loader::helper('concrete/ui');
 
 <div id="ccm-slideshowBlock-imgRows">
 <? if ($fsID <= 0) {
-	foreach($images as $imgInfo){ 
+	foreach($images as $imgInfo){
 		$f = File::getByID($imgInfo['fID']);
 		$fp = new Permissions($f);
 		$imgInfo['thumbPath'] = $f->getThumbnailSRC(1);
 		$imgInfo['fileName'] = $f->getTitle();
-		if ($fp->canViewFile()) { 
+		if ($fp->canViewFile()) {
 			$this->inc('image_row_include.php', array('imgInfo' => $imgInfo));
 		}
 	}
@@ -75,7 +75,7 @@ if ($fsID > 0) {
 	$fsInfo['duration']=$defaultDuration;
 	$fsInfo['fadeDuration']=$defaultFadeDuration;
 }
-$this->inc('fileset_row_include.php', array('fsInfo' => $fsInfo)); ?> 
+$this->inc('fileset_row_include.php', array('fsInfo' => $fsInfo)); ?>
 
 <div id="imgRowTemplateWrap" style="display:none">
 <?
@@ -91,5 +91,5 @@ $imgInfo['imgHeight']=tempHeight;
 $imgInfo['url']='';
 $imgInfo['class']='ccm-slideshowBlock-imgRow';
 ?>
-<? $this->inc('image_row_include.php', array('imgInfo' => $imgInfo)); ?> 
+<? $this->inc('image_row_include.php', array('imgInfo' => $imgInfo)); ?>
 </div>

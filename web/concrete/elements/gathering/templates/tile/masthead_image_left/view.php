@@ -6,7 +6,7 @@ if (is_array($image)) {
 ?>
 <div class="ccm-gathering-masthead-image-left ccm-gathering-masthead-image ccm-gathering-scaled-image">
 	<a href="#" data-overlay="gathering-item">
-		<img class="float-left" src="<?=$image->getPath()?>" alt="<?php echo t('Preview Image') ?>" />
+		<img class="float-left" src="<?=$image->getSrc()?>" alt="<?php echo t('Preview Image') ?>" />
 	</a>
 	<div class="ccm-gathering-tile-title-description float-left">
 		<div class="ccm-gathering-tile-headline"><a href="<?=$link?>"><?=$title?></a></div>

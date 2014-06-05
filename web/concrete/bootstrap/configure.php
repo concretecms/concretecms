@@ -183,6 +183,12 @@ define('DIRNAME_LANGUAGES_SITE_INTERFACE', 'site');
 define('DIRNAME_STYLE_CUSTOMIZER', 'style_customizer');
 define('DIRNAME_STYLE_CUSTOMIZER_TYPES', 'types');
 define('DIRNAME_STYLE_CUSTOMIZER_PRESETS', 'presets');
+define('DIRNAME_FILE_STORAGE_LOCATION_TYPES', 'storage_location_types');
+define('REL_DIR_FILES_INCOMING', '/incoming');
+define('REL_DIR_FILES_THUMBNAILS', '/thumbnails');
+define('REL_DIR_FILES_THUMBNAILS_LEVEL2', '/thumbnails/level2');
+define('REL_DIR_FILES_THUMBNAILS_LEVEL3', '/thumbnails/level3');
+
 
 
 
@@ -232,7 +238,6 @@ define('FILENAME_STYLE_CUSTOMIZER_STYLES', 'styles.xml');
 define('FILENAME_STYLE_CUSTOMIZER_DEFAULT_PRESET_NAME', 'defaults.less');
 
 
-
 /**
  * ----------------------------------------------------------------------------
  * Directory constants
@@ -270,7 +275,6 @@ define('DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_PROCESS', DIR_FILES_BLOCK_TYPES . '
 define('DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_CORE', DIR_FILES_BLOCK_TYPES_CORE . '/external_form/forms');
 define('DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_PROCESS_CORE', DIR_FILES_BLOCK_TYPES_CORE . '/external_form/forms/controllers');
 define('DIR_FILES_UPLOADED_STANDARD', DIR_APPLICATION . '/files');
-define('DIR_FILES_TRASH_STANDARD', DIR_FILES_UPLOADED_STANDARD . '/trash');
 define('DIR_FILES_BACKUPS', DIR_FILES_UPLOADED_STANDARD . '/backups');
 define('DIR_AL_ICONS', DIR_BASE_CORE . '/images/icons/filetypes');
 define('DIR_LANGUAGES_SITE_INTERFACE', DIR_LANGUAGES . '/' . DIRNAME_LANGUAGES_SITE_INTERFACE);
@@ -320,14 +324,11 @@ define('REL_DIR_STARTING_POINT_PACKAGES_CORE', ASSETS_URL . '/config/install/pac
 define('REL_DIR_PACKAGES', DIR_REL . '/packages');
 define('REL_DIR_PACKAGES_CORE', ASSETS_URL . '/packages');
 define('REL_DIR_FILES_PAGE_TEMPLATE_ICONS', ASSETS_URL_IMAGES . '/icons/page_templates');
-define('REL_DIR_FILES_UPLOADED', REL_DIR_APPLICATION . '/files');
-define('REL_DIR_FILES_UPLOADED_THUMBNAILS', REL_DIR_APPLICATION . '/files/thumbnails');
-define('REL_DIR_FILES_UPLOADED_THUMBNAILS_LEVEL2', REL_DIR_APPLICATION . '/files/thumbnails/level2');
-define('REL_DIR_FILES_UPLOADED_THUMBNAILS_LEVEL3', REL_DIR_APPLICATION . '/files/thumbnails/level3');
-define('REL_DIR_FILES_CACHE', REL_DIR_FILES_UPLOADED . '/cache');
+define('REL_DIR_FILES_UPLOADED_STANDARD', REL_DIR_APPLICATION . '/files');
+define('REL_DIR_FILES_TRASH_STANDARD', REL_DIR_FILES_UPLOADED_STANDARD . '/trash');
+define('REL_DIR_FILES_CACHE', REL_DIR_FILES_UPLOADED_STANDARD . '/cache');
 define('REL_DIR_AL_ICONS', ASSETS_URL_IMAGES . '/icons/filetypes');
-define('REL_DIR_FILES_AVATARS', REL_DIR_FILES_UPLOADED . '/avatars');
-define('REL_DIR_FILES_AVATARS_STOCK', REL_DIR_FILES_UPLOADED . '/stock_avatars');
+define('REL_DIR_FILES_AVATARS', '/avatars');
 define('REL_DIR_LANGUAGES_SITE_INTERFACE', REL_DIR_APPLICATION . '/' . DIRNAME_LANGUAGES . '/' . DIRNAME_LANGUAGES_SITE_INTERFACE);
 
 
@@ -346,16 +347,6 @@ if (URL_REWRITING_ALL == true) {
 }
 define('REL_DIR_FILES_TOOLS_BLOCKS', REL_DIR_FILES_TOOLS . '/blocks'); // this maps to the /tools/ directory in the blocks subdir
 define('REL_DIR_FILES_TOOLS_PACKAGES', REL_DIR_FILES_TOOLS . '/packages');
-
-
-
-/**
- * ----------------------------------------------------------------------------
- * Server binaries
- * ----------------------------------------------------------------------------
- */
-defined('DIR_FILES_BIN_UNZIP') or define('DIR_FILES_BIN_UNZIP', '/usr/bin/unzip');
-defined('DIR_FILES_BIN_ZIP') or define('DIR_FILES_BIN_ZIP', '/usr/bin/zip');
 
 
 

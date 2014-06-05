@@ -39,6 +39,7 @@ foreach($files as $f) {
 	$resp[$i]['title'] = $f->getTitle();
 	$resp[$i]['description'] = $f->getDescription();
 	$resp[$i]['fileName'] = $f->getFilename();
+    $resp[$i]['resultsThumbnail'] = $f->getThumbnail(1, false);
 	$resp[$i]['thumbnailLevel1'] = $f->getThumbnailSRC(1);
 	$resp[$i]['thumbnailLevel2'] = $f->getThumbnailSRC(2);
 	$resp[$i]['thumbnailLevel3'] = $f->getThumbnailSRC(3);
