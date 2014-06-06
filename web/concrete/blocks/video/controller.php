@@ -1,11 +1,12 @@
 <?
 namespace Concrete\Block\Video;
 use Loader;
+use File;
 use \Concrete\Core\Block\BlockController;
 class Controller extends BlockController {
 
 	protected $btInterfaceWidth = 320;
-	protected $btInterfaceHeight = 220;
+	protected $btInterfaceHeight = 270;
 	protected $btTable = 'btVideo';
 	protected $btCacheBlockRecord = true;
 	protected $btCacheBlockOutput = true;
