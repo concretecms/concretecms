@@ -31,12 +31,17 @@ if ($valt->validate('import_incoming')) {
 				if (!$fp->canAddFileType($cf->getExtension($name))) {
 					$resp = FileImporter::E_FILE_INVALID_EXTENSION;
 				} else {
-					$resp = $fi->import(DIR_FILES_INCOMING .'/'. $name, $name, $fr);
-					$r->setMessage(t('File uploaded successfully.'));
-					if (is_object($fr)) {
-						$r->setMessage(t('File replaced successfully.'));
-					}
-
+                    $fsl = Concrete\Core\File\StorageLocation\StorageLocation::getDefault()->getFileSystemObject();
+                    $fre = $fsl->get(REL_DIR_FILES_INCOMING . '/' . $name);
+                    if (is_object($fre)) {
+                        $tmpFile = Loader::helper('file')->getTemporaryDirectory() . '/' . time() . $name;
+                        file_put_contents($tmpFile, $fre->read());
+                        $resp = $fi->import($tmpFile, $name, $fr);
+                        $r->setMessage(t('File uploaded successfully.'));
+                        if (is_object($fr)) {
+                            $r->setMessage(t('File replaced successfully.'));
+                        }
+                    }
 				}
 				if (!($resp instanceof FileVersion)) {
 					$error->add($name . ': ' . FileImporter::getErrorMessage($resp));
