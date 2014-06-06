@@ -96,7 +96,6 @@ class Icons extends DashboardPageController {
 				} else {
 				
 					Config::save('IPHONE_HOME_SCREEN_THUMBNAIL_FID', $resp->getFileID());
-					$filepath=$resp->getPath();  
 					$this->redirect('/dashboard/system/basics/icons/', 'iphone_icon_saved');
 
 				}
@@ -129,8 +128,6 @@ class Icons extends DashboardPageController {
 				} else {
 				
 					Config::save('FAVICON_FID', $resp->getFileID());
-					$filepath=$resp->getPath();  
-					//@copy($filepath, DIR_BASE.'/favicon.ico');
 					$this->redirect('/dashboard/system/basics/icons/', 'favicon_saved');
 
 				}

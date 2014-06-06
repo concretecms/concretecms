@@ -11,7 +11,7 @@ class Connect extends DashboardPageController {
 	public $helpers = array('form'); 
 
 	public function on_start() {
-		$this->addFooterItem(Loader::helper('html')->javascript('jquery.postmessage.js'));
+		$this->addFooterItem(Loader::helper('html')->javascript('jquery-postmessage.js'));
 	}
 	
 	public function view($startStep = 'view') {

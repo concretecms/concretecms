@@ -1,59 +1,38 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<style type="text/css">
-table#rssDisplayerSetup th {font-weight: bold; text-style: normal; padding-right: 8px; white-space: nowrap}
-table#rssDisplayerSetup td{ font-size:12px }
-
-</style> 
-
-<?
-
+<?php
+defined('C5_EXECUTE') or die("Access Denied.");
 if (!$rssObj->dateFormat) {
-	$rssObj->dateFormat = t('F jS');
+    $rssObj->dateFormat = t('F jS');
 }
 ?>
-
-<div class="clearfix">
-	<label><?=t('Feed URL')?>:</label>
-	<div class="input"><input id="ccm_rss_displayer_url" name="url" value="<?=$rssObj->url?>" maxlength="255" type="text"></div>
+<div class="form-group">
+    <?= $form->label('url', t('Feed URL')) ?>
+    <input name="url" class="form-control" placeholder="Feed URL" value="<?= h($rssObj->url) ?>"/>
 </div>
-
-<div class="clearfix">
-	<label><?=t('Date Format')?>:</label>
-	<div class="input"><input type="text" name="dateFormat" value="<?=$rssObj->dateFormat?>" />
-		<div class="help-block">(<?=t('Enter a <a href="%s" target="_blank">PHP date string</a> here.', 'http://www.php.net/date')?>)</div>
-
-	</div>
+<div class="form-group">
+    <label for="title">
+        <?= t('Feed Title') ?>
+        <span class="help-block" style="font-weight: normal;display: inline">(<?= t('Optional') ?>)</span>
+    </label>
+    <input name="title" class="form-control" placeholder="Feed Title" value="<?= h($rssObj->title) ?>"/>
 </div>
-
-<div class="clearfix">
-	<label><?=t('Feed Title')?>: (<?=t('Optional')?>)</label>
-	<div class="input">
-		<input id="ccm_rss_displayer_title" name="title" value="<?=$rssObj->title?>" maxlength="255" type="text" />
-	</div>
+<div class="form-group">
+    <?= $form->label('dateFormat', t('Date Format')) ?>
+    <input name="dateFormat" class="form-control" placeholder="Date Format" value="<?= h($rssObj->dateFormat) ?>"/>
 </div>
-
-<div class="clearfix">
-	<label><?=t('# items to display')?>:</label>
-	<div class="input">
-		<input id="ccm_rss_displayer_itemsToDisplay"  name="itemsToDisplay" value="<?=intval($rssObj->itemsToDisplay)?>" type="text" size="2" maxlength="3" />
-	</div>
+<div class="form-group">
+    <?= $form->label('itemsToDisplay', t('Items to Show')) ?>
+    <input name="itemsToDisplay" class="form-control" placeholder="10" value="<?= h($rssObj->itemsToDisplay) ?>"/>
 </div>
-
-<div class="clearfix">
-	<label><?=t('Display')?>:</label>
-	<div class="input">
-	<ul class="inputs-list">
-		<li><label><input name="showSummary" type="radio" value="0" <?=(!$rssObj->showSummary)?'checked':''?>> <span><?=t('Only Titles')?></span></label></li>
-		<li><label><input name="showSummary" type="radio" value="1" <?=($rssObj->showSummary)?'checked':''?>> <span><?=t('Titles & Summary')?></span></label></li>
-	</ul>
-	</div>
+<div class="form-group">
+    <label for="showSummary">
+        <input type="checkbox" value="1" name="showSummary"<?= (!!$rssObj->showSummary ? ' checked' : '') ?> />
+        <span><?= t('Include Summary') ?></span>
+    </label>
 </div>
-
-<div class="clearfix">
-	<label></label>
-	<div class="input">
-	<ul class="inputs-list">
-		<li><label><input name="launchInNewWindow" type="checkbox" value="1" <?=($rssObj->launchInNewWindow)?'checked':''?>> <span><?=t('Open links in a new window')?></span></label></li>
-	</ul>
-	</div>
+<div class="form-group">
+    <label for="showSummary">
+        <input type="checkbox" value="1"
+               name="launchInNewWindow"<?= (!!$rssObj->launchInNewWindow ? ' checked' : '') ?> />
+        <span><?= t('Open links in a new window') ?></span>
+    </label>
 </div>

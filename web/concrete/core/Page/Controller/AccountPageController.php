@@ -2,7 +2,7 @@
 namespace Concrete\Core\Page\Controller;
 use Loader;
 use Page;
-class AccountPageControlle extends PageController {
+class AccountPageController extends PageController {
 
 	public $helpers = array('html', 'form', 'text'); 
 
@@ -11,7 +11,7 @@ class AccountPageControlle extends PageController {
 			$this->render("/page_not_found");
 		}
 		$this->error = Loader::helper('validation/error');
-		$this->set('vt', Loader::helper('validation/token'));
+		$this->set('valt', Loader::helper('validation/token'));
 		$this->set('av', Loader::helper('concrete/avatar'));
 		
 		$c = Page::getCurrentPage();

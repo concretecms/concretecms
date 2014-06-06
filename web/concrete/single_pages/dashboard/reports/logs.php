@@ -21,7 +21,7 @@ $th = Loader::helper('text');
             <?=$form->label('keywords', t('Search'))?>
             <div class="ccm-search-field-content">
             <div class="ccm-search-main-lookup-field">
-                <i class="glyphicon glyphicon-search"></i>
+                <i class="fa fa-search"></i>
                 <?=$form->search('keywords', array('placeholder' => t('Keywords')))?>
                 <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
             </div>
@@ -46,7 +46,7 @@ $th = Loader::helper('text');
             <div class="form-group" style="width: 95%">
                 <?=$form->label('level', t('Level'))?>
                 <div class="ccm-search-field-content">
-                <?=$form->selectMultiple('level', $levels, array_keys($levels))?>
+                <?=$form->selectMultiple('level', $levels, array_keys($levels), array('style' => 'width: 380px'))?>
                 </div>
             </div>
         </div>

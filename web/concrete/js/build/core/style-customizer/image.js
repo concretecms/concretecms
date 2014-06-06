@@ -23,7 +23,7 @@
 
     ConcreteStyleCustomizerImageSelector.prototype.chooseTemplate = '<span data-launch="style-customizer-palette" class="ccm-style-customizer-display-swatch">' +
         '<input type="hidden" name="<%=options.inputName%>[fID]" data-style-customizer-input="fID" />' +
-        '<span class="ccm-ui"><i class="glyphicon glyphicon-picture"></i></span></span>';
+        '<span class="ccm-ui"><i class="fa fa-picture"></i></span></span>';
 
     ConcreteStyleCustomizerImageSelector.prototype.selectorWidgetTemplate = '<div class="ccm-ui ccm-style-customizer-palette">' +
         '<% if (options.value) { %><div><label><%=i18n.currentImage%></label><div><img src="<%=options.value%>" /></div></div><% } %>' +

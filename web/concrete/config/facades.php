@@ -5,5 +5,6 @@ return array(
 	'Database' => '\Concrete\Core\Support\Facade\Database',
 	'Events'   => '\Concrete\Core\Support\Facade\Events',
 	'Route'    => '\Concrete\Core\Support\Facade\Route',
-	'Log'    => '\Concrete\Core\Support\Facade\Log'
+	'Log'    => '\Concrete\Core\Support\Facade\Log',
+    'Image'    => '\Concrete\Core\Support\Facade\Image',
 );

@@ -2,9 +2,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<? 
-$view->addHeaderItem(Loader::helper("html")->css('ccm.default.theme.css'));
+    <link rel="stylesheet" type="text/css" href="<?=$this->getThemePath()?>/main.css" />
+    <?
 $view->requireAsset('css', 'bootstrap');
+$view->requireAsset('css', 'fontawesome');
 $view->requireAsset('javascript', 'jquery');
 $view->requireAsset('javascript', 'bootstrap/alert');
 $view->requireAsset('javascript', 'bootstrap/transition');

@@ -12,7 +12,7 @@
 					<div class="col-sm-7">
 						<div class="input-group">
 						<?=$form->text('uName', array('autocomplete' => 'off'))?>
-						<span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i></span>
+						<span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
 						</div>
 					</div>
 				</div>
@@ -24,7 +24,7 @@
 					<div class="col-sm-7">
 						<div class="input-group">
 						<?=$form->password('uPassword')?>
-						<span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i></span>
+						<span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
 						</div>
 					</div>
 				</div>
@@ -36,7 +36,7 @@
 					<div class="col-sm-7">
 						<div class="input-group">
 						<?=$form->email('uEmail')?>
-						<span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i></span>
+						<span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
 						</div>
 					</div>
 				</div>
