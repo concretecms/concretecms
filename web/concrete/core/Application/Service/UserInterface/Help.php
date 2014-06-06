@@ -189,7 +189,7 @@ class Help {
 		$hideAll = t('Hide All');
 		$html =<<<EOT
 		<div class="ccm-notification-help ccm-notification">
-			<i class="glyphicon glyphicon-info-sign"></i>
+			<i class="fa fa-info-circle"></i>
 			<div class="ccm-notification-inner dialog-help">{$message}</div>
 			<div class="ccm-notification-actions">
 				<a href="#" data-help-notification-identifier="{$identifier}" data-help-notification-type="{$type}" data-dismiss="help-single">{$ok}</a><a href="#" data-help-notification-identifier="{$identifier}" data-help-notification-type="{$type}" data-dismiss="help-all">{$hideAll}</a>

@@ -52,7 +52,7 @@ if (is_object($key)) {
 	<?=$form->label('akHandle', t('Handle'))?>
 	<div class="input-group">
 	<?=$form->text('akHandle', $akHandle)?>
-	<span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i></span>
+	<span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
 	</div>
 </div>
 
@@ -61,7 +61,7 @@ if (is_object($key)) {
 	<?=$form->label('akName', t('Name'))?>
 	<div class="input-group">
 		<?=$form->text('akName', $akName)?>
-		<span class="input-group-addon"><i class="glyphicon glyphicon-asterisk"></i></span>
+		<span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
 	</div>
 </div>
 

@@ -106,7 +106,9 @@ class Service {
 	 * @param File $fob File to attach
 	 * @return StdClass Pointer to the attachment
 	 */
-	public function addAttachment(File $fob) {
+	public function addAttachment(\Concrete\Core\File\File $fob) {
+        // @TODO make this work with the File Storage Locations
+
 		$fv = $fob->getVersion();
 		$path = $fob->getPath();
 		$name = $fv->getFileName();

@@ -10,12 +10,6 @@ use \Concrete\Core\Backup\Backup as ConcreteBackup;
 
 class Backup extends DashboardPageController { 	 
 
-   public function on_start() {
-      $this->addHeaderItem(Loader::helper('html')->javascript('jquery.cookie.js'));
-	 parent::on_start();
-   } 
-
-
 	public function run_backup() {
 	  $encrypt = $this->post('useEncryption');
 	  $tp = new TaskPermission();

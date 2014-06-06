@@ -139,6 +139,11 @@ class StartingPointPackage extends BasePackage {
 	}
 
 	public function import_files() {
+        $type = \Concrete\Core\File\StorageLocation\Type\Type::add('default', t('Default'));
+        \Concrete\Core\File\StorageLocation\Type\Type::add('local', t('Local'));
+        $configuration = $type->getConfigurationObject();
+        $fsl = \Concrete\Core\File\StorageLocation\StorageLocation::add($configuration, t('Default'), true);
+
 		if (is_dir($this->getPackagePath() . '/files')) {
 			$fh = new FileImporter();
 			$contents = Loader::helper('file')->getDirectoryContents($this->getPackagePath() . '/files');
@@ -215,26 +220,16 @@ class StartingPointPackage extends BasePackage {
 	public function make_directories() {
 		Cache::flush();
 
-		if (!is_dir(DIR_FILES_UPLOADED_THUMBNAILS)) {
-			mkdir(DIR_FILES_UPLOADED_THUMBNAILS, DIRECTORY_PERMISSIONS_MODE);
-			chmod(DIR_FILES_UPLOADED_THUMBNAILS, DIRECTORY_PERMISSIONS_MODE);
+        if (!is_dir(DIR_FILES_CACHE)) {
+            mkdir(DIR_FILES_CACHE, DIRECTORY_PERMISSIONS_MODE);
+            chmod(DIR_FILES_CACHE, DIRECTORY_PERMISSIONS_MODE);
+        }
+
+        if (!is_dir(DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_INCOMING)) {
+			mkdir(DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_INCOMING, DIRECTORY_PERMISSIONS_MODE);
+			chmod(DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_INCOMING, DIRECTORY_PERMISSIONS_MODE);
 		}
-		if (!is_dir(DIR_FILES_INCOMING)) {
-			mkdir(DIR_FILES_INCOMING, DIRECTORY_PERMISSIONS_MODE);
-			chmod(DIR_FILES_INCOMING, DIRECTORY_PERMISSIONS_MODE);
-		}
-		if (!is_dir(DIR_FILES_TRASH)) {
-			mkdir(DIR_FILES_TRASH, DIRECTORY_PERMISSIONS_MODE);
-			chmod(DIR_FILES_TRASH, DIRECTORY_PERMISSIONS_MODE);
-		}
-		if (!is_dir(DIR_FILES_CACHE)) {
-			mkdir(DIR_FILES_CACHE, DIRECTORY_PERMISSIONS_MODE);
-			chmod(DIR_FILES_CACHE, DIRECTORY_PERMISSIONS_MODE);
-		}
-		if (!is_dir(DIR_FILES_AVATARS)) {
-			mkdir(DIR_FILES_AVATARS, DIRECTORY_PERMISSIONS_MODE);
-			chmod(DIR_FILES_AVATARS, DIRECTORY_PERMISSIONS_MODE);
-		}
+
 	}
 
 	public function finish() {
