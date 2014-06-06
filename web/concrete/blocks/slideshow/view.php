@@ -86,7 +86,7 @@ var ccmSlideShowHelper<?=intval($bID)?> = {
 			?>
 			{
 				fileName:"<?=$f->getFileName()?>",
-				fullFilePath:"<?=$f->getRelativePath()?>",
+				fullFilePath:"<?=$f->getURL()?>",
 				duration:<?=intval($imgInfo['duration'])?>,
 				fadeDuration:<?=intval($imgInfo['fadeDuration'])?>,		
 				url:"<?=$imgInfo['url']?>",
