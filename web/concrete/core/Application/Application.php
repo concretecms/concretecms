@@ -218,8 +218,9 @@ class Application extends Container
                 $redirect .= '/';
             }
             if ($pathInfo != $redirect) {
+                $dispatcher = URL_REWRITING || URL_REWRITING_ALL ? '' : '/' . DISPATCHER_FILENAME;
                 Redirect::url(
-                        BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '/' . $path . ($r->getQueryString(
+                        BASE_URL . DIR_REL . $dispatcher . '/' . $path . ($r->getQueryString(
                         ) ? '?' . $r->getQueryString() : '')
                 )->send();
             }
