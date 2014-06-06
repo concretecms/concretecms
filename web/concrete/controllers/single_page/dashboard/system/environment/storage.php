@@ -39,7 +39,7 @@ class Storage extends DashboardPageController {
         $this->view();
     }
 
-    public function storage_locaton_updated() {
+    public function storage_location_updated() {
         $this->set('message', t('File storage location saved.'));
         $this->view();
     }

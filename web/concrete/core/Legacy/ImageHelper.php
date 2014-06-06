@@ -53,7 +53,7 @@ class ImageHelper
         if ($mixed instanceof \Imagine\Image\ImageInterface) {
             $image = $mixed;
         } else {
-            $image = Image::open($originalPath);
+            $image = Image::open($mixed);
         }
         if ($fit) {
             $box = new Box($width, $height);

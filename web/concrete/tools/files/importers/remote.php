@@ -19,8 +19,6 @@ if (isset($_REQUEST['fID'])) {
 
 $r = new FileEditResponse();
 
-$searchInstance = $_POST['searchInstance'];
-
 $valt = Loader::helper('validation/token');
 $file = Loader::helper('file');
 Loader::helper('mime');
@@ -43,7 +41,7 @@ if (!$error->has()) {
 			continue; 
 		
 		// validate URL
-		if (Zend_Uri_Http::check($this_url)) {
+		if (!filter_var($this_url, FILTER_VALIDATE_URL)) {
 			// URL appears to be good... add it
 			$incoming_urls[] = $this_url;
 		} else {

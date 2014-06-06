@@ -1,6 +1,7 @@
 <?
 
 namespace Concrete\Core\File\Service;
+use Concrete\Core\File\StorageLocation\StorageLocation;
 use Loader;
 class Application {
 
@@ -30,36 +31,15 @@ class Application {
 	}
 
     /**
-     * @TODO Make this work again. It needs to respsect file storage locations and have a place
-     * in the UI.
+     * @return array
      */
     public function getIncomingDirectoryContents()
     {
 		$incoming_file_information = array();
-		
-		if (is_dir(DIR_FILES_INCOMING)) {
-		    if ($incoming_file_handle = opendir(DIR_FILES_INCOMING)) {
-		        $cnt = 0;
-				
-				while (($file = readdir($incoming_file_handle)) !== false) {
-					if (substr($file, 0, 1) == '.') {
-						continue;
-					}
-					
-					$current_file_stats = array();
-					$current_file_stats = stat(DIR_FILES_INCOMING .'/'. $file);
-					
-					$incoming_file_information[$cnt]['name'] = $file;
-					$incoming_file_information[$cnt]['size'] = $current_file_stats[7];
-		        
-					$cnt++;
-				}
-		        closedir($incoming_file_handle);
-			}
-		}			
-	
-		return $incoming_file_information;
-	}
+		$fs = StorageLocation::getDefault()->getFileSystemObject();
+        $items = $fs->listContents(REL_DIR_FILES_INCOMING);
+        return $items;
+    }
 
 	/**
 	 * Serializes an array of strings into format suitable for multi-uploader

@@ -83,14 +83,13 @@ div#ccm-popover-menu-container {
         height: 25px;
         cursor: pointer;
     }
-
 }
 
 div#ccm-file-manager-upload {
     position: absolute;
     top: 30px;
     right: 10px;
-    width: 320px;
+    width: 340px;
     border: 1px solid #e1e1e1;
     .border-radius(2px);
     text-align: center;
@@ -112,6 +111,19 @@ div#ccm-file-manager-upload {
         height: 55px;
         cursor: pointer;
     }
+
+    a {
+      position: relative;
+      z-index: 100;
+      color: #acacac;
+      text-decoration: underline;
+      display: inline-block;
+
+      &:hover {
+        color: #333;
+      }
+    }
+
 }
 
 /**
