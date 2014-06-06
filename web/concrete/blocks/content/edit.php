@@ -10,7 +10,7 @@ var CCM_EDITOR_SECURITY_TOKEN = "<?=Loader::helper('validation/token')->generate
 $(function() {
     $('#redactor-edit-content').redactor({
         'plugins': [
-            'fontfamily', 'fontsize', 'fontcolor', 'concrete5inline'
+            'fontfamily', 'fontsize', 'fontcolor', 'concrete5inline', 'concrete5'
         ]
     });
 });
