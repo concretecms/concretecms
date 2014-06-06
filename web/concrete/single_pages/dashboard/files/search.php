@@ -7,7 +7,15 @@ $fp = FilePermissions::getGlobal();
 if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
 
 <? if ($fp->canAddFile()) { ?>
-	<div id="ccm-file-manager-upload"><?=t("<strong>Upload Files</strong> / Click to Choose or Drag &amp; Drop")?><input type="file" name="files[]" /></div>
+	<div id="ccm-file-manager-upload">
+        <?=t("<strong>Upload Files</strong> / Click to Choose or Drag &amp; Drop. / ")?>
+        <a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/import"
+           class="dialog-launch"
+           dialog-width="500"
+            dialog-height="500"
+            dialog-modal="true"
+            dialog-title="<?=t('Add Files')?>"><?=t('More Options')?></a>
+        <input type="file" name="files[]" /></div>
 <? } ?>
 
 <div class="ccm-dashboard-content-full" data-search="files">

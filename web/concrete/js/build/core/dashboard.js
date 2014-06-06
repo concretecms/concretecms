@@ -23,10 +23,15 @@ var ConcreteDashboard = function() {
 		$('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
 	}
 
-	return {
+    setupDialogs = function() {
+        $('.dialog-launch').dialog();
+    }
+
+    return {
 		start: function(options) {
 			setupTooltips();
 			setupResultMessages();
+            setupDialogs();
 
 		}
 
