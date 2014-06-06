@@ -2,6 +2,7 @@
 namespace Concrete\Block\Video;
 use Loader;
 use \Concrete\Core\Block\BlockController;
+use File;
 class Controller extends BlockController {
 
 	protected $btInterfaceWidth = 320;
