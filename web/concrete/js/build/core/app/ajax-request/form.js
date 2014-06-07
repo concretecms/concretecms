@@ -62,7 +62,6 @@
 					'message': r.message,
 					'title': r.title
 					});					
-					ConcretePanelManager.exitPanelMode();
 				}
 			}
 		}
