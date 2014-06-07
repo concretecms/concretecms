@@ -28,7 +28,7 @@ class ImporterTest extends \FileStorageTestCase {
             'FileVersionLog'
         ));
         parent::setUp();
-        define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.txt;*.jpeg;*.png');
+        define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.txt;*.jpg;*.jpeg;*.png');
 
         $category = Category::add('file');
         $number = AttributeType::add('number', 'Number');
@@ -136,6 +136,34 @@ class ImporterTest extends \FileStorageTestCase {
         $file = DIR_BASE . '/concrete/themes/default/images/inneroptics_dot_net_aspens.jpg';
         $fi = new Importer();
         $fo = $fi->import($file, 'Aspens.png');
+        $type = $fo->getTypeObject();
+        $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
+
+        $this->assertTrue((bool) $fo->hasThumbnail(1));
+        $this->assertTrue((bool) $fo->hasThumbnail(2));
+        $this->assertFalse((bool) $fo->hasThumbnail(3));
+
+        $cf = Core::make('helper/concrete/file');
+        $fh = Core::make('helper/file');
+        $this->assertEquals('http://www.dummyco.com/application/files/thumbnails/level2'
+            . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), 'jpg'), 2),
+            $fo->getThumbnailURL(2));
+    }
+
+    public function testImageImportFromIncoming()
+    {
+        // create the default storage location first.
+        mkdir($this->getStorageDirectory());
+        $this->getStorageLocation();
+
+        $incomingPath = $this->getStorageDirectory() . '/incoming';
+        mkdir($incomingPath);
+
+        copy(DIR_BASE . '/concrete/themes/default/images/inneroptics_dot_net_aspens.jpg', $incomingPath . '/trees.jpg');
+
+        $fi = new Importer();
+        $fo = $fi->importIncomingFile('trees.jpg');
+        $this->assertInstanceOf('\Concrete\Core\File\Version', $fo);
         $type = $fo->getTypeObject();
         $this->assertEquals(\Concrete\Core\File\Type\Type::T_IMAGE, $type->getGenericType());
 
