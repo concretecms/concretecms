@@ -44,7 +44,12 @@ ConcreteFileImportDialog = {
     addFiles: function() {
         var $form = $('#' + ccm_fiActiveTab + '-form');
         if ($form.length) {
-            $form.concreteAjaxForm().submit();
+            $form.concreteAjaxForm({
+                success: function(r) {
+                    jQuery.fn.dialog.closeTop();
+                    ConcreteEvent.trigger('FileManagerUpdateRequestComplete');
+                }
+            }).submit();
         }
     }
 }
@@ -94,7 +99,8 @@ ConcreteFileImportDialog = {
 
 </form>
 <?php } else { ?>
-	<?=t('No files found in %s', DIR_FILES_INCOMING)?>
+    <br/><br/>
+	<?=t('No files found in %s', REL_DIR_FILES_INCOMING)?>
 <?php } ?>
 </div>
 

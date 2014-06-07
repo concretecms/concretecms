@@ -72,8 +72,8 @@ class Importer {
 	 * object to that File. If not, we make a new filerecord.
 	 * @param string $pointer path to file
 	 * @param string $filename
-	 * @param FileRecord $fr
-	 * @return number Error Code | FileVersion
+	 * @param ConcreteFile $fr
+	 * @return number Error Code | \Concrete\Core\File\Version
 	 */
 	public function import($pointer, $filename = false, $fr = false) {
 		
@@ -134,4 +134,63 @@ class Importer {
 		$fr->refreshCache();
 		return $fv;
 	}
+
+    /**
+     * Imports a file in the default file storage location's incoming directory
+     * @param $filename
+     * @param ConcreteFile $fr
+     * @return number Error Code | \Concrete\Core\File\Version
+     */
+    public function importIncomingFile($filename, $fr = false)
+    {
+        $fh = Loader::helper('validation/file');
+        $fi = Loader::helper('file');
+        $cf = Core::make('helper/concrete/file');
+        $sanitizedFilename = $fi->sanitize($filename);
+
+        $default = StorageLocation::getDefault();
+        $storage = $default->getFileSystemObject();
+
+        if (!$storage->has(REL_DIR_FILES_INCOMING . '/' . $filename)) {
+            return Importer::E_FILE_INVALID;
+        }
+
+        if (!$fh->extension($filename)) {
+            return Importer::E_FILE_INVALID_EXTENSION;
+        }
+
+        // first we import the file into the storage location that is the same.
+        $prefix = $this->generatePrefix();
+        try {
+            $storage->copy(REL_DIR_FILES_INCOMING . '/' . $filename, $cf->prefix($prefix, $sanitizedFilename));
+        } catch(\Exception $e) {
+            $storage->write(
+                $cf->prefix($prefix, $sanitizedFilename),
+                $storage->read(REL_DIR_FILES_INCOMING . '/' . $filename)
+            );
+        }
+
+        if (!($fr instanceof File)) {
+            // we have to create a new file object for this file version
+            $fv = ConcreteFile::add($sanitizedFilename, $prefix, array('fvTitle'=>$filename), $default);
+            $fv->refreshAttributes();
+            $fr = $fv->getFile();
+        } else {
+            // We get a new version to modify
+            $fv = $fr->getVersionToModify(true);
+            $fv->updateFile($sanitizedFilename, $prefix);
+            $fv->refreshAttributes();
+
+            $fsl = $fr->getFileStorageLocationObject();
+            if ($fsl->getID() != $storage->getID()) {
+                // we have to move the file from where we just imported it to this file's location.
+                $newFileSystem = $fsl->getFileSystemObject();
+                $contents = $fv->getFileContents();
+                $newFileSystem->put($fh->prefix($fv->getPrefix(), $fv->getFilename()), $contents);
+                $default->delete($fh->prefix($fv->getPrefix(), $fv->getFilename()));
+            }
+        }
+
+        return $fv;
+    }
 }
