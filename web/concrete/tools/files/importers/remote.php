@@ -47,7 +47,7 @@ if (!$error->has()) {
             $response = $request->send();
             $incoming_urls[] = $this_url;
         } catch(\Exception $e) {
-            $error->add(Loader::helper('text')->specialchars($this_url) . t(' is not a valid URL.'));
+            $error->add(t('%s is not a valid URL.', Loader::helper('text')->specialchars($this_url)));
         }
 	}
 
@@ -85,7 +85,7 @@ if (!$error->has()) {
 				// use mimetype from http response
 				$fextension = MimeHelper::mimeToExtension($response->getContentType());
 				if ($fextension === false)
-					$error->add(t('Unknown mime-type: ') . $response->getContentType());
+					$error->add(t('Unknown mime-type: %s', $response->getContentType()));
 				else {
 					// make sure we're coming up with a unique filename 
 					do {
@@ -133,11 +133,11 @@ if (!$error->has()) {
 				unlink($fpath.'/'.$fname);
 			} else {
 				// could not figure out a file name
-				$error->add(t('Could not determine the name of the file at ') . $this_url);
+				$error->add(t(/*i18n: %s is an URL*/'Could not determine the name of the file at %s', $this_url));
 			}
 		} else {
 			// warn that we couldn't download the file
-			$error->add(t('There was an error downloading ') . $this_url);
+			$error->add(t(/*i18n: %s is an URL*/'There was an error downloading %s', $this_url));
 		}
 	}
 }
