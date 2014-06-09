@@ -16,7 +16,7 @@ class FileServiceProvider extends ServiceProvider {
 			$this->app->singleton($key, $value);
 		}
 
-        $this->app->bind('image/imagick', '\Imagine\Imageick\Imagine');
+        $this->app->bind('image/imagick', '\Imagine\Imagick\Imagine');
         $this->app->bind('image/gd', '\Imagine\Gd\Imagine');
 	}
 
