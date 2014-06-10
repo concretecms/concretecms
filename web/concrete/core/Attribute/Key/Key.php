@@ -821,7 +821,6 @@ class Key extends Object
 
     public function createIndexedSearchTable()
     {
-
         if ($this->getIndexedSearchTable() != false) {
             $db = Database::get();
             $platform = $db->getDatabasePlatform();
