@@ -132,6 +132,7 @@ class PageList extends DatabaseItemList {
 		}
 
 		$accessEntities = $u->getUserAccessEntityObjects();
+        $peIDs = array('-1');
 		foreach($accessEntities as $pae) {
 			$peIDs[] = $pae->getAccessEntityID();
 		}
