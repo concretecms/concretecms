@@ -9,7 +9,7 @@ $fh = Loader::helper('form');
 
 echo $cdh->getDashboardPaneHeaderWrapper(t('Test Mail Settings'), false, 'span8 offset2', false);
 
-?><form method="post" action="<?=$view->url('/dashboard/system/mail/method/test', 'test')?>" class="form-horizontal" id="mail-settings-test-form">
+?><form method="post" action="<?=$controller->action('do_test')?>" class="form-horizontal" id="mail-settings-test-form">
 	<div class="ccm-pane-body"><?php
 		if(!ENABLE_EMAILS) {
 			?><div class="alert alert-info"><?php echo t(/*i18n: %1$s is a configuration name, %2$s is a configuration value*/'It\'s not possible to test the settings since the mail system is disabled (the setting %1$s is set to %2$s in the configuration).', '<b>ENABLE_EMAILS</b>', '<b>false</b>'); ?></div><?php

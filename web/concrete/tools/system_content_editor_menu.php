@@ -7,18 +7,10 @@ $fp = FilePermissions::getGlobal();
 if (Loader::helper('validation/token')->validate('editor')) {
 
 	$obj = new stdClass;
-	$obj->coreMenus = array();
 	$obj->snippets = array();
-	if ($dsh->canRead()) {
-		$obj->coreMenus[] = 'insert_page';
-	}
-	if ($fp->canSearchFileSet()) {
-		$obj->coreMenus[] = 'insert_file';
-		$obj->coreMenus[] = 'insert_image';
-	}
 	$u = new User();
 	if ($u->isRegistered()) {
-		$snippets = SystemContentEditorSnippet::getActiveList();
+		$snippets = \Concrete\Core\Editor\Snippet::getActiveList();
 		foreach($snippets as $sns) {
 			$menu = new stdClass;
 			$menu->scsHandle = $sns->getSystemContentEditorSnippetHandle();

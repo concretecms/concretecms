@@ -93,7 +93,10 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase {
 			$pdo->exec("DROP TABLE IF EXISTS `$table`;");
 		}
 
-		parent::tearDown();
+        $db = Loader::db();
+        $db->getEntityManager()->clear();
+
+        parent::tearDown();
 	}
 
 

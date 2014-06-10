@@ -31,20 +31,16 @@ if ($valt->validate('import_incoming')) {
 				if (!$fp->canAddFileType($cf->getExtension($name))) {
 					$resp = FileImporter::E_FILE_INVALID_EXTENSION;
 				} else {
-					$resp = $fi->import(DIR_FILES_INCOMING .'/'. $name, $name, $fr);
-					$r->setMessage(t('File uploaded successfully.'));
-					if (is_object($fr)) {
-						$r->setMessage(t('File replaced successfully.'));
-					}
-
+                    $resp = $fi->importIncomingFile($name);
 				}
-				if (!($resp instanceof FileVersion)) {
+				if (!($resp instanceof \Concrete\Core\File\Version)) {
 					$error->add($name . ': ' . FileImporter::getErrorMessage($resp));
-				
+
 				} else {
 					$files[] = $resp;
 					if ($_POST['removeFilesAfterPost'] == 1) {
-						unlink(DIR_FILES_INCOMING .'/'. $name);
+                        $fsl = \Concrete\Core\File\StorageLocation\StorageLocation::getDefault()->getFileSystemObject();
+                        $fsl->delete(REL_DIR_FILES_INCOMING . '/' . $name);
 					}
 					
 					if (!is_object($fr)) {
@@ -71,4 +67,5 @@ $r->setError($error);
 if (is_object($respf)) {
 	$r->setFile($respf);
 }
+$r->setMessage(t2('%s file imported successfully.', '%s files imported successfully', count($files)));
 $r->outputJSON();

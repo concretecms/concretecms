@@ -68,7 +68,17 @@ EOL;
 	}
 	$cih = Loader::helper('concrete/ui');
 	if (Localization::activeLanguage() != 'en') {
-		$v->addFooterItem($html->javascript('i18n/ui.datepicker-' . Localization::activeLanguage() . '.js'));
+		$alternatives = array(Localization::activeLocale());
+		if(Localization::activeLocale() !== Localization::activeLanguage()) {
+			$alternatives[] = Localization::activeLanguage();
+		}
+		foreach($alternatives as $alternative) {
+			$alternativeJS = $html->javascript('i18n/ui.datepicker-' . str_replace('_', '-', $alternative) . '.js');
+			if(is_file($alternativeJS->getAssetPath())) {
+				$v->addFooterItem($alternativeJS);
+				break;
+			}
+		}
 		$v->addFooterItem('<script type="text/javascript">$(function() { jQuery.datepicker.setDefaults({dateFormat: \'yy-mm-dd\'}); });</script>');
 	}
 	if (!Config::get('SEEN_INTRODUCTION')) {

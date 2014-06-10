@@ -19,8 +19,6 @@ if (isset($_REQUEST['fID'])) {
 
 $r = new FileEditResponse();
 
-$searchInstance = $_POST['searchInstance'];
-
 $valt = Loader::helper('validation/token');
 $file = Loader::helper('file');
 Loader::helper('mime');
@@ -43,12 +41,14 @@ if (!$error->has()) {
 			continue; 
 		
 		// validate URL
-		if (Zend_Uri_Http::check($this_url)) {
-			// URL appears to be good... add it
-			$incoming_urls[] = $this_url;
-		} else {
-			$error->add(Loader::helper('text')->specialchars($this_url) . t(' is not a valid URL.'));
-		}
+        try {
+            $client = new \Guzzle\Http\Client($this_url);
+            $request = $client->get();
+            $response = $request->send();
+            $incoming_urls[] = $this_url;
+        } catch(\Exception $e) {
+            $error->add(t('%s is not a valid URL.', Loader::helper('text')->specialchars($this_url)));
+        }
 	}
 
 	if (!$valt->validate('import_remote')) {
@@ -70,23 +70,22 @@ if (!$error->has()) {
 	// itterate over each incoming URL adding if relevant
 	foreach($incoming_urls as $this_url) {
 		// try to D/L the provided file
-		$client = new Zend_Http_Client($this_url);
-		$response = $client->request();
+        $client = new \Guzzle\Http\Client($this_url);
+        $request = $client->get();
+        $response = $request->send();
 		
-		if ($response->isSuccessful()) {
-			$uri = Zend_Uri_Http::fromString($this_url);
-			$fname = '';
+		if ($response->getContentLength()) {
 			$fpath = $file->getTemporaryDirectory();
 	
 			// figure out a filename based on filename, mimetype, ???
-			if (preg_match('/^.+?[\\/]([-\w%]+\.[-\w%]+)$/', $uri->getPath(), $matches)) {
+			if (preg_match('/^.+?[\\/]([-\w%]+\.[-\w%]+)$/', $request->getPath(), $matches)) {
 				// got a filename (with extension)... use it
 				$fname = $matches[1];
-			} else if (! is_null($response->getHeader('Content-Type'))) {
+			} else if (! is_null($response->getContentType())) {
 				// use mimetype from http response
-				$fextension = MimeHelper::mimeToExtension($response->getHeader('Content-Type'));
+				$fextension = MimeHelper::mimeToExtension($response->getContentType());
 				if ($fextension === false)
-					$error->add(t('Unknown mime-type: ') . $response->getHeader('Content-Type'));
+					$error->add(t('Unknown mime-type: %s', $response->getContentType()));
 				else {
 					// make sure we're coming up with a unique filename 
 					do {
@@ -115,7 +114,7 @@ if (!$error->has()) {
 				} else {
 					$resp = FileImporter::E_FILE_INVALID_EXTENSION;
 				}
-				if (!($resp instanceof FileVersion)) {
+				if (!($resp instanceof \Concrete\Core\File\Version)) {
 					$error->add($fname . ': ' . FileImporter::getErrorMessage($resp));
 				} else {
 					$import_responses[] = $resp;
@@ -134,11 +133,11 @@ if (!$error->has()) {
 				unlink($fpath.'/'.$fname);
 			} else {
 				// could not figure out a file name
-				$error->add(t('Could not determine the name of the file at ') . $this_url);
+				$error->add(t(/*i18n: %s is an URL*/'Could not determine the name of the file at %s', $this_url));
 			}
 		} else {
 			// warn that we couldn't download the file
-			$error->add(t('There was an error downloading ') . $this_url);
+			$error->add(t(/*i18n: %s is an URL*/'There was an error downloading %s', $this_url));
 		}
 	}
 }

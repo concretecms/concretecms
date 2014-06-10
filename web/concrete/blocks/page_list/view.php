@@ -43,7 +43,8 @@ $th = Loader::helper('text');
 		 * ~OR~ IF YOU DO NOT WANT IMAGES TO BE RESIZED:
 		 * 1) Put in some code here like the following 2 lines:
 		 * 	    $img_src = $img->getRelativePath();
-		 * 	    list($img_width, $img_height) = getimagesize($img->getPath());
+		 *      $img_width = $img->getAttribute('width');
+		 *      $img_height = $img->getAttribute('height');
 		 * 2) Output the image tag below like this:
 		 * 	    <img src="<?php echo $img_src ?>" width="<?php echo $img_width ?>" height="<?php echo $img_height ?>" alt="" />
 		 */

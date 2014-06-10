@@ -250,7 +250,7 @@ class Theme extends Object
                 if ($a->isDefaultPreset()) {
                     return -1;
                 } else {
-                    return strcasecmp($a->getPresetName(), $b->getPresetName());
+                    return strcasecmp($a->getPresetDisplayName('text'), $b->getPresetDisplayName('text'));
                 }
             }
         );

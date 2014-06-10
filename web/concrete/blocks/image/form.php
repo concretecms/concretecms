@@ -14,7 +14,6 @@ if ($controller->getFileOnstateID() > 0) {
 ?>
 
 <fieldset>
-	<legend><?=t('Image to Display')?></legend>
 <?
 $args = array();
 if ($forceImageToMatchDimensions && $maxWidth && $maxHeight) {
@@ -30,19 +29,19 @@ if ($forceImageToMatchDimensions && $maxWidth && $maxHeight) {
 	<?=$al->image('ccm-b-image', 'fID', t('Choose Image'), $bf, $args);?>
 </div>
 <div class="form-group">
-	<label class="control-label"><?=t('Image On-State')?></label>
+	<label class="control-label"><?=t('Image Hover')?> <small style="color:#999999; font-weight: 200;"><?php echo t('(Optional)'); ?></small></label>
 	<?=$al->image('ccm-b-image-onstate', 'fOnstateID', t('Choose Image On-State'), $bfo, $args);?>
 </div>
 
 </fieldset>
+<hr/>
 
 <fieldset>
-	<legend><?=t('Link and Caption')?></legend>
 
 <div class="form-group">
-	<?=$form->label('linkType', t('Image Links to:'))?>
-	<select name="linkType" id="linkType" class="form-control">
-		<option value="0" <?=(empty($externalLink) && empty($internalLinkCID) ? 'selected="selected"' : '')?>><?=t('Nothing')?></option>
+	<?=$form->label('linkType', t('Image Link'))?>
+	<select name="linkType" id="linkType" class="form-control" style="width: 60%;">
+		<option value="0" <?=(empty($externalLink) && empty($internalLinkCID) ? 'selected="selected"' : '')?>><?=t('None')?></option>
 		<option value="1" <?=(empty($externalLink) && !empty($internalLinkCID) ? 'selected="selected"' : '')?>><?=t('Another Page')?></option>
 		<option value="2" <?=(!empty($externalLink) ? 'selected="selected"' : '')?>><?=t('External URL')?></option>
 	</select>
@@ -54,20 +53,20 @@ if ($forceImageToMatchDimensions && $maxWidth && $maxHeight) {
 </div>
 
 <div id="linkTypeExternal" style="display: none;" class="form-group">
-	<?=$form->label('externalLink', t('URL:'))?>
-	<?= $form->text('externalLink', $externalLink); ?>
+	<?=$form->label('externalLink', t('URL'))?>
+	<?= $form->text('externalLink', $externalLink, array('style'=>'width: 60%;')); ?>
 </div>
 
 
 <div class="form-group">
-	<?=$form->label('altText', t('Alt Text/Caption'))?>
-	<?= $form->text('altText', $altText); ?>
+	<?=$form->label('altText', t('Alt. Text'))?>
+	<?= $form->text('altText', $altText, array('style'=>'width: 60%;')); ?>
 </div>
 
 </fieldset>
 
 <fieldset>
-	<legend><?=t('Constrain Image Dimensions')?></legend>
+<hr/>
 
 	<? if ($maxWidth == 0) { 
 		$maxWidth = '';
@@ -77,6 +76,7 @@ if ($forceImageToMatchDimensions && $maxWidth && $maxHeight) {
 	}
 	?>
 
+<label><?php echo t('Constrain Image Size'); ?></label>
 <div class="form-group">
 	<?=$form->label('maxWidth', t('Max Width'))?>
 	<?= $form->text('maxWidth', $maxWidth, array('style' => 'width: 60px')); ?>
@@ -86,7 +86,6 @@ if ($forceImageToMatchDimensions && $maxWidth && $maxHeight) {
 	<?=$form->label('maxHeight', t('Max Height'))?>
 	<?= $form->text('maxHeight', $maxHeight, array('style' => 'width: 60px')); ?>
 </div>
-
 
 <div class="form-group">
 	<?=$form->label('forceImageToMatchDimensions', t('Scale Image'))?>

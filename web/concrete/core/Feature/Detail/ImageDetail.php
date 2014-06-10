@@ -3,7 +3,7 @@ namespace Concrete\Core\Feature\Detail;
 use Loader;
 class ImageDetail extends Detail {
 
-	protected $path;
+	protected $src;
 	protected $width;
 	protected $height;
 
@@ -11,23 +11,16 @@ class ImageDetail extends Detail {
 		if (is_object($mixed)) {
 			$f = $mixed->getImageFeatureDetailFileObject();
 			if (is_object($f)) {
-				$this->path = $f->getRelativePath();
+				$this->src = $f->getRelativePath();
 				$this->width = $f->getAttribute('width');
 				$this->height = $f->getAttribute('height');
 			}
 		} else {
-			$this->path = $mixed;
-			//$r = @getimagesize($this->path);
-			if ($r[0]) {
-				$this->width = $r[0];
-			}
-			if ($r[1]) {
-				$this->height = $r[1];
-			}
+			$this->src = $mixed;
 		}
 	}
 
-	public function getPath() {return $this->path;}
+	public function getSrc() {return $this->src;}
 	public function getWidth() {return $this->width;}
 	public function getHeight() {return $this->height;}
 

@@ -10,7 +10,6 @@ Route::register('/install/test_url/{num1}/{num2}', '\Concrete\Controller\Install
 Route::register('/install/configure', '\Concrete\Controller\Install::configure');
 Route::register('/install/run_routine/{pkgHandle}/{routine}', '\Concrete\Controller\Install::run_routine');
 
-
 /**
  * Tools - legacy
  */
@@ -20,7 +19,6 @@ Route::register('/tools/{tool}', '\Concrete\Core\Legacy\Controller\ToolControlle
 /**
  * Dialog
  */
-
 Route::register('/ccm/system/dialogs/page/delete/', '\Concrete\Controller\Dialog\Page\Delete::view');
 Route::register('/ccm/system/dialogs/page/delete/submit', '\Concrete\Controller\Dialog\Page\Delete::submit');
 Route::register('/ccm/system/dialogs/area/layout/presets/submit/{arLayoutID}', '\Concrete\Controller\Dialog\Area\Layout\Presets::submit');

@@ -9,7 +9,7 @@ class Controller extends BlockController {
 
 	protected $btTable = 'btTags';
 	protected $btInterfaceWidth = "450";
-	protected $btInterfaceHeight = "260";
+	protected $btInterfaceHeight = "439";
 
 	protected $btExportPageColumns = array('targetCID');
 	

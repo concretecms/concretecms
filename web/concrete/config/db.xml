@@ -2445,18 +2445,40 @@
       <unsigned/>
     </field>
   </table>
+    <table name="FileStorageLocationTypes">
+        <field name="fslTypeID" type="I" size="10">
+            <key/>
+            <unsigned/>
+            <autoincrement />
+        </field>
+        <field name="fslTypeHandle" type="C" size="255">
+            <notnull/>
+        </field>
+        <field name="fslTypeName" type="C" size="255">
+            <notnull/>
+        </field>
+        <field name="pkgID" type="I" size="10">
+            <notnull/>
+            <default value="0"/>
+            <unsigned/>
+        </field>
+    </table>
   <table name="FileStorageLocations">
     <field name="fslID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
+        <key/>
+        <unsigned/>
+        <autoincrement />
     </field>
     <field name="fslName" type="C" size="255">
       <notnull/>
     </field>
-    <field name="fslDirectory" type="C" size="255">
-      <notnull/>
-    </field>
+      <field name="fslConfiguration" type="X2">
+          <notnull/>
+      </field>
+      <field name="fslIsDefault" type="I1" size="1">
+          <notnull/>
+          <default value="0" />
+      </field>
   </table>
   <table name="Files">
     <field name="fID" type="I" size="10">
@@ -3484,27 +3506,19 @@
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="logType" type="C" size="64">
-      <notnull/>
+    <field name="channel" type="C" size="255">
     </field>
-    <field name="timestamp" type="T">
+    <field name="time" type="I" size="10">
       <notnull/>
-      <deftimestamp/>
-    </field>
-    <field name="logText" type="X2" />
-    <field name="logUserID" type="I" size="10">
       <unsigned/>
     </field>
-    <field name="logIsInternal" type="I1" size="1">
-      <notnull/>
-      <default value="0"/>
+    <field name="message" type="X2" />
+    <field name="uID" type="I" size="10">
+      <unsigned/>
     </field>
-    <index name="logType">
-      <col>logType</col>
-    </index>
-    <index name="logIsInternal">
-      <col>logIsInternal</col>
-    </index>
+    <field name="level" type="I" size="10">
+      <notnull/>
+    </field>
   </table>
   <table name="MailImporters">
     <field name="miID" type="I" size="10">
@@ -3628,7 +3642,6 @@
       <default value="0"/>
     </field>
     <field name="uPreviousLogin" type="I" size="10">
-      <notnull/>
       <default value="0"/>
       <unsigned/>
     </field>

@@ -75,7 +75,7 @@ class Customize extends BackendInterfacePageController {
                     return 1;
                 }
 
-                return strcasecmp($a->getPresetName(), $b->getPresetName());
+                return strcasecmp($a->getPresetDisplayName('text'), $b->getPresetDisplayName('text'));
             });
 
             $styleList = $pt->getThemeCustomizableStyleList();

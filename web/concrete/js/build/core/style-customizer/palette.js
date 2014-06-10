@@ -2,17 +2,19 @@
  * block ajax
  */
 
-!function(global, $) {
+/* jshint unused:vars, undef:true, browser:true */
+/* global $, _, alert, ConcreteEvent, ccmi18n */
+
+(function(global, $) {
     'use strict';
 
     function ConcreteStyleCustomizerPalette($element, options) {
-        'use strict';
-        var my = this,
-            options = $.extend({
-                'inputName': false,
-                'unit': 'px',
-                'appendTo': document.body
-            }, options);
+        var my = this;
+        options = $.extend({
+            'inputName': false,
+            'unit': 'px',
+            'appendTo': document.body
+        }, options);
 
         my.options = options;
         my.opened = false;
@@ -20,8 +22,8 @@
         my.$element = $element;
         my.$container = $(my.options.appendTo);
 
-        my._chooseTemplate = _.template(my.chooseTemplate, {'options': my.options});
-        my._selectorTemplate = _.template(my.selectorWidgetTemplate, {'options': my.options});
+        my._chooseTemplate = _.template(my.chooseTemplate, {'options': my.options, i18n: ccmi18n});
+        my._selectorTemplate = _.template(my.selectorWidgetTemplate, {'options': my.options, i18n: ccmi18n});
 
         my.$element.append(my._chooseTemplate);
         my.$widget = $(my._selectorTemplate);
@@ -107,8 +109,8 @@
             my.closeSelector(e);
             ConcreteEvent.publish('StyleCustomizerControlUpdate');
         }
-    }
+    };
 
     global.ConcreteStyleCustomizerPalette = ConcreteStyleCustomizerPalette;
 
-}(this, $);
+})(this, $);

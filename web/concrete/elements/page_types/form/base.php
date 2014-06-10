@@ -5,7 +5,7 @@ $form = Loader::helper('form');
 $templates = array();
 $pagetemplates = PageTemplate::getList();
 foreach($pagetemplates as $pt) {
-	$templates[$pt->getPageTemplateID()] = $pt->getPageTemplateName();
+	$templates[$pt->getPageTemplateID()] = $pt->getPageTemplateDisplayName();
 }
 $targetTypes = PageTypePublishTargetType::getList();
 

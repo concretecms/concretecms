@@ -14,6 +14,7 @@ class Session {
 		} else {
 			$storage = new NativeSessionStorage();
 			$options = array(
+				'cookie_path' => DIR_REL . '/',
 				'cookie_lifetime' => 0,
 				'cookie_secure' => false,
 				'cookie_httponly' => true,
@@ -32,7 +33,7 @@ class Session {
 				$options['cookie_secure'] = SESSION_COOKIE_PARAM_SECURE;
 			}
 			if (defined('SESSION_COOKIE_PARAM_HTTPONLY') && SESSION_COOKIE_PARAM_HTTPONLY) {
-				$options['cookie_path'] = SESSION_COOKIE_PARAM_HTTPONLY;
+				$options['cookie_httponly'] = SESSION_COOKIE_PARAM_HTTPONLY;
 			}
 			$storage->setOptions($options);
 		}

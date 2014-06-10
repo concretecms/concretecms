@@ -6,54 +6,48 @@ if(!$ak instanceof CollectionAttributeKey) {?>
 	<div class="ccm-error"><?=t('Error: The required page attribute with the handle of: "%s" doesn\'t exist',$controller->attributeHandle)?><br/><br/></div>
 <? } else { ?>
 <input type="hidden" name="attributeHandle" value="<?=$controller->attributeHandle?>" />
-<ul id="ccm-tags-tabs" class="nav nav-tabs">
-	<li class="active"><a id="ccm-tags-tab-add" href="javascript:void(0);"><?=($bID>0)? t('Edit') : t('Add') ?></a></li>
-	<li class=""><a id="ccm-tags-tab-advanced"  href="javascript:void(0);"><?=t('Advanced')?></a></li>
-</ul>
 
-<div id="ccm-tagsPane-add" class="ccm-tagsPane">
-
-	<div class="clearfix">
-	<?=$form->label('title', t('Display Title'))?>
-	<div class="input">
+    <?=$form->label('title', t('Title'))?>
+	<div class="form-group">
 		<?php echo $form->text('title',$title);?>
 	</div>
-	</div>
 
-	<div class="clearfix">
-	<label><?=t('Display')?></label>
-	<div class="input">
-	<ul class="inputs-list">
-		<li><label><?php echo $form->radio('displayMode','page',$displayMode)?> <span><?php echo t('Display Tags for the current page')?></span></label></li>
-		<li><label><?php echo $form->radio('displayMode','cloud',$displayMode)?> <span><?php echo t('Display available tags')?></span></label></li>
-	</ul>
-	</div>
-	</div>
+	<label><?=t('Display Tags')?></label>
+    <div class="form-group">
+        <div class="radio">
+            <label>
+                <?php echo $form->radio('displayMode','page',$displayMode)?><?php echo t('Current Page')?>
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <?php echo $form->radio('displayMode','cloud',$displayMode)?><?php echo t('All Available Tags')?>
+            </label>
+        </div>
+    </div>
 
 	<?php if (!$inStackDashboardPage) { ?>
-	<div id="ccm-tags-display-page" class="clearfix">
+	<div id="ccm-tags-display-page" class="form-group">
 	<label><?php echo $ak->getAttributeKeyDisplayName();?></label>
-	<div class="input">
-		<?php
-			$av = $c->getAttributeValueObject($ak);
-			$ak->render('form',$av);
-		?>
-	</div>
+        <div class="input">
+            <?php
+                $av = $c->getAttributeValueObject($ak);
+                $ak->render('form',$av);
+            ?>
+        </div>
 	</div>
 	<?php } ?>
 
-	<div id="ccm-tags-display-cloud" class="clearfix">
-	<?=$form->label('cloudCount', t('Number to Display'))?>
+	<div id="ccm-tags-display-cloud" class="form-group">
+     <?=$form->label('cloudCount', t('Number to Display'))?>
 	<div class="input">
-			<?php echo $form->text('cloudCount',$cloudCount,array('size'=>4))?>
+		<?php echo $form->text('cloudCount',$cloudCount,array('size'=>4))?>
 	</div>
 	</div>
 
-</div>
 
-<div id="ccm-tagsPane-advanced" class="ccm-tagsPane" style="display:none">
 	<div class="clearfix">
-	<label><?=t('Link Tags to Page')?></label>
+	<label style="margin-bottom: 0px;"><?=t('Link Tags')?></label>
 	<div class="input">
 		<?php
 		$form_selector = Loader::helper('form/page_selector');
@@ -62,5 +56,7 @@ if(!$ak instanceof CollectionAttributeKey) {?>
 	</div>
 	</div>
 
-</div>
 <?php } ?>
+<script>
+    $(function(){ tags.init(); });
+</script>

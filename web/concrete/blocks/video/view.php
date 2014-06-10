@@ -6,7 +6,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 // the content	
 
 $file = $controller->getFileObject();
-$rel_file_path=$file->getRelativePath(); 
+$rel_file_path=$file->getURL();
 ?>
 <div style="text-align:center">
 
@@ -23,7 +23,6 @@ if ($c->isEditMode()) { ?>
 	<?
 	
 	
-	//echo mime_content_type(DIR_FILES_UPLOADED.'/'.$file->getFilename()).'<br>';
 	if( strstr(strtolower($file->getFilename()),'.flv') ){   ?>
 		
 		<script type="text/javascript">

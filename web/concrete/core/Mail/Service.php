@@ -3,7 +3,10 @@ namespace Concrete\Core\Mail;
 use Config;
 use Zend_Mail;
 use Zend_Mail_Transport_Smtp;
+use \Concrete\Core\Logging\GroupLogger;
 use Log;
+use \Monolog\Logger;
+
 class Service {
 
 	protected $headers = array();
@@ -103,7 +106,9 @@ class Service {
 	 * @param File $fob File to attach
 	 * @return StdClass Pointer to the attachment
 	 */
-	public function addAttachment(File $fob) {
+	public function addAttachment(\Concrete\Core\File\File $fob) {
+        // @TODO make this work with the File Storage Locations
+
 		$fv = $fob->getVersion();
 		$path = $fob->getPath();
 		$name = $fv->getFileName();
@@ -414,7 +419,7 @@ class Service {
 				if($this->getTesting()) {
 					throw $e;
 				}
-				$l = new Log(LOG_TYPE_EXCEPTIONS, true, true);
+                $l = new GroupLogger(LOG_TYPE_EXCEPTIONS, Logger::CRITICAL);
 				$l->write(t('Mail Exception Occurred. Unable to send mail: ') . $e->getMessage());
 				$l->write($e->getTraceAsString());
 				if (ENABLE_LOG_EMAILS) {
@@ -433,7 +438,7 @@ class Service {
 		
 		// add email to log
 		if (ENABLE_LOG_EMAILS && !$this->getTesting()) {
-			$l = new Log(LOG_TYPE_EMAILS, true, true);
+            $l = new GroupLogger(LOG_TYPE_EMAILS, Logger::INFO);
 			if (ENABLE_EMAILS) {
 				$l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL WAS SENT TO mail()') . '**');
 			} else {

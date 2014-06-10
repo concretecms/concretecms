@@ -49,19 +49,19 @@ class Controller extends BlockController {
 		if (intval($this->fsID) < 1) {
 			return false;
 		}
-        Loader::helper('concrete/file');
-		
-		$ak = FileAttributeKey::getByHandle('height');
+        \Loader::helper('concrete/file');
 
-		$fs = FileSet::getByID($this->fsID);
-		$fileList = new FileList();		
+		$ak = \FileAttributeKey::getByHandle('height');
+
+		$fs = \FileSet::getByID($this->fsID);
+		$fileList = new \FileList();
 		$fileList->filterBySet($fs);
-		$fileList->filterByType(FileType::T_IMAGE);	
+		$fileList->filterByType(\Concrete\Core\File\Type\Type::T_IMAGE);
 		$fileList->sortByFileSetDisplayOrder();
-		
+
 		$files = $fileList->get(1000,0);
-		
-		
+
+
 		$image = array();
 		$image['duration'] = $this->duration;
 		$image['fadeDuration'] = $this->fadeDuration;
@@ -70,13 +70,12 @@ class Controller extends BlockController {
 		$images = array();
 		$maxHeight = 0;
 		foreach ($files as $f) {
-			$fp = new Permissions($f);
+			$fp = new \Permissions($f);
 			if(!$fp->canViewFile()) { continue; }
 			$image['fID'] 			= $f->getFileID();
 			$image['fileName'] 		= $f->getFileName();
-			$image['fullFilePath'] 	= $f->getPath();
 			$image['url']			= $f->getRelativePath();
-			
+
 			// find the max height of all the images so slideshow doesn't bounce around while rotating
 			$vo = $f->getAttributeValueObject($ak);
 			if (is_object($vo)) {
@@ -94,12 +93,12 @@ class Controller extends BlockController {
 	function loadImages(){
 		if(intval($this->bID)==0) $this->images=array();
 		$sortChoices=array('ORDER'=>'position','RANDOM-SET'=>'groupSet asc, position asc','RANDOM'=>'rand()');
-		if( !array_key_exists($this->playback,$sortChoices) ) 
+		if( !array_key_exists($this->playback,$sortChoices) )
 			$this->playback='ORDER';
 		if(intval($this->bID)==0) return array();
 		$sql = "SELECT * FROM btSlideshowImg WHERE bID=".intval($this->bID).' ORDER BY '.$sortChoices[$this->playback];
 		$db = Loader::db();
-		$this->images=$db->getAll($sql); 
+		$this->images=$db->getAll($sql);
 		$this->maxHeight = $db->GetOne('SELECT max(imgHeight) FROM btSlideshowImg WHERE bID=?', array($this->bID));
 	}
 	
@@ -115,7 +114,7 @@ class Controller extends BlockController {
 		} else {
 			$this->loadFileSet();
 		}
-		$this->randomizeImages();	
+		$this->randomizeImages();
 		$this->set('defaultFadeDuration', $this->defaultFadeDuration);
 		$this->set('defaultDuration', $this->defaultDuration);
 		$this->set('fadeDuration', $this->fadeDuration);
@@ -128,7 +127,7 @@ class Controller extends BlockController {
 		$this->set('playback', $this->playback);
 		$type = ($this->fsID > 0) ? 'FILESET' : 'CUSTOM';
 		$this->set('type', $type);
-		$this->set('bID', $this->bID);				
+		$this->set('bID', $this->bID);
 	}
 	
 	function view() {
@@ -138,7 +137,7 @@ class Controller extends BlockController {
 	function add() {
 		$this->loadBlockInformation();
 	}
-	
+
 	function edit() {
 		$this->loadBlockInformation();
 	}

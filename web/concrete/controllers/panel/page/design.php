@@ -68,7 +68,7 @@ class Design extends BackendUIPageController {
 			$themesSelect[$pt->getThemeID()] = $pt->getThemeDisplayName();
 		}
 		foreach($_templates as $pt) {
-			$templatesSelect[$pt->getPageTemplateID()] = $pt->getPageTemplateName();
+			$templatesSelect[$pt->getPageTemplateID()] = $pt->getPageTemplateDisplayName();
 		}
 
 		$this->set('templatesSelect', $templatesSelect);

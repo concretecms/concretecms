@@ -1,7 +1,11 @@
 <?
 namespace Concrete\Core\File;
+use Concrete\Core\File\StorageLocation\StorageLocation;
+use League\Flysystem\AdapterInterface;
 use Loader;
 use \File as ConcreteFile;
+use Core;
+
 class Importer {
 	
 	/** 
@@ -19,7 +23,8 @@ class Importer {
 	const E_FILE_INVALID_EXTENSION = 10;
 	const E_FILE_INVALID = 11; // pointer is invalid file, is a directory, etc...
 	const E_FILE_UNABLE_TO_STORE = 12;
-	
+    const E_FILE_INVALID_STORAGE_LOCATION = 13;
+
 	/** 
 	 * Returns a text string explaining the error that was passed
 	 */
@@ -36,6 +41,9 @@ class Importer {
 			case Importer::E_PHP_FILE_PARTIAL_UPLOAD:
 				$msg = t('The file was only partially uploaded.');
 				break;
+            case Importer::E_FILE_INVALID_STORAGE_LOCATION:
+                $msg = t('No default file storage location could be found to store this file.');
+                break;
 			case Importer::E_PHP_FILE_EXCEEDS_HTML_MAX_FILE_SIZE:
 			case Importer::E_PHP_FILE_EXCEEDS_UPLOAD_MAX_FILESIZE:
 				$msg = t('Uploaded file is too large. The current value of upload_max_filesize is %s', ini_get('upload_max_filesize'));
@@ -50,40 +58,22 @@ class Importer {
 		}
 		return $msg;
 	}
-	
-	protected function generatePrefix() {
+
+	protected function generatePrefix()
+    {
 		$prefix = rand(10, 99) . time();
-		return $prefix;	
+		return $prefix;
 	}
-	
-	protected function storeFile($prefix, $pointer, $filename, $fr = false) {
-		// assumes prefix are 12 digits
-		$fi = Loader::helper('concrete/file');
-		$path = false;
-		if ($fr instanceof File) {
-			if ($fr->getStorageLocationID() > 0) {
-				$fsl = StorageLocation::getByID($fr->getStorageLocationID());
-				$path = $fi->mapSystemPath($prefix, $filename, true, $fsl->getDirectory());
-			}
-		}
-		
-		if ($path == false) {
-			$path = $fi->mapSystemPath($prefix, $filename, true);
-		}
-		$r = @copy($pointer, $path);
-		@chmod($path, FILE_PERMISSIONS_MODE);
-		return $r;
-	}
-	
-	/** 
+
+	/**
 	 * Imports a local file into the system. The file must be added to this path
 	 * somehow. That's what happens in tools/files/importers/.
 	 * If a $fr (FileRecord) object is passed, we assign the newly imported FileVersion
 	 * object to that File. If not, we make a new filerecord.
 	 * @param string $pointer path to file
 	 * @param string $filename
-	 * @param FileRecord $fr
-	 * @return number Error Code | FileVersion
+	 * @param ConcreteFile $fr
+	 * @return number Error Code | \Concrete\Core\File\Version
 	 */
 	public function import($pointer, $filename = false, $fr = false) {
 		
@@ -94,7 +84,8 @@ class Importer {
 		
 		$fh = Loader::helper('validation/file');
 		$fi = Loader::helper('file');
-		$sanitized_filename = $fi->sanitize($filename);
+        $cf = Core::make('helper/concrete/file');
+		$sanitizedFilename = $fi->sanitize($filename);
 		
 		// test if file is valid, else return FileImporter::E_FILE_INVALID
 		if (!$fh->file($pointer)) {
@@ -105,30 +96,101 @@ class Importer {
 			return Importer::E_FILE_INVALID_EXTENSION;
 		}
 
-		
-		$prefix = $this->generatePrefix();
-		
-		// do save in the FileVersions table
-		
-		// move file to correct area in the filesystem based on prefix
-		$response = $this->storeFile($prefix, $pointer, $sanitized_filename, $fr);
-		if (!$response) {
-			return Importer::E_FILE_UNABLE_TO_STORE;
-		}
-		
+        if ($fr instanceof File) {
+            $fsl = $fr->getFileStorageLocationObject();
+        } else {
+    		$fsl = StorageLocation::getDefault();
+        }
+        if (!($fsl instanceof StorageLocation)) {
+            return Importer::E_FILE_INVALID_STORAGE_LOCATION;
+        }
+
+        // store the file in the file storage location.
+        $filesystem = $fsl->getFileSystemObject();
+        $prefix = $this->generatePrefix();
+
+        try {
+            $src = fopen($pointer, 'rb');
+            $filesystem->writeStream($cf->prefix($prefix, $sanitizedFilename), $src, array(
+                'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+                'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($sanitizedFilename))
+            ));
+        } catch (\Exception $e) {
+            return self::E_FILE_UNABLE_TO_STORE;
+        }
+
 		if (!($fr instanceof File)) {
 			// we have to create a new file object for this file version
-			$fv = ConcreteFile::add($sanitized_filename, $prefix, array('fvTitle'=>$filename));
+			$fv = ConcreteFile::add($sanitizedFilename, $prefix, array('fvTitle'=>$filename), $fsl);
 			$fv->refreshAttributes();
 			$fr = $fv->getFile();
 		} else {
 			// We get a new version to modify
 			$fv = $fr->getVersionToModify(true);
-			$fv->updateFile($sanitized_filename, $prefix);
+			$fv->updateFile($sanitizedFilename, $prefix);
 			$fv->refreshAttributes();
 		}
 
 		$fr->refreshCache();
 		return $fv;
 	}
+
+    /**
+     * Imports a file in the default file storage location's incoming directory
+     * @param $filename
+     * @param ConcreteFile $fr
+     * @return number Error Code | \Concrete\Core\File\Version
+     */
+    public function importIncomingFile($filename, $fr = false)
+    {
+        $fh = Loader::helper('validation/file');
+        $fi = Loader::helper('file');
+        $cf = Core::make('helper/concrete/file');
+        $sanitizedFilename = $fi->sanitize($filename);
+
+        $default = StorageLocation::getDefault();
+        $storage = $default->getFileSystemObject();
+
+        if (!$storage->has(REL_DIR_FILES_INCOMING . '/' . $filename)) {
+            return Importer::E_FILE_INVALID;
+        }
+
+        if (!$fh->extension($filename)) {
+            return Importer::E_FILE_INVALID_EXTENSION;
+        }
+
+        // first we import the file into the storage location that is the same.
+        $prefix = $this->generatePrefix();
+        try {
+            $storage->copy(REL_DIR_FILES_INCOMING . '/' . $filename, $cf->prefix($prefix, $sanitizedFilename));
+        } catch(\Exception $e) {
+            $storage->write(
+                $cf->prefix($prefix, $sanitizedFilename),
+                $storage->read(REL_DIR_FILES_INCOMING . '/' . $filename)
+            );
+        }
+
+        if (!($fr instanceof File)) {
+            // we have to create a new file object for this file version
+            $fv = ConcreteFile::add($sanitizedFilename, $prefix, array('fvTitle'=>$filename), $default);
+            $fv->refreshAttributes();
+            $fr = $fv->getFile();
+        } else {
+            // We get a new version to modify
+            $fv = $fr->getVersionToModify(true);
+            $fv->updateFile($sanitizedFilename, $prefix);
+            $fv->refreshAttributes();
+
+            $fsl = $fr->getFileStorageLocationObject();
+            if ($fsl->getID() != $storage->getID()) {
+                // we have to move the file from where we just imported it to this file's location.
+                $newFileSystem = $fsl->getFileSystemObject();
+                $contents = $fv->getFileContents();
+                $newFileSystem->put($fh->prefix($fv->getPrefix(), $fv->getFilename()), $contents);
+                $default->delete($fh->prefix($fv->getPrefix(), $fv->getFilename()));
+            }
+        }
+
+        return $fv;
+    }
 }

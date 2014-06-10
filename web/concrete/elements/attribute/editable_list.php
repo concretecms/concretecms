@@ -28,7 +28,7 @@
 		<div class="col-md-9" <? if ($canEdit) { ?>data-editable-field-inline-commands="true"<? } ?>>
 		<? if ($canEdit) { ?>
 		<ul class="ccm-edit-mode-inline-commands">
-			<li><a href="#" data-key-id="<?=$ak->getAttributeKeyID()?>" data-url="<?=$clearAction?>" data-editable-field-command="clear_attribute"><i class="glyphicon glyphicon-trash"></i></a></li>
+			<li><a href="#" data-key-id="<?=$ak->getAttributeKeyID()?>" data-url="<?=$clearAction?>" data-editable-field-command="clear_attribute"><i class="fa fa-trash"></i></a></li>
 		</ul>
 		<? } ?><p><span <? if ($canEdit) { ?>data-title="<?=$ak->getAttributeKeyName()?>" data-key-id="<?=$ak->getAttributeKeyID()?>" data-name="<?=$ak->getAttributeKeyID()?>" data-editable-field-type="xeditableAttribute" data-url="<?=$saveAction?>" data-type="concreteattribute"<? } ?>><?=$display?></span></p>
 	</div>

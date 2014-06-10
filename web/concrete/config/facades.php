@@ -4,5 +4,7 @@ return array(
 	'Session'  => '\Concrete\Core\Support\Facade\Session',
 	'Database' => '\Concrete\Core\Support\Facade\Database',
 	'Events'   => '\Concrete\Core\Support\Facade\Events',
-	'Route'    => '\Concrete\Core\Support\Facade\Route'
+	'Route'    => '\Concrete\Core\Support\Facade\Route',
+	'Log'    => '\Concrete\Core\Support\Facade\Log',
+    'Image'    => '\Concrete\Core\Support\Facade\Image',
 );

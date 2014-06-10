@@ -6,6 +6,6 @@ if (is_array($image)) {
 ?>
 
 <div class="ccm-gathering-overlay">
-	<img src="<?=$image->getPath()?>" style="max-width: 600px" />
+	<img src="<?=$image->getSrc()?>" style="max-width: 600px" />
 	<div class="ccm-gathering-thumbnail-caption"><?=$title?></div>
 </div>

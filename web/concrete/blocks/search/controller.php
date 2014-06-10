@@ -9,7 +9,7 @@ class Controller extends BlockController {
 
 	protected $btTable = 'btSearch';
 	protected $btInterfaceWidth = "400";
-	protected $btInterfaceHeight = "240";
+	protected $btInterfaceHeight = "420";
 	protected $btWrapperClass = 'ccm-ui';
 
 	public $title = "";
