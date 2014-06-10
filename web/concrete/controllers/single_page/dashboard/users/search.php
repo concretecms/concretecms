@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 use \Concrete\Core\Page\Controller\DashboardPageController;
+use Imagine\Image\Box;
 use Loader;
 use Exception;
 use User;
@@ -33,10 +34,12 @@ class Search extends DashboardPageController {
 		if ($this->canEditAvatar) {
 			$av = Loader::helper('concrete/avatar'); 
 			if (is_uploaded_file($_FILES['avatar']['tmp_name']) ) {
-				$av->updateUserAvatar($_FILES['avatar']['tmp_name'], $this->user->getUserID());
+                $image = \Image::open($_FILES['avatar']['tmp_name']);
+                $image = $image->thumbnail(new Box(AVATAR_WIDTH, AVATAR_HEIGHT));
+                $this->user->updateUserAvatar($image);
 			} else {
 				if ($_POST['task'] == 'clear') {
-					$this->user->update(array('uHasAvatar' => false));
+					$this->user->update(array('uHasAvatar' => 0));
 				}
 			}
 		} else {
@@ -354,7 +357,7 @@ class Search extends DashboardPageController {
 		$languages = Localization::getAvailableInterfaceLanguages();
 		array_unshift($languages, 'en_US');
 		$obj = new stdClass;
-		$obj->text = t('** Default');
+		$obj->text = tc('Default locale', '** Default');
 		$obj->value = '';
 		$result = array($obj);
 		

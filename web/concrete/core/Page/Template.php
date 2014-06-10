@@ -30,6 +30,23 @@ class Template extends Object {
 		return PackageList::getHandle($this->pkgID);
 	}
 
+	/** Returns the display name for this page template (localized and escaped accordingly to $format)
+	 * @param string $format = 'html'
+	 *   Escape the result in html format (if $format is 'html').
+	 *   If $format is 'text' or any other value, the display name won't be escaped.
+	 * @return string
+	 */
+	public function getPageTemplateDisplayName($format = 'html') {
+		$value = tc('PageTemplateName', $this->getPageTemplateName());
+		switch($format) {
+			case 'html':
+				return h($value);
+			case 'text':
+			default:
+				return $value;
+		}
+	}
+
 	public static function getByHandle($pTemplateHandle) {
 		$db = Loader::db();
 		$q = "select pTemplateID, pTemplateHandle, pTemplateIsInternal, pTemplateName, pTemplateIcon, pkgID from PageTemplates where pTemplateHandle = ?";
@@ -83,11 +100,14 @@ class Template extends Object {
 	public static function getListByPackage($pkg) {
 		$db = Loader::db();
 		$list = array();
-		$r = $db->Execute('select pTemplateID from PageTemplates where pkgID = ? order by pTemplateName asc', array($pkg->getPackageID()));
+		$r = $db->Execute('select pTemplateID from PageTemplates where pkgID = ?', array($pkg->getPackageID()));
 		while ($row = $r->FetchRow()) {
 			$list[] = static::getByID($row['pTemplateID']);
 		}
 		$r->Close();
+		usort($list, function($a, $b) {
+			return strcasecmp($a->getPageTemplateDisplayName('text'), $b->getPageTemplateDisplayName('text'));
+		});
 		return $list;
 	}	
 
@@ -95,14 +115,17 @@ class Template extends Object {
 		$db = Loader::db();
 		$list = array();
 		if ($includeInternal) {
-			$r = $db->Execute('select pTemplateID from PageTemplates order by pTemplateName asc');
+			$r = $db->Execute('select pTemplateID from PageTemplates');
 		} else {
-			$r = $db->Execute('select pTemplateID from PageTemplates where pTemplateIsInternal = 0 order by pTemplateName asc');
+			$r = $db->Execute('select pTemplateID from PageTemplates where pTemplateIsInternal = 0');
 		}
 		while ($row = $r->FetchRow()) {
 			$list[] = static::getByID($row['pTemplateID']);
 		}
 		$r->Close();
+		usort($list, function($a, $b) {
+			return strcasecmp($a->getPageTemplateDisplayName('text'), $b->getPageTemplateDisplayName('text'));
+		});
 		return $list;
 	}
 	
@@ -146,7 +169,7 @@ class Template extends Object {
 
 	public function getPageTemplateIconImage() {
 		$src = REL_DIR_FILES_PAGE_TEMPLATE_ICONS.'/'.$this->pTemplateIcon;
-		$iconImg = '<img src="'.$src.'" height="' . PAGE_TEMPLATE_ICON_HEIGHT . '" width="' . PAGE_TEMPLATE_ICON_WIDTH . '" alt="'.$this->getPageTemplateName().'" title="'.$this->getPageTemplateName().'" />';
+		$iconImg = '<img src="'.$src.'" height="' . PAGE_TEMPLATE_ICON_HEIGHT . '" width="' . PAGE_TEMPLATE_ICON_WIDTH . '" alt="'.$this->getPageTemplateDisplayName().'" title="'.$this->getPageTemplateDisplayName().'" />';
 		return $iconImg;
 	}
 }

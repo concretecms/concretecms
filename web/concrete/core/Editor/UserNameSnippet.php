@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Editor;
 use Loader;
+use User;
 class UserNameSnippet extends Snippet {
 
 

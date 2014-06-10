@@ -6,7 +6,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
 
 <section id="ccm-panel-page-design-customize">
     <form data-form="panel-page-design-customize" target="ccm-page-preview-frame" method="post" action="<?=$controller->action("preview", $theme->getThemeID())?>">
-    <header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="glyphicon glyphicon-chevron-left"></span></a> <?=t('Customize Theme')?></header>
+    <header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="fa fa-chevron-left"></span></a> <?=t('Customize Theme')?></header>
 
     <div class="ccm-panel-content-inner">
 
@@ -20,7 +20,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
                 $selected = true;
             }
             ?>
-            <label class="list-group-item"><input type="radio" class="ccm-flat-radio" value="<?=$preset->getPresetHandle()?>" name="handle" <? if ($selected) { ?>checked="checked"<? } ?> /> <?=$preset->getPresetName()?>
+            <label class="list-group-item"><input type="radio" class="ccm-flat-radio" value="<?=$preset->getPresetHandle()?>" name="handle" <? if ($selected) { ?>checked="checked"<? } ?> /> <?=$preset->getPresetDisplayName()?>
                 <?=$preset->getPresetIconHTML()?>
             </label>
             <? if ($i == 0) { ?>
@@ -39,10 +39,10 @@ $pk = PermissionKey::getByHandle('customize_themes');
     <div id="ccm-panel-page-design-customize-list">
     <? foreach($styleSets as $set) { ?>
         <div class="ccm-panel-page-design-customize-style-set">
-            <h5 class="ccm-panel-page-design-customize-style-set-collapse"><?=$set->getName()?></h5>
+            <h5 class="ccm-panel-page-design-customize-style-set-collapse"><?=$set->getDisplayName()?></h5>
             <ul class="list-unstyled">
             <? foreach($set->getStyles() as $style) { ?>
-                <li><?=$style->getName()?>
+                <li><?=$style->getDisplayName()?>
                 <?
                 $value = $style->getValueFromList($valueList);
                 ?>
@@ -58,7 +58,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
             <li>
                 <?=t('Custom CSS')?>
                 <input type="hidden" name="sccRecordID" value="<?=$sccRecordID?>" />
-                <span class="ccm-style-customizer-display-swatch-wrapper" data-custom-css-selector="custom"><span class="ccm-style-customizer-display-swatch"><i class="glyphicon glyphicon-cog"></i></span></span>
+                <span class="ccm-style-customizer-display-swatch-wrapper" data-custom-css-selector="custom"><span class="ccm-style-customizer-display-swatch"><i class="fa fa-cog"></i></span></span>
             </li>
         </ul>
     </div>

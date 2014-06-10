@@ -2,19 +2,21 @@
  * block ajax
  */
 
-!function(global, $) {
+/* jshint unused:vars, undef:true, browser:true */
+/* global $, ConcreteEvent, ConcreteStyleCustomizerPalette */
+
+(function(global, $) {
     'use strict';
 
     function ConcreteSizeSelector($element, options) {
-        'use strict';
         var my = this,
-            options = $.extend({
-                'inputName': false,
-                'unit': 'px',
-                'value': 0,
-                'appendTo': document.body
-            }, options),
             step = 1;
+        options = $.extend({
+            'inputName': false,
+            'unit': 'px',
+            'value': 0,
+            'appendTo': document.body
+        }, options);
 
         ConcreteStyleCustomizerPalette.call(my, $element, options);
         my.$slider = my.$widget.find('div.ccm-style-customizer-slider');
@@ -43,8 +45,8 @@
         '<span><%=options.value + options.unit%></span></span>';
 
     ConcreteSizeSelector.prototype.selectorWidgetTemplate = '<div class="ccm-ui ccm-style-customizer-palette ccm-style-customizer-palette-large">' +
-        '<div><label>Size</label><div data-style-customizer-field="size"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><%=options.value%><%=options.unit%></span></div></div>' +
-        '<div class="ccm-style-customizer-palette-actions"><button class="btn btn-primary">Save</button></div>' +
+        '<div><label><%=i18n.size%></label><div data-style-customizer-field="size"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><%=options.value%><%=options.unit%></span></div></div>' +
+        '<div class="ccm-style-customizer-palette-actions"><button class="btn btn-primary"><%=i18n.save%></button></div>' +
         '</div>';
 
     ConcreteSizeSelector.prototype.updateSwatch = function() {
@@ -52,7 +54,7 @@
             $swatch = my.$element.find('span[data-launch=style-customizer-palette] span');
 
         $swatch.html(my.getValue('size') + my.options.unit);
-    }
+    };
 
     ConcreteSizeSelector.prototype.save = function (e) {
         var my = this;
@@ -60,15 +62,15 @@
         my.updateSwatch();
         ConcreteEvent.publish('StyleCustomizerControlUpdate');
         my.closeSelector(e);
-    }
+    };
 
     // jQuery Plugin
     $.fn.concreteSizeSelector = function(options) {
         return $.each($(this), function(i, obj) {
             new ConcreteSizeSelector($(this), options);
         });
-    }
+    };
 
     global.ConcreteSizeSelector = ConcreteSizeSelector;
 
-}(this, $);
+})(this, $);

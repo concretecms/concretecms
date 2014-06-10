@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Database;
-use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Setup;
 
 class Connection extends \Doctrine\DBAL\Connection {
 
@@ -12,8 +12,7 @@ class Connection extends \Doctrine\DBAL\Connection {
      */
     public function getEntityManager() {
         if (!isset(static::$entityManager)) {
-            $devMode = true;
-            $config = Setup::createXMLMetadataConfiguration(array(DIR_ORM_ENTITIES), $devMode);
+            $config = Setup::createAnnotationMetadataConfiguration(array(DIR_BASE_CORE . '/' . DIRNAME_CLASSES));
             $conn = $this->getParams();
             static::$entityManager = EntityManager::create($conn, $config);
         }

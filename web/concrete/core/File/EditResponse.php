@@ -2,6 +2,8 @@
 namespace Concrete\Core\File;
 class EditResponse extends \Concrete\Core\Application\EditResponse {
 
+    protected $files = array();
+
 	public function setFile(File $file) {
 		$this->files[] = $file;
 	}

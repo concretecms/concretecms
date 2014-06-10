@@ -13,34 +13,45 @@ div.survey-block-option img {
 	var currentOption = <?=count($controller->options)?>;
 </script>
 <div class="ccm-ui">
-
-<strong><?=t('Question')?></strong><br/>
-<input type="text" style="width: 320px" name="question" value="<?=$controller->getQuestion()?>" />
-<br><br>
-
-<strong><?=t('Open to all site visitors?')?></strong><br/>
-<input type="radio" value="0" name="requiresRegistration" style="vertical-align: middle" <? if (!$controller->requiresRegistration()) { ?> checked <? } ?> />&nbsp;<?=t('Yes')?>
-&nbsp;&nbsp;
-<input type="radio" value="1" name="requiresRegistration" style="vertical-align: middle" <? if ($controller->requiresRegistration()) { ?> checked <? } ?> />&nbsp;<?=t('No. Registration is required to answer.')?>
-<br><br>
-
-<strong><?=t('Options')?></strong>
-<div id="pollOptions">
-<? 
-$options = $controller->getPollOptions();
-if (count($options) == 0) {
-	echo t("None");
-} else {
-	foreach($options as $opt) { ?>		
-        <div class="survey-block-option" id="option<?=$opt->getOptionID()?>"><a href="#" onclick="removeOption(<?=$opt->getOptionID()?>); return false"><img src="<?=ASSETS_URL_IMAGES?>/icons/delete_small.png" /></a> <?=$opt->getOptionName()?>
-        <input type="hidden" name="survivingOptionNames[]" value="<?=htmlspecialchars($opt->getOptionName())?>" />
-        </div>		
-	<? }
-} ?>
+<div class="form-group">
+    <label for="questionEntry"><?=t('Question')?></label>
+    <input type="text" style="width: 320px" name="question" value="<?=$controller->getQuestion()?>" class="form-control" />
 </div>
-<br/><br/>
-<strong><?=t('Add option')?></strong><br/>
-
-<input type="text" name="optionValue" id="ccm-survey-optionValue" style="width: 320px" />
-<input type="button" onclick="addOption()" value="add" class="btn small" />
+<label for="requiresRegistration"><?=t('Target Audience')?></label>
+<div class="radio">
+    <label>
+    <input id="requiresRegistration" type="radio" value="0" name="requiresRegistration" style="vertical-align: middle" <? if (!$controller->requiresRegistration()) { ?> checked <? } ?> />&nbsp;<?=t('Public')?>
+    </label>
+</div>
+<div class="radio">
+    <label>
+        <input type="radio" value="1" name="requiresRegistration" style="vertical-align: middle" <? if ($controller->requiresRegistration()) { ?> checked <? } ?> />&nbsp;<?=t('Only Registered Users')?>
+    </label>
+</div>
+<hr />
+<label><?=t('Answer Options')?></label>
+<div class="form-group">
+    <div id="pollOptions">
+    <?
+    $options = $controller->getPollOptions();
+    if (count($options) == 0) {
+        echo t("None");
+    } else {
+        foreach($options as $opt) { ?>
+            <div class="survey-block-option" id="option<?=$opt->getOptionID()?>"><a href="#" onclick="removeOption(<?=$opt->getOptionID()?>); return false"><img src="<?=ASSETS_URL_IMAGES?>/icons/delete_small.png" /></a> <?=$opt->getOptionName()?>
+            <input type="hidden" name="survivingOptionNames[]" value="<?=htmlspecialchars($opt->getOptionName())?>" />
+            </div>
+        <? }
+    } ?>
+    </div>
+</div>
+<label for="optionEntry"><?=t('Add Option')?></label>
+<div class="form-group">
+    <div class="input-group">
+        <input type="text" name="optionValue" id="ccm-survey-optionValue" class="form-control"/>
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button" onclick="addOption()"><?php echo t('Add'); ?></button>
+          </span>
+    </div>
+</div>
 </div>

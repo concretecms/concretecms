@@ -1,8 +1,0 @@
-<doctrine-mapping>
-  <entity table="StyleCustomizerCustomCssRecords" name="Concrete\Core\StyleCustomizer\CustomCssRecord">
-    <id name="sccRecordID" type="integer">
-        <generator strategy="AUTO" />
-      </id>
-    <field name="value" length="text" />
-  </entity>
-</doctrine-mapping>

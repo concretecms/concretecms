@@ -49,7 +49,8 @@ abstract class DataSource extends Object {
 		$db = Loader::db();
 		$row = $db->GetRow('select gasID, gasHandle, pkgID, gasName from GatheringDataSources where gasHandle = ?', array($gasHandle));
 		if (isset($row['gasID'])) {
-			$class = Loader::helper('text')->camelcase($row['gasHandle']) . 'GatheringDataSource';
+            //todo: hard coded class path to get indexing working for testing, needs to be made more dynamic
+			$class = '\\Concrete\\Core\\Gathering\\DataSource\\' . Loader::helper('text')->camelcase($row['gasHandle']) . 'DataSource';
 			$gas = new $class();
 			$gas->setPropertiesFromArray($row);
 			return $gas;

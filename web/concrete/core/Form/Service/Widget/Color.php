@@ -31,6 +31,9 @@ class Color {
         $options['className'] = 'ccm-widget-colorpicker';
         $options['showInitial'] = true;
         $options['showInput'] = true;
+        $options['cancelText'] = t('Cancel');
+        $options['chooseText'] = t('Choose');
+        $options['clearText'] = t('Clear Color Selection');
         $strOptions = json_encode($options);
 
         print "<input type=\"text\" name=\"{$inputName}\" value=\"{$value}\" id=\"ccm-colorpicker-{$inputName}\" />";

@@ -8,10 +8,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <script type="text/javascript">
 var CCM_EDITOR_SECURITY_TOKEN = "<?=Loader::helper('validation/token')->generate('editor')?>";
 $(function() {
-	$('#redactor-edit-content').redactor({
-		'plugins': [
-			'concrete5inline', 'concrete5'
-		]
-	});
+    $('#redactor-edit-content').redactor({
+        'plugins': [
+            'fontfamily', 'fontsize', 'fontcolor', 'concrete5inline', 'concrete5'
+        ]
+    });
 });
 </script>

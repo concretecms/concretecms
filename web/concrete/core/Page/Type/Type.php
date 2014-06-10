@@ -452,17 +452,20 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
 		// now we clear the default from edit page drafts
 		$pk = PermissionKey::getByHandle('edit_page_type_drafts');
-		$pk->setPermissionObject($ptt);
-		$pt = $pk->getPermissionAssignmentObject();
-		$pt->clearPermissionAssignment();
+        if (is_object($pk)) {
+            $pk->setPermissionObject($ptt);
+            $pt = $pk->getPermissionAssignmentObject();
+            if (is_object($pt)) {
+                $pt->clearPermissionAssignment();
+            }
+            // now we assign the page draft owner access entity
+            $pa = PermissionAccess::create($pk);
+            $pe = PageOwnerPermissionAccessEntity::getOrCreate();
+            $pa->addListItem($pe);
+            $pt->assignPermissionAccess($pa);
 
-		// now we assign the page draft owner access entity
-		$pa = PermissionAccess::create($pk);
-		$pe = PageOwnerPermissionAccessEntity::getOrCreate();
-		$pa->addListItem($pe);
-		$pt->assignPermissionAccess($pa);
-
-		return $ptt;
+            return $ptt;
+        }
 	}
 
 	public function update($data) {

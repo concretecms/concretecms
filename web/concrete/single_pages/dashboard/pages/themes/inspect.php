@@ -90,7 +90,7 @@ $ci = Loader::helper('concrete/ui');
                                         print '<label><input type="checkbox" value="' . $f->getHandle() . '" name="pageTemplates[]" checked /> <span>'.t('Create page template.').'</span></label>';
                                         break;
                                     case PageThemeFile::TFTYPE_PAGE_TEMPLATE_EXISTING:
-                                        print t('None. This file will be used by page\'s with the <strong>%s</strong> template.',$txt->unhandle($f->getHandle()) );
+                                        print t('None. This file will be used by pages with the <strong>%s</strong> template.',$txt->unhandle($f->getHandle()) );
                                         break;
                                 }
                                 // END Switch

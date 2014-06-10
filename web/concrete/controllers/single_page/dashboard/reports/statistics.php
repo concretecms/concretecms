@@ -62,8 +62,8 @@ class Statistics extends DashboardPageController {
 	}
 
 	public function view() {
-		$this->addFooterItem(Loader::helper('html')->javascript('jquery.visualize.js'));
-		$this->addFooterItem(Loader::helper('html')->css('jquery.visualize.css'));
+		$this->addFooterItem(Loader::helper('html')->javascript('jquery-visualize.js'));
+		$this->addFooterItem(Loader::helper('html')->css('jquery-visualize.css'));
 		$this->setLatestPageViews();
 		$this->setLatestPagesCreated();
 		$this->setLatestRegistrations();

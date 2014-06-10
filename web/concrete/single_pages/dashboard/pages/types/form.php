@@ -12,7 +12,7 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 		<form method="post" class="form-stacked" action="<?=$view->action('add_set', $pagetype->getPageTypeID())?>">
 			<?=Loader::helper('validation/token')->output('add_set')?>
 			<div class="control-group">
-				<?=$form->label('ptComposerFormLayoutSetName', t('Set Name'))?>
+				<?=$form->label('ptComposerFormLayoutSetName', tc('Name of a set', 'Set Name'))?>
 				<div class="controls">
 					<?=$form->text('ptComposerFormLayoutSetName')?>
 				</div>
@@ -39,10 +39,10 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 		<div class="ccm-page-type-composer-form-layout-control-set" data-page-type-composer-form-layout-control-set-id="<?=$set->getPageTypeComposerFormLayoutSetID()?>">
 			<div class="ccm-page-type-composer-item-control-bar">
 				<ul class="ccm-page-type-composer-item-controls">
-					<li><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/page_types/composer/form/add_control?ptComposerFormLayoutSetID=<?=$set->getPageTypeComposerFormLayoutSetID()?>" dialog-title="<?=t('Add Form Control')?>" dialog-width="640" dialog-height="400" data-command="add-form-set-control"><i class="glyphicon glyphicon-plus-sign"></i></a></li>
-					<li><a href="#" data-command="move_set" style="cursor: move"><i class="glyphicon glyphicon-move"></i></a></li>
-					<li><a href="#" data-edit-set="<?=$set->getPageTypeComposerFormLayoutSetID()?>"><i class="glyphicon glyphicon-pencil"></i></a></li>
-					<li><a href="#" data-delete-set="<?=$set->getPageTypeComposerFormLayoutSetID()?>"><i class="glyphicon glyphicon-trash"></i></a></li>
+					<li><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/page_types/composer/form/add_control?ptComposerFormLayoutSetID=<?=$set->getPageTypeComposerFormLayoutSetID()?>" dialog-title="<?=t('Add Form Control')?>" dialog-width="640" dialog-height="400" data-command="add-form-set-control"><i class="fa fa-plus-sign"></i></a></li>
+					<li><a href="#" data-command="move_set" style="cursor: move"><i class="fa fa-move"></i></a></li>
+					<li><a href="#" data-edit-set="<?=$set->getPageTypeComposerFormLayoutSetID()?>"><i class="fa fa-pencil"></i></a></li>
+					<li><a href="#" data-delete-set="<?=$set->getPageTypeComposerFormLayoutSetID()?>"><i class="fa fa-trash"></i></a></li>
 				</ul>
 				<div class="ccm-page-type-composer-form-layout-control-set-name" ><? if ($set->getPageTypeComposerFormLayoutSetDisplayName()) { ?><?=$set->getPageTypeComposerFormLayoutSetDisplayName()?><? } else { ?><?=t('(No Name)')?><? } ?></div>
 				<div style="display: none">
@@ -58,7 +58,7 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 					<div data-edit-set-dialog="<?=$set->getPageTypeComposerFormLayoutSetID()?>">
 						<form data-edit-set-form="<?=$set->getPageTypeComposerFormLayoutSetID()?>" action="<?=$view->action('update_set', $set->getPageTypeComposerFormLayoutSetID())?>" method="post">
 						<div class="control-group">
-							<?=$form->label('ptComposerFormLayoutSetName', t('Set Name'))?>
+							<?=$form->label('ptComposerFormLayoutSetName', tc('Name of a set', 'Set Name'))?>
 							<div class="controls">
 								<?=$form->text('ptComposerFormLayoutSetName', $set->getPageTypeComposerFormLayoutSetName())?>
 							</div>

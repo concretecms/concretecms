@@ -1,42 +1,120 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('File Storage Locations'), false, 'span6 offset3', false)?>
+<? if ($this->controller->getTask() == 'select_type'
+    || $this->controller->getTask() == 'add'
+    || $this->controller->getTask() == 'edit'
+    || $this->controller->getTask() == 'update'
+    || $this->controller->getTask() == 'delete') { ?>
 
-	<form method="post" class="form-inline" id="file-access-storage" action="<?=$view->url('/dashboard/system/environment/storage', 'save')?>">
-	<div class="ccm-pane-body">
-			<?=$validation_token->output('file_storage');?>
-			<fieldset>
-			<legend><?=t('Standard File Location')?></legend>
-			<div class="control-group">
-			<label class="control-label" for="DIR_FILES_UPLOADED"><?=t('Path')?></label>
-			<div class="controls">
-			<?=$form->text('DIR_FILES_UPLOADED', DIR_FILES_UPLOADED, array('rows'=>'2','class' => 'span5'))?>
-			</div>
-			</div>
-			
-			</fieldset>
-			<fieldset>
-			<legend><?=t('Alternate Storage Directory')?></legend>
-			
-			<div class="control-group">
-			<label for="fslName" class="control-label"><?=t('Location Name')?></label>
-			<div class="controls">
-			<?=$form->text('fslName', $fslName, array('class' => 'span5'))?>
-			</div></div>
-			<div class="control-group">
-			<label for="fslDirectory" class="control-label"><?=t('Path')?></label>
-			<div class="controls">
-			<?=$form->text('fslDirectory', $fslDirectory, array('rows' => '2', 'class' => 'span5'))?>
-			</div></div>
-			</fieldset>
-	</div>
-	<div class="ccm-pane-footer">
-		<?= $interface->submit(t('Save'), 'file-storage', 'right', 'primary') ?>		
-		<? if (is_object($fsl)) { ?>
-			<button type="submit" name="delete" value="1" onclick="return confirm('<?=t('Are you sure? (Note: this will not remove any files, it will simply remove the pointer to the directory, and reset any files that are set to this location.)')?>')" class="pull-right btn btn-danger"><?=t('Delete Alternate')?></button>
-		<? } ?>
+    <?
+    if (is_object($location)) {
+        $fslName = $location->getName();
+        $fslIsDefault = $location->isDefault();
+        $method = 'update';
 
-	</div>
-	</form>
+        if (!$fslIsDefault) { ?>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
+        <div class="ccm-dashboard-header-buttons">
+            <form method="post" action="<?=$this->action('delete')?>">
+                <input type="hidden" name="fslID" value="<?=$location->getID()?>" />
+                <?=Loader::helper('validation/token')->output('delete');?>
+                <button type="button" class="btn btn-danger" data-action="delete-location"><?=t('Delete Location')?></button>
+            </form>
+        </div>
+
+        <?
+        }
+
+    } else {
+        $method = 'add';
+    }
+    ?>
+    <form method="post" action="<?=$view->action($method)?>" id="ccm-attribute-key-form">
+        <?=Loader::helper('validation/token')->output($method);?>
+        <input type="hidden" name="fslTypeID" value="<?=$type->getID()?>" />
+        <? if (is_object($location)) { ?>
+            <input type="hidden" name="fslID" value="<?=$location->getID()?>" />
+        <? } ?>
+        <fieldset>
+            <legend><?=t('Basics')?></legend>
+            <div class="form-group">
+                <?=$form->label('fslName', t('Name'))?>
+                <div class="input-group">
+                    <?=$form->text('fslName', $fslName)?>
+                    <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+                </div>
+            </div>
+            <? if ($fslIsDefault) {
+                $args = array('disabled' => 'disabled');
+            } else {
+                $args = array();
+            }
+            ?>
+            <div class="form-group">
+                <label><?=t('Default')?>
+                <div class="radio">
+                    <label><?=$form->radio('fslIsDefault', 1, $fslIsDefault, $args)?>
+                        <?=t('Yes, make this the default storage location for new files.')?>
+                    </label>
+                </div>
+                <div class="radio">
+                    <label><?=$form->radio('fslIsDefault', 0, $fslIsDefault, $args)?>
+                        <?=t('No, this is not the default storage location.')?>
+                    </label>
+                </div>
+            </div>
+
+        </fieldset>
+        <? if ($type->hasOptionsForm()) {
+        ?>
+        <fieldset>
+            <legend><?=t('Options %s Storage Type', $type->getName())?></legend>
+            <? $type->includeOptionsForm($location);?>
+        </fieldset>
+        <? } ?>
+        <div class="ccm-dashboard-form-actions-wrapper">
+            <div class="ccm-dashboard-form-actions">
+                <a href="<?=URL::page($c)?>" class="btn pull-left btn-default"><?=t('Back')?></a>
+                <? if (is_object($location)) { ?>
+                    <button type="submit" class="btn btn-primary pull-right"><?=t('Save')?></button>
+                <? } else { ?>
+                    <button type="submit" class="btn btn-primary pull-right"><?=t('Add')?></button>
+                <? } ?>
+            </div>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+    $(function() {
+        $('button[data-action=delete-location]').on('click', function(e) {
+            e.preventDefault();
+            if (confirm('<?=t('Delete this storage location? All files using it will have their storage location reset to the default.')?>')) {
+                $(this).closest('form').submit();
+            }
+        });
+    })
+    </script>
+<? } else { ?>
+
+    <h3><?=t('Storage Locations')?></h3>
+    <ul class="item-select-list">
+    <? foreach($locations as $location) { ?>
+        <li><a href="<?=$this->action('edit', $location->getID())?>"><i class="fa fa-hdd-o"></i> <?=$location->getName()?></a></li>
+    <? } ?>
+    </ul>
+
+    <form method="get" action="<?=$view->action('select_type')?>" id="ccm-file-storage-location-type-form">
+        <fieldset>
+
+            <legend><?=t('Add Location')?></legend>
+            <label for="atID"><?=t('Choose Type')?></label>
+            <div class="form-inline">
+                <div class="form-group">
+                    <?=$form->select('fslTypeID', $types)?>
+                </div>
+                <button type="submit" class="btn btn-default"><?=t('Go')?></button>
+            </div>
+        </fieldset>
+    </form>
+
+<? } ?>

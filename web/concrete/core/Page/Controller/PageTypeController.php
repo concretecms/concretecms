@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Core\Page\Controller;
 use Loader;
-use Concrete\Core\Controller;
-class PageTypeController extends Controller {
+use Concrete\Core\Page\Controller\PageController;
+class PageTypeController extends PageController {
 }

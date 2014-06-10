@@ -7,7 +7,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <input type="hidden" name="processCollection" value="1">
 
 
-    <header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="glyphicon glyphicon-chevron-left"></span></a> <?=t('Design')?></header>
+    <header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="fa fa-chevron-left"></span></a> <?=t('Design')?></header>
 
     <div class="ccm-panel-content-inner">
 
@@ -21,7 +21,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     $selected = true;
                 }
                 ?>
-                <label class="list-group-item"><input type="radio" class="ccm-flat-radio" value="<?=$tmp->getPageTemplateID()?>" name="pTemplateID" <? if ($selected) { ?>checked<? } ?> /> <?=$tmp->getPageTemplateName()?>
+                <label class="list-group-item"><input type="radio" class="ccm-flat-radio" value="<?=$tmp->getPageTemplateID()?>" name="pTemplateID" <? if ($selected) { ?>checked<? } ?> /> <?=$tmp->getPageTemplateDisplayName()?>
                     <?=$tmp->getPageTemplateIconImage()?>
                 </label>
                 <? if ($selected) { ?>
@@ -59,7 +59,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         <? if ($th->isThemeCustomizable()) { ?>
                         <span class="ccm-page-design-theme-customize">
                             <?=t('Customize')?>
-                            <a href="#" data-launch-panel-detail="page-design-customize" data-panel-detail-url="<?=URL::to('/ccm/system/panels/details/page/preview')?>" data-launch-sub-panel-url="<?=URL::to('/ccm/system/panels/page/design/customize', $th->getThemeID())?>"><i class="glyphicon glyphicon-share-alt"></i></a>
+                            <a href="#" data-launch-panel-detail="page-design-customize" data-panel-detail-url="<?=URL::to('/ccm/system/panels/details/page/preview')?>" data-launch-sub-panel-url="<?=URL::to('/ccm/system/panels/page/design/customize', $th->getThemeID())?>"><i class="fa fa-share-alt"></i></a>
                         </span>
                         <? } ?>
                     </i>

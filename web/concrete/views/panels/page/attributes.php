@@ -3,9 +3,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 <section id="ccm-menu-page-attributes">
-	<header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="glyphicon glyphicon-chevron-left"></span></a> <?=t('Attributes')?></header>
+	<header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="fa fa-chevron-left"></span></a> <?=t('Attributes')?></header>
 	<div class="ccm-menu-page-attributes-search">
-		<i class="glyphicon glyphicon-search"></i>
+		<i class="fa fa-search"></i>
 		<input type="text" name="" id="ccm-menu-page-attributes-search-input" placeholder="<?=t('Search')?>" autocomplete="false" />
 	</div>
 

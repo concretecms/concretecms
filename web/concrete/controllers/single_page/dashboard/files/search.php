@@ -12,7 +12,7 @@ class Search extends DashboardPageController {
 		$this->set('searchController', $cnt);
 		$result = Loader::helper('json')->encode($cnt->getSearchResultObject()->getJSONObject());
 		$v = View::getInstance();
-		$v->requireAsset('core/filemanager');
+		$v->requireAsset('core/file-manager');
 		$this->addFooterItem("<script type=\"text/javascript\">$(function() { $('div[data-search=files]').concreteFileManager({result: " . $result . "}); });</script>");
 	}
 

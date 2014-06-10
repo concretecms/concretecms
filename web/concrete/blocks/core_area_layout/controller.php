@@ -145,7 +145,7 @@ class Controller extends BlockController {
 		}
 
 		public function edit() {
-			$this->addHeaderItem(Loader::helper('html')->javascript('ccm.layouts.js'));
+			$this->addHeaderItem(Loader::helper('html')->javascript('layouts.js'));
 			$this->view();
 			// since we set a render override in view() we have to explicitly declare edit
 			$this->set('enableThemeGrid', $this->arLayout->isAreaLayoutUsingThemeGridFramework());
@@ -168,7 +168,7 @@ class Controller extends BlockController {
 		}
 
 		public function add() {
-			$this->addHeaderItem(Loader::helper('html')->javascript('ccm.layouts.js'));
+			$this->addHeaderItem(Loader::helper('html')->javascript('layouts.js'));
 			$maxColumns = 12; // normally
 			// now we check our active theme and see if it has other plans
 			$c = Page::getCurrentPage();

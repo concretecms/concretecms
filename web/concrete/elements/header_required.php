@@ -104,7 +104,6 @@ var CCM_REL = "<?php echo DIR_REL?>";
 <?php
 
 $v = View::getInstance();
-$v->requireAsset('javascript', 'jquery');
 
 if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES && $u->isRegistered()) {
 	$v->requireAsset('core/account');

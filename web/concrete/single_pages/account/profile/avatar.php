@@ -49,7 +49,7 @@
 				image: '<?php echo $av->getImagePath($profile)?>',
 				save: "<?php echo $view->url($c->getCollectionPath(), 'save_thumb')?>"    
 			};
-			swfobject.embedSWF ("<?php echo ASSETS_URL_JAVASCRIPT?>/thumbnail_editor_3.swf", "profile-avatar", "500", "400", "10,0,0,0", "includes/expressInstall.swf", flashvars, params);
+			swfobject.embedSWF ("<?php echo ASSETS_URL_JAVASCRIPT?>/thumbnail-editor-3.swf", "profile-avatar", "500", "400", "10,0,0,0", "includes/expressInstall.swf", flashvars, params);
 	
 			
 	   });

@@ -144,7 +144,7 @@
 	<div class="ccm-search-fields-row">
 		<div class="form-group">
 			<div class="ccm-search-main-lookup-field">
-				<i class="glyphicon glyphicon-search"></i>
+				<i class="fa fa-search"></i>
 				<?=$form->search('fsKeywords', Loader::helper('text')->entities($_REQUEST['fsKeywords']), array('placeholder' => t('File Set Name')))?>
 				<button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
 			</div>

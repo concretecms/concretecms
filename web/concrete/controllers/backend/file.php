@@ -125,7 +125,7 @@ class File extends Controller {
 					$importer = new FileImporter();
 					$response = $importer->import($_FILES['files']['tmp_name'][$i], $_FILES['files']['name'][$i]);
 				}
-				if (!($response instanceof FileVersion)) {
+				if (!($response instanceof \Concrete\Core\File\Version)) {
 					throw new Exception(FileImporter::getErrorMessage($response));
 				} else {
 					$file = $response->getFile();

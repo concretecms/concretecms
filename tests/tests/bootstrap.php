@@ -19,6 +19,9 @@ set_include_path(get_include_path() . PATH_SEPARATOR . realpath(dirname(__FILE__
 
 require_once('ConcreteDatabaseTestCase.php');
 require_once('BlockTypeTestCase.php');
+require_once('PageTestCase.php');
+require_once('AttributeTestCase.php');
+require_once('FileStorageTestCase.php');
 
 
 define('DIR_BASE', realpath(dirname(__FILE__) . '/../../web'));

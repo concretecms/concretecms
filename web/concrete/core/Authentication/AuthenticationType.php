@@ -266,12 +266,12 @@ class AuthenticationType extends Object {
 	 * in an array to the AuthenticationTypeController::saveTypeForm
 	 */
 	public function renderTypeForm() {
-		$form = $this->mapAuthenticationTypeFilePath('type_form.php');
-		if ($form->exists()) {
+		$type_form = $this->mapAuthenticationTypeFilePath('type_form.php');
+		if ($type_form->exists()) {
 			ob_start();
 			$this->controller->edit();
 			extract($this->controller->getSets());
-			require_once($form->file); // We use the $this method to prevent extract overwrite.
+			require_once($type_form->file); // We use the $this method to prevent extract overwrite.
 			$out = ob_get_contents();
 			ob_end_clean();
 			echo $out;

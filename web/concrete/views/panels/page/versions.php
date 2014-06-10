@@ -23,9 +23,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		</td>
 		<td>
 			<% if (cv.cvIsApproved == 1) { %>
-				<i class="glyphicon glyphicon-ok" title="<?=t('This is the approved page version.')?>"></i>
+				<i class="fa fa-ok" title="<?=t('This is the approved page version.')?>"></i>
 			<% } %>
-			<a href="#" class="ccm-panel-page-versions-version-menu" data-launch-versions-menu="ccm-panel-page-versions-version-menu-<%-cv.cvID%>"><i class="glyphicon glyphicon-share-alt"></i></a>
+			<a href="#" class="ccm-panel-page-versions-version-menu" data-launch-versions-menu="ccm-panel-page-versions-version-menu-<%-cv.cvID%>"><i class="fa fa-share-alt"></i></a>
 			<div class="ccm-popover-inverse popover fade" data-menu="ccm-panel-page-versions-version-menu-<%-cv.cvID%>">
 				<div class="popover-inner">
 				<ul class="dropdown-menu">
@@ -281,7 +281,7 @@ $(function() {
 
 
 <section id="ccm-panel-page-versions" class="ccm-ui">
-	<header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="glyphicon glyphicon-chevron-left"></span></a> <?=t('Versions')?></header>
+	<header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="fa fa-chevron-left"></span></a> <?=t('Versions')?></header>
 	<table>
 		<thead>
 			<tr>

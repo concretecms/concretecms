@@ -1,5 +1,6 @@
 # ignore system files
 .DS_Store
+.idea
 thumbs.db
 __MACOSX
 ._*
@@ -52,6 +53,7 @@ error_log
 
 # ignore JavaScript source maps
 /web/concrete/js/*.js.map
+/web/concrete/js/bootstrap/*.js.map
 
 # ignore node modules used for building
 /build/node_modules

@@ -1,6 +1,6 @@
 <?php 
 namespace Concrete\Core\User\Group;
-class GroupAutomationController {
+abstract class GroupAutomationController {
 
 	/** 
 	 * Return true to automatically enter the current ux into the group

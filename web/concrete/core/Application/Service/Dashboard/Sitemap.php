@@ -139,7 +139,7 @@ class Sitemap {
 		$cIcon = $c->getCollectionIcon();
 		if (!$cIcon) {
 			if ($cID == 1) {
-				$cIconClass = 'glyphicon glyphicon-home';
+				$cIconClass = 'fa fa-home';
 			} else if ($numSubpages > 0) {
 				$cIcon = ASSETS_URL_IMAGES . '/dashboard/sitemap/folder.png';
 			} else {

@@ -36,19 +36,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<hr/>
 		<p class="lead"><?=t('Other URLs that should redirect to this page')?></p>
 
-		<?php
-			$paths = $c->getPagePaths();
-			foreach ($paths as $path) {
-				if (!$path['ppIsCanonical']) {
-					$ppID = $path['ppID'];
-					$cPath = $path['cPath'];
-					echo '<div class="input ccm-meta-path">' .
-		     			'<input type="text" name="ppURL-' . $ppID . '" class="ccm-input-text" value="' . $cPath . '" id="ppID-'. $ppID . '"> ' .
-		     			'<a href="javascript:void(0)" class="ccm-meta-path-del">' . t('Remove Path') . '</a></div>'."\n";
-				}
-			}
-		?>
-
 		<div id="ccm-panel-detail-location-page-paths">
 
 		</div>
@@ -86,8 +73,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <script type="text/template" class="pagePath">
 <div class="ccm-panel-detail-location-page-path">
-	<input class="control-input" type="text" name="ppURL[]" value="<%=ppPath%>" />
-	<a href="#"><i class="glyphicon glyphicon-minus-sign" /></a>
+	<input class="control-input" type="text" name="additionalPath[]" value="<%=path%>" />
+	<a href="#"><i class="fa fa-minus-sign" /></a>
 </div>
 </script>
 
@@ -122,12 +109,18 @@ $(function() {
 	$('button[name=addRedirect]').on('click', function() {
 		$('#ccm-panel-detail-location-page-paths').append(
 			renderPagePath({
-				ppPath: ''
+				path: ''
 			})
 		);
 	});
 
-	ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
+    <? foreach($additionalPaths as $path) { ?>
+    $('#ccm-panel-detail-location-page-paths').append(
+        renderPagePath({path: '<?=$path->getPagePath()?>'})
+    );
+    <? } ?>
+
+    ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
 		$('#ccm-panel-detail-location-display').html(renderBreadcrumb({
 			parentLink: '<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=' + data.cID,
 			parentName: data.title,
