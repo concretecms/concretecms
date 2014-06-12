@@ -24,6 +24,30 @@ class PageListTest extends \PageTestCase {
         ),
         array(
             'Foobler', '/test-page-1',
+        ),
+        array(
+            'Test Page 2', false
+        ),
+        array(
+            'Holy Mackerel', false
+        ),
+        array(
+            'Another Fun Page', false, 'alternate'
+        ),
+        array(
+            'Foo Bar', '/test-page-2'
+        ),
+        array(
+            'Test Page 3', false
+        ),
+        array(
+            'Another Page', false, 'alternate', 'right_sidebar'
+        ),
+        array(
+            'More Testing', false, 'alternate'
+        ),
+        array(
+            'Foobler', '/another-fun-page'
         )
     );
 
@@ -47,7 +71,7 @@ class PageListTest extends \PageTestCase {
         \Concrete\Core\Permission\Category::add('page');
         \Concrete\Core\Permission\Key\Key::add('page', 'view_page', 'View Page', '', 0, 0);
         PageTemplate::add('left_sidebar', 'Left Sidebar');
-        PageTemplate::add('right_sidebar', 'Left Sidebar');
+        PageTemplate::add('right_sidebar', 'Right Sidebar');
         PageType::add(array(
             'handle' => 'alternate',
             'name' => 'Alternate'
@@ -62,9 +86,16 @@ class PageListTest extends \PageTestCase {
         $this->list->ignorePermissions();
     }
 
+    protected function addAlias()
+    {
+        $subject = Page::getByPath('/test-page-2');
+        $parent = Page::getByPath('/another-fun-page');
+        $subject->addCollectionAlias($parent);
+    }
+
     public function testGetUnfilteredTotal()
     {
-        $this->assertEquals(5, $this->list->getTotal());
+        $this->assertEquals(13, $this->list->getTotal());
     }
 
     public function testFilterByTypeNone()
@@ -76,16 +107,16 @@ class PageListTest extends \PageTestCase {
     public function testFilterByTypeValid1()
     {
         $this->list->filterByPageTypeHandle('basic');
-        $this->assertEquals(3, $this->list->getTotal());
+        $this->assertEquals(8, $this->list->getTotal());
         $results = $this->list->getPage();
-        $this->assertEquals(3, count($results));
+        $this->assertEquals(8, count($results));
         $this->assertInstanceOf('\Concrete\Core\Page\Page', $results[0]);
     }
 
     public function testFilterByTypeValid2()
     {
         $this->list->filterByPageTypeHandle('alternate');
-        $this->assertEquals(1, $this->list->getTotal());
+        $this->assertEquals(4, $this->list->getTotal());
     }
 
     public function testSortByIDAscending()
@@ -102,9 +133,9 @@ class PageListTest extends \PageTestCase {
         $this->list->sortByName();
         $results = $this->list->getPage();
         $this->assertEquals('Abracadabra', $results[0]->getCollectionName());
-        $this->assertEquals('Brace Yourself', $results[1]->getCollectionName());
-        $this->assertEquals('Foobler', $results[2]->getCollectionName());
-        $this->assertEquals('Home', $results[3]->getCollectionName());
+        $this->assertEquals('Another Fun Page', $results[1]->getCollectionName());
+        $this->assertEquals('Another Page', $results[2]->getCollectionName());
+        $this->assertEquals('Brace Yourself', $results[3]->getCollectionName());
     }
 
     public function testFilterByKeywords()
@@ -114,6 +145,70 @@ class PageListTest extends \PageTestCase {
         $this->assertEquals(2, $total);
     }
 
+    public function testItemsPerPage()
+    {
+        $this->list->setItemsPerPage(2);
+        $pages = $this->list->getPage();
+        $this->assertEquals(2, count($pages));
+    }
+
+    public function testSummary()
+    {
+        $this->list->setItemsPerPage(2);
+        $this->list->sortByCollectionIDAscending();
+        $summary = $this->list->getSummary();
+        $this->assertInstanceOf('stdClass', $summary);
+        $this->assertEquals(2, $summary->chunk);
+        $this->assertEquals('asc', $summary->order);
+        $this->assertEquals(0, $summary->startAt);
+        $this->assertEquals(13, $summary->total);
+        $this->assertEquals(1, $summary->current);
+        $this->assertEquals(-1, $summary->previous);
+        $this->assertEquals(2, $summary->next);
+        $this->assertEquals(12, $summary->last);
+        $this->assertEquals(1, $summary->currentStart);
+        $this->assertEquals(2, $summary->currentEnd);
+        $this->assertEquals(true, $summary->needsPaging);
+    }
+
+    public function testAliasingAndBasicGet()
+    {
+        $this->addAlias();
+        $this->list->sortBy('cID', 'desc');
+
+        $results = $this->list->get();
+        $this->assertEquals(14, count($results));
+        $this->assertEquals('Test Page 2', $results[0]->getCollectionName());
+        $this->assertEquals(true, $results[0]->isAlias());
+    }
+
+    public function testFilterByParentID()
+    {
+        $this->addAlias();
+        $parent = Page::getByPath('/another-fun-page');
+        $this->list->filterByParentID($parent->getCollectionID());
+        $results = $this->list->getPage();
+        $this->assertEquals(2, count($results));
+        $this->assertEquals(2, $this->list->getTotal());
+    }
+
+    public function testFilterByApproved()
+    {
+        $this->addAlias();
+        $parent = Page::getByPath('/test-page-1/foobler');
+        $type = PageType::getByHandle('basic');
+        $template = PageTemplate::getByHandle('left_sidebar');
+        $c = $parent->add($type, array(
+            'cName' => 'This is an unapproved page.',
+            'pTemplateID' => $template->getPageTemplateID(),
+            'cvIsApproved' => false
+        ));
+
+        $this->list->filterByIsApproved(0);
+        $this->assertEquals(1, $this->list->getTotal());
+        $results = $this->list->get();
+        $this->assertEquals(1, count($results));
+    }
 
 }
  
