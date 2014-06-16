@@ -348,8 +348,7 @@ abstract class Key extends Object {
 	public function getPermissionAssignmentObject() {
 		if (is_object($this->permissionObject)) {
 			$className = $this->permissionObject->getPermissionAssignmentClassName();
-			$targ = Core::make($className);
-			$targ->setPermissionObject($this->permissionObject);
+			$targ = Core::make($className, array($this->permissionObject));
 		} else {
 			$targ = new PermissionAssignment();
 		}

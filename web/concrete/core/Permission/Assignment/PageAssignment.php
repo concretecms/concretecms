@@ -3,8 +3,14 @@ namespace Concrete\Core\Permission\Assignment;
 use PermissionAccess;
 use \Concrete\Core\Permission\Cache as PermissionCache;
 
+use Page;
 use Loader;
 class PageAssignment extends Assignment {
+
+	public function __construct(Page $p)
+	{
+		$this->setPermissionObject($p);
+	}
 
 	public function getPermissionAccessObject() {
 		$pa = PermissionCache::getAccessObject($this->pk, $this->getPermissionObject());

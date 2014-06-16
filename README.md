@@ -14,7 +14,7 @@ This is a developer preview branch. This is intended for Add-On developers and c
 2. Clone this repository.
 2. Use [Composer](https://getcomposer.org/) to Install the third party dependencies
 
-    cd git/concrete5/web/concrete
+    cd web/concrete
     composer install
 
 This should install everything necessary into the vendor/ directory in the concrete directory.
