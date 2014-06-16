@@ -60,7 +60,6 @@ class Date {
 		if(!isset($mask) || !strlen($mask)) {
 			$mask = 'Y-m-d H:i:s';
 		}
-
 		$req = Request::getInstance();
 		if ($req->hasCustomRequestUser()) {
 			return date($mask, strtotime($req->getCustomRequestDateTime()));
