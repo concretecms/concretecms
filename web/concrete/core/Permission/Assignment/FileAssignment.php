@@ -18,10 +18,6 @@ class FileAssignment extends Assignment {
 		'delete_file' => 'delete_file_set_files'
 	);
 	
-	public function __construct(File $f)
-	{
-		$this->setPermissionObject($f);
-	}
 
 	public function getPermissionAccessObject() {
 		$db = Loader::db();

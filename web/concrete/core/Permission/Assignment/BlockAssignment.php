@@ -29,11 +29,6 @@ class BlockAssignment extends Assignment {
 		'delete_block' => 'edit_page_contents'		
 	);
 	
-	public function __construct(Block $b)
-	{
-		$this->setPermissionObject($b);
-	}
-
 	public function setPermissionObject(Block $b) {
 		$this->permissionObject = $b;
 		

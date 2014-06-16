@@ -9,11 +9,6 @@ class TopicTreeNodeAssignment extends TreeNodeAssignment {
 		'view_topic_tree_node' => 'view_topic_category_tree_node'
 	);
 
-	public function __construct(TopicTreeNode $node)
-	{
-		$this->setPermissionObject($node);
-	}
-
 	public function setPermissionObject(TopicTreeNode $node) {
 		$this->permissionObject = $node;
 		
