@@ -11,7 +11,7 @@ class Controller extends AttributeTypeController  {
 	protected $searchIndexFieldDefinition = array('type' => 'boolean', 'options' => array('default' => 0, 'notnull' => false));
 	
 	public function searchForm($list) {
-		$list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), 1);
+		$list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $this->request('value'));
 		return $list;
 	}	
 
