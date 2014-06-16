@@ -1,43 +1,83 @@
 <?
 namespace Concrete\Core\File;
+use Carbon\Carbon;
 use FileSet;
 use Loader;
 use CacheLocal;
 use User;
 use Events;
 use Page;
+use Database;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Key as AttributeKey;
 use \Concrete\Core\File\StorageLocation\StorageLocation;
 use FileAttributeKey;
 use PermissionKey;
 
-class File extends Object implements \Concrete\Core\Permission\ObjectInterface { 
+/**
+ * @Entity
+ * @Table(name="Files")
+ */
 
-	const CREATE_NEW_VERSION_THRESHOLD = 300; // in seconds (5 minutes)
-	const F_ERROR_INVALID_FILE = 1;
-	const F_ERROR_FILE_NOT_FOUND = 2;
-	
-	/**
+class File implements \Concrete\Core\Permission\ObjectInterface {
+
+    /**
+     * Create a new version every 300 seconds.
+     */
+    const CREATE_NEW_VERSION_THRESHOLD = 300;
+
+
+    /**
+     * @Id @Column(type="integer")
+     * @GeneratedValue
+     */
+    protected $fID;
+
+    /**
+     * @Column(type="datetime")
+     */
+    protected $fDateAdded = null;
+
+    /**
+     * @Column(type="string")
+     */
+    protected $fPassword;
+
+    /**
+     * @Column(type="boolean")
+     */
+    protected $fOverrideSetPermissions = false;
+
+    /**
+     * Originally placed on which page.
+     * @Column(columnDefinition="integer unsigned")
+     */
+    protected $ocID = 0;
+
+    /**
+     * @Column(columnDefinition="integer unsigned")
+     */
+    protected $uID = 0;
+
+    /**
+     * @ManyToOne(targetEntity="\Concrete\Core\File\StorageLocation\StorageLocation")
+     * @JoinColumn(name="fslID", referencedColumnName="fslID")
+     **/
+    protected $storageLocation;
+
+
+    /**
 	 * returns a file object for the given file ID
 	 * @param int $fID
 	 * @return File
 	 */
-	public static function getByID($fID) {
-		
-		$db = Loader::db();
-		$f = new File();
-		$row = $db->GetRow("SELECT Files.*, FileVersions.fvID
-		FROM Files LEFT JOIN FileVersions on Files.fID = FileVersions.fID and FileVersions.fvIsApproved = 1
-		WHERE Files.fID = ?", array($fID));
-		if (!is_null($fID) && $row['fID'] == $fID) {
-			$f->setPropertiesFromArray($row);
-		} else {
-			$f->error = static::F_ERROR_INVALID_FILE;
-		}
-		return $f;
-	}	
-	
+    public static function getByID($fID)
+    {
+        $db = Database::get();
+        $em = $db->getEntityManager();
+        return $em->find('\Concrete\Core\File\File', $fID);
+    }
+
 	/** 
 	 * For all methods that file does not implement, we pass through to the currently active file version object 
 	 */
@@ -66,7 +106,7 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 	}
 	
 	public function getStorageLocationID() {
-		return $this->fslID;
+		return $this->locationn->getID();
 	}
 
     /**
@@ -74,14 +114,9 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
      */
     public function getFileStorageLocationObject()
     {
-        $fsl = StorageLocation::getByID($this->fslID);
-        return $fsl;
+        return $this->storageLocation;
     }
 
-	public function refreshCache() {
-		// NOT NECESSARY
-	}
-	
 	public function reindex() {
 
 		return;
@@ -108,6 +143,12 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		return $path;
 	}
 
+    protected function save()
+    {
+        $em = Database::get()->getEntityManager();
+        $em->persist($this)->flush();
+    }
+
 	public function setFileStorageLocation(StorageLocation $newLocation)
     {
         $fh = Loader::helper('concrete/file');
@@ -123,11 +164,8 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
             $currentFilesystem->delete($fh->prefix($fv->getPrefix(), $fv->getFilename()));
         }
 
-        $db = Loader::db();
-        $db->Execute('update Files set fslID = ? where fID = ?', array(
-            $newLocation->getID(), $this->getFileID()
-        ));
-        $this->fslID = $newLocation->getID();
+        $this->location = $newLocation;
+        $this->save();
 	}
 
 	public function setPassword($pw) {
@@ -136,18 +174,16 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		$fe->setFilePassword($pw);
 		Events::dispatch('on_file_set_password', $fe);
 
-		$db = Loader::db();
-		$db->Execute("update Files set fPassword = ? where fID = ?", array($pw, $this->getFileID()));
-		$this->fPassword = $pw;
+        $this->fPassword = $pw;
+        $this->save();
 	}
 	
 	public function setOriginalPage($ocID) {
 		if ($ocID < 1) {
 			return false;
 		}
-		
-		$db = Loader::db();
-		$db->Execute("update Files set ocID = ? where fID = ?", array($ocID, $this->getFileID()));
+        $this->ocID = $ocID;
+        $this->save();
 	}
 	
 	public function getOriginalPageObject() {
@@ -166,7 +202,8 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 	public function resetPermissions($fOverrideSetPermissions = 0) {
 		$db = Loader::db();
 		$db->Execute("delete from FilePermissionAssignments where fID = ?", array($this->fID));
-		$db->Execute("update Files set fOverrideSetPermissions = ? where fID = ?", array($fOverrideSetPermissions, $this->fID));
+        $this->fOverrideSetPermissions = (bool) $fOverrideSetPermissions;
+        $this->save();
 		if ($fOverrideSetPermissions) {
 			$permissions = PermissionKey::getList('file');
 			foreach($permissions as $pk) { 
@@ -183,8 +220,7 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 	
 	public function setUserID($uID) {
 		$this->uID = $uID;
-		$db = Loader::db();
-		$db->Execute("update Files set uID = ? where fID = ?", array($uID, $this->fID));
+        $this->save();
 	}
 	
 	public function getFileSets() {
@@ -220,7 +256,7 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		
 		$fv = $this->getRecentVersion();
 		$fav = $this->getApprovedVersion();
-		
+
 		// first test. Does the user ID of the most recent version match ours? If not, then we create new
 		if ($u->getUserID() != $fv->getAuthorUserID()) {
 			$createNew = true;
@@ -239,7 +275,6 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		
 		if ($createNew) {
 			$fv2 = $fv->duplicate();
-			
 			// Are the recent and active versions the same? If so, we approve this new version we just made
 			if ($fv->getFileVersionID() == $fav->getFileVersionID()) {
 				$fv2->approve();
@@ -253,16 +288,17 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 	public function getFileID() { return $this->fID;}
 	
 	public function duplicate() {
+
 		$dh = Loader::helper('date');
 		$db = Loader::db();
-		$date = $dh->getSystemDateTime(); 
+		$date = $dh->getSystemDateTime();
 
-		$r1 = $db->GetRow('select * from Files where fID = ?', array($this->fID));
-		unset($r1['fID']);
-		$r1['fDateAdded'] = $date;
+        $em = Database::get()->getEntityManager();
+        $nf = $em->copy($this);
+        $nf->fDateAdded = new Carbon($date);
+        $em->flush();
 
-		$r2 = $db->insert('Files', $r1);
-		$fIDNew = $db->LastInsertId();
+        $fIDNew = $nf->getFileID();
 
 		$versions = $db->GetAll('select * from FileVersions where fID = ?', $this->fID);
 		foreach($versions as $fileversion) {
@@ -317,13 +353,15 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		} else if ($u->isRegistered()) {
 			$uID = $u->getUserID();
 		}
-		
-		$db->Execute('insert into Files (fDateAdded, uID, fslID) values (?, ?, ?)', array($date, $uID, $fsl->getID()));
-		
-		$fID = $db->Insert_ID();
-		
-		$f = static::getByID($fID);
-		
+
+        $f = new self;
+        $f->uID = $uID;
+        $f->storageLocation = $fsl;
+        $f->fDateAdded = new Carbon($date);
+        $em = $db->getEntityManager();
+        $em->persist($f);
+        $em->flush();
+
 		$fv = $f->addVersion($filename, $prefix, $data);
 
 		$fve = new \Concrete\Core\File\Event\FileVersion($fv);
@@ -420,7 +458,8 @@ class File extends Object implements \Concrete\Core\Permission\ObjectInterface {
         }
 
 		// now from the DB
-		$db->Execute("delete from Files where fID = ?", array($this->fID));
+        $em = $db->getEntityManager();
+        $em->remove($this);
 		$db->Execute("delete from FileSetFiles where fID = ?", array($this->fID));
 		$db->Execute("delete from FileSearchIndexAttributes where fID = ?", array($this->fID));
 		$db->Execute("delete from DownloadStatistics where fID = ?", array($this->fID));

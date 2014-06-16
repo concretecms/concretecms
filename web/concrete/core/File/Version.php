@@ -282,7 +282,6 @@ class Version extends Object {
 		Events::dispatch('on_file_version_update_title', $fe);
 
 		$fo = $this->getFile();
-		$fo->refreshCache();
 	}
 
 	public function updateTags($tags) {
@@ -296,7 +295,6 @@ class Version extends Object {
 		Events::dispatch('on_file_version_update_tags', $fe);
 
 		$fo = $this->getFile();
-		$fo->refreshCache();
 	}
 
 
@@ -310,7 +308,6 @@ class Version extends Object {
 		Events::dispatch('on_file_version_update_description', $fe);
 
 		$fo = $this->getFile();
-		$fo->refreshCache();
 	}
 
 	public function updateFile($filename, $prefix) {
@@ -321,7 +318,6 @@ class Version extends Object {
 		$this->fvPrefix = $prefix;
 
 		$fo = $this->getFile();
-		$fo->refreshCache();
 	}
 
 
@@ -335,7 +331,6 @@ class Version extends Object {
 
 		$fo = $this->getFile();
 		$fo->reindex();
-		$fo->refreshCache();
 	}
 
 
@@ -347,7 +342,6 @@ class Version extends Object {
 		Events::dispatch('on_file_version_deny', $fe);
 	
 		$fo = $this->getFile();
-		$fo->refreshCache();
 	}
 
 
@@ -357,7 +351,6 @@ class Version extends Object {
 		}
 		$ak->setAttribute($this, $value);
 		$fo = $this->getFile();
-		$fo->refreshCache();
 		$fo->reindex();
 		unset($ak);
 	}
@@ -627,7 +620,6 @@ class Version extends Object {
 			}
 		}
 		$f = $this->getFile();
-		$f->refreshCache();
 		$f->reindex();
 	}
 
@@ -658,7 +650,6 @@ class Version extends Object {
 			$cav->delete();
 		}
 		$fo = $this->getFile();
-		$fo->refreshCache();
 		$fo->reindex();
 	}
 
