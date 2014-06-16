@@ -8,6 +8,11 @@ class Assignment {
 	protected $pk; // permissionkey
 	protected $permissionObject;
 	
+	public function __construct($po)
+	{
+		$this->setPermissionObject($po);
+	}
+
 	public function setPermissionObject($po) {
 		$this->permissionObject = $po;
 	}
