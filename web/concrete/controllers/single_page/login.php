@@ -133,10 +133,10 @@ class Login extends PageController {
 	 * @param $type	AuthenticationType handle
 	 */
 	public function authenticate($type = '') {
-    $valt = Loader::helper('validation/token');
-    if(!$valt->validate('login_'.$type)) {
-      $this->error->add($valt->getErrorMessage());
-    } else {
+		$valt = Loader::helper('validation/token');
+		if(!$valt->validate('login_'.$type)) {
+			$this->error->add($valt->getErrorMessage());
+		} else {
   		try {
   			$at = AuthenticationType::getByHandle($type);
   			$at->controller->authenticate();
@@ -144,7 +144,7 @@ class Login extends PageController {
   		} catch (\exception $e) {
   			$this->error->add($e->getMessage());
   		}
-    }
+		}
 		$this->view();
 	}
 
