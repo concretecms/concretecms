@@ -23,7 +23,7 @@ class Login extends PageController {
 
 	public function on_start() {
 		$this->error = Loader::helper('validation/error');
-    $this->set('valt', Loader::helper('validation/token'));
+		$this->set('valt', Loader::helper('validation/token'));
 		if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
 			$this->set('uNameLabel', t('Email Address'));
 		} else {
@@ -137,13 +137,13 @@ class Login extends PageController {
 		if(!$valt->validate('login_'.$type)) {
 			$this->error->add($valt->getErrorMessage());
 		} else {
-  		try {
-  			$at = AuthenticationType::getByHandle($type);
-  			$at->controller->authenticate();
-  			$this->finishAuthentication($at);
-  		} catch (\exception $e) {
-  			$this->error->add($e->getMessage());
-  		}
+			try {
+				$at = AuthenticationType::getByHandle($type);
+				$at->controller->authenticate();
+				$this->finishAuthentication($at);
+			} catch (\exception $e) {
+				$this->error->add($e->getMessage());
+			}
 		}
 		$this->view();
 	}
