@@ -134,9 +134,11 @@ $page_selector = Loader::helper('form/page_selector');
 
         <div class="form-group"
              id="divSubPageLevelsNum"<? if ($info['displaySubPageLevels'] != 'custom') { ?> style="display: none"<? } ?>>
-            <input type="text" name="displaySubPageLevelsNum" value="<?= $info['displaySubPageLevelsNum'] ?>"
-                   style="width: 30px; vertical-align: middle">
-            &nbsp;<?= t('levels') ?>
+            <div class="input-group">
+                <input type="text" name="displaySubPageLevelsNum" value="<?= $info['displaySubPageLevelsNum'] ?>"
+                       class="form-control">
+                <span class="input-group-addon"> levels</span>
+            </div>
         </div>
     </div>
 </div>
