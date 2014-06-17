@@ -4,7 +4,7 @@ use \Concrete\Core\Page\Controller\AccountPageController;
 class Profile extends AccountPageController {
 
 	public function view() {
-		$this->redirect('/account/profile/public');
+		$this->redirect('/account/profile/public_profile');
 	}
-		
+
 }

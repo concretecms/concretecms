@@ -9,31 +9,31 @@
 <div class="navbar-inner">
 
 <form method="get" action="<?=$view->action('search_members')?>" class="navbar-form">
-	<input name="keywords" type="text" value="<?=$keywords?>" size="20" class="" placeholder="<?=t('Search')?>" />		
-	<input name="submit" type="button" value="<?=t('Search')?>" class="btn" />	
+	<input name="keywords" type="text" value="<?=$keywords?>" size="20" class="" placeholder="<?=t('Search')?>" />
+	<input name="submit" type="button" value="<?=t('Search')?>" class="btn" />
 </form>
 
 </div>
 </div>
 
 <? if ($userList->getTotal() == 0) { ?>
-	
+
 		<div><?=t('No users found.')?></div>
-	
+
 	<? } else { ?>
-	
+
 		<table class="table table-striped" id="ccm-members-directory">
-		
-		
-		<?  
+
+
+		<?
 		$av = Loader::helper('concrete/avatar');
 		$u = new User();
-		
+
 		foreach($users as $user) { 	?>
-		
+
 		<tr>
-			<td class="ccm-members-directory-avatar"><a href="<?=$view->url('/account/profile/public','view', $user->getUserID())?>"><?=$av->outputUserAvatar($user)?></a></td>
-			<td class="ccm-members-directory-name"><a href="<?=$view->url('/account/profile/public','view', $user->getUserID())?>"><?=ucfirst($user->getUserName())?></a></td>
+			<td class="ccm-members-directory-avatar"><a href="<?=$view->url('/account/profile/public_profile','view', $user->getUserID())?>"><?=$av->outputUserAvatar($user)?></a></td>
+			<td class="ccm-members-directory-name"><a href="<?=$view->url('/account/profile/public_profile','view', $user->getUserID())?>"><?=ucfirst($user->getUserName())?></a></td>
 			<?
 			foreach($attribs as $ak) { ?>
 				<td>
@@ -41,15 +41,15 @@
 				</td>
 			<? } ?>
 		</tr>
-	
+
 		<? } ?>
-		
+
 		</table>
-		
+
 		<?=$userList->displayPagingV2()?>
-		
-	<? 
-	
+
+	<?
+
 	} ?>
 
 

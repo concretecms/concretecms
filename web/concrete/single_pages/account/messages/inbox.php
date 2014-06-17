@@ -7,26 +7,26 @@
 <h1><?=t("Private Messages")?></h1>
 </div>
 
-    	<? switch($this->controller->getTask()) { 
+    	<? switch($this->controller->getTask()) {
     		case 'view_message': ?>
 
 			<?=Loader::helper('concrete/ui')->tabs(array(
 				array($view->action('view_mailbox', 'inbox'), t('Inbox'), $box == 'inbox'),
 				array($view->action('view_mailbox', 'sent'), t('Sent'), $box == 'sent')
 			), false)?>
-    		
+
     		<div id="ccm-private-message-detail">
-				<a href="<?=$view->url('/account/profile/public', 'view', $msg->getMessageRelevantUserID())?>"><?=$av->outputUserAvatar($msg->getMessageRelevantUserObject())?></a>
-				<a href="<?=$view->url('/account/profile/public', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
-				
+				<a href="<?=$view->url('/account/profile/public_profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$av->outputUserAvatar($msg->getMessageRelevantUserObject())?></a>
+				<a href="<?=$view->url('/account/profile/public_profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
+
 				<div id="ccm-private-message-actions">
-				
+
 				<div class="btn-toolbar">
-				
+
 				<div class="btn-group">
 				<a href="<?=$backURL?>" class="btn btn-small"><i class="icon-arrow-left"></i> <?=t('Back to Messages')?></a>
 				</div>
-				
+
 				<div class="btn-group">
 				<a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#">
 				<i class="icon-cog"></i> <?=t('Action')?>
@@ -36,33 +36,33 @@
 				<ul class="dropdown-menu">
 				<? $u = new User(); ?>
 				<? if ($msg->getMessageAuthorID() != $u->getUserID()) { ?>
-					<? 
+					<?
 					$mui = $msg->getMessageRelevantUserObject();
-					if (is_object($mui)) { 
+					if (is_object($mui)) {
 						if ($mui->getUserProfilePrivateMessagesEnabled()) { ?>
 							<li><a href="<?=$view->action('reply', $box, $msg->getMessageID())?>"><?=t('Reply')?></a>
 							<li class="divider"></li>
-						<? } 						
+						<? }
 					}?>
 				<? } ?>
 				<li><a href="javascript:void(0)" onclick="if(confirm('<?=t('Delete this message?')?>')) { window.location.href='<?=$deleteURL?>'}; return false"><?=t('Delete')?></a>
 				</ul>
 				</div>
 				</div>
-				
+
 				</div>
-				
+
 				<strong><?=$subject?></strong>
 				<time><?=$dateAdded?></time>
 				<br/><br/>
-				
+
     			<div>
    				<?=$msg->getFormattedMessageBody()?>
    				</div>
 			</div>
-			    		
-    		
-    		<? 
+
+
+    		<?
     			break;
     		case 'view_mailbox': ?>
 
@@ -70,8 +70,8 @@
 				array($view->action('view_mailbox', 'inbox'), t('Inbox'), $mailbox == 'inbox'),
 				array($view->action('view_mailbox', 'sent'), t('Sent'), $mailbox == 'sent')
 			), false)?>
-			
-    		
+
+
 			<table class="ccm-profile-messages-list table-striped table" border="0" cellspacing="0" cellpadding="0">
 			<thead>
 			<tr>
@@ -81,25 +81,25 @@
 				<th><?=t('Status')?></th>
 			</tr>
 			</thead>
-			<tbody>    		
-    		
-    		
+			<tbody>
+
+
     		<?
-    			if (is_array($messages)) { 
+    			if (is_array($messages)) {
 					foreach($messages as $msg) { ?>
-					
+
 					<tr>
 						<td class="ccm-profile-message-from">
-						<a href="<?=$view->url('/account/profile/public', 'view', $msg->getMessageRelevantUserID())?>"><?=$av->outputUserAvatar($msg->getMessageRelevantUserObject())?></a>
-						<a href="<?=$view->url('/account/profile/public', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
+						<a href="<?=$view->url('/account/profile/public_profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$av->outputUserAvatar($msg->getMessageRelevantUserObject())?></a>
+						<a href="<?=$view->url('/account/profile/public_profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
 						</td>
 						<td class="ccm-profile-messages-item-name"><a href="<?=$view->url('/account/messages/inbox', 'view_message', $mailbox, $msg->getMessageID())?>"><?=$msg->getFormattedMessageSubject()?></a></td>
 						<td style="white-space: nowrap"><?=$msg->getMessageDateAdded('user', t('F d, Y \a\t g:i A'))?></td>
 						<td><?=$msg->getMessageStatus()?></td>
 					</tr>
-					
-					
-			
+
+
+
 				<? } ?>
 			<? } else { ?>
 				<tr>
@@ -108,90 +108,90 @@
 			<? } ?>
 			</tbody>
 			</table>
-			
-			
+
+
 			<?
 
 				$messageList->displayPaging();
     			break;
     		case 'reply_complete': ?>
-    		
+
     		<div class="alert alert-success"><?=t('Reply Sent.')?></div>
     		<a href="<?=$view->url('/account/messages/inbox', 'view_message', $box, $msgID)?>" class="btn"><?=t('Back to Message')?></a>
-    		
+
     		<?
     			break;
     		case 'send_complete': ?>
-    		
+
     		<div class="alert alert-success"><?=t('Message Sent.')?></div>
-    		<a href="<?=$view->url('/account/profile/public', 'view', $recipient->getUserID())?>" class="btn"><?=t('Back to Profile')?></a>
-    		
+    		<a href="<?=$view->url('/account/profile/public_profile', 'view', $recipient->getUserID())?>" class="btn"><?=t('Back to Profile')?></a>
+
     		<?
     			break;
 			case 'over_limit': ?>
 				<h2><?php echo t('Woops!')?></h2>
-				<p><?php echo t("You've sent more messages than we can handle just now, that last one didn't go out. 
-				We've notified an administrator to check into this. 
+				<p><?php echo t("You've sent more messages than we can handle just now, that last one didn't go out.
+				We've notified an administrator to check into this.
 				Please wait a few minutes before sending a new message."); ?></p>
-				<?php break; 
+				<?php break;
     		case 'send':
     		case 'reply':
     		case 'write': ?>
 
 			<div id="ccm-profile-message-compose">
 				<form method="post" action="<?=$view->action('send')?>" class="form-horizontal">
-				
+
 				<?=$form->hidden("uID", $recipient->getUserID())?>
 				<? if ($this->controller->getTask() == 'reply') { ?>
 					<?=$form->hidden("msgID", $msgID)?>
 					<?=$form->hidden("box", $box)?>
-				<? 
+				<?
 					$subject = t('Re: %s', $text->entities($msgSubject));
 				} else {
 					$subject = $text->entities($msgSubject);
 				}
 				?>
-				
+
 				<h3><?=t('Send a Private Message')?></h3>
-				
+
 				<div class="control-group">
 					<label class="control-label"><?=t("To")?></label>
 					<div class="controls">
 						<input disabled="disabled" type="text" value="<?=$recipient->getUserName()?>" class="span5" />
 					</div>
 				</div>
-				
+
 				<div class="control-group">
 					<?=$form->label('subject', t('Subject'))?>
 					<div class="controls">
 						<?=$form->text('msgSubject', $subject, array('class' => 'span5'))?>
 					</div>
 				</div>
-				
+
 				<div class="control-group">
 					<?=$form->label('body', t('Message'))?>
 					<div class="controls">
 						<?=$form->textarea('msgBody', $msgBody, array('rows'=>8, 'class' => 'span5'))?>
 					</div>
 				</div>
-				
+
 				<div class="well">
 					<?=$form->submit('button_submit', t('Send Message'), array('class' => 'pull-right btn-primary'))?>
 					<?=$form->submit('button_cancel', t('Cancel'), array('onclick' => 'window.location.href=\'' . $backURL . '\'; return false'))?>
 				</div>
-				
+
 				<?=$vt->output('validate_send_message');?>
-				
+
 				</form>
-				
-			</div>    	    		
-    		
-    		
-    		<? break; 
-    		
-    		default: 
+
+			</div>
+
+
+    		<? break;
+
+    		default:
     			// the inbox and sent box and other controls ?>
-    		
+
     			<table class="table table-striped" border="0" cellspacing="0" cellpadding="0">
     			<tr>
     				<th class="ccm-profile-messages-item-name"><?=t('Mailbox')?></th>
@@ -220,13 +220,11 @@
    				</td>
     			</tr>
     			</table>
-    		
+
     		<?
     			break;
     	} ?>
-    	
+
 
 </div>
 </div>
-        
-        
