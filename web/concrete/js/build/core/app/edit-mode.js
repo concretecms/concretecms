@@ -26,7 +26,7 @@
             dragAreaBlacklist: []
         });
 
-        Concrete.event.bind('PanelOpen', function editModePanelOpenEventHandler(event, data) {
+        Concrete.event.bind('PanelLoad', function editModePanelOpenEventHandler(event, data) {
             my.panelOpened(data.panel, data.element);
         });
 
@@ -42,21 +42,21 @@
                     {name: 'bID', value: block.getId()}
                 ],
                 bID = block.getId(),
-                $container = block.getElem(),
-                prop;
+                $container = block.getElem();
 
             if (block.menu) {
                 block.menu.destroy();
             }
             if (data.postData) {
-                for (prop in data.postData) {
-                    if (data.postData.hasOwnProperty(prop)) {
-                        postData.push({name: prop, value: data.postData[prop]});
-                    }
+                for (var prop in data.postData) {
+                    postData.push({name: prop, value: data.postData[prop]});
                 }
             }
-            Concrete.event.unsubscribe('EditModeExitInline');
-            Concrete.event.bind('EditModeExitInline', function (e) {
+
+            if (typeof my.getExitInlineEvent === 'function') {
+                Concrete.event.unsubscribe(my.getExitInlineEvent());
+            }
+            my.set('exitInlineEvent', Concrete.event.bind('EditModeExitInline', function (e) {
                 e.stopPropagation();
                 var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + CCM_CID + '&bID=' + block.getId() + '&arHandle=' + escape(area.getHandle()) + '&btask=view_edit_mode';
                 $.fn.dialog.showLoader();
@@ -72,7 +72,7 @@
                         });
                     }
                 );
-            });
+            }));
 
             ConcreteMenuManager.disable();
             ConcreteToolbar.disable();
@@ -348,6 +348,22 @@
         Block.call(my, elem, edit_mode, dragger);
     };
 
+
+    var Stack = Concrete.Stack = function Stack(elem, edit_mode, dragger) {
+        var my = this;
+        Block.call(my, elem, edit_mode, dragger);
+    };
+
+    var DuplicateBlock = Concrete.DuplicateBlock = function DuplicateBlock(elem, edit_mode, dragger) {
+        var my = this;
+        Block.call(my, elem, edit_mode, dragger);
+    };
+
+    var StackBlock = Concrete.StackBlock = function StackBlock(elem, edit_mode, dragger) {
+        var my = this;
+        Block.call(my, elem, edit_mode, dragger);
+    };
+
     /**
      * Drag Area that we create for dropping the blocks into
      * @param {jQuery}   elem  The drag area html element
@@ -399,6 +415,7 @@
 
         panelOpened: function editModePanelOpened(panel, element) {
             var my = this;
+
             if (panel.getIdentifier() !== 'add-block') {
                 return null;
             }
@@ -406,6 +423,27 @@
             $(element).find('a.ccm-panel-add-block-draggable-block-type').each(function () {
                 var block, me = $(this), dragger = $('<a/>').addClass('ccm-panel-add-block-draggable-block-type-dragger').appendTo(me);
                 my.addBlock(block = new BlockType($(this), my, dragger));
+
+                block.setPeper(dragger);
+            });
+
+            $(element).find('div.ccm-panel-add-block-stack-item').each(function () {
+                var block, me = $(this), dragger = me.find('div.stack-name');
+                my.addBlock(block = new Stack($(this), my, dragger));
+
+                block.setPeper(dragger);
+
+                $(this).find('div.block').each(function () {
+                    var block, me = $(this), dragger = me.find('div.block-name');
+                    my.addBlock(block = new StackBlock($(this), my, dragger));
+
+                    block.setPeper(dragger);
+                });
+            });
+
+            $(element).find('div.ccm-panel-add-clipboard-block-item').each(function () {
+                var block, me = $(this), dragger = me;
+                my.addBlock(block = new DuplicateBlock($(this), my, dragger));
 
                 block.setPeper(dragger);
             });
@@ -717,13 +755,18 @@
         /**
          * Find the contending DragArea's
          * @param  {Pep}      pep   The Pep object from the event.
-         * @param  {Block}    block The Block object from the event.
+         * @param  {Block|Stack}    block The Block object from the event.
          * @return {Array}          Array of all drag areas that are capable of accepting the block.
          */
         contendingDragAreas: function areaContendingDragAreas(pep, block) {
             var my = this, max_blocks = my.getMaximumBlocks();
 
-            if ((max_blocks > 0 && my.getBlocks().length >= max_blocks) || !_(my.getBlockTypes()).contains(block.getHandle())) {
+
+            if (block instanceof Stack || block.getHandle() === 'core_stack_display') {
+                return _(my.getDragAreas()).filter(function (drag_area) {
+                    return drag_area.isContender(pep, block);
+                });
+            } else if ((max_blocks > 0 && my.getBlocks().length >= max_blocks) || !_(my.getBlockTypes()).contains(block.getHandle())) {
                 return [];
             }
             return _(my.getDragAreas()).filter(function (drag_area) {
@@ -733,6 +776,40 @@
     };
 
     Block.prototype = {
+
+        handleAddResponse: function blockHandleAddResponse(response, area, after_block, success_title, success_message) {
+            var my = this;
+
+            if (response.error) {
+                return;
+            }
+            $.get(CCM_TOOLS_PATH + '/edit_block_popup',
+                {
+                    arHandle: response.arHandle,
+                    cID: response.cID,
+                    bID: response.bID,
+                    btask: 'view_edit_mode'
+                }, function (html) {
+                    if (after_block) {
+                        after_block.getElem().after(html);
+                    } else {
+                        area.getElem().append(html);
+                    }
+                    $.fn.dialog.hideLoader();
+                    _.defer(function () {
+                        my.getEditMode().scanBlocks();
+                        my.showSuccessfulAdd();
+                    });
+                });
+            return true;
+        },
+
+        showSuccessfulAdd: function blockShowSuccessfulAdd() {
+            ConcreteAlert.notify({
+                'message': ccmi18n.addBlockMsg,
+                'title': ccmi18n.addBlock
+            });
+        },
 
         delete: function (msg, callback) {
             var my = this, bID = my.getId(),
@@ -780,7 +857,7 @@
             var editorBlocks = editor.getBlocks();
             for (i = 0; i < editorBlocks.length; i++) {
                 b = editorBlocks[i];
-                if (parseInt(b.getId(), 10) === parseInt(oldBID, 10)) {
+                if (b.getId() === oldBID) {
                     editorBlocks[i] = newBlock;
                 }
             }
@@ -790,7 +867,7 @@
             var areaBlocks = area.getBlocks(), total = areaBlocks.length;
             for (i = 0; i < total; i++) {
                 b = areaBlocks[i];
-                if (parseInt(b.getId(), 10) === parseInt(oldBID, 10)) {
+                if (b.getId() === oldBID) {
                     area.addBlockToIndex(newBlock, i);
                 }
             }
@@ -898,6 +975,26 @@
             return true;
         },
 
+        resetTransform: function blockResetTransform() {
+            var transformation = '';
+            var element = this.getDragger().css({
+                top: 0,
+                left: 0,
+                '-webkit-transform': transformation,
+                '-moz-transform': transformation,
+                '-ms-transform': transformation,
+                '-o-transform': transformation,
+                'transform': transformation
+            }).get(0);
+
+            if (element.filters) {
+                element.filters = [];
+            }
+
+            this.setDraggerPosition({ x: 0, y: 0 });
+            return this.renderPosition();
+        },
+
         /**
          * Quick method to multiplty matrices, modified from a version on RosettaCode
          * @param  {Array}  matrix1 Array containing a matrix
@@ -1002,6 +1099,7 @@
 
         pepInitiate: function blockPepInitiate(context, event, pep) {
             var my = this;
+            my.resetTransform();
             my.setDragging(true);
             my.getDragger().hide().appendTo(window.document.body).css(my.getElem().offset());
             my.setDraggerOffset({x: event.clientX - my.getElem().offset().left + window.document.body.scrollLeft, y: event.clientY - my.getElem().offset().top + window.document.body.scrollTop});
@@ -1019,17 +1117,41 @@
         },
         pepStart: function blockPepStart(context, event, pep) {
             var my = this;
-            my.getDragger().css({top: 0, left: 0});
-            my.setDraggerOffset({x: event.clientX - my.getElem().offset().left + window.document.body.scrollLeft, y: event.clientY - my.getElem().offset().top + window.document.body.scrollTop});
-            my.dragPosition(pep);
-            var start_pos = my.getDraggerOffset(), start_width = my.getDragger().width();
-            my.getDragger().animate({width: 90, height: 90}, {duration: 250, step: function (now, fx) {
-                if (fx.prop === 'width') {
-                    var change = start_width - now;
-                    my.setDraggerOffset({x: start_pos.x - change, y: start_pos.y });
+            my.resetTransform();
+
+            var elem = my.getElem(),
+                mouse_position = { x: event.pageX, y: event.pageY },
+                elem_position = {
+                    x: elem.offset().left,
+                    y: elem.offset().top
+                },
+                mouse_percentage = {
+                    x: (elem_position.x - mouse_position.x) / elem.width(),
+                    y: (elem_position.y - mouse_position.y) / elem.height()
+                };
+
+            my.setDraggerPosition({ x: elem_position.x, y: elem_position.y });
+            my.renderPosition();
+
+            my.setDraggerOffset({
+                x: -1 * (mouse_percentage.x * elem.width()),
+                y: -1 * (mouse_percentage.y * elem.height())
+            });
+
+            my.getDragger().animate({
+                width: 90,
+                height: 90
+            }, {
+                duration: 250,
+                step: function (now, fx) {
+                    my.setDraggerOffset({
+                        x: -1 * (mouse_percentage.x * $(this).width()),
+                        y: -1 * (mouse_percentage.y * $(this).height())
+                    });
                     my.dragPosition(pep);
                 }
-            }});
+            });
+
             _.defer(function () {
                 Concrete.event.fire('EditModeBlockDragStart', {block: my, pep: pep, event: event});
             });
@@ -1120,6 +1242,140 @@
         }
     };
 
+    Stack.prototype = _({
+        pepStop: function StackPepStop(context, event, pep) {
+            var my = this, elem = my.getElem();
+            if (my.getSelected()) {
+                var area = my.getSelected().getArea(),
+                    area_handle = area.getHandle(),
+                    dragAreaBlockID = 0,
+                    dragAreaBlock = my.getSelected().getBlock();
+
+                if (dragAreaBlock) {
+                    dragAreaBlockID = dragAreaBlock.getId();
+                }
+
+                ConcretePanelManager.exitPanelMode();
+
+                var settings = {
+                    cID: CCM_CID,
+                    arHandle: area_handle,
+                    stID: elem.data('cid'),
+                    atask: 'add_stack',
+                    ccm_token: CCM_SECURITY_TOKEN
+                };
+                if (dragAreaBlockID) {
+                    settings.dragAreaBlockID = dragAreaBlockID;
+                }
+                $.fn.dialog.showLoader();
+                $.getJSON(CCM_DISPATCHER_FILENAME, settings, function (response) {
+                    my.handleAddResponse(response, area, dragAreaBlock);
+                });
+            }
+
+            _.defer(function () {
+                Concrete.event.fire('EditModeBlockDragStop', {block: my, pep: pep, event: event});
+            });
+            my.getDragger().remove();
+            my.setAttr('dragger', null);
+        },
+
+        showSuccessfulAdd: function stackShowSuccessfulAdd() {
+            ConcreteAlert.notify({
+                'message': ccmi18n.addBlockStackMsg,
+                'title': ccmi18n.addBlockStack
+            });
+        }
+    }).defaults(Block.prototype);
+
+    DuplicateBlock.prototype = _({
+        pepStop: function DuplicateBlockPepStop(context, event, pep) {
+            var my = this, elem = my.getElem();
+            if (my.getSelected()) {
+                var block_type_id = elem.data('btid'),
+                    area = my.getSelected().getArea(),
+                    area_handle = area.getHandle(),
+                    dragAreaBlockID = 0,
+                    dragAreaBlock = my.getSelected().getBlock(),
+                    pcID = elem.data('pcid');
+
+                if (dragAreaBlock) {
+                    dragAreaBlockID = dragAreaBlock.getId();
+                }
+
+                ConcretePanelManager.exitPanelMode();
+
+                var settings = {
+                    cID: CCM_CID,
+                    arHandle: area_handle,
+                    btID: block_type_id,
+                    mode: 'edit',
+                    processBlock: 1,
+                    add: 1,
+                    btask: 'alias_existing_block',
+                    pcID: [ pcID ],
+                    ccm_token: CCM_SECURITY_TOKEN
+                };
+                if (dragAreaBlockID) {
+                    settings.dragAreaBlockID = dragAreaBlockID;
+                }
+                $.getJSON(CCM_DISPATCHER_FILENAME, settings, function (response) {
+                    my.handleAddResponse(response, area, dragAreaBlock);
+                });
+            }
+
+            _.defer(function () {
+                Concrete.event.fire('EditModeBlockDragStop', {block: my, pep: pep, event: event});
+            });
+            my.getDragger().remove();
+            my.setAttr('dragger', null);
+        }
+    }).defaults(Block.prototype);
+
+    StackBlock.prototype = _({
+        pepStop: function StackBlockPepStop(context, event, pep) {
+            var my = this, elem = my.getElem();
+            if (my.getSelected()) {
+                var block_type_id = elem.data('btid'),
+                    area = my.getSelected().getArea(),
+                    area_handle = area.getHandle(),
+                    dragAreaBlockID = 0,
+                    dragAreaBlock = my.getSelected().getBlock(),
+                    pcID = elem.data('pcid');
+
+                if (dragAreaBlock) {
+                    dragAreaBlockID = dragAreaBlock.getId();
+                }
+
+                ConcretePanelManager.exitPanelMode();
+
+                var settings = {
+                    cID: CCM_CID,
+                    arHandle: area_handle,
+                    btID: block_type_id,
+                    mode: 'edit',
+                    processBlock: 1,
+                    add: 1,
+                    btask: 'alias_existing_block',
+                    pcID: [ pcID ],
+                    ccm_token: CCM_SECURITY_TOKEN
+                };
+                if (dragAreaBlockID) {
+                    settings.dragAreaBlockID = dragAreaBlockID;
+                }
+                $.getJSON(CCM_DISPATCHER_FILENAME, settings, function (response) {
+                    my.handleAddResponse(response, area, dragAreaBlock);
+                });
+            }
+
+            _.defer(function () {
+                Concrete.event.fire('EditModeBlockDragStop', {block: my, pep: pep, event: event});
+            });
+            my.getDragger().remove();
+            my.setAttr('dragger', null);
+        }
+    }).defaults(Block.prototype);
+
     BlockType.prototype = _({
         pepStop: function blockTypePepStop(context, event, pep) {
             var my = this, elem = my.getElem();
@@ -1146,9 +1402,30 @@
                         mode: 'edit',
                         processBlock: 1,
                         add: 1,
-                        ccm_token: CCM_SECURITY_TOKEN
+                        ccm_token: CCM_SECURITY_TOKEN,
+                        dragAreaBlockID: dragAreaBlockID
                     }, function (response) {
-                        CCMEditMode.parseBlockResponse(response, false, 'add');
+                        $.fn.dialog.showLoader();
+                        $.getJSON(CCM_DISPATCHER_FILENAME, settings, function (response) {
+                            if (response.error) return;
+                            $.get(CCM_TOOLS_PATH + '/edit_block_popup',
+                                {
+                                    arHandle: response.arHandle,
+                                    cID: response.cID,
+                                    bID: response.bID,
+                                    btask: 'view_edit_mode'
+                                }, function (html) {
+                                    if (dragAreaBlock) {
+                                        dragAreaBlock.getElem().after(html);
+                                    } else {
+                                        area.getElem().append(html);
+                                    }
+                                    $.fn.dialog.hideLoader();
+                                    _.defer(function () {
+                                        my.getEditMode().scanBlocks();
+                                    });
+                                });
+                        });
                     });
                 } else if (is_inline) {
                     ConcreteEvent.fire('EditModeBlockAddInline', {
