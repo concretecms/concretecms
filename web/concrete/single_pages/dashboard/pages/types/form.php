@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); 
+<? defined('C5_EXECUTE') or die("Access Denied.");
 
 use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
 use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayoutSet;
@@ -40,7 +40,7 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 			<div class="ccm-page-type-composer-item-control-bar">
 				<ul class="ccm-page-type-composer-item-controls">
 					<li><a href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/page_types/composer/form/add_control?ptComposerFormLayoutSetID=<?=$set->getPageTypeComposerFormLayoutSetID()?>" dialog-title="<?=t('Add Form Control')?>" dialog-width="640" dialog-height="400" data-command="add-form-set-control"><i class="fa fa-plus-sign"></i></a></li>
-					<li><a href="#" data-command="move_set" style="cursor: move"><i class="fa fa-move"></i></a></li>
+					<li><a href="#" data-command="move_set" style="cursor: move"><i class="fa fa-arrows"></i></a></li>
 					<li><a href="#" data-edit-set="<?=$set->getPageTypeComposerFormLayoutSetID()?>"><i class="fa fa-pencil"></i></a></li>
 					<li><a href="#" data-delete-set="<?=$set->getPageTypeComposerFormLayoutSetID()?>"><i class="fa fa-trash"></i></a></li>
 				</ul>
@@ -103,7 +103,7 @@ $(function() {
 			width: 320,
 			dialogClass: 'ccm-ui',
 			title: '<?=t("Delete Set ")?>',
-			height: 200, 
+			height: 200,
 			buttons: [
 				{
 					'text': '<?=t("Cancel")?>',
@@ -129,7 +129,7 @@ $(function() {
 			width: 320,
 			dialogClass: 'ccm-ui',
 			title: '<?=t("Update Set ")?>',
-			height: 235, 
+			height: 235,
 			buttons: [
 				{
 					'text': '<?=t("Cancel")?>',
@@ -152,7 +152,7 @@ $(function() {
 		handle: 'a[data-command=move_set]',
 		items: '.ccm-page-type-composer-form-layout-control-set',
 		cursor: 'move',
-		axis: 'y', 
+		axis: 'y',
 		stop: function() {
 			var formData = [{
 				'name': 'token',
@@ -181,7 +181,7 @@ $(function() {
 		handle: 'a[data-command=move-set-control]',
 		items: '.ccm-page-type-composer-form-layout-control-set-control',
 		cursor: 'move',
-		axis: 'y', 
+		axis: 'y',
 		stop: function() {
 			var formData = [{
 				'name': 'token',
@@ -212,7 +212,7 @@ $(function() {
 			width: 320,
 			dialogClass: 'ccm-ui',
 			title: '<?=t("Delete Control ")?>',
-			height: 200, 
+			height: 200,
 			buttons: [
 				{
 					'text': '<?=t("Cancel")?>',
@@ -241,7 +241,7 @@ $(function() {
 							success: function() {
 								jQuery.fn.dialog.hideLoader();
 								jQuery.fn.dialog.closeAll();
-								$('div[data-page-type-composer-form-layout-control-set-control-id=' + ptComposerFormLayoutSetControlID + ']').remove();								
+								$('div[data-page-type-composer-form-layout-control-set-control-id=' + ptComposerFormLayoutSetControlID + ']').remove();
 							}
 						});
 
