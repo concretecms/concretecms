@@ -7,9 +7,9 @@
 			<?
 			$u = new User();
 			if ($u->isRegistered()) { ?>
-				<? 
+				<?
 				if (Config::get("ENABLE_USER_PROFILES")) {
-					$userName = '<a href="' . $view->url('/account/profile/public') . '">' . $u->getUserName() . '</a>';
+					$userName = '<a href="' . $view->url('/account/profile/public_profile') . '">' . $u->getUserName() . '</a>';
 				} else {
 					$userName = $u->getUserName();
 				}
@@ -18,7 +18,7 @@
 			<? } else { ?>
 				<span class="sign-in"><a href="<?=$view->url('/login')?>"><?=t('Sign In to Edit this Site')?></a></span>
 			<? } ?>
-            
+
 	</div>
 
 </div>

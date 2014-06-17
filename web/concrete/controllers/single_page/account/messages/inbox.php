@@ -8,24 +8,24 @@ use Loader;
 use User;
 
 class Inbox extends AccountPageController {
-	
+
 	public function view() {
 		$this->view_mailbox('inbox');
 		$this->task = 'view_mailbox';
 	}
-	
+
 	protected function validateUser($uID) {
-		if ($uID > 0) { 
+		if ($uID > 0) {
 			$ui = UserInfo::getByID($uID);
 			if ((is_object($ui)) && ($ui->getAttribute('profile_private_messages_enabled') == 1)) {
 				$this->set('recipient', $ui);
 				return true;
 			}
 		}
-		
+
 		$this->redirect('/profile');
 	}
-	
+
 	protected function getMessageMailboxID($box) {
 		$msgMailboxID = 0;
 		switch($box) {
@@ -39,15 +39,15 @@ class Inbox extends AccountPageController {
 				$msgMailboxID = $box;
 				break;
 		}
-		return $msgMailboxID;	
+		return $msgMailboxID;
 	}
-	
+
 	public function view_mailbox($box) {
 		$msgMailboxID = $this->getMessageMailboxID($box);
-		
+
 		$u = new User();
 		$ui = UserInfo::getByID($u->getUserID());
-		
+
 		$mailbox = UserPrivateMessageMailbox::get($ui, $msgMailboxID);
 		if (is_object($mailbox)) {
 			$messageList = $mailbox->getMessageList();
@@ -55,13 +55,13 @@ class Inbox extends AccountPageController {
 			$this->set('messages', $messages);
 			$this->set('messageList', $messageList);
 		}
-		
+
 		// also, we have to mark all messages in this mailbox as no longer "new"
-		
+
 		$mailbox->removeNewStatus();
 		$this->set('mailbox', $box);
 	}
-	
+
 	public function view_message($box, $msgID) {
 		$msgMailboxID = $this->getMessageMailboxID($box);
 		$u = new User();
@@ -75,7 +75,7 @@ class Inbox extends AccountPageController {
 			$this->set('dateAdded', $msg->getMessageDateAdded('user', DATE_APP_GENERIC_MDYT_FULL));
 			$this->set('author', $msg->getMessageAuthorObject());
 			$this->set('msg', $msg);
-			$this->set('box', $box);			
+			$this->set('box', $box);
 			$this->set('backURL', View::url('/account/messages/inbox', 'view_mailbox', $box));
 			$valt = Loader::helper('validation/token');
 			$token = $valt->generate('delete_message_' . $msgID);
@@ -84,18 +84,18 @@ class Inbox extends AccountPageController {
 			$this->redirect('/account/messages/inbox');
 		}
 	}
-	
+
 	public function delete_message($box, $msgID, $token) {
 		$valt = Loader::helper('validation/token');
 		if (!$valt->validate('delete_message_' . $msgID, $token)) {
 			$this->error->add($valt->getErrorMessage());
 		}
-		
+
 		$msgMailboxID = $this->getMessageMailboxID($box);
 		$u = new User();
 		$ui = UserInfo::getByID($u->getUserID());
 		$mailbox = UserPrivateMessageMailbox::get($ui, $msgMailboxID);
-		
+
 		$msg = UserPrivateMessage::getByID($msgID, $mailbox);
 		if ($ui->canReadPrivateMessage($msg) && (!$this->error->has())) {
 			$msg->delete();
@@ -103,10 +103,10 @@ class Inbox extends AccountPageController {
 		}
 		print $this->view();
 	}
-	
+
 	public function write($uID) {
 		$this->validateUser($uID);
-		$this->set('backURL', View::url('/account/profile/public', 'view', $uID));
+		$this->set('backURL', View::url('/account/profile/public_profile', 'view', $uID));
 	}
 
 	public function reply($boxID, $msgID) {
@@ -117,26 +117,26 @@ class Inbox extends AccountPageController {
 		$this->set('msgID', $msgID);
 		$this->set('box', $boxID);
 		$this->set('msg', $msg);
-		
+
 		$this->set('msgSubject', $msg->getFormattedMessageSubject());
-		
+
 		$body = "\n\n\n" . $msg->getMessageDelimiter() . "\n";
 		$body .= t("From: %s\nDate Sent: %s\nSubject: %s", $msg->getMessageAuthorName(), $msg->getMessageDateAdded('user', DATE_APP_GENERIC_MDYT_FULL), $msg->getFormattedMessageSubject());
 		$body .= "\n\n" . $msg->getMessageBody();
 		$this->set('msgBody', $body);
 	}
-	
+
 	public function send() {
 		$uID = $this->post('uID');
-	
-		if ($this->post('msgID') > 0) { 
+
+		if ($this->post('msgID') > 0) {
 			$msgID = $this->post('msgID');
 			$box = $this->post('box');
 			$this->reply($box, $msgID);
 		} else {
 			$this->write($uID);
 		}
-		
+
 		$vf = Loader::helper('validation/form');
 		$vf->setData($this->post());
 		$vf->addRequired('msgBody', t("You haven't written a message!"));
@@ -148,7 +148,7 @@ class Inbox extends AccountPageController {
 			if ($r instanceof \Concrete\Core\Helper\Validation\Error) {
 				$this->error = $r;
 			} else {
-				if ($this->post('msgID') > 0) { 
+				if ($this->post('msgID') > 0) {
 					$this->redirect('/account/messages/inbox', 'reply_complete', $box, $msgID);
 				} else {
 					$this->redirect('/account/messages/inbox', 'send_complete', $uID);
@@ -156,17 +156,17 @@ class Inbox extends AccountPageController {
 			}
 		} else {
 			$this->error = $vf->getError();
-		}		
+		}
 	}
-	
-	public function send_complete($uID) { 
+
+	public function send_complete($uID) {
 		$this->validateUser($uID);
 	}
 
-	public function reply_complete($box, $msgID) { 
+	public function reply_complete($box, $msgID) {
 		$this->reply($box, $msgID);
 	}
-	
+
 	public function on_before_render() {
 		$this->set('error', $this->error);
 	}

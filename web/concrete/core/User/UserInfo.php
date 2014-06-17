@@ -40,11 +40,11 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 			$nm = preg_replace('/(?!^)[[:upper:]]/','_\0', $nm);
 			$nm = strtolower($nm);
 			$nm = str_replace('get_user_', '', $nm);
-			
+
 			return $this->getAttribute($nm);
-		}			
+		}
 	}
-	
+
 	/**
 	 * returns the UserInfo object for a give user's uID
 	 * @param int $uID
@@ -53,7 +53,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 	public static function getByID($uID) {
 		return UserInfo::get('where uID = ?', $uID);
 	}
-	
+
 	/**
 	 * returns the UserInfo object for a give user's username
 	 * @param string $uName
@@ -62,7 +62,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 	public static function getByUserName($uName) {
 		return UserInfo::get('where uName = ?', $uName);
 	}
-	
+
 	/**
 	 * returns the UserInfo object for a give user's email address
 	 * @param string $uEmail
@@ -72,7 +72,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		return UserInfo::get('where uEmail = ?', $uEmail);
 	}
 
-	/** 
+	/**
 	 * Returns a user object by open ID. Does not log a user in.
 	 * @param string $uOpenID
 	 * @return UserInfo
@@ -80,8 +80,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 	public function getByOpenID($uOpenID) {
 		return UserInfo::get('inner join UserOpenIDs on Users.uID = UserOpenIDs.uID where uOpenID = ?', $uOpenID);
 	}
-	
-	
+
+
 	/**
 	 * @param string $uHash
 	 * @param boolean $unredeemedHashesOnly
@@ -109,7 +109,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		}
 		return $groups;
 	}
-	
+
 	private function get($where, $var) {
 		$db = Loader::db();
 		$q = "select Users.uID, Users.uLastLogin, Users.uLastIP, Users.uIsValidated, Users.uPreviousLogin, Users.uIsFullRecord, Users.uNumLogins, Users.uDateAdded, Users.uIsActive, Users.uDefaultLanguage, Users.uLastOnline, Users.uHasAvatar, Users.uName, Users.uEmail, Users.uPassword, Users.uTimezone from Users " . $where;
@@ -120,15 +120,15 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 			$ui->setPropertiesFromArray($row);
 			$r->free();
 		}
-		
+
 		if (is_object($ui)) {
 			return $ui;
 		}
 	}
-	
+
 	const ADD_OPTIONS_NOHASH		= 0;
 	const ADD_OPTIONS_SKIP_CALLBACK	= 1;
-	
+
 	/**
 	 * @param array $data
 	 * @param array | false $options
@@ -140,7 +140,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		$dh = Loader::helper('date');
 		$uDateAdded = $dh->getSystemDateTime();
 		$hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
-		
+
 		if ($data['uIsValidated'] == 1) {
 			$uIsValidated = 1;
 		} else if (isset($data['uIsValidated']) && $data['uIsValidated'] == 0) {
@@ -148,18 +148,18 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		} else {
 			$uIsValidated = -1;
 		}
-		
+
 		if (isset($data['uIsFullRecord']) && $data['uIsFullRecord'] == 0) {
 			$uIsFullRecord = 0;
 		} else {
 			$uIsFullRecord = 1;
 		}
-		
+
 		$password_to_insert = $data['uPassword'];
 		if (!in_array(self::ADD_OPTIONS_NOHASH, $options)) {
 			$hash = $hasher->HashPassword($password_to_insert);
-		}	
-		
+		}
+
 		if (isset($data['uDefaultLanguage']) && $data['uDefaultLanguage'] != '') {
 			$uDefaultLanguage = $data['uDefaultLanguage'];
 		}
@@ -169,23 +169,23 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		if ($res) {
 			$newUID = $db->Insert_ID();
 			$ui = UserInfo::getByID($newUID);
-			
+
 			if (is_object($ui) && !in_array(self::ADD_OPTIONS_SKIP_CALLBACK,$options)) {
 				// run any internal event we have for user add
 				$ue = new \Concrete\Core\User\Event\UserInfoWithPassword($ui);
 				$ue->setUserPassword($data['uPassword']);
 				Events::dispatch('on_user_add', $ue);
 			}
-			
+
 			return $ui;
 		}
 	}
-	
+
 	public function addSuperUser($uPasswordEncrypted, $uEmail) {
 		$db = Loader::db();
 		$dh = Loader::helper('date');
 		$uDateAdded = $dh->getSystemDateTime();
-		
+
 		$v = array(USER_SUPER_ID, USER_SUPER, $uEmail, $uPasswordEncrypted, 1, $uDateAdded);
 		$r = $db->prepare("insert into Users (uID, uName, uEmail, uPassword, uIsActive, uDateAdded) values (?, ?, ?, ?, ?, ?)");
 		$res = $db->execute($r, $v);
@@ -194,7 +194,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 			return UserInfo::getByID($newUID);
 		}
 	}
-	
+
 	/**
 	 * Deletes a user
 	 * @return void
@@ -214,8 +214,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		if (!$ue->proceed()) {
 			return false;
 		}
-		
-		$db = Loader::db();  
+
+		$db = Loader::db();
 
 		$r = $db->Execute('select avID, akID from UserAttributeValues where uID = ?', array($this->uID));
 		while ($row = $r->FetchRow()) {
@@ -227,14 +227,14 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		}
 
 		$r = $db->query("DELETE FROM UserSearchIndexAttributes WHERE uID = ?",array(intval($this->uID)) );
-		
+
 		$r = $db->query("DELETE FROM UserGroups WHERE uID = ?",array(intval($this->uID)) );
 		$r = $db->query("DELETE FROM UserOpenIDs WHERE uID = ?",array(intval($this->uID)));
 		$r = $db->query("DELETE FROM Users WHERE uID = ?",array(intval($this->uID)));
 		$r = $db->query("DELETE FROM UserValidationHashes WHERE uID = ?",array(intval($this->uID)));
-		
+
 		$r = $db->query("DELETE FROM Piles WHERE uID = ?",array(intval($this->uID)));
-		
+
 		$r = $db->query("UPDATE Blocks set uID=? WHERE uID = ?",array( intval(USER_SUPER_ID), intval($this->uID)));
 		$r = $db->query("UPDATE Pages set uID=? WHERE uID = ?",array( intval(USER_SUPER_ID), intval($this->uID)));
 	}
@@ -247,7 +247,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 	public function setGroupMemberType($type) {
 		$this->gMemberType = $type;
 	}
-	
+
 	public function getGroupMemberType() {
 		return $this->gMemberType;
 	}
@@ -277,7 +277,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		$db = Loader::db();
 		$db->query("update Users set uHasAvatar = 1 where uID = ?", array($this->getUserID()));
     }
-	
+
 	public function sendPrivateMessage($recipient, $subject, $text, $inReplyTo = false) {
 		if(UserPrivateMessageLimit::isOverLimit($this->getUserID())) {
 			return UserPrivateMessageLimit::getErrorObject();
@@ -286,20 +286,20 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		$messageText = t('Subject: %s', $subject);
 		$messageText .= "\n";
 		$messageText .= t('Message: %s', $text);
-		
+
 		$additionalArgs = array('user' => $this);
 		if (!$antispam->check($messageText, 'private_message', $additionalArgs)) {
 			return false;
 		}
-		
+
 		$subject = ($subject == '') ? t('(No Subject)') : $subject;
 		$db = Loader::db();
 		$dt = Loader::helper('date');
 		$v = array($this->getUserID(), $dt->getLocalDateTime(), $subject, $text, $recipient->getUserID());
 		$db->Execute('insert into UserPrivateMessages (uAuthorID, msgDateCreated, msgSubject, msgBody, uToID) values (?, ?, ?, ?, ?)', $v);
-		
+
 		$msgID = $db->Insert_ID();
-		
+
 		if ($msgID > 0) {
 			// we add the private message to the sent box of the sender, and the inbox of the recipient
 			$v = array($db->Insert_ID(), $this->getUserID(), $this->getUserID(), UserPrivateMessageMailbox::MBTYPE_SENT, 0, 1);
@@ -307,12 +307,12 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 			$v = array($db->Insert_ID(), $recipient->getUserID(), $this->getUserID(), UserPrivateMessageMailbox::MBTYPE_INBOX, 1, 1);
 			$db->Execute('insert into UserPrivateMessagesTo (msgID, uID, uAuthorID, msgMailboxID, msgIsNew, msgIsUnread) values (?, ?, ?, ?, ?, ?)', $v);
 		}
-		
+
 		// If the message is in reply to another message, we make a note of that here
 		if (is_object($inReplyTo)) {
 			$db->Execute('update UserPrivateMessagesTo set msgIsReplied = 1 where uID = ? and msgID = ?', array($this->getUserID(), $inReplyTo->getMessageID()));
 		}
-		
+
 		// send the email notification
 		if ($recipient->getAttribute('profile_private_messages_notification_enabled')) {
 			$mh = Loader::helper('mail');
@@ -320,10 +320,10 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 			$mh->addParameter('msgBody', $text);
 			$mh->addParameter('msgAuthor', $this->getUserName());
 			$mh->addParameter('msgDateCreated', $msgDateCreated);
-			$mh->addParameter('profileURL', BASE_URL . View::url('/account/profile/public', 'view', $this->getUserID()));
+			$mh->addParameter('profileURL', BASE_URL . View::url('/account/profile/public_profile', 'view', $this->getUserID()));
 			$mh->addParameter('profilePreferencesURL', BASE_URL . View::url('/account/profile/edit'));
 			$mh->to($recipient->getUserEmail());
-			
+
 			$mi = MailImporter::getByHandle("private_message");
 			if (is_object($mi) && $mi->isMailImporterEnabled()) {
 				$mh->load('private_message_response_enabled');
@@ -339,7 +339,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 			$mh->sendMail();
 		}
 	}
-	
+
 	/**
 	 * gets the user object of the current UserInfo object ($this)
 	 * @return User
@@ -350,8 +350,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		return $nu;
 	}
 
-	/** 
-	 * Sets the attribute of a user info object to the specified value, and saves it in the database 
+	/**
+	 * Sets the attribute of a user info object to the specified value, and saves it in the database
 	*/
 	public function setAttribute($ak, $value) {
 		if (!is_object($ak)) {
@@ -372,7 +372,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		}
 		$this->reindex();
 	}
-	
+
 	public function reindex() {
 		$attribs = UserAttributeKey::getAttributes($this->getUserID(), 'getSearchIndexValue');
 		$db = Loader::db();
@@ -382,8 +382,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		$rs = $db->Execute('select * from UserSearchIndexAttributes where uID = -1');
 		AttributeKey::reindex('UserSearchIndexAttributes', $searchableAttributes, $attribs, $rs);
 	}
-	
-	/** 
+
+	/**
 	 * Gets the value of the attribute for the user
 	 */
 	public function getAttribute($ak, $displayMode = false) {
@@ -396,22 +396,22 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 				if(func_num_args() > 2) {
 					$args = func_get_args();
 					array_shift($args);
-					return call_user_func_array(array($av, 'getValue'), $args);						
+					return call_user_func_array(array($av, 'getValue'), $args);
 				} else {
 					return $av->getValue($displayMode);
 				}
 			}
 		}
 	}
-	
+
 	public function getAttributeField($ak) {
 		if (!is_object($ak)) {
 			$ak = UserAttributeKey::getByHandle($ak);
 		}
 		$value = $this->getAttributeValueObject($ak);
 		$ak->render('form', $value);
-	}		
-	
+	}
+
 	public function getAttributeValueObject($ak, $createIfNotFound = false) {
 		$db = Loader::db();
 		$av = false;
@@ -424,25 +424,25 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 				$av->setAttributeKey($ak);
 			}
 		}
-		
+
 		if ($createIfNotFound) {
 			$cnt = 0;
-		
+
 			// Is this avID in use ?
 			if (is_object($av)) {
 				$cnt = $db->GetOne("select count(avID) from UserAttributeValues where avID = ?", $av->getAttributeValueID());
 			}
-			
+
 			if ((!is_object($av)) || ($cnt > 1)) {
 				$newAV = $ak->addAttributeValue();
 				$av = UserAttributeValue::getByID($newAV->getAttributeValueID());
 				$av->setUser($this);
 			}
 		}
-		
+
 		return $av;
 	}
-	
+
 	public function update($data) {
 		$db = Loader::db();
 		if ($this->uID) {
@@ -459,27 +459,27 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 			if (isset($data['uHasAvatar'])) {
 				$uHasAvatar = $data['uHasAvatar'];
 			}
-			if( isset($data['uTimezone'])) { 
+			if( isset($data['uTimezone'])) {
 				$uTimezone = $data['uTimezone'];
 			}
-			
+
 			$ux = $this->getUserObject();
-			$uDefaultLanguage = $ux->getUserDefaultLanguage();				
+			$uDefaultLanguage = $ux->getUserDefaultLanguage();
 			if (isset($data['uDefaultLanguage']) && $data['uDefaultLanguage'] != '') {
 				$uDefaultLanguage = $data['uDefaultLanguage'];
 				if (Session::get('uID') == $this->uID) {
 					Session::set('uDefaultLanguage', $uDefaultLanguage); // make sure to keep the new uDefaultLanguage in there
-				} 					
+				}
 			}
-			
+
 			$testChange = false;
-			
+
 			if ($data['uPassword'] != null) {
 				if ($data['uPassword'] == $data['uPasswordConfirm']) {
 					$v = array($uName, $uEmail, $this->getUserObject()->getUserPasswordHasher()->HashPassword($data['uPassword']), $uHasAvatar, $uTimezone, $uDefaultLanguage, $this->uID);
 					$r = $db->prepare("update Users set uName = ?, uEmail = ?, uPassword = ?, uHasAvatar = ?, uTimezone = ?, uDefaultLanguage = ? where uID = ?");
 					$res = $db->execute($r, $v);
-					
+
 					$testChange = true;
 
 				} else {
@@ -500,15 +500,15 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 			$ui = UserInfo::getByID($this->uID);
 			$ue = new \Concrete\Core\User\Event\UserInfo($ui);
 			Events::dispatch('on_user_update', $ue);
-			
+
 			if ($testChange) {
 				$ue = new \Concrete\Core\User\Event\UserInfoWithPassword($ui);
 				Events::dispatch('on_user_change_password', $ue);
-			}				
+			}
 			return $res;
 		}
 	}
-			
+
 	public function updateGroups($groupArray) {
 		$db = Loader::db();
 		$q = "select gID from UserGroups where uID = '{$this->uID}'";
@@ -565,7 +565,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
 		}
 	}
-	
+
 	/**
 	 * @param array $data
 	 * @return UserInfo
@@ -574,14 +574,14 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		// slightly different than add. this is public facing
 		if (defined("USER_VALIDATE_EMAIL")) {
 			if (USER_VALIDATE_EMAIL > 0) {
-				$data['uIsValidated'] = 0;	
+				$data['uIsValidated'] = 0;
 			}
 		}
 		$ui = UserInfo::add($data);
 		return $ui;
 	}
 
-	
+
 	public function setupValidation() {
 		$db = Loader::db();
 		$hash = $db->GetOne("select uHash from UserValidationHashes where uID = ? order by uDateGenerated desc", array($this->uID));
@@ -594,7 +594,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 			return $hash;
 		}
 	}
-	
+
 	function markValidated() {
 		$db = Loader::db();
 		$v = array($this->uID);
@@ -606,8 +606,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
 		return true;
 	}
-	
-	function changePassword($newPassword) { 
+
+	function changePassword($newPassword) {
 		$db = Loader::db();
 		if ($this->uID) {
 			$v = array($this->getUserObject()->getUserPasswordHasher()->HashPassword($newPassword), $this->uID);
@@ -638,8 +638,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		$ue = new \Concrete\Core\User\Event\UserInfo($this);
 		Events::dispatch('on_user_deactivate', $ue);
 	}
-	
-	
+
+
 	function resetUserPassword() {
 		// resets user's password, and returns the value of the reset password
 		$db = Loader::db();
@@ -653,11 +653,11 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 			return $newPassword;
 		}
 	}
-	
+
 	function hasAvatar() {
 		return $this->uHasAvatar;
 	}
-	
+
 	function getLastLogin() {
 		return $this->uLastLogin;
 	}
@@ -665,27 +665,27 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 	function getLastIPAddress() {
 		return long2ip($this->uLastIP);
 	}
-	
+
 	function getPreviousLogin() {
 		return $this->uPreviousLogin;
 	}
-	
+
 	function isActive() {
 		return $this->uIsActive;
 	}
-	
+
 	public function isValidated() {
 		return $this->uIsValidated;
 	}
-	
+
 	public function isFullRecord() {
 		return $this->uIsFullRecord;
 	}
-	
+
 	function getNumLogins() {
 		return $this->uNumLogins;
 	}
-	
+
 	function getUserID() {
 		return $this->uID;
 	}
@@ -706,23 +706,23 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		return $this->uEmail;
 	}
 
-	/* 
+	/*
 	 * returns the user's timezone
 	 * @return string timezone
 	*/
 	function getUserTimezone() {
 		return $this->uTimezone;
 	}
-	
+
 	public function getUserDefaultLanguage() {
 		return $this->uDefaultLanguage;
 	}
 
 	/**
-	* Gets the date a user was added to the system, 
+	* Gets the date a user was added to the system,
 	* if user is specified, returns in the current user's timezone
 	* @param string $type (system || user)
-	* @return string date formated like: 2009-01-01 00:00:00 
+	* @return string date formated like: 2009-01-01 00:00:00
 	*/
 	function getUserDateAdded($type = 'system', $datemask = 'Y-m-d H:i:s') {
 		$dh = Loader::helper('date');
@@ -744,10 +744,10 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 	}
 
 	/**
-	* Gets the date a user was last active on the site 
+	* Gets the date a user was last active on the site
 	* if user is specified, returns in the current user's timezone
 	* @param string $type (system || user)
-	* @return string date formated like: 2009-01-01 00:00:00 
+	* @return string date formated like: 2009-01-01 00:00:00
 	*/
 	function getLastOnline($type = 'system') {
 		if(ENABLE_USER_TIMEZONES && $type == 'user') {
@@ -757,8 +757,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 			return $this->uLastOnline;
 		}
 	}
-	
-	
+
+
 	function getUserEndDate($type = 'system') {
 		if(ENABLE_USER_TIMEZONES && $type == 'user') {
 			$dh = Loader::helper('date');

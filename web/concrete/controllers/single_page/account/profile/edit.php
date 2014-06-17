@@ -10,7 +10,7 @@ use User;
 use UserAttributeKey;
 
 class Edit extends AccountPageController {
-	
+
 	public function view() {
 		$u = new User();
 		$profile = UserInfo::getByID($u->getUserID());
@@ -20,7 +20,7 @@ class Edit extends AccountPageController {
 			throw new Exception(t('You must be logged in to access this page.'));
 		}
 	}
-	
+
 	public function callback($type,$method='callback') {
 		$at = AuthenticationType::getByHandle($type);
 		$this->view();
@@ -45,8 +45,8 @@ class Edit extends AccountPageController {
 			$this->error->add($e->getMessage());
 		}
 	}
-		
-	public function save() { 
+
+	public function save() {
 		$this->view();
 		$ui = $this->get('profile');
 
@@ -56,10 +56,10 @@ class Edit extends AccountPageController {
 		$cvh = Loader::helper('concrete/validation');
 		$valt = Loader::helper('validation/token');
 		$e = Loader::helper('validation/error');
-	
+
 		$data = $this->post();
-		
-		/* 
+
+		/*
 		 * Validation
 		*/
 		//token
@@ -80,15 +80,15 @@ class Edit extends AccountPageController {
 		if(strlen($data['uPasswordNew'])) {
 			$passwordNew = $data['uPasswordNew'];
 			$passwordNewConfirm = $data['uPasswordNewConfirm'];
-			
+
 			if ((strlen($passwordNew) < USER_PASSWORD_MINIMUM) || (strlen($passwordNew) > USER_PASSWORD_MAXIMUM)) {
 				$e->add(t('A password must be between %s and %s characters', USER_PASSWORD_MINIMUM, USER_PASSWORD_MAXIMUM));
-			}		
-			
+			}
+
 			if (strlen($passwordNew) >= USER_PASSWORD_MINIMUM && !$cvh->password($passwordNew)) {
 				$e->add(t('A password may not contain ", \', >, <, or any spaces.'));
 			}
-			
+
 			if ($passwordNew) {
 				if ($passwordNew != $passwordNewConfirm) {
 					$e->add(t('The two passwords provided do not match.'));
@@ -96,8 +96,8 @@ class Edit extends AccountPageController {
 			}
 			$data['uPasswordConfirm'] = $passwordNew;
 			$data['uPassword'] = $passwordNew;
-		}		
-		
+		}
+
 		$aks = UserAttributeKey::getEditableInProfileList();
 
 		foreach($aks as $uak) {
@@ -111,18 +111,18 @@ class Edit extends AccountPageController {
 			}
 		}
 
-		if (!$e->has()) {		
-			$data['uEmail'] = $email;		
+		if (!$e->has()) {
+			$data['uEmail'] = $email;
 			if(ENABLE_USER_TIMEZONES) {
 				$data['uTimezone'] = $this->post('uTimezone');
 			}
-			
+
 			$ui->update($data);
-			
+
 			foreach($aks as $uak) {
-				$uak->saveAttributeForm($ui);				
+				$uak->saveAttributeForm($ui);
 			}
-			$this->redirect("/account/profile/public", "save_complete");
+			$this->redirect("/account/profile/public_profile", "save_complete");
 		} else {
 			$this->set('error', $e);
 		}
