@@ -5577,6 +5577,130 @@ div#ccm-panel-dashboard div.ccm-panel-dashboard-footer p {
   line-height: 1.5;
   margin-bottom: 5px;
 }
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-block-stack-item > div.stack-name,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-block-stack-item > div.stack-name,
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-clipboard-block-item > div.stack-name,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-clipboard-block-item > div.stack-name,
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-block-stack-item div.block-name,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-block-stack-item div.block-name,
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-clipboard-block-item div.block-name,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-clipboard-block-item div.block-name {
+  border-top: solid 1px #07080a;
+  background: #0f1825;
+  font-weight: bold;
+  padding-left: 40px;
+  line-height: 40px;
+  color: #737c8e;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-block-stack-item > div.blocks,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-block-stack-item > div.blocks,
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-clipboard-block-item > div.blocks,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-clipboard-block-item > div.blocks {
+  height: 60px;
+  overflow: hidden;
+  color: #9ea6b6;
+  background: #343639;
+  position: relative;
+  -webkit-transition: height 250ms ease-in-out;
+  transition: height 250ms ease-in-out;
+}
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-block-stack-item > div.blocks > div.block-count,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-block-stack-item > div.blocks > div.block-count,
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-clipboard-block-item > div.blocks > div.block-count,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-clipboard-block-item > div.blocks > div.block-count {
+  background: #202834;
+  color: #60728d;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+  line-height: 60px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding-left: 40px;
+  z-index: 2;
+  cursor: pointer;
+}
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-block-stack-item > div.blocks > div.block,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-block-stack-item > div.blocks > div.block,
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-clipboard-block-item > div.blocks > div.block,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-clipboard-block-item > div.blocks > div.block {
+  display: block;
+  position: relative;
+  min-height: 120px;
+  max-height: 290px;
+  float: left;
+  width: 100%;
+  height: auto;
+  border-top: solid 1px bezier;
+}
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-block-stack-item > div.blocks > div.block > div.block-name,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-block-stack-item > div.blocks > div.block > div.block-name,
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-clipboard-block-item > div.blocks > div.block > div.block-name,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-clipboard-block-item > div.blocks > div.block > div.block-name {
+  background: #1c1e21;
+  color: #737c8e;
+}
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-block-stack-item > div.blocks > div.block > div.block-handle,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-block-stack-item > div.blocks > div.block > div.block-handle,
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-clipboard-block-item > div.blocks > div.block > div.block-handle,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-clipboard-block-item > div.blocks > div.block > div.block-handle {
+  position: absolute;
+  top: 40px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+}
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-block-stack-item > div.blocks > div.block > div.block-content,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-block-stack-item > div.blocks > div.block > div.block-content,
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-clipboard-block-item > div.blocks > div.block > div.block-content,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-clipboard-block-item > div.blocks > div.block > div.block-content {
+  background: #343639;
+}
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-block-stack-item.active div.stack-name,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-block-stack-item.active div.stack-name,
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-clipboard-block-item.active div.stack-name,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-clipboard-block-item.active div.stack-name,
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-block-stack-item.active div.block-name,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-block-stack-item.active div.block-name,
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-clipboard-block-item.active div.block-name,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-clipboard-block-item.active div.block-name {
+  color: #2aa9dd;
+}
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-block-stack-item.active div.blocks > div.block-count,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-block-stack-item.active div.blocks > div.block-count,
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-clipboard-block-item.active div.blocks > div.block-count,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-clipboard-block-item.active div.blocks > div.block-count {
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-block-stack-item.active div.blocks > div.block-count.hidden,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-block-stack-item.active div.blocks > div.block-count.hidden,
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-clipboard-block-item.active div.blocks > div.block-count.hidden,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-clipboard-block-item.active div.blocks > div.block-count.hidden {
+  display: none;
+}
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-block-stack-item:hover > div.stack-name,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-block-stack-item:hover > div.stack-name,
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-clipboard-block-item:hover > div.stack-name,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-clipboard-block-item:hover > div.stack-name {
+  color: #2aa9dd;
+}
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-clipboard-block-item > div.blocks,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-clipboard-block-item > div.blocks {
+  max-height: 150px;
+  height: auto;
+}
+div#ccm-panel-add-block-stack-list > div.ccm-panel-add-clipboard-block-item > div.blocks div.block-handle,
+div#ccm-panel-add-clipboard-block-list > div.ccm-panel-add-clipboard-block-item > div.blocks div.block-handle {
+  top: 0;
+  max-height: 150px;
+}
 /**
  * New Page
  */
@@ -9284,8 +9408,8 @@ ul.ccm-edit-mode-inline-commands:hover {
   text-decoration: none !important;
 }
 /*
-  * Korvin's new stuff
-  */
+ * Korvin's new stuff
+ */
 div.ccm-area-drag-area {
   -webkit-transition: outline-width 0.5s cubic-bezier(0.19, 1, 0.22, 1), outline-color 0.5s cubic-bezier(0.19, 1, 0.22, 1);
   outline-color: transparent;
@@ -9312,6 +9436,10 @@ a.ccm-panel-add-block-draggable-block-type-dragger {
   left: 0px;
   width: 90px;
   height: 90px;
+  z-index: 1000000;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
 }
 /**
  * Disabled edit mode blocks
