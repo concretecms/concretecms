@@ -23,9 +23,8 @@ div#ccm-panel-overlay {
 }
 
 div#ccm-panel-overlay.ccm-panel-translucent {
-    background-color: rgba(255,255,255,0.7);
+    background-color: rgba(255, 255, 255, 0.7);
 }
-
 
 html.ccm-panel-ready.ccm-panel-left {
     div.ccm-page {
@@ -100,7 +99,7 @@ div.ccm-panel-right div.ccm-panel-shadow-layer {
     position: absolute;
     top: 0px;
     z-index: @index-level-panel;
-    .box-shadow(inset 10px 10px 10px rgba(128,128,128,0.3));
+    .box-shadow(inset 10px 10px 10px rgba(128, 128, 128, 0.3));
 }
 
 div.ccm-panel-left div.ccm-panel-shadow-layer {
@@ -110,7 +109,7 @@ div.ccm-panel-left div.ccm-panel-shadow-layer {
     top: 0px;
     right: 0px;
     z-index: @index-level-panel;
-    .box-shadow(inset -10px 10px 10px rgba(128,128,128,0.3));
+    .box-shadow(inset -10px 10px 10px rgba(128, 128, 128, 0.3));
 }
 
 /**
@@ -128,9 +127,11 @@ div.ccm-panel-content {
 
 }
 
-div.ccm-panel div.ccm-panel-content {}
+div.ccm-panel div.ccm-panel-content {
+}
 
-div.ccm-panel.ccm-panel-loaded div.ccm-panel-content {}
+div.ccm-panel.ccm-panel-loaded div.ccm-panel-content {
+}
 
 div.ccm-panel-content {
     header {
@@ -145,7 +146,9 @@ div.ccm-panel-content {
             font-weight: lighter;
             margin-top: 4px;
 
-            a {text-decoration: none;}
+            a {
+                text-decoration: none;
+            }
         }
     }
 
@@ -157,7 +160,6 @@ div.ccm-panel-content {
         > li {
             margin-top: 10px;
         }
-
 
         li {
 
@@ -201,7 +203,6 @@ div.ccm-panel-content-inner {
     padding: 20px 40px 40px 40px;
 }
 
-
 /**
  * Dashboard Panel
  */
@@ -222,7 +223,7 @@ div#ccm-panel-dashboard {
             a {
                 color: #4674a1;
 
-                &:hover{
+                &:hover {
                     color: #0c253e;
                 }
 
@@ -232,7 +233,9 @@ div#ccm-panel-dashboard {
             }
         }
 
-        > li > a:hover {    background-color: #c9d4de;}
+        > li > a:hover {
+            background-color: #c9d4de;
+        }
     }
 
     div.ccm-panel-header-accordion {
@@ -341,9 +344,6 @@ div#ccm-panel-page, div#ccm-panel-compose-page {
 
 }
 
-
-
-
 /**
  * Panel Drill Down
  */
@@ -370,8 +370,6 @@ a.ccm-panel-back:hover {
     text-decoration: none;
     margin-right: 4px;
 }
-
-
 
 /**
  * Panel main detail areas
@@ -415,9 +413,7 @@ div.ccm-panel-detail {
         border-bottom: 0px;
     }
 
-
 }
-
 
 html.ccm-panel-left div.ccm-panel-detail {
     padding-left: 321px;
@@ -444,7 +440,6 @@ div.ccm-panel-detail-content {
         }
     }
 }
-
 
 div.ccm-panel-detail {
 
@@ -530,11 +525,10 @@ div.ccm-panel-detail.ccm-panel-detail-transition-fade {
     .opacity(0);
     display: block;
 }
+
 div.ccm-panel-detail.ccm-panel-detail-transition-fade-apply {
     .opacity(1);
 }
-
-
 
 /**
  * Miscellaneous effects classes
@@ -628,8 +622,8 @@ div.ccm-panel-header-accordion {
         }
 
         li > a, span {
-            display: block;
-            position: relative;
+                    display: block;
+                    position: relative;
             line-height: 15px;
             font-size: 15px;
             font-weight: 300;
@@ -658,16 +652,15 @@ div.ccm-panel-header-accordion {
         }
 
         ul.ccm-panel-header-accordion-dropdown:after {
-            content: "";
-            width: 0;
-            height: 0;
-            position: absolute;
-            top: 22px;
-            right: 15px;
-            border-width: 6px 6px 0px 6px;
-            border-style: solid;
+                    content: "";
+                    width: 0;
+                    height: 0;
+                    position: absolute;
+                    top: 22 px;
+                    right: 15 px;
+                    border-width: 6 px 6 px 0 px 6 px;
+                    border-style: solid;
         }
-
 
          
     }
@@ -676,11 +669,10 @@ div.ccm-panel-header-accordion {
 div.ccm-panel-header-accordion-dropdown-visible {
     nav {
         ul.ccm-panel-header-accordion-dropdown:after {
-            border-width: 0px 6px 6px 6px;
+                    border-width: 0 px 6 px 6 px 6 px;
         }
     }
 }
-
 
 /**
  * Panel check boxes
@@ -742,14 +734,14 @@ div.ccm-panel-header-accordion-dropdown-visible {
             span {
 
                 &:after {
-                    content: "";
-                    width: 0;
-                    height: 0;
-                    position: absolute;
-                    top: 15px;
-                    left: 18px;
-                    border-width: 6px 6px 0px 6px;
-                    border-style: solid;
+                            content: "";
+                            width: 0;
+                            height: 0;
+                            position: absolute;
+                            top: 15 px;
+                            left: 18 px;
+                            border-width: 6 px 6 px 0 px 6 px;
+                            border-style: solid;
                 }
 
             }
@@ -760,7 +752,7 @@ div.ccm-panel-header-accordion-dropdown-visible {
             a.list-group-item-collapse {
                 span {
                     &:after {
-                        border-width: 0px 6px 6px 6px;
+                                border-width: 0 px 6 px 6 px 6 px;
                     }
                 }
             }
@@ -783,7 +775,7 @@ div.ccm-panel-header-accordion-dropdown-visible {
 
     background-color: #2a2c30;
     div.ccm-panel-shadow-layer {
-        .box-shadow(inset -10px 10px 10px rgba(20,20,20,0.3));
+        .box-shadow(inset -10px 10px 10px rgba(20, 20, 20, 0.3));
     }
 
     .ccm-panel-content-inner {
@@ -798,8 +790,12 @@ div.ccm-panel-header-accordion-dropdown-visible {
         color: #3baaf7;
     }
 
-    a {color: #2aa9dd}
-    a:hover {color: #2aa9dd;}
+    a {
+        color: #2aa9dd
+    }
+    a:hover {
+        color: #2aa9dd;
+    }
 
     div.ccm-panel-content-inner {
         textarea {
@@ -823,7 +819,6 @@ div.ccm-panel-header-accordion-dropdown-visible {
         }
     }
     .list-group {
-
 
         .list-group-item {
             background-color: #171c22;
@@ -867,7 +862,6 @@ div.ccm-panel-header-accordion-dropdown-visible {
     }
 }
 
-
 /**
  * Panel Confirmation
  */
@@ -900,8 +894,8 @@ div.ccm-panel-confirmation-wrapper {
     &.ccm-panel-confirmation-displayed {
         div.ccm-panel-confirmation {
             .opacity(1);
-          -webkit-filter: blur(0px);
-          filter: blur(0px);
+            -webkit-filter: blur(0px);
+            filter: blur(0px);
         }
     }
 
