@@ -295,6 +295,109 @@ div#ccm-panel-dashboard {
 
 }
 
+div#ccm-panel-add-block-stack-list,
+div#ccm-panel-add-clipboard-block-list {
+    > div.ccm-panel-add-block-stack-item,
+    > div.ccm-panel-add-clipboard-block-item {
+        > div.stack-name,
+        div.block-name {
+            border-top: solid 1px rgb(7, 8, 10);
+            background: rgb(15, 24, 37);
+            font-weight: bold;
+            padding-left: 40px;
+            line-height: 40px;
+            color: rgb(115, 124, 142);
+            cursor: -moz-grab;
+            cursor: -webkit-grab;
+            cursor: grab;
+        }
+
+        > div.blocks {
+            height: 60px;
+            overflow: hidden;
+            color: #9ea6b6;
+            background: #343639;
+            position: relative;
+            .transition(height 250ms ease-in-out);
+
+            > div.block-count {
+                background: #202834;
+                color: #60728d;
+                .transition(opacity 250ms ease-in-out);
+                line-height: 60px;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                padding-left: 40px;
+                z-index: 2;
+                cursor: pointer;
+            }
+
+            > div.block {
+                display: block;
+                position: relative;
+                min-height: 120px;
+                max-height: 290px;
+                float: left;
+                width: 100%;
+                height: auto;
+                border-top: solid 1px bezier;
+
+                > div.block-name {
+                    background: #1c1e21;
+                    color: #737c8e;
+                }
+
+                > div.block-handle {
+                    position: absolute;
+                    top: 40px;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    height: auto;
+                }
+
+                > div.block-content {
+                    background: #343639;
+                }
+            }
+        }
+
+        &.active {
+            div.stack-name,
+            div.block-name {
+                color: rgb(42, 169, 221);
+            }
+            div.blocks {
+
+                > div.block-count {
+                    .opacity(0);
+                    &.hidden {
+                        display: none;
+                    }
+                }
+            }
+        }
+        &:hover > div.stack-name {
+            color: rgb(42, 169, 221);
+        }
+
+    }
+    > div.ccm-panel-add-clipboard-block-item {
+        > div.blocks {
+            max-height: 150px;
+            height: auto;
+
+            div.block-handle {
+                top: 0;
+                max-height: 150px;
+            }
+        }
+    }
+}
+
 /**
  * New Page
  */
