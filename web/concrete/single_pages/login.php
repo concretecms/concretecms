@@ -71,6 +71,7 @@ $form = Loader::helper('form');
 						<div data-authType='<?=$auth->getAuthenticationTypeHandle()?>' style='<?=$first?"display:block":"display:none"?>'>
 							<fieldset>
 								<form method='post' class='form-horizontal' action='<?=$view->url('/login', 'authenticate', $auth->getAuthenticationTypeHandle())?>'>
+									<?php $valt->output('login_'.$auth->getAuthenticationTypeHandle());?>
 									<div class='authForm'>
 										<?$auth->renderForm()?>
 									</div>
