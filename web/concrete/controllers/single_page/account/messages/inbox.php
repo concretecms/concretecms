@@ -10,8 +10,14 @@ use User;
 class Inbox extends AccountPageController {
 
 	public function view() {
-		$this->view_mailbox('inbox');
-		$this->task = 'view_mailbox';
+		$u = new User();
+		$ui = UserInfo::getByID($u->getUserID());
+
+		$inbox = UserPrivateMessageMailbox::get($ui, $this->getMessageMailboxID('inbox'));
+		$sent = UserPrivateMessageMailbox::get($ui, $this->getMessageMailboxID('sent'));
+
+		$this->set('inbox', $inbox);
+		$this->set('sent', $sent);
 	}
 
 	protected function validateUser($uID) {
