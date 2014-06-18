@@ -14,7 +14,7 @@ abstract class Editor extends Object {
 
 	public function formatConversationMessageBody($cnv,$cnvMessageBody,$config=array()) {
 		if (isset($config['htmlawed'])) {
-			
+
 			$default = array('safe'=>1,'elements'=>'span, em, b, i, p, strike, font, br, div');
 			$conf = array_merge($default,(array)$config['htmlawed']);
 			$lawed = htmLawed($cnvMessageBody, $conf);
@@ -27,7 +27,7 @@ abstract class Editor extends Object {
 			$haystack = array();
 			foreach ($users as $user) {
 				$needle[] = "@".$user->getUserName();
-				$haystack[] = "<a href='".View::url('/account/profile/public', 'view', $user->getUserID())."'>@".$user->getUserName()."</a>";
+				$haystack[] = "<a href='".View::url('/account/profile/public_profile', 'view', $user->getUserID())."'>@".$user->getUserName()."</a>";
 			}
 			return str_ireplace($needle,$haystack,$lawed);
 		}
@@ -46,14 +46,14 @@ abstract class Editor extends Object {
 		$env = Environment::get();
 		$editor = $this;
 		$path = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' . $this->cnvEditorHandle . '/' . FILENAME_CONVERSATION_EDITOR_FORM_MESSAGE, $this->getPackageHandle());
-		include($path);		
+		include($path);
 	}
 
 	public function outputConversationEditorReplyMessageForm() {
 		$env = Environment::get();
 		$editor = $this;
 		$path = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' . $this->cnvEditorHandle . '/' . FILENAME_CONVERSATION_EDITOR_FORM_REPLY, $this->getPackageHandle());
-		include($path);		
+		include($path);
 	}
 
 	protected $cnvEditorInputName = 'cnvMessageBody';
@@ -75,15 +75,15 @@ abstract class Editor extends Object {
 		return PackageList::getHandle($this->pkgID);
 	}
 	public function getPackageObject() {return Package::getByID($this->pkgID);}
-	
+
 	public static function getActive() {
 		$db = Loader::db();
 		$cnvEditorHandle = $db->GetOne('select cnvEditorHandle from ConversationEditors where cnvEditorIsActive = 1');
-		if ($cnvEditorHandle) { 
+		if ($cnvEditorHandle) {
 			return static::getByHandle($cnvEditorHandle);
 		}
 	}
-	
+
 	public static function getByHandle($cnvEditorHandle) {
 		$db = Loader::db();
 		$r = $db->GetRow('select cnvEditorHandle, cnvEditorIsActive, pkgID, cnvEditorName from ConversationEditors where cnvEditorHandle = ?', array($cnvEditorHandle));
@@ -94,7 +94,7 @@ abstract class Editor extends Object {
 			return $sc;
 		}
 	}
-	
+
 	public static function add($cnvEditorHandle, $cnvEditorName, $pkg = false) {
 		$pkgID = 0;
 		if (is_object($pkg)) {
@@ -104,23 +104,23 @@ abstract class Editor extends Object {
 		$db->Execute('insert into ConversationEditors (cnvEditorHandle, cnvEditorName, pkgID) values (?, ?, ?)', array($cnvEditorHandle, $cnvEditorName, $pkgID));
 		return static::getByHandle($cnvEditorHandle);
 	}
-	
+
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from ConversationEditors where cnvEditorHandle = ?', array($this->cnvEditorHandle));
 	}
-	
+
 	public function activate() {
 		$db = Loader::db();
 		static::deactivateAll();
 		$db->Execute('update ConversationEditors set cnvEditorIsActive = 1 where cnvEditorHandle = ?', array($this->cnvEditorHandle));
 	}
-	
+
 	public static function deactivateAll() {
 		$db = Loader::db();
 		$db->Execute('update ConversationEditors set cnvEditorIsActive = 0');
 	}
-		
+
 	public static function getList() {
 		$db = Loader::db();
 		$cnvEditorHandles = $db->GetCol('select cnvEditorHandle from ConversationEditors order by cnvEditorHandle asc');
@@ -142,11 +142,11 @@ abstract class Editor extends Object {
 		}
 		return $editors;
 	}
-	
+
 	public static function exportList($xml) {
 		$list = self::getList();
 		$nxml = $xml->addChild('conversationeditors');
-		
+
 		foreach($list as $sc) {
 			$activated = 0;
 			$type = $nxml->addChild('editor');
@@ -156,11 +156,11 @@ abstract class Editor extends Object {
 			$type->addAttribute('activated', $sc->isConversationEditorActive());
 		}
 	}
-		
+
 	public function hasOptionsForm() {
 		$env = Environment::get();
 		$rec = $env->getRecord(DIRNAME_ELEMENTS . '/' . DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' . $this->cnvEditorHandle . '/' . FILENAME_CONVERSATION_EDITOR_OPTIONS, $this->getPackageHandle());
 		return $rec->exists();
-	}	
-	
+	}
+
 }
