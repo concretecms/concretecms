@@ -100,6 +100,23 @@ class ImporterTest extends \FileStorageTestCase {
 
     }
 
+    public function testFileVersions()
+    {
+        // create the default storage location first.
+        mkdir($this->getStorageDirectory());
+        $this->getStorageLocation();
+
+        $file = dirname(__FILE__) . '/test.txt';
+        touch($file);
+        $fi = new Importer();
+        $fi->import($file, 'test.txt');
+
+        $f = \File::getByID(1);
+        $versions = $f->getFileVersions();
+        $this->assertEquals(1, count($versions));
+
+    }
+
     public function testImageImportSize()
     {
         // create the default storage location first.
@@ -114,9 +131,7 @@ class ImporterTest extends \FileStorageTestCase {
 
         $this->assertEquals(113, $fo->getAttribute('width'));
         $this->assertEquals(113, $fo->getAttribute('height'));
-
     }
-
     public function testThumbnailStorageLocation()
     {
         mkdir($this->getStorageDirectory());
@@ -195,7 +210,7 @@ class ImporterTest extends \FileStorageTestCase {
         CacheLocal::flush();
 
         $fv2 = $f->getVersion(1);
-        $this->assertFalse($fv2);
+        $this->assertNull($fv2);
 
     }
 
@@ -214,6 +229,28 @@ class ImporterTest extends \FileStorageTestCase {
 
         $this->assertEquals('text/plain', $fo1->getMimeType());
         $this->assertEquals('image/jpeg', $fo2->getMimeType());
+    }
+
+    public function testFileVersionDuplicate()
+    {
+        mkdir($this->getStorageDirectory());
+        $this->getStorageLocation();
+
+        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
+        $fi = new Importer();
+        $fi->import($sample, 'sample.txt');
+
+        $f = \File::getByID(1);
+        $fv = $f->getVersion(1);
+
+        $this->assertEquals(1, $fv->getFileVersionID());
+        $this->assertEquals('sample.txt', $fv->getFilename());
+        $this->assertEquals(true, $fv->isApproved());
+
+        $fv2 = $fv->duplicate();
+        $this->assertEquals(2, $fv2->getFileVersionID());
+        $this->assertEquals(false, $fv->isApproved());
+
     }
 
     public function testFileReplace()
@@ -241,5 +278,40 @@ class ImporterTest extends \FileStorageTestCase {
         );
     }
 
+    public function testVersionApprove()
+    {
+        // create the default storage location first.
+        mkdir($this->getStorageDirectory());
+        $this->getStorageLocation();
+
+        $file = dirname(__FILE__) . '/test.txt';
+        touch($file);
+        $fi = new Importer();
+        $r = $fi->import($file, 'test.txt');
+
+        $fv2 = $r->duplicate();
+        $fv3 = $r->duplicate();
+        $fv4 = $r->duplicate();
+        $f = \File::getByID(1);
+        $fv4b = $f->getVersion(4);
+
+        $this->assertEquals(1, $r->getFileVersionID());
+        $this->assertEquals(2, $fv2->getFileVersionID());
+        $this->assertEquals(3, $fv3->getFileVersionID());
+        $this->assertEquals(4, $fv4b->getFileVersionID());
+        $this->assertEquals(4, $fv4->getFileVersionID());
+        $this->assertEquals($fv4, $fv4b);
+
+        $fv3->approve();
+        $this->assertEquals(true, $fv3->isApproved());
+
+        $f = \File::getByID(1);
+        $fv1 = $f->getVersion(1);
+        $this->assertEquals(false, $fv1->isApproved());
+        $fva = $f->getApprovedVersion();
+        $this->assertEquals($fva, $fv3);
+
+
+    }
 }
  
