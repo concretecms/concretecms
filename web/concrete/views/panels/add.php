@@ -74,7 +74,7 @@ switch ($tab) {
                     </div>
                     <div class="blocks">
                         <div class="block-count">
-                            <?= $block_count ?> <?= t2('Block', 'Blocks', $block_count) ?>
+                            <?= t2('%d Block', '%d Blocks', $block_count) ?>
                         </div>
                         <?php
 
