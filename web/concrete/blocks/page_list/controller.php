@@ -14,24 +14,24 @@ class Controller extends BlockController {
 	protected $btExportPageColumns = array('cParentID');
 	protected $btExportPageTypeColumns = array('ptID');
 	protected $btCacheBlockRecord = true;
-	
-	/** 
+
+	/**
 	 * Used for localization. If we want to localize the name/description we have to include this
 	 */
 	public function getBlockTypeDescription() {
 		return t("List pages based on type, area.");
 	}
-	
+
 	public function getBlockTypeName() {
 		return t("Page List");
 	}
-	
+
 	public function getJavaScriptStrings() {
 		return array(
 			'feed-name' => t('Please give your RSS Feed a name.')
 		);
 	}
-	
+
 	public function getPageList() {
 		$db = Loader::db();
 		$bID = $this->bID;
@@ -50,11 +50,11 @@ class Controller extends BlockController {
 			$row['rss'] = $this->rss;
 			$row['displayAliases'] = $this->displayAliases;
 		}
-		
+
 
 		$pl = new PageList();
 		$pl->setNameSpace('b' . $this->bID);
-		
+
 		$cArray = array();
 
 		switch($row['orderBy']) {
@@ -79,14 +79,14 @@ class Controller extends BlockController {
 		}
 
 		$num = (int) $row['num'];
-		
-		$pl->setItemsPerPage($num);			
+
+		$pl->setItemsPerPage($num);
 
 		$c = Page::getCurrentPage();
 		if (is_object($c)) {
 			$this->cID = $c->getCollectionID();
 		}
-		
+
 		if ($this->displayFeaturedOnly == 1) {
 			$cak = CollectionAttributeKey::getByHandle('is_featured');
 			if (is_object($cak)) {
@@ -96,17 +96,17 @@ class Controller extends BlockController {
 		if (!$row['displayAliases']) {
 			$pl->filterByIsAlias(0);
 		}
-		$pl->filter('cvName', '', '!=');			
-	
+		$pl->filter('cvName', '', '!=');
+
 		if ($row['ptID']) {
 			$pl->filterByPageTypeID($row['ptID']);
 		}
-		
+
 		$columns = $db->MetaColumnNames(CollectionAttributeKey::getIndexedSearchTable());
 		if (isset($columns['ak_exclude_page_list'])) {
 			$pl->filter(false, '(ak_exclude_page_list = 0 or ak_exclude_page_list is null)');
 		}
-		
+
 		if ( intval($row['cParentID']) != 0) {
 			$cParentID = ($row['cThis']) ? $this->cID : $row['cParentID'];
 			if ($this->includeAllDescendents) {
@@ -118,10 +118,10 @@ class Controller extends BlockController {
 		return $pl;
 	}
 
-	
+
 	public function getPages() {
 		$pl = $this->getPageList();
-		
+
 		if ($pl->getItemsPerPage() > 0) {
 			$pages = $pl->getPage();
 		} else {
@@ -132,14 +132,14 @@ class Controller extends BlockController {
 	}
 
 
-	
+
 	public function view() {
 		$cArray = $this->getPages();
 		$nh = Loader::helper('navigation');
 		$this->set('nh', $nh);
 		$this->set('cArray', $cArray); //Legacy (pre-5.4.2)
 		$this->set('pages', $cArray); //More descriptive variable name (introduced in 5.4.2)
-		
+
 		//RSS...
 		$showRss = false;
 		$rssIconSrc = '';
@@ -164,13 +164,13 @@ class Controller extends BlockController {
 			}
 		}
 		if ($showPagination) {
-			$this->requireAsset('core/frontend/pagination');
+			$this->requireAsset('css', 'core/frontend/pagination');
 		}
 		$this->set('showPagination', $showPagination);
 		$this->set('paginator', $paginator);
 
 	}
-	
+
 	// this doesn't work yet
 	/*
 	public function on_page_view() {
@@ -180,9 +180,9 @@ class Controller extends BlockController {
 		}
 	}
 	*/
-	
+
 	public function add() {
-		
+
 		$c = Page::getCurrentPage();
 		$uh = Loader::helper('concrete/urls');
 		//	echo $rssUrl;
@@ -198,7 +198,7 @@ class Controller extends BlockController {
 		$bID=$b->getBlockID();
 		$this->set('bID', $bID);
 		$c = Page::getCurrentPage();
-		if ($c->getCollectionID() != $this->cParentID && (!$this->cThis) && ($this->cParentID != 0)) { 
+		if ($c->getCollectionID() != $this->cParentID && (!$this->cThis) && ($this->cParentID != 0)) {
 			$isOtherPage = true;
 			$this->set('isOtherPage', true);
 		}
@@ -206,7 +206,7 @@ class Controller extends BlockController {
 		$this->set('uh', $uh);
 		$this->set('bt', BlockType::getByHandle('page_list'));
 	}
-	
+
 	function save($args) {
 		// If we've gotten to the process() function for this class, we assume that we're in
 		// the clear, as far as permissions are concerned (since we check permissions at several
@@ -218,7 +218,7 @@ class Controller extends BlockController {
 		if (is_object($c)) {
 			$this->cID = $c->getCollectionID();
 		}
-		
+
 		$args['num'] = ($args['num'] > 0) ? $args['num'] : 0;
 		$args['cThis'] = ($args['cParentID'] == $this->cID) ? '1' : '0';
 		$args['cParentID'] = ($args['cParentID'] == 'OTHER') ? $args['cParentIDValue'] : $args['cParentID'];
@@ -229,13 +229,13 @@ class Controller extends BlockController {
 		$args['truncateSummaries'] = ($args['truncateSummaries']) ? '1' : '0';
 		$args['displayFeaturedOnly'] = ($args['displayFeaturedOnly']) ? '1' : '0';
 		$args['displayAliases'] = ($args['displayAliases']) ? '1' : '0';
-		$args['truncateChars'] = intval($args['truncateChars']); 
-		$args['paginate'] = intval($args['paginate']); 
+		$args['truncateChars'] = intval($args['truncateChars']);
+		$args['paginate'] = intval($args['paginate']);
 		$args['rss'] = intval($args['rss']);
 		$args['ptID'] = intval($args['ptID']);
 
 		parent::save($args);
-	
+
 	}
 
 	public function getRssUrl($b, $tool = 'rss'){
