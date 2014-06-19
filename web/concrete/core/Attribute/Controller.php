@@ -10,7 +10,11 @@ class Controller extends AbstractController
 {
 
     protected $identifier;
+    /** @var \Concrete\Core\Attribute\Key\Key */
     protected $attributeKey;
+    /** @var \Concrete\Core\Attribute\Value\Value */
+    protected $attributeValue;
+    protected $searchIndexFieldDefinition;
     protected $requestArray = false;
 
     public function setRequestArray($array)
@@ -74,7 +78,6 @@ class Controller extends AbstractController
 
     }
 
-
     protected function getAttributeValueID()
     {
         if (is_object($this->attributeValue)) {
@@ -94,9 +97,13 @@ class Controller extends AbstractController
         } else {
             $text = $customText;
         }
-        print Loader::helper('form')->label($this->field('value'), $text);
+        $form = new \Concrete\Core\Form\Service\Form();
+        print $form->label($this->field('value'), $text);
     }
 
+    /**
+     * @param \Concrete\Core\Attribute\Type $attributeType
+     */
     public function __construct($attributeType)
     {
         $this->identifier = $attributeType->getAttributeTypeID();
@@ -193,16 +200,18 @@ class Controller extends AbstractController
         return 'ak_' . $this->attributeKey->getAttributeKeyHandle() . ' like ' . $qkeywords . ' ';
     }
 
-    /* Automatically run when an attribute key is added or updated
-    * @return ValidationError
-    */
+    /**
+     * Automatically run when an attribute key is added or updated
+     * @param bool|array $args
+     * @return \Concrete\Core\Error\Error
+     */
     public function validateKey($args = false)
     {
         if ($args == false) {
             $args = $this->post();
         }
-        $val = Loader::helper('validation/form');
-        $valt = Loader::helper('validation/token');
+        $val = new \Concrete\Core\Form\Service\Validation();
+        $valt = new \Concrete\Core\Validation\CSRF\Token();
         $val->setData($args);
         $val->addRequired("akHandle", t("Handle required."));
         $val->addRequired("akName", t('Name required.'));
@@ -214,7 +223,8 @@ class Controller extends AbstractController
             $error->add($valt->getErrorMessage());
         }
 
-        if (preg_match("/[^A-Za-z0-9_]/", $args['akHandle'])) {
+        $stringValidator = new \Concrete\Core\Utility\Service\Validation\Strings();
+        if ($stringValidator->handle($args['akHandle'])) {
             $error->add(t('Attribute handles may only contain letters, numbers and underscore "_" characters'));
         }
 
