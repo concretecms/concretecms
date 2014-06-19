@@ -192,23 +192,6 @@ class PageListTest extends \PageTestCase {
         $this->assertEquals(2, $this->list->getTotal());
     }
 
-    public function testFilterByApproved()
-    {
-        $this->addAlias();
-        $parent = Page::getByPath('/test-page-1/foobler');
-        $type = PageType::getByHandle('basic');
-        $template = PageTemplate::getByHandle('left_sidebar');
-        $c = $parent->add($type, array(
-            'cName' => 'This is an unapproved page.',
-            'pTemplateID' => $template->getPageTemplateID(),
-            'cvIsApproved' => false
-        ));
-
-        $this->list->filterByIsApproved(0);
-        $this->assertEquals(1, $this->list->getTotal());
-        $results = $this->list->get();
-        $this->assertEquals(1, count($results));
-    }
 
 }
  
