@@ -77,6 +77,17 @@ class Version
     protected $fvTitle = null;
 
     /**
+     * @Column(type="string")
+     */
+    protected $fvExtension = null;
+
+
+    /**
+     * @Column(type="integer")
+     */
+    protected $fvType = 0;
+
+    /**
      * @Column(type="text")
      */
     protected $fvTags = null;
