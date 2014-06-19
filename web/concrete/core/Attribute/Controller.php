@@ -3,6 +3,7 @@ namespace Concrete\Core\Attribute;
 
 use \Concrete\Core\Controller\AbstractController;
 use Loader;
+use Core;
 use \Concrete\Core\Attribute\View as AttributeTypeView;
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 
@@ -97,7 +98,8 @@ class Controller extends AbstractController
         } else {
             $text = $customText;
         }
-        $form = new \Concrete\Core\Form\Service\Form();
+        /** @var \Concrete\Core\Form\Service\Form $form */
+        $form = Core::make('helper/form');
         print $form->label($this->field('value'), $text);
     }
 
@@ -210,8 +212,10 @@ class Controller extends AbstractController
         if ($args == false) {
             $args = $this->post();
         }
-        $val = new \Concrete\Core\Form\Service\Validation();
-        $valt = new \Concrete\Core\Validation\CSRF\Token();
+        /** @var \Concrete\Core\Form\Service\Validation $val */
+        $val = Core::make('helper/validation/form');
+        /** @var \Concrete\Core\Validation\CSRF\Token $valt */
+        $valt = Core::make('helper/validation/token');
         $val->setData($args);
         $val->addRequired("akHandle", t("Handle required."));
         $val->addRequired("akName", t('Name required.'));
@@ -223,8 +227,9 @@ class Controller extends AbstractController
             $error->add($valt->getErrorMessage());
         }
 
-        $stringValidator = new \Concrete\Core\Utility\Service\Validation\Strings();
-        if ($stringValidator->handle($args['akHandle'])) {
+        /** @var \Concrete\Core\Utility\Service\Validation\Strings $stringValidator */
+        $stringValidator = Core::make('helper/validation/strings');
+        if (!$stringValidator->handle($args['akHandle'])) {
             $error->add(t('Attribute handles may only contain letters, numbers and underscore "_" characters'));
         }
 
