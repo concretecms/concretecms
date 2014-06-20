@@ -11,8 +11,8 @@
         }
         ?>
 
-        <div class="col-md-4">
-            <legend><?=t($cat->getCollectionName())?></legend>
+        <div class="col-md-4 ccm-dashboard-section-menu">
+            <h2><?=t($cat->getCollectionName())?></h2>
 
 
             <?
