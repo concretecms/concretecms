@@ -20,6 +20,5 @@ if ($bt->controller->displayPages == "custom") {
 }
 
 $bv = new BlockView($bt);
-$bv->setViewTemplate('list');
 $bv->render('view');
 exit;
