@@ -4,21 +4,9 @@ $form = Loader::helper('form');
 $c = Page::getCurrentPage();
 $page_selector = Loader::helper('form/page_selector');
 ?>
-<ul id="ccm-autonav-tabs" class="nav nav-tabs">
-    <li class="active"><a id="ccm-autonav-tab-add" href="javascript:void(0);"><?= t('Edit') ?></a></li>
-    <li class=""><a id="ccm-autonav-tab-preview" href="javascript:void(0);"><?= t('Preview') ?></a></li>
-</ul>
+<div class="row autonav-form">
 
-<div style="padding: 10px">
-
-
-    <div style="clear: both" class="ccm-autonavPane ccm-preview-pane" id="ccm-autonavPane-preview"
-         style="display: none">
-
-
-    </div>
-    <div class="ccm-autonavPane" id="ccm-autonavPane-add">
-
+    <div class="col-xs-6">
 
         <input type="hidden" name="autonavCurrentCID" value="<?= $c->getCollectionID() ?>"/>
         <input type="hidden" name="autonavPreviewPane"
@@ -141,4 +129,43 @@ $page_selector = Loader::helper('form/page_selector');
             </div>
         </div>
     </div>
+
+    <div class="col-xs-6">
+        <div class="preview">
+            <div class="loader">
+                <i class="fa fa-cog fa-spin"></i>
+            </div>
+            <div class="render">
+
+            </div>
+            <div class="cover"></div>
+        </div>
+    </div>
+
 </div>
+
+<style type="text/css">
+    div.autonav-form div.preview > div.loader {
+        position: fixed;
+        top: 50%;
+        left: 74%;
+    }
+    div.autonav-form div.cover {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    div.autonav-form div.render > ul ul {
+        margin-left:25px;
+        list-style-type: none;
+    }
+    div.autonav-form div.render > ul ul > li > a {
+        padding: 10px 15px;
+        display: block;
+    }
+</style>
+<script type="application/javascript">
+    Concrete.event.publish('autonav.edit.open');
+</script>
