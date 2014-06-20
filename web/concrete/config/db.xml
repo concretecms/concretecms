@@ -3390,6 +3390,7 @@
       <unsigned/>
     </field>
     <field name="msgMailboxID" type="I" size="11">
+      <key/>
       <notnull/>
     </field>
     <field name="msgIsNew" type="I" size="1">
