@@ -32,7 +32,7 @@ class Controller extends BlockController
     public $displaySystemPages = false;
     public $displayUnapproved = false;
     protected $btTable = 'btNavigation';
-    protected $btInterfaceWidth = "500";
+    protected $btInterfaceWidth = "800";
     protected $btInterfaceHeight = "350";
     protected $btCacheBlockRecord = true;
     protected $btCacheBlockOutput = true;
