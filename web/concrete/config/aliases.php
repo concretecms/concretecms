@@ -3,7 +3,6 @@ return array(
     'Request' => '\Concrete\Core\Http\Request',
     'Environment' => '\Concrete\Core\Foundation\Environment',
     'Localization' => '\Concrete\Core\Localization\Localization',
-    'Events' => '\Concrete\Core\Events\Events',
     'Response' => '\Concrete\Core\Http\Response',
     'Redirect' => '\Concrete\Core\Routing\Redirect',
     'URL' => '\Concrete\Core\Routing\URL',
