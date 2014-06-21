@@ -14,8 +14,8 @@ echo $h->getDashboardPaneHeaderWrapper(t('Maintenance Mode'), false, 'span6 offs
 	</fieldset>	
 	
 	<div class="ccm-dashboard-form-actions-wrapper">
-		<div class="ccm-dashboard-form-actions">
-			<input type="submit" class="btn primary pull-right" name="maintenance-mode-form" value="<?=t('Save')?>">
+		<div class="ccm-dashboard-form-actions">    
+		    <button class="pull-right btn btn-success" type="submit" ><?=t('Save')?></button>
 		</div>
 	</div>
 </form>
