@@ -6,35 +6,6 @@ echo $h->getDashboardPaneHeaderWrapper(t('Maintenance Mode'), false, 'span6 offs
 
 <form id="maintenance-mode-form" action="<?php echo $view->action('')?>" method="post">
 	<div class="ccm-pane-body">
-		
-		<!--
-		<?php echo $this->controller->token->output('update_maintenance')?>
-		<?php if (!empty($token_error) && is_array($token_error)) { ?>
-		<div class="alert-message error"><?php echo $token_error[0]?></div>
-		<?php } ?>
-		<div class="clearfix">
-			<?php echo $form->label('site_maintenance_mode', t('Maintenance Mode'))?>
-			<div class="input">
-				<ul class="inputs-list">
-					<li>
-						<label>
-							<?php echo $form->radio('site_maintenance_mode', '1', $site_maintenance_mode)?>
-							<span><?php echo t('Enabled')?></span>
-						</label>
-					</li>
-					<li>
-						<label>
-							<?php echo $form->radio('site_maintenance_mode', '0', $site_maintenance_mode)?>
-							<span><?php echo t('Disabled')?></span>
-						</label>
-					</li>
-				</ul>
-			</div>
-		</div>	
-		-->
-		
-		
-		
 		<fieldset>
 			<legend style="margin-bottom: 0px"><?=t('Maintenance Mode')?></legend>
 			<div class="control-group">
