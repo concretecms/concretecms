@@ -23,7 +23,8 @@ class FileListTest extends \FileStorageTestCase {
             'AttributeValues',
             'FileSets',
             'atNumber',
-            'FileVersionLog'
+            'FileVersionLog',
+            'FileSetFiles'
         ));
         parent::setUp();
         define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.txt;*.jpg;*.jpeg;*.png');
@@ -59,9 +60,6 @@ class FileListTest extends \FileStorageTestCase {
             $fi->import($pointer, $filename);
         }
 
-
-        //$this->list = new \Concrete\Core\Legacy\FileList();
-        //$this->list->setPermissionLevel(false);
         $this->list = new \Concrete\Core\File\FileList();
     }
 
@@ -76,17 +74,31 @@ class FileListTest extends \FileStorageTestCase {
         }
     }
 
+    public function testGetPaginationObject()
+    {
+        $pagination = $this->list->getPagination();
+        $this->assertInstanceOf('\Concrete\Core\Pagination\Pagination', $pagination);
+    }
+
     public function testGetUnfilteredTotal()
     {
-        $this->assertEquals(11, $this->list->getTotal());
+        $this->assertEquals(11, $this->list->getTotalResults());
+    }
+
+    public function testGetUnfilteredTotalFromPagination()
+    {
+        $pagination = $this->list->getPagination();
+        $this->assertEquals(11, $pagination->getTotalResults());
     }
 
     public function testFilterByTypeValid1()
     {
         $this->list->filterByType(\Concrete\Core\File\Type\Type::T_IMAGE);
-        $this->assertEquals(5, $this->list->getTotal());
-        $this->list->getPaginator()->setMaxPerPage(3);
-        $results = $this->list->getPage();
+        $this->assertEquals(5, $this->list->getTotalResults());
+        $pagination = $this->list->getPagination();
+        $this->assertEquals(5, $pagination->getTotalResults());
+        $pagination->setMaxPerPage(3)->setCurrentPage(1);
+        $results = $pagination->getCurrentPageResults();
         $this->assertEquals(3, count($results));
         $this->assertInstanceOf('\Concrete\Core\File\File', $results[0]);
     }
@@ -95,15 +107,55 @@ class FileListTest extends \FileStorageTestCase {
     {
         $this->list->filterByType(\Concrete\Core\File\Type\Type::T_TEXT);
         $this->list->filterByExtension('txt');
-        $this->assertEquals(6, $this->list->getTotal());
+        $this->assertEquals(6, $this->list->getTotalResults());
     }
 
     public function testFilterByKeywords()
     {
         $this->list->filterByKeywords('le');
-        $this->assertEquals(5, $this->list->getTotal());
+        $pagination = $this->list->getPagination();
+        $this->assertEquals(5, $pagination->getTotalResults());
     }
 
+    public function testFilterBySet()
+    {
+        $fs = \FileSet::add('test');
+        $f = \File::getByID(1);
+        $f2 = \File::getByID(4);
+        $fs->addFileToSet($f);
+        $fs->addFileToSet($f2);
+
+        $fs2 = \FileSet::add('test2');
+        $fs2->addFiletoSet($f);
+
+        $this->list->filterBySet($fs);
+        $pagination = $this->list->getPagination();
+        $this->assertEquals(2, $pagination->getTotalResults());
+        $results = $this->list->getResults();
+        $this->assertEquals(2, count($results));
+        $this->assertEquals(4, $results[1]->getFileID());
+
+        $this->list->filterBySet($fs2);
+        $results = $this->list->getResults();
+
+        $this->assertEquals(1, count($results));
+        $this->assertEquals(1, $results[0]->getFileID());
+
+        $nl = new \Concrete\Core\File\FileList();
+        $nl->filterByNoSet();
+        $results = $nl->getResults();
+        $this->assertEquals(9, count($results));
+    }
+
+    public function testSortByFilename()
+    {
+        $this->list->sortByFilenameAscending();
+        $pagination = $this->list->getPagination();
+        $pagination->setMaxPerPage(2);
+        $results = $pagination->getCurrentPageResults();
+        $this->assertEquals(2, count($results));
+        $this->assertEquals(5, $results[0]->getFileID());
+    }
 
 }
  

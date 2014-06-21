@@ -185,12 +185,9 @@ class Controller extends AbstractController
 
     }
 
-    // return a string we can use to search by
-    public function searchKeywords($keywords, $list = false)
+    public function searchKeywords($keywords, $queryBuilder)
     {
-        $db = Loader::db();
-        $qkeywords = $db->quote('%' . $keywords . '%');
-        return 'ak_' . $this->attributeKey->getAttributeKeyHandle() . ' like ' . $qkeywords . ' ';
+        return $queryBuilder->expr()->like('ak_' . $this->attributeKey->getAttributeKeyHandle(), ':keywords');
     }
 
     /* Automatically run when an attribute key is added or updated
