@@ -120,11 +120,34 @@ class ContentExporter {
 		
 	}
 	
-	public function getFilesArchive() {
+	public function getFilesArchive()
+    {
 		
 		$vh = Loader::helper("validation/identifier");
 		$archive = $vh->getString();
-		FileList::exportArchive($archive);
+
+        $fl = new FileList();
+        $files = $fl->getResults();
+        $fh = Loader::helper('file');
+        $filename = $fh->getTemporaryDirectory() . '/' . $archive . '.zip';
+        if (count($files) > 0) {
+            try {
+                $zip = new ZipArchive;
+                $res = $zip->open($filename, ZipArchive::CREATE);
+                if ($res === TRUE) {
+                    foreach($files as $f) {
+                        $zip->addFromString($f->getFilename(), $f->getFileContents());
+                    }
+                    $zip->close();
+                    $fh->forceDownload($filename);
+                } else {
+                    throw new Exception(t('Could not open with ZipArchive::CREATE'));
+                }
+            } catch(Exception $e) {
+                throw new Exception(t('Failed to create zip file as "%s": %s', $filename, $e->getMessage()));
+            }
+        }
+
 		return $archive;
 	}
 	

@@ -373,17 +373,5 @@ class FileList extends DatabaseItemList {
 	public function sortByFileSetDisplayOrder() {
 		$this->sortByMultiple('fsDisplayOrder asc', 'fID asc');
 	}
-	
-	public static function getExtensionList() {
-		$db = Loader::db();
-		$col = $db->GetCol('select distinct(trim(fvExtension)) as extension from FileVersions where fvIsApproved = 1 and fvExtension <> ""');
-		return $col;
-	}
-
-	public static function getTypeList() {
-		$db = Loader::db();
-		$col = $db->GetCol('select distinct(trim(fvType)) as type from FileVersions where fvIsApproved = 1 and fvType <> 0');
-		return $col;
-	}
 
 }

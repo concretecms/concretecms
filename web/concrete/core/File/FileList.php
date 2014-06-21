@@ -1,65 +1,68 @@
 <?php 
 namespace Concrete\Core\File;
+use Concrete\Core\Foundation\Collection\DatabaseItemList;
 use Database;
 use Doctrine\DBAL\Logging\EchoSQLLogger;
 use Doctrine\DBAL\Query;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
-use Pagerfanta\Pagerfanta as Paginator;
+use \Concrete\Core\Pagination\Pagination;
 use FileAttributeKey;
 
-class FileList
+class FileList extends DatabaseItemList
 {
 
-    /** @var \Doctrine\ORM\EntityManager */
-    protected $manager;
+    const PERMISSION_LEVEL_IGNORE = -1;
+    const PERMISSION_LEVEL_VIEW = 0;
+    const PERMISSION_LEVEL_VIEW_IN_FILE_MANAGER = 5;
 
-    /** @var \Pagerfanta\Pagerfanta */
-    protected $paginator;
+    /**
+     * The default permission level is to view ALL files and ignore permissions.
+     * @var int
+     */
+    protected $permissionLevel = self::PERMISSION_LEVEL_IGNORE;
 
-    /** @var \Doctrine\DBAL\Query\QueryBuilder */
-    protected $query;
-
-    /** @var integer */
-    protected $maxPerPage = 10;
-
-    /** @var integer */
-    protected $currentPage = 1;
-
-    public function getPaginator()
+    public function createQuery()
     {
-        if (!isset($this->paginator)) {
-            $adapter = new DoctrineDbalAdapter($this->query, function($query) {
-               $query->select('count(distinct f.fID)')->setMaxResults(1);
-            });
-            $this->paginator = new Paginator($adapter);
-            $this->paginator->setMaxPerPage($this->maxPerPage);
-        }
-        return $this->paginator;
-    }
-
-    public function __construct()
-    {
-        $this->query = Database::get()->createQueryBuilder();
         $this->query->select('f.fID')
             ->from('Files', 'f')
-            ->innerJoin('f', 'FileVersions', 'fv', 'f.fID = fv.fID and fv.fvIsApproved = 1');
+            ->innerJoin('f', 'FileVersions', 'fv', 'f.fID = fv.fID and fv.fvIsApproved = 1')
+            ->leftJoin('f', 'FileSearchIndexAttributes', 'fsi', 'f.fID = fsi.fID')
+            ->leftJoin('f', 'Users', 'u', 'f.uID = u.uID');
     }
 
-    public function getTotal()
+    public function getTotalResults()
     {
-        return $this->getPaginator()->getNbResults();
+        $query = clone $this->query;
+        return $query->select('count(distinct f.fID)')->setMaxResults(1)->execute()->fetchColumn();
     }
 
-    public function getPage()
+    public function getPagination()
     {
-        $results = array();
-        foreach($this->getPaginator()->getCurrentPageResults() as $fID) {
-            $f = File::getByID($fID);
-            if (is_object($f)) {
-                $results[] = $f;
+        if (!isset($this->pagination)) {
+            $adapter = new DoctrineDbalAdapter($this->query, function($query) {
+                $query->select('count(distinct f.fID)')->setMaxResults(1);
+            });
+            if ($this->permissionLevel == self::PERMISSION_LEVEL_IGNORE) {
+                $this->pagination = new Pagination($this, $adapter);
+            } else {
+                $this->pagination = new FuzzyPagination($this, $adapter);
             }
         }
-        return $results;
+        return $this->pagination;
+    }
+
+    /**
+     * @param $queryRow
+     * @return \Concrete\Core\File\File
+     */
+    public function getResult($queryRow)
+    {
+        $f = File::getByID($queryRow['fID']);
+        if (is_object($f)) {
+            if ($this->permissionLevel == self::PERMISSION_LEVEL_IGNORE) {
+                return $f;
+            }
+        }
     }
 
     public function filterByType($type)
@@ -75,31 +78,110 @@ class FileList
     }
 
     /**
-     * Filters by "keywords" (which searches everything including filenames, title, tags, users who uploaded the file, tags)
+     * Filters by "keywords" (which searches everything including filenames,
+     * title, users who uploaded the file, tags)
      */
     public function filterByKeywords($keywords) {
-        $this->query->andWhere($this->query->expr()->orX(
-           $this->query->expr()->like('fv.fvFilename', ':keywords'),
-           $this->query->expr()->like('fv.fvDescription', ':keywords')
-        ));
-        $this->query->setParameter('keywords', '%' . $keywords . '%');
-
-        /*
-        $db = Loader::db();
-        $keywordsExact = $db->quote($keywords);
-        $qkeywords = $db->quote('%' . $keywords . '%');
+        $expressions = array(
+            $this->query->expr()->like('fv.fvFilename', ':keywords'),
+            $this->query->expr()->like('fv.fvDescription', ':keywords'),
+            $this->query->expr()->like('fv.fvTitle', ':keywords'),
+            $this->query->expr()->like('fv.fvTags', ':keywords'),
+            $this->query->expr()->eq('uName', ':keywords')
+        );
 
         $keys = FileAttributeKey::getSearchableIndexedList();
-
         foreach ($keys as $ak) {
             $cnt = $ak->getController();
-            $this->query->orW
-            $attribsStr.=' OR ' . $cnt->searchKeywords($keywords);
+            $expressions[] = $cnt->searchKeywords($keywords, $this->query);
         }
-        $this->filter(false, '(fvFilename like ' . $qkeywords . ' or fvDescription like ' . $qkeywords . ' or fvTitle like ' . $qkeywords . ' or fvTags like ' . $qkeywords . ' or u.uName = ' . $keywordsExact . $attribsStr . ')');
-        */
-
-
+        $expr = $this->query->expr();
+        $this->query->andWhere(call_user_func_array(array($expr, 'orX'), $expressions));
+        $this->query->setParameter('keywords', '%' . $keywords . '%');
     }
+
+
+    public function filterBySet($fs) {
+        $table = 'fsf' . $fs->getFileSetID();
+        $this->query->leftJoin('f', 'FileSetFiles', $table, 'f.fID = ' . $table . '.fID');
+        $this->query->andWhere($table . '.fsID = :fsID' . $fs->getFileSetID());
+        $this->query->setParameter('fsID' . $fs->getFileSetID(), $fs->getFileSetID());
+    }
+
+    public function filterByNoSet()
+    {
+        $this->query->leftJoin('f', 'FileSetFiles', 'fsex', 'f.fID = fsex.fID');
+        $this->query->andWhere('fsex.fsID is null');
+    }
+
+    /**
+     * Filters the file list by file size (in kilobytes)
+     */
+    public function filterBySize($from, $to)
+    {
+        $this->query->andWhere('fv.fvSize >= :fvSizeFrom');
+        $this->query->andWhere('fv.fvSize <= :fvSizeTo');
+        $this->query->setParameter('fvSizeFrom', $from * 1024);
+        $this->query->setParameter('fvSizeTo', $to * 1024);
+    }
+
+    /**
+     * Filters by public date
+     * @param string $date
+     */
+    public function filterByDateAdded($date, $comparison = '=')
+    {
+        $this->query->andWhere('f.fDateAdded ' . $comparison . ' :fDateAdded');
+        $this->query->setParameter('fDateAdded', $date);
+    }
+
+    public function filterByOriginalPageID($ocID)
+    {
+        $this->query->andWhere('f.ocID = :ocID');
+        $this->query->setParameter('ocID', $ocID);
+    }
+
+    /**
+     * filters a FileList by the uID of the approving User
+     * @param int $uID
+     * @return void
+     */
+    public function filterByApproverUserID($uID)
+    {
+        $this->query->andWhere('fv.fvApproverUID = :fvApproverUID');
+        $this->query->setParameter('fvApproverUID', $uID);
+    }
+
+    /**
+     * filters a FileList by the uID of the owning User
+     * @param int $uID
+     * @return void
+     * @since 5.4.1.1+
+     */
+    public function filterByAuthorUserID($uID)
+    {
+        $this->query->andWhere('fv.fvAuthorUID = :fvAuthorUID');
+        $this->query->setParameter('fvAuthorUID', $uID);
+    }
+
+    /**
+     * Filters by "tags" only.
+     */
+    public function filterByTags($tags)
+    {
+        $this->query->andWhere($this->query->expr()->andX(
+            $this->query->expr()->like('fv.fvTags', ':tags')
+        ));
+        $this->query->setParameter('tags', '%' . $tags . '%');
+    }
+
+    /**
+     * Sorts by filename in ascending order.
+     */
+    public function sortByFilenameAscending()
+    {
+        $this->query->orderBy('fv.fvFilename', 'asc');
+    }
+
 
 }

@@ -9,6 +9,7 @@ use Permissions;
 use Loader;
 use FileSet;
 use URL;
+use Concrete\Core\File\Type\Type as FileType;
 use FilePermissions;
 use stdClass;
 
@@ -169,7 +170,7 @@ class Files extends Controller {
 				<?=$form->text('size_to', $searchRequest['size_to'], array('style' => 'width: 60px'))?>
 				<? break;
 			case 'type':
-				$t1 = FileList::getTypeList();
+				$t1 = FileType::getUsedTypeList();
 				$types = array();
 				foreach($t1 as $value) {
 					$types[$value] = FileType::getGenericTypeText($value);
@@ -177,7 +178,7 @@ class Files extends Controller {
 				print $form->select('types', $types, $searchRequest['types'], array('style' => 'width: 120px'));
 				break;
 			case 'extension':
-				$ext1 = FileList::getExtensionList();
+				$ext1 = FileType::getUsedExtensionList();
 				$extensions = array();
 				foreach($ext1 as $value) {
 					$extensions[$value] = $value;
