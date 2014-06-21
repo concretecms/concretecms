@@ -6,6 +6,7 @@ echo $h->getDashboardPaneHeaderWrapper(t('Maintenance Mode'), false, 'span6 offs
 
 <form id="maintenance-mode-form" action="<?php echo $view->action('')?>" method="post">
 	<div class="ccm-pane-body">
+		<?php echo $this->controller->token->output('update_maintenance')?>
 		<fieldset>
 			<legend style="margin-bottom: 0px"><?=t('Maintenance Mode')?></legend>
 			<div class="control-group">
