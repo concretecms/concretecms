@@ -25,6 +25,11 @@ class Pagination extends Pagerfanta
         return $this->getNbResults();
     }
 
+    public function getTotalPages()
+    {
+        return $this->getNbPages();
+    }
+
     public function getCurrentPageResults()
     {
         $results = parent::getCurrentPageResults();

@@ -25,6 +25,7 @@ class Version
 {
 
     /**
+    /* @Id
      * @ManyToOne(targetEntity="File", inversedBy="versions")
      * @JoinColumn(name="fID", referencedColumnName="fID")
      * @var \Concrete\Core\File\File

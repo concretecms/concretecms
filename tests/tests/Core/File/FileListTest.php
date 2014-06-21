@@ -157,5 +157,51 @@ class FileListTest extends \FileStorageTestCase {
         $this->assertEquals(5, $results[0]->getFileID());
     }
 
+    public function testAutoSort()
+    {
+        $req = \Request::getInstance();
+        $req->query->set($this->list->getQuerySortColumnParameter(), 'fvFilename');
+        $req->query->set($this->list->getQuerySortDirectionParameter(), 'desc');
+
+        $nl = new \Concrete\Core\File\FileList();
+        $results = $nl->getResults();
+
+        $this->assertEquals(6, $results[0]->getFileID());
+        $this->assertEquals('testing.txt', $results[0]->getFilename());
+    }
+
+    public function testPaginationPagesWithoutPermissions()
+    {
+        $pagination = $this->list->getPagination();
+        $pagination->setMaxPerPage(2)->setCurrentPage(1);
+
+        $this->assertEquals(6, $pagination->getTotalPages());
+
+        $this->list->filterByType(\Concrete\Core\File\Type\Type::T_IMAGE);
+        $pagination = $this->list->getPagination();
+        $this->assertEquals(5, $pagination->getTotalResults());
+        $pagination->setMaxPerPage(2)->setCurrentPage(2);
+
+        $this->assertEquals(3, $pagination->getTotalPages());
+        $this->assertTrue($pagination->hasNextPage());
+        $this->assertTrue($pagination->hasPreviousPage());
+
+        $pagination->setCurrentPage(1);
+        $this->assertTrue($pagination->hasNextPage());
+        $this->assertFalse($pagination->hasPreviousPage());
+
+        $pagination->setCurrentPage(3);
+        $this->assertFalse($pagination->hasNextPage());
+        $this->assertTrue($pagination->hasPreviousPage());
+
+        $results = $pagination->getCurrentPageResults();
+        $this->assertInstanceOf('\Concrete\Core\File\File', $results[0]);
+        $this->assertEquals(1, count($results[0]));
+    }
+
+    public function testPaginationWithPermissions()
+    {
+        
+    }
 }
  
