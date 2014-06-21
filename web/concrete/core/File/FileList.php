@@ -16,6 +16,12 @@ class FileList extends DatabaseItemList
     const PERMISSION_LEVEL_VIEW_IN_FILE_MANAGER = 5;
 
     /**
+     * Columns in this array can be sorted via the request.
+     * @var array
+     */
+    protected $autoSortColumns = array('fvFilename', 'fvAuthorName','fvTitle', 'fDateAdded', 'fvDateAdded', 'fvSize');
+
+    /**
      * The default permission level is to view ALL files and ignore permissions.
      * @var int
      */
@@ -38,17 +44,15 @@ class FileList extends DatabaseItemList
 
     public function getPagination()
     {
-        if (!isset($this->pagination)) {
-            $adapter = new DoctrineDbalAdapter($this->query, function($query) {
-                $query->select('count(distinct f.fID)')->setMaxResults(1);
-            });
-            if ($this->permissionLevel == self::PERMISSION_LEVEL_IGNORE) {
-                $this->pagination = new Pagination($this, $adapter);
-            } else {
-                $this->pagination = new FuzzyPagination($this, $adapter);
-            }
+        $adapter = new DoctrineDbalAdapter($this->query, function($query) {
+            $query->select('count(distinct f.fID)')->setMaxResults(1);
+        });
+        if ($this->permissionLevel == self::PERMISSION_LEVEL_IGNORE) {
+            $pagination = new Pagination($this, $adapter);
+        } else {
+            $pagination = new FuzzyPagination($this, $adapter);
         }
-        return $this->pagination;
+        return $pagination;
     }
 
     /**

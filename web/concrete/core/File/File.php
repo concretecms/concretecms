@@ -3,6 +3,8 @@ namespace Concrete\Core\File;
 
 use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Util\Debug;
+use Doctrine\DBAL\Logging\EchoSQLLogger;
 use FileSet;
 use Loader;
 use CacheLocal;
@@ -448,7 +450,8 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $db = Loader::db();
         $em = $db->getEntityManager();
         $r = $em->getRepository('\Concrete\Core\File\Version');
-        return $r->findOneBy(array('file' => $this, 'fvIsApproved' => true));
+        $fv = $r->findOneBy(array('file' => $this, 'fvIsApproved' => true));
+        return $fv;
     }
 
     public function inFileSet($fs)
