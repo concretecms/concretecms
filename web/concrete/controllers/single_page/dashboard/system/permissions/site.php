@@ -9,6 +9,8 @@ use PermissionAccess;
 use GroupList;
 use Cache;
 use Page;
+use Group;
+use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 
 class Site extends DashboardPageController {
 	public function view() {
