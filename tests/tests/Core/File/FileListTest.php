@@ -3,10 +3,14 @@ namespace Concrete\Tests\Core\File;
 use \Concrete\Core\File\Importer;
 use \Concrete\Core\Attribute\Type as AttributeType;
 use \Concrete\Core\Attribute\Key\FileKey;
+use Concrete\Core\Pagination\FuzzyPagination;
 use Core;
 use \Concrete\Core\Attribute\Key\Category;
 
 class FileListTest extends \FileStorageTestCase {
+
+    /** @var \Concrete\Core\File\FileList */
+    protected $list;
 
     protected function setUp()
     {
@@ -61,6 +65,7 @@ class FileListTest extends \FileStorageTestCase {
         }
 
         $this->list = new \Concrete\Core\File\FileList();
+        $this->list->ignorePermissions();
     }
 
     protected function cleanup()
@@ -142,6 +147,7 @@ class FileListTest extends \FileStorageTestCase {
         $this->assertEquals(1, $results[0]->getFileID());
 
         $nl = new \Concrete\Core\File\FileList();
+        $nl->ignorePermissions();
         $nl->filterByNoSet();
         $results = $nl->getResults();
         $this->assertEquals(9, count($results));
@@ -164,6 +170,7 @@ class FileListTest extends \FileStorageTestCase {
         $req->query->set($this->list->getQuerySortDirectionParameter(), 'desc');
 
         $nl = new \Concrete\Core\File\FileList();
+        $nl->ignorePermissions();
         $results = $nl->getResults();
 
         $this->assertEquals(6, $results[0]->getFileID());
@@ -201,7 +208,58 @@ class FileListTest extends \FileStorageTestCase {
 
     public function testPaginationWithPermissions()
     {
-        
+        // first lets make some more files.
+        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
+        $image = DIR_BASE . '/concrete/images/logo.png';
+        $fi = new Importer();
+
+        $files = array(
+            'another.txt' => $sample,
+            'funtime.txt' => $sample,
+            'funtime2.txt' => $sample,
+            'awesome-o' => $sample,
+            'image.png' => $image
+        );
+
+        foreach($files as $filename => $pointer) {
+            $fi->import($pointer, $filename);
+        }
+
+        $nl = new \Concrete\Core\File\FileList();
+        $nl->setPermissionsChecker(function($file) {
+            if ($file->getTypeObject()->getGenericType() == \Concrete\Core\File\Type\Type::T_IMAGE) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+        $nl->sortByFilenameAscending();
+        $results = $nl->getResults();
+        $pagination = $nl->getPagination();
+        $this->assertEquals(FuzzyPagination::TOTAL_RESULTS_UNKNOWN, $nl->getTotalResults());
+        $this->assertEquals(FuzzyPagination::TOTAL_RESULTS_UNKNOWN, $pagination->getTotalResults());
+        $this->assertEquals(6, count($results));
+
+        // so there are six "real" results, and 15 total results without filtering.
+        $pagination->setMaxPerPage(4)->setCurrentPage(1);
+
+        $this->assertEquals(FuzzyPagination::TOTAL_RESULTS_UNKNOWN, $pagination->getTotalPages());
+
+        $this->assertTrue($pagination->hasNextPage());
+        $this->assertFalse($pagination->hasPreviousPage());
+        $results = $pagination->getCurrentPageResults();
+
+        $this->assertEquals(4, count($results));
+        $this->assertEquals('foobley.png', $results[0]->getFilename());
+        $this->assertEquals('image.png', $results[1]->getFilename());
+        $this->assertEquals('test1.png', $results[2]->getFilename());
+        $this->assertEquals('test2.png', $results[3]->getFilename());
+
+        $pagination->setCurrentPage(2);
+        $this->assertTrue($pagination->hasPreviousPage());
+        $this->assertFalse($pagination->hasNextPage());
+
+
     }
 }
  
