@@ -1,7 +1,6 @@
 <?
-namespace Concrete\Core\Html\Service;
+namespace Concrete\Core\Legacy;
 use stdClass;
-use Loader;
 
 class Pagination {
 

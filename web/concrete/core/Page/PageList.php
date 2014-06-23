@@ -2,7 +2,7 @@
 namespace Concrete\Core\Page;
 use Loader;
 use Page as ConcretePage;
-use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use Concrete\Core\Legacy\DatabaseItemList;
 use User;
 use \Concrete\Core\Permission\Access\Entity\PageOwnerEntity as PageOwnerPermissionAccessEntity;
 use PermissionKey;
