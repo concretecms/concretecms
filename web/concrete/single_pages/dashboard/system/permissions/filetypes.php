@@ -3,7 +3,6 @@
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Allowed File Types'), false, 'span8 offset2', false)?>
 
 	<form method="post" id="file-access-extensions" action="<?=$view->url('/dashboard/system/permissions/filetypes', 'file_access_extensions')?>" role="form">
-	
 		<?=$validation_token->output('file_access_extensions');?>
 		<p>
 		<?=t('Only files with the following extensions will be allowed. Separate extensions with commas. Periods and spaces will be ignored.')?>
@@ -21,7 +20,6 @@
     	        <button class="pull-right btn btn-success" type="submit" value="file-access-extensions"><?=t('Save')?></button>
             </div>
     	</div>	        
-	        
 	</form>
 
 	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
