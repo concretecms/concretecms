@@ -6,9 +6,9 @@ echo $h->getDashboardPaneHeaderWrapper(t('Maintenance Mode'), false, 'span6 offs
 <form id="maintenance-mode-form" action="<?php echo $view->action('')?>" method="post" role="form">
     <?php echo $this->controller->token->output('update_maintenance')?>
     <fieldset>
-        <legend style="margin-bottom: 0px"><?=t('Maintenance Mode')?></legend>
         <div class="form-group">
             <label class="radio"><?=$form->radio('site_maintenance_mode', '1', $site_maintenance_mode)?> <span><?=t('Enabled')?></span></label>
+            <label class="radio"><?=$form->radio('site_maintenance_mode', '0', $site_maintenance_mode)?> <span><?=t('Disabled')?></span></label>
         </div>
     </fieldset>	
 
