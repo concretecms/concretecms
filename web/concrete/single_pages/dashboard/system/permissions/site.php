@@ -40,16 +40,12 @@ $form = Loader::helper('form');
     <legend style="margin-bottom: 0px"><?=t('Edit Access')?></legend>
         <span class="help-block"><?=t('Choose which users and groups may edit your site. Note: These settings can be overridden on specific pages.')?></span>
         <div class="form-group">
-			<ul class="checkbox">
-				<?foreach($gArray as $g):?>
-				<li>
-					<label>
-						<?=$form->checkbox('gID[]', $g->getGroupID(), in_array($g->getGroupID(), $editAccess))?>
-						<span><?=$g->getGroupDisplayName()?></span>
-					</label>
-				</li>
-				<?endforeach?>
-			</ul>
+			<?foreach($gArray as $g):?>
+				<label class="checkbox">
+					<?=$form->checkbox('gID[]', $g->getGroupID(), in_array($g->getGroupID(), $editAccess))?>
+					<span><?=$g->getGroupDisplayName()?></span>
+				</label>
+			<?endforeach?>
         </div>
     </fieldset>
     
