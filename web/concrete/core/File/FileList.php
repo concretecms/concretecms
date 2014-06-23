@@ -1,6 +1,9 @@
 <?php 
 namespace Concrete\Core\File;
 use Concrete\Core\Foundation\Collection\DatabaseItemList;
+use Concrete\Core\Foundation\Collection\ListItemInterface;
+use Concrete\Core\Foundation\Collection\PermissionableListItemInterface;
+use Concrete\Core\Pagination\FuzzyPagination;
 use Database;
 use Doctrine\DBAL\Logging\EchoSQLLogger;
 use Doctrine\DBAL\Query;
@@ -8,12 +11,11 @@ use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use \Concrete\Core\Pagination\Pagination;
 use FileAttributeKey;
 
-class FileList extends DatabaseItemList
+class FileList extends DatabaseItemList implements PermissionableListItemInterface, ListItemInterface
 {
 
-    const PERMISSION_LEVEL_IGNORE = -1;
-    const PERMISSION_LEVEL_VIEW = 0;
-    const PERMISSION_LEVEL_VIEW_IN_FILE_MANAGER = 5;
+    /** @var  \Closure | integer | null */
+    protected $permissionsChecker;
 
     /**
      * Columns in this array can be sorted via the request.
@@ -21,11 +23,15 @@ class FileList extends DatabaseItemList
      */
     protected $autoSortColumns = array('fvFilename', 'fvAuthorName','fvTitle', 'fDateAdded', 'fvDateAdded', 'fvSize');
 
-    /**
-     * The default permission level is to view ALL files and ignore permissions.
-     * @var int
-     */
-    protected $permissionLevel = self::PERMISSION_LEVEL_IGNORE;
+    public function setPermissionsChecker(\Closure $checker)
+    {
+        $this->permissionsChecker = $checker;
+    }
+
+    public function ignorePermissions()
+    {
+        $this->permissionsChecker = -1;
+    }
 
     public function createQuery()
     {
@@ -38,16 +44,24 @@ class FileList extends DatabaseItemList
 
     public function getTotalResults()
     {
-        $query = clone $this->query;
-        return $query->select('count(distinct f.fID)')->setMaxResults(1)->execute()->fetchColumn();
+        if ($this->permissionsChecker == -1) {
+            $query = clone $this->query;
+            return $query->select('count(distinct f.fID)')->setMaxResults(1)->execute()->fetchColumn();
+        } else {
+            return FuzzyPagination::TOTAL_RESULTS_UNKNOWN;
+        }
     }
 
+    /**
+     * @return FuzzyPagination|Pagination
+     */
     public function getPagination()
     {
         $adapter = new DoctrineDbalAdapter($this->query, function($query) {
             $query->select('count(distinct f.fID)')->setMaxResults(1);
         });
-        if ($this->permissionLevel == self::PERMISSION_LEVEL_IGNORE) {
+
+        if ($this->permissionsChecker == -1) {
             $pagination = new Pagination($this, $adapter);
         } else {
             $pagination = new FuzzyPagination($this, $adapter);
@@ -62,11 +76,23 @@ class FileList extends DatabaseItemList
     public function getResult($queryRow)
     {
         $f = File::getByID($queryRow['fID']);
-        if (is_object($f)) {
-            if ($this->permissionLevel == self::PERMISSION_LEVEL_IGNORE) {
-                return $f;
+        if (is_object($f) && $this->checkPermissions($f)) {
+            return $f;
+        }
+    }
+
+    public function checkPermissions($mixed)
+    {
+        if (isset($this->permissionsChecker)) {
+            if ($this->permissionsChecker === -1) {
+                return true;
+            } else {
+                return call_user_func_array($this->permissionsChecker, array($mixed));
             }
         }
+
+        $fp = new \Permissions($mixed);
+        return $fp->canViewFile();
     }
 
     public function filterByType($type)
