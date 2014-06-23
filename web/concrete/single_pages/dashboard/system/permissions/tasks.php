@@ -19,7 +19,6 @@
 	
 	<div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <a href="<?=$view->url('/dashboard/system/permissions/tasks')?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
             <button class="pull-right btn btn-success" type="submit" ><?=t('Save')?> <i class="icon-ok-sign icon-white"></i></button>
         </div>
     </div>
