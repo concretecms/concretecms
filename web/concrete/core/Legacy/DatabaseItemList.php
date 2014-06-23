@@ -1,7 +1,5 @@
 <?
-namespace Concrete\Core\Foundation\Collection\Database;
-use \Concrete\Core\Foundation\Collection\ItemList;
-use Loader;
+namespace Concrete\Core\Legacy;
 class DatabaseItemList extends ItemList {
 
 	protected $query = '';

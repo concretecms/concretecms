@@ -3,9 +3,9 @@ namespace Concrete\Tests\Core\File;
 use \Concrete\Core\File\Importer;
 use \Concrete\Core\Attribute\Type as AttributeType;
 use \Concrete\Core\Attribute\Key\FileKey;
-use Concrete\Core\Pagination\FuzzyPagination;
 use Core;
 use \Concrete\Core\Attribute\Key\Category;
+use Doctrine\DBAL\Logging\EchoSQLLogger;
 
 class FileListTest extends \FileStorageTestCase {
 
@@ -21,6 +21,9 @@ class FileListTest extends \FileStorageTestCase {
             'PermissionAccessEntityTypes',
             'FileAttributeValues',
             'AttributeKeyCategories',
+            'AttributeSetKeys',
+            'Packages',
+            'AttributeSets',
             'AttributeTypes',
             'Config',
             'AttributeKeys',
@@ -236,26 +239,44 @@ class FileListTest extends \FileStorageTestCase {
         $nl->sortByFilenameAscending();
         $results = $nl->getResults();
         $pagination = $nl->getPagination();
-        $this->assertEquals(FuzzyPagination::TOTAL_RESULTS_UNKNOWN, $nl->getTotalResults());
-        $this->assertEquals(FuzzyPagination::TOTAL_RESULTS_UNKNOWN, $pagination->getTotalResults());
+        $this->assertEquals(-1, $nl->getTotalResults());
+        $this->assertEquals(6, $pagination->getTotalResults());
         $this->assertEquals(6, count($results));
 
         // so there are six "real" results, and 15 total results without filtering.
         $pagination->setMaxPerPage(4)->setCurrentPage(1);
 
-        $this->assertEquals(FuzzyPagination::TOTAL_RESULTS_UNKNOWN, $pagination->getTotalPages());
+        $this->assertEquals(2, $pagination->getTotalPages());
 
         $this->assertTrue($pagination->hasNextPage());
         $this->assertFalse($pagination->hasPreviousPage());
+
+        // Ok, so the results ought to be the following files, broken up into pages of four, in this order:
+        // foobley.png
+        // image.png
+        // logo1.png
+        // logo2.png
+        // -- page break --
+        // logo3.png
+        // test.png
+
         $results = $pagination->getCurrentPageResults();
 
+        $this->assertInstanceOf('\Concrete\Core\Pagination\PermissionablePagination', $pagination);
         $this->assertEquals(4, count($results));
         $this->assertEquals('foobley.png', $results[0]->getFilename());
         $this->assertEquals('image.png', $results[1]->getFilename());
-        $this->assertEquals('test1.png', $results[2]->getFilename());
-        $this->assertEquals('test2.png', $results[3]->getFilename());
+        $this->assertEquals('logo1.png', $results[2]->getFilename());
+        $this->assertEquals('logo2.png', $results[3]->getFilename());
 
         $pagination->setCurrentPage(2);
+
+        $results = $pagination->getCurrentPageResults();
+
+        $this->assertEquals('logo3.png', $results[0]->getFilename());
+        $this->assertEquals('test.png', $results[1]->getFilename());
+        $this->assertEquals(2, count($results));
+
         $this->assertTrue($pagination->hasPreviousPage());
         $this->assertFalse($pagination->hasNextPage());
 

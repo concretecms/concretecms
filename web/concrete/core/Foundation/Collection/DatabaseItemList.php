@@ -26,6 +26,11 @@ abstract class DatabaseItemList implements ListItemInterface
         $this->setupAutomaticSorting();
     }
 
+    public function getQueryObject()
+    {
+        return $this->query;
+    }
+
     /** Returns a full array of results. */
     public function getResults()
     {

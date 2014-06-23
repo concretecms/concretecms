@@ -1,17 +1,15 @@
 <?php 
 namespace Concrete\Core\File;
 use Concrete\Core\Foundation\Collection\DatabaseItemList;
-use Concrete\Core\Foundation\Collection\ListItemInterface;
 use Concrete\Core\Foundation\Collection\PermissionableListItemInterface;
-use Concrete\Core\Pagination\FuzzyPagination;
+use Concrete\Core\Pagination\PermissionablePagination;
 use Database;
-use Doctrine\DBAL\Logging\EchoSQLLogger;
 use Doctrine\DBAL\Query;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use \Concrete\Core\Pagination\Pagination;
 use FileAttributeKey;
 
-class FileList extends DatabaseItemList implements PermissionableListItemInterface, ListItemInterface
+class FileList extends DatabaseItemList implements PermissionableListItemInterface
 {
 
     /** @var  \Closure | integer | null */
@@ -48,23 +46,22 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
             $query = clone $this->query;
             return $query->select('count(distinct f.fID)')->setMaxResults(1)->execute()->fetchColumn();
         } else {
-            return FuzzyPagination::TOTAL_RESULTS_UNKNOWN;
+            return -1; // unknown
         }
     }
 
     /**
-     * @return FuzzyPagination|Pagination
+     * @return PermissionablePagination|Pagination
      */
     public function getPagination()
     {
-        $adapter = new DoctrineDbalAdapter($this->query, function($query) {
-            $query->select('count(distinct f.fID)')->setMaxResults(1);
-        });
-
         if ($this->permissionsChecker == -1) {
+            $adapter = new DoctrineDbalAdapter($this->query, function($query) {
+                $query->select('count(distinct f.fID)')->setMaxResults(1);
+            });
             $pagination = new Pagination($this, $adapter);
         } else {
-            $pagination = new FuzzyPagination($this, $adapter);
+            $pagination = new PermissionablePagination($this);
         }
         return $pagination;
     }

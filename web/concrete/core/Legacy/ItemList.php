@@ -1,6 +1,5 @@
 <?
-namespace Concrete\Core\Foundation\Collection;
-use Loader;
+namespace Concrete\Core\Legacy;
 use Session;
 
 class ItemList {

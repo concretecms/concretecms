@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Collection\Version;
 use Loader;
-use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use \Concrete\Core\Legacy\DatabaseItemList;
 
 /**
  * An object that holds a list of versions for a particular collection.
