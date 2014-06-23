@@ -1,52 +1,46 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-/* @var $h ConcreteDashboardHelper */
+
 $h = Loader::helper('concrete/dashboard');
-/* @var $ih ConcreteInterfaceHelper */
 $ih = Loader::helper('concrete/ui');
-/* @var $form FormHelper */
 $form = Loader::helper('form');
 ?>
 <?=$h->getDashboardPaneHeaderWrapper(t('Site Access'), false, false, false);?>
-<form id="site-permissions-form" action="<?=$view->action('')?>" method="post">
-	<?=$this->controller->token->output('site_permissions_code')?>
+<form id="site-permissions-form" action="<?=$view->action('')?>" method="post" role="form">
+	<?php echo $this->controller->token->output('site_permissions_code')?>
+	
+    <? if(PERMISSIONS_MODEL != 'simple'):?>
+    <div>
+        <p>
+            <?=t('Your concrete5 site does not use the simple permissions model. You must change your permissions for each specific page and content area.')?>
+        </p>
+    </div>
+    <?else:?>
+    
+    <fieldset>
+	<legend style="margin-bottom: 0px"><?=t('Viewing Permissions')?></legend>
+	<div class="form-group">
+        <label class="radio">
+		    <?=$form->radio('view', 'ANYONE', $guestCanRead)?> 
+		    <span><?=t('Public')?> - <?=t('Anyone may view the website.')?></span>
+        </label>
+		 
+        <label class="radio">
+            <?=$form->radio('view', 'USERS', $registeredCanRead)?> 
+            <span><?=t('Members')?> - <?=t('Only registered users may view the website. test')?></span>
+        </label>
 
-<? if(PERMISSIONS_MODEL != 'simple'):?>
-<div class="ccm-pane-body ccm-pane-body-footer">
-<p>
-<?=t('Your concrete5 site does not use the simple permissions model. You must change your permissions for each specific page and content area.')?>
-</p>
-</div>
-<?else:?>
-<div class="ccm-pane-body">
-	<div class="clearfix">
-		<?=$form->label('view', t('Viewing Permissions'))?>
-		<div class="input">
-			<ul class="inputs-list">
-				<li>
-					<label>
-						<?=$form->radio('view', 'ANYONE', $guestCanRead)?>
-						<span><?=t('Public')?> - <?=t('Anyone may view the website.')?></span>
-					</label>
-				</li>
-				<li>
-					<label>
-						<?=$form->radio('view', 'USERS', $registeredCanRead)?>
-						<span><?=t('Members')?> - <?=t('Only registered users may view the website.')?></span>
-					</label>
-				</li>
-				<li>
-					<label>
-						<?=$form->radio('view', 'PRIVATE', !$guestCanRead && !$registeredCanRead)?>
-						<span><?=t('Private')?> - <?=t('Only the administrative group may view the website.')?></span>
-					</label>
-				</li>
-			</ul>
-		</div>
-	</div>
-	<div class="clearfix">
-		<?=$form->label('gID', t('Edit Access'))?>
-		<div class="input">
-			<ul class="inputs-list">
+		<label class="radio">
+			<?=$form->radio('view', 'PRIVATE', !$guestCanRead && !$registeredCanRead)?>
+			<span><?=t('Private')?> - <?=t('Only the administrative group may view the website.')?></span>
+		</label>
+    </div>
+    </fieldset>
+    
+    <fieldset>
+    <legend style="margin-bottom: 0px"><?=t('Edit Access')?></legend>
+        <span class="help-block"><?=t('Choose which users and groups may edit your site. Note: These settings can be overridden on specific pages.')?></span>
+        <div class="form-group">
+			<ul class="checkbox">
 				<?foreach($gArray as $g):?>
 				<li>
 					<label>
@@ -56,16 +50,14 @@ $form = Loader::helper('form');
 				</li>
 				<?endforeach?>
 			</ul>
-			<span class="help-block"><?=t('Choose which users and groups may edit your site. Note: These settings can be overridden on specific pages.')?></span>
-		</div>
-	</div>
-</div>
-<div class="ccm-pane-footer">
-<?
-	$submit = $ih->submit( t('Save'), 'site-permissions-form', 'right', 'primary');
-	print $submit;
-?>
-</div>
+        </div>
+    </fieldset>
+    
+    <div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
+            <button class="pull-right btn btn-success" type="submit" ><?=t('Save')?></button>
+        </div>
+    </div>
 
 <?endif?>
 </form>
