@@ -11,22 +11,18 @@ use TaskPermission;
 class Types extends DashboardPageController {
 
 	public function on_start() {
-		$this->set('ci', Loader::helper('concrete/urls'));
-		$this->set('ch', Loader::helper('concrete/ui'));
-		$this->set("valt", Loader::helper('validation/token'));
-		$this->error = Loader::helper('validation/error');
-	}
+        $this->set('ci', Loader::helper('concrete/urls'));
+		parent::on_start();
+    }
 
-	public function on_before_render() {
-		$this->set('error', $this->error);
-	}
-	
 	public function view() {
 		$env = Environment::get();
 		$env->clearOverrideCache();
 		$btAvailableArray = BlockTypeList::getAvailableList();
-		$btInstalledArray = BlockTypeList::getInstalledList();
-		$internalBlockTypes = array();		
+        $btl = new BlockTypeList();
+        $btl->includeInternalBlockTypes();
+        $btInstalledArray = $btl->get();
+		$internalBlockTypes = array();
 		$normalBlockTypes = array();
 		foreach($btInstalledArray as $_bt) {
 			if ($_bt->isInternalBlockType()) {
@@ -68,24 +64,24 @@ class Types extends DashboardPageController {
 	public function install($btHandle = null) {
 		$tp = new TaskPermission();
 		if ($tp->canInstallPackages()) { 
-			try {
-				$resp = BlockType::installBlockType($btHandle);
-				
-				if ($resp != '') {
-					$this->error->add($resp);
-				} else {
-					$this->set('message', t('Block Type Installed.'));
-				}
-			} catch(Exception $e) {
-				$this->error->add($e);
-				$this->set('error', $this->error);
-			}
+            try {
+                $resp = BlockType::installBlockType($btHandle);
+                $this->redirect('/dashboard/blocks/types', 'installed');
+            } catch(\Exception $e) {
+                $this->error->add($e);
+            }
 		} else {
 			$this->error->add(t('You do not have permission to install custom block types or add-ons.'));
 			$this->set('error', $this->error);
 		}		
 		$this->view();
 	}
+
+    public function installed()
+    {
+        $this->set('success', t('Block type installed successfully.'));
+        $this->view();
+    }
 	
 	public function uninstall($btID = 0, $token = '') {
 		$valt = Loader::helper('validation/token');
@@ -94,7 +90,7 @@ class Types extends DashboardPageController {
 			$bt = BlockType::getByID($btID);
 		}
 		
-		$u = new User();
+		$u = new \User();
 		if (!$u->isSuperUser()) {
 			$this->error->add(t('Only the super user may remove block types.'));
 		} else if (isset($bt) && ($bt instanceof BlockType)) {

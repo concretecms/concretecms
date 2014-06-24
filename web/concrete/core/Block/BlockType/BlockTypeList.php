@@ -12,14 +12,21 @@ use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
 class BlockTypeList extends DatabaseItemList {
 
 	protected $autoSortColumns = array('btHandle', 'btID', 'btDisplayOrder');
-	
+	protected $includeInternalBlockTypes = false;
+
 	function __construct() {
 		$this->setQuery("select btID from BlockTypes");
-		$this->filter('btIsInternal', false);
 		$this->sortByMultiple('btDisplayOrder asc', 'btName asc', 'btID asc');
 	}
+    public function includeInternalBlockTypes()
+    {
+        $this->includeInternalBlockTypes = true;
+    }
 
 	public function get($itemsToGet = 100, $offset = 0) {
+        if (!$this->includeInternalBlockTypes) {
+            $this->filter('btIsInternal', false);
+        }
 		$r = parent::get( $itemsToGet, intval($offset));
 		$blocktypes = array();
 		foreach($r as $row) {
@@ -81,28 +88,24 @@ class BlockTypeList extends DatabaseItemList {
 				if (strpos($file, '.') === false) {
 					$fdir = $dir . '/' . $file;
 					if (is_dir($fdir) && !in_array($file, $btHandles) && file_exists($fdir . '/' . FILENAME_BLOCK_CONTROLLER)) {
-						$bt = new BlockType;
-						$bt->btHandle = $file;
-						$class = $bt->getBlockTypeClassFromHandle($file);
-						
-						require_once($fdir . '/' . FILENAME_BLOCK_CONTROLLER);
-						if (!class_exists($class)) {
-							continue;
-						}
-						$bta = new $class;
-						$bt->btName = $bta->getBlockTypeName();
-						$bt->btDescription = $bta->getBlockTypeDescription();
-						$bt->hasCustomViewTemplate = file_exists(DIR_FILES_BLOCK_TYPES . '/' . $file . '/' . FILENAME_BLOCK_VIEW);
-						$bt->hasCustomEditTemplate = file_exists(DIR_FILES_BLOCK_TYPES . '/' . $file . '/' . FILENAME_BLOCK_EDIT);
-						$bt->hasCustomAddTemplate = file_exists(DIR_FILES_BLOCK_TYPES . '/' . $file . '/' . FILENAME_BLOCK_ADD);
-						
-						
-						$btID = $db->GetOne("select btID from BlockTypes where btHandle = ?", array($file));
-						$bt->installed = ($btID > 0);
-						$bt->btID = $btID;
-						
+						$bt = BlockType::getByHandle($file);
+                        if (!is_object($bt)) {
+                            $bt = new BlockType;
+                            $bt->setBlockTypeHandle($file);
+                            $class = $bt->getBlockTypeClass();
+                            $bta = new $class;
+                            $bt->setBlockTypeName($bta->getBlockTypeName());
+                            $bt->setBlockTypeDescription($bta->getBlockTypeDescription());
+                            $bt->hasCustomViewTemplate = file_exists(DIR_FILES_BLOCK_TYPES . '/' . $file . '/' . FILENAME_BLOCK_VIEW);
+                            $bt->hasCustomEditTemplate = file_exists(DIR_FILES_BLOCK_TYPES . '/' . $file . '/' . FILENAME_BLOCK_EDIT);
+                            $bt->hasCustomAddTemplate = file_exists(DIR_FILES_BLOCK_TYPES . '/' . $file . '/' . FILENAME_BLOCK_ADD);
+                            $bt->installed = false;
+
+                        } else {
+                            $bt->installed = true;
+                        }
+
 						$blocktypes[] = $bt;
-						
 					}
 				}				
 			}
