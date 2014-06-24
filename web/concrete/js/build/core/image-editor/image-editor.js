@@ -1067,7 +1067,6 @@ $.fn.ImageEditor = function (settings) {
       $.fn.dialog.closeTop();
   });
   $('div.controls > div.controlscontainer',context).children('ul.nav').children().click(function(){
-    debugger;
     if ($(this).hasClass('active')) return false;
     $('div.controls > div.controlscontainer',context).children('ul.nav').children().removeClass('active');
     $(this).addClass('active');
@@ -1076,7 +1075,6 @@ $.fn.ImageEditor = function (settings) {
   });
   $('div.controlset',context).find('div.control').children('div.contents').slideUp(0)
   .end().end().find('h4').click(function(){
-    debugger;
     if ($(this).parent().hasClass('disabled')) return;
     $(this).addClass('active');
     $('div.controlset',context).find('h4').not($(this)).removeClass('active');

@@ -567,7 +567,7 @@ class BlockType
      * Adds a block to the system without adding it to a collection.
      * Passes page and area data along if it is available, however.
      *
-     * @param mixed           $data
+     * @param mixed            $data
      * @param bool|\Collection $c
      * @param bool|\Area       $a
      * @return bool|\Concrete\Core\Block\Block
@@ -610,6 +610,9 @@ class BlockType
             $class = $this->getBlockTypeClass();
             if (is_object($c)) {
                 $nb->setBlockCollectionObject($c);
+            }
+            if (is_object($a)) {
+                $nb->setBlockAreaObject($a);
             }
             $bc = new $class($nb);
             $bc->save($data);

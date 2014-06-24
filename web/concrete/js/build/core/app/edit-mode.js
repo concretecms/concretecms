@@ -357,9 +357,10 @@
         Block.call(my, elem, edit_mode, dragger);
     };
 
-    var StackBlock = Concrete.StackBlock = function StackBlock(elem, edit_mode, dragger) {
+    var StackBlock = Concrete.StackBlock = function StackBlock(elem, stack, edit_mode, dragger) {
         var my = this;
         Block.call(my, elem, edit_mode, dragger);
+        my.setAttr('stack', stack);
     };
 
     /**
@@ -426,14 +427,14 @@
             });
 
             $(element).find('div.ccm-panel-add-block-stack-item').each(function () {
-                var block, me = $(this), dragger = me.find('div.stack-name');
-                my.addBlock(block = new Stack($(this), my, dragger));
+                var stack, block, me = $(this), dragger = me.find('div.stack-name');
+                my.addBlock(stack = new Stack($(this), my, dragger));
 
-                block.setPeper(dragger);
+                stack.setPeper(dragger);
 
                 $(this).find('div.block').each(function () {
                     var block, me = $(this), dragger = me.find('div.block-name');
-                    my.addBlock(block = new StackBlock($(this), my, dragger));
+                    my.addBlock(block = new StackBlock($(this), stack, my, dragger));
 
                     block.setPeper(dragger);
                 });
@@ -759,7 +760,6 @@
         contendingDragAreas: function areaContendingDragAreas(pep, block) {
             var my = this, max_blocks = my.getMaximumBlocks();
 
-
             if (block instanceof Stack || block.getHandle() === 'core_stack_display') {
                 return _(my.getDragAreas()).filter(function (drag_area) {
                     return drag_area.isContender(pep, block);
@@ -791,12 +791,13 @@
                     if (after_block) {
                         after_block.getElem().after(html);
                     } else {
-                        area.getElem().append(html);
+                        area.getElem().prepend(html);
                     }
                     $.fn.dialog.hideLoader();
                     _.defer(function () {
                         my.getEditMode().scanBlocks();
                         my.showSuccessfulAdd();
+                        Concrete.forceRefresh();
                     });
                 });
             return true;
@@ -1338,8 +1339,7 @@
                     area = my.getSelected().getArea(),
                     area_handle = area.getHandle(),
                     dragAreaBlockID = 0,
-                    dragAreaBlock = my.getSelected().getBlock(),
-                    pcID = elem.data('pcid');
+                    dragAreaBlock = my.getSelected().getBlock();
 
                 if (dragAreaBlock) {
                     dragAreaBlockID = dragAreaBlock.getId();
@@ -1349,13 +1349,14 @@
 
                 var settings = {
                     cID: CCM_CID,
+                    bID: elem.data('block-id'),
                     arHandle: area_handle,
                     btID: block_type_id,
                     mode: 'edit',
                     processBlock: 1,
                     add: 1,
                     btask: 'alias_existing_block',
-                    pcID: [ pcID ],
+                    pcID: [ elem.data('cID') ],
                     ccm_token: CCM_SECURITY_TOKEN
                 };
                 if (dragAreaBlockID) {
@@ -1404,26 +1405,23 @@
                         dragAreaBlockID: dragAreaBlockID
                     }, function (response) {
                         $.fn.dialog.showLoader();
-                        $.getJSON(CCM_DISPATCHER_FILENAME, settings, function (response) {
-                            if (response.error) return;
-                            $.get(CCM_TOOLS_PATH + '/edit_block_popup',
-                                {
-                                    arHandle: response.arHandle,
-                                    cID: response.cID,
-                                    bID: response.bID,
-                                    btask: 'view_edit_mode'
-                                }, function (html) {
-                                    if (dragAreaBlock) {
-                                        dragAreaBlock.getElem().after(html);
-                                    } else {
-                                        area.getElem().append(html);
-                                    }
-                                    $.fn.dialog.hideLoader();
-                                    _.defer(function () {
-                                        my.getEditMode().scanBlocks();
-                                    });
+                        $.get(CCM_TOOLS_PATH + '/edit_block_popup',
+                            {
+                                arHandle: response.arHandle,
+                                cID: response.cID,
+                                bID: response.bID,
+                                btask: 'view_edit_mode'
+                            }, function (html) {
+                                if (dragAreaBlock) {
+                                    dragAreaBlock.getElem().after(html);
+                                } else {
+                                    area.getElem().append(html);
+                                }
+                                $.fn.dialog.hideLoader();
+                                _.defer(function () {
+                                    my.getEditMode().scanBlocks();
                                 });
-                        });
+                            });
                     });
                 } else if (is_inline) {
                     ConcreteEvent.fire('EditModeBlockAddInline', {
