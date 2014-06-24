@@ -82,8 +82,10 @@ class BlockType
     {
         $em = DB::get()->getEntityManager();
         $bt = $em->getRepository('\Concrete\Core\Block\BlockType\BlockType')->findOneBy(array('btHandle' => $btHandle));
-        $bt->loadController();
-        return $bt;
+        if (is_object($bt)) {
+            $bt->loadController();
+            return $bt;
+        }
     }
 
     /**
@@ -164,6 +166,22 @@ class BlockType
         $prefix = $r->override ? true : $pkgHandle;
         $class = core_class('Block\\' . $txt->camelcase($btHandle) . '\\Controller', $prefix);
         return $class;
+    }
+
+    /**
+     * Sets the block type handle
+     */
+    public function setBlockTypeName($btName)
+    {
+        $this->btName = $btName;
+    }
+
+    /**
+     * Sets the block type description
+     */
+    public function setBlockTypeDescription($btDescription)
+    {
+        $this->btDescription = $btDescription;
     }
 
     /**
