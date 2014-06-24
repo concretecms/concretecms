@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Search;
 use Database;
+use Doctrine\DBAL\Logging\EchoSQLLogger;
 
 abstract class DatabaseItemList implements ListItemInterface
 {
@@ -46,6 +47,13 @@ abstract class DatabaseItemList implements ListItemInterface
         return $results;
     }
 
+    public function filter($field, $value, $comparison = '=')
+    {
+        $this->query->andWhere(implode(' ', array(
+           $field, $comparison, $this->query->createNamedParameter($value)
+        )));
+    }
+
     public function sortBy($field, $direction = 'asc')
     {
         $this->sortBy = $field;
@@ -85,6 +93,16 @@ abstract class DatabaseItemList implements ListItemInterface
 
     public function setupAutomaticSorting(StickyRequest $request = null)
     {
+        // First, we check to see if there are any sortable attributes we can add to the
+        // auto sort columns.
+        if (is_callable(array($this->attributeClass, 'getList'))) {
+            $l = call_user_func(array($this->attributeClass, 'getList'));
+            foreach($l as $ak) {
+                $this->autoSortColumns[] = 'ak_' . $ak->getAttributeKeyHandle();
+            }
+        }
+
+        // now we check to see if we should setup sorting by a sticky search request.
         if ($request) {
             $data = $request->getSearchRequest();
         } else {
