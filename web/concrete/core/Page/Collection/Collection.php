@@ -1,26 +1,27 @@
 <?php
 namespace Concrete\Core\Page\Collection;
 
-use Concrete\Core\Feature\Feature;
-use Loader;
+use Area;
+use Block;
 use CacheLocal;
+use CollectionAttributeKey;
+use CollectionVersion;
+use Concrete\Core\Attribute\Key\Key;
+use Concrete\Core\Attribute\Value\CollectionValue as CollectionAttributeValue;
+use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
+use Concrete\Core\Feature\Feature;
+use Concrete\Core\Foundation\Object as Object;
+use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
+use Concrete\Core\Page\Collection\Version\VersionList;
+use Concrete\Core\Page\Search\IndexedSearch;
+use Concrete\Core\Page\Style\CustomStyleRule;
 use Config;
+use Loader;
 use Page;
+use PageCache;
 use Permissions;
 use Stack;
-use CollectionVersion;
-use \Concrete\Core\Foundation\Object as Object;
-use CollectionAttributeKey;
-use \Concrete\Core\Attribute\Value\CollectionValue as CollectionAttributeValue;
 use User;
-use Block;
-use \Concrete\Core\Page\Collection\Version\VersionList;
-use \Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
-use \Concrete\Core\Page\Style\CustomStyleRule;
-use Concrete\Core\Attribute\Key\Key;
-use Concrete\Core\Page\Search\IndexedSearch;
-use PageCache;
-use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
 
 class Collection extends Object
 {
@@ -30,10 +31,148 @@ class Collection extends Object
 
     /* version specific stuff */
 
+    public static function reindexPendingPages()
+    {
+        $num = 0;
+        $db = Loader::db();
+        $r = $db->Execute("select cID from PageSearchIndex where cRequiresReindex = 1");
+        while ($row = $r->FetchRow()) {
+            $pc = Page::getByID($row['cID']);
+            $pc->reindex(false, true);
+            $num++;
+        }
+        Config::save('DO_PAGE_REINDEX_CHECK', false);
+        return $num;
+    }
+
+    public static function getByHandle($handle)
+    {
+        $db = Loader::db();
+
+        // first we ensure that this does NOT appear in the Pages table. This is not a page. It is more basic than that
+
+        $r = $db->query(
+                "select Collections.cID, Pages.cID as pcID from Collections left join Pages on Collections.cID = Pages.cID where Collections.cHandle = ?",
+                array($handle)
+        );
+        if ($r->numRows() == 0) {
+
+            // there is nothing in the collections table for this page, so we create and grab
+
+            $data['handle'] = $handle;
+            $cObj = self::addCollection($data);
+
+        } else {
+            $row = $r->fetchRow();
+            if ($row['cID'] > 0 && $row['pcID'] == null) {
+
+                // there is a collection, but it is not a page. so we grab it
+                $cObj = Collection::getByID($row['cID']);
+
+            }
+        }
+
+        if (isset($cObj)) {
+            return $cObj;
+        }
+
+    }
+
+    public function addCollection($data)
+    {
+        $db = Loader::db();
+        $dh = Loader::helper('date');
+        $cDate = $dh->getSystemDateTime();
+        $cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : $cDate;
+
+        if (isset($data['cID'])) {
+            $res = $db->query(
+                      "insert into Collections (cID, cHandle, cDateAdded, cDateModified) values (?, ?, ?, ?)",
+                      array($data['cID'], $data['handle'], $cDate, $cDate)
+            );
+            $newCID = $data['cID'];
+        } else {
+            $res = $db->query(
+                      "insert into Collections (cHandle, cDateAdded, cDateModified) values (?, ?, ?)",
+                      array($data['handle'], $cDate, $cDate)
+            );
+            $newCID = $db->Insert_ID();
+        }
+
+        $cvIsApproved = (isset($data['cvIsApproved']) && $data['cvIsApproved'] == 0) ? 0 : 1;
+        $cvIsNew = 1;
+        if ($cvIsApproved) {
+            $cvIsNew = 0;
+        }
+        if (isset($data['cvIsNew'])) {
+            $cvIsNew = $data['cvIsNew'];
+        }
+        $data['name'] = Loader::helper('text')->sanitize($data['name']);
+        if (is_object($this) && $this instanceof Page) {
+            $pThemeID = $this->getCollectionThemeID();
+        } else {
+            $pThemeID = 0;
+        }
+
+        $pTemplateID = 0;
+        if ($data['pTemplateID']) {
+            $pTemplateID = $data['pTemplateID'];
+        }
+
+        if ($res) {
+            // now we add a pending version to the collectionversions table
+            $v2 = array(
+                $newCID,
+                1,
+                $pTemplateID,
+                $data['name'],
+                $data['handle'],
+                $data['cDescription'],
+                $cDatePublic,
+                $cDate,
+                VERSION_INITIAL_COMMENT,
+                $data['uID'],
+                $cvIsApproved,
+                $cvIsNew,
+                $pThemeID
+            );
+            $q2 = "insert into CollectionVersions (cID, cvID, pTemplateID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved, cvIsNew, pThemeID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $r2 = $db->prepare($q2);
+            $res2 = $db->execute($r2, $v2);
+        }
+
+        $nc = Collection::getByID($newCID);
+        return $nc;
+    }
+
+    /**
+     * @param int   $cID
+     * @param mixed $version 'RECENT'|'ACTIVE'|version id
+     * @return Collection
+     */
+    public static function getByID($cID, $version = 'RECENT')
+    {
+        $db = Loader::db();
+        $q = "select Collections.cDateAdded, Collections.cDateModified, Collections.cID from Collections where cID = ?";
+        $row = $db->getRow($q, array($cID));
+
+        $c = new Collection;
+        $c->setPropertiesFromArray($row);
+
+        if ($version != false) {
+            // we don't do this on the front page
+            $c->loadVersionObject($version);
+        }
+
+        return $c;
+    }
+
     function loadVersionObject($cvID = 'ACTIVE')
     {
         $this->vObj = CollectionVersion::get($this, $cvID);
     }
+
+    /* attribute stuff */
 
     function getVersionToModify()
     {
@@ -54,13 +193,12 @@ class Collection extends Object
         }
     }
 
-    public function getNextVersionComments()
+    function getVersionObject()
     {
-        $c = Page::getByID($this->getCollectionID(), 'ACTIVE');
-        $cvID = $c->getVersionID();
-        return t("Version %d", $cvID + 1);
+        return $this->vObj;
     }
 
+    // remove the collection attributes for this version of a page
 
     public function cloneVersion($versionComments)
     {
@@ -99,17 +237,29 @@ class Collection extends Object
         $r = $db->query($q);
         while ($row = $r->FetchRow()) {
             $db->Execute(
-                'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, csrID) values (?, ?, ?, ?)',
-                array(
-                    $this->getCollectionID(),
-                    $nvObj->getVersionID(),
-                    $row['arHandle'],
-                    $row['csrID']
-                )
+               'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, csrID) values (?, ?, ?, ?)',
+               array(
+                   $this->getCollectionID(),
+                   $nvObj->getVersionID(),
+                   $row['arHandle'],
+                   $row['csrID']
+               )
             );
         }
 
         return $nc;
+    }
+
+    function getCollectionID()
+    {
+        return $this->cID;
+    }
+
+    public function getNextVersionComments()
+    {
+        $c = Page::getByID($this->getCollectionID(), 'ACTIVE');
+        $cvID = $c->getVersionID();
+        return t("Version %d", $cvID + 1);
     }
 
     public function getFeatureAssignments()
@@ -119,9 +269,6 @@ class Collection extends Object
         }
         return array();
     }
-
-
-    /* attribute stuff */
 
     /**
      * Returns the value of the attribute with the handle $ak
@@ -149,7 +296,7 @@ class Collection extends Object
      *
      *
      * @param string|object $akHandle
-     * @param boolean $displayMode
+     * @param boolean       $displayMode
      * @return type
      */
     public function getAttribute($akHandle, $displayMode = false)
@@ -166,7 +313,8 @@ class Collection extends Object
         }
     }
 
-    // remove the collection attributes for this version of a page
+    // get's an array of collection attribute objects that are attached to this collection. Does not get values
+
     public function clearCollectionAttributes($retainAKIDs = array())
     {
         $db = Loader::db();
@@ -178,8 +326,8 @@ class Collection extends Object
             $akIDStr = implode(',', $cleanAKIDs);
             $v2 = array($this->getCollectionID(), $this->getVersionID());
             $db->query(
-                "delete from CollectionAttributeValues where cID = ? and cvID = ? and akID not in ({$akIDStr})",
-                $v2
+               "delete from CollectionAttributeValues where cID = ? and cvID = ? and akID not in ({$akIDStr})",
+               $v2
             );
         } else {
             $v2 = array($this->getCollectionID(), $this->getVersionID());
@@ -188,19 +336,13 @@ class Collection extends Object
         $this->reindex();
     }
 
-    public static function reindexPendingPages()
+    function getVersionID()
     {
-        $num = 0;
-        $db = Loader::db();
-        $r = $db->Execute("select cID from PageSearchIndex where cRequiresReindex = 1");
-        while ($row = $r->FetchRow()) {
-            $pc = Page::getByID($row['cID']);
-            $pc->reindex(false, true);
-            $num++;
-        }
-        Config::save('DO_PAGE_REINDEX_CHECK', false);
-        return $num;
+        // shortcut
+        return $this->vObj->cvID;
     }
+
+    /* area stuff */
 
     public function reindex($index = false, $actuallyDoReindex = true)
     {
@@ -212,9 +354,9 @@ class Collection extends Object
             $db = Loader::db();
 
             $attribs = CollectionAttributeKey::getAttributes(
-                $this->getCollectionID(),
-                $this->getVersionID(),
-                'getSearchIndexValue'
+                                             $this->getCollectionID(),
+                                             $this->getVersionID(),
+                                             'getSearchIndexValue'
             );
 
             $db->Execute('delete from CollectionSearchIndexAttributes where cID = ?', array($this->getCollectionID()));
@@ -228,15 +370,14 @@ class Collection extends Object
 
             $index->reindexPage($this);
             $db->Replace(
-                'PageSearchIndex',
-                array('cID' => $this->getCollectionID(), 'cRequiresReindex' => 0),
-                array('cID'),
-                false
+               'PageSearchIndex',
+               array('cID' => $this->getCollectionID(), 'cRequiresReindex' => 0),
+               array('cID'),
+               false
             );
 
             $cache = PageCache::getLibrary();
             $cache->purge($this);
-
 
             // we check to see if this page is referenced in any gatherings
             $c = Page::getByID($this->getCollectionID(), $this->getVersionID());
@@ -250,13 +391,27 @@ class Collection extends Object
             $db = Loader::db();
             Config::save('DO_PAGE_REINDEX_CHECK', true);
             $db->Replace(
-                'PageSearchIndex',
-                array('cID' => $this->getCollectionID(), 'cRequiresReindex' => 1),
-                array('cID'),
-                false
+               'PageSearchIndex',
+               array('cID' => $this->getCollectionID(), 'cRequiresReindex' => 1),
+               array('cID'),
+               false
             );
         }
     }
+
+    /* aliased content */
+
+    public function clearAttribute($ak)
+    {
+        $db = Loader::db();
+        $cav = $this->getAttributeValueObject($ak);
+        if (is_object($cav)) {
+            $cav->delete();
+        }
+        $this->reindex();
+    }
+
+    /* basic CRUD */
 
     public function getAttributeValueObject($ak, $createIfNotFound = false)
     {
@@ -281,8 +436,8 @@ class Collection extends Object
             // Is this avID in use ?
             if (is_object($av)) {
                 $cnt = $db->GetOne(
-                    "select count(avID) from CollectionAttributeValues where avID = ?",
-                    $av->getAttributeValueID()
+                          "select count(avID) from CollectionAttributeValues where avID = ?",
+                          $av->getAttributeValueID()
                 );
             }
 
@@ -296,33 +451,12 @@ class Collection extends Object
         return $av;
     }
 
-    public function setAttribute($ak, $value)
-    {
-        if (!is_object($ak)) {
-            $ak = CollectionAttributeKey::getByHandle($ak);
-        }
-        $ak->setAttribute($this, $value);
-        unset($ak);
-        $this->reindex();
-    }
-
-    public function clearAttribute($ak)
-    {
-        $db = Loader::db();
-        $cav = $this->getAttributeValueObject($ak);
-        if (is_object($cav)) {
-            $cav->delete();
-        }
-        $this->reindex();
-    }
-
-    // get's an array of collection attribute objects that are attached to this collection. Does not get values
     public function getSetCollectionAttributes()
     {
         $db = Loader::db();
         $akIDs = $db->GetCol(
-            "select akID from CollectionAttributeValues where cID = ? and cvID = ?",
-            array($this->getCollectionID(), $this->getVersionID())
+                    "select akID from CollectionAttributeValues where cID = ? and cvID = ?",
+                    array($this->getCollectionID(), $this->getVersionID())
         );
         $attribs = array();
         foreach ($akIDs as $akID) {
@@ -336,14 +470,24 @@ class Collection extends Object
         $this->setAttribute($ak, $value);
     }
 
-    /* area stuff */
+    public function setAttribute($ak, $value)
+    {
+        if (!is_object($ak)) {
+            $ak = CollectionAttributeKey::getByHandle($ak);
+        }
+        $ak->setAttribute($this, $value);
+        unset($ak);
+        $this->reindex();
+    }
 
+    /**
+     * @param string $arHandle
+     * @return Area
+     */
     function getArea($arHandle)
     {
         return Area::get($this, $arHandle);
     }
-
-    /* aliased content */
 
     function hasAliasedContent()
     {
@@ -371,14 +515,6 @@ class Collection extends Object
         return false;
     }
 
-
-    /* basic CRUD */
-
-    function getCollectionID()
-    {
-        return $this->cID;
-    }
-
     function getCollectionDateLastModified($mask = null, $type = "system")
     {
         $dh = Loader::helper('date');
@@ -392,11 +528,6 @@ class Collection extends Object
         } else {
             return $dh->date($mask, strtotime($cDateModified));
         }
-    }
-
-    function getVersionObject()
-    {
-        return $this->vObj;
     }
 
     function getCollectionHandle()
@@ -419,48 +550,9 @@ class Collection extends Object
         }
     }
 
-    function getVersionID()
-    {
-        // shortcut
-        return $this->vObj->cvID;
-    }
-
     public function __destruct()
     {
         unset($this->vObj);
-    }
-
-    function getCollectionAreaDisplayOrder($arHandle, $ignoreVersions = false)
-    {
-        // this function queries CollectionBlocks to grab the highest displayOrder value, then increments it, and returns
-        // this is used to add new blocks to existing Pages/areas
-
-        $db = Loader::db();
-        $cID = $this->cID;
-        $cvID = $this->vObj->cvID;
-        if ($ignoreVersions) {
-            $q = "select max(cbDisplayOrder) as cbdis from CollectionVersionBlocks where cID = ? and arHandle = ?";
-            $v = array($cID, $arHandle);
-        } else {
-            $q = "select max(cbDisplayOrder) as cbdis from CollectionVersionBlocks where cID = ? and cvID = ? and arHandle = ?";
-            $v = array($cID, $cvID, $arHandle);
-        }
-        $r = $db->query($q, $v);
-        if ($r) {
-            if ($r->numRows() > 0) {
-                // then we know we got a value; we increment it and return
-                $res = $r->fetchRow();
-                $displayOrder = $res['cbdis'];
-                if (is_null($displayOrder)) {
-                    return 0;
-                }
-                $displayOrder++;
-                return $displayOrder;
-            } else {
-                // we didn't get anything, so we return a zero
-                return 0;
-            }
-        }
     }
 
     /**
@@ -476,12 +568,12 @@ class Collection extends Object
         CacheLocal::set('csrCheck', $this->getCollectionID() . ':' . $this->getVersionID(), true);
 
         $r1 = $db->GetAll(
-            'select bID, arHandle, csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0',
-            array($this->getCollectionID(), $this->getVersionID())
+                 'select bID, arHandle, csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0',
+                 array($this->getCollectionID(), $this->getVersionID())
         );
         $r2 = $db->GetAll(
-            'select arHandle, csrID from CollectionVersionAreaStyles where cID = ? and cvID = ? and csrID > 0',
-            array($this->getCollectionID(), $this->getVersionID())
+                 'select arHandle, csrID from CollectionVersionAreaStyles where cID = ? and cvID = ? and csrID > 0',
+                 array($this->getCollectionID(), $this->getVersionID())
         );
         foreach ($r1 as $r) {
             $csrID = $r['csrID'];
@@ -492,9 +584,9 @@ class Collection extends Object
                 $obj->setCustomStyleNameSpace('blockStyle' . $bID . $arHandle);
                 $csrs[] = $obj;
                 CacheLocal::set(
-                    'csrObject',
-                    $this->getCollectionID() . ':' . $this->getVersionID() . ':' . $r['arHandle'] . ':' . $r['bID'],
-                    $obj
+                          'csrObject',
+                          $this->getCollectionID() . ':' . $this->getVersionID() . ':' . $r['arHandle'] . ':' . $r['bID'],
+                          $obj
                 );
             }
         }
@@ -507,17 +599,17 @@ class Collection extends Object
                 $obj->setCustomStyleNameSpace('areaStyle' . $arHandle);
                 $csrs[] = $obj;
                 CacheLocal::set(
-                    'csrObject',
-                    $this->getCollectionID() . ':' . $this->getVersionID() . ':' . $r['arHandle'],
-                    $obj
+                          'csrObject',
+                          $this->getCollectionID() . ':' . $this->getVersionID() . ':' . $r['arHandle'],
+                          $obj
                 );
             }
         }
 
         // grab all the header block style rules for items in global areas on this page
         $rs = $db->GetCol(
-            'select arHandle from Areas where arIsGlobal = 1 and cID = ?',
-            array($this->getCollectionID())
+                 'select arHandle from Areas where arIsGlobal = 1 and cID = ?',
+                 array($this->getCollectionID())
         );
         if (count($rs) > 0) {
             $pcp = new Permissions($this);
@@ -530,8 +622,8 @@ class Collection extends Object
                 if (is_object($s)) {
                     CacheLocal::set('csrCheck', $s->getCollectionID() . ':' . $s->getVersionID(), true);
                     $rs1 = $db->GetAll(
-                        'select bID, csrID, arHandle from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0',
-                        array($s->getCollectionID(), $s->getVersionID())
+                              'select bID, csrID, arHandle from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0',
+                              array($s->getCollectionID(), $s->getVersionID())
                     );
                     foreach ($rs1 as $r) {
                         $csrID = $r['csrID'];
@@ -542,10 +634,9 @@ class Collection extends Object
                             $obj->setCustomStyleNameSpace('blockStyle' . $bID . $arHandle);
                             $csrs[] = $obj;
                             CacheLocal::set(
-                                'csrObject',
-                                $s->getCollectionID() . ':' . $s->getVersionID(
-                                ) . ':' . $r['arHandle'] . ':' . $r['bID'],
-                                $obj
+                                      'csrObject',
+                                      $s->getCollectionID() . ':' . $s->getVersionID() . ':' . $r['arHandle'] . ':' . $r['bID'],
+                                      $obj
                             );
                         }
                     }
@@ -599,12 +690,12 @@ class Collection extends Object
     {
         $db = Loader::db();
         $db->Execute(
-            'delete from CollectionVersionAreaStyles where cID = ? and cvID = ? and arHandle = ?',
-            array(
-                $this->getCollectionID(),
-                $this->getVersionID(),
-                $area->getAreaHandle()
-            )
+           'delete from CollectionVersionAreaStyles where cID = ? and cvID = ? and arHandle = ?',
+           array(
+               $this->getCollectionID(),
+               $this->getVersionID(),
+               $area->getAreaHandle()
+           )
         );
     }
 
@@ -612,15 +703,15 @@ class Collection extends Object
     {
         $db = Loader::db();
         $db->Replace(
-            'CollectionVersionAreaStyles',
-            array(
-                'cID' => $this->getCollectionID(),
-                'cvID' => $this->getVersionID(),
-                'arHandle' => $area->getAreaHandle(),
-                'csrID' => $csr->getCustomStyleRuleID()
-            ),
-            array('cID', 'cvID', 'arHandle'),
-            true
+           'CollectionVersionAreaStyles',
+           array(
+               'cID'      => $this->getCollectionID(),
+               'cvID'     => $this->getVersionID(),
+               'arHandle' => $area->getAreaHandle(),
+               'csrID'    => $csr->getCustomStyleRuleID()
+           ),
+           array('cID', 'cvID', 'arHandle'),
+           true
         );
     }
 
@@ -634,15 +725,15 @@ class Collection extends Object
             $oc->getVersionID()
         );
         $r = $db->GetOne(
-            'select count(*) from CollectionVersionRelatedEdits where cID = ? and cvID = ? and cRelationID = ? and cvRelationID = ?',
-            $v
+                'select count(*) from CollectionVersionRelatedEdits where cID = ? and cvID = ? and cRelationID = ? and cvRelationID = ?',
+                $v
         );
         if ($r > 0) {
             return false;
         } else {
             $db->Execute(
-                'insert into CollectionVersionRelatedEdits (cID, cvID, cRelationID, cvRelationID) values (?, ?, ?, ?)',
-                $v
+               'insert into CollectionVersionRelatedEdits (cID, cvID, cRelationID, cvRelationID) values (?, ?, ?, ?)',
+               $v
             );
         }
     }
@@ -652,10 +743,17 @@ class Collection extends Object
         return false;
     }
 
+    /* new cleaned up API below */
+
     function getPageTypeID()
     {
         return false;
     }
+
+    /* This function is slightly misnamed: it should be getOrCreateByHandle($handle) but I wanted to keep it brief
+     * @param string $handle
+     * @return Collection
+     */
 
     public function rescanDisplayOrder($areaName)
     {
@@ -677,68 +775,6 @@ class Collection extends Object
             }
             $r->free();
         }
-    }
-
-
-    /* new cleaned up API below */
-
-    /**
-     * @param int $cID
-     * @param mixed $version 'RECENT'|'ACTIVE'|version id
-     * @return Collection
-     */
-    public static function getByID($cID, $version = 'RECENT')
-    {
-        $db = Loader::db();
-        $q = "select Collections.cDateAdded, Collections.cDateModified, Collections.cID from Collections where cID = ?";
-        $row = $db->getRow($q, array($cID));
-
-        $c = new Collection;
-        $c->setPropertiesFromArray($row);
-
-        if ($version != false) {
-            // we don't do this on the front page
-            $c->loadVersionObject($version);
-        }
-
-        return $c;
-    }
-
-    /* This function is slightly misnamed: it should be getOrCreateByHandle($handle) but I wanted to keep it brief
-     * @param string $handle
-     * @return Collection
-     */
-    public static function getByHandle($handle)
-    {
-        $db = Loader::db();
-
-        // first we ensure that this does NOT appear in the Pages table. This is not a page. It is more basic than that
-
-        $r = $db->query(
-            "select Collections.cID, Pages.cID as pcID from Collections left join Pages on Collections.cID = Pages.cID where Collections.cHandle = ?",
-            array($handle)
-        );
-        if ($r->numRows() == 0) {
-
-            // there is nothing in the collections table for this page, so we create and grab
-
-            $data['handle'] = $handle;
-            $cObj = self::addCollection($data);
-
-        } else {
-            $row = $r->fetchRow();
-            if ($row['cID'] > 0 && $row['pcID'] == null) {
-
-                // there is a collection, but it is not a page. so we grab it
-                $cObj = Collection::getByID($row['cID']);
-
-            }
-        }
-
-        if (isset($cObj)) {
-            return $cObj;
-        }
-
     }
 
     public function refreshCache()
@@ -771,52 +807,8 @@ class Collection extends Object
     }
 
     /**
-     * List the block IDs in a collection or area within a collection
-     * @param bool|string $arHandle . If specified, returns just the blocks in an area
-     * @return array
-     */
-    public function getBlockIDs($arHandle = false)
-    {
-        $blockIDs = CacheLocal::getEntry(
-            'collection_block_ids',
-            $this->getCollectionID() . ':' . $this->getVersionID()
-        );
-        $blocks = array();
-
-        if (!is_array($blockIDs)) {
-            $v = array($this->getCollectionID(), $this->getVersionID());
-            $db = Loader::db();
-            $q = "select Blocks.bID, CollectionVersionBlocks.arHandle from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) order by CollectionVersionBlocks.cbDisplayOrder asc";
-            $r = $db->GetAll($q, $v);
-            $blockIDs = array();
-            if (is_array($r)) {
-                foreach ($r as $bl) {
-                    $blockIDs[strtolower($bl['arHandle'])][] = $bl;
-                }
-            }
-            CacheLocal::set('collection_block_ids', $this->getCollectionID() . ':' . $this->getVersionID(), $blockIDs);
-        }
-
-
-        if ($arHandle != false) {
-            $blockIDsTmp = $blockIDs[strtolower($arHandle)];
-            $blockIDs = $blockIDsTmp;
-        } else {
-            $blockIDsTmp = $blockIDs;
-            $blockIDs = array();
-            foreach ($blockIDsTmp as $arHandle => $row) {
-                foreach ($row as $brow) {
-                    if (!in_array($brow, $blockIDs)) {
-                        $blockIDs[] = $brow;
-                    }
-                }
-            }
-        }
-        return $blockIDs;
-    }
-
-    /**
      * List the blocks in a collection or area within a collection
+     *
      * @param bool|string $arHandle . If specified, returns just the blocks in an area
      * @return array
      */
@@ -837,6 +829,50 @@ class Collection extends Object
         return $blocks;
     }
 
+    /**
+     * List the block IDs in a collection or area within a collection
+     *
+     * @param bool|string $arHandle . If specified, returns just the blocks in an area
+     * @return array
+     */
+    public function getBlockIDs($arHandle = false)
+    {
+        $blockIDs = CacheLocal::getEntry(
+                              'collection_block_ids',
+                              $this->getCollectionID() . ':' . $this->getVersionID()
+        );
+        $blocks = array();
+
+        if (!is_array($blockIDs)) {
+            $v = array($this->getCollectionID(), $this->getVersionID());
+            $db = Loader::db();
+            $q = "select Blocks.bID, CollectionVersionBlocks.arHandle from CollectionVersionBlocks inner join Blocks on (CollectionVersionBlocks.bID = Blocks.bID) inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where CollectionVersionBlocks.cID = ? and (CollectionVersionBlocks.cvID = ? or CollectionVersionBlocks.cbIncludeAll=1) order by CollectionVersionBlocks.cbDisplayOrder asc";
+            $r = $db->GetAll($q, $v);
+            $blockIDs = array();
+            if (is_array($r)) {
+                foreach ($r as $bl) {
+                    $blockIDs[strtolower($bl['arHandle'])][] = $bl;
+                }
+            }
+            CacheLocal::set('collection_block_ids', $this->getCollectionID() . ':' . $this->getVersionID(), $blockIDs);
+        }
+
+        if ($arHandle != false) {
+            $blockIDsTmp = $blockIDs[strtolower($arHandle)];
+            $blockIDs = $blockIDsTmp;
+        } else {
+            $blockIDsTmp = $blockIDs;
+            $blockIDs = array();
+            foreach ($blockIDsTmp as $arHandle => $row) {
+                foreach ($row as $brow) {
+                    if (!in_array($brow, $blockIDs)) {
+                        $blockIDs[] = $brow;
+                    }
+                }
+            }
+        }
+        return $blockIDs;
+    }
 
     public function addBlock($bt, $a, $data)
     {
@@ -856,8 +892,8 @@ class Collection extends Object
             // is not aliased across versions, then we want to get display order simply based on area, NOT based
             // on area + version
             $newBlockDisplayOrder = $this->getCollectionAreaDisplayOrder(
-                $arHandle,
-                true
+                                         $arHandle,
+                                         true
             ); // second argument is "ignoreVersions"
         } else {
             $newBlockDisplayOrder = $this->getCollectionAreaDisplayOrder($arHandle);
@@ -883,13 +919,13 @@ class Collection extends Object
                 $fd = $fe->getFeatureDetailObject($controller);
                 $fa = CollectionVersionFeatureAssignment::add($fe, $fd, $this);
                 $db->Execute(
-                    'insert into BlockFeatureAssignments (cID, cvID, bID, faID) values (?, ?, ?, ?)',
-                    array(
-                        $this->getCollectionID(),
-                        $this->getVersionID(),
-                        $nb->getBlockID(),
-                        $fa->getFeatureAssignmentID()
-                    )
+                   'insert into BlockFeatureAssignments (cID, cvID, bID, faID) values (?, ?, ?, ?)',
+                   array(
+                       $this->getCollectionID(),
+                       $this->getVersionID(),
+                       $nb->getBlockID(),
+                       $fa->getFeatureAssignmentID()
+                   )
                 );
             }
         }
@@ -897,82 +933,48 @@ class Collection extends Object
         return Block::getByID($nb->getBlockID(), $this, $a);
     }
 
+    function getCollectionAreaDisplayOrder($arHandle, $ignoreVersions = false)
+    {
+        // this function queries CollectionBlocks to grab the highest displayOrder value, then increments it, and returns
+        // this is used to add new blocks to existing Pages/areas
+
+        $db = Loader::db();
+        $cID = $this->cID;
+        $cvID = $this->vObj->cvID;
+        if ($ignoreVersions) {
+            $q = "select max(cbDisplayOrder) as cbdis from CollectionVersionBlocks where cID = ? and arHandle = ?";
+            $v = array($cID, $arHandle);
+        } else {
+            $q = "select max(cbDisplayOrder) as cbdis from CollectionVersionBlocks where cID = ? and cvID = ? and arHandle = ?";
+            $v = array($cID, $cvID, $arHandle);
+        }
+        $r = $db->query($q, $v);
+        if ($r) {
+            if ($r->numRows() > 0) {
+                // then we know we got a value; we increment it and return
+                $res = $r->fetchRow();
+                $displayOrder = $res['cbdis'];
+                if (is_null($displayOrder)) {
+                    return 0;
+                }
+                $displayOrder++;
+                return $displayOrder;
+            } else {
+                // we didn't get anything, so we return a zero
+                return 0;
+            }
+        }
+    }
+
     public function addFeature(Feature $fe)
     {
         $db = Loader::db();
         $db->Replace(
-            'CollectionVersionFeatures',
-            array('cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID(), 'feID' => $fe->getFeatureID()),
-            array('cID', 'cvID', 'feID'),
-            true
+           'CollectionVersionFeatures',
+           array('cID' => $this->getCollectionID(), 'cvID' => $this->getVersionID(), 'feID' => $fe->getFeatureID()),
+           array('cID', 'cvID', 'feID'),
+           true
         );
-    }
-
-    public function addCollection($data)
-    {
-        $db = Loader::db();
-        $dh = Loader::helper('date');
-        $cDate = $dh->getSystemDateTime();
-        $cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : $cDate;
-
-        if (isset($data['cID'])) {
-            $res = $db->query(
-                "insert into Collections (cID, cHandle, cDateAdded, cDateModified) values (?, ?, ?, ?)",
-                array($data['cID'], $data['handle'], $cDate, $cDate)
-            );
-            $newCID = $data['cID'];
-        } else {
-            $res = $db->query(
-                "insert into Collections (cHandle, cDateAdded, cDateModified) values (?, ?, ?)",
-                array($data['handle'], $cDate, $cDate)
-            );
-            $newCID = $db->Insert_ID();
-        }
-
-        $cvIsApproved = (isset($data['cvIsApproved']) && $data['cvIsApproved'] == 0) ? 0 : 1;
-        $cvIsNew = 1;
-        if ($cvIsApproved) {
-            $cvIsNew = 0;
-        }
-        if (isset($data['cvIsNew'])) {
-            $cvIsNew = $data['cvIsNew'];
-        }
-        $data['name'] = Loader::helper('text')->sanitize($data['name']);
-        if (is_object($this) && $this instanceof Page) {
-            $pThemeID = $this->getCollectionThemeID();
-        } else {
-            $pThemeID = 0;
-        }
-
-        $pTemplateID = 0;
-        if ($data['pTemplateID']) {
-            $pTemplateID = $data['pTemplateID'];
-        }
-
-        if ($res) {
-            // now we add a pending version to the collectionversions table
-            $v2 = array(
-                $newCID,
-                1,
-                $pTemplateID,
-                $data['name'],
-                $data['handle'],
-                $data['cDescription'],
-                $cDatePublic,
-                $cDate,
-                VERSION_INITIAL_COMMENT,
-                $data['uID'],
-                $cvIsApproved,
-                $cvIsNew,
-                $pThemeID
-            );
-            $q2 = "insert into CollectionVersions (cID, cvID, pTemplateID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsApproved, cvIsNew, pThemeID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $r2 = $db->prepare($q2);
-            $res2 = $db->execute($r2, $v2);
-        }
-
-        $nc = Collection::getByID($newCID);
-        return $nc;
     }
 
     public function markModified()
@@ -1101,16 +1103,16 @@ class Collection extends Object
                     $r2 = $db->query($q2);
                     while ($row2 = $r2->fetchRow()) {
                         $db->Replace(
-                            'BlockPermissionAssignments',
-                            array(
-                                'cID' => $newCID,
-                                'cvID' => $row['cvID'],
-                                'bID' => $row['bID'],
-                                'paID' => $row2['paID'],
-                                'pkID' => $row2['pkID']
-                            ),
-                            array('cID', 'cvID', 'bID', 'paID', 'pkID'),
-                            true
+                           'BlockPermissionAssignments',
+                           array(
+                               'cID'  => $newCID,
+                               'cvID' => $row['cvID'],
+                               'bID'  => $row['bID'],
+                               'paID' => $row2['paID'],
+                               'pkID' => $row2['pkID']
+                           ),
+                           array('cID', 'cvID', 'bID', 'paID', 'pkID'),
+                           true
                         );
                     }
                 }
