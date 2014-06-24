@@ -53,10 +53,8 @@
                 }
             }
 
-            if (typeof my.getExitInlineEvent === 'function') {
-                Concrete.event.unsubscribe(my.getExitInlineEvent());
-            }
-            my.set('exitInlineEvent', Concrete.event.bind('EditModeExitInline', function (e) {
+            Concrete.event.bind('EditModeExitInline', function (e) {
+                Concrete.event.unbind(e);
                 e.stopPropagation();
                 var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + CCM_CID + '&bID=' + block.getId() + '&arHandle=' + escape(area.getHandle()) + '&btask=view_edit_mode';
                 $.fn.dialog.showLoader();
@@ -72,7 +70,7 @@
                         });
                     }
                 );
-            }));
+            });
 
             ConcreteMenuManager.disable();
             ConcreteToolbar.disable();

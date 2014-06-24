@@ -1,4 +1,4 @@
-;(function(global, $) {
+var eventing = (function(global, $) {
     'use strict';
     global.c5 = global.c5 || {};
 
@@ -42,7 +42,7 @@
                 if (typeof enabled === 'undefined') {
                     return debug;
                 }
-                return debug = !!enabled;
+                return (debug = !!enabled);
             },
 
             subscribe: function(type, handler, target) {
@@ -87,7 +87,7 @@
             },
 
             unsubscribe: function(type, secondary_argument, target) {
-
+                var args;
                 if (debug) {
                     groupLog('Event Unsubscribed', function() {
                         groupLog('Type', type, true);
@@ -99,8 +99,9 @@
 
                 }
 
-                var args = [type.toLowerCase()];
-                if (typeof secondary_argument !== undefined) args.push(secondary_argument);
+                args = [(typeof type.toLowerCase === 'function' ? type.toLowerCase() : type)];
+
+                if (typeof secondary_argument !== 'undefined') args.push(secondary_argument);
                 $.fn.unbind.apply(getTarget(target), args);
                 return ConcreteEvent;
             }
