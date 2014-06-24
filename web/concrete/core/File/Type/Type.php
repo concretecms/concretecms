@@ -88,7 +88,7 @@ class Type
         }
     }
 
-    public function getGenericTypeText($type)
+    public static function getGenericTypeText($type)
     {
         if ($type > 0) {
             return static::mapGenericTypeText($type);

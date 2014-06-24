@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Page\Search\ColumnSet;
 use Loader;
-use \Concrete\Core\Foundation\Collection\Database\Column\Set as DatabaseItemListColumnSet;
+use \Concrete\Core\Search\Column\Set;
 use User;
-class ColumnSet extends \Concrete\Core\Foundation\Collection\Database\Column\Set {
+class ColumnSet extends Set {
 	protected $attributeClass = 'CollectionAttributeKey';
 	public function getCurrent() {
 		$u = new User();
@@ -11,7 +11,7 @@ class ColumnSet extends \Concrete\Core\Foundation\Collection\Database\Column\Set
 		if ($fldc != '') {
 			$fldc = @unserialize($fldc);
 		}
-		if (!($fldc instanceof DatabaseItemListColumnSet)) {
+		if (!($fldc instanceof Set)) {
 			$fldc = new DefaultSet();
 		}
 		return $fldc;

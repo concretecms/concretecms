@@ -5,7 +5,7 @@ use FileList;
 use \Concrete\Core\Search\StickyRequest;
 use \Concrete\Core\File\Search\ColumnSet\ColumnSet as FileSearchColumnSet;
 use \Concrete\Core\File\Search\Result\Result as FileSearchResult;
-use \Concrete\Core\Attribute\File\FileKey as FileAttributeKey;
+use FileAttributeKey;
 use Permissions;
 use Loader;
 use FileSet;
@@ -18,28 +18,32 @@ class Files extends Controller {
 
 	protected $fields = array();
 
+    /** @var \Concrete\Core\File\FileList */
+    protected $fileList;
+
 	public function __construct() {
-		$this->fileList = new FileList();
         $this->searchRequest = new StickyRequest('files');
+		$this->fileList = new FileList($this->searchRequest);
 	}
 
 	public function search() {
 		$cp = FilePermissions::getGlobal();
-        $sr = new StickyRequest('files');
 		if (!$cp->canSearchFiles()) {
 			return false;
 		}
 		
 		if ($_REQUEST['submitSearch']) {
-            $sr->resetSearchRequest();
+            $this->searchRequest->resetSearchRequest();
 		}
 
         $req = $this->searchRequest->getSearchRequest();
 		$columns = FileSearchColumnSet::getCurrent();
 
-		$col = $columns->getDefaultSortColumn();	
-		$this->fileList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
-		
+        if (!$this->fileList->getActiveSortColumn()) {
+    		$col = $columns->getDefaultSortColumn();
+	    	$this->fileList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
+        }
+
 		// first thing, we check to see if a saved search is being used
 		if (isset($req['fssID'])) {
 			$fs = FileSet::getByID($req['fssID']);
@@ -51,9 +55,9 @@ class Files extends Controller {
 				$this->fileList->addToSearchRequest('ccm_order_by', $colsort->getColumnKey());
 			}
 		}
-
 		$keywords = htmlentities($req['fKeywords'], ENT_QUOTES, APP_CHARSET);
-		
+
+
 		if ($keywords != '') {
 			$this->fileList->filterByKeywords($keywords);
 		}
@@ -145,7 +149,7 @@ class Files extends Controller {
 			$this->fileList->setItemsPerPage(intval($req['numResults']));
 		}
 
-		$ilr = new FileSearchResult($columns, $this->fileList, URL::to('/ccm/system/search/files/submit'), $this->fields);
+        $ilr = new FileSearchResult($columns, $this->fileList, URL::to('/ccm/system/search/files/submit'), $this->fields);
 		$this->result = $ilr;
 	}
 
@@ -176,7 +180,7 @@ class Files extends Controller {
 				foreach($t1 as $value) {
 					$types[$value] = FileType::getGenericTypeText($value);
 				}
-				print $form->select('types', $types, $searchRequest['types'], array('style' => 'width: 120px'));
+				print $form->select('type', $types, $searchRequest['type'], array('style' => 'width: 120px'));
 				break;
 			case 'extension':
 				$ext1 = FileType::getUsedExtensionList();
@@ -184,7 +188,7 @@ class Files extends Controller {
 				foreach($ext1 as $value) {
 					$extensions[$value] = $value;
 				}				
-				print $form->select('extensions', $extensions, $searchRequest['extensions'], array('style' => 'width: 120px'));
+				print $form->select('extension', $extensions, $searchRequest['extensions'], array('style' => 'width: 120px'));
 				break;
 			case 'date_added': ?>
 				<?=$form->text('date_from', $searchRequest['date_from'], array('style' => 'width: 86px'))?>

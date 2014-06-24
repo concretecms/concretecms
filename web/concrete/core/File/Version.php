@@ -68,6 +68,11 @@ class Version
     protected $fvAuthorUID = 0;
 
     /**
+     * @Column(type="bigint")
+     */
+    protected $fvSize = 0;
+
+    /**
      * @Column(type="integer")
      */
     protected $fvApproverUID = 0;
@@ -92,6 +97,21 @@ class Version
      * @Column(type="text")
      */
     protected $fvTags = null;
+
+    /**
+     * @Column(type="boolean")
+     */
+    protected $fvHasThumbnail1 = false;
+
+    /**
+     * @Column(type="boolean")
+     */
+    protected $fvHasThumbnail2 = false;
+
+    /**
+     * @Column(type="boolean")
+     */
+    protected $fvHasThumbnail3 = false;
 
     public static function add(\Concrete\Core\File\File $file, $filename, $prefix, $data = array())
     {
@@ -146,9 +166,7 @@ class Version
     }
 
     protected $attributes = array();
-    protected $fvHasThumbnail1 = false;
-    protected $fvHasThumbnail2 = false;
-    protected $fvHasThumbnail3 = false;
+
 
     // Update type constants
     const UT_REPLACE_FILE = 1;
@@ -734,13 +752,18 @@ class Version
         $helper = Loader::helper('concrete/file');
 
         $thumbnail = $image->thumbnail(new \Imagine\Image\Box($width, $height));
+        $thumbnailPath = $helper->getThumbnailFilePath($this->getPrefix(), $this->getFilename(), $level);
 
         $o = new stdClass;
         $o->visibility = AdapterInterface::VISIBILITY_PUBLIC;
         $o->mimetype = 'image/jpeg';
 
+        if ($filesystem->has($thumbnailPath)) {
+            $filesystem->delete($thumbnailPath);
+        }
+
         $filesystem->write(
-            $helper->getThumbnailFilePath($this->getPrefix(), $this->getFilename(), $level),
+            $thumbnailPath,
             $thumbnail,
             array(
                 'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
@@ -748,12 +771,6 @@ class Version
             )
         );
 
-        $db = Loader::db();
-        $db->update(
-            'FileVersions',
-            array('fvHasThumbnail' . $level => true),
-            array('fID' => $this->getFileID(), 'fvID' => $this->getFileVersionID())
-        );
         switch ($level) {
             case 1:
                 $this->fvHasThumbnail1 = true;
@@ -765,17 +782,26 @@ class Version
                 $this->fvHasThumbnail3 = true;
                 break;
         }
+
+        $this->save();
     }
 
     public function hasThumbnail($level)
     {
-        return $this->{"fvHasThumbnail{$level}"};
+        switch ($level) {
+            case 1:
+                return $this->fvHasThumbnail1;
+            case 2:
+                return $this->fvHasThumbnail2;
+            case 3:
+                return $this->fvHasThumbnail3;
+        }
     }
 
     public function getThumbnail($level, $fullImageTag = true)
     {
         $html = Loader::helper('html');
-        if ($this->{"fvHasThumbnail{$level}"}) {
+        if ($this->hasThumbnail($level)) {
             if ($fullImageTag) {
                 return $html->image($this->getThumbnailURL($level));
             } else {
@@ -801,31 +827,28 @@ class Version
 
         $fsr = $this->getFileResource();
         if (!$fsr->isFile()) {
-            return ConcreteFile::F_ERROR_FILE_NOT_FOUND;
+            return Importer::E_FILE_INVALID;
         }
 
         $size = $fsr->getSize();
 
         $title = ($firstRun) ? $this->getFilename() : $this->getTitle();
 
-        $db->Execute(
-            'update FileVersions set fvExtension = ?, fvType = ?, fvTitle = ?, fvSize = ? where fID = ? and fvID = ?',
-            array($ext, $ftl->getGenericType(), $title, $size, $this->getFileID(), $this->getFileVersionID())
-        );
+        $this->fvExtension = $ext;
+        $this->fvType = $ftl->getGenericType();
+        $this->fvTitle = $title;
+        $this->fvSize = $size;
+
         if (is_object($ftl)) {
             if ($ftl->getCustomImporter() != false) {
-
-                $db->Execute(
-                    'update FileVersions set fvGenericType = ? where fID = ? and fvID = ?',
-                    array($ftl->getGenericType(), $this->getFileID(), $this->getFileVersionID())
-                );
-
-                // we have a custom library script that handles this stuff
+                $this->fvGenericType = $ftl->getGenericType();
                 $cl = $ftl->getCustomInspector();
                 $cl->inspect($this);
-
             }
         }
+
+        $this->save();
+
         $f = $this->getFile();
         $f->reindex();
     }

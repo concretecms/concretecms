@@ -19,7 +19,7 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
      * Columns in this array can be sorted via the request.
      * @var array
      */
-    protected $autoSortColumns = array('fvFilename', 'fvAuthorName','fvTitle', 'fDateAdded', 'fvDateAdded', 'fvSize');
+    protected $autoSortColumns = array('fv.fvFilename', 'fv.fvAuthorName','fv.fvTitle', 'f.fDateAdded', 'fv.fvDateAdded', 'fv.fvSize');
 
     public function setPermissionsChecker(\Closure $checker)
     {
@@ -62,6 +62,12 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
             $pagination = new Pagination($this, $adapter);
         } else {
             $pagination = new PermissionablePagination($this);
+        }
+
+        $query = \Request::getInstance()->query;
+        if ($query->has($this->getQueryPaginationPageParameter())) {
+            $page = intval($query->get($this->getQueryPaginationPageParameter()));
+            $pagination->setCurrentPage($page);
         }
         return $pagination;
     }

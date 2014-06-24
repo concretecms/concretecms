@@ -9,7 +9,9 @@ interface ListItemInterface
     public function getResult($mixed);
     public function getResults();
     public function sortBy($column, $direction = false);
+    public function isActiveSortColumn($column);
     public function getQuerySortColumnParameter();
     public function getQuerySortDirectionParameter();
+    public function getQueryPaginationPageParameter();
 
 }

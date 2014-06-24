@@ -7,6 +7,9 @@ abstract class DatabaseItemList implements ListItemInterface
 
     protected $sortColumnParameter = 'ccm_order_by';
     protected $sortDirectionParameter = 'ccm_order_by_direction';
+    protected $paginationPageParameter = 'ccm_paging_p';
+    protected $sortBy;
+    protected $sortByDirection;
 
     /** @var \Doctrine\DBAL\Query\QueryBuilder */
     protected $query;
@@ -14,7 +17,7 @@ abstract class DatabaseItemList implements ListItemInterface
     /** @var \Concrete\Core\Pagination\Pagination  */
     protected $pagination;
 
-    public function __construct()
+    public function __construct(StickyRequest $req = null)
     {
         $this->query = Database::get()->createQueryBuilder();
 
@@ -22,7 +25,7 @@ abstract class DatabaseItemList implements ListItemInterface
         $this->createQuery();
 
         // setup the default sorting based on the request.
-        $this->setupAutomaticSorting();
+        $this->setupAutomaticSorting($req);
     }
 
     public function getQueryObject()
@@ -43,9 +46,26 @@ abstract class DatabaseItemList implements ListItemInterface
         return $results;
     }
 
-    public function sortBy($field, $directon = 'asc')
+    public function sortBy($field, $direction = 'asc')
     {
-        $this->query->orderBy($field, $directon);
+        $this->sortBy = $field;
+        $this->sortByDirection = $direction;
+        $this->query->orderBy($field, $direction);
+    }
+
+    public function getActiveSortColumn()
+    {
+        return $this->sortBy;
+    }
+
+    public function isActiveSortColumn($field)
+    {
+        return $this->sortBy == $field;
+    }
+
+    public function getActiveSortDirection()
+    {
+        return $this->sortByDirection;
     }
 
     public function getQuerySortColumnParameter()
@@ -53,20 +73,32 @@ abstract class DatabaseItemList implements ListItemInterface
         return $this->sortColumnParameter;
     }
 
+    public function getQueryPaginationPageParameter()
+    {
+        return $this->paginationPageParameter;
+    }
+
     public function getQuerySortDirectionParameter()
     {
         return $this->sortDirectionParameter;
     }
 
-    public function setupAutomaticSorting()
+    public function setupAutomaticSorting(StickyRequest $request = null)
     {
-        $req = \Request::getInstance();
-        $direction = 'asc';
-        if ($req->query->has($this->getQuerySortDirectionParameter())) {
-            $direction = $req->query->get($this->getQuerySortDirectionParameter());
+        if ($request) {
+            $data = $request->getSearchRequest();
+        } else {
+            $data = \Request::getInstance()->query->all();
         }
-        if ($req->query->has($this->getQuerySortColumnParameter())) {
-            $this->query->orderBy($req->query->get($this->getQuerySortColumnParameter()), $direction);
+        $direction = 'asc';
+        if (isset($data[$this->getQuerySortDirectionParameter()])) {
+            $direction = $data[$this->getQuerySortDirectionParameter()];
+        }
+        if (isset($data[$this->getQuerySortColumnParameter()])) {
+            $value = $data[$this->getQuerySortColumnParameter()];
+            if (in_array($value, $this->autoSortColumns)) {
+                $this->sortBy($value, $direction);
+            }
         }
     }
 }
