@@ -19,7 +19,8 @@ foreach($searchFieldAttributes as $ak) {
     $searchFields[$ak->getAttributeKeyID()] = tc('AttributeKeyName', $ak->getAttributeKeyName());
 }
 
-$searchRequest = $controller->getSearchRequest();
+$flr = new \Concrete\Core\Search\StickyRequest('files');
+$req = $flr->getSearchRequest();
 
 ?>
 

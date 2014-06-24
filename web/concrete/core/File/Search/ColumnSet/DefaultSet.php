@@ -1,26 +1,27 @@
 <?php
 namespace Concrete\Core\File\Search\ColumnSet;
 use Loader;
-use \Concrete\Core\Foundation\Collection\Database\Column\Column as DatabaseItemListColumn;
+use \Concrete\Core\Search\Column\Column;
+use \Concrete\Core\Search\Column\Set;
 
-class DefaultSet extends \Concrete\Core\Foundation\Collection\Database\Column\Set {
+class DefaultSet extends Set {
 	protected $attributeClass = 'FileAttributeKey';	
 	
 	public static function getFileDateAdded($f) {
-		return date(DATE_APP_DASHBOARD_SEARCH_RESULTS_FILES, strtotime($f->getDateAdded()));
+		return date(DATE_APP_DASHBOARD_SEARCH_RESULTS_FILES, $f->getDateAdded()->getTimestamp());
 	}
 
 	public static function getFileDateActivated($f) {
 		$fv = $f->getVersion();
-		return date(DATE_APP_DASHBOARD_SEARCH_RESULTS_FILES, strtotime($fv->getDateAdded()));
+		return date(DATE_APP_DASHBOARD_SEARCH_RESULTS_FILES, $f->getDateAdded()->getTimestamp());
 	}
 	
 	public function __construct() {
-		$this->addColumn(new DatabaseItemListColumn('fvType', t('Type'), 'getType', false));
-		$this->addColumn(new DatabaseItemListColumn('fvTitle', t('Title'), 'getTitle'));
-		$this->addColumn(new DatabaseItemListColumn('fDateAdded', t('Added'), array('\Concrete\Core\File\Search\ColumnSet\DefaultSet', 'getFileDateAdded')));
-		$this->addColumn(new DatabaseItemListColumn('fvDateAdded', t('Active'), array('\Concrete\Core\File\Search\ColumnSet\DefaultSet', 'getFileDateActivated')));
-		$this->addColumn(new DatabaseItemListColumn('fvSize', t('Size'), 'getSize'));
+		$this->addColumn(new Column('fvType', t('Type'), 'getType', false));
+		$this->addColumn(new Column('fvTitle', t('Title'), 'getTitle'));
+		$this->addColumn(new Column('fDateAdded', t('Added'), array('\Concrete\Core\File\Search\ColumnSet\DefaultSet', 'getFileDateAdded')));
+		$this->addColumn(new Column('fvDateAdded', t('Active'), array('\Concrete\Core\File\Search\ColumnSet\DefaultSet', 'getFileDateActivated')));
+		$this->addColumn(new Column('fvSize', t('Size'), 'getSize'));
 		$title = $this->getColumnByKey('fDateAdded');
 		$this->setDefaultSortColumn($title, 'desc');
 	}

@@ -579,4 +579,12 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             array($this->fID, intval($fvID), $uID, $rcID)
         );
     }
+
+    /**
+     * @deprecated
+     */
+    public function isError()
+    {
+        return false;
+    }
 }

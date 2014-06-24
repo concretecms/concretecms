@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Core\Foundation\Collection;
+namespace Concrete\Core\Search;
 interface PermissionableListItemInterface
 {
     public function checkPermissions($mixed);

@@ -1,12 +1,12 @@
 <?php 
 namespace Concrete\Core\File;
-use Concrete\Core\Foundation\Collection\DatabaseItemList;
-use Concrete\Core\Foundation\Collection\PermissionableListItemInterface;
-use Concrete\Core\Pagination\PermissionablePagination;
+use Concrete\Core\Search\DatabaseItemList;
+use Concrete\Core\Search\PermissionableListItemInterface;
+use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Database;
 use Doctrine\DBAL\Query;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
-use \Concrete\Core\Pagination\Pagination;
+use \Concrete\Core\Search\Pagination\Pagination;
 use FileAttributeKey;
 
 class FileList extends DatabaseItemList implements PermissionableListItemInterface

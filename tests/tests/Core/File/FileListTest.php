@@ -85,7 +85,7 @@ class FileListTest extends \FileStorageTestCase {
     public function testGetPaginationObject()
     {
         $pagination = $this->list->getPagination();
-        $this->assertInstanceOf('\Concrete\Core\Pagination\Pagination', $pagination);
+        $this->assertInstanceOf('\Concrete\Core\Search\Pagination\Pagination', $pagination);
     }
 
     public function testGetUnfilteredTotal()
@@ -262,7 +262,7 @@ class FileListTest extends \FileStorageTestCase {
 
         $results = $pagination->getCurrentPageResults();
 
-        $this->assertInstanceOf('\Concrete\Core\Pagination\PermissionablePagination', $pagination);
+        $this->assertInstanceOf('\Concrete\Core\Search\Pagination\PermissionablePagination', $pagination);
         $this->assertEquals(4, count($results));
         $this->assertEquals('foobley.png', $results[0]->getFilename());
         $this->assertEquals('image.png', $results[1]->getFilename());
@@ -279,6 +279,18 @@ class FileListTest extends \FileStorageTestCase {
 
         $this->assertTrue($pagination->hasPreviousPage());
         $this->assertFalse($pagination->hasNextPage());
+    }
+
+    public function testFileSearchDefaultColumnSet()
+    {
+        $set = \Concrete\Core\File\Search\ColumnSet\ColumnSet::getCurrent();
+
+        $this->assertInstanceOf('\Concrete\Core\File\Search\ColumnSet\DefaultSet', $set);
+
+        $columns = $set->getColumns();
+
+        $this->assertEquals(5, count($columns));
+
 
 
     }
