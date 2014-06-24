@@ -584,7 +584,7 @@ if (isset($_REQUEST['processBlock']) && $_REQUEST['processBlock'] && $valt->vali
 
     } else {
         if ($_REQUEST['add'] || $_REQUEST['_add']) {
-            // the persion is attempting to add a block of content of some kind
+            // the user is attempting to add a block of content of some kind
             $a = Area::get($c, $_REQUEST['arHandle']);
             if (is_object($a)) {
                 $ax = $a;
@@ -621,22 +621,6 @@ if (isset($_REQUEST['processBlock']) && $_REQUEST['processBlock'] && $valt->vali
                                     $data['bOriginalID'] = $bID;
                                     $nb = $nvc->addBlock($btx, $ax, $data);
                                     $nb->refreshCache();
-
-                                    if ($_REQUEST['dragAreaBlockID'] > 0 && Loader::helper('validation/numbers')
-                                                                                  ->integer(
-                                                                                  $_REQUEST['dragAreaBlockID'])
-                                    ) {
-                                        $db = Block::getByID(
-                                                   $_REQUEST['dragAreaBlockID'],
-                                                   $this->pageToModify,
-                                                   $this->areaToModify);
-                                        if (is_object($db) && !$db->isError()) {
-                                            $nb->moveBlockToDisplayOrderPosition($db);
-                                        }
-                                    }
-                                    if (!is_object($db)) {
-                                        $nb->moveBlockToDisplayOrderPosition(false);
-                                    }
                                 }
                             }
                         }
@@ -662,6 +646,23 @@ if (isset($_REQUEST['processBlock']) && $_REQUEST['processBlock'] && $valt->vali
 
                     $obj = new stdClass;
                     if (is_object($nb)) {
+                        if ($_REQUEST['dragAreaBlockID'] > 0 && Loader::helper('validation/numbers')
+                                                                      ->integer(
+                                                                      $_REQUEST['dragAreaBlockID'])
+                        ) {
+                            $db = Block::getByID(
+                                       $_REQUEST['dragAreaBlockID'],
+                                       $this->pageToModify,
+                                       $this->areaToModify);
+                            if (is_object($db) && !$db->isError()) {
+                                $nb->moveBlockToDisplayOrderPosition($db);
+                            }
+                        }
+                        if (!is_object($db)) {
+                            $nb->moveBlockToDisplayOrderPosition(false);
+                        }
+                        $nb->refreshCache();
+
                         $obj->aID = $a->getAreaID();
                         $obj->arHandle = $a->getAreaHandle();
                         $obj->cID = $c->getCollectionID();
