@@ -1,10 +1,11 @@
-<?php 
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\Pages;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use \Concrete\Core\Page\Single as SinglePage;
 use Permissions;
 use Package;
 use Loader;
+use Page;
 
 class Single extends DashboardPageController {
 
