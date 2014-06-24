@@ -398,9 +398,10 @@
             $('.ccm-area-drag-area').remove();
         },
 
-
         scanBlocks: function editModeScanBlocks() {
             var my = this, area, block;
+            my.reset();
+
             $('div.ccm-area').each(function () {
                 area = new Area($(this), my);
                 my.addArea(area);
