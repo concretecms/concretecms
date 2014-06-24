@@ -1,503 +1,554 @@
 <?
 namespace Concrete\Core\Block\BlockType;
-use Loader;
-use Environment;
-use Localization;
-use CacheLocal;
-use Package;
-use Cache;
-use Database as DB;
-use User;
+
 use Block;
-use \Concrete\Core\Filesystem\TemplateFile;
-use \Concrete\Core\Package\PackageList;
-use \Concrete\Core\Block\View\BlockView;
 use BlockTypeSet;
+use Cache;
+use Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Filesystem\TemplateFile;
+use Concrete\Core\Package\PackageList;
+use Database as DB;
+use Environment;
+use Loader;
+use Localization;
+use Package;
 use Page;
+use User;
 
 /**
  * @Entity
  * @Table(name="BlockTypes")
  */
-class BlockType {
+class BlockType
+{
 
+    public $controller;
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue
      */
     protected $btID;
-
     /**
      * @Column(type="string", length=128)
      */
-	protected $btHandle;
-
+    protected $btHandle;
     /**
      * @Column(type="string", length=128)
      */
-	protected $btName;
-
+    protected $btName;
     /**
      * @Column(type="text")
      */
-	protected $btDescription;
-
+    protected $btDescription;
     /**
      * @Column(type="boolean")
      */
-	protected $btCopyWhenPropagate = false;
-
+    protected $btCopyWhenPropagate = false;
     /**
      * @Column(type="boolean")
      */
-	protected $btIncludeAll = false;
-
+    protected $btIncludeAll = false;
     /**
      * @Column(type="boolean")
      */
-	protected $btIsInternal = false;
-
+    protected $btIsInternal = false;
     /**
      * @Column(type="boolean")
      */
-	protected $btSupportsInlineEdit = false;
-
+    protected $btSupportsInlineEdit = false;
     /**
      * @Column(type="boolean")
      */
-	protected $btSupportsInlineAdd = false;
-
+    protected $btSupportsInlineAdd = false;
     /**
      * @Column(type="integer")
      */
-	protected $btInterfaceHeight;
-
+    protected $btInterfaceHeight;
     /**
      * @Column(type="integer")
      */
-	protected $btInterfaceWidth;
-
+    protected $btInterfaceWidth;
     /**
      * @Column(columnDefinition="integer unsigned")
      */
-	protected $pkgID = 0;
+    protected $pkgID = 0;
 
-	public $controller;
-	/** 
-	 * Sets the block type handle
-	 */
-	public function setBlockTypeHandle($btHandle) {
-		$this->btHandle = $btHandle;
-	}
+    /**
+     * Retrieves a BlockType object based on its btHandle
+     *
+     * @return BlockType
+     */
+    public static function getByHandle($btHandle)
+    {
+        $em = DB::get()->getEntityManager();
+        $bt = $em->getRepository('\Concrete\Core\Block\BlockType\BlockType')->findOneBy(array('btHandle' => $btHandle));
+        $bt->loadController();
+        return $bt;
+    }
 
-	/**
-	 * Determines if the block type has templates available
-	 * @return boolean
-	 */
-	public function hasAddTemplate() {
-		$bv = new BlockView($this);
-		$path = $bv->getBlockPath(FILENAME_BLOCK_ADD);
-		if (file_exists($path . '/' . FILENAME_BLOCK_ADD)) {
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Retrieves a BlockType object based on its btID
+     *
+     * @return BlockType
+     */
+    public static function getByID($btID)
+    {
+        $em = DB::get()->getEntityManager();
+        $bt = $em->getRepository('\Concrete\Core\Block\BlockType\BlockType')->find($btID);
+        $bt->loadController();
+        return $bt;
+    }
 
-	/** 
-	 * Retrieves a BlockType object based on its btHandle
-	 * @return BlockType
-	 */
-	public static function getByHandle($btHandle) {
-		$em = DB::get()->getEntityManager();
-		$bt = $em->getRepository('\Concrete\Core\Block\BlockType\BlockType')->findOneBy(array('btHandle' => $btHandle));
-		$bt->loadController();
-		return $bt;
-	}
+    /**
+     * @deprecated
+     */
+    public static function installBlockTypeFromPackage($btHandle, $pkg)
+    {
+        static::installBlockType($btHandle, $pkg);
+    }
 
-	/**
-	 * gets the available composer templates
-	 * used for editing instances of the BlockType while in the composer ui in the dashboard
-	 * @return TemplateFile[]
-	 */
-	function getBlockTypeComposerTemplates() {
-		$btHandle = $this->getBlockTypeHandle();
-		$files = array();
-		$fh = Loader::helper('file');
-		$dir = DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES_COMPOSER;
-		if(is_dir($dir)) {
-			$files = array_merge($files, $fh->getDirectoryContents($dir));
-		}
-		$dir = DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES_COMPOSER;
-		if (file_exists($dir)) {
-			$files = array_merge($files, $fh->getDirectoryContents($dir));
-		}
-		$templates = array();
-		foreach(array_unique($files) as $file) {
-			$templates[] = new TemplateFile($this, $file);
-		}
-		return TemplateFile::sortTemplateFileList($templates);
-	}
+    /**
+     * Installs a BlockType that is passed via a btHandle string. The core or override directories are parsed.
+     */
 
-	/** 
-	 * Retrieves a BlockType object based on its btID
-	 * @return BlockType
-	 */
-	public static function getByID($btID) {
-		$em = DB::get()->getEntityManager();
-		$bt = $em->getRepository('\Concrete\Core\Block\BlockType\BlockType')->find($btID);
-		$bt->loadController();
-		return $bt;
-	}
+    public static function installBlockType($btHandle, $pkg = false)
+    {
+        $env = Environment::get();
+        $pkgHandle = false;
+        if (is_object($pkg)) {
+            $pkgHandle = $pkg->getPackageHandle();
+        }
+        $class = static::getBlockTypeMappedClass($btHandle, $pkgHandle);
+        $bta = new $class;
+        $path = dirname($env->getPath(DIRNAME_BLOCKS . '/' . $btHandle . '/' . FILENAME_CONTROLLER, $pkgHandle));
 
-	/** 
-	 * Loads controller
-	 */
-	protected function loadController() {
-		if (!isset($this->controller)) {
-			$class = static::getBlockTypeMappedClass($this->getBlockTypeHandle(), $this->getPackageHandle());
-			$this->controller = new $class($this);
-		}
-	}
+        //Attempt to run the subclass methods (install schema from db.xml, etc.)
+        $r = $bta->install($path);
 
-	/** 
-	 * if a the current BlockType is Internal or not - meaning one of the core built-in concrete5 blocks
-	 * @access private
-	 * @return boolean
-	 */
-	function isBlockTypeInternal() {return $this->btIsInternal;}
+        $currentLocale = Localization::activeLocale();
+        if ($currentLocale != 'en_US') {
+            // Prevent the database records being stored in wrong language
+            Localization::changeLocale('en_US');
+        }
 
-	/** 
-	 * if a the current BlockType supports inline edit or not
-	 * @return boolean
-	 */
-	public function supportsInlineEdit() {return $this->btSupportsInlineEdit;}
+        //Install the block
+        $bt = new static();
+        $bt->loadFromController($bta);
+        if ($pkg instanceof Package) {
+            $bt->pkgID = $pkg->getPackageID();
+        } else {
+            $bt->pkgID = 0;
+        }
+        $bt->btHandle = $btHandle;
+        if ($currentLocale != 'en_US') {
+            Localization::changeLocale($currentLocale);
+        }
 
-	/** 
-	 * if a the current BlockType supports inline add or not
-	 * @return boolean
-	 */
-	public function supportsInlineAdd() {return $this->btSupportsInlineAdd;}
-	
-	/** 
-	 * Returns true if the block type is internal (and therefore cannot be removed) a core block
-	 * @return boolean
-	 */
-	public function isInternalBlockType() {
-		return $this->btIsInternal;
-	}
+        $em = DB::get()->getEntityManager();
+        $em->persist($bt);
+        $em->flush();
 
-	/**
-	 * returns the width in pixels that the block type's editing dialog will open in
-	 * @return int
-	 */
-	public function getBlockTypeInterfaceWidth() {return $this->btInterfaceWidth;}
-	
-	/**
-	 * returns the height in pixels that the block type's editing dialog will open in
-	 * @return int
-	 */
-	public function getBlockTypeInterfaceHeight() {return $this->btInterfaceHeight;}
-	
-	/**
-	 * returns the id of the BlockType's package if it's in a package
-	 * @return int
-	 */
-	public function getPackageID() {return $this->pkgID;}
-	
-	/**
-	 * returns the handle of the BlockType's package if it's in a package
-	 * @return string
-	 */
-	public function getPackageHandle() {
-		return \Concrete\Core\Package\PackageList::getHandle($this->pkgID);
-	}
+        return $bt;
+    }
 
-	/**
-	 * gets the BlockTypes description text
-	 * @return string
-	 */
-	public function getBlockTypeDescription() {
-		return $this->btDescription;
-	}
+    /**
+     * Return the class file that this BlockType uses
+     *
+     * @return string
+     */
+    public static function getBlockTypeMappedClass($btHandle, $pkgHandle = false)
+    {
+        $env = Environment::get();
+        $txt = Loader::helper('text');
+        $r = $env->getRecord(DIRNAME_BLOCKS . '/' . $btHandle . '/' . FILENAME_CONTROLLER);
+        $prefix = $r->override ? true : $pkgHandle;
+        $class = core_class('Block\\' . $txt->camelcase($btHandle) . '\\Controller', $prefix);
+        return $class;
+    }
 
-	/** 
-	 * @return int
-	 */
-	public function getBlockTypeID() {
-		return $this->btID;
-	}
-	
-	/** 
-	 * @return string
-	 */
-	public function getBlockTypeHandle() {
-		return $this->btHandle;
-	}
+    /**
+     * Sets the block type handle
+     */
+    public function setBlockTypeHandle($btHandle)
+    {
+        $this->btHandle = $btHandle;
+    }
 
-	/** 
-	 * @return string
-	 */
-	public function getBlockTypeName() {
-		return $this->btName;
-	}
-	
-	/** 
-	 * @return boolean
-	 */
-	public function isCopiedWhenPropagated() {
-		return $this->btCopyWhenPropagate;
-	}
+    /**
+     * Determines if the block type has templates available
+     *
+     * @return boolean
+     */
+    public function hasAddTemplate()
+    {
+        $bv = new BlockView($this);
+        $path = $bv->getBlockPath(FILENAME_BLOCK_ADD);
+        if (file_exists($path . '/' . FILENAME_BLOCK_ADD)) {
+            return true;
+        }
+        return false;
+    }
 
-	/** 
-	 * If true, this block is not versioned on a page – it is included as is on all versions of the page, even when updated.
-	 * @return boolean
-	 */
-	public function includeAll() {
-		return $this->btIncludeAll;
-	}
+    /**
+     * gets the available composer templates
+     * used for editing instances of the BlockType while in the composer ui in the dashboard
+     *
+     * @return TemplateFile[]
+     */
+    function getBlockTypeComposerTemplates()
+    {
+        $btHandle = $this->getBlockTypeHandle();
+        $files = array();
+        $fh = Loader::helper('file');
+        $dir = DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES_COMPOSER;
+        if (is_dir($dir)) {
+            $files = array_merge($files, $fh->getDirectoryContents($dir));
+        }
+        $dir = DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES_COMPOSER;
+        if (file_exists($dir)) {
+            $files = array_merge($files, $fh->getDirectoryContents($dir));
+        }
+        $templates = array();
+        foreach (array_unique($files) as $file) {
+            $templates[] = new TemplateFile($this, $file);
+        }
+        return TemplateFile::sortTemplateFileList($templates);
+    }
 
-	/** 
-	 * Returns the class for the current block type.
-	 */
-	public function getBlockTypeClass() {
-		return static::getBlockTypeMappedClass($this->btHandle, $this->getPackageHandle());
-	}
+    /**
+     * @return string
+     */
+    public function getBlockTypeHandle()
+    {
+        return $this->btHandle;
+    }
 
-	/**
-	 * @deprecated
-	 */
-	public function getBlockTypeClassFromHandle() {
-		return $this->getBlockTypeClass();
-	}
-	
+    /**
+     * if a the current BlockType supports inline edit or not
+     *
+     * @return boolean
+     */
+    public function supportsInlineEdit()
+    {
+        return $this->btSupportsInlineEdit;
+    }
 
-	/** 
-	 * Return the class file that this BlockType uses
-	 * @return string
-	 */
-	public static function getBlockTypeMappedClass($btHandle, $pkgHandle = false) {
-		$env = Environment::get();
-		$txt = Loader::helper('text');
-		$r = $env->getRecord(DIRNAME_BLOCKS . '/' . $btHandle . '/'. FILENAME_CONTROLLER);
-		$prefix = $r->override ? true : $pkgHandle;
-		$class = core_class('Block\\' . $txt->camelcase($btHandle) . '\\Controller', $prefix);
-		return $class;
-	}
-	
-	/** 
-	 * Returns an array of all BlockTypeSet objects that this block is in
-	 */
-	public function getBlockTypeSets() {
-		$db = Loader::db();
-		$list = array();
-		$r = $db->Execute('select btsID from BlockTypeSetBlockTypes where btID = ? order by displayOrder asc', array($this->getBlockTypeID()));
-		while ($row = $r->FetchRow()) {
-			$list[] = BlockTypeSet::getByID($row['btsID']);
-		}
-		$r->Close();
-		return $list;
-	}
+    /**
+     * if a the current BlockType supports inline add or not
+     *
+     * @return boolean
+     */
+    public function supportsInlineAdd()
+    {
+        return $this->btSupportsInlineAdd;
+    }
 
-	/** 
-	 * Returns the number of unique instances of this block throughout the entire site
-	 * note - this count could include blocks in areas that are no longer rendered by the theme
-	 * @param boolean specify true if you only want to see the number of blocks in active pages
-	 * @return int
-	 */
-	public function getCount($ignoreUnapprovedVersions = false) {
-		$db = Loader::db();
-		if ($ignoreUnapprovedVersions) {
-    		$count = $db->GetOne("SELECT count(btID) FROM Blocks b
-        			WHERE btID=?
-        			AND EXISTS (
-            			SELECT 1 FROM CollectionVersionBlocks cvb 
-            			INNER JOIN CollectionVersions cv ON cv.cID=cvb.cID AND cv.cvID=cvb.cvID
-            			WHERE b.bID=cvb.bID AND cv.cvIsApproved=1
-        			)", array($this->btID));            
-		} else {
-    		$count = $db->GetOne("SELECT count(btID) FROM Blocks WHERE btID = ?", array($this->btID));
-		}
-		return $count;
-	}
+    /**
+     * Returns true if the block type is internal (and therefore cannot be removed) a core block
+     *
+     * @return boolean
+     */
+    public function isInternalBlockType()
+    {
+        return $this->btIsInternal;
+    }
 
-	/**
-	 * Not a permissions call. Actually checks to see whether this block is not an internal one.
-	 * @return boolean
-	 */
-	public function canUnInstall() {
-		return (!$this->isBlockTypeInternal());
-	}
+    /**
+     * returns the width in pixels that the block type's editing dialog will open in
+     *
+     * @return int
+     */
+    public function getBlockTypeInterfaceWidth()
+    {
+        return $this->btInterfaceWidth;
+    }
 
-	/** 
-	 * Renders a particular view of a block type, using the public $controller variable as the block type's controller
-	 * @param string template 'view' for the default
-	 * @return void
-	 */
-	public function render($view = 'view') {
-		$bv = new BlockView($this);
-		$bv->render($view);
-	}			
+    /**
+     * returns the height in pixels that the block type's editing dialog will open in
+     *
+     * @return int
+     */
+    public function getBlockTypeInterfaceHeight()
+    {
+        return $this->btInterfaceHeight;
+    }
 
-	/**
-	 * get's the block type controller
-	 * @return BlockTypeController
-	 */
-	public function getController() {
-		return $this->controller;
-	}
+    /**
+     * returns the id of the BlockType's package if it's in a package
+     *
+     * @return int
+     */
+    public function getPackageID()
+    {
+        return $this->pkgID;
+    }
 
-	/**
-	 * Gets the custom templates available for the current BlockType
-	 * @return TemplateFile[]
-	 */
-	function getBlockTypeCustomTemplates() {
-		$btHandle = $this->getBlockTypeHandle();
-		$fh = Loader::helper('file');
-		$files = array();
-		$dir = DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES;
-		if(is_dir($dir)) {
-			$files = array_merge($files, $fh->getDirectoryContents($dir));
-		}
-		// NOW, we check to see if this btHandle has any custom templates that have been installed as separate packages
-		foreach(PackageList::get()->getPackages() as $pkg) {
-			$dir =
-				(is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle()) ? DIR_PACKAGES : DIR_PACKAGES_CORE)
-				. '/'. $pkg->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $btHandle . '/' . DIRNAME_BLOCK_TEMPLATES
-			;
-			if(is_dir($dir)) {
-				$files = array_merge($files, $fh->getDirectoryContents($dir));
-			}
-		}
-		$dir = DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES;
-		if(is_dir($dir)) {
-			$files = array_merge($files, $fh->getDirectoryContents($dir));
-		}
-		$templates = array();
-		foreach(array_unique($files) as $file) {
-			$templates[] = new TemplateFile($this, $file);
-		}
-		return TemplateFile::sortTemplateFileList($templates);
-	}
+    /**
+     * gets the BlockTypes description text
+     *
+     * @return string
+     */
+    public function getBlockTypeDescription()
+    {
+        return $this->btDescription;
+    }
 
-	
-	/** 
-	 * @private
-	 */
-	function setBlockTypeDisplayOrder($displayOrder) {
-		$db = Loader::db();
-		
-		$displayOrder = intval($displayOrder); //in case displayOrder came from a string (so ADODB escapes it properly)
-		
-		$sql = "UPDATE BlockTypes SET btDisplayOrder = btDisplayOrder - 1 WHERE btDisplayOrder > ?";
-		$vals = array($this->btDisplayOrder);
-		$db->Execute($sql, $vals);
-		
-		$sql = "UPDATE BlockTypes SET btDisplayOrder = btDisplayOrder + 1 WHERE btDisplayOrder >= ?";
-		$vals = array($displayOrder);
-		$db->Execute($sql, $vals);
-		
-		$sql = "UPDATE BlockTypes SET btDisplayOrder = ? WHERE btID = ?";
-		$vals = array($displayOrder, $this->btID);
-		$db->Execute($sql, $vals);
-		
-		// now we remove the block type from cache
-		$ca = new Cache();
-		$ca->delete('blockTypeByID', $this->btID);
-		$ca->delete('blockTypeByHandle', $this->btHandle);
-		$ca->delete('blockTypeList', false);
-	}
+    /**
+     * @return string
+     */
+    public function getBlockTypeName()
+    {
+        return $this->btName;
+    }
 
-	/** 
-	 * @deprecated
-	 */
-	public static function installBlockTypeFromPackage($btHandle, $pkg) {
-		static::installBlockType($btHandle, $pkg);
-	}
+    /**
+     * @return boolean
+     */
+    public function isCopiedWhenPropagated()
+    {
+        return $this->btCopyWhenPropagate;
+    }
 
-	/**
-	 * refreshes the BlockType's database schema throws an Exception if error
-	 * @return void
-	 */
-	public function refresh() {
-		$pkgHandle = false;
-		if ($this->pkgID > 0) {
-			$pkgHandle = $this->getPackageHandle();
-		}
+    /**
+     * If true, this block is not versioned on a page – it is included as is on all versions of the page, even when updated.
+     *
+     * @return boolean
+     */
+    public function includeAll()
+    {
+        return $this->btIncludeAll;
+    }
 
-		$class = static::getBlockTypeMappedClass($this->btHandle, $pkgHandle);
-		$bta = new $class;
-		$this->loadFromController($bta);
+    /**
+     * @deprecated
+     */
+    public function getBlockTypeClassFromHandle()
+    {
+        return $this->getBlockTypeClass();
+    }
 
-		$em = DB::get()->getEntityManager();
-		$em->persist($this);
-		$em->flush();
-	}
-	
+    /**
+     * Returns the class for the current block type.
+     */
+    public function getBlockTypeClass()
+    {
+        return static::getBlockTypeMappedClass($this->btHandle, $this->getPackageHandle());
+    }
 
-	/** 
-	 * Installs a BlockType that is passed via a btHandle string. The core or override directories are parsed.
-	 */
+    /**
+     * returns the handle of the BlockType's package if it's in a package
+     *
+     * @return string
+     */
+    public function getPackageHandle()
+    {
+        return \Concrete\Core\Package\PackageList::getHandle($this->pkgID);
+    }
 
-	public static function installBlockType($btHandle, $pkg = false) {
-		$env = Environment::get();
-		$pkgHandle = false;
-		if (is_object($pkg)){
-			$pkgHandle = $pkg->getPackageHandle();
-		}
-		$class = static::getBlockTypeMappedClass($btHandle, $pkgHandle);
-		$bta = new $class;
-		$path = dirname($env->getPath(DIRNAME_BLOCKS . '/' . $btHandle . '/'. FILENAME_CONTROLLER, $pkgHandle));
-		
-		//Attempt to run the subclass methods (install schema from db.xml, etc.)
-		$r = $bta->install($path);
+    /**
+     * Returns an array of all BlockTypeSet objects that this block is in
+     */
+    public function getBlockTypeSets()
+    {
+        $db = Loader::db();
+        $list = array();
+        $r = $db->Execute(
+                'select btsID from BlockTypeSetBlockTypes where btID = ? order by displayOrder asc',
+                array($this->getBlockTypeID()));
+        while ($row = $r->FetchRow()) {
+            $list[] = BlockTypeSet::getByID($row['btsID']);
+        }
+        $r->Close();
+        return $list;
+    }
 
-		$currentLocale = Localization::activeLocale();
-		if ($currentLocale != 'en_US') {
-			// Prevent the database records being stored in wrong language
-			Localization::changeLocale('en_US');
-		}
+    /**
+     * @return int
+     */
+    public function getBlockTypeID()
+    {
+        return $this->btID;
+    }
 
-		//Install the block
-		$bt = new static();
-		$bt->loadFromController($bta);
-		if ($pkg instanceof Package) {
-			$bt->pkgID = $pkg->getPackageID();
-		} else {
-			$bt->pkgID = 0;
-		}
-		$bt->btHandle = $btHandle;
-		if ($currentLocale != 'en_US') {
-			Localization::changeLocale($currentLocale);
-		}
-		
-		$em = DB::get()->getEntityManager();
-		$em->persist($bt);
-		$em->flush();
+    /**
+     * Returns the number of unique instances of this block throughout the entire site
+     * note - this count could include blocks in areas that are no longer rendered by the theme
+     *
+     * @param boolean specify true if you only want to see the number of blocks in active pages
+     * @return int
+     */
+    public function getCount($ignoreUnapprovedVersions = false)
+    {
+        $db = Loader::db();
+        if ($ignoreUnapprovedVersions) {
+            $count = $db->GetOne(
+                        "SELECT count(btID) FROM Blocks b
+                                            WHERE btID=?
+                                            AND EXISTS (
+                                                SELECT 1 FROM CollectionVersionBlocks cvb
+                                                INNER JOIN CollectionVersions cv ON cv.cID=cvb.cID AND cv.cvID=cvb.cvID
+                                                WHERE b.bID=cvb.bID AND cv.cvIsApproved=1
+                                            )",
+                        array($this->btID));
+        } else {
+            $count = $db->GetOne("SELECT count(btID) FROM Blocks WHERE btID = ?", array($this->btID));
+        }
+        return $count;
+    }
 
-		return $bt;
-	}
+    /**
+     * Not a permissions call. Actually checks to see whether this block is not an internal one.
+     *
+     * @return boolean
+     */
+    public function canUnInstall()
+    {
+        return (!$this->isBlockTypeInternal());
+    }
 
-	protected function loadFromController($bta) {
-		$this->btName = $bta->getBlockTypeName();
-		$this->btDescription = $bta->getBlockTypeDescription();
-		$this->btCopyWhenPropagate = $bta->isCopiedWhenPropagated();
-		$this->btIncludeAll = $bta->includeAll();
-		$this->btIsInternal = $bta->isBlockTypeInternal();
-		$this->btSupportsInlineEdit = $bta->supportsInlineEdit();
-		$this->btSupportsInlineAdd = $bta->supportsInlineAdd();
-		$this->btInterfaceHeight = $bta->getInterfaceHeight();
-		$this->btInterfaceWidth = $bta->getInterfaceWidth();
-	}
+    /**
+     * if a the current BlockType is Internal or not - meaning one of the core built-in concrete5 blocks
+     *
+     * @access private
+     * @return boolean
+     */
+    function isBlockTypeInternal()
+    {
+        return $this->btIsInternal;
+    }
 
-    /** 
+    /**
+     * Renders a particular view of a block type, using the public $controller variable as the block type's controller
+     *
+     * @param string template 'view' for the default
+     * @return void
+     */
+    public function render($view = 'view')
+    {
+        $bv = new BlockView($this);
+        $bv->render($view);
+    }
+
+    /**
+     * get's the block type controller
+     *
+     * @return BlockTypeController
+     */
+    public function getController()
+    {
+        return $this->controller;
+    }
+
+    /**
+     * Gets the custom templates available for the current BlockType
+     *
+     * @return TemplateFile[]
+     */
+    function getBlockTypeCustomTemplates()
+    {
+        $btHandle = $this->getBlockTypeHandle();
+        $fh = Loader::helper('file');
+        $files = array();
+        $dir = DIR_FILES_BLOCK_TYPES . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES;
+        if (is_dir($dir)) {
+            $files = array_merge($files, $fh->getDirectoryContents($dir));
+        }
+        // NOW, we check to see if this btHandle has any custom templates that have been installed as separate packages
+        foreach (PackageList::get()->getPackages() as $pkg) {
+            $dir =
+                (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle()) ? DIR_PACKAGES : DIR_PACKAGES_CORE)
+                . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_BLOCKS . '/' . $btHandle . '/' . DIRNAME_BLOCK_TEMPLATES;
+            if (is_dir($dir)) {
+                $files = array_merge($files, $fh->getDirectoryContents($dir));
+            }
+        }
+        $dir = DIR_FILES_BLOCK_TYPES_CORE . "/{$btHandle}/" . DIRNAME_BLOCK_TEMPLATES;
+        if (is_dir($dir)) {
+            $files = array_merge($files, $fh->getDirectoryContents($dir));
+        }
+        $templates = array();
+        foreach (array_unique($files) as $file) {
+            $templates[] = new TemplateFile($this, $file);
+        }
+        return TemplateFile::sortTemplateFileList($templates);
+    }
+
+    /**
+     * @private
+     */
+    function setBlockTypeDisplayOrder($displayOrder)
+    {
+        $db = Loader::db();
+
+        $displayOrder = intval($displayOrder); //in case displayOrder came from a string (so ADODB escapes it properly)
+
+        $sql = "UPDATE BlockTypes SET btDisplayOrder = btDisplayOrder - 1 WHERE btDisplayOrder > ?";
+        $vals = array($this->btDisplayOrder);
+        $db->Execute($sql, $vals);
+
+        $sql = "UPDATE BlockTypes SET btDisplayOrder = btDisplayOrder + 1 WHERE btDisplayOrder >= ?";
+        $vals = array($displayOrder);
+        $db->Execute($sql, $vals);
+
+        $sql = "UPDATE BlockTypes SET btDisplayOrder = ? WHERE btID = ?";
+        $vals = array($displayOrder, $this->btID);
+        $db->Execute($sql, $vals);
+
+        // now we remove the block type from cache
+        $ca = new Cache();
+        $ca->delete('blockTypeByID', $this->btID);
+        $ca->delete('blockTypeByHandle', $this->btHandle);
+        $ca->delete('blockTypeList', false);
+    }
+
+    /**
+     * refreshes the BlockType's database schema throws an Exception if error
+     *
+     * @return void
+     */
+    public function refresh()
+    {
+        $pkgHandle = false;
+        if ($this->pkgID > 0) {
+            $pkgHandle = $this->getPackageHandle();
+        }
+
+        $class = static::getBlockTypeMappedClass($this->btHandle, $pkgHandle);
+        $bta = new $class;
+        $this->loadFromController($bta);
+
+        $em = DB::get()->getEntityManager();
+        $em->persist($this);
+        $em->flush();
+    }
+
+    protected function loadFromController($bta)
+    {
+        $this->btName = $bta->getBlockTypeName();
+        $this->btDescription = $bta->getBlockTypeDescription();
+        $this->btCopyWhenPropagate = $bta->isCopiedWhenPropagated();
+        $this->btIncludeAll = $bta->includeAll();
+        $this->btIsInternal = $bta->isBlockTypeInternal();
+        $this->btSupportsInlineEdit = $bta->supportsInlineEdit();
+        $this->btSupportsInlineAdd = $bta->supportsInlineAdd();
+        $this->btInterfaceHeight = $bta->getInterfaceHeight();
+        $this->btInterfaceWidth = $bta->getInterfaceWidth();
+    }
+
+    /**
      * Removes the block type. Also removes instances of content.
      */
-    public function delete() {
+    public function delete()
+    {
         $db = Loader::db();
-        $r = $db->Execute('select cID, cvID, b.bID, arHandle from CollectionVersionBlocks cvb inner join Blocks b on b.bID = cvb.bID where btID = ?', array($this->getBlockTypeID()));
+        $r = $db->Execute(
+                'select cID, cvID, b.bID, arHandle from CollectionVersionBlocks cvb inner join Blocks b on b.bID = cvb.bID where btID = ?',
+                array($this->getBlockTypeID()));
         while ($row = $r->FetchRow()) {
             $nc = Page::getByID($row['cID'], $row['cvID']);
-            if(!is_object($nc) || $nc->isError()) continue;
+            if (!is_object($nc) || $nc->isError()) {
+                continue;
+            }
             $b = Block::getByID($row['bID'], $nc, $row['arHandle']);
             if (is_object($b)) {
                 $b->deleteBlock();
@@ -506,61 +557,77 @@ class BlockType {
 
         $em = $db->getEntityManager();
         $em->remove($this);
-        $em->flush();  
-        
+        $em->flush();
+
         //Remove gaps in display order numbering (to avoid future sorting errors)
         BlockTypeList::resetBlockTypeDisplayOrder('btDisplayOrder');
     }
 
-	/** 
-	 * Adds a block to the system without adding it to a collection. 
-	 * Passes page and area data along if it is available, however.
-	 */
-	public function add($data, $c = false, $a = false) {
-		$db = Loader::db();
-		
-		$u = new User();
-		if (isset($data['uID'])) {
-			$uID = $data['uID'];
-		} else { 
-			$uID = $u->getUserID();
-		}
-		$bName = '';
-		if (isset($data['bName'])) {
-			$bName = $data['bName'];
-		}
+    /**
+     * Adds a block to the system without adding it to a collection.
+     * Passes page and area data along if it is available, however.
+     *
+     * @param mixed           $data
+     * @param bool|\Collection $c
+     * @param bool|\Area       $a
+     * @return bool|\Concrete\Core\Block\Block
+     */
+    public function add($data, $c = false, $a = false)
+    {
+        $db = Loader::db();
 
-		$btID = $this->btID;
-		$dh = Loader::helper('date');
-		$bDate = $dh->getSystemDateTime();
-		$bIsActive = (isset($this->btActiveWhenAdded) && $this->btActiveWhenAdded == 1) ? 1 : 0;
-		
-		$v = array($bName, $bDate, $bDate, $bIsActive, $btID, $uID);
-		$q = "insert into Blocks (bName, bDateAdded, bDateModified, bIsActive, btID, uID) values (?, ?, ?, ?, ?, ?)";
-		
-		$r = $db->prepare($q);
-		$res = $db->execute($r, $v);
+        $u = new User();
+        if (isset($data['uID'])) {
+            $uID = $data['uID'];
+        } else {
+            $uID = $u->getUserID();
+        }
+        $bName = '';
+        if (isset($data['bName'])) {
+            $bName = $data['bName'];
+        }
 
-		$bIDnew = $db->Insert_ID();
+        $btID = $this->btID;
+        $dh = Loader::helper('date');
+        $bDate = $dh->getSystemDateTime();
+        $bIsActive = (isset($this->btActiveWhenAdded) && $this->btActiveWhenAdded == 1) ? 1 : 0;
 
-		// we get the block object for the block we just added
+        $v = array($bName, $bDate, $bDate, $bIsActive, $btID, $uID);
+        $q = "insert into Blocks (bName, bDateAdded, bDateModified, bIsActive, btID, uID) values (?, ?, ?, ?, ?, ?)";
 
-		if ($res) {
-			$nb = Block::getByID($bIDnew);
+        $r = $db->prepare($q);
+        $res = $db->execute($r, $v);
 
-			$btHandle = $this->getBlockTypeHandle();
-			
-			$class = $this->getBlockTypeClass();
-			if (is_object($c)) {
-				$nb->setBlockCollectionObject($c);
-			}
-			$bc = new $class($nb);
-			$bc->save($data);				
-			return Block::getByID($bIDnew);
-			
-		}
-		
-	}
-	
+        $bIDnew = $db->Insert_ID();
+
+        // we get the block object for the block we just added
+
+        if ($res) {
+            $nb = Block::getByID($bIDnew);
+
+            $btHandle = $this->getBlockTypeHandle();
+
+            $class = $this->getBlockTypeClass();
+            if (is_object($c)) {
+                $nb->setBlockCollectionObject($c);
+            }
+            $bc = new $class($nb);
+            $bc->save($data);
+            return Block::getByID($bIDnew);
+
+        }
+
+    }
+
+    /**
+     * Loads controller
+     */
+    protected function loadController()
+    {
+        if (!isset($this->controller)) {
+            $class = static::getBlockTypeMappedClass($this->getBlockTypeHandle(), $this->getPackageHandle());
+            $this->controller = new $class($this);
+        }
+    }
 
 }
