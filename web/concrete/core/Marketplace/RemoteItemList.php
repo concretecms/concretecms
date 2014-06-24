@@ -3,7 +3,7 @@ namespace Concrete\Core\Marketplace;
 use Cache;
 use Loader;
 use Config;
-use \Concrete\Core\Foundation\Collection\ItemList;
+use \Concrete\Core\Legacy\ItemList;
 class RemoteItemList extends ItemList {
 	
 	protected $includeInstalledItems = true;

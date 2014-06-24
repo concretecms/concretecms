@@ -1,8 +1,8 @@
 <?php
 
-namespace Concrete\Core\Pagination;
+namespace Concrete\Core\Search\Pagination;
 
-use Concrete\Core\Foundation\Collection\ListItemInterface;
+use Concrete\Core\Search\ListItemInterface;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 

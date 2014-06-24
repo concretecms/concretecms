@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Core\Foundation\Collection;
+namespace Concrete\Core\Search;
 interface ListItemInterface
 {
     public function createQuery();

@@ -2,6 +2,7 @@
 namespace Concrete\Controller\Search;
 use Controller;
 use FileList;
+use \Concrete\Core\Search\StickyRequest;
 use \Concrete\Core\File\Search\ColumnSet\ColumnSet as FileSearchColumnSet;
 use \Concrete\Core\File\Search\Result\Result as FileSearchResult;
 use \Concrete\Core\Attribute\File\FileKey as FileAttributeKey;
@@ -19,21 +20,21 @@ class Files extends Controller {
 
 	public function __construct() {
 		$this->fileList = new FileList();
-		$this->fileList->enableStickySearchRequest();
+        $this->searchRequest = new StickyRequest('files');
 	}
 
 	public function search() {
 		$cp = FilePermissions::getGlobal();
+        $sr = new StickyRequest('files');
 		if (!$cp->canSearchFiles()) {
 			return false;
 		}
 		
 		if ($_REQUEST['submitSearch']) {
-			$this->fileList->resetSearchRequest();
+            $sr->resetSearchRequest();
 		}
 
-		$req = $this->fileList->getSearchRequest();
-		$this->fileList->displayUnapprovedPages();
+        $req = $this->searchRequest->getSearchRequest();
 		$columns = FileSearchColumnSet::getCurrent();
 
 		$col = $columns->getDefaultSortColumn();	
@@ -160,7 +161,7 @@ class Files extends Controller {
 	protected function getField($field) {
 		$r = new stdClass;
 		$r->field = $field;
-		$searchRequest = $this->getSearchRequest();
+		$searchRequest = $this->searchRequest->getSearchRequest();
 		$form = Loader::helper('form');
 		ob_start();
 		switch($field) {
@@ -215,10 +216,6 @@ class Files extends Controller {
 
 	public function getFields() {
 		return $this->fields;		
-	}
-
-	public function getSearchRequest() {
-		return $this->fileList->getSearchRequest();
 	}
 
 

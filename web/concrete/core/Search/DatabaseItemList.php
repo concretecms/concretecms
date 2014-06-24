@@ -1,7 +1,6 @@
 <?
-namespace Concrete\Core\Foundation\Collection;
+namespace Concrete\Core\Search;
 use Database;
-use Doctrine\DBAL\Logging\EchoSQLLogger;
 
 abstract class DatabaseItemList implements ListItemInterface
 {
