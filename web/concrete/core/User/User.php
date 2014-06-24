@@ -334,7 +334,7 @@ class User extends Object {
 			list($_uID, $authType, $uHash) = explode(':', $_COOKIE['ccmAuthUserHash']);
 			$at = AuthenticationType::getByHandle($authType);
 			$u = User::getByUserID($_uID);
-			if ($u->isError()) {
+			if ((!is_object($u)) || $u->isError()) {
 				return;
 			}
 			if ($at->controller->verifyHash($u, $uHash)) {
