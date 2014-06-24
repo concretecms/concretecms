@@ -4,6 +4,7 @@ use Concrete\Core\Search\DatabaseItemList;
 use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Database;
+use Core;
 use Doctrine\DBAL\Query;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use \Concrete\Core\Search\Pagination\Pagination;
@@ -20,6 +21,8 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
      * @var array
      */
     protected $autoSortColumns = array('fv.fvFilename', 'fv.fvAuthorName','fv.fvTitle', 'f.fDateAdded', 'fv.fvDateAdded', 'fv.fvSize');
+
+    protected $attributeClass = 'FileAttributeKey';
 
     public function setPermissionsChecker(\Closure $checker)
     {
@@ -100,8 +103,21 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
 
     public function filterByType($type)
     {
-        $this->query->andWhere('fv.fvType = :fvType');
-        $this->query->setParameter('fvType', $type);
+        $this->filter('fvType', $type);
+    }
+
+    /* magic method for filtering by attributes. */
+    public function __call($nm, $a)
+    {
+        if (substr($nm, 0, 8) == 'filterBy') {
+            $txt = Core::make('helper/text');
+            $attrib = $txt->uncamelcase(substr($nm, 8));
+            if (count($a) == 2) {
+                $this->filterByAttribute($attrib, $a[0], $a[1]);
+            } else {
+                $this->filterByAttribute($attrib, $a[0]);
+            }
+        }
     }
 
     public function filterByExtension($extension)
@@ -195,6 +211,14 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
     {
         $this->query->andWhere('fv.fvAuthorUID = :fvAuthorUID');
         $this->query->setParameter('fvAuthorUID', $uID);
+    }
+
+    /**
+     * Filters by a file attribute.
+     */
+    public function filterByAttribute($column, $value, $comparison = '=')
+    {
+        $this->filter('ak_' . $column, $value, $comparison);
     }
 
     /**
