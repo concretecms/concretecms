@@ -16,7 +16,7 @@ class StickyRequest
 
     protected function getStickySearchNameSpace()
     {
-        return $this->namespace;
+        return 'search/' . $this->namespace;
     }
 
     public function resetSearchRequest($namespace = '')
@@ -42,6 +42,9 @@ class StickyRequest
         }
 
         foreach(Request::getInstance()->query->all() as $key => $value) {
+            $data[$key] = $value;
+        }
+        foreach(Request::getInstance()->request->all() as $key => $value) {
             $data[$key] = $value;
         }
 

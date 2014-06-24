@@ -72,7 +72,7 @@ if (is_object($oc)) {
 </div>
 <div class="row">
 	<div class="col-md-3"><p><?=t('Date Added')?></p></div>
-	<div class="col-md-9"><p><?=t('Added by <strong>%s</strong> on %s', $fv->getAuthorName(), $dateHelper->date(DATE_APP_FILE_PROPERTIES, strtotime($f->getDateAdded())))?></p></div>
+	<div class="col-md-9"><p><?=t('Added by <strong>%s</strong> on %s', $fv->getAuthorName(), $f->getDateAdded()->format(DATE_APP_FILE_PROPERTIES))?></p></div>
 </div>
 <?
 $fsl = $f->getFileStorageLocationObject();
@@ -189,7 +189,7 @@ if (count($attribs) > 0) { ?>
 				</a>
 				</div>
 			</td>
-			<td> 
+			<td>
 				<div style="width: 150px; word-wrap: break-word">
 					<?=$fvv->getTitle()?>
 				</div>
@@ -205,26 +205,26 @@ if (count($attribs) > 0) { ?>
 							print ', ';
 						}
 					}
-					
+
 					print '.';
 				}
 				?>
 				</td>
 			<td><?=$fvv->getAuthorName()?></td>
-			<td><?=$dateHelper->date(DATE_APP_FILE_VERSIONS, strtotime($fvv->getDateAdded()))?></td>
+			<td><?=$fvv->getDateAdded()->format(DATE_APP_FILE_VERSIONS)?></td>
 			<? if ($fp->canEditFileContents()) { ?>
 				<td><a data-action="delete-version" data-file-version-id="<?=$fvv->getFileVersionID()?>" href="javascript:void(0)"><i class="fa fa-trash"></i></a></td>
 			<? } ?>
-		</tr>	
-	
+		</tr>
+
 	<? } ?>
-	
+
 	</table>
 
 </div>
 
 <div class="ccm-tab-content" id="ccm-tab-content-statistics">
-	
+
 	<?
 	$downloadStatistics = $f->getDownloadStatistics();
 	?>

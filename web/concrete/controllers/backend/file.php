@@ -42,8 +42,8 @@ class File extends Controller {
 			$fv = $f->getApprovedVersion();
 			$resp = $fv->refreshAttributes();
 			switch($resp) {
-				case ConcreteFile::F_ERROR_FILE_NOT_FOUND:
-					$errorMessage .= t('File %s could not be found.', $fv->getFilename()) . '<br/>';
+                case \Concrete\Core\File\Importer::E_FILE_INVALID:
+                    $errorMessage .= t('File %s could not be found.', $fv->getFilename()) . '<br/>';
 					break;
 				default:
 					$successCount++;

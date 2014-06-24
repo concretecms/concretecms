@@ -90,7 +90,7 @@ $req = $flr->getSearchRequest();
         <? } ?>
     </select>
     <div class="ccm-search-field-content"><% if (typeof(field) != 'undefined') { %><%=field.html%><% } %></div>
-    <a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="fa fa-minus-sign"></i></a>
+    <a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="fa fa-minus-circle"></i></a>
 </div>
 </script>
 
@@ -124,11 +124,7 @@ $req = $flr->getSearchRequest();
 </div>
 
 <script type="text/template" data-template="search-results-pagination">
-<ul class="pagination">
-    <li class="<%=pagination.prevClass%>"><%=pagination.previousPage%></li>
-    <%=pagination.pages%>
-    <li class="<%=pagination.nextClass%>"><%=pagination.nextPage%></li>
-</div>
+<%=paginationTemplate%>
 </script>
 
 <script type="text/template" data-template="search-results-table-head">

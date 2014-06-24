@@ -18,9 +18,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 </div>
 
 <script type="text/template" data-template="search-results-pagination">
-<ul class="pagination">
-    <%=paginationTemplate%>
-</div>
+<%=paginationTemplate%>
 </script>
 
 <script type="text/template" data-template="search-results-table-head">

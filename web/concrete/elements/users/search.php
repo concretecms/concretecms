@@ -95,7 +95,7 @@ $searchRequest = $controller->getSearchRequest();
 		<? } ?>
 	</select>
 	<div class="ccm-search-field-content"><% if (typeof(field) != 'undefined') { %><%=field.html%><% } %></div>
-	<a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="fa fa-minus-sign"></i></a>
+	<a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="fa fa-minus-circle"></i></a>
 </div>
 </script>
 

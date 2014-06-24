@@ -2,7 +2,7 @@
 namespace Concrete\Core\Search\Result;
 use \Concrete\Core\Search\Column\Set;
 use \Concrete\Core\Search\ListItemInterface;
-use Pagerfanta\View\DefaultView;
+use Pagerfanta\View\TwitterBootstrap3View;
 use stdClass;
 
 class Result {
@@ -10,6 +10,8 @@ class Result {
 	protected $listColumns;
 	protected $list;
 	protected $baseURL;
+
+    /** @var \Concrete\Core\Search\Pagination\Pagination */
 	protected $pagination;
 
 	protected $items;
@@ -76,12 +78,17 @@ class Result {
 		foreach($this->getColumns() as $column) {
 			$obj->columns[] = $column;
 		}
-
-        $view = new DefaultView();
-        $options = array('proximity' => 3);
-        $html = $view->render($this->pagination, function($page) {
-            return '/derp?page=' . $page;
-        }, $options);
+        $html = '';
+        if ($this->pagination->haveToPaginate()) {
+            $view = new TwitterBootstrap3View();
+            $options = array('proximity' => 3);
+            $result = $this;
+            $html = $view->render($this->pagination, function($page) use ($result) {
+                $list = $result->getItemListObject();
+                return $result->getBaseURL() . '?'
+                    . $list->getQueryPaginationPageParameter() . '=' . $page;
+            }, $options);
+        }
 
 		$obj->paginationTemplate = $html;
 		$obj->fields = $this->fields;
