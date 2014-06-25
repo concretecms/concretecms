@@ -58,7 +58,7 @@ class ApprovePageRequest extends PageRequest {
 	
 	public function trigger() {
 		$page = Page::getByID($this->cID, $this->cvID);
-		parent::trigger();
+		return parent::trigger();
 	}
 
 	public function getWorkflowRequestAdditionalActions(WorkflowProgress $wp) {
