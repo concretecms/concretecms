@@ -46,7 +46,6 @@ function ConcretePanel(options) {
         this.setupSubPanels();
         this.setupPanelDetails();
         Concrete.event.publish('PanelLoad', {panel: this, element: element});
-
     };
 
     this.hide = function () {
@@ -241,8 +240,13 @@ function ConcretePanel(options) {
             jQuery.fn.dialog.hideLoader();
             $content.find('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
             obj.loadPanelDetailActions($content);
+
+            _.defer(function() {
+                Concrete.event.publish('PanelOpenDetail', {
+                    container: $content
+                });
+            });
         });
-        Concrete.event.publish('PanelOpenDetail', obj);
     };
 
     this.loadPanelDetailActions = function ($content) {
@@ -271,6 +275,7 @@ function ConcretePanel(options) {
                 obj.closePanelDetail();
             });
             $('button[data-panel-detail-action=submit]').on('click', function () {
+
                 $('[data-panel-detail-form]').concreteAjaxForm().submit();
             });
         }
@@ -347,7 +352,7 @@ function ConcretePanel(options) {
                 panelDetailOptions.transition = $(this).attr('data-panel-transition');
             }
             if ($(this).attr('data-panel-detail-url')) {
-                panelDetailOptions.url = $(this).attr('data-panel-detail-url');
+                panelDetailOptions.url = $(this).data('panel-detail-url');
             }
             obj.openPanelDetail(panelDetailOptions);
             return false;
