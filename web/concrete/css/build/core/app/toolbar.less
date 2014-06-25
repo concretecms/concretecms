@@ -11,7 +11,7 @@ div#ccm-toolbar {
 
 	> ul {
 		.clear_float();
-
+        padding-left: 0px;
 		list-style-type: none;
 		margin: 0px;
 	
@@ -173,5 +173,130 @@ div#ccm-toolbar-disabled {
 	left: 0px;
 	width: 100%;
 	.opacity(0);
+}
+
+/* Responsive Toolbar */
+
+
+.ccm-toolbar-mobile-menu-button {
+  font-size: 23px;
+  padding: 8px 15px;
+  border-left: 1px solid #ccc;
+  cursor: pointer;
+  &:hover,
+  &.ccm-mobile-close {
+    color: #7d7d7d;
+  }
+}
+
+.ccm-mobile-menu-entries {
+  padding-left: 0px;
+  margin-left: 12px;
+  li {
+    &.ccm-toolbar-page-edit-mode-active {
+      a {
+        color: #00cc66;
+      }
+      i {
+        &.fa-pencil {
+          color: #00cc66;
+        }
+      }
+    }
+    a{
+      display: inline-block;
+      &:hover {
+        text-decoration:none;
+      }
+    }
+    ul {
+      display: none;
+      margin-left: 60px;
+      margin-bottom: 10px;
+
+      li {
+        a {
+          text-transform: none;
+          color: #4674a1;
+          padding: 6px 0px 6px 0px;
+          font-weight: normal;
+          font-size: 13px;
+          background: none;
+        }
+        ul {
+          margin-top: 10px;
+          a {
+            text-transform: none;
+            color: #1b7bbc;
+            padding: 6px 0px 6px 0px;
+            font-weight: normal;
+            font-size: 13px;
+          }
+        }
+      }
+    }
+    i {
+      &.fa-caret-down {
+        margin-left: 6px;
+        font-size: 14px;
+      }
+      &.mobile-leading-icon {
+        display: inline-block !important;
+        color: #CAC9C9;
+        font-size: 17px;
+        min-width: 30px;
+        text-align: center;
+        &.fa-th-large {
+          font-size: 16px;
+        }
+        &.fa-cog {
+          font-size: 19px;
+        }
+      }
+    }
+    a {
+      color: #4674a1;
+      font-size: 18px;
+      display: inline-block;
+      width: 80%;
+      padding: 7px 5% 7px 0px;
+      margin: 0% 5% 0% 0;
+      padding-left: 15px;
+      height: 100%;
+      font-weight: 200;
+      text-decoration: none;
+      &:hover {
+        color: #195279;
+      }
+    }
+  }
+  -webkit-text-size-adjust: none;
+  list-style-type: none;
+}
+
+
+.ccm-mobile-toolbar-menu {
+  display: none;
+
+}
+
+.ccm-mobile-menu-overlay {
+  padding-bottom: 10px;
+  padding-top: 15px;
+  display: none;
+  background-color: #FCFCFC;
+  position: fixed;
+  border-bottom: 5px solid #4674a1;
+  width: 100%;
+  z-index: 99;
+  top: 49px;
+  left: 0px;
+  &.ccm-mobile-menu-overlay-dashboard {
+    li {
+      ul {
+        display: block; // dashboard's mobile menu is always visible
+      }
+    }
+  }
 }
 
