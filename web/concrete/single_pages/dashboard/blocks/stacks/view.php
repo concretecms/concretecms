@@ -44,7 +44,7 @@ if ($controller->getTask() == 'view_details') {
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?=t('Add Block')?></i></a>
             <ul class="dropdown-menu">
-                <li><a href="javascript:void(0)" data-dialog="add-new-block"><?=t('New')?></a></li>
+                <li><a class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" dialog-title="<?=t('Add Block')?>" href="<?=URL::to('/ccm/system/dialogs/page/add_block_list')?>?cID=<?=$stack->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>"><?=t('Add Block')?></a></li>
                 <li><a class="dialog-launch" dialog-modal="false" dialog-width="550" dialog-height="380" dialog-title="<?=t('Paste From Clipboard')?>" id="stackAddClipboard" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?cID=<?=$stack->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>&atask=paste&addOnly=0"><?=t('Paste From Clipboard')?></a></li>
             </ul>
         </li>
