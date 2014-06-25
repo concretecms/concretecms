@@ -53,11 +53,8 @@
 }
 .ccm-ui {
   /*! normalize.css v3.0.0 | MIT License | git.io/normalize */
-
   /* concrete5 & mod */
-
   /* concrete5 */
-
   /*
 input[type="radio"],
 input[type="checkbox"],
@@ -71,7 +68,6 @@ input[type="checkbox"],
   }
 }
 */
-
 }
 .ccm-ui html {
   font-family: sans-serif;
@@ -1641,7 +1637,6 @@ a.ccm-ui .bg-danger:hover {
   margin: 4px 0 0;
   margin-top: 1px \9;
   /* IE8-9 */
-
   line-height: normal;
 }
 .ccm-ui input[type="file"] {
@@ -1691,7 +1686,6 @@ a.ccm-ui .bg-danger:hover {
     height: auto;
   }
   */
-
 }
 .ccm-ui .form-control:focus {
   border-color: #66afe9;
@@ -2006,7 +2000,6 @@ select[multiple].ccm-ui .input-lg {
   -ms-user-select: none;
   user-select: none;
   /* concrete5 */
-
   /*
   &.disabled,
   &[disabled],
@@ -2016,7 +2009,6 @@ select[multiple].ccm-ui .input-lg {
     .opacity(.65);
     .box-shadow(none);
   }*/
-
 }
 .ccm-ui .btn:focus,
 .ccm-ui .btn:active:focus,
@@ -3683,14 +3675,12 @@ select[multiple].ccm-ui .input-group-sm > .input-group-btn > .btn {
   vertical-align: baseline;
   border-radius: .25em;
   /* concrete5 */
-
   /*
   .btn & {
     position: relative;
     top: -1px;
   }
   */
-
 }
 .ccm-ui .label[href]:hover,
 .ccm-ui .label[href]:focus {
@@ -3761,7 +3751,6 @@ select[multiple].ccm-ui .input-group-sm > .input-group-btn > .btn {
   background-color: #999999;
   border-radius: 10px;
   /* concrete5 */
-
   /*
   .btn & {
     position: relative;
@@ -3773,7 +3762,6 @@ select[multiple].ccm-ui .input-group-sm > .input-group-btn > .btn {
   }
 
   */
-
 }
 .ccm-ui .badge:empty {
   display: none;
@@ -4471,7 +4459,6 @@ a.ccm-ui .list-group-item-danger.active:focus {
   opacity: 0.2;
   filter: alpha(opacity=20);
   /* concrete5 */
-
   /*
   button& {
     padding: 0;
@@ -4480,7 +4467,6 @@ a.ccm-ui .list-group-item-danger.active:focus {
     border: 0;
     -webkit-appearance: none;
   }*/
-
 }
 .ccm-ui .close:hover,
 .ccm-ui .close:focus {
@@ -6406,7 +6392,6 @@ p.ccm-marketplace-detail-loading {
   position: relative;
   z-index: 1;
   /* prevent shadows falling behind containers with backgrounds */
-
   list-style: none;
   margin: 0;
   padding: 0;
@@ -8525,7 +8510,6 @@ div#ccm-dialog-attributes-detail {
   padding-top: 10px;
   padding-bottom: 0px;
   /* the ccm-search-fields-row has a margin on the bottom */
-
   margin-left: 95px;
 }
 .ccm-ui form.ccm-search-fields.ccm-search-fields-none {
@@ -8673,8 +8657,8 @@ table.ccm-search-results-table thead th.ccm-results-list-active-sort-asc a {
   background: #00496e;
   white-space: nowrap;
 }
-table.ccm-search-results-table thead th.ccm-results-list-active-sort-desc a:after,
-table.ccm-search-results-table thead th.ccm-results-list-active-sort-asc a:after {
+ table.ccm-search-results-table thead th.ccm-results-list-active-sort-desc a:after,
+ table.ccm-search-results-table thead th.ccm-results-list-active-sort-asc a:after {
   vertical-align: middle;
   content: "";
   width: 0;
@@ -8709,7 +8693,6 @@ table.ccm-search-results-table thead th span {
   /* not sure why this was here, it was causing columns to not go the whole width in the sort row
 				display: inline-block;
 				*/
-
 }
 table.ccm-search-results-table tbody td {
   -webkit-transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
@@ -9508,7 +9491,6 @@ div#ccm-toolbar {
   width: 100%;
   z-index: 1000;
   /* over the top of the highlighter, which is 1000 */
-
 }
 div#ccm-toolbar > ul {
   list-style-type: none;
@@ -9662,7 +9644,6 @@ div#ccm-toolbar-disabled {
   background-color: rgba(255, 255, 255, 0.8);
   z-index: 1100;
   /* right over the toolbar */
-
   position: fixed;
   top: 0px;
   left: 0px;
@@ -10065,7 +10046,6 @@ div.ccm-block-type-drop-zone.ccm-area-drag-block-type-over {
   font-size: 15px !important;
   background: #fff;
   /* spinner */
-
 }
 .ccm-inline-toolbar > li label {
   font-size: 9px;
@@ -10222,7 +10202,6 @@ div.ccm-block-type-drop-zone.ccm-area-drag-block-type-over {
   left: 0;
   z-index: 1150;
   /* same as toolbar */
-
 }
 #ccm-inline-toolbar-container.ccm-inline-toolbar-affixed {
   position: fixed;
@@ -10259,7 +10238,6 @@ div.ccm-block-type-drop-zone.ccm-area-drag-block-type-over {
   min-height: 80px;
   padding-top: 1px;
   /* disable margin collapse inner */
-
   border-collapse: collapse;
 }
 #ccm-layouts-edit-mode.ccm-layouts-edit-mode-edit .ccm-layout-column-highlight {
@@ -10444,7 +10422,6 @@ div.ccm-area {
   /**
      * draggable blocks into area
      */
-
 }
 div.ccm-area .ccm-area-block-dropzone-active {
   margin-top: -8px;
