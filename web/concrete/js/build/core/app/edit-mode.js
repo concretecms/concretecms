@@ -42,14 +42,17 @@
                     {name: 'bID', value: block.getId()}
                 ],
                 bID = block.getId(),
-                $container = block.getElem();
+                $container = block.getElem(),
+                prop;
 
             if (block.menu) {
                 block.menu.destroy();
             }
             if (data.postData) {
-                for (var prop in data.postData) {
-                    postData.push({name: prop, value: data.postData[prop]});
+                for (prop in data.postData) {
+                    if (data.postData.hasOwnProperty(prop)) {
+                        postData.push({name: prop, value: data.postData[prop]});
+                    }
                 }
             }
 
@@ -346,7 +349,6 @@
         Block.call(my, elem, edit_mode, dragger);
     };
 
-
     var Stack = Concrete.Stack = function Stack(elem, edit_mode, dragger) {
         var my = this;
         Block.call(my, elem, edit_mode, dragger);
@@ -513,7 +515,7 @@
 
         /**
          * Add block to the blocks
-         * @param {Block} block Block to add
+         * @param block
          */
         addBlock: function editModeAddBlock(block) {
             var my = this;
@@ -775,6 +777,32 @@
     };
 
     Block.prototype = {
+
+        addToDragArea: function blockAddToDragArea(drag_area) {
+            var my = this,
+                sourceArea = my.getArea(),
+                targetArea = drag_area.getArea(),
+                selected_block;
+
+            sourceArea.removeBlock(my);
+            drag_area.getElem().after(my.getElem());
+            selected_block = drag_area.getBlock();
+            if (selected_block) {
+                drag_area.getArea().addBlock(my, selected_block);
+            } else {
+                drag_area.getArea().addBlockToIndex(my, 0);
+            }
+            my.getPeper().pep(my.getPepSettings());
+            if (targetArea.getTotalBlocks() === 1) {
+                // we have to destroy the old menu and create it anew
+                targetArea.bindMenu();
+            }
+            Concrete.event.fire('EditModeBlockMove', {
+                block: my,
+                sourceArea: sourceArea,
+                targetArea: targetArea
+            });
+        },
 
         handleAddResponse: function blockHandleAddResponse(response, area, after_block, success_title, success_message) {
             var my = this;
@@ -1156,31 +1184,15 @@
                 Concrete.event.fire('EditModeBlockDragStart', {block: my, pep: pep, event: event});
             });
         },
+
         pepStop: function blockPepStop(context, event, pep) {
-            var selected_block, my = this, sourceArea = my.getArea();
+            var my = this, drag_area;
             my.getDragger().stop(1);
             my.getDragger().css({top: 0, left: 0});
             my.dragPosition(pep);
-            if (my.getSelected()) {
-                sourceArea.removeBlock(my);
-                var targetArea = my.getSelected().getArea();
-                my.getSelected().getElem().after(my.getElem());
-                selected_block = my.getSelected().getBlock();
-                if (selected_block) {
-                    my.getSelected().getArea().addBlock(my, selected_block);
-                } else {
-                    my.getSelected().getArea().addBlockToIndex(my, 0);
-                }
-                my.getPeper().pep(my.getPepSettings());
-                if (targetArea.getTotalBlocks() === 1) {
-                    // we have to destroy the old menu and create it anew
-                    targetArea.bindMenu();
-                }
-                Concrete.event.fire('EditModeBlockMove', {
-                    block: my,
-                    sourceArea: sourceArea,
-                    targetArea: targetArea
-                });
+
+            if ((drag_area = my.getSelected())) {
+                my.addToDragArea(drag_area);
             }
 
             my.animateToElem();
@@ -1242,42 +1254,128 @@
         }
     };
 
-    Stack.prototype = _({
-        pepStop: function StackPepStop(context, event, pep) {
-            var my = this, elem = my.getElem();
-            if (my.getSelected()) {
-                var area = my.getSelected().getArea(),
-                    area_handle = area.getHandle(),
-                    dragAreaBlockID = 0,
-                    dragAreaBlock = my.getSelected().getBlock();
+    BlockType.prototype = _({
 
-                if (dragAreaBlock) {
-                    dragAreaBlockID = dragAreaBlock.getId();
-                }
+        pepStop: function blockTypePepStop(context, event, pep) {
+            var my = this, drag_area;
 
-                ConcretePanelManager.exitPanelMode();
-
-                var settings = {
-                    cID: CCM_CID,
-                    arHandle: area_handle,
-                    stID: elem.data('cid'),
-                    atask: 'add_stack',
-                    ccm_token: CCM_SECURITY_TOKEN
-                };
-                if (dragAreaBlockID) {
-                    settings.dragAreaBlockID = dragAreaBlockID;
-                }
-                $.fn.dialog.showLoader();
-                $.getJSON(CCM_DISPATCHER_FILENAME, settings, function (response) {
-                    my.handleAddResponse(response, area, dragAreaBlock);
-                });
+            if ((drag_area = my.getSelected())) {
+                my.addToDragArea(drag_area);
             }
 
             _.defer(function () {
                 Concrete.event.fire('EditModeBlockDragStop', {block: my, pep: pep, event: event});
             });
+
             my.getDragger().remove();
             my.setAttr('dragger', null);
+        },
+
+        addToDragArea: function blockTypeAddToDragArea(drag_area) {
+            var my = this, elem = my.getElem(),
+                block_type_id = elem.data('btid'),
+                area = drag_area.getArea(),
+                area_handle = area.getHandle(),
+                dragAreaBlockID = 0,
+                dragAreaBlock = drag_area.getBlock(),
+                is_inline = !!elem.data('supports-inline-add'),
+                has_add = !!elem.data('has-add-template');
+
+            if (dragAreaBlock) {
+                dragAreaBlockID = dragAreaBlock.getId();
+            }
+
+            ConcretePanelManager.exitPanelMode();
+
+            if (!has_add) {
+                $.get(CCM_DISPATCHER_FILENAME, {
+                    cID: CCM_CID,
+                    arHandle: area_handle,
+                    btID: block_type_id,
+                    mode: 'edit',
+                    processBlock: 1,
+                    add: 1,
+                    ccm_token: CCM_SECURITY_TOKEN,
+                    dragAreaBlockID: dragAreaBlockID
+                }, function (response) {
+                    $.fn.dialog.showLoader();
+                    $.get(CCM_TOOLS_PATH + '/edit_block_popup',
+                        {
+                            arHandle: response.arHandle,
+                            cID: response.cID,
+                            bID: response.bID,
+                            btask: 'view_edit_mode'
+                        }, function (html) {
+                            if (dragAreaBlock) {
+                                dragAreaBlock.getElem().after(html);
+                            } else {
+                                area.getElem().append(html);
+                            }
+                            $.fn.dialog.hideLoader();
+                            _.defer(function () {
+                                my.getEditMode().scanBlocks();
+                            });
+                        });
+                });
+            } else if (is_inline) {
+                ConcreteEvent.fire('EditModeBlockAddInline', {
+                    'selected': drag_area,
+                    'area': drag_area.getArea(),
+                    'btID': block_type_id,
+                    'dragAreaBlockID': dragAreaBlockID
+                });
+            } else {
+                $.fn.dialog.open({
+                    onClose: function () {
+                        $.fn.dialog.closeAll();
+                    },
+                    onOpen: function () {
+                        $(function () {
+                            $('#ccm-block-form').concreteAjaxBlockForm({
+                                'task': 'add',
+                                'dragAreaBlockID': dragAreaBlockID
+                            });
+                        });
+                    },
+                    width: parseInt(elem.data('dialog-width'), 10),
+                    height: parseInt(elem.data('dialog-height'), 10) + 20,
+                    title: elem.data('dialog-title'),
+                    href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add_block?cID=' + CCM_CID + '&btID=' + block_type_id + '&arHandle=' + encodeURIComponent(area_handle)
+                });
+            }
+        }
+    }).defaults(Block.prototype);
+
+    Stack.prototype = _({
+        addToDragArea: function StackAddToDragArea(drag_area) {
+            var my = this, elem = my.getElem(),
+                area = drag_area.getArea(),
+                area_handle = area.getHandle(),
+                dragAreaBlockID = 0,
+                dragAreaBlock = drag_area.getBlock();
+
+            if (dragAreaBlock) {
+                dragAreaBlockID = dragAreaBlock.getId();
+            }
+
+            ConcretePanelManager.exitPanelMode();
+
+            var settings = {
+                cID: CCM_CID,
+                arHandle: area_handle,
+                stID: elem.data('cid'),
+                atask: 'add_stack',
+                ccm_token: CCM_SECURITY_TOKEN
+            };
+
+            if (dragAreaBlockID) {
+                settings.dragAreaBlockID = dragAreaBlockID;
+            }
+
+            $.fn.dialog.showLoader();
+            $.getJSON(CCM_DISPATCHER_FILENAME, settings, function (response) {
+                my.handleAddResponse(response, area, dragAreaBlock);
+            });
         },
 
         showSuccessfulAdd: function stackShowSuccessfulAdd() {
@@ -1286,179 +1384,79 @@
                 'title': ccmi18n.addBlockStack
             });
         }
-    }).defaults(Block.prototype);
+    }).defaults(BlockType.prototype);
 
     DuplicateBlock.prototype = _({
-        pepStop: function DuplicateBlockPepStop(context, event, pep) {
-            var my = this, elem = my.getElem();
-            if (my.getSelected()) {
-                var block_type_id = elem.data('btid'),
-                    area = my.getSelected().getArea(),
-                    area_handle = area.getHandle(),
-                    dragAreaBlockID = 0,
-                    dragAreaBlock = my.getSelected().getBlock(),
-                    pcID = elem.data('pcid');
+        addToDragArea: function DuplicateBlockAddToDragArea(drag_area) {
+            var my = this, elem = my.getElem(),
+                block_type_id = elem.data('btid'),
+                area = drag_area.getArea(),
+                area_handle = area.getHandle(),
+                dragAreaBlockID = 0,
+                dragAreaBlock = drag_area.getBlock(),
+                pcID = elem.data('pcid');
 
-                if (dragAreaBlock) {
-                    dragAreaBlockID = dragAreaBlock.getId();
-                }
-
-                ConcretePanelManager.exitPanelMode();
-
-                var settings = {
-                    cID: CCM_CID,
-                    arHandle: area_handle,
-                    btID: block_type_id,
-                    mode: 'edit',
-                    processBlock: 1,
-                    add: 1,
-                    btask: 'alias_existing_block',
-                    pcID: [ pcID ],
-                    ccm_token: CCM_SECURITY_TOKEN
-                };
-                if (dragAreaBlockID) {
-                    settings.dragAreaBlockID = dragAreaBlockID;
-                }
-                $.getJSON(CCM_DISPATCHER_FILENAME, settings, function (response) {
-                    my.handleAddResponse(response, area, dragAreaBlock);
-                });
+            if (dragAreaBlock) {
+                dragAreaBlockID = dragAreaBlock.getId();
             }
 
-            _.defer(function () {
-                Concrete.event.fire('EditModeBlockDragStop', {block: my, pep: pep, event: event});
+            ConcretePanelManager.exitPanelMode();
+
+            var settings = {
+                cID: CCM_CID,
+                arHandle: area_handle,
+                btID: block_type_id,
+                mode: 'edit',
+                processBlock: 1,
+                add: 1,
+                btask: 'alias_existing_block',
+                pcID: [ pcID ],
+                ccm_token: CCM_SECURITY_TOKEN
+            };
+            if (dragAreaBlockID) {
+                settings.dragAreaBlockID = dragAreaBlockID;
+            }
+            $.getJSON(CCM_DISPATCHER_FILENAME, settings, function (response) {
+                my.handleAddResponse(response, area, dragAreaBlock);
             });
-            my.getDragger().remove();
-            my.setAttr('dragger', null);
         }
-    }).defaults(Block.prototype);
+    }).defaults(BlockType.prototype);
 
     StackBlock.prototype = _({
-        pepStop: function StackBlockPepStop(context, event, pep) {
-            var my = this, elem = my.getElem();
-            if (my.getSelected()) {
-                var block_type_id = elem.data('btid'),
-                    area = my.getSelected().getArea(),
-                    area_handle = area.getHandle(),
-                    dragAreaBlockID = 0,
-                    dragAreaBlock = my.getSelected().getBlock();
+        addToDragArea: function StackBlockAddToDragArea(drag_area) {
+            var my = this, elem = my.getElem(),
+                block_type_id = elem.data('btid'),
+                area = drag_area.getArea(),
+                area_handle = area.getHandle(),
+                dragAreaBlockID = 0,
+                dragAreaBlock = drag_area.getBlock();
 
-                if (dragAreaBlock) {
-                    dragAreaBlockID = dragAreaBlock.getId();
-                }
-
-                ConcretePanelManager.exitPanelMode();
-
-                var settings = {
-                    cID: CCM_CID,
-                    bID: elem.data('block-id'),
-                    arHandle: area_handle,
-                    btID: block_type_id,
-                    mode: 'edit',
-                    processBlock: 1,
-                    add: 1,
-                    btask: 'alias_existing_block',
-                    pcID: [ elem.data('cID') ],
-                    ccm_token: CCM_SECURITY_TOKEN
-                };
-                if (dragAreaBlockID) {
-                    settings.dragAreaBlockID = dragAreaBlockID;
-                }
-                $.getJSON(CCM_DISPATCHER_FILENAME, settings, function (response) {
-                    my.handleAddResponse(response, area, dragAreaBlock);
-                });
+            if (dragAreaBlock) {
+                dragAreaBlockID = dragAreaBlock.getId();
             }
 
-            _.defer(function () {
-                Concrete.event.fire('EditModeBlockDragStop', {block: my, pep: pep, event: event});
-            });
-            my.getDragger().remove();
-            my.setAttr('dragger', null);
-        }
-    }).defaults(Block.prototype);
+            ConcretePanelManager.exitPanelMode();
 
-    BlockType.prototype = _({
-        pepStop: function blockTypePepStop(context, event, pep) {
-            var my = this, elem = my.getElem();
-            if (my.getSelected()) {
-                var block_type_id = elem.data('btid'),
-                    area = my.getSelected().getArea(),
-                    area_handle = area.getHandle(),
-                    dragAreaBlockID = 0,
-                    dragAreaBlock = my.getSelected().getBlock(),
-                    is_inline = !!elem.data('supports-inline-add'),
-                    has_add = !!elem.data('has-add-template');
-
-                if (dragAreaBlock) {
-                    dragAreaBlockID = dragAreaBlock.getId();
-                }
-
-                ConcretePanelManager.exitPanelMode();
-
-                if (!has_add) {
-                    $.get(CCM_DISPATCHER_FILENAME, {
-                        cID: CCM_CID,
-                        arHandle: area_handle,
-                        btID: block_type_id,
-                        mode: 'edit',
-                        processBlock: 1,
-                        add: 1,
-                        ccm_token: CCM_SECURITY_TOKEN,
-                        dragAreaBlockID: dragAreaBlockID
-                    }, function (response) {
-                        $.fn.dialog.showLoader();
-                        $.get(CCM_TOOLS_PATH + '/edit_block_popup',
-                            {
-                                arHandle: response.arHandle,
-                                cID: response.cID,
-                                bID: response.bID,
-                                btask: 'view_edit_mode'
-                            }, function (html) {
-                                if (dragAreaBlock) {
-                                    dragAreaBlock.getElem().after(html);
-                                } else {
-                                    area.getElem().append(html);
-                                }
-                                $.fn.dialog.hideLoader();
-                                _.defer(function () {
-                                    my.getEditMode().scanBlocks();
-                                });
-                            });
-                    });
-                } else if (is_inline) {
-                    ConcreteEvent.fire('EditModeBlockAddInline', {
-                        'selected': my.getSelected(),
-                        'area': my.getSelected().getArea(),
-                        'btID': block_type_id,
-                        'dragAreaBlockID': dragAreaBlockID
-                    });
-                } else {
-                    $.fn.dialog.open({
-                        onClose: function () {
-                            $.fn.dialog.closeAll();
-                        },
-                        onOpen: function () {
-                            $(function () {
-                                $('#ccm-block-form').concreteAjaxBlockForm({
-                                    'task': 'add',
-                                    'dragAreaBlockID': dragAreaBlockID
-                                });
-                            });
-                        },
-                        width: parseInt(elem.data('dialog-width'), 10),
-                        height: parseInt(elem.data('dialog-height'), 10) + 20,
-                        title: elem.data('dialog-title'),
-                        href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add_block?cID=' + CCM_CID + '&btID=' + block_type_id + '&arHandle=' + encodeURIComponent(area_handle)
-                    });
-                }
+            var settings = {
+                cID: CCM_CID,
+                bID: elem.data('block-id'),
+                arHandle: area_handle,
+                btID: block_type_id,
+                mode: 'edit',
+                processBlock: 1,
+                add: 1,
+                btask: 'alias_existing_block',
+                pcID: [ elem.data('cID') ],
+                ccm_token: CCM_SECURITY_TOKEN
+            };
+            if (dragAreaBlockID) {
+                settings.dragAreaBlockID = dragAreaBlockID;
             }
-
-            _.defer(function () {
-                Concrete.event.fire('EditModeBlockDragStop', {block: my, pep: pep, event: event});
+            $.getJSON(CCM_DISPATCHER_FILENAME, settings, function (response) {
+                my.handleAddResponse(response, area, dragAreaBlock);
             });
-            my.getDragger().remove();
-            my.setAttr('dragger', null);
         }
-    }).defaults(Block.prototype);
+    }).defaults(BlockType.prototype);
 
     DragArea.prototype = {
 
