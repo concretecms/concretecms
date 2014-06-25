@@ -813,7 +813,7 @@
             });
         },
 
-        handleAddResponse: function blockHandleAddResponse(response, area, after_block, success_title, success_message) {
+        handleAddResponse: function blockHandleAddResponse(response, area, after_block, onComplete) {
             var my = this;
 
             if (response.error) {
@@ -836,6 +836,10 @@
                         my.getEditMode().scanBlocks();
                         my.showSuccessfulAdd();
                         Concrete.forceRefresh();
+
+                        if (onComplete) {
+                            onComplete();
+                        }
                     });
                 });
             return true;
@@ -1407,6 +1411,7 @@
                 area = drag_area.getArea(),
                 area_handle = area.getHandle(),
                 dragAreaBlockID = 0,
+                cID = elem.data('cid'),
                 dragAreaBlock = drag_area.getBlock(),
                 pcID = elem.data('pcid');
 
@@ -1415,9 +1420,11 @@
             }
 
             ConcretePanelManager.exitPanelMode();
+            jQuery.fn.dialog.closeAll();
+            jQuery.fn.dialog.showLoader();
 
             var settings = {
-                cID: CCM_CID,
+                cID: cID,
                 arHandle: area_handle,
                 btID: block_type_id,
                 mode: 'edit',
@@ -1431,7 +1438,11 @@
                 settings.dragAreaBlockID = dragAreaBlockID;
             }
             $.getJSON(CCM_DISPATCHER_FILENAME, settings, function (response) {
-                my.handleAddResponse(response, area, dragAreaBlock);
+                my.handleAddResponse(response, area, dragAreaBlock, function() {
+                    ConcreteEvent.fire('EditModeAddClipboardComplete', {
+                        block: my
+                    });
+                });
             });
         }
     }).defaults(BlockType.prototype);
@@ -1467,7 +1478,7 @@
                 settings.dragAreaBlockID = dragAreaBlockID;
             }
             $.getJSON(CCM_DISPATCHER_FILENAME, settings, function (response) {
-                my.handleAddResponse(response, area, dragAreaBlock);
+                my.handleAddResponse(response, area, dragAreaBlock)
             });
         }
     }).defaults(BlockType.prototype);

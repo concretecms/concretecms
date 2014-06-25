@@ -46,6 +46,7 @@ Route::register('/ccm/system/dialogs/file/bulk/properties', '\Concrete\Controlle
 Route::register('/ccm/system/dialogs/file/bulk/properties/update_attribute', '\Concrete\Controller\Dialog\File\Bulk\Properties::updateAttribute');
 Route::register('/ccm/system/dialogs/file/bulk/properties/clear_attribute', '\Concrete\Controller\Dialog\File\Bulk\Properties::clearAttribute');
 Route::register('/ccm/system/dialogs/page/add_block_list', '\Concrete\Controller\Dialog\Page\AddBlockList::view');
+Route::register('/ccm/system/dialogs/page/clipboard', '\Concrete\Controller\Dialog\Page\Clipboard::view');
 Route::register('/ccm/system/dialogs/page/add_block', '\Concrete\Controller\Dialog\Page\AddBlock::view');
 Route::register('/ccm/system/dialogs/page/add_block/submit', '\Concrete\Controller\Dialog\Page\AddBlock::submit');
 Route::register('/ccm/system/dialogs/page/search/customize', '\Concrete\Controller\Dialog\Page\Search\Customize::view');
