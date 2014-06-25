@@ -1,11 +1,14 @@
 <?
 namespace Concrete\Controller\SinglePage\Dashboard\Blocks;
+use Concrete\Core\Page\Collection\Version\Version;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use StackList, Stack;
 use Page;
 use Permissions;
 use Loader;
-use \Concrete\Workflow\Request\DeletePageRequest as DeletePagePageWorkflowRequest;
+use User;
+use \Concrete\Core\Workflow\Request\DeletePageRequest;
+use \Concrete\Core\Workflow\Request\ApproveStackRequest;
 use View;
 use Exception;
 
@@ -16,10 +19,6 @@ class Stacks extends DashboardPageController {
 		parent::on_start();
 		
 		$stm = new StackList();
-		$stm->filterByGlobalAreas();
-		$this->set('globalareas', $stm->get());
-
-		$stm = new StackList();
 		$stm->filterByUserAdded();
 		$this->set('useradded', $stm->get());
 	}
@@ -29,40 +28,16 @@ class Stacks extends DashboardPageController {
 		$cpc = new Permissions($parent);
 		if ($cpc->canMoveOrCopyPage()) {
 			$this->set('canMoveStacks', true);
-			
-			$sortUrl = View::url('/dashboard/blocks/stacks', 'update_order');
-			$this->addFooterItem('<script type="text/javascript">
-			$("div.ccm-stack-content-wrapper").sortable({
-				handle: "img.ccm-group-sort",
-				cursor: "move",
-				axis: "y",
-				opacity: 0.5,
-				stop: function() {
-					var pagelist = $(this).sortable("serialize");
-					$.ajax({
-						dataType: "json",
-						type: "post",
-						url: "'.$sortUrl.'",
-						data: pagelist,
-						success: function(r) {
-							if (r.success) {
-								ccmAlert.hud(r.message, 2000, "success");
-							} else {
-								ccmAlert.hud(r.message, 2000, "error");
-							}
-						}
-					});
-				}
-			});
-			</script>');
+            $sortUrl = View::url('/dashboard/blocks/stacks', 'update_order');
+            $this->set('sortURL', $sortUrl);
 		}
 	}
-	
+
 	public function add_stack() {
 		if (Loader::helper('validation/token')->validate('add_stack')) {
 			if (Loader::helper('validation/strings')->notempty($this->post('stackName')))  {
 				$stack = Stack::addStack($this->post('stackName'));
-				$this->redirect('/dashboard/blocks/stacks', 'stack_added');
+				$this->redirect('/dashboard/blocks/stacks', 'view_details', $stack->getCollectionID(), 'stack_added');
 			} else {
 				$this->error->add(t("You must give your stack a name."));
 			}
@@ -71,28 +46,28 @@ class Stacks extends DashboardPageController {
 		}
 	}
 	
-	public function stack_added() {
-		$this->set('message', t('Stack added successfully'));
-		$this->view();
-	}
-
 	public function stack_deleted() {
 		$this->set('message', t('Stack deleted successfully'));
 		$this->view();
 	}
-	
-	public function delete($cID = false, $token = false) {
-		if (Loader::helper('validation/token')->validate('delete', $token)) {
-			$s = Stack::getByID($cID);
+
+    public function stack_approved() {
+        $this->set('message', t('Stack approved successfully'));
+        $this->view();
+    }
+
+    public function delete_stack() {
+		if (Loader::helper('validation/token')->validate('delete_stack')) {
+			$s = Stack::getByID($_REQUEST['stackID']);
 			if (is_object($s)) {
 				$sps = new Permissions($s);
 				if ($sps->canDeletePage()) {
 					$u = new User();
-					$pkr = new DeletePagePageWorkflowRequest();
+					$pkr = new DeletePageRequest();
 					$pkr->setRequestedPage($s);
 					$pkr->setRequesterUserID($u->getUserID());
 					$response = $pkr->trigger();
-					if ($response instanceof WorkflowProgressResponse) {
+					if ($response instanceof \Concrete\Core\Workflow\Progress\Response) {
 						// we only get this response if we have skipped workflows and jumped straight in to an approve() step.
 						$this->redirect('/dashboard/blocks/stacks', 'stack_deleted');
 					} else {
@@ -108,7 +83,38 @@ class Stacks extends DashboardPageController {
 			$this->error->add(Loader::helper('validation/token')->getErrorMessage());
 		}
 	}
-	
+
+
+    public function approve_stack($stackID = false, $token = false) {
+        if (Loader::helper('validation/token')->validate('approve_stack', $token)) {
+            $s = Stack::getByID($stackID);
+            if (is_object($s)) {
+                $sps = new Permissions($s);
+                if ($sps->canApprovePageVersions()) {
+                    $u = new User();
+                    $v = Version::get($s, 'RECENT');
+                    $pkr = new ApproveStackRequest();
+                    $pkr->setRequestedPage($s);
+                    $pkr->setRequestedVersionID($v->getVersionID());
+                    $pkr->setRequesterUserID($u->getUserID());
+                    $response = $pkr->trigger();
+                    if ($response instanceof \Concrete\Core\Workflow\Progress\Response) {
+                        // we only get this response if we have skipped workflows and jumped straight in to an approve() step.
+                        $this->redirect('/dashboard/blocks/stacks', 'stack_approved');
+                    } else {
+                        $this->redirect('/dashboard/blocks/stacks', 'view_details', $cID, 'approve_saved');
+                    }
+                } else {
+                    $this->error->add(t('You do not have access to approve this stack.'));
+                }
+            } else {
+                $this->error->add(t('Invalid stack'));
+            }
+        } else {
+            $this->error->add(Loader::helper('validation/token')->getErrorMessage());
+        }
+    }
+
 	public function view_details($cID, $msg = false) {
 		$s = Stack::getByID($cID);
 		if (is_object($s)) {
@@ -127,7 +133,13 @@ class Stacks extends DashboardPageController {
 			$this->set('stack', $s);
 			$this->set('blocks', $blocks);
 			switch($msg) {
-				case 'delete_saved':
+                case 'stack_added':
+                    $this->set('message', t('Stack added successfully.'));
+				    break;
+                case 'approve_saved':
+                    $this->set('message', t('Approve request asved. You must complete the approval workflow before these changes are publicly accessible.'));
+                    break;
+                case 'delete_saved':
 					$this->set('message', t('Delete request saved. You must complete the delete workflow before this stack can be deleted.'));
 					break;
 				case 'rename_saved':
@@ -162,12 +174,12 @@ class Stacks extends DashboardPageController {
 					));
 					
 					$u = new User();
-					$pkr = new ApproveStackPageWorkflowRequest();
+					$pkr = new ApproveStackRequest();
 					$pkr->setRequestedPage($s);
 					$pkr->setRequestedVersionID($v->getVersionID());
 					$pkr->setRequesterUserID($u->getUserID());
 					$response = $pkr->trigger();
-					if ($response instanceof WorkflowProgressResponse) {
+                    if ($response instanceof \Concrete\Core\Workflow\Progress\Response) {
 						// we only get this response if we have skipped workflows and jumped straight in to an approve() step.
 						$this->redirect('/dashboard/blocks/stacks', 'stack_renamed', $cID);
 					} else {
