@@ -3042,6 +3042,7 @@ select[multiple].ccm-ui .input-group-sm > .input-group-btn > .btn {
   border-top-right-radius: 0;
   border-top-left-radius: 0;
 }
+<<<<<<< HEAD
 .ccm-ui .navbar {
   position: relative;
   min-height: 50px;
@@ -3514,6 +3515,8 @@ select[multiple].ccm-ui .input-group-sm > .input-group-btn > .btn {
 .ccm-ui .navbar-inverse .navbar-link:hover {
   color: #ffffff;
 }
+=======
+>>>>>>> Add `preview as user` to the editmode panel in advanced permissions mode
 .ccm-ui .breadcrumb {
   padding: 8px 15px;
   margin-bottom: 20px;
@@ -4717,12 +4720,15 @@ a.ccm-ui .list-group-item-danger.active:focus {
 .ccm-ui .btn-group-vertical > .btn-group:after,
 .ccm-ui .nav:before,
 .ccm-ui .nav:after,
+<<<<<<< HEAD
 .ccm-ui .navbar:before,
 .ccm-ui .navbar:after,
 .ccm-ui .navbar-header:before,
 .ccm-ui .navbar-header:after,
 .ccm-ui .navbar-collapse:before,
 .ccm-ui .navbar-collapse:after,
+=======
+>>>>>>> Add `preview as user` to the editmode panel in advanced permissions mode
 .ccm-ui .pager:before,
 .ccm-ui .pager:after,
 .ccm-ui .panel-body:before,
@@ -4738,9 +4744,12 @@ a.ccm-ui .list-group-item-danger.active:focus {
 .ccm-ui .btn-toolbar:after,
 .ccm-ui .btn-group-vertical > .btn-group:after,
 .ccm-ui .nav:after,
+<<<<<<< HEAD
 .ccm-ui .navbar:after,
 .ccm-ui .navbar-header:after,
 .ccm-ui .navbar-collapse:after,
+=======
+>>>>>>> Add `preview as user` to the editmode panel in advanced permissions mode
 .ccm-ui .pager:after,
 .ccm-ui .panel-body:after {
   clear: both;
@@ -7506,6 +7515,39 @@ div.ccm-panel-confirmation-wrapper.ccm-panel-confirmation-disappearing div.ccm-p
   opacity: 0;
   filter: alpha(opacity=0);
 }
+<<<<<<< HEAD
+=======
+div.preview-frame-container {
+  background: white;
+  -moz-box-shadow: 0px 0px 15px -5px #000000;
+  -webkit-box-shadow: 0px 0px 15px -5px #000000;
+  box-shadow: 0px 0px 15px -5px #000000;
+  position: relative;
+  min-height: 600px;
+}
+div.preview-frame-container div.loader,
+div.preview-frame-container div.cover {
+  display: none;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #cccccc;
+  min-height: 600px;
+}
+div.preview-frame-container div.loader div.icon,
+div.preview-frame-container div.cover div.icon {
+  margin-top: 300px;
+}
+div.preview-frame-container div.cover {
+  background: transparent;
+  display: block;
+  z-index: 5;
+}
+>>>>>>> Add `preview as user` to the editmode panel in advanced permissions mode
 /** 
  * Add block
  */

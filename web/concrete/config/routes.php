@@ -125,6 +125,9 @@ Route::register('/ccm/system/panels/page/versions/duplicate', '\Concrete\Control
 Route::register('/ccm/system/panels/page/versions/new_page', '\Concrete\Controller\Panel\Page\Versions::new_page');
 Route::register('/ccm/system/panels/page/versions/delete', '\Concrete\Controller\Panel\Page\Versions::delete');
 Route::register('/ccm/system/panels/page/versions/approve', '\Concrete\Controller\Panel\Page\Versions::approve');
+Route::register('/ccm/system/panels/page/preview_as_user', '\Concrete\Controller\Panel\Page\PreviewAsUser::view');
+Route::register('/ccm/system/panels/page/preview_as_user/preview', '\Concrete\Controller\Panel\Page\PreviewAsUser::frame_page');
+Route::register('/ccm/system/panels/page/preview_as_user/render', '\Concrete\Controller\Panel\Page\PreviewAsUser::preview_page');
 
 /**
  * Panel Details

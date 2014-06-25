@@ -148,6 +148,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return 'page';
     }
 
+    /**
+     * @return PageController
+     */
     public function getPageController() {
         if (isset($this->controller)) {
             return $this->controller;
@@ -198,7 +201,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * Returns 1 if the page is in edit mode
+     * Is the page in edit mode
      * @return bool
      */
     public function isEditMode() {

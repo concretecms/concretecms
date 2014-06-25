@@ -12,7 +12,7 @@ use Session;
 class Dashboard {
 
 
-	/** 
+	/**
 	 * Checks to see if a user has access to the C5 dashboard.
 	 */
 	public function canRead() {
@@ -20,8 +20,8 @@ class Dashboard {
 		$cp = new Permissions($c);
 		return $cp->canViewPage();
 	}
-	
-	
+
+
 	public function canAccessComposer() {
 		$c = Page::getByPath('/dashboard/composer', 'ACTIVE');
 		$cp = new Permissions($c);
@@ -31,33 +31,35 @@ class Dashboard {
 	/**
 	 * Test if the current path is within the dashboard.
 	 * Optionally, a Page or path can be passed to test.
-	 * 
+	 *
 	 * @param  Page | string $page (optional)
 	 * @return [boolean]
 	 */
 	public function inDashboard($page = false) {
+        $path = "";
 		if ($page instanceof Page && !$page->isError()) {
 			$path = $page->getCollectionPath();
 		} elseif (is_string($page)) {
 			$path = $page;
 		} else {
 			$page = Page::getCurrentPage();
-			$path = $page->getCollectionPath();
-			return strpos($page->getCollectionPath(), '/dashboard') === 0;
+            if ($page instanceof Page && !$page->isError()) {
+                $path = $page->getCollectionPath();
+            }
 		}
 		return strpos($path, '/dashboard') === 0;
 	}
-	
+
 	public function getDashboardPaneFooterWrapper($includeDefaultBody = true) {
 		return;
-		
+
 		$html = '</div></div></div></div>';
 		if ($includeDefaultBody) {
 			$html .= '</div>';
 		}
 		return $html;
 	}
-	
+
 	public function getDashboardPaneHeaderWrapper($title = false, $help = false, $span = 'span12', $includeDefaultBody = true, $navigatePages = array(), $upToPage = false, $favorites = true) {
 		return;
 
@@ -71,7 +73,7 @@ class Dashboard {
 				$gridtotal = ($offsettotal * 2) + $spantotal;
 			}
 		}
-		
+
 		if ($gridtotal > 12) {
 			// we are working with legacy bootstrap 16-column grid
 			// we take the offset and then we subtract from the span
@@ -79,7 +81,7 @@ class Dashboard {
 			$spantotal .= ' offset' . $offsettotal;
 			$span = 'span' . $spantotal;
 		}
-		
+
 		$html = '<div class="ccm-ui"><div class="row"><div class="' . $span . '"><div class="ccm-pane">';
 		$html .= self::getDashboardPaneHeader($title, $help, $navigatePages, $upToPage, $favorites);
 		if ($includeDefaultBody) {
@@ -87,7 +89,7 @@ class Dashboard {
 		}
 		return $html;
 	}
-	
+
 	public function getDashboardPaneHeader($title = false, $help = false, $navigatePages = array(), $upToPage = false, $favorites = true) {
 		$c = Page::getCurrentPage();
 		$vt = Loader::helper('validation/token');
@@ -96,48 +98,48 @@ class Dashboard {
 		$currentMenu = array();
 		$nh = Loader::helper('navigation');
 		$trail = $nh->getTrailToCollection($c);
-		if (count($trail) > 1 || count($navigatePages) > 1 || is_object($upToPage)) { 
+		if (count($trail) > 1 || count($navigatePages) > 1 || is_object($upToPage)) {
 			$parent = Page::getByID($c->getCollectionParentID());
 			if (count($trail) > 1 && (!is_object($upToPage))) {
 				$upToPage = Page::getByID($parent->getCollectionParentID());
 			}
 			$subpages = array();
-			if ($navigatePages !== -1) { 
-				if (count($navigatePages) > 0) { 
+			if ($navigatePages !== -1) {
+				if (count($navigatePages) > 0) {
 					$subpages = $navigatePages;
-				} else { 
+				} else {
 					$subpages = \Concrete\Block\Autonav\Controller::getChildPages($parent);
 				}
 			}
-			
+
 			$subpagesP = array();
 			if(is_array($subpages)) {
 				foreach($subpages as $sc) {
 					$cp = new Permissions($sc);
-					if ($cp->canViewPage()) { 
+					if ($cp->canViewPage()) {
 						$subpagesP[] = $sc;
 					}
 				}
 			}
-			
-			if (count($subpagesP) > 0 || is_object($upToPage)) { 
+
+			if (count($subpagesP) > 0 || is_object($upToPage)) {
 				$relatedPages = '<ul id="ccm-page-navigate-pages-content" class="dropdown-menu">';
-		
-				foreach($subpagesP as $sc) { 
+
+				foreach($subpagesP as $sc) {
 					if ($sc->getAttribute('exclude_nav')) {
 						continue;
 					}
-		
+
 					if ($c->getCollectionPath() == $sc->getCollectionPath() || (strpos($c->getCollectionPath(), $sc->getCollectionPath()) == 0) && strpos($c->getCollectionPath(), $sc->getCollectionPath()) !== false) {
 						$class= 'nav-selected';
 					} else {
 						$class = '';
 					}
-					
+
 					$relatedPages .= '<li class="' . $class . '"><a href="' . $nh->getLinkToCollection($sc, false, true) . '">' . t($sc->getCollectionName()) . '</a></li>';
 				}
-		
-				if ($upToPage) { 
+
+				if ($upToPage) {
 					$relatedPages .= '<li class="ccm-menu-separator"></li>';
 					$relatedPages .= '<li><a href="' . $nh->getLinkToCollection($upToPage, false, true) . '">' . t('&lt; Back to %s', t($upToPage->getCollectionName())) . '</a></li>';
 				}
@@ -145,15 +147,15 @@ class Dashboard {
 				$navigateTitle = t($parent->getCollectionName());
 			}
 		}
-		
+
 
 		$html = '<div class="ccm-pane-header">';
-		
+
 		/*$class = 'icon-star';
 		$qn = ConcreteDashboardMenu::getMine();
 		$quicknav = $qn->getItems(false);
 		if (in_array($c->getCollectionPath(), $quicknav)) {
-			$class = 'icon-white icon-star';	
+			$class = 'icon-white icon-star';
 		}
 		*/
 		$html .= '<ul class="ccm-pane-header-icons">';
@@ -164,19 +166,19 @@ class Dashboard {
 				$help = $pageHelp[$c->getCollectionPath()];
 			}
 		}
-		
+
 		if (is_array($help)) {
 			$help = $help[0] . '<br/><br/><a href="' . $help[1] . '" class="btn small" target="_blank">' . t('Learn More') . '</a>';
 		}
-		
-		if (isset($relatedPages)) { 
+
+		if (isset($relatedPages)) {
 			$html .= '<li><a href="" data-toggle="dropdown" title="' . $navigateTitle . '" id="ccm-page-navigate-pages"><i class="icon-share-alt"></i></a>' . $relatedPages . '</li>';
 		}
-		
+
 		if ($help) {
 			$html .= '<li><span style="display: none" id="ccm-page-help-content">' . $help . '</span><a href="javascript:void(0)" title="' . t('Help') . '" id="ccm-page-help"><i class="icon-question-sign"></i></a></li>';
 		}
-		
+
 		if ($favorites) {
 		$html .= '<li><a href="javascript:void(0)" id="ccm-add-to-quick-nav" onclick="CCMDashboard.toggleQuickNav(' . $c->getCollectionID() . ',\'' . $token . '\')"><i class="' . $class . '"></i></a></li>';
 		}
@@ -190,7 +192,7 @@ class Dashboard {
 		$html .= '</div>';
 		return $html;
 	}
-	
+
 	public function getDashboardBackgroundImage() {
 		$feed = array();
 		// this feed is an array of standard PHP objects with a SRC, a caption, and a URL
@@ -199,7 +201,7 @@ class Dashboard {
 		$obj = new stdClass;
 		$obj->checkData = false;
 		$obj->displayCaption = false;
-		
+
 		if (defined('WHITE_LABEL_DASHBOARD_BACKGROUND_FEED') && WHITE_LABEL_DASHBOARD_BACKGROUND_FEED != '') {
 			$image = WHITE_LABEL_DASHBOARD_BACKGROUND_FEED . '/' . $filename;
 		} else if (defined('WHITE_LABEL_DASHBOARD_BACKGROUND_SRC') && WHITE_LABEL_DASHBOARD_BACKGROUND_SRC != '') {
@@ -217,7 +219,7 @@ class Dashboard {
 				}
 			} else if ($imageSetting == 'none') {
 				$image = '';
-			} else { 
+			} else {
 				if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) {
 					$image = DASHBOARD_BACKGROUND_FEED_SECURE . '/' . $filename;
 				} else {
@@ -236,20 +238,20 @@ class Dashboard {
 		$dashboardMenusKey = Localization::activeLocale();
 		if (array_key_exists($dashboardMenusKey, $dashboardMenus)) {
 			return $dashboardMenus[$dashboardMenusKey];
-		}			
+		}
 
 		ob_start(); ?>
 			<div id="ccm-intelligent-search-results">
 			<?
 			$page = Page::getByPath('/dashboard');
 			$children = $page->getCollectionChildrenArray(true);
-			
+
 			$packagepages = array();
 			$corepages = array();
 			foreach($children as $ch) {
 				$page = Page::getByID($ch);
 				$pageP = new Permissions($page);
-				if ($pageP->canRead()) { 
+				if ($pageP->canRead()) {
 					if (!$page->getAttribute("exclude_nav")) {
 						if ($page->getPackageID() > 0) {
 							$packagepages[] = $page;
@@ -260,36 +262,36 @@ class Dashboard {
 				} else {
 					continue;
 				}
-			
+
 				if ($page->getAttribute('exclude_search_index')) {
 					continue;
 				}
-				
+
 				if ($page->getCollectionPath() == '/dashboard/system') {
 					$ch2 = $page->getCollectionChildrenArray();
 				} else {
 					$ch2 = $page->getCollectionChildrenArray(true);
 				}
 				?>
-				
+
 				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-onsite">
-				
+
 				<h1><?=t($page->getCollectionName())?></h1>
-				
-				
+
+
 				<ul class="ccm-intelligent-search-results-list">
 				<? if (count($ch2) == 0) { ?>
 					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page, false, true)?>"><?=t($page->getCollectionName())?></a><span><?=t($page->getCollectionName())?> <?=t($page->getAttribute('meta_keywords'))?></span></li>
 				<? } ?>
-				
+
 				<?
 				if ($page->getCollectionPath() == '/dashboard/system') { ?>
 					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($page, false, true)?>"><?=t('View All')?></a><span><?=t($page->getCollectionName())?> <?=t($page->getAttribute('meta_keywords'))?></span></li>
-				<?				
+				<?
 				}
-				
+
 				foreach($ch2 as $chi) {
-					$subpage = Page::getByID($chi); 
+					$subpage = Page::getByID($chi);
 					$subpageP = new Permissions($subpage);
 					if (!$subpageP->canRead()) {
 						continue;
@@ -298,41 +300,41 @@ class Dashboard {
 					if ($subpage->getAttribute('exclude_search_index')) {
 						continue;
 					}
-			
+
 					?>
 					<li><a href="<?=Loader::helper('navigation')->getLinkTocollection($subpage, false, true)?>"><?=t($subpage->getCollectionName())?></a><span><? if ($page->getCollectionPath() != '/dashboard/system') { ?><?=t($page->getCollectionName())?> <?=t($page->getAttribute('meta_keywords'))?> <? } ?><?=t($subpage->getCollectionName())?> <?=t($subpage->getAttribute('meta_keywords'))?></span></li>
-					<? 
+					<?
 				}
 				?>
 				</ul>
-				
+
 				</div>
 				<? }
-				
+
 				$custHome = Page::getByPath('/dashboard/home');
 				$custHomeP = new Permissions($custHome);
 				if ($custHomeP->canRead()) {
 				?>
-				
+
 				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-onsite">
-				
+
 				<h1><?=t('Dashboard Home')?></h1>
-				
-				
+
+
 				<ul class="ccm-intelligent-search-results-list">
 					<li><a href="<?=URL::to('/dashboard/home')?>"><?=t('Customize')?> <span><?=t('Customize Dashboard Home')?></span></a></li>
 				</ul>
-				
+
 				</div>
-				
+
 				<? } ?>
-				
+
 				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-loading">
 				<h1><?=t('Your Site')?></h1>
 				<ul class="ccm-intelligent-search-results-list" id="ccm-intelligent-search-results-list-your-site">
 				</ul>
 				</div>
-				
+
 				<? if (ENABLE_INTELLIGENT_SEARCH_HELP) { ?>
 				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-offsite ccm-intelligent-search-results-module-loading">
 				<h1><?=t('Help')?></h1>
@@ -340,23 +342,23 @@ class Dashboard {
 				</ul>
 				</div>
 				<? } ?>
-				
+
 				<? if (ENABLE_INTELLIGENT_SEARCH_MARKETPLACE) { ?>
 				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-offsite ccm-intelligent-search-results-module-loading">
 				<h1><?=t('Add-Ons')?></h1>
 				<ul class="ccm-intelligent-search-results-list" id="ccm-intelligent-search-results-list-marketplace">
 				</ul>
 				</div>
-				<? } ?>				
+				<? } ?>
 			</div>
-			
+
 		<?
 			$html = ob_get_contents();
 			ob_end_clean();
 		$dashboardMenus[$dashboardMenusKey] = str_replace(array("\n", "\r", "\t"), "", $html);
 		Session::set('dashboardMenus', $dashboardMenus);
 		return $dashboardMenus[$dashboardMenusKey];
-	}	
+	}
 
 
 
@@ -364,7 +366,7 @@ class Dashboard {
 
 
 class DashboardMenu {
-	
+
 	protected $items;
 	public function getItems($sort = true) {
 		if ($sort) {
@@ -372,7 +374,7 @@ class DashboardMenu {
 		}
 		return $this->items;
 	}
-	
+
 	protected static function sortItems($a, $b) {
 		$subpatha = substr($a, 11); // /dashboard
 		$subpathb = substr($b, 11); // /dashboard
@@ -385,7 +387,7 @@ class DashboardMenu {
 			$subpathb = $segmentb[0] . '/' . $segmentb[1];
 			$segmenta .= '/' . $segmentsa[1];
 			$segmentb .= '/' . $segmentsb[1];
-			
+
 		}
 
 		if (!$segmenta) {
@@ -412,11 +414,11 @@ class DashboardMenu {
 			}
 		}
 	}
-	
+
 	public function contains($c) {
 		return in_array($c->getCollectionPath(), $this->items);
 	}
-	
+
 	public function add($c) {
 		$this->items[] = $c->getCollectionPath();
 	}
@@ -434,14 +436,14 @@ class DashboardMenu {
 		$qn = new DashboardMenu();
 		$qnx = new DefaultDashboardMenu();
 		$qn->items = $qnx->items;
-		return $qn;	
+		return $qn;
 	}
 
 
 }
 
 class DefaultDashboardMenu extends DashboardMenu {
-	
+
 	public $items = array(
 		'/dashboard/composer/write',
 		'/dashboard/composer/drafts',
