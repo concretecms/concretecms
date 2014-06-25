@@ -36,7 +36,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                     <ul class="ccm-mobile-menu-entries">
                         <? if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) { ?>
                             <? if ($c->isEditMode()) { ?>
-                                <li class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit"><i class="fa fa-pencil mobile-leading-icon"></i><a data-toolbar-action="check-in" <? if ($vo->isNew()) { ?>href="javascript:void(0)" data-launch-panel="check-in"><?php echo t('Save Changes') ?><? } else { ?>href="<?=URL::to('/ccm/system/page/check_in', $c->getCollectionID(), Loader::helper('validation/token')->generate())?>"<? } ?> data-panel-url="<?=URL::to('/ccm/system/panels/page/check_in')?>"><?php echo t('Save Changes') ?></a></li>
+                                <li class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit"><i class="fa fa-pencil mobile-leading-icon"></i><a data-toolbar-action="check-in" <? if ($vo->isNew()) { ?>href="javascript:void(0)" data-launch-panel="check-in"><?php echo t('Save Changes') ?><? } else { ?>href="<?=URL::to('/ccm/system/page/check_in', $c->getCollectionID(), Loader::helper('validation/token')->generate())?>" data-panel-url="<?=URL::to('/ccm/system/panels/page/check_in')?>"><?php echo t('Save Changes') ?><? } ?></a></li>
                             <? } else { ?>
                                 <li class="ccm-toolbar-page-edit"><i class="fa fa-pencil mobile-leading-icon"></i><a data-toolbar-action="check-out" href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?>"><?php echo t('Edit this Page') ?></a></li>
                             <? } ?>
