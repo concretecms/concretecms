@@ -26,7 +26,7 @@ $form = Loader::helper('form');
 		 
         <label class="radio">
             <?=$form->radio('view', 'USERS', $registeredCanRead)?> 
-            <span><?=t('Members')?> - <?=t('Only registered users may view the website. test')?></span>
+            <span><?=t('Members')?> - <?=t('Only registered users may view the website.')?></span>
         </label>
 
 		<label class="radio">
