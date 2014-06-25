@@ -35,6 +35,9 @@ class Controller extends BlockController {
 		$bID = $this->bID;
 		
 		$f = File::getByID($this->fID);
+        if (!is_object($f) || !$f->getFileID()) {
+            return false;
+        }
 		$relPath = $f->getRelativePath();
 
 		if ($this->maxWidth == $f->getAttribute('width') && $this->maxHeight == $f->getAttribute('height')) {

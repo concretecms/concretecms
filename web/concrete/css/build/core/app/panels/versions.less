@@ -9,6 +9,13 @@
                 color: #707c8c;
             }
 
+            tr.ccm-panel-page-version-approved {
+              td {
+                background-color: #154661 !important;
+                color: #ccc;
+              }
+            }
+
             td {
 
                 a.ccm-panel-page-versions-version-menu {
@@ -70,7 +77,13 @@
                 color: #333;
             }
 
+          tr.ccm-panel-page-version-approved {
             td {
+              background-color: rgba(59, 170, 247, 0.1);
+            }
+          }
+
+          td {
                 a.ccm-panel-page-versions-version-menu {
                     color: #707c8c;
                     &.ccm-panel-page-versions-hover {
@@ -127,7 +140,9 @@
         thead {
             th {
 
-                button {
+              border-bottom: 1px solid rgba(0,0,0,0);
+
+              button {
                     font-weight: bold;
                     font-size: @font-size-small;
                 }
@@ -140,7 +155,15 @@
             }
         }
 
-        tbody {
+      tfoot {
+        td {
+
+          border-top: 1px solid rgba(0,0,0,0);
+
+        }
+      }
+
+      tbody {
             tr:hover {
                 td {
 

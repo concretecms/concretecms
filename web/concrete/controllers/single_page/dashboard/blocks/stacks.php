@@ -51,11 +51,6 @@ class Stacks extends DashboardPageController {
 		$this->view();
 	}
 
-    public function stack_approved() {
-        $this->set('message', t('Stack approved successfully'));
-        $this->view();
-    }
-
     public function delete_stack() {
 		if (Loader::helper('validation/token')->validate('delete_stack')) {
 			$s = Stack::getByID($_REQUEST['stackID']);
@@ -100,9 +95,9 @@ class Stacks extends DashboardPageController {
                     $response = $pkr->trigger();
                     if ($response instanceof \Concrete\Core\Workflow\Progress\Response) {
                         // we only get this response if we have skipped workflows and jumped straight in to an approve() step.
-                        $this->redirect('/dashboard/blocks/stacks', 'stack_approved');
+                        $this->redirect('/dashboard/blocks/stacks', 'view_details', $stackID, 'stack_approved');
                     } else {
-                        $this->redirect('/dashboard/blocks/stacks', 'view_details', $cID, 'approve_saved');
+                        $this->redirect('/dashboard/blocks/stacks', 'view_details', $stackID, 'approve_saved');
                     }
                 } else {
                     $this->error->add(t('You do not have access to approve this stack.'));
@@ -136,6 +131,9 @@ class Stacks extends DashboardPageController {
                 case 'stack_added':
                     $this->set('message', t('Stack added successfully.'));
 				    break;
+                case 'stack_approved':
+                    $this->set('message', t('Stack approved successfully'));
+                    break;
                 case 'approve_saved':
                     $this->set('message', t('Approve request asved. You must complete the approval workflow before these changes are publicly accessible.'));
                     break;
