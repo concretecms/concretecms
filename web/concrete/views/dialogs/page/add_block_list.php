@@ -81,7 +81,9 @@ for ($i = 0; $i < count($sets); $i++) {
 <script type="text/javascript">
     $(function() {
         $('#ccm-add-block-list').on('click', 'a', function() {
-            alert('hi');
+            ConcreteEvent.publish('AddBlockListAddBlock', {
+                $launcher: $(this)
+            });
             return false;
         });
     });

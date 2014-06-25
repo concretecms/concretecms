@@ -15,8 +15,13 @@
     /**
      * Edit mode object for managing editing.
      */
-    var EditMode = Concrete.EditMode = function EditMode() {
+    var EditMode = Concrete.EditMode = function EditMode(options) {
         var my = this;
+        options = options || {};
+        options = $.extend({
+            'notify': true
+        }, options);
+
         Concrete.createGetterSetters.call(my, {
             dragging: false,
             areas: [],
@@ -35,7 +40,7 @@
                 area = block.getArea(),
                 postData = [
                     {name: 'btask', value: 'edit'},
-                    {name: 'cID', value: CCM_CID},
+                    {name: 'cID', value: block.getCID()},
                     {name: 'arHandle', value: area.getHandle()},
                     {name: 'arGridColumnSpan', value: data.arGridColumnSpan},
                     {name: 'aID', value: area.getId()},
@@ -59,7 +64,7 @@
             Concrete.event.bind('EditModeExitInline', function (e) {
                 Concrete.event.unbind(e);
                 e.stopPropagation();
-                var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + CCM_CID + '&bID=' + block.getId() + '&arHandle=' + escape(area.getHandle()) + '&btask=view_edit_mode';
+                var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + block.getCID() + '&bID=' + block.getId() + '&arHandle=' + escape(area.getHandle()) + '&btask=view_edit_mode';
                 $.fn.dialog.showLoader();
                 $.get(action,
                     function (r) {
@@ -96,9 +101,10 @@
             var area = data.area,
                 selected = data.selected,
                 btID = data.btID,
+                cID = data.cID,
                 postData = [
                     {name: 'btask', value: 'edit'},
-                    {name: 'cID', value: CCM_CID},
+                    {name: 'cID', value: cID},
                     {name: 'arGridColumnSpan', value: data.arGridColumnSpan},
                     {name: 'arHandle', value: area.getHandle()},
                     {name: 'btID', value: btID}
@@ -117,6 +123,7 @@
 
             ConcreteMenuManager.disable();
             ConcreteToolbar.disable();
+            jQuery.fn.dialog.closeAll();
 
             $('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
 
@@ -161,7 +168,7 @@
             $.ajax({
                 type: 'POST',
                 url: CCM_TOOLS_PATH + '/pile_manager',
-                data: 'cID=' + CCM_CID + '&bID=' + block.getId() + '&arHandle=' + encodeURIComponent(area.getHandle()) + '&btask=add&scrapbookName=userScrapbook',
+                data: 'cID=' + block.getCID() + '&bID=' + block.getId() + '&arHandle=' + encodeURIComponent(area.getHandle()) + '&btask=add&scrapbookName=userScrapbook',
                 success: function (resp) {
                     ConcreteAlert.notify({
                         'message': ccmi18n.copyBlockToScrapbookMsg,
@@ -223,7 +230,7 @@
             }, 150);
 
             $.concreteAjax({
-                url: CCM_DISPATCHER_FILENAME + '/ccm/system/page/arrange_blocks?cID=' + CCM_CID,
+                url: CCM_DISPATCHER_FILENAME + '/ccm/system/page/arrange_blocks?cID=' + block.getCID(),
                 data: send,
                 success: function (r) {
                     $.fn.dialog.hideLoader();
@@ -243,11 +250,12 @@
             return my;
         };
 
-        ConcreteAlert.notify({
-            'message': ccmi18n.editModeMsg,
-            'title': ccmi18n.editMode
-        });
-
+        if (options.notify) {
+            ConcreteAlert.notify({
+                'message': ccmi18n.editModeMsg,
+                'title': ccmi18n.editMode
+            });
+        }
     };
 
     /**
@@ -289,6 +297,7 @@
             id: elem.data('block-id'),
             handle: elem.data('block-type-handle'),
             areaId: elem.data('area-id'),
+            cID: elem.data('cid'),
             area: null,
             elem: elem,
             dragger: null,
@@ -839,11 +848,11 @@
             });
         },
 
-        delete: function (msg, callback) {
+        delete: function (msg) {
             var my = this, bID = my.getId(),
                 area = my.getArea(),
                 block = area.getBlockByID(bID),
-                cID = CCM_CID,
+                cID = my.getCID(),
                 arHandle = area.getHandle();
 
             ConcreteToolbar.disableDirectExit();
@@ -858,9 +867,6 @@
                 url: CCM_DISPATCHER_FILENAME,
                 data: 'cID=' + cID + '&ccm_token=' + CCM_SECURITY_TOKEN + '&isAjax=true&btask=remove&bID=' + bID + '&arHandle=' + encodeURIComponent(arHandle)
             });
-            if (typeof(callback) === 'function') {
-                callback();
-            }
         },
 
         /**
@@ -944,7 +950,7 @@
             var my = this;
             my.getElem().find('a[data-menu-action=block_dialog]').each(function () {
                 var href = $(this).data('menu-href');
-                href += (href.indexOf('?') !== -1) ? '&cID=' + CCM_CID : '?cID=' + CCM_CID;
+                href += (href.indexOf('?') !== -1) ? '&cID=' + my.getCID() : '?cID=' + my.getCID();
                 href += '&arHandle=' + encodeURIComponent(area.getHandle()) + '&bID=' + my.getId();
                 $(this).attr('href', href).dialog();
             });
@@ -1274,6 +1280,7 @@
         addToDragArea: function blockTypeAddToDragArea(drag_area) {
             var my = this, elem = my.getElem(),
                 block_type_id = elem.data('btid'),
+                cID = elem.data('cid'),
                 area = drag_area.getArea(),
                 area_handle = area.getHandle(),
                 dragAreaBlockID = 0,
@@ -1289,7 +1296,7 @@
 
             if (!has_add) {
                 $.get(CCM_DISPATCHER_FILENAME, {
-                    cID: CCM_CID,
+                    cID: cID,
                     arHandle: area_handle,
                     btID: block_type_id,
                     mode: 'edit',
@@ -1321,14 +1328,21 @@
                 ConcreteEvent.fire('EditModeBlockAddInline', {
                     'selected': drag_area,
                     'area': drag_area.getArea(),
+                    'cID': cID,
                     'btID': block_type_id,
                     'dragAreaBlockID': dragAreaBlockID
                 });
             } else {
                 $.fn.dialog.open({
+                    /**
+                     * Not sure why this is here but it's causing problems with adding blocks
+                     * in stack so I'm commenting it out - AE
+                     */
+                        /*
                     onClose: function () {
                         $.fn.dialog.closeAll();
                     },
+                    */
                     onOpen: function () {
                         $(function () {
                             $('#ccm-block-form').concreteAjaxBlockForm({
@@ -1340,7 +1354,7 @@
                     width: parseInt(elem.data('dialog-width'), 10),
                     height: parseInt(elem.data('dialog-height'), 10) + 20,
                     title: elem.data('dialog-title'),
-                    href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add_block?cID=' + CCM_CID + '&btID=' + block_type_id + '&arHandle=' + encodeURIComponent(area_handle)
+                    href: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add_block?cID=' + cID + '&btID=' + block_type_id + '&arHandle=' + encodeURIComponent(area_handle)
                 });
             }
         }

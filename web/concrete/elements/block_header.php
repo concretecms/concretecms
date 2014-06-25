@@ -69,6 +69,7 @@ if ($isAlias) {
 
 <div
     custom-style="<?=$b->getBlockCustomStyleRuleID()?>"
+    data-cID="<?=$c->getCollectionID()?>"
     data-area-id="<?=$a->getAreaID()?>"
     data-block-id="<?=$b->getBlockID()?>"
     class="<?=$class?>"

@@ -1,7 +1,7 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Workflow\Progress\PageProgress as PageWorkflowProgress;
-
+use \Concrete\Core\Block\View\BlockView;
 if ($controller->getTask() == 'view_details') {
 
     $cpc = new Permissions($stack);
@@ -48,30 +48,52 @@ if ($controller->getTask() == 'view_details') {
             </ul>
         </li>
 
-        <li class="ccm-main-nav-edit-option"><a dialog-width="640" dialog-height="340" class="dialog-launch" id="stackVersions" dialog-title="<?=t('Version History')?>" href="<?=URL::to('/ccm/system/panels/page/versions')?>?cID=<?=$stack->getCollectionID()?>"><?=t('Version History')?></a></li>
+        <li><a dialog-width="640" dialog-height="340" class="dialog-launch" id="stackVersions" dialog-title="<?=t('Version History')?>" href="<?=URL::to('/ccm/system/panels/page/versions')?>?cID=<?=$stack->getCollectionID()?>"><?=t('Version History')?></a></li>
         <? if ($cpc->canEditPageProperties()) { ?>
-            <li class="ccm-main-nav-edit-option"><a href="<?=$view->action('rename', $stack->getCollectionID())?>"><?=t('Rename')?></a></li>
+            <li><a href="<?=$view->action('rename', $stack->getCollectionID())?>"><?=t('Rename')?></a></li>
         <? } ?>
         <? if ($cpc->canEditPagePermissions() && PERMISSIONS_MODEL == 'advanced') { ?>
-            <li class="ccm-main-nav-edit-option"><a dialog-width="580" dialog-append-buttons="true" dialog-height="420" dialog-title="<?=t('Stack Permissions')?>" id="stackPermissions" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?cID=<?=$stack->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>&atask=groups"><?=t('Permissions')?></a></li>
+            <li><a dialog-width="580" dialog-append-buttons="true" dialog-height="420" dialog-title="<?=t('Stack Permissions')?>" id="stackPermissions" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?cID=<?=$stack->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>&atask=groups"><?=t('Permissions')?></a></li>
         <? } ?>
 
         <? if ($cpc->canMoveOrCopyPage()) { ?>
-            <li class="ccm-main-nav-edit-option"><a href="<?=$view->action('duplicate', $stack->getCollectionID())?>" style="margin-right: 4px;"><?=t('Duplicate Stack')?></a></li>
+            <li><a href="<?=$view->action('duplicate', $stack->getCollectionID())?>" style="margin-right: 4px;"><?=t('Duplicate Stack')?></a></li>
         <? } ?>
         <? if ($cpc->canDeletePage()) { ?>
-            <li class="ccm-main-nav-edit-option"><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete Stack')?></span></a></li>
+            <li><a href="javascript:void(0)" data-dialog="delete-stack"><span class="text-danger"><?=t('Delete Stack')?></span></a></li>
         <? } ?>
     </ul>
     <? if ($showApprovalButton) { ?>
     <ul class="nav navbar-nav navbar-right">
-        <li class="navbar-form ccm-main-nav-edit-option" <? if ($vo->isApproved()) { ?> style="display: none;" <? } ?>>
+        <li id="ccm-stack-list-approve-button" class="navbar-form" <? if ($vo->isApproved()) { ?> style="display: none;" <? } ?>>
             <button class="btn btn-success" onclick="window.location.href='<?=URL::to('/dashboard/blocks/stacks', 'approve_stack', $stack->getCollectionID(), $token->generate('approve_stack'))?>'"><?=$publishTitle?></button>
         </li>
     </ul>
     <? } ?>
     </div>
     </nav>
+
+    <div id="ccm-stack-container">
+
+    <?
+    $a = Area::get($stack, STACKS_AREA_NAME);
+    Loader::element('block_area_header', array('a' => $a));
+    Loader::element('block_area_header_view', array('a' => $a));
+
+    foreach($blocks as $b) {
+        $bv = new BlockView($b);
+        $bv->setAreaObject($a);
+        $p = new Permissions($b);
+        if ($p->canViewBlock()) {
+            Loader::element('block_header', array( 'a' => $a, 'b' => $b, 'p' => $p ));
+            $bv->render('view');
+            Loader::element('block_footer');
+        }
+    }
+    Loader::element('block_area_footer_view', array('a' => $a));
+    ?>
+
+    </div>
 
     <div style="display: none">
         <div id="ccm-dialog-delete-stack" class="ccm-ui">
@@ -88,7 +110,33 @@ if ($controller->getTask() == 'view_details') {
     </div>
 
     <script type="text/javascript">
+        var showApprovalButton = function() {
+            $('#ccm-stack-list-approve-button').show().addClass("animated fadeIn");
+        }
+
         $(function() {
+            var editor = new Concrete.EditMode({notify: false}),
+                area = editor.getAreaByID(<?=$a->getAreaID()?>),
+                dragArea = _.last(area.getDragAreas());
+
+            ConcreteEvent.on('AddBlockListAddBlock', function(event, data) {
+                blockType = new Concrete.BlockType(data.$launcher, editor);
+                blockType.addToDragArea(dragArea);
+                return false;
+            });
+
+            ConcreteEvent.on('EditModeAddBlockComplete', function(event, data) {
+                showApprovalButton();
+            });
+
+            ConcreteEvent.on('EditModeUpdateBlockComplete', function(event, data) {
+                showApprovalButton();
+            });
+
+            ConcreteEvent.on('EditModeBlockDelete', function(event, data) {
+                showApprovalButton();
+            });
+
             $('a[data-dialog=delete-stack]').on('click', function() {
                 jQuery.fn.dialog.open({
                     element: '#ccm-dialog-delete-stack',
@@ -188,6 +236,7 @@ if ($controller->getTask() == 'view_details') {
 
     <script type="text/javascript">
     $(function() {
+
         $('a[data-dialog=add-stack]').on('click', function() {
             jQuery.fn.dialog.open({
                 element: '#ccm-dialog-add-stack',
@@ -221,6 +270,7 @@ if ($controller->getTask() == 'view_details') {
             }
         });
         <? } ?>
+
     });
     </script>
 
