@@ -185,7 +185,7 @@ switch ($tab) {
                      data-event="duplicate"
                      data-panel-add-block-drag-item="clipboard-item"
                      data-name="<?= h($type->getBlockTypeName()) ?>"
-                     data-cID="<?= $block->getBlockCollectionID() ?>"
+                     data-cID="<?= $c->getCollectionID() ?>"
                      data-block-type-handle="<?= $type->getBlockTypeHandle() ?>"
                      data-dialog-title="<?= t('Add %s', t($type->getBlockTypeName())) ?>"
                      data-dialog-width="<?= $type->getBlockTypeInterfaceWidth() ?>"
