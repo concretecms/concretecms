@@ -9,7 +9,14 @@ abstract class DatabaseItemList extends ItemList
     /** @var \Doctrine\DBAL\Query\QueryBuilder */
     protected $query;
 
-    abstract public function createQuery();
+    /**
+     * @param \Doctrine\DBAL\Query\QueryBuilder $query
+     * @return \Doctrine\DBAL\Query\QueryBuilder
+     */
+    public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
+    {
+        return $query;
+    }
 
     final public function __construct(StickyRequest $req = null)
     {
@@ -27,9 +34,16 @@ abstract class DatabaseItemList extends ItemList
         return $this->query;
     }
 
+    public function deliverQueryObject()
+    {
+        $query = clone $this->query;
+        $query = $this->finalizeQuery($query);
+        return $query;
+    }
+
     public function executeGetResults()
     {
-        return $this->query->execute()->fetchAll();
+        return $this->deliverQueryObject()->execute()->fetchAll();
     }
 
     protected function executeSortBy($column, $direction = 'asc')
