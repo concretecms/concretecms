@@ -8,14 +8,24 @@ defined('C5_EXECUTE') or die("Access Denied.");
     
 	<div class="form-group">
       <label><?php echo t('Labels'); ?></label>
-      <span class="radio"><input name="linkStyle" type="radio" value="next_previous" <?php echo ($controller->linkStyle!='page_name')?'checked="checked"':'' ?>  /> <span><?php echo t('Custom')?></span></span>
-      <span class="radio"><input name="linkStyle" class="radio" type="radio" value="page_name" <?php echo ($controller->linkStyle=='page_name')?'checked="checked"':'' ?>  /> <span><?php echo t('Page Titles') ?></span></span>
-	</div>
+      <div class="radio">
+        <label>
+            <input name="linkStyle" type="radio" value="next_previous" <?php echo ($controller->linkStyle!='page_name')?'checked="checked"':'' ?>  />
+            <span><?php echo t('Custom')?></span>
+        </label>
+      </div>
+      <div class="radio">
+          <label>
+              <input name="linkStyle" class="radio" type="radio" value="page_name" <?php echo ($controller->linkStyle=='page_name')?'checked="checked"':'' ?>  />
+              <span><?php echo t('Page Titles') ?></span>
+          </label>
+      </div>
+    </div>
 
-  </fieldset>
-    <hr/>
+</fieldset>
 <fieldset id="ccm_edit_pane_nextPreviousWrap" style="display:<?php echo ($controller->linkStyle!='page_name')?'block':'none' ?>">
-      <div class="form-group row">
+    <hr/>
+    <div class="form-group row">
         <div class="col-xs-6">
             <label class="control-label"><?php  echo t('Next Label')?></label>
             <input name="nextLabel" class="form-control" type="text" value="<?php echo htmlentities($controller->nextLabel, ENT_QUOTES, APP_CHARSET) ?>" placeholder="<?php echo t('leave blank to hide'); ?>" />

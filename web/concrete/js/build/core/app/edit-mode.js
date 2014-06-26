@@ -9,10 +9,6 @@
     'use strict';
 
     /**
-     * First lay out objects
-     */
-
-    /**
      * Edit mode object for managing editing.
      */
     var EditMode = Concrete.EditMode = function EditMode(options) {
@@ -185,6 +181,34 @@
             });
         });
 
+
+        var $body = $(window.document.body),
+            scrolling = false,
+            scroll_buffer = 100;
+        my.setAttr('scroller_bottom', scroller_bottom);
+        my.setAttr('scroller_top', scroller_top);
+
+        function scrollLoop(block, element, amount, step, test, scroll_method, axis) {
+            if (test.call()) {
+                scrolling = true;
+                var pos_start = scroll_method.call(element),
+                    pos_new = pos_start + amount,
+                    args = _.toArray(arguments),
+                    pos = block.getDraggerPosition();
+
+                scroll_method.call(element, pos_new);
+
+                pos[axis] -= pos_start - scroll_method.call(element);
+                block.renderPosition();
+
+                _.defer(function () {
+                    scrollLoop.apply(this, args);
+                }, step);
+            } else {
+                scrolling = false;
+            }
+        }
+
         Concrete.event.bind('EditModeBlockDrag', _.throttle(function editModeEditModeBlockDragEventHandler(event, data) {
             if (!my.getDragging()) {
                 return;
@@ -199,6 +223,29 @@
                 Concrete.event.fire('EditModeContenders', contenders);
                 my.selectContender(pep, block, contenders, data.event);
             });
+
+            if (!scrolling) {
+                // Vertical
+                scrollLoop(block, $body, 2, 10, function () {
+                    var pos = block.getDraggerPosition().y - $body.scrollTop();
+                    return block.getDragging() && $(window).height() - pos <= scroll_buffer;
+                }, $.fn.scrollTop, 'y');
+                scrollLoop(block, $body, -2, 10, function () {
+                    var pos = block.getDraggerPosition().y - $body.scrollTop();
+                    return block.getDragging() && pos <= scroll_buffer;
+                }, $.fn.scrollTop, 'y');
+
+                // Horizontal
+                scrollLoop(block, $body, 2, 10, function () {
+                    var pos = block.getDraggerPosition().x - $body.scrollLeft();
+                    return block.getDragging() && $(window).width() - pos <= scroll_buffer;
+                }, $.fn.scrollLeft, 'x');
+                scrollLoop(block, $body, -2, 10, function () {
+                    var pos = block.getDraggerPosition().x - $body.scrollLeft();
+                    return block.getDragging() && pos <= scroll_buffer;
+                }, $.fn.scrollLeft, 'x');
+            }
+
         }, 250, {trailing: false}));
 
         Concrete.event.bind('EditModeBlockDragStop', function editModeEditModeBlockDragStopEventHandler() {
@@ -1338,15 +1385,7 @@
                 });
             } else {
                 $.fn.dialog.open({
-                    /**
-                     * Not sure why this is here but it's causing problems with adding blocks
-                     * in stack so I'm commenting it out - AE
-                     */
-                        /*
-                    onClose: function () {
-                        $.fn.dialog.closeAll();
-                    },
-                    */
+
                     onOpen: function () {
                         $(function () {
                             $('#ccm-block-form').concreteAjaxBlockForm({
@@ -1438,7 +1477,7 @@
                 settings.dragAreaBlockID = dragAreaBlockID;
             }
             $.getJSON(CCM_DISPATCHER_FILENAME, settings, function (response) {
-                my.handleAddResponse(response, area, dragAreaBlock, function() {
+                my.handleAddResponse(response, area, dragAreaBlock, function () {
                     ConcreteEvent.fire('EditModeAddClipboardComplete', {
                         block: my
                     });

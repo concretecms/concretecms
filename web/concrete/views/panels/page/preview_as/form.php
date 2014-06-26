@@ -9,7 +9,7 @@
         <div class="ccm-panel-content-inner" id="ccm-menu-page-attributes-list">
 
             <label class="label"><?= t('Date') ?></label>
-            <input class="form-control" type="datetime" />
+            <input class="form-control" type="datetime" value="<?= date('m/d/Y') ?>" />
 
 
             <label class="label"><?= t('Time') ?></label>
