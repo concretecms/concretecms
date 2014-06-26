@@ -22,10 +22,6 @@ class Search extends DashboardPageController {
 
 	protected $user = false;
 
-	public function on_start(){
-		$this->error = Loader::helper('validation/error');
-	}
-
 	public function update_avatar($uID = false) {
 		$this->setupUser($uID);
 		if (!Loader::helper('validation/token')->validate()) {
