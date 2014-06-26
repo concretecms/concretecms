@@ -386,7 +386,9 @@ function ConcretePanel(options) {
                 obj.isOpen = true;
                 Concrete.event.publish('PanelOpen', {panel: obj, element: element});
             });
-            ConcretePanelManager.showOverlay(obj.options.translucent);
+            if (obj.options.overlay) {
+                ConcretePanelManager.showOverlay(obj.options.translucent);
+            }
             $('[data-launch-panel=\'' + obj.getIdentifier() + '\']').addClass('ccm-launch-panel-active');
             $('html').addClass(obj.getPositionClass());
             $(this).dequeue();
@@ -434,6 +436,7 @@ var ConcretePanelManager = (function ConcretePanelManagerGenerator() {
         register: function (overrides) {
             var options = $.extend({
                 translucent: true,
+                overlay: true,
                 position: 'left',
                 primary: true,
                 transition: 'slide'
@@ -442,19 +445,21 @@ var ConcretePanelManager = (function ConcretePanelManagerGenerator() {
             var panel = new ConcretePanel(options);
             panels.push(panel);
 
-            $('<div />', {
-                'id': panel.getDOMID(),
-                'class': 'ccm-panel ' + panel.getPositionClass()
-            }).appendTo($(document.body));
+            var $panel = $('#' + panel.getDOMID());
+            if (!($panel.length)) {
+                $('<div />', {
+                    'id': panel.getDOMID(),
+                    'class': 'ccm-panel ' + panel.getPositionClass()
+                }).appendTo($(document.body));
 
-            $('<div />', {
-                'class': 'ccm-panel-content-wrapper ccm-ui'
-            }).appendTo($('#' + panel.getDOMID()));
+                $('<div />', {
+                    'class': 'ccm-panel-content-wrapper ccm-ui'
+                }).appendTo($('#' + panel.getDOMID()));
 
-            $('<div />', {
-                'class': 'ccm-panel-shadow-layer'
-            }).appendTo($('#' + panel.getDOMID()));
-
+                $('<div />', {
+                    'class': 'ccm-panel-shadow-layer'
+                }).appendTo($('#' + panel.getDOMID()));
+            }
         },
 
         getByIdentifier: function (panelID) {

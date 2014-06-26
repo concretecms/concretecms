@@ -4,6 +4,7 @@ if ($_GET['_ccm_dashboard_external']) {
 }
 $html = Loader::helper('html');
 ?><!DOCTYPE html>
+<html <? if (!$hideDashboardPanel) { ?>class="ccm-panel-open ccm-panel-right"<? } ?>>
 <head>
     <link rel="stylesheet" type="text/css" href="<?=$this->getThemePath()?>/main.css" />
 <?
@@ -63,7 +64,7 @@ if (!$frontendPageID) {
     <ul>
         <li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></span></li>
         <li class="ccm-toolbar-account pull-left"><a href="<?=$backLink?>"><i class="fa fa-arrow-left"></i></a>
-        <li class="pull-right hidden-xs"><a href="<?=URL::to('/dashboard')?>" data-launch-panel="dashboard" class="ccm-launch-panel-active" data-panel-url="<?=URL::to('/system/panels/dashboard')?>"><i class="fa fa-th-large"></i></a>
+        <li class="pull-right hidden-xs"><a href="<?=URL::to('/dashboard')?>" data-launch-panel="dashboard" <? if (!$hideDashboardPanel) { ?>class="ccm-launch-panel-active" <? } ?> data-panel-url="<?=URL::to('/system/panels/dashboard')?>"><i class="fa fa-th-large"></i></a>
         <li class="pull-right hidden-xs"><a href="#" data-panel-url="<?=URL::to('/system/panels/sitemap')?>" data-launch-panel="sitemap"><i class="fa fa-list-alt"></i></a></li>
         <li class="ccm-toolbar-search pull-right hidden-xs"><i class="fa fa-search"></i> <input type="search" id="ccm-nav-intelligent-search" tabindex="1" /></li>
         <li class="pull-right ccm-toolbar-mobile-menu-button visible-xs hidden-sm hidden-md hidden-lg"><i class="fa fa-bars fa-2"></i></li>
@@ -72,8 +73,10 @@ if (!$frontendPageID) {
 <?
 $dh = Loader::helper('concrete/dashboard');
 print $dh->getIntelligentSearchMenu();
-?>
-<div id="ccm-panel-dashboard" class="ccm-panel ccm-panel-right ccm-panel-transition-slide ccm-panel-active ccm-panel-loaded">
+
+if (!$hideDashboardPanel) { ?>
+
+<div id="ccm-panel-dashboard" class="hidden-xs ccm-panel ccm-panel-right ccm-panel-transition-slide ccm-panel-active ccm-panel-loaded">
     <div class="ccm-panel-content-wrapper ccm-ui">
         <div class="ccm-panel-content ccm-panel-content-visible">
 <?
@@ -91,5 +94,7 @@ Loader::element('panels/dashboard', array(
 )); ?>
 </div></div><div class="ccm-panel-shadow-layer"></div>
 </div>
+
+<? } ?>
 
 <div id="ccm-dashboard-content">

@@ -54,6 +54,7 @@ class Statistics extends DashboardPageController {
 			$this->labels[] = $label;
 			$this->dates[] = $date;
 		}
+        parent::on_start();
 	}
 
 	protected function setDownloadStatistics() {

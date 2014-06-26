@@ -47,10 +47,6 @@ class Themes extends DashboardPageController {
 		$this->view();
 	}
 	
-	public function on_start() {
-		$this->set('disableThirdLevelNav', true);
-	}
-	
 	public function remove($pThemeID, $token = '') {
 		$v = Loader::helper('validation/error');
 		try {
