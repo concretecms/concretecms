@@ -33,11 +33,12 @@ class Topic extends TreeNode {
 	public function getTreeNodeJSON() {
 		$obj = parent::getTreeNodeJSON();
 		if (is_object($obj)) {
+            $obj->iconClass = 'fa fa-comment-o';
 			return $obj;
 		}
 	}
 
-	public function duplicate($parent = false) {
+    public function duplicate($parent = false) {
 		$node = $this::add($this->treeNodeTopicName, $parent);
 		$this->duplicateChildren($node);
 		return $node;
