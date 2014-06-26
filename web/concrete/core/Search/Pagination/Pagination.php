@@ -1,16 +1,16 @@
 <?php
 namespace Concrete\Core\Search\Pagination;
 
-use Concrete\Core\Search\ListItemInterface;
+use Concrete\Core\Search\ItemList;
 use Pagerfanta\Adapter\AdapterInterface;
 use Pagerfanta\Pagerfanta;
 
 class Pagination extends Pagerfanta
 {
-    /** @var \Concrete\Core\Foundation\Collection\ListItemInterface  */
+    /** @var \Concrete\Core\Search\ItemList  */
     protected $list;
 
-    public function __construct(ListItemInterface $itemList, AdapterInterface $adapter) {
+    public function __construct(ItemList $itemList, AdapterInterface $adapter) {
         $this->list = $itemList;
         return parent::__construct($adapter);
     }

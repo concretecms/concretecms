@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Search\Pagination;
 
-use Concrete\Core\Search\ListItemInterface;
+use Concrete\Core\Search\ItemList;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 
@@ -11,7 +11,7 @@ class PermissionablePagination extends Pagination
 
     protected $maxResultsToProcessAtOnce = 1000;
 
-    public function __construct(ListItemInterface $itemList)
+    public function __construct(ItemList $itemList)
     {
         $itemList->getQueryObject()->setMaxResults($this->maxResultsToProcessAtOnce);
         $results = $itemList->getResults();

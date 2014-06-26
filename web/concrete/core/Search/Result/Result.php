@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Core\Search\Result;
 use \Concrete\Core\Search\Column\Set;
-use \Concrete\Core\Search\ListItemInterface;
+use \Concrete\Core\Search\ItemList;
 use Pagerfanta\View\TwitterBootstrap3View;
 use stdClass;
 
@@ -28,7 +28,7 @@ class Result {
 		return $this->baseURL;
 	}
 
-	public function __construct(Set $columns, ListItemInterface $il, $url, $fields = array()) {
+	public function __construct(Set $columns, ItemList $il, $url, $fields = array()) {
 		$this->listColumns = $columns;
 		$this->list = $il;
 		$this->baseURL = $url;
