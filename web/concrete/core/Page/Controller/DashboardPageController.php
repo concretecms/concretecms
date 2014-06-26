@@ -13,13 +13,19 @@ class DashboardPageController extends PageController {
 			$this->addHeaderItem('<meta name="viewport" content="width=device-width,initial-scale=1"/>');
 		}
 	}
-	
+
 	public function on_start() {
 		$this->token = Loader::helper('validation/token');
 		$this->error = Loader::helper('validation/error');
 		$this->set('interface', Loader::helper('concrete/ui'));
 		$this->set('dashboard', Loader::helper('concrete/dashboard'));
-	}
+
+        $hideDashboardPanel = false;
+        if (\Cookie::has('panels/dashboard/closed') && intval(\Cookie::get('panels/dashboard/closed')) == 1) {
+            $hideDashboardPanel = true;
+        }
+        $this->set('hideDashboardPanel', $hideDashboardPanel);
+    }
 	
 	public function on_before_render() {
 		$pageTitle = $this->get('pageTitle');
