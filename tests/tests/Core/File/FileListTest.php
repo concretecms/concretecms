@@ -169,9 +169,8 @@ class FileListTest extends \FileStorageTestCase {
     public function testAutoSort()
     {
         $req = \Request::getInstance();
-        $req->query->set($this->list->getQuerySortColumnParameter(), 'fvFilename');
+        $req->query->set($this->list->getQuerySortColumnParameter(), 'fv.fvFilename');
         $req->query->set($this->list->getQuerySortDirectionParameter(), 'desc');
-
         $nl = new \Concrete\Core\File\FileList();
         $nl->ignorePermissions();
         $results = $nl->getResults();
