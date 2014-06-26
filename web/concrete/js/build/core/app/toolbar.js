@@ -148,6 +148,22 @@ var ConcreteToolbar = function() {
 
 	}
 
+   setupMobileNav = function(){
+        $('.ccm-toolbar-mobile-menu-button').click(function(){
+            $(this).toggleClass('ccm-mobile-close');   // slide out mobile nav
+            $('.ccm-mobile-menu-overlay').slideToggle();
+        });
+        $('.ccm-mobile-menu-overlay .parent-ul a').click(function(event) {
+            if(!($(this).parent('li').hasClass('last-li'))) {
+                $(this).parent('li').siblings().children('ul').hide();
+                if(!($(this).parent('li').children('ul').is(':visible'))) {
+                    $(this).next('ul').show();
+                    event.preventDefault();
+                }
+            }
+        });
+    }
+
 	activateIntelligentSearchResults = function() {
 		if ($("#ccm-intelligent-search-results div:visible").length == 0) {
 			$("#ccm-intelligent-search-results").hide();
@@ -270,6 +286,7 @@ var ConcreteToolbar = function() {
 				setupChosen();
 				setupPageAlerts();
 				setupHelpNotifications();
+                setupMobileNav();
 
 				// make sure that dashboard dropdown doesn't get dismissed if you mis-click inside it;
 				$('#ccm-toolbar-menu-dashboard').on('click', function(e) {
@@ -304,5 +321,4 @@ var ConcreteToolbar = function() {
 
 
 	}
-
 }();

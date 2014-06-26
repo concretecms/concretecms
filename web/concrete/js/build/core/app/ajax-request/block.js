@@ -71,6 +71,10 @@
 						});
 					}
 
+                    ConcreteEvent.fire('EditModeAddBlockComplete', {
+                        block: block
+                    });
+
 				} else {
 					// remove old block from area
 					var block = area.getBlockByID(my.options.bID);
@@ -87,7 +91,10 @@
 						});
 					}
 
-				}
+                    ConcreteEvent.fire('EditModeUpdateBlockComplete', {
+                        block: newBlock
+                    });
+                }
 
 
 			});

@@ -1,4 +1,4 @@
-<? 
+<?
 defined('C5_EXECUTE') or die("Access Denied.");
 $c = $b->getBlockCollectionObject();
 if (!is_object($a)) {
@@ -69,6 +69,7 @@ if ($isAlias) {
 
 <div
     custom-style="<?=$b->getBlockCustomStyleRuleID()?>"
+    data-cID="<?=$c->getCollectionID()?>"
     data-area-id="<?=$a->getAreaID()?>"
     data-block-id="<?=$b->getBlockID()?>"
     class="<?=$class?>"
@@ -79,7 +80,7 @@ if ($isAlias) {
 >
     <ul class="ccm-edit-mode-inline-commands ccm-ui">
         <? if ($p->canEditBlock() && $btw->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY && (!$a->isGlobalArea())) {  ?>
-            <li><a data-inline-command="move-block" href="#"><i class="fa fa-move"></i></a></li>
+            <li><a data-inline-command="move-block" href="#"><i class="fa fa-arrows"></i></a></li>
         <? } ?>
     </ul>
 
@@ -89,11 +90,11 @@ if ($isAlias) {
 	<div class="arrow"></div>
 	<div class="popover-inner">
 	<ul class="dropdown-menu">
-	
-	<? if ($btOriginal->getBlockTypeHandle() == BLOCK_HANDLE_STACK_PROXY) { 
+
+	<? if ($btOriginal->getBlockTypeHandle() == BLOCK_HANDLE_STACK_PROXY) {
 		if (is_object($_bo)) {
 			$bi = $_bo->getInstance();
-		} else { 
+		} else {
 			$bi = $b->getInstance();
 		}
 		$stack = Stack::getByID($bi->stID);
@@ -101,32 +102,32 @@ if ($isAlias) {
 			$sp = new Permissions($stack);
 			if ($sp->canWrite()) { ?>
 
-			<li><a href="<?=View::url('/dashboard/blocks/stacks', 'view_details', $stack->getCollectionID())?>"><?=t("Manage Stack Contents")?></a></li>		
+			<li><a href="<?=View::url('/dashboard/blocks/stacks', 'view_details', $stack->getCollectionID())?>"><?=t("Manage Stack Contents")?></a></li>
 
-			<? } 
+			<? }
 		}
 	} else if ($p->canEditBlock() && $b->isEditable()) { ?>
 
 		<? if ($editInline) { ?>
 
 			<? if ($b->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?>
-				<li><a href="javascript:void(0)" data-menu-action="edit_inline" data-area-grid-column-span="<?=$a->getAreaGridColumnSpan()?>"><?=t("Edit Layout")?></a></li>		
+				<li><a href="javascript:void(0)" data-menu-action="edit_inline" data-area-grid-column-span="<?=$a->getAreaGridColumnSpan()?>"><?=t("Edit Layout")?></a></li>
 			<? } else { ?>
-				<li><a href="javascript:void(0)" data-menu-action="edit_inline" data-area-grid-column-span="<?=$a->getAreaGridColumnSpan()?>"><?=t("Edit Block")?></a></li>		
+				<li><a href="javascript:void(0)" data-menu-action="edit_inline" data-area-grid-column-span="<?=$a->getAreaGridColumnSpan()?>"><?=t("Edit Block")?></a></li>
 				<? } ?>
 		<? } else { ?>
-			<li><a data-menu-action="block_dialog" data-menu-href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?btask=edit" dialog-title="<?=t('Edit %s', $btOriginal->getBlockTypeName())?>" dialog-modal="false" dialog-width="<?=$btOriginal->getBlockTypeInterfaceWidth()?>" dialog-height="<?=$btOriginal->getBlockTypeInterfaceHeight() + $heightPlus?>" ><?=t("Edit Block")?></a></li>		
+			<li><a data-menu-action="block_dialog" data-menu-href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?btask=edit" dialog-title="<?=t('Edit %s', $btOriginal->getBlockTypeName())?>" dialog-modal="false" dialog-width="<?=$btOriginal->getBlockTypeInterfaceWidth()?>" dialog-height="<?=$btOriginal->getBlockTypeInterfaceHeight() + $heightPlus?>" ><?=t("Edit Block")?></a></li>
 		<? } ?>
 
 	<? } ?>
 
 	<? if ($b->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) { ?>
-	<li><a href="javascript:void(0)" data-menu-action="block_scrapbook"><?=t("Copy to Clipboard")?></a></li>		
+	<li><a href="javascript:void(0)" data-menu-action="block_scrapbook"><?=t("Copy to Clipboard")?></a></li>
 	<? } ?>
 
 
 	<? if ($p->canDeleteBlock()) {  ?>
-		<li><a href="javascript:void(0)" data-menu-action="delete_block" data-menu-delete-message="<?=$deleteMessage?>"><?=t("Delete")?></a></li>		
+		<li><a href="javascript:void(0)" data-menu-action="delete_block" data-menu-delete-message="<?=$deleteMessage?>"><?=t("Delete")?></a></li>
 	<? } ?>
 
 	<? if ($b->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) { ?>
@@ -135,24 +136,24 @@ if ($isAlias) {
 			<li class="divider"></li>
 
 			<? if ($canDesign) { ?>
-				<li><a dialog-title="<?=t('Custom Style')?>" dialog-modal="false" dialog-width="475" dialog-height="500" data-menu-action="block_dialog" data-menu-href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?btask=block_css" ><?=t("Design")?></a></li>		
+				<li><a dialog-title="<?=t('Custom Style')?>" dialog-modal="false" dialog-width="475" dialog-height="500" data-menu-action="block_dialog" data-menu-href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?btask=block_css" ><?=t("Design")?></a></li>
 			<? } ?>
 
 			<? if ($p->canEditBlockCustomTemplate()) { ?>
-				<li><a dialog-title="<?=t('Custom Template')?>" dialog-modal="false" dialog-width="300" dialog-height="275" data-menu-action="block_dialog" data-menu-href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?btask=template" ><?=t("Custom Template")?></a></li>		
+				<li><a dialog-title="<?=t('Custom Template')?>" dialog-modal="false" dialog-width="300" dialog-height="275" data-menu-action="block_dialog" data-menu-href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?btask=template" ><?=t("Custom Template")?></a></li>
 			<? } ?>
 		<? } ?>
 
 		<? if ($canModifyGroups || $canScheduleGuestAccess || $canAliasBlockOut) { ?>
 			<li class="divider"></li>
 			<? if ($canModifyGroups) { ?>
-				<li><a dialog-title="<?=t('Block Permissions')?>" dialog-modal="false" dialog-width="350" dialog-height="420" data-menu-action="block_dialog" data-menu-href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?btask=groups" ><?=t("Permissions")?></a></li>		
+				<li><a dialog-title="<?=t('Block Permissions')?>" dialog-modal="false" dialog-width="350" dialog-height="420" data-menu-action="block_dialog" data-menu-href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?btask=groups" ><?=t("Permissions")?></a></li>
 			<? } ?>
 			<? if ($canScheduleGuestAccess) { ?>
-				<li><a dialog-title="<?=t('Schedule Guest Access')?>" dialog-modal="false" dialog-width="500" dialog-height="220" data-menu-action="block_dialog" data-menu-href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?btask=guest_timed_access" ><?=t("Schedule Guest Access")?></a></li>		
+				<li><a dialog-title="<?=t('Schedule Guest Access')?>" dialog-modal="false" dialog-width="500" dialog-height="220" data-menu-action="block_dialog" data-menu-href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?btask=guest_timed_access" ><?=t("Schedule Guest Access")?></a></li>
 			<? } ?>
 			<? if ($canAliasBlockOut) { ?>
-				<li><a dialog-title="<?=t('Setup on Child Pages')?>" dialog-modal="false" dialog-width="550" dialog-height="450" data-menu-action="block_dialog" data-menu-href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?btask=child_pages" ><?=t("Setup on Child Pages")?></a></li>		
+				<li><a dialog-title="<?=t('Setup on Child Pages')?>" dialog-modal="false" dialog-width="550" dialog-height="450" data-menu-action="block_dialog" data-menu-href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?btask=child_pages" ><?=t("Setup on Child Pages")?></a></li>
 			<? } ?>
 		<? } ?>
 	<? } ?>

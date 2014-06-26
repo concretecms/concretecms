@@ -40,6 +40,8 @@
     .box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
   }
 
+  /* concrete5 */
+  /*
   &.disabled,
   &[disabled],
   fieldset[disabled] & {
@@ -47,7 +49,22 @@
     pointer-events: none; // Future-proof disabling of clicks
     .opacity(.65);
     .box-shadow(none);
+  }*/
+
+  &.disabled,
+  &[disabled] {
+    cursor: not-allowed;
+    pointer-events: none; // Future-proof disabling of clicks
+    .opacity(.65);
+    .box-shadow(none);
   }
+}
+
+fieldset .btn {
+    cursor: not-allowed;
+    pointer-events: none; // Future-proof disabling of clicks
+    .opacity(.65);
+    .box-shadow(none);
 }
 
 
@@ -90,11 +107,14 @@
 
   &,
   &:active,
-  &[disabled],
-  fieldset[disabled] & {
+  &[disabled]
+  /* concrete5 ,
+  fieldset[disabled] &
+  */ {
     background-color: transparent;
     .box-shadow(none);
   }
+
   &,
   &:hover,
   &:focus,
@@ -107,8 +127,10 @@
     text-decoration: underline;
     background-color: transparent;
   }
-  &[disabled],
-  fieldset[disabled] & {
+  &[disabled]
+  /* concrete5 ,
+  fieldset[disabled] &
+  */ {
     &:hover,
     &:focus {
       color: @btn-link-disabled-color;
@@ -117,6 +139,25 @@
   }
 }
 
+fieldset[disabled] .btn-link {
+
+}
+
+fieldset[disabled] {
+    .btn-link {
+        &:active,
+        &[disabled] {
+            background-color: transparent;
+            .box-shadow(none);
+        }
+
+        &:hover,
+        &:focus {
+            color: @btn-link-disabled-color;
+            text-decoration: none;
+        }
+    }
+}
 
 // Button Sizes
 // --------------------------------------------------

@@ -23,6 +23,7 @@ class Login extends PageController {
 
 	public function on_start() {
 		$this->error = Loader::helper('validation/error');
+		$this->set('valt', Loader::helper('validation/token'));
 		if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
 			$this->set('uNameLabel', t('Email Address'));
 		} else {
@@ -131,13 +132,18 @@ class Login extends PageController {
 	 *
 	 * @param $type	AuthenticationType handle
 	 */
-	public function authenticate($type) {
-		try {
-			$at = AuthenticationType::getByHandle($type);
-			$at->controller->authenticate();
-			$this->finishAuthentication($at);
-		} catch (\exception $e) {
-			$this->error->add($e->getMessage());
+	public function authenticate($type = '') {
+		$valt = Loader::helper('validation/token');
+		if(!$valt->validate('login_'.$type)) {
+			$this->error->add($valt->getErrorMessage());
+		} else {
+			try {
+				$at = AuthenticationType::getByHandle($type);
+				$at->controller->authenticate();
+				$this->finishAuthentication($at);
+			} catch (\exception $e) {
+				$this->error->add($e->getMessage());
+			}
 		}
 		$this->view();
 	}
@@ -168,7 +174,7 @@ class Login extends PageController {
 			$this->set('required_attributes', $unfilled);
 			$this->set('u', $u);
 			$this->error->add(t('Fill in these required settings in order to continue.'));
-		
+
 			Session::set('uRequiredAttributeUser', $u->getUserID());
 			Session::set('uRequiredAttributeUserAuthenticationType', $type->getAuthenticationTypeHandle());
 
@@ -229,7 +235,7 @@ class Login extends PageController {
 		if (!$this->error) {
 			$this->error = Loader::helper('validation/error');
 		}
-		
+
 		$nh = Loader::helper('validation/numbers');
 		$navigation = Loader::helper('navigation');
 		$rUrl = false;
@@ -252,9 +258,9 @@ class Login extends PageController {
 					if ($rc instanceof Page && !$rc->isError()) {
 						$rUrl = $navigation->getLinkToCollection($rc);
 						break;
-					}		
+					}
 				}
-				
+
 				// admin to dashboard?
 				$dash = Page::getByPath("/dashboard", "RECENT");
 				$dbp = new Permissions($dash);
@@ -264,16 +270,16 @@ class Login extends PageController {
 					$rUrl = $navigation->getLinkToCollection($rc);
 					break;
 				}
-				
+
 				//options set in dashboard/users/registration
 				$login_redirect_mode=Config::get('LOGIN_REDIRECT');
-				
+
 				//redirect to user profile
 				if ($login_redirect_mode=='PROFILE' && ENABLE_USER_PROFILES) {
 					$rUrl = View::url('/profile',$u->getUserID());
 					break;
-				} 
-				
+				}
+
 				//redirect to custom page
 				$login_redirect_cid = intval(Config::get('LOGIN_REDIRECT_CID'));
 				if ($login_redirect_mode == 'CUSTOM' && $login_redirect_cid > 0) {
@@ -283,10 +289,10 @@ class Login extends PageController {
 						break;
 					}
 				}
-				
+
 				break;
 			} while(false);
-			
+
 			if($rUrl) {
 				$this->redirect($rUrl);
 			} else {

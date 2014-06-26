@@ -15,7 +15,7 @@
 		</div>
 	<? } else { ?>
 		<? if ($profile->getAttribute('profile_private_messages_enabled')) { ?>
-			<a href="<?=$view->url('/account/messages/inbox', 'write', $profile->getUserID())?>" class="btn btn-mini"><i class="icon-user"></i> <?=t('Connect')?></a>		
+			<a href="<?=$view->url('/account/messages/inbox', 'write', $profile->getUserID())?>" class="btn btn-mini"><i class="icon-user"></i> <?=t('Connect')?></a>
 		<? } ?>
 	<? } ?>
 </div>
@@ -28,7 +28,7 @@
 		<i class="icon-time"></i> <?=t('Joined %s', date(DATE_APP_GENERIC_MDY_FULL, strtotime($profile->getUserDateAdded())))?>
 	</div>
 	<div class="ccm-profile-statistics-item">
-		<i class="icon-fire"></i> <?=number_format(UserPointEntry::getTotal($profile))?> <?=t('Community Points')?>
+		<i class="icon-fire"></i> <?=number_format(\Concrete\Core\User\Point\Entry::getTotal($profile))?> <?=t('Community Points')?>
 	</div>
 	<div class="ccm-profile-statistics-item">
 		<i class="icon-bookmark"></i> <a href="#badges"><?=number_format(count($badges))?> <?=t2('Badge', 'Badges', count($badges))?></a>
@@ -42,13 +42,13 @@
 	<div id="ccm-profile-detail">
 
 
-        <?php 
+        <?php
         $uaks = UserAttributeKey::getPublicProfileList();
         foreach($uaks as $ua) { ?>
 		<div>
 			<h4><?php echo $ua->getKeyName()?></h4>
-			<?php 
-			$r = $profile->getAttribute($ua, 'displaySanitized', 'display'); 
+			<?php
+			$r = $profile->getAttribute($ua, 'displaySanitized', 'display');
 			if ($r) {
 				print $r;
 			} else {
@@ -56,7 +56,7 @@
 			}
 			?>
 		</div>
-        <?php  } ?>		
+        <?php  } ?>
 
 		<h4><?=t("Badges")?></h4>
 		<? if (count($badges) > 0) { ?>
@@ -64,7 +64,7 @@
 
 		<ul class="thumbnails">
 
-			<? foreach($badges as $ub) { 
+			<? foreach($badges as $ub) {
 				$uf = $ub->getGroupBadgeImageObject();
 				if (is_object($uf)) { ?>
 
@@ -86,17 +86,17 @@
 		<? } else { ?>
 			<p><?=t("This user hasn't won any badges.")?></p>
 		<? } ?>
-        
-		
-		<?php  
-			$a = new Area('Main'); 
-			//$a->setAttribute('profile', $profile); 
+
+
+		<?php
+			$a = new Area('Main');
+			//$a->setAttribute('profile', $profile);
 			$a->setBlockWrapperStart('<div class="ccm-profile-body-item">');
 			$a->setBlockWrapperEnd('</div>');
-			$a->display($c); 
+			$a->display($c);
 		?>
-		
-	</div>	
+
+	</div>
 </div>
 
 <script type="text/javascript">

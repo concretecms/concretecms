@@ -60,3 +60,6 @@ error_log
 /build/release
 /build/Gruntfile.parameters.js
 /build/npm-debug.log
+
+# ignore PHP symbol map
+__IDE_SYMBOLS__.php

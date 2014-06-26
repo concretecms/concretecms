@@ -4,7 +4,7 @@
 	$minColumns = 1;
 	if ($controller->getTask() == 'add') {
 		$spacing = 0;
-		$iscustom = false; 
+		$iscustom = false;
 	}
 
 	$presets = AreaLayoutPreset::getList();
@@ -32,7 +32,7 @@
 	<li data-grid-form-view="themegrid">
 		<label for="themeGridColumns"><?=t("Columns:")?></label>
 		<input type="text" name="themeGridColumns" id="themeGridColumns" style="width: 40px" <? if ($controller->getTask() == 'add') {?>  data-input="number" data-minimum="<?=$minColumns?>" data-maximum="<?=$themeGridMaxColumns?>" <? } ?> value="<?=$columnsNum?>" />
-		<? if ($controller->getTask() == 'edit') { 
+		<? if ($controller->getTask() == 'edit') {
 			// we need this to actually go through the form in edit mode, for layout presets to be saveable in edit mode. ?>
 			<input type="hidden" name="themeGridColumns" value="<?=$columnsNum?>" />
 		<? } ?>
@@ -40,7 +40,7 @@
 	<li data-grid-form-view="custom" class="ccm-sub-toolbar-text-cell">
 		<label for="columns"><?=t("Columns:")?></label>
 		<input type="text" name="columns" id="columns" style="width: 40px" <? if ($controller->getTask() == 'add') {?> data-input="number" data-minimum="<?=$minColumns?>" data-maximum="<?=$maxColumns?>" <? } ?> value="<?=$columnsNum?>" />
-		<? if ($controller->getTask() == 'edit') { 
+		<? if ($controller->getTask() == 'edit') {
 			// we need this to actually go through the form in edit mode, for layout presets to be saveable in edit mode. ?>
 			<input type="hidden" name="columns" value="<?=$columnsNum?>" />
 		<? } ?>
@@ -55,10 +55,10 @@
 	<? if ($controller->getTask() == 'edit') {
 		$bp = new Permissions($b); ?>
 
-		<li class="ccm-inline-toolbar-fa fa-cell"><a href="#" data-layout-command="move-block"><i class="fa fa-move"></i></a></li>
+		<li class="ccm-inline-toolbar-fa fa-cell"><a href="#" data-layout-command="move-block"><i class="fa fa-arrows"></i></a></li>
 
 		<?
-		if ($bp->canDeleteBlock()) { 
+		if ($bp->canDeleteBlock()) {
 			$deleteMessage = t('Do you want to delete this layout? This will remove all blocks inside it.');
 			?>
 			<li class="ccm-inline-toolbar-icon-cell"><a href="#" data-menu-action="delete-layout"><i class="fa fa-trash"></i></a></li>
@@ -78,7 +78,7 @@
 	<? } ?>
 
 <script type="text/javascript">
-<? 
+<?
 
 if ($controller->getTask() == 'edit') {
 	$editing = 'true';
@@ -132,7 +132,7 @@ $(function() {
 		<? } ?>
 		'gridColumnClasses': [
 			<? $classes = $themeGridFramework->getPageThemeGridFrameworkColumnClasses();?>
-			<? for ($i = 0; $i < count($classes); $i++) { 
+			<? for ($i = 0; $i < count($classes); $i++) {
 				$class = $classes[$i];?>
 				'<?=$class?>' <? if (($i + 1) < count($classes)) { ?>, <? } ?>
 
