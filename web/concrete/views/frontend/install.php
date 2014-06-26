@@ -381,7 +381,7 @@ $(function() {
 	<td><? if ($fileWriteTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
 	<td width="100%"><?=t('Writable Files and Configuration Directories')?>
 	</td>
-	<td><? if (!$fileWriteTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('The config/, packages/ and files/ directories must be writable by your web server.')?>"></i><? } ?></td>
+	<td><? if (!$fileWriteTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('The packages/, application/config/ and application/files/ directories must be writable by your web server.')?>"></i><? } ?></td>
 </tr>
 <tr>
 	<td><i id="ccm-test-cookies-enabled-loading" class="fa fa-spinner fa-spin"></i></td>
