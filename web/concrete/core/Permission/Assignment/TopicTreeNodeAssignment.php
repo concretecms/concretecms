@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Assignment;
+use Concrete\Core\Tree\Node\Node;
 use PermissionAccess;
 use \Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
 use Loader;
@@ -15,7 +16,7 @@ class TopicTreeNodeAssignment extends TreeNodeAssignment {
 		if ($node->overrideParentTreeNodePermissions()) {
 			$this->permissionObjectToCheck = $node;
 		} else {
-			$parent = TreeNode::getByID($node->getTreeNodePermissionsNodeID());
+			$parent = Node::getByID($node->getTreeNodePermissionsNodeID());
 			$this->permissionObjectToCheck = $parent;
 		}
 	}

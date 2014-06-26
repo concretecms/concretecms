@@ -65,7 +65,7 @@ class Group extends TreeNode {
 		$obj = parent::getTreeNodeJSON();
 		if (is_object($obj)) {
 			$obj->gID = $this->gID;
-			$obj->icon = ASSETS_URL_IMAGES . '/icons/group.png';
+            $obj->iconClass = 'fa fa-users';
 			return $obj;
 		}
 	}

@@ -2,6 +2,7 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Attributes;
 use \Concrete\Core\Page\Controller\DashboardPageController;
+use Concrete\Core\Tree\Tree;
 use Config;
 use Loader;
 use \Concrete\Core\Tree\Type\Topic as TopicTree;
@@ -175,15 +176,15 @@ class Topics extends DashboardPageController {
 	}
 
 
-	public function remove_tree($treeID = false, $token = false) {
-		if ($this->token->validate('remove_tree', $token)) {
-			$tree = Tree::getByID(Loader::helper('security')->sanitizeInt($treeID));
+	public function remove_tree() {
+		if ($this->token->validate('remove_tree')) {
+			$tree = Tree::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['treeID']));
 			$treeType = $tree->getTreeTypeObject();
 			if (is_object($treeType)) {
 				$treeTypeHandle = $treeType->getTreeTypeHandle();
 			}
 			if (is_object($tree) && $treeTypeHandle == 'topic') {
-				if (PermissionKey::getByHandle('remove_topic_tree')->validate()) {
+				if (\PermissionKey::getByHandle('remove_topic_tree')->validate()) {
 					$tree->delete();
 					$this->redirect('/dashboard/system/attributes/topics', 'tree_deleted');
 				}
@@ -215,7 +216,7 @@ class Topics extends DashboardPageController {
 
 			if (!$this->error->has()) {
 				$node->delete();
-				$r = new stdClass;
+				$r = new \stdClass;
 				$r->treeNodeID = $treeNodeID;
 				Loader::helper('ajax')->sendResult($r);
 			}

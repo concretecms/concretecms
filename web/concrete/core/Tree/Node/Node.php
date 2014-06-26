@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Tree\Node;
 use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Tree\Tree;
 use Loader;
 use \Concrete\Core\Tree\Node\NodeType as TreeNodeType;
 use PermissionKey;
@@ -21,7 +22,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
 
     public function getTreeNodeID() {return $this->treeNodeID;}
     public function getTreeNodeParentID() {return $this->treeNodeParentID;}
-    public function getTreeNodeParentObject() {return TreeNode::getByID($this->treeNodeParentID);}
+    public function getTreeNodeParentObject() {return self::getByID($this->treeNodeParentID);}
     public function getTreeObject() {return Tree::getByID($this->treeID);}
     public function getTreeID() {return $this->treeID;}
     public function getTreeNodeTypeID() {return $this->treeNodeTypeID;}
@@ -288,7 +289,7 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
             $this->getTreeNodeID(), $this->getTreeNodeID()
         ));
         while ($row = $r->FetchRow()) {
-            $node = TreeNode::getByID($row['treeNodeID']);
+            $node = self::getByID($row['treeNodeID']);
             $parentNode = $node->getTreeNodeParentObject();
             $db->Execute('update TreeNodes set inheritPermissionsFromTreeNodeID = ? where treeNodeID = ?', array($parentNode->getTreeNodePermissionsNodeID(), $node->getTreeNodeID()));
         }

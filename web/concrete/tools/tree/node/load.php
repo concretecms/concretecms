@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-$node = TreeNode::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['treeNodeParentID']));
+$node = \Concrete\Core\Tree\Node\Node::getByID(Loader::helper('security')->sanitizeInt($_REQUEST['treeNodeParentID']));
 $selectedNodeIDs = Loader::helper('security')->sanitizeString($_REQUEST['treeNodeSelectedID']);
 if (is_object($node)) {
 	$np = new Permissions($node);
