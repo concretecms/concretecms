@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Core\User\Group;
-use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use \Concrete\Core\Legacy\DatabaseItemList;
 use Loader;
 use Permissions;
 class GroupList extends DatabaseItemList {

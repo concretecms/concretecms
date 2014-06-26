@@ -15,7 +15,7 @@ abstract class DatabaseItemList implements ListItemInterface
     /** @var \Doctrine\DBAL\Query\QueryBuilder */
     protected $query;
 
-    /** @var \Concrete\Core\Pagination\Pagination  */
+    /** @var \Concrete\Core\Search\Pagination\Pagination  */
     protected $pagination;
 
     public function __construct(StickyRequest $req = null)
@@ -46,6 +46,22 @@ abstract class DatabaseItemList implements ListItemInterface
         }
         return $results;
     }
+
+    /**
+     * @return PermissionablePagination|Pagination
+     */
+    public function getPagination()
+    {
+        $pagination = $this->createPaginationObject();
+        $query = \Request::getInstance()->query;
+        if ($query->has($this->getQueryPaginationPageParameter())) {
+            $page = intval($query->get($this->getQueryPaginationPageParameter()));
+            $pagination->setCurrentPage($page);
+        }
+        return $pagination;
+    }
+
+    abstract protected function createPaginationObject();
 
     public function filter($field, $value, $comparison = '=')
     {

@@ -5,7 +5,7 @@ use Loader;
 use \Concrete\Core\Workflow\Progress\PageProgress as PageWorkflowProgress;
 use Permissions;
 use \Concrete\Core\Page\Page as ConcretePage;
-use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use \Concrete\Core\Legacy\DatabaseItemList;
 class ProgressList extends PageList {
 	
 	protected $autoSortColumns = array('wpDateLastAction', 'cvName', 'wpCurrentStatus');

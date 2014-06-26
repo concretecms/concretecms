@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Conversation\Message;
 use Loader;
-use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use \Concrete\Core\Legacy\DatabaseItemList;
 class MessageList extends DatabaseItemList {
 
 	protected $sortBy = 'cnvMessageDateCreated';

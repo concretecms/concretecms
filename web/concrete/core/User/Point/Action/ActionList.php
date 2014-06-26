@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Core\User\Point\Action;
-use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use \Concrete\Core\Legacy\DatabaseItemList;
 
 class ActionList extends DatabaseItemList {
 

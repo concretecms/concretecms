@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Core\User\Point;
-use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use \Concrete\Core\Legacy\DatabaseItemList;
 use Loader;
 class ActivityList extends DatabaseItemList {
 	

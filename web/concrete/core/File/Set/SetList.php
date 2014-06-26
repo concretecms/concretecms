@@ -1,6 +1,6 @@
 <?php
 namespace Concrete\Core\File\Set;
-use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use \Concrete\Core\Legacy\DatabaseItemList;
 use Loader;
 use FileSet;
 use User;
