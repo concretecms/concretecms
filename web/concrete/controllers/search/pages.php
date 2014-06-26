@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Controller\Search;
+use Concrete\Core\Search\StickyRequest;
 use Controller;
 use PageList;
 use \Concrete\Core\Page\Search\ColumnSet\ColumnSet as PageSearchColumnSet;
@@ -17,8 +18,8 @@ class Pages extends Controller {
 	protected $fields = array();
 
 	public function __construct() {
-		$this->pageList = new PageList();
-		$this->pageList->enableStickySearchRequest();
+        $this->searchRequest = new StickyRequest('pages');
+        $this->pageList = new PageList($this->searchRequest);
 	}
 
 	public function search() {

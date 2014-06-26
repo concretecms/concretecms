@@ -1,5 +1,6 @@
-<?php 
+<?php
 namespace Concrete\Core\File;
+
 use Concrete\Core\Search\DatabaseItemList;
 use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
@@ -20,7 +21,14 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
      * Columns in this array can be sorted via the request.
      * @var array
      */
-    protected $autoSortColumns = array('fv.fvFilename', 'fv.fvAuthorName','fv.fvTitle', 'f.fDateAdded', 'fv.fvDateAdded', 'fv.fvSize');
+    protected $autoSortColumns = array(
+        'fv.fvFilename',
+        'fv.fvAuthorName',
+        'fv.fvTitle',
+        'f.fDateAdded',
+        'fv.fvDateAdded',
+        'fv.fvSize'
+    );
 
     protected $attributeClass = 'FileAttributeKey';
 
@@ -46,7 +54,7 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
     public function getTotalResults()
     {
         if ($this->permissionsChecker == -1) {
-            $query = clone $this->query;
+            $query = $this->deliverQueryObject();
             return $query->select('count(distinct f.fID)')->setMaxResults(1)->execute()->fetchColumn();
         } else {
             return -1; // unknown
@@ -56,7 +64,7 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
     protected function createPaginationObject()
     {
         if ($this->permissionsChecker == -1) {
-            $adapter = new DoctrineDbalAdapter($this->query, function($query) {
+            $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
                 $query->select('count(distinct f.fID)')->setMaxResults(1);
             });
             $pagination = new Pagination($this, $adapter);
@@ -101,12 +109,11 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
     public function __call($nm, $a)
     {
         if (substr($nm, 0, 8) == 'filterBy') {
-            $txt = Core::make('helper/text');
-            $attrib = $txt->uncamelcase(substr($nm, 8));
+            $handle = uncamelcase(substr($nm, 8));
             if (count($a) == 2) {
-                $this->filterByAttribute($attrib, $a[0], $a[1]);
+                $this->filterByAttribute($handle, $a[0], $a[1]);
             } else {
-                $this->filterByAttribute($attrib, $a[0]);
+                $this->filterByAttribute($handle, $a[0]);
             }
         }
     }
@@ -121,7 +128,8 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
      * Filters by "keywords" (which searches everything including filenames,
      * title, users who uploaded the file, tags)
      */
-    public function filterByKeywords($keywords) {
+    public function filterByKeywords($keywords)
+    {
         $expressions = array(
             $this->query->expr()->like('fv.fvFilename', ':keywords'),
             $this->query->expr()->like('fv.fvDescription', ':keywords'),
@@ -140,8 +148,8 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
         $this->query->setParameter('keywords', '%' . $keywords . '%');
     }
 
-
-    public function filterBySet($fs) {
+    public function filterBySet($fs)
+    {
         $table = 'fsf' . $fs->getFileSetID();
         $this->query->leftJoin('f', 'FileSetFiles', $table, 'f.fID = ' . $table . '.fID');
         $this->query->andWhere($table . '.fsID = :fsID' . $fs->getFileSetID());
@@ -217,9 +225,11 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function filterByTags($tags)
     {
-        $this->query->andWhere($this->query->expr()->andX(
-            $this->query->expr()->like('fv.fvTags', ':tags')
-        ));
+        $this->query->andWhere(
+            $this->query->expr()->andX(
+                $this->query->expr()->like('fv.fvTags', ':tags')
+            )
+        );
         $this->query->setParameter('tags', '%' . $tags . '%');
     }
 
