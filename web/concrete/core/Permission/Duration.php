@@ -5,7 +5,7 @@ use Loader;
 class Duration extends Object {
 
 	public function getPermissionDurationID() { return $this->pdID;}
-	
+
 	public static function getByID($pdID) {
 		$db = Loader::db();
 		$pdObject = $db->getOne('select pdObject from PermissionDurationObjects where pdID = ?', array($pdID));
@@ -14,11 +14,11 @@ class Duration extends Object {
 			return $pd;
 		}
 	}
-	
+
 	public function save() {
 		$db = Loader::db();
 		if (!$this->pdID) {
-			$pd = new PermissionDuration();
+			$pd = new Duration();
 			$pdObject = serialize($pd);
 			$db->Execute('insert into PermissionDurationObjects (pdObject) values (?)', array($pdObject));
 			$this->pdID = $db->Insert_ID();
@@ -26,20 +26,20 @@ class Duration extends Object {
 		$pdObject = serialize($this);
 		$db->Execute('update PermissionDurationObjects set pdObject = ? where pdID = ?', array($pdObject, $this->pdID));
 	}
-	
+
 	public function setStartDate($pdStartDate) {$this->pdStartDate = $pdStartDate;}
 	public function setEndDate($pdEndDate) {$this->pdEndDate = $pdEndDate;}
 	public function setStartDateAllDay($pdStartDateAllDay) {$this->pdStartDateAllDay = $pdStartDateAllDay;}
-	public function setEndDateAllDay($pdEndDateAllDay) {$this->pdEndDateAllDay = $pdEndDateAllDay;}	
+	public function setEndDateAllDay($pdEndDateAllDay) {$this->pdEndDateAllDay = $pdEndDateAllDay;}
 	public function setRepeatPeriod($pdRepeatPeriod) {$this->pdRepeatPeriod = $pdRepeatPeriod;}
 	public function setRepeatPeriodWeekDays($pdRepeatPeriodWeeksDays) {$this->pdRepeatPeriodWeeksDays = $pdRepeatPeriodWeeksDays;}
 	public function setRepeatEveryNum($pdRepeatEveryNum) {$this->pdRepeatEveryNum = $pdRepeatEveryNum;}
 	public function setRepeatMonthBy($pdRepeatPeriodMonthsRepeatBy) {$this->pdRepeatPeriodMonthsRepeatBy = $pdRepeatPeriodMonthsRepeatBy;}
 	public function setRepeatPeriodEnd($pdRepeatPeriodEnd) {$this->pdRepeatPeriodEnd = $pdRepeatPeriodEnd;}
-	
+
 	public function getStartDate() {return $this->pdStartDate;}
 	public function isStartDateAllDay() {return $this->pdStartDateAllDay;}
-	public function isEndDateAllDay() {return $this->pdEndDateAllDay;}	
+	public function isEndDateAllDay() {return $this->pdEndDateAllDay;}
 	public function getEndDate() {return $this->pdEndDate;}
 	public function repeats() {
 		return (in_array($this->pdRepeatPeriod, array('daily','weekly','monthly')));
@@ -54,11 +54,11 @@ class Duration extends Object {
 	}
 	public function getRepeatMonthBy() {return $this->pdRepeatPeriodMonthsRepeatBy;}
 	public function getRepeatPeriodEveryNum() {return $this->pdRepeatEveryNum;}
-	public function getRepeatPeriodEnd() {return $this->pdRepeatPeriodEnd;}	
-	
+	public function getRepeatPeriodEnd() {return $this->pdRepeatPeriodEnd;}
+
 	public function isActive() {
 		$now = strtotime(Loader::helper('date')->getLocalDateTime());
-		if (!$this->repeats()) { 
+		if (!$this->repeats()) {
 			$isActive = true;
 			if ($this->getStartDate() != '' && strtotime($this->getStartDate()) > $now) {
 				$isActive = false;
@@ -91,7 +91,7 @@ class Duration extends Object {
 						$dow = date('w', $now);
 						if ($startDOW == $endDOW) {
 							$days = $this->getRepeatPeriodWeekDays();
-							if (in_array($dow, $days)) { 
+							if (in_array($dow, $days)) {
 								if ($now >= $dailyTimeStart && $now <= $dailyTimeEnd) {
 									$isActive = true;
 								}
@@ -103,11 +103,11 @@ class Duration extends Object {
 							} else if ($dow == $startDOW) {
 								if ($now >= $dailyTimeStart) {
 									$isActive = true;
-								}								
+								}
 							} else if ($dow == $endDOW) {
 								if ($now <= $dailyTimeEnd) {
 									$isActive = true;
-								}								
+								}
 							}
 						}
 					}
@@ -130,9 +130,9 @@ class Duration extends Object {
 								if (date('d', $now) == date('d', strtotime($this->getStartDate()))) {
 									$checkTime = true;
 								}
-							}								
+							}
 						}
-						
+
 						if ($checkTime) {
 							if ($now >= $dailyTimeStart && $now <= $dailyTimeEnd) {
 								$isActive = true;
@@ -142,7 +142,7 @@ class Duration extends Object {
 					break;
 
 			}
-			
+
 			if ($this->getStartDate() != '' && strtotime($this->getStartDate()) > $now) {
 				$isActive = false;
 			}
@@ -150,54 +150,54 @@ class Duration extends Object {
 				$isActive = false;
 			}
 
-		}		
+		}
 		return $isActive;
 	}
-	
+
 	public function getTextRepresentation() {
 		$text = '';
-		if ($this->getStartDate() != '') { 
+		if ($this->getStartDate() != '') {
 			$text .= t('Starts %s. ', date(DATE_APP_GENERIC_MDYT, strtotime($this->getStartDate())));
 		} else {
 			$text .= t('Already Started. ');
-		} 
-		if ($this->getEndDate() != '') { 
+		}
+		if ($this->getEndDate() != '') {
 			$text .= t('Ends %s. ', date(DATE_APP_GENERIC_MDYT, strtotime($this->getEndDate())));
 		} else {
 			$text .= t('No End Date. ');
-		} 
-		if ($this->repeats()) { 
+		}
+		if ($this->repeats()) {
 			$text .= t('Repeats %s. ', ucfirst($this->getRepeatPeriod()));
 		}
 		return $text;
 	}
-	
+
 	public static function filterByActive($list) {
 		$filteredList = array();
-		foreach($list as $l) { 
+		foreach($list as $l) {
 			$pd = $l->getPermissionDurationObject();
-			if (is_object($pd)) { 
-				if ($pd->isActive()) { 					
+			if (is_object($pd)) {
+				if ($pd->isActive()) {
 					$filteredList[] = $l;
 				}
-			} else { 
+			} else {
 				$filteredList[] = $l;
 			}
 		}
 		return $filteredList;
 	}
-	
+
 	public static function translateFromRequest() {
 		$dt = Loader::helper('form/date_time');
 		$dateStart = $dt->translate('pdStartDate');
 		$dateEnd = $dt->translate('pdEndDate');
-		
+
 		if ($dateStart || $dateEnd) {
-			// create a PermissionDuration object
-			if ($_REQUEST['pdID']) { 
-				$pd = PermissionDuration::getByID($_REQUEST['pdID']);
-			} else { 
-				$pd = new PermissionDuration();
+			// create a Duration object
+			if ($_REQUEST['pdID']) {
+				$pd = Duration::getByID($_REQUEST['pdID']);
+			} else {
+				$pd = new Duration();
 			}
 
 			if ($_REQUEST['pdStartDateAllDayActivate']) {
@@ -211,8 +211,8 @@ class Duration extends Object {
 				$dateEnd = date('Y-m-d 23:59:59', strtotime($dateEnd));
 			} else {
 				$pd->setEndDateAllDay(0);
-			}	
-					
+			}
+
 			$pd->setStartDate($dateStart);
 			$pd->setEndDate($dateEnd);
 			if ($_POST['pdRepeatPeriod'] && $_POST['pdRepeat']) {
@@ -224,19 +224,19 @@ class Duration extends Object {
 					$pd->setRepeatPeriodWeekDays($_POST['pdRepeatPeriodWeeksDays']);
 				} else if ($_POST['pdRepeatPeriod'] == 'monthly') {
 					$pd->setRepeatMonthBy($_POST['pdRepeatPeriodMonthsRepeatBy']);
-					$pd->setRepeatEveryNum($_POST['pdRepeatPeriodMonthsEvery']);					
+					$pd->setRepeatEveryNum($_POST['pdRepeatPeriodMonthsEvery']);
 				}
 				$pd->setRepeatPeriodEnd($dt->translate('pdEndRepeatDateSpecific'));
 			} else {
 				$pd->setRepeatPeriod(false);
 			}
-			$pd->save();		
+			$pd->save();
 		} else {
 			unset($pd);
 		}
 
 		return $pd;
 	}
-	
+
 }
 

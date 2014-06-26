@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller\Panel\Page;
 
+use Concrete\Core\Form\Service\Widget\DateTime;
 use Controller;
 use Loader;
 use Page;
@@ -43,10 +44,7 @@ class PreviewAsUser extends Controller
                     $request->setCustomRequestUser($user_info);
                 }
             }
-
-            $datetime = Loader::helper('form/date_time');
-            $date = $datetime->translate('onDate', $_REQUEST);
-            $request->setCustomRequestDateTime($date);
+            $request->setCustomRequestDateTime(Request::request('date'));
 
             $controller = $page->getPageController();
             $view = $controller->getViewObject();
