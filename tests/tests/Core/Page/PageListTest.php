@@ -226,6 +226,11 @@ class PageListTest extends \PageTestCase {
         $this->assertEquals(14, count($results));
     }
 
+    public function testAliases()
+    {
+
+    }
+
 
 }
  
