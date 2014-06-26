@@ -9,10 +9,6 @@
     'use strict';
 
     /**
-     * Handle scrolling on drag.
-     */
-
-    /**
      * Edit mode object for managing editing.
      */
     var EditMode = Concrete.EditMode = function EditMode(options) {
@@ -186,11 +182,8 @@
         });
 
 
-        var scroller_top = $('<div />').addClass('scroller top-scroller').appendTo('body'),
-            scroller_bottom = $('<div />').addClass('scroller bottom-scroller').appendTo('body'),
-            $body = $(window.document.body),
+        var $body = $(window.document.body),
             scrolling = false,
-            scroller = 0,
             scroll_buffer = 100;
         my.setAttr('scroller_bottom', scroller_bottom);
         my.setAttr('scroller_top', scroller_top);
@@ -1392,7 +1385,7 @@
                 });
             } else {
                 $.fn.dialog.open({
-                    
+
                     onOpen: function () {
                         $(function () {
                             $('#ccm-block-form').concreteAjaxBlockForm({

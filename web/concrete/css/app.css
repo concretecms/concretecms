@@ -10986,19 +10986,3 @@ div.ccm-edit-mode-disabled-item {
   font-size: 14px;
   font-weight: 200;
 }
-div.scroller {
-  /** Modify this value to change scroll sensitivity */
-
-  height: 100px;
-  position: fixed;
-  width: 100%;
-  z-index: -5px;
-  background-color: transparent !important;
-  left: 0;
-}
-div.scroller.top-scroller {
-  top: 0;
-}
-div.scroller.bottom-scroller {
-  bottom: 0;
-}
