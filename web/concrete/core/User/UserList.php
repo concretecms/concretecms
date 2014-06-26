@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\User;
 use Loader;
-use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use \Concrete\Core\Legacy\DatabaseItemList;
 use UserAttributeKey;
 /**
  * An object that allows a filtered list of users to be returned.

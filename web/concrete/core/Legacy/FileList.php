@@ -1,6 +1,5 @@
 <?php 
 namespace Concrete\Core\Legacy;
-use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
 use \File as ConcreteFile;
 use User;
 use FileAttributeKey;

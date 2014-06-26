@@ -53,10 +53,7 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
         }
     }
 
-    /**
-     * @return PermissionablePagination|Pagination
-     */
-    public function getPagination()
+    protected function createPaginationObject()
     {
         if ($this->permissionsChecker == -1) {
             $adapter = new DoctrineDbalAdapter($this->query, function($query) {
@@ -65,12 +62,6 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
             $pagination = new Pagination($this, $adapter);
         } else {
             $pagination = new PermissionablePagination($this);
-        }
-
-        $query = \Request::getInstance()->query;
-        if ($query->has($this->getQueryPaginationPageParameter())) {
-            $page = intval($query->get($this->getQueryPaginationPageParameter()));
-            $pagination->setCurrentPage($page);
         }
         return $pagination;
     }
