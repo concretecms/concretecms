@@ -1,0 +1,16 @@
+div.scroller {
+    /** Modify this value to change scroll sensitivity */
+    height: 100px;
+    position: fixed;
+    width: 100%;
+    z-index: -5px;
+    background-color: transparent !important;
+    left: 0;
+
+    &.top-scroller {
+        top: 0;
+    }
+    &.bottom-scroller {
+        bottom: 0;
+    }
+}
