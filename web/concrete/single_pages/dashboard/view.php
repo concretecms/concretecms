@@ -1,5 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
-<div class="container-fluid">
+<div>
 <?php $rowCount = 0;
 for ($i = 0; $i < count($categories); $i++) {
 $cat = $categories[$i];

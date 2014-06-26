@@ -14,6 +14,10 @@ body {
 html.ccm-panel-right {
   div#ccm-dashboard-content {
     margin-right: 320px;
+
+    div.ccm-dashboard-form-actions-wrapper {
+      padding: 0px 335px 15px 15px;
+    }
   }
 }
 
@@ -69,9 +73,11 @@ div#ccm-dashboard-content {
         bottom: 0px;
         left: 0px;
         width: 100%;
-        padding: 0px 335px 15px 15px;
+        padding: 0px 15px 15px 15px;
 
-        div.ccm-dashboard-form-actions {
+      .transition(padding cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s);
+
+      div.ccm-dashboard-form-actions {
             .clearfix;
             background-color: #242729;
             padding: 20px;
@@ -149,5 +155,9 @@ div#ccm-dashboard-content {
 @media (max-width: @screen-md) {
   div#ccm-dashboard-content {
     margin-right: 0px !important;
+
+    div.ccm-dashboard-form-actions-wrapper {
+      padding-right: 15px !important;
+    }
   }
 }
