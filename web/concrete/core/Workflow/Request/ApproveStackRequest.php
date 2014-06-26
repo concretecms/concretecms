@@ -3,16 +3,13 @@ namespace Concrete\Core\Workflow\Request;
 use Workflow;
 use Loader;
 use Page;
-use \Concrete\Core\Workflow\Description as WorkflowDescription;
-use Permissions;
-use PermissionKey;
 use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use CollectionVersion;
 use Events;
-use \Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
+use Stack;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
-abstract class ApproveStackRequest extends PageRequest {
+class ApproveStackRequest extends ApprovePageRequest {
 
 	public function approve(WorkflowProgress $wp) {
 		$s = Stack::getByID($this->getRequestedPageID());

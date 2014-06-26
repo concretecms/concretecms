@@ -20,7 +20,6 @@ div#ccm-menu-highlighter {
     .transition(background-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000));
 }
 
-
 /**
  * Blocks AND areas
  */
@@ -35,13 +34,12 @@ div.ccm-block-edit, div.ccm-area, div.ccm-area-disabled {
  */
 div.ccm-block-type-sorting {
     border: 1px solid darken(@wellBackground, 7%);
-    .box-shadow(0px 0px 2px 0px rgba(0,0,0,0.5));
+    .box-shadow(0px 0px 2px 0px rgba(0, 0, 0, 0.5));
     overflow: hidden;
     padding: 10px;
-    background-color: rgba(128,128,128,0.1);
+    background-color: rgba(128, 128, 128, 0.1);
     .rotate(5deg);
 }
-
 
 /**
  * Blocks
@@ -68,7 +66,6 @@ div.ccm-block-edit.ccm-menu-item-hover, div.ccm-block-edit.ccm-block-highlight {
     }
 }
 
-
 /**
  * Areas
   */
@@ -91,12 +88,11 @@ div.ccm-area {
             height: 10px;
             margin-top: 2px;
             margin-bottom: 2px;
-            border: 2px solid rgba(0,0,0,0);
+            border: 2px solid rgba(0, 0, 0, 0);
         }
     }
 
     .ccm-area-block-dropzone-over {
-
 
         .ccm-area-block-dropzone-inner {
             border: 2px solid #0c6;
@@ -104,6 +100,7 @@ div.ccm-area {
     }
 
 }
+
 div.ccm-area:hover,
 div.ccm-area.ccm-parent-menu-item-hover,
 div.ccm-area.ccm-parent-menu-item-active,
@@ -143,7 +140,6 @@ div.ccm-area-footer {
         }
     }
 }
-
 
 /**
  * Hovering over areas
@@ -208,7 +204,6 @@ div#ccm-menu-highlighter.ccm-area-highlight {
     opacity: 0.1;
 }
 
-
 /**
  * Inline edit mode tweaks
  */
@@ -237,8 +232,6 @@ div#ccm-menu-highlighter.ccm-block-highlight {
     opacity: 0.4;
 }
 
-
-
 /**
  * Inline commands
  */
@@ -251,7 +244,7 @@ ul.ccm-edit-mode-inline-commands {
     top: 0px;
     right: 0px;
     height: 20px !important;
-    background: rgba(255,255,255,0.8);
+    background: rgba(255, 255, 255, 0.8);
     z-index: @index-level-inline-commands; // has to be over the click proxy
     li {
         display: inline-block;
@@ -293,21 +286,15 @@ ul.ccm-edit-mode-inline-commands:hover {
     .opacity(1);
 }
 
-
-
-
-
-
-
 /**
  * In page menus
  */
 #ccm-popover-menu-container div.popover {
 
     &.ccm-popover-inverse {
-        background-color: rgba(0,0,0,0.6) !important;
+        background-color: rgba(0, 0, 0, 0.6) !important;
         ul.dropdown-menu {
-            background-color: rgba(0,0,0,0.6) !important;
+            background-color: rgba(0, 0, 0, 0.6) !important;
             li {
                 span {
                     color: #444245;
@@ -325,7 +312,6 @@ ul.ccm-edit-mode-inline-commands:hover {
             }
         }
     }
-
 
     ul.dropdown-menu {
 
@@ -347,43 +333,42 @@ ul.ccm-edit-mode-inline-commands:hover {
 
         li {
 
-        display: block;
-
-
-        a, span {
-            text-decoration: none !important;
-            padding: 3px 12px !important;
-            color: #999;
             display: block;
+
+            a, span {
+                text-decoration: none !important;
+                padding: 3px 12px !important;
+                color: #999;
+                display: block;
+            }
+            a:hover {
+                color: #000;
+                background-image: none !important;
+                background-color: transparent !important;
+            }
+
+            font-family: @baseFontFamily !important;
+            font-size: @font-size-base !important;
+            line-height: @baseLineHeight !important;
+
         }
-        a:hover {
-            color: #000;
-            background-image: none !important;
-            background-color: transparent !important;
+
+        .divider {
+            margin: 9px 1px !important;
         }
-
-
-
-        font-family: @baseFontFamily !important;
-        font-size: @font-size-base !important;
-        line-height: @baseLineHeight !important;
-
-        }
-
-        .divider {margin: 9px 1px !important;}
     }
 
 }
 
 .ccm-ui div.popover ul.dropdown-menu a:hover {
-  color: @dropdownLinkColor !important;
-  text-decoration: none !important;
- }
+    color: @dropdownLinkColor !important;
+    text-decoration: none !important;
+}
 
- /*
-  * Korvin's new stuff
-  */
- div.ccm-area-drag-area {
+/*
+ * Korvin's new stuff
+ */
+div.ccm-area-drag-area {
     -webkit-transition: outline-width 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000), outline-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000);
     outline-color: transparent;
     outline-style: solid;
@@ -413,6 +398,10 @@ a.ccm-block-edit-drag, a.ccm-panel-add-block-draggable-block-type-dragger {
     left: 0px;
     width: 90px;
     height: 90px;
+    z-index: 1000000;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+    cursor: grabbing;
 }
 
 /**
@@ -426,5 +415,5 @@ div.ccm-edit-mode-disabled-item {
     color: #666;
     font-family: @font-family-sans-serif;
     font-size: @font-size-base;
-    font-weight:200;
+    font-weight: 200;
 }

@@ -56,14 +56,10 @@ $list->registerProviders(require DIR_BASE_CORE . '/config/services.php');
 
 /**
  * ----------------------------------------------------------------------------
- * Handle trailing slashes/non trailing slashes in URL. Has to come after
- * we define our core services because our redirect routines use some of those
- * services. Setup file cache directories. Has to come after we define services
+ * Setup file cache directories. Has to come after we define services
  * because we use the file service.
  * ----------------------------------------------------------------------------
  */
-$cms->handleURLSlashes();
-$cms->handleBaseURLRedirection();
 $cms->setupFilesystem();
 
 /**
@@ -158,6 +154,15 @@ $loc->setLocale($lan);
  * ----------------------------------------------------------------------------
  */
 require DIR_BASE_CORE . '/bootstrap/preferences.php';
+
+/**
+ * ----------------------------------------------------------------------------
+ * Redirect user based on their trailing or non-trailing slash. Must come after
+ * preferences because we use the pretty URLs preference.
+ * ----------------------------------------------------------------------------
+ */
+$cms->handleBaseURLRedirection();
+$cms->handleURLSlashes();
 
 /**
  * ----------------------------------------------------------------------------

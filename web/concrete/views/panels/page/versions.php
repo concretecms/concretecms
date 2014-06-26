@@ -11,7 +11,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 </script>
 
 <script type="text/template" class="version">
-	<tr>
+	<tr <% if (cv.cvIsApproved == 1) { %> class="ccm-panel-page-version-approved" <% } %>>
 		<td><input type="checkbox" name="cvID[]" value="<%-cv.cvID%>" data-version-active="<%-cv.cvIsApproved == 1%>" /></td>
 		<td><span class="ccm-panel-page-versions-version-id"><%-cv.cvID%></span></td>
 		<td class="ccm-panel-page-versions-details">
@@ -25,7 +25,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<% if (cv.cvIsApproved == 1) { %>
 				<i class="fa fa-ok" title="<?=t('This is the approved page version.')?>"></i>
 			<% } %>
-			<a href="#" class="ccm-panel-page-versions-version-menu" data-launch-versions-menu="ccm-panel-page-versions-version-menu-<%-cv.cvID%>"><i class="fa fa-share-alt"></i></a>
+			<a href="#" class="ccm-panel-page-versions-version-menu" data-launch-versions-menu="ccm-panel-page-versions-version-menu-<%-cv.cvID%>"><i class="fa fa-share"></i></a>
 			<div class="ccm-popover-inverse popover fade" data-menu="ccm-panel-page-versions-version-menu-<%-cv.cvID%>">
 				<div class="popover-inner">
 				<ul class="dropdown-menu">
@@ -282,7 +282,7 @@ $(function() {
 
 <section id="ccm-panel-page-versions" class="ccm-ui">
 	<header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="fa fa-chevron-left"></span></a> <?=t('Versions')?></header>
-	<table>
+	<table class="table">
 		<thead>
 			<tr>
 				<th><input type="checkbox" /></th>

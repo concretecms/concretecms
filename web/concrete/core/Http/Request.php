@@ -38,10 +38,10 @@ class Request extends SymfonyRequest {
 	}
 
 	public static function getInstance() {
-		if (null === self::$_request) {
-			self::$_request = Request::createFromGlobals();
+		if (null === static::$_request) {
+			static::$_request = static::createFromGlobals();
 		}
-		return self::$_request;
+		return static::$_request;
 	}
 
 	/** 

@@ -225,7 +225,7 @@ use Loader;
 		 *         $e = $val->getError();
 		 *     }
 		 * </code>
-		 * @return ValidationErrorHelper
+		 * @return \Concrete\Core\Error\Error
 		 */
 		public function getError() {
 			return $this->error;

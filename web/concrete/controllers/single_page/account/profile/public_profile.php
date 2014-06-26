@@ -6,19 +6,19 @@ use User;
 use UserInfo;
 use Exception;
 
-class Public extends AccountPageController {
-	
+class PublicProfile extends AccountPageController {
+
 	public function save_complete() {
 		$this->set('success', t('Profile updated successfully.'));
 		$this->view();
 	}
-	
+
 	public function view($userID = 0) {
 		if(!ENABLE_USER_PROFILES) {
 			header("HTTP/1.0 404 Not Found");
 			$this->render("/page_not_found");
 		}
-		
+
 		$html = Loader::helper('html');
 		$canEdit = false;
 		$u = new User();
@@ -45,5 +45,5 @@ class Public extends AccountPageController {
 		$this->set('t', Loader::helper('text'));
 		$this->set('canEdit',$canEdit);
 	}
-	
+
 }

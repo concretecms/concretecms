@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Concrete\Core\User;
 use \Concrete\Core\Foundation\Object;
 use Loader;
@@ -25,7 +25,7 @@ class User extends Object {
 	// an associative array of all access entity objects that are associated with this user.
 	protected $accessEntities = array();
 	protected $hasher;
-	
+
 	/** Return an User instance given its id (or null if it's not found)
 	* @param int $uID The id of the user
 	* @param boolean $login = false Set to true to make the user the current one
@@ -83,7 +83,7 @@ class User extends Object {
 
 	public function checkLogin() {
 
-		
+
 		$aeu = Config::get('ACCESS_ENTITY_UPDATED');
 		if ($aeu && $aeu > Session::get('accessEntitiesUpdated')) {
 			User::refreshUserGroups();
@@ -120,7 +120,7 @@ class User extends Object {
 			$username = $args[0];
 			$password = $args[1];
 			if (!$args[2]) {
-				Session::remove('uGroups');	
+				Session::remove('uGroups');
 				Session::remove('accessEntities');
 			}
 			$v = array($username);
@@ -132,9 +132,9 @@ class User extends Object {
 			$db = Loader::db();
 			$r = $db->query($q, $v);
 			if ($r) {
-				$row = $r->fetchRow(); 
+				$row = $r->fetchRow();
 				$pw_is_valid_legacy = (defined('PASSWORD_SALT') && User::legacyEncryptPassword($password) == $row['uPassword']);
-				$pw_is_valid = $pw_is_valid_legacy || $this->getUserPasswordHasher()->checkPassword($password, $row['uPassword']); 
+				$pw_is_valid = $pw_is_valid_legacy || $this->getUserPasswordHasher()->checkPassword($password, $row['uPassword']);
 				if ($row['uID'] && $row['uIsValidated'] === '0' && defined('USER_VALIDATE_EMAIL') && USER_VALIDATE_EMAIL == TRUE) {
 					$this->loadError(USER_NON_VALIDATED);
 				} else if ($row['uID'] && $row['uIsActive'] && $pw_is_valid) {
@@ -168,15 +168,15 @@ class User extends Object {
 				}
 				$r->free();
 				if ($pw_is_valid_legacy) {
-					// this password was generated on a previous version of Concrete5. 
+					// this password was generated on a previous version of Concrete5.
 					// We re-hash it to make it more secure.
 					$v = array($this->getUserPasswordHasher()->HashPassword($password), $this->uID);
 					$db->execute($db->prepare("update Users set uPassword = ? where uID = ?"), $v);
 				}
 			} else {
-				$this->getUserPasswordHasher()->hashpassword($password); // hashpassword and checkpassword are slow functions. 
+				$this->getUserPasswordHasher()->hashpassword($password); // hashpassword and checkpassword are slow functions.
 								 	// We run one here just take time.
-									// Without it an attacker would be able to tell that the 
+									// Without it an attacker would be able to tell that the
 									// username doesn't exist using a timing attack.
 				$this->loadError(USER_INVALID);
 			}
@@ -237,13 +237,13 @@ class User extends Object {
 		$db->query("insert into PageStatistics (cID, uID, date) values (?, ?, NOW())", $v);
 
 	}
-	
+
     // $salt is retained for compatibilty with older versions of concerete5, but not used.
 	public function encryptPassword($uPassword, $salt = null) {
 		return $this->getUserPasswordHasher()->HashPassword($uPassword);
     }
 
-	// this is for compatibility with passwords generated in older versions of Concrete5. 
+	// this is for compatibility with passwords generated in older versions of Concrete5.
 	// Use only for checking password hashes, not generating new ones to store.
 	public function legacyEncryptPassword($uPassword) {
 		return md5($uPassword . ':' . PASSWORD_SALT);
@@ -334,7 +334,7 @@ class User extends Object {
 			list($_uID, $authType, $uHash) = explode(':', $_COOKIE['ccmAuthUserHash']);
 			$at = AuthenticationType::getByHandle($authType);
 			$u = User::getByUserID($_uID);
-			if ($u->isError()) {
+			if ((!is_object($u)) || $u->isError()) {
 				return;
 			}
 			if ($at->controller->verifyHash($u, $uHash)) {
@@ -348,13 +348,13 @@ class User extends Object {
 		$gs->filterByUserID($this->uID);
 		return $gs->get();
 	}
-	
+
 	function getUserGroups() {
 		return $this->uGroups;
 	}
 
-	/** 
-	 * Sets a default language for a user record 
+	/**
+	 * Sets a default language for a user record
 	 */
 	public function setUserDefaultLanguage($lang) {
 		$db = Loader::db();
@@ -420,7 +420,7 @@ class User extends Object {
 			$db = Loader::db();
 			if ($this->uID) {
 				$ug[REGISTERED_GROUP_ID] = REGISTERED_GROUP_ID;
-				
+
 				$uID = $this->uID;
 				$q = "select Groups.gID, Groups.gName, Groups.gUserExpirationIsEnabled, Groups.gUserExpirationSetDateTime, Groups.gUserExpirationInterval, Groups.gUserExpirationAction, Groups.gUserExpirationMethod, UserGroups.ugEntered from UserGroups inner join Groups on (UserGroups.gID = Groups.gID) where UserGroups.uID = '$uID'";
 				$r = $db->query($q);
@@ -492,10 +492,10 @@ class User extends Object {
 					$ui = CoreUserInfo::getByID($this->getUserID());
 					$mh->addParameter('badgeName', $g->getGroupName());
 					$mh->addParameter('uDisplayName', $ui->getUserDisplayName());
-					$mh->addParameter('uProfileURL', BASE_URL . View::url('/account/profile/public', 'view', $this->getUserID()));
+					$mh->addParameter('uProfileURL', BASE_URL . View::url('/account/profile/public_profile', 'view', $this->getUserID()));
 					$mh->to($ui->getUserEmail());
 					$mh->load('won_badge');
-					$mh->sendMail();						
+					$mh->sendMail();
 				}
 
 				$ue = new \Concrete\Core\User\Event\UserGroup($this);
@@ -535,7 +535,7 @@ class User extends Object {
 		// so you can work on it without the system failing because you're editing a template
 		Session::set('mcEditID', $mcID);
 		Session::set('ocID', $ocID);
-	
+
 	}
 
 	function loadCollectionEdit(&$c) {
@@ -583,7 +583,7 @@ class User extends Object {
 					$p->refreshCache();
 				}
 			}
-			
+
 			$q = "update Pages set cIsCheckedOut = 0, cCheckedOutUID = null, cCheckedOutDatetime = null, cCheckedOutDatetimeLastEdit = null where cCheckedOutUID = ?";
 			$db->query($q, array($this->getUserID()));
 		}

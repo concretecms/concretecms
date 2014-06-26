@@ -270,6 +270,10 @@ class StartingPointPackage extends BasePackage {
 		$home->assignPermissions($g1, array('view_page'));
 		$home->assignPermissions($g3, array('view_page_versions', 'view_page_in_sitemap', 'preview_page_as_user', 'edit_page_properties', 'edit_page_contents', 'edit_page_speed_settings', 'edit_page_theme', 'edit_page_template', 'edit_page_permissions', 'delete_page', 'delete_page_versions', 'approve_page_versions', 'add_subpage', 'move_or_copy_page', 'schedule_page_contents_guest_access'));
 
+        // login
+        $dashboard = Page::getByPath('/login', "RECENT");
+        $dashboard->assignPermissions($g1, array('view_page'));
+
 		// dashboard
 		$dashboard = Page::getByPath('/dashboard', "RECENT");
 		$dashboard->assignPermissions($g3, array('view_page'));

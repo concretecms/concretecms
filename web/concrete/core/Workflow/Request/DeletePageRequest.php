@@ -3,12 +3,14 @@ namespace Concrete\Core\Workflow\Request;
 use Workflow;
 use Loader;
 use Page;
+use Stack;
 use \Concrete\Core\Workflow\Description as WorkflowDescription;
 use Permissions;
 use PermissionKey;
 use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use CollectionVersion;
 use Events;
+use URL;
 use \Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 class DeletePageRequest extends PageRequest {
@@ -57,7 +59,7 @@ class DeletePageRequest extends PageRequest {
 			$c = Stack::getByID($this->getRequestedPageID());
 			$c->delete();
 			$wpr = new WorkflowProgressResponse();
-			$wpr->setWorkflowProgressResponseURL(View::url('/dashboard/blocks/stacks', 'stack_deleted'));
+			$wpr->setWorkflowProgressResponseURL(URL::to('/dashboard/blocks/stacks', 'stack_deleted'));
 			return $wpr;
 		}
 

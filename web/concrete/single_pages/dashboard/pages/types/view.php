@@ -19,16 +19,18 @@
 	$pk = PermissionKey::getByHandle('access_page_type_permissions');
 	 ?>
 
+    <div class="ccm-dashboard-header-buttons">
+        <a href="<?=$view->url('/dashboard/pages/types/add')?>" class="btn btn-small btn-primary pull-right"><?=t('Add Page Type')?></a>
+    </div>
 
-	<? if (count($pagetypes) > 0) { ?>
+
+    <? if (count($pagetypes) > 0) { ?>
 
 	<table class="table table-striped">
 	<thead>
 		<tr>
 			<th><?=t('Name')?></th>
-			<td class="page-type-tasks">
-				<a href="<?=$view->url('/dashboard/pages/types/add')?>" class="btn btn-small btn-primary pull-right"><?=t('Add Page Type')?></a>
-			</td>
+            <th></th>
 		</tr>
 	</thead>
 	<tbody>

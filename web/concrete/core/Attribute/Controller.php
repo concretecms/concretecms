@@ -3,6 +3,7 @@ namespace Concrete\Core\Attribute;
 
 use \Concrete\Core\Controller\AbstractController;
 use Loader;
+use Core;
 use \Concrete\Core\Attribute\View as AttributeTypeView;
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 
@@ -10,7 +11,11 @@ class Controller extends AbstractController
 {
 
     protected $identifier;
+    /** @var \Concrete\Core\Attribute\Key\Key */
     protected $attributeKey;
+    /** @var \Concrete\Core\Attribute\Value\Value */
+    protected $attributeValue;
+    protected $searchIndexFieldDefinition;
     protected $requestArray = false;
 
     public function setRequestArray($array)
@@ -74,7 +79,6 @@ class Controller extends AbstractController
 
     }
 
-
     protected function getAttributeValueID()
     {
         if (is_object($this->attributeValue)) {
@@ -94,9 +98,14 @@ class Controller extends AbstractController
         } else {
             $text = $customText;
         }
-        print Loader::helper('form')->label($this->field('value'), $text);
+        /** @var \Concrete\Core\Form\Service\Form $form */
+        $form = Core::make('helper/form');
+        print $form->label($this->field('value'), $text);
     }
 
+    /**
+     * @param \Concrete\Core\Attribute\Type $attributeType
+     */
     public function __construct($attributeType)
     {
         $this->identifier = $attributeType->getAttributeTypeID();
@@ -190,16 +199,20 @@ class Controller extends AbstractController
         return $queryBuilder->expr()->like('ak_' . $this->attributeKey->getAttributeKeyHandle(), ':keywords');
     }
 
-    /* Automatically run when an attribute key is added or updated
-    * @return ValidationError
-    */
+    /**
+     * Automatically run when an attribute key is added or updated
+     * @param bool|array $args
+     * @return \Concrete\Core\Error\Error
+     */
     public function validateKey($args = false)
     {
         if ($args == false) {
             $args = $this->post();
         }
-        $val = Loader::helper('validation/form');
-        $valt = Loader::helper('validation/token');
+        /** @var \Concrete\Core\Form\Service\Validation $val */
+        $val = Core::make('helper/validation/form');
+        /** @var \Concrete\Core\Validation\CSRF\Token $valt */
+        $valt = Core::make('helper/validation/token');
         $val->setData($args);
         $val->addRequired("akHandle", t("Handle required."));
         $val->addRequired("akName", t('Name required.'));
@@ -211,7 +224,9 @@ class Controller extends AbstractController
             $error->add($valt->getErrorMessage());
         }
 
-        if (preg_match("/[^A-Za-z0-9_]/", $args['akHandle'])) {
+        /** @var \Concrete\Core\Utility\Service\Validation\Strings $stringValidator */
+        $stringValidator = Core::make('helper/validation/strings');
+        if (!$stringValidator->handle($args['akHandle'])) {
             $error->add(t('Attribute handles may only contain letters, numbers and underscore "_" characters'));
         }
 

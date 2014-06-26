@@ -9,7 +9,7 @@ class Controller extends BlockController {
 	public function getBlockTypeDescription() {
 		return t("Places a discussion a page.");
 	}
-	
+
 	public function getBlockTypeName() {
 		return t("Discussion");
 	}
@@ -53,7 +53,7 @@ class Controller extends BlockController {
 			}
 			if ($this->itemsPerPage > 0) {
 				$dl->setItemsPerPage($this->itemsPerPage);
-				$this->requireAsset('core/frontend/pagination');
+				$this->requireAsset('css', 'core/frontend/pagination');
 			}
 			$pages = $dl->getPage();
 			$this->set('reqOrderBy', $orderBy);
