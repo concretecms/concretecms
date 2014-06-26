@@ -16,10 +16,24 @@
 
         var container = $('div.preview-frame-container'),
             frame = container.children('iframe'),
-            loader = container.children('div.loader');
+            loader = container.children('div.loader'),
+            form;
 
         Concrete.event.bind('PanelOpenDetail', function(e) {
             Concrete.event.unsubscribe(e);
+
+            var bind = _.once(function() {
+                form = $('form.preview-panel-form');
+                form.change(function() {
+                    handleChange();
+                });
+                form.find('button').click(function() {
+                    handleChange();
+                });
+                form.find('input').keydown(_.debounce(function() {
+                    handleChange();
+                }, 1000));
+            });
 
             frame.load(function() {
                 _.defer(function() {
@@ -29,6 +43,7 @@
                 });
                 frame.fadeIn();
                 loader.fadeOut();
+                bind();
             });
 
         });
@@ -60,17 +75,7 @@
             loader.fadeIn(250, function() {
                 frame.attr('src', src);
             });
-        };
-        var form = $('form.preview-panel-form');
-        form.change(function() {
-            handleChange();
-        });
-        form.find('button').click(function() {
-            handleChange();
-        });
-        form.find('input').keydown(_.debounce(function() {
-            handleChange();
-        }, 1000));
+        }
 
     }(window, jQuery, _));
 </script>
