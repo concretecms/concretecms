@@ -37,7 +37,7 @@ div[data-container=editable-fields] section {
 </form>
 
 
-<div class="container" data-container="editable-fields">
+<div class="container-fluid" data-container="editable-fields">
 
 <section>
 	<div class="row">
