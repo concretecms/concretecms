@@ -260,8 +260,49 @@ class PageListTest extends \PageTestCase {
 
     public function testIndexedSearch()
     {
+        $c = Page::getByPath('/another-fun-page');
+        $c->update(array('cDescription' => 'A page of all pages.'));
+        $c->reindex();
+
+        $this->list->filterByFulltextKeywords('Page');
+        $this->list->sortByRelevance();
+        $results = $this->list->getResults();
+        $this->assertEquals(5, count($results));
+
+        $this->assertEquals(8, $results[0]->getCollectionID());
+        $this->assertGreaterThan(0, $results[0]->getPageIndexScore());
+        $this->assertGreaterThan(0, $results[1]->getPageIndexScore());
+        $this->assertEquals($results[1]->getPageIndexScore(), $results[2]->getPageIndexScore());
+    }
+
+    public function testFilterByName()
+    {
+        $this->list->filterByName('Brace Yourself', true);
+        $this->assertEquals(1, $this->list->getTotalResults());
+
+        $nl = new \Concrete\Core\Page\PageList();
+        $nl->ignorePermissions();
+        $nl->filterByName('Foo', false);
+        $this->assertEquals(3, $nl->getTotalResults());
+    }
+
+    public function testFilterByPath()
+    {
+
+        $this->createPage('More Fun', '/test-page-1/foobler');
+
+        $this->list->filterByPath('/test-page-1');
+        $totalResults = $this->list->getTotalResults();
+        $this->assertEquals(2, $totalResults);
+        $nl = new \Concrete\Core\Page\PageList();
+        $nl->ignorePermissions();
+        $nl->filterbyPath('/test-page-1', false);
+        $pagination = $nl->getPagination();
+        $this->assertEquals(1, $pagination->getNBResults());
 
     }
+
+
 
 }
  

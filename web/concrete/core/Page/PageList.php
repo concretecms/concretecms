@@ -24,7 +24,12 @@ class PageList extends DatabaseItemList
     protected $autoSortColumns = array('cv.cvName', 'cv.cvDatePublic', 'c.cDateAdded', 'c.cDateModified');
 
     protected $attributeClass = 'FileAttributeKey';
-    protected $isIndexedSearch = false;
+
+    /**
+     * Whether this is a search using fulltext.
+     */
+    protected $isFulltextSearch = false;
+
     /**
      * Whether to include system pages (login, etc...) in this query.
      * @var bool
@@ -67,8 +72,8 @@ class PageList extends DatabaseItemList
         $this->includeSystemPages = true;
     }
 
-    public function isIndexedSearch() {
-        return $this->isIndexedSearch;
+    public function isFulltextSearch() {
+        return $this->isFulltextSearch();
     }
 
     public function createQuery()
@@ -96,7 +101,8 @@ class PageList extends DatabaseItemList
                 ->leftJoin('p', 'PageTypes', 'pt', 'pt.ptID = if(pa.cID is null, p.ptID, pa.ptID)')
                 ->leftJoin('p', 'CollectionSearchIndexAttributes', 'csi', 'csi.cID = if(pa.cID is null, p.cID, pa.cID)')
                 ->innerJoin('p', 'CollectionVersions', 'cv', 'cv.cID = if(pa.cID is null, p.cID, pa.cID)')
-                ->innerJoin('p', 'Collections', 'c', 'p.cID = c.cID');
+                ->innerJoin('p', 'Collections', 'c', 'p.cID = c.cID')
+                ->andWhere('p.cIsTemplate = 0 or pa.cIsTemplate = 0');
         } else {
             $query->from('Pages', 'p')
                 ->leftJoin('p', 'PagePaths', 'pp', '(p.cID = pp.cID and pp.ppIsCanonical = true)')
@@ -105,29 +111,14 @@ class PageList extends DatabaseItemList
                 ->leftJoin('c', 'CollectionSearchIndexAttributes', 'csi', 'c.cID = csi.cID')
                 ->innerJoin('p', 'Collections', 'c', 'p.cID = c.cID')
                 ->innerJoin('p', 'CollectionVersions', 'cv', 'p.cID = cv.cID and cvIsApproved = 1')
-                ->andWhere('p.cPointerID < 1');
-        }
-        /*
-        if ($this->includeAliases) {
-            inner join Collections c on (c.cID = if(p2.cID is null, p1.cID, p2.cID))');
-        } else {
-            $this->setQuery('select p1.cID, pt.ptHandle ' . $ik . $additionalFields . ' from Pages p1 left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = p1.cID) inner join CollectionVersions cv on (cv.cID = p1.cID and cvID = ' . $cvID . ') left join PageTypes pt on (pt.ptID = p1.ptID)  inner join Collections c on (c.cID = p1.cID)');
+                ->andWhere('p.cPointerID < 1')
+                ->andWhere('p.cIsTemplate = 0');
         }
 
-        if ($this->includeAliases) {
-            $this->filter(false, "(p1.cIsTemplate = 0 or p2.cIsTemplate = 0)");
-        } else {
-            $this->filter('p1.cIsTemplate', 0);
+        if ($this->isFulltextSearch) {
+            $query->addSelect('match(ps.cName, ps.cDescription, ps.content) against (:fulltext) as cIndexScore');
         }
 
-        $this->setupPermissions();
-
-        if ($this->includeAliases) {
-            $this->setupAttributeFilters("left join CollectionSearchIndexAttributes on (CollectionSearchIndexAttributes.cID = if (p2.cID is null, p1.cID, p2.cID))");
-        } else {
-            $this->setupAttributeFilters("left join CollectionSearchIndexAttributes on (CollectionSearchIndexAttributes.cID = p1.cID)");
-        }
-        */
         if (!$this->includeInactivePages) {
             $query->andWhere('p.cIsActive = :cIsActive');
             $query->setParameter('cIsActive', true);
@@ -160,6 +151,9 @@ class PageList extends DatabaseItemList
     {
         $c = ConcretePage::getByID($queryRow['cID']);
         if (is_object($c) && $this->checkPermissions($c)) {
+            if (isset($queryRow['cIndexScore'])) {
+                $c->setPageIndexScore($queryRow['cIndexScore']);
+            }
             return $c;
         }
     }
@@ -212,6 +206,47 @@ class PageList extends DatabaseItemList
         }
     }
 
+    /**
+     * Filters a list by page name.
+     * @param $name
+     * @param bool $exact
+     */
+    public function filterByName($name, $exact = false)
+    {
+        if ($exact) {
+            $this->query->andWhere('cv.cvName = :cvName');
+            $this->query->setParameter('cvName', $name);
+        } else {
+            $this->query->andWhere(
+                $this->query->expr()->like('cv.cvName', ':cvName')
+            );
+            $this->query->setParameter('cvName', '%' . $name . '%');
+        }
+    }
+
+    /**
+     * Filter a list by page path.
+     * @param $path
+     * @param bool $includeAllChildren
+     */
+    public function filterByPath($path, $includeAllChildren = true)
+    {
+        if (!$includeAllChildren) {
+            $this->query->andWhere('pp.cPath = :cPath');
+            $this->query->setParameter('cPath', $path);
+        } else {
+            $this->query->andWhere(
+                $this->query->expr()->like('pp.cPath', ':cPath')
+            );
+            $this->query->setParameter('cPath', $path . '/%');
+        }
+        $this->query->andWhere('pp.ppIsCanonical = 1');
+    }
+
+    /**
+     * Filters keyword fields by keywords (including name, description, content, and attributes.
+     * @param $keywords
+     */
     public function filterByKeywords($keywords)
     {
         $expressions = array(
@@ -228,6 +263,30 @@ class PageList extends DatabaseItemList
         $expr = $this->query->expr();
         $this->query->andWhere(call_user_func_array(array($expr, 'orX'), $expressions));
         $this->query->setParameter('keywords', '%' . $keywords . '%');
+    }
+
+    public function filterByFulltextKeywords($keywords)
+    {
+        $this->isFulltextSearch = true;
+        $this->autoSortColumns[] = 'cIndexScore';
+        $this->query->where('match(ps.cName, ps.cDescription, ps.content) against (:fulltext)');
+        $this->query->setParameter('fulltext', $keywords);
+    }
+
+    /**
+     * Sorts this list by display order
+     */
+    public function sortByDisplayOrder()
+    {
+        $this->query->orderBy('p.cID', 'asc');
+    }
+
+    /**
+     * Sorts this list by display order descending
+     */
+    public function sortByDisplayOrderDescending()
+    {
+        $this->query->orderBy('p.cID', 'desc');
     }
 
     /**
@@ -254,6 +313,15 @@ class PageList extends DatabaseItemList
         $this->query->orderBy('cv.cvName', 'desc');
     }
 
+    /**
+     * Sorts by fulltext relevance (requires that the query be fulltext-based
+     */
+    public function sortByRelevance()
+    {
+        if ($this->isFulltextSearch) {
+            $this->query->orderBy('cIndexScore', 'desc');
+        }
+    }
 
     public function __call($nm, $a)
     {
