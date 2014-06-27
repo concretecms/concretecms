@@ -20,12 +20,12 @@ $form = Loader::helper('form');
             <?php } ?>
             </tbody>
         </table>
-    </form>
-    <div class="ccm-dashboard-form-actions-wrapper">
-        <div class="ccm-dashboard-form-actions">
-            <?=$form->submit('save', t('Save'), array(), 'btn-primary pull-right')?>
+        <div class="ccm-dashboard-form-actions-wrapper">
+            <div class="ccm-dashboard-form-actions">
+                <?=$form->submit('save', t('Save'), array(), 'btn-primary pull-right')?>
+            </div>
         </div>
-    </div>
+    </form>
 <? } else { ?>
     <p><?=t('There are no Community Points Rating Types installed.')?></p>
 <? } ?>
