@@ -27,6 +27,7 @@ $form = Loader::helper('form');
                     <?=$form->select('miIsEnabled', $enabledVals, $mi->isMailImporterEnabled())?>
                 </div>
             </fieldset>
+            <div class="spacer-row-2"></div>
             <fieldset>
                 <legend><?=t('POP Mail Server Authentication Settings')?></legend>
                 <div class="form-group">
