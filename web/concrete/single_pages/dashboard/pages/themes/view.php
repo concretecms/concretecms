@@ -32,8 +32,6 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
         <?=$bt->button(t("Ok"), $activate_confirm, 'right', 'btn btn-primary');?>
     	<?=$bt->button(t('Cancel'), $view->url('/dashboard/pages/themes/'), 'left');?>
 
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
-    	
     
 	<? } else { ?>
     
@@ -43,9 +41,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 	// Separate inclusion of dashboard header and footer helpers - no pane footer.
 	
 	?>
-    
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Themes'), false, 'span10 offset1');?>
-	
+
 	<h3><?=t('Currently Installed')?></h3>
 	
 	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table">
@@ -166,6 +162,4 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
     
     <? } ?>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper()?>
-	
 	<? } // END 'ELSE' DEFAULT LISTING ?>	
