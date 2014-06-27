@@ -1,8 +1,8 @@
 function toggleCustomPage(value) {
     if (value == "custom") {
-        $("#ccm-autonav-page-selector").css('display', 'block');
+        $("#ccm-autonav-page-selector", container).slideDown();
     } else {
-        $("#ccm-autonav-page-selector").hide();
+        $("#ccm-autonav-page-selector", container).slideUp();
     }
 }
 
@@ -18,52 +18,54 @@ function toggleSubPageLevels(value) {
 
 function toggleSubPageLevelsNum(value) {
     if (value == "custom") {
-        $("#divSubPageLevelsNum").css('display', 'block');
+        $("#divSubPageLevelsNum").slideDown();
     } else {
-        $("#divSubPageLevelsNum").hide();
+        $("#divSubPageLevelsNum").slideUp();
     }
 }
 
 
-var preview_container, preview_loader, preview_render;
+var container, preview_container, preview_loader, preview_render;
 
 var autonav = {
-    showLoader: function () {
-        preview_loader.show();
-        preview_render.hide();
+    showLoader: function (element) {
+        var position = element.position(),
+            top = position.top,
+            left = position.left + element.closest('.form-group').width() + 10;
+
+        preview_loader.css({
+            left: left,
+            top: top
+        }).show();
     },
 
     hideLoader: function () {
         preview_loader.hide();
-        preview_render.show();
     }
 };
 
 var request = null, url = null;
-reloadPreview = function () {
+function reloadPreview(event) {
     if (!url) {
         url = $("input[name=autonavPreviewPane]").val();
     }
 
-    orderBy = $("select[name=orderBy]").val();
-    displayPages = $("select[name=displayPages]").val();
-    displaySubPages = $("select[name=displaySubPages]").val();
-    displaySubPageLevels = $("select[name=displaySubPageLevels]").val();
-    displaySubPageLevelsNum = $("input[name=displaySubPageLevelsNum]").val();
-    displayUnavailablePages = $("input[name=displayUnavailablePages]").val();
-    displayPagesCID = $("input[name=displayPagesCID]").val();
-    displayPagesIncludeSelf = $("input[name=displayUnavailablePages]").val();
+    orderBy = $("select[name=orderBy]", container).val();
+    displayPages = $("select[name=displayPages]", container).val();
+    displaySubPages = $("select[name=displaySubPages]", container).val();
+    displaySubPageLevels = $("select[name=displaySubPageLevels]", container).val();
+    displaySubPageLevelsNum = $("input[name=displaySubPageLevelsNum]", container).val();
+    displayUnavailablePages = $("input[name=displayUnavailablePages]", container).val();
+    displayPagesCID = $("input[name=displayPagesCID]", container).val();
+    displayPagesIncludeSelf = displayUnavailablePages;
 
     if (displayPages == "custom" && !displayPagesCID) {
         return false;
     }
 
-    //$("#ccm-dialog-throbber").css('visibility', 'visible');
-
-    var loaderHTML = '<div style="padding: 20px; text-align: center"><img src="' + CCM_IMAGE_PATH + '/throbber_white_32.gif"></div>';
-    $('#ccm-autonavPane-preview').html(loaderHTML);
-
-    autonav.showLoader();
+    if (event && event.target) {
+        autonav.showLoader($(event.target));
+    }
 
     if (request) {
         request.abort();
@@ -83,35 +85,36 @@ reloadPreview = function () {
         autonav.hideLoader();
         request = null;
     });
-};
-
-function reloadCCMCall() {
-    reloadPreview();
 }
 
-
-autonavShowPane = function (pane) {
-    $('ul#ccm-autonav-tabs li').each(function (num, el) {
-        $(el).removeClass('active');
-    });
-    $(document.getElementById('ccm-autonav-tab-' + pane).parentNode).addClass('active');
-    $('div.ccm-autonavPane').each(function (num, el) {
-        el.style.display = 'none';
-    });
-    $('#ccm-autonavPane-' + pane).css('display', 'block');
-    if (pane == 'preview') reloadPreview(document.blockForm);
-};
-
 Concrete.event.bind('autonav.edit.open', function() {
-    preview_container = $('div.autonav-form').find('div.preview'),
-    preview_loader = preview_container.children('.loader'),
-    preview_render = preview_container.children('.render');
+    container = $('div.autonav-form');
+    preview_container = container.find('div.preview');
+    preview_loader = container.find('div.loader');
+    preview_render = preview_container.children('div.render');
 
-    preview_container.closest('form').change(function () {
-        reloadPreview();
+    preview_container.closest('form').change(function (e) {
+        reloadPreview(e);
     });
+
+    container.find('input[name=displaySubPageLevelsNum]').keyup(_.debounce(function(e) {
+        var element = $(this).parent();
+        _.defer(function() {
+            reloadPreview();
+            autonav.showLoader(element);
+        });
+    }, 500));
 
     _.defer(function() {
         reloadPreview();
+    });
+});
+
+Concrete.event.bind('ConcreteSitemap', function() {
+    Concrete.event.bind('SitemapSelectPage', function() {
+        _.defer(function() {
+            reloadPreview();
+            autonav.showLoader($("#ccm-autonav-page-selector", container));
+        });
     });
 });

@@ -43,15 +43,21 @@ class PageSelector {
 			$('a[data-page-selector-launch={$fieldName}]').dialog();
 			$('a[data-page-selector-launch={$fieldName}]').on('click', function() {
 				var selector = $(this);
-				ConcreteEvent.unsubscribe('SitemapSelectPage');
-				ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
-					var handle = selector.attr('data-page-selector-launch');
-					var container = $('div[data-page-selector=' + handle + ']');
-					container.find('.ccm-summary-selected-item-label').html(data.title);
-					container.find('.ccm-sitemap-clear-selected-page').show();
-					container.find('input[data-page-selector=cID]').val(data.cID);
-					$.fn.dialog.closeTop();
-				});
+
+				ConcreteEvent.bind('ConcreteSitemap', function(event, sitemap) {
+                    ConcreteEvent.unbind(event);
+                    ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
+                        if (data.instance === sitemap) {
+                            ConcreteEvent.unsubscribe(e);
+                            var handle = selector.attr('data-page-selector-launch');
+                            var container = $('div[data-page-selector=' + handle + ']');
+                            container.find('.ccm-summary-selected-item-label').html(data.title);
+                            container.find('.ccm-sitemap-clear-selected-page').show();
+                            container.find('input[data-page-selector=cID]').val(data.cID);
+                            $.fn.dialog.closeTop();
+                        }
+                    });
+                });
 			});
 
 			$('a[data-page-selector-clear={$fieldName}]').click(function() {
