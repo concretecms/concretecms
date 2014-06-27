@@ -11,6 +11,11 @@ define('DB_SERVER', 'localhost');
 
 define('BASE_URL', 'http://www.dummyco.com');
 
+define('DIR_BUILDTOOLS', dirname(dirname(__FILE__)) . '/build-tools');
+if(!is_dir(DIR_BUILDTOOLS)) {
+	exec('git clone --depth 1 --single-branch --branch master https://github.com/mlocati/concrete5-build ' . escapeshellarg(DIR_BUILDTOOLS));
+}
+
 // error reporting
 PHPUnit_Framework_Error_Notice::$enabled = FALSE;
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
