@@ -154,6 +154,7 @@ $page_selector = Loader::helper('form/page_selector');
 <style type="text/css">
     div.autonav-form div.loader {
         position: absolute;
+        line-height: 34px;
     }
     div.autonav-form div.cover {
         width: 100%;

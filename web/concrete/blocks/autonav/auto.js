@@ -30,8 +30,9 @@ var container, preview_container, preview_loader, preview_render;
 var autonav = {
     showLoader: function (element) {
         var position = element.position(),
-            top = position.top,
-            left = position.left + element.closest('.form-group').width() + 10;
+            group = element.closest('.form-group'),
+            top = element.position().top,
+            left = group.position().left + group.width() + 10;
 
         preview_loader.css({
             left: left,
