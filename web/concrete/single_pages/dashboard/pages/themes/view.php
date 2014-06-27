@@ -110,7 +110,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
     		$themes[$pt->getThemeID()] = $pt->getThemeDisplayName();
     	} ?>
     	<?=$form->select('MOBILE_THEME_ID', $themes, Config::get('MOBILE_THEME_ID'))?>
-    	<?=$form->submit('save_mobile_theme', t('Save'))?>
+        <button class="btn btn-default" type="submit"><?=t('Save')?></button>
     </div>
     </form>
     <br/><br/>
