@@ -185,8 +185,6 @@
         var $body = $(window.document.body),
             scrolling = false,
             scroll_buffer = 100;
-        my.setAttr('scroller_bottom', scroller_bottom);
-        my.setAttr('scroller_top', scroller_top);
 
         function scrollLoop(block, element, amount, step, test, scroll_method, axis) {
             if (test.call()) {
@@ -1517,7 +1515,7 @@
                 settings.dragAreaBlockID = dragAreaBlockID;
             }
             $.getJSON(CCM_DISPATCHER_FILENAME, settings, function (response) {
-                my.handleAddResponse(response, area, dragAreaBlock)
+                my.handleAddResponse(response, area, dragAreaBlock);
             });
         }
     }).defaults(BlockType.prototype);
