@@ -135,7 +135,7 @@ class Stacks extends DashboardPageController {
                     $this->set('message', t('Stack approved successfully'));
                     break;
                 case 'approve_saved':
-                    $this->set('message', t('Approve request asved. You must complete the approval workflow before these changes are publicly accessible.'));
+                    $this->set('message', t('Approve request saved. You must complete the approval workflow before these changes are publicly accessible.'));
                     break;
                 case 'delete_saved':
 					$this->set('message', t('Delete request saved. You must complete the delete workflow before this stack can be deleted.'));
