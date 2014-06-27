@@ -1,36 +1,29 @@
 <?php
-defined('C5_EXECUTE') or die("Access Denied.");
-$dh = Loader::helper('concrete/dashboard');
+defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-echo $dh->getDashboardPaneHeaderWrapper(t('Logging'), t('Enables saving records of emails being sent out. This will save records even if actual email delivery is disabled on your site.'), 'span6 offset3', false);
-?>
-
-<form method="post" class="form-inline" action="<?php echo $view->action('update_logging'); ?>">
-	<div class="ccm-pane-body">	
-		<?php echo $this->controller->token->output('update_logging'); ?>
+<form method="post" action="<?php echo $view->action('update_logging'); ?>">
+	<?php echo $this->controller->token->output('update_logging'); ?>
 		
-		<div class="control-group">
-			<div class="controls">
-			<label for="ENABLE_LOG_ERRORS" class="checkbox">
-				<?php echo $fh->checkbox('ENABLE_LOG_ERRORS', 1, $intLogErrors) ?>
-			
-				<span><?php echo t('Log Application Exceptions'); ?></span>
-			</label>
-			</div>
-			<div class="controls">
-			<label class="checkbox" for="ENABLE_LOG_EMAILS">
-				<?php echo $fh->checkbox('ENABLE_LOG_EMAILS', 1, $intLogEmails) ?>
-			
-				<span><?php echo t('Log Emails Sent'); ?></span>
-			</label>
-			</div>
-		</div>		
+    <div class="form-group">
+        <div class="checkbox">
+        <label for="ENABLE_LOG_ERRORS">
+            <?php echo $fh->checkbox('ENABLE_LOG_ERRORS', 1, $intLogErrors) ?>
 
-	</div>
+            <span><?php echo t('Log Application Exceptions'); ?></span>
+        </label>
+        </div>
+        <div class="checkbox">
+        <label for="ENABLE_LOG_EMAILS">
+            <?php echo $fh->checkbox('ENABLE_LOG_EMAILS', 1, $intLogEmails) ?>
 
-	<div class="ccm-pane-footer">	
-		<?php echo $interface->submit(t('Save'), 'logging-form', 'right', 'primary'); ?>
+            <span><?php echo t('Log Emails Sent'); ?></span>
+        </label>
+        </div>
+    </div>
+
+	<div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
+		    <?php echo $interface->submit(t('Save'), 'logging-form', 'right', 'btn-primary'); ?>
+        </div>
 	</div>
 </form>
-
-<?php echo $dh->getDashboardPaneFooterWrapper(false); ?>
