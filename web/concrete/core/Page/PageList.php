@@ -24,12 +24,17 @@ class PageList extends DatabaseItemList
     protected $autoSortColumns = array('cv.cvName', 'cv.cvDatePublic', 'c.cDateAdded', 'c.cDateModified');
 
     protected $attributeClass = 'FileAttributeKey';
-
+    protected $isIndexedSearch = false;
     /**
      * Whether to include system pages (login, etc...) in this query.
      * @var bool
      */
     protected $includeSystemPages = false;
+
+    /**
+     * Whether to include aliases in the result set.
+     */
+    protected $includeAliases = false;
 
     /**
      * Whether to include inactive (deleted) pages in the query.
@@ -47,6 +52,11 @@ class PageList extends DatabaseItemList
         $this->permissionsChecker = -1;
     }
 
+    public function includeAliases()
+    {
+        $this->includeAliases = true;
+    }
+
     public function includeInactivePages()
     {
         $this->includeInactivePages = true;
@@ -57,22 +67,20 @@ class PageList extends DatabaseItemList
         $this->includeSystemPages = true;
     }
 
+    public function isIndexedSearch() {
+        return $this->isIndexedSearch;
+    }
+
     public function createQuery()
     {
-        $this->query->select('p.cID')
-            ->from('Pages', 'p')
-            ->innerJoin('p', 'Collections', 'c', 'p.cID = c.cID')
-            ->innerJoin('c', 'CollectionVersions', 'cv', 'c.cID = cv.cID and cvIsApproved = 1')
-            ->leftJoin('c', 'CollectionSearchIndexAttributes', 'csi', 'c.cID = csi.cID')
-            ->leftJoin('p', 'PageTypes', 'pt', 'p.ptID = pt.ptID')
-            ->leftJoin('p', 'PageSearchIndex', 'ps', 'p.cID = ps.cID');
+        $this->query->select('p.cID');
     }
 
     public function getTotalResults()
     {
         if ($this->permissionsChecker == -1) {
             $query = $this->deliverQueryObject();
-            return $query->select('count(distinct c.cID)')->setMaxResults(1)->execute()->fetchColumn();
+            return $query->select('count(distinct p.cID)')->setMaxResults(1)->execute()->fetchColumn();
         } else {
             return -1; // unknown
         }
@@ -80,6 +88,46 @@ class PageList extends DatabaseItemList
 
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
     {
+        if ($this->includeAliases) {
+            $query->from('Pages', 'p')
+                ->leftJoin('p', 'Pages', 'pa', 'p.cPointerID = pa.cID')
+                ->leftJoin('p', 'PagePaths', 'pp', 'p.cID = pp.cID and pp.ppIsCanonical = true')
+                ->leftJoin('pa', 'PageSearchIndex', 'ps', 'ps.cID = if(pa.cID is null, p.cID, pa.cID)')
+                ->leftJoin('p', 'PageTypes', 'pt', 'pt.ptID = if(pa.cID is null, p.ptID, pa.ptID)')
+                ->leftJoin('p', 'CollectionSearchIndexAttributes', 'csi', 'csi.cID = if(pa.cID is null, p.cID, pa.cID)')
+                ->innerJoin('p', 'CollectionVersions', 'cv', 'cv.cID = if(pa.cID is null, p.cID, pa.cID)')
+                ->innerJoin('p', 'Collections', 'c', 'p.cID = c.cID');
+        } else {
+            $query->from('Pages', 'p')
+                ->leftJoin('p', 'PagePaths', 'pp', '(p.cID = pp.cID and pp.ppIsCanonical = true)')
+                ->leftJoin('p', 'PageSearchIndex', 'ps', 'p.cID = ps.cID')
+                ->leftJoin('p', 'PageTypes', 'pt', 'p.ptID = pt.ptID')
+                ->leftJoin('c', 'CollectionSearchIndexAttributes', 'csi', 'c.cID = csi.cID')
+                ->innerJoin('p', 'Collections', 'c', 'p.cID = c.cID')
+                ->innerJoin('p', 'CollectionVersions', 'cv', 'p.cID = cv.cID and cvIsApproved = 1')
+                ->andWhere('p.cPointerID < 1');
+        }
+        /*
+        if ($this->includeAliases) {
+            inner join Collections c on (c.cID = if(p2.cID is null, p1.cID, p2.cID))');
+        } else {
+            $this->setQuery('select p1.cID, pt.ptHandle ' . $ik . $additionalFields . ' from Pages p1 left join PagePaths on (PagePaths.cID = p1.cID and PagePaths.ppIsCanonical = 1) left join PageSearchIndex psi on (psi.cID = p1.cID) inner join CollectionVersions cv on (cv.cID = p1.cID and cvID = ' . $cvID . ') left join PageTypes pt on (pt.ptID = p1.ptID)  inner join Collections c on (c.cID = p1.cID)');
+        }
+
+        if ($this->includeAliases) {
+            $this->filter(false, "(p1.cIsTemplate = 0 or p2.cIsTemplate = 0)");
+        } else {
+            $this->filter('p1.cIsTemplate', 0);
+        }
+
+        $this->setupPermissions();
+
+        if ($this->includeAliases) {
+            $this->setupAttributeFilters("left join CollectionSearchIndexAttributes on (CollectionSearchIndexAttributes.cID = if (p2.cID is null, p1.cID, p2.cID))");
+        } else {
+            $this->setupAttributeFilters("left join CollectionSearchIndexAttributes on (CollectionSearchIndexAttributes.cID = p1.cID)");
+        }
+        */
         if (!$this->includeInactivePages) {
             $query->andWhere('p.cIsActive = :cIsActive');
             $query->setParameter('cIsActive', true);
@@ -95,7 +143,7 @@ class PageList extends DatabaseItemList
     {
         if ($this->permissionsChecker == -1) {
             $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function($query) {
-                $query->select('count(distinct c.cID)')->setMaxResults(1);
+                $query->select('count(distinct p.cID)')->setMaxResults(1);
             });
             $pagination = new Pagination($this, $adapter);
         } else {
@@ -196,6 +244,14 @@ class PageList extends DatabaseItemList
     public function sortByName()
     {
         $this->query->orderBy('cv.cvName', 'asc');
+    }
+
+    /**
+     * Sorts by name in descending order.
+     */
+    public function sortByNameDescending()
+    {
+        $this->query->orderBy('cv.cvName', 'desc');
     }
 
 
