@@ -12,6 +12,9 @@ $page_selector = Loader::helper('form/page_selector');
         <input type="hidden" name="autonavPreviewPane"
                value="<?= Loader::helper('concrete/urls')->getBlockTypeToolsURL($bt) ?>/preview_pane"/>
 
+        <fieldset>
+            <legend><?= t('Settings') ?></legend>
+        </fieldset>
 
         <div class="form-group">
             <label for="orderBy"><?= t('Page Order') ?></label>
@@ -128,13 +131,17 @@ $page_selector = Loader::helper('form/page_selector');
                 <span class="input-group-addon"> levels</span>
             </div>
         </div>
+
+        <div class="loader">
+            <i class="fa fa-cog fa-spin"></i>
+        </div>
     </div>
 
     <div class="col-xs-6">
         <div class="preview">
-            <div class="loader">
-                <i class="fa fa-cog fa-spin"></i>
-            </div>
+            <fieldset>
+                <legend><?= t('Included Pages') ?></legend>
+            </fieldset>
             <div class="render">
 
             </div>
@@ -145,10 +152,8 @@ $page_selector = Loader::helper('form/page_selector');
 </div>
 
 <style type="text/css">
-    div.autonav-form div.preview > div.loader {
-        position: fixed;
-        top: 50%;
-        left: 74%;
+    div.autonav-form div.loader {
+        position: absolute;
     }
     div.autonav-form div.cover {
         width: 100%;
@@ -161,8 +166,8 @@ $page_selector = Loader::helper('form/page_selector');
         margin-left:25px;
         list-style-type: none;
     }
-    div.autonav-form div.render > ul ul > li > a {
-        padding: 10px 15px;
+    div.autonav-form div.render li a {
+        padding: 0;
         display: block;
     }
 </style>

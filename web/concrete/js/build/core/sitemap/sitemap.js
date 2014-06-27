@@ -18,6 +18,9 @@
 		my.$element = $element;
 		my.setupTree();
 		my.setupTreeEvents();
+
+        Concrete.event.publish('ConcreteSitemap', this);
+
 		return my.$element;
 	}
 
@@ -29,7 +32,7 @@
 		},
 
 		setupTree: function() {
-			var minExpandLevel, 
+			var minExpandLevel,
 				my = this,
 				doPersist = true;
 
@@ -58,7 +61,7 @@
 						'cParentID': my.options.cParentID,
 						'displaySingleLevel': my.options.displaySingleLevel ? 1 : 0,
 						'includeSystemPages': my.options.includeSystemPages ? 1 : 0
-					}, 
+					},
 
 				},
 				onPostInit: function() {
@@ -75,7 +78,7 @@
 					} else {
 						my.reloadNode(node);
 					}
-				}, 
+				},
 				onExpand: function(expand, node) {
 					if (expand && my.options.displaySingleLevel) {
 						my.displaySingleLevel(node);
@@ -84,8 +87,8 @@
 				onClick: function(node, e) {
 					if (node.getEventTargetType(e) == "title" && node.data.cID) {
 						if (my.options.onSelectNode) {
-							my.options.onSelectNode(node);
-						
+							my.options.onSelectNode.call(my, node);
+
 						/*} else if (methods.private.eventListenerExists(my.options.requestID, 'onSelectNode')) {
 							methods.private.triggerEvent(my.options.requestID, 'onSelectNode', [node]); */
 
@@ -97,7 +100,7 @@
 								onHide: function(menu) {
 									menu.$launcher.each(function() {
 										$(this).unbind('mousemove.concreteMenu');
-									});									
+									});
 								}
 							});
 							menu.show(e);
@@ -166,7 +169,7 @@
 				params = [],
 				i;
 
-			node.setLazyNodeStatus(DTNodeStatus_Loading);	
+			node.setLazyNodeStatus(DTNodeStatus_Loading);
 			for (i = 0; i < childNodes.length; i++) {
 				var childNode = childNodes[i];
 				params.push({'name': 'cID[]', 'value': childNode.data.cID});
@@ -196,7 +199,7 @@
 			var dialog_url = CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request?origCID=' + node.data.cID + '&destCID=' + destNode.data.cID + '&dragMode=' + dragMode;
 			var dialog_height = 350;
 			var dialog_width = 350;
-			
+
 			$.fn.dialog.open({
 				title: dialog_title,
 				href: dialog_url,
@@ -220,7 +223,7 @@
 
     	},
 
-    
+
     	setupNodePagination: function($tree, nodeKey) {
     		//var tree = $tree.dynatree('getTree');
     		var pg = $tree.find('span.ccm-sitemap-explore-paging');
@@ -287,13 +290,13 @@
 						}
 					}
 				};
-				
+
 			node.appendAjax(params);
     	}
 
 	}
 
-	/** 
+	/**
 	 * Static methods
 	 */
 
@@ -309,7 +312,7 @@
 	}
 
 	ConcreteSitemap.submitDragRequest = function() {
-	
+
 		var origCID = $('#origCID').val();
 		var destParentID = $('#destParentID').val();
 		var destCID = $('#destCID').val();
@@ -319,7 +322,7 @@
 		var copyAll = $("input[name=copyAll]:checked").val();
 		var saveOldPagePath = $("input[name=saveOldPagePath]:checked").val();
 		var params = {
-		
+
 			'origCID': origCID,
 			'destCID': destCID,
 			'ctask': ctask,
@@ -335,7 +338,7 @@
 
 			var dialogTitle = ccmi18n_sitemap.copyProgressTitle;
 			ccm_triggerProgressiveOperation(
-				CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all', 
+				CCM_TOOLS_PATH + '/dashboard/sitemap_copy_all',
 				[{'name': 'origCID', 'value': origCID}, {'name': 'destCID', 'value': destCID}],
 				dialogTitle, function() {
 					$('.ui-dialog-content').dialog('close');
