@@ -90,13 +90,6 @@ class PageListTest extends \PageTestCase {
         $this->list->ignorePermissions();
     }
 
-    protected function addAlias()
-    {
-        $subject = Page::getByPath('/test-page-2');
-        $parent = Page::getByPath('/another-fun-page');
-        $subject->addCollectionAlias($parent);
-    }
-
     public function testGetUnfilteredTotal()
     {
         $this->assertEquals(13, $this->list->getTotalResults());
@@ -176,26 +169,29 @@ class PageListTest extends \PageTestCase {
         $this->assertEquals(true, $pagination->haveToPaginate());
     }
 
-    public function testAliasingAndBasicGet()
+    public function testExcludingAliasesAndBasicGet()
     {
-        $this->addAlias();
+        $subject = Page::getByPath('/test-page-2');
+        $parent = Page::getByPath('/another-fun-page');
+        $subject->addCollectionAlias($parent);
         $this->list->sortBy('cID', 'desc');
 
         $results = $this->list->getResults();
-        $this->assertEquals(14, count($results));
-        $this->assertEquals('Test Page 2', $results[0]->getCollectionName());
-        $this->assertEquals(true, $results[0]->isAlias());
+        $this->assertEquals(13, count($results));
+        $this->assertEquals('Foobler', $results[0]->getCollectionName());
     }
 
     public function testFilterByParentID()
     {
-        $this->addAlias();
+        $subject = Page::getByPath('/test-page-2');
+        $parent = Page::getByPath('/another-fun-page');
+        $subject->addCollectionAlias($parent);
         $parent = Page::getByPath('/another-fun-page');
         $this->list->filterByParentID($parent->getCollectionID());
         $pagination = $this->list->getPagination();
         $results = $pagination->getCurrentPageResults();
-        $this->assertEquals(2, count($results));
-        $this->assertEquals(2, $pagination->getTotalResults());
+        $this->assertEquals(1, count($results));
+        $this->assertEquals(1, $pagination->getTotalResults());
     }
 
     public function testFilterByActiveAndSystem()
@@ -228,9 +224,44 @@ class PageListTest extends \PageTestCase {
 
     public function testAliases()
     {
+        $parent = Page::getByPath('/test-page-2/foo-bar');
+        $subject = Page::getByPath('/another-fun-page');
+        $subject->addCollectionAlias($parent);
 
+        $pc = Page::getByPath('/brace-yourself');
+        $pc->move($parent);
+
+        $page = $this->createPage('Page 2', $parent);
+        $page->reindex();
+
+        $this->list->filterByParentID($parent->getCollectionID());
+        $this->list->includeAliases();
+        $totalResults = $this->list->getTotalResults();
+        $this->assertEquals(3, $totalResults);
+
+        $this->list->filterByKeywords('Page');
+        $totalResults = $this->list->getTotalResults(); // should get two.
+        $this->assertEquals(2, $totalResults);
+
+        $nl = new \Concrete\Core\Page\PageList();
+        $nl->includeAliases();
+        $nl->ignorePermissions();
+        $nl->sortByName();
+        $total = $nl->getPagination()->getTotalResults();
+        $results = $nl->getPagination()->setMaxPerPage(10)->getCurrentPageResults();
+        $this->assertEquals(15, $total);
+        $this->assertEquals(10, count($results));
+        $this->assertTrue($results[2]->isAlias());
+        $this->assertEquals('Another Fun Page', $results[2]->getCollectionName());
+        $this->assertEquals($results[2]->getCollectionID(), $subject->getCollectionID());
+        $this->assertEquals(14, $results[2]->getCollectionPointerOriginalID());
+        $this->assertEquals(8, $results[2]->getCollectionID());
     }
 
+    public function testIndexedSearch()
+    {
+
+    }
 
 }
  
