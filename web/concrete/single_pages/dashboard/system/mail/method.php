@@ -7,13 +7,9 @@ $secureVals = array('' => t('None'), 'SSL' => 'SSL', 'TLS' => 'TLS');
 $form = Loader::helper('form');
 ?>
 	
-
-	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('SMTP Method'), false, 'span8 offset2', false)?>
-	<form method="post" action="<?=$view->url('/dashboard/system/mail/method', 'save_settings')?>" class="form-horizontal" id="mail-settings-form">
+	<form method="post" action="<?=$view->url('/dashboard/system/mail/method', 'save_settings')?>" id="mail-settings-form">
 	<?php Loader::helper('validation/token')->output('save_settings') ?>
-	<div class="ccm-pane-body">
 	<fieldset>
-	<legend><?=t('Send Mail Method')?></legend>
 	<div class="control-group">
 	<div class="controls">
 	<label class="radio"><?=$form->radio('MAIL_SEND_METHOD', 'PHP_MAIL', MAIL_SEND_METHOD)?> <span><?=t('Default PHP Mail Function')?></span></label>
@@ -21,44 +17,40 @@ $form = Loader::helper('form');
 	</div>
 	</div>
 	</fieldset>
+    <div class="spacer-row-2"></div>
 	<fieldset id="ccm-settings-mail-smtp">
-		<legend><?=t('SMTP Settings')?></legend>
-			<div class="control-group">
-				<?=$form->label('MAIL_SEND_METHOD_SMTP_SERVER',t('Mail Server'));?>
-				<div class="controls">
-					<?=$form->text('MAIL_SEND_METHOD_SMTP_SERVER', Config::get('MAIL_SEND_METHOD_SMTP_SERVER'))?>
-				</div>
-			</div>
-			<div class="control-group">
-				<?=$form->label('MAIL_SEND_METHOD_SMTP_USERNAME',t('Username'));?>
-				<div class="controls">
-					<?=$form->text('MAIL_SEND_METHOD_SMTP_USERNAME', Config::get('MAIL_SEND_METHOD_SMTP_USERNAME'))?>
-				</div>
-			</div>
-			<div class="control-group">
-				<?=$form->label('MAIL_SEND_METHOD_SMTP_PASSWORD',t('Password'));?>
-				<div class="controls">
-					<?=$form->password('MAIL_SEND_METHOD_SMTP_PASSWORD', Config::get('MAIL_SEND_METHOD_SMTP_PASSWORD'), array('autocomplete' => 'off'))?>
-				</div>
-			</div>
-			
-			<div class="control-group">
-				<?=$form->label('MAIL_SEND_METHOD_SMTP_ENCRYPTION',t('Encryption'));?>
-				<div class="controls">
-					<?=$form->select('MAIL_SEND_METHOD_SMTP_ENCRYPTION', $secureVals, Config::get('MAIL_SEND_METHOD_SMTP_ENCRYPTION'))?>
-				</div>
-			</div>
-			<div class="control-group">
-				<?=$form->label('MAIL_SEND_METHOD_SMTP_PORT',t('Port (Leave blank for default)'));?>
-				<div class="controls">
-					<?=$form->text('MAIL_SEND_METHOD_SMTP_PORT', Config::get('MAIL_SEND_METHOD_SMTP_PORT'))?>
-				</div>
-			</div>	
+            <div class="row">
+                <div class="col-md-6">
+                    <legend><?=t('SMTP Settings')?></legend>
+                    <div class="form-group">
+                        <?=$form->label('MAIL_SEND_METHOD_SMTP_SERVER',t('Mail Server'));?>
+                        <?=$form->text('MAIL_SEND_METHOD_SMTP_SERVER', Config::get('MAIL_SEND_METHOD_SMTP_SERVER'))?>
+                    </div>
+                    <div class="form-group">
+                        <?=$form->label('MAIL_SEND_METHOD_SMTP_USERNAME',t('Username'));?>
+                        <?=$form->text('MAIL_SEND_METHOD_SMTP_USERNAME', Config::get('MAIL_SEND_METHOD_SMTP_USERNAME'))?>
+                    </div>
+                    <div class="form-group">
+                        <?=$form->label('MAIL_SEND_METHOD_SMTP_PASSWORD',t('Password'));?>
+                        <?=$form->password('MAIL_SEND_METHOD_SMTP_PASSWORD', Config::get('MAIL_SEND_METHOD_SMTP_PASSWORD'), array('autocomplete' => 'off'))?>
+                    </div>
+
+                    <div class="form-group">
+                        <?=$form->label('MAIL_SEND_METHOD_SMTP_ENCRYPTION',t('Encryption'));?>
+                        <?=$form->select('MAIL_SEND_METHOD_SMTP_ENCRYPTION', $secureVals, Config::get('MAIL_SEND_METHOD_SMTP_ENCRYPTION'))?>
+                    </div>
+                    <div class="form-group">
+                        <?=$form->label('MAIL_SEND_METHOD_SMTP_PORT',t('Port (Leave blank for default)'));?>
+                        <?=$form->text('MAIL_SEND_METHOD_SMTP_PORT', Config::get('MAIL_SEND_METHOD_SMTP_PORT'))?>
+                    </div>
+                </div>
+            </div>
 	</fieldset>	
-	</div>
-	<div class="ccm-pane-footer">
-		<a href="<?=$view->url('/dashboard/system/mail/method/test')?>" class="btn"><?=t('Test Settings')?></a>
-		<?=$ih->submit(t('Save'), 'mail-settings-form','right','primary')?>
+	<div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
+		<a href="<?=$view->url('/dashboard/system/mail/method/test')?>" class="btn btn-default pull-left"><?=t('Test Settings')?></a>
+		<?=$ih->submit(t('Save'), 'mail-settings-form','right','btn-primary')?>
+        </div>
 	</div>
 	</form>
 	
