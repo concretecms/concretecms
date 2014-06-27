@@ -18,10 +18,8 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 	
 	?>
     
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Themes'), false, 'span10 offset1', false);?>
-    
-    <div class="ccm-pane-body">
-    
+
+
         <div class="alert-message block-message error" style="margin-bottom:0px;">
             
             <h5>
@@ -30,15 +28,10 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
             
         </div>
     
-    </div>
-    
-    <div class="ccm-pane-footer">
-        <?=$bt->button(t("Ok"), $activate_confirm, 'right', 'btn btn-primary');?>            
+
+        <?=$bt->button(t("Ok"), $activate_confirm, 'right', 'btn btn-primary');?>
     	<?=$bt->button(t('Cancel'), $view->url('/dashboard/pages/themes/'), 'left');?>
-    </div>
-    
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
-    	
+
     
 	<? } else { ?>
     
@@ -48,9 +41,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 	// Separate inclusion of dashboard header and footer helpers - no pane footer.
 	
 	?>
-    
-    <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Themes'), false, 'span10 offset1');?>
-	
+
 	<h3><?=t('Currently Installed')?></h3>
 	
 	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table">
@@ -108,20 +99,18 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
     </table>
     
     
-    <form method="post" action="<?=$view->action('save_mobile_theme')?>" class="form-horizontal">
+    <form method="post" action="<?=$view->action('save_mobile_theme')?>" class="form-inline">
     <h3><?=t("Mobile Theme")?></h3>
     <p><?=t("To use a separate theme for mobile browsers, specify it below.")?></p>
     
     <div class="control-group">
-    <?=$form->label('MOBILE_THEME_ID', t('Mobile Theme'))?>
-    <div class="controls">
+    <?=$form->label('MOBILE_THEME_ID', t('Mobile Theme'), array('style'=>'margin-right: 10px;'))?>
     	<? $themes[0] = t('** Same as website (default)'); ?>
     	<? foreach($tArray as $pt) {
     		$themes[$pt->getThemeID()] = $pt->getThemeDisplayName();
     	} ?>
     	<?=$form->select('MOBILE_THEME_ID', $themes, Config::get('MOBILE_THEME_ID'))?>
     	<?=$form->submit('save_mobile_theme', t('Save'))?>
-    </div>
     </div>
     </form>
     <br/><br/>
@@ -173,6 +162,4 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
     
     <? } ?>
 
-	<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper()?>
-	
 	<? } // END 'ELSE' DEFAULT LISTING ?>	
