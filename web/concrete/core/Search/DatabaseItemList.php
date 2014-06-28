@@ -9,6 +9,9 @@ abstract class DatabaseItemList extends ItemList
     /** @var \Doctrine\DBAL\Query\QueryBuilder */
     protected $query;
 
+    /** @var  \Concrete\Core\Search\StickyRequest | null */
+    protected $searchRequest;
+
     /**
      * @param \Doctrine\DBAL\Query\QueryBuilder $query
      * @return \Doctrine\DBAL\Query\QueryBuilder
@@ -21,12 +24,8 @@ abstract class DatabaseItemList extends ItemList
     final public function __construct(StickyRequest $req = null)
     {
         $this->query = Database::get()->createQueryBuilder();
-
-        // create the initial query.
+        $this->searchRequest = $req;
         $this->createQuery();
-
-        // setup the default sorting based on the request.
-        $this->setupAutomaticSorting($req);
     }
 
     public function getQueryObject()
@@ -36,6 +35,8 @@ abstract class DatabaseItemList extends ItemList
 
     public function deliverQueryObject()
     {
+        // setup the default sorting based on the request.
+        $this->setupAutomaticSorting($this->searchRequest);
         $query = clone $this->query;
         $query = $this->finalizeQuery($query);
         return $query;
@@ -58,5 +59,12 @@ abstract class DatabaseItemList extends ItemList
         )));
     }
 
+    /**
+     * Filters by a attribute.
+     */
+    public function filterByAttribute($column, $value, $comparison = '=')
+    {
+        $this->filter('ak_' . $column, $value, $comparison);
+    }
 
 }

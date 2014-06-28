@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Page;
+
 use Concrete\Core\Search\DatabaseItemList;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
@@ -7,12 +8,15 @@ use Page as ConcretePage;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
 /**
-*
-* An object that allows a filtered list of pages to be returned.
-*
-*/
+ *
+ * An object that allows a filtered list of pages to be returned.
+ *
+ */
 class PageList extends DatabaseItemList
 {
+
+    const PAGE_VERSION_ACTIVE = 1;
+    const PAGE_VERSION_RECENT = 2;
 
     /** @var  \Closure | integer | null */
     protected $permissionsChecker;
@@ -23,7 +27,13 @@ class PageList extends DatabaseItemList
      */
     protected $autoSortColumns = array('cv.cvName', 'cv.cvDatePublic', 'c.cDateAdded', 'c.cDateModified');
 
-    protected $attributeClass = 'FileAttributeKey';
+    protected $attributeClass = 'CollectionAttributeKey';
+
+    /**
+     * Which version to attempt to retrieve.
+     * @var int
+     */
+    protected $pageVersionToRetrieve = self::PAGE_VERSION_ACTIVE;
 
     /**
      * Whether this is a search using fulltext.
@@ -72,8 +82,14 @@ class PageList extends DatabaseItemList
         $this->includeSystemPages = true;
     }
 
-    public function isFulltextSearch() {
-        return $this->isFulltextSearch();
+    public function isFulltextSearch()
+    {
+        return $this->isFulltextSearch;
+    }
+
+    public function setPageVersionToRetrieve($pageVersionToRetrieve)
+    {
+        $this->pageVersionToRetrieve = $pageVersionToRetrieve;
     }
 
     public function createQuery()
@@ -133,7 +149,7 @@ class PageList extends DatabaseItemList
     protected function createPaginationObject()
     {
         if ($this->permissionsChecker == -1) {
-            $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function($query) {
+            $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
                 $query->select('count(distinct p.cID)')->setMaxResults(1);
             });
             $pagination = new Pagination($this, $adapter);
@@ -149,8 +165,14 @@ class PageList extends DatabaseItemList
      */
     public function getResult($queryRow)
     {
-        $c = ConcretePage::getByID($queryRow['cID']);
+        $c = ConcretePage::getByID($queryRow['cID'], 'ACTIVE');
         if (is_object($c) && $this->checkPermissions($c)) {
+            if ($this->pageVersionToRetrieve == self::PAGE_VERSION_RECENT) {
+                $cp = new \Permissions($c);
+                if ($cp->canViewPageVersions()) {
+                    $c->loadVersionObject('RECENT');
+                }
+            }
             if (isset($queryRow['cIndexScore'])) {
                 $c->setPageIndexScore($queryRow['cIndexScore']);
             }
@@ -168,8 +190,8 @@ class PageList extends DatabaseItemList
             }
         }
 
-        $fp = new \Permissions($mixed);
-        return $fp->canViewPage();
+        $cp = new \Permissions($mixed);
+        return $cp->canViewPage();
     }
 
     /**
@@ -228,7 +250,7 @@ class PageList extends DatabaseItemList
     public function filterByDateLastModified($date, $comparison = '=')
     {
         $this->query->andWhere($this->query->expr()->comparison('c.cDateModified', $comparison, ':cDateModified'));
-        $this->query->setParameter('c.cDateModified', $date);
+        $this->query->setParameter('cDateModified', $date);
     }
 
     /**
@@ -427,14 +449,16 @@ class PageList extends DatabaseItemList
             } else {
                 $this->filterByAttribute($attrib, $a[0]);
             }
-        }
-        if (substr($nm, 0, 6) == 'sortBy') {
-            $handle = uncamelcase(substr($nm, 6));
-            if (count($a) == 1) {
-                $this->sortBy($attrib, $a[0]);
-            }
-            else {
-                $this->sortBy($attrib);
+        } else {
+            if (substr($nm, 0, 6) == 'sortBy') {
+                $handle = uncamelcase(substr($nm, 6));
+                if (count($a) == 1) {
+                    $this->sortBy($attrib, $a[0]);
+                } else {
+                    $this->sortBy($attrib);
+                }
+            } else {
+                throw new \Exception(t('%s method does not exist for the PageList class', $nm));
             }
         }
     }

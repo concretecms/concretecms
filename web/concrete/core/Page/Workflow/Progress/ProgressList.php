@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Core\Page\Workflow\Progress;
-use \Concrete\Core\Page\PageList as PageList;
+use \Concrete\Core\Legacy\PageList as PageList;
 use Loader;
 use \Concrete\Core\Workflow\Progress\PageProgress as PageWorkflowProgress;
 use Permissions;

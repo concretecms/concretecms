@@ -12,8 +12,8 @@ if (is_object($trash) && !$trash->isError()) {
 	$pl = new PageList();
 	$pl->filterByParentID($trash->getCollectionID());
 	$pl->includeInactivePages();
-	$pl->displayUnapprovedPages();
-	$pages = $pl->get();	
+    $pl->setPageVersionToRetrieve(\Concrete\Core\Page\PageList::PAGE_VERSION_RECENT);
+	$pages = $pl->getResults();
 	foreach($pages as $pc) {
 		$cp = new Permissions($pc);
 		if ($cp->canDeletePage()) {

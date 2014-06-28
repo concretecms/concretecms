@@ -63,7 +63,7 @@ class Set {
 				if ($_col->getColumnKey() == $col->getColumnKey()) {
 					return true;
 				}
-			} else if (is_a($col, '\Concrete\Attribute\Key')) {
+			} else if (is_a($col, '\Concrete\Core\Attribute\Key\Key')) {
 				if ($_col->getColumnKey() == 'ak_' . $col->getAttributeKeyHandle()) {
 					return true;
 				}
