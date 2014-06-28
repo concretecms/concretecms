@@ -7,12 +7,12 @@ use \Concrete\Core\Area\SubArea;
 $enablePermissions = false;
 if ($a instanceof SubArea && (!$a->overrideCollectionPermissions())) { ?>
 
-	<div class="block-message alert-message notice">
+	<div class="alert alert-info">
 	<p>
 	<?=t("The following area permissions are inherited from a parent area. ")?>
 	</p>
 	<br/>
-	<a href="javascript:void(0)" class="btn btn-small" onclick="ccm_setAreaPermissionsToOverride()"><?=t('Override Permissions')?></a>
+	<a href="javascript:void(0)" class="btn btn-sm btn-default" onclick="ccm_setAreaPermissionsToOverride()"><?=t('Override Permissions')?></a>
 	</div>
 		
 <? } else if ($a->getAreaCollectionInheritID() != $c->getCollectionID() && $a->getAreaCollectionInheritID() > 0) {
@@ -21,7 +21,7 @@ if ($a instanceof SubArea && (!$a->overrideCollectionPermissions())) { ?>
 		?>
 		
 
-		<div class="block-message alert-message notice">
+		<div class="alert alert-info">
 		<p>
 		<? if ($areac->isMasterCollection()) { ?>
 			<? $ptName = $areac->getPageTypeName(); ?>
@@ -32,27 +32,27 @@ if ($a instanceof SubArea && (!$a->overrideCollectionPermissions())) { ?>
 		<? } ?>
 		</p>
 		<br/>
-		<a href="javascript:void(0)" class="btn btn-small" onclick="ccm_setAreaPermissionsToOverride()"><?=t('Override Permissions')?></a>
+		<a href="javascript:void(0)" class="btn btn-sm btn-default" onclick="ccm_setAreaPermissionsToOverride()"><?=t('Override Permissions')?></a>
 		</div>
 		
 <? 	} else if (!$a->overrideCollectionPermissions()) { ?>
 
-	<div class="block-message alert-message notice">
+	<div class="alert alert-info">
 	<p>
 	<?=t("The following area permissions are inherited from the page's permissions.")?>
 	</p>
 	<br/>
-	<a href="javascript:void(0)" class="btn btn-small" onclick="ccm_setAreaPermissionsToOverride()"><?=t('Override Permissions')?></a>
+	<a href="javascript:void(0)" class="btn btn-sm btn-default" onclick="ccm_setAreaPermissionsToOverride()"><?=t('Override Permissions')?></a>
 	</div>
 	
 <? } else { 
 	$enablePermissions = true;
 	?>
 
-	<div class="block-message alert-message notice">
+	<div class="alert alert-info">
 	<p><?=t("Permissions for this area currently override those of the page.")?></p>
 	<br/>
-	<a href="javascript:void(0)" class="btn btn-small" onclick="ccm_revertToPagePermissions()"><?=t('Revert to Page Permissions')?></a>
+	<a href="javascript:void(0)" class="btn btn-sm btn-default" onclick="ccm_revertToPagePermissions()"><?=t('Revert to Page Permissions')?></a>
 	</div>
 
 <? } ?>
@@ -62,7 +62,7 @@ if ($a instanceof SubArea && (!$a->overrideCollectionPermissions())) { ?>
 <? $cat = PermissionKeyCategory::getByHandle('area');?>
 
 <form method="post" id="ccm-permission-list-form" action="<?=$cat->getToolsURL("save_permission_assignments")?>&cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>">
-<table class="ccm-permission-grid">
+<table class="ccm-permission-grid table table-striped">
 
 <?
 $permissions = PermissionKey::getList('area');

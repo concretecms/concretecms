@@ -56,7 +56,7 @@ if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
 		<h3><?=t('Saved Presets')?></h3>
 	
 		<?=$form->select('cspID', $presetsArray, $cspID, array('style' => 'vertical-align: middle'))?>
-		<a href="javascript:void(0)" id="ccm-style-delete-preset" style="display: none" onclick="ccmCustomStyle.deletePreset()"><img src="<?=ASSETS_URL_IMAGES?>/icons/delete_small.png" style="vertical-align: middle" width="16" height="16" border="0" /></a>
+		<a href="javascript:void(0)" id="ccm-style-delete-preset" style="display: none" onclick="ccmCustomStyle.deletePreset()"><i class="fa fa-trash-o"></i></a>
 		
 		<br/><br/>
 		

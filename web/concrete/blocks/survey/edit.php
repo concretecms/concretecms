@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <style type="text/css">
 div.survey-block-option {
-	position: relative; border-bottom: 1px solid #ddd; padding-bottom: 3px; padding-top: 3px;
+	position: relative; border-bottom: 1px solid #ddd; margin-bottom: 3px;
 }
 
 div.survey-block-option img {
@@ -38,7 +38,7 @@ div.survey-block-option img {
         echo t("None");
     } else {
         foreach($options as $opt) { ?>
-            <div class="survey-block-option" id="option<?=$opt->getOptionID()?>"><a href="#" onclick="removeOption(<?=$opt->getOptionID()?>); return false"><img src="<?=ASSETS_URL_IMAGES?>/icons/delete_small.png" /></a> <?=$opt->getOptionName()?>
+            <div class="survey-block-option" id="option<?=$opt->getOptionID()?>"><a href="#" class="pull-right" onclick="removeOption(<?=$opt->getOptionID()?>); return false"><i class="fa fa-trash-o"></i></a> <?=$opt->getOptionName()?>
             <input type="hidden" name="survivingOptionNames[]" value="<?=htmlspecialchars($opt->getOptionName())?>" />
             </div>
         <? }
