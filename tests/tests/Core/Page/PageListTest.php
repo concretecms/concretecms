@@ -194,6 +194,34 @@ class PageListTest extends \PageTestCase {
         $this->assertEquals(1, $pagination->getTotalResults());
     }
 
+    public function testFilterByPageTypeID()
+    {
+        $type = \Concrete\Core\Page\Type\Type::getByHandle('alternate');
+        $this->list->filterByPageTypeID($type->getPageTypeID());
+        $pagination = $this->list->getPagination();
+        $results = $pagination->getCurrentPageResults();
+        $this->assertEquals(4, count($results));
+    }
+
+    public function testFilterByNumChildren()
+    {
+        $this->list->filterByNumberOfChildren(2, '>=');
+        $results = $this->list->getResults();
+        $this->assertEquals(1, count($results));
+        $this->assertEquals(1, $results[0]->getCollectionID());
+
+        $subject = Page::getByPath('/test-page-2');
+        $parent = Page::getByPath('/holy-mackerel');
+        $subject->addCollectionAlias($parent);
+
+        $nl = new \Concrete\Core\Page\PageList();
+        $nl->ignorePermissions();
+        $nl->includeAliases();
+        $nl->filterByNumberOfChildren(1, '>=');
+        $results = $nl->getTotalResults();
+        $this->assertEquals(5, $results);
+    }
+
     public function testFilterByActiveAndSystem()
     {
 

@@ -190,6 +190,85 @@ class PageList extends DatabaseItemList
     }
 
     /**
+     * Filters by date added
+     * @param string $date
+     */
+    public function filterByDateAdded($date, $comparison = '=')
+    {
+        $this->query->andWhere($this->query->expr()->comparison('c.cDateAdded', $comparison, ':cDateAdded'));
+        $this->query->setParameter('cDateAdded', $date);
+    }
+
+    /**
+     * Filter by number of children.
+     * @param $number
+     * @param string $comparison
+     */
+    public function filterByNumberOfChildren($number, $comparison = '>')
+    {
+        $number = intval($number);
+        if ($this->includeAliases) {
+            $this->query->andWhere(
+                $this->query->expr()->orX(
+                    $this->query->expr()->comparison('p.cChildren', $comparison, ':cChildren'),
+                    $this->query->expr()->comparison('pa.cChildren', $comparison, ':cChildren')
+                )
+            );
+        } else {
+            $this->query->andWhere($this->query->expr()->comparison('p.cChildren', $comparison, ':cChildren'));
+        }
+        $this->query->setParameter('cChildren', $number);
+    }
+
+    /**
+     * Filter by last modified date.
+     * @param $date
+     * @param string $comparison
+     */
+    public function filterByDateLastModified($date, $comparison = '=')
+    {
+        $this->query->andWhere($this->query->expr()->comparison('c.cDateModified', $comparison, ':cDateModified'));
+        $this->query->setParameter('c.cDateModified', $date);
+    }
+
+    /**
+     * Filters by public date
+     * @param string $date
+     */
+    public function filterByPublicDate($date, $comparison = '=')
+    {
+        $this->query->andWhere($this->query->expr()->comparison('cv.cDatePublic', $comparison, ':cvDatePublic'));
+        $this->query->setParameter('cv.cDatePublic', $date);
+    }
+
+    /**
+     * Filters by user ID)
+     * @param mixed $uID
+     */
+    public function filterByUserID($uID)
+    {
+        $this->query->andWhere('p.uID = :uID');
+        $this->query->setParameter('uID', $uID);
+    }
+
+    /**
+     * Filters by page type ID
+     * @param array | integer $cParentID
+     */
+    public function filterByPageTypeID($ptID)
+    {
+        $db = \Database::get();
+        if (is_array($ptID)) {
+            $this->query->andWhere(
+                $this->query->expr()->in('p.ptID', array_map(array($db, 'quote'), $ptID))
+            );
+        } else {
+            $this->query->andWhere($this->query->expr()->comparison('p.ptID', '=', ':ptID'));
+            $this->query->setParameter('ptID', $ptID, \PDO::PARAM_INT);
+        }
+    }
+
+    /**
      * Filters by parent ID
      * @param array | integer $cParentID
      */
@@ -298,6 +377,14 @@ class PageList extends DatabaseItemList
     }
 
     /**
+     * Sorts this list by public date ascending order
+     */
+    public function sortByPublicDate()
+    {
+        $this->query->orderBy('cv.cvDatePublic', 'asc');
+    }
+
+    /**
      * Sorts by name in ascending order.
      */
     public function sortByName()
@@ -311,6 +398,14 @@ class PageList extends DatabaseItemList
     public function sortByNameDescending()
     {
         $this->query->orderBy('cv.cvName', 'desc');
+    }
+
+    /**
+     * Sorts this list by public date descending order
+     */
+    public function sortByPublicDateDescending()
+    {
+        $this->query->orderBy('cv.cvDatePublic', 'desc');
     }
 
     /**
@@ -347,8 +442,17 @@ class PageList extends DatabaseItemList
     /**
      * @deprecated
      */
-    public function filterByCollectionTypeHandle($ctHandle) {
+    public function filterByCollectionTypeHandle($ctHandle)
+    {
         $this->filterByPageTypeHandle($ctHandle);
+    }
+
+    /**
+     * @deprecated
+     */
+    public function filterByCollectionTypeID($ctID)
+    {
+        $this->filterByPageTypeID($ctID);
     }
 
 }
