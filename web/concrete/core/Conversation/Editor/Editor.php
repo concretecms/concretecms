@@ -3,6 +3,7 @@ namespace Concrete\Core\Conversation\Editor;
 use Loader;
 use \Concrete\Core\Package\PackageList;
 use Core;
+use Config;
 use \Concrete\Core\Foundation\Object;
 abstract class Editor extends Object {
 
@@ -43,7 +44,7 @@ abstract class Editor extends Object {
 	}
 
 	public function outputConversationEditorAddMessageForm() {
-		$env = Environment::get();
+		$env = \Environment::get();
 		$editor = $this;
 		$path = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_CONVERSATIONS . '/' . DIRNAME_CONVERSATION_EDITOR . '/' . $this->cnvEditorHandle . '/' . FILENAME_CONVERSATION_EDITOR_FORM_MESSAGE, $this->getPackageHandle());
 		include($path);

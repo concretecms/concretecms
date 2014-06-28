@@ -2,6 +2,8 @@
 namespace Concrete\Core\Conversation\Message;
 use Loader;
 use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use Concrete\Core\Conversation\Conversation;
+
 class MessageList extends DatabaseItemList {
 
 	protected $sortBy = 'cnvMessageDateCreated';

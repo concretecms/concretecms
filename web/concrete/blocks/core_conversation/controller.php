@@ -2,6 +2,12 @@
 namespace Concrete\Block\CoreConversation;
 use Loader;
 use \Concrete\Core\Block\BlockController;
+use Concrete\Core\Conversation\Conversation;
+use Concrete\Core\Feature\ConversationFeatureInterface;
+use Concrete\Core\Http\ResponseAssetGroup;
+use Config;
+use Page;
+
 /**
  * The controller for the conversation block. This block is used to display conversations in a page.
  *
@@ -12,7 +18,7 @@ use \Concrete\Core\Block\BlockController;
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-	class Controller extends BlockController implements \Concrete\Core\Feature\ConversationFeatureInterface {
+	class Controller extends BlockController implements ConversationFeatureInterface {
 
 		protected $btCacheBlockRecord = true;
 		protected $btTable = 'btCoreConversation';
