@@ -17,6 +17,11 @@ class Pages extends Controller {
 
 	protected $fields = array();
 
+    /**
+     * @var \Concrete\Core\Page\PageList
+     */
+    protected $pageList;
+
 	public function __construct() {
         $this->searchRequest = new StickyRequest('pages');
         $this->pageList = new PageList($this->searchRequest);
@@ -27,22 +32,22 @@ class Pages extends Controller {
 		if (!$dh->canRead()) {
 			return false;
 		}
-		
-		$this->pageList->ignoreAliases();
-		
+
 		if ($_REQUEST['submitSearch']) {
-			$this->pageList->resetSearchRequest();
+			$this->searchRequest->resetSearchRequest();
 		}
 
-		$req = $this->pageList->getSearchRequest();
-		$this->pageList->displayUnapprovedPages();
+		$req = $this->searchRequest->getSearchRequest();
 		$columns = PageSearchColumnSet::getCurrent();
 
-		$col = $columns->getDefaultSortColumn();	
-		$this->pageList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
-		
+        if (!$this->pageList->getActiveSortColumn()) {
+    		$col = $columns->getDefaultSortColumn();
+	    	$this->pageList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
+        }
+
 		$cvName = htmlentities($req['cvName'], ENT_QUOTES, APP_CHARSET);
-		
+
+        $this->pageList->setPageVersionToRetrieve(\Concrete\Core\Page\PageList::PAGE_VERSION_RECENT);
 		if ($cvName != '') {
 			$this->pageList->filterByName($cvName);
 		}
@@ -63,7 +68,7 @@ class Pages extends Controller {
 					switch($item) {
 						case 'keywords':
 							$keywords = htmlentities($req['keywords'], ENT_QUOTES, APP_CHARSET);
-							$this->pageList->filterByKeywords($keywords);
+							$this->pageList->filterByFulltextKeywords($keywords);
 							break;
 						case 'num_children':
 							$symbol = '=';
@@ -75,7 +80,7 @@ class Pages extends Controller {
 							$this->pageList->filterByNumberOfChildren($req['cChildren'], $symbol);						
 							break;
 						case 'owner':
-							$ui = UserInfo::getByUserName($req['owner']);
+							$ui = \UserInfo::getByUserName($req['owner']);
 							if (is_object($ui)) {
 								$this->pageList->filterByUserID($ui->getUserID());
 							} else {
@@ -153,11 +158,11 @@ class Pages extends Controller {
 
 						default:
 							$akID = $item;
-							$fak = CollectionAttributeKey::get($akID);
+							$fak = CollectionAttributeKey::getByID($akID);
 							if (!is_object($fak) || (!($fak instanceof CollectionAttributeKey))) {
 								break;
 							}
-							
+
 							$type = $fak->getAttributeType();
 							$cnt = $type->getController();
 							$cnt->setRequestArray($req);
@@ -185,7 +190,7 @@ class Pages extends Controller {
 	protected function getField($field) {
 		$r = new stdClass;
 		$r->field = $field;
-		$searchRequest = $this->getSearchRequest();
+        $searchRequest = $this->searchRequest->getSearchRequest();
 		$form = Loader::helper('form');
 		ob_start();
 		switch($field) {
@@ -211,15 +216,15 @@ class Pages extends Controller {
 				<?=$form->text('owner', array('class'=>'span5'))?>
 				<? break;
 			case 'permissions_inheritance': ?>
-				<select name="cInheritPermissionsFrom">
-					<option value="PARENT"<? if ($req['cInheritPermissionsFrom'] == 'PARENT') { ?> selected <? } ?>><?=t('Parent Page')?></option>
-					<option value="TEMPLATE" <? if ($req['cInheritPermissionsFrom'] == 'TEMPLATE') { ?> selected <? } ?>><?=t('Page Type')?></option>
-					<option value="OVERRIDE"<? if ($req['cInheritPermissionsFrom'] == 'OVERRIDE') { ?> selected <? } ?>><?=t('Itself (Override)')?></option>
+				<select name="cInheritPermissionsFrom" class="form-control">
+					<option value="PARENT"<? if ($searchRequest['cInheritPermissionsFrom'] == 'PARENT') { ?> selected <? } ?>><?=t('Parent Page')?></option>
+					<option value="TEMPLATE" <? if ($searchRequest['cInheritPermissionsFrom'] == 'TEMPLATE') { ?> selected <? } ?>><?=t('Page Type')?></option>
+					<option value="OVERRIDE"<? if ($searchRequest['cInheritPermissionsFrom'] == 'OVERRIDE') { ?> selected <? } ?>><?=t('Itself (Override)')?></option>
 				</select>
 				<? break;
 			case 'version_status': ?>
-				<label class="checkbox"><?=$form->radio('cvIsApproved', 0, false)?> <span><?=t('Unapproved')?></span></label>
-				<label class="checkbox"><?=$form->radio('cvIsApproved', 1, false)?> <span><?=t('Approved')?></span></label>
+				<div class="radio"><label><?=$form->radio('cvIsApproved', 0, false)?> <span><?=t('Unapproved')?></span></label></div>
+				<div class="radio"><label><?=$form->radio('cvIsApproved', 1, false)?> <span><?=t('Approved')?></span></label></div>
 				<? break;
 			case 'parent': ?>
 				<? $ps = Loader::helper("form/page_selector");
@@ -231,15 +236,15 @@ class Pages extends Controller {
 				<label class="checkbox"><?=$form->radio('cParentAll', 1, false)?> <span><?=t('Yes')?></span></label>
 				<? break;
 			case 'num_children': ?>
-				<select name="cChildrenSelect">
-					<option value="gt"<? if ($req['cChildrenSelect'] == 'gt') { ?> selected <? } ?>><?=t('More Than')?></option>
-					<option value="eq" <? if ($req['cChildrenSelect'] == 'eq') { ?> selected <? } ?>><?=t('Equal To')?></option>
-					<option value="lt"<? if ($req['cChildrenSelect'] == 'lt') { ?> selected <? } ?>><?=t('Fewer Than')?></option>
+				<select name="cChildrenSelect" class="form-control">
+					<option value="gt"<? if ($searchRequest['cChildrenSelect'] == 'gt') { ?> selected <? } ?>><?=t('More Than')?></option>
+					<option value="eq" <? if ($searchRequest['cChildrenSelect'] == 'eq') { ?> selected <? } ?>><?=t('Equal To')?></option>
+					<option value="lt"<? if ($searchRequest['cChildrenSelect'] == 'lt') { ?> selected <? } ?>><?=t('Fewer Than')?></option>
 				</select>
-				<input type="text" name="cChildren" value="<?=$req['cChildren']?>" />
+				<input type="text" name="cChildren" class="form-control" value="<?=$searchRequest['cChildren']?>" />
 				<? break;
 			case 'theme': ?>
-				<select name="pThemeID">
+				<select name="pThemeID" class="form-control">
 				<? $themes = PageTheme::getList(); ?>
 				<? foreach($themes as $pt) { ?>
 					<option value="<?=$pt->getThemeID()?>" <? if ($pt->getThemeID() == $searchRequest['pThemeID']) { ?> selected<? } ?>><?=$pt->getThemeName()?></option>			
@@ -268,11 +273,6 @@ class Pages extends Controller {
 	public function getFields() {
 		return $this->fields;		
 	}
-
-	public function getSearchRequest() {
-		return $this->pageList->getSearchRequest();
-	}
-
 
 	
 }

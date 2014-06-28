@@ -13,7 +13,7 @@ class Item extends SearchResultItem {
 
 	public function __construct(SearchResult $result, Set $columns, $item) {
 		$list = $result->getItemListObject();
-		if ($list->isIndexedSearch()) {
+		if ($list->isFulltextSearch()) {
 			$this->columns[] = new SearchResultItemColumn(t('Score'), $item->getPageIndexScore());
 		}
 		parent::__construct($result, $columns, $item);

@@ -41,7 +41,7 @@ $req = $flr->getSearchRequest();
     <div class="form-group">
         <div class="ccm-search-main-lookup-field">
             <i class="fa fa-search"></i>
-            <?=$form->search('fKeywords', $searchRequest['fKeywords'], array('placeholder' => t('Keywords')))?>
+            <?=$form->search('fKeywords', $req['fKeywords'], array('placeholder' => t('Keywords')))?>
             <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
         </div>
     </div>
@@ -66,11 +66,11 @@ $req = $flr->getSearchRequest();
         <select multiple name="fsID[]" class="chosen-select">
             <optgroup label="<?=t('Sets')?>">
             <? foreach($s1 as $s) { ?>
-                <option value="<?=$s->getFileSetID()?>"  <? if (is_array($searchRequest['fsID']) && in_array($s->getFileSetID(), $searchRequest['fsID'])) { ?> selected="selected" <? } ?>><?=wordwrap($s->getFileSetName(), '23', '&shy;', true)?></option>
+                <option value="<?=$s->getFileSetID()?>"  <? if (is_array($req['fsID']) && in_array($s->getFileSetID(), $req['fsID'])) { ?> selected="selected" <? } ?>><?=wordwrap($s->getFileSetName(), '23', '&shy;', true)?></option>
             <? } ?>
             </optgroup>
             <optgroup label="<?=t('Other')?>">
-                <option value="-1" <? if (is_array($searchRequest['fsID']) && in_array(-1, $searchRequest['fsID'])) { ?> selected="selected" <? } ?>><?=t('Files in no sets.')?></option>
+                <option value="-1" <? if (is_array($req['fsID']) && in_array(-1, $req['fsID'])) { ?> selected="selected" <? } ?>><?=t('Files in no sets.')?></option>
             </optgroup>
         </select>
         </div>

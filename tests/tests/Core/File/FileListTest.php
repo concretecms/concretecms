@@ -177,6 +177,9 @@ class FileListTest extends \FileStorageTestCase {
 
         $this->assertEquals(6, $results[0]->getFileID());
         $this->assertEquals('testing.txt', $results[0]->getFilename());
+
+        $req->query->set($this->list->getQuerySortColumnParameter(), null);
+        $req->query->set($this->list->getQuerySortDirectionParameter(), null);
     }
 
     public function testPaginationPagesWithoutPermissions()

@@ -213,14 +213,6 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
     }
 
     /**
-     * Filters by a file attribute.
-     */
-    public function filterByAttribute($column, $value, $comparison = '=')
-    {
-        $this->filter('ak_' . $column, $value, $comparison);
-    }
-
-    /**
      * Filters by "tags" only.
      */
     public function filterByTags($tags)
