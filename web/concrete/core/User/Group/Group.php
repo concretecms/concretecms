@@ -504,12 +504,12 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface 
 
 	public function setBadgeOptions($gBadgeFID, $gBadgeDescription, $gBadgeCommunityPointValue) {
 		$db = Loader::db();
-		$db->Execute('update Groups set gIsBadge = 1, gBadgeFID = ?, gBadgeDescription = ?, gBadgeCommunityPointValue = ? where gID = ?', array($gBadgeFID, $gBadgeDescription, $gBadgeCommunityPointValue, $this->gID));
+		$db->Execute('update Groups set gIsBadge = 1, gBadgeFID = ?, gBadgeDescription = ?, gBadgeCommunityPointValue = ? where gID = ?', array(intval($gBadgeFID), $gBadgeDescription, $gBadgeCommunityPointValue, $this->gID));
 	}
 
 	public function setAutomationOptions($gCheckAutomationOnRegister, $gCheckAutomationOnLogin, $gCheckAutomationOnJobRun) {
 		$db = Loader::db();
-		$db->Execute('update Groups set gIsAutomated = 1, gCheckAutomationOnRegister = ?, gCheckAutomationOnLogin = ?, gCheckAutomationOnJobRun = ? where gID = ?', array($gCheckAutomationOnRegister, $gCheckAutomationOnLogin, $gCheckAutomationOnJobRun, $this->gID));
+		$db->Execute('update Groups set gIsAutomated = 1, gCheckAutomationOnRegister = ?, gCheckAutomationOnLogin = ?, gCheckAutomationOnJobRun = ? where gID = ?', array(intval($gCheckAutomationOnRegister), intval($gCheckAutomationOnLogin), intval($gCheckAutomationOnJobRun), $this->gID));
 	}
 
 	public function setGroupExpirationByDateTime($datetime, $action) {

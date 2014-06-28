@@ -73,7 +73,8 @@ class Groups extends DashboardPageController {
 		
 		if (!$this->error->has()) {
 			$g->update($gName, $_POST['gDescription']);
-			$cnta = Loader::controller('/dashboard/users/add_group');
+            $cntp = Page::getByPath('/dashboard/users/add_group');
+			$cnta = $cntp->getController();
 			$cnta->checkExpirationOptions($g);
 			$cnta->checkBadgeOptions($g);
 			$cnta->checkAutomationOptions($g);
