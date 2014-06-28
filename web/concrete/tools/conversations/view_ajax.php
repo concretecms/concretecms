@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Conversation\MessageList as ConversationMessageList;
-use \Concrete\Core\Conversation\ThreadedList as ConversationMessageThreadedList;
+use \Concrete\Core\Conversation\Message\ThreadedList as ConversationMessageThreadedList;
 
 $cnv = Conversation::getByID($_POST['cnvID']);
 if (is_object($cnv)) {

@@ -7,7 +7,7 @@ if (!is_array($messages)) {
 $u = new User();
 $ui = UserInfo::getByID($u->getUserID());
 $page = Page::getByID($cID);
-$editor = ConversationEditor::getActive();
+$editor = \Concrete\Core\Conversation\Editor\Editor::getActive();
 $editor->setConversationObject($args['conversation']);
 $val = Loader::helper('validation/token');
 $form = Loader::helper('form');

@@ -11,7 +11,7 @@ class Conversation extends Object {
 	public function getConversationParentMessageID() {return $this->cnvParentMessageID;}
 	public function getConversationDateCreated() {return $this->cnvDateCreated;}
 	public function getConversationDateLastMessage() {return $this->cnvDateLastMessage;}
-	public function getConversationMessagesTotal() {return $this->cnvMessagesTotal;}
+	public function getConversationMessagesTotal() {return intval($this->cnvMessagesTotal);}
 
 	public static function getByID($cnvID) {
 		$db = Loader::db();
