@@ -19,7 +19,7 @@
         notify: function(defaults) {
             var options = $.extend({
                 'type': 'success',
-                'icon': 'ok',
+                'icon': 'check',
                 'title': false,
                 'message': false,
                 'appendTo': false,
