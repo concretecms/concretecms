@@ -14,7 +14,7 @@ function addOption(value) {
 		ipd = document.createElement("DIV");
 		ipd.id = "option" + currentOption;
 		ipd.className = 'survey-block-option';
-		ipd.innerHTML = "<a href=\"#\" onclick=\"removeOption(" + currentOption + ")\"><img src=\"" + CCM_IMAGE_PATH + "/icons/delete_small.png\" /><" + "/a> " + ip.value;
+		ipd.innerHTML = "<a href=\"#\" onclick=\"removeOption(" + currentOption + ")\" class=\"pull-right\"><i class=\"fa fa-trash-o\"></i><" + "/a> " + ip.value;
 		ipd.appendChild(ip);
 		pi.appendChild(ipd);	
 		$('#ccm-survey-optionValue').val('');
