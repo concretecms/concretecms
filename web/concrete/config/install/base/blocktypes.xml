@@ -7,9 +7,10 @@
         <blocktype handle="core_scrapbook_display" package=""/>
         <blocktype handle="core_stack_display" package=""/>
         <blocktype handle="core_gathering_display" package=""/>
-        <!--
         <blocktype handle="core_conversation" package=""/>
         <blocktype handle="core_conversation_message" package=""/>
+
+        <!--
         <blocktype handle="core_gathering" package=""/>
         //-->
 
@@ -72,9 +73,7 @@
         </blocktypeset>
         <blocktypeset handle="social" name="Social Networking" package="">
             <blocktype handle="survey"/>
-            <!--
             <blocktype handle="core_conversation" />
-            //-->
             <blocktype handle="discussion"/>
         </blocktypeset>
         <blocktypeset handle="multimedia" name="Multimedia" package="">
