@@ -8,7 +8,7 @@ $date = Loader::helper('form/date_time');
 
 if (isset($group)) { ?>
 
-<form method="post" id="update-group-form" action="<?=$view->url('/dashboard/users/groups/', 'update_group')?>" role="form">
+<form method="post" id="update-group-form" class="form-stacked" action="<?=$view->url('/dashboard/users/groups/', 'update_group')?>" role="form">
     <?=$valt->output('add_or_update_group')?>
 	<?
 	    $u = new User();
@@ -32,25 +32,25 @@ if (isset($group)) { ?>
 	    <legend><?=t('Group Details')?></legend>
 	    <div class="form-group">
 	        <label for="gName"><?=t('Name')?></label>
-	        <input type="text" name="gName" id="gName" class="form-control" value="<?=Loader::helper('text')->entities($gName)?>" />
+	        <input type="text" name="gName" id="gName" class="form-control" value="<?=Loader::helper('text')->entities($group->getGroupName())?>" />
 	    </div>
 	    
 	    <div class="form-group">
 	        <label for="gDescription"><?=t('Description')?></label>	        
-	        <textarea name="gDescription" id="gDescription" rows="6" class="form-control"><?=Loader::helper("text")->entities($gDescription)?></textarea>
+	        <textarea name="gDescription" id="gDescription" rows="6" class="form-control"><?=Loader::helper("text")->entities($group->getGroupDescription())?></textarea>
 	    </div>
     </fieldset>
 
 	<? if (ENABLE_USER_PROFILES) { ?>
 	
 	<fieldset>
-		<legend><?=t('Badge Details')?></legend>
-
         <div class="form-group">
-            <label class="checkbox">
+            <div class="checkbox">
+                <label>
                 <?=$form->checkbox('gIsBadge', 1, $group->isGroupBadge())?>	
                 <span><?=t('This group is a badge.')?> <i class="icon-question-sign" title="<?=t('Badges are publicly viewable in user profiles, and display pictures and a custom description. Badges can be automatically assigned or given out by administrators.')?>"></i> </span>
-            </label>
+                </label>
+            </div>
         </div>
 		
         <div id="gUserBadgeOptions" style="display: none">
@@ -80,10 +80,12 @@ if (isset($group)) { ?>
 	<fieldset>
 		<legend><?=t('Automation')?></legend>
 		<div class="form-group">
-            <label class="checkbox">
+            <div class="checkbox">
+                <label>
                 <?=$form->checkbox('gIsAutomated', 1, $group->isGroupAutomated())?>
-                <span><?=t('This group is automatically entered.')?> <i class="icon-question-sign" title="<?=t("Automated Groups aren't assigned by administrators. They are checked against code at certain times that determines whether users should enter them.")?>"></i> </span>
-            </label>
+                <span><?=t('This group is automatically entered.')?> <i class="fa fa-question-circle launch-tooltip" title="<?=t("Automated Groups aren't assigned by administrators. They are checked against code at certain times that determines whether users should enter them.")?>"></i> </span>
+                </label>
+            </div>
 		
 		</div>
 		
@@ -91,20 +93,26 @@ if (isset($group)) { ?>
     		<div class="form-group">
     		    <label><?=t('Check Group')?></label>
     		    
-    		    <label class="checkbox">
+    		    <div class="checkbox">
+                    <label>
     				<?=$form->checkbox('gCheckAutomationOnRegister', 1, $group->checkGroupAutomationOnRegister())?>
     				<span><?=t('When a user registers.')?></span>
-    			</label>
-    			
-    			<label class="checkbox">
+                    </label>
+    			</div>
+
+    			<div class="checkbox">
+                    <label>
     				<?=$form->checkbox('gCheckAutomationOnLogin', 1, $group->checkGroupAutomationOnLogin())?>
     				<span><?=t('When a user signs in.')?></span>
-    			</label>
+                    </label>
+    			</div>
     			
-    			<label class="checkbox">
+    			<div class="checkbox">
+                    <label>
     				<?=$form->checkbox('gCheckAutomationOnJobRun', 1, $group->checkGroupAutomationOnJobRun())?>
     				<span><?=t('When the "Check Automated Groups" Job runs.')?></span>
-    			</label>
+                    </label>
+    			</div>
     		</div>
     
     		<div class="alert alert-info">
@@ -116,9 +124,10 @@ if (isset($group)) { ?>
     	</div>
 
     	<div class="form-group">
-            <label class="checkbox">
+            <div class="checkbox">
+                <label>
     		<?=$form->checkbox('gUserExpirationIsEnabled', 1, $group->isGroupExpirationEnabled())?>
-    		<span><?=t('Automatically remove users from this group')?></span></label>
+    		<span><?=t('Automatically remove users from this group')?></span></label></div>
     	</div>
 	
     	<div class="form-group">
@@ -190,7 +199,7 @@ if (isset($group)) { ?>
             <button class="btn pull-right btn-primary" style="margin-left: 10px" type="submit"><?=t('Update Group')?></button>
             
             <?php if ($u->isSuperUser()) { ?>
-                <?php print $ih->button_js(t('Delete'), "deleteGroup()", 'right', 'error');?>
+                <?php print $ih->button_js(t('Delete'), "deleteGroup()", 'right', 'btn-danger');?>
             <?php } ?>
         </div>
     </div>
@@ -239,8 +248,7 @@ $(function() {
 			$('#gAutomationOptions').hide();
 		}
 	}).triggerHandler('click');
-	$('.icon-question-sign').tooltip();
-	
+
 });
 </script>
 <? } else { ?>
