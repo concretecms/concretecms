@@ -51,10 +51,9 @@ class Sitemap {
 		$pl->displayUnapprovedPages();
 		$total = $pl->getTotal();
 		if ($cID == 1) {
-			$results = $pl->get();			
+			$results = $pl->getResults();
 		} else {
-			$pl->setItemsPerPage(SITEMAP_PAGES_LIMIT);
-			$results = $pl->getPage();
+			$results = $pl->getPagination()->setMaxPerPage(SITEMAP_PAGES_LIMIT)->getCurrentPageResults();
 		}
 		
 		$nodes = array();
