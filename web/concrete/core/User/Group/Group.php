@@ -430,10 +430,14 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface 
 			}
 			if (!is_object($node)) {
 				$tree = GroupTree::get();
-				$node = $tree->getRootTreeNodeObject();
+                if (is_object($tree)) {
+    				$node = $tree->getRootTreeNodeObject();
+                }
 			}
 
-			GroupTreeNode::add($ng, $node);
+            if (is_object($node)) {
+    			GroupTreeNode::add($ng, $node);
+            }
 
 			$ge = new Event($ng);
 			Events::dispatch('on_group_add', $ge);

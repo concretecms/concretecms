@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Controller\Search;
+use Concrete\Core\Search\StickyRequest;
+use Concrete\Core\User\Group\GroupSetList;
 use Controller;
 use UserList;
 use \Concrete\Core\User\Search\ColumnSet\ColumnSet as UserSearchColumnSet;
@@ -18,9 +20,14 @@ class Users extends Controller {
 
 	protected $fields = array();
 
+    /**
+     * @var \Concrete\Core\User\UserList
+     */
+    protected $userList;
+
 	public function __construct() {
-		$this->userList = new UserList();
-		$this->userList->enableStickySearchRequest();
+        $this->searchRequest = new StickyRequest('users');
+        $this->userList = new UserList($this->searchRequest);
 	}
 
 	public function search() {
@@ -30,19 +37,21 @@ class Users extends Controller {
 		}
 		
 		if ($_REQUEST['submitSearch']) {
-			$this->userList->resetSearchRequest();
+			$this->searchRequest->resetSearchRequest();
 		}
 
-		$req = $this->userList->getSearchRequest();
+		$req = $this->searchRequest->getSearchRequest();
 		$columns = UserSearchColumnSet::getCurrent();
 
-		$col = $columns->getDefaultSortColumn();	
-		$this->userList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
+        if (!$this->userList->getActiveSortColumn()) {
+    		$col = $columns->getDefaultSortColumn();
+	    	$this->userList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
+        }
 
-		$this->userList->showInactiveUsers = true;
-		$this->userList->showInvalidatedUsers = true;
-		
-		$columns = UserSearchColumnSet::getCurrent();
+        $this->userList->includeInactiveUsers();
+        $this->userList->includeUnvalidatedUsers();
+
+        $columns = UserSearchColumnSet::getCurrent();
 		$this->set('columns', $columns);
 
 		if ($req['keywords'] != '') {
@@ -132,7 +141,7 @@ class Users extends Controller {
 
 						default:
 							$akID = $item;
-							$fak = UserAttributeKey::get($akID);
+							$fak = UserAttributeKey::getByID($akID);
 							$type = $fak->getAttributeType();
 							$cnt = $type->getController();
 							$cnt->setAttributeKey($fak);
@@ -159,7 +168,7 @@ class Users extends Controller {
 	protected function getField($field) {
 		$r = new stdClass;
 		$r->field = $field;
-		$searchRequest = $this->getSearchRequest();
+		$searchRequest = $this->searchRequest->getSearchRequest();
 		$form = Loader::helper('form');
 		ob_start();
 		switch($field) {
@@ -201,11 +210,6 @@ class Users extends Controller {
 	public function getFields() {
 		return $this->fields;		
 	}
-
-	public function getSearchRequest() {
-		return $this->userList->getSearchRequest();
-	}
-
 
 	
 }

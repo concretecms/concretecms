@@ -12,6 +12,8 @@ abstract class DatabaseItemList extends ItemList
     /** @var  \Concrete\Core\Search\StickyRequest | null */
     protected $searchRequest;
 
+    abstract public function createQuery();
+
     /**
      * @param \Doctrine\DBAL\Query\QueryBuilder $query
      * @return \Doctrine\DBAL\Query\QueryBuilder

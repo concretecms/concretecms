@@ -4,7 +4,8 @@ use Concrete\Core\Attribute\Key\Category;
 abstract class UserTestCase extends ConcreteDatabaseTestCase {
 
     protected $fixtures = array();
-    protected $tables = array('Users', 'UserGroups', 'UserAttributeValues'); // so brutal
+    protected $tables = array('Users', 'UserGroups', 'Groups',
+        'TreeTypes', 'Trees',  'TreeGroupNodes', 'UserAttributeValues'); // so brutal
 
     public function setUp() {
         parent::setUp();
