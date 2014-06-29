@@ -15,7 +15,7 @@ $form = Loader::helper('form');
 	<script class='word_template' type="text/template" charset="utf-8">
 		<tr class='editing'>
 			<th class='id'></th>
-			<td class='word'><span></span><input name='banned_word[]'></td>
+			<td class='word'><span></span><input name='banned_word[]' class="form-control"></td>
 			<td style='text-align:right'><a href='#' class='save_word btn btn-primary'><?=t('Save')?></a></td>
 		</tr>
 	</script>
@@ -85,6 +85,8 @@ $(".add_word").on('click', function(e) {
 	var newWord = getTemplate();
 	newWord.find('th.id').text(' ');
 	newWord.appendTo(ctx.find('tbody'));
+	
+	ctx.find('td.word').children('input').focus();
 
 	e.preventDefault();
 	e.stopPropagation();
@@ -94,7 +96,7 @@ ctx.on('click','a.edit_word',function(e){
 	var me = $(this);
 	ctx.find('tr.editing').find('a.save_word').click();
 	me.closest('tr').addClass('editing').find('td.word').children('span').hide().end()
-		.children('input').addClass('form-control').show().end().end().end()
+		.children('input').addClass('form-control').show().focus().end().end().end()
 		.closest('td').empty().append(save.clone());
 
 	e.preventDefault();
