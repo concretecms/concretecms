@@ -53,7 +53,7 @@ $form = Loader::helper('form');
 	
 	<div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-            <?php echo $interface->submit(t('Save'), 'proxy-form', 'right', 'btn-primary'); ?>
+            <?php echo $interface->submit(t('Save'), 'bannedwords-form', 'right', 'btn-primary'); ?>
         </div>
     </div>
 </form>
@@ -100,7 +100,7 @@ ctx.on('click','a.edit_word',function(e){
 	e.preventDefault();
 	e.stopPropagation();
 	return false;
-}).on('clicks','a.save_word',function(e){
+}).on('click','a.save_word',function(e){
 	var me = $(this);
 	var tr = me.closest('tr');
 
