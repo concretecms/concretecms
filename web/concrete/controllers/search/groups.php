@@ -50,12 +50,6 @@ class Groups extends Controller {
 		$result = $this->result;
 		Loader::helper('ajax')->sendResult($this->result->getJSONObject());
 	}
-
-	public function getSearchRequest() {
-		return $this->groupList->getSearchRequest();
-	}
-
-
 	
 }
 
