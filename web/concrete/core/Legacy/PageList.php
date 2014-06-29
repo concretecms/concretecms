@@ -1,6 +1,5 @@
 <?php
 namespace Concrete\Core\Legacy;
-use Loader;
 use Page as ConcretePage;
 use Concrete\Core\Legacy\DatabaseItemList;
 use User;
