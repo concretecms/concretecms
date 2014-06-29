@@ -5,6 +5,7 @@ use Concrete\Core\Search\DatabaseItemList;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Page as ConcretePage;
+use Concrete\Core\Search\PermissionableListItemInterface;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 
 /**
@@ -12,7 +13,7 @@ use Pagerfanta\Adapter\DoctrineDbalAdapter;
  * An object that allows a filtered list of pages to be returned.
  *
  */
-class PageList extends DatabaseItemList
+class PageList extends DatabaseItemList implements PermissionableListItemInterface
 {
 
     const PAGE_VERSION_ACTIVE = 1;
@@ -97,16 +98,6 @@ class PageList extends DatabaseItemList
         $this->query->select('p.cID');
     }
 
-    public function getTotalResults()
-    {
-        if ($this->permissionsChecker == -1) {
-            $query = $this->deliverQueryObject();
-            return $query->select('count(distinct p.cID)')->setMaxResults(1)->execute()->fetchColumn();
-        } else {
-            return -1; // unknown
-        }
-    }
-
     public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
     {
         if ($this->includeAliases) {
@@ -145,6 +136,17 @@ class PageList extends DatabaseItemList
         }
         return $query;
     }
+
+    public function getTotalResults()
+    {
+        if ($this->permissionsChecker == -1) {
+            $query = $this->deliverQueryObject();
+            return $query->select('count(distinct p.cID)')->setMaxResults(1)->execute()->fetchColumn();
+        } else {
+            return -1; // unknown
+        }
+    }
+
 
     protected function createPaginationObject()
     {

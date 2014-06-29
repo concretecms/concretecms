@@ -1,6 +1,6 @@
 <?
 
-namespace Concrete\Core\Legacy;
+namespace Concrete\Core\User;
 use Loader;
 use \Concrete\Core\Legacy\DatabaseItemList;
 use UserAttributeKey;

@@ -21,7 +21,8 @@ $ek = PermissionKey::getByHandle('edit_user_properties');
 $ik = PermissionKey::getByHandle('activate_user');
 $dk = PermissionKey::getByHandle('delete_user');
 
-$searchRequest = $controller->getSearchRequest();
+$flr = new \Concrete\Core\Search\StickyRequest('users');
+$searchRequest = $flr->getSearchRequest();
 
 ?>
 

@@ -18,11 +18,11 @@ class DefaultSet extends Set {
 	}
 	
 	public function __construct() {
-		$this->addColumn(new Column('uName', t('Username'), array('Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserName')));
-		$this->addColumn(new Column('uEmail', t('Email'), array('Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserEmail')));
-		$this->addColumn(new Column('uDateAdded', t('Last Modified'), array('Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserDateAdded')));
-		$this->addColumn(new Column('uNumLogins', t('# Logins'), 'getNumLogins'));
-		$date = $this->getColumnByKey('uDateAdded');
+		$this->addColumn(new Column('u.uName', t('Username'), array('Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserName')));
+		$this->addColumn(new Column('u.uEmail', t('Email'), array('Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserEmail')));
+		$this->addColumn(new Column('u.uDateAdded', t('Last Modified'), array('Concrete\Core\User\Search\ColumnSet\DefaultSet', 'getUserDateAdded')));
+		$this->addColumn(new Column('u.uNumLogins', t('# Logins'), 'getNumLogins'));
+		$date = $this->getColumnByKey('u.uDateAdded');
 		$this->setDefaultSortColumn($date, 'desc');
 	}
 }

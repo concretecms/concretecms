@@ -9,6 +9,7 @@ abstract class ItemList
     protected $sortBy;
     protected $sortByDirection;
     protected $autoSortColumns = array();
+    protected $itemsPerPage = -1; // determined by the pagination object.
 
     abstract protected function createPaginationObject();
     abstract protected function executeSortBy($field, $direction = 'asc');
@@ -69,6 +70,11 @@ abstract class ItemList
         return $this->sortDirectionParameter;
     }
 
+    public function setItemsPerPage($itemsPerPage)
+    {
+        $this->itemsPerPage = $itemsPerPage;
+    }
+
     /**
      * Returns the total results in this item list.
      * @return int
@@ -85,6 +91,9 @@ abstract class ItemList
         if ($query->has($this->getQueryPaginationPageParameter())) {
             $page = intval($query->get($this->getQueryPaginationPageParameter()));
             $pagination->setCurrentPage($page);
+        }
+        if ($this->itemsPerPage > -1) {
+            $pagination->setMaxPerPage($this->itemsPerPage);
         }
         return $pagination;
     }
