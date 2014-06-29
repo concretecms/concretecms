@@ -23,7 +23,7 @@ abstract class DatabaseItemList extends ItemList
         return $query;
     }
 
-    final public function __construct(StickyRequest $req = null)
+    public function __construct(StickyRequest $req = null)
     {
         $this->query = Database::get()->createQueryBuilder();
         $this->searchRequest = $req;
