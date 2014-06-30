@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Page;
 
-use Concrete\Core\Search\DatabaseItemList;
+use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\Pagination\Pagination;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Page as ConcretePage;
@@ -19,6 +19,11 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     const PAGE_VERSION_ACTIVE = 1;
     const PAGE_VERSION_RECENT = 2;
 
+    protected function getAttributeKeyClassName()
+    {
+        return '\\Concrete\\Core\\Attribute\\Key\\CollectionKey';
+    }
+
     /** @var  \Closure | integer | null */
     protected $permissionsChecker;
 
@@ -27,8 +32,6 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      * @var array
      */
     protected $autoSortColumns = array('cv.cvName', 'cv.cvDatePublic', 'c.cDateAdded', 'c.cDateModified');
-
-    protected $attributeClass = 'CollectionAttributeKey';
 
     /**
      * Which version to attempt to retrieve.
@@ -439,29 +442,6 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     {
         if ($this->isFulltextSearch) {
             $this->query->orderBy('cIndexScore', 'desc');
-        }
-    }
-
-    public function __call($nm, $a)
-    {
-        if (substr($nm, 0, 8) == 'filterBy') {
-            $handle = uncamelcase(substr($nm, 8));
-            if (count($a) == 2) {
-                $this->filterByAttribute($attrib, $a[0], $a[1]);
-            } else {
-                $this->filterByAttribute($attrib, $a[0]);
-            }
-        } else {
-            if (substr($nm, 0, 6) == 'sortBy') {
-                $handle = uncamelcase(substr($nm, 6));
-                if (count($a) == 1) {
-                    $this->sortBy($attrib, $a[0]);
-                } else {
-                    $this->sortBy($attrib);
-                }
-            } else {
-                throw new \Exception(t('%s method does not exist for the PageList class', $nm));
-            }
         }
     }
 

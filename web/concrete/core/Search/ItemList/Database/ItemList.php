@@ -1,9 +1,10 @@
 <?
-namespace Concrete\Core\Search;
+namespace Concrete\Core\Search\ItemList\Database;
+use Concrete\Core\Search\StickyRequest;
 use Database;
-use Doctrine\DBAL\Logging\EchoSQLLogger;
+use Concrete\Core\Search\ItemList\ItemList as AbstractItemList;
 
-abstract class DatabaseItemList extends ItemList
+abstract class ItemList extends AbstractItemList
 {
 
     /** @var \Doctrine\DBAL\Query\QueryBuilder */
@@ -59,14 +60,6 @@ abstract class DatabaseItemList extends ItemList
         $this->query->andWhere(implode(' ', array(
            $field, $comparison, $this->query->createNamedParameter($value)
         )));
-    }
-
-    /**
-     * Filters by a attribute.
-     */
-    public function filterByAttribute($column, $value, $comparison = '=')
-    {
-        $this->filter('ak_' . $column, $value, $comparison);
     }
 
 }

@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\File;
 
-use Concrete\Core\Search\DatabaseItemList;
+use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\Search\PermissionableListItemInterface;
 use Concrete\Core\Search\Pagination\PermissionablePagination;
 use Database;
@@ -30,7 +30,10 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
         'fv.fvSize'
     );
 
-    protected $attributeClass = 'FileAttributeKey';
+    protected function getAttributeKeyClassName()
+    {
+        return '\\Concrete\\Core\\Attribute\\Key\\FileKey';
+    }
 
     public function setPermissionsChecker(\Closure $checker)
     {
@@ -103,19 +106,6 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
     public function filterByType($type)
     {
         $this->filter('fvType', $type);
-    }
-
-    /* magic method for filtering by attributes. */
-    public function __call($nm, $a)
-    {
-        if (substr($nm, 0, 8) == 'filterBy') {
-            $handle = uncamelcase(substr($nm, 8));
-            if (count($a) == 2) {
-                $this->filterByAttribute($handle, $a[0], $a[1]);
-            } else {
-                $this->filterByAttribute($handle, $a[0]);
-            }
-        }
     }
 
     public function filterByExtension($extension)

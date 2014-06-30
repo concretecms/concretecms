@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Core\Search\Result;
 use \Concrete\Core\Search\Column\Set;
-use \Concrete\Core\Search\ItemList;
+use \Concrete\Core\Search\ItemList\ItemList;
 use Pagerfanta\View\TwitterBootstrap3View;
 use stdClass;
 
