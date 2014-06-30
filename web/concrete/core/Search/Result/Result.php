@@ -1,15 +1,17 @@
 <?
 namespace Concrete\Core\Search\Result;
-use \Concrete\Core\Foundation\Collection\Database\Column\Set as DatabaseItemListColumnSet;
-use \Concrete\Core\Foundation\Collection\ItemList;
+use \Concrete\Core\Search\Column\Set;
+use \Concrete\Core\Search\ItemList\ItemList;
+use Pagerfanta\View\TwitterBootstrap3View;
 use stdClass;
 
 class Result {
 
-	protected $summary;
 	protected $listColumns;
 	protected $list;
 	protected $baseURL;
+
+    /** @var \Concrete\Core\Search\Pagination\Pagination */
 	protected $pagination;
 
 	protected $items;
@@ -26,18 +28,18 @@ class Result {
 		return $this->baseURL;
 	}
 
-	public function __construct(DatabaseItemListColumnSet $columns, ItemList $il, $url, $fields = array()) {
-		$this->summary = $il->getSummary();
+	public function __construct(Set $columns, ItemList $il, $url, $fields = array()) {
 		$this->listColumns = $columns;
 		$this->list = $il;
 		$this->baseURL = $url;
 		$this->fields = $fields;
+        $this->pagination = $il->getPagination();
 	}
 
 	public function getItems() {
 		if (!isset($this->items)) {
 			$this->items = array();
-			$items = $this->list->getPage();
+			$items = $this->pagination->getCurrentPageResults();
 			foreach($items as $item) {
 				$node = $this->getItemDetails($item);
 				$this->items[] = $node;
@@ -76,8 +78,17 @@ class Result {
 		foreach($this->getColumns() as $column) {
 			$obj->columns[] = $column;
 		}
-		$obj->summary = $this->summary;
-		$obj->pagination = $this->list->getPagination($this->getBaseURL())->getAsJSONObject();
+        $html = '';
+        if ($this->pagination->haveToPaginate()) {
+            $view = new TwitterBootstrap3View();
+            $result = $this;
+            $html = $view->render($this->pagination, function($page) use ($result) {
+                $list = $result->getItemListObject();
+                return $result->getBaseURL() . '?'
+                . $list->getQueryPaginationPageParameter() . '=' . $page;
+            });
+        }
+		$obj->paginationTemplate = $html;
 		$obj->fields = $this->fields;
 		return $obj;
 	}

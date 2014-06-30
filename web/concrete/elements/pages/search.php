@@ -22,7 +22,8 @@ foreach($searchFieldAttributes as $ak) {
 	$searchFields[$ak->getAttributeKeyID()] = tc('AttributeKeyName', $ak->getAttributeKeyName());
 }
 
-$searchRequest = $controller->getSearchRequest();
+$flr = new \Concrete\Core\Search\StickyRequest('pages');
+$req = $flr->getSearchRequest();
 
 ?>
 
@@ -47,7 +48,7 @@ $searchRequest = $controller->getSearchRequest();
 	<div class="form-group">
 		<div class="ccm-search-main-lookup-field">
 			<i class="fa fa-search"></i>
-			<?=$form->search('cvName', $searchRequest['cvName'], array('placeholder' => t('Page Name')))?>
+			<?=$form->search('cvName', $req['cvName'], array('placeholder' => t('Page Name')))?>
 			<button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
 		</div>
 	</div>
@@ -69,7 +70,7 @@ $searchRequest = $controller->getSearchRequest();
 		<? } ?>
 	</select>
 	<div class="ccm-search-field-content"><% if (typeof(field) != 'undefined') { %><%=field.html%><% } %></div>
-	<a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="fa fa-minus-sign"></i></a>
+	<a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="fa fa-minus-circle"></i></a>
 </div>
 </script>
 

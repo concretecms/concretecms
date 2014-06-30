@@ -1,66 +1,117 @@
 <?
 namespace Concrete\Core\User\Group;
-use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+
+use Concrete\Core\Search\ItemList\Database\ItemList as DatabaseItemList;
+use Concrete\Core\Search\Pagination\Pagination;
 use Loader;
+use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Permissions;
-class GroupList extends DatabaseItemList {
-	
-	protected $itemsPerPage = 10;
-	protected $minimumGroupID = REGISTERED_GROUP_ID;
-	
-	protected $autoSortColumns = array('gName', 'gID');
 
-	public function includeAllGroups() {
-		$this->filter('Groups.gID', -1, '>');
-	}
-	
-	public function filterByKeywords($kw) {
-		$db = Loader::db();
-		$this->filter(false, "(Groups.gName like " . $db->qstr('%' . $kw . '%') . " or Groups.gDescription like " . $db->qstr('%' . $kw . '%') . ")");
-	}
-	
-	// only return groups that this user has the ability to assign.
-	public function filterByAssignable() {
-		if (PERMISSIONS_MODEL != 'simple') {
-			// there's gotta be a more reasonable way than this but right now i'm not sure what that is.
-			$excludeGroupIDs = array(GUEST_GROUP_ID, REGISTERED_GROUP_ID);
-			$db = Loader::db();
-			$r = $db->Execute('select gID from Groups where gID > ?', array(REGISTERED_GROUP_ID));
-			while ($row = $r->FetchRow()) {
-				$g = Group::getByID($row['gID']);
-				$gp = new Permissions($g);
-				if (!$gp->canAssignGroup()) {
-					$excludeGroupIDs[] = $row['gID'];
-				}
-			}
-			$this->filter('Groups.gID', $excludeGroupIDs, 'not in');
-		}
-	}
+class GroupList extends DatabaseItemList
+{
 
-	public function filterByUserID($uID) {
-		$this->addToQuery('inner join UserGroups ug on Groups.gID = ug.gID');
-		$this->filter('ug.uID', $uID);
-	}
+    protected $includeAllGroups = false;
 
-	public function updateItemsPerPage( $num ) {
-		$this->itemsPerPage = $num;
-	}
-	
-	function __construct() {
-		$this->setQuery("select Groups.gID, Groups.gName, Groups.gDescription from Groups");
-		$this->filter('Groups.gID', REGISTERED_GROUP_ID, '>');
-	}
+    protected $autoSortColumns = array('gName', 'gID');
 
-	public function get($itemsToGet = 100, $offset = 0) {
-		$r = parent::get( $itemsToGet, intval($offset));
-		$groups = array();
-		foreach($r as $row) {
-			$g = Group::getByID($row['gID']);			
-			if (is_object($g)) {
-				$groups[] = $g;
-			}
-		}
-		return $groups;
-	}
-	
+    public function includeAllGroups()
+    {
+        $this->includeAllGroups = true;
+    }
+
+    /**
+     * Filters keyword fields by keywords (including name and description).
+     * @param $keywords
+     */
+    public function filterByKeywords($keywords)
+    {
+        $expressions = array(
+            $this->query->expr()->like('g.gName', ':keywords'),
+            $this->query->expr()->like('g.gDescription', ':keywords')
+        );
+
+        $expr = $this->query->expr();
+        $this->query->andWhere(call_user_func_array(array($expr, 'orX'), $expressions));
+        $this->query->setParameter('keywords', '%' . $keywords . '%');
+    }
+
+    /**
+     * Only return groups the user has the ability to assign.
+     */
+    public function filterByAssignable()
+    {
+        if (PERMISSIONS_MODEL != 'simple') {
+            // there's gotta be a more reasonable way than this but right now i'm not sure what that is.
+            $excludeGroupIDs = array(GUEST_GROUP_ID, REGISTERED_GROUP_ID);
+            $db = Loader::db();
+            $r = $db->Execute('select gID from Groups where gID > ?', array(REGISTERED_GROUP_ID));
+            while ($row = $r->FetchRow()) {
+                $g = Group::getByID($row['gID']);
+                $gp = new Permissions($g);
+                if (!$gp->canAssignGroup()) {
+                    $excludeGroupIDs[] = $row['gID'];
+                }
+            }
+            $this->query->andWhere(
+                $this->query->expr()->notIn('g.gId', array_map(array($db, 'quote'), $excludeGroupIDs))
+            );
+        }
+    }
+
+    public function filterByUserID($uID)
+    {
+        $this->query->innerJoin('g', 'UserGroups', 'ug', 'g.gID = ug.gID');
+        $this->query->andWhere('ug.uID = :uID');
+        $this->query->setParameter('uID', $uID);
+    }
+
+    public function createQuery()
+    {
+        $this->query->select('g.gID')
+            ->from('Groups', 'g');
+    }
+
+    public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
+    {
+        if (!$this->includeAllGroups) {
+            $query->andWhere('g.gID > :minGroupID');
+            $query->setParameter('minGroupID', REGISTERED_GROUP_ID);
+        }
+        return $query;
+    }
+
+    /**
+     * The total results of the query
+     * @return int
+     */
+    public function getTotalResults()
+    {
+        $query = $this->deliverQueryObject();
+        return $query->select('count(g.gID)')->setMaxResults(1)->execute()->fetchColumn();
+    }
+
+    /**
+     * Gets the pagination object for the query.
+     * @return Pagination
+     */
+    protected function createPaginationObject()
+    {
+        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+            $query->select('count(g.gID)')->setMaxResults(1);
+        });
+        $pagination = new Pagination($this, $adapter);
+        return $pagination;
+    }
+
+    /**
+     * @param $queryRow
+     * @return \Concrete\Core\User\Group\Group
+     */
+    public function getResult($queryRow)
+    {
+        $g = Group::getByID($queryRow['gID']);
+        return $g;
+    }
+
+
 }

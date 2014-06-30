@@ -74,7 +74,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <script type="text/template" class="pagePath">
 <div class="ccm-panel-detail-location-page-path">
 	<input class="control-input" type="text" name="additionalPath[]" value="<%=path%>" />
-	<a href="#"><i class="fa fa-minus-sign" /></a>
+	<a href="#"><i class="fa fa-minus-circle" /></a>
 </div>
 </script>
 

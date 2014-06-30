@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Core\Foundation\Collection\Database\Column;
+namespace Concrete\Core\Search\Column;
 use Loader;
 class AttributeKeyColumn extends Column {
 

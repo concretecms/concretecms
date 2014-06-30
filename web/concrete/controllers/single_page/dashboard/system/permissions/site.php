@@ -35,7 +35,7 @@ class Site extends DashboardPageController {
 
 		$gl = new GroupList();
 		$gl->filter('gID', REGISTERED_GROUP_ID, '>');
-		$gIDs = $gl->get();
+		$gIDs = $gl->getResults();
 		$gArray = array();
 		foreach($gIDs as $g) {
 			$gArray[] = $g;

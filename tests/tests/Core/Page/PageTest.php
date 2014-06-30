@@ -200,6 +200,4 @@ class PageTest extends PageTestCase {
         $this->assertEquals('/page-4/page-2/subpage-a/page-1', $pagePath->getPagePath());
         $this->assertTrue($pagePath->isPagePathCanonical());
     }
-
-
 }

@@ -69,8 +69,7 @@ class Bulkupdate extends DashboardPageController {
 		if (!$this->error->has()) {
 			$gl = new GroupList();
 			$gl->filterByKeywords($gName);
-			$gl->setItemsPerPage(-1);
-			$this->set('groups', $gl->get());
+			$this->set('groups', $gl->getResults());
 		}
 	}
 

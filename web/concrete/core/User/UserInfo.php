@@ -373,15 +373,24 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 		$this->reindex();
 	}
 
-	public function reindex() {
-		$attribs = UserAttributeKey::getAttributes($this->getUserID(), 'getSearchIndexValue');
-		$db = Loader::db();
+    /**
+     * Reindex the attributes on this file.
+     * @return void
+     */
+    public function reindex()
+    {
+        $attribs = UserAttributeKey::getAttributes(
+            $this->getUserID(),
+            'getSearchIndexValue'
+        );
+        $db = Loader::db();
 
-		$db->Execute('delete from UserSearchIndexAttributes where uID = ?', array($this->getUserID()));
-		$searchableAttributes = array('uID' => $this->getUserID());
-		$rs = $db->Execute('select * from UserSearchIndexAttributes where uID = -1');
-		AttributeKey::reindex('UserSearchIndexAttributes', $searchableAttributes, $attribs, $rs);
-	}
+        $db->Execute('delete from UserSearchIndexAttributes where uID = ?', array($this->getUserID()));
+        $searchableAttributes = array('uID' => $this->getUserID());
+
+        $key = new UserAttributeKey();
+        $key->reindex('UserSearchIndexAttributes', $searchableAttributes, $attribs);
+    }
 
 	/**
 	 * Gets the value of the attribute for the user

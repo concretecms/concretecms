@@ -1,7 +1,5 @@
 <?
-namespace Concrete\Core\Foundation\Collection\Database;
-use \Concrete\Core\Foundation\Collection\ItemList;
-use Loader;
+namespace Concrete\Core\Legacy;
 class DatabaseItemList extends ItemList {
 
 	protected $query = '';
@@ -17,7 +15,7 @@ class DatabaseItemList extends ItemList {
 	public function getTotal() {
 		if ($this->total == -1) {
 			$db = Loader::db();
-			$arr = $this->executeBase(); // returns an associated array of query/placeholder values				
+			$arr = $this->executeBase(); // returns an associated array of query/placeholder values
 			$r = $db->Execute($arr);
 			$this->total = $r->NumRows();
 		}		

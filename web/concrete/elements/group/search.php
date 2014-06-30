@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?> 
 <?
 $form = Loader::helper('form');
-$searchRequest = $controller->getSearchRequest();
+$searchRequest = $_REQUEST;
 $result = Loader::helper('json')->encode($controller->getSearchResultObject()->getJSONObject());
 $tree = GroupTree::get();
 $guestGroupNode = GroupTreeNode::getTreeNodeByGroupID(GUEST_GROUP_ID);
@@ -62,11 +62,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 
 
 <script type="text/template" data-template="search-results-pagination">
-<ul class="pagination">
-	<li class="<%=pagination.prevClass%>"><%=pagination.previousPage%></li>
-	<%=pagination.pages%>
-	<li class="<%=pagination.nextClass%>"><%=pagination.nextPage%></li>
-</div>
+<%=paginationTemplate%>
 </script>
 
 <script type="text/template" data-template="search-results-table-head">

@@ -4,7 +4,7 @@ use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
 use Page;
-use PageList;
+use \Concrete\Core\Legacy\PageList;
 
 class Bulk extends DashboardPageController {
 	

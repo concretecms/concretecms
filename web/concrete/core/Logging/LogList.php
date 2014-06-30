@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Core\Logging;
-use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use \Concrete\Core\Legacy\DatabaseItemList;
 use Database;
 class LogList extends DatabaseItemList {
 
