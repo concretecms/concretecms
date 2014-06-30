@@ -66,8 +66,7 @@ $searchRequest = $flr->getSearchRequest();
 			<?=$form->label('gID', t('In Group'))?>
 			<? 
 			$gl = new GroupList();
-			$gl->setItemsPerPage(-1);
-			$g1 = $gl->getPage();
+			$g1 = $gl->getResults();
 			?>		
 			<div class="ccm-search-field-content">			
 			<select multiple name="gID[]" class="chosen-select form-control" style="width: 200px">
