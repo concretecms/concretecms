@@ -6,7 +6,7 @@
 $gl = new GroupList();
 $gl->filter('gID', REGISTERED_GROUP_ID, '>');
 $gl->sortBy('gID', 'asc');
-$gIDs = $gl->get();
+$gIDs = $gl->getResults();
 $gArray = array();
 foreach($gIDs as $gID) {
 	$groups[] = Group::getByID($gID['gID']);

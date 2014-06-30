@@ -95,13 +95,6 @@ class CollectionKey extends Key {
 		return parent::getList('collection');	
 	}
 	
-	/** 
-	 * @access private 
-	 */
-	public function get($akID) {
-		return static::getByID($akID);
-	}
-	
 	protected function saveAttribute($nvc, $value = false) {
 		// We check a cID/cvID/akID combo, and if that particular combination has an attribute value ID that
 		// is NOT in use anywhere else on the same cID, cvID, akID combo, we use it (so we reuse IDs)

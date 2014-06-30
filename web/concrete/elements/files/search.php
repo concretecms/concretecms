@@ -19,7 +19,8 @@ foreach($searchFieldAttributes as $ak) {
     $searchFields[$ak->getAttributeKeyID()] = tc('AttributeKeyName', $ak->getAttributeKeyName());
 }
 
-$searchRequest = $controller->getSearchRequest();
+$flr = new \Concrete\Core\Search\StickyRequest('files');
+$req = $flr->getSearchRequest();
 
 ?>
 
@@ -40,7 +41,7 @@ $searchRequest = $controller->getSearchRequest();
     <div class="form-group">
         <div class="ccm-search-main-lookup-field">
             <i class="fa fa-search"></i>
-            <?=$form->search('fKeywords', $searchRequest['fKeywords'], array('placeholder' => t('Keywords')))?>
+            <?=$form->search('fKeywords', $req['fKeywords'], array('placeholder' => t('Keywords')))?>
             <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
         </div>
     </div>
@@ -65,11 +66,11 @@ $searchRequest = $controller->getSearchRequest();
         <select multiple name="fsID[]" class="chosen-select">
             <optgroup label="<?=t('Sets')?>">
             <? foreach($s1 as $s) { ?>
-                <option value="<?=$s->getFileSetID()?>"  <? if (is_array($searchRequest['fsID']) && in_array($s->getFileSetID(), $searchRequest['fsID'])) { ?> selected="selected" <? } ?>><?=wordwrap($s->getFileSetName(), '23', '&shy;', true)?></option>
+                <option value="<?=$s->getFileSetID()?>"  <? if (is_array($req['fsID']) && in_array($s->getFileSetID(), $req['fsID'])) { ?> selected="selected" <? } ?>><?=wordwrap($s->getFileSetName(), '23', '&shy;', true)?></option>
             <? } ?>
             </optgroup>
             <optgroup label="<?=t('Other')?>">
-                <option value="-1" <? if (is_array($searchRequest['fsID']) && in_array(-1, $searchRequest['fsID'])) { ?> selected="selected" <? } ?>><?=t('Files in no sets.')?></option>
+                <option value="-1" <? if (is_array($req['fsID']) && in_array(-1, $req['fsID'])) { ?> selected="selected" <? } ?>><?=t('Files in no sets.')?></option>
             </optgroup>
         </select>
         </div>
@@ -89,7 +90,7 @@ $searchRequest = $controller->getSearchRequest();
         <? } ?>
     </select>
     <div class="ccm-search-field-content"><% if (typeof(field) != 'undefined') { %><%=field.html%><% } %></div>
-    <a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="fa fa-minus-sign"></i></a>
+    <a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="fa fa-minus-circle"></i></a>
 </div>
 </script>
 
@@ -123,11 +124,7 @@ $searchRequest = $controller->getSearchRequest();
 </div>
 
 <script type="text/template" data-template="search-results-pagination">
-<ul class="pagination">
-    <li class="<%=pagination.prevClass%>"><%=pagination.previousPage%></li>
-    <%=pagination.pages%>
-    <li class="<%=pagination.nextClass%>"><%=pagination.nextPage%></li>
-</div>
+<%=paginationTemplate%>
 </script>
 
 <script type="text/template" data-template="search-results-table-head">

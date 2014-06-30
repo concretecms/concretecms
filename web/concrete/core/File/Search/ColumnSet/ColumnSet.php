@@ -2,9 +2,9 @@
 namespace Concrete\Core\File\Search\ColumnSet;
 use Loader;
 use User;
-use \Concrete\Core\Foundation\Collection\Database\Column\Set as DatabaseItemListColumnSet;
+use \Concrete\Core\Search\Column\Set as DatabaseItemListColumnSet;
 
-class ColumnSet extends \Concrete\Core\Foundation\Collection\Database\Column\Set {
+class ColumnSet extends DatabaseItemListColumnSet {
 	protected $attributeClass = 'FileAttributeKey';
 	public function getCurrent() {
 		$u = new User();

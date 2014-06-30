@@ -463,9 +463,7 @@ class Key extends Object
         if (isset($akIsSearchable) && !$akIsSearchable) {
             $akIsSearchable = 0;
         }
-        if (isset($akIsSearchableIndexed) && !$akIsSearchableIndexed) {
-            $akIsSearchableIndexed = 0;
-        }
+        $akIsSearchableIndexed = intval($akIsSearchableIndexed);
         $db = Loader::db();
 
         $akCategoryHandle = $db->GetOne(
@@ -557,6 +555,7 @@ class Key extends Object
         /** @var \Concrete\Core\Database\Connection $db */
         $db = Loader::db();
         $sm = $db->getSchemaManager();
+
         /** @var \Doctrine\DBAL\Schema\Column[] $columns */
         $columns = $sm->listTableColumns($table);
 
@@ -821,7 +820,6 @@ class Key extends Object
 
     public function createIndexedSearchTable()
     {
-
         if ($this->getIndexedSearchTable() != false) {
             $db = Database::get();
             $platform = $db->getDatabasePlatform();

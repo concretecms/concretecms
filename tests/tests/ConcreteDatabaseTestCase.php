@@ -13,7 +13,11 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase {
 			$this->appendXML($node, $ch);
 		}
 	}
-	
+
+    protected function debug()
+    {
+        \Database::get()->getConfiguration()->setSQLLogger(new \Doctrine\DBAL\Logging\EchoSQLLogger());
+    }
 
 	public function getConnection() {
 	    if ($this->conn === null) {

@@ -24,8 +24,7 @@ foreach($users as $ui) {
 }
 
 $gl = new GroupList();
-$gl->setItemsPerPage(-1);
-$g1 = $gl->getPage();
+$g1 = $gl->getResults();
 
 
 if ($_POST['task'] == 'group_add') {

@@ -93,8 +93,8 @@ class Controller extends BlockController {
 				$pl->filterByIsFeatured(1);
 			}
 		}
-		if (!$row['displayAliases']) {
-			$pl->filterByIsAlias(0);
+		if ($row['displayAliases']) {
+			$pl->includeAliases();
 		}
 		$pl->filter('cvName', '', '!=');
 

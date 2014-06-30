@@ -278,6 +278,7 @@ class Search extends DashboardPageController {
 			$sr->setMessage(t('Attribute saved successfully.'));
 			$sr->setAdditionalDataAttribute('value',  $val->getValue('displaySanitized','display'));
 		}
+        $this->user->reindex();
 		$sr->outputJSON();
 	}
 

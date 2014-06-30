@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Block\Survey;
 use Loader;
-use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use \Concrete\Core\Legacy\DatabaseItemList;
 
 /**
  * Returns all surveys in a site.

@@ -19,6 +19,7 @@
         "michelf/php-markdown": "1.4.*@dev",
         "filp/whoops": "1.*",
         "guzzle/guzzle": ">=3.7.0,<=3.9.9",
+        "pagerfanta/pagerfanta": "1.0.2",
         "facebook/php-sdk": "dev-master",
         "htmlawed/htmlawed": "dev-master",
         "mobiledetect/mobiledetectlib": "dev-master",
