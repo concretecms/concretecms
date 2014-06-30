@@ -13,10 +13,14 @@ abstract class ItemList
     protected $autoSortColumns = array();
     protected $itemsPerPage = -1; // determined by the pagination object.
 
-    abstract protected function createPaginationObject();
     abstract protected function executeSortBy($field, $direction = 'asc');
     abstract public function executeGetResults();
     abstract public function getResult($mixed);
+
+    /**
+     * @return \Concrete\Core\Search\Pagination\Pagination
+     */
+    abstract protected function createPaginationObject();
 
     public function sortBy($field, $direction = 'asc')
     {
