@@ -142,7 +142,8 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
 
     public function getTotalResults()
     {
-        if ($this->permissionsChecker == -1) {
+        $u = new \User();
+        if ($this->permissionsChecker == -1 || $u->isSuperUser()) {
             $query = $this->deliverQueryObject();
             return $query->select('count(distinct p.cID)')->setMaxResults(1)->execute()->fetchColumn();
         } else {
@@ -153,7 +154,8 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
 
     protected function createPaginationObject()
     {
-        if ($this->permissionsChecker == -1) {
+        $u = new \User();
+        if ($this->permissionsChecker == -1 || $u->isSuperUser()) {
             $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
                 $query->select('count(distinct p.cID)')->setMaxResults(1);
             });
@@ -187,6 +189,11 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
 
     public function checkPermissions($mixed)
     {
+        $u = new \User();
+        if ($u->isSuperUser()) {
+            return true;
+        }
+
         if (isset($this->permissionsChecker)) {
             if ($this->permissionsChecker === -1) {
                 return true;
