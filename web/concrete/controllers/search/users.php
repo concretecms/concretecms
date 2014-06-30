@@ -66,7 +66,7 @@ class Users extends Controller {
 		if (!$u->isSuperUser()) {
 			$gIDs = array(-1);
 			$gs = new GroupList();
-			$groups = $gs->get();
+			$groups = $gs->getResults();
 			foreach($groups as $g) {
 				$gp = new Permissions($g);
 				if ($gp->canSearchUsersInGroup()) {

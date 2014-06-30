@@ -450,7 +450,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface 
 	public static function getBadges() {
 		$gs = new GroupList();
 		$gs->filter('gIsBadge', 1);
-		$results = $gs->get();
+		$results = $gs->getResults();
 		$badges = array();
 		foreach($results as $gr) {
 			$badges[] = Group::getByID($gr['gID']);
