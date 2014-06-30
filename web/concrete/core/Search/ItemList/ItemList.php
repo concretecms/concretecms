@@ -1,5 +1,7 @@
 <?
-namespace Concrete\Core\Search;
+namespace Concrete\Core\Search\ItemList;
+
+use Concrete\Core\Search\StickyRequest;
 
 abstract class ItemList
 {
@@ -104,16 +106,6 @@ abstract class ItemList
      */
     public function setupAutomaticSorting(StickyRequest $request = null)
     {
-        // First, we check to see if there are any sortable attributes we can add to the
-        // auto sort columns.
-        if (is_callable(array($this->attributeClass, 'getList'))) {
-            $l = call_user_func(array($this->attributeClass, 'getList'));
-            foreach($l as $ak) {
-                $this->autoSortColumns[] = 'ak_' . $ak->getAttributeKeyHandle();
-            }
-        }
-
-        // now we check to see if we should setup sorting by a sticky search request.
         if ($request) {
             $data = $request->getSearchRequest();
         } else {

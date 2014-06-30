@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Search\Pagination;
 
-use Concrete\Core\Search\ItemList;
+use Concrete\Core\Search\ItemList\ItemList;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 

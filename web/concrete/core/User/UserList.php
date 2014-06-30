@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Core\User;
 
-use Concrete\Core\Search\DatabaseItemList;
+use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
 use Concrete\Core\User\Group\Group;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Concrete\Core\Search\Pagination\Pagination;
@@ -10,7 +10,10 @@ use UserInfo as CoreUserInfo;
 class UserList extends DatabaseItemList
 {
 
-    protected $attributeClass = 'UserAttributeKey';
+    protected function getAttributeKeyClassName()
+    {
+        return '\\Concrete\\Core\\Attribute\\Key\\UserKey';
+    }
 
     /**
      * Columns in this array can be sorted via the request.
@@ -205,31 +208,6 @@ class UserList extends DatabaseItemList
     {
         $this->query->orderBy('u.uID', 'asc');
     }
-
-    /* magic method for filtering by user attributes. */
-    public function __call($nm, $a)
-    {
-        if (substr($nm, 0, 8) == 'filterBy') {
-            $handle = uncamelcase(substr($nm, 8));
-            if (count($a) == 2) {
-                $this->filterByAttribute($attrib, $a[0], $a[1]);
-            } else {
-                $this->filterByAttribute($attrib, $a[0]);
-            }
-        } else {
-            if (substr($nm, 0, 6) == 'sortBy') {
-                $handle = uncamelcase(substr($nm, 6));
-                if (count($a) == 1) {
-                    $this->sortBy($attrib, $a[0]);
-                } else {
-                    $this->sortBy($attrib);
-                }
-            } else {
-                throw new \Exception(t('%s method does not exist for the UserList class', $nm));
-            }
-        }
-    }
-
 
 
 }

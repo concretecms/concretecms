@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Core\User\Group;
 
-use \Concrete\Core\Search\DatabaseItemList;
+use Concrete\Core\Search\ItemList\Database\ItemList as DatabaseItemList;
 use Concrete\Core\Search\Pagination\Pagination;
 use Loader;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
