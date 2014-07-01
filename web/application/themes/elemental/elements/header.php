@@ -3,24 +3,28 @@
 <html lang="<?=Localization::activeLanguage()?>">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!--[if lt IE 9]>
-    <script src="<?=$view->getThemePath()?>/js/ie/html5-shiv.js"></script>
-    <script src="<?=$view->getThemePath()?>/js/ie/respond.js"></script>
-    <![endif]-->
     <link rel="stylesheet" type="text/css" href="<?=$this->getThemePath()?>/css/bootstrap-modified.css">
-    <?php
-    Loader::element('header_required', array('pageTitle' => $pageTitle));
-    ?>
+    <?=$html->css($view->getStylesheet('main.less'))?>
+    <?php Loader::element('header_required', array('pageTitle' => $pageTitle));?>
 </head>
 <body>
-
+<?
+    $as = new GlobalArea('Header Search');
+    $blocks = $as->getTotalBlocksInArea();
+    $displayThirdColumn = $blocks > 0 || $c->isEditMode();
+?>
 <div class="ccm-page">
-
     <header>
-
         <div class="container">
-            <div class="col-md-4"><span id="brand">Elemental</span></div>
-            <div class="col-md-8">alsfjkaksd</div>
+            <div class="col-md-4"><span id="header-brand">Elemental</span></div>
+            <div class="<? if ($displayThirdColumn) { ?>col-md-5<? } else { ?>col-md-8<? } ?>">
+                <?
+                $a = new GlobalArea('Header Navigation');
+                $a->display();
+                ?>
+            </div>
+            <? if ($displayThirdColumn) { ?>
+                <div class="col-md-3"><? $as->display(); ?></div>
+            <? } ?>
         </div>
-
     </header>
