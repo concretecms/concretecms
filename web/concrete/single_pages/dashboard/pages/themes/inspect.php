@@ -58,6 +58,9 @@ $ci = Loader::helper('concrete/ui');
                                     case PageThemeFile::TFTYPE_VIEW:
                                         print t("Wrapper for static pages.");
                                         break;
+                                    case PageThemeFile::TFTYPE_PAGE_CLASS:
+                                        print t("Custom page class file.");
+                                        break;
                                     case PageThemeFile::TFTYPE_DEFAULT:
                                         print t("Default template.");
                                         break;
