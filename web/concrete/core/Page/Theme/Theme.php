@@ -484,6 +484,8 @@ class Theme extends Object
 
                 if ($f == FILENAME_THEMES_VIEW) {
                     $type = PageThemeFile::TFTYPE_VIEW;
+                } else if ($f == FILENAME_THEMES_CLASS) {
+                    $type = PageThemeFile::TFTYPE_PAGE_CLASS;
                 } else {
                     if ($f == FILENAME_THEMES_DEFAULT) {
                         $type = PageThemeFile::TFTYPE_DEFAULT;

@@ -37,8 +37,13 @@ class File {
 	 * This is a template for a page that already exists in the system.
 	 */
 	const TFTYPE_PAGE_TEMPLATE_EXISTING = 5;
-	
-	/** 
+
+    /**
+     * A custom class for a page theme.
+     */
+    const TFTYPE_PAGE_CLASS = 6;
+
+    /**
 	 * Sets the filename of this object to the passed parameter.
 	 * @params string $filename
 	 * @return void
