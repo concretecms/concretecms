@@ -4,6 +4,7 @@ use Page;
 use Request;
 use Loader;
 use Controller;
+use Core;
 use \Concrete\Core\Page\View\PageView;
 class PageController extends Controller {
 
@@ -18,6 +19,7 @@ class PageController extends Controller {
     public function __construct(Page $c) {
         $this->c = $c;
         $this->view = new PageView($this->c);
+        $this->set('html', Core::make('\Concrete\Core\Html\Service\Html'));
     }
 
     public function getPageObject() {

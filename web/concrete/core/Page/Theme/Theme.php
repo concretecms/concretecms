@@ -328,7 +328,7 @@ class Theme extends Object
             $scl = $style->getValueList();
             $stylesheet->setValueList($scl);
         }
-        if (!$stylesheet->outputFileExists()) {
+        if (!$stylesheet->outputFileExists() || !ENABLE_ASSET_CACHE) {
             $stylesheet->output();
         }
         return $stylesheet->getOutputRelativePath();
