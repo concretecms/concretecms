@@ -1,27 +1,22 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");?>
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Spam Control'), false, 'span10 offset1', (!is_object($activeLibrary) || (!$activeLibrary->hasOptionsForm())))?>
 <form method="post" id="site-form" action="<?=$view->action('update_library')?>">
-<? if (is_object($activeLibrary) && $activeLibrary->hasOptionsForm()) { ?>
-	<div class="ccm-pane-body">
-<? } ?>
+    <div class="form-group">
 		<label for='group_id'>Spam Whitelist Group</label>
 		<?=$form->select('group_id', (array)$groups, $whitelistGroup);?>
-
+    </div>
 	<?=$this->controller->token->output('update_library')?>
 	<? if (count($libraries) > 0) { ?>
 
-		<div class="clearfix">
+		<div class="form-group">
 		<?=$form->label('activeLibrary', t('Active Library'))?>
-		<div class="input">
-		<? 
+		<?
 		$activeHandle = '';
 		if (is_object($activeLibrary)) {
 			$activeHandle = $activeLibrary->getSystemAntispamLibraryHandle();
 		}
 		?>
 		
-		<?=$form->select('activeLibrary', $libraries, $activeHandle, array('class' => 'span4'))?>
-		</div>
+		<?=$form->select('activeLibrary', $libraries, $activeHandle, array('class' => 'form-control'))?>
 		</div>
 		
 		<? if (is_object($activeLibrary)) {
@@ -34,24 +29,18 @@
 				
 				?>
 				
-				<div class="clearfix">
-				<?=$form->label('ANTISPAM_LOG_SPAM', t('Log settings'))?>
-				<div class="input">
-				<ul class="inputs-list">
-					<li><label><?=$form->checkbox('ANTISPAM_LOG_SPAM', 1, Config::get('ANTISPAM_LOG_SPAM'))?> <span><?=t('Log entries marked as spam.')?></span></label>
-						<span class="help-block"><?=t('Logged entries can be found in <a href="%s" style="color: #bfbfbf; text-decoration: underline">Dashboard > Reports > Logs</a>', $view->url('/dashboard/reports/logs'))?></span>
-					</li>
-				</ul>
-				</div>
+				<div class="form-group">
+                <label><?= t('Log settings') ?></label>
+                    <div class="checkbox">
+                        <?=t('Log entries marked as spam.')?><label><?=$form->checkbox('ANTISPAM_LOG_SPAM', 1, Config::get('ANTISPAM_LOG_SPAM'))?></label>
+                    </div>
+					<span class="help-block"><?=t('Logged entries can be found in <a href="%s" style="color: #bfbfbf; text-decoration: underline">Dashboard > Reports > Logs</a>', $view->url('/dashboard/reports/logs'))?></span>
 				</div>
 
-				<div class="clearfix">
-				<?=$form->label('ANTISPAM_NOTIFY_EMAIL', t('Email Notification'))?>
-				<div class="input">
+				<div class="form-group">
+                    <label><?=t('Email Notification')?> </label>
 					<?=$form->text('ANTISPAM_NOTIFY_EMAIL', Config::get('ANTISPAM_NOTIFY_EMAIL'))?>
-				<span class="help-block"><?=t('Any email address in this box will be notified when spam is detected.')?></span>
-				</div>
-
+				    <span class="help-block"><?=t('Any email address in this box will be notified when spam is detected.')?></span>
 				</div>
 				
 				
@@ -65,11 +54,12 @@
 	<? } ?>
 
 <? if (is_object($activeLibrary) && $activeLibrary->hasOptionsForm()) { ?>
+	<div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
+		    <?=Loader::helper('concrete/ui')->submit(t('Save Additional Settings'), 'submit', 'right', 'btn-primary')?>
+        </div>
 	</div>
-	<div class="ccm-pane-footer">
-		<?=Loader::helper('concrete/ui')->submit(t('Save Additional Settings'), 'submit', 'right', 'primary')?>
-	</div>
-<? } ?>	
+<? } ?>
 </form>
 
 <script type="text/javascript">
@@ -79,5 +69,3 @@ $(function() {
 	});
 });
 </script>
-
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper( (!is_object($activeLibrary) || (!$activeLibrary->hasOptionsForm())));?>
