@@ -1,57 +1,67 @@
 <?php
 $form = Loader::helper('form');
-echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Conversation Editor'), false, 'span8 offset2', false);
 ?>
-<form action="<?=$view->action('save')?>" method='post'>
-	<div class='ccm-pane-body'>
-		<div class='clearfix'>
-			<label>
-				<input value=1 name='banned_list_enabled' <?=$bannedListEnabled?'checked ':''?>type='checkbox'>
-				<?=t('Disallow posts that include banned words?')?>
-			</label>
-		</div>
-		<script class='word_template' type="text/template" charset="utf-8">
-			<tr class='editing'>
-				<th class='id'></th>
-				<td class='word'><span></span><input name='banned_word[]'></td>
-				<td style='text-align:right'><a href='#' class='save_word btn'><?=t('Save')?></a></td>
-			</tr>
-		</script>
-		<div class='banned_words_table' style='overflow:hidden'>
-			<table class='banned_word_list table'>
-				<thead>
-					<tr>
-						<th style='width:20px'>ID</th>
-						<th>Word</th>
-						<th style='width:50px;text-align:right'><a class='add_word' href='#'><i class='icon-plus'></i></a></th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php
-					foreach ($bannedWords as $word) {
-						if (!is_object($word)) continue;
-						?>
-						<tr>
-							<th class='id'><?=$word->getID()?></th>
-							<td class='word'><span><?=$word->getWord()?></span><input style='display:none' name='banned_word[]' value='<?=$word->getWord()?>'></td>
-							<td style='text-align:right'><a href='#' class='delete_word'><i class='icon-trash'></i></a> <a href='#' class='edit_word'><i class='icon-edit'></i></a></td>
-						</tr>
-						<?php
-					}
+<form action="<?=$view->action('save')?>" method='POST'>
+    <div class="ccm-dashboard-header-buttons">
+        <a class='add_word btn btn-primary' href='#'><?=t('Add Word')?></a>
+    </div>
+    
+    <div class="checkbox">
+        <label>
+		    <input value=1 name='banned_list_enabled' <?=$bannedListEnabled?'checked ':''?>type='checkbox'> <?=t('Disallow posts that include banned words?')?>
+        </label>
+    </div>
+	
+	<script class='word_template' type="text/template" charset="utf-8">
+		<tr class='editing'>
+			<th class='id'></th>
+			<td class='word'><span></span><input name='banned_word[]' class="form-control"></td>
+			<td style='text-align:right'><a href='#' class='save_word btn btn-primary'><?=t('Save')?></a></td>
+		</tr>
+	</script>
+	
+	<div class='banned_words_table' style='overflow:hidden'>
+		<table class='banned_word_list table'>
+			<thead>
+				<tr>
+					<th style='width:20px'>ID</th>
+					<th>Word</th>
+					<th style='width:200px;text-align:right'></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php
+				foreach ($bannedWords as $word) {
+					if (!is_object($word)) continue;
 					?>
-				</tbody>
-			</table>
-		</div>
+					<tr>
+						<th class='id'><?=$word->getID()?></th>
+						<td class='word'><span><?=$word->getWord()?></span><input style='display:none' name='banned_word[]' value='<?=$word->getWord()?>'></td>
+						<td style='text-align:right'>
+                            <div class="btn-group">
+                                <a href='#' class='edit_word btn btn-default'>Edit</a>
+                                <a href='#' class='delete_word btn btn-danger'>Delete</a>
+                            </div>
+						 </td>
+					</tr>
+					<?php
+				}
+				?>
+			</tbody>
+		</table>
 	</div>
-	<div class='ccm-pane-footer'>
-		<button class='btn btn-primary pull-right'><?=t('Save')?></button>
-	</div>
+	
+	<div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
+            <?php echo $interface->submit(t('Save'), 'bannedwords-form', 'right', 'btn-primary'); ?>
+        </div>
+    </div>
 </form>
 <script>
 var ctx = $('table.banned_word_list'), template = $('script.word_template'),
 	getTemplate = function(){return $(template.text());},
-	save = $("<a href='#' class='save_word btn'><?=t('Save')?></a>"),
-	edit = $("<a href='#' class='delete_word'><i class='icon-trash'></i></a> <a href='#' class='edit_word'><i class='icon-edit'></i></a>"),
+	save = $("<a href='#' class='save_word btn btn-primary'><?=t('Save')?></a>"),
+	edit = $("<div class=\"btn-group\"><a href='#' class='edit_word btn btn-default'>Edit</a><a href='#' class='delete_word btn btn-danger'>Delete</a></div>"),
 	totalheight = ctx.parent().height();
 
 if (!$('input[name=banned_list_enabled]').get(0).checked) {
@@ -70,11 +80,23 @@ $('input[name=banned_list_enabled]').click(function(){
 		ctx.parent().animate({height:0},200);
 	}
 });
+$(".add_word").on('click', function(e) {
+    ctx.find('tr.editing').find('a.save_word').click();
+	var newWord = getTemplate();
+	newWord.find('th.id').text(' ');
+	newWord.appendTo(ctx.find('tbody'));
+	
+	ctx.find('td.word').children('input').focus();
+
+	e.preventDefault();
+	e.stopPropagation();
+	return false;
+});
 ctx.on('click','a.edit_word',function(e){
 	var me = $(this);
 	ctx.find('tr.editing').find('a.save_word').click();
 	me.closest('tr').addClass('editing').find('td.word').children('span').hide().end()
-		.children('input').show().end().end().end()
+		.children('input').addClass('form-control').show().focus().end().end().end()
 		.closest('td').empty().append(save.clone());
 
 	e.preventDefault();
@@ -83,19 +105,25 @@ ctx.on('click','a.edit_word',function(e){
 }).on('click','a.save_word',function(e){
 	var me = $(this);
 	var tr = me.closest('tr');
-	tr.find('td.word').children('span').text(tr.find('td.word').children('input').val());
-	tr.removeClass('editing').find('td.word').children('span').show().end()
-		.children('input').hide().end().end().end()
-		.closest('td').empty().append(edit.clone());
+
+    tr.removeClass('editing')
+        .find('td.word').children('span').text(tr.find('td.word').children('input').val()).show().end()
+        .children('input').removeClass('form-control').hide().end().end().end();
+        	
+    tr.find('td:eq(1)').empty().append(edit.clone());
 
 	e.preventDefault();
 	e.stopPropagation();
 	return false;
-}).on('click','a.add_word',function(e){
-	ctx.find('tr.editing').find('a.save_word').click();
-	var newWord = getTemplate();
-	newWord.find('th.id').text(' ');
-	newWord.appendTo(ctx.find('tbody'));
+}).on('blur', '.word', function(e) {
+    var me = $(this);
+	var tr = me.closest('tr');
+
+    tr.removeClass('editing')
+        .find('td.word').children('span').text(tr.find('td.word').children('input').val()).show().end()
+        .children('input').removeClass('form-control').hide().end().end().end();
+        	
+    tr.find('td:eq(1)').empty().append(edit.clone());
 
 	e.preventDefault();
 	e.stopPropagation();
