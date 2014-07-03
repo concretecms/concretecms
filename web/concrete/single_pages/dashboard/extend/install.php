@@ -276,7 +276,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 		<? if (count($availableArray) == 0 && count($purchasedBlocks) == 0) { ?>
 			
 			<? if (!$mi->isConnected()) { ?>
-				<?=t('Nothing currently available to install.')?>
+				<p><?=t('Nothing currently available to install.')?></p>
 			<? } ?>
 			
 		<? } else { ?>
