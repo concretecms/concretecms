@@ -51,7 +51,8 @@ class Request extends SymfonyRequest {
 	 * Returns the full path for a request
 	 */
 	public function getPath() {
-		$path = '/' . trim($this->getPathInfo(), '/');
+	    $pathInfo = rawurldecode($this->getPathInfo());
+		$path = '/' . trim($pathInfo, '/');
 		return ($path == '/') ? '' : $path;
 	}
 
