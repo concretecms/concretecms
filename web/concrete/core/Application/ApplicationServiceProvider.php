@@ -19,7 +19,8 @@ class ApplicationServiceProvider extends ServiceProvider {
 			'helper/concrete/urls' => '\Concrete\Core\Application\Service\Urls',
 			'helper/concrete/user' => '\Concrete\Core\Application\Service\User',
 			'helper/concrete/validation' => '\Concrete\Core\Application\Service\Validation',
-			'helper/rating' => '\Concrete\Attribute\Rating\Service'
+			'helper/rating' => '\Concrete\Attribute\Rating\Service',
+            'helper/pagination' => '\Concrete\Core\Legacy\Pagination'
 		);
 
 		foreach($singletons as $key => $value) {

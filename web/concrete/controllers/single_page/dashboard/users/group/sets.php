@@ -13,8 +13,7 @@ class Sets extends DashboardPageController {
 		parent::on_start();
 		$this->set('groupSets', GroupSet::getList());
 		$gl = new GroupList();
-		$gl->setItemsPerPage(10000);
-		$groups = $gl->getPage();
+		$groups = $gl->getResults();
 		$this->set('groups', $groups);
 	}
 	

@@ -20,18 +20,20 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
     
 
 
-        <div class="alert-message block-message error" style="margin-bottom:0px;">
+        <div class="alert alert-danger">
             
             <h5>
                 <strong><?=t('Apply this theme to every page on your site?')?></strong>
             </h5>
             
         </div>
-    
 
+        <div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
         <?=$bt->button(t("Ok"), $activate_confirm, 'right', 'btn btn-primary');?>
     	<?=$bt->button(t('Cancel'), $view->url('/dashboard/pages/themes/'), 'left');?>
-
+        </div>
+        </div>
     
 	<? } else { ?>
     

@@ -55,10 +55,8 @@ if (isset($_REQUEST['item']) && is_array($_REQUEST['item'])) {
 	$f = File::getByID(intval($_REQUEST['fID']));
 	if($f->isError()) {
 		switch($f->getError()) {
-			case File::F_ERROR_FILE_NOT_FOUND:
+            case \Concrete\Core\File\Importer::E_FILE_INVALID:
 				die(t("The requested file couldn't be found."));
-			case File::F_ERROR_INVALID_FILE:
-				die(t("The requested file is not valid."));
 			default:
 				die(t("An unexpected error occurred while looking for the requested file"));
 		}

@@ -131,7 +131,6 @@ class Importer {
 			$fv->refreshAttributes();
 		}
 
-		$fr->refreshCache();
 		return $fv;
 	}
 

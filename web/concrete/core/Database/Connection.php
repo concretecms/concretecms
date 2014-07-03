@@ -12,7 +12,7 @@ class Connection extends \Doctrine\DBAL\Connection {
      */
     public function getEntityManager() {
         if (!isset(static::$entityManager)) {
-            $config = Setup::createAnnotationMetadataConfiguration(array(DIR_BASE_CORE . '/' . DIRNAME_CLASSES));
+            $config = Setup::createAnnotationMetadataConfiguration(array(DIR_BASE_CORE . '/' . DIRNAME_CLASSES), true);
             $conn = $this->getParams();
             static::$entityManager = EntityManager::create($conn, $config);
         }

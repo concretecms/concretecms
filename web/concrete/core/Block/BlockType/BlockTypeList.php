@@ -1,13 +1,12 @@
 <?
 namespace Concrete\Core\Block\BlockType;
-use \Concrete\Core\Foundation\Object;
 use Loader;
 use Environment;
 use CacheLocal;
 use BlockType as ConcreteBlockType;
 use Package;
 use Cache;
-use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use \Concrete\Core\Legacy\DatabaseItemList;
 
 class BlockTypeList extends DatabaseItemList {
 

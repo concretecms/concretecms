@@ -1,155 +1,213 @@
 <?
-
 namespace Concrete\Core\User;
-use Loader;
-use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
-use UserAttributeKey;
-/**
- * An object that allows a filtered list of users to be returned.
- * @package Files 
- * @author Tony Trupp <tony@concrete5.org>
- * @category Concrete
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- *
- */
 
-class UserList extends DatabaseItemList { 
+use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
+use Concrete\Core\User\Group\Group;
+use Pagerfanta\Adapter\DoctrineDbalAdapter;
+use Concrete\Core\Search\Pagination\Pagination;
+use UserInfo as CoreUserInfo;
 
-	protected $attributeFilters = array();
-	protected $autoSortColumns = array('uName', 'uEmail', 'uDateAdded', 'uLastLogin', 'uNumLogins', 'uLastOnline');
-	protected $itemsPerPage = 10;
-	protected $attributeClass = 'UserAttributeKey';
-	
-	public $showInactiveUsers;
-	public $showInvalidatedUsers=0;
-	public $searchAgainstEmail=0;
-	
-	//Filter by uName
-	public function filterByUserName($username) {
-		$this->filter('u.uName', $username, '=');
-	}
-	
-	public function filterByKeywords($keywords) {
-		$db = Loader::db();
-		$qkeywords = $db->quote('%' . $keywords . '%');
-		$keys = UserAttributeKey::getSearchableIndexedList();
-		$emailSearchStr=' OR u.uEmail like '.$qkeywords.' ';	
-		$attribsStr = '';
-		foreach ($keys as $ak) {
-			$cnt = $ak->getController();			
-			$attribsStr.=' OR ' . $cnt->searchKeywords($keywords);
-		}
-		$this->filter(false, '( u.uName like ' . $qkeywords . $emailSearchStr . $attribsStr . ')');
-	}
-	
-	/**
-	 * filters the user list for only users within the provided group.  Accepts an instance of a group object or a string group name
-	 * @param Group|string $group
-	 * @param boolean $inGroup
-	 * @return void
-	*/
-	public function filterByGroup($group='', $inGroup = true){
-		if(!$group instanceof Group) {
-			$group = Group::getByName($group);
-		}
-		$tbl='ug_'.$group->getGroupID();
-		$this->addToQuery("left join UserGroups $tbl on {$tbl}.uID = u.uID ");	
-		if ($inGroup) {
-			$this->filter(false, "{$tbl}.gID=".intval($group->getGroupID()) );
-		} else {
-			$this->filter(false, "{$tbl}.gID is null");
-		}
-	}
+class UserList extends DatabaseItemList
+{
 
-	public function excludeUsers($uo) {
-		if (is_object($uo)) {
-			$uID = $uo->getUserID();
-		} else {
-			$uID = $uo;
-		}
-		$this->filter('u.uID',$uID,'!=');
-	}
+    protected function getAttributeKeyClassName()
+    {
+        return '\\Concrete\\Core\\Attribute\\Key\\UserKey';
+    }
 
-	public function filterByGroupID($gID){ 
-		if (!Loader::helper('validation/numbers')->integer($gID)) {
-			$gID = 0;
-		}		
-		$tbl='ug_'.$gID;
-		$this->addToQuery("left join UserGroups $tbl on {$tbl}.uID = u.uID ");			
-		$this->filter(false, "{$tbl}.gID=".$gID);
-	}
+    /**
+     * Columns in this array can be sorted via the request.
+     * @var array
+     */
+    protected $autoSortColumns = array(
+        'u.uName',
+        'u.uEmail',
+        'u.uDateAdded',
+        'u.uLastLogin',
+        'u.uNumLogins',
+        'u.uLastOnline'
+    );
 
-	public function filterByDateAdded($date, $comparison = '=') {
-		$this->filter('u.uDateAdded', $date, $comparison);
-	}
-	
-	/**
-	 * Returns an array of userInfo objects based on current filter settings
-	 * @return UserInfo[]
-	 */
-	public function get($itemsToGet = 100, $offset = 0) {
-		$userInfos = array(); 
-		$this->createQuery();
-		$r = parent::get( $itemsToGet, intval($offset));
-		foreach($r as $row) {
-			$ui = UserInfo::getByID($row['uID']);			
-			$userInfos[] = $ui;
-		}
-		return $userInfos;
-	}
-	
-	/**
-	 * similar to get except it returns an array of userIDs
-	 * much faster than getting a UserInfo object for each result if all you need is the user's id
-	 * @return array $userIDs
-	*/
-	public function getUserIDs($itemsToGet = 100, $offset=0) {
-		$this->createQuery();
-		$userIDs = array();
-		$r = parent::get($itemsToGet, intval($offset));
-		foreach($r as $row) {
-			$userIDs[] = $row['uID'];
-		}
-		return $userIDs;
-	}	
-	
-	public function getTotal(){ 
-		$this->createQuery();
-		return parent::getTotal();
-	}	
-	
-	public function filterByIsActive($val) {
-		$this->showInactiveUsers = $val;
-		$this->filter('u.uIsActive', $val);
-	}	
-	
-	//this was added because calling both getTotal() and get() was duplicating some of the query components
-	protected function createQuery(){
-		if(!$this->queryCreated){
-			$this->setBaseQuery();
-			if(!isset($this->showInactiveUsers)) $this->filter('u.uIsActive', 1);
-			if(!$this->showInvalidatedUsers) $this->filter('u.uIsValidated', 0, '!=');
-			$this->setupAttributeFilters("left join UserSearchIndexAttributes on (UserSearchIndexAttributes.uID = u.uID)");
-			$this->queryCreated=1;
-		}
-	}	
-	
-	protected function setBaseQuery() {
-		$this->setQuery('SELECT DISTINCT u.uID, u.uName FROM Users u ');
-	}
+    /**
+     * Whether to include inactive users.
+     * @var bool
+     */
+    protected $includeInactiveUsers = false;
 
-	/* magic method for filtering by page attributes. */
-	public function __call($nm, $a) {
-		if (substr($nm, 0, 8) == 'filterBy') {
-			$txt = Loader::helper('text');
-			$attrib = $txt->uncamelcase(substr($nm, 8));
-			if (count($a) == 2) {
-				$this->filterByAttribute($attrib, $a[0], $a[1]);
-			} else {
-				$this->filterByAttribute($attrib, $a[0]);
-			}
-		}			
-	}
+
+    /**
+     * Whether to include unvalidated users.
+     * @var bool
+     */
+    protected $includeUnvalidatedUsers = false;
+
+    /**
+     * The total results of the query
+     * @return int
+     */
+    public function getTotalResults()
+    {
+        $query = $this->deliverQueryObject();
+        return $query->select('count(distinct u.uID)')->setMaxResults(1)->execute()->fetchColumn();
+    }
+
+    /**
+     * Gets the pagination object for the query.
+     * @return Pagination
+     */
+    protected function createPaginationObject()
+    {
+        $adapter = new DoctrineDbalAdapter($this->deliverQueryObject(), function ($query) {
+            $query->select('count(distinct u.uID)')->setMaxResults(1);
+        });
+        $pagination = new Pagination($this, $adapter);
+        return $pagination;
+    }
+
+    /**
+     * @param $queryRow
+     * @return \Concrete\Core\User\UserInfo
+     */
+    public function getResult($queryRow)
+    {
+        $ui = CoreUserInfo::getByID($queryRow['uID']);
+        return $ui;
+    }
+
+    /**
+     * similar to get except it returns an array of userIDs
+     * much faster than getting a UserInfo object for each result if all you need is the user's id
+     * @return array $userIDs
+     */
+    public function getResultIDs()
+    {
+        $results = $this->executeGetResults();
+        $ids = array();
+        foreach($results as $result) {
+            $ids[] = $result['uID'];
+        }
+        return $ids;
+    }
+
+    public function createQuery()
+    {
+        $this->query->select('u.uID')
+            ->from('Users', 'u')
+            ->leftJoin('u', 'UserSearchIndexAttributes', 'ua', 'u.uID = ua.uID');
+    }
+
+    public function finalizeQuery(\Doctrine\DBAL\Query\QueryBuilder $query)
+    {
+        if (!$this->includeInactiveUsers) {
+            $query->andWhere('u.uIsActive = :uIsActive');
+            $query->setParameter('uIsActive', true);
+        }
+        if (!$this->includeUnvalidatedUsers) {
+            $query->andWhere('u.uIsValidated != 0');
+        }
+        return $query;
+    }
+
+    public function includeInactiveUsers()
+    {
+        $this->includeInactiveUsers = true;
+    }
+
+    public function includeUnvalidatedUsers()
+    {
+        $this->includeUnvalidatedUsers = true;
+    }
+
+    /**
+     * Explicitly filters by whether a user is active or not. Does this by setting "include inactive users"
+     * to true, THEN filtering them in our out. Some settings here are redundant given the default settings
+     * but a little duplication is ok sometimes.
+     * @param $val
+     */
+    public function filterByIsActive($isActive)
+    {
+        $this->includeInactiveUsers();
+        $this->query->andWhere('u.uIsActive = :uIsActive');
+        $this->query->setParameter('uIsActive', $isActive);
+    }
+
+    /**
+     * Filter list by user name
+     * @param $username
+     */
+    public function filterByUserName($username)
+    {
+        $this->query->andWhere('u.uName = :uName');
+        $this->query->setParameter('uName', $username);
+    }
+
+    /**
+     * Filters keyword fields by keywords (including username, email and attributes).
+     * @param $keywords
+     */
+    public function filterByKeywords($keywords)
+    {
+        $expressions = array(
+            $this->query->expr()->like('u.uName', ':keywords'),
+            $this->query->expr()->like('u.uEmail', ':keywords')
+        );
+
+        $keys = \Concrete\Core\Attribute\Key\UserKey::getSearchableIndexedList();
+        foreach ($keys as $ak) {
+            $cnt = $ak->getController();
+            $expressions[] = $cnt->searchKeywords($keywords, $this->query);
+        }
+        $expr = $this->query->expr();
+        $this->query->andWhere(call_user_func_array(array($expr, 'orX'), $expressions));
+        $this->query->setParameter('keywords', '%' . $keywords . '%');
+    }
+
+
+    /**
+     * Filters the user list for only users within the provided group.  Accepts an instance of a group object or a string group name
+     * @param \Concrete\Core\User\Group | string $group
+     * @param boolean $inGroup
+     * @return void
+     */
+    public function filterByGroup($group = '', $inGroup = true)
+    {
+        if (!($group instanceof \Concrete\Core\User\Group\Group)) {
+            $group = \Concrete\Core\User\Group\Group::getByName($group);
+        }
+
+        $table = 'ug' . $group->getGroupID();
+        $this->query->leftJoin('u', 'UserGroups', $table, 'u.uID = ' . $table . '.uID');
+        if ($inGroup) {
+            $this->query->andWhere($table . '.gID = :gID' . $group->getGroupID());
+            $this->query->setParameter('gID' . $group->getGroupID(), $group->getGroupID());
+        } else {
+            $this->query->andWhere($table . '.gID is null');
+        }
+    }
+
+    /**
+     * Filters by date added
+     * @param string $date
+     */
+    public function filterByDateAdded($date, $comparison = '=')
+    {
+        $this->query->andWhere($this->query->expr()->comparison('u.uDateAdded', $comparison, ':uDateAdded'));
+        $this->query->setParameter('uDateAdded', $date);
+    }
+
+    /**
+     * Filters by Group ID
+     */
+    public function filterByGroupID($gID)
+    {
+        $group = Group::getByID($gID);
+        $this->filterByGroup($group);
+    }
+
+    public function sortByUserID()
+    {
+        $this->query->orderBy('u.uID', 'asc');
+    }
+
 
 }

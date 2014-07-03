@@ -1,9 +1,9 @@
 <?
 namespace Concrete\Core\Page\Stack;
 use Loader;
-use PageList;
+use Concrete\Core\Legacy\PageList;
 use Page;
-use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use \Concrete\Core\Legacy\DatabaseItemList;
 
 class StackList extends PageList {
 

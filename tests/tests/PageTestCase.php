@@ -8,7 +8,7 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase {
     protected $tables = array('Pages', 'PageThemes', 'PagePaths', 'PermissionKeys', 'PermissionKeyCategories', 'PageTypes',
         'PageTemplates', 'Collections', 'CollectionVersions', 'CollectionVersionFeatureAssignments',
         'CollectionAttributeValues', 'CollectionVersionBlockStyles', 'CollectionVersionThemeCustomStyles',
-        'CollectionVersionRelatedEdits', 'CollectionVersionAreaStyles', 'CollectionSearchIndexAttributes',
+        'CollectionVersionRelatedEdits', 'CollectionVersionAreaStyles',
         'PagePermissionAssignments', 'CollectionVersionBlocks', 'Areas', 'PageSearchIndex', 'Config',
         'GatheringDataSources', 'Logs'); // so brutal
 
@@ -23,18 +23,38 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase {
             ));
     }
 
-    protected static function createPage($name, $parent = false)
+    protected static function createPage($name, $parent = false, $type = false, $template = false)
     {
-        if (!is_object($parent)) {
+        if ($parent === false) {
             $parent = Page::getByID(HOME_CID);
+        } else if (is_string($parent)) {
+            $parent = Page::getByPath($parent);
         }
 
-        $pt = PageType::getByID(1);
-        $template = PageTemplate::getByID(1);
+        if ($type === false) {
+            $type = 1;
+        }
+
+        if (is_string($type)) {
+            $pt = PageType::getByHandle($type);
+        } else {
+            $pt = PageType::getByID($type);
+        }
+
+        if ($template === false) {
+            $template = 1;
+        }
+
+        if (is_string($template)) {
+            $template = PageTemplate::getByHandle($template);
+        } else {
+            $template = PageTemplate::getByID($template);
+        }
+
         $page = $parent->add($pt, array(
-                'cName'=> $name,
-                'pTemplateID' => $template->getPageTemplateID()
-            ));
+            'cName'=> $name,
+            'pTemplateID' => $template->getPageTemplateID()
+        ));
         return $page;
     }
 

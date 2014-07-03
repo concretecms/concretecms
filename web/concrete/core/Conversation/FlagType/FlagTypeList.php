@@ -2,7 +2,7 @@
 namespace Concrete\Core\Conversation\FlagType;
 use Loader;
 use ConversationFlagType;
-use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use \Concrete\Core\Legacy\DatabaseItemList;
 class FlagTypeList extends DatabaseItemList {
 
 	public function __construct() {
