@@ -904,7 +904,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @return string
      */
     function getCollectionPath() {
-        return $this->cPath;
+		return self::getEncodePath($this->cPath);
     }
 
     /**
@@ -919,6 +919,24 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         ));
         return $path;
     }
+
+	/**
+	 * Returns the urlencode path for a page from path string
+	 * @param string $path
+	 * @return string $path
+	 */	
+	public static function getEncodePath($path){
+	    if(mb_strpos($path,"/") !== false){
+	      $path = explode("/",$path);
+	      $path = array_map("rawurlencode",$path);
+	      $newPath = implode("/",$path);
+	    }else if(is_null($path)){
+          $newPath = NULL;
+	    }else{
+	      $newPath = rawurlencode($path);
+	    } 
+	    return str_replace('%21','!',$newPath);
+	}
 
     /**
      * Adds a non-canonical page path to the current page.
@@ -995,7 +1013,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public static function getCollectionPathFromID($cID) {
         $db = Loader::db();
         $path = $db->GetOne("select cPath from PagePaths inner join CollectionVersions on (PagePaths.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1) where PagePaths.cID = ? order by PagePaths.ppIsCanonical desc", array($cID));
-        return $path;
+        return self::getEncodePath($path);
     }
 
     /**
