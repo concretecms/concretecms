@@ -21,7 +21,8 @@ $ek = PermissionKey::getByHandle('edit_user_properties');
 $ik = PermissionKey::getByHandle('activate_user');
 $dk = PermissionKey::getByHandle('delete_user');
 
-$searchRequest = $controller->getSearchRequest();
+$flr = new \Concrete\Core\Search\StickyRequest('users');
+$searchRequest = $flr->getSearchRequest();
 
 ?>
 
@@ -65,8 +66,7 @@ $searchRequest = $controller->getSearchRequest();
 			<?=$form->label('gID', t('In Group'))?>
 			<? 
 			$gl = new GroupList();
-			$gl->setItemsPerPage(-1);
-			$g1 = $gl->getPage();
+			$g1 = $gl->getResults();
 			?>		
 			<div class="ccm-search-field-content">			
 			<select multiple name="gID[]" class="chosen-select form-control" style="width: 200px">
@@ -95,7 +95,7 @@ $searchRequest = $controller->getSearchRequest();
 		<? } ?>
 	</select>
 	<div class="ccm-search-field-content"><% if (typeof(field) != 'undefined') { %><%=field.html%><% } %></div>
-	<a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="fa fa-minus-sign"></i></a>
+	<a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="fa fa-minus-circle"></i></a>
 </div>
 </script>
 

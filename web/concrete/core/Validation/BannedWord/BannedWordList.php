@@ -1,6 +1,6 @@
 <?php
 namespace Concrete\Core\Validation\BannedWord;
-use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use \Concrete\Core\Legacy\DatabaseItemList;
 class BannedWordList extends DatabaseItemList {
 
 	public function __construct() {

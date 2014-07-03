@@ -1,0 +1,93 @@
+header {
+
+  padding-top: @padding-large-vertical * 5;
+  padding-bottom: @padding-large-vertical * 5;
+
+  /* Header Logo/Brand */
+  span#header-brand {
+    font-family: @titles-font-family;
+    font-weight: @header-brand-font-weight;
+    color: @header-brand-color;
+    font-size: @header-brand-font-size;
+  }
+
+
+  nav {
+
+    ul > li > a {
+      padding-right: 40px;
+      font-family: @secondary-font-family;
+      font-size: @header-navigation-font-size;
+      font-weight: @header-navigation-font-weight;
+      color: @header-navigation-text-color;
+
+      &:hover {
+        color: @header-navigation-hover-color;
+        text-decoration: none;
+      }
+    }
+
+    > ul {
+      -webkit-font-smoothing:antialiased;
+      list-style: none;
+      margin-top: 0px !important;
+      padding: 15px 0px 0px 0px;
+      width: 100%;
+    }
+
+  }
+
+
+  nav li {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    display: inline-block;
+  }
+
+  nav li ul a {
+    display: block;
+    padding: 10px;
+    color: @header-navigation-menu-text-color;
+    .transition(all .25s ease);
+    font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    font-weight: normal;
+  }
+  nav .dropdown:after {
+    content: ' ▶';
+  }
+  nav .dropdown:hover:after{
+    content:'\25bc'
+  }
+  nav li ul {
+    float: left;
+    left: 0;
+    opacity: 0;
+    padding: 0px;
+    position: absolute;
+    top: 10px;
+    visibility: hidden;
+    width: 200px;
+    background-color: @header-navigation-menu-background-color;
+    z-index: 1;
+    .transition(all .25s ease);
+    .border-radius(2px);
+    border: 1px solid @header-navigation-menu-border-color;
+  }
+  nav li:hover ul {
+    opacity: 1;
+    top: 25px;
+    visibility: visible;
+  }
+  nav li ul li {
+    float: none;
+    width: 100%;
+  }
+  nav li ul a:hover {
+    color: @header-navigation-menu-text-hover-color;
+    background-color: @header-navigation-menu-background-hover-color;
+  }
+
+
+
+}

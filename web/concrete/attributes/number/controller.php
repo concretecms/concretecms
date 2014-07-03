@@ -14,8 +14,8 @@ class Controller extends AttributeTypeController  {
 	}
 	
 	public function searchForm($list) {
-		$numFrom = $this->request('from');
-		$numTo = $this->request('to');
+		$numFrom = intval($this->request('from'));
+		$numTo = intval($this->request('to'));
 		if ($numFrom) {
 			$list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), $numFrom, '>=');
 		}

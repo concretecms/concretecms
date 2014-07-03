@@ -2,13 +2,15 @@
 namespace Concrete\Controller\Search;
 use Controller;
 use FileList;
+use \Concrete\Core\Search\StickyRequest;
 use \Concrete\Core\File\Search\ColumnSet\ColumnSet as FileSearchColumnSet;
 use \Concrete\Core\File\Search\Result\Result as FileSearchResult;
-use \Concrete\Core\Attribute\File\FileKey as FileAttributeKey;
+use FileAttributeKey;
 use Permissions;
 use Loader;
 use FileSet;
 use URL;
+use Concrete\Core\File\Type\Type as FileType;
 use FilePermissions;
 use stdClass;
 
@@ -16,9 +18,12 @@ class Files extends Controller {
 
 	protected $fields = array();
 
+    /** @var \Concrete\Core\File\FileList */
+    protected $fileList;
+
 	public function __construct() {
-		$this->fileList = new FileList();
-		$this->fileList->enableStickySearchRequest();
+        $this->searchRequest = new StickyRequest('files');
+		$this->fileList = new FileList($this->searchRequest);
 	}
 
 	public function search() {
@@ -28,16 +33,17 @@ class Files extends Controller {
 		}
 		
 		if ($_REQUEST['submitSearch']) {
-			$this->fileList->resetSearchRequest();
+            $this->searchRequest->resetSearchRequest();
 		}
 
-		$req = $this->fileList->getSearchRequest();
-		$this->fileList->displayUnapprovedPages();
+        $req = $this->searchRequest->getSearchRequest();
 		$columns = FileSearchColumnSet::getCurrent();
 
-		$col = $columns->getDefaultSortColumn();	
-		$this->fileList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
-		
+        if (!$this->fileList->getActiveSortColumn()) {
+    		$col = $columns->getDefaultSortColumn();
+	    	$this->fileList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
+        }
+
 		// first thing, we check to see if a saved search is being used
 		if (isset($req['fssID'])) {
 			$fs = FileSet::getByID($req['fssID']);
@@ -49,9 +55,9 @@ class Files extends Controller {
 				$this->fileList->addToSearchRequest('ccm_order_by', $colsort->getColumnKey());
 			}
 		}
-
 		$keywords = htmlentities($req['fKeywords'], ENT_QUOTES, APP_CHARSET);
-		
+
+
 		if ($keywords != '') {
 			$this->fileList->filterByKeywords($keywords);
 		}
@@ -143,7 +149,7 @@ class Files extends Controller {
 			$this->fileList->setItemsPerPage(intval($req['numResults']));
 		}
 
-		$ilr = new FileSearchResult($columns, $this->fileList, URL::to('/ccm/system/search/files/submit'), $this->fields);
+        $ilr = new FileSearchResult($columns, $this->fileList, URL::to('/ccm/system/search/files/submit'), $this->fields);
 		$this->result = $ilr;
 	}
 
@@ -159,7 +165,7 @@ class Files extends Controller {
 	protected function getField($field) {
 		$r = new stdClass;
 		$r->field = $field;
-		$searchRequest = $this->getSearchRequest();
+		$searchRequest = $this->searchRequest->getSearchRequest();
 		$form = Loader::helper('form');
 		ob_start();
 		switch($field) {
@@ -169,20 +175,20 @@ class Files extends Controller {
 				<?=$form->text('size_to', $searchRequest['size_to'], array('style' => 'width: 60px'))?>
 				<? break;
 			case 'type':
-				$t1 = FileList::getTypeList();
+				$t1 = FileType::getUsedTypeList();
 				$types = array();
 				foreach($t1 as $value) {
 					$types[$value] = FileType::getGenericTypeText($value);
 				}
-				print $form->select('types', $types, $searchRequest['types'], array('style' => 'width: 120px'));
+				print $form->select('type', $types, $searchRequest['type'], array('style' => 'width: 120px'));
 				break;
 			case 'extension':
-				$ext1 = FileList::getExtensionList();
+				$ext1 = FileType::getUsedExtensionList();
 				$extensions = array();
 				foreach($ext1 as $value) {
 					$extensions[$value] = $value;
 				}				
-				print $form->select('extensions', $extensions, $searchRequest['extensions'], array('style' => 'width: 120px'));
+				print $form->select('extension', $extensions, $searchRequest['extensions'], array('style' => 'width: 120px'));
 				break;
 			case 'date_added': ?>
 				<?=$form->text('date_from', $searchRequest['date_from'], array('style' => 'width: 86px'))?>
@@ -214,10 +220,6 @@ class Files extends Controller {
 
 	public function getFields() {
 		return $this->fields;		
-	}
-
-	public function getSearchRequest() {
-		return $this->fileList->getSearchRequest();
 	}
 
 

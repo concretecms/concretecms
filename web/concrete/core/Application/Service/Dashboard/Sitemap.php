@@ -48,13 +48,12 @@ class Sitemap {
 			$pl->includeInactivePages();
 		}
 		$pl->filterByParentID($cID);
-		$pl->displayUnapprovedPages();
-		$total = $pl->getTotal();
+        $pl->setPageVersionToRetrieve(\Concrete\Core\Page\PageList::PAGE_VERSION_RECENT);
+
 		if ($cID == 1) {
-			$results = $pl->get();			
+			$results = $pl->getResults();
 		} else {
-			$pl->setItemsPerPage(SITEMAP_PAGES_LIMIT);
-			$results = $pl->getPage();
+			$results = $pl->getPagination()->setMaxPerPage(SITEMAP_PAGES_LIMIT)->getCurrentPageResults();
 		}
 		
 		$nodes = array();
@@ -64,7 +63,7 @@ class Sitemap {
 				$nodes[] = $n;
 			}
 		}
-
+        $total = count($results);
 		if ($total > SITEMAP_PAGES_LIMIT) {
 			if ($this->displayNodePagination) {
 
@@ -83,8 +82,8 @@ class Sitemap {
 				$n->active = false;
 				$n->focus = false;
 				$n->unselectable = true;
-				$n->title = t('%s more to display. <strong>View all &gt;</strong>', $total - SITEMAP_PAGES_LIMIT);
-				$n->href = View::url('/dashboard/sitemap/explore/', $cID);
+				$n->title = ' ' . t('%s more to display. <strong>View all &gt;</strong>', $total - SITEMAP_PAGES_LIMIT);
+				$n->href = \URL::to('/dashboard/sitemap/explore/', $cID);
 				$nodes[] = $n;
 			}
 		}

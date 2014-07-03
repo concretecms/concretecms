@@ -32,7 +32,7 @@ if ($cp->canEditPagePermissions()) {
 	
 	$gl = new GroupList();
 	$gl->sortBy('gID', 'asc');
-	$gArray = $gl->get();
+	$gArray = $gl->getResults();
 
 	$rel = Loader::helper('security')->sanitizeString($_REQUEST['rel']);
 ?>

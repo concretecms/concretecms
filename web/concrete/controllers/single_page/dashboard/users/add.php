@@ -20,8 +20,7 @@ class Add extends DashboardPageController {
 		$attribs = UserAttributeKey::getRegistrationList();
 		$assignment = PermissionKey::getByHandle('edit_user_properties')->getMyAssignment();
 		$gl = new GroupList();
-		$gl->setItemsPerPage(10000);
-		$gArray = $gl->getPage();
+        $gArray = $gl->getPagination()->setMaxPerPage(10000)->getCurrentPageResults();
 
 		$this->set('form',Loader::helper('form'));
 		$this->set('valt',Loader::helper('validation/token'));

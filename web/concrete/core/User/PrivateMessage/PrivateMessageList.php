@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Core\User\PrivateMessage;
-use \Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use \Concrete\Core\Legacy\DatabaseItemList;
 use Loader;
 class PrivateMessageList extends DatabaseItemList {
 	

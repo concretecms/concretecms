@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Core\Gathering\Item;
 use Loader;
-use Concrete\Core\Foundation\Collection\Database\DatabaseItemList;
+use Concrete\Core\Legacy\DatabaseItemList;
 class ItemList extends DatabaseItemList {
 
 	protected $itemsPerPage = 24;

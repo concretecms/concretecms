@@ -4,16 +4,16 @@ namespace Concrete\Core\Page\Search\Result;
 use \Concrete\Core\Search\Result\Item as SearchResultItem;
 use \Concrete\Core\Search\Result\ItemColumn as SearchResultItemColumn;
 use \Concrete\Core\Search\Result\Result as SearchResult;
-use \Concrete\Core\Foundation\Collection\Database\Column\Set as DatabaseItemListColumnSet;
+use \Concrete\Core\Search\Column\Set;
 use Permissions;
 
 class Item extends SearchResultItem {
 
 	public $cID;
 
-	public function __construct(SearchResult $result, DatabaseItemListColumnSet $columns, $item) {
+	public function __construct(SearchResult $result, Set $columns, $item) {
 		$list = $result->getItemListObject();
-		if ($list->isIndexedSearch()) {
+		if ($list->isFulltextSearch()) {
 			$this->columns[] = new SearchResultItemColumn(t('Score'), $item->getPageIndexScore());
 		}
 		parent::__construct($result, $columns, $item);
