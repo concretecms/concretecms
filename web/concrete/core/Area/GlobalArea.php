@@ -24,8 +24,11 @@ class GlobalArea extends Area {
 	public function getTotalBlocksInArea() {
 		$stack = $this->getGlobalAreaStackObject();
 		$ax = Area::get($stack, STACKS_AREA_NAME);
-		return $ax->getTotalBlocksInArea();
-	}
+        if (is_object($ax)) {
+    		return $ax->getTotalBlocksInArea();
+	    }
+        return 0;
+    }
 
 	protected function getGlobalAreaStackObject() {
 		$c = Page::getCurrentPage();

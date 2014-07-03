@@ -50,9 +50,9 @@ $al->registerGroup('core/colorpicker', array(
 ));
 
 // font awesome
-$al->register('css', 'fontawesome', 'css/font-awesome.css', array('minify' => false));
-$al->registerGroup('fontawesome', array(
-        array('css', 'fontawesome')
+$al->register('css', 'font-awesome', 'css/font-awesome.css', array('minify' => false));
+$al->registerGroup('font-awesome', array(
+        array('css', 'font-awesome')
     ));
 
 // concrete5 style customizer palettes
@@ -96,7 +96,7 @@ $al->registerGroup('redactor', array(
     array('javascript', 'core/file-manager'),
     array('css', 'redactor'),
     array('css', 'core/file-manager'),
-    array('css', 'fontawesome')
+    array('css', 'font-awesome')
 ));
 
 // ace editor
@@ -151,7 +151,7 @@ $al->registerGroup('core/app', array(
     array('javascript', 'jquery/ui'),
     array('javascript', 'core/app'),
     array('css', 'core/app'),
-    array('css', 'fontawesome'),
+    array('css', 'font-awesome'),
     array('css', 'jquery/ui')
 ));
 
@@ -200,7 +200,7 @@ $al->registerGroup('dashboard', array(
     array('css', 'core/app'),
     array('css', 'redactor'),
     array('css', 'jquery/ui'),
-    array('css', 'fontawesome')
+    array('css', 'font-awesome')
 ));
 
 
