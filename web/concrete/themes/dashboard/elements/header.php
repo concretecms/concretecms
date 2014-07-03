@@ -41,7 +41,7 @@ if (!$frontendPageID) {
 <body>
 
 <div id="ccm-dashboard-page" class="ccm-ui">
-    <div class="ccm-mobile-menu-overlay ccm-mobile-menu-overlay-dashboard">
+    <div class="ccm-mobile-menu-overlay ccm-mobile-menu-overlay-dashboard hidden-md hidden-lg hidden-sm">
         <div class="ccm-mobile-menu-main">
             <ul class="ccm-mobile-menu-entries">
                 <li><i class="fa fa-th-large mobile-leading-icon"></i><a href="<?=URL::to('/dashboard')?>"><?php echo t('Dashboard') ?><i class="fa fa-caret-down"></i></a>
