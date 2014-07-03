@@ -1,4 +1,9 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+$ag = \Concrete\Core\Http\ResponseAssetGroup::get();
+$ag->requireAsset('css', 'font-awesome');
+
+?>
 <!DOCTYPE html>
 <html lang="<?=Localization::activeLanguage()?>">
 <head>
