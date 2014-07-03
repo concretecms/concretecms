@@ -239,6 +239,15 @@ class Connection extends \Doctrine\DBAL\Connection
 
         return true;
     }
+    /**
+     * @deprecated Alias to old ADODB method
+     */
+    public function StartTrans()
+    {
+        $db->BeginTrans();
+
+        return true;
+    }
 
     /**
      * @deprecated Alias to old ADODB method
@@ -249,11 +258,29 @@ class Connection extends \Doctrine\DBAL\Connection
 
         return true;
     }
+    /**
+     * @deprecated Alias to old ADODB method
+     */
+    public function CompleteTrans()
+    {
+        $this->commit();
+
+        return true;
+    }
 
     /**
      * @deprecated Alias to old ADODB method
      */
     public function RollbackTrans()
+    {
+        $this->rollBack();
+
+        return true;
+    }
+    /**
+     * @deprecated Alias to old ADODB method
+     */
+    public function FailTrans()
     {
         $this->rollBack();
 
