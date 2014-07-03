@@ -16,27 +16,23 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 
 ?>
 
-<form class="form-horizontal" method="post" id="add-group-form" action="<?=$view->url('/dashboard/users/add_group/', 'do_add')?>">
-<div class="ccm-pane-body">
+<form class="form-stacked" method="post" id="add-group-form" action="<?=$view->url('/dashboard/users/add_group/', 'do_add')?>">
 <?=$valt->output('add_or_update_group')?>
 <fieldset>
-	<legend><?=t('Details')?></legend>
-
-<div class="control-group">
+	<legend><?=t('Group Details')?></legend>
+<div class="form-group">
 <?=$form->label('gName', t('Name'))?>
-<div class="controls">
-	<input type="text" name="gName" class="span6" value="<?=htmlentities($_POST['gName'])?>" />
-</div>
+	<input type="text" class="form-control" name="gName" value="<?=htmlentities($_POST['gName'])?>" />
 </div>
 
-<div class="control-group">
+<div class="form-group">
 <?=$form->label('gDescription', t('Description'))?>
 <div class="controls">
 	<?=$form->textarea('gDescription', array('rows' => 6, 'class' =>'span6'))?>
 </div>
 </div>
 
-<div class="control-group">
+<div class="form-group">
 <label class="control-label"><?=t('Parent Group')?></label>
 <div class="controls">
     <div class="groups-tree" style="width: 460px" data-groups-tree="<?=$tree->getTreeID()?>">
@@ -73,87 +69,89 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 </fieldset>
 <? if (ENABLE_USER_PROFILES) { ?>
 <fieldset>
-	<legend><?=t('Badge')?></legend>
-	<div class="control-group">
-	<div class="controls">
-	<label class="checkbox">
-	<?=$form->checkbox('gIsBadge', 1, false)?>
-	<span><?=t('This group is a badge.')?> <i class="icon-question-sign" title="<?=t('Badges are publicly viewable in user profiles, and display pictures and a custom description. Badges can be automatically assigned or given out by administrators.')?>"></i> </span>
-	</label>
-	</div>
+	<div class="form-group">
+        <div class="checkbox">
+            <label>
+            <?=$form->checkbox('gIsBadge', 1, false)?>
+            <span><?=t('This group is a badge.')?> <i class="fa fa-question-circle launch-tooltip" title="<?=t('Badges are publicly viewable in user profiles, and display pictures and a custom description. Badges can be automatically assigned or given out by administrators.')?>"></i> </span>
+            </label>
+        </div>
 	</div>
 	
-<div id="gUserBadgeOptions" style="display: none">
-	<div class="control-group">
-		<label class="control-label"><?=t('Image')?></label>
-		<div class="controls">
-			<?
+    <div id="gUserBadgeOptions" style="display: none">
+        <div class="form-group">
+            <label class="control-label"><?=t('Image')?></label>
+            <div class="controls">
+                <?
 
-			$af = Loader::helper('concrete/asset_library');
-			print $af->image('gBadgeFID', 'gBadgeFID', t('Choose Badge Image'), $badgeImage);
-			?>
+                $af = Loader::helper('concrete/asset_library');
+                print $af->image('gBadgeFID', 'gBadgeFID', t('Choose Badge Image'), $badgeImage);
+                ?>
 
-		</div>
-	</div>
+            </div>
+        </div>
 
-	<div class="control-group">
-	<?=$form->label('gBadgeDescription', t('Badge Description'))?>
-	<div class="controls">
-		<?=$form->textarea('gBadgeDescription', array('rows' => 6, 'class' =>'span6'))?>
-	</div>
-	</div>
+        <div class="form-group">
+            <?=$form->label('gBadgeDescription', t('Badge Description'))?>
+            <div class="controls">
+                <?=$form->textarea('gBadgeDescription', array('rows' => 6, 'class' =>'span6'))?>
+            </div>
+        </div>
 
-	<div class="control-group">
-	<?=$form->label('gBadgeCommunityPointValue', t('Community Points'))?>
-	<div class="controls">
-		<?=$form->text('gBadgeCommunityPointValue', GROUP_BADGE_DEFAULT_POINT_VALUE, array('class' => 'span1'))?>
-	</div>
-	</div>
+        <div class="form-group">
+            <?=$form->label('gBadgeCommunityPointValue', t('Community Points'))?>
+            <div class="controls">
+                <?=$form->text('gBadgeCommunityPointValue', GROUP_BADGE_DEFAULT_POINT_VALUE, array('class' => 'span1'))?>
+            </div>
+        </div>
 
-
-</div>
+    </div>
 
 </fieldset>
 <? } ?>
 
 <fieldset>
 	<legend><?=t('Automation')?></legend>
-	<div class="control-group">
-	<div class="controls">
-	<label class="checkbox">
-	<?=$form->checkbox('gIsAutomated', 1, false)?>
-	<span><?=t('This group is automatically entered.')?> <i class="icon-question-sign" title="<?=t("Automated Groups aren't assigned by administrators. They are checked against code at certain times that determines whether users should enter them.")?>"></i> </span>
-	</label>
-	</div>
+	<div class="form-group">
+        <div class="checkbox">
+            <label>
+            <?=$form->checkbox('gIsAutomated', 1, false)?>
+            <span><?=t('This group is automatically entered.')?> <i class="fa fa-question-circle launch-tooltip" title="<?=t("Automated Groups aren't assigned by administrators. They are checked against code at certain times that determines whether users should enter them.")?>"></i> </span>
+            </label>
+        </div>
 	</div>
 	
 <div id="gAutomationOptions" style="display: none">
-	<div class="control-group">
-	<label class="control-label"><?=t('Check Group')?></label>
-	<div class="controls">
-		<label class="checkbox">
-			<?=$form->checkbox('gCheckAutomationOnRegister', 1)?>
-			<span><?=t('When a user registers.')?></span>
-		</label>
-		<label class="checkbox">
-			<?=$form->checkbox('gCheckAutomationOnLogin', 1)?>
-			<span><?=t('When a user signs in.')?></span>
-		</label>
-		<label class="checkbox">
-			<?=$form->checkbox('gCheckAutomationOnJobRun', 1)?>
-			<span><?=t('When the "Check Automated Groups" Job runs.')?></span>
-		</label>
+	<div class="form-group">
+        <label><?=t('Check Group')?></label>
+        <div class="checkbox">
+            <label>
+                <?=$form->checkbox('gCheckAutomationOnRegister', 1)?>
+                <span><?=t('When a user registers.')?></span>
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <?=$form->checkbox('gCheckAutomationOnLogin', 1)?>
+                <span><?=t('When a user signs in.')?></span>
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <?=$form->checkbox('gCheckAutomationOnJobRun', 1)?>
+                <span><?=t('When the "Check Automated Groups" Job runs.')?></span>
+            </label>
+        </div>
 	</div>
-	</div>
-
 </div>
 
 
-<div class="control-group">
-	<div class="controls">
-	<label class="checkbox">
-	<?=$form->checkbox('gUserExpirationIsEnabled', 1, false)?>
-	<span><?=t('Automatically remove users from this group.')?></span></label>
+<div class="form-group">
+	<div class="checkbox">
+        <label>
+            <?=$form->checkbox('gUserExpirationIsEnabled', 1, false)?>
+            <?=t('Automatically remove users from this group.')?>
+        </label>
 	</div>
 	
 	<div class="controls" style="">
@@ -161,21 +159,19 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 		'SET_TIME' => t('at a specific date and time'),
 			'INTERVAL' => t('once a certain amount of time has passed')
 		
-	), array('disabled' => true));?>	
+	), array('disabled' => true, 'class'=>'form-control'));?>
 	</div>	
 </div>
 
 <div id="gUserExpirationSetTimeOptions" style="display: none">
-<div class="control-group">
-<?=$form->label('gUserExpirationSetDateTime', t('Expiration Date'))?>
-<div class="controls">
+<div class="form-group">
+<label for="gUserExpirationSetDateTime"><?=t('Expiration Date')?></label>
 <?=$date->datetime('gUserExpirationSetDateTime')?>
 </div>
 </div>
-</div>
 <div id="gUserExpirationIntervalOptions" style="display: none">
-<div class="control-group">
-<label class="control-label"><?=t('Accounts expire after')?></label>
+<div class="form-group">
+<label><?=t('Accounts expire after')?></label>
 <div class="controls">
 <table class="table " style="width: auto">
 <tr>
@@ -200,7 +196,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 </div>
 
 <div id="gUserExpirationAction" style="display: none">
-<div class="control-group">
+<div class="form-group">
 <?=$form->label('gUserExpirationAction', t('Expiration Action'))?>
 <div class="controls">
 <?=$form->select("gUserExpirationAction", array(
@@ -213,7 +209,6 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 </div>
 </div>
 </fieldset>
-</div>
 
 
 <div class="ccm-dashboard-form-actions-wrapper">
