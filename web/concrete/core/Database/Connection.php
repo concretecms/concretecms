@@ -229,4 +229,35 @@ class Connection extends \Doctrine\DBAL\Connection
         return $schemaColumns;
 
     }
+
+    /**
+     * @deprecated Alias to old ADODB method
+     */
+    public function BeginTrans()
+    {
+        $db->BeginTrans();
+
+        return true;
+    }
+
+    /**
+     * @deprecated Alias to old ADODB method
+     */
+    public function CommitTrans()
+    {
+        $this->commit();
+
+        return true;
+    }
+
+    /**
+     * @deprecated Alias to old ADODB method
+     */
+    public function RollbackTrans()
+    {
+        $this->rollBack();
+
+        return true;
+    }
+
 }
