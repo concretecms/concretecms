@@ -5,6 +5,7 @@ use Cache;
 use Loader;
 use Config;
 use \Concrete\Core\Legacy\ItemList;
+use \Concrete\Core\Package\Package;
 
 class RemoteItemList extends ItemList
 {
