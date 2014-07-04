@@ -51,7 +51,7 @@
 			<label class="control-label"></label>
 			<div class="controls">
 				<?
-				print $interface->submit(t('Upload'), 'favicon-form', 'left');
+				print $interface->submit(t('Upload'), 'favicon-form', 'left', 'btn-success');
 				?>
 			
 			</div>
@@ -114,7 +114,7 @@
 			<label class="control-label"></label>
 			<div class="controls">
 				<?
-				print $interface->submit(t('Upload'), 'favicon-form', 'left');
+				print $interface->submit(t('Upload'), 'favicon-form', 'left', 'btn-success');
 				?>
 			
 			</div>
@@ -176,7 +176,7 @@
 				<div class="control-group">
 					<label class="control-label"></label>
 					<div class="controls">
-						<? echo $interface->submit(t('Upload'), 'favicon-form', 'left'); ?>
+						<? echo $interface->submit(t('Upload'), 'favicon-form', 'left', 'btn-success'); ?>
 					</div>
 				</div>
 				<?
