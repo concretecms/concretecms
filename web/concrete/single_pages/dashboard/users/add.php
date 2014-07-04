@@ -9,10 +9,10 @@
 			<div class="row">
 				<div class="form-group">
 					<label for="uName" class="control-label col-sm-3"><?=t('Username')?></label>
-					<div class="col-sm-7">
+					<div class="col-sm-4">
 						<div class="input-group">
 						<?=$form->text('uName', array('autocomplete' => 'off'))?>
-						<span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+						<span class="input-group-addon"><i class="fa fa-user"></i></span>
 						</div>
 					</div>
 				</div>
@@ -21,10 +21,10 @@
 			<div class="row">
 				<div class="form-group">
 					<label for="uPassword" class="control-label col-sm-3"><?=t('Password')?></label>
-					<div class="col-sm-7">
+					<div class="col-sm-4">
 						<div class="input-group">
 						<?=$form->password('uPassword')?>
-						<span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+						<span class="input-group-addon"><i class="fa fa-lock"></i></span>
 						</div>
 					</div>
 				</div>
@@ -33,10 +33,10 @@
 			<div class="row">
 				<div class="form-group">
 					<label for="uEmail" class="control-label col-sm-3"><?=t('Email Address')?></label>
-					<div class="col-sm-7">
+					<div class="col-sm-4">
 						<div class="input-group">
 						<?=$form->email('uEmail')?>
-						<span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
+						<span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 						</div>
 					</div>
 				</div>
