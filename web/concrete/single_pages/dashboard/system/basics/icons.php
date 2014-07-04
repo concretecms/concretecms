@@ -24,7 +24,7 @@
 		<div class="control-group">
 		<label></label>
 		<div class="controls">
-			<a href="javascript:void(0)" class="btn danger" onclick="removeFavIcon()"><?=t('Remove')?></a>
+			<a href="javascript:void(0)" class="btn btn-danger" onclick="removeFavIcon()"><?=t('Remove')?></a>
 		</div>
 		</div>
 		
@@ -88,7 +88,7 @@
 		<div class="control-group">
 		<label></label>
 		<div class="controls">
-			<a href="javascript:void(0)" class="btn danger" onclick="removeIphoneThumbnail()"><?=t('Remove')?></a>
+			<a href="javascript:void(0)" class="btn btn-danger" onclick="removeIphoneThumbnail()"><?=t('Remove')?></a>
 		</div>
 		</div>
 		
@@ -147,7 +147,7 @@
 				<div class="control-group">
 					<label></label>
 					<div class="controls">
-						<a href="javascript:void(0)" class="btn danger" onclick="removeModernThumbnail()"><?php echo t('Remove'); ?></a>
+						<a href="javascript:void(0)" class="btn btn-danger" onclick="removeModernThumbnail()"><?php echo t('Remove'); ?></a>
 					</div>
 				</div>
 				<script>
