@@ -1,6 +1,7 @@
 <?php
 use Concrete\Core\Application\Service\Dashboard;
 use Concrete\Core\Http\Service\Json;
+use \Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
 
 $dh = new Dashboard();
 if ($dh->canRead()) {
