@@ -1,10 +1,12 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");
+<?php
+use Concrete\Core\Application\Service\Dashboard;
+use Concrete\Core\Http\Service\Json;
 
-$dh = Loader::helper('concrete/dashboard');
+$dh = new Dashboard();
 if ($dh->canRead()) {
     session_write_close();
 
-    $js = Loader::helper('json');
+    $js = new Json();
 
     $mri = new MarketplaceRemoteItemList();
     $mri->setItemsPerPage(5);
