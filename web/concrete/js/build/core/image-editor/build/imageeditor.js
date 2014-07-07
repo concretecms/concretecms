@@ -27,8 +27,6 @@ var ImageEditor = function (settings) {
   im.showLoader = $.fn.dialog.showLoader;
   im.hideLoader = $.fn.dialog.hideLoader;
   im.stage.im = im;
-  im.stage.setX(.5);
-  im.stage.setY(.5);
   im.stage.elementType = 'stage';
   im.crosshair.src = '/concrete/images/image_editor/crosshair.png';
 

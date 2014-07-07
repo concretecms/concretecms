@@ -1,86 +1,55 @@
-im.save = function() {
-  im.background.hide();
-  im.stage.setScale(1);
-
-  im.fire('ChangeActiveAction');
-  im.fire('changeActiveComponent');
-  im.background.hide();
-  im.foreground.hide();
-
-  $(im.stage.getContainer()).hide();
-
-  var startx = Math.round(im.center.x - (im.saveWidth / 2)),
-      starty = Math.round(im.center.y - (im.saveHeight / 2)),
-      oldx = im.stage.getX(),
-      oldy = im.stage.getY(),
-      oldwidth = im.stage.getWidth(),
-      oldheight = im.stage.getHeight();
-
-  im.stage.setX(-startx);
-  im.stage.setY(-starty);
-  im.stage.setWidth(Math.max(im.stage.getWidth(),im.saveWidth));
-  im.stage.setHeight(Math.max(im.stage.getHeight(),im.saveHeight));
-  im.stage.draw();
-
-
-  im.showLoader('Saving..');
-  im.stage.toDataURL({
-    width:im.saveWidth,
-    height:im.saveHeight,
-    callback:function(data){
-      var img = $('<img/>').attr('src',data);
-      $.fn.dialog.open({element:$(img).width(250)});
-      im.hideLoader();
-      im.background.show();
-      im.foreground.show();
-      im.stage.setX(oldx);
-      im.stage.setY(oldy);
-      im.stage.setWidth(oldwidth);
-      im.stage.setHeight(oldheight);
-      im.stage.setScale(im.scale);
-      im.stage.draw();
-      $(im.stage.getContainer()).show();
-    }
-  })
-};
-
 im.save = function saveImage() {
   im.fire('ChangeActiveAction');
 
-  var oldStagePosition = im.stage.getPosition(),
-      oldScale = im.scale;
+    im.stage.toDataURL({
+        callback: function(data) {
+            var fake_canvas = $('<img />').addClass('fake_canvas').appendTo(im.editorContext.children('.Editor'));
+            fake_canvas.attr('src', data);
 
-  im.stage.setPosition(-im.saveArea.getX(), -im.saveArea.getY());
-  im.stage.setScale(1);
-  im.background.hide();
-  im.foreground.hide();
-  im.stage.draw();
+            fake_canvas.css({
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                backgroundColor: 'white'
+            });
 
-  im.stage.toDataURL({
-    width: im.saveWidth,
-    height: im.saveHeight,
-    callback: function saveImageDataUrlCallback(url) {
-      im.stage.setPosition(oldStagePosition);
-      im.background.show();
-      im.foreground.show();
-      im.stage.setScale(oldScale);
-      im.stage.draw();
+            var oldStagePosition = im.stage.getPosition(),
+                oldScale = im.scale;
 
-      $.post('/index.php/tools/required/files/importers/imageeditor',{
-        fID: im.fileId,
-        imgData: url
-      }, function(res){
-        var result = JSON.parse(res);
-        if (result.error === 1){
-          alert(result.message);
-        } else if (result.error === 0) {
-          window.location = window.location;
-          window.location.reload();
+            im.stage.setPosition(-im.saveArea.getX(), -im.saveArea.getY());
+            im.stage.setScale(1);
+            im.background.hide();
+            im.foreground.hide();
+            im.stage.draw();
+
+            im.stage.toDataURL({
+                width: im.saveWidth,
+                height: im.saveHeight,
+                callback: function saveImageDataUrlCallback(url) {
+                    im.stage.setPosition(oldStagePosition);
+                    im.background.show();
+                    im.foreground.show();
+                    im.stage.setScale(oldScale);
+                    im.stage.draw();
+
+                    fake_canvas.remove();
+                    $.post('/index.php/tools/required/files/importers/imageeditor',{
+                        fID: im.fileId,
+                        imgData: url
+                    }, function(res){
+                        var result = JSON.parse(res);
+                        if (result.error === 1){
+                            alert(result.message);
+                        } else if (result.error === 0) {
+                            window.location = window.location;
+                            window.location.reload();
+                        }
+                    });
+                }
+            });
         }
-      });
-    }
-  });
-}
+    });
+};
 
 im.actualPosition = function actualPosition(x, y, cx, cy, rad) {
   var ay = y - cy,

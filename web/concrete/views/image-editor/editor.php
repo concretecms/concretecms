@@ -1,9 +1,11 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+use Aws\CloudFront\Exception\Exception;
 use \Concrete\Core\Http\ResponseAssetGroup;
 use \Concrete\Core\ImageEditor\ControlSet as SystemImageEditorControlSet;
 use \Concrete\Core\ImageEditor\Filter as SystemImageEditorFilter;
 use \Concrete\Core\ImageEditor\Component as SystemImageEditorComponent;
+use Whoops\Exception\ErrorException;
 
 $editorid = substr(sha1(time()), 0, 5); // Just enough entropy.
 
@@ -30,27 +32,35 @@ $filters = SystemImageEditorFilter::getList();
     </div>
     <div class='controls'>
         <div class='controlscontainer'>
-            <?php/*<ul class='nav nav-tabs'>
-        <li class='active'><a href='#'>Edit</a></li>
-        <li><a href='#'>Add</a></li>
-      </ul>*/?>
             <div class='editorcontrols'>
                 <div class='control-sets'>
                     <?php
                     if (!$controlsets) echo "&nbsp;";
                     foreach($controlsets as $controlset) {
-                        $handle = $controlset->getImageEditorControlSetHandle();
-                        echo "<link rel='stylesheet' href='/concrete/css/image-editor/control-sets/{$handle}.css?d=".sha1(rand(1,500000))."'>
-                <div class='controlset {$handle}'".
-                            " data-namespace='{$handle}'".
-                            " data-src='/concrete/js/image-editor/control-sets/{$handle}.js'>".
-                            "<h4>".$controlset->getImageEditorControlSetDisplayName()."</h4>".
-                            "<div class='control'><div class='contents'>";
-
-                        echo Loader::element('image_editor/control_sets/'.$handle,array('editorid'=>$editorid));
-                        echo "</div></div>".
-                            "<div class='border'></div>".
-                            "</div>";
+                        $handle = $controlset->getHandle();
+                        ?>
+                        <link rel='stylesheet' href='<?= $controlset->getCssPath() ?>'>
+                        <div class="controlset controlset-<?= $controlset->gethandle() ?>"
+                            data-namespace="<?= $controlset->getHandle() ?>"
+                            data-src="<?= $controlset->getJavascriptPath() ?>">
+                            <h4><?= $controlset->getDisplayName() ?></h4>
+                            <div class="control">
+                                <div class="contents">
+                                    <?php
+                                    try {
+                                        $view = new View;
+                                        $view->setInnerContentFile($controlset->getViewPath());
+                                        echo $view->renderViewContents(array('control-set' => $controlset));
+                                    } catch (ErrorException $e) {
+                                        echo t("No view found.");
+                                        // File doesn't exist, just continue.
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                            <div class='border'></div>
+                        </div>
+                        <?php
                     }
                     ?>
                 </div>

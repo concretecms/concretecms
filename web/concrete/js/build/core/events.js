@@ -1,8 +1,8 @@
-var eventing = (function(global, $) {
+var eventing = (function (global, $) {
     'use strict';
     global.c5 = global.c5 || {};
 
-    global.ConcreteEvent = (function(ns, $) {
+    global.ConcreteEvent = (function (ns, $) {
         var target = $('<span />'), debug = false;
 
         var hasGroup = typeof global.console.group === 'function' && typeof global.console.groupEnd === 'function',
@@ -30,25 +30,27 @@ var eventing = (function(global, $) {
                 }
             }
         }
+
         function getTarget(given_target) {
             if (!given_target) given_target = target;
             if (!(given_target instanceof $)) given_target = $(given_target);
             if (!given_target.length) given_target = target;
             return given_target;
         }
+
         var ConcreteEvent = {
 
-            debug: function(enabled) {
+            debug: function (enabled) {
                 if (typeof enabled === 'undefined') {
                     return debug;
                 }
                 return (debug = !!enabled);
             },
 
-            subscribe: function(type, handler, target) {
+            subscribe: function (type, handler, target) {
 
                 if (debug) {
-                    groupLog('Event Subscribed', function() {
+                    groupLog('Event Subscribed', function () {
                         groupLog('Type', type, true);
                         groupLog('Handler', handler, true);
                         groupLog('Target', target, true);
@@ -58,7 +60,7 @@ var eventing = (function(global, $) {
 
                 }
                 if (type instanceof Array) {
-                    return _(type).each(function(v) {
+                    return _(type).each(function (v) {
                         ConcreteEvent.subscribe(v, handler, target);
                     });
                 }
@@ -66,9 +68,9 @@ var eventing = (function(global, $) {
                 return ConcreteEvent;
             },
 
-            publish: function(type, data, target) {
+            publish: function (type, data, target) {
                 if (debug) {
-                    groupLog('Event Published', function() {
+                    groupLog('Event Published', function () {
                         groupLog('Type', type, true);
                         groupLog('Data', data, true);
                         groupLog('Target', target, true);
@@ -78,7 +80,7 @@ var eventing = (function(global, $) {
 
                 }
                 if (type instanceof Array) {
-                    return _(type).each(function(v) {
+                    return _(type).each(function (v) {
                         ConcreteEvent.publish(v, data, target);
                     });
                 }
@@ -86,10 +88,10 @@ var eventing = (function(global, $) {
                 return ConcreteEvent;
             },
 
-            unsubscribe: function(type, secondary_argument, target) {
+            unsubscribe: function (type, secondary_argument, target) {
                 var args;
                 if (debug) {
-                    groupLog('Event Unsubscribed', function() {
+                    groupLog('Event Unsubscribed', function () {
                         groupLog('Type', type, true);
                         groupLog('Secondary Argument', secondary_argument, true);
                         groupLog('Target', target, true);
@@ -107,9 +109,9 @@ var eventing = (function(global, $) {
             }
         };
 
-        ConcreteEvent.sub = ConcreteEvent.bind = ConcreteEvent.watch   = ConcreteEvent.on = ConcreteEvent.subscribe;
+        ConcreteEvent.sub = ConcreteEvent.bind = ConcreteEvent.watch = ConcreteEvent.on = ConcreteEvent.subscribe;
         ConcreteEvent.pub = ConcreteEvent.fire = ConcreteEvent.trigger = ConcreteEvent.publish;
-        ConcreteEvent.unsub = ConcreteEvent.unbind = ConcreteEvent.unwatch   = ConcreteEvent.off = ConcreteEvent.unsubscribe;
+        ConcreteEvent.unsub = ConcreteEvent.unbind = ConcreteEvent.unwatch = ConcreteEvent.off = ConcreteEvent.unsubscribe;
 
         ns.event = ConcreteEvent;
         return ConcreteEvent;
