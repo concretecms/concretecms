@@ -56,6 +56,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     public $areaBlocksArray = array();
 
     protected $arIsLoaded = false;
+    protected $arUseGridContainer = false;
     protected $arDisplayName;
     protected $arGridColumnSpan;
 
@@ -76,7 +77,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     final public function enableGridContainer()
     {
-    
+        $this->arUseGridContainer = true;
     }
 
 	public function getAreaDisplayName()

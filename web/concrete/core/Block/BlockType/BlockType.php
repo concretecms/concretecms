@@ -23,6 +23,14 @@ class BlockType
 {
 
     public $controller;
+
+    /**
+     * If a grid container is enabled at the area level, all blocks added will be individually
+     * wrapped inside it on each add. If this is set to true, this block type will NOT be wrapped
+     * @var bool
+     */
+    protected $btIgnorePageThemeGridFrameworkContainer = false;
+
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue
