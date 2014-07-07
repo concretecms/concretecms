@@ -2,12 +2,13 @@ main {
 
   font-family: @main-content-font-family;
   font-weight: 400;
+  font-size: @main-content-base-font-size;
   -webkit-font-smoothing:antialiased;
 
-  h1 {
-    font-family: @main-title-font-family;
-    font-weight: @main-title-font-weight;
-    color: @main-title-text-color;
-    font-size: @main-title-font-size;
+  h1, h2, h3, h4, h5 {
+    font-family: @titles-font-family;
+    color: @titles-text-color;
+    font-weight: @titles-font-weight;
   }
+
 }

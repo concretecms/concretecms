@@ -5,7 +5,7 @@ use Core;
 abstract class GridFramework {
 
 	public static function getByHandle($pThemeGridFrameworkHandle) {
-		$class = '\\Concrete\\Core\\Page\\Theme\\GridFramework\\Type\\' . $pThemeGridFrameworkHandle;
+		$class = '\\Concrete\\Core\\Page\\Theme\\GridFramework\\Type\\' . camelcase($pThemeGridFrameworkHandle);
 		$cl = Core::make($class);
 		return $cl;
 	}
