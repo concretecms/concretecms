@@ -154,7 +154,7 @@ function CropSetup(im, me, $) {
   my.crop = function Crop() {
     var layer = im.activeElement.parent,
         oldPosition = { x: layer.getX(), y: layer.getY() },
-        oldScale = im.scale,
+        oldScale = im.,
         oldStagePosition = { x: my.stage.getX(), y: my.stage.getY() };
 
     layer.setPosition(oldPosition.x - my.cropLayer.getX(), oldPosition.y - my.cropLayer.getY());
