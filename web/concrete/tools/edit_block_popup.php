@@ -121,20 +121,15 @@ if (is_object($b)) {
                 <?
                 }
 
-                Loader::element(
-                      'block_header',
-                      array(
-                          'a' => $a,
-                          'b' => $b,
-                          'p' => $bp
-                      ));
+                if (isset($_REQUEST['arEnableGridContainer']) && $_REQUEST['arEnableGridContainer'] == 1) {
+                    $a->enableGridContainer();
+                }
 
                 // we make sure that our active theme gets registered as well because we want to make sure that
                 // assets provided by the theme aren't loaded by the block in this mode.
                 $pt = $c->getCollectionThemeObject();
                 $pt->registerAssets();
                 $bv->render('view');
-                Loader::element('block_footer');
             }
             break;
         case 'groups':
@@ -162,8 +157,11 @@ if (is_object($b)) {
             if ($bp->canWrite()) {
 
                 // Handle special posted area parameters here
-                if (isset($_REQUEST['arGridColumnSpan'])) {
-                    $a->setAreaGridColumnSpan(intval($_REQUEST['arGridColumnSpan']));
+                if (isset($_REQUEST['arGridMaximumColumns'])) {
+                    $a->setAreaGridMaximumColumns(intval($_REQUEST['arGridMaximumColumns']));
+                }
+                if (isset($_REQUEST['arEnableGridContainer']) && $_REQUEST['arEnableGridContainer'] == 1) {
+                    $a->enableGridContainer();
                 }
                 $bv->addScopeItems(
                    array(

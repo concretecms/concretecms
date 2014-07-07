@@ -29,7 +29,7 @@ use \Concrete\Core\Block\BlockController;
 		protected $btSupportsInlineAdd = true;
 		protected $btCacheBlockOutputForRegisteredUsers = true;
 		protected $btCacheBlockOutputLifetime = 0; //until manually updated or cleared
-		
+
 		public function getBlockTypeDescription() {
 			return t("HTML/WYSIWYG Editor Content.");
 		}

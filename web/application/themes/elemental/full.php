@@ -1,6 +1,3 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
-?>
-</div>
-
-
+$this->inc('default.php');

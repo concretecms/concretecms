@@ -21,15 +21,17 @@ $ag->requireAsset('css', 'font-awesome');
 <div class="ccm-page">
     <header>
         <div class="container">
-            <div class="col-md-4"><span id="header-brand">Elemental</span></div>
-            <div class="<? if ($displayThirdColumn) { ?>col-md-5<? } else { ?>col-md-8<? } ?>">
-                <?
-                $a = new GlobalArea('Header Navigation');
-                $a->display();
-                ?>
+            <div class="row">
+                <div class="col-md-4"><span id="header-brand">Elemental</span></div>
+                <div class="<? if ($displayThirdColumn) { ?>col-md-5<? } else { ?>col-md-8<? } ?>">
+                    <?
+                    $a = new GlobalArea('Header Navigation');
+                    $a->display();
+                    ?>
+                </div>
+                <? if ($displayThirdColumn) { ?>
+                    <div class="col-md-3"><? $as->display(); ?></div>
+                <? } ?>
             </div>
-            <? if ($displayThirdColumn) { ?>
-                <div class="col-md-3"><? $as->display(); ?></div>
-            <? } ?>
         </div>
     </header>

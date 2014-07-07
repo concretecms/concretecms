@@ -26,6 +26,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btHandle = "";
     protected $btIsInternal = 0;
     protected $btSupportsInlineAdd = false;
+    protected $btIgnorePageThemeGridFrameworkContainer = false;
     protected $btSupportsInlineEdit = false;
     protected $btCopyWhenPropagate = 0;
     protected $btIncludeAll = 0;
@@ -639,6 +640,16 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     public function supportsInlineAdd()
     {
         return $this->btSupportsInlineAdd;
+    }
+
+    /**
+     * If true, container classes will not be wrapped around this block type in edit mode (if the
+     * theme in question supports a grid framework.
+     * @return bool
+     */
+    public function ignorePageThemeGridFrameworkContainer()
+    {
+        return $this->btIgnorePageThemeGridFrameworkContainer;
     }
 
     /**

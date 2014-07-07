@@ -37,4 +37,3 @@ if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
 ?>
 
 </div>
-

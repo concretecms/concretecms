@@ -67,7 +67,7 @@ if (isset($help) && !$bt->supportsInlineEdit()) { ?>
 	?></div>
 <? } ?>
 
-<div <? if (!$bt->supportsInlineEdit()) { ?>class="ccm-ui"<? } ?>>
+<div <? if (!$bt->supportsInlineEdit()) { ?>class="ccm-ui"<? } else { ?>data-container="inline-toolbar"<? } ?>>
 
 <form method="post" id="ccm-block-form" class="validate" action="<?=$b->getBlockEditAction()?>&rcID=<?=intval($rcID)?>" enctype="multipart/form-data">
 
@@ -78,5 +78,5 @@ if (isset($help) && !$bt->supportsInlineEdit()) { ?>
 <? if (!$bt->supportsInlineEdit()) { ?>
 <div id="ccm-block-fields">
 <? } else { ?>
-<div>
+    <div>
 <? } ?>

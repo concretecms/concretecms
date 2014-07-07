@@ -85,9 +85,7 @@ if ($controller->getTask() == 'view_details') {
         $bv->setAreaObject($a);
         $p = new Permissions($b);
         if ($p->canViewBlock()) {
-            Loader::element('block_header', array( 'a' => $a, 'b' => $b, 'p' => $p ));
             $bv->render('view');
-            Loader::element('block_footer');
         }
     }
     Loader::element('block_area_footer_view', array('a' => $a));

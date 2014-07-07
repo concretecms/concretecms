@@ -44,7 +44,26 @@ if (isset($help) && !$blockType->supportsInlineAdd()) { ?>
 	?></div>
 <? } ?>
 
-<div <? if (!$blockType->supportsInlineAdd()) { ?>class="ccm-ui"<? } ?>>
+<?
+if ($blockType->supportsInlineAdd()) {
+    $pt = $c->getCollectionThemeObject();
+    if (
+        $pt->supportsGridFramework()
+        && $area->isGridContainerEnabled()
+        && !$blockType->ignorePageThemeGridFrameworkContainer()
+    ) {
+
+        $gf = $pt->getThemeGridFrameworkObject();
+        print $gf->getPageThemeGridFrameworkContainerStartHTML();
+        print $gf->getPageThemeGridFrameworkRowStartHTML();
+        printf('<div class="%s">', $gf->getPageThemeGridFrameworkColumnClassForSpan(
+                $gf->getPageThemeGridFrameworkNumColumns()
+            ));
+    }
+}
+?>
+
+<div <? if (!$blockType->supportsInlineAdd()) { ?>class="ccm-ui"<? } else { ?>data-container="inline-toolbar"<? } ?>>
 
 
 <form method="post" action="<?=$controller->action('submit')?>" id="ccm-block-form" enctype="multipart/form-data" class="validate">
@@ -83,4 +102,20 @@ if (isset($help) && !$blockType->supportsInlineAdd()) { ?>
 </form>
 
 </div>
+
+<?
+if ($blockType->supportsInlineAdd()) {
+    $pt = $c->getCollectionThemeObject();
+    if (
+        $pt->supportsGridFramework()
+        && $area->isGridContainerEnabled()
+        && !$blockType->ignorePageThemeGridFrameworkContainer()
+    ) {
+        $gf = $pt->getThemeGridFrameworkObject();
+        print '</div>';
+        print $gf->getPageThemeGridFrameworkRowEndHTML();
+        print $gf->getPageThemeGridFrameworkContainerEndHTML();
+    }
+}
+
 

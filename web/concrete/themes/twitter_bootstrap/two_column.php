@@ -8,7 +8,7 @@ $this->inc('elements/header.php'); ?>
 <div class="span12">
 <?
 	$a = new Area('Main');
-	$a->setAreaGridColumnSpan(12);
+	$a->setAreaGridMaximumColumns(12);
 	$a->display($c);
 ?>
 </div>
@@ -19,7 +19,7 @@ $this->inc('elements/header.php'); ?>
 <div class="span6">
 <?
 	$a = new Area('Column One');
-	$a->setAreaGridColumnSpan(6);
+	$a->setAreaGridMaximumColumns(6);
 	$a->display($c);
 ?>
 </div>
@@ -27,7 +27,7 @@ $this->inc('elements/header.php'); ?>
 <div class="span6">
 <?
 	$a = new Area('Column Two');
-	$a->setAreaGridColumnSpan(6);
+	$a->setAreaGridMaximumColumns(6);
 	$a->display($c);
 ?>
 </div>

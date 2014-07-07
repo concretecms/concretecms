@@ -58,26 +58,44 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     protected $arIsLoaded = false;
     protected $arUseGridContainer = false;
     protected $arDisplayName;
-    protected $arGridColumnSpan;
+    protected $arGridMaximumColumns;
 
     public function setAreaDisplayName($arDisplayName)
     {
         $this->arDisplayName = $arDisplayName;
     }
 
-    public function setAreaGridColumnSpan($cspan)
+    public function setAreaGridMaximumColumns($cspan)
     {
-        $this->arGridColumnSpan = $cspan;
+        $this->arGridMaximumColumns = $cspan;
     }
 
-    public function getAreaGridColumnSpan()
+    public function getAreaGridMaximumColumns()
     {
-        return $this->arGridColumnSpan;
+        if (!isset($this->arGridMaximumColumns)) {
+            $this->arGridMaximumColumns = null;
+            if ($this->isGridContainerEnabled()) {
+                $c = $this->getAreaCollectionObject();
+                if (is_object($c)) {
+                    $pt = $c->getCollectionThemeObject();
+                    if (is_object($pt)) {
+                        $gf = $pt->getThemeGridFrameworkObject();
+                        $this->arGridMaximumColumns = $gf->getPageThemeGridFrameworkNumColumns();
+                    }
+                }
+            }
+        }
+        return $this->arGridMaximumColumns;
     }
 
     final public function enableGridContainer()
     {
         $this->arUseGridContainer = true;
+    }
+
+    public function isGridContainerEnabled()
+    {
+        return $this->arUseGridContainer;
     }
 
 	public function getAreaDisplayName()
@@ -677,27 +695,11 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             $includeEditStrip = false;
             $bv = new BlockView($b);
             $p = new Permissions($b);
-            if ($c->isEditMode() && $this->showControls && $p->canViewEditInterface()) {
-                $includeEditStrip = true;
-            }
             if ($p->canViewBlock()) {
                 if (!$c->isEditMode()) {
                     echo $this->enclosingStart;
                 }
-                if ($includeEditStrip) {
-                    Loader::element(
-                        'block_header',
-                        array(
-                            'a' => $this,
-                            'b' => $b,
-                            'p' => $p
-                        )
-                    );
-                }
                 $bv->render('view');
-                if ($includeEditStrip) {
-                    Loader::element('block_footer');
-                }
                 if (!$c->isEditMode()) {
                     echo $this->enclosingEnd;
                 }
