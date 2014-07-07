@@ -28,6 +28,7 @@
         <blocktype handle="form" package=""/>
         <blocktype handle="google_map" package=""/>
         <blocktype handle="html" package=""/>
+        <blocktype handle="horizontal_rule" package=""/>
         <blocktype handle="discussion" package=""/>
         <blocktype handle="image" package=""/>
         <blocktype handle="next_previous" package=""/>
@@ -52,6 +53,7 @@
             <blocktype handle="html"/>
             <blocktype handle="image"/>
             <blocktype handle="file"/>
+            <blocktype handle="horizontal_rule"/>
         </blocktypeset>
         <blocktypeset handle="navigation" name="Navigation" package="">
             <blocktype handle="autonav"/>

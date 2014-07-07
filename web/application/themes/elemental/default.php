@@ -5,7 +5,7 @@ $this->inc('elements/header.php'); ?>
 <main>
 <?
 $a = new Area('Main');
-$a->setAreaGridColumnSpan(12);
+$a->enableGridContainer();
 $a->display($c);
 ?>
 </main>

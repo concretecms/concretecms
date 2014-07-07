@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="<?=$this->getThemePath()?>/main.css" />
     <?
 $view->requireAsset('css', 'bootstrap');
-$view->requireAsset('css', 'fontawesome');
+$view->requireAsset('css', 'font-awesome');
 $view->requireAsset('javascript', 'jquery');
 $view->requireAsset('javascript', 'bootstrap/alert');
 $view->requireAsset('javascript', 'bootstrap/transition');
