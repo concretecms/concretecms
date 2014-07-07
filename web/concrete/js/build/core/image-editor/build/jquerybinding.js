@@ -5,8 +5,7 @@
     window.c5_image_editor = im; // Safe keeping
     window.im = im;
     return im;
-}
-;
+};
 
 $.fn.ImageEditor = function (settings) {
     (settings === undefined && (settings = {}));
@@ -53,7 +52,7 @@ $.fn.ImageEditor = function (settings) {
     $('div.controls > div.controlscontainer', context).children('div.save').children('button.save').click(function () {
         im.save();
     }).end().children('button.cancel').click(function () {
-        if (confirm("Are you Sure?"))
+        if (confirm("Are you sure?"))
             $.fn.dialog.closeTop();
     });
 
