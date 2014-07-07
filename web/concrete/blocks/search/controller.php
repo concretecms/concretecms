@@ -3,6 +3,7 @@ namespace Concrete\Block\Search;
 use Loader;
 use CollectionAttributeKey;
 use \Concrete\Core\Page\Search\IndexedPageList;
+use \Concrete\Core\Page\Search\IndexedSearchResult;
 use \Concrete\Core\Block\BlockController;
 use Page;
 class Controller extends BlockController {
@@ -186,7 +187,7 @@ class Controller extends BlockController {
 			$ipl->filterByPath($this->baseSearchPath);
 		}
 
-		$ipl->filter(false, '(ak_exclude_search_index = 0 or ak_exclude_search_index is null)');
+		//$ipl->filter(false, '(ak_exclude_search_index = 0 or ak_exclude_search_index is null)');
 
 		$res = $ipl->getPage();
 

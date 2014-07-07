@@ -44,11 +44,17 @@ if ($do_search) {
 		</div>
 		
 		<?
-		if($paginator && strlen($paginator->getPages())>0){ ?>	
+		if($paginator && $paginator->haveToPaginate()) { ?>	
 		<div class="ccm-pagination">	
-			 <span class="ccm-page-left"><?=$paginator->getPrevious()?></span>
-			 <?=$paginator->getPages()?>
-			 <span class="ccm-page-right"><?=$paginator->getNext()?></span>
+            <?php if($paginator->hasPreviousPage()) { ?>
+			<span class="ccm-page-left"><?=$paginator->getPreviousPage()?></span>
+			<?php } ?>
+			
+			<?=$paginator->getCurrentPageResults()?>
+			
+			<?php if($paginator->hasNextPage()) { ?>
+		    <span class="ccm-page-right"><?=$paginator->getNextPage()?></span>
+		    <?php } ?>
 		</div>	
 		<? } ?>
 
