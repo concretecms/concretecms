@@ -670,6 +670,7 @@
                 });
                 Concrete.event.fire('EditModeBlockAddInline', {
                     area: my,
+                    cID: CCM_CID,
                     btID: $(this).attr('data-block-type-id'),
                     arGridColumnSpan: $(this).attr('data-area-grid-column-span'),
                     event: e,

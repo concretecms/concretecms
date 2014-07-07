@@ -425,18 +425,23 @@ class Theme extends Object
             "select pThemeID, pThemeHandle, pThemeDescription, pkgID, pThemeName, pThemeHasCustomClass from PageThemes where {$where}",
             $args
         );
+        $env = Environment::get();
         if ($row['pThemeID']) {
             if ($row['pThemeHasCustomClass']) {
-                $class = '\\Concrete\\Theme\\' . Loader::helper('text')->camelcase(
-                        $row['pThemeHandle'] . '\\PageTheme'
-                    );
+
+                $r = $env->getRecord(DIRNAME_THEMES . '/' . $row['pThemeHandle'] . '/' . FILENAME_THEMES_CLASS);
+                $prefix = $r->override ? true : $row['pkgHandle'];
+                $class = core_class(
+                    'Theme\\' .
+                    Loader::helper('text')->camelcase($row['pThemeHandle']) .
+                    '\\PageTheme',
+                $prefix);
             } else {
                 $class = '\\Concrete\Core\\Page\\Theme\\Theme';
             }
             $pl = Core::make($class);
             $pl->setPropertiesFromArray($row);
             $pkgHandle = $pl->getPackageHandle();
-            $env = Environment::get();
             $pl->pThemeDirectory = $env->getPath(DIRNAME_THEMES . '/' . $row['pThemeHandle'], $pkgHandle);
             $pl->pThemeURL = $env->getURL(DIRNAME_THEMES . '/' . $row['pThemeHandle'], $pkgHandle);
             return $pl;
@@ -574,7 +579,7 @@ class Theme extends Object
         $env = Environment::get();
         $db = Loader::db();
         $r = $env->getRecord(
-            DIRNAME_THEMES . '/' . '/' . $this->pThemeHandle . '/' . FILENAME_THEMES_CLASS,
+            DIRNAME_THEMES . '/' . $this->pThemeHandle . '/' . FILENAME_THEMES_CLASS,
             $this->getPackageHandle()
         );
         if ($r->exists()) {

@@ -61,7 +61,7 @@
 		if ($bp->canDeleteBlock()) {
 			$deleteMessage = t('Do you want to delete this layout? This will remove all blocks inside it.');
 			?>
-			<li class="ccm-inline-toolbar-icon-cell"><a href="#" data-menu-action="delete-layout"><i class="fa fa-trash"></i></a></li>
+			<li class="ccm-inline-toolbar-icon-cell"><a href="#" data-menu-action="delete-layout"><i class="fa fa-trash-o"></i></a></li>
 		<? } ?>
 	<? } ?>
 
