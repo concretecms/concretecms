@@ -3,7 +3,7 @@ header {
   padding-top: @padding-large-vertical * 5;
   padding-bottom: @padding-large-vertical * 5;
   border-bottom: 1px solid #f0eee1;
-  margin-bottom: @padding-large-vertical * 5;
+  margin-bottom: (@padding-large-vertical * 5) - (@line-height-computed);
 
   /* Header Logo/Brand */
   span#header-brand {
@@ -89,7 +89,4 @@ header {
     color: @header-navigation-menu-text-hover-color;
     background-color: @header-navigation-menu-background-hover-color;
   }
-
-
-
 }

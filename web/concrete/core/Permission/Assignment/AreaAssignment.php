@@ -2,7 +2,7 @@
 namespace Concrete\Core\Permission\Assignment;
 use PermissionAccess;
 use Loader;
-use Area;
+use \Concrete\Core\Area\Area;
 use Stack;
 use PermissionKey;
 

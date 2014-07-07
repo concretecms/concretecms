@@ -74,7 +74,7 @@
 </ul>
 
 	<? if ($controller->getTask() == 'add') { ?>
-		<input name="arLayoutMaxColumns" type="hidden" value="<?=$view->getAreaObject()->getAreaGridColumnSpan()?>" />
+		<input name="arLayoutMaxColumns" type="hidden" value="<?=$view->getAreaObject()->getAreaGridMaximumColumns()?>" />
 	<? } ?>
 
 <script type="text/javascript">
@@ -126,7 +126,7 @@ $(function() {
 		'rowstart':  '<?=addslashes($themeGridFramework->getPageThemeGridFrameworkRowStartHTML())?>',
 		'rowend': '<?=addslashes($themeGridFramework->getPageThemeGridFrameworkRowEndHTML())?>',
 		<? if ($controller->getTask() == 'add') { ?>
-		'maxcolumns': '<?=$controller->getAreaObject()->getAreaGridColumnSpan()?>',
+		'maxcolumns': '<?=$controller->getAreaObject()->getAreaGridMaximumColumns()?>',
 		<? } else { ?>
 		'maxcolumns': '<?=$themeGridMaxColumns?>',
 		<? } ?>

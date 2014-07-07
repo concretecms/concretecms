@@ -34,11 +34,13 @@
         Concrete.event.bind('EditModeBlockEditInline', function (event, data) {
             var block = data.block,
                 area = block.getArea(),
+                arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0,
                 postData = [
                     {name: 'btask', value: 'edit'},
                     {name: 'cID', value: block.getCID()},
                     {name: 'arHandle', value: area.getHandle()},
-                    {name: 'arGridColumnSpan', value: data.arGridColumnSpan},
+                    {name: 'arGridMaximumColumns', value: data.arGridMaximumColumns},
+                    {name: 'arEnableGridContainer', value: arEnableGridContainer},
                     {name: 'aID', value: area.getId()},
                     {name: 'bID', value: block.getId()}
                 ],
@@ -60,7 +62,7 @@
             Concrete.event.bind('EditModeExitInline', function (e) {
                 Concrete.event.unbind(e);
                 e.stopPropagation();
-                var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + block.getCID() + '&bID=' + block.getId() + '&arHandle=' + escape(area.getHandle()) + '&btask=view_edit_mode';
+                var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + block.getCID() + '&arEnableGridContainer=' + arEnableGridContainer + '&bID=' + block.getId() + '&arHandle=' + escape(area.getHandle()) + '&btask=view_edit_mode';
                 $.fn.dialog.showLoader();
                 $.get(action,
                     function (r) {
@@ -98,10 +100,12 @@
                 selected = data.selected,
                 btID = data.btID,
                 cID = data.cID,
+                arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0,
                 postData = [
                     {name: 'btask', value: 'edit'},
                     {name: 'cID', value: cID},
-                    {name: 'arGridColumnSpan', value: data.arGridColumnSpan},
+                    {name: 'arGridMaximumColumns', value: data.arGridMaximumColumns},
+                    {name: 'arEnableGridContainer', value: arEnableGridContainer},
                     {name: 'arHandle', value: area.getHandle()},
                     {name: 'btID', value: btID}
                 ], dragAreaBlock, dragAreaBlockID, elem;
@@ -149,7 +153,7 @@
                             'dragAreaBlockID': dragAreaBlockID
                         });
                     });
-                    my.loadInlineEditModeToolbars($container);
+                    my.loadInlineEditModeToolbars($container.find('div[data-container=inline-toolbar]'));
                 },
                 complete: function () {
                     $.fn.dialog.hideLoader();
@@ -316,6 +320,7 @@
             id: elem.data('area-id'),
             elem: elem,
             totalBlocks: 0,
+            enableGridContainer: elem.data('area-enable-grid-container'),
             handle: elem.data('area-handle'),
             dragAreas: [],
             blocks: [],
@@ -323,7 +328,6 @@
             maximumBlocks: parseInt(elem.data('maximumBlocks'), 10),
             blockTypes: elem.data('accepts-block-types').split(' ')
         });
-
         my.id = my.getId();
         my.setTotalBlocks(0); // we also need to update the DOM which this does.
         my.addDragArea();
@@ -672,7 +676,7 @@
                     area: my,
                     cID: CCM_CID,
                     btID: $(this).attr('data-block-type-id'),
-                    arGridColumnSpan: $(this).attr('data-area-grid-column-span'),
+                    arGridMaximumColumns: $(this).attr('data-area-grid-maximum-columns'),
                     event: e,
                     dragAreaBlock: dragAreaLastBlock
                 });
@@ -691,7 +695,7 @@
                 var block = _.findWhere(editor.getBlocks(), {id: bID});
                 Concrete.event.fire('EditModeBlockEditInline', {
                     block: block,
-                    arGridColumnSpan: $link.attr('data-area-grid-column-span'),
+                    arGridMaximumColumns: $link.attr('data-area-grid-maximum-columns'),
                     event: e
                 });
                 return false;
@@ -803,7 +807,7 @@
             } else {
                 elem = $('<div class="ccm-area-drag-area"/>');
                 drag_area = new DragArea(elem, my, block);
-                block.getElem().after(elem);
+                block.getElem().closest('div[data-container=block]').after(elem);
             }
             my.getDragAreas().push(drag_area);
             return drag_area;
@@ -860,7 +864,8 @@
         },
 
         handleAddResponse: function blockHandleAddResponse(response, area, after_block, onComplete) {
-            var my = this;
+            var my = this,
+                arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0;
 
             if (response.error) {
                 return;
@@ -870,10 +875,11 @@
                     arHandle: response.arHandle,
                     cID: response.cID,
                     bID: response.bID,
-                    btask: 'view_edit_mode'
+                    btask: 'view_edit_mode',
+                    arEnableGridContainer: arEnableGridContainer
                 }, function (html) {
                     if (after_block) {
-                        after_block.getElem().after(html);
+                        after_block.getElem().closest('div[data-container=block]').after(html);
                     } else {
                         area.getElem().prepend(html);
                     }
@@ -925,12 +931,12 @@
         replace: function (bID, content) {
             var my = this, editor = Concrete.getEditMode(), oldBID = my.getId(), area = my.getArea(), totalBlocks = area.getTotalBlocks(), i, b;
 
-            my.getElem().next('.ccm-area-drag-area').remove();
+            my.getElem().closest('div[data-container=block]').next('.ccm-area-drag-area').remove();
             my.getElem().data('block-id', bID); // it's super lame that i have to do this.
             my.getElem().attr('data-block-id', bID);
 
             if (content) {
-                my.getElem().before(content).remove();
+                my.getElem().closest('div[data-container=block]').before(content).remove();
             }
 
             var newBlock = new Concrete.Block($('[data-block-id=' + bID + ']'), editor);
@@ -1333,6 +1339,7 @@
                 cID = elem.data('cid'),
                 area = drag_area.getArea(),
                 area_handle = area.getHandle(),
+                arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0,
                 dragAreaBlockID = 0,
                 dragAreaBlock = drag_area.getBlock(),
                 is_inline = !!elem.data('supports-inline-add'),
@@ -1345,7 +1352,7 @@
             ConcretePanelManager.exitPanelMode();
 
             if (!has_add) {
-                $.get(CCM_DISPATCHER_FILENAME, {
+                $.get(CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add_block/submit', {
                     cID: cID,
                     arHandle: area_handle,
                     btID: block_type_id,
@@ -1361,10 +1368,11 @@
                             arHandle: response.arHandle,
                             cID: response.cID,
                             bID: response.bID,
+                            arEnableGridContainer: arEnableGridContainer,
                             btask: 'view_edit_mode'
                         }, function (html) {
                             if (dragAreaBlock) {
-                                dragAreaBlock.getElem().after(html);
+                                dragAreaBlock.getElem().closest('div[data-container=block]').after(html);
                             } else {
                                 area.getElem().append(html);
                             }
@@ -1379,6 +1387,7 @@
                     'selected': drag_area,
                     'area': drag_area.getArea(),
                     'cID': cID,
+                    'arEnableGridContainer': arEnableGridContainer,
                     'btID': block_type_id,
                     'dragAreaBlockID': dragAreaBlockID
                 });

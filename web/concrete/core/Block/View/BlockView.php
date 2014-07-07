@@ -119,8 +119,10 @@ class BlockView extends AbstractView {
 
 		switch($view) {
 			case 'view':
-				$this->setBlockViewHeaderFile(DIR_FILES_ELEMENTS_CORE . '/block_header_view.php');
-				$this->setBlockViewFooterFile(DIR_FILES_ELEMENTS_CORE . '/block_footer_view.php');
+                if (is_object($this->block)) {
+    				$this->setBlockViewHeaderFile(DIR_FILES_ELEMENTS_CORE . '/block_header_view.php');
+	    			$this->setBlockViewFooterFile(DIR_FILES_ELEMENTS_CORE . '/block_footer_view.php');
+                }
 				if ($this->controller->blockViewRenderOverride) {
 					$template = DIRNAME_BLOCKS . '/' . $this->blockType->getBlockTypeHandle() . '/' . $this->controller->blockViewRenderOverride . '.php';
 					$this->setViewTemplate($env->getPath($template, $this->blockTypePkgHandle));

@@ -48,9 +48,12 @@ class AddBlock extends BackendInterfacePageController {
 		$bv = new BlockView($this->blockType);
 		$bv->setAreaObject($this->area);
 		// Handle special posted area parameters here
-		if (isset($_REQUEST['arGridColumnSpan'])) {
-			$this->area->setAreaGridColumnSpan(intval($_REQUEST['arGridColumnSpan']));
+		if (isset($_REQUEST['arGridMaximumColumns'])) {
+			$this->area->setAreaGridMaximumColumns(intval($_REQUEST['arGridMaximumColumns']));
 		}
+        if (isset($_REQUEST['arEnableGridContainer']) && $_REQUEST['arEnableGridContainer'] == 1) {
+            $this->area->enableGridContainer();
+        }
 		$bv->addScopeItems(array('a' => $this->a, 'cp' => $this->permissions, 'ap' => $this->areaPermissions));
 		$this->set('blockView', $bv);
 		$this->set('blockType', $this->blockType);
@@ -62,7 +65,10 @@ class AddBlock extends BackendInterfacePageController {
 	public function submit() {
 		$pc = new PageEditResponse($this->error);
 		$pc->setPage($this->page);
-		if ($this->validateAction()) {
+		if ($this->validateAction() || is_object($this->blockType)
+            && !$this->blockType->hasAddTemplate()
+            && Loader::helper('validation/token')->validate())
+        {
 
 			$data = $_POST;
 			$bt = $this->blockType;

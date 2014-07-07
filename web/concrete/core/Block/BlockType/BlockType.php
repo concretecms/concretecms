@@ -25,9 +25,7 @@ class BlockType
     public $controller;
 
     /**
-     * If a grid container is enabled at the area level, all blocks added will be individually
-     * wrapped inside it on each add. If this is set to true, this block type will NOT be wrapped
-     * @var bool
+     * @Column(type="boolean")
      */
     protected $btIgnorePageThemeGridFrameworkContainer = false;
 
@@ -300,6 +298,16 @@ class BlockType
     }
 
     /**
+     * If true, container classes will not be wrapped around this block type in edit mode (if the
+     * theme in question supports a grid framework.
+     * @return bool
+     */
+    public function ignorePageThemeGridFrameworkContainer()
+    {
+        return $this->btIgnorePageThemeGridFrameworkContainer;
+    }
+
+    /**
      * returns the id of the BlockType's package if it's in a package
      *
      * @return int
@@ -557,6 +565,7 @@ class BlockType
         $this->btIsInternal = $bta->isBlockTypeInternal();
         $this->btSupportsInlineEdit = $bta->supportsInlineEdit();
         $this->btSupportsInlineAdd = $bta->supportsInlineAdd();
+        $this->btIgnorePageThemeGridFrameworkContainer = $bta->ignorePageThemeGridFrameworkContainer();
         $this->btInterfaceHeight = $bta->getInterfaceHeight();
         $this->btInterfaceWidth = $bta->getInterfaceWidth();
     }

@@ -60,7 +60,7 @@ $class = 'ccm-area-footer';
 		 ?>
 			<? $areaLayoutBT = BlockType::getByHandle('core_area_layout'); ?>
 
-			<li><a dialog-title="<?=t('Add Layout')?>" data-area-grid-column-span="<?=$a->getAreaGridColumnSpan()?>" data-menu-action="add-inline" href="#" data-block-type-id="<?=$areabt->getBlockTypeID()?>"><?=t("Add Layout")?></a></li>		
+			<li><a dialog-title="<?=t('Add Layout')?>" data-area-grid-maximum-columns="<?=$a->getAreaGridMaximumColumns()?>" data-menu-action="add-inline" href="#" data-block-type-id="<?=$areabt->getBlockTypeID()?>"><?=t("Add Layout")?></a></li>
 		<? } ?>
 		<? if ($canEditAreaPermissions) { ?>
 			<li class="divider"></li>
@@ -83,7 +83,7 @@ $class = 'ccm-area-footer';
 			$bx = $a->getSubAreaBlockObject();
 			if (is_object($bx) && !$bx->isError()) { ?>
 				<li class="divider"></li>
-				<li><a href="javascript:void(0)" data-container-layout-block-id="<?=$bx->getBlockID()?>" data-menu-action="edit-container-layout" data-area-grid-column-span="<?=$a->getAreaGridColumnSpan()?>"><?=t("Edit Container Layout")?></a></li>
+				<li><a href="javascript:void(0)" data-container-layout-block-id="<?=$bx->getBlockID()?>" data-menu-action="edit-container-layout" data-area-grid-maximum-columns="<?=$a->getAreaGridMaximumColumns()?>"><?=t("Edit Container Layout")?></a></li>
 				<? if ($pk->validate()) { 
 					$btc = $bx->getController();
 					$arLayout = $btc->getAreaLayoutObject(); ?>

@@ -30,7 +30,6 @@ class ThemeGridColumn extends Column {
 		$layout = $this->getAreaLayoutObject();
 		$a = $layout->getAreaObject();
 		$as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a);
-		$as->setAreaGridColumnSpan($this->arLayoutColumnSpan);		
 		$as->setAreaDisplayName(t('Column %s', $this->getAreaLayoutColumnIndex() + 1));
 		if ($disableControls) {
 			$as->disableControls();

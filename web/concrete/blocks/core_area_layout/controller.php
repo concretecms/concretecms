@@ -173,12 +173,12 @@ class Controller extends BlockController {
 			// now we check our active theme and see if it has other plans
 			$c = Page::getCurrentPage();
 			$pt = $c->getCollectionThemeObject();
-			if (is_object($pt) && $pt->supportsGridFramework() && is_object($this->area) && $this->area->getAreaGridColumnSpan()) {
+			if (is_object($pt) && $pt->supportsGridFramework() && is_object($this->area) && $this->area->getAreaGridMaximumColumns()) {
 				$gf = $pt->getThemeGridFrameworkObject();
 				$this->set('enableThemeGrid', true);
 				$this->set('themeGridName', $gf->getPageThemeGridFrameworkName());
 				$this->set('themeGridFramework', $gf);
-				$this->set('themeGridMaxColumns', $this->area->getAreaGridColumnSpan());
+				$this->set('themeGridMaxColumns', $this->area->getAreaGridMaximumColumns());
 			} else {
 				$this->set('enableThemeGrid', false);
 			}

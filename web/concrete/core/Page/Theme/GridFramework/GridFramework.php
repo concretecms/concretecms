@@ -13,7 +13,10 @@ abstract class GridFramework {
 	abstract public function getPageThemeGridFrameworkName();
 	abstract public function getPageThemeGridFrameworkRowStartHTML();
 	abstract public function getPageThemeGridFrameworkRowEndHTML();
-	public function getPageThemeGridFrameworkNumColumns() {
+    abstract public function getPageThemeGridFrameworkContainerStartHTML();
+    abstract public function getPageThemeGridFrameworkContainerEndHTML();
+
+    public function getPageThemeGridFrameworkNumColumns() {
 		$classes = $this->getPageThemeGridFrameworkColumnClasses();
 		return count($classes);
 	}
