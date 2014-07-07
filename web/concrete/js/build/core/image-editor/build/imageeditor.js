@@ -69,4 +69,4 @@ var ImageEditor = function (settings) {
   im.stage.setDraggable = function(v) {
     warn('setting draggable to '+v);
     return im.stage._setDraggable(v);
-  }
+  };

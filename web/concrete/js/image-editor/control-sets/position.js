@@ -248,8 +248,6 @@ Crop.prototype = {
         });
 
         var start_position;
-
-
         im.bind('rotationChanged', function() {
             _.defer(function(){
                 layer.setRotation(im.activeElement.getRotation());
