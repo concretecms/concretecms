@@ -235,7 +235,7 @@ class Connection extends \Doctrine\DBAL\Connection
      */
     public function BeginTrans()
     {
-        $db->BeginTrans();
+        $this->beginTransaction();
 
         return true;
     }
@@ -244,7 +244,7 @@ class Connection extends \Doctrine\DBAL\Connection
      */
     public function StartTrans()
     {
-        $db->BeginTrans();
+        $this->beginTransaction();
 
         return true;
     }
