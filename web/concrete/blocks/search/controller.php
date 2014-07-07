@@ -31,18 +31,6 @@ class Controller extends BlockController {
 		return $this->hText;
 	}
 	
-	public function validate($post) {
-		$errors = Loader::helper('validation/error');
-		if ($post['title'] === false || $post['title'] == '') {
-			$errors->add(t("Please enter your Search Title."));
-		}
-		if ($post['buttonText'] === false || $post['buttonText'] == '') {
-			$errors->add(t("Please enter your Submit Button Text."));
-		}
-		
-		return $errors;
-	}
-	
 	public function highlightedExtendedMarkup($fulltext, $highlight) {
 		$text = @preg_replace("#\n|\r#", ' ', $fulltext);
 
@@ -93,15 +81,8 @@ class Controller extends BlockController {
 		return t("Search");
 	}
 
-	public function getJavaScriptStrings() {
-		return array('search-title' => t('Please enter a valid search title.'));
-	}
-
 	function __construct($obj = null) {
 		parent::__construct($obj);
-		if ($this->title == '') {
-			$this->title=t("Search");
-		}
 	}
 
 	public function indexExists() {
@@ -166,7 +147,6 @@ class Controller extends BlockController {
 		
 		$ipl = new IndexedPageList();
 		$aksearch = false;
-		$ipl->ignoreAliases();
 		if (is_array($_REQUEST['akID'])) {
 			foreach($_REQUEST['akID'] as $akID => $req) {
 				$fak = CollectionAttributeKey::getByID($akID);

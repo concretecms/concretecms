@@ -7,7 +7,6 @@
 <form action="<?=$view->url( $resultTargetURL )?>" method="get" class="ccm-search-block-form">
 
 	<? if( strlen($title)>0){ ?><h3><?=$title?></h3><? } ?>
-	
 	<? if(strlen($query)==0){ ?>
 	<input name="search_paths[]" type="hidden" value="<?=htmlentities($baseSearchPath, ENT_COMPAT, APP_CHARSET) ?>" />
 	<? } else if (is_array($_REQUEST['search_paths'])) { 
@@ -17,8 +16,10 @@
 	} ?>
 	
 	<input name="query" type="text" value="<?=htmlentities($query, ENT_COMPAT, APP_CHARSET)?>" class="ccm-search-block-text" />
-	
+
+    <? if($buttonText) { ?>
 	<input name="submit" type="submit" value="<?=$buttonText?>" class="ccm-search-block-submit" />
+    <? } ?>
 
 <? 
 $tt = Loader::helper('text');
