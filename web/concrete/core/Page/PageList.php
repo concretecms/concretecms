@@ -110,7 +110,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
                 ->leftJoin('pa', 'PageSearchIndex', 'ps', 'ps.cID = if(pa.cID is null, p.cID, pa.cID)')
                 ->leftJoin('p', 'PageTypes', 'pt', 'pt.ptID = if(pa.cID is null, p.ptID, pa.ptID)')
                 ->leftJoin('p', 'CollectionSearchIndexAttributes', 'csi', 'csi.cID = if(pa.cID is null, p.cID, pa.cID)')
-                ->innerJoin('p', 'CollectionVersions', 'cv', 'cv.cID = if(pa.cID is null, p.cID, pa.cID)')
+                ->innerJoin('p', 'CollectionVersions', 'cv', 'cv.cID = if(pa.cID is null, p.cID, pa.cID) and cvIsApproved = 1')
                 ->innerJoin('p', 'Collections', 'c', 'p.cID = c.cID')
                 ->andWhere('p.cIsTemplate = 0 or pa.cIsTemplate = 0');
         } else {

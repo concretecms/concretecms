@@ -8,7 +8,7 @@ use Core;
 
 class Pagination extends Pagerfanta
 {
-    /** @var \Concrete\Core\Search\ItemList  */
+    /** @var \Concrete\Core\Search\ItemList\ItemList  */
     protected $list;
 
     public function __construct(AbstractItemList $itemList, AdapterInterface $adapter) {
@@ -42,7 +42,12 @@ class Pagination extends Pagerfanta
 
     public function getCurrentPageResults()
     {
+        $this->list->debugStart();
+
         $results = parent::getCurrentPageResults();
+
+        $this->list->debugStop();
+
         $return = array();
         foreach($results as $result) {
             $r = $this->list->getResult($result);

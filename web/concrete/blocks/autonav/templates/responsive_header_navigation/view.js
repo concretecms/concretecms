@@ -1,6 +1,5 @@
 (function(global, $) {
 
-    alert('hi');
 
 
 

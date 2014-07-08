@@ -3,6 +3,7 @@ namespace Concrete\Core\Search\ItemList\Database;
 use Concrete\Core\Search\StickyRequest;
 use Database;
 use Concrete\Core\Search\ItemList\ItemList as AbstractItemList;
+use Doctrine\DBAL\Logging\EchoSQLLogger;
 
 abstract class ItemList extends AbstractItemList
 {
@@ -48,6 +49,20 @@ abstract class ItemList extends AbstractItemList
     public function executeGetResults()
     {
         return $this->deliverQueryObject()->execute()->fetchAll();
+    }
+
+    public function debugStart()
+    {
+        if ($this->isDebugged()) {
+            Database::get()->getConfiguration()->setSQLLogger(new EchoSQLLogger());
+        }
+    }
+
+    public function debugStop()
+    {
+        if ($this->isDebugged()) {
+            Database::get()->getConfiguration()->setSQLLogger(null);
+        }
     }
 
     protected function executeSortBy($column, $direction = 'asc')

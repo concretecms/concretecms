@@ -308,8 +308,8 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/gathering/base.css': '<%= DIR_BASE %>/concrete/css/build/core/gathering/base.less',
         '<%= DIR_BASE %>/concrete/css/redactor.css': '<%= DIR_BASE %>/concrete/css/build/vendor/redactor/redactor.less',
         '<%= DIR_BASE %>/concrete/css/topics.css': '<%= DIR_BASE %>/concrete/css/build/core/topics.less',
-        '<%= DIR_BASE %>/application/themes/elemental/css/bootstrap-modified.css': '<%= DIR_BASE %>/application/themes/elemental/css/build/bootstrap-3.2.0/bootstrap.less',
-
+        '<%= DIR_BASE %>/concrete/themes/elemental/css/bootstrap-modified.css': '<%= DIR_BASE %>/concrete/themes/elemental/css/build/bootstrap-3.2.0/bootstrap.less',
+        '<%= DIR_BASE %>/concrete/css/frontend/pagination.css': '<%= DIR_BASE %>/concrete/css/build/core/frontend/pagination.less',
     };
 
     // Let's include the dependencies
