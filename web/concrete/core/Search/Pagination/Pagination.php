@@ -5,7 +5,7 @@ use Concrete\Core\Search\ItemList\ItemList as AbstractItemList;
 use Pagerfanta\Adapter\AdapterInterface;
 use Pagerfanta\Pagerfanta;
 use Core;
-
+use Page;
 class Pagination extends Pagerfanta
 {
     /** @var \Concrete\Core\Search\ItemList\ItemList  */
@@ -32,12 +32,22 @@ class Pagination extends Pagerfanta
     }
 
     /**
-     * return @\Pagerfanta\View\ViewInterface
+     * This is a convenience method that does the following: 1. it grabs the pagination/view service (which by default
+     * is bootstrap 3) 2. it sets up URLs to start with the pass of the current page, and 3. it uses the default
+     * item list query string parameter for paging. If you need more custom functionality you should consider
+     * using the Pagerfanta\View\ViewInterface objects directly.
+     * @return string
      */
-    public function getView()
+    public function renderDefaultView()
     {
         $v = Core::make('pagination/view');
-        return $v;
+        $c = Page::getCurrentPage();
+        $url = $c->getCollectionLink();
+        $list = $this->list;
+        $html = $v->render($this, function($page) use ($list, $url, $result) {
+            return $url . '?' . $list->getQueryPaginationPageParameter() . '=' . $page;
+        });
+        return $html;
     }
 
     public function getCurrentPageResults()
