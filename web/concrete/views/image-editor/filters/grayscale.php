@@ -1,1 +1,1 @@
-gray
+<?= t('Convert image to grayscale') ?>

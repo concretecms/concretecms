@@ -14,7 +14,3 @@ foreach ($filters as $filter) {
     <?php
 }
 ?>
-<div class="form-group">
-    <button class="btn cancelfilter"><?= t('Cancel') ?></button>
-    <button class="btn savefilter btn-primary pull-right"><?= t('Save') ?></button>
-</div>

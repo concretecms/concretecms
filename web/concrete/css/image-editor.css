@@ -160,7 +160,7 @@ div.slideOut > ul.slideOutBlockList {
   padding-bottom: 30px;
 }
 div.slideOut > ul.slideOutBlockList > li {
-  margin: 15px 50px;
+  margin: 15px 0px;
   width: 160px;
   position: relative;
 }

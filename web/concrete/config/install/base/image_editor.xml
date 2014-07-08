@@ -11,6 +11,7 @@
     <imageeditor_component handle="shape" name="Shape"/>
   </imageeditor_components>
   <imageeditor_filters>
+    <imageeditor_filter handle="none" name="None"/>
     <imageeditor_filter handle="grayscale" name="Grayscale"/>
     <imageeditor_filter handle="sepia" name="Sepia"/>
     <imageeditor_filter handle="gaussian_blur" name="Blur"/>

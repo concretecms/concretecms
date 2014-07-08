@@ -1,28 +1,25 @@
 var me = this;
-me.controls = $(document.createElement('div'));
 im.bind('filterFullyLoaded', function (e, data) {
     if (data.namespace === me.namespace) {
-        me.applybutton = $($.parseHTML("<button/>")).text('apply').addClass('btn');
-        me.radius = $($.parseHTML("<input/>")).val(1);
-
-        me.controls.append(me.radius).append(me.applybutton);
+        var slider_span = me.parent.find('.filter.filter-gaussian_blur').find('.radius-percent');
+        slider = me.parent.find('.filter.filter-gaussian_blur').find('.radius-slider').slider({
+            min: 1,
+            max: 50,
+            step: 1,
+            value: 5,
+            slide: function(event, data) {
+                applyBlur();
+                slider_span.text(data.value);
+            }
+        });
     }
 });
 im.bind('filterChange', function (e, data) {
     if (data.im.namespace === me.im.namespace) {
         im.showLoader('Applying Blur');
 
-        setTimeout(function () {
-            // Just apply, there is no variation.
-
-            im.activeElement.setFilter(Kinetic.Filters.Blur);
-            im.activeElement.setFilterRadius(5);
-            im.activeElement.applyFilter();
-
-            im.hideLoader();
-            im.fire('BlurFilterDidFinish');
-            im.fire('filterApplied', me);
-            // Apply Filter
+        _.delay(function () {
+            applyBlur();
         }, 10); // Allow loader to show
     }
 });
@@ -33,3 +30,15 @@ im.bind('filterApplyExample', function (e, data) {
         im.fire('filterBuiltExample', me, data.elem);
     }
 });
+
+var applyBlur = _.debounce(function() {
+    im.activeElement.setFilter(Kinetic.Filters.Blur);
+    im.activeElement.setFilterRadius(slider.slider('value'));
+    im.activeElement.applyFilter();
+
+    im.hideLoader();
+    im.fire('BlurFilterDidFinish');
+    im.fire('filterApplied', me);
+}, 250);
+
+var slider;
