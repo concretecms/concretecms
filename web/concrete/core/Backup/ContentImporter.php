@@ -767,7 +767,7 @@ class ContentImporter {
 				$handle = $controlset['handle'];
 				$name = $controlset['name'];
 				$ob = SystemImageEditorControlSet::getByHandle($handle);
-				if ($ob->getImageEditorControlSetHandle() != $handle) {
+				if ($ob->getHandle() != $handle) {
 					SystemImageEditorControlSet::add($handle, $name);
 				}
 			}
@@ -793,7 +793,7 @@ class ContentImporter {
 				$handle = $filter['handle'];
 				$name = $filter['name'];
 				$ob = SystemImageEditorFilter::getByHandle($handle);
-				if ($ob->getImageEditorFilterHandle() != $handle) {
+				if ($ob->getHandle() != $handle) {
 					SystemImageEditorFilter::add($handle, $name);
 				}
 			}
