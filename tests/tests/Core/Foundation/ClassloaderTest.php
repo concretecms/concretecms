@@ -18,7 +18,7 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testThemeAutoloadingCore() {
-		$this->assertTrue(class_exists('\Concrete\Theme\TwitterBootstrap\PageTheme'));
+		$this->assertTrue(class_exists('\Concrete\Theme\Elemental\PageTheme'));
 		$this->assertTrue(class_exists('\Concrete\Theme\Concrete\PageTheme'));
 	}
 
