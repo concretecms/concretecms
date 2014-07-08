@@ -139,12 +139,7 @@ class Controller extends BlockController {
             $pages = $pagination->getCurrentPageResults();
             if ($pagination->getTotalPages() > 1 && $this->paginate) {
                 $showPagination = true;
-                $view = $pagination->getView();
-                $c = Page::getCurrentPage();
-                $url = $c->getCollectionLink();
-                $pagination = $view->render($pagination, function($page) use ($list, $url, $result) {
-                    return $url . '?' . $list->getQueryPaginationPageParameter() . '=' . $page;
-                });
+                $pagination = $pagination->renderDefaultView();
                 $this->set('pagination', $pagination);
 			}
 		} else {
