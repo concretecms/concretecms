@@ -145,8 +145,6 @@ var ImageEditor = function (settings) {
   im.showLoader = $.fn.dialog.showLoader;
   im.hideLoader = $.fn.dialog.hideLoader;
   im.stage.im = im;
-  im.stage.setX(.5);
-  im.stage.setY(.5);
   im.stage.elementType = 'stage';
   im.crosshair.src = '/concrete/images/image_editor/crosshair.png';
 
@@ -189,7 +187,7 @@ var ImageEditor = function (settings) {
   im.stage.setDraggable = function(v) {
     warn('setting draggable to '+v);
     return im.stage._setDraggable(v);
-  }
+  };
 // Handle event binding.
 im.bindEvent = im.bind = im.on = function (type, handler, elem) {
   var element = elem || im.stage.getContainer();
@@ -384,161 +382,131 @@ im.bind('saveSizeChange',function(){
 im.setCursor = function(cursor) {
   $(im.stage.getContainer()).css('cursor',cursor);
 };
-im.save = function() {
-  im.background.hide();
-  im.stage.setScale(1);
+im.save = function saveImage() {
+    im.fire('ChangeActiveAction');
 
-  im.fire('ChangeActiveAction');
-  im.fire('changeActiveComponent');
-  im.background.hide();
-  im.foreground.hide();
+    im.stage.toDataURL({
+        callback: function (data) {
+            var fake_canvas = $('<img />').addClass('fake_canvas').appendTo(im.editorContext.children('.Editor'));
+            fake_canvas.attr('src', data);
 
-  $(im.stage.getContainer()).hide();
+            fake_canvas.css({
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                backgroundColor: 'white'
+            });
 
-  var startx = Math.round(im.center.x - (im.saveWidth / 2)),
-      starty = Math.round(im.center.y - (im.saveHeight / 2)),
-      oldx = im.stage.getX(),
-      oldy = im.stage.getY(),
-      oldwidth = im.stage.getWidth(),
-      oldheight = im.stage.getHeight();
+            var oldStagePosition = im.stage.getPosition(),
+                oldScale = im.scale;
 
-  im.stage.setX(-startx);
-  im.stage.setY(-starty);
-  im.stage.setWidth(Math.max(im.stage.getWidth(),im.saveWidth));
-  im.stage.setHeight(Math.max(im.stage.getHeight(),im.saveHeight));
-  im.stage.draw();
+            im.stage.setPosition(-im.saveArea.getX(), -im.saveArea.getY());
+            im.stage.setScale(1);
+            im.background.hide();
+            im.foreground.hide();
+            im.stage.draw();
 
+            im.stage.toDataURL({
+                width: im.saveWidth,
+                height: im.saveHeight,
+                callback: function saveImageDataUrlCallback(url) {
+                    im.stage.setPosition(oldStagePosition);
+                    im.background.show();
+                    im.foreground.show();
+                    im.stage.setScale(oldScale);
+                    im.stage.draw();
 
-  im.showLoader('Saving..');
-  im.stage.toDataURL({
-    width:im.saveWidth,
-    height:im.saveHeight,
-    callback:function(data){
-      var img = $('<img/>').attr('src',data);
-      $.fn.dialog.open({element:$(img).width(250)});
-      im.hideLoader();
-      im.background.show();
-      im.foreground.show();
-      im.stage.setX(oldx);
-      im.stage.setY(oldy);
-      im.stage.setWidth(oldwidth);
-      im.stage.setHeight(oldheight);
-      im.stage.setScale(im.scale);
-      im.stage.draw();
-      $(im.stage.getContainer()).show();
-    }
-  })
+                    fake_canvas.remove();
+                    $.post('/index.php/tools/required/files/importers/imageeditor', {
+                        fID: im.fileId,
+                        imgData: url
+                    }, function (res) {
+                        var result = JSON.parse(res);
+                        if (result.error === 1) {
+                            alert(result.message);
+                        } else if (result.error === 0) {
+                            window.location = window.location;
+                            window.location.reload();
+                        }
+                    });
+                }
+            });
+        }
+    });
 };
 
-im.save = function saveImage() {
-  im.fire('ChangeActiveAction');
-
-  var oldStagePosition = im.stage.getPosition(),
-      oldScale = im.scale;
-
-  im.stage.setPosition(-im.saveArea.getX(), -im.saveArea.getY());
-  im.stage.setScale(1);
-  im.background.hide();
-  im.foreground.hide();
-  im.stage.draw();
-
-  im.stage.toDataURL({
-    width: im.saveWidth,
-    height: im.saveHeight,
-    callback: function saveImageDataUrlCallback(url) {
-      im.stage.setPosition(oldStagePosition);
-      im.background.show();
-      im.foreground.show();
-      im.stage.setScale(oldScale);
-      im.stage.draw();
-
-      $.post('/index.php/tools/required/files/importers/imageeditor',{
-        fID: im.fileId,
-        imgData: url
-      }, function(res){
-        var result = JSON.parse(res);
-        if (result.error === 1){
-          alert(result.message);
-        } else if (result.error === 0) {
-          window.location = window.location;
-          window.location.reload();
-        }
-      });
-    }
-  });
-}
-
 im.actualPosition = function actualPosition(x, y, cx, cy, rad) {
-  var ay = y - cy,
-      ax = x - cx,
-      degChange = im.activeElement.getRotation() + Math.atan2(ay, ax),
-      r = Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2));
-  return [cx + (r * Math.cos(degChange)), cy + (r * Math.sin(degChange))];
-}
+    var ay = y - cy,
+        ax = x - cx,
+        degChange = im.activeElement.getRotation() + Math.atan2(ay, ax),
+        r = Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2));
+    return [cx + (r * Math.cos(degChange)), cy + (r * Math.sin(degChange))];
+};
 
 im.getActualRect = function actualRect(cx, cy, elem) {
-  var rect = [], rad = elem.getRotation();
-  rect.push(im.actualPosition(elem.getX(), elem.getY(), cx, cy, rad));
-  rect.push(im.actualPosition(elem.getX() + elem.getWidth() * elem.getScaleX(), elem.getY(), cx, cy, rad));
-  rect.push(im.actualPosition(elem.getX() + elem.getWidth() * elem.getScaleX(), elem.getY() + elem.getHeight() * elem.getScaleY(), cx, cy, rad));
-  rect.push(im.actualPosition(elem.getX(), elem.getY() + elem.getHeight() * elem.getScaleY(), cx, cy, rad));
-  return rect;
-}
+    var rect = [], rad = elem.getRotation();
+    rect.push(im.actualPosition(elem.getX(), elem.getY(), cx, cy, rad));
+    rect.push(im.actualPosition(elem.getX() + elem.getWidth() * elem.getScaleX(), elem.getY(), cx, cy, rad));
+    rect.push(im.actualPosition(elem.getX() + elem.getWidth() * elem.getScaleX(), elem.getY() + elem.getHeight() * elem.getScaleY(), cx, cy, rad));
+    rect.push(im.actualPosition(elem.getX(), elem.getY() + elem.getHeight() * elem.getScaleY(), cx, cy, rad));
+    return rect;
+};
 
 im.adjustSavers = function AdjustingSavers(fire) {
-  if (im.activeElement.nodeType === 'Stage') return;
-  im.foreground.autoCrop = false;
-  im.background.autoCrop = false;
-  var i, e, u, score = {min:{x:false, y:false}, max:{x:false, y:false}};
-  /*
-  for (var i = im.stage.children.length - 1; i >= 0; i--) {
-    var layer = im.stage.children[i];
-    if (layer.autoCrop === false) continue;
-    for (var e = layer.children.length - 1; e >= 0; e--) {
-      var child = layer.children[e],
-          rect = im.getActualRect(0, 0, child);
-          console.log(child);
+    if (im.activeElement.nodeType === 'Stage') return;
+    im.foreground.autoCrop = false;
+    im.background.autoCrop = false;
+    var i, e, u, score = {min: {x: false, y: false}, max: {x: false, y: false}};
+    /*
+     for (var i = im.stage.children.length - 1; i >= 0; i--) {
+     var layer = im.stage.children[i];
+     if (layer.autoCrop === false) continue;
+     for (var e = layer.children.length - 1; e >= 0; e--) {
+     var child = layer.children[e],
+     rect = im.getActualRect(0, 0, child);
+     console.log(child);
 
-      for (var u = rect.length - 1; u >= 0; u--) {
+     for (var u = rect.length - 1; u >= 0; u--) {
+     var point = rect[u], x = point[0] + layer.getX(), y = point[1] + layer.getY();
+     if (x > score.max.x || score.max.x === false) score.max.x = x;
+     if (x < score.min.x || score.min.x === false) score.min.x = x;
+     if (y > score.max.y || score.max.y === false) score.max.y = y;
+     if (y < score.min.y || score.min.y === false) score.min.y = y;
+     }
+     }
+     }
+     */
+    var child = im.activeElement,
+        layer = child.parent,
+        rect = im.getActualRect(0, 0, child),
+        u;
+
+    for (u = rect.length - 1; u >= 0; u--) {
         var point = rect[u], x = point[0] + layer.getX(), y = point[1] + layer.getY();
         if (x > score.max.x || score.max.x === false) score.max.x = x;
         if (x < score.min.x || score.min.x === false) score.min.x = x;
         if (y > score.max.y || score.max.y === false) score.max.y = y;
         if (y < score.min.y || score.min.y === false) score.min.y = y;
-      }
     }
-  }
-  */
-  var child = im.activeElement,
-      layer = child.parent,
-      rect = im.getActualRect(0, 0, child);
 
-  for (var u = rect.length - 1; u >= 0; u--) {
-    var point = rect[u], x = point[0] + layer.getX(), y = point[1] + layer.getY();
-    if (x > score.max.x || score.max.x === false) score.max.x = x;
-    if (x < score.min.x || score.min.x === false) score.min.x = x;
-    if (y > score.max.y || score.max.y === false) score.max.y = y;
-    if (y < score.min.y || score.min.y === false) score.min.y = y;
-  }
-
-  var size = {width: score.max.x - score.min.x, height: score.max.y - score.min.y};
-  im.alterCore('saveWidth',Math.round(size.width));
-  im.alterCore('saveHeight',Math.round(size.height));
-  im.buildBackground();
+    var size = {width: score.max.x - score.min.x, height: score.max.y - score.min.y};
+    im.alterCore('saveWidth', Math.round(size.width));
+    im.alterCore('saveHeight', Math.round(size.height));
+    im.buildBackground();
 
 
-  var ap = [im.center.x - (im.activeElement.getWidth() * im.activeElement.getScaleX()) / 2,
+    var ap = [im.center.x - (im.activeElement.getWidth() * im.activeElement.getScaleX()) / 2,
             im.center.y - (im.activeElement.getHeight() * im.activeElement.getScaleY()) / 2],
-      adj = im.actualPosition(ap[0], ap[1], im.center.x, im.center.y, im.activeElement.getRotation());
+        adj = im.actualPosition(ap[0], ap[1], im.center.x, im.center.y, im.activeElement.getRotation());
 
-  im.activeElement.parent.setPosition(adj.map(Math.round));
+    im.activeElement.parent.setPosition(adj.map(Math.round));
 
-  if (fire !== false) im.fire('adjustedsavers');
-  im.stage.draw();
-}
+    if (fire !== false) im.fire('adjustedsavers');
+    im.stage.draw();
+};
 
-im.bind('imageLoad', function() {
-  setTimeout(im.adjustSavers, 0);
+im.bind('imageLoad', function () {
+    setTimeout(im.adjustSavers, 0);
 });
 im.extend = function(property,value) {
   this[property] = value;
@@ -693,10 +661,7 @@ im.bind('load', function(){
 }, im.bgimage);
 im.bgimage.src = '/concrete/images/testbg.png';
 im.buildBackground = function() {
-  var startbb = (new Date).getTime();
-
   var dimensions = im.stage.getTotalDimensions();
-  var to = (dimensions.max.x + dimensions.visibleHeight + dimensions.visibleWidth) * 2;
 
   im.saveArea.setFillPatternOffset([-(im.saveWidth/2) * im.scale,-(im.saveHeight/2) * im.scale]);
   im.saveArea.setX(Math.round(im.center.x - (im.saveWidth / 2)));
@@ -721,273 +686,298 @@ im.buildBackground = function() {
   //im.foreground.moveToTop();
   im.saveArea.draw();
   im.coverLayer.draw();
+    debugger;
 };
 
 im.buildBackground();
 im.on('stageChanged',im.buildBackground);
-im.stage.setDragBoundFunc(function(ret) {
-  var dim = im.stage.getTotalDimensions();
+im.stage.setDragBoundFunc(function (ret) {
+    var dim = im.stage.getTotalDimensions();
 
-  var maxx = Math.max(dim.max.x,dim.min.x)-1,
-      minx = Math.min(dim.max.x,dim.min.x)+1,
-      maxy = Math.max(dim.max.y,dim.min.y)-1,
-      miny = Math.min(dim.max.y,dim.min.y)+1;
+    var maxx = Math.max(dim.max.x, dim.min.x) + 100,
+        minx = Math.min(dim.max.x, dim.min.x) - 100,
+        maxy = Math.max(dim.max.y, dim.min.y) + 100,
+        miny = Math.min(dim.max.y, dim.min.y) - 100;
 
-  ret.x = Math.floor(ret.x);
-  ret.y = Math.floor(ret.y);
+    ret.x = Math.floor(ret.x);
+    ret.y = Math.floor(ret.y);
 
-  if (ret.x > maxx) ret.x = maxx;
-  if (ret.x < minx) ret.x = minx;
-  if (ret.y > maxy) ret.y = maxy;
-  if (ret.y < miny) ret.y = miny;
+    if (ret.x > maxx) ret.x = maxx;
+    if (ret.x < minx) ret.x = minx;
+    if (ret.y > maxy) ret.y = maxy;
+    if (ret.y < miny) ret.y = miny;
 
-  ret.x = Math.floor(ret.x);
-  ret.y = Math.floor(ret.y);
+    ret.x = Math.floor(ret.x);
+    ret.y = Math.floor(ret.y);
 
-  return ret;
+    return ret;
 });
 im.setActiveElement(im.stage);
 im.stage.setDraggable(true);
 im.autoCrop = true;
-im.on('imageLoad',function(){
-  var padding = 100;
+im.on('imageLoad', function () {
+    var padding = 50;
 
-  var w = im.stage.getWidth() - (padding * 2), h = im.stage.getHeight() - (padding * 2);
-  if (im.saveWidth < w && im.saveHeight < h) return;
-  var perc = Math.max(im.saveWidth/w, im.saveHeight/h);
-  //im.scale = 1/perc;
-  //im.scale = Math.round(im.scale * 1000) / 1000;
-  //im.alterCore('scale',im.scale);
+    var w = im.stage.getWidth() - (padding * 2), h = im.stage.getHeight() - (padding * 2);
+    if (im.saveWidth < w && im.saveHeight < h) return;
+    var perc = Math.max(im.saveWidth / w, im.saveHeight / h);
 
-  //im.stage.setScale(im.scale);
-  im.stage.setX((im.stage.getWidth() - (im.stage.getWidth() * im.stage.getScale().x))/2);
-  im.stage.setY((im.stage.getHeight() - (im.stage.getHeight() * im.stage.getScale().y))/2);
-  
-  var pos = (im.stage.getDragBoundFunc())({x:im.stage.getX(),y:im.stage.getY()});
-  im.stage.setX(pos.x);
-  im.stage.setY(pos.y);
+    im.scale = 1 / perc;
+    im.scale = Math.round(im.scale * 100) / 100;
+    im.alterCore('scale', im.scale);
 
-  im.fire('scaleChange');
-  im.fire('stageChanged');
-  im.buildBackground();
+    im.stage.setScale(im.scale);
+    im.stage.setX((im.stage.getWidth() - (im.stage.getWidth() * im.stage.getScale().x)) / 2);
+    im.stage.setY((im.stage.getHeight() - (im.stage.getHeight() * im.stage.getScale().y)) / 2);
+
+    var pos = (im.stage.getDragBoundFunc())({x: im.stage.getX(), y: im.stage.getY()});
+    im.stage.setX(pos.x);
+    im.stage.setY(pos.y);
+
+    im.fire('scaleChange');
+    im.fire('stageChanged');
+    im.buildBackground();
 });
 
-im.fit = function(wh,scale) {
-  if (scale === false) {
-    return {width:im.saveWidth,height:im.saveHeight};
-  }
-  var height = wh.height,
-      width  = wh.width;
-
-  if (width > im.saveWidth) {
-    height /= width / im.saveWidth;
-    width = im.saveWidth;
-  }
-  if (height > im.saveHeight) {
-    width /= height / im.saveHeight;
-    height = im.saveHeight;
-  }
-  return {width:width,height:height};
-};if (settings.src) {
-  im.showLoader('Loading Image..');
-  var img = new Image(), controlSetsLoaded = false;
-  im.bind('ControlSetsLoaded',function(){
-    controlSetsLoaded = true;
-  });
-
-  im.bind('load',function imageLoaded(){
-    if (!im.strictSize) {
-      im.saveWidth = img.width;
-      im.saveHeight = img.height;
-      im.fire('saveSizeChange');
-      im.buildBackground();
+im.fit = function (wh, scale) {
+    if (scale === false) {
+        return {
+            width: im.saveWidth,
+            height: im.saveHeight
+        };
     }
-    var center = {
-      x: Math.floor(im.center.x - (img.width / 2)),
-      y: Math.floor(im.center.y - (img.height / 2))
-    };
-    var image = new Kinetic.Image({
-      image: img,
-      x: 0,
-      y: 0
+    var height = wh.height,
+        width = wh.width;
+
+    if (width > im.saveWidth) {
+        height /= width / im.saveWidth;
+        width = im.saveWidth;
+    }
+    if (height > im.saveHeight) {
+        width /= height / im.saveHeight;
+        height = im.saveHeight;
+    }
+    return {width: width, height: height};
+};
+if (settings.src) {
+    im.showLoader('Loading Image..');
+    var img = new Image(), controlSetsLoaded = false;
+    im.bind('ControlSetsLoaded', function () {
+        controlSetsLoaded = true;
     });
-    im.addElement(image, 'image');
-    image.setPosition(center);
-    _.defer(function(){
-      im.fire('imageload');
-    });
-    function activate() {
-      _.defer(function activateImageElement(){
-        im.stage.draw();
-        im.setActiveElement(image);
-        im.fire('changeActiveAction', im.controlSetNamespaces[0]);
-      });
-    }
-    if (controlSetsLoaded) {
-      activate();
-    } else {
-      im.bind('ControlSetsLoaded', activate);
-    }
-  }, img);
 
-  img.src = settings.src;
+    im.bind('load', function imageLoaded() {
+        if (!im.strictSize) {
+            im.saveWidth = img.width;
+            im.saveHeight = img.height;
+            im.fire('saveSizeChange');
+            im.buildBackground();
+        }
+        var center = {
+            x: Math.floor(im.center.x - (img.width / 2)),
+            y: Math.floor(im.center.y - (img.height / 2))
+        };
+        var image = new Kinetic.Image({
+            image: img,
+            x: 0,
+            y: 0
+        });
+        image.setPosition(center);
+        im.addElement(image, 'image');
+        _.defer(function () {
+            im.fire('imageload');
+        });
+        function activate() {
+            _.defer(function activateImageElement() {
+                im.stage.draw();
+                im.setActiveElement(image);
+                im.fire('changeActiveAction', im.controlSetNamespaces[0]);
+            });
+        }
+
+        if (controlSetsLoaded) {
+            activate();
+        } else {
+            im.bind('ControlSetsLoaded', activate);
+        }
+    }, img);
+
+    img.src = settings.src;
 } else {
-  im.fire('imageload');
+    im.fire('imageload');
 }
-im.bind('imageload',function(){
-  var cs = settings.controlsets || {}, filters = settings.filters || {}, namespace, firstcs;
-  var running = 0;
-  log('Loading ControlSets');
-  im.showLoader('Loading Control Sets..');
-  im.fire('LoadingControlSets');
-  for (namespace in cs) {
-    var myns = "ControlSet_" + namespace;
-    im.controlSetNamespaces.push(myns);
-    $.ajax(cs[namespace]['src'],{
-      dataType:'text',
-      cache:false,
-      namespace:namespace,
-      myns:myns,
-      beforeSend:function(){running++;},
-      success:function(js){
-        running--;
-        var nso = im.addControlSet(this.myns,js,cs[this.namespace]['element']);
-        log(nso);
-        im.fire('controlSetLoad',nso);
-        if (0 == running) {
-          im.trigger('ControlSetsLoaded');
+im.bind('imageload', function () {
+    var cs = settings.controlsets || {}, filters = settings.filters || {}, namespace, firstcs;
+    var running = 0;
+    log('Loading ControlSets');
+    im.showLoader('Loading Control Sets..');
+    im.fire('LoadingControlSets');
+    for (namespace in cs) {
+        var myns = "ControlSet_" + namespace;
+        im.controlSetNamespaces.push(myns);
+        $.ajax(cs[namespace]['src'], {
+            dataType: 'text',
+            cache: false,
+            namespace: namespace,
+            myns: myns,
+            beforeSend: function () {
+                running++;
+            },
+            success: function (js) {
+                running--;
+                var nso = im.addControlSet(this.myns, js, cs[this.namespace]['element']);
+                log(nso);
+                im.fire('controlSetLoad', nso);
+                if (0 == running) {
+                    im.trigger('ControlSetsLoaded');
+                }
+            },
+            error: function (xhr, errDesc, exception) {
+                running--;
+                if (0 == running) {
+                    im.trigger('ControlSetsLoaded');
+                }
+            }
+        });
+    }
+});
+im.bind('ControlSetsLoaded', function () {
+    im.fire('LoadingComponents');
+    im.showLoader('Loading Components..');
+    var components = settings.components || {}, namespace, running = 0;
+    log('Loading Components');
+
+    for (namespace in components) {
+        var myns = "Component_" + namespace;
+        $.ajax(components[namespace]['src'], {
+            dataType: 'text',
+            cache: false,
+            namespace: namespace,
+            myns: myns,
+            beforeSend: function () {
+                running++;
+            },
+            success: function (js) {
+                running--;
+                var nso = im.addComponent(this.myns, js, components[this.namespace]['element']);
+                log(nso);
+                im.fire('ComponentLoad', nso);
+                if (0 == running) {
+                    im.trigger('ComponentsLoaded');
+                }
+            },
+            error: function (xhr, errDesc, exception) {
+                running--;
+                if (0 == running) {
+                    im.trigger('ComponentsLoaded');
+                }
+            }
+        });
+    }
+    if (0 == running) {
+        im.trigger('ComponentsLoaded');
+    }
+});
+
+im.bind('ComponentsLoaded', function () { // do this when the control sets finish loading.
+    log('Loading Filters');
+    im.showLoader('Loading Filters..');
+    var filters = settings.filters || {}, namespace, firstf, active = 0;
+    im.fire('LoadingFilters');
+    for (namespace in filters) {
+        if (filters.hasOwnProperty(namespace)) {
+            (function(namespace) {
+                var settings = _.clone(filters[namespace]),
+                    myns = "Filter_" + namespace,
+                    name = settings.name;
+
+                if (!firstf) {
+                    firstf = myns;
+                }
+
+                active++;
+                $.ajax(filters[namespace].src, {
+                    dataType: 'text',
+                    cache: false,
+                    namespace: namespace,
+                    myns: myns,
+                    name: name,
+                    success: function (js) {
+                        var nso = im.addFilter(this.myns, js);
+                        nso.name = this.name;
+                        nso.settings = settings;
+                        im.fire('filterLoad', nso);
+                        active--;
+                        if (0 === active) {
+                            im.trigger('FiltersLoaded');
+                        }
+                    },
+                    error: function (xhr, errDesc, exception) {
+                        active--;
+                        if (0 === active) {
+                            im.trigger('FiltersLoaded');
+                        }
+                    }
+                });
+            }(namespace));
         }
-      },
-      error: function(xhr, errDesc, exception) {
-        running--;
-        if (0 == running) {
-          im.trigger('ControlSetsLoaded');
-        }
-      }
+    }
+});
+im.bind('ChangeActiveAction', function (e, ns) {
+    if (ns === im.activeControlSet) return;
+    for (var ons in im.controlSets) {
+        getElem(im.controlSets[ons]);
+        if (ons !== ns) getElem(im.controlSets[ons]).slideUp();
+    }
+    im.activeControlSet = ns;
+    im.alterCore('activeControlSet', ns);
+    if (!ns) {
+        $('div.control-sets', im.controlContext).find('h4.active').removeClass('active');
+        return;
+    }
+    var cs = $(im.controlSets[ns]),
+        height = cs.show().height();
+    if (cs.length == 0) return;
+    cs.hide().height(height).slideDown(function () {
+        $(this).height('')
     });
-  }
 });
-im.bind('ControlSetsLoaded',function(){
-  im.fire('LoadingComponents');
-  im.showLoader('Loading Components..');
-  var components = settings.components || {}, namespace, running = 0;
-  log('Loading Components');
 
-  for (namespace in components) {
-    var myns = "Component_" + namespace;
-    $.ajax(components[namespace]['src'],{
-      dataType:'text',
-      cache:false,
-      namespace:namespace,
-      myns:myns,
-      beforeSend:function(){running++;},
-      success:function(js){
-        running--;
-        var nso = im.addComponent(this.myns,js,components[this.namespace]['element']);
-        log(nso);
-        im.fire('ComponentLoad',nso);
-        if (0 == running) {
-          im.trigger('ComponentsLoaded');
-        }
-      },
-      error: function(xhr, errDesc, exception) {
-        running--;
-        if (0 == running) {
-          im.trigger('ComponentsLoaded');
-        }
-      }
+im.bind('ChangeActiveComponent', function (e, ns) {
+    if (ns === im.activeComponent) return;
+    for (var ons in im.components) {
+        if (ons !== ns) getElem(im.components[ons]).slideUp();
+    }
+    im.activeComponent = ns;
+    im.alterCore('activeComponent', ns);
+    if (!ns) return;
+    var cs = $(im.components[ns]),
+        height = cs.show().height();
+    if (cs.length == 0) return;
+    cs.hide().height(height).slideDown(function () {
+        $(this).height('')
     });
-  }
-  if (0 == running) {
-    im.trigger('ComponentsLoaded');
-  }
 });
 
-im.bind('ComponentsLoaded',function(){ // do this when the control sets finish loading.
-  log('Loading Filters');
-  im.showLoader('Loading Filters..');
-  var filters = settings.filters || {}, namespace, firstf, firstc, active = 0;
-  im.fire('LoadingFilters');
-  for (namespace in filters) {
-    var myns = "Filter_" + namespace;
-    var name = filters[namespace].name;
-    if (!firstf) firstf = myns;
-    active++;
-    $.ajax(filters[namespace].src,{
-      dataType:'text',
-      cache:false,
-      namespace:namespace,
-      myns:myns,
-      name:name,
-      success:function(js){
-        var nso = im.addFilter(this.myns,js);
-        nso.name = this.name;
-        im.fire('filterLoad',nso);
-        active--;
-        if (0 == active) {
-          im.trigger('FiltersLoaded');
-        }
-      },
-      error: function(xhr, errDesc, exception) {
-        active--;
-        if (0 == active) {
-          im.trigger('FiltersLoaded');
-        }
-      }
-    });
-  }
-});
-im.bind('ChangeActiveAction',function(e, ns){
-  if (ns === im.activeControlSet) return;
-  for (var ons in im.controlSets) {
-    getElem(im.controlSets[ons]);
-    if (ons !== ns) getElem(im.controlSets[ons]).slideUp();
-  }
-  im.activeControlSet = ns;
-  im.alterCore('activeControlSet',ns);
-  if (!ns) {
-    $('div.control-sets',im.controlContext).find('h4.active').removeClass('active');
-    return;
-  }
-  var cs = $(im.controlSets[ns]),
-      height = cs.show().height();
-  if (cs.length == 0) return;
-  cs.hide().height(height).slideDown(function(){$(this).height('')});
-});
-
-im.bind('ChangeActiveComponent',function(e, ns){
-  if (ns === im.activeComponent) return;
-  for (var ons in im.components) {
-    if (ons !== ns) getElem(im.components[ons]).slideUp();
-  }
-  im.activeComponent = ns;
-  im.alterCore('activeComponent',ns);
-  if (!ns) return;
-  var cs = $(im.components[ns]),
-      height = cs.show().height();
-  if (cs.length == 0) return;
-  cs.hide().height(height).slideDown(function(){$(this).height('')});
-});
-
-im.bind('ChangeNavTab',function(e, data) {
-  im.trigger('ChangeActiveAction',data);
-  im.trigger('ChangeActiveComponent',data);
-  var parent = getElem('div.editorcontrols');
-  switch(data) {
-    case 'add':
-      parent.children('div.control-sets').hide();
-      parent.children('div.components').show();
-      break;
-    case 'edit':
-      parent.children('div.components').hide();
-      parent.children('div.control-sets').show();
-      break;
-  }
+im.bind('ChangeNavTab', function (e, data) {
+    im.trigger('ChangeActiveAction', data);
+    im.trigger('ChangeActiveComponent', data);
+    var parent = getElem('div.editorcontrols');
+    switch (data) {
+        case 'add':
+            parent.children('div.control-sets').hide();
+            parent.children('div.components').show();
+            break;
+        case 'edit':
+            parent.children('div.components').hide();
+            parent.children('div.control-sets').show();
+            break;
+    }
 });
 
 
-im.bind('FiltersLoaded',function(){
-  im.hideLoader();
+im.bind('FiltersLoaded', function () {
+    im.hideLoader();
 });
 im.slideOut = $("<div/>").addClass('slideOut').css({
   width:0,
@@ -1007,7 +997,7 @@ im.showSlideOut = function(contents,callback) {
     im.slideOutContents = contents.width(300);
     im.slideOut.append(im.slideOutContents)
     im.slideOut.addClass('active').addClass('sliding');
-    im.slideOut.stop(1).slideOut(300,function(){
+    im.slideOut.stop(1).slideOut(300, function(){
       im.slideOut.removeClass('sliding');
       ((typeof callback === 'function') && callback());
     });
@@ -1021,101 +1011,104 @@ im.hideSlideOut = function(callback) {
     ((typeof callback === 'function') && callback());
   });
 };
-im.controlContext.after(im.slideOut);// End the ImageEditor object.
+im.controlContext.after(im.slideOut);
+    // End the ImageEditor object.
 
+    im.setActiveElement(im.stage);
 
-  im.setActiveElement(im.stage);
-
-  window.c5_image_editor = im; // Safe keeping
-  window.im = im;
-  return im;
+    window.c5_image_editor = im; // Safe keeping
+    window.im = im;
+    return im;
 };
 
 $.fn.ImageEditor = function (settings) {
-  (settings === undefined && (settings = {}));
-  settings.imageload = $.fn.dialog.hideLoader;
-  var self = $(this);
-  settings.container = self[0];
-  if (self.height() == 0) {
-    setTimeout(function(){
-      self.ImageEditor(settings);
-    },50);
-    return;
-  }
-  self.closest('.ui-dialog').find('.ui-resizable-handle').hide();
-  self.height("-=30");
-  $('div.editorcontrols').height(self.height() - 90);
-  self.width("-=330").parent().width("-=330").children('div.bottomBar').width("-=330");
-  (settings.width === undefined && (settings.width = self.width()));
-  (settings.height === undefined && (settings.height = self.height()));
-  $.fn.dialog.showLoader();
-  var im = new ImageEditor(settings);
+    (settings === undefined && (settings = {}));
+    settings.imageload = $.fn.dialog.hideLoader;
+    var self = $(this);
+    settings.container = self[0];
+    if (self.height() == 0) {
+        setTimeout(function () {
+            self.ImageEditor(settings);
+        }, 50);
+        return;
+    }
+    self.closest('.ui-dialog').find('.ui-resizable-handle').hide();
+    self.height("-=30");
+    $('div.editorcontrols').height(self.height() - 90);
+    self.width("-=330").parent().width("-=330").children('div.bottomBar').width("-=330");
+    (settings.width === undefined && (settings.width = self.width()));
+    (settings.height === undefined && (settings.height = self.height()));
+    $.fn.dialog.showLoader();
+    var im = new ImageEditor(settings);
 
-  var context = im.domContext;
-  im.on('ChangeActiveAction',function(e, data){
-    if (!data)
-      $('h4.active',context).removeClass('active');
-  });
-  im.on('ChangeActiveComponent',function(e, data){
-    if (!data)
-      $('h4.active',context).removeClass('active');
-  });
-  $('div.controls > div.controlscontainer',context).children('div.save').children('button.save').click(function(){
-    im.save();
-  }).end().children('button.cancel').click(function(){
-    if (confirm("Are you certain?"))
-      $.fn.dialog.closeTop();
-  });
-  $('div.controls > div.controlscontainer',context).children('ul.nav').children().click(function(){
-    if ($(this).hasClass('active')) return false;
-    $('div.controls > div.controlscontainer',context).children('ul.nav').children().removeClass('active');
-    $(this).addClass('active');
-    im.trigger('ChangeNavTab',$(this).text().toLowerCase());
-    return false;
-  });
-  $('div.controlset',context).find('div.control').children('div.contents').slideUp(0)
-  .end().end().find('h4').click(function(){
-    if ($(this).parent().hasClass('disabled')) return;
-    $(this).addClass('active');
-    $('div.controlset',context).find('h4').not($(this)).removeClass('active');
-    var ns = $(this).parent().attr('data-namespace');
-    im.trigger('ChangeActiveAction',"ControlSet_"+ns);
-  });
+    var context = im.domContext;
+    $('div.control-sets > div.controlset', context).each(function () {
+        var container = $(this),
+            type = container.data('namespace');
 
-  $('div.component',context).find('div.control').children('div.childrenontents').slideUp(0).hide()
-  .end().end().find('h4').click(function(){
-    if ($(this).hasClass('active')) return false;
-    $(this).addClass('active');
-    $('div.component',context).children('h4').not($(this)).removeClass('active');
-    var ns = $(this).parent().attr('data-namespace');
-    im.trigger('ChangeActiveComponent',"Component_"+ns);
-  });
-  $('div.components').hide();
+        container.find('h4').click(function () {
+            if (!container.hasClass('active')) {
+                im.fire('ChangeActiveAction', 'ControlSet_' + type);
+            }
+        });
 
-  im.bind('imageload', $.fn.dialog.hideLoader);
-  return im;
+        im.bind('ChangeActiveAction', function(e, data) {
+            if (data === 'ControlSet_' + type) {
+                context.find('div.controlset.active').removeClass('active').children('.control').slideUp(250);
+                container.addClass('active');
+
+                var control = container.children('.control').height('auto');
+                control.slideDown(250);
+            }
+        });
+    });
+
+    $('div.controls > div.controlscontainer', context).children('div.save').children('button.save').click(function () {
+        im.save();
+    }).end().children('button.cancel').click(function () {
+        if (confirm("Are you sure?"))
+            $.fn.dialog.closeTop();
+    });
+
+    im.on('ChangeActiveAction', function (e, data) {
+        if (!data) {
+            $('h4.active', context).removeClass('active');
+        }
+    });
+
+    im.on('ChangeActiveComponent', function (e, data) {
+        if (!data) {
+            $('div.controlset.active', context).removeClass('active');
+        }
+    });
+
+    im.bind('imageload', $.fn.dialog.hideLoader);
+    return im;
 };
-$.fn.slideOut = function(time,callback) {
-  var me = $(this),
-      startWidth = me.width(),
-      totalWidth = 300;
-  me.css('overflow-y','auto');
-  if (startWidth == totalWidth) {
-    me.animate({width:totalWidth},0,callback);
+$.fn.slideOut = function (time, callback) {
+    var me = $(this),
+        startWidth = me.width(),
+        totalWidth = 255;
+    me.css('overflow-y', 'auto');
+    if (startWidth == totalWidth) {
+        me.animate({width: totalWidth}, 0, callback);
+        return this;
+    }
+    me.width(startWidth).animate({width: totalWidth}, time || 300, callback || function () {
+    });
     return this;
-  };
-  me.width(startWidth).animate({width:totalWidth},time || 300,callback || function(){});
-  return this;
 };
-$.fn.slideIn = function(time,callback) {
-  var me = $(this);
-  me.css('overflow-y','hidden');
-  if (me.width() === 0) {
-    me.animate({width:0},0,callback);
+$.fn.slideIn = function (time, callback) {
+    var me = $(this);
+    me.css('overflow-y', 'hidden');
+    if (me.width() === 0) {
+        me.animate({width: 0}, 0, callback);
+        return this;
+    }
+
+    me.animate({width: 0}, time || 300, callback || function () {
+    });
     return this;
-  };
-  me.animate({width:0},time || 300,callback || function(){});
-  return this;
 };
 ImageEditor.prototype = ImageEditor.fn = {
   filter: {

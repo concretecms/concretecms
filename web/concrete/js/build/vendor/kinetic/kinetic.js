@@ -52,13 +52,13 @@ var Kinetic = {};
         // user agent
         UA: (function() {
             var ua = navigator.userAgent.toLowerCase(),
-                // jQuery UA regex
+            // jQuery UA regex
                 match = /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
-                /(webkit)[ \/]([\w.]+)/.exec( ua ) ||
-                /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
-                /(msie) ([\w.]+)/.exec( ua ) ||
-                ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
-                [];
+                    /(webkit)[ \/]([\w.]+)/.exec( ua ) ||
+                    /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
+                    /(msie) ([\w.]+)/.exec( ua ) ||
+                    ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
+                    [];
 
             return {
                 browser: match[ 1 ] || '',
@@ -80,25 +80,25 @@ var Kinetic = {};
          * @abstract
          * @param {Object} config
          * @param {Number} [config.x]
-     * @param {Number} [config.y]
-     * @param {Number} [config.width]
-     * @param {Number} [config.height]
-     * @param {Boolean} [config.visible]
-     * @param {Boolean} [config.listening] whether or not the node is listening for events
-     * @param {String} [config.id] unique id
-     * @param {String} [config.name] non-unique name
-     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
-     * @param {Object} [config.scale] set scale
-     * @param {Number} [config.scaleX] set scale x
-     * @param {Number} [config.scaleY] set scale y
-     * @param {Number} [config.rotation] rotation in radians
-     * @param {Number} [config.rotationDeg] rotation in degrees
-     * @param {Object} [config.offset] offset from center point and rotation point
-     * @param {Number} [config.offsetX] set offset x
-     * @param {Number} [config.offsetY] set offset y
-     * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
-     *  the entire stage by dragging any portion of the stage
-     * @param {Function} [config.dragBoundFunc]
+         * @param {Number} [config.y]
+         * @param {Number} [config.width]
+         * @param {Number} [config.height]
+         * @param {Boolean} [config.visible]
+         * @param {Boolean} [config.listening] whether or not the node is listening for events
+         * @param {String} [config.id] unique id
+         * @param {String} [config.name] non-unique name
+         * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
+         * @param {Object} [config.scale] set scale
+         * @param {Number} [config.scaleX] set scale x
+         * @param {Number} [config.scaleY] set scale y
+         * @param {Number} [config.rotation] rotation in radians
+         * @param {Number} [config.rotationDeg] rotation in degrees
+         * @param {Object} [config.offset] offset from center point and rotation point
+         * @param {Number} [config.offsetX] set offset x
+         * @param {Number} [config.offsetY] set offset y
+         * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
+         *  the entire stage by dragging any portion of the stage
+         * @param {Function} [config.dragBoundFunc]
          */
         Node: function(config) {
             this._init(config);
@@ -112,86 +112,86 @@ var Kinetic = {};
          * @augments Kinetic.Node
          * @param {Object} config
          * @param {String} [config.fill] fill color
-     * @param {Object} [config.fillRGB] set fill color with an object literal containing an r, g, and b component
-     * @param {Integer} [config.fillR] set fill red component
-     * @param {Integer} [config.fillG] set fill green component
-     * @param {Integer} [config.fillB] set fill blue component
-     * @param {Image} [config.fillPatternImage] fill pattern image
-     * @param {Number} [config.fillPatternX]
-     * @param {Number} [config.fillPatternY]
-     * @param {Number|Array|Object} [config.fillPatternOffset] number, array with two elements, or object with x and y component
-     * @param {Number} [config.fillPatternOffsetX]
-     * @param {Number} [config.fillPatternOffsetY]
-     * @param {Number|Array|Object} [config.fillPatternScale] number, array with two elements, or object with x and y component
-     * @param {Number} [config.fillPatternScaleX]
-     * @param {Number} [config.fillPatternScaleY]
-     * @param {Number} [config.fillPatternRotation]
-     * @param {String} [config.fillPatternRepeat] can be 'repeat', 'repeat-x', 'repeat-y', or 'no-repeat'.  The default is 'no-repeat'
-     * @param {Number|Array|Object} [config.fillLinearGradientStartPoint] number, array with two elements, or object with x and y component
-     * @param {Number} [config.fillLinearGradientStartPointX]
-     * @param {Number} [config.fillLinearGradientStartPointY]
-     * @param {Number|Array|Object} [config.fillLinearGradientEndPoint] number, array with two elements, or object with x and y component
-     * @param {Number|Array|Object} [config.fillLinearGradientEndPoint] number, array with two elements, or object with x and y component
-     * @param {Number} [config.fillLinearGradientEndPointX]
-     * @param {Number} [config.fillLinearGradientEndPointY]
-     * @param {Array} [config.fillLinearGradientColorStops] array of color stops
-     * @param {Number|Array|Object} [config.fillRadialGradientStartPoint] number, array with two elements, or object with x and y component
-     * @param {Number} [config.fillRadialGradientStartPointX]
-     * @param {Number} [config.fillRadialGradientStartPointY]
-     * @param {Number|Array|Object} [config.fillRadialGradientEndPoint] number, array with two elements, or object with x and y component
-     * @param {Number} [config.fillRadialGradientEndPointX]
-     * @param {Number} [config.fillRadialGradientEndPointY]
-     * @param {Number} [config.fillRadialGradientStartRadius]
-     * @param {Number} [config.fillRadialGradientEndRadius]
-     * @param {Array} [config.fillRadialGradientColorStops] array of color stops
-     * @param {Boolean} [config.fillEnabled] flag which enables or disables the fill.  The default value is true
-     * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
-     * @param {String} [config.stroke] stroke color
-     * @param {Object} [config.strokeRGB] set stroke color with an object literal containing an r, g, and b component
-     * @param {Integer} [config.strokeR] set stroke red component
-     * @param {Integer} [config.strokeG] set stroke green component
-     * @param {Integer} [config.strokeB] set stroke blue component
-     * @param {Number} [config.strokeWidth] stroke width
-     * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
-     * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
-     * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
-     *  is miter
-     * @param {String} [config.lineCap] can be butt, round, or sqare.  The default
-     *  is butt
-     * @param {String} [config.shadowColor]
-     * @param {Object} [config.shadowColorRGB] set shadowColor color with an object literal containing an r, g, and b component
-     * @param {Integer} [config.shadowColorR] set shadowColor red component
-     * @param {Integer} [config.shadowColorG] set shadowColor green component
-     * @param {Integer} [config.shadowColorB] set shadowColor blue component
-     * @param {Number} [config.shadowBlur]
-     * @param {Object} [config.shadowOffset]
-     * @param {Number} [config.shadowOffsetX]
-     * @param {Number} [config.shadowOffsetY]
-     * @param {Number} [config.shadowOpacity] shadow opacity.  Can be any real number
-     *  between 0 and 1
-     * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
-     * @param {Array} [config.dashArray]
-     * @param {Boolean} [config.dashArrayEnabled] flag which enables or disables the dashArray.  The default value is true
+         * @param {Object} [config.fillRGB] set fill color with an object literal containing an r, g, and b component
+         * @param {Integer} [config.fillR] set fill red component
+         * @param {Integer} [config.fillG] set fill green component
+         * @param {Integer} [config.fillB] set fill blue component
+         * @param {Image} [config.fillPatternImage] fill pattern image
+         * @param {Number} [config.fillPatternX]
+         * @param {Number} [config.fillPatternY]
+         * @param {Number|Array|Object} [config.fillPatternOffset] number, array with two elements, or object with x and y component
+         * @param {Number} [config.fillPatternOffsetX]
+         * @param {Number} [config.fillPatternOffsetY]
+         * @param {Number|Array|Object} [config.fillPatternScale] number, array with two elements, or object with x and y component
+         * @param {Number} [config.fillPatternScaleX]
+         * @param {Number} [config.fillPatternScaleY]
+         * @param {Number} [config.fillPatternRotation]
+         * @param {String} [config.fillPatternRepeat] can be 'repeat', 'repeat-x', 'repeat-y', or 'no-repeat'.  The default is 'no-repeat'
+         * @param {Number|Array|Object} [config.fillLinearGradientStartPoint] number, array with two elements, or object with x and y component
+         * @param {Number} [config.fillLinearGradientStartPointX]
+         * @param {Number} [config.fillLinearGradientStartPointY]
+         * @param {Number|Array|Object} [config.fillLinearGradientEndPoint] number, array with two elements, or object with x and y component
+         * @param {Number|Array|Object} [config.fillLinearGradientEndPoint] number, array with two elements, or object with x and y component
+         * @param {Number} [config.fillLinearGradientEndPointX]
+         * @param {Number} [config.fillLinearGradientEndPointY]
+         * @param {Array} [config.fillLinearGradientColorStops] array of color stops
+         * @param {Number|Array|Object} [config.fillRadialGradientStartPoint] number, array with two elements, or object with x and y component
+         * @param {Number} [config.fillRadialGradientStartPointX]
+         * @param {Number} [config.fillRadialGradientStartPointY]
+         * @param {Number|Array|Object} [config.fillRadialGradientEndPoint] number, array with two elements, or object with x and y component
+         * @param {Number} [config.fillRadialGradientEndPointX]
+         * @param {Number} [config.fillRadialGradientEndPointY]
+         * @param {Number} [config.fillRadialGradientStartRadius]
+         * @param {Number} [config.fillRadialGradientEndRadius]
+         * @param {Array} [config.fillRadialGradientColorStops] array of color stops
+         * @param {Boolean} [config.fillEnabled] flag which enables or disables the fill.  The default value is true
+         * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
+         * @param {String} [config.stroke] stroke color
+         * @param {Object} [config.strokeRGB] set stroke color with an object literal containing an r, g, and b component
+         * @param {Integer} [config.strokeR] set stroke red component
+         * @param {Integer} [config.strokeG] set stroke green component
+         * @param {Integer} [config.strokeB] set stroke blue component
+         * @param {Number} [config.strokeWidth] stroke width
+         * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
+         * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
+         * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
+         *  is miter
+         * @param {String} [config.lineCap] can be butt, round, or sqare.  The default
+         *  is butt
+         * @param {String} [config.shadowColor]
+         * @param {Object} [config.shadowColorRGB] set shadowColor color with an object literal containing an r, g, and b component
+         * @param {Integer} [config.shadowColorR] set shadowColor red component
+         * @param {Integer} [config.shadowColorG] set shadowColor green component
+         * @param {Integer} [config.shadowColorB] set shadowColor blue component
+         * @param {Number} [config.shadowBlur]
+         * @param {Object} [config.shadowOffset]
+         * @param {Number} [config.shadowOffsetX]
+         * @param {Number} [config.shadowOffsetY]
+         * @param {Number} [config.shadowOpacity] shadow opacity.  Can be any real number
+         *  between 0 and 1
+         * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
+         * @param {Array} [config.dashArray]
+         * @param {Boolean} [config.dashArrayEnabled] flag which enables or disables the dashArray.  The default value is true
          * @param {Number} [config.x]
-     * @param {Number} [config.y]
-     * @param {Number} [config.width]
-     * @param {Number} [config.height]
-     * @param {Boolean} [config.visible]
-     * @param {Boolean} [config.listening] whether or not the node is listening for events
-     * @param {String} [config.id] unique id
-     * @param {String} [config.name] non-unique name
-     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
-     * @param {Object} [config.scale] set scale
-     * @param {Number} [config.scaleX] set scale x
-     * @param {Number} [config.scaleY] set scale y
-     * @param {Number} [config.rotation] rotation in radians
-     * @param {Number} [config.rotationDeg] rotation in degrees
-     * @param {Object} [config.offset] offset from center point and rotation point
-     * @param {Number} [config.offsetX] set offset x
-     * @param {Number} [config.offsetY] set offset y
-     * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
-     *  the entire stage by dragging any portion of the stage
-     * @param {Function} [config.dragBoundFunc]
+         * @param {Number} [config.y]
+         * @param {Number} [config.width]
+         * @param {Number} [config.height]
+         * @param {Boolean} [config.visible]
+         * @param {Boolean} [config.listening] whether or not the node is listening for events
+         * @param {String} [config.id] unique id
+         * @param {String} [config.name] non-unique name
+         * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
+         * @param {Object} [config.scale] set scale
+         * @param {Number} [config.scaleX] set scale x
+         * @param {Number} [config.scaleY] set scale y
+         * @param {Number} [config.rotation] rotation in radians
+         * @param {Number} [config.rotationDeg] rotation in degrees
+         * @param {Object} [config.offset] offset from center point and rotation point
+         * @param {Number} [config.offsetX] set offset x
+         * @param {Number} [config.offsetY] set offset y
+         * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
+         *  the entire stage by dragging any portion of the stage
+         * @param {Function} [config.dragBoundFunc]
          * @example
          * var customShape = new Kinetic.Shape({<br>
          *   x: 5,<br>
@@ -220,25 +220,25 @@ var Kinetic = {};
          * @abstract
          * @param {Object} config
          * @param {Number} [config.x]
-     * @param {Number} [config.y]
-     * @param {Number} [config.width]
-     * @param {Number} [config.height]
-     * @param {Boolean} [config.visible]
-     * @param {Boolean} [config.listening] whether or not the node is listening for events
-     * @param {String} [config.id] unique id
-     * @param {String} [config.name] non-unique name
-     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
-     * @param {Object} [config.scale] set scale
-     * @param {Number} [config.scaleX] set scale x
-     * @param {Number} [config.scaleY] set scale y
-     * @param {Number} [config.rotation] rotation in radians
-     * @param {Number} [config.rotationDeg] rotation in degrees
-     * @param {Object} [config.offset] offset from center point and rotation point
-     * @param {Number} [config.offsetX] set offset x
-     * @param {Number} [config.offsetY] set offset y
-     * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
-     *  the entire stage by dragging any portion of the stage
-     * @param {Function} [config.dragBoundFunc]
+         * @param {Number} [config.y]
+         * @param {Number} [config.width]
+         * @param {Number} [config.height]
+         * @param {Boolean} [config.visible]
+         * @param {Boolean} [config.listening] whether or not the node is listening for events
+         * @param {String} [config.id] unique id
+         * @param {String} [config.name] non-unique name
+         * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
+         * @param {Object} [config.scale] set scale
+         * @param {Number} [config.scaleX] set scale x
+         * @param {Number} [config.scaleY] set scale y
+         * @param {Number} [config.rotation] rotation in radians
+         * @param {Number} [config.rotationDeg] rotation in degrees
+         * @param {Object} [config.offset] offset from center point and rotation point
+         * @param {Number} [config.offsetX] set offset x
+         * @param {Number} [config.offsetY] set offset y
+         * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
+         *  the entire stage by dragging any portion of the stage
+         * @param {Function} [config.dragBoundFunc]
          * @param {Function} [config.clipFunc] clipping function
 
          */
@@ -254,25 +254,25 @@ var Kinetic = {};
          * @param {Object} config
          * @param {String|DomElement} config.container Container id or DOM element
          * @param {Number} [config.x]
-     * @param {Number} [config.y]
-     * @param {Number} [config.width]
-     * @param {Number} [config.height]
-     * @param {Boolean} [config.visible]
-     * @param {Boolean} [config.listening] whether or not the node is listening for events
-     * @param {String} [config.id] unique id
-     * @param {String} [config.name] non-unique name
-     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
-     * @param {Object} [config.scale] set scale
-     * @param {Number} [config.scaleX] set scale x
-     * @param {Number} [config.scaleY] set scale y
-     * @param {Number} [config.rotation] rotation in radians
-     * @param {Number} [config.rotationDeg] rotation in degrees
-     * @param {Object} [config.offset] offset from center point and rotation point
-     * @param {Number} [config.offsetX] set offset x
-     * @param {Number} [config.offsetY] set offset y
-     * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
-     *  the entire stage by dragging any portion of the stage
-     * @param {Function} [config.dragBoundFunc]
+         * @param {Number} [config.y]
+         * @param {Number} [config.width]
+         * @param {Number} [config.height]
+         * @param {Boolean} [config.visible]
+         * @param {Boolean} [config.listening] whether or not the node is listening for events
+         * @param {String} [config.id] unique id
+         * @param {String} [config.name] non-unique name
+         * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
+         * @param {Object} [config.scale] set scale
+         * @param {Number} [config.scaleX] set scale x
+         * @param {Number} [config.scaleY] set scale y
+         * @param {Number} [config.rotation] rotation in radians
+         * @param {Number} [config.rotationDeg] rotation in degrees
+         * @param {Object} [config.offset] offset from center point and rotation point
+         * @param {Number} [config.offsetX] set offset x
+         * @param {Number} [config.offsetY] set offset y
+         * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
+         *  the entire stage by dragging any portion of the stage
+         * @param {Function} [config.dragBoundFunc]
          * @param {Function} [config.clipFunc] clipping function
 
          * @example
@@ -296,25 +296,25 @@ var Kinetic = {};
          * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
          * to clear the canvas before each layer draw.  The default value is true.
          * @param {Number} [config.x]
-     * @param {Number} [config.y]
-     * @param {Number} [config.width]
-     * @param {Number} [config.height]
-     * @param {Boolean} [config.visible]
-     * @param {Boolean} [config.listening] whether or not the node is listening for events
-     * @param {String} [config.id] unique id
-     * @param {String} [config.name] non-unique name
-     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
-     * @param {Object} [config.scale] set scale
-     * @param {Number} [config.scaleX] set scale x
-     * @param {Number} [config.scaleY] set scale y
-     * @param {Number} [config.rotation] rotation in radians
-     * @param {Number} [config.rotationDeg] rotation in degrees
-     * @param {Object} [config.offset] offset from center point and rotation point
-     * @param {Number} [config.offsetX] set offset x
-     * @param {Number} [config.offsetY] set offset y
-     * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
-     *  the entire stage by dragging any portion of the stage
-     * @param {Function} [config.dragBoundFunc]
+         * @param {Number} [config.y]
+         * @param {Number} [config.width]
+         * @param {Number} [config.height]
+         * @param {Boolean} [config.visible]
+         * @param {Boolean} [config.listening] whether or not the node is listening for events
+         * @param {String} [config.id] unique id
+         * @param {String} [config.name] non-unique name
+         * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
+         * @param {Object} [config.scale] set scale
+         * @param {Number} [config.scaleX] set scale x
+         * @param {Number} [config.scaleY] set scale y
+         * @param {Number} [config.rotation] rotation in radians
+         * @param {Number} [config.rotationDeg] rotation in degrees
+         * @param {Object} [config.offset] offset from center point and rotation point
+         * @param {Number} [config.offsetX] set offset x
+         * @param {Number} [config.offsetY] set offset y
+         * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
+         *  the entire stage by dragging any portion of the stage
+         * @param {Function} [config.dragBoundFunc]
          * @param {Function} [config.clipFunc] clipping function
 
          * @example
@@ -331,25 +331,25 @@ var Kinetic = {};
          * @augments Kinetic.Container
          * @param {Object} config
          * @param {Number} [config.x]
-     * @param {Number} [config.y]
-     * @param {Number} [config.width]
-     * @param {Number} [config.height]
-     * @param {Boolean} [config.visible]
-     * @param {Boolean} [config.listening] whether or not the node is listening for events
-     * @param {String} [config.id] unique id
-     * @param {String} [config.name] non-unique name
-     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
-     * @param {Object} [config.scale] set scale
-     * @param {Number} [config.scaleX] set scale x
-     * @param {Number} [config.scaleY] set scale y
-     * @param {Number} [config.rotation] rotation in radians
-     * @param {Number} [config.rotationDeg] rotation in degrees
-     * @param {Object} [config.offset] offset from center point and rotation point
-     * @param {Number} [config.offsetX] set offset x
-     * @param {Number} [config.offsetY] set offset y
-     * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
-     *  the entire stage by dragging any portion of the stage
-     * @param {Function} [config.dragBoundFunc]
+         * @param {Number} [config.y]
+         * @param {Number} [config.width]
+         * @param {Number} [config.height]
+         * @param {Boolean} [config.visible]
+         * @param {Boolean} [config.listening] whether or not the node is listening for events
+         * @param {String} [config.id] unique id
+         * @param {String} [config.name] non-unique name
+         * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
+         * @param {Object} [config.scale] set scale
+         * @param {Number} [config.scaleX] set scale x
+         * @param {Number} [config.scaleY] set scale y
+         * @param {Number} [config.rotation] rotation in radians
+         * @param {Number} [config.rotationDeg] rotation in degrees
+         * @param {Object} [config.offset] offset from center point and rotation point
+         * @param {Number} [config.offsetX] set offset x
+         * @param {Number} [config.offsetY] set offset y
+         * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
+         *  the entire stage by dragging any portion of the stage
+         * @param {Function} [config.dragBoundFunc]
          * @param {Function} [config.clipFunc] clipping function
 
          * @example
@@ -378,11 +378,11 @@ var Kinetic = {};
             }
         },
         /**
-        * returns whether or not a drag and drop operation is ready, but may
-        *  not necessarily have started
-        * @method
-        * @memberof Kinetic
-        */
+         * returns whether or not a drag and drop operation is ready, but may
+         *  not necessarily have started
+         * @method
+         * @memberof Kinetic
+         */
         isDragReady: function() {
             var dd = Kinetic.DD;
 
@@ -560,20 +560,20 @@ var Kinetic = {};
     };
 
     /*
-    * Last updated November 2011
-    * By Simon Sarris
-    * www.simonsarris.com
-    * sarris@acm.org
-    *
-    * Free to use and distribute at will
-    * So long as you are nice to people, etc
-    */
+     * Last updated November 2011
+     * By Simon Sarris
+     * www.simonsarris.com
+     * sarris@acm.org
+     *
+     * Free to use and distribute at will
+     * So long as you are nice to people, etc
+     */
 
     /*
-    * The usage of this class was inspired by some of the work done by a forked
-    * project, KineticJS-Ext by Wappworks, which is based on Simon's Transform
-    * class.  Modified by Eric Rowell
-    */
+     * The usage of this class was inspired by some of the work done by a forked
+     * project, KineticJS-Ext by Wappworks, which is based on Simon's Transform
+     * class.  Modified by Eric Rowell
+     */
 
     /**
      * Transform constructor
@@ -655,7 +655,7 @@ var Kinetic = {};
             this.m[1] = m12;
             this.m[2] = m21;
             this.m[3] = m22;
-         },
+        },
         /**
          * Transform multiplication
          * @method
@@ -1082,7 +1082,7 @@ var Kinetic = {};
         getRandomColor: function() {
             var randColor = (Math.random() * 0xFFFFFF << 0).toString(16);
             while (randColor.length < 6) {
-              randColor = ZERO + randColor;
+                randColor = ZERO + randColor;
             }
             return HASH + randColor;
         },
@@ -1111,37 +1111,37 @@ var Kinetic = {};
          * var rgb = Kinetic.Util.getRGB('rgb(0,0,255)');
          */
         getRGB: function(color) {
-          var rgb;
-          // color string
-          if (color in COLORS) {
-            rgb = COLORS[color];
-            return {
-              r: rgb[0],
-              g: rgb[1],
-              b: rgb[2]
-            };
-          }
-          // hex
-          else if (color[0] === HASH) {
-            return this._hexToRgb(color.substring(1));
-          }
-          // rgb string
-          else if (color.substr(0, 4) === RGB_PAREN) {
-            rgb = RGB_REGEX.exec(color.replace(/ /g,''));
-            return {
-                r: parseInt(rgb[1], 10),
-                g: parseInt(rgb[2], 10),
-                b: parseInt(rgb[3], 10)
-            };
-          }
-          // default
-          else {
-            return {
-                r: 0,
-                g: 0,
-                b: 0
-            };
-          }
+            var rgb;
+            // color string
+            if (color in COLORS) {
+                rgb = COLORS[color];
+                return {
+                    r: rgb[0],
+                    g: rgb[1],
+                    b: rgb[2]
+                };
+            }
+            // hex
+            else if (color[0] === HASH) {
+                return this._hexToRgb(color.substring(1));
+            }
+            // rgb string
+            else if (color.substr(0, 4) === RGB_PAREN) {
+                rgb = RGB_REGEX.exec(color.replace(/ /g,''));
+                return {
+                    r: parseInt(rgb[1], 10),
+                    g: parseInt(rgb[2], 10),
+                    b: parseInt(rgb[3], 10)
+                };
+            }
+            // default
+            else {
+                return {
+                    r: 0,
+                    g: 0,
+                    b: 0
+                };
+            }
         },
         // o1 takes precedence over o2
         _merge: function(o1, o2) {
@@ -1205,11 +1205,11 @@ var Kinetic = {};
          * @param {Object} methods
          */
         addMethods: function(constructor, methods) {
-          var key;
+            var key;
 
-          for (key in methods) {
-            constructor.prototype[key] = methods[key];
-          }
+            for (key in methods) {
+                constructor.prototype[key] = methods[key];
+            }
         },
         _getControlPoints: function(p0, p1, p2, t) {
             var x0 = p0.x;
@@ -1922,11 +1922,11 @@ var Kinetic = {};
         },
         _fillRadialGradient: function(shape) {
             var start = shape.getFillRadialGradientStartPoint(),
-            end = shape.getFillRadialGradientEndPoint(),
-            startRadius = shape.getFillRadialGradientStartRadius(),
-            endRadius = shape.getFillRadialGradientEndRadius(),
-            colorStops = shape.getFillRadialGradientColorStops(),
-            grd = this.createRadialGradient(start.x, start.y, startRadius, end.x, end.y, endRadius);
+                end = shape.getFillRadialGradientEndPoint(),
+                startRadius = shape.getFillRadialGradientStartRadius(),
+                endRadius = shape.getFillRadialGradientEndRadius(),
+                colorStops = shape.getFillRadialGradientColorStops(),
+                grd = this.createRadialGradient(start.x, start.y, startRadius, end.x, end.y, endRadius);
 
             // build color stops
             for(var n = 0; n < colorStops.length; n += 2) {
@@ -2273,17 +2273,17 @@ var Kinetic = {};
                     y = 0;
 
                 if (pos) {
-                  x = pos.x;
-                  y = pos.y;
+                    x = pos.x;
+                    y = pos.y;
 
-                  this._fireBeforeChangeEvent(attr, oldVal, pos);
-                  if (x !== undefined) {
-                    this[baseMethod + UPPER_X](x);
-                  }
-                  if (y !== undefined) {
-                    this[baseMethod + UPPER_Y](y);
-                  }
-                  this._fireChangeEvent(attr, oldVal, pos);
+                    this._fireBeforeChangeEvent(attr, oldVal, pos);
+                    if (x !== undefined) {
+                        this[baseMethod + UPPER_X](x);
+                    }
+                    if (y !== undefined) {
+                        this[baseMethod + UPPER_Y](y);
+                    }
+                    this._fireChangeEvent(attr, oldVal, pos);
                 }
             };
         },
@@ -2300,25 +2300,25 @@ var Kinetic = {};
                     x, y, width, height;
 
                 if (both) {
-                  x = both.x;
-                  y = both.y;
-                  width = both.width;
-                  height = both.height;
+                    x = both.x;
+                    y = both.y;
+                    width = both.width;
+                    height = both.height;
 
-                  this._fireBeforeChangeEvent(attr, oldVal, both);
-                  if (x !== undefined) {
-                    this[baseMethod + UPPER_X](x);
-                  }
-                  if (y !== undefined) {
-                    this[baseMethod + UPPER_Y](y);
-                  }
-                  if (width !== undefined) {
-                    this[baseMethod + UPPER_WIDTH](width);
-                  }
-                  if (height !== undefined) {
-                    this[baseMethod + UPPER_HEIGHT](height);
-                  }
-                  this._fireChangeEvent(attr, oldVal, both);
+                    this._fireBeforeChangeEvent(attr, oldVal, both);
+                    if (x !== undefined) {
+                        this[baseMethod + UPPER_X](x);
+                    }
+                    if (y !== undefined) {
+                        this[baseMethod + UPPER_Y](y);
+                    }
+                    if (width !== undefined) {
+                        this[baseMethod + UPPER_WIDTH](width);
+                    }
+                    if (height !== undefined) {
+                        this[baseMethod + UPPER_HEIGHT](height);
+                    }
+                    this._fireChangeEvent(attr, oldVal, both);
                 }
             };
         },
@@ -2346,9 +2346,9 @@ var Kinetic = {};
                     oldVal = this.attrs[attr];
 
                 if (pos) {
-                  this._fireBeforeChangeEvent(attr, oldVal, pos);
-                  this.attrs[attr].push(pos);
-                  this._fireChangeEvent(attr, oldVal, pos);
+                    this._fireBeforeChangeEvent(attr, oldVal, pos);
+                    this.attrs[attr].push(pos);
+                    this._fireChangeEvent(attr, oldVal, pos);
                 }
             };
         }
@@ -2434,12 +2434,12 @@ var Kinetic = {};
             });
         },
         /**
-        * clear cached variables
-        * @method
-        * @memberof Kinetic.Node.prototype
-        * @example
-        * node.clearCache();
-        */
+         * clear cached variables
+         * @method
+         * @memberof Kinetic.Node.prototype
+         * @example
+         * node.clearCache();
+         */
         clearCache: function() {
             this.cache = {};
         },
@@ -2464,7 +2464,7 @@ var Kinetic = {};
 
             if (this.children) {
                 this.getChildren().each(function(node) {
-                  node._clearSelfAndChildrenCache(attr);
+                    node._clearSelfAndChildrenCache(attr);
                 });
             }
         },
@@ -2510,7 +2510,7 @@ var Kinetic = {};
                 len = events.length,
                 n, event, parts, baseEvent, name;
 
-             /*
+            /*
              * loop through types and attach event listeners to
              * each one.  eg. 'click mouseover.namespace mouseout'
              * will create three event bindings
@@ -2636,14 +2636,14 @@ var Kinetic = {};
             }
         },
         /**
-        * get ancestors
-        * @method
-        * @memberof Kinetic.Node.prototype
-        * @example
-        * shape.getAncestors().each(function(node) {
+         * get ancestors
+         * @method
+         * @memberof Kinetic.Node.prototype
+         * @example
+         * shape.getAncestors().each(function(node) {
         *   console.log(node.getId());
         * })
-        */
+         */
         getAncestors: function() {
             var parent = this.getParent(),
                 ancestors = new Kinetic.Collection();
@@ -2730,7 +2730,7 @@ var Kinetic = {};
          * @memberof Kinetic.Node.prototype
          */
         isListening: function() {
-          return this._getCache(LISTENING, this._isListening);
+            return this._getCache(LISTENING, this._isListening);
         },
         _isListening: function() {
             var listening = this.getListening(),
@@ -2749,7 +2749,7 @@ var Kinetic = {};
          * @memberof Kinetic.Node.prototype
          */
         isVisible: function() {
-          return this._getCache(VISIBLE, this._isVisible);
+            return this._getCache(VISIBLE, this._isVisible);
         },
         _isVisible: function() {
             var visible = this.getVisible(),
@@ -3693,7 +3693,7 @@ var Kinetic = {};
 
     Kinetic.Factory.addGetter(Kinetic.Node, 'name');
 
-     /**
+    /**
      * get name
      * @name getName
      * @method
@@ -3765,7 +3765,7 @@ var Kinetic = {};
      * shape.setScale([20, 40]);
      */
 
-     /**
+    /**
      * set scale x
      * @name setScaleX
      * @param {Number} x
@@ -3773,7 +3773,7 @@ var Kinetic = {};
      * @memberof Kinetic.Node.prototype
      */
 
-     /**
+    /**
      * set scale y
      * @name setScaleY
      * @param {Number} y
@@ -3788,14 +3788,14 @@ var Kinetic = {};
      * @memberof Kinetic.Node.prototype
      */
 
-     /**
+    /**
      * get scale x
      * @name getScaleX
      * @method
      * @memberof Kinetic.Node.prototype
      */
 
-     /**
+    /**
      * get scale y
      * @name getScaleY
      * @method
@@ -3827,7 +3827,7 @@ var Kinetic = {};
      * shape.setSkew(5);
      */
 
-     /**
+    /**
      * set skew x
      * @name setSkewX
      * @param {Number} x
@@ -3835,7 +3835,7 @@ var Kinetic = {};
      * @memberof Kinetic.Node.prototype
      */
 
-     /**
+    /**
      * set skew y
      * @name setSkewY
      * @param {Number} y
@@ -3850,14 +3850,14 @@ var Kinetic = {};
      * @memberof Kinetic.Node.prototype
      */
 
-     /**
+    /**
      * get skew x
      * @name getSkewX
      * @method
      * @memberof Kinetic.Node.prototype
      */
 
-     /**
+    /**
      * get skew y
      * @name getSkewY
      * @method
@@ -3889,7 +3889,7 @@ var Kinetic = {};
      * shape.setOffset(5);
      */
 
-     /**
+    /**
      * set offset x
      * @name setOffsetX
      * @method
@@ -3897,7 +3897,7 @@ var Kinetic = {};
      * @param {Number} x
      */
 
-     /**
+    /**
      * set offset y
      * @name setOffsetY
      * @method
@@ -3912,14 +3912,14 @@ var Kinetic = {};
      * @memberof Kinetic.Node.prototype
      */
 
-     /**
+    /**
      * get offset x
      * @name getOffsetX
      * @method
      * @memberof Kinetic.Node.prototype
      */
 
-     /**
+    /**
      * get offset y
      * @name getOffsetY
      * @method
@@ -4248,9 +4248,9 @@ var Kinetic = {};
 
         if (!this.batchAnim) {
             this.batchAnim = new Kinetic.Animation(function() {
-              if (that.lastBatchDrawTime && new Date().getTime() - that.lastBatchDrawTime > BATCH_DRAW_STOP_TIME_DIFF) {
-                that.batchAnim.stop();
-              }
+                if (that.lastBatchDrawTime && new Date().getTime() - that.lastBatchDrawTime > BATCH_DRAW_STOP_TIME_DIFF) {
+                    that.batchAnim.stop();
+                }
             }, this);
         }
 
@@ -4274,18 +4274,18 @@ var Kinetic = {};
     };
 })();;(function() {
     var blacklist = {
-        node: 1,
-        duration: 1,
-        easing: 1,
-        onFinish: 1,
-        yoyo: 1
-    },
+            node: 1,
+            duration: 1,
+            easing: 1,
+            onFinish: 1,
+            yoyo: 1
+        },
 
-    PAUSED = 1,
-    PLAYING = 2,
-    REVERSING = 3,
+        PAUSED = 1,
+        PLAYING = 2,
+        REVERSING = 3,
 
-    idCounter = 0;
+        idCounter = 0;
 
     /**
      * Tween constructor.  Tweens enable you to animate a node between the current state and a new state.
@@ -4655,9 +4655,9 @@ var Kinetic = {};
     };
 
     /*
-    * These eases were ported from an Adobe Flash tweening library to JavaScript
-    * by Xaric
-    */
+     * These eases were ported from an Adobe Flash tweening library to JavaScript
+     * by Xaric
+     */
 
     /**
      * @namespace Easings
@@ -4665,28 +4665,28 @@ var Kinetic = {};
      */
     Kinetic.Easings = {
         /**
-        * back ease in
-        * @function
-        * @memberof Kinetic.Easings
-        */
+         * back ease in
+         * @function
+         * @memberof Kinetic.Easings
+         */
         'BackEaseIn': function(t, b, c, d, a, p) {
             var s = 1.70158;
             return c * (t /= d) * t * ((s + 1) * t - s) + b;
         },
         /**
-        * back ease out
-        * @function
-        * @memberof Kinetic.Easings
-        */
+         * back ease out
+         * @function
+         * @memberof Kinetic.Easings
+         */
         'BackEaseOut': function(t, b, c, d, a, p) {
             var s = 1.70158;
             return c * (( t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
         },
         /**
-        * back ease in out
-        * @function
-        * @memberof Kinetic.Easings
-        */
+         * back ease in out
+         * @function
+         * @memberof Kinetic.Easings
+         */
         'BackEaseInOut': function(t, b, c, d, a, p) {
             var s = 1.70158;
             if((t /= d / 2) < 1) {
@@ -4695,10 +4695,10 @@ var Kinetic = {};
             return c / 2 * ((t -= 2) * t * (((s *= (1.525)) + 1) * t + s) + 2) + b;
         },
         /**
-        * elastic ease in
-        * @function
-        * @memberof Kinetic.Easings
-        */
+         * elastic ease in
+         * @function
+         * @memberof Kinetic.Easings
+         */
         'ElasticEaseIn': function(t, b, c, d, a, p) {
             // added s = 0
             var s = 0;
@@ -4721,10 +4721,10 @@ var Kinetic = {};
             return -(a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
         },
         /**
-        * elastic ease out
-        * @function
-        * @memberof Kinetic.Easings
-        */
+         * elastic ease out
+         * @function
+         * @memberof Kinetic.Easings
+         */
         'ElasticEaseOut': function(t, b, c, d, a, p) {
             // added s = 0
             var s = 0;
@@ -4747,10 +4747,10 @@ var Kinetic = {};
             return (a * Math.pow(2, -10 * t) * Math.sin((t * d - s) * (2 * Math.PI) / p) + c + b);
         },
         /**
-        * elastic ease in out
-        * @function
-        * @memberof Kinetic.Easings
-        */
+         * elastic ease in out
+         * @function
+         * @memberof Kinetic.Easings
+         */
         'ElasticEaseInOut': function(t, b, c, d, a, p) {
             // added s = 0
             var s = 0;
@@ -4776,10 +4776,10 @@ var Kinetic = {};
             return a * Math.pow(2, -10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p) * 0.5 + c + b;
         },
         /**
-        * bounce ease out
-        * @function
-        * @memberof Kinetic.Easings
-        */
+         * bounce ease out
+         * @function
+         * @memberof Kinetic.Easings
+         */
         'BounceEaseOut': function(t, b, c, d) {
             if((t /= d) < (1 / 2.75)) {
                 return c * (7.5625 * t * t) + b;
@@ -4795,18 +4795,18 @@ var Kinetic = {};
             }
         },
         /**
-        * bounce ease in
-        * @function
-        * @memberof Kinetic.Easings
-        */
+         * bounce ease in
+         * @function
+         * @memberof Kinetic.Easings
+         */
         'BounceEaseIn': function(t, b, c, d) {
             return c - Kinetic.Easings.BounceEaseOut(d - t, 0, c, d) + b;
         },
         /**
-        * bounce ease in out
-        * @function
-        * @memberof Kinetic.Easings
-        */
+         * bounce ease in out
+         * @function
+         * @memberof Kinetic.Easings
+         */
         'BounceEaseInOut': function(t, b, c, d) {
             if(t < d / 2) {
                 return Kinetic.Easings.BounceEaseIn(t * 2, 0, c, d) * 0.5 + b;
@@ -4816,26 +4816,26 @@ var Kinetic = {};
             }
         },
         /**
-        * ease in
-        * @function
-        * @memberof Kinetic.Easings
-        */
+         * ease in
+         * @function
+         * @memberof Kinetic.Easings
+         */
         'EaseIn': function(t, b, c, d) {
             return c * (t /= d) * t + b;
         },
         /**
-        * ease out
-        * @function
-        * @memberof Kinetic.Easings
-        */
+         * ease out
+         * @function
+         * @memberof Kinetic.Easings
+         */
         'EaseOut': function(t, b, c, d) {
             return -c * (t /= d) * (t - 2) + b;
         },
         /**
-        * ease in out
-        * @function
-        * @memberof Kinetic.Easings
-        */
+         * ease in out
+         * @function
+         * @memberof Kinetic.Easings
+         */
         'EaseInOut': function(t, b, c, d) {
             if((t /= d / 2) < 1) {
                 return c / 2 * t * t + b;
@@ -4843,26 +4843,26 @@ var Kinetic = {};
             return -c / 2 * ((--t) * (t - 2) - 1) + b;
         },
         /**
-        * strong ease in
-        * @function
-        * @memberof Kinetic.Easings
-        */
+         * strong ease in
+         * @function
+         * @memberof Kinetic.Easings
+         */
         'StrongEaseIn': function(t, b, c, d) {
             return c * (t /= d) * t * t * t * t + b;
         },
         /**
-        * strong ease out
-        * @function
-        * @memberof Kinetic.Easings
-        */
+         * strong ease out
+         * @function
+         * @memberof Kinetic.Easings
+         */
         'StrongEaseOut': function(t, b, c, d) {
             return c * (( t = t / d - 1) * t * t * t * t + 1) + b;
         },
         /**
-        * strong ease in out
-        * @function
-        * @memberof Kinetic.Easings
-        */
+         * strong ease in out
+         * @function
+         * @memberof Kinetic.Easings
+         */
         'StrongEaseInOut': function(t, b, c, d) {
             if((t /= d / 2) < 1) {
                 return c / 2 * t * t * t * t * t + b;
@@ -4870,10 +4870,10 @@ var Kinetic = {};
             return c / 2 * ((t -= 2) * t * t * t * t + 2) + b;
         },
         /**
-        * linear
-        * @function
-        * @memberof Kinetic.Easings
-        */
+         * linear
+         * @function
+         * @memberof Kinetic.Easings
+         */
         'Linear': function(t, b, c, d) {
             return c * t / d + b;
         }
@@ -4914,7 +4914,7 @@ var Kinetic = {};
 
             if(node) {
                 nodeType = node.nodeType,
-                layer = node.getLayer();
+                    layer = node.getLayer();
                 dd.anim.stop();
 
                 // only fire dragend event if the drag and drop
@@ -4939,7 +4939,7 @@ var Kinetic = {};
             var dragEndNode = evt.dragEndNode;
 
             if (evt && dragEndNode) {
-              dragEndNode.fire('dragend', evt, true);
+                dragEndNode.fire('dragend', evt, true);
             }
         }
     };
@@ -5103,7 +5103,7 @@ var Kinetic = {};
 
     Kinetic.Factory.addGetter(Kinetic.Node, 'draggable', false);
 
-     /**
+    /**
      * get draggable
      * @name getDraggable
      * @method
@@ -5447,7 +5447,7 @@ var Kinetic = {};
      * });
      */
 
-     /**
+    /**
      * set clipX
      * @method
      * @name setClipX
@@ -5455,7 +5455,7 @@ var Kinetic = {};
      * @param {Number} x
      */
 
-     /**
+    /**
      * set clipY
      * @name setClipY
      * @method
@@ -5463,7 +5463,7 @@ var Kinetic = {};
      * @param {Number} y
      */
 
-     /**
+    /**
      * set clipWidth
      * @name setClipWidth
      * @method
@@ -5471,7 +5471,7 @@ var Kinetic = {};
      * @param {Number} width
      */
 
-     /**
+    /**
      * set clipHeight
      * @name setClipHeight
      * @method
@@ -5828,7 +5828,7 @@ var Kinetic = {};
      * @param {String} color
      */
 
-     /**
+    /**
      * set stroke color with an object literal
      * @name setStrokeRGB
      * @method
@@ -5842,7 +5842,7 @@ var Kinetic = {};
      * });
      */
 
-     /**
+    /**
      * set stroke color red component
      * @name setStrokeR
      * @method
@@ -5850,7 +5850,7 @@ var Kinetic = {};
      * @param {Integer} red
      */
 
-     /**
+    /**
      * set stroke color green component
      * @name setStrokeG
      * @method
@@ -5858,7 +5858,7 @@ var Kinetic = {};
      * @param {Integer} green
      */
 
-     /**
+    /**
      * set stroke color blue component
      * @name setStrokeB
      * @method
@@ -5866,35 +5866,35 @@ var Kinetic = {};
      * @param {Integer} blue
      */
 
-     /**
+    /**
      * get stroke color
      * @name getStroke
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get stroke color as an object literal
      * @name getStrokeRGB
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get stroke color red component
      * @name getStrokeR
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get stroke color green component
      * @name getStrokeG
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get stroke color blue component
      * @name getStrokeB
      * @method
@@ -5912,7 +5912,7 @@ var Kinetic = {};
      *  default is miter
      */
 
-     /**
+    /**
      * get line join
      * @name getLineJoin
      * @method
@@ -5930,7 +5930,7 @@ var Kinetic = {};
      * @param {String} lineCap
      */
 
-     /**
+    /**
      * get line cap
      * @name getLineCap
      * @method
@@ -5947,7 +5947,7 @@ var Kinetic = {};
      * @param {Number} strokeWidth
      */
 
-     /**
+    /**
      * get stroke width
      * @name getStrokeWidth
      * @method
@@ -5964,7 +5964,7 @@ var Kinetic = {};
      * @param {Function} drawFunc drawing function
      */
 
-     /**
+    /**
      * get draw function
      * @name getDrawFunc
      * @method
@@ -5981,7 +5981,7 @@ var Kinetic = {};
      * @param {Function} drawHitFunc drawing function used for hit detection
      */
 
-     /**
+    /**
      * get draw hit function
      * @name getDrawHitFunc
      * @method
@@ -6004,7 +6004,7 @@ var Kinetic = {};
      *  apart
      */
 
-     /**
+    /**
      * get dash array
      * @name getDashArray
      * @method
@@ -6021,7 +6021,7 @@ var Kinetic = {};
      * @param {String} color
      */
 
-     /**
+    /**
      * set shadow color with an object literal
      * @name setShadowColorRGB
      * @method
@@ -6035,7 +6035,7 @@ var Kinetic = {};
      * });
      */
 
-     /**
+    /**
      * set shadow color red component
      * @name setShadowColorR
      * @method
@@ -6043,7 +6043,7 @@ var Kinetic = {};
      * @param {Integer} red
      */
 
-     /**
+    /**
      * set shadow color green component
      * @name setShadowColorG
      * @method
@@ -6051,7 +6051,7 @@ var Kinetic = {};
      * @param {Integer} green
      */
 
-     /**
+    /**
      * set shadow color blue component
      * @name setShadowColorB
      * @method
@@ -6059,35 +6059,35 @@ var Kinetic = {};
      * @param {Integer} blue
      */
 
-     /**
+    /**
      * get shadow color
      * @name getShadowColor
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get shadow color as an object literal
      * @name getShadowColorRGB
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get shadow color red component
      * @name getShadowColorR
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get shadow color green component
      * @name getShadowColorG
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get shadow color blue component
      * @name getShadowColorB
      * @method
@@ -6104,7 +6104,7 @@ var Kinetic = {};
      * @param {Number} blur
      */
 
-     /**
+    /**
      * get shadow blur
      * @name getShadowBlur
      * @method
@@ -6121,7 +6121,7 @@ var Kinetic = {};
      * @param {Number} opacity must be a value between 0 and 1
      */
 
-     /**
+    /**
      * get shadow opacity
      * @name getShadowOpacity
      * @method
@@ -6138,7 +6138,7 @@ var Kinetic = {};
      * @param {Image} image object
      */
 
-     /**
+    /**
      * get fill pattern image
      * @name getFillPatternImage
      * @method
@@ -6155,7 +6155,7 @@ var Kinetic = {};
      * @param {String} color
      */
 
-     /**
+    /**
      * set fill color with an object literal
      * @name setFillRGB
      * @method
@@ -6169,7 +6169,7 @@ var Kinetic = {};
      * });
      */
 
-     /**
+    /**
      * set fill color red component
      * @name setFillR
      * @method
@@ -6177,7 +6177,7 @@ var Kinetic = {};
      * @param {Integer} red
      */
 
-     /**
+    /**
      * set fill color green component
      * @name setFillG
      * @method
@@ -6185,7 +6185,7 @@ var Kinetic = {};
      * @param {Integer} green
      */
 
-     /**
+    /**
      * set fill color blue component
      * @name setFillB
      * @method
@@ -6193,35 +6193,35 @@ var Kinetic = {};
      * @param {Integer} blue
      */
 
-     /**
+    /**
      * get fill color
      * @name getFill
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get fill color as an object literal
      * @name getFillRGB
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get fill color red component
      * @name getFillR
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get fill color green component
      * @name getFillG
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get fill color blue component
      * @name getFillB
      * @method
@@ -6238,7 +6238,7 @@ var Kinetic = {};
      * @param {Number} x
      */
 
-     /**
+    /**
      * get fill pattern x
      * @name getFillPatternX
      * @method
@@ -6255,7 +6255,7 @@ var Kinetic = {};
      * @param {Number} y
      */
 
-     /**
+    /**
      * get fill pattern y
      * @name getFillPatternY
      * @method
@@ -6272,7 +6272,7 @@ var Kinetic = {};
      * @param {Array} colorStops
      */
 
-     /**
+    /**
      * get fill linear gradient color stops
      * @name getFillLinearGradientColorStops
      * @method
@@ -6290,7 +6290,7 @@ var Kinetic = {};
      * @param {Number} radius
      */
 
-     /**
+    /**
      * get fill radial gradient start radius
      * @name getFillRadialGradientStartRadius
      * @method
@@ -6307,7 +6307,7 @@ var Kinetic = {};
      * @param {Number} radius
      */
 
-     /**
+    /**
      * get fill radial gradient end radius
      * @name getFillRadialGradientEndRadius
      * @method
@@ -6324,7 +6324,7 @@ var Kinetic = {};
      * @param {Number} colorStops
      */
 
-     /**
+    /**
      * get fill radial gradient color stops
      * @name getFillRadialGradientColorStops
      * @method
@@ -6341,7 +6341,7 @@ var Kinetic = {};
      * @param {Number} repeat can be 'repeat', 'repeat-x', 'repeat-y', or 'no-repeat'.  The default is 'no-repeat'
      */
 
-     /**
+    /**
      * get fill pattern repeat
      * @name getFillPatternRepeat
      * @method
@@ -6358,7 +6358,7 @@ var Kinetic = {};
      * @param {Boolean} enabled
      */
 
-     /**
+    /**
      * get fill enabled
      * @name getFillEnabled
      * @method
@@ -6375,7 +6375,7 @@ var Kinetic = {};
      * @param {Boolean} enabled
      */
 
-     /**
+    /**
      * get stroke enabled
      * @name getStrokeEnabled
      * @method
@@ -6392,7 +6392,7 @@ var Kinetic = {};
      * @param {Boolean} enabled
      */
 
-     /**
+    /**
      * get shadow enabled
      * @name getShadowEnabled
      * @method
@@ -6409,7 +6409,7 @@ var Kinetic = {};
      * @param {Boolean} enabled
      */
 
-     /**
+    /**
      * get dash array enabled
      * @name getDashArrayEnabled
      * @method
@@ -6427,7 +6427,7 @@ var Kinetic = {};
      *  The default is color.
      */
 
-     /**
+    /**
      * get fill priority
      * @name getFillPriority
      * @method
@@ -6436,7 +6436,7 @@ var Kinetic = {};
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeScaleEnabled', true);
 
-     /**
+    /**
      * set stroke scale enabled
      * @name setStrokeScaleEnabled
      * @method
@@ -6444,7 +6444,7 @@ var Kinetic = {};
      * @param {Boolean} enabled
      */
 
-     /**
+    /**
      * get stroke scale enabled
      * @name getStrokeScaleEnabled
      * @method
@@ -6475,7 +6475,7 @@ var Kinetic = {};
      * shape.setFillPatternOffset(5);
      */
 
-     /**
+    /**
      * set fill pattern offset x
      * @name setFillPatternOffsetX
      * @method
@@ -6483,7 +6483,7 @@ var Kinetic = {};
      * @param {Number} x
      */
 
-     /**
+    /**
      * set fill pattern offset y
      * @name setFillPatternOffsetY
      * @method
@@ -6491,21 +6491,21 @@ var Kinetic = {};
      * @param {Number} y
      */
 
-     /**
+    /**
      * get fill pattern offset
      * @name getFillPatternOffset
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get fill pattern offset x
      * @name getFillPatternOffsetX
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get fill pattern offset y
      * @name getFillPatternOffsetY
      * @method
@@ -6536,7 +6536,7 @@ var Kinetic = {};
      * shape.setFillPatternScale([20, 40]);
      */
 
-     /**
+    /**
      * set fill pattern scale x
      * @name setFillPatternScaleX
      * @method
@@ -6544,7 +6544,7 @@ var Kinetic = {};
      * @param {Number} x
      */
 
-     /**
+    /**
      * set fill pattern scale y
      * @name setFillPatternScaleY
      * @method
@@ -6552,21 +6552,21 @@ var Kinetic = {};
      * @param {Number} y
      */
 
-     /**
+    /**
      * get fill pattern scale
      * @name getFillPatternScale
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get fill pattern scale x
      * @name getFillPatternScaleX
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get fill pattern scale y
      * @name getFillPatternScaleY
      * @method
@@ -6597,7 +6597,7 @@ var Kinetic = {};
      * shape.setFillLinearGradientStartPoint(5);
      */
 
-     /**
+    /**
      * set fill linear gradient start point x
      * @name setFillLinearGradientStartPointX
      * @method
@@ -6605,7 +6605,7 @@ var Kinetic = {};
      * @param {Number} x
      */
 
-     /**
+    /**
      * set fill linear gradient start point y
      * @name setFillLinearGradientStartPointY
      * @method
@@ -6613,21 +6613,21 @@ var Kinetic = {};
      * @param {Number} y
      */
 
-     /**
+    /**
      * get fill linear gradient start point
      * @name getFillLinearGradientStartPoint
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get fill linear gradient start point x
      * @name getFillLinearGradientStartPointX
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get fill linear gradient start point y
      * @name getFillLinearGradientStartPointY
      * @method
@@ -6658,7 +6658,7 @@ var Kinetic = {};
      * shape.setFillLinearGradientEndPoint(5);
      */
 
-     /**
+    /**
      * set fill linear gradient end point x
      * @name setFillLinearGradientEndPointX
      * @method
@@ -6666,7 +6666,7 @@ var Kinetic = {};
      * @param {Number} x
      */
 
-     /**
+    /**
      * set fill linear gradient end point y
      * @name setFillLinearGradientEndPointY
      * @method
@@ -6674,21 +6674,21 @@ var Kinetic = {};
      * @param {Number} y
      */
 
-     /**
+    /**
      * get fill linear gradient end point
      * @name getFillLinearGradientEndPoint
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get fill linear gradient end point x
      * @name getFillLinearGradientEndPointX
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get fill linear gradient end point y
      * @name getFillLinearGradientEndPointY
      * @method
@@ -6719,7 +6719,7 @@ var Kinetic = {};
      * shape.setFillRadialGradientStartPoint(5);
      */
 
-     /**
+    /**
      * set fill radial gradient start point x
      * @name setFillRadialGradientStartPointX
      * @method
@@ -6727,7 +6727,7 @@ var Kinetic = {};
      * @param {Number} x
      */
 
-     /**
+    /**
      * set fill radial gradient start point y
      * @name setFillRadialGradientStartPointY
      * @method
@@ -6735,21 +6735,21 @@ var Kinetic = {};
      * @param {Number} y
      */
 
-     /**
+    /**
      * get fill radial gradient start point
      * @name getFillRadialGradientStartPoint
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get fill radial gradient start point x
      * @name getFillRadialGradientStartPointX
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get fill radial gradient start point y
      * @name getFillRadialGradientStartPointY
      * @method
@@ -6780,7 +6780,7 @@ var Kinetic = {};
      * shape.setFillRadialGradientEndPoint(5);
      */
 
-     /**
+    /**
      * set fill radial gradient end point x
      * @name setFillRadialGradientEndPointX
      * @method
@@ -6788,7 +6788,7 @@ var Kinetic = {};
      * @param {Number} x
      */
 
-     /**
+    /**
      * set fill radial gradient end point y
      * @name setFillRadialGradientEndPointY
      * @method
@@ -6796,21 +6796,21 @@ var Kinetic = {};
      * @param {Number} y
      */
 
-     /**
+    /**
      * get fill radial gradient end point
      * @name getFillRadialGradientEndPoint
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get fill radial gradient end point x
      * @name getFillRadialGradientEndPointX
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get fill radial gradient end point y
      * @name getFillRadialGradientEndPointY
      * @method
@@ -6841,7 +6841,7 @@ var Kinetic = {};
      * shape.setShadowOffset(5);
      */
 
-     /**
+    /**
      * set shadow offset x
      * @name setShadowOffsetX
      * @method
@@ -6849,7 +6849,7 @@ var Kinetic = {};
      * @param {Number} x
      */
 
-     /**
+    /**
      * set shadow offset y
      * @name setShadowOffsetY
      * @method
@@ -6864,14 +6864,14 @@ var Kinetic = {};
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get shadow offset x
      * @name getShadowOffsetX
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    /**
      * get shadow offset y
      * @name getShadowOffsetY
      * @method
@@ -6958,12 +6958,12 @@ var Kinetic = {};
         EVENTS = [MOUSEDOWN, MOUSEMOVE, MOUSEUP, MOUSEOUT, TOUCHSTART, TOUCHMOVE, TOUCHEND, MOUSEOVER],
 
     // cached variables
-    eventsLength = EVENTS.length;
+        eventsLength = EVENTS.length;
 
     function addEvent(ctx, eventName) {
-      ctx.content.addEventListener(eventName, function(evt) {
-        ctx[UNDERSCORE + eventName](evt);
-      }, false);
+        ctx.content.addEventListener(eventName, function(evt) {
+            ctx[UNDERSCORE + eventName](evt);
+        }, false);
     }
 
     Kinetic.Util.addMethods(Kinetic.Stage, {
@@ -7269,7 +7269,7 @@ var Kinetic = {};
                 n;
 
             for (n = 0; n < eventsLength; n++) {
-              addEvent(this, EVENTS[n]);
+                addEvent(this, EVENTS[n]);
             }
         },
         _mouseover: function(evt) {
@@ -7313,11 +7313,11 @@ var Kinetic = {};
              * to run mouseout from previous target shape
              */
             else {
-              if(this.targetShape && !Kinetic.isDragging()) {
-                this.targetShape._fireAndBubble(MOUSEOUT, evt);
-                this.targetShape._fireAndBubble(MOUSELEAVE, evt);
-                this.targetShape = null;
-              }
+                if(this.targetShape && !Kinetic.isDragging()) {
+                    this.targetShape._fireAndBubble(MOUSEOUT, evt);
+                    this.targetShape._fireAndBubble(MOUSELEAVE, evt);
+                    this.targetShape = null;
+                }
 
             }
 
@@ -7429,17 +7429,17 @@ var Kinetic = {};
                 shape = obj && obj.shape ? obj.shape : undefined,
                 fireDblClick = false;
 
-                if(Kinetic.inDblClickWindow) {
-                    fireDblClick = true;
-                    Kinetic.inDblClickWindow = false;
-                }
-                else {
-                    Kinetic.inDblClickWindow = true;
-                }
+            if(Kinetic.inDblClickWindow) {
+                fireDblClick = true;
+                Kinetic.inDblClickWindow = false;
+            }
+            else {
+                Kinetic.inDblClickWindow = true;
+            }
 
-                setTimeout(function() {
-                    Kinetic.inDblClickWindow = false;
-                }, Kinetic.dblClickWindow);
+            setTimeout(function() {
+                Kinetic.inDblClickWindow = false;
+            }, Kinetic.dblClickWindow);
 
             if (shape) {
                 shape._fireAndBubble(TOUCHEND, evt);
@@ -8384,7 +8384,7 @@ var Kinetic = {};
      * @param {Number} radius
      */
 
-     /**
+    /**
      * get radius
      * @name getRadius
      * @method
@@ -8402,7 +8402,7 @@ var Kinetic = {};
      * @param {Number} angle
      */
 
-     /**
+    /**
      * set angle in degrees
      * @name setAngleDeg
      * @method
@@ -8410,7 +8410,7 @@ var Kinetic = {};
      * @param {Number} angleDeg
      */
 
-     /**
+    /**
      * get angle
      * @name getAngle
      * @method
@@ -8418,7 +8418,7 @@ var Kinetic = {};
      * @returns {Number}
      */
 
-     /**
+    /**
      * get angle in degrees
      * @name getAngleDeg
      * @method
@@ -8653,8 +8653,8 @@ var Kinetic = {};
 
             // Make a filterCanvas the same size as the cropped image
             if (this.filterCanvas &&
-                    this.filterCanvas.getWidth() === crop.width &&
-                    this.filterCanvas.getHeight() === crop.height) {
+                this.filterCanvas.getWidth() === crop.width &&
+                this.filterCanvas.getHeight() === crop.height) {
                 filterCanvas = this.filterCanvas;
                 filterCanvas.getContext().clear();
             }
@@ -8816,7 +8816,7 @@ var Kinetic = {};
      * });
      */
 
-     /**
+    /**
      * set cropX
      * @method
      * @name setCropX
@@ -8824,7 +8824,7 @@ var Kinetic = {};
      * @param {Number} x
      */
 
-     /**
+    /**
      * set cropY
      * @name setCropY
      * @method
@@ -8832,7 +8832,7 @@ var Kinetic = {};
      * @param {Number} y
      */
 
-     /**
+    /**
      * set cropWidth
      * @name setCropWidth
      * @method
@@ -8840,7 +8840,7 @@ var Kinetic = {};
      * @param {Number} width
      */
 
-     /**
+    /**
      * set cropHeight
      * @name setCropHeight
      * @method
@@ -8888,9 +8888,9 @@ var Kinetic = {};
      * @returns {Number}
      */
 
-     Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filter');
+    Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filter');
 
-     /**
+    /**
      * set filter
      * @name setFilter
      * @method
@@ -9072,7 +9072,7 @@ var Kinetic = {};
         NONE = 'none',
         ATTR_CHANGE_LIST = ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'align', 'lineHeight', 'text', 'width', 'height', 'wrap'],
 
-        // cached variables
+    // cached variables
         attrChangeListLen = ATTR_CHANGE_LIST.length,
         dummyContext = document.createElement(CANVAS).getContext(CONTEXT_2D);
 
@@ -9338,111 +9338,111 @@ var Kinetic = {};
             return dummyContext.measureText(text).width;
         },
         _setTextData: function () {
-             var lines = this.getText().split('\n'),
-                 fontSize = +this.getFontSize(),
-                 textWidth = 0,
-                 lineHeightPx = this.getLineHeight() * fontSize,
-                 width = this.attrs.width,
-                 height = this.attrs.height,
-                 fixedWidth = width !== AUTO,
-                 fixedHeight = height !== AUTO,
-                 padding = this.getPadding(),
-                 maxWidth = width - padding * 2,
-                 maxHeightPx = height - padding * 2,
-                 currentHeightPx = 0,
-                 wrap = this.getWrap(),
-                 shouldWrap = wrap !== NONE,
-                 wrapAtWord = wrap !==  CHAR && shouldWrap;
+            var lines = this.getText().split('\n'),
+                fontSize = +this.getFontSize(),
+                textWidth = 0,
+                lineHeightPx = this.getLineHeight() * fontSize,
+                width = this.attrs.width,
+                height = this.attrs.height,
+                fixedWidth = width !== AUTO,
+                fixedHeight = height !== AUTO,
+                padding = this.getPadding(),
+                maxWidth = width - padding * 2,
+                maxHeightPx = height - padding * 2,
+                currentHeightPx = 0,
+                wrap = this.getWrap(),
+                shouldWrap = wrap !== NONE,
+                wrapAtWord = wrap !==  CHAR && shouldWrap;
 
-             this.textArr = [];
-             dummyContext.save();
-             dummyContext.font = this.getFontStyle() + SPACE + fontSize + PX_SPACE + this.getFontFamily();
-             for (var i = 0, max = lines.length; i < max; ++i) {
-                 var line = lines[i],
-                     lineWidth = this._getTextWidth(line);
-                 if (fixedWidth && lineWidth > maxWidth) {
-                     /*
-                      * if width is fixed and line does not fit entirely
-                      * break the line into multiple fitting lines
-                      */
-                     while (line.length > 0) {
+            this.textArr = [];
+            dummyContext.save();
+            dummyContext.font = this.getFontStyle() + SPACE + fontSize + PX_SPACE + this.getFontFamily();
+            for (var i = 0, max = lines.length; i < max; ++i) {
+                var line = lines[i],
+                    lineWidth = this._getTextWidth(line);
+                if (fixedWidth && lineWidth > maxWidth) {
+                    /*
+                     * if width is fixed and line does not fit entirely
+                     * break the line into multiple fitting lines
+                     */
+                    while (line.length > 0) {
                         /*
                          * use binary search to find the longest substring that
                          * that would fit in the specified width
                          */
-                         var low = 0, high = line.length,
-                             match = '', matchWidth = 0;
-                         while (low < high) {
-                             var mid = (low + high) >>> 1,
-                                 substr = line.slice(0, mid + 1),
-                                 substrWidth = this._getTextWidth(substr);
-                             if (substrWidth <= maxWidth) {
-                                 low = mid + 1;
-                                 match = substr;
-                                 matchWidth = substrWidth;
-                             } else {
-                                 high = mid;
-                             }
-                         }
-                         /*
-                          * 'low' is now the index of the substring end
-                          * 'match' is the substring
-                          * 'matchWidth' is the substring width in px
-                          */
-                         if (match) {
-                             // a fitting substring was found
-                             if (wrapAtWord) {
-                                 // try to find a space or dash where wrapping could be done
-                                 var wrapIndex = Math.max(match.lastIndexOf(SPACE),
-                                                          match.lastIndexOf(DASH)) + 1;
-                                 if (wrapIndex > 0) {
-                                     // re-cut the substring found at the space/dash position
-                                     low = wrapIndex;
-                                     match = match.slice(0, low);
-                                     matchWidth = this._getTextWidth(match);
-                                 }
-                             }
-                             this._addTextLine(match, matchWidth);
-                             currentHeightPx += lineHeightPx;
-                             if (!shouldWrap ||
-                                 (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx)) {
-                                 /*
-                                  * stop wrapping if wrapping is disabled or if adding
-                                  * one more line would overflow the fixed height
-                                  */
-                                 break;
-                             }
-                             line = line.slice(low);
-                             if (line.length > 0) {
-                                 // Check if the remaining text would fit on one line
-                                 lineWidth = this._getTextWidth(line);
-                                 if (lineWidth <= maxWidth) {
-                                     // if it does, add the line and break out of the loop
-                                     this._addTextLine(line, lineWidth);
-                                     currentHeightPx += lineHeightPx;
-                                     break;
-                                 }
-                             }
-                         } else {
-                             // not even one character could fit in the element, abort
-                             break;
-                         }
-                     }
-                 } else {
-                     // element width is automatically adjusted to max line width
-                     this._addTextLine(line, lineWidth);
-                     currentHeightPx += lineHeightPx;
-                     textWidth = Math.max(textWidth, lineWidth);
-                 }
-                 // if element height is fixed, abort if adding one more line would overflow
-                 if (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx) {
-                     break;
-                 }
-             }
-             dummyContext.restore();
-             this.textHeight = fontSize;
-             this.textWidth = textWidth;
-         }
+                        var low = 0, high = line.length,
+                            match = '', matchWidth = 0;
+                        while (low < high) {
+                            var mid = (low + high) >>> 1,
+                                substr = line.slice(0, mid + 1),
+                                substrWidth = this._getTextWidth(substr);
+                            if (substrWidth <= maxWidth) {
+                                low = mid + 1;
+                                match = substr;
+                                matchWidth = substrWidth;
+                            } else {
+                                high = mid;
+                            }
+                        }
+                        /*
+                         * 'low' is now the index of the substring end
+                         * 'match' is the substring
+                         * 'matchWidth' is the substring width in px
+                         */
+                        if (match) {
+                            // a fitting substring was found
+                            if (wrapAtWord) {
+                                // try to find a space or dash where wrapping could be done
+                                var wrapIndex = Math.max(match.lastIndexOf(SPACE),
+                                    match.lastIndexOf(DASH)) + 1;
+                                if (wrapIndex > 0) {
+                                    // re-cut the substring found at the space/dash position
+                                    low = wrapIndex;
+                                    match = match.slice(0, low);
+                                    matchWidth = this._getTextWidth(match);
+                                }
+                            }
+                            this._addTextLine(match, matchWidth);
+                            currentHeightPx += lineHeightPx;
+                            if (!shouldWrap ||
+                                (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx)) {
+                                /*
+                                 * stop wrapping if wrapping is disabled or if adding
+                                 * one more line would overflow the fixed height
+                                 */
+                                break;
+                            }
+                            line = line.slice(low);
+                            if (line.length > 0) {
+                                // Check if the remaining text would fit on one line
+                                lineWidth = this._getTextWidth(line);
+                                if (lineWidth <= maxWidth) {
+                                    // if it does, add the line and break out of the loop
+                                    this._addTextLine(line, lineWidth);
+                                    currentHeightPx += lineHeightPx;
+                                    break;
+                                }
+                            }
+                        } else {
+                            // not even one character could fit in the element, abort
+                            break;
+                        }
+                    }
+                } else {
+                    // element width is automatically adjusted to max line width
+                    this._addTextLine(line, lineWidth);
+                    currentHeightPx += lineHeightPx;
+                    textWidth = Math.max(textWidth, lineWidth);
+                }
+                // if element height is fixed, abort if adding one more line would overflow
+                if (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx) {
+                    break;
+                }
+            }
+            dummyContext.restore();
+            this.textHeight = fontSize;
+            this.textWidth = textWidth;
+        }
     };
     Kinetic.Util.extend(Kinetic.Text, Kinetic.Shape);
 
@@ -9457,7 +9457,7 @@ var Kinetic = {};
      * @param {String} fontFamily
      */
 
-     /**
+    /**
      * get font family
      * @name getFontFamily
      * @method
@@ -9475,7 +9475,7 @@ var Kinetic = {};
      * @param {Number} fontSize
      */
 
-     /**
+    /**
      * get font size
      * @name getFontSize
      * @method
@@ -9493,7 +9493,7 @@ var Kinetic = {};
      * @param {String} fontStyle
      */
 
-     /**
+    /**
      * get font style
      * @name getFontStyle
      * @method
@@ -9511,7 +9511,7 @@ var Kinetic = {};
      * @param {int} padding
      */
 
-     /**
+    /**
      * get padding
      * @name getPadding
      * @method
@@ -9529,7 +9529,7 @@ var Kinetic = {};
      * @param {String} align align can be 'left', 'center', or 'right'
      */
 
-     /**
+    /**
      * get horizontal align
      * @name getAlign
      * @method
@@ -9547,7 +9547,7 @@ var Kinetic = {};
      * @param {Number} lineHeight default is 1
      */
 
-     /**
+    /**
      * get line height
      * @name getLineHeight
      * @method
@@ -9565,7 +9565,7 @@ var Kinetic = {};
      * @param {String} wrap can be word, char, or none. Default is word
      */
 
-     /**
+    /**
      * get wrap
      * @name getWrap
      * @method
@@ -10426,7 +10426,7 @@ var Kinetic = {};
      * @param {String} anim animation key
      */
 
-     /**
+    /**
      * get animation key
      * @name getAnimation
      * @method
@@ -10444,7 +10444,7 @@ var Kinetic = {};
      * @param {Object} animations
      */
 
-     /**
+    /**
      * get animations map
      * @name getAnimations
      * @method
@@ -10462,7 +10462,7 @@ var Kinetic = {};
      * @param {Image} image
      */
 
-     /**
+    /**
      * get image
      * @name getImage
      * @method
@@ -10480,7 +10480,7 @@ var Kinetic = {};
      * @param {Integer} index frame index
      */
 
-     /**
+    /**
      * get animation frame index
      * @name getIndex
      * @method
@@ -10499,7 +10499,7 @@ var Kinetic = {};
      * @param {Integer} frameRate
      */
 
-     /**
+    /**
      * get frame rate
      * @name getFrameRate
      * @method
@@ -11582,7 +11582,7 @@ var Kinetic = {};
      * @param {String} fontFamily
      */
 
-     /**
+    /**
      * get font family
      * @name getFontFamily
      * @method
@@ -11599,7 +11599,7 @@ var Kinetic = {};
      * @param {int} fontSize
      */
 
-     /**
+    /**
      * get font size
      * @name getFontSize
      * @method
@@ -11616,7 +11616,7 @@ var Kinetic = {};
      * @param {String} fontStyle
      */
 
-     /**
+    /**
      * get font style
      * @name getFontStyle
      * @method
@@ -11773,7 +11773,7 @@ var Kinetic = {};
      * @param {Number} radius
      */
 
-     /**
+    /**
      * get radius
      * @name getRadius
      * @method
@@ -11943,7 +11943,7 @@ var Kinetic = {};
      * @param {Integer} points
      */
 
-     /**
+    /**
      * get number of points
      * @name getNumPoints
      * @method
@@ -11960,7 +11960,7 @@ var Kinetic = {};
      * @param {Number} radius
      */
 
-     /**
+    /**
      * get inner radius
      * @name getInnerRadius
      * @method
@@ -11977,7 +11977,7 @@ var Kinetic = {};
      * @param {Number} radius
      */
 
-     /**
+    /**
      * get outer radius
      * @name getOuterRadius
      * @method
@@ -11995,8 +11995,8 @@ var Kinetic = {};
         LEFT = 'left',
         LABEL = 'Label',
 
-     // cached variables
-     attrChangeListLen = ATTR_CHANGE_LIST.length;
+    // cached variables
+        attrChangeListLen = ATTR_CHANGE_LIST.length;
 
     /**
      * Label constructor.&nbsp; Labels are groups that contain a Text and Tag shape
@@ -12095,8 +12095,8 @@ var Kinetic = {};
             var that = this,
                 n;
             var func = function(){
-                    that._sync();
-                };
+                that._sync();
+            };
 
             // update text data for certain attr changes
             for(n = 0; n < attrChangeListLen; n++) {
@@ -12116,12 +12116,12 @@ var Kinetic = {};
 
             if (text && tag) {
                 width = text.getWidth(),
-                height = text.getHeight(),
-                pointerDirection = tag.getPointerDirection(),
-                pointerWidth = tag.getPointerWidth(),
-                pointerHeight = tag.getPointerHeight(),
-                x = 0,
-                y = 0;
+                    height = text.getHeight(),
+                    pointerDirection = tag.getPointerDirection(),
+                    pointerWidth = tag.getPointerWidth(),
+                    pointerHeight = tag.getPointerHeight(),
+                    x = 0,
+                    y = 0;
 
                 switch(pointerDirection) {
                     case UP:
@@ -12238,7 +12238,7 @@ var Kinetic = {};
      *  default is none
      */
 
-     /**
+    /**
      * get pointer Direction
      * @name getPointerDirection
      * @method
@@ -12255,7 +12255,7 @@ var Kinetic = {};
      * @param {Number} pointerWidth
      */
 
-     /**
+    /**
      * get pointer width
      * @name getPointerWidth
      * @method
@@ -12272,7 +12272,7 @@ var Kinetic = {};
      * @param {Number} pointerHeight
      */
 
-     /**
+    /**
      * get pointer height
      * @name getPointerHeight
      * @method
@@ -12338,19 +12338,19 @@ var Kinetic = {};
 
     Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterBrightness', 0);
     /**
-    * get filter brightness.  The brightness is a number between -255 and 255.&nbsp; Positive values
-    *  increase the brightness and negative values decrease the brightness, making the image darker
-    * @name getFilterBrightness
-    * @method
-    * @memberof Kinetic.Image.prototype
-    */
+     * get filter brightness.  The brightness is a number between -255 and 255.&nbsp; Positive values
+     *  increase the brightness and negative values decrease the brightness, making the image darker
+     * @name getFilterBrightness
+     * @method
+     * @memberof Kinetic.Image.prototype
+     */
 
     /**
-    * set filter brightness
-    * @name setFilterBrightness
-    * @method
-    * @memberof Kinetic.Image.prototype
-    */
+     * set filter brightness
+     * @name setFilterBrightness
+     * @method
+     * @memberof Kinetic.Image.prototype
+     */
 })();
 ;(function() {
     /**
@@ -12374,7 +12374,7 @@ var Kinetic = {};
 ;/*
  the Gauss filter
  master repo: https://github.com/pavelpower/kineticjsGaussFilter/
-*/
+ */
 (function() {
     /*
 
@@ -12886,7 +12886,7 @@ var Kinetic = {};
     Kinetic.Filters.Mask = function(idata) {
         // Detect pixels close to the background color
         var threshold = this.getFilterThreshold(),
-                    mask = backgroundMask(idata, threshold);
+            mask = backgroundMask(idata, threshold);
         if (mask) {
             // Erode
             mask = erodeMask(mask, idata.width, idata.height);
@@ -12962,7 +12962,7 @@ var Kinetic = {};
         // hsl to rgb:
         hue /= 60;
         var rR = 0, rG = 0, rB = 0,
-            //chroma = saturation*(1 - Math.abs(2*luminance - 1)),
+        //chroma = saturation*(1 - Math.abs(2*luminance - 1)),
             tmp = chroma * (1-Math.abs(hue % 2 - 1)),
             m = luminance - chroma/2;
 
@@ -13124,10 +13124,10 @@ var Kinetic = {};
         // copy the result to the original canvas
         var lastPos = nPixels*4;
         for( pos=0; pos<lastPos; pos+=4 ){
-             pixels[pos+0] = result[pos+0];
-             pixels[pos+1] = result[pos+1];
-             pixels[pos+2] = result[pos+2];
-             //pixels[pos+3] = result[pos+3];
+            pixels[pos+0] = result[pos+0];
+            pixels[pos+1] = result[pos+1];
+            pixels[pos+2] = result[pos+2];
+            //pixels[pos+3] = result[pos+3];
         }
     };
 

@@ -1,0 +1,6 @@
+.controlset.controlset-filter .filter {
+    display:none;
+}
+.controlset.controlset-filter .filter.active {
+    display:block;
+}
