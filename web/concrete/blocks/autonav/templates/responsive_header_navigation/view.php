@@ -1,6 +1,41 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-$navItems = $controller->getNavItems();
+<script>
+    $(document).ready(function(){
+        var originalNav = $('.ccm-responsive-navigation');
+        var clonedNavigation = originalNav.clone();
+        $(originalNav).addClass('original');
+        $('.ccm-responsive-menu-overlay').append(clonedNavigation);
+        $('.ccm-responsive-menu-launch').click(function(){
+            $('.ccm-responsive-menu-launch').toggleClass('responsive-button-close');   // slide out mobile nav
+            $('.ccm-responsive-menu-overlay').slideToggle();
+        });
+        $('.ccm-responsive-menu-overlay ul li').children('ul').hide();
+        $('.ccm-responsive-menu-overlay li').each(function(index) {
+            if($(this).children('ul').size() > 0) {
+                $(this).addClass('parent-ul');
+            } else {
+                $(this).addClass('last-li');
+            }
+        });
+        $('.ccm-responsive-menu-overlay .parent-ul a').click(function(event) {
+            if(!($(this).parent('li').hasClass('last-li'))) {
+                $(this).parent('li').siblings().children('ul').hide();
+                if($(this).parent('li').children('ul').is(':visible')) {
+                } else {
+                    $(this).next('ul').show();
+                    event.preventDefault();
+                }
+            }
+        });
+    });
+</script>
+<style>
+    .ccm-responsive-mobile-menu-overlay {
+        display: none;
+    }
+</style>
+<? $navItems = $controller->getNavItems();
 
 /**
  * The $navItems variable is an array of objects, each representing a nav menu item.
@@ -110,7 +145,7 @@ foreach ($navItems as $ni) {
 
 //*** Step 2 of 2: Output menu HTML ***/
 
-echo '<nav><ul>'; //opens the top-level menu
+echo '<nav class="ccm-responsive-navigation"><ul>'; //opens the top-level menu
 
 foreach ($navItems as $ni) {
 
@@ -127,3 +162,5 @@ foreach ($navItems as $ni) {
 }
 
 echo '</ul></nav>'; //closes the top-level menu
+echo '<div class="ccm-responsive-menu-launch"><i></i></div>'; // empty i tag for attaching :after or :before psuedos for things like FontAwesome icons.
+echo '<div class="ccm-responsive-menu-overlay"></div>';
