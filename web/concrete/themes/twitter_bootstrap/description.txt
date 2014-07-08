@@ -1,2 +1,0 @@
-Twitter Bootstrap
-A concrete5 Twitter Bootstrap theme.

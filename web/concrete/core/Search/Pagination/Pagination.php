@@ -4,6 +4,7 @@ namespace Concrete\Core\Search\Pagination;
 use Concrete\Core\Search\ItemList\ItemList as AbstractItemList;
 use Pagerfanta\Adapter\AdapterInterface;
 use Pagerfanta\Pagerfanta;
+use Core;
 
 class Pagination extends Pagerfanta
 {
@@ -28,6 +29,15 @@ class Pagination extends Pagerfanta
     public function getTotalPages()
     {
         return $this->getNbPages();
+    }
+
+    /**
+     * return @\Pagerfanta\View\ViewInterface
+     */
+    public function getView()
+    {
+        $v = Core::make('pagination/view');
+        return $v;
     }
 
     public function getCurrentPageResults()

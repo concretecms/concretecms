@@ -93,13 +93,13 @@ abstract class ItemList
     public function getPagination()
     {
         $pagination = $this->createPaginationObject();
+        if ($this->itemsPerPage > -1) {
+            $pagination->setMaxPerPage($this->itemsPerPage);
+        }
         $query = \Request::getInstance()->query;
         if ($query->has($this->getQueryPaginationPageParameter())) {
             $page = intval($query->get($this->getQueryPaginationPageParameter()));
             $pagination->setCurrentPage($page);
-        }
-        if ($this->itemsPerPage > -1) {
-            $pagination->setMaxPerPage($this->itemsPerPage);
         }
         return $pagination;
     }
