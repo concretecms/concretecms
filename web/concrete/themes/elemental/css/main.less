@@ -1,12 +1,19 @@
-.ccm-page {
+/* Import bootstrap 3 mixins and variables so we can use them */
 @import "build/bootstrap-3.2.0/variables.less";
 @import "build/bootstrap-3.2.0/mixins.less";
-@import "build/mobile/navigation.less";
-@import "../../../../concrete/css/build/core/include/mixins.less";
 
+/* Import core mixins so we can use them */
+@import "../../../css/build/core/include/mixins.less";
+
+/* Import our theme variables. */
 @import "./build/variables.less";
-@import "./build/fonts.less";
 
-@import "build/header.less";
-@import "build/content.less";
+/* Import our theme fonts */
+@import "build/fonts.less";
+
+/* Our style rules - namespace so as not to collide with the core app styles */
+.ccm-page {
+  @import "build/mobile/navigation.less";
+  @import "build/header.less";
+  @import "build/content.less";
 }
