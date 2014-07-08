@@ -74,7 +74,7 @@ $.fn.ImageEditor = function (settings) {
 $.fn.slideOut = function (time, callback) {
     var me = $(this),
         startWidth = me.width(),
-        totalWidth = 300;
+        totalWidth = 255;
     me.css('overflow-y', 'auto');
     if (startWidth == totalWidth) {
         me.animate({width: totalWidth}, 0, callback);

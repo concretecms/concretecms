@@ -53,7 +53,7 @@ var vignette = function (data, stuff, size, strength) {
     if (strength == null) {
         strength = 60;
     }
-    size = '50%';
+
     if (typeof size === 'string' && size.substr(-1) === "%") {
         size = Math.min(width, height) * Number(size.substr(0, size.length - 1)) / 100;
     }
@@ -75,7 +75,6 @@ var vignette = function (data, stuff, size, strength) {
     }
 };
 
-
 var me = this;
 im.bind('filterFullyLoaded', function (e, data) {
     if (data.im.namespace === me.im.namespace) {
@@ -89,19 +88,48 @@ im.bind('filterChange', function (e, data) {
         _.defer(function () {
             // Just apply, there is no variation.
 
-            im.activeElement.setFilter(vignette);
-            im.activeElement.applyFilter();
-
-            im.hideLoader();
-            im.fire('VignetteFilterDidFinish');
-            im.fire('filterApplied', me);
+            updateVignette();
             // Apply Filter
         }); // Allow loader to show
     }
 });
 im.bind('filterApplyExample', function (e, data) {
     if (data.namespace === me.im.namespace) {
-        data.image.setFilter(vignette);
+        data.image.setFilter(_.partial(vignette, _, _, '50%', '50'));
         im.fire('filterBuiltExample', me, data.elem);
+    }
+});
+
+var updateVignette = _.debounce(function() {
+    $.fn.dialog.showLoader();
+    im.activeElement.setFilter(_.partial(vignette, _, _, size_slider.slider('value') + '%', strength_slider.slider('value')));
+    im.activeElement.applyFilter();
+    $.fn.dialog.hideLoader();
+
+    im.fire('VignetteFilterDidFinish');
+    im.fire('filterApplied', me);
+}, 250);
+
+var elem = im.controlContext.find('.filter.filter-vignette');
+var strength_percent = elem.find('.strength-percent');
+var strength_slider = elem.find('.strength-slider').slider({
+    value: 60,
+    step: 1,
+    max: 100,
+    min: 1,
+    slide: function(event, data) {
+        updateVignette();
+        strength_percent.text(data.value + '%');
+    }
+});
+var size_percent = elem.find('.size-percent');
+var size_slider = elem.find('.size-slider').slider({
+    value: 50,
+    step: 1,
+    max: 100,
+    min: 1,
+    slide: function(event, data) {
+        updateVignette();
+        size_percent.text(data.value + '%');
     }
 });

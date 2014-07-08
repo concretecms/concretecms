@@ -997,7 +997,7 @@ im.showSlideOut = function(contents,callback) {
     im.slideOutContents = contents.width(300);
     im.slideOut.append(im.slideOutContents)
     im.slideOut.addClass('active').addClass('sliding');
-    im.slideOut.stop(1).slideOut(300,function(){
+    im.slideOut.stop(1).slideOut(300, function(){
       im.slideOut.removeClass('sliding');
       ((typeof callback === 'function') && callback());
     });
@@ -1011,7 +1011,8 @@ im.hideSlideOut = function(callback) {
     ((typeof callback === 'function') && callback());
   });
 };
-im.controlContext.after(im.slideOut);    // End the ImageEditor object.
+im.controlContext.after(im.slideOut);
+    // End the ImageEditor object.
 
     im.setActiveElement(im.stage);
 
@@ -1087,7 +1088,7 @@ $.fn.ImageEditor = function (settings) {
 $.fn.slideOut = function (time, callback) {
     var me = $(this),
         startWidth = me.width(),
-        totalWidth = 300;
+        totalWidth = 255;
     me.css('overflow-y', 'auto');
     if (startWidth == totalWidth) {
         me.animate({width: totalWidth}, 0, callback);

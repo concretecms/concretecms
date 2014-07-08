@@ -1,5 +1,9 @@
 var me = $(this);
 
+me.find('.cancelbutton').click(function() {
+    im.activeElement.clearFilter();
+    im.activeElement.draw();
+});
 im.selected = false;
 im.bind('ChangeActiveAction', function (e, data) {
     if (data != im.namespace) {
