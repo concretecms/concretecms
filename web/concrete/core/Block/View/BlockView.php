@@ -119,7 +119,7 @@ class BlockView extends AbstractView {
 
 		switch($view) {
 			case 'view':
-                if (is_object($this->block)) {
+                if (is_object($this->block) && is_object($this->area)) {
     				$this->setBlockViewHeaderFile(DIR_FILES_ELEMENTS_CORE . '/block_header_view.php');
 	    			$this->setBlockViewFooterFile(DIR_FILES_ELEMENTS_CORE . '/block_footer_view.php');
                 }

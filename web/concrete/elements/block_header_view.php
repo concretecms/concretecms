@@ -4,11 +4,9 @@ $c = $b->getBlockCollectionObject();
 $blockStyle = $b->getBlockCustomStyleRule();
 $pt = $c->getCollectionThemeObject();
 $a = $b->getBlockAreaObject();
-
 if (!is_object($a)) {
     $a = Area::get($c, $b->getAreaHandle());
 }
-
 if (is_object($blockStyle)) { ?>
 	<div id="<?=$blockStyle->getCustomStyleRuleCSSID(true)?>" class="<?=$blockStyle->getCustomStyleRuleClassName() ?> ccm-block-styles" >
 <? } ?>
@@ -30,6 +28,7 @@ if (
 }
 
 $p = new Permissions($b);
+
 if ($a->showControls && $p->canViewEditInterface()) {
     $arHandle = $a->getAreaHandle();
 
