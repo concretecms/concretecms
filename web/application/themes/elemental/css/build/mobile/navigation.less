@@ -1,0 +1,50 @@
+.ccm-responsive-menu-overlay {
+  display: none;
+  position: absolute;
+  border-bottom: 5px solid #1b7bbc;
+  width: 100%;
+  z-index: 99;
+  top: 72px;
+  left: 0px;
+}
+
+.ccm-responsive-menu-launch {
+  display: none;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  i {
+    &:after {
+      content: "\f002";
+      font-family: FontAwesome;
+      font-weight: normal;
+      font-style: normal;
+      display: inline-block;
+      cursor: pointer;
+      text-decoration: inherit;
+      &.responsive-button-close {
+        &:after {
+          content: "\f002";
+          font-family: FontAwesome;
+          font-weight: normal;
+          font-style: normal;
+          display: inline-block;
+          cursor: pointer;
+          text-decoration: inherit;
+        }
+      }
+    }
+  }
+}
+
+@media all and (max-width: @screen-xs-max) {
+
+  .ccm-responsive-menu-launch {
+    display: block;
+  }
+
+  .ccm-responsive-navigation.original {
+    display: none;
+  }
+
+}
