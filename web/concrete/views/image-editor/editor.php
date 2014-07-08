@@ -1,10 +1,9 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-use Aws\CloudFront\Exception\Exception;
-use \Concrete\Core\Http\ResponseAssetGroup;
-use \Concrete\Core\ImageEditor\ControlSet as SystemImageEditorControlSet;
-use \Concrete\Core\ImageEditor\Filter as SystemImageEditorFilter;
-use \Concrete\Core\ImageEditor\Component as SystemImageEditorComponent;
+use Concrete\Core\Http\ResponseAssetGroup;
+use Concrete\Core\ImageEditor\Component as SystemImageEditorComponent;
+use Concrete\Core\ImageEditor\ControlSet as SystemImageEditorControlSet;
+use Concrete\Core\ImageEditor\Filter as SystemImageEditorFilter;
 use Whoops\Exception\ErrorException;
 
 $editorid = substr(sha1(time()), 0, 5); // Just enough entropy.
@@ -27,7 +26,7 @@ $filters = SystemImageEditorFilter::getList();
 ?>
 <div class='table ccm-ui'>
     <div class='editorcontainer'>
-        <div id='<?=$editorid?>' class='Editor'></div>
+        <div id='<?= $editorid ?>' class='Editor'></div>
         <div class='bottomBar'></div>
     </div>
     <div class='controls'>
@@ -35,15 +34,18 @@ $filters = SystemImageEditorFilter::getList();
             <div class='editorcontrols'>
                 <div class='control-sets'>
                     <?php
-                    if (!$controlsets) echo "&nbsp;";
-                    foreach($controlsets as $controlset) {
+                    if (!$controlsets) {
+                        echo "&nbsp;";
+                    }
+                    foreach ($controlsets as $controlset) {
                         $handle = $controlset->getHandle();
                         ?>
                         <link rel='stylesheet' href='<?= $controlset->getCssPath() ?>'>
                         <div class="controlset controlset-<?= $controlset->gethandle() ?>"
-                            data-namespace="<?= $controlset->getHandle() ?>"
-                            data-src="<?= $controlset->getJavascriptPath() ?>">
+                             data-namespace="<?= $controlset->getHandle() ?>"
+                             data-src="<?= $controlset->getJavascriptPath() ?>">
                             <h4><?= $controlset->getDisplayName() ?></h4>
+
                             <div class="control">
                                 <div class="contents">
                                     <?php
@@ -60,7 +62,7 @@ $filters = SystemImageEditorFilter::getList();
                             </div>
                             <div class='border'></div>
                         </div>
-                        <?php
+                    <?php
                     }
                     ?>
                 </div>
@@ -74,31 +76,40 @@ $filters = SystemImageEditorFilter::getList();
 </div>
 
 <script>
-    $(function(){
-        _.defer(function(){
-            var settings = {src:'<?=$fv->getURL()?>',fID:<?=$fv->fID?>,controlsets:{},filters:{},components:{},debug:true};
-            $('div.controlset','div.controls').each(function(){
+    $(function () {
+        _.defer(function () {
+            var settings = {src: '<?=$fv->getURL()?>', fID:<?=$fv->fID?>, controlsets: {}, filters: {}, components: {}, debug: true};
+            $('div.controlset', 'div.controls').each(function () {
                 settings.controlsets[$(this).attr('data-namespace')] = {
-                    src:$(this).attr('data-src'),
+                    src: $(this).attr('data-src'),
                     element: $(this).children('div.control').children('div.contents')
                 }
             });
-            $('div.component','div.controls').each(function(){
+            $('div.component', 'div.controls').each(function () {
                 settings.components[$(this).attr('data-namespace')] = {
-                    src:$(this).attr('data-src'),
+                    src: $(this).attr('>getdata-src'),
                     element: $(this).children('div.control').children('div.contents')
                 }
             });
             settings.filters = <?php
       $fnames = array();
       foreach ($filters as $filter) {
-        $handle = $filter->getImageEditorFilterHandle();
-        $fnames[$handle] = array("src"=>"/concrete/js/image-editor/filters/{$handle}.js","name"=>$filter->getImageEditorFilterDisplayName('text'));
+        $handle = $filter->getHandle();
+        $fnames[$handle] = array(
+            "src" => $filter->getJavascriptPath(),
+            "name" => $filter->getDisplayName('text'),
+            "selector" => '.filter.filter-' . $handle);
       }
       echo Loader::helper('json')->encode($fnames);
     ?>;
             var editor = $('div#<?=$editorid?>.Editor');
-            window.im = editor.closest('.ui-dialog-content').css('padding',0).end().ImageEditor(settings);
+            window.im = editor.closest('.ui-dialog-content').css('padding', 0).end().ImageEditor(settings);
         });
     });
 </script>
+<?php
+foreach ($filters as $filter) {
+    ?>
+    <link rel='stylesheet' href='<?= $filter->getCssPath() ?>'>
+    <?php
+}
