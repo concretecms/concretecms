@@ -1,10 +1,10 @@
 im.stage.setDragBoundFunc(function (ret) {
     var dim = im.stage.getTotalDimensions();
 
-    var maxx = Math.max(dim.max.x, dim.min.x) - 1,
-        minx = Math.min(dim.max.x, dim.min.x) + 1,
-        maxy = Math.max(dim.max.y, dim.min.y) - 1,
-        miny = Math.min(dim.max.y, dim.min.y) + 1;
+    var maxx = Math.max(dim.max.x, dim.min.x) + 100,
+        minx = Math.min(dim.max.x, dim.min.x) - 100,
+        maxy = Math.max(dim.max.y, dim.min.y) + 100,
+        miny = Math.min(dim.max.y, dim.min.y) - 100;
 
     ret.x = Math.floor(ret.x);
     ret.y = Math.floor(ret.y);

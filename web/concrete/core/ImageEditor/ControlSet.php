@@ -184,7 +184,8 @@ class ControlSet
         return true;
     }
 
-    public function getAssetPath($directory, $extension, $full_path) {
+    public function getAssetPath($directory, $extension, $full_path)
+    {
         $file = $this->getHandle() . $extension;
 
         if ($this->pkgID) {
@@ -204,15 +205,18 @@ class ControlSet
         return ($full_path ? DIR_BASE : '') . '/concrete' . $path;
     }
 
-    public function getViewPath() {
+    public function getViewPath()
+    {
         return $this->getAssetPath('views', '.php', true);
     }
 
-    public function getJavascriptPath() {
+    public function getJavascriptPath()
+    {
         return $this->getAssetPath('js', '.js', false);
     }
 
-    public function getCssPath() {
+    public function getCssPath()
+    {
         return $this->getAssetPath('css', '.css', false);
     }
 

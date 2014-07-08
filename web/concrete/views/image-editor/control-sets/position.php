@@ -1,6 +1,19 @@
 <div class="row">
     <div class="col-sm-10 row form-horizontal">
         <div class="form-group">
+            <label for="scale" class="control-label col-sm-4"><?= t('Scale') ?></label>
+            <div class="col-sm-8 scale-container">
+                <div class="scale-slider"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-2">
+        <span class="scale-percent">100%</span>
+    </div>
+</div>
+<div>
+    <div class="col-sm-10 row form-horizontal">
+        <div class="form-group">
             <label for="width" class="control-label col-sm-4"><?= t('Width') ?></label>
 
             <div class="input-group col-sm-8">

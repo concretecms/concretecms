@@ -6,6 +6,7 @@ im.bind('changeActiveElement', function () {
     ratio = im.activeElement.getWidth() / im.activeElement.getHeight();
     height_input.val(im.activeElement.getHeight());
     width_input.val(im.activeElement.getWidth());
+    resetScale();
 });
 
 function Rotation(im, me) {
@@ -123,6 +124,48 @@ im.bind('sizeChanged', function (event, data) {
 
     width_input.val(data.width);
     height_input.val(data.height);
+
+    if (!data.scale) {
+        resetScale();
+    }
+});
+
+var percent = $('span.scale-percent');
+var scale = $('div.scale-slider');
+var scale_width = 0, scale_height = 0, fired_from_scale = false;
+
+var resetScale = function() {
+    scale_width = im.activeElement.getWidth();
+    scale_height = im.activeElement.getHeight();
+    scale.slider('value', 100);
+    percent.text('100%');
+};
+
+var resetDebounced = _.debounce(function() {
+    resetScale();
+}, 2000);
+
+scale.slider({
+    value: 100,
+    min: 10,
+    max: 500,
+    step: 5,
+    slide: function(event, data) {
+        new_width = Math.round(scale_width * (data.value / 100));
+        new_height = Math.round(scale_height * (data.value / 100));
+        im.activeElement.setWidth(new_width);
+        im.activeElement.setHeight(new_height);
+        im.adjustSavers();
+
+        percent.text(data.value + '%');
+        resetDebounced();
+
+        im.fire('sizeChanged', {
+            width: new_width,
+            height: new_height,
+            scale: true
+        });
+    }
 });
 
 function Crop() {
