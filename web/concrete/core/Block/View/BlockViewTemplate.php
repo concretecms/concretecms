@@ -5,6 +5,7 @@ use Environment;
 use CacheLocal;
 use AssetList;
 use View;
+use Block;
 use \Concrete\Core\Package\PackageList;
 use \Concrete\Core\Asset\JavascriptAsset;
 use \Concrete\Core\Asset\CSSAsset;
@@ -129,7 +130,7 @@ class BlockViewTemplate {
 			$template = $bv->getBlockPath($this->render) . '/' . $this->render;
 			$this->baseURL = $bv->getBlockURL($this->render);
 		}
-		
+
 		if ($this->basePath == '') {
 			$this->basePath = dirname($template);
 		}
