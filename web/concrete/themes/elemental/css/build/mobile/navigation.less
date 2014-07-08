@@ -1,38 +1,101 @@
-.ccm-responsive-menu-overlay {
+.ccm-responsive-overlay {
+  background: white;
   display: none;
   position: absolute;
-  border-bottom: 5px solid #1b7bbc;
+  border-bottom: 5px solid @header-brand-color;
   width: 100%;
   z-index: 99;
-  top: 72px;
+  top: 147px;
   left: 0px;
+  padding-top: 15px;
+  padding-left: 20px;
+  -webkit-text-size-adjust: none;
+  ul {
+    padding-left: 0;
+    li {
+      list-style-type: none;
+      &.parent-ul {
+        a {
+          &:after {
+            padding-left: 7px;
+            padding-top: 3px;
+            font-size: 20px;
+            content: "\f107";
+            font-family: FontAwesome;
+            font-weight: normal;
+            font-style: normal;
+            display: inline-block;
+            cursor: pointer;
+            text-decoration: inherit;
+          }
+        }
+      }
+      a {
+        &:hover {
+          color: @header-navigation-hover-color;;
+        }
+        color: @header-navigation-text-color;
+        font-size: 18px;
+        display: inline-block;
+        width: 80%;
+        padding: 7px 5% 7px 0px;
+        margin: 0% 5% 0% 0;
+        padding-left: 15px;
+        height: 100%;
+        font-weight: 200;
+        text-decoration: none;
+      }
+      ul {
+        li {
+          &.last-li {
+            a{
+              padding-top: 0px;
+              font-size: 15px;
+              &:after {
+                content: '';
+              }
+            }
+          }
+          padding-left: 10px;
+        }
+      }
+      display: block;
+    }
+  }
 }
+
 
 .ccm-responsive-menu-launch {
   display: none;
-  width: 25px;
-  height: 25px;
   cursor: pointer;
+  margin-top: 10px;
+  float: right;
+  &.responsive-button-close {
+    i {
+      &:after {
+        font-size: 20px;
+        color: @header-navigation-text-color;
+        content: "\f077";
+        font-family: FontAwesome;
+        font-weight: normal;
+        font-style: normal;
+        display: inline-block;
+        cursor: pointer;
+        text-decoration: inherit;
+      }
+    }
+  }
   i {
     &:after {
-      content: "\f002";
+      font-size: 20px;
+      content: "\f0c9";
       font-family: FontAwesome;
+      color: @header-navigation-text-color;
       font-weight: normal;
       font-style: normal;
       display: inline-block;
       cursor: pointer;
       text-decoration: inherit;
-      &.responsive-button-close {
-        &:after {
-          content: "\f002";
-          font-family: FontAwesome;
-          font-weight: normal;
-          font-style: normal;
-          display: inline-block;
-          cursor: pointer;
-          text-decoration: inherit;
-        }
-      }
     }
   }
 }
@@ -47,4 +110,10 @@
     display: none;
   }
 
+}
+
+@media all and (min-width: @screen-xs-max) {
+  .ccm-responsive-overlay {
+    display: none !important;
+  }
 }
