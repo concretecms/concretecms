@@ -232,8 +232,11 @@ class User extends Object
     {
         $db = Loader::db();
         $uLastLogin = $db->getOne("select uLastLogin from Users where uID = ?", array($this->uID));
-
-        $db->query("update Users set uLastIP = ?, uLastLogin = ?, uPreviousLogin = ?, uNumLogins = uNumLogins + 1 where uID = ?", array(ip2long(Loader::helper('validation/ip')->getRequestIP()), time(), $uLastLogin, $this->uID));
+        $ip = ip2long(Loader::helper('validation/ip')->getRequestIP());
+        if (empty($ip)) {
+            $ip = 0;
+        }
+        $db->query("update Users set uLastIP = ?, uLastLogin = ?, uPreviousLogin = ?, uNumLogins = uNumLogins + 1 where uID = ?", array($ip, time(), $uLastLogin, $this->uID));
     }
 
     public function recordView($c)
