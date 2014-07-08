@@ -21,10 +21,7 @@ im.bind('load', function(){
 }, im.bgimage);
 im.bgimage.src = '/concrete/images/testbg.png';
 im.buildBackground = function() {
-  var startbb = (new Date).getTime();
-
   var dimensions = im.stage.getTotalDimensions();
-  var to = (dimensions.max.x + dimensions.visibleHeight + dimensions.visibleWidth) * 2;
 
   im.saveArea.setFillPatternOffset([-(im.saveWidth/2) * im.scale,-(im.saveHeight/2) * im.scale]);
   im.saveArea.setX(Math.round(im.center.x - (im.saveWidth / 2)));
@@ -49,6 +46,7 @@ im.buildBackground = function() {
   //im.foreground.moveToTop();
   im.saveArea.draw();
   im.coverLayer.draw();
+    debugger;
 };
 
 im.buildBackground();

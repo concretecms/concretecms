@@ -16,7 +16,7 @@ im.showSlideOut = function(contents,callback) {
     im.slideOutContents = contents.width(300);
     im.slideOut.append(im.slideOutContents)
     im.slideOut.addClass('active').addClass('sliding');
-    im.slideOut.stop(1).slideOut(300,function(){
+    im.slideOut.stop(1).slideOut(300, function(){
       im.slideOut.removeClass('sliding');
       ((typeof callback === 'function') && callback());
     });
