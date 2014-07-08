@@ -10,6 +10,7 @@ $editorid = substr(sha1(time()), 0, 5); // Just enough entropy.
 
 $u = new User();
 $form = Loader::helper('form');
+/** @var FileVersion $fv */
 $f = $fv->getFile();
 $fp = new Permissions($f);
 if (!$fp->canEditFileContents()) {
@@ -78,7 +79,7 @@ $filters = SystemImageEditorFilter::getList();
 <script>
     $(function () {
         _.defer(function () {
-            var settings = {src: '<?=$fv->getURL()?>', fID:<?=$fv->fID?>, controlsets: {}, filters: {}, components: {}, debug: true};
+            var settings = {src: '<?=$fv->getURL()?>', fID:<?= $fv->getFileID() ?>, controlsets: {}, filters: {}, components: {}, debug: true};
             $('div.controlset', 'div.controls').each(function () {
                 settings.controlsets[$(this).attr('data-namespace')] = {
                     src: $(this).attr('data-src'),
