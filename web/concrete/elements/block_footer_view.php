@@ -2,6 +2,14 @@
 
 defined('C5_EXECUTE') or die("Access Denied.");
 
+if ($a->isGlobalArea()) {
+    $c = Page::getCurrentPage();
+    $cID = $c->getCollectionID();
+} else {
+    $cID = $b->getBlockCollectionID();
+    $c = $b->getBlockCollectionObject();
+}
+
 ?>
 
 </div>
@@ -17,9 +25,13 @@ if (
     print $gf->getPageThemeGridFrameworkRowEndHTML();
     print $gf->getPageThemeGridFrameworkContainerEndHTML();
 }
-?>
 
-</div>
+$p = new Permissions($b);
+$showMenu = false;
+if ($a->showControls() && $c->isEditMode() && $p->canViewEditInterface()) { ?>
+    </div>
+<? } ?>
+
 
 <? if ($blockStyle && $blockStyle->getCustomStyleRuleID()) {
     ?>

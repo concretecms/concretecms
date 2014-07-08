@@ -1,17 +1,30 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-$c = $b->getBlockCollectionObject();
+
+if ($a->isGlobalArea()) {
+    $c = Page::getCurrentPage();
+    $cID = $c->getCollectionID();
+} else {
+    $cID = $b->getBlockCollectionID();
+    $c = $b->getBlockCollectionObject();
+}
+
+$p = new Permissions($b);
+$showMenu = false;
+if ($a->showControls() && $c->isEditMode() && $p->canViewEditInterface()) {
+    $showMenu = true;
+}
+
 $blockStyle = $b->getBlockCustomStyleRule();
 $pt = $c->getCollectionThemeObject();
-$a = $b->getBlockAreaObject();
-if (!is_object($a)) {
-    $a = Area::get($c, $b->getAreaHandle());
-}
+
 if (is_object($blockStyle)) { ?>
 	<div id="<?=$blockStyle->getCustomStyleRuleCSSID(true)?>" class="<?=$blockStyle->getCustomStyleRuleClassName() ?> ccm-block-styles" >
 <? } ?>
 
-<div data-container="block">
+<? if ($showMenu) { ?>
+    <div data-container="block">
+<? } ?>
 
 <?
 if (
@@ -27,9 +40,7 @@ if (
     ));
 }
 
-$p = new Permissions($b);
-
-if ($a->showControls && $p->canViewEditInterface()) {
+if ($showMenu) {
     $arHandle = $a->getAreaHandle();
 
     $btw = BlockType::getByID($b->getBlockTypeID());
@@ -43,14 +54,6 @@ if ($a->showControls && $p->canViewEditInterface()) {
 
     if ($b->getBlockTypeHandle() == BLOCK_HANDLE_STACK_PROXY) {
         $class .= ' ccm-block-stack ';
-    }
-
-    if ($a->isGlobalArea()) {
-        $c = Page::getCurrentPage();
-        $cID = $c->getCollectionID();
-    } else {
-        $cID = $b->getBlockCollectionID();
-        $c = $b->getBlockCollectionObject();
     }
     $editInline = false;
     if ($btw->supportsInlineEdit()) {

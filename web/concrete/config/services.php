@@ -8,6 +8,7 @@ return array(
     '\Concrete\Core\Localization\LocalizationServiceProvider',
     '\Concrete\Core\Feed\FeedServiceProvider',
     '\Concrete\Core\Html\HtmlServiceProvider',
+    '\Concrete\Core\Search\PaginationServiceProvider',
     '\Concrete\Core\Mail\MailServiceProvider',
     '\Concrete\Core\Application\ApplicationServiceProvider',
     '\Concrete\Core\Utility\UtilityServiceProvider',

@@ -262,6 +262,7 @@ class BlockView extends AbstractView {
 		$items = parent::getScopeItems();
 		$items['b'] = $this->block;
 		$items['bt'] = $this->blockType;
+        $items['a'] = $this->area;
 		return $items;
 	}
 

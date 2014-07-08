@@ -36,7 +36,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     /**
      * @var boolean
      */
-    public $showControls = true;
+    protected $showControls = true;
 
     /**
      * @var string
@@ -63,6 +63,11 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     public function setAreaDisplayName($arDisplayName)
     {
         $this->arDisplayName = $arDisplayName;
+    }
+
+    public function showControls()
+    {
+        return $this->showControls;
     }
 
     public function setAreaGridMaximumColumns($cspan)
@@ -694,6 +699,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         foreach ($blocksToDisplay as $b) {
             $includeEditStrip = false;
             $bv = new BlockView($b);
+            $bv->setAreaObject($this);
             $p = new Permissions($b);
             if ($p->canViewBlock()) {
                 if (!$c->isEditMode()) {

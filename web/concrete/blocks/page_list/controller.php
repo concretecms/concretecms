@@ -32,7 +32,7 @@ class Controller extends BlockController {
 		);
 	}
 
-	public function getPageList() {
+	protected function getPageList() {
 		$db = Loader::db();
 		$bID = $this->bID;
 		if ($this->bID) {
@@ -53,7 +53,7 @@ class Controller extends BlockController {
 
 
 		$pl = new PageList();
-		$pl->setNameSpace('b' . $this->bID);
+		//$pl->setNameSpace('b' . $this->bID);
 
 		$cArray = array();
 
@@ -77,10 +77,6 @@ class Controller extends BlockController {
 				$pl->sortByPublicDateDescending();
 				break;
 		}
-
-		$num = (int) $row['num'];
-
-		$pl->setItemsPerPage($num);
 
 		$c = Page::getCurrentPage();
 		if (is_object($c)) {
@@ -118,27 +114,10 @@ class Controller extends BlockController {
 		return $pl;
 	}
 
-
-	public function getPages() {
-		$pl = $this->getPageList();
-
-		if ($pl->getItemsPerPage() > 0) {
-			$pages = $pl->getPage();
-		} else {
-			$pages = $pl->get();
-		}
-		$this->set('pl', $pl);
-		return $pages;
-	}
-
-
-
 	public function view() {
-		$cArray = $this->getPages();
+		$list = $this->getPageList();
 		$nh = Loader::helper('navigation');
 		$this->set('nh', $nh);
-		$this->set('cArray', $cArray); //Legacy (pre-5.4.2)
-		$this->set('pages', $cArray); //More descriptive variable name (introduced in 5.4.2)
 
 		//RSS...
 		$showRss = false;
@@ -154,21 +133,30 @@ class Controller extends BlockController {
 
 		//Pagination...
 		$showPagination = false;
-		$paginator = null;
-		$pl = $this->get('pl'); //Terrible horrible hacky way to get the $pl object set in $this->getPages() -- we need to do it this way for backwards-compatibility reasons
-		if ($this->paginate && $this->num > 0 && is_object($pl)) {
-			$description = $pl->getSummary();
-			if ($description->pages > 1) {
-				$showPagination = true;
-				$paginator = $pl->getPagination();
+		if ($this->paginate && $this->num > 0 && is_object($list)) {
+            $list->setItemsPerPage($this->num);
+            $pagination = $list->getPagination();
+            $pages = $pagination->getCurrentPageResults();
+            if ($pagination->getTotalPages() > 1) {
+                $showPagination = true;
+                $view = $pagination->getView();
+                $c = Page::getCurrentPage();
+                $url = $c->getCollectionLink();
+                $pagination = $view->render($pagination, function($page) use ($list, $url, $result) {
+                    return $url . '?' . $list->getQueryPaginationPageParameter() . '=' . $page;
+                });
+                $this->set('pagination', $pagination);
 			}
-		}
+		} else {
+            $pages = $list->getResults();
+        }
+
 		if ($showPagination) {
 			$this->requireAsset('css', 'core/frontend/pagination');
 		}
+        $this->set('pages', $pages);
+        $this->set('list', $list);
 		$this->set('showPagination', $showPagination);
-		$this->set('paginator', $paginator);
-
 	}
 
 	// this doesn't work yet
