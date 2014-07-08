@@ -1,11 +1,9 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
     <themes>
-        <theme handle="twitter_bootstrap" package="" activated="1"/>
+        <theme handle="elemental" package="" activated="1"/>
     </themes>
     <pagetemplates>
-        <pagetemplate handle="right_sidebar" name="Right Sidebar" icon="right_sidebar.png" package="" />
-        <pagetemplate handle="two_column" name="Two Column" icon="2col" package="" />
         <pagetemplate handle="full" name="Full" icon="full.png" package="" />
     </pagetemplates>
     <pagetypes>
@@ -26,16 +24,7 @@
         </set>
       </formlayout>
       <output>
-        <pagetemplate handle="right_sidebar">
-          <page>
-            <area name="Main">
-              <block type="core_page_type_composer_control_output" name="">
-                <control output-control-id="EcjltFnE"/>
-              </block>
-            </area>
-          </page>
-        </pagetemplate>
-        <pagetemplate handle="two_column">
+        <pagetemplate handle="full">
           <page>
             <area name="Main">
               <block type="core_page_type_composer_control_output" name="">
@@ -49,7 +38,7 @@
     </pagetype>
     </pagetypes>
     <pages>
-	<page name="Home" path="" filename="" template="two_column" pagetype="page" description="" package="">
+	<page name="Home" path="" filename="" template="full" pagetype="page" description="" package="">
 	</page>
     </pages>
 </concrete5-cif>
