@@ -12,15 +12,28 @@ abstract class ItemList
     protected $sortByDirection;
     protected $autoSortColumns = array();
     protected $itemsPerPage = -1; // determined by the pagination object.
+    protected $debug = false;
 
     abstract protected function executeSortBy($field, $direction = 'asc');
     abstract public function executeGetResults();
     abstract public function getResult($mixed);
+    abstract public function debugStart();
+    abstract public function debugStop();
 
     /**
      * @return \Concrete\Core\Search\Pagination\Pagination
      */
     abstract protected function createPaginationObject();
+
+    public function debug()
+    {
+        $this->debug = true;
+    }
+
+    public function isDebugged()
+    {
+        return $this->debug;
+    }
 
     public function sortBy($field, $direction = 'asc')
     {
@@ -33,7 +46,13 @@ abstract class ItemList
     public function getResults()
     {
         $results = array();
+
+        $this->debugStart();
+
         $executeResults = $this->executeGetResults();
+
+        $this->debugStop();
+
         foreach($executeResults as $result) {
             $r = $this->getResult($result);
             if ($r != null) {

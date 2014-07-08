@@ -133,11 +133,11 @@ class Controller extends BlockController {
 
 		//Pagination...
 		$showPagination = false;
-		if ($this->paginate && $this->num > 0 && is_object($list)) {
+		if ($this->num > 0) {
             $list->setItemsPerPage($this->num);
             $pagination = $list->getPagination();
             $pages = $pagination->getCurrentPageResults();
-            if ($pagination->getTotalPages() > 1) {
+            if ($pagination->getTotalPages() > 1 && $this->paginate) {
                 $showPagination = true;
                 $view = $pagination->getView();
                 $c = Page::getCurrentPage();
