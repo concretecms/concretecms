@@ -5,8 +5,8 @@ Route::setThemeByRoute('/dashboard/*', 'dashboard');
 Route::setThemeByRoute('/account', VIEW_CORE_THEME);
 Route::setThemeByRoute('/account/*', VIEW_CORE_THEME);
 
-Route::setThemeByRoute('/page_forbidden', VIEW_CORE_THEME);
-Route::setThemeByRoute('/page_not_found', VIEW_CORE_THEME);
+//Route::setThemeByRoute('/page_forbidden', VIEW_CORE_THEME);
+//Route::setThemeByRoute('/page_not_found', VIEW_CORE_THEME);
 Route::setThemeByRoute('/install', VIEW_CORE_THEME);
 Route::setThemeByRoute('/login', VIEW_CORE_THEME);
 Route::setThemeByRoute('/register', VIEW_CORE_THEME);
