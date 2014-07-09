@@ -5,10 +5,16 @@ $blocks = $as->getTotalBlocksInArea();
 $displayThirdColumn = $blocks > 0 || $c->isEditMode();
 
 ?>
+
 <header>
     <div class="container">
         <div class="row">
-            <div class="col-md-4 col-xs-6"><span id="header-site-title">Elemental</span></div>
+            <div class="col-md-4 col-xs-6">
+                <?
+                $a = new GlobalArea('Header Site Title');
+                $a->display();
+                ?>
+            </div>
             <div class="<? if ($displayThirdColumn) { ?>col-md-5 col-xs-6<? } else { ?>col-md-8 col-xs-6<? } ?>">
                 <?
                 $a = new GlobalArea('Header Navigation');
