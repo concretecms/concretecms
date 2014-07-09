@@ -549,6 +549,7 @@ class BlockType
 
         $class = static::getBlockTypeMappedClass($this->btHandle, $pkgHandle);
         $bta = new $class;
+
         $this->loadFromController($bta);
 
         $em = DB::get()->getEntityManager();

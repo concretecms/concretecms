@@ -27,6 +27,7 @@
         <blocktype handle="flash_content" package=""/>
         <blocktype handle="form" package=""/>
         <blocktype handle="page_title" package=""/>
+        <blocktype handle="social_links" package=""/>
         <blocktype handle="google_map" package=""/>
         <blocktype handle="html" package=""/>
         <blocktype handle="horizontal_rule" package=""/>
@@ -78,6 +79,7 @@
         <blocktypeset handle="social" name="Social Networking" package="">
             <blocktype handle="survey"/>
             <blocktype handle="core_conversation" />
+            <blocktype handle="social_links" />
             <blocktype handle="discussion"/>
         </blocktypeset>
         <blocktypeset handle="multimedia" name="Multimedia" package="">
