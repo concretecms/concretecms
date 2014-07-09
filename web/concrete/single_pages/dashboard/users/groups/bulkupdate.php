@@ -115,12 +115,9 @@ $(function() {
           <? } ?>
           'removeNodesByID': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
           'onSelect': function(select, node) {
-            console.log('here i am');
              if (select) {
-                alert('Changing val of it to' + node.data.key);
                 $('input[name=gParentNodeID]').val(node.data.key);
              } else {
-                alert('its blank');
                 $('input[name=gParentNodeID]').val('');
              }
           }
