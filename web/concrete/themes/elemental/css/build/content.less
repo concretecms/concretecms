@@ -3,15 +3,30 @@
 }
 main {
 
-  font-family: @main-content-font-family;
-  font-weight: 400;
-  font-size: @main-content-base-font-size;
+  font-family: @body-type-font-family;
+  font-weight: @body-type-font-weight;
+  font-size: @body-type-font-size;
+  line-height: @body-type-font-size * @line-height-base;
   -webkit-font-smoothing:antialiased;
 
-  h1, h2, h3, h4, h5 {
-    font-family: @titles-font-family;
-    color: @titles-text-color;
-    font-weight: @titles-font-weight;
+  blockquote {
+    padding-left: @blockquote-left-padding-size;
+    font-size: @blockquote-type-font-size;
+    font-weight: @blockquote-type-font-weight;
+    border-color: @blockquote-border-color;
+    color: @blockquote-type-color;
+    line-height: @blockquote-type-font-size * @line-height-base;
   }
 
+  h1 {.make-heading(@h1-type-font-family, @h1-type-font-size, @h1-type-font-weight, @h1-type-color);}
+  h2 {.make-heading(@h2-type-font-family, @h2-type-font-size, @h2-type-font-weight, @h2-type-color);}
+  h3 {.make-heading(@h3-type-font-family, @h3-type-font-size, @h3-type-font-weight, @h3-type-color);}
+  h4 {.make-heading(@h4-type-font-family, @h4-type-font-size, @h4-type-font-weight, @h4-type-color);}
+  h5 {.make-heading(@h5-type-font-family, @h5-type-font-size, @h5-type-font-weight, @h5-type-color, @h5-type-text-transform);}
+  h6 {.make-heading(@h6-type-font-family, @h6-type-font-size, @h6-type-font-weight, @h6-type-color, @h5-type-text-transform);}
+
+  hr {
+    margin-top: 80px;
+    margin-bottom: 80px;
+  }
 }

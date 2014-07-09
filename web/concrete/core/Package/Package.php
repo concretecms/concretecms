@@ -201,16 +201,11 @@ class Package extends Object {
 
 	public static function getClass($pkgHandle) {
 		// loads and instantiates the object
-		$env = Environment::get();
-		$path = $env->getPath(FILENAME_PACKAGE_CONTROLLER, $pkgHandle);
-		if (file_exists($path)) {
-			require_once($path);
-		}
-		$class = Object::camelcase($pkgHandle) . "Package";
-		if (class_exists($class)) {
-			$cl = Core::make($class);
-			return $cl;
-		}
+        $class = '\\Concrete\\Package\\' . camelcase($pkgHandle) . '\\Controller';
+        if (class_exists($class)) {
+            $cl = Core::make($class);
+	    	return $cl;
+        }
 	}
 	
 	/**

@@ -1,6 +1,8 @@
 <?
+
+namespace Concrete\StartingPointPackage\ElementalBlank;
 use \Concrete\Core\Package\StartingPointPackage;
-class ElementalBlankStartingPointPackage extends StartingPointPackage {
+class Controller extends StartingPointPackage {
 
 	protected $pkgHandle = 'elemental_blank';
 	

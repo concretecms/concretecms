@@ -97,4 +97,4 @@ Loader::element('panels/dashboard', array(
 
 <? } ?>
 
-<div id="ccm-dashboard-content">
+<div id="ccm-dashboard-content" class="container-fluid">

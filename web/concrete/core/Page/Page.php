@@ -2164,10 +2164,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $suffix = 0;
             while ($proceed != true) {
                 $newPath = ($suffix == 0) ? $pathString : $pathString . PAGE_PATH_SEPARATOR . $suffix;
-                $path = $em->getRepository('\Concrete\Core\Page\PagePath')->findOneBy(
-                    array('cPath' => $newPath)
-                );
-                if (!is_object($path)) {
+                $q = $em->createQuery("select p from Concrete\Core\Page\PagePath p
+                    where p.cPath = ?1 and p.cID <> ?2");
+
+                $q->setParameter(1, $newPath);
+                $q->setParameter(2, $this->getCollectionID());
+                $result = $q->getResult();
+
+                if (!is_object($result[0])) {
                     $proceed = true;
                 } else {
                     $suffix++;

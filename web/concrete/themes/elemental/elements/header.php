@@ -34,7 +34,7 @@ $ag->requireAsset('css', 'font-awesome');
     <header>
         <div class="container">
             <div class="row">
-                <div class="col-md-4"><span id="header-brand">Elemental</span></div>
+                <div class="col-md-4"><span id="header-site-title">Elemental</span></div>
                 <div class="<? if ($displayThirdColumn) { ?>col-md-5<? } else { ?>col-md-8<? } ?>">
                     <?
                     $a = new GlobalArea('Header Navigation');

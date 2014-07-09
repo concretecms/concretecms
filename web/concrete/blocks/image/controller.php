@@ -33,13 +33,11 @@ class Controller extends BlockController {
 	public function view() {
 		//$c = Page::getCurrentPage();
 		$bID = $this->bID;
-		
 		$f = File::getByID($this->fID);
         if (!is_object($f) || !$f->getFileID()) {
             return false;
         }
 		$relPath = $f->getRelativePath();
-
 		if ($this->maxWidth == $f->getAttribute('width') && $this->maxHeight == $f->getAttribute('height')) {
 			$sizeStr = 'width="' . $f->getAttribute('width') . '" height="' . $f->getAttribute('height') . '"';
 		} else if (!$this->forceImageToMatchDimensions && ($this->maxWidth > 0 || $this->maxHeight > 0)) { 
