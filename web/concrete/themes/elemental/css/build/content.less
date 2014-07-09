@@ -27,19 +27,20 @@ div.ccm-page {
     border-top: 1px solid #d9d9d9;
   }
 
-  a:not(.btn) {
-    color: @body-link-color;
-
-    &:hover {
-      color: @body-link-hover-color;
-      text-decoration: none;
-    }
-  }
-
   main {
     padding-top:(@padding-large-vertical * 3.6) - (@line-height-computed);
     padding-bottom: 50px;
     background-color: @page-background-color;
   }
 
+  main, footer {
+    a:not(.btn) {
+      color: @body-link-color;
+
+      &:hover {
+        color: @body-link-hover-color;
+        text-decoration: none;
+      }
+    }
+  }
 }
