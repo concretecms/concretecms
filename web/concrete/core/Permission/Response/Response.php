@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Response;
+use Aws\CloudFront\Exception\Exception;
 use Loader;
 use Page;
 use User;
@@ -16,8 +17,8 @@ class Response {
 	protected $customClassObjects = array();
 	protected $category;
 	static $cache = array();
-	
-	public function setPermissionObject($object) { 
+
+	public function setPermissionObject($object) {
 		$this->object = $object;
 	}
 	public function getPermissionObject() {
@@ -26,9 +27,9 @@ class Response {
 	public function setPermissionCategoryObject($category) {
 		$this->category = $category;
 	}
-	
+
 	public function testForErrors() { }
-	
+
 	public static function getResponse($object) {
 		$r = PermissionCache::getResponse($object);
 		if (is_object($r)) {
@@ -56,18 +57,17 @@ class Response {
 		}
 		$pk = $this->category->getPermissionKeyByHandle($permission);
 		if (!$pk) {
-			print t('Unable to get permission key for %s', $permission);
-			exit;
+			throw new Exception(t('Unable to get permission key for %s', $permission));
 		}
 		$pk->setPermissionObject($this->object);
 		return call_user_func_array(array($pk, 'validate'), $args);
 	}
-	
+
 	public function __call($f, $a) {
 		$permission = substr($f, 3);
 		$permission = Loader::helper('text')->uncamelcase($permission);
 		return $this->validate($permission, $a);
 	}
-	
+
 
 }
