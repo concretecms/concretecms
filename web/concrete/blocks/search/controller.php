@@ -2,8 +2,7 @@
 namespace Concrete\Block\Search;
 use Loader;
 use CollectionAttributeKey;
-use \Concrete\Core\Page\Search\IndexedPageList;
-use \Concrete\Core\Page\Search\IndexedSearchResult;
+use \Concrete\Core\Page\PageList;
 use \Concrete\Core\Block\BlockController;
 use Page;
 class Controller extends BlockController {
@@ -148,7 +147,7 @@ class Controller extends BlockController {
 		// $_q = trim(preg_replace('/[^A-Za-z0-9\s\']/i', ' ', $_REQUEST['query']));
 		$_q = $q;
 		
-		$ipl = new IndexedPageList();
+		$ipl = new PageList();
 		$aksearch = false;
 		if (is_array($_REQUEST['akID'])) {
 			foreach($_REQUEST['akID'] as $akID => $req) {
@@ -175,7 +174,6 @@ class Controller extends BlockController {
 			return false;
 		}
 
-		$ipl->setSimpleIndexMode(true);
 		if (isset($_REQUEST['query'])) {
 			$ipl->filterByKeywords($_q);
 		}
@@ -191,18 +189,16 @@ class Controller extends BlockController {
 
         // TODO fix this
 		//$ipl->filter(false, '(ak_exclude_search_index = 0 or ak_exclude_search_index is null)');
-		
-		$res = $ipl->getPage();
 
-		foreach($res as $r) {
-			$results[] = new IndexedSearchResult($r['cID'], $r['cName'], $r['cDescription'], $r['score'], $r['cPath'], $r['content'], $r['cDatePublic']);
-		}
-        
+        $ipl->setItemsPerPage(1);
+        $pagination = $ipl->getPagination();
+        $results = $pagination->getCurrentPageResults();
+
 		$this->set('query', $q);
 		$this->set('results', $results);
 		$this->set('do_search', true);
 		$this->set('searchList', $ipl);
-		$this->set('pagination', $ipl->getPagination());
+		$this->set('pagination', $pagination);
 	}
 
 }

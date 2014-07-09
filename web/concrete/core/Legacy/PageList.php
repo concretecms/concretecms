@@ -93,7 +93,7 @@ class PageList extends DatabaseItemList {
 			$attribsStr.=' OR ' . $cnt->searchKeywords($keywords);
 		}
 
-		if ($simple || $this->indexModeSimple) { // $this->indexModeSimple is set by the IndexedPageList class
+		if ($simple || $this->indexModeSimple) {
 			$this->filter(false, "(psi.cName like $qk or psi.cDescription like $qk or psi.content like $qk {$attribsStr})");
 		} else {
 			$this->indexedSearch = true;

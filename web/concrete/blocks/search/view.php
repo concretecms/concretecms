@@ -29,15 +29,15 @@ if ($do_search) {
 	<? }else{ ?>
 		<div id="searchResults">
 		<? foreach($results as $r) { 
-			$currentPageBody = $this->controller->highlightedExtendedMarkup($r->getBodyContent(), $query);?>
+			$currentPageBody = $this->controller->highlightedExtendedMarkup($r->getPageIndexContent(), $query);?>
 			<div class="searchResult">
-				<h3><a href="<?=$r->getPath()?>"><?=$r->getName()?></a></h3>
+				<h3><a href="<?=$r->getCollectionPath()?>"><?=$r->getCollectionName()?></a></h3>
 				<p>
-					<? if ($r->getDescription()) { ?>
-						<?php  echo $this->controller->highlightedMarkup($tt->shortText($r->getDescription()),$query)?><br/>
+					<? if ($r->getCollectionDescription()) { ?>
+						<?php  echo $this->controller->highlightedMarkup($tt->shortText($r->getCollectionDescription()),$query)?><br/>
 					<? } ?>
 					<?php echo $currentPageBody; ?>
-					<a href="<?php  echo $r->getPath(); ?>" class="pageLink"><?php  echo $this->controller->highlightedMarkup($r->getPath(),$query)?></a>
+					<a href="<?php  echo $r->getCollectionPath(); ?>" class="pageLink"><?php  echo $this->controller->highlightedMarkup($r->getCollectionPath(),$query)?></a>
 				</p>
 			</div>
 		<? 	}//foreach search result ?>
