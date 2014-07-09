@@ -9,7 +9,8 @@ use JobSet;
 
 class Jobs extends DashboardPageController {
 
-	function on_start() {
+	function on_start() 
+	{
 		parent::on_start();
 		$installed = Job::getList();
 		$this->set('availableJobs', Job::getAvailableList(0)); 
@@ -18,17 +19,20 @@ class Jobs extends DashboardPageController {
 		$this->set('auth', Job::generateAuth());
 	}
 
-	public function view() {
+	public function view() 
+	{
 		$this->set('jobListSelected', true);
 	}
 	
-	public function view_sets() {
+	public function view_sets() 
+	{
 		$this->set('jobSetsSelected', true);
 	}
 
-	function install($handle = null) {
-		if ($handle) {
-			
+	function install($handle = null) 
+	{
+		if ($handle) 
+		{
 			Job::installByHandle($handle);
 			$this->redirect('/dashboard/system/optimization/jobs', 'job_installed');
 		} else {
@@ -37,12 +41,15 @@ class Jobs extends DashboardPageController {
 		$this->view();
 	}
 	
-	function uninstall($job_id = null) {
-		if ($job_id) {
-			
+	function uninstall($job_id = null) 
+	{
+		if ($job_id) 
+		{	
 			$job = Job::getByID((int) $job_id);
-			if ($job) {
-				if (!$job->jNotUninstallable) {
+			if ($job) 
+			{
+				if (!$job->jNotUninstallable) 
+				{
 					$job->uninstall();
 					$this->redirect('/dashboard/system/optimization/jobs', 'job_uninstalled');
 				} else {
@@ -57,35 +64,42 @@ class Jobs extends DashboardPageController {
 		$this->view();
 	}
 
-	public function job_uninstalled() {
+	public function job_uninstalled() 
+	{
 		$this->set('message', t('Job successfully uninstalled.'));
 		$this->view();
 	}
 
-	public function job_installed() {
+	public function job_installed() 
+	{
 		$this->set('message', t('Job successfully installed.'));
 		$this->view();
 	}
 	
-	public function reset() {
+	public function reset() 
+	{
 		$jobs = Job::getList();
-		foreach($jobs as $j) {
+		foreach($jobs as $j) 
+		{
 			$j->reset();
 		}
 		$this->redirect('/dashboard/system/optimization/jobs', 'reset_complete');
 	}
 
-	public function reset_complete() {
+	public function reset_complete() 
+	{
 		$this->set('message', t('All running jobs have been reset.'));
 		$this->view();
 	}
 
-	public function set_added() {
+	public function set_added() 
+	{
 		$this->set('success', t('Job set added.'));
 		$this->set('jobSetsSelected', true);
 	}
 
-	public function edit_set($jsID = false) {
+	public function edit_set($jsID = false) 
+	{
 		$this->set('jobSetsSelected', true);
 		$js = JobSet::getByID($jsID);
 		if (is_object($js)) {
@@ -95,20 +109,27 @@ class Jobs extends DashboardPageController {
 		}
 	}
 
-	public function update_set_jobs() {
-		if ($this->token->validate('update_set_jobs')) { 
+	public function update_set_jobs() 
+	{
+		if ($this->token->validate('update_set_jobs')) 
+		{ 
 			$js = JobSet::getByID($this->post('jsID'));
-			if (!is_object($js)) {
+			if (!is_object($js)) 
+			{
 				$this->error->add(t('Invalid Job set.'));
 			}
 
-			if (!$this->error->has()) {
+			if (!$this->error->has()) 
+			{
 				// go through and add all the attributes that aren't in another set
 				$js->clearJobs();
-				if (is_array($this->post('jID'))) {
-					foreach($_POST['jID'] as $jID) {
+				if (is_array($this->post('jID'))) 
+				{
+					foreach($_POST['jID'] as $jID) 
+					{
 						$j = Job::getByID($jID);
-						if(is_object($j)) {
+						if(is_object($j)) 
+						{
 							$js->addJob($j);
 						}
 					}					
@@ -121,24 +142,31 @@ class Jobs extends DashboardPageController {
 		}
 		$this->edit($this->post('asID'));
 	}
-	public function set_updated() {
+	
+	public function set_updated() 
+	{
 		$this->set('jobSetsSelected', true);
 		$this->set('success', t('Job Set updated successfully.'));
 	}
 
-	public function update_set() {
+	public function update_set() 
+	{
 		$this->set('jobSetsSelected', true);
-		if ($this->token->validate('update_set')) { 
+		if ($this->token->validate('update_set')) 
+		{ 
 			$js = JobSet::getByID($this->post('jsID'));
-			if (!is_object($js)) {
+			if (!is_object($js)) 
+			{
 				$this->error->add(t('Invalid Job set.'));
 			} else {
-				if (!trim($this->post('jsName'))) { 
+				if (!trim($this->post('jsName'))) 
+				{ 
 					$this->error->add(t("Specify a name for your Job set."));
 				}
 			}
 			
-			if (!$this->error->has()) {
+			if (!$this->error->has()) 
+			{
 				$js->updateJobSetName($this->post('jsName'));
 				$this->redirect('/dashboard/system/optimization/jobs', 'set_updated');
 			}
@@ -148,23 +176,30 @@ class Jobs extends DashboardPageController {
 		}
 	}
 
-	public function set_deleted() {
+	public function set_deleted() 
+	{
 		$this->set('jobSetsSelected', true);
 		$this->set('success', t('Group set deleted successfully.'));
 	}
 
-	public function delete_set() {
+	public function delete_set() 
+	{
 		$this->set('jobSetsSelected', true);
-		if ($this->token->validate('delete_set')) { 
+		if ($this->token->validate('delete_set')) 
+		{ 
 			$js = JobSet::getByID($this->post('jsID'));
-			if (!$js->canDelete()) {
+			if (!$js->canDelete()) 
+			{
 				$this->error->add(t('You cannot delete the default Job set.'));
 			}
 
-			if (!is_object($js)) {
+			if (!is_object($js)) 
+			{
 				$this->error->add(t('Invalid Job set.'));
 			}
-			if (!$this->error->has()) {
+			
+			if (!$this->error->has()) 
+			{
 				$js->delete();
 				$this->redirect('/dashboard/system/optimization/jobs', 'set_deleted');
 			}			
@@ -174,18 +209,25 @@ class Jobs extends DashboardPageController {
 		}
 	}
 
-	public function add_set() {
+	public function add_set() 
+	{
 		$this->set('jobSetsSelected', true);
 		if ($this->token->validate('add_set')) { 
-			if (!trim($this->post('jsName'))) { 
+			if (!trim($this->post('jsName'))) 
+			{ 
 				$this->error->add(t("Specify a name for your Job set."));
 			}
-			if (!$this->error->has()) {			
+			
+			if (!$this->error->has()) 
+			{			
 				$js = JobSet::add($this->post('jsName'));
-				if (is_array($_POST['jID'])) {
-					foreach($_POST['jID'] as $jID) {
+				if (is_array($_POST['jID'])) 
+				{
+					foreach($_POST['jID'] as $jID) 
+					{
 						$j = Job::getByID($jID);
-						if(is_object($j)) {
+						if(is_object($j)) 
+						{
 							$js->addJob($j);
 						}
 					}					
@@ -198,7 +240,8 @@ class Jobs extends DashboardPageController {
 		}
 	}
 
-	public function update_job_schedule() {
+	public function update_job_schedule() 
+	{
 		$jID = $this->post('jID');
 		$J = Job::getByID($jID);
 		$J->setSchedule($this->post('isScheduled'), $this->post('unit'), max(0,(int)$this->post('value')));
@@ -206,13 +249,15 @@ class Jobs extends DashboardPageController {
 		$this->redirect('/dashboard/system/optimization/jobs', 'job_scheduled');
 	}
 	
-	public function job_scheduled() {
+	public function job_scheduled() 
+	{
 		$this->set('success', t('Job schedule updated successfully.'));
 		$this->view();
 	}
 	
 	
-	public function update_set_schedule() {
+	public function update_set_schedule() 
+	{
 		$jsID = $this->post('jsID');
 		$S = JobSet::getByID($jsID);
 		$S->setSchedule($this->post('isScheduled'), $this->post('unit'), $this->post('value'));
@@ -220,10 +265,9 @@ class Jobs extends DashboardPageController {
 		$this->redirect('/dashboard/system/optimization/jobs', 'set_scheduled');
 	}
 	
-	public function set_scheduled() {
+	public function set_scheduled() 
+	{
 		$this->set('success', t('Job Set schedule updated successfully.'));
 		$this->view();
 	}
-	
-	
 }
