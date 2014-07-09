@@ -44,8 +44,11 @@ class Pagination extends Pagerfanta
         $c = Page::getCurrentPage();
         $url = $c->getCollectionLink();
         $list = $this->list;
+
         $html = $v->render($this, function($page) use ($list, $url, $result) {
-            return $url . '?' . $list->getQueryPaginationPageParameter() . '=' . $page;
+            $qs = Core::make('helper/url');
+            $url = $qs->setVariable($list->getQueryPaginationPageParameter(), $page);
+            return $url;
         });
         return $html;
     }
