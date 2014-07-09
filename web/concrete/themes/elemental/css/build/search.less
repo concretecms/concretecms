@@ -1,0 +1,110 @@
+main {
+  .ccm-search-block-form {
+    h3 {
+      font-family: @header-site-title-type-font-family;
+      font-size: 26px;
+      text-transform: uppercase;
+    }
+    input.ccm-search-block-text {
+      border: 0;
+      .box-shadow(none);
+      font-size: 22px;
+      margin-top: 25px;
+      margin-bottom: 15px;
+      width: 100%;
+      font-weight: 200;
+      padding-left: 0px;
+    }
+    .pagination {
+      >li {
+        &.active {
+          span {
+            background: none;
+            color: #548627;
+            border-color: @pagination-border-color;
+          }
+        }
+        &.next {
+          &.disabled {
+            a, span {
+             color: #b3beb8;
+            }
+          }
+          a {
+            border-right: 1px solid @pagination-border-color;
+            .border-right-radius(25px);
+            padding-right: 25px;
+          }
+          span {
+            border-right: 1px solid @pagination-border-color;
+            .border-right-radius(25px);
+            padding-right: 25px;
+
+          }
+        }
+        &.prev {
+          &.disabled {
+            a, span {
+              color: #b3beb8;
+            }
+          }
+          span {
+            border-left: 1px solid @pagination-border-color;
+            .border-left-radius(25px);
+            padding-left: 25px;
+          }
+          a {
+            border-left: 1px solid @pagination-border-color;
+            border-left: 1px solid @pagination-border-color;
+            .border-left-radius(25px);
+            padding-left: 25px;
+          }
+        }
+        >a {
+          &:hover {
+            background: none;
+          }
+          font-size: 14px;
+          border-left: 0;
+          border-right: 0;
+          padding-top: 12px;
+          padding-bottom: 12px;
+          border-color: @pagination-border-color;
+        }
+        > span {
+          font-size: 14px;
+          border-left: 0;
+          border-right: 0;
+          padding-top: 12px;
+          padding-bottom: 12px;
+          border-color: @pagination-border-color;
+        }
+      }
+    }
+    #searchResults {
+      margin-top: 15px;
+      border-top: 1px solid #ececec;
+      .searchResult {
+        margin-top: 0px;
+        margin-bottom: 0px;
+        padding-top: 24px;
+        padding-bottom: 7px;
+        border-bottom: 1px solid #ececec;
+        p {
+          color: #6e6e6e;
+        }
+        h3 {
+          margin-top: 0px;
+          text-transform:none;
+          margin-bottom: 20px;
+          font-family: inherit;
+          a {
+            font-weight: 400;
+            font-size: 22px;
+            color: @header-navigation-type-color;
+          }
+        }
+      }
+    }
+  }
+}
