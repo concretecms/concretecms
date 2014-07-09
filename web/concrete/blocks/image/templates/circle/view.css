@@ -1,0 +1,8 @@
+img.img-circle {
+    display: block;
+    margin: 0px auto 0px auto;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -ms-border-radius: 50%;
+}

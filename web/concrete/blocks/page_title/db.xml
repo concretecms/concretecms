@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btPageTitle">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+		<field name="useCustomTitle" type="I">
+			<unsigned />
+			<default value="0"/>
+		</field>
+		<field name="titleText" type="C" size="255"></field>
+	</table>
+</schema>

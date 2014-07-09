@@ -1,8 +1,12 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-</div>
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">derp</div>
+            <div class="col-md-9">Social</div>
+        </div>
+    </div>
+</footer>
 
-<?php Loader::element('footer_required'); ?>
-
-</body>
-</html>
+<? $this->inc('elements/footer_bottom.php');?>

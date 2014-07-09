@@ -80,7 +80,7 @@ $translatedSubmitLabel = t('Submit');
 */?>
 
 <div id="formblock<?php  echo $bID; ?>" class="ccm-block-type-form">
-<form enctype="multipart/form-data" class="form-horizontal" id="miniSurveyView<?php  echo $bID; ?>" class="miniSurveyView" method="post" action="<?php  echo $formAction ?>">
+<form enctype="multipart/form-data" class="form-stacked" id="miniSurveyView<?php  echo $bID; ?>" class="miniSurveyView" method="post" action="<?php  echo $formAction ?>">
 
 	<?php  if ($success): ?>
 		
@@ -101,33 +101,29 @@ $translatedSubmitLabel = t('Submit');
 	<div class="fields">
 		
 		<?php  foreach ($questions as $question): ?>
-			<div class="control-group field field-<?php  echo $question['type']; ?>">
+			<div class="form-group field field-<?php  echo $question['type']; ?>">
 				<label class="control-label" <?php  echo $question['labelFor']; ?>>
 					<?php  echo $question['question']; ?>
 				</label>
-				<div class="controls">
 				<?php  echo $question['input']; ?>
 					<?php if ($question['required']): ?>
-						<span class="muted"><?=t("Required")?></span>
+						<span class="text-muted"><?=t("Required")?></span>
 					<?php  endif; ?>
-				</div>
 			</div>
 		<?php  endforeach; ?>
 		
 	</div><!-- .fields -->
 	
 	<?php  if ($captcha): ?>
-		<div class="control-group captcha">
+		<div class="form-group captcha">
 			<label class="control-label"><?php  echo $translatedCaptchaLabel; ?></label>
-			<div class="controls">
 			<div><?php  $captcha->display(); ?></div>
 			<div><?php  $captcha->showInput(); ?></div>
-			</div>
 		</div>
 	<?php  endif; ?>
 
 	<div class="form-actions">
-		<input type="submit" name="Submit" class="pull-right btn btn-primary" value="<?php  echo $translatedSubmitLabel; ?>" />
+		<input type="submit" name="Submit" class="btn btn-primary" value="<?php  echo $translatedSubmitLabel; ?>" />
 	</div>
 
 	<input name="qsID" type="hidden" value="<?php  echo $qsID; ?>" />
