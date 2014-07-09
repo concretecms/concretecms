@@ -3,6 +3,9 @@ namespace Concrete\Core\User\Point\Action;
 use Loader;
 use Environment;
 use \Concrete\Core\Package\PackageList;
+use Group;
+use UserInfo;
+use \Concrete\Core\User\Point\Entry as UserPointEntry;
 
 class Action {
 	
@@ -12,22 +15,26 @@ class Action {
 	public $upaDefaultPoints;
 	public $gBadgeID;
 	
-	public function load($upaID) {
+	public function load($upaID) 
+	{
 		$db = Loader::db();
 		$row = $db->GetRow('select * from UserPointActions where upaID = ?', array($upaID));
 		$this->setDataFromArray($row);
 	}
 	
-	public function delete() {
+	public function delete() 
+	{
 		$db = Loader::db();
 		$db->delete('UserPointActions', array('upaID' => $this->upaID));
 
 	}
+	
 	/**
 	 * @param $upaID
 	 * @return UserPointAction
 	 */
-	public static function getByID($upaID) {
+	public static function getByID($upaID) 
+	{
 		$db = Loader::db();
 		$row = $db->getRow("SELECT * FROM UserPointActions WHERE upaID = ?",array($upaID));
 		if ($row['upaID']) {
@@ -40,7 +47,7 @@ class Action {
 				
 				$class = Loader::helper('text')->camelcase($row['upaHandle']) . $class;
 			}
-			$upa = new $class();
+			$upa = new Action;
 			$upa->setDataFromArray($row);
 			return $upa;
 		}
@@ -51,7 +58,8 @@ class Action {
 	 * @param Package $pkg
 	 * @return array
  	 */
-	public static function getListByPackage($pkg) {
+	public static function getListByPackage($pkg) 
+	{
 		$db = Loader::db();
 		$upaIDs = $db->GetCol('select upaID from UserPointActions where pkgID = ? order by upaName asc', array($pkg->getPackageID()));
 		$actions = array();
@@ -68,7 +76,8 @@ class Action {
 	 * @param $upaHandle
 	 * @return UserPointAction
 	*/
-	public static function getByHandle($upaHandle) {
+	public static function getByHandle($upaHandle) 
+	{
 		$db = Loader::db();
 		$row = $db->getRow("SELECT * FROM UserPointActions WHERE upaHandle = ?",array($upaHandle));
 		if ($row['upaID']) {
@@ -81,13 +90,14 @@ class Action {
 				
 				$class = Loader::helper('text')->camelcase($row['upaHandle']) . $class;
 			}
-			$upa = new $class();
+			$upa = new Action;
 			$upa->setDataFromArray($row);
 			return $upa;
 		}
 	}
 
-	public static function add($upaHandle, $upaName, $upaDefaultPoints, $group, $upaIsActive = true, $pkg = false) {
+	public static function add($upaHandle, $upaName, $upaDefaultPoints, $group, $upaIsActive = true, $pkg = false) 
+	{
 		$upa = new static();
 		$upa->upaHandle = $upaHandle;
 		$upa->upaName = $upaName;
@@ -115,14 +125,15 @@ class Action {
 			$upa->upaHasCustomClass = 1;
 		}
 
-		//$upa->save();
+		$upa->save();
 	}
 
 	/**
 	 * @param array $data
 	 * @return boolean
 	 */
-	protected function setDataFromArray($data) {
+	protected function setDataFromArray($data) 
+	{
 		if(is_array($data) && count($data)) {
 			$this->upaID = $data['upaID'];
 			$this->upaHandle = $data['upaHandle'];
@@ -136,73 +147,89 @@ class Action {
 		}
 	}
 	
+	public function getAttributeNames()
+	{
+    	return array('upaID', 'upaHandle', 'upaName', 'upaDefaultPoints', 'gBadgeID', 'upaIsActive');
+	}
+	
 	/** 
 	 * @return boolean
 	 */
-	public function hasCustomClass() {
+	public function hasCustomClass() 
+	{
 		return $this->upaHasCustomClass;
 	}
 
-	public function getPackageHandle() {
+	public function getPackageHandle() 
+	{
 		return PackageList::getHandle($this->pkgID);
 	}
 
-	public function getPackageID() {
+	public function getPackageID() 
+	{
 		return $this->pkgID;
 	}
 
 	/**
 	 * @return string
 	*/
-	public function getUserPointActionHandle() {
+	public function getUserPointActionHandle() 
+	{
 		return $this->upaHandle;
 	}
 	
 	/**
 	 * @return string
 	*/
-	public function getUserPointActionName() {
+	public function getUserPointActionName() 
+	{
 		return $this->upaName;
 	}
 	
 	/**
 	 * @return int
 	 */
-	public function getUserPointActionID() {
+	public function getUserPointActionID() 
+	{
 		return $this->upaID;
 	}
 	
 	/**
 	 * @return int
 	 */
-	public function getUserPointActionDefaultPoints() {
+	public function getUserPointActionDefaultPoints() 
+	{
 		return $this->upaDefaultPoints;
 	}
 	
 	/**
 	 * @return int
 	 */
-	public function getUserPointActionBadgeGroupID() {
+	public function getUserPointActionBadgeGroupID() 
+	{
 		return $this->gBadgeID;
 	}
 
-	public function isUserPointActionActive() {
+	public function isUserPointActionActive() 
+	{
 		return $this->upaIsActive;
 	}
 
 	/**
 	 * @return Group
 	*/
-	public function getUserPointActionBadgeGroupObject() {
+	public function getUserPointActionBadgeGroupObject() 
+	{
 		return Group::getByID($this->getUserPointActionBadgeGroupID());
 	}
 	
-	public function addDetailedEntry($user, UserPointActionDescription $descr, $points = false, $date = null) {
+	public function addDetailedEntry($user, ActionDescription $descr, $points = false, $date = null) 
+	{
 		$this->addEntry($user, $descr, $points, $date);
 	}
 
-	public function addEntry($user, UserPointActionDescription $descr, $points = false, $date = null) {
-
+	public function addEntry($user, ActionDescription $descr, $points = false, $date = null) 
+	{
 		if (!$this->isUserPointActionActive()) {
 			return false;
 		}
@@ -252,16 +279,29 @@ class Action {
 		return true;
 	}
 
-	public function save() {
+	public function save() 
+	{
 		$db = Loader::db();
-		$db->update('UserPointActions', array(
-			'upaHandle' => $this->upaHandle,
-			'upaName' => $this->upaName,
-			'upaDefaultPoints' => $this->upaDefaultPoints,
-			'upaHasCustomClass' => $this->upaHasCustomClass,
-			'upaIsActive' => $this->upaIsActive,
-			'gBadgeID' => $this->gBadgeID
-		), array("upaID" => $this->upaID));
-	}
+		if($this->upaID) {
+    		$db->update('UserPointActions', array(
+    			'upaHandle' => $this->upaHandle,
+    			'upaName' => $this->upaName,
+    			'upaDefaultPoints' => $this->upaDefaultPoints,
+    			'upaHasCustomClass' => $this->upaHasCustomClass,
+    			'upaIsActive' => $this->upaIsActive,
+    			'gBadgeID' => $this->gBadgeID
+    		), array("upaID" => $this->upaID));
+		} else {
+    		$res = $db->insert('UserPointActions', array(
+    		    'upaHandle' => $this->upaHandle,
+    			'upaName' => $this->upaName,
+    			'upaDefaultPoints' => $this->upaDefaultPoints,
+    			'upaHasCustomClass' => $this->upaHasCustomClass,
+    			'upaIsActive' => $this->upaIsActive,
+    			'gBadgeID' => $this->gBadgeID
+    		));
+    		
+		}
 		
+	}		
 }
