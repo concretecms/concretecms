@@ -374,19 +374,20 @@ class AuthenticationType extends Object
         $this->controller->requireAsset('javascript', 'backstretch');
 
         $form = $this->mapAuthenticationTypeFilePath($element . '.php');
-        if ($form->exists()) {
-            ob_start();
-            if (method_exists($this->controller, $element)) {
-                call_user_func_array(array($this->controller, $element), $params);
-            } else {
-                $this->controller->view();
-            }
-            extract(array_merge($params, $this->controller->getSets()));
-            require_once($form->file);
-            $out = ob_get_contents();
-            ob_end_clean();
-            echo $out;
+        if (!$form->exists()) {
+            $form = $this->mapAuthenticationTypeFilePath('form.php');
         }
+        ob_start();
+        if (method_exists($this->controller, $element)) {
+            call_user_func_array(array($this->controller, $element), $params);
+        } else {
+            $this->controller->view();
+        }
+        extract(array_merge($params, $this->controller->getSets()));
+        require_once($form->file);
+        $out = ob_get_contents();
+        ob_end_clean();
+        echo $out;
     }
 
     /**

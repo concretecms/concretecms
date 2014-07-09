@@ -6,9 +6,7 @@ $form = Loader::helper('form');
 <form method='post'
       action='<?= View::url('/login', 'authenticate', $this->getAuthenticationTypeHandle()) ?>'>
     <div class="form-group concrete-login">
-        <p>
-            <?= t('Sign into your website with an account that is part of this website.') ?>
-        </p>
+        <span><?= t('Sign in with a local account.') ?> </span>
         <hr>
     </div>
     <div class="form-group">
