@@ -5,6 +5,7 @@ use Area;
 use BlockType;
 use Cache;
 use CacheLocal;
+use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Feature\Assignment\Assignment as FeatureAssignment;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;

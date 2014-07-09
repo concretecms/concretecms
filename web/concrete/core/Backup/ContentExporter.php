@@ -1,5 +1,47 @@
 <?
 namespace Concrete\Core\Backup;
+use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
+use Page;
+use Package;
+use Stack;
+use SinglePage;
+use UserInfo;
+use PageType;
+use BlockType;
+use Block;
+use Group;
+use PageTheme;
+use Concrete\Core\Block\BlockType\BlockTypeList;
+use Loader;
+use Concrete\Core\Attribute\Key\Key as AttributeKey;
+use Concrete\Core\Attribute\Set as AttributeSet;
+use Concrete\Core\Package\PackageList;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
+use Job;
+use SimpleXMLElement;
+use Core;
+use JobSet;
+use PageTemplate;
+use CollectionAttributeKey;
+use \Concrete\Core\Block\BlockType\Set as BlockTypeSet;
+use \Concrete\Core\Attribute\Type as AttributeType;
+use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use PermissionKeyCategory;
+use \Concrete\Core\Permission\Access\Entity\Type as PermissionAccessEntityType;
+use PermissionAccess;
+use \Concrete\Core\Captcha\Library as SystemCaptchaLibrary;
+use \Concrete\Core\Feature\Feature;
+use \Concrete\Core\Feature\Category\Category as FeatureCategory;
+use \Concrete\Core\Gathering\DataSource\DataSource as GatheringDataSource;
+use \Concrete\Core\Gathering\Item\Template\Template as GatheringItemTemplate;
+use \Concrete\Core\Page\Type\Composer\Control\Type\Type as PageTypeComposerControlType;
+use \Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
+use \Concrete\Core\Conversation\Editor\Editor as ConversationEditor;
+use \Concrete\Core\Conversation\Rating\Type as ConversationRatingType;
+use FileImporter;
+use FileList;
+use ZipArchive;
+
 class ContentExporter {
 	
 	protected $x; // the xml object for export
@@ -105,11 +147,11 @@ class ContentExporter {
 		}
 	}
 
-	public static function addPageTypeComposerOutputControlID(PageTypeComposerFormLayoutSetControl $control, $id) {
+	public static function addPageTypeComposerOutputControlID(FormLayoutSetControl $control, $id) {
 		self::$ptComposerOutputControlIDs[$control->getPageTypeComposerFormLayoutSetControlID()] = $id;
 	}
 	
-	public static function getPageTypeComposerOutputControlTemporaryID(PageTypeComposerFormLayoutSetControl $control) {
+	public static function getPageTypeComposerOutputControlTemporaryID(FormLayoutSetControl $control) {
 		if (isset(self::$ptComposerOutputControlIDs[$control->getPageTypeComposerFormLayoutSetControlID()])) {
 			return self::$ptComposerOutputControlIDs[$control->getPageTypeComposerFormLayoutSetControlID()];
 		}

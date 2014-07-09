@@ -1,5 +1,8 @@
 <?
 namespace Concrete\Core\Gathering\Item\Template;
+use Concrete\Core\Feature\Assignment\GatheringItemAssignment;
+use Concrete\Core\Feature\Feature;
+use Concrete\Core\Gathering\Item\Item;
 use Loader;
 use \Concrete\Core\Package\PackageList;
 use Core;
@@ -94,7 +97,7 @@ abstract class Template extends Object {
 	public function getPackageHandle() {return PackageList::getHandle($this->pkgID);}
 	public function getGatheringItemTemplateFixedSlotWidth() {return $this->gatFixedSlotWidth;}
 	public function getGatheringItemTemplateFixedSlotHeight() {return $this->gatFixedSlotHeight;}
-	public function getGatheringItemTemplateTypeObject() {return GatheringItemTemplateType::getByID($this->gatTypeID);}
+	public function getGatheringItemTemplateTypeObject() {return Type::getByID($this->gatTypeID);}
 	public function getGatheringItemTemplateTypeID() {return $this->gatTypeID;}
 	public function getGatheringItemTemplateMinimumSlotHeight(GatheringItem $item) {
 		return 1;
@@ -125,7 +128,7 @@ abstract class Template extends Object {
 
 		$w = 0;
 		$handles = $this->getGatheringItemTemplateFeatureHandles();
-		$assignments = \Concrete\Core\Gathering\Feature\Assignment::getList($item);
+		$assignments = \Concrete\Core\Feature\Assignment\GatheringItemAssignment::getList($item);
 		foreach($assignments as $as) {
 			if (in_array($as->getFeatureDetailHandle(), $handles)) {
 				$fd = $as->getFeatureDetailObject();
@@ -144,14 +147,14 @@ abstract class Template extends Object {
 		return mt_rand($wb, $wt);
 	}
 
-	public function getGatheringItemTemplateSlotHeight(GatheringItem $item) {
+	public function getGatheringItemTemplateSlotHeight(Item $item) {
 		if ($this->getGatheringItemTemplateFixedSlotHeight()) {
 			return $this->getGatheringItemTemplateFixedSlotHeight();
 		}
 
 		$h = 0;
 		$handles = $this->getGatheringItemTemplateFeatureHandles();
-		$assignments = GatheringItemFeatureAssignment::getList($item);
+		$assignments = GatheringItemAssignment::getList($item);
 		foreach($assignments as $as) {
 			if (in_array($as->getFeatureDetailHandle(), $handles)) {
 				$fd = $as->getFeatureDetailObject();

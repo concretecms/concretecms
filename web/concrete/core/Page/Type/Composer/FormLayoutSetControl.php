@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Page\Type\Composer;
 use Loader;
+use Concrete\Core\Backup\ContentExporter;
 use PageTemplate;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Page\Type\Composer\OutputControl as PageTypeComposerOutputControl;
