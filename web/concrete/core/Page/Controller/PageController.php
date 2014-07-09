@@ -17,6 +17,7 @@ class PageController extends Controller {
     }
 
     public function __construct(Page $c) {
+        parent::__construct();
         $this->c = $c;
         $this->view = new PageView($this->c);
         $this->set('html', Core::make('\Concrete\Core\Html\Service\Html'));

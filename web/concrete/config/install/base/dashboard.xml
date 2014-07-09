@@ -476,6 +476,13 @@
 				</attributekey>
 			</attributes>
         </page>
+        <page name="Social Links" path="/dashboard/system/basics/social" filename="/dashboard/system/basics/social.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>sharing, facebook, twitter</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Bookmark Icons" path="/dashboard/system/basics/icons" filename="/dashboard/system/basics/icons.php" pagetype="" description="Bookmark icon and mobile home screen icon setup." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
