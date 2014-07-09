@@ -1,4 +1,4 @@
-<? 
+<?
 defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
 $th = Loader::helper('text');
@@ -76,10 +76,9 @@ $th = Loader::helper('text');
                     <td valign="top" style="text-align: center"><?=$ent->getLevelIcon()?></td>
                     <td valign="top" style="white-space: nowrap"><?=$ent->getChannelDisplayName()?></td>
                     <td valign="top"><strong><?php
-                    if($ent->getUserID() == NULL){
+                    if(!intval($ent->getUserID())){
                         echo t("Guest");
-                    }
-                    else{
+                    } else {
                         $u = User::getByUserID($ent->getUserID());
                         echo $u->getUserName();
                     }

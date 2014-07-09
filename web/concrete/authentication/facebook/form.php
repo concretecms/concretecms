@@ -1,26 +1,20 @@
 <?php defined('C5_EXECUTE') or die('Access denied.') ?>
 
-<div style='margin-left:20px;background:#3B5998'>
-	<h3 style='color:white;padding:0 10px 0'>
-		facebook
-		<button style='margin-top:5px' class='btn btn-primary pull-right authFacebookLogin'>
-			<?=t('Login with Facebook')?>
-		</button>
-	</h3>
-</div>
+<button class="btn btn-block btn-success authFacebookLogin"><?= t('Log in with facebook') ?></button>
 <script type="text/javascript">
-	$('button.authFacebookLogin').click(function(){
-		var login = window.open('<?=$loginUrl?>','Login with Facebook',"width=500,height=300");
-		(login.focus && login.focus());
+    $('button.authFacebookLogin').click(function () {
+        var login = window.open('<?=$loginUrl?>', 'Log in with Facebook', 'width=500,height=300');
+        (login.focus && login.focus());
 
-		function loginStatus() {
-			if (login.closed) {
-				window.location.href = '<?=$statusURI?>';
-				return;
-			}
-			setTimeout(loginStatus, 500);
-		}
-		loginStatus();
-		return false;
-	});
+        function loginStatus() {
+            if (login.closed) {
+                window.location.href = '<?=$statusURI?>';
+                return;
+            }
+            setTimeout(loginStatus, 500);
+        }
+
+        loginStatus();
+        return false;
+    });
 </script>
