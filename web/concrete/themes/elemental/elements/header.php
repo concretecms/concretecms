@@ -34,15 +34,15 @@ $ag->requireAsset('css', 'font-awesome');
     <header>
         <div class="container">
             <div class="row">
-                <div class="col-md-4"><span id="header-site-title">Elemental</span></div>
-                <div class="<? if ($displayThirdColumn) { ?>col-md-5<? } else { ?>col-md-8<? } ?>">
+                <div class="col-md-4 col-xs-6"><span id="header-site-title">Elemental</span></div>
+                <div class="<? if ($displayThirdColumn) { ?>col-md-5 col-xs-6<? } else { ?>col-md-8 col-xs-6<? } ?>">
                     <?
                     $a = new GlobalArea('Header Navigation');
                     $a->display();
                     ?>
                 </div>
                 <? if ($displayThirdColumn) { ?>
-                    <div class="col-md-3"><? $as->display(); ?></div>
+                    <div class="col-md-3 col-xs-12"><? $as->display(); ?></div>
                 <? } ?>
             </div>
         </div>
