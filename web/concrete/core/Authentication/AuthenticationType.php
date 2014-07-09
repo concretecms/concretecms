@@ -381,7 +381,7 @@ class AuthenticationType extends Object
             } else {
                 $this->controller->view();
             }
-            extract($this->controller->getSets());
+            extract(array_merge($params, $this->controller->getSets()));
             require_once($form->file);
             $out = ob_get_contents();
             ob_end_clean();
