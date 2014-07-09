@@ -6,7 +6,8 @@ use Loader;
 use PermissionKey;
 use TaskPermission;
 use PermissionAccess;
-class Concrete5_Controller_Page_Dashboard_System_Permissions_Files extends DashboardPageController {
+use FileSet;
+class Files extends DashboardPageController {
 	
 	public function save() {
 		if (Loader::helper('validation/token')->validate('save_permissions')) {
