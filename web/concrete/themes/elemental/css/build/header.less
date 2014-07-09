@@ -2,8 +2,8 @@ header {
 
   background-color: @page-background-color;
 
-  padding-top: @padding-large-vertical * 3.6;
-  padding-bottom: @padding-large-vertical * 3.6;
+  padding-top: 30px;
+  padding-bottom: 30px;
   border-bottom: 1px solid #d9d9d9;
 
   span#header-site-title {
@@ -11,6 +11,7 @@ header {
     font-weight: @header-site-title-type-font-weight;
     color: @header-site-title-type-color;
     text-transform: @header-site-title-type-text-transform;
+    line-height: @header-site-title-type-font-size;
     font-size: @header-site-title-type-font-size;
   }
 
@@ -63,7 +64,9 @@ header {
       -webkit-font-smoothing:antialiased;
       list-style: none;
       margin-top: 0px !important;
-      padding: 15px 0px 0px 0px;
+      padding: 0px 0px 0px 0px;
+      top: 10px;
+      position: relative;
       width: 100%;
        li {
         &:hover {
