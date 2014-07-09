@@ -225,7 +225,7 @@ class MiniSurvey {
 					for ($i = 0; $i < count($options); $i++) {
 						if(strlen(trim($options[$i]))==0) continue;
 						$checked=($_REQUEST['Question'.$msqID.'_'.$i]==trim($options[$i]))?'checked':'';
-						$html.= '  <div class="checkboxPair"><input name="Question'.$msqID.'_'.$i.'" type="checkbox" value="'.trim($options[$i]).'" '.$checked.' />&nbsp;'.$options[$i].'</div>'."\r\n";
+						$html.= '  <div class="checkbox"><label><input name="Question'.$msqID.'_'.$i.'" type="checkbox" value="'.trim($options[$i]).'" '.$checked.' /> <span>'.$options[$i].'</span></label></div>'."\r\n";
 					}
 					$html.= '</div>';
 					//}
@@ -240,32 +240,32 @@ class MiniSurvey {
 						$checked=($_REQUEST['Question'.$msqID]==trim($option))?'selected="selected"':'';
 						$html.= '<option '.$checked.'>'.trim($option).'</option>';
 					}
-					return '<select name="Question'.$msqID.'" id="Question'.$msqID.'" >'.$html.'</select>';
+					return '<select class="form-control" name="Question'.$msqID.'" id="Question'.$msqID.'" >'.$html.'</select>';
 
 				case 'radios':
 					foreach($options as $option){
 						if(strlen(trim($option))==0) continue;
 						$checked=($_REQUEST['Question'.$msqID]==trim($option))?'checked':'';
-						$html.= '<div class="radioPair"><input name="Question'.$msqID.'" type="radio" value="'.trim($option).'" '.$checked.' />&nbsp;'.$option.'</div>';
+						$html.= '<div class="radio"><label><input name="Question'.$msqID.'" type="radio" value="'.trim($option).'" '.$checked.' /> <span>'.$option.'</span></label></div>';
 					}
 					return $html;
 
 				case 'fileupload':
-					$html='<input type="file" name="Question'.$msqID.'" id="Question'.$msqID.'" />';
+					$html='<input type="file" name="Question'.$msqID.'" class="form-control" id="Question'.$msqID.'" />';
 					return $html;
 
 				case 'text':
 					$val=($_REQUEST['Question'.$msqID])?Loader::helper('text')->entities($_REQUEST['Question'.$msqID]):'';
-					return '<textarea name="Question'.$msqID.'" id="Question'.$msqID.'" cols="'.$questionData['width'].'" rows="'.$questionData['height'].'">'.$val.'</textarea>';
+					return '<textarea name="Question'.$msqID.'" class="form-control" id="Question'.$msqID.'" cols="'.$questionData['width'].'" rows="'.$questionData['height'].'">'.$val.'</textarea>';
 				case 'url':
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
-					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="url" value="'.stripslashes(htmlspecialchars($val)).'" />';
+					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" class="form-control" type="url" value="'.stripslashes(htmlspecialchars($val)).'" />';
 				case 'telephone':
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
-					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="tel" value="'.stripslashes(htmlspecialchars($val)).'" />';
+					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" class="form-control" type="tel" value="'.stripslashes(htmlspecialchars($val)).'" />';
 				case 'email':
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
-					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="email" value="'.stripslashes(htmlspecialchars($val)).'" />';
+					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" class="form-control" type="email" value="'.stripslashes(htmlspecialchars($val)).'" />';
 				case 'date':
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
 					return $datetime->date('Question'.$msqID,($val!==''?$val:'now'));
@@ -275,7 +275,7 @@ class MiniSurvey {
 				case 'field':
 				default:
 					$val=($_REQUEST['Question'.$msqID])?$_REQUEST['Question'.$msqID]:'';
-					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" type="text" value="'.stripslashes(htmlspecialchars($val)).'" />';
+					return '<input name="Question'.$msqID.'" id="Question'.$msqID.'" class="form-control" type="text" value="'.stripslashes(htmlspecialchars($val)).'" />';
 			}
 		}
 

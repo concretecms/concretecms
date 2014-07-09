@@ -430,7 +430,7 @@ class Version
             $db->Execute(
                 "insert into FileAttributeValues (fID, fvID, akID, avID) values (?, ?, ?, ?)",
                 array(
-                    $this->fID,
+                    $this->file->getFileID(),
                     $fvID,
                     $row['akID'],
                     $row['avID']
@@ -603,7 +603,7 @@ class Version
         $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
         $fh = Loader::helper('concrete/file');
         $path = $fh->getThumbnailFilePath($this->getPrefix(), $this->getFilename(), $level);
-        if ($path) {
+        if ($fsl->has($path)) {
             $fsl->delete($path);
         }
     }

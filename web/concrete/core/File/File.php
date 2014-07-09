@@ -313,7 +313,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         }
 
         // second test. If the date the version was added is older than File::CREATE_NEW_VERSION_THRESHOLD, we create new
-        $unixTime = strtotime($fv->getDateAdded());
+        $unixTime = $fv->getDateAdded()->getTimestamp();
         $diff = time() - $unixTime;
         if ($diff > File::CREATE_NEW_VERSION_THRESHOLD) {
             $createNew = true;

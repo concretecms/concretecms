@@ -5,9 +5,9 @@ if (strlen($relPathHover)) {
 if (strlen($linkURL)) { ?>
 	<a href="<?=$linkURL?>"<?=strlen($hoverImage)?' class="ccm-image-hover"':''?>>
 <?}?>
-<img class="ccm-image-block primary" alt="<?=$altText?>" src="<?=$relPath?>" <?=$sizeStr?>/>
+<img class="ccm-image-block primary img-responsive" alt="<?=$altText?>" src="<?=$relPath?>" <?=$sizeStr?>/>
 <? if($relPathHover) { ?>
-	<img class="ccm-image-block alternate" alt="<?=$altText?>" src="<?=$relPathHover?>" <?=$sizeStr?>/>
+	<img class="ccm-image-block alternate img-responsive" alt="<?=$altText?>" src="<?=$relPathHover?>" <?=$sizeStr?>/>
 <? }?>
 <?if (strlen($linkURL)) { ?>
 	</a>

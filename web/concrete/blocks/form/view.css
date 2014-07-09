@@ -1,11 +1,12 @@
-div.ccm-block-type-form div.control-group {
-	margin-bottom: 10px;
+div.ccm-block-type-form div.form-group {
+    margin-bottom: 10px;
 }
 
-div.ccm-block-type-form span.muted {
-	opacity: .50;
+div.ccm-block-type-form span.text-muted {
+    opacity: .50;
 }
 
-div.ccm-block-type-form div.control-group label.control-label {
-	font-weight: bold;
+div.ccm-block-type-form div.form-group label.control-label {
+    font-weight: bold;
+    display: block;
 }
