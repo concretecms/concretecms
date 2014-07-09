@@ -190,7 +190,6 @@ class Controller extends BlockController {
         // TODO fix this
 		//$ipl->filter(false, '(ak_exclude_search_index = 0 or ak_exclude_search_index is null)');
 
-        $ipl->setItemsPerPage(1);
         $pagination = $ipl->getPagination();
         $results = $pagination->getCurrentPageResults();
 
