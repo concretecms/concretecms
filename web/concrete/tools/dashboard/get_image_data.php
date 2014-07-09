@@ -4,7 +4,7 @@ session_write_close();
 
 // first, we check to see if the dashboard image data has been set in the cache
 if (DASHBOARD_BACKGROUND_INFO != false) {
-	if ($_REQUEST['image'] && preg_match('/([0-9]+)\.jpg/i', $_REQUEST['image'])) { 
+	if ($_REQUEST['image'] && preg_match('/([0-9]+)\.jpg/i', $_REQUEST['image'])) {
 		$imageData = Cache::get('dashboard_image_data', $_REQUEST['image']);
 		if (!$imageData) {
 			// call out to the server to grab the data
@@ -15,5 +15,5 @@ if (DASHBOARD_BACKGROUND_INFO != false) {
 	}
 
 	print $imageData;
-	
+
 }

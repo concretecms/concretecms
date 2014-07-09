@@ -8,6 +8,7 @@ if ($authType) {
     $active = $authType;
     $activeAuths = array($authType);
 }
+$image = date('Ymd') . '.jpg';
 ?>
 <div class="login-page">
     <div class="col-sm-6 col-sm-offset-3 login-title">
@@ -39,7 +40,7 @@ if ($authType) {
                     ?>
                     <div data-handle="<?= $auth->getAuthenticationTypeHandle() ?>"
                          class="authentication-type authentication-type-<?= $auth->getAuthenticationTypeHandle() ?>">
-                         <?php $auth->renderForm($authTypeElement ?: 'form', $authTypeParams ?: array()) ?>
+                        <?php $auth->renderForm($authTypeElement ? : 'form', $authTypeParams ? : array()) ?>
                     </div>
                 <?php
                 }
@@ -47,21 +48,25 @@ if ($authType) {
             </div>
         </div>
     </div>
+    <div class="background-credit">
+        <?= t('Photo Credit:') ?>
+        <a href="#" style="pull-right"></a>
+    </div>
 
     <script type="text/javascript">
         (function ($) {
             "use strict";
 
             var forms = $('div.controls').find('div.authentication-type').hide();
-            var types = $('ul.auth-types > li').each(function() {
+            var types = $('ul.auth-types > li').each(function () {
                 var me = $(this),
                     form = forms.filter('[data-handle="' + me.data('handle') + '"]');
-                me.click(function() {
+                me.click(function () {
                     if (form.hasClass('active')) return;
                     types.removeClass('active');
                     me.addClass('active')
                     if (forms.filter('.active').length) {
-                        forms.stop().filter('.active').removeClass('active').fadeOut(250, function() {
+                        forms.stop().filter('.active').removeClass('active').fadeOut(250, function () {
                             form.addClass('active').fadeIn(250);
                         });
                     } else {
@@ -89,8 +94,12 @@ if ($authType) {
             }, 0);
 
             $(function () {
-                $.backstretch("<?= DASHBOARD_BACKGROUND_FEED . '/' . date('Ymd') ?>.jpg", {
+                $.backstretch("<?= DASHBOARD_BACKGROUND_FEED . '/' . $image ?>", {
                     fade: 500
+                });
+                $.getJSON('<?= BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '/tools/required/dashboard/get_image_data' ?>', { image: '<?= $image ?>' }, function (data) {
+                    console.log($('div.background-credit').children().attr('href', data.link).text(data.author.join()));
+                    console.log(data);
                 });
             });
             $('ul.nav.nav-tabs > li > a').on('click', function () {
