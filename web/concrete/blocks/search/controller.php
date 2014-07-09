@@ -111,9 +111,11 @@ class Controller extends BlockController {
 		$this->set('resultTargetURL', $resultsURL);
 
 		//run query if display results elsewhere not set, or the cID of this page is set
-		if( !empty($_REQUEST['query']) || isset($_REQUEST['akID']) || isset($_REQUEST['month']))  {
-			$this->do_search();
-		}
+		if ($this->postTo_cID == '') {
+            if( !empty($_REQUEST['query']) || isset($_REQUEST['akID']) || isset($_REQUEST['month']))  {
+	    		$this->do_search();
+		    }
+        }
 	}
 
 	function save($data) {
