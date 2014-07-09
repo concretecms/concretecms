@@ -1365,7 +1365,7 @@
                     $.fn.dialog.showLoader();
                     $.get(CCM_TOOLS_PATH + '/edit_block_popup',
                         {
-                            arHandle: response.arHandle,
+                            arHandle: area.getHandle(),
                             cID: response.cID,
                             bID: response.bID,
                             arEnableGridContainer: arEnableGridContainer,
