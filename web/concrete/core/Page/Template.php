@@ -4,6 +4,7 @@ namespace Concrete\Core\Page;
 use PageType;
 use Concrete\Core\Support\Facade\Database;
 use \Concrete\Core\Package\PackageList;
+use Core;
 
 /**
  * @Entity
@@ -148,10 +149,7 @@ class Template
     {
         $db = Database::get();
         $em = $db->getEntityManager();
-        $args = array();
-        if ($includeInternal) {
-            $args['pTemplateIsInternal'] = true;
-        }
+        $args = array('pTemplateIsInternal' => $includeInternal);
         $list = $em->getRepository('\Concrete\Core\Page\Template')->findBy(
             $args, array('pTemplateID' => 'asc')
         );
@@ -202,7 +200,7 @@ class Template
 
     public function getIcons()
     {
-        $f = Loader::helper('file');
+        $f = Core::make('helper/file');
         return $f->getDirectoryContents(DIR_FILES_PAGE_TEMPLATE_ICONS);
     }
 

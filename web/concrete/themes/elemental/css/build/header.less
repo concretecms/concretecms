@@ -1,16 +1,16 @@
 header {
 
-  padding-top: @padding-large-vertical * 5;
-  padding-bottom: @padding-large-vertical * 5;
+  padding-top: @padding-large-vertical * 3.6;
+  padding-bottom: @padding-large-vertical * 3.6;
   border-bottom: 1px solid #f0eee1;
-  margin-bottom: (@padding-large-vertical * 5) - (@line-height-computed);
+  margin-bottom: (@padding-large-vertical * 3.6) - (@line-height-computed);
 
   /* Header Logo/Brand */
-  span#header-brand {
-    font-family: @header-brand-font-family;
-    font-weight: @header-brand-font-weight;
-    color: @header-brand-color;
-    font-size: @header-brand-font-size;
+  span#header-site-title {
+    font-family: @header-site-title-type-font-family;
+    font-weight: @header-site-title-type-font-weight;
+    color: @header-site-title-type-color;
+    font-size: @header-site-title-type-font-size;
   }
 
   nav {
@@ -27,10 +27,10 @@ header {
     ul {
       a {
         padding-right: 40px;
-        font-family: @header-brand-font-family;
-        font-size: @header-navigation-font-size;
-        font-weight: @header-navigation-font-weight;
-        color: @header-navigation-text-color;
+        font-family: @header-site-title-type-font-family;
+        font-size: @header-navigation-type-font-size;
+        font-weight: @header-navigation-type-font-weight;
+        color: @header-navigation-type-color;
 
         &:hover {
           color: @header-navigation-hover-color;

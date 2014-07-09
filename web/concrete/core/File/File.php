@@ -341,20 +341,31 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         return $this->fID;
     }
 
+    public function __clone()
+    {
+    }
+
     public function duplicate()
     {
 
-        $dh = Loader::helper('date');
         $db = Loader::db();
-        $date = $dh->getSystemDateTime();
 
-        $em = Database::get()->getEntityManager();
-        $nf = $em->copy($this);
-        $nf->fDateAdded = new Carbon($date);
+        $em = $db->getEntityManager();
+        $nf = clone $this;
+
+        $dh = Loader::helper('date');
+        $date = $dh->getSystemDateTime();
+        $this->fDateAdded = new Carbon($date);
+        $this->versions = clone $this->versions;
+        foreach($this->versions as $fv) {
+            $fv->setFile($nf);
+        }
+        $this->fID = null;
+
+        $em->persist($nf);
         $em->flush();
 
-        $fIDNew = $nf->getFileID();
-
+        /*
         $versions = $db->GetAll('select * from FileVersions where fID = ?', $this->fID);
         foreach ($versions as $fileversion) {
             $fileversion['fID'] = $fIDNew;
@@ -375,18 +386,16 @@ class File implements \Concrete\Core\Permission\ObjectInterface
                 )
             );
         }
+        */
 
         $v = array($this->fID);
         $q = "select fID, paID, pkID from FilePermissionAssignments where fID = ?";
         $r = $db->query($q, $v);
         while ($row = $r->fetchRow()) {
-            $v = array($fIDNew, $row['paID'], $row['pkID']);
+            $v = array($nf->getFileID(), $row['paID'], $row['pkID']);
             $q = "insert into FilePermissionAssignments (fID, paID, pkID) values (?, ?, ?)";
             $db->query($q, $v);
         }
-
-        // return the new file object
-        $nf = static::getByID($fIDNew);
 
         $fe = new \Concrete\Core\File\Event\DuplicateFile($this);
         $fe->setNewFileObject($nf);
@@ -490,7 +499,6 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         $db->Execute("delete from DownloadStatistics where fID = ?", array($this->fID));
         $db->Execute("delete from FilePermissionAssignments where fID = ?", array($this->fID));
     }
-
 
     /**
      * returns the most recent FileVersion object

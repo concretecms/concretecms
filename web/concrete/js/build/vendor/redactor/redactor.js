@@ -250,6 +250,9 @@
                     header3: 'Header 3',
                     header4: 'Header 4',
                     header5: 'Header 5',
+                    /* concrete5 */
+                    header6: 'Header 6',
+                    /* end concrete5 */
                     bold: 'Bold',
                     italic: 'Italic',
                     fontcolor: 'Font Color',
@@ -471,6 +474,12 @@
                             title: lang.header5,
                             func: 'formatBlocks',
                             className: 'redactor_format_h5'
+                        },
+                        h6: /* concrete5 */
+                        {
+                            title: lang.header6,
+                            func: 'formatBlocks',
+                            className: 'redactor_format_h6'
                         }
                     }
                 },

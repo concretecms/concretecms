@@ -67,6 +67,8 @@ class ClassLoader  {
 
 	protected function setupFileAutoloader() {
 		$symfonyLoader = new SymfonyClassloader();
+        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\StartingPointPackage', DIR_BASE_CORE . '/config/install/' . DIRNAME_PACKAGES);
+        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package', DIR_PACKAGES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Attribute', DIR_BASE_CORE . '/' . DIRNAME_ATTRIBUTES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Authentication', DIR_BASE_CORE . '/' . DIRNAME_AUTHENTICATION);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Block', DIR_BASE_CORE . '/' . DIRNAME_BLOCKS);
@@ -75,6 +77,7 @@ class ClassLoader  {
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Job', DIR_BASE_CORE . '/' . DIRNAME_JOBS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
 
+        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\StartingPointPackage', DIR_APPLICATION . '/config/install/' . DIRNAME_PACKAGES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Attribute', DIR_APPLICATION. '/' . DIRNAME_ATTRIBUTES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Authentication', DIR_APPLICATION . '/' . DIRNAME_AUTHENTICATION);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Block', DIR_APPLICATION . '/' . DIRNAME_BLOCKS);

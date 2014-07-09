@@ -22,6 +22,11 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue(class_exists('\Concrete\Theme\Concrete\PageTheme'));
 	}
 
+    public function testStartingPointPackageAutoloading()
+    {
+        $this->assertTrue(class_exists('\Concrete\StartingPointPackage\ElementalBlank\Controller'));
+    }
+
 	public function testJobAutoloadingCore() {
 		$this->assertTrue(class_exists('\Concrete\Job\IndexSearchAll'));
 		$this->assertTrue(class_exists('\Concrete\Job\IndexSearch'));

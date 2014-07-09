@@ -309,15 +309,13 @@ class StartingPointPackage extends BasePackage {
 	}
 
 	public static function getClass($pkgHandle) {
-		$dir = (is_dir(DIR_STARTING_POINT_PACKAGES . '/' . $pkgHandle)) ? DIR_STARTING_POINT_PACKAGES : DIR_STARTING_POINT_PACKAGES_CORE;
-		if (file_exists($dir . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER)) {
-			require_once($dir . '/' . $pkgHandle . '/' . FILENAME_PACKAGE_CONTROLLER);
-			$class = Object::camelcase($pkgHandle) . "StartingPointPackage";
-			if (class_exists($class)) {
-				$cl = new $class;
-				return $cl;
-			}
-		}
+        if (is_dir(DIR_STARTING_POINT_PACKAGES . '/' . $pkgHandle)) {
+            $class = '\\Application\\StartingPointPackage\\' . camelcase($pkgHandle) . '\\Controller';
+        } else {
+            $class = '\\Concrete\\StartingPointPackage\\' . camelcase($pkgHandle) . '\\Controller';
+        }
+		$cl = new $class;
+		return $cl;
 	}
 
 	public static function getAvailableList() {

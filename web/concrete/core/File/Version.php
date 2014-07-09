@@ -113,6 +113,11 @@ class Version
      */
     protected $fvHasThumbnail3 = false;
 
+    public function setFile(\Concrete\Core\File\File $file)
+    {
+        $this->file = $file;
+    }
+
     public static function add(\Concrete\Core\File\File $file, $filename, $prefix, $data = array())
     {
         $u = new User();
@@ -401,7 +406,6 @@ class Version
      */
     public function duplicate()
     {
-
         $db = Loader::db();
         $em = $db->getEntityManager();
         $qq = $em->createQuery('select max(v.fvID) from \Concrete\Core\File\Version v where v.file = :file');

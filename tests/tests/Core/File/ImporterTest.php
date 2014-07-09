@@ -19,6 +19,7 @@ class ImporterTest extends \FileStorageTestCase {
             'Users',
             'PermissionAccessEntityTypes',
             'FileAttributeValues',
+            'FilePermissionAssignments',
             'AttributeKeyCategories',
             'AttributeTypes',
             'Config',
@@ -229,6 +230,24 @@ class ImporterTest extends \FileStorageTestCase {
 
         $this->assertEquals('text/plain', $fo1->getMimeType());
         $this->assertEquals('image/jpeg', $fo2->getMimeType());
+    }
+
+    public function testFileDuplicate()
+    {
+        mkdir($this->getStorageDirectory());
+        $this->getStorageLocation();
+
+        $sample = dirname(__FILE__) . '/StorageLocation/fixtures/sample.txt';
+        $fi = new Importer();
+        $fi->import($sample, 'sample.txt');
+
+        $f = \File::getByID(1);
+        $f2 = $f->duplicate();
+        $this->assertEquals(2, $f2->getFileID());
+        $versions = $f2->getVersionList();
+        $this->assertEquals(1, count($versions));
+        $this->assertEquals(1, $versions[0]->getFileVersionID());
+        $this->assertEquals(2, $versions[0]->getFileID());
     }
 
     public function testFileVersionDuplicate()
