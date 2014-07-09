@@ -7,6 +7,7 @@ main {
     font-size: @title-thin-type-font-size;
     line-height: @title-thin-type-font-size * @line-height-base;
     font-weight: 200;
+    display: block;
   }
 
   h1.page-title {
@@ -25,5 +26,23 @@ main {
     line-height: @title-caps-bold-type-font-size * @line-height-base;
     font-weight: 700;
     text-transform: uppercase;
+  }
+
+  // ensure that what you're putting in here is large and in charge
+  .jumbo {
+    h1 {
+      .title-thin;
+      padding-top: 40px;
+      font-size: @title-thin-type-font-size * 1.5;
+      padding-bottom: 40px;
+    }
+
+    p {
+      font-size: @h2-type-font-size;
+      color: @h4-type-color;
+      font-weight: 200;
+    }
+
+    min-height: 300px;
   }
 }
