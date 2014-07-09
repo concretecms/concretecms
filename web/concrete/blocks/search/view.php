@@ -44,15 +44,15 @@ if ($do_search) {
 		</div>
 		
 		<?
-		if($paginator && strlen($paginator->getPages())>0){ ?>	
-		<div class="ccm-pagination">	
-			 <span class="ccm-page-left"><?=$paginator->getPrevious()?></span>
-			 <?=$paginator->getPages()?>
-			 <span class="ccm-page-right"><?=$paginator->getNext()?></span>
-		</div>	
-		<? } ?>
+		
+		
+        //$pagination = $searchList->getPagination();
+        $pages = $pagination->getCurrentPageResults();
 
-	<?				
+        if ($pagination->getTotalPages() > 1 && $pagination->haveToPaginate()) {
+            $showPagination = true;
+            echo $pagination->renderDefaultView();
+        }		
 	} //results found
 } 
 ?>

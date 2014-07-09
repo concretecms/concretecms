@@ -3,6 +3,7 @@ namespace Concrete\Block\Search;
 use Loader;
 use CollectionAttributeKey;
 use \Concrete\Core\Page\Search\IndexedPageList;
+use \Concrete\Core\Page\Search\IndexedSearchResult;
 use \Concrete\Core\Block\BlockController;
 use Page;
 class Controller extends BlockController {
@@ -186,19 +187,20 @@ class Controller extends BlockController {
 			$ipl->filterByPath($this->baseSearchPath);
 		}
 
-		$ipl->filter(false, '(ak_exclude_search_index = 0 or ak_exclude_search_index is null)');
-
+        // TODO fix this
+		//$ipl->filter(false, '(ak_exclude_search_index = 0 or ak_exclude_search_index is null)');
+		
 		$res = $ipl->getPage();
 
 		foreach($res as $r) {
 			$results[] = new IndexedSearchResult($r['cID'], $r['cName'], $r['cDescription'], $r['score'], $r['cPath'], $r['content'], $r['cDatePublic']);
 		}
-
+        
 		$this->set('query', $q);
-		$this->set('paginator', $ipl->getPagination());
 		$this->set('results', $results);
 		$this->set('do_search', true);
 		$this->set('searchList', $ipl);
+		$this->set('pagination', $ipl->getPagination());
 	}
 
 }
