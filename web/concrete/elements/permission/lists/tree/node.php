@@ -13,7 +13,7 @@ if (!$node->overrideParentTreeNodePermissions()) {
 	<div class="alert alert-info">
 	<?=t("Permissions for this node are currently inherited from <strong>%s</strong>.", $permNode->getTreeNodeDisplayName())?>
 	<br/><br/>
-	<a href="javascript:void(0)" class="btn btn-small" onclick="TopicsPermissions.setTreeNodePermissionsToOverride()"><?=t('Override Permissions')?></a>
+	<a href="javascript:void(0)" class="btn btn-sm btn-warning" onclick="TopicsPermissions.setTreeNodePermissionsToOverride()"><?=t('Override Permissions')?></a>
 	</div>
 	
 <? } else { 
@@ -24,7 +24,7 @@ if (!$node->overrideParentTreeNodePermissions()) {
 	<?=t("Permissions for this node currently override its parents' permissions.")?>
 	<? if ($node->getTreeNodeParentID() > 0) { ?>
 	<br/><br/>
-		<a href="javascript:void(0)" class="btn btn-small" onclick="TopicsPermissions.setTreeNodePermissionsToInherit()"><?=t('Revert to Parent Permisisons')?></a>
+		<a href="javascript:void(0)" class="btn btn-sm btn-warning" onclick="TopicsPermissions.setTreeNodePermissionsToInherit()"><?=t('Revert to Parent Permisisons')?></a>
 	<? } ?>
 </div>
 
