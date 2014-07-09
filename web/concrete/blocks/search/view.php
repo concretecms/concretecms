@@ -44,21 +44,15 @@ if ($do_search) {
 		</div>
 		
 		<?
-		if($paginator && $paginator->haveToPaginate()) { ?>	
-		<div class="ccm-pagination">	
-            <?php if($paginator->hasPreviousPage()) { ?>
-			<span class="ccm-page-left"><?=$paginator->getPreviousPage()?></span>
-			<?php } ?>
-			
-			<?=$paginator->getCurrentPageResults()?>
-			
-			<?php if($paginator->hasNextPage()) { ?>
-		    <span class="ccm-page-right"><?=$paginator->getNextPage()?></span>
-		    <?php } ?>
-		</div>	
-		<? } ?>
+		
+		
+        //$pagination = $searchList->getPagination();
+        $pages = $pagination->getCurrentPageResults();
 
-	<?				
+        if ($pagination->getTotalPages() > 1 && $pagination->haveToPaginate()) {
+            $showPagination = true;
+            echo $pagination->renderDefaultView();
+        }		
 	} //results found
 } 
 ?>
