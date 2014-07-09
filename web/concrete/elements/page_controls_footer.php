@@ -51,13 +51,13 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                         <?php } ?>
                                         <li><a class="dialog-launch" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="<?=t('Attributes')?>" href="<?=URL::to('/ccm/system/dialogs/page/attributes')?>?cID=<?=$cID?>"><?=t('Attributes')?></a></li>
                                     <?php }
-                                    if($permissions->canEditSpeedSettings()) {?>
+                                    if($permissions->canEditPageSpeedSettings()) {?>
                                         <li><a class="dialog-launch" dialog-width="550" dialog-height="280" dialog-modal="false" dialog-title="<?=t('Caching')?>" href="<?=URL::to('/ccm/system/panels/details/page/caching')?>?cID=<?=$cID?>>"><?=t('Caching')?></a></li>
                                     <?php }
                                     if($permissions->canEditPagePermissions()){?>
                                         <li><a class="dialog-launch" dialog-width="500" dialog-height="630" dialog-modal="false" dialog-title="<?=t('Permissions')?>" href="<?=URL::to('/ccm/system/panels/details/page/permissions')?>?cID=<?=$cID?>"><?=t('Permissions')?></a></li>
                                     <?php }
-                                    if($permissions->canEditPages()){?>
+                                    if($permissions->canEditPageTheme() || $permissions->canEditPageTemplate()){?>
                                         <li><a class="dialog-launch" dialog-width="350" dialog-height="250" dialog-modal="false" dialog-title="<?=t('Design')?>" href="<?=URL::to('/ccm/system/dialogs/page/design')?>?cID=<?=$cID?>"><?=t('Design')?></a></li>
                                     <?php }
                                     if($permissions->canViewPageVersions()){?>
