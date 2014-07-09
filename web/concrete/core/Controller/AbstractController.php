@@ -19,6 +19,11 @@ abstract class AbstractController {
 		call_user_func_array(array($r, 'requireAsset'), $args);
 	}
 
+    public function __construct()
+    {
+        $this->request = Request::getInstance();
+    }
+
 	/** 
 	 * Adds an item to the view's header. This item will then be automatically printed out before the <body> section of the page
 	 * @param string $item

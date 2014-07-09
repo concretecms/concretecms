@@ -2785,6 +2785,18 @@
       <unsigned/>
     </field>
   </table>
+    <table name="SocialLinks">
+        <field name="slID" type="I" size="10">
+            <key/>
+            <unsigned />
+            <autoincrement/>
+        </field>
+        <field name="ssID" type="I" size="10">
+            <unsigned />
+            <default value="0" />
+        </field>
+        <field name="url" type="C" size="255"/>
+    </table>
   <table name="SystemCaptchaLibraries">
     <field name="sclHandle" type="C" size="64">
       <key/>

@@ -44,6 +44,7 @@ class Controller extends AbstractController {
 	}
 
 	public function __construct() {
+        parent::__construct();
 		if ($this->viewPath) {
 			$this->view = new View($this->viewPath);
 			$this->view->setController($this);
