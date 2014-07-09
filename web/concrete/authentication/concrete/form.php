@@ -2,7 +2,6 @@
 $form = Loader::helper('form');
 ?>
 
-
 <form method='post'
       action='<?= View::url('/login', 'authenticate', $this->getAuthenticationTypeHandle()) ?>'>
     <div class="form-group concrete-login">

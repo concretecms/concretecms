@@ -24,7 +24,6 @@ class Controller extends AuthenticationTypeController
     {
         $u = new User();
         if (!Session::has('authFacebookStatus')) {
-            return;
             throw new \Exception(t('Something went wrong, please try again.'));
         }
         $status = Session::get('authFacebookStatus');
@@ -43,7 +42,8 @@ class Controller extends AuthenticationTypeController
             }
             throw new \Exception($msg);
         } else if ($status == 2) {
-            return t("Successfully attached this facebook account to your user account.");
+            $this->set('message', t("Successfully attached this facebook account to your user account."));
+            return;
         } else if ($status == 4) {
             throw new \Exception(t( /*i18n %s is the site name*/
                                      'This facebook account is already attached to your %s account.',

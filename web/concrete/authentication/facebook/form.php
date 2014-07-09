@@ -1,5 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access denied.') ?>
-
+<?php if (isset($message)) { ?>
+    <div class="alert alert-success" role="alert"><?= $message ?></div>
+<? } ?>
 <button class="btn btn-block btn-success authFacebookLogin"><?= t('Log in with facebook') ?></button>
 <script type="text/javascript">
     $('button.authFacebookLogin').click(function () {
