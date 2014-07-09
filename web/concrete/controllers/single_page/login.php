@@ -79,8 +79,6 @@ class Login extends PageController
             array_shift($params);
             array_shift($params);
 
-            $message = call_user_func_array(array($at->controller, $method), $params);
-
             $this->view();
             $this->set('authTypeParams', $params);
             $this->set('authTypeElement', $method);
@@ -202,7 +200,6 @@ class Login extends PageController
         }
         $this->locales = $locales;
         $this->set('locales', $locales);
-
     }
 
     public function chooseRedirect()
@@ -282,6 +279,7 @@ class Login extends PageController
     public function view($type = null, $element = 'form')
     {
         $this->requireAsset('javascript', 'backstretch');
+        $this->set('authTypeParams', $this->getSets());
         if (strlen($type)) {
             $at = AuthenticationType::getByHandle($type);
             $this->set('authType', $at);
