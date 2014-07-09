@@ -9,7 +9,8 @@ use GroupList;
 
 class Bulkupdate extends DashboardPageController {
 
-	public function confirm() {
+	public function confirm() 
+	{
 		$this->move();
 
 		if (!$this->error->has()) {
@@ -27,7 +28,8 @@ class Bulkupdate extends DashboardPageController {
 		$this->redirect('/dashboard/users/groups', 'bulk_update_complete');
 	}
 
-	public function move() {
+	public function move() 
+	{
 		$this->search();
 		$gParentNodeID = Loader::helper('security')->sanitizeInt($_REQUEST['gParentNodeID']);
 		if ($gParentNodeID) {
@@ -58,7 +60,9 @@ class Bulkupdate extends DashboardPageController {
 		}
 
 	}
-	public function search() {
+	
+	public function search() 
+	{
 		$this->requireAsset('core/groups');
 		$tree = GroupTree::get();
 		$this->set("tree", $tree);
