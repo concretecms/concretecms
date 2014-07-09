@@ -13,6 +13,27 @@ header {
     font-size: @header-site-title-type-font-size;
   }
 
+  .ccm-search-block-form {
+    position: relative;
+    &:before {
+      content: "\f002";
+      font-family: FontAwesome;
+      font-weight: normal;
+      font-style: normal;
+      display: inline-block;
+      position: absolute;
+      left: 14px;
+      top: 9px;
+      text-decoration: inherit;
+      color: #d2d2d2;
+    }
+    .ccm-search-block-text {
+      border: 1px solid #e6e6e6;
+      border-radius: 30px;
+      padding: 10px 20px 10px 35px;
+    }
+  }
+
   nav {
     .dropdown{
       &:after {
@@ -24,6 +45,7 @@ header {
         }
       }
     }
+
     ul {
       a {
         padding-right: 40px;
