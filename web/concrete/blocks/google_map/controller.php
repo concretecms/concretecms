@@ -45,7 +45,8 @@ class Controller extends BlockController {
 	}
 	
 	
-	public function view(){ 
+	public function view(){
+        $this->requireAsset('javascript', 'jquery');
 		$this->set('bID', $this->bID);	
 		$this->set('title', $this->title);
 		$this->set('location', $this->location);

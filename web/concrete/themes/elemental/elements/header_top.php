@@ -26,4 +26,4 @@ $ag->requireAsset('css', 'font-awesome');
 </head>
 <body>
 
-<div class="ccm-page ccm-elemental">
+<div class="ccm-page">
