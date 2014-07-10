@@ -127,7 +127,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
     public function getStorageLocationID()
     {
-        return $this->location->getID();
+        return $this->storageLocation;
     }
 
     /**
@@ -313,8 +313,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         }
 
         // second test. If the date the version was added is older than File::CREATE_NEW_VERSION_THRESHOLD, we create new
-        $unixTime = $fv->getDateAdded()->getTimestamp();
-        $diff = time() - $unixTime;
+        $diff = time() - $fv->getDateAdded()->getTimestamp();
         if ($diff > File::CREATE_NEW_VERSION_THRESHOLD) {
             $createNew = true;
         }
