@@ -76,12 +76,18 @@ $th = Loader::helper('text');
                     <td valign="top" style="text-align: center"><?=$ent->getLevelIcon()?></td>
                     <td valign="top" style="white-space: nowrap"><?=$ent->getChannelDisplayName()?></td>
                     <td valign="top"><strong><?php
-                    if($ent->getUserID() == NULL){
+                    $uID = $ent->getUserID();
+                    if(empty($uID)) {
                         echo t("Guest");
                     }
-                    else{
-                        $u = User::getByUserID($ent->getUserID());
-                        echo $u->getUserName();
+                    else {
+                        $u = User::getByUserID($uID);
+                        if(is_object($u)) {
+                            echo $u->getUserName();
+                        }
+                        else {
+                            echo tc('Deleted user', 'Deleted (id: %s)', $uID);
+                        }
                     }
                     ?></strong></td>
                     <td style="width: 100%"><?=$th->makenice($ent->getMessage())?></td>
