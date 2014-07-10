@@ -106,7 +106,7 @@ var miniSurvey = {
         var postStr = 'question=' + encodeURIComponent($('#question' + mode).val()) + '&options=' + options;
         postStr += '&width=' + escape($('#width' + mode).val());
         postStr += '&height=' + escape($('#height' + mode).val());
-        var req = $('#required' + mode + ' input[value=1]').prop('checked') ? 1 : 0;
+        var req = $('input[type="radio"][name="required' + mode + '"]:checked').val();
         postStr += '&required=' + req;
         postStr += '&position=' + escape($('#position' + mode).val());
         var form = document.getElementById('ccm-block-form');
@@ -184,11 +184,11 @@ var miniSurvey = {
                 $('#heightEdit').val(jsonObj.height);
                 $('#positionEdit').val(jsonObj.position);
                 if (parseInt(jsonObj.required, 10) == 1) {
-                    $('#requiredEdit input[value=1]').prop('checked', true);
-                    $('#requiredEdit input[value=0]').prop('checked', false);
+                    $('input[name="requiredEdit"][value=1]').prop('checked', true);
+                    $('input[name="requiredEdit"][value=0]').prop('checked', false);
                 } else {
-                    $('#requiredEdit input[value=1]').prop('checked', false);
-                    $('#requiredEdit input[value=0]').prop('checked', true);
+                    $('input[name="requiredEdit"][value=1]').prop('checked', false);
+                    $('input[name="requiredEdit"][value=0]').prop('checked', true);
                 }
 
                 if (jsonObj.inputType == 'email') {
