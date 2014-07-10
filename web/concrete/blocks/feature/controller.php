@@ -76,7 +76,7 @@ class Controller extends BlockController
 
     public function getSearchableContent()
     {
-        return $this->description;
+        return $this->title . ' ' . $this->paragraph;
     }
 
 
