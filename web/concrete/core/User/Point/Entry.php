@@ -1,6 +1,8 @@
 <?
 namespace Concrete\Core\User\Point;
 use Loader;
+use \Concrete\Core\User\UserInfo;
+use \Concrete\Core\User\Point\Action\Action as UserPointAction;
 class Entry {
 
 	public $upID;

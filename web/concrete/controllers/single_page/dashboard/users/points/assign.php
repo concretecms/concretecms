@@ -4,8 +4,9 @@ namespace Concrete\Controller\SinglePage\Dashboard\Users\Points;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use \Concrete\Core\User\Point\Entry as UserPointEntry;
+use \Concrete\Core\User\Point\Action\Action as UserPointAction;
 use \Concrete\Core\User\Point\Action\ActionList as UserPointActionList;
-use \Concrete\Core\User\Point\Action\Description as UserPointActionDescription;
+use \Concrete\Core\User\Point\Action\ActionDescription as UserPointActionDescription;
 use UserInfo;
 
 class Assign extends DashboardPageController {
@@ -42,7 +43,8 @@ class Assign extends DashboardPageController {
 		}
 	}
 
-	public function save() {
+	public function save() 
+	{
 
 		$user = $this->post('upUser');
 		if(is_numeric($user)) {
