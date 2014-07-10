@@ -2,14 +2,8 @@
 <concrete5-cif version="1.0">
     <imageeditor_controlsets>
         <imageeditor_controlset handle="position" name="Position"/>
-        <imageeditor_controlset handle="crop" name="Crop"/>
         <imageeditor_controlset handle="filter" name="Filter"/>
     </imageeditor_controlsets>
-    <imageeditor_components>
-        <imageeditor_component handle="text" name="Text"/>
-        <imageeditor_component handle="image" name="Image"/>
-        <imageeditor_component handle="shape" name="Shape"/>
-    </imageeditor_components>
     <imageeditor_filters>
         <imageeditor_filter handle="none" name="None"/>
         <imageeditor_filter handle="grayscale" name="Grayscale"/>
