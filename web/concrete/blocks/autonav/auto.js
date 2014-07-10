@@ -111,7 +111,7 @@ Concrete.event.bind('autonav.edit.open', function() {
     });
 });
 
-Concrete.event.bind('ConcreteSitemap', function() {
+Concrete.event.bind('ConcreteSitemap, ConcreteSitemapPageSearch', function() {
     Concrete.event.bind('SitemapSelectPage', function() {
         _.defer(function() {
             reloadPreview();
