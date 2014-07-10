@@ -20,6 +20,11 @@ class Controller extends AuthenticationTypeController
         }
     }
 
+    public function getAuthenticationTypeIconHTML()
+    {
+        return '<i class="fa fa-facebook"></i>';
+    }
+
     public function status()
     {
         $u = new User();

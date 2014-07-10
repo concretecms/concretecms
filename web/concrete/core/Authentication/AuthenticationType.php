@@ -220,6 +220,11 @@ class AuthenticationType extends Object
         return $this->controller;
     }
 
+    public function getAuthenticationTypeIconHTML()
+    {
+        return $this->controller->getAuthenticationTypeIconHTML();
+    }
+
     /**
      * AuthenticationType::setAuthenticationTypeDisplayOrder
      * Update the order for display.

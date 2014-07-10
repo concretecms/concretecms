@@ -14,7 +14,7 @@ tbody tr {
 
 if ($editmode) {
     $pageTitle = t('Edit %s Authentication Type', $at->getAuthenticationTypeName());
-    ?><form class="form-horizontal" method="post" action="<?=$view->action('save', $at->getAuthenticationTypeID())?>"><?php
+    ?><form class="form-stacked" method="post" action="<?=$view->action('save', $at->getAuthenticationTypeID())?>"><?php
 }
 if (!$editmode) {
     ?>
@@ -22,9 +22,10 @@ if (!$editmode) {
         <table class="table">
             <thead>
                 <tr>
+                    <th></th>
                     <th><?=t('ID')?></th>
-                    <th><?=t('Display Name')?></th>
                     <th><?=t('Handle')?></th>
+                    <th><?=t('Display Name')?></th>
                     <th></th>
                 </tr>
             </thead>
@@ -35,10 +36,11 @@ if (!$editmode) {
                         data-editURL="<?=h($view->action('edit', $at->getAuthenticationTypeID()))?>"
                         class="<?=$at->isEnabled() ? 'success' : 'error'?>"
                     >
-                        <td><?=$at->getAuthenticationTypeID()?></td>
-                        <td><?=$at->getAuthenticationTypeName()?></td>
+                        <td style="text-align: center; width: 50px"><?=$at->getAuthenticationTypeIconHTML()?></td>
+                        <td style="width: 100px"><?=$at->getAuthenticationTypeID()?></td>
                         <td><?=$at->getAuthenticationTypeHandle()?></td>
-                        <td style="text-align:right"><i class="handle icon-resize-vertical"></i></td>
+                        <td><?=$at->getAuthenticationTypeName()?></td>
+                        <td style="text-align:right"><i style="cursor: move" class="fa fa-arrows"></i></td>
                     </tr><?php
                 }
             ?></tbody>
@@ -50,7 +52,7 @@ if (!$editmode) {
         $(function(){
             var sortableTable = $('table.table tbody');
             sortableTable.sortable({
-               handle: 'i.handle',
+               handle: 'i.fa-arrows',
                helper: function(e, ui) {
                    ui.children().each(function() {
                        var me = $(this);
@@ -58,6 +60,7 @@ if (!$editmode) {
                    });
                    return ui;
                },
+               cursor: 'move',
                stop: function(e, ui) {
                    var order = [];
                    sortableTable.children().each(function() {
@@ -76,9 +79,7 @@ if (!$editmode) {
     <?php
 } else {
     ?>
-    <fieldset>
-        <?=$at->renderTypeForm()?>
-    </fieldset>
+    <?=$at->renderTypeForm()?>
     <?php
 }
 

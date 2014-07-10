@@ -22,6 +22,11 @@ class Controller extends AuthenticationTypeController
         }
     }
 
+    public function getAuthenticationTypeIconHTML()
+    {
+        return '<i class="fa fa-user"></i>';
+    }
+
     public function verifyHash(User $u, $hash)
     {
         $uID = $u->getUserID();
