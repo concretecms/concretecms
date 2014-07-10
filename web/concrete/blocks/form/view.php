@@ -104,11 +104,11 @@ $translatedSubmitLabel = t('Submit');
 			<div class="form-group field field-<?php  echo $question['type']; ?>">
 				<label class="control-label" <?php  echo $question['labelFor']; ?>>
 					<?php  echo $question['question']; ?>
+                    <?php if ($question['required']): ?>
+                        <span class="text-muted small" style="font-weight: normal"><?=t("Required")?></span>
+                    <?php  endif; ?>
 				</label>
 				<?php  echo $question['input']; ?>
-					<?php if ($question['required']): ?>
-						<span class="text-muted"><?=t("Required")?></span>
-					<?php  endif; ?>
 			</div>
 		<?php  endforeach; ?>
 		
