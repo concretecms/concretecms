@@ -29,8 +29,11 @@ class Groups extends DashboardPageController {
 	public function edit($gID = false) {
 		$g = Group::getByID(intval($gID));
 		$gp = new Permissions($g);
+        if (!is_object($g)) {
+            throw new \Exception(t('Invalid group.'));
+        }
 		if (!$gp->canEditGroup()) {
-			throw new Exception(t('You do not have access to edit this group.'));
+			throw new \Exception(t('You do not have access to edit this group.'));
 		}
 		if (is_object($g)) { 		
 			$this->set('group', $g);

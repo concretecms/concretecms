@@ -464,6 +464,7 @@ define('DASHBOARD_BACKGROUND_INFO', 'http://backgroundimages.concrete5.org/get_i
 /* -- Text, title formats -- */
 defined('PAGE_TITLE_FORMAT') or define('PAGE_TITLE_FORMAT', '%1$s :: %2$s');
 defined('PAGE_PATH_SEPARATOR') or define('PAGE_PATH_SEPARATOR', '-');
+defined('GROUP_DISPLAY_NAME_SEPARATOR') or define('GROUP_DISPLAY_NAME_SEPARATOR', ' / ');
 defined('PAGE_PATH_SEGMENT_MAX_LENGTH') or define('PAGE_PATH_SEGMENT_MAX_LENGTH', '128');
 defined('PAGING_STRING') or define('PAGING_STRING', 'ccm_paging_p');
 defined('TRASH_PAGE_PATH') or define('TRASH_PAGE_PATH', '/!trash');

@@ -4,6 +4,7 @@ use Loader;
 use Config;
 use URL;
 use PermissionAccess;
+use Group;
 class GroupCombinationEntity extends Entity {
 	
 	protected $groups = array();
@@ -63,8 +64,8 @@ class GroupCombinationEntity extends Entity {
 		$peID = $db->GetOne($q, array($petID));
 		if (!$peID) { 
 			$db->Execute("insert into PermissionAccessEntities (petID) values (?)", array($petID));
+            $peID = $db->Insert_ID();
 			Config::save('ACCESS_ENTITY_UPDATED', time());
-			$peID = $db->Insert_ID();
 			foreach($groups as $g) {
 				$db->Execute('insert into PermissionAccessEntityGroups (peID, gID) values (?, ?)', array($peID, $g->getGroupID()));
 			}

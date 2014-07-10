@@ -6,6 +6,7 @@ use \Concrete\Core\Tree\Node\Type\Group as GroupTreeNode;
 use Group;
 use Loader;
 use GroupList;
+use Concrete\Core\Tree\Node\Node as TreeNode;
 
 class Bulkupdate extends DashboardPageController {
 

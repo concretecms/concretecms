@@ -4,7 +4,7 @@ $form = Loader::helper('form');?>
 
 <? if (is_array($selectedGroups)) { ?>
 
-<h2><?=t('Confirm')?></h2>
+<h4><?=t('Confirm')?></h4>
 <? if ($gParent instanceof Group) { ?>
 <p><?=t('Move the following group(s) beneath <strong>%s</strong>.', $gParent->getGroupDisplayName())?></p>
 <? } else { ?> 
@@ -39,23 +39,22 @@ $form = Loader::helper('form');?>
 
     <div class="row">
         <div class="col-md-6">
-            <h2><?=t('Choose Groups to Move')?></h2>
-    
-        	<label class="checkbox" style="user-select: none; -moz-user-select: none; -webkit-user-select: none">
-        		<input data-toggle="checkbox" type="checkbox" /> <b><?=t('Select All')?></b>
-        	</label>
-        	
-        	<div id="group-list">
-                <? foreach($groups as $g) { ?>
-            		<label class="checkbox">
-            			<input name="gID[]" type="checkbox" <? if (is_array($_POST['gID']) && in_array($g->getGroupID(), $_POST['gID'])) { ?>checked<? } ?> value="<?=$g->getGroupID()?>" /> <?=$g->getGroupDisplayName()?>
-            		</label>
-            	<? } ?>
+            <h4><?=t('Choose Groups to Move')?></h4>
+
+            <div class="checkbox">
+                <label style="user-select: none; -moz-user-select: none; -webkit-user-select: none">
+                    <input data-toggle="checkbox" type="checkbox" /> <strong><?=t('Select All')?></strong>
+                </label>
             </div>
+            <? foreach($groups as $g) { ?>
+                <div class="checkbox" data-checkbox="group-list"><label>
+                    <input name="gID[]" type="checkbox" <? if (is_array($_POST['gID']) && in_array($g->getGroupID(), $_POST['gID'])) { ?>checked<? } ?> value="<?=$g->getGroupID()?>" /> <?=$g->getGroupDisplayName()?>
+                </label></div>
+            <? } ?>
         </div>
         
         <div class="col-md-6">
-            <h2><?=t('Choose New Parent Location')?></h2>
+            <h4><?=t('Choose New Parent Location')?></h4>
             
             <?=$form->hidden('gParentNodeID')?>
             
@@ -96,9 +95,9 @@ $form = Loader::helper('form');?>
 $(function() {
 	$('input[data-toggle=checkbox]').on('click', function() {
 		if ($(this).is(':checked')) {
-			$('#group-list input[type=checkbox]').prop('checked', true);
+			$('div[data-checkbox=group-list] input[type=checkbox]').prop('checked', true);
 		} else {
-			$('#group-list input[type=checkbox]').prop('checked', false);
+			$('div[data-checkbox=group-list]  input[type=checkbox]').prop('checked', false);
 
 		}
 	});
@@ -128,13 +127,12 @@ $(function() {
 <? } else { ?>
 
 <form method="POST" action="<?=$view->action('search')?>">
-	<h2><?=t('Search for Groups to Move')?></h2>
+	<h4><?=t('Search for Groups to Move')?></h4>
 	
 	<div class="row">
 	    <div class="col-md-6">
 	        <fieldset>
             	<div class="form-group">
-            		<?=$form->label('gName', t('Search Groups'))?>
                     <?=$form->text('gName')?>
             	</div>
             </fieldset>

@@ -41,6 +41,7 @@ ConcreteEvent.unsubscribe('SelectGroup');
 ConcreteEvent.subscribe('SelectGroup', function(e, data) {
 	var gID = data.gID, gName = data.gName;
 	if ($("input[class=combogID][value=" + gID + "]").length == 0) {
+        jQuery.fn.dialog.closeTop();
 		$("#ccm-permissions-access-entity-combination-groups-none").hide();
 		var tbl = $("#ccm-permissions-access-entity-combination-groups");
 		html = '<tr><td><input type="hidden" class="combogID" name="gID[]" value="' + gID + '" /><img src="<?=ASSETS_URL_IMAGES?>/icons/group.png" /></td><td>' + gName + '</td><? if (!is_object($pae)) { ?><td><a href="javascript:void(0)" onclick="ccm_removeCombinationGroup(this)"><img src="<?=ASSETS_URL_IMAGES?>/icons/remove.png" /></a></td><? } ?>';

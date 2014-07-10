@@ -87,7 +87,7 @@ $(function() {
 	      'removeNodesByID': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
 	      <? } ?>
 		<? if ($selectMode) { ?>
-			onSelectNode: function(node) {
+			onClick: function(node) {
 				ConcreteEvent.publish('SelectGroup', {'gID': node.data.gID, 'gName': node.data.title});
 			},
 		<? } ?>
