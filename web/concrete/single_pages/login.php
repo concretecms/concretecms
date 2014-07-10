@@ -24,7 +24,7 @@ $image = date('Ymd') . '.jpg';
                     foreach ($activeAuths as $auth) {
                         ?>
                         <li data-handle="<?= $auth->getAuthenticationTypeHandle() ?>">
-                            <i class="fa fa-user"></i>
+                            <?=$auth->getAuthenticationTypeIconHTML()?>
                             <span><?= $auth->getAuthenticationTypeName() ?></span>
                         </li>
                     <?php
