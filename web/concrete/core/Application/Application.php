@@ -40,10 +40,12 @@ class Application extends Container
      */
     public function shutdown()
     {
-        $this->handleScheduledJobs();
-        $db = Database::get();
-        if ($db->isConnected()) {
-            $db->close();
+        if ($this->isInstalled()) {
+            $this->handleScheduledJobs();
+            $db = Database::get();
+            if ($db->isConnected()) {
+                $db->close();
+            }
         }
         if (defined('ENABLE_OVERRIDE_CACHE') && ENABLE_OVERRIDE_CACHE) {
             Environment::saveCachedEnvironmentObject();
@@ -61,7 +63,7 @@ class Application extends Container
      */
     protected function handleScheduledJobs()
     {
-        if ($this->isInstalled() && ENABLE_JOB_SCHEDULING) {
+        if (ENABLE_JOB_SCHEDULING) {
             $c = Page::getCurrentPage();
             if ($c instanceof Page && !$c->isAdminArea()) {
                 // check for non dashboard page

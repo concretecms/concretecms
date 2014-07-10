@@ -106,10 +106,11 @@ if (!$cms->isInstalled()) {
     if (!$cms->isRunThroughCommandLineInterface() && !$request->matches('/install/*') && $request->getPath(
         ) != '/install'
     ) {
-        Redirect::to('/install')->send();
+        $response = Redirect::to('/install');
     }
-
-    $response = $cms->dispatch($request);
+    else {
+        $response = $cms->dispatch($request);
+    }
     $response->send();
     $cms->shutdown();
 }
@@ -198,5 +199,3 @@ $response->send();
  * ----------------------------------------------------------------------------
  */
 return $cms;
-
-
