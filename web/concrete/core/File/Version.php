@@ -430,7 +430,7 @@ class Version
             $db->Execute(
                 "insert into FileAttributeValues (fID, fvID, akID, avID) values (?, ?, ?, ?)",
                 array(
-                    $this->file->getFileID(),
+                    $this->getFileID(),
                     $fvID,
                     $row['akID'],
                     $row['avID']

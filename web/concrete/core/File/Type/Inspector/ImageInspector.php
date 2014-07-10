@@ -3,7 +3,6 @@ namespace Concrete\Core\File\Type\Inspector;
 use Image;
 use FileAttributeKey;
 use Core;
-use \Imagine\Image\Box;
 
 class ImageInspector extends Inspector {
 
