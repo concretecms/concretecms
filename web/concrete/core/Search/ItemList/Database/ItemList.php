@@ -70,11 +70,18 @@ abstract class ItemList extends AbstractItemList
         $this->query->orderBy($column, $direction);
     }
 
+    /**
+     * @deprecated
+     */
     public function filter($field, $value, $comparison = '=')
     {
-        $this->query->andWhere(implode(' ', array(
-           $field, $comparison, $this->query->createNamedParameter($value)
-        )));
+        if ($field == false) {
+            $this->query->andWhere($value); // ugh
+        } else {
+            $this->query->andWhere(implode(' ', array(
+               $field, $comparison, $this->query->createNamedParameter($value)
+            )));
+        }
     }
 
 }

@@ -107,7 +107,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
             $query->from('Pages', 'p')
                 ->leftJoin('p', 'Pages', 'pa', 'p.cPointerID = pa.cID')
                 ->leftJoin('p', 'PagePaths', 'pp', 'p.cID = pp.cID and pp.ppIsCanonical = true')
-                ->leftJoin('pa', 'PageSearchIndex', 'ps', 'ps.cID = if(pa.cID is null, p.cID, pa.cID)')
+                ->leftJoin('pa', 'PageSearchIndex', 'psi', 'psi.cID = if(pa.cID is null, p.cID, pa.cID)')
                 ->leftJoin('p', 'PageTypes', 'pt', 'pt.ptID = if(pa.cID is null, p.ptID, pa.ptID)')
                 ->leftJoin('p', 'CollectionSearchIndexAttributes', 'csi', 'csi.cID = if(pa.cID is null, p.cID, pa.cID)')
                 ->innerJoin('p', 'CollectionVersions', 'cv', 'cv.cID = if(pa.cID is null, p.cID, pa.cID) and cvIsApproved = 1')
@@ -116,7 +116,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         } else {
             $query->from('Pages', 'p')
                 ->leftJoin('p', 'PagePaths', 'pp', '(p.cID = pp.cID and pp.ppIsCanonical = true)')
-                ->leftJoin('p', 'PageSearchIndex', 'ps', 'p.cID = ps.cID')
+                ->leftJoin('p', 'PageSearchIndex', 'psi', 'p.cID = psi.cID')
                 ->leftJoin('p', 'PageTypes', 'pt', 'p.ptID = pt.ptID')
                 ->leftJoin('c', 'CollectionSearchIndexAttributes', 'csi', 'c.cID = csi.cID')
                 ->innerJoin('p', 'Collections', 'c', 'p.cID = c.cID')
@@ -126,7 +126,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         }
 
         if ($this->isFulltextSearch) {
-            $query->addSelect('match(ps.cName, ps.cDescription, ps.content) against (:fulltext) as cIndexScore');
+            $query->addSelect('match(psi.cName, psi.cDescription, psi.content) against (:fulltext) as cIndexScore');
         }
 
         if (!$this->includeInactivePages) {
@@ -363,9 +363,9 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     public function filterByKeywords($keywords)
     {
         $expressions = array(
-            $this->query->expr()->like('ps.cName', ':keywords'),
-            $this->query->expr()->like('ps.cDescription', ':keywords'),
-            $this->query->expr()->like('ps.content', ':keywords')
+            $this->query->expr()->like('psi.cName', ':keywords'),
+            $this->query->expr()->like('psi.cDescription', ':keywords'),
+            $this->query->expr()->like('psi.content', ':keywords')
         );
 
         $keys = \CollectionAttributeKey::getSearchableIndexedList();
@@ -382,7 +382,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     {
         $this->isFulltextSearch = true;
         $this->autoSortColumns[] = 'cIndexScore';
-        $this->query->where('match(ps.cName, ps.cDescription, ps.content) against (:fulltext)');
+        $this->query->where('match(psi.cName, psi.cDescription, psi.content) against (:fulltext)');
         $this->query->setParameter('fulltext', $keywords);
     }
 
@@ -468,4 +468,12 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         $this->filterByPageTypeID($ctID);
     }
 
+    /**
+     * This does nothing.
+     * @deprecated
+     */
+    public function ignoreAliases()
+    {
+        return false;
+    }
 }

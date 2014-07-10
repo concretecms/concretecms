@@ -424,7 +424,7 @@ abstract class Job extends Object {
 	}
 
 	public function setSchedule($scheduled, $interval, $value) {
-		$this->isScheduled = ($scheduled?true:false);
+		$this->isScheduled = $scheduled ? 1 : 0;
 		$this->scheduledInterval = Loader::helper('security')->sanitizeString($interval);
 		$this->scheduledValue = $value;
 		if($this->getJobID()) {

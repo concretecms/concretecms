@@ -5,7 +5,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <div class="ccm-ui">
 	<div id="ccm-progressive-operation-progress-bar" data-total-items="<?=$totalItems?>">
 	<div class="progress progress-striped active">
-	<div class="bar" style="width: 0%;"></div>
+	<div class="progress-bar" style="width: 0%;"></div>
 	</div>
 	</div>
 
