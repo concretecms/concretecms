@@ -142,6 +142,18 @@ class UserList extends DatabaseItemList
     }
 
     /**
+     * Filter list by user name but as a like parameter
+     * @param $username
+     */
+    public function filterByFuzzyUserName($username)
+    {
+        $this->query->andWhere(
+            $this->query->expr()->like('u.uName', ':uName')
+        );
+        $this->query->setParameter('uName', $username . '%');
+    }
+
+    /**
      * Filters keyword fields by keywords (including username, email and attributes).
      * @param $keywords
      */
@@ -207,6 +219,11 @@ class UserList extends DatabaseItemList
     public function sortByUserID()
     {
         $this->query->orderBy('u.uID', 'asc');
+    }
+
+    public function sortByUserName()
+    {
+        $this->query->orderBy('u.uName', 'asc');
     }
 
 

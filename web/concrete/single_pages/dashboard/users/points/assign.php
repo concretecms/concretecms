@@ -52,7 +52,7 @@
 $(function() {
 	
 	$('#upaID').change(function() {
-		var src = $('#upaID').attr('json-src')+'-/'+$('#upaID').val();
+		var src = $('#upaID').attr('json-src')+'/-/'+$('#upaID').val();
 		$.getJSON(src,function(j) {
 			$('#upPoints').val(j);
 		});
