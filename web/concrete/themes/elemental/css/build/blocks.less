@@ -1,19 +1,53 @@
 // formatting for certain core blocks in here
 
-div.ccm-block-feature-item {
+main {
+  // feature block
+  div.ccm-block-feature-item {
 
-  h4, i {
-    color: @header-site-title-type-color;
+    h4, i {
+      color: @header-site-title-type-color;
+    }
+
+    p {
+      margin-left: 30px;
+    }
+
+    i {
+      margin-right: 10px;
+    }
+
+    margin-bottom: 40px;
+
   }
 
-  p {
-    margin-left: 30px;
+
+  // faq block
+  .ccm-faq-container {
+    .make-row();
+  }
+  .ccm-faq-block-links {
+    .make-lg-column(3);
+
+    a {
+      display: block;
+      margin-bottom: 10px;
+      color: #7cc2ee;
+      &:hover {
+        color: #4289b6;
+      }
+    }
+  }
+  .ccm-faq-block-entries {
+    h3 {
+      margin-top: 0px;
+    }
+
+    div.faq-entry-content {
+      margin-bottom: 50px;
+    }
+    .make-lg-column(8);
+    .make-lg-column-offset(1);
   }
 
-  i {
-    margin-right: 10px;
-  }
-
-  margin-bottom: 40px;
 
 }
