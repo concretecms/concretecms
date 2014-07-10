@@ -27,6 +27,7 @@
         <blocktype handle="flash_content" package=""/>
         <blocktype handle="form" package=""/>
         <blocktype handle="page_title" package=""/>
+        <blocktype handle="feature" package=""/>
         <blocktype handle="social_links" package=""/>
         <blocktype handle="google_map" package=""/>
         <blocktype handle="html" package=""/>
@@ -56,6 +57,7 @@
             <blocktype handle="image"/>
             <blocktype handle="file"/>
             <blocktype handle="horizontal_rule"/>
+            <blocktype handle="feature"/>
         </blocktypeset>
         <blocktypeset handle="navigation" name="Navigation" package="">
             <blocktype handle="autonav"/>

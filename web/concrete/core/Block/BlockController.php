@@ -34,7 +34,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btInterfaceWidth = "400";
     protected $btInterfaceHeight = "400";
     protected $btHasRendered = false;
-    protected $btCacheBlockRecord = false; //until manually updated or cleared
+    protected $btCacheBlockRecord = true;
     protected $btCacheBlockOutput = false;
     protected $btCacheBlockOutputLifetime = 0;
     protected $btCacheBlockOutputOnPost = false;
