@@ -53,8 +53,8 @@ $dh = Core::make('helper/date');
     		<th style="width: 250px"><?=t('Name')?></th>
     		<th><?=t('Last Run')?></th>
     		<th style="width: 200px"><?=t('Results of Last Run')?></th>
-    		<td><a href="<?=$view->action('reset')?>" class="btn pull-right btn-mini"><?=t('Reset All Jobs')?></a></td>
-    		<td></td>
+    		<th><a href="<?=$view->action('reset')?>" class="btn btn-default pull-right btn-xs"><?=t('Reset All Jobs')?></a></th>
+    		<th></th>
     	</tr>
 	</thead>
 	
@@ -66,7 +66,7 @@ $dh = Core::make('helper/date');
                 </td>
                 
     			<td>
-    			    <i class="fa fa-question launch-tooltip" title="<?=$j->getJobDescription()?>"></i> <?=$j->getJobName()?>
+    			    <i class="fa fa-question-circle launch-tooltip" title="<?=$j->getJobDescription()?>"></i> <?=$j->getJobName()?>
                 </td>
                 
     			<td class="jDateLastRun"><?
@@ -92,9 +92,9 @@ $dh = Core::make('helper/date');
     			</td>
     			
     			<td style="width: 50px">
-    				<a href="javascript:void(0)" class="ccm-automate-job-instructions launch-tooltip" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jID="<?=$j->getJobID()?>" title="<?=t('Automate this Job')?>"><i class="fa fa-clock-o"></i></a>
+    				<a href="javascript:void(0)" class="ccm-automate-job-instructions icon-link launch-tooltip" data-jSupportsQueue="<?=$j->supportsQueue()?>" data-jID="<?=$j->getJobID()?>" title="<?=t('Automate this Job')?>"><i class="fa fa-clock-o"></i></a>
     				<? if ($j->canUninstall()) { ?>
-    					<a href="<?=$view->action('uninstall', $j->getJobID())?>" class="launch-tooltip" title="<?=t('Remove this Job')?>"><i class="fa fa-trash-o"></i></a>
+    					<a href="<?=$view->action('uninstall', $j->getJobID())?>" class="icon-link launch-tooltip" title="<?=t('Remove this Job')?>"><i class="fa fa-trash-o"></i></a>
     				<? } ?>
     			</td>
     			
@@ -106,7 +106,7 @@ $dh = Core::make('helper/date');
 <div style="display: none" id="ccm-jobs-automation-dialogs">
     <? foreach($installedJobs as $j) { ?>
     	<div id="jd<?=$j->getJobID()?>" class="ccm-ui">
-    		<form action="<?=$view->action('update_job_schedule')?>" method="post">
+    		<form action="<?=$view->action('update_job_schedule')?>" method="post" data-form="schedule-job">
     			<?=$form->hidden('jID', $j->getJobID());?>
     			
     			<h4><?=t('Run Job')?></h4>
@@ -186,7 +186,9 @@ $dh = Core::make('helper/date');
     			</fieldset>
     			
     			<div class="dialog-buttons">
-                    <input type="submit" value="<?php echo t('Save'); ?>" class="btn btn-primary pull-right">
+                    <button type="button" onclick="$('form[data-form=schedule-job]').submit()" class="btn btn-primary pull-right">
+                        <?=t('Save')?>
+                    </button>
                 </div>
     		</form>
     	</div>
@@ -491,7 +493,8 @@ $(function() {
 	});
 	$('a.ccm-automate-job-instructions').on('click', $("#ccm-jobs-list"), function() {
 		//if ($(this).attr('data-jSupportsQueue')) { }
-		$('#jd' + $(this).attr("data-jID")).jqdialog({
+        jQuery.fn.dialog.open({
+            element: '#jd' + $(this).attr("data-jID"),
 			height: 550,
 			width: 650,
 			modal: true,

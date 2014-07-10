@@ -73,7 +73,7 @@ ccm_doProgressiveOperation = function(url, params, totalItems, onComplete, onErr
 				if ((totalItems - totalItemsLeft) > 0) {
 					$('#ccm-progressive-operation-status').html(totalItems - totalItemsLeft);
 				}
-				$('#ccm-progressive-operation-progress-bar div.bar').width(pct + '%');
+				$('#ccm-progressive-operation-progress-bar div.progress-bar').width(pct + '%');
 				if (totalItemsLeft > 0) {
 					setTimeout(function() {
 						ccm_doProgressiveOperation(url, params, totalItems, onComplete, onError);
