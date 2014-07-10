@@ -1,4 +1,4 @@
-<? 
+<?
 defined('C5_EXECUTE') or die("Access Denied.");
 $valt = Loader::helper('validation/token');
 $th = Loader::helper('text');
@@ -41,7 +41,7 @@ $th = Loader::helper('text');
                     </div>
                 </div>
             </div>
-    
+
             <div class="ccm-search-fields-row">
                 <div class="form-group" style="width: 95%">
                     <?=$form->label('level', t('Level'))?>
@@ -79,8 +79,7 @@ $th = Loader::helper('text');
                     $uID = $ent->getUserID();
                     if(empty($uID)) {
                         echo t("Guest");
-                    }
-                    else {
+                    } else {
                         $u = User::getByUserID($uID);
                         if(is_object($u)) {
                             echo $u->getUserName();
