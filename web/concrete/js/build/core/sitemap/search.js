@@ -90,8 +90,6 @@
 				'<% if (item.isTrash) { %>' + 
 					'<li><a data-action="empty-trash" href="javascript:void(0)">' + ccmi18n_sitemap.emptyTrash + '</a></li>' + 
 				'<% } else if (item.isInTrash) { %>' + 
-					'<li><a onclick="ccm_previewInternalTheme(<%=item.cID%>, false, \'' + ccmi18n_sitemap.previewPage + '\')" href="javascript:void(0)">' + ccmi18n_sitemap.previewPage + '</a></li>' +
-					'<li class="divider"><\/li>' + 
 					'<li><a data-action="delete-forever" href="javascript:void(0)">' + ccmi18n_sitemap.deletePageForever + '</a></li>' +
 				'<% } else if (item.cAlias == \'LINK\' || item.cAlias == \'POINTER\') { %>' +
 					'<li><a onclick="window.location.href=\'' + CCM_DISPATCHER_FILENAME + '?cID=<%=item.cID%>\'" href="javascript:void(0)">' + ccmi18n_sitemap.visitExternalLink + '</a></li>' +
