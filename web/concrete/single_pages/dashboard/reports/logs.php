@@ -34,7 +34,7 @@ $th = Loader::helper('text');
                     <div class="ccm-search-field-content">
                         <?=$form->select('channel', $channels, array('style'=>'width:180px;'))?>
                         <? if ($selectedChannel) { ?>
-                            <a href="<?=$controller->action('clear', $valt->generate(), $selectedChannel)?>" class="btn btn-default btn-sm"><?=t('Clear all %s', $th->unhandle($selectedChannel))?></a>
+                            <a href="<?=$controller->action('clear', $valt->generate(), $selectedChannel)?>" class="btn btn-default btn-sm"><?=tc('%s is a channel', 'Clear all in %s', Log::getChannelDisplayName($selectedChannel))?></a>
                         <? } else { ?>
                             <a href="<?=$controller->action('clear', $valt->generate())?>" class="btn btn-default btn-sm"><?=t('Clear all')?></a>
                          <? } ?>
