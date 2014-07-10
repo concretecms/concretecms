@@ -76,7 +76,7 @@ class AddGroup extends DashboardPageController {
 		}
 
 		if (is_object($parentGroup)) {
-			$pp = new Permissions($parentGroup);
+			$pp = new \Permissions($parentGroup);
 			if (!$pp->canAddSubGroup()) {
 				$this->error->add(t('You do not have permission to add a group beneath %s', $parentGroup->getGroupDisplayName()));
 			}

@@ -13,6 +13,8 @@
 			minimumExpandLevel: 2,
 			selectNodeByKey: false,
 			enableDragAndDrop: true,
+            onSelect: false, // This is when you click a checkbox or radio button
+            onClick: false, // this is when you click a group title when not in chooseNodeInForm mode.
 			readOnly: false,
 			removeNodesByID: [],
 			chooseNodeInForm: false // false (no ability to choose a node as a form element), "single" uses radio, "multiple" = checkbox.
@@ -92,7 +94,7 @@
 				onLazyRead: function(node) {
 					my.reloadNode(node);
 				},
-
+                onSelect: options.onSelect,
 				selectMode: 1,
 				checkbox: checkbox,
 				classNames: classNames,
@@ -130,30 +132,41 @@
 			        }
 				},
 				onClick: function(node, e) {
-					if (options.onSelectNode && node.getEventTargetType(e) == 'title') {
-						options.onSelectNode(node);
-						return false;
-					}
 
 					if (node.getEventTargetType(e) == 'expander') {
 						return true;
 					}
-					if (options.chooseNodeInForm && node.getEventTargetType(e) != 'checkbox') {
-						return false;
+
+					if (options.chooseNodeInForm) {
+                        var targetType = node.getEventTargetType(e);
+                        if (targetType == 'checkbox' || targetType == 'title') {
+                            if (targetType == 'title') {
+                                node.select(true);
+                            }
+                            return true;
+                        } else {
+                            return false;
+                        }
 					}
+
 					if (!node.getEventTargetType(e)) {
 						return false;
 					}
 					if (!options.chooseNodeInForm && node.getEventTargetType(e) == 'title') {
-						var $menu = my._menuTemplate({options: my.options, data: node.data});
-						if ($menu) {
-							var menu = new ConcreteMenu($(node.span), {
-								menu: $menu,
-								handle: 'none'
-							});
-							menu.show(e);
-						}
+                        if (options.onClick) {
+                            options.onClick(node);
+                        } else {
+                            var $menu = my._menuTemplate({options: my.options, data: node.data});
+                            if ($menu) {
+                                var menu = new ConcreteMenu($(node.span), {
+                                    menu: $menu,
+                                    handle: 'none'
+                                });
+                                menu.show(e);
+                            }
+                        }
 					}
+                    return true;
 				},
 				fx: {height: 'toggle', duration: 200},
 				dnd: {
