@@ -2,104 +2,115 @@
 
 $activeAuths = AuthenticationType::getActiveListSorted();
 $form = Loader::helper('form');
-?>
-<style>
-.authForm .row {
-	margin-left:0;
-}
-.authForm .actions {
-	margin-left:20px;
-}
-</style>
-<div class='row'>
-	<div class='span10 offset1'>
-		<?php
-		if (isset($required_attributes)) {
-			$af = Loader::helper('form/attribute');
 
-			?>
-			<fieldset>
-				<form method="post" action="<?=$view->url('/login', 'fill_attributes')?>">
-					<?php
-					foreach ($required_attributes as $attribute) {
-						?>
-						<div class='row'>
-							<?php
-							echo $af->display($attribute, true);
-							?>
-						</div>
-						<?php
-					}
-					?>
-					<button type="submit" class="btn"><?php echo t('Complete Profile'); ?></button>
-				</form>
-			</fieldset>
-			<?php
-		} else {
-			?>
-			<div class="page-header">
-				<h1><?=t('Sign in to %s', SITE)?></h1>
-			</div>
-			<?php
-			// render authentication type specific views
-			if($authType instanceof AuthenticationType && strlen($authTypeElement)) {
-				$authType->renderForm($authTypeElement);
-			} else { // render authentication type(s) initial view
-				if (count($activeAuths) > 1) {
-					?>
-					<ul class="nav nav-tabs">
-						<?php
-						$first = true;
-						foreach ($activeAuths as $auth) {
-							?>
-							<li<?=$first?" class='active'":''?>>
-								<a data-authType='<?=$auth->getAuthenticationTypeHandle()?>' href='#<?=$auth->getAuthenticationTypeHandle()?>'><?=$auth->getAuthenticationTypeName()?></a>
-							</li>
-							<?php
-							$first = false;
-						}
-						?>
-					</ul>
-					<?php
-				}
-				?>
-				<div class='authTypes row'>
-					<?php
-					$first = true;
-					foreach ($activeAuths as $auth) {
-						?>
-						<div data-authType='<?=$auth->getAuthenticationTypeHandle()?>' style='<?=$first?"display:block":"display:none"?>'>
-							<fieldset>
-								<form method='post' class='form-horizontal' action='<?=$view->url('/login', 'authenticate', $auth->getAuthenticationTypeHandle())?>'>
-									<?php $valt->output('login_'.$auth->getAuthenticationTypeHandle());?>
-									<div class='authForm'>
-										<?$auth->renderForm()?>
-									</div>
-								</form>
-							</fieldset>
-						</div>
-						<?php
-						$first = false;
-					}
-					?>
-				</div>
-				<?php
-			}
-		}
-		?>
-	</div>
+$active = null;
+if ($authType) {
+    $active = $authType;
+    $activeAuths = array($authType);
+}
+$image = date('Ymd') . '.jpg';
+?>
+<div class="login-page">
+    <div class="col-sm-6 col-sm-offset-3 login-title">
+        <span><?= t('Sign into your website.') ?></span>
+    </div>
+    <div class="col-sm-6 col-sm-offset-3 login-form">
+        <div class="row">
+            <div class="types col-sm-4">
+                <ul class="auth-types">
+                    <?php
+                    /** @var AuthenticationType[] $activeAuths */
+
+                    foreach ($activeAuths as $auth) {
+                        ?>
+                        <li data-handle="<?= $auth->getAuthenticationTypeHandle() ?>">
+                            <i class="fa fa-user"></i>
+                            <span><?= $auth->getAuthenticationTypeName() ?></span>
+                        </li>
+                    <?php
+                    }
+                    ?>
+                </ul>
+            </div>
+            <div class="controls col-sm-8">
+                <?php
+                /** @var AuthenticationType[] $activeAuths */
+
+                foreach ($activeAuths as $auth) {
+                    ?>
+                    <div data-handle="<?= $auth->getAuthenticationTypeHandle() ?>"
+                         class="authentication-type authentication-type-<?= $auth->getAuthenticationTypeHandle() ?>">
+                        <?php $auth->renderForm($authTypeElement ? : 'form', $authTypeParams ? : array()) ?>
+                    </div>
+                <?php
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+    <div class="background-credit">
+        <?= t('Photo Credit:') ?>
+        <a href="#" style="pull-right"></a>
+    </div>
+
+    <script type="text/javascript">
+        (function ($) {
+            "use strict";
+
+            var forms = $('div.controls').find('div.authentication-type').hide();
+            var types = $('ul.auth-types > li').each(function () {
+                var me = $(this),
+                    form = forms.filter('[data-handle="' + me.data('handle') + '"]');
+                me.click(function () {
+                    if (form.hasClass('active')) return;
+                    types.removeClass('active');
+                    me.addClass('active')
+                    if (forms.filter('.active').length) {
+                        forms.stop().filter('.active').removeClass('active').fadeOut(250, function () {
+                            form.addClass('active').fadeIn(250);
+                        });
+                    } else {
+                        form.addClass('active').show();
+                    }
+                });
+            });
+            types.first().click();
+
+            var title = $('.login-title').find('span');
+            title.css({
+                lineHeight: '1000px',
+                fontSize: 10
+            });
+            setTimeout(function () {
+                var start_height = title.parent().height(), size = 10, last;
+                while (title.parent().height() === start_height) {
+                    last = size++;
+                    title.css('font-size', size);
+                }
+                title.css({
+                    fontSize: last,
+                    lineHeight: 'auto'
+                });
+            }, 0);
+
+            $(function () {
+                $.backstretch("<?= DASHBOARD_BACKGROUND_FEED . '/' . $image ?>", {
+                    fade: 500
+                });
+                $.getJSON('<?= BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '/tools/required/dashboard/get_image_data' ?>', { image: '<?= $image ?>' }, function (data) {
+                    console.log($('div.background-credit').children().attr('href', data.link).text(data.author.join()));
+                    console.log(data);
+                });
+            });
+            $('ul.nav.nav-tabs > li > a').on('click', function () {
+                var me = $(this);
+                if (me.parent().hasClass('active')) return false;
+                $('ul.nav.nav-tabs > li.active').removeClass('active');
+                var at = me.attr('data-authType');
+                me.parent().addClass('active');
+                $('div.authTypes > div').hide().filter('[data-authType="' + at + '"]').show();
+                return false;
+            });
+        })(jQuery);
+    </script>
 </div>
-<script type="text/javascript">
-(function($){
-	"use strict";
-	$('ul.nav.nav-tabs > li > a').on('click',function(){
-		var me = $(this);
-		if (me.parent().hasClass('active')) return false;
-		$('ul.nav.nav-tabs > li.active').removeClass('active');
-		var at = me.attr('data-authType');
-		me.parent().addClass('active');
-		$('div.authTypes > div').hide().filter('[data-authType="'+at+'"]').show();
-		return false;
-	});
-})(jQuery);
-</script>

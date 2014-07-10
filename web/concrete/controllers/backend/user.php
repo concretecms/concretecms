@@ -1,3 +1,4 @@
+
 <?
 namespace Concrete\Controller\Backend;
 use Controller;
@@ -86,5 +87,5 @@ class User extends Controller {
 		$r->outputJSON();
 	}
 
-	
+
 }
