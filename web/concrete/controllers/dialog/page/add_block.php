@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\Page;
 use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use BlockType;
@@ -104,8 +104,9 @@ class AddBlock extends BackendInterfacePageController {
 
 				$pc->setAdditionalDataAttribute('btID', $nb->getBlockTypeID());
 				$pc->setAdditionalDataAttribute('bID', $nb->getBlockID());
-				$pc->setAdditionalDataAttribute('arHandle', $this->areaToModify->getAreaHandle());
-				$pc->setAdditionalDataAttribute('aID', $this->areaToModify->getAreaID());
+				$pc->setAdditionalDataAttribute('arHandle', $this->area->getAreaHandle());
+
+				$pc->setAdditionalDataAttribute('aID', $this->area->getAreaID());
 			} else {
 				$pc->setError($e);
 			}
