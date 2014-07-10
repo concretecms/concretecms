@@ -26,11 +26,14 @@ $v = $c->getVersionObject();
 ?>
 <div class="ccm-panel-check-in-publish">
 
-	<div class="btn-group">
+	<? /*
+    <div class="btn-group">
 		<button id="ccm-check-in-publish" type="submit" name="action" value="publish" class="btn btn-primary"><?=$publishTitle?></button>
 		<button id="ccm-check-in-publish-time" type="button" class="btn btn-primary"><i class="fa fa-clock-o fa-inverse"></i></button>
 	</div>
-
+    */?>
+    <button id="ccm-check-in-publish" type="submit" name="action" value="publish" class="btn btn-primary"><?=$publishTitle?></button>
+    <br/><br/>
 </div>
 
 <? } ?>
