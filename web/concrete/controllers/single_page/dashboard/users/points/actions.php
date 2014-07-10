@@ -12,19 +12,22 @@ class Actions extends DashboardPageController {
 	public $upa;
 		
 	
-	public function on_start() {
+	public function on_start() 
+	{
 		$this->upa = new UserPointAction();
 	}
 	
 	
-	public function add() {
+	public function add() 
+	{
 		$this->set('add_edit',t('Add'));
 		$this->set('showForm',true);
 		$this->view();
 	}
 	
 	
-	public function view($upaID=NULL) {
+	public function view($upaID=NULL) 
+	{
 		
 		if(isset($upaID)) {
 			$this->set('add_edit',t('Edit'));
@@ -51,7 +54,8 @@ class Actions extends DashboardPageController {
 	}
 	
 	
-	public function getActionList() {
+	public function getActionList() 
+	{
 		$al = new UserPointActionList();
 		
 		switch($_REQUEST['ccm_order_by']) {
@@ -78,7 +82,8 @@ class Actions extends DashboardPageController {
 	}
 	
 	
-	protected function setAttribs($upa) {
+	protected function setAttribs($upa) 
+	{
 		$attribs = $upa->getAttributeNames();
 		foreach($attribs as $key) {
 			$this->set($key, $upa->$key);
@@ -86,7 +91,8 @@ class Actions extends DashboardPageController {
 	}
 	
 	
-	public function save() {
+	public function save() 
+	{
 		if($this->post('upaID') > 0) {
 			$this->upa->load($this->post('upaID'));
 			if (!$this->upa->hasCustomClass()) {
@@ -113,20 +119,23 @@ class Actions extends DashboardPageController {
 	}	
 	
 	
-	public function delete($upaID) {
+	public function delete($upaID) 
+	{
 		$this->upa->load($upaID);
 		$this->upa->delete();
 		$this->redirect('/dashboard/users/points/actions','action_deleted');
 	}
 	
 	
-	public function action_deleted() {
+	public function action_deleted() 
+	{
 		$this->set('message', t('Community Point Action Deleted'));
 		$this->view();
 	} 
 	
 	
-	public function action_saved() {
+	public function action_saved() 
+	{
 		$this->set('message', t('Community Point Action Saved'));
 		$this->view();
 	}
