@@ -40,7 +40,7 @@ class Controller extends BlockController
         if ($this->useCustomTitle && strlen($this->titleText)) {
             $title = $this->titleText;
         } else {
-            $p = $this->getCollectionObject();
+            $p = Page::getCurrentPage();
             if ($p instanceof Page) {
                 $title = $p->getCollectionName();
                 if (!strlen($title) && $this->getCollectionObject()->isMasterCollection()) {
