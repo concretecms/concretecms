@@ -34,6 +34,7 @@
         <blocktype handle="horizontal_rule" package=""/>
         <blocktype handle="discussion" package=""/>
         <blocktype handle="image" package=""/>
+        <blocktype handle="faq" package=""/>
         <blocktype handle="next_previous" package=""/>
         <blocktype handle="page_list" package=""/>
         <blocktype handle="rss_displayer" package=""/>
@@ -66,7 +67,7 @@
             <blocktype handle="core_gathering"/>
 
             //-->
-
+            <blocktype handle="faq"/>
             <blocktype handle="page_list"/>
             <blocktype handle="next_previous"/>
             <blocktype handle="date_nav"/>
