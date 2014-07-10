@@ -2734,6 +2734,9 @@
       <null/>
       <default value="0"/>
     </field>
+      <field name="object" type="X2">
+          <null/>
+      </field>
     <field name="timestamp" type="T">
       <notnull/>
       <deftimestamp/>

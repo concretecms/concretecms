@@ -18,6 +18,7 @@ class Entry {
 			$this->upID = $row['upID'];
 			$this->upuID = $row['upuID'];
 			$this->upaID = $row['upaID'];
+            $this->object = $row['object'];
 			$this->upPoints = $row['upPoints'];
 			$this->timestamp = $row['timestamp'];
 		}
@@ -30,6 +31,7 @@ class Entry {
 				'upID' => $this->upID,
 				'upuID' => $this->upuID,
 				'upaID' => $this->upaID,
+                'object' => $this->object,
 				'upPoints' => $this->upPoints,
 				'timestamp' => date('Y-m-d H:i:s')
 			), array('upID' => $this->upID));
@@ -37,6 +39,7 @@ class Entry {
 			$db->insert('UserPointHistory', array(
 				'upID' => $this->upID,
 				'upuID' => $this->upuID,
+                'object' => $this->object,
 				'upaID' => $this->upaID,
 				'upPoints' => $this->upPoints,
 				'timestamp' => date('Y-m-d H:i:s')

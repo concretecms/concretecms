@@ -145,4 +145,12 @@ abstract class ItemList
             }
         }
     }
+
+    /**
+     * @deprecated
+     */
+    public function get()
+    {
+        return $this->getResults();
+    }
 }
