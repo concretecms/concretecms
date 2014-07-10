@@ -49,7 +49,11 @@
                 $(this).removeClass('ccm-search-select-hover');
             });
             $e.unbind('.concretePageSearchChoosePage').on('click.concretePageSearchChoosePage', 'tr[data-launch-search-menu]', function () {
-                ConcreteEvent.publish('SitemapSelectPage', {cID: $(this).attr('data-page-id'), title: $(this).attr('data-page-name')});
+                ConcreteEvent.publish('SitemapSelectPage', {
+                    instance: my,
+                    cID: $(this).attr('data-page-id'),
+                    title: $(this).attr('data-page-name')
+                });
                 return false;
             });
         }
