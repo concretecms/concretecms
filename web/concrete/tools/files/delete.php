@@ -75,7 +75,7 @@ foreach($files as $f) {
 			<tr>
 				<td><?=$fv->getType()?></td>
 				<td class="ccm-file-list-filename" width="100%"><div style="word-wrap: break-word; width: 150px"><?=$fv->getTitle()?></div></td>
-				<td><?=date(DATE_APP_DASHBOARD_SEARCH_RESULTS_FILES, strtotime($f->getDateAdded()))?></td>
+				<td><?=date(DATE_APP_DASHBOARD_SEARCH_RESULTS_FILES, $f->getDateAdded()->getTimestamp())?></td>
 				<td><?=$fv->getSize()?></td>
 				<td><?=$fv->getAuthorName()?></td>
 			</tr>
