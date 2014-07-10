@@ -16,40 +16,40 @@ $th = Loader::helper('text');
 
     <div data-search-element="wrapper">
         <form role="form" data-search-form="logs" action="<?=$controller->action('view')?>" class="form-inline ccm-search-fields">
-        <div class="ccm-search-fields-row">
-		<div class="form-group">
-            <?=$form->label('keywords', t('Search'))?>
-            <div class="ccm-search-field-content">
-            <div class="ccm-search-main-lookup-field">
-                <i class="fa fa-search"></i>
-                <?=$form->search('keywords', array('placeholder' => t('Keywords')))?>
-                <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
-            </div>
-            </div>
-		</div>
-        </div>
-        <div class="ccm-search-fields-row">
-        <div class="form-group">
-            <?=$form->label('channel', t('Channel'))?>
-            <div class="ccm-search-field-content">
-            <?=$form->select('channel', $channels, array('style'=>'width:180px;'))?>
-            <? if ($selectedChannel) { ?>
-                <a href="<?=$controller->action('clear', $valt->generate(), $selectedChannel)?>" class="btn btn-default btn-sm"><?=t('Clear all %s', $th->unhandle($selectedChannel))?></a>
-            <? } else { ?>
-                <a href="<?=$controller->action('clear', $valt->generate())?>" class="btn btn-default btn-sm"><?=t('Clear all')?></a>
-             <? } ?>
-            </div>
-        </div>
-        </div>
-
-        <div class="ccm-search-fields-row">
-            <div class="form-group" style="width: 95%">
-                <?=$form->label('level', t('Level'))?>
-                <div class="ccm-search-field-content">
-                <?=$form->selectMultiple('level', $levels, array_keys($levels), array('style' => 'width: 380px'))?>
+            <div class="ccm-search-fields-row">
+                <div class="form-group">
+                    <?=$form->label('keywords', t('Search'))?>
+                    <div class="ccm-search-field-content">
+                        <div class="ccm-search-main-lookup-field">
+                            <i class="fa fa-search"></i>
+                            <?=$form->search('keywords', array('placeholder' => t('Keywords')))?>
+                            <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="ccm-search-fields-row">
+                <div class="form-group">
+                    <?=$form->label('channel', t('Channel'))?>
+                    <div class="ccm-search-field-content">
+                        <?=$form->select('channel', $channels, array('style'=>'width:180px;'))?>
+                        <? if ($selectedChannel) { ?>
+                            <a href="<?=$controller->action('clear', $valt->generate(), $selectedChannel)?>" class="btn btn-default btn-sm"><?=t('Clear all %s', $th->unhandle($selectedChannel))?></a>
+                        <? } else { ?>
+                            <a href="<?=$controller->action('clear', $valt->generate())?>" class="btn btn-default btn-sm"><?=t('Clear all')?></a>
+                         <? } ?>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="ccm-search-fields-row">
+                <div class="form-group" style="width: 95%">
+                    <?=$form->label('level', t('Level'))?>
+                    <div class="ccm-search-field-content">
+                        <?=$form->selectMultiple('level', $levels, array_keys($levels), array('style' => 'width: 380px'))?>
+                    </div>
+                </div>
+            </div>
 
         </form>
 
