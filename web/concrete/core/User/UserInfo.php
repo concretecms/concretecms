@@ -200,7 +200,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 	 * @return void
 	 */
 	public function delete(){
-		return;
 
 		// we will NOT let you delete the admin user
 		if ($this->uID == USER_SUPER_ID) {
