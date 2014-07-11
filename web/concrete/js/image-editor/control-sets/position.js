@@ -180,6 +180,18 @@ function Crop() {
         listening: true
     });
 
+    im.bind('sizeChanged', function() {
+        var old_position = _.clone(crop.layer.getPosition());
+        crop.layer.setPosition(im.activeElement.parent.getPosition());
+        crop.dragLayer.setPosition(im.activeElement.parent.getPosition());
+        var new_position = _.clone(crop.layer.getPosition());
+
+        crop.offset.x -= (new_position.x - old_position.x);
+        crop.offset.y -= (new_position.y - old_position.y);
+
+        crop.layer.draw();
+    });
+
     var start_position, start_offset;
     this.cover = new Kinetic.Shape({
         fill: 'black',
@@ -304,7 +316,6 @@ Crop.prototype = {
         im.bind('sizeChanged', function (event, data) {
             if (!crop.active) return;
             crop.positionDraggers();
-            start_position = null;
             crop.dragRect.parent.draw();
         });
 
@@ -330,9 +341,13 @@ Crop.prototype = {
             im.stage.draw();
         });
 
-        var do_crop = $('button.docrop').click(function() {
+        var do_crop = $('button.docrop', me).click(function() {
             if (!crop.active) return;
             crop.finalize();
+        });
+        var cancel_crop = $('button.cancel', me).click(function() {
+            crop.destroy();
+            im.adjustSavers();
         });
 
 
@@ -564,26 +579,44 @@ Crop.prototype = {
     },
 
     finalize: function() {
-        var elem = im.activeElement,
-            crop_x = elem.getCropX() || 0,
-            crop_y = elem.getCropY() || 0;
+        var crop = this,
+            elem = im.activeElement,
+            url;
 
-        elem.setCrop({
-            x: crop_x + this.offset.x,
-            y: crop_y + this.offset.y,
-            width: this.width,
-            height: this.height
+        im.stage.setScale(1);
+        im.stage.setPosition(0, 0);
+        im.activeElement.parent.setPosition(0, 0);
+        elem.toImage({
+            x: 0,
+            y: 0,
+            width: elem.getWidth(),
+            height: elem.getHeight(),
+            callback: function(image) {
+                im.activeElement.setImage(image);
+                elem.setCrop({
+                    x: crop.offset.x,
+                    y: crop.offset.y,
+                    width: crop.width,
+                    height: crop.height
+                });
+                im.stage.setScale(im.scale);
+
+                elem.setWidth(crop.width);
+                elem.setHeight(crop.height);
+
+                elem.parent.draw();
+                im.adjustSavers();
+                crop.destroy();
+                im.stage.draw();
+
+                im.fire('activeElementSizeChange');
+                im.fire('sizeChanged', {
+                    width: crop.width,
+                    height: crop.height
+                });
+            }
         });
-        elem.setWidth(this.width);
-        elem.setHeight(this.height);
-        elem.parent.draw();
-        im.fire('activeElementSizeChange');
-        im.fire('sizeChanged', {
-            width: this.width,
-            height: this.height
-        });
-        this.destroy();
-        im.adjustSavers();
+
     }
 
 };
