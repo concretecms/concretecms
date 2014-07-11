@@ -441,7 +441,15 @@ CCMLayout.prototype._showThemeGridSlider = function() {
 	for (i = 1; i <= maxColumns; i++) {
 		columnHTML += '<div class="' + minColumnClass + '"></div>'
 	}
-	$('#' + obj.options.gridrowtmpid).append($(obj.options.rowstart + columnHTML + obj.options.rowend));
+	$('#' + obj.options.gridrowtmpid).append(
+        $(
+            obj.options.containerstart
+            + obj.options.rowstart
+            + columnHTML
+            + obj.options.rowend
+            + obj.options.containerend
+        )
+    );
 	var marginModifier = 0;
 	for (i = 0; i < maxColumns; i++) {
 		var $column = $($('#' + obj.options.gridrowtmpid + ' .' + minColumnClass).get(i));

@@ -123,6 +123,8 @@ $(function() {
 		'editing': <?=$editing?>,
 		'supportsgrid': '<?=$enableThemeGrid?>',
 		<? if ($enableThemeGrid) { ?>
+        'containerstart':  '<?=addslashes($themeGridFramework->getPageThemeGridFrameworkContainerStartHTML())?>',
+        'containerend': '<?=addslashes($themeGridFramework->getPageThemeGridFrameworkContainerEndHTML())?>',
 		'rowstart':  '<?=addslashes($themeGridFramework->getPageThemeGridFrameworkRowStartHTML())?>',
 		'rowend': '<?=addslashes($themeGridFramework->getPageThemeGridFrameworkRowEndHTML())?>',
 		<? if ($controller->getTask() == 'add') { ?>
