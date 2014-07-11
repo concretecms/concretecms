@@ -19,7 +19,7 @@ $seoSet = AttributeSet::getByHandle('seo');
             <li>
                 <a href="#" data-launch-panel-detail="page-composer"
                    data-panel-detail-url="<?= URL::to('/ccm/system/panels/details/page/composer') ?>"
-                   data-panel-transition="swap">
+                   data-panel-transition="fade">
                     <?= t('Composer') ?>
                 </a>
             </li>
@@ -44,7 +44,7 @@ $seoSet = AttributeSet::getByHandle('seo');
             <li>
                 <a href="#" data-launch-panel-detail="page-seo"
                    data-panel-detail-url="<?= URL::to('/ccm/system/panels/details/page/seo') ?>"
-                   data-panel-transition="swap">
+                   data-panel-transition="fade">
                     <?= t('SEO') ?>
                 </a>
             </li>
@@ -55,7 +55,7 @@ $seoSet = AttributeSet::getByHandle('seo');
             <li>
                 <a href="#" data-launch-panel-detail="page-location"
                    data-panel-detail-url="<?= URL::to('/ccm/system/panels/details/page/location') ?>"
-                   data-panel-transition="swap">
+                   data-panel-transition="fade">
                     <?= t('Location') ?>
                 </a>
             </li>
