@@ -32,8 +32,18 @@ $v = $c->getVersionObject();
 		<button id="ccm-check-in-publish-time" type="button" class="btn btn-primary"><i class="fa fa-clock-o fa-inverse"></i></button>
 	</div>
     */?>
-    <button id="ccm-check-in-publish" type="submit" name="action" value="publish" class="btn-block btn btn-primary"><?=$publishTitle?></button>
-    <br/><br/>
+
+    <button <? if (is_object($publishErrors) && $publishErrors->has()) { ?>disabled<? } ?>
+            id="ccm-check-in-publish" type="submit" name="action" value="publish" class="btn-block btn btn-primary"><?=$publishTitle?></button>
+    <br/>
+    <? if (is_object($publishErrors) && $publishErrors->has()) { ?>
+        <div class="small">
+        <? foreach($publishErrors->getList() as $error) { ?>
+            <div class="text-danger"><strong><i class="fa fa-exclamation-circle"></i> <?=$error?></strong></div>
+            <br/>
+        <? } ?>
+        </div>
+    <? } ?>
 </div>
 
 <? } ?>
