@@ -223,3 +223,14 @@ var ccmi18n_chosen = {
     no_results_text: "<?=t(/*i18n After this text we have a search criteria: for instance 'No results match "Criteria"'*/'No results match')?>"
 
 };
+
+var ccmi18n_redactor = {
+
+    remove_font: "<?=t('Remove font')?>",
+    change_font_family: "<?=t('Change font family')?>",
+    remove_font_size: "<?=t('Remove font size')?>",
+    change_font_size: "<?=t('Change font size')?>",
+    cancel: "<?=t('Cancel')?>",
+    save: "<?=t('Save')?>"
+
+};
