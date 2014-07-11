@@ -1,5 +1,5 @@
 (function ($) {
-$.Redactor.opts.langs['ge'] = {
+$.Redactor.opts.langs['ka'] = {
 	html: 'HTML კოდი',
 	video: 'ვიდეოს ჩასმა',
 	image: 'სურათის ჩასმა',
