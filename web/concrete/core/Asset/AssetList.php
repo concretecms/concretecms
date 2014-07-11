@@ -88,6 +88,19 @@ class AssetList
         $this->assetGroups[$assetGroupHandle] = $group;
     }
 
+    public function unregister($assetType, $assetHandle)
+    {
+        $ap = new AssetPointer($assetType, $assetHandle);
+        foreach ($this->assetGroups as $ag) {
+            $ag->remove($ap);
+        }
+        if (array_key_exists($assetType, $this->assets)) {
+            if (array_key_exists($assetHandle, $this->assets[$assetType])) {
+                unset($this->assets[$assetType][$assetHandle]);
+            }
+        }
+    }
+
     public function getAsset($assetType, $assetHandle)
     {
         return $this->assets[$assetType][$assetHandle];
