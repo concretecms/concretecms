@@ -40,6 +40,16 @@ class AssetGroup
         }
     }
 
+    public function remove(AssetPointer $ap)
+    {
+        foreach ($this->assetPointers as $index => $assetPointer) {
+            if ($assetPointer->getHandle() == $ap->getHandle() && $assetPointer->getType() == $ap->getType()) {
+                array_splice($this->assetPointers, $index, 1);
+                break;
+            }
+        }
+    }
+
     public function getAssets()
     {
         return $this->assets;
