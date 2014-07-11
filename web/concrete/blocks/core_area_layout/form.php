@@ -55,7 +55,7 @@
 	<? if ($controller->getTask() == 'edit') {
 		$bp = new Permissions($b); ?>
 
-		<li class="ccm-inline-toolbar-fa fa-cell"><a href="#" data-layout-command="move-block"><i class="fa fa-arrows"></i></a></li>
+		<li class="ccm-inline-toolbar-icon-cell"><a href="#" data-layout-command="move-block"><i class="fa fa-arrows"></i></a></li>
 
 		<?
 		if ($bp->canDeleteBlock()) {
