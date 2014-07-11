@@ -17,6 +17,9 @@ $.Redactor.opts.langs['de'] = {
 	header3: 'Überschrift 3',
     header4: 'Überschrift 4',
     header5: 'Überschrift 5',
+	/* concrete5 */
+	header6: 'Überschrift 5',
+	/* end concrete5 */
 	bold:  'Fett',
 	italic: 'Kursiv',
 	fontcolor: 'Schriftfarbe',
@@ -62,7 +65,7 @@ $.Redactor.opts.langs['de'] = {
 	or_choose: 'Oder, wählen Sie eine Datei aus',
 	drop_file_here: 'Ziehen Sie eine Datei hier hin',
 	align_left:	'Linksbündig',
-	align_center: 'Mitte',
+	align_center: 'Zentrieren',
 	align_right: 'Rechtsbündig',
 	align_justify: 'Blocksatz',
 	horizontalrule: 'Horizontale Linie',
@@ -74,6 +77,6 @@ $.Redactor.opts.langs['de'] = {
 	alignment: 'Ausrichtung',
 	filename: 'Name (optional)',
 	edit: 'Bearbeiten',
-	center: 'Center'
+	center: 'Zentriert'
 };
 })( jQuery );
