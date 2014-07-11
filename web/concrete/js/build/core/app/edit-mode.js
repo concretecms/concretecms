@@ -15,7 +15,7 @@
         var my = this;
         options = options || {};
         options = $.extend({
-            'notify': true
+            'notify': false
         }, options);
 
         Concrete.createGetterSetters.call(my, {
