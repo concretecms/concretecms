@@ -1,5 +1,5 @@
 (function ($) {
-$.Redactor.opts.langs['sr-cir'] = {
+$.Redactor.opts.langs['sr'] = {
 	html: 'ХТМЛ',
 	video: 'Убаци видео',
 	image: 'Убаци фотографију',
