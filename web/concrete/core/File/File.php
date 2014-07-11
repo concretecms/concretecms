@@ -97,9 +97,9 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     public function __call($nm, $a)
     {
         $fv = $this->getApprovedVersion();
-		if(is_null($fv)) {
-			return null;
-		}
+        if(is_null($fv)) {
+            return null;
+        }
 		return call_user_func_array(array($fv, $nm), $a);
     }
 
