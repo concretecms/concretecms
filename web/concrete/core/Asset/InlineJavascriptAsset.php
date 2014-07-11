@@ -21,6 +21,11 @@ class InlineJavascriptAsset extends Asset
         return 'inline_javascript';
     }
 
+    public function getAssetDefaultPosition()
+    {
+        return null;
+    }
+
     public function combine($assets) { }
 
     public function minify($assets) { }
