@@ -1,5 +1,5 @@
 (function ($) {
-$.Redactor.opts.langs['ua'] = {
+$.Redactor.opts.langs['uk'] = {
 	html: 'Код',
 	video: 'Відео',
 	image: 'Зображення',
