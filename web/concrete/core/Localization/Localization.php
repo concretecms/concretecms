@@ -4,6 +4,8 @@ namespace Concrete\Core\Localization;
 use Loader;
 use Cache;
 use Events;
+use Concrete\Core\Asset\AssetList;
+use Concrete\Core\Asset\AssetPointer;
 
 class Localization
 {
@@ -58,6 +60,9 @@ class Localization
 
     public function setLocale($locale)
     {
+        $assetList = AssetList::getInstance();
+        $assetList->unregister('javascript', 'redactor_locale');
+        $assetList->unregister('inline_javascript', 'redactor_locale');
         $localeNeededLoading = false;
         if (!ENABLE_TRANSLATE_LOCALE_EN_US && $locale == 'en_US' && isset($this->translate)) {
             unset($this->translate);
@@ -100,6 +105,26 @@ class Localization
             }
             $this->translate->setLocale($locale);
         }
+
+        $alternatives = array(Localization::activeLocale());
+        if (Localization::activeLocale() !== Localization::activeLanguage()) {
+            $alternatives[] = Localization::activeLanguage();
+        }
+        foreach ($alternatives as $alternative) {
+            $relFilename = DIRNAME_JAVASCRIPT . '/i18n/redactor-' . $alternative . '.js';
+            $filename = DIR_BASE_CORE . '/' . $relFilename;
+            if (is_file($filename)) {
+                $assetList->register('javascript', 'redactor_locale', $relFilename);
+                $assetList->register('inline_javascript', 'redactor_locale', null)->setCode("$.Redactor.opts.lang = '$alternative';");
+                $assetGroup = $assetList->getAssetGroup('redactor');
+                if (is_object($assetGroup)) {
+                    $assetGroup->add(new AssetPointer('javascript', 'redactor_locale'));
+                    $assetGroup->add(new AssetPointer('inline_javascript', 'redactor_locale'));
+                }
+                break;
+            }
+        }
+
         if ($localeNeededLoading) {
             $event = new \Symfony\Component\EventDispatcher\GenericEvent();
             $event->setArgument('locale', $locale);
