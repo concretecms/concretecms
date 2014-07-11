@@ -18,7 +18,7 @@ $.Redactor.opts.langs['de'] = {
     header4: 'Überschrift 4',
     header5: 'Überschrift 5',
 	/* concrete5 */
-	header6: 'Überschrift 5',
+	header6: 'Überschrift 6',
 	/* end concrete5 */
 	bold:  'Fett',
 	italic: 'Kursiv',
