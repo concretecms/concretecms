@@ -17,6 +17,9 @@ $.Redactor.opts.langs['it'] = {
 	header3: 'H3',
 	header4: 'H4',
 	header5: 'H5',
+	/* concrete5 */
+	header6: 'H6',
+	/* end concrete5 */
 	bold:  'Grassetto',
 	italic: 'Corsivo',
 	superscript: 'Apice',
@@ -72,6 +75,6 @@ $.Redactor.opts.langs['it'] = {
 	alignment: 'Allineamento',
 	filename: 'Nome (opzionale)',
 	edit: 'Modifica',
-	center: 'Center'
+	center: 'Centro'
 };
 })( jQuery );
