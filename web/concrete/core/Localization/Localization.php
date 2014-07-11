@@ -4,6 +4,9 @@ namespace Concrete\Core\Localization;
 use Loader;
 use Cache;
 use Events;
+use Concrete\Core\Asset\AssetList;
+use Concrete\Core\Asset\AssetPointer;
+
 
 class Localization
 {
@@ -58,6 +61,8 @@ class Localization
 
     public function setLocale($locale)
     {
+        $assetList = AssetList::getInstance();
+        $assetList->unregister('javascript', 'redactor_locale');
         $localeNeededLoading = false;
         if (!ENABLE_TRANSLATE_LOCALE_EN_US && $locale == 'en_US' && isset($this->translate)) {
             unset($this->translate);
@@ -99,6 +104,20 @@ class Localization
                 $localeNeededLoading = true;
             }
             $this->translate->setLocale($locale);
+        }
+        $assetList->register(
+            'javascript',
+            'redactor_locale',
+            REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_redactor_js',
+            array(
+                'combine' => false,
+                'minify' => false,
+                'local' => false
+            )
+        );
+        $assetGroup = $assetList->getAssetGroup('redactor');
+        if (is_object($assetGroup)) {
+            $assetGroup->add(new AssetPointer('javascript', 'redactor_locale'));
         }
         if ($localeNeededLoading) {
             $event = new \Symfony\Component\EventDispatcher\GenericEvent();
