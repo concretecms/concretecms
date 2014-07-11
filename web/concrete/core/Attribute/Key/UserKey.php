@@ -20,7 +20,7 @@ class UserKey extends Key {
 		'primary' => array('uID')
 	);
 
-	public function getAttributes($uID, $method = 'getValue') {
+	public static function getAttributes($uID, $method = 'getValue') {
 		$db = Loader::db();
 		$values = $db->GetAll("select avID, akID from UserAttributeValues where uID = ?", array($uID));
 		$avl = new AttributeValueList();

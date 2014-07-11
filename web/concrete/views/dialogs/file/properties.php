@@ -213,7 +213,7 @@ if (count($attribs) > 0) { ?>
 			<td><?=$fvv->getAuthorName()?></td>
 			<td><?=$fvv->getDateAdded()->format(DATE_APP_FILE_VERSIONS)?></td>
 			<? if ($fp->canEditFileContents()) { ?>
-				<td><a data-action="delete-version" data-file-version-id="<?=$fvv->getFileVersionID()?>" href="javascript:void(0)"><i class="fa fa-trash"></i></a></td>
+				<td><a data-action="delete-version" data-file-version-id="<?=$fvv->getFileVersionID()?>" href="javascript:void(0)"><i class="fa fa-trash-o"></i></a></td>
 			<? } ?>
 		</tr>
 
