@@ -115,7 +115,15 @@ class Localization
             $filename = DIR_BASE_CORE . '/' . $relFilename;
             if (is_file($filename)) {
                 $assetList->register('javascript', 'redactor_locale', $relFilename);
-                $assetList->register('inline_javascript', 'redactor_locale', null)->setCode("$.Redactor.opts.lang = '$alternative';");
+                $assetList->register('inline_javascript', 'redactor_locale', null)->setCode(<<<EOT
+$.Redactor.opts.lang = '$alternative';
+$.each($.Redactor.opts.langs['en'], function(key, value) {
+    if(!(key in $.Redactor.opts.langs['$alternative'])) {
+        $.Redactor.opts.langs['$alternative'][key] = value;
+    }
+});
+EOT
+                );
                 $assetGroup = $assetList->getAssetGroup('redactor');
                 if (is_object($assetGroup)) {
                     $assetGroup->add(new AssetPointer('javascript', 'redactor_locale'));
