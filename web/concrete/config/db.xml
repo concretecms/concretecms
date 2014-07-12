@@ -1338,6 +1338,10 @@
       <UNIQUE/>
       <col>atHandle</col>
     </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>atID</col>
+    </index>
   </table>
   <table name="AttributeValues">
     <field name="avID" type="I" size="10">
