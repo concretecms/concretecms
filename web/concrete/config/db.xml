@@ -3959,6 +3959,13 @@
       <notnull/>
       <default value="0"/>
     </field>
+    <index name="akID">
+        <col>akID</col>
+        <col>displayOrder</col>
+    </index>
+    <index name="value">
+        <col>value</col>
+    </index>
   </table>
   <table name="atSelectOptionsSelected">
     <field name="avID" type="I" size="10">
