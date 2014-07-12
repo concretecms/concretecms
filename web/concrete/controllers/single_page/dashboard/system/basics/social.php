@@ -40,9 +40,9 @@ class Social extends DashboardPageController
             $this->error->add($this->token->getErrorMessage());
         }
 
-        $ssID = intval($this->request->request->get('ssID'));
-        if ($ssID > 0) {
-            $service = Service::getByID($ssID);
+        $ssHandle = $this->request->request->get('ssHandle');
+        if ($ssHandle) {
+            $service = Service::getByHandle($ssHandle);
         }
         $sec = Core::make('helper/security');
         $url = $sec->sanitizeURL($this->request->request->get('url'));
@@ -52,16 +52,16 @@ class Social extends DashboardPageController
         if (!is_object($service)) {
             $this->error->add(t('You must choose a service.'));
         }
-        return array($ssID, $url);
+        return array($ssHandle, $url);
     }
 
     public function add_link()
     {
         $r = $this->validatePageRequest('add_link');
         if (!$this->error->has()) {
-            list($ssID, $url) = $r;
+            list($ssHandle, $url) = $r;
             $link = new Link();
-            $link->setServiceID($ssID);
+            $link->setServiceHandle($ssHandle);
             $link->setURL($url);
             $link->save();
             $this->redirect('/dashboard/system/basics/social', 'link_added');
@@ -99,9 +99,9 @@ class Social extends DashboardPageController
         $this->edit($slID);
         if (!$this->error->has()) {
 
-            list($ssID, $url) = $r;
+            list($ssHandle, $url) = $r;
             $link = $this->socialLink;
-            $link->setServiceID($ssID);
+            $link->setServiceHandle($ssHandle);
             $link->setURL($url);
             $link->save();
             $this->redirect('/dashboard/system/basics/social', 'link_updated');
@@ -113,7 +113,7 @@ class Social extends DashboardPageController
         $services = array('' => t('Choose a Service'));
         $list = ServiceList::get();
         foreach($list as $service) {
-            $services[$service->getID()] = $service->getName();
+            $services[$service->getHandle()] = $service->getName();
         }
         $this->set('services', $services);
     }

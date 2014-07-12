@@ -67,6 +67,13 @@ class Controller extends BlockController
         return $links;
     }
 
+    public function export(\SimpleXMLElement $blockNode) {
+        foreach($this->getSelectedLinks() as $link) {
+            $linkNode = $blockNode->addChild('link');
+            $linkNode->addAttribute('service', $link->getServiceObject()->getHandle());
+        }
+    }
+
     public function validate()
     {
         $e = Core::make('helper/validation/error');
@@ -75,6 +82,14 @@ class Controller extends BlockController
             $e->add(t('You must choose at least one link.'));
         }
         return $e;
+    }
+
+    public function duplicate($newBlockID)
+    {
+        $db = Database::get();
+        foreach($this->getSelectedLinks() as $link) {
+            $db->insert('btSocialLinks', array('bID' => $newBlockID, 'slID' => $link->getID(), 'displayOrder' => $this->displayOrder));
+        }
     }
 
 

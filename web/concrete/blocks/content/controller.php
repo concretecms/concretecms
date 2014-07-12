@@ -76,7 +76,7 @@ use \Concrete\Core\Block\BlockController;
 
 			$content = preg_replace_callback(
 				'/\{ccm:export:page:(.*)\}/i',
-				array('static', 'replacePagePlaceHolderOnImport'),				
+				array('static', 'replacePagePlaceHolderOnImport'),
 				$content);
 
 			$content = preg_replace_callback(
@@ -138,17 +138,17 @@ use \Concrete\Core\Block\BlockController;
 			$content = $this->content;
 			$content = preg_replace_callback(
 				'/{CCM:CID_([0-9]+)}/i',
-				array('ContentExporter', 'replacePageWithPlaceHolderInMatch'),				
+				array('\Concrete\Core\Backup\ContentExporter', 'replacePageWithPlaceHolderInMatch'),
 				$content);
 
 			$content = preg_replace_callback(
 				'/{CCM:FID_([0-9]+)}/i',
-				array('ContentExporter', 'replaceImageWithPlaceHolderInMatch'),				
+				array('\Concrete\Core\Backup\ContentExporter', 'replaceImageWithPlaceHolderInMatch'),
 				$content);
 
 			$content = preg_replace_callback(
 				'/{CCM:FID_DL_([0-9]+)}/i',
-				array('ContentExporter', 'replaceFileWithPlaceHolderInMatch'),				
+				array('\Concrete\Core\Backup\ContentExporter', 'replaceFileWithPlaceHolderInMatch'),
 				$content);
 
 			$cnode = $record->addChild('content');

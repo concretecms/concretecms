@@ -49,7 +49,12 @@ class Controller extends BlockController {
 			parent::delete();
 		}
 
-		public function save($post) {
+        public function export(\SimpleXMLElement $blockNode) {
+            $layout = $this->getAreaLayoutObject();
+            $layout->export($blockNode);
+        }
+
+        public function save($post) {
 			$db = Loader::db();
 			$arLayoutID = $db->GetOne('select arLayoutID from btCoreAreaLayout where bID = ?', array($this->bID));
 			if (!$arLayoutID) {

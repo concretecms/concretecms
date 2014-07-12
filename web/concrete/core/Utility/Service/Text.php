@@ -12,6 +12,7 @@ namespace Concrete\Core\Utility\Service;
 use \Concrete\Core\Foundation\Object;
 use Config;
 use Loader;
+use DOMDocument;
 
 class Text { 
 
@@ -368,7 +369,7 @@ class Text {
 	 * @param string $xml
 	 */
 	public function formatXML($xml) {  
-		$dom = new DOMDocument;
+        $dom = new DOMDocument;
 		$dom->preserveWhiteSpace = false;
 		$dom->loadXML($xml);
 		$dom->formatOutput = true;

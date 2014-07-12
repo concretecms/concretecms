@@ -19,6 +19,12 @@ class CustomLayout extends Layout {
 		return $this->arLayoutIsCustom;
 	}
 
+    public function exportDetails($node)
+    {
+        $node->addAttribute('spacing', $this->arLayoutSpacing);
+        $node->addAttribute('custom-widths', $this->arLayoutIsCustom);
+    }
+
 	public function duplicate() {
 		$db = Loader::db();
 		$v = array($this->arLayoutSpacing, $this->arLayoutIsCustom);

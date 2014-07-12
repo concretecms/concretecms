@@ -8,8 +8,10 @@ use SinglePage;
 use UserInfo;
 use PageType;
 use BlockType;
+use Config;
 use Block;
 use Group;
+use File;
 use PageTheme;
 use Concrete\Core\Block\BlockType\BlockTypeList;
 use Loader;
@@ -21,6 +23,8 @@ use Job;
 use SimpleXMLElement;
 use Core;
 use JobSet;
+use \Concrete\Core\Workflow\Type as WorkflowType;
+use Concrete\Core\Page\Stack\StackList;
 use PageTemplate;
 use CollectionAttributeKey;
 use \Concrete\Core\Block\BlockType\Set as BlockTypeSet;
@@ -127,12 +131,17 @@ class ContentExporter {
 		$r = $db->Execute('select Pages.cID from Pages where cIsTemplate = 0 and cFilename is null or cFilename = "" order by cID asc');
 		while($row = $r->FetchRow()) {
 			$pc = Page::getByID($row['cID'], 'RECENT');
+            if ($pc->getPageTypeHandle() == STACKS_PAGE_TYPE) {
+                continue;
+            }
 			$pc->export($pages);
 		}		
 		
 				
 		SystemCaptchaLibrary::exportList($this->x);
-		
+
+        \Concrete\Core\Sharing\SocialNetwork\Link::exportList($this->x);
+
 		Config::exportList($this->x);
 		
 	}
@@ -158,10 +167,13 @@ class ContentExporter {
 	}	
 	
 	public function output() {
-		return $this->x->asXML();
-		
+		$xml = $this->x->asXML();
+
+		// remove crappy characters
+        return preg_replace('/[\x00-\x1F\x7F]/', '', $xml);
+
 	}
-	
+
 	public function getFilesArchive()
     {
 		

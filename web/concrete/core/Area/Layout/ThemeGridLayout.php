@@ -24,6 +24,11 @@ class ThemeGridLayout extends Layout {
 		}
 	}
 
+    public function exportDetails($node)
+    {
+        $node->addAttribute('columns', $this->arLayoutMaxColumns);
+    }
+
 	public function setThemeGridFrameworkObject($gf) {
 		$this->gf = $gf;
 	}

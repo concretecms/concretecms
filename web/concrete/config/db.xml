@@ -2794,9 +2794,9 @@
             <unsigned />
             <autoincrement/>
         </field>
-        <field name="ssID" type="I" size="10">
-            <unsigned />
-            <default value="0" />
+        <field name="ssHandle" type="C" size="255">
+            <default value="" />
+            <notnull />
         </field>
         <field name="url" type="C" size="255"/>
     </table>

@@ -7,12 +7,12 @@
     || $controller->getTask() == 'delete_link') {
 
     $url = '';
-    $ssID = '';
+    $ssHandle = '';
     $action = $view->action('add_link');
     $token = 'add_link';
     if (is_object($link)) {
         $url = $link->getURL();
-        $ssID = $link->getServiceID();
+        $ssHandle = $link->getServiceHandle();
         $action = $view->action('edit_link', $link->getID());
         $token = 'edit_link';
     }
@@ -58,9 +58,9 @@
         <?=$this->controller->token->output($token)?>
 
         <div class="form-group">
-            <?=$form->label('ssID', t('Service'), array('class' => 'col-md-2'))?>
+            <?=$form->label('ssHandle', t('Service'), array('class' => 'col-md-2'))?>
             <div class="col-md-5">
-            <?=$form->select('ssID', $services, $ssID)?>
+            <?=$form->select('ssHandle', $services, $ssHandle)?>
             </div>
         </div>
 

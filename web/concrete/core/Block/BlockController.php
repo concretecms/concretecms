@@ -302,7 +302,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             while ($record = $r->FetchRow()) {
                 $tableRecord = $data->addChild('record');
                 foreach ($record as $key => $value) {
-                    if (isset($columns[strtoupper($key)])) {
+                    if (isset($columns[strtolower($key)])) {
                         if (in_array($key, $this->btExportPageColumns)) {
                             $tableRecord->addChild($key, ContentExporter::replacePageWithPlaceHolder($value));
                         } else {
