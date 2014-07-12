@@ -1254,6 +1254,15 @@
       <col>akHandle</col>
       <col>akCategoryID</col>
     </index>
+    <index name="akCategoryID">
+        <col>akCategoryID</col>
+    </index>
+    <index name="atID">
+        <col>atID</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="AttributeKeyCategories">
     <field name="akCategoryID" type="I" size="10">
