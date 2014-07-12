@@ -3976,6 +3976,9 @@
       <key/>
       <unsigned/>
     </field>
+    <index name="atSelectOptionID">
+        <col>atSelectOptionID</col>
+    </index>
   </table>
   <table name="atAddress">
     <field name="avID" type="I" size="10">
