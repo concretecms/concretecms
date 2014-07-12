@@ -71,7 +71,7 @@ $class = 'ccm-area-footer';
 		<li><a dialog-title="<?=t('Area Permissions')?>" class="dialog-launch" dialog-modal="false" dialog-width="425" dialog-height="430" id="menuAreaStyle<?=$a->getAreaID()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>&atask=groups"><?=t("Permissions")?></a></li>		
 	<? } ?>
 
-	<? 
+	<?
 	if ($a instanceof SubArea) {
 		$pk = PermissionKey::getByHandle('manage_layout_presets');
 		if (!is_object($areabt)) {
@@ -79,7 +79,7 @@ $class = 'ccm-area-footer';
 		}
 		$ax = $a->getSubAreaParentPermissionsObject();
 		$axp = new Permissions($ax);
-		if ($axp->canAddBlockToArea($bt)) { 
+		if ($axp->canAddBlockToArea($bt)) {
 			$bx = $a->getSubAreaBlockObject();
 			if (is_object($bx) && !$bx->isError()) { ?>
 				<li class="divider"></li>

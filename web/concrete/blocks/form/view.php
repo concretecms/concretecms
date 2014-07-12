@@ -90,7 +90,7 @@ $translatedSubmitLabel = t('Submit');
 	
 	<?php  elseif ($errors): ?>
 
-		<div class="alert alert-error">
+		<div class="alert alert-danger">
 			<?php  echo $errorHeader; ?>
 			<?php  echo $errorDivs; /* each error wrapped in <div class="error">...</div> */ ?>
 		</div>

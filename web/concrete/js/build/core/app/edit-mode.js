@@ -15,7 +15,7 @@
         var my = this;
         options = options || {};
         options = $.extend({
-            'notify': true
+            'notify': false
         }, options);
 
         Concrete.createGetterSetters.call(my, {
@@ -357,7 +357,7 @@
             editMode: edit_mode,
             selected: null,
             stepIndex: 0,
-            peper: peper || elem.find('a[data-inline-command="move-block"]'),
+            peper: peper || elem.children('.ccm-edit-mode-inline-commands').find('a[data-inline-command="move-block"]'),
             pepSettings: {}
         });
 

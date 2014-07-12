@@ -92,11 +92,13 @@ class Attributes extends BackendInterfacePageController {
 			if (!is_array($selectedAKIDs)) {
 				$selectedAKIDs = array();					
 			}
+            $selected = is_array($_POST['selectedAKIDs']) ? $_POST['selectedAKIDs'] : array();
+
 			foreach($setAttribs as $ak) {
 				// do I have the ability to edit this attribute?
 				if (in_array($ak->getAttributeKeyID(), $asl->getAttributesAllowedArray())) {
 					// Is this item in the selectedAKIDs array? If so then it is being saved
-					if (in_array($ak->getAttributeKeyID(), $_POST['selectedAKIDs'])) {
+					if (in_array($ak->getAttributeKeyID(), $selected)) {
 						$ak->saveAttributeForm($nvc);
 					} else {
 						// it is being removed

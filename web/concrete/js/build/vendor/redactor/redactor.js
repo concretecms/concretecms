@@ -2724,7 +2724,7 @@
             this.$toolbar.find('a.dropact').removeClass('redactor_act').removeClass('dropact');
             /* concrete5 */
             //$('.redactor_dropdown').hide();
-            $('ul.dropdown-menu').hide();
+            $('#redactor-dropdown-holder ul.dropdown-menu').hide();
             /* end concrete5 */
             this.callback('dropdownHide');
         },

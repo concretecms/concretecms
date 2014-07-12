@@ -26,7 +26,6 @@ if ($_POST['task'] == 'delete_files') {
 		}
 	}
 
-	$fr->setFiles($files);
 	$fr->setMessage(t2('%s file deleted successfully.', '%s files deleted successfully.', count($files)));
 	$fr->outputJSON();
 }
