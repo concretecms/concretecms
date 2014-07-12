@@ -1207,6 +1207,18 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="asHandle">
+        <unique/>
+        <col>asHandle</col>
+    </index>
+    <index name="akCategoryID">
+        <col>akCategoryID</col>
+        <col>asDisplayOrder</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>asID</col>
+    </index>
   </table>
   <table name="AttributeKeys">
     <field name="akID" type="I" size="10">
