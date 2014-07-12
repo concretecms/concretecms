@@ -9,9 +9,12 @@
 		<field name='token' type="C" size='32' />
 		<field name="uID" type="I" size='10' />
 		<field name="validThrough" type="I" size='10' />
-		<index name="usertoken">
+		<index name="token">
 			<UNIQUE/>
 			<col>token</col>
 		</index>
+        <index name="uID">
+            <col>uID</col>
+        </index>
 	</table>
 </schema>
