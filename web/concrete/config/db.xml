@@ -1271,6 +1271,13 @@
     <field name="pkgID" type="I" size="10">
       <unsigned/>
     </field>
+    <index name="akHandle">
+        <col>akHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>akCategoryID</col>
+    </index>
   </table>
   <table name="AttributeTypeCategories">
     <field name="atID" type="I" size="10">
