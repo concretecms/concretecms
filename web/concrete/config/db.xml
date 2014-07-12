@@ -1092,6 +1092,12 @@
   </field>
   <field name="arLayoutPresetName" type="C" size="255">
   </field>
+    <index name="arLayoutID">
+        <col>arLayoutID</col>
+    </index>
+    <index name="arLayoutPresetName">
+        <col>arLayoutPresetName</col>
+    </index>
 </table>
 <table name="AreaLayoutColumns">
     <field name="arLayoutColumnID" type="I">
