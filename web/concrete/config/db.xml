@@ -1393,6 +1393,13 @@
     <field name="pkgID" type="I" size="10">
       <UNSIGNED />
     </field>
+    <index name="authTypeHandle">
+        <unique/>
+        <col>authTypeHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="BlockRelations">
     <field name="brID" type="I" size="10">
