@@ -3885,6 +3885,9 @@
       <notnull/>
       <unsigned/>
     </field>
+    <index name="fID">
+        <col>fID</col>
+    </index>
   </table>
   <table name="atNumber">
     <field name="avID" type="I" size="10">
