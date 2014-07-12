@@ -7,6 +7,7 @@ use Package;
 use \Concrete\Core\Package\PackageList;
 use \Concrete\Core\Permission\Assignment\Assignment as PermissionAssignment;
 use User;
+use \Concrete\Core\Permission\Category as PermissionKeyCategory;
 use \Concrete\Core\Permission\Cache as PermissionCache;
 use Environment;
 use Core;
@@ -193,7 +194,7 @@ abstract class Key extends Object {
 		$categories = PermissionKeyCategory::getList();
 		$pxml = $xml->addChild('permissionkeys');
 		foreach($categories as $cat) {
-			$permissions = PermissionKey::getList($cat->getPermissionKeyCategoryHandle());
+			$permissions = static::getList($cat->getPermissionKeyCategoryHandle());
 			foreach($permissions as $p) {
 				$p->export($pxml);
 			}

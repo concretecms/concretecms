@@ -26,7 +26,13 @@ class ThemeGridColumn extends Column {
 		return $newAreaLayoutColumn;
 	}
 
-	public function display($disableControls = false) {
+    public function exportDetails($node)
+    {
+        $node->addAttribute('span', $this->arLayoutColumnSpan);
+        $node->addAttribute('offset', $this->arLayoutColumnOffset);
+    }
+
+    public function display($disableControls = false) {
 		$layout = $this->getAreaLayoutObject();
 		$a = $layout->getAreaObject();
 		$as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a);

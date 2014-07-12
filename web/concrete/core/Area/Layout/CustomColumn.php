@@ -23,6 +23,11 @@ class CustomColumn extends Column {
 		return $newAreaLayoutColumn;
 	}
 
+    public function exportDetails($node)
+    {
+        $node->addAttribute('width', $this->arLayoutColumnWidth);
+    }
+
 	public function getAreaLayoutColumnClass() {
 		return 'ccm-layout-column';
 	}

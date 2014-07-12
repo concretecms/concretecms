@@ -884,7 +884,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         $db = Loader::db();
-        $r = $db->Execute('select arHandle from Areas where cID = ? and arIsGlobal = 0', array($this->getCollectionID()));
+        $r = $db->Execute('select arHandle from Areas where cID = ? and arIsGlobal = 0 and arParentID = 0', array($this->getCollectionID()));
         while ($row = $r->FetchRow()) {
             $ax = Area::get($this, $row['arHandle']);
             $ax->export($p, $this);

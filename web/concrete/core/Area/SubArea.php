@@ -49,8 +49,15 @@ class SubArea extends Area {
 		$arHandle = $parent->getAreaHandle() . self::AREA_SUB_DELIMITER . $arHandle;
 		$this->arParentID = $parent->getAreaID();
 		parent::__construct($arHandle);
-	}	
+	}
 
+    public function export($p, $page)
+    {
+        $blocks = $page->getBlocks($this->getAreaHandle());
+        foreach ($blocks as $bl) {
+            $bl->export($p);
+        }
+    }
 
 	public function delete() {
 		$db = Loader::db();
