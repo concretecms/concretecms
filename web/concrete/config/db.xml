@@ -3931,6 +3931,7 @@
     <field name="serviceInfo" type="C" size="255"/>
     <index name="avID">
       <col>avID</col>
+      <col>avsID</col>
     </index>
   </table>
   <table name="atTextareaSettings">
