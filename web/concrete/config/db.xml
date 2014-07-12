@@ -924,6 +924,9 @@
       <notnull/>
       <default value="1"/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
   </table>
   <table name="AreaPermissionBlockTypeAccessListCustom">
     <field name="paID" type="I" size="10">
