@@ -961,6 +961,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+      <index name="paID">
+          <col>paID</col>
+      </index>
+      <index name="pkID">
+          <col>pkID</col>
+      </index>
   </table>
   <table name="BlockPermissionAssignments">
     <field name="cID" type="I" size="10">
