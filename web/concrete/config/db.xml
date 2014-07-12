@@ -3994,6 +3994,9 @@
     <field name="country" type="C" size="5">
       <notnull/>
     </field>
+    <index name="akID">
+        <col>akID</col>
+    </index>
   </table>
   <table name="atAddressSettings">
     <field name="akID" type="I" size="10">
