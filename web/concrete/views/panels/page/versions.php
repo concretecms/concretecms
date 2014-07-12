@@ -12,7 +12,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <script type="text/template" class="version">
 	<tr <% if (cv.cvIsApproved == 1) { %> class="ccm-panel-page-version-approved" <% } %>>
-		<td><input type="checkbox" name="cvID[]" value="<%-cv.cvID%>" data-version-active="<%-cv.cvIsApproved == 1%>" /></td>
+		<td><input class="ccm-flat-checkbox" type="checkbox" name="cvID[]" value="<%-cv.cvID%>" data-version-active="<%-cv.cvIsApproved == 1%>" /></td>
 		<td><span class="ccm-panel-page-versions-version-id"><%-cv.cvID%></span></td>
 		<td class="ccm-panel-page-versions-details">
 			<p><span class="ccm-panel-page-versions-version-timestamp"><%-cv.cvDateVersionCreated%></span></p>
@@ -285,7 +285,7 @@ $(function() {
 	<table class="table">
 		<thead>
 			<tr>
-				<th><input type="checkbox" /></th>
+				<th><input class="ccm-flat-checkbox" type="checkbox" /></th>
 				<th colspan="3"><!--<button type="button" class="btn-link" data-version-action="compare" disabled><?=t('Compare')?></button>//--><button type="button" class="btn-link" data-version-action="delete" disabled><?=t('Delete')?></button></th>
 			</tr>
 		</thead>

@@ -82,7 +82,7 @@ class Types extends DashboardPageController {
 		if (count($templates) == 0 && $this->post('ptAllowedPageTemplates') == 'C') {
 			$this->error->add(t('You must specify at least one page template.'));
 		}
-		$target = PageTypePublishTargetType::getByID($this->post('ptPublishTargetTypeID'));
+		$target = \Concrete\Core\Page\Type\PublishTarget\Type\Type::getByID($this->post('ptPublishTargetTypeID'));
 		if (!is_object($target)) {
 			$this->error->add(t('Invalid page type target type.'));
 		}

@@ -40,39 +40,45 @@ class PageSelector
         }
         $html .= '</strong></div>';
         $html .= '<a class="ccm-sitemap-select-page" data-page-selector-launch="' . $fieldName . '" dialog-width="90%" dialog-height="70%" dialog-append-buttons="true" dialog-modal="false" dialog-title="' . t(
-                'Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector?cID=' . $selectedCID . '">' . t(
+                'Choose Page') . '" href="' . REL_DIR_FILES_TOOLS_REQUIRED . '/sitemap_search_selector?cID=' . $selectedCID . '" dialog-on-close="Concrete.event.fire(\'fileselectorclose\', \'{$fieldName}\');">' . t(
                 'Select Page') . '</a>';
         $html .= '&nbsp;<a href="javascript:void(0)" dialog-sender="' . $fieldName . '" data-page-selector-clear="' . $fieldName . '" class="ccm-sitemap-clear-selected-page" style="float: right; margin-top: -8px;' . $clearStyle . '"><img src="' . ASSETS_URL_IMAGES . '/icons/remove.png" style="vertical-align: middle; margin-left: 3px" /></a>';
         $html .= '<input type="hidden" data-page-selector="cID" name="' . $fieldName . '" value="' . $selectedCID . '"/>';
         $html .= '</div>';
         $html .= "<script type=\"text/javascript\">
-                    var ccmActivePageField;
-                    function ccm_initSelectPage() {
-                        $('a[data-page-selector-launch={$fieldName}]').dialog();
-                        $('a[data-page-selector-launch={$fieldName}]').on('click', function () {
+                    (function(global) {
+                        var ccmActivePageField;
+                        var launcher = $('a[data-page-selector-launch=\"{$fieldName}\"]'), name = '{$fieldName}', openEvent, openEvent2;
+                        var container = $('div[data-page-selector=\"' + name + '\"]');
+                        launcher.dialog();
+
+                        ConcreteEvent.bind('fileselectorclose', function(field_name) {
+                            ConcreteEvent.unbind('ConcreteSitemap.' + name);
+                            ConcreteEvent.unbind('SitemapSelectPage.' + name);
+                            ConcreteEvent.unbind('ConcreteSitemapPageSearch.' + name);
+                        });
+                        launcher.on('click', function () {
                             var selector = $(this),
                                 handle_select = function(e, data) {
-                                    ConcreteEvent.unsubscribe(e);
+                                    ConcreteEvent.unbind(e);
                                     var handle = selector.attr('data-page-selector-launch');
-                                    var container = $('div[data-page-selector=' + handle + ']');
                                     container.find('.ccm-summary-selected-item-label').html(data.title);
                                     container.find('.ccm-sitemap-clear-selected-page').show();
                                     container.find('input[data-page-selector=cID]').val(data.cID);
                                     $.fn.dialog.closeTop();
                                 };
 
-                            ConcreteEvent.bind('ConcreteSitemap', function (event, sitemap) {
-                                ConcreteEvent.unbind(event);
-                                ConcreteEvent.subscribe('SitemapSelectPage', function (e, data) {
+                            ConcreteEvent.bind('ConcreteSitemap.' + name, function (event, sitemap) {
+                                ConcreteEvent.subscribe('SitemapSelectPage.' + name, function (e, data) {
                                     if (data.instance === sitemap) {
                                         handle_select(e, data);
                                     }
                                 });
                             });
 
-                            ConcreteEvent.bind('ConcreteSitemapPageSearch', function (event, search) {
-                                ConcreteEvent.unbind(event);
-                                ConcreteEvent.subscribe('SitemapSelectPage', function (e, data) {
+                            ConcreteEvent.bind('ConcreteSitemapPageSearch.' + name, function (event, search) {
+
+                                ConcreteEvent.subscribe('SitemapSelectPage.' + name, function (e, data) {
                                     if (data.instance === search) {
                                         handle_select(e, data);
                                     }
@@ -86,8 +92,7 @@ class PageSelector
                             container.find('.ccm-sitemap-clear-selected-page').hide();
                             container.find('input[data-page-selector=cID]').val('');
                         });
-                    }
-                    $(ccm_initSelectPage);
+                    }(this));
                   </script>";
         return $html;
     }

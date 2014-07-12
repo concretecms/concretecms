@@ -32,23 +32,30 @@ $v = $c->getVersionObject();
 		<button id="ccm-check-in-publish-time" type="button" class="btn btn-primary"><i class="fa fa-clock-o fa-inverse"></i></button>
 	</div>
     */?>
-    <button id="ccm-check-in-publish" type="submit" name="action" value="publish" class="btn btn-primary"><?=$publishTitle?></button>
-    <br/><br/>
+
+    <button <? if (is_object($publishErrors) && $publishErrors->has()) { ?>disabled<? } ?>
+            id="ccm-check-in-publish" type="submit" name="action" value="publish" class="btn-block btn btn-primary"><?=$publishTitle?></button>
+    <br/>
+    <? if (is_object($publishErrors) && $publishErrors->has()) { ?>
+        <div class="small">
+        <? foreach($publishErrors->getList() as $error) { ?>
+            <div class="text-danger"><strong><i class="fa fa-exclamation-circle"></i> <?=$error?></strong></div>
+            <br/>
+        <? } ?>
+        </div>
+    <? } ?>
 </div>
 
 <? } ?>
 
-<div class="ccm-panel-check-in-preview">
-	<button id="ccm-check-in-preview" type="submit" name="action" value="save" class="btn-success btn"><?=t('Save Changes')?></button>
-	<? if ($c->isPageDraft() && $cp->canDeletePage()) { ?>
-		<button id="ccm-check-in-discard" type="submit" name="action" value="discard" class="btn-danger btn"><?=t('Discard Draft')?></button>
-	<? } else if ($v->canDiscard()) { ?>
-		<button id="ccm-check-in-discard" type="submit" name="action" value="discard" class="btn-danger btn"><?=t('Discard Changes')?></button>
+	<button id="ccm-check-in-preview" type="submit" name="action" value="save" class="btn-block btn-success btn"><?=t('Save Changes')?></button>
 
+    <? if ($c->isPageDraft() && $cp->canDeletePage()) { ?>
+		<button id="ccm-check-in-discard" type="submit" name="action" value="discard" class="btn-block btn-danger btn"><?=t('Discard Draft')?></button>
+	<? } else if ($v->canDiscard()) { ?>
+		<button id="ccm-check-in-discard" type="submit" name="action" value="discard" class="btn-block btn-danger btn"><?=t('Discard Changes')?></button>
 	<? } ?>
-	</button>
 	<input type="hidden" name="approve" value="PREVIEW" id="ccm-approve-field" />
-</div>
 
 </form>
 

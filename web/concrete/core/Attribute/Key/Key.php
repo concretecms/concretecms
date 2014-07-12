@@ -332,6 +332,7 @@ class Key extends Object
                     'akName' => $ak['name'],
                     'akIsInternal' => $akIsInternal,
                     'akIsSearchableIndexed' => $ak['indexed'],
+                    'akIsAutoCreated' => 1,
                     'akIsSearchable' => $ak['searchable']
                 ),
                 $pkg
@@ -363,7 +364,7 @@ class Key extends Object
 
         $_akIsSearchable = 1;
         $_akIsSearchableIndexed = 1;
-        $_akIsAutoCreated = 1;
+        $_akIsAutoCreated = 0;
         $_akIsEditable = 1;
         $_akIsInternal = 0;
 
