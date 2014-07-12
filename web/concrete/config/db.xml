@@ -1362,6 +1362,15 @@
     <field name="atID" type="I" size="10">
       <unsigned/>
     </field>
+    <index name="akID">
+        <col>akID</col>
+    </index>
+    <index name="uID">
+        <col>uID</col>
+    </index>
+    <index name="atID">
+        <col>atID</col>
+    </index>
   </table>
   <table name="AuthenticationTypes">
     <field name="authTypeID" type="I" size="10">
