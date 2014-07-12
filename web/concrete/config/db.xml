@@ -1117,6 +1117,16 @@
   <field name="arLayoutColumnDisplayID" type="I">
     <default value="0" />
   </field>
+    <index name="arLayoutID">
+        <col>arLayoutID</col>
+        <col>arLayoutColumnIndex</col>
+    </index>
+    <index name="arID">
+        <col>arID</col>
+    </index>
+    <index name="arLayoutColumnDisplayID">
+        <col>arLayoutColumnDisplayID</col>
+    </index>
 </table>
 <table name="AreaLayoutCustomColumns">
   <field name="arLayoutColumnID" type="I">
