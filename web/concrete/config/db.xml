@@ -1734,6 +1734,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="akID">
+        <col>akID</col>
+    </index>
+    <index name="avID">
+        <col>avID</col>
+    </index>
   </table>
   <table name="CollectionVersionRelatedEdits">
     <field name="cID" type="I" size="10">
