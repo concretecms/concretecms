@@ -1924,6 +1924,10 @@
       <default value="0000-00-00 00:00:00"/>
     </field>
     <field name="cHandle" type="C" size="255"/>
+    <index name="cIDDateModified">
+        <col>cID</col>
+        <col>cDateModified</col>
+    </index>
     <index name="cDateModified">
       <col>cDateModified</col>
     </index>
