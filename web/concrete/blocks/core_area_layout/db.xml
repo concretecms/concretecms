@@ -12,5 +12,8 @@
 			<notnull />
 			<default value="0" />
 		</field>
+        <index name="arLayoutID">
+            <col>arLayoutID</col>
+        </index>
 	</table>
 </schema>
