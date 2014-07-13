@@ -4212,6 +4212,12 @@
       <unsigned/>
     </field>
     <field name="wpDateCompleted" type="T"/>
+    <index name="uIDStarted">
+        <col>uIDStarted</col>
+    </index>
+    <index name="uIDCompleted">
+        <col>uIDCompleted</col>
+    </index>
   </table>
   <table name="BasicWorkflowPermissionAssignments">
     <field name="wfID" type="I" size="10">
