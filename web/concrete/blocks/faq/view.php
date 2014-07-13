@@ -20,6 +20,8 @@ $faqEntryCount = 1;?>
         } ?>
     </div>
     <?php } else { ?>
+    <div class="ccm-faq-block-links">
         <p><?php echo t('No Faq Entries Entered.'); ?></p>
+    </div>
     <?php } ?>
 </div>
