@@ -56,6 +56,9 @@
 		</field>
 		<field name="truncateChars" type="I">
 			<default value="128"/>
-		</field>		
+		</field>
+        <index name="ptID">
+            <col>ptID</col>
+        </index>
 	</table>
 </schema>
