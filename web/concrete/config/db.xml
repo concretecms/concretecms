@@ -1485,6 +1485,16 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="btsHandle">
+        <unique/>
+        <col>btsHandle</col>
+    </index>
+    <index name="btsDisplayOrder">
+        <col>btsDisplayOrder</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="BlockTypes">
     <field name="btID" type="I" size="10">
