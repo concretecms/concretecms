@@ -10,5 +10,8 @@
 			<notnull />
 			<default value="0" />
 		</field>
+        <index name="cnvMessageID">
+            <col>cnvMessageID</col>
+        </index>
 	</table>
 </schema>
