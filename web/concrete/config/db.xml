@@ -1563,7 +1563,13 @@
     <field name="uID" type="I" size="10">
       <unsigned/>
     </field>
- <field name="btCachedBlockRecord" type="X2"></field>
+    <field name="btCachedBlockRecord" type="X2"/>
+    <index name="btID">
+        <col>btID</col>
+    </index>
+    <index name="uID">
+        <col>uID</col>
+    </index>
   </table>
   <table name="CollectionVersionBlocksOutputCache">
     <field name="cID" type="I" size="10">
