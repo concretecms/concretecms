@@ -10,5 +10,8 @@
 			<unsigned />
 			<notnull />
 		</field>
+        <index name="gaID">
+            <col>gaID</col>
+        </index>
 	</table>
 </schema>
