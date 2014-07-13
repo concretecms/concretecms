@@ -1295,8 +1295,8 @@
     <field name="pkgID" type="I" size="10">
       <unsigned/>
     </field>
-    <index name="akHandle">
-        <col>akHandle</col>
+    <index name="akCategoryHandle">
+        <col>akCategoryHandle</col>
     </index>
     <index name="pkgID">
         <col>pkgID</col>
