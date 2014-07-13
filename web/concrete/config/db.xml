@@ -1647,9 +1647,8 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <index name="cIDcvID">
-      <col>cID</col>
-      <col>cvID</col>
+    <index name="faID">
+        <col>faID</col>
     </index>
   </table>
   <table name="CollectionVersionThemeCustomStyles">
