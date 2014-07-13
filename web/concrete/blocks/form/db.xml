@@ -102,6 +102,9 @@
 		<index name="questionSetId">
 			<col>questionSetId</col>
 		</index>
+        <index name="uID">
+            <col>uID</col>
+        </index>
 	</table>
 	
 	<table name="btFormAnswers">
