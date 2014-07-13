@@ -59,16 +59,15 @@ class Legacy extends XmlParser {
 			$name = (string) $index['name'];
 			$fields = array();
 			$flags = array();
+            foreach($index->col as $col) {
+                $fields[] = $col->__toString();
+            }
+            if ($index->fulltext || $index->FULLTEXT) {
+                $flags[] = 'FULLTEXT';
+            }
 			if ($index->UNIQUE || $index->unique) {
-				$fields[] = $index->col->__toString();
 				$schemaTable->addUniqueIndex($fields, $name);
 			} else {
-				foreach($index->col as $col) {
-					$fields[] = $col->__toString();
-				}
-				if ($index->fulltext || $index->FULLTEXT) {
-					$flags[] = 'FULLTEXT';
-				}
 				$schemaTable->addIndex($fields, $name, $flags);
 			}
 		}	
