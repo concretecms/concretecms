@@ -177,7 +177,7 @@ class Set extends Object {
 	
 	public function contains($bt) {
 		$db = Loader::db();
-		$r = $db->GetOne('select count(akID) from BlockTypeSetBlockTypes where btsID = ? and btID = ?', array($this->getBlockTypeSetID(), $bt->getBlockTypeID()));
+		$r = $db->GetOne('select count(*) from BlockTypeSetBlockTypes where btsID = ? and btID = ?', array($this->getBlockTypeSetID(), $bt->getBlockTypeID()));
 		return $r > 0;
 	}	
 	
