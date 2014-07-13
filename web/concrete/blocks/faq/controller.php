@@ -28,7 +28,15 @@ class Controller extends BlockController
 
     public function getSearchableContent()
     {
-        return $this->content;
+        $content = '';
+        $db = Loader::db();
+        $v = array($this->bID);
+        $q = 'select * from btFaqEntries where bID = ?';
+        $r = $db->query($q, $v);
+        foreach($r as $row) {
+           $content.= $row['title']. ' '.$row['linkTitle'].' '.$row['description'];
+        }
+        return $content;
     }
 
     public function edit()
@@ -43,6 +51,24 @@ class Controller extends BlockController
         $db = Loader::db();
         $query = $db->GetAll('SELECT * from btFaqEntries WHERE bID = ? ORDER BY sortOrder', array($this->bID));
         $this->set('rows', $query);
+    }
+
+    public function duplicate($newBID) {
+        $db = Loader::db();
+        $v = array($this->bID);
+        $q = 'select * from btFaqEntries where bID = ?';
+        $r = $db->query($q, $v);
+        foreach($r as $row) {
+            $db->execute('INSERT INTO btFaqEntries (bID, title, linkTitle, description, sortOrder) values(?,?,?,?,?)',
+                array(
+                    $newBID,
+                    $row['title'],
+                    $row['linkTitle'],
+                    $row['description'],
+                    $row['sortOrder']
+                )
+            );
+        }
     }
 
     public function delete()
