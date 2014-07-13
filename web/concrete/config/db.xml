@@ -1543,6 +1543,14 @@
       <unique/>
       <col>btHandle</col>
     </index>
+    <index name="btDisplayOrder">
+        <col>btDisplayOrder</col>
+        <col>btName</col>
+        <col>btID</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="Blocks">
     <field name="bID" type="I" size="10">
