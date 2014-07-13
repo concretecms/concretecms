@@ -1646,10 +1646,18 @@
       <default value="0"/>
       <unsigned/>
     </field>
-      <index name="ccvbID">
-      <col>cID</col>
-      <col>cvID</col>
-      <col>bID</col>
+    <index name="faID">
+        <col>faID</col>
+        <col>cID</col>
+        <col>cvID</col>
+    </index>
+    <index name="faID">
+        <col>faID</col>
+        <col>cID</col>
+        <col>cvID</col>
+    </index>
+    <index name="bID">
+        <col>bID</col>
     </index>
 
   </table>
