@@ -23,6 +23,10 @@
 		<field name="displayOrder" type="I">
 			<default value="0"/>
 		</field>
+        <index name="bID">
+            <col>bID</col>
+            <col>displayOrder</col>
+        </index>
 	</table>
 	<table name="btSurveyResults">
 		<field name="resultID" type="I">
