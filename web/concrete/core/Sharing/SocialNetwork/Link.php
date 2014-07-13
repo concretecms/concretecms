@@ -106,4 +106,13 @@ class Link
         return $r;
     }
 
+    public static function getByServiceHandle($ssHandle)
+    {
+        $db = Database::get();
+        $em = $db->getEntityManager();
+        return $em->getRepository('\Concrete\Core\Sharing\SocialNetwork\Link')->findOneBy(
+            array('ssHandle' => $ssHandle)
+        );
+    }
+
 }

@@ -43,7 +43,10 @@ abstract class Layout extends Object {
 		return $this->arLayoutNumColumns;
 	}
 
-	public function getAreaLayoutColumns() {
+    /**
+     * @return array \Concrete\Core\Area\Layout\Column
+     */
+    public function getAreaLayoutColumns() {
 		$db = Loader::db();
 		$r = $db->Execute('select arLayoutColumnID from AreaLayoutColumns where arLayoutID = ? order by arLayoutColumnIndex asc', array($this->arLayoutID));
 		$columns = array();

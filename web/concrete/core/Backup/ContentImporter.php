@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Backup;
+use Concrete\Core\Sharing\SocialNetwork\Link;
 use Page;
 use Package;
 use Stack;
@@ -70,6 +71,7 @@ class ContentImporter {
 		$this->importPageTypePublishTargetTypes($sx);
 		$this->importPageTypeComposerControlTypes($sx);
 		$this->importBannedWords($sx);
+        $this->importSocialLinks($sx);
 		$this->importFeatures($sx);
 		$this->importFeatureCategories($sx);
 		$this->importGatheringDataSources($sx);
@@ -252,12 +254,8 @@ class ContentImporter {
 				$args = array();
 				$ct = PageType::getByHandle($px['pagetype']);
 				$template = PageTemplate::getByHandle($px['template']);
-				if ($px['path'] == '') {
-					// home page
-					$page = $home;
-					$args['ptID'] = $ct->getPageTypeID();
-					$args['pTemplateID'] = $template->getPageTemplateID();
-				} else {
+				if ($px['path'] != '') {
+					// not home page
 					$page = Page::getByPath($px['path']);
 					if (!is_object($page) || ($page->isError())) {
 						$lastSlash = strrpos((string) $px['path'], '/');
@@ -270,11 +268,15 @@ class ContentImporter {
 						}
 						$page = $parent->add($ct, $data);
 					}
-				}
+				} else {
+                    $page = $home;
+                }
 
 				$args['cName'] = $px['name'];
 				$args['cDescription'] = $px['description'];
-				$args['ptID'] = $ct->getPageTypeID();
+                if (is_object($ct)) {
+	    			$args['ptID'] = $ct->getPageTypeID();
+                }
 				$args['pTemplateID'] = $template->getPageTemplateID();
 				$page->update($args);
 			}
@@ -504,7 +506,18 @@ class ContentImporter {
 		}
 	}
 
-	protected function importConversationFlagTypes(\SimpleXMLElement $sx) {
+    protected function importSocialLinks(\SimpleXMLElement $sx) {
+        if (isset($sx->sociallinks)) {
+            foreach($sx->sociallinks->link as $l) {
+                $sociallink = new Link();
+                $sociallink->setURL((string) $l['url']);
+                $sociallink->setServiceHandle((string) $l['service']);
+                $sociallink->save();
+            }
+        }
+    }
+
+    protected function importConversationFlagTypes(\SimpleXMLElement $sx) {
 		if (isset($sx->flag_types)) {
 			foreach($sx->flag_types->flag_type as $p) {
 				$bw = ConversationFlagType::add($p);

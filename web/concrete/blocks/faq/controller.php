@@ -7,6 +7,7 @@ use Loader;
 class Controller extends BlockController
 {
     protected $btTable = 'btFaq';
+    protected $btExportTables = array('btFaq', 'btFaqEntries');
     protected $btInterfaceWidth = "600";
     protected $btWrapperClass = 'ccm-ui';
     protected $btInterfaceHeight = "465";
