@@ -8,9 +8,10 @@
 		<field name="fID" type="I">
 			<unsigned />
 		</field>
-		<field name="quality" type="C" size="255">
-		</field>
-		<field name="minVersion" type="C" size="255">
-		</field>
+		<field name="quality" type="C" size="255"/>
+		<field name="minVersion" type="C" size="255"/>
+        <index name="fID">
+            <col>fID</col>
+        </index>
 	</table>
 </schema>
