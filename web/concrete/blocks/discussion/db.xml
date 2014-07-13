@@ -28,6 +28,11 @@
 			<notnull />
 			<default value="1" />
 		</field>
-
+        <index name="cnvDiscussionID">
+            <col>cnvDiscussionID</col>
+        </index>
+        <index name="ptID">
+            <col>ptID</col>
+        </index>
 	</table>
 </schema>
