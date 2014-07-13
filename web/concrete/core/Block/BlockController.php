@@ -297,7 +297,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             $data->addAttribute('table', $tbl);
             $columns = $db->MetaColumns($tbl);
             // remove columns we don't want
-            unset($columns['BID']);
+            unset($columns['bid']);
             $r = $db->Execute('select * from ' . $tbl . ' where bID = ?', array($this->bID));
             while ($record = $r->FetchRow()) {
                 $tableRecord = $data->addChild('record');

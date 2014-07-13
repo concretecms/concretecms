@@ -859,6 +859,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
         $p->addAttribute('filename', $this->getCollectionFilename());
         $p->addAttribute('pagetype', $this->getPageTypeHandle());
+        $template = PageTemplate::getByID($this->getPageTemplateID());
+        if (is_object($template)) {
+            $p->addAttribute('template', $template->getPageTemplateHandle());
+        }
         $ui = UserInfo::getByID($this->getCollectionUserID());
         if (!is_object($ui)) {
             $ui = UserInfo::getByID(USER_SUPER_ID);

@@ -84,11 +84,17 @@ abstract class Column extends Object {
 		$c = $a->getAreaCollectionObject();
 		$as->load($c);
 		if (!$this->getAreaID()) {
-			$db = Loader::db();
-			$db->Execute('update AreaLayoutColumns set arID = ? where arLayoutColumnID = ?', array($as->getAreaID(), $this->arLayoutColumnID));
+            $this->setAreaID($as->getAreaID());
 		}
 		$as->display($c);
 	}
+
+    public function setAreaID($arID)
+    {
+        $db = Loader::db();
+        $this->arID = $arID;
+        $db->Execute('update AreaLayoutColumns set arID = ? where arLayoutColumnID = ?', array($arID, $this->arLayoutColumnID));
+    }
 
 	public function delete() {
 		$db = Loader::db();

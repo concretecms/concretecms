@@ -37,18 +37,6 @@ class ThemeGridLayout extends Layout {
 		return $this->gf;
 	}
 
-	public function setAreaObject(Area $a) {
-		$this->area = $a;
-	}
-
-	public function getAreaObject() {
-		return $this->area;
-	}
-
-	public function getAreaLayoutID() {
-		return $this->arLayoutID;
-	}
-		
 	public function getAreaLayoutSpacing() {
 		return $this->arLayoutSpacing;
 	}

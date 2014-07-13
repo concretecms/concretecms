@@ -76,7 +76,6 @@
                 <block type="html" name="">
                     <data table="btContentLocal">
                         <record>
-                            <bID><![CDATA[102]]></bID>
                             <content><![CDATA[<span id="footer-site-title">Elemental</span>]]></content>
                         </record>
                     </data>
@@ -97,7 +96,6 @@
                 <block type="autonav" name="" custom-template="responsive_header_navigation">
                     <data table="btNavigation">
                         <record>
-                            <bID><![CDATA[243]]></bID>
                             <orderBy><![CDATA[display_asc]]></orderBy>
                             <displayPages><![CDATA[top]]></displayPages>
                             <displayPagesCID/>
@@ -116,11 +114,10 @@
                 <block type="search" name="">
                     <data table="btSearch">
                         <record>
-                            <bID><![CDATA[204]]></bID>
                             <title><![CDATA[]]></title>
                             <buttonText><![CDATA[]]></buttonText>
                             <baseSearchPath><![CDATA[]]></baseSearchPath>
-                            <postTo_cID><![CDATA[138]]></postTo_cID>
+                            <postTo_cID>{ccm:export:page:/search}</postTo_cID>
                             <resultsURL><![CDATA[]]></resultsURL>
                         </record>
                     </data>
@@ -132,7 +129,6 @@
                 <block type="html" name="">
                     <data table="btContentLocal">
                         <record>
-                            <bID><![CDATA[121]]></bID>
                             <content><![CDATA[<span id="header-site-title">Elemental</span>]]></content>
                         </record>
                     </data>
@@ -140,115 +136,11 @@
             </area>
         </stack>
     </stacks>
-
-
     <pages>
-        <page name="Home" path="" filename="" pagetype="" user="admin" description="" package="">
+        <page name="Home" path="" filename="" pagetype="" template="full" user="admin" description="" package="">
             <area name="Main"/>
         </page>
-        <page name="Welcome to concrete5" path="/dashboard/welcome" filename="" pagetype="dashboard_header_four_col" user="admin" description="Learn about how to use concrete5, how to develop for concrete5, and get general help." package="">
-            <attributes>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-            </attributes>
-            <area name="Header">
-                <block type="content" name="">
-                    <data table="btContentLocal">
-                        <record>
-                            <content><![CDATA[<div id="newsflow-header-first-run"><h1>Welcome to concrete5.</h1><h2>It's easy to edit content and add pages using in-context editing.</h2></div>]]></content>
-                        </record>
-                    </data>
-                </block>
-            </area>
-            <area name="Column 1">
-                <block type="content" name="">
-                    <data table="btContentLocal">
-                        <record>
-                            <content><![CDATA[<div class="newsflow-column-first-run"><h3>Building Your Own Site</h3><p>Editing with concrete5 is a breeze. Just point and click to make changes.</p><br/><p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/editors')" class="btn primary">Editor's Guide</a></p></div>]]></content>
-                        </record>
-                    </data>
-                </block>
-            </area>
-            <area name="Column 2">
-                <block type="content" name="">
-                    <data table="btContentLocal">
-                        <record>
-                            <content><![CDATA[<div class="newsflow-column-first-run"><h3>Developing Applications</h3><p>If you’re comfortable in PHP concrete5 should be a breeze to learn. Take a few moments to understand the architecture.</p><p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/developers')" class="btn primary">Developer's Guide</a></p></div>]]></content>
-                        </record>
-                    </data>
-                </block>
-            </area>
-            <area name="Column 3">
-                <block type="content" name="">
-                    <data table="btContentLocal">
-                        <record>
-                            <content><![CDATA[<div class="newsflow-column-first-run"><h3>Designing Websites</h3><p>Good with CSS and HTML? You can easily theme anything with concrete5.</p><br/><p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/designers')" class="btn primary">Designer's Guide</a></p></div>]]></content>
-                        </record>
-                    </data>
-                </block>
-            </area>
-            <area name="Column 4">
-                <block type="content" name="">
-                    <data table="btContentLocal">
-                        <record>
-                            <content><![CDATA[<div class="newsflow-column-first-run"><h3>Business Background</h3><p>Worried about license structures, white-labeling or why concrete5 is a good choice for your agency?</p><p><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/executives')" class="btn primary">Executive's Guide</a></p></div>]]></content>
-                        </record>
-                    </data>
-                </block>
-            </area>
-        </page>
-        <page name="Customize Dashboard Home" path="/dashboard/home" filename="" pagetype="dashboard_primary_five" user="admin" description="" package="">
-            <attributes>
-                <attributekey handle="exclude_nav">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-                <attributekey handle="exclude_search_index">
-                    <value><![CDATA[1]]></value>
-                </attributekey>
-            </attributes>
-            <area name="Primary">
-                <block type="dashboard_app_status" name=""/>
-                <block type="dashboard_site_activity" name=""/>
-            </area>
-            <area name="Secondary 1">
-                <block type="dashboard_newsflow_latest" name="">
-                    <data table="btDashboardNewsflowLatest">
-                        <record>
-                            <bID><![CDATA[8]]></bID>
-                            <slot><![CDATA[A]]></slot>
-                        </record>
-                    </data>
-                </block>
-            </area>
-            <area name="Secondary 2">
-                <block type="dashboard_newsflow_latest" name="">
-                    <data table="btDashboardNewsflowLatest">
-                        <record>
-                            <bID><![CDATA[9]]></bID>
-                            <slot><![CDATA[B]]></slot>
-                        </record>
-                    </data>
-                </block>
-            </area>
-            <area name="Secondary 3">
-                <block type="dashboard_featured_theme" name=""/>
-            </area>
-            <area name="Secondary 4">
-                <block type="dashboard_featured_addon" name=""/>
-            </area>
-            <area name="Secondary 5">
-                <block type="dashboard_newsflow_latest" name="">
-                    <data table="btDashboardNewsflowLatest">
-                        <record>
-                            <bID><![CDATA[12]]></bID>
-                            <slot><![CDATA[C]]></slot>
-                        </record>
-                    </data>
-                </block>
-            </area>
-        </page>
-        <page name="Search" path="/search" filename="" pagetype="page" user="admin" description="" package="">
+        <page name="Search" path="/search" filename="" pagetype="page" template="full" user="admin" description="" package="">
             <attributes>
                 <attributekey handle="meta_title">
                     <value><![CDATA[]]></value>
@@ -273,23 +165,21 @@
                 <block type="search" name="">
                     <data table="btSearch">
                         <record>
-                            <bID><![CDATA[18]]></bID>
                             <title><![CDATA[Search]]></title>
                             <buttonText><![CDATA[Search]]></buttonText>
                             <baseSearchPath><![CDATA[]]></baseSearchPath>
-                            <postTo_cID><![CDATA[]]></postTo_cID>
+                            <postTo_cID/>
                             <resultsURL><![CDATA[]]></resultsURL>
                         </record>
                     </data>
                 </block>
             </area>
         </page>
-        <page name="About" path="/about" filename="" pagetype="page" user="admin" description="" package="">
+        <page name="About" path="/about" filename="" pagetype="page" template="full" user="admin" description="" package="">
             <area name="Main">
                 <block type="page_title" name="">
                     <data table="btPageTitle">
                         <record>
-                            <bID><![CDATA[81]]></bID>
                             <useCustomTitle><![CDATA[0]]></useCustomTitle>
                             <titleText><![CDATA[]]></titleText>
                         </record>
@@ -302,7 +192,6 @@
                                 <block type="image" name="">
                                     <data table="btContentImage">
                                         <record>
-                                            <bID><![CDATA[23]]></bID>
                                             <fID>{ccm:export:file:blank.png}</fID>
                                             <fOnstateID/>
                                             <maxWidth><![CDATA[0]]></maxWidth>
@@ -358,7 +247,6 @@
                                 <block type="image" name="">
                                     <data table="btContentImage">
                                         <record>
-                                            <bID><![CDATA[31]]></bID>
                                             <fID>{ccm:export:file:blank.png}</fID>
                                             <fOnstateID/>
                                             <maxWidth><![CDATA[0]]></maxWidth>
@@ -389,7 +277,6 @@
                                 <block type="image" name="" custom-template="right_tilt">
                                     <data table="btContentImage">
                                         <record>
-                                            <bID><![CDATA[212]]></bID>
                                             <fID>{ccm:export:file:blank2.png}</fID>
                                             <fOnstateID/>
                                             <maxWidth><![CDATA[0]]></maxWidth>
@@ -416,7 +303,7 @@
                 </block>
             </area>
         </page>
-        <page name="Blank Page" path="/blank-page" filename="" pagetype="page" user="admin" description="" package="">
+        <page name="Blank Page" path="/blank-page" filename="" pagetype="page" template="blank" user="admin" description="" package="">
             <attributes>
                 <attributekey handle="exclude_nav">
                     <value><![CDATA[1]]></value>
@@ -432,12 +319,11 @@
                 </block>
             </area>
         </page>
-        <page name="Contact Us" path="/about/contact-us" filename="" pagetype="page" user="admin" description="" package="">
+        <page name="Contact Us" path="/about/contact-us" filename="" pagetype="page" template="full" user="admin" description="" package="">
             <area name="Main">
                 <block type="page_title" name="">
                     <data table="btPageTitle">
                         <record>
-                            <bID><![CDATA[82]]></bID>
                             <useCustomTitle><![CDATA[0]]></useCustomTitle>
                             <titleText><![CDATA[]]></titleText>
                         </record>
@@ -450,7 +336,6 @@
                                 <block type="google_map" name="">
                                     <data table="btGoogleMap">
                                         <record>
-                                            <bID><![CDATA[84]]></bID>
                                             <title><![CDATA[]]></title>
                                             <location><![CDATA[1200 NW Naito Pkwy, Portland, OR, United States]]></location>
                                             <latitude><![CDATA[45.5313254]]></latitude>
@@ -482,7 +367,6 @@
                                 <block type="image" name="" custom-template="circle">
                                     <data table="btContentImage">
                                         <record>
-                                            <bID><![CDATA[91]]></bID>
                                             <fID>{ccm:export:file:chinese_house2.jpg}</fID>
                                             <fOnstateID/>
                                             <maxWidth><![CDATA[0]]></maxWidth>
@@ -515,7 +399,6 @@
                                 <block type="form" name="">
                                     <data table="btForm">
                                         <record>
-                                            <bID><![CDATA[206]]></bID>
                                             <questionSetId><![CDATA[1404886998]]></questionSetId>
                                             <surveyName><![CDATA[Contact Us]]></surveyName>
                                             <thankyouMsg><![CDATA[Thanks!]]></thankyouMsg>
@@ -530,7 +413,6 @@
                                         <record>
                                             <qID><![CDATA[19]]></qID>
                                             <msqID><![CDATA[1]]></msqID>
-                                            <bID><![CDATA[206]]></bID>
                                             <questionSetId><![CDATA[1404886998]]></questionSetId>
                                             <question><![CDATA[First Name]]></question>
                                             <inputType><![CDATA[field]]></inputType>
@@ -543,7 +425,6 @@
                                         <record>
                                             <qID><![CDATA[20]]></qID>
                                             <msqID><![CDATA[2]]></msqID>
-                                            <bID><![CDATA[206]]></bID>
                                             <questionSetId><![CDATA[1404886998]]></questionSetId>
                                             <question><![CDATA[Last Name]]></question>
                                             <inputType><![CDATA[field]]></inputType>
@@ -556,7 +437,6 @@
                                         <record>
                                             <qID><![CDATA[21]]></qID>
                                             <msqID><![CDATA[3]]></msqID>
-                                            <bID><![CDATA[206]]></bID>
                                             <questionSetId><![CDATA[1404886998]]></questionSetId>
                                             <question><![CDATA[Email Address]]></question>
                                             <inputType><![CDATA[email]]></inputType>
@@ -569,7 +449,6 @@
                                         <record>
                                             <qID><![CDATA[25]]></qID>
                                             <msqID><![CDATA[4]]></msqID>
-                                            <bID><![CDATA[206]]></bID>
                                             <questionSetId><![CDATA[1404886998]]></questionSetId>
                                             <question><![CDATA[Subject]]></question>
                                             <inputType><![CDATA[select]]></inputType>
@@ -582,7 +461,6 @@
                                         <record>
                                             <qID><![CDATA[26]]></qID>
                                             <msqID><![CDATA[5]]></msqID>
-                                            <bID><![CDATA[206]]></bID>
                                             <questionSetId><![CDATA[1404886998]]></questionSetId>
                                             <question><![CDATA[Message]]></question>
                                             <inputType><![CDATA[text]]></inputType>
@@ -600,12 +478,11 @@
                 </block>
             </area>
         </page>
-        <page name="Careers" path="/about/careers" filename="" pagetype="page" user="admin" description="" package="">
+        <page name="Careers" path="/about/careers" filename="" pagetype="page" template="full" user="admin" description="" package="">
             <area name="Main">
                 <block type="page_title" name="">
                     <data table="btPageTitle">
                         <record>
-                            <bID><![CDATA[185]]></bID>
                             <useCustomTitle><![CDATA[1]]></useCustomTitle>
                             <titleText><![CDATA[Work with Us]]></titleText>
                         </record>
@@ -614,7 +491,6 @@
                 <block type="image" name="">
                     <data table="btContentImage">
                         <record>
-                            <bID><![CDATA[186]]></bID>
                             <fID>{ccm:export:file:masthead.png}</fID>
                             <fOnstateID/>
                             <maxWidth><![CDATA[0]]></maxWidth>
@@ -629,7 +505,6 @@
                 <block type="html" name="">
                     <data table="btContentLocal">
                         <record>
-                            <bID><![CDATA[195]]></bID>
                             <content><![CDATA[<div style="height: 50px"></div>]]></content>
                         </record>
                     </data>
@@ -641,7 +516,6 @@
                                 <block type="feature" name="">
                                     <data table="btFeature">
                                         <record>
-                                            <bID><![CDATA[196]]></bID>
                                             <icon><![CDATA[home]]></icon>
                                             <title><![CDATA[Welcome Home]]></title>
                                             <paragraph><![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan.]]></paragraph>
@@ -651,7 +525,6 @@
                                 <block type="feature" name="">
                                     <data table="btFeature">
                                         <record>
-                                            <bID><![CDATA[192]]></bID>
                                             <icon><![CDATA[user]]></icon>
                                             <title><![CDATA[Great Workers]]></title>
                                             <paragraph><![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan.]]></paragraph>
@@ -663,7 +536,6 @@
                                 <block type="feature" name="">
                                     <data table="btFeature">
                                         <record>
-                                            <bID><![CDATA[190]]></bID>
                                             <icon><![CDATA[flag]]></icon>
                                             <title><![CDATA[Amazing Location]]></title>
                                             <paragraph><![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan.]]></paragraph>
@@ -673,7 +545,6 @@
                                 <block type="feature" name="">
                                     <data table="btFeature">
                                         <record>
-                                            <bID><![CDATA[193]]></bID>
                                             <icon><![CDATA[clock-o]]></icon>
                                             <title><![CDATA[Paid Time Off]]></title>
                                             <paragraph><![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan.]]></paragraph>
@@ -685,7 +556,6 @@
                                 <block type="feature" name="">
                                     <data table="btFeature">
                                         <record>
-                                            <bID><![CDATA[191]]></bID>
                                             <icon><![CDATA[star]]></icon>
                                             <title><![CDATA[No Meetings]]></title>
                                             <paragraph><![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan.]]></paragraph>
@@ -695,7 +565,6 @@
                                 <block type="feature" name="">
                                     <data table="btFeature">
                                         <record>
-                                            <bID><![CDATA[194]]></bID>
                                             <icon><![CDATA[beer]]></icon>
                                             <title><![CDATA[Free Drinks]]></title>
                                             <paragraph><![CDATA[Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan.]]></paragraph>
@@ -741,12 +610,11 @@
                 </block>
             </area>
         </page>
-        <page name="Frequently Asked Questions" path="/about/faq" filename="" pagetype="page" user="admin" description="" package="">
+        <page name="Frequently Asked Questions" path="/about/faq" filename="" pagetype="page" template="full" user="admin" description="" package="">
             <area name="Main">
                 <block type="page_title" name="">
                     <data table="btPageTitle">
                         <record>
-                            <bID><![CDATA[209]]></bID>
                             <useCustomTitle><![CDATA[0]]></useCustomTitle>
                             <titleText><![CDATA[Frequently Asked Questions]]></titleText>
                         </record>
@@ -755,55 +623,32 @@
                 <block type="faq" name="">
                     <data table="btFaq">
                         <record>
-                            <bID><![CDATA[215]]></bID>
                             <blockTitle><![CDATA[]]></blockTitle>
                         </record>
                     </data>
-                </block>
-            </area>
-        </page>
-        <page name="Derb." path="/about/contact-us/derb" filename="" pagetype="page" user="admin" description="" package="">
-            <area name="Main">
-                <block type="content" name="">
-                    <data table="btContentLocal">
+                    <data table="btFaqEntries">
                         <record>
-                            <content><![CDATA[<p>Editing content. derp derp derp.</p>]]></content>
+                            <id><![CDATA[4]]></id>
+                            <linkTitle><![CDATA[What are page page versions?]]></linkTitle>
+                            <title><![CDATA[What are page page versions?]]></title>
+                            <sortOrder><![CDATA[0]]></sortOrder>
+                            <description><![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. ]]></description>
+                        </record>
+                        <record>
+                            <id><![CDATA[5]]></id>
+                            <linkTitle><![CDATA[How do I add more people as editors in my website?]]></linkTitle>
+                            <title><![CDATA[How do I add more people as editors in my website?]]></title>
+                            <sortOrder><![CDATA[1]]></sortOrder>
+                            <description><![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. ]]></description>
                         </record>
                     </data>
-                </block>
-            </area>
-        </page>
-        <page name="My name" path="/!trash/my-name" filename="" pagetype="page" user="admin" description="" package="">
-            <area name="Main">
-                <block type="content" name="">
-                    <data table="btContentLocal">
-                        <record>
-                            <content><![CDATA[]]></content>
-                        </record>
-                    </data>
-                </block>
-            </area>
-        </page>
-        <page name="derb" path="/about/careers/derb" filename="" pagetype="page" user="admin" description="" package="">
-            <area name="Main">
-                <block type="content" name="">
-                    <data table="btContentLocal">
-                        <record>
-                            <content><![CDATA[]]></content>
-                        </record>
-                    </data>
-                </block>
-                <block type="core_area_layout" name="">
-                    <arealayout type="custom" spacing="15" custom-widths="1">
-                        <columns>
-                            <column width="296"/>
-                            <column width="464"/>
-                            <column width="380"/>
-                        </columns>
-                    </arealayout>
                 </block>
             </area>
         </page>
     </pages>
-
+    <sociallinks>
+        <link service="facebook" url="http://facebook.com/concrete5"/>
+        <link service="github" url="http://github.com/concrete5"/>
+        <link service="twitter" url="http://twitter.com/concrete5"/>
+    </sociallinks>
 </concrete5-cif>
