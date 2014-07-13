@@ -317,10 +317,9 @@
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="bannedWord" type="X2"></field>
-    <index name="bwID">
-      <col>bwID</col>
-    </index>
+    <field name="bannedWord" type="X2">
+        <notnull/>
+    </field>
   </table>
 
   <table name="Gatherings">
