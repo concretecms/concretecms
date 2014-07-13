@@ -844,6 +844,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
+    <index name="btID">
+        <col>btID</col>
+    </index>
   </table>
   <table name="UserPermissionUserSearchAccessList">
     <field name="paID" type="I" size="10">
