@@ -1627,6 +1627,9 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <index name="bID">
+        <col>bID</col>
+    </index>
   </table>
   <table name="CollectionVersionFeatureAssignments">
     <field name="cID" type="I" size="10">
