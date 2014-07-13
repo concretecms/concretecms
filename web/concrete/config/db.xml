@@ -1428,6 +1428,12 @@
     <field name="relationType" type="C" size="50">
       <notnull/>
     </field>
+    <index name="bID">
+        <col>bID</col>
+    </index>
+    <index name="originalBID">
+        <col>originalBID</col>
+    </index>
   </table>
     <table name="BlockTypeSetBlockTypes">
     <field name="btID" type="I" size="10">
