@@ -79,7 +79,11 @@
 		</index>
 		<index name="msqID">
 		  <col>msqID</col> 
-		</index> 							
+		</index>
+        <index name="bID">
+            <col>bID</col>
+            <col>questionSetId</col>
+        </index>
 	</table>
 	
 	<table name="btFormAnswerSet">
