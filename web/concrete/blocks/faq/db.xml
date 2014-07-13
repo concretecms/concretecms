@@ -7,9 +7,13 @@
     <table name="btFaqEntries">
         <field name="id" type="I"><UNSIGNED/><key/><AUTOINCREMENT/></field>
         <field name="bID" type="I"><UNSIGNED /></field>
-        <field name="linkTitle" type="C" size="255"></field>
-        <field name="title" type="C" size="255"></field>
-        <field name="sortOrder" type="I"></field>
-        <field name="description" type="X2"></field>
+        <field name="linkTitle" type="C" size="255"/>
+        <field name="title" type="C" size="255"/>
+        <field name="sortOrder" type="I"/>
+        <field name="description" type="X2"/>
+        <index name="bID">
+            <col>bID</col>
+            <col>sortOrder</col>
+        </index>
     </table>
 </schema>
