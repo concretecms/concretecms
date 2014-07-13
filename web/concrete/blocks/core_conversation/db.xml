@@ -69,5 +69,8 @@
 			<notnull />
 			<default value="top" />
 		</field>
+        <index name="cnvID">
+            <col>cnvID</col>
+        </index>
 	</table>
 </schema>
