@@ -23,12 +23,19 @@
 		</field>
 		<field name="bID" type="I"><unsigned /></field>
 		<field name="fID" type="I"><unsigned /></field>		
-		<field name="url" type="C" size="255"></field>
+		<field name="url" type="C" size="255"/>
 		<field name="duration" type="I"><unsigned /></field>
 		<field name="fadeDuration" type="I"><unsigned /></field>
 		<field name="groupSet" type="I"><unsigned /></field>
 		<field name="position" type="I"><unsigned /></field>	
-		<field name="imgHeight" type="I"><unsigned /></field>							
+		<field name="imgHeight" type="I"><unsigned /></field>
+        <index name="bID">
+            <col>bID</col>
+            <col>imgHeight</col>
+        </index>
+        <index name="fID">
+            <col>fID</col>
+        </index>
 	</table>
 	
 </schema>
