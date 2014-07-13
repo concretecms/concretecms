@@ -1002,6 +1002,15 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="bID">
+        <col>bID</col>
+    </index>
+    <index name="pkID">
+        <col>pkID</col>
+    </index>
+    <index name="paID">
+        <col>paID</col>
+    </index>
   </table>
   <table name="Areas">
     <field name="arID" type="I" size="10">
