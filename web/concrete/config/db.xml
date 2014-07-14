@@ -308,7 +308,13 @@
     <field name="fcID" type="I" size="10">
       <unsigned/>
     </field>
-   <field name="fdObject" type="X2"></field>
+    <field name="fdObject" type="X2"/>
+    <index name="feID">
+        <col>feID</col>
+    </index>
+    <index name="fcID">
+        <col>fcID</col>
+    </index>
   </table>
 
   <table name="BannedWords">
