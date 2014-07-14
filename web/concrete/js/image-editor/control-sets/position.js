@@ -1,6 +1,9 @@
 var me = $(this), ratio_h, ratio_v;
 
 im.bind('changeActiveElement', function () {
+    if (im.strictSize) {
+        im.activeElement.setDraggable(true);
+    }
     im.activeElement.setPosition({x: 0, y: 0});
     im.adjustSavers();
     ratio = im.activeElement.getWidth() / im.activeElement.getHeight();
