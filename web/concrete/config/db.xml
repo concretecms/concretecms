@@ -572,6 +572,12 @@
       <default value="0" />
       <unsigned/>
     </field>
+    <index name="cID">
+        <col>cID</col>
+    </index>
+    <index name="cnvParentMessageID">
+        <col>cnvParentMessageID</col>
+    </index>
   </table>
   <table name="ConversationFeatureDetailAssignments">
     <field name="faID" type="I" size="10">
