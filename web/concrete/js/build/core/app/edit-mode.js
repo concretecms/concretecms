@@ -73,6 +73,9 @@
                                 block: newBlock
                             });
                             my.destroyInlineEditModeToolbars();
+                            _.defer(function() {
+                                my.scanBlocks();
+                            });
                         });
                     }
                 );
@@ -133,10 +136,21 @@
                 area.menu.destroy();
             }
 
-            Concrete.event.unsubscribe('EditModeExitInline');
-            Concrete.event.bind('EditModeExitInline', function () {
+            var saved = false;
+            Concrete.event.bind('EditModeExitInlineSaved', function(e) {
+                Concrete.event.unbind(e);
+                saved = true;
+            });
+            Concrete.event.bind('EditModeExitInline', function (e) {
+                Concrete.event.unsubscribe(e);
+                if (saved) {
+                    return;
+                }
                 $('#a' + area.getId() + '-bt' + btID).remove();
                 my.destroyInlineEditModeToolbars();
+                _.defer(function() {
+                    my.scanBlocks();
+                });
             });
             $.ajax({
                 type: 'GET',
@@ -1322,11 +1336,28 @@
 
     BlockType.prototype = _({
 
+        pepStart: function blockTypePepStart(context, event, pep) {
+            var my = this, panel;
+            Block.prototype.pepStart.call(this, context, event, pep);
+
+            my.setAttr('closedPanel', _(ConcretePanelManager.getPanels()).find(function(panel) {
+                return panel.isOpen;
+            }));
+
+            if ((panel = my.getClosedPanel())) {
+                panel.hide();
+            }
+        },
+
         pepStop: function blockTypePepStop(context, event, pep) {
-            var my = this, drag_area;
+            var my = this, drag_area, panel;
 
             if ((drag_area = my.getSelected())) {
                 my.addToDragArea(drag_area);
+            } else {
+                if ((panel = my.getClosedPanel())) {
+                    panel.show();
+                }
             }
 
             _.defer(function () {
