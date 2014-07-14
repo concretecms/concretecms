@@ -295,6 +295,14 @@
     <field name="pkgID" type="I" size="10">
       <unsigned/>
     </field>
+    <index name="fcHandle">
+        <unique/>
+        <col>fcHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>fcID</col>
+    </index>
   </table>
     <table name="FeatureAssignments">
     <field name="faID" type="I" size="10">
