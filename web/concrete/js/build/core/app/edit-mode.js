@@ -137,6 +137,7 @@
             Concrete.event.bind('EditModeExitInline', function () {
                 $('#a' + area.getId() + '-bt' + btID).remove();
                 my.destroyInlineEditModeToolbars();
+                ConcreteEvent.fire('EditModeExitInlineComplete');
             });
             $.ajax({
                 type: 'GET',
