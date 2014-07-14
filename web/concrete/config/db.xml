@@ -716,12 +716,16 @@
     <field name="cnvMessageAttachmentID" type="I" size="11">
       <key/>
       <unsigned />
-       <autoincrement/>
+      <autoincrement/>
     </field>
-    <field name="cnvMessageID" type="I" size="11">
-    </field>
-    <field name="fID" type="I" size="11">
-    </field>
+    <field name="cnvMessageID" type="I" size="11"/>
+    <field name="fID" type="I" size="11"/>
+    <index name="cnvMessageID">
+        <col>cnvMessageID</col>
+    </index>
+    <index name="fID">
+        <col>fID</col>
+    </index>
   </table>
   <table name="ConversationMessageRatings">
         <field name="cnvMessageID" type="I"  size="10">
