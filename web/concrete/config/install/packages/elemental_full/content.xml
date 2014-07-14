@@ -629,8 +629,8 @@
                     <data table="btFaqEntries">
                         <record>
                             <id><![CDATA[4]]></id>
-                            <linkTitle><![CDATA[What are page page versions?]]></linkTitle>
-                            <title><![CDATA[What are page page versions?]]></title>
+                            <linkTitle><![CDATA[What are page versions?]]></linkTitle>
+                            <title><![CDATA[What are page versions?]]></title>
                             <sortOrder><![CDATA[0]]></sortOrder>
                             <description><![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. ]]></description>
                         </record>
