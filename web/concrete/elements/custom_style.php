@@ -2,13 +2,14 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
-<ul id="ccm-inline-design-toolbar" class="ccm-inline-toolbar ccm-ui">
+<form method="post" action="<?=$action?>" id="ccm-inline-design-form">
+<ul class="ccm-inline-toolbar ccm-ui">
     <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-font"></i></a>
         <div class="ccm-inline-design-dropdown-menu dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
             <h3><?=t('Background')?></h3>
             <div>
                 <?=t('Color')?>
-                <?=Loader::helper('form/color')->output('background-color');?>
+                <?=Loader::helper('form/color')->output('backgroundColor');?>
             </div>
             <hr />
             <div>
@@ -27,7 +28,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
         <button data-action="save-design" class="btn btn-primary" type="button"><?=t('Save')?></button>
     </li>
 </ul>
+</form>
 
 <script type="text/javascript">
-    $('#ccm-inline-design-toolbar').concreteInlineStyleCustomizer();
+    $('#ccm-inline-design-form').concreteInlineStyleCustomizer();
 </script>

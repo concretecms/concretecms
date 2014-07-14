@@ -89,6 +89,7 @@ if (isset($_REQUEST['btask']) && $_REQUEST['btask'] && $valt->validate()) {
                 }
             }
             break;
+        /*
         case 'update_block_css':
             $a = Area::get($c, $_REQUEST['arHandle']);
             if (is_object($a)) {
@@ -257,6 +258,7 @@ if (isset($_REQUEST['btask']) && $_REQUEST['btask'] && $valt->validate()) {
                 //exit;
             }
             break;
+        */
         case 'passthru_stack':
             if (isset($_GET['bID'])) {
                 $vn = Loader::helper('validation/numbers');
