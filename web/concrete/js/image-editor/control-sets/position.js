@@ -581,11 +581,13 @@ Crop.prototype = {
     finalize: function() {
         var crop = this,
             elem = im.activeElement,
+            old_filter = im.activeElement.getFilter(),
             url;
 
         im.stage.setScale(1);
         im.stage.setPosition(0, 0);
         im.activeElement.parent.setPosition(0, 0);
+        im.activeElement.clearFilter();
         elem.toImage({
             x: 0,
             y: 0,
@@ -593,6 +595,7 @@ Crop.prototype = {
             height: elem.getHeight(),
             callback: function(image) {
                 im.activeElement.setImage(image);
+                im.activeElement.setFilter(old_filter);
                 elem.setCrop({
                     x: crop.offset.x,
                     y: crop.offset.y,
