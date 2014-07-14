@@ -2054,6 +2054,22 @@
       <notnull/>
       <deftimestamp/>
     </field>
+    <index name="fID">
+        <col>fID</col>
+        <col>timestamp</col>
+    </index>
+    <index name="fvID">
+        <col>fvID</col>
+    </index>
+    <index name="uID">
+        <col>uID</col>
+    </index>
+    <index name="rcID">
+        <col>rcID</col>
+    </index>
+    <index name="timestamp">
+        <col>timestamp</col>
+    </index>
   </table>
   <table name="FileAttributeValues">
     <field name="fID" type="I" size="10">
