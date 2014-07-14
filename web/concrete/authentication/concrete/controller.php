@@ -65,7 +65,7 @@ class Controller extends AuthenticationTypeController
                array($token, $u->getUserID(), $validThrough));
         } catch (\Exception $e) {
             // HOLY CRAP.. SERIOUSLY?
-            $this->buildHash($u, $test++);
+            $this->buildHash($u, ++$test);
         }
         return $token;
     }
