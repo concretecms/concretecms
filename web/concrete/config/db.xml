@@ -585,7 +585,7 @@
       <UNSIGNED/>
     </field>
   </table>
-    <table name="ConversationDiscussions">
+  <table name="ConversationDiscussions">
     <field name="cnvDiscussionID" type="I" size="10">
       <key/>
       <autoincrement/>
@@ -597,6 +597,9 @@
     <field name="cID" type="I" size="10">
       <unsigned />
     </field>
+    <index name="cID">
+        <col>cID</col>
+    </index>
   </table>
    <table name="gaPage">
     <field name="gaiID" type="I" size="10">
