@@ -584,6 +584,9 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <index name="cnvID">
+        <col>cnvID</col>
+    </index>
   </table>
   <table name="ConversationDiscussions">
     <field name="cnvDiscussionID" type="I" size="10">
