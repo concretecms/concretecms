@@ -19,6 +19,8 @@ RedactorPlugins.concrete5inline = {
         $('#ccm-redactor-save-button').unbind().on('click', function() {
             $('#redactor-content').val(obj.get());
             toolbar.hide();
+            ConcreteEvent.fire('EditModeExitInlineSaved');
+            ConcreteEvent.fire('EditModeExitInline');
             obj.destroy();
             $('#ccm-block-form').submit();
         });
