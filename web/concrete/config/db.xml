@@ -2793,6 +2793,15 @@
       <default value="0"/>
     </field>
     <field name="fPassword" type="C" size="255"/>
+    <index name="uID">
+        <col>uID</col>
+    </index>
+    <index name="fsID">
+        <col>fsID</col>
+    </index>
+    <index name="ocID">
+        <col>ocID</col>
+    </index>
     <index name="fOverrideSetPermissions">
       <col>fOverrideSetPermissions</col>
     </index>
