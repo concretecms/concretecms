@@ -136,8 +136,16 @@
                 area.menu.destroy();
             }
 
+            var saved = false;
+            Concrete.event.bind('EditModeExitInlineSaved', function(e) {
+                Concrete.event.unbind(e);
+                saved = true;
+            });
             Concrete.event.bind('EditModeExitInline', function (e) {
                 Concrete.event.unsubscribe(e);
+                if (saved) {
+                    return;
+                }
                 $('#a' + area.getId() + '-bt' + btID).remove();
                 my.destroyInlineEditModeToolbars();
                 _.defer(function() {
