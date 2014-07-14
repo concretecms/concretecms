@@ -7547,6 +7547,11 @@ div.ccm-panel-header-accordion-dropdown-visible nav ul.ccm-panel-header-accordio
 /**
  * Panel list groups
  */
+.ccm-panel .ccm-panel-cover {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
 .ccm-panel .list-group .list-group-item {
   -webkit-transition: background-color 0.2s linear;
   transition: background-color 0.2s linear;

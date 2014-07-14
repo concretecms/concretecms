@@ -81,9 +81,13 @@ function ConcretePanel(options) {
         var $panel = $('#' + this.getDOMID());
         var obj = this;
         $panel.find('[data-launch-sub-panel-url]').unbind('.sub').on('click.sub', function () {
+            var cover = $('<div />').addClass('ccm-panel-cover').appendTo($(this).closest('.ccm-panel'));
             obj.closePanelDetailImmediately();
             var url = $(this).attr('data-launch-sub-panel-url');
             $('<div />', {'class': 'ccm-panel-content ccm-panel-content-appearing'}).appendTo($panel.find('.ccm-panel-content-wrapper')).load(url + '?cID=' + CCM_CID, function () {
+                _.delay(function() {
+                    cover.remove();
+                }, 250);
                 $panel.find('.ccm-panel-content-visible').removeClass('ccm-panel-content-visible').addClass('ccm-panel-slide-left');
                 $(this).removeClass('ccm-panel-content-appearing').addClass('ccm-panel-content-visible');
                 obj.onPanelLoad(this);
