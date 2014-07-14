@@ -13,6 +13,13 @@ class Design extends BackendInterfaceBlockController {
         return $this->permissions->canEditBlockDesign() || $this->permissions->canEditBlockCustomTemplate();
     }
 
+    public function submit()
+    {
+        if ($this->validateAction() && $this->canAccess()) {
+
+        }
+    }
+
 	public function view() {
         $btc = $this->block->getInstance();
         $btc->outputAutoHeaderItems();

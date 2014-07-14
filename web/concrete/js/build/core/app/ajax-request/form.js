@@ -11,6 +11,8 @@
 		options = $.extend({
 			'beforeSubmit': my.before,
 			'complete': my.complete,
+            'error': my.error,
+            'success': my.success,
 			'data': {}
 		}, options);
 		my.$form = $form;
@@ -34,10 +36,10 @@
 				options.beforeSubmit(my);
 			},
 			error: function(r) {
-				my.error(r, my);
+				options.error(r, my);
 			},
 			success: function(r) {
-				my.success(r, my, successCallback);
+                options.success(r, my, successCallback);
 			},
 			complete: function() {
 				options.complete(my);

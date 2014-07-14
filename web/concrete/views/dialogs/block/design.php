@@ -12,7 +12,9 @@ if (is_object($csr)) {
 
 $ag = \Concrete\Core\Http\ResponseAssetGroup::get();
 $ag->requireAsset('core/style-customizer');
-Loader::element("custom_style");
+Loader::element("custom_style", array(
+    'action' => $controller->action('submit')
+));
 
 $pt = $c->getCollectionThemeObject();
 $pt->registerAssets();

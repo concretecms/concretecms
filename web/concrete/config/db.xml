@@ -1682,7 +1682,7 @@
     <field name="arHandle" type="C" size="255">
       <key/>
     </field>
-    <field name="csrID" type="I" size="10">
+    <field name="pssID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
@@ -1703,7 +1703,7 @@
     <field name="arHandle" type="C" size="255">
       <key/>
     </field>
-    <field name="csrID" type="I" size="10">
+    <field name="pssID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
@@ -1872,32 +1872,30 @@
       <key/>
     </field>
   </table>
-  <table name="CustomStylePresets">
-    <field name="cspID" type="I" size="10">
+  <table name="PageStyleSetPresets">
+    <field name="pssPresetID" type="I" size="10">
       <key/>
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="cspName" type="C" size="255">
+    <field name="pssPresetName" type="C" size="255">
       <notnull/>
     </field>
-    <field name="csrID" type="I" size="10">
+    <field name="pssID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
     </field>
   </table>
-  <table name="CustomStyleRules">
-    <field name="csrID" type="I" size="10">
+  <table name="PageStyleSets">
+    <field name="pssID" type="I" size="10">
       <key/>
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="css_id" type="C" size="128"/>
-    <field name="css_class" type="C" size="128"/>
-    <field name="css_serialized" type="X"/>
-    <field name="css_custom" type="X"/>
+    <field name="backgroundColor" type="C" />
   </table>
+
   <table name="StyleCustomizerValueLists">
     <field name="scvlID" type="I" size="10">
       <key/>
