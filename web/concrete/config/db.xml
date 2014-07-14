@@ -2081,6 +2081,7 @@
         <col>timestamp</col>
     </index>
     <index name="fvID">
+        <col>fID</col>
         <col>fvID</col>
     </index>
     <index name="uID">
