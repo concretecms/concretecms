@@ -761,23 +761,29 @@
         <col>uID</col>
     </index>
   </table>
-    <table name="ConversationRatingTypes">
-        <field name="cnvRatingTypeID" type="I" size="10">
-          <key/>
-          <autoincrement/>
-          <unsigned/>
-        </field>
-        <field name="cnvRatingTypeHandle" type="C" size="255">
-        </field>
-        <field name="cnvRatingTypeName" type="C" size="10"/>
-        <field name="cnvRatingTypeCommunityPoints" type="I" size="10">
-        </field>
+  <table name="ConversationRatingTypes">
+    <field name="cnvRatingTypeID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="cnvRatingTypeHandle" type="C" size="255"/>
+    <field name="cnvRatingTypeName" type="C" size="10"/>
+    <field name="cnvRatingTypeCommunityPoints" type="I" size="10"/>
     <field name="pkgID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
     </field>
-    </table>
+    <index name="cnvRatingTypeHandle">
+        <unique/>
+        <col>cnvRatingTypeHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>cnvRatingTypeHandle</col>
+    </index>
+  </table>
   <table name="PermissionAssignments">
     <field name="paID" type="I" size="10">
       <key/>
