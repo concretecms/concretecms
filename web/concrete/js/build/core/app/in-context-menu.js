@@ -33,10 +33,14 @@
 		}
 		my.$menu = $(options.menu);
 		my.setup();
+
+        Concrete.event.bind('EditModeBlockDragInitialization', function() {
+            my.hide();
+        });
 	}
 
 	ConcreteMenu.prototype = {
-		
+
 		setup: function() {
 			var my = this, options = my.options, global = ConcreteMenuManager;
 
@@ -78,8 +82,8 @@
 			if (!$elementToInspect) {
 				return false;
 			}
-			
-			var my = this, 
+
+			var my = this,
 				offset = $elementToInspect.offset(),
 				properties = {
 					'top': offset.top - my.options.highlightOffset,
@@ -97,14 +101,14 @@
 
 		hoverProxy: function(e, $specificLauncher) {
 			e.stopPropagation();
-			
+
 			// we pass $launcher in because some menus can have multiple items
 			// launch the same and we want to know which item triggered the launch
-			var my = this, 
+			var my = this,
 				global = ConcreteMenuManager,
-				menuLauncherHoverClass = my.options.menuLauncherHoverClass, 
+				menuLauncherHoverClass = my.options.menuLauncherHoverClass,
 				$clickProxy = global.$clickProxy;
-			
+
 			if (!global.enabled || global.activeMenu) {
 				return false;
 			}
@@ -131,7 +135,7 @@
 		},
 
 		show: function(e) {
-			var my = this, 
+			var my = this,
 				global = ConcreteMenuManager,
 				options = my.options,
 				$launcher = my.$launcher,
@@ -145,7 +149,7 @@
 			e.stopPropagation();
 			$highlighter.removeClass();
 			my.positionAt($highlighter, $launcher);
-			_.defer(function() { 
+			_.defer(function() {
 				$highlighter.addClass(options.highlightClassName)
 			});
 
@@ -172,7 +176,7 @@
 				posY = posY + 10;
 				$menu.removeClass('top');
 				$menu.addClass('bottom');
-			}	
+			}
 
 			$menu.css({'top': posY + 'px', 'left': posX + 'px'});
 			_.defer(function() {
@@ -192,7 +196,7 @@
 		},
 
 		hide: function(e) {
-			var my = this, 
+			var my = this,
 				global = ConcreteMenuManager,
 				reset = {'class': '', 'width': 0, 'height': 0, 'top': 0, 'left': 0}
 
@@ -205,8 +209,8 @@
 				_.defer(function() { my.$menuPointer.hide(); });
 			}
 
-			_.defer(function() { 
-				my.$element.removeClass(my.options.menuActiveClass); 
+			_.defer(function() {
+				my.$element.removeClass(my.options.menuActiveClass);
 				my.$element.parents('*').slice(0,3).removeClass(my.options.menuActiveParentClass);
 				global.$container.removeClass().addClass('ccm-ui').html('');
 			});
@@ -234,7 +238,7 @@
 		activeMenu: false,
 
 		reset: function() {
-			
+
 		},
 
 		enable: function() {
