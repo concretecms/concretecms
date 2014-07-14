@@ -50,14 +50,15 @@
                 jQuery.fn.dialog.hideLoader();
 
                 if (my.options.task == 'add') {
-                    var $area = $('div[data-area-id=' + resp.aID + ']');
+                    var $area = area.getElem();
+
 
                     if (my.options.dragAreaBlockID) {
                         // we are adding this block AFTER this other block.
                         var $block = $area.find('div[data-block-id=' + my.options.dragAreaBlockID + ']');
                         $block.closest('div[data-container=block]').next('.ccm-area-drag-area').after(r);
                     } else {
-                        $area.find('.ccm-area-block-list').prepend(r);
+                        $area.children('.ccm-area-block-list').prepend(r);
                     }
                     var block = new Concrete.Block($('[data-block-id=' + resp.bID + ']'), editor);
                     area.addBlock(block);
