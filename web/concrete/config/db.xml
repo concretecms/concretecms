@@ -677,8 +677,8 @@
       <unsigned/>
     </field>
     <field name="cnvMessageFlagTypeID" type="I" size="10"/>
-    <index name='cnvMessageID'>
-      <col>cnvMessageID</col>
+    <index name="cnvMessageFlagTypeID">
+      <col>cnvMessageFlagTypeID</col>
     </index>
   </table>
   <table name="ConversationFlaggedMessageTypes">
