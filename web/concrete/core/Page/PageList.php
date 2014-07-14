@@ -224,6 +224,16 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     }
 
     /**
+     * Filters by page template
+     * @param mixed $ptHandle
+     */
+    public function filterByPageTemplate(Template $template)
+    {
+        $this->query->andWhere('cv.pTemplateID = :pTemplateID');
+        $this->query->setParameter('pTemplateID', $template->getPageTemplateID());
+    }
+
+    /**
      * Filters by date added
      * @param string $date
      */

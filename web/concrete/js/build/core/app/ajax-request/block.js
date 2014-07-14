@@ -34,7 +34,7 @@
                 editor = new Concrete.getEditMode(),
                 area = editor.getAreaByID(resp.aID),
                 arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0,
-                action = CCM_TOOLS_PATH + '/edit_block_popup';
+                action = CCM_DISPATCHER_FILENAME + '/ccm/system/block/render';
 
             jQuery.fn.dialog.closeTop();
 
@@ -42,7 +42,6 @@
                 arHandle: area.getHandle(),
                 cID: cID,
                 bID: resp.bID,
-                btask: 'view_edit_mode',
                 arEnableGridContainer: arEnableGridContainer
             }, function (r) {
 

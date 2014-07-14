@@ -264,7 +264,7 @@ class Install extends Controller {
 					$e->add(t('The two passwords provided do not match.'));
 				}
 			}
-			
+
 			if(is_object($this->fileWriteErrors)) {
 				$e = $this->fileWriteErrors;
 			}

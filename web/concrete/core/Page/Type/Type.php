@@ -659,6 +659,6 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 		CorePagePropertyPageTypeComposerControl::clearComposerRequestProcessControls();
 
 		return $p;
-	}
+    }
 
 }
