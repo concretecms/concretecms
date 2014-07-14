@@ -1959,7 +1959,7 @@
       <col>cDateAdded</col>
     </index>
   </table>
-    <table name="Config">
+  <table name="Config">
     <field name="cfKey" type="C" size="64">
       <key/>
     </field>
@@ -1980,6 +1980,11 @@
     </field>
     <index name="uID">
       <col>uID</col>
+      <col>cfKey</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>cfKey</col>
     </index>
   </table>
   <table name="DownloadStatistics">
