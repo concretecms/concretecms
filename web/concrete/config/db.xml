@@ -703,7 +703,11 @@
       <default value="0"/>
       <unsigned/>
     </field>
-</table>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>cnvEditorHandle</col>
+    </index>
+  </table>
   <table name="ConversationMessageAttachments">
     <field name="cnvMessageAttachmentID" type="I" size="11">
       <key/>
