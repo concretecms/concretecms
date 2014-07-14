@@ -1332,11 +1332,28 @@
 
     BlockType.prototype = _({
 
+        pepStart: function blockTypePepStart(context, event, pep) {
+            var my = this, panel;
+            Block.prototype.pepStart.call(this, context, event, pep);
+
+            my.setAttr('closedPanel', _(ConcretePanelManager.getPanels()).find(function(panel) {
+                return panel.isOpen;
+            }));
+
+            if ((panel = my.getClosedPanel())) {
+                panel.hide();
+            }
+        },
+
         pepStop: function blockTypePepStop(context, event, pep) {
-            var my = this, drag_area;
+            var my = this, drag_area, panel;
 
             if ((drag_area = my.getSelected())) {
                 my.addToDragArea(drag_area);
+            } else {
+                if ((panel = my.getClosedPanel())) {
+                    panel.show();
+                }
             }
 
             _.defer(function () {
