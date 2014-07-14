@@ -2111,6 +2111,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="cspName">
+        <col>cspName</col>
+    </index>
+    <index name="csrID">
+        <col>csrID</col>
+    </index>
   </table>
   <table name="CustomStyleRules">
     <field name="csrID" type="I" size="10">
