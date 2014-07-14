@@ -1344,7 +1344,7 @@
                 return panel.isOpen;
             }));
 
-            if ((panel = my.getClosedPanel())) {
+            if ((panel = my.getAttr('closedPanel'))) {
                 panel.hide();
             }
         },
@@ -1355,7 +1355,7 @@
             if ((drag_area = my.getSelected())) {
                 my.addToDragArea(drag_area);
             } else {
-                if ((panel = my.getClosedPanel())) {
+                if ((panel = my.getAttr('closedPanel'))) {
                     panel.show();
                 }
             }
