@@ -2141,6 +2141,12 @@
     <field name="extension" type="C" size="32">
       <key/>
     </field>
+    <index name="gID">
+        <col>gID</col>
+    </index>
+    <index name="uID">
+        <col>uID</col>
+    </index>
   </table>
   <table name="CustomStylePresets">
     <field name="cspID" type="I" size="10">
