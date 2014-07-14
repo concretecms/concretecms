@@ -1677,6 +1677,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="pThemeID">
+        <col>pThemeID</col>
+    </index>
+    <index name="scvlID">
+        <col>scvlID</col>
+    </index>
   </table>
 
   <table name="BlockFeatureAssignments">
