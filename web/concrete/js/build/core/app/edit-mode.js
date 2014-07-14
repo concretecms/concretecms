@@ -73,6 +73,9 @@
                                 block: newBlock
                             });
                             my.destroyInlineEditModeToolbars();
+                            _.defer(function() {
+                                my.scanBlocks();
+                            });
                         });
                     }
                 );
@@ -133,10 +136,13 @@
                 area.menu.destroy();
             }
 
-            Concrete.event.unsubscribe('EditModeExitInline');
-            Concrete.event.bind('EditModeExitInline', function () {
+            Concrete.event.bind('EditModeExitInline', function (e) {
+                Concrete.event.unsubscribe(e);
                 $('#a' + area.getId() + '-bt' + btID).remove();
                 my.destroyInlineEditModeToolbars();
+                _.defer(function() {
+                    my.scanBlocks();
+                });
             });
             $.ajax({
                 type: 'GET',
