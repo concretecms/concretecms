@@ -14,12 +14,16 @@ im.save = function saveImage() {
             });
 
             var oldStagePosition = im.stage.getPosition(),
-                oldScale = im.scale;
+                oldScale = im.scale,
+                oldWidth = im.stage.getWidth(),
+                oldHeight = im.stage.getHeight();
 
             im.stage.setPosition(-im.saveArea.getX(), -im.saveArea.getY());
             im.stage.setScale(1);
             im.background.hide();
             im.foreground.hide();
+            im.stage.setHeight(im.saveHeight + 100);
+            im.stage.setWidth(im.saveWidth + 100);
             im.stage.draw();
 
             im.stage.toDataURL({
@@ -30,6 +34,8 @@ im.save = function saveImage() {
                     im.background.show();
                     im.foreground.show();
                     im.stage.setScale(oldScale);
+                    im.stage.setHeight(oldHeight);
+                    im.stage.setWidth(oldWidth);
                     im.stage.draw();
 
                     fake_canvas.remove();
