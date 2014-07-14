@@ -666,9 +666,8 @@
     <index name="cnvMessageParentID">
       <col>cnvMessageParentID</col>
     </index>
-    <index name="cnvTotal">
-      <col>cnvID</col>
-      <col>cnvIsMessageDeleted</col>
+    <index name="uID">
+        <col>uID</col>
     </index>
   </table>
   <table name="ConversationFlaggedMessages">
