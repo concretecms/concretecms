@@ -688,8 +688,9 @@
       <unsigned/>
     </field>
     <field name="cnvMessageFlagTypeHandle" type="C" size="64" />
-    <index name='cnvMessageFlagTypeID'>
-      <col>cnvMessageFlagTypeID</col>
+    <index name='cnvMessageFlagTypeHandle'>
+      <unique/>
+      <col>cnvMessageFlagTypeHandle</col>
     </index>
   </table>
   <table name="ConversationEditors">
