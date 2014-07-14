@@ -34,9 +34,9 @@
         Concrete.event.bind('EditModeBlockEditInline', function (event, data) {
             var block = data.block,
                 area = block.getArea(),
+                action = (data.action) ? data.action : CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/block/edit',
                 arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0,
                 postData = [
-                    {name: 'btask', value: 'edit'},
                     {name: 'cID', value: block.getCID()},
                     {name: 'arHandle', value: area.getHandle()},
                     {name: 'arGridMaximumColumns', value: data.arGridMaximumColumns},
@@ -62,7 +62,7 @@
             Concrete.event.bind('EditModeExitInline', function (e) {
                 Concrete.event.unbind(e);
                 e.stopPropagation();
-                var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + block.getCID() + '&arEnableGridContainer=' + arEnableGridContainer + '&bID=' + block.getId() + '&arHandle=' + escape(area.getHandle()) + '&btask=view_edit_mode';
+                var action = CCM_DISPATCHER_FILENAME + '/ccm/system/block/render?cID=' + block.getCID() + '&arEnableGridContainer=' + arEnableGridContainer + '&bID=' + block.getId() + '&arHandle=' + escape(area.getHandle());
                 $.fn.dialog.showLoader();
                 $.get(action,
                     function (r) {
@@ -85,7 +85,7 @@
 
             $.ajax({
                 type: 'GET',
-                url: CCM_TOOLS_PATH + '/edit_block_popup',
+                url: action,
                 data: postData,
                 success: function (r) {
                     $container.html(r);
@@ -870,12 +870,11 @@
             if (response.error) {
                 return;
             }
-            $.get(CCM_TOOLS_PATH + '/edit_block_popup',
+            $.get(CCM_DISPATCHER_FILENAME + '/ccm/system/block/render',
                 {
                     arHandle: response.arHandle,
                     cID: response.cID,
                     bID: response.bID,
-                    btask: 'view_edit_mode',
                     arEnableGridContainer: arEnableGridContainer
                 }, function (html) {
                     if (after_block) {
@@ -996,6 +995,11 @@
 
                 $menuElem.find('a[data-menu-action=delete_block]').unbind().on('click', function () {
                     Concrete.event.fire('EditModeBlockDelete', {message: $(this).attr('data-menu-delete-message'), block: my, event: event});
+                });
+                $menuElem.find('a[data-menu-action=block_design]').unbind().on('click', function () {
+                    Concrete.event.fire('EditModeBlockEditInline', {
+                        block: my, event: event, action: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/block/design'
+                    });
                 });
             }
         },
@@ -1363,13 +1367,12 @@
                     dragAreaBlockID: dragAreaBlockID
                 }, function (response) {
                     $.fn.dialog.showLoader();
-                    $.get(CCM_TOOLS_PATH + '/edit_block_popup',
+                    $.get(CCM_DISPATCHER_FILENAME + '/ccm/system/block/render',
                         {
                             arHandle: area.getHandle(),
                             cID: response.cID,
                             bID: response.bID,
-                            arEnableGridContainer: arEnableGridContainer,
-                            btask: 'view_edit_mode'
+                            arEnableGridContainer: arEnableGridContainer
                         }, function (html) {
                             if (dragAreaBlock) {
                                 dragAreaBlock.getElem().closest('div[data-container=block]').after(html);

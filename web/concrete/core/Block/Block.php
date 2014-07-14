@@ -12,6 +12,7 @@ use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVe
 use Concrete\Core\Foundation\Object;
 use Concrete\Core\Package\PackageList;
 use Loader;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Page;
 
 class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
@@ -1020,12 +1021,6 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     {
         $str = $this->_getBlockAction();
         return $str . '&amp;btask=update_information';
-    }
-
-    function getBlockMasterCollectionAliasAction()
-    {
-        $str = $this->_getBlockAction();
-        return $str . '&amp;btask=mc_alias';
     }
 
     function getBlockUpdateCssAction()

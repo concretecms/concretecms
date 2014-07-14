@@ -50,7 +50,7 @@ $(function() {
 			jQuery.fn.dialog.showLoader();
 		},
 		success: function(r) {
-			ccm_mainNavDisableDirectExit();
+            ConcreteToolbar.disableDirectExit();
 			jQuery.fn.dialog.hideLoader();
 			jQuery.fn.dialog.closeTop();
 			ConcreteAlert.notify({

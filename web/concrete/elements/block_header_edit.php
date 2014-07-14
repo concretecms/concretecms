@@ -9,14 +9,14 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <script type="text/javascript">
 
 <? $ci = Loader::helper("concrete/urls"); ?>
-<? $url = $ci->getBlockTypeJavaScriptURL($bt); 
+<? $url = $ci->getBlockTypeJavaScriptURL($bt);
 if ($url != '') { ?>
 	ccm_addHeaderItem("<?=$url?>", 'JAVASCRIPT');
-<? } 
+<? }
 
 $identifier = strtoupper('BLOCK_CONTROLLER_' . $btHandle);
 if (is_array($headerItems[$identifier])) {
-	foreach($headerItems[$identifier] as $item) { 
+	foreach($headerItems[$identifier] as $item) {
 		if ($item instanceof CSSOutputObject) {
 			$type = 'CSS';
 		} else {
@@ -69,7 +69,7 @@ if (isset($help) && !$bt->supportsInlineEdit()) { ?>
 
 <div <? if (!$bt->supportsInlineEdit()) { ?>class="ccm-ui"<? } else { ?>data-container="inline-toolbar"<? } ?>>
 
-<form method="post" id="ccm-block-form" class="validate" action="<?=$b->getBlockEditAction()?>&rcID=<?=intval($rcID)?>" enctype="multipart/form-data">
+<form method="post" id="ccm-block-form" class="validate" action="<?=$dialogController->action('submit')?>" enctype="multipart/form-data">
 
 <? foreach($this->controller->getJavaScriptStrings() as $key => $val) { ?>
 	<input type="hidden" name="ccm-string-<?=$key?>" value="<?=h($val)?>" />

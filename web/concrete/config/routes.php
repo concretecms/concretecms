@@ -81,6 +81,19 @@ Route::register('/ccm/system/page/check_in/{cID}/{token}', '\Concrete\Controller
 Route::register('/ccm/system/page/create/{ptID}', '\Concrete\Controller\Backend\Page::create');
 Route::register('/ccm/system/page/arrange_blocks/', '\Concrete\Controller\Backend\Page\ArrangeBlocks::arrange');
 
+/**
+ * Blocks
+ */
+Route::register('/ccm/system/dialogs/block/edit/', '\Concrete\Controller\Dialog\Block\Edit::view');
+Route::register('/ccm/system/dialogs/block/edit/submit/', '\Concrete\Controller\Dialog\Block\Edit::submit');
+Route::register('/ccm/system/block/render/', '\Concrete\Controller\Backend\Block::render');
+Route::register('/ccm/system/dialogs/block/permissions/list/', '\Concrete\Controller\Dialog\Block\Permissions::viewList');
+Route::register('/ccm/system/dialogs/block/permissions/detail/', '\Concrete\Controller\Dialog\Block\Permissions::viewDetail');
+Route::register('/ccm/system/dialogs/block/permissions/guest_access/', '\Concrete\Controller\Dialog\Block\Permissions\GuestAccess::__construct');
+Route::register('/ccm/system/dialogs/block/aliasing/', '\Concrete\Controller\Dialog\Block\Aliasing::view');
+Route::register('/ccm/system/dialogs/block/aliasing/submit', '\Concrete\Controller\Dialog\Block\Aliasing::submit');
+Route::register('/ccm/system/dialogs/block/design/', '\Concrete\Controller\Dialog\Block\Design::view');
+Route::register('/ccm/system/dialogs/block/design/submit', '\Concrete\Controller\Dialog\Block\Design::submit');
 
 /**
  * Misc

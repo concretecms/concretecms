@@ -72,7 +72,7 @@ abstract class EditResponse {
 
 	public function outputJSON() {
 		$r = $this->getJSONObject();
-		if ($this->error && $this->error->has()) {
+		if ($this->error && is_object($this->error) && $this->error->has()) {
 			Loader::helper('ajax')->sendError($this->error);
 		} else {
 			Loader::helper('ajax')->sendResult($this->getJSONObject());
