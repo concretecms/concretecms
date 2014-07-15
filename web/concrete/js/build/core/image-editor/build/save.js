@@ -14,12 +14,16 @@ im.save = function saveImage() {
             });
 
             var oldStagePosition = im.stage.getPosition(),
-                oldScale = im.scale;
+                oldScale = im.scale,
+                oldWidth = im.stage.getWidth(),
+                oldHeight = im.stage.getHeight();
 
             im.stage.setPosition(-im.saveArea.getX(), -im.saveArea.getY());
             im.stage.setScale(1);
             im.background.hide();
             im.foreground.hide();
+            im.stage.setHeight(im.saveHeight + 100);
+            im.stage.setWidth(im.saveWidth + 100);
             im.stage.draw();
 
             im.stage.toDataURL({
@@ -30,6 +34,8 @@ im.save = function saveImage() {
                     im.background.show();
                     im.foreground.show();
                     im.stage.setScale(oldScale);
+                    im.stage.setHeight(oldHeight);
+                    im.stage.setWidth(oldWidth);
                     im.stage.draw();
 
                     fake_canvas.remove();
@@ -95,7 +101,7 @@ im.adjustSavers = function AdjustingSavers(fire) {
     var child = im.activeElement,
         layer = child.parent,
         rect = im.getActualRect(0, 0, child),
-        u;
+        u, size;
 
     for (u = rect.length - 1; u >= 0; u--) {
         var point = rect[u], x = point[0] + layer.getX(), y = point[1] + layer.getY();
@@ -105,11 +111,12 @@ im.adjustSavers = function AdjustingSavers(fire) {
         if (y < score.min.y || score.min.y === false) score.min.y = y;
     }
 
-    var size = {width: score.max.x - score.min.x, height: score.max.y - score.min.y};
-    im.alterCore('saveWidth', Math.round(size.width));
-    im.alterCore('saveHeight', Math.round(size.height));
-    im.buildBackground();
-
+    size = {width: score.max.x - score.min.x, height: score.max.y - score.min.y};
+    if (!im.strictSize) {
+        im.alterCore('saveWidth', Math.round(size.width));
+        im.alterCore('saveHeight', Math.round(size.height));
+        im.buildBackground();
+    }
 
     var ap = [im.center.x - (im.activeElement.getWidth() * im.activeElement.getScaleX()) / 2,
             im.center.y - (im.activeElement.getHeight() * im.activeElement.getScaleY()) / 2],

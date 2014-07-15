@@ -12,7 +12,6 @@ im.bind('filterChange', function (e, data) {
 });
 im.bind('filterApplyExample', function (e, data) {
     if (data.namespace === me.namespace) {
-        im.activeElement.clearFilter();
         im.fire('filterBuiltExample', me, data.elem);
     }
 });

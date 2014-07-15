@@ -1,6 +1,9 @@
 var me = $(this), ratio_h, ratio_v;
 
 im.bind('changeActiveElement', function () {
+    if (im.strictSize) {
+        im.activeElement.setDraggable(true);
+    }
     im.activeElement.setPosition({x: 0, y: 0});
     im.adjustSavers();
     ratio = im.activeElement.getWidth() / im.activeElement.getHeight();
@@ -88,7 +91,7 @@ var height_input = $('input[name="height"]', me).keyup(_.debounce(function () {
     var height = parseInt($(this).val()), width = im.activeElement.getWidth();
 
     if (locked) {
-        width = Math.round(height * ratio);
+        width = Math.floor(height * ratio);
     }
 
     im.activeElement.setWidth(width);
@@ -102,7 +105,7 @@ var width_input = $('input[name="width"]', me).keyup(_.debounce(function () {
     var width = parseInt($(this).val()), height = im.activeElement.getHeight();
 
     if (locked) {
-        height = Math.round(width * (1 / ratio));
+        height = Math.floor(width * (1 / ratio));
     }
 
     im.activeElement.setWidth(width);
@@ -151,8 +154,8 @@ scale.slider({
     max: 500,
     step: 5,
     slide: function(event, data) {
-        new_width = Math.round(scale_width * (data.value / 100));
-        new_height = Math.round(scale_height * (data.value / 100));
+        new_width = Math.floor(scale_width * (data.value / 100));
+        new_height = Math.floor(scale_height * (data.value / 100));
         im.activeElement.setWidth(new_width);
         im.activeElement.setHeight(new_height);
         im.adjustSavers();
@@ -359,7 +362,7 @@ Crop.prototype = {
             }
 
             if (crop.locked) {
-                width = Math.round(height * ratio);
+                width = Math.floor(height * ratio);
             }
 
             crop.width = width;
@@ -377,7 +380,7 @@ Crop.prototype = {
             }
 
             if (crop.locked) {
-                height = Math.round(width * (1 / ratio));
+                height = Math.floor(width * (1 / ratio));
             }
 
             crop.width = Math.abs(width);
@@ -388,8 +391,8 @@ Crop.prototype = {
         }, 250)).val(crop.width);
 
         im.bind('cropSizeChanged', function (event, data) {
-            crop.width = Math.round(data.width);
-            crop.height = Math.round(data.height);
+            crop.width = Math.floor(data.width);
+            crop.height = Math.floor(data.height);
             width_input.val(crop.width);
             height_input.val(crop.height);
             _.defer(function () {
@@ -581,11 +584,17 @@ Crop.prototype = {
     finalize: function() {
         var crop = this,
             elem = im.activeElement,
+            old_filter = im.activeElement.getFilter(),
+            old_rotation = im.activeElement.getRotationDeg(),
+            old_scale = im.activeElement.getScale(),
             url;
 
         im.stage.setScale(1);
         im.stage.setPosition(0, 0);
         im.activeElement.parent.setPosition(0, 0);
+        im.activeElement.setRotationDeg(0);
+        im.activeElement.setScale(1, 1);
+        im.activeElement.clearFilter();
         elem.toImage({
             x: 0,
             y: 0,
@@ -593,6 +602,9 @@ Crop.prototype = {
             height: elem.getHeight(),
             callback: function(image) {
                 im.activeElement.setImage(image);
+                im.activeElement.setFilter(old_filter);
+                im.activeElement.setRotationDeg(old_rotation);
+                im.activeElement.setScale(old_scale);
                 elem.setCrop({
                     x: crop.offset.x,
                     y: crop.offset.y,
