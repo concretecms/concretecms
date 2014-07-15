@@ -45,6 +45,10 @@ class Design extends BackendInterfaceBlockController {
             $set = new Set();
             $set->setBackgroundColor($r['backgroundColor']);
             $set->setBackgroundImageFileID(intval($r['backgroundImageFileID']));
+            $set->setBackgroundRepeat($r['backgroundRepeat']);
+            $set->setLinkColor($r['linkColor']);
+            $set->setTextColor($r['textColor']);
+            $set->setBaseFontSize($r['baseFontSize']);
             $set->save();
 
             $b->setCustomStyleSet($set);

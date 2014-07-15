@@ -19,7 +19,7 @@ class PageStyleTest extends PageTestCase {
         $this->assertInstanceOf('\Concrete\Core\Page\Style\Set', $psx);
         $this->assertEquals(1, $psx->getID());
         $this->assertEquals('#ffffff', $psx->getBackgroundColor());
-        $this->assertEquals('.ccm-custom-style-style-set-1{background-color:#ffffff}', $psx->getCSS());
+        $this->assertEquals('.ccm-custom-style-style-set-1{background-color:#ffffff;}', $psx->getCSS());
     }
 
     public function testPageStylesBlock()
@@ -43,6 +43,6 @@ class PageStyleTest extends PageTestCase {
         $b2->resetCustomStyleSet();
 
         $css = $set->getCSS();
-        $this->assertEquals('.ccm-custom-style-main-1{background-color:#aaa}', $css);
+        $this->assertEquals('.ccm-custom-style-main-1{background-color:#aaa;}', $css);
     }
 }

@@ -339,10 +339,12 @@
   <table name="GatheringItemSelectedTemplates">
     <field name="gaiID" type="I" size="10">
       <unsigned/>
+      <key/>
       <notnull />
       <default value="0" />
     </field>
     <field name="gatID" type="I" size="10">
+        <key/>
       <unsigned/>
       <notnull />
       <default value="0" />
@@ -714,6 +716,12 @@
     </field>
   </table>
   <table name="ConversationMessageRatings">
+      <field name="cnvMessageRatingID" type="I"  size="10">
+          <key/>
+          <unsigned />
+          <autoincrement/>
+      </field>
+
         <field name="cnvMessageID" type="I"  size="10">
             <unsigned />
         </field>
@@ -1894,6 +1902,7 @@
       <unsigned/>
     </field>
     <field name="backgroundColor" type="C" />
+    <field name="backgroundImageFileID" type="I" />
     <field name="backgroundRepeat" type="C" />
     <field name="borderWidth" type="I" />
     <field name="borderColor" type="C" />
@@ -4359,6 +4368,7 @@
     <field name="treeID" type="I" size="11">
       <UNSIGNED/>
       <DEFAULT value="0"/>
+      <KEY/>
     </field>
     <field name="topicTreeName" type="C" size="255">
       <DEFAULT value=""/>

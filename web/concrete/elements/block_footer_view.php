@@ -33,7 +33,9 @@ if ($a->showControls() && $c->isEditMode() && $p->canViewEditInterface()) { ?>
 <? } ?>
 
 
-<? if ($blockStyle && $blockStyle->getCustomStyleRuleID()) {
+<?
+$blockStyle = $b->getCustomStyleSet();
+if (is_object($blockStyle)) {
     ?>
     </div>
 <? } ?>
