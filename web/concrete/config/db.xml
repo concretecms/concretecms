@@ -557,6 +557,13 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="gasHandle">
+        <unique/>
+        <col>gasHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="GatheringConfiguredDataSources">
     <field name="gcsID" type="I" size="10">
