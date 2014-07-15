@@ -1894,6 +1894,24 @@
       <unsigned/>
     </field>
     <field name="backgroundColor" type="C" />
+    <field name="backgroundRepeat" type="C" />
+    <field name="borderWidth" type="I" />
+    <field name="borderColor" type="C" />
+    <field name="borderStyle" type="C" />
+    <field name="baseFontSize" type="C" />
+    <field name="alignment" type="C" />
+    <field name="textColor" type="C" />
+    <field name="linkColor" type="C" />
+    <field name="spacingTop" type="C" />
+    <field name="spacingBottom" type="C" />
+    <field name="spacingLeft" type="C" />
+    <field name="spacingRight" type="C" />
+    <field name="rotate" type="C" />
+    <field name="boxShadowHorizontal" type="C" />
+    <field name="boxShadowVertical" type="C" />
+    <field name="boxShadowBlur" type="C" />
+    <field name="boxShadowSpread" type="C" />
+    <field name="boxShadowColor" type="C" />
   </table>
 
   <table name="StyleCustomizerValueLists">
