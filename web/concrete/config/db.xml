@@ -2742,6 +2742,11 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="fvID">
+        <col>fID</col>
+        <col>fvID</col>
+        <col>fvlID</col>
+    </index>
   </table>
     <table name="FileStorageLocationTypes">
         <field name="fslTypeID" type="I" size="10">
