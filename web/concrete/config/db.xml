@@ -570,7 +570,13 @@
     <field name="gasID" type="I" size="10">
       <unsigned/>
     </field>
-   <field name="gcdObject" type="X2"></field>
+   <field name="gcdObject" type="X2"/>
+   <index name="gaID">
+       <col>gaID</col>
+   </index>
+   <index name="gasID">
+       <col>gasID</col>
+   </index>
   </table>
   <table name="Conversations">
     <field name="cnvID" type="I" size="10">
