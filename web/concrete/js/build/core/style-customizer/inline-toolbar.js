@@ -19,11 +19,34 @@
         setupForm: function() {
             var my = this;
             my.$element.concreteAjaxForm({
-                success: function(r) {
-                    ConcreteEvent.fire('EditModeExitInline');
+                success: function(resp) {
+                    var editor = new Concrete.getEditMode(),
+                        area = editor.getAreaByID(resp.aID),
+                        block = area.getBlockByID(parseInt(resp.originalBlockID)),
+                        arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0,
+                        action = CCM_DISPATCHER_FILENAME + '/ccm/system/block/render';
+
+                    $.get(action, {
+                            arHandle: area.getHandle(),
+                            cID: resp.cID,
+                            bID: resp.bID,
+                            arEnableGridContainer: arEnableGridContainer
+                        }, function (r) {
+                            ConcreteToolbar.disableDirectExit();
+                            var newBlock = block.replace(resp.bID, r);
+                            ConcreteAlert.notify({
+                                'message': resp.message
+                            });
+
+                            editor.destroyInlineEditModeToolbars();
+
+                            ConcreteEvent.fire('EditModeExitInlineComplete', {
+                                block: newBlock
+                            });
+                    });
                 },
+
                 error: function(r) {
-                    ConcreteAlert.dialog('Error', r.responseText);
                     my.$toolbar.prependTo('#ccm-inline-toolbar-container').show();
                 }
             });

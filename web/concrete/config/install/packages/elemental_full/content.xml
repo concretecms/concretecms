@@ -13,6 +13,7 @@
     <pagetype name="Empty Page" handle="page" package="" launch-in-composer="0">
         <pagetemplates type="all" default="full"/>
         <target handle="all" package=""/>
+        <composer>
         <formlayout>
             <set name="Basics">
                 <control custom-template="" required="1" custom-label="Page Name" type="core_page_property" handle="name"/>
@@ -35,6 +36,7 @@
                 <page name="" path="" filename="" pagetype="" user="admin" description="" package=""/>
             </pagetemplate>
         </output>
+        </composer>
     </pagetype>
     </pagetypes>
     <stacks>

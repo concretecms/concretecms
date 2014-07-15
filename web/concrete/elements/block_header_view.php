@@ -15,11 +15,11 @@ if ($a->showControls() && $c->isEditMode() && $p->canViewEditInterface()) {
     $showMenu = true;
 }
 
-$blockStyle = $b->getBlockCustomStyleRule();
+$css = $b->getCustomStyleSet();
 $pt = $c->getCollectionThemeObject();
 
-if (is_object($blockStyle)) { ?>
-	<div id="<?=$blockStyle->getCustomStyleRuleCSSID(true)?>" class="<?=$blockStyle->getCustomStyleRuleClassName() ?> ccm-block-styles" >
+if (is_object($css)) { ?>
+	<div class="<?=$css->getContainerClass() ?>" >
 <? } ?>
 
 <? if ($showMenu) { ?>
@@ -96,7 +96,6 @@ if ($showMenu) {
     ?>
 
     <div
-        custom-style="<?=$b->getBlockCustomStyleRuleID()?>"
         data-cID="<?=$c->getCollectionID()?>"
         data-area-id="<?=$a->getAreaID()?>"
         data-block-id="<?=$b->getBlockID()?>"
