@@ -2639,6 +2639,9 @@
       <key/>
       <notnull/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
   </table>
   <table name="FileVersions">
     <field name="fID" type="I" size="10">
