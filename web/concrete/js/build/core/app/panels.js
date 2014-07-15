@@ -1,7 +1,7 @@
 /**
  * Left and right panels
  */
-
+var html = $('html');
 function ConcretePanel(options) {
     'use strict';
     this.options = options;
@@ -48,24 +48,24 @@ function ConcretePanel(options) {
         Concrete.event.publish('PanelLoad', {panel: this, element: element});
     };
 
-    this.hide = function () {
-        var delay = this.closePanelDetail();
-        if (!delay) {
-            delay = 0;
-        }
-        var obj = this;
-        Concrete.event.publish('PanelClose', {panel: this});
-        $(window).delay(delay).queue(function () {
+    this.hide = function (callback) {
+        callback = callback || $.noop;
+        var me = this;
+        this.closePanelDetail(function () {
+            var obj = this;
             $('[data-launch-panel=\'' + obj.getIdentifier() + '\']').removeClass('ccm-launch-panel-active');
             $('#' + obj.getDOMID()).removeClass('ccm-panel-active');
             $('#ccm-panel-overlay').queue(function () {
                 $(this).removeClass('ccm-panel-translucent');
                 $(this).dequeue();
             }).delay(1000).hide(0);
-            $('html').removeClass(obj.getPositionClass());
-            $('html').removeClass('ccm-panel-open');
+            html.removeClass(obj.getPositionClass());
+            html.removeClass('ccm-panel-open');
             obj.isOpen = false;
             $(this).dequeue();
+
+            callback.call(me);
+            Concrete.event.publish('PanelClose', {panel: this});
         });
     };
 
@@ -144,8 +144,11 @@ function ConcretePanel(options) {
         });
     };
 
-    this.closePanelDetail = function () {
+    this.closePanelDetail = function (callback) {
+        callback = callback || $.noop;
+        var me = this;
         if (!this.detail) {
+            callback.call(me);
             return false;
         }
 
@@ -164,7 +167,7 @@ function ConcretePanel(options) {
             $(this).removeClass('ccm-panel-detail-transition-' + transition + '-apply');
             $(this).dequeue();
         }).delay(550).queue(function () {
-            $('html').removeClass('ccm-panel-detail-open');
+            html.removeClass('ccm-panel-detail-open');
             $(this).addClass('ccm-panel-detail-disable-transition');
             $(this).dequeue();
         }).delay(1).queue(function () {
@@ -173,6 +176,8 @@ function ConcretePanel(options) {
         }).delay(1).queue(function () {
             $(this).removeClass('ccm-panel-detail-disable-transition');
             $(this).dequeue();
+
+            callback.call(me);
         });
 
         $('#ccm-panel-detail-form-actions-wrapper .ccm-panel-detail-form-actions').queue(function () {
@@ -239,7 +244,7 @@ function ConcretePanel(options) {
                 $(this).addClass('ccm-panel-detail-transition-' + options.transition + '-apply');
                 $(this).dequeue();
             });
-        $('html').addClass('ccm-panel-detail-open');
+        html.addClass('ccm-panel-detail-open');
         $content.load(options.url + '?cID=' + CCM_CID + options.data, function () {
             jQuery.fn.dialog.hideLoader();
             $content.find('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
@@ -365,44 +370,52 @@ function ConcretePanel(options) {
 
     };
 
-    this.show = function () {
+    this.show = function(callback) {
+        callback = callback || $.noop;
+        var element = $('#' + this.getDOMID()),
+            obj = this,
+            show = function() {
+                html.addClass('ccm-panel-open');
+                element.find('.ccm-panel-content-wrapper').html('');
+                element.addClass('ccm-panel-active ccm-panel-loading');
+                $('<div/>').addClass('ccm-panel-content ccm-panel-content-visible')
+                    .appendTo(element.find('.ccm-panel-content-wrapper'))
+                    .load(obj.getURL() + '?cID=' + CCM_CID, function() {
+                        var elem = this;
+                        element.delay(1).queue(function () {
+                            $(this).removeClass('ccm-panel-loading').addClass('ccm-panel-loaded');
+                            $(this).dequeue();
+                        });
+                        obj.onPanelLoad(element);
+                        obj.isOpen = true;
+                        Concrete.event.publish('PanelOpen', {
+                            panel: obj,
+                            element: elem
+                        });
+                        if (obj.options.overlay) {
+                            ConcretePanelManager.showOverlay(obj.options.translucent);
+                        }
+                    });
+                $('[data-launch-panel=\'' + obj.getIdentifier() + '\']').addClass('ccm-launch-panel-active');
+                html.addClass(obj.getPositionClass());
+            };
 
-        var delay = 0;
         if (this.options.primary) {
-            // then it is the only panel that can be open on the screen
-            // we hide any other open ones.
-            var panels = ConcretePanelManager.getPanels();
-            for (var i = 0; i < panels.length; i++) {
-                var panel = panels[i];
-                if ((panel.getIdentifier() != this.getIdentifier()) && (panel.isOpen)) {
-                    delay = panel.hide();
-                }
-            }
-        }
-        var obj = this;
-        $('html').addClass('ccm-panel-open');
-        $(window).delay(delay).queue(function () {
-            var $panel = $('#' + obj.getDOMID());
-            $panel.find('.ccm-panel-content-wrapper').html('');
-            $panel.addClass('ccm-panel-active ccm-panel-loading');
-            $('<div />', {'class': 'ccm-panel-content ccm-panel-content-visible'}).appendTo($panel.find('.ccm-panel-content-wrapper')).load(obj.getURL() + '?cID=' + CCM_CID, function () {
-                var element = this;
-                $panel.delay(1).queue(function () {
-                    $(this).removeClass('ccm-panel-loading').addClass('ccm-panel-loaded');
-                    $(this).dequeue();
-                });
-                obj.onPanelLoad(element);
-                obj.isOpen = true;
-                Concrete.event.publish('PanelOpen', {panel: obj, element: element});
+            var open_panel = _(ConcretePanelManager.getPanels()).findWhere({
+                isOpen: true
             });
-            if (obj.options.overlay) {
-                ConcretePanelManager.showOverlay(obj.options.translucent);
+            if (open_panel) {
+                open_panel.hide(function() {
+                    show.call(this);
+                });
+            } else {
+                show.call(this);
             }
-            $('[data-launch-panel=\'' + obj.getIdentifier() + '\']').addClass('ccm-launch-panel-active');
-            $('html').addClass(obj.getPositionClass());
-            $(this).dequeue();
-        });
-    };
+        } else {
+            show.call(this);
+        }
+    }
+
 }
 
 var ConcretePanelManager = (function ConcretePanelManagerGenerator() {
