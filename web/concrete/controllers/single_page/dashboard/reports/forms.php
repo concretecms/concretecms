@@ -63,8 +63,8 @@ class Forms extends DashboardPageController
         if ($hasCBRow) {
             echo "rowspan=\"2\" valign='bottom'";
         }
-        echo "><b>Submitted Date</b></td>\r\n";
-        echo "<td><b>User</b></td>\r\n";
+        echo "><b>" . t('Submitted Date') . "</b></td>\r\n";
+        echo "<td><b>" . t('User') . "</b></td>\r\n";
 
         foreach ($questions as $questionId => $question) {
             if ($question['inputType'] == 'checkboxlist') {
