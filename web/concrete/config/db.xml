@@ -3097,6 +3097,9 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <index name="jID">
+        <col>jID</col>
+    </index>
   </table>
   <table name="JobSets">
     <field name="jsID" type="I" size="10">
