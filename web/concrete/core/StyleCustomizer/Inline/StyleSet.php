@@ -1,21 +1,19 @@
 <?
-namespace Concrete\Core\Page\Style;
+namespace Concrete\Core\StyleCustomizer\Inline;
 use Database;
 use Core;
 /**
  * @Entity
- * @Table(name="PageStyleSets")
+ * @Table(name="StyleCustomizerInlineStyleSets")
  */
-class Set
+class StyleSet
 {
-
-    protected $containerClass;
 
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue
      */
-    protected $pssID;
+    protected $issID;
 
     /**
      * @Column(type="string")
@@ -65,22 +63,43 @@ class Set
     /**
      * @Column(type="string")
      */
-    protected $spacingTop;
+    protected $marginTop;
 
     /**
      * @Column(type="string")
      */
-    protected $spacingBottom;
+    protected $marginBottom;
 
     /**
      * @Column(type="string")
      */
-    protected $spacingLeft;
+    protected $marginLeft;
 
     /**
      * @Column(type="string")
      */
-    protected $spacingRight;
+    protected $marginRight;
+
+
+    /**
+     * @Column(type="string")
+     */
+    protected $paddingTop;
+
+    /**
+     * @Column(type="string")
+     */
+    protected $paddingBottom;
+
+    /**
+     * @Column(type="string")
+     */
+    protected $paddingLeft;
+
+    /**
+     * @Column(type="string")
+     */
+    protected $paddingRight;
 
     /**
      * @Column(type="string")
@@ -289,70 +308,6 @@ class Set
     }
 
     /**
-     * @param mixed $spacingBottom
-     */
-    public function setSpacingBottom($spacingBottom)
-    {
-        $this->spacingBottom = $spacingBottom;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSpacingBottom()
-    {
-        return $this->spacingBottom;
-    }
-
-    /**
-     * @param mixed $spacingLeft
-     */
-    public function setSpacingLeft($spacingLeft)
-    {
-        $this->spacingLeft = $spacingLeft;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSpacingLeft()
-    {
-        return $this->spacingLeft;
-    }
-
-    /**
-     * @param mixed $spacingRight
-     */
-    public function setSpacingRight($spacingRight)
-    {
-        $this->spacingRight = $spacingRight;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSpacingRight()
-    {
-        return $this->spacingRight;
-    }
-
-    /**
-     * @param mixed $spacingTop
-     */
-    public function setSpacingTop($spacingTop)
-    {
-        $this->spacingTop = $spacingTop;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSpacingTop()
-    {
-        return $this->spacingTop;
-    }
-
-    /**
      * @param mixed $textColor
      */
     public function setTextColor($textColor)
@@ -387,7 +342,135 @@ class Set
 
     public function getID()
     {
-        return $this->pssID;
+        return $this->issID;
+    }
+
+    /**
+     * @param mixed $marginBottom
+     */
+    public function setMarginBottom($marginBottom)
+    {
+        $this->marginBottom = $marginBottom;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMarginBottom()
+    {
+        return $this->marginBottom;
+    }
+
+    /**
+     * @param mixed $marginLeft
+     */
+    public function setMarginLeft($marginLeft)
+    {
+        $this->marginLeft = $marginLeft;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMarginLeft()
+    {
+        return $this->marginLeft;
+    }
+
+    /**
+     * @param mixed $marginRight
+     */
+    public function setMarginRight($marginRight)
+    {
+        $this->marginRight = $marginRight;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMarginRight()
+    {
+        return $this->marginRight;
+    }
+
+    /**
+     * @param mixed $marginTop
+     */
+    public function setMarginTop($marginTop)
+    {
+        $this->marginTop = $marginTop;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMarginTop()
+    {
+        return $this->marginTop;
+    }
+
+    /**
+     * @param mixed $paddingBottom
+     */
+    public function setPaddingBottom($paddingBottom)
+    {
+        $this->paddingBottom = $paddingBottom;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPaddingBottom()
+    {
+        return $this->paddingBottom;
+    }
+
+    /**
+     * @param mixed $paddingLeft
+     */
+    public function setPaddingLeft($paddingLeft)
+    {
+        $this->paddingLeft = $paddingLeft;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPaddingLeft()
+    {
+        return $this->paddingLeft;
+    }
+
+    /**
+     * @param mixed $paddingRight
+     */
+    public function setPaddingRight($paddingRight)
+    {
+        $this->paddingRight = $paddingRight;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPaddingRight()
+    {
+        return $this->paddingRight;
+    }
+
+    /**
+     * @param mixed $paddingTop
+     */
+    public function setPaddingTop($paddingTop)
+    {
+        $this->paddingTop = $paddingTop;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPaddingTop()
+    {
+        return $this->paddingTop;
     }
 
     public function setBackgroundColor($backgroundColor)
@@ -412,14 +495,14 @@ class Set
     }
 
     /**
-     * @param $pssID
+     * @param $issID
      * @return \Concrete\Core\Page\Style\Set
      */
-    public function getByID($pssID)
+    public function getByID($issID)
     {
         $db = Database::get();
         $em = $db->getEntityManager();
-        return $em->find('\Concrete\Core\Page\Style\Set', $pssID);
+        return $em->find('\Concrete\Core\StyleCustomizer\Inline\StyleSet', $issID);
     }
 
     public function save()
@@ -429,65 +512,4 @@ class Set
         $em->persist($this);
         $em->flush();
     }
-
-    public function getContainerClass()
-    {
-        if (isset($this->containerClass)) {
-            return $this->containerClass;
-        } else {
-            return 'ccm-custom-style-style-set-' . $this->getID();
-        }
-    }
-
-    public function setContainerClass($class)
-    {
-        $this->containerClass = $class;
-    }
-
-    public function getCSS()
-    {
-        $css = '.' . $this->getContainerClass() . '{';
-        if ($this->backgroundColor) {
-            $css .= 'background-color:' . $this->backgroundColor . ';';
-        }
-        if ($this->backgroundImageFileID) {
-            $f = $this->getBackgroundImageFileObject();
-            if (is_object($f)) {
-                $css .= 'background-image: url(' . $f->getRelativePath() . ');';
-                $css .= 'background-repeat: ' . $this->backgroundRepeat . ';';
-            }
-        }
-        if ($this->baseFontSize) {
-            $css .= 'font-size:' . $this->baseFontSize . ';';
-        }
-        if ($this->textColor) {
-            $css .= 'color:' . $this->textColor . ';';
-        }
-        if ($this->baseFontSize) {
-            $css .= 'font-size:' . $this->baseFontSize . ';';
-        }
-        $css .= '}';
-
-        if ($this->linkColor) {
-            $css .= '.' . $this->getContainerClass() . ' a {';
-                $css .= 'color:' . $this->linkColor . ' !important;';
-            $css .= '}';
-        }
-        return $css;
-    }
-
-    /**
-     * Utility method for generating these classes
-     */
-    public static function generateCustomStyleContainerClass()
-    {
-        $args = func_get_args();
-        $class = 'ccm-custom-style-';
-        $txt = Core::make('helper/text');
-        foreach($args as $ag) {
-            $class .= strtolower($txt->filterNonAlphaNum($ag)) . '-';
-        }
-        return trim($class, '-');
-    }
-
 }

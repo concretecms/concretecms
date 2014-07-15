@@ -3,7 +3,7 @@ namespace Concrete\Controller\Dialog\Block;
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Page\EditResponse;
-use Concrete\Core\Page\Style\Set;
+use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 
 class Design extends BackendInterfaceBlockController {
 
@@ -42,13 +42,22 @@ class Design extends BackendInterfaceBlockController {
             }
 
             $r = $this->request->request->all();
-            $set = new Set();
+            $set = new StyleSet();
             $set->setBackgroundColor($r['backgroundColor']);
             $set->setBackgroundImageFileID(intval($r['backgroundImageFileID']));
             $set->setBackgroundRepeat($r['backgroundRepeat']);
             $set->setLinkColor($r['linkColor']);
             $set->setTextColor($r['textColor']);
             $set->setBaseFontSize($r['baseFontSize']);
+            $set->setMarginTop($r['marginTop']);
+            $set->setMarginRight($r['marginRight']);
+            $set->setMarginBottom($r['marginBottom']);
+            $set->setMarginLeft($r['marginLeft']);
+            $set->setPaddingTop($r['paddingTop']);
+            $set->setPaddingRight($r['paddingRight']);
+            $set->setPaddingBottom($r['paddingBottom']);
+            $set->setPaddingLeft($r['paddingLeft']);
+
             $set->save();
 
             $b->setCustomStyleSet($set);

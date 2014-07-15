@@ -1,31 +1,30 @@
 <?
 
-class PageStyleTest extends PageTestCase {
+class BlockStyleTest extends PageTestCase {
 
      public function setUp()
     {
         parent::setUp();
         $this->tables = array_merge($this->tables,
-           array('PageStyleSets', 'BlockTypes', 'Blocks')
+           array('StyleCustomizerInlineStyleSets', 'BlockTypes', 'Blocks')
         );
     }
     public function testPageStyles()
     {
-        $ps = new \Concrete\Core\Page\Style\Set();
+        $ps = new \Concrete\Core\StyleCustomizer\Inline\StyleSet();
         $ps->setBackgroundColor('#ffffff');
         $ps->save();
 
-        $psx = \Concrete\Core\Page\Style\Set::getByID(1);
-        $this->assertInstanceOf('\Concrete\Core\Page\Style\Set', $psx);
+        $psx = \Concrete\Core\StyleCustomizer\Inline\StyleSet::getByID(1);
+        $this->assertInstanceOf('\Concrete\Core\StyleCustomizer\Inline\StyleSet', $psx);
         $this->assertEquals(1, $psx->getID());
         $this->assertEquals('#ffffff', $psx->getBackgroundColor());
-        $this->assertEquals('.ccm-custom-style-style-set-1{background-color:#ffffff;}', $psx->getCSS());
     }
 
     public function testPageStylesBlock()
     {
 
-        $ps = new \Concrete\Core\Page\Style\Set();
+        $ps = new \Concrete\Core\StyleCustomizer\Inline\StyleSet();
         $ps->setBackgroundColor('#aaa');
         $ps->save();
 
@@ -37,12 +36,13 @@ class PageStyleTest extends PageTestCase {
 
         $b2 = Block::getByID(1, $c, 'Main');
         $this->assertEquals(1, $b2->getBlockID());
-        $set = $b2->getCustomStyleSet();
-        $this->assertInstanceOf('\Concrete\Core\Page\Style\Set', $set);
+        $style = $b2->getCustomStyle();
+        $this->assertInstanceOf('\Concrete\Core\Block\CustomStyle', $style);
 
-        $b2->resetCustomStyleSet();
+        $b2->resetCustomStyle();
 
-        $css = $set->getCSS();
+        $css = $style->getCSS();
+        $this->assertEquals('ccm-custom-style-main-1', $style->getContainerClass());
         $this->assertEquals('.ccm-custom-style-main-1{background-color:#aaa;}', $css);
     }
 }
