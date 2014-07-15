@@ -4,10 +4,10 @@ class BlockStyleTest extends PageTestCase {
 
      public function setUp()
     {
-        parent::setUp();
         $this->tables = array_merge($this->tables,
-           array('StyleCustomizerInlineStyleSets', 'BlockTypes', 'Blocks')
+           array('StyleCustomizerInlineStyleSets', 'BlockTypes', 'Blocks', 'AttributeKeyCategories')
         );
+        parent::setUp();
     }
     public function testPageStyles()
     {

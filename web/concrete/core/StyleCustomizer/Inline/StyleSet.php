@@ -511,8 +511,10 @@ class StyleSet
 
     public function getBackgroundImageFileObject()
     {
-        $f = \File::getByID($this->backgroundImageFileID);
-        return $f;
+        if ($this->backgroundImageFileID) {
+            $f = \File::getByID($this->backgroundImageFileID);
+            return $f;
+        }
     }
 
     /**
