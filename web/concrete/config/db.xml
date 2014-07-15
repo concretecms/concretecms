@@ -2916,6 +2916,13 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="gsName">
+        <col>gsName</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>gsID</col>
+    </index>
   </table>
   <table name="Groups">
     <field name="gID" type="I" size="10">
