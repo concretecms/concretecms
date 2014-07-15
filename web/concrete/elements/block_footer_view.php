@@ -12,6 +12,13 @@ if ($a->isGlobalArea()) {
 
 ?>
 
+<?
+$blockStyle = $b->getCustomStyle();
+if (is_object($blockStyle)) {
+    ?>
+    </div>
+<? } ?>
+
 </div>
 
 <?
@@ -29,13 +36,5 @@ if (
 $p = new Permissions($b);
 $showMenu = false;
 if ($a->showControls() && $c->isEditMode() && $p->canViewEditInterface()) { ?>
-    </div>
-<? } ?>
-
-
-<?
-$blockStyle = $b->getCustomStyle();
-if (is_object($blockStyle)) {
-    ?>
     </div>
 <? } ?>
