@@ -48,6 +48,11 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 						<?=t("Delete this form layout set? This cannot be undone.")?>
 						<?=Loader::helper('validation/token')->output('delete_set')?>
 						</form>
+                        <div class="dialog-buttons">
+                            <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                            <button class="btn btn-danger pull-right" onclick="$('form[data-delete-set-form=<?=$set->getPageTypeComposerFormLayoutSetID()?>]').submit();"><?=t('Delete Set')?></button>
+                        </div>
+
 					</div>
 				</div>
 
@@ -60,6 +65,10 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 								<?=$form->text('ptComposerFormLayoutSetName', $set->getPageTypeComposerFormLayoutSetName())?>
 							</div>
 						</div>
+                        <div class="dialog-buttons">
+                            <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                            <button class="btn btn-primary pull-right" onclick="$('form[data-edit-set-form=<?=$set->getPageTypeComposerFormLayoutSetID()?>]').submit();"><?=t('Update Set')?></button>
+                        </div>
 						<?=Loader::helper('validation/token')->output('update_set')?>
 						</form>
 					</div>
@@ -83,6 +92,33 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 
 
 <script type="text/javascript">
+
+var Composer = {
+
+    deleteFromLayoutSetControl: function(ptComposerFormLayoutSetControlID) {
+        jQuery.fn.dialog.showLoader();
+        var formData = [{
+            'name': 'token',
+            'value': '<?=Loader::helper("validation/token")->generate("delete_set_control")?>'
+        }, {
+            'name': 'ptComposerFormLayoutSetControlID',
+            'value': ptComposerFormLayoutSetControlID
+        }];
+
+        $.ajax({
+            type: 'post',
+            data: formData,
+            url: '<?=$view->action("delete_set_control")?>',
+            success: function() {
+                jQuery.fn.dialog.hideLoader();
+                jQuery.fn.dialog.closeAll();
+                $('div[data-page-type-composer-form-layout-control-set-control-id=' + ptComposerFormLayoutSetControlID + ']').remove();
+            }
+        });
+    }
+
+}
+
 $(function() {
 	$('a[data-dialog=add_set]').on('click', function() {
 		jQuery.fn.dialog.open({
@@ -95,55 +131,23 @@ $(function() {
 	});
 	$('a[data-delete-set]').on('click', function() {
 		var ptComposerFormLayoutSetID = $(this).attr('data-delete-set');
-		$('div[data-delete-set-dialog=' + ptComposerFormLayoutSetID + ']').dialog({
-			modal: true,
-			width: 320,
-			dialogClass: 'ccm-ui',
-			title: '<?=t("Delete Set ")?>',
-			height: 250,
-			buttons: [
-				{
-					'text': '<?=t("Cancel")?>',
-					'class': 'btn btn-default pull-left',
-					'click': function() {
-						$(this).dialog('close');
-					}
-				},
-				{
-					'text': '<?=t("Delete")?>',
-					'class': 'btn pull-right btn-danger',
-					'click': function() {
-						$('form[data-delete-set-form=' + ptComposerFormLayoutSetID + ']').submit();
-					}
-				}
-			]
-		});
+        jQuery.fn.dialog.open({
+            element: 'div[data-delete-set-dialog=' + ptComposerFormLayoutSetID + ']',
+            modal: true,
+            width: 320,
+            title: '<?=t("Delete Control Set")?>',
+            height: 'auto'
+        });
 	});
 	$('a[data-edit-set]').on('click', function() {
 		var ptComposerFormLayoutSetID = $(this).attr('data-edit-set');
-		$('div[data-edit-set-dialog=' + ptComposerFormLayoutSetID + ']').dialog({
-			modal: true,
-			width: 320,
-			dialogClass: 'ccm-ui',
-			title: '<?=t("Update Set ")?>',
-			height: 235,
-			buttons: [
-				{
-					'text': '<?=t("Cancel")?>',
-					'class': 'btn btn-default pull-left',
-					'click': function() {
-						$(this).dialog('close');
-					}
-				},
-				{
-					'text': '<?=t("Update")?>',
-					'class': 'btn pull-right btn-primary',
-					'click': function() {
-						$('form[data-edit-set-form=' + ptComposerFormLayoutSetID + ']').submit();
-					}
-				}
-			]
-		});
+        jQuery.fn.dialog.open({
+            element: 'div[data-edit-set-dialog=' + ptComposerFormLayoutSetID + ']',
+            modal: true,
+            width: 320,
+            title: '<?=t("Update Control Set")?>',
+            height: 'auto'
+        });
 	});
 	$('div.ccm-pane-body').sortable({
 		handle: 'a[data-command=move_set]',
@@ -204,48 +208,13 @@ $(function() {
 
 	$('div.ccm-page-type-composer-form-layout-control-set-inner').on('click', 'a[data-delete-set-control]', function() {
 		var ptComposerFormLayoutSetControlID = $(this).attr('data-delete-set-control');
-		$('div[data-delete-set-control-dialog=' + ptComposerFormLayoutSetControlID + ']').dialog({
-			modal: true,
-			width: 320,
-			dialogClass: 'ccm-ui',
-			title: '<?=t("Delete Control ")?>',
-			height: 250,
-			buttons: [
-				{
-					'text': '<?=t("Cancel")?>',
-					'class': 'btn btn-default pull-left',
-					'click': function() {
-						$(this).dialog('close');
-					}
-				},
-				{
-					'text': '<?=t("Delete")?>',
-					'class': 'btn pull-right btn-danger',
-					'click': function() {
-						jQuery.fn.dialog.showLoader();
-						var formData = [{
-							'name': 'token',
-							'value': '<?=Loader::helper("validation/token")->generate("delete_set_control")?>'
-						}, {
-							'name': 'ptComposerFormLayoutSetControlID',
-							'value': ptComposerFormLayoutSetControlID
-						}];
-
-						$.ajax({
-							type: 'post',
-							data: formData,
-							url: '<?=$view->action("delete_set_control")?>',
-							success: function() {
-								jQuery.fn.dialog.hideLoader();
-								jQuery.fn.dialog.closeAll();
-								$('div[data-page-type-composer-form-layout-control-set-control-id=' + ptComposerFormLayoutSetControlID + ']').remove();
-							}
-						});
-
-					}
-				}
-			]
-		});
+        jQuery.fn.dialog.open({
+            element: 'div[data-delete-set-control-dialog=' + ptComposerFormLayoutSetControlID + ']',
+            modal: true,
+            width: 320,
+            title: '<?=t("Delete Control")?>',
+            height: 'auto'
+        });
 		return false;
 	});
 
