@@ -429,9 +429,12 @@
       <col>gasID</col>
       <col>gaID</col>
     </index>
-    <index name="gaiKey">
-      <col>gaiKey</col>
-      <col>gasID</col>
+    <index name="gaID">
+      <col>gaID</col>
+      <col>gaiBatchTimestamp</col>
+    </index>
+    <index name="gasID">
+        <col>gasID</col>
     </index>
   </table>
 
