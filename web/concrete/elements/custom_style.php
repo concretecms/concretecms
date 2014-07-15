@@ -15,6 +15,9 @@ $paddingTop = '';
 $paddingLeft = '';
 $paddingRight = '';
 $paddingBottom = '';
+$borderStyle = '';
+$borderWidth = '';
+$borderColor = '';
 
 if (is_object($style)) {
     $set = $style->getStyleSet();
@@ -32,6 +35,9 @@ if (is_object($style)) {
     $paddingLeft = $set->getPaddingLeft();
     $paddingRight = $set->getPaddingRight();
     $paddingBottom = $set->getPaddingBottom();
+    $borderStyle = $set->getBorderStyle();
+    $borderWidth = $set->getBorderWidth();
+    $borderColor = $set->getBorderColor();
 }
 
 $repeatOptions = array(
@@ -40,6 +46,18 @@ $repeatOptions = array(
     'repeat-y' => t('Vertical'),
     'repeat' => t('Tile')
 );
+$borderOptions = array(
+    'none' => t('None'),
+    'solid' => t('Solid'),
+    'dotted' => t('Dotted'),
+    'dashed' => t('Dashed'),
+    'double' => t('Double'),
+    'groove' => t('Groove'),
+    'ridge' => t('Ridge'),
+    'inset' => t('Inset'),
+    'outset' => t('Outset')
+);
+
 $al = new Concrete\Core\Application\Service\FileManager();
 $form = Core::make('helper/form');
 ?>
@@ -87,6 +105,23 @@ $form = Core::make('helper/form');
     </li>
     <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-square-o"></i></a>
         <div class="ccm-inline-design-dropdown-menu dropdown-menu">
+            <h3><?=t('Border')?></h3>
+            <div>
+                <?=t('Color')?>
+                <?=Loader::helper('form/color')->output('borderColor', $borderColor);?>
+            </div>
+            <div>
+                <?=t('Style')?>
+                <?=$form->select('borderStyle', $borderOptions, $borderStyle);?>
+            </div>
+            <div>
+                <?=t('Width')?>
+                <?=$form->text('borderWidth', $borderWidth);?>
+            </div>
+        </div>
+    </li>
+    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-arrows-h"></i></a>
+        <div class="ccm-inline-design-dropdown-menu dropdown-menu">
             <h3><?=t('Padding')?></h3>
             <div>
                 <?=t('Top')?>
@@ -127,8 +162,8 @@ $form = Core::make('helper/form');
 
             <? } ?>
         </div>
+
     </li>
-    <li class="ccm-inline-toolbar-icon-cell"><a href="#"><i class="fa fa-arrows-h"></i></a></li>
     <li class="ccm-inline-toolbar-icon-cell"><a href="#"><i class="fa fa-html5"></i></a></li>
     <li class="ccm-inline-toolbar-icon-cell"><a href="#"><i class="fa fa-cog"></i></a></li>
     <li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-cancel">

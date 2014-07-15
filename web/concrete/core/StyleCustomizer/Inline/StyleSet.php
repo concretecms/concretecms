@@ -43,6 +43,27 @@ class StyleSet
     /**
      * @Column(type="string")
      */
+    protected $borderWidth;
+
+    /**
+     * @param mixed $borderWidth
+     */
+    public function setBorderWidth($borderWidth)
+    {
+        $this->borderWidth = $borderWidth;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBorderWidth()
+    {
+        return $this->borderWidth;
+    }
+
+    /**
+     * @Column(type="string")
+     */
     protected $baseFontSize;
 
     /**

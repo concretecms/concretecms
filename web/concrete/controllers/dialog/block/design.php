@@ -57,6 +57,10 @@ class Design extends BackendInterfaceBlockController {
             $set->setPaddingRight($r['paddingRight']);
             $set->setPaddingBottom($r['paddingBottom']);
             $set->setPaddingLeft($r['paddingLeft']);
+            $set->setBorderWidth($r['borderWidth']);
+            $set->setBorderStyle($r['borderStyle']);
+            $set->setBorderColor($r['borderColor']);
+
 
             $set->save();
 
