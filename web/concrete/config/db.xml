@@ -356,6 +356,9 @@
     <field name="gaDateLastUpdated" type="T">
       <notnull/>
     </field>
+    <index name="gaDateLastUpdated">
+        <col>gaDateLastUpdated</col>
+    </index>
   </table>
   <table name="GatheringItemSelectedTemplates">
     <field name="gaiID" type="I" size="10">
