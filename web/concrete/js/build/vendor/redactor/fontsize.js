@@ -12,9 +12,9 @@ RedactorPlugins.fontsize = {
             dropdown['s' + i] = { title: s + 'px', callback: function() { that.setFontsize(s); } };
         });
 
-        dropdown['remove'] = { title: 'Remove font size', callback: function() { that.resetFontsize(); } };
+        dropdown['remove'] = { title: ccmi18n_redactor.remove_font_size, callback: function() { that.resetFontsize(); } };
 
-        this.buttonAddAfter('fontfamily', 'fontsize', 'Change font size', false, dropdown);
+        this.buttonAddAfter('fontfamily', 'fontsize', ccmi18n_redactor.change_font_size, false, dropdown);
     },
     setFontsize: function(size)
     {

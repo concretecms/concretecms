@@ -69,6 +69,7 @@ $form = Core::make('helper/form');
     </li>
     <li class="ccm-inline-toolbar-icon-cell"><a href="#"><i class="fa fa-square-o"></i></a></li>
     <li class="ccm-inline-toolbar-icon-cell"><a href="#"><i class="fa fa-arrows-h"></i></a></li>
+    <li class="ccm-inline-toolbar-icon-cell"><a href="#"><i class="fa fa-html5"></i></a></li>
     <li class="ccm-inline-toolbar-icon-cell"><a href="#"><i class="fa fa-cog"></i></a></li>
     <li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-cancel">
         <button data-action="cancel-design" type="button" class="btn btn-mini"><?=t("Cancel")?></button>
