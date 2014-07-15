@@ -465,6 +465,13 @@
     <field name="faID" type="I" size="10">
       <unsigned/>
     </field>
+    <index name="gaiID">
+        <col>gaiID</col>
+        <col>faID</col>
+    </index>
+    <index name="faID">
+        <col>faID</col>
+    </index>
   </table>
 
   <table name="GatheringItemTemplateTypes">
