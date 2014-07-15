@@ -60,6 +60,7 @@ class Design extends BackendInterfaceBlockController {
             $set->setBorderWidth($r['borderWidth']);
             $set->setBorderStyle($r['borderStyle']);
             $set->setBorderColor($r['borderColor']);
+            $set->setAlignment($r['alignment']);
 
 
             $set->save();

@@ -18,6 +18,7 @@ $paddingBottom = '';
 $borderStyle = '';
 $borderWidth = '';
 $borderColor = '';
+$alignment = '';
 
 if (is_object($style)) {
     $set = $style->getStyleSet();
@@ -38,6 +39,7 @@ if (is_object($style)) {
     $borderStyle = $set->getBorderStyle();
     $borderWidth = $set->getBorderWidth();
     $borderColor = $set->getBorderColor();
+    $alignment = $set->getAlignment();
 }
 
 $repeatOptions = array(
@@ -56,6 +58,12 @@ $borderOptions = array(
     'ridge' => t('Ridge'),
     'inset' => t('Inset'),
     'outset' => t('Outset')
+);
+
+$alignmentOptions = array(
+    '' => t('None'),
+    'right' => t('Right'),
+    'left' => t('Left'),
 );
 
 $al = new Concrete\Core\Application\Service\FileManager();
@@ -80,6 +88,11 @@ $form = Core::make('helper/form');
                 <?=t('Base Font Size')?>
                 <?=$form->text('baseFontSize', $baseFontSize);?>
             </div>
+            <div>
+                <?=t('Alignment')?>
+                <?=$form->select('alignment', $alignmentOptions, $alignment);?>
+            </div>
+
         </div>
 
     </li>
