@@ -2975,6 +2975,15 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="gName">
+        <col>gName</col>
+    </index>
+    <index name="gBadgeFID">
+        <col>gBadgeFID</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="Jobs">
     <field name="jID" type="I" size="10">
