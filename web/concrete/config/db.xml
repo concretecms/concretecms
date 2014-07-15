@@ -536,6 +536,13 @@
       <col>gatHandle</col>
       <col>gatTypeID</col>
     </index>
+    <index name="gatTypeID">
+        <col>gatTypeID</col>
+        <col>gatName</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="GatheringItemTemplateFeatures">
     <field name="gfeID" type="I" size="10">
