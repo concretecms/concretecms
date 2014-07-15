@@ -1904,7 +1904,7 @@
     <field name="backgroundColor" type="C" />
     <field name="backgroundImageFileID" type="I" />
     <field name="backgroundRepeat" type="C" />
-    <field name="borderWidth" type="I" />
+    <field name="borderWidth" type="C" />
     <field name="borderColor" type="C" />
     <field name="borderStyle" type="C" />
     <field name="baseFontSize" type="C" />
