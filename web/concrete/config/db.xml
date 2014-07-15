@@ -282,14 +282,14 @@
     <field name="pkgID" type="I" size="10">
       <unsigned/>
     </field>
-    <field name="feHandle">
+    <index name="feHandle">
         <unique/>
         <col>feHandle</col>
-    </field>
-    <field name="pkgID">
+    </index>
+    <index name="pkgID">
         <col>pkgID</col>
         <col>feID</col>
-    </field>
+    </index>
   </table>
     <table name="FeatureCategories">
     <field name="fcID" type="I" size="10">
