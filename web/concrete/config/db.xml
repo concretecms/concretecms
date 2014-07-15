@@ -494,6 +494,13 @@
     <default value="0"/>
     <unsigned/>
   </field>
+  <index name="gatTypeHandle">
+      <unique/>
+      <col>gatTypeHandle</col>
+  </index>
+  <index name="pkgID">
+      <col>pkgID</col>
+  </index>
 </table>
 
 
