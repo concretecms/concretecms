@@ -11,8 +11,13 @@ if (is_object($set)) { ?>
 $ag = \Concrete\Core\Http\ResponseAssetGroup::get();
 $ag->requireAsset('core/style-customizer');
 Loader::element("custom_style", array(
-    'action' => $controller->action('submit'),
-    'style' => $b->getCustomStyle()
+    'saveAction' => $controller->action('submit'),
+    'resetAction' => $controller->action('reset'),
+    'style' => $b->getCustomStyle(true),
+    'bFilename' => $b->getBlockFilename(),
+    'bName' => $b->getBlockName(),
+    'templates' => $templates,
+    'canEditCustomTemplate' => $canEditCustomTemplate,
 ));
 
 $pt = $c->getCollectionThemeObject();

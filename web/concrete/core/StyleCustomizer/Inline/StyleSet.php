@@ -46,6 +46,11 @@ class StyleSet
     protected $borderWidth;
 
     /**
+     * @Column(type="string")
+     */
+    protected $borderRadius;
+
+    /**
      * @param mixed $borderWidth
      */
     public function setBorderWidth($borderWidth)
@@ -230,6 +235,22 @@ class StyleSet
     public function getBorderStyle()
     {
         return $this->borderStyle;
+    }
+
+    /**
+     * @param mixed $borderStyle
+     */
+    public function setBorderRadius($borderRadius)
+    {
+        $this->borderRadius = $borderRadius;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBorderRadius()
+    {
+        return $this->borderRadius;
     }
 
     /**

@@ -10,7 +10,11 @@
         my.$element = $element;
         my.$toolbar = my.$element.find('>ul');
         my.$toolbar.find('div.dropdown-menu').on('click', function(e) {
-            e.stopPropagation(); // stop the menu from closing
+            if ($(e.target).is('button')) {
+                return true;
+            } else {
+                e.stopPropagation(); // stop the menu from closing
+            }
         });
 
         my.setupForm();
@@ -19,36 +23,40 @@
 
     ConcreteInlineStyleCustomizer.prototype = {
 
+        handleResponse: function(resp) {
+            var my = this;
+            var editor = new Concrete.getEditMode(),
+                area = editor.getAreaByID(resp.aID),
+                block = area.getBlockByID(parseInt(resp.originalBlockID)),
+                arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0,
+                action = CCM_DISPATCHER_FILENAME + '/ccm/system/block/render';
+
+            $.get(action, {
+                arHandle: area.getHandle(),
+                cID: resp.cID,
+                bID: resp.bID,
+                arEnableGridContainer: arEnableGridContainer
+            }, function (r) {
+                ConcreteToolbar.disableDirectExit();
+                var newBlock = block.replace(resp.bID, r);
+                ConcreteAlert.notify({
+                    'message': resp.message
+                });
+
+                editor.destroyInlineEditModeToolbars();
+
+                ConcreteEvent.fire('EditModeExitInlineComplete', {
+                    block: newBlock
+                });
+            });
+        },
+
         setupForm: function() {
             var my = this;
             my.$element.concreteAjaxForm({
                 success: function(resp) {
-                    var editor = new Concrete.getEditMode(),
-                        area = editor.getAreaByID(resp.aID),
-                        block = area.getBlockByID(parseInt(resp.originalBlockID)),
-                        arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0,
-                        action = CCM_DISPATCHER_FILENAME + '/ccm/system/block/render';
-
-                    $.get(action, {
-                            arHandle: area.getHandle(),
-                            cID: resp.cID,
-                            bID: resp.bID,
-                            arEnableGridContainer: arEnableGridContainer
-                        }, function (r) {
-                            ConcreteToolbar.disableDirectExit();
-                            var newBlock = block.replace(resp.bID, r);
-                            ConcreteAlert.notify({
-                                'message': resp.message
-                            });
-
-                            editor.destroyInlineEditModeToolbars();
-
-                            ConcreteEvent.fire('EditModeExitInlineComplete', {
-                                block: newBlock
-                            });
-                    });
+                    my.handleResponse(resp);
                 },
-
                 error: function(r) {
                     my.$toolbar.prependTo('#ccm-inline-toolbar-container').show();
                 }
@@ -60,6 +68,16 @@
             my.$toolbar.on('click.inlineStyleCustomizer', 'button[data-action=cancel-design]', function() {
                 my.$element.hide();
                 ConcreteEvent.fire('EditModeExitInline');
+                return false;
+            });
+
+            my.$toolbar.on('click.inlineStyleCustomizer', 'button[data-action=reset-design]', function() {
+                $.concreteAjax({
+                    url: $(this).attr('data-reset-action'),
+                    success: function(resp) {
+                        my.handleResponse(resp);
+                    }
+                });
                 return false;
             });
 

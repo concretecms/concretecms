@@ -11,7 +11,7 @@ class CustomStyle implements CustomStyleInterface
     protected $bID;
     protected $set;
 
-    public function __construct(StyleSet $set, $bID, $arHandle)
+    public function __construct(StyleSet $set = null, $bID, $arHandle)
     {
         $this->arHandle = $arHandle;
         $this->bID = $bID;
@@ -76,6 +76,24 @@ class CustomStyle implements CustomStyleInterface
         }
         if ($set->getAlignment()) {
             $css .= 'float:' . $set->getAlignment() . ';';
+        }
+        if ($set->getBorderRadius()) {
+            $css .= 'border-radius:' . $set->getBorderRadius() . ';';
+            $css .= '-moz-border-radius:' . $set->getBorderRadius() . ';';
+            $css .= '-webkit-border-radius:' . $set->getBorderRadius() . ';';
+            $css .= '-o-border-radius:' . $set->getBorderRadius() . ';';
+            $css .= '-ms-border-radius:' . $set->getBorderRadius() . ';';
+        }
+        if ($set->getRotate()) {
+            $css .= 'transform: rotate(' . $set->getRotate() . 'deg);';
+            $css .= '-moz-transform: rotate(' . $set->getRotate() . 'deg);';
+            $css .= '-webkit-transform: rotate(' . $set->getRotate() . 'deg);';
+            $css .= '-o-transform: rotate(' . $set->getRotate() . 'deg);';
+            $css .= '-ms-transform: rotate(' . $set->getRotate() . 'deg);';
+        }
+        if ($set->getBoxShadowSpread()) {
+            $css .= 'box-shadow: ' . $set->getBoxShadowHorizontal() . ' ' . $set->getBoxShadowVertical();
+            $css .= ' ' . $set->getBoxShadowBlur() . ' ' . $set->getBoxShadowSpread() . ' ' . $set->getBoxShadowColor();
         }
 
         $css .= '}';

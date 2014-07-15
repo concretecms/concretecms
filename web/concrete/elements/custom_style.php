@@ -18,10 +18,16 @@ $paddingBottom = '';
 $borderStyle = '';
 $borderWidth = '';
 $borderColor = '';
+$borderRadius = '';
 $alignment = '';
-
-if (is_object($style)) {
-    $set = $style->getStyleSet();
+$rotate = '';
+$boxShadowHorizontal = '';
+$boxShadowVertical = '';
+$boxShadowBlur = '';
+$boxShadowSpread = '';
+$boxShadowColor = '';
+$set = $style->getStyleSet();
+if (is_object($set)) {
     $backgroundColor = $set->getBackgroundColor();
     $textColor = $set->getTextColor();
     $linkColor = $set->getLinkColor();
@@ -39,7 +45,14 @@ if (is_object($style)) {
     $borderStyle = $set->getBorderStyle();
     $borderWidth = $set->getBorderWidth();
     $borderColor = $set->getBorderColor();
+    $borderRadius = $set->getBorderRadius();
     $alignment = $set->getAlignment();
+    $rotate = $set->getRotate();
+    $boxShadowHorizontal = $set->getBoxShadowHorizontal();
+    $boxShadowVertical = $set->getBoxShadowVertical();
+    $boxShadowBlur = $set->getBoxShadowBlur();
+    $boxShadowSpread = $set->getBoxShadowSpread();
+    $boxShadowColor = $set->getBoxShadowColor();
 }
 
 $repeatOptions = array(
@@ -70,7 +83,7 @@ $al = new Concrete\Core\Application\Service\FileManager();
 $form = Core::make('helper/form');
 ?>
 
-<form method="post" action="<?=$action?>" id="ccm-inline-design-form">
+<form method="post" action="<?=$saveAction?>" id="ccm-inline-design-form">
 <ul class="ccm-inline-toolbar ccm-ui">
     <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-font"></i></a>
 
@@ -131,6 +144,10 @@ $form = Core::make('helper/form');
                 <?=t('Width')?>
                 <?=$form->text('borderWidth', $borderWidth);?>
             </div>
+            <div>
+                <?=t('Radius')?>
+                <?=$form->text('borderRadius', $borderRadius);?>
+            </div>
         </div>
     </li>
     <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-arrows-h"></i></a>
@@ -177,8 +194,62 @@ $form = Core::make('helper/form');
         </div>
 
     </li>
-    <li class="ccm-inline-toolbar-icon-cell"><a href="#"><i class="fa fa-html5"></i></a></li>
-    <li class="ccm-inline-toolbar-icon-cell"><a href="#"><i class="fa fa-cog"></i></a></li>
+    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-magic"></i></a>
+        <div class="ccm-inline-design-dropdown-menu dropdown-menu">
+            <h3><?=t('Shadow')?></h3>
+            <div>
+                <?=t('Color')?>
+                <?=Loader::helper('form/color')->output('boxShadowColor', $boxShadowColor);?>
+            </div>
+            <div>
+                <?=t('Horizontal Position')?>
+                <?=$form->text('boxShadowHorizontal', $boxShadowHorizontal);?>
+            </div>
+            <div>
+                <?=t('Vertical Position')?>
+                <?=$form->text('boxShadowVertical', $boxShadowVertical);?>
+            </div>
+            <div>
+                <?=t('Blur')?>
+                <?=$form->text('boxShadowBlur', $boxShadowBlur);?>
+            </div>
+            <div>
+                <?=t('Spread')?>
+                <?=$form->text('boxShadowSpread', $boxShadowSpread);?>
+            </div>
+            <hr/>
+            <h3><?=t('Rotate')?></h3>
+            <div>
+                <?=t('Rotation (in degrees)')?>
+                <?=$form->text('rotate', $rotate);?>
+            </div>
+
+        </div>
+
+    </li>
+    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-cog"></i></a>
+        <div class="ccm-inline-design-dropdown-menu dropdown-menu">
+            <button data-reset-action="<?=$resetAction?>" data-action="reset-design" type="button" class="btn btn-danger"><?=t("Clear Styles")?></button>
+            <? if ($style instanceof \Concrete\Core\Block\CustomStyle && $canEditCustomTemplate) { ?>
+                <hr/>
+                <div>
+                    <?=t('Block Name')?>
+                    <?=$form->text('bName', $bName);?>
+                </div>
+                <div>
+                    <?=t('Custom Template')?>
+                    <select id="bFilename" name="bFilename" class="form-control">
+                        <option value="">(<?=t('None selected')?>)</option>
+                        <?
+                        foreach($templates as $tpl) {
+                            ?><option value="<?=$tpl->getTemplateFileFilename()?>" <? if ($bFilename == $tpl->getTemplateFileFilename()) { ?> selected <? } ?>><?=$tpl->getTemplateFileDisplayName()?></option><?
+                        }
+                        ?>
+                    </select>
+                 </div>
+            <? } ?>
+        </div>
+    </li>
     <li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-cancel">
         <button data-action="cancel-design" type="button" class="btn btn-mini"><?=t("Cancel")?></button>
     </li>
