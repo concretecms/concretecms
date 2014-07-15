@@ -34,7 +34,7 @@
       <default value="0"/>
       <unsigned/>
     </field>
-   <field name="ptPublishTargetObject" type="X2"></field>
+   <field name="ptPublishTargetObject" type="X2"/>
   </table>
 
   <table name="PageTypePageTemplates">
@@ -136,7 +136,7 @@
       <unsigned/>
       <default value="0" />
     </field>
-   <field name="ptComposerControlObject" type="X2"></field>
+   <field name="ptComposerControlObject" type="X2"/>
     <field name="ptComposerFormLayoutSetControlDisplayOrder" type="I" size="10">
       <unsigned/>
       <default value="0" />
@@ -2242,7 +2242,7 @@
       <notnull/>
       <default value="0"/>
     </field>
-    <field name="pkDescription" type="C" size="255"></field>
+    <field name="pkDescription" type="C" size="255"/>
     <field name="pkCategoryID" type="I" size="10">
       <unsigned/>
     </field>
@@ -2945,14 +2945,14 @@
     <field name="jDescription" type="C" size="255">
       <notnull/>
     </field>
-    <field name="jDateInstalled" type="T"></field>
-    <field name="jDateLastRun" type="T"></field>
+    <field name="jDateInstalled" type="T"/>
+    <field name="jDateLastRun" type="T"/>
     <field name="pkgID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="jLastStatusText" type="X2"></field>
+    <field name="jLastStatusText" type="X2"/>
     <field name="jLastStatusCode" type="I2" size="4">
       <notnull/>
       <default value="0"/>
@@ -3034,7 +3034,7 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="jDateLastRun" type="T"></field>
+    <field name="jDateLastRun" type="T"/>
     <field name="isScheduled" type="I2" size="1">
       <notnull/>
       <default value="0"/>
@@ -4005,7 +4005,7 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="uTimezone" type="C" size="255"></field>
+    <field name="uTimezone" type="C" size="255"/>
     <field name="uDefaultLanguage" type="C" size="32"/>
     <index name="uName">
       <unique/>
