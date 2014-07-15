@@ -362,20 +362,23 @@
       <unsigned/>
       <notnull />
       <default value="0" />
+      <key/>
+    </field>>
+    <field name="gatTypeID" type="I" size="10">
+        <unsigned/>
+        <default value="0" />
+        <key/>
     </field>
     <field name="gatID" type="I" size="10">
       <unsigned/>
       <notnull />
       <default value="0" />
     </field>
-    <field name="gatTypeID" type="I" size="10">
-     <unsigned/>
-     <default value="0" />
-    </field>
-    <index name="gatUniqueKey">
-      <unique/>
-      <col>gaiID</col>
+    <index name="gatTypeID">
       <col>gatTypeID</col>
+    </index>
+    <index name="gatID">
+        <col>gatID</col>
     </index>
   </table>
   <table name="GatheringItems">
