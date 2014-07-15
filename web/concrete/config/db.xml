@@ -2712,8 +2712,8 @@
     <index name="fvType">
       <col>fvType</col>
     </index>
-    <index name="fvTitle">
-      <col>fvTitle</col>
+    <index name="fvFilename">
+      <col>fvFilename</col>
     </index>
   </table>
   <table name="FileVersionLog">
