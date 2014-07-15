@@ -2588,16 +2588,22 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <field name="pkID" type="I" size="10">
+        <key/>
+        <default value="0"/>
+        <unsigned/>
+    </field>
     <field name="paID" type="I" size="10">
       <key/>
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="pkID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
+    <index name="paID">
+        <col>paID</col>
+    </index>
+    <index name="pkID">
+        <col>pkID</col>
+    </index>
   </table>
   <table name="FileSetPermissionFileTypeAccessList">
     <field name="paID" type="I" size="10">
