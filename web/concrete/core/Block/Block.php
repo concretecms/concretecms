@@ -807,9 +807,9 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $nb;
     }
 
-    public function getCustomStyle()
+    public function getCustomStyle($force = false)
     {
-        if ($this->getCustomStyleSetID() > 0) {
+        if ($this->getCustomStyleSetID() > 0 || $force) {
             $csr = StyleSet::getByID($this->getCustomStyleSetID());
             $bs = new CustomStyle($csr, $this->getBlockID(), $this->getAreaHandle());
             return $bs;

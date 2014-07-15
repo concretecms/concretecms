@@ -1907,6 +1907,7 @@
     <field name="borderWidth" type="C" />
     <field name="borderColor" type="C" />
     <field name="borderStyle" type="C" />
+    <field name="borderRadius" type="C" />
     <field name="baseFontSize" type="C" />
     <field name="alignment" type="C" />
     <field name="textColor" type="C" />
