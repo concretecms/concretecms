@@ -75,20 +75,11 @@ if ($controller->getTask() == 'view_details') {
 
     <div id="ccm-stack-container">
 
-    <?
+    <?php
     $a = Area::get($stack, STACKS_AREA_NAME);
-    Loader::element('block_area_header', array('a' => $a));
-    Loader::element('block_area_header_view', array('a' => $a));
-
-    foreach($blocks as $b) {
-        $bv = new BlockView($b);
-        $bv->setAreaObject($a);
-        $p = new Permissions($b);
-        if ($p->canViewBlock()) {
-            $bv->render('view');
-        }
-    }
-    Loader::element('block_area_footer_view', array('a' => $a));
+    $stack->forceEditMode(true);
+    $a->display($stack);
+    $stack->forceEditMode(false);
     ?>
 
     </div>
@@ -110,7 +101,7 @@ if ($controller->getTask() == 'view_details') {
     <script type="text/javascript">
         var showApprovalButton = function() {
             $('#ccm-stack-list-approve-button').show().addClass("animated fadeIn");
-        }
+        };
 
         $(function() {
             var editor = new Concrete.EditMode({notify: false}),
@@ -118,14 +109,16 @@ if ($controller->getTask() == 'view_details') {
                 dragArea = _.last(area.getDragAreas());
 
             ConcreteEvent.on('ClipboardAddBlock', function(event, data) {
-                block = new Concrete.DuplicateBlock(data.$launcher, editor);
-                block.addToDragArea(dragArea);
+                var block = new Concrete.DuplicateBlock(data.$launcher, editor);
+                block.addToDragArea(_.last(area.getDragAreas()));
+                $.fn.dialog.closeTop();
                 return false;
             });
 
             ConcreteEvent.on('AddBlockListAddBlock', function(event, data) {
-                blockType = new Concrete.BlockType(data.$launcher, editor);
-                blockType.addToDragArea(dragArea);
+                var blockType = new Concrete.BlockType(data.$launcher, editor);
+                blockType.addToDragArea(_.last(area.getDragAreas()));
+                $.fn.dialog.closeTop();
                 return false;
             });
 

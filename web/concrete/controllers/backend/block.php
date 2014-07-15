@@ -19,6 +19,7 @@ class Block extends BackendInterfaceBlockController {
         if (isset($_REQUEST['arEnableGridContainer']) && $_REQUEST['arEnableGridContainer'] == 1) {
             $this->area->enableGridContainer();
         }
+        $this->page->forceEditMode();
         $bv->addScopeItems(array('c' => $this->page, 'a' => $this->area, 'dialogController' => $this));
         $this->set('bv', $bv);
         $this->view = new View('/backend/block');
