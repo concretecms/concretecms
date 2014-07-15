@@ -2760,6 +2760,13 @@
             <default value="0"/>
             <unsigned/>
         </field>
+        <index name="fslTypeHandle">
+            <unique/>
+            <col>fslTypeHandle</col>
+        </index>
+        <index name="pkgID">
+            <col>pkgID</col>
+        </index>
     </table>
   <table name="FileStorageLocations">
     <field name="fslID" type="I" size="10">
