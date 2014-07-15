@@ -41,7 +41,9 @@ if ($cp->canViewPage()) {
 		<? 
 		$controls = $t->getPageTypeComposerControlObjects();
 		foreach($controls as $cnt) { ?>
-			<li><a href="#" data-control-type-id="<?=$t->getPageTypeComposerControlTypeID()?>" data-control-identifier="<?=$cnt->getPageTypeComposerControlIdentifier()?>" style="background-image: url('<?=$cnt->getPageTypeComposerControlIconSRC()?>')"><?=$cnt->getPageTypeComposerControlName()?></a></li>
+			<li><a href="#" data-control-type-id="<?=$t->getPageTypeComposerControlTypeID()?>" data-control-identifier="<?=$cnt->getPageTypeComposerControlIdentifier()?>">
+                    <img src="<?=$cnt->getPageTypeComposerControlIconSRC()?>" />
+                    <?=$cnt->getPageTypeComposerControlName()?></a></li>
 		<? } ?>
 	</ul>
 	</div>

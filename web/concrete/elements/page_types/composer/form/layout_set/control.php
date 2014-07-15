@@ -13,6 +13,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<div data-delete-set-control-dialog="<?=$control->getPageTypeComposerFormLayoutSetControlID()?>">
 			<?=t("Delete this control? This cannot be undone.")?>
 			<?=Loader::helper('validation/token')->output('delete_set_control')?>
+
+            <div class="dialog-buttons">
+                <button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+                <button class="btn btn-danger pull-right" onclick="Composer.deleteFromLayoutSetControl(<?=$control->getPageTypeComposerFormLayoutSetControlID()?>)"><?=t('Update Set')?></button>
+            </div>
+
 		</div>
 	</div>
 
