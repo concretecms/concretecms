@@ -35,8 +35,11 @@ class Forms extends DashboardPageController {
 		header("Pragma: public");
 		$date = date('Ymd');
 		header("Content-Disposition: inline; filename=".$fileName."_form_data_{$date}.xls"); 
-		header("Content-Title: ".$surveys[$questionSet]['surveyName']." Form Data Output - Run on {$date}");		echo "<html>\r\n";
-		echo "<head><META http-equiv=Content-Type content=\"text/html; charset=".APP_CHARSET."\"></head>\r\n";
+		echo "<html>\r\n";
+                echo "<head>\r\n";
+                echo "<META http-equiv=Content-Type content=\"text/html; charset=".APP_CHARSET."\">\r\n";
+                echo "<title>" . $textHelper->entities(t(/*i18n: %1$s is the survey name, %2$s is the date. */ '%1$s Form Data Output - Run on %2$s', $surveys[$questionSet]['surveyName'], $date)) . "</title>\r\n";
+                echo "</head>\r\n";
 		echo "<body>\r\n";
 		echo "<table>\r\n";
 		$hasCBRow = false;
@@ -64,9 +67,9 @@ class Forms extends DashboardPageController {
             {
 			    echo "\t\t<td ";
 			    if ($hasCBRow) {
-			    	echo "rowspan=\"2\" valign='bottom'>";
+			    	echo "rowspan=\"2\" valign='bottom'";
 			    }
-			    echo "<b>\r\n";
+			    echo "><b>\r\n";
             }
 			echo "\t\t\t".$questions[$questionId]['question']."\r\n";
 			echo "\t\t</b></td>\r\n";			
