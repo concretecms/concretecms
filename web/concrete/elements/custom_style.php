@@ -7,13 +7,31 @@ $baseFontSize = '';
 $backgroundRepeat = 'no-repeat';
 $textColor = '';
 $linkColor = '';
-if (is_object($set)) {
+$marginTop = '';
+$marginLeft = '';
+$marginRight = '';
+$marginBottom = '';
+$paddingTop = '';
+$paddingLeft = '';
+$paddingRight = '';
+$paddingBottom = '';
+
+if (is_object($style)) {
+    $set = $style->getStyleSet();
     $backgroundColor = $set->getBackgroundColor();
     $textColor = $set->getTextColor();
     $linkColor = $set->getLinkColor();
     $image = $set->getBackgroundImageFileObject();
     $backgroundRepeat = $set->getBackgroundRepeat();
     $baseFontSize = $set->getBaseFontSize();
+    $marginTop = $set->getMarginTop();
+    $marginLeft = $set->getMarginLeft();
+    $marginRight = $set->getMarginRight();
+    $marginBottom = $set->getMarginBottom();
+    $paddingTop = $set->getPaddingTop();
+    $paddingLeft = $set->getPaddingLeft();
+    $paddingRight = $set->getPaddingRight();
+    $paddingBottom = $set->getPaddingBottom();
 }
 
 $repeatOptions = array(
@@ -49,7 +67,7 @@ $form = Core::make('helper/form');
     </li>
     <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-image"></i></a>
 
-        <div class="ccm-inline-design-dropdown-menu dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+        <div class="ccm-inline-design-dropdown-menu dropdown-menu">
             <h3><?=t('Background')?></h3>
             <div>
                 <?=t('Color')?>
@@ -67,7 +85,49 @@ $form = Core::make('helper/form');
         </div>
 
     </li>
-    <li class="ccm-inline-toolbar-icon-cell"><a href="#"><i class="fa fa-square-o"></i></a></li>
+    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-square-o"></i></a>
+        <div class="ccm-inline-design-dropdown-menu dropdown-menu">
+            <h3><?=t('Padding')?></h3>
+            <div>
+                <?=t('Top')?>
+                <?=$form->text('paddingTop', $paddingTop);?>
+            </div>
+            <div>
+                <?=t('Right')?>
+                <?=$form->text('paddingRight', $paddingRight);?>
+            </div>
+            <div>
+                <?=t('Bottom')?>
+                <?=$form->text('paddingBottom', $paddingBottom);?>
+            </div>
+            <div>
+                <?=t('Left')?>
+                <?=$form->text('paddingLeft', $paddingLeft);?>
+            </div>
+
+            <? if ($style instanceof \Concrete\Core\Block\CustomStyle) { ?>
+                <hr />
+                <h3><?=t('Margin')?></h3>
+                <div>
+                    <?=t('Top')?>
+                    <?=$form->text('marginTop', $marginTop);?>
+                </div>
+                <div>
+                    <?=t('Right')?>
+                    <?=$form->text('marginRight', $marginRight);?>
+                </div>
+                <div>
+                    <?=t('Bottom')?>
+                    <?=$form->text('marginBottom', $marginBottom);?>
+                </div>
+                <div>
+                    <?=t('Left')?>
+                    <?=$form->text('marginLeft', $marginLeft);?>
+                </div>
+
+            <? } ?>
+        </div>
+    </li>
     <li class="ccm-inline-toolbar-icon-cell"><a href="#"><i class="fa fa-arrows-h"></i></a></li>
     <li class="ccm-inline-toolbar-icon-cell"><a href="#"><i class="fa fa-html5"></i></a></li>
     <li class="ccm-inline-toolbar-icon-cell"><a href="#"><i class="fa fa-cog"></i></a></li>

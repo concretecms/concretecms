@@ -1690,7 +1690,7 @@
     <field name="arHandle" type="C" size="255">
       <key/>
     </field>
-    <field name="pssID" type="I" size="10">
+    <field name="issID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
@@ -1711,7 +1711,7 @@
     <field name="arHandle" type="C" size="255">
       <key/>
     </field>
-    <field name="pssID" type="I" size="10">
+    <field name="issID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
@@ -1880,7 +1880,7 @@
       <key/>
     </field>
   </table>
-  <table name="PageStyleSetPresets">
+  <table name="StyleCustomizerInlineStylePresets">
     <field name="pssPresetID" type="I" size="10">
       <key/>
       <autoincrement/>
@@ -1889,14 +1889,14 @@
     <field name="pssPresetName" type="C" size="255">
       <notnull/>
     </field>
-    <field name="pssID" type="I" size="10">
+    <field name="issID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
     </field>
   </table>
-  <table name="PageStyleSets">
-    <field name="pssID" type="I" size="10">
+  <table name="StyleCustomizerInlineStyleSets">
+    <field name="issID" type="I" size="10">
       <key/>
       <autoincrement/>
       <unsigned/>
@@ -1911,10 +1911,14 @@
     <field name="alignment" type="C" />
     <field name="textColor" type="C" />
     <field name="linkColor" type="C" />
-    <field name="spacingTop" type="C" />
-    <field name="spacingBottom" type="C" />
-    <field name="spacingLeft" type="C" />
-    <field name="spacingRight" type="C" />
+    <field name="paddingTop" type="C" />
+    <field name="paddingBottom" type="C" />
+    <field name="paddingLeft" type="C" />
+    <field name="paddingRight" type="C" />
+    <field name="marginTop" type="C" />
+    <field name="marginBottom" type="C" />
+    <field name="marginLeft" type="C" />
+    <field name="marginRight" type="C" />
     <field name="rotate" type="C" />
     <field name="boxShadowHorizontal" type="C" />
     <field name="boxShadowVertical" type="C" />

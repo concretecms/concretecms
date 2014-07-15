@@ -15,7 +15,7 @@ if ($a->showControls() && $c->isEditMode() && $p->canViewEditInterface()) {
     $showMenu = true;
 }
 
-$css = $b->getCustomStyleSet();
+$css = $b->getCustomStyle();
 $pt = $c->getCollectionThemeObject();
 
 if (is_object($css)) { ?>
