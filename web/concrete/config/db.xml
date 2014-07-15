@@ -640,6 +640,9 @@
     <field name="cID" type="I" size="10">
       <unsigned />
     </field>
+    <index name="cID">
+        <col>cID</col>
+    </index>
   </table>
   <table name="ConversationMessages">
     <field name="cnvMessageID" type="I" size="10">
