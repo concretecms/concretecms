@@ -549,6 +549,13 @@
     <field name="feID" type="I" size="10">
       <unsigned/>
     </field>
+    <index name="gatID">
+        <col>gatID</col>
+    </index>
+    <index name="feID">
+        <col>feID</col>
+        <col>gatID</col>
+    </index>
   </table>
     <table name="GatheringDataSources">
     <field name="gasID" type="I" size="10">
