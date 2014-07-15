@@ -9,6 +9,9 @@
         my.options = options;
         my.$element = $element;
         my.$toolbar = my.$element.find('>ul');
+        my.$toolbar.find('div.dropdown-menu').on('click', function(e) {
+            e.stopPropagation(); // stop the menu from closing
+        });
 
         my.setupForm();
         my.setupButtons();
