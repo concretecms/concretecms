@@ -81,7 +81,7 @@
                 );
             });
 
-            ConcreteMenuManager.disable();
+//            ConcreteMenuManager.disable();
             ConcreteToolbar.disable();
             area.getElem().addClass('ccm-area-inline-edit-disabled');
             $container.addClass('ccm-block-edit-inline-active');

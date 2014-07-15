@@ -129,10 +129,10 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 	public function getCustomAreaStyles() {
 		if (!isset($this->customAreaStyles)) {
 			$db = Loader::db();
-			$r = $db->GetAll('select csrID, arHandle from CollectionVersionAreaStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->cvID));
+			$r = $db->GetAll('select pssID, arHandle from CollectionVersionAreaStyles where cID = ? and cvID = ?', array($this->getCollectionID(), $this->cvID));
 			$this->customAreaStyles = array();
 			foreach($r as $styles) {
-				$this->customAreaStyles[$styles['arHandle']] = $styles['csrID'];
+				$this->customAreaStyles[$styles['arHandle']] = $styles['pssID'];
 			}
 		}
 		return $this->customAreaStyles;
