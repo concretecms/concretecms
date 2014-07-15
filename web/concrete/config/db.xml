@@ -4043,9 +4043,17 @@
       <notnull/>
     </field>
     <field name="fsOverrideGlobalPermissions" type="I" size="4"/>
-    <index name="fsOverrideGlobalPermissions">
-      <col>fsOverrideGlobalPermissions</col>
-    </index>
+      <index name="uID">
+          <col>uID</col>
+          <col>fsType</col>
+          <col>fsName</col>
+      </index>
+      <index name="fsName">
+          <col>fsName</col>
+      </index>
+      <index name="fsType">
+          <col>fsType</col>
+      </index>
   </table>
   <table name="FileSetSavedSearches">
     <field name="fsID" type="I" size="10">
