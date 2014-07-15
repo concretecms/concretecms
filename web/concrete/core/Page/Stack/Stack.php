@@ -3,6 +3,7 @@ namespace Concrete\Core\Page\Stack;
 
 use Area;
 use CacheLocal;
+use Concrete;
 use Loader;
 use Page;
 use PageType;

@@ -39,6 +39,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     protected $controller;
     protected $blocksAliasedFromMasterCollection = null;
     protected $cIsSystemPage = false;
+    protected $editModeForced = false;
+
+    public function forceEditMode($setting = true) {
+        return $this->editModeForced = !!$setting;
+    }
+
     /**
      * @param string $path /path/to/page
      * @param string $version ACTIVE or RECENT
@@ -205,6 +211,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @return bool
      */
     public function isEditMode() {
+        if ($this->editModeForced) {
+            return true;
+        }
         return $this->isCheckedOutByMe();
     }
 
