@@ -3042,6 +3042,22 @@
       <notnull/>
       <default value="0"/>
     </field>
+    <index name="jHandle">
+        <unique/>
+        <col>jHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
+    <index name="isScheduled">
+        <col>isScheduled</col>
+        <col>jDateLastRun</col>
+        <col>jID</col>
+    </index>
+    <index name="jDateLastRun">
+        <col>jDateLastRun</col>
+        <col>jID</col>
+    </index>
   </table>
   <table name="JobsLog">
     <field name="jlID" type="I" size="10">
