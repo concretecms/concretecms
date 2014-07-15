@@ -74,6 +74,9 @@ class CustomStyle implements CustomStyleInterface
         if ($set->getBorderColor()) {
             $css .= 'border-color:' . $set->getBorderColor() . ';';
         }
+        if ($set->getAlignment()) {
+            $css .= 'float:' . $set->getAlignment() . ';';
+        }
 
         $css .= '}';
 
