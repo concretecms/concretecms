@@ -65,6 +65,15 @@ class CustomStyle implements CustomStyleInterface
         if ($set->getPaddingLeft()) {
             $css .= 'padding-left:' . $set->getPaddingLeft() . ';';
         }
+        if ($set->getBorderWidth()) {
+            $css .= 'border-width:' . $set->getBorderWidth() . ';';
+        }
+        if ($set->getBorderStyle()) {
+            $css .= 'border-style:' . $set->getBorderStyle() . ';';
+        }
+        if ($set->getBorderColor()) {
+            $css .= 'border-color:' . $set->getBorderColor() . ';';
+        }
 
         $css .= '}';
 
