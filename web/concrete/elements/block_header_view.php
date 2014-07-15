@@ -18,11 +18,7 @@ if ($a->showControls() && $c->isEditMode() && $p->canViewEditInterface()) {
 $css = $b->getCustomStyle();
 $pt = $c->getCollectionThemeObject();
 
-if (is_object($css)) { ?>
-	<div class="<?=$css->getContainerClass() ?>" >
-<? } ?>
-
-<? if ($showMenu) { ?>
+if ($showMenu) { ?>
     <div data-container="block">
 <? } ?>
 
@@ -105,6 +101,11 @@ if ($showMenu) {
         data-dragging-avatar="<?=h('<p><img src="' . Loader::helper('concrete/urls')->getBlockTypeIconURL($btw) . '" /><span>' . t($btw->getBlockTypeName()) . '</span></p>')?>"
         <? if ($btw->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) { ?> data-block-menu-handle="none"<? } ?>
         >
+
+    <? if (is_object($css)) { ?>
+    <div class="<?=$css->getContainerClass() ?>" >
+<? } ?>
+
         <ul class="ccm-edit-mode-inline-commands ccm-ui">
             <? if ($p->canEditBlock() && $btw->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY && (!$a->isGlobalArea())) {  ?>
                 <li><a data-inline-command="move-block" href="#"><i class="fa fa-arrows"></i></a></li>
