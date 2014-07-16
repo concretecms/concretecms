@@ -3566,6 +3566,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="scvlID">
+        <col>scvlID</col>
+    </index>
+    <index name="sccRecordID">
+        <col>sccRecordID</col>
+    </index>
   </table>
   <table name="PageTemplates">
     <field name="pTemplateID" type="I" size="10">
