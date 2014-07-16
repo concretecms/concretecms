@@ -1,10 +1,10 @@
 <?
 namespace Concrete\Core\Area;
-use Concrete\Core\StyleCustomizer\Inline\CustomStyleInterface;
+use Concrete\Core\StyleCustomizer\Inline\CustomStyle as AbstractCustomStyle;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Core;
 
-class CustomStyle implements CustomStyleInterface
+class CustomStyle extends AbstractCustomStyle
 {
 
     protected $arHandle;
@@ -14,11 +14,6 @@ class CustomStyle implements CustomStyleInterface
     {
         $this->arHandle = $arHandle;
         $this->set = $set;
-    }
-
-    public function getStyleSet()
-    {
-        return $this->set;
     }
 
     public function getCSS()
@@ -38,18 +33,6 @@ class CustomStyle implements CustomStyleInterface
         }
         if ($set->getTextColor()) {
             $css .= 'color:' . $set->getTextColor() . ';';
-        }
-        if ($set->getMarginTop()) {
-            $css .= 'margin-top:' . $set->getMarginTop() . ';';
-        }
-        if ($set->getMarginRight()) {
-            $css .= 'margin-right:' . $set->getMarginRight() . ';';
-        }
-        if ($set->getMarginBottom()) {
-            $css .= 'margin-bottom:' . $set->getMarginBottom() . ';';
-        }
-        if ($set->getMarginLeft()) {
-            $css .= 'margin-left:' . $set->getMarginLeft() . ';';
         }
         if ($set->getPaddingTop()) {
             $css .= 'padding-top:' . $set->getPaddingTop() . ';';
@@ -71,9 +54,6 @@ class CustomStyle implements CustomStyleInterface
         }
         if ($set->getBorderColor()) {
             $css .= 'border-color:' . $set->getBorderColor() . ';';
-        }
-        if ($set->getAlignment()) {
-            $css .= 'float:' . $set->getAlignment() . ';';
         }
         if ($set->getBorderRadius()) {
             $css .= 'border-radius:' . $set->getBorderRadius() . ';';

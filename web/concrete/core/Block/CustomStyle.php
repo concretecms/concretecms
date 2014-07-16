@@ -1,10 +1,10 @@
 <?
 namespace Concrete\Core\Block;
-use Concrete\Core\StyleCustomizer\Inline\CustomStyleInterface;
+use Concrete\Core\StyleCustomizer\Inline\CustomStyle as AbstractCustomStyle;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Core;
 
-class CustomStyle implements CustomStyleInterface
+class CustomStyle extends AbstractCustomStyle
 {
 
     protected $arHandle;
@@ -16,11 +16,6 @@ class CustomStyle implements CustomStyleInterface
         $this->arHandle = $arHandle;
         $this->bID = $bID;
         $this->set = $set;
-    }
-
-    public function getStyleSet()
-    {
-        return $this->set;
     }
 
     public function getCSS()

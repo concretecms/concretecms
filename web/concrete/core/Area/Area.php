@@ -729,8 +729,15 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         $area = $p->addChild('area');
         $area->addAttribute('name', $this->getAreaHandle());
         $blocks = $page->getBlocks($this->getAreaHandle());
+        $c = $this->getAreaCollectionObject();
+        $style = $c->getAreaCustomStyle($this);
+        if (is_object($style)) {
+            $set = $style->getStyleSet();
+            $set->export($area);
+        }
+        $wrapper = $area->addChild('blocks');
         foreach ($blocks as $bl) {
-            $bl->export($area);
+            $bl->export($wrapper);
         }
     }
 

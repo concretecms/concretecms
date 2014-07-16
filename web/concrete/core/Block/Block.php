@@ -1270,6 +1270,11 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             }
 
             if ($exportType == 'full') {
+                $style = $this->getCustomStyle();
+                if (is_object($style)) {
+                    $set = $style->getStyleSet();
+                    $set->export($blockNode);
+                }
                 $bc = $this->getInstance();
                 $bc->export($blockNode);
             }

@@ -53,6 +53,12 @@ class SubArea extends Area {
 
     public function export($p, $page)
     {
+        $c = $this->getAreaCollectionObject();
+        $style = $c->getAreaCustomStyle($this);
+        if (is_object($style)) {
+            $set = $style->getStyleSet();
+            $set->export($p);
+        }
         $blocks = $page->getBlocks($this->getAreaHandle());
         foreach ($blocks as $bl) {
             $bl->export($p);

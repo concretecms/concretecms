@@ -42,6 +42,7 @@
     <stacks>
         <stack name="Footer Contact" type="global_area">
             <area name="Main">
+                <blocks>
                 <block type="content" name="">
                     <data table="btContentLocal">
                         <record>
@@ -49,10 +50,12 @@
                         </record>
                     </data>
                 </block>
+                </blocks>
             </area>
         </stack>
         <stack name="Footer Legal" type="global_area">
             <area name="Main">
+                <blocks>
                 <block type="content" name="">
                     <data table="btContentLocal">
                         <record>
@@ -60,10 +63,12 @@
                         </record>
                     </data>
                 </block>
+                </blocks>
             </area>
         </stack>
         <stack name="Footer Navigation" type="global_area">
             <area name="Main">
+                <blocks>
                 <block type="content" name="">
                     <data table="btContentLocal">
                         <record>
@@ -71,10 +76,12 @@
                         </record>
                     </data>
                 </block>
+                </blocks>
             </area>
         </stack>
         <stack name="Footer Site Title" type="global_area">
             <area name="Main">
+                <blocks>
                 <block type="html" name="">
                     <data table="btContentLocal">
                         <record>
@@ -82,19 +89,24 @@
                         </record>
                     </data>
                 </block>
+                </blocks>
             </area>
         </stack>
         <stack name="Footer Social" type="global_area">
             <area name="Main">
+                <blocks>
+
                 <block type="social_links" name="">
                     <link service="twitter"/>
                     <link service="github"/>
                     <link service="facebook"/>
                 </block>
+                </blocks>
             </area>
         </stack>
         <stack name="Header Navigation" type="global_area">
             <area name="Main">
+                <blocks>
                 <block type="autonav" name="" custom-template="responsive_header_navigation">
                     <data table="btNavigation">
                         <record>
@@ -109,10 +121,12 @@
                         </record>
                     </data>
                 </block>
+                </blocks>
             </area>
         </stack>
         <stack name="Header Search" type="global_area">
             <area name="Main">
+                <blocks>
                 <block type="search" name="">
                     <data table="btSearch">
                         <record>
@@ -124,10 +138,12 @@
                         </record>
                     </data>
                 </block>
+                </blocks>
             </area>
         </stack>
         <stack name="Header Site Title" type="global_area">
             <area name="Main">
+                <blocks>
                 <block type="html" name="">
                     <data table="btContentLocal">
                         <record>
@@ -135,12 +151,119 @@
                         </record>
                     </data>
                 </block>
+                </blocks>
             </area>
         </stack>
     </stacks>
     <pages>
         <page name="Home" path="" filename="" pagetype="" template="full" user="admin" description="" package="">
-            <area name="Main"/>
+            <area name="Main">
+                <blocks>
+                    <block type="image_slider" name="">
+                        <data table="btImageSlider">
+                            <record>
+                                <navigationType><![CDATA[1]]></navigationType>
+                            </record>
+                        </data>
+                        <data table="btImageSliderEntries">
+                            <record>
+                                <id><![CDATA[5]]></id>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:slider1.png}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[Stand Out on the Web]]></title>
+                                <description><![CDATA[<p>Share your business with an impressive, yet minimal presentation. Let your customers understand your web presence through elegance and clarity.</p>]]></description>
+                                <sortOrder><![CDATA[0]]></sortOrder>
+                            </record>
+                            <record>
+                                <id><![CDATA[6]]></id>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:slider2.png}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[A Simple Image Slider]]></title>
+                                <description><![CDATA[<p>This image slider can have any content that you want in it.</p>]]></description>
+                                <sortOrder><![CDATA[1]]></sortOrder>
+                            </record>
+                        </data>
+                    </block>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="4" offset="0">
+                                    <block type="feature" name="">
+                                        <data table="btFeature">
+                                            <record>
+                                                <icon><![CDATA[pencil]]></icon>
+                                                <title><![CDATA[Easy to Edit]]></title>
+                                                <paragraph><![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. ]]></paragraph>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="4" offset="0">
+                                    <block type="feature" name="">
+                                        <data table="btFeature">
+                                            <record>
+                                                <icon><![CDATA[eye]]></icon>
+                                                <title><![CDATA[Pixel Perfect]]></title>
+                                                <paragraph><![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. ]]></paragraph>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="4" offset="0">
+                                    <block type="feature" name="">
+                                        <data table="btFeature">
+                                            <record>
+                                                <icon><![CDATA[youtube-play]]></icon>
+                                                <title><![CDATA[Media Rich]]></title>
+                                                <paragraph><![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. ]]></paragraph>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Main Footer">
+                <style>
+                    <backgroundColor>rgb(246, 248, 239)</backgroundColor>
+                    <backgrounDRepeat>no-repeat</backgrounDRepeat>
+                    <borderWidth/>
+                    <borderColor/>
+                    <borderStyle>none</borderStyle>
+                    <borderRadius/>
+                    <baseFontSize/>
+                    <alignment/>
+                    <textColor/>
+                    <linkColor/>
+                    <paddingTop/>
+                    <paddingBottom/>
+                    <paddingLeft/>
+                    <paddingRight/>
+                    <marginTop/>
+                    <marginBottom/>
+                    <marginLeft/>
+                    <marginRight/>
+                    <rotate/>
+                    <boxShadowHorizontal/>
+                    <boxShadowVertical/>
+                    <boxShadowBlur/>
+                    <boxShadowSpread/>
+                    <boxShadowColor/>
+                </style>
+                <blocks>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<h2 style="text-align: center;">Presenting your Business has never been so easy</h2><p style="text-align: center;">Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. </p>]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
         </page>
         <page name="Search" path="/search" filename="" pagetype="page" template="full" user="admin" description="" package="">
             <attributes>
@@ -164,6 +287,7 @@
                 </attributekey>
             </attributes>
             <area name="Main">
+                <blocks>
                 <block type="search" name="">
                     <data table="btSearch">
                         <record>
@@ -175,10 +299,12 @@
                         </record>
                     </data>
                 </block>
+                </blocks>
             </area>
         </page>
         <page name="About" path="/about" filename="" pagetype="page" template="full" user="admin" description="" package="">
             <area name="Main">
+                <blocks>
                 <block type="page_title" name="">
                     <data table="btPageTitle">
                         <record>
@@ -303,6 +429,7 @@
                         </columns>
                     </arealayout>
                 </block>
+                </blocks>
             </area>
         </page>
         <page name="Blank Page" path="/blank-page" filename="" pagetype="page" template="blank" user="admin" description="" package="">
@@ -312,6 +439,7 @@
                 </attributekey>
             </attributes>
             <area name="Main">
+                <blocks>
                 <block type="content" name="">
                     <data table="btContentLocal">
                         <record>
@@ -319,10 +447,12 @@
                         </record>
                     </data>
                 </block>
+                </blocks>
             </area>
         </page>
         <page name="Contact Us" path="/about/contact-us" filename="" pagetype="page" template="full" user="admin" description="" package="">
             <area name="Main">
+                <blocks>
                 <block type="page_title" name="">
                     <data table="btPageTitle">
                         <record>
@@ -478,10 +608,12 @@
                         </columns>
                     </arealayout>
                 </block>
+                </blocks>
             </area>
         </page>
         <page name="Careers" path="/about/careers" filename="" pagetype="page" template="full" user="admin" description="" package="">
             <area name="Main">
+                <blocks>
                 <block type="page_title" name="">
                     <data table="btPageTitle">
                         <record>
@@ -610,10 +742,12 @@
                         </columns>
                     </arealayout>
                 </block>
+                </blocks>
             </area>
         </page>
         <page name="Frequently Asked Questions" path="/about/faq" filename="" pagetype="page" template="full" user="admin" description="" package="">
             <area name="Main">
+                <blocks>
                 <block type="page_title" name="">
                     <data table="btPageTitle">
                         <record>
@@ -645,6 +779,7 @@
                         </record>
                     </data>
                 </block>
+                </blocks>
             </area>
         </page>
     </pages>
