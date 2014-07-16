@@ -4450,6 +4450,9 @@
     <index name="stName">
       <col>stName</col>
     </index>
+    <index name="cID">
+        <col>cID</col>
+    </index>
   </table>
   <table name="atDateTimeSettings">
     <field name="akID" type="I" size="10">
