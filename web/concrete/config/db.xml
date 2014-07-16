@@ -554,7 +554,6 @@
     </index>
     <index name="gatTypeID">
         <col>gatTypeID</col>
-        <col>gatName</col>
     </index>
     <index name="pkgID">
         <col>pkgID</col>
@@ -3131,6 +3130,12 @@
       <notnull/>
       <default value="0"/>
     </field>
+      <index name="pkgID">
+          <col>pkgID</col>
+      </index>
+      <index name="jsName">
+          <col>jsName</col>
+      </index>
   </table>
   <table name="UserPointHistory">
     <field name="upID" type="I" size="11">
@@ -3156,12 +3161,6 @@
       <notnull/>
       <deftimestamp/>
     </field>
-    <index name="pkgID">
-        <col>pkgID</col>
-    </index>
-    <index name="jsName">
-        <col>jsName</col>
-    </index>
   </table>
 
 
