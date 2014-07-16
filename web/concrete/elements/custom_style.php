@@ -79,6 +79,12 @@ $alignmentOptions = array(
     'left' => t('Left'),
 );
 
+if ($style instanceof \Concrete\Core\Block\CustomStyle) {
+    $method = 'concreteBlockInlineStyleCustomizer';
+} else {
+    $method = 'concreteAreaInlineStyleCustomizer';
+}
+
 $al = new Concrete\Core\Application\Service\FileManager();
 $form = Core::make('helper/form');
 ?>
@@ -260,5 +266,5 @@ $form = Core::make('helper/form');
 </form>
 
 <script type="text/javascript">
-    $('#ccm-inline-design-form').concreteInlineStyleCustomizer();
+    $('#ccm-inline-design-form').<?=$method?>();
 </script>

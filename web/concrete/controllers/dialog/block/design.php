@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Controller\Dialog\Block;
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
+use Concrete\Core\Block\CustomStyle;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Page\EditResponse;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
@@ -62,6 +63,11 @@ class Design extends BackendInterfaceBlockController {
         if ($this->validateAction() && $this->canAccess()) {
 
             $b = $this->getBlockToEdit();
+            $oldStyle = $b->getCustomStyle();
+            if (is_object($oldStyle)) {
+                $oldStyleSet = $oldStyle->getStyleSet();
+            }
+
             $r = $this->request->request->all();
             $set = new StyleSet();
             $set->setBackgroundColor($r['backgroundColor']);
@@ -95,7 +101,9 @@ class Design extends BackendInterfaceBlockController {
 
             if ($this->permissions->canEditBlockCustomTemplate()) {
                 $data = array();
-
+                $data['bFilename'] = $r['bFilename'];
+                $data['bName'] = $r['bName'];
+                $b->updateBlockInformation($data);
             }
 
             $pr = new EditResponse();
@@ -103,6 +111,15 @@ class Design extends BackendInterfaceBlockController {
             $pr->setAdditionalDataAttribute('aID', $this->area->getAreaID());
             $pr->setAdditionalDataAttribute('arHandle', $this->area->getAreaHandle());
             $pr->setAdditionalDataAttribute('originalBlockID', $this->block->getBlockID());
+            $pr->setAdditionalDataAttribute('issID', $set->getID());
+
+            if (is_object($oldStyleSet)) {
+                $pr->setAdditionalDataAttribute('oldIssID', $oldStyleSet->getID());
+            }
+
+            $style = new CustomStyle($set, $b->getBlockID(), $this->area->getAreaHandle());
+
+            $pr->setAdditionalDataAttribute('css', $style->getCSS());
             $pr->setAdditionalDataAttribute('bID', $b->getBlockID());
             $pr->setMessage(t('Design updated.'));
             $pr->outputJSON();
