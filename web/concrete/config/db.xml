@@ -2759,6 +2759,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
+    <index name="akID">
+        <col>akID</col>
+    </index>
   </table>
   <table name="PagePermissionAssignments">
     <field name="cID" type="I" size="10">
