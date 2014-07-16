@@ -9,6 +9,12 @@ if ($a->isGlobalArea()) {
 	$class .= ' ccm-global-area';
 }
 
+$c = Page::getCurrentPage();
+$css = $c->getAreaCustomStyle($a);
+if (is_object($css)) {
+    $class .= ' ' . $css->getContainerClass();
+}
+
 $canAddGathering = false;
 
 foreach($blockTypes as $bt) {

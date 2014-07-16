@@ -7,4 +7,4 @@ if (is_object($css)) {
 }
 ?>
 
-<div data-section="area-view" class="<?=$class?>" >
+<div class="<?=$class?>" >
