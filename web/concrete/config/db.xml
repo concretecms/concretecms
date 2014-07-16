@@ -270,6 +270,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="pkID">
+        <col>pkID</col>
+    </index>
+    <index name="ptID">
+        <col>ptID</col>
+    </index>
   </table>
   <table name="PageTypePermissionControlAccessList">
     <field name="paID" type="I" size="10">
