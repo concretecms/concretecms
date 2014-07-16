@@ -1,8 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Page\Stack\Pile\PileContent;
-use Concrete\Core\Page\Style\CustomStylePreset;
-use Concrete\Core\Page\Style\CustomStyleRule;
 
 # Filename: _process.php
 # Author: Andrew Embler (andrew@concrete5.org)
@@ -337,6 +335,7 @@ if (isset($_GET['atask']) && $_GET['atask'] && $valt->validate()) {
             exit;
 
             break;
+        /*
         case 'design':
             $area = Area::get($c, $_GET['arHandle']);
             $ap = new Permissions($area);
@@ -375,6 +374,7 @@ if (isset($_GET['atask']) && $_GET['atask'] && $valt->validate()) {
                 exit;
             }
             break;
+        */
 
     }
 }
