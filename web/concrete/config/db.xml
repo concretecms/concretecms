@@ -3311,6 +3311,12 @@
       <notnull/>
       <deftimestamp/>
     </field>
+    <index name="upuID">
+        <col>upuID</col>
+    </index>
+    <index name="upaID">
+        <col>upaID</col>
+    </index>
   </table>
 
 
