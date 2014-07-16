@@ -4741,6 +4741,10 @@
       <deftimestamp/>
     </field>
     <field name="object" type="X"/>
+    <index name="wpID">
+        <col>wpID</col>
+        <col>timestamp</col>
+    </index>
   </table>
   <table name="WorkflowProgress">
     <field name="wpID" type="I" size="10">
