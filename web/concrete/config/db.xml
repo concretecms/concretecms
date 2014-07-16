@@ -3512,6 +3512,9 @@
       <unsigned/>
       <default value="0"/>
     </field>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="Packages">
     <field name="pkgID" type="I" size="10">
