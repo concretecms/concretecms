@@ -3483,6 +3483,9 @@
       <unsigned/>
       <default value="0"/>
     </field>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="SystemImageEditorShapes">
     <field name="scsID" type="I" size="10">
