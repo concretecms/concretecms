@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Block\PageList;
 use Loader;
 use PageList;
@@ -113,6 +113,12 @@ class Controller extends BlockController {
 		}
 		return $pl;
 	}
+
+    public function getPages() {
+        $pl = $this->getPageList();
+        $pages = $pl->get();
+        return $pages;
+    }
 
 	public function view() {
 		$list = $this->getPageList();
