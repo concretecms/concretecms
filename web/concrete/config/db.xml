@@ -3900,6 +3900,10 @@
     <field name="state" type="C" size="64">
       <notnull/>
     </field>
+    <index name="uID">
+        <col>uID</col>
+        <col>name</col>
+    </index>
   </table>
   <table name="UserAttributeKeys">
     <field name="akID" type="I" size="10">
