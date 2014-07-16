@@ -4178,6 +4178,18 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="uID">
+        <col>uID</col>
+        <col>type</col>
+    </index>
+    <index name="uHash">
+        <col>uHash</col>
+        <col>type</col>
+    </index>
+    <index name="uDateGenerated">
+        <col>uDateGenerated</col>
+        <col>type</col>
+    </index>
   </table>
   <table name="Logs">
     <field name="logID" type="I" size="10">
