@@ -2739,6 +2739,9 @@
       <notnull/>
       <default value="1"/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
   </table>
   <table name="UserPermissionViewAttributeAccessListCustom">
     <field name="paID" type="I" size="10">
