@@ -4825,6 +4825,10 @@
       <unique/>
       <col>wfName</col>
     </index>
+    <index name="wftID">
+        <col>wftID</col>
+        <col>wfID</col>
+    </index>
   </table>
   <table name="PermissionAccessWorkflows">
     <field name="paID" type="I" size="10">
