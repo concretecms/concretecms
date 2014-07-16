@@ -2639,6 +2639,13 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="paID">
+        <col>paID</col>
+        <col>pkID</col>
+    </index>
+    <index name="pkID">
+        <col>pkID</col>
+    </index>
   </table>
   <table name="FileSetPermissionAssignments">
     <field name="fsID" type="I" size="10">
