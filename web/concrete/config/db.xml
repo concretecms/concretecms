@@ -5035,6 +5035,9 @@
       <UNSIGNED/>
       <default value="0" />
     </field>
+    <index name="gID">
+        <col>gID</col>
+    </index>
   </table>
 
   <table name="TopicTrees">
