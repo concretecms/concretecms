@@ -948,6 +948,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
   left: 0;
   /* concrete5 */
   padding: 0px;
+  box-sizing: content-box; /* See issue #412 */
   /* concrete5 */
   width: 300px;
   overflow: hidden;
@@ -1067,7 +1068,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-dialog .ui-dialog-content { position: relative; border: 0;
   /* concrete5 */
   padding: 19px 26px 19px 26px;
-
+  box-sizing: content-box; /* See issue #412 */
   /* end concrete5 */
 
  background: none; overflow: auto; zoom: 1; }
