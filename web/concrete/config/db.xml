@@ -2364,6 +2364,12 @@
       <unique/>
       <col>pkHandle</col>
     </index>
+    <index name="pkCategoryID">
+        <col>pkCategoryID</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="PermissionKeyCategories">
     <field name="pkCategoryID" type="I" size="10">
