@@ -888,7 +888,7 @@
 
         getContainer: function blockGetActualElement() {
             var current = this.getElem();
-            while (!current.parent().hasClass('ccm-area-block-list')) {
+            while (!current.parent().hasClass('ccm-area-block-list') && !current.parent().is('[data-area-id]')) {
                 if (!current.parent().length) {
                     break;
                 }
