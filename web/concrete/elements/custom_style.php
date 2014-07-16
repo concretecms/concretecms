@@ -103,11 +103,15 @@ $form = Core::make('helper/form');
                 <?=t('Link Color')?>
                 <?=Loader::helper('form/color')->output('linkColor', $linkColor);?>
             </div>
+            <hr />
             <div>
-                <?=t('Base Font Size')?>
-                <?=$form->text('baseFontSize', $baseFontSize);?>
+                <span class="ccm-inline-style-slider-heading"><?=t('Base Font Size')?></span>
+                <div class="ccm-inline-style-sliders" data-style-slider-min="0" data-style-slider-max="200" data-style-slider-default-setting="0">
+                    <input type="hidden" name="baseFontSize" id="baseFontSize" class="ccm-inline-style-slider-value" value="<?php echo $baseFontSize ? $baseFontSize : '' ?>" />
+                </div>
+                <span class="ccm-inline-style-slider-total-display"><span class="ccm-inline-style-slider-display-value"><?php echo $baseFontSize ? $baseFontSize.'' : '0' ?></span><span class="ccm-inline-style-slider-display-format">px</span></span>
             </div>
-            <div>
+            <div class="ccm-inline-select-container">
                 <?=t('Alignment')?>
                 <?=$form->select('alignment', $alignmentOptions, $alignment);?>
             </div>
@@ -128,7 +132,7 @@ $form = Core::make('helper/form');
                 <?=t('Image')?>
                 <?=$al->image('backgroundImageFileID', 'backgroundImageFileID', t('Choose Image'), $image);?>
             </div>
-            <div>
+            <div class="ccm-inline-select-container">
                 <?=t('Tile')?>
                 <?=$form->select('backgroundRepeat', $repeatOptions, $backgroundRepeat);?>
             </div>
@@ -142,17 +146,24 @@ $form = Core::make('helper/form');
                 <?=t('Color')?>
                 <?=Loader::helper('form/color')->output('borderColor', $borderColor);?>
             </div>
-            <div>
+            <hr />
+            <div class="ccm-inline-select-container">
                 <?=t('Style')?>
                 <?=$form->select('borderStyle', $borderOptions, $borderStyle);?>
             </div>
             <div>
-                <?=t('Width')?>
-                <?=$form->text('borderWidth', $borderWidth);?>
+                <span class="ccm-inline-style-slider-heading"><?=t('Width')?></span>
+                <div class="ccm-inline-style-sliders" data-style-slider-min="0" data-style-slider-max="200" data-style-slider-default-setting="0">
+                    <input type="hidden" name="borderWidth" id="borderWidth" class="ccm-inline-style-slider-value" value="<?php echo $borderWidth ? $borderWidth : '' ?>" />
+                </div>
+                <span class="ccm-inline-style-slider-total-display"><span class="ccm-inline-style-slider-display-value"><?php echo $borderWidth ? $borderWidth.'' : '0' ?></span><span class="ccm-inline-style-slider-display-format">px</span></span>
             </div>
             <div>
-                <?=t('Radius')?>
-                <?=$form->text('borderRadius', $borderRadius);?>
+                <span class="ccm-inline-style-slider-heading"><?=t('Radius')?></span>
+                <div class="ccm-inline-style-sliders" data-style-slider-min="0" data-style-slider-max="200" data-style-slider-default-setting="0">
+                    <input type="hidden" name="borderRadius" id="borderRadius" class="ccm-inline-style-slider-value" value="<?php echo $borderRadius ? $borderRadius : '' ?>" />
+                </div>
+                <span class="ccm-inline-style-slider-total-display"><span class="ccm-inline-style-slider-display-value"><?php echo $borderRadius ? $borderRadius.'' : '0' ?></span><span class="ccm-inline-style-slider-display-format">px</span></span>
             </div>
         </div>
     </li>
@@ -160,40 +171,64 @@ $form = Core::make('helper/form');
         <div class="ccm-inline-design-dropdown-menu dropdown-menu">
             <h3><?=t('Padding')?></h3>
             <div>
-                <?=t('Top')?>
-                <?=$form->text('paddingTop', $paddingTop);?>
+                <span class="ccm-inline-style-slider-heading"><?=t('Top')?></span>
+                <div class="ccm-inline-style-sliders" data-style-slider-min="0" data-style-slider-max="200" data-style-slider-default-setting="0">
+                    <input type="hidden" name="paddingTop" id="paddingTop" class="ccm-inline-style-slider-value" value="<?php echo $paddingTop ? $paddingTop : '' ?>" />
+                </div>
+                <span class="ccm-inline-style-slider-total-display"><span class="ccm-inline-style-slider-display-value"><?php echo $paddingTop ? $paddingTop.'' : '0' ?></span><span class="ccm-inline-style-slider-display-format">px</span></span>
             </div>
             <div>
-                <?=t('Right')?>
-                <?=$form->text('paddingRight', $paddingRight);?>
+                <span class="ccm-inline-style-slider-heading"><?=t('Right')?></span>
+                <div class="ccm-inline-style-sliders" data-style-slider-min="0" data-style-slider-max="200" data-style-slider-default-setting="0">
+                    <input type="hidden" name="paddingRight" id="paddingRight" class="ccm-inline-style-slider-value" value="<?php echo $paddingRight ? $paddingRight : '' ?>" />
+                </div>
+                <span class="ccm-inline-style-slider-total-display"><span class="ccm-inline-style-slider-display-value"><?php echo $paddingRight ? $paddingRight.'' : '0' ?></span><span class="ccm-inline-style-slider-display-format">px</span></span>
             </div>
             <div>
-                <?=t('Bottom')?>
-                <?=$form->text('paddingBottom', $paddingBottom);?>
+                <span class="ccm-inline-style-slider-heading"><?=t('Bottom')?></span>
+                <div class="ccm-inline-style-sliders" data-style-slider-min="0" data-style-slider-max="200" data-style-slider-default-setting="0">
+                    <input type="hidden" name="paddingBottom" id="paddingBottom" class="ccm-inline-style-slider-value" value="<?php echo $paddingBottom ? $paddingBottom : '' ?>" />
+                </div>
+                <span class="ccm-inline-style-slider-total-display"><span class="ccm-inline-style-slider-display-value"><?php echo $paddingBottom ? $paddingBottom.'' : '0' ?></span><span class="ccm-inline-style-slider-display-format">px</span></span>
             </div>
             <div>
-                <?=t('Left')?>
-                <?=$form->text('paddingLeft', $paddingLeft);?>
+                <span class="ccm-inline-style-slider-heading"><?=t('Left')?></span>
+                <div class="ccm-inline-style-sliders" data-style-slider-min="0" data-style-slider-max="200" data-style-slider-default-setting="0">
+                    <input type="hidden" name="paddingLeft" id="paddingLeft" class="ccm-inline-style-slider-value" value="<?php echo $paddingLeft ? $paddingLeft : '' ?>" />
+                </div>
+                <span class="ccm-inline-style-slider-total-display"><span class="ccm-inline-style-slider-display-value"><?php echo $paddingLeft ? $paddingLeft.'' : '0' ?></span><span class="ccm-inline-style-slider-display-format">px</span></span>
             </div>
 
             <? if ($style instanceof \Concrete\Core\Block\CustomStyle) { ?>
                 <hr />
                 <h3><?=t('Margin')?></h3>
                 <div>
-                    <?=t('Top')?>
-                    <?=$form->text('marginTop', $marginTop);?>
+                    <span class="ccm-inline-style-slider-heading"><?=t('Top')?></span>
+                    <div class="ccm-inline-style-sliders" data-style-slider-min="-50" data-style-slider-max="200" data-style-slider-default-setting="0">
+                        <input type="hidden" name="marginTop" id="marginTop" class="ccm-inline-style-slider-value" value="<?php echo $marginTop ? $marginTop : '' ?>" />
+                    </div>
+                    <span class="ccm-inline-style-slider-total-display"><span class="ccm-inline-style-slider-display-value"><?php echo $marginTop ? $marginTop.'' : '0' ?></span><span class="ccm-inline-style-slider-display-format">px</span></span>
                 </div>
                 <div>
-                    <?=t('Right')?>
-                    <?=$form->text('marginRight', $marginRight);?>
+                    <span class="ccm-inline-style-slider-heading"><?=t('Right')?></span>
+                    <div class="ccm-inline-style-sliders" data-style-slider-min="-50" data-style-slider-max="200" data-style-slider-default-setting="0">
+                        <input type="hidden" name="marginRight" id="marginRight" class="ccm-inline-style-slider-value" value="<?php echo $marginRight ? $marginRight : '' ?>" />
+                    </div>
+                    <span class="ccm-inline-style-slider-total-display"><span class="ccm-inline-style-slider-display-value"><?php echo $marginRight ? $marginRight.'' : '0' ?></span><span class="ccm-inline-style-slider-display-format">px</span></span>
                 </div>
                 <div>
-                    <?=t('Bottom')?>
-                    <?=$form->text('marginBottom', $marginBottom);?>
+                    <span class="ccm-inline-style-slider-heading"><?=t('Bottom')?></span>
+                    <div class="ccm-inline-style-sliders" data-style-slider-min="-50" data-style-slider-max="200" data-style-slider-default-setting="0">
+                        <input type="hidden" name="marginBottom" id="marginBottom" class="ccm-inline-style-slider-value" value="<?php echo $marginBottom ? $marginBottom : '' ?>" />
+                    </div>
+                    <span class="ccm-inline-style-slider-total-display"><span class="ccm-inline-style-slider-display-value"><?php echo $marginBottom ? $marginBottom.'' : '0' ?></span><span class="ccm-inline-style-slider-display-format">px</span></span>
                 </div>
                 <div>
-                    <?=t('Left')?>
-                    <?=$form->text('marginLeft', $marginLeft);?>
+                    <span class="ccm-inline-style-slider-heading"><?=t('Left')?></span>
+                    <div class="ccm-inline-style-sliders" data-style-slider-min="-50" data-style-slider-max="200" data-style-slider-default-setting="0">
+                        <input type="hidden" name="marginLeft" id="marginLeft" class="ccm-inline-style-slider-value" value="<?php echo $marginLeft ? $marginLeft : '' ?>" />
+                    </div>
+                    <span class="ccm-inline-style-slider-total-display"><span class="ccm-inline-style-slider-display-value"><?php echo $marginLeft ? $marginLeft.'' : '0' ?></span><span class="ccm-inline-style-slider-display-format">px</span></span>
                 </div>
 
             <? } ?>
@@ -207,27 +242,43 @@ $form = Core::make('helper/form');
                 <?=t('Color')?>
                 <?=Loader::helper('form/color')->output('boxShadowColor', $boxShadowColor);?>
             </div>
+            <hr />
             <div>
-                <?=t('Horizontal Position')?>
-                <?=$form->text('boxShadowHorizontal', $boxShadowHorizontal);?>
+                <span class="ccm-inline-style-slider-heading"><?=t('Horizontal Position')?></span>
+                <div class="ccm-inline-style-sliders" data-style-slider-min="0" data-style-slider-max="200" data-style-slider-default-setting="0">
+                    <input type="hidden" name="boxShadowHorizontal" id="boxShadowHorizontal" class="ccm-inline-style-slider-value" value="<?php echo $boxShadowHorizontal ? $boxShadowHorizontal : '' ?>" />
+                </div>
+                <span class="ccm-inline-style-slider-total-display"><span class="ccm-inline-style-slider-display-value"><?php echo $boxShadowHorizontal ? $boxShadowHorizontal.'' : '0' ?></span><span class="ccm-inline-style-slider-display-format">px</span></span>
             </div>
             <div>
-                <?=t('Vertical Position')?>
-                <?=$form->text('boxShadowVertical', $boxShadowVertical);?>
+                <span class="ccm-inline-style-slider-heading"><?=t('Vertical Position')?></span>
+                <div class="ccm-inline-style-sliders" data-style-slider-min="0" data-style-slider-max="200" data-style-slider-default-setting="0">
+                    <input type="hidden" name="boxShadowVertical" id="boxShadowVertical" class="ccm-inline-style-slider-value" value="<?php echo $boxShadowVertical ? $boxShadowVertical : '' ?>" />
+                </div>
+                <span class="ccm-inline-style-slider-total-display"><span class="ccm-inline-style-slider-display-value"><?php echo $boxShadowVertical ? $boxShadowVertical.'' : '0' ?></span><span class="ccm-inline-style-slider-display-format">px</span></span>
             </div>
             <div>
-                <?=t('Blur')?>
-                <?=$form->text('boxShadowBlur', $boxShadowBlur);?>
+                <span class="ccm-inline-style-slider-heading"><?=t('Blur')?></span>
+                <div class="ccm-inline-style-sliders" data-style-slider-min="0" data-style-slider-max="200" data-style-slider-default-setting="0">
+                    <input type="hidden" name="boxShadowBlur" id="boxShadowBlur" class="ccm-inline-style-slider-value" value="<?php echo $boxShadowBlur ? $boxShadowBlur : '' ?>" />
+                </div>
+                <span class="ccm-inline-style-slider-total-display"><span class="ccm-inline-style-slider-display-value"><?php echo $boxShadowBlur ? $boxShadowBlur.'' : '0' ?></span><span class="ccm-inline-style-slider-display-format">px</span></span>
             </div>
             <div>
-                <?=t('Spread')?>
-                <?=$form->text('boxShadowSpread', $boxShadowSpread);?>
+                <span class="ccm-inline-style-slider-heading"><?=t('Spread')?></span>
+                <div class="ccm-inline-style-sliders" data-style-slider-min="-50" data-style-slider-max="200" data-style-slider-default-setting="0">
+                    <input type="hidden" name="boxShadowSpread" id="boxShadowSpread" class="ccm-inline-style-slider-value" value="<?php echo $boxShadowSpread ? $boxShadowSpread : '' ?>" />
+                </div>
+                <span class="ccm-inline-style-slider-total-display"><span class="ccm-inline-style-slider-display-value"><?php echo $boxShadowSpread ? $boxShadowSpread.'' : '0' ?></span><span class="ccm-inline-style-slider-display-format">px</span></span>
             </div>
             <hr/>
             <h3><?=t('Rotate')?></h3>
             <div>
-                <?=t('Rotation (in degrees)')?>
-                <?=$form->text('rotate', $rotate);?>
+                <span class="ccm-inline-style-slider-heading"><?=t('Rotation (in degrees)')?></span>
+                <div class="ccm-inline-style-sliders" data-style-slider-min="0" data-style-slider-max="360" data-style-slider-default-setting="0">
+                    <input type="hidden" name="rotate" id="rotate" class="ccm-inline-style-slider-value" value="<?php echo $rotate ? $rotate : '' ?>" />
+                </div>
+                <span class="ccm-inline-style-slider-total-display"><span class="ccm-inline-style-slider-display-value"><?php echo $rotate ? $rotate.'' : '0' ?></span><span class="ccm-inline-style-slider-display-format">&deg;</span></span>
             </div>
 
         </div>
@@ -242,7 +293,7 @@ $form = Core::make('helper/form');
                     <?=t('Block Name')?>
                     <?=$form->text('bName', $bName);?>
                 </div>
-                <div>
+                <div class="ccm-inline-select-container">
                     <?=t('Custom Template')?>
                     <select id="bFilename" name="bFilename" class="form-control">
                         <option value="">(<?=t('None selected')?>)</option>
