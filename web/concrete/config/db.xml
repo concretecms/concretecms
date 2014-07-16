@@ -3351,6 +3351,9 @@
             <default value="0" />
         </field>
         <field name="url" type="C" size="255"/>
+        <index name="ssID">
+            <col>ssID</col>
+        </index>
     </table>
   <table name="SystemCaptchaLibraries">
     <field name="sclHandle" type="C" size="64">
