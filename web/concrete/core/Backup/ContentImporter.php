@@ -18,6 +18,7 @@ use Core;
 use JobSet;
 use PageTemplate;
 use CollectionAttributeKey;
+use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use \Concrete\Core\Block\BlockType\Set as BlockTypeSet;
 use \Concrete\Core\Attribute\Type as AttributeType;
 use \Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
@@ -301,8 +302,8 @@ class ContentImporter
     public function importPageAreas(Page $page, \SimpleXMLElement $px)
     {
         foreach ($px->area as $ax) {
-            if (isset($ax->block)) {
-                foreach ($ax->block as $bx) {
+            if (isset($ax->blocks)) {
+                foreach ($ax->blocks->block as $bx) {
                     if ($bx['type'] != '') {
                         // we check this because you might just get a block node with only an mc-block-id, if it's an alias
                         $bt = BlockType::getByHandle($bx['type']);
@@ -324,6 +325,12 @@ class ContentImporter
                         }
                     }
                 }
+            }
+
+            if (isset($ax->style)) {
+                $area = \Area::get($page, (string) $ax['name']);
+                $set = StyleSet::import($ax->style);
+                $page->setCustomStyleSet($area, $set);
             }
         }
     }
@@ -674,8 +681,8 @@ class ContentImporter
     {
         if (isset($sx->permissioncategories)) {
             foreach ($sx->permissioncategories->category as $pkc) {
-                $pkg = static::getPackageObject($akc['package']);
-                $pkx = PermissionKeyCategory::add((string)$pkc['handle'], $pkg);
+                $pkg = static::getPackageObject($pkc['package']);
+                PermissionKeyCategory::add((string)$pkc['handle'], $pkg);
             }
         }
     }
@@ -685,7 +692,7 @@ class ContentImporter
         if (isset($sx->workflowprogresscategories)) {
             foreach ($sx->workflowprogresscategories->category as $wpc) {
                 $pkg = static::getPackageObject($wpc['package']);
-                $wkx = WorkflowProgressCategory::add((string)$wpc['handle'], $pkg);
+                WorkflowProgressCategory::add((string)$wpc['handle'], $pkg);
             }
         }
     }
@@ -805,8 +812,8 @@ class ContentImporter
     {
         if (isset($sx->gatheringitemtemplatetypes)) {
             foreach ($sx->gatheringitemtemplatetypes->gatheringitemtemplatetype as $at) {
-                $pkg = static::getPackageObject($wt['package']);
-                $type = GatheringItemTemplateType::add((string)$at['handle'], $pkg);
+                $pkg = static::getPackageObject($at['package']);
+                GatheringItemTemplateType::add((string)$at['handle'], $pkg);
             }
         }
     }

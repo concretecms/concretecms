@@ -8,14 +8,14 @@
     <div class="radio">
         <label>
             <input type="radio" name="ENABLE_BLOCK_CACHE" value="0" <?php if (ENABLE_BLOCK_CACHE == false) { ?> checked <?php  } ?> />
-            <span><?=t('Off - Good for development of custom blocks.')?></span>
+            <?=t('Off - Good for development of custom blocks.')?>
         </label>
     </div>
 
     <div class="radio">
         <label>
             <input type="radio" name="ENABLE_BLOCK_CACHE" value="1" <?php if (ENABLE_BLOCK_CACHE == true) { ?> checked <?php  } ?> />
-            <span><?=t('On - Helps speed up a live site.')?></span>
+            <?=t('On - Helps speed up a live site.')?>
         </label>
     </div>
     </fieldset>

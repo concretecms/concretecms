@@ -12,9 +12,11 @@ class Controller extends BlockController
     protected $btWrapperClass = 'ccm-ui';
     protected $btInterfaceHeight = "465";
     protected $btCacheBlockRecord = true;
+    protected $btExportFileColumns = array('fID');
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
+    protected $btIgnorePageThemeGridFrameworkContainer = true;
 
     public function getBlockTypeDescription()
     {

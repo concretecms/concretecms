@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Core\StyleCustomizer\Inline;
+use Concrete\Core\Backup\ContentExporter;
+use Concrete\Core\Backup\ContentImporter;
 use Database;
 use Core;
 /**
@@ -555,5 +557,79 @@ class StyleSet
         $em = $db->getEntityManager();
         $em->persist($this);
         $em->flush();
+    }
+
+    public function import(\SimpleXMLElement $node)
+    {
+        $o = new self;
+        $o->setBackgroundColor((string) $node->backgroundColor);
+        $filename = (string) $node['backgroundImage'];
+        if ($filename) {
+            $fID = ContentImporter::getValue($filename);
+            if ($fID) {
+                $o->setBackgroundImageFileID($fID);
+            }
+        }
+
+        $o->setBackgroundRepeat((string) $node->backgroundRepeat);
+        $o->setBorderWidth((string) $node->borderWidth);
+        $o->setBorderColor((string) $node->borderColor);
+        $o->setBorderStyle((string) $node->borderStyle);
+        $o->setBorderRadius((string) $node->borderRadius);
+        $o->setBaseFontSize((string) $node->baseFontSize);
+        $o->setAlignment((string) $node->alignment);
+        $o->setTextColor((string) $node->textColor);
+        $o->setLinkColor((string) $node->linkColor);
+        $o->setPaddingTop((string) $node->paddingTop);
+        $o->setPaddingBottom((string) $node->paddingBottom);
+        $o->setPaddingLeft((string) $node->paddingLeft);
+        $o->setPaddingRight((string) $node->paddingRight);
+        $o->setMarginTop((string) $node->marginTop);
+        $o->setMarginBottom((string) $node->marginBottom);
+        $o->setMarginLeft((string) $node->marginLeft);
+        $o->setMarginRight((string) $node->marginRight);
+        $o->setRotate((string) $node->rotate);
+        $o->setBoxShadowHorizontal((string) $node->boxShadowHorizontal);
+        $o->setBoxShadowVertical((string) $node->boxShadowVertical);
+        $o->setBoxShadowSpread((string) $node->boxShadowSpread);
+        $o->setBoxShadowBlur((string) $node->boxShadowBlur);
+        $o->setBoxShadowColor((string) $node->boxShadowColor);
+        $o->save();
+        return $o;
+    }
+
+
+    public function export(\SimpleXMLElement $node)
+    {
+        $node = $node->addChild('style');
+        $node->addChild('backgroundColor', $this->getBackgroundColor());
+        $fID = $this->backgroundImageFileID;
+        if ($fID) {
+            $node->addChild('backgroundImage', ContentExporter::replaceFileWithPlaceHolder($fID));
+        }
+        $node->addChild('backgroundRepeat', $this->getBackgroundRepeat());
+        $node->addChild('borderWidth', $this->getBorderWidth());
+        $node->addChild('borderColor', $this->getBorderColor());
+        $node->addChild('borderStyle', $this->getBorderStyle());
+        $node->addChild('borderRadius', $this->getBorderRadius());
+        $node->addChild('baseFontSize', $this->getBaseFontSize());
+        $node->addChild('alignment', $this->getAlignment());
+        $node->addChild('textColor', $this->getTextColor());
+        $node->addChild('linkColor', $this->getLinkColor());
+        $node->addChild('paddingTop', $this->getPaddingTop());
+        $node->addChild('paddingBottom', $this->getPaddingBottom());
+        $node->addChild('paddingLeft', $this->getPaddingLeft());
+        $node->addChild('paddingRight', $this->getPaddingRight());
+        $node->addChild('marginTop', $this->getMarginTop());
+        $node->addChild('marginBottom', $this->getMarginBottom());
+        $node->addChild('marginLeft', $this->getMarginLeft());
+        $node->addChild('marginRight', $this->getMarginRight());
+        $node->addChild('rotate', $this->getRotate());
+        $node->addChild('boxShadowHorizontal', $this->getBoxShadowHorizontal());
+        $node->addChild('boxShadowVertical', $this->getBoxShadowVertical());
+        $node->addChild('boxShadowBlur', $this->getBoxShadowBlur());
+        $node->addChild('boxShadowSpread', $this->getBoxShadowSpread());
+        $node->addChild('boxShadowColor', $this->getBoxShadowColor());
+
     }
 }

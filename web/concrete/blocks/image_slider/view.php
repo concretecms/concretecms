@@ -14,26 +14,32 @@ $(document).ready(function(){
 </script>
 
 <div class="ccm-image-slider-container" >
-    <?php if(count($rows) > 0) { ?>
-    <ul class="rslides" id="ccm-image-slider-<?php echo $bID ?>">
-        <?php foreach($rows as $row) { ?>
-            <li>
-            <?php if($row['linkURL']) { ?>
-                <a href="<?php echo $row['linkURL'] ?>" class="mega-link-overlay"></a>
+    <div class="ccm-image-slider">
+        <div class="ccm-image-slider-inner">
+
+        <?php if(count($rows) > 0) { ?>
+        <ul class="rslides" id="ccm-image-slider-<?php echo $bID ?>">
+            <?php foreach($rows as $row) { ?>
+                <li>
+                <?php if($row['linkURL']) { ?>
+                    <a href="<?php echo $row['linkURL'] ?>" class="mega-link-overlay"></a>
+                <?php } ?>
+                <?php if(is_object(File::getByID($row['fID']))) { ?>
+                <img src="<?php echo File::getByID($row['fID'])->getURL(); ?>" alt="<?php echo $row['title'] ?>">
+                <?php } ?>
+                <div class="ccm-image-slider-text">
+                    <h2 class="ccm-image-slider-title"><?php echo $row['title'] ?></h2>
+                    <?php echo $row['description'] ?>
+                </div>
+                </li>
             <?php } ?>
-            <?php if(is_object(File::getByID($row['fID']))) { ?>
-            <img src="<?php echo File::getByID($row['fID'])->getURL(); ?>" alt="<?php echo $row['title'] ?>">
-            <?php } ?>
-            <div class="ccm-image-slider-text">
-                <h2 class="ccm-image-slider-title"><?php echo $row['title'] ?></h2>
-                <?php echo $row['description'] ?>
-            </div>
-            </li>
+        </ul>
+        <?php } else { ?>
+        <div class="ccm-image-slider-placeholder">
+            <p><?php echo t('No Slides Entered.'); ?></p>
+        </div>
         <?php } ?>
-    </ul>
-    <?php } else { ?>
-    <div class="ccm-image-slider-placeholder">
-        <p><?php echo t('No Slides Entered.'); ?></p>
+        </div>
+
     </div>
-    <?php } ?>
 </div>
