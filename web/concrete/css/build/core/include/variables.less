@@ -48,16 +48,19 @@
 
 /* Inline Editing Toolbar - has to come above disabled toolbar */
 @index-level-inline-toolbar: 1150;
-@index-level-inline-toolbar-dropdown: 1160;
 
 /* Intelligent Search */
 @index-level-intelligent-search: 1200;
 
 /* Dialogs */
 @index-level-dialog-overlay: 1200;
-@index-level-dialog: 1300;
 @index-level-modal-overlay: 1200;
 @index-level-modal-loader: 1201;
+@index-level-dialog: 1300;
+
+/* Redactor dropdown –can be either inline OR in a dialog box so we have to come above dialog. Hopefully this doesn't
+cause other problems */
+@index-level-redactor-toolbar-dropdown: 1350;
 
 /* Dialog Content */
 @index-level-dialog-content: 1500;
