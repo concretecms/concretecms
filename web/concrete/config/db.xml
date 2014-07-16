@@ -3945,8 +3945,7 @@
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="channel" type="C" size="255">
-    </field>
+    <field name="channel" type="C" size="255"/>
     <field name="time" type="I" size="10">
       <notnull/>
       <unsigned/>
@@ -3958,6 +3957,12 @@
     <field name="level" type="I" size="10">
       <notnull/>
     </field>
+    <index name="channel">
+        <col>channel</col>
+    </index>
+    <index name="uID">
+        <col>uID</col>
+    </index>
   </table>
   <table name="MailImporters">
     <field name="miID" type="I" size="10">
