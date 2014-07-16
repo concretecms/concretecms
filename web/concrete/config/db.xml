@@ -2449,6 +2449,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
+    <index name="ptID">
+        <col>ptID</col>
+    </index>
   </table>
   <table name="PagePermissionThemeAccessList">
     <field name="paID" type="I" size="10">
