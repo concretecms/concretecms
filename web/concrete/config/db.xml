@@ -2332,6 +2332,9 @@
       <unsigned/>
     </field>
     <field name="value" type="X" />
+    <index name="scvlID">
+        <col>scvlID</col>
+    </index>
   </table>
   <table name="PermissionKeys">
     <field name="pkID" type="I" size="10">
