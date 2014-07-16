@@ -693,8 +693,9 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         // now, we iterate through these block groups (which are actually arrays of block objects), and display them on the page
         if ($this->showControls && $c->isEditMode() && $ap->canViewAreaControls()) {
             Loader::element('block_area_header', array('a' => $this));
+        } else {
+            Loader::element('block_area_header_view', array('a' => $this));
         }
-        Loader::element('block_area_header_view', array('a' => $this));
 
         foreach ($blocksToDisplay as $b) {
             $includeEditStrip = false;
@@ -712,10 +713,10 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             }
         }
 
-        Loader::element('block_area_footer_view', array('a' => $this));
-
         if ($this->showControls && $c->isEditMode() && $ap->canViewAreaControls()) {
             Loader::element('block_area_footer', array('a' => $this));
+        } else {
+            Loader::element('block_area_footer_view', array('a' => $this));
         }
     }
 

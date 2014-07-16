@@ -123,9 +123,9 @@
             editor = new Concrete.getEditMode(),
             area = editor.getAreaByID(resp.aID);
         my.refreshStyles(resp);
-        area.getElem().find('div[data-section=area-view]').removeClass();
+        area.getElem().removeClassExcept('ccm-area ccm-global-area');
         if (resp.containerClass) {
-            area.getElem().find('div[data-section=area-view]').addClass(resp.containerClass);
+            area.getElem().addClass(resp.containerClass);
         }
         editor.destroyInlineEditModeToolbars();
     }
@@ -142,6 +142,24 @@
             new ConcreteAreaInlineStyleCustomizer($(this), options);
         });
     }
+
+    $.fn.removeClassExcept = function (val) {
+        return this.each(function (index, el) {
+            var keep = val.split(" "),  // list we'd like to keep
+                reAdd = [],          // ones that should be re-added if found
+                $el = $(el);       // element we're working on
+
+            // look for which we re-add (based on them already existing)
+            for (var i = 0; i < keep.length; i++){
+                if ($el.hasClass(keep[i])) reAdd.push(keep[i]);
+            }
+
+            // drop all, and only add those confirmed as existing
+            $el
+                .removeClass()               // remove existing classes
+                .addClass(reAdd.join(' '));  // re-add the confirmed ones
+        });
+    };
 
     global.ConcreteBlockInlineStyleCustomizer = ConcreteBlockInlineStyleCustomizer;
     global.ConcreteAreaInlineStyleCustomizer = ConcreteAreaInlineStyleCustomizer;
