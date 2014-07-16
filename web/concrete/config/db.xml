@@ -3866,6 +3866,18 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="pID">
+        <col>pID</col>
+        <col>displayOrder</col>
+    </index>
+    <index name="itemID">
+        <col>itemID</col>
+    </index>
+    <index name="itemType">
+        <col>itemType</col>
+        <col>itemID</col>
+        <col>pID</col>
+    </index>
   </table>
   <table name="Piles">
     <field name="pID" type="I" size="10">
