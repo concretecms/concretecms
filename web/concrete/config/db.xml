@@ -3977,7 +3977,7 @@
     <field name="miUsername" type="C" size="255"/>
     <field name="miPassword" type="C" size="255"/>
     <field name="miEncryption" type="C" size="32"/>
-    <field name="miIsEnabled" type="I" size="1">
+    <field name="miIsEnabled" type="I1" size="1">
       <notnull/>
       <default value="0"/>
     </field>
@@ -3993,6 +3993,14 @@
     <field name="miConnectionMethod" type="C" size="8">
       <default value="POP" />
     </field>
+    <index name="miHandle">
+        <unique/>
+        <col>miHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>miID</col>
+    </index>
   </table>
   <table name="MailValidationHashes">
     <field name="mvhID" type="I" size="10">
