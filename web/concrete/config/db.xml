@@ -4946,6 +4946,13 @@
       <UNSIGNED/>
       <DEFAULT value="0"/>
     </field>
+    <index name="treeTypeHandle">
+        <unique/>
+        <col>treeTypeHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
 
   <table name="TreeNodeTypes">
