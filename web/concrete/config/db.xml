@@ -5023,6 +5023,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="pkID">
+        <col>pkID</col>
+    </index>
+    <index name="paID">
+        <col>paID</col>
+    </index>
   </table>
 
   <table name="TreeGroupNodes">
