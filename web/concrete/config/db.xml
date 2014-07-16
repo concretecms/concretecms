@@ -4030,6 +4030,12 @@
       <unsigned/>
     </field>
     <field name="data" type="X"/>
+    <index name="miID">
+        <col>miID</col>
+    </index>
+    <index name="mHash">
+        <col>mHash</col>
+    </index>
   </table>
   <table name="UserOpenIDs">
     <field name="uID" type="I" size="10">
