@@ -3549,6 +3549,9 @@
       <unique/>
       <col>pThemeHandle</col>
     </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="PageThemeCustomStyles">
     <field name="pThemeID" type="I" size="10">
