@@ -4823,6 +4823,9 @@
       <DEFAULT value="30"/>
       <UNSIGNED/>
     </field>
+    <index name="queue_name">
+        <col>queue_name</col>
+    </index>
     <opt platform="mysql">ENGINE=INNODB</opt>
     <opt platform="mysqlt">ENGINE=INNODB</opt>
   </table>
