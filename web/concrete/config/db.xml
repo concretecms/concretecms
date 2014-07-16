@@ -104,6 +104,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="ptPublishTargetTypeHandle">
+        <col>ptPublishTargetTypeHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="PageTypeComposerControlTypes">
     <field name="ptComposerControlTypeID" type="I" size="10">
