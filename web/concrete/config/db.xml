@@ -34,7 +34,15 @@
       <default value="0"/>
       <unsigned/>
     </field>
-   <field name="ptPublishTargetObject" type="X2"/>
+    <field name="ptPublishTargetObject" type="X2"/>
+    <index name="ptHandle">
+        <unique/>
+        <col>ptHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>ptID</col>
+    </index>
   </table>
 
   <table name="PageTypePageTemplates">
