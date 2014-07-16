@@ -4808,6 +4808,13 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="wftHandle">
+        <unique/>
+        <col>wftHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="Workflows">
     <field name="wfID" type="I" size="10">
