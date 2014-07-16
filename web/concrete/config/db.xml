@@ -186,6 +186,12 @@
       <unsigned/>
       <default value="0" />
     </field>
+    <index name="ptID">
+        <col>ptID</col>
+    </index>
+    <index name="cID">
+        <col>cID</col>
+    </index>
   </table>
 
   <table name="PageTypeComposerOutputControls">
