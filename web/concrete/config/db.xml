@@ -4928,6 +4928,9 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <index name="treeTypeID">
+        <col>treeTypeID</col>
+    </index>
   </table>
 
   <table name="TreeTypes">
