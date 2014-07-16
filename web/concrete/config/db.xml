@@ -4993,6 +4993,16 @@
     <index name="treeNodeParentID">
       <col>treeNodeParentID</col>
     </index>
+    <index name="treeNodeTypeID">
+        <col>treeNodeTypeID</col>
+    </index>
+    <index name="treeID">
+        <col>treeID</col>
+    </index>
+    <index name="inheritPermissionsFromTreeNodeID">
+        <col>inheritPermissionsFromTreeNodeID</col>
+        <col>treeNodeID</col>
+    </index>
   </table>
 
 
