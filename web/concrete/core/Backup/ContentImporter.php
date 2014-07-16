@@ -565,10 +565,14 @@ class ContentImporter {
 	protected function importJobSets(\SimpleXMLElement $sx) {
 		if (isset($sx->jobsets)) {
 			foreach($sx->jobsets->jobset as $js) {
-				$pkg = static::getPackageObject($js['package']);
 				$jso = JobSet::getByName((string) $js['name']);
 				if (!is_object($jso)) {
-					$jso = JobSet::add((string) $js['name']);
+                    $pkg = static::getPackageObject($js['package']);
+                    if(is_object($pkg)) {
+                        $jso = JobSet::add((string) $js['name'], $pkg);
+                    } else {
+                        $jso = JobSet::add((string) $js['name']);
+                    }
 				}
 				foreach($js->children() as $jsk) {
 					$j = Job::getByHandle((string) $jsk['handle']);
