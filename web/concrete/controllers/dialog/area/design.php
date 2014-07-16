@@ -39,6 +39,10 @@ class Design extends BackendPageController {
         if ($this->validateAction() && $this->canAccess()) {
 
             $a = $this->area;
+            $oldStyle = $this->page->getAreaCustomStyle($a);
+            if (is_object($oldStyle)) {
+                $oldStyleSet = $oldStyle->getStyleSet();
+            }
 
             $nvc = $this->page->getVersionToModify();
 
@@ -79,8 +83,13 @@ class Design extends BackendPageController {
             $pr->setAdditionalDataAttribute('arHandle', $this->area->getAreaHandle());
             $pr->setAdditionalDataAttribute('issID', $set->getID());
 
+            if (is_object($oldStyleSet)) {
+                $pr->setAdditionalDataAttribute('oldIssID', $oldStyleSet->getID());
+            }
+
             $style = new CustomStyle($set, $this->area->getAreaHandle());
             $pr->setAdditionalDataAttribute('css', $style->getCSS());
+            $pr->setAdditionalDataAttribute('containerClass', $style->getContainerClass());
 
             $pr->setMessage(t('Design updated.'));
             $pr->outputJSON();

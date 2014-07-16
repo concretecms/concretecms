@@ -1,6 +1,7 @@
 (function(global, $) {
     'use strict';
 
+
     function ConcreteInlineStyleCustomizer($element, options) {
         var my = this;
         options = $.extend({
@@ -23,32 +24,13 @@
 
     ConcreteInlineStyleCustomizer.prototype = {
 
-        handleResponse: function(resp) {
-            var my = this;
-            var editor = new Concrete.getEditMode(),
-                area = editor.getAreaByID(resp.aID),
-                block = area.getBlockByID(parseInt(resp.originalBlockID)),
-                arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0,
-                action = CCM_DISPATCHER_FILENAME + '/ccm/system/block/render';
-
-            $.get(action, {
-                arHandle: area.getHandle(),
-                cID: resp.cID,
-                bID: resp.bID,
-                arEnableGridContainer: arEnableGridContainer
-            }, function (r) {
-                ConcreteToolbar.disableDirectExit();
-                var newBlock = block.replace(resp.bID, r);
-                ConcreteAlert.notify({
-                    'message': resp.message
-                });
-
-                editor.destroyInlineEditModeToolbars();
-
-                ConcreteEvent.fire('EditModeExitInlineComplete', {
-                    block: newBlock
-                });
-            });
+        refreshStyles: function(resp) {
+            if (resp.oldIssID) {
+                $('head').find('style[data-style-set=' + resp.oldIssID +']').remove();
+            }
+            if (resp.issID) {
+                $('head').append($('<style />', {'data-style-set': resp.issID, 'text': resp.css}));
+            }
         },
 
         setupForm: function() {
@@ -92,13 +74,76 @@
 
     }
 
-    // jQuery Plugin
-    $.fn.concreteInlineStyleCustomizer = function (options) {
-        return $.each($(this), function (i, obj) {
-            new ConcreteInlineStyleCustomizer($(this), options);
+    function ConcreteBlockInlineStyleCustomizer($element, options) {
+        var my = this;
+        ConcreteInlineStyleCustomizer.call(my, $element, options);
+    }
+
+    ConcreteBlockInlineStyleCustomizer.prototype = Object.create(ConcreteInlineStyleCustomizer.prototype);
+
+    ConcreteBlockInlineStyleCustomizer.prototype.handleResponse = function(resp) {
+        var my = this;
+        var editor = new Concrete.getEditMode(),
+            area = editor.getAreaByID(resp.aID),
+            block = area.getBlockByID(parseInt(resp.originalBlockID)),
+            arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0,
+            action = CCM_DISPATCHER_FILENAME + '/ccm/system/block/render';
+
+        $.get(action, {
+            arHandle: area.getHandle(),
+            cID: resp.cID,
+            bID: resp.bID,
+            arEnableGridContainer: arEnableGridContainer
+        }, function (r) {
+            ConcreteToolbar.disableDirectExit();
+            var newBlock = block.replace(resp.bID, r);
+            ConcreteAlert.notify({
+                'message': resp.message
+            });
+
+            my.refreshStyles(resp);
+
+            editor.destroyInlineEditModeToolbars();
+
+            ConcreteEvent.fire('EditModeExitInlineComplete', {
+                block: newBlock
+            });
         });
     }
 
-    global.ConcreteInlineStyleCustomizer = ConcreteInlineStyleCustomizer;
+    function ConcreteAreaInlineStyleCustomizer($element, options) {
+        var my = this;
+        ConcreteInlineStyleCustomizer.call(my, $element, options);
+    }
+
+    ConcreteAreaInlineStyleCustomizer.prototype = Object.create(ConcreteInlineStyleCustomizer.prototype);
+
+    ConcreteAreaInlineStyleCustomizer.prototype.handleResponse = function(resp) {
+        var my = this,
+            editor = new Concrete.getEditMode(),
+            area = editor.getAreaByID(resp.aID);
+        my.refreshStyles(resp);
+        area.getElem().find('div[data-section=area-view]').removeClass();
+        if (resp.containerClass) {
+            area.getElem().find('div[data-section=area-view]').addClass(resp.containerClass);
+        }
+        editor.destroyInlineEditModeToolbars();
+    }
+
+    // jQuery Plugin
+    $.fn.concreteBlockInlineStyleCustomizer = function (options) {
+        return $.each($(this), function (i, obj) {
+            new ConcreteBlockInlineStyleCustomizer($(this), options);
+        });
+    }
+
+    $.fn.concreteAreaInlineStyleCustomizer = function (options) {
+        return $.each($(this), function (i, obj) {
+            new ConcreteAreaInlineStyleCustomizer($(this), options);
+        });
+    }
+
+    global.ConcreteBlockInlineStyleCustomizer = ConcreteBlockInlineStyleCustomizer;
+    global.ConcreteAreaInlineStyleCustomizer = ConcreteAreaInlineStyleCustomizer;
 
 })(this, $);
