@@ -4874,6 +4874,10 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <index name="originalCID">
+        <col>originalCID</col>
+        <col>queue_name</col>
+    </index>
   </table>
    <table name="Trees">
     <field name="treeID" type="I" size="11">
