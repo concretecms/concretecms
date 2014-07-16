@@ -1,5 +1,56 @@
 // formatting for certain core blocks in here
 
+.ccm-image-slider-container {
+  .rslides_nav {
+    background-image: url('../../images/arrows.gif');
+  }
+  .rslides_tabs {
+    padding-left: 0px;
+    padding-top: 15px;
+    padding-bottom: 10px;
+    li {
+      list-style-type: none;
+      display: inline-block;
+      margin-right: 5px;
+      &.rslides_here {
+        a {
+          background: @header-site-title-type-color;
+        }
+      }
+      a {
+        overflow: hidden;
+        text-indent: 99px;
+        background: #ccccc9;
+        width: 15px;
+        height: 15px;
+        display: inline-block;
+        margin-right: 10px;
+        .border-radius(30px);
+      }
+    }
+  }
+
+  .ccm-image-slider-text {
+    h2 {
+      color: @header-site-title-type-color;
+      font-family: @header-site-title-type-font-family;
+      font-size: 48px;
+      font-weight: 200;
+      margin-bottom: 5%;
+      line-height: 1.2em;
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.4em;
+      color: #989ea0;
+      width: 80%;
+    }
+  }
+
+
+}
+
 main {
   // feature block
   div.ccm-block-feature-item {
