@@ -2386,6 +2386,13 @@
     <field name="pkgID" type="I" size="10">
       <unsigned/>
     </field>
+    <index name="petHandle">
+        <unique/>
+        <col>petHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="PermissionAccessEntityTypeCategories">
     <field name="petID" type="I" size="10">
