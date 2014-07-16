@@ -64,10 +64,10 @@ class Controller extends BlockController {
 					if('Controller' != get_class($btc)){
 						$btc->outputAutoHeaderItems();
 					}
-					$csr = $b->getBlockCustomStyleRule();
+					$csr = $b->getCustomStyle();
 					if (is_object($csr)) {
-						$styleHeader = '#'.$csr->getCustomStyleRuleCSSID(1).' {'. $csr->getCustomStyleRuleText(). "} \r\n";  
-						$btc->addHeaderItem("<style type=\"text/css\"> \r\n".$styleHeader.'</style>', 'VIEW');
+                        $styleHeader = '<style type="text/css" data-style-set="' . $st->getStyleSet()->getID() . '">' . $st->getCSS() . '</style>';
+						$btc->addHeaderItem($styleHeader);
 					}
 					$btc->runTask('on_page_view', array($page));
 				}
