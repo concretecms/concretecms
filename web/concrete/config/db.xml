@@ -4768,10 +4768,15 @@
       <notnull/>
       <default value="0"/>
     </field>
+    <index name="wpCategoryID">
+        <col>wpCategoryID</col>
+    </index>
+    <index name="wfID">
+        <col>wfID</col>
+    </index>
     <index name="wrID">
       <col>wrID</col>
-    </index>
-    <index name="wpIsCompleted">
+      <col>wpID</col>
       <col>wpIsCompleted</col>
     </index>
   </table>
