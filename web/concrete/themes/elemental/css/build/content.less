@@ -28,8 +28,12 @@ div.ccm-page {
   }
 
   main {
-    padding-top:(@padding-large-vertical * 3.6) - (@line-height-computed);
-    padding-bottom: 50px;
+    div.container:first-child {
+      padding-top:(@padding-large-vertical * 3.6) - (@line-height-computed);
+    }
+    div.container:last-child {
+      padding-bottom: 50px;
+    }
     background-color: @page-background-color;
   }
 
