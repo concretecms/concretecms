@@ -608,16 +608,22 @@
             $.fn.dialog.hideLoader();
         },
 
-        loadInlineEditModeToolbars: function ($container) {
+        loadInlineEditModeToolbars: function ($container, toolbarHTML) {
             $('#ccm-inline-toolbar-container').remove();
+            var $holder = $('<div />', {id: 'ccm-inline-toolbar-container'}).appendTo(document.body);
 
-            var $toolbar = $container.find('.ccm-inline-toolbar'),
-                $holder = $('<div />', {id: 'ccm-inline-toolbar-container'}).appendTo(document.body),
-                $window = $(window),
+            if (toolbarHTML) {
+                $holder.append(toolbarHTML);
+                var $toolbar = $holder.find('.ccm-inline-toolbar');
+            } else {
+                var $toolbar = $container.find('.ccm-inline-toolbar');
+                $toolbar.appendTo($holder);
+            }
+
+            var $window = $(window),
                 pos = $container.offset(),
                 l = pos.left;
 
-            $toolbar.appendTo($holder);
             var tw = l + parseInt($toolbar.width());
             if (tw > $window.width()) {
                 var overage = tw - (l + $container.width());
@@ -715,6 +721,33 @@
                 return false;
             });
 
+            $menuElem.find('a[data-menu-action=edit-area-design]').on('click', function (e) {
+                e.preventDefault();
+                ConcreteToolbar.disable();
+                my.getElem().addClass('ccm-area-inline-edit-disabled');
+                var postData = {
+                    'arHandle': my.getHandle(),
+                    'cID': CCM_CID,
+                }
+
+                Concrete.event.bind('EditModeExitInline', function (e) {
+                    Concrete.event.unsubscribe(e);
+                    my.getEditMode().destroyInlineEditModeToolbars();
+                });
+
+                $.ajax({
+                    type: 'GET',
+                    url: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/area/design',
+                    data: postData,
+                    success: function (r) {
+                        var $container = my.getElem();
+                        my.getEditMode().loadInlineEditModeToolbars($container, r);
+                        $.fn.dialog.hideLoader();
+                    }
+                });
+
+
+            });
         },
 
         /**

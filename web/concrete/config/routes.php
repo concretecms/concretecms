@@ -65,6 +65,9 @@ Route::register('/ccm/system/dialogs/block/aliasing/submit', '\Concrete\Controll
 Route::register('/ccm/system/dialogs/block/design/', '\Concrete\Controller\Dialog\Block\Design::view');
 Route::register('/ccm/system/dialogs/block/design/submit', '\Concrete\Controller\Dialog\Block\Design::submit');
 Route::register('/ccm/system/dialogs/block/design/reset', '\Concrete\Controller\Dialog\Block\Design::reset');
+Route::register('/ccm/system/dialogs/area/design/', '\Concrete\Controller\Dialog\Area\Design::view');
+Route::register('/ccm/system/dialogs/area/design/submit', '\Concrete\Controller\Dialog\Area\Design::submit');
+Route::register('/ccm/system/dialogs/area/design/reset', '\Concrete\Controller\Dialog\Area\Design::reset');
 
 /**
  * Files

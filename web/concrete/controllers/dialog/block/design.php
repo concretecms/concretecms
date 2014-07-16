@@ -95,9 +95,7 @@ class Design extends BackendInterfaceBlockController {
 
             if ($this->permissions->canEditBlockCustomTemplate()) {
                 $data = array();
-                $data['bFilename'] = $r['bFilename'];
-                $data['bName'] = $r['bName'];
-                $b->updateBlockInformation($data);
+
             }
 
             $pr = new EditResponse();

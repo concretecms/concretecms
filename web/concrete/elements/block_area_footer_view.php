@@ -2,6 +2,8 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $c = Page::getCurrentPage();
-$areaStyle = $c->getAreaCustomStyleRule($a);
+$areaStyle = $c->getAreaCustomStyle($a);
 
-if($areaStyle && $areaStyle->getCustomStyleRuleID() ){ ?></div><? } ?>
+if (is_object($areaStyle)) { ?>
+    </div>
+<? } ?>

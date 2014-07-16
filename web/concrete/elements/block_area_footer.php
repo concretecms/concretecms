@@ -53,7 +53,7 @@ $class = 'ccm-area-footer';
 
 	<? if ($showAreaDesign || $showAreaLayouts) { ?>
 		<? if ($showAreaDesign) { ?>
-			<li><a dialog-title="<?=t('Custom Style')?>" class="dialog-launch" dialog-modal="false" dialog-width="475" dialog-height="500" id="menuAreaStyle<?=$a->getAreaID()?>" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?cID=<?=$c->getCollectionID()?>&arHandle=<?=urlencode($a->getAreaHandle())?>&atask=design"><?=t("Edit Area Design")?></a></li>		
+			<li><a data-menu-action="edit-area-design" href="#"><?=t("Edit Area Design")?></a></li>
 		<? } ?>
 		<? if ($showAreaLayouts) {
 			$areabt = BlockType::getByHandle(BLOCK_HANDLE_LAYOUT_PROXY);
