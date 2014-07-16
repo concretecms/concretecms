@@ -4706,6 +4706,9 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="wfID">
+        <col>wfID</col>
+    </index>
   </table>
   <table name="BasicWorkflowProgressData">
     <field name="wpID" type="I" size="10">
