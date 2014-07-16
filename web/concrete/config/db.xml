@@ -3593,6 +3593,9 @@
       <unique/>
       <col>pTemplateHandle</col>
     </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="Pages">
     <field name="cID" type="I" size="10">
