@@ -4047,6 +4047,10 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="uAuthorID">
+        <col>uAuthorID</col>
+        <col>msgDateCreated</col>
+    </index>
   </table>
   <table name="UserPrivateMessagesTo">
     <field name="msgID" type="I" size="10">
