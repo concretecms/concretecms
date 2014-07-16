@@ -3342,6 +3342,9 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
     <table name="SocialLinks">
         <field name="slID" type="I" size="10">
