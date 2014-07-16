@@ -128,6 +128,9 @@
         <unique/>
         <col>ptComposerControlTypeHandle</col>
     </index>
+    <index name="ptID">
+        <col>ptID</col>
+    </index>
   </table>
   <table name="PageTypeComposerFormLayoutSetControls">
     <field name="ptComposerFormLayoutSetControlID" type="I" size="10">
