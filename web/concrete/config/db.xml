@@ -3080,6 +3080,9 @@
       <notnull/>
       <default value="0"/>
     </field>
+    <index name="jID">
+        <col>jID</col>
+    </index>
   </table>
   <table name="JobSetJobs">
     <field name="jsID" type="I" size="10">
