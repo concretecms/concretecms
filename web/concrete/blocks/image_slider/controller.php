@@ -23,7 +23,7 @@ class Controller extends BlockController
 
     public function getBlockTypeName()
     {
-        return t("Image Slider Block");
+        return t("Image Slider");
     }
 
     public function getSearchableContent()

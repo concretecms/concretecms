@@ -3,7 +3,7 @@ namespace Concrete\Controller\Backend;
 
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
 use Concrete\Core\Block\View\BlockView;
-use Concrete\Core\View\View;
+use Concrete\Core\View\DialogView;
 
 class Block extends BackendInterfaceBlockController {
 
@@ -21,7 +21,7 @@ class Block extends BackendInterfaceBlockController {
         }
         $bv->addScopeItems(array('c' => $this->page, 'a' => $this->area, 'dialogController' => $this));
         $this->set('bv', $bv);
-        $this->view = new View('/backend/block');
+        $this->view = new DialogView('/backend/block');
 	}
 
 }

@@ -19,7 +19,14 @@
         var attachFileManagerLaunch = function($obj) {
             $obj.click(function(){
                 var oldLauncher = $(this);
-                ConcreteFileManager.launchDialog(function (data) { oldLauncher.next('.image-fID').val(data.fID)});
+                ConcreteFileManager.launchDialog(function (data) {
+                    ConcreteFileManager.getFileDetails(data.fID, function(r) {
+                        jQuery.fn.dialog.hideLoader();
+                        var file = r.files[0];
+                        oldLauncher.html('<img src="' + file.thumbnailLevel1 + '" />');
+                        oldLauncher.next('.image-fID').val(file.fID)
+                    });
+                });
             });
         }
 
