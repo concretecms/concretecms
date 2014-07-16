@@ -698,7 +698,6 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
 
         foreach ($blocksToDisplay as $b) {
-            $includeEditStrip = false;
             $bv = new BlockView($b);
             $bv->setAreaObject($this);
             $p = new Permissions($b);

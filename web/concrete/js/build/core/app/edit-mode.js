@@ -332,6 +332,7 @@
 
         Concrete.createGetterSetters.call(my, {
             id: elem.data('area-id'),
+            blockTemplate: _(elem.children('script[role=area-block-wrapper]').html()).template(),
             elem: elem,
             totalBlocks: 0,
             enableGridContainer: elem.data('area-enable-grid-container'),
@@ -361,6 +362,7 @@
             handle: elem.data('block-type-handle'),
             areaId: elem.data('area-id'),
             cID: elem.data('cid'),
+            wraps: !!elem.data('block-type-wraps'),
             area: null,
             elem: elem,
             dragger: null,
@@ -815,7 +817,7 @@
         removeBlock: function areaRemoveBlock(block) {
             var my = this, totalBlocks = my.getTotalBlocks();
 
-            block.getElem().remove();
+            block.getContainer().remove();
             my.setBlocks(_(my.getBlocks()).without(block));
 
             my.setTotalBlocks(totalBlocks - 1);
@@ -854,7 +856,7 @@
             } else {
                 elem = $('<div class="ccm-area-drag-area"/>');
                 drag_area = new DragArea(elem, my, block);
-                block.getElem().closest('div[data-container=block]').after(elem);
+                block.getContainer().after(elem);
             }
             my.getDragAreas().push(drag_area);
             return drag_area;
@@ -884,14 +886,37 @@
 
     Block.prototype = {
 
+        getContainer: function blockGetActualElement() {
+            var current = this.getElem();
+            while (!current.parent().hasClass('ccm-area-block-list')) {
+                if (!current.parent().length) {
+                    break;
+                }
+                current = current.parent();
+            }
+            return current;
+        },
+
         addToDragArea: function blockAddToDragArea(drag_area) {
             var my = this,
                 sourceArea = my.getArea(),
                 targetArea = drag_area.getArea(),
-                selected_block;
+                selected_block, wrapper;
 
             sourceArea.removeBlock(my);
-            drag_area.getElem().after(my.getElem());
+
+            my.getContainer().remove();
+            if (my.getWraps()) {
+                wrapper = $(targetArea.getBlockTemplate()());
+                drag_area.getElem().after(wrapper);
+                if (wrapper.children().length) {
+                    wrapper.find('div.block').replaceWith(my.getElem());
+                } else {
+                    wrapper.append(my.getElem());
+                }
+            } else {
+                drag_area.getElem().after(my.getElem());
+            }
             selected_block = drag_area.getBlock();
             if (selected_block) {
                 drag_area.getArea().addBlock(my, selected_block);
@@ -903,6 +928,7 @@
                 // we have to destroy the old menu and create it anew
                 targetArea.bindMenu();
             }
+            my.getEditMode().scanBlocks();
             Concrete.event.fire('EditModeBlockMove', {
                 block: my,
                 sourceArea: sourceArea,
@@ -925,7 +951,7 @@
                     arEnableGridContainer: arEnableGridContainer
                 }, function (html) {
                     if (after_block) {
-                        after_block.getElem().closest('div[data-container=block]').after(html);
+                        after_block.getContainer().after(html);
                     } else {
                         area.getElem().prepend(html);
                     }
@@ -1441,7 +1467,7 @@
                             arEnableGridContainer: arEnableGridContainer
                         }, function (html) {
                             if (dragAreaBlock) {
-                                dragAreaBlock.getElem().closest('div[data-container=block]').after(html);
+                                dragAreaBlock.getContainer().after(html);
                             } else {
                                 area.getElem().append(html);
                             }

@@ -89,6 +89,9 @@ class Theme extends Object
         return $this->pThemeGridFrameworkHandle != false;
     }
 
+    /**
+     * @return GridFramework|null
+     */
     public function getThemeGridFrameworkObject()
     {
         if ($this->pThemeGridFrameworkHandle) {
