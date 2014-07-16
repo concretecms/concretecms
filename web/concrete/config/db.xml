@@ -3394,6 +3394,9 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
 
 
