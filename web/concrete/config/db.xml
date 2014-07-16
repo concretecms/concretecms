@@ -2547,6 +2547,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
+    <index name="akID">
+        <col>akID</col>
+    </index>
   </table>
   <table name="UserPermissionEditPropertyAccessList">
     <field name="paID" type="I" size="10">
