@@ -3342,6 +3342,16 @@
       <notnull/>
       <default value="0"/>
     </field>
+    <index name="upaHandle">
+        <unique/>
+        <col>upaHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
+    <index name="gBBadgeID">
+        <col>gBadgeID</col>
+    </index>
   </table>
   <table name="SystemAntispamLibraries">
     <field name="saslHandle" type="C" size="64">
