@@ -4753,6 +4753,9 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="wpID">
+        <col>wpID</col>
+    </index>
   </table>
   <table name="Queues">
     <field name="queue_id" type="I" size="10">
