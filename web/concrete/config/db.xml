@@ -3696,6 +3696,7 @@
       <col>cParentID</col>
     </index>
     <index name="cIsActive">
+      <col>cID</col>
       <col>cIsActive</col>
     </index>
     <index name="cCheckedOutUID">
@@ -3703,15 +3704,26 @@
     </index>
     <index name="uID">
       <col>uID</col>
+      <col>cPointerID</col>
     </index>
     <index name="cPointerID">
       <col>cPointerID</col>
+      <col>cDisplayOrder</col>
     </index>
     <index name="cIsTemplate">
+      <col>cID</col>
       <col>cIsTemplate</col>
     </index>
     <index name="cIsSystemPage">
+      <col>cID</col>
       <col>cIsSystemPage</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
+    <index name="cParentMaxDisplay">
+        <col>cParentID</col>
+        <col>cDisplayOrder</col>
     </index>
   </table>
   <table name="PileContents">
