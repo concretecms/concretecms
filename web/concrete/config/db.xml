@@ -105,6 +105,9 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="PageTypeComposerFormLayoutSets">
     <field name="ptComposerFormLayoutSetID" type="I" size="10">
@@ -124,9 +127,6 @@
     <index name="ptComposerControlTypeHandle">
         <unique/>
         <col>ptComposerControlTypeHandle</col>
-    </index>
-    <index name="pkgID">
-        <col>pkgID</col>
     </index>
   </table>
   <table name="PageTypeComposerFormLayoutSetControls">
