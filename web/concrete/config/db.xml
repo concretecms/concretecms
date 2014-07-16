@@ -3153,6 +3153,12 @@
       <notnull/>
       <deftimestamp/>
     </field>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
+    <index name="jsName">
+        <col>jsName</col>
+    </index>
   </table>
 
 
