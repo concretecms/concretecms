@@ -991,6 +991,13 @@
       <col>peID</col>
       <col>accessType</col>
     </index>
+    <index name="pdID">
+        <col>pdID</col>
+    </index>
+    <index name="permissionAccessDuration">
+        <col>paID</col>
+        <col>pdID</col>
+    </index>
   </table>
   <table name="BlockTypePermissionBlockTypeAccessList">
     <field name="paID" type="I" size="10">
