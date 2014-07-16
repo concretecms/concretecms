@@ -76,6 +76,16 @@
       <unsigned/>
       <default value="0" />
     </field>
+    <index name="cID">
+        <col>cID</col>
+    </index>
+    <index name="bID">
+        <col>bID</col>
+        <col>cID</col>
+    </index>
+    <index name="ptComposerFormLayoutSetControlID">
+        <col>ptComposerFormLayoutSetControlID</col>
+    </index>
   </table>
 
   <table name="PageTypePublishTargetTypes">
