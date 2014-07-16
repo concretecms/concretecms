@@ -48,6 +48,9 @@
       <unsigned/>
       <default value="0" />
     </field>
+    <index name="pTemplateID">
+        <col>pTemplateID</col>
+    </index>
   </table>
 
   <table name="PageTypeComposerOutputBlocks">
