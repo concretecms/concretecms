@@ -206,6 +206,16 @@
       <unsigned/>
       <default value="0" />
     </field>
+    <index name="pTemplateID">
+        <col>pTemplateID</col>
+        <col>ptComposerFormLayoutSetControlID</col>
+    </index>
+    <index name="ptID">
+        <col>ptID</col>
+    </index>
+    <index name="ptComposerFormLayoutSetControlID">
+        <col>ptComposerFormLayoutSetControlID</col>
+    </index>
   </table>
 
   <table name="PageTypeComposerDraftBlocks">
