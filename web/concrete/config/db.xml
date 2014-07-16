@@ -4717,6 +4717,13 @@
     <field name="pkgID" type="I" size="10">
       <unsigned/>
     </field>
+    <index name="wpCategoryHandle">
+        <unique/>
+        <col>wpCategoryHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="WorkflowProgressHistory">
     <field name="wphID" type="I" size="10">
