@@ -39,7 +39,7 @@
         <blocktype handle="page_list" package=""/>
         <blocktype handle="rss_displayer" package=""/>
         <blocktype handle="search" package=""/>
-        <blocktype handle="slideshow" package=""/>
+        <blocktype handle="image_slider" package=""/>
         <blocktype handle="survey" package=""/>
         <blocktype handle="tags" package=""/>
         <blocktype handle="video" package=""/>
@@ -86,7 +86,7 @@
             <blocktype handle="discussion"/>
         </blocktypeset>
         <blocktypeset handle="multimedia" name="Multimedia" package="">
-            <blocktype handle="slideshow"/>
+            <blocktype handle="image_slider"/>
             <blocktype handle="video"/>
             <blocktype handle="youtube"/>
             <blocktype handle="google_map"/>
