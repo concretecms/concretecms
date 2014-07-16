@@ -195,19 +195,25 @@ input[type="date"] {
 //
 // Indent the labels to position radios/checkboxes as hanging controls.
 
+/*
+ * concrete5 - fix the padding problem by patching in code from later bootstrap
+ */
 .radio,
 .checkbox {
+  position: relative;
   display: block;
   min-height: @line-height-computed; // clear the floating input if there is no label text
   margin-top: 10px;
   margin-bottom: 10px;
-  padding-left: 20px;
+
   label {
-    display: inline;
+    padding-left: 20px;
+    margin-bottom: 0;
     font-weight: normal;
     cursor: pointer;
   }
 }
+
 .radio input[type="radio"],
 .radio-inline input[type="radio"],
 .checkbox input[type="checkbox"],

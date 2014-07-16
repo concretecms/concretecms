@@ -595,9 +595,9 @@ class Collection extends Object
 
         foreach ($r2 as $r) {
             $issID = $r['issID'];
-            $obj = Set::getByID($issID);
+            $obj = StyleSet::getByID($issID);
             if (is_object($obj)) {
-                $obj = new AreaCustomStyle($obj, $arHandle);
+                $obj = new AreaCustomStyle($obj, $r['arHandle']);
                 $psss[] = $obj;
                 CacheLocal::set(
                           'pssObject',
@@ -645,7 +645,7 @@ class Collection extends Object
 
         $styleHeader = '';
         foreach ($psss as $st) {
-            $styleHeader .= $st->getCSS();
+            $styleHeader .= '<style type="text/css" data-style-set="' . $st->getStyleSet()->getID() . '">' . $st->getCSS() . '</style>';
         }
 
         if (strlen(trim($styleHeader))) {
@@ -653,12 +653,12 @@ class Collection extends Object
                 return $styleHeader;
             } else {
                 $v = \View::getInstance();
-                $v->addHeaderItem("<style type=\"text/css\"> \r\n" . $styleHeader . '</style>', 'VIEW');
+                $v->addHeaderItem($styleHeader);
             }
         }
     }
 
-    public function getAreaCustomStyleRule($area)
+    public function getAreaCustomStyle($area, $force = false)
     {
         $db = Loader::db();
 
@@ -672,13 +672,13 @@ class Collection extends Object
         $styles = $this->vObj->getCustomAreaStyles();
         $issID = $styles[$area->getAreaHandle()];
 
-        if ($issID > 0) {
-            $txt = Loader::helper('text');
-            $pss = Set::getByID($issID);
-            if (is_object($pss)) {
-                $pss = new AreaCustomStyle($pss, $area->getAreaHandle());
-                return $pss;
+        if ($issID > 0 || $force) {
+            if ($issID) {
+                $pss = StyleSet::getByID($issID);
             }
+
+            $pss = new AreaCustomStyle($pss, $area->getAreaHandle());
+            return $pss;
         }
     }
 
@@ -695,8 +695,7 @@ class Collection extends Object
         );
     }
 
-    /*
-    public function setAreaCustomStyle($area, $csr)
+    public function setCustomStyleSet($area, $set)
     {
         $db = Loader::db();
         $db->Replace(
@@ -705,13 +704,12 @@ class Collection extends Object
                'cID'      => $this->getCollectionID(),
                'cvID'     => $this->getVersionID(),
                'arHandle' => $area->getAreaHandle(),
-               'csrID'    => $csr->getCustomStyleRuleID()
+               'issID'    => $set->getID()
            ),
            array('cID', 'cvID', 'arHandle'),
            true
         );
     }
-    */
 
     public function relateVersionEdits($oc)
     {
