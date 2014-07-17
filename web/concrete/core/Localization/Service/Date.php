@@ -319,4 +319,94 @@ class Date
         return round($zendToUTC->getTimestamp() / 86400);
     }
 
+    /**
+     * Render the date part of a date/time as a localized string
+     * @param mixed $value $The date/time representation (one of the values accepted by toZendDate)
+     * @param bool $longDate $Set to true for the long date format (eg 'December 31, 2000'), false (default) for the short format (eg '12/31/2000')
+     * @param string $toTimezone The timezone to set. Special values are:<ul>
+     *     <li>'system' for the current system timezone</li>
+     *     <li>'user' (default) for the user's timezone</li>
+     *     <li>'app' for the app's timezone</li>
+     *     <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
+     * </ul>
+     * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
+     */
+    public function formatDate($value = 'now', $longDate = false, $toTimezone = 'user')
+    {
+        $zendDate = $this->toZendDate($value, $toTimezone);
+        if (is_null(toZendDate)) {
+            return '';
+        }
+        if ($longDate) {
+            $format = t(/*i18n: Long date format: see http://www.php.net/manual/en/function.date.php */ 'F j, Y');
+        } else {
+            $format = t(/*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y');
+        }
+
+        return $zendDate->toString($format);
+    }
+
+    /**
+     * Render the time part of a date/time as a localized string
+     * @param mixed $value The date/time representation (one of the values accepted by toZendDate)
+     * @param bool $withSeconds Set to true to include seconds (eg '11:59:59 PM'), false (default) otherwise (eg '11:59 PM');
+     * @param string $toTimezone The timezone to set. Special values are:<ul>
+     *     <li>'system' for the current system timezone</li>
+     *     <li>'user' (default) for the user's timezone</li>
+     *     <li>'app' for the app's timezone</li>
+     *     <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
+     * </ul>
+     * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
+     */
+    public function formatTime($value = 'now', $withSeconds = false, $toTimezone = 'user')
+    {
+        $zendDate = $this->toZendDate($value, $toTimezone);
+        if (is_null(toZendDate)) {
+            return '';
+        }
+        if ($withSeconds) {
+            $format = t(/*i18n: Time format with seconds: see http://www.php.net/manual/en/function.date.php */ 'g:i:s A');
+        } else {
+            $format = t(/*i18n: Time format without seconds: see http://www.php.net/manual/en/function.date.php */ 'g:i A');
+        }
+
+        return $zendDate->toString($format);
+    }
+
+    /**
+     * Render both the date and time parts of a date/time as a localized string
+     * @param mixed $value The date/time representation (one of the values accepted by toZendDate)
+     * @param bool $longDate Set to true for the long date format (eg 'December 31, 2000 at ...'), false (default) for the short format (eg '12/31/2000 at ...')
+     * @param bool $withSeconds Set to true to include seconds (eg '... at 11:59:59 PM'), false (default) otherwise (eg '... at 11:59 PM');
+     * @param string $toTimezone The timezone to set. Special values are:<ul>
+     *     <li>'system' for the current system timezone</li>
+     *     <li>'user' (default) for the user's timezone</li>
+     *     <li>'app' for the app's timezone</li>
+     *     <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
+     * </ul>
+     * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
+     */
+    public function formatDateTime($value = 'now', $longDate = false, $withSeconds = false, $toTimezone = 'user')
+    {
+        $zendDate = $this->toZendDate($value, $toTimezone);
+        if (is_null($zendDate)) {
+            return '';
+        }
+        if ($longDate) {
+            if ($withSeconds) {
+                $format = t(/*i18n: Long date format and time with seconds: see http://www.php.net/manual/en/function.date.php */ 'F d, Y \\a\\t g:i:s A')
+                ;
+            } else {
+                $format = t(/*i18n: Long date format and time without seconds: see http://www.php.net/manual/en/function.date.php */ 'F d, Y \\a\\t g:i A');
+            }
+        } else {
+            if ($withSeconds) {
+                $format = t(/*i18n: Short date format and time with seconds: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y \\a\\t g:i:s A');
+            } else {
+                $format = t(/*i18n: Short date format and time without seconds: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y \\a\\t g:i A');
+            }
+        }
+
+        return $zendDate->toString($format);
+    }
 }
