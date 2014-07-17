@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Page\View;
 use Loader;
 use View;
@@ -73,8 +73,13 @@ class PageView extends View {
             }
         } else {
             $pt = PageTemplate::getByID($this->pTemplateID);
-            $rec = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle() . '.php', $this->themePkgHandle);
-            if ($rec->exists()) {
+            $rec = null;
+            if ($pt) {
+                $rec = $env->getRecord(
+                    DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle() . '.php',
+                    $this->themePkgHandle);
+            }
+            if ($rec && $rec->exists()) {
                 $this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle() . '.php', $this->themePkgHandle));
             } else {
                 $rec = $env->getRecord(DIRNAME_PAGE_TYPES . '/' . $this->c->getPageTypeHandle() . '.php', $this->themePkgHandle);
