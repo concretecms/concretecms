@@ -158,48 +158,56 @@ class Date
     /**
      * Describe the difference in time between now and a date/time in the past.
      * If the date/time is in the future or if it's more than one year old, you'll get the date representation of $posttime
-     * @param int $posttime The timestamp to analyze
-     * @param bool $precise = false Set to true to a more verbose and precise result, false for a more rounded result
+     * @param  int    $posttime The timestamp to analyze
+     * @param  bool   $precise  = false Set to true to a more verbose and precise result, false for a more rounded result
      * @return string
      */
     public function timeSince($posttime, $precise = false)
     {
-        $timeRemaining=0;
-        $diff=date("U")-$posttime;
-        $days=intval($diff/(24*60*60));
-        $hoursInSecs=$diff-($days*(24*60*60));
-        $hours=intval($hoursInSecs/(60*60));
-        if ($hours<=0) $hours=$hours+24;
-        if ($posttime>date("U") || $diff > (365 * 24 * 60 * 60) ) {
-            return $this->date(DATE_APP_GENERIC_MDY,$posttime);
+        $diff = time() - $posttime;
+        if (($diff < 0) || ($diff > 365 * 24 * 60 * 60)) {
+            return $this->formatDate($posttime, false);
         } else {
-            if ($diff>86400) {
-                    $days= floor($diff / 86400);
-                    $timeRemaining = t2('%d day', '%d days', $days, $days);
-                    if ($precise) {
-                        $timeRemaining .= ', '.t2('%d hour', '%d hours', $hours, $hours);
-                    }
-                } elseif ($diff>3600) {
-                    $timeRemaining = t2('%d hour', '%d hours', $hours, $hours);
-                    if ($precise) {
-                        $minutes = date("i", $diff);
-                        $timeRemaining .= ', '.t2('%d minute', '%d minutes', $minutes, $minutes);
-                    }
-                } elseif ($diff>60) {
-                    $minutes=date("i",$diff);
-                    if(substr($minutes,0,1)=='0') $minutes=substr($minutes,1);
-                    $timeRemaining = t2('%d minute', '%d minutes', $minutes, $minutes);
-                    if ($precise) {
-                        $seconds = date("s",$diff);
-                        $timeRemaining .= ', '.t2('%d second', '%d seconds', $seconds, $seconds);
-                    }
-                } else {
-                    $seconds=date("s",$diff);
-                    if(substr($seconds,0,1)=='0') $seconds=substr($seconds,1);
-                    $timeRemaining = t2('%d second', '%d seconds', $seconds, $seconds);
-                }
+            return $this->describeInterval($diff, $precise);
+        }
+    }
+
+    /**
+     * Returns the localized representation of a time interval specified as seconds.
+     * @param  int    $diff    The time difference in seconds
+     * @param  bool   $precise = false Set to true to a more verbose and precise result, false for a more rounded result
+     * @return string
+     */
+    public function describeInterval($diff, $precise = false)
+    {
+        $secondsPerMinute = 60;
+        $secondsPerHour = 60 * $secondsPerMinute;
+        $secondsPerDay = 24 * $secondsPerHour;
+        $days = floor($diff / $secondsPerDay);
+        $diff = $diff - $days * $secondsPerDay;
+        $hours = floor($diff / $secondsPerHour);
+        $diff = $diff - $hours * $secondsPerHour;
+        $minutes = floor($diff / $secondsPerMinute);
+        $seconds = $diff - $minutes * $secondsPerMinute;
+        if ($days > 0) {
+            $description = t2('%d day', '%d days', $days, $days);
+            if ($precise) {
+                $description .= ', ' . t2('%d hour', '%d hours', $hours, $hours);
+            }
+        } elseif ($hours > 0) {
+            $description = t2('%d hour', '%d hours', $hours, $hours);
+            if ($precise) {
+                $description .= ', ' . t2('%d minute', '%d minutes', $minutes, $minutes);
+            }
+        } elseif ($minutes > 0) {
+            $description = t2('%d minute', '%d minutes', $minutes, $minutes);
+            if ($precise) {
+                $description .= ', '.t2('%d second', '%d seconds', $seconds, $seconds);
+            }
+        } else {
+            $description = t2('%d second', '%d seconds', $seconds, $seconds);
         }
 
-        return $timeRemaining;
-    }//end timeSince
+        return $description;
+    }
 }
