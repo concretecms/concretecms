@@ -210,4 +210,81 @@ class Date
 
         return $description;
     }
+
+    /**
+     * Convert a date to a Zend_Date instance.
+     * @param  string|DateTime|Zend_Date|int $value It can be:<ul>
+     *    <li>the special value 'now' (default) to return the current date/time</li>
+     *    <li>a DateTime instance</li>
+     *    <li>a Zend_Date instance</li>
+     *    <li>a string parsable by strtotime (the current system timezone is used)</li>
+     *    <li>a timestamp</li>
+     * </ul>
+     * @param  string $toTimezone The timezone to set. Special values are:<ul>
+     *    <li>'system' (default) for the current system timezone</li>
+     *    <li>'user' for the user's timezone</li>
+     *    <li>'app' for the app's timezone</li>
+     *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
+     * </ul>
+     * @return Zend_Date|null Returns the Zend_Date instance (or null if $value couldn't be parsed)
+     */
+    public function toZendDate($value = 'now', $toTimezone = 'system')
+    {
+        $zendDate = null;
+        if (is_int($value)) {
+            $zendDate = new Zend_Date($value, Zend_Date::TIMESTAMP);
+        } elseif ($value instanceof DateTime) {
+            $zendDate = new Zend_Date($value->format(DATE_ATOM), DATE_ATOM);
+            $zendDate->setTimeZone($value->format('e'));
+        } elseif (is_a($value, 'Zend_Date')) {
+            $zendDate = clone $value;
+        } elseif (is_string($value) && strlen($value)) {
+            if ($value === 'now') {
+                $zendDate = new Zend_Date();
+            } elseif (is_numeric($value)) {
+                $zendDate = new Zend_Date($value, Zend_Date::TIMESTAMP);
+            } else {
+                $timestamp = @strtotime($value);
+                if ($timestamp !== false) {
+                    $zendDate = new Zend_Date($timestamp, Zend_Date::TIMESTAMP);
+                }
+            }
+        }
+        if (is_null($zendDate)) {
+            return null;
+        }
+        $zendDate->setLocale(Localization::activeLocale());
+        switch ($toTimezone) {
+            case 'system':
+                $tz = defined('APP_TIMEZONE_SERVER') ? APP_TIMEZONE_SERVER : date_default_timezone_get();
+                break;
+            case 'app':
+                $tz = defined('APP_TIMEZONE') ? APP_TIMEZONE : date_default_timezone_get();
+                break;
+            case 'user':
+                $tz = null;
+                if (defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) {
+                    $u = null;
+                    $request = C5_ENVIRONMENT_ONLY ? Request::get() : null;
+                    if ($request && $request->hasCustomRequestUser()) {
+                        $u = $request->getCustomRequestUser();
+                    } elseif (User::isLoggedIn()) {
+                        $u = new User();
+                    }
+                    if ($u) {
+                        $tz = $u->getUserTimezone();
+                    }
+                }
+                if (!$tz) {
+                    $tz = defined('APP_TIMEZONE') ? APP_TIMEZONE : date_default_timezone_get();
+                }
+                break;
+            default:
+                $tz = $toTimezone;
+                break;
+        }
+        $zendDate->setTimezone($tz);
+
+        return $zendDate;
+    }
 }
