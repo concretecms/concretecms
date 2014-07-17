@@ -228,7 +228,8 @@ class Stack extends Page
         }
 
         $db = Loader::db();
-        $r = $db->Execute('select arHandle from Areas where cID = ?', array($this->getCollectionID()));
+        // you shouldn't ever have a sub area in a stack but just in case.
+        $r = $db->Execute('select arHandle from Areas where cID = ? and arParentID = 0', array($this->getCollectionID()));
         while ($row = $r->FetchRow()) {
             $ax = Area::get($this, $row['arHandle']);
             $ax->export($p, $this);

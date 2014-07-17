@@ -3,6 +3,7 @@
 namespace Concrete\Block\SocialLinks;
 use \Concrete\Core\Block\BlockController;
 use Concrete\Core\Sharing\SocialNetwork\Link;
+use Concrete\Core\Sharing\SocialNetwork\Service;
 use Database;
 use Core;
 
@@ -67,6 +68,25 @@ class Controller extends BlockController
         return $links;
     }
 
+    public function export(\SimpleXMLElement $blockNode)
+    {
+        foreach($this->getSelectedLinks() as $link) {
+            $linkNode = $blockNode->addChild('link');
+            $linkNode->addAttribute('service', $link->getServiceObject()->getHandle());
+        }
+    }
+
+    public function getImportData($blockNode)
+    {
+
+        $args = array();
+        foreach($blockNode->link as $link) {
+            $link = Link::getByServiceHandle((string) $link['service']);
+            $args['slID'][] = $link->getID();
+        }
+        return $args;
+    }
+
     public function validate()
     {
         $e = Core::make('helper/validation/error');
@@ -77,12 +97,19 @@ class Controller extends BlockController
         return $e;
     }
 
+    public function duplicate($newBlockID)
+    {
+        $db = Database::get();
+        foreach($this->getSelectedLinks() as $link) {
+            $db->insert('btSocialLinks', array('bID' => $newBlockID, 'slID' => $link->getID(), 'displayOrder' => $this->displayOrder));
+        }
+    }
 
-    public function save()
+    public function save($args)
     {
         $db = Database::get();
         $db->delete('btSocialLinks', array('bID' => $this->bID));
-        $slIDs = $this->post('slID');
+        $slIDs = $args['slID'];
 
         $statement = $db->prepare('insert into btSocialLinks (bID, slID, displayOrder) values (?, ?, ?)');
         $displayOrder = 0;

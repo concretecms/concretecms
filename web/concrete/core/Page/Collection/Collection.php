@@ -14,7 +14,9 @@ use Concrete\Core\Foundation\Object as Object;
 use Concrete\Core\Gathering\Item\Page as PageGatheringItem;
 use Concrete\Core\Page\Collection\Version\VersionList;
 use Concrete\Core\Page\Search\IndexedSearch;
-use Concrete\Core\Page\Style\CustomStyleRule;
+use Concrete\Core\StyleCustomizer\Inline\StyleSet;
+use Concrete\Core\Block\CustomStyle as BlockCustomStyle;
+use Concrete\Core\Area\CustomStyle as AreaCustomStyle;
 use Config;
 use Loader;
 use Page;
@@ -233,16 +235,16 @@ class Collection extends Object
         }
 
         // duplicate any area styles
-        $q = "select csrID, arHandle from CollectionVersionAreaStyles where cID = '$cID' and cvID = '$cvID'";
+        $q = "select issID, arHandle from CollectionVersionAreaStyles where cID = '$cID' and cvID = '$cvID'";
         $r = $db->query($q);
         while ($row = $r->FetchRow()) {
             $db->Execute(
-               'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, csrID) values (?, ?, ?, ?)',
+               'insert into CollectionVersionAreaStyles (cID, cvID, arHandle, issID) values (?, ?, ?, ?)',
                array(
                    $this->getCollectionID(),
                    $nvObj->getVersionID(),
                    $row['arHandle'],
-                   $row['csrID']
+                   $row['issID']
                )
             );
         }
@@ -563,28 +565,28 @@ class Collection extends Object
     {
 
         $db = Loader::db();
-        $csrs = array();
+        $psss = array();
         $txt = Loader::helper('text');
-        CacheLocal::set('csrCheck', $this->getCollectionID() . ':' . $this->getVersionID(), true);
+        CacheLocal::set('pssCheck', $this->getCollectionID() . ':' . $this->getVersionID(), true);
 
         $r1 = $db->GetAll(
-                 'select bID, arHandle, csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0',
+                 'select bID, arHandle, issID from CollectionVersionBlockStyles where cID = ? and cvID = ? and issID > 0',
                  array($this->getCollectionID(), $this->getVersionID())
         );
         $r2 = $db->GetAll(
-                 'select arHandle, csrID from CollectionVersionAreaStyles where cID = ? and cvID = ? and csrID > 0',
+                 'select arHandle, issID from CollectionVersionAreaStyles where cID = ? and cvID = ? and issID > 0',
                  array($this->getCollectionID(), $this->getVersionID())
         );
         foreach ($r1 as $r) {
-            $csrID = $r['csrID'];
+            $issID = $r['issID'];
             $arHandle = $txt->filterNonAlphaNum($r['arHandle']);
             $bID = $r['bID'];
-            $obj = CustomStyleRule::getByID($csrID);
+            $obj = StyleSet::getByID($issID);
             if (is_object($obj)) {
-                $obj->setCustomStyleNameSpace('blockStyle' . $bID . $arHandle);
-                $csrs[] = $obj;
+                $obj = new BlockCustomStyle($obj, $bID, $arHandle);
+                $psss[] = $obj;
                 CacheLocal::set(
-                          'csrObject',
+                          'pssObject',
                           $this->getCollectionID() . ':' . $this->getVersionID() . ':' . $r['arHandle'] . ':' . $r['bID'],
                           $obj
                 );
@@ -592,14 +594,13 @@ class Collection extends Object
         }
 
         foreach ($r2 as $r) {
-            $csrID = $r['csrID'];
-            $arHandle = $txt->filterNonAlphaNum($r['arHandle']);
-            $obj = CustomStyleRule::getByID($csrID);
+            $issID = $r['issID'];
+            $obj = StyleSet::getByID($issID);
             if (is_object($obj)) {
-                $obj->setCustomStyleNameSpace('areaStyle' . $arHandle);
-                $csrs[] = $obj;
+                $obj = new AreaCustomStyle($obj, $r['arHandle']);
+                $psss[] = $obj;
                 CacheLocal::set(
-                          'csrObject',
+                          'pssObject',
                           $this->getCollectionID() . ':' . $this->getVersionID() . ':' . $r['arHandle'],
                           $obj
                 );
@@ -620,21 +621,19 @@ class Collection extends Object
                     $s = Stack::getByName($garHandle, 'ACTIVE');
                 }
                 if (is_object($s)) {
-                    CacheLocal::set('csrCheck', $s->getCollectionID() . ':' . $s->getVersionID(), true);
+                    CacheLocal::set('pssCheck', $s->getCollectionID() . ':' . $s->getVersionID(), true);
                     $rs1 = $db->GetAll(
-                              'select bID, csrID, arHandle from CollectionVersionBlockStyles where cID = ? and cvID = ? and csrID > 0',
+                              'select bID, issID, arHandle from CollectionVersionBlockStyles where cID = ? and cvID = ? and issID > 0',
                               array($s->getCollectionID(), $s->getVersionID())
                     );
                     foreach ($rs1 as $r) {
-                        $csrID = $r['csrID'];
-                        $arHandle = $txt->filterNonAlphaNum($r['arHandle']);
-                        $bID = $r['bID'];
-                        $obj = CustomStyleRule::getByID($csrID);
+                        $issID = $r['issID'];
+                        $obj = Set::getByID($issID);
                         if (is_object($obj)) {
-                            $obj->setCustomStyleNameSpace('blockStyle' . $bID . $arHandle);
-                            $csrs[] = $obj;
+                            $obj = new BlockCustomStyle($obj, $r['bID'], $r['arHandle']);
+                            $psss[] = $obj;
                             CacheLocal::set(
-                                      'csrObject',
+                                      'pssObject',
                                       $s->getCollectionID() . ':' . $s->getVersionID() . ':' . $r['arHandle'] . ':' . $r['bID'],
                                       $obj
                             );
@@ -643,25 +642,23 @@ class Collection extends Object
                 }
             }
         }
-        //get the header style rules
+
         $styleHeader = '';
-        foreach ($csrs as $st) {
-            if ($st->getCustomStyleRuleCSSID(true)) {
-                $styleHeader .= '#' . $st->getCustomStyleRuleCSSID(1) . ' {' . $st->getCustomStyleRuleText() . "} \r\n";
-            }
+        foreach ($psss as $st) {
+            $styleHeader .= '<style type="text/css" data-style-set="' . $st->getStyleSet()->getID() . '">' . $st->getCSS() . '</style>';
         }
 
         if (strlen(trim($styleHeader))) {
             if ($return == true) {
                 return $styleHeader;
             } else {
-                $v = View::getInstance();
-                $v->addHeaderItem("<style type=\"text/css\"> \r\n" . $styleHeader . '</style>', 'VIEW');
+                $v = \View::getInstance();
+                $v->addHeaderItem($styleHeader);
             }
         }
     }
 
-    public function getAreaCustomStyleRule($area)
+    public function getAreaCustomStyle($area, $force = false)
     {
         $db = Loader::db();
 
@@ -673,16 +670,15 @@ class Collection extends Object
         }
 
         $styles = $this->vObj->getCustomAreaStyles();
-        $csrID = $styles[$area->getAreaHandle()];
+        $issID = $styles[$area->getAreaHandle()];
 
-        if ($csrID > 0) {
-            $txt = Loader::helper('text');
-            $arHandle = $txt->filterNonAlphaNum($area->getAreaHandle());
-            $csr = CustomStyleRule::getByID($csrID);
-            if (is_object($csr)) {
-                $csr->setCustomStyleNameSpace('areaStyle' . $arHandle);
-                return $csr;
+        if ($issID > 0 || $force) {
+            if ($issID) {
+                $pss = StyleSet::getByID($issID);
             }
+
+            $pss = new AreaCustomStyle($pss, $area->getAreaHandle());
+            return $pss;
         }
     }
 
@@ -699,7 +695,7 @@ class Collection extends Object
         );
     }
 
-    public function setAreaCustomStyle($area, $csr)
+    public function setCustomStyleSet($area, $set)
     {
         $db = Loader::db();
         $db->Replace(
@@ -708,7 +704,7 @@ class Collection extends Object
                'cID'      => $this->getCollectionID(),
                'cvID'     => $this->getVersionID(),
                'arHandle' => $area->getAreaHandle(),
-               'csrID'    => $csr->getCustomStyleRuleID()
+               'issID'    => $set->getID()
            ),
            array('cID', 'cvID', 'arHandle'),
            true
@@ -1069,15 +1065,15 @@ class Collection extends Object
             $ql = "select * from CollectionVersionBlockStyles where cID = '{$this->cID}'";
             $rl = $db->query($ql);
             while ($row = $rl->fetchRow()) {
-                $vl = array($newCID, $row['cvID'], $row['bID'], $row['arHandle'], $row['csrID']);
-                $ql = "insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, csrID) values (?, ?, ?, ?, ?)";
+                $vl = array($newCID, $row['cvID'], $row['bID'], $row['arHandle'], $row['issID']);
+                $ql = "insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, issID) values (?, ?, ?, ?, ?)";
                 $db->query($ql, $vl);
             }
             $ql = "select * from CollectionVersionAreaStyles where cID = '{$this->cID}'";
             $rl = $db->query($ql);
             while ($row = $rl->fetchRow()) {
-                $vl = array($newCID, $row['cvID'], $row['arHandle'], $row['csrID']);
-                $ql = "insert into CollectionVersionAreaStyles (cID, cvID, arHandle, csrID) values (?, ?, ?, ?)";
+                $vl = array($newCID, $row['cvID'], $row['arHandle'], $row['issID']);
+                $ql = "insert into CollectionVersionAreaStyles (cID, cvID, arHandle, issID) values (?, ?, ?, ?)";
                 $db->query($ql, $vl);
             }
 

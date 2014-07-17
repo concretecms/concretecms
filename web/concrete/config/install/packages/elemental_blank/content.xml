@@ -27,9 +27,11 @@
         <pagetemplate handle="full">
           <page>
             <area name="Main">
-              <block type="core_page_type_composer_control_output" name="">
-                <control output-control-id="EcjltFnE"/>
-              </block>
+              <blocks>
+                  <block type="core_page_type_composer_control_output" name="">
+                    <control output-control-id="EcjltFnE"/>
+                  </block>
+              </blocks>
             </area>
           </page>
         </pagetemplate>

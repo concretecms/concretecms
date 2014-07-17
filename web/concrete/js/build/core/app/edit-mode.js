@@ -34,9 +34,9 @@
         Concrete.event.bind('EditModeBlockEditInline', function (event, data) {
             var block = data.block,
                 area = block.getArea(),
+                action = (data.action) ? data.action : CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/block/edit',
                 arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0,
                 postData = [
-                    {name: 'btask', value: 'edit'},
                     {name: 'cID', value: block.getCID()},
                     {name: 'arHandle', value: area.getHandle()},
                     {name: 'arGridMaximumColumns', value: data.arGridMaximumColumns},
@@ -62,7 +62,7 @@
             Concrete.event.bind('EditModeExitInline', function (e) {
                 Concrete.event.unbind(e);
                 e.stopPropagation();
-                var action = CCM_TOOLS_PATH + '/edit_block_popup?cID=' + block.getCID() + '&arEnableGridContainer=' + arEnableGridContainer + '&bID=' + block.getId() + '&arHandle=' + escape(area.getHandle()) + '&btask=view_edit_mode';
+                var action = CCM_DISPATCHER_FILENAME + '/ccm/system/block/render?cID=' + block.getCID() + '&arEnableGridContainer=' + arEnableGridContainer + '&bID=' + block.getId() + '&arHandle=' + escape(area.getHandle());
                 $.fn.dialog.showLoader();
                 $.get(action,
                     function (r) {
@@ -73,19 +73,22 @@
                                 block: newBlock
                             });
                             my.destroyInlineEditModeToolbars();
+                            _.defer(function() {
+                                my.scanBlocks();
+                            });
                         });
                     }
                 );
             });
 
-            ConcreteMenuManager.disable();
+//            ConcreteMenuManager.disable();
             ConcreteToolbar.disable();
             area.getElem().addClass('ccm-area-inline-edit-disabled');
             $container.addClass('ccm-block-edit-inline-active');
 
             $.ajax({
                 type: 'GET',
-                url: CCM_TOOLS_PATH + '/edit_block_popup',
+                url: action,
                 data: postData,
                 success: function (r) {
                     $container.html(r);
@@ -133,10 +136,21 @@
                 area.menu.destroy();
             }
 
-            Concrete.event.unsubscribe('EditModeExitInline');
-            Concrete.event.bind('EditModeExitInline', function () {
+            var saved = false;
+            Concrete.event.bind('EditModeExitInlineSaved', function(e) {
+                Concrete.event.unbind(e);
+                saved = true;
+            });
+            Concrete.event.bind('EditModeExitInline', function (e) {
+                Concrete.event.unsubscribe(e);
+                if (saved) {
+                    return;
+                }
                 $('#a' + area.getId() + '-bt' + btID).remove();
                 my.destroyInlineEditModeToolbars();
+                _.defer(function() {
+                    my.scanBlocks();
+                });
             });
             $.ajax({
                 type: 'GET',
@@ -318,6 +332,7 @@
 
         Concrete.createGetterSetters.call(my, {
             id: elem.data('area-id'),
+            blockTemplate: _(elem.children('script[role=area-block-wrapper]').html()).template(),
             elem: elem,
             totalBlocks: 0,
             enableGridContainer: elem.data('area-enable-grid-container'),
@@ -347,6 +362,7 @@
             handle: elem.data('block-type-handle'),
             areaId: elem.data('area-id'),
             cID: elem.data('cid'),
+            wraps: !!elem.data('block-type-wraps'),
             area: null,
             elem: elem,
             dragger: null,
@@ -594,16 +610,22 @@
             $.fn.dialog.hideLoader();
         },
 
-        loadInlineEditModeToolbars: function ($container) {
+        loadInlineEditModeToolbars: function ($container, toolbarHTML) {
             $('#ccm-inline-toolbar-container').remove();
+            var $holder = $('<div />', {id: 'ccm-inline-toolbar-container'}).appendTo(document.body);
 
-            var $toolbar = $container.find('.ccm-inline-toolbar'),
-                $holder = $('<div />', {id: 'ccm-inline-toolbar-container'}).appendTo(document.body),
-                $window = $(window),
+            if (toolbarHTML) {
+                $holder.append(toolbarHTML);
+                var $toolbar = $holder.find('.ccm-inline-toolbar');
+            } else {
+                var $toolbar = $container.find('.ccm-inline-toolbar');
+                $toolbar.appendTo($holder);
+            }
+
+            var $window = $(window),
                 pos = $container.offset(),
                 l = pos.left;
 
-            $toolbar.appendTo($holder);
             var tw = l + parseInt($toolbar.width());
             if (tw > $window.width()) {
                 var overage = tw - (l + $container.width());
@@ -701,6 +723,33 @@
                 return false;
             });
 
+            $menuElem.find('a[data-menu-action=edit-area-design]').on('click', function (e) {
+                e.preventDefault();
+                ConcreteToolbar.disable();
+                my.getElem().addClass('ccm-area-inline-edit-disabled');
+                var postData = {
+                    'arHandle': my.getHandle(),
+                    'cID': CCM_CID,
+                }
+
+                Concrete.event.bind('EditModeExitInline', function (e) {
+                    Concrete.event.unsubscribe(e);
+                    my.getEditMode().destroyInlineEditModeToolbars();
+                });
+
+                $.ajax({
+                    type: 'GET',
+                    url: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/area/design',
+                    data: postData,
+                    success: function (r) {
+                        var $container = my.getElem();
+                        my.getEditMode().loadInlineEditModeToolbars($container, r);
+                        $.fn.dialog.hideLoader();
+                    }
+                });
+
+
+            });
         },
 
         /**
@@ -768,7 +817,7 @@
         removeBlock: function areaRemoveBlock(block) {
             var my = this, totalBlocks = my.getTotalBlocks();
 
-            block.getElem().remove();
+            block.getContainer().remove();
             my.setBlocks(_(my.getBlocks()).without(block));
 
             my.setTotalBlocks(totalBlocks - 1);
@@ -807,7 +856,7 @@
             } else {
                 elem = $('<div class="ccm-area-drag-area"/>');
                 drag_area = new DragArea(elem, my, block);
-                block.getElem().closest('div[data-container=block]').after(elem);
+                block.getContainer().after(elem);
             }
             my.getDragAreas().push(drag_area);
             return drag_area;
@@ -837,14 +886,37 @@
 
     Block.prototype = {
 
+        getContainer: function blockGetActualElement() {
+            var current = this.getElem();
+            while (!current.parent().hasClass('ccm-area-block-list') && !current.parent().is('[data-area-id]')) {
+                if (!current.parent().length) {
+                    break;
+                }
+                current = current.parent();
+            }
+            return current;
+        },
+
         addToDragArea: function blockAddToDragArea(drag_area) {
             var my = this,
                 sourceArea = my.getArea(),
                 targetArea = drag_area.getArea(),
-                selected_block;
+                selected_block, wrapper;
 
             sourceArea.removeBlock(my);
-            drag_area.getElem().after(my.getElem());
+
+            my.getContainer().remove();
+            if (my.getWraps()) {
+                wrapper = $(targetArea.getBlockTemplate()());
+                drag_area.getElem().after(wrapper);
+                if (wrapper.children().length) {
+                    wrapper.find('div.block').replaceWith(my.getElem());
+                } else {
+                    wrapper.append(my.getElem());
+                }
+            } else {
+                drag_area.getElem().after(my.getElem());
+            }
             selected_block = drag_area.getBlock();
             if (selected_block) {
                 drag_area.getArea().addBlock(my, selected_block);
@@ -856,6 +928,7 @@
                 // we have to destroy the old menu and create it anew
                 targetArea.bindMenu();
             }
+            my.getEditMode().scanBlocks();
             Concrete.event.fire('EditModeBlockMove', {
                 block: my,
                 sourceArea: sourceArea,
@@ -870,16 +943,15 @@
             if (response.error) {
                 return;
             }
-            $.get(CCM_TOOLS_PATH + '/edit_block_popup',
+            $.get(CCM_DISPATCHER_FILENAME + '/ccm/system/block/render',
                 {
                     arHandle: response.arHandle,
                     cID: response.cID,
                     bID: response.bID,
-                    btask: 'view_edit_mode',
                     arEnableGridContainer: arEnableGridContainer
                 }, function (html) {
                     if (after_block) {
-                        after_block.getElem().closest('div[data-container=block]').after(html);
+                        after_block.getContainer().after(html);
                     } else {
                         area.getElem().prepend(html);
                     }
@@ -996,6 +1068,13 @@
 
                 $menuElem.find('a[data-menu-action=delete_block]').unbind().on('click', function () {
                     Concrete.event.fire('EditModeBlockDelete', {message: $(this).attr('data-menu-delete-message'), block: my, event: event});
+                });
+
+                $menuElem.find('a[data-menu-action=block_design]').unbind().on('click', function (e) {
+                    e.preventDefault();
+                    Concrete.event.fire('EditModeBlockEditInline', {
+                        block: my, event: event, action: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/block/design'
+                    });
                 });
             }
         },
@@ -1318,11 +1397,28 @@
 
     BlockType.prototype = _({
 
+        pepStart: function blockTypePepStart(context, event, pep) {
+            var my = this, panel;
+            Block.prototype.pepStart.call(this, context, event, pep);
+
+            my.setAttr('closedPanel', _(ConcretePanelManager.getPanels()).find(function(panel) {
+                return panel.isOpen;
+            }));
+
+            if ((panel = my.getAttr('closedPanel'))) {
+                panel.hide();
+            }
+        },
+
         pepStop: function blockTypePepStop(context, event, pep) {
-            var my = this, drag_area;
+            var my = this, drag_area, panel;
 
             if ((drag_area = my.getSelected())) {
                 my.addToDragArea(drag_area);
+            } else {
+                if ((panel = my.getAttr('closedPanel'))) {
+                    panel.show();
+                }
             }
 
             _.defer(function () {
@@ -1363,16 +1459,15 @@
                     dragAreaBlockID: dragAreaBlockID
                 }, function (response) {
                     $.fn.dialog.showLoader();
-                    $.get(CCM_TOOLS_PATH + '/edit_block_popup',
+                    $.get(CCM_DISPATCHER_FILENAME + '/ccm/system/block/render',
                         {
                             arHandle: area.getHandle(),
                             cID: response.cID,
                             bID: response.bID,
-                            arEnableGridContainer: arEnableGridContainer,
-                            btask: 'view_edit_mode'
+                            arEnableGridContainer: arEnableGridContainer
                         }, function (html) {
                             if (dragAreaBlock) {
-                                dragAreaBlock.getElem().closest('div[data-container=block]').after(html);
+                                dragAreaBlock.getContainer().after(html);
                             } else {
                                 area.getElem().append(html);
                             }

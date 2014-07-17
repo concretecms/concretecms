@@ -1,145 +1,270 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-use \Concrete\Core\Page\Style\CustomStyleRule;
-use \Concrete\Core\Page\Style\CustomStylePreset;
-if (ENABLE_CUSTOM_DESIGN == false) {
-	die(t('Custom design options have been disabled.'));
+
+$backgroundColor = '';
+$image = false;
+$baseFontSize = '';
+$backgroundRepeat = 'no-repeat';
+$textColor = '';
+$linkColor = '';
+$marginTop = '';
+$marginLeft = '';
+$marginRight = '';
+$marginBottom = '';
+$paddingTop = '';
+$paddingLeft = '';
+$paddingRight = '';
+$paddingBottom = '';
+$borderStyle = '';
+$borderWidth = '';
+$borderColor = '';
+$borderRadius = '';
+$alignment = '';
+$rotate = '';
+$boxShadowHorizontal = '';
+$boxShadowVertical = '';
+$boxShadowBlur = '';
+$boxShadowSpread = '';
+$boxShadowColor = '';
+$set = $style->getStyleSet();
+if (is_object($set)) {
+    $backgroundColor = $set->getBackgroundColor();
+    $textColor = $set->getTextColor();
+    $linkColor = $set->getLinkColor();
+    $image = $set->getBackgroundImageFileObject();
+    $backgroundRepeat = $set->getBackgroundRepeat();
+    $baseFontSize = $set->getBaseFontSize();
+    $marginTop = $set->getMarginTop();
+    $marginLeft = $set->getMarginLeft();
+    $marginRight = $set->getMarginRight();
+    $marginBottom = $set->getMarginBottom();
+    $paddingTop = $set->getPaddingTop();
+    $paddingLeft = $set->getPaddingLeft();
+    $paddingRight = $set->getPaddingRight();
+    $paddingBottom = $set->getPaddingBottom();
+    $borderStyle = $set->getBorderStyle();
+    $borderWidth = $set->getBorderWidth();
+    $borderColor = $set->getBorderColor();
+    $borderRadius = $set->getBorderRadius();
+    $alignment = $set->getAlignment();
+    $rotate = $set->getRotate();
+    $boxShadowHorizontal = $set->getBoxShadowHorizontal();
+    $boxShadowVertical = $set->getBoxShadowVertical();
+    $boxShadowBlur = $set->getBoxShadowBlur();
+    $boxShadowSpread = $set->getBoxShadowSpread();
+    $boxShadowColor = $set->getBoxShadowColor();
 }
 
-$c = Page::getCurrentPage();
+$repeatOptions = array(
+    'no-repeat' => t('None'),
+    'repeat-x' => t('Horizontal'),
+    'repeat-y' => t('Vertical'),
+    'repeat' => t('Tile')
+);
+$borderOptions = array(
+    'none' => t('None'),
+    'solid' => t('Solid'),
+    'dotted' => t('Dotted'),
+    'dashed' => t('Dashed'),
+    'double' => t('Double'),
+    'groove' => t('Groove'),
+    'ridge' => t('Ridge'),
+    'inset' => t('Inset'),
+    'outset' => t('Outset')
+);
 
-$txt = Loader::helper('text');
-$form = Loader::helper('form');
-$fh = Loader::helper('form/color'); 
-$ah = Loader::helper("concrete/asset_library");
+$alignmentOptions = array(
+    '' => t('None'),
+    'right' => t('Right'),
+    'left' => t('Left'),
+);
 
-if (isset($_REQUEST['cspID']) && $_REQUEST['cspID'] > 0) {
-	$csp = CustomStylePreset::getByID($_REQUEST['cspID']);
-	if (is_object($csp)) {
-		$style = $csp->getCustomStylePresetRuleObject();
-	}
-} else if (is_object($style)) {
-	$selectedCsrID = $style->getId();
+if ($style instanceof \Concrete\Core\Block\CustomStyle) {
+    $method = 'concreteBlockInlineStyleCustomizer';
+} else {
+    $method = 'concreteAreaInlineStyleCustomizer';
 }
 
-if(!$style) $style = new CustomStyleRule();
-
-$cssData = $style->getCustomStylesArray();
-
-$presets = CustomStylePreset::getList();
-$presetsArray = array();
-foreach($presets as $csp) {
-	$presetsArray[$csp->getCustomStylePresetID()] = $csp->getCustomStylePresetName();
-}
-
-$presetsArray[0] = t('** Custom (No Preset)');
-ksort($presetsArray);
-
-if (!isset($_REQUEST['csrID'])) {
-	$cspID = $style->getPresetId();
-}
-
-if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
-	$cspID = 0;
-}
+$al = new Concrete\Core\Application\Service\FileManager();
+$form = Core::make('helper/form');
 ?>
 
-<? if (!$_REQUEST['refresh']) { ?>
-	<div class="ccm-ui" id="ccm-custom-style-wrapper">
-<? } ?>
+<form method="post" action="<?=$saveAction?>" id="ccm-inline-design-form">
+<ul class="ccm-inline-toolbar ccm-ui">
+    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-font"></i></a>
 
-<form class="form-stacked" method="post" id="ccmCustomCssForm" action="<?=$action?>" style="width:96%; margin:auto;">
+        <div class="ccm-inline-design-dropdown-menu dropdown-menu">
+            <div>
+                <?=t('Text Color')?>
+                <?=Loader::helper('form/color')->output('textColor', $textColor);?>
+            </div>
+            <hr />
+            <div>
+                <?=t('Link Color')?>
+                <?=Loader::helper('form/color')->output('linkColor', $linkColor);?>
+            </div>
+            <div>
+                <?=t('Base Font Size')?>
+                <?=$form->text('baseFontSize', $baseFontSize);?>
+            </div>
+            <div>
+                <?=t('Alignment')?>
+                <?=$form->select('alignment', $alignmentOptions, $alignment);?>
+            </div>
 
-	<input id="ccm-reset-style" name="reset_css" type="hidden" value="0" />
-	
-	<? if (count($presets) > 0) { ?>
-		<h3><?=t('Saved Presets')?></h3>
-	
-		<?=$form->select('cspID', $presetsArray, $cspID, array('style' => 'vertical-align: middle'))?>
-		<a href="javascript:void(0)" id="ccm-style-delete-preset" style="display: none" onclick="ccmCustomStyle.deletePreset()"><i class="fa fa-trash-o"></i></a>
-		
-		<br/><br/>
-		
-		<input type="hidden" id="ccm-custom-style-refresh-action" value="<?=$refreshAction?>" /> 
-	<? } ?>
-	
-	<input type="hidden" name="selectedCsrID" value="<?=$selectedCsrID?>" />
-	<ul id="ccm-styleEditPane-tabs" class="ccm-dialog-tabs" style="margin-left:0px">
-		<li class="ccm-nav-active"><a id="ccm-styleEditPane-tab-fonts" href="#" onclick="return ccmCustomStyle.tabs(this,'fonts');"><?=t('Fonts') ?></a></li>
-		<li><a href="javascript:void(0);" onclick="return ccmCustomStyle.tabs(this,'background');"><?=t('Background') ?></a></li>
-		<li><a href="javascript:void(0);" onclick="return ccmCustomStyle.tabs(this,'border');"><?=t('Border') ?></a></li>
-		<li><a href="javascript:void(0);" onclick="return ccmCustomStyle.tabs(this,'spacing');"><?=t('Spacing') ?></a></li>
-		<li><a href="javascript:void(0);" onclick="return ccmCustomStyle.tabs(this,'css');"><?=t('CSS')?></a></li> 
-	</ul>		
-	
-	<div id="ccmCustomCssFormTabs">
-	
-		<?php Loader::element('custom_style/fonts', array('cssData' => $cssData, 'fh' => $fh));?>
-	
-		<?php Loader::element('custom_style/background', array('cssData' => $cssData, 'fh' => $fh, 'ah' => $ah));?>
-	
-		<?php Loader::element('custom_style/border', array('cssData' => $cssData, 'fh' => $fh));?>
+        </div>
 
-		<?php Loader::element('custom_style/spacing', array('cssData' => $cssData, 'fh' => $fh));?>
-		
-		<?php Loader::element('custom_style/css', array('style' => $style));?>
+    </li>
+    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-image"></i></a>
 
-	</div>
-	
-	<br/>
-	
-	<? if ($cspID > 0) { 
-		$cspx = CustomStylePreset::getByID($cspID);?>
-		<div id="cspFooterPreset" style="display: none">
-			<div class="ccm-note-important">
-				<h2><?=t('You are changing a preset')?></h2>
-				<label class="radio"><?=$form->radio('cspPresetAction', 'update_existing_preset', true)?> <?=t('Update "%s" preset everywhere it is used', $cspx->getCustomStylePresetName())?></label>
-				<label class="radio"><?=$form->radio('cspPresetAction', 'save_as_custom_style')?> <?=t('Use this style here, and leave "%s" unchanged', $cspx->getCustomStylePresetName())?></label>
-				<label class="radio"><?=$form->radio('cspPresetAction', 'create_new_preset')?> <?=t('Save this style as a new preset')?><br/><span style="margin-left: 20px"><?=$form->text('cspName', array('style' => 'width:  127px', 'disabled' => true))?></span></label>
-			</div>
-		</div>
-	<? } ?>
-	
-	<div id="cspFooterNoPreset" >
-		<label for="cspPresetAction" class="checkbox inline">
-			<?=$form->checkbox('cspPresetAction', 'create_new_preset')?>
-			<?=t('Save this style as a new preset.')?>
-		</label>
-		<span style="margin-left: 10px">
-			<?=$form->text('cspName', array('style' => 'width:  140px', 'disabled' => true))?>
-		</span>
-	</div>
-	
-	<br/>
-	
-	<? if (!$_REQUEST['refresh']) { ?>
-		<div class="dialog-buttons">
-			<a href="#" class="pull-left btn" onclick="jQuery.fn.dialog.closeTop(); return false"><?=t('Cancel')?></a>
-			<a href="javascript:void(0)" onclick="$('#ccmCustomCssForm').submit()" class="btn btn-primary pull-right"><span><?=t('Save')?></span></a>
-			<? if ($cspID < 1) { ?>
-				<a onclick="return ccmCustomStyle.resetAll();" id="ccm-reset-style-button" class="btn btn-primary pull-right" style="margin-right:8px; "><span><?=t('Reset Styles')?></span></a>
-			<? } ?>
-		</div>
-	<? } ?>
+        <div class="ccm-inline-design-dropdown-menu dropdown-menu">
+            <h3><?=t('Background')?></h3>
+            <div>
+                <?=t('Color')?>
+                <?=Loader::helper('form/color')->output('backgroundColor', $backgroundColor);?>
+            </div>
+            <hr />
+            <div>
+                <?=t('Image')?>
+                <?=$al->image('backgroundImageFileID', 'backgroundImageFileID', t('Choose Image'), $image);?>
+            </div>
+            <div>
+                <?=t('Tile')?>
+                <?=$form->select('backgroundRepeat', $repeatOptions, $backgroundRepeat);?>
+            </div>
+        </div>
 
-	<div class="ccm-spacer"></div> 
-	
-	<div class="ccm-note" style="margin-top:16px;">
-		<?=t('Note: Styles set here are often overridden by those defined within the various block types.')?>
-	</div>		
-	
-<?
-$valt = Loader::helper('validation/token');
-$valt->output();
-?>
+    </li>
+    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-square-o"></i></a>
+        <div class="ccm-inline-design-dropdown-menu dropdown-menu">
+            <h3><?=t('Border')?></h3>
+            <div>
+                <?=t('Color')?>
+                <?=Loader::helper('form/color')->output('borderColor', $borderColor);?>
+            </div>
+            <div>
+                <?=t('Style')?>
+                <?=$form->select('borderStyle', $borderOptions, $borderStyle);?>
+            </div>
+            <div>
+                <?=t('Width')?>
+                <?=$form->text('borderWidth', $borderWidth);?>
+            </div>
+            <div>
+                <?=t('Radius')?>
+                <?=$form->text('borderRadius', $borderRadius);?>
+            </div>
+        </div>
+    </li>
+    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-arrows-h"></i></a>
+        <div class="ccm-inline-design-dropdown-menu dropdown-menu">
+            <h3><?=t('Padding')?></h3>
+            <div>
+                <?=t('Top')?>
+                <?=$form->text('paddingTop', $paddingTop);?>
+            </div>
+            <div>
+                <?=t('Right')?>
+                <?=$form->text('paddingRight', $paddingRight);?>
+            </div>
+            <div>
+                <?=t('Bottom')?>
+                <?=$form->text('paddingBottom', $paddingBottom);?>
+            </div>
+            <div>
+                <?=t('Left')?>
+                <?=$form->text('paddingLeft', $paddingLeft);?>
+            </div>
+
+            <? if ($style instanceof \Concrete\Core\Block\CustomStyle) { ?>
+                <hr />
+                <h3><?=t('Margin')?></h3>
+                <div>
+                    <?=t('Top')?>
+                    <?=$form->text('marginTop', $marginTop);?>
+                </div>
+                <div>
+                    <?=t('Right')?>
+                    <?=$form->text('marginRight', $marginRight);?>
+                </div>
+                <div>
+                    <?=t('Bottom')?>
+                    <?=$form->text('marginBottom', $marginBottom);?>
+                </div>
+                <div>
+                    <?=t('Left')?>
+                    <?=$form->text('marginLeft', $marginLeft);?>
+                </div>
+
+            <? } ?>
+        </div>
+
+    </li>
+    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-magic"></i></a>
+        <div class="ccm-inline-design-dropdown-menu dropdown-menu">
+            <h3><?=t('Shadow')?></h3>
+            <div>
+                <?=t('Color')?>
+                <?=Loader::helper('form/color')->output('boxShadowColor', $boxShadowColor);?>
+            </div>
+            <div>
+                <?=t('Horizontal Position')?>
+                <?=$form->text('boxShadowHorizontal', $boxShadowHorizontal);?>
+            </div>
+            <div>
+                <?=t('Vertical Position')?>
+                <?=$form->text('boxShadowVertical', $boxShadowVertical);?>
+            </div>
+            <div>
+                <?=t('Blur')?>
+                <?=$form->text('boxShadowBlur', $boxShadowBlur);?>
+            </div>
+            <div>
+                <?=t('Spread')?>
+                <?=$form->text('boxShadowSpread', $boxShadowSpread);?>
+            </div>
+            <hr/>
+            <h3><?=t('Rotate')?></h3>
+            <div>
+                <?=t('Rotation (in degrees)')?>
+                <?=$form->text('rotate', $rotate);?>
+            </div>
+
+        </div>
+
+    </li>
+    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-cog"></i></a>
+        <div class="ccm-inline-design-dropdown-menu dropdown-menu">
+            <button data-reset-action="<?=$resetAction?>" data-action="reset-design" type="button" class="btn btn-danger"><?=t("Clear Styles")?></button>
+            <? if ($style instanceof \Concrete\Core\Block\CustomStyle && $canEditCustomTemplate) { ?>
+                <hr/>
+                <div>
+                    <?=t('Block Name')?>
+                    <?=$form->text('bName', $bName);?>
+                </div>
+                <div>
+                    <?=t('Custom Template')?>
+                    <select id="bFilename" name="bFilename" class="form-control">
+                        <option value="">(<?=t('None selected')?>)</option>
+                        <?
+                        foreach($templates as $tpl) {
+                            ?><option value="<?=$tpl->getTemplateFileFilename()?>" <? if ($bFilename == $tpl->getTemplateFileFilename()) { ?> selected <? } ?>><?=$tpl->getTemplateFileDisplayName()?></option><?
+                        }
+                        ?>
+                    </select>
+                 </div>
+            <? } ?>
+        </div>
+    </li>
+    <li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-cancel">
+        <button data-action="cancel-design" type="button" class="btn btn-mini"><?=t("Cancel")?></button>
+    </li>
+    <li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-save">
+        <button data-action="save-design" class="btn btn-primary" type="button"><?=t('Save')?></button>
+    </li>
+</ul>
 </form>
 
 <script type="text/javascript">
-	$(function() {
-		ccmCustomStyle.initForm();
-	});
+    $('#ccm-inline-design-form').<?=$method?>();
 </script>
-
-<? if (!$_REQUEST['refresh']) { ?>
-	</div>
-<? } ?>

@@ -4,20 +4,20 @@ namespace Concrete\Core\Sharing\SocialNetwork;
 class Service
 {
 
-    protected $ssID;
+    protected $ssHandle;
     protected $ssName;
     protected $ssIcon;
 
-    public function __construct($ssID, $ssName, $ssIcon)
+    public function __construct($ssHandle, $ssName, $ssIcon)
     {
-        $this->ssID = $ssID;
+        $this->ssHandle = $ssHandle;
         $this->ssName = $ssName;
         $this->ssIcon = $ssIcon;
     }
 
-    public function getID()
+    public function getHandle()
     {
-        return $this->ssID;
+        return $this->ssHandle;
     }
 
     public function getName()
@@ -35,11 +35,11 @@ class Service
         return '<i class="fa fa-' . $this->getIcon() . '"></i>';
     }
 
-    public static function getByID($ssID)
+    public static function getByHandle($ssHandle)
     {
         $services = ServiceList::get();
         foreach($services as $s) {
-            if ($s->getID() == $ssID) {
+            if ($s->getHandle() == $ssHandle) {
                 return $s;
             }
         }

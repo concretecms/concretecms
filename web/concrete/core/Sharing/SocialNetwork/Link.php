@@ -11,10 +11,10 @@ class Link
 {
 
     /**
-     * The social service ID (for icon mapping)
-     * @Column(type="integer")
+     * The social service handle
+     * @Column(type="string")
      */
-    protected $ssID;
+    protected $ssHandle;
 
     /**
      * @Column(type="string")
@@ -43,14 +43,14 @@ class Link
         return $this->slID;
     }
 
-    public function setServiceID($ssID)
+    public function setServiceHandle($ssHandle)
     {
-        $this->ssID = $ssID;
+        $this->ssHandle = $ssHandle;
     }
 
-    public function getServiceID()
+    public function getServiceHandle()
     {
-        return $this->ssID;
+        return $this->ssHandle;
     }
 
     public function getServiceIconHTML()
@@ -61,14 +61,14 @@ class Link
 
     public function getServiceObject()
     {
-        return Service::getByID($this->ssID);
+        return Service::getByHandle($this->ssHandle);
     }
 
     public static function getList()
     {
         $db = Database::get();
         $em = $db->getEntityManager();
-        return $em->getRepository('\Concrete\Core\Sharing\SocialNetwork\Link')->findBy(array(), array('ssID' => 'asc'));
+        return $em->getRepository('\Concrete\Core\Sharing\SocialNetwork\Link')->findBy(array(), array('ssHandle' => 'asc'));
     }
 
     public function save()
@@ -77,6 +77,18 @@ class Link
         $em = $db->getEntityManager();
         $em->persist($this);
         $em->flush();
+    }
+
+    public static function exportList($node)
+    {
+        $child = $node->addChild('sociallinks');
+        $list = static::getList();
+        foreach($list as $link) {
+            $linkNode = $child->addChild('link');
+            $linkNode->addAttribute('service', $link->getServiceObject()->getHandle());
+            $linkNode->addAttribute('url', $link->getURL());
+
+        }
     }
 
     public function delete()
@@ -92,6 +104,15 @@ class Link
         $em = $db->getEntityManager();
         $r = $em->find('\Concrete\Core\Sharing\SocialNetwork\Link', $id);
         return $r;
+    }
+
+    public static function getByServiceHandle($ssHandle)
+    {
+        $db = Database::get();
+        $em = $db->getEntityManager();
+        return $em->getRepository('\Concrete\Core\Sharing\SocialNetwork\Link')->findOneBy(
+            array('ssHandle' => $ssHandle)
+        );
     }
 
 }

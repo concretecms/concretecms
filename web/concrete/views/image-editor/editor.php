@@ -25,74 +25,81 @@ $components = SystemImageEditorComponent::getList();
 $filters = SystemImageEditorFilter::getList();
 
 ?>
-<div class='table ccm-ui'>
-    <div class='editorcontainer'>
-        <div id='<?= $editorid ?>' class='Editor'></div>
-        <div class='bottomBar'></div>
-    </div>
-    <div class='controls'>
-        <div class='controlscontainer'>
-            <div class='editorcontrols'>
-                <div class='control-sets'>
-                    <?php
-                    if (!$controlsets) {
-                        echo "&nbsp;";
-                    }
-                    foreach ($controlsets as $controlset) {
-                        $handle = $controlset->getHandle();
-                        ?>
-                        <link rel='stylesheet' href='<?= $controlset->getCssPath() ?>'>
-                        <div class="controlset controlset-<?= $controlset->gethandle() ?>"
-                             data-namespace="<?= $controlset->getHandle() ?>"
-                             data-src="<?= $controlset->getJavascriptPath() ?>">
-                            <h4><?= $controlset->getDisplayName() ?></h4>
+    <div class='table ccm-ui'>
+        <div class='editorcontainer'>
+            <div id='<?= $editorid ?>' class='Editor'></div>
+            <div class='bottomBar'></div>
+        </div>
+        <div class='controls'>
+            <div class='controlscontainer'>
+                <div class='editorcontrols'>
+                    <div class='control-sets'>
+                        <?php
+                        if (!$controlsets) {
+                            echo "&nbsp;";
+                        }
+                        foreach ($controlsets as $controlset) {
+                            $handle = $controlset->getHandle();
+                            ?>
+                            <link rel='stylesheet' href='<?= $controlset->getCssPath() ?>'>
+                            <div class="controlset controlset-<?= $controlset->gethandle() ?>"
+                                 data-namespace="<?= $controlset->getHandle() ?>"
+                                 data-src="<?= $controlset->getJavascriptPath() ?>">
+                                <h4><?= $controlset->getDisplayName() ?></h4>
 
-                            <div class="control">
-                                <div class="contents">
-                                    <?php
-                                    try {
-                                        $view = new View;
-                                        $view->setInnerContentFile($controlset->getViewPath());
-                                        echo $view->renderViewContents(array('control-set' => $controlset));
-                                    } catch (ErrorException $e) {
-                                        echo t("No view found.");
-                                        // File doesn't exist, just continue.
-                                    }
-                                    ?>
+                                <div class="control">
+                                    <div class="contents">
+                                        <?php
+                                        try {
+                                            $view = new View;
+                                            $view->setInnerContentFile($controlset->getViewPath());
+                                            echo $view->renderViewContents(array('control-set' => $controlset));
+                                        } catch (ErrorException $e) {
+                                            echo t("No view found.");
+                                            // File doesn't exist, just continue.
+                                        }
+                                        ?>
+                                    </div>
                                 </div>
+                                <div class='border'></div>
                             </div>
-                            <div class='border'></div>
-                        </div>
-                    <?php
-                    }
-                    ?>
+                        <?php
+                        }
+                        ?>
+                    </div>
                 </div>
-            </div>
-            <div class='save'>
-                <button class='cancel btn'>Cancel</button>
-                <button class='save btn pull-right btn-primary'>Save</button>
+                <div class='save'>
+                    <button class='cancel btn'>Cancel</button>
+                    <button class='save btn pull-right btn-primary'>Save</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    $(function () {
-        _.defer(function () {
-            var settings = {src: '<?=$fv->getURL()?>', fID:<?= $fv->getFileID() ?>, controlsets: {}, filters: {}, components: {}, debug: true};
-            $('div.controlset', 'div.controls').each(function () {
-                settings.controlsets[$(this).attr('data-namespace')] = {
-                    src: $(this).attr('data-src'),
-                    element: $(this).children('div.control').children('div.contents')
-                }
-            });
-            $('div.component', 'div.controls').each(function () {
-                settings.components[$(this).attr('data-namespace')] = {
-                    src: $(this).attr('>getdata-src'),
-                    element: $(this).children('div.control').children('div.contents')
-                }
-            });
-            settings.filters = <?php
+    <script>
+        $(function () {
+            _.defer(function () {
+                var settings = {
+                    src: '<?=$fv->getURL()?>',
+                    fID: <?= $fv->getFileID() ?>,
+                    controlsets: {},
+                    filters: {},
+                    components: {},
+                    debug: false
+                };
+                $('div.controlset', 'div.controls').each(function () {
+                    settings.controlsets[$(this).attr('data-namespace')] = {
+                        src: $(this).attr('data-src'),
+                        element: $(this).children('div.control').children('div.contents')
+                    }
+                });
+                $('div.component', 'div.controls').each(function () {
+                    settings.components[$(this).attr('data-namespace')] = {
+                        src: $(this).attr('>getdata-src'),
+                        element: $(this).children('div.control').children('div.contents')
+                    }
+                });
+                settings.filters = <?php
       $fnames = array();
       foreach ($filters as $filter) {
         $handle = $filter->getHandle();
@@ -103,14 +110,14 @@ $filters = SystemImageEditorFilter::getList();
       }
       echo Loader::helper('json')->encode($fnames);
     ?>;
-            var editor = $('div#<?=$editorid?>.Editor');
-            window.im = editor.closest('.ui-dialog-content').css('padding', 0).end().ImageEditor(settings);
+                var editor = $('div#<?=$editorid?>.Editor');
+                window.im = editor.closest('.ui-dialog-content').css('padding', 0).end().ImageEditor(settings);
+            });
         });
-    });
-</script>
+    </script>
 <?php
 foreach ($filters as $filter) {
     ?>
     <link rel='stylesheet' href='<?= $filter->getCssPath() ?>'>
-    <?php
+<?php
 }

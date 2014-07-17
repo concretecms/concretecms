@@ -28,7 +28,9 @@ class CheckIn extends BackendInterfacePageController
     public function __construct()
     {
         parent::__construct();
-        $this->set('publishErrors', $this->checkForPublishing());
+        if ($this->page) {
+            $this->set('publishErrors', $this->checkForPublishing());
+        }
     }
 
     protected function checkForPublishing()

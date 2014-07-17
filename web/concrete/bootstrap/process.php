@@ -1,8 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Page\Stack\Pile\PileContent;
-use Concrete\Core\Page\Style\CustomStylePreset;
-use Concrete\Core\Page\Style\CustomStyleRule;
 
 # Filename: _process.php
 # Author: Andrew Embler (andrew@concrete5.org)
@@ -89,6 +87,7 @@ if (isset($_REQUEST['btask']) && $_REQUEST['btask'] && $valt->validate()) {
                 }
             }
             break;
+        /*
         case 'update_block_css':
             $a = Area::get($c, $_REQUEST['arHandle']);
             if (is_object($a)) {
@@ -257,6 +256,7 @@ if (isset($_REQUEST['btask']) && $_REQUEST['btask'] && $valt->validate()) {
                 //exit;
             }
             break;
+        */
         case 'passthru_stack':
             if (isset($_GET['bID'])) {
                 $vn = Loader::helper('validation/numbers');
@@ -335,6 +335,7 @@ if (isset($_GET['atask']) && $_GET['atask'] && $valt->validate()) {
             exit;
 
             break;
+        /*
         case 'design':
             $area = Area::get($c, $_GET['arHandle']);
             $ap = new Permissions($area);
@@ -373,6 +374,7 @@ if (isset($_GET['atask']) && $_GET['atask'] && $valt->validate()) {
                 exit;
             }
             break;
+        */
 
     }
 }
@@ -482,105 +484,99 @@ if (isset($_REQUEST['processBlock']) && $_REQUEST['processBlock'] && $valt->vali
 
     // some admin (or unscrupulous person) is doing something to a block of content on the site
     $edit = ($_REQUEST['enterViewMode']) ? "" : "&mode=edit";
-
     if ($_POST['update']) {
-        // the person is attempting to update some block of content
+        /*
+            // the person is attempting to update some block of content
 
-        $a = Area::get($c, $_GET['arHandle']);
-        $ax = $a;
-        $cx = $c;
-        if ($a->isGlobalArea()) {
-            $ax = STACKS_AREA_NAME;
-            $cx = Stack::getByName($_REQUEST['arHandle']);
-        }
-        $b = Block::getByID($_REQUEST['bID'], $cx, $ax);
-        $p = new Permissions($b);
-
-        if ($p->canWrite()) {
-
-            $bi = $b->getInstance();
-            if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
-                $_b = Block::getByID($bi->getOriginalBlockID());
-                $bi = $_b->getInstance(); // for validation
+            $a = Area::get($c, $_GET['arHandle']);
+            $ax = $a;
+            $cx = $c;
+            if ($a->isGlobalArea()) {
+                $ax = STACKS_AREA_NAME;
+                $cx = Stack::getByName($_REQUEST['arHandle']);
             }
-            $e = $bi->validate($_POST);
-            $obj = new stdClass;
-            $obj->aID = $a->getAreaID();
-            $obj->arHandle = $a->getAreaHandle();
-            $obj->cID = $c->getCollectionID();
+            $b = Block::getByID($_REQUEST['bID'], $cx, $ax);
+            $p = new Permissions($b);
 
-            if ((!is_object($e)) || (($e instanceof \Concrete\Core\Error\Error) && (!$e->has()))) {
-                $bt = BlockType::getByHandle($b->getBlockTypeHandle());
-                if (!$bt->includeAll()) {
-                    // we make sure to create a new version, if necessary
-                    $nvc = $cx->getVersionToModify();
-                } else {
-                    $nvc = $cx; // keep the same one
-                }
+            if ($p->canWrite()) {
 
-                if ($a->isGlobalArea()) {
-                    $xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
-                    $xvc->relateVersionEdits($nvc);
-                }
-
-                $ob = $b;
-                // replace the block with the version of the block in the later version (if applicable)
-                $b = Block::getByID($_REQUEST['bID'], $nvc, $ax);
-
+                $bi = $b->getInstance();
                 if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
-                    // if we're editing a scrapbook display block, we add a new block in this position for the real block type
-                    // set the block to the display order
-                    // delete the scrapbook display block, and save the data
-                    /*
-                    $originalDisplayOrder = $b->getBlockDisplayOrder();
-                    $btx = BlockType::getByHandle($_b->getBlockTypeHandle());
-                    $nb = $nvc->addBlock($btx, $ax, array());
-                    $nb->setAbsoluteBlockDisplayOrder($originalDisplayOrder);
-                    $b->deleteBlock();
-                    $b = &$nb;
-                    */
+                    $_b = Block::getByID($bi->getOriginalBlockID());
+                    $bi = $_b->getInstance(); // for validation
+                }
+                $e = $bi->validate($_POST);
+                $obj = new stdClass;
+                $obj->aID = $a->getAreaID();
+                $obj->arHandle = $a->getAreaHandle();
+                $obj->cID = $c->getCollectionID();
 
-                    $originalDisplayOrder = $b->getBlockDisplayOrder();
-                    $cnt = $b->getController();
-                    $ob = Block::getByID($cnt->getOriginalBlockID());
-                    $ob->loadNewCollection($nvc);
-                    if (!is_object($ax)) {
-                        $ax = Area::getOrCreate($cx, $ax);
+                if ((!is_object($e)) || (($e instanceof \Concrete\Core\Error\Error) && (!$e->has()))) {
+                    $bt = BlockType::getByHandle($b->getBlockTypeHandle());
+                    if (!$bt->includeAll()) {
+                        // we make sure to create a new version, if necessary
+                        $nvc = $cx->getVersionToModify();
+                    } else {
+                        $nvc = $cx; // keep the same one
                     }
-                    $ob->setBlockAreaObject($ax);
-                    $nb = $ob->duplicate($nvc);
-                    $nb->setAbsoluteBlockDisplayOrder($originalDisplayOrder);
-                    $b->deleteBlock();
-                    $b = & $nb;
 
-                } else {
-                    if ($b->isAlias()) {
+                    if ($a->isGlobalArea()) {
+                        $xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
+                        $xvc->relateVersionEdits($nvc);
+                    }
 
-                        // then this means that the block we're updating is an alias. If you update an alias, you're actually going
-                        // to duplicate the original block, and update the newly created block. If you update an original, your changes
-                        // propagate to the aliases
+                    $ob = $b;
+                    // replace the block with the version of the block in the later version (if applicable)
+                    $b = Block::getByID($_REQUEST['bID'], $nvc, $ax);
+
+                    if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
+                        // if we're editing a scrapbook display block, we add a new block in this position for the real block type
+                        // set the block to the display order
+                        // delete the scrapbook display block, and save the data
+
+
+                        $originalDisplayOrder = $b->getBlockDisplayOrder();
+                        $cnt = $b->getController();
+                        $ob = Block::getByID($cnt->getOriginalBlockID());
+                        $ob->loadNewCollection($nvc);
+                        if (!is_object($ax)) {
+                            $ax = Area::getOrCreate($cx, $ax);
+                        }
+                        $ob->setBlockAreaObject($ax);
                         $nb = $ob->duplicate($nvc);
+                        $nb->setAbsoluteBlockDisplayOrder($originalDisplayOrder);
                         $b->deleteBlock();
                         $b = & $nb;
 
+                    } else {
+                        if ($b->isAlias()) {
+
+                            // then this means that the block we're updating is an alias. If you update an alias, you're actually going
+                            // to duplicate the original block, and update the newly created block. If you update an original, your changes
+                            // propagate to the aliases
+                            $nb = $ob->duplicate($nvc);
+                            $b->deleteBlock();
+                            $b = & $nb;
+
+                        }
                     }
+
+                    // we can update the block that we're submitting
+                    $b->update($_POST);
+                    $obj->error = false;
+                    if (!$obj->cID) {
+                        $obj->cID = $nvc->getCollectionID();
+                    }
+                    $obj->bID = $b->getBlockID();
+                } else {
+                    $obj->error = true;
+                    $obj->errors = $e->getList();
                 }
 
-                // we can update the block that we're submitting
-                $b->update($_POST);
-                $obj->error = false;
-                if (!$obj->cID) {
-                    $obj->cID = $nvc->getCollectionID();
-                }
-                $obj->bID = $b->getBlockID();
-            } else {
-                $obj->error = true;
-                $obj->errors = $e->getList();
+                print Loader::helper('json')->encode($obj);
+                exit;
             }
-
-            print Loader::helper('json')->encode($obj);
-            exit;
-        }
+            */
 
     } else {
         if ($_REQUEST['add'] || $_REQUEST['_add']) {

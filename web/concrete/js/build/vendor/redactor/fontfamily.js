@@ -12,9 +12,9 @@ RedactorPlugins.fontfamily = {
             dropdown['s' + i] = { title: s, callback: function() { that.setFontfamily(s); }};
         });
 
-        dropdown['remove'] = { title: 'Remove font', callback: function() { that.resetFontfamily(); }};
+        dropdown['remove'] = { title: ccmi18n_redactor.remove_font, callback: function() { that.resetFontfamily(); }};
 
-        this.buttonAddAfter('formatting', 'fontfamily', 'Change font family', false, dropdown);
+        this.buttonAddAfter('formatting', 'fontfamily', ccmi18n_redactor.change_font_family, false, dropdown);
     },
     setFontfamily: function (value)
     {

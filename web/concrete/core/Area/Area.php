@@ -693,11 +693,11 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         // now, we iterate through these block groups (which are actually arrays of block objects), and display them on the page
         if ($this->showControls && $c->isEditMode() && $ap->canViewAreaControls()) {
             Loader::element('block_area_header', array('a' => $this));
+        } else {
+            Loader::element('block_area_header_view', array('a' => $this));
         }
-        Loader::element('block_area_header_view', array('a' => $this));
 
         foreach ($blocksToDisplay as $b) {
-            $includeEditStrip = false;
             $bv = new BlockView($b);
             $bv->setAreaObject($this);
             $p = new Permissions($b);
@@ -712,10 +712,10 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             }
         }
 
-        Loader::element('block_area_footer_view', array('a' => $this));
-
         if ($this->showControls && $c->isEditMode() && $ap->canViewAreaControls()) {
             Loader::element('block_area_footer', array('a' => $this));
+        } else {
+            Loader::element('block_area_footer_view', array('a' => $this));
         }
     }
 
@@ -728,8 +728,15 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         $area = $p->addChild('area');
         $area->addAttribute('name', $this->getAreaHandle());
         $blocks = $page->getBlocks($this->getAreaHandle());
+        $c = $this->getAreaCollectionObject();
+        $style = $c->getAreaCustomStyle($this);
+        if (is_object($style)) {
+            $set = $style->getStyleSet();
+            $set->export($area);
+        }
+        $wrapper = $area->addChild('blocks');
         foreach ($blocks as $bl) {
-            $bl->export($area);
+            $bl->export($wrapper);
         }
     }
 
