@@ -472,4 +472,60 @@ class Date
                 return $this->formatDateTime($zendDate, $longDate, $withSeconds);
         }
     }
+
+    /** Returns the format string for the jQueryUI DatePicker widget
+     * @param string $relatedPHPFormat = '' Related PHP date format that will be used to parse the format handled by the DatePicker.
+     *     If not specified we'll use the same format used by formatDate(..., false)
+     * @return string
+     */
+    public function getJQueryUIDatePickerFormat($relatedPHPFormat = '')
+    {
+        $phpFormat = (is_string($relatedPHPFormat) && strlen($relatedPHPFormat)) ?
+            $relatedPHPFormat :
+            t(/*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y')
+        ;
+        // Special chars that need to be escaped in the DatePicker format string
+        $datepickerSpecials = array('d', 'o', 'D', 'm', 'M', 'y', '@', '!', '\'');
+        // Map from php to DatePicker format
+        $map = array(
+                'j' => 'd',
+                'd' => 'dd',
+                'z' => 'o',
+                'D' => 'D',
+                'l' => 'DD',
+                'n' => 'm',
+                'm' => 'mm',
+                'M' => 'M',
+                'F' => 'MM',
+                'y' => 'y',
+                'Y' => 'yy'
+        );
+        $datepickerFormat = '';
+        $escaped = false;
+        for ($i = 0; $i < strlen($phpFormat); $i++) {
+            $c = substr($phpFormat, $i, 1);
+            if ($escaped) {
+                if (in_array($c, $datepickerSpecials)) {
+                    $datepickerFormat .= '\'' . $c;
+                } else {
+                    $datepickerFormat .= $c;
+                }
+                $escaped = false;
+            } elseif ($c === '\\') {
+                $escaped = true;
+            } elseif (array_key_exists($c, $map)) {
+                $datepickerFormat .= $map[$c];
+            } elseif (in_array($c, $datepickerSpecials)) {
+                $datepickerFormat .= '\'' . $c;
+            } else {
+                $datepickerFormat .= $c;
+            }
+        }
+        if ($escaped) {
+            $datepickerFormat .= '\\';
+        }
+
+        return $datepickerFormat;
+    }
+
 }
