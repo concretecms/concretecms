@@ -158,8 +158,8 @@ class Date
     /**
      * Describe the difference in time between now and a date/time in the past.
      * If the date/time is in the future or if it's more than one year old, you'll get the date representation of $posttime
-     * @param  int    $posttime The timestamp to analyze
-     * @param  bool   $precise  = false Set to true to a more verbose and precise result, false for a more rounded result
+     * @param int $posttime The timestamp to analyze
+     * @param bool $precise = false Set to true to a more verbose and precise result, false for a more rounded result
      * @return string
      */
     public function timeSince($posttime, $precise = false)
@@ -174,8 +174,8 @@ class Date
 
     /**
      * Returns the localized representation of a time interval specified as seconds.
-     * @param  int    $diff    The time difference in seconds
-     * @param  bool   $precise = false Set to true to a more verbose and precise result, false for a more rounded result
+     * @param int $diff The time difference in seconds
+     * @param bool $precise = false Set to true to a more verbose and precise result, false for a more rounded result
      * @return string
      */
     public function describeInterval($diff, $precise = false)
@@ -213,14 +213,14 @@ class Date
 
     /**
      * Convert a date to a Zend_Date instance.
-     * @param  string|DateTime|Zend_Date|int $value It can be:<ul>
+     * @param string|DateTime|Zend_Date|int $value It can be:<ul>
      *    <li>the special value 'now' (default) to return the current date/time</li>
      *    <li>a DateTime instance</li>
      *    <li>a Zend_Date instance</li>
      *    <li>a string parsable by strtotime (the current system timezone is used)</li>
      *    <li>a timestamp</li>
      * </ul>
-     * @param  string $toTimezone The timezone to set. Special values are:<ul>
+     * @param string $toTimezone The timezone to set. Special values are:<ul>
      *    <li>'system' (default) for the current system timezone</li>
      *    <li>'user' for the user's timezone</li>
      *    <li>'app' for the app's timezone</li>
