@@ -287,4 +287,36 @@ class Date
 
         return $zendDate;
     }
+
+    /**
+     * Returns the difference in days between to dates.
+     * @param mixed $from The start date/time representation (one of the values accepted by toZendDate)
+     * @param mixed $to The end date/time representation (one of the values accepted by toZendDate)
+     * @param string $timezone The timezone to set. Special values are:<ul>
+     *    <li>'system' for the current system timezone</li>
+     *    <li>'user' (default) for the user's timezone</li>
+     *    <li>'app' for the app's timezone</li>
+     *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
+     * </ul>
+     * @return int|null Returns the difference in days (less than zero if $dateFrom if greater than $dateTo).
+     * Returns null if one of both the dates can't be parsed.
+     */
+    public function getDeltaDays($from, $to, $timezone = 'user')
+    {
+        $zendFrom = $this->toZendDate($from, $timezone);
+        $zendTo = $this->toZendDate($to, $timezone);
+        if (is_null($zendFrom) || is_null($zendTo)) {
+            return null;
+        }
+        $zendFromUTC = new Zend_Date();
+        $zendToUTC = new Zend_Date();
+        $zendFromUTC->setTimezone('GMT');
+        $zendToUTC->setTimezone('GMT');
+        $zendFromUTC->setDate($zendFrom->toString('Y-m-d'), 'Y-m-d');
+        $zendToUTC->setDate($zendTo->toString('Y-m-d'), 'Y-m-d');
+        $zendToUTC->sub($zendFromUTC);
+
+        return round($zendToUTC->getTimestamp() / 86400);
+    }
+
 }
