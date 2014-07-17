@@ -12,6 +12,6 @@
     "download": "0.1.10"
   },
   "scripts": {
-    "install": "grunt debug"
+    "install": "grunt release"
   }
 }
