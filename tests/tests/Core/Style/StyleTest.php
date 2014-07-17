@@ -115,9 +115,9 @@ class StyleTest extends \PHPUnit_Framework_TestCase {
         $ts->setVariable('body');
         $value = $ts->getValueFromList($list);
         $this->assertTrue($value->getFontFamily() == 'Arial');
-        $this->assertTrue($value->getFontWeight() == 'normal');
-        $this->assertTrue($value->getTextDecoration() == 'none');
-        $this->assertTrue($value->getTextTransform() == 'none');
+        $this->assertEquals(-1, $value->getFontWeight());
+        $this->assertEquals(-1, $value->getTextDecoration());
+        $this->assertEquals(-1, $value->getTextTransform());
     }
 
     public function testLessVariableImages() {
