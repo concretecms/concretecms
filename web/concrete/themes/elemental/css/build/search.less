@@ -5,19 +5,23 @@ main {
       font-size: @h2-type-font-size;
       text-transform: uppercase;
     }
-    input.ccm-search-block-text {
-      border: 0;
-      .box-shadow(none);
-      font-size: 22px;
-      margin-top: 25px;
-      max-width: 320px;
-      margin-bottom: 15px;
-      font-weight: 200;
-      padding-left: 0px;
+    input{
+      &.ccm-search-block-text {
+        border: 1px solid #e6e6e6;
+        margin-right: 15px;
+        width: 50%;
+        margin-bottom: 15px;
+        padding: 10px;
+      }
+
+      &.ccm-search-block-submit {
+        &:focus {
+          outline: none;
+        }
+      }
     }
-    .ccm-search-block-submit {
-      display: none;
-    }
+
+
 
     #searchResults {
       margin-top: 15px;

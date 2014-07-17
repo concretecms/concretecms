@@ -425,20 +425,25 @@
   <table name="GatheringItemSelectedTemplates">
     <field name="gaiID" type="I" size="10">
       <unsigned/>
+      <key/>
       <notnull />
       <default value="0" />
-      <key/>
     </field>>
+      <field name="gatID" type="I" size="10">
+          <key/>
+          <unsigned/>
+          <notnull />
+          <default value="0" />
+      </field>
     <field name="gatTypeID" type="I" size="10">
         <unsigned/>
         <default value="0" />
-        <key/>
     </field>
-    <field name="gatID" type="I" size="10">
-      <unsigned/>
-      <notnull />
-      <default value="0" />
-    </field>
+      <index name="gatUniqueKey">
+          <unique/>
+          <col>gaiID</col>
+          <col>gatTypeID</col>
+      </index>
     <index name="gatTypeID">
       <col>gatTypeID</col>
     </index>
@@ -875,19 +880,20 @@
     </index>
   </table>
   <table name="ConversationMessageRatings">
-    <field name="cnvRatingID" type="I" size="10">
-        <key/>
-        <unsigned/>
-        <autoincrement/>
-    </field>
-    <field name="cnvMessageID" type="I"  size="10">
-        <unsigned />
-    </field>
-    <field name="cnvRatingTypeID" type="I" size="10">
-        <notnull />
-        <default value="0" />
-        <unsigned />
-    </field>
+      <field name="cnvMessageRatingID" type="I"  size="10">
+          <key/>
+          <unsigned />
+          <autoincrement/>
+      </field>
+
+        <field name="cnvMessageID" type="I"  size="10">
+            <unsigned />
+        </field>
+        <field name="cnvRatingTypeID" type="I" size="10">
+            <notnull />
+            <default value="0" />
+            <unsigned />
+        </field>
     <field name="cnvMessageRatingIP" type="I8" size="10">
       <notnull/>
       <default value="0"/>
@@ -2025,7 +2031,7 @@
     <field name="arHandle" type="C" size="255">
       <key/>
     </field>
-    <field name="csrID" type="I" size="10">
+    <field name="issID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
@@ -2053,7 +2059,7 @@
     <field name="arHandle" type="C" size="255">
       <key/>
     </field>
-    <field name="csrID" type="I" size="10">
+    <field name="issID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
@@ -2275,16 +2281,16 @@
         <col>uID</col>
     </index>
   </table>
-  <table name="CustomStylePresets">
-    <field name="cspID" type="I" size="10">
+  <table name="StyleCustomizerInlineStylePresets">
+    <field name="pssPresetID" type="I" size="10">
       <key/>
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="cspName" type="C" size="255">
+    <field name="pssPresetName" type="C" size="255">
       <notnull/>
     </field>
-    <field name="csrID" type="I" size="10">
+    <field name="issID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
@@ -2296,17 +2302,39 @@
         <col>csrID</col>
     </index>
   </table>
-  <table name="CustomStyleRules">
-    <field name="csrID" type="I" size="10">
+  <table name="StyleCustomizerInlineStyleSets">
+    <field name="issID" type="I" size="10">
       <key/>
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="css_id" type="C" size="128"/>
-    <field name="css_class" type="C" size="128"/>
-    <field name="css_serialized" type="X"/>
-    <field name="css_custom" type="X"/>
+    <field name="backgroundColor" type="C" />
+    <field name="backgroundImageFileID" type="I" />
+    <field name="backgroundRepeat" type="C" />
+    <field name="borderWidth" type="C" />
+    <field name="borderColor" type="C" />
+    <field name="borderStyle" type="C" />
+    <field name="borderRadius" type="C" />
+    <field name="baseFontSize" type="C" />
+    <field name="alignment" type="C" />
+    <field name="textColor" type="C" />
+    <field name="linkColor" type="C" />
+    <field name="paddingTop" type="C" />
+    <field name="paddingBottom" type="C" />
+    <field name="paddingLeft" type="C" />
+    <field name="paddingRight" type="C" />
+    <field name="marginTop" type="C" />
+    <field name="marginBottom" type="C" />
+    <field name="marginLeft" type="C" />
+    <field name="marginRight" type="C" />
+    <field name="rotate" type="C" />
+    <field name="boxShadowHorizontal" type="C" />
+    <field name="boxShadowVertical" type="C" />
+    <field name="boxShadowBlur" type="C" />
+    <field name="boxShadowSpread" type="C" />
+    <field name="boxShadowColor" type="C" />
   </table>
+
   <table name="StyleCustomizerValueLists">
     <field name="scvlID" type="I" size="10">
       <key/>
@@ -3383,9 +3411,9 @@
             <unsigned />
             <autoincrement/>
         </field>
-        <field name="ssID" type="I" size="10">
-            <unsigned />
-            <default value="0" />
+        <field name="ssHandle" type="C" size="255">
+            <default value="" />
+            <notnull />
         </field>
         <field name="url" type="C" size="255"/>
         <index name="ssID">
@@ -5160,6 +5188,7 @@
     <field name="treeID" type="I" size="11">
       <UNSIGNED/>
       <DEFAULT value="0"/>
+      <KEY/>
     </field>
     <field name="topicTreeName" type="C" size="255">
       <DEFAULT value=""/>

@@ -33,7 +33,9 @@
 		<field name="updated_time" type="C" size='255' />
 	</table>
 	<table name="authTypeFacebookUserMap">
-		<field name="uID" type="I" size='10' />
+		<field name="uID" type="I" size='10'>
+            <key />
+        </field>
 		<field name="fbUserID" type="C" size='255' />
 		<index name="User">
 			<UNIQUE/>

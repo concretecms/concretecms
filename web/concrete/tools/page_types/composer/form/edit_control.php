@@ -36,13 +36,13 @@ if ($cp->canViewPage()) {
 
 	<div class="ccm-ui">
 		<form data-edit-set-form-control="<?=$control->getPageTypeComposerFormLayoutSetControlID()?>" action="#" method="post">
-		<div class="control-group">
+		<div class="form-group">
 			<?=$form->label('ptComposerFormLayoutSetControlCustomLabel', t('Custom Label'))?>
 			<div class="controls">
 				<?=$form->text('ptComposerFormLayoutSetControlCustomLabel', $control->getPageTypeComposerFormLayoutSetControlCustomLabel())?>
 			</div>
 		</div>
-		<div class="control-group">
+		<div class="form-group">
 			<?=$form->label('ptComposerFormLayoutSetControlCustomTemplate', t('Custom Template'))?>
 			<div class="controls">
 				<?=$form->select('ptComposerFormLayoutSetControlCustomTemplate', $templates, $control->getPageTypeComposerFormLayoutSetControlCustomTemplate())?>
@@ -50,7 +50,7 @@ if ($cp->canViewPage()) {
 		</div>
 
 		<? if ($object->pageTypeComposerFormControlSupportsValidation()) { ?>
-		<div class="control-group">
+		<div class="form-group">
 			<?=$form->label('ptComposerFormLayoutSetControlRequired', t('Required'))?>
 			<div class="controls">
 				<label class="checkbox"><?=$form->checkbox('ptComposerFormLayoutSetControlRequired', 1, $control->isPageTypeComposerFormLayoutSetControlRequired())?> <label><?=t('Yes, require this form element')?></label></label>
@@ -61,7 +61,7 @@ if ($cp->canViewPage()) {
 		<?=Loader::helper('validation/token')->output('update_set_control')?>
 		</form>
 		<div class="dialog-buttons">
-			<button class="btn" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
+			<button class="btn btn-default" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
 			<button class="btn btn-primary pull-right" data-submit-set-form="<?=$control->getPageTypeComposerFormLayoutSetControlID()?>"><?=t('Save')?></button>
 		</div>
 

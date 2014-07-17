@@ -8,6 +8,7 @@ abstract class Column extends Object {
 
 	abstract static public function getByID($arLayoutColumnID);
 	abstract public function getAreaLayoutColumnClass();
+    abstract public function exportDetails($node);
 
 	protected function loadBasicInformation($arLayoutColumnID) {
 		$db = Loader::db();
@@ -36,6 +37,14 @@ abstract class Column extends Object {
 	public function getAreaID() {
 		return $this->arID;
 	}
+
+    public function export($node)
+    {
+        $column = $node->addChild('column');
+        $this->exportDetails($column);
+        $area = $this->getAreaObject();
+        $area->export($column, $area->getAreaCollectionObject());
+    }
 
 	protected function duplicate($newAreaLayout) {
 		$db = Loader::db();
@@ -75,11 +84,17 @@ abstract class Column extends Object {
 		$c = $a->getAreaCollectionObject();
 		$as->load($c);
 		if (!$this->getAreaID()) {
-			$db = Loader::db();
-			$db->Execute('update AreaLayoutColumns set arID = ? where arLayoutColumnID = ?', array($as->getAreaID(), $this->arLayoutColumnID));
+            $this->setAreaID($as->getAreaID());
 		}
 		$as->display($c);
 	}
+
+    public function setAreaID($arID)
+    {
+        $db = Loader::db();
+        $this->arID = $arID;
+        $db->Execute('update AreaLayoutColumns set arID = ? where arLayoutColumnID = ?', array($arID, $this->arLayoutColumnID));
+    }
 
 	public function delete() {
 		$db = Loader::db();

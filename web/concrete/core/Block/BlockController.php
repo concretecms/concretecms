@@ -297,12 +297,12 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             $data->addAttribute('table', $tbl);
             $columns = $db->MetaColumns($tbl);
             // remove columns we don't want
-            unset($columns['BID']);
+            unset($columns['bid']);
             $r = $db->Execute('select * from ' . $tbl . ' where bID = ?', array($this->bID));
             while ($record = $r->FetchRow()) {
                 $tableRecord = $data->addChild('record');
                 foreach ($record as $key => $value) {
-                    if (isset($columns[strtoupper($key)])) {
+                    if (isset($columns[strtolower($key)])) {
                         if (in_array($key, $this->btExportPageColumns)) {
                             $tableRecord->addChild($key, ContentExporter::replacePageWithPlaceHolder($value));
                         } else {
@@ -350,6 +350,12 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         // now we insert stuff that isn't part of the btTable
         // we have to do this this way because we need a bID
         $this->importAdditionalData($b, $blockNode);
+
+        // now we handle the styles
+        if (isset($blockNode->style)) {
+            $set = StyleSet::import($ax->style);
+            $b->setCustomStyleSet($set);
+        }
     }
 
     protected function getImportData($blockNode, $page)

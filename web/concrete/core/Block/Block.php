@@ -11,7 +11,9 @@ use Concrete\Core\Feature\Assignment\Assignment as FeatureAssignment;
 use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVersionFeatureAssignment;
 use Concrete\Core\Foundation\Object;
 use Concrete\Core\Package\PackageList;
+use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Loader;
+use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Page;
 
 class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
@@ -20,7 +22,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     protected $cID;
     protected $arHandle;
     protected $c;
-    protected $csrID;
+    protected $issID;
     protected $proxyBlock = false;
     protected $bActionCID;
 
@@ -558,16 +560,16 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $res = $db->execute($r, $v);
 
             // styles
-            $csrID = $this->getBlockCustomStyleRuleID();
-            if ($csrID > 0) {
+            $issID = $this->getCustomStyleSetID();
+            if ($issID > 0) {
                 $db->Execute(
-                   'insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, csrID) values (?, ?, ?, ?, ?)',
+                   'insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, issID) values (?, ?, ?, ?, ?)',
                    array(
                        $cID,
                        $cvID,
                        $this->bID,
                        $this->getAreaHandle(),
-                       $csrID
+                       $issID
                    ));
             }
             if ($res) {
@@ -625,18 +627,18 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $this->cbOverrideAreaPermissions;
     }
 
-    public function getBlockCustomStyleRuleID()
+    public function getCustomStyleSetID()
     {
         $db = Loader::db();
-        if (!isset($this->csrID)) {
+        if (!isset($this->issID)) {
             $co = $this->getBlockCollectionObject();
             $csrCheck = CacheLocal::getEntry('csrCheck', $co->getCollectionID() . ':' . $co->getVersionID());
             $csrObject = CacheLocal::getEntry(
                                    'csrObject',
                                    $co->getCollectionID() . ':' . $co->getVersionID() . ':' . $this->getAreaHandle() . ':' . $this->getBlockID());
             if (is_object($csrObject)) {
-                $this->csrID = $csrObject->getCustomStyleRuleID();
-                return $csrObject->getCustomStyleRuleID();
+                $this->issID = $csrObject->getCustomStyleSetID();
+                return $csrObject->getCustomStyleSetID();
             } else {
                 if ($csrCheck) {
                     return false;
@@ -658,14 +660,14 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                     $this->bID
                 );
 
-                $this->csrID = $db->GetOne(
-                                  'select csrID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?',
+                $this->issID = $db->GetOne(
+                                  'select issID from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?',
                                   $v);
             } else {
-                $this->csrID = 0;
+                $this->issID = 0;
             }
         }
-        return $this->csrID;
+        return $this->issID;
     }
 
     function getBlockAreaObject()
@@ -795,60 +797,63 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $res2 = $db->execute($r2, $v2);
         $nb = Block::getByID($newBID, $nc, $this->arHandle);
 
-        $csrID = $this->getBlockCustomStyleRuleID();
-        if ($csrID > 0) {
-            $v = array($ncID, $nvID, $newBID, $this->arHandle, $csrID);
+        $issID = $this->getCustomStyleSetID();
+        if ($issID > 0) {
+            $v = array($ncID, $nvID, $newBID, $this->arHandle, $issID);
             $db->Execute(
-               'insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, csrID) values (?, ?, ?, ?, ?)',
+               'insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, issID) values (?, ?, ?, ?, ?)',
                $v);
         }
         return $nb;
     }
 
-    public function getBlockCustomStyleRule()
+    public function getCustomStyle($force = false)
     {
-        if ($this->getBlockCustomStyleRuleID() > 0) {
-
-            $txt = Loader::helper('text');
-            $csr = CustomStyleRule::getByID($this->getBlockCustomStyleRuleID());
-            $arHandle = $txt->filterNonAlphaNum($this->getAreaHandle());
-
-            if (is_object($csr)) {
-                $csr->setCustomStyleNameSpace('blockStyle' . $this->getBlockID() . $arHandle);
-                return $csr;
-            }
+        if ($this->getCustomStyleSetID() > 0 || $force) {
+            $csr = StyleSet::getByID($this->getCustomStyleSetID());
+            $bs = new CustomStyle($csr, $this->getBlockID(), $this->getAreaHandle());
+            return $bs;
         }
     }
 
-    public function resetBlockCustomStyle($updateAll = false)
+    public function setCustomStyleSet(StyleSet $set)
     {
         $db = Loader::db();
         $c = $this->getBlockCollectionObject();
         $cvID = $c->getVersionID();
-        if ($updateAll) {
-            $r = $db->Execute(
-                    'select cID, cvID, bID, arHandle from CollectionVersionBlockStyles where bID = ? and csrID = ?',
-                    array($this->bID, $this->getBlockCustomStyleRuleID()));
-            while ($row = $r->FetchRow()) {
-                $c1 = Page::getByID($row['cID'], $row['cvID']);
-                $b1 = Block::getByID($row['bID'], $c1, $row['arHandle']);
-            }
-            $db->Execute(
-               'delete from CollectionVersionBlockStyles where bID = ? and csrID = ?',
-               array(
-                   $this->bID,
-                   $this->getBlockCustomStyleRuleID()
-               ));
-        } else {
-            $db->Execute(
-               'delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?',
-               array(
-                   $this->getBlockCollectionID(),
-                   $cvID,
-                   $this->getAreaHandle(),
-                   $this->bID
-               ));
-        }
+        $db->Replace(
+            'CollectionVersionBlockStyles',
+            array(
+                'cID'      => $this->getBlockCollectionID(),
+                'cvID'     => $cvID,
+                'arHandle' => $this->getAreaHandle(),
+                'bID'      => $this->bID,
+                'issID'    => $set->getID()),
+            array(
+                'cID',
+                'cvID',
+                'bID',
+                'arHandle'),
+            true
+        );
+        $this->issID = $set->getID();
+    }
+
+    public function resetCustomStyle()
+    {
+        $db = Loader::db();
+        $c = $this->getBlockCollectionObject();
+        $cvID = $c->getVersionID();
+        $db->Execute(
+            'delete from CollectionVersionBlockStyles where cID = ? and cvID = ? and arHandle = ? and bID = ?',
+            array(
+                $this->getBlockCollectionID(),
+                $cvID,
+                $this->getAreaHandle(),
+                $this->bID
+            )
+        );
+        $this->issID = 0;
     }
 
     public function __destruct()
@@ -856,42 +861,6 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         unset($this->c);
         unset($this->a);
         unset($this->instance);
-    }
-
-    public function setBlockCustomStyle($csr, $updateAll = false)
-    {
-        $db = Loader::db();
-        $c = $this->getBlockCollectionObject();
-        $cvID = $c->getVersionID();
-        if ($updateAll) {
-            $r = $db->Execute(
-                    'select cID, cvID, bID, arHandle from CollectionVersionBlocks where bID = ?',
-                    array($this->bID));
-            while ($row = $r->FetchRow()) {
-                $c1 = Page::getByID($row['cID'], $row['cvID']);
-                $b1 = Block::getByID($row['bID'], $c1, $row['arHandle']);
-                $b1->setBlockCustomStyle($csr, false);
-            }
-        } else {
-            if ($csr->getCustomStyleRuleID() > 0) {
-                $db->Replace(
-                   'CollectionVersionBlockStyles',
-                   array(
-                       'cID'      => $this->getBlockCollectionID(),
-                       'cvID'     => $cvID,
-                       'arHandle' => $this->getAreaHandle(),
-                       'bID'      => $this->bID,
-                       'csrID'    => $csr->getCustomStyleRuleID()),
-                   array(
-                       'cID',
-                       'cvID',
-                       'bID',
-                       'arHandle'),
-                   true
-                );
-                $this->refreshCache();
-            }
-        }
     }
 
     /**
@@ -1020,12 +989,6 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     {
         $str = $this->_getBlockAction();
         return $str . '&amp;btask=update_information';
-    }
-
-    function getBlockMasterCollectionAliasAction()
-    {
-        $str = $this->_getBlockAction();
-        return $str . '&amp;btask=mc_alias';
     }
 
     function getBlockUpdateCssAction()
@@ -1307,6 +1270,11 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             }
 
             if ($exportType == 'full') {
+                $style = $this->getCustomStyle();
+                if (is_object($style)) {
+                    $set = $style->getStyleSet();
+                    $set->export($blockNode);
+                }
                 $bc = $this->getInstance();
                 $bc->export($blockNode);
             }

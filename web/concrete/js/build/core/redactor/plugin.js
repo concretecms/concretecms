@@ -7,7 +7,7 @@ RedactorPlugins.concrete5inline = {
 
         var obj = this;
         this.$toolbar.addClass("ccm-inline-toolbar");
-        this.$toolbar.append($('<li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-cancel"><button id="ccm-redactor-cancel-button" type="button" class="btn btn-mini">Cancel</button></li><li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-save"><button id="ccm-redactor-save-button" type="button" class="btn btn-primary btn-mini">Save</button></li>'));
+        this.$toolbar.append($('<li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-cancel"><button id="ccm-redactor-cancel-button" type="button" class="btn btn-mini">' + ccmi18n_redactor.cancel + '</button></li><li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-save"><button id="ccm-redactor-save-button" type="button" class="btn btn-primary btn-mini">' + ccmi18n_redactor.save + '</button></li>'));
         var toolbar = this.$toolbar;
 
         $('#ccm-redactor-cancel-button').unbind().on('click', function() {
@@ -19,6 +19,8 @@ RedactorPlugins.concrete5inline = {
         $('#ccm-redactor-save-button').unbind().on('click', function() {
             $('#redactor-content').val(obj.get());
             toolbar.hide();
+            ConcreteEvent.fire('EditModeExitInlineSaved');
+            ConcreteEvent.fire('EditModeExitInline');
             obj.destroy();
             $('#ccm-block-form').submit();
         });

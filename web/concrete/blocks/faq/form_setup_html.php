@@ -60,15 +60,15 @@
         <div class="ccm-faq-entry well">
             <i class="fa fa-arrows"></i>
             <div class="form-group">
-                <label><?php echo t('FAQ Entry Anchor Link Text') ?></label>
+                <label><?php echo t('Anchor Link Text') ?></label>
                 <input type="text" name="linkTitle[]" value="<?php echo $row['linkTitle'] ?>" />
             </div>
             <div class="form-group">
-                <label><?php echo t('FAQ Entry Title Text') ?></label>
+                <label><?php echo t('Title Text') ?></label>
                 <input type="text" name="title[]" value="<?php echo $row['title'] ?>" />
             </div>
             <div class="form-group">
-                <label><?php echo t('FAQ Entry Description') ?></label>
+                <label><?php echo t('Description') ?></label>
                 <textarea name="description[]"><?php echo $row['description'] ?></textarea>
             </div>
                 <input class="ccm-faq-entry-sort" type="hidden" name="sortOrder[]" value="<?php echo $row['sortOrder'] ?>"/>
@@ -81,15 +81,15 @@
     <div class="ccm-faq-entry well ccm-faq-entry-template"style="display: none;">
         <i class="fa-arrows fa"></i>
         <div class="form-group">
-            <label><?php echo t('FAQ Entry Anchor Link Text') ?></label>
+            <label><?php echo t('Anchor Link Text') ?></label>
             <input type="text" name="linkTitle[]" value="" />
         </div>
         <div class="form-group">
-            <label><?php echo t('FAQ Entry Title Text') ?></label>
+            <label><?php echo t('Title Text') ?></label>
             <input type="text" name="title[]" value="" />
         </div>
         <div class="form-group">
-            <label><?php echo t('FAQ Entry Description') ?></label>
+            <label><?php echo t('Description') ?></label>
             <textarea name="description[]"></textarea>
         </div>
             <input class="ccm-faq-entry-sort" type="hidden" name="sortOrder[]" value=""/>

@@ -90,9 +90,20 @@ $al->registerGroup('swfobject', array(
 
 // redactor
 $al->register('javascript', 'redactor', 'js/redactor.js', array('minify' => false));
+$al->register(
+    'javascript',
+    'redactor_locale',
+    REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_redactor_js',
+    array(
+        'combine' => false,
+        'minify' => false,
+        'local' => false
+    )
+);
 $al->register('css', 'redactor', 'css/redactor.css');
 $al->registerGroup('redactor', array(
     array('javascript', 'redactor'),
+    array('javascript', 'redactor_locale'),
     array('javascript', 'core/file-manager'),
     array('css', 'redactor'),
     array('css', 'core/file-manager'),

@@ -78,7 +78,6 @@ if ($controller->getTask() == 'view_details') {
     <?
     $a = Area::get($stack, STACKS_AREA_NAME);
     Loader::element('block_area_header', array('a' => $a));
-    Loader::element('block_area_header_view', array('a' => $a));
 
     foreach($blocks as $b) {
         $bv = new BlockView($b);
@@ -88,9 +87,9 @@ if ($controller->getTask() == 'view_details') {
             $bv->render('view');
         }
     }
-    Loader::element('block_area_footer_view', array('a' => $a));
     ?>
 
+    </div>
     </div>
 
     <div style="display: none">

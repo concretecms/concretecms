@@ -26,23 +26,11 @@ class ThemeGridColumn extends Column {
 		return $newAreaLayoutColumn;
 	}
 
-	public function display($disableControls = false) {
-		$layout = $this->getAreaLayoutObject();
-		$a = $layout->getAreaObject();
-		$as = new SubArea($this->getAreaLayoutColumnDisplayID(), $a);
-		$as->setAreaDisplayName(t('Column %s', $this->getAreaLayoutColumnIndex() + 1));
-		if ($disableControls) {
-			$as->disableControls();
-		}
-		$c = $a->getAreaCollectionObject();
-		$as->load($c);
-		if (!$this->getAreaID()) {
-			$db = Loader::db();
-			$db->Execute('update AreaLayoutColumns set arID = ? where arLayoutColumnID = ?', array($as->getAreaID(), $this->arLayoutColumnID));
-		}
-		$as->display($c);
-	}
-
+    public function exportDetails($node)
+    {
+        $node->addAttribute('span', $this->arLayoutColumnSpan);
+        $node->addAttribute('offset', $this->arLayoutColumnOffset);
+    }
 
 	public function getAreaLayoutColumnSpan() {
 		return $this->arLayoutColumnSpan;

@@ -43,7 +43,10 @@ abstract class Layout extends Object {
 		return $this->arLayoutNumColumns;
 	}
 
-	public function getAreaLayoutColumns() {
+    /**
+     * @return array \Concrete\Core\Area\Layout\Column
+     */
+    public function getAreaLayoutColumns() {
 		$db = Loader::db();
 		$r = $db->Execute('select arLayoutColumnID from AreaLayoutColumns where arLayoutID = ? order by arLayoutColumnIndex asc', array($this->arLayoutID));
 		$columns = array();
@@ -74,6 +77,22 @@ abstract class Layout extends Object {
 
 	abstract public function duplicate();
 	abstract static public function add();
+    abstract public function exportDetails($node);
+
+    public function export($node)
+    {
+        $layout = $node->addChild('arealayout');
+        if ($this->isAreaLayoutUsingThemeGridFramework()) {
+            $layout->addAttribute('type', 'theme-grid');
+        } else {
+            $layout->addAttribute('type', 'custom');
+        }
+        $this->exportDetails($layout);
+        $columns = $layout->addChild('columns');
+        foreach($this->getAreaLayoutColumns() as $column) {
+            $column->export($columns);
+        }
+    }
 
 	public function delete() {
 		$columns = $this->getAreaLayoutColumns();

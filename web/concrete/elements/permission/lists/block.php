@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="ccm-ui">
-	<? 
+	<?
 	$c = Page::getCurrentPage();
 	$a = $b->getBlockAreaObject();
 
@@ -14,8 +14,8 @@ if (!$b->overrideAreaPermissions()) { ?>
 	<br/>
 	<a href="javascript:void(0)" class="btn btn-small" onclick="ccm_setBlockPermissionsToOverride()"><?=t('Override Permissions')?></a>
 	</div>
-	
-<? } else { 
+
+<? } else {
 	$enablePermissions = true;
 	?>
 
@@ -37,7 +37,7 @@ if (!$b->overrideAreaPermissions()) { ?>
 
 <?
 $permissions = PermissionKey::getList('block');
-foreach($permissions as $pk) { 
+foreach($permissions as $pk) {
 	$pk->setPermissionObject($b);
 
 ?>
@@ -76,11 +76,11 @@ ccm_permissionLaunchDialog = function(link) {
 	}
 	jQuery.fn.dialog.open({
 		title: $(link).attr('dialog-title'),
-		href: '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?duplicate=' + dupe + '&bID=<?=$b->getBlockID()?>&arHandle=<?=urlencode($b->getAreaHandle())?>&cvID=<?=$c->getVersionID()?>&bID=<?=$b->getBlockID()?>&cID=<?=$c->getCollectionID()?>&btask=set_advanced_permissions&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
+		href: '<?=URL::to('/ccm/system/dialogs/block/permissions/detail')?>?duplicate=' + dupe + '&bID=<?=$b->getBlockID()?>&arHandle=<?=urlencode($b->getAreaHandle())?>&cvID=<?=$c->getVersionID()?>&bID=<?=$b->getBlockID()?>&cID=<?=$c->getCollectionID()?>&pkID=' + $(link).attr('data-pkID') + '&paID=' + $(link).attr('data-paID'),
 		modal: false,
 		width: 500,
 		height: 380
-	});		
+	});
 }
 
 $(function() {
@@ -88,34 +88,34 @@ $(function() {
 		beforeSubmit: function() {
 			jQuery.fn.dialog.showLoader();
 		},
-		
+
 		success: function(r) {
-			ccm_mainNavDisableDirectExit();
+            ConcreteToolbar.disableDirectExit();
 			jQuery.fn.dialog.hideLoader();
 			jQuery.fn.dialog.closeTop();
-		}		
+		}
 	});
 });
 
 ccm_revertToAreaPermissions = function() {
 	jQuery.fn.dialog.showLoader();
-	$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("revert_to_area_permissions")?>&bID=<?=$b->getBlockID()?>&cvID=<?=$c->getVersionID()?>&arHandle=<?=urlencode($b->getAreaHandle())?>&cID=<?=$c->getCollectionID()?>', function() { 
-		ccm_mainNavDisableDirectExit();
+	$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("revert_to_area_permissions")?>&bID=<?=$b->getBlockID()?>&cvID=<?=$c->getVersionID()?>&arHandle=<?=urlencode($b->getAreaHandle())?>&cID=<?=$c->getCollectionID()?>', function() {
+        ConcreteToolbar.disableDirectExit();
 		ccm_refreshBlockPermissions();
 	});
 }
 
 ccm_setBlockPermissionsToOverride = function() {
 	jQuery.fn.dialog.showLoader();
-	$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("override_area_permissions")?>&bID=<?=$b->getBlockID()?>&cvID=<?=$c->getVersionID()?>&arHandle=<?=urlencode($b->getAreaHandle())?>&cID=<?=$c->getCollectionID()?>', function() { 
-		ccm_mainNavDisableDirectExit();
+	$.get('<?=$pk->getPermissionAssignmentObject()->getPermissionKeyToolsURL("override_area_permissions")?>&bID=<?=$b->getBlockID()?>&cvID=<?=$c->getVersionID()?>&arHandle=<?=urlencode($b->getAreaHandle())?>&cID=<?=$c->getCollectionID()?>', function() {
+        ConcreteToolbar.disableDirectExit();
 		ccm_refreshBlockPermissions();
 	});
 }
 
 ccm_refreshBlockPermissions = function() {
 	jQuery.fn.dialog.showLoader();
-	$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?btask=groups&bID=<?=$b->getBlockID()?>&cvID=<?=$c->getVersionID()?>&arHandle=<?=urlencode($b->getAreaHandle())?>&cID=<?=$c->getCollectionID()?>', function(r) { 
+	$.get('<?=URL::to('/ccm/system/dialogs/block/permissions/list')?>?bID=<?=$b->getBlockID()?>&cvID=<?=$c->getVersionID()?>&arHandle=<?=urlencode($b->getAreaHandle())?>&cID=<?=$c->getCollectionID()?>', function(r) {
 		jQuery.fn.dialog.replaceTop(r);
 		jQuery.fn.dialog.hideLoader();
 	});

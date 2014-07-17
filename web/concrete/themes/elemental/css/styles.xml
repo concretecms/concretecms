@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<styles version="1.0">
+    <set name="Background Colors">
+        <style name="Body Background" variable="body-background" type="color" />
+        <style name="Header Background" variable="header-background" type="color" />
+        <style name="Main Background" variable="main-background" type="color" />
+        <style name="Footer Background" variable="footer-background" type="color" />
+    </set>
+    <set name="Header">
+        <style name="Navigation Link Color" variable="navigation-links" type="color" />
+        <style name="Navigation Background Hover" variable="navigation-links-hover-background" type="color" />
+        <style name="Site Title" variable="site-title" type="color" />
+    </set>
+    <set name="Body">
+        <style name="Typography" variable="body" type="type" />
+        <style name="Link Color" variable="body-link" type="color" />
+        <style name="Headings" variable="body-headings" type="color" />
+    </set>
+    <set name="Footer">
+        <style name="Top Margin" variable="footer-top-margin" type="size" />
+        <style name="Color" variable="footer-text" type="color" />
+        <style name="Background Image" variable="footer-background" type="image" />
+    </set>
+</styles>

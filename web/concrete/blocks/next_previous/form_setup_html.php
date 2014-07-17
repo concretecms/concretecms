@@ -7,17 +7,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
   <fieldset>
     
 	<div class="form-group">
-      <label><?php echo t('Labels'); ?></label>
+      <label class="control-label"><?php echo t('Labels'); ?></label>
       <div class="radio">
         <label>
             <input name="linkStyle" type="radio" value="next_previous" <?php echo ($controller->linkStyle!='page_name')?'checked="checked"':'' ?>  />
-            <span><?php echo t('Custom')?></span>
+            <?php echo t('Custom')?>
         </label>
       </div>
       <div class="radio">
           <label>
-              <input name="linkStyle" class="radio" type="radio" value="page_name" <?php echo ($controller->linkStyle=='page_name')?'checked="checked"':'' ?>  />
-              <span><?php echo t('Page Titles') ?></span>
+              <input name="linkStyle" type="radio" value="page_name" <?php echo ($controller->linkStyle=='page_name')?'checked="checked"':'' ?>  />
+              <?php echo t('Page Titles') ?>
           </label>
       </div>
     </div>

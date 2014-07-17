@@ -55,19 +55,6 @@ switch($_GET['atask']) {
 		$toolSection = "block_area_add_scrapbook";
 		$canViewPane = $ap->canAddBlocks();
 		break;
-	case 'design':
-		$toolSection = 'custom_style';
-		$args['style'] = $c->getAreaCustomStyleRule($a);
-		$args['action'] = $a->getAreaUpdateAction('design');
-		$args['refreshAction'] = REL_DIR_FILES_TOOLS_REQUIRED . '/edit_area_popup?atask=design&cID=' . $c->getCollectionID() . '&arHandle=' . $a->getAreaHandle() . '&refresh=1';
-		$canViewPane = $ap->canEditAreaDesign();
-		if ($canViewPane) {
-			if ($_REQUEST['subtask'] == 'delete_custom_style_preset') {
-				$styleToDelete = CustomStylePreset::getByID($_REQUEST['deleteCspID']);
-				$styleToDelete->delete(); 
-			}
-		}		
-		break;
 	case 'groups':
 		$toolSection = "permission/lists/area";
 		$canViewPane = $ap->canEditAreaPermissions();

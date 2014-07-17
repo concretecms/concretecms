@@ -10,5 +10,5 @@ $pk->setPermissionObject($b);
 
 
 <script type="text/javascript">
-var ccm_permissionDialogURL = '<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_block_popup?bID=<?=$b->getBlockID()?>&arHandle=<?=urlencode($b->getAreaHandle())?>&cvID=<?=$c->getVersionID()?>&bID=<?=$b->getBlockID()?>&cID=<?=$c->getCollectionID()?>&btask=set_advanced_permissions'; 
+var ccm_permissionDialogURL = '<?=URL::to('/ccm/system/dialogs/block/permissions/detail')?>?bID=<?=$b->getBlockID()?>&arHandle=<?=urlencode($b->getAreaHandle())?>&cvID=<?=$c->getVersionID()?>&bID=<?=$b->getBlockID()?>&cID=<?=$c->getCollectionID()?>';
 </script>

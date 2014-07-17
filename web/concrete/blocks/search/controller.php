@@ -11,6 +11,7 @@ class Controller extends BlockController {
 	protected $btInterfaceWidth = "400";
 	protected $btInterfaceHeight = "420";
 	protected $btWrapperClass = 'ccm-ui';
+    protected $btExportPageColumns = array('postTo_cID');
 
 	public $title = "";
 	public $buttonText = ">";
