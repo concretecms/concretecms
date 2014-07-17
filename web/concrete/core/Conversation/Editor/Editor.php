@@ -2,6 +2,7 @@
 namespace Concrete\Core\Conversation\Editor;
 use Loader;
 use \Concrete\Core\Package\PackageList;
+use ConversationMessage;
 use Core;
 use Config;
 use \Concrete\Core\Foundation\Object;
