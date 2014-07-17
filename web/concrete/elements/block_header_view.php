@@ -11,7 +11,7 @@ if ($a->isGlobalArea()) {
 
 $p = new Permissions($b);
 $showMenu = false;
-if ($a->showControls() && $c->isEditMode() && $p->canViewEditInterface()) {
+if ($a->showControls() && $c->isEditMode() && $p->canViewEditInterface() && $view->showControls()) {
     $showMenu = true;
 }
 
@@ -105,7 +105,7 @@ if ($showMenu) {
 
     <? if (is_object($css)) { ?>
     <div class="<?=$css->getContainerClass() ?>" >
-<? } ?>
+    <? } ?>
 
         <ul class="ccm-edit-mode-inline-commands ccm-ui">
             <? if ($p->canEditBlock() && $btw->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY && (!$a->isGlobalArea())) {  ?>
@@ -189,5 +189,10 @@ if ($showMenu) {
         </div>
 
 <? } else { ?>
+
+    <? if (is_object($css)) { ?>
+    <div class="<?=$css->getContainerClass() ?>" >
+    <? } else { ?>
     <div>
+    <? } ?>
 <? } ?>

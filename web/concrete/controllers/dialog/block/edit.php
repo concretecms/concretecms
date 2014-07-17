@@ -42,7 +42,7 @@ class Edit extends BackendInterfaceBlockController
 
             $bi = $b->getInstance();
             if ($b->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY) {
-                $_b = Block::getByID($bi->getOriginalBlockID());
+                $_b = \Block::getByID($bi->getOriginalBlockID());
                 $bi = $_b->getInstance(); // for validation
             }
             $e = $bi->validate($_POST);

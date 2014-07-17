@@ -10,6 +10,13 @@ if (is_object($set)) { ?>
 
 $ag = \Concrete\Core\Http\ResponseAssetGroup::get();
 $ag->requireAsset('core/style-customizer');
+$pt = $c->getCollectionThemeObject();
+
+$blockClasses = $pt->getThemeBlockClasses();
+$customClasses = array();
+if (isset($blockClasses[$b->getBlockTypeHandle()])) {
+    $customClasses = $blockClasses[$b->getBlockTypeHandle()];
+}
 Loader::element("custom_style", array(
     'saveAction' => $controller->action('submit'),
     'resetAction' => $controller->action('reset'),
@@ -17,9 +24,9 @@ Loader::element("custom_style", array(
     'bFilename' => $b->getBlockFilename(),
     'bName' => $b->getBlockName(),
     'templates' => $templates,
+    'customClasses' => $customClasses,
     'canEditCustomTemplate' => $canEditCustomTemplate,
 ));
 
-$pt = $c->getCollectionThemeObject();
 $pt->registerAssets();
 $bv->render('view');

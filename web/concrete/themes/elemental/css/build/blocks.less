@@ -8,7 +8,7 @@
 
   background-color: transparent;
   background-repeat: repeat-x;
-  background-image: url(@image-slider-background-image);
+  /* background-image is moved to main.less because it needs to be in the theme root */
 
   .ccm-image-slider {
 
@@ -98,10 +98,28 @@ main {
     }
 
     padding-left: 25px;
-    margin-bottom: 40px;
-
+    margin-bottom: 40px
   }
 
+  // Custom home page class for feature
+  div.ccm-block-feature-home-page {
+    div.ccm-block-feature-item h4, div.ccm-block-feature-item i {
+      color: #1a1a1a;
+    }
+
+    div.ccm-block-feature-item h4 {
+      font-size: 1.5em;
+    }
+
+    div.ccm-block-feature-item i {
+      font-size: 1.3em;
+      top: 1px;
+    }
+
+    div.ccm-block-feature-item {
+      padding-left: 45px;
+    }
+  }
 
   // faq block
   .ccm-faq-container {
