@@ -22,7 +22,7 @@
     ConcreteStyleCustomizerImageSelector.prototype = Object.create(ConcreteStyleCustomizerPalette.prototype);
 
     ConcreteStyleCustomizerImageSelector.prototype.chooseTemplate = '<span data-launch="style-customizer-palette" class="ccm-style-customizer-display-swatch">' +
-        '<input type="hidden" name="<%=options.inputName%>[fID]" data-style-customizer-input="fID" />' +
+        '<input type="hidden" value="<%=options.value%>" name="<%=options.inputName%>[image]" data-style-customizer-input="image" />' +
         '<span class="ccm-ui"><i class="fa fa-picture-o"></i></span></span>';
 
     ConcreteStyleCustomizerImageSelector.prototype.selectorWidgetTemplate = '<div class="ccm-ui ccm-style-customizer-palette">' +
@@ -33,13 +33,13 @@
 
     ConcreteStyleCustomizerImageSelector.prototype.save = function (e) {
         var my = this,
-            fID = 0;
+            image;
 
         var $selector = my.$widget.find('div.ccm-file-selector-file-selected');
         if ($selector.length) {
-            fID = $selector.find('input[type=hidden]').val();
+            image = $selector.find('input[type=hidden]').val();
         }
-        my.setValue('fID', fID);
+        my.setValue('image', image);
         ConcreteEvent.publish('StyleCustomizerControlUpdate');
         my.closeSelector(e);
     };
