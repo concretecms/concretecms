@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Collection\Version;
 
+use Core;
 use PageEditResponse;
 use Loader;
 use Page;
@@ -28,6 +29,9 @@ class EditResponse extends PageEditResponse
 
     public function getJSONObject()
     {
+        $dateHelper = Core::make('helper/date');
+        /* @var $dateHelper \Concrete\Core\Localization\Service\Date */
+
         $o = parent::getBaseJSONObject();
 
         $c = Page::getByID($this->cID);
@@ -40,7 +44,7 @@ class EditResponse extends PageEditResponse
             $obj->cvID = $v->getVersionID();
             $obj->cvIsApproved = $v->isApproved();
             $obj->cpCanDeletePageVersions = $cpCanDeletePageVersions;
-            $obj->cvDateVersionCreated = date(DATE_APP_PAGE_VERSIONS, strtotime($v->getVersionDateCreated('user')));
+            $obj->cvDateVersionCreated = $dateHelper->formatDateTime($v->getVersionDateCreated()); 
             $obj->cvAuthorUserName = $v->getVersionAuthorUserName();
             $obj->cvComments = $v->getVersionComments();
             $versions[] = $obj;
