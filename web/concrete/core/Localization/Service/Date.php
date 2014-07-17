@@ -99,6 +99,7 @@ class Date
             return $datetime->format($mask);
         }
     }
+
     /**
 	 * Gets the localized date according to a specific mask
 	 * @param object $datetime A PHP DateTime Object
@@ -145,17 +146,23 @@ class Date
     }
 
     /**
-	 * returns a keyed array of timezone identifiers
-	 * see: http://www.php.net/datetimezone.listidentifiers.php
-	 * @return array:
+	 * Returns a keyed array of timezone identifiers
+	 * @return array
+	 * @see http://www.php.net/datetimezone.listidentifiers.php
 	 */
     public function getTimezones()
     {
         return array_combine(\DateTimeZone::listIdentifiers(),DateTimeZone::listIdentifiers());
     }
 
-
-    public function timeSince($posttime,$precise=0)
+    /**
+     * Describe the difference in time between now and a date/time in the past.
+     * If the date/time is in the future or if it's more than one year old, you'll get the date representation of $posttime
+     * @param int $posttime The timestamp to analyze
+     * @param bool $precise = false Set to true to a more verbose and precise result, false for a more rounded result
+     * @return string
+     */
+    public function timeSince($posttime, $precise = false)
     {
         $timeRemaining=0;
         $diff=date("U")-$posttime;
@@ -169,12 +176,12 @@ class Date
             if ($diff>86400) {
                     $days= floor($diff / 86400);
                     $timeRemaining = t2('%d day', '%d days', $days, $days);
-                    if ($precise==1) {
+                    if ($precise) {
                         $timeRemaining .= ', '.t2('%d hour', '%d hours', $hours, $hours);
                     }
                 } elseif ($diff>3600) {
                     $timeRemaining = t2('%d hour', '%d hours', $hours, $hours);
-                    if ($precise==1) {
+                    if ($precise) {
                         $minutes = date("i", $diff);
                         $timeRemaining .= ', '.t2('%d minute', '%d minutes', $minutes, $minutes);
                     }
@@ -182,7 +189,7 @@ class Date
                     $minutes=date("i",$diff);
                     if(substr($minutes,0,1)=='0') $minutes=substr($minutes,1);
                     $timeRemaining = t2('%d minute', '%d minutes', $minutes, $minutes);
-                    if ($precise==1) {
+                    if ($precise) {
                         $seconds = date("s",$diff);
                         $timeRemaining .= ', '.t2('%d second', '%d seconds', $seconds, $seconds);
                     }
