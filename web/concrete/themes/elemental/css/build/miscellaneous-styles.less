@@ -1,49 +1,52 @@
-main {
+div.ccm-page {
+  main {
 
-  /* Header/Footer Logo/Brand */
-  .title-thin {
-    color: @title-thin-type-color;
-    font-family: @title-thin-type-font-family;
-    font-size: @title-thin-type-font-size;
-    line-height: @line-height-base;
-    font-weight: 200;
-    display: block;
-  }
+    h1.page-title {
+      color: @page-title-type-color;
+      font-family: @page-title-type-font-family;
+      font-size: @page-title-type-font-size;
+      line-height: @line-height-base;
+      font-weight: @page-title-type-font-weight;
+      text-transform: @page-title-type-text-transform;
+      padding-bottom: 30px;
+     }
 
-  h1.page-title {
-    color: @page-title-type-color;
-    font-family: @page-title-type-font-family;
-    font-size: @page-title-type-font-size;
-    line-height: @line-height-base;
-    font-weight: @page-title-type-font-weight;
-    text-transform: @page-title-type-text-transform;
-    padding-bottom: 30px;
-   }
+    // ensure that what you're putting in here is large and in charge
+    .jumbo {
+      h1 {
+        .title-thin;
+        padding-top: 40px;
+        font-size: @title-thin-type-font-size * 1.5;
+        padding-bottom: 40px;
+      }
 
-  .title-caps-bold {
-    color: @title-caps-bold-type-color;
-    font-family: @title-caps-bold-type-font-family;
-    font-size: @title-caps-bold-type-font-size;
-    line-height: @title-caps-bold-type-font-size * @line-height-base;
-    font-weight: 700;
-    text-transform: uppercase;
-  }
+      p {
+        font-size: @h2-type-font-size;
+        color: @h4-type-color;
+        font-weight: 200;
+      }
 
-  // ensure that what you're putting in here is large and in charge
-  .jumbo {
-    h1 {
-      .title-thin;
-      padding-top: 40px;
-      font-size: @title-thin-type-font-size * 1.5;
-      padding-bottom: 40px;
+      min-height: 300px;
     }
-
-    p {
-      font-size: @h2-type-font-size;
-      color: @h4-type-color;
-      font-weight: 200;
-    }
-
-    min-height: 300px;
   }
 }
+
+/* comes outside of main because we want to show it in redactor */
+.title-thin {
+  color: @title-thin-type-color !important;
+  font-family: @title-thin-type-font-family !important;
+  font-size: @title-thin-type-font-size !important;
+  line-height: @line-height-base !important;
+  font-weight: 200 !important;
+  display: block
+}
+
+.title-caps-bold {
+  color: @title-caps-bold-type-color !important;
+  font-family: @title-caps-bold-type-font-family !important;
+  font-size: @title-caps-bold-type-font-size !important;
+  line-height: @title-caps-bold-type-font-size * @line-height-base !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+}
+
