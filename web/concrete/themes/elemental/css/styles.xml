@@ -2,41 +2,45 @@
 <styles version="1.0">
     <set name="Full Page">
         <style name="Page Background" variable="page-background" type="color" />
-        <style name="Body Type" variable="body" type="type" />
+        <style name="Text" variable="body" type="type" />
+        <style name="Link" variable="body-link" type="color" />
+        <style name="Link Hover" variable="body-link-hover" type="color" />
+        <style name="Page Titles" variable="page-title" type="type" />
     </set>
     <set name="Header">
         <style name="Site Title" variable="header-site-title" type="type" />
+        <style name="Navigation" variable="header-navigation" type="type" />
+        <style name="Navigation Hover" variable="header-navigation-hover" type="color" />
+        <style name="Navigation Menu Background" variable="header-navigation-menu-background" type="color" />
+        <style name="Navigation Menu Background Hover" variable="header-navigation-menu-background-hover" type="color" />
+        <style name="Navigation Menu Border" variable="header-navigation-menu-border" type="color" />
+        <style name="Navigation Menu Text" variable="header-navigation-menu-text" type="color" />
+        <style name="Navigation Menu Text Hover" variable="header-navigation-menu-text-hover" type="color" />
+    </set>
+    <set name="Headings">
+        <style name="Heading 1" variable="h1" type="type" />
+        <style name="Heading 2" variable="h2" type="type" />
+        <style name="Heading 3" variable="h3" type="type" />
+        <style name="Heading 4" variable="h4" type="type" />
+        <style name="Heading 5" variable="h5" type="type" />
+        <style name="Heading 6" variable="h6" type="type" />
+    </set>
+    <set name="Blockquote">
+        <style name="Text" variable="blockquote" type="type" />
+        <style name="Left Padding" variable="blockquote-left-padding" type="size" />
+        <style name="Border Color" variable="blockquote-border" type="color" />
+    </set>
+    <set name="Image Slider">
+        <style name="Background Image" variable="image-slider-background" type="image" />
+        <style name="Navigation" variable="image-slider-navigation" type="color" />
     </set>
     <set name="Footer">
         <style name="Site Title" variable="footer-site-title" type="type" />
+        <style name="Social Icons" variable="footer-social-icon" type="color" />
+        <style name="Social Icons Hover" variable="footer-social-icon-hover" type="color" />
     </set>
     <set name="Miscellaneous">
         <style name="Title Thin" variable="title-thin" type="type" />
+        <style name="Title Caps Bold" variable="title-caps-bold" type="type" />
     </set>
 </styles>
-
-        <!--
-<styles version="1.0">
-    <set name="Background Colors">
-        <style name="Body Background" variable="body-background" type="color" />
-        <style name="Header Background" variable="header-background" type="color" />
-        <style name="Main Background" variable="main-background" type="color" />
-        <style name="Footer Background" variable="footer-background" type="color" />
-    </set>
-    <set name="Header">
-        <style name="Navigation Link Color" variable="navigation-links" type="color" />
-        <style name="Navigation Background Hover" variable="navigation-links-hover-background" type="color" />
-        <style name="Site Title" variable="site-title" type="color" />
-    </set>
-    <set name="Body">
-        <style name="Typography" variable="body" type="type" />
-        <style name="Link Color" variable="body-link" type="color" />
-        <style name="Headings" variable="body-headings" type="color" />
-    </set>
-    <set name="Footer">
-        <style name="Top Margin" variable="footer-top-margin" type="size" />
-        <style name="Color" variable="footer-text" type="color" />
-        <style name="Background Image" variable="footer-background" type="image" />
-    </set>
-</styles>
-//-->
