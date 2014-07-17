@@ -409,4 +409,67 @@ class Date
 
         return $zendDate->toString($format);
     }
+
+    /**
+     * Render the date part of a date/time as a localized string. If the day is yesterday we'll print 'Yesterday' (the same for today, tomorrow)
+     * @param mixed $value The date/time representation (one of the values accepted by toZendDate)
+     * @param bool $longDate Set to true for the long date format (eg 'December 31, 2000'), false (default) for the short format (eg '12/31/2000')
+     * @param string $toTimezone The timezone to set. Special values are:<ul>
+     *     <li>'system' for the current system timezone</li>
+     *     <li>'user' (default) for the user's timezone</li>
+     *     <li>'app' for the app's timezone</li>
+     *     <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
+     * </ul>
+     * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
+     */
+    public function formatPrettyDate($value, $longDate = false, $toTimezone = 'user')
+    {
+        $zendDate = $this->toZendDate($value, $toTimezone);
+        if (is_null($zendDate)) {
+            return '';
+        }
+        $days = $this->getDeltaDays('now', $zendDate, $toTimezone);
+        switch ($days) {
+            case 0:
+                return t('Today');
+            case 1:
+                return t('Tomorrow');
+            case -1:
+                return t('Yesterday');
+            default:
+                return $this->formatDate($zendDate, $longDate);
+        }
+    }
+
+    /**
+     * Render both the date and time parts of a date/time as a localized string. If the day is yesterday we'll print 'Yesterday' (the same for today, tomorrow)
+     * @param mixed $value The date/time representation (one of the values accepted by toZendDate)
+     * @param bool $longDate Set to true for the long date format (eg 'December 31, 2000 at ...'), false (default) for the short format (eg '12/31/2000 at ...')
+     * @param bool $withSeconds Set to true to include seconds (eg '... at 11:59:59 PM'), false (default) otherwise (eg '... at 11:59 PM');
+     * @param string $timezone The timezone to set. Special values are:<ul>
+     *     <li>'system' for the current system timezone</li>
+     *     <li>'user' (default) for the user's timezone</li>
+     *     <li>'app' for the app's timezone</li>
+     *     <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
+     * </ul>
+     * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
+     */
+    public function formatPrettyDateTime($value, $longDate = false, $withSeconds = false, $timezone = 'user')
+    {
+        $zendDate = $this->toZendDate($value, $timezone);
+        if (is_null($zendDate)) {
+            return '';
+        }
+        $days = $this->getDeltaDays('now', $zendDate, $timezone);
+        switch ($days) {
+            case 0:
+                return t(/*i18n: %s is a time */ 'Today at %s', $this->formatTime($zendDate, $withSeconds, $timezone));
+            case 1:
+                return t(/*i18n: %s is a time */ 'Tomorrow at %s', $this->formatTime($zendDate, $withSeconds, $timezone));
+            case -1:
+                return t(/*i18n: %s is a time */ 'Yesterday at %s', $this->formatTime($zendDate, $withSeconds, $timezone));
+            default:
+                return $this->formatDateTime($zendDate, $longDate, $withSeconds);
+        }
+    }
 }
