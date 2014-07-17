@@ -12,20 +12,19 @@
         var my = this, $field, $slider;
         options = $.extend({
             'inputName': false,
-            'fontFamily': false,
-            'color': false,
-            'bold': false,
-            'italic': false,
-            'underline': false,
-            'uppercase': false,
-            'fontSizeValue': false,
+            'fontFamily': -1,
+            'color': -1,
+            'italic': -1,
+            'underline': -1,
+            'uppercase': -1,
+            'fontSizeValue': -1,
             'fontSizeUnit': 'px',
-            'letterSpacingValue': false,
+            'fontWeight': -1,
+            'letterSpacingValue': -1,
             'letterSpacingUnit': 'px',
-            'lineHeightValue': false,
+            'lineHeightValue': -1,
             'lineHeightUnit': 'px'
         }, options);
-
         ConcreteStyleCustomizerPalette.call(my, $element, options);
 
         my.$fontMenu = my.$widget.find('select[data-style-customizer-field=font]');
@@ -62,40 +61,50 @@
         });
 
         // set defaults
-        if (my.options.fontFamily) {
+        if (my.options.fontFamily != -1) {
             my.setValue('font-family', my.options.fontFamily);
             if (_.indexOf(my.fonts, my.options.fontFamily) < 0) {
                 my.$fontMenu.append($('<option>', {'value': my.options.fontFamily, 'text': my.options.fontFamily}));
             }
             my.$fontMenu.val(my.options.fontFamily);
+        } else {
+            my.$widget.find('[data-wrapper=fontFamily]').remove();
+            my.$element.find('[data-wrapper=fontFamily]').remove();
         }
 
-        if (my.options.color) {
+        if (my.options.color != -1) {
             my.$colorpicker.spectrum('set', my.options.color);
             my.setValue('color', my.options.color);
+        } else {
+            my.$widget.find('[data-wrapper=color]').remove();
+            my.$element.find('[data-wrapper=color]').remove();
         }
 
-        if (my.options.underline) {
-            my.$widget.find('input[data-style-customizer-field=underline]').prop('checked', true);
-            my.setValue('underline', '1');
+        if (my.options.underline != -1) {
+            my.$widget.find('input[data-style-customizer-field=underline]').prop('checked', my.options.underline);
+            my.setValue('underline', my.options.underline ? 1 : 0);
+        } else {
+            my.$widget.find('[data-wrapper=underline]').remove();
+            my.$element.find('[data-wrapper=underline]').remove();
         }
 
-        if (my.options.uppercase) {
-            my.$widget.find('input[data-style-customizer-field=uppercase]').prop('checked', true);
-            my.setValue('uppercase', '1');
+        if (my.options.uppercase != -1) {
+            my.$widget.find('input[data-style-customizer-field=uppercase]').prop('checked', my.options.uppercase);
+            my.setValue('uppercase',  my.options.uppercase ? 1 : 0);
+        } else {
+            my.$widget.find('[data-wrapper=uppercase]').remove();
+            my.$element.find('[data-wrapper=uppercase]').remove();
         }
 
-        if (my.options.italic) {
-            my.$widget.find('input[data-style-customizer-field=italic]').prop('checked', true);
-            my.setValue('italic', '1');
+        if (my.options.italic != -1) {
+            my.$widget.find('input[data-style-customizer-field=italic]').prop('checked', my.options.italic);
+            my.setValue('italic',  my.options.italic ? 1 : 0);
+        } else {
+            my.$widget.find('[data-wrapper=italic]').remove();
+            my.$element.find('[data-wrapper=italic]').remove();
         }
 
-        if (my.options.bold) {
-            my.$widget.find('input[data-style-customizer-field=bold]').prop('checked', true);
-            my.setValue('bold', '1');
-        }
-
-        if (my.options.fontSizeValue) {
+        if (my.options.fontSizeValue != -1) {
             $field = my.$widget.find('div[data-style-customizer-field=font-size]');
             $slider = $field.find('div.ccm-style-customizer-slider');
             $slider.slider('value', my.options.fontSizeValue);
@@ -106,8 +115,26 @@
             $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-number').html(my.options.fontSizeValue);
             $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-unit').html(my.options.fontSizeUnit);
             my.setValue('font-size', my.options.fontSizeValue);
+        } else {
+            my.$widget.find('[data-wrapper=fontSize]').remove();
+            my.$element.find('[data-wrapper=fontSize]').remove();
         }
-        if (my.options.letterSpacingValue) {
+
+        if (my.options.fontWeight != -1) {
+            $field = my.$widget.find('div[data-style-customizer-field=font-weight]');
+            $slider = $field.find('div.ccm-style-customizer-slider');
+            $slider.slider('option', 'step', 100);
+            $slider.slider('option', 'max', 900);
+            $slider.slider('option', 'min', 100);
+            $slider.slider('value', my.options.fontWeight);
+            $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-number').html(my.options.fontWeight);
+            my.setValue('font-weight', my.options.fontWeight);
+        } else {
+            my.$widget.find('[data-wrapper=fontWeight]').remove();
+            my.$element.find('[data-wrapper=fontWeight]').remove();
+        }
+
+        if (my.options.letterSpacingValue != -1) {
             $field = my.$widget.find('div[data-style-customizer-field=letter-spacing]');
             $slider = $field.find('div.ccm-style-customizer-slider');
             $slider.slider('value', my.options.letterSpacingValue);
@@ -118,9 +145,12 @@
             $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-number').html(my.options.letterSpacingValue);
             $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-unit').html(my.options.letterSpacingUnit);
             my.setValue('letter-spacing', my.options.letterSpacingValue);
+        } else {
+            my.$widget.find('[data-wrapper=letterSpacing]').remove();
+            my.$element.find('[data-wrapper=letterSpacing]').remove();
         }
 
-        if (my.options.lineHeightValue) {
+        if (my.options.lineHeightValue != -1) {
             $field = my.$widget.find('div[data-style-customizer-field=line-height]');
             $slider = $field.find('div.ccm-style-customizer-slider');
             $slider.slider('value', my.options.lineHeightValue);
@@ -131,6 +161,9 @@
             $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-number').html(my.options.lineHeightValue);
             $field.find('span.ccm-style-customizer-slider-value span.ccm-style-customizer-unit').html(my.options.lineHeightUnit);
             my.setValue('line-height', my.options.lineHeightValue);
+        } else {
+            my.$widget.find('[data-wrapper=lineHeight]').remove();
+            my.$element.find('[data-wrapper=lineHeight]').remove();
         }
 
         my.updateSwatch();
@@ -141,29 +174,29 @@
 
     ConcreteTypographySelector.prototype.fonts = ['Arial','Helvetica', 'Georgia', 'Verdana', 'Trebuchet MS', 'Book Antiqua', 'Tahoma', 'Times New Roman', 'Courier New', 'Arial Black', 'Comic Sans MS'];
     ConcreteTypographySelector.prototype.chooseTemplate = '<span class="ccm-style-customizer-display-swatch" data-launch="style-customizer-palette">' +
-        '<input type="hidden" name="<%=options.inputName%>[font-family]" data-style-customizer-input="font-family" />' +
-        '<input type="hidden" name="<%=options.inputName%>[color]" data-style-customizer-input="color" />' +
-        '<input type="hidden" name="<%=options.inputName%>[bold]" data-style-customizer-input="bold" />' +
-        '<input type="hidden" name="<%=options.inputName%>[italic]" data-style-customizer-input="italic" />' +
-        '<input type="hidden" name="<%=options.inputName%>[underline]" data-style-customizer-input="underline" />' +
-        '<input type="hidden" name="<%=options.inputName%>[uppercase]" data-style-customizer-input="uppercase" />' +
-        '<input type="hidden" name="<%=options.inputName%>[font-size][size]" data-style-customizer-input="font-size" />' +
-        '<input type="hidden" name="<%=options.inputName%>[font-size][unit]" value="<%=options.fontSizeUnit%>" />' +
-        '<input type="hidden" name="<%=options.inputName%>[letter-spacing][size]" data-style-customizer-input="letter-spacing" />' +
-        '<input type="hidden" name="<%=options.inputName%>[letter-spacing][unit]" value="<%=options.letterSpacingUnit%>" />' +
-        '<input type="hidden" name="<%=options.inputName%>[line-height][size]" data-style-customizer-input="line-height" />' +
-        '<input type="hidden" name="<%=options.inputName%>[line-height][unit]" value="<%=options.lineHeightUnit%>" />' +
+        '<div data-wrapper="fontFamily"><input type="hidden" name="<%=options.inputName%>[font-family]" data-style-customizer-input="font-family" /></div>' +
+        '<div data-wrapper="color"><input type="hidden" name="<%=options.inputName%>[color]" data-style-customizer-input="color" /></div>' +
+        '<div data-wrapper="italic"><input type="hidden" name="<%=options.inputName%>[italic]" data-style-customizer-input="italic" /></div>' +
+        '<div data-wrapper="underline"><input type="hidden" name="<%=options.inputName%>[underline]" data-style-customizer-input="underline" /></div>' +
+        '<div data-wrapper="uppercase"><input type="hidden" name="<%=options.inputName%>[uppercase]" data-style-customizer-input="uppercase" /></div>' +
+        '<div data-wrapper="fontWeight"><input type="hidden" name="<%=options.inputName%>[font-weight]" data-style-customizer-input="font-weight" /></div>' +
+        '<div data-wrapper="fontSize"><input type="hidden" name="<%=options.inputName%>[font-size][size]" data-style-customizer-input="font-size" />' +
+        '<input type="hidden" name="<%=options.inputName%>[font-size][unit]" value="<%=options.fontSizeUnit%>" /></div>' +
+        '<div data-wrapper="letterSpacing"><input type="hidden" name="<%=options.inputName%>[letter-spacing][size]" data-style-customizer-input="letter-spacing" />' +
+        '<input type="hidden" name="<%=options.inputName%>[letter-spacing][unit]" value="<%=options.letterSpacingUnit%>" /></div>' +
+        '<div data-wrapper="lineHeight"><input type="hidden" name="<%=options.inputName%>[line-height][size]" data-style-customizer-input="line-height" />' +
+        '<input type="hidden" name="<%=options.inputName%>[line-height][unit]" value="<%=options.lineHeightUnit%>" /></div>' +
         '<span>T</span></span>';
 
     ConcreteTypographySelector.prototype.selectorWidgetTemplate = '<div class="ccm-ui ccm-style-customizer-palette">' +
-        '<div><select data-style-customizer-field="font"><option value=""><%=i18n.chooseFont%></option></select> <input type="text" data-style-customizer-field="color"></div>' +
-        '<div class="checkbox"><label><input type="checkbox" class="ccm-flat-checkbox" data-style-customizer-field="bold"> <%=i18n.bold%></label></div>' +
-        '<div class="checkbox"><label><input type="checkbox" class="ccm-flat-checkbox" data-style-customizer-field="italic"> <%=i18n.italic%></label></div>' +
-        '<div class="checkbox"><label><input type="checkbox" class="ccm-flat-checkbox" data-style-customizer-field="underline"> <%=i18n.underline%></label></div>' +
-        '<div class="checkbox"><label><input type="checkbox" class="ccm-flat-checkbox" data-style-customizer-field="uppercase"> <%=i18n.uppercase%></label></div>' +
-        '<div><label><%=i18n.fontSize%></label><div data-style-customizer-field="font-size"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><span class="ccm-style-customizer-number"></span><span class="ccm-style-customizer-unit">px</span></span></div></div>' +
-        '<div><label><%=i18n.letterSpacing%></label><div data-style-customizer-field="letter-spacing"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><span class="ccm-style-customizer-number"></span><span class="ccm-style-customizer-unit">px</span></span></div></div>' +
-        '<div><label><%=i18n.lineHeight%></label><div data-style-customizer-field="line-height"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><span class="ccm-style-customizer-number"></span><span class="ccm-style-customizer-unit">px</span></span></div></div>' +
+        '<div><select data-style-customizer-field="font" data-wrapper="fontFamily"><option value=""><%=i18n.chooseFont%></option></select> <span data-wrapper="color"><input type="text" data-style-customizer-field="color"></span></div>' +
+        '<div data-wrapper="italic" class="checkbox"><label><input type="checkbox" class="ccm-flat-checkbox" data-style-customizer-field="italic"> <%=i18n.italic%></label></div>' +
+        '<div data-wrapper="underline" class="checkbox"><label><input type="checkbox" class="ccm-flat-checkbox" data-style-customizer-field="underline"> <%=i18n.underline%></label></div>' +
+        '<div data-wrapper="uppercase" class="checkbox"><label><input type="checkbox" class="ccm-flat-checkbox" data-style-customizer-field="uppercase"> <%=i18n.uppercase%></label></div>' +
+        '<div data-wrapper="fontSize"><label><%=i18n.fontSize%></label><div data-style-customizer-field="font-size"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><span class="ccm-style-customizer-number"></span><span class="ccm-style-customizer-unit">px</span></span></div></div>' +
+        '<div data-wrapper="fontWeight"><label><%=i18n.fontWeight%> <i class="fa fa-question-circle launch-tooltip" title="400 = Normal, 700 = Bold"></i></label><div data-style-customizer-field="font-weight"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><span class="ccm-style-customizer-number"></span></span></div></div>' +
+        '<div data-wrapper="letterSpacing"><label><%=i18n.letterSpacing%></label><div data-style-customizer-field="letter-spacing"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><span class="ccm-style-customizer-number"></span><span class="ccm-style-customizer-unit">px</span></span></div></div>' +
+        '<div data-wrapper="lineHeight"><label><%=i18n.lineHeight%></label><div data-style-customizer-field="line-height"><div class="ccm-style-customizer-slider"></div><span class="ccm-style-customizer-slider-value"><span class="ccm-style-customizer-number"></span><span class="ccm-style-customizer-unit">px</span></span></div></div>' +
         '<div class="ccm-style-customizer-palette-actions"><button class="btn btn-primary"><%=i18n.save%></button></div>' +
         '</div>';
 
@@ -171,28 +204,30 @@
         var my = this,
             $swatch = my.$element.find('span.ccm-style-customizer-display-swatch');
 
-        $swatch.css('font-family', my.getValue('font-family'));
-        $swatch.css('color', my.getValue('color'));
+        if (my.getValue('font-family')) {
+            $swatch.css('font-family', my.getValue('font-family'));
+        }
+        if (my.getValue('color')) {
+            $swatch.css('color', my.getValue('color'));
+        }
+
         $swatch.css('font-weight', 'inherit');
         $swatch.css('font-style', 'inherit');
         $swatch.css('text-decoration', 'inherit');
         $swatch.css('text-transform', 'inherit');
 
-        if (my.getValue('bold') === '1') {
-            $swatch.css('font-weight', 'bold');
-        }
+
         if (my.getValue('italic') === '1') {
             $swatch.css('font-style', 'italic');
         }
         if (my.getValue('underline') === '1') {
             $swatch.css('text-decoration', 'underline');
         }
+        $swatch.css('font-weight', my.getValue('font-weight'));
         if (my.getValue('uppercase') === '1') {
             $swatch.css('text-transform', 'uppercase');
         }
-        //$swatch.css('line-height', my.getValue('line-height') + my.options.unit);
-        $swatch.css('letter-spacing', my.getValue('letter-spacing') + my.options.unit);
-        $swatch.css('font-size', my.getValue('font-size') + my.options.unit);
+        $swatch.css('font-size', '14px');
 
     };
 
@@ -200,11 +235,11 @@
         var my = this;
         my.setValue('font-family', my.$fontMenu.val());
         my.setValue('color', my.$widget.find('input[data-style-customizer-field=color]').spectrum('get'));
-        my.setValue('bold', my.$widget.find('input[data-style-customizer-field=bold]').is(':checked') ? '1' : 0);
         my.setValue('italic', my.$widget.find('input[data-style-customizer-field=italic]').is(':checked') ? '1' : 0);
         my.setValue('underline', my.$widget.find('input[data-style-customizer-field=underline]').is(':checked') ? '1' : 0);
         my.setValue('uppercase', my.$widget.find('input[data-style-customizer-field=uppercase]').is(':checked') ? '1' : 0);
         my.setValue('font-size', my.$widget.find('div[data-style-customizer-field=font-size] div.ccm-style-customizer-slider').slider('value'));
+        my.setValue('font-weight', my.$widget.find('div[data-style-customizer-field=font-weight] div.ccm-style-customizer-slider').slider('value'));
         my.setValue('letter-spacing', my.$widget.find('div[data-style-customizer-field=letter-spacing] div.ccm-style-customizer-slider').slider('value'));
         my.setValue('line-height', my.$widget.find('div[data-style-customizer-field=line-height] div.ccm-style-customizer-slider').slider('value'));
         my.updateSwatch();

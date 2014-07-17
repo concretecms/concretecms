@@ -331,10 +331,16 @@ class Theme extends Object
             $scl = $style->getValueList();
             $stylesheet->setValueList($scl);
         }
-        if (!$stylesheet->outputFileExists() || !ENABLE_ASSET_CACHE) {
-            $stylesheet->output();
+        if (!$this->isThemePreviewRequest()) {
+            if (!$stylesheet->outputFileExists() || !ENABLE_ASSET_CACHE) {
+                $stylesheet->output();
+            }
         }
-        return $stylesheet->getOutputRelativePath();
+        $path = $stylesheet->getOutputRelativePath();
+        if ($this->isThemePreviewRequest()) {
+            $path .= '?ts=' . time();
+        }
+        return $path;
     }
 
     /**

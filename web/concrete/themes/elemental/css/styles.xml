@@ -1,5 +1,21 @@
 <?xml version="1.0"?>
 <styles version="1.0">
+    <set name="Full Page">
+        <style name="Page Background" variable="page-background" type="color" />
+    </set>
+    <set name="Header">
+        <style name="Site Title" variable="header-site-title" type="type" />
+    </set>
+    <set name="Footer">
+        <style name="Site Title" variable="footer-site-title" type="type" />
+    </set>
+    <set name="Miscellaneous">
+        <style name="Title Thin" variable="title-thin" type="type" />
+    </set>
+</styles>
+
+        <!--
+<styles version="1.0">
     <set name="Background Colors">
         <style name="Body Background" variable="body-background" type="color" />
         <style name="Header Background" variable="header-background" type="color" />
@@ -22,3 +38,4 @@
         <style name="Background Image" variable="footer-background" type="image" />
     </set>
 </styles>
+//-->

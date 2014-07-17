@@ -24,6 +24,7 @@ class Customize extends BackendInterfacePageController {
     }
 
     public function view($pThemeID) {
+        $this->requireAsset('core/style-customizer');
         $pt = PageTheme::getByID($pThemeID);
         if (is_object($pt) && $pt->isThemeCustomizable()) {
 

@@ -27,7 +27,7 @@ class Stylesheet {
      * @return string CSS
      */
     public function getCss($valueList = false) {
-        $parser = new \Less_Parser(array('compress' => false));
+        $parser = new \Less_Parser(array('compress' => true));
         $parser = $parser->parseFile($this->file, $this->sourceUriRoot);
         if (isset($this->valueList) && $this->valueList instanceof \Concrete\Core\StyleCustomizer\Style\ValueList) {
             $variables = array();
