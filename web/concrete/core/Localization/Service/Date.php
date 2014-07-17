@@ -102,7 +102,7 @@ class Date
 
     /**
 	 * Gets the localized date according to a specific mask
-	 * @param object $datetime A PHP DateTime Object
+	 * @param object $datetime A PHP \DateTime Object
 	 * @param string $mask
 	 * @return string
 	 */
@@ -213,9 +213,9 @@ class Date
 
     /**
      * Convert a date to a Zend_Date instance.
-     * @param string|DateTime|Zend_Date|int $value It can be:<ul>
+     * @param string|\DateTime|Zend_Date|int $value It can be:<ul>
      *    <li>the special value 'now' (default) to return the current date/time</li>
-     *    <li>a DateTime instance</li>
+     *    <li>a \DateTime instance</li>
      *    <li>a Zend_Date instance</li>
      *    <li>a string parsable by strtotime (the current system timezone is used)</li>
      *    <li>a timestamp</li>
@@ -230,23 +230,25 @@ class Date
      */
     public function toZendDate($value = 'now', $toTimezone = 'system')
     {
+        $locale = Localization::activeLocale();
         $zendDate = null;
+        
         if (is_int($value)) {
-            $zendDate = new Zend_Date($value, Zend_Date::TIMESTAMP);
-        } elseif ($value instanceof DateTime) {
-            $zendDate = new Zend_Date($value->format(DATE_ATOM), DATE_ATOM);
+            $zendDate = new Zend_Date($value, Zend_Date::TIMESTAMP, $locale);
+        } elseif ($value instanceof \DateTime) {
+            $zendDate = new Zend_Date($value->format(DATE_ATOM), DATE_ATOM, $locale);
             $zendDate->setTimeZone($value->format('e'));
         } elseif (is_a($value, 'Zend_Date')) {
             $zendDate = clone $value;
         } elseif (is_string($value) && strlen($value)) {
             if ($value === 'now') {
-                $zendDate = new Zend_Date();
+                $zendDate = new Zend_Date(time(), Zend_Date::TIMESTAMP, $locale);
             } elseif (is_numeric($value)) {
-                $zendDate = new Zend_Date($value, Zend_Date::TIMESTAMP);
+                $zendDate = new Zend_Date($value, Zend_Date::TIMESTAMP, $locale);
             } else {
                 $timestamp = @strtotime($value);
                 if ($timestamp !== false) {
-                    $zendDate = new Zend_Date($timestamp, Zend_Date::TIMESTAMP);
+                    $zendDate = new Zend_Date($timestamp, Zend_Date::TIMESTAMP, $locale);
                 }
             }
         }
@@ -308,8 +310,9 @@ class Date
         if (is_null($zendFrom) || is_null($zendTo)) {
             return null;
         }
-        $zendFromUTC = new Zend_Date();
-        $zendToUTC = new Zend_Date();
+        $locale = Localization::activeLocale();
+        $zendFromUTC = new Zend_Date(time(), Zend_Date::TIMESTAMP, $locale);
+        $zendToUTC = new Zend_Date(time(), Zend_Date::TIMESTAMP, $locale);
         $zendFromUTC->setTimezone('GMT');
         $zendToUTC->setTimezone('GMT');
         $zendFromUTC->setDate($zendFrom->toString('Y-m-d'), 'Y-m-d');
