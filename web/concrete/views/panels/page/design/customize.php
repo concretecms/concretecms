@@ -36,6 +36,15 @@ $pk = PermissionKey::getByHandle('customize_themes');
 
     </div>
 
+    <?
+    // output basic values –these are ones we don't have any
+    // kind of special mapping for and that don't appear in our customizer style sets.
+    foreach($valueList->getValues() as $value) {
+        if ($value instanceof \Concrete\Core\StyleCustomizer\Style\Value\BasicValue) { ?>
+           <input type="hidden" name="<?=$value->getVariable()?>" value="<?=$value->getValue()?>" />
+        <? }
+    }
+    ?>
     <div id="ccm-panel-page-design-customize-list">
     <? foreach($styleSets as $set) { ?>
         <div class="ccm-panel-page-design-customize-style-set">

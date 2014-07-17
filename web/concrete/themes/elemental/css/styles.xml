@@ -2,6 +2,7 @@
 <styles version="1.0">
     <set name="Full Page">
         <style name="Page Background" variable="page-background" type="color" />
+        <style name="Body Type" variable="body" type="type" />
     </set>
     <set name="Header">
         <style name="Site Title" variable="header-site-title" type="type" />
