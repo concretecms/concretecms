@@ -46,8 +46,8 @@ $form = Loader::helper('form/page_selector');
         </div>
 
         <legend><?= t('Filters') ?></legend>
-        <div class="form-group">
-            <label class="checkbox">
+        <div class="checkbox">
+            <label>
                 <input <? if (!is_object($cadf)) { ?> disabled <? } ?> type="checkbox" name="displayFeaturedOnly"
                                                                        value="1" <? if ($displayFeaturedOnly == 1) { ?> checked <? } ?>
                                                                        style="vertical-align: middle"/>
@@ -60,8 +60,8 @@ $form = Loader::helper('form/page_selector');
             <? } ?>
         </div>
 
-        <div class="form-group">
-            <label class="checkbox">
+        <div class="checkbox">
+            <label>
                 <input type="checkbox" name="displayAliases"
                        value="1" <? if ($displayAliases == 1) { ?> checked <? } ?> />
                 <?= t('Display page aliases.') ?>
@@ -69,28 +69,28 @@ $form = Loader::helper('form/page_selector');
         </div>
 
         <legend><?= t('Pagination') ?></legend>
-        <div class="form-group">
-            <label class="checkbox">
+        <div class="checkbox">
+            <label>
                 <input type="checkbox" name="paginate" value="1" <? if ($paginate == 1) { ?> checked <? } ?> />
                 <?= t('Display pagination interface if more items are available than are displayed.') ?>
             </label>
         </div>
 
         <legend><?= t('Location') ?></legend>
-        <div class="form-group">
-            <label class="radio">
+        <div class="radio">
+            <label>
                 <input type="radio" name="cParentID" id="cEverywhereField"
                        value="0" <? if ($cParentID == 0) { ?> checked<? } ?> />
                 <?= t('Everywhere') ?>
             </label>
 
-            <label class="radio">
+            <label>
                 <input type="radio" name="cParentID" id="cThisPageField"
                        value="<?= $c->getCollectionID() ?>" <? if ($cParentID == $c->getCollectionID() || $cThis) { ?> checked<? } ?>>
                 <?= t('Beneath this page') ?>
             </label>
 
-            <label class="radio">
+            <label>
                 <input type="radio" name="cParentID" id="cOtherField"
                        value="OTHER" <? if ($isOtherPage) { ?> checked<? } ?>>
                 <?= t('Beneath another page') ?>
@@ -137,12 +137,12 @@ $form = Loader::helper('form/page_selector');
         </div>
 
         <legend><?= t('Provide RSS Feed') ?></legend>
-        <div class="form-group">
-            <label class="radio inline">
+        <div class="radio">
+            <label>
                 <input id="ccm-pagelist-rssSelectorOn" type="radio" name="rss" class="rssSelector"
                        value="1" <?= ($rss ? "checked=\"checked\"" : "") ?>/> <?= t('Yes') ?>
             </label>
-            <label class="radio inline">
+            <label>
                 <input type="radio" name="rss" class="rssSelector"
                        value="0" <?= ($rss ? "" : "checked=\"checked\"") ?>/> <?= t('No') ?>
             </label>
