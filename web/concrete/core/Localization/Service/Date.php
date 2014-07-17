@@ -473,6 +473,28 @@ class Date
         }
     }
 
+    /**
+     * Render a date/time as a localized string, by specifying a custom format
+     * @param string $format The custom format (see http://www.php.net/manual/en/function.date.php for applicable formats)
+     * @param mixed $value The date/time representation (one of the values accepted by toZendDate)
+     * @param string $toTimezone The timezone to set. Special values are:<ul>
+     *     <li>'system' for the current system timezone</li>
+     *     <li>'user' (default) for the user's timezone</li>
+     *     <li>'app' for the app's timezone</li>
+     *     <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
+     * </ul>
+     * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
+     */
+    public function formatCustom($format, $value = 'now', $toTimezone = 'user')
+    {
+        $zendDate = $this->toZendDate($value, $toTimezone);
+        if (is_null($zendDate)) {
+            return '';
+        }
+
+        return $zendDate->toString($format);
+    }
+
     /** Returns the format string for the jQueryUI DatePicker widget
      * @param string $relatedPHPFormat = '' Related PHP date format that will be used to parse the format handled by the DatePicker.
      *     If not specified we'll use the same format used by formatDate(..., false)
