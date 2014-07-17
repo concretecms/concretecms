@@ -26,7 +26,10 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
     public function getThemeEditorClasses()
     {
         return array(
-
+            array('title' => t('Title Thin'), 'menuClass' => 'title-thin', 'spanClass' => 'title-thin'),
+            array('title' => t('Title Caps'), 'menuClass' => 'title-caps-bold', 'spanClass' => 'title-caps-bold'),
+            array('title' => t('Success Button'), 'menuClass' => '', 'spanClass' => 'btn btn-success'),
+            array('title' => t('Success Button (Alternate)'), 'menuClass' => '', 'spanClass' => 'btn btn-success-alt'),
         );
     }
 
