@@ -1,7 +1,12 @@
 <?php
 namespace Concrete\Core\Conversation\Message;
 use Loader;
+use Conversation;
+use ConversationEditor;
+use ConversationRatingType;
 use \Concrete\Core\Foundation\Object;
+use User;
+use UserInfo;
 class Message extends Object {
 	public function getConversationMessageID() {return $this->cnvMessageID;}
 	public function getConversationMessageSubject() {return $this->cnvMessageSubject;}
