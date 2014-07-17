@@ -4,33 +4,31 @@ $ih = Loader::helper('concrete/ui');
 
 echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Single Pages'), false);?>
 	<div class="clearfix">
-		<h3><?php echo t('Add Single Page')?></h3>
+		<h4><?php echo t('Add Single Page')?></h4>
 		<?php if(URL_REWRITING == true || URL_REWRITING_ALL == true) {
 			$base = BASE_URL.DIR_REL;
 		} else { 
 			$base = BASE_URL.DIR_REL.'/'.DISPATCHER_FILENAME;
 		}?>
-		<form class="form-stacked" method="post" id="add_static_page_form" action="<?php echo $view->url('/dashboard/pages/single')?>">
+		<form class="form-inline" method="post" id="add_static_page_form" action="<?php echo $view->url('/dashboard/pages/single')?>">
 			<?php echo $this->controller->token->output('add_single_page')?>
-			<div class="control-group">
-			<label for="pageURL" class="control-label"><?php echo t('The page you want to add is available at:')?></label>
-			<div class="controls">
-			<div class="input-prepend">
-				<span class="add-on"><?php echo $base?>/</span><input type="text" name="pageURL" value="<?php echo $this->post('pageURL')?>" class="span4" />
-			</div>
-				<button class="btn" type="submit"><?=t('Add')?></button>
-			</div>
-			</div>
-
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-addon"><?php echo $base?>/</div>
+                    <input type="text" style="width: 200px" class="form-control" name="pageURL" value="<?php echo $this->post('pageURL')?>" />
+                    &nbsp; <button class="btn btn-default" type="submit"><?=t('Add')?></button>
+                </div>
+            </div>
 		</form>
-		<h3><?php echo t('Already Installed')?></h3>
+        <hr>
+		<h4><?php echo t('Already Installed')?></h4>
 		<table border="0" cellspacing="1" cellpadding="0" class="table table-striped">
 			<thead>
 				<tr>
-					<th class="subheader" width="100%"><?php echo t('Name')?></th>
+					<th class="subheader"><?php echo t('Name')?></th>
 					<th class="subheader"><?php echo t('Path')?></th>
 					<th class="subheader"><?php echo t('Package')?></th>
-					<th class="subheader"><div style="width: 90px"></div></th>
+					<th class="subheader"></th>
 				</tr>
 			</thead>
 			<?php if (count($generated) == 0) { ?>
@@ -53,11 +51,13 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sing
 						$packageName = t('None');
 					} ?>
 					<tr>
-						<td><a href="<?php echo DIR_REL?>/<?php echo DISPATCHER_FILENAME?>?cID=<?php echo $p->getCollectionID()?>"><?php echo $p->getCollectionName()?></a></td>
-						<td><?php echo $p->getCollectionPath()?></td>
-						<td><?php print $packageName; ?></td>
-						<td>
-							<?php if($cp->canAdmin()) { print $ih->button(t('Refresh'),$view->action('refresh', $p->getCollectionID(), $this->controller->token->generate('refresh')), 'left', false, array('title'=>t('Refreshes the page, rebuilding its permissions and its name.'))); }?>
+						<td style="width: 30%"><a href="<?php echo DIR_REL?>/<?php echo DISPATCHER_FILENAME?>?cID=<?php echo $p->getCollectionID()?>"><?php echo $p->getCollectionName()?></a></td>
+						<td style="width: 40%"><?php echo $p->getCollectionPath()?></td>
+						<td style="width: 30%"><?php print $packageName; ?></td>
+						<td style="width: 1">
+							<?php if($cp->canAdmin()) { ?>
+                                <a href="<?=$view->action('refresh', $p->getCollectionID(), $this->controller->token->generate('refresh'))?>" title="<?=t('Refreshes the page, rebuilding its permissions and its name.')?>" class="icon-link launch-tooltip"><i class="fa fa-refresh"></i></a>
+                            <? } ?>
 						</td>
 					</tr>
 				<?php }
