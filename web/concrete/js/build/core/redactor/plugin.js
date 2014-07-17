@@ -34,7 +34,8 @@ RedactorPlugins.concrete5 = {
     init: function() {
 
         var plugin = this;
-
+        this.buttonRemove('formatting');
+        
         $.ajax({
             'type': 'get',
             'dataType': 'json',

@@ -15,4 +15,19 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
 
     protected $pThemeGridFrameworkHandle = 'bootstrap3';
 
+    public function getThemeBlockClasses()
+    {
+        return array(
+            'feature' => array('ccm-block-feature-home-page')
+        );
+    }
+
+
+    public function getThemeEditorClasses()
+    {
+        return array(
+
+        );
+    }
+
 }

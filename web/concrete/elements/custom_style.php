@@ -26,6 +26,7 @@ $boxShadowVertical = '';
 $boxShadowBlur = '';
 $boxShadowSpread = '';
 $boxShadowColor = '';
+$customClass = '';
 $set = $style->getStyleSet();
 if (is_object($set)) {
     $backgroundColor = $set->getBackgroundColor();
@@ -53,6 +54,7 @@ if (is_object($set)) {
     $boxShadowBlur = $set->getBoxShadowBlur();
     $boxShadowSpread = $set->getBoxShadowSpread();
     $boxShadowColor = $set->getBoxShadowColor();
+    $customClass = $set->getCustomClass();
 }
 
 $repeatOptions = array(
@@ -78,6 +80,16 @@ $alignmentOptions = array(
     'right' => t('Right'),
     'left' => t('Left'),
 );
+
+
+$customClassesSelect = array(
+    '' => t('None')
+);
+if (is_array($customClasses)) {
+    foreach($customClasses as $class) {
+        $customClassesSelect[$class] = $class;
+    }
+}
 
 if ($style instanceof \Concrete\Core\Block\CustomStyle) {
     $method = 'concreteBlockInlineStyleCustomizer';
@@ -286,8 +298,13 @@ $form = Core::make('helper/form');
     </li>
     <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-cog"></i></a>
         <div class="ccm-inline-design-dropdown-menu dropdown-menu">
-            <button data-reset-action="<?=$resetAction?>" data-action="reset-design" type="button" class="btn btn-danger"><?=t("Clear Styles")?></button>
+            <h3><?=t('Advanced')?></h3>
+
             <? if ($style instanceof \Concrete\Core\Block\CustomStyle && $canEditCustomTemplate) { ?>
+                <div>
+                    <?=t('Custom Classes')?>
+                    <?=$form->select('customClass', $customClassesSelect, $customClass);?>
+                </div>
                 <hr/>
                 <div>
                     <?=t('Block Name')?>
@@ -304,7 +321,12 @@ $form = Core::make('helper/form');
                         ?>
                     </select>
                  </div>
+                <hr/>
+
             <? } ?>
+            <div>
+                <button data-reset-action="<?=$resetAction?>" data-action="reset-design" type="button" class="btn-block btn btn-danger"><?=t("Clear Styles")?></button>
+            </div>
         </div>
     </li>
     <li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-cancel">

@@ -1926,6 +1926,7 @@
     <field name="boxShadowBlur" type="C" />
     <field name="boxShadowSpread" type="C" />
     <field name="boxShadowColor" type="C" />
+    <field name="customClass" type="C" />
   </table>
 
   <table name="StyleCustomizerValueLists">

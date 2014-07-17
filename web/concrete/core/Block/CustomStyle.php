@@ -107,6 +107,9 @@ class CustomStyle extends AbstractCustomStyle
         $txt = Core::make('helper/text');
         $class .= strtolower($txt->filterNonAlphaNum($this->arHandle));
         $class .= '-' . $this->bID;
+        if (is_object($this->set) && $this->set->getCustomClass()) {
+            $class .= ' ' . $this->set->getCustomClass();
+        }
         return $class;
     }
 }

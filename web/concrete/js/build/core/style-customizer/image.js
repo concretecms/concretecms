@@ -26,7 +26,7 @@
         '<span class="ccm-ui"><i class="fa fa-picture-o"></i></span></span>';
 
     ConcreteStyleCustomizerImageSelector.prototype.selectorWidgetTemplate = '<div class="ccm-ui ccm-style-customizer-palette">' +
-        '<% if (options.value) { %><div><label><%=i18n.currentImage%></label><div><img src="<%=options.value%>" /></div></div><% } %>' +
+        '<% if (options.value) { %><div><label><%=i18n.currentImage%></label><div><img style="width: 100%" src="<%=options.value%>" /></div></div><% } %>' +
         '<div><label><%=i18n.image%></label><div data-style-customizer-field="image" class="ccm-file-selector"></div></div>' +
         '<div class="ccm-style-customizer-palette-actions"><button class="btn btn-primary"><%=i18n.save%></button></div>' +
         '</div>';

@@ -191,6 +191,9 @@
                             <columns>
                                 <column span="4" offset="0">
                                     <block type="feature" name="">
+                                        <style>
+                                            <customClass>ccm-block-feature-home-page</customClass>
+                                        </style>
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[pencil]]></icon>
@@ -202,6 +205,9 @@
                                 </column>
                                 <column span="4" offset="0">
                                     <block type="feature" name="">
+                                        <style>
+                                            <customClass>ccm-block-feature-home-page</customClass>
+                                        </style>
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[eye]]></icon>
@@ -213,6 +219,9 @@
                                 </column>
                                 <column span="4" offset="0">
                                     <block type="feature" name="">
+                                        <style>
+                                            <customClass>ccm-block-feature-home-page</customClass>
+                                        </style>
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[youtube-play]]></icon>
