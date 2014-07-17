@@ -2038,10 +2038,10 @@
     </field>
     <index name="bID">
         <col>bID</col>
-        <col>csrID</col>
+        <col>issID</col>
     </index>
-    <index name="csrID">
-        <col>csrID</col>
+    <index name="issID">
+        <col>issID</col>
     </index>
   </table>
 
@@ -2064,8 +2064,8 @@
       <default value="0"/>
       <unsigned/>
     </field>
-    <index name="csrID">
-        <col>csrID</col>
+    <index name="issID">
+        <col>issID</col>
     </index>
   </table>
   <table name="CollectionVersions">
@@ -2295,11 +2295,8 @@
       <default value="0"/>
       <unsigned/>
     </field>
-    <index name="cspName">
-        <col>cspName</col>
-    </index>
-    <index name="csrID">
-        <col>csrID</col>
+    <index name="issID">
+        <col>issID</col>
     </index>
   </table>
   <table name="StyleCustomizerInlineStyleSets">
@@ -3416,8 +3413,9 @@
             <notnull />
         </field>
         <field name="url" type="C" size="255"/>
-        <index name="ssID">
-            <col>ssID</col>
+        <index name="ssHandle">
+            <unique/>
+            <col>ssHandle</col>
         </index>
     </table>
   <table name="SystemCaptchaLibraries">
