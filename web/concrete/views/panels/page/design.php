@@ -59,7 +59,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                         <? if ($th->isThemeCustomizable()) { ?>
                         <span class="ccm-page-design-theme-customize">
                             <?=t('Customize')?>
-                            <a href="#" data-launch-panel-detail="page-design-customize" data-panel-detail-url="<?=URL::to('/ccm/system/panels/details/page/preview')?>" data-launch-sub-panel-url="<?=URL::to('/ccm/system/panels/page/design/customize', $th->getThemeID())?>"><i class="fa fa-share-alt"></i></a>
+                            <a href="#" data-launch-panel-detail="page-design-customize" data-panel-detail-url="<?=URL::to('/ccm/system/panels/details/page/preview')?>" data-launch-sub-panel-url="<?=URL::to('/ccm/system/panels/page/design/customize', $th->getThemeID())?>"><i class="fa fa-share"></i></a>
                         </span>
                         <? } ?>
                     </i>

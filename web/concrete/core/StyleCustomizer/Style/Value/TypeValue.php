@@ -8,10 +8,10 @@ class TypeValue extends Value
     protected $color = -1;
     protected $lineHeight = -1;
     protected $letterSpacing = -1;
-    protected $fontStyle = 'normal';
-    protected $fontWeight = 'normal';
-    protected $textDecoration = 'none';
-    protected $textTransform = 'none';
+    protected $fontStyle = -1;
+    protected $fontWeight = -1;
+    protected $textDecoration = -1;
+    protected $textTransform = -1;
 
     public function setFontFamily($fontFamily) {
         $this->fontFamily = $fontFamily;
@@ -110,14 +110,24 @@ class TypeValue extends Value
     {
 
         $variables = array();
-        $variables[$this->getVariable() . '-type-font-family'] = $this->getFontFamily();
+        if ($this->getFontFamily() != -1) {
+            $variables[$this->getVariable() . '-type-font-family'] = $this->getFontFamily();
+        }
         if (is_object($this->color)) {
             $variables[$this->getVariable() . '-type-color'] = $this->color->toStyleString();
         }
-        $variables[$this->getVariable() . '-type-text-decoration'] = $this->getTextDecoration();
-        $variables[$this->getVariable() . '-type-text-tranform'] = $this->getTextTransform();
-        $variables[$this->getVariable() . '-type-font-style'] = $this->getFontStyle();
-        $variables[$this->getVariable() . '-type-font-weight'] = $this->getFontWeight();
+        if ($this->getTextDecoration() != -1) {
+            $variables[$this->getVariable() . '-type-text-decoration'] = $this->getTextDecoration();
+        }
+        if ($this->getTextTransform() != -1) {
+            $variables[$this->getVariable() . '-type-text-transform'] = $this->getTextTransform();
+        }
+        if ($this->getFontStyle() != -1) {
+            $variables[$this->getVariable() . '-type-font-style'] = $this->getFontStyle();
+        }
+        if ($this->getFontWeight() != -1) {
+            $variables[$this->getVariable() . '-type-font-weight'] = $this->getFontWeight();
+        }
         if (is_object($this->fontSize) && $this->fontSize->getSize()) {
             $variables[$this->getVariable() . '-type-font-size'] = $this->fontSize->toStyleString();
         }
