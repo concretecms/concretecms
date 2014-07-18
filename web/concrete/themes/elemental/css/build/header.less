@@ -27,12 +27,18 @@ header {
       left: 14px;
       top: 9px;
       text-decoration: inherit;
-      color: #d2d2d2;
+      color: @header-search-input-icon-color;
     }
     .ccm-search-block-text {
-      border: 1px solid #e6e6e6;
+      border: 1px solid @header-search-input-border-color;
+      color: @header-search-input-icon-color;
       border-radius: 30px;
       padding: 10px 20px 10px 35px;
+      background-color: @header-search-input-background-color;
+
+      &:focus {
+        outline: 0;
+      }
     }
   }
 
