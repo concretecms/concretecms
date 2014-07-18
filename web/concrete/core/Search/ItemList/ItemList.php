@@ -107,7 +107,7 @@ abstract class ItemList
     abstract public function getTotalResults();
 
     /**
-     * @return PermissionablePagination|Pagination
+     * @return \Concrete\Core\Search\Pagination\Pagination|\Concrete\Core\Search\Pagination\PermissionablePagination
      */
     public function getPagination()
     {
