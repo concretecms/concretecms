@@ -46,12 +46,11 @@ class PageSelector
         $html .= '<input type="hidden" data-page-selector="cID" name="' . $fieldName . '" value="' . $selectedCID . '"/>';
         $html .= '</div>';
         $html .= "<script type=\"text/javascript\">
-                    (function(global) {
+                   $(function() {
                         var ccmActivePageField;
                         var launcher = $('a[data-page-selector-launch=\"{$fieldName}\"]'), name = '{$fieldName}', openEvent, openEvent2;
                         var container = $('div[data-page-selector=\"' + name + '\"]');
                         launcher.dialog();
-
                         ConcreteEvent.bind('fileselectorclose', function(field_name) {
                             ConcreteEvent.unbind('ConcreteSitemap.' + name);
                             ConcreteEvent.unbind('SitemapSelectPage.' + name);
@@ -92,7 +91,7 @@ class PageSelector
                             container.find('.ccm-sitemap-clear-selected-page').hide();
                             container.find('input[data-page-selector=cID]').val('');
                         });
-                    }(this));
+                  });
                   </script>";
         return $html;
     }
