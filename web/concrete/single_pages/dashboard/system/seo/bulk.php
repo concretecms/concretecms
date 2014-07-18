@@ -167,9 +167,9 @@ if (count($pages) > 0) {
 							<br />
 							<br />
 								<div class="metaInput">
-									<?php $pageTitle = $cobj->getCollectionName();
-									$pageTitle = htmlspecialchars($pageTitle, ENT_COMPAT, APP_CHARSET);
-									$autoTitle = sprintf(PAGE_TITLE_FORMAT, SITE, $pageTitle);
+									<?php $seoPageTitle = $cobj->getCollectionName();
+									$seoPageTitle = htmlspecialchars($seoPageTitle, ENT_COMPAT, APP_CHARSET);
+									$autoTitle = sprintf(PAGE_TITLE_FORMAT, SITE, $seoPageTitle);
 									$titleInfo = array('title' => $cID);
 									if(strlen($cobj->getAttribute('meta_title')) <= 0) {
 										 $titleInfo[style] = 'background: whiteSmoke';
