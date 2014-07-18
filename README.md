@@ -12,22 +12,26 @@ This is a developer preview branch. This is intended for Add-On developers and c
 
 1. Make sure your development environment enables PHP short tags.
 2. Clone this repository.
-3. Use [Composer](https://getcomposer.org/) to Install the third party dependencies
+3. Use [Composer](https://getcomposer.org/) to install the third party dependencies
 
-    `cd web/concrete`
-    
-    `composer install`
-    
+    If composer is installed globally:
+
+        cd web/concrete
+        composer install
+
+    If composer is downloaded as a .phar:
+
+        cd web/concrete
+        php /path/to/composer.phar install
+
     This should install everything necessary into the vendor/ directory in the concrete directory.
 
 4. Use [npm](https://www.npmjs.org/) to install [grunt](http://gruntjs.com/) to the build directory
-	
-	`cd build` 
-	
-	`npm install grunt grunt-contrib-concat grunt-contrib-uglify grunt-contrib-cssmin grunt-contrib-less grunt-contrib-watch`
 
-5. Build with grunt
-	
-	`cd build`
-	
-	`grunt`
+        cd build
+        npm install grunt grunt-contrib-concat grunt-contrib-uglify grunt-contrib-cssmin grunt-contrib-less grunt-contrib-watch
+
+5. Build concrete5 sources with grunt
+
+        cd build
+        grunt release

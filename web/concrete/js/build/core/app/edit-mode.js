@@ -1468,7 +1468,6 @@
                 dragAreaBlockID = dragAreaBlock.getId();
             }
 
-            ConcretePanelManager.exitPanelMode();
             jQuery.fn.dialog.closeAll();
 
             if (!has_add) {
