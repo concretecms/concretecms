@@ -4,7 +4,7 @@ use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
 use Page;
-use PageList;;
+use PageList;
 
 class Bulk extends DashboardPageController {
 	
@@ -24,13 +24,13 @@ class Bulk extends DashboardPageController {
 	
 	public function saveRecord() {
 		$text = Loader::helper('text');
-        $success = false;
-        $success = 'success';
+        $success = t('success');
         $cID = $this->post('cID');
         $c = Page::getByID($cID);
         if (trim(sprintf(PAGE_TITLE_FORMAT, SITE, $c->getCollectionName())) != trim($this->post('meta_title')) && $this->post('meta_title')) {
         	 $c->setAttribute('meta_title',trim($this->post('meta_title')));
 		}
+
 		if (trim(htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET)) != trim($this->post('meta_description')) && $this->post('meta_description'))  {
         	$c->setAttribute('meta_description', trim($this->post('meta_description')));
 		}
@@ -40,7 +40,7 @@ class Bulk extends DashboardPageController {
         $c->rescanCollectionPath();
         $newPath = Page::getCollectionPathFromID($cID);
 		$newHandle = $text->urlify($cHandle);
-        $result = array('success'=>$success, 'cID'=>$cID, 'cHandle'=>$newHandle, 'newPath' => $newHandle);
+        $result = array('success'=>$success, 'cID'=>$cID, 'cHandle'=>$newHandle, 'newPath' => $newHandle, 'newLink'=>$newPath);
         echo Loader::helper('json')->encode($result);
         exit;
     }
