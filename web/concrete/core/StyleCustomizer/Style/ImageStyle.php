@@ -24,7 +24,7 @@ class ImageStyle extends Style
 
         print '<span class="ccm-style-customizer-display-swatch-wrapper" data-image-selector="' . $this->getVariable() . '"></span>';
         print "<script type=\"text/javascript\">";
-        print "$(function () { $('span[data-image-selector=" . $this->getVariable() . "]').concreteStyleCustomizerImageSelector({$strOptions}); });";
+        print "$(function() { $('span[data-image-selector=" . $this->getVariable() . "]').concreteStyleCustomizerImageSelector({$strOptions}); });";
         print "</script>";
     }
 
