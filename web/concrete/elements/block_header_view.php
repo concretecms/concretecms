@@ -189,10 +189,7 @@ if ($showMenu) {
         </div>
 
 <? } else { ?>
-
     <? if (is_object($css)) { ?>
     <div class="<?=$css->getContainerClass() ?>" >
-    <? } else { ?>
-    <div>
     <? } ?>
 <? } ?>
