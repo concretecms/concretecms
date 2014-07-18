@@ -41,6 +41,5 @@ class Postlogin extends DashboardPageController {
 				$this->set('message',$message);
 			}
 		}
-		$u = new User();
 	}
 }
