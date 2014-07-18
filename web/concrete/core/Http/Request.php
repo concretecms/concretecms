@@ -100,8 +100,12 @@ class Request extends SymfonyRequest {
 		return $defaultValue;
 	}
 
-
-	public function request($key = null) {
+    /**
+     * @param null $key
+     * @param null $default_value
+     * @return mixed|null
+     */
+    public function request($key = null, $default_value = null) {
 		if ($key == null) {
 			return $_REQUEST;
 		}
@@ -112,11 +116,11 @@ class Request extends SymfonyRequest {
 			return $req->request->get($key);
 		}
 
+        return $default_value;
 	}
 
 	public function isPost() {
 		return $_SERVER['REQUEST_METHOD'] == 'POST';
 	}
-
 
 }
