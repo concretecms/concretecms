@@ -10,6 +10,9 @@
     <set name="Header">
         <style name="Background" variable="header-background" type="color" />
         <style name="Site Title" variable="header-site-title" type="type" />
+        <style name="Search Field Icon Color" variable="header-search-input-icon" type="color" />
+        <style name="Search Field Border Color" variable="header-search-input-border" type="color" />
+        <style name="Search Field Background Color" variable="header-search-input-background" type="color" />
         <style name="Navigation" variable="header-navigation" type="type" />
         <style name="Navigation Hover" variable="header-navigation-hover" type="color" />
         <style name="Navigation Menu Background" variable="header-navigation-menu-background" type="color" />
