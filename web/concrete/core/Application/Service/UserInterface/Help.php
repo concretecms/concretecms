@@ -126,7 +126,7 @@ class Help
 
         // default message
         $msgTxt = t("<b>Welcome to customizing themes!</b><br/>Watch this tutorial for guidance.<br/><br/>")
-            . '<div style="text-align: center" padding: 20px;"><a style="margin: 10px;" href="http://www.youtube.com/watch?v=pischKK2uHQ" target="_blank"><img src="http://www.concrete5.org/files/6413/9067/3863/video_button.png" /></a></div>'
+            . '<div style="text-align: center"; padding: 20px;"><a style="margin: 10px;" href="http://www.youtube.com/watch?v=pischKK2uHQ" target="_blank"><img src="http://www.concrete5.org/files/6413/9067/3863/video_button.png" /></a></div>'
         ;
         $panels['/page/design'][] = HelpMessage::get('/page/design', $msgTxt);
 
