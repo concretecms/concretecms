@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\Block;
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
 use Concrete\Core\Block\CustomStyle;
@@ -38,6 +38,7 @@ class Design extends BackendInterfaceBlockController {
             $ax = STACKS_AREA_NAME;
             $cx = \Stack::getByName($_REQUEST['arHandle']);
         }
+
 
         $b = \Block::getByID($_REQUEST['bID'], $cx, $ax);
         $nvc = $cx->getVersionToModify();

@@ -1,17 +1,21 @@
 <?php
 namespace Concrete\Controller\Backend\UserInterface;
+
+use Exception;
 use Page as ConcretePage;
 use Permissions;
-use Exception;
-abstract class Block extends Page  {
 
-	protected $page;
+abstract class Block extends Page
+{
+
+    protected $page;
     protected $area;
     protected $block;
 
-	public function __construct() {
-		parent::__construct();
-		$request = $this->request;
+    public function __construct()
+    {
+        parent::__construct();
+        $request = $this->request;
         $arHandle = $request->query->get('arHandle');
         $bID = $request->query->get('bID');
         $a = \Area::get($this->page, $arHandle);
@@ -35,19 +39,21 @@ abstract class Block extends Page  {
         $this->set('b', $b);
     }
 
-	public function getViewObject() {
-		if ($this->permissions->canViewEditInterface()) {
-			return parent::getViewObject();
-		}
-		throw new Exception(t('Access Denied'));
-	}
+    public function getViewObject()
+    {
+        if ($this->permissions->canViewEditInterface()) {
+            return parent::getViewObject();
+        }
+        throw new Exception(t('Access Denied'));
+    }
 
-	public function action() {
-		$url = call_user_func_array('parent::action', func_get_args());
-		$url .= '&arHandle=' . urlencode($this->area->getAreaHandle());
+    public function action()
+    {
+        $url = call_user_func_array('parent::action', func_get_args());
+        $url .= '&arHandle=' . urlencode($this->area->getAreaHandle());
         $url .= '&bID=' . $this->block->getBlockID();
-		return $url;
-	}
+        return $url;
+    }
 
 }
-	
+

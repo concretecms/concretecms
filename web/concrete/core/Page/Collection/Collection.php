@@ -628,7 +628,7 @@ class Collection extends Object
                     );
                     foreach ($rs1 as $r) {
                         $issID = $r['issID'];
-                        $obj = Set::getByID($issID);
+                        $obj = StyleSet::getByID($issID);
                         if (is_object($obj)) {
                             $obj = new BlockCustomStyle($obj, $r['bID'], $r['arHandle']);
                             $psss[] = $obj;

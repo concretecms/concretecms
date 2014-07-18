@@ -565,7 +565,7 @@ class StyleSet
      * @param $issID
      * @return \Concrete\Core\Page\Style\Set
      */
-    public function getByID($issID)
+    public static function getByID($issID)
     {
         $db = Database::get();
         $em = $db->getEntityManager();
