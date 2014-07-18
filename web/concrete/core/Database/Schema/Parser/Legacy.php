@@ -85,7 +85,13 @@ class Legacy extends XmlParser
         $size = (string)$column['size'];
         $options = array();
         if ($size) {
-            $options['length'] = $size;
+            if(in_array($type, array('N','F'))){
+                $precision = explode('.', $size);
+                $options['precision'] = $precision[0];
+                $options['scale'] = $precision[1];
+            } else {
+                $options['length'] = $size;
+            }
         }
         if ($column->unsigned || $column->UNSIGNED) {
             $options['unsigned'] = true;
