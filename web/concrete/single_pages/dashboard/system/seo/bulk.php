@@ -58,7 +58,7 @@ $th = Loader::helper('text');
                 <div class="form-group">
                     <?=$form->label('cParentIDSearchField', t('Parent Page'))?>
                     <div class="ccm-search-field-content">
-                        <?php // echo $pageSelector->selectPage('cParentIDSearchField', $cParentIDSearchField ? $cParentIDSearchField : false);?>
+                        <?php echo $pageSelector->selectPage('cParentIDSearchField', $cParentIDSearchField ? $cParentIDSearchField : false);?>
                     </div>
                 </div>
             </div>
@@ -230,7 +230,9 @@ $th = Loader::helper('text');
         });
         </script>
     </div>
+    <? if ($pagination) { ?>
     <div style="text-align: center">
-    <?php print $pagination->renderDefaultView(); ?>
+        <?=$pagination?>
     </div>
+    <? } ?>
 </div>

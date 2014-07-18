@@ -4,7 +4,7 @@ use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
 use Page;
-use PageList;
+use \Concrete\Core\Page\PageList;
 
 class Bulk extends DashboardPageController {
 	
@@ -17,9 +17,13 @@ class Bulk extends DashboardPageController {
             $pagination = $pageList->getPagination();
             $pages = $pagination->getCurrentPageResults();
 			$this->set('pageList', $pageList);
-			$this->set('pages', $pages);		
-			$this->set('pagination', $pageList->getPagination());
-		}
+			$this->set('pages', $pages);
+            $paginationView = false;
+            if ($pagination->haveToPaginate()) {
+                $paginationView = $pagination->renderDefaultView();
+            }
+			$this->set('pagination', $paginationView);
+   		}
 	}
 	
 	public function saveRecord() {
@@ -44,8 +48,11 @@ class Bulk extends DashboardPageController {
         echo Loader::helper('json')->encode($result);
         exit;
     }
-	
-	public function getRequestedSearchResults() {
+
+    /**
+     * @return bool|PageList
+     */
+    public function getRequestedSearchResults() {
 	
 		$dh = Loader::helper('concrete/dashboard/sitemap');
 		if (!$dh->canRead()) {
