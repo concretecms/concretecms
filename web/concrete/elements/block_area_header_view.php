@@ -5,6 +5,7 @@ $css = $c->getAreaCustomStyle($a);
 if (is_object($css)) {
     $class = $css->getContainerClass();
 }
-?>
 
-<div class="<?=$class?>" >
+if ($class) { ?>
+    <div class="<?=$class?>" >
+<? } ?>

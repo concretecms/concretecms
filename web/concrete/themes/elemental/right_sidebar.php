@@ -10,16 +10,18 @@ $this->inc('elements/header.php'); ?>
     ?>
     <div class="container">
         <div class="row">
-            <div class="col-md-9">
-                <?
-                $a = new Area('Sidebar');
-                $a->display($c);
-                ?>
-            </div>
-            <div class="col-md-3">
+            <div class="col-sm-6">
                 <?
                 $a = new Area('Main');
                 $a->setAreaGridMaximumColumns(12);
+                $a->display($c);
+                ?>
+            </div>
+            <div class="col-sm-offset-2 col-sm-4">
+                <?
+                $a = new Area('Sidebar');
+                $a->display($c);
+                $a = new Area('Sidebar Footer');
                 $a->display($c);
                 ?>
             </div>

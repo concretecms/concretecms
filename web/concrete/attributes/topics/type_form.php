@@ -42,11 +42,13 @@
 <fieldset>
 <legend><?=t('Topic Tree')?></legend>
 <div class="clearfix"></div>
-	<select name="topicTreeIDSelect">
+    <div class="form-group">
+	<select class="form-control" name="topicTreeIDSelect">
 		<? foreach($trees as $stree) { ?> 
 			<option value="<?=$stree->getTreeID()?>" <? if ($tree->getTreeID() == $stree->getTreeID()) { ?>selected<? } ?>><?=$stree->getTreeDisplayName()?></option>
 		<? } ?>
 	</select>
+    </div>
 <div class="tree-view-container">
 	<div class="tree-view-template">
 		<legend><?=t('Topic Default Parent Node')?></legend>
