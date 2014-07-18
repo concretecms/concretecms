@@ -43,7 +43,7 @@ class Design extends BackendInterfaceBlockController {
         $b = \Block::getByID($_REQUEST['bID'], $cx, $ax);
         $nvc = $cx->getVersionToModify();
         if ($this->area->isGlobalArea()) {
-            $xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
+            $xvc = $this->page->getVersionToModify(); // we need to create a new version of THIS page as well.
             $xvc->relateVersionEdits($nvc);
         }
 
