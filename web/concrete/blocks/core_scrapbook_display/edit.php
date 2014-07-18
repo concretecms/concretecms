@@ -18,10 +18,7 @@ if ($bp->canWrite()) {
 
     <?php
 
-    $bv->render(
-       'edit',
-       array(
-           'c' => $c,
-           'a' => $a
-       ));
+    $bv->addScopeItems($view->getScopeItems());
+    $bv->render('edit');
+
 }

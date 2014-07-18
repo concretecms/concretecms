@@ -11,7 +11,7 @@ $(function() {
     $('#redactor-edit-content').redactor({
         minHeight: '300',
         'plugins': [
-            'fontfamily', 'fontsize', 'fontcolor', 'concrete5inline', 'concrete5'
+            'fontcolor', 'concrete5inline', 'concrete5'
         ]
     });
 });

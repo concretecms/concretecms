@@ -10,16 +10,8 @@ if ($a->isGlobalArea()) {
     $c = $b->getBlockCollectionObject();
 }
 
-?>
-
-<?
 $blockStyle = $b->getCustomStyle();
-if (is_object($blockStyle)) {
-    ?>
-    </div>
-<? } ?>
-
-</div>
+?>
 
 <?
 if (
@@ -36,5 +28,11 @@ if (
 $p = new Permissions($b);
 $showMenu = false;
 if ($a->showControls() && $c->isEditMode() && $p->canViewEditInterface()) { ?>
+<? if (is_object($blockStyle)) { ?>
+    </div>
+<? } ?>
+    </div>
+    </div>
+<? } else { ?>
     </div>
 <? } ?>

@@ -33,6 +33,8 @@ class ColorStyle extends Style {
         print "$(function() { $('#ccm-colorpicker-{$inputName}').spectrum({
             showInput: true,
             showInitial: true,
+            preferredFormat: 'rgb',
+            allowEmpty: true,
             className: 'ccm-widget-colorpicker',
             showAlpha: true,
             value: " . $json->encode($color) . ",
@@ -46,6 +48,9 @@ class ColorStyle extends Style {
 
     public static function parse($value, $variable = false) {
         if ($value instanceof Less_Tree_Color) {
+            if ($value->isTransparentKeyword) {
+                return false;
+            }
             $cv = new ColorValue($variable);
             $cv->setRed($value->rgb[0]);
             $cv->setGreen($value->rgb[1]);
@@ -67,6 +72,9 @@ class ColorStyle extends Style {
     public function getValueFromRequest(\Symfony\Component\HttpFoundation\ParameterBag $request)
     {
         $color = $request->get($this->getVariable());
+        if (!$color['color']) { // transparent
+            return false;
+        }
         $cv = new \Primal\Color\Parser($color['color']);
         $result = $cv->getResult();
         $alpha = false;

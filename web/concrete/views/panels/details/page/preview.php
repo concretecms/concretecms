@@ -7,7 +7,7 @@ if (is_object($c) && !$c->isError()) {
 
         <?=Loader::helper('concrete/ui/help')->notify('panel', '/page/design')?>
 
-		<iframe id="ccm-page-preview-frame"></iframe>
+		<iframe id="ccm-page-preview-frame" name="ccm-page-preview-frame"></iframe>
 
 	<? }
 }

@@ -2744,7 +2744,10 @@
                 case 'html':
                     return 'fa fa-code';
                 case 'formatting':
+                case 'formatting-concrete5':
                     return 'fa fa-paragraph';
+                case 'styles':
+                    return 'fa fa-magic';
                 case 'orderedlist':
                     return 'fa fa-list-ol';
                 case 'unorderedlist':

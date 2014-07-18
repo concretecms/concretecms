@@ -4,7 +4,7 @@ use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
 use Page;
-use \Concrete\Core\Legacy\PageList;
+use PageList;;
 
 class Bulk extends DashboardPageController {
 	
@@ -14,11 +14,10 @@ class Bulk extends DashboardPageController {
 		$html = Loader::helper('html');
 		$pageList = $this->getRequestedSearchResults();
 		if (is_object($pageList)) {
-			$pages = $pageList->getPage();
-					
-			$this->set('pageList', $pageList);		
+            $pagination = $pageList->getPagination();
+            $pages = $pagination->getCurrentPageResults();
+			$this->set('pageList', $pageList);
 			$this->set('pages', $pages);		
-			$this->set('searchInstance', $searchInstance);
 			$this->set('pagination', $pageList->getPagination());
 		}
 	}
@@ -54,14 +53,12 @@ class Bulk extends DashboardPageController {
 		}
 		
 		$pageList = new PageList();
-		$pageList->ignoreAliases();
-		$pageList->enableStickySearchRequest();
-		
+
 		if ($_REQUEST['submit_search']) {
 			$pageList->resetSearchRequest();
 		}
 
-		$req = $pageList->getSearchRequest();
+        $req = $_REQUEST;
 		$pageList->displayUnapprovedPages();
 
 		$pageList->sortBy('cDateModified', 'desc');

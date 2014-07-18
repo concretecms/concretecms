@@ -20,6 +20,7 @@
 
         my.setupForm();
         my.setupButtons();
+        my.setupSliders();
     }
 
     ConcreteInlineStyleCustomizer.prototype = {
@@ -69,6 +70,30 @@
                 my.$element.submit();
                 ConcreteEvent.unsubscribe('EditModeExitInlineComplete');
                 return false;
+            });
+        },
+
+        setupSliders: function(){
+            var my = this;
+            my.$toolbar.find('.ccm-inline-style-sliders').each(function(){
+                var targetInput = $(this).children('.ccm-inline-style-slider-value');
+                var min = parseInt($(this).attr('data-style-slider-min'));
+                var max = parseInt($(this).attr('data-style-slider-max'));
+                var currentValue = parseInt($(this).children('.ccm-inline-style-slider-value').val().replace(/\D/g,''));
+                if(isNaN(currentValue)) {
+                    currentValue = parseInt($(this).attr('data-style-slider-default-setting'));
+                }
+                $(this).slider({
+                    min: min,
+                    max: max,
+                    value: currentValue,
+                    slide: function( event, ui ) {
+                        targetInput.prop('disabled', false);
+                        var targetInputFormat = targetInput.attr('data-value-format');
+                        targetInput.val( ui.value + targetInputFormat );
+                        $(this).next('.ccm-inline-style-slider-display-value').text(ui.value + targetInputFormat);
+                    }
+                });
             });
         }
 

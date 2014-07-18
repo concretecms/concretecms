@@ -6,13 +6,15 @@
 @import "../../../css/build/core/include/mixins.less";
 
 /* Import our theme variables. */
-@import "./build/variables.less";
+@import "presets/defaults.less";
 
 /* Import our theme mixins */
 @import "./build/mixins.less";
 
 /* Import our theme fonts */
-@import "build/fonts.less";
+//@import "build/fonts.less";
+
+@import ~"@{preset-fonts-file}";
 
 /* Our style rules - namespace so as not to collide with the core app styles */
 @import "build/body.less";
@@ -22,9 +24,15 @@ div.ccm-page {
   @import "build/pagination.less";
   @import "build/search.less";
   @import "build/blocks.less";
-  @import "build/miscellaneous-styles.less";
   @import "build/buttons.less";
 }
-
+@import "build/miscellaneous-styles.less";
 @import "build/footer.less";
 @import "build/mobile/navigation.less";
+
+/* CSS with background images – we need these directives to be in the root of theme
+ * otherwise we can't both map the stylesheet to them AND the customizer to them
+ */
+.ccm-image-slider-container {
+  background-image: url(@image-slider-background-image);
+}

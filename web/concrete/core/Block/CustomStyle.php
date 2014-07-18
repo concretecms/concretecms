@@ -21,7 +21,7 @@ class CustomStyle extends AbstractCustomStyle
     public function getCSS()
     {
         $set = $this->set;
-        $css = '.' . $this->getContainerClass() . '{';
+        $css = '.' . str_replace(' ', '.', $this->getContainerClass()) . '{';
         if ($set->getBackgroundColor()) {
             $css .= 'background-color:' . $set->getBackgroundColor() . ';';
         }
@@ -94,7 +94,7 @@ class CustomStyle extends AbstractCustomStyle
         $css .= '}';
 
         if ($set->getLinkColor()) {
-            $css .= '.' . $this->getContainerClass() . ' a {';
+            $css .= '.' . str_replace(' ', '.', $this->getContainerClass()) . ' a {';
             $css .= 'color:' . $set->getLinkColor() . ' !important;';
             $css .= '}';
         }
@@ -107,6 +107,9 @@ class CustomStyle extends AbstractCustomStyle
         $txt = Core::make('helper/text');
         $class .= strtolower($txt->filterNonAlphaNum($this->arHandle));
         $class .= '-' . $this->bID;
+        if (is_object($this->set) && $this->set->getCustomClass()) {
+            $class .= ' ' . $this->set->getCustomClass();
+        }
         return $class;
     }
 }

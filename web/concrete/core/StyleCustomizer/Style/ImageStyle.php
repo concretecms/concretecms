@@ -3,6 +3,7 @@ namespace Concrete\Core\StyleCustomizer\Style;
 use \Concrete\Core\StyleCustomizer\Style\Value\ImageValue;
 use Less_Environment;
 use File;
+use Loader;
 use Permissions;
 
 class ImageStyle extends Style {
@@ -28,18 +29,23 @@ class ImageStyle extends Style {
     public function getValueFromRequest(\Symfony\Component\HttpFoundation\ParameterBag $request)
     {
         $image = $request->get($this->getVariable());
-        $fID = $image['fID'];
-        if ($fID) {
-            $f = File::getByID($fID);
-            if (is_object($f)) {
-                $fp = new Permissions($f);
-                if ($fp->canViewFile()) {
-                    $iv = new ImageValue($this->getVariable());
-                    $iv->setFileID($fID);
-                    $iv->setUrl($f->getRelativePath());
-                    return $iv;
-                }
+        $image = $image['image'];
+        if ($image) {
+            $iv = new ImageValue($this->getVariable());
+            if (Loader::helper('validation/numbers')->integer($image)) {
+                // it's a file ID.
+                $f = File::getByID($fID);
+                if (is_object($f)) {
+                    $fp = new Permissions($f);
+                    if ($fp->canViewFile()) {
+                        $iv->setFileID($fID);
+                        $iv->setUrl($f->getRelativePath());
+                    }
+               }
+            } else {
+                $iv->setUrl($image);
             }
+            return $iv;
         }
     }
 
