@@ -9,6 +9,8 @@ $d = Loader::helper('concrete/dashboard');
 
      <?php echo $this->controller->token->output('update_timezone')?>
 
+    <div class="alert alert-info"><?=t('With this setting enabled, users may specify their own time zone in their user profile, and content timestamps will be adjusted accordingly. Without this setting enabled, content timestamps appear in server time.')?></div>
+
     <div class="form-group">
         <div class="checkbox">
             <label>
