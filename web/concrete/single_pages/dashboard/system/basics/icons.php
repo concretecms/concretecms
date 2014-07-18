@@ -24,7 +24,7 @@
 		<div class="control-group">
 		<label></label>
 		<div class="controls">
-			<a href="javascript:void(0)" class="btn danger" onclick="removeFavIcon()"><?=t('Remove')?></a>
+			<a href="javascript:void(0)" class="btn btn-danger" onclick="removeFavIcon()"><?=t('Remove')?></a>
 		</div>
 		</div>
 		
@@ -51,7 +51,7 @@
 			<label class="control-label"></label>
 			<div class="controls">
 				<?
-				print $interface->submit(t('Upload'), 'favicon-form', 'left');
+				print $interface->submit(t('Upload'), 'favicon-form', 'left', 'btn-success');
 				?>
 			
 			</div>
@@ -88,7 +88,7 @@
 		<div class="control-group">
 		<label></label>
 		<div class="controls">
-			<a href="javascript:void(0)" class="btn danger" onclick="removeIphoneThumbnail()"><?=t('Remove')?></a>
+			<a href="javascript:void(0)" class="btn btn-danger" onclick="removeIphoneThumbnail()"><?=t('Remove')?></a>
 		</div>
 		</div>
 		
@@ -114,7 +114,7 @@
 			<label class="control-label"></label>
 			<div class="controls">
 				<?
-				print $interface->submit(t('Upload'), 'favicon-form', 'left');
+				print $interface->submit(t('Upload'), 'favicon-form', 'left', 'btn-success');
 				?>
 			
 			</div>
@@ -147,7 +147,7 @@
 				<div class="control-group">
 					<label></label>
 					<div class="controls">
-						<a href="javascript:void(0)" class="btn danger" onclick="removeModernThumbnail()"><?php echo t('Remove'); ?></a>
+						<a href="javascript:void(0)" class="btn btn-danger" onclick="removeModernThumbnail()"><?php echo t('Remove'); ?></a>
 					</div>
 				</div>
 				<script>
@@ -176,7 +176,7 @@
 				<div class="control-group">
 					<label class="control-label"></label>
 					<div class="controls">
-						<? echo $interface->submit(t('Upload'), 'favicon-form', 'left'); ?>
+						<? echo $interface->submit(t('Upload'), 'favicon-form', 'left', 'btn-success'); ?>
 					</div>
 				</div>
 				<?
