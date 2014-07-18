@@ -13,7 +13,7 @@ class Timezone extends DashboardPageController {
      }
 
      public function timezone_saved() {
-		$this->set('message', t("User time zones have been saved."));
+		$this->set('success', t("User time zones have been saved."));
 		$this->view();
 	}
 
