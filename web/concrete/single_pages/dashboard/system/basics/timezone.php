@@ -5,27 +5,23 @@ $h = Loader::helper('concrete/ui');
 $d = Loader::helper('concrete/dashboard');
 ?>
 
-<?php print $d->getDashboardPaneHeaderWrapper(t('Timezone'), false, 'span8 offset2', false); ?>
-
-<form method="post" id="user-timezone-form" action="<?php echo $view->action('update') ?>" class="form-horizontal">
+<form method="post" id="user-timezone-form" action="<?php echo $view->action('update') ?>">
 
      <?php echo $this->controller->token->output('update_timezone')?>
-     
-    <div class="ccm-pane-body">
-    
-    	<div class="control-group">
-            <label class="checkbox">
-                <input type="checkbox" name="user_timezones" value="1" <?php if ($user_timezones) { ?> checked <?php } ?> />
-                <span><?php echo t('Enable user defined time zones.') ?></span>
+
+    <div class="form-group">
+        <div class="checkbox">
+            <label>
+            <input type="checkbox" name="user_timezones" value="1" <?php if ($user_timezones) { ?> checked <?php } ?> />
+            <?php echo t('Enable user defined time zones.') ?>
             </label>
         </div>
-        
     </div>
-     
-     <div class="ccm-pane-footer">
-          <? print $interface->submit(t('Save'), 'user-timezone-form', 'right', 'primary'); ?>
-     </div>
-     
-</form>
 
-<?php print $d->getDashboardPaneFooterWrapper(false); ?>
+    <div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
+            <? print $interface->submit(t('Save'), 'user-timezone-form', 'right', 'btn-primary'); ?>
+        </div>
+    </div>
+
+</form>
