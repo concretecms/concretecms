@@ -1,14 +1,16 @@
 <?php
 namespace Concrete\Core\StyleCustomizer\Style;
+
 use \Concrete\Core\StyleCustomizer\Style\Value\ImageValue;
 use Less_Environment;
 use File;
 use Loader;
 use Permissions;
 
-class ImageStyle extends Style {
-
-    public function render($value = false) {
+class ImageStyle extends Style
+{
+    public function render($value = false)
+    {
         $r = \Concrete\Core\Http\ResponseAssetGroup::get();
         $r->requireAsset('core/style-customizer');
 
@@ -22,7 +24,7 @@ class ImageStyle extends Style {
 
         print '<span class="ccm-style-customizer-display-swatch-wrapper" data-image-selector="' . $this->getVariable() . '"></span>';
         print "<script type=\"text/javascript\">";
-        print "$(function() { $('span[data-image-selector=" . $this->getVariable() . "]').concreteStyleCustomizerImageSelector({$strOptions}); });";
+        print "$(function () { $('span[data-image-selector=" . $this->getVariable() . "]').concreteStyleCustomizerImageSelector({$strOptions}); });";
         print "</script>";
     }
 
@@ -45,13 +47,15 @@ class ImageStyle extends Style {
             } else {
                 $iv->setUrl($image);
             }
+
             return $iv;
         }
     }
 
-    public function getValuesFromVariables($rules = array()) {
+    public function getValuesFromVariables($rules = array())
+    {
         $values = array();
-        foreach($rules as $rule) {
+        foreach ($rules as $rule) {
             if (preg_match('/@(.+)\-image/i', $rule->name, $matches)) {
                 $entryURI = $rule->value->value[0]->value[0]->currentFileInfo['entryUri'];
                 $value = $rule->value->value[0]->value[0]->value;
@@ -65,9 +69,8 @@ class ImageStyle extends Style {
                 }
             }
         }
+
         return $values;
     }
 
-
 }
-
