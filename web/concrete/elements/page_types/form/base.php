@@ -31,62 +31,48 @@ if (is_object($pagetype)) {
 ?>
 
 <?=Loader::helper('validation/token')->output($token)?>
-	<div class="control-group">
+	<div class="form-group">
 		<?=$form->label('ptName', t('Page Type Name'))?>
-		<div class="controls">
-			<?=$form->text('ptName', $ptName, array('class' => 'span5'))?>
-		</div>
+    	<?=$form->text('ptName', $ptName, array('class' => 'span5'))?>
 	</div>
 
-	<div class="control-group">
+	<div class="form-group">
 		<?=$form->label('ptHandle', t('Page Type Handle'))?>
-		<div class="controls">
-			<?=$form->text('ptHandle', $ptHandle, array('class' => 'span5'))?>
-		</div>
+		<?=$form->text('ptHandle', $ptHandle, array('class' => 'span5'))?>
 	</div>
 
-	<div class="control-group">
+	<div class="form-group">
 		<?=$form->label('ptPageTemplateID', t('Default Page Template'))?>
-		<div class="controls">
-			<?=$form->select('ptDefaultPageTemplateID', $templates, $ptDefaultPageTemplateID, array('class' => 'span5'))?>
-		</div>
+		<?=$form->select('ptDefaultPageTemplateID', $templates, $ptDefaultPageTemplateID, array('class' => 'span5'))?>
 	</div>
 
-	<div class="control-group">
+	<div class="form-group">
 		<?=$form->label('ptLaunchInComposer', t('Launch In Composer'))?>
-		<div class="controls">
-			<?=$form->select('ptLaunchInComposer', array('0' => t('No'), '1' => t('Yes')), $ptLaunchInComposer, array('class' => 'span5'))?>
-		</div>
+		<?=$form->select('ptLaunchInComposer', array('0' => t('No'), '1' => t('Yes')), $ptLaunchInComposer, array('class' => 'span5'))?>
 	</div>
 
-	<div class="control-group">
+	<div class="form-group">
 		<?=$form->label('ptAllowedPageTemplates', t('Allowed Page Templates'))?>
-		<div class="controls">
-			<?=$form->select('ptAllowedPageTemplates', array('A' => t('All'), 'C' => t('Selected Page Templates'), 'X' => t('Everything But Selected')), $ptAllowedPageTemplates, array('class' => 'span3'))?>
-		</div>
+		<?=$form->select('ptAllowedPageTemplates', array('A' => t('All'), 'C' => t('Selected Page Templates'), 'X' => t('Everything But Selected')), $ptAllowedPageTemplates, array('class' => 'span3'))?>
 	</div>
 
-	<div class="control-group" data-form-row="page-templates">
+	<div class="form-group" data-form-row="page-templates">
 		<?=$form->label('ptPageTemplateID', t('Page Templates'))?>
-		<div class="controls">
-			<?=$form->selectMultiple('ptPageTemplateID', $templates, $ptPageTemplateID, array('class' => 'span5'))?>
-		</div>
+		<?=$form->selectMultiple('ptPageTemplateID', $templates, $ptPageTemplateID, array('class' => 'span5'))?>
 	</div>
 
-	<div class="control-group">
+	<div class="form-group">
 		<?=$form->label('ptPublishTargetTypeID', t('Publish Method'))?>
-		<div class="controls">
-			<? for ($i = 0; $i < count($targetTypes); $i++) {
-				$t = $targetTypes[$i];
-				if (!is_object($pagetype)) {
-					$selected = ($i == 0);
-				} else {
-					$selected = $pagetype->getPageTypePublishTargetTypeID();
-				}
-				?>
-				<label class="radio"><?=$form->radio('ptPublishTargetTypeID', $t->getPageTypePublishTargetTypeID(), $selected)?> <span><?=$t->getPageTypePublishTargetTypeDisplayName()?></label>
-			<? } ?>
-		</div>
+        <? for ($i = 0; $i < count($targetTypes); $i++) {
+            $t = $targetTypes[$i];
+            if (!is_object($pagetype)) {
+                $selected = ($i == 0);
+            } else {
+                $selected = $pagetype->getPageTypePublishTargetTypeID();
+            }
+            ?>
+            <div class="radio"><label><?=$form->radio('ptPublishTargetTypeID', $t->getPageTypePublishTargetTypeID(), $selected)?><?=$t->getPageTypePublishTargetTypeDisplayName()?></label></div>
+        <? } ?>
 	</div>
 
 	<? foreach($targetTypes as $t) { 
