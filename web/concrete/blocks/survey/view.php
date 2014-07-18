@@ -68,7 +68,7 @@ $show_graph = (count($optionNamesAbbrev) && !$_GET['dontGraphPoll'] && $totalVot
                             ?>
                             <tr>
 
-                                <td class="col-sm-2">
+                                <td class="col-sm-2" style="white-space: nowrap">
                                     <div class="surveySwatch" style="background:#<?= $graphColors[$i - 1] ?>"></div>
                                     &nbsp;<?= ($totalVotes > 0) ? round($opt->getResults() / $totalVotes * 100) : 0 ?>%
                                 </td>
