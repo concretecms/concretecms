@@ -11,7 +11,7 @@ if ($a->isGlobalArea()) {
 
 $p = new Permissions($b);
 $showMenu = false;
-if ($a->showControls() && $c->isEditMode() && $p->canViewEditInterface() && $view->showControls()) {
+if ($a->showControls() && $p->canViewEditInterface() && $view->showControls()) {
     $showMenu = true;
 }
 

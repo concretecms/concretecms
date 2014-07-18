@@ -77,6 +77,7 @@ if ($controller->getTask() == 'view_details') {
 
     <?
     $a = Area::get($stack, STACKS_AREA_NAME);
+    $a->forceControlsToDisplay();
     Loader::element('block_area_header', array('a' => $a));
 
     foreach($blocks as $b) {
@@ -89,6 +90,7 @@ if ($controller->getTask() == 'view_details') {
     }
     ?>
 
+    </div>
     </div>
     </div>
 

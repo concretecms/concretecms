@@ -27,7 +27,7 @@ if (
 
 $p = new Permissions($b);
 $showMenu = false;
-if ($a->showControls() && $c->isEditMode() && $p->canViewEditInterface()) { ?>
+if ($a->showControls() && $p->canViewEditInterface() && $view->showControls()) { ?>
 <? if (is_object($blockStyle)) { ?>
     </div>
 <? } ?>
