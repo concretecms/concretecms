@@ -1,39 +1,26 @@
-<?
+<?php
 namespace Concrete\Core\Page\View;
-use Loader;
-use View;
-use Environment;
-use PageTemplate;
-use User;
-use Permissions;
-use PageCache;
-use PageTheme;
-use URL;
-use Core;
 
-class PageView extends View {
+use Environment;
+use Loader;
+use PageCache;
+use PageTemplate;
+use PageTheme;
+use Permissions;
+use URL;
+use User;
+use View;
+
+class PageView extends View
+{
 
     protected $c; // page
     protected $cp;
     protected $pTemplateID;
     protected $customStyleMap;
 
-    public function getPageObject() {
-        return $this->c;
-    }
-
-    protected function constructView($page) {
-        $this->c = $page;
-        parent::constructView($page->getCollectionPath());
-        if (!isset($this->pTemplateID)) {
-            $this->pTemplateID = $this->c->getPageTemplateID();
-        }
-        if (!isset($this->pThemeID)) {
-            $this->pThemeID = $this->c->getPageTemplateID();
-        }
-    }
-
-    public function getScopeItems() {
+    public function getScopeItems()
+    {
         $items = parent::getScopeItems();
         $items['c'] = $this->c;
         $items['theme'] = $this->themeObject;
@@ -43,18 +30,21 @@ class PageView extends View {
     /**
      * Called from previewing functions, this lets us override the page's template with one of our own choosing
      */
-    public function setCustomPageTemplate(PageTemplate $pt) {
+    public function setCustomPageTemplate(PageTemplate $pt)
+    {
         $this->pTemplateID = $pt->getPageTemplateID();
     }
 
     /**
      * Called from previewing functions, this lets us override the page's theme with one of our own choosing
      */
-    public function setCustomPageTheme(PageTheme $pt) {
+    public function setCustomPageTheme(PageTheme $pt)
+    {
         $this->themeObject = $pt;
     }
 
-    public function setupRender() {
+    public function setupRender()
+    {
         $this->loadViewThemeObject();
         $env = Environment::get();
         if ($this->c->getPageTypeID() == 0 && $this->c->getCollectionFilename()) {
@@ -64,25 +54,50 @@ class PageView extends View {
             if ($r->exists()) {
                 $this->setViewTemplate($r->file);
             } else {
-                if (file_exists(DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php')) {
-                    $this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php'));
+                if (file_exists(
+                    DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php')) {
+                    $this->setViewTemplate(
+                        $env->getPath(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php'));
                 } else {
-                    $this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $this->themePkgHandle));
+                    $this->setViewTemplate(
+                        $env->getPath(
+                            DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW,
+                            $this->themePkgHandle));
                 }
-                $this->setInnerContentFile($env->getPath(DIRNAME_PAGES . '/' . $cFilename, $this->c->getPackageHandle()));
+                $this->setInnerContentFile(
+                    $env->getPath(DIRNAME_PAGES . '/' . $cFilename, $this->c->getPackageHandle()));
             }
         } else {
             $pt = PageTemplate::getByID($this->pTemplateID);
-            $rec = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle() . '.php', $this->themePkgHandle);
-            if ($rec->exists()) {
-                $this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle() . '.php', $this->themePkgHandle));
+            $rec = null;
+            if ($pt) {
+                $rec = $env->getRecord(
+                    DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle() . '.php',
+                    $this->themePkgHandle);
+            }
+            if ($rec && $rec->exists()) {
+                $this->setViewTemplate(
+                    $env->getPath(
+                        DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle() . '.php',
+                        $this->themePkgHandle));
             } else {
-                $rec = $env->getRecord(DIRNAME_PAGE_TYPES . '/' . $this->c->getPageTypeHandle() . '.php', $this->themePkgHandle);
+                $rec = $env->getRecord(
+                    DIRNAME_PAGE_TYPES . '/' . $this->c->getPageTypeHandle() . '.php',
+                    $this->themePkgHandle);
                 if ($rec->exists()) {
-                    $this->setInnerContentFile($env->getPath(DIRNAME_PAGE_TYPES . '/' . $this->c->getPageTypeHandle() . '.php', $this->themePkgHandle));
-                    $this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $this->themePkgHandle));
+                    $this->setInnerContentFile(
+                        $env->getPath(
+                            DIRNAME_PAGE_TYPES . '/' . $this->c->getPageTypeHandle() . '.php',
+                            $this->themePkgHandle));
+                    $this->setViewTemplate(
+                        $env->getPath(
+                            DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW,
+                            $this->themePkgHandle));
                 } else {
-                    $this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_DEFAULT, $this->themePkgHandle));
+                    $this->setViewTemplate(
+                        $env->getPath(
+                            DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_DEFAULT,
+                            $this->themePkgHandle));
                 }
             }
         }
@@ -103,10 +118,16 @@ class PageView extends View {
         $env = Environment::get();
         $output = DIR_FILES_CACHE . '/pages/' . $this->c->getCollectionID() . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle();
         $relative = REL_DIR_FILES_CACHE . '/pages/' . $this->c->getCollectionID() . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle();
-        $r = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeObject->getThemeHandle() . '/' . DIRNAME_CSS . '/' . $stylesheet,
+        $r = $env->getRecord(
+            DIRNAME_THEMES . '/' . $this->themeObject->getThemeHandle() . '/' . DIRNAME_CSS . '/' . $stylesheet,
             $this->themeObject->getPackageHandle());
         if ($r->exists()) {
-            $sheetObject = new \Concrete\Core\StyleCustomizer\Stylesheet($stylesheet, $r->file, $r->url, $output, $relative);
+            $sheetObject = new \Concrete\Core\StyleCustomizer\Stylesheet(
+                $stylesheet,
+                $r->file,
+                $r->url,
+                $output,
+                $relative);
             if ($sheetObject->outputFileExists()) {
                 return $sheetObject->getOutputRelativePath();
             }
@@ -118,12 +139,14 @@ class PageView extends View {
          * deprecated - but this is for backward compatibility. If we don't have a stylesheet in the css/
          * directory we just pass through and return the passed file in the current directory.
          */
-        return $env->getURL(DIRNAME_THEMES . '/' . $this->themeObject->getThemeHandle() . '/' . $stylesheet,
+        return $env->getURL(
+            DIRNAME_THEMES . '/' . $this->themeObject->getThemeHandle() . '/' . $stylesheet,
             $this->themeObject->getPackageHandle()
         );
     }
 
-    public function startRender() {
+    public function startRender()
+    {
         parent::startRender();
         $this->c->outputCustomStyleHeaderItems();
         // do we have any custom menu plugins?
@@ -137,14 +160,15 @@ class PageView extends View {
             }
             $ih = Loader::helper('concrete/ui/menu');
             $interfaceItems = $ih->getPageHeaderMenuItems();
-            foreach($interfaceItems as $item) {
+            foreach ($interfaceItems as $item) {
                 $controller = $item->getController();
                 $controller->outputAutoHeaderItems();
             }
         }
     }
 
-    public function finishRender($contents) {
+    public function finishRender($contents)
+    {
         parent::finishRender($contents);
         $cache = PageCache::getLibrary();
         $shouldAddToCache = $cache->shouldAddToCache($this);
@@ -158,13 +182,35 @@ class PageView extends View {
     /**
      * @deprecated
      */
-    public function getCollectionObject() {return $this->getPageObject();}
-    public function section($url) {
+    public function getCollectionObject()
+    {
+        return $this->getPageObject();
+    }
+
+    public function getPageObject()
+    {
+        return $this->c;
+    }
+
+    public function section($url)
+    {
         if (!empty($this->viewPath)) {
             $url = '/' . trim($url, '/');
             if (strpos($this->viewPath, $url) !== false && strpos($this->viewPath, $url) == 0) {
                 return true;
             }
+        }
+    }
+
+    protected function constructView($page)
+    {
+        $this->c = $page;
+        parent::constructView($page->getCollectionPath());
+        if (!isset($this->pTemplateID)) {
+            $this->pTemplateID = $this->c->getPageTemplateID();
+        }
+        if (!isset($this->pThemeID)) {
+            $this->pThemeID = $this->c->getPageTemplateID();
         }
     }
 

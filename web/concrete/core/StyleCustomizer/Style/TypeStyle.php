@@ -21,10 +21,16 @@ class TypeStyle extends Style {
             if (is_object($color)) {
                 $args['color'] = $color->toStyleString();
             }
-            $args['bold'] = $style->getFontWeight() == 'bold' ? true : false;
-            $args['italic'] = $style->getFontStyle() == 'italic' ? true : false;
-            $args['underline'] = $style->getTextDecoration() == 'underline' ? true : false;
-            $args['uppercase'] = $style->getTextTransform() == 'uppercase' ? true : false;
+            $args['fontWeight'] = $style->getFontWeight();
+            if ($style->getFontStyle() != -1) {
+                $args['italic'] = $style->getFontStyle() == 'italic' ? true : false;
+            }
+            if ($style->getTextDecoration() != -1) {
+                $args['underline'] = $style->getTextDecoration() == 'underline' ? true : false;
+            }
+            if ($style->getTextTransform() != -1) {
+                $args['uppercase'] = $style->getTextTransform() == 'uppercase' ? true : false;
+            }
             $fontSize = $style->getFontSize();
             if (is_object($fontSize)) {
                 $args['fontSizeValue'] = $fontSize->getSize();
@@ -49,18 +55,28 @@ class TypeStyle extends Style {
     {
         $type = $request->get($this->getVariable());
         $tv = new TypeValue($this->getVariable());
-        $tv->setFontFamily($type['font-family']);
-        if ($type['bold']) {
-            $tv->setFontWeight('bold');
+        if ($type['font-family']) {
+            $tv->setFontFamily($type['font-family']);
+        }
+        if ($type['font-weight']) {
+            $tv->setFontWeight($type['font-weight']);
         }
         if ($type['italic']) {
             $tv->setFontStyle('italic');
+        } else if (isset($type['italic'])) {
+            $tv->setFontStyle('none');
         }
+
         if ($type['underline']) {
             $tv->setTextDecoration('underline');
+        } else if (isset($type['underline'])) {
+            $tv->setDecoration('none');
         }
+
         if ($type['uppercase']) {
             $tv->setTextTransform('uppercase');
+        } else if (isset($type['uppercase'])) {
+            $tv->setTextTransform('none');
         }
 
         if ($type['color']) {

@@ -20,6 +20,27 @@ class StyleSet
     /**
      * @Column(type="string")
      */
+    protected $customClass;
+
+    /**
+     * @param mixed $customClass
+     */
+    public function setCustomClass($customClass)
+    {
+        $this->customClass = $customClass;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomClass()
+    {
+        return $this->customClass;
+    }
+
+    /**
+     * @Column(type="string")
+     */
     protected $backgroundColor;
 
     /**
@@ -594,6 +615,7 @@ class StyleSet
         $o->setBoxShadowSpread((string) $node->boxShadowSpread);
         $o->setBoxShadowBlur((string) $node->boxShadowBlur);
         $o->setBoxShadowColor((string) $node->boxShadowColor);
+        $o->setCustomClass((string) $node->customClass);
         $o->save();
         return $o;
     }
@@ -630,6 +652,6 @@ class StyleSet
         $node->addChild('boxShadowBlur', $this->getBoxShadowBlur());
         $node->addChild('boxShadowSpread', $this->getBoxShadowSpread());
         $node->addChild('boxShadowColor', $this->getBoxShadowColor());
-
+        $node->addChild('customClass', $this->getCustomClass());
     }
 }

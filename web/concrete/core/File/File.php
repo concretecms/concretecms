@@ -525,6 +525,10 @@ class File implements \Concrete\Core\Permission\ObjectInterface
      */
     public function getVersion($fvID = null)
     {
+        if (!$fvID) {
+            return $this->getApprovedVersion();
+        }
+
         $db = Loader::db();
         $em = $db->getEntityManager();
         $r = $em->getRepository('\Concrete\Core\File\Version');

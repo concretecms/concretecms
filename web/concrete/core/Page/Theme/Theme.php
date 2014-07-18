@@ -32,7 +32,6 @@ class Theme extends Object
     protected $pThemeThumbnail;
     protected $pThemeHandle;
     protected $pThemeURL;
-    protected $pThemeGridFrameworkHandle = false;
     protected $pThemeIsPreview = false;
 
     const E_THEME_INSTALLED = 1;
@@ -42,10 +41,6 @@ class Theme extends Object
 
     protected $stylesheetCachePath = DIR_FILES_CACHE;
     protected $stylesheetCacheRelativePath = REL_DIR_FILES_CACHE;
-
-    public function registerAssets()
-    {
-    }
 
     public static function getGlobalList()
     {
@@ -82,22 +77,6 @@ class Theme extends Object
     {
         $db = Loader::db();
         return $db->GetCol("select pThemeHandle from PageThemes");
-    }
-
-    public function supportsGridFramework()
-    {
-        return $this->pThemeGridFrameworkHandle != false;
-    }
-
-    /**
-     * @return GridFramework|null
-     */
-    public function getThemeGridFrameworkObject()
-    {
-        if ($this->pThemeGridFrameworkHandle) {
-            $pTheme = GridFramework::getByHandle($this->pThemeGridFrameworkHandle);
-            return $pTheme;
-        }
     }
 
     public function providesAsset($assetType, $assetHandle)
@@ -331,10 +310,16 @@ class Theme extends Object
             $scl = $style->getValueList();
             $stylesheet->setValueList($scl);
         }
-        if (!$stylesheet->outputFileExists() || !ENABLE_ASSET_CACHE) {
-            $stylesheet->output();
+        if (!$this->isThemePreviewRequest()) {
+            if (!$stylesheet->outputFileExists() || !ENABLE_ASSET_CACHE) {
+                $stylesheet->output();
+            }
         }
-        return $stylesheet->getOutputRelativePath();
+        $path = $stylesheet->getOutputRelativePath();
+        if ($this->isThemePreviewRequest()) {
+            $path .= '?ts=' . time();
+        }
+        return $path;
     }
 
     /**
@@ -761,6 +746,43 @@ class Theme extends Object
         $db->query("delete from PageThemes where pThemeID = ?", array($this->pThemeID));
         $env = Environment::get();
         $env->clearOverrideCache();
+    }
+
+
+    /**
+     * Special items meant to be extended by custom theme classes
+     */
+
+    protected $pThemeGridFrameworkHandle = false;
+
+    public function registerAssets()
+    {
+    }
+
+    public function supportsGridFramework()
+    {
+        return $this->pThemeGridFrameworkHandle != false;
+    }
+
+    /**
+     * @return GridFramework|null
+     */
+    public function getThemeGridFrameworkObject()
+    {
+        if ($this->pThemeGridFrameworkHandle) {
+            $pTheme = GridFramework::getByHandle($this->pThemeGridFrameworkHandle);
+            return $pTheme;
+        }
+    }
+
+    public function getThemeBlockClasses()
+    {
+        return array();
+    }
+
+    public function getThemeEditorClasses()
+    {
+        return array();
     }
 
     public function getThemeGatheringGridItemMargin()

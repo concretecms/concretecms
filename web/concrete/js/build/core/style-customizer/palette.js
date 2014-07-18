@@ -29,6 +29,7 @@
         my.$widget = $(my._selectorTemplate);
         my.$container.append(my.$widget);
 
+        my.$widget.find('.launch-tooltip').tooltip();
         my.$widget.find('div.ccm-style-customizer-palette-actions button').on('click.style-customizer-palette', function(e) {
             my.save(e);
             return false;

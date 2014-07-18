@@ -191,6 +191,9 @@
                             <columns>
                                 <column span="4" offset="0">
                                     <block type="feature" name="">
+                                        <style>
+                                            <customClass>ccm-block-feature-home-page</customClass>
+                                        </style>
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[pencil]]></icon>
@@ -202,6 +205,9 @@
                                 </column>
                                 <column span="4" offset="0">
                                     <block type="feature" name="">
+                                        <style>
+                                            <customClass>ccm-block-feature-home-page</customClass>
+                                        </style>
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[eye]]></icon>
@@ -213,6 +219,9 @@
                                 </column>
                                 <column span="4" offset="0">
                                     <block type="feature" name="">
+                                        <style>
+                                            <customClass>ccm-block-feature-home-page</customClass>
+                                        </style>
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[youtube-play]]></icon>
@@ -258,7 +267,7 @@
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<h2 style="text-align: center;">Presenting your Business has never been so easy</h2><p style="text-align: center;">Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. </p>]]></content>
+                                <content><![CDATA[<p style="text-align: center"><span class="title-caps-bold">Presenting your Business has never been so easy</span></p><p style="text-align: center;">Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. </p>]]></content>
                             </record>
                         </data>
                     </block>

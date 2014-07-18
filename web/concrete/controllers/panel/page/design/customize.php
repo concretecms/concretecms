@@ -24,6 +24,7 @@ class Customize extends BackendInterfacePageController {
     }
 
     public function view($pThemeID) {
+        $this->requireAsset('core/style-customizer');
         $pt = PageTheme::getByID($pThemeID);
         if (is_object($pt) && $pt->isThemeCustomizable()) {
 
@@ -97,17 +98,7 @@ class Customize extends BackendInterfacePageController {
     protected function getValueListFromRequest($pThemeID) {
         $pt = PageTheme::getByID($pThemeID);
         $styles = $pt->getThemeCustomizableStyleList();
-        // now we loop through all the styles and get values from the post.
-        $values = array();
-        $vl = new \Concrete\Core\StyleCustomizer\Style\ValueList();
-        foreach($styles->getSets() as $set) {
-            foreach($set->getStyles() as $style) {
-                $value = $style->getValueFromRequest($this->request->request);
-                if (is_object($value)) {
-                    $vl->addValue($value);
-                }
-            }
-        }
+        $vl = \Concrete\Core\StyleCustomizer\Style\ValueList::loadFromRequest($this->request->request, $styles);
         return $vl;
     }
 
