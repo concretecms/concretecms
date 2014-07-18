@@ -11,7 +11,7 @@ var eventing = (function (global, $) {
 
         function groupLog(group, value, dontcall) {
             if (hasGroup) {
-                global.console.group(group);
+                global.console.groupCollapsed(group);
 
                 if (!dontcall && typeof value === 'function') {
                     value();
@@ -49,13 +49,35 @@ var eventing = (function (global, $) {
 
             subscribe: function (type, handler, target) {
 
+                var old_handler = handler, bound_stack = (new Error('EventStack')).stack;
+                handler = function() {
+                    if (debug) {
+                        groupLog('Handler Fired.', function () {
+                            groupLog('Type', type, true);
+                            groupLog('Handler', old_handler, true);
+                            groupLog('Target', target, true);
+                            groupLog('Bound Stack', bound_stack, true);
+                            if (typeof global.console.trace === 'function') {
+                                global.console.trace();
+                            } else {
+                                groupLog('Stack', (new Error('EventStack')).stack);
+                            }
+
+                        });
+                    }
+
+                    old_handler.apply(this, _(arguments).toArray());
+                };
                 if (debug) {
                     groupLog('Event Subscribed', function () {
                         groupLog('Type', type, true);
-                        groupLog('Handler', handler, true);
+                        groupLog('Handler', old_handler, true);
                         groupLog('Target', target, true);
-                        if (typeof global.console.trace === 'function')
+                        if (typeof global.console.trace === 'function') {
                             global.console.trace();
+                        } else {
+                            groupLog('Stack', (new Error('EventStack')).stack);
+                        }
                     });
 
                 }
@@ -74,8 +96,11 @@ var eventing = (function (global, $) {
                         groupLog('Type', type, true);
                         groupLog('Data', data, true);
                         groupLog('Target', target, true);
-                        if (typeof global.console.trace === 'function')
+                        if (typeof global.console.trace === 'function') {
                             global.console.trace();
+                        } else {
+                            groupLog('Stack', (new Error('EventStack')).stack);
+                        }
                     });
 
                 }
@@ -95,8 +120,11 @@ var eventing = (function (global, $) {
                         groupLog('Type', type, true);
                         groupLog('Secondary Argument', secondary_argument, true);
                         groupLog('Target', target, true);
-                        if (typeof global.console.trace === 'function')
+                        if (typeof global.console.trace === 'function') {
                             global.console.trace();
+                        } else {
+                            groupLog('Stack', (new Error('EventStack')).stack);
+                        }
                     });
 
                 }
