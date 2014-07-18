@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Block;
 
 use Area;
