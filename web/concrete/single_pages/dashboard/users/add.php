@@ -2,7 +2,6 @@
 <? $ih = Loader::helper('concrete/ui'); ?>
 
     <form method="post" class="form-horizontal" action="<?=$view->action('submit')?>">
-		<div class="container">
 		<fieldset>
     		<legend><?=t('Basic Details')?></legend>
 			
@@ -103,8 +102,6 @@
 
 	       } ?>
         </fieldset>
-	</div>
-
 	<?=$token->output('submit');?>
 
 	<div class="ccm-dashboard-form-actions-wrapper">

@@ -4,6 +4,8 @@ use \Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
 use PermissionKey;
 use PermissionAccess;
+use Concrete\Core\Legacy\TaskPermission;
+
 class Permissions extends DashboardPageController {
 	
 	public function save() {

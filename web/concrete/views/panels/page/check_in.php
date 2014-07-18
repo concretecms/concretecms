@@ -43,6 +43,17 @@ $v = $c->getVersionObject();
             <br/>
         <? } ?>
         </div>
+
+        <?
+        $pagetype = PageType::getByID($c->getPageTypeID());
+        if (is_object($pagetype)) { ?>
+            <div class="small">
+           <div class="text-info"><strong><i class="fa fa-question-circle"></i>
+            <?=t('Fix common page errors from the <a href="#" data-launch-panel-detail="page-composer" data-panel-detail-url="' . URL::to('/ccm/system/panels/details/page/composer') . '" data-panel-transition="fade">Page Compose interface</a>.')?>
+            </strong></div>
+            <br/>
+            </div>
+        <? } ?>
     <? } ?>
 </div>
 
