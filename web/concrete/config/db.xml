@@ -184,34 +184,6 @@
       <default value="0" />
     </field>
   </table>
-
-  <table name="PageTypeComposerDraftBlocks">
-<field name="ptComposerDraftBlockID" type="I" size="10">
-      <key/>
-      <autoincrement/>
-      <unsigned/>
-    </field>
-  <field name="cID" type="I" size="10">
-      <unsigned/>
-      <notnull />
-      <default value="0" />
-    </field>
-    <field name="arHandle" type="C" size="255">
-    </field>
-    <field name="cbDisplayOrder" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
-    <field name="ptComposerFormLayoutSetControlID" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-      <notnull />
-    </field>
-    <field name="bID" type="I" size="10">
-      <unsigned/>
-      <default value="0" />
-    </field>
-  </table>
   <table name="PageTypePermissionAssignments">
     <field name="ptID" type="I" size="10">
       <key/>
@@ -224,39 +196,6 @@
       <unsigned/>
     </field>
     <field name="paID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-  </table>
-  <table name="PageTypePermissionControlAccessList">
-    <field name="paID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="peID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="permission" type="C" size="1">
-      <notnull/>
-      <default value="1"/>
-    </field>
-  </table>
-  <table name="PageTypePermissionControlAccessListCustom">
-    <field name="paID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="peID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="ptComposerFormLayoutSetControlID" type="I" size="10">
       <key/>
       <default value="0"/>
       <unsigned/>
@@ -846,72 +785,6 @@
       <unsigned/>
     </field>
     <field name="btID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-  </table>
-  <table name="UserPermissionUserSearchAccessList">
-    <field name="paID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="peID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="permission" type="C" size="1">
-      <notnull/>
-      <default value="1"/>
-    </field>
-  </table>
-  <table name="UserPermissionUserSearchAccessListCustom">
-    <field name="paID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="peID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="gID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-  </table>
-  <table name="UserPermissionAssignGroupAccessList">
-    <field name="paID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="peID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="permission" type="C" size="1">
-      <notnull/>
-      <default value="1"/>
-    </field>
-  </table>
-  <table name="UserPermissionAssignGroupAccessListCustom">
-    <field name="paID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="peID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="gID" type="I" size="10">
       <key/>
       <default value="0"/>
       <unsigned/>
@@ -1858,26 +1731,6 @@
       <key/>
       <default value="0"/>
       <unsigned/>
-    </field>
-  </table>
-  <table name="FilePermissionFileTypes">
-    <field name="fsID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="gID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="uID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
-    <field name="extension" type="C" size="32">
-      <key/>
     </field>
   </table>
   <table name="StyleCustomizerInlineStylePresets">
