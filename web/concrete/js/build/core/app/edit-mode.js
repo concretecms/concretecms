@@ -59,27 +59,29 @@
                 }
             }
 
-            Concrete.event.bind('EditModeExitInline', function (e) {
-                Concrete.event.unbind(e);
-                e.stopPropagation();
-                var action = CCM_DISPATCHER_FILENAME + '/ccm/system/block/render?cID=' + block.getCID() + '&arEnableGridContainer=' + arEnableGridContainer + '&bID=' + block.getId() + '&arHandle=' + escape(area.getHandle());
-                $.fn.dialog.showLoader();
-                $.get(action,
-                    function (r) {
-                        var block = area.getBlockByID(bID);
-                        var newBlock = block.replace(bID, r);
-                        _.defer(function () {
-                            ConcreteEvent.fire('EditModeExitInlineComplete', {
-                                block: newBlock
+            Concrete.event
+                .unbind('EditModeExitInline.editmode')
+                .bind('EditModeExitInline.editmode', function (e) {
+                    Concrete.event.unbind(e);
+                    e.stopPropagation();
+                    var action = CCM_DISPATCHER_FILENAME + '/ccm/system/block/render?cID=' + block.getCID() + '&arEnableGridContainer=' + arEnableGridContainer + '&bID=' + block.getId() + '&arHandle=' + escape(area.getHandle());
+                    $.fn.dialog.showLoader();
+                    $.get(action,
+                        function (r) {
+                            var block = area.getBlockByID(bID);
+                            var newBlock = block.replace(bID, r);
+                            _.defer(function () {
+                                ConcreteEvent.fire('EditModeExitInlineComplete', {
+                                    block: newBlock
+                                });
+                                my.destroyInlineEditModeToolbars();
+                                _.defer(function () {
+                                    my.scanBlocks();
+                                });
                             });
-                            my.destroyInlineEditModeToolbars();
-                            _.defer(function() {
-                                my.scanBlocks();
-                            });
-                        });
-                    }
-                );
-            });
+                        }
+                    );
+                });
 
 //            ConcreteMenuManager.disable();
             ConcreteToolbar.disable();
@@ -137,7 +139,7 @@
             }
 
             var saved = false;
-            Concrete.event.bind('EditModeExitInlineSaved', function(e) {
+            Concrete.event.bind('EditModeExitInlineSaved', function (e) {
                 Concrete.event.unbind(e);
                 saved = true;
             });
@@ -148,7 +150,7 @@
                 }
                 $('#a' + area.getId() + '-bt' + btID).remove();
                 my.destroyInlineEditModeToolbars();
-                _.defer(function() {
+                _.defer(function () {
                     my.scanBlocks();
                 });
             });
@@ -188,7 +190,8 @@
                         'message': ccmi18n.copyBlockToScrapbookMsg,
                         'title': ccmi18n.copyBlockToScrapbook
                     });
-                }});
+                }
+            });
         });
 
         Concrete.event.bind('EditModeBlockDelete', function (event, data) {
@@ -691,68 +694,68 @@
             $menuElem.find('a[data-menu-action=add-inline]')
                 .off('click.edit-mode')
                 .on('click.edit-mode', function (e) {
-                // we are going to place this at the END of the list.
-                var dragAreaLastBlock = false;
-                _.each(my.getBlocks(), function (block) {
-                    dragAreaLastBlock = block;
+                    // we are going to place this at the END of the list.
+                    var dragAreaLastBlock = false;
+                    _.each(my.getBlocks(), function (block) {
+                        dragAreaLastBlock = block;
+                    });
+                    Concrete.event.fire('EditModeBlockAddInline', {
+                        area: my,
+                        cID: CCM_CID,
+                        btID: $(this).attr('data-block-type-id'),
+                        arGridMaximumColumns: $(this).attr('data-area-grid-maximum-columns'),
+                        event: e,
+                        dragAreaBlock: dragAreaLastBlock
+                    });
+                    return false;
                 });
-                Concrete.event.fire('EditModeBlockAddInline', {
-                    area: my,
-                    cID: CCM_CID,
-                    btID: $(this).attr('data-block-type-id'),
-                    arGridMaximumColumns: $(this).attr('data-area-grid-maximum-columns'),
-                    event: e,
-                    dragAreaBlock: dragAreaLastBlock
-                });
-                return false;
-            });
 
             $menuElem.find('a[data-menu-action=edit-container-layout]')
                 .off('click.edit-mode')
                 .on('click.edit-mode', function (e) {
-                // we are going to place this at the END of the list.
-                var $link = $(this);
-                var dragAreaLastBlock = _.last(my.getBlocks());
-                var bID = parseInt($(this).attr('data-container-layout-block-id'));
-                var editor = Concrete.getEditMode();
-                var block = _.findWhere(editor.getBlocks(), {id: bID});
-                Concrete.event.fire('EditModeBlockEditInline', {
-                    block: block,
-                    arGridMaximumColumns: $link.attr('data-area-grid-maximum-columns'),
-                    event: e
+                    // we are going to place this at the END of the list.
+                    var $link = $(this);
+                    var dragAreaLastBlock = _.last(my.getBlocks());
+                    var bID = parseInt($(this).attr('data-container-layout-block-id'));
+                    var editor = Concrete.getEditMode();
+                    var block = _.findWhere(editor.getBlocks(), {id: bID});
+                    Concrete.event.fire('EditModeBlockEditInline', {
+                        block: block,
+                        arGridMaximumColumns: $link.attr('data-area-grid-maximum-columns'),
+                        event: e
+                    });
+                    return false;
                 });
-                return false;
-            });
 
             $menuElem.find('a[data-menu-action=edit-area-design]')
                 .off('click.edit-mode')
                 .on('click.edit-mode', function (e) {
-                e.preventDefault();
-                ConcreteToolbar.disable();
-                my.getElem().addClass('ccm-area-inline-edit-disabled');
-                var postData = {
-                    'arHandle': my.getHandle(),
-                    'cID': CCM_CID,
-                };
+                    e.preventDefault();
+                    ConcreteToolbar.disable();
+                    my.getElem().addClass('ccm-area-inline-edit-disabled');
+                    var postData = {
+                        'arHandle': my.getHandle(),
+                        'cID': CCM_CID,
+                    };
 
-                Concrete.event.bind('EditModeExitInline', function (e) {
-                    Concrete.event.unsubscribe(e);
-                    my.getEditMode().destroyInlineEditModeToolbars();
+                    Concrete.event.bind('EditModeExitInline', function (e) {
+                        Concrete.event.unsubscribe(e);
+                        my.getEditMode().destroyInlineEditModeToolbars();
+                    });
+
+                    $.ajax({
+                        type: 'GET',
+                        url: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/area/design',
+                        data: postData,
+                        success: function (r) {
+                            var $container = my.getElem();
+                            my.getEditMode().loadInlineEditModeToolbars($container, r);
+                            $.fn.dialog.hideLoader();
+                        }
+                    });
+
+
                 });
-
-                $.ajax({
-                    type: 'GET',
-                    url: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/area/design',
-                    data: postData,
-                    success: function (r) {
-                        var $container = my.getElem();
-                        my.getEditMode().loadInlineEditModeToolbars($container, r);
-                        $.fn.dialog.hideLoader();
-                    }
-                });
-
-
-            });
         },
 
         /**
@@ -1070,7 +1073,11 @@
                 });
 
                 $menuElem.find('a[data-menu-action=delete_block]').unbind().on('click', function () {
-                    Concrete.event.fire('EditModeBlockDelete', {message: $(this).attr('data-menu-delete-message'), block: my, event: event});
+                    Concrete.event.fire('EditModeBlockDelete', {
+                        message: $(this).attr('data-menu-delete-message'),
+                        block: my,
+                        event: event
+                    });
                 });
 
                 $menuElem.find('a[data-menu-action=block_design]').unbind().on('click', function (e) {
@@ -1162,7 +1169,7 @@
                 element.filters = [];
             }
 
-            this.setDraggerPosition({ x: 0, y: 0 });
+            this.setDraggerPosition({x: 0, y: 0});
             return this.renderPosition();
         },
 
@@ -1193,7 +1200,7 @@
          * @return {String}        CSS string
          */
         matrixToCss: function blockMatrixToCss(matrix) {
-            var precision = 4, multiplier = Math.pow(10, precision), round = function(number) {
+            var precision = 4, multiplier = Math.pow(10, precision), round = function (number) {
                 return Math.round(number * multiplier) / multiplier;
             };
             matrix[0] = _(matrix[0]).map(round);
@@ -1209,16 +1216,20 @@
         endRotation: function blockEndRotation() {
             var my = this;
             var start_rotation = my.getRotationDeg();
-            my.getDragger().animate({rotation: 0}, {duration: 1, step: function () {
-            }});
-            var step_index = my.setStepIndex(my.getStepIndex() + 1);
-            my.getDragger().animate({rotation: my.getRotationDeg()}, {queue: false, duration: 150, step: function (now) {
-                if (my.getStepIndex() !== step_index) {
-                    return;
+            my.getDragger().animate({rotation: 0}, {
+                duration: 1, step: function () {
                 }
-                my.setRotationDeg(start_rotation - now);
-                my.renderPosition();
-            }}, 'easeOutElastic');
+            });
+            var step_index = my.setStepIndex(my.getStepIndex() + 1);
+            my.getDragger().animate({rotation: my.getRotationDeg()}, {
+                queue: false, duration: 150, step: function (now) {
+                    if (my.getStepIndex() !== step_index) {
+                        return;
+                    }
+                    my.setRotationDeg(start_rotation - now);
+                    my.renderPosition();
+                }
+            }, 'easeOutElastic');
             return true;
         },
 
@@ -1234,15 +1245,15 @@
             var cos = _.bind(Math.cos, Math),
                 sin = _.bind(Math.sin, Math);
             var position_matrix = [
-                [ 1, 0, x ],
-                [ 0, 1, y ],
-                [ 0, 0, 1 ]
+                [1, 0, x],
+                [0, 1, y],
+                [0, 0, 1]
             ], rotation_matrix, final_matrix;
             if (a) {
                 rotation_matrix = [
-                    [ cos(a), sin(a), 0 ],
-                    [ -sin(a), cos(a), 0 ],
-                    [ 0 , 0 , 1 ]
+                    [cos(a), sin(a), 0],
+                    [-sin(a), cos(a), 0],
+                    [0, 0, 1]
                 ];
                 final_matrix = my.multiplyMatrices(position_matrix, rotation_matrix);
             } else {
@@ -1267,7 +1278,7 @@
                 position = {x: my.getDragger().offset().left, y: my.getDragger().offset().top};
             }
             var x = position.x - offset.x, y = position.y - offset.y;
-            my.setDraggerPosition({ x: x, y: y });
+            my.setDraggerPosition({x: x, y: y});
             my.renderPosition();
 
             return true;
@@ -1278,7 +1289,10 @@
             my.resetTransform();
             my.setDragging(true);
             my.getDragger().hide().appendTo(window.document.body).css(my.getElem().offset());
-            my.setDraggerOffset({x: event.clientX - my.getElem().offset().left + window.document.body.scrollLeft, y: event.clientY - my.getElem().offset().top + window.document.body.scrollTop});
+            my.setDraggerOffset({
+                x: event.clientX - my.getElem().offset().left + window.document.body.scrollLeft,
+                y: event.clientY - my.getElem().offset().top + window.document.body.scrollTop
+            });
             my.getDragger().fadeIn(250);
 
             _.defer(function () {
@@ -1296,7 +1310,7 @@
             my.resetTransform();
 
             var elem = my.getElem(),
-                mouse_position = { x: event.pageX, y: event.pageY },
+                mouse_position = {x: event.pageX, y: event.pageY},
                 elem_position = {
                     x: elem.offset().left,
                     y: elem.offset().top
@@ -1306,7 +1320,7 @@
                     y: (elem_position.y - mouse_position.y) / elem.height()
                 };
 
-            my.setDraggerPosition({ x: elem_position.x, y: elem_position.y });
+            my.setDraggerPosition({x: elem_position.x, y: elem_position.y});
             my.renderPosition();
 
             my.setDraggerOffset({
@@ -1358,8 +1372,10 @@
                 height: my.getDragger().height()
             };
             my.setDragging(false);
-            my.getDragger().animate({ccm_perc: 0}, {duration: 0, step: function () {
-            }}).animate({
+            my.getDragger().animate({ccm_perc: 0}, {
+                duration: 0, step: function () {
+                }
+            }).animate({
                 ccm_perc: 1,
                 opacity: 0
             }, {
@@ -1408,7 +1424,7 @@
             var my = this, panel;
             Block.prototype.pepStart.call(this, context, event, pep);
 
-            my.setAttr('closedPanel', _(ConcretePanelManager.getPanels()).find(function(panel) {
+            my.setAttr('closedPanel', _(ConcretePanelManager.getPanels()).find(function (panel) {
                 return panel.isOpen;
             }));
 
@@ -1580,7 +1596,7 @@
                 processBlock: 1,
                 add: 1,
                 btask: 'alias_existing_block',
-                pcID: [ pcID ],
+                pcID: [pcID],
                 ccm_token: CCM_SECURITY_TOKEN
             };
             if (dragAreaBlockID) {
@@ -1620,7 +1636,7 @@
                 processBlock: 1,
                 add: 1,
                 btask: 'alias_existing_block',
-                pcID: [ elem.data('cID') ],
+                pcID: [elem.data('cID')],
                 ccm_token: CCM_SECURITY_TOKEN
             };
             if (dragAreaBlockID) {
