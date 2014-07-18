@@ -1,295 +1,236 @@
-<?php  defined('C5_EXECUTE') or die('Access Denied');?>
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Bulk SEO Updater'), t('Manage Search Engine Optimization (SEO) Related Page Properties.'), false, false);
+<?php  defined('C5_EXECUTE') or die('Access Denied');
 $pageSelector = Loader::helper('form/page_selector');
 $nh = Loader::helper('navigation');
 $th = Loader::helper('text');
 ?>
-<style type="text/css">
-		.rowHolder {
-			width: 869px;
-			padding: 15px;
-			position: relative;
-		}
 
-		.rowHolder div {
-			float: left;
-			min-height: 100px;
-		}
+<style>
+    table.ccm-search-results-table {
+        border-top: 1px solid #ccc;
+    }
 
-		.rowHolder div.metaInput {
-			float: none;
-			margin: 0px;
-			min-height: 0px;
-		}
-		.rowHolder div.headings {
-			min-height: 50px;
-		}
+    table.ccm-search-results-table tr td {
+        vertical-align: top;
+    }
 
-		.rowHolder.stripe {
-			background: #eee;
-		}
+    table.ccm-search-results-table tr td .submit-changes {
+        margin-top: 26px;
+    }
 
-		.rowHolder.stripe .help-inline {
-			color: #999;
-		}
+    .ccm-ui .form-inline .radio input[type="radio"], .ccm-ui .form-inline .checkbox input[type="checkbox"] {
+        margin-left: -20px;
+    }
 
+    .ccm-ui .form-inline .checkbox, .ccm-ui .form-inline .radio {
+        margin-right: 15px;
+    }
+</style>
+<div class="ccm-dashboard-content-full">
+    <div data-search-element="wrapper">
+        <form role="form" action="<?=$controller->action('view')?>" class="form-inline ccm-search-fields">
+            <div class="ccm-search-fields-row">
+                <div class="form-group">
+                    <?=$form->label('keywords', t('Search'))?>
+                    <div class="ccm-search-field-content">
+                        <div class="ccm-search-main-lookup-field">
+                            <i class="fa fa-search"></i>
+                            <?=$form->search('keywords', array('placeholder' => t('Keywords')))?>
+                            <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ccm-search-fields-row">
+                <div class="form-group">
+                    <?=$form->label('channel', t('Number of Pages to Display'))?>
+                    <div class="ccm-search-field-content">
+                        <?=$form->select('numResults', array(
+                            '10' => '10',
+                            '25' => '25',
+                            '50' => '50',
+                            '100' => '100',
+                            '500' => '500'
+                        ), Loader::helper('text')->specialchars($searchRequest['numResults']))?>
+                    </div>
+                </div>
+            </div>
+            <div class="ccm-search-fields-row">
+                <div class="form-group">
+                    <?=$form->label('cParentIDSearchField', t('Parent Page'))?>
+                    <div class="ccm-search-field-content">
+                        <?php // echo $pageSelector->selectPage('cParentIDSearchField', $cParentIDSearchField ? $cParentIDSearchField : false);?>
+                    </div>
+                </div>
+            </div>
+            <div class="ccm-search-fields-row">
+                <div class="form-group">
+                    <?=$form->label('cParentAll', t('How Many Levels Below Parent?'))?>
+                    <div class="ccm-search-field-content">
+                        <div class="radio">
+                            <label><?=$form->radio('cParentAll', 0, false)?><?=t('First Level')?></label>
+                       </div>
+                       <div class="radio">
+                           <label><?=$form->radio('cParentAll', 1, false)?><?=t('All Levels')?></label>
+                       </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ccm-search-fields-row">
+                <div class="form-group">
+                    <?=$form->label('cParentAll', t('Filter By:'))?>
+                    <div class="ccm-search-field-content">
+                        <div class="checkbox">
+                            <label> <?php echo $form->checkbox('noDescription', 1, $descCheck);  ?><?=t('No Meta Description'); ?></label>
+                        </div>
+                        <div class="checkbox">
+                            <label> <?php echo $form->checkbox('noKeywords', 1, $keywordCheck);  ?><?=t('No Meta Keywords'); ?></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-		.updateButton {
-			float: right;
-		}
+        </form>
+    </div>
+    <div data-search-element="results">
+    <?php
+    if (count($pages) > 0) { ?>
+        <table class="ccm-search-results-table">
+            <tbody>
+            <?php $i = 0;
+                foreach($pages as $cobj) {
+                    $cpobj = new Permissions($cobj);
+                    $i++;
+                    $cID = $cobj->getCollectionID();
+                    ?>
+                <tr class="ccm-seoRow-<?php echo $cID; ?> ccm-seo-rows">
+                        <td>
+                            <strong><?php echo t('Page Name'); ?></strong><br/>
+                            <?php echo $cobj-> getCollectionName() ? $cobj->getCollectionName() : ''; ?><br/><br/>
+                            <strong><?php echo t('Page Type'); ?></strong><br/>
+                            <?php echo $cobj->getPageTypeName() ? $cobj->getPageTypeName() : t('Single Page'); ?><br/><br/>
+                            <strong><?php echo t('Modified'); ?></strong><br/>
+                            <?php echo $cobj->getCollectionDateLastModified() ? $cobj->getCollectionDateLastModified(DATE_APP_GENERIC_MDYT) : ''; ?>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label><?php echo t('Meta Title'); ?></label>
+                                <?php $seoPageTitle = $cobj->getCollectionName();
+                                $seoPageTitle = htmlspecialchars($seoPageTitle, ENT_COMPAT, APP_CHARSET);
+                                $autoTitle = sprintf(PAGE_TITLE_FORMAT, SITE, $seoPageTitle);
+                                $titleInfo = array('title' => $cID);
+                                if(strlen($cobj->getAttribute('meta_title')) <= 0) {
+                                    $titleInfo[style] = 'background: whiteSmoke';
+                                }
+                                echo $form->text('meta_title', $cobj->getAttribute('meta_title') ? $cobj->getAttribute('meta_title') : $autoTitle, $titleInfo);
+                                echo $titleInfo[style] ? '<span class="help-inline">' . t('Default value. Click to edit.') . '</span>' : '' ?>
+                            </div>
+                            <div class="form-group">
+                                <label><?php echo t('Meta Description'); ?></label>
+                                <?php $pageDescription = $cobj->getCollectionDescription();
+                                $autoDesc = htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET);
+                                $descInfo = array('title' => $cID);
+                                if(strlen($cobj -> getAttribute('meta_description')) <= 0) {
+                                    $descInfo[style] = 'background: whiteSmoke';
+                                }
+                                echo $form->textarea('meta_description', $cobj->getAttribute('meta_description') ? $cobj->getAttribute('meta_description') : $autoDesc, $descInfo);
+                                echo $descInfo[style] ? '<span class="help-inline">' . t('Default value. Click to edit.') . '</span>' : '';
+                                ?>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label><?php echo t('Meta Keywords'); ?></label>
+                                <?php echo $form->textarea('meta_keywords', $cobj->getAttribute('meta_keywords'), array('title' => $cID)); ?>
+                            </div>
+                            <? if ($cobj->getCollectionID() != HOME_CID) { ?>
 
-		.headingsContainer {
-			float: left;
-			width: 150px;
-			padding: 10px;
-			border: 1px solid #ddd;
-			border-radius: 10px;
-		}
+                                <div class="form-group">
+                                    <label><?php echo t('Slug'); ?></label>
+                                    <?php echo $form->text('collection_handle', $cobj->getCollectionHandle(), array('title' => $cID, 'class' => 'collectionHandle')); ?>
+                                    <?php
+                                    Page::rescanCollectionPath($cID);
+                                    $path = $cobj->getCollectionPath();
+                                    $tokens = explode('/', $path);
+                                    $lastkey = array_pop(array_keys($tokens));
+                                    $tokens[$lastkey] = '<strong class="collectionPath">' . $tokens[$lastkey] . '</strong>';
+                                    $untokens = implode('/', $tokens);
+                                    ?><a class="help-inline url-path" href="<?php echo $nh->getLinkToCollection($cobj); ?>" target="_blank"><?php echo BASE_URL . DIR_REL . $untokens; ?></a><?php
+                                    ?>
+                                </div>
+                            <? } ?>
+                        </td>
+                        <td style="position: relative;">
+                            <form id="seoForm<?php echo $cID; ?>" action="<?php echo View::url('/dashboard/system/seo/page_data/', 'saveRecord')?>" method="post" class="pageForm">
+                                <a class="btn btn-default submit-changes" data-cID="<?php echo $cobj->getCollectionID() ?>"><?php echo t('Save') ?></a>
+                            </form>
+                            <img style="display: none; position: absolute; top: 20px; right: 20px;" id="throbber<?php echo $cID ?>"  class="throbber" src="<?php echo ASSETS_URL_IMAGES . '/throbber_white_32.gif' ?>" />
+                        </td>
+                </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+        <div class="ccm-dashboard-form-actions-wrapper">
+            <div class="ccm-dashboard-form-actions">
+                <button id="allSeoSubmit" class="btn pull-right btn-success"><?php echo t('Save All') ?></button>
+            </div>
+        </div>
+        <?php } else { ?>
+        <div class="ccm-results-list-none"><?php echo t('No pages found.')?></div>
+        <?php  } ?>
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $('.ccm-seo-rows').each(function(){
+               $(this).find('input, textarea').change(function(){
+                  $(this).addClass('hasChanged');
+                  $(this).closest('tr').find('.btn').addClass('btn-success');
+               });
+            });
+            $('.submit-changes').click(function(event) {
+                event.preventDefault();
+                var iterator = $(this).attr('data-cID');
+                var throbber = $('.ccm-seoRow-'+iterator+' .throbber');
+                console.log(throbber);
+                throbber.show();
+                var data = {};
+                data.cID = iterator;
+                data.meta_title = $('.ccm-seoRow-'+iterator+' input[name="meta_title"].hasChanged').val();
+                data.meta_description = $('.ccm-seoRow-'+iterator+' textarea[name="meta_description"]').val();
+                data.meta_keywords = $('.ccm-seoRow-'+iterator+' textarea[name="meta_keywords"]').val();
+                data.collection_handle = $('.ccm-seoRow-'+iterator+' input[name="collection_handle"]').val();
 
-		.headings {
-			float: left;
-			clear: both;
-		}
+                $.ajax({
+                    url: '<?php echo $view->action("saveRecord") ?>',
+                    dataType: 'json',
+                    type: 'post',
+                    data: data,
+                    success:function(res) {
+                        if(res.success) {
+                            var cID = res.cID;
+                            throbber.hide();
+                            $('.ccm-seoRow-'+cID+' .collectionPath').html(res.newPath);
+                            $('.ccm-seoRow-'+cID+' .collectionHandle').val(res.cHandle);
+                            $('.hasChanged').removeClass('.hasChanged');
+                            $('tr .btn-success').removeClass('btn-success');
+                        } else {
+                            alert('<?php echo t('An error occured while saving.'); ?>');
+                        }
+                    }
+                });
+                throbber.show();
+            });
 
-		.metaFieldContainer {
-			float: left;
-			width: 650px;
-			padding-left: 30px;
-		}
+            $('#allSeoSubmit').click(function() {
+                $('.submit-changes.btn-success').click();
+            });
 
-		.metaFieldContainer div {
-			margin: 0px 10px 10px 10px;
-		}
-
-		div.updateButton {
-			float: right;
-			min-height: 0;
-		}
-
-		a.url-path {
-			word-wrap: break-word;
-			width: 300px;
-			display: block;
-		}
-	</style>
-	<script type="text/javascript">
-	$(document).ready(function(){
-		$('#searchUnderParent').click(function(){
-			$('#parentOptions').toggle();
-			if ($('#searchUnderParent').hasClass('ccm-icon-option-closed')) {
-				 	$(this).removeClass('ccm-icon-option-closed');
-				 	$(this).addClass('ccm-icon-option-open');
-			} else {
-				$(this).removeClass('ccm-icon-option-open');
-				$(this).addClass('ccm-icon-option-closed');
-			}
-			});
-		});
-		</script>
-<form action="<?=$view->action('view')?>">
-	<div class="ccm-pane-options">
-			<label style="width: auto; margin-right: 1em; margin-left: 20px;"><?=t('Keywords'); ?></label><?php echo $form->text('keywords', '', array('style' => 'width: 130px')); ?><span style="margin-left: 30px;"><?=t(' # Per Page'); ?></span>
-			<?=$form->select('numResults', array(
-				'10' => '10',
-				'25' => '25',
-				'50' => '50',
-				'100' => '100',
-				'500' => '500'
-			), Loader::helper('text')->specialchars($searchRequest['numResults']), array('style' => 'width:65px; margin: 0px 10px 0px 10px;'))?>
-			<?php print $form->submit(t('Search'), $formID, $buttonAlign = 'left', 'searchSubmit'); ?><br />
-			<a href="javascript:void(0)" class="ccm-icon-option-closed" id="searchUnderParent"><?php echo t('Advanced Search'); ?></a>
-			<div id="parentOptions" style="margin-left: 25px; display: <?php echo $parentDialogOpen ? 'block' : 'none'; ?>">
-			<div id="pageSelectorHolder" style="float: left; width: 400px; margin-top: 15px;">
-			<strong style="display: block; margin-top: 10px;"><?php echo t('Parent Page'); ?></strong>
-			<?php print $pageSelector->selectPage('cParentIDSearchField', 'ccm_selectSitemapNode');?>
-			</div>
-			<div id="searchOptionHolder" style="width: 400px; margin-left: 65px; float: left; margin-top: 15px;">
-				<br/><strong style="display: block;"><?=t('How Many Levels Below Parent?')?></strong><br/>
-				<ul class="inputs-list" style="width: 130px; float: left;">
-					<li><label><?=$form->radio('cParentAll', 0, false)?> <span><?=t('First Level')?></span></label></li>
-					<li><label><?=$form->radio('cParentAll', 1, false)?> <span><?=t('All Levels')?></span></label></li>
-				</ul>
-				<div class="pageChecks"><label class="checkbox"> <?php echo $form->checkbox('noDescription', 1, $descCheck);  ?> <span><?=t(' No Meta Description'); ?></span></label></div>
-				<div class="pageChecks"><label class="checkbox"> <?php echo $form->checkbox('noKeywords', 1, $keywordCheck);  ?> <span><?=t(' No Meta Keywords'); ?></span></label></div>
-			</div>
-				<div style="clear: both;"></div>
-			</div>
-	</div>
-</form>
-
-<div class="ccm-pane-body">
-<?php
-if (count($pages) > 0) {
-	  $i = 0;
-		foreach($pages as $cobj) {
-			$cpobj = new Permissions($cobj);
-			$i++;
-			$cID = $cobj->getCollectionID();
-			$stripe = ($i % 2?'stripe':'');
-			?>
-			<div class="ccm-results-list table table-condensed">
-				<div class="rowHolder <?php echo $stripe; ?> ccm-seoRow-<?php echo $cID; ?>" style="float: left;">
-					<form id="seoForm<?php echo $cID; ?>" action="<?php echo View::url('/dashboard/system/seo/page_data/', 'saveRecord')?>" method="post" class="pageForm">
-						<div class="headingsContainer">
-
-							<div class="headings">
-								<?php echo $form->hidden('cID', $cID) ?>
-								<strong><?php echo t('Page Name'); ?></strong>
-								<br />
-								<br />
-								<?php echo $cobj -> getCollectionName() ? $cobj->getCollectionName() : ''; ?>
-								<br />
-								<br />
-							</div>
-
-							<div class="headings">
-								<strong><?php echo t('Page Type'); ?></strong>
-								<br />
-								<br />
-								<?php echo $cobj->getPageTypeName() ? $cobj->getPageTypeName() : t('Single Page'); ?>
-								<br />
-								<br />
-							</div>
-
-							<div class="headings"><strong><?php echo t('Modified'); ?></strong>
-								<br />
-								<br />
-								<?php echo $cobj->getCollectionDateLastModified() ? $cobj->getCollectionDateLastModified(DATE_APP_GENERIC_MDYT) : ''; ?>
-								<br />
-								<br />
-							</div>
-
-						</div>
-
-
-						<div class="metaFieldContainer">
-							<div><strong><?php echo t('Meta Title'); ?></strong>
-							<br />
-							<br />
-								<div class="metaInput">
-									<?php $seoPageTitle = $cobj->getCollectionName();
-									$seoPageTitle = htmlspecialchars($seoPageTitle, ENT_COMPAT, APP_CHARSET);
-									$autoTitle = sprintf(PAGE_TITLE_FORMAT, SITE, $seoPageTitle);
-									$titleInfo = array('title' => $cID);
-									if(strlen($cobj->getAttribute('meta_title')) <= 0) {
-										 $titleInfo[style] = 'background: whiteSmoke';
-									}
-									echo $form->text('meta_title', $cobj->getAttribute('meta_title') ? $cobj->getAttribute('meta_title') : $autoTitle, $titleInfo);
-									echo $titleInfo[style] ? '<br /><span class="help-inline">' . t('Default value. Click to edit.') . '</span>' : '' ?>
-								</div>
-							</div>
-
-							<div style="margin-left: 30px;"><strong><?php echo t('Meta Description'); ?></strong>
-							<br />
-							<br />
-								<div class="metaInput">
-									<?php $pageDescription = $cobj->getCollectionDescription();
-									$autoDesc = htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET);
-									$descInfo = array('title' => $cID);
-									if(strlen($cobj -> getAttribute('meta_description')) <= 0) {
-										$descInfo[style] = 'background: whiteSmoke';
-									}
-									echo $form->textarea('meta_description', $cobj->getAttribute('meta_description') ? $cobj->getAttribute('meta_description') : $autoDesc, $descInfo);
-									echo $descInfo[style] ? '<br /><span class="help-inline">' . t('Default value. Click to edit.') . '</span>' : '';
-									 ?>
-								</div>
-							</div>
-
-							<div>
-								<strong><?php echo t('Meta Keywords'); ?></strong>
-								<br />
-								<br />
-								<?php echo $form->textarea('meta_keywords', $cobj->getAttribute('meta_keywords'), array('title' => $cID)); ?>
-							</div>
-
-							<? if ($cobj->getCollectionID() != HOME_CID) { ?>
-
-							<div style="margin-left: 30px;">
-								<strong><?php echo t('Slug'); ?></strong>
-								<br />
-								<br />
-								<?php echo $form->text('collection_handle', $cobj->getCollectionHandle(), array('title' => $cID, 'class' => 'collectionHandle')); ?>
-								<br />
-								<?php
-									Page::rescanCollectionPath($cID);
-									$path = $cobj->getCollectionPath();
-									$tokens = explode('/', $path);
-									$lastkey = array_pop(array_keys($tokens));
-									$tokens[$lastkey] = '<strong class="collectionPath">' . $tokens[$lastkey] . '</strong>';
-									$untokens = implode('/', $tokens);
-									?><a class="help-inline url-path" href="<?php echo $nh->getLinkToCollection($cobj); ?>" target="_blank"><?php echo BASE_URL . DIR_REL . $untokens; ?></a><?php
-								?>
-							</div>
-							<? } ?>
-
-							<div class="updateButton">
-								<br />
-								<br />
-								<?php print $form->submit(t('Save'), $formID, $buttonAlign = 'right', 'seoSubmit update' . $cID, array('title' => $cID)); ?>
-							</div>
-							<div>
-								<img style="display: none; position: absolute; top: 20px; right: 20px;" id="throbber<?php echo $cID ?>"  class="throbber<?php echo $cID ?>" src="<?php echo ASSETS_URL_IMAGES . '/throbber_white_32.gif' ?>" />
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-			<div style="clear: left"></div>
-		<?php } ?>
-	<?php } else { ?>
-		<div class="ccm-results-list-none"><?php echo t('No pages found.')?></div>
-	<?php  }
-	print $form->button(t('Update All'), 'javascript:void(0)', $buttonAlign='right', $innerClass=null, $args = array('id'=>'allSeoSubmit'));
- 	?>
-	<div style="clear: left;"></div>
-	<script type="text/javascript">
-	$(document).ready(function() {
-		var options = {
-			url: '<?php echo $view->action("saveRecord") ?>',
-			dataType: 'json',
-			success:function(res) {
-				if(res.success) {
-					var cID = res.cID;
-					$('.throbber'+cID).hide();
-					$('.ccm-seoRow-'+cID).animate({"background-color" : "#57A957" }, 500);
-					$('.update'+cID).removeClass('success');
-					$('.update'+cID).removeClass('valueChanged');
-					$('.ccm-seoRow-'+cID+' .collectionPath').html(res.newPath);
-					$('.ccm-seoRow-'+cID+' .collectionHandle').val(res.cHandle);
-					if ($('.ccm-seoRow-'+cID).hasClass('stripe')) {
-						$('.ccm-seoRow-'+cID).animate({"background-color" : "#eee" }, 500);
-					} else {
-						$('.ccm-seoRow-'+cID).animate({"background-color" : "#ffff" }, 500);
-					}
-				} else {
-					alert('An error occured while saving.');
-				}
-			}
-		};
-
-		$('.rowHolder input[type="text"], .rowHolder textarea' ).change(function() {
-			var identifier =  $(this).attr('title');
-			$('.seoSubmit[title= ' + identifier + ']').addClass('success').addClass('valueChanged');
-		});
-
-		$('.seoSubmit').click(function() {
-			var iterator = $(this).attr('title');
-			$('#seoForm' + iterator).ajaxForm(options);
-			$('#throbber'+iterator).show();
-		});
-
-		$('#allSeoSubmit').click(function() {
-			$('.valueChanged').click();
-		});
-
-		$('.metaInput').click(function(){
-			$(this).children().css({'background' : 'white'});
-			$(this).children('.help-inline').hide();
-		})
-	});
-
-	</script>
-</div>
-<div style="text-align: center">
-<?php print $pagination->renderDefaultView(); ?>
+            $('.ccm-search-results-table tr td input, .ccm-search-results-table tr td textarea').not('.collectionHandle').click(function(){
+                $(this).css({'background' : 'white'});
+                $(this).next('.help-inline').hide();
+            })
+        });
+        </script>
+    </div>
+    <div style="text-align: center">
+    <?php print $pagination->renderDefaultView(); ?>
+    </div>
 </div>
