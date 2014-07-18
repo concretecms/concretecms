@@ -33,6 +33,6 @@ if ($a->showControls() && $p->canViewEditInterface() && $view->showControls()) {
 <? } ?>
     </div>
     </div>
-<? } else { ?>
+<? } else if (is_object($blockStyle)) { ?>
     </div>
 <? } ?>
