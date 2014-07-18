@@ -8,5 +8,7 @@ if (is_object($_bx)) {
 	$c = Page::getCurrentPage();
 	$_bx->setProxyBlock($b);
 	$_bx->loadNewCollection($c);
-	$_bx->display();
+    $bv = new \Concrete\Core\Block\View\BlockView($_bx);
+    $bv->disableControls();
+    $bv->render('view');
 }

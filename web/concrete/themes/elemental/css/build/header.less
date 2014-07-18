@@ -1,6 +1,6 @@
 header {
 
-  background-color: @page-background-color;
+  background-color: @header-background-color;
 
   padding-top: 30px;
   padding-bottom: 30px;
@@ -27,16 +27,24 @@ header {
       left: 14px;
       top: 9px;
       text-decoration: inherit;
-      color: #d2d2d2;
+      color: @header-search-input-icon-color;
     }
     .ccm-search-block-text {
-      border: 1px solid #e6e6e6;
+      border: 1px solid @header-search-input-border-color;
+      color: @header-search-input-icon-color;
       border-radius: 30px;
       padding: 10px 20px 10px 35px;
+      background-color: @header-search-input-background-color;
+
+      &:focus {
+        outline: 0;
+      }
     }
   }
 
   nav {
+    position: relative;
+
     .dropdown{
       &:after {
         content: ' ▶';
@@ -51,10 +59,11 @@ header {
     ul {
       a {
         padding-right: 40px;
-        font-family: @header-site-title-type-font-family;
+        font-family: @header-navigation-type-font-family;
         font-size: @header-navigation-type-font-size;
         font-weight: @header-navigation-type-font-weight;
         color: @header-navigation-type-color;
+        text-transform: @header-navigation-type-text-transform;
 
         &:hover {
           color: @header-navigation-hover-color;
@@ -66,8 +75,8 @@ header {
       margin-top: 0px !important;
       padding: 0px 0px 0px 0px;
       top: 10px;
-      position: relative;
-      width: 100%;
+      right: 0px;
+      position: absolute;
        li {
         &:hover {
           ul {
@@ -94,6 +103,8 @@ header {
               }
               display: block;
               padding-bottom: 15px;
+              font-size: 1.0em;
+              text-transform: none;
               color: @header-navigation-menu-text-color;
               .transition(all .25s ease);
               font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;

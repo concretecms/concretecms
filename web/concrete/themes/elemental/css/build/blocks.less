@@ -6,6 +6,10 @@
   padding-top: 20px;
   margin-bottom: 70px;
 
+  background-color: transparent;
+  background-repeat: repeat;
+  /* background-image is moved to main.less because it needs to be in the theme root */
+
   .ccm-image-slider {
 
     .container-fixed();
@@ -41,13 +45,13 @@
       margin-right: 5px;
       &.rslides_here {
         a {
-          background: @header-site-title-type-color;
+          background: @image-slider-navigation-active-color;
         }
       }
       a {
         overflow: hidden;
         text-indent: 99px;
-        background: #ccccc9;
+        background: @image-slider-navigation-color;
         width: 15px;
         height: 15px;
         display: inline-block;
@@ -59,18 +63,18 @@
 
   .ccm-image-slider-text {
     h2 {
-      color: @header-site-title-type-color;
-      font-family: @header-site-title-type-font-family;
-      font-size: 48px;
-      font-weight: 200;
+      color: @image-slider-title-type-color;
+      font-family: @image-slider-title-type-font-family;
+      font-size: @image-slider-title-type-font-size;
+      font-weight: @image-slider-title-type-font-weight;
       margin-bottom: 5%;
-      line-height: 1.2em;
     }
 
     p {
-      font-size: 16px;
-      line-height: 1.4em;
-      color: #989ea0;
+      color: @image-slider-paragraph-type-color;
+      font-family: @image-slider-paragraph-type-font-family;
+      font-size: @image-slider-paragraph-type-font-size;
+      font-weight: @image-slider-paragraph-type-font-weight;
       width: 80%;
     }
   }
@@ -94,10 +98,29 @@ main {
     }
 
     padding-left: 25px;
-    margin-bottom: 40px;
-
+    margin-bottom: 40px
   }
 
+  // Custom home page class for feature
+  div.ccm-block-feature-home-page {
+    div.ccm-block-feature-item h4, div.ccm-block-feature-item i {
+      color: @home-feature-title-color;
+    }
+
+    div.ccm-block-feature-item h4 {
+      font-size: 1.5em;
+    }
+
+    div.ccm-block-feature-item i {
+      color: @home-feature-icon-color;
+      font-size: 1.3em;
+      top: 1px;
+    }
+
+    div.ccm-block-feature-item {
+      padding-left: 45px;
+    }
+  }
 
   // faq block
   .ccm-faq-container {
@@ -109,10 +132,6 @@ main {
     a {
       display: block;
       margin-bottom: 10px;
-      color: #7cc2ee;
-      &:hover {
-        color: #4289b6;
-      }
     }
   }
   .ccm-faq-block-entries {

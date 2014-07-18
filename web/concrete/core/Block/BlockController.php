@@ -8,6 +8,7 @@ use Concrete\Core\Block\View\BlockViewTemplate;
 use Concrete\Core\Controller;
 use Concrete\Core\Feature\Feature;
 use Concrete\Core\Legacy\BlockRecord;
+use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 use Events;
 use Loader;
 use Package;
@@ -353,7 +354,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
 
         // now we handle the styles
         if (isset($blockNode->style)) {
-            $set = StyleSet::import($ax->style);
+            $set = StyleSet::import($blockNode->style);
             $b->setCustomStyleSet($set);
         }
     }

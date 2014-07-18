@@ -1,6 +1,15 @@
 footer#footer-theme {
 
   padding-bottom: 30px;
+  a {
+    color: @footer-link-color;
+    &:hover {
+      color: @footer-link-hover-color;
+    }
+  }
+
+  color: @footer-text-color;
+
 
   div#ccm-block-social-links {
     text-align: right;
@@ -16,17 +25,18 @@ footer#footer-theme {
   }
 
   section {
-    border-top: 1px solid #d9d9d9;
+    border-top: 1px solid @footer-section-divider-color;
     padding-top: 30px;
     padding-bottom: 30px;
   }
 
   section:first-child {
-    background-color: @page-background-color;
+    background-color: @footer-top-background-color;
   }
 
   section:last-child {
     padding-bottom: 30px;
+    background-color: @footer-bottom-background-color;
   }
 
   span#footer-site-title {

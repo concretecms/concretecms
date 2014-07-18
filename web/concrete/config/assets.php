@@ -288,6 +288,7 @@ $al->registerGroup('core/gathering', array(
 $al->register('javascript', 'core/conversation', 'js/conversations.js');
 $al->register('css', 'core/conversation', 'css/conversations.css');
 $al->registerGroup('core/conversation', array(
+    array('javascript', 'jquery'),
     array('javascript', 'dropzone'),
     array('javascript', 'bootstrap/dropdown'),
     array('javascript', 'core/events'),

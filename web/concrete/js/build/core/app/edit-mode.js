@@ -688,7 +688,9 @@
                 'menu': $('[data-area-menu=' + elem.attr('data-launch-area-menu') + ']')
             });
 
-            $menuElem.find('a[data-menu-action=add-inline]').on('click', function (e) {
+            $menuElem.find('a[data-menu-action=add-inline]')
+                .off('click.edit-mode')
+                .on('click.edit-mode', function (e) {
                 // we are going to place this at the END of the list.
                 var dragAreaLastBlock = false;
                 _.each(my.getBlocks(), function (block) {
@@ -705,13 +707,12 @@
                 return false;
             });
 
-            $menuElem.find('a[data-menu-action=edit-container-layout]').on('click', function (e) {
+            $menuElem.find('a[data-menu-action=edit-container-layout]')
+                .off('click.edit-mode')
+                .on('click.edit-mode', function (e) {
                 // we are going to place this at the END of the list.
                 var $link = $(this);
-                var dragAreaLastBlock = false;
-                _.each(my.getBlocks(), function (block) {
-                    dragAreaLastBlock = block;
-                });
+                var dragAreaLastBlock = _.last(my.getBlocks());
                 var bID = parseInt($(this).attr('data-container-layout-block-id'));
                 var editor = Concrete.getEditMode();
                 var block = _.findWhere(editor.getBlocks(), {id: bID});
@@ -723,14 +724,16 @@
                 return false;
             });
 
-            $menuElem.find('a[data-menu-action=edit-area-design]').on('click', function (e) {
+            $menuElem.find('a[data-menu-action=edit-area-design]')
+                .off('click.edit-mode')
+                .on('click.edit-mode', function (e) {
                 e.preventDefault();
                 ConcreteToolbar.disable();
                 my.getElem().addClass('ccm-area-inline-edit-disabled');
                 var postData = {
                     'arHandle': my.getHandle(),
                     'cID': CCM_CID,
-                }
+                };
 
                 Concrete.event.bind('EditModeExitInline', function (e) {
                     Concrete.event.unsubscribe(e);
