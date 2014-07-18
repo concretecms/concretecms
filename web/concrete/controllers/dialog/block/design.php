@@ -95,6 +95,7 @@ class Design extends BackendInterfaceBlockController {
             $set->setBoxShadowHorizontal($r['boxShadowHorizontal']);
             $set->setBoxShadowVertical($r['boxShadowVertical']);
             $set->setBoxShadowSpread($r['boxShadowSpread']);
+            $set->setCustomClass($r['customClass']);
             $set->save();
 
             $b->setCustomStyleSet($set);

@@ -6,7 +6,7 @@
 div.ccm-style-customizer-palette {
 
     &.ccm-style-customizer-palette-large {
-        width: 500px;
+        width: 550px;
 
         div.ccm-style-customizer-slider {
             width: 440px;
@@ -14,7 +14,7 @@ div.ccm-style-customizer-palette {
     }
 
     border: 1px solid black;
-    width: 220px;
+    width: 250px;
     padding: 10px;
     z-index: @index-level-panel-select-widget;
     display: none;
@@ -219,9 +219,105 @@ div.ccm-widget-colorpicker {
 
 .ccm-ui {
   div.dropdown-menu.ccm-inline-design-dropdown-menu {
+    min-width: 261px;
+    .ccm-file-selector {
+      margin-top: 5px;
+      margin-bottom: 15px;
+    }
+
+    .ccm-inline-style-slider-heading {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .ccm-inline-style-slider-display-value {
+      display: inline-block;
+      margin-left: 5%;
+      width: 20%;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .ccm-inline-style-sliders {
+      &.ui-slider-horizontal {
+        margin-bottom: 15px;
+      }
+      width: 68%;
+      display: inline-block;
+      vertical-align: middle;
+      margin-bottom: 15px;
+    }
+    a.ui-slider-handle {
+      background-color: #888 !important;
+      .border-radius(7px);
+      cursor: pointer;
+      &:focus {
+        outline: none;
+        background-color: #666;
+      }
+    }
+
+    .ui-slider-horizontal {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      background: #444;
+      .border-radius(4px);
+    }
     padding: 20px;
     background-color: #0f0f0f;
     color: #7f8d90;
+    input[type="text"] {
+      .border-radius(3px);
+      padding: 5px 10px;
+      font-size: 13px;
+      font-weight: 200;
+      margin-top: 5px;
+      margin-bottom: 15px;
+    }
+    select {
+      &.form-control {
+        background: #aaaaaa;
+        color: #4c4c4d;
+        padding-right: 30px;
+        margin-bottom: 15px;
+        margin-top: 5px;
+      }
+    }
+    .ccm-inline-select-container {
+      position: relative;
+      &:after {
+        content: '\f0dd';
+        font-family: FontAwesome;
+        color: #707070;
+        position: absolute;
+        bottom: 10px;
+        right: 15px;
+      }
+      #backgroundRepeat {
+
+      }
+    }
+
+    .sp-dd {
+      display: none;
+    }
+    .sp-replacer {
+      padding: 0;
+      margin-left: 10px;
+      .sp-preview {
+        width: 28px;
+        height: 28px;
+        border: 0;
+        .sp-preview-inner {
+          width: 28px;
+          height: 28px;
+        }
+      }
+      width: 28px;
+      height: 28px;
+      .border-radius(4px);
+      border: 1px solid #444;
+    }
 
     line-height: @line-height-base;
     h3 {
@@ -234,7 +330,5 @@ div.ccm-widget-colorpicker {
     hr {
       border-color: #666;
     }
-
-
   }
 }
