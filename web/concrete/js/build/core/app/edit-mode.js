@@ -1469,6 +1469,7 @@
             }
 
             ConcretePanelManager.exitPanelMode();
+            jQuery.fn.dialog.closeAll();
 
             if (!has_add) {
                 $.get(CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add_block/submit', {
