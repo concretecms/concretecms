@@ -486,4 +486,12 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
     {
         return false;
     }
+
+    /**
+     * @deprecated
+     */
+    public function displayUnapprovedPages()
+    {
+        $this->setPageVersionToRetrieve(self::PAGE_VERSION_RECENT);
+    }
 }
