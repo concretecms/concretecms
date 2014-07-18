@@ -289,9 +289,7 @@ if (count($pages) > 0) {
 	});
 
 	</script>
-	<?php $pageList->displaySummary(); ?>
 </div>
-<div class="ccm-pane-footer">
-	<?php $pageList->displayPagingV2(); ?>
+<div style="text-align: center">
+<?php print $pagination->renderDefaultView(); ?>
 </div>
-<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false); ?>
