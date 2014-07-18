@@ -45,10 +45,12 @@ $page_selector = Loader::helper('form/page_selector');
 
         <div class="form-group">
             <label for="displayUnavailablePages"><?= t('Check Page Permissions') ?></label>
-            <label style="font-weight:normal" class="checkbox">
+            <div class="checkbox">
+                <label>
                 <?= $form->checkbox('displayUnavailablePages', 1, $info['displayUnavailablePages']); ?>
                 <?= t('Display links that may require login.'); ?>
-            </label>
+                </label>
+            </div>
         </div>
 
         <div class="form-group">
