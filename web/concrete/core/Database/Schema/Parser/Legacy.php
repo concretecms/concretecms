@@ -132,17 +132,33 @@ class Legacy extends XmlParser
     {
         $type = (string)$column['type'];
         $size = (string)$column['size'];
+        if ($type == 'L') {
+            return 'boolean';
+        }
+        if ($type == 'I1') {
+            if ($size != '' && $size > 1) {
+                return 'smallint';
+            } else {
+                return 'boolean';
+            }
+        }
+        if ($type == 'I2') {
+            return 'smallint';
+        }
+        if ($type == 'I4') {
+            return 'integer';
+        }
         if ($type == 'I') {
+            if ($size != '' && $size == 1) {
+                return 'boolean';
+            }
+            if ($size != '' && $size < 5) {
+                return 'smallint';
+            }
             return 'integer';
         }
         if ($type == 'I8') {
             return 'bigint';
-        }
-        if ($type == 'I1' || $type == 'L') {
-            return 'boolean';
-        }
-        if ($type == 'I2') {
-            return 'smallint';
         }
         if ($type == 'C') {
             return 'string';
