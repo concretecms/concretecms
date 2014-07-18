@@ -21,7 +21,7 @@ class CustomStyle extends AbstractCustomStyle
     public function getCSS()
     {
         $set = $this->set;
-        $css = '.' . $this->getContainerClass() . '{';
+        $css = '.' . str_replace(' ', '.', $this->getContainerClass()) . '{';
         if ($set->getBackgroundColor()) {
             $css .= 'background-color:' . $set->getBackgroundColor() . ';';
         }
@@ -94,7 +94,7 @@ class CustomStyle extends AbstractCustomStyle
         $css .= '}';
 
         if ($set->getLinkColor()) {
-            $css .= '.' . $this->getContainerClass() . ' a {';
+            $css .= '.' . str_replace(' ', '.', $this->getContainerClass()) . ' a {';
             $css .= 'color:' . $set->getLinkColor() . ' !important;';
             $css .= '}';
         }
