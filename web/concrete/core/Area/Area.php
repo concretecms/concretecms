@@ -36,7 +36,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     /**
      * @var boolean
      */
-    protected $showControls = true;
+    protected $showControls = -1;
 
     /**
      * @var string
@@ -65,9 +65,23 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         $this->arDisplayName = $arDisplayName;
     }
 
+    /**
+     * Returns whether or not controls are to be displayed
+     * @return bool
+     */
     public function showControls()
     {
-        return $this->showControls;
+        if ($this->showControls === true || $this->showControls === false) {
+            return $this->showControls;
+        } else {
+            $c = $this->getAreaCollectionObject();
+            return $c->isEditMode();
+        }
+    }
+
+    public function forceControlsToDisplay()
+    {
+        $this->showControls = true;
     }
 
     public function setAreaGridMaximumColumns($cspan)
