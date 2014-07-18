@@ -1,9 +1,10 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\Block;
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
 use Concrete\Core\Block\CustomStyle;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Page\EditResponse;
+use Concrete\Core\Page\Page;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
 
 class Design extends BackendInterfaceBlockController {
@@ -39,9 +40,11 @@ class Design extends BackendInterfaceBlockController {
             $cx = \Stack::getByName($_REQUEST['arHandle']);
         }
 
+
         $b = \Block::getByID($_REQUEST['bID'], $cx, $ax);
         $nvc = $cx->getVersionToModify();
         if ($this->area->isGlobalArea()) {
+            $c = Page::getCurrentPage();
             $xvc = $c->getVersionToModify(); // we need to create a new version of THIS page as well.
             $xvc->relateVersionEdits($nvc);
         }
