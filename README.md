@@ -14,17 +14,20 @@ This is a developer preview branch. This is intended for Add-On developers and c
 2. Clone this repository.
 3. Use [Composer](https://getcomposer.org/) to Install the third party dependencies
 
-    cd web/concrete
-    composer install
+    `cd web/concrete`
+    
+    `composer install`
     
     This should install everything necessary into the vendor/ directory in the concrete directory.
 
 4. Use [npm](https://www.npmjs.org/) to install [grunt](http://gruntjs.com/) to the build directory
 	
-	cd build 
-	npm install grunt grunt-contrib-concat grunt-contrib-uglify grunt-contrib-cssmin grunt-contrib-less grunt-contrib-watch
+	`cd build` 
+	
+	`npm install grunt grunt-contrib-concat grunt-contrib-uglify grunt-contrib-cssmin grunt-contrib-less grunt-contrib-watch`
 
 5. Build with grunt
 	
-	cd build
-	grunt
+	`cd build`
+	
+	`grunt`
