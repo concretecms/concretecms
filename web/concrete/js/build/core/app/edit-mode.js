@@ -1121,7 +1121,6 @@
          */
         transform: function blockTransform(transformation, matrix) {
             var my = this;
-
             var element = my.getDragger().css({
                 '-webkit-transform': transformation,
                 '-moz-transform': transformation,
@@ -1194,6 +1193,11 @@
          * @return {String}        CSS string
          */
         matrixToCss: function blockMatrixToCss(matrix) {
+            var precision = 4, multiplier = Math.pow(10, precision), round = function(number) {
+                return Math.round(number * multiplier) / multiplier;
+            };
+            matrix[0] = _(matrix[0]).map(round);
+            matrix[1] = _(matrix[1]).map(round);
             var css_arr = [matrix[0][0], matrix[0][1], matrix[1][0], matrix[1][1], matrix[0][2], matrix[1][2]];
             return 'matrix(' + css_arr.join(',') + ')';
         },
