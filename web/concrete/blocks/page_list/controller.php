@@ -189,7 +189,6 @@ class Controller extends BlockController
         $this->set('c', $c);
         $this->set('uh', $uh);
         $this->set('bt', BlockType::getByHandle('page_list'));
-        $this->set('displayAliases', true);
     }
 
     public function edit()

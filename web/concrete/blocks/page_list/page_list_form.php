@@ -83,13 +83,15 @@ $form = Loader::helper('form/page_selector');
                        value="0" <? if ($cParentID == 0) { ?> checked<? } ?> />
                 <?= t('Everywhere') ?>
             </label>
-
+        </div>
+        <div class="radio">
             <label>
                 <input type="radio" name="cParentID" id="cThisPageField"
                        value="<?= $c->getCollectionID() ?>" <? if ($cParentID == $c->getCollectionID() || $cThis) { ?> checked<? } ?>>
                 <?= t('Beneath this page') ?>
             </label>
-
+         </div>
+        <div class="radio">
             <label>
                 <input type="radio" name="cParentID" id="cOtherField"
                        value="OTHER" <? if ($isOtherPage) { ?> checked<? } ?>>
@@ -107,11 +109,13 @@ $form = Loader::helper('form/page_selector');
         <div class="ccm-page-list-all-descendents"
              style="<?php echo (!$isOtherPage && !$cThis) ? ' display: none;' : ''; ?>">
             <div class="form-group">
-                <label class="checkbox">
+                <div class="checkbox">
+                <label>
                     <input type="checkbox" name="includeAllDescendents" id="includeAllDescendents"
                            value="1" <?php echo $includeAllDescendents ? 'checked="checked"' : '' ?> />
                     <?php echo t('Include all child pages') ?>
                 </label>
+                </div>
             </div>
         </div>
 

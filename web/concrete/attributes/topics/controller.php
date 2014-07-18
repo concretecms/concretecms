@@ -2,6 +2,7 @@
 namespace Concrete\Attribute\Topics;
 use Loader;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Tree\Type\Topic as TopicTree;
 use \Concrete\Core\Attribute\Controller as AttributeTypeController;
 class Controller extends AttributeTypeController  {
 
