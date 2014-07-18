@@ -36,11 +36,11 @@ class ImageStyle extends Style
             $iv = new ImageValue($this->getVariable());
             if (Loader::helper('validation/numbers')->integer($image)) {
                 // it's a file ID.
-                $f = File::getByID($fID);
+                $f = File::getByID($image);
                 if (is_object($f)) {
                     $fp = new Permissions($f);
                     if ($fp->canViewFile()) {
-                        $iv->setFileID($fID);
+                        $iv->setFileID($image);
                         $iv->setUrl($f->getRelativePath());
                     }
                }
