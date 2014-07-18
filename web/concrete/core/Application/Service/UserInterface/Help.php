@@ -95,7 +95,7 @@ class Help
         );
 
         // displays views 3 -> 5
-        $msgTxt = "Need help speeding up your site?  contact concrete5's <a href=\"http://enterprise.concrete5.com/\" target=\"_blank\">enterprise services</a>.";
+        $msgTxt = t("Need help speeding up your site?  contact concrete5's <a href=\"%s\" target=\"_blank\">enterprise services</a>.", 'http://enterprise.concrete5.com/');
         $pages['/dashboard/system/optimization/cache'][] = HelpMessage::get('/page/design', $msgTxt, 3, 5);
 
         // default message
@@ -114,17 +114,20 @@ class Help
         );
 
         // displays views 3 -> 6
-        $msgTxt = "Need some help?<br/>
-         We noticed you've been in this area a few times recently. There's additional themes you can buy
-         <a href=\"http://www.concrete5.org/marketplace/themes\" target=\"_blank\">here</a>, or you can get custom design services from our <a href=\"http://enterprise.concrete5.com/\" target=\"_blank\">partners</a>.";
+        $msgTxt = t('Need some help?')
+            . '<br/>'
+            . t(
+                'We noticed you\'ve been in this area a few times recently. There\'s additional themes you can buy <a href="%1$s" target="_blank">here</a>, or you can get custom design services from our <a href="%2$s" target="_blank">partners</a>.',
+                'http://www.concrete5.org/marketplace/themes',
+                'http://enterprise.concrete5.com/'
+               )
+        ;
         $panels['/page/design'][] = HelpMessage::get('/page/design', $msgTxt, 3, 6);
 
         // default message
-        $msgTxt = "<b>Welcome to customizing themes!</b><br/>
-        Watch this tutorial for guidance.<br/><br/>
-        <div style=\"text-align: center\" padding: 20px;\">
-        <a style=\"margin: 10px;\" href=\"http://www.youtube.com/watch?v=pischKK2uHQ\" target=\"_blank\"><img src=\"http://www.concrete5.org/files/6413/9067/3863/video_button.png\"/></a></div>
-        ";
+        $msgTxt = t("<b>Welcome to customizing themes!</b><br/>Watch this tutorial for guidance.<br/><br/>")
+            . '<div style="text-align: center" padding: 20px;"><a style="margin: 10px;" href="http://www.youtube.com/watch?v=pischKK2uHQ" target="_blank"><img src="http://www.concrete5.org/files/6413/9067/3863/video_button.png" /></a></div>'
+        ;
         $panels['/page/design'][] = HelpMessage::get('/page/design', $msgTxt);
 
         return $panels;
