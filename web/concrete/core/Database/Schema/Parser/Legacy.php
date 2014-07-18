@@ -149,7 +149,7 @@ class Legacy extends XmlParser
             return 'integer';
         }
         if ($type == 'I') {
-            if ($size != '' && $size == 1) {
+            if ($size === '1') {
                 return 'boolean';
             }
             if ($size != '' && $size < 5) {
