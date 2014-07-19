@@ -24,6 +24,7 @@
         <blocktype handle="date_nav" package=""/>
         <blocktype handle="external_form" package=""/>
         <blocktype handle="file" package=""/>
+        <blocktype handle="page_attribute_display" package=""/>
         <blocktype handle="flash_content" package=""/>
         <blocktype handle="form" package=""/>
         <blocktype handle="page_title" package=""/>
@@ -88,6 +89,7 @@
             <blocktype handle="discussion"/>
         </blocktypeset>
         <blocktypeset handle="multimedia" name="Multimedia" package="">
+            <blocktype handle="page_attribute_display"/>
             <blocktype handle="image_slider"/>
             <blocktype handle="video"/>
             <blocktype handle="youtube"/>

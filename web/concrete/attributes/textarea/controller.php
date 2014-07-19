@@ -44,7 +44,7 @@ class Controller extends DefaultController  {
 			print '<div class="ccm-attribute-textarea-edit">' . Loader::helper('form')->textarea($this->field('value'), $value, array('class' => $additionalClass . ' ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID())) . '</div>';
 			print '<script type="text/javascript">';
 			print 'var CCM_EDITOR_SECURITY_TOKEN = "' . Loader::helper('validation/token')->generate('editor') . '";';
-			print '$(function() { $(".ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID() . '").redactor({ ';
+			print '$(function() { $(".ccm-advanced-editor-' . $this->attributeKey->getAttributeKeyID() . '").redactor({';
 			if ($this->akTextareaDisplayMode == 'rich_text' || ($this->akTextareaDisplayMode == 'rich_text_custom' && in_array('concrete5menu', $this->akTextareaDisplayModeCustomOptions))) {
 				print 'plugins: [\'concrete5\'], ';
 			}
@@ -155,6 +155,7 @@ class Controller extends DefaultController  {
 	}
 	
 	public function type_form() {
+        $this->set('akTextareaDisplayModeCustomOptions', array());
 		$this->load();
 	}
 	
@@ -171,7 +172,6 @@ class Controller extends DefaultController  {
 		if ($row['akTextareaDisplayMode'] == 'rich_text_custom') {
 			$this->akTextareaDisplayModeCustomOptions = unserialize($row['akTextareaDisplayModeCustomOptions']);
 		}
-
 		$this->set('akTextareaDisplayMode', $this->akTextareaDisplayMode);
 		$this->set('akTextareaDisplayModeCustomOptions', $this->akTextareaDisplayModeCustomOptions);
 	}

@@ -87,7 +87,9 @@ class Composer extends BackendInterfacePageController {
 		$ptr->setPage($c);
 
 		$pagetype = $c->getPageTypeObject();
-		$pt = PageTemplate::getByID($_POST['ptComposerPageTemplateID']);
+        if ($_POST['ptComposerPageTemplateID']) {
+    		$pt = PageTemplate::getByID($_POST['ptComposerPageTemplateID']);
+        }
 		$availablePageTemplates = $pagetype->getPageTypePageTemplateObjects();
 		if (!is_object($pt)) {
 			$pt = $pagetype->getPageTypeDefaultPageTemplateObject();
