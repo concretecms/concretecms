@@ -19,6 +19,21 @@ var pageList ={
 		this.truncateSwitch.click(function(){ pageList.truncationShown(this); });
 		this.truncateSwitch.change(function(){ pageList.truncationShown(this); });
 
+        $('.pagelist-form').on('change.page-list-block', 'input[name=useButtonForLink]', function() {
+            if ($(this).val() == '1') {
+                $('.ccm-page-list-button-text').slideDown();
+            } else {
+                $('.ccm-page-list-button-text').slideUp();
+            }
+        });
+        $('.pagelist-form').on('change.page-list-block', 'input[name=includeDescription]', function() {
+            if ($(this).val() == '1') {
+                $('.ccm-page-list-truncate-description').slideDown();
+            } else {
+                $('.ccm-page-list-truncate-description').slideUp();
+            }
+        });
+
 	},
 	truncationShown:function(cb){
 		var truncateTxt=$('#ccm-pagelist-truncateTxt');

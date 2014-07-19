@@ -18,7 +18,9 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
     public function getThemeBlockClasses()
     {
         return array(
-            'feature' => array('ccm-block-feature-home-page')
+            'feature' => array('ccm-block-feature-home-page'),
+            'page_list' => array('ccm-block-sidebar-wrapped'),
+            'content' => array('ccm-block-sidebar-wrapped'),
         );
     }
 
@@ -28,8 +30,9 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
         return array(
             array('title' => t('Title Thin'), 'menuClass' => 'title-thin', 'spanClass' => 'title-thin'),
             array('title' => t('Title Caps'), 'menuClass' => 'title-caps-bold', 'spanClass' => 'title-caps-bold'),
+            array('title' => t('Standard Button'), 'menuClass' => '', 'spanClass' => 'btn btn-default'),
             array('title' => t('Success Button'), 'menuClass' => '', 'spanClass' => 'btn btn-success'),
-            array('title' => t('Success Button (Alternate)'), 'menuClass' => '', 'spanClass' => 'btn btn-success-alt'),
+            array('title' => t('Primary Button'), 'menuClass' => '', 'spanClass' => 'btn btn-primary')
         );
     }
 

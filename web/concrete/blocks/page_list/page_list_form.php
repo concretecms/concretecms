@@ -140,43 +140,83 @@ $form = Loader::helper('form/page_selector');
             </select>
         </div>
 
-        <legend><?= t('Provide RSS Feed') ?></legend>
-        <div class="radio">
-            <label>
-                <input id="ccm-pagelist-rssSelectorOn" type="radio" name="rss" class="rssSelector"
-                       value="1" <?= ($rss ? "checked=\"checked\"" : "") ?>/> <?= t('Yes') ?>
-            </label>
-            <label>
-                <input type="radio" name="rss" class="rssSelector"
-                       value="0" <?= ($rss ? "" : "checked=\"checked\"") ?>/> <?= t('No') ?>
-            </label>
-        </div>
-
-        <div id="ccm-pagelist-rssDetails" <?= ($rss ? "" : "style=\"display:none;\"") ?>>
-            <div class="form-group">
-                <label class="control-label"><?= t('RSS Feed Title') ?></label>
-                <input class="form-control" id="ccm-pagelist-rssTitle" type="text" name="rssTitle"
-                       value="<?= $rssTitle ?>"/>
-            </div>
-            <div class="form-group">
-                <label class="control-label"><?= t('RSS Feed Description') ?></label>
-                <textarea name="rssDescription" class="form-control"><?= $rssDescription ?></textarea>
-            </div>
-        </div>
-
-        <legend><?= t('Truncate Summaries') ?></legend>
+        <legend><?= t('Output') ?></legend>
         <div class="form-group">
+            <label class="control-label"><?= t('Provide RSS Feed') ?></label>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="rss" class="rssSelector"
+                           value="0" <?= ($rss ? "" : "checked=\"checked\"") ?>/> <?= t('No') ?>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input id="ccm-pagelist-rssSelectorOn" type="radio" name="rss" class="rssSelector"
+                           value="1" <?= ($rss ? "checked=\"checked\"" : "") ?>/> <?= t('Yes') ?>
+                </label>
+             </div>
+            <div id="ccm-pagelist-rssDetails" <?= ($rss ? "" : "style=\"display:none;\"") ?>>
+                <div class="form-group">
+                    <label class="control-label"><?= t('RSS Feed Title') ?></label>
+                    <input class="form-control" id="ccm-pagelist-rssTitle" type="text" name="rssTitle"
+                           value="<?= $rssTitle ?>"/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label"><?= t('RSS Feed Description') ?></label>
+                    <textarea name="rssDescription" class="form-control"><?= $rssDescription ?></textarea>
+                </div>
+            </div>
+        </div>
 
-            <div class="input-group">
+        <div class="form-group">
+            <label class="control-label"><?= t('Include Page Description') ?></label>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="includeDescription" class="rssSelector"
+                           value="0" <?= ($includeDescription ? "" : "checked=\"checked\"") ?>/> <?= t('No') ?>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="includeDescription"
+                           value="1" <?= ($includeDescription ? "checked=\"checked\"" : "") ?>/> <?= t('Yes') ?>
+                </label>
+            </div>
+            <div class="ccm-page-list-truncate-description" <?= ($includeDescription ? "" : "style=\"display:none;\"") ?>>
+                <label class="control-label"><?=t('Display Truncated Description')?></label>
+                <div class="input-group">
                 <span class="input-group-addon">
                     <input id="ccm-pagelist-truncateSummariesOn" name="truncateSummaries" type="checkbox"
                            value="1" <?= ($truncateSummaries ? "checked=\"checked\"" : "") ?> />
                 </span>
-                <input class="form-control" id="ccm-pagelist-truncateChars" <?= ($truncateSummaries ? "" : "disabled=\"disabled\"") ?>
-                              type="text" name="truncateChars" size="3" value="<?= intval($truncateChars) ?>" />
+                    <input class="form-control" id="ccm-pagelist-truncateChars" <?= ($truncateSummaries ? "" : "disabled=\"disabled\"") ?>
+                           type="text" name="truncateChars" size="3" value="<?= intval($truncateChars) ?>" />
                 <span class="input-group-addon">
                     <?= t('characters') ?>
                 </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label"><?= t('Use Button For Link') ?></label>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="useButtonForLink" class="rssSelector"
+                           value="0" <?= ($useButtonForLink ? "" : "checked=\"checked\"") ?>/> <?= t('No') ?>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="useButtonForLink"
+                           value="1" <?= ($useButtonForLink ? "checked=\"checked\"" : "") ?>/> <?= t('Yes') ?>
+                </label>
+            </div>
+            <div class="ccm-page-list-button-text" <?= ($useButtonForLink ? "" : "style=\"display:none;\"") ?>>
+                <div class="form-group">
+                    <label class="control-label"><?= t('Button Text') ?></label>
+                    <input class="form-control" type="text" name="buttonLinkText" value="<?=$buttonLinkText?>" />
+                </div>
             </div>
         </div>
 

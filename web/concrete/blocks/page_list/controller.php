@@ -132,6 +132,12 @@ class Controller extends BlockController
         $list = $this->getPageList();
         $nh = Loader::helper('navigation');
         $this->set('nh', $nh);
+        $containerClass = 'ccm-block-page-list';
+        if ($this->useButtonForLink) {
+            $containerClass = 'ccm-block-button-page-list';
+        }
+
+        $this->set('containerClass', $containerClass);
 
         //RSS...
         $showRss = false;
@@ -188,6 +194,7 @@ class Controller extends BlockController
         //	echo $rssUrl;
         $this->set('c', $c);
         $this->set('uh', $uh);
+        $this->set('includeDescription', true);
         $this->set('bt', BlockType::getByHandle('page_list'));
     }
 
