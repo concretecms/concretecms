@@ -30,6 +30,15 @@ class MessageList extends DatabaseItemList {
 		$this->sortBy('cnvMessageDateCreated', 'asc');
 	}
 
+    public function sortByRating() {
+        $this->setQuery('SELECT cnvm.cnvMessageID, coalesce(SUM(cnvrt.cnvRatingTypeCommunityPoints), 0) AS xCnvTotalCommunityPoints
+                        FROM ConversationMessages cnvm
+                          LEFT JOIN ConversationMessageRatings cnvmr ON cnvm.cnvMessageID = cnvmr.cnvMessageID
+                          LEFT JOIN ConversationRatingTypes cnvrt ON cnvmr.cnvRatingTypeID = cnvrt.cnvRatingTypeID');
+        $this->groupBy('cnvm.cnvMessageID');
+        $this->sortBy('xCnvTotalCommunityPoints', 'desc');
+    }
+
 	public function filterByApproved() {
 		$this->filter('cnvIsMessageApproved', 1);
 	}
