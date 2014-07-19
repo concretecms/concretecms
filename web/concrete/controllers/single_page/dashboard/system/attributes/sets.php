@@ -4,8 +4,9 @@ namespace Concrete\Controller\SinglePage\Dashboard\System\Attributes;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
-use AttributeKeyCategory;
+use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use AttributeSet;
+
 
 class Sets extends DashboardPageController {
 	

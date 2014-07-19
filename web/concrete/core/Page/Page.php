@@ -1577,6 +1577,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $pTemplateID = $data['pTemplateID'];
         }
 
+        if (!$cDatePublic) {
+            $cDatePublic = Core::make('helper/date')->getLocalDateTime();
+        }
         $txt = Loader::helper('text');
         if (!isset($data['cHandle']) && ($this->getCollectionHandle() != '')) {
             $cHandle = $this->getCollectionHandle();

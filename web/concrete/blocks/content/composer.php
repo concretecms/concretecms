@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-$class = 'ccm-content-editor';
+$class = 'ccm-block-content-editor-composer';
 $form = Loader::helper('form');
 ?>
 
@@ -9,8 +9,7 @@ $form = Loader::helper('form');
 	<div class="controls">
 		<?
 		print $form->textarea($this->field('content'), $controller->getContentEditMode(), array(
-			'class' => $class,
-			'style' => 'width: 580px; height: 380px'
+			'class' => $class
 		));
 		?>
 	</div>
@@ -21,7 +20,8 @@ var CCM_EDITOR_SECURITY_TOKEN = "<?=Loader::helper('validation/token')->generate
 
 $(function() {
 	$('.<?=$class?>').redactor({
-		'plugins': ['concrete5']
+		'plugins': ['concrete5'],
+        'minHeight': 380
 	});
 });
 </script>

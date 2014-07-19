@@ -1,4 +1,6 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
+use Concrete\Core\Attribute\Key\Key as AttributeKey;
 $form = Loader::helper('form');
 $txt = Loader::helper('text');?>
 <?php if (in_array($this->controller->getTask(), array('update_set', 'update_set_attributes', 'edit', 'delete_set'))) { 

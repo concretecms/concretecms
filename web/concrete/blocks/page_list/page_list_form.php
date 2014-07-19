@@ -27,13 +27,13 @@ $form = Loader::helper('form/page_selector');
 
             if (is_array($ctArray)) {
                 ?>
-                <select class="form-control" name="ctID" id="selectCTID">
+                <select class="form-control" name="ptID" id="selectPTID">
                     <option value="0">** <?php echo t('All') ?> **</option>
                     <?php
                     foreach ($ctArray as $ct) {
                         ?>
                         <option
-                            value="<?= $ct->getPageTypeID() ?>" <? if ($ctID == $ct->getPageTypeID()) { ?> selected <? } ?>>
+                            value="<?= $ct->getPageTypeID() ?>" <? if ($ptID == $ct->getPageTypeID()) { ?> selected <? } ?>>
                             <?= $ct->getPageTypeName() ?>
                         </option>
                     <?php
