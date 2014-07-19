@@ -285,13 +285,13 @@ class Controller extends BlockController
 
         // Build human-readable option list
         $i = 1;
-        $chart_options = '<table class="zebra-striped"><tbody>';
+        $chart_options = '<table class="table"><tbody>';
         foreach ($options as $option) {
             $chart_options .= '<tr>';
             $chart_options .= '<td>';
-            $chart_options .= '<strong>' . $options[$i - 1]['name'] . '</strong>';
+            $chart_options .= '<strong>' . trim($options[$i - 1]['name']) . '</strong>';
             $chart_options .= '</td>';
-            $chart_options .= '<td width="60" style="text-align:right;">';
+            $chart_options .= '<td style="text-align:right; white-space: nowrap">';
             $chart_options .= ($option['amount'] > 0) ? round($option['amount'] / $total_results * 100) : 0;
             $chart_options .= '%';
             $chart_options .= '<div class="surveySwatch" style="border-radius: 3px; margin-left: 6px; width:18px; height:18px; float:right; background:#' . $graphColors[$i - 1] . '"></div>';
