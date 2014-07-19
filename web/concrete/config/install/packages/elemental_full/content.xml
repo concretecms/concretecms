@@ -68,136 +68,139 @@
                 <pagetemplate handle="left_sidebar"/>
             </pagetemplates>
             <target handle="parent_page" package="" path="/about/careers"/>
-            <formlayout>
-                <set name="Basics">
-                    <control custom-template="" required="1" custom-label="Job Name" type="core_page_property"
-                             handle="name"/>
-                    <control custom-template="" custom-label="Posting Date" type="core_page_property"
-                             handle="date_time"/>
-                </set>
-                <set name="About This Job">
-                    <control custom-template="" custom-label="" type="collection_attribute" handle="job_location"/>
-                    <control custom-template="" custom-label="" type="collection_attribute"
-                             handle="job_posting_department"/>
-                    <control custom-template="" custom-label="Brief Description" type="core_page_property"
-                             handle="description"/>
-                    <control custom-template="" custom-label="Job Details" output-control-id="q9qJOy47" type="block"
-                             handle="content"/>
-                </set>
-            </formlayout>
-            <output>
-                <pagetemplate handle="left_sidebar">
-                    <page name="" path="" filename="" pagetype="" template="left_sidebar" user="admin" description=""
-                          package="">
-                        <area name="Page Header">
-                            <blocks>
-                                <block type="page_title" name="" mc-block-id="LMG7zpe2">
-                                    <data table="btPageTitle">
-                                        <record>
-                                            <useCustomTitle><![CDATA[0]]></useCustomTitle>
-                                            <titleText><![CDATA[[Page Title]]]></titleText>
-                                        </record>
-                                    </data>
-                                </block>
-                            </blocks>
-                        </area>
-                        <area name="Sidebar">
-                            <blocks>
-                                <block type="content" name="" mc-block-id="ifDQ2iqj">
-                                    <data table="btContentLocal">
-                                        <record>
-                                            <content><![CDATA[<h4>Open Positions</h4>]]></content>
-                                        </record>
-                                    </data>
-                                </block>
-                                <block type="page_list" name="" mc-block-id="59ioFW3w">
-                                    <data table="btPageList">
-                                        <record>
-                                            <num><![CDATA[0]]></num>
-                                            <orderBy><![CDATA[chrono_desc]]></orderBy>
-                                            <cParentID>{ccm:export:page:/about/careers}</cParentID>
-                                            <cThis><![CDATA[0]]></cThis>
-                                            <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
-                                            <paginate><![CDATA[0]]></paginate>
-                                            <displayAliases><![CDATA[0]]></displayAliases>
-                                            <ptID/>
-                                            <rss><![CDATA[0]]></rss>
-                                            <rssTitle><![CDATA[]]></rssTitle>
-                                            <rssDescription><![CDATA[]]></rssDescription>
-                                            <truncateSummaries><![CDATA[0]]></truncateSummaries>
-                                            <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
-                                            <truncateChars><![CDATA[0]]></truncateChars>
-                                        </record>
-                                    </data>
-                                </block>
-                            </blocks>
-                        </area>
-                        <area name="Main">
-                            <blocks>
-                                <block type="content" name="" mc-block-id="I2LUwXnb">
-                                    <data table="btContentLocal">
-                                        <record>
-                                            <content>
-                                                <![CDATA[<p><a href="{ccm:export:page:/about/careers}" style="background-color: rgb(255, 255, 255);"><i class="fa fa-arrow-left"></i> Back to Careers</a></p>]]></content>
-                                        </record>
-                                    </data>
-                                </block>
-                                <block type="content" name="" mc-block-id="4wQcBAs8">
-                                    <data table="btContentLocal">
-                                        <record>
-                                            <content><![CDATA[<h3>Department</h3>]]></content>
-                                        </record>
-                                    </data>
-                                </block>
-                                <block type="page_attribute_display" name="" mc-block-id="v7yUoCNE">
-                                    <data table="btPageAttributeDisplay">
-                                        <record>
-                                            <attributeHandle><![CDATA[job_posting_department]]></attributeHandle>
-                                            <attributeTitleText><![CDATA[]]></attributeTitleText>
-                                            <displayTag><![CDATA[p]]></displayTag>
-                                            <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
-                                            <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
-                                            <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
-                                        </record>
-                                    </data>
-                                </block>
-                                <block type="content" name="" mc-block-id="4LBsDWGJ">
-                                    <data table="btContentLocal">
-                                        <record>
-                                            <content><![CDATA[<h3>Location</h3>]]></content>
-                                        </record>
-                                    </data>
-                                </block>
-                                <block type="page_attribute_display" name="" mc-block-id="gjVgT87z">
-                                    <data table="btPageAttributeDisplay">
-                                        <record>
-                                            <attributeHandle><![CDATA[job_location]]></attributeHandle>
-                                            <attributeTitleText><![CDATA[]]></attributeTitleText>
-                                            <displayTag><![CDATA[p]]></displayTag>
-                                            <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
-                                            <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
-                                            <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
-                                        </record>
-                                    </data>
-                                </block>
-                                <block type="content" name="" mc-block-id="fmva8kF1">
-                                    <data table="btContentLocal">
-                                        <record>
-                                            <content><![CDATA[<h3>Job Information</h3>]]></content>
-                                        </record>
-                                    </data>
-                                </block>
-                                <block type="core_page_type_composer_control_output" name="" mc-block-id="e2xhBvJW">
-                                    <control output-control-id="q9qJOy47"/>
-                                </block>
-                            </blocks>
-                        </area>
-                        <area name="Page Footer">
-                            <blocks/>
-                        </area>
-                    </page>
-                </pagetemplate>
-            </output>
+            <composer>
+                <formlayout>
+                    <set name="Basics">
+                        <control custom-template="" required="1" custom-label="Job Name" type="core_page_property"
+                                 handle="name"/>
+                        <control custom-template="" custom-label="Posting Date" type="core_page_property"
+                                 handle="date_time"/>
+                    </set>
+                    <set name="About This Job">
+                        <control custom-template="" custom-label="" type="collection_attribute" handle="job_location"/>
+                        <control custom-template="" custom-label="" type="collection_attribute"
+                                 handle="job_posting_department"/>
+                        <control custom-template="" custom-label="Brief Description" type="core_page_property"
+                                 handle="description"/>
+                        <control custom-template="" custom-label="Job Details" output-control-id="q9qJOy47" type="block"
+                                 handle="content"/>
+                    </set>
+                </formlayout>
+                <output>
+                    <pagetemplate handle="left_sidebar">
+                        <page name="" path="" filename="" pagetype="" template="left_sidebar" user="admin"
+                              description=""
+                              package="">
+                            <area name="Page Header">
+                                <blocks>
+                                    <block type="page_title" name="" mc-block-id="LMG7zpe2">
+                                        <data table="btPageTitle">
+                                            <record>
+                                                <useCustomTitle><![CDATA[0]]></useCustomTitle>
+                                                <titleText><![CDATA[[Page Title]]]></titleText>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </blocks>
+                            </area>
+                            <area name="Sidebar">
+                                <blocks>
+                                    <block type="content" name="" mc-block-id="ifDQ2iqj">
+                                        <data table="btContentLocal">
+                                            <record>
+                                                <content><![CDATA[<h4>Open Positions</h4>]]></content>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="page_list" name="" mc-block-id="59ioFW3w">
+                                        <data table="btPageList">
+                                            <record>
+                                                <num><![CDATA[0]]></num>
+                                                <orderBy><![CDATA[chrono_desc]]></orderBy>
+                                                <cParentID>{ccm:export:page:/about/careers}</cParentID>
+                                                <cThis><![CDATA[0]]></cThis>
+                                                <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
+                                                <paginate><![CDATA[0]]></paginate>
+                                                <displayAliases><![CDATA[0]]></displayAliases>
+                                                <ptID/>
+                                                <rss><![CDATA[0]]></rss>
+                                                <rssTitle><![CDATA[]]></rssTitle>
+                                                <rssDescription><![CDATA[]]></rssDescription>
+                                                <truncateSummaries><![CDATA[0]]></truncateSummaries>
+                                                <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
+                                                <truncateChars><![CDATA[0]]></truncateChars>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </blocks>
+                            </area>
+                            <area name="Main">
+                                <blocks>
+                                    <block type="content" name="" mc-block-id="I2LUwXnb">
+                                        <data table="btContentLocal">
+                                            <record>
+                                                <content>
+                                                    <![CDATA[<p><a href="{ccm:export:page:/about/careers}" style="background-color: rgb(255, 255, 255);"><i class="fa fa-arrow-left"></i> Back to Careers</a></p>]]></content>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="content" name="" mc-block-id="4wQcBAs8">
+                                        <data table="btContentLocal">
+                                            <record>
+                                                <content><![CDATA[<h3>Department</h3>]]></content>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="page_attribute_display" name="" mc-block-id="v7yUoCNE">
+                                        <data table="btPageAttributeDisplay">
+                                            <record>
+                                                <attributeHandle><![CDATA[job_posting_department]]></attributeHandle>
+                                                <attributeTitleText><![CDATA[]]></attributeTitleText>
+                                                <displayTag><![CDATA[p]]></displayTag>
+                                                <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
+                                                <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
+                                                <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="content" name="" mc-block-id="4LBsDWGJ">
+                                        <data table="btContentLocal">
+                                            <record>
+                                                <content><![CDATA[<h3>Location</h3>]]></content>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="page_attribute_display" name="" mc-block-id="gjVgT87z">
+                                        <data table="btPageAttributeDisplay">
+                                            <record>
+                                                <attributeHandle><![CDATA[job_location]]></attributeHandle>
+                                                <attributeTitleText><![CDATA[]]></attributeTitleText>
+                                                <displayTag><![CDATA[p]]></displayTag>
+                                                <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
+                                                <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
+                                                <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="content" name="" mc-block-id="fmva8kF1">
+                                        <data table="btContentLocal">
+                                            <record>
+                                                <content><![CDATA[<h3>Job Information</h3>]]></content>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="core_page_type_composer_control_output" name="" mc-block-id="e2xhBvJW">
+                                        <control output-control-id="q9qJOy47"/>
+                                    </block>
+                                </blocks>
+                            </area>
+                            <area name="Page Footer">
+                                <blocks/>
+                            </area>
+                        </page>
+                    </pagetemplate>
+                </output>
+            </composer>
         </pagetype>
     </pagetypes>
     <stacks>
@@ -948,7 +951,8 @@
                 </blocks>
             </area>
         </page>
-        <page name="Web Developer" path="/about/careers/web-developer" filename="" pagetype="job_posting" template="left_sidebar" user="admin" description="" package="">
+        <page name="Web Developer" path="/about/careers/web-developer" filename="" pagetype="job_posting"
+              template="left_sidebar" user="admin" description="" package="">
             <attributes>
                 <attributekey handle="meta_title">
                     <value><![CDATA[]]></value>
@@ -971,7 +975,8 @@
                     </value>
                 </attributekey>
                 <attributekey handle="job_location">
-                    <value><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla massa lacus, vehicula eu interdum convallis, laoreet id lectus. Nunc turpis elit, aliquam sit amet aliquam tincidunt, dapibus vel tellus. ]]></value>
+                    <value>
+                        <![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla massa lacus, vehicula eu interdum convallis, laoreet id lectus. Nunc turpis elit, aliquam sit amet aliquam tincidunt, dapibus vel tellus. ]]></value>
                 </attributekey>
             </attributes>
             <area name="Main">
@@ -985,7 +990,8 @@
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<p>Quisque accumsan leo sit amet neque pretium consectetur. Sed blandit nulla at justo volutpat rhoncus. Sed risus orci, luctus sit amet fringilla faucibus, congue nec dui. Phasellus mattis lobortis magna sed dapibus. Donec sagittis nunc sed accumsan eleifend. Ut porttitor sapien eu nisl volutpat, vitae interdum est mollis. Sed laoreet sit amet elit in eleifend. Sed a tincidunt velit, nec posuere urna. In eget metus non est varius viverra. Quisque accumsan odio sem, in consequat nunc lobortis ac.</p><p>Cras dignissim nulla ut euismod adipiscing. Mauris non eros sem. Cras at lacinia nulla. Maecenas nec magna arcu. Aenean iaculis, augue sed pretium semper, odio tellus volutpat risus, quis consectetur nibh mauris ut odio. Integer convallis, augue a accumsan condimentum, sem nisl congue lorem, consectetur lacinia neque tortor eu neque. Aenean convallis arcu vitae enim dignissim vestibulum. Phasellus tincidunt dolor id enim gravida ullamcorper. Nullam ut lorem auctor, congue quam non, auctor arcu. Morbi ac aliquam ipsum, at aliquet ligula.</p><p>Cras adipiscing tellus non nulla suscipit congue. Pellentesque id neque euismod, elementum augue vel, volutpat turpis. Pellentesque sit amet tortor non lorem hendrerit pellentesque ac in nisi. Sed aliquet tincidunt arcu, eu lacinia lorem fringilla id. Integer ut ornare orci. Donec scelerisque vulputate est a condimentum. Morbi tellus sapien, vehicula vel ipsum non, luctus ullamcorper mi. Phasellus felis tortor, egestas quis felis sit amet, malesuada auctor nibh. Sed mollis mi sit amet tristique scelerisque. Cras elementum mauris urna, ullamcorper consectetur orci vehicula ut.</p>]]></content>
+                                <content>
+                                    <![CDATA[<p>Quisque accumsan leo sit amet neque pretium consectetur. Sed blandit nulla at justo volutpat rhoncus. Sed risus orci, luctus sit amet fringilla faucibus, congue nec dui. Phasellus mattis lobortis magna sed dapibus. Donec sagittis nunc sed accumsan eleifend. Ut porttitor sapien eu nisl volutpat, vitae interdum est mollis. Sed laoreet sit amet elit in eleifend. Sed a tincidunt velit, nec posuere urna. In eget metus non est varius viverra. Quisque accumsan odio sem, in consequat nunc lobortis ac.</p><p>Cras dignissim nulla ut euismod adipiscing. Mauris non eros sem. Cras at lacinia nulla. Maecenas nec magna arcu. Aenean iaculis, augue sed pretium semper, odio tellus volutpat risus, quis consectetur nibh mauris ut odio. Integer convallis, augue a accumsan condimentum, sem nisl congue lorem, consectetur lacinia neque tortor eu neque. Aenean convallis arcu vitae enim dignissim vestibulum. Phasellus tincidunt dolor id enim gravida ullamcorper. Nullam ut lorem auctor, congue quam non, auctor arcu. Morbi ac aliquam ipsum, at aliquet ligula.</p><p>Cras adipiscing tellus non nulla suscipit congue. Pellentesque id neque euismod, elementum augue vel, volutpat turpis. Pellentesque sit amet tortor non lorem hendrerit pellentesque ac in nisi. Sed aliquet tincidunt arcu, eu lacinia lorem fringilla id. Integer ut ornare orci. Donec scelerisque vulputate est a condimentum. Morbi tellus sapien, vehicula vel ipsum non, luctus ullamcorper mi. Phasellus felis tortor, egestas quis felis sit amet, malesuada auctor nibh. Sed mollis mi sit amet tristique scelerisque. Cras elementum mauris urna, ullamcorper consectetur orci vehicula ut.</p>]]></content>
                             </record>
                         </data>
                     </block>
