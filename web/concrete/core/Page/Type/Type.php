@@ -368,7 +368,9 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 			$target = $sc->getPageTypePublishTargetObject();
 			$target->export($pagetype);
 
-			$fsn = $pagetype->addChild('formlayout');
+            $fsn = $pagetype->addChild('composer');
+			$fsn = $fsn->addChild('formlayout');
+
 			$fieldsets = PageTypeComposerFormLayoutSet::getList($sc);
 			foreach($fieldsets as $fs) {
 				$fs->export($fsn);
