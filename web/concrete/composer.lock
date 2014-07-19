@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ec8eb5b395fdc71d6690c8f7cff1679d",
+    "hash": "1cacfcd0cfe62318fabaaa805314c7fd",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -230,7 +230,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/",
                     "role": "Creator"
@@ -297,7 +297,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan Wage",
+                    "name": "Jonathan H. Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/",
                     "role": "Creator"
@@ -318,7 +318,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -715,16 +715,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "ae05259236204ccf904a94e5b0d96df8d4351da5"
+                "reference": "9f451fbc7b8cad5e71300672c340c28c6bec09ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/ae05259236204ccf904a94e5b0d96df8d4351da5",
-                "reference": "ae05259236204ccf904a94e5b0d96df8d4351da5",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/9f451fbc7b8cad5e71300672c340c28c6bec09ff",
+                "reference": "9f451fbc7b8cad5e71300672c340c28c6bec09ff",
                 "shasum": ""
             },
             "require": {
@@ -769,7 +769,7 @@
                 "whoops",
                 "zf2"
             ],
-            "time": "2014-05-13 05:05:11"
+            "time": "2014-07-11 05:56:54"
         },
         {
             "name": "guzzle/guzzle",
@@ -869,12 +869,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hautelook/phpass.git",
-                "reference": "94845c6e7eecdc025e8b33dd272d03db06c87f2a"
+                "reference": "ba0ffbbd083aa54944ce9cd73473da314bc00127"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hautelook/phpass/zipball/94845c6e7eecdc025e8b33dd272d03db06c87f2a",
-                "reference": "94845c6e7eecdc025e8b33dd272d03db06c87f2a",
+                "url": "https://api.github.com/repos/hautelook/phpass/zipball/ba0ffbbd083aa54944ce9cd73473da314bc00127",
+                "reference": "ba0ffbbd083aa54944ce9cd73473da314bc00127",
                 "shasum": ""
             },
             "require": {
@@ -905,7 +905,7 @@
                 "password",
                 "security"
             ],
-            "time": "2013-05-01 13:59:26"
+            "time": "2014-07-14 23:42:18"
         },
         {
             "name": "htmlawed/htmlawed",
@@ -1242,12 +1242,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/serbanghita/Mobile-Detect.git",
-                "reference": "3e61d64863885bd172b0f4ad74f73db57a4bef4c"
+                "reference": "3548c51559873ad59f26d85b8248dffdda7fd679"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/3e61d64863885bd172b0f4ad74f73db57a4bef4c",
-                "reference": "3e61d64863885bd172b0f4ad74f73db57a4bef4c",
+                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/3548c51559873ad59f26d85b8248dffdda7fd679",
+                "reference": "3548c51559873ad59f26d85b8248dffdda7fd679",
                 "shasum": ""
             },
             "require": {
@@ -1286,7 +1286,7 @@
                 "mobile detector",
                 "php mobile detect"
             ],
-            "time": "2014-06-16 19:29:31"
+            "time": "2014-07-10 20:53:40"
         },
         {
             "name": "monolog/monolog",
@@ -1724,12 +1724,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ClassLoader.git",
-                "reference": "6043dcaa25d70f3b2243cfd6a3f6d6bd42f3f3b9"
+                "reference": "25b74b67d455268415d7d34b41f8b7df4cb33ba4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ClassLoader/zipball/6043dcaa25d70f3b2243cfd6a3f6d6bd42f3f3b9",
-                "reference": "6043dcaa25d70f3b2243cfd6a3f6d6bd42f3f3b9",
+                "url": "https://api.github.com/repos/symfony/ClassLoader/zipball/25b74b67d455268415d7d34b41f8b7df4cb33ba4",
+                "reference": "25b74b67d455268415d7d34b41f8b7df4cb33ba4",
                 "shasum": ""
             },
             "require": {
@@ -1767,21 +1767,21 @@
             ],
             "description": "Symfony ClassLoader Component",
             "homepage": "http://symfony.com",
-            "time": "2014-07-08 12:21:33"
+            "time": "2014-07-09 09:05:48"
         },
         {
             "name": "symfony/console",
-            "version": "v2.5.1",
+            "version": "v2.5.2",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "2e3df33dd72a9cdef7e9745d930e29ff844fe055"
+                "reference": "386fa63407805959bd2c5fe540294721ad4224c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/2e3df33dd72a9cdef7e9745d930e29ff844fe055",
-                "reference": "2e3df33dd72a9cdef7e9745d930e29ff844fe055",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/386fa63407805959bd2c5fe540294721ad4224c8",
+                "reference": "386fa63407805959bd2c5fe540294721ad4224c8",
                 "shasum": ""
             },
             "require": {
@@ -1824,7 +1824,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2014-07-08 12:21:33"
+            "time": "2014-07-15 14:15:12"
         },
         {
             "name": "symfony/event-dispatcher",
