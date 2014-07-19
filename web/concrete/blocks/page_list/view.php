@@ -6,11 +6,12 @@ $th = Loader::helper('text');
 //Note that $nh (navigation helper) is already loaded for us by the controller (for legacy reasons)
 ?>
 
-<div class="ccm-page-list">
+<div class="<?=$containerClass?>">
 
 	<?php foreach ($pages as $page):
 
 		// Prepare data for each page being listed...
+        $buttonClasses = 'btn btn-default';
 		$title = $th->entities($page->getCollectionName());
 		$url = $nh->getLinkToCollection($page);
 		$target = ($page->getCollectionPointerExternalLink() != '' && $page->openCollectionPointerExternalLinkInNewWindow()) ? '_blank' : $page->getAttribute('nav_target');
@@ -52,24 +53,41 @@ $th = Loader::helper('text');
 		/* End data preparation. */
 
 		/* The HTML from here through "endforeach" is repeated for every item in the list... */ ?>
-		<h3 class="ccm-page-list-title">
-			<a href="<?php echo $url ?>" target="<?php echo $target ?>"><?php echo $title ?></a>
+
+        <div class="ccm-block-page-list-page-entry">
+
+		<h3 class="ccm-block-page-list--title">
+            <? if ($useButtonForLink) { ?>
+                <?php echo $title; ?>
+            <? } else { ?>
+    			<a href="<?php echo $url ?>" target="<?php echo $target ?>"><?php echo $title ?></a>
+            <? } ?>
 		</h3>
-		<div class="ccm-page-list-description">
-			<?php echo $description ?>
-		</div>
-		
+        <? if ($includeDescription): ?>
+            <div class="ccm-block-page-list-description">
+                <?php echo $description ?>
+            </div>
+        <? endif; ?>
+
+        <? if ($useButtonForLink): ?>
+        <div class="ccm-block-page-list-button">
+            <a href="<?=$url?>" class="<?=$buttonClasses?>"><?=$buttonLinkText?></a>
+        </div>
+        <? endif; ?>
+
+        </div>
+
 	<?php endforeach; ?>
  
 
 	<?php if ($showRss): ?>
-		<div class="ccm-page-list-rss-icon">
+		<div class="ccm-block-page-list-rss-icon">
 			<a href="<?php echo $rssUrl ?>" target="_blank"><img src="<?php echo $rssIconSrc ?>" width="14" height="14" alt="<?php echo t('RSS Icon') ?>" title="<?php echo t('RSS Feed') ?>" /></a>
 		</div>
 		<link href="<?php echo BASE_URL.$rssUrl ?>" rel="alternate" type="application/rss+xml" title="<?php echo $rssTitle; ?>" />
 	<?php endif; ?>
  
-</div><!-- end .ccm-page-list -->
+</div><!-- end .ccm-block-page-list -->
 
 
 <?php if ($showPagination): ?>
