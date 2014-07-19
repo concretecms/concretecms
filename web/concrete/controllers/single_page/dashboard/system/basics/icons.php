@@ -9,6 +9,8 @@ use FileVersion;
 
 class Icons extends DashboardPageController {
 
+    public $helpers = array('form', 'concrete/asset_library');
+
 	public function view() {
 		$this->set('site', SITE);
 	}
