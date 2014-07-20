@@ -384,6 +384,7 @@ im.setCursor = function(cursor) {
 };
 im.save = function saveImage() {
     im.fire('ChangeActiveAction');
+    im.fire('ImageEditorWillSave');
 
     im.stage.toDataURL({
         callback: function (data) {
@@ -431,6 +432,7 @@ im.save = function saveImage() {
                         if (result.error === 1) {
                             alert(result.message);
                         } else if (result.error === 0) {
+                            im.fire('ImageEditorDidSave');
                             window.location = window.location;
                             window.location.reload();
                         }

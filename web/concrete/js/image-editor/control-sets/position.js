@@ -174,6 +174,10 @@ scale.slider({
 function Crop() {
     var crop = this;
 
+    im.bind('ImageEditorWillSave', function() {
+       crop.layer.hide();
+    });
+
     this.active = true;
     crop_area.slideDown();
     this.layer = new Kinetic.Layer({
