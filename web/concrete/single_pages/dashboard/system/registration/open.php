@@ -9,7 +9,7 @@
 $h = Loader::helper('concrete/ui');
 ?>
 <form class="form-stacked" method="post" id="registration-type-form"
-      action="<?php echo $view->url('/dashboard/system/registration/public', 'update_registration_type') ?>">
+      action="<?php echo $view->action('update_registration_type') ?>">
 
     <div class="row">
 
