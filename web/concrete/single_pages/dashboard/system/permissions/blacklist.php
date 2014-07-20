@@ -3,38 +3,37 @@
 $h = Loader::helper('concrete/dashboard');?>
 <form method="post" id="ipblacklist-form" action="<?php echo $view->action('update_ipblacklist')?>">
 	<?php echo $this->controller->token->output('update_ipblacklist')?>
-	<?=$h->getDashboardPaneHeaderWrapper(t('IP Address Blacklist'), false, 'span10 offset1', false);?>
 	<div class="ccm-pane-body">
 			
-			<h3><?php echo t('Smart IP Banning')?></h3>
-			<div class="ccm-inline-form-and-text">
+			<legend><?php echo t('Smart IP Banning')?></legend>
+			<div class="form-group form-inline">
 				<?php echo $form->checkbox('ip_ban_lock_ip_enable', 1, $ip_ban_enable_lock_ip_after)?> <?php echo t('Lock IP after')?>
 				
-				<?php echo $form->text('ip_ban_lock_ip_attempts', $ip_ban_lock_ip_after_attempts, array('style'=>'width:30px'))?>
+				<?php echo $form->text('ip_ban_lock_ip_attempts', $ip_ban_lock_ip_after_attempts, array('style'=>'width:60px'))?>
 				<?php echo t('failed login attempts');?>		
 				<?php echo t('in');?>		
-				<?php echo $form->text('ip_ban_lock_ip_time', $ip_ban_lock_ip_after_time, array('style'=>'width:30px'))?>				
+				<?php echo $form->text('ip_ban_lock_ip_time', $ip_ban_lock_ip_after_time, array('style'=>'width:60px'))?>
 				<?php echo t('seconds');?>				
 			</div>	
-			<div class="ccm-inline-form-and-text">
+			<div class="form-inline form-group">
 				<?php echo $form->radio('ip_ban_lock_ip_how_long_type', $ip_ban_lock_ip_how_long_type_timed, $ip_ban_lock_ip_how_long_type)?> <?php echo t('Ban IP For')?>	
-				<?php echo $form->text('ip_ban_lock_ip_how_long_min', $ip_ban_lock_ip_how_long_min, array('style'=>'width:30px'))?>				
+				<?php echo $form->text('ip_ban_lock_ip_how_long_min', $ip_ban_lock_ip_how_long_min, array('style'=>'width:60px'))?>
 				<?php echo t('minutes');?>
 				<?php echo $form->radio('ip_ban_lock_ip_how_long_type', $ip_ban_lock_ip_how_long_type_forever, $ip_ban_lock_ip_how_long_type)?> <?php echo t('Forever')?>					
 			</div>
 			<h4><?php echo t('Automatically Banned IP Addresses')?></h4>
-			<table id="ip-blacklist" class="ccm-results-list table table-condensed" width="100%" cellspacing="1" cellpadding="0" border="0">	
+			<table id="ip-blacklist" class="ccm-results-list table table-condensed table-striped" width="100%" cellspacing="1" cellpadding="0" border="0">
 				<thead>
 				<tr>
 					<th><?php echo $form->checkbox('ip_ban_select_all',1,false)?> <?php echo t('IP')?></th>
 					<th><?php echo t('Reason For Ban')?></th>
 					<th><?php echo t('Expires In')?></th>
 					<th> 
-						<select name="ip_ban_change_to" id="ip_ban_change_to">				
+						<select name="ip_ban_change_to" id="ip_ban_change_to" class="form-control" style="display: inline-block; width: 50%;">
 							<option value="<?php echo $ip_ban_change_makeperm?>"><?php echo t('Make Ban Permanent')?></option>
 							<option value="<?php echo $ip_ban_change_remove?>"><?php echo t('Remove Ban')?></option>
 						</select>
-						<input type="button" value="<?php echo t('Go')?>" name="submit-ipblacklist" id="submit-ipblacklist" class="btn" />
+						<input type="button" value="<?php echo t('Go')?>" name="submit-ipblacklist" id="submit-ipblacklist" class="btn btn-default" />
 					</th>
 				</tr>
 				</thead>
@@ -55,20 +54,20 @@ $h = Loader::helper('concrete/dashboard');?>
 				<?php  } ?>
 				</tbody>
 			</table>	
-			<h3><?php echo t('Permanent IP Ban')?></h3>
+			<legend><?php echo t('Permanent IP Ban')?></legend>
 			<p class="notes">
 			<?php echo t('Enter IP addresses, one per line, in the form below to manually ban an IP address. To indicate a range, use a wildcard character (e.g. 192.168.15.* will block 192.168.15.1, 192.168.15.2, etc...)')?>			
 			</p>					
 			<textarea id="ip_ban_manual" name="ip_ban_manual" rows="10" style="width: 350px; margin-bottom: 10px;"><?php echo $user_banned_manual_ips?></textarea>
 	</div>
-	<div class="ccm-pane-footer">
+    <div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
 
 		<?php 	
-		print $interface->button_js(t('Save'), 'saveIpBlacklist()', 'right', 'primary');
+		print $interface->button_js(t('Save'), 'saveIpBlacklist()', 'right', 'btn-primary');
 		?>
-	
+	    </div>
 	</div>
-	<?php print $h->getDashboardPaneFooterWrapper(false); ?>
 </form>
 
 <script type="text/javascript">
