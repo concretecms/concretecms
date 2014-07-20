@@ -1,10 +1,9 @@
-<?
+<?php
 defined('C5_EXECUTE') or die('Access Denied.');
 
-use Concrete\Core\Foundation\Environment as Environment;
-use Concrete\Core\Foundation\Object as Object;
+use Concrete\Core\Utility\Service\Text;
 
-/** 
+/**
 * Translate text (simple form).
 * @param string $text The text to be translated.
 * @param mixed ... Unlimited optional number of arguments: if specified they'll be used for printf.
@@ -32,7 +31,7 @@ function t($text) {
 	}
 }
 
-/** 
+/**
 * Translate text (plural form).
 * @param string $singular The singular form.
 * @param string $plural The plural form.
@@ -86,15 +85,29 @@ function tc($context, $text) {
 	return vsprintf($text, $arg);
 }
 
-/** 
+/**
  * Security helper
+ *
+ * @param string $input
+ * @return string mixed
  */
 function h($input) {
-    return Loader::helper('text')->specialchars($input);
+    return id(new Text)->specialchars($input);
 }
 
+/**
+ * Class member access on instantiation.
+ *
+ *     id(new Block)->render();
+ *
+ * @param  mixed $mixed
+ * @return mixed mixed
+ */
+function id($mixed) {
+    return $mixed;
+}
 
-/** 
+/**
  *  Returns a concrete5 namespaced class
  */
 function core_class($class, $prefix = false) {
@@ -115,7 +128,7 @@ function core_class($class, $prefix = false) {
 	return $class;
 }
 
-/** 
+/**
  * Returns $string in CamelCase
  * @param  [string] $string
  * @return [string]
@@ -146,10 +159,11 @@ function camelcase($string, $leaveSlashes = false) {
 }
 
 
-/** 
+/**
  * Returns CamelCase string as camel_case
- * @param  [string] $string
- * @return [string]
+ *
+ * @param  string $string
+ * @return string mixed
  */
 function uncamelcase($string) {
 	$v = preg_split('/([A-Z])/', $string, false, PREG_SPLIT_DELIM_CAPTURE);
@@ -169,6 +183,11 @@ function uncamelcase($string) {
 
 /**
  * Fills an object properties from an array
+ */
+/**
+ * @param $o
+ * @param $array
+ * @return mixed
  */
 function array_to_object($o, $array) {
     foreach ($array as $property => $value) {
