@@ -7,7 +7,7 @@ use Config;
 use Localization;
 class Update {
 
-	public static function getLatestAvailableVersionNumber() {		
+	public static function getLatestAvailableVersionNumber() {
 		$d = Loader::helper('date');
 		// first, we check session
 		$queryWS = false;
@@ -30,7 +30,7 @@ class Update {
 		} else {
 			$queryWS = true;
 		}
-		
+
 		if ($queryWS) {
 			$mi = Marketplace::getInstance();
 			if ($mi->isConnected()) {
@@ -38,7 +38,7 @@ class Update {
 			}
 			$update = static::getLatestAvailableUpdate();
 			$versionNum = $update->version;
-			
+
 			if ($versionNum) {
 				Config::save('APP_VERSION_LATEST', $versionNum);
 			} else {
@@ -46,24 +46,25 @@ class Update {
 				Config::save('APP_VERSION_LATEST', APP_VERSION);
 			}
 		}
-		
+
 		return $versionNum;
 	}
-	
-	public function getApplicationUpdateInformation() {
-		$r = Cache::get('APP_UPDATE_INFO', false);
-		if (!is_object($r)) {
-			$r = static::getLatestAvailableUpdate();
-		}
-		return $r;
-	}
-		
+
+	public function getApplicationUpdateInformation()
+    {
+        $r = Cache::get('APP_UPDATE_INFO', false);
+        if (!is_object($r)) {
+            $r = static::getLatestAvailableUpdate();
+        }
+        return $r;
+    }
+
 	protected static function getLatestAvailableUpdate() {
 		$obj = new \stdClass;
 		$obj->notes = false;
 		$obj->url = false;
 		$obj->date = false;
-		
+
 		if (function_exists('curl_init')) {
 			$curl_handle = @curl_init();
 
@@ -85,7 +86,7 @@ class Update {
 			$loc = Localization::getInstance();
 			@curl_setopt($curl_handle, CURLOPT_POSTFIELDS, 'LOCALE=' . $loc->activeLocale() . '&BASE_URL_FULL=' . BASE_URL . '/' . DIR_REL . '&APP_VERSION=' . APP_VERSION);
 			$resp = @curl_exec($curl_handle);
-			
+
 			$xml = @simplexml_load_string($resp);
 			if ($xml === false) {
 				// invalid. That means it's old and it's just the version
@@ -96,18 +97,18 @@ class Update {
 				$obj->notes = (string) $xml->notes;
 				$obj->url = (string) $xml->url;
 				$obj->date = (string) $xml->date;
-			}		
+			}
 
 			Cache::set('APP_UPDATE_INFO', false, $obj);
 
 		} else {
 			$obj->version = APP_VERSION;
 		}
-		
+
 		return $obj;
 	}
 
-	/** 
+	/**
 	 * Looks in the designated updates location for all directories, ascertains what
 	 * version they represent, and finds all versions greater than the currently installed version of
 	 * concrete5
@@ -124,10 +125,9 @@ class Update {
 						$updates[] = $obj;
 					}
 				}
-			}				
+			}
 		}
 		return $updates;
 	}
-
 
 }
