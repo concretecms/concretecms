@@ -1,6 +1,7 @@
 <?
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Backup;
+use Concrete\Controller\Frontend\Upgrade;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
@@ -9,7 +10,7 @@ use Exception;
 use \Concrete\Core\Updater\ApplicationUpdate;
 
 class UpdateArchive extends Archive {
-	
+
 	public function __construct() {
 		parent::__construct();
 		$this->targetDirectory = DIR_CORE_UPDATES;
@@ -18,7 +19,7 @@ class UpdateArchive extends Archive {
 	public function install($file) {
 		parent::install($file, true);
 	}
-	
+
 }
 
 if (!ini_get('safe_mode')) {
@@ -26,9 +27,9 @@ if (!ini_get('safe_mode')) {
 	ini_set('max_execution_time', 0);
 }
 
-class Update extends DashboardPageController { 	 
-	
-	function view() {  
+class Update extends DashboardPageController {
+
+	function view() {
 		$upd = new \Concrete\Core\Updater\Update();
 		$updates = $upd->getLocalAvailableUpdates();
 		$remote = $upd->getApplicationUpdateInformation();
@@ -44,30 +45,30 @@ class Update extends DashboardPageController {
 					break;
 				}
 			}
-			
+
 			$this->set('downloadableUpgradeAvailable', $downloadableUpgradeAvailable);
 			$this->set('update', $remote);
 		} else {
 			$this->set('downloadableUpgradeAvailable', false);
 		}
 	}
-	
+
 	public function check_for_updates() {
 		Config::clear('APP_VERSION_LATEST', false);
 		\Concrete\Core\Updater\Update::getLatestAvailableVersionNumber();
 		$this->redirect('/dashboard/system/backup/update');
 	}
-	
+
 	public function on_start() {
 		$this->error = Loader::helper('validation/error');
-		$cnt = Loader::controller('/upgrade');
-		$cnt->secCheck();
+        
+        id(new Upgrade())->secCheck();
 	}
 
 	public function on_before_render() {
 		$this->set('error', $this->error);
 	}
-	
+
 	public function download_update() {
 		$vt = Loader::helper('validation/token');
 		if (!$vt->validate('download_update')) {
@@ -78,7 +79,7 @@ class Update extends DashboardPageController {
 		} else if (!is_writable(DIR_CORE_UPDATES)) {
 			$this->error->add(t('The directory %s must be writable by the web server.', DIR_CORE_UPDATES));
 		}
-		
+
 		if (!$this->error->has()) {
 			$remote = \Concrete\Core\Updater\Update::getApplicationUpdateInformation();
 			if (is_object($remote)) {
@@ -89,14 +90,14 @@ class Update extends DashboardPageController {
 				} else if ($r == Package::E_PACKAGE_SAVE) {
 					$response = array($r);
 				}
-				
+
 				if (isset($response)) {
 					$errors = Package::mapError($response);
 					foreach($errors as $e) {
 						$this->error->add($e);
 					}
 				}
-				
+
 				if (!$this->error->has()) {
 					// the file exists in the right spot
 					$ar = new UpdateArchive();
@@ -105,7 +106,7 @@ class Update extends DashboardPageController {
 					} catch(Exception $e) {
 						$this->error->add($e->getMessage());
 					}
-						
+
 				}
 			} else {
 				$this->error->add(t('Unable to retrieve software from update server.'));
@@ -113,7 +114,7 @@ class Update extends DashboardPageController {
 		}
 		$this->view();
 	}
-	
+
 	public function do_update() {
 		$updateVersion = $this->post('updateVersion');
 		if (!$updateVersion) {
@@ -121,7 +122,7 @@ class Update extends DashboardPageController {
 		} else {
 			$upd = ApplicationUpdate::getByVersionNumber($updateVersion);
 		}
-		
+
 		if (!is_object($upd)) {
 			$this->error->add(t('Invalid version'));
 		} else {
@@ -129,7 +130,7 @@ class Update extends DashboardPageController {
 				$this->error->add(t('You may only apply updates with a greater version number than the version you are currently running.'));
 			}
 		}
-		
+
 		if (!$this->error->has()) {
 			$resp = $upd->apply();
 			if ($resp !== true) {
