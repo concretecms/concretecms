@@ -20,9 +20,9 @@ $db = Loader::db();
 ?>
 <script>
     jQuery(function ($) {
-        var deleteResponse = (<?=$json->encode(t('Are you sure you want to delete this form submission?'))?>),
-            deleteForm = (<?=$json->encode(t('Are you sure you want to delete this form and its form submissions?'))?>),
-            deleteFormAnswers = (<?=$json->encode(t('Are you sure you want to delete this form submissions?'))?>);
+        var deleteResponse = '<?= t('Are you sure you want to delete this form submission?') ?>',
+            deleteForm = '<?= t('Are you sure you want to delete this form and its form submissions?') ?>',
+            deleteFormAnswers = '<?= t('Are you sure you want to delete this form submissions?') ?>';
         $('.delete-response').on('click', function (e) {
             if (!confirm(deleteResponse)) {
                 e.preventDefault();
@@ -80,53 +80,57 @@ $db = Loader::db();
     if ($showTable) {
         ?>
 
+
         <table class="table table-striped">
             <thead>
             <tr>
-                <th><?php echo t('Form') ?></th>
-                <th><?php echo t('Submissions') ?></th>
-                <th><?php echo t('Options') ?></th>
+                <th class="col-sm-5"><?= t('Form') ?></th>
+                <th><?= t('Submissions') ?></th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
-            <? foreach ($surveys as $qsid => $survey): {
-                $block = Block::getByID((int)$survey['bID']);
+
+            <?php
+            foreach ($surveys as $id => $survey) {
+                $block = Block::getByID(intval($survey['bID'], 10));
                 if (!is_object($block)) {
                     continue;
                 }
                 $in_use = (int)$db->getOne(
                     'SELECT count(*)
-			FROM CollectionVersionBlocks
-			INNER JOIN Pages
-			ON CollectionVersionBlocks.cID = Pages.cID
-			INNER JOIN CollectionVersions
-			ON CollectionVersions.cID = Pages.cID
-			WHERE CollectionVersions.cvIsApproved = 1
-			AND CollectionVersionBlocks.cvID = CollectionVersions.cvID
-			AND CollectionVersionBlocks.bID = ?',
-                    array($block->bID)
-                );
+                                FROM CollectionVersionBlocks
+                                INNER JOIN Pages
+                                ON CollectionVersionBlocks.cID = Pages.cID
+                                INNER JOIN CollectionVersions
+                                ON CollectionVersions.cID = Pages.cID
+                                WHERE CollectionVersions.cvIsApproved = 1
+                                AND CollectionVersionBlocks.cvID = CollectionVersions.cvID
+                                AND CollectionVersionBlocks.bID = ?',
+                    array($block->bID));
                 $url = $nh->getLinkToCollection($block->getBlockCollectionObject());
                 ?>
                 <tr>
                     <td><?= $text->entities($survey['surveyName']) ?></td>
                     <td><?= $text->entities($survey['answerSetCount']) ?></td>
-                    <td>
-                        <?= $ih->button(
-                            t('View Responses'),
-                            DIR_REL . '/index.php?cID=' . $c->getCollectionID() . '&qsid=' . $qsid,
-                            'left',
-                            'small') ?>
-                        <?= $ih->button(t('Open Page'), $url, 'left', 'small') ?>
+                    <td class="text-right">
                         <form method="post" action="" style="display: inline">
                             <input type="hidden" name="qsID" value="<?= intval($qsid) ?>"/>
                             <input type="hidden" name="action" value="deleteFormAnswers"/>
                             <?php $valt->output('deleteFormAnswers') ?>
-                            <?= $ih->submit(
-                                t('Delete Submissions'),
-                                false,
-                                'left',
-                                'small error delete-form-answers') ?>
+                            <div class="btn-group">
+                                <a href="<?= DIR_REL . '/index.php?cID=' . $c->getCollectionID() . '&qsid=' . $qsid ?>"
+                                   class="btn btn-default">
+                                    <?= t('View Responses') ?>
+                                </a>
+                                <a class="btn btn-default" href="url">
+                                    <?= t('Open Page') ?>
+                                </a>
+                                <button class="btn btn-danger delete-form-answers"
+                                        name='ccm-submit-buton'>
+                                    <?= t('Delete Submissions') ?>
+                                </button>
+                            </div>
                         </form>
                         <? if (!$in_use): { ?>
                             <form method="post" action="" style="display: inline">
@@ -139,10 +143,58 @@ $db = Loader::db();
                         <? }endif ?>
                     </td>
                 </tr>
-            <? }endforeach ?>
+            <?php
+            }
+            ?>
             </tbody>
         </table>
-    <? } else { ?>
+    <?php
+    }
+    /*foreach ($surveys as $qsid => $survey): {
+            $block = Block::getByID((int)$survey['bID']);
+            if (!is_object($block)) {
+                continue;
+            }
+
+            $url = $nh->getLinkToCollection($block->getBlockCollectionObject());
+            ?>
+            <tr>
+                <td><?= $text->entities($survey['surveyName']) ?></td>
+                <td><?= $text->entities($survey['answerSetCount']) ?></td>
+                <td>
+                    <?= $ih->button(
+                        t('View Responses'),
+                        DIR_REL . '/index.php?cID=' . $c->getCollectionID() . '&qsid=' . $qsid,
+                        'left',
+                        'small') ?>
+                    <?= $ih->button(t('Open Page'), $url, 'left', 'small') ?>
+                    <form method="post" action="" style="display: inline">
+                        <input type="hidden" name="qsID" value="<?= intval($qsid) ?>"/>
+                        <input type="hidden" name="action" value="deleteFormAnswers"/>
+                        <?php $valt->output('deleteFormAnswers') ?>
+                        <?= $ih->submit(
+                            t('Delete Submissions'),
+                            false,
+                            'left',
+                            'small error delete-form-answers') ?>
+                    </form>
+                    <? if (!$in_use): { ?>
+                        <form method="post" action="" style="display: inline">
+                            <input type="hidden" name="bID" value="<?= intval($survey['bID']) ?>"/>
+                            <input type="hidden" name="qsID" value="<?= intval($qsid) ?>"/>
+                            <input type="hidden" name="action" value="deleteForm"/>
+                            <?php $valt->output('deleteForm') ?>
+                            <?= $ih->submit(t('Delete'), false, 'left', 'small error delete-form') ?>
+                        </form>
+                    <? }endif ?>
+                </td>
+            </tr>
+        <? }endforeach ?>
+        </tbody>
+        </table>
+    <? } */
+else {
+        ?>
         <p><?= t('There are no available forms in your site.') ?></p>
     <? } ?>
     <?= $h->getDashboardPaneFooterWrapper(); ?>
@@ -157,9 +209,10 @@ $db = Loader::db();
         <div><?= t('No one has yet submitted this form.') ?></div>
     <? } else: { ?>
 
-        <div class="ccm-list-action-row">
-            <a id="ccm-export-results" href="<?= $view->action('excel', '?qsid=' . $questionSet) ?>"><span></span><?= t(
-                    'Export to Excel') ?></a>
+        <div class="ccm-dashboard-header-buttons">
+            <a id="ccm-export-results" class="btn btn-success" href="<?= $view->action('excel', '?qsid=' . $questionSet) ?>">
+                <i class='fa fa-download'></i> <?= t('Export to Excel') ?>
+            </a>
         </div>
 
         <div class="form-results-container">
@@ -188,7 +241,7 @@ $db = Loader::db();
                             <? foreach ($questions as $question): { ?>
                                 <th><?= $question['question'] ?></th>
                             <? }endforeach ?>
-                            <th><?= t('Actions') ?></th>
+                            <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -229,12 +282,12 @@ $db = Loader::db();
 
                         endforeach?>
                         <td>
-                            <form method="post" action="" style="display: inline">
+                            <form method="post" action="" class='pull-right'>
                                 <input type="hidden" name="qsid" value="<?= intval($answerSet['questionSetId']) ?>"/>
                                 <input type="hidden" name="asid" value="<?= intval($answerSet['asID']) ?>"/>
                                 <input type="hidden" name="action" value="deleteResponse"/>
                                 <?php $valt->output('deleteResponse') ?>
-                                <?= $ih->submit(t('Delete'), false, 'left', 'danger delete-response small') ?>
+                                <?= $ih->submit(t('Delete'), false, 'left', 'btn pull-right btn-danger') ?>
                             </form>
                         </td>
                     </tr>
