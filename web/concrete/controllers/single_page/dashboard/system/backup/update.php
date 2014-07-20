@@ -1,5 +1,4 @@
-<?
-
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Backup;
 
 use Concrete\Controller\Frontend\Upgrade;
