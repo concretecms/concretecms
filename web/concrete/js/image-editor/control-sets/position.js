@@ -202,7 +202,7 @@ function Crop() {
     var start_position, start_offset;
     this.cover = new Kinetic.Shape({
         fill: 'black',
-        opacity: .4,
+        opacity: .4,What
         width: im.stage.getWidth() * 2,
         height: im.stage.getHeight() * 2,
         listening: false,
