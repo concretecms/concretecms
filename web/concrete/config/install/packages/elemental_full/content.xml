@@ -248,6 +248,14 @@
                                     <block type="core_page_type_composer_control_output" name="" mc-block-id="e2xhBvJW">
                                         <control output-control-id="q9qJOy47"/>
                                     </block>
+                                    <block type="content" name="" mc-block-id="d8f7ddkN">
+                                        <data table="btContentLocal">
+                                            <record>
+                                                <content>
+                                                    <![CDATA[<br/><br/>]]></content>
+                                            </record>
+                                        </data>
+                                    </block>
                                 </blocks>
                             </area>
                             <area name="Page Footer">
@@ -1058,6 +1066,7 @@
                             </record>
                         </data>
                     </block>
+                    <block mc-block-id="d8f7ddkN" />
                 </blocks>
             </area>
             <area name="Page Header">
@@ -1120,6 +1129,7 @@
                             </record>
                         </data>
                     </block>
+                    <block mc-block-id="d8f7ddkN" />
                 </blocks>
             </area>
             <area name="Page Header">
