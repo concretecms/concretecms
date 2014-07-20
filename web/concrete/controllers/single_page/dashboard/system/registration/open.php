@@ -59,7 +59,7 @@ class Open extends DashboardPageController
             }
             Config::save('REGISTRATION_TYPE', $this->post('registration_type'));
 
-            $this->redirect('/dashboard/system/registration/public', 1);
+            $this->redirect('/dashboard/system/registration/open', 1);
         }
     }
 
