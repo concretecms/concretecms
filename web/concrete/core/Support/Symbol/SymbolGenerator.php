@@ -12,7 +12,7 @@ class SymbolGenerator {
 
     /**
      * The ClassSymbol objects
-     * @var array
+     * @var ClassSymbol[]
      */
     protected $classes = array();
 

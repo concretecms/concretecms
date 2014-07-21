@@ -251,9 +251,9 @@ class Filter
 
         $path = '/' . $directory . '/image-editor/filters/' . $file;
         if (file_exists(DIR_BASE . $path)) {
-            return ($full_path ? DIR_BASE : '') . $path;
+            return ($full_path ? DIR_BASE : DIR_REL) . $path;
         }
-        return ($full_path ? DIR_BASE : '') . '/concrete' . $path;
+        return ($full_path ? DIR_BASE : DIR_REL) . '/concrete' . $path;
     }
 
     /**
