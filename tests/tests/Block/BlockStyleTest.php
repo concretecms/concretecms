@@ -42,7 +42,7 @@ class BlockStyleTest extends PageTestCase {
         $b2->resetCustomStyle();
 
         $css = $style->getCSS();
-        $this->assertEquals('ccm-custom-style-main-1', $style->getContainerClass());
-        $this->assertEquals('.ccm-custom-style-main-1{background-color:#aaa;}', $css);
+        $this->assertEquals('ccm-custom-style-container ccm-custom-style-main-1', $style->getContainerClass());
+        $this->assertEquals('.ccm-custom-style-container.ccm-custom-style-main-1{background-color:#aaa;}', $css);
     }
 }
