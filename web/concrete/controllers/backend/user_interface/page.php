@@ -16,7 +16,6 @@ abstract class Page extends \Concrete\Controller\Backend\UserInterface {
 			$this->setPageObject($page);
 			$request->setCurrentPage($this->page);
 		}
-
 	}
 
 	public function setPageObject(ConcretePage $c) {

@@ -12,7 +12,9 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<div class="dialog-buttons"><input type="button" class="btn btn-default" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" /></div>
 <? } else { ?>
 	<form method="post" data-dialog-form="delete-page" action="<?=$controller->action('submit')?>">
-		<input type="hidden" name="rel" value="<?php echo h($request_rel); ?>" />
+        <? if ($redirect) { ?>
+            <input type="hidden" name="redirect" value="1" />
+        <? } ?>
 
 		<div class="dialog-buttons">
 		<button class="btn btn-default pull-left" data-dialog-action="cancel"><?=t('Cancel')?></button>
@@ -20,7 +22,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		</div>
 
 		<? if($c->isSystemPage()) { ?>
-			<div class="alert alert-error"><?php echo t('Warning! This is a system page. Deleting it could potentially break your site. Please proceed with caution.') ?></div>
+			<div class="alert alert-danger"><?php echo t('Warning! This is a system page. Deleting it could potentially break your site. Please proceed with caution.') ?></div>
 		<? } ?>
 		<p><?=t('Are you sure you wish to delete this page?')?></p>
 		<? if ($u->isSuperUser() && $numChildren > 0) { ?>
