@@ -111,12 +111,16 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<?php if (count($groupSets) > 0) { ?>
 	
 		<div class="ccm-attribute-sortable-set-list">
-		
-			<?php foreach($groupSets as $gs) { ?>
-				<div class="ccm-group" id="asID_<?php echo $gs->getGroupSetID()?>">
-					<a class="ccm-group-inner" href="<?php echo $view->url('/dashboard/users/group_sets', 'edit', $gs->getGroupSetID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo $gs->getGroupSetDisplayName()?></a>
-				</div>
-			<?php } ?>
+
+            <ul class="item-select-list" id="ccm-group-list">
+                <?php foreach($groupSets as $gs) { ?>
+                    <li>
+                        <a href="<?php echo $view->url('/dashboard/users/group_sets', 'edit', $gs->getGroupSetID())?>">
+                            <i class="fa fa-users"></i> <?php echo $gs->getGroupSetDisplayName()?>
+                        </a>
+                    </li>
+                <? } ?>
+            </ul>
 		</div>
 	
 	<?php } else { ?>
