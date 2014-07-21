@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Conversation\Message;
+use File;
 use Loader;
 use Conversation;
 use ConversationEditor;
@@ -169,13 +170,13 @@ class Message extends Object {
 		$cnvRatingTypeID = $db->GetOne('SELECT * FROM ConversationRatingTypes WHERE cnvRatingTypeHandle = ?', array($ratingType->cnvRatingTypeHandle));
 		$db->Execute('INSERT INTO ConversationMessageRatings (cnvMessageID, cnvRatingTypeID, cnvMessageRatingIP, timestamp, uID) VALUES (?, ?, ?, ?, ?)', array($this->getConversationMessageID(), $cnvRatingTypeID, $commentRatingIP, date('Y-m-d H:i:s'), $commentRatingUserID));
 		$ratingType->adjustConversationMessageRatingTotalScore($this);
-	}	
+	}
 	public function getConversationMessageRating(ConversationRatingType $ratingType) {
 		$db = Loader::db();
 		$cnt = $db->GetOne('SELECT count(*) from ConversationMessageRatings where cnvRatingTypeID = ? AND cnvMessageID = ?',  array($ratingType->getConversationRatingTypeID(), $this->cnvMessageID));
 		return $cnt;
 	}
-	
+
 	public function flag($flagtype) {
 		if ($flagtype instanceof ConversationFlagType) {
 			$db = Loader::db();
@@ -212,27 +213,27 @@ class Message extends Object {
 			return $cnv;
 		}
 	}
-	
+
 	public function attachFile(File $f, $cnvMessageID) {
 		$db = Loader::db();
 		if(!is_object($f) || !is_object(static::getByID($cnvMessageID))) {
 			return false;
 		} else {
-			
+
 			$db->Execute('INSERT INTO ConversationMessageAttachments (cnvMessageID, fID) VALUES (?, ?)', array(
 				$cnvMessageID,
 				$f->getFileID()
 			));
 		}
 	}
-	
+
 	public function removeFile($cnvMessageAttachmentID) {
 		$db = Loader::db();
 		$db->Execute('DELETE FROM ConversationMessageAttachments WHERE cnvMessageAttachmentID = ?', array(
 			$cnvMessageAttachmentID
 		));
 	}
-	
+
 	public function getAttachments($cnvMessageID) {
 		$db = Loader::db();
 		$attachments = $db->Execute('SELECT * FROM ConversationMessageAttachments WHERE cnvMessageID = ?', array(
@@ -277,7 +278,7 @@ class Message extends Object {
 
 		$r = $db->Execute('insert into ConversationMessages (cnvMessageSubject, cnvMessageBody, cnvMessageDateCreated, cnvMessageParentID, cnvMessageLevel, cnvID, uID, cnvMessageSubmitIP, cnvMessageSubmitUserAgent) values (?, ?, ?, ?, ?, ?, ?, ?, ?)',
 						  array($cnvMessageSubject, $cnvMessageBody, $date, $cnvMessageParentID, $cnvMessageLevel, $cnvID, $uID, ip2long(Loader::Helper('validation/ip')->getRequestIP()), $_SERVER['HTTP_USER_AGENT']));
-		
+
 		$cnvMessageID = $db->Insert_ID();
 
 		if ($cnv instanceof Conversation) {
