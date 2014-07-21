@@ -66,6 +66,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <p><?php echo t('Total page versions')?>: <strong><?php echo $totalVersions?></strong></p>
 <p><?php echo t('Total pages in edit mode')?>: <strong><?php echo $totalEditMode?></strong></p>
 
+<br/><br/>
+
 <h4><?=t('Five Most Recent Downloads')?></h4>
 
 <table class="table"  id="ccm-site-statistics-downloads">
