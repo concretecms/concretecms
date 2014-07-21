@@ -134,7 +134,7 @@ $seoSet = AttributeSet::getByHandle('seo');
             ?>
             <li>
                 <a class="dialog-launch"
-                   href="<?= URL::to('/ccm/system/dialogs/page/delete_redirect') ?>?cID=<?= $c->getCollectionID() ?>"
+                   href="<?= URL::to('/ccm/system/dialogs/page/delete') ?>?cID=<?= $c->getCollectionID() ?>"
                    dialog-modal="true" dialog-title="<?= t('Delete Page') ?>" dialog-width="400" dialog-height="250">
                     <?= t('Delete Page') ?>
                 </a>

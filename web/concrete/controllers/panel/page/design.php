@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Controller\Panel\Page;
 use \Concrete\Controller\Backend\UserInterface\Page as BackendUIPageController;
+use Concrete\Core\Page\Collection\Version\Version;
 use Permissions;
 use PageTemplate;
 use PageTheme;
@@ -9,6 +10,9 @@ use PageEditResponse;
 use Loader;
 use Response;
 use View;
+use User;
+use Concrete\Core\Workflow\Request\ApprovePageRequest;
+
 class Design extends BackendUIPageController {
 
 	protected $viewPath = '/panels/page/design';
@@ -147,7 +151,21 @@ class Design extends BackendUIPageController {
 
 			$r = new PageEditResponse();
 			$r->setPage($c);
-			$r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
+            if ($this->request->request->get('sitemap')) {
+                $r->setMessage(t('Page template and theme updated successfully.'));
+                if ($this->permissions->canApprovePageVersions() && SITEMAP_APPROVE_IMMEDIATELY) {
+                    $pkr = new ApprovePageRequest();
+                    $u = new User();
+                    $pkr->setRequestedPage($this->page);
+                    $v = Version::get($this->page, "RECENT");
+                    $pkr->setRequestedVersionID($v->getVersionID());
+                    $pkr->setRequesterUserID($u->getUserID());
+                    $response = $pkr->trigger();
+                    $u->unloadCollectionEdit();
+                }
+            } else {
+  				$r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
+            }
 			$r->outputJSON();
 		}
 	}

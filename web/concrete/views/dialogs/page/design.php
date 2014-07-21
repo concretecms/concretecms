@@ -14,6 +14,8 @@ if (is_object($selectedTemplate)) {
 <div class="ccm-ui">
 <form method="post" data-dialog-form="design" action="<?=$controller->action('submit')?>">
 
+    <input type="hidden" name="sitemap" value="1" />
+    
 	<div class="form-group">
 		<?=$form->label('pTemplateID', t('Page Template'))?>
 		<?=$form->select('pTemplateID', $templatesSelect, $selectedTemplateID)?>

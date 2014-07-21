@@ -20,7 +20,7 @@ Route::register('/tools/{tool}', '\Concrete\Core\Legacy\Controller\ToolControlle
  * Dialog
  */
 Route::register('/ccm/system/dialogs/page/delete', '\Concrete\Controller\Dialog\Page\Delete::view');
-Route::register('/ccm/system/dialogs/page/delete_redirect', '\Concrete\Controller\Dialog\Page\Delete::viewSetupRedirect');
+Route::register('/ccm/system/dialogs/page/delete_from_sitemap', '\Concrete\Controller\Dialog\Page\Delete::viewFromSitemap');
 Route::register('/ccm/system/dialogs/page/delete/submit', '\Concrete\Controller\Dialog\Page\Delete::submit');
 Route::register('/ccm/system/dialogs/area/layout/presets/submit/{arLayoutID}', '\Concrete\Controller\Dialog\Area\Layout\Presets::submit');
 Route::register('/ccm/system/dialogs/area/layout/presets/{arLayoutID}/{token}', '\Concrete\Controller\Dialog\Area\Layout\Presets::view');
