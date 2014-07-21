@@ -41,8 +41,8 @@ abstract class Block extends Page
 
     public function getViewObject()
     {
-        if ($this->permissions->canViewEditInterface()) {
-            return parent::getViewObject();
+        if ($this->permissions->canViewEditInterface() && $this->canAccess()) {
+            return \Concrete\Core\Controller\Controller::getViewObject();
         }
         throw new Exception(t('Access Denied'));
     }
