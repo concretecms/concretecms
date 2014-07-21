@@ -38,8 +38,8 @@ $(function() {
 	$("#ccm-user-selector-{$fieldName}").dialog();
 	$("#ccm-user-selector-{$fieldName}").on('click', function() {
 		var selector = $(this);
-		ConcreteEvent.unsubscribe('UserSearchDialogSelectUser');
-		ConcreteEvent.subscribe('UserSearchDialogSelectUser', function(e, data) {
+		ConcreteEvent.unsubscribe('UserSearchDialogSelectUser.core');
+		ConcreteEvent.subscribe('UserSearchDialogSelectUser.core', function(e, data) {
 			var par = selector.parent().find('.ccm-summary-selected-item-label'),
 				pari = selector.parent().find('[name={$fieldName}]');
 			par.html(data.uName);

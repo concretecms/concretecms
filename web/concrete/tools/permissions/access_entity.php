@@ -8,7 +8,7 @@ use \Concrete\Core\Permission\Duration as PermissionDuration;
 $tp = new TaskPermission();
 $tu = Loader::helper('concrete/user');
 $dt = Loader::helper('form/date_time');
-if (!$tu->canAccessUserSearchInterface() && !$tp->canAccessGroupSearch()) { 
+if (!$tu->canAccessUserSearchInterface() && !$tp->canAccessGroupSearch()) {
 	die(t("You do not have user search or group search permissions."));
 }
 $pae = false;
@@ -27,17 +27,17 @@ if (!is_object($pd)) {
 	$pd = false;
 }
 
-if ($_POST['task'] == 'save_permissions') { 
+if ($_POST['task'] == 'save_permissions') {
 	$js = Loader::helper('json');
 	$r = new stdClass;
-	
+
 	if (is_object($pae)) {
 		$pd = PermissionDuration::translateFromRequest();
 	} else {
 		$r->error = true;
 		$r->message = t('You must choose who this permission is for.');
 	}
-	
+
 	if (!$r->error) {
 		$r->peID = $pae->getAccessEntityID();
 		if (is_object($pd)) {
@@ -46,7 +46,7 @@ if ($_POST['task'] == 'save_permissions') {
 			$r->pdID = 0;
 		}
 	}
-	
+
 	print $js->encode($r);
 	exit;
 }
@@ -74,7 +74,7 @@ if ($_POST['task'] == 'save_permissions') {
 	<span class="caret"></span>
 		</a>
 	<ul class="dropdown-menu">
-	<? 
+	<?
 	$category = PermissionKeyCategory::getByHandle($_REQUEST['pkCategoryHandle']);
 	$entitytypes = PermissionAccessEntityType::getList($category);
 	foreach($entitytypes as $type) { ?>
@@ -85,14 +85,14 @@ if ($_POST['task'] == 'save_permissions') {
 <br/><br/>
 
 <? foreach($entitytypes as $type) { ?>
-	
+
 <? if ($type->getPackageID() > 0) { ?>
 	<? Loader::packageElement('permission/access/entity/types/' . $type->getAccessEntityTypeHandle(), $type->getPackageHandle(), array('type' => $type)); ?>
 <? } else { ?>
 	<? Loader::element('permission/access/entity/types/' . $type->getAccessEntityTypeHandle(), array('type' => $type)); ?>
 <? } ?>
 
-	
+
 <? } ?>
 
 <? } ?>
@@ -129,7 +129,7 @@ if ($_POST['task'] == 'save_permissions') {
 			if (r.error) {
 				ConcreteAlert.dialog('<?=t("Error")?>', r.message);
 			} else {
-				if (typeof(ccm_addAccessEntity) == 'function') { 
+				if (typeof(ccm_addAccessEntity) == 'function') {
 					ccm_addAccessEntity(r.peID, r.pdID, '<?=addslashes($_REQUEST["accessType"])?>');
 				} else {
 					alert(r.peID);
@@ -138,7 +138,7 @@ if ($_POST['task'] == 'save_permissions') {
 			}
 		}
 	});
-	
+
 </script>
 
 

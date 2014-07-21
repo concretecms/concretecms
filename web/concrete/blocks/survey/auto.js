@@ -1,31 +1,44 @@
-var pi = $("#pollOptions").get(0);
-	
-function addOption(value) {		
-	if($('#ccm-survey-optionValue').val().length) {
-		if (currentOption == 0) {
-			pi.innerHTML = "";
-		}
-		currentOption++;
-		ip = document.createElement("INPUT");
-		ip.type = "hidden";
-		ip.name = "pollOption[]";
-		ip.value = $('#ccm-survey-optionValue').val();
-				
-		ipd = document.createElement("DIV");
-		ipd.id = "option" + currentOption;
-		ipd.className = 'survey-block-option';
-		ipd.innerHTML = "<a href=\"#\" onclick=\"removeOption(" + currentOption + ")\" class=\"pull-right\"><i class=\"fa fa-trash-o\"></i><" + "/a> " + ip.value;
-		ipd.appendChild(ip);
-		pi.appendChild(ipd);	
-		$('#ccm-survey-optionValue').val('');
-	}
-}
+(function($){
+    'use strict';
 
-function removeOption(id) {
-	opt = $("#option" + id).get(0);
-	pi.removeChild(opt);
-	currentOption--;
-	if (currentOption == 0) {
-		pi.innerHTML = "None";
-	}
-}
+    var container, options, template, input;
+
+
+    Concrete.event.bind('survey-edit-open', function() {
+        container = $('div.survey-block-edit');
+        options = $("div.poll-options", container);
+        template = _($("script[role='option']", container).remove().html()).template();
+        input = $('input.option-value', container);
+
+        container.find('button.add-option').click(function(e) {
+            addOption();
+
+            e.preventDefault();
+            return false;
+        });
+
+        attachDelete(options);
+    });
+
+    function attachDelete(elem) {
+        elem.find('a.delete').click(function(e) {
+            $(this).closest('div.survey-block-option').remove();
+            if (options.children().length === 0) {
+                $("<div class='empty'>None</div>").appendTo(options)
+            }
+        });
+    }
+
+    function addOption() {
+        var value = input.val().trim();
+        if (value.length) {
+            input.val('');
+            options.children('div.empty').remove();
+
+            var elem = $(template({value: value}));
+            attachDelete(elem);
+            options.append(elem);
+        }
+    }
+
+}(jQuery));

@@ -1,9 +1,9 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-$this->inc('elements/header.php'); 
+$this->inc('elements/header.php');
 ?>
 
-<header><h1><?=t($pageTitle)?></h1></header>
+<header class="ccm-dashboard-page-header"><h1><?=t($pageTitle) ?: '&nbsp;' ?></h1></header>
 
 <?
 if (isset($error)) {
@@ -22,14 +22,14 @@ if (count($_error) > 0) { ?>
 	<div class="ccm-ui"  id="ccm-dashboard-result-message">
 	<?php Loader::element('system_errors', array('format' => 'block', 'error' => $_error)); ?>
 	</div>
-	<? 
+	<?
 }
 
 if (isset($message)) { ?>
 	<div class="ccm-ui" id="ccm-dashboard-result-message">
 	<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">×</button><?=nl2br(Loader::helper('text')->entities($message))?></div>
 	</div>
-<? 
+<?
 
 } else if (isset($success)) { ?>
 	<div class="ccm-ui" id="ccm-dashboard-result-message">
