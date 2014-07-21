@@ -200,9 +200,9 @@ class ControlSet
 
         $path = '/' . $directory . '/image-editor/control-sets/' . $file;
         if (file_exists(DIR_BASE . $path)) {
-            return ($full_path ? DIR_BASE : '') . $path;
+            return ($full_path ? DIR_BASE : DIR_REL) . $path;
         }
-        return ($full_path ? DIR_BASE : '') . '/concrete' . $path;
+        return ($full_path ? DIR_BASE : DIR_REL) . '/concrete' . $path;
     }
 
     public function getViewPath()
