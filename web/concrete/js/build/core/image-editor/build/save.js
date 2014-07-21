@@ -40,7 +40,7 @@ im.save = function saveImage() {
                     im.stage.draw();
 
                     fake_canvas.remove();
-                    $.post('/index.php/tools/required/files/importers/imageeditor', {
+                    $.post(CCM_REL + '/index.php/tools/required/files/importers/imageeditor', {
                         fID: im.fileId,
                         imgData: url
                     }, function (res) {
