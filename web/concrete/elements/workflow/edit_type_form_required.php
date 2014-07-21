@@ -9,17 +9,17 @@ $type = $workflow->getWorkflowTypeObject();
 
 ?>
 
-<div class="control-group">
 <fieldset>
 <legend><?=t("Workflow Basics")?></legend>
 
-<div class="control-group">
+<div class="form-group">
 	<?=$form->label('wfName', t('Name'))?>
-	<div class="controls">
+	<div class="input-group">
 		<?=$form->text('wfName', $wfName)?>
+		<span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
 	</div>
 </div>
-</fieldset></div>
+</fieldset>
 
 <? 
 if ($type->getPackageID() > 0) { 

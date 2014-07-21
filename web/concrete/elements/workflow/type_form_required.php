@@ -11,8 +11,20 @@ $type = $workflow->getWorkflowTypeObject();
 
 <input type="hidden" name="wfID" value="<?=$workflow->getWorkflowID()?>" />
 
-<div class="ccm-pane-body">
+<h3><?=h($wfName)?> <small><?=$type->getWorkflowTypeName()?></small></h3>
 
+<? 
+if ($type->getPackageID() > 0) { 
+	Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle()  . '/type_form', $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
+} else {
+	Loader::element('workflow/types/' . $type->getWorkflowTypeHandle() . '/type_form', array('type' => $type, 'workflow' => $workflow));
+}
+?>
+
+<div class="ccm-dashboard-form-actions-wrapper">
+<div class="ccm-dashboard-form-actions">
+	<a href="<?=URL::to('/dashboard/workflow/workflows')?>" class="btn btn-default pull-left"><?=t('Back to List')?></a>
+	<div class="pull-right">
 <? if (is_object($workflow)) { ?>
 
 	<?
@@ -28,29 +40,13 @@ $type = $workflow->getWorkflowTypeObject();
 	}
 	</script>
 	
-	<? print $ih->button_js(t('Delete Workflow'), "deleteWorkflow()", 'right', 'error');?>
+	<? print $ih->button_js(t('Delete Workflow'), "deleteWorkflow()", '', 'btn-danger');?>
 <? } ?>
-
-
-<h3><?=t('Type')?></h3>
-<p><?=$type->getWorkflowTypeName()?></p>
-
-<? 
-if ($type->getPackageID() > 0) { 
-	Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle()  . '/type_form', $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
-} else {
-	Loader::element('workflow/types/' . $type->getWorkflowTypeHandle() . '/type_form', array('type' => $type, 'workflow' => $workflow));
-}
-?>
-
-</div>
-<div class="ccm-pane-footer">
-	<a href="<?=$view->url('/dashboard/workflow/workflows')?>" class="btn"><?=t('Back to List')?></a>
-	<div style="float: right">
 <? 
 if ($type->getPackageID() > 0) {
 	Loader::packageElement('workflow/types/' . $type->getWorkflowTypeHandle() . '/type_form_buttons', $type->getPackageHandle(), array('type' => $type, 'workflow' => $workflow));
 } ?>
-	<a href="<?=$view->action('edit_details', $workflow->getWorkflowID())?>" class="btn"><?=t('Edit Details')?></a>
+	<a href="<?=$view->action('edit_details', $workflow->getWorkflowID())?>" class="btn btn-primary"><?=t('Edit Details')?></a>
+	</div>
 </div>
 </div>
