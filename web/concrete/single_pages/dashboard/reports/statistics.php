@@ -2,14 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Recent Activity'))?>
-
-<div class="row">
-
-
-<div class="span-pane-half">
-
-<h3><?=t('Recent Page Views')?></h3>
+<h4><?=t('Recent Page Views')?></h3>
 
 <table class="table" id="ccm-site-statistics-visits" style="display: none">
 <thead>
@@ -29,11 +22,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 </tr>
 </table>
 
-</div>
-
-<div class="span-pane-half">
-
-<h3><?=t('Recent Registrations')?></h3>
+<h4><?=t('Recent Registrations')?></h4>
 
 <table class="table"  id="ccm-site-statistics-registrations" style="display: none">
 <thead>
@@ -53,19 +42,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 </tr>
 </table>
 
-
-</div>
-
-</div>
-
-<div class="row">
-
-
-<div class="span-pane-half">
-
-<br/><br/>
-
-<h3><?=t('Pages Created')?></h3>
+<h4><?=t('Pages Created')?></h4>
 
 <table class="table"  id="ccm-site-statistics-new-pages" style="display: none">
 <thead>
@@ -85,19 +62,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
 </tr>
 </table>
 
-<br/>
 
 <p><?php echo t('Total page versions')?>: <strong><?php echo $totalVersions?></strong></p>
 <p><?php echo t('Total pages in edit mode')?>: <strong><?php echo $totalEditMode?></strong></p>
 
-
-</div>
-
-<div class="span-pane-half">
-
-<br/><br/>
-
-<h3><?=t('Five Most Recent Downloads')?></h3>
+<h4><?=t('Five Most Recent Downloads')?></h4>
 
 <table class="table"  id="ccm-site-statistics-downloads">
 <thead>
@@ -152,33 +121,26 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <? } ?>
 </table>
 
-
-</div>
-
-</div>
-
 <script type="text/javascript">
 $(function() {
 	$("#ccm-site-statistics-visits").visualize({
 		'type': 'line',
 		'appendKey': false,
 		'colors': ['#C6DCF1'],
-		'width': '360'
+		'width': '500'
 	});
 	$("#ccm-site-statistics-registrations").visualize({
 		'type': 'line',
 		'appendKey': false,
 		'colors': ['#B2E4BA'],
-		'width': '360'
+		'width': '500'
 	});
 	$("#ccm-site-statistics-new-pages").visualize({
 		'type': 'line',
 		'appendKey': false,
 		'colors': ['#B2E4BA'],
-		'width': '360'
+		'width': '500'
 	});
 
 });
 </script>
-
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>
