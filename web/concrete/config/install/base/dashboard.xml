@@ -2,7 +2,7 @@
 <concrete5-cif version="1.0">
     <singlepages>
         <page name="Dashboard" path="/dashboard" filename="/dashboard/view.php" pagetype="" description="" package="" root="true" />
-	
+
         <page name="Sitemap" path="/dashboard/sitemap" filename="/dashboard/sitemap/view.php" pagetype="" description="Whole world at a glance." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
@@ -311,7 +311,7 @@
 				<value><![CDATA[1]]></value>
 			</attributekey>
 			</attributes>
-		</page>		
+		</page>
         <page name="Attributes" path="/dashboard/pages/attributes" filename="/dashboard/pages/attributes.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
@@ -331,7 +331,7 @@
 					<value>icon-wrench</value>
 				</attributekey>
 			</attributes>
-        </page>        
+        </page>
         <!--
         <page name="Conversations" path="/dashboard/conversations" filename="/dashboard/conversations/view.php" pagetype="" description="" package=""></page>
         <page name="Messages" path="/dashboard/conversations/messages" filename="/dashboard/conversations/messages.php" pagetype="" description="" package="">
@@ -355,14 +355,14 @@
 				<attributekey handle="icon_dashboard">
 					<value>icon-list</value>
 				</attributekey>
-			</attributes>        
+			</attributes>
         </page>
         <page name="Waiting for Me" path="/dashboard/workflow/me" filename="/dashboard/workflow/me.php" pagetype="" description="" package="">
         	<attributes>
 				<attributekey handle="icon_dashboard">
 					<value>icon-user</value>
 				</attributekey>
-			</attributes>        
+			</attributes>
         </page>
         <page name="Stacks &amp; Blocks" path="/dashboard/blocks" filename="/dashboard/blocks/view.php" pagetype="" description="Manage sitewide content and administer block types." package="" />
         <page name="Stacks" path="/dashboard/blocks/stacks" filename="/dashboard/blocks/stacks/view.php" pagetype="" description="Share content across your site." package="">
@@ -374,7 +374,7 @@
 					<value>icon-th</value>
 				</attributekey>
 			</attributes>
-        
+
         </page>
         <page name="Block &amp; Stack Permissions" path="/dashboard/blocks/permissions" filename="/dashboard/blocks/permissions.php" pagetype="" description="Control who can add blocks and stacks on your site." package="">
            	<attributes>
@@ -406,7 +406,7 @@
 				</attributekey>
 			</attributes>
         </page>
-    	
+
         <page name="Extend concrete5" path="/dashboard/extend" filename="/dashboard/extend/view.php" pagetype="" description="Connect to the concrete5 marketplace, install custom add-ons, and download updates for marketplace add-ons and themes." package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
@@ -662,10 +662,10 @@
 				</attributekey>
 			</attributes>
         </page>
-        <page name="Public Registration" path="/dashboard/system/registration/public" filename="/dashboard/system/registration/public.php" pagetype="" description="" package="">
+        <page name="Public Registration" path="/dashboard/system/registration/open" filename="/dashboard/system/registration/open.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>signup, new user, community</value>
+					<value>signup, new user, community, public registration, public, registration</value>
 				</attributekey>
 			</attributes>
         </page>
@@ -911,7 +911,7 @@
 				</block>
 			</area>
     	</page>
-    	
+
     	<page name="Customize Dashboard Home" path="/dashboard/home" filename="" template="dashboard_primary_five" pagetype="dashboard_primary_five" description="" package="">
 			<attributes>
 				<attributekey handle="exclude_nav">

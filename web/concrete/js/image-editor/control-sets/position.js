@@ -174,6 +174,10 @@ scale.slider({
 function Crop() {
     var crop = this;
 
+    im.bind('ImageEditorWillSave', function() {
+       crop.layer.hide();
+    });
+
     this.active = true;
     crop_area.slideDown();
     this.layer = new Kinetic.Layer({
@@ -198,7 +202,7 @@ function Crop() {
     var start_position, start_offset;
     this.cover = new Kinetic.Shape({
         fill: 'black',
-        opacity: .4,
+        opacity: .4,What
         width: im.stage.getWidth() * 2,
         height: im.stage.getHeight() * 2,
         listening: false,
