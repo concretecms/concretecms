@@ -55,6 +55,13 @@ class ImageHelper
         } else {
             $image = Image::open($mixed);
         }
+        if ($height < 1) {
+            $height = 1;
+        }
+        if ($width < 1) {
+            $width = 1;
+        }
+        
         if ($fit) {
             $box = new Box($width, $height);
             $center = new Center($box);
