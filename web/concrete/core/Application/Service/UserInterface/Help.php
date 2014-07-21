@@ -74,7 +74,7 @@ class Help
             '/dashboard/system/basics/timezone' => t("Allow your users to specify their time zone. This setting is editable in the user profile and in the dashboard users section."),
             '/dashboard/system/basics/icons' => t("Upload an image that will appear in the address bar when visitors go to your site and in the bookmark list if they bookmark it."),
             '/dashboard/system/basics/name' => t("Even if you change your website's logo, the Site Name is used in some emails."),
-            '/dashboard/system/registration/public' => t("Enable Public Registration to let visitors create new user accounts."),
+            '/dashboard/system/registration/open' => t("Enable Public Registration to let visitors create new user accounts."),
             '/dashboard/system/registration/profiles' => t("Display information about your concrete5 site's users, on a public page."),
             '/dashboard/system/registration/postlogin' => t("Determine where users should be redirected to after they login."),
             '/dashboard/system/environment/storage' => t("Create an alternate file-storage location (in addition to the standard file location) where you'll have the option of putting files after uploading them to the File Manager. "),

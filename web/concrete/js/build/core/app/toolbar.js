@@ -197,15 +197,15 @@ var ConcreteToolbar = function() {
 				$("#ccm-intelligent-search-results-list-marketplace").parent().show();
 				$("#ccm-intelligent-search-results-list-help").parent().show();
 				$("#ccm-intelligent-search-results-list-your-site").parent().show();
-				$("#ccm-intelligent-search-results-list-marketplace").parent().addClass('ccm-intelligent-search-results-module-loading');
-				$("#ccm-intelligent-search-results-list-help").parent().addClass('ccm-intelligent-search-results-module-loading');
-				$("#ccm-intelligent-search-results-list-your-site").parent().addClass('ccm-intelligent-search-results-module-loading');
+				$("#ccm-intelligent-search-results-list-marketplace").parent().removeClass('ccm-intelligent-search-results-module-loaded');
+				$("#ccm-intelligent-search-results-list-help").parent().removeClass('ccm-intelligent-search-results-module-loaded');
+				$("#ccm-intelligent-search-results-list-your-site").parent().removeClass('ccm-intelligent-search-results-module-loaded');
 
 				$.getJSON(CCM_TOOLS_PATH + '/marketplace/intelligent_search', {
 					'q': remotesearchquery
 				},
 				function(r) {
-					$("#ccm-intelligent-search-results-list-marketplace").parent().removeClass('ccm-intelligent-search-results-module-loading');
+					$("#ccm-intelligent-search-results-list-marketplace").parent().addClass('ccm-intelligent-search-results-module-loaded');
 					$("#ccm-intelligent-search-results-list-marketplace").html('');
 					for (i = 0; i < r.length; i++) {
 						var rr= r[i];
@@ -229,7 +229,7 @@ var ConcreteToolbar = function() {
 				},
 				function(r) {
 
-					$("#ccm-intelligent-search-results-list-help").parent().removeClass('ccm-intelligent-search-results-module-loading');
+					$("#ccm-intelligent-search-results-list-help").parent().addClass('ccm-intelligent-search-results-module-loaded');
 					$("#ccm-intelligent-search-results-list-help").html('');
 					for (i = 0; i < r.length; i++) {
 						var rr= r[i];
@@ -253,7 +253,7 @@ var ConcreteToolbar = function() {
 				},
 				function(r) {
 
-					$("#ccm-intelligent-search-results-list-your-site").parent().removeClass('ccm-intelligent-search-results-module-loading');
+					$("#ccm-intelligent-search-results-list-your-site").parent().addClass('ccm-intelligent-search-results-module-loaded');
 					$("#ccm-intelligent-search-results-list-your-site").html('');
 					for (i = 0; i < r.length; i++) {
 						var rr= r[i];
