@@ -13,13 +13,15 @@ session_write_close();
 $keywords = $_REQUEST['q'];
 $pl = new PageList();
 $pl->filterByName($keywords);
-if (PERMISSIONS_MODEL != 'simple') {
-	$pl->setViewPagePermissionKeyHandle('view_page_in_sitemap');
-}
-$pl->ignoreAliases();
 $pl->sortBy('cID', 'asc');
 $pl->setItemsPerPage(5);
-$pages = $pl->getPage();
+$pl->setPermissionsChecker(function($page) {
+    $pp = new Permissions($page);
+    return $pp->canViewPageInSitemap();
+});
+$pagination = $pl->getPagination();
+$pages = $pagination->getCurrentPageResults();
+
 $results = array();
 $nh = Loader::helper('navigation');
 foreach($pages as $c) {

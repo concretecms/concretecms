@@ -3,7 +3,7 @@ namespace Concrete\Core\Permission\Assignment;
 use PermissionAccess;
 use Loader;
 use FileSet;
-use File;
+use \Concrete\Core\File\File;
 class FileAssignment extends Assignment {
 
 	protected $permissionObjectToCheck;
