@@ -10,6 +10,7 @@ use Page;
 class Delete extends BackendInterfacePageController {
 
 	protected $viewPath = '/dialogs/page/delete';
+    protected $controllerActionPath = '/ccm/system/dialogs/page/delete';
 
 	protected function canAccess() {
 		return $this->permissions->canDeletePage();
@@ -18,6 +19,11 @@ class Delete extends BackendInterfacePageController {
 	public function view() {
 		$this->set('numChildren', $this->page->getNumChildren());
 	}
+
+    public function viewSetupRedirect() {
+        $this->set('numChildren', $this->page->getNumChildren());
+        $this->set('redirect', true);
+    }
 
 	public function submit() {
 		if ($this->validateAction()) {
@@ -41,6 +47,9 @@ class Delete extends BackendInterfacePageController {
 						if ($response instanceof WorkflowProgressResponse) {
 							// we only get this response if we have skipped workflows and jumped straight in to an approve() step.
 							$pr->setMessage(t('Page deleted successfully.'));
+                            if ($this->request->request->get('redirect')) {
+                                $pr->setRedirectURL($parent->getCollectionLink(true));
+                            }
 						} else {
 							$pr->setMessage(t('Page deletion request saved. This action will have to be approved before the page is deleted.'));
 						}

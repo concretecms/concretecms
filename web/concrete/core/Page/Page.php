@@ -2625,6 +2625,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     public function setPageDraftTargetParentPageID($cParentID) {
         $db = Loader::db();
+        $cParentID = intval($cParentID);
         $db->Execute('update Pages set cDraftTargetParentPageID = ? where cID = ?', array($cParentID, $this->cID));
         $this->cDraftTargetParentPageID = $cParentID;
     }
