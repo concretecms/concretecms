@@ -12,10 +12,11 @@
             }, function(r) {
                 $.fn.dialog.closeTop();
                 $('#ccm-permissions-access-entity-form input[name=peID]').val(r.peID);
-                $('#ccm-permissions-access-entity-label').html('<div class="alert alert-info">' + r.label + '</div>'
-        Concrete.event.bind('UserSearchDialogSelectUser', function(event, data) {
-            ccm_triggerSelectUser(data.uID, data.uName);
-        });
-
+                $('#ccm-permissions-access-entity-label').html('<div class="alert alert-info">' + r.label + '</div>');
+                Concrete.event.bind('UserSearchDialogSelectUser', function(event, data) {
+                    ccm_triggerSelectUser(data.uID, data.uName);
+                });
+            });
+        }
     }());
 </script>
