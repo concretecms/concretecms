@@ -35,7 +35,7 @@ class Images extends DashboardPageController {
 					Config::save('DASHBOARD_BACKGROUND_IMAGE', $this->post('DASHBOARD_BACKGROUND_IMAGE'));
 					Config::save('DASHBOARD_BACKGROUND_IMAGE_CUSTOM_FILE_ID', $this->post('DASHBOARD_BACKGROUND_IMAGE_CUSTOM_FILE_ID'));
 				}
-				$this->redirect('/dashboard/system/basics/interface', 'settings_saved');
+				$this->redirect('/dashboard/system/basics/images', 'settings_saved');
 			}
 		} else {
 			$this->set('error', array($this->token->getErrorMessage()));
