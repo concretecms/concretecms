@@ -17,6 +17,17 @@ div.ccm-conversation-avatar {
     }
 }
 
+div.ccm-conversation-message-form {
+  ul.redactor_toolbar {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+  .redactor_editor {
+    padding: 10px;
+    border: 1px solid #eee;
+  }
+}
+
 .cnv-admin-pane {
     position: absolute;
     right: 0;
@@ -45,9 +56,13 @@ div.ccm-conversation-avatar {
     }
 }
 
+.ccm-conversation-message-count {
+}
+
 div.ccm-conversation-messages-header {
     .clearfix();
     margin-bottom: 15px;
+
     select.ccm-sort-conversations {
         font-size: @fontSizeSmall;
         width: auto;
@@ -100,8 +115,7 @@ div.ccm-conversation-add-reply {
 }
 
 div.ccm-conversation-attachment-container {
-    padding: 0 150px 0 50px;
-    margin-top: -30px;
+    margin-top: 20px;
     .dropzone {
         border: 2px dashed @grayLight;
     }

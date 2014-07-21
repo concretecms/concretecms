@@ -18,7 +18,7 @@ if ($u->isLoggedIn()) {
 if (is_object($conversation)) {
 	?>
 	<div class="ccm-conversation-wrapper" data-conversation-id="<?=$conversation->getConversationID()?>">
-	<?=t('Loading Conversation')?> <img src="<?=Loader::helper('concrete/urls')->getBlockTypeAssetsURL($b->getBlockTypeObject(), 'loading.gif')?>" />
+	<?=t('Loading Conversation')?> <i class="fa fa-spin fa-circle-o-notch"></i>
 	</div>
 
 	<script type="text/javascript">
