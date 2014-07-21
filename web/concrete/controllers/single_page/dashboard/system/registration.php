@@ -7,6 +7,6 @@ use Loader;
 class Registration extends DashboardPageController {
 
 	public function view(){
-		$this->redirect('/dashboard/system/registration/public/');
+		$this->redirect('/dashboard/system/registration/open/');
 	}
 }
