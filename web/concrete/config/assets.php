@@ -294,6 +294,7 @@ $al->registerGroup('core/conversation', array(
     array('javascript', 'core/events'),
     array('javascript', 'core/conversation'),
     array('css', 'core/conversation'),
+    array('css', 'font-awesome'),
     array('css', 'bootstrap/dropdown')
 ), true);
 

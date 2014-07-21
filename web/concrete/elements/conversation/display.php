@@ -28,7 +28,7 @@ $form = Loader::helper('form');
 				<?php echo $form->hidden('cID', $cID) ?>
 				<?php echo $form->hidden('bID', $bID) ?>	
 				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-primary"><?=t('Submit')?></button>
-				<button type="button" class="pull-right btn ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="icon-picture"></i></button>
+				<button type="button" class="pull-right btn btn-default ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
 			</div>
 			</form>
 			<div class="ccm-conversation-attachment-container">
@@ -84,7 +84,7 @@ $form = Loader::helper('form');
 
 	<div class="ccm-conversation-messages-header">
 		<? if ($enableOrdering) { ?>
-		<select class="ccm-sort-conversations" data-sort="conversation-message-list">
+		<select class="form-control pull-right ccm-sort-conversations" data-sort="conversation-message-list">
 			<option value="date_desc" <? if ($orderBy == 'date_desc') { ?>selected="selected"<? } ?>><?=t('Recent')?></option>
 			<option value="date_asc" <? if ($orderBy == 'date_asc') { ?>selected="selected"<? } ?>><?=t('Oldest')?></option>
 			<option value="rating" <? if ($orderBy == 'rating') { ?>selected="selected"<? } ?>><?=t('Popular')?></option>
