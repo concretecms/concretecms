@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Core\Permission\Response;
-use Aws\CloudFront\Exception\Exception;
+use \Exception;
 use Loader;
 use Page;
 use User;
