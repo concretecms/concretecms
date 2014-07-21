@@ -63,6 +63,7 @@ class Users extends Controller {
 		}
 		
 		$u = new User();
+        /*
 		if (!$u->isSuperUser()) {
 			$gIDs = array(-1);
 			$gs = new GroupList();
@@ -73,7 +74,7 @@ class Users extends Controller {
 					$gIDs[] = $g->getGroupID();
 				}
 			}
-			$this->userList->addToQuery("left join UserGroups ugRequired on ugRequired.uID = u.uID ");	
+			$this->userList->addToQuery("left join UserGroups ugRequired on ugRequired.uID = u.uID ");
 			$this->userList->filter(false, '(ugRequired.gID in (' . implode(',', $gIDs) . ') or ugRequired.gID is null)');
 		}
 		
@@ -89,11 +90,11 @@ class Users extends Controller {
 				}
 			}
 		}
-		
 		foreach($filterGIDs as $gID) {
 			$this->userList->filterByGroupID($gID);
 		}
-		
+		*/
+
 		if (is_array($req['field'])) {
 			foreach($req['field'] as $i => $item) {
 				$this->fields[] = $this->getField($item);
