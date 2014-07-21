@@ -103,7 +103,7 @@ class CustomStyle extends AbstractCustomStyle
 
     public function getContainerClass()
     {
-        $class = 'ccm-custom-style-';
+        $class = 'ccm-custom-style-container ccm-custom-style-';
         $txt = Core::make('helper/text');
         $class .= strtolower($txt->filterNonAlphaNum($this->arHandle));
         $class .= '-' . $this->bID;
