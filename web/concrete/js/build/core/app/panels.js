@@ -46,7 +46,6 @@ function ConcretePanel(options) {
         var $link = $('a[data-launch-panel=' + this.getIdentifier() + ']');
 
         this.setupSubPanels();
-        console.log(this);
         this.setupPanelDetails();
         $link.removeClass().addClass('ccm-launch-panel-active');
         $link.find('.spinner').remove();
