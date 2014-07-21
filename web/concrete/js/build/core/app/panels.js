@@ -43,8 +43,13 @@ function ConcretePanel(options) {
     };
 
     this.onPanelLoad = function (element) {
+        var $link = $('a[data-launch-panel=' + this.getIdentifier() + ']');
+
         this.setupSubPanels();
+        console.log(this);
         this.setupPanelDetails();
+        $link.removeClass().addClass('ccm-launch-panel-active');
+        $link.find('.spinner').remove();
         Concrete.event.publish('PanelLoad', {panel: this, element: element});
     };
 
@@ -53,7 +58,9 @@ function ConcretePanel(options) {
         var me = this;
         this.closePanelDetail(function () {
             var obj = this;
-            $('[data-launch-panel=\'' + obj.getIdentifier() + '\']').removeClass('ccm-launch-panel-active');
+            var $link = $('a[data-launch-panel=' + this.getIdentifier() + ']');
+            $link.removeClass();
+            $link.find('.spinner').remove();
             $('#' + obj.getDOMID()).removeClass('ccm-panel-active');
             $('#ccm-panel-overlay').queue(function () {
                 $(this).removeClass('ccm-panel-translucent');
@@ -396,7 +403,6 @@ function ConcretePanel(options) {
                             ConcretePanelManager.showOverlay(obj.options.translucent);
                         }
                     });
-                $('[data-launch-panel=\'' + obj.getIdentifier() + '\']').addClass('ccm-launch-panel-active');
                 html.addClass(obj.getPositionClass());
             };
 

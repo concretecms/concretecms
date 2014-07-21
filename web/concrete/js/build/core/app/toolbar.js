@@ -78,7 +78,8 @@ var ConcreteToolbar = function() {
 		$('<div />', {'id': 'ccm-panel-overlay'}).appendTo($(document.body));
 		$('[data-launch-panel]').unbind().on('click', function() {
 			var panelID = $(this).attr('data-launch-panel');
-			$(this).toggleClass('ccm-launch-panel-active');
+			$(this).toggleClass('ccm-launch-panel-loading');
+            $(this).append('<div class="spinner"><div class="double-bounce1"></div><div class="double-bounce2"></div></div>');
 			var panel = ConcretePanelManager.getByIdentifier(panelID);
 			panel.toggle();
 			return false;
@@ -288,10 +289,6 @@ var ConcreteToolbar = function() {
 				setupHelpNotifications();
                 setupMobileNav();
 
-				// make sure that dashboard dropdown doesn't get dismissed if you mis-click inside it;
-				$('#ccm-toolbar-menu-dashboard').on('click', function(e) {
-					e.stopPropagation();
-				});
 			}
 		},
 
