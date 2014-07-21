@@ -47,7 +47,7 @@
                <?php } ?>
                 link_url: '<?php echo $row['linkURL'] ?>',
                 title: '<?php echo $row['title'] ?>',
-                description: '<?php echo addslashes($row['description']) ?>',
+                description: '<?php echo str_replace(array("\t", "\r", "\n"), "", addslashes($row['description']))?>',
                 sort_order: '<?php echo $row['sortOrder'] ?>'
             }));
         <?php }
