@@ -17,7 +17,7 @@ class MethodSymbol
 
     /**
      * The parameters.
-     * @var array
+     * @var \ReflectionParameter[]
      */
     protected $parameters = array();
 
@@ -62,8 +62,13 @@ class MethodSymbol
             } /*else if ($parameter->isCallable()) { // This should be enabled for php 5.4
                 $param .= 'callable ';
             } */ else {
-                if ($parameter->getClass()) {
-                    $param .= $parameter->getClass()->getName() . ' ';
+                try {
+                    if (is_object($parameter->getClass())) {
+                        $param .= $parameter->getClass()->getName() . ' ';
+                    }
+                } catch (\ReflectionException $e) {
+                    $class = $this->reflectionMethod->getDeclaringClass()->getName();
+                    echo "Invalid type hint in {$class}::{$this->handle}\n";
                 }
             }
             if ($parameter->isPassedByReference()) {
@@ -124,7 +129,7 @@ class MethodSymbol
             ');';
 
         $rendered .= "\n}\n";
-        
+
         return $rendered;
     }
 
