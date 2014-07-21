@@ -12,8 +12,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<div class="dialog-buttons"><input type="button" class="btn btn-default" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" /></div>
 <? } else { ?>
 	<form method="post" data-dialog-form="delete-page" action="<?=$controller->action('submit')?>">
-        <? if ($redirect) { ?>
-            <input type="hidden" name="redirect" value="1" />
+        <? if ($sitemap) { ?>
+            <input type="hidden" name="sitemap" value="1" />
         <? } ?>
 
 		<div class="dialog-buttons">

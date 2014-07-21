@@ -20,9 +20,9 @@ class Delete extends BackendInterfacePageController {
 		$this->set('numChildren', $this->page->getNumChildren());
 	}
 
-    public function viewSetupRedirect() {
+    public function viewFromSitemap() {
         $this->set('numChildren', $this->page->getNumChildren());
-        $this->set('redirect', true);
+        $this->set('sitemap', true);
     }
 
 	public function submit() {
@@ -47,7 +47,7 @@ class Delete extends BackendInterfacePageController {
 						if ($response instanceof WorkflowProgressResponse) {
 							// we only get this response if we have skipped workflows and jumped straight in to an approve() step.
 							$pr->setMessage(t('Page deleted successfully.'));
-                            if ($this->request->request->get('redirect')) {
+                            if (!$this->request->request->get('sitemap')) {
                                 $pr->setRedirectURL($parent->getCollectionLink(true));
                             }
 						} else {
