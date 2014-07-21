@@ -1,11 +1,11 @@
 <?php 
-namespace Concrete\Controller\SinglePage\Dashboard\Users\Group;
+namespace Concrete\Controller\SinglePage\Dashboard\Users;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use \Concrete\Core\User\Group\GroupSet;
 use GroupList;
 use Group;
 use Loader;
-class Sets extends DashboardPageController {
+class GroupSets extends DashboardPageController {
 	
 	public $category;
 	
