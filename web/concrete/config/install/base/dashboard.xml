@@ -107,7 +107,7 @@
         <page name="User Groups" path="/dashboard/users/groups" filename="/dashboard/users/groups.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>user, group, people, permissions, access, expire, badges, achievements</value>
+					<value>user, group, people, permissions, expire, badges</value>
 				</attributekey>
 				<attributekey handle="icon_dashboard">
 					<value>icon-globe</value>
@@ -165,7 +165,7 @@
         <page name="Community Points" path="/dashboard/users/points" filename="/dashboard/users/points/view.php" pagetype="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
-					<value>community, points, karma, achievements</value>
+					<value>community, points, karma</value>
 				</attributekey>
 				<attributekey handle="icon_dashboard">
 					<value>icon-heart</value>
