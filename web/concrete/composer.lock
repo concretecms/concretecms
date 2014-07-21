@@ -1,10 +1,9 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
-        "This file is @generated automatically"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "1cacfcd0cfe62318fabaaa805314c7fd",
+    "hash": "ec8eb5b395fdc71d6690c8f7cff1679d",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -297,7 +296,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/",
                     "role": "Creator"
@@ -318,7 +317,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -392,7 +391,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes Schmitt",
+                    "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -869,12 +868,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hautelook/phpass.git",
-                "reference": "ba0ffbbd083aa54944ce9cd73473da314bc00127"
+                "reference": "09463d13a673999f3432461e5dbde535766901da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hautelook/phpass/zipball/ba0ffbbd083aa54944ce9cd73473da314bc00127",
-                "reference": "ba0ffbbd083aa54944ce9cd73473da314bc00127",
+                "url": "https://api.github.com/repos/hautelook/phpass/zipball/09463d13a673999f3432461e5dbde535766901da",
+                "reference": "09463d13a673999f3432461e5dbde535766901da",
                 "shasum": ""
             },
             "require": {
@@ -905,7 +904,7 @@
                 "password",
                 "security"
             ],
-            "time": "2014-07-14 23:42:18"
+            "time": "2014-07-18 03:04:01"
         },
         {
             "name": "htmlawed/htmlawed",
@@ -1273,7 +1272,7 @@
                 {
                     "name": "Serban Ghita",
                     "email": "serbanghita@gmail.com",
-                    "homepage": "http://mobiledetect.net",
+                    "homepage": "http://ghita.org",
                     "role": "Developer"
                 }
             ],
@@ -1362,19 +1361,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "b94de7192b01d0e80794eae984dcc773220ab0dc"
+                "reference": "9b42a1aec56011c2ac4d75c0ddad0794762344fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/b94de7192b01d0e80794eae984dcc773220ab0dc",
-                "reference": "b94de7192b01d0e80794eae984dcc773220ab0dc",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/9b42a1aec56011c2ac4d75c0ddad0794762344fc",
+                "reference": "9b42a1aec56011c2ac4d75c0ddad0794762344fc",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "3.7.*"
+                "phpunit/phpunit": "~4.0"
             },
             "type": "library",
             "autoload": {
@@ -1400,7 +1399,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2014-05-13 02:29:30"
+            "time": "2014-07-18 03:44:47"
         },
         {
             "name": "oyejorge/less.php",
@@ -1441,7 +1440,7 @@
                     "homepage": "https://github.com/agar"
                 },
                 {
-                    "name": "Martin Jantošovič",
+                    "name": "Martin Janto\u0161ovi\u010d",
                     "homepage": "https://github.com/Mordred"
                 },
                 {
@@ -1514,7 +1513,7 @@
             ],
             "authors": [
                 {
-                    "name": "Pablo Díez",
+                    "name": "Pablo D\u00edez",
                     "email": "pablodip@gmail.com",
                     "homepage": "http://github.com/pablodip"
                 }
@@ -1719,17 +1718,17 @@
         },
         {
             "name": "symfony/class-loader",
-            "version": "2.5.x-dev",
+            "version": "dev-master",
             "target-dir": "Symfony/Component/ClassLoader",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ClassLoader.git",
-                "reference": "25b74b67d455268415d7d34b41f8b7df4cb33ba4"
+                "reference": "206de04f06299f28e1725d9a07a2ee05610fb6f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ClassLoader/zipball/25b74b67d455268415d7d34b41f8b7df4cb33ba4",
-                "reference": "25b74b67d455268415d7d34b41f8b7df4cb33ba4",
+                "url": "https://api.github.com/repos/symfony/ClassLoader/zipball/206de04f06299f28e1725d9a07a2ee05610fb6f8",
+                "reference": "206de04f06299f28e1725d9a07a2ee05610fb6f8",
                 "shasum": ""
             },
             "require": {
@@ -1741,7 +1740,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.6-dev"
                 }
             },
             "autoload": {
@@ -1767,7 +1766,7 @@
             ],
             "description": "Symfony ClassLoader Component",
             "homepage": "http://symfony.com",
-            "time": "2014-07-09 09:05:48"
+            "time": "2014-07-09 09:06:26"
         },
         {
             "name": "symfony/console",
@@ -2090,12 +2089,12 @@
             "version": "v0.5.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tedious/JShrink.git",
+                "url": "https://github.com/tedivm/JShrink.git",
                 "reference": "4b48e3d051cf0ab145db9df20d3292d91485bb60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tedious/JShrink/zipball/4b48e3d051cf0ab145db9df20d3292d91485bb60",
+                "url": "https://api.github.com/repos/tedivm/JShrink/zipball/4b48e3d051cf0ab145db9df20d3292d91485bb60",
                 "reference": "4b48e3d051cf0ab145db9df20d3292d91485bb60",
                 "shasum": ""
             },

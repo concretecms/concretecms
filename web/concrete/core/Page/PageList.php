@@ -401,7 +401,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function sortByDisplayOrder()
     {
-        $this->query->orderBy('p.cID', 'asc');
+        $this->query->orderBy('p.cDisplayOrder', 'asc');
     }
 
     /**
@@ -409,7 +409,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function sortByDisplayOrderDescending()
     {
-        $this->query->orderBy('p.cID', 'desc');
+        $this->query->orderBy('p.cDisplayOrder', 'desc');
     }
 
     /**
