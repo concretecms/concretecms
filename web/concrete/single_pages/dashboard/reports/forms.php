@@ -113,21 +113,21 @@ $db = Loader::db();
                 <tr>
                     <td><?= $text->entities($survey['surveyName']) ?></td>
                     <td><?= $text->entities($survey['answerSetCount']) ?></td>
-                    <td class="text-right">
+                    <td style="min-width: 380px" class="text-right">
                         <form method="post" action="" style="display: inline">
                             <input type="hidden" name="qsID" value="<?= intval($qsid) ?>"/>
                             <input type="hidden" name="action" value="deleteFormAnswers"/>
                             <?php $valt->output('deleteFormAnswers') ?>
                             <div class="btn-group">
                                 <a href="<?= DIR_REL . '/index.php?cID=' . $c->getCollectionID() . '&qsid=' . $qsid ?>"
-                                   class="btn btn-default">
+                                   class="btn btn-default btn-sm">
                                     <?= t('View Responses') ?>
                                 </a>
-                                <a class="btn btn-default" href="url">
+                                <a class="btn btn-default btn-sm" href="url">
                                     <?= t('Open Page') ?>
                                 </a>
-                                <button class="btn btn-danger delete-form-answers"
-                                        name='ccm-submit-buton'>
+                                <button class="btn btn-danger btn-sm delete-form-answers"
+                                        name='ccm-submit-button'>
                                     <?= t('Delete Submissions') ?>
                                 </button>
                             </div>
