@@ -21,15 +21,15 @@ if ($this->controller->getTask() == 'viewDetail') {
 
     <div class="row">
 
-        <div class="col-sm-9">
+        <div class="col-sm-7">
 
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th><?= t('Option') ?></th>
-                        <th><?= t('IP Address') ?></th>
-                        <th><?= t('Date') ?></th>
-                        <th><?= t('User') ?></th>
+                        <th><span><?= t('Option') ?></span></th>
+                        <th><span><?= t('IP Address') ?></span></th>
+                        <th><span><?= t('Date') ?></span></th>
+                        <th><span><?= t('User') ?></span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,7 +48,7 @@ if ($this->controller->getTask() == 'viewDetail') {
 
         </div>
 
-        <div class="col-sm-3">
+        <div class="col-sm-3 col-sm-offset-1">
 
             <div>
                 <div class="text-center">
@@ -92,7 +92,7 @@ if ($this->controller->getTask() == 'viewDetail') {
                             <?= t('Last Response') ?>
                         </a>
                     </th>
-                    <th class="col-sm-2 text-right" <?= $surveyList->getSearchResultsClass('numberOfResponses') ?>">
+                    <th class="col-sm-2 text-right <?= $surveyList->getSearchResultsClass('numberOfResponses') ?>" style="white-space: nowrap" ">
                         <a href="<?= $surveyList->getSortByURL('numberOfResponses', 'desc') ?>">
                             <?= t('Number of Responses') ?>
                         </a>
