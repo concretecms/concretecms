@@ -25,7 +25,7 @@ $form = Loader::helper('form');
 			<thead>
 				<tr>
 					<th style='width:20px'>ID</th>
-					<th>Word</th>
+					<th><?=t('Word')?></th>
 					<th style='width:200px;text-align:right'></th>
 				</tr>
 			</thead>
@@ -39,8 +39,8 @@ $form = Loader::helper('form');
 						<td class='word'><span><?=$word->getWord()?></span><input style='display:none' name='banned_word[]' value='<?=$word->getWord()?>'></td>
 						<td style='text-align:right'>
                             <div class="btn-group">
-                                <a href='#' class='edit_word btn btn-default'>Edit</a>
-                                <a href='#' class='delete_word btn btn-danger'>Delete</a>
+                                <a href='#' class='edit_word btn btn-default'><?=t('Edit')?></a>
+                                <a href='#' class='delete_word btn btn-danger'><?=t('Delete')?></a>
                             </div>
 						 </td>
 					</tr>
@@ -61,7 +61,7 @@ $form = Loader::helper('form');
 var ctx = $('table.banned_word_list'), template = $('script.word_template'),
 	getTemplate = function(){return $(template.text());},
 	save = $("<a href='#' class='save_word btn btn-primary'><?=t('Save')?></a>"),
-	edit = $("<div class=\"btn-group\"><a href='#' class='edit_word btn btn-default'>Edit</a><a href='#' class='delete_word btn btn-danger'>Delete</a></div>"),
+	edit = $("<div class=\"btn-group\"><a href='#' class='edit_word btn btn-default'><?=t('Edit')?></a><a href='#' class='delete_word btn btn-danger'><?=t('Delete')?></a></div>"),
 	totalheight = ctx.parent().height();
 
 if (!$('input[name=banned_list_enabled]').get(0).checked) {
