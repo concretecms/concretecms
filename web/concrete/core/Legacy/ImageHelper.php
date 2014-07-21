@@ -61,7 +61,7 @@ class ImageHelper
         if ($width < 1) {
             $width = 1;
         }
-        
+
         if ($fit) {
             $box = new Box($width, $height);
             $center = new Center($box);
