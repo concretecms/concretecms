@@ -236,9 +236,9 @@ class Dashboard {
 	public function getIntelligentSearchMenu() {
 		$dashboardMenus = Session::get('dashboardMenus', array());
 		$dashboardMenusKey = Localization::activeLocale();
-		if (array_key_exists($dashboardMenusKey, $dashboardMenus)) {
+		/*if (array_key_exists($dashboardMenusKey, $dashboardMenus)) {
 			return $dashboardMenus[$dashboardMenusKey];
-		}
+		}*/
 
 		ob_start(); ?>
 			<div id="ccm-intelligent-search-results">
@@ -329,23 +329,41 @@ class Dashboard {
 
 				<? } ?>
 
-				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-loading">
+				<div class="ccm-intelligent-search-results-module">
 				<h1><?=t('Your Site')?></h1>
+                <div class="loader">
+                    <div class="dot dot1"></div>
+                    <div class="dot dot2"></div>
+                    <div class="dot dot3"></div>
+                    <div class="dot dot4"></div>
+                </div>
 				<ul class="ccm-intelligent-search-results-list" id="ccm-intelligent-search-results-list-your-site">
 				</ul>
 				</div>
 
 				<? if (ENABLE_INTELLIGENT_SEARCH_HELP) { ?>
-				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-offsite ccm-intelligent-search-results-module-loading">
+				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-offsite">
 				<h1><?=t('Help')?></h1>
+                <div class="loader">
+                    <div class="dot dot1"></div>
+                    <div class="dot dot2"></div>
+                    <div class="dot dot3"></div>
+                    <div class="dot dot4"></div>
+                </div>
 				<ul class="ccm-intelligent-search-results-list" id="ccm-intelligent-search-results-list-help">
 				</ul>
 				</div>
 				<? } ?>
 
 				<? if (ENABLE_INTELLIGENT_SEARCH_MARKETPLACE) { ?>
-				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-offsite ccm-intelligent-search-results-module-loading">
+				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-offsite">
 				<h1><?=t('Add-Ons')?></h1>
+                <div class="loader">
+                    <div class="dot dot1"></div>
+                    <div class="dot dot2"></div>
+                    <div class="dot dot3"></div>
+                    <div class="dot dot4"></div>
+                </div>
 				<ul class="ccm-intelligent-search-results-list" id="ccm-intelligent-search-results-list-marketplace">
 				</ul>
 				</div>
