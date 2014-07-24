@@ -111,19 +111,29 @@ class Type
     public static function getUsedExtensionList()
     {
         $db = Loader::db();
-        $col = $db->GetCol(
-            'select distinct(trim(fvExtension)) as extension from FileVersions where fvIsApproved = 1 and fvExtension <> ""'
-        );
-        return $col;
+        $stm = $db->query('select distinct fvExtension from FileVersions where fvIsApproved = 1 and fvExtension <> ""');
+        $extensions = array();
+        while ($row = $stm->fetch()) {
+            $fvExtension = trim($row['fvExtension']);
+            if (!in_array($fvExtension, $extensions)) {
+                $extensions[] = $fvExtension;
+            }
+        }
+        return $extensions;
     }
 
     public static function getUsedTypeList()
     {
         $db = Loader::db();
-        $col = $db->GetCol(
-            'select distinct(trim(fvType)) as type from FileVersions where fvIsApproved = 1 and fvType <> 0'
-        );
-        return $col;
+        $stm = $db->query('select distinct fvType from FileVersions where fvIsApproved = 1 and fvType <> 0');
+        $types = array();
+        while ($row = $stm->fetch()) {
+            $fvType = trim($row['fvType']);
+            if (!in_array($fvType, $types)) {
+                $types[] = $fvType;
+            }
+        }
+        return $types;
     }
 
     /**

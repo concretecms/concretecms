@@ -87,7 +87,7 @@ class Controller extends BlockController
     public function delete()
     {
         $db = Loader::db();
-        $db->execute('DELETE from btImageSliderEntriesWHERE bID = ?', array($this->bID));
+        $db->delete('btImageSliderEntries', array('bID' => $this->bID));
         parent::delete();
     }
 
