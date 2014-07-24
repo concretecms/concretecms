@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Package;
 use Cache;
+use Concrete\Core\File\Image\Thumbnail\Type;
 use Concrete\Core\Foundation\Object;
 use AuthenticationType;
 use Loader;
@@ -143,6 +144,13 @@ class StartingPointPackage extends BasePackage {
         \Concrete\Core\File\StorageLocation\Type\Type::add('local', t('Local'));
         $configuration = $type->getConfigurationObject();
         $fsl = \Concrete\Core\File\StorageLocation\StorageLocation::add($configuration, t('Default'), true);
+
+        $thumbnailType = new Type();
+        $thumbnailType->requireType();
+        $thumbnailType->setName(t('File Manager Thumbnails'));
+        $thumbnailType->setHandle(FILE_MANAGER_THUMBNAIL_HANDLE);
+        $thumbnailType->setWidth(FILE_MANAGER_THUMBNAIL_WIDTH);
+        $thumbnailType->save();
 
 		if (is_dir($this->getPackagePath() . '/files')) {
 			$fh = new FileImporter();
