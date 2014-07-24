@@ -146,7 +146,7 @@ var ImageEditor = function (settings) {
   im.hideLoader = $.fn.dialog.hideLoader;
   im.stage.im = im;
   im.stage.elementType = 'stage';
-  im.crosshair.src = '/concrete/images/image_editor/crosshair.png';
+  im.crosshair.src = CCM_REL + '/concrete/images/image_editor/crosshair.png';
 
   im.center = {
     x: Math.round(im.width / 2),
@@ -424,7 +424,7 @@ im.save = function saveImage() {
                     im.stage.draw();
 
                     fake_canvas.remove();
-                    $.post('/index.php/tools/required/files/importers/imageeditor', {
+                    $.post(CCM_REL + '/index.php/tools/required/files/importers/imageeditor', {
                         fID: im.fileId,
                         imgData: url
                     }, function (res) {
