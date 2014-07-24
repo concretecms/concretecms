@@ -296,7 +296,7 @@ class File {
 	* @return string $extension
 	*/
 	public function getExtension($filename) {
-		$extension = end(explode(".",$filename));
+		$extension = trim(end(explode(".",$filename)));
 		return $extension;
 	}
 	
