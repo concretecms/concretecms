@@ -225,7 +225,7 @@ class Set implements \Concrete\Core\Permission\ObjectInterface {
 	public function removeFileFromSet($f_id){
 
 		if (is_object($f_id)) {
-			$f_id = $f_id->fID;
+			$f_id = $f_id->getFileID();
 		}
 
 		$file_set_file = File::createAndGetFile($f_id,$this->fsID);
