@@ -51,7 +51,7 @@ $req = $flr->getSearchRequest();
         <?
         $fp = FilePermissions::getGlobal();
         if ($fp->canAddFile()) { ?>
-            <li id="ccm-file-manager-upload"><a href="#"><?=t('Upload Files')?><input type="file" name="files[]" /></a></li>
+            <li id="ccm-file-manager-upload"><a href="#"><?=t('Upload Files')?><input type="file" name="files[]" multiple="multiple" /></a></li>
         <? } ?>
 
     </ul>
