@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions;
+namespace Concrete\Controller\SinglePage\Dashboard\System\Files;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
@@ -44,7 +44,7 @@ class Filetypes extends DashboardPageController {
 		$types = preg_split('{,}',$this->post('file-access-file-types'),null,PREG_SPLIT_NO_EMPTY);
 		$types = $helper_file->serializeUploadFileExtensions($types);
 		Config::save('UPLOAD_FILE_EXTENSIONS_ALLOWED',$types);
-		$this->redirect('/dashboard/system/permissions/filetypes','saved');
+		$this->redirect('/dashboard/system/files/filetypes','saved');
 	}
 }
 

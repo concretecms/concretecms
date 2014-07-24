@@ -1,5 +1,5 @@
 <?php
-namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions;
+namespace Concrete\Controller\SinglePage\Dashboard\System\Files;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
@@ -7,7 +7,7 @@ use PermissionKey;
 use TaskPermission;
 use PermissionAccess;
 use FileSet;
-class Files extends DashboardPageController {
+class Permissions extends DashboardPageController {
 	
 	public function save() {
 		if (Loader::helper('validation/token')->validate('save_permissions')) {
@@ -27,7 +27,7 @@ class Files extends DashboardPageController {
 						}			
 					}		
 				}
-				$this->redirect('/dashboard/system/permissions/files', 'updated');
+				$this->redirect('/dashboard/system/files/permissions', 'updated');
 			}
 			
 		} else {
