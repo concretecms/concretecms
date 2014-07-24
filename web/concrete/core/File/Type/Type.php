@@ -114,10 +114,7 @@ class Type
         $stm = $db->query('select distinct fvExtension from FileVersions where fvIsApproved = 1 and fvExtension <> ""');
         $extensions = array();
         while ($row = $stm->fetch()) {
-            $fvExtension = trim($row['fvExtension']);
-            if (!in_array($fvExtension, $extensions)) {
-                $extensions[] = $fvExtension;
-            }
+            $extensions[] = $row['fvExtension'];
         }
         return $extensions;
     }
@@ -128,10 +125,7 @@ class Type
         $stm = $db->query('select distinct fvType from FileVersions where fvIsApproved = 1 and fvType <> 0');
         $types = array();
         while ($row = $stm->fetch()) {
-            $fvType = trim($row['fvType']);
-            if (!in_array($fvType, $types)) {
-                $types[] = $fvType;
-            }
+            $types[] = $row['fvType'];
         }
         return $types;
     }
