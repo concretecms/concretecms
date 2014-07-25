@@ -102,7 +102,7 @@ main {
   }
 
   // Custom home page class for feature
-  div.ccm-block-feature-home-page {
+  div.feature-home-page {
     div.ccm-block-feature-item h4, div.ccm-block-feature-item i {
       color: @home-feature-title-color;
     }
@@ -120,6 +120,14 @@ main {
     div.ccm-block-feature-item {
       padding-left: 45px;
     }
+  }
+
+  // Custom home page page list block for recent blog entry
+  div.recent-blog-entry {
+    h3 {
+      .make-heading(@h2-type-font-family, @h2-type-font-size, @h2-type-font-weight, @h2-type-color);
+    }
+
   }
 
   // faq block
@@ -151,8 +159,7 @@ main {
     padding-bottom: 30px;
   }
 
-  // page list with buttons
-  div.ccm-block-button-page-list {
+  div.page-list-with-buttons {
     div.ccm-block-page-list-page-entry {
 
       &:first-child {
@@ -161,13 +168,21 @@ main {
         margin-top: 0px;
       }
 
+      a.ccm-block-page-list-read-more {
+        .btn;
+        border: 1px solid transparent;
+        display: inline-block;
+        .button-variant(@body-type-color, @page-background-color, @default-button-border-color);
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+
       margin-top: 50px;
       padding-top: 50px;
       border-top: 1px solid @footer-section-divider-color;
 
-      div.ccm-block-page-list-button {
-        padding-top: 20px;
-      }
     }
 
     margin-bottom: 50px;
@@ -175,7 +190,7 @@ main {
 
   // page list table of contents custom class (used for careers sidebar)
   // and content block
-  div.ccm-block-sidebar-wrapped {
+  div.block-sidebar-wrapped {
     padding: 10px;
     background-color: @sidebar-faint-background-color;
 
@@ -192,7 +207,7 @@ main {
     }
   }
 
-  div.ccm-block-sidebar-wrapped + div.ccm-block-sidebar-wrapped {
+  div.block-sidebar-wrapped + div.block-sidebar-wrapped {
     padding-top: 0px;
   }
 

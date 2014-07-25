@@ -425,7 +425,7 @@
                                 <column span="4" offset="0">
                                     <block type="feature" name="">
                                         <style>
-                                            <customClass>ccm-block-feature-home-page</customClass>
+                                            <customClass>feature-home-page</customClass>
                                         </style>
                                         <data table="btFeature">
                                             <record>
@@ -440,7 +440,7 @@
                                 <column span="4" offset="0">
                                     <block type="feature" name="">
                                         <style>
-                                            <customClass>ccm-block-feature-home-page</customClass>
+                                            <customClass>feature-home-page</customClass>
                                         </style>
                                         <data table="btFeature">
                                             <record>
@@ -455,7 +455,7 @@
                                 <column span="4" offset="0">
                                     <block type="feature" name="">
                                         <style>
-                                            <customClass>ccm-block-feature-home-page</customClass>
+                                            <customClass>feature-home-page</customClass>
                                         </style>
                                         <data table="btFeature">
                                             <record>
@@ -993,6 +993,9 @@
                                 <column span="8" offset="0">
                                     <block type="page_list" name="">
                                         <data table="btPageList">
+                                            <style>
+                                                <customClass>page-list-with-buttons</customClass>
+                                            </style>
                                             <record>
                                                 <num><![CDATA[0]]></num>
                                                 <orderBy><![CDATA[chrono_desc]]></orderBy>

@@ -11,15 +11,27 @@ $th = Loader::helper('text');
 	<?php foreach ($pages as $page):
 
 		// Prepare data for each page being listed...
-        $buttonClasses = 'btn btn-default';
+        $buttonClasses = 'ccm-block-page-list-read-more';
+        $entryClasses = 'ccm-block-page-list-page-entry';
 		$title = $th->entities($page->getCollectionName());
 		$url = $nh->getLinkToCollection($page);
 		$target = ($page->getCollectionPointerExternalLink() != '' && $page->openCollectionPointerExternalLinkInNewWindow()) ? '_blank' : $page->getAttribute('nav_target');
 		$target = empty($target) ? '_self' : $target;
 		$description = $page->getCollectionDescription();
 		$description = $controller->truncateSummaries ? $th->wordSafeShortText($description, $controller->truncateChars) : $description;
-		$description = $th->entities($description);	
-		
+		$description = $th->entities($description);
+        $thumbnail = false;
+        if ($displayThumbnail) {
+            $thumbnail = $page->getAttribute('thumbnail');
+        }
+        $includeEntryText = false;
+        if ($includeName || $includeDescription || $useButtonForLink) {
+            $includeEntryText = true;
+        }
+        if (is_object($thumbnail) && $includeEntryText) {
+            $entryClasses = 'ccm-block-page-list-page-entry-horizontal';
+        }
+
 		//Other useful page data...
 		
 		//$date = $page->getCollectionDatePublic(DATE_APP_GENERIC_MDY_FULL);
@@ -54,27 +66,38 @@ $th = Loader::helper('text');
 
 		/* The HTML from here through "endforeach" is repeated for every item in the list... */ ?>
 
-        <div class="ccm-block-page-list-page-entry">
+        <div class="<?=$entryClasses?>">
 
-		<h3 class="ccm-block-page-list--title">
-            <? if ($useButtonForLink) { ?>
-                <?php echo $title; ?>
-            <? } else { ?>
-    			<a href="<?php echo $url ?>" target="<?php echo $target ?>"><?php echo $title ?></a>
-            <? } ?>
-		</h3>
-        <? if ($includeDescription): ?>
-            <div class="ccm-block-page-list-description">
-                <?php echo $description ?>
+        <?php if (is_object($thumbnail)): ?>
+            <div class="ccm-block-page-list-page-entry-thumbnail">
+                <img src="<?=$thumbnail->getRelativePath()?>" class="img-responsive" />
             </div>
         <? endif; ?>
 
-        <? if ($useButtonForLink): ?>
-        <div class="ccm-block-page-list-button">
-            <a href="<?=$url?>" class="<?=$buttonClasses?>"><?=$buttonLinkText?></a>
-        </div>
-        <? endif; ?>
+        <?php if ($includeEntryText): ?>
+            <div class="ccm-block-page-list-page-entry-text">
 
+                <h3 class="ccm-block-page-list-title">
+                    <? if ($useButtonForLink) { ?>
+                        <?php echo $title; ?>
+                    <? } else { ?>
+                        <a href="<?php echo $url ?>" target="<?php echo $target ?>"><?php echo $title ?></a>
+                    <? } ?>
+                </h3>
+                <? if ($includeDescription): ?>
+                    <div class="ccm-block-page-list-description">
+                        <?php echo $description ?>
+                    </div>
+                <? endif; ?>
+
+                <? if ($useButtonForLink): ?>
+                <div class="ccm-block-page-list-page-entry-read-more">
+                    <a href="<?=$url?>" class="<?=$buttonClasses?>"><?=$buttonLinkText?></a>
+                </div>
+                <? endif; ?>
+
+                </div>
+        <? endif; ?>
         </div>
 
 	<?php endforeach; ?>
