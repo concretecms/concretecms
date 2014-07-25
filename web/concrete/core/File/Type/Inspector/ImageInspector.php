@@ -19,7 +19,6 @@ class ImageInspector extends Inspector {
 		$fv->setAttribute($at1, $data->getWidth());
 		$fv->setAttribute($at2, $data->getHeight());
 
-        //$fv->rescanThumbnail(1);
-        //$fv->rescanThumbnail(2);
+        $fv->rescanThumbnails();
     }
 }

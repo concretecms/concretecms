@@ -2,7 +2,8 @@
 namespace Concrete\Core\File;
 
 use Carbon\Carbon;
-use \Concrete\Core\Foundation\Object;
+use Concrete\Core\File\Image\Thumbnail\Type\Type;
+use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
 use League\Flysystem\AdapterInterface;
 use Loader;
 use \File as ConcreteFile;
@@ -101,17 +102,12 @@ class Version
     /**
      * @Column(type="boolean")
      */
-    protected $fvHasThumbnail1 = false;
+    protected $fvHasListingThumbnail = false;
 
     /**
      * @Column(type="boolean")
      */
-    protected $fvHasThumbnail2 = false;
-
-    /**
-     * @Column(type="boolean")
-     */
-    protected $fvHasThumbnail3 = false;
+    protected $fvHasDetailThumbnail = false;
 
     public function setFile(\Concrete\Core\File\File $file)
     {
@@ -584,10 +580,10 @@ class Version
         $db->Execute("delete from FileAttributeValues where fID = ? and fvID = ?", array($this->fID, $this->fvID));
         $db->Execute("delete from FileVersionLog where fID = ? and fvID = ?", array($this->fID, $this->fvID));
 
-        foreach (array(1, 2, 3) as $level) {
-            if ($this->{"fvHasThumbnail{$level}"}) {
-                $this->deleteThumbnail($level);
-            }
+        $types = Type::getVersionList();
+
+        foreach($types as $type) {
+            $this->deleteThumbnail($type);
         }
 
         $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
@@ -596,13 +592,15 @@ class Version
     }
 
     /**
-     * Deletes the thumbnail for the particular level.
+     * Deletes the thumbnail for the particular thumbnail type.
      */
-    public function deleteThumbnail($level)
+    public function deleteThumbnail($type)
     {
+        if (!($type instanceof ThumbnailTypeVersion)) {
+            $type = ThumbnailTypeVersion::getByHandle($type);
+        }
         $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
-        $fh = Loader::helper('concrete/file');
-        $path = $fh->getThumbnailFilePath($this->getPrefix(), $this->getFilename(), $level);
+        $path = $type->getFilePath($this);
         if ($fsl->has($path)) {
             $fsl->delete($path);
         }
@@ -710,110 +708,103 @@ class Version
         }
     }
 
-    public function getThumbnailURL($level)
+    public function getThumbnailURL($type)
     {
-        if ($this->{"fvHasThumbnail{$level}"}) {
-            $fsl = $this->getFile()->getFileStorageLocationObject();
-            if ($fsl) {
-                $configuration = $fsl->getConfigurationObject();
-                $f = Loader::helper('concrete/file');
-                $path = $f->getThumbnailFilePath($this->getPrefix(), $this->getFilename(), $level);
-                return $configuration->getPublicURLToFile($path);
+        if (!($type instanceof ThumbnailTypeVersion)) {
+            $type = ThumbnailTypeVersion::getByHandle($type);
+        }
+        $fsl = $this->getFile()->getFileStorageLocationObject();
+        if ($fsl) {
+            $configuration = $fsl->getConfigurationObject();
+            $path = $type->getFilePath($this);
+            return $configuration->getPublicURLToFile($path);
+        }
+    }
+
+    public function rescanThumbnails()
+    {
+        $types = Type::getVersionList();
+
+        foreach($types as $type) {
+
+            $fr = $this->getFileResource();
+
+            // delete the file if it exists
+            $this->deleteThumbnail($type);
+
+            $image = \Image::load($fr->read());
+
+            $filesystem = $this->getFile()
+                ->getFileStorageLocationObject()
+                ->getFileSystemObject();
+
+            $thumbnail = $image->thumbnail(new \Imagine\Image\Box($type->getWidth(), $type->getWidth()));
+            $thumbnailPath = $type->getFilePath($this);
+
+            $o = new \stdClass;
+            $o->visibility = AdapterInterface::VISIBILITY_PUBLIC;
+            $o->mimetype = 'image/jpeg';
+
+            $filesystem->write(
+                $thumbnailPath,
+                $thumbnail,
+                array(
+                    'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+                    'mimetype' => 'image/jpeg'
+                )
+            );
+
+            if ($type->getHandle() == FILE_MANAGER_LISTING_THUMBNAIL_HANDLE) {
+                $this->fvHasListingThumbnail = true;
             }
+
+            if ($type->getHandle() == FILE_MANAGER_DETAIL_THUMBNAIL_HANDLE) {
+                $this->fvHasDetailThumbnail = true;
+            }
+
         }
     }
 
-    public function rescanThumbnail($level)
-    {
-
-        $fr = $this->getFileResource();
-
-        // delete the file if it exists
-        if ($this->hasThumbnail($level)) {
-            $this->deleteThumbnail($level);
-        }
-
-        $image = \Image::load($fr->read());
-
-        $filesystem = $this->getFile()
-            ->getFileStorageLocationObject()
-            ->getFileSystemObject();
-
-        switch ($level) {
-            case 1:
-                $width = AL_THUMBNAIL_WIDTH;
-                $height = AL_THUMBNAIL_HEIGHT;
-                break;
-            case 2:
-                $width = AL_THUMBNAIL_WIDTH_LEVEL2;
-                $height = AL_THUMBNAIL_HEIGHT_LEVEL2;
-                break;
-            case 3:
-                $width = AL_THUMBNAIL_WIDTH_LEVEL3;
-                $height = AL_THUMBNAIL_HEIGHT_LEVEL3;
-        }
-
-        $helper = Loader::helper('concrete/file');
-
-        $thumbnail = $image->thumbnail(new \Imagine\Image\Box($width, $height));
-        $thumbnailPath = $helper->getThumbnailFilePath($this->getPrefix(), $this->getFilename(), $level);
-
-        $o = new stdClass;
-        $o->visibility = AdapterInterface::VISIBILITY_PUBLIC;
-        $o->mimetype = 'image/jpeg';
-
-        if ($filesystem->has($thumbnailPath)) {
-            $filesystem->delete($thumbnailPath);
-        }
-
-        $filesystem->write(
-            $thumbnailPath,
-            $thumbnail,
-            array(
-                'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
-                'mimetype' => 'image/jpeg'
-            )
-        );
-
-        switch ($level) {
-            case 1:
-                $this->fvHasThumbnail1 = true;
-                break;
-            case 2:
-                $this->fvHasThumbnail2 = true;
-                break;
-            case 3:
-                $this->fvHasThumbnail3 = true;
-                break;
-        }
-
-        $this->save();
-    }
-
+    /**
+     * @deprecated
+     * @param $level
+     * @return mixed
+     */
     public function hasThumbnail($level)
     {
         switch ($level) {
             case 1:
-                return $this->fvHasThumbnail1;
+                return $this->fvHasListingThumbnail;
             case 2:
-                return $this->fvHasThumbnail2;
-            case 3:
-                return $this->fvHasThumbnail3;
+                return $this->fvHasDetailThumbnail;
+        }
+
+        return false;
+    }
+
+    public function getListingThumbnailImage()
+    {
+        $html = Loader::helper('html');
+        if ($this->fvHasListingThumbnail) {
+            $type = Type::getByHandle(FILE_MANAGER_LISTING_THUMBNAIL_HANDLE);
+            $baseSrc = $this->getThumbnailURL($type->getBaseVersion());
+            $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
+            return '<img src="' . $baseSrc . '" data-at2x="' . $doubledSrc . '" />';
+        } else {
+            return $this->getTypeObject()->getThumbnail();
         }
     }
 
-    public function getThumbnail($level, $fullImageTag = true)
+    public function getDetailThumbnailImage()
     {
         $html = Loader::helper('html');
-        if ($this->hasThumbnail($level)) {
-            if ($fullImageTag) {
-                return $html->image($this->getThumbnailURL($level));
-            } else {
-                return $this->getThumbnailURL($level);
-            }
+        if ($this->fvHasDetailThumbnail) {
+            $type = Type::getByHandle(FILE_MANAGER_DETAIL_THUMBNAIL_HANDLE);
+            $baseSrc = $this->getThumbnailURL($type->getBaseVersion());
+            $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
+            return '<img src="' . $baseSrc . '" data-at2x="' . $doubledSrc . '" />';
         } else {
-            $ft = FileTypeList::getType($this->fvFilename);
-            return $ft->getThumbnail($level, $fullImageTag);
+            return $this->getTypeObject()->getThumbnail();
         }
     }
 
@@ -915,10 +906,7 @@ class Version
         $r->title = $this->getTitle();
         $r->description = $this->getDescription();
         $r->fileName = $this->getFilename();
-        $r->resultsThumbnail = $this->getThumbnail(1, false);
-        $r->thumbnailLevel1 = $this->getThumbnailURL(1);
-        $r->thumbnailLevel2 = $this->getThumbnailURL(2);
-        $r->thumbnailLevel3 = $this->getThumbnailURL(3);
+        $r->resultsThumbnailImg = $this->getListingThumbnailImage();
         $r->fID = $this->getFileID();
         foreach ($ats as $key => $value) {
             $r->{$key} = $value;

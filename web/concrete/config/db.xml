@@ -2278,15 +2278,11 @@
       <unsigned/>
     </field>
     <field name="fvActivateDatetime" type="T"/>
-    <field name="fvHasThumbnail1" type="I" size="1">
+    <field name="fvHasListingThumbnail" type="I" size="1">
       <notnull/>
       <default value="0"/>
     </field>
-    <field name="fvHasThumbnail2" type="I" size="1">
-      <notnull/>
-      <default value="0"/>
-    </field>
-    <field name="fvHasThumbnail3" type="I" size="1">
+    <field name="fvHasDetailThumbnail" type="I" size="1">
       <notnull/>
       <default value="0"/>
     </field>

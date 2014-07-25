@@ -99,7 +99,7 @@ $req = $flr->getSearchRequest();
 <tr data-launch-search-menu="<%=file.fID%>" data-file-manager-file="<%=file.fID%>">
     <td><span class="ccm-search-results-checkbox"><input type="checkbox" data-search-checkbox="individual" value="<%=file.fID%>" /></span></td>
     <td class="ccm-file-manager-search-results-star <% if (file.isStarred) { %>ccm-file-manager-search-results-star-active<% } %>"><a href="#" data-search-toggle="star" data-search-toggle-url="<?=URL::to('/ccm/system/file/star')?>" data-search-toggle-file-id="<%=file.fID%>"><i class="fa fa-star"></i></a></td>
-    <td class="ccm-file-manager-search-results-thumbnail"><img src="<%=file.resultsThumbnail%>" /></td>
+    <td class="ccm-file-manager-search-results-thumbnail"><%=file.resultsThumbnailImg%></td>
     <% for(i = 0; i < file.columns.length; i++) {
         var column = file.columns[i]; %>
         <td><%=column.value%></td>
