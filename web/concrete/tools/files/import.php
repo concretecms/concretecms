@@ -82,7 +82,7 @@ ConcreteFileImportDialog = {
 						<input type="checkbox" name="send_file<?=$i?>" class="ccm-file-select-incoming" value="<?=$file['basename']?>" />
 					<?php } ?>
 				</td>
-				<td width="20%" style="vertical-align: middle" class="center"><?=$ft->getThumbnail(1)?></td>
+				<td width="20%" style="vertical-align: middle" class="center"><?=$ft->getListingThumbnail()?></td>
 				<td width="45%" style="vertical-align: middle"><?=$file['basename']?></td>
 				<td width="25%" style="vertical-align: middle"class="center"><?=Loader::helper('number')->formatSize($file['size'], 'KB')?></td>
 			</tr>

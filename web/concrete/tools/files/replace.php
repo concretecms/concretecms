@@ -46,7 +46,7 @@ if (count($contents) > 0) { ?>
 	<?=$valt->output('import_incoming');?>
 </form>
 <? } else { ?>
-	<?=t('No files found in %s', DIR_FILES_INCOMING)?>
+	<?=t('No files found in %s', REL_DIR_FILES_INCOMING)?>
 <? } ?>
 </div>
 

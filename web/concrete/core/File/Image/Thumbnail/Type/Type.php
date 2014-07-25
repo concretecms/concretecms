@@ -1,7 +1,8 @@
 <?php
-namespace Concrete\Core\File\Image\Thumbnail;
+namespace Concrete\Core\File\Image\Thumbnail\Type;
 
 use Database;
+use Core;
 
 /**
  * @Entity
@@ -101,12 +102,28 @@ class Type
     }
 
 
-
+    /**
+     * @return \Concrete\Core\File\Image\Thumbnail\Type\Type[]
+     */
     public static function getList()
     {
         $db = Database::get();
         $em = $db->getEntityManager();
-        return $em->getRepository('\Concrete\Core\File\Image\Thumbnail\Type')->findBy(array(), array('ftTypeWidth' => 'asc'));
+        return $em->getRepository('\Concrete\Core\File\Image\Thumbnail\Type\Type')->findBy(array(), array('ftTypeWidth' => 'asc'));
+    }
+
+    /**
+     * @return \Concrete\Core\File\Image\Thumbnail\Type\Version[]
+     */
+    public static function getVersionList()
+    {
+        $types = static::getList();
+        $versions = array();
+        foreach($types as $type) {
+            $versions[] = $type->getBaseVersion();
+            $versions[] = $type->getDoubledVersion();
+        }
+        return $versions;
     }
 
     public function save()
@@ -140,7 +157,31 @@ class Type
     {
         $db = Database::get();
         $em = $db->getEntityManager();
-        $r = $em->find('\Concrete\Core\File\Image\Thumbnail\Type', $id);
+        $r = $em->find('\Concrete\Core\File\Image\Thumbnail\Type\Type', $id);
         return $r;
     }
+
+    /**
+     * @param $ftTypeHandle
+     * @return \Concrete\Core\File\Image\Thumbnail\Type\Type
+     */
+    public static function getByHandle($ftTypeHandle)
+    {
+        $db = Database::get();
+        $em = $db->getEntityManager();
+        $r = $em->getRepository('\Concrete\Core\File\Image\Thumbnail\Type\Type')
+            ->findOneBy(array('ftTypeHandle' => $ftTypeHandle));
+        return $r;
+    }
+
+    public function getBaseVersion()
+    {
+        return new Version($this->getHandle(), $this->getHandle(), $this->getWidth());
+    }
+
+    public function getDoubledVersion()
+    {
+        return new Version($this->getHandle() . '_2x', $this->getHandle(), $this->getWidth() * 2);
+    }
+
 }
