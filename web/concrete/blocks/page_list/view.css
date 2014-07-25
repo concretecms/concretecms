@@ -1,1 +1,22 @@
 div.ccm-page-list-rss-icon {margin-top: 10px}
+
+div.ccm-block-page-list-page-entry {
+    display: table;
+}
+
+
+div.ccm-block-page-list-page-entry-horizontal div.ccm-block-page-list-page-entry-thumbnail {
+    display: table-cell;
+    vertical-align: top;
+}
+
+div.ccm-block-page-list-page-entry-horizontal div.ccm-block-page-list-page-entry-text {
+    display: table-cell;
+    width: 100%;
+    padding-left: 20px;
+    vertical-align: top;
+}
+
+div.ccm-block-page-list-page-entry-read-more {
+    margin-top: 20px;
+}

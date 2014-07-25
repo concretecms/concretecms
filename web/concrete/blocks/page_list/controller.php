@@ -133,9 +133,6 @@ class Controller extends BlockController
         $nh = Loader::helper('navigation');
         $this->set('nh', $nh);
         $containerClass = 'ccm-block-page-list';
-        if ($this->useButtonForLink) {
-            $containerClass = 'ccm-block-button-page-list';
-        }
 
         $this->set('containerClass', $containerClass);
 
@@ -195,7 +192,10 @@ class Controller extends BlockController
         $this->set('c', $c);
         $this->set('uh', $uh);
         $this->set('includeDescription', true);
+        $this->set('includeName', true);
         $this->set('bt', BlockType::getByHandle('page_list'));
+        $this->set('featuredAttribute', CollectionAttributeKey::getByHandle('is_featured'));
+        $this->set('thumbnailAttribute', CollectionAttributeKey::getByHandle('thumbnail'));
     }
 
     public function edit()
@@ -212,6 +212,8 @@ class Controller extends BlockController
         $uh = Loader::helper('concrete/urls');
         $this->set('uh', $uh);
         $this->set('bt', BlockType::getByHandle('page_list'));
+        $this->set('featuredAttribute', CollectionAttributeKey::getByHandle('is_featured'));
+        $this->set('thumbnailAttribute', CollectionAttributeKey::getByHandle('thumbnail'));
     }
 
     function save($args)
@@ -236,6 +238,7 @@ class Controller extends BlockController
         $args['includeAllDescendents'] = ($args['includeAllDescendents']) ? '1' : '0';
         $args['truncateSummaries'] = ($args['truncateSummaries']) ? '1' : '0';
         $args['displayFeaturedOnly'] = ($args['displayFeaturedOnly']) ? '1' : '0';
+        $args['displayThumbnail'] = ($args['displayThumbnail']) ? '1' : '0';
         $args['displayAliases'] = ($args['displayAliases']) ? '1' : '0';
         $args['truncateChars'] = intval($args['truncateChars']);
         $args['paginate'] = intval($args['paginate']);

@@ -18,9 +18,13 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
     public function getThemeBlockClasses()
     {
         return array(
-            'feature' => array('ccm-block-feature-home-page'),
-            'page_list' => array('ccm-block-sidebar-wrapped'),
-            'content' => array('ccm-block-sidebar-wrapped'),
+            'feature' => array('feature-home-page'),
+            'page_list' => array(
+                'recent-blog-entry',
+                'page-list-with-buttons',
+                'block-sidebar-wrapped'
+            ),
+            'content' => array('block-sidebar-wrapped'),
         );
     }
 

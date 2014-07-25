@@ -29,6 +29,11 @@
         </field>
         <field name="buttonLinkText" type="C" size="255">
         </field>
+        <field name="includeName" type="I1">
+            <unsigned />
+            <notnull />
+            <default value="1" />
+        </field>
         <field name="includeDescription" type="I1">
             <unsigned />
             <notnull />
@@ -63,9 +68,12 @@
 		<field name="truncateSummaries" type="I">
 			<default value="0"/>
 		</field>
-		<field name="displayFeaturedOnly" type="I">
+		<field name="displayFeaturedOnly" type="I1">
 			<default value="0"/>
 		</field>
+        <field name="displayThumbnail" type="I1">
+            <default value="0"/>
+        </field>
 		<field name="truncateChars" type="I">
 			<default value="128"/>
 		</field>		

@@ -48,12 +48,12 @@ $form = Loader::helper('form/page_selector');
         <legend><?= t('Filters') ?></legend>
         <div class="checkbox">
             <label>
-                <input <? if (!is_object($cadf)) { ?> disabled <? } ?> type="checkbox" name="displayFeaturedOnly"
+                <input <? if (!is_object($featuredAttribute)) { ?> disabled <? } ?> type="checkbox" name="displayFeaturedOnly"
                                                                        value="1" <? if ($displayFeaturedOnly == 1) { ?> checked <? } ?>
                                                                        style="vertical-align: middle"/>
                 <?= t('Featured pages only.') ?>
             </label>
-            <? if (!is_object($cadf)) { ?>
+            <? if (!is_object($featuredAttribute)) { ?>
                 <span class="help-block"><?=
                     t(
                         '(<strong>Note</strong>: You must create the "is_featured" page attribute first.)'); ?></span>
@@ -169,10 +169,26 @@ $form = Loader::helper('form/page_selector');
         </div>
 
         <div class="form-group">
+            <label class="control-label"><?= t('Include Page Name') ?></label>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="includeName"
+                           value="0" <?= ($includeName ? "" : "checked=\"checked\"") ?>/> <?= t('No') ?>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="includeName"
+                           value="1" <?= ($includeName ? "checked=\"checked\"" : "") ?>/> <?= t('Yes') ?>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
             <label class="control-label"><?= t('Include Page Description') ?></label>
             <div class="radio">
                 <label>
-                    <input type="radio" name="includeDescription" class="rssSelector"
+                    <input type="radio" name="includeDescription"
                            value="0" <?= ($includeDescription ? "" : "checked=\"checked\"") ?>/> <?= t('No') ?>
                 </label>
             </div>
@@ -199,7 +215,30 @@ $form = Loader::helper('form/page_selector');
         </div>
 
         <div class="form-group">
-            <label class="control-label"><?= t('Use Button For Link') ?></label>
+            <label class="control-label"><?= t('Display Thumbnail Image') ?></label>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="displayThumbnail"
+                           <?= (!is_object($thumbnailAttribute) ? 'disabled ' : '')?>
+                           value="0" <?= ($displayThumbnail ? "" : "checked=\"checked\"") ?>/> <?= t('No') ?>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="displayThumbnail"
+                        <?= (!is_object($thumbnailAttribute) ? 'disabled ' : '')?>
+                           value="1" <?= ($displayThumbnail ? "checked=\"checked\"" : "") ?>/> <?= t('Yes') ?>
+                </label>
+            </div>
+            <? if (!is_object($thumbnailAttribute)) { ?>
+                <div class="help-block">
+                <?=t('You must create an attribute with the \'thumbnail\' handle in order to use this option.')?>
+                </div>
+            <? } ?>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label"><?= t('Use Different Link than Page Name') ?></label>
             <div class="radio">
                 <label>
                     <input type="radio" name="useButtonForLink" class="rssSelector"
@@ -214,7 +253,7 @@ $form = Loader::helper('form/page_selector');
             </div>
             <div class="ccm-page-list-button-text" <?= ($useButtonForLink ? "" : "style=\"display:none;\"") ?>>
                 <div class="form-group">
-                    <label class="control-label"><?= t('Button Text') ?></label>
+                    <label class="control-label"><?= t('Link Text') ?></label>
                     <input class="form-control" type="text" name="buttonLinkText" value="<?=$buttonLinkText?>" />
                 </div>
             </div>
