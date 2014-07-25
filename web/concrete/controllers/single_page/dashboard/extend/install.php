@@ -105,6 +105,9 @@ class Install extends DashboardPageController {
 					$tests = Package::testForInstall($package);
 					if (is_array($tests)) {
 						$tests = Package::mapError($tests);
+						foreach ($tests as $test) {
+							$this->error->add($test);
+						}
 						$this->set('error', $tests);
 					} else {
 						$currentLocale = Localization::activeLocale();
