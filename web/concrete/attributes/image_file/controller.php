@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Attribute\ImageFile;
 use Loader;
+use File;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Controller as AttributeTypeController;
 
@@ -16,6 +17,11 @@ class Controller extends AttributeTypeController  {
 			return $f;
 		}
 	}
+
+    public function registerRequiredAssets()
+    {
+        $this->requireAsset('core/file-manager');
+    }
 	
 	public function getDisplayValue() {
 		$f = $this->getValue();

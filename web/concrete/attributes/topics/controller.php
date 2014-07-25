@@ -21,7 +21,13 @@ class Controller extends AttributeTypeController  {
 		//$this->load();
 		//return parent::getDisplaySanitizedValue();
 	}
-	
+
+    public function registerRequiredAssets()
+    {
+        $this->requireAsset('core/topics');
+        $this->requireAsset('jquery/form');
+    }
+
 	public static function getSelectedOptions($avID) {
 		//$avID = $this->getAttributeValueID();
 		$db = Loader::db();
@@ -33,8 +39,6 @@ class Controller extends AttributeTypeController  {
 	}
 	
 	public function form($additionalClass = false) {
-		$this->requireAsset('core/topics');
-		$this->requireAsset('jquery/form');
 		$this->load();
 		if (is_object($this->attributeValue)) {
 			$value = $this->getAttributeValue()->getValue();
@@ -136,8 +140,6 @@ class Controller extends AttributeTypeController  {
 	
 	public function getValue() {
 		$this->load();
-		$this->requireAsset('core/topics');
-		$this->requireAsset('jquery/form');
 		$this->set('parentNode', $this->akTopicParentNodeID);
 		$this->set('treeID', $this->akTopicTreeID);
 		$this->set('avID', $avID); 
@@ -157,7 +159,6 @@ class Controller extends AttributeTypeController  {
 	
 	public function type_form() {
 		$this->load();
-		$this->requireAsset('core/topics');
 		$tt = new TopicTree();
 		$defaultTree = $tt->getDefault();
 		$topicTreeList = $tt->getList();
