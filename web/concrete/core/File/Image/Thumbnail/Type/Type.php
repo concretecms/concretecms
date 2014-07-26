@@ -140,9 +140,12 @@ class Type
         $list = static::getList();
         foreach($list as $link) {
             $linkNode = $child->addChild('thumbnailtype');
-//            $linkNode->addAttribute('service', $link->getServiceObject()->getHandle());
-  //          $linkNode->addAttribute('url', $link->getURL());
-
+            $linkNode->addAttribute('name', $link->getName());
+            $linkNode->addAttribute('handle', $link->getHandle());
+            $linkNode->addAttribute('width', $link->getWidth());
+            if ($link->isRequired()) {
+                $linkNode->addAttribute('required', $link->isRequired());
+            }
         }
     }
 

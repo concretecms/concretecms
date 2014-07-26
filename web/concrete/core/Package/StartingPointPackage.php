@@ -126,6 +126,9 @@ class StartingPointPackage extends BasePackage {
 	public function install_themes() {
 		$ci = new ContentImporter();
 		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/themes.xml');
+        if (file_exists($this->getPackagePath() . '/themes.xml')) {
+            $ci->importContentFile($this->getPackagePath() . '/themes.xml');
+        }
 	}
 
 	public function install_jobs() {
@@ -169,7 +172,6 @@ class StartingPointPackage extends BasePackage {
 	}
 
 	public function install_content() {
-		$installDirectory = DIR_BASE_CORE . '/config';
 		$ci = new ContentImporter();
 		$ci->importContentFile($this->getPackagePath() . '/content.xml');
 

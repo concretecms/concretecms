@@ -1466,7 +1466,7 @@
       <unsigned/>
     </field>
     <field name="avID" type="I" size="10">
-      <key/>
+      <!--<key/>// --> <!-- pretty sure the key definition on this totally wrong //-->
       <default value="0"/>
       <unsigned/>
     </field>
@@ -1728,7 +1728,7 @@
       <unsigned/>
     </field>
     <field name="avID" type="I" size="10">
-      <key/>
+      <!--<key/>// --> <!-- pretty sure the key definition on this totally wrong //-->
       <default value="0"/>
       <unsigned/>
     </field>
@@ -3267,7 +3267,7 @@
       <unsigned/>
     </field>
     <field name="avID" type="I" size="10">
-      <key/>
+        <!--<key/>// --> <!-- pretty sure the key definition on this totally wrong //-->
       <default value="0"/>
       <unsigned/>
     </field>

@@ -785,6 +785,11 @@ class Theme extends Object
         return array();
     }
 
+    public function getThemeResponsiveImageMap()
+    {
+        return array();
+    }
+
     public function getThemeGatheringGridItemMargin()
     {
         return 20;

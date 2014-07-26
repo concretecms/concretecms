@@ -142,7 +142,9 @@ class ContentExporter {
 
         \Concrete\Core\Sharing\SocialNetwork\Link::exportList($this->x);
 
-		Config::exportList($this->x);
+        \Concrete\Core\File\Image\Thumbnail\Type\Type::exportList($this->x);
+
+        Config::exportList($this->x);
 		
 	}
 	

@@ -2,6 +2,7 @@
 
 $ag = \Concrete\Core\Http\ResponseAssetGroup::get();
 $ag->requireAsset('css', 'font-awesome');
+$ag->requireAsset('javascript', 'jquery');
 
 ?>
 <!DOCTYPE html>
