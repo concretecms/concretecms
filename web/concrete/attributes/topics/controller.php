@@ -25,7 +25,7 @@ class Controller extends AttributeTypeController  {
     public function registerRequiredAssets()
     {
         $this->requireAsset('core/topics');
-        $this->requireAsset('jquery/form');
+        $this->requireAsset('javascript', 'jquery/form');
     }
 
 	public static function getSelectedOptions($avID) {

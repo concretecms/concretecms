@@ -78,6 +78,7 @@ class ContentImporter
         $this->importPageTypeComposerControlTypes($sx);
         $this->importBannedWords($sx);
         $this->importSocialLinks($sx);
+        $this->importFileImportantThumbnailTypes($sx);
         $this->importFeatures($sx);
         $this->importFeatureCategories($sx);
         $this->importGatheringDataSources($sx);
@@ -564,6 +565,23 @@ class ContentImporter
                 $sociallink->setURL((string)$l['url']);
                 $sociallink->setServiceHandle((string)$l['service']);
                 $sociallink->save();
+            }
+        }
+    }
+
+    protected function importFileImportantThumbnailTypes(\SimpleXMLElement $sx)
+    {
+        if (isset($sx->thumbnailtypes)) {
+            foreach ($sx->thumbnailtypes->thumbnailtype as $l) {
+                $type = new \Concrete\Core\File\Image\Thumbnail\Type\Type();
+                $type->setName((string) $l['name']);
+                $type->setHandle((string) $l['handle']);
+                $type->setWidth((string) $l['width']);
+                $required = (string) $l['required'];
+                if ($required) {
+                    $type->requireType();
+                }
+                $type->save();
             }
         }
     }

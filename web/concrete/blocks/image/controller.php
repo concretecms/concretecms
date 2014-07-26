@@ -31,6 +31,11 @@ class Controller extends BlockController {
 	}		
 	
 	public function view() {
+        $this->requireAsset('javascript', 'picturefill');
+        if ($this->getFileOnstateID()) {
+            $this->requireAsset('javascript', 'jquery');
+        }
+
 		//$c = Page::getCurrentPage();
 		$bID = $this->bID;
 		$f = File::getByID($this->fID);
@@ -71,7 +76,7 @@ class Controller extends BlockController {
 		$this->set('relPathHover',$relPathHover);
 		$this->set('sizeStr',$sizeStr);
 		$this->set('altText',$altText);
-
+        $this->set('f', $f);
 		if($this->fOnstateID > 0) {
 			$this->addHeaderItem('<style type="text/css"> img.ccm-image-block.alternate { display:none; } </style>');
 		}
