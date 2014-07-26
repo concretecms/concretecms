@@ -2,6 +2,7 @@
 namespace Concrete\Core\Backup;
 
 use Concrete\Core\Sharing\SocialNetwork\Link;
+use Concrete\Core\Tree\Tree;
 use Page;
 use Package;
 use Stack;
@@ -78,6 +79,7 @@ class ContentImporter
         $this->importPageTypeComposerControlTypes($sx);
         $this->importBannedWords($sx);
         $this->importSocialLinks($sx);
+        $this->importTrees($sx);
         $this->importFileImportantThumbnailTypes($sx);
         $this->importFeatures($sx);
         $this->importFeatureCategories($sx);
@@ -565,6 +567,15 @@ class ContentImporter
                 $sociallink->setURL((string)$l['url']);
                 $sociallink->setServiceHandle((string)$l['service']);
                 $sociallink->save();
+            }
+        }
+    }
+
+    protected function importTrees(\SimpleXMLElement $sx)
+    {
+        if (isset($sx->trees)) {
+            foreach ($sx->trees->tree as $t) {
+                Tree::import($t);
             }
         }
     }

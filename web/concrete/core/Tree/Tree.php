@@ -33,6 +33,22 @@ abstract class Tree extends Object {
 		}
 	}
 
+    public static function exportList(\SimpleXMLElement $sx)
+    {
+        $trees = $sx->addChild('trees');
+        $db = Loader::db();
+        $r = $db->Execute('select treeID from Trees order by treeID asc');
+        while ($row = $r->Fetchrow()) {
+            $tree = static::getByID($row['treeID']);
+            $treenode = $trees->addChild('tree');
+            $treenode->addAttribute('type', $tree->getTreeTypeHandle());
+            $root = $tree->getRootTreeNodeObject();
+            $root->populateChildren();
+            $root->export($treenode);
+        }
+    }
+
+
 	public function getTreeID() {return $this->treeID;}
 	public function getRootTreeNodeObject() {return \Concrete\Core\Tree\Node\Node::getByID($this->rootTreeNodeID);}
 

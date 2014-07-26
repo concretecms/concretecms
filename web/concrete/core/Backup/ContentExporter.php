@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Backup;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
+use Concrete\Core\Tree\Tree;
 use Page;
 use Package;
 use Stack;
@@ -145,7 +146,9 @@ class ContentExporter {
         \Concrete\Core\File\Image\Thumbnail\Type\Type::exportList($this->x);
 
         Config::exportList($this->x);
-		
+
+        Tree::exportList($this->x);
+
 	}
 	
 	public static function addMasterCollectionBlockID($b, $id) {
