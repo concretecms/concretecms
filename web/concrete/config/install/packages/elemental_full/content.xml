@@ -652,7 +652,10 @@
                         <arealayout type="theme-grid" columns="12">
                             <columns>
                                 <column span="4" offset="0">
-                                    <block type="image" name="" custom-template="right_tilt">
+                                    <block type="image" name="">
+                                        <style>
+                                            <customClass>image-right-tilt</customClass>
+                                        </style>
                                         <data table="btContentImage">
                                             <record>
                                                 <fID>{ccm:export:file:blank2.png}</fID>
@@ -751,7 +754,10 @@
                         <arealayout type="theme-grid" columns="12">
                             <columns>
                                 <column span="2" offset="0">
-                                    <block type="image" name="" custom-template="circle">
+                                    <block type="image" name="">
+                                        <style>
+                                            <customClass>image-circle</customClass>
+                                        </style>
                                         <data table="btContentImage">
                                             <record>
                                                 <fID>{ccm:export:file:chinese_house2.jpg}</fID>
@@ -989,10 +995,10 @@
                                 </column>
                                 <column span="8" offset="0">
                                     <block type="page_list" name="">
+                                        <style>
+                                            <customClass>page-list-with-buttons</customClass>
+                                        </style>
                                         <data table="btPageList">
-                                            <style>
-                                                <customClass>page-list-with-buttons</customClass>
-                                            </style>
                                             <record>
                                                 <num><![CDATA[0]]></num>
                                                 <orderBy><![CDATA[chrono_desc]]></orderBy>

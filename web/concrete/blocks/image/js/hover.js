@@ -1,4 +1,3 @@
-<script type="text/javascript">
 $(function() {
     $( 'img.ccm-image-block.primary' ).hover(function(){
         $(this).attr('oldsrc',$(this).attr('src'));
@@ -8,4 +7,3 @@ $(function() {
         $(this).attr('src',$(this).attr('oldsrc'));
     });
 });
-</script>

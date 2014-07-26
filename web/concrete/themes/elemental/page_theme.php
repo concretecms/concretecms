@@ -11,6 +11,10 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
         $this->providesAsset('css', 'blocks/faq');
         $this->providesAsset('css', 'blocks/topic_list');
         $this->providesAsset('css', 'core/frontend/*');
+
+        $this->requireAsset('css', 'font-awesome');
+        $this->requireAsset('javascript', 'jquery');
+        $this->requireAsset('javascript', 'picturefill');
 	}
 
     protected $pThemeGridFrameworkHandle = 'bootstrap3';
@@ -25,6 +29,17 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
                 'block-sidebar-wrapped'
             ),
             'content' => array('block-sidebar-wrapped'),
+            'image' => array(
+                'image-right-tilt',
+                'image-circle'
+            )
+        );
+    }
+
+    public function getThemeDefaultBlockTemplates()
+    {
+        return array(
+            'image' => 'responsive_picture'
         );
     }
 

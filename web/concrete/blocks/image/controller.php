@@ -78,6 +78,9 @@ class Controller extends BlockController {
 		$this->set('altText',$altText);
         $this->set('f', $f);
 		if($this->fOnstateID > 0) {
+            $bt = \BlockType::getByHandle('image');
+            $hoverJs = Loader::helper('concrete/urls')->getBlockTypeAssetsURL($bt, 'js/hover.js');
+            $this->addFooterItem(Loader::helper('html')->javascript($hoverJs));
 			$this->addHeaderItem('<style type="text/css"> img.ccm-image-block.alternate { display:none; } </style>');
 		}
 

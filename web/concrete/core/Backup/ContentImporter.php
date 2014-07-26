@@ -307,7 +307,7 @@ class ContentImporter
                 foreach ($ax->blocks->block as $bx) {
                     if ($bx['type'] != '') {
                         // we check this because you might just get a block node with only an mc-block-id, if it's an alias
-                        $bt = BlockType::getByHandle($bx['type']);
+                        $bt = BlockType::getByHandle((string) $bx['type']);
                         if (!is_object($bt)) {
                             throw new \Exception(t('Invalid block type handle: %s', strval($bx['type'])));
                         }
@@ -385,9 +385,9 @@ class ContentImporter
             foreach ($sx->blocktypes->blocktype as $bt) {
                 $pkg = static::getPackageObject($bt['package']);
                 if (is_object($pkg)) {
-                    BlockType::installBlockTypeFromPackage($bt['handle'], $pkg);
+                    BlockType::installBlockTypeFromPackage((string) $bt['handle'], $pkg);
                 } else {
-                    BlockType::installBlockType($bt['handle']);
+                    BlockType::installBlockType((string) $bt['handle']);
                 }
             }
         }
