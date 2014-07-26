@@ -109,6 +109,20 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         }
     }
 
+    public function export(\SimpleXMLElement $x) {
+        if (!$this->getTreeNodeParentID() == 0) {
+            $tag = $x->addChild($this->getTreeNodeTypeHandle());
+            $tag->addAttribute('name', $this->getTreeNodeDisplayName());
+        } else {
+            $tag = $x;
+        }
+
+        foreach($this->getChildNodes() as $node) {
+            $node->export($tag);
+        }
+        return $tag;
+    }
+
     public function duplicate($parent = false) {
         $node = $this::add($parent);
         $this->duplicateChildren($node);
