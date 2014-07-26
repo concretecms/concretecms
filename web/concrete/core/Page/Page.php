@@ -1827,6 +1827,22 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
+
+    public function addBlock($bt, $a, $data)
+    {
+        $b = parent::addBlock($bt, $a, $data);
+        $btHandle = $bt->getBlockTypeHandle();
+        $theme = $this->getCollectionThemeObject();
+        if ($btHandle) {
+            $templates = $theme->getThemeDefaultBlockTemplates();
+            if (count($templates) && isset($templates[$btHandle])) {
+                $template = $templates[$btHandle];
+                $b->updateBlockInformation(array('bFilename' => $template));
+            }
+        }
+        return $b;
+    }
+
     function move($nc) {
         $db = Loader::db();
         $newCParentID = $nc->getCollectionID();

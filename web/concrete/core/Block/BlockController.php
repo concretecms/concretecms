@@ -335,14 +335,24 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
 
     public function import($page, $arHandle, \SimpleXMLElement $blockNode)
     {
-        $args = array();
         $db = Loader::db();
         // handle the adodb stuff
         $args = $this->getImportData($blockNode, $page);
+        $blockData = array();
 
         $bt = BlockType::getByHandle($this->btHandle);
         $b = $page->addBlock($bt, $arHandle, $args);
-        $b->updateBlockInformation(array('bName' => $blockNode['name'], 'bFilename' => $blockNode['custom-template']));
+        $bName = (string) $blockNode['name'];
+        $bFilename = (string) $blockNode['custom-template'];
+        if ($bName) {
+            $blockData['bName'] = $bName;
+        }
+        if ($bFilename) {
+            $blockData['bFilename'] = $bFilename;
+        }
+        if (count($blockData)) {
+            $b->updateBlockInformation($blockData);
+        }
 
         if ($page->isMasterCollection() && $blockNode['mc-block-id'] != '') {
             ContentImporter::addMasterCollectionBlockID($b, (string)$blockNode['mc-block-id']);
