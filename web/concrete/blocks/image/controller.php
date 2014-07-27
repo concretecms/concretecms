@@ -76,6 +76,7 @@ class Controller extends BlockController {
 			$this->addHeaderItem('<style type="text/css"> img.ccm-image-block.alternate { display:none; } </style>');
 		}
 
+        $this->requireAsset('javascript', 'jquery');
 	}
 
 	

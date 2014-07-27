@@ -1,6 +1,8 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<? $navItems = $controller->getNavItems();
+<? View::getInstance()->requireAsset('javascript', 'jquery');
+
+$navItems = $controller->getNavItems();
 
 /**
  * The $navItems variable is an array of objects, each representing a nav menu item.
