@@ -10,6 +10,9 @@ abstract class Tree extends Object {
 	abstract protected function loadDetails();
 	abstract protected function deleteDetails();
 	abstract public function getTreeDisplayName();
+    abstract public function exportDetails(\SimpleXMLElement $sx);
+    abstract public static function importDetails(\SimpleXMLElement $sx);
+
 
 	public function setSelectedTreeNodeID($nodeID) {
 		$this->treeNodeSelectedID = $nodeID;
@@ -33,6 +36,16 @@ abstract class Tree extends Object {
 		}
 	}
 
+    public function export(\SimpleXMLElement $sx)
+    {
+        $treenode = $sx->addChild('tree');
+        $treenode->addAttribute('type', $this->getTreeTypeHandle());
+        $this->exportDetails($treenode);
+        $root = $this->getRootTreeNodeObject();
+        $root->populateChildren();
+        $root->export($treenode);
+    }
+
     public static function exportList(\SimpleXMLElement $sx)
     {
         $trees = $sx->addChild('trees');
@@ -40,11 +53,7 @@ abstract class Tree extends Object {
         $r = $db->Execute('select treeID from Trees order by treeID asc');
         while ($row = $r->Fetchrow()) {
             $tree = static::getByID($row['treeID']);
-            $treenode = $trees->addChild('tree');
-            $treenode->addAttribute('type', $tree->getTreeTypeHandle());
-            $root = $tree->getRootTreeNodeObject();
-            $root->populateChildren();
-            $root->export($treenode);
+            $tree->export($trees);
         }
     }
 
