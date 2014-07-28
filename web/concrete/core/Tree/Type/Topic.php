@@ -41,8 +41,19 @@ class Topic extends Tree {
 		return $tree;
 	}
 
+    public static function importDetails(\SimpleXMLElement $sx)
+    {
+        $isDefault = (string) $sx['default'];
+        if ($isDefault) {
+            return static::getDefault();
+        } else {
+            $name = (string) $sx['name'];
+            return static::add($name);
+        }
+    }
 
-	protected function loadDetails() {
+
+    protected function loadDetails() {
 		$db = Loader::db();
 		$row = $db->GetRow('select treeID, topicTreeName from TopicTrees where treeID = ?', array($this->treeID));
 		if (is_array($row) && $row['treeID']) {
