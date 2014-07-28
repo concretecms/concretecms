@@ -272,6 +272,22 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         return $node;
     }
 
+    public function importNode(\SimpleXMLElement $sx, $parent = false)
+    {
+        return static::add($parent);
+    }
+
+    public function importChildren(\SimpleXMLElement $sx)
+    {
+        $xnodes = $sx->children();
+        foreach($xnodes as $xn) {
+            $type = NodeType::getByHandle($xn->getName());
+            $class = $type->getTreeNodeTypeClass();
+            $node = call_user_func_array(array($class, 'importNode'), array($xn, $this));
+            call_user_func_array(array($node, 'importChildren'), array($xn));
+        }
+    }
+
     public function populateChildren() {
         $this->populateDirectChildrenOnly();
         foreach($this->childNodes as $node) {

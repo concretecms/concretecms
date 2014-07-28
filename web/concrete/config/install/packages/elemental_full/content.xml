@@ -1200,7 +1200,7 @@
         <link service="twitter" url="http://twitter.com/concrete5"/>
     </sociallinks>
     <trees>
-    <tree type="topic">
+    <tree type="topic" default="1">
         <topic_category name="Reviews">
             <topic name="Gadgets"/>
             <topic name="Movies"/>

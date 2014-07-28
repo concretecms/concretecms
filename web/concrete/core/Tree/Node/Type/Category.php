@@ -44,10 +44,14 @@ abstract class Category extends TreeNode {
 	}
 
 	public static function add($treeNodeCategoryName = '', $parent = false) {
-		$db = Loader::db();
 		$node = parent::add($parent);
 		$node->setTreeNodeCategoryName($treeNodeCategoryName);
 		return $node;
 	}
+
+    public function importNode(\SimpleXMLElement $sx, $parent = false)
+    {
+        return static::add((string) $sx['name'], $parent);
+    }
 
 }

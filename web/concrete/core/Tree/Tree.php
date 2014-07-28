@@ -48,6 +48,14 @@ abstract class Tree extends Object {
         }
     }
 
+    public static function import(\SimpleXMLElement $sx)
+    {
+        $type = TreeType::getByHandle((string) $sx['type']);
+        $class = $type->getTreeTypeClass();
+        $tree = call_user_func_array(array($class, 'importDetails'), array($sx));
+        $parent = $tree->getRootTreeNodeObject();
+        $parent->importChildren($sx);
+    }
 
 	public function getTreeID() {return $this->treeID;}
 	public function getRootTreeNodeObject() {return \Concrete\Core\Tree\Node\Node::getByID($this->rootTreeNodeID);}
