@@ -41,6 +41,14 @@ class Topic extends Tree {
 		return $tree;
 	}
 
+    public function exportDetails(\SimpleXMLElement $sx)
+    {
+        $default = self::getDefault();
+        if (is_object($default) && $default->getTreeID() == $this->getTreeID()) {
+            $sx->addAttribute('default', 1);
+        }
+    }
+
     public static function importDetails(\SimpleXMLElement $sx)
     {
         $isDefault = (string) $sx['default'];
