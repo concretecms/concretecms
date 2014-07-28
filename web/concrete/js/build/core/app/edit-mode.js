@@ -1066,15 +1066,15 @@
                     'menu': $('[data-block-menu=' + elem.attr('data-launch-block-menu') + ']')
                 });
 
-                $menuElem.find('a[data-menu-action=edit_inline]').unbind().on('click', function () {
+                $menuElem.find('a[data-menu-action=edit_inline]').unbind().on('click', function (event) {
                     Concrete.event.fire('EditModeBlockEditInline', {block: my, event: event});
                 });
 
-                $menuElem.find('a[data-menu-action=block_scrapbook]').unbind().on('click', function () {
+                $menuElem.find('a[data-menu-action=block_scrapbook]').unbind().on('click', function (event) {
                     Concrete.event.fire('EditModeBlockAddToClipboard', {block: my, event: event});
                 });
 
-                $menuElem.find('a[data-menu-action=delete_block]').unbind().on('click', function () {
+                $menuElem.find('a[data-menu-action=delete_block]').unbind().on('click', function (event) {
                     Concrete.event.fire('EditModeBlockDelete', {
                         message: $(this).attr('data-menu-delete-message'),
                         block: my,
@@ -1085,7 +1085,7 @@
                 $menuElem.find('a[data-menu-action=block_design]').unbind().on('click', function (e) {
                     e.preventDefault();
                     Concrete.event.fire('EditModeBlockEditInline', {
-                        block: my, event: event, action: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/block/design'
+                        block: my, event: e, action: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/block/design'
                     });
                 });
             }
