@@ -1,8 +1,8 @@
 <?
 namespace Concrete\Attribute\Topics;
+use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Concrete\Core\Tree\Node\Node;
 use Loader;
-use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Tree\Type\Topic as TopicTree;
 use \Concrete\Core\Tree\Tree;
 use \Concrete\Core\Tree\Node\Node as TreeNode;
@@ -25,7 +25,14 @@ class Controller extends AttributeTypeController  {
 		//return parent::getDisplaySanitizedValue();
 	}
 
-	public static function getSelectedOptions($avID) {
+    public function filterByAttribute(AttributedItemList $list, $column, $value, $comparison = '=')
+    {
+   //     $qb = $list->getQueryObject();
+ //       $qb->innerJoin('derp', 'derpderp', 'd.a = d.b');
+//        $list->filter('ak_' . $this->attributeKey->getAttributeKeyHandle(), $value, $comparison);
+    }
+
+    public static function getSelectedOptions($avID) {
 		//$avID = $this->getAttributeValueID();
 		$db = Loader::db();
 		$optionIDs = $db->execute(
@@ -145,10 +152,12 @@ class Controller extends AttributeTypeController  {
 		$ak = $this->getAttributeKey();
 		$cleanIDs = array();
 		$topicsArray = $_POST['topics_'.$ak->getAttributeKeyID()];
+        $db->Execute('delete from atSelectedTopics where avID = ?', array($this->getAttributeValueID()));
 		if(is_array($topicsArray) && count($topicsArray) > 0) {
 			foreach($topicsArray as $topicID) {
 				$cleanIDs[] = $sh->sanitizeInt($topicID);
 			}
+            print_r($cleanIDs);
 			foreach($cleanIDs as $topID) {
 				$db->execute('INSERT INTO atSelectedTopics (avID, TopicNodeID) VALUES (?, ?)', array($this->getAttributeValueID(), $topID));
 			}

@@ -19,25 +19,6 @@ class CollectionKey extends Key {
 		'primary' => array('cID')
 	);
 
-	/** 
-	 * Returns an attribute value list of attributes and values (duh) which a collection version can store 
-	 * against its object.
-	 * @return AttributeValueList
-	 */
-	public static function getAttributes($cID, $cvID, $method = 'getValue') {
-		$db = Loader::db();
-		$values = $db->GetAll("select akID, avID from CollectionAttributeValues where cID = ? and cvID = ?", array($cID, $cvID));
-		$avl = new AttributeValueList();
-		foreach($values as $val) {
-			$ak = static::getByID($val['akID']);
-			if (is_object($ak)) {
-				$value = $ak->getAttributeValue($val['avID'], $method);
-				$avl->addAttributeValue($ak, $value);
-			}
-		}
-		return $avl;
-	}
-
 	public static function getColumnHeaderList() {
 		return parent::getList('collection', array('akIsColumnHeader' => 1));	
 	}

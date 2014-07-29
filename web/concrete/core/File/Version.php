@@ -292,15 +292,6 @@ class Version
     }
 
     /**
-     * Gets an associative array of all attributes for a file version
-     */
-    public function getAttributeList()
-    {
-        $attributes = FileAttributeKey::getAttributes($this->fID, $this->fvID);
-        return $attributes;
-    }
-
-    /**
      * Gets an attribute for the file. If "nice mode" is set, we display it nicely
      * for use in the file attributes table
      */

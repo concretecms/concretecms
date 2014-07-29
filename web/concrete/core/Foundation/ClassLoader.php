@@ -59,6 +59,7 @@ class ClassLoader  {
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Authentication', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_AUTHENTICATION);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Block', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_BLOCKS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Theme', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_THEMES);
+        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Controller\\PageType', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Controller', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_CONTROLLERS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Job', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_JOBS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Core', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_CLASSES);
@@ -73,6 +74,7 @@ class ClassLoader  {
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Authentication', DIR_BASE_CORE . '/' . DIRNAME_AUTHENTICATION);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Block', DIR_BASE_CORE . '/' . DIRNAME_BLOCKS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Theme', DIR_BASE_CORE . '/' . DIRNAME_THEMES);
+        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Controller\\PageType', DIR_BASE_CORE . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Controller', DIR_BASE_CORE . '/' . DIRNAME_CONTROLLERS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Job', DIR_BASE_CORE . '/' . DIRNAME_JOBS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
@@ -82,6 +84,7 @@ class ClassLoader  {
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Authentication', DIR_APPLICATION . '/' . DIRNAME_AUTHENTICATION);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Block', DIR_APPLICATION . '/' . DIRNAME_BLOCKS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Theme', DIR_APPLICATION . '/' . DIRNAME_THEMES);
+        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Controller\\PageType', DIR_APPLICATION . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Controller', DIR_APPLICATION . '/' . DIRNAME_CONTROLLERS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Job', DIR_APPLICATION . '/' . DIRNAME_JOBS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Core', DIR_APPLICATION . '/' . DIRNAME_CLASSES);
