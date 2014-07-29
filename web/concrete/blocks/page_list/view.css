@@ -1,7 +1,12 @@
 div.ccm-page-list-rss-icon {margin-top: 10px}
 
-div.ccm-block-page-list-page-entry {
+div.ccm-block-page-list-page-entry-horizontal {
     display: table;
+}
+
+div.ccm-block-page-list-page-entry-horizontal,
+div.ccm-block-page-list-page-entry {
+    margin-bottom: 10px;
 }
 
 

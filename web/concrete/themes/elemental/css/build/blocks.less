@@ -142,6 +142,7 @@ main {
       margin-bottom: 10px;
     }
   }
+
   .ccm-faq-block-entries {
     h3 {
       margin-top: 0px;
@@ -175,6 +176,17 @@ main {
   }
 
   // Blog
+  div.ccm-block-page-list-page-entry-horizontal {
+    .clearfix();
+  }
+
+  div.ccm-block-page-list-page-entry-horizontal,
+  div.ccm-block-page-list-page-entry {
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid @content-section-divider-color;
+  }
+
   div.blog-entry-list {
 
     div.ccm-block-page-list-no-pages {
@@ -182,6 +194,36 @@ main {
       font-size: @h3-type-font-size;
       font-family: @h3-type-font-family;
       color: @h5-type-color;
+    }
+
+    div.ccm-block-page-list-page-entry-horizontal {
+      .make-row();
+
+      div.ccm-block-page-list-page-entry-thumbnail {
+        .make-xs-column(2);
+      }
+      div.ccm-block-page-list-page-entry-text {
+        .make-xs-column(10);
+      }
+    }
+
+    div.ccm-block-page-list-date {
+      color: lighten(@body-type-color, 25%);
+      font-size: 0.8em;
+      margin-bottom: 10px;
+    }
+
+    h3 {
+      margin: 0px;
+
+      a {
+        color: @h2-type-color;
+        &:hover {
+          text-decoration: none;
+          color: @header-navigation-type-color;
+        }
+      }
+
     }
 
   }
