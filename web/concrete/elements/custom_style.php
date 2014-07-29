@@ -103,7 +103,7 @@ $form = Core::make('helper/form');
 
 <form method="post" action="<?=$saveAction?>" id="ccm-inline-design-form">
 <ul class="ccm-inline-toolbar ccm-ui">
-    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-font"></i></a>
+    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown" title="<?=t('Text Size and Color')?>"><i class="fa fa-font"></i></a>
 
         <div class="ccm-inline-design-dropdown-menu dropdown-menu">
             <div>
@@ -131,7 +131,7 @@ $form = Core::make('helper/form');
         </div>
 
     </li>
-    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-image"></i></a>
+    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown" title="<?=t('Background Color and Image')?>"><i class="fa fa-image"></i></a>
 
         <div class="ccm-inline-design-dropdown-menu dropdown-menu">
             <h3><?=t('Background')?></h3>
@@ -151,7 +151,7 @@ $form = Core::make('helper/form');
         </div>
 
     </li>
-    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-square-o"></i></a>
+    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown" title="<?=t('Borders')?>"><i class="fa fa-square-o"></i></a>
         <div class="ccm-inline-design-dropdown-menu dropdown-menu">
             <h3><?=t('Border')?></h3>
             <div>
@@ -179,7 +179,7 @@ $form = Core::make('helper/form');
             </div>
         </div>
     </li>
-    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-arrows-h"></i></a>
+    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown" title="<?=t('Margin and Padding')?>"><i class="fa fa-arrows-h"></i></a>
         <div class="ccm-inline-design-dropdown-menu dropdown-menu">
             <h3><?=t('Padding')?></h3>
             <div>
@@ -247,7 +247,7 @@ $form = Core::make('helper/form');
         </div>
 
     </li>
-    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-magic"></i></a>
+    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown" title="<?=t('Shadow and Rotation (CSS3)')?>"><i class="fa fa-magic"></i></a>
         <div class="ccm-inline-design-dropdown-menu dropdown-menu">
             <h3><?=t('Shadow')?></h3>
             <div>
@@ -296,7 +296,7 @@ $form = Core::make('helper/form');
         </div>
 
     </li>
-    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown"><i class="fa fa-cog"></i></a>
+    <li class="ccm-inline-toolbar-icon-cell"><a href="#" data-toggle="dropdown" title="<?=t('Custom CSS Classes, Block Name, Custom Templates and Reset Styles')?>"><i class="fa fa-cog"></i></a>
         <div class="ccm-inline-design-dropdown-menu dropdown-menu">
             <h3><?=t('Advanced')?></h3>
 
