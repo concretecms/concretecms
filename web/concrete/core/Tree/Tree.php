@@ -68,6 +68,7 @@ abstract class Tree extends Object {
 
 	public function getTreeID() {return $this->treeID;}
 	public function getRootTreeNodeObject() {return \Concrete\Core\Tree\Node\Node::getByID($this->rootTreeNodeID);}
+    public function getRootTreeNodeID() {return $this->rootTreeNodeID;}
 
 	public function setRequest($data) {
 		$this->requestData = $data;

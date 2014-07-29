@@ -86,11 +86,6 @@ class Controller extends AbstractController
         }
     }
 
-    public function registerRequiredAssets()
-    {
-        return false;
-    }
-
     public function field($fieldName)
     {
         return 'akID[' . $this->attributeKey->getAttributeKeyID() . '][' . $fieldName . ']';
@@ -115,7 +110,6 @@ class Controller extends AbstractController
     {
         $this->identifier = $attributeType->getAttributeTypeID();
         $this->attributeType = $attributeType;
-        $this->registerRequiredAssets();
         $this->set('controller', $this);
     }
 

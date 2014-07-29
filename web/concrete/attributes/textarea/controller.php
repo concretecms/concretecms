@@ -21,13 +21,6 @@ class Controller extends DefaultController  {
 		$this->setDisplayMode($akTextareaDisplayMode, $options);
 	}
 
-    public function registerRequiredAssets()
-    {
-        $this->requireAsset('jquery/ui');
-        $this->requireAsset('redactor');
-    }
-
-
     public function getDisplaySanitizedValue() {
 		$this->load();
 		if ($this->akTextareaDisplayMode == 'text') {
@@ -38,6 +31,9 @@ class Controller extends DefaultController  {
 	
 	public function form($additionalClass = false) {
 		$this->load();
+        $this->requireAsset('jquery/ui');
+        $this->requireAsset('redactor');
+
 		if (is_object($this->attributeValue)) {
 			$value = $this->getAttributeValue()->getValue();
 		}

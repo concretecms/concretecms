@@ -109,7 +109,11 @@ $th = Loader::helper('text');
 		</div>
 		<link href="<?php echo BASE_URL.$rssUrl ?>" rel="alternate" type="application/rss+xml" title="<?php echo $rssTitle; ?>" />
 	<?php endif; ?>
- 
+
+    <? if (count($pages) == 0): ?>
+        <div class="ccm-block-page-list-no-pages"><?=$noResultsMessage?></div>
+    <? endif;?>
+
 </div><!-- end .ccm-block-page-list -->
 
 

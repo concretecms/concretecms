@@ -4,8 +4,7 @@ $node = $tree->getRootTreeNodeObject();
 $node->populateChildren();
 if (is_object($node)) {
     $walk = function($node) use (&$walk, &$view) {
-
-        print '<ul class="">';
+        print '<ul class="ccm-block-topic-list">';
         foreach($node->getChildNodes() as $topic) {
             if ($topic instanceof \Concrete\Core\Tree\Node\Type\TopicCategory) { ?>
                 <li><?=$topic->getTreeNodeDisplayName()?></li>

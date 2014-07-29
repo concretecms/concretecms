@@ -181,16 +181,6 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 
 	<? }
 
-	if ($c->isMasterCollection()) {
-		print Loader::helper('concrete/ui')->notify(array(
-			'title' => t('Page Type Template.'),
-			'message' => t('Page Defaults for %s Page Type. All edits take effect immediately.', $c->getPageTypeName()),
-			'type' => 'info',
-			'icon' => 'info-sign',
-		))?>
-
-	<? }
-	
 	$hasPendingPageApproval = false;
 	
 	if ($canViewToolbar) { ?>

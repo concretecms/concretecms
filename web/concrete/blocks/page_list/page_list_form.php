@@ -45,7 +45,7 @@ $form = Loader::helper('form/page_selector');
             ?>
         </div>
 
-        <legend><?= t('Filters') ?></legend>
+        <legend><?= t('Filtering') ?></legend>
         <div class="checkbox">
             <label>
                 <input <? if (!is_object($featuredAttribute)) { ?> disabled <? } ?> type="checkbox" name="displayFeaturedOnly"
@@ -66,6 +66,14 @@ $form = Loader::helper('form/page_selector');
                        value="1" <? if ($displayAliases == 1) { ?> checked <? } ?> />
                 <?= t('Display page aliases.') ?>
             </label>
+        </div>
+
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="enableExternalFiltering" value="1" <? if ($enableExternalFiltering) { ?>checked<? } ?> />
+                <?= t('Enable Other Blocks to Filter This Page List.') ?>
+            </label>
+            <span class="help-block"><?=t('Allows other blocks like the topic list block to pass search criteria to this page list block.')?></span>
         </div>
 
         <legend><?= t('Pagination') ?></legend>
@@ -258,6 +266,12 @@ $form = Loader::helper('form/page_selector');
                 </div>
             </div>
         </div>
+
+        <div class="form-group">
+            <label class="control-label"><?= t('Message to Display When No Pages Listed.') ?></label>
+            <textarea class="form-control" name="noResultsMessage"><?=$noResultsMessage?></textarea>
+        </div>
+
 
         <div class="loader">
             <i class="fa fa-cog fa-spin"></i>
