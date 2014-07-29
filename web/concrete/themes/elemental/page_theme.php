@@ -29,6 +29,7 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
                 'block-sidebar-wrapped'
             ),
             'content' => array('block-sidebar-wrapped'),
+            'topic_list' => array('block-sidebar-wrapped'),
             'image' => array(
                 'image-right-tilt',
                 'image-circle'

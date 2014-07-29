@@ -93,20 +93,20 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 				<? if (!$pageInUseBySomeoneElse && $c->getCollectionPointerID() == 0) { ?>
 
 				<? if ($c->isEditMode()) { ?>
-					<li class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit pull-left hidden-xs"><a data-toolbar-action="check-in" <? if ($vo->isNew()) { ?>href="javascript:void(0)" data-launch-panel="check-in"<? } else { ?>href="<?=URL::to('/ccm/system/page/check_in', $c->getCollectionID(), Loader::helper('validation/token')->generate())?>"<? } ?> data-panel-url="<?=URL::to('/ccm/system/panels/page/check_in')?>"><i class="fa fa-pencil"></i></a></li>
+					<li class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit pull-left hidden-xs"><a data-toolbar-action="check-in" <? if ($vo->isNew()) { ?>href="javascript:void(0)" data-launch-panel="check-in"<? } else { ?>href="<?=URL::to('/ccm/system/page/check_in', $c->getCollectionID(), Loader::helper('validation/token')->generate())?>"<? } ?> data-panel-url="<?=URL::to('/ccm/system/panels/page/check_in')?>" title="<?=t('Exit Edit Mode')?>"><i class="fa fa-pencil"></i></a></li>
 				<? } else { ?>
-					<li class="ccm-toolbar-page-edit pull-left hidden-xs"><a data-toolbar-action="check-out" href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?>"><i class="fa fa-pencil"></i></a></li>
+					<li class="ccm-toolbar-page-edit pull-left hidden-xs"><a data-toolbar-action="check-out" href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$c->getCollectionID()?>&ctask=check-out<?=$token?>" title="<?=t('Edit This Page')?>"><i class="fa fa-pencil"></i></a></li>
 				<? } ?>
 
-				<li class="pull-left hidden-xs"><a href="#" data-launch-panel="page" data-panel-url="<?=URL::to('/ccm/system/panels/page')?>"><i class="fa fa-cog"></i></a></li>
+				<li class="pull-left hidden-xs"><a href="#" data-launch-panel="page" data-panel-url="<?=URL::to('/ccm/system/panels/page')?>" title="<?=t('Page Design, Location, Attributes and Settings')?>"><i class="fa fa-cog"></i></a></li>
 				<? }
 
 				if ($cp->canEditPageContents() && (!$pageInUseBySomeoneElse)) { ?>
 					<li class="ccm-toolbar-add pull-left hidden-xs">
 						<? if ($c->isEditMode()) { ?>
-							<a href="#" data-launch-panel="add-block" data-panel-url="<?=URL::to('/ccm/system/panels/add')?>"><i class="fa fa-plus"></i></a>
+							<a href="#" data-launch-panel="add-block" data-panel-url="<?=URL::to('/ccm/system/panels/add')?>" title="<?=t('Add Content to The Page')?>"><i class="fa fa-plus"></i></a>
 						<? } else { ?>
-							<a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$cID?>&ctask=check-out-add-block<?=$token?>"><i class="fa fa-plus"></i></a>
+							<a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$cID?>&ctask=check-out-add-block<?=$token?>" title="<?=t('Add Content to The Page')?>"><i class="fa fa-plus"></i></a>
 						<? } ?>
 					</li>
 				<? } 
@@ -126,9 +126,9 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 					<li class="pull-left" id="ccm-white-label-message"><?=t('Powered by <a href="%s">concrete5</a>.', CONCRETE5_ORG_URL)?></li>
 				<? }?>
                 <li class="pull-right ccm-toolbar-mobile-menu-button visible-xs hidden-sm hidden-md hidden-lg"><i class="fa fa-bars fa-2"></i></li>
-				<li class="pull-right hidden-xs "><a href="<?=URL::to('/dashboard')?>" data-launch-panel="dashboard"><i class="fa fa-th-large"></i></a>
+				<li class="pull-right hidden-xs "><a href="<?=URL::to('/dashboard')?>" data-launch-panel="dashboard" title="<?=t('Dashboard – Change Site-wide Settings')?>"><i class="fa fa-th-large"></i></a>
 
-				<li class="pull-right hidden-xs"><a href="#" data-panel-url="<?=URL::to('/ccm/system/panels/sitemap')?>" data-launch-panel="sitemap"><i class="fa fa-list-alt"></i></a>
+				<li class="pull-right hidden-xs"><a href="#" data-panel-url="<?=URL::to('/ccm/system/panels/sitemap')?>" title="<?=t('Add Pages and Navigate Your Site')?>" data-launch-panel="sitemap"><i class="fa fa-list-alt"></i></a>
 
 					</li>
 				<li class="ccm-toolbar-search pull-right hidden-xs"><i class="fa fa-search"></i> <input type="search" id="ccm-nav-intelligent-search" tabindex="1" /></li>
