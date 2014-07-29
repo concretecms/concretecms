@@ -545,46 +545,8 @@ class Key extends Object
         );
     }
 
-    /**
-     * @param string $table
-     * @param array $columnHeaders
-     * @param \Concrete\Core\Attribute\Value\ValueList $attribs
-     * @param mixed $rs this is a legacy parameter, not actually used anymore
-     */
-    public function reindex($table, $columnHeaders, $attribs, $rs = null)
-    {
-        /** @var \Concrete\Core\Database\Connection $db */
-        $db = Loader::db();
-        $sm = $db->getSchemaManager();
-
-        /** @var \Doctrine\DBAL\Schema\Column[] $columns */
-        $columns = $sm->listTableColumns($table);
-
-        $attribs->rewind();
-        while ($attribs->valid()) {
-            $column = 'ak_' . $attribs->key();
-            if (is_array($attribs->current())) {
-                foreach ($attribs->current() as $key => $value) {
-                    $column .= '_' . $key;
-                    if (isset($columns[strtolower($column)])) {
-                        $columnHeaders[$column] = $value;
-                    }
-                }
-            } else {
-                if (isset($columns[strtolower($column)])) {
-                    $columnHeaders[$column] = $attribs->current();
-                }
-            }
-
-            $attribs->next();
-        }
-
-        $db->insert($table, $columnHeaders);
-    }
-
     public function updateSearchIndex($prevHandle = false)
     {
-
         $type = $this->getAttributeType();
         $cnt = $type->getController();
 

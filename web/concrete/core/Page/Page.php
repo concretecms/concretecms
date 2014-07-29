@@ -159,14 +159,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $env = Environment::get();
 
         if ($this->getPageTypeID() > 0) {
-            /*
-            $ptHandle = $mixed->getPageTypeHandle();
-            $path = self::pageTypeControllerPath($ptHandle, $mixed->getPackageHandle());
-            if ($path) {
-                require_once($path);
-                $class = Object::camelcase($ptHandle) . 'PageTypeController';
-            }
-            */
+            $ptHandle = $this->getPageTypeHandle();
+            $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ptHandle . '.php', $this->getPackageHandle());
+            $prefix = $r->override ? true : $this->getPackageHandle();
+            $class = core_class('Controller\\PageType\\' . camelcase($ptHandle), $prefix);
         } else if ($this->isGeneratedCollection()) {
             $file = $this->getCollectionFilename();
             $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . $file, $this->getPackageHandle());

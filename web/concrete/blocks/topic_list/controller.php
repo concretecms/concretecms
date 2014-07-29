@@ -16,7 +16,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
-    protected $btInterfaceHeight = 100;
+    protected $btInterfaceHeight = 250;
     protected $btTable = 'btTopicList';
 
     public function getBlockTypeDescription()
@@ -53,5 +53,33 @@ class Controller extends BlockController
         $tt = new TopicTree();
         $tree = $tt->getByID(Loader::helper('security')->sanitizeInt($this->topicTreeID));
         $this->set('tree', $tree);
+    }
+
+    public function action_topic($topic = false) {
+        $this->set('selectedTopicID', intval($topic));
+        $this->view();
+    }
+
+    public function getTopicLink(\Concrete\Core\Tree\Node\Type\Topic $topic)
+    {
+        if ($this->cParentID) {
+            $c = \Page::getByID($this->cParentID);
+        } else {
+            $c = \Page::getCurrentPage();
+        }
+
+        return \URL::page($c, 'topic', $topic->getTreeNodeID());
+    }
+
+    public function save($data)
+    {
+        $externalTarget = intval($data['externalTarget']);
+        if ($externalTarget === 0) {
+            $data['cParentID'] = 0;
+        } else {
+            $data['cParentID'] = intval($data['cParentID']);
+        }
+
+        parent::save($data);
     }
 }
