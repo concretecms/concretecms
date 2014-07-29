@@ -223,6 +223,22 @@ $form = Loader::helper('form/page_selector');
         </div>
 
         <div class="form-group">
+            <label class="control-label"><?= t('Include Public Page Date') ?></label>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="includeDate"
+                           value="0" <?= ($includeDate ? "" : "checked=\"checked\"") ?>/> <?= t('No') ?>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="includeDate"
+                           value="1" <?= ($includeDate ? "checked=\"checked\"" : "") ?>/> <?= t('Yes') ?>
+                </label>
+            </div>
+            <span class="help-block"><?=t('This is usually the date the page is created. It can be changed from the page attributes panel.')?></span>
+        </div>
+        <div class="form-group">
             <label class="control-label"><?= t('Display Thumbnail Image') ?></label>
             <div class="radio">
                 <label>

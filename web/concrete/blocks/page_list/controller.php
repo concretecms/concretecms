@@ -237,6 +237,7 @@ class Controller extends BlockController
         }
         $args['enableExternalFiltering'] = ($args['enableExternalFiltering']) ? '1' : '0';
         $args['includeAllDescendents'] = ($args['includeAllDescendents']) ? '1' : '0';
+        $args['includeDate'] = ($args['includeDate']) ? '1' : '0';
         $args['truncateSummaries'] = ($args['truncateSummaries']) ? '1' : '0';
         $args['displayFeaturedOnly'] = ($args['displayFeaturedOnly']) ? '1' : '0';
         $args['displayThumbnail'] = ($args['displayThumbnail']) ? '1' : '0';

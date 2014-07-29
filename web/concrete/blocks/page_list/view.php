@@ -32,10 +32,12 @@ $th = Loader::helper('text');
             $entryClasses = 'ccm-block-page-list-page-entry-horizontal';
         }
 
+        $date = $page->getCollectionDatePublic(DATE_APP_GENERIC_MDYT_FULL);
+
+
 		//Other useful page data...
 		
-		//$date = $page->getCollectionDatePublic(DATE_APP_GENERIC_MDY_FULL);
-		
+
 		//$last_edited_by = $page->getVersionObject()->getVersionAuthorUserName();
 		
 		//$original_author = Page::getByID($page->getCollectionID(), 1)->getVersionObject()->getVersionAuthorUserName();
@@ -84,6 +86,11 @@ $th = Loader::helper('text');
                         <a href="<?php echo $url ?>" target="<?php echo $target ?>"><?php echo $title ?></a>
                     <? } ?>
                 </h3>
+
+                <? if ($includeDate): ?>
+                    <div class="ccm-block-page-list-date"><?=$date?></div>
+                <? endif; ?>
+
                 <? if ($includeDescription): ?>
                     <div class="ccm-block-page-list-description">
                         <?php echo $description ?>
