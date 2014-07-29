@@ -21,11 +21,6 @@ class Controller extends AttributeTypeController
     }
 
 
-    public function registerRequiredAssets()
-    {
-        $this->requireAsset('css', 'jquery/rating');
-    }
-
     public function getDisplayValue()
     {
         $value = $this->getValue();

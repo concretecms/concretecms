@@ -235,6 +235,7 @@ class Controller extends BlockController
         if (!$args['cParentID']) {
             $args['cParentID'] = 0;
         }
+        $args['enableExternalFiltering'] = ($args['enableExternalFiltering']) ? '1' : '0';
         $args['includeAllDescendents'] = ($args['includeAllDescendents']) ? '1' : '0';
         $args['truncateSummaries'] = ($args['truncateSummaries']) ? '1' : '0';
         $args['displayFeaturedOnly'] = ($args['displayFeaturedOnly']) ? '1' : '0';

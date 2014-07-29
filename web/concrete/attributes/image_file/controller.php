@@ -19,11 +19,6 @@ class Controller extends AttributeTypeController  {
 		}
 	}
 
-    public function registerRequiredAssets()
-    {
-        $this->requireAsset('core/file-manager');
-    }
-	
 	public function getDisplayValue() {
 		$f = $this->getValue();
 		if (is_object($f)) {

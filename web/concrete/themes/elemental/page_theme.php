@@ -25,6 +25,7 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
             'feature' => array('feature-home-page'),
             'page_list' => array(
                 'recent-blog-entry',
+                'blog-entry-list',
                 'page-list-with-buttons',
                 'block-sidebar-wrapped'
             ),

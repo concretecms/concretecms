@@ -1,8 +1,11 @@
 <?
 namespace Concrete\Attribute\Topics;
+use Concrete\Core\Tree\Node\Node;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Tree\Type\Topic as TopicTree;
+use \Concrete\Core\Tree\Tree;
+use \Concrete\Core\Tree\Node\Node as TreeNode;
 use \Concrete\Core\Attribute\Controller as AttributeTypeController;
 class Controller extends AttributeTypeController  {
 
@@ -22,12 +25,6 @@ class Controller extends AttributeTypeController  {
 		//return parent::getDisplaySanitizedValue();
 	}
 
-    public function registerRequiredAssets()
-    {
-        $this->requireAsset('core/topics');
-        $this->requireAsset('javascript', 'jquery/form');
-    }
-
 	public static function getSelectedOptions($avID) {
 		//$avID = $this->getAttributeValueID();
 		$db = Loader::db();
@@ -37,9 +34,33 @@ class Controller extends AttributeTypeController  {
 		);
 		return $optionIDs;
 	}
-	
-	public function form($additionalClass = false) {
+
+    public function exportKey($key) {
+        $this->load();
+        $tree = Tree::getByID($this->akTopicTreeID);
+        $node = Node::getByID($this->akTopicParentNodeID);
+        $path = '/';
+        $nodes = $node->getTreeNodeParentArray();
+        foreach($nodes as $n) {
+            if ($n->getTreeNodeID() == $tree->getRootTreeNodeID()) {
+                continue;
+            }
+            $path .= $n->getTreeNodeDisplayName() . '/';
+        }
+        if ($node->getTreeNodeID() != $tree->getRootTreeNodeID()) {
+            $path .= $node->getTreeNodeDisplayName();
+        }
+
+        $treeNode = $key->addChild('tree');
+        $treeNode->addAttribute('name', $tree->getTreeDisplayName());
+        $treeNode->addAttribute('path', $path);
+        return $akey;
+    }
+
+    public function form($additionalClass = false) {
 		$this->load();
+        $this->requireAsset('core/topics');
+        $this->requireAsset('javascript', 'jquery/form');
 		if (is_object($this->attributeValue)) {
 			$value = $this->getAttributeValue()->getValue();
 		}
@@ -158,6 +179,8 @@ class Controller extends AttributeTypeController  {
 	}
 	
 	public function type_form() {
+        $this->requireAsset('core/topics');
+        $this->requireAsset('javascript', 'jquery/form');
 		$this->load();
 		$tt = new TopicTree();
 		$defaultTree = $tt->getDefault();
