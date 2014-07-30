@@ -12,8 +12,21 @@ class Controller extends AttributeTypeController  {
 	protected $searchIndexFieldDefinition = array('type' => 'text', 'options' => array('length' => 4294967295, 'default' => null, 'notnull' => false));
 
 	public $helpers = array('form');
-	
-	public function saveKey($data) {
+
+    public function filterByAttribute(AttributedItemList $list, $value, $comparison = '=')
+    {
+        $topic = Node::getByID(intval($value));
+        if (is_object($topic) && $topic instanceof \Concrete\Core\Tree\Node\Type\Topic) {
+            $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();
+            $qb = $list->getQueryObject();
+            $qb->andWhere(
+                $qb->expr()->like($column, ':topic')
+            );
+            $qb->setParameter('topic', $topic->getTreeNodeDisplayName());
+        }
+    }
+
+    public function saveKey($data) {
 		$akTopicParentNodeID = $data['akTopicParentNodeID'];
 		$akTopicTreeID = $data['akTopicTreeID'];
 		$this->setNodes($akTopicParentNodeID, $akTopicTreeID);
@@ -24,13 +37,6 @@ class Controller extends AttributeTypeController  {
 		//$this->load();
 		//return parent::getDisplaySanitizedValue();
 	}
-
-    public function filterByAttribute(AttributedItemList $list, $column, $value, $comparison = '=')
-    {
-   //     $qb = $list->getQueryObject();
- //       $qb->innerJoin('derp', 'derpderp', 'd.a = d.b');
-//        $list->filter('ak_' . $this->attributeKey->getAttributeKeyHandle(), $value, $comparison);
-    }
 
     public static function getSelectedOptions($avID) {
 		//$avID = $this->getAttributeValueID();
@@ -46,18 +52,7 @@ class Controller extends AttributeTypeController  {
         $this->load();
         $tree = Tree::getByID($this->akTopicTreeID);
         $node = Node::getByID($this->akTopicParentNodeID);
-        $path = '/';
-        $nodes = $node->getTreeNodeParentArray();
-        foreach($nodes as $n) {
-            if ($n->getTreeNodeID() == $tree->getRootTreeNodeID()) {
-                continue;
-            }
-            $path .= $n->getTreeNodeDisplayName() . '/';
-        }
-        if ($node->getTreeNodeID() != $tree->getRootTreeNodeID()) {
-            $path .= $node->getTreeNodeDisplayName();
-        }
-
+        $path = $node->getTreeNodeDisplayPath();
         $treeNode = $key->addChild('tree');
         $treeNode->addAttribute('name', $tree->getTreeDisplayName());
         $treeNode->addAttribute('path', $path);
@@ -157,7 +152,6 @@ class Controller extends AttributeTypeController  {
 			foreach($topicsArray as $topicID) {
 				$cleanIDs[] = $sh->sanitizeInt($topicID);
 			}
-            print_r($cleanIDs);
 			foreach($cleanIDs as $topID) {
 				$db->execute('INSERT INTO atSelectedTopics (avID, TopicNodeID) VALUES (?, ?)', array($this->getAttributeValueID(), $topID));
 			}

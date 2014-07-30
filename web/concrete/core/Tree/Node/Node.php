@@ -129,6 +129,23 @@ abstract class Node extends Object implements \Concrete\Core\Permission\ObjectIn
         return $node;
     }
 
+    public function getTreeNodeDisplayPath()
+    {
+        $path = '/';
+        $nodes = array_reverse($this->getTreeNodeParentArray());
+        for ($i = 0; $i < count($nodes); $i++ ) {
+            if ($i == 0) {
+                continue;
+            }
+            $n = $nodes[$i];
+            $path .= $n->getTreeNodeDisplayName() . '/';
+        }
+        if (count($nodes) > 0) {
+            $path .= $this->getTreeNodeDisplayName();
+        }
+        return $path;
+    }
+
     protected function duplicateChildren(Node $node) {
         if ($this->overrideParentTreeNodePermissions()) {
             $node->setTreeNodePermissionsToOverride();
