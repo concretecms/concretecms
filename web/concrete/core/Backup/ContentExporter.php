@@ -251,8 +251,8 @@ class ContentExporter {
 			return '{ccm:export:pagetype:' . $ct->getPageTypeHandle() . '}';
 		}
 	}
-	
-	/** 
+
+    /**
 	 * Removes an item from the export xml registry
 	 */
 	public function removeItem($parent, $node, $handle) {

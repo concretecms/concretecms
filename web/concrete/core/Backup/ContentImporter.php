@@ -317,13 +317,26 @@ class ContentImporter
                         $btc->import($page, (string)$ax['name'], $bx);
                     } else {
                         if ($bx['mc-block-id'] != '') {
-
                             // we find that block in the master collection block pool and alias it out
                             $bID = array_search((string)$bx['mc-block-id'], self::$mcBlockIDs);
                             if ($bID) {
                                 $mc = Page::getByID($page->getMasterCollectionID(), 'RECENT');
                                 $block = Block::getByID($bID, $mc, (string)$ax['name']);
                                 $block->alias($page);
+
+                                if ($block->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
+                                    // we have to go get the blocks on that page in this layout.
+                                    $btc = $block->getController();
+                                    $arLayout = $btc->getAreaLayoutObject();
+                                    $columns = $arLayout->getAreaLayoutColumns();
+                                    foreach($columns as $column) {
+                                        $area = $column->getAreaObject();
+                                        $blocks = $area->getAreaBlocksArray($mc);
+                                        foreach($blocks as $_b) {
+                                            $_b->alias($page);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -814,9 +827,12 @@ class ContentImporter
     {
         if (isset($sx->attributesets)) {
             foreach ($sx->attributesets->attributeset as $as) {
+                $set = \Concrete\Core\Attribute\Set::getByHandle((string) $as['handle']);
                 $akc = AttributeKeyCategory::getByHandle($as['category']);
-                $pkg = static::getPackageObject($as['package']);
-                $set = $akc->addSet((string)$as['handle'], (string)$as['name'], $pkg, $as['locked']);
+                if (!is_object($set)) {
+                    $pkg = static::getPackageObject($as['package']);
+                    $set = $akc->addSet((string)$as['handle'], (string)$as['name'], $pkg, $as['locked']);
+                }
                 foreach ($as->children() as $ask) {
                     $ak = $akc->getAttributeKeyByHandle((string)$ask['handle']);
                     if (is_object($ak)) {
