@@ -5,6 +5,8 @@ use Package;
 use CacheLocal;
 use \Concrete\Core\Attribute\Value\ValueList as AttributeValueList;
 use \Concrete\Core\Attribute\Value\FileValue as FileAttributeValue;
+use \Concrete\Core\File\Type\TypeList as FileTypeList;
+use \Concrete\Core\Attribute\Type as AttributeType;
 use File;
 use FileVersion;
 class FileKey extends Key {
