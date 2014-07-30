@@ -333,7 +333,7 @@
                                                                 <truncateChars><![CDATA[0]]></truncateChars>
                                                                 <enableExternalFiltering><![CDATA[1]]></enableExternalFiltering>
                                                                 <noResultsMessage><![CDATA[No posts to this blog.]]></noResultsMessage>
-                                                                <includeDate><![CDATA[0]]></includeDate>
+                                                                <includeDate><![CDATA[1]]></includeDate>
                                                             </record>
                                                         </data>
                                                     </block>
