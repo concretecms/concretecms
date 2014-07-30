@@ -107,7 +107,7 @@ class BlockView extends AbstractView
                 $c = Page::getCurrentPage();
                 if (is_object($b) && is_object($c)) {
                     $a = $b->getBlockAreaObject();
-                    return URL::page($c, 'passthru', urlencode($a->getAreaHandle()), $b->getBlockID(), $task);
+                    return URL::page($c, $task);
                 }
             }
         } catch (Exception $e) {
