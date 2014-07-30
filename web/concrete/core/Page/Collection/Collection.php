@@ -354,17 +354,15 @@ class Collection extends Object
         }
         if ($actuallyDoReindex || ENABLE_PROGRESSIVE_PAGE_REINDEX == false) {
             $db = Loader::db();
-            $attributes = $db->GetCol('select akID from CollectionAttributeValues where cID = ? and cvID = ?', array(
+            $attribs = CollectionAttributeKey::getAttributes(
                 $this->getCollectionID(),
-                $this->getVersionID()
-            ));
-
-            foreach($attributes as $akID) {
-                $ak = CollectionAttributeKey::getByID($akID);
-                if (is_object($ak)) {
-                    $ak->getController()->reindex($ak, $this);
-                }
-            }
+                $this->getVersionID(),
+                'getSearchIndexValue'
+            );
+            $db->Execute('delete from CollectionSearchIndexAttributes where cID = ?', array($this->getCollectionID()));
+            $searchableAttributes = array('cID' => $this->getCollectionID());
+            $key = new Key();
+            $key->reindex('CollectionSearchIndexAttributes', $searchableAttributes, $attribs);
 
             if ($index == false) {
                 $index = new IndexedSearch();

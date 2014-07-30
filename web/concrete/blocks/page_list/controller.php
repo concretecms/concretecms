@@ -201,6 +201,7 @@ class Controller extends BlockController
         $topic = intval($topic);
         $ak = CollectionAttributeKey::getByHandle('topic');
         if (is_object($ak)) {
+            $this->list->debug();
             $this->list->filterByTopic($topic);
         }
         $this->view();

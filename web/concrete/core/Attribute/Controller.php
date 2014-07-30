@@ -1,9 +1,7 @@
 <?php
 namespace Concrete\Core\Attribute;
 
-use Concrete\Core\Attribute\Key\Key;
 use \Concrete\Core\Controller\AbstractController;
-use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Loader;
 use Core;
 use \Concrete\Core\Attribute\View as AttributeTypeView;
@@ -86,6 +84,11 @@ class Controller extends AbstractController
         if (is_object($this->attributeValue)) {
             return $this->attributeValue->getAttributeValueID();
         }
+    }
+
+    public function filterByAttribute(AttributedItemList $list, $value, $comparison = '=')
+    {
+        $list->filter('ak_' . $this->attributeKey->getAttributeKeyHandle(), $value, $comparison);
     }
 
     public function field($fieldName)
@@ -199,44 +202,6 @@ class Controller extends AbstractController
     public function searchKeywords($keywords, $queryBuilder)
     {
         return $queryBuilder->expr()->like('ak_' . $this->attributeKey->getAttributeKeyHandle(), ':keywords');
-    }
-
-    public function filterByAttribute(AttributedItemList $list, $column, $value, $comparison = '=')
-    {
-        $list->filter('ak_' . $this->attributeKey->getAttributeKeyHandle(), $value, $comparison);
-    }
-
-    public function reindex(Key $key, $object)
-    {
-        $db = Loader::db();
-        $sm = $db->getSchemaManager();
-        $table = $key->getIndexedSearchTable();
-        if (!$table) {
-            return false;
-        }
-
-        $columns = $sm->listTableColumns($table);
-
-        $attribs->rewind();
-        while ($attribs->valid()) {
-            $column = 'ak_' . $attribs->key();
-            if (is_array($attribs->current())) {
-                foreach ($attribs->current() as $key => $value) {
-                    $column .= '_' . $key;
-                    if (isset($columns[strtolower($column)])) {
-                        $columnHeaders[$column] = $value;
-                    }
-                }
-            } else {
-                if (isset($columns[strtolower($column)])) {
-                    $columnHeaders[$column] = $attribs->current();
-                }
-            }
-
-            $attribs->next();
-        }
-
-        $db->insert($table, $columnHeaders);
     }
 
     /**
