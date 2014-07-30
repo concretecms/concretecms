@@ -20,9 +20,9 @@ class Controller extends AttributeTypeController  {
             $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();
             $qb = $list->getQueryObject();
             $qb->andWhere(
-                $qb->expr()->like($column, ':topic')
+                $qb->expr()->like($column, ':topicPath')
             );
-            $qb->setParameter('topic', $topic->getTreeNodeDisplayName());
+            $qb->setParameter('topicPath', "%||" . $topic->getTreeNodeDisplayPath() . '%||');
         }
     }
 
@@ -102,19 +102,11 @@ class Controller extends AttributeTypeController  {
 	}
 	
 	public function getSearchIndexValue() {
-        $str = "\n";
+        $str = "||";
         $nodeKeys = $this->getSelectedOptions($this->getAttributeValueID());
         foreach($nodeKeys as $nodeKey) {
            $nodeObj = TreeNode::getByID($nodeKey['TopicNodeID']);
-           $nodeParentArray = array_reverse($nodeObj->getTreeNodeParentArray()); // order array from general to specific
-			$parentNameArray = array();
-			foreach($nodeParentArray as $nodeParent) {
-			   $parentNameArray[] = $nodeParent->getTreeNodeDisplayName();
-			}
-			array_shift($parentNameArray);  // pop top level categories off the list
-			$implodedList = implode('>', $parentNameArray);
-			$implodedList .= '>'.$nodeObj->getTreeNodeDisplayName();
-			$str .=  $implodedList . "\n";	
+           $str .= $nodeObj->getTreeNodeDisplayPath() . "||";
         }
         // remove line break for empty list
         if ($str == "\n") {
