@@ -306,21 +306,15 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                     if (isset($columns[strtolower($key)])) {
                         if (in_array($key, $this->btExportPageColumns)) {
                             $tableRecord->addChild($key, ContentExporter::replacePageWithPlaceHolder($value));
+                        } else if (in_array($key, $this->btExportFileColumns)) {
+                            $tableRecord->addChild($key, ContentExporter::replaceFileWithPlaceHolder($value));
+                        } else if (in_array($key, $this->btExportPageTypeColumns)) {
+                            $tableRecord->addChild($key, ContentExporter::replacePageTypeWithPlaceHolder($value));
                         } else {
-                            if (in_array($key, $this->btExportFileColumns)) {
-                                $tableRecord->addChild($key, ContentExporter::replaceFileWithPlaceHolder($value));
-                            } else {
-                                if (in_array($key, $this->btExportPageTypeColumns)) {
-                                    $tableRecord->addChild(
-                                                $key,
-                                                ContentExporter::replacePageTypeWithPlaceHolder($value));
-                                } else {
-                                    $cnode = $tableRecord->addChild($key);
-                                    $node = dom_import_simplexml($cnode);
-                                    $no = $node->ownerDocument;
-                                    $node->appendChild($no->createCDataSection($value));
-                                }
-                            }
+                            $cnode = $tableRecord->addChild($key);
+                            $node = dom_import_simplexml($cnode);
+                            $no = $node->ownerDocument;
+                            $node->appendChild($no->createCDataSection($value));
                         }
                     }
                 }

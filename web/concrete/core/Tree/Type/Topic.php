@@ -22,6 +22,13 @@ class Topic extends Tree {
 		$db->Execute('delete from TopicTrees where treeID = ?', array($this->treeID));
 	}
 
+    public static function getByDisplayName($name)
+    {
+        $db = Loader::db();
+        $treeID = $db->GetOne('select treeID from TopicTrees where topicTreeName = ?', array($name));
+        return Tree::getByID($treeID);
+    }
+
 	public static function add($name) {
 		// copy permissions from the other node.
 		$rootNode = TopicCategoryTreeNode::add();

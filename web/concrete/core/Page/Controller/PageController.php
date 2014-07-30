@@ -96,9 +96,6 @@ class PageController extends Controller {
                 array_shift($taskparts);
                 $this->parameters = $taskparts;
             }
-        } else if ($method != 'view') {
-            $this->action = 'passthru';
-            $this->parameters = $taskparts;
         } else {
             $this->action = 'view';
             if ($taskparts[0]) {
@@ -122,13 +119,13 @@ class PageController extends Controller {
                 $valid = false;
             }
         }
-
         if (!$valid) {
             // we check the blocks on the page.
             $blocks = $this->getPageObject()->getBlocks();
             foreach($blocks as $b) {
                 $controller = $b->getController();
                 $method = 'action_' . $this->parameters[0];
+                $this->action = 'passthru';
                 if (is_callable(array($controller, $method))) {
                     $r = new \ReflectionMethod(get_class($controller), $method);
                     if ($r->getNumberOfParameters() < count($this->parameters) - 1) {

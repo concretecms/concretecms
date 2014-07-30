@@ -882,7 +882,6 @@ class Version
      */
     public function getJSONObject()
     {
-        $ats = $this->getAttributeList();
         $r = new stdClass;
         $fp = new Permissions($this->getFile());
         $r->canCopyFile = $fp->canCopyFile();
@@ -899,9 +898,6 @@ class Version
         $r->fileName = $this->getFilename();
         $r->resultsThumbnailImg = $this->getListingThumbnailImage();
         $r->fID = $this->getFileID();
-        foreach ($ats as $key => $value) {
-            $r->{$key} = $value;
-        }
         return $r;
     }
 }

@@ -17,11 +17,25 @@
                       category="collection">
             <type mode="text"/>
         </attributekey>
+        <attributekey handle="exclude_subpages_from_nav" name="Exclude From Sub-Pages From Nav" package="" searchable="1" indexed="1" type="boolean" category="collection">
+            <type checked="0"/>
+        </attributekey>
+        <attributekey handle="thumbnail" name="Thumbnail" package="" searchable="1" indexed="1" type="image_file" category="collection"/>
+        <attributekey handle="topic" name="Topic" package="" searchable="1" indexed="1" type="topics" category="collection">
+            <tree name="Topics" path="/"/>
+        </attributekey>
     </attributekeys>
     <attributesets>
+        <attributeset handle="navigation" category="collection">
+            <attributekey handle="exclude_subpages_from_nav"/>
+        </attributeset>
         <attributeset handle="job_board" name="Jobs" package="" locked="0" category="collection">
             <attributekey handle="job_posting_department"/>
             <attributekey handle="job_location"/>
+        </attributeset>
+        <attributeset handle="blog" name="Blog" package="" locked="0" category="collection">
+            <attributekey handle="thumbnail"/>
+            <attributekey handle="topic"/>
         </attributeset>
     </attributesets>
     <pagetemplates>
@@ -256,6 +270,133 @@
                                 </blocks>
                             </area>
                             <area name="Page Footer">
+                                <blocks/>
+                            </area>
+                        </page>
+                    </pagetemplate>
+                </output>
+            </composer>
+        </pagetype>
+        <pagetype name="Blog" handle="blog" package="" launch-in-composer="1">
+            <pagetemplates type="custom" default="full">
+                <pagetemplate handle="full"/>
+            </pagetemplates>
+            <target handle="all" package=""/>
+            <composer>
+                <formlayout>
+                    <set name="Details">
+                        <control custom-template="" custom-label="Blog Name" type="core_page_property" handle="name"/>
+                        <control custom-template="" custom-label="" type="core_page_property" handle="publish_target"/>
+                    </set>
+                </formlayout>
+                <output>
+                    <pagetemplate handle="full">
+                        <page name="" path="" filename="" pagetype="" template="full" user="admin" description="" package="">
+                            <area name="Main">
+                                <blocks>
+                                    <block type="page_title" name="" mc-block-id="1SrIYV5J">
+                                        <data table="btPageTitle">
+                                            <record>
+                                                <useCustomTitle><![CDATA[0]]></useCustomTitle>
+                                                <titleText><![CDATA[[Page Title]]]></titleText>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="core_area_layout" name="" mc-block-id="XIyJqyJD">
+                                        <arealayout type="theme-grid" columns="12">
+                                            <columns>
+                                                <column span="8" offset="0">
+                                                    <block type="page_list" name="" mc-block-id="o2okE5W6">
+                                                        <style>
+                                                            <customClass>blog-entry-list</customClass>
+                                                        </style>
+                                                        <data table="btPageList">
+                                                            <record>
+                                                                <num><![CDATA[10]]></num>
+                                                                <orderBy><![CDATA[chrono_desc]]></orderBy>
+                                                                <cParentID>0</cParentID>
+                                                                <cThis><![CDATA[1]]></cThis>
+                                                                <useButtonForLink><![CDATA[0]]></useButtonForLink>
+                                                                <buttonLinkText><![CDATA[]]></buttonLinkText>
+                                                                <includeName><![CDATA[1]]></includeName>
+                                                                <includeDescription><![CDATA[1]]></includeDescription>
+                                                                <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
+                                                                <paginate><![CDATA[1]]></paginate>
+                                                                <displayAliases><![CDATA[0]]></displayAliases>
+                                                                <ptID>{ccm:export:pagetype:blog_entry}</ptID>
+                                                                <rss><![CDATA[0]]></rss>
+                                                                <rssTitle><![CDATA[]]></rssTitle>
+                                                                <rssDescription><![CDATA[]]></rssDescription>
+                                                                <truncateSummaries><![CDATA[0]]></truncateSummaries>
+                                                                <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
+                                                                <displayThumbnail><![CDATA[0]]></displayThumbnail>
+                                                                <truncateChars><![CDATA[0]]></truncateChars>
+                                                                <enableExternalFiltering><![CDATA[1]]></enableExternalFiltering>
+                                                                <noResultsMessage><![CDATA[No posts to this blog.]]></noResultsMessage>
+                                                                <includeDate><![CDATA[0]]></includeDate>
+                                                            </record>
+                                                        </data>
+                                                    </block>
+                                                </column>
+                                                <column span="3" offset="1">
+                                                    <block type="content" name="" mc-block-id="263v2L9Z">
+                                                        <style>
+                                                            <customClass>block-sidebar-wrapped</customClass>
+                                                        </style>
+                                                        <data table="btContentLocal">
+                                                            <record>
+                                                                <content><![CDATA[<h5>Topics</h5>]]></content>
+                                                            </record>
+                                                        </data>
+                                                    </block>
+                                                    <block type="topic_list" name="" mc-block-id="D9wxkl0c">
+                                                        <style>
+                                                            <customClass>block-sidebar-wrapped</customClass>
+                                                        </style>
+                                                        <data>
+                                                            <tree>Topics</tree>
+                                                            <cParentID />
+                                                        </data>
+                                                    </block>
+                                                </column>
+                                            </columns>
+                                        </arealayout>
+                                    </block>
+                                </blocks>
+                            </area>
+                            <area name="Main Footer">
+                                <blocks/>
+                            </area>
+                        </page>
+                    </pagetemplate>
+                </output>
+            </composer>
+        </pagetype>
+        <pagetype name="Blog Entry" handle="blog_entry" package="" launch-in-composer="1">
+            <pagetemplates type="custom" default="full">
+                <pagetemplate handle="full"/>
+            </pagetemplates>
+            <target handle="page_type" package="" pagetype="blog"/>
+            <composer>
+                <formlayout>
+                    <set name="Post Details">
+                        <control custom-template="" custom-label="Entry Name" type="core_page_property" handle="name"/>
+                        <control custom-template="" custom-label="Short Description" type="core_page_property" handle="description"/>
+                        <control custom-template="" custom-label="Blog" type="core_page_property" handle="publish_target"/>
+                        <control custom-template="" custom-label="Topic" type="collection_attribute" handle="topic"/>
+                    </set>
+                    <set name="Content">
+                        <control custom-template="" custom-label="" type="collection_attribute" handle="thumbnail"/>
+                        <control custom-template="" custom-label="" output-control-id="czGL5wk8" type="block" handle="content"/>
+                    </set>
+                </formlayout>
+                <output>
+                    <pagetemplate handle="full">
+                        <page name="" path="" filename="" pagetype="" template="full" user="admin" description="" package="">
+                            <area name="Main">
+                                <blocks/>
+                            </area>
+                            <area name="Main Footer">
                                 <blocks/>
                             </area>
                         </page>
@@ -1193,6 +1334,59 @@
                 </blocks>
             </area>
         </page>
+        <page name="Blog" path="/blog" filename="" pagetype="blog" template="full" user="admin" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_subpages_from_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+            <area name="Main">
+                <blocks>
+                    <block mc-block-id="1SrIYV5J"/>
+                    <block mc-block-id="XIyJqyJD"/>
+                </blocks>
+            </area>
+            <area name="Main Footer">
+                <blocks/>
+            </area>
+        </page>
+        <page name="Hello World!" path="/blog/hello-world" filename="" pagetype="blog_entry" template="full" user="admin" description="This is your first blog entry in concrete5 version 7! Sed ut leo diam. Ut vel mauris ac felis sollicitudin ultricies. Pellentesque dui sem, tincidunt non massa vitae, sodales tristique mi. Nunc feugiat erat a risus egestas pellentesque nec elementum nisl." package="">
+            <attributes>
+                <attributekey handle="meta_title">
+                    <value><![CDATA[]]></value>
+                </attributekey>
+                <attributekey handle="meta_description">
+                    <value><![CDATA[]]></value>
+                </attributekey>
+                <attributekey handle="meta_keywords">
+                    <value><![CDATA[]]></value>
+                </attributekey>
+                <attributekey handle="header_extra_content">
+                    <value><![CDATA[]]></value>
+                </attributekey>
+                <attributekey handle="exclude_sitemapxml">
+                    <value><![CDATA[0]]></value>
+                </attributekey>
+                <attributekey handle="thumbnail">
+                    <value>
+                        <fID>{ccm:export:file:balloon.jpg}</fID>
+                    </value>
+                </attributekey>
+                <attributekey handle="topic">
+                    <topics>
+                        <topic>/Reviews/Movies</topic>
+                        <topic>/Reviews/Music</topic>
+                    </topics>
+                </attributekey>
+            </attributes>
+            <area name="Main">
+                <blocks/>
+            </area>
+            <area name="Main Footer">
+                <blocks/>
+            </area>
+        </page>
+
     </pages>
     <sociallinks>
         <link service="facebook" url="http://facebook.com/concrete5"/>

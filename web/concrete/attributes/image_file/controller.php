@@ -2,8 +2,8 @@
 namespace Concrete\Attribute\ImageFile;
 use Loader;
 use File;
-use \Concrete\Core\Foundation\Object;
 use Concrete\Core\Backup\ContentExporter;
+use Concrete\Core\Backup\ContentImporter;
 use \Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController  {
