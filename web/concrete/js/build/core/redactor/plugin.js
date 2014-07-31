@@ -20,7 +20,9 @@ RedactorPlugins.concrete5inline = {
             $('#redactor-content').val(obj.get());
             toolbar.hide();
             ConcreteEvent.fire('EditModeExitInlineSaved');
-            ConcreteEvent.fire('EditModeExitInline');
+            ConcreteEvent.fire('EditModeExitInline', {
+                action: 'save_inline'
+            });
             $('#ccm-block-form').submit();
         });
 
