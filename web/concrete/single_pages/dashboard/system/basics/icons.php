@@ -1,4 +1,4 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");?>
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <form method="post" class="form-horizontal" id="favicon-form" action="<?=$view->action('update_favicon')?>" >
     <?=$this->controller->token->output('update_favicon')?>
@@ -6,12 +6,12 @@
         <legend><?=t('Favicon')?></legend>
             <div class="help-block"><?=t('Your image should be 16x16 pixels, and should be a gif or a png with a .ico file extension.')?></div>
             <?
-            $favIconFID = intval(Config::get('FAVICON_FID'));
-            $f = File::getByID($favIconFID);
+            $faviconFID = intval(Config::get('FAVICON_FID'));
+            $f = File::getByID($faviconFID);
             ?>
             <div class="form-group">
                 <div class="col-md-6">
-                    <?=$concrete_asset_library->file('ccm-favicon-file', 'fID', t('Choose File'), $f);?>
+                    <?=$concrete_asset_library->file('ccm-favicon-file', 'faviconFID', t('Choose File'), $f);?>
                 </div>
                 <div class="col-md-6">
                     <button class="pull-right btn btn-default" type="submit" ><?=t('Save')?></button>
@@ -28,12 +28,12 @@
         <legend><?=t('iPhone Thumbnail')?></legend>
         <div class="help-block"><?=t('iPhone home screen icons should be 57x57 and be in the .png format.')?></div>
         <?
-        $favIconFID=intval(Config::get('IPHONE_HOME_SCREEN_THUMBNAIL_FID'));
-        $f = File::getByID($favIconFID);
+        $iosHomeFID=intval(Config::get('IPHONE_HOME_SCREEN_THUMBNAIL_FID'));
+        $f = File::getByID($iosHomeFID);
         ?>
         <div class="form-group">
             <div class="col-md-6">
-                <?=$concrete_asset_library->file('ccm-iphone-file', 'fID', t('Choose File'), $f);?>
+                <?=$concrete_asset_library->file('ccm-iphone-file', 'iosHomeFID', t('Choose File'), $f);?>
             </div>
             <div class="col-md-6">
                 <button class="pull-right btn btn-default" type="submit" ><?=t('Save')?></button>
@@ -51,18 +51,35 @@
         <legend><?php echo t('Windows 8 Thumbnail'); ?></legend>
         <div class="help-block"><?=t('Windows 8 start screen tiles should be 144x144 and be in the .png format.'); ?></div>
         <?
-        $favIconFID = intval(Config::get('MODERN_TILE_THUMBNAIL_FID'));
-        $f = File::getByID($favIconFID);
-        $bg = strval(Config::get('MODERN_TILE_THUMBNAIL_BGCOLOR'));
+        $modernThumbFID = intval(Config::get('MODERN_TILE_THUMBNAIL_FID'));
+        $f = File::getByID($modernThumbFID);
+        $modernThumbBG = strval(Config::get('MODERN_TILE_THUMBNAIL_BGCOLOR'));
         ?>
         <div class="form-group">
             <div class="col-md-6">
-                <?=$concrete_asset_library->file('ccm-modern-file', 'fID', t('Choose File'), $f);?>
+                <?=$concrete_asset_library->file('ccm-modern-file', 'modernThumbFID', t('Choose File'), $f);?>
             </div>
             <div class="col-md-4">
                 <div class="controls">
-                    <?php echo Loader::helper('form/color')->output('favicon_bgcolor', strval(Config::get('MODERN_TILE_THUMBNAIL_BGCOLOR'))); ?>
-                    <?php echo t('Background Color'); ?>
+
+                    <input type="text" name="modernThumbBG" value="<?=$modernThumbBG?>" id="favicon-bgcolor" />
+                    <script type="text/javascript">
+                    $(function() {
+                        $('#favicon-bgcolor').spectrum({
+                            showInput: true,
+                            showInitial: true,
+                            preferredFormat: 'rgb',
+                            allowEmpty: true,
+                            className: 'ccm-widget-colorpicker',
+                            showAlpha: true,
+                            value: <?= $json->encode($modernThumbBG)?>,
+                            cancelText: <?= $json->encode(t('Cancel')) ?>,
+                            chooseText: <?= $json->encode(t('Choose')) ?>,
+                            clearText: <?=$json->encode(t('Clear Color Selection')) ?>
+                        });
+                    });
+                    </script>
+
                 </div>
             </div>
             <div class="col-md-2">
