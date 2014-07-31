@@ -1,14 +1,14 @@
-
-
 @import "../../core/include/variables.less";
-@import "../../core/include/mixins.less"; // Modify this for custom colors, font-sizes, etc
-@import "../../vendor/bootstrap/variables.less"; // Modify this for custom colors, font-sizes, etc
+@import "../../core/include/mixins.less";
+// Modify this for custom colors, font-sizes, etc
+@import "../../vendor/bootstrap/variables.less";
+// Modify this for custom colors, font-sizes, etc
 @import "../../vendor/bootstrap/mixins.less";
 @import "../../vendor/bootstrap/grid.less";
 
 body {
-    background-color: #fff;
-    margin: 0px;
+  background-color: #fff;
+  margin: 0px;
 }
 
 html.ccm-panel-right {
@@ -23,8 +23,8 @@ html.ccm-panel-right {
 
 div#ccm-dashboard-content {
 
-  tr{
-    &.ccm-theme-active{
+  tr {
+    &.ccm-theme-active {
       td {
         background-color: #ddf4fb !important;
       }
@@ -34,86 +34,84 @@ div#ccm-dashboard-content {
   .transition(margin cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s);
 
   .ccm-dashboard-section-menu {
-      padding-bottom: 85px;
-      li {
-        margin-bottom: 4px;
-      }
-      h2 {
-        display: block;
-        width: 100%;
-        padding: 0;
-        margin-bottom: 10px;
-        font-size: 21px;
-        font-weight: 200;
-        margin-top: 0px;
-        line-height: inherit;
-        color: #333;
-        border-bottom: 1px solid #e5e5e5;
-      }
+    padding-bottom: 85px;
+    li {
+      margin-bottom: 4px;
+    }
+    h2 {
+      display: block;
+      width: 100%;
+      padding: 0;
+      margin-bottom: 10px;
+      font-size: 21px;
+      font-weight: 200;
+      margin-top: 0px;
+      line-height: inherit;
+      color: #333;
+      border-bottom: 1px solid #e5e5e5;
+    }
+  }
+
+  position: relative;
+  padding-right: 20px;
+  padding-left: 95px;
+  padding-bottom: 100px;
+
+  header {
+    margin-left: -95px;
+    margin-right: -20px;
+    padding: 34px 80px 34px 95px;
+
+    h1 {
+      font-size: 22px;
+      font-weight: 600;
+      color: #105192;
     }
 
-    position: relative;
-    padding-right: 20px;
-    padding-left: 95px;
-    padding-bottom: 100px;
+    background-color: #f3f3f3;
+    margin-bottom: 30px;
+  }
 
-    header {
-        margin-left: -95px;
-        margin-right: -20px;
-        padding: 34px 80px 34px 95px;
+  form.ccm-dashboard-content-form {
+    margin-bottom: 120px;
+  }
 
-        h1 {
-            font-size: 22px;
-            font-weight: 600;
-            color: #105192;
-        }
+  div.ccm-dashboard-form-actions-wrapper {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    padding: 0px 15px 15px 15px;
+    z-index: @index-level-dashboard-form-actions-wrapper;
 
-        background-color: #f3f3f3;
-        margin-bottom: 30px;
+    .transition(cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s);
+
+    div.ccm-dashboard-form-actions {
+      .clearfix;
+      background-color: #242729;
+      padding: 20px;
+      .border-radius(4px);
     }
+  }
 
-    form.ccm-dashboard-content-form {
-        margin-bottom: 120px;
+  div.ccm-dashboard-content-full {
+    margin-left: -95px;
+    margin-right: -20px;
+
+    section {
+      margin-left: 95px;
     }
+  }
 
-    div.ccm-dashboard-form-actions-wrapper {
-        position: fixed;
-        bottom: 0px;
-        left: 0px;
-        width: 100%;
-        padding: 0px 15px 15px 15px;
+  header + div.ccm-dashboard-content-full {
+    margin-top: -30px;
+  }
 
-      .transition(padding cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s);
-
-      div.ccm-dashboard-form-actions {
-            .clearfix;
-            background-color: #242729;
-            padding: 20px;
-            .border-radius(4px);
-        }
-    }
-
-    div.ccm-dashboard-content-full {
-        margin-left: -95px;
-        margin-right: -20px;
-
-        section {
-            margin-left: 95px;
-        }
-    }
-
-    header + div.ccm-dashboard-content-full {
-        margin-top: -30px;
-    }
-
-    div.ccm-dashboard-header-buttons {
-        position: absolute;
-        top: 50px;
-        right: 30px;
-    }
-
-
-
+  div.ccm-dashboard-header-buttons {
+    position: absolute;
+    top: 50px;
+    right: 30px;
+  }
 
 }
 
@@ -121,32 +119,30 @@ div#ccm-dashboard-content {
  * Attributes
  */
 div.ccm-attribute-list-wrapper {
-    padding-bottom: 20px;
+  padding-bottom: 20px;
 }
-
 
 /**
  * Result Messages
  */
 div#ccm-dashboard-content {
-    div#ccm-dashboard-result-message {
-        margin-right: 20px;
-        margin-left: 0px;
-    }
+  div#ccm-dashboard-result-message {
+    margin-right: 20px;
+    margin-left: 0px;
+  }
 }
-
 
 /**
  * Help and notifications
  */
 div#ccm-dashboard-content {
-    div.ccm-notification-help {
-        position: absolute;
-        right: 0px;
-        top: 50px;
+  div.ccm-notification-help {
+    position: absolute;
+    right: 0px;
+    top: 50px;
 
-        z-index: @index-level-dashboard-help;
-    }
+    z-index: @index-level-dashboard-help;
+  }
 }
 
 /**
