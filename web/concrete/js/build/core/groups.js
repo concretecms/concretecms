@@ -11,7 +11,7 @@
 		options = $.extend({
 			treeID: false,
 			minimumExpandLevel: 2,
-			selectNodeByKey: false,
+			selectNodeByKey: [],
 			enableDragAndDrop: true,
             onSelect: false, // This is when you click a checkbox or radio button
             onClick: false, // this is when you click a group title when not in chooseNodeInForm mode.
@@ -75,8 +75,8 @@
 						break;
 							
 				}
-				if (options.selectNodeByKey) {
-					ajaxData.treeNodeSelectedID = options.selectNodeByKey;
+				if (options.selectNodesByKey.length) {
+					ajaxData.treeNodeSelectedIDs = options.selectNodesByKey;
 				}
 			}
 						

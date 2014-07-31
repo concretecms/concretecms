@@ -668,7 +668,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         $blocks = array();
         foreach ($blocksTmp as $ab) {
             $ab->setBlockAreaObject($this);
-            if ($currentPage->getCollectionID() != $this->c->getCollectionID()) {
+            if (is_object($currentPage) && $currentPage->getCollectionID() != $this->c->getCollectionID()) {
                 // this is useful for rendering areas from one page
                 // onto the next and including interactive elements
                 $ab->setBlockActionCollectionID($this->c->getCollectionID());

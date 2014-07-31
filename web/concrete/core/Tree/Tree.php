@@ -5,18 +5,21 @@ use Loader;
 use Core;
 abstract class Tree extends Object {
 
-	protected $treeNodeSelectedID = 0;
+	protected $treeNodeSelectedIDs = array();
 
 	abstract protected function loadDetails();
 	abstract protected function deleteDetails();
 	abstract public function getTreeDisplayName();
+    abstract public function exportDetails(\SimpleXMLElement $sx);
+    abstract public static function importDetails(\SimpleXMLElement $sx);
 
-	public function setSelectedTreeNodeID($nodeID) {
-		$this->treeNodeSelectedID = $nodeID;
+
+	public function setSelectedTreeNodeIDs($nodeIDs) {
+		$this->treeNodeSelectedIDs = $nodeIDs;
 	}
 
-	public function getSelectedTreeNodeID() {
-		return $this->treeNodeSelectedID;
+	public function getSelectedTreeNodeIDs() {
+		return $this->treeNodeSelectedIDs;
 	}
 
 	public function getTreeTypeID() {
@@ -33,8 +36,79 @@ abstract class Tree extends Object {
 		}
 	}
 
+    public function export(\SimpleXMLElement $sx)
+    {
+        $treenode = $sx->addChild('tree');
+        $treenode->addAttribute('type', $this->getTreeTypeHandle());
+        $this->exportDetails($treenode);
+        $root = $this->getRootTreeNodeObject();
+        $root->populateChildren();
+        $root->export($treenode);
+    }
+
+    public static function exportList(\SimpleXMLElement $sx)
+    {
+        $trees = $sx->addChild('trees');
+        $db = Loader::db();
+        $r = $db->Execute('select treeID from Trees order by treeID asc');
+        while ($row = $r->Fetchrow()) {
+            $tree = static::getByID($row['treeID']);
+            $tree->export($trees);
+        }
+    }
+
+    public static function import(\SimpleXMLElement $sx)
+    {
+        $type = TreeType::getByHandle((string) $sx['type']);
+        $class = $type->getTreeTypeClass();
+        $tree = call_user_func_array(array($class, 'importDetails'), array($sx));
+        $parent = $tree->getRootTreeNodeObject();
+        $parent->importChildren($sx);
+    }
+
 	public function getTreeID() {return $this->treeID;}
 	public function getRootTreeNodeObject() {return \Concrete\Core\Tree\Node\Node::getByID($this->rootTreeNodeID);}
+    public function getRootTreeNodeID() {return $this->rootTreeNodeID;}
+
+    /**
+     * Iterates through the segments in the path, to return the node at the proper display. Mostly used for export
+     * and import.
+     * @param $path
+     */
+    public function getNodeByDisplayPath($path)
+    {
+        $root = $this->getRootTreeNodeObject();
+
+        if ($path == '/' || !$path) {
+            return $root;
+        }
+
+        $computedPath = '';
+        $tree = $this;
+        $walk = function($node, $computedPath) use (&$walk, &$tree, &$path) {
+            $node->populateDirectChildrenOnly();
+
+            if ($node->getTreeNodeID() != $tree->getRootTreeNodeID()) {
+                $name = $node->getTreeNodeDisplayName();
+                $computedPath .= '/' . $name;
+            }
+
+            if ($computedPath == $path) {
+                return $node;
+            } else {
+                $children = $node->getChildNodes();
+                foreach($children as $child) {
+                    $node = $walk($child, $computedPath);
+                    if ($node !== null) {
+                        return $node;
+                    }
+                }
+            }
+            return null;
+        };
+        $node = $walk($root, $computedPath);
+        return $node;
+    }
 
 	public function setRequest($data) {
 		$this->requestData = $data;
@@ -65,13 +139,13 @@ abstract class Tree extends Object {
 	public function getJSON() {
 		$root = $this->getRootTreeNodeObject();
 		$root->populateDirectChildrenOnly();
-		if(is_array($this->getSelectedTreeNodeID())) {
-			foreach($this->getSelectedTreeNodeID() as $magicNodes) {
+		if(is_array($this->getSelectedTreeNodeIDs())) {
+			foreach($this->getSelectedTreeNodeIDs() as $magicNodes) {
 				$root->selectChildrenNodesByID($magicNodes);
 			}
 		}
-		if ($this->getSelectedTreeNodeID() > 0) {
-			$root->selectChildrenNodesByID($this->getSelectedTreeNodeID());
+		if ($this->getSelectedTreeNodeIDs() > 0) {
+			$root->selectChildrenNodesByID($this->getSelectedTreeNodeIDs());
 		}
 		return $root->getTreeNodeJSON();
 	}

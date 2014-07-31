@@ -584,7 +584,6 @@ class Key extends Object
 
     public function updateSearchIndex($prevHandle = false)
     {
-
         $type = $this->getAttributeType();
         $cnt = $type->getController();
 

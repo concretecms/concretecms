@@ -562,6 +562,35 @@
 				</attributekey>
 			</attributes>
         </page>
+        <page name="Files" path="/dashboard/system/files" filename="/dashboard/system/files/view.php" pagetype="" description="" package=""/>
+        <page name="File Manager Permissions" path="/dashboard/system/files/permissions" filename="/dashboard/system/files/permissions.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>file options, file manager, upload, modify</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Allowed File Types" path="/dashboard/system/files/filetypes" filename="/dashboard/system/files/filetypes.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>security, files, media, extension, manager, upload</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="Thumbnails" path="/dashboard/system/files/thumbnails" filename="/dashboard/system/files/thumbnails.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>images, picture, responsive, retina</value>
+                </attributekey>
+            </attributes>
+        </page>
+        <page name="File Storage Locations" path="/dashboard/system/files/storage" filename="/dashboard/system/files/storage.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>security, alternate storage, hide files</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Optimization" path="/dashboard/system/optimization" filename="/dashboard/system/optimization/view.php" pagetype="" description="Keep your site running well." package=""/>
         <page name="Cache &amp; Speed Settings" path="/dashboard/system/optimization/cache" filename="/dashboard/system/optimization/cache.php" pagetype="" description="" package="">
 			<attributes>
@@ -593,20 +622,7 @@
 				</attributekey>
 			</attributes>
         </page>
-        <page name="File Manager Permissions" path="/dashboard/system/permissions/files" filename="/dashboard/system/permissions/file.php" pagetype="" description="" package="">
-			<attributes>
-				<attributekey handle="meta_keywords">
-					<value>file options, file manager, upload, modify</value>
-				</attributekey>
-			</attributes>
-        </page>
-        <page name="Allowed File Types" path="/dashboard/system/permissions/filetypes" filename="/dashboard/system/permissions/filetypes.php" pagetype="" description="" package="">
-			<attributes>
-				<attributekey handle="meta_keywords">
-					<value>security, files, media, extension, manager, upload</value>
-				</attributekey>
-			</attributes>
-        </page>
+
         <page name="Task Permissions" path="/dashboard/system/permissions/tasks" filename="/dashboard/system/permissions/tasks.php" pagetype="" description="" package="">
 			<attributes>
 				<attributekey handle="meta_keywords">
@@ -790,13 +806,6 @@
 			<attributes>
 				<attributekey handle="meta_keywords">
 					<value>email, logging, logs, smtp, pop, errors, mysql, log</value>
-				</attributekey>
-			</attributes>
-        </page>
-        <page name="File Storage Locations" path="/dashboard/system/environment/storage" filename="/dashboard/system/environment/storage.php" pagetype="" description="" package="">
-			<attributes>
-				<attributekey handle="meta_keywords">
-					<value>security, alternate storage, hide files</value>
 				</attributekey>
 			</attributes>
         </page>

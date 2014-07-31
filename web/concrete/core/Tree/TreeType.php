@@ -71,6 +71,8 @@ class TreeType extends Object {
 		while ($row = $r->FetchRow()) {
 			$list[] = TreeType::getByID($row['treeTypeID']);
 		}
+
+
 		$r->Close();
 		return $list;
 	}	

@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Controller\SinglePage\Dashboard\System\Environment;
+namespace Concrete\Controller\SinglePage\Dashboard\System\Files;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
@@ -51,7 +51,7 @@ class Storage extends DashboardPageController {
             $this->set('location', $location);
             $this->set('type', $location->getTypeObject());
         } else {
-            $this->redirect('/dashboard/system/environment/storage');
+            $this->redirect('/dashboard/system/files/storage');
         }
     }
 
@@ -96,7 +96,7 @@ class Storage extends DashboardPageController {
                 $fsl->setIsDefault($request->request->get('fslIsDefault'));
             }
             $fsl->save();
-            $this->redirect('/dashboard/system/environment/storage', 'storage_location_updated');
+            $this->redirect('/dashboard/system/files/storage', 'storage_location_updated');
         }
 
         $this->edit($request->request->get('fslID'));
@@ -119,7 +119,7 @@ class Storage extends DashboardPageController {
 
         if (!$this->error->has()) {
             $fsl->delete();
-            $this->redirect('/dashboard/system/environment/storage', 'storage_location_deleted');
+            $this->redirect('/dashboard/system/files/storage', 'storage_location_deleted');
         }
         $this->edit($request->request->get('fslID'));
 
@@ -139,7 +139,7 @@ class Storage extends DashboardPageController {
                 $request->request->get('fslIsDefault')
             );
 
-            $this->redirect('/dashboard/system/environment/storage', 'storage_location_added');
+            $this->redirect('/dashboard/system/files/storage', 'storage_location_added');
         }
 
         $this->set('type', $type);
