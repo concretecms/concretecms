@@ -8,7 +8,7 @@ use Environment;
 use CacheLocal;
 use User;
 use Page;
-use Block;
+use \Concrete\Core\Block\Block;
 use BlockType;
 use URL;
 
