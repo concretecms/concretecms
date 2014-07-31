@@ -76,7 +76,6 @@
 			// loop through all results,
 			// create nodes for them.
 			$.each(result.items, function(i, item) {
-                console.log(item);
 				cs.$results.append(cs._templateSearchResultsMenu({'item': item}));
 			});
 
