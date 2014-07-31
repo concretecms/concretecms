@@ -1119,6 +1119,9 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $this->themeObject = PageTheme::getByID($this->vObj->pThemeID);
             }
         }
+        if (!$this->themeObject) {
+            $this->themeObject = PageTheme::getSiteTheme();
+        }
         return $this->themeObject;
     }
 

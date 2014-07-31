@@ -3,75 +3,46 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "ec8eb5b395fdc71d6690c8f7cff1679d",
+    "hash": "3ce5938d1bf3fc26c3d83ce38c22bd1b",
     "packages": [
         {
-            "name": "aws/aws-sdk-php",
-            "version": "2.6.6",
+            "name": "anahkiasen/html-object",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "37d5572e2408c5ea7104c361b64a187b1a0a53bd"
+                "url": "https://github.com/Anahkiasen/html-object.git",
+                "reference": "776aff25a4db27964d95b2332e2f379b0aac9ff0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/37d5572e2408c5ea7104c361b64a187b1a0a53bd",
-                "reference": "37d5572e2408c5ea7104c361b64a187b1a0a53bd",
+                "url": "https://api.github.com/repos/Anahkiasen/html-object/zipball/776aff25a4db27964d95b2332e2f379b0aac9ff0",
+                "reference": "776aff25a4db27964d95b2332e2f379b0aac9ff0",
                 "shasum": ""
             },
             "require": {
-                "guzzle/guzzle": ">=3.7.0,<=3.9.9",
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "doctrine/cache": "~1.0",
-                "ext-openssl": "*",
-                "monolog/monolog": "1.4.*",
-                "phpunit/phpunit": "3.7.*",
-                "symfony/class-loader": "2.*",
-                "symfony/yaml": "2.*"
-            },
-            "suggest": {
-                "doctrine/cache": "Adds support for caching of credentials and responses",
-                "ext-apc": "Allows service description opcode caching, request and response caching, and credentials caching",
-                "ext-openssl": "Allows working with CloudFront private distributions and verifying received SNS messages",
-                "monolog/monolog": "Adds support for logging HTTP requests and responses",
-                "symfony/yaml": "Eases the ability to write manifests for creating jobs in AWS Import/Export"
+                "php": ">=5.3.0"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.6.x-dev"
-                }
-            },
             "autoload": {
                 "psr-0": {
-                    "Aws": "src/"
-                }
+                    "HtmlObject": "src"
+                },
+                "classmap": [
+                    "tests"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "Apache-2.0"
+                "MIT"
             ],
             "authors": [
                 {
-                    "name": "Amazon Web Services",
-                    "homepage": "http://aws.amazon.com"
+                    "name": "Maxime Fabre",
+                    "email": "ehtnam6@gmail.com"
                 }
             ],
-            "description": "AWS SDK for PHP - Use Amazon Web Services in your PHP project",
-            "homepage": "http://aws.amazon.com/sdkforphp",
-            "keywords": [
-                "amazon",
-                "aws",
-                "cloud",
-                "dynamodb",
-                "ec2",
-                "glacier",
-                "s3",
-                "sdk"
-            ],
-            "time": "2014-05-29 18:57:57"
+            "description": "A set of classes to create and manipulate HTML objects abstractions",
+            "time": "2014-01-27 22:41:20"
         },
         {
             "name": "dapphp/securimage",
@@ -229,7 +200,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan Wage",
+                    "name": "Jonathan H. Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/",
                     "role": "Creator"
@@ -391,7 +362,7 @@
                     "email": "kontakt@beberlei.de"
                 },
                 {
-                    "name": "Johannes M. Schmitt",
+                    "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
                     "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
@@ -1440,7 +1411,7 @@
                     "homepage": "https://github.com/agar"
                 },
                 {
-                    "name": "Martin Janto\u0161ovi\u010d",
+                    "name": "Martin Jantošovič",
                     "homepage": "https://github.com/Mordred"
                 },
                 {
@@ -1513,7 +1484,7 @@
             ],
             "authors": [
                 {
-                    "name": "Pablo D\u00edez",
+                    "name": "Pablo Díez",
                     "email": "pablodip@gmail.com",
                     "homepage": "http://github.com/pablodip"
                 }
@@ -1718,17 +1689,17 @@
         },
         {
             "name": "symfony/class-loader",
-            "version": "dev-master",
+            "version": "2.5.x-dev",
             "target-dir": "Symfony/Component/ClassLoader",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ClassLoader.git",
-                "reference": "206de04f06299f28e1725d9a07a2ee05610fb6f8"
+                "reference": "25b74b67d455268415d7d34b41f8b7df4cb33ba4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ClassLoader/zipball/206de04f06299f28e1725d9a07a2ee05610fb6f8",
-                "reference": "206de04f06299f28e1725d9a07a2ee05610fb6f8",
+                "url": "https://api.github.com/repos/symfony/ClassLoader/zipball/25b74b67d455268415d7d34b41f8b7df4cb33ba4",
+                "reference": "25b74b67d455268415d7d34b41f8b7df4cb33ba4",
                 "shasum": ""
             },
             "require": {
@@ -1740,7 +1711,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.6-dev"
+                    "dev-master": "2.5-dev"
                 }
             },
             "autoload": {
@@ -1766,7 +1737,7 @@
             ],
             "description": "Symfony ClassLoader Component",
             "homepage": "http://symfony.com",
-            "time": "2014-07-09 09:06:26"
+            "time": "2014-07-09 09:05:48"
         },
         {
             "name": "symfony/console",
@@ -2089,12 +2060,12 @@
             "version": "v0.5.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tedivm/JShrink.git",
+                "url": "https://github.com/tedious/JShrink.git",
                 "reference": "4b48e3d051cf0ab145db9df20d3292d91485bb60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tedivm/JShrink/zipball/4b48e3d051cf0ab145db9df20d3292d91485bb60",
+                "url": "https://api.github.com/repos/tedious/JShrink/zipball/4b48e3d051cf0ab145db9df20d3292d91485bb60",
                 "reference": "4b48e3d051cf0ab145db9df20d3292d91485bb60",
                 "shasum": ""
             },
