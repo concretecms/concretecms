@@ -31,61 +31,14 @@ class Controller extends BlockController {
 	}		
 	
 	public function view() {
-        $this->requireAsset('javascript', 'picturefill');
-        if ($this->getFileOnstateID()) {
-            $this->requireAsset('javascript', 'jquery');
-        }
-
-		//$c = Page::getCurrentPage();
-		$bID = $this->bID;
-		$f = File::getByID($this->fID);
+        $f = File::getByID($this->fID);
         if (!is_object($f) || !$f->getFileID()) {
             return false;
         }
-		$relPath = $f->getRelativePath();
-		if ($this->maxWidth == $f->getAttribute('width') && $this->maxHeight == $f->getAttribute('height')) {
-			$sizeStr = 'width="' . $f->getAttribute('width') . '" height="' . $f->getAttribute('height') . '"';
-		} else if (!$this->forceImageToMatchDimensions && ($this->maxWidth > 0 || $this->maxHeight > 0)) { 
-			$ih = Loader::helper('image');
-			$thumb = $ih->getThumbnail($f, $this->maxWidth, $this->maxHeight);
-			$sizeStr = ' width="' . $thumb->width . '" height="' . $thumb->height . '"';
-			$relPath = $thumb->src;
-		} else {
-            $sizeStr = 'width="' . $f->getAttribute('width') . '" height="' . $f->getAttribute('height') . '"';
-        }
-
-		if($this->fOnstateID > 0) {
-			$fos = File::getByID($this->fOnstateID);
-
-			if ($this->maxWidth == $fos->getAttribute('width') && $this->maxHeight == $fos->getAttribute('height')) {
-				$relPathHover = $fos->getRelativePath();
-			} else if (!$this->forceImageToMatchDimensions && ($this->maxWidth > 0 || $this->maxHeight > 0)) {
-				$thumbHover = $ih->getThumbnail($fos, $this->maxWidth, $this->maxHeight);
-				$relPathHover = $thumbHover->src;
-			} else {
-				$relPathHover = $fos->getRelativePath();
-			}
-
-		}
-
-		//var_dump($relPath);
-		$this->set('linkURL',$this->getLinkURL());
-		
-
-		$this->set('relPath',$relPath);
-		$this->set('relPathHover',$relPathHover);
-		$this->set('sizeStr',$sizeStr);
-		$this->set('altText',$altText);
         $this->set('f', $f);
-		if($this->fOnstateID > 0) {
-            $bt = \BlockType::getByHandle('image');
-            $hoverJs = Loader::helper('concrete/urls')->getBlockTypeAssetsURL($bt, 'js/hover.js');
-            $this->addFooterItem(Loader::helper('html')->javascript($hoverJs));
-			$this->addHeaderItem('<style type="text/css"> img.ccm-image-block.alternate { display:none; } </style>');
-		}
-
+        $this->set('altText',$this->getAltText());
+        $this->set('linkURL',$this->getLinkURL());
 	}
-
 	
 	public function getJavaScriptStrings() {
 		return array(

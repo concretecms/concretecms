@@ -72,7 +72,12 @@ $th = Loader::helper('text');
 
         <?php if (is_object($thumbnail)): ?>
             <div class="ccm-block-page-list-page-entry-thumbnail">
-                <img src="<?=$thumbnail->getRelativePath()?>" class="img-responsive" />
+                <?
+                $img = Core::make('html/image', array($thumbnail));
+                $tag = $img->getTag();
+                $tag->addClass('img-responsive');
+                print $tag;
+                ?>
             </div>
         <? endif; ?>
 
