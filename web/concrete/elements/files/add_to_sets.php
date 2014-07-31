@@ -159,6 +159,8 @@ $(function() {
 			$(this).find('img').attr('src', CCM_IMAGE_PATH + '/checkbox_state_' + toSetState + '.png');
 		});
 	});
+
+
 });
 /*
 $(function() {
@@ -182,20 +184,6 @@ ccm_alSetupSetsForm = function(searchInstance) {
 
 </script>
 
-
-	<div class="ccm-pane-options">
-		<div class="ccm-pane-options-permanent-search">
-
-		<form class="form-inline">
-		<i class="icon-search"></i>
-
-		<?=$form->text('fsAddToSearchName', $searchRequest['fsSearchName'], array('autocomplete' => 'off'))?>
-
-		</form>
-
-		</div>
-	</div>
-
 <? if (!$disableForm) { ?>
 	<form method="post" class="form-stacked" data-dialog-form="file-sets" id="ccm-add-to-set-form" action="<?=Loader::helper('concrete/urls')->getToolsURL('files/add_to')?>">
 	<?=$form->hidden('task', 'add_to_sets')?>
@@ -204,17 +192,30 @@ ccm_alSetupSetsForm = function(searchInstance) {
 	<? } ?>
 
 <? } ?>
-	
+
+    <fieldset class="form-inline">
+        <legend><?=t('Add to New Set')?></legend>
+
+        <?=$form->checkbox('fsNew', 1)?> <?=$form->text('fsNewText', array('style' => 'width: 120px', 'onclick' => '$(\'input[name=fsNew]\').attr(\'checked\',true)'))?> <?=$form->checkbox('fsNewShare', 1, true)?> <?=t('Make set public')?>
+
+    </fieldset>
 
 
 	<br/>
 	<fieldset>
 		<legend><?=t('Existing Set')?></legend>
-	
+
 	<? $s1 = FileSet::getMySets(); ?>
 	<? if (count($s1) > 0) { ?>
+        <?php if(count($s1) > 10) { // show filter form if there are a bunch of sets ?>
+            <div class="form-group">
+                <form class="form-inline">
+                    <?=$form->text('fsAddToSearchName', $searchRequest['fsSearchName'], array('autocomplete' => 'off', 'placeholder'=>t('Filter Sets')))?>
+                </form>
+            </div>
+        <? } ?>
 
-		<div class="form-group">
+        <div class="form-group">
 			<ul id="ccm-file-search-add-to-sets-list" class="list-unstyled">
 		
 		
@@ -256,14 +257,6 @@ ccm_alSetupSetsForm = function(searchInstance) {
 	
 <? } ?>
 
-<br/><br/>
-
-<fieldset class="form-inline">
-	<legend><?=t('Add to New Set')?></legend>
-
-	<?=$form->checkbox('fsNew', 1)?> <?=$form->text('fsNewText', array('style' => 'width: 120px', 'onclick' => '$(\'input[name=fsNew]\').attr(\'checked\',true)'))?> <?=$form->checkbox('fsNewShare', 1, true)?> <?=t('Make set public')?>
-
-</fieldset>
 
 <? if (!$disableForm) { ?>
 

@@ -61,26 +61,35 @@
 
             Concrete.event
                 .unbind('EditModeExitInline.editmode')
-                .bind('EditModeExitInline.editmode', function (e) {
+                .bind('EditModeExitInline.editmode', function (e, event_data) {
                     Concrete.event.unbind(e);
                     e.stopPropagation();
-                    var action = CCM_DISPATCHER_FILENAME + '/ccm/system/block/render?cID=' + block.getCID() + '&arEnableGridContainer=' + arEnableGridContainer + '&bID=' + block.getId() + '&arHandle=' + escape(area.getHandle());
+                    var action = CCM_DISPATCHER_FILENAME + '/ccm/system/block/render',
+                        data = {
+                            cID: block.getCID(),
+                            arEnableGridContainer: arEnableGridContainer,
+                            bID: block.getId(),
+                            arHandle: area.getHandle()
+                        };
+
                     $.fn.dialog.showLoader();
-                    $.get(action,
-                        function (r) {
-                            var block = area.getBlockByID(bID);
-                            var newBlock = block.replace(bID, r);
-                            _.defer(function () {
-                                ConcreteEvent.fire('EditModeExitInlineComplete', {
-                                    block: newBlock
-                                });
-                                my.destroyInlineEditModeToolbars();
+
+                    if (!event_data || !event_data.action || event_data.action !== 'save_inline') {
+                        $.get(action, data,
+                            function (r) {
+                                var newBlock = block.replace(r);
                                 _.defer(function () {
-                                    my.scanBlocks();
+                                    ConcreteEvent.fire('EditModeExitInlineComplete', {
+                                        block: newBlock
+                                    });
+                                    my.destroyInlineEditModeToolbars();
+                                    _.defer(function () {
+                                        my.scanBlocks();
+                                    });
                                 });
-                            });
-                        }
-                    );
+                            }
+                        );
+                    }
                 });
 
 //            ConcreteMenuManager.disable();
@@ -737,7 +746,7 @@
                     my.getElem().addClass('ccm-area-inline-edit-disabled');
                     var postData = {
                         'arHandle': my.getHandle(),
-                        'cID': CCM_CID,
+                        'cID': CCM_CID
                     };
 
                     Concrete.event.bind('EditModeExitInline', function (e) {
@@ -984,7 +993,7 @@
             });
         },
 
-        delete: function (msg) {
+        delete: function blockDelete(msg) {
             var my = this, bID = my.getId(),
                 area = my.getArea(),
                 block = area.getBlockByID(bID),
@@ -1008,50 +1017,21 @@
         /**
          * replaces a block in an area with a new block by ID and content
          */
-        replace: function (bID, content) {
-            var my = this, editor = Concrete.getEditMode(), oldBID = my.getId(), area = my.getArea(), totalBlocks = area.getTotalBlocks(), i, b;
+        replace: function blockReplace(content) {
+            var my = this, new_block_elem = $(content);
 
-            my.getElem().closest('div[data-container=block]').next('.ccm-area-drag-area').remove();
-            my.getElem().data('block-id', bID); // it's super lame that i have to do this.
-            my.getElem().attr('data-block-id', bID);
+            this.getContainer().replaceWith(new_block_elem);
 
-            if (content) {
-                my.getElem().closest('div[data-container=block]').before(content).remove();
-            }
-
-            var newBlock = new Concrete.Block($('[data-block-id=' + bID + ']'), editor);
-
-            area.setTotalBlocks(totalBlocks - 1); // it will get incremented by addBlock below
-
-            // now we go through all the block registries and replace the old one with this one.
-            var editorBlocks = editor.getBlocks();
-            for (i = 0; i < editorBlocks.length; i++) {
-                b = editorBlocks[i];
-                if (b.getId() === oldBID) {
-                    editorBlocks[i] = newBlock;
-                }
-            }
-            editor.setBlocks(editorBlocks);
-
-            // area specific
-            var areaBlocks = area.getBlocks(), total = areaBlocks.length;
-            for (i = 0; i < total; i++) {
-                b = areaBlocks[i];
-                if (b.getId() === oldBID) {
-                    area.addBlockToIndex(newBlock, i);
-                }
-            }
-
-
-            return newBlock;
+            my.getEditMode().scanBlocks();
+            return my.getArea().getBlockByID(new_block_elem.data('block-id'));
         },
 
-        getMenuElem: function () {
+        getMenuElem: function blockGetMenuElem() {
             var my = this;
-            return $('[data-block-menu=block-menu-b' + my.getId() + '-' + my.getAreaId() + ']');
+            return $('div.ccm-edit-mode-block-menu', this.getElem()).first();
         },
 
-        bindMenu: function () {
+        bindMenu: function blockBindMenu() {
             var my = this,
                 elem = my.getElem(),
                 menuHandle = elem.attr('data-block-menu-handle'),
@@ -1063,7 +1043,7 @@
                     'handle': 'this',
                     'highlightClassName': 'ccm-block-highlight',
                     'menuActiveClass': 'ccm-block-highlight',
-                    'menu': $('[data-block-menu=' + elem.attr('data-launch-block-menu') + ']')
+                    'menu': $('div.ccm-edit-mode-block-menu', my.getElem())
                 });
 
                 $menuElem.find('a[data-menu-action=edit_inline]').unbind().on('click', function (event) {
@@ -1151,7 +1131,6 @@
                 element.style.left = -(element.offsetWidth / 2) + (element.clientWidth / 2) + 'px';
                 element.style.top = -(element.offsetHeight / 2) + (element.clientHeight / 2) + 'px';
             }
-
             return true;
         },
 
