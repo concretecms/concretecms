@@ -20,18 +20,17 @@ class Controller extends AttributeTypeController
         return round($value);
     }
 
+
     public function getDisplayValue()
     {
         $value = $this->getValue();
         $rt = Loader::helper('rating');
-        $this->requireAsset('css', 'jquery/rating');
         return $rt->output($this->attributeKey->getAttributeKeyHandle() . time(), $value);
     }
 
     public function form()
     {
         $caValue = 0;
-        $this->requireAsset('jquery/rating');
         if ($this->getAttributeValueID() > 0) {
             $caValue = $this->getValue();
         }
@@ -73,7 +72,6 @@ class Controller extends AttributeTypeController
     public function search()
     {
         $rt = Loader::helper('form/rating');
-        $this->requireAsset('jquery/rating');
         print $rt->rating($this->field('value'), $this->request('value'), false);
     }
 

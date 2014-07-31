@@ -135,11 +135,11 @@ class DispatcherRouteCallback extends RouteCallback {
 		$controller = $c->getPageController();
 		$controller->on_start();
 		$controller->setupRequestActionAndParameters($request);
-		$requestTask = $controller->getRequestAction();
+        if (!$controller->validateRequest()) {
+            return $this->sendPageNotFound($request);
+        }
+        $requestTask = $controller->getRequestAction();
 		$requestParameters = $controller->getRequestActionParameters();
-		if (!$controller->validateRequest()) {
-			return $this->sendPageNotFound($request);
-		}
 		$controller->runAction($requestTask, $requestParameters);
 		$c->setController($controller);
 		$view = $controller->getViewObject();

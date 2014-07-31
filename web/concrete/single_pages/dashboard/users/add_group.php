@@ -46,10 +46,10 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
           'chooseNodeInForm': 'single',
 		  'enableDragAndDrop': false,
           <? if ($this->controller->isPost()) { ?> 
-             'selectNodeByKey': '<?=$_POST['gParentNodeID']?>',
+             'selectNodesByKey': [<?=intval($_POST['gParentNodeID'])?>]
           <? } else {
           	if (is_object($rootNode)) { ?>
-          		'selectNodeByKey': '<?=$rootNode->getTreeNodeID()?>',
+          		'selectNodesByKey': [<?=intval($rootNode->getTreeNodeID())?>],
           		<? } ?>
 	      	<? } ?>
 	      'removeNodesByID': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],

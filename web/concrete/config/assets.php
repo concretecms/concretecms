@@ -30,6 +30,9 @@ $al->register('javascript', 'dropzone', 'js/dropzone.js');
 // jquery form
 $al->register('javascript', 'jquery/form', 'js/jquery-form.js');
 
+// picturefill
+$al->register('javascript', 'picturefill', 'js/picturefill.js', array('minify' => false));
+
 // jquery rating
 $al->register('javascript', 'jquery/rating', 'js/jquery.rating.js');
 $al->register('css', 'jquery/rating', 'css/jquery-rating.css', array('minify' => false));

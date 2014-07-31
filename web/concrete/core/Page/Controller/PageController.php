@@ -10,6 +10,7 @@ class PageController extends Controller {
 
     protected $supportsPageCache = false;
     protected $action;
+
     protected $parameters = array();
 
     public function supportsPageCache() {
@@ -60,14 +61,6 @@ class PageController extends Controller {
         }
     }
 
-    public function passthru($arHandle = false, $bID = false, $action = false) {
-        $args = func_get_args();
-        $args = array_slice(func_get_args(), 3);
-        $this->action = 'passthru';
-        $this->parameters = func_get_args();
-    }
-
-
     public function setupRequestActionAndParameters(Request $request) {
         $task = substr($request->getPath(), strlen($this->c->getCollectionPath()) + 1);
         $task = str_replace('-/', '', $task);
@@ -112,6 +105,7 @@ class PageController extends Controller {
     }
 
     public function validateRequest() {
+
         $valid = true;
         if (!is_callable(array($this, $this->action)) && count($this->parameters) > 0) {
             $valid = false;
@@ -123,6 +117,23 @@ class PageController extends Controller {
             $r = new \ReflectionMethod(get_class($this), $this->action);
             if ($r->getNumberOfParameters() < count($this->parameters)) {
                 $valid = false;
+            }
+        }
+        if (!$valid) {
+            // we check the blocks on the page.
+            $blocks = $this->getPageObject()->getBlocks();
+            foreach($blocks as $b) {
+                $controller = $b->getController();
+                $method = 'action_' . $this->parameters[0];
+                $this->action = 'passthru';
+                if (is_callable(array($controller, $method))) {
+                    $r = new \ReflectionMethod(get_class($controller), $method);
+                    if ($r->getNumberOfParameters() < count($this->parameters) - 1) {
+                        $valid = false;
+                    } else {
+                        $valid = true;
+                    }
+                }
             }
         }
 

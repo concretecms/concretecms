@@ -52,6 +52,7 @@
         <style name="Link Hover Color" variable="footer-link-hover" type="color" />
     </set>
     <set name="Miscellaneous">
+        <style name="Content Divider Color" variable="content-section-divider" type="color" />
         <style name="Default Button Border" variable="default-button-border" type="color" />
         <style name="Sidebar Faint Background" variable="sidebar-faint-background" type="color" />
         <style name="Title Thin" variable="title-thin" type="type" />

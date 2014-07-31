@@ -1466,7 +1466,7 @@
       <unsigned/>
     </field>
     <field name="avID" type="I" size="10">
-      <key/>
+      <!--<key/>// --> <!-- pretty sure the key definition on this totally wrong //-->
       <default value="0"/>
       <unsigned/>
     </field>
@@ -1728,7 +1728,7 @@
       <unsigned/>
     </field>
     <field name="avID" type="I" size="10">
-      <key/>
+      <!--<key/>// --> <!-- pretty sure the key definition on this totally wrong //-->
       <default value="0"/>
       <unsigned/>
     </field>
@@ -2278,15 +2278,11 @@
       <unsigned/>
     </field>
     <field name="fvActivateDatetime" type="T"/>
-    <field name="fvHasThumbnail1" type="I" size="1">
+    <field name="fvHasListingThumbnail" type="I" size="1">
       <notnull/>
       <default value="0"/>
     </field>
-    <field name="fvHasThumbnail2" type="I" size="1">
-      <notnull/>
-      <default value="0"/>
-    </field>
-    <field name="fvHasThumbnail3" type="I" size="1">
+    <field name="fvHasDetailThumbnail" type="I" size="1">
       <notnull/>
       <default value="0"/>
     </field>
@@ -2349,6 +2345,30 @@
             <notnull/>
             <default value="0"/>
             <unsigned/>
+        </field>
+    </table>
+
+    <table name="FileImageThumbnailTypes">
+        <field name="ftTypeID" type="I" size="10">
+            <key/>
+            <unsigned/>
+            <autoincrement />
+        </field>
+        <field name="ftTypeHandle" type="C" size="255">
+            <notnull/>
+            <default value="" />
+        </field>
+        <field name="ftTypeName" type="C" size="255">
+            <notnull/>
+            <default value="" />
+        </field>
+        <field name="ftTypeWidth" type="I" size="10">
+            <notnull/>
+            <default value="0" />
+        </field>
+        <field name="ftTypeIsRequired" type="I1" size="1">
+            <notnull/>
+            <default value="0" />
         </field>
     </table>
   <table name="FileStorageLocations">
@@ -3247,7 +3267,7 @@
       <unsigned/>
     </field>
     <field name="avID" type="I" size="10">
-      <key/>
+        <!--<key/>// --> <!-- pretty sure the key definition on this totally wrong //-->
       <default value="0"/>
       <unsigned/>
     </field>

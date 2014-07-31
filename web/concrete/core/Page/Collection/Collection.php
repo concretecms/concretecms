@@ -354,13 +354,11 @@ class Collection extends Object
         }
         if ($actuallyDoReindex || ENABLE_PROGRESSIVE_PAGE_REINDEX == false) {
             $db = Loader::db();
-
             $attribs = CollectionAttributeKey::getAttributes(
-                                             $this->getCollectionID(),
-                                             $this->getVersionID(),
-                                             'getSearchIndexValue'
+                $this->getCollectionID(),
+                $this->getVersionID(),
+                'getSearchIndexValue'
             );
-
             $db->Execute('delete from CollectionSearchIndexAttributes where cID = ?', array($this->getCollectionID()));
             $searchableAttributes = array('cID' => $this->getCollectionID());
             $key = new Key();

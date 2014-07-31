@@ -6,7 +6,7 @@ class PaginationServiceProvider extends ServiceProvider {
 
     public function register() {
         $singletons = array(
-            'pagination/view' => '\Pagerfanta\View\TwitterBootstrap3View'
+            'pagination/view' => '\Concrete\Core\Search\Pagination\View\ConcreteBootstrap3View'
         );
 
         foreach($singletons as $key => $value) {

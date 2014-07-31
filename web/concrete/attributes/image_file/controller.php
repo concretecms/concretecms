@@ -1,7 +1,9 @@
 <?
 namespace Concrete\Attribute\ImageFile;
 use Loader;
-use \Concrete\Core\Foundation\Object;
+use File;
+use Concrete\Core\Backup\ContentExporter;
+use Concrete\Core\Backup\ContentImporter;
 use \Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController  {
@@ -16,7 +18,7 @@ class Controller extends AttributeTypeController  {
 			return $f;
 		}
 	}
-	
+
 	public function getDisplayValue() {
 		$f = $this->getValue();
 		if (is_object($f)) {

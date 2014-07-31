@@ -97,6 +97,13 @@ ConcretePageAttributesDetail = {
 			},
 			type: 'post',
 			success: function(r) {
+                _.each(r.assets.css, function(css) {
+                    ccm_addHeaderItem(css, 'CSS');
+                });
+                _.each(r.assets.javascript, function(javascript) {
+                    ccm_addHeaderItem(javascript, 'JAVASCRIPT');
+                });
+
 				var $form = $('form[data-panel-detail-form=attributes]');
 				$form.append(
 					renderAttribute(r)
