@@ -85,7 +85,7 @@
                 } else {
                     // remove old block from area
                     var block = area.getBlockByID(my.options.bID);
-                    var newBlock = block.replace(resp.bID, r);
+                    var newBlock = block.replace(r);
                     ConcreteAlert.notify({
                         'message': ccmi18n.updateBlockMsg,
                         'title': ccmi18n.updateBlock
