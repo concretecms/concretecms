@@ -2,6 +2,7 @@
 namespace Concrete\Core\Backup;
 
 use Concrete\Core\Sharing\SocialNetwork\Link;
+use Concrete\Core\Tree\Tree;
 use Page;
 use Package;
 use Stack;
@@ -78,6 +79,8 @@ class ContentImporter
         $this->importPageTypeComposerControlTypes($sx);
         $this->importBannedWords($sx);
         $this->importSocialLinks($sx);
+        $this->importTrees($sx);
+        $this->importFileImportantThumbnailTypes($sx);
         $this->importFeatures($sx);
         $this->importFeatureCategories($sx);
         $this->importGatheringDataSources($sx);
@@ -306,7 +309,7 @@ class ContentImporter
                 foreach ($ax->blocks->block as $bx) {
                     if ($bx['type'] != '') {
                         // we check this because you might just get a block node with only an mc-block-id, if it's an alias
-                        $bt = BlockType::getByHandle($bx['type']);
+                        $bt = BlockType::getByHandle((string) $bx['type']);
                         if (!is_object($bt)) {
                             throw new \Exception(t('Invalid block type handle: %s', strval($bx['type'])));
                         }
@@ -314,13 +317,26 @@ class ContentImporter
                         $btc->import($page, (string)$ax['name'], $bx);
                     } else {
                         if ($bx['mc-block-id'] != '') {
-
                             // we find that block in the master collection block pool and alias it out
                             $bID = array_search((string)$bx['mc-block-id'], self::$mcBlockIDs);
                             if ($bID) {
                                 $mc = Page::getByID($page->getMasterCollectionID(), 'RECENT');
                                 $block = Block::getByID($bID, $mc, (string)$ax['name']);
                                 $block->alias($page);
+
+                                if ($block->getBlockTypeHandle() == BLOCK_HANDLE_LAYOUT_PROXY) {
+                                    // we have to go get the blocks on that page in this layout.
+                                    $btc = $block->getController();
+                                    $arLayout = $btc->getAreaLayoutObject();
+                                    $columns = $arLayout->getAreaLayoutColumns();
+                                    foreach($columns as $column) {
+                                        $area = $column->getAreaObject();
+                                        $blocks = $area->getAreaBlocksArray($mc);
+                                        foreach($blocks as $_b) {
+                                            $_b->alias($page);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -384,9 +400,9 @@ class ContentImporter
             foreach ($sx->blocktypes->blocktype as $bt) {
                 $pkg = static::getPackageObject($bt['package']);
                 if (is_object($pkg)) {
-                    BlockType::installBlockTypeFromPackage($bt['handle'], $pkg);
+                    BlockType::installBlockTypeFromPackage((string) $bt['handle'], $pkg);
                 } else {
-                    BlockType::installBlockType($bt['handle']);
+                    BlockType::installBlockType((string) $bt['handle']);
                 }
             }
         }
@@ -564,6 +580,32 @@ class ContentImporter
                 $sociallink->setURL((string)$l['url']);
                 $sociallink->setServiceHandle((string)$l['service']);
                 $sociallink->save();
+            }
+        }
+    }
+
+    protected function importTrees(\SimpleXMLElement $sx)
+    {
+        if (isset($sx->trees)) {
+            foreach ($sx->trees->tree as $t) {
+                Tree::import($t);
+            }
+        }
+    }
+
+    protected function importFileImportantThumbnailTypes(\SimpleXMLElement $sx)
+    {
+        if (isset($sx->thumbnailtypes)) {
+            foreach ($sx->thumbnailtypes->thumbnailtype as $l) {
+                $type = new \Concrete\Core\File\Image\Thumbnail\Type\Type();
+                $type->setName((string) $l['name']);
+                $type->setHandle((string) $l['handle']);
+                $type->setWidth((string) $l['width']);
+                $required = (string) $l['required'];
+                if ($required) {
+                    $type->requireType();
+                }
+                $type->save();
             }
         }
     }
@@ -785,9 +827,12 @@ class ContentImporter
     {
         if (isset($sx->attributesets)) {
             foreach ($sx->attributesets->attributeset as $as) {
+                $set = \Concrete\Core\Attribute\Set::getByHandle((string) $as['handle']);
                 $akc = AttributeKeyCategory::getByHandle($as['category']);
-                $pkg = static::getPackageObject($as['package']);
-                $set = $akc->addSet((string)$as['handle'], (string)$as['name'], $pkg, $as['locked']);
+                if (!is_object($set)) {
+                    $pkg = static::getPackageObject($as['package']);
+                    $set = $akc->addSet((string)$as['handle'], (string)$as['name'], $pkg, $as['locked']);
+                }
                 foreach ($as->children() as $ask) {
                     $ak = $akc->getAttributeKeyByHandle((string)$ask['handle']);
                     if (is_object($ak)) {

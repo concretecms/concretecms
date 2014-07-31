@@ -88,8 +88,8 @@
 			
 		<li id="fID_<?=$f->getFileID()?>">
 			<div>
-				<?=$f->getThumbnail(1)?>	
-				<input type="hidden" name="fsDisplayOrder[]" value="<?=$f->getFileID()?>" />			
+				<?=$f->getListingThumbnail()?>
+				<input type="hidden" name="fsDisplayOrder[]" value="<?=$f->getFileID()?>" />
 				<span style="word-wrap: break-word"><?=$f->getTitle()?></span>
 			</div>
 		</li>

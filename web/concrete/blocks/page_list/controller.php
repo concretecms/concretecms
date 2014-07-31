@@ -17,6 +17,7 @@ class Controller extends BlockController
     protected $btExportPageColumns = array('cParentID');
     protected $btExportPageTypeColumns = array('ptID');
     protected $btCacheBlockRecord = true;
+    protected $list;
 
     /**
      * Used for localization. If we want to localize the name/description we have to include this
@@ -38,56 +39,35 @@ class Controller extends BlockController
         );
     }
 
-    public function getPages()
+    public function on_start()
     {
-        $pl = $this->getPageList();
-        $pages = $pl->get();
-        return $pages;
-    }
-
-    protected function getPageList()
-    {
-        $db = Loader::db();
-        $bID = $this->bID;
-        if ($this->bID) {
-            $q = "select num, cParentID, cThis, orderBy, ptID, displayAliases, rss from btPageList where bID = '$bID'";
-            $r = $db->query($q);
-            if ($r) {
-                $row = $r->fetchRow();
-            }
-        } else {
-            $row['num'] = $this->num;
-            $row['cParentID'] = $this->cParentID;
-            $row['cThis'] = $this->cThis;
-            $row['orderBy'] = $this->orderBy;
-            $row['ptID'] = $this->ptID;
-            $row['rss'] = $this->rss;
-            $row['displayAliases'] = $this->displayAliases;
+        if (!$this->bID) {
+            return;
         }
 
-        $pl = new PageList();
+        $this->list = new PageList();
         //$pl->setNameSpace('b' . $this->bID);
 
         $cArray = array();
 
-        switch ($row['orderBy']) {
+        switch ($this->orderBy) {
             case 'display_asc':
-                $pl->sortByDisplayOrder();
+                $this->list->sortByDisplayOrder();
                 break;
             case 'display_desc':
-                $pl->sortByDisplayOrderDescending();
+                $this->list->sortByDisplayOrderDescending();
                 break;
             case 'chrono_asc':
-                $pl->sortByPublicDate();
+                $this->list->sortByPublicDate();
                 break;
             case 'alpha_asc':
-                $pl->sortByName();
+                $this->list->sortByName();
                 break;
             case 'alpha_desc':
-                $pl->sortByNameDescending();
+                $this->list->sortByNameDescending();
                 break;
             default:
-                $pl->sortByPublicDateDescending();
+                $this->list->sortByPublicDateDescending();
                 break;
         }
 
@@ -99,43 +79,41 @@ class Controller extends BlockController
         if ($this->displayFeaturedOnly == 1) {
             $cak = CollectionAttributeKey::getByHandle('is_featured');
             if (is_object($cak)) {
-                $pl->filterByIsFeatured(1);
+                $this->list->filterByIsFeatured(1);
             }
         }
-        if ($row['displayAliases']) {
-            $pl->includeAliases();
+        if ($this->displayAliases) {
+            $this->list->includeAliases();
         }
-        $pl->filter('cvName', '', '!=');
+        $this->list->filter('cvName', '', '!=');
 
-        if ($row['ptID']) {
-            $pl->filterByPageTypeID($row['ptID']);
+        if ($this->ptID) {
+            $this->list->filterByPageTypeID($this->ptID);
         }
 
+        $db = Loader::db();
         $columns = $db->MetaColumnNames(CollectionAttributeKey::getIndexedSearchTable());
         if (isset($columns['ak_exclude_page_list'])) {
-            $pl->filter(false, '(ak_exclude_page_list = 0 or ak_exclude_page_list is null)');
+            $this->list->filter(false, '(ak_exclude_page_list = 0 or ak_exclude_page_list is null)');
         }
 
-        if (intval($row['cParentID']) != 0) {
-            $cParentID = ($row['cThis']) ? $this->cID : $row['cParentID'];
+        if (intval($this->cParentID) != 0) {
+            $cParentID = ($this->cThis) ? $this->cID : $this->cParentID;
             if ($this->includeAllDescendents) {
-                $pl->filterByPath(Page::getByID($cParentID)->getCollectionPath());
+                $this->list->filterByPath(Page::getByID($cParentID)->getCollectionPath());
             } else {
-                $pl->filterByParentID($cParentID);
+                $this->list->filterByParentID($cParentID);
             }
         }
-        return $pl;
+        return $this->list;
     }
 
     public function view()
     {
-        $list = $this->getPageList();
+        $list = $this->list;
         $nh = Loader::helper('navigation');
         $this->set('nh', $nh);
         $containerClass = 'ccm-block-page-list';
-        if ($this->useButtonForLink) {
-            $containerClass = 'ccm-block-button-page-list';
-        }
 
         $this->set('containerClass', $containerClass);
 
@@ -195,7 +173,10 @@ class Controller extends BlockController
         $this->set('c', $c);
         $this->set('uh', $uh);
         $this->set('includeDescription', true);
+        $this->set('includeName', true);
         $this->set('bt', BlockType::getByHandle('page_list'));
+        $this->set('featuredAttribute', CollectionAttributeKey::getByHandle('is_featured'));
+        $this->set('thumbnailAttribute', CollectionAttributeKey::getByHandle('thumbnail'));
     }
 
     public function edit()
@@ -212,6 +193,17 @@ class Controller extends BlockController
         $uh = Loader::helper('concrete/urls');
         $this->set('uh', $uh);
         $this->set('bt', BlockType::getByHandle('page_list'));
+        $this->set('featuredAttribute', CollectionAttributeKey::getByHandle('is_featured'));
+        $this->set('thumbnailAttribute', CollectionAttributeKey::getByHandle('thumbnail'));
+    }
+
+    public function action_topic($topic = false) {
+        $topic = intval($topic);
+        $ak = CollectionAttributeKey::getByHandle('topic');
+        if (is_object($ak)) {
+            $this->list->filterByTopic($topic);
+        }
+        $this->view();
     }
 
     function save($args)
@@ -233,9 +225,12 @@ class Controller extends BlockController
         if (!$args['cParentID']) {
             $args['cParentID'] = 0;
         }
+        $args['enableExternalFiltering'] = ($args['enableExternalFiltering']) ? '1' : '0';
         $args['includeAllDescendents'] = ($args['includeAllDescendents']) ? '1' : '0';
+        $args['includeDate'] = ($args['includeDate']) ? '1' : '0';
         $args['truncateSummaries'] = ($args['truncateSummaries']) ? '1' : '0';
         $args['displayFeaturedOnly'] = ($args['displayFeaturedOnly']) ? '1' : '0';
+        $args['displayThumbnail'] = ($args['displayThumbnail']) ? '1' : '0';
         $args['displayAliases'] = ($args['displayAliases']) ? '1' : '0';
         $args['truncateChars'] = intval($args['truncateChars']);
         $args['paginate'] = intval($args['paginate']);

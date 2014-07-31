@@ -14,7 +14,17 @@ class Group extends Tree {
 		return Tree::getByID($treeID);
 	}
 
-	protected function deleteDetails() {}
+    public static function importDetails(\SimpleXMLElement $sx)
+    {
+
+    }
+
+    public function exportDetails(\SimpleXMLElement $sx)
+    {
+
+    }
+
+    protected function deleteDetails() {}
 
 	public static function add() {
 		// copy permissions from the other node.

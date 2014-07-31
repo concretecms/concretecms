@@ -107,7 +107,7 @@ class BlockView extends AbstractView
                 $c = Page::getCurrentPage();
                 if (is_object($b) && is_object($c)) {
                     $a = $b->getBlockAreaObject();
-                    return URL::page($c, 'passthru', urlencode($a->getAreaHandle()), $b->getBlockID(), $task);
+                    return URL::page($c, $task);
                 }
             }
         } catch (Exception $e) {
@@ -358,24 +358,6 @@ class BlockView extends AbstractView
         return $contents;
     }
 
-    /**
-     * Tests the current page controller to see if it's passing through a block action. I really wish
-     * this could be handled in the block controller but due to some dumb decisions years ago it cannot be.
-     */
-    protected function getPassThruAction()
-    {
-        $c = Page::getCurrentPage();
-        if (is_object($c)) {
-            $cnt = $c->getController();
-            $parameters = $cnt->getParameters();
-            $action = $cnt->getAction();
-            if ($action == 'passthru' && $this->block->getBlockID() == $parameters[1]) {
-                return 'action_' . $parameters[2];
-            }
-        }
-    }
-
-
     public function runControllerTask()
     {
         if ($this->useBlockCache()) {
@@ -389,14 +371,22 @@ class BlockView extends AbstractView
                 $method = 'view';
             }
             if ($method == 'view') {
-                $method = $this->getPassThruAction();
-                if (!$method) {
-                    $method = 'view';
+                $c = Page::getCurrentPage();
+                if (is_object($c)) {
+                    $cnt = $c->getController();
+                    $tempParameters = $cnt->getParameters();
+                    $action = $cnt->getAction();
+                    if ($action == 'passthru' && is_callable(array($this->controller, 'action_' . $tempParameters[0]))) {
+                        $method = 'action_' . $tempParameters[0];
+                        $parameters = array_slice($tempParameters, 1);
+                    }
                 }
             }
-
+            if (!$parameters) {
+                $parameters = array();
+            }
             $this->controller->on_start();
-            $this->controller->runAction($method, array());
+            $this->controller->runAction($method, $parameters);
             $this->controller->on_before_render();
         }
 

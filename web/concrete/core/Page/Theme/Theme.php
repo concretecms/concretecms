@@ -85,6 +85,12 @@ class Theme extends Object
         $r->markAssetAsIncluded($assetType, $assetHandle);
     }
 
+    public function requireAsset($assetType, $assetHandle)
+    {
+        $r = ResponseAssetGroup::get();
+        $r->requireAsset($assetType, $assetHandle);
+    }
+
     public static function getAvailableThemes($filterInstalled = true)
     {
         // scans the directory for available themes. For those who don't want to go through
@@ -781,6 +787,16 @@ class Theme extends Object
     }
 
     public function getThemeEditorClasses()
+    {
+        return array();
+    }
+
+    public function getThemeDefaultBlockTemplates()
+    {
+        return array();
+    }
+
+    public function getThemeResponsiveImageMap()
     {
         return array();
     }

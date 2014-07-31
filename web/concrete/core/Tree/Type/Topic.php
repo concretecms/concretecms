@@ -22,6 +22,13 @@ class Topic extends Tree {
 		$db->Execute('delete from TopicTrees where treeID = ?', array($this->treeID));
 	}
 
+    public static function getByDisplayName($name)
+    {
+        $db = Loader::db();
+        $treeID = $db->GetOne('select treeID from TopicTrees where topicTreeName = ?', array($name));
+        return Tree::getByID($treeID);
+    }
+
 	public static function add($name) {
 		// copy permissions from the other node.
 		$rootNode = TopicCategoryTreeNode::add();
@@ -41,8 +48,27 @@ class Topic extends Tree {
 		return $tree;
 	}
 
+    public function exportDetails(\SimpleXMLElement $sx)
+    {
+        $default = self::getDefault();
+        if (is_object($default) && $default->getTreeID() == $this->getTreeID()) {
+            $sx->addAttribute('default', 1);
+        }
+    }
 
-	protected function loadDetails() {
+    public static function importDetails(\SimpleXMLElement $sx)
+    {
+        $isDefault = (string) $sx['default'];
+        if ($isDefault) {
+            return static::getDefault();
+        } else {
+            $name = (string) $sx['name'];
+            return static::add($name);
+        }
+    }
+
+
+    protected function loadDetails() {
 		$db = Loader::db();
 		$row = $db->GetRow('select treeID, topicTreeName from TopicTrees where treeID = ?', array($this->treeID));
 		if (is_array($row) && $row['treeID']) {

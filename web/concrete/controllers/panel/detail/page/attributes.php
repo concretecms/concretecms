@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Controller\Panel\Detail\Page;
 use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
+use Concrete\Core\Http\ResponseAssetGroup;
 use PageEditResponse;
 use PermissionKey;
 use stdClass;
@@ -132,6 +133,13 @@ class Attributes extends BackendInterfacePageController {
 		if (is_object($ak) && in_array($ak->getAttributeKeyID(), $allowed)) {
 			$obj = $this->getAttributeJSONRepresentation($ak, 'add');
 			$obj->pending = true;
+            $obj->assets = array();
+            $ag = ResponseAssetGroup::get();
+            foreach($ag->getAssetsToOutput() as $position => $assets) {
+                foreach($assets as $asset) {
+                    $obj->assets[$asset->getAssetType()][] = $asset->getAssetURL();
+                }
+            }
 			Loader::helper('ajax')->sendResult($obj);
 		}
 	}

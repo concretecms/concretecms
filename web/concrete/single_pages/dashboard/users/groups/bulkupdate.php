@@ -110,7 +110,7 @@ $(function() {
           'treeID': '<?=$tree->getTreeID()?>',
           'chooseNodeInForm': 'single',
           <? if ($this->controller->isPost()) { ?> 
-             'selectNodeByKey': '<?=$_POST['gParentNodeID']?>',
+             'selectNodesByKey': [<?=intval($_POST['gParentNodeID'])?>],
           <? } ?>
           'removeNodesByID': ['<?=$guestGroupNode->getTreeNodeID()?>','<?=$registeredGroupNode->getTreeNodeID()?>'],
           'onSelect': function(select, node) {

@@ -159,14 +159,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $env = Environment::get();
 
         if ($this->getPageTypeID() > 0) {
-            /*
-            $ptHandle = $mixed->getPageTypeHandle();
-            $path = self::pageTypeControllerPath($ptHandle, $mixed->getPackageHandle());
-            if ($path) {
-                require_once($path);
-                $class = Object::camelcase($ptHandle) . 'PageTypeController';
-            }
-            */
+            $ptHandle = $this->getPageTypeHandle();
+            $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ptHandle . '.php', $this->getPackageHandle());
+            $prefix = $r->override ? true : $this->getPackageHandle();
+            $class = core_class('Controller\\PageType\\' . camelcase($ptHandle), $prefix);
         } else if ($this->isGeneratedCollection()) {
             $file = $this->getCollectionFilename();
             $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . $file, $this->getPackageHandle());
@@ -1825,6 +1821,22 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $r2 = $db->query($q2);
             $this->updateGroupsSubCollection($cParentIDString);
         }
+    }
+
+
+    public function addBlock($bt, $a, $data)
+    {
+        $b = parent::addBlock($bt, $a, $data);
+        $btHandle = $bt->getBlockTypeHandle();
+        $theme = $this->getCollectionThemeObject();
+        if ($btHandle) {
+            $templates = $theme->getThemeDefaultBlockTemplates();
+            if (count($templates) && isset($templates[$btHandle])) {
+                $template = $templates[$btHandle];
+                $b->updateBlockInformation(array('bFilename' => $template));
+            }
+        }
+        return $b;
     }
 
     function move($nc) {

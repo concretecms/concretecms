@@ -2,3 +2,7 @@
     padding-left: 0;
     list-style: none;
 }
+
+.ccm-block-topic-list-topic-selected {
+    font-weight: bold;
+}
