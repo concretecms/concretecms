@@ -1832,7 +1832,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $b = parent::addBlock($bt, $a, $data);
         $btHandle = $bt->getBlockTypeHandle();
         $theme = $this->getCollectionThemeObject();
-        if ($btHandle) {
+        if ($btHandle && $theme) {
             $templates = $theme->getThemeDefaultBlockTemplates();
             if (count($templates) && isset($templates[$btHandle])) {
                 $template = $templates[$btHandle];
