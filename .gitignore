@@ -5,8 +5,9 @@ thumbs.db
 __MACOSX
 ._*
 
-# ignore composer.phar
+# ignore composer files
 composer.phar
+web/concrete/composer.lock
 
 # ignore the site.php
 /web/application/config/site.php
