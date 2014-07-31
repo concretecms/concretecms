@@ -256,7 +256,6 @@ if (isset($_REQUEST['btask']) && $_REQUEST['btask'] && $valt->validate()) {
                 //exit;
             }
             break;
-        */
         case 'passthru_stack':
             if (isset($_GET['bID'])) {
                 $vn = Loader::helper('validation/numbers');
@@ -271,6 +270,7 @@ if (isset($_REQUEST['btask']) && $_REQUEST['btask'] && $valt->validate()) {
                 }
             }
             break;
+        */
     }
 }
 

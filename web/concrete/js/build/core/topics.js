@@ -70,13 +70,14 @@
 		},
     	
 
-    	reloadNode: function(node, onComplete) {
-    		var obj = this;
+    	reloadNode: function(options, node, onComplete) {
+    		var obj = this,
+                data = options.ajaxData;
+            data.treeNodeParentID = node.data.key;
+
     		var params = {
 				url: CCM_TOOLS_PATH + '/tree/node/load',
-				data: {
-					treeNodeParentID: node.data.key
-				},
+				data: data,
 				success: function() {
 					if (onComplete) {
 						onComplete();
@@ -150,7 +151,7 @@
 					jQuery.fn.dialog.closeTop();
 		    		var node = $tree.dynatree('getTree').getNodeByKey(r.treeNodeParentID);
 					node.setLazyNodeStatus(DTNodeStatus_Loading);	
-					methods.private.reloadNode(node, function() {
+					methods.private.reloadNode($tree.data('options'), node, function() {
 						node.setLazyNodeStatus(DTNodeStatus_Ok);	
 					});
 				}
@@ -197,7 +198,7 @@
 			readonly: false,
 			chooseNodeInForm: false,
 			onSelect: false,
-			selectNodeByKey: false
+			selectNodesByKey: []
 		}, options);
 
 		var checkbox = false,
@@ -220,8 +221,8 @@
 			classNames = {
 				'checkbox': 'dynatree-radio'
 			};
-			if (options.selectNodeByKey) {
-				ajaxData.treeNodeSelectedID = options.selectNodeByKey;
+            if (options.selectNodesByKey.length) {
+				ajaxData.treeNodeSelectedIDs = options.selectNodesByKey;
 			}
 		}
 		
@@ -231,8 +232,8 @@
 			classNames = {
 				'checkbox': 'dynatree-checkbox'
 			};
-			if (options.selectNodeByKey) {
-				ajaxData.treeNodeSelectedID = options.selectNodeByKey;
+            if (options.selectNodesByKey.length) {
+				ajaxData.treeNodeSelectedIDs = options.selectNodesByKey;
 			}
 		}
 		
@@ -252,6 +253,7 @@
 				var loadToolsURL = CCM_TOOLS_PATH + '/tree/node/load';
 			}
 			var $obj = $(this);
+            options.ajaxData = ajaxData;
 			$obj.data('options', options);
 			$obj.dynatree({
 				autoFocus: false,
@@ -276,10 +278,10 @@
 				initAjax: {
 					url: loadToolsURL,
 					type: 'post',
-					data: ajaxData, 
+					data: ajaxData
 				},
 				onLazyRead: function(node) {
-					methods.private.reloadNode(node);
+					methods.private.reloadNode(options, node);
 				},
 
 				onPostInit: function() {

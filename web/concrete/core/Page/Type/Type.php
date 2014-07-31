@@ -368,15 +368,15 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 			$target = $sc->getPageTypePublishTargetObject();
 			$target->export($pagetype);
 
-            $fsn = $pagetype->addChild('composer');
-			$fsn = $fsn->addChild('formlayout');
+            $cfsn = $pagetype->addChild('composer');
+			$fsn = $cfsn->addChild('formlayout');
 
 			$fieldsets = PageTypeComposerFormLayoutSet::getList($sc);
 			foreach($fieldsets as $fs) {
 				$fs->export($fsn);
 			}
 
-			$osn = $pagetype->addChild('output');
+			$osn = $cfsn->addChild('output');
 			foreach($templates as $tt) {
 				$pagetemplate = $osn->addChild('pagetemplate');
 				$pagetemplate->addAttribute('handle', $tt->getPageTemplateHandle());

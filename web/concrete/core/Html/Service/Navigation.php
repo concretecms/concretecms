@@ -39,7 +39,7 @@ class Navigation {
 			$link = BASE_URL . $link;
 		}
 
-		if (!URL_USE_TRAILING_SLASH) {
+		if (!URL_USE_TRAILING_SLASH && $link != '/') {
 			$link = rtrim($link, '/');
 		}
 

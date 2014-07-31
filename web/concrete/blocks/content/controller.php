@@ -185,7 +185,17 @@ use \Concrete\Core\Block\BlockController;
 		
 		function translateFrom($text) {
 
-    		// now we add in support for the links
+            $text = preg_replace(
+                array(
+                    '/{CCM:BASE_URL}/i'
+                ),
+                array(
+                    BASE_URL . DIR_REL,
+                ),
+                $text
+            );
+
+            // now we add in support for the links
 			
 			$text = preg_replace_callback(
 				'/{CCM:CID_([0-9]+)}/i',

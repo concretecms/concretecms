@@ -9,8 +9,12 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
         $this->providesAsset('css', 'blocks/social_links');
         $this->providesAsset('css', 'blocks/feature');
         $this->providesAsset('css', 'blocks/faq');
-        $this->providesAsset('css', 'blocks/topic_list');
+        $this->providesAsset('css', 'blocks/page_list');
         $this->providesAsset('css', 'core/frontend/*');
+
+        $this->requireAsset('css', 'font-awesome');
+        $this->requireAsset('javascript', 'jquery');
+        $this->requireAsset('javascript', 'picturefill');
 	}
 
     protected $pThemeGridFrameworkHandle = 'bootstrap3';
@@ -18,12 +22,39 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
     public function getThemeBlockClasses()
     {
         return array(
-            'feature' => array('ccm-block-feature-home-page'),
-            'page_list' => array('ccm-block-sidebar-wrapped'),
-            'content' => array('ccm-block-sidebar-wrapped'),
+            'feature' => array('feature-home-page'),
+            'page_list' => array(
+                'recent-blog-entry',
+                'blog-entry-list',
+                'page-list-with-buttons',
+                'block-sidebar-wrapped'
+            ),
+            'content' => array('block-sidebar-wrapped'),
+            'topic_list' => array('block-sidebar-wrapped'),
+            'image' => array(
+                'image-right-tilt',
+                'image-circle'
+            )
         );
     }
 
+    public function getThemeDefaultBlockTemplates()
+    {
+        /*
+        return array(
+            'image' => 'some_special_image_template'
+        );
+        */
+    }
+
+    public function getThemeResponsiveImageMap()
+    {
+        return array(
+            'large' => '900px',
+            'medium' => '768px',
+            'small' => '0'
+        );
+    }
 
     public function getThemeEditorClasses()
     {

@@ -17,7 +17,7 @@
 			'treeID': '<?php echo $treeID ?>',
 			'treeNodeParentID': '<?php echo $parentNode ?>',
 			'chooseNodeInForm': 'multiple',
-			'selectNodeByKey': '<?php echo $valueIDs ?>',
+			'selectNodesByKey': [<?php echo $valueIDs ?>],
 			'selectMode': '2',
 			'noMenu': true,
 			'noDrag' : true,

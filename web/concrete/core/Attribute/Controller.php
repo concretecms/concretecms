@@ -86,6 +86,11 @@ class Controller extends AbstractController
         }
     }
 
+    public function filterByAttribute(AttributedItemList $list, $value, $comparison = '=')
+    {
+        $list->filter('ak_' . $this->attributeKey->getAttributeKeyHandle(), $value, $comparison);
+    }
+
     public function field($fieldName)
     {
         return 'akID[' . $this->attributeKey->getAttributeKeyID() . '][' . $fieldName . ']';

@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Package;
 use Cache;
-use Concrete\Core\Foundation\Object;
+use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use AuthenticationType;
 use Loader;
 use Package as BasePackage;
@@ -126,6 +126,9 @@ class StartingPointPackage extends BasePackage {
 	public function install_themes() {
 		$ci = new ContentImporter();
 		$ci->importContentFile(DIR_BASE_CORE. '/config/install/base/themes.xml');
+        if (file_exists($this->getPackagePath() . '/themes.xml')) {
+            $ci->importContentFile($this->getPackagePath() . '/themes.xml');
+        }
 	}
 
 	public function install_jobs() {
@@ -144,6 +147,20 @@ class StartingPointPackage extends BasePackage {
         $configuration = $type->getConfigurationObject();
         $fsl = \Concrete\Core\File\StorageLocation\StorageLocation::add($configuration, t('Default'), true);
 
+        $thumbnailType = new Type();
+        $thumbnailType->requireType();
+        $thumbnailType->setName(t('File Manager Thumbnails'));
+        $thumbnailType->setHandle(FILE_MANAGER_LISTING_THUMBNAIL_HANDLE);
+        $thumbnailType->setWidth(FILE_MANAGER_LISTING_THUMBNAIL_WIDTH);
+        $thumbnailType->save();
+
+        $thumbnailType = new Type();
+        $thumbnailType->requireType();
+        $thumbnailType->setName(t('File Manager Detail Thumbnails'));
+        $thumbnailType->setHandle(FILE_MANAGER_DETAIL_THUMBNAIL_HANDLE);
+        $thumbnailType->setWidth(FILE_MANAGER_DETAIL_THUMBNAIL_WIDTH);
+        $thumbnailType->save();
+
 		if (is_dir($this->getPackagePath() . '/files')) {
 			$fh = new FileImporter();
 			$contents = Loader::helper('file')->getDirectoryContents($this->getPackagePath() . '/files');
@@ -155,7 +172,6 @@ class StartingPointPackage extends BasePackage {
 	}
 
 	public function install_content() {
-		$installDirectory = DIR_BASE_CORE . '/config';
 		$ci = new ContentImporter();
 		$ci->importContentFile($this->getPackagePath() . '/content.xml');
 

@@ -7,7 +7,7 @@
 			'noDrag' : true,
 			//'selectMode': 2,
 			<?php if($parentNode) { ?>
-             'selectNodeByKey': '<?php echo $parentNode ?>',
+             'selectNodesByKey': [<?php echo $parentNode ?>],
              <?php } ?>
 			'onSelect' : function(select, node) {
                  if (select) {

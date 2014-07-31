@@ -10,17 +10,12 @@ if (!is_object($tree)) {
 	exit;
 }
 
-if ($_REQUEST['treeNodeSelectedID']) {
+if ($_REQUEST['treeNodeSelectedIDs']) {
 	// starting multiple node stuff
-	$nodeIDs = explode(',', $_REQUEST['treeNodeSelectedID']);
-	if(count($nodeIDs) > 0) {
-		foreach($nodeIDs as $nID) {
-			$node = TreeNode::getByID($nID);
-			if (is_object($node) && $node->getTreeID() == $tree->getTreeID()) {
-				$tree->setSelectedTreeNodeID($node->getTreeNodeID());
-			}
-		}	//end multiple node stuff
-	}
+    $node = TreeNode::getByID($nID);
+    if (is_object($node) && $node->getTreeID() == $tree->getTreeID()) {
+        $tree->setSelectedTreeNodeIDs($_REQUEST['treeNodeSelectedIDs']);
+    }
 }
 
 $tree->setRequest($_REQUEST);

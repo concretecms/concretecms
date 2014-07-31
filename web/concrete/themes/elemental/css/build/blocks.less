@@ -102,7 +102,7 @@ main {
   }
 
   // Custom home page class for feature
-  div.ccm-block-feature-home-page {
+  div.feature-home-page {
     div.ccm-block-feature-item h4, div.ccm-block-feature-item i {
       color: @home-feature-title-color;
     }
@@ -122,6 +122,14 @@ main {
     }
   }
 
+  // Custom home page page list block for recent blog entry
+  div.recent-blog-entry {
+    h3 {
+      .make-heading(@h2-type-font-family, @h2-type-font-size, @h2-type-font-weight, @h2-type-color);
+    }
+
+  }
+
   // faq block
   .ccm-faq-container {
     .make-row();
@@ -134,6 +142,7 @@ main {
       margin-bottom: 10px;
     }
   }
+
   .ccm-faq-block-entries {
     h3 {
       margin-top: 0px;
@@ -146,13 +155,84 @@ main {
     .make-lg-column-offset(1);
   }
 
+  // Image block
+
+  .image-right-tilt .ccm-image-block {
+    display: block;
+    margin: 0px auto 0px auto;
+    transform:rotate(3deg);
+    -moz-transform: rotate(3deg);
+    -ms-transform:rotate(3deg); /* IE 9 */
+    -webkit-transform:rotate(3deg);
+  }
+
+  .image-circle .ccm-image-block {
+    border-radius: 50%;
+  }
+
   // form block
   div.ccm-block-type-form {
     padding-bottom: 30px;
   }
 
-  // page list with buttons
-  div.ccm-block-button-page-list {
+  // Blog
+  div.ccm-block-page-list-page-entry-horizontal {
+    .clearfix();
+  }
+
+  div.ccm-block-page-list-page-entry-horizontal,
+  div.ccm-block-page-list-page-entry {
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid @content-section-divider-color;
+  }
+
+  div.ccm-block-page-list-page-entry-read-more {
+    margin-top: 20px;
+  }
+
+  div.blog-entry-list {
+
+    div.ccm-block-page-list-no-pages {
+      text-align: center;
+      font-size: @h3-type-font-size;
+      font-family: @h3-type-font-family;
+      color: @h5-type-color;
+    }
+
+    div.ccm-block-page-list-page-entry-horizontal {
+      .make-row();
+
+      div.ccm-block-page-list-page-entry-thumbnail {
+        .make-xs-column(2);
+        padding-top: 7px; // to counteract the h3 line height
+      }
+      div.ccm-block-page-list-page-entry-text {
+        .make-xs-column(10);
+      }
+    }
+
+    div.ccm-block-page-list-date {
+      color: lighten(@body-type-color, 25%);
+      font-size: 0.8em;
+      margin-bottom: 10px;
+    }
+
+    h3 {
+      margin: 0px;
+
+      a {
+        color: @h2-type-color;
+        &:hover {
+          text-decoration: none;
+          color: @header-navigation-type-color;
+        }
+      }
+
+    }
+
+  }
+  div.page-list-with-buttons {
     div.ccm-block-page-list-page-entry {
 
       &:first-child {
@@ -161,13 +241,21 @@ main {
         margin-top: 0px;
       }
 
+      a.ccm-block-page-list-read-more {
+        .btn;
+        border: 1px solid transparent;
+        display: inline-block;
+        .button-variant(@body-type-color, @page-background-color, @default-button-border-color);
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+
       margin-top: 50px;
       padding-top: 50px;
       border-top: 1px solid @footer-section-divider-color;
 
-      div.ccm-block-page-list-button {
-        padding-top: 20px;
-      }
     }
 
     margin-bottom: 50px;
@@ -175,7 +263,7 @@ main {
 
   // page list table of contents custom class (used for careers sidebar)
   // and content block
-  div.ccm-block-sidebar-wrapped {
+  div.block-sidebar-wrapped {
     padding: 10px;
     background-color: @sidebar-faint-background-color;
 
@@ -190,9 +278,35 @@ main {
         }
       }
     }
+
+    ul {
+      list-style-type: none;
+      font-size: 0.85em;
+      padding: 0px;
+      margin: 0px;
+      color: @h5-type-color;
+
+      li {
+        margin-bottom: 12px;
+      }
+      a {
+        color: @footer-link-color !important;
+        &:hover {
+          text-decoration: none;
+          color: @footer-link-hover-color !important;
+        }
+      }
+
+      ul {
+        padding-left: 20px;
+        font-size: 1em;
+
+      }
+    }
+
   }
 
-  div.ccm-block-sidebar-wrapped + div.ccm-block-sidebar-wrapped {
+  div.block-sidebar-wrapped + div.block-sidebar-wrapped {
     padding-top: 0px;
   }
 

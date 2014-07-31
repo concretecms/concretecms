@@ -10,9 +10,10 @@ abstract class AttributedItemList extends ItemList
     /**
      * Filters by a attribute.
      */
-    public function filterByAttribute($column, $value, $comparison = '=')
+    public function filterByAttribute($handle, $value, $comparison = '=')
     {
-        $this->filter('ak_' . $column, $value, $comparison);
+        $ak = call_user_func_array(array($this->getAttributeKeyClassName(), 'getByHandle'), array($handle));
+        $ak->getController()->filterByAttribute($this, $value, $comparison);
     }
 
     /**
@@ -26,17 +27,17 @@ abstract class AttributedItemList extends ItemList
         if (substr($nm, 0, 8) == 'filterBy') {
             $handle = uncamelcase(substr($nm, 8));
             if (count($a) == 2) {
-                $this->filterByAttribute($attrib, $a[0], $a[1]);
+                $this->filterByAttribute($handle, $a[0], $a[1]);
             } else {
-                $this->filterByAttribute($attrib, $a[0]);
+                $this->filterByAttribute($handle, $a[0]);
             }
         } else {
             if (substr($nm, 0, 6) == 'sortBy') {
                 $handle = uncamelcase(substr($nm, 6));
                 if (count($a) == 1) {
-                    $this->sortBy($attrib, $a[0]);
+                    $this->sortBy($handle, $a[0]);
                 } else {
-                    $this->sortBy($attrib);
+                    $this->sortBy($handle);
                 }
             } else {
                 throw new \Exception(t('%s method does not exist for the %s class', $nm, get_called_class()));

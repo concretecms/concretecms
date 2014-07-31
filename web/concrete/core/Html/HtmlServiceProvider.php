@@ -8,7 +8,9 @@ class HtmlServiceProvider extends ServiceProvider {
         $singletons = array(
             'helper/html' => '\Concrete\Core\Html\Service\Html',
             'helper/overlay' => '\Concrete\Core\Html\Service\Overlay',
-            'helper/navigation' => '\Concrete\Core\Html\Service\Navigation'
+            'helper/navigation' => '\Concrete\Core\Html\Service\Navigation',
+
+            'html/image' => '\Concrete\Core\Html\Image'
         );
 
         foreach($singletons as $key => $value) {

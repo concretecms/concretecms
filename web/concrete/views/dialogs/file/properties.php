@@ -150,7 +150,7 @@ if (count($attribs) > 0) { ?>
 <h4><?=t('File Preview')?></h4>
 
 <div style="text-align: center">
-<?=$fv->getThumbnail(2)?>
+<?=$fv->getDetailThumbnailImage()?>
 </div>
 
 </section>

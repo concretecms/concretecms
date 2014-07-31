@@ -29,6 +29,7 @@
         "dapphp/securimage": "dev-master",
         "kertz/twitteroauth": "dev-master",
         "simplepie/simplepie": "dev-master",
+        "anahkiasen/html-object": "1.4.0",
         "zf1/zend-exception": "dev-master",
         "zf1/zend-loader": "dev-master",
         "zf1/zend-validate": "dev-master",
