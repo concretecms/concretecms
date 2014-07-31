@@ -707,8 +707,13 @@ class Version
         $fsl = $this->getFile()->getFileStorageLocationObject();
         if ($fsl) {
             $configuration = $fsl->getConfigurationObject();
+            $fss = $fsl->getFileSystemObject();
             $path = $type->getFilePath($this);
-            return $configuration->getPublicURLToFile($path);
+            if ($fss->has($path)) {
+                return $configuration->getPublicURLToFile($path);
+            } else {
+                return $this->getURL();
+            }
         }
     }
 
@@ -722,6 +727,10 @@ class Version
 
             // delete the file if it exists
             $this->deleteThumbnail($type);
+
+            if ($this->getAttribute('width') <= $type->getWidth()) {
+                continue;
+            }
 
             $image = \Image::load($fr->read());
 

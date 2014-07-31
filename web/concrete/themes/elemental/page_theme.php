@@ -40,9 +40,11 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
 
     public function getThemeDefaultBlockTemplates()
     {
+        /*
         return array(
-            'image' => 'responsive_picture'
+            'image' => 'some_special_image_template'
         );
+        */
     }
 
     public function getThemeResponsiveImageMap()
