@@ -11,17 +11,26 @@ use \Concrete\Core\Backup\Backup as ConcreteBackup;
 class Backup extends DashboardPageController { 	 
 
 	public function run_backup() {
-	  $encrypt = $this->post('useEncryption');
-	  $tp = new TaskPermission();
-  	  if ($tp->canBackup()) {		
-          $encrypt = (bool) $encrypt;
-          try {
-	          $backup = ConcreteBackup::execute($encrypt);   
- 			} catch(Exception $e) {
- 				$this->error->add($e);
- 			}
- 			$this->view();
-		}
+        if($this->token->validate('run_backup')) {
+
+            //@TODO this backup stuff needs to be reworked since we're not using adodb anymore
+            throw new Exception(t('This has not been implemented in 5.7'));
+
+
+            $encrypt = ($this->post('useEncryption')?1:0);
+            $tp = new TaskPermission();
+            if ($tp->canBackup()) {
+                try {
+                    ConcreteBackup::execute($encrypt);
+                } catch(Exception $e) {
+                    $this->error->add($e);
+                }
+                $this->view();
+            }
+
+        } else {
+            $this->set('error', array($this->token->getErrorMessage()));
+        }
 	}
 
 	public function view() {
