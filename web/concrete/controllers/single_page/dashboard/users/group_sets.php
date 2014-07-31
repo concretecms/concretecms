@@ -90,7 +90,7 @@ class GroupSets extends DashboardPageController {
 			}
 
 			if (!$this->error->has()) {
-				// go through and add all the attributes that aren't in another set
+				// go through and add all the groups that aren't in another set
 				$gs->clearGroups();
 				if (is_array($this->post('gID'))) {
 					foreach($_POST['gID'] as $gID) {
