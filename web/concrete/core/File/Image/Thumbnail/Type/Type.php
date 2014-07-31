@@ -54,6 +54,14 @@ class Type
     }
 
     /**
+     * @return mixed
+     */
+    public function getID()
+    {
+        return $this->ftTypeID;
+    }
+
+    /**
      * @param mixed $ftTypeIsRequired
      */
     public function requireType()
