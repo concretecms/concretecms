@@ -115,7 +115,7 @@ if ($showMenu) {
 
         <div class="ccm-ui">
 
-            <div class="popover fade" data-block-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>">
+            <div class="popover fade ccm-edit-mode-block-menu" data-block-menu="block-menu-b<?=$b->getBlockID()?>-<?=$a->getAreaID()?>">
                 <div class="arrow"></div>
                 <div class="popover-inner">
                     <ul class="dropdown-menu">
