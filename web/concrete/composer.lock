@@ -1,7 +1,8 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
     ],
     "hash": "3ce5938d1bf3fc26c3d83ce38c22bd1b",
     "packages": [
@@ -2714,6 +2715,7 @@
         "zf1/zend-mail": 20,
         "nesbot/carbon": 20
     },
+    "prefer-stable": false,
     "platform": {
         "php": ">=5.3.3"
     },
