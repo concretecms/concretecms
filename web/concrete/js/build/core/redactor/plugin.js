@@ -77,7 +77,7 @@ RedactorPlugins.concrete5 = {
                     dropdown['s' + i] = { title: s.title, className:s.menuClass, callback: function() { plugin.setCustomFormat(s); }};
                 });
 
-                dropdown['remove'] = { title: 'Remove Style', callback: function() { plugin.resetCustomFormat(); }};
+                dropdown['remove'] = { title: ccmi18n_redactor.remove_style, callback: function() { plugin.resetCustomFormat(); }};
                 (plugin.buttonGet('formatting').length) ? plugin.buttonAddAfter('formatting','styles', plugin.opts.curLang.customStyles, false, dropdown) : plugin.buttonAdd('styles', plugin.opts.curLang.customStyles, false, dropdown);
             }
         });
