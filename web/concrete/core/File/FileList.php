@@ -230,5 +230,12 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
         $this->query->orderBy('fv.fvFilename', 'asc');
     }
 
+    /**
+     * Sorts by file set display order in ascending order.
+     */
+    public function sortByFileSetDisplayOrder()
+    {
+        $this->query->orderBy('fsDisplayOrder', 'asc');
+    }
 
 }
