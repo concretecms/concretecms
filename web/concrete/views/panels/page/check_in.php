@@ -49,7 +49,7 @@ $v = $c->getVersionObject();
         if (is_object($pagetype)) { ?>
             <div class="small">
            <div class="text-info"><strong><i class="fa fa-question-circle"></i>
-            <?=t('Fix common page errors from the <a href="#" data-launch-panel-detail="page-composer" data-panel-detail-url="' . URL::to('/ccm/system/panels/details/page/composer') . '" data-panel-transition="fade">Page Compose interface</a>.')?>
+            <?=t('Fix common page errors from the <a href="#" data-launch-panel-detail="page-composer" data-panel-detail-url="%s" data-panel-transition="fade">Page Compose interface</a>.', URL::to('/ccm/system/panels/details/page/composer'))?>
             </strong></div>
             <br/>
             </div>
