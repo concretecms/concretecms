@@ -19,7 +19,7 @@ class Sets extends DashboardPageController {
 	public function category($categoryID = false, $mode = false) {
 		$this->addFooterItem('<script type="text/javascript">
 		$("div.ccm-attribute-sortable-set-list").sortable({
-			handle: \'img.ccm-group-sort\',
+			handle: \'i.ccm-group-sort\',
 			cursor: \'move\',
 			opacity: 0.5,
 			stop: function() {

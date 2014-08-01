@@ -3,11 +3,8 @@ use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use Concrete\Core\Attribute\Key\Key as AttributeKey;
 $form = Loader::helper('form');
 $txt = Loader::helper('text');?>
-<?php if (in_array($this->controller->getTask(), array('update_set', 'update_set_attributes', 'edit', 'delete_set'))) { 
+<?php if (in_array($this->controller->getTask(), array('update_set', 'update_set_attributes', 'edit', 'delete_set'))) { ?>
 
-	echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Set'), false, 'span6 offset3');?>
-		
-		<div class="clearfix">
 		<div class="row">
 		<div class="span-pane-half">
 		<h3><?=t('Update Set Details')?></h3>
@@ -109,16 +106,11 @@ $txt = Loader::helper('text');?>
 		</div>
 
 
-	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
-
-
 
 
 <?php } else if($this->controller->getTask() == 'category' || $this->controller->getTask() == 'add_set'){ ?>
 
-	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($txt->unHandle($this->controller->category->getAttributeKeyCategoryHandle()).' '.t('Attribute Sets'), false, 'span6 offset3');?>
 	<form method="post" action="<?php echo $view->action('add_set')?>">
-
 
 	<?php if (count($sets) > 0) { ?>
 	
@@ -126,12 +118,16 @@ $txt = Loader::helper('text');?>
 		
 			<?php foreach($sets as $asl) { ?>
 				<div class="ccm-group" id="asID_<?php echo $asl->getAttributeSetID()?>">
-					<img class="ccm-group-sort" src="<?php echo ASSETS_URL_IMAGES?>/icons/up_down.png" width="14" height="14" />
-					<a class="ccm-group-inner" href="<?php echo $view->url('/dashboard/system/attributes/sets/', 'edit', $asl->getAttributeSetID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo $asl->getAttributeSetDisplayName()?></a>
+                    <i class="ccm-group-sort fa fa-arrows-v" style="padding: 0 4px 0 4px;"></i>
+
+					<a class="ccm-group-inner" href="<?php echo $view->url('/dashboard/system/attributes/sets/', 'edit', $asl->getAttributeSetID())?>">
+                        <i class="fa fa-cubes"></i>
+                        <?php echo $asl->getAttributeSetDisplayName()?>
+                    </a>
 				</div>
 			<?php } ?>
 		</div>
-	
+
 	<?php } else { ?>
 		<?php echo t('No attribute sets currently defined.')?>
 	<?php } ?>
@@ -159,25 +155,27 @@ $txt = Loader::helper('text');?>
 
 	</form>
 	
-	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>
-	
-	
 
-<?php } else { ?>
-	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Attribute Categories'), false, 'span6 offset3');?>
-		<p><?php echo t('Attribute Categories are used to group different types of sets.')?></p>
+<?php } else { // Attribute Category List  ?>
+
+        <h3><?=t('Attribute Categories')?></h3>
+		<span class="help-block"><?php echo t('Attribute Categories are used to group different types of sets.')?></span>
 		<div class="">
 			<?php 
 			if(count($categories) > 0) {
 				foreach($categories as $cat) { ?>
 					<div class="ccm-group" id="acID_<?php echo $cat->getAttributeKeyCategoryID()?>">
-						<a class="ccm-group-inner" href="<?php echo $view->url('/dashboard/system/attributes/sets/', 'category', $cat->getAttributeKeyCategoryID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo $txt->unhandle($cat->getAttributeKeyCategoryHandle())?></a>
+
+						<a class="ccm-group-inner" href="<?php echo $view->url('/dashboard/system/attributes/sets/', 'category', $cat->getAttributeKeyCategoryID())?>">
+                            <i class="fa fa-cubes"></i>
+                            <?php echo $txt->unhandle($cat->getAttributeKeyCategoryHandle())?>
+                        </a>
 					</div>
 				<?php } 
 			} else {
 				echo t('No attribute categories currently defined.');
 			} ?>
 		</div>
-	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>	
+
 <?php } ?>
 
