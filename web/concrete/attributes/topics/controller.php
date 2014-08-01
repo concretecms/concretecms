@@ -197,7 +197,14 @@ class Controller extends AttributeTypeController  {
 	}
 	
 	public function getValue() {
+        $nodes = $this->getSelectedOptions();
+        $topics = array();
+        foreach($nodes as $node) {
+            $topic = Node::getByID($node);
+            $topics[] = $topic;
+        }
 
+        return $topics;
 	}
 	
 	public function deleteKey() {

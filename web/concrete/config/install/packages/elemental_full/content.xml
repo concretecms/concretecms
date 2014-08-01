@@ -352,10 +352,21 @@
                                                     <block type="topic_list" name="" mc-block-id="D9wxkl0c">
                                                         <style>
                                                             <customClass>block-sidebar-wrapped</customClass>
+                                                            <marginBottom>40px</marginBottom>
                                                         </style>
                                                         <data>
                                                             <tree>Topics</tree>
                                                             <cParentID />
+                                                        </data>
+                                                    </block>
+                                                    <block type="content" name="">
+                                                        <style>
+                                                            <paddingBottom>40px</paddingBottom>
+                                                        </style>
+                                                        <data table="btContentLocal">
+                                                            <record>
+                                                                <content><![CDATA[<h5>Friends</h5><p><a href="http://concrete5.org">concrete5</a></p><p><a href="http://portlandlabs.com">Portland Labs</a></p>]]></content>
+                                                            </record>
                                                         </data>
                                                     </block>
                                                 </column>
@@ -373,8 +384,8 @@
             </composer>
         </pagetype>
         <pagetype name="Blog Entry" handle="blog_entry" package="" launch-in-composer="1">
-            <pagetemplates type="custom" default="full">
-                <pagetemplate handle="full"/>
+            <pagetemplates type="custom" default="right_sidebar">
+                <pagetemplate handle="right_sidebar"/>
             </pagetemplates>
             <target handle="page_type" package="" pagetype="blog"/>
             <composer>
@@ -387,14 +398,48 @@
                     </set>
                     <set name="Content">
                         <control custom-template="" custom-label="" type="collection_attribute" handle="thumbnail"/>
-                        <control custom-template="" custom-label="" output-control-id="czGL5wk8" type="block" handle="content"/>
+                        <control custom-template="" custom-label="" output-control-id="p61yUi4X" type="block" handle="content"/>
                     </set>
                 </formlayout>
                 <output>
-                    <pagetemplate handle="full">
-                        <page name="" path="" filename="" pagetype="" template="full" user="admin" description="" package="">
+                    <pagetemplate handle="right_sidebar">
+                        <page name="" path="" filename="" pagetype="" template="right_sidebar" user="admin" description="" package="">
                             <area name="Main">
-                                <blocks/>
+                                <blocks>
+                                    <block type="page_title" name="" custom-template="byline.php" mc-block-id="2KmcLBW2">
+                                        <data table="btPageTitle">
+                                            <record>
+                                                <useCustomTitle><![CDATA[0]]></useCustomTitle>
+                                                <titleText><![CDATA[[Page Title]]]></titleText>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="core_page_type_composer_control_output" name="" mc-block-id="rUJKjFGS">
+                                        <control output-control-id="p61yUi4X"/>
+                                    </block>
+                                </blocks>
+                            </area>
+                            <area name="Sidebar">
+                                <style>
+                                    <paddingTop>40px</paddingTop>
+                                </style>
+                                <blocks>
+                                    <block type="content" name="" mc-block-id="UNxXXsKF">
+                                        <data table="btContentLocal">
+                                            <record>
+                                                <content><![CDATA[<h5>Topics</h5>]]></content>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="topic_list" name="" mc-block-id="fbNw0oNa">
+                                        <data>
+                                            <mode>P</mode>
+                                            <topicAttributeKeyHandle>topic</topicAttributeKeyHandle>
+                                            <tree>Topics</tree>
+                                            <cParentID>{ccm:export:page:/blog}</cParentID>
+                                        </data>
+                                    </block>
+                                </blocks>
                             </area>
                             <area name="Main Footer">
                                 <blocks/>
@@ -1350,43 +1395,6 @@
                 <blocks/>
             </area>
         </page>
-        <page name="Hello World!" path="/blog/hello-world" filename="" pagetype="blog_entry" template="full" user="admin" description="This is your first blog entry in concrete5 version 7! Sed ut leo diam. Ut vel mauris ac felis sollicitudin ultricies. Pellentesque dui sem, tincidunt non massa vitae, sodales tristique mi. Nunc feugiat erat a risus egestas pellentesque nec elementum nisl." package="">
-            <attributes>
-                <attributekey handle="meta_title">
-                    <value><![CDATA[]]></value>
-                </attributekey>
-                <attributekey handle="meta_description">
-                    <value><![CDATA[]]></value>
-                </attributekey>
-                <attributekey handle="meta_keywords">
-                    <value><![CDATA[]]></value>
-                </attributekey>
-                <attributekey handle="header_extra_content">
-                    <value><![CDATA[]]></value>
-                </attributekey>
-                <attributekey handle="exclude_sitemapxml">
-                    <value><![CDATA[0]]></value>
-                </attributekey>
-                <attributekey handle="thumbnail">
-                    <value>
-                        <fID>{ccm:export:file:balloon.jpg}</fID>
-                    </value>
-                </attributekey>
-                <attributekey handle="topic">
-                    <topics>
-                        <topic>/Reviews/Movies</topic>
-                        <topic>/Reviews/Music</topic>
-                    </topics>
-                </attributekey>
-            </attributes>
-            <area name="Main">
-                <blocks/>
-            </area>
-            <area name="Main Footer">
-                <blocks/>
-            </area>
-        </page>
-
     </pages>
     <sociallinks>
         <link service="facebook" url="http://facebook.com/concrete5"/>

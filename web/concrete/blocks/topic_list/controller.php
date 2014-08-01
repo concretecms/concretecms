@@ -2,6 +2,7 @@
 
 namespace Concrete\Block\TopicList;
 defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Tree\Tree;
 use Concrete\Core\Tree\Type\Topic as TopicTree;
@@ -18,7 +19,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
-    protected $btInterfaceHeight = 250;
+    protected $btInterfaceHeight = 300;
     protected $btTable = 'btTopicList';
 
     public function getBlockTypeDescription()
@@ -46,15 +47,30 @@ class Controller extends BlockController
             $tree = $defaultTree;
         }
         $trees = $tt->getList();
+        $keys = CollectionKey::getList();
+        foreach($keys as $ak) {
+            if ($ak->getAttributeTypeHandle() == 'topics') {
+                $attributeKeys[] = $ak;
+            }
+        }
+        $this->set('attributeKeys', $attributeKeys);
         $this->set('tree', $tree);
         $this->set('trees', $trees);
     }
 
     public function view()
     {
-        $tt = new TopicTree();
-        $tree = $tt->getByID(Loader::helper('security')->sanitizeInt($this->topicTreeID));
-        $this->set('tree', $tree);
+        if ($this->mode == 'P') {
+            $page = \Page::getCurrentPage();
+            $topics = $page->getAttribute($this->topicAttributeKeyHandle);
+            if (is_array($topics)) {
+                $this->set('topics', $topics);
+            }
+        } else {
+            $tt = new TopicTree();
+            $tree = $tt->getByID(Loader::helper('security')->sanitizeInt($this->topicTreeID));
+            $this->set('tree', $tree);
+        }
     }
 
     public function action_topic($topic = false) {
@@ -84,16 +100,18 @@ class Controller extends BlockController
 
     public function export(\SimpleXMLElement $blockNode) {
         $tree = Tree::getByID($this->topicTreeID);
+        $data = $blockNode->addChild('data');
+        $data->addChild('mode', $this->mode);
+        $data->addChild('topicAttributeKeyHandle', $this->topicAttributeKeyHandle);
         if (is_object($tree)) {
-            $data = $blockNode->addChild('data');
             $data->addChild('tree', $tree->getTreeDisplayName());
-            $path = null;
-            if ($this->cParentID) {
-                $parent = \Page::getByID($this->cParentID);
-                $path = '{ccm:export:page:' . $parent->getCollectionPath() . '}';
-            }
-            $data->addChild('cParentID', $path);
         }
+        $path = null;
+        if ($this->cParentID) {
+            $parent = \Page::getByID($this->cParentID);
+            $path = '{ccm:export:page:' . $parent->getCollectionPath() . '}';
+        }
+        $data->addChild('cParentID', $path);
     }
 
     public function getImportData($blockNode, $page) {
@@ -103,6 +121,11 @@ class Controller extends BlockController
         $tree = Topic::getByDisplayName($treeName);
         $args['topicTreeID'] = $tree->getTreeID();
         $args['cParentID'] = 0;
+        $args['mode'] = (string) $blockNode->data->mode;
+        if (!$args['mode']) {
+            $args['mode'] = 'S';
+        }
+        $args['topicAttributeKeyHandle'] = (string) $blockNode->data->topicAttributeKeyHandle;
         if ($page) {
             if (preg_match('/\{ccm:export:page:(.*)\}/i', $page, $matches)) {
                 $c = \Page::getByPath($matches[1]);

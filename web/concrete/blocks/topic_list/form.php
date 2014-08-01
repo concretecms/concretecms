@@ -1,10 +1,26 @@
 <?php defined('C5_EXECUTE') or die("Access Denied."); ?>
 <fieldset>
     <div class="form-group">
+        <label class="control-label" for="modeSelect"><?=t('Mode')?></label>
+        <select class="form-control" name="mode" id="modeSelect">
+            <option value="S" <? if ($mode == 'S') { ?>selected<? } ?>><?=t('Search – Display a list of all topics for use on a search sidebar.')?></option>
+            <option value="P" <? if ($mode == 'P') { ?>selected<? } ?>><?=t('Page – Display a list of just topics for the page.')?></option>
+        </select>
+    </div>
+    <div class="form-group" data-row="mode-search">
         <label class="control-label" for="topicTreeIDSelect"><?=t('Topic Tree')?></label>
         <select class="form-control" name="topicTreeID" id="topicTreeIDSelect">
             <? foreach($trees as $stree) { ?>
                 <option value="<?=$stree->getTreeID()?>" <? if ($tree->getTreeID() == $stree->getTreeID()) { ?>selected<? } ?>><?=$stree->getTreeDisplayName()?></option>
+            <? } ?>
+        </select>
+    </div>
+
+    <div class="form-group" data-row="mode-page">
+        <label class="control-label" for="attributeKeySelect"><?=t('Topic Attribute To Display')?></label>
+        <select class="form-control" name="topicAttributeKeyHandle" id="attributeKeySelect">
+            <? foreach($attributeKeys as $attributeKey) { ?>
+                <option value="<?=$attributeKey->getAttributeKeyHandle()?>" <? if ($attributeKey->getAttributeKeyHandle() == $topicAttributeKeyHandle) { ?>selected<? } ?>><?=$attributeKey->getAttributeKeyDisplayName()?></option>
             <? } ?>
         </select>
     </div>
@@ -28,6 +44,16 @@
 
 <script type="text/javascript">
 $(function() {
+    $("select#modeSelect").on('change', function() {
+        if ($(this).val() == 'S') {
+            $('div[data-row=mode-page]').hide();
+            $('div[data-row=mode-search]').show();
+        } else {
+            $('div[data-row=mode-search]').hide();
+            $('div[data-row=mode-page]').show();
+        }
+    }).trigger('change');
+
    $("input[name=externalTarget]").on('change', function() {
        if ($(this).is(":checked")) {
            $('#ccm-search-block-external-target-page').show();
