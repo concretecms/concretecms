@@ -1,2 +1,1 @@
 !function(a,b){"use strict";b('a[data-concrete5-link-launch="lightbox-image"]').magnificPopup({type:"image",removalDelay:500,callbacks:{beforeOpen:function(){this.st.image.markup=this.st.image.markup.replace("mfp-figure","mfp-figure mfp-with-anim"),this.st.mainClass="mfp-zoom-in"}},closeOnContentClick:!0,midClick:!0})}(this,$);
-//# sourceMappingURL=/concrete/js/lightbox.js.map
