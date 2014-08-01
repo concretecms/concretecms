@@ -121,7 +121,7 @@
             arEnableGridContainer: arEnableGridContainer
         }, function (r) {
             ConcreteToolbar.disableDirectExit();
-            var newBlock = block.replace(resp.bID, r);
+            var newBlock = block.replace(r);
             ConcreteAlert.notify({
                 'message': resp.message
             });
