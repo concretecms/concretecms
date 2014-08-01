@@ -13,12 +13,16 @@ class Version
 
     protected $directoryName;
     protected $handle;
+    protected $name;
     protected $width;
+    protected $height;
 
-    public function __construct($directoryName, $handle, $width)
+    public function __construct($directoryName, $handle, $name, $width, $height)
     {
         $this->handle = $handle;
+        $this->name = $name;
         $this->width = $width;
+        $this->height = $height;
         $this->directoryName = $directoryName;
     }
 
@@ -31,11 +35,35 @@ class Version
     }
 
     /**
+     * @param mixed $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
+    }
+
+    /**
      * @return mixed
      */
     public function getHandle()
     {
         return $this->handle;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -52,6 +80,14 @@ class Version
     public function getWidth()
     {
         return $this->width;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHeight()
+    {
+        return $this->height;
     }
 
     /**

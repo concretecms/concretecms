@@ -2,6 +2,7 @@
 namespace Concrete\Core\File;
 
 use Carbon\Carbon;
+use Concrete\Core\File\Image\Thumbnail\Thumbnail;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
 use League\Flysystem\AdapterInterface;
@@ -12,6 +13,7 @@ use FileAttributeKey;
 use \Concrete\Core\Attribute\Value\FileValue as FileAttributeValue;
 use stdClass;
 use Permissions;
+use Imagine\Image\ImageInterface;
 use User;
 use View;
 use Page;
@@ -717,6 +719,28 @@ class Version
         }
     }
 
+    public function getThumbnails()
+    {
+        $thumbnails = array();
+        $types = Type::getVersionList();
+        foreach($types as $type) {
+
+            if ($this->getAttribute('width') <= $type->getWidth()) {
+                continue;
+            }
+
+            $thumbnailPath = $type->getFilePath($this);
+            $location = $this->getFile()->getFileStorageLocationObject();
+            $configuration = $location->getConfigurationObject();
+            $filesystem = $location->getFileSystemObject();
+            if ($filesystem->has($thumbnailPath)) {
+                $thumbnails[] = new Thumbnail($type, $configuration->getPublicURLToFile($thumbnailPath));
+            }
+        }
+
+        return $thumbnails;
+    }
+
     public function rescanThumbnails()
     {
         $types = Type::getVersionList();
@@ -738,7 +762,13 @@ class Version
                 ->getFileStorageLocationObject()
                 ->getFileSystemObject();
 
-            $thumbnail = $image->thumbnail(new \Imagine\Image\Box($type->getWidth(), $type->getWidth()));
+            $height = $type->getHeight();
+            $thumbnailMode = ImageInterface::THUMBNAIL_OUTBOUND;
+            if (!$height) {
+                $height = $type->getWidth();
+                $thumbnailMode = ImageInterface::THUMBNAIL_INSET;
+            }
+            $thumbnail = $image->thumbnail(new \Imagine\Image\Box($type->getWidth(), $height), $thumbnailMode);
             $thumbnailPath = $type->getFilePath($this);
 
             $o = new \stdClass;
@@ -747,7 +777,7 @@ class Version
 
             $filesystem->write(
                 $thumbnailPath,
-                $thumbnail,
+                $thumbnail->get('jpg', array('jpeg_quality' => 60)),
                 array(
                     'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
                     'mimetype' => 'image/jpeg'
@@ -903,6 +933,7 @@ class Version
         $r->urlInline = View::url('/download_file', 'view_inline', $this->getFileID());
         $r->urlDownload = View::url('/download_file', 'view', $this->getFileID());
         $r->title = $this->getTitle();
+        $r->genericTypeText = $this->getGenericTypeText();
         $r->description = $this->getDescription();
         $r->fileName = $this->getFilename();
         $r->resultsThumbnailImg = $this->getListingThumbnailImage();

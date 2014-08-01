@@ -11,6 +11,7 @@
         $ftTypeName = $type->getName();
         $ftTypeHandle = $type->getHandle();
         $ftTypeWidth = $type->getWidth();
+        $ftTypeHeight = $type->getHeight();
         $ftTypeIsRequired = $type->isRequired();
         $method = 'update';
 
@@ -59,6 +60,11 @@
                     <span class="input-group-addon"><i class="fa fa-asterisk"></i></span>
                 </div>
             </div>
+            <div class="form-group">
+                <?=$form->label('ftTypeHeight', t('Height'))?>
+                <?=$form->text('ftTypeHeight', $ftTypeHeight)?>
+            </div>
+            <div class="alert alert-info"><i class="fa fa-exclamation-circle"></i> <?=t('Only place a value in here if you want this thumbnail to force its dimensions to the width and height.')?></div>
         </fieldset>
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
@@ -95,6 +101,7 @@
         <th><?=t('Handle')?></th>
         <th><?=t('Name')?></th>
         <th><?=t('Width')?></th>
+        <th><?=t('Height')?></th>
         <th><?=t('Required')?></th>
     </tr>
     </thead>
@@ -104,6 +111,7 @@
         <td><a href="<?=$view->action('edit', $type->getID())?>"><?=$type->getHandle()?></a></td>
         <td><?=$type->getName()?></td>
         <td><?=$type->getWidth()?></td>
+        <td><?=($type->getHeight()) ? $type->getHeight() : '<span class="text-muted">' . t('Automatic') . '</span>' ?></td>
         <td><?=($type->isRequired()) ? t('Yes') : t('No')?></td>
     </tr>
     <? } ?>

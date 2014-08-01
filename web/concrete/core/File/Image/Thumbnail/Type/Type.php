@@ -27,6 +27,11 @@ class Type
     protected $ftTypeWidth = 0;
 
     /**
+     * @Column(type="integer")
+     */
+    protected $ftTypeHeight;
+
+    /**
      * @Column(type="boolean")
      */
     protected $ftTypeIsRequired = false;
@@ -102,11 +107,27 @@ class Type
     }
 
     /**
+     * @param mixed $ftTypeHeight
+     */
+    public function setHeight($ftTypeHeight)
+    {
+        $this->ftTypeHeight = $ftTypeHeight;
+    }
+
+    /**
      * @return mixed
      */
     public function getWidth()
     {
         return $this->ftTypeWidth;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHeight()
+    {
+        return $this->ftTypeHeight;
     }
 
 
@@ -151,6 +172,9 @@ class Type
             $linkNode->addAttribute('name', $link->getName());
             $linkNode->addAttribute('handle', $link->getHandle());
             $linkNode->addAttribute('width', $link->getWidth());
+            if ($link->getHeight()) {
+                $linkNode->addAttribute('height', $link->getHeight());
+            }
             if ($link->isRequired()) {
                 $linkNode->addAttribute('required', $link->isRequired());
             }
@@ -187,12 +211,17 @@ class Type
 
     public function getBaseVersion()
     {
-        return new Version($this->getHandle(), $this->getHandle(), $this->getWidth());
+        return new Version($this->getHandle(), $this->getHandle(), $this->getName(), $this->getWidth(), $this->getHeight());
     }
 
     public function getDoubledVersion()
     {
-        return new Version($this->getHandle() . '_2x', $this->getHandle(), $this->getWidth() * 2);
+        $name = t('%s (Retina Version)', $this->getName());
+        $height = null;
+        if ($this->getHeight()) {
+            $height = $this->getHeight() * 2;
+        }
+        return new Version($this->getHandle() . '_2x', $this->getHandle() . '_2x', $name, $this->getWidth() * 2, $height);
     }
 
 }

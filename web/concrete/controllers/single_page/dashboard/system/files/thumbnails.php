@@ -97,9 +97,14 @@ class Thumbnails extends DashboardPageController {
         }
         if (!$this->error->has()) {
             $type->setWidth($request->request->get('ftTypeWidth'));
+            $height = intval($request->request->get('ftTypeHeight'));
+            if ($height > 0) {
+                $type->setHeight($request->request->get('ftTypeHeight'));
+            } else {
+                $type->setHeight(null);
+            }
             $type->setName($request->request->get('ftTypeName'));
             $type->setHandle($request->request->get('ftTypeHandle'));
-            $type->save();
             $type->save();
             $this->redirect('/dashboard/system/files/thumbnails', 'thumbnail_type_updated');
         }
@@ -115,6 +120,10 @@ class Thumbnails extends DashboardPageController {
         }
         if (!$this->error->has()) {
             $type = new Type();
+            $height = intval($request->request->get('ftTypeHeight'));
+            if ($height > 0) {
+                $type->setHeight($request->request->get('ftTypeHeight'));
+            }
             $type->setWidth($request->request->get('ftTypeWidth'));
             $type->setName($request->request->get('ftTypeName'));
             $type->setHandle($request->request->get('ftTypeHandle'));

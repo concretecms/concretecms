@@ -152,6 +152,7 @@ class StartingPointPackage extends BasePackage {
         $thumbnailType->setName(t('File Manager Thumbnails'));
         $thumbnailType->setHandle(FILE_MANAGER_LISTING_THUMBNAIL_HANDLE);
         $thumbnailType->setWidth(FILE_MANAGER_LISTING_THUMBNAIL_WIDTH);
+        $thumbnailType->setHeight(FILE_MANAGER_LISTING_THUMBNAIL_HEIGHT);
         $thumbnailType->save();
 
         $thumbnailType = new Type();
