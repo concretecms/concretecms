@@ -17,18 +17,19 @@ class Sets extends DashboardPageController {
 	}
 	
 	public function category($categoryID = false, $mode = false) {
-		$this->addFooterItem('<script type="text/javascript">
-		$("div.ccm-attribute-sortable-set-list").sortable({
-			handle: \'i.ccm-group-sort\',
-			cursor: \'move\',
-			opacity: 0.5,
-			stop: function() {
-				var ualist = $(this).sortable(\'serialize\');
-				ualist += \'&categoryID='.$categoryID.'\';
-				$.post(\''.REL_DIR_FILES_TOOLS_REQUIRED.'/dashboard/attribute_set_order_update\', ualist, function(r) {
-	
-				});
-			}
+		//$this->addHeaderItem('<style type="text/css"> .ccm-attribute-sortable-set-list li a:hover { cursor:move;}</style>');
+        $this->addFooterItem('<script type="text/javascript">
+		$(function() {
+            $("ul.ccm-attribute-sortable-set-list").sortable({
+                opacity: 0.5,
+                stop: function() {
+                    var ualist = $(this).sortable(\'serialize\');
+                    ualist += \'&categoryID='.$categoryID.'\';
+                    $.post(\''.REL_DIR_FILES_TOOLS_REQUIRED.'/dashboard/attribute_set_order_update\', ualist, function(r) {
+
+                    });
+                }
+            });
 		});
 	</script>');
 		if(!intval($categoryID)) {
