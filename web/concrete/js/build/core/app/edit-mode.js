@@ -102,9 +102,14 @@
                 url: action,
                 data: postData,
                 success: function (r) {
-                    $container.html(r);
+                    var elem = $(r);
+                    $container.empty().append(elem);
                     my.loadInlineEditModeToolbars($container);
                     $.fn.dialog.hideLoader();
+                    Concrete.event.fire('EditModeInlineEditLoaded', {
+                        block: block,
+                        element: elem
+                    });
                 }
             });
         });
@@ -242,10 +247,19 @@
                 return;
             }
             var block = data.block, pep = data.pep,
-                contenders = _.flatten(_(my.getAreas()).map(function (area) {
-                    var drag_areas = area.contendingDragAreas(pep, block);
-                    return drag_areas;
-                }), true);
+                areas = my.getAreas(),
+                contenders;
+
+            if (block instanceof Layout) {
+                areas = [_(areas).find(function(a) {
+                    return block.getArea() === a;
+                })];
+            }
+
+            contenders = _.flatten(_(areas).map(function (area) {
+                var drag_areas = area.contendingDragAreas(pep, block);
+                return drag_areas;
+            }), true);
 
             _.defer(function () {
                 Concrete.event.fire('EditModeContenders', contenders);
@@ -453,6 +467,16 @@
         my.setAttr('stack', stack);
     };
 
+    var Layout = Concrete.Layout = function Layout(elem, edit_mode) {
+        var my = this;
+        Concrete.event.bind('EditModeInlineEditLoaded.editmode', function(e, data) {
+            if (data.block === my) {
+                my.bindDrag();
+            }
+        });
+        Block.call(my, elem, edit_mode, $());
+    };
+
     /**
      * Drag Area that we create for dropping the blocks into
      * @param {jQuery}   elem  The drag area html element
@@ -475,6 +499,7 @@
             var drag_areas = data;
             my.setIsContender(_.contains(drag_areas, my));
         });
+
         Concrete.event.bind('EditModeSelectableContender', function (e, data) {
             my.setIsSelectable(data === my);
         });
@@ -485,6 +510,7 @@
         reset: function () {
             var my = this;
             my.setAttr('areas', []);
+            my.setAttr('blocks', []);
             $('.ccm-area-drag-area').remove();
         },
 
@@ -494,11 +520,8 @@
 
             $('div.ccm-area').each(function () {
                 area = new Area($(this), my);
+                area.scanBlocks();
                 my.addArea(area);
-            });
-            $('div.ccm-block-edit').each(function () {
-                my.addBlock(block = new Block($(this), my));
-                _(my.getAreas()).findWhere({id: block.getAreaId()}).addBlock(block);
             });
             _.invoke(my.getAreas(), 'bindMenu');
         },
@@ -670,12 +693,29 @@
 
     Area.prototype = {
 
-        getBlockByID: function blockGetByID(bID) {
+        scanBlocks: function areaScanBlocks() {
+            var my = this;
+            $('div.ccm-block-edit', this.getElem()).each(function () {
+                var me = $(this), handle = me.data('block-type-handle'), block, type;
+                my.setBlocks([]);
+
+                if (handle === 'core_area_layout') {
+                    type = Layout;
+                } else {
+                    type = Block;
+                }
+
+                my.getEditMode().addBlock(block = new type(me, my));
+                my.addBlock(block);
+            });
+        },
+
+        getBlockByID: function areaGetBlockByID(bID) {
             var my = this;
             return _.findWhere(my.getBlocks(), {id: bID});
         },
 
-        getMenuElem: function () {
+        getMenuElem: function areaGetMenuElem() {
             var my = this;
             return $('[data-area-menu=area-menu-a' + my.getId() + ']');
         },
@@ -726,7 +766,6 @@
                 .on('click.edit-mode', function (e) {
                     // we are going to place this at the END of the list.
                     var $link = $(this);
-                    var dragAreaLastBlock = _.last(my.getBlocks());
                     var bID = parseInt($(this).attr('data-container-layout-block-id'));
                     var editor = Concrete.getEditMode();
                     var block = _.findWhere(editor.getBlocks(), {id: bID});
@@ -1018,12 +1057,12 @@
          * replaces a block in an area with a new block by ID and content
          */
         replace: function blockReplace(content) {
-            var my = this, new_block_elem = $(content);
+            var new_block_elem = $(content);
 
             this.getContainer().replaceWith(new_block_elem);
 
-            my.getEditMode().scanBlocks();
-            return my.getArea().getBlockByID(new_block_elem.data('block-id'));
+            this.getArea().scanBlocks();
+            return this.getArea().getBlockByID(new_block_elem.data('block-id'));
         },
 
         getMenuElem: function blockGetMenuElem() {
@@ -1627,6 +1666,53 @@
                 my.handleAddResponse(response, area, dragAreaBlock);
             });
         }
+    }).defaults(BlockType.prototype);
+
+    StackBlock.prototype = _({
+        addToDragArea: function StackBlockAddToDragArea(drag_area) {
+            var my = this, elem = my.getElem(),
+                block_type_id = elem.data('btid'),
+                area = drag_area.getArea(),
+                area_handle = area.getHandle(),
+                dragAreaBlockID = 0,
+                dragAreaBlock = drag_area.getBlock();
+
+            if (dragAreaBlock) {
+                dragAreaBlockID = dragAreaBlock.getId();
+            }
+
+            ConcretePanelManager.exitPanelMode();
+
+            var settings = {
+                cID: CCM_CID,
+                bID: elem.data('block-id'),
+                arHandle: area_handle,
+                btID: block_type_id,
+                mode: 'edit',
+                processBlock: 1,
+                add: 1,
+                btask: 'alias_existing_block',
+                pcID: [elem.data('cID')],
+                ccm_token: CCM_SECURITY_TOKEN
+            };
+            if (dragAreaBlockID) {
+                settings.dragAreaBlockID = dragAreaBlockID;
+            }
+            $.getJSON(CCM_DISPATCHER_FILENAME, settings, function (response) {
+                my.handleAddResponse(response, area, dragAreaBlock);
+            });
+        }
+    }).defaults(BlockType.prototype);
+
+    Layout.prototype = _({
+
+        bindDrag: function layoutBindDrag() {
+            var my = this,
+                peper = $('a[data-layout-command="move-block"]').parent();
+            $.pep.unbind(peper);
+            peper.pep(my.getPepSettings());
+        }
+
     }).defaults(BlockType.prototype);
 
     DragArea.prototype = {
