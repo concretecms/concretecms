@@ -1,11 +1,11 @@
 <?
 namespace Concrete\Core\Html\Service;
-class Overlay {
+class Lightbox {
 
 	public function init($selector = '.ccm-overlay') {
 		$view = View::getInstance();
 		$v = View::getInstance();
-		$v->requireAsset('core/overlay');
+		$v->requireAsset('core/lightbox');
 		if($selector && strlen($selector)) {
 			$js = "<script type=\"text/javascript\">$(function() {
 				$('".$selector."-image').magnificPopup({type:'image'});
