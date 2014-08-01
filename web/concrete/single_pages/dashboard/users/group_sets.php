@@ -78,25 +78,26 @@
     <div class="row">
         <div class="col-md-12">
         <? if (PERMISSIONS_MODEL == 'advanced') { ?>
+            <div>
+                <?php if (count($groupSets) > 0) { ?>
+
+                    <ul class="item-select-list" id="ccm-group-list">
+                        <?php foreach($groupSets as $gs) { ?>
+                            <li>
+                                <a href="<?php echo $view->url('/dashboard/users/group_sets', 'edit', $gs->getGroupSetID())?>">
+                                    <i class="fa fa-users"></i> <?php echo $gs->getGroupSetDisplayName()?>
+                                </a>
+                            </li>
+                        <? } ?>
+                    </ul>
+
+                <?php } else { ?>
+                    <p><?php echo t('You have not added any group sets.')?></p>
+                <?php } ?>
+            </div>
+
             <form method="post" action="<?php echo $view->action('add_set')?>">
                 <?php echo Loader::helper('validation/token')->output('add_set')?>
-                <fieldset>
-                    <?php if (count($groupSets) > 0) { ?>
-
-                        <ul class="item-select-list" id="ccm-group-list">
-                            <?php foreach($groupSets as $gs) { ?>
-                                <li>
-                                    <a href="<?php echo $view->url('/dashboard/users/group_sets', 'edit', $gs->getGroupSetID())?>">
-                                        <i class="fa fa-users"></i> <?php echo $gs->getGroupSetDisplayName()?>
-                                    </a>
-                                </li>
-                            <? } ?>
-                        </ul>
-
-                    <?php } else { ?>
-                        <p><?php echo t('You have not added any group sets.')?></p>
-                    <?php } ?>
-                </fieldset>
                 <fieldset>
                     <legend><?=t('Add Set')?></legend>
                     <input type="hidden" name="categoryID" value="<?php echo $categoryID?>" />

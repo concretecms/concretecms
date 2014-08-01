@@ -3,181 +3,178 @@ use Concrete\Core\Attribute\Key\Category as AttributeKeyCategory;
 use Concrete\Core\Attribute\Key\Key as AttributeKey;
 $form = Loader::helper('form');
 $txt = Loader::helper('text');?>
-<?php if (in_array($this->controller->getTask(), array('update_set', 'update_set_attributes', 'edit', 'delete_set'))) { 
+<?php if (in_array($this->controller->getTask(), array('update_set', 'update_set_attributes', 'edit', 'delete_set'))) { ?>
+    <div class="row">
+		<div class="col-md-8">
+            <form class="" method="post" action="<?php echo $view->action('update_set')?>">
+                <input type="hidden" name="asID" value="<?php echo $set->getAttributeSetID()?>" />
+                <?php echo Loader::helper('validation/token')->output('update_set')?>
 
-	echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Edit Set'), false, 'span6 offset3');?>
-		
-		<div class="clearfix">
-		<div class="row">
-		<div class="span-pane-half">
-		<h3><?=t('Update Set Details')?></h3>
-	
-		<?php if ($set->isAttributeSetLocked()) { ?>
-			<div class="info block-message alert-message">
-				<p><?php echo t('This attribute set is locked. It cannot be deleted, and its handle cannot be changed.')?></p>
-			</div>	
-		<?php } ?>
+                <fieldset>
+                    <legend><?=t('Update Set Details')?></legend>
 
-		<form class="" method="post" action="<?php echo $view->action('update_set')?>">
-			<input type="hidden" name="asID" value="<?php echo $set->getAttributeSetID()?>" />
-			<?php echo Loader::helper('validation/token')->output('update_set')?>
-			<div class="clearfix">
-				<?php echo $form->label('asHandle', t('Handle'))?>
-				<div class="input">
-					<?php if ($set->isAttributeSetLocked()) { ?>
-						<?php echo $form->text('asHandle', $set->getAttributeSetHandle(), array('disabled' => 'disabled'))?>
-					<?php } else { ?>
-						<?php echo $form->text('asHandle', $set->getAttributeSetHandle())?>
-					<?php } ?>
-				</div>
-			</div>
-	
-			<div class="clearfix">
-				<?php echo $form->label('asName', t('Name'))?>
-				<div class="input">
-					<?php echo $form->text('asName', $set->getAttributeSetName())?>
-				</div>
-			</div>
+                    <?php if ($set->isAttributeSetLocked()) {?>
+                        <div class="alert alert-warning">
+                            <p><?php echo t('This attribute set is locked. It cannot be deleted, and its handle cannot be changed.')?></p>
+                        </div>
+                        <script type="text/javascript">
+                            $(function() {
+                                $('#asHandle').attr('disabled','disabled');
+                            });
+                        </script>
+                    <?php } ?>
 
-			<div class="clearfix">
-				<label></label>
-				<div class="input">
-					<?php echo $form->submit('submit', t('Update Set'), array('class' => ''))?>
-				</div>
-			</div>
-		</form>
+                    <div class="form-group">
+                        <?php echo $form->label('asHandle', t('Handle'))?>
+                        <?php if ($set->isAttributeSetLocked()) { ?>
+                            <?php echo $form->text('asHandle', $set->getAttributeSetHandle(), array('disabled' => 'disabled'))?>
+                        <?php } else { ?>
+                            <?php echo $form->text('asHandle', $set->getAttributeSetHandle())?>
+                        <?php } ?>
+                    </div>
 
-		<?php if (!$set->isAttributeSetLocked()) { ?>	
-			<h3><?=t('Delete Set')?></h3>
-			<p><?php echo t('Warning, this cannot be undone. No attributes will be deleted but they will no longer be grouped together.')?></p>
-			<form method="post" action="<?php echo $view->action('delete_set')?>" class="">
-				<input type="hidden" name="asID" value="<?php echo $set->getAttributeSetID()?>" />
-				<?php echo Loader::helper('validation/token')->output('delete_set')?>
-			
-				<div class="clearfix">
-					<?php echo $form->submit('submit', t('Delete Set'), array('class' => 'danger'))?>
-				</div>
-			</form>
-		<?php } ?>
+                    <div class="form-group">
+                        <?php echo $form->label('asName', t('Name'))?>
+                        <?php echo $form->text('asName', $set->getAttributeSetName())?>
+                    </div>
+
+                    <div class="form-group">
+                        <?php echo $form->submit('submit', t('Update Set'), array('class' => 'btn btn-primary'))?>
+                    </div>
+                    </fieldset>
+            </form>
+
 		</div>
+        <div class="col-md-4">
+            <?php if (!$set->isAttributeSetLocked()) { ?>
+                <form method="post" action="<?php echo $view->action('delete_set')?>" class="">
+                    <input type="hidden" name="asID" value="<?php echo $set->getAttributeSetID()?>" />
+                    <?php echo Loader::helper('validation/token')->output('delete_set')?>
 
-		<div class="span-pane-half">
-		<h3><?=t('Add Attributes to Set')?></h3>
-	
-		<form class="" method="post" action="<?php echo $view->action('update_set_attributes')?>">
-			<input type="hidden" name="asID" value="<?php echo $set->getAttributeSetID()?>" />
-			<?php echo Loader::helper('validation/token')->output('update_set_attributes')?>
-	
-			<?php 
-			$cat = AttributeKeyCategory::getByID($set->getAttributeSetKeyCategoryID());
-			$list = AttributeKey::getList($cat->getAttributeKeyCategoryHandle());
-			$unassigned = $cat->getUnassignedAttributeKeys();
-			if (count($list) > 0) { ?>
-	
-				<div class="clearfix">
-					<ul class="inputs-list">
-	
-						<?php foreach($list as $ak) { 
-	
-						$disabled = '';
-						if (!in_array($ak, $unassigned) && (!$ak->inAttributeSet($set))) { 
-							$disabled = array('disabled' => 'disabled');
-						}
-		
-						?>
-							<li>
-								<label>
-									<?php echo $form->checkbox('akID[]', $ak->getAttributeKeyID(), $ak->inAttributeSet($set), $disabled)?>
-									<span><?php echo $ak->getAttributeKeyDisplayName()?></span>
-									<span class="help-inline"><?php echo $ak->getAttributeKeyHandle()?></span>
-								</label>
-							</li>	
-						<?php } ?>
-					</ul>
-				</div>
-		
-				<div class="clearfix">
-					<?php echo $form->submit('submit', t('Update Attributes'), array('class' => ''))?>
-				</div>
-			<?php } else { ?>
-				<p><?php echo t('No attributes found.')?></p>
-			<?php } ?>
-	
-		</form>
-		</div>
-		</div>
-		</div>
+                    <fieldset>
+                        <legend><?=t('Delete Set')?></legend>
+                        <span class="help-block"><?php echo t('Warning, this cannot be undone. No attributes will be deleted but they will no longer be grouped together.')?></span>
 
+                        <div class="form-group">
+                            <?php echo $form->submit('submit', t('Delete Set'), array('class' => 'btn btn-danger'))?>
+                        </div>
+                    </fieldset>
+                </form>
+            <?php } ?>
+        </div>
+    </div>
+    <div class="row">
+		<div class="col-md-12">
+            <form class="" method="post" action="<?php echo $view->action('update_set_attributes')?>">
+                <input type="hidden" name="asID" value="<?php echo $set->getAttributeSetID()?>" />
+                <?php echo Loader::helper('validation/token')->output('update_set_attributes')?>
+                <fieldset>
 
-	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>
+                    <legend><?=t('Add Attributes to Set')?></legend>
 
+                    <?php
+                    $cat = AttributeKeyCategory::getByID($set->getAttributeSetKeyCategoryID());
+                    $list = AttributeKey::getList($cat->getAttributeKeyCategoryHandle());
+                    $unassigned = $cat->getUnassignedAttributeKeys();
+                    if (count($list) > 0) { ?>
 
+                        <div class="form-group">
+                            <?php foreach($list as $ak) {
 
+                                $disabled = '';
+                                if (!in_array($ak, $unassigned) && (!$ak->inAttributeSet($set))) {
+                                    $disabled = array('disabled' => 'disabled');
+                                }
+                                ?>
+                                <div class="checkbox">
+                                    <label>
+                                        <?php echo $form->checkbox('akID[]', $ak->getAttributeKeyID(), $ak->inAttributeSet($set), $disabled)?>
+                                        <span><?php echo $ak->getAttributeKeyDisplayName()?></span>
+                                        <span class="help-inline"><?php echo $ak->getAttributeKeyHandle()?></span>
+                                    </label>
+                                </div>
+                            <?php } ?>
+                        </div>
+
+                        <div class="form-group">
+                            <?php echo $form->submit('submit', t('Update Attributes'), array('class' => 'btn btn-primary'))?>
+                        </div>
+                    <?php } else { ?>
+                        <p><?php echo t('No attributes found.')?></p>
+                    <?php } ?>
+                </fieldset>
+            </form>
+        </div>
+	</div>
 
 <?php } else if($this->controller->getTask() == 'category' || $this->controller->getTask() == 'add_set'){ ?>
 
-	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper($txt->unHandle($this->controller->category->getAttributeKeyCategoryHandle()).' '.t('Attribute Sets'), false, 'span6 offset3');?>
-	<form method="post" action="<?php echo $view->action('add_set')?>">
 
 
 	<?php if (count($sets) > 0) { ?>
-	
-		<div class="ccm-attribute-sortable-set-list">
-		
+
+        <ul class="item-select-list ccm-attribute-sortable-set-list">
 			<?php foreach($sets as $asl) { ?>
-				<div class="ccm-group" id="asID_<?php echo $asl->getAttributeSetID()?>">
-					<img class="ccm-group-sort" src="<?php echo ASSETS_URL_IMAGES?>/icons/up_down.png" width="14" height="14" />
-					<a class="ccm-group-inner" href="<?php echo $view->url('/dashboard/system/attributes/sets/', 'edit', $asl->getAttributeSetID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo $asl->getAttributeSetDisplayName()?></a>
-				</div>
+				<li id="asID_<?php echo $asl->getAttributeSetID()?>" class="ccm-item-select-list-sort">
+                    <a href="<?php echo $view->url('/dashboard/system/attributes/sets/', 'edit', $asl->getAttributeSetID())?>">
+                        <i class="fa fa-cubes"></i>
+                        <?php echo $asl->getAttributeSetDisplayName()?>
+                    </a>
+                    <i class="ccm-item-select-list-sort"></i>
+				</li>
 			<?php } ?>
-		</div>
-	
+		</ul>
+
 	<?php } else { ?>
 		<?php echo t('No attribute sets currently defined.')?>
 	<?php } ?>
 
-	<br/>
-	
-	<h3><?=t('Add Set')?></h3>
 
-	<input type="hidden" name="categoryID" value="<?php echo $categoryID?>" />
-	<?php echo Loader::helper('validation/token')->output('add_set')?>
-	<div class="form-group">
-		<?php echo $form->label('asHandle', t('Handle'))?>
-		<?php echo $form->text('asHandle')?>
-	</div>
-	
-	<div class="form-group">
-		<?php echo $form->label('asName', t('Name'))?>
-		<?php echo $form->text('asName')?>
-	</div>
-	
-	<div class="form-group">
-		<label class="control-label"></label>
-		<?php echo $form->submit('submit', t('Add Set'), array('class' => 'btn'))?>
-	</div>
+    <form method="post" action="<?php echo $view->action('add_set')?>">
+        <?php echo Loader::helper('validation/token')->output('add_set')?>
+        <input type="hidden" name="categoryID" value="<?php echo $categoryID?>" />
+
+        <fieldset>
+            <legend><?=t('Add Set')?></legend>
+            <div class="form-group">
+                <?php echo $form->label('asHandle', t('Handle'))?>
+                <?php echo $form->text('asHandle')?>
+            </div>
+
+            <div class="form-group">
+                <?php echo $form->label('asName', t('Name'))?>
+                <?php echo $form->text('asName')?>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label"></label>
+                <?php echo $form->submit('submit', t('Add Set'), array('class' => 'btn'))?>
+            </div>
+        </fieldset>
 
 	</form>
 	
-	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>
-	
-	
 
-<?php } else { ?>
-	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Attribute Categories'), false, 'span6 offset3');?>
-		<p><?php echo t('Attribute Categories are used to group different types of sets.')?></p>
-		<div class="">
+<?php } else { // Attribute Category List  ?>
+
+        <h3><?=t('Attribute Categories')?></h3>
+		<span class="help-block"><?php echo t('Attribute Categories are used to group different types of sets.')?></span>
+		<ul class="item-select-list">
 			<?php 
 			if(count($categories) > 0) {
 				foreach($categories as $cat) { ?>
-					<div class="ccm-group" id="acID_<?php echo $cat->getAttributeKeyCategoryID()?>">
-						<a class="ccm-group-inner" href="<?php echo $view->url('/dashboard/system/attributes/sets/', 'category', $cat->getAttributeKeyCategoryID())?>" style="background-image: url(<?php echo ASSETS_URL_IMAGES?>/icons/group.png)"><?php echo $txt->unhandle($cat->getAttributeKeyCategoryHandle())?></a>
-					</div>
+					<li class="ccm-group" id="acID_<?php echo $cat->getAttributeKeyCategoryID()?>">
+
+						<a class="ccm-group-inner" href="<?php echo $view->url('/dashboard/system/attributes/sets/', 'category', $cat->getAttributeKeyCategoryID())?>">
+                            <i class="fa fa-cubes"></i>
+                            <?php echo $txt->unhandle($cat->getAttributeKeyCategoryHandle())?>
+                        </a>
+					</li>
 				<?php } 
 			} else {
 				echo t('No attribute categories currently defined.');
 			} ?>
-		</div>
-	<?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);?>	
+		</ul>
+
 <?php } ?>
 

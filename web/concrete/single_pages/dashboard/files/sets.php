@@ -33,29 +33,25 @@
 		<div id="ccm-tab-content-details" class="ccm-tab-content">
 
 			<div class="form-group">
-			<?=$form->label('file_set_name', t('Name'))?>
-			<?=$form->text('file_set_name',$fs->fsName, array('class' => 'span5'));?>	
+                <?=$form->label('file_set_name', t('Name'))?>
+                <?=$form->text('file_set_name',$fs->fsName, array('class' => 'span5'));?>
 			</div>
 
-			<? 
+			<?
+			if (PERMISSIONS_MODEL != 'simple') {
+				if ($fsp->canEditFileSetPermissions()) { ?>
+			
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label class="checkbox"><?=$form->checkbox('fsOverrideGlobalPermissions', 1, $fs->overrideGlobalPermissions())?> <?=t('Enable custom permissions for this file set.')?></label>
+                        </div>
+                    </div>
 
-			if (PERMISSIONS_MODEL != 'simple') { 
-			
-				if ($fsp->canEditFileSetPermissions()) {
+                    <div id="ccm-permission-list-form" <? if (!$fs->overrideGlobalPermissions()) { ?> style="display: none" <? } ?>>
 
-			?>
-			
-			<div class="form-group">
-			<label class="checkbox"><?=$form->checkbox('fsOverrideGlobalPermissions', 1, $fs->overrideGlobalPermissions())?> <?=t('Enable custom permissions for this file set.')?></label>
-			</div>
-			
-			
+                    <? Loader::element('permission/lists/file_set', array("fs" => $fs)); ?>
 
-			<div id="ccm-permission-list-form" <? if (!$fs->overrideGlobalPermissions()) { ?> style="display: none" <? } ?>>
-
-			<? Loader::element('permission/lists/file_set', array("fs" => $fs)); ?>
-			
-			</div>
+                    </div>
 				<? } 
 			
 			}
@@ -75,29 +71,26 @@
 		$fl->sortByFileSetDisplayOrder();
 		$files = $fl->get();
 		if (count($files) > 0) { ?>
-		
-		
-		<p><?=t('Click and drag to reorder the files in this set. New files added to this set will automatically be appended to the end.')?></p>
-		<div class="ccm-spacer">&nbsp;</div>
-		
-		<ul class="ccm-file-set-file-list">
-		
-		<?
 
-		foreach($files as $f) { ?>
-			
-		<li id="fID_<?=$f->getFileID()?>">
-			<div>
-				<?=$f->getListingThumbnail()?>
-				<input type="hidden" name="fsDisplayOrder[]" value="<?=$f->getFileID()?>" />
-				<span style="word-wrap: break-word"><?=$f->getTitle()?></span>
-			</div>
-		</li>
-			
-		<? } ?>
+            <span class="help-block"><?=t('Click and drag to reorder the files in this set. New files added to this set will automatically be appended to the end.')?></span>
+            <div class="ccm-spacer">&nbsp;</div>
 
-			
-		</ul>
+            <ul class="ccm-file-set-file-list  item-select-list">
+
+            <?
+            foreach($files as $f) { ?>
+
+                <li id="fID_<?=$f->getFileID()?>" class="">
+                    <div>
+                        <?=$f->getListingThumbnailImage()?>
+                        <input type="hidden" name="fsDisplayOrder[]" value="<?=$f->getFileID()?>" />
+                        <span style="word-wrap: break-word"><?=$f->getTitle()?></span>
+                    </div>
+                </li>
+
+            <? } ?>
+
+            </ul>
 		<? } else { ?>
 			<div class="alert alert-info"><?=t('There are no files in this set.')?></div>
 		<? } ?>
@@ -124,11 +117,10 @@
 	</script>
 	
 	<style type="text/css">
-	.ccm-file-set-file-list:hover {cursor: move}
+	    .ccm-file-set-file-list:hover {cursor: move}
 	</style>
 
 <?php } else { ?>
-
 
 	<style type="text/css">
 		form#ccm-file-set-search {
@@ -163,7 +155,7 @@
 		<? foreach ($fileSets as $fs) { ?>
 		
 			<div class="ccm-group">
-				<a class="ccm-group-inner" href="<?=$view->url('/dashboard/files/sets/', 'view_detail', $fs->getFileSetID())?>" style="background-image: url(<?=ASSETS_URL_IMAGES?>/icons/group.png)"><?=$fs->getFileSetName()?></a>
+				<a class="ccm-group-inner" href="<?=$view->url('/dashboard/files/sets/', 'view_detail', $fs->getFileSetID())?>"><i class="fa fa-cubes"></i> <?=$fs->getFileSetName()?></a>
 			</div>
 		
 		<? }
