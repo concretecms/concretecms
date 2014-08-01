@@ -44,8 +44,11 @@ class Image
                 $type = \Concrete\Core\File\Image\Thumbnail\Type\Type::getByHandle($thumbnail);
                 $src = $f->getThumbnailURL($type->getBaseVersion());
                 $sources[] = array('src' => $src, 'width' => $width);
+                if ($width == 0) {
+                    $fallbackSrc = $src;
+                }
             }
-            $this->tag = \Concrete\Core\Html\Object\Picture::create($sources, $f->getRelativePath());
+            $this->tag = \Concrete\Core\Html\Object\Picture::create($sources, $fallbackSrc);
         } else {
             // Return a simple image tag.
             $this->tag = \HtmlObject\Image::create($f->getRelativePath());

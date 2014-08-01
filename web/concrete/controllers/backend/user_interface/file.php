@@ -25,7 +25,7 @@ abstract class File extends \Concrete\Controller\Backend\UserInterface {
 
 	public function setFileObject(ConcreteFile $f) {
 		$this->file = $f;
-		$this->permissions = new Permissions($this->file);		
+		$this->permissions = new Permissions($this->file);
 		$this->set('f', $this->file);
 		$this->set('fp', $this->permissions);
 	}

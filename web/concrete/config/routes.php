@@ -40,6 +40,8 @@ Route::register('/ccm/system/dialogs/user/bulk/properties', '\Concrete\Controlle
 Route::register('/ccm/system/dialogs/user/bulk/properties/update_attribute', '\Concrete\Controller\Dialog\User\Bulk\Properties::updateAttribute');
 Route::register('/ccm/system/dialogs/user/bulk/properties/clear_attribute', '\Concrete\Controller\Dialog\User\Bulk\Properties::clearAttribute');
 Route::register('/ccm/system/dialogs/file/properties', '\Concrete\Controller\Dialog\File\Properties::view');
+Route::register('/ccm/system/dialogs/file/thumbnails', '\Concrete\Controller\Dialog\File\Thumbnails::view');
+Route::register('/ccm/system/dialogs/file/thumbnails/edit', '\Concrete\Controller\Dialog\File\Thumbnails\Edit::view');
 Route::register('/ccm/system/dialogs/file/properties/save', '\Concrete\Controller\Dialog\File\Properties::save');
 Route::register('/ccm/system/dialogs/file/properties/update_attribute', '\Concrete\Controller\Dialog\File\Properties::update_attribute');
 Route::register('/ccm/system/dialogs/file/properties/clear_attribute', '\Concrete\Controller\Dialog\File\Properties::clear_attribute');

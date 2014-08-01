@@ -66,6 +66,14 @@ if (is_object($oc)) {
 	<div class="col-md-3"><p><?=t('Type')?></p></div>
 	<div class="col-md-9"><p><?=$fv->getType()?></p></div>
 </div>
+<? if ($fv->getTypeObject()->getGenericType() == \Concrete\Core\File\Type\Type::T_IMAGE) {
+    $thumbnails = $fv->getThumbnails();
+    ?>
+    <div class="row">
+        <div class="col-md-3"><p><?=t('Thumbnails')?></p></div>
+        <div class="col-md-9"><p><a class="dialog-launch icon-link" dialog-title="<?=t('Thumbnail Images')?>" dialog-width="90%" dialog-height="70%" href="<?=URL::to('/ccm/system/dialogs/file/thumbnails')?>?fID=<?=$fv->getFileID()?>&fvID=<?=$fv->getFileVersionID()?>"><?=count($thumbnails)?> <i class="fa fa-edit"></i></a></p></div>
+    </div>
+<? } ?>
 <div class="row">
 	<div class="col-md-3"><p><?=t('Size')?></p></div>
 	<div class="col-md-9"><p><?=$fv->getSize()?> (<?=t2(/*i18n: %s is a number */ '%s byte', '%s bytes', $fv->getFullSize(), Loader::helper('number')->format($fv->getFullSize()))?>)</p></div>

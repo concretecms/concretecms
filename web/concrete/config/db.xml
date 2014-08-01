@@ -2366,6 +2366,7 @@
             <notnull/>
             <default value="0" />
         </field>
+        <field name="ftTypeHeight" type="I" size="10"></field>
         <field name="ftTypeIsRequired" type="I1" size="1">
             <notnull/>
             <default value="0" />
