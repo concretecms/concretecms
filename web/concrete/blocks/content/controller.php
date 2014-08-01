@@ -52,6 +52,15 @@ use \Concrete\Core\Block\BlockController;
 			$str = str_replace("<br />\n", "\n", $str);
 			return $str;
 		}
+
+        public function view()
+        {
+            $content = $this->getContent();
+            if (preg_match('/data-concrete5-link-launch="lightbox-image"/i', $content)) {
+                $this->requireAsset('core/lightbox');
+            }
+            $this->set('content', $content);
+        }
 		
 		function getContentEditMode() {
 			$content = $this->translateFromEditMode($this->content);

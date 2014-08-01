@@ -6408,7 +6408,9 @@
                 this.insert_link_node = false;
 
                 var sel = this.getSelection();
-                var url = '', text = '', target = '';
+                /* concrete5 */
+                var url = '', text = '', target = '', lightbox = false;
+                /* end concrete5 */
 
                 var elem = this.getParent();
                 var par = $(elem).parent().get(0);
@@ -6422,12 +6424,20 @@
                     url = elem.href;
                     text = $(elem).text();
                     target = elem.target;
+                    /* concrete5 */
+                    lightbox = $(elem).attr('data-concrete5-link-launch') == 'lightbox-image';
+                    /* end concret5 */
 
                     this.insert_link_node = elem;
                 }
                 else text = sel.toString();
 
                 $('#redactor_link_url_text').val(text);
+                /* concrete5 */
+                if (lightbox) {
+                    $('#redactor_link_lightbox').prop('checked', true);
+                }
+                /* end concrete5 */
 
                 var thref = self.location.href.replace(/\/$/i, '');
                 url = url.replace(thref, '');
@@ -6508,6 +6518,14 @@
 
             var link = $('#redactor_link_url').val();
             var text = $('#redactor_link_url_text').val();
+            /* concrete5 */
+            var lightbox = $('#redactor_link_lightbox').is(':checked');
+
+            if (lightbox) {
+                var lightboxStr = 'data-concrete5-link-launch="lightbox-image"';
+            } else {
+                var lightboxStr = '';
+            }
 
             // mailto
             if (link.search('@') != -1 && /(http|ftp|https):\/\//i.test(link) === false)
@@ -6541,10 +6559,10 @@
                 extra = '&nbsp;';
             }
 
-            this.linkInsert('<a href="' + link + '"' + target + '>' + text + '</a>' + extra, $.trim(text), link, targetBlank);
+            this.linkInsert('<a href="' + link + '"' + target + ' ' + lightboxStr + '>' + text + '</a>' + extra, $.trim(text), link, targetBlank, lightbox);
 
         },
-        linkInsert: function (a, text, link, target)
+        linkInsert: function (a, text, link, target, lightbox)
         {
             this.selectionRestore();
 
@@ -6565,6 +6583,13 @@
                         $(this.insert_link_node).removeAttr('target');
                     }
 
+                    /* concrete5 */
+                    if (lightbox != '') {
+                        $(this.insert_link_node).attr('data-concrete5-link-launch', 'lightbox-image');
+                    } else {
+                        $(this.insert_link_node).removeAttr('data-concrete5-link-launch');
+                    }
+                    /* end concrete5 */
                 }
                 else
                 {
@@ -7462,6 +7487,16 @@
                     + '<label>' + this.opts.curLang.text + '</label>'
                     + '<input type="text" class="form-control" id="redactor_link_url_text" />'
                     + '</div>'
+                    /* concrete5 */
+                    + '<div class="form-group">'
+                    + '<div class="checkbox">'
+                    + '<label>'
+                    + '<input type="checkbox" id="redactor_link_lightbox" />'
+                    + 'Open Link in Lightbox.'
+                    + '</label>'
+                    + '</div>'
+                    + '</div>'
+                    /* end concrete5 */
                 + '</section>'
                 + '<footer>'
                 /* concrete5

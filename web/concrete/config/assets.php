@@ -301,12 +301,15 @@ $al->registerGroup('core/conversation', array(
     array('css', 'bootstrap/dropdown')
 ), true);
 
-// Overlay
-$al->register('javascript', 'core/overlay', 'js/overlay/jquery-magnific-popup.js');
-$al->register('css', 'core/overlay', 'css/overlay/jquery-magnific-popup.css');
-$al->registerGroup('core/overlay', array(
-    array('javascript', 'core/overlay'),
-    array('css', 'core/overlay')
+// Lightbox
+$al->register('javascript', 'core/lightbox', 'js/jquery-magnific-popup.js');
+$al->register('javascript', 'core/lightbox/launcher', 'js/lightbox.js');
+$al->register('css', 'core/lightbox', 'css/jquery-magnific-popup.css');
+$al->registerGroup('core/lightbox', array(
+    array('javascript', 'jquery'),
+    array('javascript', 'core/lightbox'),
+    array('javascript', 'core/lightbox/launcher'),
+    array('css', 'core/lightbox')
 ));
 
 // My Account
