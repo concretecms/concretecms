@@ -5,6 +5,15 @@
 			<key />
 			<unsigned />
 		</field>
+        <field name="mode" type="C" size="1">
+            <notnull />
+            <default value="S" />
+            <!-- S = Search, P = Page //-->
+        </field>
+        <field name="topicAttributeKeyHandle" type="C" size="255">
+            <notnull />
+            <default value="" />
+        </field>
 		<field name="topicTreeID" type="I" size="10">
             <unsigned />
             <notnull />
