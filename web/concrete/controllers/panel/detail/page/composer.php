@@ -96,7 +96,8 @@ class Composer extends BackendInterfacePageController {
 		}
 		$e = $pagetype->validateCreateDraftRequest($pt);
 		if (!$e->has()) {
-			$c = $c->cloneVersion('');
+			$c = $c->getVersionToModify();
+            $this->page = $c;
 
 			/// set the target
 			$configuredTarget = $pagetype->getPageTypePublishTargetObject();

@@ -85,6 +85,7 @@ ConcretePageComposerDetail = {
 			my.$form.concreteAjaxForm({
 				url: '<?=$controller->action('publish')?>',
 				success: function(r) {
+                    submitSuccess = true;
 					window.location.href = r.redirectURL;
 				},
 				complete: function() {
