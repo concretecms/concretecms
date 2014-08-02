@@ -8,11 +8,6 @@
 	<script type="text/javascript">
 	$(function() {
 		var treeObj = $('.tree-view-template_<?php echo $akID ?>');
-		<?php if(!$valueIDArray) { ?>
-			var initialSelect = true; // if this is the first time running, allow initial select. 
-		<?php } else {  ?>
-			var initialSelect = false;
-		<?php } ?>
 		treeObj.ccmtopicstree({
 			'treeID': '<?php echo $treeID ?>',
 			'treeNodeParentID': '<?php echo $parentNode ?>',
@@ -25,14 +20,13 @@
 			'allChildren': true,
 			'checkbox': true,
 			'onSelect' : function(select, node) {
-				 if(!initialSelect) {  // dynatree insists on creating a value at the beginning to enable this event. we skip that.
-				 	initialSelect = true;
-				 } else {
-	                 if (select) {
-	                    $('.topics_<?php echo $akID ?> .hidden-value-container').append('<input name="topics_<?php echo $akID ?>[]" type="hidden" value="'+node.data.key+'">');
-	                 } else {
-	                    $('.topics_<?php echo $akID ?> input[value='+node.data.key+']').remove();
-	                 }
+                 if (select) {
+                    var element = $('.topics_<?php echo $akID ?> .hidden-value-container input[data-node-id=' + node.data.key + ']');
+                    if (!element.length) {
+                        $('.topics_<?php echo $akID ?> .hidden-value-container').append('<input data-node-id="' + node.data.key + '" name="topics_<?php echo $akID ?>[]" type="hidden" value="'+node.data.key+'">');
+                    }
+                 } else {
+                    $('.topics_<?php echo $akID ?> input[value='+node.data.key+']').remove();
                  }
              }
 		});
@@ -44,10 +38,10 @@
 		<div class="dynamic-container">
 		</div>
 		<div class="hidden-value-container">
-		<?php 
+		<?php
 		if(is_array($valueIDArray)) {
 			foreach($valueIDArray as $vID) { ?>
-				<input type="hidden" name="topics_<?php echo $akID ?>[]" value="<?php echo $vID ?>">
+				<input data-node-id="<?=$vID?>" type="hidden" name="topics_<?php echo $akID ?>[]" value="<?php echo $vID ?>">
 		<?php }
 		} ?>
 		</div>
