@@ -177,7 +177,6 @@
     <div class="ccm-image-slider-entries">
 
     </div>
-    <a class="jump-to-bottom"></a>
 </div>
 <script type="text/template" id="imageTemplate">
     <div class="ccm-image-slider-entry well">
