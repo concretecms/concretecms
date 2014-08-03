@@ -6,7 +6,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 /** @var FileVersion $version */
 ?>
 <div class="ccm-ui">
-
     <?php
     /** @var Version $type */
     foreach ($types as $type) {
@@ -43,7 +42,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <?php
             if ($hasFile) {
                 ?>
-                <img class="ccm-file-manager-image-thumbnail-image unbound" style="max-width: 100%" src="<?= $configuration->getPublicURLToFile($thumbnailPath) ?>"/>
+                <img class="ccm-file-manager-image-thumbnail-image"
+                     data-handle='<?= $type->getHandle() ?>'
+                     data-fid="<?= $version->getFileID() ?>"
+                     data-fvid="<?= $version->getFileVersionID() ?>"
+                     style="max-width: 100%"
+                     src="<?= $configuration->getPublicURLToFile($thumbnailPath) ?>"/>
             <?php
             } else {
                 echo t(
@@ -52,25 +56,22 @@ defined('C5_EXECUTE') or die("Access Denied.");
             }
             ?>
         </div>
-        <script>
-            (function() {
-                var thumbnail = $('img.ccm-file-manager-image-thumbnail-image.unbound').removeClass('unbound');
-
-                Concrete.event.bind('ImageEditorDidSave', function(event, data) {
-                    if (data.isThumbnail) {
-                        console.log(data, thumbnail);
-                        if (data.fID === <?= $version->getFileID() ?> &&
-                            data.fvID === <?= $version->getFileVersionID() ?> &&
-                            data.handle === '<?= $type->getHandle() ?>') {
-                            thumbnail.attr('src', data.url);
-                            $.fn.dialog.closeTop();
-                        }
-                    }
-                });
-            }());
-        </script>
 
     <? } ?>
 
+    <script>
+        (function() {
+            Concrete.event.unbind('ImageEditorDidSave.thumbnails');
+            var thumbnails = $('img.ccm-file-manager-image-thumbnail-image');
+            Concrete.event.bind('ImageEditorDidSave.thumbnails', function(event, data) {
+                if (data.isThumbnail) {
+
+                    var thumbnail = thumbnails.filter('[data-handle=' + data.handle + '][data-fid=' + data.fID + '][data-fvid=' + data.fvID + ']').get(0);
+                    thumbnail.src = data.imgData;
+                    $.fn.dialog.closeTop();
+                }
+            });
+        }());
+    </script>
 
 </div>
