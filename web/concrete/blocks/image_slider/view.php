@@ -1,4 +1,10 @@
-<? defined('C5_EXECUTE') or die("Access Denied.");?>
+<? defined('C5_EXECUTE') or die("Access Denied.");
+$c = Page::getCurrentPage();
+if ($c->isEditMode()) { ?>
+    <div class="ccm-edit-mode-disabled-item" style="width: <? echo $width; ?>; height: <? echo $height; ?>">
+        <div style="padding: 40px 0px 40px 0px"><? echo t('Image Slider disabled in edit mode.')?></div>
+    </div>
+<?  } else { ?>
 <script>
 $(document).ready(function(){
     $(function () {
@@ -43,3 +49,4 @@ $(document).ready(function(){
 
     </div>
 </div>
+<?php } ?>
