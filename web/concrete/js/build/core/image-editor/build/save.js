@@ -40,17 +40,23 @@ im.save = function saveImage() {
                     im.stage.draw();
 
                     fake_canvas.remove();
-                    $.post(CCM_REL + '/index.php/tools/required/files/importers/imageeditor', {
+
+                    $.post(im.saveUrl, _.extend(im.saveData, {
                         fID: im.fileId,
                         imgData: url
-                    }, function (res) {
+                    }), function (res) {
                         var result = JSON.parse(res);
                         if (result.error === 1) {
                             alert(result.message);
                         } else if (result.error === 0) {
-                            im.fire('ImageEditorDidSave');
-                            window.location = window.location;
-                            window.location.reload();
+                            im.fire('ImageEditorDidSave', _.extend(im.saveData, {
+                                fID: im.fileId,
+                                imgData: url
+                            }));
+                            Concrete.event.fire('ImageEditorDidSave', _.extend(im.saveData, {
+                                fID: im.fileId,
+                                imgData: url
+                            }));
                         }
                     });
                 }
