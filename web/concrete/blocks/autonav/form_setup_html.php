@@ -130,7 +130,7 @@ $page_selector = Loader::helper('form/page_selector');
             <div class="input-group">
                 <input type="text" name="displaySubPageLevelsNum" value="<?= $info['displaySubPageLevelsNum'] ?>"
                        class="form-control">
-                <span class="input-group-addon"> levels</span>
+                <span class="input-group-addon"> <?= t('levels') ?></span>
             </div>
         </div>
 
