@@ -24,6 +24,7 @@
         "htmlawed/htmlawed": "dev-master",
         "mobiledetect/mobiledetectlib": "dev-master",
         "monolog/monolog": "~1.7",
+        "sunra/php-simple-html-dom-parser": "1.5.0",
         "hautelook/phpass": "dev-master",
         "voku/urlify": "1.0.*@dev",
         "dapphp/securimage": "dev-master",

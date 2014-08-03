@@ -55,11 +55,7 @@ use \Concrete\Core\Block\BlockController;
 
         public function view()
         {
-            $content = $this->getContent();
-            if (preg_match('/data-concrete5-link-launch="lightbox-image"/i', $content)) {
-                $this->requireAsset('core/lightbox');
-            }
-            $this->set('content', $content);
+            $this->set('content', $this->getContent());
         }
 		
 		function getContentEditMode() {
@@ -301,7 +297,7 @@ use \Concrete\Core\Block\BlockController;
 			if (!defined('BASE_URL') || BASE_URL == '') {
 				return $text;
 			}
-			
+
 			$url1 = str_replace('/', '\/', BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME);
 			$url2 = str_replace('/', '\/', BASE_URL . DIR_REL);
 			$url3 = URL::to('/download_file', 'view_inline');
@@ -313,8 +309,8 @@ use \Concrete\Core\Block\BlockController;
 			$text = preg_replace(
 				array(
 					'/' . $url1 . '\?cID=([0-9]+)/i', 
-					'/' . $url3 . '([0-9]+)\//i', 
-					'/' . $url4 . '([0-9]+)\//i', 
+					'/' . $url3 . '\/([0-9]+)/i',
+					'/' . $url4 . '\/([0-9]+)/i',
 					'/' . $url2 . '/i'),
 				array(
 					'{CCM:CID_\\1}',

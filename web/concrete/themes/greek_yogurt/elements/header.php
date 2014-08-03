@@ -19,7 +19,7 @@ Loader::element('header_required'); ?>
 
 <body>
 
-<div class="ccm-page">
+<div class="<?=$c->getPageWrapperClass()?>">
 
 <!--start main container -->
 

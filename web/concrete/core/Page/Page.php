@@ -1505,6 +1505,16 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $scc;
     }
 
+    public function getPageWrapperClass()
+    {
+        $pt = $this->getPageTypeObject();
+        $classes = array('ccm-page');
+        if (is_object($pt)) {
+            $classes[] = 'page-type-' . str_replace('_', '-', $pt->getPageTypeHandle());
+        }
+        return implode(' ', $classes);
+    }
+
     public function writePageThemeCustomizations() {
         $theme = $this->getCollectionThemeObject();
         if (is_object($theme) && $theme->isThemeCustomizable()) {

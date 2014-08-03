@@ -19,6 +19,7 @@ class ImporterTest extends \FileStorageTestCase {
             'Users',
             'PermissionAccessEntityTypes',
             'FileAttributeValues',
+            'FileImageThumbnailTypes',
             'FilePermissionAssignments',
             'AttributeKeyCategories',
             'AttributeTypes',
@@ -35,6 +36,7 @@ class ImporterTest extends \FileStorageTestCase {
         $number = AttributeType::add('number', 'Number');
         FileKey::add($number, array('akHandle' => 'width', 'akName' => 'Width'));
         FileKey::add($number, array('akHandle' => 'height', 'akName' => 'Height'));
+
         CacheLocal::flush();
     }
 
@@ -161,9 +163,9 @@ class ImporterTest extends \FileStorageTestCase {
 
         $cf = Core::make('helper/concrete/file');
         $fh = Core::make('helper/file');
-        $this->assertEquals('http://www.dummyco.com/application/files/thumbnails/level2'
+        $this->assertEquals('http://www.dummyco.com/application/files/thumbnails/file_manager_detail'
             . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), 'jpg'), 2),
-            $fo->getThumbnailURL(2));
+            $fo->getThumbnailURL('file_manager_detail'));
     }
 
     public function testImageImportFromIncoming()
@@ -189,9 +191,9 @@ class ImporterTest extends \FileStorageTestCase {
 
         $cf = Core::make('helper/concrete/file');
         $fh = Core::make('helper/file');
-        $this->assertEquals('http://www.dummyco.com/application/files/thumbnails/level2'
+        $this->assertEquals('http://www.dummyco.com/application/files/thumbnails/file_manager_detail'
             . $cf->prefix($fo->getPrefix(), $fh->replaceExtension($fo->getFilename(), 'jpg'), 2),
-            $fo->getThumbnailURL(2));
+            $fo->getThumbnailURL('file_manager_detail'));
     }
 
     public function testFileVersionDelete()
