@@ -744,7 +744,6 @@ class Version
     public function rescanThumbnails()
     {
         $types = Type::getVersionList();
-
         foreach($types as $type) {
 
             $fr = $this->getFileResource();
@@ -814,7 +813,6 @@ class Version
 
     public function getListingThumbnailImage()
     {
-        $html = Loader::helper('html');
         if ($this->fvHasListingThumbnail) {
             $type = Type::getByHandle(FILE_MANAGER_LISTING_THUMBNAIL_HANDLE);
             $baseSrc = $this->getThumbnailURL($type->getBaseVersion());
@@ -827,7 +825,6 @@ class Version
 
     public function getDetailThumbnailImage()
     {
-        $html = Loader::helper('html');
         if ($this->fvHasDetailThumbnail) {
             $type = Type::getByHandle(FILE_MANAGER_DETAIL_THUMBNAIL_HANDLE);
             $baseSrc = $this->getThumbnailURL($type->getBaseVersion());

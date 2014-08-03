@@ -12,4 +12,4 @@
 
 </head>
 <body>
-<div class="ccm-page">
+<div class="<?=$c->getPageWrapperClass()?>">

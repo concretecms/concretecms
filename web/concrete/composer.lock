@@ -1,10 +1,9 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
-        "This file is @generated automatically"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "3ce5938d1bf3fc26c3d83ce38c22bd1b",
+    "hash": "8492f54875c78c13331ea805e20fe25d",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -147,7 +146,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -201,7 +200,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan H. Wage",
+                    "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/",
                     "role": "Creator"
@@ -1689,6 +1688,49 @@
             "time": "2014-04-28 12:50:39"
         },
         {
+            "name": "sunra/php-simple-html-dom-parser",
+            "version": "v1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sunra/php-simple-html-dom-parser.git",
+                "reference": "a0b80ace086c7e09085669205e1b3c2c9c7a453c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sunra/php-simple-html-dom-parser/zipball/a0b80ace086c7e09085669205e1b3c2c9c7a453c",
+                "reference": "a0b80ace086c7e09085669205e1b3c2c9c7a453c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Sunra\\PhpSimple\\HtmlDomParser": "Src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sunra",
+                    "email": "sunra@yandex.ru",
+                    "homepage": "http://github.com/sunra"
+                }
+            ],
+            "description": "Composer adaptation of: A HTML DOM parser written in PHP5+ let you manipulate HTML in a very easy way! Require PHP 5+. Supports invalid HTML. Find tags on an HTML page with selectors just like jQuery. Extract contents from HTML in a single line.",
+            "homepage": "https://github.com/sunra/php-simple-html-dom-parser",
+            "keywords": [
+                "dom",
+                "html",
+                "parser"
+            ],
+            "time": "2013-05-04 14:32:03"
+        },
+        {
             "name": "symfony/class-loader",
             "version": "2.5.x-dev",
             "target-dir": "Symfony/Component/ClassLoader",
@@ -2061,12 +2103,12 @@
             "version": "v0.5.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tedious/JShrink.git",
+                "url": "https://github.com/tedivm/JShrink.git",
                 "reference": "4b48e3d051cf0ab145db9df20d3292d91485bb60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tedious/JShrink/zipball/4b48e3d051cf0ab145db9df20d3292d91485bb60",
+                "url": "https://api.github.com/repos/tedivm/JShrink/zipball/4b48e3d051cf0ab145db9df20d3292d91485bb60",
                 "reference": "4b48e3d051cf0ab145db9df20d3292d91485bb60",
                 "shasum": ""
             },
@@ -2715,7 +2757,6 @@
         "zf1/zend-mail": 20,
         "nesbot/carbon": 20
     },
-    "prefer-stable": false,
     "platform": {
         "php": ">=5.3.3"
     },

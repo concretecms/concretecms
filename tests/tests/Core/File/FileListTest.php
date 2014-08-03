@@ -24,6 +24,7 @@ class FileListTest extends \FileStorageTestCase {
             'AttributeSetKeys',
             'Packages',
             'AttributeSets',
+            'FileImageThumbnailTypes',
             'AttributeTypes',
             'Config',
             'AttributeKeys',
