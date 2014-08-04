@@ -306,11 +306,11 @@
                     area: targetArea.getId(),
                     sourceArea: sourceArea.getId(),
                     block: block.getId(),
-                    blocks: {}
+                    blocks: []
                 };
 
             _(targetArea.getBlocks()).each(function (block, key) {
-                send.blocks[key] = block.getId();
+                send.blocks.push(block.getId());
             });
             block.bindMenu();
             var loading = false, timeout = setTimeout(function () {
@@ -469,6 +469,7 @@
 
     var Layout = Concrete.Layout = function Layout(elem, edit_mode) {
         var my = this;
+        Concrete.event.unbind('EditModeInlineEditLoaded.editmode');
         Concrete.event.bind('EditModeInlineEditLoaded.editmode', function(e, data) {
             if (data.block === my) {
                 my.bindDrag();
@@ -694,10 +695,14 @@
     Area.prototype = {
 
         scanBlocks: function areaScanBlocks() {
-            var my = this;
+            var my = this, type, block, editmode = my.getEditMode();
+
+            // Remove existing blocks from the editmode block list.
+            editmode.setBlocks(_(editmode.getBlocks()).without(my.getBlocks()));
+            my.setBlocks([]);
+
             $('div.ccm-block-edit', this.getElem()).each(function () {
-                var me = $(this), handle = me.data('block-type-handle'), block, type;
-                my.setBlocks([]);
+                var me = $(this), handle = me.data('block-type-handle');
 
                 if (handle === 'core_area_layout') {
                     type = Layout;
@@ -705,8 +710,9 @@
                     type = Block;
                 }
 
-                my.getEditMode().addBlock(block = new type(me, my));
+                block = new type(me, my);
                 my.addBlock(block);
+                editmode.addBlock(block);
             });
         },
 
@@ -1713,7 +1719,7 @@
             peper.pep(my.getPepSettings());
         }
 
-    }).defaults(BlockType.prototype);
+    }).defaults(Block.prototype);
 
     DragArea.prototype = {
 
