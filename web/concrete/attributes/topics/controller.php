@@ -15,7 +15,11 @@ class Controller extends AttributeTypeController  {
 
     public function filterByAttribute(AttributedItemList $list, $value, $comparison = '=')
     {
-        $topic = Node::getByID(intval($value));
+        if ($value instanceof TreeNode) {
+            $topic = $value;
+        } else {
+            $topic = Node::getByID(intval($value));
+        }
         if (is_object($topic) && $topic instanceof \Concrete\Core\Tree\Node\Type\Topic) {
             $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();
             $qb = $list->getQueryObject();

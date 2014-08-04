@@ -1,12 +1,17 @@
 <?php  defined('C5_EXECUTE') or die("Access Denied."); ?>
-<?
 
+<div class="ccm-block-topic-list-wrapper">
+
+    <div class="ccm-block-topic-list-header">
+        <h5><?=$title?></h5>
+    </div>
+<?
 if ($mode == 'S'):
     $node = $tree->getRootTreeNodeObject();
     $node->populateChildren();
     if (is_object($node)) {
         $walk = function($node) use (&$walk, &$view, $selectedTopicID) {
-            print '<ul class="ccm-block-topic-list">';
+            print '<ul class="ccm-block-topic-list-list">';
             foreach($node->getChildNodes() as $topic) {
                 if ($topic instanceof \Concrete\Core\Tree\Node\Type\TopicCategory) { ?>
                     <li><?=$topic->getTreeNodeDisplayName()?></li>
@@ -28,7 +33,7 @@ endif;
 if ($mode == 'P'): ?>
 
     <? if (count($topics)) { ?>
-        <ul class="ccm-block-topic-page-topics">
+        <ul class="ccm-block-topic-list-page-topics">
         <? foreach($topics as $topic) { ?>
             <li><a href="<?=$view->controller->getTopicLink($topic)?>"><?=$topic->getTreeNodeDisplayName()?></a></li>
         <? } ?>
@@ -36,5 +41,7 @@ if ($mode == 'P'): ?>
     <? } else { ?>
         <?=t('No topics.')?>
     <? } ?>
-<?
-endif;
+
+<? endif; ?>
+
+</div>

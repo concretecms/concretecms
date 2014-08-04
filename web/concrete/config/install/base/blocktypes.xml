@@ -31,6 +31,7 @@
         <blocktype handle="feature" package=""/>
         <blocktype handle="topic_list" package=""/>
         <blocktype handle="social_links" package=""/>
+        <blocktype handle="related_pages" package=""/>
         <blocktype handle="share_this_page" package=""/>
         <blocktype handle="google_map" package=""/>
         <blocktype handle="html" package=""/>
@@ -76,6 +77,7 @@
             <blocktype handle="date_nav"/>
             <blocktype handle="tags"/>
             <blocktype handle="topic_list"/>
+            <blocktype handle="related_pages"/>
             <blocktype handle="rss_displayer"/>
         </blocktypeset>
         <blocktypeset handle="form" name="Forms" package="">

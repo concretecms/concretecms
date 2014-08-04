@@ -19,7 +19,7 @@ class Controller extends BlockController
     protected $btCacheBlockOutput = true;
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
-    protected $btInterfaceHeight = 300;
+    protected $btInterfaceHeight = 400;
     protected $btTable = 'btTopicList';
 
     public function getBlockTypeDescription()
@@ -35,6 +35,7 @@ class Controller extends BlockController
     public function add()
     {
         $this->edit();
+        $this->set('title', t('Topics'));
     }
 
     public function edit()
