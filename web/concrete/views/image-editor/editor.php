@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Http\ResponseAssetGroup;
 use Concrete\Core\ImageEditor\Component as SystemImageEditorComponent;
@@ -76,17 +76,32 @@ $filters = SystemImageEditorFilter::getList();
         </div>
     </div>
 
+<?php
+if (!$settings) {
+    $settings = array();
+}
+$fnames = array();
+foreach ($filters as $filter) {
+    $handle = $filter->getHandle();
+    $fnames[$handle] = array(
+        "src"      => $filter->getJavascriptPath(),
+        "name"     => $filter->getDisplayName('text'),
+        "selector" => '.filter.filter-' . $handle);
+}
+?>
     <script>
         $(function () {
             _.defer(function () {
-                var settings = {
-                    src: '<?=$fv->getURL()?>',
-                    fID: <?= $fv->getFileID() ?>,
-                    controlsets: {},
-                    filters: {},
-                    components: {},
-                    debug: false
-                };
+                var defaults = {
+                        saveUrl: CCM_REL + '/index.php/tools/required/files/importers/imageeditor',
+                        src: '<?=$fv->getURL()?>',
+                        fID: <?= $fv->getFileID() ?>,
+                        controlsets: {},
+                        filters: {},
+                        components: {},
+                        debug: false
+                    },
+                    settings = _.extend(defaults, <?= json_encode($settings) ?>);
                 $('div.controlset', 'div.controls').each(function () {
                     settings.controlsets[$(this).attr('data-namespace')] = {
                         src: $(this).attr('data-src'),
@@ -99,20 +114,23 @@ $filters = SystemImageEditorFilter::getList();
                         element: $(this).children('div.control').children('div.contents')
                     }
                 });
-                settings.filters = <?php
-      $fnames = array();
-      foreach ($filters as $filter) {
-        $handle = $filter->getHandle();
-        $fnames[$handle] = array(
-            "src" => $filter->getJavascriptPath(),
-            "name" => $filter->getDisplayName('text'),
-            "selector" => '.filter.filter-' . $handle);
-      }
-      echo Loader::helper('json')->encode($fnames);
-    ?>;
+                settings.filters = <?= json_encode($fnames); ?>;
                 var editor = $('div#<?=$editorid?>.Editor');
                 window.im = editor.closest('.ui-dialog-content').css('padding', 0).end().ImageEditor(settings);
             });
+
+            Concrete.event.unbind('ImageEditorDidSave.core');
+            <?php
+            if (!isset($no_bind) || !$no_bind) {
+                ?>
+                Concrete.event.bind('ImageEditorDidSave.core', function(e) {
+                    Concrete.event.unbind(e);
+                    window.location = window.location;
+                    window.location.reload();
+                });
+                <?php
+            }
+            ?>
         });
     </script>
 <?php
