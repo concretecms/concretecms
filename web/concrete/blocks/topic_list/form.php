@@ -4,7 +4,7 @@
         <label class="control-label" for="modeSelect"><?=t('Mode')?></label>
         <select class="form-control" name="mode" id="modeSelect">
             <option value="S" <? if ($mode == 'S') { ?>selected<? } ?>><?=t('Search – Display a list of all topics for use on a search sidebar.')?></option>
-            <option value="P" <? if ($mode == 'P') { ?>selected<? } ?>><?=t('Page – Display a list of just topics for the page.')?></option>
+            <option value="P" <? if ($mode == 'P') { ?>selected<? } ?>><?=t('Page – Display a list of topics for the current page.')?></option>
         </select>
     </div>
     <div class="form-group" data-row="mode-search">
