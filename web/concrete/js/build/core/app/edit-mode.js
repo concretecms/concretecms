@@ -701,7 +701,7 @@
             editmode.setBlocks(_(editmode.getBlocks()).without(my.getBlocks()));
             my.setBlocks([]);
 
-            $('div.ccm-block-edit', this.getElem()).each(function () {
+            $('div.ccm-block-edit[data-area-id=' + my.getId() + ']', this.getElem()).each(function () {
                 var me = $(this), handle = me.data('block-type-handle');
 
                 if (handle === 'core_area_layout') {
