@@ -56,6 +56,7 @@
         <style name="Default Button Border" variable="default-button-border" type="color" />
         <style name="Sidebar Faint Background" variable="sidebar-faint-background" type="color" />
         <style name="Title Thin" variable="title-thin" type="type" />
+        <style name="Image Caption" variable="image-caption" type="type" />
         <style name="Title Caps Bold" variable="title-caps-bold" type="type" />
         <style name="Home Feature Title" variable="home-feature-title" type="color" />
         <style name="Home Feature Icon" variable="home-feature-icon" type="color" />

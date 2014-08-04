@@ -103,6 +103,7 @@ class Controller extends BlockController
         $tree = Tree::getByID($this->topicTreeID);
         $data = $blockNode->addChild('data');
         $data->addChild('mode', $this->mode);
+        $data->addChild("title", $this->title);
         $data->addChild('topicAttributeKeyHandle', $this->topicAttributeKeyHandle);
         if (is_object($tree)) {
             $data->addChild('tree', $tree->getTreeDisplayName());
@@ -122,6 +123,7 @@ class Controller extends BlockController
         $tree = Topic::getByDisplayName($treeName);
         $args['topicTreeID'] = $tree->getTreeID();
         $args['cParentID'] = 0;
+        $args['title'] = (string) $blockNode->data->title;
         $args['mode'] = (string) $blockNode->data->mode;
         if (!$args['mode']) {
             $args['mode'] = 'S';

@@ -32,7 +32,10 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
             ),
             'next_previous' => array('block-sidebar-wrapped'),
             'share_this_page' => array('block-sidebar-wrapped'),
-            'content' => array('block-sidebar-wrapped'),
+            'content' => array(
+                'block-sidebar-wrapped',
+                'block-sidebar-padded'
+            ),
             'topic_list' => array('block-sidebar-wrapped'),
             'image' => array(
                 'image-right-tilt',
@@ -64,6 +67,7 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
         return array(
             array('title' => t('Title Thin'), 'menuClass' => 'title-thin', 'spanClass' => 'title-thin'),
             array('title' => t('Title Caps'), 'menuClass' => 'title-caps-bold', 'spanClass' => 'title-caps-bold'),
+            array('title' => t('Image Caption'), 'menuClass' => 'image-caption', 'spanClass' => 'image-caption'),
             array('title' => t('Standard Button'), 'menuClass' => '', 'spanClass' => 'btn btn-default'),
             array('title' => t('Success Button'), 'menuClass' => '', 'spanClass' => 'btn btn-success'),
             array('title' => t('Primary Button'), 'menuClass' => '', 'spanClass' => 'btn btn-primary')

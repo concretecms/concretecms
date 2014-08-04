@@ -178,13 +178,18 @@ use Sunra\PhpSimple\HtmlDomParser;
 				$text);
 
 			// now we add in support for the files
-			
-			$text = preg_replace_callback(
-				'/{CCM:FID_([0-9]+)}/i',
-				array('static', 'replaceFileIDInEditMode'),				
-				$text);
+            $dom = new HtmlDomParser();
+            $r = $dom->str_get_html($text);
+            if (is_object($r)) {
+                foreach($r->find('concrete-picture') as $picture) {
+                    $fID = $picture->fid;
+                    $alt = $picture->alt;
+                    $picture->outertext = '<img src="' . URL::to('/download_file', 'view_inline', $fID) . '" alt="' . $alt . '" />';
+                }
 
-			
+                $text = (string) $r;
+            }
+
 			$text = preg_replace_callback(
 				'/{CCM:FID_DL_([0-9]+)}/i',
 				array('static', 'replaceDownloadFileIDInEditMode'),				
@@ -213,16 +218,26 @@ use Sunra\PhpSimple\HtmlDomParser;
 				array('static', 'replaceCollectionID'),				
 				$text);
 
-			$text = preg_replace_callback(
-				'/<img [^>]*src\s*=\s*"{CCM:FID_([0-9]+)}"[^>]*>/i',
-				array('static', 'replaceImageID'),
-				$text);
+			// now we add in support for the files that we view inline
+            $dom = new HtmlDomParser();
+            $r = $dom->str_get_html($text);
+            if (is_object($r)) {
+                foreach($r->find('concrete-picture') as $picture) {
+                    $fID = $picture->fid;
+                    $alt = $picture->alt;
+                    $fo = \File::getByID($fID);
+                    if (is_object($fo)) {
+                        $image = new \Concrete\Core\Html\Image($fo);
+                        $tag = $image->getTag();
+                        if ($alt) {
+                            $tag->alt($alt);
+                        }
+                        $picture->outertext = (string) $tag;
+                    }
+                }
 
-			// now we add in support for the files that we view inline			
-			$text = preg_replace_callback(
-				'/{CCM:FID_([0-9]+)}/i',
-				array('static', 'replaceFileID'),				
-				$text);
+                $text = (string) $r;
+            }
 
 			// now files we download
 			
@@ -239,33 +254,6 @@ use Sunra\PhpSimple\HtmlDomParser;
 			return $text;
 		}
 		
-		private function replaceFileID($match) {
-			$fID = $match[1];
-			if ($fID > 0) {
-				$path = File::getRelativePathFromID($fID);
-				return $path;
-			}
-		}
-		
-		private function replaceImageID($match) {
-			$fID = $match[1];
-			if ($fID > 0) {
-				preg_match('/width\s*="([0-9]+)"/',$match[0],$matchWidth);
-				preg_match('/height\s*="([0-9]+)"/',$match[0],$matchHeight);
-				$file = File::getByID($fID);
-				if (is_object($file) && (!$file->isError())) {
-					$imgHelper = Loader::helper('image');
-					$maxWidth = ($matchWidth[1]) ? $matchWidth[1] : $file->getAttribute('width');
-					$maxHeight = ($matchHeight[1]) ? $matchHeight[1] : $file->getAttribute('height');
-					if ($file->getAttribute('width') > $maxWidth || $file->getAttribute('height') > $maxHeight) {
-						$thumb = $imgHelper->getThumbnail($file, $maxWidth, $maxHeight);
-						return preg_replace('/{CCM:FID_([0-9]+)}/i', $thumb->src, $match[0]);
-					}
-				}
-				return $match[0];
-			}
-		}
-
 		private function replaceDownloadFileID($match) {
 			$fID = $match[1];
 			if ($fID > 0) {
@@ -285,11 +273,6 @@ use Sunra\PhpSimple\HtmlDomParser;
 			}
 		}
 		
-		private function replaceFileIDInEditMode($match) {
-			$fID = $match[1];
-			return URL::to('/download_file', 'view_inline', $fID);
-		}
-		
 		private function replaceCollectionID($match) {
 			$cID = $match[1];
 			if ($cID > 0) {
@@ -304,26 +287,42 @@ use Sunra\PhpSimple\HtmlDomParser;
 				return $text;
 			}
 
-			$url1 = str_replace('/', '\/', BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME);
+            $url1 = str_replace('/', '\/', BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME);
 			$url2 = str_replace('/', '\/', BASE_URL . DIR_REL);
-			$url3 = URL::to('/download_file', 'view_inline');
-			$url3 = str_replace('/', '\/', $url3);
-			$url3 = str_replace('-', '\-', $url3);
 			$url4 = URL::to('/download_file', 'view');
 			$url4 = str_replace('/', '\/', $url4);
 			$url4 = str_replace('-', '\-', $url4);
 			$text = preg_replace(
 				array(
 					'/' . $url1 . '\?cID=([0-9]+)/i', 
-					'/' . $url3 . '\/([0-9]+)/i',
 					'/' . $url4 . '\/([0-9]+)/i',
 					'/' . $url2 . '/i'),
 				array(
 					'{CCM:CID_\\1}',
-					'{CCM:FID_\\1}',
 					'{CCM:FID_DL_\\1}',
 					'{CCM:BASE_URL}')
 				, $text);
+
+            // images inline
+            $imgmatch = URL::to('/download_file', 'view_inline');
+            $imgmatch = str_replace('/', '\/', $imgmatch);
+            $imgmatch = str_replace('-', '\-', $imgmatch);
+            $imgmatch = '/' . $imgmatch . '\/([0-9]+)/i';
+
+            $dom = new HtmlDomParser();
+            $r = $dom->str_get_html($text);
+            if ($r) {
+                foreach($r->find('img') as $img) {
+                    $src = $img->src;
+                    $alt = $img->alt;
+                    if (preg_match($imgmatch, $src, $matches)) {
+                        $img->outertext = '<concrete-picture fID="' . $matches[1] . '" alt="' . $alt . '" />';
+                    }
+                }
+
+                $text = (string) $r;
+            }
+
 			return $text;
 		}
 		
