@@ -10,9 +10,20 @@ use PermissionAccess;
 
 class Topic extends Tree
 {
-    public function getTreeDisplayName()
+    /** Returns the display name for this tree (localized and escaped accordingly to $format)
+     * @param  string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+     * @return string
+     */
+    public function getTreeDisplayName($format = 'html')
     {
-        return $this->topicTreeName;
+        $value = tc('TreeName', $this->topicTreeName);
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
     }
 
     public static function getDefault()
