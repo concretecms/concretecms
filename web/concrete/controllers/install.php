@@ -76,7 +76,7 @@ class Install extends Controller
 
     protected function validateDatabase($e)
     {
-        if (!function_exists('mysql_connect')) {
+        if (!extension_loaded('pdo')) {
             $e->add($this->getDBErrorMsg());
         } else {
 
@@ -123,7 +123,7 @@ class Install extends Controller
 
     public function getDBErrorMsg()
     {
-        return t('Function mysql_connect() not found. Your system does not appear to have MySQL available within PHP.');
+        return t('The PDO extension is not loaded.');
     }
 
     public function setup()
@@ -161,8 +161,8 @@ class Install extends Controller
     private function setRequiredItems()
     {
         $this->set('imageTest', function_exists('imagecreatetruecolor'));
-        $this->set('mysqlTest', function_exists('mysql_connect'));
-        $this->set('jsonTest', function_exists('json_encode'));
+        $this->set('mysqlTest', extension_loaded('PDO'));
+        $this->set('jsonTest', extension_loaded('json'));
         $this->set('xmlTest', function_exists('xml_parse') && function_exists('simplexml_load_file'));
         $this->set('fileWriteTest', $this->testFileWritePermissions());
         $phpVmin = '5.3.3';

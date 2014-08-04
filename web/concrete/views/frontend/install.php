@@ -1,4 +1,4 @@
-<? 
+<?
 defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/views/install.css";</style>
@@ -12,7 +12,7 @@ $(function() {
 });
 </script>
 
-<? 
+<?
 
 $introMsg = t('To install concrete5, please fill out the form below.');
 
@@ -20,7 +20,7 @@ if (isset($successMessage)) { ?>
 
 <script type="text/javascript">
 $(function() {
-	
+
 <? for ($i = 1; $i <= count($installRoutines); $i++) {
 	$routine = $installRoutines[$i-1]; ?>
 
@@ -53,7 +53,7 @@ $(function() {
 			}
 		});
 	}
-	
+
 <? } ?>
 
 	ccm_installRoutine1();
@@ -137,7 +137,7 @@ $(function() {
 <div class="col-md-5 col-md-offset-1">
 
 	<input type="hidden" name="locale" value="<?=$locale?>" />
-	
+
 	<fieldset>
 		<legend><?=t('Site Information')?></legend>
 		<div class="form-group">
@@ -145,9 +145,9 @@ $(function() {
 		<div class="col-md-8">
 			<?=$form->text('SITE', array('class' => ''))?>
 		</div>
-		</div>			
+		</div>
 	</fieldset>
-	
+
 	<fieldset>
 		<legend><?=t('Administrator Information')?></legend>
 		<div class="form-group">
@@ -168,7 +168,7 @@ $(function() {
 			<?=$form->password('uPasswordConfirm', array('class' => ''))?>
 		</div>
 		</div>
-		
+
 	</fieldset>
 
 </div>
@@ -213,16 +213,16 @@ $(function() {
 
 <h3><?=t('Sample Content')?></h3>
 
-		
+
 		<?
 		$uh = Loader::helper('concrete/urls');
 		?>
-		
+
 		<table class="table table-striped" id="sample-content-selector">
 		<tbody>
-		<? 
+		<?
 		$availableSampleContent = StartingPointPackage::getAvailableList();
-		foreach($availableSampleContent as $spl) { 
+		foreach($availableSampleContent as $spl) {
 			$pkgHandle = $spl->getPackageHandle();
 		?>
 
@@ -231,9 +231,9 @@ $(function() {
 			<td class="sample-content-thumbnail"><img src="<?=$uh->getPackageIconURL($spl)?>" width="97" height="97" alt="<?=$spl->getPackageName()?>" /></td>
 			<td class="sample-content-description"><h4><?=$spl->getPackageName()?></h4><p><?=$spl->getPackageDescription()?></td>
 		</tr>
-		
+
 		<? } ?>
-		
+
 		</tbody>
 		</table>
 		<br/>
@@ -241,7 +241,7 @@ $(function() {
 			<div class="alert alert-info"><?=t('concrete5 veterans can choose "Empty Site," but otherwise we recommend starting with some sample content.')?></div>
 		<? } ?>
 
-	
+
 </div>
 </div>
 
@@ -291,7 +291,7 @@ $(function() {
 	});
 	$.getJSON('<?=$view->url("/install", "test_url", "20", "20")?>', function(json) {
 		// test url takes two numbers and adds them together. Basically we just need to make sure that
-		// our url() syntax works - we do this by sending a test url call to the server when we're certain 
+		// our url() syntax works - we do this by sending a test url call to the server when we're certain
 		// of what the output will be
 		if (json.response == 40) {
 			$("#ccm-test-request-loading").attr('class', 'fa fa-check');
@@ -307,7 +307,7 @@ $(function() {
 			$("#install-errors").show();
 		}
 	});
-	
+
 });
 </script>
 
@@ -341,7 +341,7 @@ $(function() {
 </tr>
 <tr>
 	<td><? if ($mysqlTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
-	<td width="100%"><?=t('MySQL Available')?>
+	<td width="100%"><?=t('MySQL PDO Extension Enabled')?>
 	</td>
 	<td><? if (!$mysqlTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=$this->controller->getDBErrorMsg()?>"></i><? } ?></td>
 </tr>
