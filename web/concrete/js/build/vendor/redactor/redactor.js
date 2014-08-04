@@ -11,9 +11,9 @@
 */
 (function($)
 {
-    var uuid = 0;
-
     "use strict";
+
+    var uuid = 0;
 
     var Range = function(range)
     {
