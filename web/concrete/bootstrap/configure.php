@@ -1,5 +1,9 @@
 <?php
 
+if (version_compare(phpversion(), '5.3.3') < 0) {
+    die("concrete5 requires PHP 5.3.3+ to run.\n");
+}
+
 /**
  * ----------------------------------------------------------------------------
  * Ensure that all subsequent procedural pages are running inside concrete5.

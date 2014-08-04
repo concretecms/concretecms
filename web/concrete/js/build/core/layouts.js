@@ -31,7 +31,7 @@ jQuery.fn.ccmlayoutpresetdelete = function(options) {
 			});
 		});
 	});
-}
+};
 
 // initialization
 var CCMLayout = function(element, options) {
@@ -54,7 +54,7 @@ var CCMLayout = function(element, options) {
 	this._setupFormEvents();
 
 	this._updateChooseTypeForm();
-}
+};
 
 // private methods
 CCMLayout.prototype._setupDOM = function() {
@@ -79,7 +79,7 @@ CCMLayout.prototype._setupDOM = function() {
 	this.$savebtn = this.$toolbar.find(this.options.btnsave);
 	this.$cancelbtn = this.$toolbar.find(this.options.btncancel);
 	this.$slider = false;
-}
+};
 
 CCMLayout.prototype._setupFormSaveAndCancel = function() {
 	var obj = this;
@@ -100,13 +100,13 @@ CCMLayout.prototype._setupFormSaveAndCancel = function() {
 			obj._rescanAreasInPage(e, data);
       	});
 	});
-}
+};
 
 CCMLayout.prototype._rescanAreasInPage = function(e, data) {
 	var editor = Concrete.getEditMode();
 	editor.reset();
 	editor.scanBlocks();
-}
+};
 
 CCMLayout.prototype._setupToolbarView = function() {
 	var obj = this;
@@ -115,7 +115,7 @@ CCMLayout.prototype._setupToolbarView = function() {
 			$(this).hide();
 		}
 	});
-}
+};
 
 CCMLayout.prototype._updateChooseTypeForm = function() {
 	var typeval = this.$selectgridtype.find('option:selected').val();
@@ -174,7 +174,7 @@ CCMLayout.prototype._updateChooseTypeForm = function() {
 	if (this.options.editing) {
 		this.$selectgridtype.prop('disabled', true);
 	}
-}
+};
 
 
 CCMLayout.prototype._setupFormEvents = function() {

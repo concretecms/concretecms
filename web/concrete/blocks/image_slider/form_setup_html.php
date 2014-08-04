@@ -16,6 +16,22 @@
             });
         }
 
+        var attachSortDesc = function($obj) {
+            $obj.click(function(){
+               var myContainer = $(this).closest($('.ccm-image-slider-entry'));
+               myContainer.insertAfter(myContainer.next('.ccm-image-slider-entry'));
+               doSortCount();
+            });
+        }
+
+        var attachSortAsc = function($obj) {
+            $obj.click(function(){
+                var myContainer = $(this).closest($('.ccm-image-slider-entry'));
+                myContainer.insertBefore(myContainer.prev('.ccm-image-slider-entry'));
+                doSortCount();
+            });
+        }
+
         var attachFileManagerLaunch = function($obj) {
             $obj.click(function(){
                 var oldLauncher = $(this);
@@ -23,7 +39,8 @@
                     ConcreteFileManager.getFileDetails(data.fID, function(r) {
                         jQuery.fn.dialog.hideLoader();
                         var file = r.files[0];
-                        oldLauncher.html('<img src="' + file.thumbnailLevel1 + '" />');
+                        console.log(file.resultsThumbnailImg);
+                        oldLauncher.html(file.resultsThumbnailImg);
                         oldLauncher.next('.image-fID').val(file.fID)
                     });
                 });
@@ -41,7 +58,7 @@
            sliderEntriesContainer.append(_templateSlide({
                 fID: '<?php echo $row['fID'] ?>',
                 <?php if(File::getByID($row['fID'])) { ?>
-                image_url: '<?php echo File::getByID($row['fID'])->getURL();?>',
+                image_url: '<?php echo File::getByID($row['fID'])->getThumbnailURL('file_manager_listing');?>',
                 <?php } else { ?>
                 image_url: '',
                <?php } ?>
@@ -55,14 +72,9 @@
 
         doSortCount();
 
-        //sliderEntriesContainer.sortable({
-           // stop: function( event, ui ) {
-             //   doSortCount();  // recount every time icon divs are resorted.
-           // }
-        //});
-
         $('.ccm-add-image-slider-entry').click(function(){
-            var newSlide = sliderEntriesContainer.append(_templateSlide({
+           var thisModal = $(this).closest('.ui-dialog-content');
+            sliderEntriesContainer.append(_templateSlide({
                 fID: '',
                 title: '',
                 link_url: '',
@@ -71,14 +83,20 @@
                 sort_order: '',
                 image_url: ''
             }));
-            $(newSlide).find('.redactor-content').redactor({
+            var newSlide = $('.ccm-image-slider-entry').last();
+            thisModal.scrollTop(newSlide.offset().top);
+            newSlide.find('.redactor-content').redactor({
                 minHeight: '200'
             });
-            attachDelete($(newSlide).find('.ccm-delete-image-slider-entry'));
-            attachFileManagerLaunch($(newSlide).find('.ccm-pick-slide-image'));
+            attachDelete(newSlide.find('.ccm-delete-image-slider-entry'));
+            attachFileManagerLaunch(newSlide.find('.ccm-pick-slide-image'));
+            attachSortDesc(newSlide.find('i.fa-sort-desc'));
+            attachSortAsc(newSlide.find('i.fa-sort-asc'));
             doSortCount();
         });
         attachDelete($('.ccm-delete-image-slider-entry'));
+        attachSortAsc($('i.fa-sort-asc'));
+        attachSortDesc($('i.fa-sort-desc'));
         attachFileManagerLaunch($('.ccm-pick-slide-image'));
         $(function() {  // activate redactors
             $('.redactor-content').redactor({
@@ -124,9 +142,21 @@
 
 
 
-    .ccm-image-slider-block-container i.fa-arrows {
+    .ccm-image-slider-block-container i.fa-sort-asc {
         position: absolute;
         top: 10px;
+        right: 10px;
+        cursor: pointer;
+    }
+
+    .ccm-image-slider-block-container i:hover {
+        color: #5cb85c;
+    }
+
+    .ccm-image-slider-block-container i.fa-sort-desc {
+        position: absolute;
+        top: 15px;
+        cursor: pointer;
         right: 10px;
     }
 </style>
@@ -150,7 +180,8 @@
 </div>
 <script type="text/template" id="imageTemplate">
     <div class="ccm-image-slider-entry well">
-        <i class="fa fa-arrows"></i>
+        <i class="fa fa-sort-desc"></i>
+        <i class="fa fa-sort-asc"></i>
         <div class="form-group">
             <label><?php echo t('Image') ?></label>
             <div class="ccm-pick-slide-image">
