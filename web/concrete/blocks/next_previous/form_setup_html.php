@@ -2,29 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");  
 ?> 
 
-
- 	
-  <fieldset>
-    
-	<div class="form-group">
-      <label class="control-label"><?php echo t('Labels'); ?></label>
-      <div class="radio">
-        <label>
-            <input name="linkStyle" type="radio" value="next_previous" <?php echo ($controller->linkStyle!='page_name')?'checked="checked"':'' ?>  />
-            <?php echo t('Custom')?>
-        </label>
-      </div>
-      <div class="radio">
-          <label>
-              <input name="linkStyle" type="radio" value="page_name" <?php echo ($controller->linkStyle=='page_name')?'checked="checked"':'' ?>  />
-              <?php echo t('Page Titles') ?>
-          </label>
-      </div>
-    </div>
-
-</fieldset>
-<fieldset id="ccm_edit_pane_nextPreviousWrap" style="display:<?php echo ($controller->linkStyle!='page_name')?'block':'none' ?>">
-    <hr/>
+<fieldset id="ccm_edit_pane_nextPreviousWrap">
     <div class="form-group row">
         <div class="col-xs-6">
             <label class="control-label"><?php  echo t('Next Label')?></label>
@@ -47,12 +25,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
  </fieldset>
 
   <fieldset>
-  <hr/>
-  <div class="form-group">
-     <div class="checkbox">
-        <label><input name="showArrows" type="checkbox" value="1" <?php echo intval($controller->showArrows)?'checked="checked"':'' ?> /> <?=t('Include Arrows')?> </label>
-     </div>
-  </div>
 
   <div class="form-group">
       <div class="checkbox">

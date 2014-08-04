@@ -6,6 +6,8 @@ use Loader;
 use URL;
 use \Concrete\Core\Editor\Snippet;
 use \Concrete\Core\Block\BlockController;
+use Sunra\PhpSimple\HtmlDomParser;
+
 
 /**
  * The controller for the content block.
@@ -55,7 +57,11 @@ use \Concrete\Core\Block\BlockController;
 
         public function view()
         {
-            $this->set('content', $this->getContent());
+            $content = $this->getContent();
+            if (preg_match('/data-concrete5-link-launch/i', $content)) {
+                $this->requireAsset('core/lightbox');
+            }
+            $this->set('content', $content);
         }
 		
 		function getContentEditMode() {
@@ -209,7 +215,7 @@ use \Concrete\Core\Block\BlockController;
 
 			$text = preg_replace_callback(
 				'/<img [^>]*src\s*=\s*"{CCM:FID_([0-9]+)}"[^>]*>/i',
-				array('static', 'replaceImageID'),				
+				array('static', 'replaceImageID'),
 				$text);
 
 			// now we add in support for the files that we view inline			
