@@ -239,19 +239,20 @@ use \Concrete\Core\Block\BlockController;
 		
 		private function replaceFileID($match) {
 			$fID = $match[1];
-			if ($fID > 0) {
-				$path = File::getRelativePathFromID($fID);
-				return $path;
+			$file = File::getByID($fID);
+			if (!$file) {
+				return '';
 			}
+			return $file->getURL();
 		}
-		
+
 		private function replaceImageID($match) {
 			$fID = $match[1];
 			if ($fID > 0) {
 				preg_match('/width\s*="([0-9]+)"/',$match[0],$matchWidth);
 				preg_match('/height\s*="([0-9]+)"/',$match[0],$matchHeight);
 				$file = File::getByID($fID);
-				if (is_object($file) && (!$file->isError())) {
+				if ($file) {
 					$imgHelper = Loader::helper('image');
 					$maxWidth = ($matchWidth[1]) ? $matchWidth[1] : $file->getAttribute('width');
 					$maxHeight = ($matchHeight[1]) ? $matchHeight[1] : $file->getAttribute('height');
@@ -285,7 +286,11 @@ use \Concrete\Core\Block\BlockController;
 		
 		private function replaceFileIDInEditMode($match) {
 			$fID = $match[1];
-			return URL::to('/download_file', 'view_inline', $fID);
+			$file = File::getByID($fID);
+			if (!$file) {
+				return '';
+			}
+			return $file->getURL();
 		}
 		
 		private function replaceCollectionID($match) {

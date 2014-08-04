@@ -6856,7 +6856,7 @@
                         ConcreteFileManager.getFileDetails(data.fID, function(r) {
                             jQuery.fn.dialog.hideLoader();
                             var file = r.files[0];
-                            $('#redactor_file_link').val(file.urlInline);
+                            $('#redactor_file_link').val(file.url);
                         });
                     });
                 });
