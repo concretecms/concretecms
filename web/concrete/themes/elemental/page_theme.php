@@ -29,6 +29,8 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
                 'page-list-with-buttons',
                 'block-sidebar-wrapped'
             ),
+            'next_previous' => array('block-sidebar-wrapped'),
+            'share_this_page' => array('block-sidebar-wrapped'),
             'content' => array('block-sidebar-wrapped'),
             'topic_list' => array('block-sidebar-wrapped'),
             'image' => array(

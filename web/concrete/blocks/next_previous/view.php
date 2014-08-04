@@ -1,30 +1,42 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-
 $nh = Loader::helper('navigation');
 $previousLinkURL = is_object($previousCollection) ? $nh->getLinkToCollection($previousCollection) : '';
 $parentLinkURL = is_object($parentCollection) ? $nh->getLinkToCollection($parentCollection) : '';
 $nextLinkURL = is_object($nextCollection) ? $nh->getLinkToCollection($nextCollection) : '';
+$previousLinkText = is_object($previousCollection) ? $previousCollection->getCollectionName() : '';
+$nextLinkText = is_object($nextCollection) ? $nextCollection->getCollectionName() : '';
 ?>
 
-<div id="ccm-next-previous-<?php echo $bID; ?>" class="ccm-next-previous-wrapper">
+<div class="ccm-block-next-previous-wrapper">
+
+    <? if ($previousLabel && $previousLinkURL != ''): ?>
+    <div class="ccm-block-next-previous-header">
+        <h5><?=$previousLabel?></h5>
+    </div>
+    <? endif; ?>
 
     <?php if ($previousLinkText): ?>
-	<div class="ccm-next-previous-previouslink">
-		<?php echo $previousLinkURL ? '<a href="' . $previousLinkURL . '">' . $previousLinkText . '</a>' : '&nbsp;' ?>
- 	</div>
+	<p class="ccm-block-next-previous-previous-link">
+		<?php echo $previousLinkURL ? '<a href="' . $previousLinkURL . '">' . $previousLinkText . '</a>' : '' ?>
+ 	</p>
 	<?php endif; ?>
 
-	<?php if ($parentLinkText): ?>
-	<div class="ccm-next-previous-parentlink">
+    <? if ($nextLabel && $nextLinkURL != ''): ?>
+        <div class="ccm-block-next-previous-header">
+            <h5><?=$nextLabel?></h5>
+        </div>
+    <? endif; ?>
+
+    <?php if ($nextLinkText): ?>
+        <p class="ccm-block-next-previous-next-link">
+            <?php echo $nextLinkURL ? '<a href="' . $nextLinkURL . '">' . $nextLinkText . '</a>' : '' ?>
+        </p>
+    <?php endif; ?>
+
+    <?php if ($parentLinkText): ?>
+	<p class="ccm-block-next-previous-parent-link">
 		<?php echo $parentLinkURL ? '<a href="' . $parentLinkURL . '">' . $parentLinkText . '</a>' : '' ?>
- 	</div>
-	<?php endif; ?>
-	
-	<?php if ($nextLinkText): ?>
-	<div class="ccm-next-previous-nextlink">
-		<?php echo $nextLinkURL ? '<a href="' . $nextLinkURL . '">' . $nextLinkText . '</a>' : '' ?>
- 	</div>
+ 	</p>
 	<?php endif; ?>
 
-	<div class="spacer"></div>
 </div>

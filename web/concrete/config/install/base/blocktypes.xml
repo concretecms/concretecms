@@ -31,6 +31,7 @@
         <blocktype handle="feature" package=""/>
         <blocktype handle="topic_list" package=""/>
         <blocktype handle="social_links" package=""/>
+        <blocktype handle="share_this_page" package=""/>
         <blocktype handle="google_map" package=""/>
         <blocktype handle="html" package=""/>
         <blocktype handle="horizontal_rule" package=""/>
@@ -87,6 +88,7 @@
             <blocktype handle="core_conversation" />
             <blocktype handle="social_links" />
             <blocktype handle="discussion"/>
+            <blocktype handle="share_this_page" />
         </blocktypeset>
         <blocktypeset handle="multimedia" name="Multimedia" package="">
             <blocktype handle="page_attribute_display"/>

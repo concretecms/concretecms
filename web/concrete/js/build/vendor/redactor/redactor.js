@@ -6585,7 +6585,7 @@
 
                     /* concrete5 */
                     if (lightbox != '') {
-                        $(this.insert_link_node).attr('data-concrete5-link-launch', 'lightbox-image');
+                        $(this.insert_link_node).attr('data-concrete5-link-launch', 'lightbox');
                     } else {
                         $(this.insert_link_node).removeAttr('data-concrete5-link-launch');
                     }
@@ -6873,6 +6873,12 @@
 
             var callback = $.proxy(function()
             {
+
+                /* concrete5 */
+                // automatically select the default radio button
+                $('#redactor_link_default').prop('checked', true);
+                /* end concrete5 */
+
                 $('#redactor_file_alt').val($el.attr('alt'));
                 $('#redactor_image_edit_src').attr('href', $el.attr('src'));
 
@@ -6892,6 +6898,8 @@
                     if ($(parent).attr('target') == '_blank')
                     {
                         $('#redactor_link_blank').prop('checked', true);
+                    } else if ($(parent).attr('data-concrete5-link-launch')) {
+                        $('#redactor_link_lightbox').prop('checked', true);
                     }
                 }
 
@@ -6908,6 +6916,18 @@
                 }, this));
 
                 /* concrete5 */
+                $('a[data-action=choose-file-from-file-manager]').on('click', function(e) {
+                    e.preventDefault();
+                    ConcreteFileManager.launchDialog(function(data) {
+                        jQuery.fn.dialog.showLoader();
+                        ConcreteFileManager.getFileDetails(data.fID, function(r) {
+                            jQuery.fn.dialog.hideLoader();
+                            var file = r.files[0];
+                            $('#redactor_file_link').val(file.urlDownload);
+                        });
+                    });
+                });
+
                 $('a[data-action=choose-link-from-sitemap]').on('click', function(e) {
                     e.preventDefault();
                     jQuery.fn.dialog.open({
@@ -6977,6 +6997,7 @@
 
             var floating = $('#redactor_form_image_align').val();
             var margin = '';
+            var lightbox = false;
 
             if (floating === 'left')
             {
@@ -7007,6 +7028,13 @@
                     target = true;
                 }
 
+                /* concrete5 */
+                if ($('#redactor_link_lightbox').prop('checked'))
+                {
+                    lightbox = true;
+                }
+                /* end concrete5 */
+
                 if (parent.get(0).tagName !== 'A')
                 {
                     var a = $('<a href="' + link + '">' + this.outerHtml(el) + '</a>');
@@ -7014,6 +7042,9 @@
                     if (target)
                     {
                         a.attr('target', '_blank');
+                    }
+                    else if (lightbox) {
+                        a.attr('data-concrete5-link-launch', 'lightbox-image');
                     }
 
                     $el.replaceWith(a);
@@ -7029,7 +7060,18 @@
                     {
                         parent.removeAttr('target');
                     }
-                }
+
+                    if (lightbox)
+                    {
+                        parent.attr('data-concrete5-link-launch', 'lightbox-image');
+                    }
+                    else
+                    {
+                        parent.removeAttr('data-concrete5-link-launch');
+                    }
+
+
+                 }
             }
             else
             {
@@ -7397,13 +7439,18 @@
                     + '<input type="text" id="redactor_file_alt" class="form-control" />'
                     + '</div>'
                     + '<div class="form-group">'
-                    + '<label>' + this.opts.curLang.link + '</label>'
+                    + '<label class="control-label">' + this.opts.curLang.link + '</label>'
                     + '<div class="input-group">'
                     + '<input type="text" name="redactor_file_link" id="redactor_file_link" class="form-control"  />'
+                    + '<span class="input-group-addon"><a href="#" data-action="choose-file-from-file-manager" class="icon-link"><i class="fa fa-file"></i></a></span>'
                     + '<span class="input-group-addon"><a href="#" data-action="choose-link-from-sitemap" class="icon-link"><i class="fa fa-search"></i></a></span>'
                     + '</div></div>'
                     + '<div class="form-group">'
-                    + '<div class="checkbox"><label><input type="checkbox" id="redactor_link_blank"> ' + this.opts.curLang.link_new_tab + '</label></div>'
+                    + '<label class="control-label">Open Link</label>'
+                    + '<div class="radio"><label><input type="radio" id="redactor_link_default" name="redactor_open_link_behavior" value="default"> Default Behavior</label></div>'
+                    + '<div class="radio"><label><input type="radio" id="redactor_link_lightbox" name="redactor_open_link_behavior" value="lightbox"> In a Lightbox</label></div>'
+                    + '<div class="radio"><label><input type="radio" id="redactor_link_blank" name="redactor_open_link_behavior" value="blank"> ' + this.opts.curLang.link_new_tab + '</label></div>'
+                    + '</div>'
                     + '<div class="form-group">'
                     + '<label>' + this.opts.curLang.image_position + '</label>'
                     + '<select id="redactor_form_image_align" class="form-control">'

@@ -264,37 +264,32 @@ main {
   // page list table of contents custom class (used for careers sidebar)
   // and content block
   div.block-sidebar-wrapped {
-    padding: 10px;
+    padding: 25px;
     background-color: @sidebar-faint-background-color;
+    font-size: 0.85em;
 
     h3 {
       margin: 0px;
       font-size: @font-size-base;
       font-weight: normal;
-      a {
-        color: @footer-link-color !important;
-        &:hover {
-          color: @footer-link-hover-color !important;
-        }
+    }
+
+    a {
+      color: @footer-link-color !important;
+      &:hover {
+        text-decoration: none;
+        color: @footer-link-hover-color !important;
       }
     }
 
     ul {
       list-style-type: none;
-      font-size: 0.85em;
       padding: 0px;
       margin: 0px;
       color: @h5-type-color;
 
       li {
         margin-bottom: 12px;
-      }
-      a {
-        color: @footer-link-color !important;
-        &:hover {
-          text-decoration: none;
-          color: @footer-link-hover-color !important;
-        }
       }
 
       ul {
@@ -347,5 +342,16 @@ main {
     }
   }
 
+  //horizontal rule block in sidebar
+  div.col-sidebar {
+    hr {
+      margin: 0px;
+    }
+  }
+
+  // next/previous
+  div.ccm-block-next-previous-header {
+    font-size: @body-type-font-size;
+  }
 
 }
