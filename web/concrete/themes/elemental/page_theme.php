@@ -7,6 +7,7 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
         $this->providesAsset('css', 'bootstrap/*');
         $this->providesAsset('css', 'blocks/form');
         $this->providesAsset('css', 'blocks/social_links');
+        $this->providesAsset('css', 'blocks/share_this_page');
         $this->providesAsset('css', 'blocks/feature');
         $this->providesAsset('css', 'blocks/faq');
         $this->providesAsset('css', 'blocks/page_list');

@@ -24,5 +24,9 @@
             <notnull />
             <default value="0" />
         </field>
+        <field name="title" type="C" size="255">
+            <notnull />
+            <default value="" />
+        </field>
 	</table>
 </schema>

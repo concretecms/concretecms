@@ -264,7 +264,7 @@ main {
   // page list table of contents custom class (used for careers sidebar)
   // and content block
   div.block-sidebar-wrapped {
-    padding: 25px;
+    padding: 25px 40px 25px 40px;
     background-color: @sidebar-faint-background-color;
     font-size: 0.85em;
 
@@ -331,27 +331,51 @@ main {
   }
 
   // blocks in blog entry
-  ul.ccm-block-topic-page-topics {
+  div.block-sidebar-wrapped {
+    div.ccm-block-share-this-page {
+      margin: -15px -40px -25px -40px;
+      padding: 15px 40px 10px 40px;
+      border-top: 1px solid @content-section-divider-color;
+      font-size: @h3-type-font-size;
+
+      a {
+        color: @footer-social-icon-color !important;
+        &:hover {
+          color: @footer-link-color !important;
+        }
+      }
+    }
+  }
+  // next/previous
+  div.ccm-block-next-previous-header {
+    font-size: @body-type-font-size;
+  }
+
+  // Blog Entry Sidebar blocks
+  div.col-sidebar {
+    div.ccm-block-related-pages-wrapper {
+      margin: 25px 40px 25px 40px;
+    }
+    div.ccm-block-topic-list-wrapper {
+      margin: 25px 40px 25px 40px;
+    }
+  }
+
+  div.block-sidebar-wrapped {
+    div.ccm-block-topic-list-header {
+      font-size: @body-type-font-size;
+    }
+  }
+
+  ul.ccm-block-topic-list-page-topics {
     list-style-type: none;
     padding-left: 0px;
     padding-bottom: 0px;
 
     li {
-      margin-bottom: (@line-height-computed / 2); // matchces bootstrap paragraph height
+      margin-bottom: (@line-height-computed / 2); // matches bootstrap paragraph height
       padding-bottom: 0px;
     }
-  }
-
-  //horizontal rule block in sidebar
-  div.col-sidebar {
-    hr {
-      margin: 0px;
-    }
-  }
-
-  // next/previous
-  div.ccm-block-next-previous-header {
-    font-size: @body-type-font-size;
   }
 
 }

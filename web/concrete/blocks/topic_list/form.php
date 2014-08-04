@@ -40,6 +40,11 @@
         </div>
     </div>
 
+    <div class="form-group">
+        <label class="control-label" for="title"><?=t('Title')?></label>
+        <input class="form-control" name="title" id="title" value="<?=$title?>" />
+    </div>
+
 </fieldset>
 
 <script type="text/javascript">
