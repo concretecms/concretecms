@@ -1,7 +1,7 @@
 <?php
 
-if (version_compare(phpversion(), '5.3.2') < 0) {
-    die("concrete5 requires PHP 5.3.2+ to run.\n");
+if (version_compare(phpversion(), '5.3.3') < 0) {
+    die("concrete5 requires PHP 5.3.3+ to run.\n");
 }
 
 /**
