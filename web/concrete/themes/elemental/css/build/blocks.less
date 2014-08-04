@@ -263,6 +263,14 @@ main {
 
   // page list table of contents custom class (used for careers sidebar)
   // and content block
+  div.block-sidebar-padded {
+    padding: 25px 40px 25px 40px;
+
+    p {
+      font-size: 0.85em;
+    }
+  }
+
   div.block-sidebar-wrapped {
     padding: 25px 40px 25px 40px;
     background-color: @sidebar-faint-background-color;
@@ -280,6 +288,12 @@ main {
         text-decoration: none;
         color: @footer-link-hover-color !important;
       }
+    }
+
+    div.ccm-block-page-list-page-entry {
+      padding-bottom: 0px;
+      border-bottom: 0px;
+      margin-bottom: 0px;
     }
 
     ul {
@@ -355,16 +369,21 @@ main {
   div.col-sidebar {
     div.ccm-block-related-pages-wrapper {
       margin: 25px 40px 25px 40px;
+      font-size: .85em;
     }
     div.ccm-block-topic-list-wrapper {
       margin: 25px 40px 25px 40px;
+      font-size: .85em;
     }
-  }
 
-  div.block-sidebar-wrapped {
     div.ccm-block-topic-list-header {
       font-size: @body-type-font-size;
     }
+
+    div.ccm-block-related-pages-header {
+      font-size: @body-type-font-size;
+    }
+
   }
 
   ul.ccm-block-topic-list-page-topics {

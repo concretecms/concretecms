@@ -118,31 +118,7 @@
                                 <blocks>
                                     <block type="content" name="" mc-block-id="ifDQ2iqj">
                                         <style>
-                                            <backgroundColor/>
-                                            <backgroundRepeat>no-repeat</backgroundRepeat>
-                                            <borderWidth/>
-                                            <borderColor/>
-                                            <borderStyle>none</borderStyle>
-                                            <borderRadius/>
-                                            <baseFontSize/>
-                                            <alignment/>
-                                            <textColor/>
-                                            <linkColor/>
-                                            <paddingTop/>
-                                            <paddingBottom/>
-                                            <paddingLeft/>
-                                            <paddingRight/>
-                                            <marginTop/>
-                                            <marginBottom/>
-                                            <marginLeft/>
-                                            <marginRight/>
-                                            <rotate/>
-                                            <boxShadowHorizontal/>
-                                            <boxShadowVertical/>
-                                            <boxShadowBlur/>
-                                            <boxShadowSpread/>
-                                            <boxShadowColor/>
-                                            <customClass>ccm-block-sidebar-wrapped</customClass>
+                                            <customClass>block-sidebar-wrapped</customClass>
                                         </style>
                                         <data table="btContentLocal">
                                             <record>
@@ -152,31 +128,7 @@
                                     </block>
                                     <block type="page_list" name="" mc-block-id="59ioFW3w">
                                         <style>
-                                            <backgroundColor/>
-                                            <backgroundRepeat>no-repeat</backgroundRepeat>
-                                            <borderWidth/>
-                                            <borderColor/>
-                                            <borderStyle>none</borderStyle>
-                                            <borderRadius/>
-                                            <baseFontSize/>
-                                            <alignment/>
-                                            <textColor/>
-                                            <linkColor/>
-                                            <paddingTop/>
-                                            <paddingBottom/>
-                                            <paddingLeft/>
-                                            <paddingRight/>
-                                            <marginTop/>
-                                            <marginBottom/>
-                                            <marginLeft/>
-                                            <marginRight/>
-                                            <rotate/>
-                                            <boxShadowHorizontal/>
-                                            <boxShadowVertical/>
-                                            <boxShadowBlur/>
-                                            <boxShadowSpread/>
-                                            <boxShadowColor/>
-                                            <customClass>ccm-block-sidebar-wrapped</customClass>
+                                            <customClass>block-sidebar-wrapped</customClass>
                                         </style>
 
                                         <data table="btPageList">
@@ -339,29 +291,20 @@
                                                     </block>
                                                 </column>
                                                 <column span="3" offset="1">
-                                                    <block type="content" name="" mc-block-id="263v2L9Z">
-                                                        <style>
-                                                            <customClass>block-sidebar-wrapped</customClass>
-                                                        </style>
-                                                        <data table="btContentLocal">
-                                                            <record>
-                                                                <content><![CDATA[<h5>Topics</h5>]]></content>
-                                                            </record>
-                                                        </data>
-                                                    </block>
                                                     <block type="topic_list" name="" mc-block-id="D9wxkl0c">
                                                         <style>
                                                             <customClass>block-sidebar-wrapped</customClass>
-                                                            <marginBottom>40px</marginBottom>
                                                         </style>
                                                         <data>
+                                                            <mode>S</mode>
                                                             <tree>Topics</tree>
+                                                            <title>Topics</title>
                                                             <cParentID />
                                                         </data>
                                                     </block>
                                                     <block type="content" name="">
                                                         <style>
-                                                            <paddingBottom>40px</paddingBottom>
+                                                            <customClass>block-sidebar-padded</customClass>
                                                         </style>
                                                         <data table="btContentLocal">
                                                             <record>
@@ -398,7 +341,7 @@
                     </set>
                     <set name="Content">
                         <control custom-template="" custom-label="" type="collection_attribute" handle="thumbnail"/>
-                        <control custom-template="" custom-label="" output-control-id="p61yUi4X" type="block" handle="content"/>
+                        <control custom-template="" custom-label="" output-control-id="hvkABj7O" type="block" handle="content"/>
                     </set>
                 </formlayout>
                 <output>
@@ -406,7 +349,7 @@
                         <page name="" path="" filename="" pagetype="" template="right_sidebar" user="admin" description="" package="">
                             <area name="Main">
                                 <blocks>
-                                    <block type="page_title" name="" custom-template="byline.php" mc-block-id="2KmcLBW2">
+                                    <block type="page_title" name="" custom-template="byline.php" mc-block-id="2laTUivP">
                                         <data table="btPageTitle">
                                             <record>
                                                 <useCustomTitle><![CDATA[0]]></useCustomTitle>
@@ -414,41 +357,103 @@
                                             </record>
                                         </data>
                                     </block>
-                                    <block type="core_page_type_composer_control_output" name="" mc-block-id="rUJKjFGS">
-                                        <control output-control-id="p61yUi4X"/>
+                                    <block type="core_page_type_composer_control_output" name="" mc-block-id="uZu6zbQu">
+                                        <control output-control-id="hvkABj7O"/>
                                     </block>
                                 </blocks>
                             </area>
                             <area name="Sidebar">
-                                <style>
-                                    <paddingTop>40px</paddingTop>
-                                </style>
                                 <blocks>
-                                    <block type="content" name="" mc-block-id="UNxXXsKF">
-                                        <data table="btContentLocal">
+                                    <block type="next_previous" name="" mc-block-id="fvPXlBjJ">
+                                        <style>
+                                            <customClass>block-sidebar-wrapped</customClass>
+                                        </style>
+                                        <data table="btNextPrevious">
                                             <record>
-                                                <content><![CDATA[<h5>Topics</h5>]]></content>
+                                                <linkStyle><![CDATA[]]></linkStyle>
+                                                <nextLabel><![CDATA[Next Post]]></nextLabel>
+                                                <previousLabel><![CDATA[Last Post]]></previousLabel>
+                                                <parentLabel><![CDATA[]]></parentLabel>
+                                                <showArrows><![CDATA[0]]></showArrows>
+                                                <loopSequence><![CDATA[0]]></loopSequence>
+                                                <excludeSystemPages><![CDATA[1]]></excludeSystemPages>
+                                                <orderBy><![CDATA[chrono_desc]]></orderBy>
                                             </record>
                                         </data>
                                     </block>
-                                    <block type="topic_list" name="" mc-block-id="fbNw0oNa">
+                                    <block type="share_this_page" name="" mc-block-id="GBlMoZuS">
+                                        <style>
+                                            <customClass>block-sidebar-wrapped</customClass>
+                                        </style>
+                                        <data>
+                                            <service>facebook</service>
+                                            <service>twitter</service>
+                                            <service>linkedin</service>
+                                            <service>email</service>
+                                        </data>
+                                    </block>
+                                    <block type="topic_list" name="" mc-block-id="yB5uMzTR">
                                         <data>
                                             <mode>P</mode>
                                             <topicAttributeKeyHandle>topic</topicAttributeKeyHandle>
                                             <tree>Topics</tree>
+                                            <title>Topics</title>
                                             <cParentID>{ccm:export:page:/blog}</cParentID>
+                                        </data>
+                                    </block>
+                                    <block type="related_pages" name="" mc-block-id="Lv3mGCEr">
+                                        <data table="btRelatedPages">
+                                            <record>
+                                                <topicAttributeKeyHandle><![CDATA[topic]]></topicAttributeKeyHandle>
+                                                <maxResults><![CDATA[3]]></maxResults>
+                                                <cParentID>{ccm:export:page:/blog}</cParentID>
+                                                <ptID>{ccm:export:pagetype:blog_entry}</ptID>
+                                                <title><![CDATA[Related Posts]]></title>
+                                            </record>
                                         </data>
                                     </block>
                                 </blocks>
                             </area>
-                            <area name="Main Footer">
+                            <area name="Page Header">
                                 <blocks/>
+                            </area>
+                            <area name="Sidebar Footer">
+                                <blocks/>
+                            </area>
+                            <area name="Page Footer">
+                                <blocks>
+                                    <block type="horizontal_rule" name="" mc-block-id="mnhueHaB"/>
+                                    <block type="core_conversation" name="" mc-block-id="7hU1Dbqc">
+                                        <data table="btCoreConversation">
+                                            <record>
+                                                <enablePosting><![CDATA[1]]></enablePosting>
+                                                <paginate><![CDATA[1]]></paginate>
+                                                <itemsPerPage><![CDATA[50]]></itemsPerPage>
+                                                <displayMode><![CDATA[threaded]]></displayMode>
+                                                <orderBy><![CDATA[date_asc]]></orderBy>
+                                                <enableOrdering><![CDATA[0]]></enableOrdering>
+                                                <enableCommentRating><![CDATA[1]]></enableCommentRating>
+                                                <displayPostingForm><![CDATA[top]]></displayPostingForm>
+                                                <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
+                                                <dateFormat><![CDATA[default]]></dateFormat>
+                                                <customDateFormat><![CDATA[]]></customDateFormat>
+                                                <maxFilesGuest><![CDATA[0]]></maxFilesGuest>
+                                                <maxFilesRegistered><![CDATA[0]]></maxFilesRegistered>
+                                                <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
+                                                <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
+                                                <fileExtensions><![CDATA[]]></fileExtensions>
+                                                <insertNewMessages><![CDATA[top]]></insertNewMessages>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </blocks>
                             </area>
                         </page>
                     </pagetemplate>
                 </output>
             </composer>
         </pagetype>
+
     </pagetypes>
     <stacks>
         <stack name="Footer Contact" type="global_area">

@@ -103,6 +103,26 @@ class Controller extends BlockController
         return $e;
     }
 
+    public function export(\SimpleXMLElement $blockNode)
+    {
+        $data = $blockNode->addChild('data');
+        foreach($this->getSelectedServices() as $link) {
+            $data->addChild('service', $link->getHandle());
+        }
+    }
+
+    public function getImportData($blockNode)
+    {
+
+        $args = array();
+        foreach($blockNode->data->service as $service) {
+            $link = Service::getByHandle((string) $service);
+            $args['service'][] = $link->getHandle();
+        }
+        return $args;
+    }
+
+
     public function save($args)
     {
         $db = Database::get();

@@ -36,7 +36,7 @@ class Image
         if ($this->usePictureTag) {
 
             if (!isset($this->theme)) {
-                $c = Page::getCurrentPage();
+                $c = \Page::getCurrentPage();
                 $this->theme = $c->getCollectionThemeObject();
             }
             $sources = array();

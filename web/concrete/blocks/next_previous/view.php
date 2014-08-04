@@ -7,6 +7,8 @@ $previousLinkText = is_object($previousCollection) ? $previousCollection->getCol
 $nextLinkText = is_object($nextCollection) ? $nextCollection->getCollectionName() : '';
 ?>
 
+<? if ($previousLinkURL || $nextLinkURL || $parentLinkText): ?>
+
 <div class="ccm-block-next-previous-wrapper">
 
     <? if ($previousLabel && $previousLinkURL != ''): ?>
@@ -40,3 +42,5 @@ $nextLinkText = is_object($nextCollection) ? $nextCollection->getCollectionName(
 	<?php endif; ?>
 
 </div>
+
+<? endif; ?>

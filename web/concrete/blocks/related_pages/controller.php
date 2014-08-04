@@ -6,9 +6,6 @@ use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\Page\PageList;
 use Concrete\Core\Page\Type\Type;
-use Concrete\Core\Tree\Tree;
-use Concrete\Core\Tree\Type\Topic as TopicTree;
-use Concrete\Core\Tree\Type\Topic;
 use Core;
 use Loader;
 
@@ -22,6 +19,8 @@ class Controller extends BlockController
     protected $btCacheBlockOutputOnPost = true;
     protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btInterfaceHeight = 300;
+    protected $btExportPageColumns = array('cParentID');
+    protected $btExportPageTypeColumns = array('ptID');
     protected $btTable = 'btRelatedPages';
 
     public function getBlockTypeDescription()
@@ -61,7 +60,7 @@ class Controller extends BlockController
         $c = \Page::getCurrentPage();
         if (is_object($ak)) {
             $topics = $c->getAttribute($ak->getAttributeKeyHandle());
-            if (count($topics)) {
+            if (count($topics) > 0 && is_array($topics)) {
                 $pl = new PageList();
                 $pl->setItemsPerPage($this->maxResults);
                 if ($this->ptID) {
