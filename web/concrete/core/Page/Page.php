@@ -303,7 +303,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $db->execute('UPDATE CollectionVersionBlocks SET arHandle = ?  WHERE cID = ? and cvID = ? and bID = ?',
                      array($area_handle, $this->getCollectionID(), $this->getVersionID(), $moved_block_id));
 
-
         $update_query = "UPDATE CollectionVersionBlocks SET cbDisplayOrder = CASE bID";
         $when_statements = array();
         $update_values = array();
