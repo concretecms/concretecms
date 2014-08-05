@@ -57,6 +57,13 @@ class ContentFileTranslateTest extends FileStorageTestCase {
 
         $this->assertEquals('background-slider-blue-sky.png', $r->getFilename());
         $this->assertEquals($to, $translated);
+
+        $c->content = $from;
+        $sx = new SimpleXMLElement('<test />');
+        $c->export($sx);
+
+        $content = (string) $sx->data->record->content;
+        $this->assertEquals('<p>This is really nice.</p><concrete-picture alt="Happy Cat" file="background-slider-blue-sky.png" />', $content);
     }
 
 }

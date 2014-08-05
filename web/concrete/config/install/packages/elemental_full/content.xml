@@ -341,15 +341,15 @@
                     </set>
                     <set name="Content">
                         <control custom-template="" custom-label="" type="collection_attribute" handle="thumbnail"/>
-                        <control custom-template="" custom-label="" output-control-id="hvkABj7O" type="block" handle="content"/>
+                        <control custom-template="" custom-label="" output-control-id="6y4mB58T" type="block" handle="content"/>
                     </set>
                 </formlayout>
                 <output>
                     <pagetemplate handle="right_sidebar">
-                        <page name="" path="" filename="" pagetype="" template="right_sidebar" user="admin" description="" package="">
+                        <page name="" path="" filename="" pagetype="blog_entry" template="right_sidebar" user="admin" description="" package="">
                             <area name="Main">
                                 <blocks>
-                                    <block type="page_title" name="" custom-template="byline.php" mc-block-id="2laTUivP">
+                                    <block type="page_title" name="" custom-template="byline.php" mc-block-id="3zXqs3ea">
                                         <data table="btPageTitle">
                                             <record>
                                                 <useCustomTitle><![CDATA[0]]></useCustomTitle>
@@ -357,32 +357,78 @@
                                             </record>
                                         </data>
                                     </block>
-                                    <block type="core_page_type_composer_control_output" name="" mc-block-id="uZu6zbQu">
-                                        <control output-control-id="hvkABj7O"/>
+                                    <block type="core_page_type_composer_control_output" name="" mc-block-id="YVfXXxWY">
+                                        <control output-control-id="6y4mB58T"/>
                                     </block>
                                 </blocks>
                             </area>
                             <area name="Sidebar">
                                 <blocks>
-                                    <block type="next_previous" name="" mc-block-id="fvPXlBjJ">
+                                    <block type="next_previous" name="" mc-block-id="71azOVYD">
                                         <style>
+                                            <backgroundColor/>
+                                            <backgroundRepeat/>
+                                            <borderWidth/>
+                                            <borderColor/>
+                                            <borderStyle/>
+                                            <borderRadius/>
+                                            <baseFontSize/>
+                                            <alignment/>
+                                            <textColor/>
+                                            <linkColor/>
+                                            <paddingTop/>
+                                            <paddingBottom/>
+                                            <paddingLeft/>
+                                            <paddingRight/>
+                                            <marginTop/>
+                                            <marginBottom/>
+                                            <marginLeft/>
+                                            <marginRight/>
+                                            <rotate/>
+                                            <boxShadowHorizontal/>
+                                            <boxShadowVertical/>
+                                            <boxShadowBlur/>
+                                            <boxShadowSpread/>
+                                            <boxShadowColor/>
                                             <customClass>block-sidebar-wrapped</customClass>
                                         </style>
                                         <data table="btNextPrevious">
                                             <record>
-                                                <linkStyle><![CDATA[]]></linkStyle>
                                                 <nextLabel><![CDATA[Next Post]]></nextLabel>
                                                 <previousLabel><![CDATA[Last Post]]></previousLabel>
                                                 <parentLabel><![CDATA[]]></parentLabel>
-                                                <showArrows><![CDATA[0]]></showArrows>
                                                 <loopSequence><![CDATA[0]]></loopSequence>
                                                 <excludeSystemPages><![CDATA[1]]></excludeSystemPages>
                                                 <orderBy><![CDATA[chrono_desc]]></orderBy>
                                             </record>
                                         </data>
                                     </block>
-                                    <block type="share_this_page" name="" mc-block-id="GBlMoZuS">
+                                    <block type="share_this_page" name="" mc-block-id="PXLhJkwz">
                                         <style>
+                                            <backgroundColor/>
+                                            <backgroundRepeat/>
+                                            <borderWidth/>
+                                            <borderColor/>
+                                            <borderStyle/>
+                                            <borderRadius/>
+                                            <baseFontSize/>
+                                            <alignment/>
+                                            <textColor/>
+                                            <linkColor/>
+                                            <paddingTop/>
+                                            <paddingBottom/>
+                                            <paddingLeft/>
+                                            <paddingRight/>
+                                            <marginTop/>
+                                            <marginBottom/>
+                                            <marginLeft/>
+                                            <marginRight/>
+                                            <rotate/>
+                                            <boxShadowHorizontal/>
+                                            <boxShadowVertical/>
+                                            <boxShadowBlur/>
+                                            <boxShadowSpread/>
+                                            <boxShadowColor/>
                                             <customClass>block-sidebar-wrapped</customClass>
                                         </style>
                                         <data>
@@ -392,38 +438,32 @@
                                             <service>email</service>
                                         </data>
                                     </block>
-                                    <block type="topic_list" name="" mc-block-id="yB5uMzTR">
+                                    <block type="topic_list" name="" mc-block-id="gZQmjnx8">
                                         <data>
                                             <mode>P</mode>
+                                            <title>Topics</title>
                                             <topicAttributeKeyHandle>topic</topicAttributeKeyHandle>
                                             <tree>Topics</tree>
-                                            <title>Topics</title>
                                             <cParentID>{ccm:export:page:/blog}</cParentID>
                                         </data>
                                     </block>
-                                    <block type="related_pages" name="" mc-block-id="Lv3mGCEr">
+                                    <block type="related_pages" name="" mc-block-id="KffPWR4h">
                                         <data table="btRelatedPages">
                                             <record>
                                                 <topicAttributeKeyHandle><![CDATA[topic]]></topicAttributeKeyHandle>
+                                                <title><![CDATA[Related Posts]]></title>
                                                 <maxResults><![CDATA[3]]></maxResults>
                                                 <cParentID>{ccm:export:page:/blog}</cParentID>
                                                 <ptID>{ccm:export:pagetype:blog_entry}</ptID>
-                                                <title><![CDATA[Related Posts]]></title>
                                             </record>
                                         </data>
                                     </block>
                                 </blocks>
                             </area>
-                            <area name="Page Header">
-                                <blocks/>
-                            </area>
-                            <area name="Sidebar Footer">
-                                <blocks/>
-                            </area>
                             <area name="Page Footer">
                                 <blocks>
-                                    <block type="horizontal_rule" name="" mc-block-id="mnhueHaB"/>
-                                    <block type="core_conversation" name="" mc-block-id="7hU1Dbqc">
+                                    <block type="horizontal_rule" name="" mc-block-id="jEWzzXJW"/>
+                                    <block type="core_conversation" name="" mc-block-id="z8E17SQA">
                                         <data table="btCoreConversation">
                                             <record>
                                                 <enablePosting><![CDATA[1]]></enablePosting>
@@ -453,7 +493,6 @@
                 </output>
             </composer>
         </pagetype>
-
     </pagetypes>
     <stacks>
         <stack name="Footer Contact" type="global_area">
@@ -591,8 +630,7 @@
                                 <fID>{ccm:export:file:slider1.png}</fID>
                                 <linkURL><![CDATA[]]></linkURL>
                                 <title><![CDATA[Stand Out on the Web]]></title>
-                                <description>
-                                    <![CDATA[<p>Share your business with an impressive, yet minimal presentation. Let your customers understand your web presence through elegance and clarity.</p>]]></description>
+                                <description><![CDATA[                                    <p>Share your business with an impressive, yet minimal presentation. Let your customers understand your web presence through elegance and clarity.</p>]]></description>
                                 <sortOrder><![CDATA[0]]></sortOrder>
                             </record>
                             <record>
@@ -601,8 +639,7 @@
                                 <fID>{ccm:export:file:slider2.png}</fID>
                                 <linkURL><![CDATA[]]></linkURL>
                                 <title><![CDATA[A Simple Image Slider]]></title>
-                                <description>
-                                    <![CDATA[<p>This image slider can have any content that you want in it.</p>]]></description>
+                                <description><![CDATA[                                    <p>This image slider can have any content that you want in it.</p>]]></description>
                                 <sortOrder><![CDATA[1]]></sortOrder>
                             </record>
                         </data>
@@ -613,14 +650,37 @@
                                 <column span="4" offset="0">
                                     <block type="feature" name="">
                                         <style>
+                                            <backgroundColor/>
+                                            <backgroundRepeat/>
+                                            <borderWidth/>
+                                            <borderColor/>
+                                            <borderStyle/>
+                                            <borderRadius/>
+                                            <baseFontSize/>
+                                            <alignment/>
+                                            <textColor/>
+                                            <linkColor/>
+                                            <paddingTop/>
+                                            <paddingBottom/>
+                                            <paddingLeft/>
+                                            <paddingRight/>
+                                            <marginTop/>
+                                            <marginBottom/>
+                                            <marginLeft/>
+                                            <marginRight/>
+                                            <rotate/>
+                                            <boxShadowHorizontal/>
+                                            <boxShadowVertical/>
+                                            <boxShadowBlur/>
+                                            <boxShadowSpread/>
+                                            <boxShadowColor/>
                                             <customClass>feature-home-page</customClass>
                                         </style>
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[pencil]]></icon>
                                                 <title><![CDATA[Easy to Edit]]></title>
-                                                <paragraph>
-                                                    <![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. ]]></paragraph>
+                                                <paragraph><![CDATA[                                                    Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. ]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -628,14 +688,37 @@
                                 <column span="4" offset="0">
                                     <block type="feature" name="">
                                         <style>
+                                            <backgroundColor/>
+                                            <backgroundRepeat/>
+                                            <borderWidth/>
+                                            <borderColor/>
+                                            <borderStyle/>
+                                            <borderRadius/>
+                                            <baseFontSize/>
+                                            <alignment/>
+                                            <textColor/>
+                                            <linkColor/>
+                                            <paddingTop/>
+                                            <paddingBottom/>
+                                            <paddingLeft/>
+                                            <paddingRight/>
+                                            <marginTop/>
+                                            <marginBottom/>
+                                            <marginLeft/>
+                                            <marginRight/>
+                                            <rotate/>
+                                            <boxShadowHorizontal/>
+                                            <boxShadowVertical/>
+                                            <boxShadowBlur/>
+                                            <boxShadowSpread/>
+                                            <boxShadowColor/>
                                             <customClass>feature-home-page</customClass>
                                         </style>
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[eye]]></icon>
                                                 <title><![CDATA[Pixel Perfect]]></title>
-                                                <paragraph>
-                                                    <![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. ]]></paragraph>
+                                                <paragraph><![CDATA[                                                    Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. ]]></paragraph>
                                             </record>
                                         </data>
                                     </block>
@@ -643,14 +726,144 @@
                                 <column span="4" offset="0">
                                     <block type="feature" name="">
                                         <style>
+                                            <backgroundColor/>
+                                            <backgroundRepeat/>
+                                            <borderWidth/>
+                                            <borderColor/>
+                                            <borderStyle/>
+                                            <borderRadius/>
+                                            <baseFontSize/>
+                                            <alignment/>
+                                            <textColor/>
+                                            <linkColor/>
+                                            <paddingTop/>
+                                            <paddingBottom/>
+                                            <paddingLeft/>
+                                            <paddingRight/>
+                                            <marginTop/>
+                                            <marginBottom/>
+                                            <marginLeft/>
+                                            <marginRight/>
+                                            <rotate/>
+                                            <boxShadowHorizontal/>
+                                            <boxShadowVertical/>
+                                            <boxShadowBlur/>
+                                            <boxShadowSpread/>
+                                            <boxShadowColor/>
                                             <customClass>feature-home-page</customClass>
                                         </style>
                                         <data table="btFeature">
                                             <record>
                                                 <icon><![CDATA[youtube-play]]></icon>
                                                 <title><![CDATA[Media Rich]]></title>
-                                                <paragraph>
-                                                    <![CDATA[Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. ]]></paragraph>
+                                                <paragraph><![CDATA[                                                    Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. ]]></paragraph>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[                                     <p style="text-align: center"><span class="title-caps-bold">Presenting your Business has never been so easy</span></p><p style="text-align: center;">Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. </p>]]></content>
+                            </record>
+                        </data>
+                    </block>
+                    <block type="horizontal_rule" name=""/>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="6" offset="0">
+                                    <block type="content" name="">
+                                        <data table="btContentLocal">
+                                            <record>
+                                                <content><![CDATA[<h5>Latest Blog Post</h5>]]></content>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="6" offset="0">
+                                    <block type="content" name="">
+                                        <data table="btContentLocal">
+                                            <record>
+                                                <content><![CDATA[<h5>Now Open For Business</h5>]]></content>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="2" offset="0">
+                                    <block type="page_list" name="">
+                                        <data table="btPageList">
+                                            <record>
+                                                <num><![CDATA[1]]></num>
+                                                <orderBy><![CDATA[chrono_desc]]></orderBy>
+                                                <cParentID/>
+                                                <cThis><![CDATA[0]]></cThis>
+                                                <useButtonForLink><![CDATA[0]]></useButtonForLink>
+                                                <buttonLinkText><![CDATA[]]></buttonLinkText>
+                                                <includeName><![CDATA[0]]></includeName>
+                                                <includeDescription><![CDATA[0]]></includeDescription>
+                                                <includeDate><![CDATA[0]]></includeDate>
+                                                <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
+                                                <paginate><![CDATA[0]]></paginate>
+                                                <displayAliases><![CDATA[0]]></displayAliases>
+                                                <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
+                                                <ptID>{ccm:export:pagetype:blog_entry}</ptID>
+                                                <rss><![CDATA[0]]></rss>
+                                                <rssTitle><![CDATA[]]></rssTitle>
+                                                <rssDescription><![CDATA[]]></rssDescription>
+                                                <truncateSummaries><![CDATA[0]]></truncateSummaries>
+                                                <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
+                                                <noResultsMessage><![CDATA[]]></noResultsMessage>
+                                                <displayThumbnail><![CDATA[1]]></displayThumbnail>
+                                                <truncateChars><![CDATA[0]]></truncateChars>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="3" offset="0">
+                                    <block type="page_list" name="">
+                                        <data table="btPageList">
+                                            <record>
+                                                <num><![CDATA[1]]></num>
+                                                <orderBy><![CDATA[display_asc]]></orderBy>
+                                                <cParentID/>
+                                                <cThis><![CDATA[0]]></cThis>
+                                                <useButtonForLink><![CDATA[0]]></useButtonForLink>
+                                                <buttonLinkText><![CDATA[]]></buttonLinkText>
+                                                <includeName><![CDATA[1]]></includeName>
+                                                <includeDescription><![CDATA[1]]></includeDescription>
+                                                <includeDate><![CDATA[0]]></includeDate>
+                                                <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
+                                                <paginate><![CDATA[0]]></paginate>
+                                                <displayAliases><![CDATA[0]]></displayAliases>
+                                                <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
+                                                <ptID>{ccm:export:pagetype:blog_entry}</ptID>
+                                                <rss><![CDATA[0]]></rss>
+                                                <rssTitle><![CDATA[]]></rssTitle>
+                                                <rssDescription><![CDATA[]]></rssDescription>
+                                                <truncateSummaries><![CDATA[0]]></truncateSummaries>
+                                                <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
+                                                <noResultsMessage><![CDATA[]]></noResultsMessage>
+                                                <displayThumbnail><![CDATA[0]]></displayThumbnail>
+                                                <truncateChars><![CDATA[0]]></truncateChars>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="6" offset="1">
+                                    <block type="content" name="">
+                                        <data table="btContentLocal">
+                                            <record>
+                                                <content><![CDATA[<p>  <span class="title-thin">We specialize is making your concepts a reality.</span>  </p>  <p>    Sed cursus facilisis dignissim. Aliquam rhoncus enim et pellentesque varius. Nulla sodales nibh lorem, sit amet imperdiet arcu commodo sit amet. Mauris sed scelerisque nisl. Ut auctor ipsum tellus, vel viverra massa elementum sit amet.  </p>  <p>    Sed adipiscing tempus sem eu molestie. Aenean laoreet pretium ante vitae ultrices. Aenean eu gravida magna, vel aliquet magna. In auctor convallis gravida.<br>  </p>  <br/>  <p>  <a href="{ccm:export:page:/about/contact-us}"><span class="btn btn-success">Contact Us Today</span></a>  </p>]]></content>
                                             </record>
                                         </data>
                                     </block>
@@ -661,42 +874,7 @@
                 </blocks>
             </area>
             <area name="Main Footer">
-                <style>
-                    <backgroundColor>rgb(246, 248, 239)</backgroundColor>
-                    <backgrounDRepeat>no-repeat</backgrounDRepeat>
-                    <borderWidth/>
-                    <borderColor/>
-                    <borderStyle>none</borderStyle>
-                    <borderRadius/>
-                    <baseFontSize/>
-                    <alignment/>
-                    <textColor/>
-                    <linkColor/>
-                    <paddingTop/>
-                    <paddingBottom/>
-                    <paddingLeft/>
-                    <paddingRight/>
-                    <marginTop/>
-                    <marginBottom/>
-                    <marginLeft/>
-                    <marginRight/>
-                    <rotate/>
-                    <boxShadowHorizontal/>
-                    <boxShadowVertical/>
-                    <boxShadowBlur/>
-                    <boxShadowSpread/>
-                    <boxShadowColor/>
-                </style>
-                <blocks>
-                    <block type="content" name="">
-                        <data table="btContentLocal">
-                            <record>
-                                <content>
-                                    <![CDATA[<p style="text-align: center"><span class="title-caps-bold">Presenting your Business has never been so easy</span></p><p style="text-align: center;">Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. </p>]]></content>
-                            </record>
-                        </data>
-                    </block>
-                </blocks>
+                <blocks/>
             </area>
         </page>
         <page name="Search" path="/search" filename="" pagetype="page" template="full" user="admin" description=""
@@ -1397,6 +1575,225 @@
                 </blocks>
             </area>
             <area name="Main Footer">
+                <blocks/>
+            </area>
+        </page>
+        <page name="Hello World!" public-date="2014-08-04 12:00:00" path="/blog/hello-world" filename="" pagetype="blog_entry" template="right_sidebar" user="admin" description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum." package="">
+            <attributes>
+                <attributekey handle="meta_title">
+                    <value><![CDATA[]]></value>
+                </attributekey>
+                <attributekey handle="meta_description">
+                    <value><![CDATA[]]></value>
+                </attributekey>
+                <attributekey handle="meta_keywords">
+                    <value><![CDATA[]]></value>
+                </attributekey>
+                <attributekey handle="header_extra_content">
+                    <value><![CDATA[]]></value>
+                </attributekey>
+                <attributekey handle="exclude_sitemapxml">
+                    <value><![CDATA[0]]></value>
+                </attributekey>
+                <attributekey handle="thumbnail">
+                    <value>
+                        <fID>{ccm:export:file:balloon.jpg}</fID>
+                    </value>
+                </attributekey>
+                <attributekey handle="topic">
+                    <topics>
+                        <topic>/Projects</topic>
+                    </topics>
+                </attributekey>
+            </attributes>
+            <area name="Page Footer">
+                <blocks>
+                    <block mc-block-id="jEWzzXJW"/>
+                    <block type="core_conversation" name="">
+                        <data table="btCoreConversation">
+                            <record>
+                                <enablePosting><![CDATA[1]]></enablePosting>
+                                <paginate><![CDATA[1]]></paginate>
+                                <itemsPerPage><![CDATA[50]]></itemsPerPage>
+                                <displayMode><![CDATA[threaded]]></displayMode>
+                                <orderBy><![CDATA[date_asc]]></orderBy>
+                                <enableOrdering><![CDATA[0]]></enableOrdering>
+                                <enableCommentRating><![CDATA[1]]></enableCommentRating>
+                                <displayPostingForm><![CDATA[top]]></displayPostingForm>
+                                <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
+                                <dateFormat><![CDATA[default]]></dateFormat>
+                                <customDateFormat><![CDATA[]]></customDateFormat>
+                                <maxFilesGuest><![CDATA[0]]></maxFilesGuest>
+                                <maxFilesRegistered><![CDATA[0]]></maxFilesRegistered>
+                                <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
+                                <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
+                                <fileExtensions><![CDATA[]]></fileExtensions>
+                                <insertNewMessages><![CDATA[top]]></insertNewMessages>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Main">
+                <blocks>
+                    <block mc-block-id="3zXqs3ea"/>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<blockquote>Fusce volutpat sodales mauris quis dapibus. Maecenas convallis, libero eu ultrices interdum, leo mauris commodo diam, sed cursus sapien ligula nec leo.</blockquote><p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p><p><a href="{ccm:export:file:balloon.jpg}" data-concrete5-link-launch="lightbox-image"><concrete-picture alt="" style="width: 363px; display: block; margin: auto;" file="balloon.jpg" /></a></p><h2>Heading 2</h2><p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p><h3>Heading 3</h3><p>Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum. Vestibulum elementum pellentesque tortor ac congue. Mauris vel nibh id metus tincidunt eleifend. In interdum gravida ligula, at venenatis odio fermentum at. Donec dapibus enim lectus, quis venenatis tellus volutpat in. Nullam in velit tortor.</p><h3>Heading 3</h3><p>Donec blandit lectus nec neque ullamcorper rhoncus. Sed adipiscing tempus sem eu molestie. Aenean laoreet pretium ante vitae ultrices. Aenean eu gravida magna, vel aliquet magna. In auctor convallis gravida. Phasellus est erat, adipiscing nec lobortis quis, eleifend at sem. Curabitur fringilla viverra dolor, in rutrum ipsum rutrum sit amet. Vestibulum feugiat porttitor ipsum vel condimentum. Suspendisse at tempus libero. Sed eu tempor enim. Etiam convallis eleifend rutrum. Donec porta diam quis tellus feugiat dignissim. Cras posuere, massa eget laoreet laoreet, urna libero lobortis dolor, sed consequat elit urna eget massa. Donec aliquet pellentesque consectetur.</p>]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Page Header">
+                <blocks/>
+            </area>
+            <area name="Sidebar">
+                <blocks>
+                    <block mc-block-id="71azOVYD"/>
+                    <block mc-block-id="PXLhJkwz"/>
+                    <block mc-block-id="gZQmjnx8"/>
+                    <block mc-block-id="KffPWR4h"/>
+                </blocks>
+            </area>
+            <area name="Sidebar Footer">
+                <blocks/>
+            </area>
+        </page>
+        <page name="Another Blog Post" public-date="2014-08-04 15:00:00" path="/blog/another-blog-post" filename="" pagetype="blog_entry" template="right_sidebar" user="admin" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna." package="">
+            <attributes>
+                <attributekey handle="thumbnail">
+                    <value>
+                        <fID>{ccm:export:file:chinese_house2.jpg}</fID>
+                    </value>
+                </attributekey>
+                <attributekey handle="topic">
+                    <topics>
+                        <topic>/Humor</topic>
+                    </topics>
+                </attributekey>
+            </attributes>
+            <area name="Page Footer">
+                <blocks>
+                    <block mc-block-id="jEWzzXJW"/>
+                    <block type="core_conversation" name="">
+                        <data table="btCoreConversation">
+                            <record>
+                                <enablePosting><![CDATA[1]]></enablePosting>
+                                <paginate><![CDATA[1]]></paginate>
+                                <itemsPerPage><![CDATA[50]]></itemsPerPage>
+                                <displayMode><![CDATA[threaded]]></displayMode>
+                                <orderBy><![CDATA[date_asc]]></orderBy>
+                                <enableOrdering><![CDATA[0]]></enableOrdering>
+                                <enableCommentRating><![CDATA[1]]></enableCommentRating>
+                                <displayPostingForm><![CDATA[top]]></displayPostingForm>
+                                <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
+                                <dateFormat><![CDATA[default]]></dateFormat>
+                                <customDateFormat><![CDATA[]]></customDateFormat>
+                                <maxFilesGuest><![CDATA[0]]></maxFilesGuest>
+                                <maxFilesRegistered><![CDATA[0]]></maxFilesRegistered>
+                                <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
+                                <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
+                                <fileExtensions><![CDATA[]]></fileExtensions>
+                                <insertNewMessages><![CDATA[top]]></insertNewMessages>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Main">
+                <blocks>
+                    <block mc-block-id="3zXqs3ea"/>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p><p><span class="title-thin">CMS To the Rescue!</span></p><p>Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p><p><a href="http://www.concrete5.org">Learn more at concrete5.org </a><br></p>]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Page Header">
+                <blocks/>
+            </area>
+            <area name="Sidebar">
+                <blocks>
+                    <block mc-block-id="71azOVYD"/>
+                    <block mc-block-id="PXLhJkwz"/>
+                    <block mc-block-id="gZQmjnx8"/>
+                    <block mc-block-id="KffPWR4h"/>
+                </blocks>
+            </area>
+            <area name="Sidebar Footer">
+                <blocks/>
+            </area>
+        </page>
+        <page name="A Beautiful Site Deserves a Beautiful Blog" public-date="2014-08-04 16:30" path="/blog/a-beautiful-blog" filename="" pagetype="blog_entry" template="right_sidebar" user="admin" description="Donec blandit lectus nec neque ullamcorper rhoncus. Sed adipiscing tempus sem eu molestie. Aenean laoreet pretium ante vitae ultrices. Aenean eu gravida magna, vel aliquet magna. In auctor convallis gravida. Phasellus est erat." package="">
+            <attributes>
+                <attributekey handle="thumbnail">
+                    <value>
+                        <fID>{ccm:export:file:plants.jpg}</fID>
+                    </value>
+                </attributekey>
+                <attributekey handle="topic">
+                    <topics>
+                        <topic>/Projects</topic>
+                    </topics>
+                </attributekey>
+            </attributes>
+            <area name="Page Footer">
+                <blocks>
+                    <block mc-block-id="jEWzzXJW"/>
+                    <block type="core_conversation" name="">
+                        <data table="btCoreConversation">
+                            <record>
+                                <enablePosting><![CDATA[1]]></enablePosting>
+                                <paginate><![CDATA[1]]></paginate>
+                                <itemsPerPage><![CDATA[50]]></itemsPerPage>
+                                <displayMode><![CDATA[threaded]]></displayMode>
+                                <orderBy><![CDATA[date_asc]]></orderBy>
+                                <enableOrdering><![CDATA[0]]></enableOrdering>
+                                <enableCommentRating><![CDATA[1]]></enableCommentRating>
+                                <displayPostingForm><![CDATA[top]]></displayPostingForm>
+                                <addMessageLabel><![CDATA[Add Message]]></addMessageLabel>
+                                <dateFormat><![CDATA[default]]></dateFormat>
+                                <customDateFormat><![CDATA[]]></customDateFormat>
+                                <maxFilesGuest><![CDATA[0]]></maxFilesGuest>
+                                <maxFilesRegistered><![CDATA[0]]></maxFilesRegistered>
+                                <maxFileSizeGuest><![CDATA[0]]></maxFileSizeGuest>
+                                <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
+                                <fileExtensions><![CDATA[]]></fileExtensions>
+                                <insertNewMessages><![CDATA[top]]></insertNewMessages>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Main">
+                <blocks>
+                    <block mc-block-id="3zXqs3ea"/>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p><p><span class="title-caps-bold">Heading 3</span></p><p>Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum. Vestibulum elementum pellentesque tortor ac congue. Mauris vel nibh id metus tincidunt eleifend. In interdum gravida ligula, at venenatis odio fermentum at. Donec dapibus enim lectus, quis venenatis tellus volutpat in. Nullam in velit tortor.</p><p><a href="{ccm:export:file:plants.jpg}" data-concrete5-link-launch="lightbox-image"><concrete-picture alt="" style="width: 579px; display: block; margin: auto;" file="plants.jpg" /></a></p><p><span class="image-caption">Look at my beautiful image. Don't you to look more?</span></p><p>Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum. Vestibulum elementum pellentesque tortor ac congue. Mauris vel nibh id metus tincidunt eleifend. In interdum gravida ligula, at venenatis odio fermentum at. Donec dapibus enim lectus, quis venenatis tellus volutpat in. Nullam in velit tortor.</p>]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Page Header">
+                <blocks/>
+            </area>
+            <area name="Sidebar">
+                <blocks>
+                    <block mc-block-id="71azOVYD"/>
+                    <block mc-block-id="PXLhJkwz"/>
+                    <block mc-block-id="gZQmjnx8"/>
+                    <block mc-block-id="KffPWR4h"/>
+                </blocks>
+            </area>
+            <area name="Sidebar Footer">
                 <blocks/>
             </area>
         </page>

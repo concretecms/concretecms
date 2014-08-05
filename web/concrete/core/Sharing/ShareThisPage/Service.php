@@ -31,7 +31,9 @@ class Service extends SocialNetworkService
                 case 'reddit':
                     return "https://www.reddit.com/submit?url={$url}";
                 case 'email':
-                    return "#";
+                    $body = urlencode(t("Check out this article on %s:\n\n%s\n%s", SITE, $title, urldecode($url)));
+                    $subject = urlencode(t('Thought you\'d enjoy this article.'));
+                    return "mailto:?body={$body}&subject={$subject}";
             }
         }
     }

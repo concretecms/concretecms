@@ -10,7 +10,6 @@ $nextLinkText = is_object($nextCollection) ? $nextCollection->getCollectionName(
 <? if ($previousLinkURL || $nextLinkURL || $parentLinkText): ?>
 
 <div class="ccm-block-next-previous-wrapper">
-
     <? if ($previousLabel && $previousLinkURL != ''): ?>
     <div class="ccm-block-next-previous-header">
         <h5><?=$previousLabel?></h5>
