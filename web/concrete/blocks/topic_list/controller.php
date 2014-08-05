@@ -1,5 +1,4 @@
-<?php
-
+<?php 
 namespace Concrete\Block\TopicList;
 defined('C5_EXECUTE') or die("Access Denied.");
 use Concrete\Core\Attribute\Key\CollectionKey;
@@ -48,7 +47,7 @@ class Controller extends BlockController
         }
         $trees = $tt->getList();
         $keys = CollectionKey::getList();
-        foreach($keys as $ak) {
+        foreach ($keys as $ak) {
             if ($ak->getAttributeTypeHandle() == 'topics') {
                 $attributeKeys[] = $ak;
             }
@@ -73,7 +72,8 @@ class Controller extends BlockController
         }
     }
 
-    public function action_topic($topic = false) {
+    public function action_topic($topic = false)
+    {
         $this->set('selectedTopicID', intval($topic));
         $this->view();
     }
@@ -89,7 +89,8 @@ class Controller extends BlockController
         return \URL::page($c, 'topic', $topic->getTreeNodeID());
     }
 
-    public static function replaceTreeWithPlaceHolder($treeID) {
+    public static function replaceTreeWithPlaceHolder($treeID)
+    {
         if ($treeID > 0) {
             $tree = Tree::getByID($treeID);
             if (is_object($tree)) {
@@ -98,7 +99,8 @@ class Controller extends BlockController
         }
     }
 
-    public function export(\SimpleXMLElement $blockNode) {
+    public function export(\SimpleXMLElement $blockNode)
+    {
         $tree = Tree::getByID($this->topicTreeID);
         $data = $blockNode->addChild('data');
         $data->addChild('mode', $this->mode);
@@ -114,7 +116,8 @@ class Controller extends BlockController
         $data->addChild('cParentID', $path);
     }
 
-    public function getImportData($blockNode, $page) {
+    public function getImportData($blockNode, $page)
+    {
         $args = array();
         $treeName = (string) $blockNode->data->tree;
         $page = (string) $blockNode->data->cParentID;
@@ -133,6 +136,7 @@ class Controller extends BlockController
                 $args['cParentID'] = $c->getCollectionID();
             }
         }
+
         return $args;
     }
 
