@@ -3,7 +3,7 @@ namespace Concrete\Core\Permission\Key;
 use Loader;
 class PageTypeKey extends Key {
 	
-	public function copyFromDefaultsToPageType(PermissionKey $pk) {
+	public function copyFromDefaultsToPageType(\Concrete\Core\Permission\Key\Key $pk) {
 		$db = Loader::db();
 		$paID = $pk->getPermissionAccessID();
 		if ($paID) { 
