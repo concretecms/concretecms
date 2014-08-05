@@ -21,10 +21,8 @@ $cmp = new Permissions($pagetype);
 			if (is_object($page)) { // we are loading content in
 				$con->setPageObject($page);
 			}
-			if ($cmp->canComposePageType($con)) { ?>
-				<? $con->render(); ?>
-			<? } ?>
-			
+            ?>
+			<? $con->render(); ?>
 		<? } ?>
 
 	</fieldset>

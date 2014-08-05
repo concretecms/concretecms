@@ -372,7 +372,6 @@
         my.id = my.getId();
         my.setTotalBlocks(0); // we also need to update the DOM which this does.
         my.addDragArea();
-
     };
 
     /**
@@ -1717,6 +1716,14 @@
                 peper = $('a[data-layout-command="move-block"]').parent();
             $.pep.unbind(peper);
             peper.pep(my.getPepSettings());
+        },
+
+        addToDragArea: function layoutAddToDragArea() {
+            Concrete.Block.prototype.addToDragArea.apply(this, _.toArray(arguments));
+            var container = $('#ccm-inline-toolbar-container');
+            container.css({
+                top: this.getElem().offset().top - container.outerHeight() - 5
+            });
         }
 
     }).defaults(Block.prototype);

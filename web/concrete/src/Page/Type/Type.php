@@ -446,7 +446,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
 		// copy permissions from the defaults to the page type
 		$cpk = PermissionKey::getByHandle('access_page_type_permissions');
-		$permissions = PermissionKey::getList('pagetype');
+		$permissions = PermissionKey::getList('page_type');
 		foreach($permissions as $pk) { 
 			$pk->setPermissionObject($ptt);
 			$pk->copyFromDefaultsToPageType($cpk);

@@ -22,7 +22,7 @@ class Sitemap extends BackendInterfacePageController {
 		$pagetypes = PageType::getList();
 		foreach($pagetypes as $pt) {
 			$ptp = new Permissions($pt);
-			if ($ptp->canComposePageType()) {
+			if ($ptp->canAddPageType()) {
 				$this->pagetypes[] = $pt;
 			}
 		}
