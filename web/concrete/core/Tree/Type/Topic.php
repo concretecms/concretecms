@@ -10,6 +10,14 @@ use PermissionAccess;
 
 class Topic extends Tree
 {
+    /** Returns the standard name for this tree
+     * @return string
+     */
+    public function getTreeName()
+    {
+    	return $this->topicTreeName;
+    }
+
     /** Returns the display name for this tree (localized and escaped accordingly to $format)
      * @param  string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
      * @return string
