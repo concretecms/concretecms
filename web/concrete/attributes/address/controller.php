@@ -8,23 +8,18 @@ class Controller extends AttributeTypeController  {
 
 	public $helpers = array('form');
 	
-	public function searchKeywords($keywords) {
-        /*
-         * @TODO Make this work again.
-         */
-        /*
-		$db = Loader::db();
-		$qkeywords = $db->quote('%' . $keywords . '%');
-		$str = '(ak_' . $this->attributeKey->getAttributeKeyHandle() . '_address1 like '.$qkeywords.' or ';
-		$str .= 'ak_' . $this->attributeKey->getAttributeKeyHandle() . '_address2 like '.$qkeywords.' or ';
-		$str .= 'ak_' . $this->attributeKey->getAttributeKeyHandle() . '_city like '.$qkeywords.' or ';
-		$str .= 'ak_' . $this->attributeKey->getAttributeKeyHandle() . '_state_province like '.$qkeywords.' or ';
-		$str .= 'ak_' . $this->attributeKey->getAttributeKeyHandle() . '_postal_code like '.$qkeywords.' or ';
-		$str .= 'ak_' . $this->attributeKey->getAttributeKeyHandle() . '_country like '.$qkeywords.' )';
-		return $str;
-        */
-	}
-	
+	public function searchKeywords($keywords, $queryBuilder) {
+        $h = $this->attributeKey->getAttributeKeyHandle();
+        return $queryBuilder->expr()->orX(
+            $queryBuilder->expr()->like("ak_{$h}_address1", ':keywords'),
+            $queryBuilder->expr()->like("ak_{$h}_address2", ':keywords'),
+            $queryBuilder->expr()->like("ak_{$h}_city", ':keywords'),
+            $queryBuilder->expr()->like("ak_{$h}_state_province", ':keywords'),
+            $queryBuilder->expr()->like("ak_{$h}_postal_code", ':keywords'),
+            $queryBuilder->expr()->like("ak_{$h}_country", ':keywords')
+        );
+    }
+
 	public function searchForm($list) {
 		$address1 = $this->request('address1');
 		$address2 = $this->request('address2');
