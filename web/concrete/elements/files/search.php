@@ -111,16 +111,15 @@ $req = $flr->getSearchRequest();
 <div data-search-element="wrapper"></div>
 
 <div data-search-element="results">
-
-<table border="0" cellspacing="0" cellpadding="0" class="ccm-search-results-table">
-<thead>
-</thead>
-<tbody>
-</tbody>
-</table>
-
-<div class="ccm-search-results-pagination"></div>
-
+    <div class="table-responsive">
+        <table class="ccm-search-results-table table">
+        <thead>
+        </thead>
+        <tbody>
+        </tbody>
+        </table>
+    </div>
+    <div class="ccm-search-results-pagination"></div>
 </div>
 
 <script type="text/template" data-template="search-results-pagination">
