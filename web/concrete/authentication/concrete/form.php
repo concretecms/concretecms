@@ -12,13 +12,15 @@ $form = Loader::helper('form');
         <input name="uName" class="form-control col-sm-12"
                placeholder="<?=USER_REGISTRATION_WITH_EMAIL_ADDRESS ? t('Email Address') : t('Username')?>" />
     </div>
+
     <div class="form-group">
-        <label><?php // Empty label for spacing ?></label>
+        <label>&nbsp;</label>
         <input name="uPassword" class="form-control" type="password"
                placeholder="Password" />
     </div>
-    <div class="form-group">
-        <label class="checkbox" style="font-weight:normal">
+
+    <div class="checkbox">
+        <label style="font-weight:normal">
             <input type="checkbox" name="uMaintainLogin" value="1">
             <?= t('Stay signed in for two weeks') ?>
         </label>
