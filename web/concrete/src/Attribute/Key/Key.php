@@ -461,9 +461,7 @@ class Key extends Object
         if (!isset($akName)) {
             throw new ErrorException('No Attribute Key name set.');
         }
-        if (isset($akIsSearchable) && !$akIsSearchable) {
-            $akIsSearchable = 0;
-        }
+        $akIsSearchable = intval($akIsSearchable);
         $akIsSearchableIndexed = intval($akIsSearchableIndexed);
         $db = Loader::db();
 
@@ -472,6 +470,7 @@ class Key extends Object
             $this->getAttributeKeyID()
         );
         $a = array($akHandle, $akName, $akIsSearchable, $akIsSearchableIndexed, $this->getAttributeKeyID());
+
         $r = $db->query(
             "update AttributeKeys set akHandle = ?, akName = ?, akIsSearchable = ?, akIsSearchableIndexed = ? where akID = ?",
             $a
