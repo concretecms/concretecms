@@ -37,7 +37,7 @@ div.ccm-page {
   color: @title-thin-type-color !important;
   font-family: @title-thin-type-font-family !important;
   font-size: @title-thin-type-font-size !important;
-  line-height: @line-height-base !important;
+  line-height: (@line-height-base * .8);
   font-weight: 200 !important;
   display: block
 }
@@ -55,5 +55,5 @@ div.ccm-page {
   font-family: @image-caption-type-font-family;
   color: @image-caption-type-color;
   font-size: @image-caption-type-font-size;
-  font-style: @image-caption-type-font-style;
+  @image-caption-type-font-style: 'italic';
 }

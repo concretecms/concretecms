@@ -122,6 +122,7 @@ class BlockView extends AbstractView
     {
         $this->runControllerTask();
         if ($this->outputContent) {
+            $this->viewPerformed = 'view';
             return false;
         }
 
@@ -143,7 +144,6 @@ class BlockView extends AbstractView
             $customFilenameToRender = $view . '.php';
             $view = 'view';
         }
-
         switch ($view) {
             case 'view':
                 if (is_object($this->block) && is_object($this->area)) {
@@ -222,7 +222,9 @@ class BlockView extends AbstractView
     public function renderViewContents($scopeItems)
     {
         if ($this->outputContent) {
+            $this->onBeforeGetContents();
             print $this->outputContent;
+            $this->onAfterGetContents();
         } else {
             extract($scopeItems);
             if ($this->blockViewHeaderFile) {

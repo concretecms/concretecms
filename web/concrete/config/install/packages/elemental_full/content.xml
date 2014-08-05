@@ -801,6 +801,9 @@
                             <columns>
                                 <column span="2" offset="0">
                                     <block type="page_list" name="">
+                                        <style>
+                                            <customClass>recent-blog-entry</customClass>
+                                        </style>
                                         <data table="btPageList">
                                             <record>
                                                 <num><![CDATA[1]]></num>
@@ -831,6 +834,9 @@
                                 </column>
                                 <column span="3" offset="0">
                                     <block type="page_list" name="">
+                                        <style>
+                                            <customClass>recent-blog-entry</customClass>
+                                        </style>
                                         <data table="btPageList">
                                             <record>
                                                 <num><![CDATA[1]]></num>
@@ -863,7 +869,7 @@
                                     <block type="content" name="">
                                         <data table="btContentLocal">
                                             <record>
-                                                <content><![CDATA[<p>  <span class="title-thin">We specialize is making your concepts a reality.</span>  </p>  <p>    Sed cursus facilisis dignissim. Aliquam rhoncus enim et pellentesque varius. Nulla sodales nibh lorem, sit amet imperdiet arcu commodo sit amet. Mauris sed scelerisque nisl. Ut auctor ipsum tellus, vel viverra massa elementum sit amet.  </p>  <p>    Sed adipiscing tempus sem eu molestie. Aenean laoreet pretium ante vitae ultrices. Aenean eu gravida magna, vel aliquet magna. In auctor convallis gravida.<br>  </p>  <br/>  <p>  <a href="{ccm:export:page:/about/contact-us}"><span class="btn btn-success">Contact Us Today</span></a>  </p>]]></content>
+                                                <content><![CDATA[<p>  <span class="title-thin">We specialize in making your concepts a reality.</span>  </p>  <p>    Sed cursus facilisis dignissim. Aliquam rhoncus enim et pellentesque varius. Nulla sodales nibh lorem, sit amet imperdiet arcu commodo sit amet. Mauris sed scelerisque nisl. Ut auctor ipsum tellus, vel viverra massa elementum sit amet.  </p>  <p>    Sed adipiscing tempus sem eu molestie. Aenean laoreet pretium ante vitae ultrices. Aenean eu gravida magna, vel aliquet magna. In auctor convallis gravida.<br>  </p>  <br/>  <p>  <a href="{ccm:export:page:/about/contact-us}"><span class="btn btn-success">Contact Us Today</span></a>  </p>]]></content>
                                             </record>
                                         </data>
                                     </block>
