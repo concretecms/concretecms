@@ -1,16 +1,20 @@
-<?php 
+<?php
 namespace Concrete\Core\Session;
-use \Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
-class SessionServiceProvider extends ServiceProvider {
+use Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 
-	public function register() {
+class SessionServiceProvider extends ServiceProvider
+{
 
-		$this->app->singleton('session', function() {
-			return Session::start();
-		});
+    public function register()
+    {
 
-	}
+        $this->app->singleton(
+            'session',
+            function () {
+                return Session::start();
+            });
 
+    }
 
 }
