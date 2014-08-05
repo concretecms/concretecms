@@ -68,7 +68,7 @@ class Controller extends BlockController {
 		$pagetype = PageType::getByID($this->ptID);
 		if (is_object($pagetype) && $this->enableNewTopics) {
 			$ccp = new Permissions($pagetype);
-			if ($ccp->canComposePageType()) {
+			if ($ccp->canAddPageType()) {
 				$pagetypes = $pagetype->getPageTypeComposerPageTypeObjects();
 				$ctTopic = $pagetypes[0];
 				$c = Page::getCurrentPage();
