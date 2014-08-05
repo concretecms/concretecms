@@ -471,8 +471,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface 
 		}
 		$results = $gs->get();
 		$controllers = array();
-		foreach($results as $gr) {
-			$group = Group::getByID($gr['gID']);
+		foreach($results as $group) {
 			$controller = $group->getGroupAutomationController();
 			$controllers[] = $controller;
 		}
