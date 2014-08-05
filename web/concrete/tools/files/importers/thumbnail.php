@@ -23,7 +23,7 @@ if (!$imgData) {
 /** @var Version $file_version */
 $file_version = $f->getVersion(intval(Request::request('fvID', 1)));
 
-$handle = Request::request('thumbnail', '');
+$handle = Request::request('handle', '');
 
 /** @var Thumbnail[] $thumbnails */
 $thumbnails = $file_version->getThumbnails();
@@ -36,16 +36,18 @@ foreach ($thumbnails as $thumb) {
     }
 }
 
+if ($thumbnail) {
+    /** @var Concrete\Core\File\Service\File $fh */
+    $fh = Loader::helper('file');
 
-/** @var Concrete\Core\File\Service\File $fh */
-$fh = Loader::helper('file');
+    /**
+     * Clear out the old image, and replace it with this data. This is destructive and not versioned, it definitely needs to
+     * be revised.
+     */
+    $path = DIR_FILES_UPLOADED_STANDARD . $type_version->getFilePath($file_version);
+    $fh->clear($path);
+    $fh->append($path, base64_decode(str_replace('data:image/png;base64,', '', $imgData)));
 
-/**
- * Clear out the old image, and replace it with this data. This is destructive and not versioned, it definitely needs to
- * be revised.
- */
-$path = DIR_FILES_UPLOADED_STANDARD . $type_version->getFilePath($file_version);
-$fh->clear($path);
-$fh->append($path, base64_decode(str_replace('data:image/png;base64,', '', $imgData)));
-
-die('{"error":0}');
+    die('{"error":0}');
+}
+die('{"error":1,"code":400,"message":"Invalid thumbnail handle"}');
