@@ -2,7 +2,7 @@
 <?php if (isset($message)) { ?>
     <div class="alert alert-success" role="alert"><?= $message ?></div>
 <? } ?>
-<button class="btn btn-block btn-success authFacebookLogin"><?= t('Log in with facebook') ?></button>
+<button class="btn btn-block btn-success authFacebookLogin"><?= t('Log in with Facebook') ?></button>
 <script type="text/javascript">
     $('button.authFacebookLogin').click(function () {
         var login = window.open('<?=$loginUrl?>', 'Log in with Facebook', 'width=500,height=300');
