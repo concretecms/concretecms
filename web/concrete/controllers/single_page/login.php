@@ -17,6 +17,7 @@ use Session;
 use User;
 use UserAttributeKey;
 use UserInfo;
+use View;
 
 class Login extends PageController
 {
@@ -142,12 +143,13 @@ class Login extends PageController
 
             $this->set('required_attributes', $unfilled);
             $this->set('u', $u);
-            $this->error->add(t('Fill in these required settings in order to continue.'));
 
             Session::set('uRequiredAttributeUser', $u->getUserID());
             Session::set('uRequiredAttributeUserAuthenticationType', $type->getAuthenticationTypeHandle());
 
-            $this->render('/login');
+            $this->view();
+            echo $this->getViewObject()->render();
+            exit;
         }
 
         $u->setLastAuthType($type);
@@ -292,7 +294,7 @@ class Login extends PageController
         try {
             if (!Session::has('uRequiredAttributeUser') ||
                 intval(Session::get('uRequiredAttributeUser')) < 1 ||
-                Session::has('uRequiredAttributeUserAuthenticationType') ||
+                !Session::has('uRequiredAttributeUserAuthenticationType') ||
                 !Session::get('uRequiredAttributeUserAuthenticationType')
             ) {
                 Session::remove('uRequiredAttributeUser');
@@ -332,7 +334,6 @@ class Login extends PageController
             $this->finishAuthentication($at);
         } catch (\Exception $e) {
             $this->error->add($e->getMessage());
-            $this->render('/login');
         }
     }
 
