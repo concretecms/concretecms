@@ -29,6 +29,7 @@ jQuery.Redactor.opts.langs[<?=$jh->encode($locale)?>] = {
     header5: <?=$jh->encode(t('Header 5'))?>,
     /* concrete5 */
     header6: <?=$jh->encode(t('Header 6'))?>,
+    customStyles: <?=$jh->encode(t('Custom Styles'))?>,
     /* end concrete5 */
     bold: <?=$jh->encode(t('Bold'))?>,
     italic: <?=$jh->encode(t('Italic'))?>,
@@ -98,6 +99,7 @@ var ccmi18n_redactor = {
     remove_font_size: <?=$jh->encode(t('Remove font size'))?>,
     change_font_size: <?=$jh->encode(t('Change font size'))?>,
     cancel: <?=$jh->encode(t('Cancel'))?>,
-    save: <?=$jh->encode(t('Save'))?>
+    save: <?=$jh->encode(t('Save'))?>,
+    remove_style: <?=$jh->encode(t('Remove Style'))?>
  };
  
