@@ -394,7 +394,7 @@ class Package extends Object {
 			return t('%s (%s)', $item->getAttributeSetDisplayName(), $txt->unhandle($at->getAttributeKeyCategoryHandle()));
 		} else if ($item instanceof GroupSet) {
 			return $item->getGroupSetDisplayName();
-		} else if (is_a($item, 'AttributeKey')) {
+		} else if ($item instanceof AttributeKey) {
 			$akc = AttributeKeyCategory::getByID($item->getAttributeKeyCategoryID());
 			return t(' %s (%s)', $txt->unhandle($item->getAttributeKeyHandle()), $txt->unhandle($akc->getAttributeKeyCategoryHandle()));
 		} else if ($item instanceof ConfigValue) {
