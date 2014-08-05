@@ -157,7 +157,7 @@ define('DIRNAME_BLOCK_TOOLS', 'tools');
 define('DIRNAME_BLOCK_TEMPLATES', 'templates');
 define('DIRNAME_BLOCK_TEMPLATES_COMPOSER', 'composer');
 define('DIRNAME_CSS', 'css');
-define('DIRNAME_CLASSES', 'core');
+define('DIRNAME_CLASSES', 'src');
 define('DIRNAME_PREVIEW', 'preview');
 define('DIRNAME_GROUP', 'group');
 define('DIRNAME_GROUP_AUTOMATION', 'automation');
