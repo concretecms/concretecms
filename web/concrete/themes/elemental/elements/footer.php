@@ -1,4 +1,6 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php use Concrete\Core\Validation\CSRF\Token;
+
+defined('C5_EXECUTE') or die("Access Denied."); ?>
 
 <footer id="footer-theme">
     <section>
@@ -51,7 +53,25 @@
             <div class="col-sm-12">
                 <span><?=t('Built with <a href="http://www.concrete5.org" class="concrete5">concrete5</a> CMS.')?></span>
                 <span class="pull-right">
-                    <a href="<?=URL::to('/login')?>">Login</a>
+                    <?php
+                    if (!id(new User)->isLoggedIn()) {
+                        ?>
+                        <a href="<?=URL::to('/login')?>">
+                            <?= t('Log in') ?>
+                        </a>
+                        <?php
+                    } else {
+                        $token = new Token();
+                        ?>
+                        <form action="<?= URL::to('/login', 'logout') ?>">
+                            <?php id(new Token())->output('logout'); ?>
+                            <a href="#" onclick="$(this).closest('form').submit();return false">
+                                <?= t('Log out') ?>
+                            </a>
+                        </form>
+                        <?php
+                    }
+                    ?>
                 </span>
             </div>
         </div>
