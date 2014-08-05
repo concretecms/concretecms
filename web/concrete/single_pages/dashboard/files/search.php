@@ -15,7 +15,8 @@ if ($fp->canAddFile() || $fp->canSearchFiles()) { ?>
             dialog-height="500"
             dialog-modal="true"
             dialog-title="<?=t('Add Files')?>"><?=t('More Options')?></a>
-        <input type="file" name="files[]" multiple="multiple" /></div>
+        <input type="file" name="files[]" multiple="multiple" />
+    </div>
 <? } ?>
 
 <div class="ccm-dashboard-content-full" data-search="files">

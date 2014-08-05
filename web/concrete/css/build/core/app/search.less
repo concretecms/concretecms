@@ -222,10 +222,17 @@ table.ccm-search-results-table {
 
 	tbody {
 
+        td.ccm-file-manager-search-results-star a {
+          padding: 10px 20px 10px 20px;
+        }
 
-		td {
+        td {
 
-			.transition(all 0.2s cubic-bezier(0.190, 1.000, 0.220, 1.000));
+          span.ccm-search-results-checkbox {
+            padding: 10px 20px 10px 20px;
+          }
+
+          .transition(all 0.2s cubic-bezier(0.190, 1.000, 0.220, 1.000));
 
 			input[type=checkbox],input[type=radio] {
 				border: 1px solid #c0c0c0;
@@ -270,13 +277,104 @@ table.ccm-search-results-table {
 	}
 }
 
-div.ccm-search-results-none {
-	font-size: @font-size-large;
-	margin-top: 60px;
-	text-align: center;
+
+table.ccm-search-results-table {
+
+  div.ccm-search-results-none {
+      font-size: @font-size-large;
+      margin-top: 60px;
+      text-align: center;
+  }
+
+  div.ccm-search-results-pagination {
+      margin-top: 20px;
+      text-align: center;
+  }
 }
 
-div.ccm-search-results-pagination {
-	margin-top: 20px;
-	text-align: center;
+
+@media (max-width: @screen-md-max) {
+
+  .ccm-ui table.ccm-search-results-table {
+
+    thead tr th, tbody tr td  {
+      padding-left: 2px;
+      padding-right: 2px;
+      span, a {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+
+    // Ensure the content doesn't wrap
+    > thead,
+    > tbody,
+    > tfoot {
+      > tr {
+        > th,
+        > td {
+          white-space: pre-wrap;
+        }
+      }
+    }
+
+  }
+
+  // coppied from bootstrap becuase it couldn't be applied to the larger size screen
+  /*
+  .table-responsive {
+      width: 100%;
+      margin-bottom: 15px;
+      overflow-y: hidden;
+      overflow-x: scroll;
+      border: 1px solid @table-border-color;
+
+      // Tighten up spacing and give a background color
+      > .table {
+        margin-bottom: 0;
+        background-color: #fff;
+
+        // Ensure the content doesn't wrap
+        > thead,
+        > tbody,
+        > tfoot {
+          > tr {
+            > th,
+            > td {
+              white-space: nowrap;
+            }
+          }
+        }
+      }
+
+      // Special overrides for the bordered tables
+      > .table-bordered {
+        border: 0;
+
+        // Nuke the appropriate borders so that the parent can handle them
+        > thead,
+        > tbody,
+        > tfoot {
+          > tr {
+            > th:first-child,
+            > td:first-child {
+              border-left: 0;
+            }
+            > th:last-child,
+            > td:last-child {
+              border-right: 0;
+            }
+          }
+          > tr:last-child {
+            > th,
+            > td {
+              border-bottom: 0;
+            }
+          }
+        }
+      }
+
+  }
+  */
+
 }
