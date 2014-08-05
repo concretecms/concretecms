@@ -542,6 +542,14 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Accessibility" path="/dashboard/system/basics/accessibility"
+              filename="/dashboard/system/basics/accessibility.php" pagetype="" description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>accessibility, easy mode</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Social Links" path="/dashboard/system/basics/social" filename="/dashboard/system/basics/social.php"
               pagetype="" description="" package="">
             <attributes>
