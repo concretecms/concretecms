@@ -12,9 +12,10 @@
 		ConcreteMenu.call(my, $element, options);
 	}
 
-	ConcreteFileMenu.prototype = Object.create(ConcreteMenu.prototype);
+    ConcreteFileMenu.prototype = Object.create(ConcreteMenu.prototype);
 
-	ConcreteFileMenu.prototype.setupMenuOptions = function($menu) {
+
+    ConcreteFileMenu.prototype.setupMenuOptions = function($menu) {
 		var my = this, 
 			parent = ConcreteMenu.prototype,
 			fID = $menu.attr('data-search-file-menu'),

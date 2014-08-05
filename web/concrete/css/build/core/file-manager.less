@@ -86,7 +86,6 @@ div#ccm-popover-menu-container {
 }
 
 div#ccm-file-manager-upload {
-    position: absolute;
     top: 30px;
     right: 10px;
     border: 1px solid #e1e1e1;
@@ -180,4 +179,11 @@ div.ccm-file-manager-image-thumbnail {
   font-size: 18px;
   font-weight: 300;
   color: #999;
+}
+
+
+@media (max-width: @screen-xs-max) {
+  div#ccm-file-manager-upload {
+    position: static;
+  }
 }

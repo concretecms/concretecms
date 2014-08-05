@@ -27,34 +27,34 @@ $req = $flr->getSearchRequest();
 <script type="text/template" data-template="search-form">
 <form role="form" data-search-form="files" action="<?=URL::to('/ccm/system/search/files/submit')?>" class="form-inline ccm-search-fields">
     <div class="ccm-search-fields-row">
-    <div class="form-group">
-        <select data-bulk-action="files" disabled class="ccm-search-bulk-action form-control">
-            <option value=""><?=t('Items Selected')?></option>
-            <option value="download"><?=t('Download')?></option>
-            <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Edit Properties')?>" data-bulk-action-url="<?=URL::to('/ccm/system/dialogs/file/bulk/properties')?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?=t('Edit Properties')?></option>
-            <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Sets')?>" data-bulk-action-url="<?=Loader::helper('concrete/urls')->getToolsURL('files/add_to')?>" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?=t('Sets')?></option>
-            <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Rescan')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/rescan" data-bulk-action-dialog-width="350" data-bulk-action-dialog-height="200"><?=t('Rescan')?></option>
-            <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Duplicate')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/duplicate" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?=t('Copy')?></option>
-            <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Delete')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?=t('Delete')?></option>
-        </select>
-    </div>
-    <div class="form-group">
-        <div class="ccm-search-main-lookup-field">
-            <i class="fa fa-search"></i>
-            <?=$form->search('fKeywords', $req['fKeywords'], array('placeholder' => t('Keywords')))?>
-            <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
+        <div class="form-group">
+            <select data-bulk-action="files" disabled class="ccm-search-bulk-action form-control">
+                <option value=""><?=t('Items Selected')?></option>
+                <option value="download"><?=t('Download')?></option>
+                <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Edit Properties')?>" data-bulk-action-url="<?=URL::to('/ccm/system/dialogs/file/bulk/properties')?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?=t('Edit Properties')?></option>
+                <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Sets')?>" data-bulk-action-url="<?=Loader::helper('concrete/urls')->getToolsURL('files/add_to')?>" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?=t('Sets')?></option>
+                <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Rescan')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/rescan" data-bulk-action-dialog-width="350" data-bulk-action-dialog-height="200"><?=t('Rescan')?></option>
+                <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Duplicate')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/duplicate" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?=t('Copy')?></option>
+                <option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Delete')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/delete" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?=t('Delete')?></option>
+            </select>
         </div>
-    </div>
-    <ul class="ccm-search-form-advanced list-inline">
-        <li><a href="#" data-search-toggle="advanced"><?=t('Advanced Search')?></a>
-        <li><a href="#" data-search-toggle="customize" data-search-column-customize-url="<?=URL::to('/ccm/system/dialogs/file/search/customize')?>"><?=t('Customize Results')?></a>
-        <?
-        $fp = FilePermissions::getGlobal();
-        if ($fp->canAddFile()) { ?>
-            <li id="ccm-file-manager-upload"><a href="#"><?=t('Upload Files')?><input type="file" name="files[]" multiple="multiple" /></a></li>
-        <? } ?>
+        <div class="form-group">
+            <div class="ccm-search-main-lookup-field">
+                <i class="fa fa-search"></i>
+                <?=$form->search('fKeywords', $req['fKeywords'], array('placeholder' => t('Keywords')))?>
+                <button type="submit" class="ccm-search-field-hidden-submit" tabindex="-1"><?=t('Search')?></button>
+            </div>
+        </div>
+        <ul class="ccm-search-form-advanced list-inline">
+            <li><a href="#" data-search-toggle="advanced"><?=t('Advanced Search')?></a>
+            <li><a href="#" data-search-toggle="customize" data-search-column-customize-url="<?=URL::to('/ccm/system/dialogs/file/search/customize')?>"><?=t('Customize Results')?></a>
+            <?
+            $fp = FilePermissions::getGlobal();
+            if ($fp->canAddFile()) { ?>
+                <li id="ccm-file-manager-upload"><a href="#"><?=t('Upload Files')?><input type="file" name="files[]" multiple="multiple" /></a></li>
+            <? } ?>
 
-    </ul>
+        </ul>
     </div>
     <?
     $s1 = FileSet::getMySets();
@@ -112,7 +112,7 @@ $req = $flr->getSearchRequest();
 
 <div data-search-element="results">
     <div class="table-responsive">
-        <table class="ccm-search-results-table table">
+        <table class="ccm-search-results-table">
         <thead>
         </thead>
         <tbody>
