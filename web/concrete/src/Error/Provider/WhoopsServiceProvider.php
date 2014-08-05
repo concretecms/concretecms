@@ -4,7 +4,6 @@ namespace Concrete\Core\Error\Provider;
 use Concrete\Core\Error\Handler\ErrorHandler;
 use Concrete\Core\Error\Handler\JsonErrorHandler;
 use Concrete\Core\Foundation\Service\Provider;
-use Whoops\Example\Exception;
 use Whoops\Run;
 
 class WhoopsServiceProvider extends Provider
