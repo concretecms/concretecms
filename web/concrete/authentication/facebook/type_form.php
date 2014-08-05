@@ -1,11 +1,11 @@
 <?php defined('C5_EXECUTE') or die('Access denied.'); ?>
 
 <div class='form-group'>
-    <?=$form->label('apikey', t('Api Key'))?>
+    <?=$form->label('apikey', t('App ID'))?>
     <?=$form->text('apikey', $apikey)?>
 </div>
 <div class='form-group'>
-    <?=$form->label('apisecret', t('Api Secret'))?>
+    <?=$form->label('apisecret', t('App Secret'))?>
     <?=$form->text('apisecret', $apisecret)?>
 </div>
 
