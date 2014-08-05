@@ -152,6 +152,7 @@
      */
     ConcreteFileManager.launchDialog = function(callback) {
         var w = $(window).width() - 53;
+
         $.fn.dialog.open({
             width: w,
             height: '100%',

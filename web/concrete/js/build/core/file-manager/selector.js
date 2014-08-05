@@ -38,6 +38,7 @@
 
     ConcreteFileSelector.prototype = {
 
+
         chooseTemplate: '<div class="ccm-file-selector-choose-new"><%=options.chooseText%></div>',
         loadingTemplate: '<div class="ccm-file-selector-loading"><img src="' + CCM_IMAGE_PATH + '/throbber_white_16.gif" /></div>',
         fileLoadedTemplate: '<div class="ccm-file-selector-file-selected"><input type="hidden" name="<%=inputName%>" value="<%=file.fID%>" />' +
