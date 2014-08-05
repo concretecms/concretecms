@@ -11,7 +11,7 @@ class Controller extends BlockController {
 	protected $btInterfaceHeight = "400"; 
 	protected $btCacheBlockRecord = true;
 	protected $btWrapperClass = 'ccm-ui';
-	/** 
+	/**
 	 * Used for localization. If we want to localize the name/description we have to include this
 	 */
 	public function getBlockTypeDescription() {
@@ -42,21 +42,10 @@ class Controller extends BlockController {
 		$previousPage=$this->getPreviousCollection();
 		$parentPage=Page::getByID(Page::getCurrentPage()->getCollectionParentID());
 		
-		if( $this->linkStyle=='page_name' ){
-			$nextLinkText = (!$nextPage)?'':$nextPage->getCollectionName(); 
-			$previousLinkText = (!$previousPage)?'':$previousPage->getCollectionName();
-			$parentLinkText = (!$parentPage)?'':$parentPage->getCollectionName();
-		}else{
-			$nextLinkText = $this->nextLabel;
-			$previousLinkText = $this->previousLabel;
-			$parentLinkText = $this->parentLabel;
-		}
-		
-		if($this->showArrows){
-			$nextLinkText = $nextLinkText.' &raquo;';
-			$previousLinkText = '&laquo; '.$previousLinkText;
-		}
-		
+        $nextLinkText = $this->nextLabel;
+        $previousLinkText = $this->previousLabel;
+        $parentLinkText = $this->parentLabel;
+
 		$this->set( 'nextCollection', $nextPage );
 		$this->set( 'previousCollection', $previousPage );
 		$this->set( 'parentCollection', $parentPage );

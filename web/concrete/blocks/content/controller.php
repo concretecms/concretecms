@@ -85,15 +85,25 @@ use Sunra\PhpSimple\HtmlDomParser;
 			$args = array();
 			$content = $blockNode->data->record->content;
 
-			$content = preg_replace_callback(
+            $dom = new HtmlDomParser();
+            $r = $dom->str_get_html($content);
+            if (is_object($r)) {
+                foreach($r->find('concrete-picture') as $picture) {
+                    $filename = $picture->file;
+                    $db = Loader::db();
+                    $fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', array($filename));
+                    $picture->fID = $fID;
+                    $picture->file = false;
+                }
+                $content= (string) $r;
+            }
+
+            $content = preg_replace_callback(
 				'/\{ccm:export:page:(.*)\}/i',
 				array('static', 'replacePagePlaceHolderOnImport'),
 				$content);
 
-			$content = preg_replace_callback(
-				'/\{ccm:export:image:(.*)\}/i',
-				array('static', 'replaceImagePlaceHolderOnImport'),				
-				$content);
+
 
 			$content = preg_replace_callback(
 				'/\{ccm:export:file:(.*)\}/i',
@@ -127,13 +137,6 @@ use Sunra\PhpSimple\HtmlDomParser;
 			}
 		}
 
-		public static function replaceImagePlaceHolderOnImport($match) {
-			$filename = $match[1];
-			$db = Loader::db();
-			$fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', array($filename));
-			return '{CCM:FID_' . $fID . '}';
-		}
-		
 		public static function replaceFilePlaceHolderOnImport($match) {
 			$filename = $match[1];
 			$db = Loader::db();
@@ -147,14 +150,26 @@ use Sunra\PhpSimple\HtmlDomParser;
 			$data->addAttribute('table', $this->btTable);
 			$record = $data->addChild('record');
 			$content = $this->content;
+
+            $dom = new HtmlDomParser();
+            $r = $dom->str_get_html($content);
+            if (is_object($r)) {
+                foreach($r->find('concrete-picture') as $picture) {
+                    $fID = $picture->fid;
+                    $f = \File::getByID($fID);
+                    if (is_object($f)) {
+                        $alt = $picture->alt;
+                        $style = $picture->style;
+                        $picture->fid = false;
+                        $picture->file = $f->getFilename();
+                    }
+                }
+                $content= (string) $r;
+            }
+
 			$content = preg_replace_callback(
 				'/{CCM:CID_([0-9]+)}/i',
 				array('\Concrete\Core\Backup\ContentExporter', 'replacePageWithPlaceHolderInMatch'),
-				$content);
-
-			$content = preg_replace_callback(
-				'/{CCM:FID_([0-9]+)}/i',
-				array('\Concrete\Core\Backup\ContentExporter', 'replaceImageWithPlaceHolderInMatch'),
 				$content);
 
 			$content = preg_replace_callback(
@@ -184,7 +199,8 @@ use Sunra\PhpSimple\HtmlDomParser;
                 foreach($r->find('concrete-picture') as $picture) {
                     $fID = $picture->fid;
                     $alt = $picture->alt;
-                    $picture->outertext = '<img src="' . URL::to('/download_file', 'view_inline', $fID) . '" alt="' . $alt . '" />';
+                    $style = $picture->style;
+                    $picture->outertext = '<img src="' . URL::to('/download_file', 'view_inline', $fID) . '" alt="' . $alt . '" style="' . $style . '" />';
                 }
 
                 $text = (string) $r;
@@ -225,12 +241,16 @@ use Sunra\PhpSimple\HtmlDomParser;
                 foreach($r->find('concrete-picture') as $picture) {
                     $fID = $picture->fid;
                     $alt = $picture->alt;
+                    $style = $picture->style;
                     $fo = \File::getByID($fID);
                     if (is_object($fo)) {
                         $image = new \Concrete\Core\Html\Image($fo);
                         $tag = $image->getTag();
                         if ($alt) {
                             $tag->alt($alt);
+                        }
+                        if ($style) {
+                            $tag->style($style);
                         }
                         $picture->outertext = (string) $tag;
                     }
@@ -315,8 +335,9 @@ use Sunra\PhpSimple\HtmlDomParser;
                 foreach($r->find('img') as $img) {
                     $src = $img->src;
                     $alt = $img->alt;
+                    $style = $img->style;
                     if (preg_match($imgmatch, $src, $matches)) {
-                        $img->outertext = '<concrete-picture fID="' . $matches[1] . '" alt="' . $alt . '" />';
+                        $img->outertext = '<concrete-picture fID="' . $matches[1] . '" alt="' . $alt . '" style="' . $style . '" />';
                     }
                 }
 

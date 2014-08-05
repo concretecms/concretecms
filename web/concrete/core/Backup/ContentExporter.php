@@ -238,13 +238,6 @@ class ContentExporter {
 		}
 	}
 	
-	public static function replaceImageWithPlaceHolderInMatch($fID) {
-		if ($fID > 0) { 
-			$f = File::getByID($fID[1]);
-			return '{ccm:export:image:' . $f->getFileName() . '}';
-		}
-	}
-
 	public static function replacePageTypeWithPlaceHolder($ptID) {
 		if ($ptID > 0) {
 			$ct = PageType::getByID($ptID);
