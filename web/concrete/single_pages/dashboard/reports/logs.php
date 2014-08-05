@@ -46,7 +46,7 @@ $th = Loader::helper('text');
                 <div class="form-group" style="width: 95%">
                     <?=$form->label('level', t('Level'))?>
                     <div class="ccm-search-field-content">
-                        <?=$form->selectMultiple('level', $levels, array_keys($levels))?>
+                        <?=$form->selectMultiple('level', $levels, array_keys($levels), array('style'=>"width:190px"))?>
                     </div>
                 </div>
             </div>
@@ -57,7 +57,7 @@ $th = Loader::helper('text');
 
     <div data-search-element="results">
         <div class="table-responsive">
-            <table class="ccm-search-results-table table">
+            <table class="ccm-search-results-table">
                 <thead>
                     <tr>
                         <th class="<?=$list->getSearchResultsClass('time')?>"><a href="<?=$list->getSortByURL('time', 'desc')?>"><?=t('Date/Time')?></a></th>
