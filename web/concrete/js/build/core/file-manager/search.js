@@ -53,7 +53,11 @@
                 dataType: 'json',
                 formData: {'ccm_token': CCM_SECURITY_TOKEN},
                 error: function(r) {
-                    ConcreteAlert.dialog('Error', r.responseText);
+                    var message = r.responseText;
+                    try {
+                        message = jQuery.parseJSON(message).errors.join('<br/>');
+                    } catch (e) {}
+                    ConcreteAlert.dialog('Error', message);
                 },
                 progress: function(e, data) {
                     var progress = parseInt(data.loaded / data.total * 100, 10);
@@ -74,11 +78,11 @@
                     jQuery.fn.dialog.closeTop();
                     my.refreshResults();
                 }
-            }
+            };
 
         $fileUploader.on('click', function() {
             $(this).find('input').trigger('click');
-        })
+        });
         $fileUploader.fileupload(arguments);
 
     };
@@ -104,7 +108,7 @@
             });
             return false;
         });
-    }
+    };
 
     ConcreteFileManager.prototype.updateResults = function(result) {
         var my = this;
@@ -124,7 +128,7 @@
                 return false;
             });
         }
-    }
+    };
 
     ConcreteFileManager.prototype.handleSelectedBulkAction = function(value, type, $option, $items) {
         var my = this, itemIDs = [];
@@ -137,7 +141,7 @@
         } else {
             ConcreteAjaxSearch.prototype.handleSelectedBulkAction.call(this, value, type, $option, $items);
         }
-    }
+    };
 
     ConcreteAjaxSearch.prototype.createMenu = function($selector) {
         var my = this;
@@ -145,7 +149,7 @@
             'container': my,
             'menu': $('[data-search-menu=' + $selector.attr('data-launch-search-menu') + ']')
         });
-    }
+    };
 
     /**
      * Static Methods
@@ -166,7 +170,7 @@
                 });
             }
         });
-    }
+    };
 
     ConcreteFileManager.getFileDetails = function(fID, callback) {
         $.ajax({
@@ -181,7 +185,7 @@
                 callback(r);
             }
         });
-    }
+    };
 
     var ConcreteFileManagerMenu = {
 
@@ -218,16 +222,16 @@
                 '<% } %>' +
             '</ul></div></div>';
         }
-    }
+    };
 
     // jQuery Plugin
     $.fn.concreteFileManager = function(options) {
         return $.each($(this), function(i, obj) {
             new ConcreteFileManager($(this), options);
         });
-    }
+    };
 
     global.ConcreteFileManager = ConcreteFileManager;
     global.ConcreteFileManagerMenu = ConcreteFileManagerMenu;
 
-}(this, $);
+}(window, $);
