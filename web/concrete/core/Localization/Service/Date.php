@@ -232,7 +232,7 @@ class Date
     {
         $locale = Localization::activeLocale();
         $zendDate = null;
-        
+
         if (is_int($value)) {
             $zendDate = new Zend_Date($value, Zend_Date::TIMESTAMP, $locale);
         } elseif ($value instanceof \DateTime) {
@@ -553,4 +553,18 @@ class Date
         return $datepickerFormat;
     }
 
+    /**
+     * Returns the time format (12 or 24)
+     * @return int
+     */
+    public function getTimeFormat()
+    {
+        $timeFormat = tc(/*i18n: can be 12 or 24 */'Time format', '12');
+        switch ($timeFormat) {
+            case '24':
+                return 24;
+            default:
+                return 12;
+        }
+    }
 }
