@@ -16,31 +16,25 @@ if (isset($_POST['akHasCustomCountries'])) {
 <fieldset>
 <legend><?=t('Address Options')?></legend>
 
-<div class="clearfix">
+<div class="form-group">
 <label><?=t("Available Countries")?></label>
-<div class="input">
-<ul class="inputs-list">
-<li><label><?=$form->radio('akHasCustomCountries', 0, $akHasCustomCountries)?> <span><?=t('All Available Countries')?></span></label></li>
-<li><label><?=$form->radio('akHasCustomCountries', 1, $akHasCustomCountries)?> <span><?=t('Selected Countries')?></span></label></li>
-</ul>
+    <div class="radio">
+        <label><?=$form->radio('akHasCustomCountries', 0, $akHasCustomCountries)?><?=t('All Available Countries')?></label>
+    </div>
+    <div class="radio">
+        <label><?=$form->radio('akHasCustomCountries', 1, $akHasCustomCountries)?><?=t('Selected Countries')?></label>
+    </div>
 </div>
-</div>
-<div class="clearfix">
-<label></label>
-<div class="input">
-	<select id="akCustomCountries" name="akCustomCountries[]" multiple size="7" disabled="disabled">
+<div class="form-group">
+	<select id="akCustomCountries" name="akCustomCountries[]" multiple size="7" disabled="disabled" class="form-control">
 		<? foreach ($countries as $key=>$val) { ?>
 			<? if (empty($key) || empty($val)) continue; ?>
 			<option <?=(in_array($key, $akCustomCountries) || $akHasCustomCountries == 0 ?'selected ':'')?>value="<?=$key?>"><?=$val?></option>
 		<? } ?>
 	</select>
 </div>
-</div>
 
-<div class="clearfix">
+<div class="form-group">
 <label for="akDefaultCountry"><?=t('Default Country')?></label>
-<div class="input">
-<?=$form->select('akDefaultCountry', $countries, $akDefaultCountry)?></div>
-</div>
-
+<?=$form->select('akDefaultCountry', $countries, $akDefaultCountry, array('classes'=>'form-control'))?>
 </fieldset>
