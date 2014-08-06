@@ -115,7 +115,7 @@ class Controller extends AttributeTypeController
     public function importKey($key)
     {
         $name = (string) $key->tree['name'];
-        $tree = \Concrete\Core\Tree\Type\Topic::getByDisplayName($name);
+        $tree = \Concrete\Core\Tree\Type\Topic::getByName($name);
         $node = $tree->getNodeByDisplayPath((string) $key->tree['path']);
         $this->setNodes($node->getTreeNodeID(), $tree->getTreeID());
     }
