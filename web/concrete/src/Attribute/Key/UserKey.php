@@ -105,7 +105,7 @@ class UserKey extends Key {
 		$akn = static::add($type, array(
 			'akHandle' => $ak['handle'], 
 			'akName' => $ak['name'], 
-			'akIsSearchableIndexed' => $ak['indexed'], 
+			'akIsSearchableIndexed' => $ak['indexed'],
 			'akIsSearchable' => $ak['searchable'],
 			'uakProfileDisplay' => $ak['profile-displayed'],
 			'uakProfileEdit' => $ak['profile-editable'],

@@ -45,7 +45,13 @@ class Composer extends BackendInterfacePageController {
 		$e = Loader::helper('validation/error');
 		if (!$c->getPageDraftTargetParentPageID()) {
 			$e->add(t('You must choose a page to publish this page beneath.'));
-		}
+		} else {
+            $target = \Page::getByID($c->getPageDraftTargetParentPageID());
+            $ppc = new \Permissions($target);
+            if (!$ppc->canAddSubCollection($target)) {
+                $e->add(t('You do not have permission to publish a page in this location.'));
+            }
+        }
 
 		foreach($outputControls as $oc) {
 			if ($oc->isPageTypeComposerFormControlRequiredOnThisRequest()) {
@@ -90,7 +96,6 @@ class Composer extends BackendInterfacePageController {
         if ($_POST['ptComposerPageTemplateID']) {
     		$pt = PageTemplate::getByID($_POST['ptComposerPageTemplateID']);
         }
-		$availablePageTemplates = $pagetype->getPageTypePageTemplateObjects();
 		if (!is_object($pt)) {
 			$pt = $pagetype->getPageTypeDefaultPageTemplateObject();
 		}

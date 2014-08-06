@@ -340,8 +340,12 @@ class User extends Object
         // First, we check to see if we have any collection in edit mode
         $this->unloadCollectionEdit();
         $this->unloadAuthenticationTypes();
-        @session_unset();
-        if ($hard == true) {
+
+        // @todo remove this hard option if `Session::clear()` does what we need.
+        if (!$hard) {
+            Session::clear();
+        } else {
+            @session_unset();
             @session_destroy();
         }
 

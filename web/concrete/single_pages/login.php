@@ -1,4 +1,7 @@
-<?php defined('C5_EXECUTE') or die('Access denied.');
+<?php
+use Concrete\Core\Attribute\Key\Key;
+
+defined('C5_EXECUTE') or die('Access denied.');
 
 $activeAuths = AuthenticationType::getActiveListSorted();
 $form = Loader::helper('form');
@@ -9,40 +12,75 @@ if ($authType) {
     $activeAuths = array($authType);
 }
 $image = date('Ymd') . '.jpg';
+
+/** @var Key[] $required_attributes */
+
+$attribute_mode = (isset($required_attributes) && count($required_attributes));
 ?>
 <div class="login-page">
     <div class="col-sm-6 col-sm-offset-3 login-title">
-        <span><?= t('Sign into your website.') ?></span>
+        <span><?= !$attribute_mode ? t('Sign into your website.') : t('Required Attributes') ?></span>
     </div>
     <div class="col-sm-6 col-sm-offset-3 login-form">
         <div class="row">
             <div class="types col-sm-4">
                 <ul class="auth-types">
                     <?php
-                    /** @var AuthenticationType[] $activeAuths */
-
-                    foreach ($activeAuths as $auth) {
+                    if ($attribute_mode) {
                         ?>
-                        <li data-handle="<?= $auth->getAuthenticationTypeHandle() ?>">
-                            <?=$auth->getAuthenticationTypeIconHTML()?>
-                            <span><?= $auth->getAuthenticationTypeName() ?></span>
+                        <li data-handle="required_attributes">
+                            <i class="fa fa-question"></i>
+                            <span><?= t('Attributes') ?></span>
                         </li>
-                    <?php
+                        <?php
+                    } else {
+                        /** @var AuthenticationType[] $activeAuths */
+                        foreach ($activeAuths as $auth) {
+                            ?>
+                            <li data-handle="<?= $auth->getAuthenticationTypeHandle() ?>">
+                                <?= $auth->getAuthenticationTypeIconHTML() ?>
+                                <span><?= $auth->getAuthenticationTypeName() ?></span>
+                            </li>
+                        <?php
+                        }
                     }
                     ?>
                 </ul>
             </div>
             <div class="controls col-sm-8">
                 <?php
-                /** @var AuthenticationType[] $activeAuths */
-
-                foreach ($activeAuths as $auth) {
+                if ($attribute_mode) {
+                    $attribute_helper = new Concrete\Core\Form\Service\Widget\Attribute();
                     ?>
-                    <div data-handle="<?= $auth->getAuthenticationTypeHandle() ?>"
-                         class="authentication-type authentication-type-<?= $auth->getAuthenticationTypeHandle() ?>">
-                        <?php $auth->renderForm($authTypeElement ? : 'form', $authTypeParams ? : array()) ?>
-                    </div>
-                <?php
+                    <form action="<?= View::action('fill_attributes') ?>" method="POST">
+                        <div data-handle="required_attributes"
+                             class="authentication-type authentication-type-required-attributes">
+                            <div class="ccm-required-attribute-form"
+                                 style="height:340px;overflow:auto;margin-bottom:20px;">
+                                <?php
+                                foreach ($required_attributes as $key) {
+                                    echo $attribute_helper->display($key, true);
+                                }
+                                ?>
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-primary pull-right"><?= t('Submit') ?></button>
+                            </div>
+
+                        </div>
+                    </form>
+                    <?php
+                } else {
+                    /** @var AuthenticationType[] $activeAuths */
+
+                    foreach ($activeAuths as $auth) {
+                        ?>
+                        <div data-handle="<?= $auth->getAuthenticationTypeHandle() ?>"
+                             class="authentication-type authentication-type-<?= $auth->getAuthenticationTypeHandle() ?>">
+                            <?php $auth->renderForm($authTypeElement ?: 'form', $authTypeParams ?: array()) ?>
+                        </div>
+                    <?php
+                    }
                 }
                 ?>
             </div>
