@@ -29,7 +29,6 @@ if (count($attribs) > 0) { ?>
 
 	<?
 	$ih = Loader::helper('concrete/ui');
-	$valt = Loader::helper('validation/token');
 
 	
 	if (count($sets) > 0 && ($_REQUEST['asGroupAttributes'] !== '0')) { ?>
@@ -51,27 +50,23 @@ if (count($attribs) > 0) { ?>
 			<div class="ccm-attribute-list-wrapper"><?=t('No attributes defined.')?></div>
 		
 		<? } else { ?>
-			
-			<div class="ccm-attribute-sortable-set-list ccm-attribute-list-wrapper" attribute-set-id="<?=$as->getAttributeSetID()?>" id="asID_<?=$as->getAttributeSetID()?>">			
-			
+            <ul class="item-select-list ccm-sortable-attribute-list-wrapper" attribute-set-id="<?=$as->getAttributeSetID()?>" id="asID_<?=$as->getAttributeSetID()?>">
 			<?
-			
 			foreach($setattribs as $ak) { ?>
-			
-			<div class="ccm-attribute" id="akID_<?=$as->getAttributeSetID()?>_<?=$ak->getAttributeKeyID()?>">
-				<img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /> <a href="<?=URL::to($editURL, 'edit', $ak->getAttributeKeyID())?>"><?=$ak->getAttributeKeyDisplayName()?></a>
-			</div>
-	
-
+                <li class="ccm-attribute ccm-item-select-list-sort" id="akID_<?=$ak->getAttributeKeyID()?>">
+                    <a href="<?=URL::to($editURL, 'edit', $ak->getAttributeKeyID())?>">
+                        <img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" />
+                        <?=$ak->getAttributeKeyDisplayName()?>
+                    </a>
+                    <i class="ccm-item-select-list-sort"></i>
+                </li>
 			<? } ?>
+			</ul>
 			
-			</div>
-			
-			<? } ?>
+		<? } ?>
 			
 		</fieldset>
 
-			
 		<? } 
 		
 		$unsetattribs = $category->getUnassignedAttributeKeys();
@@ -79,17 +74,17 @@ if (count($attribs) > 0) { ?>
 		
 			<fieldset>
 				<legend><?=t('Other')?></legend>
-	
-				<div class="ccm-attribute-list-wrapper">
+				<ul class="ccm-attribute-list-wrapper item-select-list">
 				<?
 				foreach($unsetattribs as $ak) { ?>
-		
-				<div class="ccm-attribute" id="akID_<?=$as->getAttributeSetID()?>_<?=$ak->getAttributeKeyID()?>">
-					<img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /> <a href="<?=URL::to($editURL, 'edit', $ak->getAttributeKeyID())?>"><?=$ak->getAttributeKeyDisplayName()?></a>
-				</div>
-	
-
-			<? } ?>
+                    <li class="ccm-attribute">
+                        <a href="<?=URL::to($editURL, 'edit', $ak->getAttributeKeyID())?>">
+                            <img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" />
+                            <?=$ak->getAttributeKeyDisplayName()?>
+                        </a>
+                    </li>
+	            <? } ?>
+                </ul>
 			</fieldset>
 		
 		<?
@@ -97,18 +92,16 @@ if (count($attribs) > 0) { ?>
 		}
 	
 	} else { ?>
-		
-				<div class="ccm-attribute-list-wrapper">
-		
+		<ul class="item-select-list ccm-sortable-attribute-list-wrapper">
 		<?
-		foreach($attribs as $ak) { ?>
-		<div class="ccm-attribute" id="akID_<?=$ak->getAttributeKeyID()?>">
-			<img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /> <a href="<?=URL::to($editURL, 'edit', $ak->getAttributeKeyID())?>"><?=$ak->getAttributeKeyDisplayName()?></a>
-		</div>
+        foreach($attribs as $ak) { ?>
+            <li class="ccm-attribute ccm-item-select-list-sort" id="akID_<?=$ak->getAttributeKeyID()?>">
+			    <a href="<?=URL::to($editURL, 'edit', $ak->getAttributeKeyID())?>"><img class="ccm-attribute-icon" src="<?=$ak->getAttributeKeyIconSRC()?>" width="16" height="16" /> <?=$ak->getAttributeKeyDisplayName()?></a>
+                <i class="ccm-item-select-list-sort"></i>
+		    </li>
 		
 		<? } ?>
-	
-		</div>
+		</ul>
 	
 	<? } ?>
 	
@@ -122,18 +115,18 @@ if (count($attribs) > 0) { ?>
 	
 <? } ?>
 
-
 <script type="text/javascript">
 $(function() {
-	$("div.ccm-attribute-sortable-set-list").sortable({
-		handle: 'img.ccm-attribute-icon',
+    $("ul.ccm-sortable-attribute-list-wrapper").sortable({
+		handle: 'i.ccm-item-select-list-sort',
 		cursor: 'move',
 		opacity: 0.5,
 		stop: function() {
 			var ualist = $(this).sortable('serialize');
 			ualist += '&cID=<?=$c->getCollectionID()?>';
 			ualist += '&asID=' + $(this).attr('attribute-set-id');
-			$.post('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/dashboard/attribute_sets_update', ualist, function(r) {
+            ualist += '&ccm_token=' + '<?=$controller->token->generate('user_attribute_sort')?>';
+			$.post('<?=URL::to('/ccm/system/user/user_attributes/sort')?>', ualist, function(r) {
 
 			});
 		}
@@ -141,9 +134,6 @@ $(function() {
 });
 </script>
 
-<style type="text/css">
-div.ccm-attribute-sortable-set-list img.ccm-attribute-icon:hover {cursor: move}
-</style>
 
 <? $form = Loader::helper('form'); ?>
 <? if (isset($types) && is_array($types) && count($types) > 0) { ?>

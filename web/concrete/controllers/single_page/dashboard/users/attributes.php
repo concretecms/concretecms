@@ -33,13 +33,15 @@ class Attributes extends DashboardPageController {
 	}
 	
 	public function on_start() {
-		$this->set('category', AttributeKeyCategory::getByHandle('user'));
+        parent::on_start();
+        $this->set('category', AttributeKeyCategory::getByHandle('user'));
 		$otypes = AttributeType::getList('user');
 		$types = array();
 		foreach($otypes as $at) {
 			$types[$at->getAttributeTypeID()] = $at->getAttributeTypeDisplayName();
 		}
 		$this->set('types', $types);
+
 	}
 	
 	public function activate($akID, $token = null) {

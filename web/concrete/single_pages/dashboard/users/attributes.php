@@ -20,10 +20,9 @@
 	<? } ?>
 
 <? } else { ?>
-
 	<?
 	$attribs = UserAttributeKey::getList();
-	Loader::element('dashboard/attributes_table', array('types' => $types, 'category' => $category, 'attribs'=> $attribs, 'editURL' => '/dashboard/users/attributes')); ?>
+	Loader::element('dashboard/attributes_table', array('types' => $types, 'category' => $category, 'attribs'=> $attribs, 'editURL' => '/dashboard/users/attributes', 'controller'=>$this->controller)); ?>
 
 	<? } ?>
 

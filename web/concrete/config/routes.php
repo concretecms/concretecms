@@ -89,6 +89,7 @@ Route::register('/ccm/system/file/upload', '\Concrete\Controller\Backend\File::u
  */
 Route::register('/ccm/system/user/add_group', '\Concrete\Controller\Backend\User::addGroup');
 Route::register('/ccm/system/user/remove_group', '\Concrete\Controller\Backend\User::removeGroup');
+Route::register('/ccm/system/user/user_attributes/sort', '\Concrete\Controller\Backend\UserAttributes::sort');
 
 /**
  * Page actions - non UI
