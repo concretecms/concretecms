@@ -38,8 +38,8 @@ if ($_POST['task'] == 'edit_speed_settings') {
 $form = Loader::helper('form');
 
 $pages = array();
-if (is_array($_REQUEST['cID'])) {
-	foreach($_REQUEST['cID'] as $cID) {
+if (is_array($_REQUEST['item'])) {
+	foreach($_REQUEST['item'] as $cID) {
 		$pages[] = Page::getByID($cID);
 	}
 } else {
@@ -50,7 +50,7 @@ $pcnt = 0;
 $fullPageCaching = -3;
 $cCacheFullPageContentOverrideLifetime = -2;
 $cCacheFullPageContentOverrideLifetimeCustomValue = -1;
-foreach($pages as $c) { 
+foreach($pages as $c) {
 	$cp = new Permissions($c);
 	if ($cp->canEditPageSpeedSettings()) {
 		if ($c->getCollectionFullPageCaching() != $fullPageCaching && $fullPageCaching != -3) {
