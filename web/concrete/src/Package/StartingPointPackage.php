@@ -84,7 +84,7 @@ class StartingPointPackage extends BasePackage {
 		$topicType = \Concrete\Core\Tree\TreeType::add('topic', $pkg);
 		$topicCategoryNodeType = \Concrete\Core\Tree\Node\NodeType::add('topic_category', $pkg);
 		$topicNodeType = \Concrete\Core\Tree\Node\NodeType::add('topic', $pkg);
-		$tree = \Concrete\Core\Tree\Type\Topic::add('Topics');
+		//$tree = \Concrete\Core\Tree\Type\Topic::add('Topics');
 
 	}
 

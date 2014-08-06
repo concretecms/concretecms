@@ -10,7 +10,6 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
         $this->providesAsset('css', 'blocks/share_this_page');
         $this->providesAsset('css', 'blocks/feature');
         $this->providesAsset('css', 'blocks/faq');
-        $this->providesAsset('css', 'blocks/page_list');
         $this->providesAsset('css', 'core/frontend/*');
 
         $this->requireAsset('css', 'font-awesome');
