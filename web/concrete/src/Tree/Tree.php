@@ -11,8 +11,20 @@ abstract class Tree extends Object
 
     abstract protected function loadDetails();
     abstract protected function deleteDetails();
-    abstract public function getTreeDisplayName();
+
+    /** Returns the standard name for this tree
+     * @return string
+     */
+    abstract public function getTreeName();
+
+    /** Returns the display name for this tree (localized and escaped accordingly to $format)
+     * @param  string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
+     * @return string
+     */
+    abstract public function getTreeDisplayName($format = 'html');
+
     abstract public function exportDetails(\SimpleXMLElement $sx);
+
     abstract public static function importDetails(\SimpleXMLElement $sx);
 
     public function setSelectedTreeNodeIDs($nodeIDs)

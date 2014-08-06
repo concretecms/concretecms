@@ -97,7 +97,7 @@ class Controller extends BlockController
         if ($treeID > 0) {
             $tree = Tree::getByID($treeID);
             if (is_object($tree)) {
-                return '{ccm:export:tree:' . $tree->getTreeDisplayName() . '}';
+                return '{ccm:export:tree:' . $tree->getTreeName() . '}';
             }
         }
     }
@@ -110,7 +110,7 @@ class Controller extends BlockController
         $data->addChild("title", $this->title);
         $data->addChild('topicAttributeKeyHandle', $this->topicAttributeKeyHandle);
         if (is_object($tree)) {
-            $data->addChild('tree', $tree->getTreeDisplayName());
+            $data->addChild('tree', $tree->getTreeName());
         }
         $path = null;
         if ($this->cParentID) {
