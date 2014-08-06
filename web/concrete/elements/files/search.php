@@ -97,7 +97,7 @@ $req = $flr->getSearchRequest();
 <script type="text/template" data-template="search-results-table-body">
 <% _.each(items, function(file) {%>
 <tr data-launch-search-menu="<%=file.fID%>" data-file-manager-file="<%=file.fID%>">
-    <td><span class="ccm-search-results-checkbox"><input type="checkbox" data-search-checkbox="individual" value="<%=file.fID%>" /></span></td>
+    <td><span class="ccm-search-results-checkbox"><input type="checkbox" class="ccm-flat-checkbox" data-search-checkbox="individual" value="<%=file.fID%>" /></span></td>
     <td class="ccm-file-manager-search-results-star <% if (file.isStarred) { %>ccm-file-manager-search-results-star-active<% } %>"><a href="#" data-search-toggle="star" data-search-toggle-url="<?=URL::to('/ccm/system/file/star')?>" data-search-toggle-file-id="<%=file.fID%>"><i class="fa fa-star"></i></a></td>
     <td class="ccm-file-manager-search-results-thumbnail"><%=file.resultsThumbnailImg%></td>
     <% for(i = 0; i < file.columns.length; i++) {
@@ -128,7 +128,7 @@ $req = $flr->getSearchRequest();
 
 <script type="text/template" data-template="search-results-table-head">
 <tr>
-    <th><span class="ccm-search-results-checkbox"><input type="checkbox" data-search-checkbox="select-all" /></span></th>
+    <th><span class="ccm-search-results-checkbox"><input type="checkbox" class="ccm-flat-checkbox" data-search-checkbox="select-all" /></span></th>
     <th class="ccm-file-manager-search-results-star"><span><i class="fa fa-star"></i></span></th>
     <th><span><?=t('Thumbnail')?></th>
     <%

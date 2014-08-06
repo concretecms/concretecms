@@ -16,8 +16,8 @@ if ($_POST['task'] == 'design_pages') {
 	if ($_POST['ptID'] > 0) {
 		$ct = PageType::getByID($_POST['ptID']);
 	}
-	if (is_array($_POST['cID'])) {
-		foreach($_POST['cID'] as $cID) {
+	if (is_array($_POST['item'])) {
+		foreach($_POST['item'] as $cID) {
 			$c = Page::getByID($cID);
 			$cp = new Permissions($c);
 			if ($cp->canEditPageTheme($pl)) {
@@ -32,8 +32,6 @@ if ($_POST['task'] == 'design_pages') {
 						$c->update($data);
 					}
 				}				
-			} else {
-				$json['error'] = t('Unable to delete one or more pages.');
 			}
 		}
 	}
@@ -46,8 +44,8 @@ if ($_POST['task'] == 'design_pages') {
 $form = Loader::helper('form');
 
 $pages = array();
-if (is_array($_REQUEST['items'])) {
-	foreach($_REQUEST['items'] as $cID) {
+if (is_array($_REQUEST['item'])) {
+	foreach($_REQUEST['item'] as $cID) {
 		$pages[] = Page::getByID($cID);
 	}
 } else {
