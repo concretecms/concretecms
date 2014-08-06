@@ -125,7 +125,7 @@ class Controller extends BlockController
         $args = array();
         $treeName = (string) $blockNode->data->tree;
         $page = (string) $blockNode->data->cParentID;
-        $tree = Topic::getByDisplayName($treeName);
+        $tree = Topic::getByName($treeName);
         $args['topicTreeID'] = $tree->getTreeID();
         $args['cParentID'] = 0;
         $args['title'] = (string) $blockNode->data->title;

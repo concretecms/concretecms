@@ -49,7 +49,7 @@ class Topic extends Tree
         $db->Execute('delete from TopicTrees where treeID = ?', array($this->treeID));
     }
 
-    public static function getByDisplayName($name)
+    public static function getByName($name)
     {
         $db = Loader::db();
         $treeID = $db->GetOne('select treeID from TopicTrees where topicTreeName = ?', array($name));
