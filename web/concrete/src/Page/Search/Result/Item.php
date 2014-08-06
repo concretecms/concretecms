@@ -24,9 +24,9 @@ class Item extends SearchResultItem {
 		$this->cID = $item->getCollectionID();
 		$cp = new Permissions($item);        
 		$this->canEditPageProperties = $cp->canEditPageProperties();
-		$this->canEditPageSpeedSettings = $cp->anEditPageSpeedSettings();
+		$this->canEditPageSpeedSettings = $cp->canEditPageSpeedSettings();
 		$this->canEditPagePermissions = $cp->canEditPagePermissions();
-		$this->canEditPageDesign = $cp->canEditPageDesign();
+		$this->canEditPageDesign = $cp->canEditPageTemplate() || $cp->canEditPageTheme();
 		$this->canViewPageVersions = $cp->canViewPageVersions();
 		$this->canDeletePage = $cp->canDeletePage();
 		$this->cvName = $item->getCollectionName();

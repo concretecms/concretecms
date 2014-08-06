@@ -4,6 +4,7 @@ use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageContr
 use Permissions;
 use Page;
 use Loader;
+use Core;
 use CollectionVersion;
 use \Concrete\Core\Page\Collection\Version\EditResponse as PageEditVersionResponse;
 use PageEditResponse;
@@ -62,29 +63,40 @@ class Versions extends BackendInterfacePageController {
 	public function new_page() {
 		if ($this->validateAction()) {
 			$c = $this->page;
+            $e = Core::make('helper/validation/error');
+            $pt = $c->getPageTypeObject();
+            if (is_object($pt)) {
+                $ptp = new \Permissions($pt);
+                if (!$ptp->canAddPageType()) {
+                    $e->add(t('You do not have permission to create new pages of this type.'));
+                }
+            }
+
 			$r = new PageEditVersionResponse();
-			$c->loadVersionObject($_REQUEST['cvID']);
-			$nc = $c->cloneVersion(t('New Page Created From Version'));
-			$v = $nc->getVersionObject();
-			$drafts = Page::getByPath(PAGE_DRAFTS_PAGE_PATH);
-			$nc = $c->duplicate($drafts);
-			$nc->deactivate();
-			$nc->move($drafts);
-			// now we delete all but the new version
-			$vls = new VersionList($nc);
-			$vls->setItemsPerPage(-1);
-			$vArray = $vls->getPage();
-			for ($i = 1; $i < count($vArray); $i++) {
-				$cv = $vArray[$i];
-				$cv->delete();
-			}
-			// now, we delete the version we duped on the current page, since we don't need it anymore.
-			$v->delete();
-			// finally, we redirect the user to the new drafts page in composer mode.
-			$r = new PageEditVersionResponse();
-			$r->setPage($nc);
-			$r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $nc->getCollectionID() . '&ctask=check-out-first&' . Loader::helper('validation/token')->getParameter());
-			$r->outputJSON();
+            $r->setError($e);
+            if (!$e->has()) {
+                $c->loadVersionObject($_REQUEST['cvID']);
+                $nc = $c->cloneVersion(t('New Page Created From Version'));
+                $v = $nc->getVersionObject();
+                $drafts = Page::getByPath(PAGE_DRAFTS_PAGE_PATH);
+                $nc = $c->duplicate($drafts);
+                $nc->deactivate();
+                $nc->move($drafts);
+                // now we delete all but the new version
+                $vls = new VersionList($nc);
+                $vls->setItemsPerPage(-1);
+                $vArray = $vls->getPage();
+                for ($i = 1; $i < count($vArray); $i++) {
+                    $cv = $vArray[$i];
+                    $cv->delete();
+                }
+                // now, we delete the version we duped on the current page, since we don't need it anymore.
+                $v->delete();
+                // finally, we redirect the user to the new drafts page in composer mode.
+    			$r->setPage($nc);
+    			$r->setRedirectURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $nc->getCollectionID() . '&ctask=check-out-first&' . Loader::helper('validation/token')->getParameter());
+            }
+            $r->outputJSON();
 		}
 	}
 

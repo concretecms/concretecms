@@ -10,7 +10,7 @@ abstract class AbstractView {
 	protected static $requestInstance;
 	protected static $requestInstances = array();
 	protected $scopeItems = array();
-	
+
 	public function addScopeItems($items) {
 		foreach($items as $key => $value) {
 			$this->scopeItems[$key] = $value;
@@ -74,11 +74,11 @@ abstract class AbstractView {
 		$r = ResponseAssetGroup::get();
 		$r->requireAsset($assetType, $assetHandle);
 	}
-	
+
 	public function setController($controller) {
 		$this->controller = $controller;
 	}
-	
+
 	public function setViewTemplate($template) {
 		$this->template = $template;
 	}
@@ -100,7 +100,7 @@ abstract class AbstractView {
 	protected function onAfterGetContents() {}
 
 	public function getScopeItems() {
-		if (is_object($this->controller)) { 
+		if (is_object($this->controller)) {
 			$sets = $this->controller->getSets();
 			$helpers = $this->controller->getHelperObjects();
 			$return = array_merge($this->scopeItems, $sets, $helpers);
@@ -143,12 +143,12 @@ abstract class AbstractView {
 	}
 
 	/**
-	 * url is a utility function that is used inside a view to setup urls w/tasks and parameters		
+	 * url is a utility function that is used inside a view to setup urls w/tasks and parameters
 	 * @deprecated
 	 * @param string $action
 	 * @param string $task
 	 * @return string $url
-	*/	
+	*/
 	public function url($action, $task = null) {
 		$args = func_get_args();
 		return call_user_func_array(array('URL', 'to'), $args);
@@ -166,24 +166,24 @@ abstract class AbstractView {
 		Loader::helper('concrete/ui')->renderError($title, $error);
 	}
 
-	/** 
+	/**
 	 * @access private
 	 */
 	public function addHeaderItem($item) {
 		$this->addHeaderAsset($item);
 	}
-	
-	/** 
+
+	/**
 	 * @access private
 	 */
 	public function addFooterItem($item) {
 		$this->addFooterAsset($item);
-	}	
+	}
 
-	/** 
-	 * @access private
-	 */
-	public static function getInstance() {
+    /**
+     * @return View
+     */
+    public static function getInstance() {
 		return View::getRequestInstance();
 	}
 

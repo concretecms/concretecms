@@ -1,125 +1,162 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
-$js = Loader::helper('json');
 
 $form = Loader::helper('form');
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAccessFileManager()) {
-	die(t("Unable to access the file manager."));
+    die(t("Unable to access the file manager."));
 }
 
-if ($_POST['task'] == 'duplicate_multiple_files') {
-	$json['error'] = false;
-	
-	if (is_array($_POST['item'])) {
-		foreach($_POST['item'] as $fID) {
-			$f = File::getByID($fID);
-			$fp = new Permissions($f);
-			if ($fp->canCopyFile()) {
-				$nf = $f->duplicate();
-				$json['fID'][] = $nf->getFileID();
-			} else {
-				$json['error'] = t('Unable to copy one or more files.');
-			}
-		}
-	}
-	print $js->encode($json);
-	exit;
+$items = Request::request('item');
+if (Request::request('task') == 'duplicate_multiple_files') {
+    $json['error'] = false;
+
+    if (is_array($items)) {
+        foreach ($items as $fID) {
+            $f = File::getByID($fID);
+            $fp = new Permissions($f);
+            if ($fp->canCopyFile()) {
+                $nf = $f->duplicate();
+                $json['fID'][] = $nf->getFileID();
+            } else {
+                $json['errors'] = array(t('Unable to copy one or more files.'));
+            }
+        }
+    }
+    print json_encode($json);
+    exit;
 }
 
+if (!is_array($items)) {
 
-if (!is_array($_REQUEST['item'])) {
+    $obj = new stdClass;
+    $obj->message = '';
+    $obj->error = 0;
 
-	$obj = new stdClass;
-	$obj->message = '';
-	$obj->error = 0;
+    $f = File::getByID($_REQUEST['fID']);
+    $fp = new Permissions($f);
+    if (!is_object($f) || $f->isError()) {
+        $obj->error = 1;
+        $obj->message = t('Invalid file.');
+    } else {
+        if (!$fp->canCopyFile()) {
+            $obj->error = 1;
+            $obj->message = t('You do not have the ability to copy this file.');
+        }
+    }
 
-	$f = File::getByID($_REQUEST['fID']);
-	$fp = new Permissions($f);
-	if (!is_object($f) || $f->isError()) {
-		$obj->error = 1;
-		$obj->message = t('Invalid file.');
-	} else if (!$fp->canCopyFile()) {
-		$obj->error = 1;
-		$obj->message = t('You do not have the ability to copy this file.');
-	}
+    if (!$obj->error) {
+        $nf = $f->duplicate();
+        if (is_object($nf)) {
+            $obj->fID = $nf->getFileID();
+        }
+    }
 
-	if (!$obj->error) {
-		$nf = $f->duplicate();
-		if (is_object($nf)) {
-			$obj->fID = $nf->getFileID();
-		}
-	}
-	
-	print $js->encode($obj);
-	exit;
+    print $js->encode($obj);
+    exit;
 
 } else {
-	
-	$files = array();
-	
-	foreach($_REQUEST['item'] as $fID) {
-		$files[] = File::getByID($fID);
-	}
 
-	$fcnt = 0;
-	foreach($files as $f) { 
-		$fp = new Permissions($f);
-		if ($fp->canCopyFile()) {
-			$fcnt++;
-		}
-	}
-	
-	$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
+$files = array();
 
-	?>
-	
-<div class="ccm-ui">
+foreach ($items as $fID) {
+    $files[] = File::getByID($fID);
+}
 
-	<? if ($fcnt == 0) { ?>
-		<?=t("You do not have permission to copy any of the selected files."); ?>
-	<? } else { ?>
-		<?=t('Are you sure you want to copy the following files?')?><br/><br/>
-		
-		<form id="ccm-<?=$searchInstance?>-duplicate-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/duplicate">
-		<?=$form->hidden('task', 'duplicate_multiple_files')?>
-	<table border="0" cellspacing="0" cellpadding="0" width="100%" class="table table-bordered">
-		
-		<? foreach($files as $f) { 
-			$fp = new Permissions($f);
-			if ($fp->canCopyFile()) {
-				$fv = $f->getApprovedVersion();
-				if (is_object($fv)) { ?>
-				
-				<?=$form->hidden('fID[]', $f->getFileID())?>		
-				
-				<tr>
-					<td><?=$fv->getType()?></td>
-					<td class="ccm-file-list-filename" width="100%"><div style="width: 150px; word-wrap: break-word"><?=$fv->getTitle()?></div></td>
-					<td><?=date(DATE_APP_DASHBOARD_SEARCH_RESULTS_FILES, $f->getDateAdded()->getTimestamp())?></td>
-					<td><?=$fv->getSize()?></td>
-					<td><?=$fv->getAuthorName()?></td>
-				</tr>
-				
-				<? }
-			}
-			
-		} ?>
-		</table>
-		</form>
-		<? $ih = Loader::helper('concrete/ui')?>
-		<div class="dialog-buttons">
-			<?=$ih->button_js(t('Copy'), 'ccm_alDuplicateFiles(\'' . $searchInstance . '\')', 'right', 'primary')?>
-			<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left')?>	
-		</div>
-		
-			
-			
-		<?
-		
-	}
+$fcnt = 0;
+foreach ($files as $f) {
+    $fp = new Permissions($f);
+    if ($fp->canCopyFile()) {
+        $fcnt++;
+    }
+}
 
+$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 
-}?>
+?>
+
+<div class="ccm-ui ccm-copy-form">
+
+    <? if ($fcnt == 0) { ?>
+        <?= t("You do not have permission to copy any of the selected files."); ?>
+    <? } else { ?>
+        <?= t('Are you sure you want to copy the following files?') ?><br/><br/>
+
+        <form id="ccm-<?= $searchInstance ?>-duplicate-form" method="post"
+              action="<?= REL_DIR_FILES_TOOLS_REQUIRED ?>/files/duplicate">
+            <?= $form->hidden('task', 'duplicate_multiple_files') ?>
+            <table border="0" cellspacing="0" cellpadding="0" width="100%" class="table table-bordered">
+
+                <? foreach ($files as $f) {
+                    $fp = new Permissions($f);
+                    if ($fp->canCopyFile()) {
+                        $fv = $f->getApprovedVersion();
+                        if (is_object($fv)) {
+                            ?>
+
+                            <?= $form->hidden('item[]', $f->getFileID()) ?>
+
+                            <tr>
+                                <td><?= $fv->getType() ?></td>
+                                <td class="ccm-file-list-filename" width="100%">
+                                    <div style="width: 150px; word-wrap: break-word"><?= $fv->getTitle() ?></div>
+                                </td>
+                                <td><?= date(
+                                        DATE_APP_DASHBOARD_SEARCH_RESULTS_FILES,
+                                        $f->getDateAdded()->getTimestamp()) ?></td>
+                                <td><?= $fv->getSize() ?></td>
+                                <td><?= $fv->getAuthorName() ?></td>
+                            </tr>
+
+                        <?
+                        }
+                    }
+
+                } ?>
+            </table>
+            <? $ih = Loader::helper('concrete/ui') ?>
+            <div class="dialog-buttons">
+                <button class="btn btn-default cancel"><?= t('Cancel') ?></button>
+                <button class="btn btn-primary pull-right submit"><?= t('Copy') ?></button>
+            </div>
+        </form>
+    <?
+
+    }
+    }?>
 </div>
+
+<script>
+    (function () {
+        var container = $('div.ccm-copy-form'),
+            copy = $('button.submit', container),
+            cancel = $('button.cancel', container),
+            form = $('form', container);
+
+        cancel.click(function (e) {
+            e.preventDefault();
+
+            $.fn.dialog.closeTop();
+
+            return false;
+        });
+
+        copy.click(function (e) {
+            e.preventDefault();
+
+            $.getJSON(form.attr('action'), form.serialize(), function (data) {
+                cancel.click();
+                Window.location.reload();
+            }).fail(function (data) {
+                debugger;
+                if (data.responseJSON && data.responseJSON.errors) {
+                    alert(data.responseJSON.errors.join("\n"));
+                } else {
+                    alert(data.responseText);
+                }
+            });
+
+        });
+    }());
+</script>
