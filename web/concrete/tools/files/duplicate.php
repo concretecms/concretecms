@@ -1,7 +1,6 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
-$js = Loader::helper('json');
 
 $form = Loader::helper('form');
 $fp = FilePermissions::getGlobal();
@@ -9,27 +8,27 @@ if (!$fp->canAccessFileManager()) {
 	die(t("Unable to access the file manager."));
 }
 
-if ($_POST['task'] == 'duplicate_multiple_files') {
+$items = Request::request('item');
+if (Request::request('task') == 'duplicate_multiple_files') {
 	$json['error'] = false;
-	
-	if (is_array($_POST['item'])) {
-		foreach($_POST['item'] as $fID) {
+
+	if (is_array($items)) {
+		foreach($items as $fID) {
 			$f = File::getByID($fID);
 			$fp = new Permissions($f);
 			if ($fp->canCopyFile()) {
 				$nf = $f->duplicate();
 				$json['fID'][] = $nf->getFileID();
 			} else {
-				$json['error'] = t('Unable to copy one or more files.');
+				$json['errors'] = array(t('Unable to copy one or more files.'));
 			}
 		}
 	}
-	print $js->encode($json);
+	print json_encode($json);
 	exit;
 }
 
-
-if (!is_array($_REQUEST['item'])) {
+if (!is_array($items)) {
 
 	$obj = new stdClass;
 	$obj->message = '';
@@ -51,49 +50,49 @@ if (!is_array($_REQUEST['item'])) {
 			$obj->fID = $nf->getFileID();
 		}
 	}
-	
+
 	print $js->encode($obj);
 	exit;
 
 } else {
-	
+
 	$files = array();
-	
-	foreach($_REQUEST['item'] as $fID) {
+
+	foreach($items as $fID) {
 		$files[] = File::getByID($fID);
 	}
 
 	$fcnt = 0;
-	foreach($files as $f) { 
+	foreach($files as $f) {
 		$fp = new Permissions($f);
 		if ($fp->canCopyFile()) {
 			$fcnt++;
 		}
 	}
-	
+
 	$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 
 	?>
-	
-<div class="ccm-ui">
+
+<div class="ccm-ui ccm-copy-form">
 
 	<? if ($fcnt == 0) { ?>
 		<?=t("You do not have permission to copy any of the selected files."); ?>
 	<? } else { ?>
 		<?=t('Are you sure you want to copy the following files?')?><br/><br/>
-		
+
 		<form id="ccm-<?=$searchInstance?>-duplicate-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/files/duplicate">
 		<?=$form->hidden('task', 'duplicate_multiple_files')?>
 	<table border="0" cellspacing="0" cellpadding="0" width="100%" class="table table-bordered">
-		
-		<? foreach($files as $f) { 
+
+		<? foreach($files as $f) {
 			$fp = new Permissions($f);
 			if ($fp->canCopyFile()) {
 				$fv = $f->getApprovedVersion();
 				if (is_object($fv)) { ?>
-				
-				<?=$form->hidden('fID[]', $f->getFileID())?>		
-				
+
+				<?=$form->hidden('item[]', $f->getFileID())?>
+
 				<tr>
 					<td><?=$fv->getType()?></td>
 					<td class="ccm-file-list-filename" width="100%"><div style="width: 150px; word-wrap: break-word"><?=$fv->getTitle()?></div></td>
@@ -101,25 +100,54 @@ if (!is_array($_REQUEST['item'])) {
 					<td><?=$fv->getSize()?></td>
 					<td><?=$fv->getAuthorName()?></td>
 				</tr>
-				
+
 				<? }
 			}
-			
+
 		} ?>
 		</table>
-		</form>
 		<? $ih = Loader::helper('concrete/ui')?>
 		<div class="dialog-buttons">
-			<?=$ih->button_js(t('Copy'), 'ccm_alDuplicateFiles(\'' . $searchInstance . '\')', 'right', 'primary')?>
-			<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left')?>	
+            <button class="btn btn-default cancel"><?= t('Cancel') ?></button>
+            <button class="btn btn-primary pull-right submit"><?= t('Copy') ?></button>
 		</div>
-		
-			
-			
+        </form>
 		<?
-		
+
 	}
-
-
 }?>
 </div>
+
+<script>
+    (function() {
+        var container = $('div.ccm-copy-form'),
+            copy = $('button.submit', container),
+            cancel = $('button.cancel', container),
+            form = $('form', container);
+
+        cancel.click(function(e) {
+            e.preventDefault();
+
+            $.fn.dialog.closeTop();
+
+            return false;
+        });
+
+        copy.click(function(e) {
+            e.preventDefault();
+
+            $.getJSON(form.attr('action'), form.serialize(), function(data) {
+                cancel.click();
+                Window.location.reload();
+            }).fail(function(data) {
+                debugger;
+                if (data.responseJSON && data.responseJSON.errors) {
+                    alert(data.responseJSON.errors.join("\n"));
+                } else{
+                    alert(data.responseText);
+                }
+            });
+
+        });
+    }());
+</script>

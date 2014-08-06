@@ -101,7 +101,7 @@ var ConcreteToolbar = function() {
 			$('a[data-toolbar-action=check-in]').unbind('click.close-check-in');
 		});
 
-	}
+	};
 
 	setupIntelligentSearch = function() {
 		$searchInput.bind('keydown.ccm-intelligent-search', function(e) {
