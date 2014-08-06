@@ -16,7 +16,7 @@ class Image
             $th = $c->getCollectionThemeObject();
             if (is_object($th)) {
                 $this->theme = $th;
-                $this->usePictureTag = count($th->getThemeResponsiveImageMap() > 0);
+                $this->usePictureTag = count($th->getThemeResponsiveImageMap()) > 0;
             }
         }
     }

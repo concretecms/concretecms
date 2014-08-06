@@ -199,10 +199,7 @@ class Controller extends BlockController
 
     public function action_topic($topic = false) {
         $topic = intval($topic);
-        $ak = CollectionAttributeKey::getByHandle('topic');
-        if (is_object($ak)) {
-            $this->list->filterByTopic($topic);
-        }
+        $this->list->filterByTopic($topic);
         $this->view();
     }
 

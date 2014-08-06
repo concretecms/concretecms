@@ -206,14 +206,14 @@ main {
     margin-top: 20px;
   }
 
-  div.blog-entry-list {
+  div.ccm-block-page-list-no-pages {
+    text-align: center;
+    font-size: @h3-type-font-size;
+    font-family: @h3-type-font-family;
+    color: @h5-type-color;
+  }
 
-    div.ccm-block-page-list-no-pages {
-      text-align: center;
-      font-size: @h3-type-font-size;
-      font-family: @h3-type-font-family;
-      color: @h5-type-color;
-    }
+  div.blog-entry-list {
 
     div.ccm-block-page-list-page-entry-horizontal {
       .make-row();
@@ -221,6 +221,10 @@ main {
       div.ccm-block-page-list-page-entry-thumbnail {
         .make-xs-column(2);
         padding-top: 7px; // to counteract the h3 line height
+
+        img {
+          .img-responsive;
+        }
       }
       div.ccm-block-page-list-page-entry-text {
         .make-xs-column(10);
@@ -245,10 +249,32 @@ main {
       }
 
     }
+  }
+
+  // Page List as Gallery
+
+  div.ccm-block-page-list-thumbnail-grid-wrapper {
+
+    .make-row();
+
+    div.ccm-block-page-list-page-entry-grid-item {
+      .make-sm-column(4);
+      padding-bottom: @grid-gutter-width;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
 
   }
+
+
   div.page-list-with-buttons {
     div.ccm-block-page-list-page-entry {
+
+      border-bottom: 0px;
 
       &:first-child {
         padding-top: 0px;

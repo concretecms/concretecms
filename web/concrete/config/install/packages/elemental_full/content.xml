@@ -21,12 +21,46 @@
             <type checked="0"/>
         </attributekey>
         <attributekey handle="thumbnail" name="Thumbnail" package="" searchable="1" indexed="1" type="image_file" category="collection"/>
-        <attributekey handle="topic" name="Topic" package="" searchable="1" indexed="1" type="topics" category="collection">
-            <tree name="Topics" path="/"/>
+        <attributekey handle="blog_entry_topics" name="Blog Entry Topics" package="" searchable="1" indexed="1" type="topics" category="collection">
+            <tree name="Blog Entries" path="/"/>
+        </attributekey>
+        <attributekey handle="project_topics" name="Project Topics" package="" searchable="1" indexed="1" type="topics" category="collection">
+            <tree name="Projects" path="/"/>
+        </attributekey>
+        <attributekey handle="project_client" name="Client" package="" searchable="1" indexed="1" type="text" category="collection"/>
+        <attributekey handle="project_tasks" name="Task" package="" searchable="1" indexed="1" type="select" category="collection">
+            <type allow-multiple-values="1" display-order="display_asc" allow-other-values="0">
+                <options>
+                    <option value="Architecture" is-end-user-added="0"/>
+                    <option value="Multimedia" is-end-user-added="0"/>
+                    <option value="Design" is-end-user-added="0"/>
+                    <option value="Production" is-end-user-added="0"/>
+                    <option value="Development" is-end-user-added="0"/>
+                    <option value="Quality Assurance" is-end-user-added="0"/>
+                </options>
+            </type>
+        </attributekey>
+        <attributekey handle="project_skills" name="Skills" package="" searchable="1" indexed="1" type="select" category="collection">
+            <type allow-multiple-values="1" display-order="display_asc" allow-other-values="0">
+                <options>
+                    <option value="HTML" is-end-user-added="0"/>
+                    <option value="JavaScript" is-end-user-added="0"/>
+                    <option value="PHP" is-end-user-added="0"/>
+                    <option value="Database" is-end-user-added="0"/>
+                    <option value="CSS" is-end-user-added="0"/>
+                    <option value="Ruby" is-end-user-added="0"/>
+                    <option value="Java" is-end-user-added="0"/>
+                    <option value="iOS/Android/App Development" is-end-user-added="0"/>
+                    <option value="Photoshop" is-end-user-added="0"/>
+                    <option value="Python" is-end-user-added="0"/>
+                    <option value="Writing" is-end-user-added="0"/>
+                </options>
+            </type>
         </attributekey>
     </attributekeys>
     <attributesets>
         <attributeset handle="navigation" category="collection">
+            <attributekey handle="thumbnail"/>
             <attributekey handle="exclude_subpages_from_nav"/>
         </attributeset>
         <attributeset handle="job_board" name="Jobs" package="" locked="0" category="collection">
@@ -34,9 +68,15 @@
             <attributekey handle="job_location"/>
         </attributeset>
         <attributeset handle="blog" name="Blog" package="" locked="0" category="collection">
-            <attributekey handle="thumbnail"/>
-            <attributekey handle="topic"/>
+            <attributekey handle="blog_entry_topics"/>
         </attributeset>
+        <attributeset handle="portfolio" name="Portfolio" package="" locked="0" category="collection">
+            <attributekey handle="project_topics"/>
+            <attributekey handle="project_client"/>
+            <attributekey handle="project_tasks"/>
+            <attributekey handle="project_skills"/>
+        </attributeset>
+
     </attributesets>
     <pagetemplates>
         <pagetemplate icon="blank.png" name="Blank" handle="blank" package="" internal=""/>
@@ -297,7 +337,7 @@
                                                         </style>
                                                         <data>
                                                             <mode>S</mode>
-                                                            <tree>Topics</tree>
+                                                            <tree>Blog Entries</tree>
                                                             <title>Topics</title>
                                                             <cParentID />
                                                         </data>
@@ -337,7 +377,7 @@
                         <control custom-template="" custom-label="Entry Name" type="core_page_property" handle="name"/>
                         <control custom-template="" custom-label="Short Description" type="core_page_property" handle="description"/>
                         <control custom-template="" custom-label="Blog" type="core_page_property" handle="publish_target"/>
-                        <control custom-template="" custom-label="Topic" type="collection_attribute" handle="topic"/>
+                        <control custom-template="" custom-label="Topics" type="collection_attribute" handle="blog_entry_topics"/>
                     </set>
                     <set name="Content">
                         <control custom-template="" custom-label="" type="collection_attribute" handle="thumbnail"/>
@@ -442,15 +482,15 @@
                                         <data>
                                             <mode>P</mode>
                                             <title>Topics</title>
-                                            <topicAttributeKeyHandle>topic</topicAttributeKeyHandle>
-                                            <tree>Topics</tree>
+                                            <topicAttributeKeyHandle>blog_entry_topics</topicAttributeKeyHandle>
+                                            <tree>Blog Entries</tree>
                                             <cParentID>{ccm:export:page:/blog}</cParentID>
                                         </data>
                                     </block>
                                     <block type="related_pages" name="" mc-block-id="KffPWR4h">
                                         <data table="btRelatedPages">
                                             <record>
-                                                <topicAttributeKeyHandle><![CDATA[topic]]></topicAttributeKeyHandle>
+                                                <topicAttributeKeyHandle><![CDATA[blog_entry_topic]]></topicAttributeKeyHandle>
                                                 <title><![CDATA[Related Posts]]></title>
                                                 <maxResults><![CDATA[3]]></maxResults>
                                                 <cParentID>{ccm:export:page:/blog}</cParentID>
@@ -483,6 +523,292 @@
                                                 <maxFileSizeRegistered><![CDATA[0]]></maxFileSizeRegistered>
                                                 <fileExtensions><![CDATA[]]></fileExtensions>
                                                 <insertNewMessages><![CDATA[top]]></insertNewMessages>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </blocks>
+                            </area>
+                        </page>
+                    </pagetemplate>
+                </output>
+            </composer>
+        </pagetype>
+        <pagetype name="Portfolio" handle="portfolio" package="" launch-in-composer="1">
+            <pagetemplates type="custom" default="full">
+                <pagetemplate handle="full"/>
+            </pagetemplates>
+            <target handle="all" package=""/>
+            <composer>
+                <formlayout>
+                    <set name="">
+                        <control custom-template="" custom-label="Name" type="core_page_property" handle="name"/>
+                        <control custom-template="" custom-label="" type="core_page_property" handle="publish_target"/>
+                    </set>
+                </formlayout>
+                <output>
+                    <pagetemplate handle="full">
+                        <page name="" path="" filename="" pagetype="portfolio" template="full" user="admin" description="" package="">
+                            <area name="Main">
+                                <blocks>
+                                    <block type="page_title" name="" mc-block-id="LSGookBK">
+                                        <data table="btPageTitle">
+                                            <record>
+                                                <useCustomTitle><![CDATA[0]]></useCustomTitle>
+                                                <titleText><![CDATA[[Page Title]]]></titleText>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="topic_list" name="" custom-template="flat_filter.php" mc-block-id="RCaPR2iR">
+                                        <style>
+                                            <backgroundColor/>
+                                            <backgroundRepeat>no-repeat</backgroundRepeat>
+                                            <borderWidth/>
+                                            <borderColor/>
+                                            <borderStyle>none</borderStyle>
+                                            <borderRadius/>
+                                            <baseFontSize/>
+                                            <alignment/>
+                                            <textColor/>
+                                            <linkColor/>
+                                            <paddingTop/>
+                                            <paddingBottom/>
+                                            <paddingLeft/>
+                                            <paddingRight/>
+                                            <marginTop/>
+                                            <marginBottom/>
+                                            <marginLeft/>
+                                            <marginRight/>
+                                            <rotate/>
+                                            <boxShadowHorizontal/>
+                                            <boxShadowVertical/>
+                                            <boxShadowBlur/>
+                                            <boxShadowSpread/>
+                                            <boxShadowColor/>
+                                            <customClass/>
+                                        </style>
+                                        <data>
+                                            <mode>S</mode>
+                                            <title/>
+                                            <topicAttributeKeyHandle />
+                                            <tree>Projects</tree>
+                                            <cParentID/>
+                                        </data>
+                                    </block>
+                                    <block type="page_list" name="" custom-template="thumbnail_grid" mc-block-id="N7fcHauo">
+                                        <data table="btPageList">
+                                            <record>
+                                                <num><![CDATA[0]]></num>
+                                                <orderBy><![CDATA[chrono_desc]]></orderBy>
+                                                <cParentID>{ccm:export:page:}</cParentID>
+                                                <cThis><![CDATA[1]]></cThis>
+                                                <useButtonForLink><![CDATA[0]]></useButtonForLink>
+                                                <buttonLinkText><![CDATA[]]></buttonLinkText>
+                                                <includeName><![CDATA[1]]></includeName>
+                                                <includeDescription><![CDATA[0]]></includeDescription>
+                                                <includeDate><![CDATA[0]]></includeDate>
+                                                <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
+                                                <paginate><![CDATA[1]]></paginate>
+                                                <displayAliases><![CDATA[0]]></displayAliases>
+                                                <enableExternalFiltering><![CDATA[1]]></enableExternalFiltering>
+                                                <ptID>{ccm:export:pagetype:portfolio_project}</ptID>
+                                                <rss><![CDATA[0]]></rss>
+                                                <rssTitle><![CDATA[]]></rssTitle>
+                                                <rssDescription><![CDATA[]]></rssDescription>
+                                                <truncateSummaries><![CDATA[0]]></truncateSummaries>
+                                                <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
+                                                <noResultsMessage><![CDATA[No projects found.]]></noResultsMessage>
+                                                <displayThumbnail><![CDATA[1]]></displayThumbnail>
+                                                <truncateChars><![CDATA[0]]></truncateChars>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </blocks>
+                            </area>
+                            <area name="Main Footer">
+                                <blocks/>
+                            </area>
+                        </page>
+                    </pagetemplate>
+                </output>
+            </composer>
+        </pagetype>
+        <pagetype name="Portfolio Project" handle="portfolio_project" package="" launch-in-composer="1">
+            <pagetemplates type="custom" default="left_sidebar">
+                <pagetemplate handle="left_sidebar"/>
+                <pagetemplate handle="right_sidebar"/>
+            </pagetemplates>
+            <target handle="page_type" package="" pagetype="portfolio"/>
+            <composer>
+                <formlayout>
+                    <set name="Page">
+                        <control custom-template="" custom-label="" type="core_page_property" handle="name"/>
+                        <control custom-template="" custom-label="" type="core_page_property" handle="url_slug"/>
+                        <control custom-template="" custom-label="Portfolio" type="core_page_property" handle="publish_target"/>
+                    </set>
+                    <set name="Project Data">
+                        <control custom-template="" custom-label="" type="collection_attribute" handle="project_topics"/>
+                        <control custom-template="" custom-label="Date Completed" type="core_page_property" handle="date_time"/>
+                        <control custom-template="" custom-label="" type="collection_attribute" handle="project_client"/>
+                        <control custom-template="" custom-label="" type="collection_attribute" handle="project_tasks"/>
+                        <control custom-template="" custom-label="" type="collection_attribute" handle="project_skills"/>
+                    </set>
+                    <set name="Content">
+                        <control custom-template="" custom-label="" type="collection_attribute" handle="thumbnail"/>
+                        <control custom-template="" custom-label="" output-control-id="yXxylvrI" type="block" handle="content"/>
+                    </set>
+                </formlayout>
+                <output>
+                    <pagetemplate handle="left_sidebar">
+                        <page name="" path="" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="" package="">
+                            <area name="Page Header">
+                                <blocks>
+                                    <block type="page_title" name="" mc-block-id="Blj682mK">
+                                        <data table="btPageTitle">
+                                            <record>
+                                                <useCustomTitle><![CDATA[0]]></useCustomTitle>
+                                                <titleText><![CDATA[[Page Title]]]></titleText>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </blocks>
+                            </area>
+                            <area name="Sidebar">
+                                <blocks>
+                                    <block type="page_attribute_display" name="" mc-block-id="vXzZI1Jv">
+                                        <data table="btPageAttributeDisplay">
+                                            <record>
+                                                <attributeHandle><![CDATA[project_client]]></attributeHandle>
+                                                <attributeTitleText><![CDATA[Client:]]></attributeTitleText>
+                                                <displayTag><![CDATA[]]></displayTag>
+                                                <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
+                                                <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
+                                                <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="page_attribute_display" name="" mc-block-id="m95mBEXx">
+                                        <data table="btPageAttributeDisplay">
+                                            <record>
+                                                <attributeHandle><![CDATA[project_tasks]]></attributeHandle>
+                                                <attributeTitleText><![CDATA[Task:]]></attributeTitleText>
+                                                <displayTag><![CDATA[]]></displayTag>
+                                                <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
+                                                <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
+                                                <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="page_attribute_display" name="" mc-block-id="bq88MXOi">
+                                        <data table="btPageAttributeDisplay">
+                                            <record>
+                                                <attributeHandle><![CDATA[project_skills]]></attributeHandle>
+                                                <attributeTitleText><![CDATA[Skills:]]></attributeTitleText>
+                                                <displayTag><![CDATA[]]></displayTag>
+                                                <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
+                                                <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
+                                                <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </blocks>
+                            </area>
+                            <area name="Main">
+                                <blocks>
+                                    <block type="core_page_type_composer_control_output" name="" mc-block-id="lppk0el5">
+                                        <control output-control-id="yXxylvrI"/>
+                                    </block>
+                                </blocks>
+                            </area>
+                            <area name="Page Footer">
+                                <blocks>
+                                    <block type="horizontal_rule" name="" mc-block-id="z5KRV50f"/>
+                                    <block type="related_pages" name="" mc-block-id="DEpG6w2r">
+                                        <data table="btRelatedPages">
+                                            <record>
+                                                <topicAttributeKeyHandle><![CDATA[project_topics]]></topicAttributeKeyHandle>
+                                                <title><![CDATA[Related Projects]]></title>
+                                                <maxResults><![CDATA[3]]></maxResults>
+                                                <cParentID/>
+                                                <ptID>{ccm:export:pagetype:portfolio_project}</ptID>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </blocks>
+                            </area>
+                        </page>
+                    </pagetemplate>
+                    <pagetemplate handle="right_sidebar">
+                        <page name="" path="" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="" package="">
+                            <area name="Page Header">
+                                <blocks>
+                                    <block type="page_title" name="" mc-block-id="Blj682mK">
+                                        <data table="btPageTitle">
+                                            <record>
+                                                <useCustomTitle><![CDATA[0]]></useCustomTitle>
+                                                <titleText><![CDATA[[Page Title]]]></titleText>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </blocks>
+                            </area>
+                            <area name="Sidebar">
+                                <blocks>
+                                    <block type="page_attribute_display" name="" mc-block-id="vXzZI1Jv">
+                                        <data table="btPageAttributeDisplay">
+                                            <record>
+                                                <attributeHandle><![CDATA[project_client]]></attributeHandle>
+                                                <attributeTitleText><![CDATA[Client:]]></attributeTitleText>
+                                                <displayTag><![CDATA[]]></displayTag>
+                                                <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
+                                                <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
+                                                <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="page_attribute_display" name="" mc-block-id="m95mBEXx">
+                                        <data table="btPageAttributeDisplay">
+                                            <record>
+                                                <attributeHandle><![CDATA[project_tasks]]></attributeHandle>
+                                                <attributeTitleText><![CDATA[Task:]]></attributeTitleText>
+                                                <displayTag><![CDATA[]]></displayTag>
+                                                <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
+                                                <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
+                                                <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="page_attribute_display" name="" mc-block-id="bq88MXOi">
+                                        <data table="btPageAttributeDisplay">
+                                            <record>
+                                                <attributeHandle><![CDATA[project_skills]]></attributeHandle>
+                                                <attributeTitleText><![CDATA[Skills:]]></attributeTitleText>
+                                                <displayTag><![CDATA[]]></displayTag>
+                                                <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
+                                                <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
+                                                <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </blocks>
+                            </area>
+                            <area name="Main">
+                                <blocks>
+                                    <block type="core_page_type_composer_control_output" name="" mc-block-id="lppk0el5">
+                                        <control output-control-id="yXxylvrI"/>
+                                    </block>
+                                </blocks>
+                            </area>
+                            <area name="Page Footer">
+                                <blocks>
+                                    <block type="horizontal_rule" name="" mc-block-id="z5KRV50f"/>
+                                    <block type="related_pages" name="" mc-block-id="DEpG6w2r">
+                                        <data table="btRelatedPages">
+                                            <record>
+                                                <topicAttributeKeyHandle><![CDATA[project_topics]]></topicAttributeKeyHandle>
+                                                <title><![CDATA[Related Projects]]></title>
+                                                <maxResults><![CDATA[3]]></maxResults>
+                                                <cParentID/>
+                                                <ptID>{ccm:export:pagetype:portfolio_project}</ptID>
                                             </record>
                                         </data>
                                     </block>
@@ -1606,7 +1932,7 @@
                         <fID>{ccm:export:file:balloon.jpg}</fID>
                     </value>
                 </attributekey>
-                <attributekey handle="topic">
+                <attributekey handle="blog_entry_topics">
                     <topics>
                         <topic>/Projects</topic>
                     </topics>
@@ -1674,7 +2000,7 @@
                         <fID>{ccm:export:file:chinese_house2.jpg}</fID>
                     </value>
                 </attributekey>
-                <attributekey handle="topic">
+                <attributekey handle="blog_entry_topics">
                     <topics>
                         <topic>/Humor</topic>
                     </topics>
@@ -1742,7 +2068,7 @@
                         <fID>{ccm:export:file:plants.jpg}</fID>
                     </value>
                 </attributekey>
-                <attributekey handle="topic">
+                <attributekey handle="blog_entry_topics">
                     <topics>
                         <topic>/Projects</topic>
                     </topics>
@@ -1803,6 +2129,369 @@
                 <blocks/>
             </area>
         </page>
+        <page name="Portfolio" path="/portfolio" filename="" pagetype="portfolio" template="full" user="admin" description="" package="">
+            <attributes>
+                <attributekey handle="exclude_subpages_from_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+            <area name="Main">
+                <blocks>
+                    <block mc-block-id="LSGookBK"/>
+                    <block mc-block-id="RCaPR2iR"/>
+                    <block mc-block-id="N7fcHauo"/>
+                </blocks>
+            </area>
+            <area name="Main Footer">
+                <blocks/>
+            </area>
+        </page>
+        <page name="Project Title" public-date="2014-08-06 15:30:00" path="/portfolio/project-title" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="" package="">
+            <attributes>
+                <attributekey handle="thumbnail">
+                    <value>
+                        <fID>{ccm:export:file:bridge.jpg}</fID>
+                    </value>
+                </attributekey>
+                <attributekey handle="project_topics">
+                    <topics>
+                        <topic>/Homework</topic>
+                    </topics>
+                </attributekey>
+                <attributekey handle="project_client">
+                    <value><![CDATA[Test Client]]></value>
+                </attributekey>
+                <attributekey handle="project_tasks">
+                    <value>
+                        <option>Architecture</option>
+                        <option>Design</option>
+                        <option>Production</option>
+                    </value>
+                </attributekey>
+                <attributekey handle="project_skills">
+                    <value>
+                        <option>HTML</option>
+                        <option>JavaScript</option>
+                        <option>PHP</option>
+                    </value>
+                </attributekey>
+            </attributes>
+            <area name="Page Header">
+                <blocks>
+                    <block mc-block-id="Blj682mK"/>
+                </blocks>
+            </area>
+            <area name="Sidebar">
+                <blocks>
+                    <block mc-block-id="vXzZI1Jv"/>
+                    <block mc-block-id="m95mBEXx"/>
+                    <block mc-block-id="bq88MXOi"/>
+                </blocks>
+            </area>
+            <area name="Main">
+                <blocks>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tempus nibh a laoreet cursus. Phasellus malesuada vulputate bibendum. Ut vitae justo nisi. Sed consectetur vestibulum tortor, in bibendum diam lacinia vitae. Nullam volutpat risus quis orci consectetur adipiscing. In commodo vulputate arcu sit amet ornare. Vivamus ut iaculis velit.</blockquote><p>Pellentesque euismod lacus sed accumsan luctus. Suspendisse urna felis, lacinia vel tempor id, ultricies rutrum nisl. Nunc ultrices nulla et bibendum molestie. Phasellus porttitor sit amet libero vel fermentum. Sed sapien risus, eleifend vel hendrerit eu, porta vel tellus. Duis faucibus odio et magna varius, quis accumsan tellus vestibulum. Nam nunc nulla, convallis at elementum pharetra, adipiscing quis enim. Donec feugiat porttitor dolor, nec porttitor mi auctor eget. Fusce iaculis varius diam non dictum. Fusce elementum a nunc vel tincidunt. Morbi nec est elementum, vehicula odio nec, lobortis lacus. Nulla ultricies vitae nunc ut lacinia. Proin mattis felis sem, eu consectetur arcu varius et. Duis at lectus eu lorem elementum aliquet nec in elit. Vestibulum non metus ac risus adipiscing pellentesque sed sit amet lorem. Donec viverra, metus in varius pulvinar, augue nunc accumsan eros, a pulvinar est elit vitae nulla.</p><p>Duis non leo in enim laoreet pretium. Nullam vitae neque nec libero pharetra tempor at faucibus lectus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed imperdiet convallis arcu. Nam sollicitudin sollicitudin lacus non dictum. Aliquam erat volutpat. Nulla sapien quam, consequat non dui ut, eleifend sodales orci. Praesent quis lorem accumsan, volutpat lectus a, sollicitudin erat. Donec faucibus mi in sapien volutpat, ac auctor lorem mollis. Proin eget turpis non lacus bibendum porta non ac justo. Aliquam aliquam viverra lorem ac rutrum. In et sapien sit amet diam vestibulum cursus ut tristique tellus.</p><p>Ut in purus mi. Etiam ac aliquet ipsum. Pellentesque faucibus diam dui. Morbi a semper orci. Ut nec malesuada urna. Vestibulum aliquet ante ac lacus dictum, sit amet pulvinar leo laoreet. Maecenas ut est commodo, commodo quam nec, dignissim est. Quisque rutrum molestie nunc, sed mollis nulla volutpat et. Donec dignissim ornare augue eu aliquam. Aliquam in tincidunt velit. In at fermentum mauris, ut accumsan nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p><p>Integer ac nulla at nisi sodales ullamcorper id in justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam pharetra elit odio, ac mattis turpis consequat ac. Pellentesque tincidunt sed enim nec auctor. Quisque varius, felis a hendrerit faucibus, nunc lorem varius nibh, vel dignissim velit dolor ut elit. Mauris ut vulputate neque. Donec at est vitae massa egestas fringilla. Praesent a tristique nibh. Nunc blandit dui risus, quis rhoncus nisi consectetur vel.</p>]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Page Footer">
+                <blocks>
+                    <block mc-block-id="z5KRV50f"/>
+                    <block mc-block-id="DEpG6w2r"/>
+                </blocks>
+            </area>
+        </page>
+        <page name="Project Title 2" public-date="2014-08-06 15:20:00" path="/portfolio/project-title-2" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="" package="">
+            <attributes>
+                <attributekey handle="thumbnail">
+                    <value>
+                        <fID>{ccm:export:file:houses.jpg}</fID>
+                    </value>
+                </attributekey>
+                <attributekey handle="project_topics">
+                    <topics>
+                        <topic>/Activities</topic>
+                    </topics>
+                </attributekey>
+                <attributekey handle="project_client">
+                    <value><![CDATA[Test Client]]></value>
+                </attributekey>
+                <attributekey handle="project_tasks">
+                    <value>
+                        <option>Architecture</option>
+                    </value>
+                </attributekey>
+                <attributekey handle="project_skills">
+                    <value>
+                        <option>PHP</option>
+                    </value>
+                </attributekey>
+            </attributes>
+            <area name="Page Header">
+                <blocks>
+                    <block mc-block-id="Blj682mK"/>
+                </blocks>
+            </area>
+            <area name="Sidebar">
+                <blocks>
+                    <block mc-block-id="vXzZI1Jv"/>
+                    <block mc-block-id="m95mBEXx"/>
+                    <block mc-block-id="bq88MXOi"/>
+                </blocks>
+            </area>
+            <area name="Main">
+                <blocks>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tempus nibh a laoreet cursus. Phasellus malesuada vulputate bibendum. Ut vitae justo nisi. Sed consectetur vestibulum tortor, in bibendum diam lacinia vitae. Nullam volutpat risus quis orci consectetur adipiscing. In commodo vulputate arcu sit amet ornare. Vivamus ut iaculis velit.</blockquote><p>Pellentesque euismod lacus sed accumsan luctus. Suspendisse urna felis, lacinia vel tempor id, ultricies rutrum nisl. Nunc ultrices nulla et bibendum molestie. Phasellus porttitor sit amet libero vel fermentum. Sed sapien risus, eleifend vel hendrerit eu, porta vel tellus. Duis faucibus odio et magna varius, quis accumsan tellus vestibulum. Nam nunc nulla, convallis at elementum pharetra, adipiscing quis enim. Donec feugiat porttitor dolor, nec porttitor mi auctor eget. Fusce iaculis varius diam non dictum. Fusce elementum a nunc vel tincidunt. Morbi nec est elementum, vehicula odio nec, lobortis lacus. Nulla ultricies vitae nunc ut lacinia. Proin mattis felis sem, eu consectetur arcu varius et. Duis at lectus eu lorem elementum aliquet nec in elit. Vestibulum non metus ac risus adipiscing pellentesque sed sit amet lorem. Donec viverra, metus in varius pulvinar, augue nunc accumsan eros, a pulvinar est elit vitae nulla.</p><p>Duis non leo in enim laoreet pretium. Nullam vitae neque nec libero pharetra tempor at faucibus lectus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed imperdiet convallis arcu. Nam sollicitudin sollicitudin lacus non dictum. Aliquam erat volutpat. Nulla sapien quam, consequat non dui ut, eleifend sodales orci. Praesent quis lorem accumsan, volutpat lectus a, sollicitudin erat. Donec faucibus mi in sapien volutpat, ac auctor lorem mollis. Proin eget turpis non lacus bibendum porta non ac justo. Aliquam aliquam viverra lorem ac rutrum. In et sapien sit amet diam vestibulum cursus ut tristique tellus.</p><p>Ut in purus mi. Etiam ac aliquet ipsum. Pellentesque faucibus diam dui. Morbi a semper orci. Ut nec malesuada urna. Vestibulum aliquet ante ac lacus dictum, sit amet pulvinar leo laoreet. Maecenas ut est commodo, commodo quam nec, dignissim est. Quisque rutrum molestie nunc, sed mollis nulla volutpat et. Donec dignissim ornare augue eu aliquam. Aliquam in tincidunt velit. In at fermentum mauris, ut accumsan nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p><p>Integer ac nulla at nisi sodales ullamcorper id in justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam pharetra elit odio, ac mattis turpis consequat ac. Pellentesque tincidunt sed enim nec auctor. Quisque varius, felis a hendrerit faucibus, nunc lorem varius nibh, vel dignissim velit dolor ut elit. Mauris ut vulputate neque. Donec at est vitae massa egestas fringilla. Praesent a tristique nibh. Nunc blandit dui risus, quis rhoncus nisi consectetur vel.</p>]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Page Footer">
+                <blocks>
+                    <block mc-block-id="z5KRV50f"/>
+                    <block mc-block-id="DEpG6w2r"/>
+                </blocks>
+            </area>
+        </page>
+        <page name="Project Title 3" public-date="2014-08-06 15:10:00" path="/portfolio/project-title-3" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="" package="">
+            <attributes>
+                <attributekey handle="thumbnail">
+                    <value>
+                        <fID>{ccm:export:file:sunset.jpg}</fID>
+                    </value>
+                </attributekey>
+                <attributekey handle="project_topics">
+                    <topics>
+                        <topic>/Homework</topic>
+                    </topics>
+                </attributekey>
+                <attributekey handle="project_client">
+                    <value><![CDATA[Test Client 2]]></value>
+                </attributekey>
+                <attributekey handle="project_tasks">
+                    <value>
+                        <option>Multimedia</option>
+                        <option>Production</option>
+                        <option>Development</option>
+                    </value>
+                </attributekey>
+                <attributekey handle="project_skills">
+                    <value>
+                        <option>PHP</option>
+                        <option>HTML</option>
+                        <option>CSS</option>
+                        <option>JavaScript</option>
+                    </value>
+                </attributekey>
+            </attributes>
+            <area name="Page Header">
+                <blocks>
+                    <block mc-block-id="Blj682mK"/>
+                </blocks>
+            </area>
+            <area name="Sidebar">
+                <blocks>
+                    <block mc-block-id="vXzZI1Jv"/>
+                    <block mc-block-id="m95mBEXx"/>
+                    <block mc-block-id="bq88MXOi"/>
+                </blocks>
+            </area>
+            <area name="Main">
+                <blocks>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tempus nibh a laoreet cursus. Phasellus malesuada vulputate bibendum. Ut vitae justo nisi. Sed consectetur vestibulum tortor, in bibendum diam lacinia vitae. Nullam volutpat risus quis orci consectetur adipiscing. In commodo vulputate arcu sit amet ornare. Vivamus ut iaculis velit.</blockquote><p>Pellentesque euismod lacus sed accumsan luctus. Suspendisse urna felis, lacinia vel tempor id, ultricies rutrum nisl. Nunc ultrices nulla et bibendum molestie. Phasellus porttitor sit amet libero vel fermentum. Sed sapien risus, eleifend vel hendrerit eu, porta vel tellus. Duis faucibus odio et magna varius, quis accumsan tellus vestibulum. Nam nunc nulla, convallis at elementum pharetra, adipiscing quis enim. Donec feugiat porttitor dolor, nec porttitor mi auctor eget. Fusce iaculis varius diam non dictum. Fusce elementum a nunc vel tincidunt. Morbi nec est elementum, vehicula odio nec, lobortis lacus. Nulla ultricies vitae nunc ut lacinia. Proin mattis felis sem, eu consectetur arcu varius et. Duis at lectus eu lorem elementum aliquet nec in elit. Vestibulum non metus ac risus adipiscing pellentesque sed sit amet lorem. Donec viverra, metus in varius pulvinar, augue nunc accumsan eros, a pulvinar est elit vitae nulla.</p><p>Duis non leo in enim laoreet pretium. Nullam vitae neque nec libero pharetra tempor at faucibus lectus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed imperdiet convallis arcu. Nam sollicitudin sollicitudin lacus non dictum. Aliquam erat volutpat. Nulla sapien quam, consequat non dui ut, eleifend sodales orci. Praesent quis lorem accumsan, volutpat lectus a, sollicitudin erat. Donec faucibus mi in sapien volutpat, ac auctor lorem mollis. Proin eget turpis non lacus bibendum porta non ac justo. Aliquam aliquam viverra lorem ac rutrum. In et sapien sit amet diam vestibulum cursus ut tristique tellus.</p><p>Ut in purus mi. Etiam ac aliquet ipsum. Pellentesque faucibus diam dui. Morbi a semper orci. Ut nec malesuada urna. Vestibulum aliquet ante ac lacus dictum, sit amet pulvinar leo laoreet. Maecenas ut est commodo, commodo quam nec, dignissim est. Quisque rutrum molestie nunc, sed mollis nulla volutpat et. Donec dignissim ornare augue eu aliquam. Aliquam in tincidunt velit. In at fermentum mauris, ut accumsan nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p><p>Integer ac nulla at nisi sodales ullamcorper id in justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam pharetra elit odio, ac mattis turpis consequat ac. Pellentesque tincidunt sed enim nec auctor. Quisque varius, felis a hendrerit faucibus, nunc lorem varius nibh, vel dignissim velit dolor ut elit. Mauris ut vulputate neque. Donec at est vitae massa egestas fringilla. Praesent a tristique nibh. Nunc blandit dui risus, quis rhoncus nisi consectetur vel.</p>]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Page Footer">
+                <blocks>
+                    <block mc-block-id="z5KRV50f"/>
+                    <block mc-block-id="DEpG6w2r"/>
+                </blocks>
+            </area>
+        </page>
+        <page name="Project Title 4" public-date="2014-08-06 15:00:00" path="/portfolio/project-title-4" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="" package="">
+            <attributes>
+                <attributekey handle="thumbnail">
+                    <value>
+                        <fID>{ccm:export:file:subway.jpg}</fID>
+                    </value>
+                </attributekey>
+                <attributekey handle="project_topics">
+                    <topics>
+                        <topic>/Homework</topic>
+                    </topics>
+                </attributekey>
+                <attributekey handle="project_client">
+                    <value><![CDATA[Test Client 2]]></value>
+                </attributekey>
+                <attributekey handle="project_tasks">
+                    <value>
+                        <option>Design</option>
+                    </value>
+                </attributekey>
+                <attributekey handle="project_skills">
+                    <value>
+                        <option>Photoshop</option>
+                    </value>
+                </attributekey>
+            </attributes>
+            <area name="Page Header">
+                <blocks>
+                    <block mc-block-id="Blj682mK"/>
+                </blocks>
+            </area>
+            <area name="Sidebar">
+                <blocks>
+                    <block mc-block-id="vXzZI1Jv"/>
+                    <block mc-block-id="m95mBEXx"/>
+                    <block mc-block-id="bq88MXOi"/>
+                </blocks>
+            </area>
+            <area name="Main">
+                <blocks>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tempus nibh a laoreet cursus. Phasellus malesuada vulputate bibendum. Ut vitae justo nisi. Sed consectetur vestibulum tortor, in bibendum diam lacinia vitae. Nullam volutpat risus quis orci consectetur adipiscing. In commodo vulputate arcu sit amet ornare. Vivamus ut iaculis velit.</blockquote><p>Pellentesque euismod lacus sed accumsan luctus. Suspendisse urna felis, lacinia vel tempor id, ultricies rutrum nisl. Nunc ultrices nulla et bibendum molestie. Phasellus porttitor sit amet libero vel fermentum. Sed sapien risus, eleifend vel hendrerit eu, porta vel tellus. Duis faucibus odio et magna varius, quis accumsan tellus vestibulum. Nam nunc nulla, convallis at elementum pharetra, adipiscing quis enim. Donec feugiat porttitor dolor, nec porttitor mi auctor eget. Fusce iaculis varius diam non dictum. Fusce elementum a nunc vel tincidunt. Morbi nec est elementum, vehicula odio nec, lobortis lacus. Nulla ultricies vitae nunc ut lacinia. Proin mattis felis sem, eu consectetur arcu varius et. Duis at lectus eu lorem elementum aliquet nec in elit. Vestibulum non metus ac risus adipiscing pellentesque sed sit amet lorem. Donec viverra, metus in varius pulvinar, augue nunc accumsan eros, a pulvinar est elit vitae nulla.</p><p>Duis non leo in enim laoreet pretium. Nullam vitae neque nec libero pharetra tempor at faucibus lectus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed imperdiet convallis arcu. Nam sollicitudin sollicitudin lacus non dictum. Aliquam erat volutpat. Nulla sapien quam, consequat non dui ut, eleifend sodales orci. Praesent quis lorem accumsan, volutpat lectus a, sollicitudin erat. Donec faucibus mi in sapien volutpat, ac auctor lorem mollis. Proin eget turpis non lacus bibendum porta non ac justo. Aliquam aliquam viverra lorem ac rutrum. In et sapien sit amet diam vestibulum cursus ut tristique tellus.</p><p>Ut in purus mi. Etiam ac aliquet ipsum. Pellentesque faucibus diam dui. Morbi a semper orci. Ut nec malesuada urna. Vestibulum aliquet ante ac lacus dictum, sit amet pulvinar leo laoreet. Maecenas ut est commodo, commodo quam nec, dignissim est. Quisque rutrum molestie nunc, sed mollis nulla volutpat et. Donec dignissim ornare augue eu aliquam. Aliquam in tincidunt velit. In at fermentum mauris, ut accumsan nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p><p>Integer ac nulla at nisi sodales ullamcorper id in justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam pharetra elit odio, ac mattis turpis consequat ac. Pellentesque tincidunt sed enim nec auctor. Quisque varius, felis a hendrerit faucibus, nunc lorem varius nibh, vel dignissim velit dolor ut elit. Mauris ut vulputate neque. Donec at est vitae massa egestas fringilla. Praesent a tristique nibh. Nunc blandit dui risus, quis rhoncus nisi consectetur vel.</p>]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Page Footer">
+                <blocks>
+                    <block mc-block-id="z5KRV50f"/>
+                    <block mc-block-id="DEpG6w2r"/>
+                </blocks>
+            </area>
+        </page>
+        <page name="Project Title 5" public-date="2014-08-06 14:30:00" path="/portfolio/project-title-5" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="" package="">
+            <attributes>
+                <attributekey handle="thumbnail">
+                    <value>
+                        <fID>{ccm:export:file:shoes.jpg}</fID>
+                    </value>
+                </attributekey>
+                <attributekey handle="project_topics">
+                    <topics>
+                        <topic>/Homework</topic>
+                    </topics>
+                </attributekey>
+                <attributekey handle="project_client">
+                    <value><![CDATA[Test Client 2]]></value>
+                </attributekey>
+                <attributekey handle="project_tasks">
+                    <value>
+                        <option>Design</option>
+                    </value>
+                </attributekey>
+                <attributekey handle="project_skills">
+                    <value>
+                        <option>Photoshop</option>
+                    </value>
+                </attributekey>
+            </attributes>
+            <area name="Page Header">
+                <blocks>
+                    <block mc-block-id="Blj682mK"/>
+                </blocks>
+            </area>
+            <area name="Sidebar">
+                <blocks>
+                    <block mc-block-id="vXzZI1Jv"/>
+                    <block mc-block-id="m95mBEXx"/>
+                    <block mc-block-id="bq88MXOi"/>
+                </blocks>
+            </area>
+            <area name="Main">
+                <blocks>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tempus nibh a laoreet cursus. Phasellus malesuada vulputate bibendum. Ut vitae justo nisi. Sed consectetur vestibulum tortor, in bibendum diam lacinia vitae. Nullam volutpat risus quis orci consectetur adipiscing. In commodo vulputate arcu sit amet ornare. Vivamus ut iaculis velit.</blockquote><p>Pellentesque euismod lacus sed accumsan luctus. Suspendisse urna felis, lacinia vel tempor id, ultricies rutrum nisl. Nunc ultrices nulla et bibendum molestie. Phasellus porttitor sit amet libero vel fermentum. Sed sapien risus, eleifend vel hendrerit eu, porta vel tellus. Duis faucibus odio et magna varius, quis accumsan tellus vestibulum. Nam nunc nulla, convallis at elementum pharetra, adipiscing quis enim. Donec feugiat porttitor dolor, nec porttitor mi auctor eget. Fusce iaculis varius diam non dictum. Fusce elementum a nunc vel tincidunt. Morbi nec est elementum, vehicula odio nec, lobortis lacus. Nulla ultricies vitae nunc ut lacinia. Proin mattis felis sem, eu consectetur arcu varius et. Duis at lectus eu lorem elementum aliquet nec in elit. Vestibulum non metus ac risus adipiscing pellentesque sed sit amet lorem. Donec viverra, metus in varius pulvinar, augue nunc accumsan eros, a pulvinar est elit vitae nulla.</p><p>Duis non leo in enim laoreet pretium. Nullam vitae neque nec libero pharetra tempor at faucibus lectus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed imperdiet convallis arcu. Nam sollicitudin sollicitudin lacus non dictum. Aliquam erat volutpat. Nulla sapien quam, consequat non dui ut, eleifend sodales orci. Praesent quis lorem accumsan, volutpat lectus a, sollicitudin erat. Donec faucibus mi in sapien volutpat, ac auctor lorem mollis. Proin eget turpis non lacus bibendum porta non ac justo. Aliquam aliquam viverra lorem ac rutrum. In et sapien sit amet diam vestibulum cursus ut tristique tellus.</p><p>Ut in purus mi. Etiam ac aliquet ipsum. Pellentesque faucibus diam dui. Morbi a semper orci. Ut nec malesuada urna. Vestibulum aliquet ante ac lacus dictum, sit amet pulvinar leo laoreet. Maecenas ut est commodo, commodo quam nec, dignissim est. Quisque rutrum molestie nunc, sed mollis nulla volutpat et. Donec dignissim ornare augue eu aliquam. Aliquam in tincidunt velit. In at fermentum mauris, ut accumsan nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p><p>Integer ac nulla at nisi sodales ullamcorper id in justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam pharetra elit odio, ac mattis turpis consequat ac. Pellentesque tincidunt sed enim nec auctor. Quisque varius, felis a hendrerit faucibus, nunc lorem varius nibh, vel dignissim velit dolor ut elit. Mauris ut vulputate neque. Donec at est vitae massa egestas fringilla. Praesent a tristique nibh. Nunc blandit dui risus, quis rhoncus nisi consectetur vel.</p>]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Page Footer">
+                <blocks>
+                    <block mc-block-id="z5KRV50f"/>
+                    <block mc-block-id="DEpG6w2r"/>
+                </blocks>
+            </area>
+        </page>
+        <page name="Project Title 6" public-date="2014-08-06 14:20:00" path="/portfolio/project-title-6" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="" package="">
+            <attributes>
+                <attributekey handle="thumbnail">
+                    <value>
+                        <fID>{ccm:export:file:mountains.jpg}</fID>
+                    </value>
+                </attributekey>
+                <attributekey handle="project_topics">
+                    <topics>
+                        <topic>/Homework</topic>
+                    </topics>
+                </attributekey>
+                <attributekey handle="project_client">
+                    <value><![CDATA[Test Client 2]]></value>
+                </attributekey>
+                <attributekey handle="project_tasks">
+                    <value>
+                        <option>Design</option>
+                    </value>
+                </attributekey>
+                <attributekey handle="project_skills">
+                    <value>
+                        <option>Photoshop</option>
+                    </value>
+                </attributekey>
+            </attributes>
+            <area name="Page Header">
+                <blocks>
+                    <block mc-block-id="Blj682mK"/>
+                </blocks>
+            </area>
+            <area name="Sidebar">
+                <blocks>
+                    <block mc-block-id="vXzZI1Jv"/>
+                    <block mc-block-id="m95mBEXx"/>
+                    <block mc-block-id="bq88MXOi"/>
+                </blocks>
+            </area>
+            <area name="Main">
+                <blocks>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tempus nibh a laoreet cursus. Phasellus malesuada vulputate bibendum. Ut vitae justo nisi. Sed consectetur vestibulum tortor, in bibendum diam lacinia vitae. Nullam volutpat risus quis orci consectetur adipiscing. In commodo vulputate arcu sit amet ornare. Vivamus ut iaculis velit.</blockquote><p>Pellentesque euismod lacus sed accumsan luctus. Suspendisse urna felis, lacinia vel tempor id, ultricies rutrum nisl. Nunc ultrices nulla et bibendum molestie. Phasellus porttitor sit amet libero vel fermentum. Sed sapien risus, eleifend vel hendrerit eu, porta vel tellus. Duis faucibus odio et magna varius, quis accumsan tellus vestibulum. Nam nunc nulla, convallis at elementum pharetra, adipiscing quis enim. Donec feugiat porttitor dolor, nec porttitor mi auctor eget. Fusce iaculis varius diam non dictum. Fusce elementum a nunc vel tincidunt. Morbi nec est elementum, vehicula odio nec, lobortis lacus. Nulla ultricies vitae nunc ut lacinia. Proin mattis felis sem, eu consectetur arcu varius et. Duis at lectus eu lorem elementum aliquet nec in elit. Vestibulum non metus ac risus adipiscing pellentesque sed sit amet lorem. Donec viverra, metus in varius pulvinar, augue nunc accumsan eros, a pulvinar est elit vitae nulla.</p><p>Duis non leo in enim laoreet pretium. Nullam vitae neque nec libero pharetra tempor at faucibus lectus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed imperdiet convallis arcu. Nam sollicitudin sollicitudin lacus non dictum. Aliquam erat volutpat. Nulla sapien quam, consequat non dui ut, eleifend sodales orci. Praesent quis lorem accumsan, volutpat lectus a, sollicitudin erat. Donec faucibus mi in sapien volutpat, ac auctor lorem mollis. Proin eget turpis non lacus bibendum porta non ac justo. Aliquam aliquam viverra lorem ac rutrum. In et sapien sit amet diam vestibulum cursus ut tristique tellus.</p><p>Ut in purus mi. Etiam ac aliquet ipsum. Pellentesque faucibus diam dui. Morbi a semper orci. Ut nec malesuada urna. Vestibulum aliquet ante ac lacus dictum, sit amet pulvinar leo laoreet. Maecenas ut est commodo, commodo quam nec, dignissim est. Quisque rutrum molestie nunc, sed mollis nulla volutpat et. Donec dignissim ornare augue eu aliquam. Aliquam in tincidunt velit. In at fermentum mauris, ut accumsan nisl. Interdum et malesuada fames ac ante ipsum primis in faucibus.</p><p>Integer ac nulla at nisi sodales ullamcorper id in justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam pharetra elit odio, ac mattis turpis consequat ac. Pellentesque tincidunt sed enim nec auctor. Quisque varius, felis a hendrerit faucibus, nunc lorem varius nibh, vel dignissim velit dolor ut elit. Mauris ut vulputate neque. Donec at est vitae massa egestas fringilla. Praesent a tristique nibh. Nunc blandit dui risus, quis rhoncus nisi consectetur vel.</p>]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Page Footer">
+                <blocks>
+                    <block mc-block-id="z5KRV50f"/>
+                    <block mc-block-id="DEpG6w2r"/>
+                </blocks>
+            </area>
+        </page>
+
     </pages>
     <sociallinks>
         <link service="facebook" url="http://facebook.com/concrete5"/>
@@ -1810,7 +2499,7 @@
         <link service="twitter" url="http://twitter.com/concrete5"/>
     </sociallinks>
     <trees>
-    <tree type="topic" default="1">
+    <tree type="topic" name="Blog Entries">
         <topic_category name="Reviews">
             <topic name="Gadgets"/>
             <topic name="Movies"/>
@@ -1820,6 +2509,12 @@
         <topic name="Projects"/>
         <topic name="Sports"/>
         <topic name="Humor"/>
+    </tree>
+    <tree type="topic" name="Projects">
+        <topic name="Crafts"/>
+        <topic name="Homework"/>
+        <topic name="Supplies"/>
+        <topic name="Activities"/>
     </tree>
     </trees>
 </concrete5-cif>

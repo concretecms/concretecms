@@ -53,7 +53,6 @@ class Topic extends Tree
     {
         $db = Loader::db();
         $treeID = $db->GetOne('select treeID from TopicTrees where topicTreeName = ?', array($name));
-
         return Tree::getByID($treeID);
     }
 

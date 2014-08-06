@@ -82,6 +82,7 @@ class Controller extends BlockController
     public function save($data)
     {
         $data['maxResults'] = intval($data['maxResults']);
+        $data['cParentID'] = intval($data['cParentID']);
         parent::save($data);
     }
 }
