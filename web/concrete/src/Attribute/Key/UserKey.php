@@ -346,7 +346,7 @@ class UserKey extends Key {
 	}
 
 
-	function updateAttributesDisplayOrder($uats) {
+	public static function updateAttributesDisplayOrder($uats) {
 		$db = Loader::db();
 		for ($i = 0; $i < count($uats); $i++) {
 			$uak = static::getByID($uats[$i]);
