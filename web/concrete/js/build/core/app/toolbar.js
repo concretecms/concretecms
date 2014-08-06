@@ -79,7 +79,7 @@ var ConcreteToolbar = function() {
 		$('[data-launch-panel]').unbind().on('click', function() {
 			var panelID = $(this).attr('data-launch-panel');
 			$(this).toggleClass('ccm-launch-panel-loading');
-            $(this).append('<div class="spinner"><div class="double-bounce1"></div><div class="double-bounce2"></div>            </div>')
+            $(this).prepend('<span class="spinner"><div class="double-bounce1"></div><div class="double-bounce2"></div>            </span>')
 			var panel = ConcretePanelManager.getByIdentifier(panelID);
 			panel.toggle();
 			return false;
