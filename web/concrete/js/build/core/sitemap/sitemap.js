@@ -121,18 +121,26 @@
 
 					},
 					autoExpandMS: 1000,
-					preventVoidMoves: true,
+					preventVoidMoves: false,
 					onDragEnter: function(node, sourceNode) {
 						return true;
 					},
 					onDragOver: function(node, sourceNode, hitMode) {
-						if (!node.parent.data.cID) {
+						if ((!node.parent.data.cID) && (node.data.cID !== '1')) { // Home page has no parents, but we still want to be able to hit it.
 							return false;
 						}
+
+                        if((hitMode != 'over') && (node.data.cID == 1)) {  // Home gets no siblings
+                            return false;
+                        }
 
 						if (!node.data.cID && hitMode == 'after') {
 							return false;
 						}
+
+                        if (sourceNode.data.cID == node.data.cID) {
+                            return false; // can't drag node onto itself.
+                        }
 
 				        // Prevent dropping a parent below it's own child
 				        if(node.isDescendantOf(sourceNode)){
@@ -157,8 +165,10 @@
 
 		setupTreeEvents: function() {
 			var my = this;
-			ConcreteEvent.subscribe('SitemapDeleteRequestComplete', function(e) {
+            ConcreteEvent.unsubscribe('SitemapDeleteRequestComplete.sitemap');
+			ConcreteEvent.subscribe('SitemapDeleteRequestComplete.sitemap', function(e) {
 	 			var node = my.$element.dynatree('getActiveNode');
+
 				var parent = node.parent;
 				my.reloadNode(parent);
 			});
@@ -207,8 +217,8 @@
 				modal: false,
 				height: dialog_height
 			});
-
-			ConcreteEvent.subscribe('SitemapDragRequestComplete', function(e) {
+            ConcreteEvent.unsubscribe('SitemapDragRequestComplete.sitemap');
+			ConcreteEvent.subscribe('SitemapDragRequestComplete.sitemap', function(e) {
 				var reloadNode = destNode.parent;
 				if (dragMode == 'over') {
 					reloadNode = destNode;
