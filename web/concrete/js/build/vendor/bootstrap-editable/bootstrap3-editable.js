@@ -614,7 +614,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
     Note: following params could redefined in engine: bootstrap or jqueryui:
     Classes 'control-group' and 'editable-error-block' must always present!
     */
-    $.fn.editableform.template = '<form class="form-inline editableform">'+
+    $.fn.editableform.template = '<form class="form-stacked editableform">'+
     '<div class="control-group">' +
     '<div><div class="editable-input"></div><div class="editable-buttons"></div></div>'+
     '<div class="editable-error-block"></div>' +
