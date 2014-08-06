@@ -54,8 +54,7 @@
               description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>add file, delete file, copy, move, alias, resize, crop, rename, images, title, attribute
-                    </value>
+                    <value>add file, delete file, copy, move, alias, resize, crop, rename, images, title, attribute</value>
                 </attributekey>
                 <attributekey handle="icon_dashboard">
                     <value>icon-picture</value>
@@ -414,8 +413,7 @@
               description="Share content across your site." package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>stacks, reusable content, scrapbook, copy, paste, paste block, copy block, site name, logo
-                    </value>
+                    <value>stacks, reusable content, scrapbook, copy, paste, paste block, copy block, site name, logo</value>
                 </attributekey>
                 <attributekey handle="icon_dashboard">
                     <value>icon-th</value>
@@ -463,9 +461,7 @@
               package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>add-on, addon, add on, package, applications, ecommerce, discussions, forums, themes,
-                        templates, blocks
-                    </value>
+                    <value>add-on, addon, add on, package, applications, ecommerce, discussions, forums, themes, templates, blocks</value>
                 </attributekey>
             </attributes>
         </page>
@@ -518,9 +514,7 @@
               pagetype="" description="Download add-ons from concrete5.org." package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>buy addon, buy add on, buy add-on, purchase addon, purchase add on, purchase add-on, find
-                        addon, new addon, marketplace
-                    </value>
+                    <value>buy addon, buy add on, buy add-on, purchase addon, purchase add on, purchase add-on, find addon, new addon, marketplace</value>
                 </attributekey>
             </attributes>
         </page>
@@ -690,9 +684,7 @@
               filename="/dashboard/system/optimization/cache.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>cache option, change cache, override, turn on cache, turn off cache, no cache, page cache,
-                        caching
-                    </value>
+                    <value>cache option, change cache, override, turn on cache, turn off cache, no cache, page cache, caching</value>
                 </attributekey>
             </attributes>
         </page>
@@ -708,9 +700,7 @@
               filename="/dashboard/system/optimization/jobs.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>index search, reindex search, build sitemap, sitemap.xml, clear old versions, page versions,
-                        remove old
-                    </value>
+                    <value>index search, reindex search, build sitemap, sitemap.xml, clear old versions, page versions, remove old</value>
                 </attributekey>
             </attributes>
         </page>
@@ -838,9 +828,7 @@
               filename="/dashboard/system/mail/importers.php" pagetype="" description="" package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>email server, mail settings, mail configuration, private message, message system, import,
-                        email, message
-                    </value>
+                    <value>email server, mail settings, mail configuration, private message, message system, import, email, message</value>
                 </attributekey>
             </attributes>
         </page>
