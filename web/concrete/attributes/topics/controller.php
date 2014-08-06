@@ -106,7 +106,7 @@ class Controller extends AttributeTypeController
         $node = Node::getByID($this->akTopicParentNodeID);
         $path = $node->getTreeNodeDisplayPath();
         $treeNode = $key->addChild('tree');
-        $treeNode->addAttribute('name', $tree->getTreeDisplayName());
+        $treeNode->addAttribute('name', $tree->getTreeName());
         $treeNode->addAttribute('path', $path);
 
         return $akey;
