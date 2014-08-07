@@ -1,0 +1,38 @@
+// feature block
+div.ccm-block-feature-item {
+  position: relative;
+
+  h4, i {
+    color: @header-site-title-type-color;
+  }
+
+  i {
+    position: absolute;
+    top: 3px;
+    left: 0px;
+  }
+
+  padding-left: 25px;
+  margin-bottom: 40px
+}
+
+// Custom home page class for feature
+div.feature-home-page {
+  div.ccm-block-feature-item h4, div.ccm-block-feature-item i {
+    color: @home-feature-title-color;
+  }
+
+  div.ccm-block-feature-item h4 {
+    font-size: 1.5em;
+  }
+
+  div.ccm-block-feature-item i {
+    color: @home-feature-icon-color;
+    font-size: 1.3em;
+    top: 1px;
+  }
+
+  div.ccm-block-feature-item {
+    padding-left: 45px;
+  }
+}
