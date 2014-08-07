@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Attribute\Boolean;
+use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -13,7 +14,7 @@ class Controller extends AttributeTypeController  {
 	public function searchForm($list) {
 		$list->filterByAttribute($this->attributeKey->getAttributeKeyHandle(), 1);
 		return $list;
-	}	
+	}
 
 	public function getValue() {
 		$db = Loader::db();

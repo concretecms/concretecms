@@ -12,6 +12,13 @@ $th = Loader::helper('text');
 		$target = ($page->getCollectionPointerExternalLink() != '' && $page->openCollectionPointerExternalLinkInNewWindow()) ? '_blank' : $page->getAttribute('nav_target');
 		$target = empty($target) ? '_self' : $target;
 		$thumbnail = $page->getAttribute('thumbnail');
+        $hoverLinkText = $title;
+        $description = $page->getCollectionDescription();
+        $description = $controller->truncateSummaries ? $th->wordSafeShortText($description, $controller->truncateChars) : $description;
+        $description = $th->entities($description);
+        if ($useButtonForLink) {
+            $hoverLinkText = $buttonLinkText;
+        }
 
         ?>
 
@@ -29,12 +36,27 @@ $th = Loader::helper('text');
                         <div class="ccm-block-page-list-page-entry-grid-thumbnail-title-wrapper">
                         <div class="ccm-block-page-list-page-entry-grid-thumbnail-title">
                             <i class="ccm-block-page-list-page-entry-grid-thumbnail-icon"></i>
-                            <?=$title?>
+                            <?=$hoverLinkText?>
                         </div>
                         </div>
                     </div>
-
                 </a>
+
+                <? if ($useButtonForLink) { ?>
+                <h3 class="ccm-block-page-list-title">
+                    <?php echo $title; ?>
+                </h3>
+                <? } ?>
+
+                <? if ($includeDate): ?>
+                    <div class="ccm-block-page-list-date"><?=$date?></div>
+                <? endif; ?>
+
+                <? if ($includeDescription): ?>
+                    <div class="ccm-block-page-list-description">
+                        <?php echo $description ?>
+                    </div>
+                <? endif; ?>
 
             </div>
         <? endif; ?>

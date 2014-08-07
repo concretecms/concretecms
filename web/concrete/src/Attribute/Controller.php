@@ -2,6 +2,7 @@
 namespace Concrete\Core\Attribute;
 
 use \Concrete\Core\Controller\AbstractController;
+use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Loader;
 use Core;
 use \Concrete\Core\Attribute\View as AttributeTypeView;
