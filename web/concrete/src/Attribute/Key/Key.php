@@ -885,7 +885,9 @@ class Key extends Object
         $this->render('search');
     }
 
-    // deprecated
+    /**
+     * @deprecated
+     */
     public function getKeyName()
     {
         return $this->getAttributeKeyName();

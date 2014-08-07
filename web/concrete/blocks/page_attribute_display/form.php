@@ -58,7 +58,7 @@ print Core::make('helper/concrete/ui')->tabs(array(
         $aks = $this->controller->getAvailableAttributes();
         foreach ($aks as $ak) {
             echo "<option value=\"".$ak->getAttributeKeyHandle()."\" ".($ak->getAttributeKeyHandle()==$this->controller->attributeHandle?"selected=\"selected\"":"").">".
-            $ak->getAttributeKeyName()."</option>\n";
+            $ak->getAttributeKeyDisplayName()."</option>\n";
         }
         ?>
         </optgroup>

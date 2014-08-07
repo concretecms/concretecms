@@ -13,7 +13,7 @@ if (PERMISSIONS_MODEL == 'advanced') {
 
 $searchFieldAttributes = UserAttributeKey::getSearchableList();
 foreach ($searchFieldAttributes as $ak) {
-    $searchFields[$ak->getAttributeKeyID()] = tc('AttributeKeyName', $ak->getAttributeKeyName());
+    $searchFields[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
 }
 
 $ek = PermissionKey::getByHandle('edit_user_properties');

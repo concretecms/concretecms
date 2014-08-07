@@ -27,7 +27,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 	<?php foreach ($list as $ak) { ?>
 
-		<div class="checkbox"><label><?=$form->checkbox('ak_' . $ak->getAttributeKeyHandle(), 1, $fldc->contains($ak))?> <span><?=tc('AttributeKeyName', $ak->getAttributeKeyName())?></span></label></div>
+		<div class="checkbox"><label><?=$form->checkbox('ak_' . $ak->getAttributeKeyHandle(), 1, $fldc->contains($ak))?> <span><?=$ak->getAttributeKeyDisplayName()?></span></label></div>
 
 	<?php } ?>
 

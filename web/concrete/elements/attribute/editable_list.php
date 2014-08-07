@@ -24,13 +24,13 @@
     $canEdit = $permissionsCallback($ak, $permissionsArguments); ?>
 
 	<div class="row">
-		<div class="col-md-3"><p><?=tc('AttributeKeyName', $ak->getAttributeKeyName())?></p></div>
+		<div class="col-md-3"><p><?=$ak->getAttributeKeyDisplayName()?></p></div>
 		<div class="col-md-9" <?php if ($canEdit) { ?>data-editable-field-inline-commands="true"<?php } ?>>
 		<?php if ($canEdit) { ?>
 		<ul class="ccm-edit-mode-inline-commands">
 			<li><a href="#" data-key-id="<?=$ak->getAttributeKeyID()?>" data-url="<?=$clearAction?>" data-editable-field-command="clear_attribute"><i class="fa fa-trash"></i></a></li>
 		</ul>
-		<?php } ?><p><span <?php if ($canEdit) { ?>data-title="<?=$ak->getAttributeKeyName()?>" data-key-id="<?=$ak->getAttributeKeyID()?>" data-name="<?=$ak->getAttributeKeyID()?>" data-editable-field-type="xeditableAttribute" data-url="<?=$saveAction?>" data-type="concreteattribute"<?php } ?>><?=$display?></span></p>
+		<?php } ?><p><span <?php if ($canEdit) { ?>data-title="<?=$ak->getAttributeKeyDisplayName()?>" data-key-id="<?=$ak->getAttributeKeyID()?>" data-name="<?=$ak->getAttributeKeyID()?>" data-editable-field-type="xeditableAttribute" data-url="<?=$saveAction?>" data-type="concreteattribute"<?php } ?>><?=$display?></span></p>
 	</div>
 	</div>
 

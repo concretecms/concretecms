@@ -44,7 +44,7 @@ class Attributes extends BackendInterfacePageController
         ob_end_clean();
         $obj = new stdClass();
         $obj->akID = $ak->getAttributeKeyID();
-        $obj->label = $ak->getAttributeKeyName();
+        $obj->label = $ak->getAttributeKeyDisplayName();
         $obj->content = $html;
         $obj->pending = ($mode == 'add') ? true : false;
 
