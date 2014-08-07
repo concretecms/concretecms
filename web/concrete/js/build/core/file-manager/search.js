@@ -53,6 +53,7 @@
                 dataType: 'json',
                 formData: {'ccm_token': CCM_SECURITY_TOKEN},
                 error: function(r) {
+                    jQuery.fn.dialog.closeTop();
                     var message = r.responseText;
                     try {
                         message = jQuery.parseJSON(message).errors.join('<br/>');
