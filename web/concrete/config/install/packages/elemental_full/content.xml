@@ -2178,7 +2178,7 @@
                 <blocks/>
             </area>
         </page>
-        <page name="Project Title" public-date="2014-08-06 15:30:00" path="/portfolio/project-title" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="" package="">
+        <page name="Project Title" public-date="2014-08-06 15:30:00" path="/portfolio/project-title" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing." package="">
             <attributes>
                 <attributekey handle="is_featured">
                     <value><![CDATA[1]]></value>
@@ -2241,7 +2241,7 @@
                 </blocks>
             </area>
         </page>
-        <page name="Project Title 2" public-date="2014-08-06 15:20:00" path="/portfolio/project-title-2" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="" package="">
+        <page name="Project Title 2" public-date="2014-08-06 15:20:00" path="/portfolio/project-title-2" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing." package="">
             <attributes>
                 <attributekey handle="thumbnail">
                     <value>
@@ -2297,7 +2297,7 @@
                 </blocks>
             </area>
         </page>
-        <page name="Project Title 3" public-date="2014-08-06 15:10:00" path="/portfolio/project-title-3" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="" package="">
+        <page name="Project Title 3" public-date="2014-08-06 15:10:00" path="/portfolio/project-title-3" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing." package="">
             <attributes>
                 <attributekey handle="is_featured">
                     <value><![CDATA[1]]></value>
@@ -2361,7 +2361,7 @@
                 </blocks>
             </area>
         </page>
-        <page name="Project Title 4" public-date="2014-08-06 15:00:00" path="/portfolio/project-title-4" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="" package="">
+        <page name="Project Title 4" public-date="2014-08-06 15:00:00" path="/portfolio/project-title-4" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing." package="">
             <attributes>
                 <attributekey handle="is_featured">
                     <value><![CDATA[1]]></value>
@@ -2420,7 +2420,7 @@
                 </blocks>
             </area>
         </page>
-        <page name="Project Title 5" public-date="2014-08-06 14:30:00" path="/portfolio/project-title-5" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="" package="">
+        <page name="Project Title 5" public-date="2014-08-06 14:30:00" path="/portfolio/project-title-5" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing." package="">
             <attributes>
                 <attributekey handle="thumbnail">
                     <value>
@@ -2476,7 +2476,7 @@
                 </blocks>
             </area>
         </page>
-        <page name="Project Title 6" public-date="2014-08-06 14:20:00" path="/portfolio/project-title-6" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="" package="">
+        <page name="Project Title 6" public-date="2014-08-06 14:20:00" path="/portfolio/project-title-6" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing." package="">
             <attributes>
                 <attributekey handle="thumbnail">
                     <value>
