@@ -87,7 +87,10 @@ var locked = true,
         method.call(lock, 'active');
     });
 
-var height_input = $('input[name="height"]', me).keyup(_.debounce(function () {
+var height_input = $('input[name="height"]', me).keyup(_.debounce(function (e) {
+    if (e.which === 9) {
+        return;
+    }
     var height = parseInt($(this).val()), width = im.activeElement.getWidth();
 
     if (locked) {
@@ -101,7 +104,10 @@ var height_input = $('input[name="height"]', me).keyup(_.debounce(function () {
 
 }, 250));
 
-var width_input = $('input[name="width"]', me).keyup(_.debounce(function () {
+var width_input = $('input[name="width"]', me).keyup(_.debounce(function (e) {
+    if (e.which === 9) {
+        return;
+    }
     var width = parseInt($(this).val()), height = im.activeElement.getHeight();
 
     if (locked) {
