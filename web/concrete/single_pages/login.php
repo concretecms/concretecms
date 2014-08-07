@@ -119,7 +119,8 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                 lineHeight: '1000px',
                 fontSize: 10
             });
-            setTimeout(function () {
+
+            setTimeout(function() {
                 var start_height = title.parent().height(), size = 10, last;
                 while (title.parent().height() === start_height) {
                     last = size++;
@@ -129,7 +130,18 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                     fontSize: last,
                     lineHeight: 'auto'
                 });
+
+                var fade_div = $('<div/>').css({
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%'
+                }).prependTo('body').height(title.offset().top + title.outerHeight() + 50);
+
+                fade_div.append($('<img/>').css({ width: '100%', height: '100%' }).attr('src', '/concrete/images/login_fade.png'));
             }, 0);
+
+
 
             $(function () {
                 $.backstretch("<?= DASHBOARD_BACKGROUND_FEED . '/' . $image ?>", {
