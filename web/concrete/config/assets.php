@@ -124,9 +124,20 @@ $al->register('javascript', 'backstretch', 'js/backstretch.js');
 
 // dynatree
 $al->register('javascript', 'dynatree', 'js/dynatree.js', array('minify' => false));
+$al->register(
+    'javascript',
+    'dynatree_locale',
+    REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_dynatree_js',
+    array(
+        'combine' => false,
+        'minify' => false,
+        'local' => false
+    )
+);
 $al->register('css', 'dynatree', 'css/dynatree.css', array('minify' => false));
 $al->registerGroup('dynatree', array(
     array('javascript', 'dynatree'),
+    array('javascript', 'dynatree_locale'),
     array('css', 'dynatree')
 ));
 
@@ -244,6 +255,7 @@ $al->registerGroup('core/sitemap', array(
     array('javascript', 'underscore'),
     array('javascript', 'jquery/ui'),
     array('javascript', 'dynatree'),
+    array('javascript', 'dynatree_locale'),
     array('javascript', 'core/app'),
     array('javascript', 'core/sitemap'),
     array('css', 'dynatree'),
@@ -257,6 +269,7 @@ $al->registerGroup('core/topics', array(
     array('javascript', 'core/events'),
     array('javascript', 'jquery/ui'),
     array('javascript', 'dynatree'),
+    array('javascript', 'dynatree_locale'),
     array('javascript', 'core/topics'),
     array('css', 'dynatree'),
     array('css', 'core/topics')
@@ -269,6 +282,7 @@ $al->registerGroup('core/groups', array(
     array('javascript', 'underscore'),
     array('javascript', 'jquery/ui'),
     array('javascript', 'dynatree'),
+    array('javascript', 'dynatree_locale'),
     array('javascript', 'core/groups'),
     array('css', 'dynatree')
 ));
