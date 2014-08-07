@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Attribute\Key;
 
 use \Concrete\Core\Foundation\Object;
@@ -16,7 +16,6 @@ use \Concrete\Core\Attribute\Value\Value as AttributeValue;
 use \Concrete\Core\Package\PackageList;
 use Concrete\Core\Attribute\Value\CollectionValue;
 use Whoops\Exception\ErrorException;
-
 
 class Key extends Object
 {
@@ -177,6 +176,7 @@ class Key extends Object
         $akCategoryID = $db->GetOne('select akCategoryID from AttributeKeys where akID = ?', $akID);
         if ($akCategoryID > 0) {
             $akc = AttributeKeyCategory::getByID($akCategoryID);
+
             return $akc->getAttributeKeyByID($akID);
         }
     }
@@ -233,6 +233,7 @@ class Key extends Object
             }
         }
         $r->Close();
+
         return $list;
     }
 
@@ -295,7 +296,6 @@ class Key extends Object
         }
         $kinstr = implode(',', $kina);
 
-
         $r = $db->Execute(
             'select akID, akCategoryID from AttributeKeys where (pkgID = ? or atID in (' . $tinstr . ') or akCategoryID in (' . $kinstr . ')) order by akID asc',
             array($pkg->getPackageID())
@@ -306,6 +306,7 @@ class Key extends Object
             $list[] = $ak;
         }
         $r->Close();
+
         return $list;
     }
 
@@ -437,6 +438,7 @@ class Key extends Object
             $at->__destruct();
             unset($at);
             unset($cnt);
+
             return $ak;
         }
     }
@@ -492,7 +494,6 @@ class Key extends Object
                 break;
         }
 
-
         if ($r) {
             $txt = Loader::helper('text');
             $className = $txt->camelcase($akCategoryHandle) . 'AttributeKey';
@@ -503,6 +504,7 @@ class Key extends Object
             $cnt->setAttributeKey($ak);
             $cnt->saveKey($args);
             $ak->updateSearchIndex($prevHandle);
+
             return $ak;
         }
     }
@@ -641,7 +643,6 @@ class Key extends Object
         $parser = new \Concrete\Core\Database\Schema\Parser\ArrayParser();
         $comparator = new \Doctrine\DBAL\Schema\Comparator();
 
-
         if ($prevHandle != false) {
             foreach ($dropColumns as $column) {
                 $toTable->dropColumn($column);
@@ -715,6 +716,7 @@ class Key extends Object
             $ids[] = $row['avID'];
         }
         $r->Close();
+
         return $ids;
     }
 
@@ -731,12 +733,14 @@ class Key extends Object
         $v = array($this->atID, $this->akID, $uID, $avDate);
         $db->Execute('insert into AttributeValues (atID, akID,  uID, avDateAdded) values (?, ?, ?, ?)', $v);
         $avID = $db->Insert_ID();
+
         return AttributeValue::getByID($avID);
     }
 
     public function getAttributeKeyIconSRC()
     {
         $type = $this->getAttributeType();
+
         return $type->getAttributeTypeIconSRC();
     }
 
@@ -745,6 +749,7 @@ class Key extends Object
         $at = AttributeType::getByHandle($this->atHandle);
         $cnt = $at->getController();
         $cnt->setAttributeKey($this);
+
         return $cnt;
     }
 
@@ -780,7 +785,6 @@ class Key extends Object
         /** @var \Concrete\Core\Attribute\Type $at */
         $at = $this->getAttributeType();
 
-
         $at->getController()->setAttributeKey($this);
 
         if ($mixed instanceof AttributeValue) {
@@ -813,9 +817,9 @@ class Key extends Object
         if (method_exists($at->controller, 'validateForm')) {
             $e = $at->controller->validateForm($at->controller->post());
         }
+
         return $e;
     }
-
 
     public function createIndexedSearchTable()
     {
@@ -853,6 +857,7 @@ class Key extends Object
         while ($row = $r->FetchRow()) {
             $sets[] = AttributeSet::getByID($row['asID']);
         }
+
         return $sets;
     }
 
@@ -901,6 +906,5 @@ class Key extends Object
     {
         return $this->getAttributeKeyID();
     }
-
 
 }
