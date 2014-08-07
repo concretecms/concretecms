@@ -38,7 +38,7 @@ class Attributes extends BackendInterfacePageController
         $data = array();
         foreach ($sets as $set) {
             $obj = new stdClass();
-            $obj->title = $set->getAttributeSetName();
+            $obj->title = $set->getAttributeSetDisplayName();
             $obj->attributes = array();
             foreach ($set->getAttributeKeys() as $ak) {
                 if (in_array($ak->getAttributeKeyID(), $allowed)) {
