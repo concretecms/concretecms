@@ -6,9 +6,12 @@ $node = $tree->getRootTreeNodeObject();
 if (is_object($node)) {
     $node->populateDirectChildrenOnly(); ?>
     <ol class="breadcrumb">
+        <li><a href="<?=$view->controller->getTopicLink()?>"
+            <? if (!$selectedTopicID) { ?>class="ccm-block-topic-list-topic-selected active"<? } ?>><?=t('All')?></a></li>
+
     <? foreach($node->getChildNodes() as $child) { ?>
         <li><a href="<?=$view->controller->getTopicLink($child)?>"
-                <? if (isset($selectedTopicID) && $selectedTopicID == $topic->getTreeNodeID()) { ?>
+                <? if (isset($selectedTopicID) && $selectedTopicID == $child->getTreeNodeID()) { ?>
                     class="ccm-block-topic-list-topic-selected active"
                 <? } ?> ><?=$child->getTreeNodeDisplayName()?></a></li>
     <? } ?>

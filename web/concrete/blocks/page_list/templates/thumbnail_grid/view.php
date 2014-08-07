@@ -24,7 +24,18 @@ $th = Loader::helper('text');
                 $tag = $img->getTag();
                 $tag->addClass('img-responsive');
                 print $tag;
-                ?></a>
+                ?>
+                    <div class="ccm-block-page-list-page-entry-grid-thumbnail-hover">
+                        <div class="ccm-block-page-list-page-entry-grid-thumbnail-title-wrapper">
+                        <div class="ccm-block-page-list-page-entry-grid-thumbnail-title">
+                            <i class="ccm-block-page-list-page-entry-grid-thumbnail-icon"></i>
+                            <?=$title?>
+                        </div>
+                        </div>
+                    </div>
+
+                </a>
+
             </div>
         <? endif; ?>
 

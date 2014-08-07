@@ -5,23 +5,55 @@ div.ccm-block-page-list-thumbnail-grid-wrapper {
   div.ccm-block-page-list-page-entry-grid-item {
     .make-sm-column(4);
     margin-bottom: @grid-gutter-width;
-    height: 240px;
     overflow: hidden;
-    /*
-    @media (min-width: @screen-md-min) {
+
+    @media (min-width: @screen-sm-min) {
+      height: 147px;
       img {
         width: 100%;
-        height: 195px;
+        height: 147px;
+      }
+    }
+
+    @media (min-width: @screen-md-min) {
+      height: 193px;
+      img {
+        width: 100%;
+        height: 193px;
+      }
+    }
+
+    @media (min-width: @screen-md-min) {
+      height: 193px;
+      img {
+        width: 100%;
+        height: 193px;
       }
     }
 
     @media (min-width: @screen-lg-min) {
+      height: 240px;
       img {
         width: 100%;
         height: 240px;
       }
     }
-  */
 
+  }
+
+  // hover effects
+  div.ccm-block-page-list-page-entry-grid-thumbnail-hover {
+    background-color: rgba(red(@body-link-color), green(@body-link-color), blue(@body-link-color), 0.7);
+  }
+
+  // icon
+  i.ccm-block-page-list-page-entry-grid-thumbnail-icon {
+    display: block;
+    margin: 0px auto 10px auto;
+  }
+
+  i.ccm-block-page-list-page-entry-grid-thumbnail-icon:before {
+    font-family: FontAwesome;
+    content: "\f064";
   }
 }

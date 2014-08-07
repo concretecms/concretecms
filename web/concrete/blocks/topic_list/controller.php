@@ -81,15 +81,18 @@ class Controller extends BlockController
         $this->view();
     }
 
-    public function getTopicLink(\Concrete\Core\Tree\Node\Type\Topic $topic)
+    public function getTopicLink(\Concrete\Core\Tree\Node\Type\Topic $topic = null)
     {
         if ($this->cParentID) {
             $c = \Page::getByID($this->cParentID);
         } else {
             $c = \Page::getCurrentPage();
         }
-
-        return \URL::page($c, 'topic', $topic->getTreeNodeID());
+        if ($topic) {
+            return \URL::page($c, 'topic', $topic->getTreeNodeID());
+        } else {
+            return \URL::page($c);
+        }
     }
 
     public static function replaceTreeWithPlaceHolder($treeID)
