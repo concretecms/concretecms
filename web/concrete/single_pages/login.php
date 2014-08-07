@@ -138,7 +138,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                     width: '100%'
                 }).prependTo('body').height(title.offset().top + title.outerHeight() + 50);
 
-                fade_div.append($('<img/>').css({ width: '100%', height: '100%' }).attr('src', '/concrete/images/login_fade.png'));
+                fade_div.append($('<img/>').css({ width: '100%', height: '100%' }).attr('src', '<?= DIR_REL ?>/concrete/images/login_fade.png'));
             }, 0);
 
 
