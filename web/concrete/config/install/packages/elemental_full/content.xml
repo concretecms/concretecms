@@ -1090,10 +1090,42 @@
                             </columns>
                         </arealayout>
                     </block>
+                    <block type="horizontal_rule" name=""/>
                     <block type="content" name="">
+                        <style>
+                            <marginBottom>80px</marginBottom>
+                        </style>
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[                                     <p style="text-align: center"><span class="title-caps-bold">Presenting your Business has never been so easy</span></p><p style="text-align: center;">Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. </p>]]></content>
+                                <content><![CDATA[<p style="text-align: center"><span class="title-caps-bold">Presenting your Business has never been so easy</span></p><p style="text-align: center;">Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing.</p><p style="text-align: center;">Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. </p>]]></content>
+                            </record>
+                        </data>
+                    </block>
+                    <block type="page_list" name="" custom-template="thumbnail_grid">
+                        <data table="btPageList">
+                            <record>
+                                <num><![CDATA[3]]></num>
+                                <orderBy><![CDATA[chrono_desc]]></orderBy>
+                                <cParentID/>
+                                <cThis><![CDATA[0]]></cThis>
+                                <useButtonForLink><![CDATA[1]]></useButtonForLink>
+                                <buttonLinkText><![CDATA[View Project]]></buttonLinkText>
+                                <includeName><![CDATA[1]]></includeName>
+                                <includeDescription><![CDATA[1]]></includeDescription>
+                                <includeDate><![CDATA[0]]></includeDate>
+                                <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
+                                <paginate><![CDATA[0]]></paginate>
+                                <displayAliases><![CDATA[0]]></displayAliases>
+                                <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
+                                <ptID>{ccm:export:pagetype:portfolio_project}</ptID>
+                                <rss><![CDATA[0]]></rss>
+                                <rssTitle><![CDATA[]]></rssTitle>
+                                <rssDescription><![CDATA[]]></rssDescription>
+                                <truncateSummaries><![CDATA[0]]></truncateSummaries>
+                                <displayFeaturedOnly><![CDATA[1]]></displayFeaturedOnly>
+                                <noResultsMessage><![CDATA[]]></noResultsMessage>
+                                <displayThumbnail><![CDATA[1]]></displayThumbnail>
+                                <truncateChars><![CDATA[0]]></truncateChars>
                             </record>
                         </data>
                     </block>
@@ -2148,6 +2180,9 @@
         </page>
         <page name="Project Title" public-date="2014-08-06 15:30:00" path="/portfolio/project-title" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="" package="">
             <attributes>
+                <attributekey handle="is_featured">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
                 <attributekey handle="thumbnail">
                     <value>
                         <fID>{ccm:export:file:bridge.jpg}</fID>
@@ -2264,6 +2299,9 @@
         </page>
         <page name="Project Title 3" public-date="2014-08-06 15:10:00" path="/portfolio/project-title-3" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="" package="">
             <attributes>
+                <attributekey handle="is_featured">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
                 <attributekey handle="thumbnail">
                     <value>
                         <fID>{ccm:export:file:sunset.jpg}</fID>
@@ -2325,6 +2363,9 @@
         </page>
         <page name="Project Title 4" public-date="2014-08-06 15:00:00" path="/portfolio/project-title-4" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="" package="">
             <attributes>
+                <attributekey handle="is_featured">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
                 <attributekey handle="thumbnail">
                     <value>
                         <fID>{ccm:export:file:subway.jpg}</fID>

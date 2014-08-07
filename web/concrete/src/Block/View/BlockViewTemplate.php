@@ -172,20 +172,22 @@ class BlockViewTemplate {
 			$v = View::getInstance();
 			foreach($this->itemsToCheck as $t => $i) {
 				if (file_exists($this->basePath . '/' . $i)) {
+                    $identifier = substr($this->basePath, strpos($this->basePath, 'blocks'));
+                    // $identifier = 'blocks/page_list', 'blocks/feature', 'blocks/page_list/templates/responsive', etc...
 					switch($t) {
 						case 'CSS':
-							$asset = new CSSAsset('blocks/'. $this->btHandle);
+							$asset = new CSSAsset($identifier);
 							$asset->setAssetURL($this->getBaseURL() . '/' . $i);
 							$asset->setAssetPath($this->basePath . '/' . $i);
 							$al->registerAsset($asset);
-							$v->requireAsset('css', 'blocks/'. $this->btHandle);
+							$v->requireAsset('css', $identifier);
 							break;
 						case 'JAVASCRIPT':
-							$asset = new JavascriptAsset('blocks/'. $this->btHandle);
+							$asset = new JavascriptAsset($identifier);
 							$asset->setAssetURL($this->getBaseURL() . '/' . $i);
 							$asset->setAssetPath($this->basePath . '/' . $i);
 							$al->registerAsset($asset);
-							$v->requireAsset('javascript', 'blocks/'. $this->btHandle);
+							$v->requireAsset('javascript', $identifier);
 							break;
 					}
 				}
@@ -195,22 +197,24 @@ class BlockViewTemplate {
 			if (count($css) > 0) {
 				foreach($css as $i) {
 					if(substr($i,-4)=='.css') {
-						$asset = new CSSAsset('blocks/'. $this->btHandle . '/'. substr($i, 0, -3));
+                        $identifier = substr($this->basePath, strpos($this->basePath, 'blocks'), -4);
+						$asset = new CSSAsset($identifier);
 						$asset->setAssetURL($this->getBaseURL() . '/' . DIRNAME_CSS . '/' . $i);
 						$asset->setAssetPath($this->basePath . '/' . DIRNAME_CSS . '/' . $i);
 						$al->registerAsset($asset);
-						$v->requireAsset('css', 'blocks/'. $this->btHandle . '/'. substr($i, 0, -3));
+						$v->requireAsset('css', 'blocks/'. $identifier);
 					}
 				}
 			}
 			if (count($js) > 0) {
 				foreach($js as $i) {
 					if (substr($i,-3)=='.js') {
-						$asset = new JavascriptAsset('blocks/'. $this->btHandle . '/'. substr($i, 0, -3));
+                        $identifier = substr($this->basePath, strpos($this->basePath, 'blocks'), -4);
+						$asset = new JavascriptAsset($identifier);
 						$asset->setAssetURL($this->getBaseURL() . '/' . DIRNAME_JAVASCRIPT . '/' . $i);
 						$asset->setAssetPath($this->basePath . '/' . DIRNAME_JAVASCRIPT . '/' . $i);
 						$al->registerAsset($asset);
-						$v->requireAsset('javascript', 'blocks/'. $this->btHandle . '/'. substr($i, 0, -3));
+						$v->requireAsset('javascript', $identifier);
 					}
 				}
 			}
