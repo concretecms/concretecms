@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Controller\Panel\Page;
 
 use \Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
@@ -37,7 +37,7 @@ class Attributes extends BackendInterfacePageController
 
         $data = array();
         foreach ($sets as $set) {
-            $obj = new stdClass;
+            $obj = new stdClass();
             $obj->title = $set->getAttributeSetName();
             $obj->attributes = array();
             foreach ($set->getAttributeKeys() as $ak) {
@@ -50,7 +50,7 @@ class Attributes extends BackendInterfacePageController
             }
         }
         if (count($leftovers)) {
-            $obj = new stdClass;
+            $obj = new stdClass();
             $obj->title = t('Other');
             $obj->attributes = array();
             foreach ($leftovers as $ak) {
@@ -68,6 +68,4 @@ class Attributes extends BackendInterfacePageController
         $this->set('attributes', $data);
     }
 
-
 }
-

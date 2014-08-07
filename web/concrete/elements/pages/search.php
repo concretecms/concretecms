@@ -1,25 +1,25 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 
 $searchFields = array(
-	'keywords' => t('Full Page Index'),
-	'date_added' => t('Date Added'),
-	'theme' => t('Theme'),
-	'last_modified' => t('Last Modified'),
-	'date_public' => t('Public Date'),
-	'owner' => t('Page Owner'),
-	'num_children' => t('# Children'),
-	'version_status' => t('Approved Version')
+    'keywords' => t('Full Page Index'),
+    'date_added' => t('Date Added'),
+    'theme' => t('Theme'),
+    'last_modified' => t('Last Modified'),
+    'date_public' => t('Public Date'),
+    'owner' => t('Page Owner'),
+    'num_children' => t('# Children'),
+    'version_status' => t('Approved Version')
 );
 
 if (PERMISSIONS_MODEL != 'simple') {
-	$searchFields['permissions_inheritance'] = t('Permissions Inheritance');
+    $searchFields['permissions_inheritance'] = t('Permissions Inheritance');
 }
 
 $searchFieldAttributes = CollectionAttributeKey::getSearchableList();
-foreach($searchFieldAttributes as $ak) {
-	$searchFields[$ak->getAttributeKeyID()] = tc('AttributeKeyName', $ak->getAttributeKeyName());
+foreach ($searchFieldAttributes as $ak) {
+    $searchFields[$ak->getAttributeKeyID()] = tc('AttributeKeyName', $ak->getAttributeKeyName());
 }
 
 $flr = new \Concrete\Core\Search\StickyRequest('pages');
@@ -36,14 +36,14 @@ $req = $flr->getSearchRequest();
 			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Page Properties')?>" data-bulk-action-url="<?=URL::to('/ccm/system/dialogs/page/bulk/properties')?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?=t('Edit Properties')?></option>
 			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Move/Copy')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/sitemap_search_selector" data-bulk-action-dialog-width="90%" data-bulk-action-dialog-height="70%"><?=t('Move/Copy')?></option>
 			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Speed Settings')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/speed_settings" data-bulk-action-dialog-width="610" data-bulk-action-dialog-height="340"><?=t('Speed Settings')?></option>
-			<? if (PERMISSIONS_MODEL == 'advanced') { ?>
+			<?php if (PERMISSIONS_MODEL == 'advanced') { ?>
 				<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Change Permissions')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/permissions" data-bulk-action-dialog-width="430" data-bulk-action-dialog-height="630"><?=t('Change Permissions')?></option>
 				<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Change Permissions - Add Access')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/permissions_access?task=add" data-bulk-action-dialog-width="440" data-bulk-action-dialog-height="200"><?=t('Change Permissions - Add Access')?></option>
 				<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Change Permissions - Remove Access')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/permissions_access?task=remove" data-bulk-action-dialog-width="440" data-bulk-action-dialog-height="300"><?=t('Change Permissions - Remove Access')?></option>
-			<? } ?>
+			<?php } ?>
 			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Design')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/design" data-bulk-action-dialog-width="610" data-bulk-action-dialog-height="405"><?=t('Design')?></option>
 			<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Delete')?>" data-bulk-action-url="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/delete" data-bulk-action-dialog-width="500" data-bulk-action-dialog-height="400"><?=t('Delete')?></option>
-		</select>	
+		</select>
 	</div>
 	<div class="form-group">
 		<div class="ccm-search-main-lookup-field">
@@ -65,9 +65,9 @@ $req = $flr->getSearchRequest();
 <div class="ccm-search-fields-row">
 	<select name="field[]" class="ccm-search-choose-field" data-search-field="pages">
 		<option value=""><?=t('Choose Field')?></option>
-		<? foreach($searchFields as $key => $value) { ?>
+		<?php foreach ($searchFields as $key => $value) { ?>
 			<option value="<?=$key?>" <% if (typeof(field) != 'undefined' && field.field == '<?=$key?>') { %>selected<% } %> data-search-field-url="<?=URL::to('/ccm/system/search/pages/field', $key)?>"><?=$value?></option>
-		<? } ?>
+		<?php } ?>
 	</select>
 	<div class="ccm-search-field-content"><% if (typeof(field) != 'undefined') { %><%=field.html%><% } %></div>
 	<a data-search-remove="search-field" class="ccm-search-remove-field" href="#"><i class="fa fa-minus-circle"></i></a>
@@ -75,10 +75,10 @@ $req = $flr->getSearchRequest();
 </script>
 
 <script type="text/template" data-template="search-results-table-body">
-<% _.each(items, function(page) {%>
+<% _.each(items, function (page) {%>
 <tr data-launch-search-menu="<%=page.cID%>" data-page-id="<%=page.cID%>" data-page-name="<%=page.cvName%>">
 	<td><span class="ccm-search-results-checkbox"><input type="checkbox" class="ccm-flat-checkbox" data-search-checkbox="individual" value="<%=page.cID%>" /></span></td>
-	<% for(i = 0; i < page.columns.length; i++) {
+	<% for (i = 0; i < page.columns.length; i++) {
 		var column = page.columns[i];
 		if (column.key == 'cvName') { %>
 			<td class="ccm-search-results-name"><%=column.value%></td>
@@ -90,4 +90,4 @@ $req = $flr->getSearchRequest();
 <% }); %>
 </script>
 
-<? Loader::element('search/template')?>
+<?php Loader::element('search/template')?>
