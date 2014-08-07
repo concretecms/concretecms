@@ -120,7 +120,7 @@ class Controller extends AttributeTypeController
             }
         }
         $e = Loader::helper('validation/error');
-        $e->add(t('You must specify a valid file for %s', $this->attributeKey->getAttributeKeyName()));
+        $e->add(t('You must specify a valid file for %s', $this->attributeKey->getAttributeKeyDisplayName()));
 
         return $e;
     }

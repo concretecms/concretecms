@@ -15,7 +15,7 @@ class AttributeKeyColumn extends Column
     public function __construct($attributeKey, $isSortable = true, $defaultSort = 'asc')
     {
         $this->attributeKey = $attributeKey;
-        parent::__construct('ak_' . $attributeKey->getAttributeKeyHandle(), tc('AttributeKeyName', $attributeKey->getAttributeKeyName()), false, $isSortable, $defaultSort);
+        parent::__construct('ak_' . $attributeKey->getAttributeKeyHandle(), $attributeKey->getAttributeKeyDisplayName(), false, $isSortable, $defaultSort);
     }
 
     public function getColumnValue($obj)

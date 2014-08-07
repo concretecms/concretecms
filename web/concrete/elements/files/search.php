@@ -16,7 +16,7 @@ if (PERMISSIONS_MODEL != 'simple') {
 
 $searchFieldAttributes = FileAttributeKey::getSearchableList();
 foreach ($searchFieldAttributes as $ak) {
-    $searchFields[$ak->getAttributeKeyID()] = tc('AttributeKeyName', $ak->getAttributeKeyName());
+    $searchFields[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
 }
 
 $flr = new \Concrete\Core\Search\StickyRequest('files');

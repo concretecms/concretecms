@@ -19,7 +19,7 @@ if (PERMISSIONS_MODEL != 'simple') {
 
 $searchFieldAttributes = CollectionAttributeKey::getSearchableList();
 foreach ($searchFieldAttributes as $ak) {
-    $searchFields[$ak->getAttributeKeyID()] = tc('AttributeKeyName', $ak->getAttributeKeyName());
+    $searchFields[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
 }
 
 $flr = new \Concrete\Core\Search\StickyRequest('pages');

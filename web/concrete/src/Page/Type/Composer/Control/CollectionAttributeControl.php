@@ -119,7 +119,7 @@ class CollectionAttributeControl extends Control
         $value = $this->page->getAttribute($ak);
         if (!$value) {
             $e = Loader::helper('validation/error');
-            $e->add(t('The field "%s" is required', $ak->getAttributeKeyName()));
+            $e->add(t('The field "%s" is required', $ak->getAttributeKeyDisplayName()));
 
             return $e;
         }
