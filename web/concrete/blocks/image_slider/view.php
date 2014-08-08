@@ -1,4 +1,5 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");
+$navigationTypeText = ($navigationType == 0) ? 'arrows' : 'pages';
 $c = Page::getCurrentPage();
 if ($c->isEditMode()) { ?>
     <div class="ccm-edit-mode-disabled-item" style="width: <? echo $width; ?>; height: <? echo $height; ?>">
@@ -19,7 +20,7 @@ $(document).ready(function(){
 });
 </script>
 
-<div class="ccm-image-slider-container" >
+<div class="ccm-image-slider-container ccm-block-image-slider-<?=$navigationTypeText?>" >
     <div class="ccm-image-slider">
         <div class="ccm-image-slider-inner">
 
@@ -30,8 +31,13 @@ $(document).ready(function(){
                 <?php if($row['linkURL']) { ?>
                     <a href="<?php echo $row['linkURL'] ?>" class="mega-link-overlay"></a>
                 <?php } ?>
-                <?php if(is_object(File::getByID($row['fID']))) { ?>
-                <img src="<?php echo File::getByID($row['fID'])->getURL(); ?>" alt="<?php echo $row['title'] ?>">
+                <?php
+                $f = File::getByID($row['fID'])
+                ?>
+                <?php if(is_object($f)) {
+                    $tag = Core::make('html/image', array($f))->getTag();
+                    $tag->alt($row['title']);
+                    print $tag; ?>
                 <?php } ?>
                 <div class="ccm-image-slider-text">
                     <h2 class="ccm-image-slider-title"><?php echo $row['title'] ?></h2>

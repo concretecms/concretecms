@@ -29,6 +29,10 @@ div.ccm-block-page-list-page-entry-horizontal div.ccm-block-page-list-page-entry
     vertical-align: top;
 }
 
+div.ccm-block-page-list-page-entry-text div.ccm-block-page-list-title {
+    font-weight: bold;
+}
+
 div.ccm-block-page-list-page-entry-read-more {
     margin-top: 20px;
 }

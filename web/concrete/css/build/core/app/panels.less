@@ -93,23 +93,12 @@ div.ccm-panel-right.ccm-panel-transition-slide.ccm-panel-active {
  * Shadow layer
  */
 
-div.ccm-panel-right div.ccm-panel-shadow-layer {
-    width: 20px;
-    height: 100%;
-    position: absolute;
-    top: 0px;
-    z-index: @index-level-panel;
-    .box-shadow(inset 10px 10px 10px rgba(128, 128, 128, 0.3));
+div.ccm-panel-right {
+    .box-shadow(inset 10px 10px 10px rgba(0, 0, 0, 0.12));
 }
 
-div.ccm-panel-left div.ccm-panel-shadow-layer {
-    width: 20px;
-    height: 100%;
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    z-index: @index-level-panel;
-    .box-shadow(inset -10px 10px 10px rgba(128, 128, 128, 0.3));
+div.ccm-panel-left {
+    .box-shadow(inset -10px 10px 10px rgba(0, 0, 0, 0.12));
 }
 
 /**
@@ -239,8 +228,7 @@ div#ccm-panel-dashboard {
     }
 
     div.ccm-panel-header-accordion {
-
-        nav {
+      nav {
 
             ul.ccm-panel-header-accordion-dropdown:after {
                 border-color: #7b8692 transparent;
@@ -258,8 +246,11 @@ div#ccm-panel-dashboard {
             span {
                 color: #97aabc;
                 background-color: #414d59;
+                .box-shadow(inset 10px 1px 10px rgba(0, 0, 0, 0.12));
 
-                &:hover {
+
+
+              &:hover {
                     background-color: #333c46;
                 }
             }
@@ -312,7 +303,8 @@ div#ccm-panel-add-clipboard-block-list {
             cursor: grab;
         }
 
-        > div.blocks {
+
+        div.blocks {
             height: 60px;
             overflow: hidden;
             color: #9ea6b6;
@@ -386,15 +378,31 @@ div#ccm-panel-add-clipboard-block-list {
 
     }
     > div.ccm-panel-add-clipboard-block-item {
-        > div.blocks {
-            max-height: 150px;
-            height: auto;
-
-            div.block-handle {
-                top: 0;
-                max-height: 150px;
-            }
+      position:relative;
+      .delete {
+        display: none;
+        position:absolute;
+        top: 5px;
+        right: 30px;
+        height: 40px;
+      }
+      &:hover {
+        .delete {
+          display:block;
         }
+      }
+      > div.block-content {
+        > div.blocks {
+          max-height: 150px;
+          height: auto;
+          padding: 0 10px;
+
+          div.block-handle {
+            top: 0;
+            max-height: 150px;
+          }
+        }
+      }
     }
 }
 

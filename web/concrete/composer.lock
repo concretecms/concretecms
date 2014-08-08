@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8492f54875c78c13331ea805e20fe25d",
+    "hash": "e460f22600bffb429401b13a61a46d5d",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -2439,13 +2439,13 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/zf1/zend-locale.git",
-                "reference": "e09d6768b56136bb724b130274bcd5fd8a902176"
+                "url": "https://github.com/mlocati/zend-locale.git",
+                "reference": "6b7895c57cb5381b3e35750342f1f6add8a21191"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-locale/zipball/e09d6768b56136bb724b130274bcd5fd8a902176",
-                "reference": "e09d6768b56136bb724b130274bcd5fd8a902176",
+                "url": "https://api.github.com/repos/mlocati/zend-locale/zipball/6b7895c57cb5381b3e35750342f1f6add8a21191",
+                "reference": "6b7895c57cb5381b3e35750342f1f6add8a21191",
                 "shasum": ""
             },
             "require": {
@@ -2463,7 +2463,6 @@
                     "Zend_Locale": "library/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],

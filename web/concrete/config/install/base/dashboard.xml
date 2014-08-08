@@ -457,11 +457,11 @@
         </page>
 
         <page name="Extend concrete5" path="/dashboard/extend" filename="/dashboard/extend/view.php" pagetype=""
-              description="Connect to the concrete5 marketplace, install custom add-ons, and download updates for marketplace add-ons and themes."
+              description=""
               package="">
             <attributes>
                 <attributekey handle="meta_keywords">
-                    <value>add-on, addon, add on, package, applications, ecommerce, discussions, forums, themes, templates, blocks</value>
+                    <value>add-on, addon, add on, package, app, ecommerce, discussions, forums, themes, templates, blocks</value>
                 </attributekey>
             </attributes>
         </page>
