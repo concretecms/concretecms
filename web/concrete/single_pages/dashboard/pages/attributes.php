@@ -20,10 +20,15 @@
 		</form>	
 	<? } ?>
 	
-<? } else { ?>
+<? } else {
 
-	<?
 	$attribs = CollectionAttributeKey::getList();
-	Loader::element('dashboard/attributes_table', array('types' => $types, 'category' => $category, 'attribs'=> $attribs, 'editURL' => '/dashboard/pages/attributes')); ?>
-
-<? } ?>
+	Loader::element('dashboard/attributes_table',
+            array(
+                'types' => $types,
+                'category' => $category,
+                'attribs'=> $attribs,
+                'editURL' => '/dashboard/pages/attributes',
+                'sortable' => false
+            ));
+} ?>

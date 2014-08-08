@@ -19,30 +19,30 @@
 		</form>	
 	<? } ?>
 
-<? } else { ?>
-	<?
-	$attribs = UserAttributeKey::getList();
-	Loader::element('dashboard/attributes_table', array('types' => $types, 'category' => $category, 'attribs'=> $attribs, 'editURL' => '/dashboard/users/attributes', 'controller'=>$this->controller)); ?>
+<? } else {
 
-	<? } ?>
+	$attribs = UserAttributeKey::getList();
+	Loader::element('dashboard/attributes_table', array(
+        'types' => $types,
+        'category' => $category,
+        'attribs'=> $attribs,
+        'editURL' => '/dashboard/users/attributes',
+        'sortable' => true
+        ));
+} ?>
+
 
 <script type="text/javascript">
-$(function() {
-	$("div.ccm-attributes-list").sortable({
-		handle: 'img.ccm-attribute-icon',
-		cursor: 'move',
-		opacity: 0.5,
-		stop: function() {
-			var ualist = $(this).sortable('serialize');
-			$.post('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/dashboard/user_attributes_update.php', ualist, function(r) {
-
-			});
-		}
-	});
-});
-
+    $(function() {
+        $("ul.ccm-sortable-attribute-list-wrapper").sortable({
+            handle: 'i.ccm-item-select-list-sort',
+            cursor: 'move',
+            opacity: 0.5,
+            stop: function() {
+                var ualist = $(this).sortable('serialize');
+                ualist += '&ccm_token=' + '<?=$controller->token->generate('user_attribute_sort')?>';
+                $.post('<?=URL::to('/ccm/system/attribute/attribute_sort/user')?>', ualist, function(r) {});
+            }
+        });
+    });
 </script>
-
-<style type="text/css">
-div.ccm-attributes-list img.ccm-attribute-icon:hover {cursor: move}
-</style>

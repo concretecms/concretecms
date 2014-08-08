@@ -89,7 +89,7 @@ Route::register('/ccm/system/file/upload', '\Concrete\Controller\Backend\File::u
  */
 Route::register('/ccm/system/user/add_group', '\Concrete\Controller\Backend\User::addGroup');
 Route::register('/ccm/system/user/remove_group', '\Concrete\Controller\Backend\User::removeGroup');
-Route::register('/ccm/system/user/user_attributes/sort', '\Concrete\Controller\Backend\UserAttributes::sort');
+
 
 /**
  * Page actions - non UI
@@ -109,6 +109,12 @@ Route::register('/ccm/system/block/render/', '\Concrete\Controller\Backend\Block
 Route::register('/ccm/system/css/page/{cID}/{cvID}/{stylesheet}', '\Concrete\Controller\Frontend\Stylesheet::page');
 Route::register('/ccm/system/css/layout/{bID}', '\Concrete\Controller\Frontend\Stylesheet::layout');
 Route::register('/ccm/system/backend/editor_data/', '\Concrete\Controller\Backend\EditorData::view');
+
+/**
+ * General Attribute
+ */
+Route::register('/ccm/system/attribute/attribute_sort/set', '\Concrete\Controller\Backend\AttributeSort::set');
+Route::register('/ccm/system/attribute/attribute_sort/user', '\Concrete\Controller\Backend\AttributeSort::user');
 
 /**
  * Search Routes
