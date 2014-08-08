@@ -8,6 +8,10 @@ $th = Loader::helper('text');
 
 <div class="<?=$containerClass?>">
 
+    <?php if ($pageListTitle): ?>
+        <h5><?=$pageListTitle?></h5>
+    <? endif; ?>
+
 	<?php foreach ($pages as $page):
 
 		// Prepare data for each page being listed...
@@ -84,13 +88,13 @@ $th = Loader::helper('text');
         <?php if ($includeEntryText): ?>
             <div class="ccm-block-page-list-page-entry-text">
 
-                <h3 class="ccm-block-page-list-title">
+                <div class="ccm-block-page-list-title">
                     <? if ($useButtonForLink) { ?>
                         <?php echo $title; ?>
                     <? } else { ?>
                         <a href="<?php echo $url ?>" target="<?php echo $target ?>"><?php echo $title ?></a>
                     <? } ?>
-                </h3>
+                </div>
 
                 <? if ($includeDate): ?>
                     <div class="ccm-block-page-list-date"><?=$date?></div>

@@ -5,7 +5,11 @@ $th = Loader::helper('text');
 
 <div class="ccm-block-page-list-thumbnail-grid-wrapper">
 
-	<?php foreach ($pages as $page):
+    <?php if ($pageListTitle): ?>
+        <h5><?=$pageListTitle?></h5>
+    <? endif; ?>
+
+    <?php foreach ($pages as $page):
 
 		$title = $th->entities($page->getCollectionName());
 		$url = $nh->getLinkToCollection($page);
@@ -43,9 +47,9 @@ $th = Loader::helper('text');
                 </a>
 
                 <? if ($useButtonForLink) { ?>
-                <h3 class="ccm-block-page-list-title">
+                <div class="ccm-block-page-list-title">
                     <?php echo $title; ?>
-                </h3>
+                </div>
                 <? } ?>
 
                 <? if ($includeDate): ?>
