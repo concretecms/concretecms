@@ -1,4 +1,10 @@
 {
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/mlocati/zend-locale"
+        }
+    ],
     "require": {
         "php": ">=5.3.3",
         "doctrine/dbal": "2.4.*",
