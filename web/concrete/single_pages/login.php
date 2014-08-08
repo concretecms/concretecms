@@ -23,14 +23,14 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
     </div>
     <div class="col-sm-6 col-sm-offset-3 login-form">
         <div class="row">
-            <div class="visible-xs ccm-authentication-type-select form-group">
+            <div class="visible-xs ccm-authentication-type-select form-group text-center">
                 <?php
                 if ($attribute_mode) {
                     ?>
                     <i class="fa fa-question"></i>
                     <span><?= t('Attributes') ?></span>
                 <?php
-                } else {
+                } else if (count($activeAuths) > 1) {
                     ?>
                     <select class="form-control col-xs-12">
                         <?php
@@ -45,6 +45,12 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                     </select>
 
                 <?php
+                } else {
+                    $auth = $activeAuths[0];
+                    ?>
+                    <?= $auth->getAuthenticationTypeIconHTML() ?>
+                    <span><?= $auth->getAuthenticationTypeName() ?></span>
+                    <?php
                 }
                 ?>
                 <label>&nbsp;</label>
