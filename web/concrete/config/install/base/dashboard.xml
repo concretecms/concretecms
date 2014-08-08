@@ -1,8 +1,13 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
     <singlepages>
-        <page name="Dashboard" path="/dashboard" filename="/dashboard/view.php" pagetype="" description="" package=""
-              root="true"/>
+        <page name="Dashboard" path="/dashboard" filename="/dashboard/view.php" pagetype="" description="" package="" root="true">
+            <attributes>
+                <attributekey handle="icon_dashboard">
+                    <value>fa fa-th-large</value>
+                </attributekey>
+            </attributes>
+        </page>
 
         <page name="Sitemap" path="/dashboard/sitemap" filename="/dashboard/sitemap/view.php" pagetype=""
               description="Whole world at a glance." package="">
@@ -18,9 +23,6 @@
                 <attributekey handle="meta_keywords">
                     <value>pages, add page, delete page, copy, move, alias</value>
                 </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-home</value>
-                </attributekey>
             </attributes>
         </page>
         <page name="Flat View" path="/dashboard/sitemap/explore" filename="/dashboard/sitemap/explore.php" pagetype=""
@@ -32,9 +34,6 @@
                 <attributekey handle="meta_keywords">
                     <value>pages, add page, delete page, copy, move, alias, bulk</value>
                 </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-road</value>
-                </attributekey>
             </attributes>
         </page>
         <page name="Page Search" path="/dashboard/sitemap/search" filename="/dashboard/sitemap/search.php" pagetype=""
@@ -42,9 +41,6 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>find page, search page, search, find, pages, sitemap</value>
-                </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-search</value>
                 </attributekey>
             </attributes>
         </page>
@@ -56,9 +52,6 @@
                 <attributekey handle="meta_keywords">
                     <value>add file, delete file, copy, move, alias, resize, crop, rename, images, title, attribute</value>
                 </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-picture</value>
-                </attributekey>
             </attributes>
         </page>
         <page name="Attributes" path="/dashboard/files/attributes" filename="/dashboard/files/attributes.php"
@@ -67,9 +60,6 @@
                 <attributekey handle="meta_keywords">
                     <value>file, file attributes, title, attribute, description, rename</value>
                 </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-cog</value>
-                </attributekey>
             </attributes>
         </page>
         <page name="File Sets" path="/dashboard/files/sets" filename="/dashboard/files/sets.php" pagetype=""
@@ -77,9 +67,6 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>files, category, categories</value>
-                </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-list-alt</value>
                 </attributekey>
             </attributes>
         </page>
@@ -91,9 +78,6 @@
                 </attributekey>
                 <attributekey handle="meta_keywords">
                     <value>new file set</value>
-                </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-plus-sign</value>
                 </attributekey>
             </attributes>
         </page>
@@ -111,9 +95,6 @@
                 <attributekey handle="meta_keywords">
                     <value>find, search, people, delete user, remove user, change password, password</value>
                 </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-user</value>
-                </attributekey>
             </attributes>
         </page>
         <page name="User Groups" path="/dashboard/users/groups" filename="/dashboard/users/groups.php" pagetype=""
@@ -122,9 +103,6 @@
                 <attributekey handle="meta_keywords">
                     <value>user, group, people, permissions, expire, badges</value>
                 </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-globe</value>
-                </attributekey>
             </attributes>
         </page>
         <page name="Attributes" path="/dashboard/users/attributes" filename="/dashboard/users/attributes.php"
@@ -132,9 +110,6 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>user attributes, user data, gather data, registration data</value>
-                </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-cog</value>
                 </attributekey>
             </attributes>
         </page>
@@ -147,9 +122,6 @@
                 <attributekey handle="exclude_nav">
                     <value><![CDATA[1]]></value>
                 </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-plus-sign</value>
-                </attributekey>
             </attributes>
         </page>
         <page name="Add Group" path="/dashboard/users/add_group" filename="/dashboard/users/add_group.php" pagetype=""
@@ -160,9 +132,6 @@
                 </attributekey>
                 <attributekey handle="exclude_nav">
                     <value><![CDATA[1]]></value>
-                </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-plus</value>
                 </attributekey>
             </attributes>
         </page>
@@ -175,9 +144,6 @@
                 <attributekey handle="meta_keywords">
                     <value>group set</value>
                 </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-list</value>
-                </attributekey>
             </attributes>
         </page>
         <page name="Community Points" path="/dashboard/users/points" filename="/dashboard/users/points/view.php"
@@ -185,9 +151,6 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>community, points, karma</value>
-                </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-heart</value>
                 </attributekey>
             </attributes>
         </page>
@@ -217,9 +180,6 @@
                 <attributekey handle="meta_keywords">
                     <value>hits, pageviews, visitors, activity</value>
                 </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-signal</value>
-                </attributekey>
             </attributes>
         </page>
         <page name="Form Results" path="/dashboard/reports/forms" filename="/dashboard/reports/forms.php" pagetype=""
@@ -227,9 +187,6 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>forms, questions, response, data</value>
-                </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-briefcase</value>
                 </attributekey>
             </attributes>
         </page>
@@ -239,9 +196,6 @@
                 <attributekey handle="meta_keywords">
                     <value>questions, quiz, response</value>
                 </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-tasks</value>
-                </attributekey>
             </attributes>
         </page>
         <page name="Logs" path="/dashboard/reports/logs" filename="/dashboard/reports/logs.php" pagetype=""
@@ -250,21 +204,14 @@
                 <attributekey handle="meta_keywords">
                     <value>forms, log, error, email, mysql, exception, survey, history</value>
                 </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-time</value>
-                </attributekey>
             </attributes>
         </page>
-        <page name="Pages &amp; Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype=""
-              description="Reskin your site." package=""></page>
+        <page name="Pages &amp; Themes" path="/dashboard/pages" filename="/dashboard/pages/view.php" pagetype="" description="Reskin your site." package="" />
         <page name="Themes" path="/dashboard/pages/themes" filename="/dashboard/pages/themes/view.php" pagetype=""
               description="Reskin your site." package="">
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>new theme, theme, active theme, change theme, template, css</value>
-                </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-font</value>
                 </attributekey>
             </attributes>
         </page>
@@ -334,13 +281,7 @@
         </page>
 
         <page name="Page Templates" path="/dashboard/pages/templates" filename="/dashboard/pages/templates/view.php"
-              pagetype="" description="Form factors for pages in your site." package="">
-            <attributes>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-file</value>
-                </attributekey>
-            </attributes>
-        </page>
+              pagetype="" description="Form factors for pages in your site." package="" />
         <page name="Add Page Template" path="/dashboard/pages/templates/add"
               filename="/dashboard/pages/templates/add.php" pagetype="" description="Add page templates to your site."
               package="">
@@ -356,9 +297,6 @@
                 <attributekey handle="meta_keywords">
                     <value>page attributes, custom</value>
                 </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-cog</value>
-                </attributekey>
             </attributes>
         </page>
         <page name="Single Pages" path="/dashboard/pages/single" filename="/dashboard/pages/single.php" pagetype=""
@@ -366,9 +304,6 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>single, page, custom, application</value>
-                </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-wrench</value>
                 </attributekey>
             </attributes>
         </page>
@@ -392,21 +327,9 @@
             </attributes>
         </page>
         <page name="Workflow List" path="/dashboard/workflow/workflows" filename="/dashboard/workflow/workflows.php"
-              pagetype="" description="" package="">
-            <attributes>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-list</value>
-                </attributekey>
-            </attributes>
-        </page>
+              pagetype="" description="" package="" />
         <page name="Waiting for Me" path="/dashboard/workflow/me" filename="/dashboard/workflow/me.php" pagetype=""
-              description="" package="">
-            <attributes>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-user</value>
-                </attributekey>
-            </attributes>
-        </page>
+              description="" package="" />
         <page name="Stacks &amp; Blocks" path="/dashboard/blocks" filename="/dashboard/blocks/view.php" pagetype=""
               description="Manage sitewide content and administer block types." package=""/>
         <page name="Stacks" path="/dashboard/blocks/stacks" filename="/dashboard/blocks/stacks/view.php" pagetype=""
@@ -416,20 +339,14 @@
                     <value>stacks, reusable content, scrapbook, copy, paste, paste block, copy block, site name, logo</value>
                 </attributekey>
                 <attributekey handle="icon_dashboard">
-                    <value>icon-th</value>
+                    <value>fa fa-th</value>
                 </attributekey>
             </attributes>
 
         </page>
         <page name="Block &amp; Stack Permissions" path="/dashboard/blocks/permissions"
               filename="/dashboard/blocks/permissions.php" pagetype=""
-              description="Control who can add blocks and stacks on your site." package="">
-            <attributes>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-lock</value>
-                </attributekey>
-            </attributes>
-        </page>
+              description="Control who can add blocks and stacks on your site." package="" />
         <page name="Stack List" path="/dashboard/blocks/stacks/list" filename="/dashboard/blocks/stacks/list/view.php"
               pagetype="" description="" package="">
             <attributes>
@@ -449,9 +366,6 @@
             <attributes>
                 <attributekey handle="meta_keywords">
                     <value>block, refresh, custom</value>
-                </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>icon-wrench</value>
                 </attributekey>
             </attributes>
         </page>
