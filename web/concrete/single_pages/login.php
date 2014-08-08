@@ -23,14 +23,14 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
     </div>
     <div class="col-sm-6 col-sm-offset-3 login-form">
         <div class="row">
-            <div class="visible-xs ccm-authentication-type-select form-group">
+            <div class="visible-xs ccm-authentication-type-select form-group text-center">
                 <?php
                 if ($attribute_mode) {
                     ?>
                     <i class="fa fa-question"></i>
                     <span><?= t('Attributes') ?></span>
                 <?php
-                } else {
+                } else if (count($activeAuths) > 1) {
                     ?>
                     <select class="form-control col-xs-12">
                         <?php
@@ -45,6 +45,12 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                     </select>
 
                 <?php
+                } else {
+                    $auth = $activeAuths[0];
+                    ?>
+                    <?= $auth->getAuthenticationTypeIconHTML() ?>
+                    <span><?= $auth->getAuthenticationTypeName() ?></span>
+                    <?php
                 }
                 ?>
                 <label>&nbsp;</label>
@@ -132,7 +138,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                     select.val(me.data('handle'));
                     if (form.hasClass('active')) return;
                     types.removeClass('active');
-                    me.addClass('active')
+                    me.addClass('active');
                     if (forms.filter('.active').length) {
                         forms.stop().filter('.active').removeClass('active').fadeOut(250, function () {
                             form.addClass('active').fadeIn(250);
