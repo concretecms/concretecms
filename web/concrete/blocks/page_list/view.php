@@ -6,7 +6,13 @@ $th = Loader::helper('text');
 //Note that $nh (navigation helper) is already loaded for us by the controller (for legacy reasons)
 ?>
 
-<div class="<?=$containerClass?>">
+<div class="ccm-block-page-list-wrapper">
+
+    <?php if ($pageListTitle): ?>
+        <div class="ccm-block-page-list-header">
+            <h5><?=$pageListTitle?></h5>
+        </div>
+<? endif; ?>
 
 	<?php foreach ($pages as $page):
 
@@ -84,13 +90,13 @@ $th = Loader::helper('text');
         <?php if ($includeEntryText): ?>
             <div class="ccm-block-page-list-page-entry-text">
 
-                <h3 class="ccm-block-page-list-title">
+                <div class="ccm-block-page-list-title">
                     <? if ($useButtonForLink) { ?>
                         <?php echo $title; ?>
                     <? } else { ?>
                         <a href="<?php echo $url ?>" target="<?php echo $target ?>"><?php echo $title ?></a>
                     <? } ?>
-                </h3>
+                </div>
 
                 <? if ($includeDate): ?>
                     <div class="ccm-block-page-list-date"><?=$date?></div>

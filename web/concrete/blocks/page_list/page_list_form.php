@@ -75,6 +75,22 @@ $form = Loader::helper('form/page_selector');
             </label>
             <span class="help-block"><?=t('Allows other blocks like the topic list block to pass search criteria to this page list block.')?></span>
         </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="filterByRelated"
+                       value="1" <? if ($filterByRelated == 1) { ?> checked <? } ?> />
+                <?= t('Filter by Related Topic.') ?>
+            </label>
+        </div>
+
+        <div class="form-group" data-row="related-topic">
+            <select class="form-control" name="relatedTopicAttributeKeyHandle" id="relatedTopicAttributeKeyHandle">
+                    <option value=""><?=t('Choose topics attribute.')?></option>
+                <? foreach($attributeKeys as $attributeKey) { ?>
+                    <option value="<?=$attributeKey->getAttributeKeyHandle()?>" <? if ($attributeKey->getAttributeKeyHandle() == $relatedTopicAttributeKeyHandle) { ?>selected<? } ?>><?=$attributeKey->getAttributeKeyDisplayName()?></option>
+                <? } ?>
+            </select>
+        </div>
 
         <legend><?= t('Pagination') ?></legend>
         <div class="checkbox">
@@ -144,6 +160,9 @@ $form = Loader::helper('form/page_selector');
                 </option>
                 <option value="alpha_desc" <? if ($orderBy == 'alpha_desc') { ?> selected <? } ?>>
                     <?= t('Reverse alphabetical order') ?>
+                </option>
+                <option value="random" <? if ($orderBy == 'random') { ?> selected <? } ?>>
+                    <?= t('Random') ?>
                 </option>
             </select>
         </div>
@@ -284,6 +303,11 @@ $form = Loader::helper('form/page_selector');
         </div>
 
         <div class="form-group">
+            <label class="control-label"><?= t('Title of Page List') ?></label>
+            <input type="text" class="form-control" name="pageListTitle" value="<?=$pageListTitle?>" />
+        </div>
+
+        <div class="form-group">
             <label class="control-label"><?= t('Message to Display When No Pages Listed.') ?></label>
             <textarea class="form-control" name="noResultsMessage"><?=$noResultsMessage?></textarea>
         </div>
@@ -335,5 +359,15 @@ $form = Loader::helper('form/page_selector');
 </style>
 <script type="application/javascript">
     Concrete.event.publish('pagelist.edit.open');
+    $(function() {
+        $('input[name=filterByRelated]').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('div[data-row=related-topic]').show();
+            } else {
+                $('div[data-row=related-topic]').hide();
+            }
+        }).trigger('change');
+    });
+
 </script>
 

@@ -6,7 +6,6 @@ print $form->textarea($editor->getConversationEditorInputName(), $editor->getCon
 $(function() {
     var textarea = $('textarea.unbound.redactor_conversation_editor_<?=$editor->cnvObject->cnvID?>').removeClass('unbound');
     $(textarea).redactor({
-        focus: true,
         autoresize: false,
         buttons: [ 'bold','italic','deleted','|','fontcolor','|','link' ],
         callback: function(obj) {

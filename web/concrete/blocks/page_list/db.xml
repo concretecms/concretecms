@@ -29,6 +29,10 @@
         </field>
         <field name="buttonLinkText" type="C" size="255">
         </field>
+        <field name="pageListTitle" type="C" size="255">
+        </field>
+        <field name="relatedTopicAttributeKeyHandle" type="C" size="255">
+        </field>
         <field name="includeName" type="I1">
             <unsigned />
             <notnull />
@@ -60,6 +64,11 @@
 			<default value="1" />
 		</field>
         <field name="enableExternalFiltering" type="I1">
+            <unsigned />
+            <notnull />
+            <default value="0" />
+        </field>
+        <field name="filterByRelated" type="I1">
             <unsigned />
             <notnull />
             <default value="0" />

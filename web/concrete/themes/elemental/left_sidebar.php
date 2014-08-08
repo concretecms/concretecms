@@ -16,7 +16,7 @@ $this->inc('elements/header.php'); ?>
                 $a->display($c);
                 ?>
             </div>
-            <div class="col-md-9 col-content">
+            <div class="col-md-8 col-sm-offset-1 col-content">
                 <?
                 $a = new Area('Main');
                 $a->setAreaGridMaximumColumns(12);

@@ -92,7 +92,7 @@ Loader::element('panels/dashboard', array(
     'ui' => $ui,
     'c' => $c
 )); ?>
-</div></div><div class="ccm-panel-shadow-layer"></div>
+</div></div>
 </div>
 
 <? } ?>

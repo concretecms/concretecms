@@ -156,16 +156,6 @@
                             </area>
                             <area name="Sidebar">
                                 <blocks>
-                                    <block type="content" name="" mc-block-id="ifDQ2iqj">
-                                        <style>
-                                            <customClass>block-sidebar-wrapped</customClass>
-                                        </style>
-                                        <data table="btContentLocal">
-                                            <record>
-                                                <content><![CDATA[<h4>Open Positions</h4>]]></content>
-                                            </record>
-                                        </data>
-                                    </block>
                                     <block type="page_list" name="" mc-block-id="59ioFW3w">
                                         <style>
                                             <customClass>block-sidebar-wrapped</customClass>
@@ -174,6 +164,7 @@
                                         <data table="btPageList">
                                             <record>
                                                 <num><![CDATA[0]]></num>
+                                                <pageListTitle>Open Positions</pageListTitle>
                                                 <orderBy><![CDATA[chrono_desc]]></orderBy>
                                                 <cParentID>{ccm:export:page:/about/careers}</cParentID>
                                                 <cThis><![CDATA[0]]></cThis>
@@ -487,14 +478,19 @@
                                             <cParentID>{ccm:export:page:/blog}</cParentID>
                                         </data>
                                     </block>
-                                    <block type="related_pages" name="" mc-block-id="KffPWR4h">
-                                        <data table="btRelatedPages">
+                                    <block type="page_list" name="" mc-block-id="KffPWR4h">
+                                        <data table="btPageList">
                                             <record>
-                                                <topicAttributeKeyHandle><![CDATA[blog_entry_topic]]></topicAttributeKeyHandle>
-                                                <title><![CDATA[Related Posts]]></title>
-                                                <maxResults><![CDATA[3]]></maxResults>
+                                                <num><![CDATA[3]]></num>
+                                                <orderBy><![CDATA[random]]></orderBy>
                                                 <cParentID>{ccm:export:page:/blog}</cParentID>
+                                                <filterByRelated>1</filterByRelated>
+                                                <cThis><![CDATA[1]]></cThis>
+                                                <includeName><![CDATA[1]]></includeName>
+                                                <includeDescription><![CDATA[0]]></includeDescription>
                                                 <ptID>{ccm:export:pagetype:blog_entry}</ptID>
+                                                <pageListTitle>Related Posts</pageListTitle>
+                                                <relatedTopicAttributeKeyHandle>blog_entry_topics</relatedTopicAttributeKeyHandle>
                                             </record>
                                         </data>
                                     </block>
@@ -635,7 +631,6 @@
         <pagetype name="Portfolio Project" handle="portfolio_project" package="" launch-in-composer="1">
             <pagetemplates type="custom" default="left_sidebar">
                 <pagetemplate handle="left_sidebar"/>
-                <pagetemplate handle="right_sidebar"/>
             </pagetemplates>
             <target handle="page_type" package="" pagetype="portfolio"/>
             <composer>
@@ -651,9 +646,12 @@
                         <control custom-template="" custom-label="" type="collection_attribute" handle="project_client"/>
                         <control custom-template="" custom-label="" type="collection_attribute" handle="project_tasks"/>
                         <control custom-template="" custom-label="" type="collection_attribute" handle="project_skills"/>
-                    </set>
-                    <set name="Content">
                         <control custom-template="" custom-label="" type="collection_attribute" handle="thumbnail"/>
+                    </set>
+                    <set name="Image Slider">
+                        <control custom-template="" custom-label="" output-control-id="LnwwIyGa" type="block" handle="image_slider"/>
+                    </set>
+                    <set name="Body">
                         <control custom-template="" custom-label="" output-control-id="yXxylvrI" type="block" handle="content"/>
                     </set>
                 </formlayout>
@@ -670,6 +668,9 @@
                                             </record>
                                         </data>
                                     </block>
+                                    <block type="core_page_type_composer_control_output" name="" mc-block-id="mBHeZSLj">
+                                        <control output-control-id="LnwwIyGa"/>
+                                    </block>
                                 </blocks>
                             </area>
                             <area name="Sidebar">
@@ -679,7 +680,7 @@
                                             <record>
                                                 <attributeHandle><![CDATA[project_client]]></attributeHandle>
                                                 <attributeTitleText><![CDATA[Client:]]></attributeTitleText>
-                                                <displayTag><![CDATA[]]></displayTag>
+                                                <displayTag><![CDATA[div]]></displayTag>
                                                 <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
                                                 <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
                                                 <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
@@ -691,7 +692,7 @@
                                             <record>
                                                 <attributeHandle><![CDATA[project_tasks]]></attributeHandle>
                                                 <attributeTitleText><![CDATA[Task:]]></attributeTitleText>
-                                                <displayTag><![CDATA[]]></displayTag>
+                                                <displayTag><![CDATA[div]]></displayTag>
                                                 <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
                                                 <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
                                                 <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
@@ -703,7 +704,7 @@
                                             <record>
                                                 <attributeHandle><![CDATA[project_skills]]></attributeHandle>
                                                 <attributeTitleText><![CDATA[Skills:]]></attributeTitleText>
-                                                <displayTag><![CDATA[]]></displayTag>
+                                                <displayTag><![CDATA[div]]></displayTag>
                                                 <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
                                                 <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
                                                 <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
@@ -722,93 +723,20 @@
                             <area name="Page Footer">
                                 <blocks>
                                     <block type="horizontal_rule" name="" mc-block-id="z5KRV50f"/>
-                                    <block type="related_pages" name="" mc-block-id="DEpG6w2r">
-                                        <data table="btRelatedPages">
+                                    <block type="page_list" name="" mc-block-id="DEpG6w2r" custom-template="thumbnail_grid">
+                                        <data table="btPageList">
                                             <record>
-                                                <topicAttributeKeyHandle><![CDATA[project_topics]]></topicAttributeKeyHandle>
-                                                <title><![CDATA[Related Projects]]></title>
-                                                <maxResults><![CDATA[3]]></maxResults>
-                                                <cParentID/>
+                                                <num><![CDATA[3]]></num>
+                                                <orderBy><![CDATA[random]]></orderBy>
+                                                <cParentID />
+                                                <filterByRelated>1</filterByRelated>
+                                                <cThis><![CDATA[0]]></cThis>
+                                                <includeName><![CDATA[1]]></includeName>
+                                                <includeDescription><![CDATA[0]]></includeDescription>
                                                 <ptID>{ccm:export:pagetype:portfolio_project}</ptID>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </blocks>
-                            </area>
-                        </page>
-                    </pagetemplate>
-                    <pagetemplate handle="right_sidebar">
-                        <page name="" path="" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="" package="">
-                            <area name="Page Header">
-                                <blocks>
-                                    <block type="page_title" name="" mc-block-id="Blj682mK">
-                                        <data table="btPageTitle">
-                                            <record>
-                                                <useCustomTitle><![CDATA[0]]></useCustomTitle>
-                                                <titleText><![CDATA[[Page Title]]]></titleText>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </blocks>
-                            </area>
-                            <area name="Sidebar">
-                                <blocks>
-                                    <block type="page_attribute_display" name="" mc-block-id="vXzZI1Jv">
-                                        <data table="btPageAttributeDisplay">
-                                            <record>
-                                                <attributeHandle><![CDATA[project_client]]></attributeHandle>
-                                                <attributeTitleText><![CDATA[Client:]]></attributeTitleText>
-                                                <displayTag><![CDATA[]]></displayTag>
-                                                <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
-                                                <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
-                                                <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
-                                            </record>
-                                        </data>
-                                    </block>
-                                    <block type="page_attribute_display" name="" mc-block-id="m95mBEXx">
-                                        <data table="btPageAttributeDisplay">
-                                            <record>
-                                                <attributeHandle><![CDATA[project_tasks]]></attributeHandle>
-                                                <attributeTitleText><![CDATA[Task:]]></attributeTitleText>
-                                                <displayTag><![CDATA[]]></displayTag>
-                                                <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
-                                                <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
-                                                <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
-                                            </record>
-                                        </data>
-                                    </block>
-                                    <block type="page_attribute_display" name="" mc-block-id="bq88MXOi">
-                                        <data table="btPageAttributeDisplay">
-                                            <record>
-                                                <attributeHandle><![CDATA[project_skills]]></attributeHandle>
-                                                <attributeTitleText><![CDATA[Skills:]]></attributeTitleText>
-                                                <displayTag><![CDATA[]]></displayTag>
-                                                <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
-                                                <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
-                                                <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </blocks>
-                            </area>
-                            <area name="Main">
-                                <blocks>
-                                    <block type="core_page_type_composer_control_output" name="" mc-block-id="lppk0el5">
-                                        <control output-control-id="yXxylvrI"/>
-                                    </block>
-                                </blocks>
-                            </area>
-                            <area name="Page Footer">
-                                <blocks>
-                                    <block type="horizontal_rule" name="" mc-block-id="z5KRV50f"/>
-                                    <block type="related_pages" name="" mc-block-id="DEpG6w2r">
-                                        <data table="btRelatedPages">
-                                            <record>
-                                                <topicAttributeKeyHandle><![CDATA[project_topics]]></topicAttributeKeyHandle>
-                                                <title><![CDATA[Related Projects]]></title>
-                                                <maxResults><![CDATA[3]]></maxResults>
-                                                <cParentID/>
-                                                <ptID>{ccm:export:pagetype:portfolio_project}</ptID>
+                                                <pageListTitle>Related Projects</pageListTitle>
+                                                <noResultsMessage><![CDATA[No related projects found.]]></noResultsMessage>
+                                                <relatedTopicAttributeKeyHandle>project_topics</relatedTopicAttributeKeyHandle>
                                             </record>
                                         </data>
                                     </block>
@@ -951,7 +879,6 @@
                         </data>
                         <data table="btImageSliderEntries">
                             <record>
-                                <id><![CDATA[5]]></id>
                                 <cID><![CDATA[0]]></cID>
                                 <fID>{ccm:export:file:slider1.png}</fID>
                                 <linkURL><![CDATA[]]></linkURL>
@@ -960,7 +887,6 @@
                                 <sortOrder><![CDATA[0]]></sortOrder>
                             </record>
                             <record>
-                                <id><![CDATA[6]]></id>
                                 <cID><![CDATA[0]]></cID>
                                 <fID>{ccm:export:file:slider2.png}</fID>
                                 <linkURL><![CDATA[]]></linkURL>
@@ -1607,6 +1533,98 @@
                 </blocks>
             </area>
         </page>
+        <page name="Services" path="/services" filename="" pagetype="page" template="full" user="admin" description="" package="">
+            <area name="Main">
+                <blocks>
+                    <block type="page_title" name="">
+                        <data table="btPageTitle">
+                            <record>
+                                <useCustomTitle><![CDATA[1]]></useCustomTitle>
+                                <titleText><![CDATA[Our Expertise]]></titleText>
+                            </record>
+                        </data>
+                    </block>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="3" offset="0">
+                                    <block type="feature" name="" custom-template="hover_description">
+                                        <data table="btFeature">
+                                            <record>
+                                                <icon><![CDATA[star]]></icon>
+                                                <title><![CDATA[Quality]]></title>
+                                                <paragraph><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales non leo id aliquet.]]></paragraph>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="3" offset="0">
+                                    <block type="feature" name="" custom-template="hover_description">
+                                        <data table="btFeature">
+                                            <record>
+                                                <icon><![CDATA[tint]]></icon>
+                                                <title><![CDATA[Design]]></title>
+                                                <paragraph><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales non leo id aliquet.]]></paragraph>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="3" offset="0">
+                                    <block type="feature" name="" custom-template="hover_description">
+                                        <data table="btFeature">
+                                            <record>
+                                                <icon><![CDATA[cog]]></icon>
+                                                <title><![CDATA[Development]]></title>
+                                                <paragraph><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales non leo id aliquet.]]></paragraph>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="3" offset="0">
+                                    <block type="feature" name="" custom-template="hover_description">
+                                        <data table="btFeature">
+                                            <record>
+                                                <icon><![CDATA[lock]]></icon>
+                                                <title><![CDATA[Security]]></title>
+                                                <paragraph><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales non leo id aliquet.]]></paragraph>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                    <block type="horizontal_rule" name=""/>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="6" offset="0">
+                                    <block type="content" name="">
+                                        <data table="btContentLocal">
+                                            <record>
+                                                <content><![CDATA[<h3>Awesome Features</h3><p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. </p><h3>Guide Books</h3><p>Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. </p><h3>Admin Accounts</h3><p>Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. </p>]]></content>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="6" offset="0">
+                                    <block type="content" name="">
+                                        <data table="btContentLocal">
+                                            <record>
+                                                <content><![CDATA[<h3>Support</h3><p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. </p><h3>Additional Options</h3><p>Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. </p><p>Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p>]]></content>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Main Footer">
+                <blocks/>
+            </area>
+        </page>
         <page name="Careers" path="/about/careers" filename="" pagetype="page" template="full" user="admin"
               description="" package="">
             <area name="Main">
@@ -1815,7 +1833,6 @@
             </area>
             <area name="Sidebar">
                 <blocks>
-                    <block mc-block-id="ifDQ2iqj"/>
                     <block mc-block-id="59ioFW3w"/>
                 </blocks>
             </area>
@@ -1878,7 +1895,6 @@
             </area>
             <area name="Sidebar">
                 <blocks>
-                    <block mc-block-id="ifDQ2iqj"/>
                     <block mc-block-id="59ioFW3w"/>
                 </blocks>
             </area>
@@ -2214,6 +2230,39 @@
             <area name="Page Header">
                 <blocks>
                     <block mc-block-id="Blj682mK"/>
+                    <block type="image_slider" name="">
+                        <data table="btImageSlider">
+                            <record>
+                                <navigationType><![CDATA[0]]></navigationType>
+                            </record>
+                        </data>
+                        <data table="btImageSliderEntries">
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:sunset.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[0]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:subway.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[1]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:shoes.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[2]]></sortOrder>
+                            </record>
+                        </data>
+                    </block>
                 </blocks>
             </area>
             <area name="Sidebar">
@@ -2270,9 +2319,41 @@
             <area name="Page Header">
                 <blocks>
                     <block mc-block-id="Blj682mK"/>
+                    <block type="image_slider" name="">
+                        <data table="btImageSlider">
+                            <record>
+                                <navigationType><![CDATA[0]]></navigationType>
+                            </record>
+                        </data>
+                        <data table="btImageSliderEntries">
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:sunset.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[0]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:subway.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[1]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:shoes.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[2]]></sortOrder>
+                            </record>
+                        </data>
+                    </block>
                 </blocks>
-            </area>
-            <area name="Sidebar">
+            </area>            <area name="Sidebar">
                 <blocks>
                     <block mc-block-id="vXzZI1Jv"/>
                     <block mc-block-id="m95mBEXx"/>
@@ -2334,9 +2415,41 @@
             <area name="Page Header">
                 <blocks>
                     <block mc-block-id="Blj682mK"/>
+                    <block type="image_slider" name="">
+                        <data table="btImageSlider">
+                            <record>
+                                <navigationType><![CDATA[0]]></navigationType>
+                            </record>
+                        </data>
+                        <data table="btImageSliderEntries">
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:sunset.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[0]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:subway.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[1]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:shoes.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[2]]></sortOrder>
+                            </record>
+                        </data>
+                    </block>
                 </blocks>
-            </area>
-            <area name="Sidebar">
+            </area>            <area name="Sidebar">
                 <blocks>
                     <block mc-block-id="vXzZI1Jv"/>
                     <block mc-block-id="m95mBEXx"/>
@@ -2393,9 +2506,41 @@
             <area name="Page Header">
                 <blocks>
                     <block mc-block-id="Blj682mK"/>
+                    <block type="image_slider" name="">
+                        <data table="btImageSlider">
+                            <record>
+                                <navigationType><![CDATA[0]]></navigationType>
+                            </record>
+                        </data>
+                        <data table="btImageSliderEntries">
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:sunset.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[0]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:subway.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[1]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:shoes.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[2]]></sortOrder>
+                            </record>
+                        </data>
+                    </block>
                 </blocks>
-            </area>
-            <area name="Sidebar">
+            </area>            <area name="Sidebar">
                 <blocks>
                     <block mc-block-id="vXzZI1Jv"/>
                     <block mc-block-id="m95mBEXx"/>
@@ -2449,9 +2594,41 @@
             <area name="Page Header">
                 <blocks>
                     <block mc-block-id="Blj682mK"/>
+                    <block type="image_slider" name="">
+                        <data table="btImageSlider">
+                            <record>
+                                <navigationType><![CDATA[0]]></navigationType>
+                            </record>
+                        </data>
+                        <data table="btImageSliderEntries">
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:sunset.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[0]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:subway.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[1]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:shoes.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[2]]></sortOrder>
+                            </record>
+                        </data>
+                    </block>
                 </blocks>
-            </area>
-            <area name="Sidebar">
+            </area>            <area name="Sidebar">
                 <blocks>
                     <block mc-block-id="vXzZI1Jv"/>
                     <block mc-block-id="m95mBEXx"/>
@@ -2505,6 +2682,39 @@
             <area name="Page Header">
                 <blocks>
                     <block mc-block-id="Blj682mK"/>
+                    <block type="image_slider" name="">
+                        <data table="btImageSlider">
+                            <record>
+                                <navigationType><![CDATA[0]]></navigationType>
+                            </record>
+                        </data>
+                        <data table="btImageSliderEntries">
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:sunset.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[0]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:subway.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[1]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:shoes.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[2]]></sortOrder>
+                            </record>
+                        </data>
+                    </block>
                 </blocks>
             </area>
             <area name="Sidebar">

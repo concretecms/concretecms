@@ -455,9 +455,9 @@
         Block.call(my, elem, edit_mode, dragger);
     };
 
-    var DuplicateBlock = Concrete.DuplicateBlock = function DuplicateBlock(elem, edit_mode, dragger) {
+    var DuplicateBlock = Concrete.DuplicateBlock = function DuplicateBlock(elem, edit_mode) {
         var my = this;
-        Block.call(my, elem, edit_mode, dragger);
+        Block.call(my, elem, edit_mode, elem.find('.block-content'));
     };
 
     var StackBlock = Concrete.StackBlock = function StackBlock(elem, stack, edit_mode, dragger) {
@@ -555,10 +555,8 @@
             });
 
             $(element).find('div.ccm-panel-add-clipboard-block-item').each(function () {
-                var block, me = $(this), dragger = me;
-                my.addBlock(block = new DuplicateBlock($(this), my, dragger));
-
-                block.setPeper(dragger);
+                var block, me = $(this);
+                my.addBlock(block = new DuplicateBlock(me, my));
             });
 
             return panel;

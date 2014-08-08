@@ -161,7 +161,7 @@
     }
 </style>
 <div class="ccm-image-slider-block-container">
-    <legend><?php echo t('Navigation') ?></legend>
+    <label class="control-label"><?php echo t('Navigation') ?></label>
     <div class="form-group">
         <div class="radio">
             <label><input type="radio" name="navigationType" value="0" <?php echo $navigationType > 0 ? '' : 'checked' ?> /><?php echo t('Arrows') ?></label>

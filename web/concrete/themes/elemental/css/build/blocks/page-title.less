@@ -1,0 +1,20 @@
+h1.page-title {
+  color: @page-title-type-color;
+  font-family: @page-title-type-font-family;
+  font-size: @page-title-type-font-size;
+  line-height: @line-height-base;
+  font-weight: @page-title-type-font-weight;
+  text-transform: @page-title-type-text-transform;
+  padding-bottom: 30px;
+  padding-top: 30px;
+}
+
+// portfolio page type
+
+&.page-type-portfolio-project {
+  h1.page-title {
+    .make-heading(@h1-type-font-family, @h1-type-font-size, @h1-type-font-weight, @h1-type-color);
+    border-bottom: 1px solid @content-section-divider-color;
+    margin-bottom: 40px;
+  }
+}
