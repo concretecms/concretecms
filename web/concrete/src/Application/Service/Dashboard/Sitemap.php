@@ -134,28 +134,32 @@ class Sitemap {
 				return false;
 			}
 		}
-		
-		$cIcon = $c->getCollectionIcon();
-		if (!$cIcon) {
-			if ($cID == 1) {
-				$cIconClass = 'fa fa-home';
-			} else if ($numSubpages > 0) {
-				$cIcon = ASSETS_URL_IMAGES . '/dashboard/sitemap/folder.png';
-			} else {
-				$cIcon = ASSETS_URL_IMAGES . '/dashboard/sitemap/document.png';
-			}
-		}
+
+        if($c->getAttribute('icon_dashboard')) {
+            $cIconClass = $c->getAttribute('icon_dashboard'); // use markup with custom class name rather than image
+        } else {
+            $cIcon = $c->getCollectionIcon();
+            if(!$cIcon) {
+                if ($cID == 1) {
+                    $cIconClass = 'fa fa-home';
+                } else if ($numSubpages > 0) {
+                    $cIconClass= 'fa fa-folder-o';
+                } else {
+                    $cIconClass = 'fa fa-file-o';
+                }
+            }
+        }
 
 		$cAlias = $c->isAlias();
 		$cPointerID = $c->getCollectionPointerID();
 		if ($cAlias) {
 			if ($cPointerID > 0) {
-				$cIcon = ASSETS_URL_IMAGES . '/icons/alias.png';
-				$cAlias = 'POINTER';
+                $cIconClass = 'fa fa-sign-in';
+                $cAlias = 'POINTER';
 				$cID = $c->getCollectionPointerOriginalID();
 			} else {
-				$cIcon = ASSETS_URL_IMAGES . '/icons/alias_external.png';
-				$cAlias = 'LINK';
+                $cIconClass = 'fa fa-sign-out';
+                $cAlias = 'LINK';
 			}
 
 		}

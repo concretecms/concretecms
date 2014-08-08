@@ -39,7 +39,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 	<script type="text/javascript">
 	$(function() {
-		ConcreteEvent.subscribe('AjaxFormSubmitSuccess', function(e, data) {
+        ConcreteEvent.unsubscribe('AjaxFormSubmitSuccess.sitemapDelete');
+		ConcreteEvent.subscribe('AjaxFormSubmitSuccess.sitemapDelete', function(e, data) {
 			if (data.form == 'delete-page') {
 				ConcreteEvent.publish('SitemapDeleteRequestComplete', {'cID': '<?=$c->getCollectionID()?>'});
 			}
