@@ -89,6 +89,9 @@ class CustomStyle extends AbstractCustomStyle
         $class = 'ccm-custom-style-';
         $txt = Core::make('helper/text');
         $class .= strtolower($txt->filterNonAlphaNum($this->arHandle));
+        if (is_object($this->set) && $this->set->getCustomClass()) {
+            $class .= ' ' . $this->set->getCustomClass();
+        }
         return $class;
     }
 }

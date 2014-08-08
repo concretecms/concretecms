@@ -300,12 +300,13 @@ $form = Core::make('helper/form');
         <div class="ccm-inline-design-dropdown-menu dropdown-menu">
             <h3><?=t('Advanced')?></h3>
 
+            <div>
+                <?=t('Custom Class')?>
+                <?=$form->select('customClass', $customClassesSelect, $customClass);?>
+            </div>
+            <hr/>
+
             <? if ($style instanceof \Concrete\Core\Block\CustomStyle && $canEditCustomTemplate) { ?>
-                <div>
-                    <?=t('Custom Classes')?>
-                    <?=$form->select('customClass', $customClassesSelect, $customClass);?>
-                </div>
-                <hr/>
                 <div>
                     <?=t('Block Name')?>
                     <?=$form->text('bName', $bName);?>
