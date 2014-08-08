@@ -132,7 +132,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                     select.val(me.data('handle'));
                     if (form.hasClass('active')) return;
                     types.removeClass('active');
-                    me.addClass('active')
+                    me.addClass('active');
                     if (forms.filter('.active').length) {
                         forms.stop().filter('.active').removeClass('active').fadeOut(250, function () {
                             form.addClass('active').fadeIn(250);

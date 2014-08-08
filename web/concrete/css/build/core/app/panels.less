@@ -303,7 +303,8 @@ div#ccm-panel-add-clipboard-block-list {
             cursor: grab;
         }
 
-        > div.blocks {
+
+        div.blocks {
             height: 60px;
             overflow: hidden;
             color: #9ea6b6;
@@ -377,15 +378,31 @@ div#ccm-panel-add-clipboard-block-list {
 
     }
     > div.ccm-panel-add-clipboard-block-item {
-        > div.blocks {
-            max-height: 150px;
-            height: auto;
-
-            div.block-handle {
-                top: 0;
-                max-height: 150px;
-            }
+      position:relative;
+      .delete {
+        display: none;
+        position:absolute;
+        top: 5px;
+        right: 30px;
+        height: 40px;
+      }
+      &:hover {
+        .delete {
+          display:block;
         }
+      }
+      > div.block-content {
+        > div.blocks {
+          max-height: 150px;
+          height: auto;
+          padding: 0 10px;
+
+          div.block-handle {
+            top: 0;
+            max-height: 150px;
+          }
+        }
+      }
     }
 }
 

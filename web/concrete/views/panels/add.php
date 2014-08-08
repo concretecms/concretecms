@@ -199,26 +199,53 @@ switch ($tab) {
                          '<p><img src="' . $icon . '" /><span>' . t(
                              $type->getBlockTypeName()) . '</span></p>') ?>"
                      data-block-id="<?= intval($block->getBlockID()) ?>">
-                    <div class="block-name">
-                        <span class="handle"><?= h($type->getBlockTypeName()) ?></span>
-                    </div>
-                    <div class="blocks">
-                        <div class="block"
-                             class="ccm-panel-add-block-draggable-block-type"
-                             title="<?= t($type->getBlockTypeName()) ?>">
-
-                            <div class="block-content">
-                                <?php
-                                $block->display()
-                                ?>
-                            </div>
-                            <div class="block-handle"></div>
+                    <div class="block-content">
+                        <div class="block-name">
+                            <span class="handle"><?= h($type->getBlockTypeName()) ?></span>
                         </div>
+                        <div class="blocks">
+                            <div class="block"
+                                 class="ccm-panel-add-block-draggable-block-type"
+                                 title="<?= t($type->getBlockTypeName()) ?>">
+
+                                <div class="block-content">
+                                    <?php
+                                    $block->display()
+                                    ?>
+                                </div>
+                                <div class="block-handle"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="delete">
+                        <button class="ccm-delete-clipboard-item pull-right btn btn-sm btn-danger">
+                            <i class="fa fa-trash-o"></i>
+                        </button>
                     </div>
                 </div>
             <?php
             }
             ?>
+            <script>
+                $('button.ccm-delete-clipboard-item').unbind().click(function(e) {
+                    e.preventDefault();
+                    if (confirm('Really delete this clipboard item?')) {
+                        var me = $(this),
+                            item = me.closest('.ccm-panel-add-clipboard-block-item');
+
+                        $.post(CCM_TOOLS_PATH + '/pile_manager', {
+                            task: 'delete',
+                            pcID: item.data('pcid'),
+                            cID: item.data('cid')
+                        }, function() {
+                            item.remove();
+                        }).fail(function(data) {
+                            alert("<?= t('An error occured while deleting this item:') ?>\n" + data.responseJSON.errors.join("\n"));
+                        });
+                    }
+                    return false;
+                });
+            </script>
         </div>
 
         <?php
