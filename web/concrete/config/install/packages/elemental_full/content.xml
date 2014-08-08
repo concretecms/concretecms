@@ -156,16 +156,6 @@
                             </area>
                             <area name="Sidebar">
                                 <blocks>
-                                    <block type="content" name="" mc-block-id="ifDQ2iqj">
-                                        <style>
-                                            <customClass>block-sidebar-wrapped</customClass>
-                                        </style>
-                                        <data table="btContentLocal">
-                                            <record>
-                                                <content><![CDATA[<h4>Open Positions</h4>]]></content>
-                                            </record>
-                                        </data>
-                                    </block>
                                     <block type="page_list" name="" mc-block-id="59ioFW3w">
                                         <style>
                                             <customClass>block-sidebar-wrapped</customClass>
@@ -174,6 +164,7 @@
                                         <data table="btPageList">
                                             <record>
                                                 <num><![CDATA[0]]></num>
+                                                <pageListTitle>Open Positions</pageListTitle>
                                                 <orderBy><![CDATA[chrono_desc]]></orderBy>
                                                 <cParentID>{ccm:export:page:/about/careers}</cParentID>
                                                 <cThis><![CDATA[0]]></cThis>
@@ -726,7 +717,7 @@
                             <area name="Page Footer">
                                 <blocks>
                                     <block type="horizontal_rule" name="" mc-block-id="z5KRV50f"/>
-                                    <block type="page_list" name="" mc-block-id="DEpG6w2r" custom-template="thumbnail-grid">
+                                    <block type="page_list" name="" mc-block-id="DEpG6w2r" custom-template="thumbnail_grid">
                                         <data table="btPageList">
                                             <record>
                                                 <num><![CDATA[3]]></num>
@@ -738,6 +729,7 @@
                                                 <includeDescription><![CDATA[0]]></includeDescription>
                                                 <ptID>{ccm:export:pagetype:portfolio_project}</ptID>
                                                 <pageListTitle>Related Projects</pageListTitle>
+                                                <noResultsMessage><![CDATA[No related projects found.]]></noResultsMessage>
                                                 <relatedTopicAttributeKeyHandle>project_topics</relatedTopicAttributeKeyHandle>
                                             </record>
                                         </data>
@@ -1745,7 +1737,6 @@
             </area>
             <area name="Sidebar">
                 <blocks>
-                    <block mc-block-id="ifDQ2iqj"/>
                     <block mc-block-id="59ioFW3w"/>
                 </blocks>
             </area>
@@ -1808,7 +1799,6 @@
             </area>
             <area name="Sidebar">
                 <blocks>
-                    <block mc-block-id="ifDQ2iqj"/>
                     <block mc-block-id="59ioFW3w"/>
                 </blocks>
             </area>
