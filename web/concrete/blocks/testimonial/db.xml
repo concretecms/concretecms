@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btTestimonial">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+        <field name="fID" type="I">
+            <unsigned />
+            <default value="0" />
+        </field>
+		<field name="name" type="C" size="255"></field>
+        <field name="position" type="C" size="255"></field>
+        <field name="company" type="C" size="255"></field>
+        <field name="companyURL" type="C" size="255"></field>
+        <field name="paragraph" type="X"></field>
+	</table>
+</schema>
