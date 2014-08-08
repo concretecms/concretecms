@@ -1533,6 +1533,98 @@
                 </blocks>
             </area>
         </page>
+        <page name="Services" path="/services" filename="" pagetype="page" template="full" user="admin" description="" package="">
+            <area name="Main">
+                <blocks>
+                    <block type="page_title" name="">
+                        <data table="btPageTitle">
+                            <record>
+                                <useCustomTitle><![CDATA[1]]></useCustomTitle>
+                                <titleText><![CDATA[Our Expertise]]></titleText>
+                            </record>
+                        </data>
+                    </block>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="3" offset="0">
+                                    <block type="feature" name="" custom-template="hover_description">
+                                        <data table="btFeature">
+                                            <record>
+                                                <icon><![CDATA[star]]></icon>
+                                                <title><![CDATA[Quality]]></title>
+                                                <paragraph><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales non leo id aliquet.]]></paragraph>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="3" offset="0">
+                                    <block type="feature" name="" custom-template="hover_description">
+                                        <data table="btFeature">
+                                            <record>
+                                                <icon><![CDATA[tint]]></icon>
+                                                <title><![CDATA[Design]]></title>
+                                                <paragraph><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales non leo id aliquet.]]></paragraph>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="3" offset="0">
+                                    <block type="feature" name="" custom-template="hover_description">
+                                        <data table="btFeature">
+                                            <record>
+                                                <icon><![CDATA[cog]]></icon>
+                                                <title><![CDATA[Development]]></title>
+                                                <paragraph><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales non leo id aliquet.]]></paragraph>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="3" offset="0">
+                                    <block type="feature" name="" custom-template="hover_description">
+                                        <data table="btFeature">
+                                            <record>
+                                                <icon><![CDATA[lock]]></icon>
+                                                <title><![CDATA[Security]]></title>
+                                                <paragraph><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sodales non leo id aliquet.]]></paragraph>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                    <block type="horizontal_rule" name=""/>
+                    <block type="core_area_layout" name="">
+                        <arealayout type="theme-grid" columns="12">
+                            <columns>
+                                <column span="6" offset="0">
+                                    <block type="content" name="">
+                                        <data table="btContentLocal">
+                                            <record>
+                                                <content><![CDATA[<h3>Awesome Features</h3><p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. </p><h3>Guide Books</h3><p>Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. </p><h3>Admin Accounts</h3><p>Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. </p>]]></content>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                                <column span="6" offset="0">
+                                    <block type="content" name="">
+                                        <data table="btContentLocal">
+                                            <record>
+                                                <content><![CDATA[<h3>Support</h3><p>Curabitur sagittis elementum felis at sodales. Nullam fermentum at urna quis accumsan. Nam bibendum leo nisi, lacinia molestie arcu consequat quis. Morbi at suscipit risus. Sed consequat eleifend metus, vitae malesuada eros elementum sed. </p><h3>Additional Options</h3><p>Fusce risus felis, viverra et dignissim at, lobortis non est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna. </p><p>Etiam aliquam, justo et varius eleifend, dui lectus egestas nunc, vel malesuada nisl purus nec metus. In gravida turpis a pharetra commodo. Donec non turpis vulputate, faucibus metus a, consectetur nunc. Morbi tortor nisi, hendrerit sed laoreet eget, fermentum et justo. Suspendisse potenti.</p>]]></content>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </column>
+                            </columns>
+                        </arealayout>
+                    </block>
+                </blocks>
+            </area>
+            <area name="Main Footer">
+                <blocks/>
+            </area>
+        </page>
         <page name="Careers" path="/about/careers" filename="" pagetype="page" template="full" user="admin"
               description="" package="">
             <area name="Main">

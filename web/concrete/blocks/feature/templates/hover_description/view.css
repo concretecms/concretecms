@@ -1,0 +1,12 @@
+div.ccm-block-feature-item-hover-wrapper {
+    text-align: center;
+    font-size: 120%;
+}
+
+div.ccm-block-feature-item-hover {
+    cursor: help;
+}
+
+div.ccm-block-feature-item-hover-icon {
+    margin-bottom: 0.5em;
+}
