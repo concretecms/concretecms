@@ -487,14 +487,19 @@
                                             <cParentID>{ccm:export:page:/blog}</cParentID>
                                         </data>
                                     </block>
-                                    <block type="related_pages" name="" mc-block-id="KffPWR4h">
-                                        <data table="btRelatedPages">
+                                    <block type="page_list" name="" mc-block-id="KffPWR4h">
+                                        <data table="btPageList">
                                             <record>
-                                                <topicAttributeKeyHandle><![CDATA[blog_entry_topic]]></topicAttributeKeyHandle>
-                                                <title><![CDATA[Related Posts]]></title>
-                                                <maxResults><![CDATA[3]]></maxResults>
+                                                <num><![CDATA[3]]></num>
+                                                <orderBy><![CDATA[random]]></orderBy>
                                                 <cParentID>{ccm:export:page:/blog}</cParentID>
+                                                <filterByRelated>1</filterByRelated>
+                                                <cThis><![CDATA[1]]></cThis>
+                                                <includeName><![CDATA[1]]></includeName>
+                                                <includeDescription><![CDATA[0]]></includeDescription>
                                                 <ptID>{ccm:export:pagetype:blog_entry}</ptID>
+                                                <pageListTitle>Related Posts</pageListTitle>
+                                                <relatedTopicAttributeKeyHandle>blog_entry_topics</relatedTopicAttributeKeyHandle>
                                             </record>
                                         </data>
                                     </block>
@@ -635,7 +640,6 @@
         <pagetype name="Portfolio Project" handle="portfolio_project" package="" launch-in-composer="1">
             <pagetemplates type="custom" default="left_sidebar">
                 <pagetemplate handle="left_sidebar"/>
-                <pagetemplate handle="right_sidebar"/>
             </pagetemplates>
             <target handle="page_type" package="" pagetype="portfolio"/>
             <composer>
@@ -722,93 +726,19 @@
                             <area name="Page Footer">
                                 <blocks>
                                     <block type="horizontal_rule" name="" mc-block-id="z5KRV50f"/>
-                                    <block type="related_pages" name="" mc-block-id="DEpG6w2r">
-                                        <data table="btRelatedPages">
+                                    <block type="page_list" name="" mc-block-id="DEpG6w2r" custom-template="thumbnail-grid">
+                                        <data table="btPageList">
                                             <record>
-                                                <topicAttributeKeyHandle><![CDATA[project_topics]]></topicAttributeKeyHandle>
-                                                <title><![CDATA[Related Projects]]></title>
-                                                <maxResults><![CDATA[3]]></maxResults>
-                                                <cParentID/>
+                                                <num><![CDATA[3]]></num>
+                                                <orderBy><![CDATA[random]]></orderBy>
+                                                <cParentID />
+                                                <filterByRelated>1</filterByRelated>
+                                                <cThis><![CDATA[0]]></cThis>
+                                                <includeName><![CDATA[1]]></includeName>
+                                                <includeDescription><![CDATA[0]]></includeDescription>
                                                 <ptID>{ccm:export:pagetype:portfolio_project}</ptID>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </blocks>
-                            </area>
-                        </page>
-                    </pagetemplate>
-                    <pagetemplate handle="right_sidebar">
-                        <page name="" path="" filename="" pagetype="portfolio_project" template="left_sidebar" user="admin" description="" package="">
-                            <area name="Page Header">
-                                <blocks>
-                                    <block type="page_title" name="" mc-block-id="Blj682mK">
-                                        <data table="btPageTitle">
-                                            <record>
-                                                <useCustomTitle><![CDATA[0]]></useCustomTitle>
-                                                <titleText><![CDATA[[Page Title]]]></titleText>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </blocks>
-                            </area>
-                            <area name="Sidebar">
-                                <blocks>
-                                    <block type="page_attribute_display" name="" mc-block-id="vXzZI1Jv">
-                                        <data table="btPageAttributeDisplay">
-                                            <record>
-                                                <attributeHandle><![CDATA[project_client]]></attributeHandle>
-                                                <attributeTitleText><![CDATA[Client:]]></attributeTitleText>
-                                                <displayTag><![CDATA[]]></displayTag>
-                                                <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
-                                                <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
-                                                <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
-                                            </record>
-                                        </data>
-                                    </block>
-                                    <block type="page_attribute_display" name="" mc-block-id="m95mBEXx">
-                                        <data table="btPageAttributeDisplay">
-                                            <record>
-                                                <attributeHandle><![CDATA[project_tasks]]></attributeHandle>
-                                                <attributeTitleText><![CDATA[Task:]]></attributeTitleText>
-                                                <displayTag><![CDATA[]]></displayTag>
-                                                <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
-                                                <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
-                                                <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
-                                            </record>
-                                        </data>
-                                    </block>
-                                    <block type="page_attribute_display" name="" mc-block-id="bq88MXOi">
-                                        <data table="btPageAttributeDisplay">
-                                            <record>
-                                                <attributeHandle><![CDATA[project_skills]]></attributeHandle>
-                                                <attributeTitleText><![CDATA[Skills:]]></attributeTitleText>
-                                                <displayTag><![CDATA[]]></displayTag>
-                                                <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
-                                                <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
-                                                <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </blocks>
-                            </area>
-                            <area name="Main">
-                                <blocks>
-                                    <block type="core_page_type_composer_control_output" name="" mc-block-id="lppk0el5">
-                                        <control output-control-id="yXxylvrI"/>
-                                    </block>
-                                </blocks>
-                            </area>
-                            <area name="Page Footer">
-                                <blocks>
-                                    <block type="horizontal_rule" name="" mc-block-id="z5KRV50f"/>
-                                    <block type="related_pages" name="" mc-block-id="DEpG6w2r">
-                                        <data table="btRelatedPages">
-                                            <record>
-                                                <topicAttributeKeyHandle><![CDATA[project_topics]]></topicAttributeKeyHandle>
-                                                <title><![CDATA[Related Projects]]></title>
-                                                <maxResults><![CDATA[3]]></maxResults>
-                                                <cParentID/>
-                                                <ptID>{ccm:export:pagetype:portfolio_project}</ptID>
+                                                <pageListTitle>Related Projects</pageListTitle>
+                                                <relatedTopicAttributeKeyHandle>project_topics</relatedTopicAttributeKeyHandle>
                                             </record>
                                         </data>
                                     </block>

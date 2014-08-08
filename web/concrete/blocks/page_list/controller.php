@@ -7,6 +7,7 @@ use Concrete\Core\Block\BlockController;
 use Loader;
 use Page;
 use PageList;
+use Concrete\Core\Attribute\Key\CollectionKey;
 
 class Controller extends BlockController
 {
@@ -59,6 +60,9 @@ class Controller extends BlockController
                 break;
             case 'chrono_asc':
                 $this->list->sortByPublicDate();
+                break;
+            case 'random':
+                $this->list->sortBy('RAND()');
                 break;
             case 'alpha_asc':
                 $this->list->sortByName();
@@ -177,6 +181,7 @@ class Controller extends BlockController
         $this->set('bt', BlockType::getByHandle('page_list'));
         $this->set('featuredAttribute', CollectionAttributeKey::getByHandle('is_featured'));
         $this->set('thumbnailAttribute', CollectionAttributeKey::getByHandle('thumbnail'));
+        $this->loadKeys();
     }
 
     public function edit()
@@ -195,6 +200,18 @@ class Controller extends BlockController
         $this->set('bt', BlockType::getByHandle('page_list'));
         $this->set('featuredAttribute', CollectionAttributeKey::getByHandle('is_featured'));
         $this->set('thumbnailAttribute', CollectionAttributeKey::getByHandle('thumbnail'));
+        $this->loadKeys();
+    }
+
+    protected function loadKeys()
+    {
+        $keys = CollectionKey::getList();
+        foreach($keys as $ak) {
+            if ($ak->getAttributeTypeHandle() == 'topics') {
+                $attributeKeys[] = $ak;
+            }
+        }
+        $this->set('attributeKeys', $attributeKeys);
     }
 
     public function action_topic($topic = false) {
@@ -227,6 +244,7 @@ class Controller extends BlockController
         $args['includeDate'] = ($args['includeDate']) ? '1' : '0';
         $args['truncateSummaries'] = ($args['truncateSummaries']) ? '1' : '0';
         $args['displayFeaturedOnly'] = ($args['displayFeaturedOnly']) ? '1' : '0';
+        $args['filterByRelated'] = ($args['filterByRelated']) ? '1' : '0';
         $args['displayThumbnail'] = ($args['displayThumbnail']) ? '1' : '0';
         $args['displayAliases'] = ($args['displayAliases']) ? '1' : '0';
         $args['truncateChars'] = intval($args['truncateChars']);
