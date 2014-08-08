@@ -6,7 +6,9 @@ $th = Loader::helper('text');
 <div class="ccm-block-page-list-thumbnail-grid-wrapper">
 
     <?php if ($pageListTitle): ?>
-        <h5><?=$pageListTitle?></h5>
+        <div class="ccm-block-page-list-header">
+            <h5><?=$pageListTitle?></h5>
+        </div>
     <? endif; ?>
 
     <?php foreach ($pages as $page):

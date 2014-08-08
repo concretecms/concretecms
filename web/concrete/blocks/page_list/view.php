@@ -6,11 +6,13 @@ $th = Loader::helper('text');
 //Note that $nh (navigation helper) is already loaded for us by the controller (for legacy reasons)
 ?>
 
-<div class="<?=$containerClass?>">
+<div class="ccm-block-page-list-wrapper">
 
     <?php if ($pageListTitle): ?>
-        <h5><?=$pageListTitle?></h5>
-    <? endif; ?>
+        <div class="ccm-block-page-list-header">
+            <h5><?=$pageListTitle?></h5>
+        </div>
+<? endif; ?>
 
 	<?php foreach ($pages as $page):
 

@@ -95,6 +95,19 @@ class Controller extends BlockController
             $this->list->filterByPageTypeID($this->ptID);
         }
 
+        if ($this->filterByRelated) {
+            $ak = CollectionKey::getByHandle($this->relatedTopicAttributeKeyHandle);
+            $c = \Page::getCurrentPage();
+            if (is_object($ak)) {
+                $topics = $c->getAttribute($ak->getAttributeKeyHandle());
+                if (count($topics) > 0 && is_array($topics)) {
+                    $topic = $topics[array_rand($topics)];
+                    $this->list->filter('p.cID', $c->getCollectionID(), '<>');
+                    $this->list->filterByTopic($topic);
+                }
+            }
+        }
+
         $db = Loader::db();
         $columns = $db->MetaColumnNames(CollectionAttributeKey::getIndexedSearchTable());
         if (isset($columns['ak_exclude_page_list'])) {
@@ -117,9 +130,6 @@ class Controller extends BlockController
         $list = $this->list;
         $nh = Loader::helper('navigation');
         $this->set('nh', $nh);
-        $containerClass = 'ccm-block-page-list';
-
-        $this->set('containerClass', $containerClass);
 
         //RSS...
         $showRss = false;
