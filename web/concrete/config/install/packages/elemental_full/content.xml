@@ -349,7 +349,7 @@
                                     </block>
                                 </blocks>
                             </area>
-                            <area name="Main Footer">
+                            <area name="Page Footer">
                                 <blocks/>
                             </area>
                         </page>
@@ -620,7 +620,7 @@
                                     </block>
                                 </blocks>
                             </area>
-                            <area name="Main Footer">
+                            <area name="Page Footer">
                                 <blocks/>
                             </area>
                         </page>
@@ -1163,8 +1163,19 @@
                     </block>
                 </blocks>
             </area>
-            <area name="Main Footer">
-                <blocks/>
+            <area name="Page Footer">
+                <style>
+                    <customClass>area-content-accent</customClass>
+                </style>
+                <blocks>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<p style="text-align: center"><span class="title-caps">Satisfied Customers</span></p>]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
             </area>
         </page>
         <page name="Search" path="/search" filename="" pagetype="page" template="full" user="admin" description=""
@@ -1621,7 +1632,7 @@
                     </block>
                 </blocks>
             </area>
-            <area name="Main Footer">
+            <area name="Page Footer">
                 <blocks/>
             </area>
         </page>
@@ -1954,7 +1965,7 @@
                     <block mc-block-id="XIyJqyJD"/>
                 </blocks>
             </area>
-            <area name="Main Footer">
+            <area name="Page Footer">
                 <blocks/>
             </area>
         </page>
@@ -2190,7 +2201,7 @@
                     <block mc-block-id="N7fcHauo"/>
                 </blocks>
             </area>
-            <area name="Main Footer">
+            <area name="Page Footer">
                 <blocks/>
             </area>
         </page>
