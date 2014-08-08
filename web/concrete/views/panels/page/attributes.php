@@ -15,7 +15,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<h5><?=$set->title?></h5>
 			<ul>
 			<?php foreach ($set->attributes as $key) { ?>
-				<li><a data-attribute-key="<?=$key->getAttributeKeyID()?>" <?php if (in_array($key->getAttributeKeyID(), $selectedAttributeIDs)) { ?>class="ccm-menu-page-attribute-selected" <?php } ?> href="#"><?=$key->getAttributeKeyDisplayName()?></a></li>
+				<li><a data-attribute-key="<?=$key->getAttributeKeyID()?>" <?php if (in_array($key->getAttributeKeyID(), $selectedAttributeIDs)) { ?>class="ccm-menu-page-attribute-selected" <?php } ?> href="javascript:void(0)"><?=$key->getAttributeKeyDisplayName()?></a></li>
 			<?php } ?>
 			</ul>
 		</div>
