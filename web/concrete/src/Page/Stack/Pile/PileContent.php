@@ -18,7 +18,7 @@ class PileContent extends Object {
 		// it's assumed that we've already checked whether this user has access to this pile content object
 
 		$db = Loader::db();
-		$v = ($this->pcID);
+		$v = array($this->pcID);
 		$q = "delete from PileContents where pcID = ?";
 		$r = $db->query($q, $v);
 		if ($r) {
