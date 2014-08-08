@@ -73,6 +73,7 @@ class Design extends BackendPageController {
             $set->setBoxShadowHorizontal($r['boxShadowHorizontal']);
             $set->setBoxShadowVertical($r['boxShadowVertical']);
             $set->setBoxShadowSpread($r['boxShadowSpread']);
+            $set->setCustomClass($r['customClass']);
             $set->save();
 
             $nvc->setCustomStyleSet($a, $set);
