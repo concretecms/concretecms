@@ -2469,12 +2469,15 @@
             "description": "Zend Framework 1 Locale package",
             "homepage": "http://framework.zend.com/",
             "keywords": [
-                "ZF1",
                 "framework",
                 "locale",
-                "zend"
+                "zend",
+                "zf1"
             ],
-            "time": "2014-05-21 16:06:13"
+            "support": {
+                "source": "https://github.com/mlocati/zend-locale/tree/master"
+            },
+            "time": "2014-08-08 13:45:44"
         },
         {
             "name": "zf1/zend-mail",

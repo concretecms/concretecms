@@ -19,10 +19,13 @@
 	<? } ?>
 
 
-<? } else { ?>
-
-	<?
+<? } else {
 	$attribs = FileAttributeKey::getList();
-	Loader::element('dashboard/attributes_table', array('types' => $types, 'category' => $category, 'attribs'=> $attribs, 'editURL' => '/dashboard/files/attributes')); ?>
-
-<? } ?>
+	Loader::element('dashboard/attributes_table', array(
+        'types' => $types,
+        'category' => $category,
+        'attribs'=> $attribs,
+        'editURL' => '/dashboard/files/attributes',
+        'sortable' => false
+        ));
+} ?>
