@@ -9,6 +9,7 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
         $this->providesAsset('css', 'blocks/social_links');
         $this->providesAsset('css', 'blocks/share_this_page');
         $this->providesAsset('css', 'blocks/feature');
+        $this->providesAsset('css', 'blocks/testimonial');
         $this->providesAsset('css', 'blocks/faq');
         $this->providesAsset('css', 'core/frontend/*');
         $this->providesAsset('css', 'blocks/feature/templates/hover_description');
