@@ -482,10 +482,6 @@ var ConcretePanelManager = (function ConcretePanelManagerGenerator() {
                 $('<div />', {
                     'class': 'ccm-panel-content-wrapper ccm-ui'
                 }).appendTo($('#' + panel.getDOMID()));
-
-                $('<div />', {
-                    'class': 'ccm-panel-shadow-layer'
-                }).appendTo($('#' + panel.getDOMID()));
             }
         },
 
