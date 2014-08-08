@@ -153,7 +153,7 @@ class Controller extends BlockController
     {
         $tag = "";
         if (strlen($this->displayTag)) {
-            $tag = "<" . $this->displayTag . ">";
+            $tag = "<" . $this->displayTag . " class=\"ccm-block-page-attribute-display-wrapper\">";
         }
         return $tag;
     }

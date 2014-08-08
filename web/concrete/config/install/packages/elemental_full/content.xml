@@ -646,9 +646,12 @@
                         <control custom-template="" custom-label="" type="collection_attribute" handle="project_client"/>
                         <control custom-template="" custom-label="" type="collection_attribute" handle="project_tasks"/>
                         <control custom-template="" custom-label="" type="collection_attribute" handle="project_skills"/>
-                    </set>
-                    <set name="Content">
                         <control custom-template="" custom-label="" type="collection_attribute" handle="thumbnail"/>
+                    </set>
+                    <set name="Image Slider">
+                        <control custom-template="" custom-label="" output-control-id="LnwwIyGa" type="block" handle="image_slider"/>
+                    </set>
+                    <set name="Body">
                         <control custom-template="" custom-label="" output-control-id="yXxylvrI" type="block" handle="content"/>
                     </set>
                 </formlayout>
@@ -665,6 +668,9 @@
                                             </record>
                                         </data>
                                     </block>
+                                    <block type="core_page_type_composer_control_output" name="" mc-block-id="mBHeZSLj">
+                                        <control output-control-id="LnwwIyGa"/>
+                                    </block>
                                 </blocks>
                             </area>
                             <area name="Sidebar">
@@ -674,7 +680,7 @@
                                             <record>
                                                 <attributeHandle><![CDATA[project_client]]></attributeHandle>
                                                 <attributeTitleText><![CDATA[Client:]]></attributeTitleText>
-                                                <displayTag><![CDATA[]]></displayTag>
+                                                <displayTag><![CDATA[div]]></displayTag>
                                                 <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
                                                 <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
                                                 <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
@@ -686,7 +692,7 @@
                                             <record>
                                                 <attributeHandle><![CDATA[project_tasks]]></attributeHandle>
                                                 <attributeTitleText><![CDATA[Task:]]></attributeTitleText>
-                                                <displayTag><![CDATA[]]></displayTag>
+                                                <displayTag><![CDATA[div]]></displayTag>
                                                 <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
                                                 <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
                                                 <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
@@ -698,7 +704,7 @@
                                             <record>
                                                 <attributeHandle><![CDATA[project_skills]]></attributeHandle>
                                                 <attributeTitleText><![CDATA[Skills:]]></attributeTitleText>
-                                                <displayTag><![CDATA[]]></displayTag>
+                                                <displayTag><![CDATA[div]]></displayTag>
                                                 <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
                                                 <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
                                                 <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
@@ -873,7 +879,6 @@
                         </data>
                         <data table="btImageSliderEntries">
                             <record>
-                                <id><![CDATA[5]]></id>
                                 <cID><![CDATA[0]]></cID>
                                 <fID>{ccm:export:file:slider1.png}</fID>
                                 <linkURL><![CDATA[]]></linkURL>
@@ -882,7 +887,6 @@
                                 <sortOrder><![CDATA[0]]></sortOrder>
                             </record>
                             <record>
-                                <id><![CDATA[6]]></id>
                                 <cID><![CDATA[0]]></cID>
                                 <fID>{ccm:export:file:slider2.png}</fID>
                                 <linkURL><![CDATA[]]></linkURL>
@@ -2134,6 +2138,39 @@
             <area name="Page Header">
                 <blocks>
                     <block mc-block-id="Blj682mK"/>
+                    <block type="image_slider" name="">
+                        <data table="btImageSlider">
+                            <record>
+                                <navigationType><![CDATA[0]]></navigationType>
+                            </record>
+                        </data>
+                        <data table="btImageSliderEntries">
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:sunset.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[0]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:subway.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[1]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:shoes.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[2]]></sortOrder>
+                            </record>
+                        </data>
+                    </block>
                 </blocks>
             </area>
             <area name="Sidebar">
@@ -2190,9 +2227,41 @@
             <area name="Page Header">
                 <blocks>
                     <block mc-block-id="Blj682mK"/>
+                    <block type="image_slider" name="">
+                        <data table="btImageSlider">
+                            <record>
+                                <navigationType><![CDATA[0]]></navigationType>
+                            </record>
+                        </data>
+                        <data table="btImageSliderEntries">
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:sunset.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[0]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:subway.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[1]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:shoes.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[2]]></sortOrder>
+                            </record>
+                        </data>
+                    </block>
                 </blocks>
-            </area>
-            <area name="Sidebar">
+            </area>            <area name="Sidebar">
                 <blocks>
                     <block mc-block-id="vXzZI1Jv"/>
                     <block mc-block-id="m95mBEXx"/>
@@ -2254,9 +2323,41 @@
             <area name="Page Header">
                 <blocks>
                     <block mc-block-id="Blj682mK"/>
+                    <block type="image_slider" name="">
+                        <data table="btImageSlider">
+                            <record>
+                                <navigationType><![CDATA[0]]></navigationType>
+                            </record>
+                        </data>
+                        <data table="btImageSliderEntries">
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:sunset.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[0]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:subway.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[1]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:shoes.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[2]]></sortOrder>
+                            </record>
+                        </data>
+                    </block>
                 </blocks>
-            </area>
-            <area name="Sidebar">
+            </area>            <area name="Sidebar">
                 <blocks>
                     <block mc-block-id="vXzZI1Jv"/>
                     <block mc-block-id="m95mBEXx"/>
@@ -2313,9 +2414,41 @@
             <area name="Page Header">
                 <blocks>
                     <block mc-block-id="Blj682mK"/>
+                    <block type="image_slider" name="">
+                        <data table="btImageSlider">
+                            <record>
+                                <navigationType><![CDATA[0]]></navigationType>
+                            </record>
+                        </data>
+                        <data table="btImageSliderEntries">
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:sunset.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[0]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:subway.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[1]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:shoes.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[2]]></sortOrder>
+                            </record>
+                        </data>
+                    </block>
                 </blocks>
-            </area>
-            <area name="Sidebar">
+            </area>            <area name="Sidebar">
                 <blocks>
                     <block mc-block-id="vXzZI1Jv"/>
                     <block mc-block-id="m95mBEXx"/>
@@ -2369,9 +2502,41 @@
             <area name="Page Header">
                 <blocks>
                     <block mc-block-id="Blj682mK"/>
+                    <block type="image_slider" name="">
+                        <data table="btImageSlider">
+                            <record>
+                                <navigationType><![CDATA[0]]></navigationType>
+                            </record>
+                        </data>
+                        <data table="btImageSliderEntries">
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:sunset.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[0]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:subway.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[1]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:shoes.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[2]]></sortOrder>
+                            </record>
+                        </data>
+                    </block>
                 </blocks>
-            </area>
-            <area name="Sidebar">
+            </area>            <area name="Sidebar">
                 <blocks>
                     <block mc-block-id="vXzZI1Jv"/>
                     <block mc-block-id="m95mBEXx"/>
@@ -2425,6 +2590,39 @@
             <area name="Page Header">
                 <blocks>
                     <block mc-block-id="Blj682mK"/>
+                    <block type="image_slider" name="">
+                        <data table="btImageSlider">
+                            <record>
+                                <navigationType><![CDATA[0]]></navigationType>
+                            </record>
+                        </data>
+                        <data table="btImageSliderEntries">
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:sunset.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[0]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:subway.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[1]]></sortOrder>
+                            </record>
+                            <record>
+                                <cID><![CDATA[0]]></cID>
+                                <fID>{ccm:export:file:shoes.jpg}</fID>
+                                <linkURL><![CDATA[]]></linkURL>
+                                <title><![CDATA[]]></title>
+                                <description><![CDATA[]]></description>
+                                <sortOrder><![CDATA[2]]></sortOrder>
+                            </record>
+                        </data>
+                    </block>
                 </blocks>
             </area>
             <area name="Sidebar">
