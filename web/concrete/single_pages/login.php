@@ -23,7 +23,35 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
     </div>
     <div class="col-sm-6 col-sm-offset-3 login-form">
         <div class="row">
-            <div class="types col-sm-4">
+            <div class="visible-xs ccm-authentication-type-select form-group">
+                <?php
+                if ($attribute_mode) {
+                    ?>
+                    <i class="fa fa-question"></i>
+                    <span><?= t('Attributes') ?></span>
+                <?php
+                } else {
+                    ?>
+                    <select class="form-control col-xs-12">
+                        <?php
+                        foreach ($activeAuths as $auth) {
+                            ?>
+                            <option value="<?= $auth->getAuthenticationTypeHandle() ?>">
+                                <?= $auth->getAuthenticationTypeName() ?>
+                            </option>
+                        <?php
+                        }
+                        ?>
+                    </select>
+
+                <?php
+                }
+                ?>
+                <label>&nbsp;</label>
+            </div>
+        </div>
+        <div class="row login-row">
+            <div class="types col-sm-4 hidden-xs">
                 <ul class="auth-types">
                     <?php
                     if ($attribute_mode) {
@@ -47,7 +75,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                     ?>
                 </ul>
             </div>
-            <div class="controls col-sm-8">
+            <div class="controls col-sm-8 col-xs-12">
                 <?php
                 if ($attribute_mode) {
                     $attribute_helper = new Concrete\Core\Form\Service\Widget\Attribute();
@@ -95,11 +123,13 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
         (function ($) {
             "use strict";
 
-            var forms = $('div.controls').find('div.authentication-type').hide();
+            var forms = $('div.controls').find('div.authentication-type').hide(),
+                select = $('div.ccm-authentication-type-select > select');
             var types = $('ul.auth-types > li').each(function () {
                 var me = $(this),
                     form = forms.filter('[data-handle="' + me.data('handle') + '"]');
                 me.click(function () {
+                    select.val(me.data('handle'));
                     if (form.hasClass('active')) return;
                     types.removeClass('active');
                     me.addClass('active')
@@ -111,6 +141,10 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                         form.addClass('active').show();
                     }
                 });
+            });
+
+            select.change(function() {
+                types.filter('[data-handle="' + $(this).val() + '"]').click();
             });
             types.first().click();
 
