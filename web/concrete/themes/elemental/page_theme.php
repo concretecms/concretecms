@@ -44,6 +44,13 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
         );
     }
 
+    public function getThemeAreaClasses()
+    {
+        return array(
+            'Page Footer' => array('area-content-accent')
+        );
+    }
+
     public function getThemeDefaultBlockTemplates()
     {
         /*
@@ -66,7 +73,8 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
     {
         return array(
             array('title' => t('Title Thin'), 'menuClass' => 'title-thin', 'spanClass' => 'title-thin'),
-            array('title' => t('Title Caps'), 'menuClass' => 'title-caps-bold', 'spanClass' => 'title-caps-bold'),
+            array('title' => t('Title Caps Bold'), 'menuClass' => 'title-caps-bold', 'spanClass' => 'title-caps-bold'),
+            array('title' => t('Title Caps'), 'menuClass' => 'title-caps', 'spanClass' => 'title-caps'),
             array('title' => t('Image Caption'), 'menuClass' => 'image-caption', 'spanClass' => 'image-caption'),
             array('title' => t('Standard Button'), 'menuClass' => '', 'spanClass' => 'btn btn-default'),
             array('title' => t('Success Button'), 'menuClass' => '', 'spanClass' => 'btn btn-success'),

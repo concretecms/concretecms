@@ -786,6 +786,11 @@ class Theme extends Object
         return array();
     }
 
+    public function getThemeAreaClasses()
+    {
+        return array();
+    }
+
     public function getThemeEditorClasses()
     {
         return array();

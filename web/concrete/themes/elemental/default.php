@@ -10,7 +10,7 @@ $a->display($c);
 ?>
 
 <?
-$a = new Area('Main Footer');
+$a = new Area('Page Footer');
 $a->enableGridContainer();
 $a->display($c);
 ?>
