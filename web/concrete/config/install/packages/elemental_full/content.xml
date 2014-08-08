@@ -1633,7 +1633,18 @@
                 </blocks>
             </area>
             <area name="Page Footer">
-                <blocks/>
+                <style>
+                    <customClass>area-content-accent</customClass>
+                </style>
+                <blocks>
+                    <block type="content" name="">
+                        <data table="btContentLocal">
+                            <record>
+                                <content><![CDATA[<p style="text-align: center"><span class="title-caps">What Clients Are Saying About Us</span></p>]]></content>
+                            </record>
+                        </data>
+                    </block>
+                </blocks>
             </area>
         </page>
         <page name="Careers" path="/about/careers" filename="" pagetype="page" template="full" user="admin"
