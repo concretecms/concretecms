@@ -74,6 +74,14 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                     }
                     ?>
                 </ul>
+				<?php if ($user->isLoggedIn()) { ?>
+					<ul class="auth-types logout" style="position: absolute;bottom: 0;padding-bottom: 15px;">
+						<li data-handle="logout">
+							<i class="fa fa-power-off"></i>
+							<span>Logout</span>
+						</li>
+					</ul>
+				<?php } ?>
             </div>
             <div class="controls col-sm-8 col-xs-12">
                 <?php
@@ -111,6 +119,9 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                     }
                 }
                 ?>
+				<div data-handle="logout" class="authentication-type authentication-type-logout">
+                	<?php View::element('users/logout_form') ?>
+				</div>
             </div>
         </div>
     </div>

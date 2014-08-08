@@ -287,6 +287,7 @@ class Login extends PageController
             $this->set('authType', $at);
             $this->set('authTypeElement', $element);
         }
+    	$this->set('user',new User());
     }
 
     public function fill_attributes()
