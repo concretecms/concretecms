@@ -159,31 +159,31 @@ if(!$dateFormat) {
 <fieldset>
 	<legend><?=t('File Attachment Management')?></legend>
 	<p class="muted"><?php echo t('Note: Entering values here will override global conversations file attachment settings for this block. Leave blank to use global settings.') ?></p>
-	<div class="control-group">
+	<div class="form-group">
 		<label class="control-label"><?=t('Max Attachment Size for Guest Users. (MB)')?></label>
 		<div class="controls">		
 			<?=$form->text('maxFileSizeGuest', $maxFileSizeGuest > 0 ? $maxFileSizeGuest : '')?>
 		</div>
 	</div>
-	<div class="control-group">
+	<div class="form-group">
 		<label class="control-label"><?=t('Max Attachment Size for Registered Users. (MB)')?></label>
 		<div class="controls">
 			<?=$form->text('maxFileSizeRegistered', $maxFileSizeRegistered > 0 ? $maxFileSizeRegistered : '')?>
 		</div>
 	</div>
-	<div class="control-group">
+	<div class="form-group">
 		<label class="control-label"><?=t('Max Attachments Per Message for Guest Users.')?></label>
 		<div class="controls">
 			<?=$form->text('maxFilesGuest', $maxFilesGuest > 0 ? $maxFilesGuest : '')?>
 		</div>
 	</div>
-	<div class="control-group">
+	<div class="form-group">
 		<label class="control-label"><?=t('Max Attachments Per Message for Registered Users')?></label>
 		<div class="controls">
 			<?=$form->text('maxFilesRegistered', $maxFilesRegistered > 0 ?  $maxFilesRegistered : '')?>
 		</div>
 	</div>
-	<div class="control-group">
+	<div class="form-group">
 		<label class="control-label"><?=t('Allowed File Extensions (Comma separated, no periods).')?></label>
 		<div class="controls">
 			<?=$form->textarea('fileExtensions', $fileExtensions)?>

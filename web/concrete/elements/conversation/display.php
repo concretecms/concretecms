@@ -26,7 +26,7 @@ $form = Loader::helper('form');
 				<? $editor->outputConversationEditorAddMessageForm(); ?>
 				<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
 				<?php echo $form->hidden('cID', $cID) ?>
-				<?php echo $form->hidden('bID', $bID) ?>	
+				<?php echo $form->hidden('bID', $bID) ?>
 				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-primary"><?=t('Submit')?></button>
 				<button type="button" class="pull-right btn btn-default ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
 			</div>
@@ -128,7 +128,7 @@ $form = Loader::helper('form');
 				<div class="ccm-conversation-errors alert alert-error"></div>
 				<? $editor->outputConversationEditorAddMessageForm(); ?>
 				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Submit')?> </button>
-				<button type="button" class="ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="icon-picture"></i></a>
+				<button type="button" class="ccm-conversation-attachment-toggle" title="<?php echo t('Attach Files'); ?>"><i class="icon-picture"></i></button>
 				<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
 				<?php echo $form->hidden('cID', $cID) ?>
 				<?php echo $form->hidden('bID', $bID) ?>	
@@ -152,7 +152,7 @@ $form = Loader::helper('form');
 				<div class="ccm-conversation-errors alert alert-error"></div>
 				<? $editor->outputConversationEditorReplyMessageForm(); ?>
 				<button type="button" data-submit="conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Submit')?></button>
-				<button type="button" class="ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="icon-picture"></i></a>
+				<button type="button" class="ccm-conversation-attachment-toggle" title="<?php echo t('Attach Files'); ?>"><i class="icon-picture"></i></button>
 				<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
 				<?php echo $form->hidden('cID', $cID) ?>
 				<?php echo $form->hidden('bID', $bID) ?>	
