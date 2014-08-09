@@ -333,13 +333,18 @@
                                                             <cParentID />
                                                         </data>
                                                     </block>
-                                                    <block type="content" name="">
+                                                    <block type="date_navigation" name="">
                                                         <style>
                                                             <customClass>block-sidebar-padded</customClass>
                                                         </style>
-                                                        <data table="btContentLocal">
+                                                        <data table="btDateNavigation">
                                                             <record>
-                                                                <content><![CDATA[<h5>Friends</h5><p><a href="http://concrete5.org">concrete5</a></p><p><a href="http://portlandlabs.com">Portland Labs</a></p>]]></content>
+                                                                <title><![CDATA[Archives]]></title>
+                                                                <redirectToResults>0</redirectToResults>
+                                                                <filterByParent>1</filterByParent>
+                                                                <cParentID>{ccm:export:page:/blog}</cParentID>
+                                                                <cTargetID/>
+                                                                <ptID>{ccm:export:pagetype:blog_entry}</ptID>
                                                             </record>
                                                         </data>
                                                     </block>
@@ -2121,7 +2126,7 @@
                 <blocks/>
             </area>
         </page>
-        <page name="Hello World!" public-date="2014-08-04 12:00:00" path="/blog/hello-world" filename="" pagetype="blog_entry" template="right_sidebar" user="admin" description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum." package="">
+        <page name="Hello World!" public-date="2014-07-01 12:00:00" path="/blog/hello-world" filename="" pagetype="blog_entry" template="right_sidebar" user="admin" description="Pellentesque ultricies ligula vel neque dictum, eu mollis tortor adipiscing. Etiam congue, est vel tincidunt vestibulum, nunc nunc porta nulla, at adipiscing neque tellus quis urna. Quisque dignissim neque a ipsum sodales, mattis aliquam ante dictum." package="">
             <attributes>
                 <attributekey handle="meta_title">
                     <value><![CDATA[]]></value>
@@ -2204,7 +2209,7 @@
                 <blocks/>
             </area>
         </page>
-        <page name="Another Blog Post" public-date="2014-08-04 15:00:00" path="/blog/another-blog-post" filename="" pagetype="blog_entry" template="right_sidebar" user="admin" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna." package="">
+        <page name="Another Blog Post" public-date="2014-07-04 15:00:00" path="/blog/another-blog-post" filename="" pagetype="blog_entry" template="right_sidebar" user="admin" description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sit amet consectetur lacus. Vestibulum neque lectus, egestas non cursus vitae, aliquam at magna." package="">
             <attributes>
                 <attributekey handle="thumbnail">
                     <value>
@@ -2272,7 +2277,7 @@
                 <blocks/>
             </area>
         </page>
-        <page name="A Beautiful Site Deserves a Beautiful Blog" public-date="2014-08-04 16:30" path="/blog/a-beautiful-blog" filename="" pagetype="blog_entry" template="right_sidebar" user="admin" description="Donec blandit lectus nec neque ullamcorper rhoncus. Sed adipiscing tempus sem eu molestie. Aenean laoreet pretium ante vitae ultrices. Aenean eu gravida magna, vel aliquet magna. In auctor convallis gravida. Phasellus est erat." package="">
+        <page name="A Beautiful Site Deserves a Beautiful Blog" public-date="2014-08-01 16:30" path="/blog/a-beautiful-blog" filename="" pagetype="blog_entry" template="right_sidebar" user="admin" description="Donec blandit lectus nec neque ullamcorper rhoncus. Sed adipiscing tempus sem eu molestie. Aenean laoreet pretium ante vitae ultrices. Aenean eu gravida magna, vel aliquet magna. In auctor convallis gravida. Phasellus est erat." package="">
             <attributes>
                 <attributekey handle="thumbnail">
                     <value>

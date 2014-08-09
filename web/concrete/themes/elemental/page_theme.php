@@ -37,6 +37,7 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
                 'block-sidebar-wrapped',
                 'block-sidebar-padded'
             ),
+            'date_navigation' => array('block-sidebar-padded'),
             'topic_list' => array('block-sidebar-wrapped'),
             'testimonial' => array('testimonial-bio'),
             'image' => array(

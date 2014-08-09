@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<schema version="0.3">
+	<table name="btDateNavigation">
+		<field name="bID" type="I">
+			<key />
+			<unsigned />
+		</field>
+        <field name="title" type="C" size="255">
+            <notnull />
+            <default value="" />
+        </field>
+        <field name="filterByParent" type="I1">
+            <default value="0" />
+        </field>
+        <field name="redirectToResults" type="I1">
+            <default value="0" />
+        </field>
+        <field name="cParentID" type="I">
+            <unsigned />
+            <notnull />
+            <default value="0" />
+        </field>
+        <!-- this field is where the links will direct you //-->
+        <field name="cTargetID" type="I">
+            <unsigned />
+            <notnull />
+            <default value="0" />
+        </field>
+        <field name="ptID" type="I2">
+            <unsigned />
+        </field>
+	</table>
+</schema>
