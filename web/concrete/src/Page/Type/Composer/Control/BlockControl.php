@@ -164,7 +164,6 @@ class BlockControl extends Control {
 		$env = Environment::get();
 		$form = Loader::helper('form');
 		$set = $this->getPageTypeComposerFormLayoutSetControlObject()->getPageTypeComposerFormLayoutSetObject();
-		$control = $this;
 
 		if ($customTemplate) {
 			$rec = $env->getRecord(DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES_COMPOSER . '/' . $customTemplate);
@@ -177,7 +176,7 @@ class BlockControl extends Control {
 			$template = FILENAME_BLOCK_COMPOSER;
 		}
 
-		$this->inc($template, array('control' => $this, 'obj' => $obj));
+		$this->inc($template, array('view' => $this, 'control' => $this, 'obj' => $obj));
 	}
 
 	public function inc($file, $args = array()) {
