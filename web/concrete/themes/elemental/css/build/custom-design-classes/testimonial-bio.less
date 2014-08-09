@@ -1,0 +1,40 @@
+div.testimonial-bio {
+
+  margin-bottom: 60px;
+
+  div.ccm-block-testimonial-wrapper {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    // undo grid mixin
+    div.ccm-block-testimonial {
+      margin-left: 0px;
+      margin-right: 0px;
+
+      div.ccm-block-testimonial-image {
+        width: auto;
+        float: none;
+        padding: 0px;
+        margin-bottom: @grid-gutter-width;
+
+        img {
+          .border-radius(0px);
+        }
+      }
+
+      div.ccm-block-testimonial-text {
+        float: none;
+        padding: 0px;
+      }
+
+    }
+
+  }
+}
+
+div.testimonial-bio + div.testimonial-bio {
+  margin-bottom: 0px;
+}
+
+div.testimonial-bio:only-child {
+  margin-bottom: 0px;
+}
