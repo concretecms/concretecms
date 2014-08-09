@@ -164,12 +164,12 @@
     <label class="control-label"><?php echo t('Navigation') ?></label>
     <div class="form-group">
         <div class="radio">
-            <label><input type="radio" name="navigationType" value="0" <?php echo $navigationType > 0 ? '' : 'checked' ?> /><?php echo t('Arrows') ?></label>
+            <label><input type="radio" name="<?=$view->field('navigationType')?>" value="0" <?php echo $navigationType > 0 ? '' : 'checked' ?> /><?php echo t('Arrows') ?></label>
         </div>
     </div>
     <div class="form-group">
         <div class="radio">
-            <label><input type="radio" name="navigationType" value="1" <?php echo $navigationType > 0 ? 'checked' : '' ?> /><?php echo t('Bullets') ?></label>
+            <label><input type="radio" name="<?=$view->field('navigationType')?>" value="1" <?php echo $navigationType > 0 ? 'checked' : '' ?> /><?php echo t('Bullets') ?></label>
         </div>
     </div>
 
@@ -191,22 +191,22 @@
                     <i class="fa fa-picture-o"></i>
                 <% } %>
             </div>
-            <input type="hidden" name="fID[]" class="image-fID" value="<%=fID%>" />
+            <input type="hidden" name="<?=$view->field('fID')?>[]" class="image-fID" value="<%=fID%>" />
         </div>
         <div class="form-group">
             <label><?php echo t('Title') ?></label>
-            <input type="text" name="title[]" value="<%=title%>" />
+            <input type="text" name="<?=$view->field('title')?>[]" value="<%=title%>" />
         </div>
         <div class="form-group">
             <label><?php echo t('Description') ?></label>
             <div class="redactor-edit-content"></div>
-            <textarea style="display: none" class="redactor-content" name="description[]"><%=description%></textarea>
+            <textarea style="display: none" class="redactor-content" name="<?=$view->field('description')?>[]"><%=description%></textarea>
         </div>
         <div class="form-group">
             <label><?php echo t('URL') ?></label>
             <textarea name="linkURL[]"><%=link_url%></textarea>
         </div>
-        <input class="ccm-image-slider-entry-sort" type="hidden" name="sortOrder[]" value="<%=sort_order%>"/>
+        <input class="ccm-image-slider-entry-sort" type="hidden" name="<?=$view->field('sortOrder')?>[]" value="<%=sort_order%>"/>
         <div class="form-group">
             <span class="btn btn-danger ccm-delete-image-slider-entry"><?php echo t('Delete Entry'); ?></span>
         </div>

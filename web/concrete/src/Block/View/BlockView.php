@@ -348,6 +348,11 @@ class BlockView extends AbstractView
         return false;
     }
 
+    public function field($field)
+    {
+        return $field;
+    }
+
     public function finishRender($contents)
     {
         if ($this->useBlockCache()) {

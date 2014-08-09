@@ -8,7 +8,7 @@ $form = Loader::helper('form');
 	<label class="control-label"><?=$label?></label>
 	<div class="controls">
 		<?
-		print $form->textarea($this->field('content'), $controller->getContentEditMode(), array(
+		print $form->textarea($control->field('content'), $controller->getContentEditMode(), array(
 			'class' => $class
 		));
 		?>

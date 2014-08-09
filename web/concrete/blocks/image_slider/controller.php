@@ -102,7 +102,7 @@ class Controller extends BlockController
             $db->execute('INSERT INTO btImageSliderEntries (bID, fID, linkURL, title, description, sortOrder) values(?,?,?,?,?,?)',
                 array(
                     $this->bID,
-                    $args['fID'][$i],
+                    intval($args['fID'][$i]),
                     $args['linkURL'][$i],
                     $args['title'][$i],
                     $args['description'][$i],
