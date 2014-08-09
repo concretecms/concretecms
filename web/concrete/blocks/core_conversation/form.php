@@ -41,7 +41,7 @@ if(!$dateFormat) {
 	</div>
 	<div class="form-group">
 		<label class="control-label"><?=t('Ordering')?></label>
-		<?=$form->select('orderBy', array('date_asc' => 'Earliest First', 'date_desc' => 'Most Recent First', 'rating' => 'Highest Rated'), $orderBy)?>
+		<?=$form->select('orderBy', array('date_asc' => t('Earliest First'), 'date_desc' => t('Most Recent First'), 'rating' => t('Highest Rated')), $orderBy)?>
 	</div>
 	<div class="form-group">
 		<div class="checkbox">
