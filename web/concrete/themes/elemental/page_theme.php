@@ -38,6 +38,7 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
                 'block-sidebar-padded'
             ),
             'topic_list' => array('block-sidebar-wrapped'),
+            'testimonial' => array('testimonial-bio'),
             'image' => array(
                 'image-right-tilt',
                 'image-circle'
