@@ -61,9 +61,9 @@ class Controller extends BlockController
 
     public function getDateLabel($dateArray)
     {
-        $date = $dateArray['year'] . '-' . $dateArray['month'] . '-01';
-        $date = date('F Y', strtotime($date));
-        return $date;
+        $date = strtotime($dateArray['year'] . '-' . $dateArray['month'] . '-01');
+        $srv = Core::make('helper/date');
+        return $srv->date('F Y', $date);
     }
 
     public function view()
