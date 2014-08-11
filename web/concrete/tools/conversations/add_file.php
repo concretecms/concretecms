@@ -123,11 +123,8 @@ if(count($error) > 0) {  // send in the errors
 
 // begin file import
 
-move_uploaded_file($_FILES["file"]["tmp_name"],
-$_SERVER['DOCUMENT_ROOT'] . "/files/tmp/" . $_FILES["file"]["name"]);
 $fi = new FileImporter();
-$fv = $fi->import( $_SERVER['DOCUMENT_ROOT'] . '/files/tmp/' . $_FILES["file"]["name"], $_FILES["file"]["name"]);
-unlink($_SERVER['DOCUMENT_ROOT'] . '/files/tmp/' . $_FILES["file"]["name"]);
+$fv = $fi->import( $_FILES["file"]["tmp_name"], $_FILES["file"]["name"]);
 if(!$fv instanceof FileVersion) {
 	$file->error = $fi->getErrorMessage($fv);
 	$file->timestamp = $_POST['timestamp'];

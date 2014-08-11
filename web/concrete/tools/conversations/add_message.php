@@ -67,7 +67,7 @@ if ($ve->has()) {
 	}
 	if($_POST['attachments'] && count($_POST['attachments'])) {
 		foreach($_POST['attachments'] as $attachmentID) {
-			ConversationMessage::attachFile(File::getByID($attachmentID), $msg->cnvMessageID);
+            $msg->attachFile(File::getByID($attachmentID));
 		}
 	}
 	$ax->sendResult($msg);

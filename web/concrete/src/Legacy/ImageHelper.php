@@ -3,6 +3,7 @@ namespace Concrete\Core\Legacy;
 
 use Image;
 use \Imagine\Image\Box;
+use Imagine\Image\ImageInterface;
 use \Imagine\Image\Point\Center;
 use \Concrete\Core\File\File;
 
@@ -63,9 +64,7 @@ class ImageHelper
         }
 
         if ($fit) {
-            $box = new Box($width, $height);
-            $center = new Center($box);
-            return $image->crop($center, $box)->save($newPath);
+            return $image->thumbnail(new Box($width, $height), ImageInterface::THUMBNAIL_OUTBOUND)->save($newPath);
         } else {
             return $image->thumbnail(new Box($width, $height))->save($newPath);
         }

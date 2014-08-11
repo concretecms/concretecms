@@ -51,8 +51,8 @@ $form = Loader::helper('form');
 				<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
 				<?php echo $form->hidden('cID', $cID) ?>
 				<?php echo $form->hidden('bID', $bID) ?>	
-				<button type="btn btn-primary" data-submit="conversation-message" class="pull-right btn btn-submit btn-small"><?=t('Submit')?> </button>
-				<button type="button" class="ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="icon-picture"></i></button>
+				<button type="btn btn-primary" data-submit="conversation-message" class="pull-right btn btn-primary"><?=t('Reply')?> </button>
+				<button type="button" class="ccm-conversation-attachment-toggle btn btn-default" href="#" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
 			</div>
 			</form>
 			<div class="ccm-conversation-attachment-container">
@@ -127,8 +127,8 @@ $form = Loader::helper('form');
 			<div class="ccm-conversation-message-form">
 				<div class="ccm-conversation-errors alert alert-error"></div>
 				<? $editor->outputConversationEditorAddMessageForm(); ?>
-				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Submit')?> </button>
-				<button type="button" class="ccm-conversation-attachment-toggle" title="<?php echo t('Attach Files'); ?>"><i class="icon-picture"></i></button>
+				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Reply')?> </button>
+				<button type="button" class="ccm-conversation-attachment-toggle" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
 				<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
 				<?php echo $form->hidden('cID', $cID) ?>
 				<?php echo $form->hidden('bID', $bID) ?>	
@@ -151,8 +151,8 @@ $form = Loader::helper('form');
 			<div class="ccm-conversation-message-form">
 				<div class="ccm-conversation-errors alert alert-error"></div>
 				<? $editor->outputConversationEditorReplyMessageForm(); ?>
-				<button type="button" data-submit="conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Submit')?></button>
-				<button type="button" class="ccm-conversation-attachment-toggle" title="<?php echo t('Attach Files'); ?>"><i class="icon-picture"></i></button>
+				<button type="button" data-submit="conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Reply')?></button>
+				<button type="button" class="ccm-conversation-attachment-toggle" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
 				<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
 				<?php echo $form->hidden('cID', $cID) ?>
 				<?php echo $form->hidden('bID', $bID) ?>	
