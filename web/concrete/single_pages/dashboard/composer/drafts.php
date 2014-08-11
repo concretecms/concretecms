@@ -7,7 +7,6 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Page Drafts'))?>
 
 <? 
-$today = Loader::helper('date')->getLocalDateTime('now', 'Y-m-d');
 if (count($drafts) > 0) { ?>
 
 <table class="table table-striped">
@@ -37,14 +36,7 @@ foreach($drafts as $dr) {
 		?>
 		</td>
 		<td><?=$dr->getPageTypeName()?></td>
-		<td><?
-			if ($today == $dr->getCollectionDateLastModified("Y-m-d")) {
-				print $dr->getCollectionDateLastModified(DATE_APP_GENERIC_T);
-			}
-			else {
-				print $dh->formatDateTime($dr->getCollectionDateLastModified());
-			}
-			?></td>
+		<td><?=$dh->formatPrettyDateTime($dr->getCollectionDateLastModified());?></td>
 	<? } ?>
 
 <? } ?>

@@ -14,15 +14,7 @@ class Surveys extends DashboardPageController
             return '';
         }
         $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
-        $inputTime = $dh->getLocalDateTime($inputTime);
-        $timestamp = strtotime($inputTime);
-        if ($timestamp >= strtotime(date('n/d/y'))) {
-            // Today
-            return t(/*i18n %s is a time */'Today at %s', $dh->date(DATE_APP_GENERIC_T, $timestamp));
-        } else {
-            // If day in past
-            return $dh->formatDateTime($timestamp);
-        }
+        return $dh->formatPrettyDateTime($inputTime);
     }
 
     public function viewDetail($bID = 0, $cID = 0)
