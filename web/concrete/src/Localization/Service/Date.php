@@ -186,9 +186,6 @@ class Date
                 if(array_key_exists($area, $areaTranslations)) {
                     $area = $areaTranslations[$area];
                 }
-                else {
-                    die($area);
-                }
                 if(array_key_exists($timeZoneID, $localizedTimezones)) {
                     $place = $localizedTimezones[$timeZoneID];
                 }
