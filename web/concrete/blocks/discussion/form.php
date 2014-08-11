@@ -21,7 +21,7 @@ foreach($pagetypes as $pt) {
 	<div class="control-group">
 		<label class="control-label"><?=t('Ordering')?></label>
 		<div class="controls">
-			<?=$form->select('orderBy', array('date_last_message' => 'Recent Comment', 'date' => 'Original Post', 'replies' => 'Activity'), $orderBy)?>
+			<?=$form->select('orderBy', array('date_last_message' => t('Recent Comment'), 'date' => t('Original Post'), 'replies' => t('Activity')), $orderBy)?>
 		</div>
 	</div>
 	<div class="control-group">
