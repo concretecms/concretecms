@@ -19,23 +19,12 @@ if (!$message->isConversationMessageApproved()){
 	$class .= ' ccm-conversation-message-flagged';
 }
 $cnvMessageID = $message->cnvMessageID;
+$c = Page::getByID($_REQUEST['cID']);
+$cnvMessageURL = urlencode($c->getCollectionLink(true) . '#' . $cnvMessageID);
+
 if ((!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) || $message->conversationMessageHasActiveChildren()) {
 	?>
-	<div data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-conversation-message-level="<?=$message->getConversationMessageLevel()?>" class="<?=$class?> ccm-ui">
-		<?php if($canAdminMessage) { ?>
-		<ul class="nav nav-pills cnv-admin-pane pull-right">
-			<li class="dropdown">
-			<a class="dropdown-toggle" id="drop4" role="button" data-toggle="dropdown" href="#">&#x25bc;</a>
-				<ul class="dropdown-menu" role="menu" aria-labelledby="drop5">
-				<li><a href="#" class="admin-best-answer"><?php echo t('Best Answer') ?></a></li>
-				<li><a href="#" class="admin-promote"><?php echo t('Promote') ?></a></li>
-				<li><a href="#" class="admin-edit" data-submit="edit-conversation-message"><?php echo t('Edit') ?></a></li> 
-				<li><a href="#" class="admin-delete" data-submit="delete-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Delete')?></a></li>
-				<li><a href="#" class="admin-flag" data-submit="flag-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Flag As Spam')?></a></li>
-				</ul>
-			</li>
-		</ul>
-		<?php } ?>
+	<div data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-conversation-message-level="<?=$message->getConversationMessageLevel()?>" class="<?=$class?>">
 		<a id="cnvMessage<?=$cnvMessageID?>" />
 		<div class="ccm-conversation-message-user">
 			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
@@ -43,6 +32,20 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 				<span class="ccm-conversation-message-username"><? if (!is_object($ui)) { ?><?=t('Anonymous')?><? } else { ?><?=$ui->getUserDisplayName()?><? } ?></span>
 				<span class="ccm-conversation-message-divider">|</span>
 				<span class="ccm-conversation-message-date"><?=$message->getConversationMessageDateTimeOutput($dateFormat);?></span>
+
+                <?php if($canAdminMessage) { ?>
+                    <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider">|</span>
+                    <span class="dropdown ccm-conversation-message-admin-control ">
+                        <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#"><?=t('Edit')?></a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="drop5">
+                            <li><a href="#" class="admin-edit" data-submit="edit-conversation-message"><?php echo t('Edit') ?></a></li>
+                            <li><a href="#" class="admin-delete" data-submit="delete-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Delete')?></a></li>
+                            <li><a href="#" class="admin-flag" data-submit="flag-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Flag As Spam')?></a></li>
+                        </ul>
+                    </span>
+                <?php } ?>
+
+
 			</div>
 			
 		</div>
@@ -62,7 +65,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 								$thumb = $im->getThumbnail($file, '90', '90', true); ?>
 						  <div class="image-popover-hover" data-full-image="<?php echo $file->getURL() ?>">
 						  	<div class="glyph-container">
-						  		<i class="fa faicon-search fa-white"></i>
+						  		<i class="fa fa-search"></i>
 						  	</div>
 						  </div>
 						  <div class="attachment-preview-container">
@@ -70,13 +73,11 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 						  </div>
 						 <?php } ?>
 							<p class="<?php echo $paragraphPadding ?> filename" rel="<?php echo $attachment['cnvMessageAttachmentID'];?>"><a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a>
-							<? 
-							if (!$message->isConversationMessageDeleted() && $canAdminMessage) { ?>
-								<a rel="<?php echo $attachment['cnvMessageAttachmentID'];?>" class="attachment-delete ccm-conversation-message-admin-control" href="#"><?=t('Delete')?></a>
-							<?php } ?>
-							<br />
-							<a class="download" href="<?php echo $file->getDownloadURL() ?>"><?php echo t('Download') ?></a>
-							</p>
+                            <?
+                            if (!$message->isConversationMessageDeleted() && $canAdminMessage) { ?>
+                                <a rel="<?php echo $attachment['cnvMessageAttachmentID'];?>" class="attachment-delete ccm-conversation-message-control-icon ccm-conversation-message-admin-control" href="#"><i class="fa fa-trash-o"></i></a>
+                            <?php } ?>
+                            </p>
 						</div>
 					<?php }
 					$paragraphPadding = '';
@@ -84,25 +85,33 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 				} ?>
 			</div>
 			<? if (!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) { ?>
-			<ul class="standard-message-controls">
-				<!-- <li class="ccm-conversation-message-admin-control"><a href="#" data-submit="flag-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Flag As Spam')?></a></li>
-				<li class="ccm-conversation-message-admin-control"><a href="#" data-submit="delete-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Delete')?></a></li> -->
-				
+			<ul>
 				<? if ($enablePosting && $displayMode == 'threaded') { ?>
 					<li><a href="#" data-toggle="conversation-reply" data-post-parent-id="<?=$message->getConversationMessageID()?>"><?=t('Reply')?></a></li>
 				<? } ?>
-			</ul>
-			<span class="control-divider"> | </span>
+                <? if ($enableCommentRating) { ?>
+                    <li><span class="ccm-conversation-message-divider">|</span></li>
+                    <?
+                    $ratingTypes = ConversationRatingType::getList();
+                    foreach($ratingTypes as $ratingType) { ?>
+                        <li><? echo $ratingType->outputRatingTypeHTML();?></li>
+                    <? } ?>
+                    <li><span class="ccm-conversation-message-rating-score" data-message-rating="<?=$message->cnvMessageID?>"><?=$message->getConversationMessageTotalRatingScore();?></span></li>
+              <? } ?>
+              <li class="ccm-conversation-social-share"><span class="ccm-conversation-message-divider">|</span></li>
+              <li class="ccm-conversation-social-share">
+                  <a class="ccm-conversation-message-control-icon" href="http://twitter.com/intent/tweet?url=<?php echo $cnvMessageURL?>" title="<?=t('Share message URL on Twitter.')?>"><i class="fa fa-twitter"></i></a>
+              </li>
+              <li class="ccm-conversation-social-share">
+                  <a class="ccm-conversation-message-control-icon" href="http://www.facebook.com/sharer.php?u=<?php echo $cnvMessageURL?>" title="<?=t('Share message URL on Facebook.')?>"><i class="fa fa-facebook"></i></a>
+              </li>
+              <li class="ccm-conversation-social-share">
+                  <a class="ccm-conversation-message-control-icon share-permalink" data-message-id= "<?php echo $messageID ?>" rel="<?php echo $cnvMessageURL ?>"  title="<?=t('Get message URL.')?>"data-dialog-title="<?php echo t('Link') ?>"  href="#"><i class="fa fa-link"></i></a>
+              </li>
+
+            </ul>
 			<? } ?>
-			
-		<? Loader::element('conversation/social_share', array('cID' => $cID, 'message' => $message));?>
-		<? if ($enableCommentRating) {
-			$ratingTypes = ConversationRatingType::getList();
-			foreach($ratingTypes as $ratingType) {
-				echo $ratingType->outputRatingTypeHTML();
-			} ?>
-			<span class="ccm-conversation-message-rating-score" data-message-rating="<?=$message->cnvMessageID?>"><?=$message->getConversationMessageTotalRatingScore();?></span>
-		<? } ?>
+
 		</div>
 	</div>
 <? } ?>

@@ -86,15 +86,12 @@ class Controller extends BlockController
         $this->view();
     }
 
-    public function isSelectedDate($dateArray = null)
+    public function isSelectedDate($dateArray)
     {
-        if (isset($this->selectedYear) && isset($this->selectedMonth) && is_array($dateArray)) {
+        if (isset($this->selectedYear) && isset($this->selectedMonth)) {
             return $dateArray['year'] == $this->selectedYear && $dateArray['month'] == $this->selectedMonth;
         }
 
-        if (!$dateArray && !$this->selectedYear && !$this->selectedMonth) {
-            return true;
-        }
     }
 
     public function view()

@@ -4,7 +4,7 @@ use Loader;
 class DownVoteType extends Type {
 
 	public function outputRatingTypeHTML() {
-		print '<div class="conversation-rate-message-container"><i class="icon-thumbs-down conversation-rate-message" data-conversation-rating-type="down_vote"></i></div>';
+        print '<a href="javascript:void(0)" class="ccm-conversation-message-control-icon" data-conversation-rating-type="down_vote"><i class="fa fa-thumbs-down conversation-rate-message"></i></a>';
 	}
 	
 	public function rateMessage() {

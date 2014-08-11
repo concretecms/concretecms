@@ -8,10 +8,7 @@
 
     <? if (count($dates)) { ?>
         <ul class="ccm-block-date-navigation-dates">
-            <li><a href="<?=$view->controller->getDateLink()?>"
-                    <? if ($view->controller->isSelectedDate()) { ?>
-                        class="ccm-block-date-navigation-date-selected"
-                    <? } ?>><?=t('All')?></a></li>
+            <li><a href="<?=$view->controller->getDateLink()?>"><?=t('All')?></a></li>
 
             <? foreach($dates as $date) { ?>
                 <li><a href="<?=$view->controller->getDateLink($date)?>"

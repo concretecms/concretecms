@@ -253,15 +253,14 @@ class Message extends Object
         }
     }
 
-    public function attachFile(File $f, $cnvMessageID)
+    public function attachFile(File $f)
     {
         $db = Loader::db();
-        if (!is_object($f) || !is_object(static::getByID($cnvMessageID))) {
+        if (!is_object($f)) {
             return false;
         } else {
-
             $db->Execute('INSERT INTO ConversationMessageAttachments (cnvMessageID, fID) VALUES (?, ?)', array(
-                $cnvMessageID,
+                $this->getConversationMessageID(),
                 $f->getFileID()
             ));
         }
