@@ -107,16 +107,6 @@ define('PAGE_PERMISSION_IDENTIFIER_USE_PERMISSION_COLLECTION_ID',
 
 /**
  * ----------------------------------------------------------------------------
- * Date and time constants. Has to come in this file because it must come after
- * localization has been initialized.
- * ----------------------------------------------------------------------------
- */
-defined('DATE_APP_DATE_PICKER') or define('DATE_APP_DATE_PICKER', t(/*i18n http://api.jqueryui.com/datepicker/#utility-formatDate */'m/d/yy'));
-
-
-
-/**
- * ----------------------------------------------------------------------------
  * Miscellaneous sitewide settings.
  * ----------------------------------------------------------------------------
  */
