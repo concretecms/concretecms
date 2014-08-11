@@ -15,9 +15,6 @@ class Surveys extends DashboardPageController
         }
         $dh = Loader::helper('date');
         $inputTime = $dh->getLocalDateTime($inputTime);
-        if (defined('DATE_APP_SURVEY_RESULTS')) {
-            return $dh->date(DATE_APP_SURVEY_RESULTS, strtotime($inputTime));
-        }
         $timestamp = strtotime($inputTime);
         if ($timestamp >= strtotime(date('n/d/y'))) {
             // Today
