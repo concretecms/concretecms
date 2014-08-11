@@ -7,7 +7,7 @@
 	<p class="meta"><?php echo t(
 		'Posted by %1$s on %2$s',
 		$c->getVersionObject()->getVersionAuthorUserName(),
-		$c->getCollectionDatePublic(DATE_APP_GENERIC_MDY_FULL)
+		Core::make('helper/date')->formatDate($c->getCollectionDatePublic(), true)
 	); ?></p>		
 </div>
 <div class="pageSection">
