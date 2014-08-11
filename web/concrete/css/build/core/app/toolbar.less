@@ -8,6 +8,7 @@ div#ccm-toolbar {
 	height: 49px;
 	width: 100%;
 	z-index: @index-level-main-bar; /* over the top of the highlighter, which is 1000 */
+  overflow:hidden;
 
   .ccm-toolbar-accessibility-title {
     display:none;
@@ -20,6 +21,12 @@ div#ccm-toolbar {
     li > a {
       width: auto !important;
       padding: 16px;
+    }
+  }
+
+  .ccm-launch-panel-loading {
+    .ccm-toolbar-accessibility-title {
+      display:none;
     }
   }
 
