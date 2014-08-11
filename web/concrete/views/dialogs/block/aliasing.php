@@ -1,5 +1,6 @@
-<?
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>
 <div class="ccm-ui">
     <form method="post" id="ccmBlockMasterCollectionForm" data-dialog-form="master-collection-alias" action="<?=$controller->action('submit')?>">
@@ -28,8 +29,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     <tr class="active">
                         <td><?=$p->getCollectionID()?></td>
                         <td><a href="<?=DIR_REL?>/<?=DISPATCHER_FILENAME?>?cID=<?=$p->getCollectionID()?>" target="_blank"><?=$p->getCollectionName()?></a></td>
-                        <td ><?=$p->getCollectionDateAdded(DATE_APP_GENERIC_MDY, 'user')?></td>
-                        <td ><? if ($b->isAlias($p)) { ?> <input type="hidden" name="checkedCIDs[]" value="<?=$p->getCollectionID()?>" /><? } ?><?=$p->getCollectionDateLastModified(DATE_APP_GENERIC_MDY, 'user')?></td>
+                        <td ><?=$dh->formatDate($p->getCollectionDateAdded())?></td>
+                        <td ><? if ($b->isAlias($p)) { ?> <input type="hidden" name="checkedCIDs[]" value="<?=$p->getCollectionID()?>" /><? } ?><?=$dh->formatDate($p->getCollectionDateLastModified())?></td>
                         <td ><input class="mc-cb" type="checkbox" name="cIDs[]" value="<?=$p->getCollectionID()?>" <? if ($b->isAlias($p)) { ?> checked <? } ?> /></td>
                     </tr>
 

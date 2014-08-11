@@ -111,7 +111,6 @@ define('PAGE_PERMISSION_IDENTIFIER_USE_PERMISSION_COLLECTION_ID',
  * localization has been initialized.
  * ----------------------------------------------------------------------------
  */
-defined('DATE_APP_GENERIC_MDY') or define('DATE_APP_GENERIC_MDY', t('n/j/Y'));
 defined('DATE_APP_DATE_PICKER') or define('DATE_APP_DATE_PICKER', t(/*i18n http://api.jqueryui.com/datepicker/#utility-formatDate */'m/d/yy'));
 
 
