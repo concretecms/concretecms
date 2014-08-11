@@ -281,8 +281,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function filterByPublicDate($date, $comparison = '=')
     {
-        $this->query->andWhere($this->query->expr()->comparison('cv.cDatePublic', $comparison, ':cvDatePublic'));
-        $this->query->setParameter('cv.cDatePublic', $date);
+        $this->query->andWhere($this->query->expr()->comparison('cv.cvDatePublic', $comparison, $this->query->createNamedParameter($date)));
     }
 
     /**

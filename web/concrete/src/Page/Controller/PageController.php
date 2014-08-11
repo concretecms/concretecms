@@ -76,8 +76,6 @@ class PageController extends Controller {
             }
         }
 
-        $foundTask = false;
-
         try {
             $r = new \ReflectionMethod(get_class($this), $method);
             $cl = $r->getDeclaringClass();
@@ -104,8 +102,8 @@ class PageController extends Controller {
         }
     }
 
-    public function validateRequest() {
-
+    public function isValidControllerTask($action, $parameters = array())
+    {
         $valid = true;
         if (!is_callable(array($this, $this->action)) && count($this->parameters) > 0) {
             $valid = false;
@@ -119,20 +117,24 @@ class PageController extends Controller {
                 $valid = false;
             }
         }
-        if (!$valid) {
+        return $valid;
+    }
+
+    public function validateRequest() {
+
+        $valid = true;
+
+        if (!$this->isValidControllerTask($this->action, $this->parameters)) {
+            $valid = false;
             // we check the blocks on the page.
             $blocks = $this->getPageObject()->getBlocks();
             foreach($blocks as $b) {
                 $controller = $b->getController();
-                $method = 'action_' . $this->parameters[0];
-                $this->action = 'passthru';
-                if (is_callable(array($controller, $method))) {
-                    $r = new \ReflectionMethod(get_class($controller), $method);
-                    if ($r->getNumberOfParameters() < count($this->parameters) - 1) {
-                        $valid = false;
-                    } else {
-                        $valid = true;
-                    }
+                list($method, $parameters) = $controller->getPassThruActionAndParameters($this->parameters);
+                if ($controller->isValidControllerTask($method, $parameters)) {
+                    $this->action = 'passthru';
+                    $valid = true;
+                    break;
                 }
             }
         }
