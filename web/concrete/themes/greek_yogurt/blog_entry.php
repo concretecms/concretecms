@@ -59,12 +59,12 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 				} ?>
 				<p>
 					<?php echo t(
-						/*i18n: %1$s is an author name, 2$s is an URL, %3$s is a date, %4$s is a time */
+						/*i18n: %1$s is an author name, 2$s is an URL, %3$s is a time, %4$s is a date */
 						'Posted by <span class="post-author">%1$s at <a href="%2$s">%3$s on %4$s</a></span>',
 						$profileLink,
 						$c->getLinkToCollection,
 						$dh->formatTime($c->getCollectionDatePublic())
-						$c->getCollectionDatePublic(DATE_APP_GENERIC_MDY_FULL)
+						$dh->formatDate($c->getCollectionDatePublic(), true)
 					); ?>
 				</p>
 
