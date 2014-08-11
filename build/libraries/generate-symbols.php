@@ -22,7 +22,7 @@ error_reporting('E_ALL');
 $generator = new \Concrete\Core\Support\Symbol\SymbolGenerator();
 
 $symbols = $generator->render();
-file_put_contents(DIR_BASE . '/concrete/core/Support/__IDE_SYMBOLS__.php', $symbols);
+file_put_contents(DIR_BASE . '/concrete/src/Support/__IDE_SYMBOLS__.php', $symbols);
 echo "Generation Complete.\n";
 die(0);
 
