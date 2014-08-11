@@ -143,8 +143,16 @@ class DateTime
             $html .= '</select>';
         }
         $html .= '</span></div>';
+        $jh = Core::make('helper/json'); /* @var $jh \Concrete\Core\Http\Service\Json */
         if ($calendarAutoStart) {
-            $html .= '<script type="text/javascript">$(function () { $("#' . $id . '_dt_pub").datepicker({ dateFormat: \'' . DATE_APP_DATE_PICKER . '\', altFormat: "@", altField: "#' . $id . '_dt", changeYear: true, showAnim: \'fadeIn\' }).datepicker( "setDate" , ' . $defaultDateJs . ' ) })</script>';
+            $html .= '<script type="text/javascript">$(function () {
+                $("#' . $id . '_dt_pub").datepicker({
+                    dateFormat: ' . $jh->encode($dh->getJQueryUIDatePickerFormat(t(/*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y'))) . ',
+                    altFormat: "@",
+                    altField: "#' . $id . '_dt",
+                    changeYear: true,
+                    showAnim: \'fadeIn\'
+                }).datepicker( "setDate" , ' . $defaultDateJs . ' ) })</script>';
         }
         // first we add a calendar input
 
@@ -201,9 +209,17 @@ EOS;
         //$id = preg_replace("/[^0-9A-Za-z-]/", "_", $prefix);
         $html = '';
         $html .= '<div><span class="ccm-input-date-wrapper" id="' . $id . '_dw"><input id="' . $id . '_pub" name="' . $field . '_pub" class="ccm-input-date"  /><input id="' . $id . '" name="' . $field . '" type="hidden"  /></span></div>';
-
+        $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+        $jh = Core::make('helper/json'); /* @var $jh \Concrete\Core\Http\Service\Json */
         if ($calendarAutoStart) {
-            $html .= '<script type="text/javascript">$(function () { $("#' . $id . '_pub").datepicker({ dateFormat: \'' . DATE_APP_DATE_PICKER . '\', altFormat: "@", altField: "#' . $id . '", changeYear: true, showAnim: \'fadeIn\' }).datepicker( "setDate" , ' . $defaultDateJs . ' ); });</script>';
+            $html .= '<script type="text/javascript">$(function () {
+                $("#' . $id . '_pub").datepicker({
+                    dateFormat: ' . $jh->encode($dh->getJQueryUIDatePickerFormat(t(/*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y'))) . ',
+                    altFormat: "@",
+                    altField: "#' . $id . '",
+                    changeYear: true,
+                    showAnim: \'fadeIn\'
+                }).datepicker( "setDate" , ' . $defaultDateJs . ' ); });</script>';
         }
 
         return $html;
