@@ -3,6 +3,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
 
 $form = Loader::helper('form');
+$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+
 $fp = FilePermissions::getGlobal();
 if (!$fp->canAccessFileManager()) {
     die(t("Unable to access the file manager."));
@@ -102,9 +104,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
                                 <td class="ccm-file-list-filename" width="100%">
                                     <div style="width: 150px; word-wrap: break-word"><?= $fv->getTitle() ?></div>
                                 </td>
-                                <td><?= date(
-                                        DATE_APP_DASHBOARD_SEARCH_RESULTS_FILES,
-                                        $f->getDateAdded()->getTimestamp()) ?></td>
+                                <td><?= $dh->formatDateTime($f->getDateAdded()->getTimestamp()) ?></td>
                                 <td><?= $fv->getSize() ?></td>
                                 <td><?= $fv->getAuthorName() ?></td>
                             </tr>

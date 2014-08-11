@@ -10,14 +10,14 @@ class DefaultSet extends Set
 
     public static function getFileDateAdded($f)
     {
-        return date(DATE_APP_DASHBOARD_SEARCH_RESULTS_FILES, $f->getDateAdded()->getTimestamp());
+        return Core::make('helper/date')->formatDateTime($f->getDateAdded()->getTimestamp());
     }
 
     public static function getFileDateActivated($f)
     {
         $fv = $f->getVersion();
 
-        return date(DATE_APP_DASHBOARD_SEARCH_RESULTS_FILES, $f->getDateAdded()->getTimestamp());
+        return Core::make('helper/date')->formatDateTime($f->getDateAdded()->getTimestamp());
     }
 
     public function __construct()

@@ -1,7 +1,10 @@
-<?
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
 $u = new User();
+
 $form = Loader::helper('form');
+$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+
 $sh = Loader::helper('concrete/dashboard/sitemap');
 if (!$sh->canRead()) {
 	die(t('Access Denied'));
@@ -103,7 +106,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 		<tr>
 			<td class="ccm-page-list-name"><?=$c->getCollectionName()?></td>
 			<td><?=$c->getPageTypeName()?></td>
-			<td><?=$c->getCollectionDatePublic(DATE_APP_DASHBOARD_SEARCH_RESULTS_PAGES)?></td>
+			<td><?=$dh->formatDateTime($c->getCollectionDatePublic())?></td>
 			<td><?
 				$ui = UserInfo::getByID($c->getCollectionUserID());
 				if (is_object($ui)) {

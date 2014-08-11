@@ -31,6 +31,7 @@ class User extends Controller
                 $users = $this->getRequestUsers();
                 $r = new UserEditResponse();
                 $r->setUsers($users);
+                $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
                 foreach ($users as $ui) {
                     $uo = $ui->getUserObject();
                     if ($task == 'add') {
@@ -39,7 +40,7 @@ class User extends Controller
                             $obj = new stdClass();
                             $obj->gDisplayName = $g->getGroupDisplayName();
                             $obj->gID = $g->getGroupID();
-                            $obj->gDateTimeEntered = date(DATE_APP_GENERIC_MDYT, strtotime($g->getGroupDateTimeEntered($uo)));
+                            $obj->gDateTimeEntered = $dh->formatDateTime($g->getGroupDateTimeEntered($uo));
                             $r->setAdditionalDataAttribute('groups', array($obj));
                         }
                     } else {
