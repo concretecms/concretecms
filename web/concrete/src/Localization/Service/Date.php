@@ -267,7 +267,7 @@ class Date
                 $tz = null;
                 if (defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) {
                     $u = null;
-                    $request = C5_ENVIRONMENT_ONLY ? Request::get() : null;
+                    $request = C5_ENVIRONMENT_ONLY ? Request::getInstance() : null;
                     if ($request && $request->hasCustomRequestUser()) {
                         $u = $request->getCustomRequestUser();
                     } elseif (User::isLoggedIn()) {
