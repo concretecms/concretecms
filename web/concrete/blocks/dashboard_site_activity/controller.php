@@ -2,6 +2,7 @@
 namespace Concrete\Block\DashboardSiteActivity;
 
 use Loader;
+use Core;
 use \Concrete\Core\Block\BlockController;
 use User;
 use UserInfo;

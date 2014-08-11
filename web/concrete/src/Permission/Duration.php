@@ -3,6 +3,7 @@ namespace Concrete\Core\Permission;
 
 use \Concrete\Core\Foundation\Object;
 use Loader;
+use Core;
 
 class Duration extends Object
 {

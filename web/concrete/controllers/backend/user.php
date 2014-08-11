@@ -8,6 +8,7 @@ use Permissions;
 use UserInfo;
 use Loader;
 use stdClass;
+use Core;
 use Exception;
 
 class User extends Controller

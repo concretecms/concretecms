@@ -6,6 +6,7 @@ use \Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
 use \Concrete\Core\User\PrivateMessage\PrivateMessage as UserPrivateMessage;
 use UserInfo;
 use Loader;
+use Core;
 use User;
 
 class Inbox extends AccountPageController
