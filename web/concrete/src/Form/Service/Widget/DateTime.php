@@ -22,7 +22,8 @@ class DateTime
             }
             // Timestamp is in ms - so "/ 1000" is needed
             $dt = date('Y-m-d', floor( $arr[$field . '_dt'] / 1000) );
-            if (DATE_FORM_HELPER_FORMAT_HOUR == '12') {
+            $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+            if ($dh->getTimeFormat() == 12) {
                 $str = $dt . ' ' . $arr[$field . '_h'] . ':' . $arr[$field . '_m'] . ' ' . $arr[$field . '_a'];
             } else {
                 $str = $dt . ' ' . $arr[$field . '_h'] . ':' . $arr[$field . '_m'];
@@ -67,10 +68,13 @@ class DateTime
             $_m = $prefix . '_m';
             $_a = $prefix . '_a';
         }
+        
+        $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+        $timeFormat = $dh->getTimeFormat();
 
-        $dfh = (DATE_FORM_HELPER_FORMAT_HOUR == '12') ? 'h' : 'H';
-        $dfhe = (DATE_FORM_HELPER_FORMAT_HOUR == '12') ? '12' : '23';
-        $dfhs = (DATE_FORM_HELPER_FORMAT_HOUR == '12') ? '1' : '0';
+        $dfh = ($timeFormat == 12) ? 'h' : 'H';
+        $dfhe = ($timeFormat == 12) ? '12' : '23';
+        $dfhs = ($timeFormat == 12) ? '1' : '0';
         if ($value != null) {
             $defaultDateJs = 'new Date(' . strtotime($value) * 1000 . ')';
             $h = date($dfh, strtotime($value));
@@ -118,7 +122,7 @@ class DateTime
             $html .= '<option value="' . sprintf('%02d', $i) . '" ' . $selected . '>' . sprintf('%02d', $i) . '</option>';
         }
         $html .= '</select>';
-        if (DATE_FORM_HELPER_FORMAT_HOUR == '12') {
+        if ($timeFormat == 12) {
             $html .= '<select class="form-control" id="' . $id . '_a" name="' . $_a . '" ' . $disabled . '>';
             $html .= '<option value="AM" ';
             if ($a == 'AM') {

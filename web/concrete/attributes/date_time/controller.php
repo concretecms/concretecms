@@ -117,8 +117,9 @@ class Controller extends AttributeTypeController
                 if (empty($data['value_dt']) || (!is_numeric($data['value_h'])) || (!is_numeric($data['value_m']))) {
                     return false;
                 }
-                switch (DATE_FORM_HELPER_FORMAT_HOUR) {
-                    case '12':
+                $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+                switch ($dh->getTimeFormat()) {
+                    case 12:
                         if (empty($data['value_a'])) {
                             return false;
                         }

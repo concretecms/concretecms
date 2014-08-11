@@ -129,7 +129,6 @@ defined('DATE_APP_DASHBOARD_SEARCH_RESULTS_PAGES') or define('DATE_APP_DASHBOARD
 defined('DATE_APP_DATE_ATTRIBUTE_TYPE_MDY') or define('DATE_APP_DATE_ATTRIBUTE_TYPE_MDY', DATE_APP_GENERIC_MDY);
 defined('DATE_APP_DATE_ATTRIBUTE_TYPE_T') or define('DATE_APP_FILE_DOWNLOAD', DATE_APP_GENERIC_TS);
 defined('DATE_APP_DATE_PICKER') or define('DATE_APP_DATE_PICKER', t(/*i18n http://api.jqueryui.com/datepicker/#utility-formatDate */'m/d/yy'));
-defined('DATE_FORM_HELPER_FORMAT_HOUR') or define('DATE_FORM_HELPER_FORMAT_HOUR', tc(/*i18n: can be 12 or 24 */'Time format', '12'));
 if (!defined('DATE_APP_SURVEY_RESULTS')) {
     // NO DEFINE HERE, JUST PLACING HERE TO MAKE A NOTE OF IT
 }
