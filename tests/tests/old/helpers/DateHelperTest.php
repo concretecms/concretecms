@@ -32,7 +32,7 @@ class DateHelperTest extends PHPUnit_Framework_TestCase
 
         // time is in the future
         $future = time()+ 7;
-        $this->assertEquals($this->object->date(DATE_APP_GENERIC_MDY,$future), $this->object->timeSince($future));
+        $this->assertEquals($this->object->formatDate($future), $this->object->timeSince($future));
 
         // time is now
         $this->assertEquals("0 seconds", $this->object->timeSince(time()));
@@ -54,7 +54,7 @@ class DateHelperTest extends PHPUnit_Framework_TestCase
                             $this->object->timeSince(time() - (2 * $days + 2 * $hours),1));
         $this->assertEquals('145 days',
                             $this->object->timeSince(time() - (145 * $days)));
-        $this->assertEquals($this->object->date(DATE_APP_GENERIC_MDY,(time() - (367 * $days))),
+        $this->assertEquals($this->object->formatDate(time() - (367 * $days)),
                             $this->object->timeSince(time() - (367 * $days)));
     }
 }
