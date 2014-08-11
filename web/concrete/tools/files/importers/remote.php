@@ -88,7 +88,7 @@ if (!$error->has()) {
                     // make sure we're coming up with a unique filename
                     do {
                         // make up a filename based on the current date/time, a random int, and the extension from the mime-type
-                        $fname = date(DATE_APP_FILENAME) . mt_rand(100, 999) . '.' . $fextension;
+                        $fname = date('Y-m-d_H-i_') . mt_rand(100, 999) . '.' . $fextension;
                     } while (file_exists($fpath.'/'.$fname));
                 }
             } //else {
