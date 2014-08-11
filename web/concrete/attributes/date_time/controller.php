@@ -38,18 +38,17 @@ class Controller extends AttributeTypeController
     {
         $this->load();
         $v = $this->getValue();
-        if ($v == '' || $v == false) {
+        if(empty($v)) {
             return '';
         }
-        $v2 = date('H:i:s', strtotime($v));
-        $r = '';
-        if ($v2 != '00:00:00' && $this->akDateDisplayMode != 'date') {
-            $r .= date(DATE_APP_DATE_ATTRIBUTE_TYPE_T, strtotime($v));
-            $r .= t(' on ' );
+        $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+        if ($this->akDateDisplayMode == 'date') {
+            // Don't use user's timezone to avoid showing wrond dates
+            return $dh->formatDate($v, false, 'app');
         }
-        $r .= date(DATE_APP_DATE_ATTRIBUTE_TYPE_MDY, strtotime($v));
-
-        return $r;
+        else {
+            return $dh->formatDateTime($v);
+        }
     }
 
     public function searchForm($list)

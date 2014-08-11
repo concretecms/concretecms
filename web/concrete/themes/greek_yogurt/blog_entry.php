@@ -1,7 +1,9 @@
-<?php 
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
 $this->inc('elements/header.php');
+
 $nav = Loader::helper('navigation');
+$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>
 
 	<div id="header-image">
@@ -61,7 +63,7 @@ $nav = Loader::helper('navigation');
 						'Posted by <span class="post-author">%1$s at <a href="%2$s">%3$s on %4$s</a></span>',
 						$profileLink,
 						$c->getLinkToCollection,
-						$c->getCollectionDatePublic(DATE_APP_GENERIC_T),
+						$dh->formatTime($c->getCollectionDatePublic())
 						$c->getCollectionDatePublic(DATE_APP_GENERIC_MDY_FULL)
 					); ?>
 				</p>
