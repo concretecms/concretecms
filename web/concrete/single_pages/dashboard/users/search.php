@@ -1,4 +1,7 @@
-<? if (is_object($user)) { ?>
+<? if (is_object($user)) {
+
+    $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+?>
 
 <style type="text/css">
 div[data-container=editable-fields] section {
@@ -76,7 +79,7 @@ div[data-container=editable-fields] section {
 			<h4><?=t('Account')?></h4>
 			<div class="row">
 				<div class="col-md-4"><p><?=t('Date Created')?></p></div>
-				<div class="col-md-8"><p><?=date(DATE_APP_GENERIC_MDYT, strtotime($user->getUserDateAdded('user')))?></p></div>
+				<div class="col-md-8"><p><?=$dh->formatDateTime($user->getUserDateAdded())?></p></div>
 			</div>
 			<div class="row">
 				<div class="col-md-4"><p><?=t('Last IP Address')?></p></div>

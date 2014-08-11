@@ -1,9 +1,12 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<? defined('C5_EXECUTE') or die("Access Denied.");
+
+$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+
+?>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Page Drafts'))?>
 
 <? 
-$today = Loader::helper('date')->getLocalDateTime('now', 'Y-m-d');
 if (count($drafts) > 0) { ?>
 
 <table class="table table-striped">
@@ -33,12 +36,7 @@ foreach($drafts as $dr) {
 		?>
 		</td>
 		<td><?=$dr->getPageTypeName()?></td>
-		<td><?
-			$mask = DATE_APP_GENERIC_MDYT;
-			if ($today == $dr->getCollectionDateLastModified("Y-m-d")) {
-				$mask = DATE_APP_GENERIC_T;
-			}
-			print $dr->getCollectionDateLastModified($mask)?></td>
+		<td><?=$dh->formatPrettyDateTime($dr->getCollectionDateLastModified());?></td>
 	<? } ?>
 
 <? } ?>

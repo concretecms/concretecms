@@ -1,4 +1,7 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<? defined('C5_EXECUTE') or die("Access Denied.");
+
+$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+?>
 <div id="ccm-profile-header">
 
 <div id="ccm-profile-avatar">
@@ -25,7 +28,7 @@
 
 <div id="ccm-profile-statistics-bar">
 	<div class="ccm-profile-statistics-item">
-		<i class="icon-time"></i> <?=t('Joined %s', date(DATE_APP_GENERIC_MDY_FULL, strtotime($profile->getUserDateAdded())))?>
+		<i class="icon-time"></i> <?=t(/*i18n: %s is a date */'Joined on %s', $dh->formatDate($profile->getUserDateAdded(), true))?>
 	</div>
 	<div class="ccm-profile-statistics-item">
 		<i class="icon-fire"></i> <?=number_format(\Concrete\Core\User\Point\Entry::getTotal($profile))?> <?=t('Community Points')?>
@@ -72,7 +75,7 @@
 
 			    <div class="thumbnail launch-tooltip ccm-profile-badge-image" title="<?=$ub->getGroupBadgeDescription()?>">
 			      <div><img src="<?=$uf->getRelativePath()?>" /></div>
-			      <div><?=t("Awarded %s", date(DATE_APP_GENERIC_MDY, strtotime($ub->getGroupDateTimeEntered($profile))))?></div>
+			      <div><?=t("Awarded %s", $dh->formatDate($ub->getGroupDateTimeEntered($profile)))?></div>
 			    </div>
 
 			</li>

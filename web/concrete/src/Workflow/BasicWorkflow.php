@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Workflow;
 
 use Concrete\Core\Workflow\HistoryEntry\BasicHistoryEntry as BasicWorkflowHistoryEntry;
@@ -7,6 +7,7 @@ use Concrete\Core\Workflow\Progress\Action\CancelAction as WorkflowProgressCance
 use Concrete\Core\Workflow\Progress\BasicData as BasicWorkflowProgressData;
 use Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
 use Loader;
+use Core;
 use PermissionAccess;
 use PermissionKey;
 use User;
@@ -57,7 +58,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
         // let's get all the people who are set to be notified on entry
         $message = t(
             'On %s, user %s submitted the following request: %s',
-            date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateAdded())),
+            Core::make('helper/date')->formatDateTime($wp->getWorkflowProgressDateAdded(), true),
             $ui->getUserName(),
             $req->getWorkflowRequestDescriptionObject()->getEmailDescription());
         $this->notify($wp, $message, 'notify_on_basic_workflow_entry');
@@ -96,16 +97,18 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
         $ux = UserInfo::getByID($bdw->getUserStartedID());
         $req = $wp->getWorkflowRequestObject();
         $description = $req->getWorkflowRequestDescriptionObject()->getInContextDescription();
+
         return t(
             '%s Submitted by <strong>%s</strong> on %s.',
             $description,
             $ux->getUserName(),
-            date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateAdded())));
+            Core::make('helper/date')->formatDateTime($wp->getWorkflowProgressDateAdded(), true);
     }
 
     public function getWorkflowProgressStatusDescription(WorkflowProgress $wp)
     {
         $req = $wp->getWorkflowRequestObject();
+
         return $req->getWorkflowRequestDescriptionObject()->getShortStatus();
     }
 
@@ -122,7 +125,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
 
             $message = t(
                 "On %s, user %s cancelled the following request: \n\n---\n%s\n---\n\n",
-                date(DATE_APP_GENERIC_MDYT_FULL, strtotime($bdw->getDateCompleted())),
+                Core::make('helper/date')->formatDateTime($bdw->getDateCompleted(), true),
                 $ux->getUserName(),
                 $req->getWorkflowRequestDescriptionObject()->getEmailDescription());
             $this->notify($wp, $message, 'notify_on_basic_workflow_deny');
@@ -146,6 +149,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
     {
         $pk = PermissionKey::getByHandle('approve_basic_workflow_action');
         $pk->setPermissionObject($this);
+
         return $pk->validate();
     }
 
@@ -161,7 +165,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
 
             $message = t(
                 "On %s, user %s approved the following request: \n\n---\n%s\n---\n\n",
-                date(DATE_APP_GENERIC_MDYT_FULL, strtotime($bdw->getDateCompleted())),
+                Core::make('helper/date')->formatDateTime($bdw->getDateCompleted(), true),
                 $ux->getUserName(),
                 $req->getWorkflowRequestDescriptionObject()->getEmailDescription());
             $this->notify($wp, $message, 'notify_on_basic_workflow_approve');
@@ -199,6 +203,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
             $buttons[] = $button1;
             $buttons[] = $button2;
         }
+
         return $buttons;
     }
 

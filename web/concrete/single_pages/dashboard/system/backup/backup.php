@@ -1,7 +1,6 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
-/* @var $dh DateHelper */
-$dh = Loader::helper('date');
+$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 
 ?>
 <script type="text/javascript">
@@ -106,7 +105,7 @@ if ($tp->canBackup()) {
             <tbody>
                 <?php foreach ($backups as $arr_bkupInf) { ?>
                     <tr>
-                        <td width="50%" style="white-space: nowrap"><?= $dh->date(DATE_APP_GENERIC_MDYT_FULL, strtotime($arr_bkupInf['date'])) ?></td>
+                        <td width="50%" style="white-space: nowrap"><?= $dh->formatDateTime($arr_bkupInf['date'], true) ?></td>
                         <td width="50%"><?= $arr_bkupInf['file']; ?></td>
                         <td style="white-space: nowrap">
                             <?= $interface->button_js(t('Download'), 'window.location.href=\'' . $view->action('download', $arr_bkupInf['file']) . '\'', 'left', 'small'); ?>

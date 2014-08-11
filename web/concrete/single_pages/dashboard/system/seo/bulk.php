@@ -2,6 +2,7 @@
 $pageSelector = Loader::helper('form/page_selector');
 $nh = Loader::helper('navigation');
 $th = Loader::helper('text');
+$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>
 
 <style>
@@ -134,7 +135,7 @@ $th = Loader::helper('text');
                         <strong><?php echo t('Page Type'); ?></strong><br/>
                         <?php echo $cobj->getPageTypeName() ? $cobj->getPageTypeName() : t('Single Page'); ?><br/><br/>
                         <strong><?php echo t('Modified'); ?></strong><br/>
-                        <?php echo $cobj->getCollectionDateLastModified() ? $cobj->getCollectionDateLastModified(DATE_APP_GENERIC_MDYT) : ''; ?>
+                        <?php echo $cobj->getCollectionDateLastModified() ? $dh->formatDateTime($cobj->getCollectionDateLastModified()) : ''; ?>
                     </div>
                     <div class="col-md-9 col-md-offset-1 seo-page-edit">
                         <div class="form-group">
