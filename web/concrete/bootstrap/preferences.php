@@ -7,8 +7,6 @@
  */
 Config::getOrDefine('SITE_DEBUG_LEVEL', DEBUG_DISPLAY_ERRORS);
 
-
-
 /**
  * ----------------------------------------------------------------------------
  * File preferences.
@@ -18,8 +16,6 @@ Config::getOrDefine('SITE_DEBUG_LEVEL', DEBUG_DISPLAY_ERRORS);
 /* -- Allowed extensions -- */
 define('UPLOAD_FILE_EXTENSIONS_CONFIGURABLE', !defined('UPLOAD_FILE_EXTENSIONS_ALLOWED'));
 Config::getOrDefine('UPLOAD_FILE_EXTENSIONS_ALLOWED','*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.3gp;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;*.pptx;*.kml;*.xml;*.svg;*.webm;*.ogg;*.ogv');
-
-
 
 /**
  * ----------------------------------------------------------------------------
@@ -32,8 +28,6 @@ Config::getOrDefine('ENABLE_ASSET_CACHE', false);
 Config::getOrDefine('FULL_PAGE_CACHE_GLOBAL', false);
 Config::getOrDefine('FULL_PAGE_CACHE_LIFETIME', 'default');
 
-
-
 /**
  * ----------------------------------------------------------------------------
  * Logging settings.
@@ -41,8 +35,6 @@ Config::getOrDefine('FULL_PAGE_CACHE_LIFETIME', 'default');
  */
 Config::getOrDefine('ENABLE_LOG_EMAILS', true);
 Config::getOrDefine('ENABLE_LOG_ERRORS', true);
-
-
 
 /**
  * ----------------------------------------------------------------------------
@@ -54,11 +46,10 @@ Config::getOrDefine('ENABLE_INTELLIGENT_SEARCH_HELP', true);
 Config::getOrDefine('ENABLE_APP_NEWS_OVERLAY', true);
 Config::getOrDefine('ENABLE_APP_NEWS', true);
 if (ENABLE_MARKETPLACE_SUPPORT) {
-	Config::getOrDefine('ENABLE_INTELLIGENT_SEARCH_MARKETPLACE', true);
+    Config::getOrDefine('ENABLE_INTELLIGENT_SEARCH_MARKETPLACE', true);
 } else {
-	Config::getOrDefine('ENABLE_INTELLIGENT_SEARCH_MARKETPLACE', false);
+    Config::getOrDefine('ENABLE_INTELLIGENT_SEARCH_MARKETPLACE', false);
 }
-
 
 /**
  * ----------------------------------------------------------------------------
@@ -67,8 +58,6 @@ if (ENABLE_MARKETPLACE_SUPPORT) {
  */
 Config::getOrDefine('WHITE_LABEL_LOGO_SRC', false);
 defined('WHITE_LABEL_APP_NAME') or define("WHITE_LABEL_APP_NAME", false);
-
-
 
 /**
  * ----------------------------------------------------------------------------
@@ -113,7 +102,7 @@ Config::getOrDefine('ENABLE_AREA_LAYOUTS', true);
 Config::getOrDefine('ENABLE_CUSTOM_DESIGN', true);
 Config::getOrDefine('FORBIDDEN_SHOW_LOGIN', true);
 define('PAGE_PERMISSION_IDENTIFIER_USE_PERMISSION_COLLECTION_ID',
-	\Concrete\Core\Permission\Access\PageAccess::usePermissionCollectionIDForIdentifier());
+    \Concrete\Core\Permission\Access\PageAccess::usePermissionCollectionIDForIdentifier());
 
 
 /**
@@ -142,7 +131,7 @@ defined('DATE_APP_DATE_ATTRIBUTE_TYPE_T') or define('DATE_APP_FILE_DOWNLOAD', DA
 defined('DATE_APP_DATE_PICKER') or define('DATE_APP_DATE_PICKER', t(/*i18n http://api.jqueryui.com/datepicker/#utility-formatDate */'m/d/yy'));
 defined('DATE_FORM_HELPER_FORMAT_HOUR') or define('DATE_FORM_HELPER_FORMAT_HOUR', tc(/*i18n: can be 12 or 24 */'Time format', '12'));
 if (!defined('DATE_APP_SURVEY_RESULTS')) {
-	// NO DEFINE HERE, JUST PLACING HERE TO MAKE A NOTE OF IT
+    // NO DEFINE HERE, JUST PLACING HERE TO MAKE A NOTE OF IT
 }
 
 

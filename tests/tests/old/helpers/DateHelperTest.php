@@ -5,7 +5,6 @@ class DateHelperTest extends PHPUnit_Framework_TestCase
      * @var DateHelper
      */
     protected $object;
-    
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -24,19 +23,20 @@ class DateHelperTest extends PHPUnit_Framework_TestCase
     {
     }
 
-    public function testTimeSince() {
+    public function testTimeSince()
+    {
         Localization::changeLocale("en_US");
         $minutes = 60;
         $hours = $minutes * 60;
         $days = $hours * 24;
-        
+
         // time is in the future
         $future = time()+ 7;
         $this->assertEquals($this->object->date(DATE_APP_GENERIC_MDY,$future), $this->object->timeSince($future));
-        
+
         // time is now
         $this->assertEquals("0 seconds", $this->object->timeSince(time()));
-        
+
         // time is in the past
         $this->assertEquals("7 seconds",
                             $this->object->timeSince(time() - 7));

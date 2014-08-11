@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Logging;
 
 use Database;
@@ -45,7 +45,7 @@ class LogEntry
 
     public function getLevelIcon()
     {
-        switch($this->getLevel()) {
+        switch ($this->getLevel()) {
             case Logger::EMERGENCY:
                 return '<i class="text-danger fa fa-fire launch-tooltip" title="' . $this->getLevelDisplayName() . '"></i>';
             case Logger::CRITICAL:
@@ -79,6 +79,7 @@ class LogEntry
     public function getDisplayTimestamp()
     {
         $dh = Core::make('helper/date');
+
         return $dh->date(DATE_APP_GENERIC_MDYT_FULL_SECONDS, $this->time);
     }
 
@@ -95,6 +96,7 @@ class LogEntry
             $row = $r->FetchRow();
             $obj = new static();
             $obj = array_to_object($obj, $row);
+
             return $obj;
         }
     }

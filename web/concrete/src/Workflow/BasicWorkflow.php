@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Workflow;
 
 use Concrete\Core\Workflow\HistoryEntry\BasicHistoryEntry as BasicWorkflowHistoryEntry;
@@ -96,6 +96,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
         $ux = UserInfo::getByID($bdw->getUserStartedID());
         $req = $wp->getWorkflowRequestObject();
         $description = $req->getWorkflowRequestDescriptionObject()->getInContextDescription();
+
         return t(
             '%s Submitted by <strong>%s</strong> on %s.',
             $description,
@@ -106,6 +107,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
     public function getWorkflowProgressStatusDescription(WorkflowProgress $wp)
     {
         $req = $wp->getWorkflowRequestObject();
+
         return $req->getWorkflowRequestDescriptionObject()->getShortStatus();
     }
 
@@ -146,6 +148,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
     {
         $pk = PermissionKey::getByHandle('approve_basic_workflow_action');
         $pk->setPermissionObject($this);
+
         return $pk->validate();
     }
 
@@ -199,6 +202,7 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
             $buttons[] = $button1;
             $buttons[] = $button2;
         }
+
         return $buttons;
     }
 

@@ -1,5 +1,6 @@
-<?
+<?php
 namespace Concrete\Controller\Backend;
+
 use Controller;
 use Group;
 use \Concrete\Core\User\EditResponse as UserEditResponse;
@@ -9,82 +10,86 @@ use Loader;
 use stdClass;
 use Exception;
 
-class User extends Controller {
+class User extends Controller
+{
+    public function addGroup()
+    {
+        $this->modifyGroup('add');
+    }
 
-	public function addGroup() {
-		$this->modifyGroup('add');
-	}
+    public function removeGroup()
+    {
+        $this->modifyGroup('remove');
+    }
 
-	public function removeGroup() {
-		$this->modifyGroup('remove');
-	}
+    protected function modifyGroup($task)
+    {
+        $g = Group::getByID(Loader::helper('security')->sanitizeInt($_POST['gID']));
+        if (is_object($g)) {
+            $gp = new Permissions($g);
+            if ($gp->canAssignGroup()) {
+                $users = $this->getRequestUsers();
+                $r = new UserEditResponse();
+                $r->setUsers($users);
+                foreach ($users as $ui) {
+                    $uo = $ui->getUserObject();
+                    if ($task == 'add') {
+                        if (!$uo->inGroup($g)) {
+                            $uo->enterGroup($g);
+                            $obj = new stdClass();
+                            $obj->gDisplayName = $g->getGroupDisplayName();
+                            $obj->gID = $g->getGroupID();
+                            $obj->gDateTimeEntered = date(DATE_APP_GENERIC_MDYT, strtotime($g->getGroupDateTimeEntered($uo)));
+                            $r->setAdditionalDataAttribute('groups', array($obj));
+                        }
+                    } else {
+                        if ($uo->inGroup($g)) {
+                            $uo->exitGroup($g);
+                            $obj = new stdClass();
+                            $obj->gID = $g->getGroupID();
+                            $r->setAdditionalDataAttribute('group', $obj);
+                        }
+                    }
+                }
+                $r->outputJSON();
+            } else {
+                throw new Exception(t('Access Denied.'));
+            }
+        } else {
+            throw new Exception(t('Invalid group.'));
+        }
 
-	protected function modifyGroup($task) {
-		$g = Group::getByID(Loader::helper('security')->sanitizeInt($_POST['gID']));
-		if (is_object($g)) {
-			$gp = new Permissions($g);
-			if ($gp->canAssignGroup()) {
-				$users = $this->getRequestUsers();
-				$r = new UserEditResponse();
-				$r->setUsers($users);
-				foreach($users as $ui) {
-					$uo = $ui->getUserObject();
-					if ($task == 'add') {
-						if (!$uo->inGroup($g)) {
-							$uo->enterGroup($g);
-							$obj = new stdClass;
-							$obj->gDisplayName = $g->getGroupDisplayName();
-							$obj->gID = $g->getGroupID();
-							$obj->gDateTimeEntered = date(DATE_APP_GENERIC_MDYT, strtotime($g->getGroupDateTimeEntered($uo)));
-							$r->setAdditionalDataAttribute('groups', array($obj));
-						}
-					} else {
-						if ($uo->inGroup($g)) {
-							$uo->exitGroup($g);
-							$obj = new stdClass;
-							$obj->gID = $g->getGroupID();
-							$r->setAdditionalDataAttribute('group', $obj);
-						}
-					}
-				}
-				$r->outputJSON();
-			} else {
-				throw new Exception(t('Access Denied.'));
-			}
-		} else {
-			throw new Exception(t('Invalid group.'));
-		}
+    }
 
-	}
+    protected function getRequestUsers($permission = 'canViewUser')
+    {
+        $users = array();
+        if (is_array($_REQUEST['uID'])) {
+            $userIDs = $_REQUEST['uID'];
+        } else {
+            $userIDs[] = $_REQUEST['uID'];
+        }
+        foreach ($userIDs as $uID) {
+            $ui = UserInfo::getByID($uID);
+            $uip = new Permissions($ui);
+            if ($uip->$permission()) {
+                $users[] = $ui;
+            }
+        }
 
-	protected function getRequestUsers($permission = 'canViewUser') {
-		$users = array();
-		if (is_array($_REQUEST['uID'])) {
-			$userIDs = $_REQUEST['uID'];
-		} else {
-			$userIDs[] = $_REQUEST['uID'];
-		}
-		foreach($userIDs as $uID) {
-			$ui = UserInfo::getByID($uID);
-			$uip = new Permissions($ui);
-			if ($uip->$permission()) {
-				$users[] = $ui;
-			}
-		}
+        if (count($users) == 0) {
+            throw new Exception(t("Access Denied."));
+        }
 
-		if (count($users) == 0) {
-			throw new Exception(t("Access Denied."));
-		}
+        return $users;
+    }
 
-		return $users;
-	}
-
-	public function getJSON() {
-		$users = $this->getRequestUsers();
-		$r = new UserEditResponse();
-		$r->setUsers($users);
-		$r->outputJSON();
-	}
-
+    public function getJSON()
+    {
+        $users = $this->getRequestUsers();
+        $r = new UserEditResponse();
+        $r->setUsers($users);
+        $r->outputJSON();
+    }
 
 }
