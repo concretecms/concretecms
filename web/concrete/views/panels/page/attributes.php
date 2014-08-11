@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
@@ -10,20 +10,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	</div>
 
 	<div class="ccm-panel-content-inner" id="ccm-menu-page-attributes-list">
-	<? foreach($attributes as $set) { ?>
+	<?php foreach ($attributes as $set) { ?>
 		<div class="ccm-menu-page-attributes-set">
 			<h5><?=$set->title?></h5>
 			<ul>
-			<? foreach($set->attributes as $key) { ?>
-				<li><a data-attribute-key="<?=$key->getAttributeKeyID()?>" <? if (in_array($key->getAttributeKeyID(), $selectedAttributeIDs)) { ?>class="ccm-menu-page-attribute-selected" <? } ?> href="#"><?=$key->getAttributeKeyName()?></a></li>
-			<? } ?>
+			<?php foreach ($set->attributes as $key) { ?>
+				<li><a data-attribute-key="<?=$key->getAttributeKeyID()?>" <?php if (in_array($key->getAttributeKeyID(), $selectedAttributeIDs)) { ?>class="ccm-menu-page-attribute-selected" <?php } ?> href="javascript:void(0)"><?=$key->getAttributeKeyDisplayName()?></a></li>
+			<?php } ?>
 			</ul>
 		</div>
-	<? } ?>
+	<?php } ?>
 	</div>
 
 </section>
-
 
 <script type="text/javascript">
 ConcreteMenuPageAttributes = {
