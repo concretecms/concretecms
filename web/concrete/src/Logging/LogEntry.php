@@ -78,9 +78,9 @@ class LogEntry
 
     public function getDisplayTimestamp()
     {
-        $dh = Core::make('helper/date');
+        $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 
-        return $dh->date(DATE_APP_GENERIC_MDYT_FULL_SECONDS, $this->time);
+        return $dh->formatDateTime($this->time, true, true);
     }
 
     public function getTimestamp()
