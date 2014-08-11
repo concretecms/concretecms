@@ -2,6 +2,7 @@
 namespace Concrete\Attribute\DateTime;
 
 use Loader;
+use Core;
 use \Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController

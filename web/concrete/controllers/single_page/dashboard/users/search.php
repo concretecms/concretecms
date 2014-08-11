@@ -6,6 +6,7 @@ use Imagine\Image\Box;
 use Loader;
 use Exception;
 use User;
+use Core;
 use UserInfo;
 use URL;
 use stdClass;

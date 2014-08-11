@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\File\Search\ColumnSet;
 
+use Core;
 use \Concrete\Core\Search\Column\Column;
 use \Concrete\Core\Search\Column\Set;
 

@@ -2,6 +2,7 @@
 namespace Concrete\Core\Conversation\Message;
 
 use File;
+use Core;
 use Loader;
 use Conversation;
 use ConversationEditor;
@@ -178,19 +179,19 @@ class Message extends Object
                 }
                 break;
             case 'mdy':
-                return tc('Message posted date', 'Posted on %s', $dh->formatDate($this->cnvMessageDateCreated);
+                return tc('Message posted date', 'Posted on %s', $dh->formatDate($this->cnvMessageDateCreated));
             case 'mdy_full':
-                return tc('Message posted date', 'Posted on %s', $dh->formatDate($this->cnvMessageDateCreated, true);
+                return tc('Message posted date', 'Posted on %s', $dh->formatDate($this->cnvMessageDateCreated, true));
             case 'mdy_t':
-                return tc('Message posted date', 'Posted on %s', $dh->formatDateTime($this->cnvMessageDateCreated);
+                return tc('Message posted date', 'Posted on %s', $dh->formatDateTime($this->cnvMessageDateCreated));
             case 'mdy_full_t':
-                return tc('Message posted date', 'Posted on %s', $dh->formatDateTime($this->cnvMessageDateCreated, true);
+                return tc('Message posted date', 'Posted on %s', $dh->formatDateTime($this->cnvMessageDateCreated, true));
             case 'mdy_ts':
-                return tc('Message posted date', 'Posted on %s', $dh->formatDateTime($this->cnvMessageDateCreated, false, true);
+                return tc('Message posted date', 'Posted on %s', $dh->formatDateTime($this->cnvMessageDateCreated, false, true));
             case 'mdy_full_ts':
-                return tc('Message posted date', 'Posted on %s', $dh->formatDateTime($this->cnvMessageDateCreated, true, true);
+                return tc('Message posted date', 'Posted on %s', $dh->formatDateTime($this->cnvMessageDateCreated, true, true));
             default:
-                return tc('Message posted date', 'Posted on %s', $dh->formatDate($this->cnvMessageDateCreated, true);
+                return tc('Message posted date', 'Posted on %s', $dh->formatDate($this->cnvMessageDateCreated, true));
                 break;
         }
     }
