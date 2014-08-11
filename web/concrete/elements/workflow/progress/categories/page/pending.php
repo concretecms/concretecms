@@ -1,6 +1,7 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
-<?
+$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+
 $list = $category->getPendingWorkflowProgressList();
 $items = $list->get();
 if (count($items) > 0) { ?>
@@ -26,7 +27,7 @@ $noitems = true;
 <tr class="ccm-workflow-waiting-for-me-row<?=$wp->getWorkflowProgressID()?>">
 	<td><?=$p->getCollectionName()?></td>
 	<td><a href="<?=Loader::helper('navigation')->getLinkToCollection($p)?>"><?=$p->getCollectionPath()?></a>
-	<td><?=date(DATE_APP_GENERIC_MDYT_FULL, strtotime($wp->getWorkflowProgressDateLastAction()))?></td>
+	<td><?=$dh->formatDateTime($wp->getWorkflowProgressDateLastAction(), true)?></td>
 	<td><a href="javascript:void(0)" title="<?=t('Click for history.')?>" onclick="$(this).parentsUntil('tr').parent().next().show()"><?=$wf->getWorkflowProgressStatusDescription($wp)?></a></td>
 	<td class="ccm-workflow-progress-actions">
 	<form action="<?=$wp->getWorkflowProgressFormAction()?>" method="post">

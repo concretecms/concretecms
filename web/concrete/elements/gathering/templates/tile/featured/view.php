@@ -6,7 +6,7 @@
 
 <div style="position: relative; color: #000; z-index: 5">
 <h2><?=$title?></h2>
-<h5><?=date(DATE_APP_GENERIC_MDYT_FULL, strtotime($date_time))?></h5>
+<h5><?=Core::make('helper/date')->formatDateTime($date_time, true)?></h5>
 <p><?=$description?></p>
 <a href="<?=$link?>" class="btn"><?=t("Read More")?></a>
 </div>
