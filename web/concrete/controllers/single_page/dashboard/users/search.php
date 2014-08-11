@@ -354,10 +354,10 @@ class Search extends DashboardPageController
     {
         $timezones = Loader::helper("date")->getTimezones();
         $result = array();
-        foreach ($timezones as $timezone) {
+        foreach ($timezones as $timezoneID => $timezoneName) {
             $obj = new stdClass();
-            $obj->value = $timezone;
-            $obj->text = $timezone;
+            $obj->value = $timezoneID;
+            $obj->text = $timezoneName;
             $result[] = $obj;
         }
         Loader::helper('ajax')->sendResult($result);
