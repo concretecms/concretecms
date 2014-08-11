@@ -402,6 +402,28 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         }
     }
 
+    public function getPassThruActionAndParameters($parameters)
+    {
+        $method = 'action_' . $parameters[0];
+        $parameters = array_slice($parameters, 1);
+        return array($method, $parameters);
+    }
+
+    public function isValidControllerTask($method, $parameters = array())
+    {
+        if (strpos($method, 'action_') !== 0) { // gotta start with action_
+            return false;
+        }
+        if (is_callable(array($this, $method))) {
+            $r = new \ReflectionMethod(get_class($this), $method);
+            if ($r->getNumberOfParameters() >= count($parameters)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function cacheBlockOutput()
     {
         return $this->btCacheBlockOutput;

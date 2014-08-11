@@ -8,8 +8,16 @@
 
     <? if (count($dates)) { ?>
         <ul class="ccm-block-date-navigation-dates">
+            <li><a href="<?=$view->controller->getDateLink()?>"
+                    <? if ($view->controller->isSelectedDate()) { ?>
+                        class="ccm-block-date-navigation-date-selected"
+                    <? } ?>><?=t('All')?></a></li>
+
             <? foreach($dates as $date) { ?>
-                <li><a href="<?=$view->controller->getDateLink($date)?>"><?=$view->controller->getDateLabel($date)?></a></li>
+                <li><a href="<?=$view->controller->getDateLink($date)?>"
+                        <? if ($view->controller->isSelectedDate($date)) { ?>
+                            class="ccm-block-date-navigation-date-selected"
+                        <? } ?>><?=$view->controller->getDateLabel($date)?></a></li>
             <? } ?>
         </ul>
     <? } else { ?>

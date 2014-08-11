@@ -66,6 +66,37 @@ class Controller extends BlockController
         return $srv->date('F Y', $date);
     }
 
+    public function getPassThruActionAndParameters($parameters)
+    {
+        if (Loader::helper("validation/numbers")->integer($parameters[0])) {
+            // then we're going to treat this as a year.
+            $method = 'action_filter_by_date';
+            $parameters[0] = intval($parameters[0]);
+            if (isset($parameters[1])) {
+                $parameters[1] = intval($parameters[1]);
+            }
+        }
+        return array($method, $parameters);
+    }
+
+    public function action_filter_by_date($year = false, $month = false)
+    {
+        $this->selectedYear = $year;
+        $this->selectedMonth = $month;
+        $this->view();
+    }
+
+    public function isSelectedDate($dateArray = null)
+    {
+        if (isset($this->selectedYear) && isset($this->selectedMonth) && is_array($dateArray)) {
+            return $dateArray['year'] == $this->selectedYear && $dateArray['month'] == $this->selectedMonth;
+        }
+
+        if (!$dateArray && !$this->selectedYear && !$this->selectedMonth) {
+            return true;
+        }
+    }
+
     public function view()
     {
         $pl = new PageList();

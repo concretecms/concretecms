@@ -224,10 +224,53 @@ class Controller extends BlockController
         $this->set('attributeKeys', $attributeKeys);
     }
 
-    public function action_topic($topic = false) {
+    public function action_filter_by_topic($topic = false) {
         $topic = intval($topic);
         $this->list->filterByTopic($topic);
         $this->view();
+    }
+
+    public function action_filter_by_date($year = false, $month = false) {
+        $start = false;
+        $end = false;
+        if ($year && $month) {
+            $last = date('t', strtotime($year . '-' . $month . '-01'));
+            $start = date('Y-m-d H:i:s', strtotime($year . '-' . $month . '-01 00:00:00'));
+            $end = date('Y-m-d H:i:s', strtotime($year . '-' . $month . '-' . $last . ' 23:59:59'));
+        } else {
+            $start = date('Y-m-d H:i:s', strtotime($year . '-01-01 00:00:00'));
+            $end = date('Y-m-d H:i:s', strtotime($year . '-12-31 23:59:59'));
+        }
+
+        $this->list->filterByPublicDate($start, '>=');
+        $this->list->filterByPublicDate($end, '<=');
+        $this->view();
+    }
+
+    public function getPassThruActionAndParameters($parameters)
+    {
+        if ($parameters[0] == 'topic') {
+            $method = 'action_filter_by_topic';
+            $parameters = array_slice($parameters, 1);
+        } else if (Loader::helper("validation/numbers")->integer($parameters[0])) {
+            // then we're going to treat this as a year.
+            $method = 'action_filter_by_date';
+            $parameters[0] = intval($parameters[0]);
+            if (isset($parameters[1])) {
+                $parameters[1] = intval($parameters[1]);
+            }
+        }
+
+        return array($method, $parameters);
+    }
+
+    public function isValidControllerTask($method, $parameters = array())
+    {
+        if (!$this->enableExternalFiltering) {
+            return false;
+        }
+
+        return parent::isValidControllerTask($method, $parameters);
     }
 
     function save($args)

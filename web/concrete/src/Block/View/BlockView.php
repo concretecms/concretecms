@@ -383,9 +383,12 @@ class BlockView extends AbstractView
                     $cnt = $c->getController();
                     $tempParameters = $cnt->getParameters();
                     $action = $cnt->getAction();
-                    if ($action == 'passthru' && is_callable(array($this->controller, 'action_' . $tempParameters[0]))) {
-                        $method = 'action_' . $tempParameters[0];
-                        $parameters = array_slice($tempParameters, 1);
+                    if ($action == 'passthru') {
+                        list($tempMethod, $tempParameters) = $this->controller->getPassThruActionAndParameters($tempParameters);
+                        if ($this->controller->isValidControllerTask($tempMethod, $tempParameters)) {
+                            $method = $tempMethod;
+                            $parameters = $tempParameters;
+                        }
                     }
                 }
             }
