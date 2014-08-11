@@ -397,6 +397,7 @@ class Search extends DashboardPageController
 
         $ui = $this->user;
         if (is_object($ui)) {
+            $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
             $this->requireAsset('core/app/editable-fields');
             $uo = $this->user->getUserObject();
             $groups = array();
@@ -404,7 +405,7 @@ class Search extends DashboardPageController
                 $obj = new stdClass();
                 $obj->gDisplayName = $g->getGroupDisplayName();
                 $obj->gID = $g->getGroupID();
-                $obj->gDateTimeEntered = date(DATE_APP_GENERIC_MDYT, strtotime($g->getGroupDateTimeEntered($this->user)));
+                $obj->gDateTimeEntered = $dh->formatDateTime($g->getGroupDateTimeEntered($this->user));
                 $groups[] = $obj;
             }
             $this->set('groupsJSON', Loader::helper('json')->encode($groups));

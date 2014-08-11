@@ -20,7 +20,7 @@ class DefaultSet extends Set
 
     public static function getUserDateAdded($ui)
     {
-        return date(DATE_APP_DASHBOARD_SEARCH_RESULTS_USERS, strtotime($ui->getUserDateAdded()));
+        return Core::make('helper/date')->formatDateTime($ui->getUserDateAdded());
     }
 
     public function __construct()

@@ -165,14 +165,15 @@ class Duration extends Object
 
     public function getTextRepresentation()
     {
+        $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
         $text = '';
         if ($this->getStartDate() != '') {
-            $text .= t('Starts %s. ', date(DATE_APP_GENERIC_MDYT, strtotime($this->getStartDate())));
+            $text .= t('Starts %s. ', $dh->formatDateTime($this->getStartDate()));
         } else {
             $text .= t('Already Started. ');
         }
         if ($this->getEndDate() != '') {
-            $text .= t('Ends %s. ', date(DATE_APP_GENERIC_MDYT, strtotime($this->getEndDate())));
+            $text .= t('Ends %s. ', $dh->formatDateTime($this->getEndDate()));
         } else {
             $text .= t('No End Date. ');
         }

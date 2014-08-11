@@ -1,10 +1,10 @@
-<?
-	defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 
 	if (!Loader::helper('validation/numbers')->integer($_GET['cID'])) {
 		die(t('Access Denied'));
 	}
 
+	$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 	$valt = Loader::helper('validation/token');
 	$fh = Loader::helper('file');
 	
@@ -401,7 +401,7 @@ $("button[name=vRemove]").click(function() {
 			print $v->getVersionApproverUserName();
 			
 			?></td>
-		<td colspan="2"><?=date(DATE_APP_PAGE_VERSIONS, strtotime($v->getVersionDateCreated('user')))?></td>
+		<td colspan="2"><?=$dh->formatDateTime($v->getVersionDateCreated())?></td>
 	</tr>	
 	<? } ?>
 	</table>

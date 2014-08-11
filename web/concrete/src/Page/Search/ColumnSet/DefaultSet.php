@@ -11,12 +11,12 @@ class DefaultSet extends Set
 
     public static function getCollectionDatePublic($c)
     {
-        return date(DATE_APP_DASHBOARD_SEARCH_RESULTS_PAGES, strtotime($c->getCollectionDatePublic()));
+        return Core::make('helper/date')->formatDateTime($c->getCollectionDatePublic());
     }
 
     public static function getCollectionDateModified($c)
     {
-        return date(DATE_APP_DASHBOARD_SEARCH_RESULTS_PAGES, strtotime($c->getCollectionDateLastModified()));
+        return Core::make('helper/date')->formatDateTime($c->getCollectionDateLastModified());
     }
 
     public function getCollectionAuthor($c)

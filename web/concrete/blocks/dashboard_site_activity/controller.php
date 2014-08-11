@@ -28,16 +28,16 @@ class Controller extends BlockController
     {
         $u = new User();
         $ui = UserInfo::getByID($u->getUserID());
-        $dh = Loader::helper('date');
+        $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
         if (is_object($ui)) {
-            $this->set('uLastLogin', $dh->date(DATE_APP_GENERIC_MDYT, $ui->getLastLogin('user')));
+            $this->set('uLastLogin', $dh->formatDateTime($ui->getLastLogin()));
             $this->set('uName', $ui->getUserName());
-            $this->set('lastEditSite', $dh->date(DATE_APP_GENERIC_MDYT, strtotime(PageStatistics::getSiteLastEdit('user'))));
+            $this->set('lastEditSite', $dh->formatDateTime(PageStatistics::getSiteLastEdit()));
             $llu = UserStatistics::getLastLoggedInUser();
             if ($llu->getUserID() == $u->getUserID()) {
                 $this->set('lastLoginSite', t('Your login is the most recent.'));
             } else {
-                $this->set('lastLoginSite', $dh->date(DATE_APP_GENERIC_MDYT, $llu->getLastLogin()));
+                $this->set('lastLoginSite', $dh->formatDateTime($llu->getLastLogin()));
             }
         }
         $this->set('totalFormSubmissions', FormBlockStatistics::getTotalSubmissions());

@@ -13,7 +13,7 @@ class Surveys extends DashboardPageController
         if (empty($inputTime)) {
             return '';
         }
-        $dh = Loader::helper('date');
+        $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
         $inputTime = $dh->getLocalDateTime($inputTime);
         $timestamp = strtotime($inputTime);
         if ($timestamp >= strtotime(date('n/d/y'))) {
@@ -21,7 +21,7 @@ class Surveys extends DashboardPageController
             return t(/*i18n %s is a time */'Today at %s', $dh->date(DATE_APP_GENERIC_T, $timestamp));
         } else {
             // If day in past
-            return $dh->date(DATE_APP_GENERIC_MDYT, $timestamp);
+            return $dh->formatDateTime($timestamp);
         }
     }
 
