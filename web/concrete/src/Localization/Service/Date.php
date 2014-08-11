@@ -152,7 +152,52 @@ class Date
 	 */
     public function getTimezones()
     {
-        return array_combine(\DateTimeZone::listIdentifiers(),DateTimeZone::listIdentifiers());
+        $locale = Localization::activeLocale();
+        $areaTranslations = array();
+        $localizedTimezones = array();
+        if($locale != 'en_US') {
+            $localizedTerritoryNames = \Zend_Locale::getTranslationList('Territory', $locale);
+            if(is_array($localizedTerritoryNames)) {
+                foreach(\Zend_Locale::getTranslationList('Territory', 'en_US') as $territoryID => $territoryEnglishName) {
+                    if(array_key_exists($territoryID, $localizedTerritoryNames)) {
+                        $areaTranslations[$territoryEnglishName] = $localizedTerritoryNames[$territoryID];
+                    }
+                }
+            }
+            $localizedTimezones = Zend_Locale::getTranslationList('CityToTimezone', $locale);
+            if(!is_array($localizedTimezones)) {
+                $localizedTimezones = array();
+            }
+        }
+        $areaTranslations = array_merge($areaTranslations, array(
+            'America' => t('America'),
+            'Arctic' => t('Arctic'),
+            'Atlantic' => t('Atlantic Ocean'),
+            'Indian' => t('Indian Ocean'),
+            'Pacific' => t('Pacific Ocean')
+        ));
+        $timeZones = array();
+        foreach(\DateTimeZone::listIdentifiers()as $timeZoneID) {
+            $timezoneName = $timeZoneID;
+            $p = strpos($timeZoneID, '/');
+            if(($p !== false) && ($p > 0)) {
+                $area = substr($timeZoneID, 0, $p);
+                $place = substr($timeZoneID, $p + 1);
+                if(array_key_exists($area, $areaTranslations)) {
+                    $area = $areaTranslations[$area];
+                }
+                else {
+                    die($area);
+                }
+                if(array_key_exists($timeZoneID, $localizedTimezones)) {
+                    $place = $localizedTimezones[$timeZoneID];
+                }
+                $timezoneName = $area . '/' . $place;
+            }
+            $timeZones[$timeZoneID] = $timezoneName;
+        }
+        natcasesort($timeZones);
+        return $timeZones;
     }
 
     /**
