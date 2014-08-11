@@ -16,7 +16,7 @@ class CollectionAttributeType extends Type {
 			$ac = new CollectionAttributeControl();
 			$ac->setAttributeKeyID($ak->getAttributeKeyID());
 			$ac->setPageTypeComposerControlIconSRC($ak->getAttributeKeyIconSRC());
-			$ac->setPageTypeComposerControlName($ak->getAttributeKeyName());
+			$ac->setPageTypeComposerControlName($ak->getAttributeKeyDisplayName());
 			$objects[] = $ac;
 		}
 		return $objects;
@@ -27,7 +27,7 @@ class CollectionAttributeType extends Type {
 		$ax = new CollectionAttributeControl();
 		$ax->setAttributeKeyID($ak->getAttributeKeyID());
 		$ax->setPageTypeComposerControlIconSRC($ak->getAttributeKeyIconSRC($ak));
-		$ax->setPageTypeComposerControlName($ak->getAttributeKeyName());
+		$ax->setPageTypeComposerControlName($ak->getAttributeKeyDisplayName());
 		return $ax;
 	}
 

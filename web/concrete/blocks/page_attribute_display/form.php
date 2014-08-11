@@ -25,7 +25,7 @@ print Core::make('helper/concrete/ui')->tabs(array(
     <div class="form-group">
         <label class="control-label"><?php  echo t('Format of Date Properties')?></label>
         <input type="text" class="form-control" name="dateFormat" value="<?php  echo $this->controller->dateFormat ?>"/>
-        <div class="text-muted"><? echo sprintf(t('See the formatting options at %s.'), '<a href="http://www.php.net/date" target="_blank">php.net/date</a>'); ?></div>
+        <div class="text-muted"><?php echo sprintf(t('See the formatting options at %s.'), '<a href="http://www.php.net/date" target="_blank">php.net/date</a>'); ?></div>
     </div>
     <fieldset>
         <legend><?=t('Thumbnail')?></legend>
@@ -47,7 +47,7 @@ print Core::make('helper/concrete/ui')->tabs(array(
         <optgroup label="<?php  echo t('Page Values');?>">
         <?php
         $corePageValues = $this->controller->getAvailablePageValues();
-        foreach(array_keys($corePageValues) as $cpv) {
+        foreach (array_keys($corePageValues) as $cpv) {
             echo "<option value=\"".$cpv."\" ".($cpv==$this->controller->attributeHandle?"selected=\"selected\"":"").">".
             $corePageValues[$cpv]."</option>\n";
         }
@@ -56,9 +56,9 @@ print Core::make('helper/concrete/ui')->tabs(array(
         <optgroup label="<?php  echo t('Page Attributes');?>">
         <?php
         $aks = $this->controller->getAvailableAttributes();
-        foreach($aks as $ak) {
+        foreach ($aks as $ak) {
             echo "<option value=\"".$ak->getAttributeKeyHandle()."\" ".($ak->getAttributeKeyHandle()==$this->controller->attributeHandle?"selected=\"selected\"":"").">".
-            $ak->getAttributeKeyName()."</option>\n";
+            $ak->getAttributeKeyDisplayName()."</option>\n";
         }
         ?>
         </optgroup>
