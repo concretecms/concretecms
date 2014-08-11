@@ -1,6 +1,8 @@
-<?
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
 use \Concrete\Core\File\StorageLocation as FileStorageLocation;
+
+$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>
 
 <div class="ccm-ui">
@@ -80,7 +82,7 @@ if (is_object($oc)) {
 </div>
 <div class="row">
 	<div class="col-md-3"><p><?=t('Date Added')?></p></div>
-	<div class="col-md-9"><p><?=t('Added by <strong>%s</strong> on %s', $fv->getAuthorName(), $f->getDateAdded()->format(DATE_APP_FILE_PROPERTIES))?></p></div>
+	<div class="col-md-9"><p><?=t('Added by <strong>%s</strong> on %s', $fv->getAuthorName(), $dh->formatDateTime($f->getDateAdded(), true))?></p></div>
 </div>
 <?
 $fsl = $f->getFileStorageLocationObject();
@@ -219,7 +221,7 @@ if (count($attribs) > 0) { ?>
 				?>
 				</td>
 			<td><?=$fvv->getAuthorName()?></td>
-			<td><?=$fvv->getDateAdded()->format(DATE_APP_FILE_VERSIONS)?></td>
+			<td><?=$dh->formatDateTime($fvv->getDateAdded(), true)?></td>
 			<? if ($fp->canEditFileContents()) { ?>
 				<td><a data-action="delete-version" data-file-version-id="<?=$fvv->getFileVersionID()?>" href="javascript:void(0)"><i class="fa fa-trash-o"></i></a></td>
 			<? } ?>
@@ -273,7 +275,7 @@ if (count($attribs) > 0) { ?>
 				} 
 				?>
 			</td>
-			<td><?=$dateHelper->date(DATE_APP_FILE_DOWNLOAD, strtotime($download['timestamp']))?></td>
+			<td><?=$dh->formatDateTime($download['timestamp'], true)?></td>
 			<td><?=intval($download['fvID'])?></td>
 		</tr>
 		<? } ?>

@@ -83,10 +83,11 @@ class Inbox extends AccountPageController
         $mailbox = UserPrivateMessageMailbox::get($ui, $msgMailboxID);
         $msg = UserPrivateMessage::getByID($msgID, $mailbox);
         if ($ui->canReadPrivateMessage($msg)) {
+            $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
             $msg->markAsRead();
             $this->set('subject', $msg->getFormattedMessageSubject());
             $this->set('msgContent', $msg->getMessageBody());
-            $this->set('dateAdded', $msg->getMessageDateAdded('user', DATE_APP_GENERIC_MDYT_FULL));
+            $this->set('dateAdded', $dh->formatDateTime($msg->getMessageDateAdded(), true));
             $this->set('author', $msg->getMessageAuthorObject());
             $this->set('msg', $msg);
             $this->set('box', $box);
@@ -127,6 +128,7 @@ class Inbox extends AccountPageController
 
     public function reply($boxID, $msgID)
     {
+        $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
         $msg = UserPrivateMessage::getByID($msgID);
         $uID = $msg->getMessageRelevantUserID();
         $this->validateUser($uID);
@@ -138,7 +140,7 @@ class Inbox extends AccountPageController
         $this->set('msgSubject', $msg->getFormattedMessageSubject());
 
         $body = "\n\n\n" . $msg->getMessageDelimiter() . "\n";
-        $body .= t("From: %s\nDate Sent: %s\nSubject: %s", $msg->getMessageAuthorName(), $msg->getMessageDateAdded('user', DATE_APP_GENERIC_MDYT_FULL), $msg->getFormattedMessageSubject());
+        $body .= t("From: %s\nDate Sent: %s\nSubject: %s", $msg->getMessageAuthorName(), $dh->formatDateTime($msg->getMessageDateAdded(), true), $msg->getFormattedMessageSubject());
         $body .= "\n\n" . $msg->getMessageBody();
         $this->set('msgBody', $body);
     }

@@ -8,6 +8,8 @@ if (is_object($composer)) {
 	}
 }
 
+$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+
 if (is_object($discussion)) { ?>
 
 	<div class="ccm-discussion" data-discussion-block-id="<?=$b->getBlockID()?>">
@@ -66,9 +68,9 @@ if (is_object($discussion)) { ?>
 				</div>
 				<div class="ccm-discussion-topic-details">
 					<h3><a href="<?=Loader::helper('navigation')->getLinkToCollection($t)?>"><?=$t->getCollectionName()?></a></h3>
-					<p><?=t('Topic Posted on %s.', date(DATE_APP_GENERIC_MDYT_FULL, strtotime($t->getCollectionDatePublic())))?>
+					<p><?=t('Topic Posted on %s.', $dh->formatDateTime($t->getCollectionDatePublic(), true))?>
 					<? if ($replies > 0) { ?>
-						<?=t('Last Message Posted on %s.', date(DATE_APP_GENERIC_MDYT_FULL, strtotime($cnv->getConversationDateLastMessage())))?>
+						<?=t('Last Message Posted on %s.', $dh->formatDateTime($cnv->getConversationDateLastMessage(), true))?>
 					<? } ?>
 					</p>
 				</div>
