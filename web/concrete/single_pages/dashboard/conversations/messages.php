@@ -154,7 +154,7 @@ $ip = Loader::helper('validation/ip'); ?>
 		</div>
 		</td>
 		<td>
-			<?=$msg->getConversationMessageDateTimeOutput(array(DATE_APP_GENERIC_MDY_FULL . ' H:i:s'));?> 
+			<?=$msg->getConversationMessageDateTimeOutput('mdy_full_ts');?> 
 			<p><?
 				if(is_object($ui)) {
 					echo tc(/*i18n: %s is the name of the author */ 'Authored', 'By %s', $ui->getUserDisplayName());

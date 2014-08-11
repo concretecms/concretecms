@@ -136,9 +136,10 @@ class Message extends Object
     }
     public function getConversationMessageDateTimeOutput($format = 'default')
     {
+        $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
         if (is_array($format)) { // custom date format
 
-            return tc('Message posted date', 'Posted on %s', Loader::helper('date')->date($format[0], strtotime($this->cnvMessageDateCreated)));
+            return tc('Message posted date', 'Posted on %s', $dh->formatCustom($format[0], $this->cnvMessageDateCreated));
         }
         switch ($format) {
             case 'elapsed': // 3 seconds ago, 4 days ago, etc.
@@ -177,11 +178,19 @@ class Message extends Object
                 }
                 break;
             case 'mdy':
-                return tc('Message posted date', 'Posted on %s', Loader::helper('date')->date(DATE_APP_GENERIC_MDY, strtotime($this->cnvMessageDateCreated)));
+                return tc('Message posted date', 'Posted on %s', $dh->formatDate($this->cnvMessageDateCreated);
             case 'mdy_full':
-                return tc('Message posted date', 'Posted on %s', Loader::helper('date')->date(DATE_APP_GENERIC_MDY_FULL, strtotime($this->cnvMessageDateCreated)));
+                return tc('Message posted date', 'Posted on %s', $dh->formatDate($this->cnvMessageDateCreated, true);
+            case 'mdy_t':
+                return tc('Message posted date', 'Posted on %s', $dh->formatDateTime($this->cnvMessageDateCreated);
+            case 'mdy_full_t':
+                return tc('Message posted date', 'Posted on %s', $dh->formatDateTime($this->cnvMessageDateCreated, true);
+            case 'mdy_ts':
+                return tc('Message posted date', 'Posted on %s', $dh->formatDateTime($this->cnvMessageDateCreated, false, true);
+            case 'mdy_full_ts':
+                return tc('Message posted date', 'Posted on %s', $dh->formatDateTime($this->cnvMessageDateCreated, true, true);
             default:
-                return tc('Message posted date', 'Posted on %s', Loader::helper('date')->date(DATE_APP_GENERIC_MDY_FULL, strtotime($this->cnvMessageDateCreated)));
+                return tc('Message posted date', 'Posted on %s', $dh->formatDate($this->cnvMessageDateCreated, true);
                 break;
         }
     }
