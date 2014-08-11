@@ -4,6 +4,7 @@ $rssUrl = $showRss ? $controller->getRssUrl($b) : '';
 $th = Loader::helper('text');
 //$ih = Loader::helper('image'); //<--uncomment this line if displaying image attributes (see below)
 //Note that $nh (navigation helper) is already loaded for us by the controller (for legacy reasons)
+$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>
 
 <div class="ccm-block-page-list-wrapper">
@@ -38,7 +39,7 @@ $th = Loader::helper('text');
             $entryClasses = 'ccm-block-page-list-page-entry-horizontal';
         }
 
-        $date = $page->getCollectionDatePublic(DATE_APP_GENERIC_MDYT_FULL);
+        $date = $dh->formatDateTime($page->getCollectionDatePublic(), true);
 
 
 		//Other useful page data...

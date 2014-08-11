@@ -1,5 +1,6 @@
-<?
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>
 
 <h4><?=t('Recent Page Views')?></h3>
@@ -117,7 +118,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			}
 			?>
 		</td>
-		<td><?=date(DATE_APP_GENERIC_MDYT, strtotime($download['timestamp']))?></td>
+		<td><?=$dh->formatDateTime($download['timestamp'])?></td>
 	</tr>
 	<? } ?>
 <? } ?>

@@ -1,4 +1,8 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+
+?>
 <form class="form-inline" action="<?php echo $view->action('view')?>" method="get">
     <div class="ccm-dashboard-header-buttons">
 	    <a href="<?=View::url('/dashboard/users/points/assign')?>" class="btn btn-primary"><?=t('Add Points')?></a>
@@ -42,7 +46,7 @@ if (count($entries) > 0) { ?>
     		<td><? if (is_object($ui)) { ?><?php echo $ui->getUserName()?><? } ?></td>
     		<td><? if (is_object($action)) { ?><?=$action->getUserPointActionName()?><? } ?></td>
     		<td><?php echo number_format($up->getUserPointEntryValue())?></td>
-    		<td><?php echo date(DATE_APP_GENERIC_MDYT, strtotime($up->getUserPointEntryTimestamp()));?></td>
+    		<td><?php echo $dh->formatDateTime($up->getUserPointEntryTimestamp());?></td>
     		<td><?=$up->getUserPointEntryDescription()?></td>
     		<td style="Text-align: right">
     		    <a href="<?=$view->action('deleteEntry', $up->getUserPointEntryID())?>" class="btn btn-sm btn-danger"><?=t('Delete')?></a>
