@@ -2,7 +2,7 @@
 
 /* @var $jh JsonHelper */
 $json = Core::make('helper/json');
-/* @var $dh DateHelper */
+/* @var $dh \Concrete\Core\Localization\Service\Date */
 $dh = Core::make('helper/date');
 
 ?>
@@ -71,14 +71,14 @@ $dh = Core::make('helper/date');
                 
     			<td class="jDateLastRun"><?
     				if ($j->getJobStatus() == 'RUNNING') {
-    					$runtime = $dh->date(DATE_APP_GENERIC_MDYT_FULL_SECONDS, strtotime($j->getJobDateLastRun()));
+    					$runtime = $dh->formatDateTime($j->getJobDateLastRun(), true, true);
     					echo ("<strong>");
     					echo t("Running since %s", $runtime);
     					echo ("</strong>");
     				} else if($j->getJobDateLastRun() == '' || substr($j->getJobDateLastRun(), 0, 4) == '0000') {
     					echo t('Never');
     				} else {
-    					$runtime = $dh->date(DATE_APP_GENERIC_MDYT_FULL_SECONDS, strtotime($j->getJobDateLastRun()) );
+    					$runtime = $dh->formatDateTime($j->getJobDateLastRun(), true, true);
     					echo $runtime;
     				}
     			?></td>

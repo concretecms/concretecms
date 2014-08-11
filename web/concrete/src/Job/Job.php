@@ -181,7 +181,7 @@ abstract class Job extends Object
         $obj = new stdClass();
         $obj->error = $resultCode;
         $obj->result = $resultMsg;
-        $obj->jDateLastRun = date(DATE_APP_GENERIC_MDYT_FULL_SECONDS);
+        $obj->jDateLastRun = Core::make('helper/date')->formatDateTime('now', true, true);
         $obj->jHandle = $this->getJobHandle();
         $obj->jID = $this->getJobID();
 

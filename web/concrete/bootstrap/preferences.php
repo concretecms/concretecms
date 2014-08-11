@@ -111,7 +111,6 @@ define('PAGE_PERMISSION_IDENTIFIER_USE_PERMISSION_COLLECTION_ID',
  * localization has been initialized.
  * ----------------------------------------------------------------------------
  */
-defined('DATE_APP_GENERIC_MDYT_FULL_SECONDS') or define('DATE_APP_GENERIC_MDYT_FULL_SECONDS', t('F d, Y \a\t g:i:s A'));
 defined('DATE_APP_GENERIC_MDYT') or define('DATE_APP_GENERIC_MDYT', t('n/j/Y \a\t g:i A'));
 defined('DATE_APP_GENERIC_MDY') or define('DATE_APP_GENERIC_MDY', t('n/j/Y'));
 defined('DATE_APP_GENERIC_MDY_FULL') or define('DATE_APP_GENERIC_MDY_FULL', t('F j, Y'));
