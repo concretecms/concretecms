@@ -155,17 +155,17 @@ class Date
         $locale = Localization::activeLocale();
         $areaTranslations = array();
         $localizedTimezones = array();
-        if($locale != 'en_US') {
+        if ($locale != 'en_US') {
             $localizedTerritoryNames = \Zend_Locale::getTranslationList('Territory', $locale);
-            if(is_array($localizedTerritoryNames)) {
-                foreach(\Zend_Locale::getTranslationList('Territory', 'en_US') as $territoryID => $territoryEnglishName) {
-                    if(array_key_exists($territoryID, $localizedTerritoryNames)) {
+            if (is_array($localizedTerritoryNames)) {
+                foreach (\Zend_Locale::getTranslationList('Territory', 'en_US') as $territoryID => $territoryEnglishName) {
+                    if (array_key_exists($territoryID, $localizedTerritoryNames)) {
                         $areaTranslations[$territoryEnglishName] = $localizedTerritoryNames[$territoryID];
                     }
                 }
             }
             $localizedTimezones = Zend_Locale::getTranslationList('CityToTimezone', $locale);
-            if(!is_array($localizedTimezones)) {
+            if (!is_array($localizedTimezones)) {
                 $localizedTimezones = array();
             }
         }
@@ -177,16 +177,16 @@ class Date
             'Pacific' => t('Pacific Ocean')
         ));
         $timeZones = array();
-        foreach(\DateTimeZone::listIdentifiers()as $timeZoneID) {
+        foreach (\DateTimeZone::listIdentifiers()as $timeZoneID) {
             $timezoneName = $timeZoneID;
             $p = strpos($timeZoneID, '/');
-            if(($p !== false) && ($p > 0)) {
+            if (($p !== false) && ($p > 0)) {
                 $area = substr($timeZoneID, 0, $p);
                 $place = substr($timeZoneID, $p + 1);
-                if(array_key_exists($area, $areaTranslations)) {
+                if (array_key_exists($area, $areaTranslations)) {
                     $area = $areaTranslations[$area];
                 }
-                if(array_key_exists($timeZoneID, $localizedTimezones)) {
+                if (array_key_exists($timeZoneID, $localizedTimezones)) {
                     $place = $localizedTimezones[$timeZoneID];
                 }
                 $timezoneName = $area . '/' . $place;
@@ -194,6 +194,7 @@ class Date
             $timeZones[$timeZoneID] = $timezoneName;
         }
         natcasesort($timeZones);
+
         return $timeZones;
     }
 
@@ -254,6 +255,51 @@ class Date
     }
 
     /**
+     * Returns the normalized timezone identifier
+     * @param string $timezone The timezone to retrieve. Special values are:<ul>
+     *    <li>'system' (default) for the current system timezone</li>
+     *    <li>'user' for the user's timezone</li>
+     *    <li>'app' for the app's timezone</li>
+     *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
+     * </ul>
+     * @return string
+     */
+    public function getTimezone($timezone)
+    {
+        switch ($timezone) {
+            case 'system':
+                $timezone = defined('APP_TIMEZONE_SERVER') ? APP_TIMEZONE_SERVER : date_default_timezone_get();
+                break;
+            case 'app':
+                $timezone = defined('APP_TIMEZONE') ? APP_TIMEZONE : date_default_timezone_get();
+                break;
+            case 'user':
+                $tz = null;
+                if (defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) {
+                    $u = null;
+                    $request = C5_ENVIRONMENT_ONLY ? Request::getInstance() : null;
+                    if ($request && $request->hasCustomRequestUser()) {
+                        $u = $request->getCustomRequestUser();
+                    } elseif (User::isLoggedIn()) {
+                        $u = new User();
+                    }
+                    if ($u) {
+                        $tz = $u->getUserTimezone();
+                    }
+                }
+                if ($tz) {
+                    $timezone = $tz;
+                }
+                else {
+                    $timezone = $this->getTimezone('app');
+                }
+                break;
+        }
+
+        return $timezone;
+    }
+
+    /**
      * Convert a date to a Zend_Date instance.
      * @param string|\DateTime|Zend_Date|int $value It can be:<ul>
      *    <li>the special value 'now' (default) to return the current date/time</li>
@@ -298,36 +344,7 @@ class Date
             return null;
         }
         $zendDate->setLocale(Localization::activeLocale());
-        switch ($toTimezone) {
-            case 'system':
-                $tz = defined('APP_TIMEZONE_SERVER') ? APP_TIMEZONE_SERVER : date_default_timezone_get();
-                break;
-            case 'app':
-                $tz = defined('APP_TIMEZONE') ? APP_TIMEZONE : date_default_timezone_get();
-                break;
-            case 'user':
-                $tz = null;
-                if (defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) {
-                    $u = null;
-                    $request = C5_ENVIRONMENT_ONLY ? Request::getInstance() : null;
-                    if ($request && $request->hasCustomRequestUser()) {
-                        $u = $request->getCustomRequestUser();
-                    } elseif (User::isLoggedIn()) {
-                        $u = new User();
-                    }
-                    if ($u) {
-                        $tz = $u->getUserTimezone();
-                    }
-                }
-                if (!$tz) {
-                    $tz = defined('APP_TIMEZONE') ? APP_TIMEZONE : date_default_timezone_get();
-                }
-                break;
-            default:
-                $tz = $toTimezone;
-                break;
-        }
-        $zendDate->setTimezone($tz);
+        $zendDate->setTimezone($this->getTimezone($toTimezone));
 
         return $zendDate;
     }
