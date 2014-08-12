@@ -22,7 +22,7 @@ $form = Loader::helper('form');
 			<form method="post" class="main-reply-form">
 			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
 			<div class="ccm-conversation-message-form">
-				<div class="ccm-conversation-errors alert alert-error"></div>
+				<div class="ccm-conversation-errors alert alert-danger"></div>
 				<? $editor->outputConversationEditorAddMessageForm(); ?>
 				<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
 				<?php echo $form->hidden('cID', $cID) ?>
@@ -33,7 +33,7 @@ $form = Loader::helper('form');
 			</form>
 			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload">
-					<div class="ccm-conversation-errors alert alert-error"></div>
+					<div class="ccm-conversation-errors alert alert-danger"></div>
 					<?php $val->output('add_conversations_file'); ?>
 					<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
 					<?php echo $form->hidden('cID', $cID) ?>
@@ -46,18 +46,18 @@ $form = Loader::helper('form');
 			<form method="post" class="aux-reply-form">
 			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
 			<div class="ccm-conversation-message-form">
-				<div class="ccm-conversation-errors alert alert-error"></div>
+				<div class="ccm-conversation-errors alert alert-danger"></div>
 				<? $editor->outputConversationEditorReplyMessageForm(); ?>
 				<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
 				<?php echo $form->hidden('cID', $cID) ?>
 				<?php echo $form->hidden('bID', $bID) ?>	
 				<button type="btn btn-primary" data-submit="conversation-message" class="pull-right btn btn-primary"><?=t('Reply')?> </button>
-				<button type="button" class="ccm-conversation-attachment-toggle btn btn-default" href="#" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
+				<button type="button" class="ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
 			</div>
 			</form>
 			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload-reply">
-					<div class="ccm-conversation-errors alert alert-error"></div>
+					<div class="ccm-conversation-errors alert alert-danger"></div>
 					<?php $val->output('add_conversations_file'); ?>
 					<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
 					<?php echo $form->hidden('cID', $cID) ?>
@@ -125,7 +125,7 @@ $form = Loader::helper('form');
 			<form method="post" class="main-reply-form">
 			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
 			<div class="ccm-conversation-message-form">
-				<div class="ccm-conversation-errors alert alert-error"></div>
+				<div class="ccm-conversation-errors alert alert-danger"></div>
 				<? $editor->outputConversationEditorAddMessageForm(); ?>
 				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Reply')?> </button>
 				<button type="button" class="ccm-conversation-attachment-toggle" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
@@ -136,7 +136,7 @@ $form = Loader::helper('form');
 			</form>
 			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload">
-					<div class="ccm-conversation-errors alert alert-error"></div>
+					<div class="ccm-conversation-errors alert alert-danger"></div>
 					<?php $val->output('add_conversations_file'); ?>
 					<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
 					<?php echo $form->hidden('cID', $cID) ?>
@@ -149,7 +149,7 @@ $form = Loader::helper('form');
 			<form method="post" class="aux-reply-form">
 			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
 			<div class="ccm-conversation-message-form">
-				<div class="ccm-conversation-errors alert alert-error"></div>
+				<div class="ccm-conversation-errors alert alert-danger"></div>
 				<? $editor->outputConversationEditorReplyMessageForm(); ?>
 				<button type="button" data-submit="conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Reply')?></button>
 				<button type="button" class="ccm-conversation-attachment-toggle" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
@@ -160,7 +160,7 @@ $form = Loader::helper('form');
 			</form>
 			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload-reply">
-					<div class="ccm-conversation-errors alert alert-error"></div>
+					<div class="ccm-conversation-errors alert alert-danger"></div>
 					<?php $val->output('add_conversations_file'); ?>
 					<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
 					<?php echo $form->hidden('cID', $cID) ?>

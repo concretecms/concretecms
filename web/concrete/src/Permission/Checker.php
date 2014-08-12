@@ -34,7 +34,7 @@ class Checker {
 	
 
 	public function __construct($object = false) {
-		if ($object) { 
+		if ($object) {
 			$this->response = PermissionResponse::getResponse($object);
 			$r = $this->response->testForErrors();
 			if ($r) {

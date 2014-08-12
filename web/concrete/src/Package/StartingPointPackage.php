@@ -4,6 +4,7 @@ namespace Concrete\Core\Package;
 use Cache;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use AuthenticationType;
+use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
 use Loader;
 use Package as BasePackage;
 use GroupTree;
@@ -312,7 +313,56 @@ class StartingPointPackage extends BasePackage {
 			$pt = $pk->getPermissionAssignmentObject();
 			$pt->assignPermissionAccess($pa);
 		}
-	}
+
+        // conversation permissions
+        $messageAuthorEntity = ConversationMessageAuthorEntity::getOrCreate();
+        $guestEntity = GroupPermissionAccessEntity::getOrCreate($g1);
+        $registeredEntity = GroupPermissionAccessEntity::getOrCreate($g2);
+
+        $pk = PermissionKey::getByHandle('add_conversation_message');
+        $pa = PermissionAccess::create($pk);
+        $pa->addListItem($guestEntity);
+        $pt = $pk->getPermissionAssignmentObject();
+        $pt->assignPermissionAccess($pa);
+
+        $pk = PermissionKey::getByHandle('add_conversation_message_attachments');
+        $pa = PermissionAccess::create($pk);
+        $pa->addListItem($guestEntity);
+        $pt = $pk->getPermissionAssignmentObject();
+        $pt->assignPermissionAccess($pa);
+
+        $pk = PermissionKey::getByHandle('edit_conversation_message');
+        $pa = PermissionAccess::create($pk);
+        $pa->addListItem($messageAuthorEntity);
+        $pa->addListItem($adminGroupEntity);
+        $pt = $pk->getPermissionAssignmentObject();
+        $pt->assignPermissionAccess($pa);
+
+        $pk = PermissionKey::getByHandle('delete_conversation_message');
+        $pa = PermissionAccess::create($pk);
+        $pa->addListItem($messageAuthorEntity);
+        $pa->addListItem($adminGroupEntity);
+        $pt = $pk->getPermissionAssignmentObject();
+        $pt->assignPermissionAccess($pa);
+
+        $pk = PermissionKey::getByHandle('rate_conversation_message');
+        $pa = PermissionAccess::create($pk);
+        $pa->addListItem($registeredEntity);
+        $pa->addListItem($adminGroupEntity);
+        $pt = $pk->getPermissionAssignmentObject();
+        $pt->assignPermissionAccess($pa);
+
+        $permissions = array('edit_conversation_permissions', 'flag_conversation_message', 'approve_conversation_message');
+        foreach($permissions as $pkHandle) {
+            $pk = PermissionKey::getByHandle($pkHandle);
+            $pa = PermissionAccess::create($pk);
+            $pa->addListItem($adminGroupEntity);
+            $pt = $pk->getPermissionAssignmentObject();
+            $pt->assignPermissionAccess($pa);
+        }
+
+
+    }
 
 	public static function hasCustomList() {
 		$fh = Loader::helper('file');

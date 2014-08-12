@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Conversation\Rating;
+use Concrete\Core\Conversation\Message\Message;
 use \Concrete\Core\Foundation\Object;
 use Loader;
 use \Concrete\Core\Package\PackageList;
@@ -7,7 +8,7 @@ use Core;
 abstract class Type extends Object {
 
 	abstract public function outputRatingTypeHTML();
-	abstract public function adjustConversationMessageRatingTotalScore(ConversationMessage $message);
+	abstract public function adjustConversationMessageRatingTotalScore(Message $message);
 	abstract public function rateMessage();
 	
 	/** Returns the list of all conversation rating types

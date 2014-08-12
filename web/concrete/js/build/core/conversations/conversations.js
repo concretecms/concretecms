@@ -566,7 +566,7 @@
 						return false;
 					}
 					if (r.error) {
-						obj.handlePostError($form, r.messages);
+						obj.handlePostError($form, r.errors);
 						return false;
 					}
 					$('.preview.processing').each(function(){

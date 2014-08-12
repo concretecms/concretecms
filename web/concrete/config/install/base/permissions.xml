@@ -20,6 +20,8 @@
         <category handle="group_tree_node" package=""/>
         <category handle="topic_category_tree_node" package=""/>
         <category handle="topic_tree_node" package=""/>
+        <category handle="conversation" package=""/>
+        <category handle="conversation_message" package=""/>
     </permissioncategories>
 
     <permissionkeys>
@@ -103,6 +105,16 @@
         <!-- topics //-->
         <permissionkey handle="view_topic_tree_node" name="View Topic Tree Node" description="" package="" category="topic_tree_node" />
         <permissionkey handle="view_topic_category_tree_node" name="View Topic Category Tree Node" description="" package="" category="topic_category_tree_node" />
+
+        <!-- conversations //-->
+        <permissionkey handle="add_conversation_message" name="Add Message to Conversation" description="" package="" category="conversation" />
+        <permissionkey handle="add_conversation_message_attachments" name="Add Message Attachments" description="" package="" category="conversation" />
+        <permissionkey handle="edit_conversation_permissions" name="Edit Conversation Permissions" description="" package="" category="conversation" />
+        <permissionkey handle="delete_conversation_message" name="Delete Message" description="" package="" category="conversation" />
+        <permissionkey handle="edit_conversation_message" name="Edit Message" description="" package="" category="conversation" />
+        <permissionkey handle="rate_conversation_message" name="Rate Message" description="" package="" category="conversation" />
+        <permissionkey handle="flag_conversation_message" name="Flag Message" description="" package="" category="conversation" />
+        <permissionkey handle="approve_conversation_message" name="Approve Message" description="" package="" category="conversation" />
 
         <!-- users //-->
         <permissionkey handle="edit_user_properties" has-custom-class="true" name="Edit User Details" package="" category="user">
@@ -345,6 +357,12 @@
             <categories>
                 <category handle="file_set" />
                 <category handle="file" />
+            </categories>
+        </permissionaccessentitytype>
+        <permissionaccessentitytype handle="conversation_message_author" name="Message Author" package="">
+            <categories>
+                <category handle="conversation" />
+                <category handle="conversation_message" />
             </categories>
         </permissionaccessentitytype>
     </permissionaccessentitytypes>

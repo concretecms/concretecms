@@ -18,6 +18,12 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvID'])) {
 }
 if (!is_object($cn)) {
 	$ve->add(t('Invalid conversation.'));
+} else {
+    $pp = new Permissions($cn);
+    if (!$pp->canAddConversationMessage()) {
+        $ve->add(t('You do not have access to add a message to this conversation.'));
+    }
+
 }
 
 if(!is_object($pageObj)) {
@@ -30,10 +36,14 @@ if(!is_object($blockObj)) {
 
 if(is_object($blockObj)) {
 	if($_POST['attachments'] && count($_POST['attachments'])) {
-		$maxFiles = $u->isRegistered() ? $blockObj->getController()->maxFilesRegistered : $blockObj->getController()->maxFilesGuest;
-		if($maxFiles > 0 && count($_POST['attachments']) > $maxFiles) {
-			$ve->add(t('You have too many attachments.'));
-		}
+        if (is_object($pp) && !$pp->canAddConversationMessageAttachments()) {
+            $ve->add(t('You do not have permission to add attachments.'));
+        } else {
+            $maxFiles = $u->isRegistered() ? $blockObj->getController()->maxFilesRegistered : $blockObj->getController()->maxFilesGuest;
+            if($maxFiles > 0 && count($_POST['attachments']) > $maxFiles) {
+                $ve->add(t('You have too many attachments.'));
+            }
+        }
 	}
 }
 
@@ -55,6 +65,7 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageParentID']) 
 if (Config::get('CONVERSATION_DISALLOW_BANNED_WORDS') && Loader::helper('validation/banned_words')->hasBannedWords($_POST['cnvMessageBody'])) {
 	$ve->add(t('Banned words detected.'));
 }
+
 
 if ($ve->has()) {
 	$ax->sendError($ve);

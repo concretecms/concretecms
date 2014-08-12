@@ -1,19 +1,44 @@
 <?
 namespace Concrete\Core\Conversation;
+use Concrete\Core\Search\PermissionableListItemInterface;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use Page;
 use \Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
 
-class Conversation extends Object {
+class Conversation extends Object implements \Concrete\Core\Permission\ObjectInterface {
 
 	public function getConversationID() {return $this->cnvID;}
 	public function getConversationParentMessageID() {return $this->cnvParentMessageID;}
 	public function getConversationDateCreated() {return $this->cnvDateCreated;}
 	public function getConversationDateLastMessage() {return $this->cnvDateLastMessage;}
 	public function getConversationMessagesTotal() {return intval($this->cnvMessagesTotal);}
+    public function overrideGlobalPermissions()
+    {
+        return $this->cnvOverrideGlobalPermissions;
+    }
 
-	public static function getByID($cnvID) {
+    public function getPermissionResponseClassName()
+    {
+        return '\\Concrete\\Core\\Permission\\Response\\ConversationResponse';
+    }
+
+    public function getPermissionAssignmentClassName()
+    {
+        return '\\Concrete\\Core\\Permission\\Assignment\\ConversationAssignment';
+    }
+
+    public function getPermissionObjectKeyCategoryHandle()
+    {
+        return 'conversation';
+    }
+
+    public function getPermissionObjectIdentifier()
+    {
+        return $this->getConversationID();
+    }
+
+    public static function getByID($cnvID) {
 		$db = Loader::db();
 		$r = $db->GetRow('select cnvID, cID, cnvDateCreated, cnvDateLastMessage, cnvMessagesTotal from Conversations where cnvID = ?', array($cnvID));
 		if (is_array($r) && $r['cnvID'] == $cnvID) {

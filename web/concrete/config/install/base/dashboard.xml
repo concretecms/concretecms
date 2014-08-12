@@ -779,7 +779,9 @@
                 </attributekey>
             </attributes>
         </page>
-
+        <page name="Conversation Permissions" path="/dashboard/system/conversations/permissions"
+              filename="/dashboard/system/conversations/permissions.php" pagetype="" description="" package="">
+        </page>
         <page name="Attributes" path="/dashboard/system/attributes" filename="/dashboard/system/attributes/view.php"
               pagetype="" description="Setup attributes for pages, users, files and more." package="">
             <attributes>
