@@ -10,5 +10,8 @@
 			<unsigned />
 			<notnull />
 		</field>
+        <index name="stID">
+            <col>stID</col>
+        </index>
 	</table>
 </schema>

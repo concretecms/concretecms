@@ -11,5 +11,8 @@
 			<notnull />
 			<default value="0" />
 		</field>
+        <index name="ptComposerOutputControlID">
+            <col>ptComposerOutputControlID</col>
+        </index>
 	</table>
 </schema>

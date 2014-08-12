@@ -13,6 +13,9 @@
 		</field>
 		<field name="height" type="I">
 			<unsigned />
-		</field>				
+		</field>
+        <index name="fID">
+            <col>fID</col>
+        </index>
 	</table>
 </schema>
