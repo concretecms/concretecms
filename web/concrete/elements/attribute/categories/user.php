@@ -11,31 +11,37 @@ if (is_object($key)) {
 ?>
 <? $form = Loader::helper('form'); ?>
 <fieldset>
-<legend><?=t('User Attribute Options')?></legend>
-<div class="control-group">
-<label class="control-label"><?=t('Public Display')?></label>
-<div class="controls">
-	<label class="checkbox"><?=$form->checkbox('uakProfileDisplay', 1, $uakProfileDisplay)?> <span><?=t('Displayed in Public Profile.');?></span></label>
-	<label class="checkbox"><?=$form->checkbox('uakMemberListDisplay', 1, $uakMemberListDisplay)?> <span><?=t('Displayed on Member List.');?></span></label>
-</div>
-</div>
+    <legend><?=t('User Attribute Options')?></legend>
+    <div class="form-group">
+    <label class="control-label"><?=t('Public Display')?></label>
+        <div class="checkbox">
+            <label class="checkbox"><?=$form->checkbox('uakProfileDisplay', 1, $uakProfileDisplay)?> <?=t('Displayed in Public Profile.');?></label>
+        </div>
+        <div class="checkbox">
+            <label class="checkbox"><?=$form->checkbox('uakMemberListDisplay', 1, $uakMemberListDisplay)?> <?=t('Displayed on Member List.');?></label>
+        </div>
+    </div>
 
-<div class="control-group">
-<label class="control-label"><?=t('Edit Mode')?></label>
-<div class="controls">
-	<label class="checkbox"><?=$form->checkbox('uakProfileEdit', 1, $uakProfileEdit)?> <span><?=t('Editable in Profile.');?></span></label>
-	<label class="checkbox"><?=$form->checkbox('uakProfileEditRequired', 1, $uakProfileEditRequired)?> <span><?=t('Editable and Required in Profile.');?></span></label>
-</div>
-</div>
+    <div class="form-group">
+        <label class="control-label"><?=t('Edit Mode')?></label>
+        <div class="checkbox">
+            <label class="checkbox"><?=$form->checkbox('uakProfileEdit', 1, $uakProfileEdit)?> <?=t('Editable in Profile.');?></label>
+        </div>
+        <div class="checkbox">
+            <label class="checkbox"><?=$form->checkbox('uakProfileEditRequired', 1, $uakProfileEditRequired)?> <?=t('Editable and Required in Profile.');?></label>
+        </div>
+    </div>
 
 
-<div class="control-group">
-<label class="control-label"><?=t('Registration')?></label>
-<div class="controls">
-	<label class="checkbox"><?=$form->checkbox('uakRegisterEdit', 1, $uakRegisterEdit)?> <span><?=t('Show on Registration Form.');?></span></label>
-	<label class="checkbox"><?=$form->checkbox('uakRegisterEditRequired', 1, $uakRegisterEditRequired)?> <span><?=t('Require on Registration Form.');?></span></label>
-</div>
-</div>
+    <div class="form-group">
+        <label class="control-label"><?=t('Registration')?></label>
+        <div class="checkbox">
+            <label class="checkbox"><?=$form->checkbox('uakRegisterEdit', 1, $uakRegisterEdit)?> <?=t('Show on Registration Form.');?></label>
+        </div>
+        <div class="checkbox">
+            <label class="checkbox"><?=$form->checkbox('uakRegisterEditRequired', 1, $uakRegisterEditRequired)?> <?=t('Require on Registration Form.');?></label>
+        </div>
+    </div>
 </fieldset>
 
 <script type="text/javascript">
