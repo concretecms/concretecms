@@ -2,9 +2,9 @@
 
 namespace Concrete\Controller\SinglePage\Dashboard\Reports;
 
+use Concrete\Core\File\File;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Loader,
-    User,
     UserInfo,
     Page;
 use \Concrete\Block\Form\MiniSurvey;
@@ -39,113 +39,78 @@ class Forms extends DashboardPageController
 
         $fileName = $textHelper->filterNonAlphaNum($surveys[$questionSet]['surveyName']);
 
-        header("Content-Type: application/vnd.ms-excel");
+        header("Content-Type: Content-type: text/csv");
         header("Cache-control: private");
         header("Pragma: public");
         $date = date('Ymd');
-        header("Content-Disposition: inline; filename=" . $fileName . "_form_data_{$date}.xls");
-        echo "<html>\r\n";
-        echo "<head>\r\n";
-        echo "<META http-equiv=Content-Type content=\"text/html; charset=" . APP_CHARSET . "\">\r\n";
-        echo "<title>" . $textHelper->entities(t(/* i18n: %1$s is the survey name, %2$s is the date. */ '%1$s Form Data Output - Run on %2$s', $surveys[$questionSet]['surveyName'], $date)) . "</title>\r\n";
-        echo "</head>\r\n";
-        echo "<body>\r\n";
-        echo "<table>\r\n";
-        $hasCBRow = false;
-        foreach ($questions as $questionId => $question) {
-            if ($question['inputType'] == 'checkboxlist') {
-                $hasCBRow = true;
-            }
-        }
+        header("Content-Disposition: attachment; filename=" . $fileName . "_form_data_{$date}.csv");
 
-        echo "<tr>";
-        echo "\t\t<td ";
-        if ($hasCBRow) {
-            echo "rowspan=\"2\" valign='bottom'";
-        }
-        echo "><b>" . t('Submitted Date') . "</b></td>\r\n";
-        echo "<td><b>" . t('User') . "</b></td>\r\n";
+        $fp = fopen('php://output', 'w');
+
+        // write the columns
+        $row = array(
+            t('Submitted Date'),
+            t('User'),
+        );
 
         foreach ($questions as $questionId => $question) {
             if ($question['inputType'] == 'checkboxlist') {
                 $options = explode('%%', $question['options']);
-                echo "\t\t" . '<td colspan="' . count($options) . '"><b>' . "\r\n";
+                foreach ($options as $opt) {
+                    $row[] = $questions[$questionId]['question'] . ': ' . $opt;
+                }
             } else {
-                echo "\t\t<td ";
-                if ($hasCBRow) {
-                    echo "rowspan=\"2\" valign='bottom'";
-                }
-                echo "><b>\r\n";
+                $row[] = $questions[$questionId]['question'];
             }
-            echo "\t\t\t" . $questions[$questionId]['question'] . "\r\n";
-            echo "\t\t</b></td>\r\n";
-        }
-        echo "</tr>";
-
-        // checkbox row
-        if ($hasCBRow) {
-            echo "<tr>";
-            foreach ($questions as $questionId => $question) {
-                if ($question['inputType'] == 'checkboxlist') {
-                    $options = explode('%%', $question['options']);
-                    foreach ($options as $opt) {
-                        echo "<td><b>{$opt}</b></td>";
-                    }
-                }
-            }
-            echo "</tr>";
         }
 
-        foreach ($answerSets as $answerSetId => $answerSet) {
-            $questionNumber = 0;
-            $numQuestionsToShow = 2;
-            echo "\t<tr>\r\n";
-            echo "\t\t<td>" . $dateHelper->getSystemDateTime($answerSet['created']) . "</td>\r\n";
-            echo "\t\t<td>";
+        fputcsv($fp, $row);
+
+        // write the data
+        foreach ($answerSets as $answerSet) {
+            $row = [];
+
+            $row[] = $dateHelper->getSystemDateTime($answerSet['created']);
+
             if ($answerSet['uID'] > 0) {
                 $ui = UserInfo::getByID($answerSet['uID']);
                 if (is_object($ui)) {
-                    echo $ui->getUserName();
+                    $row[] = $ui->getUserName();
                 }
+            } else {
+                $row[] = '';
             }
-            echo "</td>\r\n";
+
             foreach ($questions as $questionId => $question) {
-                $questionNumber++;
                 if ($question['inputType'] == 'checkboxlist') {
                     $options = explode('%%', $question['options']);
                     $subanswers = explode(',', $answerSet['answers'][$questionId]['answer']);
                     for ($i = 1; $i <= count($options); $i++) {
-                        echo "\t\t<td align='center'>\r\n";
                         if (in_array(trim($options[$i - 1]), $subanswers)) {
                             // echo "\t\t\t".$options[$i-1]."\r\n";
-                            echo "x";
+                            $row[] = 'x';
                         } else {
-                            echo "\t\t\t&nbsp;\r\n";
+                            $row[] = '';
                         }
-                        echo "\t\t</td>\r\n";
                     }
-                } elseif ($question['inputType'] == 'fileupload') {
-                    echo "\t\t<td>\r\n";
+                } else if ($question['inputType'] == 'fileupload') {
                     $fID = intval($answerSet['answers'][$questionId]['answer']);
                     $file = File::getByID($fID);
                     if ($fID && $file) {
                         $fileVersion = $file->getApprovedVersion();
-                        echo "\t\t\t" . '<a href="' . $fileVersion->getDownloadURL() . '">' . $fileVersion->getFileName() . '</a>' . "\r\n";
+                        $row[] = $fileVersion->getDownloadURL();
                     } else {
-                        echo "\t\t\t" . t('File not found') . "\r\n";
+                        $row[] = t('File not found');
                     }
-                    echo "\t\t</td>\r\n";
                 } else {
-                    echo "\t\t<td>\r\n";
-                    echo "\t\t\t" . $answerSet['answers'][$questionId]['answer'] . $answerSet['answers'][$questionId]['answerLong'] . "\r\n";
-                    echo "\t\t</td>\r\n";
+                    $row[] = $answerSet['answers'][$questionId]['answer'] . $answerSet['answers'][$questionId]['answerLong'];
                 }
             }
-            echo "\t</tr>\r\n";
+
+            fputcsv($fp, $row);
         }
-        echo "</table>\r\n";
-        echo "</body>\r\n";
-        echo "</html>\r\n";
+
+        fclose($fp);
         die;
     }
 
