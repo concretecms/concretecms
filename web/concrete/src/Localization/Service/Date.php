@@ -287,7 +287,10 @@ class Date
                         $tz = $u->getUserTimezone();
                     }
                 }
-                if (!$tz) {
+                if ($tz) {
+                    $timezone = $tz;
+                }
+                else {
                     $timezone = $this->getTimezone('app');
                 }
                 break;

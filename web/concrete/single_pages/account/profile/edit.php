@@ -29,7 +29,7 @@ $(function() {
 				<?php echo  $form->label('uTimezone', t('Time Zone'))?>
 				<div class="controls">
 				<?php echo  $form->select('uTimezone', 
-					$date->getTimezones(), 
+					Core::make('helper/date')->getTimezones(), 
 					($profile->getUserTimezone()?$profile->getUserTimezone():date_default_timezone_get())
 			); ?>
 				</div>
