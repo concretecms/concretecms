@@ -1,6 +1,7 @@
 var eventing = (function (global, $) {
     'use strict';
     global.c5 = global.c5 || {};
+    global.console = global.console || {};
 
     global.ConcreteEvent = (function (ns, $) {
         var target = $('<span />'), debug = false;
