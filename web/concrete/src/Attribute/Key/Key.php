@@ -363,8 +363,8 @@ class Key extends Object
 
         extract($args);
 
-        $_akIsSearchable = 1;
-        $_akIsSearchableIndexed = 1;
+        $_akIsSearchable = 0;
+        $_akIsSearchableIndexed = 0;
         $_akIsAutoCreated = 0;
         $_akIsEditable = 1;
         $_akIsInternal = 0;
@@ -375,19 +375,21 @@ class Key extends Object
         if (!isset($akName)) {
             throw new ErrorException('No Attribute Key name set.');
         }
-        if (isset($akIsSearchable) && !$akIsSearchable) {
-            $_akIsSearchable = 0;
+
+
+        if (isset($akIsSearchable) && $akIsSearchable != 0) {
+            $_akIsSearchable = 1;
         }
-        if (isset($akIsInternal) && $akIsInternal) {
+        if (isset($akIsInternal) && $akIsInternal != 0) {
             $_akIsInternal = 1;
         }
-        if (isset($akIsSearchableIndexed) && !$akIsSearchableIndexed) {
-            $_akIsSearchableIndexed = 0;
+        if (isset($akIsSearchableIndexed) && $akIsSearchableIndexed != 0) {
+            $_akIsSearchableIndexed = 1;
         }
-        if (isset($akIsAutoCreated) && !$akIsAutoCreated) {
-            $_akIsAutoCreated = 0;
+        if (isset($akIsAutoCreated) && $akIsAutoCreated != 0) {
+            $_akIsAutoCreated = 1;
         }
-        if (isset($akIsEditable) && (!$akIsEditable)) {
+        if (isset($akIsEditable) && $akIsEditable == 0) {
             $_akIsEditable = 0;
         }
 
