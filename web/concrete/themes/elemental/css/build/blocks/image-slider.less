@@ -9,17 +9,48 @@
   /* background-image is moved to main.less because it needs to be in the theme root */
 
   .ccm-image-slider {
-
     .container-fixed();
+
+
+    .rslides {
+      li {
+        max-height: 220px;
+      }
+    }
+
+    @media (min-width: @screen-xs-min) and (max-width: @screen-xs-max) {
+      width: 100%;
+      .rslides {
+        li {
+          max-height: 320px;
+        }
+      }
+    }
 
     @media (min-width: @screen-sm-min) {
       width: @container-sm;
+
+      .rslides {
+        li {
+          max-height: 350px;
+        }
+      }
     }
     @media (min-width: @screen-md-min) {
       width: @container-md;
+      .rslides {
+        li {
+          max-height: 429px;
+        }
+      }
     }
     @media (min-width: @screen-lg-min) {
       width: @container-lg;
+      .rslides {
+        li {
+          max-height: 480px;
+        }
+      }
     }
 
     .clearfix();
@@ -29,9 +60,47 @@
     .make-row();
     .make-lg-column(12);
   }
-
   .rslides_nav {
-    background-image: url('../../../../../blocks/image_slider/images/arrows.gif');
+    opacity: 1;
+    &.next {
+      color: white;
+      .transition(background .35s ease-in-out);
+      right: 40px;
+      &:hover {
+        text-decoration: none;
+        color: black;
+        background: white;
+      }
+      &:before {
+        .transition(background .35s ease-in-out);
+        content: "\f054";
+        font-family: FontAwesome;
+        font-size: 16px;
+        display: block;
+        margin-top: 21px;
+        margin-left: 14px;
+      }
+    }
+    &.prev {
+      color: white;
+      .transition(background .35s ease-in-out);
+      left: 40px;
+      &:hover {
+        text-decoration: none;
+        color: black;
+        background: white;
+      }
+      &:after {
+        .transition(background .35s ease-in-out);
+        content: "\f053";
+        font-family: FontAwesome;
+        font-size: 16px;
+        display: block;
+        margin-top: 21px;
+        margin-left: 12px;
+      }
+    }
+    background:rgba(0,0,0,.92);
   }
   .rslides_tabs {
     padding-left: 0px;
@@ -85,21 +154,6 @@
       .make-lg-column-offset(1);;
       .make-lg-column(10);
       margin-bottom: 60px;
-      max-height: 480px;
-
-      img {
-        max-height: 480px;
-
-      }
-    }
-
-    .rslides_nav {
-      &.next {
-        right: 40px;
-      }
-      &.prev {
-        left: 40px;
-      }
     }
   }
 }
