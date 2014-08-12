@@ -4,6 +4,7 @@ namespace Concrete\Core\Error\Provider;
 use Concrete\Core\Error\Handler\ErrorHandler;
 use Concrete\Core\Error\Handler\JsonErrorHandler;
 use Concrete\Core\Foundation\Service\Provider;
+use Whoops\Handler\PlainTextHandler;
 use Whoops\Run;
 
 class WhoopsServiceProvider extends Provider
@@ -18,9 +19,12 @@ class WhoopsServiceProvider extends Provider
 
         $handler = new ErrorHandler();
         $json_handler = new JsonErrorHandler();
+        $cli_handler = new PlainTextHandler();
+        $cli_handler->onlyForCommandLine(true);
 
         $run->pushHandler($handler);
         $run->pushHandler($json_handler);
+        $run->pushHandler($cli_handler);
 
         $run->register();
     }
