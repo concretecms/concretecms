@@ -24,7 +24,7 @@ class Forms extends DashboardPageController
         $this->loadSurveyResponses();
     }
 
-    public function excel()
+    public function csv()
     {
         $dateHelper = Loader::helper('date');
 
@@ -87,7 +87,6 @@ class Forms extends DashboardPageController
                     $subanswers = explode(',', $answerSet['answers'][$questionId]['answer']);
                     for ($i = 1; $i <= count($options); $i++) {
                         if (in_array(trim($options[$i - 1]), $subanswers)) {
-                            // echo "\t\t\t".$options[$i-1]."\r\n";
                             $row[] = 'x';
                         } else {
                             $row[] = '';
