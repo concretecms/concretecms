@@ -8,10 +8,14 @@
     </field>
     <field name="akTopicParentNodeID" type="I" size="10"/>
     <field name="akTopicTreeID" type="I" size="10"/>
+    <index name="akTopicTreeID">
+        <col>akTopicTreeID</col>
+    </index>
   </table>
   <table name="atSelectedTopics">
   	<field name="avID" type="I" size="10">
         <KEY/>
+        <UNSIGNED/>
     </field>
   	<field name="TopicNodeID" type="I" size="10">
         <KEY/>

@@ -34,7 +34,15 @@
       <default value="0"/>
       <unsigned/>
     </field>
-   <field name="ptPublishTargetObject" type="X2"></field>
+    <field name="ptPublishTargetObject" type="X2"/>
+    <index name="ptHandle">
+        <unique/>
+        <col>ptHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>ptID</col>
+    </index>
   </table>
 
   <table name="PageTypePageTemplates">
@@ -48,6 +56,9 @@
       <unsigned/>
       <default value="0" />
     </field>
+    <index name="pTemplateID">
+        <col>pTemplateID</col>
+    </index>
   </table>
 
   <table name="PageTypeComposerOutputBlocks">
@@ -76,6 +87,16 @@
       <unsigned/>
       <default value="0" />
     </field>
+    <index name="cID">
+        <col>cID</col>
+    </index>
+    <index name="bID">
+        <col>bID</col>
+        <col>cID</col>
+    </index>
+    <index name="ptComposerFormLayoutSetControlID">
+        <col>ptComposerFormLayoutSetControlID</col>
+    </index>
   </table>
 
   <table name="PageTypePublishTargetTypes">
@@ -91,6 +112,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="ptPublishTargetTypeHandle">
+        <col>ptPublishTargetTypeHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="PageTypeComposerControlTypes">
     <field name="ptComposerControlTypeID" type="I" size="10">
@@ -105,6 +132,13 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
+    <index name="ptComposerControlTypeHandle">
+        <unique/>
+        <col>ptComposerControlTypeHandle</col>
+    </index>
   </table>
   <table name="PageTypeComposerFormLayoutSets">
     <field name="ptComposerFormLayoutSetID" type="I" size="10">
@@ -121,6 +155,9 @@
       <unsigned/>
       <default value="0" />
     </field>
+    <index name="ptID">
+        <col>ptID</col>
+    </index>
   </table>
   <table name="PageTypeComposerFormLayoutSetControls">
     <field name="ptComposerFormLayoutSetControlID" type="I" size="10">
@@ -136,7 +173,7 @@
       <unsigned/>
       <default value="0" />
     </field>
-   <field name="ptComposerControlObject" type="X2"></field>
+   <field name="ptComposerControlObject" type="X2"/>
     <field name="ptComposerFormLayoutSetControlDisplayOrder" type="I" size="10">
       <unsigned/>
       <default value="0" />
@@ -146,6 +183,9 @@
     <field name="ptComposerFormLayoutSetControlRequired" type="I" size="10">
       <default value="0" />
     </field>
+    <index name="ptComposerControlTypeID">
+        <col>ptComposerControlTypeID</col>
+    </index>
   </table>
 
   <table name="PageTypePageTemplateDefaultPages">
@@ -163,6 +203,12 @@
       <unsigned/>
       <default value="0" />
     </field>
+    <index name="ptID">
+        <col>ptID</col>
+    </index>
+    <index name="cID">
+        <col>cID</col>
+    </index>
   </table>
 
   <table name="PageTypeComposerOutputControls">
@@ -183,6 +229,16 @@
       <unsigned/>
       <default value="0" />
     </field>
+    <index name="pTemplateID">
+        <col>pTemplateID</col>
+        <col>ptComposerFormLayoutSetControlID</col>
+    </index>
+    <index name="ptID">
+        <col>ptID</col>
+    </index>
+    <index name="ptComposerFormLayoutSetControlID">
+        <col>ptComposerFormLayoutSetControlID</col>
+    </index>
   </table>
   <table name="PageTypePermissionAssignments">
     <field name="ptID" type="I" size="10">
@@ -200,6 +256,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="pkID">
+        <col>pkID</col>
+    </index>
+    <index name="ptID">
+        <col>ptID</col>
+    </index>
   </table>
     <table name="Features">
     <field name="feID" type="I" size="10">
@@ -221,6 +283,14 @@
     <field name="pkgID" type="I" size="10">
       <unsigned/>
     </field>
+    <index name="feHandle">
+        <unique/>
+        <col>feHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>feID</col>
+    </index>
   </table>
     <table name="FeatureCategories">
     <field name="fcID" type="I" size="10">
@@ -234,6 +304,14 @@
     <field name="pkgID" type="I" size="10">
       <unsigned/>
     </field>
+    <index name="fcHandle">
+        <unique/>
+        <col>fcHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>fcID</col>
+    </index>
   </table>
     <table name="FeatureAssignments">
     <field name="faID" type="I" size="10">
@@ -247,7 +325,13 @@
     <field name="fcID" type="I" size="10">
       <unsigned/>
     </field>
-   <field name="fdObject" type="X2"></field>
+    <field name="fdObject" type="X2"/>
+    <index name="feID">
+        <col>feID</col>
+    </index>
+    <index name="fcID">
+        <col>fcID</col>
+    </index>
   </table>
 
   <table name="BannedWords">
@@ -256,10 +340,9 @@
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="bannedWord" type="X2"></field>
-    <index name="bwID">
-      <col>bwID</col>
-    </index>
+    <field name="bannedWord" type="X2">
+        <notnull/>
+    </field>
   </table>
 
   <table name="Gatherings">
@@ -274,6 +357,9 @@
     <field name="gaDateLastUpdated" type="T">
       <notnull/>
     </field>
+    <index name="gaDateLastUpdated">
+        <col>gaDateLastUpdated</col>
+    </index>
   </table>
   <table name="GatheringItemSelectedTemplates">
     <field name="gaiID" type="I" size="10">
@@ -281,21 +367,27 @@
       <key/>
       <notnull />
       <default value="0" />
-    </field>
-    <field name="gatID" type="I" size="10">
-        <key/>
-      <unsigned/>
-      <notnull />
-      <default value="0" />
-    </field>
+    </field>>
+      <field name="gatID" type="I" size="10">
+          <key/>
+          <unsigned/>
+          <notnull />
+          <default value="0" />
+      </field>
     <field name="gatTypeID" type="I" size="10">
-     <unsigned/>
-     <default value="0" />
+        <unsigned/>
+        <default value="0" />
     </field>
-    <index name="gatUniqueKey">
-      <unique/>
-      <col>gaiID</col>
+      <index name="gatUniqueKey">
+          <unique/>
+          <col>gaiID</col>
+          <col>gatTypeID</col>
+      </index>
+    <index name="gatTypeID">
       <col>gatTypeID</col>
+    </index>
+    <index name="gatID">
+        <col>gatID</col>
     </index>
   </table>
   <table name="GatheringItems">
@@ -349,9 +441,12 @@
       <col>gasID</col>
       <col>gaID</col>
     </index>
-    <index name="gaiKey">
-      <col>gaiKey</col>
-      <col>gasID</col>
+    <index name="gaID">
+      <col>gaID</col>
+      <col>gaiBatchTimestamp</col>
+    </index>
+    <index name="gasID">
+        <col>gasID</col>
     </index>
   </table>
 
@@ -371,6 +466,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="pkID">
+        <col>pkID</col>
+    </index>
+    <index name="paID">
+        <col>paID</col>
+    </index>
   </table>
 
   <table name="GatheringItemFeatureAssignments">
@@ -385,6 +486,13 @@
     <field name="faID" type="I" size="10">
       <unsigned/>
     </field>
+    <index name="gaiID">
+        <col>gaiID</col>
+        <col>faID</col>
+    </index>
+    <index name="faID">
+        <col>faID</col>
+    </index>
   </table>
 
   <table name="GatheringItemTemplateTypes">
@@ -401,6 +509,13 @@
     <default value="0"/>
     <unsigned/>
   </field>
+  <index name="gatTypeHandle">
+      <unique/>
+      <col>gatTypeHandle</col>
+  </index>
+  <index name="pkgID">
+      <col>pkgID</col>
+  </index>
 </table>
 
 
@@ -443,6 +558,12 @@
       <col>gatHandle</col>
       <col>gatTypeID</col>
     </index>
+    <index name="gatTypeID">
+        <col>gatTypeID</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="GatheringItemTemplateFeatures">
     <field name="gfeID" type="I" size="10">
@@ -456,6 +577,13 @@
     <field name="feID" type="I" size="10">
       <unsigned/>
     </field>
+    <index name="gatID">
+        <col>gatID</col>
+    </index>
+    <index name="feID">
+        <col>feID</col>
+        <col>gatID</col>
+    </index>
   </table>
     <table name="GatheringDataSources">
     <field name="gasID" type="I" size="10">
@@ -477,6 +605,13 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="gasHandle">
+        <unique/>
+        <col>gasHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="GatheringConfiguredDataSources">
     <field name="gcsID" type="I" size="10">
@@ -490,7 +625,13 @@
     <field name="gasID" type="I" size="10">
       <unsigned/>
     </field>
-   <field name="gcdObject" type="X2"></field>
+   <field name="gcdObject" type="X2"/>
+   <index name="gaID">
+       <col>gaID</col>
+   </index>
+   <index name="gasID">
+       <col>gasID</col>
+   </index>
   </table>
   <table name="Conversations">
     <field name="cnvID" type="I" size="10">
@@ -514,6 +655,12 @@
       <default value="0" />
       <unsigned/>
     </field>
+    <index name="cID">
+        <col>cID</col>
+    </index>
+    <index name="cnvParentMessageID">
+        <col>cnvParentMessageID</col>
+    </index>
   </table>
   <table name="ConversationFeatureDetailAssignments">
     <field name="faID" type="I" size="10">
@@ -526,8 +673,11 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <index name="cnvID">
+        <col>cnvID</col>
+    </index>
   </table>
-    <table name="ConversationDiscussions">
+  <table name="ConversationDiscussions">
     <field name="cnvDiscussionID" type="I" size="10">
       <key/>
       <autoincrement/>
@@ -539,6 +689,9 @@
     <field name="cID" type="I" size="10">
       <unsigned />
     </field>
+    <index name="cID">
+        <col>cID</col>
+    </index>
   </table>
    <table name="gaPage">
     <field name="gaiID" type="I" size="10">
@@ -548,6 +701,9 @@
     <field name="cID" type="I" size="10">
       <unsigned />
     </field>
+    <index name="cID">
+        <col>cID</col>
+    </index>
   </table>
   <table name="ConversationMessages">
     <field name="cnvMessageID" type="I" size="10">
@@ -602,9 +758,8 @@
     <index name="cnvMessageParentID">
       <col>cnvMessageParentID</col>
     </index>
-    <index name="cnvTotal">
-      <col>cnvID</col>
-      <col>cnvIsMessageDeleted</col>
+    <index name="uID">
+        <col>uID</col>
     </index>
   </table>
   <table name="ConversationFlaggedMessages">
@@ -613,8 +768,8 @@
       <unsigned/>
     </field>
     <field name="cnvMessageFlagTypeID" type="I" size="10"/>
-    <index name='cnvMessageID'>
-      <col>cnvMessageID</col>
+    <index name="cnvMessageFlagTypeID">
+      <col>cnvMessageFlagTypeID</col>
     </index>
   </table>
   <table name="ConversationFlaggedMessageTypes">
@@ -624,8 +779,9 @@
       <unsigned/>
     </field>
     <field name="cnvMessageFlagTypeHandle" type="C" size="64" />
-    <index name='cnvMessageFlagTypeID'>
-      <col>cnvMessageFlagTypeID</col>
+    <index name='cnvMessageFlagTypeHandle'>
+      <unique/>
+      <col>cnvMessageFlagTypeHandle</col>
     </index>
   </table>
   <table name="ConversationEditors">
@@ -642,17 +798,25 @@
       <default value="0"/>
       <unsigned/>
     </field>
-</table>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>cnvEditorHandle</col>
+    </index>
+  </table>
   <table name="ConversationMessageAttachments">
     <field name="cnvMessageAttachmentID" type="I" size="11">
       <key/>
       <unsigned />
-       <autoincrement/>
+      <autoincrement/>
     </field>
-    <field name="cnvMessageID" type="I" size="11">
-    </field>
-    <field name="fID" type="I" size="11">
-    </field>
+    <field name="cnvMessageID" type="I" size="11"/>
+    <field name="fID" type="I" size="11"/>
+    <index name="cnvMessageID">
+        <col>cnvMessageID</col>
+    </index>
+    <index name="fID">
+        <col>fID</col>
+    </index>
   </table>
   <table name="ConversationMessageRatings">
       <field name="cnvMessageRatingID" type="I"  size="10">
@@ -673,30 +837,46 @@
       <notnull/>
       <default value="0"/>
     </field>
-        <field name="timestamp" type="T" />
-        <field name="uID" type="I" size="10">
-            <notnull />
-            <default value="0" />
-            <unsigned />
-        </field>
-    </table>
-    <table name="ConversationRatingTypes">
-        <field name="cnvRatingTypeID" type="I" size="10">
-          <key/>
-          <autoincrement/>
-          <unsigned/>
-        </field>
-        <field name="cnvRatingTypeHandle" type="C" size="255">
-        </field>
-        <field name="cnvRatingTypeName" type="C" size="10"/>
-        <field name="cnvRatingTypeCommunityPoints" type="I" size="10">
-        </field>
+    <field name="timestamp" type="T" />
+    <field name="uID" type="I" size="10">
+        <notnull />
+        <default value="0" />
+        <unsigned />
+    </field>
+    <index name="cnvMessageID">
+        <col>cnvMessageID</col>
+        <col>cnvRatingTypeID</col>
+    </index>
+    <index name="cnvRatingTypeID">
+        <col>cnvRatingTypeID</col>
+    </index>
+    <index name="uID">
+        <col>uID</col>
+    </index>
+  </table>
+  <table name="ConversationRatingTypes">
+    <field name="cnvRatingTypeID" type="I" size="10">
+      <key/>
+      <autoincrement/>
+      <unsigned/>
+    </field>
+    <field name="cnvRatingTypeHandle" type="C" size="255"/>
+    <field name="cnvRatingTypeName" type="C" size="10"/>
+    <field name="cnvRatingTypeCommunityPoints" type="I" size="10"/>
     <field name="pkgID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
     </field>
-    </table>
+    <index name="cnvRatingTypeHandle">
+        <unique/>
+        <col>cnvRatingTypeHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>cnvRatingTypeHandle</col>
+    </index>
+  </table>
   <table name="PermissionAssignments">
     <field name="paID" type="I" size="10">
       <key/>
@@ -756,6 +936,13 @@
       <col>peID</col>
       <col>accessType</col>
     </index>
+    <index name="pdID">
+        <col>pdID</col>
+    </index>
+    <index name="permissionAccessDuration">
+        <col>paID</col>
+        <col>pdID</col>
+    </index>
   </table>
   <table name="BlockTypePermissionBlockTypeAccessList">
     <field name="paID" type="I" size="10">
@@ -772,6 +959,9 @@
       <notnull/>
       <default value="1"/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
   </table>
   <table name="BlockTypePermissionBlockTypeAccessListCustom">
     <field name="paID" type="I" size="10">
@@ -789,6 +979,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
+    <index name="btID">
+        <col>btID</col>
+    </index>
   </table>
   <table name="AreaPermissionBlockTypeAccessList">
     <field name="paID" type="I" size="10">
@@ -805,6 +1001,9 @@
       <notnull/>
       <default value="1"/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
   </table>
   <table name="AreaPermissionBlockTypeAccessListCustom">
     <field name="paID" type="I" size="10">
@@ -822,6 +1021,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
+    <index name="btID">
+        <col>btID</col>
+    </index>
   </table>
   <table name="AreaPermissionAssignments">
     <field name="cID" type="I" size="10">
@@ -842,6 +1047,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+      <index name="paID">
+          <col>paID</col>
+      </index>
+      <index name="pkID">
+          <col>pkID</col>
+      </index>
   </table>
   <table name="BlockPermissionAssignments">
     <field name="cID" type="I" size="10">
@@ -869,6 +1080,15 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="bID">
+        <col>bID</col>
+    </index>
+    <index name="pkID">
+        <col>pkID</col>
+    </index>
+    <index name="paID">
+        <col>paID</col>
+    </index>
   </table>
   <table name="Areas">
     <field name="arID" type="I" size="10">
@@ -932,6 +1152,10 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="asID">
+        <col>asID</col>
+        <col>displayOrder</col>
+    </index>
   </table>
 <table name="AreaLayouts">
     <field name="arLayoutID" type="I">
@@ -973,6 +1197,12 @@
   </field>
   <field name="arLayoutPresetName" type="C" size="255">
   </field>
+    <index name="arLayoutID">
+        <col>arLayoutID</col>
+    </index>
+    <index name="arLayoutPresetName">
+        <col>arLayoutPresetName</col>
+    </index>
 </table>
 <table name="AreaLayoutColumns">
     <field name="arLayoutColumnID" type="I">
@@ -998,6 +1228,16 @@
   <field name="arLayoutColumnDisplayID" type="I">
     <default value="0" />
   </field>
+    <index name="arLayoutID">
+        <col>arLayoutID</col>
+        <col>arLayoutColumnIndex</col>
+    </index>
+    <index name="arID">
+        <col>arID</col>
+    </index>
+    <index name="arLayoutColumnDisplayID">
+        <col>arLayoutColumnDisplayID</col>
+    </index>
 </table>
 <table name="AreaLayoutCustomColumns">
   <field name="arLayoutColumnID" type="I">
@@ -1053,6 +1293,18 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="asHandle">
+        <unique/>
+        <col>asHandle</col>
+    </index>
+    <index name="akCategoryID">
+        <col>akCategoryID</col>
+        <col>asDisplayOrder</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>asID</col>
+    </index>
   </table>
   <table name="AttributeKeys">
     <field name="akID" type="I" size="10">
@@ -1104,6 +1356,15 @@
       <col>akHandle</col>
       <col>akCategoryID</col>
     </index>
+    <index name="akCategoryID">
+        <col>akCategoryID</col>
+    </index>
+    <index name="atID">
+        <col>atID</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="AttributeKeyCategories">
     <field name="akCategoryID" type="I" size="10">
@@ -1121,6 +1382,13 @@
     <field name="pkgID" type="I" size="10">
       <unsigned/>
     </field>
+    <index name="akCategoryHandle">
+        <col>akCategoryHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>akCategoryID</col>
+    </index>
   </table>
   <table name="AttributeTypeCategories">
     <field name="atID" type="I" size="10">
@@ -1133,6 +1401,9 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="akCategoryID">
+        <col>akCategoryID</col>
+    </index>
   </table>
   <table name="AttributeTypes">
     <field name="atID" type="I" size="10">
@@ -1152,6 +1423,10 @@
     <index name="atHandle">
       <UNIQUE/>
       <col>atHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>atID</col>
     </index>
   </table>
   <table name="AttributeValues">
@@ -1173,6 +1448,15 @@
     <field name="atID" type="I" size="10">
       <unsigned/>
     </field>
+    <index name="akID">
+        <col>akID</col>
+    </index>
+    <index name="uID">
+        <col>uID</col>
+    </index>
+    <index name="atID">
+        <col>atID</col>
+    </index>
   </table>
   <table name="AuthenticationTypes">
     <field name="authTypeID" type="I" size="10">
@@ -1195,6 +1479,13 @@
     <field name="pkgID" type="I" size="10">
       <UNSIGNED />
     </field>
+    <index name="authTypeHandle">
+        <unique/>
+        <col>authTypeHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="BlockRelations">
     <field name="brID" type="I" size="10">
@@ -1215,6 +1506,12 @@
     <field name="relationType" type="C" size="50">
       <notnull/>
     </field>
+    <index name="bID">
+        <col>bID</col>
+    </index>
+    <index name="originalBID">
+        <col>originalBID</col>
+    </index>
   </table>
     <table name="BlockTypeSetBlockTypes">
     <field name="btID" type="I" size="10">
@@ -1232,6 +1529,10 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="btsID">
+        <col>btsID</col>
+        <col>displayOrder</col>
+    </index>
   </table>
   <table name="BlockTypeSets">
     <field name="btsID" type="I" size="10">
@@ -1253,6 +1554,16 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="btsHandle">
+        <unique/>
+        <col>btsHandle</col>
+    </index>
+    <index name="btsDisplayOrder">
+        <col>btsDisplayOrder</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="BlockTypes">
     <field name="btID" type="I" size="10">
@@ -1315,6 +1626,14 @@
       <unique/>
       <col>btHandle</col>
     </index>
+    <index name="btDisplayOrder">
+        <col>btDisplayOrder</col>
+        <col>btName</col>
+        <col>btID</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="Blocks">
     <field name="bID" type="I" size="10">
@@ -1344,7 +1663,13 @@
     <field name="uID" type="I" size="10">
       <unsigned/>
     </field>
- <field name="btCachedBlockRecord" type="X2"></field>
+    <field name="btCachedBlockRecord" type="X2"/>
+    <index name="btID">
+        <col>btID</col>
+    </index>
+    <index name="uID">
+        <col>uID</col>
+    </index>
   </table>
   <table name="CollectionVersionBlocksOutputCache">
     <field name="cID" type="I" size="10">
@@ -1371,6 +1696,9 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <index name="bID">
+        <col>bID</col>
+    </index>
   </table>
   <table name="CollectionVersionFeatureAssignments">
     <field name="cID" type="I" size="10">
@@ -1388,9 +1716,8 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <index name="cIDcvID">
-      <col>cID</col>
-      <col>cvID</col>
+    <index name="faID">
+        <col>faID</col>
     </index>
   </table>
   <table name="CollectionVersionThemeCustomStyles">
@@ -1419,6 +1746,15 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="pThemeID">
+        <col>pThemeID</col>
+    </index>
+    <index name="scvlID">
+        <col>scvlID</col>
+    </index>
+    <index name="sccRecordID">
+        <col>sccRecordID</col>
+    </index>
   </table>
 
   <table name="BlockFeatureAssignments">
@@ -1442,10 +1778,18 @@
       <default value="0"/>
       <unsigned/>
     </field>
-      <index name="ccvbID">
-      <col>cID</col>
-      <col>cvID</col>
-      <col>bID</col>
+    <index name="faID">
+        <col>faID</col>
+        <col>cID</col>
+        <col>cvID</col>
+    </index>
+    <index name="faID">
+        <col>faID</col>
+        <col>cID</col>
+        <col>cvID</col>
+    </index>
+    <index name="bID">
+        <col>bID</col>
     </index>
 
   </table>
@@ -1470,6 +1814,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="akID">
+        <col>akID</col>
+    </index>
+    <index name="avID">
+        <col>avID</col>
+    </index>
   </table>
   <table name="CollectionVersionRelatedEdits">
     <field name="cID" type="I" size="10">
@@ -1530,18 +1880,9 @@
       <notnull/>
       <default value="0"/>
     </field>
-    <index name="cbIncludeAll">
-      <col>cbIncludeAll</col>
-    </index>
-    <index name="isOriginal">
-      <col>isOriginal</col>
-    </index>
     <index name="bID">
       <col>bID</col>
-    </index>
-    <index name="cIDcvID">
       <col>cID</col>
-      <col>cvID</col>
     </index>
   </table>
   <table name="CollectionVersionBlockStyles">
@@ -1568,6 +1909,13 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="bID">
+        <col>bID</col>
+        <col>issID</col>
+    </index>
+    <index name="issID">
+        <col>issID</col>
+    </index>
   </table>
 
   <table name="CollectionVersionAreaStyles">
@@ -1589,6 +1937,9 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="issID">
+        <col>issID</col>
+    </index>
   </table>
   <table name="CollectionVersions">
     <field name="cID" type="I" size="10">
@@ -1635,9 +1986,21 @@
       <unsigned/>
     </field>
     <field name="cvActivateDatetime" type="T"/>
-    <index name="cvIsApproved">
-      <col>cvIsApproved</col>
-    </index>
+      <index name="cvIsApproved">
+          <col>cvIsApproved</col>
+      </index>
+      <index name="cvAuthorUID">
+          <col>cvAuthorUID</col>
+      </index>
+      <index name="cvApproverUID">
+          <col>cvApproverUID</col>
+      </index>
+      <index name="pThemeID">
+          <col>pThemeID</col>
+      </index>
+      <index name="pTemplateID">
+          <col>pTemplateID</col>
+      </index>
   </table>
   <table name="Collections">
     <field name="cID" type="I" size="10">
@@ -1654,6 +2017,10 @@
       <default value="0000-00-00 00:00:00"/>
     </field>
     <field name="cHandle" type="C" size="255"/>
+    <index name="cIDDateModified">
+        <col>cID</col>
+        <col>cDateModified</col>
+    </index>
     <index name="cDateModified">
       <col>cDateModified</col>
     </index>
@@ -1661,7 +2028,7 @@
       <col>cDateAdded</col>
     </index>
   </table>
-    <table name="Config">
+  <table name="Config">
     <field name="cfKey" type="C" size="64">
       <key/>
     </field>
@@ -1682,6 +2049,11 @@
     </field>
     <index name="uID">
       <col>uID</col>
+      <col>cfKey</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>cfKey</col>
     </index>
   </table>
   <table name="DownloadStatistics">
@@ -1710,6 +2082,23 @@
       <notnull/>
       <deftimestamp/>
     </field>
+    <index name="fID">
+        <col>fID</col>
+        <col>timestamp</col>
+    </index>
+    <index name="fvID">
+        <col>fID</col>
+        <col>fvID</col>
+    </index>
+    <index name="uID">
+        <col>uID</col>
+    </index>
+    <index name="rcID">
+        <col>rcID</col>
+    </index>
+    <index name="timestamp">
+        <col>timestamp</col>
+    </index>
   </table>
   <table name="FileAttributeValues">
     <field name="fID" type="I" size="10">
@@ -1732,6 +2121,38 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="akID">
+        <col>akID</col>
+    </index>
+    <index name="avID">
+        <col>avID</col>
+    </index>
+  </table>
+  <table name="FilePermissionFileTypes">
+    <field name="fsID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="gID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="uID" type="I" size="10">
+      <key/>
+      <default value="0"/>
+      <unsigned/>
+    </field>
+    <field name="extension" type="C" size="32">
+      <key/>
+    </field>
+    <index name="gID">
+        <col>gID</col>
+    </index>
+    <index name="uID">
+        <col>uID</col>
+    </index>
   </table>
   <table name="StyleCustomizerInlineStylePresets">
     <field name="pssPresetID" type="I" size="10">
@@ -1747,6 +2168,9 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="issID">
+        <col>issID</col>
+    </index>
   </table>
   <table name="StyleCustomizerInlineStyleSets">
     <field name="issID" type="I" size="10">
@@ -1807,6 +2231,9 @@
       <unsigned/>
     </field>
     <field name="value" type="X" />
+    <index name="scvlID">
+        <col>scvlID</col>
+    </index>
   </table>
   <table name="PermissionKeys">
     <field name="pkID" type="I" size="10">
@@ -1828,7 +2255,7 @@
       <notnull/>
       <default value="0"/>
     </field>
-    <field name="pkDescription" type="C" size="255"></field>
+    <field name="pkDescription" type="C" size="255"/>
     <field name="pkCategoryID" type="I" size="10">
       <unsigned/>
     </field>
@@ -1838,6 +2265,12 @@
     <index name="akHandle">
       <unique/>
       <col>pkHandle</col>
+    </index>
+    <index name="pkCategoryID">
+        <col>pkCategoryID</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
     </index>
   </table>
   <table name="PermissionKeyCategories">
@@ -1852,6 +2285,13 @@
     <field name="pkgID" type="I" size="10">
       <unsigned/>
     </field>
+    <index name="pkCategoryHandle">
+        <unique/>
+        <col>pkCategoryHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="PermissionAccessEntityTypes">
     <field name="petID" type="I" size="10">
@@ -1868,6 +2308,13 @@
     <field name="pkgID" type="I" size="10">
       <unsigned/>
     </field>
+    <index name="petHandle">
+        <unique/>
+        <col>petHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="PermissionAccessEntityTypeCategories">
     <field name="petID" type="I" size="10">
@@ -1880,6 +2327,9 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="pkCategoryID">
+        <col>pkCategoryID</col>
+    </index>
   </table>
   <table name="PermissionAccessEntities">
     <field name="peID" type="I" size="10">
@@ -1940,6 +2390,9 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
     <index name="gID">
       <col>gID</col>
     </index>
@@ -1973,6 +2426,9 @@
       <notnull/>
       <default value="0"/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
   </table>
   <table name="PagePermissionPageTypeAccessListCustom">
     <field name="paID" type="I" size="10">
@@ -1990,6 +2446,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
+    <index name="ptID">
+        <col>ptID</col>
+    </index>
   </table>
   <table name="PagePermissionThemeAccessList">
     <field name="paID" type="I" size="10">
@@ -2006,6 +2468,9 @@
       <notnull/>
       <default value="1"/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
   </table>
   <table name="PagePermissionThemeAccessListCustom">
     <field name="paID" type="I" size="10">
@@ -2023,6 +2488,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
+    <index name="pThemeID">
+        <col>pThemeID</col>
+    </index>
   </table>
   <table name="PagePermissionPropertyAccessList">
     <field name="paID" type="I" size="10">
@@ -2059,6 +2530,12 @@
       <notnull/>
       <default value="1"/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
+    <index name="uID">
+        <col>uID</col>
+    </index>
   </table>
   <table name="PagePermissionPropertyAttributeAccessListCustom">
     <field name="paID" type="I" size="10">
@@ -2076,6 +2553,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
+    <index name="akID">
+        <col>akID</col>
+    </index>
   </table>
   <table name="UserPermissionEditPropertyAccessList">
     <field name="paID" type="I" size="10">
@@ -2133,6 +2616,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
+    <index name="akID">
+        <col>akID</col>
+    </index>
   </table>
   <table name="UserPermissionViewAttributeAccessList">
     <field name="paID" type="I" size="10">
@@ -2149,6 +2638,9 @@
       <notnull/>
       <default value="1"/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
   </table>
   <table name="UserPermissionViewAttributeAccessListCustom">
     <field name="paID" type="I" size="10">
@@ -2166,6 +2658,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
+    <index name="akID">
+        <col>akID</col>
+    </index>
   </table>
   <table name="PagePermissionAssignments">
     <field name="cID" type="I" size="10">
@@ -2183,6 +2681,13 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="paID">
+        <col>paID</col>
+        <col>pkID</col>
+    </index>
+    <index name="pkID">
+        <col>pkID</col>
+    </index>
   </table>
   <table name="FileSetPermissionAssignments">
     <field name="fsID" type="I" size="10">
@@ -2190,16 +2695,22 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <field name="pkID" type="I" size="10">
+        <key/>
+        <default value="0"/>
+        <unsigned/>
+    </field>
     <field name="paID" type="I" size="10">
       <key/>
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="pkID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
+    <index name="paID">
+        <col>paID</col>
+    </index>
+    <index name="pkID">
+        <col>pkID</col>
+    </index>
   </table>
   <table name="FileSetPermissionFileTypeAccessList">
     <field name="paID" type="I" size="10">
@@ -2216,6 +2727,9 @@
       <notnull/>
       <default value="1"/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
   </table>
   <table name="FileSetPermissionFileTypeAccessListCustom">
     <field name="paID" type="I" size="10">
@@ -2232,6 +2746,9 @@
       <key/>
       <notnull/>
     </field>
+    <index name="peID">
+        <col>peID</col>
+    </index>
   </table>
   <table name="FileVersions">
     <field name="fID" type="I" size="10">
@@ -2298,8 +2815,8 @@
     <index name="fvType">
       <col>fvType</col>
     </index>
-    <index name="fvTitle">
-      <col>fvTitle</col>
+    <index name="fvFilename">
+      <col>fvFilename</col>
     </index>
   </table>
   <table name="FileVersionLog">
@@ -2328,6 +2845,11 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="fvID">
+        <col>fID</col>
+        <col>fvID</col>
+        <col>fvlID</col>
+    </index>
   </table>
     <table name="FileStorageLocationTypes">
         <field name="fslTypeID" type="I" size="10">
@@ -2346,6 +2868,13 @@
             <default value="0"/>
             <unsigned/>
         </field>
+        <index name="fslTypeHandle">
+            <unique/>
+            <col>fslTypeHandle</col>
+        </index>
+        <index name="pkgID">
+            <col>pkgID</col>
+        </index>
     </table>
 
     <table name="FileImageThumbnailTypes">
@@ -2416,6 +2945,15 @@
       <default value="0"/>
     </field>
     <field name="fPassword" type="C" size="255"/>
+    <index name="uID">
+        <col>uID</col>
+    </index>
+    <index name="fslID">
+        <col>fslID</col>
+    </index>
+    <index name="ocID">
+        <col>ocID</col>
+    </index>
     <index name="fOverrideSetPermissions">
       <col>fOverrideSetPermissions</col>
     </index>
@@ -2431,6 +2969,9 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="gsID">
+        <col>gsID</col>
+    </index>
   </table>
   <table name="GroupSets">
     <field name="gsID" type="I" size="10">
@@ -2444,6 +2985,13 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="gsName">
+        <col>gsName</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>gsID</col>
+    </index>
   </table>
   <table name="Groups">
     <field name="gID" type="I" size="10">
@@ -2506,6 +3054,15 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="gName">
+        <col>gName</col>
+    </index>
+    <index name="gBadgeFID">
+        <col>gBadgeFID</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="Jobs">
     <field name="jID" type="I" size="10">
@@ -2519,14 +3076,14 @@
     <field name="jDescription" type="C" size="255">
       <notnull/>
     </field>
-    <field name="jDateInstalled" type="T"></field>
-    <field name="jDateLastRun" type="T"></field>
+    <field name="jDateInstalled" type="T"/>
+    <field name="jDateLastRun" type="T"/>
     <field name="pkgID" type="I" size="10">
       <notnull/>
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="jLastStatusText" type="X2"></field>
+    <field name="jLastStatusText" type="X2"/>
     <field name="jLastStatusCode" type="I2" size="4">
       <notnull/>
       <default value="0"/>
@@ -2554,6 +3111,22 @@
       <notnull/>
       <default value="0"/>
     </field>
+    <index name="jHandle">
+        <unique/>
+        <col>jHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
+    <index name="isScheduled">
+        <col>isScheduled</col>
+        <col>jDateLastRun</col>
+        <col>jID</col>
+    </index>
+    <index name="jDateLastRun">
+        <col>jDateLastRun</col>
+        <col>jID</col>
+    </index>
   </table>
   <table name="JobsLog">
     <field name="jlID" type="I" size="10">
@@ -2576,6 +3149,9 @@
       <notnull/>
       <default value="0"/>
     </field>
+    <index name="jID">
+        <col>jID</col>
+    </index>
   </table>
   <table name="JobSetJobs">
     <field name="jsID" type="I" size="10">
@@ -2593,6 +3169,9 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <index name="jID">
+        <col>jID</col>
+    </index>
   </table>
   <table name="JobSets">
     <field name="jsID" type="I" size="10">
@@ -2608,7 +3187,7 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="jDateLastRun" type="T"></field>
+    <field name="jDateLastRun" type="T"/>
     <field name="isScheduled" type="I2" size="1">
       <notnull/>
       <default value="0"/>
@@ -2621,6 +3200,12 @@
       <notnull/>
       <default value="0"/>
     </field>
+      <index name="pkgID">
+          <col>pkgID</col>
+      </index>
+      <index name="jsName">
+          <col>jsName</col>
+      </index>
   </table>
   <table name="UserPointHistory">
     <field name="upID" type="I" size="11">
@@ -2646,6 +3231,12 @@
       <notnull/>
       <deftimestamp/>
     </field>
+    <index name="upuID">
+        <col>upuID</col>
+    </index>
+    <index name="upaID">
+        <col>upaID</col>
+    </index>
   </table>
 
 
@@ -2677,6 +3268,16 @@
       <notnull/>
       <default value="0"/>
     </field>
+    <index name="upaHandle">
+        <unique/>
+        <col>upaHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
+    <index name="gBBadgeID">
+        <col>gBadgeID</col>
+    </index>
   </table>
   <table name="SystemAntispamLibraries">
     <field name="saslHandle" type="C" size="64">
@@ -2692,6 +3293,9 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
     <table name="SocialLinks">
         <field name="slID" type="I" size="10">
@@ -2704,6 +3308,10 @@
             <notnull />
         </field>
         <field name="url" type="C" size="255"/>
+        <index name="ssHandle">
+            <unique/>
+            <col>ssHandle</col>
+        </index>
     </table>
   <table name="SystemCaptchaLibraries">
     <field name="sclHandle" type="C" size="64">
@@ -2719,6 +3327,9 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
 
   <table name="SystemContentEditorSnippets">
@@ -2735,6 +3346,9 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
 
 
@@ -2763,6 +3377,9 @@
       <unsigned/>
       <default value="0"/>
     </field>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="SystemImageEditorComponents">
     <field name="scsID" type="I" size="10">
@@ -2789,6 +3406,9 @@
       <unsigned/>
       <default value="0"/>
     </field>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="SystemImageEditorFilters">
     <field name="scsID" type="I" size="10">
@@ -2815,6 +3435,9 @@
       <unsigned/>
       <default value="0"/>
     </field>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="SystemImageEditorShapes">
     <field name="scsID" type="I" size="10">
@@ -2841,6 +3464,9 @@
       <unsigned/>
       <default value="0"/>
     </field>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="Packages">
     <field name="pkgID" type="I" size="10">
@@ -2997,6 +3623,9 @@
       <unique/>
       <col>pThemeHandle</col>
     </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="PageThemeCustomStyles">
     <field name="pThemeID" type="I" size="10">
@@ -3014,6 +3643,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="scvlID">
+        <col>scvlID</col>
+    </index>
+    <index name="sccRecordID">
+        <col>sccRecordID</col>
+    </index>
   </table>
   <table name="PageTemplates">
     <field name="pTemplateID" type="I" size="10">
@@ -3040,6 +3675,9 @@
     <index name="pTemplateHandle">
       <unique/>
       <col>pTemplateHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
     </index>
   </table>
   <table name="Pages">
@@ -3144,6 +3782,7 @@
       <col>cParentID</col>
     </index>
     <index name="cIsActive">
+      <col>cID</col>
       <col>cIsActive</col>
     </index>
     <index name="cCheckedOutUID">
@@ -3151,15 +3790,26 @@
     </index>
     <index name="uID">
       <col>uID</col>
+      <col>cPointerID</col>
     </index>
     <index name="cPointerID">
       <col>cPointerID</col>
+      <col>cDisplayOrder</col>
     </index>
     <index name="cIsTemplate">
+      <col>cID</col>
       <col>cIsTemplate</col>
     </index>
     <index name="cIsSystemPage">
+      <col>cID</col>
       <col>cIsSystemPage</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
+    <index name="cParentMaxDisplay">
+        <col>cParentID</col>
+        <col>cDisplayOrder</col>
     </index>
   </table>
   <table name="PileContents">
@@ -3195,6 +3845,18 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="pID">
+        <col>pID</col>
+        <col>displayOrder</col>
+    </index>
+    <index name="itemID">
+        <col>itemID</col>
+    </index>
+    <index name="itemType">
+        <col>itemType</col>
+        <col>itemID</col>
+        <col>pID</col>
+    </index>
   </table>
   <table name="Piles">
     <field name="pID" type="I" size="10">
@@ -3217,6 +3879,10 @@
     <field name="state" type="C" size="64">
       <notnull/>
     </field>
+    <index name="uID">
+        <col>uID</col>
+        <col>name</col>
+    </index>
   </table>
   <table name="UserAttributeKeys">
     <field name="akID" type="I" size="10">
@@ -3272,6 +3938,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="akID">
+        <col>akID</col>
+    </index>
+    <index name="avID">
+        <col>avID</col>
+    </index>
   </table>
   <table name="UserPrivateMessages">
     <field name="msgID" type="I" size="10">
@@ -3296,6 +3968,10 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="uAuthorID">
+        <col>uAuthorID</col>
+        <col>msgDateCreated</col>
+    </index>
   </table>
   <table name="UserPrivateMessagesTo">
     <field name="msgID" type="I" size="10">
@@ -3423,6 +4099,18 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="uID">
+        <col>uID</col>
+        <col>type</col>
+    </index>
+    <index name="uHash">
+        <col>uHash</col>
+        <col>type</col>
+    </index>
+    <index name="uDateGenerated">
+        <col>uDateGenerated</col>
+        <col>type</col>
+    </index>
   </table>
   <table name="Logs">
     <field name="logID" type="I" size="10">
@@ -3430,8 +4118,7 @@
       <autoincrement/>
       <unsigned/>
     </field>
-    <field name="channel" type="C" size="255">
-    </field>
+    <field name="channel" type="C" size="255"/>
     <field name="time" type="I" size="10">
       <notnull/>
       <unsigned/>
@@ -3443,6 +4130,12 @@
     <field name="level" type="I" size="10">
       <notnull/>
     </field>
+    <index name="channel">
+        <col>channel</col>
+    </index>
+    <index name="uID">
+        <col>uID</col>
+    </index>
   </table>
   <table name="MailImporters">
     <field name="miID" type="I" size="10">
@@ -3457,7 +4150,7 @@
     <field name="miUsername" type="C" size="255"/>
     <field name="miPassword" type="C" size="255"/>
     <field name="miEncryption" type="C" size="32"/>
-    <field name="miIsEnabled" type="I" size="1">
+    <field name="miIsEnabled" type="I1" size="1">
       <notnull/>
       <default value="0"/>
     </field>
@@ -3473,6 +4166,14 @@
     <field name="miConnectionMethod" type="C" size="8">
       <default value="POP" />
     </field>
+    <index name="miHandle">
+        <unique/>
+        <col>miHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+        <col>miID</col>
+    </index>
   </table>
   <table name="MailValidationHashes">
     <field name="mvhID" type="I" size="10">
@@ -3502,6 +4203,13 @@
       <unsigned/>
     </field>
     <field name="data" type="X"/>
+    <index name="miID">
+        <col>miID</col>
+    </index>
+    <index name="mHash">
+        <unique/>
+        <col>mHash</col>
+    </index>
   </table>
   <table name="UserOpenIDs">
     <field name="uID" type="I" size="10">
@@ -3579,11 +4287,14 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
-    <field name="uTimezone" type="C" size="255"></field>
+    <field name="uTimezone" type="C" size="255"/>
     <field name="uDefaultLanguage" type="C" size="32"/>
     <index name="uName">
       <unique/>
       <col>uName</col>
+    </index>
+    <index name="uEmail">
+        <col>uEmail</col>
     </index>
   </table>
   <table name="SignupRequests">
@@ -3610,16 +4321,22 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <field name="pkID" type="I" size="10">
+        <key/>
+        <default value="0"/>
+        <unsigned/>
+    </field>
     <field name="paID" type="I" size="10">
       <key/>
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="pkID" type="I" size="10">
-      <key/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
+    <index name="pkID">
+        <col>pkID</col>
+    </index>
+    <index name="paID">
+        <col>paID</col>
+    </index>
   </table>
   <table name="FileSets">
     <field name="fsID" type="I" size="10">
@@ -3639,9 +4356,17 @@
       <notnull/>
     </field>
     <field name="fsOverrideGlobalPermissions" type="I" size="4"/>
-    <index name="fsOverrideGlobalPermissions">
-      <col>fsOverrideGlobalPermissions</col>
-    </index>
+      <index name="uID">
+          <col>uID</col>
+          <col>fsType</col>
+          <col>fsName</col>
+      </index>
+      <index name="fsName">
+          <col>fsName</col>
+      </index>
+      <index name="fsType">
+          <col>fsType</col>
+      </index>
   </table>
   <table name="FileSetSavedSearches">
     <field name="fsID" type="I" size="10">
@@ -3726,6 +4451,9 @@
     <index name="stName">
       <col>stName</col>
     </index>
+    <index name="cID">
+        <col>cID</col>
+    </index>
   </table>
   <table name="atDateTimeSettings">
     <field name="akID" type="I" size="10">
@@ -3759,6 +4487,9 @@
       <notnull/>
       <unsigned/>
     </field>
+    <index name="fID">
+        <col>fID</col>
+    </index>
   </table>
   <table name="atNumber">
     <field name="avID" type="I" size="10">
@@ -3802,6 +4533,7 @@
     <field name="serviceInfo" type="C" size="255"/>
     <index name="avID">
       <col>avID</col>
+      <col>avsID</col>
     </index>
   </table>
   <table name="atTextareaSettings">
@@ -3830,6 +4562,13 @@
       <notnull/>
       <default value="0"/>
     </field>
+    <index name="akID">
+        <col>akID</col>
+        <col>displayOrder</col>
+    </index>
+    <index name="value">
+        <col>value</col>
+    </index>
   </table>
   <table name="atSelectOptionsSelected">
     <field name="avID" type="I" size="10">
@@ -3840,6 +4579,9 @@
       <key/>
       <unsigned/>
     </field>
+    <index name="atSelectOptionID">
+        <col>atSelectOptionID</col>
+    </index>
   </table>
   <table name="atAddress">
     <field name="avID" type="I" size="10">
@@ -3868,6 +4610,9 @@
     <field name="country" type="C" size="5">
       <notnull/>
     </field>
+    <index name="akID">
+        <col>akID</col>
+    </index>
   </table>
   <table name="atAddressSettings">
     <field name="akID" type="I" size="10">
@@ -3893,6 +4638,13 @@
     <field name="pkgID" type="I" size="10">
       <unsigned/>
     </field>
+    <index name="wpCategoryHandle">
+        <unique/>
+        <col>wpCategoryHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="WorkflowProgressHistory">
     <field name="wphID" type="I" size="10">
@@ -3910,6 +4662,10 @@
       <deftimestamp/>
     </field>
     <field name="object" type="X"/>
+    <index name="wpID">
+        <col>wpID</col>
+        <col>timestamp</col>
+    </index>
   </table>
   <table name="WorkflowProgress">
     <field name="wpID" type="I" size="10">
@@ -3944,10 +4700,15 @@
       <notnull/>
       <default value="0"/>
     </field>
+    <index name="wpCategoryID">
+        <col>wpCategoryID</col>
+    </index>
+    <index name="wfID">
+        <col>wfID</col>
+    </index>
     <index name="wrID">
       <col>wrID</col>
-    </index>
-    <index name="wpIsCompleted">
+      <col>wpID</col>
       <col>wpIsCompleted</col>
     </index>
   </table>
@@ -3968,6 +4729,13 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="wftHandle">
+        <unique/>
+        <col>wftHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
   <table name="Workflows">
     <field name="wfID" type="I" size="10">
@@ -3985,6 +4753,10 @@
       <unique/>
       <col>wfName</col>
     </index>
+    <index name="wftID">
+        <col>wftID</col>
+        <col>wfID</col>
+    </index>
   </table>
   <table name="PermissionAccessWorkflows">
     <field name="paID" type="I" size="10">
@@ -3997,6 +4769,9 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="wfID">
+        <col>wfID</col>
+    </index>
   </table>
   <table name="BasicWorkflowProgressData">
     <field name="wpID" type="I" size="10">
@@ -4015,6 +4790,12 @@
       <unsigned/>
     </field>
     <field name="wpDateCompleted" type="T"/>
+    <index name="uIDStarted">
+        <col>uIDStarted</col>
+    </index>
+    <index name="uIDCompleted">
+        <col>uIDCompleted</col>
+    </index>
   </table>
   <table name="BasicWorkflowPermissionAssignments">
     <field name="wfID" type="I" size="10">
@@ -4032,6 +4813,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+      <index name="pkID">
+          <col>pkID</col>
+      </index>
+    <index name="paID">
+        <col>paID</col>
+    </index>
   </table>
   <table name="WorkflowRequestObjects">
     <field name="wrID" type="I" size="10">
@@ -4052,6 +4839,9 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="wpID">
+        <col>wpID</col>
+    </index>
   </table>
   <table name="Queues">
     <field name="queue_id" type="I" size="10">
@@ -4067,6 +4857,9 @@
       <DEFAULT value="30"/>
       <UNSIGNED/>
     </field>
+    <index name="queue_name">
+        <col>queue_name</col>
+    </index>
     <opt platform="mysql">ENGINE=INNODB</opt>
     <opt platform="mysqlt">ENGINE=INNODB</opt>
   </table>
@@ -4118,6 +4911,10 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <index name="originalCID">
+        <col>originalCID</col>
+        <col>queue_name</col>
+    </index>
   </table>
    <table name="Trees">
     <field name="treeID" type="I" size="11">
@@ -4135,6 +4932,9 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+    <index name="treeTypeID">
+        <col>treeTypeID</col>
+    </index>
   </table>
 
   <table name="TreeTypes">
@@ -4150,6 +4950,13 @@
       <UNSIGNED/>
       <DEFAULT value="0"/>
     </field>
+    <index name="treeTypeHandle">
+        <unique/>
+        <col>treeTypeHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
 
   <table name="TreeNodeTypes">
@@ -4165,6 +4972,13 @@
       <UNSIGNED/>
       <DEFAULT value="0"/>
     </field>
+    <index name="treeNodeTypeHandle">
+        <unique/>
+        <col>treeNodeTypeHandle</col>
+    </index>
+    <index name="pkgID">
+        <col>pkgID</col>
+    </index>
   </table>
 
   <table name="TreeNodes">
@@ -4200,6 +5014,16 @@
     <index name="treeNodeParentID">
       <col>treeNodeParentID</col>
     </index>
+    <index name="treeNodeTypeID">
+        <col>treeNodeTypeID</col>
+    </index>
+    <index name="treeID">
+        <col>treeID</col>
+    </index>
+    <index name="inheritPermissionsFromTreeNodeID">
+        <col>inheritPermissionsFromTreeNodeID</col>
+        <col>treeNodeID</col>
+    </index>
   </table>
 
 
@@ -4230,6 +5054,12 @@
       <default value="0"/>
       <unsigned/>
     </field>
+    <index name="pkID">
+        <col>pkID</col>
+    </index>
+    <index name="paID">
+        <col>paID</col>
+    </index>
   </table>
 
   <table name="TreeGroupNodes">
@@ -4242,6 +5072,9 @@
       <UNSIGNED/>
       <default value="0" />
     </field>
+    <index name="gID">
+        <col>gID</col>
+    </index>
   </table>
 
   <table name="TopicTrees">

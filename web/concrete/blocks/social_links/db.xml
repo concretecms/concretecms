@@ -18,5 +18,12 @@
             <unsigned />
             <default value="0"/>
         </field>
+        <index name="bID">
+            <col>bID</col>
+            <col>displayOrder</col>
+        </index>
+        <index name="slID">
+            <col>slID</col>
+        </index>
 	</table>
 </schema>
