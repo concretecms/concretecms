@@ -107,9 +107,7 @@ $al->register('css', 'redactor', 'css/redactor.css');
 $al->registerGroup('redactor', array(
     array('javascript', 'redactor'),
     array('javascript', 'redactor_locale'),
-    array('javascript', 'core/file-manager'),
     array('css', 'redactor'),
-    array('css', 'core/file-manager'),
     array('css', 'font-awesome')
 ));
 

@@ -16,7 +16,7 @@ $image = $image[0];
 			<form method="post" class="main-reply-form clickable" data-dropzone-applied="true">
 			<div class="ccm-conversation-avatar"><img class="u-avatar" src="/concrete/images/avatar_none.png" width="80" height="80" alt=""></div>
 			<div class="ccm-conversation-message-form">
-				<div class="ccm-conversation-errors alert alert-error"></div>
+				<div class="ccm-conversation-errors alert alert-danger"></div>
 				<div class="redactor_box"><ul class="redactor_toolbar"><li><a href="javascript:void(null);" title="Bold" class="redactor_btn_bold" tabindex="-1"></a></li><li><a href="javascript:void(null);" title="Italic" class="redactor_btn_italic" tabindex="-1"></a></li><li><a href="javascript:void(null);" title="Deleted" class="redactor_btn_deleted" tabindex="-1"></a></li><li class="redactor_separator"></li><li><a href="javascript:void(null);" title="Font Color" class="redactor_btn_fontcolor" tabindex="-1"></a></li><li class="redactor_separator"></li><li><a href="javascript:void(null);" title="Link" class="redactor_btn_link" tabindex="-1"></a></li></ul><div class="redactor_conversation-editor redactor_redactor_conversation_editor_2 redactor_form-control redactor_editor" contenteditable="true" dir="ltr" style="height: 80px;"><p><br></p></div><textarea id="cnvMessageBody" name="cnvMessageBody" class="conversation-editor redactor_conversation_editor_2 form-control" style="display: none;"></textarea></div>
 				<input type="hidden" name="blockAreaHandle" id="blockAreaHandle" value="Column One">				<input type="hidden" name="cID" id="cID" value="1">				<input type="hidden" name="bID" id="bID" value="19">
 			</div>
@@ -30,7 +30,7 @@ $image = $image[0];
 			</select>
 			<div class="ccm-conversation-attachment-container" style="display: none;">
 				<form action="/index.php/tools/required/conversations/add_file" class="dropzone clickable" id="file-upload" data-dropzone-applied="true">
-					<div class="ccm-conversation-errors alert alert-error"></div>
+					<div class="ccm-conversation-errors alert alert-danger"></div>
 					<input type="hidden" name="ccm_token" value="1390605625:07adc131bb627d0810ca52b3d87a8453">					<input type="hidden" name="blockAreaHandle" id="blockAreaHandle" value="Column One">					<input type="hidden" name="cID" id="cID" value="1">					<input type="hidden" name="bID" id="bID" value="19">				<div class="default message"><span>Drop files here to upload</span></div></form>
 			</div>
 		</div>

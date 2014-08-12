@@ -7,7 +7,7 @@ if (is_object($message)) {
 ?>
 
 <div class="ccm-discussion-form">
-<div class="ccm-conversation-errors alert alert-error"></div>
+<div class="ccm-conversation-errors alert alert-danger"></div>
 <div class="control-group">
 	<?=$form->label($this->field('cnvMessageSubject'), t('Subject'))?>
 	<div class="controls">

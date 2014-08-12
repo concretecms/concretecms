@@ -9,7 +9,12 @@ if (is_object($cnv)) {
 	$enablePosting = ($_POST['enablePosting'] == 1) ? true : false;
 	$paginate = ($_POST['paginate'] == 1) ? true : false;
 	$enableCommentRating = ($_POST['enableCommentRating']);
-	
+
+    $cp = new Permissions($cnv);
+    if (!$cp->canAddConversationMessage()) {
+        $enablePosting = false;
+    }
+
 	if (in_array($_POST['displayMode'], array('flat'))) {
 		$displayMode = $_POST['displayMode'];
 	} else {

@@ -1,17 +1,18 @@
 <?php
 namespace Concrete\Core\Conversation\Message;
 
+use Concrete\Core\Conversation\FlagType\FlagType;
+use Concrete\Core\Conversation\Rating\Type;
 use File;
 use Core;
 use Loader;
 use Conversation;
 use ConversationEditor;
-use ConversationRatingType;
 use \Concrete\Core\Foundation\Object;
 use User;
 use UserInfo;
 
-class Message extends Object
+class Message extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
     public function getConversationMessageID() {return $this->cnvMessageID;}
     public function getConversationMessageSubject() {return $this->cnvMessageSubject;}
@@ -31,13 +32,34 @@ class Message extends Object
         $flagTypes = $db->GetCol('SELECT cnvMessageFlagTypeID FROM ConversationFlaggedMessages WHERE cnvMessageID=?',array($this->cnvMessageID));
         $flags = array();
         foreach ($flagTypes as $flagType) {
-            $flags[] = ConversationFlagType::getByID($flagType);
+            $flags[] = FlagType::getByID($flagType);
         }
         $this->cnvMessageFlagTypes = $flags;
 
         return $flags;
     }
     public function getConversationMessageTotalRatingScore() {return $this->cnvMessageTotalRatingScore;}
+
+    public function getPermissionResponseClassName()
+    {
+        return '\\Concrete\\Core\\Permission\\Response\\ConversationResponse';
+    }
+
+    public function getPermissionAssignmentClassName()
+    {
+        return '\\Concrete\\Core\\Permission\\Assignment\\ConversationAssignment';
+    }
+
+    public function getPermissionObjectKeyCategoryHandle()
+    {
+        return 'conversation';
+    }
+
+    public function getPermissionObjectIdentifier()
+    {
+        return $this->getConversationMessageID();
+    }
+
 
     public function conversationMessageHasActiveChildren()
     {
@@ -85,10 +107,10 @@ class Message extends Object
 
     public function conversationMessageHasFlag($flag)
     {
-        if (!$flag instanceof ConversationFlagType) {
-            $flag = ConversationFlagType::getByHandle($flag);
+        if (!$flag instanceof FlagType) {
+            $flag = FlagType::getByHandle($flag);
         }
-        if ($flag instanceof ConversationFlagType) {
+        if ($flag instanceof FlagType) {
             foreach ($this->getConversationMessageFlagTypes() as $type) {
                 if ($flag->getConversationFlagTypeID() == $type->getConversationFlagTypeID()) {
                     return true;
@@ -195,14 +217,14 @@ class Message extends Object
                 break;
         }
     }
-    public function rateMessage(ConversationRatingType $ratingType, $commentRatingIP, $commentRatingUserID, $post = array())
+    public function rateMessage(Type $ratingType, $commentRatingIP, $commentRatingUserID, $post = array())
     {
         $db = Loader::db();
         $cnvRatingTypeID = $db->GetOne('SELECT * FROM ConversationRatingTypes WHERE cnvRatingTypeHandle = ?', array($ratingType->cnvRatingTypeHandle));
         $db->Execute('INSERT INTO ConversationMessageRatings (cnvMessageID, cnvRatingTypeID, cnvMessageRatingIP, timestamp, uID) VALUES (?, ?, ?, ?, ?)', array($this->getConversationMessageID(), $cnvRatingTypeID, $commentRatingIP, date('Y-m-d H:i:s'), $commentRatingUserID));
         $ratingType->adjustConversationMessageRatingTotalScore($this);
     }
-    public function getConversationMessageRating(ConversationRatingType $ratingType)
+    public function getConversationMessageRating(Type $ratingType)
     {
         $db = Loader::db();
         $cnt = $db->GetOne('SELECT count(*) from ConversationMessageRatings where cnvRatingTypeID = ? AND cnvMessageID = ?',  array($ratingType->getConversationRatingTypeID(), $this->cnvMessageID));
@@ -212,7 +234,7 @@ class Message extends Object
 
     public function flag($flagtype)
     {
-        if ($flagtype instanceof ConversationFlagType) {
+        if ($flagtype instanceof FlagType) {
             $db = Loader::db();
             foreach ($this->getConversationMessageFlagTypes() as $ft) {
                 if ($ft->getConversationFlagTypeID() === $flagtype->getConversationFlagTypeID()) {
@@ -225,19 +247,19 @@ class Message extends Object
 
             return true;
         }
-        throw new Exception('Invalid flag type.');
+        throw new \Exception('Invalid flag type.');
     }
 
     public function unflag($flagtype)
     {
-        if ($flagtype instanceof ConversationFlagType) {
+        if ($flagtype instanceof FlagType) {
             $db = Loader::db();
             $db->execute('DELETE FROM ConversationFlaggedMessages WHERE cnvMessageFlagTypeID = ? AND cnvMessageID = ?',array($flagtype->getConversationFlagTypeID(),$this->getConversationMessageID()));
             $this->cnvMessageFlagTypes[] = $flagtype;
 
             return true;
         }
-        throw new Exception('Invalid flag type.');
+        throw new \Exception('Invalid flag type.');
     }
 
     public static function getByID($cnvMessageID)

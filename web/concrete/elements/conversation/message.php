@@ -2,9 +2,11 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $im = Loader::helper('image');
 
-// this is TEMPORARY. we will be using dedicated permissions for this.
-$u = new User();
-$canAdminMessage = ($u->isSuperUser() || $u->inGroup(Group::getByID(ADMIN_GROUP_ID)));
+$mp = new Permissions($message);
+$canDeleteMessage = $mp->canDeleteConversationMessage();
+$canFlagMessage = $mp->canFlagConversationMessage();
+$canEditMessage = $mp->canEditConversationMessage();
+$canRateMessage = $mp->canRateConversationMessage();
 
 $ui = $message->getConversationMessageUserObject();
 $class = 'ccm-conversation-message ccm-conversation-message-level' . $message->getConversationMessageLevel();
@@ -33,15 +35,21 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 				<span class="ccm-conversation-message-divider">|</span>
 				<span class="ccm-conversation-message-date"><?=$message->getConversationMessageDateTimeOutput($dateFormat);?></span>
 
-                <?php if($canAdminMessage) { ?>
+                <?php if($canDeleteMessage || $canFlagMessage) { ?>
                     <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider">|</span>
                     <span class="dropdown ccm-conversation-message-admin-control ">
                         <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#"><?=t('Edit')?></a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="drop5">
-                            <li><a href="#" class="admin-edit" data-submit="edit-conversation-message"><?php echo t('Edit') ?></a></li>
-                            <li><a href="#" class="admin-delete" data-submit="delete-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Delete')?></a></li>
-                            <li><a href="#" class="admin-flag" data-submit="flag-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Flag As Spam')?></a></li>
-                        </ul>
+                            <? if ($canEditMessage) { ?>
+                                <li><a href="#" class="admin-edit" data-submit="edit-conversation-message"><?php echo t('Edit') ?></a></li>
+                            <? } ?>
+                            <? if ($canDeleteMessage) { ?>
+                                <li><a href="#" class="admin-delete" data-submit="delete-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Delete')?></a></li>
+                            <? } ?>
+                            <? if ($canFlagMessage) { ?>
+                                <li><a href="#" class="admin-flag" data-submit="flag-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Flag As Spam')?></a></li>
+                            <? } ?>
+                            </ul>
                     </span>
                 <?php } ?>
 
@@ -74,7 +82,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 						 <?php } ?>
 							<p class="<?php echo $paragraphPadding ?> filename" rel="<?php echo $attachment['cnvMessageAttachmentID'];?>"><a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a>
                             <?
-                            if (!$message->isConversationMessageDeleted() && $canAdminMessage) { ?>
+                            if (!$message->isConversationMessageDeleted() && $canEditMessage) { ?>
                                 <a rel="<?php echo $attachment['cnvMessageAttachmentID'];?>" class="attachment-delete ccm-conversation-message-control-icon ccm-conversation-message-admin-control" href="#"><i class="fa fa-trash-o"></i></a>
                             <?php } ?>
                             </p>
@@ -89,7 +97,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 				<? if ($enablePosting && $displayMode == 'threaded') { ?>
 					<li><a href="#" data-toggle="conversation-reply" data-post-parent-id="<?=$message->getConversationMessageID()?>"><?=t('Reply')?></a></li>
 				<? } ?>
-                <? if ($enableCommentRating) { ?>
+                <? if ($enableCommentRating && $canRateMessage) { ?>
                     <li><span class="ccm-conversation-message-divider">|</span></li>
                     <?
                     $ratingTypes = ConversationRatingType::getList();

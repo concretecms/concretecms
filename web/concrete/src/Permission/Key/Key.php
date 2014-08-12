@@ -309,13 +309,13 @@ abstract class Key extends Object {
 		if ($u->isSuperUser()) {
 			return true;
 		}
-		
+
 		$r = PermissionCache::validate($this);
 		if ($r !== -1) {
 			return $r;
 		}
-		
 		$pae = $this->getPermissionAccessObject();
+
 		if (is_object($pae)) {
 			$valid = $pae->validate();
 		} else {

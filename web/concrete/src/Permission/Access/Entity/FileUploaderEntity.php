@@ -5,9 +5,9 @@ use PermissionAccess;
 use URL;
 use Config;
 use UserInfo;
+use User;
 use \Concrete\Core\Permission\Access\FileSetAccess as FileSetPermissionAccess;
 use \Concrete\Core\Permission\Access\FileAccess as FilePermissionAccess;
-
 class FileUploaderEntity extends Entity {
 
 	public function getAccessEntityUsers(PermissionAccess $pa) {
