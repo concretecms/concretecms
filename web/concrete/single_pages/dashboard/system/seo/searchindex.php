@@ -29,7 +29,7 @@ use \Concrete\Core\Page\Search\IndexedSearch; ?>
 		</div>
 		<div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
-			<button class="btn-danger ccm-button-left" name="reindex" value="1" onclick="return confirm('<?=t('Once the index is clear, you must reindex your site from the Automated Jobs page.')?>')"><?=t('Clear Search Index')?></button>
+			<button class="btn btn-danger ccm-button-left" name="reindex" value="1" onclick="return confirm('<?=t('Once the index is clear, you must reindex your site from the Automated Jobs page.')?>')"><?=t('Clear Search Index')?></button>
 			<?php
 			$ih = Loader::helper('concrete/ui');
 			print $ih->submit(t('Save'), 'ccm-search-index-manage', 'right', 'btn-primary');
