@@ -45,7 +45,7 @@ class Controller extends AttributeTypeController
         $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
         if ($this->akDateDisplayMode == 'date') {
             // Don't use user's timezone to avoid showing wrong dates
-            return $dh->formatDate($v, false, 'app');
+            return $dh->formatDate($v, false, 'system');
         }
         else {
             return $dh->formatDateTime($v);
