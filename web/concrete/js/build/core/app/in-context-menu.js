@@ -93,7 +93,7 @@
 					'border-top-left-radius': $elementToInspect.css('border-top-left-radius'),
 					'border-top-right-radius': $elementToInspect.css('border-top-right-radius'),
 					'border-bottom-left-radius': $elementToInspect.css('border-bottom-left-radius'),
-					'border-bottom-right-radius': $elementToInspect.css('border-bottom-right-radius'),
+					'border-bottom-right-radius': $elementToInspect.css('border-bottom-right-radius')
 				};
 
 			$elementToPosition.css(properties);
@@ -211,7 +211,7 @@
 		hide: function(e) {
 			var my = this,
 				global = ConcreteMenuManager,
-				reset = {'class': '', 'width': 0, 'height': 0, 'top': 0, 'left': 0}
+				reset = {'class': '', 'width': 0, 'height': 0, 'top': 0, 'left': 0};
 
 			if (e) {
 				e.stopPropagation();
@@ -239,7 +239,7 @@
 
 		}
 
-	}
+	};
 
 	var ConcreteMenuManager = {
 
@@ -266,7 +266,7 @@
 			return this.activeMenu;
 		}
 
-	}
+	};
 
 
 	// jQuery Plugin
@@ -274,7 +274,7 @@
 		return $.each($(this), function(i, obj) {
 			new ConcreteMenu($(this), options);
 		});
-	}
+	};
 
 	global.ConcreteMenu = ConcreteMenu;
 	global.ConcreteMenuManager = ConcreteMenuManager;
