@@ -39,7 +39,7 @@ class Forms extends DashboardPageController
 
         $fileName = $textHelper->filterNonAlphaNum($surveys[$questionSet]['surveyName']);
 
-        header("Content-Type: Content-type: text/csv");
+        header("Content-Type: text/csv");
         header("Cache-control: private");
         header("Pragma: public");
         $date = date('Ymd');
