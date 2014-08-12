@@ -10,6 +10,8 @@ if ($c->isEditMode()) { ?>
 $(document).ready(function(){
     $(function () {
         $("#ccm-image-slider-<?php echo $bID ?>").responsiveSlides({
+            prevText: "",   // String: Text for the "previous" button
+            nextText: "",
             <?php if($navigationType == 0) { ?>
             nav:true
             <?php } else { ?>
