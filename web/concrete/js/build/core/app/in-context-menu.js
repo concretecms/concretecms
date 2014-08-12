@@ -178,6 +178,19 @@
 				$menu.addClass('bottom');
 			}
 
+            var bodyWidth = $('body').innerWidth();
+            if (posX < 0) {
+                // menu is falling off the left side of the screen
+                $menu.find(".arrow").css({'left': Math.abs(posX + (mwidth / 2) - 6) + 'px'});
+                posX = 4;
+            } else if (posX + mwidth > bodyWidth) {
+                // menu is falling off the right side of the screen
+                $menu.find(".arrow").css({'left': (mwidth - (bodyWidth - e.pageX) + 4) + 'px'});
+                posX = bodyWidth.innerWidth() - mwidth - 4;
+            } else {
+                $menu.find(".arrow").css({'left': '50%'});
+            }
+
 			$menu.css({'top': posY + 'px', 'left': posX + 'px'});
 			_.defer(function() {
 				$menu.css('opacity', 1);
