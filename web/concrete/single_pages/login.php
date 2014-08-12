@@ -168,7 +168,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                 }
                 title.css({
                     fontSize: last,
-                    lineHeight: 'auto'
+                    lineHeight: ''
                 });
 
                 var fade_div = $('<div/>').css({
