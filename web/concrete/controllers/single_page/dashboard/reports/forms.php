@@ -68,8 +68,7 @@ class Forms extends DashboardPageController
 
         // write the data
         foreach ($answerSets as $answerSet) {
-            $row = [];
-
+            $row = array();
             $row[] = $dateHelper->getSystemDateTime($answerSet['created']);
 
             if ($answerSet['uID'] > 0) {
