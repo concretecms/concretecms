@@ -39,7 +39,6 @@
     left: 0;
     z-index: 99;
     opacity: 0.7;
-    text-indent: -9999px;
     overflow: hidden;
     text-decoration: none;
     height: 61px;
@@ -65,7 +64,6 @@
 
 .rslide-tabs li a {
     overflow: hidden;
-    text-indent: 99px;
     background: #ccccc9;
     width: 15px;
     height: 15px;
