@@ -566,9 +566,9 @@ class Key extends Object
             $column = 'ak_' . $attribs->key();
             if (is_array($attribs->current())) {
                 foreach ($attribs->current() as $key => $value) {
-                    $column .= '_' . $key;
-                    if (isset($columns[strtolower($column)])) {
-                        $columnHeaders[$column] = $value;
+                    $col = $column . '_' . $key;
+                    if (isset($columns[strtolower($col)])) {
+                        $columnHeaders[$col] = $value;
                     }
                 }
             } else {
