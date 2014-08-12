@@ -211,7 +211,7 @@ else {
 
         <div class="ccm-dashboard-header-buttons">
             <a id="ccm-export-results" class="btn btn-success" href="<?= $view->action('excel', '?qsid=' . $questionSet) ?>">
-                <i class='fa fa-download'></i> <?= t('Export to Excel') ?>
+                <i class='fa fa-download'></i> <?= t('Export to CSV') ?>
             </a>
         </div>
 
