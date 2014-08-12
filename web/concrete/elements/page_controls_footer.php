@@ -155,7 +155,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
             </ul>
         </div>
     </div>
-    <ul>
+    <ul class="ccm-toolbar-item-list">
         <li class="ccm-logo pull-left"><span><?= Loader::helper('concrete/ui')->getToolbarLogoSRC() ?></span></li>
         <? if ($c->isMasterCollection()) { ?>
         <li class="pull-left"><a href="<?= View::url('/dashboard/pages/types') ?>"><i class="fa fa-arrow-left"></i></a>
