@@ -26,10 +26,11 @@ This is a developer preview branch. This is intended for Add-On developers and c
 
     This should install everything necessary into the vendor/ directory in the concrete directory.
 
-4. Use [npm](https://www.npmjs.org/) to install [grunt](http://gruntjs.com/) to the build directory
+4. Use [npm](https://www.npmjs.org/) to install [grunt](http://gruntjs.com/) to the build directory and install the command line interface
 
         cd build
         npm install grunt grunt-contrib-concat grunt-contrib-uglify grunt-contrib-cssmin grunt-contrib-less grunt-contrib-watch
+		npm install -g grunt-cli
 
 5. Build concrete5 sources with grunt
 
