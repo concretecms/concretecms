@@ -81,7 +81,7 @@ class Controller extends BlockController
         $this->view();
     }
 
-    public function getTopicLink(\Concrete\Core\Tree\Node\Type\Topic $topic = null)
+    public function getTopicLink(\Concrete\Core\Tree\Node\Node $topic = null)
     {
         if ($this->cParentID) {
             $c = \Page::getByID($this->cParentID);
