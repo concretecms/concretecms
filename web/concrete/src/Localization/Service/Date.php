@@ -190,8 +190,7 @@ class Date
                     }
                     if (array_key_exists($timeZoneID, $localizedTimezones)) {
                         $place = $localizedTimezones[$timeZoneID];
-                    }
-                    else {
+                    } else {
                         $place = str_replace('_', ' ', $place);
                     }
                     $timezoneName = $area . '/' . $place;
@@ -203,6 +202,25 @@ class Date
         }
 
         return $cache[$locale];
+    }
+
+    /**
+     * Returns the display name of a timezone
+     * @param string $timezone The standard name of a timezone
+     * @return string
+     */
+    public function getTimezoneDisplayName($timezone)
+    {
+        $displayName = '';
+        if (is_string($timezone) && strlen($timezone)) {
+            $displayName = $timezone;
+            $timezones = $this->getTimezones();
+            if (array_key_exists($timezone, $timezones)) {
+                $displayName = $timezones[$timezone];
+            }
+        }
+
+        return $displayName;
     }
 
     /**
