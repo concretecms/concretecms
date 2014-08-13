@@ -45,16 +45,10 @@ class Statistics {
 
 	/**
 	 * Returns the datetime of the last edit to the site. Used in the dashboard
-	 * @return datetime
+	 * @return string A string in the format '2014-08-13 23:59:59'
 	 */
-	public static function getSiteLastEdit($type = 'system') {
-		$db = Loader::db();
-		$cDateModified = $db->GetOne("select max(Collections.cDateModified) from Collections");
-		if(ENABLE_USER_TIMEZONES && $type == 'user') {
-			$dh = Loader::helper('date');
-			return $dh->getLocalDateTime($cDateModified);
-		}
-		return $cDateModified;
+	public static function getSiteLastEdit() {
+		return Loader::db()->GetOne("select max(Collections.cDateModified) from Collections");
 	}
 
 	/**

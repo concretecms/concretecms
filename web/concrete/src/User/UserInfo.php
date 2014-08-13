@@ -728,52 +728,28 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
 	/**
 	* Gets the date a user was added to the system,
-	* if user is specified, returns in the current user's timezone
-	* @param string $type (system || user)
 	* @return string date formated like: 2009-01-01 00:00:00
 	*/
-	function getUserDateAdded($type = 'system', $datemask = 'Y-m-d H:i:s') {
-		$dh = Loader::helper('date');
-		if(ENABLE_USER_TIMEZONES && $type == 'user') {
-			return $dh->getLocalDateTime($this->uDateAdded, $datemask);
-		} else {
-			return $dh->date($datemask, strtotime($this->uDateAdded));
+	function getUserDateAdded() {
+		return $this->uDateAdded);
 		}
 	}
 
-	function getUserStartDate($type = 'system') {
-		// time-release permissions for users
-		if(ENABLE_USER_TIMEZONES && $type == 'user') {
-			$dh = Loader::helper('date');
-			return $dh->getLocalDateTime($this->upStartDate);
-		} else {
-			return $this->upStartDate;
-		}
+	function getUserStartDate() {
+		return $this->upStartDate;
 	}
 
 	/**
 	* Gets the date a user was last active on the site
-	* if user is specified, returns in the current user's timezone
-	* @param string $type (system || user)
 	* @return string date formated like: 2009-01-01 00:00:00
 	*/
-	function getLastOnline($type = 'system') {
-		if(ENABLE_USER_TIMEZONES && $type == 'user') {
-			$dh = Loader::helper('date');
-			return $dh->getLocalDateTime($this->uLastOnline);
-		} else {
-			return $this->uLastOnline;
-		}
+	function getLastOnline() {
+		$this->uLastOnline;
 	}
 
 
-	function getUserEndDate($type = 'system') {
-		if(ENABLE_USER_TIMEZONES && $type == 'user') {
-			$dh = Loader::helper('date');
-			return $dh->getLocalDateTime($this->upEndDate);
-		} else {
-			return $this->upEndDate;
-		}
+	function getUserEndDate() {
+		return $this->upEndDate;
 	}
 
 }
