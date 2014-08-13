@@ -1,6 +1,9 @@
 <? 
 
 namespace Concrete\Core\Utility\Service\Validation;
+
+
+use Egulias\EmailValidator\EmailValidator;
 /**
  * Functions useful for validating strings
  * @package Helpers
@@ -11,25 +14,18 @@ namespace Concrete\Core\Utility\Service\Validation;
  * @license    http://www.concrete5.org/license/     MIT License
  */
 
-class Strings {	
+class Strings {
 
-	
-	/**
-	 * Validates an email address
-	 * @param string $address
-	 * @return bool $isvalid
-	 */
+
+    /**
+     * Validates an email address
+     * @param $em
+     * @param bool $testMXRecord
+     * @return bool $isvalid
+     */
 	public function email($em, $testMXRecord = false) {
-		if (preg_match('/^([a-zA-Z0-9\._\+-]+)\@((\[?)[a-zA-Z0-9\-\.]+\.([a-zA-Z]{2,7}|[0-9]{1,3})(\]?))$/', $em, $matches)) {
-			if ($testMXRecord) {
-				list($username, $domain) = split("@", $em);
-				return getmxrr($domain, $mxrecords);
-			} else {
-				return true;
-			}
-		} else {
-			return false;
-		}
+        $validator = new EmailValidator();
+        return $validator->isValid($em, $testMXRecord, $testMXRecord);
 	}
 	
 	/**
