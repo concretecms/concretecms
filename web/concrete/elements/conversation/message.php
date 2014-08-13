@@ -41,7 +41,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
                         <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#"><?=t('Edit')?></a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="drop5">
                             <? if ($canEditMessage) { ?>
-                                <li><a href="#" class="admin-edit" data-submit="edit-conversation-message"><?php echo t('Edit') ?></a></li>
+                                <li><a href="javascript:void(0)" class="admin-edit" data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-load="edit-conversation-message"><?php echo t('Edit') ?></a></li>
                             <? } ?>
                             <? if ($canDeleteMessage) { ?>
                                 <li><a href="#" class="admin-delete" data-submit="delete-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Delete')?></a></li>
@@ -114,7 +114,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
                   <a class="ccm-conversation-message-control-icon" href="http://www.facebook.com/sharer.php?u=<?php echo $cnvMessageURL?>" title="<?=t('Share message URL on Facebook.')?>"><i class="fa fa-facebook"></i></a>
               </li>
               <li class="ccm-conversation-social-share">
-                  <a class="ccm-conversation-message-control-icon share-permalink" data-message-id= "<?php echo $messageID ?>" rel="<?php echo $cnvMessageURL ?>"  title="<?=t('Get message URL.')?>"data-dialog-title="<?php echo t('Link') ?>"  href="#"><i class="fa fa-link"></i></a>
+                  <a class="ccm-conversation-message-control-icon share-permalink" data-message-id= "<?php echo $messageID ?>" rel="<?php echo $cnvMessageURL ?>"  title="<?=t('Get message URL.')?>" data-dialog-title="<?php echo t('Link') ?>"  href="#"><i class="fa fa-link"></i></a>
               </li>
 
             </ul>

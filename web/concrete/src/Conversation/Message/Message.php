@@ -18,6 +18,7 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
     public function getConversationMessageSubject() {return $this->cnvMessageSubject;}
     public function getConversationMessageBody() {return $this->cnvMessageBody;}
     public function getConversationID() {return $this->cnvID;}
+    public function getConversationEditorID() {return $this->cnvEditorID;}
     public function getConversationMessageLevel() {return $this->cnvMessageLevel;}
     public function getConversationMessageParentID() {return $this->cnvMessageParentID;}
     public function getConversationMessageSubmitIP() {return long2ip($this->cnvMessageSubmitIP);}
@@ -74,6 +75,16 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
 
         return false;
     }
+
+    public function setMessageBody($cnvMessageBody)
+    {
+        $this->cnvMessageBody = $cnvMessageBody;
+        $db = Loader::db();
+        $db->Execute('update ConversationMessages set cnvMessageBody = ? where cnvMessageID = ?', array(
+                $cnvMessageBody, $this->getConversationMessageID()
+        ));
+    }
+
     public function conversationMessageHasChildren()
     {
         $db = Loader::db();
@@ -343,8 +354,11 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
             $cnvID = $cnv->getConversationID();
         }
 
-        $r = $db->Execute('insert into ConversationMessages (cnvMessageSubject, cnvMessageBody, cnvMessageDateCreated, cnvMessageParentID, cnvMessageLevel, cnvID, uID, cnvMessageSubmitIP, cnvMessageSubmitUserAgent) values (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                          array($cnvMessageSubject, $cnvMessageBody, $date, $cnvMessageParentID, $cnvMessageLevel, $cnvID, $uID, ip2long(Loader::Helper('validation/ip')->getRequestIP()), $_SERVER['HTTP_USER_AGENT']));
+        $editor = ConversationEditor::getActive();
+        $cnvEditorID = $editor->getConversationEditorID();
+
+        $r = $db->Execute('insert into ConversationMessages (cnvMessageSubject, cnvMessageBody, cnvMessageDateCreated, cnvMessageParentID, cnvEditorID, cnvMessageLevel, cnvID, uID, cnvMessageSubmitIP, cnvMessageSubmitUserAgent) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                          array($cnvMessageSubject, $cnvMessageBody, $date, $cnvMessageParentID, $cnvEditorID, $cnvMessageLevel, $cnvID, $uID, ip2long(Loader::Helper('validation/ip')->getRequestIP()), $_SERVER['HTTP_USER_AGENT']));
 
         $cnvMessageID = $db->Insert_ID();
 

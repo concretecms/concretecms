@@ -725,6 +725,11 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
     </field>
+  <field name="cnvEditorID" type="I" size="10">
+      <NOTNULL/>
+      <DEFAULT value="0"/>
+      <UNSIGNED/>
+  </field>
     <field name="cnvMessageSubmitIP" type="I" size="10">
       <NOTNULL/>
       <DEFAULT value="0"/>
@@ -789,8 +794,12 @@
     </index>
   </table>
   <table name="ConversationEditors">
-    <field name="cnvEditorHandle" type="C" size="64">
+  <field name="cnvEditorID" type="I" size="11">
       <key/>
+      <unsigned />
+      <autoincrement/>
+  </field>
+    <field name="cnvEditorHandle" type="C" size="64">
     </field>
     <field name="cnvEditorName" type="C" size="255"/>
     <field name="cnvEditorIsActive" type="I" size="1">

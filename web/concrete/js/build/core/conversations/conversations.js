@@ -205,6 +205,10 @@
 				obj.submitForm($(this));
 				return false;
 			});
+            obj.$element.on('click.cnv', 'button[data-submit=update-conversation-message]', function() {
+                obj.submitUpdateForm($(this));
+                return false;
+            });
 			var replyIterator = 1;
 			obj.$element.on('click.cnv', 'a[data-toggle=conversation-reply]', function(event) {
 				event.preventDefault();
@@ -277,7 +281,10 @@
 				}
 				return false;
 			});
-
+            obj.$element.on('click.cnv', 'a[data-load=edit-conversation-message]', function() {
+                var $link = $(this);
+                obj.editMessage($link.attr('data-conversation-message-id'));
+            });
 			obj.$element.on('change.cnv', 'select[data-sort=conversation-message-list]', function() {
 				obj.$messagelist.load(CCM_TOOLS_PATH + '/conversations/view_ajax', {
 					'cnvID':               obj.options.cnvID,
@@ -450,7 +457,26 @@
 				}
 			});
 		},
-		flagMessage: function(msgID) {
+        editMessage: function(msgID) {
+            var	formArray = [{
+                'name': 'cnvMessageID',
+                'value': msgID
+            }];
+            $.ajax({
+                type: 'post',
+                data: formArray,
+                url: CCM_TOOLS_PATH + '/conversations/edit_message',
+                success: function(html) {
+                    var $parent = $('div[data-conversation-message-id=' + msgID + ']');
+                    $parent.after(html).remove();
+                    $('.ccm-conversation-attachment-container').hide();
+                },
+                error: function(e) {
+                    obj.publish('conversationEditMessageError',{msgID:msgID,error:arguments});
+                }
+            });
+        },
+        flagMessage: function(msgID) {
 
 			var obj = this;
 			obj.publish('conversationBeforeFlagMessage',{msgID:msgID});
@@ -473,7 +499,7 @@
 					obj.publish('conversationFlagMessage',{msgID:msgID});
 				},
 				error: function(e) {
-					obj.publish('conversationFlageMessageError',{msgID:msgID,error:arguments});
+					obj.publish('conversationFlagMessageError',{msgID:msgID,error:arguments});
 					window.alert('Something went wrong while flagging this message, please refresh and try again.');
 				}
 			});
@@ -523,7 +549,35 @@
 				}
 			});
 		},
-		updateCount: function() {
+        updateMessageFromJSON: function($form, json) {
+            var obj = this;
+            var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
+            var	formArray = [{
+                'name': 'cnvMessageID',
+                'value': json.cnvMessageID
+            }, {
+                'name': 'enablePosting',
+                'value': enablePosting
+            }, {
+                'name': 'displayMode',
+                'value': obj.options.displayMode
+            }, {
+                'name': 'enableCommentRating',
+                'value': obj.options.enableCommentRating
+            }];
+
+            $.ajax({
+                type: 'post',
+                data: formArray,
+                url: CCM_TOOLS_PATH + '/conversations/message_detail',
+                success: function(html) {
+                    var $parent = $('div[data-conversation-message-id=' + json.cnvMessageID + ']');
+                    $parent.after(html).remove();
+                    $('.dropdown-toggle').dropdown();
+                }
+            });
+        },
+        updateCount: function() {
 			var obj = this;
 			obj.publish('conversationBeforeUpdateCount');
 			obj.$messagecnt.load(CCM_TOOLS_PATH + '/conversations/count_header', {
@@ -533,65 +587,120 @@
 			});
 		},
 		submitForm: function($btn) {
-			var obj = this;
-			obj.publish('conversationBeforeSubmitForm');
-			var $form = $btn.closest('form');
+            var obj = this;
+            obj.publish('conversationBeforeSubmitForm');
+            var $form = $btn.closest('form');
 
-			$btn.prop('disabled', true);
-			$form.parent().addClass('ccm-conversation-form-submitted');
-			var formArray = $form.serializeArray();
-			var parentID = $btn.attr('data-post-parent-id');
+            $btn.prop('disabled', true);
+            $form.parent().addClass('ccm-conversation-form-submitted');
+            var formArray = $form.serializeArray();
+            var parentID = $btn.attr('data-post-parent-id');
 
-			formArray.push({
-				'name': 'token',
-				'value': obj.options.posttoken
-			}, {
-				'name': 'cnvID',
-				'value': obj.options.cnvID
-			}, {
-				'name': 'cnvMessageParentID',
-				'value': parentID
-			},{
-				'name': 'enableRating',
-				'value': parentID
-			});
-			$.ajax({
-				dataType: 'json',
-				type: 'post',
-				data: formArray,
-				url: CCM_TOOLS_PATH + '/conversations/add_message',
-				success: function(r) {
-					if (!r) {
-						obj.handlePostError($form);
-						return false;
-					}
-					if (r.error) {
-						obj.handlePostError($form, r.errors);
-						return false;
-					}
-					$('.preview.processing').each(function(){
-						$('input[rel="'+ $(this).attr('rel') +'"]').remove();
-					});
-					$('form.dropzone').each(function(){
-						var d = $(this).data('dropzone');
-						$.each(d.files,function(k,v){
-							d.removeFile(v);
-						});
-					});
-					obj.addMessageFromJSON($form, r);
-					obj.publish('conversationSubmitForm',{form:$form,response:r});
-				},
-				error: function(r) {
-					obj.handlePostError($form);
-					return false;
-				},
-				complete: function(r) {
-					$btn.prop('disabled', false);
-					$form.parent().closest('.ccm-conversation-form-submitted').removeClass('ccm-conversation-form-submitted');
-				}
-			});
-		},
-		tool:{
+            formArray.push({
+                'name': 'token',
+                'value': obj.options.posttoken
+            }, {
+                'name': 'cnvID',
+                'value': obj.options.cnvID
+            }, {
+                'name': 'cnvMessageParentID',
+                'value': parentID
+            },{
+                'name': 'enableRating',
+                'value': parentID
+            });
+            $.ajax({
+                dataType: 'json',
+                type: 'post',
+                data: formArray,
+                url: CCM_TOOLS_PATH + '/conversations/add_message',
+                success: function(r) {
+                    if (!r) {
+                        obj.handlePostError($form);
+                        return false;
+                    }
+                    if (r.error) {
+                        obj.handlePostError($form, r.errors);
+                        return false;
+                    }
+                    $('.preview.processing').each(function(){
+                        $('input[rel="'+ $(this).attr('rel') +'"]').remove();
+                    });
+                    $('form.dropzone').each(function(){
+                        var d = $(this).data('dropzone');
+                        $.each(d.files,function(k,v){
+                            d.removeFile(v);
+                        });
+                    });
+                    obj.addMessageFromJSON($form, r);
+                    obj.publish('conversationSubmitForm',{form:$form,response:r});
+                },
+                error: function(r) {
+                    obj.handlePostError($form);
+                    return false;
+                },
+                complete: function(r) {
+                    $btn.prop('disabled', false);
+                    $form.parent().closest('.ccm-conversation-form-submitted').removeClass('ccm-conversation-form-submitted');
+                }
+            });
+        },
+        submitUpdateForm: function($btn) {
+            var obj = this;
+            obj.publish('conversationBeforeSubmitForm');
+            var $form = $btn.closest('form');
+
+            $btn.prop('disabled', true);
+            $form.parent().addClass('ccm-conversation-form-submitted');
+            var formArray = $form.serializeArray();
+            var cnvMessageID = $btn.attr('data-post-message-id');
+
+            formArray.push({
+                'name': 'token',
+                'value': obj.options.posttoken
+            }, {
+                'name': 'cnvMessageID',
+                'value': cnvMessageID
+            });
+            $.ajax({
+                dataType: 'json',
+                type: 'post',
+                data: formArray,
+                url: CCM_TOOLS_PATH + '/conversations/update_message',
+                success: function(r) {
+                    if (!r) {
+                        obj.handlePostError($form);
+                        return false;
+                    }
+                    if (r.error) {
+                        obj.handlePostError($form, r.errors);
+                        return false;
+                    }
+                    $('.preview.processing').each(function(){
+                        $('input[rel="'+ $(this).attr('rel') +'"]').remove();
+                    });
+                    /*
+                    $('form.dropzone').each(function(){
+                        var d = $(this).data('dropzone');
+                        $.each(d.files,function(k,v){
+                            d.removeFile(v);
+                        });
+                    });
+                    */
+                    obj.updateMessageFromJSON($form, r);
+                    obj.publish('conversationSubmitForm',{form:$form,response:r});
+                },
+                error: function(r) {
+                    obj.handlePostError($form);
+                    return false;
+                },
+                complete: function(r) {
+                    $btn.prop('disabled', false);
+                    $form.parent().closest('.ccm-conversation-form-submitted').removeClass('ccm-conversation-form-submitted');
+                }
+            });
+        },
+        tool:{
 			setCaretPosition:function(elem, caretPos) {
 				// http://stackoverflow.com/a/512542/950669
 				if(elem != null) {
