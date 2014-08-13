@@ -458,10 +458,25 @@
 			});
 		},
         editMessage: function(msgID) {
-            var	formArray = [{
+            var obj = this;
+            var	formArray = [
+                {
                 'name': 'cnvMessageID',
                 'value': msgID
-            }];
+              },
+                {
+                    'name': 'cID',
+                    'value': this.options.cID
+                },
+                {
+                    'name': 'blockAreaHandle',
+                    'value': this.options.blockAreaHandle
+                },
+                {
+                    'name': 'bID',
+                    'value': this.options.blockID
+                }
+            ];
             $.ajax({
                 type: 'post',
                 data: formArray,
@@ -470,6 +485,15 @@
                     var $parent = $('div[data-conversation-message-id=' + msgID + ']');
                     $parent.after(html).remove();
                     $('.ccm-conversation-attachment-container').hide();
+                    $('.ccm-conversation-edit-message .ccm-conversation-attachment-toggle').off('click.cnv').on('click.cnv', function(event){
+                        event.preventDefault();
+                        if($('.ccm-conversation-edit-message .ccm-conversation-attachment-container').is(':visible')) {
+                            $('.ccm-conversation-edit-message .ccm-conversation-attachment-container').toggle();
+                        }
+                        $('.ccm-conversation-edit-message .ccm-conversation-attachment-container').toggle();
+                    });
+                    obj.$element.ccmconversationattachments(obj);
+
                 },
                 error: function(e) {
                     obj.publish('conversationEditMessageError',{msgID:msgID,error:arguments});

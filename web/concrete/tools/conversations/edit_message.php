@@ -7,6 +7,10 @@ $vs = Loader::helper('validation/strings');
 $ve = Loader::helper('validation/error');
 $as = Loader::helper('validation/antispam');
 
+$pageObj = Page::getByID($_POST['cID']);
+$areaObj = Area::get($pageObj, $_POST['blockAreaHandle']);
+$blockObj = Block::getByID($_POST['bID'], $pageObj, $areaObj);
+
 $form = Loader::helper('form');
 
 $u = new User();

@@ -179,7 +179,7 @@
 					]
 				});
 			} else {
-				if (confirm('Remove this message? Replies to it will not be removed.')) { 
+				if (confirm('Remove this attachment?')) {
 					$(this).ccmconversationattachments('deleteAttachment',{ 'cnvMessageAttachmentID' : link.attr('rel'), 'cnvObj' : obj, 'dialogObj' :  obj.$attachmentdeletetdialog});
 				}
 			} 
