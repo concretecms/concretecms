@@ -52,7 +52,7 @@ $form = Loader::helper('form');
 				<?php echo $form->hidden('cID', $cID) ?>
 				<?php echo $form->hidden('bID', $bID) ?>	
 				<button type="btn btn-primary" data-submit="conversation-message" class="pull-right btn btn-primary"><?=t('Reply')?> </button>
-				<button type="button" class="ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
+				<button type="button" class="pull-right btn btn-default ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
 			</div>
 			</form>
 			<div class="ccm-conversation-attachment-container">

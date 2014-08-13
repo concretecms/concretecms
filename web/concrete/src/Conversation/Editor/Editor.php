@@ -2,7 +2,7 @@
 namespace Concrete\Core\Conversation\Editor;
 use Loader;
 use \Concrete\Core\Package\PackageList;
-use ConversationMessage;
+use Concrete\Core\Conversation\Message\Message;
 use Core;
 use Config;
 use \Concrete\Core\Foundation\Object;
@@ -10,7 +10,7 @@ abstract class Editor extends Object {
 
 	abstract public function getConversationEditorAssetPointers();
 
-	public function setConversationMessageObject(ConversationMessage $message) {
+	public function setConversationMessageObject(Message $message) {
 		$this->cnvMessage = $message;
 	}
 
@@ -70,6 +70,8 @@ abstract class Editor extends Object {
 	}
 	public function getConversationEditorInputName() {return $this->cnvEditorInputName;}
 	public function getConversationEditorHandle() { return $this->cnvEditorHandle;}
+    public function getConversationEditorID() {return $this->cnvEditorID;}
+
 	public function getConversationEditorName() { return $this->cnvEditorName;}
 	public function isConversationEditorActive() { return $this->cnvEditorIsActive;}
 	public function getPackageID() { return $this->pkgID;}
@@ -80,15 +82,26 @@ abstract class Editor extends Object {
 
 	public static function getActive() {
 		$db = Loader::db();
-		$cnvEditorHandle = $db->GetOne('select cnvEditorHandle from ConversationEditors where cnvEditorIsActive = 1');
-		if ($cnvEditorHandle) {
-			return static::getByHandle($cnvEditorHandle);
+		$cnvEditorID = $db->GetOne('select cnvEditorID from ConversationEditors where cnvEditorIsActive = 1');
+		if ($cnvEditorID) {
+			return static::getByID($cnvEditorID);
 		}
 	}
 
-	public static function getByHandle($cnvEditorHandle) {
+    public static function getByID($cnvEditorID) {
+        $db = Loader::db();
+        $r = $db->GetRow('select cnvEditorID, cnvEditorHandle, cnvEditorIsActive, pkgID, cnvEditorName from ConversationEditors where cnvEditorID = ?', array($cnvEditorID));
+        if (is_array($r) && $r['cnvEditorHandle']) {
+            $class = '\\Concrete\\Core\\Conversation\\Editor\\' . Loader::helper('text')->camelcase($r['cnvEditorHandle']) . 'Editor';
+            $sc = Core::make($class);
+            $sc->setPropertiesFromArray($r);
+            return $sc;
+        }
+    }
+
+    public static function getByHandle($cnvEditorHandle) {
 		$db = Loader::db();
-		$r = $db->GetRow('select cnvEditorHandle, cnvEditorIsActive, pkgID, cnvEditorName from ConversationEditors where cnvEditorHandle = ?', array($cnvEditorHandle));
+		$r = $db->GetRow('select cnvEditorID, cnvEditorHandle, cnvEditorIsActive, pkgID, cnvEditorName from ConversationEditors where cnvEditorHandle = ?', array($cnvEditorHandle));
 		if (is_array($r) && $r['cnvEditorHandle']) {
             $class = '\\Concrete\\Core\\Conversation\\Editor\\' . Loader::helper('text')->camelcase($r['cnvEditorHandle']) . 'Editor';
 			$sc = Core::make($class);
