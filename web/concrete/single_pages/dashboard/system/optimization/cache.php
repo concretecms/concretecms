@@ -86,7 +86,7 @@
         <div class="radio">
           <label>
               <input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="default" <?php  if (FULL_PAGE_CACHE_LIFETIME == 'default') { ?> checked <?php  } ?> />
-              <span><?=t('Every %s (default setting).', Loader::helper('date')->timeSince(time()-CACHE_LIFETIME))?></span>
+              <span><?=t('Every %s (default setting).', Loader::helper('date')->describeInterval(CACHE_LIFETIME))?></span>
           </label>
         </div>
 

@@ -152,50 +152,75 @@ class Date
 	 */
     public function getTimezones()
     {
+        static $cache = array();
         $locale = Localization::activeLocale();
-        $areaTranslations = array();
-        $localizedTimezones = array();
-        if ($locale != 'en_US') {
-            $localizedTerritoryNames = \Zend_Locale::getTranslationList('Territory', $locale);
-            if (is_array($localizedTerritoryNames)) {
-                foreach (\Zend_Locale::getTranslationList('Territory', 'en_US') as $territoryID => $territoryEnglishName) {
-                    if (array_key_exists($territoryID, $localizedTerritoryNames)) {
-                        $areaTranslations[$territoryEnglishName] = $localizedTerritoryNames[$territoryID];
+        if (!array_key_exists($locale, $cache)) {
+            $areaTranslations = array();
+            $localizedTimezones = array();
+            if ($locale != 'en_US') {
+                $localizedTerritoryNames = \Zend_Locale::getTranslationList('Territory', $locale);
+                if (is_array($localizedTerritoryNames)) {
+                    foreach (\Zend_Locale::getTranslationList('Territory', 'en_US') as $territoryID => $territoryEnglishName) {
+                        if (array_key_exists($territoryID, $localizedTerritoryNames)) {
+                            $areaTranslations[$territoryEnglishName] = $localizedTerritoryNames[$territoryID];
+                        }
                     }
                 }
-            }
-            $localizedTimezones = Zend_Locale::getTranslationList('CityToTimezone', $locale);
-            if (!is_array($localizedTimezones)) {
-                $localizedTimezones = array();
-            }
-        }
-        $areaTranslations = array_merge($areaTranslations, array(
-            'America' => t('America'),
-            'Arctic' => t('Arctic'),
-            'Atlantic' => t('Atlantic Ocean'),
-            'Indian' => t('Indian Ocean'),
-            'Pacific' => t('Pacific Ocean')
-        ));
-        $timeZones = array();
-        foreach (\DateTimeZone::listIdentifiers()as $timeZoneID) {
-            $timezoneName = $timeZoneID;
-            $p = strpos($timeZoneID, '/');
-            if (($p !== false) && ($p > 0)) {
-                $area = substr($timeZoneID, 0, $p);
-                $place = substr($timeZoneID, $p + 1);
-                if (array_key_exists($area, $areaTranslations)) {
-                    $area = $areaTranslations[$area];
+                $localizedTimezones = Zend_Locale::getTranslationList('CityToTimezone', $locale);
+                if (!is_array($localizedTimezones)) {
+                    $localizedTimezones = array();
                 }
-                if (array_key_exists($timeZoneID, $localizedTimezones)) {
-                    $place = $localizedTimezones[$timeZoneID];
-                }
-                $timezoneName = $area . '/' . $place;
             }
-            $timeZones[$timeZoneID] = $timezoneName;
+            $areaTranslations = array_merge($areaTranslations, array(
+                'America' => t('America'),
+                'Arctic' => t('Arctic'),
+                'Atlantic' => t('Atlantic Ocean'),
+                'Indian' => t('Indian Ocean'),
+                'Pacific' => t('Pacific Ocean')
+            ));
+            $timeZones = array();
+            foreach (\DateTimeZone::listIdentifiers()as $timeZoneID) {
+                $timezoneName = $timeZoneID;
+                $p = strpos($timeZoneID, '/');
+                if (($p !== false) && ($p > 0)) {
+                    $area = substr($timeZoneID, 0, $p);
+                    $place = substr($timeZoneID, $p + 1);
+                    if (array_key_exists($area, $areaTranslations)) {
+                        $area = $areaTranslations[$area];
+                    }
+                    if (array_key_exists($timeZoneID, $localizedTimezones)) {
+                        $place = $localizedTimezones[$timeZoneID];
+                    } else {
+                        $place = str_replace('_', ' ', $place);
+                    }
+                    $timezoneName = $area . '/' . $place;
+                }
+                $timeZones[$timeZoneID] = $timezoneName;
+            }
+            natcasesort($timeZones);
+            $cache[$locale] = $timeZones;
         }
-        natcasesort($timeZones);
 
-        return $timeZones;
+        return $cache[$locale];
+    }
+
+    /**
+     * Returns the display name of a timezone
+     * @param string $timezone The standard name of a timezone
+     * @return string
+     */
+    public function getTimezoneDisplayName($timezone)
+    {
+        $displayName = '';
+        if (is_string($timezone) && strlen($timezone)) {
+            $displayName = $timezone;
+            $timezones = $this->getTimezones();
+            if (array_key_exists($timezone, $timezones)) {
+                $displayName = $timezones[$timezone];
+            }
+        }
+
+        return $displayName;
     }
 
     /**
@@ -289,8 +314,7 @@ class Date
                 }
                 if ($tz) {
                     $timezone = $tz;
-                }
-                else {
+                } else {
                     $timezone = $this->getTimezone('app');
                 }
                 break;

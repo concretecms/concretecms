@@ -85,11 +85,16 @@ div[data-container=editable-fields] section {
 				<div class="col-md-4"><p><?=t('Last IP Address')?></p></div>
 				<div class="col-md-8"><p><?=$user->getLastIPAddress()?></p></div>
 			</div>
-			<? if (ENABLE_USER_TIMEZONE) { ?>
-			<div class="row">
-				<div class="col-md-4"><p><?=t('Timezone')?></p></div>
-				<div class="col-md-8"><p><span <? if ($canEditTimezone) { ?>data-editable-field-type="xeditable" data-source="<?=$view->action('get_timezones')?>" data-url="<?=$view->action('update_timezone', $user->getUserID())?>" data-type="select" data-name="uTimezone"<? } ?>><? if ($user->getUserTimezone()) { print $user->getUserTimezone(); } else { print date_default_timezone_get(); } ?></span></p></div>
-			</div>
+			<? if (ENABLE_USER_TIMEZONE) {
+				$uTimezone = $user->getUserTimezone();
+				if(empty($uTimezone)) {
+					$uTimezone = date_default_timezone_get();
+				}
+				?>
+				<div class="row">
+					<div class="col-md-4"><p><?=t('Timezone')?></p></div>
+					<div class="col-md-8"><p><span <? if ($canEditTimezone) { ?>data-editable-field-type="xeditable" data-source="<?=$view->action('get_timezones')?>" data-url="<?=$view->action('update_timezone', $user->getUserID())?>" data-type="select" data-name="uTimezone" data-value="<?=h($uTimezone)?>"<? } ?>><?=$dh->getTimezoneDisplayName($uTimezone) ?></span></p></div>
+				</div>
 			<? } ?>
 			<?
 			$languages = Localization::getAvailableInterfaceLanguages();
