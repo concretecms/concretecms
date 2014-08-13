@@ -191,6 +191,9 @@ class Date
                     if (array_key_exists($timeZoneID, $localizedTimezones)) {
                         $place = $localizedTimezones[$timeZoneID];
                     }
+                    else {
+                        $place = str_replace('_', ' ', $place);
+                    }
                     $timezoneName = $area . '/' . $place;
                 }
                 $timeZones[$timeZoneID] = $timezoneName;
