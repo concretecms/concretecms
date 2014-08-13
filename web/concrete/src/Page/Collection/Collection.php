@@ -44,6 +44,7 @@ class Collection extends Object
             $num++;
         }
         Config::save('DO_PAGE_REINDEX_CHECK', false);
+
         return $num;
     }
 
@@ -144,6 +145,7 @@ class Collection extends Object
         }
 
         $nc = Collection::getByID($newCID);
+
         return $nc;
     }
 
@@ -158,7 +160,7 @@ class Collection extends Object
         $q = "select Collections.cDateAdded, Collections.cDateModified, Collections.cID from Collections where cID = ?";
         $row = $db->getRow($q, array($cID));
 
-        $c = new Collection;
+        $c = new Collection();
         $c->setPropertiesFromArray($row);
 
         if ($version != false) {
@@ -169,14 +171,14 @@ class Collection extends Object
         return $c;
     }
 
-    function loadVersionObject($cvID = 'ACTIVE')
+    public function loadVersionObject($cvID = 'ACTIVE')
     {
         $this->vObj = CollectionVersion::get($this, $cvID);
     }
 
     /* attribute stuff */
 
-    function getVersionToModify()
+    public function getVersionToModify()
     {
         // first, we check to see if the version we're modifying has the same
         // author uID associated with it as we currently have, and if it's inactive
@@ -191,11 +193,12 @@ class Collection extends Object
             // and return that collection.
 
             $nc = $this->cloneVersion($versionComments);
+
             return $nc;
         }
     }
 
-    function getVersionObject()
+    public function getVersionObject()
     {
         return $this->vObj;
     }
@@ -252,7 +255,7 @@ class Collection extends Object
         return $nc;
     }
 
-    function getCollectionID()
+    public function getCollectionID()
     {
         return $this->cID;
     }
@@ -261,6 +264,7 @@ class Collection extends Object
     {
         $c = Page::getByID($this->getCollectionID(), 'ACTIVE');
         $cvID = $c->getVersionID();
+
         return t("Version %d", $cvID + 1);
     }
 
@@ -269,6 +273,7 @@ class Collection extends Object
         if (is_object($this->vObj)) {
             return CollectionVersionFeatureAssignment::getList($this);
         }
+
         return array();
     }
 
@@ -338,7 +343,7 @@ class Collection extends Object
         $this->reindex();
     }
 
-    function getVersionID()
+    public function getVersionID()
     {
         // shortcut
         return $this->vObj->cvID;
@@ -462,10 +467,11 @@ class Collection extends Object
         foreach ($akIDs as $akID) {
             $attribs[] = CollectionAttributeKey::getByID($akID);
         }
+
         return $attribs;
     }
 
-    function addAttribute($ak, $value)
+    public function addAttribute($ak, $value)
     {
         $this->setAttribute($ak, $value);
     }
@@ -484,12 +490,12 @@ class Collection extends Object
      * @param string $arHandle
      * @return Area
      */
-    function getArea($arHandle)
+    public function getArea($arHandle)
     {
         return Area::get($this, $arHandle);
     }
 
-    function hasAliasedContent()
+    public function hasAliasedContent()
     {
         $db = Loader::db();
         // aliased content is content on the particular page that is being
@@ -512,42 +518,23 @@ class Collection extends Object
                 }
             }
         }
+
         return false;
     }
 
-    function getCollectionDateLastModified($mask = null, $type = "system")
+    public function getCollectionDateLastModified()
     {
-        $dh = Loader::helper('date');
-        if (ENABLE_USER_TIMEZONES && $type == 'user') {
-            $cDateModified = $dh->getLocalDateTime($this->cDateModified);
-        } else {
-            $cDateModified = $this->cDateModified;
-        }
-        if ($mask == null) {
-            return $cDateModified;
-        } else {
-            return $dh->date($mask, strtotime($cDateModified));
-        }
+        return $this->cDateModified;
     }
 
-    function getCollectionHandle()
+    public function getCollectionHandle()
     {
         return $this->cHandle;
     }
 
-    function getCollectionDateAdded($mask = null, $type = 'system')
+    public function getCollectionDateAdded()
     {
-        $dh = Loader::helper('date');
-        if (ENABLE_USER_TIMEZONES && $type == 'user') {
-            $cDateAdded = $dh->getLocalDateTime($this->cDateAdded);
-        } else {
-            $cDateAdded = $this->cDateAdded;
-        }
-        if ($mask == null) {
-            return $cDateAdded;
-        } else {
-            return $dh->date($mask, strtotime($cDateAdded));
-        }
+        return $this->cDateAdded;
     }
 
     public function __destruct()
@@ -676,6 +663,7 @@ class Collection extends Object
             }
 
             $pss = new AreaCustomStyle($pss, $area->getAreaHandle());
+
             return $pss;
         }
     }
@@ -732,14 +720,14 @@ class Collection extends Object
         }
     }
 
-    function getCollectionTypeID()
+    public function getCollectionTypeID()
     {
         return false;
     }
 
     /* new cleaned up API below */
 
-    function getPageTypeID()
+    public function getPageTypeID()
     {
         return false;
     }
@@ -820,6 +808,7 @@ class Collection extends Object
                 }
             }
         }
+
         return $blocks;
     }
 
@@ -865,6 +854,7 @@ class Collection extends Object
                 }
             }
         }
+
         return $blockIDs;
     }
 
@@ -927,7 +917,7 @@ class Collection extends Object
         return Block::getByID($nb->getBlockID(), $this, $a);
     }
 
-    function getCollectionAreaDisplayOrder($arHandle, $ignoreVersions = false)
+    public function getCollectionAreaDisplayOrder($arHandle, $ignoreVersions = false)
     {
         // this function queries CollectionBlocks to grab the highest displayOrder value, then increments it, and returns
         // this is used to add new blocks to existing Pages/areas
@@ -952,6 +942,7 @@ class Collection extends Object
                     return 0;
                 }
                 $displayOrder++;
+
                 return $displayOrder;
             } else {
                 // we didn't get anything, so we return a zero
@@ -1121,6 +1112,7 @@ class Collection extends Object
                 $v2 = array($row['akID'], $row['cvID'], $row['avID'], $newCID);
                 $db->query("insert into CollectionAttributeValues (akID, cvID, avID, cID) values (?, ?, ?, ?)", $v2);
             }
+
             return Collection::getByID($newCID);
         }
 
