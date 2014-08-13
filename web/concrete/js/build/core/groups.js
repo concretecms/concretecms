@@ -153,6 +153,9 @@
 						return false;
 					}
 					if (!options.chooseNodeInForm && node.getEventTargetType(e) == 'title') {
+                        if (!node.data.gID) {
+                            return false;
+                        }
                         if (options.onClick) {
                             options.onClick(node);
                         } else {
