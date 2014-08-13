@@ -80,13 +80,10 @@ if ($_REQUEST['reload_and_remove_cache']) {
 		}
 		switch(FULL_PAGE_CACHE_LIFETIME) {
 			case 'default':
-				$time = time() - CACHE_LIFETIME;
-				$globalSettingLifetime = Loader::helper('date')->timeSince($time);
+				$globalSettingLifetime = Loader::helper('date')->describeInterval(CACHE_LIFETIME);
 				break;
 			case 'custom':
-				$custom = Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM');
-				$time = time() - $custom;
-				$globalSettingLifetime = Loader::helper('date')->timeSince($time);
+				$globalSettingLifetime = Loader::helper('date')->describeInterval(Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM'));
 				break;
 			case 'forever':
 				$globalSettingLifetime = t('Until manually cleared');
