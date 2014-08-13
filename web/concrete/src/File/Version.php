@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\File;
 
 use Carbon\Carbon;
@@ -90,7 +90,6 @@ class Version
      */
     protected $fvExtension = null;
 
-
     /**
      * @Column(type="integer")
      */
@@ -138,7 +137,7 @@ class Version
         $fv->fvFilename = $filename;
         $fv->fvPrefix = $prefix;
         $fv->fvDateAdded = $date;
-        $fv->fvIsApproved = (bool)$fvIsApproved;
+        $fv->fvIsApproved = (bool) $fvIsApproved;
         $fv->fvApproverUID = $uID;
         $fv->fvAuthorUID = $uID;
         $fv->fvActivateDateTime = $date;
@@ -157,7 +156,6 @@ class Version
         return $fv;
     }
 
-
     public function getFileID()
     {
         return $this->file->getFileID();
@@ -169,7 +167,6 @@ class Version
     }
 
     protected $attributes = array();
-
 
     // Update type constants
     const UT_REPLACE_FILE = 1;
@@ -211,6 +208,7 @@ class Version
     public function getGenericTypeText()
     {
         $to = $this->getTypeObject();
+
         return $to->getGenericTypeText($to->getGenericType());
     }
 
@@ -233,6 +231,7 @@ class Version
                 $clean_tags[] = trim($tag);
             }
         }
+
         return $clean_tags;
     }
 
@@ -316,13 +315,14 @@ class Version
                 }
             }
         }
+
         return $this->attributes[$akHandle . $mode];
     }
-
 
     public function getMimeType()
     {
         $fre = $this->getFileResource();
+
         return $fre->getMimetype();
     }
 
@@ -350,7 +350,7 @@ class Version
      * Gets the date a file version was added
      * @return string date formated like: 2009-01-01 00:00:00
      */
-    function getDateAdded()
+    public function getDateAdded()
     {
         return $this->fvDateAdded;
     }
@@ -426,7 +426,6 @@ class Version
         return $fv;
     }
 
-
     public function getType()
     {
         $ftl = $this->getTypeObject();
@@ -441,6 +440,7 @@ class Version
         $ext = $fh->getExtension($this->fvFilename);
 
         $ftl = FileTypeList::getType($ext);
+
         return $ftl;
     }
 
@@ -486,6 +486,7 @@ class Version
             // normalize the keys
             $updates1[] = $val;
         }
+
         return $updates1;
     }
 
@@ -524,7 +525,6 @@ class Version
         $this->logVersionUpdate(self::UT_REPLACE_FILE);
     }
 
-
     public function approve()
     {
         foreach ($this->file->getFileVersions() as $fv) {
@@ -542,7 +542,6 @@ class Version
         $fo->reindex();
     }
 
-
     public function deny()
     {
         $this->fvIsApproved = false;
@@ -550,7 +549,6 @@ class Version
         $fe = new \Concrete\Core\File\Event\FileVersion($this);
         Events::dispatch('on_file_version_deny', $fe);
     }
-
 
     /**
      * Removes a version of a file. Note, does NOT remove the file because we don't know where the file might elsewhere be used/referenced.
@@ -568,7 +566,7 @@ class Version
 
         $types = Type::getVersionList();
 
-        foreach($types as $type) {
+        foreach ($types as $type) {
             $this->deleteThumbnail($type);
         }
 
@@ -601,6 +599,7 @@ class Version
         $cf = Core::make('helper/concrete/file');
         $fs = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
         $fo = $fs->get($cf->prefix($this->fvPrefix, $this->fvFilename));
+
         return $fo;
     }
 
@@ -640,6 +639,7 @@ class Version
     {
         $c = Page::getCurrentPage();
         $cID = ($c instanceof Page) ? $c->getCollectionID() : 0;
+
         return BASE_URL . View::url('/download_file', $this->getFileID(), $cID);
     }
 
@@ -650,6 +650,7 @@ class Version
     {
         $c = Page::getCurrentPage();
         $cID = ($c instanceof Page) ? $c->getCollectionID() : 0;
+
         return BASE_URL . View::url('/download_file', 'force', $this->getFileID(), $cID);
     }
 
@@ -716,7 +717,7 @@ class Version
     {
         $thumbnails = array();
         $types = Type::getVersionList();
-        foreach($types as $type) {
+        foreach ($types as $type) {
 
             if ($this->getAttribute('width') <= $type->getWidth()) {
                 continue;
@@ -737,7 +738,7 @@ class Version
     public function rescanThumbnails()
     {
         $types = Type::getVersionList();
-        foreach($types as $type) {
+        foreach ($types as $type) {
 
             $fr = $this->getFileResource();
 
@@ -763,7 +764,7 @@ class Version
             $thumbnail = $image->thumbnail(new \Imagine\Image\Box($type->getWidth(), $height), $thumbnailMode);
             $thumbnailPath = $type->getFilePath($this);
 
-            $o = new \stdClass;
+            $o = new \stdClass();
             $o->visibility = AdapterInterface::VISIBILITY_PUBLIC;
             $o->mimetype = 'image/jpeg';
 
@@ -810,6 +811,7 @@ class Version
             $type = Type::getByHandle(FILE_MANAGER_LISTING_THUMBNAIL_HANDLE);
             $baseSrc = $this->getThumbnailURL($type->getBaseVersion());
             $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
+
             return '<img src="' . $baseSrc . '" data-at2x="' . $doubledSrc . '" />';
         } else {
             return $this->getTypeObject()->getThumbnail();
@@ -822,6 +824,7 @@ class Version
             $type = Type::getByHandle(FILE_MANAGER_DETAIL_THUMBNAIL_HANDLE);
             $baseSrc = $this->getThumbnailURL($type->getBaseVersion());
             $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
+
             return '<img src="' . $baseSrc . '" data-at2x="' . $doubledSrc . '" />';
         } else {
             return $this->getTypeObject()->getThumbnail();
@@ -878,6 +881,7 @@ class Version
         if (is_object($to) && $to->getView() != '') {
             return true;
         }
+
         return false;
     }
 
@@ -887,6 +891,7 @@ class Version
         if (is_object($to) && $to->getEditor() != '') {
             return true;
         }
+
         return false;
     }
 
@@ -911,7 +916,7 @@ class Version
      */
     public function getJSONObject()
     {
-        $r = new stdClass;
+        $r = new stdClass();
         $fp = new Permissions($this->getFile());
         $r->canCopyFile = $fp->canCopyFile();
         $r->canEditFilePermissions = $fp->canEditFilePermissions();
@@ -928,6 +933,7 @@ class Version
         $r->fileName = $this->getFilename();
         $r->resultsThumbnailImg = $this->getListingThumbnailImage();
         $r->fID = $this->getFileID();
+
         return $r;
     }
 }

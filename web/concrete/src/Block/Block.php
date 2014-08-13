@@ -28,7 +28,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public static function populateManually($blockInfo, $c, $a)
     {
-        $b = new Block;
+        $b = new Block();
         $b->setPropertiesFromArray($blockInfo);
 
         if (is_object($a)) {
@@ -114,7 +114,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         $db = Loader::db();
 
-        $b = new Block;
+        $b = new Block();
         if ($c == null && $a == null) {
             // just grab really specific block stuff
             $q = "select bID, bIsActive, BlockTypes.btID, Blocks.btCachedBlockRecord, BlockTypes.btHandle, BlockTypes.pkgID, BlockTypes.btName, bName, bDateAdded, bDateModified, bFilename, Blocks.uID from Blocks inner join BlockTypes on (Blocks.btID = BlockTypes.btID) where bID = ?";
@@ -157,12 +157,13 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                 $ca = new Cache();
                 CacheLocal::set('block', $bID, $b);
             }
+
             return $b;
 
         }
     }
 
-    function getBlockTypeID()
+    public function getBlockTypeID()
     {
         return $this->btID;
     }
@@ -172,7 +173,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $this->cID . ':' . $this->getAreaHandle() . ':' . $this->bID;
     }
 
-    function getAreaHandle()
+    public function getAreaHandle()
     {
         return $this->arHandle;
     }
@@ -263,10 +264,11 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                 return true;
             }
         }
+
         return false;
     }
 
-    function getBlockCollectionObject()
+    public function getBlockCollectionObject()
     {
         if (is_object($this->c)) {
             return $this->c;
@@ -275,7 +277,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    function getOriginalCollection()
+    public function getOriginalCollection()
     {
         // given a block ID, we find the original collection ID (where this bID is marked as isOriginal)
         $db = Loader::db();
@@ -285,6 +287,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $row = $r->fetchRow();
             $cID = $row['cID'];
             $nc = Page::getByID($cID, "ACTIVE");
+
             return $nc;
         }
     }
@@ -295,7 +298,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
      * @return string $path
      */
 
-    function getBlockID()
+    public function getBlockID()
     {
         return $this->bID;
     }
@@ -343,7 +346,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     {
         $b = $this;
         if (file_exists($this->getBlockPath() . '/' . $file)) {
-            include($this->getBlockPath() . '/' . $file);
+            include $this->getBlockPath() . '/' . $file;
         }
     }
 
@@ -360,6 +363,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                 $dir = DIR_FILES_BLOCK_TYPES_CORE . '/' . $this->getBlockTypeHandle();
             }
         }
+
         return $dir;
     }
 
@@ -373,12 +377,12 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         return PackageList::getHandle($this->pkgID);
     }
 
-    function getBlockTypeHandle()
+    public function getBlockTypeHandle()
     {
         return $this->btHandle;
     }
 
-    function revertToAreaPermissions()
+    public function revertToAreaPermissions()
     {
         $c = $this->getBlockCollectionObject();
 
@@ -392,12 +396,12 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
            $v);
     }
 
-    function loadNewCollection(&$c)
+    public function loadNewCollection(&$c)
     {
         $this->c = $c;
     }
 
-    function setBlockAreaObject(&$a)
+    public function setBlockAreaObject(&$a)
     {
         $this->a = $a;
         $this->arHandle = $a->getAreaHandle();
@@ -408,11 +412,12 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $this->cbIncludeAll;
     }
 
-    function getNumChildren()
+    public function getNumChildren()
     {
         $db = Loader::db();
         $q = "select count(*) as total from CollectionVersionBlocks where bID = ? and isOriginal = 0";
         $total = $db->getOne($q, array($this->bID));
+
         return $total;
     }
 
@@ -433,6 +438,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $this->instance = new $class($this);
         }
         $this->instance->setBlockObject($this);
+
         return $this->instance;
     }
 
@@ -441,7 +447,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         return BlockType::getByID($this->btID);
     }
 
-    function getCollectionList()
+    public function getCollectionList()
     {
         // gets a list of collections that include this block, along with area name, etc...
         // used in the block_details.php page in the admin control panel
@@ -454,11 +460,12 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                 $cArray[] = Page::getByID($row['cID'], 'RECENT');
             }
             $r->free();
+
             return $cArray;
         }
     }
 
-    function update($data)
+    public function update($data)
     {
         // this function updates fields common to every block
 
@@ -494,31 +501,31 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
            $v);
     }
 
-    function getBlockCollectionID()
+    public function getBlockCollectionID()
     {
         return $this->cID;
     }
 
-    function isActive()
+    public function isActive()
     {
         return $this->bIsActive;
     }
 
-    function deactivate()
+    public function deactivate()
     {
         $db = Loader::db();
         $q = "update Blocks set bIsActive = 0 where bID = ?";
         $db->query($q, array($this->bID));
     }
 
-    function activate()
+    public function activate()
     {
         $db = Loader::db();
         $q = "update Blocks set bIsActive = 1 where bID = ?";
         $db->query($q, array($this->bID));
     }
 
-    function updateBlockName($name, $force = 0)
+    public function updateBlockName($name, $force = 0)
     {
         // this function allows children blocks to change the name of the block. This is useful
         // for the block search functionality - a content local block can make the block name
@@ -537,7 +544,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    function alias($c)
+    public function alias($c)
     {
 
         // creates an alias of the block, attached to this collection, within the CollectionVersionBlocks table
@@ -619,11 +626,12 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    function overrideAreaPermissions()
+    public function overrideAreaPermissions()
     {
         if (!$this->cbOverrideAreaPermissions) {
             $this->cbOverrideAreaPermissions = 0;
         }
+
         return $this->cbOverrideAreaPermissions;
     }
 
@@ -638,6 +646,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                                    $co->getCollectionID() . ':' . $co->getVersionID() . ':' . $this->getAreaHandle() . ':' . $this->getBlockID());
             if (is_object($csrObject)) {
                 $this->issID = $csrObject->getCustomStyleSetID();
+
                 return $csrObject->getCustomStyleSetID();
             } else {
                 if ($csrCheck) {
@@ -667,10 +676,11 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                 $this->issID = 0;
             }
         }
+
         return $this->issID;
     }
 
-    function getBlockAreaObject()
+    public function getBlockAreaObject()
     {
         if (is_object($this->a)) {
             return $this->a;
@@ -680,7 +690,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     /**
      * Moves a block onto a new page and into a new area. Does not change any data about the block otherwise
      */
-    function move($nc, $area)
+    public function move($nc, $area)
     {
         $db = Loader::db();
         $bID = $this->getBlockID();
@@ -701,7 +711,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
            $v);
     }
 
-    function duplicate($nc, $isCopyFromMasterCollectionPropagation = false)
+    public function duplicate($nc, $isCopyFromMasterCollectionPropagation = false)
     {
         // duplicate takes a new collection as its argument, and duplicates the existing block
         // to that collection
@@ -804,6 +814,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                'insert into CollectionVersionBlockStyles (cID, cvID, bID, arHandle, issID) values (?, ?, ?, ?, ?)',
                $v);
         }
+
         return $nb;
     }
 
@@ -812,6 +823,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         if ($this->getCustomStyleSetID() > 0 || $force) {
             $csr = StyleSet::getByID($this->getCustomStyleSetID());
             $bs = new CustomStyle($csr, $this->getBlockID(), $this->getAreaHandle());
+
             return $bs;
         }
     }
@@ -885,9 +897,8 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             // now we check the scrapbook display
             $db = Loader::db();
 
-
             $rows=$db->getAll('select cID, cvID, arHandle FROM CollectionVersionBlocks cvb inner join btCoreScrapbookDisplay bts on bts.bID = cvb.bID where bts.bOriginalID = ?', array($this->getBlockID()));
-            foreach($rows as $row){
+            foreach ($rows as $row) {
                 Cache::delete('block', $this->getBlockID() . ':' . intval($row['cID']) . ':' . intval($row['cvID']) . ':' . $row['arHandle'] );
                 Cache::delete('block_view_output', $row['cID'] . ':' . $this->getBlockID() . ':' . $row['arHandle']);
                 Cache::delete('block', $this->getBlockID());
@@ -895,7 +906,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
             if ($this->getBlockTypeHandle() == BLOCK_HANDLE_SCRAPBOOK_PROXY && is_object($a)) {
                 $rows=$db->getAll('select cID, cvID, arHandle FROM CollectionVersionBlocks cvb inner join btCoreScrapbookDisplay bts on bts.bOriginalID = cvb.bID where bts.bID = ?', array($this->getBlockID()));
-                foreach($rows as $row){
+                foreach ($rows as $row) {
                     Cache::delete('block', $row['bID'] . ':' . $c->getCollectionID() . ':' . $c->getVersionID() . ':' . $a->getAreaHandle());
                     Cache::delete('block_view_output', $c->getCollectionID() . ':' . $row['bID'] . ':' . $a->getAreaHandle());
                 }
@@ -909,12 +920,12 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $this->c = $c;
     }
 
-    function getBlockTypeName()
+    public function getBlockTypeName()
     {
         return $this->btName;
     }
 
-    function getBlockUserID()
+    public function getBlockUserID()
     {
         return $this->uID;
     }
@@ -923,12 +934,12 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
      * Gets the date the block was added
      * @return string date formated like: 2009-01-01 00:00:00
      */
-    function getBlockDateAdded()
+    public function getBlockDateAdded()
     {
         return $this->bDateAdded;
     }
 
-    function getBlockDateLastModified()
+    public function getBlockDateLastModified()
     {
         return $this->bDateModified;
     }
@@ -938,12 +949,12 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $this->bActionCID = $bActionCID;
     }
 
-    function getBlockEditAction()
+    public function getBlockEditAction()
     {
         return $this->_getBlockAction();
     }
 
-    function _getBlockAction()
+    public function _getBlockAction()
     {
         $cID = $this->getBlockActionCollectionID();
         $bID = $this->getBlockID();
@@ -952,6 +963,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $valt = Loader::helper('validation/token');
         $token = $valt->generate();
         $str = DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&amp;bID={$bID}&amp;arHandle={$arHandle}" . $step . "&amp;ccm_token=" . $token;
+
         return $str;
     }
 
@@ -977,25 +989,28 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         return false;
     }
 
-    function getBlockUpdateInformationAction()
+    public function getBlockUpdateInformationAction()
     {
         $str = $this->_getBlockAction();
+
         return $str . '&amp;btask=update_information';
     }
 
-    function getBlockUpdateCssAction()
+    public function getBlockUpdateCssAction()
     {
         $str = $this->_getBlockAction();
+
         return $str . '&amp;btask=update_block_css';
     }
 
-    function isEditable()
+    public function isEditable()
     {
         $bv = new BlockView($this);
         $path = $bv->getBlockPath(FILENAME_BLOCK_EDIT);
         if (file_exists($path . '/' . FILENAME_BLOCK_EDIT)) {
             return true;
         }
+
         return false;
     }
 
@@ -1004,7 +1019,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $this->deleteBlock($forceDelete);
     }
 
-    function deleteBlock($forceDelete = false)
+    public function deleteBlock($forceDelete = false)
     {
         $db = Loader::db();
 
@@ -1115,7 +1130,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    function setOriginalBlockID($originalBID)
+    public function setOriginalBlockID($originalBID)
     {
         $this->originalBID = $originalBID;
     }
@@ -1201,7 +1216,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $this->updateBlockInformation($data);
     }
 
-    function updateBlockInformation($data)
+    public function updateBlockInformation($data)
     {
         // this is the function that updates a block's information, like its block filename, and block name
         $db = Loader::db();
@@ -1237,7 +1252,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         /*
         $db = Loader::db();
         $rows=$db->getAll( 'SELECT cID, cvID, arHandle FROM CollectionVersionBlocks WHERE bID='.intval($this->getBlockID()) );
-        foreach($rows as $row){
+        foreach ($rows as $row) {
             Cache::delete('block', $this->getBlockID() . ':' . intval($row['cID']) . ':' . intval($row['cvID']) . ':' . $row['arHandle'] );
             Cache::delete('block_view_output', $row['cID'] . ':' . $this->getBlockID(). ':' . $row['arHandle']);
             Cache::delete('collection_blocks', $row['cID'] . ':' . $row['cvID']);
@@ -1281,12 +1296,12 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $this->getBlockCollectionObject()->isBlockAliasedFromMasterCollection($this);
     }
 
-    function getBlockName()
+    public function getBlockName()
     {
         return $this->bName;
     }
 
-    function getBlockFilename()
+    public function getBlockFilename()
     {
         return $this->bFilename;
     }
