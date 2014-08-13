@@ -2,7 +2,7 @@
 
 <? if (isset($key)) { ?>
 
-<form method="post" class="form-horizontal" action="<?=$view->action('edit')?>" id="ccm-attribute-key-form">
+<form method="post" action="<?=$view->action('edit')?>" id="ccm-attribute-key-form">
 
 <? Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type, 'key' => $key)); ?>
 
@@ -12,7 +12,7 @@
 <? } else if ($this->controller->getTask() == 'select_type' || $this->controller->getTask() == 'add' || $this->controller->getTask() == 'edit') { ?>
 
 	<? if (isset($type)) { ?>
-		<form method="post" class="form-horizontal" action="<?=$view->action('add')?>" id="ccm-attribute-key-form">
+		<form method="post" action="<?=$view->action('add')?>" id="ccm-attribute-key-form">
 	
 		<? Loader::element("attribute/type_form_required", array('category' => $category, 'type' => $type)); ?>
 	
