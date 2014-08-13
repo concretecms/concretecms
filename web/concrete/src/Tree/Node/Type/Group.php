@@ -29,7 +29,7 @@ class Group extends TreeNode {
 
 		$g = UserGroup::getByID($this->gID);
 		if (is_object($g)) {
-			return t($g->getGroupName());
+			return t($g->getGroupDisplayName());
 		}
 	}
 
