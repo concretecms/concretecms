@@ -14,6 +14,7 @@ use \Concrete\Core\Attribute\Key\Key as AttributeKey;
 use Group;
 use \Hautelook\Phpass\PasswordHash;
 use Session;
+use Core;
 
 class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
@@ -485,10 +486,12 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     {
         $db = Loader::db();
         if ($this->uID) {
+            $ux = $this->getUserObject();
             $uName = $this->getUserName();
             $uEmail = $this->getUserEmail();
             $uHasAvatar = $this->hasAvatar();
             $uTimezone = $this->getUserTimezone();
+            $uDefaultLanguage = $ux->getUserDefaultLanguage();
             if (isset($data['uName'])) {
                 $uName = $data['uName'];
             }
@@ -501,14 +504,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             if ( isset($data['uTimezone'])) {
                 $uTimezone = $data['uTimezone'];
             }
-
-            $ux = $this->getUserObject();
-            $uDefaultLanguage = $ux->getUserDefaultLanguage();
             if (isset($data['uDefaultLanguage']) && $data['uDefaultLanguage'] != '') {
                 $uDefaultLanguage = $data['uDefaultLanguage'];
-                if (Session::get('uID') == $this->uID) {
-                    Session::set('uDefaultLanguage', $uDefaultLanguage); // make sure to keep the new uDefaultLanguage in there
-                }
             }
 
             $testChange = false;
@@ -531,8 +528,11 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             }
 
             // now we check to see if the user is updated his or her own logged in record
-            if (Session::has('uID') && Session::get('uID') == $this->uID) {
-                Session::set('uName', $uName); // make sure to keep the new uName in there
+            $session = Core::make('session');
+            if ($session->has('uID') && ($session->get('uID') == $this->uID)) {
+                $session->set('uName', $uName);
+                $session->set('uTimezone', $uTimezone);
+                $session->set('uDefaultLanguage', $uDefaultLanguage);
             }
 
             // run any internal event we have for user update
