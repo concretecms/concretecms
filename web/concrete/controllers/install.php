@@ -14,7 +14,7 @@ use View;
 defined('C5_EXECUTE') or die("Access Denied.");
 
 if (!ini_get('safe_mode')) {
-    @set_time_limit(300);
+    @set_time_limit(1000);
 }
 
 define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;*.pptx;*.kml;*.xml');
