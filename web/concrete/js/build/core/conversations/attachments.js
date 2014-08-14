@@ -4,7 +4,6 @@
 	
 		init: function(options) {
 			var obj = options;
-            console.log(obj.$element);
             obj.$element.on('click.cnv', 'a[data-toggle=conversation-reply]', function() {
 				$('.ccm-conversation-wrapper').ccmconversationattachments('clearDropzoneQueues');
 			});
