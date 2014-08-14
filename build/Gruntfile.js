@@ -325,7 +325,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-less');
-    grunt.loadNpmTasks('grunt-autoprefixer');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     // Now let's build the final configuration for Grunt.
@@ -391,12 +390,6 @@ module.exports = function(grunt) {
         }
     };
 
-    config.autoprefixer = {
-        css: {
-            src: Object.keys(css)
-        }
-    };
-
 
     config.watch = {
         javascript: {
@@ -409,7 +402,7 @@ module.exports = function(grunt) {
 
         css: {
             files: '<%=DIR_BASE%>/concrete/css/**/*.less',
-            tasks: ['css:debug', 'autoprefixer'],
+            tasks: ['css:debug'],
             options: {
                 livereload: true
             }
@@ -423,9 +416,9 @@ module.exports = function(grunt) {
     grunt.registerTask('js:release', jsTargets.release);
     grunt.registerTask('js', 'js:release');
 
-    grunt.registerTask('css:debug', ['less:debug', 'autoprefixer']);
-    grunt.registerTask('css:release', ['less:release', 'autoprefixer']);
-    grunt.registerTask('css', ['css:release', 'autoprefixer']);
+    grunt.registerTask('css:debug', 'less:debug');
+    grunt.registerTask('css:release', 'less:release');
+    grunt.registerTask('css', 'css:release');
 
     grunt.registerTask('debug', ['js:debug', 'css:debug']);
     grunt.registerTask('release', ['js:release', 'css:release']);
