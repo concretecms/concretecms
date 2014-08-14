@@ -1099,8 +1099,16 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         // so we don't have to query the database separately for every block on the page.
         if (is_null($this->blocksAliasedFromMasterCollection)) {
             $db = Loader::db();
-            $q = 'SELECT bID FROM CollectionVersionBlocks WHERE cID = ? AND isOriginal = 0 AND cvID = ? AND bID IN (SELECT bID FROM CollectionVersionBlocks AS cvb2 WHERE cvb2.cid = ?)';
-            $v = array($this->getCollectionID(), $this->getVersionObject()->getVersionID(), $this->getMasterCollectionID());
+            $q = 'SELECT cvb.bID FROM CollectionVersionBlocks AS cvb
+                    INNER JOIN CollectionVersionBlocks AS cvb2
+                        ON cvb.bID = cvb2.bID
+                            AND cvb2.cID = ?
+                    WHERE cvb.cID = ?
+                        AND cvb.isOriginal = 0
+                        AND cvb.cvID = ?
+                    GROUP BY cvb.bID
+                    ;';
+            $v = array($this->getMasterCollectionID(), $this->getCollectionID(), $this->getVersionObject()->getVersionID());
             $this->blocksAliasedFromMasterCollection = $db->GetCol($q, $v);
         }
         return in_array($b->getBlockID(), $this->blocksAliasedFromMasterCollection);
