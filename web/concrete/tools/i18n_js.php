@@ -102,7 +102,7 @@ var ccmi18n = {
     fontSize: "<?=t('Font Size')?>",
     letterSpacing: "<?=t('Letter spacing')?>",
     lineHeight: "<?=t('Line Height')?>"
-}
+};
 
 var ccmi18n_editor = {
 
@@ -110,7 +110,7 @@ var ccmi18n_editor = {
     insertImage: "<?=t('Insert Image')?>",
     insertLinkToPage: "<?=t('Link to Page')?>"
 
-}
+};
 
 var ccmi18n_sitemap = {
 
@@ -165,21 +165,21 @@ var ccmi18n_sitemap = {
     loadErrorTitle: "<?=t('Unable to load sitemap data.')?>",
     on: "<?=t('on')?>"
 
-}
+};
 
 var ccmi18n_spellchecker = {
 
     resumeEditing: "<?=t('Resume Editing')?>",
     noSuggestions: "<?=t('No Suggestions')?>"
 
-}
+};
 
 var ccmi18n_groups = {
 
     editGroup: "<?=t('Edit Group')?>",
     editPermissions: "<?=t('Edit Permissions')?>"
 
-}
+};
 
 var ccmi18n_filemanager = {
 
@@ -214,7 +214,7 @@ var ccmi18n_filemanager = {
     FTYPE_DOCUMENT: "<?=FileType::T_DOCUMENT?>",
     FTYPE_APPLICATION: "<?=FileType::T_APPLICATION?>"
 
-}
+};
 
 var ccmi18n_chosen = {
 
@@ -222,4 +222,18 @@ var ccmi18n_chosen = {
     placeholder_text_single: "<?=t('Select an Option')?>",
     no_results_text: "<?=t(/*i18n After this text we have a search criteria: for instance 'No results match "Criteria"'*/'No results match')?>"
 
+};
+
+var ccmi18n_topics = {
+
+    addCategory: "<?=t('Add Category')?>",
+    editCategory: "<?=t('Edit Category')?>",
+    deleteCategory: "<?=t('Delete Category')?>",
+    cloneCategory: "<?=t('Clone Category')?>",
+    addTopic: "<?=t('Add Topic')?>",
+    editTopic: "<?=t('Add Topic')?>",
+    deleteTopic: "<?=t('Delete Topic')?>",
+    cloneTopic: "<?=t('Clone Topic')?>",
+    editPermissions: "<?=t('Edit Permissions')?>"
+    
 };
