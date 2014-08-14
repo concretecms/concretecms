@@ -223,3 +223,17 @@ var ccmi18n_chosen = {
     no_results_text: "<?=t(/*i18n After this text we have a search criteria: for instance 'No results match "Criteria"'*/'No results match')?>"
 
 };
+
+var ccmi18n_topics = {
+
+    addCategory: "<?=t('Add Category')?>",
+    editCategory: "<?=t('Edit Category')?>",
+    deleteCategory: "<?=t('Delete Category')?>",
+    cloneCategory: "<?=t('Clone Category')?>",
+    addTopic: "<?=t('Add Topic')?>",
+    editTopic: "<?=t('Add Topic')?>",
+    deleteTopic: "<?=t('Delete Topic')?>",
+    cloneTopic: "<?=t('Clone Topic')?>",
+    editPermissions: "<?=t('Edit Permissions')?>"
+    
+}
