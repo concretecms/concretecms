@@ -459,6 +459,7 @@ div.ccm-discussion {
 
   .message {
     opacity: 1;
+    -ms-filter: none;
     filter: none;
   }
 
@@ -478,6 +479,7 @@ div.ccm-discussion {
           display: block;
           opacity: 0.1;
           filter: alpha(opacity=10);
+          -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=10)";
         }
       }
     }
@@ -518,6 +520,7 @@ div.ccm-discussion {
       .error-mark {
         display: block;
         opacity: 1;
+        -ms-filter: none;
         filter: none;
       }
 
@@ -591,6 +594,10 @@ div.ccm-discussion {
         left: 0;
         width: 0%;
         background-color: #8cc657;
+        -webkit-animation: loading 0.4s linear infinite;
+        -moz-animation: loading 0.4s linear infinite;
+        -o-animation: loading 0.4s linear infinite;
+        -ms-animation: loading 0.4s linear infinite;
         animation: loading 0.4s linear infinite;
         transition: width 0.3s ease-in-out;
         .transition(width 0.3s ease-in-out);

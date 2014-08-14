@@ -38,6 +38,10 @@
     border: 1px solid @chznDropBorder;
     border-top-color: lighten(@chznDropBorder, 25%);
     .border-radius(@chznBorderRadius);
+    -webkit-border-top-left-radius: 0;
+    -webkit-border-top-right-radius: 0;
+    -moz-border-radius-topleft: 0;
+    -moz-border-radius-topright: 0;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     .box-shadow(@chznDropBoxShadow);
@@ -56,7 +60,7 @@
     position: relative;
     overflow-x: hidden;
     overflow-y: auto;
-    overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch;
 
     li {
       display: none;
@@ -141,6 +145,8 @@
     background-color: @chznBackground;
     #gradient > .vertical(@bodyBackground, @grayLighter);
     //.border-radius(5px);
+    -webkit-background-clip: padding-box;
+       -moz-background-clip: padding;
             background-clip: padding-box;
     border: 1px solid @chznBorder;
     .box-shadow(@chznBoxShadow);
@@ -219,8 +225,15 @@
 
   .chzn-drop {
     .border-radius(@chznBorderRadius);
+    -webkit-border-top-left-radius: 0;
+    -webkit-border-top-right-radius: 0;
+    -moz-border-radius-topleft: 0;
+    -moz-border-radius-topright: 0;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+    -webkit-background-clip: padding-box;
+       -moz-background-clip: padding;
+            background-clip: padding-box;
   }
 }
 
@@ -274,6 +287,8 @@
     }
 
     .search-choice {
+      -webkit-background-clip: padding-box;
+         -moz-background-clip: padding;
               background-clip: padding-box;
       background-color: @grayLighter;
       border: 1px solid @chznBorder;
@@ -349,6 +364,10 @@
 
   .chzn-choices {
     border: 1px solid @chznFocusBorder;
+    -webkit-border-bottom-left-radius: 0;
+    -webkit-border-bottom-right-radius: 0;
+       -moz-border-radius-bottomleft: 0;
+       -moz-border-radius-bottomright: 0;
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
     .box-shadow(@chznFocusBoxShadow);

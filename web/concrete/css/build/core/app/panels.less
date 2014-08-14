@@ -6,6 +6,8 @@ div.ccm-panel {
     z-index: @index-level-panel; // has to come above the detail actions wrapper
     overflow: hidden;
     user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
 }
 
 div#ccm-panel-overlay {
@@ -312,6 +314,8 @@ div#ccm-panel-add-clipboard-block-list {
             padding-left: 40px;
             line-height: 40px;
             color: rgb(115, 124, 142);
+            cursor: -moz-grab;
+            cursor: -webkit-grab;
             cursor: grab;
         }
 
@@ -673,14 +677,18 @@ html.ccm-panel-right div.ccm-page.ccm-panel-detail-transition-swap {
 
 html.ccm-panel-ready div.ccm-page.ccm-panel-detail-transition-swap {
     transform: rotateY(0deg);
+    -webkit-transform: rotateY(0deg);
     .transition-duration(0.5s);
     transition-easing: none;
+    -webkit-transition-easing: none;
 }
 
 html.ccm-panel-ready div.ccm-page.ccm-panel-detail-transition-swap.ccm-panel-detail-transition-swap-apply {
     transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
     .transition-duration(0.5s);
     transition-easing: none;
+    -webkit-transition-easing: none;
 }
 
 div.ccm-panel-detail.ccm-panel-detail-transition-none.ccm-panel-detail-transition-none-apply {
@@ -800,6 +808,8 @@ div.ccm-panel-header-accordion-dropdown-visible {
 .ccm-ui {
     input.ccm-flat-checkbox, input.ccm-flat-radio {
         appearance: none;
+        -webkit-appearance: none;
+        padding: 9px;
         margin-right: 8px;
         margin-top: -1px;
         display: inline-block;
@@ -1001,6 +1011,7 @@ div.ccm-panel-confirmation-wrapper {
         color: #fff;
         padding: 40px 60px 40px 60px;
         .border-radius(2px);
+        -webkit-filter: blur(10px);
         filter: blur(20px);
         .opacity(0.4);
         .translate3d(0, 0, 0);
@@ -1016,6 +1027,7 @@ div.ccm-panel-confirmation-wrapper {
     &.ccm-panel-confirmation-displayed {
         div.ccm-panel-confirmation {
             .opacity(1);
+            -webkit-filter: blur(0px);
             filter: blur(0px);
         }
     }
