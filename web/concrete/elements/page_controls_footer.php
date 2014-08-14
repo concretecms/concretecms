@@ -261,7 +261,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
             <a href="#" data-panel-url="<?= URL::to('/ccm/system/panels/sitemap') ?>"
                                             title="<?= t('Add Pages and Navigate Your Site') ?>"
                                             data-launch-panel="sitemap">
-                <i class="c5i c5i-pages"></i>
+                <i class="c5i c5i-pages-fold"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings">
                     <?= tc('toolbar', 'Add Page') ?>
                 </span>
