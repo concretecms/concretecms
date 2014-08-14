@@ -59,6 +59,9 @@ class UserKey extends Key {
 	}
 
 	public static function getByHandle($akHandle) {
+        if(is_array($akHandle)) {
+            $akHandle = reset($akHandle);
+        }
 		$ak = CacheLocal::getEntry('user_attribute_key_by_handle', $akHandle);
 		if (is_object($ak)) {
 			return $ak;
@@ -192,23 +195,23 @@ class UserKey extends Key {
 		$ak = parent::add('user', $type, $args, $pkg);
 		
 		extract($args);
-		
-		if ($uakProfileDisplay != 1) {
+
+        if (!isset($uakProfileDisplay) || $uakProfileDisplay != 1) {
 			$uakProfileDisplay = 0;
 		}
-		if ($uakMemberListDisplay != 1) {
+		if (!isset($uakMemberListDisplay) || $uakMemberListDisplay != 1) {
 			$uakMemberListDisplay = 0;
 		}
-		if ($uakProfileEdit != 1) {
+		if (!isset($uakProfileEdit) || $uakProfileEdit != 1) {
 			$uakProfileEdit = 0;
 		}
-		if ($uakProfileEditRequired != 1) {
+		if (!isset($uakProfileEditRequired) || $uakProfileEditRequired != 1) {
 			$uakProfileEditRequired = 0;
 		}
-		if ($uakRegisterEdit != 1) {
+		if (!isset($uakRegisterEdit) || $uakRegisterEdit != 1) {
 			$uakRegisterEdit = 0;
 		}
-		if ($uakRegisterEditRequired != 1) {
+		if (!isset($uakRegisterEditRequired) || $uakRegisterEditRequired != 1) {
 			$uakRegisterEditRequired = 0;
 		}
 		
@@ -237,22 +240,22 @@ class UserKey extends Key {
 
 		extract($args);
 
-		if ($uakProfileDisplay != 1) {
+        if (isset($uakProfileDisplay) && $uakProfileDisplay != 1) {
 			$uakProfileDisplay = 0;
 		}
-		if ($uakMemberListDisplay != 1) {
+		if (isset($uakMemberListDisplay) && $uakMemberListDisplay != 1) {
 			$uakMemberListDisplay = 0;
 		}
-		if ($uakProfileEdit != 1) {
+		if (isset($uakProfileEdit) && $uakProfileEdit != 1) {
 			$uakProfileEdit = 0;
 		}
-		if ($uakProfileEditRequired != 1) {
+		if (isset($uakProfileEditRequired) && $uakProfileEditRequired != 1) {
 			$uakProfileEditRequired = 0;
 		}
-		if ($uakRegisterEdit != 1) {
+		if (isset($uakRegisterEdit) && $uakRegisterEdit != 1) {
 			$uakRegisterEdit = 0;
 		}
-		if ($uakRegisterEditRequired != 1) {
+		if (isset($uakRegisterEditRequired) && $uakRegisterEditRequired != 1) {
 			$uakRegisterEditRequired = 0;
 		}
 		$db = Loader::db();

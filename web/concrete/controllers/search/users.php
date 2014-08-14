@@ -41,17 +41,19 @@ class Users extends Controller {
 		}
 
 		$req = $this->searchRequest->getSearchRequest();
-		$columns = UserSearchColumnSet::getCurrent();
+        $userSearchColumnSet = new UserSearchColumnSet();
+		$columns = $userSearchColumnSet->getCurrent();
 
         if (!$this->userList->getActiveSortColumn()) {
     		$col = $columns->getDefaultSortColumn();
 	    	$this->userList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
         }
 
+
         $this->userList->includeInactiveUsers();
         $this->userList->includeUnvalidatedUsers();
 
-        $columns = UserSearchColumnSet::getCurrent();
+        $columns = $userSearchColumnSet->getCurrent();
 		$this->set('columns', $columns);
 
 		if ($req['keywords'] != '') {
@@ -61,7 +63,7 @@ class Users extends Controller {
 		if ($req['numResults'] && Loader::helper('validation/numbers')->integer($req['numResults'])) {
 			$this->userList->setItemsPerPage($req['numResults']);
 		}
-		
+
 		$u = new User();
         /*
 		if (!$u->isSuperUser()) {
@@ -77,7 +79,7 @@ class Users extends Controller {
 			$this->userList->addToQuery("left join UserGroups ugRequired on ugRequired.uID = u.uID ");
 			$this->userList->filter(false, '(ugRequired.gID in (' . implode(',', $gIDs) . ') or ugRequired.gID is null)');
 		}
-		
+
 		$filterGIDs = array();
 		if (isset($req['gID']) && is_array($req['gID'])) {
 			foreach($req['gID'] as $gID) {

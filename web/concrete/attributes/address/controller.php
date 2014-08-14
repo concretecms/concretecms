@@ -20,7 +20,11 @@ class Controller extends AttributeTypeController  {
         );
     }
 
-	public function searchForm($list) {
+    /**
+     * @param \Concrete\Core\Search\ItemList\Database\AttributedItemList $list
+     * @return mixed
+     */
+    public function searchForm($list) {
 		$address1 = $this->request('address1');
 		$address2 = $this->request('address2');
 		$city = $this->request('city');
