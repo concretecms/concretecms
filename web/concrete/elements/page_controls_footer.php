@@ -128,7 +128,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                         </ul>
                     </li>
                 <?php } ?>
-                <li class="parent-ul"><i class="fa fa-th-large mobile-leading-icon"></i><a
+                <li class="parent-ul"><i class="fa fa-sliders mobile-leading-icon"></i><a
                         href="<?= URL::to('/dashboard') ?>"><?php echo t('Dashboard') ?><i
                             class="fa fa-caret-down"></i></a>
                     <ul class="list-unstyled">
@@ -250,7 +250,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
         <li class="pull-right hidden-xs ">
             <a href="<?= URL::to('/dashboard') ?>" data-launch-panel="dashboard"
                                              title="<?= t('Dashboard – Change Site-wide Settings') ?>">
-                <i class="fa fa-th-large"></i>
+                <i class="fa fa-sliders"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings">
                     <?= tc('toolbar', 'Site Settings') ?>
                 </span>
