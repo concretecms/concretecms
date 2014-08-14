@@ -10,7 +10,11 @@ class Ajax {
 		if(@ob_get_length()) {
 			@ob_end_clean();
 		}
-		header('Content-Type: application/json; charset=' . APP_CHARSET, true);
+        if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+            header('Content-Type: application/json; charset=' . APP_CHARSET, true);
+        } else {
+            header('Content-Type: text/plain; charset=' . APP_CHARSET, true);
+        }
 		echo Loader::helper('json')->encode($result);
 		die();
 	}
