@@ -1,10 +1,4 @@
 .border-radius(@topright: 0, @bottomright: 0, @bottomleft: 0, @topleft: 0) {
-    -webkit-border-top-right-radius: @topright;
-    -webkit-border-bottom-right-radius: @bottomright;
-    -webkit-border-bottom-left-radius: @bottomleft;
-    -moz-border-radius-topright: @topright;
-    -moz-border-radius-bottomright: @bottomright;
-    -moz-border-radius-bottomleft: @bottomleft;
     border-top-right-radius: @topright;
     border-bottom-right-radius: @bottomright;
     border-bottom-left-radius: @bottomleft;
@@ -12,42 +6,25 @@
 
 .border-top-left-radius(@radius: 0) {
     border-top-left-radius: @radius;
-    -moz-border-radius-topleft: @radius;
-    -webkit-border-top-left-radius: @radius;
 }
 
 .border-top-right-radius(@radius: 0) {
     border-top-right-radius: @radius;
-    -moz-border-radius-topright: @radius;
-    -webkit-border-top-right-radius: @radius;
 }
 
 .border-top-right-radius(@radius: 0) {
     border-top-right-radius: @radius;
-    -moz-border-radius-topright: @radius;
-    -webkit-border-top-right-radius: @radius;
 }
 
 .opacity(@opacity: 0.5) {
-    -moz-opacity: @opacity;
-    -khtml-opacity: @opacity;
-    -webkit-opacity: @opacity;
     opacity: @opacity;
-    @opperc: @opacity * 100;
-    -ms-filter: ~"progid:DXImageTransform.Microsoft.Alpha(opacity=@{opperc})";
-    filter: ~"alpha(opacity=@{opperc})";
 }
 
 .transition(@duration:0.2s, @elem:all, @ease:ease-out) {
-    -webkit-transition: @elem @duration @ease;
-    -moz-transition: @elem @duration @ease;
-    -o-transition: @elem @duration @ease;
     transition: @elem @duration @ease;
 }
 
 .box-shadow(@args...) {
-    -webkit-box-shadow: @args;
-    -moz-box-shadow: @args;
     box-shadow: @args;
 }
 
@@ -84,14 +61,7 @@ div.editorcontainer {
         width: 100%;
         .border-radius(0, 0, 5px, 0);
         background: #ffffff;
-        background: -moz-linear-gradient(top, #ffffff 31%, #e8e9e9 100%);
-        background: -webkit-gradient(linear, left top, left bottom, color-stop(31%, #ffffff), color-stop(100%, #e8e9e9));
-        background: -webkit-linear-gradient(top, #ffffff 31%, #e8e9e9 100%);
-        background: -o-linear-gradient(top, #ffffff 31%, #e8e9e9 100%);
-        background: -ms-linear-gradient(top, #ffffff 31%, #e8e9e9 100%);
         background: linear-gradient(to bottom, #ffffff 31%, #e8e9e9 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e8e9e9', GradientType=0);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#e8e9e9', GradientType=0); /* IE6-9 */
 
         span.scale {
             position: absolute;

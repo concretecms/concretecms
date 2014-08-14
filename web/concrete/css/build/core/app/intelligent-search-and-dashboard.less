@@ -79,9 +79,6 @@ div#ccm-intelligent-search-results {
       animation-duration: 0.5s;
       animation-timing-function: ease;
       animation-iteration-count: infinite;
-      -webkit-animation-duration: 0.5s;
-      -webkit-animation-timing-function: ease;
-      -webkit-animation-iteration-count: infinite;
     }
 
     .dot1, .dot2 {
@@ -98,19 +95,15 @@ div#ccm-intelligent-search-results {
 
     .dot1 {
       animation-name: loader-reveal;
-      -webkit-animation-name: loader-reveal;
     }
 
     .dot2, .dot3 {
       animation-name: loader-slide;
-      -webkit-animation-name: loader-slide;
     }
 
     .dot4 {
       animation-name: loader-reveal;
       animation-direction: reverse; /* thx @HugoGiraudel */
-      -webkit-animation-name: loader-reveal;
-      -webkit-animation-direction: reverse; /* thx @HugoGiraudel */
     }
 
   }
@@ -152,35 +145,15 @@ div#ccm-intelligent-search-results {
 @keyframes loader-reveal {
   from {
     transform: scale(0.001);
-    -webkit-transform: scale(0.001);
   }
   to {
-    -webkit-transform: scale(1);
+    transform: scale(1);
   }
 }
 
 @keyframes loader-slide {
   to {
     transform: translateX(1.5em);
-    -webkit-transform: translateX(1.5 em);
-  }
-}
-
-@-webkit-keyframes loader-reveal {
-  from {
-    transform: scale(0.001);
-    -webkit-transform: scale(0.001);
-  }
-  to {
-    transform: scale(1);
-    -webkit-transform: scale(1);
-  }
-}
-
-@-webkit-keyframes loader-slide {
-  to {
-    transform: translateX(1.5em);
-    -webkit-transform: translateX(1.5em);
   }
 }
 
