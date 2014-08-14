@@ -1193,23 +1193,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     /**
      * Gets the date a the current version was made public,
-     * if user is specified, returns in the current user's timezone
-     * @param string $mask
-     * @param string $type (system || user)
      * @return string date formated like: 2009-01-01 00:00:00
-    */
-    function getCollectionDatePublic($mask = null, $type='system') {
-        $dh = Loader::helper('date');
-        if(ENABLE_USER_TIMEZONES && $type == 'user') {
-            $cDatePublic = $dh->getLocalDateTime($this->vObj->cvDatePublic);
-        } else {
-            $cDatePublic = $this->vObj->cvDatePublic;
-        }
-        if ($mask == null) {
-            return $cDatePublic;
-        } else {
-            return $dh->date($mask, strtotime($cDatePublic));
-        }
+     */
+    function getCollectionDatePublic() {
+        return $this->vObj->cvDatePublic;
     }
 
     /**

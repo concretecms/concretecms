@@ -78,17 +78,10 @@ class Package extends Object {
 	
 	/**
 	 * Gets the date the package was added to the system, 
-	 * if user is specified, returns in the current user's timezone
-	 * @param string $type (system || user)
 	 * @return string date formated like: 2009-01-01 00:00:00 
 	*/
-	function getPackageDateInstalled($type = 'system') {
-		if(ENABLE_USER_TIMEZONES && $type == 'user') {
-			$dh = Loader::helper('date');
-			return $dh->getLocalDateTime($this->pkgDateInstalled);
-		} else {
-			return $this->pkgDateInstalled;
-		}
+	function getPackageDateInstalled() {
+		return $this->pkgDateInstalled;
 	}
 	
 	public function getPackageVersion() {return $this->pkgVersion;}

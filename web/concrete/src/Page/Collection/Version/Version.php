@@ -140,17 +140,10 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 
 	/**
 	 * Gets the date the collection version was created
-	 * if user is specified, returns in the current user's timezone
-	 * @param string $type (system || user)
 	 * @return string date formated like: 2009-01-01 00:00:00
 	*/
-	function getVersionDateCreated($type = 'system') {
-		if(ENABLE_USER_TIMEZONES && $type == 'user') {
-			$dh = Loader::helper('date');
-			return $dh->getLocalDateTime($this->cvDateCreated);
-		} else {
-			return $this->cvDateCreated;
-		}
+	function getVersionDateCreated() {
+		return $this->cvDateCreated;
 	}
 
 	function canWrite() {return $this->cvCanWrite;}

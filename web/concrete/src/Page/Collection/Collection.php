@@ -515,19 +515,9 @@ class Collection extends Object
         return false;
     }
 
-    function getCollectionDateLastModified($mask = null, $type = "system")
+    function getCollectionDateLastModified()
     {
-        $dh = Loader::helper('date');
-        if (ENABLE_USER_TIMEZONES && $type == 'user') {
-            $cDateModified = $dh->getLocalDateTime($this->cDateModified);
-        } else {
-            $cDateModified = $this->cDateModified;
-        }
-        if ($mask == null) {
-            return $cDateModified;
-        } else {
-            return $dh->date($mask, strtotime($cDateModified));
-        }
+        return $this->cDateModified;
     }
 
     function getCollectionHandle()
@@ -535,19 +525,9 @@ class Collection extends Object
         return $this->cHandle;
     }
 
-    function getCollectionDateAdded($mask = null, $type = 'system')
+    function getCollectionDateAdded()
     {
-        $dh = Loader::helper('date');
-        if (ENABLE_USER_TIMEZONES && $type == 'user') {
-            $cDateAdded = $dh->getLocalDateTime($this->cDateAdded);
-        } else {
-            $cDateAdded = $this->cDateAdded;
-        }
-        if ($mask == null) {
-            return $cDateAdded;
-        } else {
-            return $dh->date($mask, strtotime($cDateAdded));
-        }
+        return $this->cDateAdded;
     }
 
     public function __destruct()
