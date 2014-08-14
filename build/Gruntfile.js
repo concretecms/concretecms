@@ -75,6 +75,7 @@ module.exports = function(grunt) {
         ccm_app: {
             dest: '<%= DIR_BASE %>/concrete/js/app.js',
             src: [
+                '<%= DIR_BASE %>/concrete/js/build/vendor/modernizr/modernizr.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/json.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-form/jquery-form.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/concrete5.js',
