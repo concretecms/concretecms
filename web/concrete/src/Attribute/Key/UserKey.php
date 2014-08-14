@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Attribute\Key;
 
 use \Concrete\Core\Attribute\Type as AttributeType;

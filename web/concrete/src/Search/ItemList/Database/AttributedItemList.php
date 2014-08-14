@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Search\ItemList\Database;
 
 use Concrete\Core\Search\StickyRequest;

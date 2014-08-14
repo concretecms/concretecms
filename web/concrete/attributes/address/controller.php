@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Attribute\Address;
 
 use Loader;
