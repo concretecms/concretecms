@@ -243,6 +243,15 @@
               description="" package="">
         </page>
 
+        <page name="Organize Page Type Order" path="/dashboard/pages/types/organize" filename="/dashboard/pages/types/organize.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
+            </attributes>
+        </page>
+
         <page name="Add Page Type" path="/dashboard/pages/types/add" filename="/dashboard/pages/types/add.php"
               pagetype="" description="" package="">
             <attributes>

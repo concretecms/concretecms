@@ -2,7 +2,7 @@
 namespace Concrete\Core\Application;
 use Loader;
 use stdClass;
-abstract class EditResponse {
+class EditResponse {
 
 	public $time;
 	public $message;
@@ -55,7 +55,10 @@ abstract class EditResponse {
 		$this->additionalData[$key] = $value;
 	}
 
-	abstract public function getJSONObject();
+    public function getJSONObject()
+    {
+        return $this->getBaseJSONObject();
+    }
 
 	public function getBaseJSONObject() {
 		$o = new stdClass;
