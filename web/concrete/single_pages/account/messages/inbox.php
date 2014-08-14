@@ -1,4 +1,7 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>
+<? defined('C5_EXECUTE') or die("Access Denied.");
+
+$dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
+?>
 
 <div class="row">
 <div class="span10 offset1">
@@ -94,7 +97,7 @@
 						<a href="<?=$view->url('/account/profile/public_profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
 						</td>
 						<td class="ccm-profile-messages-item-name"><a href="<?=$view->url('/account/messages/inbox', 'view_message', $mailbox, $msg->getMessageID())?>"><?=$msg->getFormattedMessageSubject()?></a></td>
-						<td style="white-space: nowrap"><?=$msg->getMessageDateAdded('user', t('F d, Y \a\t g:i A'))?></td>
+						<td style="white-space: nowrap"><?=$dh->formatDateTime($msg->getMessageDateAdded(), true)?></td>
 						<td><?=$msg->getMessageStatus()?></td>
 					</tr>
 
@@ -204,7 +207,7 @@
     				<td class="ccm-profile-mailbox-last-message"><?
     				$msg = $inbox->getLastMessageObject();
     				if (is_object($msg)) {
-    					print t('<strong>%s</strong>, sent by %s on %s', $msg->getFormattedMessageSubject(), $msg->getMessageAuthorName(), $msg->getMessageDateAdded('user', t('F d, Y \a\t g:i A')));
+    					print t('<strong>%s</strong>, sent by %s on %s', $msg->getFormattedMessageSubject(), $msg->getMessageAuthorName(), $dh->formatDateTime($msg->getMessageDateAdded(), true));
     				}
     				?></td>
     			</tr>
@@ -214,7 +217,7 @@
     				<td class="ccm-profile-mailbox-last-message"><?
      				$msg = $sent->getLastMessageObject();
     				if (is_object($msg)) {
-    					print t('<strong>%s</strong>, sent by %s on %s', $msg->getFormattedMessageSubject(), $msg->getMessageAuthorName(), $msg->getMessageDateAdded('user', t('F d, Y \a\t g:i A')));
+    					print t('<strong>%s</strong>, sent by %s on %s', $msg->getFormattedMessageSubject(), $msg->getMessageAuthorName(), $dh->formatDateTime($msg->getMessageDateAdded(), true));
     				}
     				?>
    				</td>
