@@ -49,6 +49,7 @@ class Add extends DashboardPageController {
 				'name' => $name,
 				'defaultTemplate' => $defaultTemplate,
 				'ptLaunchInComposer' => $this->post('ptLaunchInComposer'),
+                'ptIsFrequentlyAdded' => $this->post('ptIsFrequentlyAdded'),
 				'allowedTemplates' => $this->post('ptAllowedPageTemplates'),
 				'templates' => $templates
 			);

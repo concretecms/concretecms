@@ -37,20 +37,15 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 
                 <?php if($canDeleteMessage || $canFlagMessage) { ?>
                     <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider">|</span>
-                    <span class="dropdown ccm-conversation-message-admin-control ">
-                        <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#"><?=t('Edit')?></a>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="drop5">
-                            <? if ($canEditMessage) { ?>
-                                <li><a href="javascript:void(0)" class="admin-edit" data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-load="edit-conversation-message"><?php echo t('Edit') ?></a></li>
-                            <? } ?>
-                            <? if ($canDeleteMessage) { ?>
-                                <li><a href="#" class="admin-delete" data-submit="delete-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Delete')?></a></li>
-                            <? } ?>
-                            <? if ($canFlagMessage) { ?>
-                                <li><a href="#" class="admin-flag" data-submit="flag-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Flag As Spam')?></a></li>
-                            <? } ?>
-                            </ul>
-                    </span>
+                    <? if ($canEditMessage) { ?>
+                        <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider"><a href="javascript:void(0)" class="admin-edit" data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-load="edit-conversation-message"><?php echo t('Edit') ?></a></span>
+                    <? } ?>
+                    <? if ($canDeleteMessage) { ?>
+                        <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider"><a href="#" class="admin-delete" data-submit="delete-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Delete')?></a></span>
+                    <? } ?>
+                    <? if ($canFlagMessage) { ?>
+                        <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider"><a href="#" class="admin-flag" data-submit="flag-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Flag As Spam')?></a></span>
+                    <? } ?>
                 <?php } ?>
 
 

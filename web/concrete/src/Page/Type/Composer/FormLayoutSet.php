@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Page\Type\Composer;
 use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Page\Type\Type;
 use PageType;
 use Loader;
 class FormLayoutSet extends Object {
@@ -24,7 +25,7 @@ class FormLayoutSet extends Object {
 				return $value;
 		}
 	}
-	public static function getList(PageType $pagetype) {
+	public static function getList(Type $pagetype) {
 		$db = Loader::db();
 		$ptComposerFormLayoutSetIDs = $db->GetCol('select ptComposerFormLayoutSetID from PageTypeComposerFormLayoutSets where ptID = ? order by ptComposerFormLayoutSetDisplayOrder asc', array($pagetype->getPageTypeID()));
 		$list = array();

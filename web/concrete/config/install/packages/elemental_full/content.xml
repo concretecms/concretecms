@@ -85,7 +85,7 @@
         <pagetemplate icon="right_sidebar.png" name="Right Sidebar" handle="right_sidebar" package="" internal=""/>
     </pagetemplates>
     <pagetypes>
-        <pagetype name="Empty Page" handle="page" package="" launch-in-composer="0">
+        <pagetype name="Empty Page" handle="page" package="" is-frequently-added="1" launch-in-composer="0">
             <pagetemplates type="all" default="full"/>
             <target handle="all" package=""/>
             <composer>
@@ -114,255 +114,7 @@
                 </output>
             </composer>
         </pagetype>
-        <pagetype name="Job Posting" handle="job_posting" package="" launch-in-composer="1">
-            <pagetemplates type="custom" default="left_sidebar">
-                <pagetemplate handle="left_sidebar"/>
-            </pagetemplates>
-            <target handle="parent_page" package="" path="/team/careers"/>
-            <composer>
-                <formlayout>
-                    <set name="Basics">
-                        <control custom-template="" required="1" custom-label="Job Name" type="core_page_property"
-                                 handle="name"/>
-                        <control custom-template="" custom-label="Posting Date" type="core_page_property"
-                                 handle="date_time"/>
-                    </set>
-                    <set name="About This Job">
-                        <control custom-template="" custom-label="" type="collection_attribute" handle="job_location"/>
-                        <control custom-template="" custom-label="" type="collection_attribute"
-                                 handle="job_posting_department"/>
-                        <control custom-template="" custom-label="Brief Description" type="core_page_property"
-                                 handle="description"/>
-                        <control custom-template="" custom-label="Job Details" output-control-id="q9qJOy47" type="block"
-                                 handle="content"/>
-                    </set>
-                </formlayout>
-                <output>
-                    <pagetemplate handle="left_sidebar">
-                        <page name="" path="" filename="" pagetype="" template="left_sidebar" user="admin"
-                              description=""
-                              package="">
-                            <area name="Page Header">
-                                <blocks>
-                                    <block type="page_title" name="" mc-block-id="LMG7zpe2">
-                                        <data table="btPageTitle">
-                                            <record>
-                                                <useCustomTitle><![CDATA[0]]></useCustomTitle>
-                                                <titleText><![CDATA[[Page Title]]]></titleText>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </blocks>
-                            </area>
-                            <area name="Sidebar">
-                                <blocks>
-                                    <block type="page_list" name="" mc-block-id="59ioFW3w">
-                                        <style>
-                                            <customClass>block-sidebar-wrapped</customClass>
-                                        </style>
-
-                                        <data table="btPageList">
-                                            <record>
-                                                <num><![CDATA[0]]></num>
-                                                <pageListTitle>Open Positions</pageListTitle>
-                                                <orderBy><![CDATA[chrono_desc]]></orderBy>
-                                                <cParentID>{ccm:export:page:/team/careers}</cParentID>
-                                                <cThis><![CDATA[0]]></cThis>
-                                                <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
-                                                <paginate><![CDATA[0]]></paginate>
-                                                <displayAliases><![CDATA[0]]></displayAliases>
-                                                <ptID/>
-                                                <includeDescription>0</includeDescription>
-                                                <rss><![CDATA[0]]></rss>
-                                                <rssTitle><![CDATA[]]></rssTitle>
-                                                <rssDescription><![CDATA[]]></rssDescription>
-                                                <truncateSummaries><![CDATA[0]]></truncateSummaries>
-                                                <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
-                                                <truncateChars><![CDATA[0]]></truncateChars>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </blocks>
-                            </area>
-                            <area name="Main">
-                                <blocks>
-                                    <block type="content" name="" mc-block-id="I2LUwXnb">
-                                        <data table="btContentLocal">
-                                            <record>
-                                                <content>
-                                                    <![CDATA[<p><a href="{ccm:export:page:/team/careers}" style="background-color: rgb(255, 255, 255);"><i class="fa fa-arrow-left"></i> Back to Careers</a></p>]]></content>
-                                            </record>
-                                        </data>
-                                    </block>
-                                    <block type="content" name="" mc-block-id="4wQcBAs8">
-                                        <data table="btContentLocal">
-                                            <record>
-                                                <content><![CDATA[<h3>Department</h3>]]></content>
-                                            </record>
-                                        </data>
-                                    </block>
-                                    <block type="page_attribute_display" name="" mc-block-id="v7yUoCNE">
-                                        <data table="btPageAttributeDisplay">
-                                            <record>
-                                                <attributeHandle><![CDATA[job_posting_department]]></attributeHandle>
-                                                <attributeTitleText><![CDATA[]]></attributeTitleText>
-                                                <displayTag><![CDATA[p]]></displayTag>
-                                                <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
-                                                <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
-                                                <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
-                                            </record>
-                                        </data>
-                                    </block>
-                                    <block type="content" name="" mc-block-id="4LBsDWGJ">
-                                        <data table="btContentLocal">
-                                            <record>
-                                                <content><![CDATA[<h3>Location</h3>]]></content>
-                                            </record>
-                                        </data>
-                                    </block>
-                                    <block type="page_attribute_display" name="" mc-block-id="gjVgT87z">
-                                        <data table="btPageAttributeDisplay">
-                                            <record>
-                                                <attributeHandle><![CDATA[job_location]]></attributeHandle>
-                                                <attributeTitleText><![CDATA[]]></attributeTitleText>
-                                                <displayTag><![CDATA[p]]></displayTag>
-                                                <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
-                                                <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
-                                                <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
-                                            </record>
-                                        </data>
-                                    </block>
-                                    <block type="content" name="" mc-block-id="fmva8kF1">
-                                        <data table="btContentLocal">
-                                            <record>
-                                                <content><![CDATA[<h3>Job Information</h3>]]></content>
-                                            </record>
-                                        </data>
-                                    </block>
-                                    <block type="core_page_type_composer_control_output" name="" mc-block-id="e2xhBvJW">
-                                        <control output-control-id="q9qJOy47"/>
-                                    </block>
-                                    <block type="content" name="" mc-block-id="d8f7ddkN">
-                                        <data table="btContentLocal">
-                                            <record>
-                                                <content>
-                                                    <![CDATA[<br/><br/>]]></content>
-                                            </record>
-                                        </data>
-                                    </block>
-                                </blocks>
-                            </area>
-                            <area name="Page Footer">
-                                <blocks/>
-                            </area>
-                        </page>
-                    </pagetemplate>
-                </output>
-            </composer>
-        </pagetype>
-        <pagetype name="Blog" handle="blog" package="" launch-in-composer="1">
-            <pagetemplates type="custom" default="full">
-                <pagetemplate handle="full"/>
-            </pagetemplates>
-            <target handle="all" package=""/>
-            <composer>
-                <formlayout>
-                    <set name="Details">
-                        <control custom-template="" custom-label="Blog Name" type="core_page_property" handle="name"/>
-                        <control custom-template="" custom-label="" type="core_page_property" handle="publish_target"/>
-                    </set>
-                </formlayout>
-                <output>
-                    <pagetemplate handle="full">
-                        <page name="" path="" filename="" pagetype="" template="full" user="admin" description="" package="">
-                            <area name="Main">
-                                <blocks>
-                                    <block type="page_title" name="" mc-block-id="1SrIYV5J">
-                                        <data table="btPageTitle">
-                                            <record>
-                                                <useCustomTitle><![CDATA[0]]></useCustomTitle>
-                                                <titleText><![CDATA[[Page Title]]]></titleText>
-                                            </record>
-                                        </data>
-                                    </block>
-                                    <block type="core_area_layout" name="" mc-block-id="XIyJqyJD">
-                                        <arealayout type="theme-grid" columns="12">
-                                            <columns>
-                                                <column span="8" offset="0">
-                                                    <block type="page_list" name="" mc-block-id="o2okE5W6">
-                                                        <style>
-                                                            <customClass>blog-entry-list</customClass>
-                                                        </style>
-                                                        <data table="btPageList">
-                                                            <record>
-                                                                <num><![CDATA[10]]></num>
-                                                                <orderBy><![CDATA[chrono_desc]]></orderBy>
-                                                                <cParentID>0</cParentID>
-                                                                <cThis><![CDATA[1]]></cThis>
-                                                                <useButtonForLink><![CDATA[0]]></useButtonForLink>
-                                                                <buttonLinkText><![CDATA[]]></buttonLinkText>
-                                                                <includeName><![CDATA[1]]></includeName>
-                                                                <includeDescription><![CDATA[1]]></includeDescription>
-                                                                <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
-                                                                <paginate><![CDATA[1]]></paginate>
-                                                                <displayAliases><![CDATA[0]]></displayAliases>
-                                                                <ptID>{ccm:export:pagetype:blog_entry}</ptID>
-                                                                <rss><![CDATA[0]]></rss>
-                                                                <rssTitle><![CDATA[]]></rssTitle>
-                                                                <rssDescription><![CDATA[]]></rssDescription>
-                                                                <truncateSummaries><![CDATA[0]]></truncateSummaries>
-                                                                <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
-                                                                <displayThumbnail><![CDATA[0]]></displayThumbnail>
-                                                                <truncateChars><![CDATA[0]]></truncateChars>
-                                                                <enableExternalFiltering><![CDATA[1]]></enableExternalFiltering>
-                                                                <noResultsMessage><![CDATA[No posts to this blog.]]></noResultsMessage>
-                                                                <includeDate><![CDATA[1]]></includeDate>
-                                                            </record>
-                                                        </data>
-                                                    </block>
-                                                </column>
-                                                <column span="3" offset="1">
-                                                    <block type="topic_list" name="" mc-block-id="D9wxkl0c">
-                                                        <style>
-                                                            <customClass>block-sidebar-wrapped</customClass>
-                                                        </style>
-                                                        <data>
-                                                            <mode>S</mode>
-                                                            <tree>Blog Entries</tree>
-                                                            <title>Topics</title>
-                                                            <cParentID />
-                                                        </data>
-                                                    </block>
-                                                    <block type="date_navigation" name="">
-                                                        <style>
-                                                            <customClass>block-sidebar-padded</customClass>
-                                                        </style>
-                                                        <data table="btDateNavigation">
-                                                            <record>
-                                                                <title><![CDATA[Archives]]></title>
-                                                                <redirectToResults>0</redirectToResults>
-                                                                <filterByParent>1</filterByParent>
-                                                                <cParentID>{ccm:export:page:/blog}</cParentID>
-                                                                <cTargetID/>
-                                                                <ptID>{ccm:export:pagetype:blog_entry}</ptID>
-                                                            </record>
-                                                        </data>
-                                                    </block>
-                                                </column>
-                                            </columns>
-                                        </arealayout>
-                                    </block>
-                                </blocks>
-                            </area>
-                            <area name="Page Footer">
-                                <blocks/>
-                            </area>
-                        </page>
-                    </pagetemplate>
-                </output>
-            </composer>
-        </pagetype>
-        <pagetype name="Blog Entry" handle="blog_entry" package="" launch-in-composer="1">
+        <pagetype name="Blog Entry" handle="blog_entry" is-frequently-added="1" package="" launch-in-composer="1">
             <pagetemplates type="custom" default="right_sidebar">
                 <pagetemplate handle="right_sidebar"/>
             </pagetemplates>
@@ -534,24 +286,37 @@
                 </output>
             </composer>
         </pagetype>
-        <pagetype name="Portfolio" handle="portfolio" package="" launch-in-composer="1">
-            <pagetemplates type="custom" default="full">
-                <pagetemplate handle="full"/>
+        <pagetype name="Job Posting" handle="job_posting" is-frequently-added="1" package="" launch-in-composer="1">
+            <pagetemplates type="custom" default="left_sidebar">
+                <pagetemplate handle="left_sidebar"/>
             </pagetemplates>
-            <target handle="all" package=""/>
+            <target handle="parent_page" package="" path="/team/careers"/>
             <composer>
                 <formlayout>
-                    <set name="">
-                        <control custom-template="" custom-label="Name" type="core_page_property" handle="name"/>
-                        <control custom-template="" custom-label="" type="core_page_property" handle="publish_target"/>
+                    <set name="Basics">
+                        <control custom-template="" required="1" custom-label="Job Name" type="core_page_property"
+                                 handle="name"/>
+                        <control custom-template="" custom-label="Posting Date" type="core_page_property"
+                                 handle="date_time"/>
+                    </set>
+                    <set name="About This Job">
+                        <control custom-template="" custom-label="" type="collection_attribute" handle="job_location"/>
+                        <control custom-template="" custom-label="" type="collection_attribute"
+                                 handle="job_posting_department"/>
+                        <control custom-template="" custom-label="Brief Description" type="core_page_property"
+                                 handle="description"/>
+                        <control custom-template="" custom-label="Job Details" output-control-id="q9qJOy47" type="block"
+                                 handle="content"/>
                     </set>
                 </formlayout>
                 <output>
-                    <pagetemplate handle="full">
-                        <page name="" path="" filename="" pagetype="portfolio" template="full" user="admin" description="" package="">
-                            <area name="Main">
+                    <pagetemplate handle="left_sidebar">
+                        <page name="" path="" filename="" pagetype="" template="left_sidebar" user="admin"
+                              description=""
+                              package="">
+                            <area name="Page Header">
                                 <blocks>
-                                    <block type="page_title" name="" mc-block-id="LSGookBK">
+                                    <block type="page_title" name="" mc-block-id="LMG7zpe2">
                                         <data table="btPageTitle">
                                             <record>
                                                 <useCustomTitle><![CDATA[0]]></useCustomTitle>
@@ -559,67 +324,101 @@
                                             </record>
                                         </data>
                                     </block>
-                                    <block type="topic_list" name="" custom-template="flat_filter.php" mc-block-id="RCaPR2iR">
+                                </blocks>
+                            </area>
+                            <area name="Sidebar">
+                                <blocks>
+                                    <block type="page_list" name="" mc-block-id="59ioFW3w">
                                         <style>
-                                            <backgroundColor/>
-                                            <backgroundRepeat>no-repeat</backgroundRepeat>
-                                            <borderWidth/>
-                                            <borderColor/>
-                                            <borderStyle>none</borderStyle>
-                                            <borderRadius/>
-                                            <baseFontSize/>
-                                            <alignment/>
-                                            <textColor/>
-                                            <linkColor/>
-                                            <paddingTop/>
-                                            <paddingBottom/>
-                                            <paddingLeft/>
-                                            <paddingRight/>
-                                            <marginTop/>
-                                            <marginBottom/>
-                                            <marginLeft/>
-                                            <marginRight/>
-                                            <rotate/>
-                                            <boxShadowHorizontal/>
-                                            <boxShadowVertical/>
-                                            <boxShadowBlur/>
-                                            <boxShadowSpread/>
-                                            <boxShadowColor/>
-                                            <customClass/>
+                                            <customClass>block-sidebar-wrapped</customClass>
                                         </style>
-                                        <data>
-                                            <mode>S</mode>
-                                            <title/>
-                                            <topicAttributeKeyHandle />
-                                            <tree>Projects</tree>
-                                            <cParentID/>
-                                        </data>
-                                    </block>
-                                    <block type="page_list" name="" custom-template="thumbnail_grid" mc-block-id="N7fcHauo">
+
                                         <data table="btPageList">
                                             <record>
                                                 <num><![CDATA[0]]></num>
+                                                <pageListTitle>Open Positions</pageListTitle>
                                                 <orderBy><![CDATA[chrono_desc]]></orderBy>
-                                                <cParentID>{ccm:export:page:}</cParentID>
-                                                <cThis><![CDATA[1]]></cThis>
-                                                <useButtonForLink><![CDATA[0]]></useButtonForLink>
-                                                <buttonLinkText><![CDATA[]]></buttonLinkText>
-                                                <includeName><![CDATA[1]]></includeName>
-                                                <includeDescription><![CDATA[0]]></includeDescription>
-                                                <includeDate><![CDATA[0]]></includeDate>
+                                                <cParentID>{ccm:export:page:/team/careers}</cParentID>
+                                                <cThis><![CDATA[0]]></cThis>
                                                 <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
-                                                <paginate><![CDATA[1]]></paginate>
+                                                <paginate><![CDATA[0]]></paginate>
                                                 <displayAliases><![CDATA[0]]></displayAliases>
-                                                <enableExternalFiltering><![CDATA[1]]></enableExternalFiltering>
-                                                <ptID>{ccm:export:pagetype:portfolio_project}</ptID>
+                                                <ptID/>
+                                                <includeDescription>0</includeDescription>
                                                 <rss><![CDATA[0]]></rss>
                                                 <rssTitle><![CDATA[]]></rssTitle>
                                                 <rssDescription><![CDATA[]]></rssDescription>
                                                 <truncateSummaries><![CDATA[0]]></truncateSummaries>
                                                 <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
-                                                <noResultsMessage><![CDATA[No projects found.]]></noResultsMessage>
-                                                <displayThumbnail><![CDATA[1]]></displayThumbnail>
                                                 <truncateChars><![CDATA[0]]></truncateChars>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </blocks>
+                            </area>
+                            <area name="Main">
+                                <blocks>
+                                    <block type="content" name="" mc-block-id="I2LUwXnb">
+                                        <data table="btContentLocal">
+                                            <record>
+                                                <content>
+                                                    <![CDATA[<p><a href="{ccm:export:page:/team/careers}" style="background-color: rgb(255, 255, 255);"><i class="fa fa-arrow-left"></i> Back to Careers</a></p>]]></content>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="content" name="" mc-block-id="4wQcBAs8">
+                                        <data table="btContentLocal">
+                                            <record>
+                                                <content><![CDATA[<h3>Department</h3>]]></content>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="page_attribute_display" name="" mc-block-id="v7yUoCNE">
+                                        <data table="btPageAttributeDisplay">
+                                            <record>
+                                                <attributeHandle><![CDATA[job_posting_department]]></attributeHandle>
+                                                <attributeTitleText><![CDATA[]]></attributeTitleText>
+                                                <displayTag><![CDATA[p]]></displayTag>
+                                                <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
+                                                <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
+                                                <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="content" name="" mc-block-id="4LBsDWGJ">
+                                        <data table="btContentLocal">
+                                            <record>
+                                                <content><![CDATA[<h3>Location</h3>]]></content>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="page_attribute_display" name="" mc-block-id="gjVgT87z">
+                                        <data table="btPageAttributeDisplay">
+                                            <record>
+                                                <attributeHandle><![CDATA[job_location]]></attributeHandle>
+                                                <attributeTitleText><![CDATA[]]></attributeTitleText>
+                                                <displayTag><![CDATA[p]]></displayTag>
+                                                <dateFormat><![CDATA[m/d/y h:i:a]]></dateFormat>
+                                                <thumbnailHeight><![CDATA[250]]></thumbnailHeight>
+                                                <thumbnailWidth><![CDATA[250]]></thumbnailWidth>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="content" name="" mc-block-id="fmva8kF1">
+                                        <data table="btContentLocal">
+                                            <record>
+                                                <content><![CDATA[<h3>Job Information</h3>]]></content>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="core_page_type_composer_control_output" name="" mc-block-id="e2xhBvJW">
+                                        <control output-control-id="q9qJOy47"/>
+                                    </block>
+                                    <block type="content" name="" mc-block-id="d8f7ddkN">
+                                        <data table="btContentLocal">
+                                            <record>
+                                                <content>
+                                                    <![CDATA[<br/><br/>]]></content>
                                             </record>
                                         </data>
                                     </block>
@@ -633,7 +432,7 @@
                 </output>
             </composer>
         </pagetype>
-        <pagetype name="Portfolio Project" handle="portfolio_project" package="" launch-in-composer="1">
+        <pagetype name="Portfolio Project" handle="portfolio_project" is-frequently-added="1" package="" launch-in-composer="1">
             <pagetemplates type="custom" default="left_sidebar">
                 <pagetemplate handle="left_sidebar"/>
             </pagetemplates>
@@ -746,6 +545,207 @@
                                         </data>
                                     </block>
                                 </blocks>
+                            </area>
+                        </page>
+                    </pagetemplate>
+                </output>
+            </composer>
+        </pagetype>
+        <pagetype name="Blog" handle="blog" package="" launch-in-composer="1">
+            <pagetemplates type="custom" default="full">
+                <pagetemplate handle="full"/>
+            </pagetemplates>
+            <target handle="all" package=""/>
+            <composer>
+                <formlayout>
+                    <set name="Details">
+                        <control custom-template="" custom-label="Blog Name" type="core_page_property" handle="name"/>
+                        <control custom-template="" custom-label="" type="core_page_property" handle="publish_target"/>
+                    </set>
+                </formlayout>
+                <output>
+                    <pagetemplate handle="full">
+                        <page name="" path="" filename="" pagetype="" template="full" user="admin" description="" package="">
+                            <area name="Main">
+                                <blocks>
+                                    <block type="page_title" name="" mc-block-id="1SrIYV5J">
+                                        <data table="btPageTitle">
+                                            <record>
+                                                <useCustomTitle><![CDATA[0]]></useCustomTitle>
+                                                <titleText><![CDATA[[Page Title]]]></titleText>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="core_area_layout" name="" mc-block-id="XIyJqyJD">
+                                        <arealayout type="theme-grid" columns="12">
+                                            <columns>
+                                                <column span="8" offset="0">
+                                                    <block type="page_list" name="" mc-block-id="o2okE5W6">
+                                                        <style>
+                                                            <customClass>blog-entry-list</customClass>
+                                                        </style>
+                                                        <data table="btPageList">
+                                                            <record>
+                                                                <num><![CDATA[10]]></num>
+                                                                <orderBy><![CDATA[chrono_desc]]></orderBy>
+                                                                <cParentID>0</cParentID>
+                                                                <cThis><![CDATA[1]]></cThis>
+                                                                <useButtonForLink><![CDATA[0]]></useButtonForLink>
+                                                                <buttonLinkText><![CDATA[]]></buttonLinkText>
+                                                                <includeName><![CDATA[1]]></includeName>
+                                                                <includeDescription><![CDATA[1]]></includeDescription>
+                                                                <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
+                                                                <paginate><![CDATA[1]]></paginate>
+                                                                <displayAliases><![CDATA[0]]></displayAliases>
+                                                                <ptID>{ccm:export:pagetype:blog_entry}</ptID>
+                                                                <rss><![CDATA[0]]></rss>
+                                                                <rssTitle><![CDATA[]]></rssTitle>
+                                                                <rssDescription><![CDATA[]]></rssDescription>
+                                                                <truncateSummaries><![CDATA[0]]></truncateSummaries>
+                                                                <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
+                                                                <displayThumbnail><![CDATA[0]]></displayThumbnail>
+                                                                <truncateChars><![CDATA[0]]></truncateChars>
+                                                                <enableExternalFiltering><![CDATA[1]]></enableExternalFiltering>
+                                                                <noResultsMessage><![CDATA[No posts to this blog.]]></noResultsMessage>
+                                                                <includeDate><![CDATA[1]]></includeDate>
+                                                            </record>
+                                                        </data>
+                                                    </block>
+                                                </column>
+                                                <column span="3" offset="1">
+                                                    <block type="topic_list" name="" mc-block-id="D9wxkl0c">
+                                                        <style>
+                                                            <customClass>block-sidebar-wrapped</customClass>
+                                                        </style>
+                                                        <data>
+                                                            <mode>S</mode>
+                                                            <tree>Blog Entries</tree>
+                                                            <title>Topics</title>
+                                                            <cParentID />
+                                                        </data>
+                                                    </block>
+                                                    <block type="date_navigation" name="">
+                                                        <style>
+                                                            <customClass>block-sidebar-padded</customClass>
+                                                        </style>
+                                                        <data table="btDateNavigation">
+                                                            <record>
+                                                                <title><![CDATA[Archives]]></title>
+                                                                <redirectToResults>0</redirectToResults>
+                                                                <filterByParent>1</filterByParent>
+                                                                <cParentID>{ccm:export:page:/blog}</cParentID>
+                                                                <cTargetID/>
+                                                                <ptID>{ccm:export:pagetype:blog_entry}</ptID>
+                                                            </record>
+                                                        </data>
+                                                    </block>
+                                                </column>
+                                            </columns>
+                                        </arealayout>
+                                    </block>
+                                </blocks>
+                            </area>
+                            <area name="Page Footer">
+                                <blocks/>
+                            </area>
+                        </page>
+                    </pagetemplate>
+                </output>
+            </composer>
+        </pagetype>
+        <pagetype name="Portfolio" handle="portfolio" package="" launch-in-composer="1">
+            <pagetemplates type="custom" default="full">
+                <pagetemplate handle="full"/>
+            </pagetemplates>
+            <target handle="all" package=""/>
+            <composer>
+                <formlayout>
+                    <set name="">
+                        <control custom-template="" custom-label="Name" type="core_page_property" handle="name"/>
+                        <control custom-template="" custom-label="" type="core_page_property" handle="publish_target"/>
+                    </set>
+                </formlayout>
+                <output>
+                    <pagetemplate handle="full">
+                        <page name="" path="" filename="" pagetype="portfolio" template="full" user="admin" description="" package="">
+                            <area name="Main">
+                                <blocks>
+                                    <block type="page_title" name="" mc-block-id="LSGookBK">
+                                        <data table="btPageTitle">
+                                            <record>
+                                                <useCustomTitle><![CDATA[0]]></useCustomTitle>
+                                                <titleText><![CDATA[[Page Title]]]></titleText>
+                                            </record>
+                                        </data>
+                                    </block>
+                                    <block type="topic_list" name="" custom-template="flat_filter.php" mc-block-id="RCaPR2iR">
+                                        <style>
+                                            <backgroundColor/>
+                                            <backgroundRepeat>no-repeat</backgroundRepeat>
+                                            <borderWidth/>
+                                            <borderColor/>
+                                            <borderStyle>none</borderStyle>
+                                            <borderRadius/>
+                                            <baseFontSize/>
+                                            <alignment/>
+                                            <textColor/>
+                                            <linkColor/>
+                                            <paddingTop/>
+                                            <paddingBottom/>
+                                            <paddingLeft/>
+                                            <paddingRight/>
+                                            <marginTop/>
+                                            <marginBottom/>
+                                            <marginLeft/>
+                                            <marginRight/>
+                                            <rotate/>
+                                            <boxShadowHorizontal/>
+                                            <boxShadowVertical/>
+                                            <boxShadowBlur/>
+                                            <boxShadowSpread/>
+                                            <boxShadowColor/>
+                                            <customClass/>
+                                        </style>
+                                        <data>
+                                            <mode>S</mode>
+                                            <title/>
+                                            <topicAttributeKeyHandle />
+                                            <tree>Projects</tree>
+                                            <cParentID/>
+                                        </data>
+                                    </block>
+                                    <block type="page_list" name="" custom-template="thumbnail_grid" mc-block-id="N7fcHauo">
+                                        <data table="btPageList">
+                                            <record>
+                                                <num><![CDATA[0]]></num>
+                                                <orderBy><![CDATA[chrono_desc]]></orderBy>
+                                                <cParentID>{ccm:export:page:}</cParentID>
+                                                <cThis><![CDATA[1]]></cThis>
+                                                <useButtonForLink><![CDATA[0]]></useButtonForLink>
+                                                <buttonLinkText><![CDATA[]]></buttonLinkText>
+                                                <includeName><![CDATA[1]]></includeName>
+                                                <includeDescription><![CDATA[0]]></includeDescription>
+                                                <includeDate><![CDATA[0]]></includeDate>
+                                                <includeAllDescendents><![CDATA[0]]></includeAllDescendents>
+                                                <paginate><![CDATA[1]]></paginate>
+                                                <displayAliases><![CDATA[0]]></displayAliases>
+                                                <enableExternalFiltering><![CDATA[1]]></enableExternalFiltering>
+                                                <ptID>{ccm:export:pagetype:portfolio_project}</ptID>
+                                                <rss><![CDATA[0]]></rss>
+                                                <rssTitle><![CDATA[]]></rssTitle>
+                                                <rssDescription><![CDATA[]]></rssDescription>
+                                                <truncateSummaries><![CDATA[0]]></truncateSummaries>
+                                                <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
+                                                <noResultsMessage><![CDATA[No projects found.]]></noResultsMessage>
+                                                <displayThumbnail><![CDATA[1]]></displayThumbnail>
+                                                <truncateChars><![CDATA[0]]></truncateChars>
+                                            </record>
+                                        </data>
+                                    </block>
+                                </blocks>
+                            </area>
+                            <area name="Page Footer">
+                                <blocks/>
                             </area>
                         </page>
                     </pagetemplate>

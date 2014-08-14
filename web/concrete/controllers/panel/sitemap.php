@@ -8,7 +8,8 @@ use Permissions;
 class Sitemap extends BackendInterfacePageController {
 
 	protected $viewPath = '/panels/sitemap';
-	protected $pagetypes = array();
+	protected $frequentPageTypes = array();
+    protected $otherPageTypes = array();
 
 	protected function canAccess() {
 		return $this->canViewSitemap || count($this->pagetypes) > 0;
@@ -19,15 +20,23 @@ class Sitemap extends BackendInterfacePageController {
 		$sh = Loader::helper('concrete/dashboard/sitemap');
 		$this->canViewSitemap = $sh->canRead();
 
-		$pagetypes = PageType::getList();
-		foreach($pagetypes as $pt) {
+		$frequentlyUsed = PageType::getFrequentlyUsedList();
+		foreach($frequentlyUsed as $pt) {
 			$ptp = new Permissions($pt);
 			if ($ptp->canAddPageType()) {
-				$this->pagetypes[] = $pt;
+				$this->frequentPageTypes[] = $pt;
 			}
 		}
 
-		$drafts = Page::getDrafts();
+        $otherPageTypes = PageType::getInfrequentlyUsedList();
+        foreach($otherPageTypes as $pt) {
+            $ptp = new Permissions($pt);
+            if ($ptp->canAddPageType()) {
+                $this->otherPageTypes[] = $pt;
+            }
+        }
+
+        $drafts = Page::getDrafts();
 		$mydrafts = array();
 		foreach($drafts as $d) {
 			$dp = new Permissions($d);
@@ -36,7 +45,8 @@ class Sitemap extends BackendInterfacePageController {
 			}
 		}
 
-		$this->set('pagetypes', $this->pagetypes);
+		$this->set('frequentPageTypes', $this->frequentPageTypes);
+        $this->set('otherPageTypes', $this->otherPageTypes);
 		$this->set('drafts', $mydrafts);
 		$this->set('canViewSitemap', $this->canViewSitemap);
 	}
