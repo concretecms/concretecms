@@ -15,6 +15,8 @@ module.exports = function(grunt, config, parameters, done) {
 				'composer.lock',
 			],
 			byPath: [
+				'/concrete/vendor/imagine/imagine/lib/Imagine/resources/Adobe/Color Profile Bundling License_10.15.08.pdf',
+				'/concrete/vendor/imagine/imagine/lib/Imagine/resources/Adobe/Profile Information.pdf',
 				'/concrete/vendor/league/flysystem/phpunit.php',
 				'/concrete/vendor/nesbot/carbon/readme.php',
 				'/concrete/vendor/simplepie/simplepie/db.sql',
@@ -61,7 +63,6 @@ module.exports = function(grunt, config, parameters, done) {
 				'/concrete/vendor/hautelook/phpass/lib',
 				'/concrete/vendor/hautelook/phpass/Tests',
 				'/concrete/vendor/imagine/imagine/docs',
-				'/concrete/vendor/imagine/imagine/lib/Imagine/resources',
 				'/concrete/vendor/imagine/imagine/lib/Imagine/Test',
 				'/concrete/vendor/imagine/imagine/tests',
 				'/concrete/vendor/league/flysystem/tests',
