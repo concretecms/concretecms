@@ -310,7 +310,7 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
     public function getAttachments($cnvMessageID)
     {
         $db = Loader::db();
-        $attachments = $db->Execute('SELECT * FROM ConversationMessageAttachments WHERE cnvMessageID = ?', array(
+        $attachments = $db->GetAll('SELECT * FROM ConversationMessageAttachments WHERE cnvMessageID = ?', array(
             $cnvMessageID
         ));
 

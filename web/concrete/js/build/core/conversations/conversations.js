@@ -276,12 +276,16 @@
 			});
 			obj.$element.on('click.cnv', 'a[data-submit=flag-conversation-message]', function() {
 				var $link = $(this);
-				if (confirm('Are you sure you want to flag this messge as spam?')) {
+				if (confirm('Are you sure you want to flag this message as spam?')) {
 					obj.flagMessage($link.attr('data-conversation-message-id'));
 				}
 				return false;
 			});
             obj.$element.on('click.cnv', 'a[data-load=edit-conversation-message]', function() {
+                if($('.ccm-conversation-edit-message').is(':visible')) {
+                    alert('Please complete or cancel the current message editing session before editing this message.');
+                    return false;
+                }
                 var $link = $(this);
                 obj.editMessage($link.attr('data-conversation-message-id'));
             });
@@ -483,16 +487,18 @@
                 url: CCM_TOOLS_PATH + '/conversations/edit_message',
                 success: function(html) {
                     var $parent = $('div[data-conversation-message-id=' + msgID + ']');
+                    var $previousContents = $parent;
                     $parent.after(html).remove();
                     $('.ccm-conversation-attachment-container').hide();
                     $('.ccm-conversation-edit-message .ccm-conversation-attachment-toggle').off('click.cnv').on('click.cnv', function(event){
                         event.preventDefault();
-                        if($('.ccm-conversation-edit-message .ccm-conversation-attachment-container').is(':visible')) {
-                            $('.ccm-conversation-edit-message .ccm-conversation-attachment-container').toggle();
-                        }
                         $('.ccm-conversation-edit-message .ccm-conversation-attachment-container').toggle();
                     });
+                    obj.$editMessageHolder    = obj.$element.find('div.ccm-conversation-edit-message');
                     obj.$element.ccmconversationattachments(obj);
+                    $('button.cancel-update').on('click.cnv', function(){
+                        $('.ccm-conversation-edit-message').replaceWith($previousContents);
+                    });
 
                 },
                 error: function(e) {
