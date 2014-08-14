@@ -44,7 +44,7 @@ if (!$frontendPageID) {
     <div class="ccm-mobile-menu-overlay ccm-mobile-menu-overlay-dashboard hidden-md hidden-lg hidden-sm">
         <div class="ccm-mobile-menu-main">
             <ul class="ccm-mobile-menu-entries">
-                <li><i class="fa fa-th-large mobile-leading-icon"></i><a href="<?=URL::to('/dashboard')?>"><?php echo t('Dashboard') ?><i class="fa fa-caret-down"></i></a>
+                <li><i class="fa fa-sliders mobile-leading-icon"></i><a href="<?=URL::to('/dashboard')?>"><?php echo t('Dashboard') ?><i class="fa fa-caret-down"></i></a>
                     <ul class="list-unstyled">
                         <li class="last-li"><a href="<?=View::url('/dashboard/sitemap') ?>"><?php echo t('Sitemap'); ?></a></li>
                         <li class="last-li"><a href="<?=View::url('/dashboard/files') ?>"><?php echo t('Files'); ?></a></li>
@@ -65,7 +65,7 @@ if (!$frontendPageID) {
         <li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></span></li>
         <li class="ccm-toolbar-account pull-left"><a href="<?=$backLink?>"><i class="fa fa-arrow-left"></i></a>
         <li class="pull-right hidden-xs"><a href="<?=URL::to('/dashboard')?>" data-launch-panel="dashboard" <? if (!$hideDashboardPanel) { ?>class="ccm-launch-panel-active" <? } ?> data-panel-url="<?=URL::to('/system/panels/dashboard')?>"><i class="fa fa-sliders"></i></a>
-        <li class="pull-right hidden-xs"><a href="#" data-panel-url="<?=URL::to('/system/panels/sitemap')?>" data-launch-panel="sitemap"><i class="fa fa-list-alt"></i></a></li>
+        <li class="pull-right hidden-xs"><a href="#" data-panel-url="<?=URL::to('/system/panels/sitemap')?>" data-launch-panel="sitemap"><i class="c5i c5i-pages-fold"></i></a></li>
         <li class="ccm-toolbar-search pull-right hidden-xs"><i class="fa fa-search"></i> <input type="search" id="ccm-nav-intelligent-search" tabindex="1" /></li>
         <li class="pull-right ccm-toolbar-mobile-menu-button visible-xs hidden-sm hidden-md hidden-lg"><i class="fa fa-bars fa-2"></i></li>
     </ul>
