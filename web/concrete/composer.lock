@@ -1,9 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
     ],
-    "hash": "e460f22600bffb429401b13a61a46d5d",
+    "hash": "4f25f1c233c068029b4a9252481ec237",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -1640,16 +1641,16 @@
         },
         {
             "name": "simplepie/simplepie",
-            "version": "dev-master",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simplepie/simplepie.git",
-                "reference": "9a9faaa0d563426cf6d897c169373c5b62f1b252"
+                "reference": "ce53709778bc1e2e4deda1651b66e5081398d5cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/simplepie/simplepie/zipball/9a9faaa0d563426cf6d897c169373c5b62f1b252",
-                "reference": "9a9faaa0d563426cf6d897c169373c5b62f1b252",
+                "url": "https://api.github.com/repos/simplepie/simplepie/zipball/ce53709778bc1e2e4deda1651b66e5081398d5cc",
+                "reference": "ce53709778bc1e2e4deda1651b66e5081398d5cc",
                 "shasum": ""
             },
             "require": {
@@ -1690,7 +1691,7 @@
                 "feeds",
                 "rss"
             ],
-            "time": "2014-04-28 12:50:39"
+            "time": "2012-10-30 17:54:03"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
@@ -2745,7 +2746,6 @@
         "voku/urlify": 20,
         "dapphp/securimage": 20,
         "kertz/twitteroauth": 20,
-        "simplepie/simplepie": 20,
         "zf1/zend-exception": 20,
         "zf1/zend-loader": 20,
         "zf1/zend-validate": 20,
@@ -2762,6 +2762,7 @@
         "zf1/zend-mail": 20,
         "nesbot/carbon": 20
     },
+    "prefer-stable": false,
     "platform": {
         "php": ">=5.3.3"
     },
