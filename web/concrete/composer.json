@@ -35,7 +35,7 @@
         "voku/urlify": "1.0.*@dev",
         "dapphp/securimage": "dev-master",
         "kertz/twitteroauth": "dev-master",
-        "simplepie/simplepie": "dev-master",
+        "simplepie/simplepie": "1.3.1",
         "anahkiasen/html-object": "1.4.0",
         "zf1/zend-exception": "dev-master",
         "zf1/zend-loader": "dev-master",
