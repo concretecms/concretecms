@@ -317,14 +317,17 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
         return $attachments;
     }
 
-    public function getAttachmentByID($cnvMessageAttachmentID)
+    public static function getByAttachmentID($cnvMessageAttachmentID)
     {
         $db = Loader::db();
-        $attachment = $db->Execute('SELECT * FROM ConversationMessageAttachments WHERE cnvMessageAttachmentID = ?', array(
+        $messageID = $db->GetOne('SELECT cnvMessageID FROM ConversationMessageAttachments WHERE cnvMessageAttachmentID = ?', array(
         $cnvMessageAttachmentID
         ));
 
-        return $attachment;
+        if ($messageID) {
+            $message = self::getByID($messageID);
+            return $message;
+        }
     }
 
     public static function add($cnv, $cnvMessageSubject, $cnvMessageBody, $parentMessage = false, $user = false)
