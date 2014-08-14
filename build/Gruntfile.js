@@ -1,5 +1,6 @@
 module.exports = function(grunt) {
     var fs = require('fs');
+    var extend = require('util')._extend;
 
     var parameters = null;
     if(fs.existsSync(__dirname + '/Gruntfile.parameters.js')) {
@@ -327,7 +328,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     // Now let's build the final configuration for Grunt.
-    var extend = require('util')._extend;
 
     // Let's define the concat section (for concatenating giles)
     config.concat = extend({options: concatOptions}, concat);
@@ -431,34 +431,46 @@ module.exports = function(grunt) {
         require('./tasks/generate-symbols.js')(grunt, config, parameters, this.async());
     });
 
-    grunt.registerTask('build-release-start', 'Create concrete5 release from Git, run various required functions.', function() {
-        require('./tasks/build-release/start.js')(grunt, config, parameters, this.async());
+    grunt.registerTask('build-release-download', 'Build process: download the latest concrete5 release from GitHub.', function() {
+        require('./tasks/build-release/download.js')(grunt, config, parameters, this.async());
     });
 
-    grunt.registerTask('build-release-clean', 'Remove certain dotfiles.', function() {
+    grunt.registerTask('build-release-build', 'Build process: compile the required files of a clean concrete5 installation.', function() {
+        require('./tasks/build-release/build.js')(grunt, config, parameters, this.async());
+    });
+
+    grunt.registerTask('build-release-clean', 'Build process: remove useless files and folders.', function() {
         require('./tasks/build-release/clean.js')(grunt, config, parameters, this.async());
     });
 
-    grunt.registerTask('build-release-finish', 'Create zip file and finish.', function() {
-        require('./tasks/build-release/finish.js')(grunt, config, parameters, this.async());
+    grunt.registerTask('build-release-remove-short-tags', 'Build process: remove short tags.', function() {
+        require('./tasks/build-release/remove-short-tags.js')(grunt, config, parameters, this.async());
     });
 
-    var buildTranslationParameters = extend({}, parameters);
-    buildTranslationParameters.destination = './release/concrete5-master/web';
-
-    var buildTagParameters = extend({}, parameters);
-    buildTagParameters = parameters;
-    buildTagParameters.source = './release/concrete5-master/web';
-
-    grunt.registerTask('build-release-translations', 'Downloading Translations.', function() {
-        require('./tasks/translations.js')(grunt, config, buildTranslationParameters, this.async());
+    grunt.registerTask('build-release-translations', 'Build process: downloading Translations.', function() {
+        require('./tasks/build-release/translations.js')(grunt, config, parameters, this.async());
     });
 
-    grunt.registerTask('build-release-remove-short-tags', 'Remove short tags.', function() {
-        require('./tasks/remove-short-tags.js')(grunt, config, buildTagParameters, this.async());
+    grunt.registerTask('build-release-create-zip', 'Build process: create zip file.', function() {
+        require('./tasks/build-release/create-zip.js')(grunt, config, parameters, this.async());
     });
 
-    grunt.registerTask('build-release', ['build-release-start', 'build-release-remove-short-tags', 'build-release-translations', 'build-release-clean', 'build-release-finish']);
+    grunt.registerTask('build-release-cleanup', 'Build process: cleanup.', function() {
+        require('./tasks/build-release/cleanup.js')(grunt, config, parameters, this.async());
+    });
+
+    grunt.registerTask(
+        'build-release',
+        [
+            'build-release-download',
+            'build-release-build',
+            'build-release-clean',
+            'build-release-remove-short-tags',
+            'build-release-translations',
+            'build-release-create-zip',
+            'build-release-cleanup'
+        ]
+    );
 
     grunt.registerTask('default', 'release');
 };
