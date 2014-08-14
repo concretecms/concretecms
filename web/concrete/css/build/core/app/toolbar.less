@@ -100,12 +100,10 @@ div#ccm-toolbar {
                 top: 0;
                 left: 0;
 
-                -webkit-animation: loader-bounce 2.0s infinite ease-in-out;
                 animation: loader-bounce 2.0s infinite ease-in-out;
               }
 
               .double-bounce2 {
-                -webkit-animation-delay: -1.0s;
                 animation-delay: -1.0s;
               }
 
@@ -211,7 +209,6 @@ div#ccm-toolbar {
 	}
 
 	input[type=search]:focus, textarea:focus {
-		-webkit-appearance: none !important;
 		outline: none !important;
 	}
 
@@ -228,18 +225,11 @@ div#ccm-toolbar {
 
 }
 
-@-webkit-keyframes loader-bounce {
-  0%, 100% { -webkit-transform: scale(0.0) }
-  50% { -webkit-transform: scale(1.0) }
-}
-
 @keyframes loader-bounce {
   0%, 100% {
     transform: scale(0.0);
-    -webkit-transform: scale(0.0);
   } 50% {
       transform: scale(1.0);
-      -webkit-transform: scale(1.0);
     }
 }
 
@@ -350,7 +340,7 @@ div#ccm-toolbar-disabled {
       }
     }
   }
-  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
   list-style-type: none;
 }
 
