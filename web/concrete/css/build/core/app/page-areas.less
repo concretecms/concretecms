@@ -376,7 +376,7 @@ ul.ccm-edit-mode-inline-commands:hover {
  * Korvin's new stuff
  */
 div.ccm-area-drag-area {
-  transition: outline-width 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000), outline-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000);
+  -webkit-transition: outline-width 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000), outline-color 0.5s cubic-bezier(0.190, 1.000, 0.220, 1.000);
   outline-color: transparent;
   outline-style: solid;
 
@@ -406,9 +406,13 @@ a.ccm-block-edit-drag, a.ccm-panel-add-block-draggable-block-type-dragger {
   width: 90px;
   height: 90px;
   z-index: 1000000;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
   cursor: grab;
 
   &.pep-active {
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
     cursor: grabbing;
   }
 }
@@ -416,6 +420,8 @@ a.ccm-block-edit-drag, a.ccm-panel-add-block-draggable-block-type-dragger {
 body {
   > a.ccm-block-edit-drag,
   > a.ccm-panel-add-block-draggable-block-type-dragger {
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
     cursor: grabbing;
   }
 }
