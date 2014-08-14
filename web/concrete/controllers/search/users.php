@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Controller\Search;
+
 use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\User\Group\GroupSetList;
 use Controller;
@@ -16,37 +17,40 @@ use User;
 use URL;
 use Group;
 
-class Users extends Controller {
+class Users extends Controller
+{
 
-	protected $fields = array();
+    protected $fields = array();
 
     /**
      * @var \Concrete\Core\User\UserList
      */
     protected $userList;
 
-	public function __construct() {
+    public function __construct()
+    {
         $this->searchRequest = new StickyRequest('users');
         $this->userList = new UserList($this->searchRequest);
-	}
+    }
 
-	public function search() {
-		$dh = Loader::helper('concrete/dashboard/sitemap');
-		if (!$dh->canRead()) {
-			return false;
-		}
-		
-		if ($_REQUEST['submitSearch']) {
-			$this->searchRequest->resetSearchRequest();
-		}
+    public function search()
+    {
+        $dh = Loader::helper('concrete/dashboard/sitemap');
+        if (!$dh->canRead()) {
+            return false;
+        }
 
-		$req = $this->searchRequest->getSearchRequest();
+        if ($_REQUEST['submitSearch']) {
+            $this->searchRequest->resetSearchRequest();
+        }
+
+        $req = $this->searchRequest->getSearchRequest();
         $userSearchColumnSet = new UserSearchColumnSet();
-		$columns = $userSearchColumnSet->getCurrent();
+        $columns = $userSearchColumnSet->getCurrent();
 
         if (!$this->userList->getActiveSortColumn()) {
-    		$col = $columns->getDefaultSortColumn();
-	    	$this->userList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
+            $col = $columns->getDefaultSortColumn();
+            $this->userList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
         }
 
 
@@ -54,17 +58,17 @@ class Users extends Controller {
         $this->userList->includeUnvalidatedUsers();
 
         $columns = $userSearchColumnSet->getCurrent();
-		$this->set('columns', $columns);
+        $this->set('columns', $columns);
 
-		if ($req['keywords'] != '') {
-			$this->userList->filterByKeywords($req['keywords']);
-		}	
-		
-		if ($req['numResults'] && Loader::helper('validation/numbers')->integer($req['numResults'])) {
-			$this->userList->setItemsPerPage($req['numResults']);
-		}
+        if ($req['keywords'] != '') {
+            $this->userList->filterByKeywords($req['keywords']);
+        }
 
-		$u = new User();
+        if ($req['numResults'] && Loader::helper('validation/numbers')->integer($req['numResults'])) {
+            $this->userList->setItemsPerPage($req['numResults']);
+        }
+
+        $u = new User();
         /*
 		if (!$u->isSuperUser()) {
 			$gIDs = array(-1);
@@ -97,123 +101,137 @@ class Users extends Controller {
 		}
 		*/
 
-		if (is_array($req['field'])) {
-			foreach($req['field'] as $i => $item) {
-				$this->fields[] = $this->getField($item);
-				// due to the way the form is setup, index will always be one more than the arrays
-				if ($item != '') {
-					switch($item) {
-						case 'is_active':
-							if ($req['active'] === '0') {
-								$this->userList->filterByIsActive(0);
-							} else if ($req['active'] === '1') {
-								$this->userList->filterByIsActive(1);
-							}
-							break;
-						case "date_added":
-							$dateFrom = $_REQUEST['date_from'];
-							$dateTo = $_REQUEST['date_to'];
-							if ($dateFrom != '') {
-								$dateFrom = date('Y-m-d', strtotime($dateFrom));
-								$this->userList->filterByDateAdded($dateFrom, '>=');
-								$dateFrom .= ' 00:00:00';
-							}
-							if ($dateTo != '') {
-								$dateTo = date('Y-m-d', strtotime($dateTo));
-								$dateTo .= ' 23:59:59';
-								
-								$this->userList->filterByDateAdded($dateTo, '<=');
-							}
-							break;
-						case "group_set":
-							$gsID = $_REQUEST['gsID'];
-							$gs = GroupSet::getByID($gsID);
-							$groupsetids = array(-1);
-							if (is_object($gs)) {
-								$groups = $gs->getGroups();
-							}
-							$this->userList->addToQuery('left join UserGroups ugs on u.uID = ugs.uID');
-							foreach($groups as $g) {
-								if ($pk->validate($g) && (!in_array($g->getGroupID(), $groupsetids))) {
-									$groupsetids[] = $g->getGroupID();
-								}								
-							}							
-							$instr = 'ugs.gID in (' . implode(',', $groupsetids) . ')';
-							$this->userList->filter(false, $instr);
-							break;
+        if (is_array($req['field'])) {
+            foreach ($req['field'] as $i => $item) {
+                $this->fields[] = $this->getField($item);
+                // due to the way the form is setup, index will always be one more than the arrays
+                if ($item != '') {
+                    switch ($item) {
+                        case 'is_active':
+                            if ($req['active'] === '0') {
+                                $this->userList->filterByIsActive(0);
+                            } else {
+                                if ($req['active'] === '1') {
+                                    $this->userList->filterByIsActive(1);
+                                }
+                            }
+                            break;
+                        case "date_added":
+                            $dateFrom = $_REQUEST['date_from'];
+                            $dateTo = $_REQUEST['date_to'];
+                            if ($dateFrom != '') {
+                                $dateFrom = date('Y-m-d', strtotime($dateFrom));
+                                $this->userList->filterByDateAdded($dateFrom, '>=');
+                                $dateFrom .= ' 00:00:00';
+                            }
+                            if ($dateTo != '') {
+                                $dateTo = date('Y-m-d', strtotime($dateTo));
+                                $dateTo .= ' 23:59:59';
 
-						default:
-							$akID = $item;
-							$fak = UserAttributeKey::getByID($akID);
-							$type = $fak->getAttributeType();
-							$cnt = $type->getController();
-							$cnt->setAttributeKey($fak);
-							$cnt->searchForm($this->userList);
-							break;
-					}
-				}
-			}
-		}
+                                $this->userList->filterByDateAdded($dateTo, '<=');
+                            }
+                            break;
+                        case "group_set":
+                            $gsID = $_REQUEST['gsID'];
+                            $gs = GroupSet::getByID($gsID);
+                            $groupsetids = array(-1);
+                            if (is_object($gs)) {
+                                $groups = $gs->getGroups();
+                            }
+                            $this->userList->addToQuery('left join UserGroups ugs on u.uID = ugs.uID');
+                            foreach ($groups as $g) {
+                                if ($pk->validate($g) && (!in_array($g->getGroupID(), $groupsetids))) {
+                                    $groupsetids[] = $g->getGroupID();
+                                }
+                            }
+                            $instr = 'ugs.gID in (' . implode(',', $groupsetids) . ')';
+                            $this->userList->filter(false, $instr);
+                            break;
 
-		$ilr = new UserSearchResult($columns, $this->userList, URL::to('/ccm/system/search/users/submit'), $this->fields);
-		$this->result = $ilr;
-	}
+                        default:
+                            $akID = $item;
+                            $fak = UserAttributeKey::getByID($akID);
+                            $type = $fak->getAttributeType();
+                            $cnt = $type->getController();
+                            $cnt->setAttributeKey($fak);
+                            $cnt->searchForm($this->userList);
+                            break;
+                    }
+                }
+            }
+        }
 
-	public function getSearchResultObject() {
-		return $this->result;
-	}
+        $ilr = new UserSearchResult(
+            $columns, $this->userList, URL::to('/ccm/system/search/users/submit'), $this->fields
+        );
+        $this->result = $ilr;
+    }
 
-	public function field($field) {
-		$r = $this->getField($field);
-		Loader::helper('ajax')->sendResult($r);
-	}
+    public function getSearchResultObject()
+    {
+        return $this->result;
+    }
 
-	protected function getField($field) {
-		$r = new stdClass;
-		$r->field = $field;
-		$searchRequest = $this->searchRequest->getSearchRequest();
-		$form = Loader::helper('form');
-		ob_start();
-		switch($field) {
-			case 'date_added': ?>
-				<?=$form->text('date_from', array('style' => 'width: 86px'))?>
-				<?=t('to')?>
-				<?=$form->text('date_to', array('style' => 'width: 86px'))?>
-				<? break;
-			case 'is_active':
-				print $form->select('active', array('0' => t('Inactive Users'), '1' => t('Active Users')), array('style' => 'vertical-align: middle'));
-				break;
-			case 'group_set':
-				$gsl = new GroupSetList();
-				$groupsets = array();
-				foreach($gsl->get() as $gs) { 
-					$groupsets[$gs->getGroupSetID()] = $gs->getGroupSetName();
-				}
-				print $form->select('gsID', $groupsets);
-				break;
-			default:
-				if (Loader::helper('validation/numbers')->integer($field)) {
-					$ak = UserAttributeKey::getByID($field);
-					$ak->render('search');
-				}
-				break;
-		}
-		$contents = ob_get_contents();
-		ob_end_clean();
-		$r->html = $contents;
-		return $r;
-	}
+    public function field($field)
+    {
+        $r = $this->getField($field);
+        Loader::helper('ajax')->sendResult($r);
+    }
 
-	public function submit() {
-		$this->search();
-		$result = $this->result;
-		Loader::helper('ajax')->sendResult($this->result->getJSONObject());
-	}
+    protected function getField($field)
+    {
+        $r = new stdClass;
+        $r->field = $field;
+        $searchRequest = $this->searchRequest->getSearchRequest();
+        $form = Loader::helper('form');
+        ob_start();
+        switch ($field) {
+            case 'date_added':
+                ?>
+                <?= $form->text('date_from', array('style' => 'width: 86px')) ?>
+                <?= t('to') ?>
+                <?= $form->text('date_to', array('style' => 'width: 86px')) ?>
+                <? break;
+            case 'is_active':
+                print $form->select(
+                    'active',
+                    array('0' => t('Inactive Users'), '1' => t('Active Users')),
+                    array('style' => 'vertical-align: middle')
+                );
+                break;
+            case 'group_set':
+                $gsl = new GroupSetList();
+                $groupsets = array();
+                foreach ($gsl->get() as $gs) {
+                    $groupsets[$gs->getGroupSetID()] = $gs->getGroupSetName();
+                }
+                print $form->select('gsID', $groupsets);
+                break;
+            default:
+                if (Loader::helper('validation/numbers')->integer($field)) {
+                    $ak = UserAttributeKey::getByID($field);
+                    $ak->render('search');
+                }
+                break;
+        }
+        $contents = ob_get_contents();
+        ob_end_clean();
+        $r->html = $contents;
+        return $r;
+    }
 
-	public function getFields() {
-		return $this->fields;		
-	}
+    public function submit()
+    {
+        $this->search();
+        $result = $this->result;
+        Loader::helper('ajax')->sendResult($this->result->getJSONObject());
+    }
 
-	
+    public function getFields()
+    {
+        return $this->fields;
+    }
+
+
 }
 
