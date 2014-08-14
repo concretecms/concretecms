@@ -9,6 +9,7 @@ use Permissions;
 use Request;
 use UserInfo;
 use View;
+use Core;
 
 class PreviewAsUser extends Controller
 {
@@ -44,7 +45,7 @@ class PreviewAsUser extends Controller
                     $request->setCustomRequestUser($user_info);
                 }
             }
-            $request->setCustomRequestDateTime(Request::request('date'));
+            $request->setCustomRequestDateTime(Core::make('helper/form/date_time')->translate('preview_as_user_datetime', $request->request()));
 
             $controller = $page->getPageController();
             $view = $controller->getViewObject();
