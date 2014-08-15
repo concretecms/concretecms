@@ -1,7 +1,9 @@
-<?
+<?php
 namespace Concrete\Core\Search\ItemList\Database;
+
 use Concrete\Core\Search\StickyRequest;
 use Database;
+
 abstract class AttributedItemList extends ItemList
 {
 
@@ -12,8 +14,14 @@ abstract class AttributedItemList extends ItemList
      */
     public function filterByAttribute($handle, $value, $comparison = '=')
     {
+        $subAttribute = null;
+        if (is_array($handle)) {
+            $tmp = reset($handle);
+            $subAttribute = key($handle);
+            $handle = $tmp;
+        }
         $ak = call_user_func_array(array($this->getAttributeKeyClassName(), 'getByHandle'), array($handle));
-        $ak->getController()->filterByAttribute($this, $value, $comparison);
+        $ak->getController()->filterByAttribute($this, $value, $comparison, $subAttribute);
     }
 
     /**
@@ -54,7 +62,7 @@ abstract class AttributedItemList extends ItemList
         // auto sort columns.
         if (is_callable(array($this->getAttributeKeyClassName(), 'getList'))) {
             $l = call_user_func(array($this->getAttributeKeyClassName(), 'getList'));
-            foreach($l as $ak) {
+            foreach ($l as $ak) {
                 $this->autoSortColumns[] = 'ak_' . $ak->getAttributeKeyHandle();
             }
         }
