@@ -27,23 +27,25 @@ class Controller extends AttributeTypeController  {
 		$state_province = $this->request('state_province');
 		$postal_code = $this->request('postal_code');
 		$country = $this->request('country');
+        $akHandle = $this->attributeKey->getAttributeKeyHandle();
+
 		if ($address1) {
-			$list->filterByAttribute(array('address1' => $this->attributeKey->getAttributeKeyHandle()), '%' . $address1 . '%', 'like');
+            $list->filter('ak_'.$akHandle.'_address1', '%'.$address1.'%', 'like');
 		}
 		if ($address2) {
-			$list->filterByAttribute(array('address2' => $this->attributeKey->getAttributeKeyHandle()), '%' . $address2 . '%', 'like');
+            $list->filter('ak_'.$akHandle.'_address2', '%'.$address2.'%', 'like');
 		}
 		if ($city) {
-			$list->filterByAttribute(array('city' => $this->attributeKey->getAttributeKeyHandle()), '%' . $city . '%', 'like');
+            $list->filter('ak_'.$akHandle.'_city', '%'.$city.'%', 'like');
 		}
 		if ($state_province) {
-			$list->filterByAttribute(array('state_province' => $this->attributeKey->getAttributeKeyHandle()), $state_province);
+            $list->filter('ak_'.$akHandle.'_state_province', $state_province);
 		}
 		if ($postal_code) {
-			$list->filterByAttribute(array('postal_code' => $this->attributeKey->getAttributeKeyHandle()), '%' . $postal_code . '%', 'like');
+            $list->filter('ak_'.$akHandle.'_postal_code', '%'.$postal_code.'%', 'like');
 		}
 		if ($country) {
-			$list->filterByAttribute(array('country' => $this->attributeKey->getAttributeKeyHandle()), $country);
+            $list->filter('ak_'.$akHandle.'_country', $country);
 		}
 		return $list;
 	}
