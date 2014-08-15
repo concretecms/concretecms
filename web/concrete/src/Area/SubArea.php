@@ -51,6 +51,11 @@ class SubArea extends Area {
 		parent::__construct($arHandle);
 	}
 
+    public function getAreaParentID()
+    {
+        return $this->arParentID;
+    }
+
     public function export($p, $page)
     {
         $c = $this->getAreaCollectionObject();
