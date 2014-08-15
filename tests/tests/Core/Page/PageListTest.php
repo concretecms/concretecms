@@ -62,7 +62,8 @@ class PageListTest extends \PageTestCase {
             'PermissionAccessEntityTypes',
             'Packages',
             'AttributeKeys',
-            'AttributeTypes'
+            'AttributeTypes',
+            'PageFeeds'
 
         ));
 
@@ -330,6 +331,35 @@ class PageListTest extends \PageTestCase {
 
     }
 
+    public function testBasicFeedSave()
+    {
+        $pt = \Concrete\Core\Page\Type\Type::getByHandle('another');
+        $pp = \Concrete\Core\Page\Page::getByPath('/another-fun-page');
+        $pf = new \Concrete\Core\Page\Feed();
+        $pf->setHandle('blog');
+        $pf->setPageTypeID($pt->getPageTypeID());
+        $pf->setParentID($pp->getCollectionID());
+        $pf->setTitle('RSS Feed');
+        $pf->setDescription('My Description');
+        $pf->save();
+        $this->assertEquals('blog', $pf->getHandle());
+        $this->assertEquals(1, $pf->getID());
+
+        $pf->ignorePermissions();
+        $pl = $pf->getPageListObject();
+        $this->assertInstanceOf('\Concrete\Core\Page\PageList', $pl);
+        $this->assertEquals(1, $pl->getTotalResults());
+
+        $results = $pl->getResults();
+        $this->assertEquals('Foobler', $results[0]->getCollectionName());
+    }
+
+    public function testPageFeedNoHandle()
+    {
+        $pf = new \Concrete\Core\Page\Feed();
+        $this->setExpectedException('\Doctrine\DBAL\DBALException');
+        $pf->save();
+    }
 
 
 }

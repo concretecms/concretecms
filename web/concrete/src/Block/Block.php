@@ -5,6 +5,7 @@ use Area;
 use BlockType;
 use Cache;
 use CacheLocal;
+use Concrete\Core\Area\SubArea;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Feature\Assignment\Assignment as FeatureAssignment;
@@ -554,6 +555,15 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $q = "select count(bID) from CollectionVersionBlocks where cID = ? and cvID = ? and bID = ? and arHandle = ?";
         $total = $db->getOne($q, $v);
         if ($total == 0) {
+            if ($this->a && $this->a instanceof SubArea) {
+                // hackish - we do this because if we don't do it now, it'll automatically get created
+                // with no arParentID.
+                $db->Execute('insert into Areas (cID, arHandle, arParentID) values (?, ?, ?)', array(
+                    $c->getCollectionID(),
+                    $this->a->getAreaHandle(),
+                    $this->a->getAreaParentID()
+                ));
+            }
             array_push($v, $newBlockDisplayOrder, 0, $this->overrideAreaPermissions());
             $q = "insert into CollectionVersionBlocks (cID, cvID, bID, arHandle, cbDisplayOrder, isOriginal, cbOverrideAreaPermissions) values (?, ?, ?, ?, ?, ?, ?)";
             $r = $db->prepare($q);

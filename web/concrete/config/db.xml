@@ -3539,7 +3539,53 @@
       <col>pkgHandle</col>
     </index>
   </table>
-  <table name="PagePaths">
+    <table name="PageFeeds">
+        <field name="pfID" type="I" size="10">
+            <key/>
+            <unsigned/>
+            <autoincrement />
+        </field>
+        <field name="cParentID" type="I">
+            <unsigned />
+            <notnull />
+            <default value="1" />
+        </field>
+        <field name="pfTitle" type="C" size="255">
+        </field>
+        <field name="pfHandle" type="C" size="255">
+            <notnull />
+        </field>
+        <field name="pfDescription" type="C" size="255">
+        </field>
+        <field name="pfIncludeAllDescendents" type="I1">
+            <unsigned />
+            <notnull />
+            <default value="0" />
+        </field>
+        <field name="pfContentToDisplay" type="C" size="1">
+            <notnull />
+            <default value="S" />
+            <!-- S = short description, A = Area //-->
+        </field>
+        <field name="pfAreaHandleToDisplay" type="C" size="255">
+        </field>
+        <field name="pfDisplayAliases" type="I1">
+            <unsigned />
+            <notnull />
+            <default value="0" />
+        </field>
+        <field name="ptID" type="I2">
+            <unsigned />
+        </field>
+        <field name="pfDisplayFeaturedOnly" type="I1">
+            <default value="0"/>
+        </field>
+        <index name="pfHandle">
+            <unique/>
+            <col>pfHandle</col>
+        </index>
+    </table>
+    <table name="PagePaths">
     <field name="ppID" type="I" size="10">
       <key/>
       <autoincrement/>

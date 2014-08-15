@@ -317,6 +317,15 @@
             </attributes>
         </page>
 
+        <page name="RSS Feeds" path="/dashboard/pages/feeds" filename="/dashboard/pages/feeds.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>atom, rss, feed, syndication</value>
+                </attributekey>
+            </attributes>
+        </page>
+
         <page name="Conversations" path="/dashboard/conversations" filename="/dashboard/conversations/view.php" pagetype="" description="" package=""></page>
         <page name="Messages" path="/dashboard/conversations/messages" filename="/dashboard/conversations/messages.php" pagetype="" description="" package="">
 			<attributes>
@@ -1007,7 +1016,8 @@
                     </data>
                 </block>
             </area>
-            <area name="Secondary 3">
+            <area
+                    name="Secondary 3">
                 <block type="dashboard_featured_theme" name=""/>
             </area>
             <area name="Secondary 4">

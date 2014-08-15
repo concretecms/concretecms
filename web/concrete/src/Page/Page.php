@@ -1782,7 +1782,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         // any areas that were overriding permissions on the current page need to be overriding permissions
         // on the NEW page as well.
         $v = array($permissionsCollectionID);
-        $q = "select * from Areas where cID = ?";
+        $q = "select * from Areas where cID = ? and arOverrideCollectionPermissions";
         $r = $db->query($q, $v);
         while($row = $r->fetchRow()) {
             $v = array($this->cID, $row['arHandle'], $row['arOverrideCollectionPermissions'], $row['arInheritPermissionsFromAreaOnCID'], $row['arIsGlobal']);
