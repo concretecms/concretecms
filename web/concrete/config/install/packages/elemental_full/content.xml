@@ -124,7 +124,7 @@
                     <set name="Post Details">
                         <control custom-template="" custom-label="Entry Name" type="core_page_property" handle="name"/>
                         <control custom-template="" custom-label="Short Description" type="core_page_property" handle="description"/>
-                        <control custom-template="" custom-label="Blog" type="core_page_property" handle="publish_target"/>
+                        <control custom-template="" type="core_page_property" handle="publish_target"/>
                         <control custom-template="" custom-label="Topics" type="collection_attribute" handle="blog_entry_topics"/>
                     </set>
                     <set name="Content">
@@ -442,7 +442,7 @@
                     <set name="Page">
                         <control custom-template="" custom-label="" type="core_page_property" handle="name"/>
                         <control custom-template="" custom-label="" type="core_page_property" handle="url_slug"/>
-                        <control custom-template="" custom-label="Portfolio" type="core_page_property" handle="publish_target"/>
+                        <control custom-template="" type="core_page_property" handle="publish_target"/>
                     </set>
                     <set name="Project Data">
                         <control custom-template="" custom-label="" type="collection_attribute" handle="project_topics"/>
@@ -559,7 +559,7 @@
             <composer>
                 <formlayout>
                     <set name="Details">
-                        <control custom-template="" custom-label="Blog Name" type="core_page_property" handle="name"/>
+                        <control custom-template="" type="core_page_property" handle="name"/>
                         <control custom-template="" custom-label="" type="core_page_property" handle="publish_target"/>
                     </set>
                 </formlayout>

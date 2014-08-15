@@ -171,6 +171,7 @@ Route::register('/ccm/system/panels/details/page/composer', '\Concrete\Controlle
 Route::register('/ccm/system/panels/details/page/composer/autosave', '\Concrete\Controller\Panel\Detail\Page\Composer::autosave');
 Route::register('/ccm/system/panels/details/page/composer/publish', '\Concrete\Controller\Panel\Detail\Page\Composer::publish');
 Route::register('/ccm/system/panels/details/page/composer/discard', '\Concrete\Controller\Panel\Detail\Page\Composer::discard');
+Route::register('/ccm/system/panels/details/page/composer/save_and_exit', '\Concrete\Controller\Panel\Detail\Page\Composer::saveAndExit');
 Route::register('/ccm/system/panels/details/page/attributes', '\Concrete\Controller\Panel\Detail\Page\Attributes::view');
 Route::register('/ccm/system/panels/details/page/attributes/submit', '\Concrete\Controller\Panel\Detail\Page\Attributes::submit');
 Route::register('/ccm/system/panels/details/page/attributes/add_attribute', '\Concrete\Controller\Panel\Detail\Page\Attributes::add_attribute');

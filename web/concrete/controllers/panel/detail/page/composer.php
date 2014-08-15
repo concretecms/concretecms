@@ -35,7 +35,16 @@ class Composer extends BackendInterfacePageController {
 		$ptr->outputJSON();
 	}
 
-	public function publish() {
+    public function saveAndExit() {
+        $r = $this->save();
+        $ptr = $r[0];
+        $u = new User();
+        $c = \Page::getByID($u->getPreviousFrontendPageID());
+        $ptr->setRedirectURL($c->getCollectionLink(true));
+        $ptr->outputJSON();
+    }
+
+    public function publish() {
 		$r = $this->save();
 		$ptr = $r[0];
 		$pagetype = $r[1];

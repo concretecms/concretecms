@@ -36,7 +36,7 @@ ConcretePageComposerDetail = {
 				my.saving = false;
 		        $('#ccm-page-type-composer-form-save-status').html(r.message).show();
 		        if (onComplete) {
-		        	onComplete();
+		        	onComplete(r);
 		        }
 			}
 		}).submit();
@@ -79,7 +79,25 @@ ConcretePageComposerDetail = {
 	    	}
 		});
 
-	    $('button[data-page-type-composer-form-btn=publish]').on('click', function() {
+        $('button[data-page-type-composer-form-btn=exit]').on('click', function() {
+            my.disableAutosave();
+            var submitSuccess = false;
+            my.$form.concreteAjaxForm({
+                url: '<?=$controller->action('save_and_exit')?>',
+                success: function(r) {
+                    submitSuccess = true;
+                    window.location.href = r.redirectURL;
+                },
+                complete: function() {
+                    if (!submitSuccess) {
+                        my.enableAutosave();
+                    }
+                    jQuery.fn.dialog.hideLoader();
+                }
+            }).submit();
+        });
+
+        $('button[data-page-type-composer-form-btn=publish]').on('click', function() {
 	    	my.disableAutosave();
 	    	var submitSuccess = false;
 			my.$form.concreteAjaxForm({
