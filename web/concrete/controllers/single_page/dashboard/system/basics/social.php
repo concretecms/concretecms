@@ -47,7 +47,7 @@ class Social extends DashboardPageController
         $sec = Core::make('helper/security');
         $url = $sec->sanitizeURL($this->request->request->get('url'));
         if (!$url) {
-            $this->error->add('You must specify a valid URL.');
+            $this->error->add(t('You must specify a valid URL.'));
         }
         if (!is_object($service)) {
             $this->error->add(t('You must choose a service.'));
