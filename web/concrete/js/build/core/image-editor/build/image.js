@@ -1,5 +1,5 @@
 if (settings.src) {
-    im.showLoader('Loading Image..');
+    im.showLoader(ccmi18n_imageeditor.loadingImage);
     var img = new Image(), controlSetsLoaded = false;
     im.bind('ControlSetsLoaded', function () {
         controlSetsLoaded = true;
