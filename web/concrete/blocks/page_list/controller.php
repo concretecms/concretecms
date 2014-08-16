@@ -4,8 +4,10 @@ namespace Concrete\Block\PageList;
 use BlockType;
 use CollectionAttributeKey;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Page\Feed;
 use Loader;
 use Page;
+use Core;
 use PageList;
 use Concrete\Core\Attribute\Key\CollectionKey;
 
@@ -17,6 +19,7 @@ class Controller extends BlockController
     protected $btInterfaceHeight = "350";
     protected $btExportPageColumns = array('cParentID');
     protected $btExportPageTypeColumns = array('ptID');
+    protected $btExportPageFeedColumns = array('pfID');
     protected $btCacheBlockRecord = true;
     protected $list;
 
@@ -42,10 +45,6 @@ class Controller extends BlockController
 
     public function on_start()
     {
-        if (!$this->bID) {
-            return;
-        }
-
         $this->list = new PageList();
         //$pl->setNameSpace('b' . $this->bID);
 
@@ -131,19 +130,17 @@ class Controller extends BlockController
         $nh = Loader::helper('navigation');
         $this->set('nh', $nh);
 
-        //RSS...
-        $showRss = false;
-        $rssIconSrc = '';
-        $rssInvisibleLink = '';
-        if ($this->rss) {
-            $showRss = true;
-            $rssIconSrc = Loader::helper('concrete/urls')->getBlockTypeAssetsURL(
-                                BlockType::getByID($this->getBlockObject()->getBlockTypeID()),
-                                'rss.png');
-            //DEV NOTE: Ideally we'd set rssUrl here, but we can't because for some reason calling $this->getBlockObject() here doesn't load all info properly, and then the call to $this->getRssUrl() fails when it tries to get the area handle of the block.
+        if ($this->pfID) {
+            $this->requireAsset('css', 'font-awesome');
+            $feed = Feed::getByID($this->pfID);
+            $this->set('rssUrl', $feed->getFeedURL());
+            $link = new \HtmlObject\Element('link');
+            $link->href($feed->getFeedURL());
+            $link->rel('alternate');
+            $link->type('application/rss+xml');
+            $link->title($feed->getTitle());
+            $this->addHeaderItem($link);
         }
-        $this->set('showRss', $showRss);
-        $this->set('rssIconSrc', $rssIconSrc);
 
         //Pagination...
         $showPagination = false;
@@ -183,7 +180,6 @@ class Controller extends BlockController
 
         $c = Page::getCurrentPage();
         $uh = Loader::helper('concrete/urls');
-        //	echo $rssUrl;
         $this->set('c', $c);
         $this->set('uh', $uh);
         $this->set('includeDescription', true);
@@ -204,6 +200,10 @@ class Controller extends BlockController
         if ($c->getCollectionID() != $this->cParentID && (!$this->cThis) && ($this->cParentID != 0)) {
             $isOtherPage = true;
             $this->set('isOtherPage', true);
+        }
+        if ($this->pfID) {
+            $feed = Feed::getByID($this->pfID);
+            $this->set('rssFeed', $feed);
         }
         $uh = Loader::helper('concrete/urls');
         $this->set('uh', $uh);
@@ -245,6 +245,28 @@ class Controller extends BlockController
         $this->list->filterByPublicDate($start, '>=');
         $this->list->filterByPublicDate($end, '<=');
         $this->view();
+    }
+
+    public function validate($args)
+    {
+        $e = Core::make('helper/validation/error');
+        $vs = Core::make('helper/validation/strings');
+        $pf = false;
+        if ($this->pfID) {
+            $pf = Feed::getByID($this->pfID);
+        }
+        if ($args['rss'] && !is_object($pf)) {
+            if (!$vs->handle($args['rssHandle'])) {
+                $e->add(t('Your RSS feed must have a valid URL, containing only letters, numbers or underscores'));
+            }
+            if (!$vs->notempty($args['rssTitle'])) {
+                $e->add(t('Your RSS feed must have a valid title.'));
+            }
+            if (!$vs->notempty($args['rssDescription'])) {
+                $e->add(t('Your RSS feed must have a valid description.'));
+            }
+        }
+        return $e;
     }
 
     public function getPassThruActionAndParameters($parameters)
@@ -305,32 +327,38 @@ class Controller extends BlockController
         $args['rss'] = intval($args['rss']);
         $args['ptID'] = intval($args['ptID']);
 
+        if ($args['rss']) {
+            if ($this->pfID) {
+                $pf = Feed::getByID($this->pfID);
+            }
+
+            if (!is_object($pf)) {
+                $pf = new \Concrete\Core\Page\Feed();
+                $pf->setTitle($args['rssTitle']);
+                $pf->setDescription($args['rssDescription']);
+                $pf->setHandle($args['rssHandle']);
+            }
+
+            $pf->setParentID($args['cParentID']);
+            $pf->setPageTypeID($args['ptID']);
+            $pf->setIncludeAllDescendents($args['includeAllDescendents']);
+            $pf->setDisplayAliases($args['displayAliases']);
+            $pf->setDisplayFeaturedOnly($args['displayFeaturedOnly']);
+            $pf->setDisplayAliases($args['displayAliases']);
+            $pf->displayShortDescriptionContent();
+            $pf->save();
+            $args['pfID'] = $pf->getID();
+        } else if ($this->pfID && !$args['rss']) {
+            $pf = Feed::getByID($this->pfID);
+            if (is_object($pf)) {
+                $pf->delete();
+            }
+            $args['pfID'] = 0;
+        }
+
         parent::save($args);
 
     }
 
-    public function getRssUrl($b, $tool = 'rss')
-    {
-        $uh = Loader::helper('concrete/urls');
-        if (!$b) {
-            return '';
-        }
-
-        $pb = $b->getProxyBlock();
-        $rssb = $b;
-        if (is_object($pb)) {
-            $rssb = $pb;
-        }
-
-        $btID = $b->getBlockTypeID();
-        $bt = BlockType::getByID($btID);
-        $c = $rssb->getBlockCollectionObject();
-        $a = $rssb->getBlockAreaObject();
-        if (is_object($a)) {
-            $rssUrl = $uh->getBlockTypeToolsURL(
-                         $bt) . "/" . $tool . "?bID=" . $rssb->getBlockID() . "&amp;cID=" . $c->getCollectionID() . "&amp;arHandle=" . $a->getAreaHandle();
-            return $rssUrl;
-        }
-    }
 }
 

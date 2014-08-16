@@ -42,9 +42,13 @@ class Feeds extends DashboardPageController
         $vs = Core::make('helper/validation/strings');
         $handle = $sec->sanitizeString($this->request->request->get('pfHandle'));
         $title = $sec->sanitizeString($this->request->request->get('pfTitle'));
+        $description = $sec->sanitizeString($this->request->request->get('pfDescription'));
 
         if (!$title) {
             $this->error->add('You must specify a valid title.');
+        }
+        if (!$description) {
+            $this->error->add('You must specify a valid description.');
         }
 
         if (!$vs->handle($handle)) {
@@ -132,7 +136,11 @@ class Feeds extends DashboardPageController
         $this->set('pageTypes', $pageTypes);
 
         $areas = Area::getHandleList();
-        $this->set('areas', $areas);
+        $select = array();
+        foreach($areas as $handle) {
+            $select[$handle] = $handle;
+        }
+        $this->set('areas', $select);
 
     }
 
