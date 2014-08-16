@@ -17,15 +17,9 @@ $controller->ptID = $_REQUEST['ptID'];
 $controller->rss = $_REQUEST['rss'];
 $controller->displayFeaturedOnly = $_REQUEST['displayFeaturedOnly'];
 $controller->displayAliases = $_REQUEST['displayAliases'];
-
-$cArray = $controller->getPages();
-
-//For compatibility with 5.4.2+ view.php...
-$pages = $cArray;
-$showRss = false;
-$rssIconSrc = '';
-$showPagination = false;
-$paginator = null;
+$controller->on_start();
+$controller->view();
+$pages = $controller->get('pages');
 
 require(dirname(__FILE__) . '/../view.php');
 exit;

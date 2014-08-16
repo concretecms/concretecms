@@ -182,6 +182,11 @@ Route::register('/ccm/system/panels/details/page/permissions', '\Concrete\Contro
 Route::register('/ccm/system/panels/details/page/permissions/save_simple', '\Concrete\Controller\Panel\Detail\Page\Permissions::save_simple');
 
 /**
+ * RSS Feeds
+ */
+Route::register('/rss/{identifier}', '\Concrete\Controller\Feed::get', 'rss', array('identifier' => '[A-Za-z0-9_/.]+'));
+
+/**
  * Special Dashboard
  */
 Route::register('/dashboard/blocks/stacks/list', function() {

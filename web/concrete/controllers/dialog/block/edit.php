@@ -109,8 +109,8 @@ class Edit extends BackendInterfaceBlockController
                 $pr->setAdditionalDataAttribute('bID', $b->getBlockID());
                 // we can update the block that we're submitting
                 $b->update($_POST);
-                $pr->outputJSON();
             }
+            $pr->outputJSON();
         }
     }
 

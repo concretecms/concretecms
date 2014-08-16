@@ -1,6 +1,9 @@
 <?php
 
 namespace Concrete\Core\Page;
+use Concrete\Core\Backup\ContentExporter;
+use Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Http\Request;
 use Database;
 /**
  * @Entity
@@ -221,6 +224,10 @@ class Feed
         return $this->pfAreaHandleToDisplay;
     }
 
+    public function getFeedURL()
+    {
+        return BASE_URL . \URL::to('/rss/' . $this->getHandle());
+    }
     /**
      * @Column(type="boolean")
      */
@@ -241,12 +248,38 @@ class Feed
         $em->flush();
     }
 
-    public static function exportList($node)
+    public static function exportList(\SimpleXMLElement $node)
     {
         $child = $node->addChild('pagefeeds');
         $list = static::getList();
-        foreach($list as $link) {
-            $linkNode = $child->addChild('feed');
+        foreach($list as $feed) {
+            $feedNode = $child->addChild('feed');
+            if ($feed->getParentID()) {
+                $feedNode->addChild('parent', ContentExporter::replacePageWithPlaceHolder($feed->getParentID()));
+            }
+            $feedNode->addChild('title', $feed->getTitle());
+            $feedNode->addChild('description', $feed->getDescription());
+            $feedNode->addChild('handle', $feed->getHandle());
+            if ($feed->getIncludeAllDescendents()) {
+                $feedNode->addChild('include-all-descendents', 1);
+            }
+            if ($feed->getDisplayAliases()) {
+                $feedNode->addChild('display-aliases', 1);
+            }
+            if ($feed->getDisplayFeaturedOnly()) {
+                $feedNode->addChild('display-featured-only', 1);
+            }
+            if ($feed->getPageTypeID()) {
+                $feedNode->addChild('pagetype', ContentExporter::replacePageTypeWithPlaceHolder($feed->getPageTypeID()));
+            }
+            if ($feed->getTypeOfContentToDisplay() == 'S') {
+                $type = $feedNode->addChild('contenttype');
+                $type->addAttribute('type', 'description');
+            } else {
+                $area = $feedNode->addChild('contenttype');
+                $area->addAttribute('type', 'area');
+                $area->addAttribute('handle', $feed->getAreaHandleToDisplay());
+            }
         }
     }
 
@@ -286,6 +319,7 @@ class Feed
     {
         $pl = new PageList();
         $pl->setItemsPerPage($this->itemsPerFeed);
+        $pl->sortByPublicDateDescending();
         if (!$this->checkPagePermissions) {
             $pl->ignorePermissions();
         }
@@ -311,8 +345,51 @@ class Feed
         return $pl;
     }
 
-    public function getPageFeedContent(Page $p)
+    protected function getPageFeedContent(Page $p)
     {
-
+        switch($this->pfContentToDisplay) {
+            case 'S':
+                return $p->getCollectionDescription();
+            case 'A':
+                $a = new \Area($this->getAreaHandleToDisplay());
+                $blocks = $a->getAreaBlocksArray($p);
+                $r = Request::getInstance();
+                $r->setCurrentPage($p);
+                ob_start();
+                foreach($blocks as $b) {
+                    $bv = new BlockView($b);
+                    $bv->render('view');
+                }
+                $content = ob_get_contents();
+                ob_end_clean();
+                return $content;
+        }
     }
+
+    public function getOutput()
+    {
+        $pl = $this->getPageListObject();
+        $link = BASE_URL;
+        if ($this->cParentID) {
+            $parent = Page::getByID($this->cParentID);
+            $link = $parent->getCollectionLink(true);
+        }
+        $pagination = $pl->getPagination();
+        if ($pagination->getTotalResults() > 0) {
+            $writer = new \Zend\Feed\Writer\Feed();
+            $writer->setTitle($this->getTitle());
+            $writer->setDescription($this->getDescription());
+            $writer->setLink($link);
+            foreach($pagination->getCurrentPageResults() as $p) {
+                $entry = $writer->createEntry();
+                $entry->setTitle($p->getCollectionName());
+                $entry->setDateCreated(strtotime($p->getCollectionDatePublic()));
+                $entry->setDescription($this->getPageFeedContent($p));
+                $entry->setLink($p->getCollectionLink(true));
+                $writer->addEntry($entry);
+            }
+            return $writer->export('rss');
+        }
+    }
+
 }

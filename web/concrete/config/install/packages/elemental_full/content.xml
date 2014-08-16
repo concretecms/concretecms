@@ -345,9 +345,6 @@
                                                 <displayAliases><![CDATA[0]]></displayAliases>
                                                 <ptID/>
                                                 <includeDescription>0</includeDescription>
-                                                <rss><![CDATA[0]]></rss>
-                                                <rssTitle><![CDATA[]]></rssTitle>
-                                                <rssDescription><![CDATA[]]></rssDescription>
                                                 <truncateSummaries><![CDATA[0]]></truncateSummaries>
                                                 <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
                                                 <truncateChars><![CDATA[0]]></truncateChars>
@@ -598,9 +595,7 @@
                                                                 <paginate><![CDATA[1]]></paginate>
                                                                 <displayAliases><![CDATA[0]]></displayAliases>
                                                                 <ptID>{ccm:export:pagetype:blog_entry}</ptID>
-                                                                <rss><![CDATA[0]]></rss>
-                                                                <rssTitle><![CDATA[]]></rssTitle>
-                                                                <rssDescription><![CDATA[]]></rssDescription>
+                                                                <pfID>{ccm:export:pagefeed:blog}</pfID>
                                                                 <truncateSummaries><![CDATA[0]]></truncateSummaries>
                                                                 <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
                                                                 <displayThumbnail><![CDATA[0]]></displayThumbnail>
@@ -731,9 +726,6 @@
                                                 <displayAliases><![CDATA[0]]></displayAliases>
                                                 <enableExternalFiltering><![CDATA[1]]></enableExternalFiltering>
                                                 <ptID>{ccm:export:pagetype:portfolio_project}</ptID>
-                                                <rss><![CDATA[0]]></rss>
-                                                <rssTitle><![CDATA[]]></rssTitle>
-                                                <rssDescription><![CDATA[]]></rssDescription>
                                                 <truncateSummaries><![CDATA[0]]></truncateSummaries>
                                                 <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
                                                 <noResultsMessage><![CDATA[No projects found.]]></noResultsMessage>
@@ -1054,9 +1046,6 @@
                                 <displayAliases><![CDATA[0]]></displayAliases>
                                 <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
                                 <ptID>{ccm:export:pagetype:portfolio_project}</ptID>
-                                <rss><![CDATA[0]]></rss>
-                                <rssTitle><![CDATA[]]></rssTitle>
-                                <rssDescription><![CDATA[]]></rssDescription>
                                 <truncateSummaries><![CDATA[0]]></truncateSummaries>
                                 <displayFeaturedOnly><![CDATA[1]]></displayFeaturedOnly>
                                 <noResultsMessage><![CDATA[]]></noResultsMessage>
@@ -1114,9 +1103,6 @@
                                                 <displayAliases><![CDATA[0]]></displayAliases>
                                                 <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
                                                 <ptID>{ccm:export:pagetype:blog_entry}</ptID>
-                                                <rss><![CDATA[0]]></rss>
-                                                <rssTitle><![CDATA[]]></rssTitle>
-                                                <rssDescription><![CDATA[]]></rssDescription>
                                                 <truncateSummaries><![CDATA[0]]></truncateSummaries>
                                                 <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
                                                 <noResultsMessage><![CDATA[]]></noResultsMessage>
@@ -1147,9 +1133,6 @@
                                                 <displayAliases><![CDATA[0]]></displayAliases>
                                                 <enableExternalFiltering><![CDATA[0]]></enableExternalFiltering>
                                                 <ptID>{ccm:export:pagetype:blog_entry}</ptID>
-                                                <rss><![CDATA[0]]></rss>
-                                                <rssTitle><![CDATA[]]></rssTitle>
-                                                <rssDescription><![CDATA[]]></rssDescription>
                                                 <truncateSummaries><![CDATA[0]]></truncateSummaries>
                                                 <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
                                                 <noResultsMessage><![CDATA[]]></noResultsMessage>
@@ -2848,9 +2831,6 @@
                                                 <paginate><![CDATA[0]]></paginate>
                                                 <displayAliases><![CDATA[0]]></displayAliases>
                                                 <ptID>{ccm:export:pagetype:job_posting}</ptID>
-                                                <rss><![CDATA[0]]></rss>
-                                                <rssTitle><![CDATA[]]></rssTitle>
-                                                <rssDescription><![CDATA[]]></rssDescription>
                                                 <truncateSummaries><![CDATA[0]]></truncateSummaries>
                                                 <displayFeaturedOnly><![CDATA[0]]></displayFeaturedOnly>
                                                 <truncateChars><![CDATA[0]]></truncateChars>
@@ -3053,4 +3033,14 @@
         <topic name="Activities"/>
     </tree>
     </trees>
+    <pagefeeds>
+        <feed>
+            <parent>{ccm:export:page:/blog}</parent>
+            <title>Blog</title>
+            <description>concrete5 Blog</description>
+            <handle>blog</handle>
+            <pagetype>{ccm:export:pagetype:blog_entry}</pagetype>
+            <contenttype type="description"/>
+        </feed>
+    </pagefeeds>
 </concrete5-cif>

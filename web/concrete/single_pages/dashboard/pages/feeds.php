@@ -18,6 +18,7 @@
     $pfDisplayFeaturedOnly = false;
     $pfContentToDisplay = 'S';
     $pfAreaHandleToDisplay = 'Main';
+    $button = t('Add');
     if (is_object($feed)) {
         $pfTitle = $feed->getTitle();
         $pfDescription = $feed->getDescription();
@@ -31,6 +32,7 @@
         $pfAreaHandleToDisplay = $feed->getAreaHandleToDisplay();
         $action = $view->action('edit_feed', $feed->getID());
         $token = 'edit_feed';
+        $button = t('Update');
     }
     ?>
 
@@ -162,7 +164,7 @@
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?=URL::to('/dashboard/pages/feeds')?>" class="btn btn-default pull-left"><?=t("Cancel")?></a>
-                <button class="pull-right btn btn-success" type="submit" ><?=t('Add')?></button>
+                <button class="pull-right btn btn-success" type="submit" ><?=$button?></button>
             </div>
         </div>
     </form>

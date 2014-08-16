@@ -44,6 +44,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btExportPageColumns = array();
     protected $btExportFileColumns = array();
     protected $btExportPageTypeColumns = array();
+    protected $btExportPageFeedColumns = array();
     protected $btWrapperClass = '';
     protected $btFeatures = array();
     protected $btFeatureObjects;
@@ -310,6 +311,8 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                             $tableRecord->addChild($key, ContentExporter::replaceFileWithPlaceHolder($value));
                         } else if (in_array($key, $this->btExportPageTypeColumns)) {
                             $tableRecord->addChild($key, ContentExporter::replacePageTypeWithPlaceHolder($value));
+                        } else if (in_array($key, $this->btExportPageFeedColumns)) {
+                            $tableRecord->addChild($key, ContentExporter::replacePageFeedWithPlaceHolder($value));
                         } else {
                             $cnode = $tableRecord->addChild($key);
                             $node = dom_import_simplexml($cnode);
