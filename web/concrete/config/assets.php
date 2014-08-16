@@ -197,9 +197,20 @@ $al->registerGroup('core/app/editable-fields', array(
 // Image Editor
 $al->register('javascript', 'kinetic', 'js/kinetic.js');
 $al->register('css', 'core/imageeditor', 'css/image-editor.css');
+$al->register(
+    'javascript',
+    'core/imageeditor_locale',
+    REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_imageeditor_js',
+    array(
+        'combine' => false,
+        'minify' => false,
+        'local' => false
+    )
+);
 $al->register('javascript', 'core/imageeditor', 'js/image-editor.js');
 $al->registerGroup('core/imageeditor', array(
     array('javascript', 'kinetic'),
+    array('javascript', 'core/imageeditor_locale'),
     array('javascript', 'core/imageeditor'),
     array('css', 'core/imageeditor')
 ));
