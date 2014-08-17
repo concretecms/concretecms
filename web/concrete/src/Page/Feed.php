@@ -4,6 +4,7 @@ namespace Concrete\Core\Page;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Http\Request;
+use Concrete\Core\Permission\Access\Entity\GroupEntity;
 use Database;
 /**
  * @Entity
@@ -261,13 +262,13 @@ class Feed
             $feedNode->addChild('description', $feed->getDescription());
             $feedNode->addChild('handle', $feed->getHandle());
             if ($feed->getIncludeAllDescendents()) {
-                $feedNode->addChild('include-all-descendents', 1);
+                $feedNode->addChild('descendents', 1);
             }
             if ($feed->getDisplayAliases()) {
-                $feedNode->addChild('display-aliases', 1);
+                $feedNode->addChild('aliases', 1);
             }
             if ($feed->getDisplayFeaturedOnly()) {
-                $feedNode->addChild('display-featured-only', 1);
+                $feedNode->addChild('featured', 1);
             }
             if ($feed->getPageTypeID()) {
                 $feedNode->addChild('pagetype', ContentExporter::replacePageTypeWithPlaceHolder($feed->getPageTypeID()));
@@ -322,6 +323,20 @@ class Feed
         $pl->sortByPublicDateDescending();
         if (!$this->checkPagePermissions) {
             $pl->ignorePermissions();
+        } else {
+            $vp = \Concrete\Core\Permission\Key\Key::getByHandle('view_page');
+            $guest = \Group::getByID(GUEST_GROUP_ID);
+            $access = GroupEntity::getOrCreate($guest);
+            // we set page permissions to be Guest group only, because
+            // authentication won't work with RSS feeds
+            $pl->setPermissionsChecker(function($page) use ($vp, $access) {
+                $vp->setPermissionObject($page);
+                $pa = $vp->getPermissionAccessObject($page);
+                if (!is_object($pa)) {
+                    return false;
+                }
+                return $pa->validateAccessEntities(array($access));
+            });
         }
         if ($this->cParentID) {
             if ($this->pfIncludeAllDescendents) {
