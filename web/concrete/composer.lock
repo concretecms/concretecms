@@ -2632,13 +2632,13 @@
             "version": "1.12.6",
             "source": {
                 "type": "git",
-                "url": "https://github.com/zf1/zend-locale.git",
-                "reference": "e09d6768b56136bb724b130274bcd5fd8a902176"
+                "url": "https://github.com/mlocati/zend-locale.git",
+                "reference": "6b7895c57cb5381b3e35750342f1f6add8a21191"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-locale/zipball/e09d6768b56136bb724b130274bcd5fd8a902176",
-                "reference": "e09d6768b56136bb724b130274bcd5fd8a902176",
+                "url": "https://api.github.com/repos/mlocati/zend-locale/zipball/6b7895c57cb5381b3e35750342f1f6add8a21191",
+                "reference": "6b7895c57cb5381b3e35750342f1f6add8a21191",
                 "shasum": ""
             },
             "require": {
@@ -2668,7 +2668,7 @@
                 "locale",
                 "zend"
             ],
-            "time": "2014-05-21 16:06:13"
+            "time": "2014-08-08 13:45:44"
         },
         {
             "name": "zf1/zend-mail",
