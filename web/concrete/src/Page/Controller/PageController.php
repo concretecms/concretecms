@@ -24,6 +24,30 @@ class PageController extends Controller {
         $this->set('html', Core::make('\Concrete\Core\Html\Service\Html'));
     }
 
+    /**
+     * Given either a path or a Page object, this is a shortcut to
+     * 1. Grab the controller of that page.
+     * 2. Grab the view of that controller
+     * 3. Render that view.
+     * 4. Exit – so we immediately stop all other output in the controller that
+     * called render().
+     * @param @string|\Concrete\Core\Page\Page $var
+     */
+    public function render($var)
+    {
+        if (!($var instanceof \Concrete\Core\Page\Page)) {
+            $var = \Page::getByPath($var);
+        }
+
+        $controller = $var->getPageController();
+        $controller->on_start();
+        $controller->runAction('view');
+        $controller->on_before_render();
+        $view = $controller->getViewObject();
+        print $view->render();
+        exit;
+    }
+
     public function getPageObject() {
         return $this->c;
     }

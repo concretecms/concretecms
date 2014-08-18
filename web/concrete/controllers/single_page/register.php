@@ -14,22 +14,19 @@ class Register extends PageController {
 
 	public function on_start() {
 		if(!ENABLE_REGISTRATION) {
-            $c = \Page::getByPath('/page_not_found');
-            $controller = $c->getController();
-            $this->setViewObject($controller->getViewObject());
-		}
+            $this->render('/page_not_found');
+ 		}
 		$u = new User();
 		$this->set('u', $u);
 		$this->set('displayUserName', $this->displayUserName);
 		$this->requireAsset('css', 'core/frontend/captcha');
 	}
-	
+
 	public function forward($cID = 0) {
 		$this->set('rcID', Loader::helper('security')->sanitizeInt($cID));
 	}
 	
 	public function do_register() {
-	
 		$registerData['success']=0;
 		
 		$userHelper = Loader::helper('concrete/user');
