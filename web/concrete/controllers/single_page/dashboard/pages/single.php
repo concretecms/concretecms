@@ -26,7 +26,7 @@ class Single extends DashboardPageController
                     // now we check to see if this is already added
                     $pc = Page::getByPath('/' . $path, 'RECENT');
                     if ($pc->getError() == COLLECTION_NOT_FOUND) {
-                        SinglePage::add($this->post('pageURL'));
+                        SinglePage::add(h($this->post('pageURL')));
                         $this->redirect('/dashboard/pages/single', 'single_page_added');
                     } else {
                         $this->error->add(t("That page has already been added."));
