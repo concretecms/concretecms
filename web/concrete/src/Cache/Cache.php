@@ -3,7 +3,7 @@ namespace Concrete\Core\Cache;
 use PageCache;
 use Events;
 use Database as DB;
-use Zend_Cache;
+use \Zend\Cache\StorageFactory;
 use Zend_Translate;
 use Environment;
 use CacheLocal as ConcreteCacheLocal;
@@ -19,36 +19,19 @@ class Cache {
 		static $cache;
 		if (!isset($cache) && defined('DIR_FILES_CACHE')) {
 			if (is_dir(DIR_FILES_CACHE) && is_writable(DIR_FILES_CACHE)) {
-				$frontendOptions = array(
-					'lifetime' => CACHE_LIFETIME,
-					'automatic_serialization' => true,
-					'cache_id_prefix' => CACHE_ID		
-				);
-				$backendOptions = array(
-					'read_control' => false,
-					'cache_dir' => DIR_FILES_CACHE,
-					'file_locking' => false
-				);
-				if (defined('CACHE_BACKEND_OPTIONS')) {
-					$opts = unserialize(CACHE_BACKEND_OPTIONS);
-					foreach($opts as $k => $v) {
-						$backendOptions[$k] = $v;
-					}
-				}
-				if (defined('CACHE_FRONTEND_OPTIONS')) {
-					$opts = unserialize(CACHE_FRONTEND_OPTIONS);
-					foreach($opts as $k => $v) {
-						$frontendOptions[$k] = $v;
-					}
-				}
-				if (!defined('CACHE_LIBRARY') || (defined("CACHE_LIBRARY") && CACHE_LIBRARY == "default")) {
-					define('CACHE_LIBRARY', 'File');
-				}
-				$customBackendNaming = false;
-				if (CACHE_LIBRARY == 'Zend_Cache_Backend_ZendServer_Shmem') {
-					$customBackendNaming = true;
-				}
-				$cache = Zend_Cache::factory('Core', CACHE_LIBRARY, $frontendOptions, $backendOptions, false, $customBackendNaming);
+                $adapter = (defined('CACHE_LIBRARY')) ? CACHE_LIBRARY : 'filesystem';
+                $cache = StorageFactory::factory(array(
+                    'adapter' => array(
+                        'name' => $adapter,
+                        'ttl' => CACHE_LIFETIME
+                    )
+                ));
+                if ($adapter == 'filesystem') {
+                    $cache->setOptions(array(
+                        'cache_dir' => DIR_FILES_CACHE,
+                        'file_locking' => false
+                    ));
+                }
 			}
 		}
 		return $cache;
@@ -61,14 +44,14 @@ class Cache {
 	public function disableCache() {
 		$ca = Cache::getLibrary();
 		if (is_object($ca)) {
-			$ca->setOption('caching', false);
+			$ca->setCaching(false);
 		}
 	}
 	
 	public function enableCache() {
 		$ca = Cache::getLibrary();
 		if (is_object($ca)) {
-			$ca->setOption('caching', true);
+            $ca->setCaching(true);
 		}
 	}
 	
@@ -195,8 +178,7 @@ class Cache {
 
 		$cache = Cache::getLibrary();
 		if ($cache) {
-			$cache->setOption('caching', true);
-			$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
+			$cache->flush();
 		}
 
 		$event = new \Symfony\Component\EventDispatcher\GenericEvent();

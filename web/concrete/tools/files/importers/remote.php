@@ -1,8 +1,9 @@
 <?php
-
 defined('C5_EXECUTE') or die("Access Denied.");
-$u = new User();
+
 use \Concrete\Core\File\EditResponse as FileEditResponse;
+
+$u = new User();
 
 $cf = Loader::helper('file');
 $fp = FilePermissions::getGlobal();
@@ -42,12 +43,13 @@ if (!$error->has()) {
 
         // validate URL
         try {
-            $client = new \Guzzle\Http\Client($this_url);
-            $request = $client->get();
-            $response = $request->send();
+            $request = new \Zend\Http\Request();
+            $request->setUri($this_url);
+            $client = new \Zend\Http\Client();
+            $response = $client->dispatch($request);
             $incoming_urls[] = $this_url;
         } catch (\Exception $e) {
-            $error->add(t('%s is not a valid URL.', Loader::helper('text')->specialchars($this_url)));
+            $error->add($e->getMessage());
         }
     }
 
@@ -68,22 +70,25 @@ if (!$error->has()) {
     // itterate over each incoming URL adding if relevant
     foreach ($incoming_urls as $this_url) {
         // try to D/L the provided file
-        $client = new \Guzzle\Http\Client($this_url);
-        $request = $client->get();
-        $response = $request->send();
+        $request = new \Zend\Http\Request();
+        $request->setUri($this_url);
+        $client = new \Zend\Http\Client();
+        $response = $client->dispatch($request);
+        if ($response->isSuccess()) {
+            $headers = $response->getHeaders();
+            $contentType = $headers->get('ContentType')->getFieldValue();
 
-        if ($response->getContentLength()) {
             $fpath = $file->getTemporaryDirectory();
 
             // figure out a filename based on filename, mimetype, ???
-            if (preg_match('/^.+?[\\/]([-\w%]+\.[-\w%]+)$/', $request->getPath(), $matches)) {
+            if (preg_match('/^.+?[\\/]([-\w%]+\.[-\w%]+)$/', $request->getUri(), $matches)) {
                 // got a filename (with extension)... use it
                 $fname = $matches[1];
-            } elseif (! is_null($response->getContentType())) {
+            } else if ($contentType) {
                 // use mimetype from http response
-                $fextension = MimeHelper::mimeToExtension($response->getContentType());
+                $fextension = Core::make("helper/mime")->mimeToExtension($contentType);
                 if ($fextension === false)
-                    $error->add(t('Unknown mime-type: %s', $response->getContentType()));
+                    $error->add(t('Unknown mime-type: %s', $contentType));
                 else {
                     // make sure we're coming up with a unique filename
                     do {

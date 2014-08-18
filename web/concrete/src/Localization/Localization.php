@@ -41,11 +41,15 @@ class Localization {
 
 	public function __construct() {
 		\Zend_Date::setOptions(array('format_type' => 'php'));
+        // @todo Once we have Zend Translate swapped out for the new \Zend\i18n\Translator we can re-enable the
+        // cache
+        /*
 		$cache = Cache::getLibrary();
 		if (is_object($cache)) {
 			\Zend_Translate::setCache($cache);
 			\Zend_Date::setOptions(array('cache'=>$cache));
 		}
+        */
 	}
 
 	public function setLocale($locale) {
