@@ -45,15 +45,22 @@ class Controller extends BlockController
     public function view()
     {
         $fp = Loader::helper("feed");
-        $feed = $fp->load($this->url);
-        $feed->set_item_limit(intval($this->itemsToDisplay));
-        $feed->init();
-        $feed->handle_content_type();
-        $posts = $feed->get_items();
+        $posts = array();
 
-        if ($feed->error()) {
-            $this->set('errorMsg', t("Oops, it looks like you've entered an invalid feed address!"));
+        try {
+            $channel = $fp->load($this->url);
+            $i = 0;
+            foreach($channel as $post) {
+                $posts[] = $post;
+                if (($i + 1) == intval($this->itemsToDisplay)) {
+                    break;
+                }
+                $i++;
+            }
+        } catch(\Exception $e) {
+            $this->set('errorMsg', $e->getMessage());
         }
+
         $this->set('posts', $posts);
         $this->set('title', $this->title);
     }
@@ -72,14 +79,24 @@ class Controller extends BlockController
     public function getSearchableContent()
     {
         $fp = Loader::helper("feed");
-        $feed = $fp->load($this->url);
-        $feed->set_item_limit(intval($this->itemsToDisplay));
-        $feed->init();
-        $feed->handle_content_type();
-        $posts = $feed->get_items();
+
+        try {
+            $channel = $fp->load($this->url);
+            $i = 0;
+            foreach($channel as $post) {
+                $posts[] = $post;
+                if (($i + 1) == intval($this->itemsToDisplay)) {
+                    break;
+                }
+                $i++;
+            }
+        } catch(\Exception $e) {
+
+        }
+
         $searchContent = '';
         foreach ($posts as $item) {
-            $searchContent .= $item->get_title() . ' ' . strip_tags($item->get_description()) . ' ';
+            $searchContent .= $item->getTitle() . ' ' . strip_tags($item->getDescription()) . ' ';
         }
         return $searchContent;
     }
