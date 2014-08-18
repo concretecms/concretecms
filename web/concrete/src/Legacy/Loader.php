@@ -37,4 +37,14 @@ class Loader {
 		return false;
 	}
 
+    public static function controller($item)
+    {
+        if ($item instanceof \Page) {
+            return $item->getController();
+        }
+
+        $controller = '\\Concrete\\Controller\\' . camelcase($item);
+        return new $controller();
+    }
+
 }

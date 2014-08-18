@@ -39,7 +39,6 @@
         "zf1/zend-exception": "1.12.6",
         "zf1/zend-loader": "1.12.6",
         "zf1/zend-validate": "1.12.6",
-        "zf1/zend-xml": "1.12.6",
         "zf1/zend-db": "1.12.6",
         "zf1/zend-translate": "1.12.6",
         "zf1/zend-locale": "1.12.6",
