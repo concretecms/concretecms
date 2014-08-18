@@ -4,13 +4,77 @@
 	
 		init: function(options) {
 			var obj = options;
-			obj.$element.on('click.cnv', 'a[data-toggle=conversation-reply]', function() {
+            obj.$element.on('click.cnv', 'a[data-toggle=conversation-reply]', function() {
 				$('.ccm-conversation-wrapper').ccmconversationattachments('clearDropzoneQueues');
 			});
 			obj.$element.on('click.cnv', 'a.attachment-delete', function(event){
 				event.preventDefault();
 				$(this).ccmconversationattachments('attachmentDeleteTrigger', obj);
 			});
+            if((obj.$editMessageHolder) && (!(obj.$editMessageHolder.find('.dropzone').attr('data-dropzone-applied')))){
+                obj.$editMessageHolder.find('.dropzone').not('[data-drozpone-applied="true"]').dropzone({  // dropzone reply form
+                    'url': CCM_TOOLS_PATH + '/conversations/add_file',
+                    'success' : function(file, raw) {
+                        var self = this;
+                        $(file.previewTemplate).click(function(){
+                            self.removeFile(file);
+                            $('input[rel="'+ $(this).attr('rel') +'"]').remove();
+                        });
+                        var response = JSON.parse(raw);
+                        if(!response.error) {
+                            $(this.element).closest('div.ccm-conversation-edit-message').find('form.aux-reply-form').append('<input rel="'+response.timestamp+'" type="hidden" name="attachments[]" value="'+response.id+'" />');
+                        } else {
+                            var $form = $('.preview.processing[rel="'+response.timestamp+'"]').closest('form');
+                            obj.handlePostError($form, [response.error]);
+                            $('.preview.processing[rel="'+response.timestamp+'"]').remove();
+                            $form.children('.ccm-conversation-errors').delay(3000).fadeOut('slow', function() {
+                                $(this).html('');
+                            });
+                        }
+                    },
+                    accept: function(file, done) {
+                        var errors = [];
+                        var attachmentCount = this.files.length;
+                        if((obj.options.maxFiles > 0) && attachmentCount > obj.options.maxFiles) {
+                            errors.push('Too many files');
+                            var maxFilesExceeded = true;
+                        }
+                        var requiredExtensions = obj.options.fileExtensions.split(',');
+                        if(file.name.split('.').pop().toLowerCase() && requiredExtensions.indexOf(file.name.split('.').pop().toLowerCase()) == -1 && requiredExtensions!='') {
+                            errors.push('Invalid file extension');
+                            var invalidFileExtension = true;
+                        }
+                        if((obj.options.maxFileSize > 0) && file.size > obj.options.maxFileSize * 1000000) {
+                            errors.push('Max file size exceeded');
+                            var maxFileSizeExceeded = true;
+                        }
+
+                        if(maxFileSizeExceeded || maxFilesExceeded || invalidFileExtension) {
+                            var self = this;
+                            $('input[rel="'+ $(file.previewTemplate).attr('rel') +'"]').remove();
+                            var $form = $(file.previewTemplate).parent('.dropzone');
+                            self.removeFile(file);
+                            obj.handlePostError($form, errors);
+                            $form.children('.ccm-conversation-errors').delay(3000).fadeOut('slow', function() {
+                                $(this).html('');
+                            });
+                            var attachmentCount =- 1;
+                            done('error');  // not displayed, just needs to have argument to trigger.
+                        } else {
+                            done();
+                        }
+                    },
+                    'sending' : function(file, xhr, formData) {
+                        $(file.previewTemplate).attr('rel', new Date().getTime());
+                        formData.append("timestamp", $(file.previewTemplate).attr('rel'));
+                        formData.append("tag", $(obj.$editMessageHOlder).parent('div').attr('rel'));
+                        formData.append("fileCount", $(obj.$editMessageHolder).find('[name="attachments[]"]').length);
+                    },
+                    'init' : function() {
+                        $(this.element).data('dropzone',this);
+                    }
+                });
+            }
 			if (obj.$newmessageform.dropzone && !($(obj.$newmessageform).attr('data-dropzone-applied'))) {  // dropzone new message form
 				obj.$newmessageform.dropzone({
 					accept: function(file, done) {
@@ -150,7 +214,7 @@
 					}
 				});
 			});
-		}, 
+         },
 		
 		attachmentDeleteTrigger: function(options){
 			var obj = options;
@@ -236,7 +300,7 @@
 		} else if ( typeof method === 'object' || ! method ) {
 			return methods.init.apply( this, arguments );
 		} else {
-			$.error( 'Method ' +  method + ' does not exist on jQuery.tooltip' );
+			$.error( 'Method ' +  method + ' does not exist on ccmconversationattachments' );
 		}    
 	
 	}
