@@ -8,7 +8,7 @@ class AccountPageController extends PageController {
 
 	public function on_start(){
 		if (!defined('ENABLE_USER_PROFILES') || !ENABLE_USER_PROFILES) {
-			$this->render("/page_not_found");
+            $this->render('/page_not_found');
 		}
 		$this->error = Loader::helper('validation/error');
 		$this->set('valt', Loader::helper('validation/token'));
