@@ -36,6 +36,8 @@ class NumbersTest extends ConcreteDatabaseTestCase
             array(true, 0),
             array(true,'1'),
             array(true, 1),
+            array(true,'-1456789445'),
+            array(true, -1456789445),
             array(true, '123'),
             array(true, 123),
             array(false, '123,456'),
