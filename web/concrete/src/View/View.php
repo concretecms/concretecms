@@ -100,7 +100,9 @@ class View extends AbstractView {
         // programmatically we already have a theme.
         $this->loadViewThemeObject();
         $env = Environment::get();
-        $this->setInnerContentFile($env->getPath($this->viewRootDirectoryName . '/' . trim($this->viewPath, '/') . '.php', $this->themePkgHandle));
+        if (!$this->innerContentFile) { // will already be set in a legacy tools file
+	        $this->setInnerContentFile($env->getPath($this->viewRootDirectoryName . '/' . trim($this->viewPath, '/') . '.php', $this->themePkgHandle));
+        }
         if ($this->themeHandle) {
             if (file_exists(DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php')) {
                 $this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php'));
