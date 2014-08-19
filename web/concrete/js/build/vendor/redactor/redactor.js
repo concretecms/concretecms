@@ -301,6 +301,10 @@
                     horizontalrule: 'Insert Horizontal Rule',
                     deleted: 'Deleted',
                     anchor: 'Anchor',
+                    open_link: "Open link",
+                    default_behavior: "Default Behavior",
+                    in_lightbox: "In a Lightbox",
+                    open_link_in_lightbox: 'Open Link in Lightbox',
                     link_new_tab: 'Open link in new tab',
                     underline: 'Underline',
                     alignment: 'Alignment',
@@ -7446,9 +7450,9 @@
                     + '<span class="input-group-addon"><a href="#" data-action="choose-link-from-sitemap" class="icon-link"><i class="fa fa-search"></i></a></span>'
                     + '</div></div>'
                     + '<div class="form-group">'
-                    + '<label class="control-label">Open Link</label>'
-                    + '<div class="radio"><label><input type="radio" id="redactor_link_default" name="redactor_open_link_behavior" value="default"> Default Behavior</label></div>'
-                    + '<div class="radio"><label><input type="radio" id="redactor_link_lightbox" name="redactor_open_link_behavior" value="lightbox"> In a Lightbox</label></div>'
+                    + '<label class="control-label"> ' + this.opts.curLang.open_link + '</label>'
+                    + '<div class="radio"><label><input type="radio" id="redactor_link_default" name="redactor_open_link_behavior" value="default"> ' + this.opts.curLang.default_behavior + ' </label></div>'
+                    + '<div class="radio"><label><input type="radio" id="redactor_link_lightbox" name="redactor_open_link_behavior" value="lightbox"> ' + this.opts.curLang.in_lightbox + ' </label></div>'
                     + '<div class="radio"><label><input type="radio" id="redactor_link_blank" name="redactor_open_link_behavior" value="blank"> ' + this.opts.curLang.link_new_tab + '</label></div>'
                     + '</div>'
                     + '<div class="form-group">'
@@ -7524,7 +7528,7 @@
                 /* concrete5 */
                     + '<select id="redactor-predefined-links" class="form-control" style="width: 99.5%; display: none;"></select>'
                     + '<div class="form-group">'
-                    + '<label>URL</label>'
+                    + '<label>' + this.opts.curLang.web + '</label>'
                     + '<div class="input-group">'
                     + '<input type="text" class="form-control" id="redactor_link_url" />'
                     + '<span class="input-group-addon"><a href="#" data-action="choose-link-from-sitemap" class="icon-link"><i class="fa fa-sitemap"></i></a></span>'
@@ -7539,7 +7543,7 @@
                     + '<div class="checkbox">'
                     + '<label>'
                     + '<input type="checkbox" id="redactor_link_lightbox" />'
-                    + 'Open Link in Lightbox.'
+                    + this.opts.curLang.open_link_in_lightbox
                     + '</label>'
                     + '</div>'
                     + '</div>'
