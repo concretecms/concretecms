@@ -11,10 +11,10 @@ class Strings
 {
 
     /**
-     * Validates an email address
-     * @param $em
-     * @param bool $testMXRecord
-     * @return bool $isvalid
+     * Returns true if the provided email is valid
+     * @param string $em The email address to be tested
+     * @param bool $testMXRecord Set to true if you want to perform dns record validation for the domain, defaults to false
+     * @return bool
      */
     public function email($em, $testMXRecord = false)
     {
@@ -23,40 +23,35 @@ class Strings
     }
 
     /**
-     * Returns true on whether the passed field is completely alpha-numeric
-     * @param string $field
-     * @param bool $allow_spaces whether or not spaces are permitted in the field contents
-     * @param bool $allow_dashes whether or not dashes (-) are permitted in the field contents
+     * Returns true on whether the passed string is completely alpha-numeric, if the value is not a string or is an
+     * empty string false will be returned.
+     * @param string $value
+     * @param bool $allowSpaces whether or not spaces are permitted in the field contents
+     * @param bool $allowDashes whether or not dashes (-) are permitted in the field contents
      * @return bool
      */
-    public function alphanum($field, $allow_spaces = false, $allow_dashes = false)
+    public function alphanum($value, $allowSpaces = false, $allowDashes = false)
     {
-        if ($allow_spaces && $allow_dashes) {
-            return !preg_match("/[^A-Za-z0-9 \-]/", $field);
-        } else {
-            if ($allow_spaces) {
-                return !preg_match("/[^A-Za-z0-9 ]/", $field);
-            } else {
-                if ($allow_dashes) {
-                    return !preg_match("/[^A-Za-z0-9\-]/", $field);
-                } else {
-                    return !preg_match('/[^A-Za-z0-9]/', $field);
-                }
-            }
+
+        $allowedCharsRegex = 'A-Za-z0-9';
+        if ($allowSpaces) {
+            $allowedCharsRegex .= ' ';
         }
+        if ($allowDashes) {
+            $allowedCharsRegex .= '\-';
+        }
+        return $this->notempty($value) && !preg_match('/[^' . $allowedCharsRegex . ']/', $value);
     }
 
     /**
-     * Returns true if the passed field is a valid "handle" (e.g. only letters, numbers, or a _ symbol
+     * Returns true if the passed string is a valid "handle" (e.g. only letters, numbers, or a _ symbol)
+     * @param string $handle
+     * @return bool
      */
     public function handle($handle)
     {
-        if (!$handle) {
-            return false;
-        }
-        return !preg_match("/[^A-Za-z0-9\_]/", $handle);
+        return $this->notempty($handle) && !preg_match("/[^A-Za-z0-9\_]/", $handle);
     }
-
 
     /**
      * Returns false if the string is empty (including trim())
@@ -65,7 +60,7 @@ class Strings
      */
     public function notempty($field)
     {
-        return ((is_array($field) && count($field) > 0) || (is_string($field) && trim($field) != ''));
+        return is_string($field) && trim($field) !== '';
     }
 
     /**
@@ -76,7 +71,7 @@ class Strings
      */
     public function min($str, $length)
     {
-        return strlen(trim($str)) >= $length;
+        return $this->notempty($str) && strlen(trim($str)) >= $length;
     }
 
     /**
@@ -87,7 +82,7 @@ class Strings
      */
     public function max($str, $length)
     {
-        return strlen(trim($str)) <= $length;
+        return $this->notempty($str) && strlen(trim($str)) <= $length;
     }
 
     /**
@@ -97,7 +92,10 @@ class Strings
      */
     public function containsNumber($str)
     {
-        return strlen(trim(preg_replace('/([^0-9]*)/', '', $str)));
+        if (!$this->notempty($str)) {
+            return 0;
+        }
+        return strlen(preg_replace('/([^0-9]*)/', '', $str));
     }
 
     /**
@@ -107,7 +105,10 @@ class Strings
      */
     public function containsUpperCase($str)
     {
-        return strlen(trim(preg_replace('/([^A-Z]*)/', '', $str)));
+        if (!$this->notempty($str)) {
+            return 0;
+        }
+        return strlen(preg_replace('/([^A-Z]*)/', '', $str));
     }
 
     /**
@@ -117,7 +118,10 @@ class Strings
      */
     public function containsLowerCase($str)
     {
-        return strlen(trim(preg_replace('/([^a-z]*)/', '', $str)));
+        if (!$this->notempty($str)) {
+            return 0;
+        }
+        return strlen(preg_replace('/([^a-z]*)/', '', $str));
     }
 
     /**
@@ -127,25 +131,9 @@ class Strings
      */
     public function containsSymbol($str)
     {
-        return strlen(
-            trim(preg_replace('/([a-zA-Z0-9]*)/', '', $str))
-        ); //we replace a-z and numbers and see if there is anything left.
-    }
-
-    /**
-     * Returns true if the string contains another string
-     * @param string $str
-     * @param array $cont
-     * @return bool
-     */
-    public function containsString($str, $cont = array())
-    {
-        $arr = (!is_array($cont)) ? array($cont) : $cont; // turn the string into an array
-        foreach ($arr as $item) {
-            if (strstr($str, $item) !== false) {
-                return true;
-            }
+        if (!$this->notempty($str)) {
+            return 0;
         }
-        return false;
+        return strlen(trim(preg_replace('/([a-zA-Z0-9]*)/', '', $str)));
     }
 }
