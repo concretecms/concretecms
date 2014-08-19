@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "eb423b065e4789c1691a497cdd96b50e",
+    "hash": "d8a350313833e259e01c016206f11a72",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -2572,6 +2572,50 @@
             "time": "2014-04-15 15:28:54"
         },
         {
+            "name": "zendframework/zend-queue",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/ZendQueue.git",
+                "reference": "b3a31b42a25f306291fba40f5c77ab6645971e45"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/ZendQueue/zipball/b3a31b42a25f306291fba40f5c77ab6645971e45",
+                "reference": "b3a31b42a25f306291fba40f5c77ab6645971e45",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "zendframework/zend-stdlib": "~2"
+            },
+            "require-dev": {
+                "zendframework/zend-config": "~2",
+                "zendframework/zend-db": "~2",
+                "zendframework/zend-json": "~2"
+            },
+            "suggest": {
+                "zendframework/zend-db": "Zend\\Db required if you are using the DB queue adapter"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "ZendQueue": "library/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "provides a factory function to create specific queue client objects",
+            "homepage": "http://packages.zendframework.com/",
+            "keywords": [
+                "queue",
+                "zf2"
+            ],
+            "time": "2013-07-17 22:15:58"
+        },
+        {
             "name": "zendframework/zend-servicemanager",
             "version": "2.3.1",
             "target-dir": "Zend/ServiceManager",
@@ -3053,50 +3097,6 @@
             "time": "2014-05-21 15:17:49"
         },
         {
-            "name": "zf1/zend-queue",
-            "version": "1.12.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zf1/zend-queue.git",
-                "reference": "f0015ce0a0e6c21fc238a679bb3a3c7d72786563"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-queue/zipball/f0015ce0a0e6c21fc238a679bb3a3c7d72786563",
-                "reference": "f0015ce0a0e6c21fc238a679bb3a3c7d72786563",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2.11",
-                "zf1/zend-exception": "self.version",
-                "zf1/zend-validate": "self.version"
-            },
-            "suggest": {
-                "zf1/zend-config": "Used in special situations or with special adapters",
-                "zf1/zend-db": "Used in special situations or with special adapters",
-                "zf1/zend-loader": "Used in special situations or with special adapters"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Zend_Queue": "library/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Zend Framework 1 Queue package",
-            "homepage": "http://framework.zend.com/",
-            "keywords": [
-                "ZF1",
-                "framework",
-                "queue",
-                "zend"
-            ],
-            "time": "2014-05-21 15:18:01"
-        },
-        {
             "name": "zf1/zend-translate",
             "version": "1.12.6",
             "source": {
@@ -3241,6 +3241,7 @@
         "dapphp/securimage": 20,
         "kertz/twitteroauth": 20,
         "primal/color": 20,
+        "zendframework/zend-queue": 20,
         "nesbot/carbon": 20
     },
     "prefer-stable": false,

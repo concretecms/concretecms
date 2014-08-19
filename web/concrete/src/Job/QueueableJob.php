@@ -4,6 +4,9 @@ use \Job as AbstractJob;
 use Loader;
 use Environment;
 use Queue;
+use \ZendQueue\Queue as ZendQueue;
+use \ZendQueue\Message as ZendQueueMessage;
+
 /**
 *
 * Contains the job class.
@@ -30,9 +33,9 @@ abstract class QueueableJob extends AbstractJob {
 	// optional queue functions
 	protected $jQueueBatchSize = JOB_QUEUE_BATCH_SIZE;
 	public function getJobQueueBatchSize() {return $this->jQueueBatchSize;}
-	abstract public function start(\Zend_Queue $q);
-	abstract public function finish(\Zend_Queue $q);
-	abstract public function processQueueItem(\Zend_Queue_Message $msg);
+	abstract public function start(ZendQueue $q);
+	abstract public function finish(ZendQueue $q);
+	abstract public function processQueueItem(ZendQueueMessage $msg);
 	public function run() {}
 
 	public function getQueueObject() {
