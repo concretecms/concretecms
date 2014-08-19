@@ -4,8 +4,9 @@ use Loader;
 use QueueableJob;
 use Group;
 use User;
-use Zend_Queue;
-use Zend_Queue_Message;
+use \ZendQueue\Queue as ZendQueue;
+use \ZendQueue\Message as ZendQueueMessage;
+
 class CheckAutomatedGroups extends QueueableJob {
 
 	public $jSupportsQueue = true;
@@ -18,7 +19,7 @@ class CheckAutomatedGroups extends QueueableJob {
 		return t("Automatically add users to groups and assign badges.");
 	}
 
-	public function start(Zend_Queue $q) {
+	public function start(ZendQueue $q) {
 		$db = Loader::db();
 		$r = $db->Execute('select Users.uID from Users where uIsActive = 1 order by uID asc');
 		while ($row = $r->FetchRow()) {
@@ -26,11 +27,11 @@ class CheckAutomatedGroups extends QueueableJob {
 		}
 	}
 
-	public function finish(Zend_Queue $q) {
+	public function finish(ZendQueue $q) {
 		return t('Active users updated.');
 	}
 
-	public function processQueueItem(Zend_Queue_Message $msg) {
+	public function processQueueItem(ZendQueueMessage $msg) {
 		$ux = User::getByUserID($msg->body);
 		$groupControllers = Group::getAutomatedOnJobRunGroupControllers($ux);
 		foreach($groupControllers as $ga) {

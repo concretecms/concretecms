@@ -32,7 +32,7 @@ return array(
     'ConversationMessage' => '\Concrete\Core\Conversation\Message\Message',
     'ConversationFlagType' => '\Concrete\Core\Conversation\FlagType\FlagType',
     'ConversationRatingType' => '\Concrete\Core\Conversation\Rating\Type',
-    'Queue' => '\Concrete\Core\Foundation\Queue',
+    'Queue' => '\Concrete\Core\Foundation\Queue\Queue',
     'Block' => '\Concrete\Core\Block\Block',
     'Marketplace' => '\Concrete\Core\Marketplace\Marketplace',
     'BlockType' => '\Concrete\Core\Block\BlockType\BlockType',
@@ -72,7 +72,6 @@ return array(
     'FacebookAuthenticationTypeController' => '\Concrete\Authentication\Facebook\Controller',
     'GroupTree' => '\Concrete\Core\Tree\Type\Group',
     'GroupTreeNode' => '\Concrete\Core\Tree\Node\Type\Group',
-    'Zend_Queue_Adapter_Concrete5' => '\Concrete\Core\Utility\ZendQueueAdapter',
     'Loader' => '\Concrete\Core\Legacy\Loader',
     'TaskPermission' => '\Concrete\Core\Legacy\TaskPermission',
     'FilePermissions' => '\Concrete\Core\Legacy\FilePermissions'
