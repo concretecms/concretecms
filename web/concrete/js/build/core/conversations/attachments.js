@@ -5,11 +5,11 @@
 		init: function(options) {
 			var obj = options;
             obj.$element.on('click.cnv', 'a[data-toggle=conversation-reply]', function() {
-				$('.ccm-conversation-wrapper').ccmconversationattachments('clearDropzoneQueues');
+				$('.ccm-conversation-wrapper').concreteConversationAttachments('clearDropzoneQueues');
 			});
 			obj.$element.on('click.cnv', 'a.attachment-delete', function(event){
 				event.preventDefault();
-				$(this).ccmconversationattachments('attachmentDeleteTrigger', obj);
+				$(this).concreteConversationAttachments('attachmentDeleteTrigger', obj);
 			});
             if((obj.$editMessageHolder) && (!(obj.$editMessageHolder.find('.dropzone').attr('data-dropzone-applied')))){
                 obj.$editMessageHolder.find('.dropzone').not('[data-drozpone-applied="true"]').dropzone({  // dropzone reply form
@@ -237,14 +237,14 @@
 							'text': obj.$attachmentdeleteholder.attr('data-confirm-button-title'),
 							'class': 'btn pull-right btn-danger',
 							'click': function() {
-								$(this).ccmconversationattachments('deleteAttachment',{ 'cnvMessageAttachmentID' : link.attr('rel'), 'cnvObj' : obj, 'dialogObj' : obj.$attachmentdeletetdialog });
+								$(this).concreteConversationAttachments('deleteAttachment',{ 'cnvMessageAttachmentID' : link.attr('rel'), 'cnvObj' : obj, 'dialogObj' : obj.$attachmentdeletetdialog });
 							}
 						}
 					]
 				});
 			} else {
 				if (confirm('Remove this attachment?')) {
-					$(this).ccmconversationattachments('deleteAttachment',{ 'cnvMessageAttachmentID' : link.attr('rel'), 'cnvObj' : obj, 'dialogObj' :  obj.$attachmentdeletetdialog});
+					$(this).concreteConversationAttachments('deleteAttachment',{ 'cnvMessageAttachmentID' : link.attr('rel'), 'cnvObj' : obj, 'dialogObj' :  obj.$attachmentdeletetdialog});
 				}
 			} 
 			return false;
@@ -293,14 +293,14 @@
 		}
 	}
 	
-	$.fn.ccmconversationattachments = function(method) {
+	$.fn.concreteConversationAttachments = function(method) {
 	
 		if ( methods[method] ) {
 			return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
 		} else if ( typeof method === 'object' || ! method ) {
 			return methods.init.apply( this, arguments );
 		} else {
-			$.error( 'Method ' +  method + ' does not exist on ccmconversationattachments' );
+			$.error( 'Method ' +  method + ' does not exist on concreteConversationAttachments' );
 		}    
 	
 	}

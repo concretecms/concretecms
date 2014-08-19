@@ -1,5 +1,5 @@
 /**
- * $.fn.ccmconversation
+ * $.fn.concreteConversation
  * Functions for conversation handling
  *
  * Events:
@@ -21,25 +21,25 @@
 (function($,window){
 	"use strict";
 	$.extend($.fn,{
-		ccmconversation:function(options) {
+        concreteConversation:function(options) {
 			return this.each(function() {
 				var $obj = $(this);
-				var data = $obj.data('ccmconversation');
+				var data = $obj.data('concreteConversation');
 				if (!data) {
-					$obj.data('ccmconversation', (data = new CCMConversation($obj, options)));
+					$obj.data('concreteConversation', (data = new ConcreteConversation($obj, options)));
 				}
 			});
 		}
 	});
-	var CCMConversation = function(element, options) {
+	var ConcreteConversation = function(element, options) {
 		this.publish("beforeInitializeConversation",{element:element,options:options});
 		this.init(element,options);
 		this.publish("initializeConversation",{element:element,options:options});
 	};
-	CCMConversation.fn = CCMConversation.prototype = {
+	ConcreteConversation.fn = ConcreteConversation.prototype = {
 		publish: function(t,f) {
 			f = f || {};
-			f.CCMConversation = this;
+			f.ConcreteConversation = this;
 			window.ConcreteEvent.publish(t,f);
 		},
 		init: function(element,options) {
@@ -422,7 +422,7 @@
 				return false;
 			});
 
-			obj.$element.ccmconversationattachments(obj);
+			obj.$element.concreteConversationAttachments(obj);
 			$('.dropdown-toggle').dropdown();
 		},
 		handlePostError: function($form, messages) {
@@ -495,7 +495,7 @@
                         $('.ccm-conversation-edit-message .ccm-conversation-attachment-container').toggle();
                     });
                     obj.$editMessageHolder    = obj.$element.find('div.ccm-conversation-edit-message');
-                    obj.$element.ccmconversationattachments(obj);
+                    obj.$element.concreteConversationAttachments(obj);
                     $('button.cancel-update').on('click.cnv', function(){
                         $('.ccm-conversation-edit-message').replaceWith($previousContents);
                     });
