@@ -354,12 +354,6 @@ class PageListTest extends \PageTestCase {
         $this->assertEquals('Foobler', $results[0]->getCollectionName());
     }
 
-    public function testPageFeedNoHandle()
-    {
-        $pf = new \Concrete\Core\Page\Feed();
-        $this->setExpectedException('\Doctrine\DBAL\DBALException');
-        $pf->save();
-    }
 
 
 }
