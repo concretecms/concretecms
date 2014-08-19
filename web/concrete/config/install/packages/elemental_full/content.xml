@@ -753,7 +753,7 @@
                         <data table="btContentLocal">
                             <record>
                                 <content>
-                                    <![CDATA[<p>1234 SE StreetView</p><p>Suite 301</p><p>Portland, OR 98101</p><p><a href="{ccm:export:page:contact}">View on Google Maps</a></p>]]></content>
+                                    <![CDATA[<p>1234 SE StreetView</p><p>Suite 301</p><p>Portland, OR 98101</p><p><a href="{ccm:export:page:/contact}">View on Google Maps</a></p>]]></content>
                             </record>
                         </data>
                     </block>

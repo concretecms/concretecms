@@ -16,7 +16,7 @@
 </div>
 </div>
 
-<? if ($userList->getTotal() == 0) { ?>
+<? if ($total == 0) { ?>
 
 		<div><?=t('No users found.')?></div>
 
@@ -46,7 +46,11 @@
 
 		</table>
 
-		<?=$userList->displayPagingV2()?>
+        <? if ($pagination->haveToPaginate()) { ?>
+
+            <?=$pagination->renderDefaultView();?>
+
+        <? } ?>
 
 	<?
 
