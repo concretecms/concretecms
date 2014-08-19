@@ -1,9 +1,14 @@
 <?
 namespace Concrete\Core\Mail;
 use Config;
-use Zend_Mail;
-use Zend_Mail_Transport_Smtp;
 use \Concrete\Core\Logging\GroupLogger;
+use \Zend\Mail\Message;
+use \Zend\Mail\Transport\Sendmail as SendmailTransport;
+use \Zend\Mail\Transport\Smtp as SmtpTransport;
+use \Zend\Mail\Transport\SmtpOptions;
+use \Zend\Mime\Message as MimeMessage;
+use \Zend\Mime\Part as MimePart;
+
 use Log;
 use \Monolog\Logger;
 
@@ -46,23 +51,23 @@ class Service {
 	}
 	
 	
-	/**
-	 * @todo documentation
-	 * @return array <Zend_Mail_Transport_Smtp, Zend_Mail>
-	*/
 	public static function getMailerObject(){
 		$response = array();
-		$response['mail'] = new Zend_Mail(APP_CHARSET);
+		$response['mail'] = new Message();
+        $response['mail']->setEncoding(APP_CHARSET);
 	
 		if (MAIL_SEND_METHOD == "SMTP") {
-			$config = array();
-			
+			$config = array(
+                'host' => Config::get('MAIL_SEND_METHOD_SMTP_SERVER'),
+            );
+
 			$username = Config::get('MAIL_SEND_METHOD_SMTP_USERNAME');
 			$password = Config::get('MAIL_SEND_METHOD_SMTP_PASSWORD');
 			if ($username != '') {
-				$config['auth'] = 'login';
-				$config['username'] = $username;
-				$config['password'] = $password;
+				$config['connection_class'] = 'login';
+                $config['connection_config'] = array();
+				$config['connection_config']['username'] = $username;
+				$config['connection_config']['password'] = $password;
 			}
 			
 			$port = Config::get('MAIL_SEND_METHOD_SMTP_PORT');
@@ -74,12 +79,13 @@ class Service {
 			if ($encr != '') {
 				$config['ssl'] = $encr;
 			}
-			$transport = new Zend_Mail_Transport_Smtp(
-				Config::get('MAIL_SEND_METHOD_SMTP_SERVER'), $config
-			);					
-			
+			$transport = new SmtpTransport();
+            $options = new SmtpOptions($config);
+            $transport->setOptions($options);
 			$response['transport'] = $transport;
-		}	
+        } else {
+            $response['transport'] = new SendmailTransport();
+        }
 		
 		return $response;		
 	}
@@ -353,9 +359,10 @@ class Service {
 		if (ENABLE_EMAILS) {
 			
 			$zendMailData = self::getMailerObject();
-			$mail=$zendMailData['mail'];
-			$transport=(isset($zendMailData['transport']))?$zendMailData['transport']:NULL;
-			
+
+            $mail=$zendMailData['mail'];
+            $transport = $zendMailData['transport'];
+
 			if (is_array($this->from) && count($this->from)) {
 				if ($this->from[0] != '') {
 					$from = $this->from;
@@ -375,15 +382,13 @@ class Service {
 					$mail->setReplyTo($reply[0], $reply[1]);
 				}
 			}
-			$mail->clearRecipients();
-			
 
 			$mail->setFrom($from[0], $from[1]);
 			$mail->setSubject($this->subject);
 			foreach($this->to as $to) {
 				$mail->addTo($to[0], $to[1]);
 			}
-			
+
 			if(is_array($this->cc) && count($this->cc)) {
 				foreach($this->cc as $cc) {
 					$mail->addCc($cc[0], $cc[1]);
@@ -407,15 +412,27 @@ class Service {
 					}
 				}
 			}
-			
-			$mail->setBodyText($this->body);
+
+            $text = new MimePart($this->body);
+            $text->type = "text/plain";
+
+            $body = new MimeMessage();
+            $body->setParts(array($text));
+
 			if ($this->bodyHTML != false) {
-				$mail->setBodyHTML($this->bodyHTML);
+                $html = new MimePart($this->bodyHTML);
+                $html->type = "text/html";
+                $body->addPart($html);
 			}
+
+            $mail->setBody($body);
+
 			try {
-				$mail->send($transport);
-					
+                print_r($transport);
+                $transport->send($mail);
+
 			} catch(Exception $e) {
+
 				if($this->getTesting()) {
 					throw $e;
 				}
@@ -445,13 +462,7 @@ class Service {
 				$l->write('**' . t('EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT') . '**');
 			}
 			$l->write(t('Template Used') . ': ' . $this->template);
-			$l->write(t('To') . ': ' . $toStr);
-			$l->write(t('From') . ': ' . $fromStr);
-			if (isset($this->replyto)) {
-				$l->write(t('Reply-To') . ': ' . $replyStr);
-			}
-			$l->write(t('Subject') . ': ' . $this->subject);
-			$l->write(t('Body') . ': ' . $this->body);
+            $l->write(t('Mail Details: %s', $mail->toString()));
 			$l->close();
 		}		
 		

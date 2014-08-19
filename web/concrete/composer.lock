@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1ad8fb404bb7c31bd25067d8759d05bc",
+    "hash": "eb423b065e4789c1691a497cdd96b50e",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -639,6 +639,56 @@
             "time": "2013-09-07 16:19:56"
         },
         {
+            "name": "egulias/email-validator",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/egulias/EmailValidator.git",
+                "reference": "bb530a193056992702df9f722e8814f57bdb13c2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/bb530a193056992702df9f722e8814f57bdb13c2",
+                "reference": "bb530a193056992702df9f722e8814f57bdb13c2",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/lexer": "~1.0",
+                "php": ">= 5.3.3"
+            },
+            "require-dev": {
+                "satooshi/php-coveralls": "dev-master"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Egulias\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Eduardo Gulias Davis"
+                }
+            ],
+            "description": "A library for validating emails",
+            "homepage": "https://github.com/egulias/EmailValidator",
+            "keywords": [
+                "email",
+                "validation",
+                "validator"
+            ],
+            "time": "2014-07-06 17:21:29"
+        },
+        {
             "name": "facebook/php-sdk",
             "version": "dev-master",
             "source": {
@@ -1121,12 +1171,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/serbanghita/Mobile-Detect.git",
-                "reference": "3548c51559873ad59f26d85b8248dffdda7fd679"
+                "reference": "a72412b8615605af7cc9f2c5786ecb2484cc06b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/3548c51559873ad59f26d85b8248dffdda7fd679",
-                "reference": "3548c51559873ad59f26d85b8248dffdda7fd679",
+                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/a72412b8615605af7cc9f2c5786ecb2484cc06b7",
+                "reference": "a72412b8615605af7cc9f2c5786ecb2484cc06b7",
                 "shasum": ""
             },
             "require": {
@@ -1152,7 +1202,7 @@
                 {
                     "name": "Serban Ghita",
                     "email": "serbanghita@gmail.com",
-                    "homepage": "http://ghita.org",
+                    "homepage": "http://mobiledetect.net",
                     "role": "Developer"
                 }
             ],
@@ -1165,7 +1215,7 @@
                 "mobile detector",
                 "php mobile detect"
             ],
-            "time": "2014-07-10 20:53:40"
+            "time": "2014-08-19 09:54:40"
         },
         {
             "name": "monolog/monolog",
@@ -2108,6 +2158,52 @@
             "time": "2014-04-15 15:29:00"
         },
         {
+            "name": "zendframework/zend-crypt",
+            "version": "2.3.1",
+            "target-dir": "Zend/Crypt",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/Component_ZendCrypt.git",
+                "reference": "da16e88a5115bb720318ec9b5220ae2ab81dfb5e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendCrypt/zipball/da16e88a5115bb720318ec9b5220ae2ab81dfb5e",
+                "reference": "da16e88a5115bb720318ec9b5220ae2ab81dfb5e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.23",
+                "zendframework/zend-math": "self.version",
+                "zendframework/zend-servicemanager": "self.version",
+                "zendframework/zend-stdlib": "self.version"
+            },
+            "suggest": {
+                "ext-mcrypt": "Required for most features of Zend\\Crypt"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.3-dev",
+                    "dev-develop": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Zend\\Crypt\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "keywords": [
+                "crypt",
+                "zf2"
+            ],
+            "time": "2014-04-15 15:28:46"
+        },
+        {
             "name": "zendframework/zend-escaper",
             "version": "2.3.1",
             "target-dir": "Zend/Escaper",
@@ -2329,6 +2425,151 @@
                 "zf2"
             ],
             "time": "2014-04-15 15:28:53"
+        },
+        {
+            "name": "zendframework/zend-mail",
+            "version": "2.3.1",
+            "target-dir": "Zend/Mail",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/Component_ZendMail.git",
+                "reference": "dd32bd774258e7126cf9f22a35ba523c79a66e18"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendMail/zipball/dd32bd774258e7126cf9f22a35ba523c79a66e18",
+                "reference": "dd32bd774258e7126cf9f22a35ba523c79a66e18",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.23",
+                "zendframework/zend-crypt": "self.version",
+                "zendframework/zend-loader": "self.version",
+                "zendframework/zend-mime": "self.version",
+                "zendframework/zend-stdlib": "self.version",
+                "zendframework/zend-validator": "self.version"
+            },
+            "require-dev": {
+                "zendframework/zend-servicemanager": "self.version"
+            },
+            "suggest": {
+                "zendframework/zend-servicemanager": "Zend\\ServiceManager component"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.3-dev",
+                    "dev-develop": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Zend\\Mail\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "provides generalized functionality to compose and send both text and MIME-compliant multipart e-mail messages",
+            "keywords": [
+                "mail",
+                "zf2"
+            ],
+            "time": "2014-04-15 15:28:52"
+        },
+        {
+            "name": "zendframework/zend-math",
+            "version": "2.3.1",
+            "target-dir": "Zend/Math",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/Component_ZendMath.git",
+                "reference": "be6de5ba3d47e3f9a6732badea8bc724c49d0552"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendMath/zipball/be6de5ba3d47e3f9a6732badea8bc724c49d0552",
+                "reference": "be6de5ba3d47e3f9a6732badea8bc724c49d0552",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.23"
+            },
+            "suggest": {
+                "ext-bcmath": "If using the bcmath functionality",
+                "ext-gmp": "If using the gmp functionality",
+                "ircmaxell/random-lib": "Fallback random byte generator for Zend\\Math\\Rand if OpenSSL/Mcrypt extensions are unavailable",
+                "zendframework/zend-servicemanager": ">= current version, if using the BigInteger::factory functionality"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.3-dev",
+                    "dev-develop": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Zend\\Math\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "keywords": [
+                "math",
+                "zf2"
+            ],
+            "time": "2014-04-15 15:29:09"
+        },
+        {
+            "name": "zendframework/zend-mime",
+            "version": "2.3.1",
+            "target-dir": "Zend/Mime",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/Component_ZendMime.git",
+                "reference": "b606401e190190426ad091b4da81dbe19cd5283c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendMime/zipball/b606401e190190426ad091b4da81dbe19cd5283c",
+                "reference": "b606401e190190426ad091b4da81dbe19cd5283c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.23",
+                "zendframework/zend-stdlib": "self.version"
+            },
+            "require-dev": {
+                "zendframework/zend-mail": "self.version"
+            },
+            "suggest": {
+                "zendframework/zend-mail": "Zend\\Mail component"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.3-dev",
+                    "dev-develop": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Zend\\Mime\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "keywords": [
+                "mime",
+                "zf2"
+            ],
+            "time": "2014-04-15 15:28:54"
         },
         {
             "name": "zendframework/zend-servicemanager",
@@ -2772,47 +3013,6 @@
                 "source": "https://github.com/mlocati/zend-locale/tree/master"
             },
             "time": "2014-08-08 13:45:44"
-        },
-        {
-            "name": "zf1/zend-mail",
-            "version": "1.12.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zf1/zend-mail.git",
-                "reference": "a4782ec0185f3998abdada146a8c373e839cb110"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-mail/zipball/a4782ec0185f3998abdada146a8c373e839cb110",
-                "reference": "a4782ec0185f3998abdada146a8c373e839cb110",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2.11",
-                "zf1/zend-exception": "self.version",
-                "zf1/zend-loader": "self.version",
-                "zf1/zend-mime": "self.version",
-                "zf1/zend-validate": "self.version"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Zend_Mail": "library/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Zend Framework 1 Mail package",
-            "homepage": "http://framework.zend.com/",
-            "keywords": [
-                "ZF1",
-                "framework",
-                "mail",
-                "zend"
-            ],
-            "time": "2014-05-21 15:17:58"
         },
         {
             "name": "zf1/zend-mime",
