@@ -122,6 +122,7 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
     }
     public function getConversationMessageBodyOutput($dashboardOverride = false)
     {
+        /** @var \Concrete\Core\Conversation\Editor\Editor $editor */
         $editor = ConversationEditor::getActive();
         if ($dashboardOverride) {
             return $this->cnvMessageBody;

@@ -7,7 +7,7 @@ $ve = Loader::helper('validation/error');
 if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageAttachmentID']) && $_POST['cnvMessageAttachmentID'] > 0) {
 	$attachment = ConversationMessage::getAttachmentByID($_POST['cnvMessageAttachmentID']);
 	
-	$message = ConversationMessage::getByID($attachment->cnvMessageID);
+	$message = ConversationMessage::getByID($attachment->getConversationMessageID());
 	if (is_object($attachment)) {
 		$message->removeFile($_POST['cnvMessageAttachmentID']);
 	}

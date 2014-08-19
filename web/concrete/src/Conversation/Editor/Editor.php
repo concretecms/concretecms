@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Conversation\Editor;
 use Loader;
 use \Concrete\Core\Package\PackageList;
@@ -15,6 +15,9 @@ abstract class Editor extends Object {
 	}
 
 	public function formatConversationMessageBody($cnv,$cnvMessageBody,$config=array()) {
+        /** @var  \Concrete\Core\Utility\Service\Text $textHelper */
+        $textHelper = Core::make('helper/text');
+        $cnvMessageBody = $textHelper->noFollowHref($cnvMessageBody);
 		if (isset($config['htmlawed'])) {
 
 			$default = array('safe'=>1,'elements'=>'span, em, b, i, p, strike, font, br, div');
