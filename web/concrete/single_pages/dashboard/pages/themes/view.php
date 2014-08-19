@@ -81,9 +81,12 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
                         <?//$bt->button_js(t("Preview"), "ccm_previewInternalTheme(1, " . intval($t->getThemeID()) . ",'" . addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeDisplayName())) . "')", 'left');?>
                         <?=$bt->button(t("Inspect"), $view->url('/dashboard/pages/themes/inspect', $t->getThemeID()), 'left');?>
                         <?//$bt->button(t("Customize"), $view->url('/dashboard/pages/themes/customize', $t->getThemeID()), 'left');?>
-                    
-                        <?=$bt->button(t("Remove"), $view->url('/dashboard/pages/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), 'right', 'btn-danger');?>
-                    </div>
+                     <? if ($siteThemeID == $t->getThemeID()) { ?>
+                        <?=$bt->button(t("Remove"), $view->url('/dashboard/pages/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), 'right', 'btn-danger', array('disabled'=>'disabled'));?>
+                    <? } else { ?>
+						<?=$bt->button(t("Remove"), $view->url('/dashboard/pages/themes', 'remove', $t->getThemeID(), $valt->generate('remove')), 'right', 'btn-danger');?>	
+					<? } ?>
+					</div>
                     
                 
                     <p class="ccm-themes-name"><strong><?=$t->getThemeDisplayName()?></strong></p>
