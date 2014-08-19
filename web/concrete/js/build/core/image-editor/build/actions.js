@@ -2,7 +2,7 @@ im.bind('imageload', function () {
     var cs = settings.controlsets || {}, filters = settings.filters || {}, namespace, firstcs;
     var running = 0;
     log('Loading ControlSets');
-    im.showLoader('Loading Control Sets..');
+    im.showLoader(ccmi18n_imageeditor.loadingControlSets);
     im.fire('LoadingControlSets');
     for (namespace in cs) {
         var myns = "ControlSet_" + namespace;
@@ -35,7 +35,7 @@ im.bind('imageload', function () {
 });
 im.bind('ControlSetsLoaded', function () {
     im.fire('LoadingComponents');
-    im.showLoader('Loading Components..');
+    im.showLoader(ccmi18n_imageeditor.loadingComponents);
     var components = settings.components || {}, namespace, running = 0;
     log('Loading Components');
 
@@ -73,7 +73,7 @@ im.bind('ControlSetsLoaded', function () {
 
 im.bind('ComponentsLoaded', function () { // do this when the control sets finish loading.
     log('Loading Filters');
-    im.showLoader('Loading Filters..');
+    im.showLoader(ccmi18n_imageeditor.loadingFilters);
     var filters = settings.filters || {}, namespace, firstf, active = 0;
     im.fire('LoadingFilters');
     for (namespace in filters) {

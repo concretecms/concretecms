@@ -52,7 +52,7 @@ $.fn.ImageEditor = function (settings) {
     $('div.controls > div.controlscontainer', context).children('div.save').children('button.save').click(function () {
         im.save();
     }).end().children('button.cancel').click(function () {
-        if (confirm("Are you sure?"))
+        if (confirm(ccmi18n_imageeditor.areYouSure))
             $.fn.dialog.closeTop();
     });
 
