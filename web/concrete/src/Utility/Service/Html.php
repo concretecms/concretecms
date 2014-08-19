@@ -15,7 +15,7 @@ class Html {
     public function noFollowHref($input)
     {
         return preg_replace_callback(
-            '/(?:\<a(.*?href.*?)\>)/i',
+            '/(?:<a(.*?href.*?)>)/i',
             function ($matches) {
                 if (strpos($matches[1], 'rel="nofollow"') === false) {
                     //if there is no nofollow add it
