@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d8a350313833e259e01c016206f11a72",
+    "hash": "c1bb87e7479462d90593d05531fbd1f0",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -2894,49 +2894,6 @@
                 "zend"
             ],
             "time": "2014-05-21 16:06:11"
-        },
-        {
-            "name": "zf1/zend-db",
-            "version": "1.12.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zf1/zend-db.git",
-                "reference": "93e45ef0ef6c3f7b9d462f665bdb4943f737eaa0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-db/zipball/93e45ef0ef6c3f7b9d462f665bdb4943f737eaa0",
-                "reference": "93e45ef0ef6c3f7b9d462f665bdb4943f737eaa0",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2.11",
-                "zf1/zend-exception": "self.version",
-                "zf1/zend-loader": "self.version"
-            },
-            "suggest": {
-                "zf1/zend-registry": "Used in special situations or with special adapters",
-                "zf1/zend-wildfire": "Used in special situations or with special adapters"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Zend_Db": "library/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Zend Framework 1 Db package",
-            "homepage": "http://framework.zend.com/",
-            "keywords": [
-                "ZF1",
-                "db",
-                "framework",
-                "zend"
-            ],
-            "time": "2014-05-21 16:06:12"
         },
         {
             "name": "zf1/zend-exception",
