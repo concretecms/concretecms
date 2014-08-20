@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d8cc06d81ecad194925773f375091a28",
+    "hash": "49fef53d2961c5070d07aa7e75305ca0",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -1171,12 +1171,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/serbanghita/Mobile-Detect.git",
-                "reference": "a72412b8615605af7cc9f2c5786ecb2484cc06b7"
+                "reference": "656247c42a2d4ddf1746f134ea816337aaa89523"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/a72412b8615605af7cc9f2c5786ecb2484cc06b7",
-                "reference": "a72412b8615605af7cc9f2c5786ecb2484cc06b7",
+                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/656247c42a2d4ddf1746f134ea816337aaa89523",
+                "reference": "656247c42a2d4ddf1746f134ea816337aaa89523",
                 "shasum": ""
             },
             "require": {
@@ -1215,7 +1215,7 @@
                 "mobile detector",
                 "php mobile detect"
             ],
-            "time": "2014-08-19 09:54:40"
+            "time": "2014-08-20 16:14:47"
         },
         {
             "name": "monolog/monolog",
@@ -1603,12 +1603,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/punic/calendar.git",
-                "reference": "6e188dba225ce8a7fd394c2013dfebe217c0ea70"
+                "reference": "1547667d3a2f9c356556445c82330d1e7f8d8995"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punic/calendar/zipball/6e188dba225ce8a7fd394c2013dfebe217c0ea70",
-                "reference": "6e188dba225ce8a7fd394c2013dfebe217c0ea70",
+                "url": "https://api.github.com/repos/punic/calendar/zipball/1547667d3a2f9c356556445c82330d1e7f8d8995",
+                "reference": "1547667d3a2f9c356556445c82330d1e7f8d8995",
                 "shasum": ""
             },
             "require": {
@@ -1625,6 +1625,12 @@
             "license": [
                 "MIT"
             ],
+            "authors": [
+                {
+                    "name": "Michele Locati",
+                    "email": "mlocati@gmail.com"
+                }
+            ],
             "description": "PHP-Unicode CLDR - Calendar and date/time",
             "homepage": "https://github.com/punic/calendar",
             "keywords": [
@@ -1640,7 +1646,7 @@
                 "time",
                 "unicode"
             ],
-            "time": "2014-08-20 14:06:05"
+            "time": "2014-08-20 15:09:23"
         },
         {
             "name": "punic/common",
@@ -1648,12 +1654,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/punic/common.git",
-                "reference": "c6fd888f817d74d89856c0d8d9074827f4901977"
+                "reference": "1d8a5d0fd58723f361dc8ca3d1ff4b8211430bac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punic/common/zipball/c6fd888f817d74d89856c0d8d9074827f4901977",
-                "reference": "c6fd888f817d74d89856c0d8d9074827f4901977",
+                "url": "https://api.github.com/repos/punic/common/zipball/1d8a5d0fd58723f361dc8ca3d1ff4b8211430bac",
+                "reference": "1d8a5d0fd58723f361dc8ca3d1ff4b8211430bac",
                 "shasum": ""
             },
             "require": {
@@ -1669,6 +1675,12 @@
             "license": [
                 "MIT"
             ],
+            "authors": [
+                {
+                    "name": "Michele Locati",
+                    "email": "mlocati@gmail.com"
+                }
+            ],
             "description": "PHP-Unicode CLDR - CLDR Data",
             "homepage": "https://github.com/punic/common",
             "keywords": [
@@ -1680,7 +1692,7 @@
                 "php",
                 "unicode"
             ],
-            "time": "2014-08-20 11:42:22"
+            "time": "2014-08-20 15:09:52"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
@@ -2936,45 +2948,6 @@
             "keywords": [
                 "ZF1",
                 "cache",
-                "framework",
-                "zend"
-            ],
-            "time": "2014-05-21 16:06:11"
-        },
-        {
-            "name": "zf1/zend-date",
-            "version": "1.12.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zf1/zend-date.git",
-                "reference": "5fb1769de16f224b36a3405a66c9eb9de5fe5925"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-date/zipball/5fb1769de16f224b36a3405a66c9eb9de5fe5925",
-                "reference": "5fb1769de16f224b36a3405a66c9eb9de5fe5925",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2.11",
-                "zf1/zend-exception": "self.version",
-                "zf1/zend-locale": "self.version"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Zend_Date": "library/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Zend Framework 1 Date package",
-            "homepage": "http://framework.zend.com/",
-            "keywords": [
-                "ZF1",
-                "date",
                 "framework",
                 "zend"
             ],
