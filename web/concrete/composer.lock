@@ -1603,12 +1603,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/punic/calendar.git",
-                "reference": "734471e7086c3249d98e3b3ceccd1b1238a09b0a"
+                "reference": "6e188dba225ce8a7fd394c2013dfebe217c0ea70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punic/calendar/zipball/734471e7086c3249d98e3b3ceccd1b1238a09b0a",
-                "reference": "734471e7086c3249d98e3b3ceccd1b1238a09b0a",
+                "url": "https://api.github.com/repos/punic/calendar/zipball/6e188dba225ce8a7fd394c2013dfebe217c0ea70",
+                "reference": "6e188dba225ce8a7fd394c2013dfebe217c0ea70",
                 "shasum": ""
             },
             "require": {
@@ -1640,7 +1640,7 @@
                 "time",
                 "unicode"
             ],
-            "time": "2014-08-20 13:48:13"
+            "time": "2014-08-20 14:06:05"
         },
         {
             "name": "punic/common",
