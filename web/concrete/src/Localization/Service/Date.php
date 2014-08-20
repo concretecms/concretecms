@@ -2,7 +2,7 @@
 namespace Concrete\Core\Localization\Service;
 
 use Request;
-use Zend_Date;
+use \Punic\Calendar;
 use Zend_Locale;
 use Cache;
 use Localization;
@@ -46,7 +46,7 @@ class Date
             }
         }
         if (Localization::activeLocale() != 'en_US') {
-            return $this->dateTimeFormatLocal($datetime,$mask);
+            return $this->dateTimeFormatLocal($datetime, $mask);
         } else {
             return $datetime->format($mask);
         }
@@ -94,7 +94,7 @@ class Date
             }
         }
         if (Localization::activeLocale() != 'en_US') {
-            return $this->dateTimeFormatLocal($datetime,$mask);
+            return $this->dateTimeFormatLocal($datetime, $mask);
         } else {
             return $datetime->format($mask);
         }
@@ -102,47 +102,37 @@ class Date
 
     /**
 	 * Gets the localized date according to a specific mask
-	 * @param object $datetime A PHP \DateTime Object
+	 * @param \DateTime $datetime A PHP \DateTime Object
 	 * @param string $mask
 	 * @return string
 	 */
-    public function dateTimeFormatLocal(&$datetime,$mask)
+    public function dateTimeFormatLocal($datetime, $mask)
     {
-        $locale = new \Zend_Locale(Localization::activeLocale());
-
-        $date = new \Zend_Date($datetime->format(DATE_ATOM),DATE_ATOM, $locale);
-        $date->setTimeZone($datetime->format("e"));
-
-        return $date->toString($mask);
+        return Calendar::format(
+            $datetime,
+            Calendar::convertPhpToIsoFormat($mask)
+        );
     }
 
     /**
 	 * Subsitute for the native date() function that adds localized date support
-	 * This uses Zend's Date Object {@link http://framework.zend.com/manual/en/zend.date.constants.html#zend.date.constants.phpformats}
 	 * @param string $mask
 	 * @param int $timestamp
 	 * @return string
 	 */
-    public function date($mask,$timestamp=false)
+    public function date($mask, $timestamp = false)
     {
-        $loc = Localization::getInstance();
         if ($timestamp === false) {
             $timestamp = time();
         }
-
-        if ($loc->getLocale() == 'en_US') {
+        if (Localization::activeLocale() == 'en_US') {
             return date($mask, $timestamp);
         }
 
-        $locale = new Zend_Locale(Localization::activeLocale());
-        Zend_Date::setOptions(array('format_type' => 'php'));
-        $cache = Cache::getLibrary();
-        if (is_object($cache)) {
-            Zend_Date::setOptions(array('cache'=>$cache));
-        }
-        $date = new Zend_Date($timestamp, false, $locale);
-
-        return $date->toString($mask);
+        return Calendar::formatEx(
+            $timestamp,
+            Calendar::convertPhpToIsoFormat($mask)
+        );
     }
 
     /**
@@ -166,7 +156,7 @@ class Date
                         }
                     }
                 }
-                $localizedTimezones = Zend_Locale::getTranslationList('CityToTimezone', $locale);
+                $localizedTimezones = \Zend_Locale::getTranslationList('CityToTimezone', $locale);
                 if (!is_array($localizedTimezones)) {
                     $localizedTimezones = array();
                 }
@@ -324,11 +314,10 @@ class Date
     }
 
     /**
-     * Convert a date to a Zend_Date instance.
-     * @param string|\DateTime|Zend_Date|int $value It can be:<ul>
+     * Convert a date to a \DateTime instance.
+     * @param string|\DateTime|int $value It can be:<ul>
      *    <li>the special value 'now' (default) to return the current date/time</li>
      *    <li>a \DateTime instance</li>
-     *    <li>a Zend_Date instance</li>
      *    <li>a string parsable by strtotime (the current system timezone is used)</li>
      *    <li>a timestamp</li>
      * </ul>
@@ -338,45 +327,17 @@ class Date
      *    <li>'app' for the app's timezone</li>
      *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
-     * @return Zend_Date|null Returns the Zend_Date instance (or null if $value couldn't be parsed)
+     * @return \DateTime|null Returns the \DateTime instance (or null if $value couldn't be parsed)
      */
-    public function toZendDate($value = 'now', $toTimezone = 'system')
+    public function toDateTime($value = 'now', $toTimezone = 'system')
     {
-        $locale = Localization::activeLocale();
-        $zendDate = null;
-
-        if (is_int($value)) {
-            $zendDate = new Zend_Date($value, Zend_Date::TIMESTAMP, $locale);
-        } elseif ($value instanceof \DateTime) {
-            $zendDate = new Zend_Date($value->format(DATE_ATOM), DATE_ATOM, $locale);
-            $zendDate->setTimeZone($value->format('e'));
-        } elseif (is_a($value, 'Zend_Date')) {
-            $zendDate = clone $value;
-        } elseif (is_string($value) && strlen($value)) {
-            if ($value === 'now') {
-                $zendDate = new Zend_Date(time(), Zend_Date::TIMESTAMP, $locale);
-            } elseif (is_numeric($value)) {
-                $zendDate = new Zend_Date($value, Zend_Date::TIMESTAMP, $locale);
-            } else {
-                $timestamp = @strtotime($value);
-                if ($timestamp !== false) {
-                    $zendDate = new Zend_Date($timestamp, Zend_Date::TIMESTAMP, $locale);
-                }
-            }
-        }
-        if (is_null($zendDate)) {
-            return null;
-        }
-        $zendDate->setLocale(Localization::activeLocale());
-        $zendDate->setTimezone($this->getTimezone($toTimezone));
-
-        return $zendDate;
+        return Calendar::toDateTime($value, $this->getTimezone($toTimezone));
     }
 
     /**
      * Returns the difference in days between to dates.
-     * @param mixed $from The start date/time representation (one of the values accepted by toZendDate)
-     * @param mixed $to The end date/time representation (one of the values accepted by toZendDate)
+     * @param mixed $from The start date/time representation (one of the values accepted by toDateTime)
+     * @param mixed $to The end date/time representation (one of the values accepted by toDateTime)
      * @param string $timezone The timezone to set. Special values are:<ul>
      *    <li>'system' for the current system timezone</li>
      *    <li>'user' (default) for the user's timezone</li>
@@ -388,26 +349,24 @@ class Date
      */
     public function getDeltaDays($from, $to, $timezone = 'user')
     {
-        $zendFrom = $this->toZendDate($from, $timezone);
-        $zendTo = $this->toZendDate($to, $timezone);
-        if (is_null($zendFrom) || is_null($zendTo)) {
+        $dtFrom = $this->toDateTime($from, $timezone);
+        $dtTo = $this->toDateTime($to, $timezone);
+        if (is_null($dtFrom) || is_null($dtTo)) {
             return null;
         }
-        $locale = Localization::activeLocale();
-        $zendFromUTC = new Zend_Date(time(), Zend_Date::TIMESTAMP, $locale);
-        $zendToUTC = new Zend_Date(time(), Zend_Date::TIMESTAMP, $locale);
-        $zendFromUTC->setTimezone('GMT');
-        $zendToUTC->setTimezone('GMT');
-        $zendFromUTC->setDate($zendFrom->toString('Y-m-d'), 'Y-m-d');
-        $zendToUTC->setDate($zendTo->toString('Y-m-d'), 'Y-m-d');
-        $zendToUTC->sub($zendFromUTC);
+        $dtFrom->setTimezone('GMT');
+        $dtFrom = new \DateTime($dtFrom->format('Y-m-d'), 'UTC');
+        $dtTo->setTimezone('GMT');
+        $dtTo = new \DateTime($dtTo->format('Y-m-d'), 'UTC');
+        
+        $seconds = $dtTo->getTimestamp() - $dtFrom->getTimestamp();
 
-        return round($zendToUTC->getTimestamp() / 86400);
+        return round($seconds / 86400);
     }
 
     /**
      * Render the date part of a date/time as a localized string
-     * @param mixed $value $The date/time representation (one of the values accepted by toZendDate)
+     * @param mixed $value $The date/time representation (one of the values accepted by toDateTime)
      * @param bool $longDate $Set to true for the long date format (eg 'December 31, 2000'), false (default) for the short format (eg '12/31/2000')
      * @param string $toTimezone The timezone to set. Special values are:<ul>
      *     <li>'system' for the current system timezone</li>
@@ -419,22 +378,15 @@ class Date
      */
     public function formatDate($value = 'now', $longDate = false, $toTimezone = 'user')
     {
-        $zendDate = $this->toZendDate($value, $toTimezone);
-        if (is_null(toZendDate)) {
-            return '';
-        }
-        if ($longDate) {
-            $format = t(/*i18n: Long date format: see http://www.php.net/manual/en/function.date.php */ 'F j, Y');
-        } else {
-            $format = t(/*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y');
-        }
-
-        return $zendDate->toString($format);
+        return Calendar::formatDate(
+            $this->toDateTime($value, $toTimezone),
+            $long ? 'medium' : 'short'
+        );
     }
 
     /**
      * Render the time part of a date/time as a localized string
-     * @param mixed $value The date/time representation (one of the values accepted by toZendDate)
+     * @param mixed $value The date/time representation (one of the values accepted by toDateTime)
      * @param bool $withSeconds Set to true to include seconds (eg '11:59:59 PM'), false (default) otherwise (eg '11:59 PM');
      * @param string $toTimezone The timezone to set. Special values are:<ul>
      *     <li>'system' for the current system timezone</li>
@@ -446,22 +398,15 @@ class Date
      */
     public function formatTime($value = 'now', $withSeconds = false, $toTimezone = 'user')
     {
-        $zendDate = $this->toZendDate($value, $toTimezone);
-        if (is_null(toZendDate)) {
-            return '';
-        }
-        if ($withSeconds) {
-            $format = t(/*i18n: Time format with seconds: see http://www.php.net/manual/en/function.date.php */ 'g:i:s A');
-        } else {
-            $format = t(/*i18n: Time format without seconds: see http://www.php.net/manual/en/function.date.php */ 'g:i A');
-        }
-
-        return $zendDate->toString($format);
+        return Calendar::formatTime(
+            $this->toDateTime($value, $toTimezone),
+            $withSeconds ? 'medium' : 'short'
+        );
     }
 
     /**
      * Render both the date and time parts of a date/time as a localized string
-     * @param mixed $value The date/time representation (one of the values accepted by toZendDate)
+     * @param mixed $value The date/time representation (one of the values accepted by toDateTime)
      * @param bool $longDate Set to true for the long date format (eg 'December 31, 2000 at ...'), false (default) for the short format (eg '12/31/2000 at ...')
      * @param bool $withSeconds Set to true to include seconds (eg '... at 11:59:59 PM'), false (default) otherwise (eg '... at 11:59 PM');
      * @param string $toTimezone The timezone to set. Special values are:<ul>
@@ -474,31 +419,28 @@ class Date
      */
     public function formatDateTime($value = 'now', $longDate = false, $withSeconds = false, $toTimezone = 'user')
     {
-        $zendDate = $this->toZendDate($value, $toTimezone);
-        if (is_null($zendDate)) {
-            return '';
-        }
         if ($longDate) {
             if ($withSeconds) {
-                $format = t(/*i18n: Long date format and time with seconds: see http://www.php.net/manual/en/function.date.php */ 'F d, Y \\a\\t g:i:s A')
-                ;
+                $format = 'medium|medium|medium';
             } else {
-                $format = t(/*i18n: Long date format and time without seconds: see http://www.php.net/manual/en/function.date.php */ 'F d, Y \\a\\t g:i A');
+                $format = 'medium|medium|short';
             }
         } else {
             if ($withSeconds) {
-                $format = t(/*i18n: Short date format and time with seconds: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y \\a\\t g:i:s A');
+                $format = 'short|short|medium';
             } else {
-                $format = t(/*i18n: Short date format and time without seconds: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y \\a\\t g:i A');
+                $format = 'short|short|short';
             }
         }
-
-        return $zendDate->toString($format);
+        return Calendar::formatDateTime(
+            $this->toDateTime($value, $toTimezone),
+            $format
+        );
     }
 
     /**
      * Render the date part of a date/time as a localized string. If the day is yesterday we'll print 'Yesterday' (the same for today, tomorrow)
-     * @param mixed $value The date/time representation (one of the values accepted by toZendDate)
+     * @param mixed $value The date/time representation (one of the values accepted by toDateTime)
      * @param bool $longDate Set to true for the long date format (eg 'December 31, 2000'), false (default) for the short format (eg '12/31/2000')
      * @param string $toTimezone The timezone to set. Special values are:<ul>
      *     <li>'system' for the current system timezone</li>
@@ -510,11 +452,11 @@ class Date
      */
     public function formatPrettyDate($value, $longDate = false, $toTimezone = 'user')
     {
-        $zendDate = $this->toZendDate($value, $toTimezone);
-        if (is_null($zendDate)) {
+        $dtDate = $this->toDateTime($value, $toTimezone);
+        if (is_null($dtDate)) {
             return '';
         }
-        $days = $this->getDeltaDays('now', $zendDate, $toTimezone);
+        $days = $this->getDeltaDays('now', $dtDate, $toTimezone);
         switch ($days) {
             case 0:
                 return t('Today');
@@ -523,13 +465,13 @@ class Date
             case -1:
                 return t('Yesterday');
             default:
-                return $this->formatDate($zendDate, $longDate);
+                return $this->formatDate($dtDate, $longDate);
         }
     }
 
     /**
      * Render both the date and time parts of a date/time as a localized string. If the day is yesterday we'll print 'Yesterday' (the same for today, tomorrow)
-     * @param mixed $value The date/time representation (one of the values accepted by toZendDate)
+     * @param mixed $value The date/time representation (one of the values accepted by toDateTime)
      * @param bool $longDate Set to true for the long date format (eg 'December 31, 2000 at ...'), false (default) for the short format (eg '12/31/2000 at ...')
      * @param bool $withSeconds Set to true to include seconds (eg '... at 11:59:59 PM'), false (default) otherwise (eg '... at 11:59 PM');
      * @param string $timezone The timezone to set. Special values are:<ul>
@@ -542,27 +484,27 @@ class Date
      */
     public function formatPrettyDateTime($value, $longDate = false, $withSeconds = false, $timezone = 'user')
     {
-        $zendDate = $this->toZendDate($value, $timezone);
-        if (is_null($zendDate)) {
+        $dtDate = $this->toDateTime($value, $timezone);
+        if (is_null($dtDate)) {
             return '';
         }
-        $days = $this->getDeltaDays('now', $zendDate, $timezone);
+        $days = $this->getDeltaDays('now', $dtDate, $timezone);
         switch ($days) {
             case 0:
-                return t(/*i18n: %s is a time */ 'Today at %s', $this->formatTime($zendDate, $withSeconds, $timezone));
+                return t(/*i18n: %s is a time */ 'Today at %s', $this->formatTime($dtDate, $withSeconds, $timezone));
             case 1:
-                return t(/*i18n: %s is a time */ 'Tomorrow at %s', $this->formatTime($zendDate, $withSeconds, $timezone));
+                return t(/*i18n: %s is a time */ 'Tomorrow at %s', $this->formatTime($dtDate, $withSeconds, $timezone));
             case -1:
-                return t(/*i18n: %s is a time */ 'Yesterday at %s', $this->formatTime($zendDate, $withSeconds, $timezone));
+                return t(/*i18n: %s is a time */ 'Yesterday at %s', $this->formatTime($dtDate, $withSeconds, $timezone));
             default:
-                return $this->formatDateTime($zendDate, $longDate, $withSeconds);
+                return $this->formatDateTime($dtDate, $longDate, $withSeconds);
         }
     }
 
     /**
      * Render a date/time as a localized string, by specifying a custom format
      * @param string $format The custom format (see http://www.php.net/manual/en/function.date.php for applicable formats)
-     * @param mixed $value The date/time representation (one of the values accepted by toZendDate)
+     * @param mixed $value The date/time representation (one of the values accepted by toDateTime)
      * @param string $toTimezone The timezone to set. Special values are:<ul>
      *     <li>'system' for the current system timezone</li>
      *     <li>'user' (default) for the user's timezone</li>
@@ -573,12 +515,10 @@ class Date
      */
     public function formatCustom($format, $value = 'now', $toTimezone = 'user')
     {
-        $zendDate = $this->toZendDate($value, $toTimezone);
-        if (is_null($zendDate)) {
-            return '';
-        }
-
-        return $zendDate->toString($format);
+        return Calendar::formatEx(
+            $this->toDateTime($value, $toTimezone),
+            Calendar::convertPhpToIsoFormat($format)
+        );
     }
 
     /** Returns the format string for the jQueryUI DatePicker widget
