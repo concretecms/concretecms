@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c1bb87e7479462d90593d05531fbd1f0",
+    "hash": "d8cc06d81ecad194925773f375091a28",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -1596,6 +1596,91 @@
                 "psr-3"
             ],
             "time": "2012-12-21 11:40:51"
+        },
+        {
+            "name": "punic/calendar",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/punic/calendar.git",
+                "reference": "734471e7086c3249d98e3b3ceccd1b1238a09b0a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/punic/calendar/zipball/734471e7086c3249d98e3b3ceccd1b1238a09b0a",
+                "reference": "734471e7086c3249d98e3b3ceccd1b1238a09b0a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3",
+                "punic/common": "self.version"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Punic\\": "code/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHP-Unicode CLDR - Calendar and date/time",
+            "homepage": "https://github.com/punic/calendar",
+            "keywords": [
+                "calendar",
+                "cldr",
+                "date",
+                "date-time",
+                "i18n",
+                "internationalization",
+                "l10n",
+                "localization",
+                "php",
+                "time",
+                "unicode"
+            ],
+            "time": "2014-08-20 13:48:13"
+        },
+        {
+            "name": "punic/common",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/punic/common.git",
+                "reference": "c6fd888f817d74d89856c0d8d9074827f4901977"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/punic/common/zipball/c6fd888f817d74d89856c0d8d9074827f4901977",
+                "reference": "c6fd888f817d74d89856c0d8d9074827f4901977",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Punic\\": "code/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHP-Unicode CLDR - CLDR Data",
+            "homepage": "https://github.com/punic/common",
+            "keywords": [
+                "cldr",
+                "i18n",
+                "internationalization",
+                "l10n",
+                "localization",
+                "php",
+                "unicode"
+            ],
+            "time": "2014-08-20 11:42:22"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
@@ -3199,7 +3284,9 @@
         "kertz/twitteroauth": 20,
         "primal/color": 20,
         "zendframework/zend-queue": 20,
-        "nesbot/carbon": 20
+        "nesbot/carbon": 20,
+        "punic/common": 20,
+        "punic/calendar": 20
     },
     "prefer-stable": false,
     "platform": {
