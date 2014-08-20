@@ -75,6 +75,7 @@ module.exports = function(grunt, config, parameters, done) {
 				'/concrete/vendor/oyejorge/less.php/test',
 				'/concrete/vendor/pagerfanta/pagerfanta/tests',
 				'/concrete/vendor/psr/log/Psr/Log/Test',
+				'/concrete/vendor/punic/common/bin',
 				'/concrete/vendor/simplepie/simplepie/build',
 				'/concrete/vendor/simplepie/simplepie/compatibility_test',
 				'/concrete/vendor/simplepie/simplepie/demo',
