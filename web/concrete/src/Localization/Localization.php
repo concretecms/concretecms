@@ -4,6 +4,7 @@ namespace Concrete\Core\Localization;
 use Loader;
 use Cache;
 use Events;
+use \Punic\Data as PunicData;
 
 class Localization
 {
@@ -48,14 +49,12 @@ class Localization
 
     public function __construct()
     {
-        \Zend_Date::setOptions(array('format_type' => 'php'));
         // @todo Once we have Zend Translate swapped out for the new \Zend\i18n\Translator we can re-enable the
         // cache
         /*
         $cache = Cache::getLibrary();
         if (is_object($cache)) {
             \Zend_Translate::setCache($cache);
-            \Zend_Date::setOptions(array('cache'=>$cache));
         }
         */
     }
@@ -63,21 +62,19 @@ class Localization
     public function setLocale($locale)
     {
         $localeNeededLoading = false;
-        if (!ENABLE_TRANSLATE_LOCALE_EN_US && $locale == 'en_US' && isset($this->translate)) {
-            unset($this->translate);
+        if (($locale == 'en_US') && (!ENABLE_TRANSLATE_LOCALE_EN_US)) {
+            if (isset($this->translate)) {
+                unset($this->translate);
+            }
+            PunicData::setDefaultLocale($locale);
 
             return;
         }
-        if (!(ENABLE_TRANSLATE_LOCALE_EN_US || $locale != 'en_US')) {
-            return;
-        }
-
         if (is_dir(DIR_LANGUAGES . '/' . $locale)) {
             $languageDir = DIR_LANGUAGES . '/' . $locale;
         } elseif (is_dir(DIR_LANGUAGES_CORE . '/' . $locale)) {
             $languageDir = DIR_LANGUAGES_CORE . '/' . $locale;
-        }
-        if (!$languageDir) {
+        } else {
             return;
         }
 
@@ -85,7 +82,8 @@ class Localization
             'adapter' => 'Zend_Translate_Adapter_Gettext',
             'content' => $languageDir,
             'locale'  => $locale,
-            'disableNotices'  => true
+            'disableNotices'  => true,
+            'ignore' => array('.', 'messages.po')
         );
         if (defined('TRANSLATE_OPTIONS')) {
             $_options = unserialize(TRANSLATE_OPTIONS);
@@ -104,6 +102,7 @@ class Localization
             }
             $this->translate->setLocale($locale);
         }
+        PunicData::setDefaultLocale($locale);
         if ($localeNeededLoading) {
             $event = new \Symfony\Component\EventDispatcher\GenericEvent();
             $event->setArgument('locale', $locale);
