@@ -41,7 +41,6 @@
         "zf1/zend-validate": "1.12.6",
         "zf1/zend-translate": "1.12.6",
         "zf1/zend-locale": "1.12.6",
-        "zf1/zend-date": "1.12.6",
         "zf1/zend-mime": "1.12.6",
         "zendframework/zend-queue": "dev-master",
         "zendframework/zend-mail": "2.3.1",
