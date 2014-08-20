@@ -191,7 +191,7 @@ class Localization {
 		} 
 		
 		$cacheLibrary = Cache::getLibrary();
-		if (is_object($cacheLibrary)) {
+		if (is_object($cacheLibrary) && is_a($cacheLibrary, '\\Zend_Cache_Core')) {
 			\Zend_Locale_Data::setCache($cacheLibrary);
 		}		
 		
