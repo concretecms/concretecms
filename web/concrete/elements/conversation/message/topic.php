@@ -8,7 +8,7 @@ if ($message->isConversationMessageDeleted()) {
 if (!$message->isConversationMessageApproved()){
 	$class .= ' ccm-conversation-message-flagged';
 }
-$cnvMessageID = $message->cnvMessageID;
+$cnvMessageID = $message->getConversationMessageID();
 if ((!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) || $message->conversationMessageHasActiveChildren()) {
 	?>
 	<div data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-conversation-message-level="<?=$message->getConversationMessageLevel()?>" class="<?=$class?>">
@@ -23,8 +23,8 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 		<div class="ccm-conversation-message-controls">
 			<div class="message-attachments">
 				<?php
-				if(count($message->getAttachments($message->cnvMessageID))) {
-					foreach ($message->getAttachments($message->cnvMessageID) as $attachment) {
+				if(count($message->getAttachments($message->getConversationMessageID()))) {
+					foreach ($message->getAttachments($message->getConversationMessageID()) as $attachment) {
 						$file = File::getByID($attachment['fID']);
 						if(is_object($file)) { ?>
 						<p rel="<?php echo $attachment['cnvMessageAttachmentID'];?>"><a href="<?php echo $file->getDownloadURL() ?>"><?php echo $file->getFileName() ?></a>
@@ -54,7 +54,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 			$ratingTypes = ConversationRatingType::getList();
 			foreach($ratingTypes as $ratingType) { ?>
 				<a title="Rate this Message"><?=$ratingType->outputRatingTypeHTML();?></a>
-				<span class="ccm-conversation-message-rating-score" data-msg-rating="<?=$message->cnvMessageID?>" data-msg-rating-type="<?=$ratingType->getConversationRatingTypeHandle()?>"><?=$message->getConversationMessageRating($ratingType); ?></span>
+				<span class="ccm-conversation-message-rating-score" data-msg-rating="<?=$message->getConversationMessageID()?>" data-msg-rating-type="<?=$ratingType->getConversationRatingTypeHandle()?>"><?=$message->getConversationMessageRating($ratingType); ?></span>
 			 <? } ?>
 		<? } ?>
 		</div>
