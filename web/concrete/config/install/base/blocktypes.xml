@@ -9,11 +9,7 @@
         <blocktype handle="core_gathering_display" package=""/>
         <blocktype handle="core_conversation" package=""/>
         <blocktype handle="core_conversation_message" package=""/>
-
-        <!--
         <blocktype handle="core_gathering" package=""/>
-        //-->
-
         <blocktype handle="dashboard_featured_addon" package=""/>
         <blocktype handle="dashboard_featured_theme" package=""/>
         <blocktype handle="dashboard_newsflow_latest" package=""/>

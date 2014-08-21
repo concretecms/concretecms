@@ -47,8 +47,8 @@ class Controller extends BlockController
 
     public function getDateLink($dateArray = null)
     {
-        if ($this->cParentID) {
-            $c = \Page::getByID($this->cParentID);
+        if ($this->cTargetID) {
+            $c = \Page::getByID($this->cTargetID);
         } else {
             $c = \Page::getCurrentPage();
         }
