@@ -133,13 +133,15 @@ class Controller extends BlockController
         if ($this->pfID) {
             $this->requireAsset('css', 'font-awesome');
             $feed = Feed::getByID($this->pfID);
-            $this->set('rssUrl', $feed->getFeedURL());
-            $link = new \HtmlObject\Element('link');
-            $link->href($feed->getFeedURL());
-            $link->rel('alternate');
-            $link->type('application/rss+xml');
-            $link->title($feed->getTitle());
-            $this->addHeaderItem($link);
+            if (is_object($feed)) {
+                $this->set('rssUrl', $feed->getFeedURL());
+                $link = new \HtmlObject\Element('link');
+                $link->href($feed->getFeedURL());
+                $link->rel('alternate');
+                $link->type('application/rss+xml');
+                $link->title($feed->getTitle());
+                $this->addHeaderItem($link);
+            }
         }
 
         //Pagination...
@@ -203,7 +205,9 @@ class Controller extends BlockController
         }
         if ($this->pfID) {
             $feed = Feed::getByID($this->pfID);
-            $this->set('rssFeed', $feed);
+            if (is_object($feed)) {
+                $this->set('rssFeed', $feed);
+            }
         }
         $uh = Loader::helper('concrete/urls');
         $this->set('uh', $uh);
