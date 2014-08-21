@@ -71,14 +71,17 @@ use Sunra\PhpSimple\HtmlDomParser;
 
 		public function add() {
 			$this->requireAsset('redactor');
+            $this->requireAsset('core/file-manager');
 		}
 
 		public function edit() {
 			$this->requireAsset('redactor');
+            $this->requireAsset('core/file-manager');
 		}
 
 		public function composer() {
 			$this->requireAsset('redactor');
+            $this->requireAsset('core/file-manager');
 		}
 
 		public function getImportData($blockNode, $page) {
