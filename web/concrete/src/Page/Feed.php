@@ -399,7 +399,11 @@ class Feed
                 $entry = $writer->createEntry();
                 $entry->setTitle($p->getCollectionName());
                 $entry->setDateCreated(strtotime($p->getCollectionDatePublic()));
-                $entry->setDescription($this->getPageFeedContent($p));
+                $content = $this->getPageFeedContent($p);
+                if (!$content) {
+                    $content = t('No Content.');
+                }
+                $entry->setDescription($content);
                 $entry->setLink($p->getCollectionLink(true));
                 $writer->addEntry($entry);
             }
