@@ -1,6 +1,6 @@
 <?
 namespace Concrete\Controller\PageType;
-use Concrete\Core\Controller\PageTypeController;
+use Concrete\Core\Page\Controller\PageTypeController;
 use Page;
 use Permissions;
 use View;
