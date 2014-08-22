@@ -146,7 +146,6 @@ foreach ($importer_attributes as $attribute_name => $attribute_settings) {
     call_user_func_array(array($type_list, 'defineImporterAttribute'), $attribute_settings);
 }
 
-
 /**
  * ----------------------------------------------------------------------------
  * If we are running through the command line, we don't proceed any further
