@@ -45,14 +45,14 @@ class Feeds extends DashboardPageController
         $description = $sec->sanitizeString($this->request->request->get('pfDescription'));
 
         if (!$title) {
-            $this->error->add('You must specify a valid title.');
+            $this->error->add(t('You must specify a valid title.'));
         }
         if (!$description) {
-            $this->error->add('You must specify a valid description.');
+            $this->error->add(t('You must specify a valid description.'));
         }
 
         if (!$vs->handle($handle)) {
-            $this->error->add('A valid handle must contain no punctuation or spaces.');
+            $this->error->add(t('A valid handle must contain no punctuation or spaces.'));
         }
     }
 
