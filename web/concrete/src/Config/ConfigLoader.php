@@ -24,6 +24,7 @@ class ConfigLoader extends FileLoader {
         }
         return parent::load($environment, $group, $namespace);
     }
+
     public function loadStrict($environment, $group, $namespace = null)
     {
         return parent::load($environment, $group, $namespace);
