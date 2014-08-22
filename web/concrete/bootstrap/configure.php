@@ -417,12 +417,9 @@ defined('DB_CHARSET') or define('DB_CHARSET', 'utf8');
 
 /**
  * ----------------------------------------------------------------------------
- * Get our current version, along with setting defaults for when to check for
- * new versions.
+ * Setting defaults for when to check for new versions.
  * ----------------------------------------------------------------------------
  */
-require DIR_BASE_CORE . '/config/version.php';
-define('APP_VERSION', $APP_VERSION);
 define('APP_VERSION_LATEST_THRESHOLD', 172800); // Every 2 days we check for the latest version (this is seconds)
 define('APP_VERSION_LATEST_WS', 'http://www.concrete5.org/tools/get_latest_version_number');
 define('APP_VERSION_LATEST_DOWNLOAD', 'http://www.concrete5.org/download/');

@@ -18,8 +18,8 @@ class ConfigLoader extends FileLoader {
     {
         if (is_null($namespace)) {
             return array_replace_recursive(
-                parent::load($environment, $group, 'core'),
-                parent::load($environment, $group, $namespace)
+                (array) parent::load($environment, $group, 'core'),
+                (array) parent::load($environment, $group, $namespace)
             );
         }
         return parent::load($environment, $group, $namespace);

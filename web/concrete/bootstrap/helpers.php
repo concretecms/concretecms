@@ -1,6 +1,7 @@
 <?php defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Utility\Service\Text;
+use \Concrete\Core\Localization\Localization;
 
 /**
  * Translate text (simple form).

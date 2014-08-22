@@ -15,11 +15,17 @@ if (basename($_SERVER['PHP_SELF']) == DISPATCHER_FILENAME_CORE) {
  * ----------------------------------------------------------------------------
  */
 use Concrete\Core\Application\Application;
+use Concrete\Core\Asset\AssetList;
 use Concrete\Core\Foundation\ClassAliasList;
 use Concrete\Core\Foundation\Service\ProviderList;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Support\Facade\Facade;
 use Patchwork\Utf8\Bootup;
+use Concrete\Core\Config\Config as DatabaseConfig;
+use Concrete\Core\File\Type\TypeList;
+use Concrete\Core\Config\ConfigLoader;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Config\Repository as ConfigRepository;
 
 /**
  * ----------------------------------------------------------------------------
@@ -39,12 +45,29 @@ Facade::setFacadeApplication($cms);
 
 /**
  * ----------------------------------------------------------------------------
+ * Enable Config
+ * ----------------------------------------------------------------------------
+ */
+$file_system = new Filesystem();
+$database_config = new DatabaseConfig();
+$file_loader = new ConfigLoader($file_system, $database_config);
+$cms->instance('config', $config = new ConfigRepository($file_loader, 'default'));
+
+/**
+ * ----------------------------------------------------------------------------
+ * Get App version number
+ * ----------------------------------------------------------------------------
+ */
+define('APP_VERSION', $config->get('app.version'));
+
+/**
+ * ----------------------------------------------------------------------------
  * Setup core classes aliases.
  * ----------------------------------------------------------------------------
  */
 $list = ClassAliasList::getInstance();
-$list->registerMultiple(require DIR_BASE_CORE . '/config/aliases.php');
-$list->registerMultiple(require DIR_BASE_CORE . '/config/facades.php');
+$list->registerMultiple($config->get('app.aliases'));
+$list->registerMultiple($config->get('app.facades'));
 
 /**
  * ----------------------------------------------------------------------------
@@ -52,7 +75,7 @@ $list->registerMultiple(require DIR_BASE_CORE . '/config/facades.php');
  * ----------------------------------------------------------------------------
  */
 $list = new ProviderList($cms);
-$list->registerProviders(require DIR_BASE_CORE . '/config/services.php');
+$list->registerProviders($config->get('app.providers'));
 
 /**
  * ----------------------------------------------------------------------------
@@ -74,10 +97,47 @@ Bootup::initAll();
  * Registries for theme paths, assets, routes and file types.
  * ----------------------------------------------------------------------------
  */
-require DIR_BASE_CORE . '/config/theme_paths.php';
+$assets = $config->get('app.assets', array());
+$asset_list = AssetList::getInstance();
+
+foreach ($assets as $asset_handle => $asset_types) {
+    foreach ($asset_types as $asset_type => $asset_settings) {
+        array_splice($asset_settings, 1, 0, $asset_handle);
+        call_user_func_array(array($asset_list, 'register'), $asset_settings);
+    }
+}
+
+/**
+ * @todo Remove this when assets are ported to new config
+ */
 require DIR_BASE_CORE . '/config/assets.php';
-require DIR_BASE_CORE . '/config/routes.php';
-require DIR_BASE_CORE . '/config/file_types.php';
+
+$theme_paths = $config->get('app.theme_paths');
+foreach ($theme_paths as $route => $theme) {
+    Route::setThemeByRoute($route, $theme);
+}
+
+$routes = $config->get('app.routes');
+
+foreach ($routes as $route => $route_settings) {
+    array_unshift($route_settings, $route);
+    call_user_func_array(array('Route', 'register'), $route_settings);
+}
+
+$type_list = TypeList::getInstance();
+$file_types = $config->get('app.file_types');
+foreach ($file_types as $type_name => $type_settings) {
+    array_splice($type_settings, 1, 0, $type_name);
+
+    call_user_func_array(array($type_list, 'define'), $type_settings);
+}
+
+$importer_attributes = $config->get('app.importer_attributes');
+foreach ($importer_attributes as $attribute_name => $attribute_settings) {
+    array_unshift($attribute_settings, $attribute_name);
+    call_user_func_array(array($type_list, 'defineImporterAttribute'), $attribute_settings);
+}
+
 
 /**
  * ----------------------------------------------------------------------------
