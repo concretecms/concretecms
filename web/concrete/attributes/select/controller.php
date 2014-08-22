@@ -326,7 +326,7 @@ class Controller extends AttributeTypeController  {
 		$i = 0;
 		foreach($optionQuery as $val) {
 			$val = $db->quote('%||' . $val . '||%');
-			$multiString .= 'REPLACE(' . $tbl . '.ak_' . $this->attributeKey->getAttributeKeyHandle() . ', "\n", "||") like ' . $val . ' ';
+			$multiString .= 'REPLACE(ak_' . $this->attributeKey->getAttributeKeyHandle() . ', "\n", "||") like ' . $val . ' ';
 			if (($i + 1) < count($optionQuery)) {
 				$multiString .= 'OR ';
 			}

@@ -92,7 +92,7 @@ $db = Loader::db();
             <tbody>
 
             <?php
-            foreach ($surveys as $id => $survey) {
+            foreach ($surveys as $qsid => $survey) {
                 $block = Block::getByID(intval($survey['bID'], 10));
                 if (!is_object($block)) {
                     continue;
@@ -123,7 +123,7 @@ $db = Loader::db();
                                    class="btn btn-default btn-sm">
                                     <?= t('View Responses') ?>
                                 </a>
-                                <a class="btn btn-default btn-sm" href="url">
+                                <a class="btn btn-default btn-sm" href="<?=$url?>">
                                     <?= t('Open Page') ?>
                                 </a>
                                 <button class="btn btn-danger btn-sm delete-form-answers"

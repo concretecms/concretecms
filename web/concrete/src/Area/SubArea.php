@@ -74,7 +74,7 @@ class SubArea extends Area {
 		$db = Loader::db();
 		$blocks = $this->getAreaBlocksArray();
 		foreach($blocks as $b) {
-			$bp = new Permissions($b);
+			$bp = new \Permissions($b);
 			if ($bp->canDeleteBlock()) {
 				$b->deleteBlock();
 			}
