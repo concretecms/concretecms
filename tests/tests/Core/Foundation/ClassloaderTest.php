@@ -1,6 +1,7 @@
 <?php
 
 namespace Concrete\Tests\Core\Foundation;
+use Concrete\Core\Foundation\ClassLoader;
 use Loader;
 use Core;
 use Environment;
@@ -115,6 +116,28 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue($class == '\Application\Block\CoreAreaLayout\Controller');
 		$this->assertTrue($classExists);
 	}
+
+    public function testPackageSrcFiles() {
+        $env = Environment::get();
+        $env->clearOverrideCache();
+
+        $package = new \Package();
+        $package->pkgHandle = 'testing';
+        $loader = ClassLoader::getInstance();
+        $loader->registerPackage($package);
+
+        $root = dirname(DIR_BASE_CORE . '../');
+        @mkdir($root . '/packages/testing/src/', 0777, true);
+        @copy(dirname(__FILE__) . '/fixtures/RouteHelper.php', $root . '/packages/testing/src/RouteHelper.php');
+
+        $class = new \Concrete\Package\Testing\RouteHelper();
+        $this->assertInstanceOf('\Concrete\Package\Testing\RouteHelper', $class);
+
+        @unlink($root . '/packages/testing/src/RouteHelper.php');
+        @rmdir($root . '/packages/testing/src');
+        @rmdir($root . '/packages/testing');
+
+    }
 
 
 	public function testLegacyHelpers() {

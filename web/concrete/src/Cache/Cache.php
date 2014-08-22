@@ -128,7 +128,7 @@ class Cache {
 	public function delete($type, $id){
 		$cache = Cache::getLibrary();
 		if ($cache) {
-			$cache->remove(Cache::key($type, $id));
+			$cache->remove(\Cache::key($type, $id));
 		}
 
 		$loc = ConcreteCacheLocal::get();
