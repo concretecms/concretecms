@@ -3,12 +3,15 @@
 /**
  * Install
  */
-Route::register('/install', '\Concrete\Controller\Install::view');
-Route::register('/install/select_language', '\Concrete\Controller\Install::select_language');
-Route::register('/install/setup', '\Concrete\Controller\Install::setup');
-Route::register('/install/test_url/{num1}/{num2}', '\Concrete\Controller\Install::test_url');
-Route::register('/install/configure', '\Concrete\Controller\Install::configure');
-Route::register('/install/run_routine/{pkgHandle}/{routine}', '\Concrete\Controller\Install::run_routine');
+if(!defined('CONFIG_FILE_EXISTS') || !CONFIG_FILE_EXISTS) {
+    Route::register('/install', '\Concrete\Controller\Install::view');
+    Route::register('/install/select_language', '\Concrete\Controller\Install::select_language');
+    Route::register('/install/setup', '\Concrete\Controller\Install::setup');
+    Route::register('/install/test_url/{num1}/{num2}', '\Concrete\Controller\Install::test_url');
+    Route::register('/install/configure', '\Concrete\Controller\Install::configure');
+    Route::register('/install/run_routine/{pkgHandle}/{routine}', '\Concrete\Controller\Install::run_routine');
+}
+
 
 /**
  * Tools - legacy
