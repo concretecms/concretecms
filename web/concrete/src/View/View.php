@@ -17,12 +17,17 @@ class View extends AbstractView {
     protected $themeObject;
     protected $themeRelativePath;
     protected $themeAbsolutePath;
-    protected $themePkgHandle;
+    protected $pkgHandle;
     protected $viewRootDirectoryName = DIRNAME_VIEWS;
 
     protected function constructView($path = false) {
         $path = '/' . trim($path, '/');
         $this->viewPath = $path;
+    }
+
+    public function setPackageHandle($pkgHandle)
+    {
+        $this->pkgHandle = $pkgHandle;
     }
 
     public function getThemeDirectory() {return $this->themeAbsolutePath;}
@@ -47,7 +52,7 @@ class View extends AbstractView {
         extract($args);
         extract($this->getScopeItems());
         $env = Environment::get();
-        include($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $file, $this->themePkgHandle));
+        include($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $file, $this->pkgHandle));
     }
 
     /**
@@ -81,11 +86,11 @@ class View extends AbstractView {
             if ($this->themeHandle != VIEW_CORE_THEME && $this->themeHandle != 'dashboard') {
                 if (!isset($this->themeObject)) {
                     $this->themeObject = PageTheme::getByHandle($this->themeHandle);
-                    $this->themePkgHandle = $this->themeObject->getPackageHandle();
+                    $this->pkgHandle = $this->themeObject->getPackageHandle();
                 }
             }
-            $this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle, $this->themePkgHandle);
-            $this->themeRelativePath = $env->getURL(DIRNAME_THEMES . '/' . $this->themeHandle, $this->themePkgHandle);
+            $this->themeAbsolutePath = $env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle, $this->pkgHandle);
+            $this->themeRelativePath = $env->getURL(DIRNAME_THEMES . '/' . $this->themeHandle, $this->pkgHandle);
         }
     }
 
@@ -101,13 +106,13 @@ class View extends AbstractView {
         $this->loadViewThemeObject();
         $env = Environment::get();
         if (!$this->innerContentFile) { // will already be set in a legacy tools file
-	        $this->setInnerContentFile($env->getPath($this->viewRootDirectoryName . '/' . trim($this->viewPath, '/') . '.php', $this->themePkgHandle));
+	        $this->setInnerContentFile($env->getPath($this->viewRootDirectoryName . '/' . trim($this->viewPath, '/') . '.php', $this->pkgHandle));
         }
         if ($this->themeHandle) {
             if (file_exists(DIR_FILES_THEMES_CORE . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php')) {
                 $this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . DIRNAME_THEMES_CORE . '/' . $this->themeHandle . '.php'));
             } else {
-                $this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $this->themePkgHandle));
+                $this->setViewTemplate($env->getPath(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW, $this->pkgHandle));
             }
         }
     }

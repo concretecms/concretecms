@@ -141,6 +141,7 @@ class DispatcherRouteCallback extends RouteCallback {
         $requestTask = $controller->getRequestAction();
 		$requestParameters = $controller->getRequestActionParameters();
 		$controller->runAction($requestTask, $requestParameters);
+
 		$c->setController($controller);
 		$view = $controller->getViewObject();
 		// we update the current page with the one bound to this controller.

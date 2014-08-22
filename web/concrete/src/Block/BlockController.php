@@ -46,6 +46,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btExportPageTypeColumns = array();
     protected $btExportPageFeedColumns = array();
     protected $btWrapperClass = '';
+    protected $btDefaultSet;
     protected $btFeatures = array();
     protected $btFeatureObjects;
     protected $identifier;
@@ -161,6 +162,11 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     public function getPermissionsObject()
     {
         return $this->getPermissionObject();
+    }
+
+    public function getBlockTypeDefaultSet()
+    {
+        return $this->btDefaultSet;
     }
 
     /**

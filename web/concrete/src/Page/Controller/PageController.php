@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Core\Page\Controller;
+use Concrete\Core\Block\Block;
+use Concrete\Core\Block\BlockController;
 use Page;
 use Request;
 use Loader;
@@ -10,7 +12,7 @@ class PageController extends Controller {
 
     protected $supportsPageCache = false;
     protected $action;
-
+    protected $passThruBlocks = array();
     protected $parameters = array();
 
     public function supportsPageCache() {
@@ -144,6 +146,16 @@ class PageController extends Controller {
         return $valid;
     }
 
+    protected function setPassThruBlockController(Block $b, BlockController $controller)
+    {
+        $this->passThruBlocks[$b->getBlockID()] = $controller;
+    }
+
+    public function getPassThruBlockController(Block $b)
+    {
+        return $this->passThruBlocks[$b->getBlockID()];
+    }
+
     public function validateRequest() {
 
         $valid = true;
@@ -156,13 +168,21 @@ class PageController extends Controller {
                 $controller = $b->getController();
                 list($method, $parameters) = $controller->getPassThruActionAndParameters($this->parameters);
                 if ($controller->isValidControllerTask($method, $parameters)) {
-                    $this->action = 'passthru';
+                    $controller->on_start();
+                    $controller->runAction($method, $parameters);
+
+                    // old school blocks have already terminated at this point. They are redirecting
+                    // or exiting. But new blocks like topics, etc... can actually rely on their $set
+                    // data persisting and being passed into the view.
+
+                    // so if we make it down here we have to return true –so that we don't fire a 404.
                     $valid = true;
-                    break;
+
+                    // then, we need to save the persisted data that may have been set.
+                    $this->setPassThruBlockController($b, $controller);
                 }
             }
         }
-
         return $valid;
     }
 }

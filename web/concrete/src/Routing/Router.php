@@ -79,6 +79,34 @@ class Router {
 		return false;
 	}
 
+    public function route($data)
+    {
+        if (is_array($data)) {
+            $path = $data[0];
+            $pkg = $data[1];
+        } else {
+            $path = $data;
+        }
 
+        $path = trim($path, '/');
+        $pkgHandle = null;
+        if ($pkg) {
+            if (is_object($pkg)) {
+                $pkgHandle = $pkg->getPackageHandle();
+            } else {
+                $pkgHandle = $pkg;
+            }
+        }
+
+        $route = '/ccm';
+        if ($pkgHandle) {
+            $route .= "/{$pkgHandle}";
+        } else {
+            $route .= '/system';
+        }
+
+        $route .= "/{$path}";
+        return $route;
+    }
 
 }
