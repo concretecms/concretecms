@@ -9,7 +9,10 @@ use View;
  */
 class Loader {
 
-	public static function db() {
+    /**
+     * @return \Concrete\Core\Database\Connection
+     */
+    public static function db() {
 		return Database::getActiveConnection();
 	}
 
