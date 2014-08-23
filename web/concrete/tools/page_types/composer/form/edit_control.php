@@ -25,6 +25,7 @@ if ($cp->canViewPage()) {
 	if ($_POST['task'] == 'edit' && Loader::helper('validation/token')->validate('update_set_control')) {
 		$control->updateFormLayoutSetControlCustomLabel($_POST['ptComposerFormLayoutSetControlCustomLabel']);
 		$control->updateFormLayoutSetControlCustomTemplate($_POST['ptComposerFormLayoutSetControlCustomTemplate']);
+		$control->updateFormLayoutSetControlDescription($_POST['ptComposerFormLayoutSetControlDescription']);
 		if ($object->pageTypeComposerFormControlSupportsValidation()) {
 			$control->updateFormLayoutSetControlRequired($_POST['ptComposerFormLayoutSetControlRequired']);
 		}
@@ -46,6 +47,12 @@ if ($cp->canViewPage()) {
 			<?=$form->label('ptComposerFormLayoutSetControlCustomTemplate', t('Custom Template'))?>
 			<div class="controls">
 				<?=$form->select('ptComposerFormLayoutSetControlCustomTemplate', $templates, $control->getPageTypeComposerFormLayoutSetControlCustomTemplate())?>
+			</div>
+		</div>
+		<div class="form-group">
+			<?=$form->label('ptComposerFormLayoutSetControlDescription', t('Description'))?>
+			<div class="controls">
+				<?=$form->text('ptComposerFormLayoutSetControlDescription', $control->getPageTypeComposerFormLayoutSetControlDescription())?>
 			</div>
 		</div>
 
