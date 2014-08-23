@@ -23,11 +23,16 @@ foreach($customTemplates as $template) {
 if ($cp->canViewPage()) { 
 
 	if ($_POST['task'] == 'edit' && Loader::helper('validation/token')->validate('update_set_control')) {
-		$control->updateFormLayoutSetControlCustomLabel($_POST['ptComposerFormLayoutSetControlCustomLabel']);
-		$control->updateFormLayoutSetControlCustomTemplate($_POST['ptComposerFormLayoutSetControlCustomTemplate']);
-		$control->updateFormLayoutSetControlDescription($_POST['ptComposerFormLayoutSetControlDescription']);
+		$sec = Loader::helper('security');
+		$label = $sec->sanitizeString($_POST['ptComposerFormLayoutSetControlCustomLabel']);
+		$template = $sec->sanitizeString($_POST['ptComposerFormLayoutSetControlCustomTemplate']);
+		$description = $sec->sanitizeString($_POST['ptComposerFormLayoutSetControlDescription']);
+		$required = $sec->sanitizeInt($_POST['ptComposerFormLayoutSetControlRequired']);
+		$control->updateFormLayoutSetControlCustomLabel($label);
+		$control->updateFormLayoutSetControlCustomTemplate($template);
+		$control->updateFormLayoutSetControlDescription($description);
 		if ($object->pageTypeComposerFormControlSupportsValidation()) {
-			$control->updateFormLayoutSetControlRequired($_POST['ptComposerFormLayoutSetControlRequired']);
+			$control->updateFormLayoutSetControlRequired($required);
 		}
 		Loader::element('page_types/composer/form/layout_set/control', array('control' => $control));
 		exit;
