@@ -445,6 +445,10 @@ return array(
             array('css', 'css/font-awesome.css', array('minify' => false))
         ),
 
+        'core/events' => array(
+            array('javascript', 'js/events.js', array('minity' => false))
+        ),
+
         'core/style-customizer' => array(
             array('javascript', 'js/style-customizer.js', array('minify' => false)),
             array('css', 'css/style-customizer.css', array('minify' => false))
@@ -623,6 +627,242 @@ return array(
         'core/account' => array(
             array('javascript', 'js/accounts.js'),
             array('css', 'css/account.css')
+        )
+    ),
+
+    'asset_groups' => array(
+
+        'jquery/ui' => array(
+            array(
+                array('javascript', 'jquery/ui'),
+                array('css', 'jquery/ui'),
+            )
+        ),
+
+        'jquery/rating' => array(
+            array(
+                array('javascript', 'jquery/metadata'),
+                array('javascript', 'jquery/rating'),
+                array('css', 'jquery/rating')
+            )
+        ),
+
+        'core/colorpicker' => array(
+            array(
+                array('javascript', 'jquery'),
+                array('javascript', 'core/events'),
+                array('javascript', 'spectrum'),
+                array('css', 'spectrum')
+            )
+        ),
+
+        'font-awesome' => array(
+            array(
+                array('css', 'font-awesome')
+            )
+        ),
+
+        'core/style-customizer' => array(
+            array(
+                array('javascript', 'jquery'),
+                array('javascript', 'jquery/ui'),
+                array('javascript', 'core/events'),
+                array('javascript', 'underscore'),
+                array('javascript', 'core/colorpicker'),
+                array('javascript', 'core/app'),
+                array('javascript', 'core/file-manager'),
+                array('javascript', 'core/style-customizer'),
+                array('css', 'core/app'),
+                array('css', 'core/file-manager'),
+                array('css', 'jquery/ui'),
+                array('css', 'core/colorpicker'),
+                array('css', 'core/style-customizer')
+            )
+        ),
+
+        'jquery/fileupload' => array(
+            array(
+                array('javascript', 'jquery/fileupload')
+            )
+        ),
+
+        'swfobject' => array(
+            array(
+                array('javascript', 'swfobject')
+            )
+        ),
+
+        'redactor' => array(
+            array(
+                array('javascript', 'redactor'),
+                array('javascript', 'redactor_locale'),
+                array('css', 'redactor'),
+                array('css', 'font-awesome')
+            )
+        ),
+
+        'dynatree' => array(
+            array(
+                array('javascript', 'dynatree'),
+                array('javascript', 'dynatree_locale'),
+                array('css', 'dynatree')
+            )
+        ),
+
+        'core/app' => array(
+            array(
+                array('javascript', 'jquery'),
+                array('javascript', 'core/events'),
+                array('javascript', 'underscore'),
+                array('javascript', 'bootstrap/dropdown'),
+                array('javascript', 'bootstrap/tooltip'),
+                array('javascript', 'bootstrap/popover'),
+                array('javascript', 'jquery/ui'),
+                array('javascript', 'core/app'),
+                array('css', 'core/app'),
+                array('css', 'font-awesome'),
+                array('css', 'jquery/ui')
+            )
+        ),
+
+        'core/app/editable-fields' => array(
+            array(
+                array('javascript', 'jquery'),
+                array('javascript', 'bootstrap/dropdown'),
+                array('javascript', 'bootstrap/tooltip'),
+                array('javascript', 'bootstrap/popover'),
+                array('javascript', 'jquery/ui'),
+                array('javascript', 'core/events'),
+                array('javascript', 'underscore'),
+                array('javascript', 'core/app'),
+                array('javascript', 'bootstrap-editable'),
+                array('css', 'core/app/editable-fields'),
+                array('javascript', 'jquery/fileupload')
+            )
+        ),
+
+        'core/imageeditor' => array(
+            array(
+                array('javascript', 'kinetic'),
+                array('javascript', 'core/imageeditor_locale'),
+                array('javascript', 'core/imageeditor'),
+                array('css', 'core/imageeditor')
+            )
+        ),
+
+        'dashboard' => array(
+            array(
+                array('javascript', 'jquery'),
+                array('javascript', 'jquery/ui'),
+                array('javascript', 'underscore'),
+                array('javascript', 'dashboard'),
+                array('javascript', 'core/events'),
+                array('javascript', 'bootstrap/dropdown'),
+                array('javascript', 'bootstrap/tooltip'),
+                array('javascript', 'bootstrap/popover'),
+                array('javascript', 'bootstrap/transition'),
+                array('javascript', 'bootstrap/alert'),
+                array('javascript', 'core/app'),
+                array('javascript', 'redactor'),
+                array('css', 'core/app'),
+                array('css', 'redactor'),
+                array('css', 'jquery/ui'),
+                array('css', 'font-awesome')
+            )
+        ),
+
+        'core/file-manager' => array(
+            array(
+                array('css', 'core/app'),
+                array('css', 'core/file-manager'),
+                array('javascript', 'core/events'),
+                array('javascript', 'underscore'),
+                array('javascript', 'jquery/ui'),
+                array('javascript', 'core/app'),
+                array('javascript', 'core/file-manager')
+            )
+        ),
+
+        'core/sitemap' => array(
+            array(
+                array('javascript', 'core/events'),
+                array('javascript', 'underscore'),
+                array('javascript', 'jquery/ui'),
+                array('javascript', 'dynatree'),
+                array('javascript', 'dynatree_locale'),
+                array('javascript', 'core/app'),
+                array('javascript', 'core/sitemap'),
+                array('css', 'dynatree'),
+                array('css', 'core/sitemap')
+            )
+        ),
+
+        'core/topics' => array(
+            array(
+                array('javascript', 'core/events'),
+                array('javascript', 'jquery/ui'),
+                array('javascript', 'dynatree'),
+                array('javascript', 'dynatree_locale'),
+                array('javascript', 'core/topics'),
+                array('css', 'dynatree'),
+                array('css', 'core/topics')
+            )
+        ),
+
+        'core/groups' => array(
+            array(
+                array('javascript', 'core/events'),
+                array('javascript', 'underscore'),
+                array('javascript', 'jquery/ui'),
+                array('javascript', 'dynatree'),
+                array('javascript', 'dynatree_locale'),
+                array('javascript', 'core/groups'),
+                array('css', 'dynatree')
+            )
+        ),
+
+        'core/gathering' => array(
+            array(
+                array('javascript', 'core/gathering'),
+                array('javascript', 'redactor'),
+                array('css', 'core/gathering/base'),
+                array('css', 'core/conversation'),
+                array('css', 'core/gathering/display'),
+                array('css', 'redactor')
+            )
+        ),
+
+        'core/conversation' => array(
+            array(
+                array('javascript', 'jquery'),
+                array('javascript', 'underscore'),
+                array('javascript', 'dropzone'),
+                array('javascript', 'bootstrap/dropdown'),
+                array('javascript', 'core/events'),
+                array('javascript', 'core/conversation'),
+                array('css', 'core/conversation'),
+                array('css', 'font-awesome'),
+                array('css', 'bootstrap/dropdown')
+            ),
+            true
+        ),
+
+        'core/lightbox' => array(
+            array(
+                array('javascript', 'jquery'),
+                array('javascript', 'core/lightbox'),
+                array('javascript', 'core/lightbox/launcher'),
+                array('css', 'core/lightbox')
+            )
+        ),
+
+        'core/account' => array(
+            array(
+                array('javascript', 'core/account'),
+                array('javascript', 'bootstrap/dropdown'),
+                array('css', 'bootstrap/dropdown'),
+                array('css', 'core/account')
+            )
         )
     )
 );
