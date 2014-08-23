@@ -107,10 +107,11 @@ foreach ($assets as $asset_handle => $asset_types) {
     }
 }
 
-/**
- * @todo Remove this when assets are ported to new config
- */
-require DIR_BASE_CORE . '/config/assets.php';
+$asset_groups = $config->get('app.asset_groups', array());
+foreach ($asset_groups as $group_handle => $group_setting) {
+    array_unshift($group_setting, $group_handle);
+    call_user_func_array(array($asset_list, 'registerGroup'), $group_setting);
+}
 
 $theme_paths = $config->get('app.theme_paths');
 foreach ($theme_paths as $route => $theme) {
