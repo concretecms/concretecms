@@ -378,6 +378,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
                         $required = (string)$controlnode['required'];
                         $customTemplate = (string)$controlnode['custom-template'];
                         $label = (string)$controlnode['custom-label'];
+                        $description = (string)$controlnode['description'];
                         $outputControlID = (string)$controlnode['output-control-id'];
                         if ($required == '1') {
                             $setcontrol->updateFormLayoutSetControlRequired(true);
@@ -389,6 +390,9 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
                         }
                         if ($label) {
                             $setcontrol->updateFormLayoutSetControlCustomLabel($label);
+                        }
+                        if ($description) {
+                            $setcontrol->updateFormLayoutSetControlDescription($description);
                         }
                         if ($outputControlID) {
                             ContentImporter::addPageTypeComposerOutputControlID($setcontrol, $outputControlID);

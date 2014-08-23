@@ -18,6 +18,7 @@ class FormLayoutSetControl extends Object {
 	public function getPageTypeComposerFormLayoutSetObject() {return PageTypeComposerFormLayoutSet::getByID($this->ptComposerFormLayoutSetID);}
 	public function getPageTypeComposerFormLayoutSetControlCustomLabel() {return $this->ptComposerFormLayoutSetControlCustomLabel;}
 	public function getPageTypeComposerFormLayoutSetControlCustomTemplate() {return $this->ptComposerFormLayoutSetControlCustomTemplate;}
+	public function getPageTypeComposerFormLayoutSetControlDescription() {return $this->ptComposerFormLayoutSetControlDescription;}
 	public function isPageTypeComposerFormLayoutSetControlRequired() {return $this->ptComposerFormLayoutSetControlRequired;}
 
 	public function setPageObject($page) {
@@ -28,7 +29,7 @@ class FormLayoutSetControl extends Object {
 		$control = $this->getPageTypeComposerControlObject();
 		$control->setPageTypeComposerFormLayoutSetControlObject($this);
 		$control->setPageObject($this->page);
-		$control->render($this->getPageTypeComposerControlLabel(), $this->getPageTypeComposerFormLayoutSetControlCustomTemplate());
+		$control->render($this->getPageTypeComposerControlLabel(), $this->getPageTypeComposerFormLayoutSetControlCustomTemplate(), $this->getPageTypeComposerFormLayoutSetControlDescription());
 	}
 
 
@@ -60,6 +61,7 @@ class FormLayoutSetControl extends Object {
 			$node->addAttribute('required', true);
 		}
 		$node->addAttribute('custom-label', $this->getPageTypeComposerFormLayoutSetControlCustomLabel());
+		$node->addAttribute('description', $this->getPageTypeComposerFormLayoutSetControlDescription());
 		$db = Loader::db();
 		$cnt = $db->GetOne('select count(*) from PageTypeComposerOutputControls where ptComposerFormLayoutSetControlID = ?', array($this->ptComposerFormLayoutSetControlID));
 		if ($cnt > 0) {
@@ -130,6 +132,14 @@ class FormLayoutSetControl extends Object {
 			$template, $this->ptComposerFormLayoutSetControlID
 		));
 		$this->ptComposerFormLayoutSetControlCustomTemplate = $template;
+	}
+
+	public function updateFormLayoutSetControlDescription($description) {
+		$db = Loader::db();
+		$db->Execute('update PageTypeComposerFormLayoutSetControls set ptComposerFormLayoutSetControlDescription = ? where ptComposerFormLayoutSetControlID = ?', array(
+			$description, $this->ptComposerFormLayoutSetControlID
+		));
+		$this->ptComposerFormLayoutSetControlDescription = $description;
 	}
 
 	public function getPageTypeComposerOutputControlObject(PageTemplate $pt) {
