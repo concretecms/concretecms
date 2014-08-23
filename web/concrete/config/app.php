@@ -406,13 +406,223 @@ return array(
             array(
                 'javascript',
                 'js/jquery.js',
-                array('position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false))
+                array('position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false)
+            )
         ),
 
         'jquery/ui' => array(
             array('javascript', 'js/jquery-ui.js', array('minify' => false, 'combine' => false)),
             array('css', 'css/jquery-ui.css', array('minify' => false))
-        )
+        ),
 
+        'underscore' => array(
+            array('javascript', 'js/underscore.js', array('minify' => false))
+        ),
+
+        'dropzone' => array(
+            array('javascript', 'js/dropzone.js')
+        ),
+
+        'jquery/form' => array(
+            array('javascript', 'js/jquery-form.js')
+        ),
+
+        'picturefill' => array(
+            array('javascript', 'js/picturefill.js', array('minify' => false))
+        ),
+
+        'jquery/rating' => array(
+            array('javascript', 'js/jquery.rating.js'),
+            array('css', 'css/jquery-rating.css')
+        ),
+
+        'spectrum' => array(
+            array('javascript', 'js/spectrum.js', array('minify' => false)),
+            array('css', 'css/spectrum.css', array('minify' => false))
+        ),
+
+        'font-awesome' => array(
+            array('css', 'css/font-awesome.css', array('minify' => false))
+        ),
+
+        'core/style-customizer' => array(
+            array('javascript', 'js/style-customizer.js', array('minify' => false)),
+            array('css', 'css/style-customizer.css', array('minify' => false))
+        ),
+
+        'jquery/fileupload' => array(
+            array('javascript', 'js/jquery-fileupload.js')
+        ),
+
+        'swfobject' => array(
+            array('javascript', 'js/swfobject.js')
+        ),
+
+        'redactor' => array(
+            array('javascript', 'js/redactor.js', array('minify' => false)),
+            array('css', 'css/redactor.css')
+        ),
+
+        'redactor_locale' => array(
+            array('javascript',
+                REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_redactor_js',
+                array('combine' => false, 'minify' => false, 'local' => false)
+            )
+        ),
+
+        'ace' => array(
+            array('javascript', 'js/ace/ace.js', array('minify' => false))
+        ),
+
+        'backstretch' => array(
+            array('javascript', 'js/backstretch.js')
+        ),
+
+        'dynatree' => array(
+            array('javascript', 'js/dynatree.js', array('minify' => false)),
+            array('css', 'css/dynatree.css', array('minify' => false))
+        ),
+
+        'dynatree_locale' => array(
+            array(
+                'javascript',
+                REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_dynatree_js',
+                array('combine' => false, 'minify' => false, 'local' => false)
+            )
+        ),
+
+        'bootstrap/dropdown' => array(
+            array('javascript', 'js/bootstrap/dropdown.js'),
+            array('css', 'css/app.css', array('minify' => false))
+        ),
+
+        'bootstrap/tooltip' => array(
+            array('javascript', 'js/bootstrap/tooltip.js'),
+            array('css', 'css/app.css', array('minify' => false))
+        ),
+
+        'bootstrap/popover' => array(
+            array('javascript', 'js/bootstrap/popover.js'),
+            array('css', 'css/app.css', array('minify' => false))
+        ),
+
+        'bootstrap/alert' => array(
+            array('javascript', 'js/bootstrap/alert.js'),
+            array('css', 'css/app.css', array('minify' => false))
+        ),
+
+        'bootstrap/button' => array(
+            array('javascript', 'js/bootstrap/button.js'),
+            array('css', 'css/app.css', array('minify' => false))
+        ),
+
+        'bootstrap/transition' => array(
+            array('javascript', 'js/bootstrap/transition.js'),
+            array('css', 'css/app.css', array('minify' => false))
+        ),
+
+        'bootstrap' => array(
+            array('css', 'css/app.css', array('minify' => false))
+        ),
+
+        'core/app' => array(
+            array('javascript', 'js/app.js', array('minify' => false, 'combine' => false)),
+            array('css', 'css/app.css', array('minify' => false))
+        ),
+
+        'bootstrap-editable' => array(
+            array('javascript', 'js/bootstrap-editable.js', array('minify' => false)),
+        ),
+
+        'core/app/editable-fields' => array(
+            array('css', 'css/editable-fields.css', array('minify' => false))
+        ),
+
+        'kinetic' => array(
+            array('javascript', 'js/kinetic.js')
+        ),
+
+        'core/imageeditor' => array(
+            array('javascript', 'js/image-editor.js'),
+            array('css', 'css/image-editor.css')
+        ),
+
+        'core/imageeditor_locale' => array(
+            array(
+                'javascript',
+                REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_imageeditor_js',
+                array(
+                    'combine' => false,
+                    'minify' => false,
+                    'local' => false
+                )
+            )
+        ),
+
+        'dashboard' => array(
+            array('javascript', 'js/dashboard.js')
+        ),
+
+        'core/frontend/captcha' => array(
+            array('css', 'css/frontend/captcha.css')
+        ),
+
+        'core/frontend/pagination' => array(
+            array('css', 'css/frontend/pagination.css')
+        ),
+
+        'core/frontend/errors' => array(
+            array('css', 'css/frontend/errors.css')
+        ),
+
+        'core/file-manager' => array(
+            array('javascript', 'js/file-manager.js', array('minify' => false)),
+            array('css', 'css/file-manager.css', array('minify' => false))
+        ),
+
+        'core/sitemap' => array(
+            array('javascript', 'js/sitemap.js', array('minify' => false)),
+            array('css', 'css/sitemap.css', array('minify' => false))
+        ),
+
+        'core/topics' => array(
+            array('javascript', 'js/topics.js', array('minify' => false)),
+            array('css', 'css/topics.css', array('minify' => false))
+        ),
+
+        'core/groups' => array(
+            array('javascript', 'js/groups.js', array('minify' => false))
+        ),
+
+        'core/gathering' => array(
+            array('javascript', 'js/gathering.js')
+        ),
+
+        'core/gathering/display' => array(
+            array('css', 'css/gathering/display.css'),
+        ),
+
+        'core/gathering/base' => array(
+            array('css', 'css/gathering/base.css'),
+        ),
+
+        'core/conversation' => array(
+            array('javascript', 'js/conversations.js'),
+            array('css', 'css/conversations.css')
+        ),
+
+        'core/lightbox' => array(
+            array('javascript', 'js/jquery-magnific-popup.js'),
+            array('css', 'css/jquery-magnific-popup.css')
+        ),
+
+        'core/lightbox/launcher' => array(
+            array('javascript', 'js/lightbox.js')
+        ),
+
+        'core/account' => array(
+            array('javascript', 'js/accounts.js'),
+            array('css', 'css/account.css')
+        )
     )
 );
