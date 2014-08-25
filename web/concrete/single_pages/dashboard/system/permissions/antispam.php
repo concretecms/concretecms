@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");?>
 <form method="post" id="site-form" action="<?=$view->action('update_library')?>">
     <div class="form-group">
-		<label for='group_id'>Spam Whitelist Group</label>
+		<label for='group_id'><?=t('Spam Whitelist Group')?></label>
 		<?=$form->select('group_id', (array)$groups, $whitelistGroup);?>
     </div>
 	<?=$this->controller->token->output('update_library')?>
