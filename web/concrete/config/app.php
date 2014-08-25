@@ -446,7 +446,7 @@ return array(
         ),
 
         'core/events' => array(
-            array('javascript', 'js/events.js', array('minity' => false))
+            array('javascript', 'js/events.js', array('minify' => false))
         ),
 
         'core/style-customizer' => array(
