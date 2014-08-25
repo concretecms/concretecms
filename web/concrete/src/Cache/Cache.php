@@ -126,7 +126,7 @@ class Cache {
 	 * Removes an item from the cache
 	 */	
 	public function delete($type, $id){
-		$cache = Cache::getLibrary();
+		$cache = \Cache::getLibrary();
 		if ($cache) {
 			$cache->remove(\Cache::key($type, $id));
 		}
