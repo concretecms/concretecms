@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "49fef53d2961c5070d07aa7e75305ca0",
+    "hash": "664470a7a39c3e8900244239579b3511",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -1291,12 +1291,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "9b42a1aec56011c2ac4d75c0ddad0794762344fc"
+                "reference": "7aa2b88c702251949940e25018b01e15fb4ed59d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/9b42a1aec56011c2ac4d75c0ddad0794762344fc",
-                "reference": "9b42a1aec56011c2ac4d75c0ddad0794762344fc",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/7aa2b88c702251949940e25018b01e15fb4ed59d",
+                "reference": "7aa2b88c702251949940e25018b01e15fb4ed59d",
                 "shasum": ""
             },
             "require": {
@@ -1329,7 +1329,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2014-07-18 03:44:47"
+            "time": "2014-08-25 03:40:56"
         },
         {
             "name": "oyejorge/less.php",
@@ -1598,22 +1598,24 @@
             "time": "2012-12-21 11:40:51"
         },
         {
-            "name": "punic/calendar",
+            "name": "punic/punic",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/punic/calendar.git",
-                "reference": "1547667d3a2f9c356556445c82330d1e7f8d8995"
+                "url": "https://github.com/punic/punic.git",
+                "reference": "e43fd0fde052ea3670de36da01aae067a3cdcef5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punic/calendar/zipball/1547667d3a2f9c356556445c82330d1e7f8d8995",
-                "reference": "1547667d3a2f9c356556445c82330d1e7f8d8995",
+                "url": "https://api.github.com/repos/punic/punic/zipball/e43fd0fde052ea3670de36da01aae067a3cdcef5",
+                "reference": "e43fd0fde052ea3670de36da01aae067a3cdcef5",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3",
-                "punic/common": "self.version"
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "satooshi/php-coveralls": "dev-master"
             },
             "type": "library",
             "autoload": {
@@ -1628,11 +1630,17 @@
             "authors": [
                 {
                     "name": "Michele Locati",
-                    "email": "mlocati@gmail.com"
+                    "email": "mlocati@gmail.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Remo Laubacher",
+                    "email": "remo.laubacher@gmail.com",
+                    "role": "Collaborator, motivator and perfectionist supporter"
                 }
             ],
-            "description": "PHP-Unicode CLDR - Calendar and date/time",
-            "homepage": "https://github.com/punic/calendar",
+            "description": "PHP-Unicode CLDR",
+            "homepage": "https://github.com/punic/punic",
             "keywords": [
                 "calendar",
                 "cldr",
@@ -1644,55 +1652,11 @@
                 "localization",
                 "php",
                 "time",
+                "translate",
+                "translations",
                 "unicode"
             ],
-            "time": "2014-08-20 15:09:23"
-        },
-        {
-            "name": "punic/common",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/punic/common.git",
-                "reference": "1d8a5d0fd58723f361dc8ca3d1ff4b8211430bac"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/punic/common/zipball/1d8a5d0fd58723f361dc8ca3d1ff4b8211430bac",
-                "reference": "1d8a5d0fd58723f361dc8ca3d1ff4b8211430bac",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Punic\\": "code/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Michele Locati",
-                    "email": "mlocati@gmail.com"
-                }
-            ],
-            "description": "PHP-Unicode CLDR - CLDR Data",
-            "homepage": "https://github.com/punic/common",
-            "keywords": [
-                "cldr",
-                "i18n",
-                "internationalization",
-                "l10n",
-                "localization",
-                "php",
-                "unicode"
-            ],
-            "time": "2014-08-20 15:09:52"
+            "time": "2014-08-25 09:42:38"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
@@ -3069,7 +3033,7 @@
                 "zf1"
             ],
             "support": {
-                "source": "https://github.com/mlocati/zend-locale/tree/master"
+                "source": "https://github.com/mlocati/zend-locale/tree/1.12.6"
             },
             "time": "2014-08-08 13:45:44"
         },
@@ -3236,12 +3200,8 @@
             "time": "2014-05-21 15:52:59"
         }
     ],
-    "packages-dev": [
-
-    ],
-    "aliases": [
-
-    ],
+    "packages-dev": [],
+    "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
         "symfony/class-loader": 20,
@@ -3258,14 +3218,11 @@
         "primal/color": 20,
         "zendframework/zend-queue": 20,
         "nesbot/carbon": 20,
-        "punic/common": 20,
-        "punic/calendar": 20
+        "punic/punic": 20
     },
     "prefer-stable": false,
     "platform": {
         "php": ">=5.3.3"
     },
-    "platform-dev": [
-
-    ]
+    "platform-dev": []
 }
