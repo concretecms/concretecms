@@ -311,7 +311,7 @@ abstract class Editor extends Object
     protected function deactivateAll()
     {
         $db = Loader::db();
-        $db->update('ConversationEditors', array('cnvEditorIsActive' => 1), array());
+        $db->update('ConversationEditors', array('cnvEditorIsActive' => 0), array('cnvEditorIsActive' => 1));
     }
 
     /**
