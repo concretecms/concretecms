@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "49fef53d2961c5070d07aa7e75305ca0",
+    "hash": "0b9cbf2918bda98e4426d61b79d40b6c",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -147,7 +147,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -222,7 +222,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -268,7 +268,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jonathan Wage",
+                    "name": "Jonathan H. Wage",
                     "email": "jonwage@gmail.com",
                     "homepage": "http://www.jwage.com/",
                     "role": "Creator"
@@ -365,7 +365,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -496,7 +496,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -550,7 +550,7 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "https://github.com/schmittjoh",
+                    "homepage": "http://jmsyst.com",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -1603,17 +1603,21 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/punic/calendar.git",
-                "reference": "1547667d3a2f9c356556445c82330d1e7f8d8995"
+                "reference": "ea5681ea3828e3b56134563c9b0bc87b0efdb7d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punic/calendar/zipball/1547667d3a2f9c356556445c82330d1e7f8d8995",
-                "reference": "1547667d3a2f9c356556445c82330d1e7f8d8995",
+                "url": "https://api.github.com/repos/punic/calendar/zipball/ea5681ea3828e3b56134563c9b0bc87b0efdb7d0",
+                "reference": "ea5681ea3828e3b56134563c9b0bc87b0efdb7d0",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3",
                 "punic/common": "self.version"
+            },
+            "require-dev": {
+                "punic/common": "dev-master",
+                "satooshi/php-coveralls": "dev-master"
             },
             "type": "library",
             "autoload": {
@@ -1646,7 +1650,7 @@
                 "time",
                 "unicode"
             ],
-            "time": "2014-08-20 15:09:23"
+            "time": "2014-08-23 09:50:34"
         },
         {
             "name": "punic/common",
@@ -1654,12 +1658,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/punic/common.git",
-                "reference": "1d8a5d0fd58723f361dc8ca3d1ff4b8211430bac"
+                "reference": "2ccfbf64243a948566f8dcf093af106af5538bc4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punic/common/zipball/1d8a5d0fd58723f361dc8ca3d1ff4b8211430bac",
-                "reference": "1d8a5d0fd58723f361dc8ca3d1ff4b8211430bac",
+                "url": "https://api.github.com/repos/punic/common/zipball/2ccfbf64243a948566f8dcf093af106af5538bc4",
+                "reference": "2ccfbf64243a948566f8dcf093af106af5538bc4",
                 "shasum": ""
             },
             "require": {
@@ -1692,7 +1696,7 @@
                 "php",
                 "unicode"
             ],
-            "time": "2014-08-20 15:09:52"
+            "time": "2014-08-22 06:02:09"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
