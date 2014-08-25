@@ -354,11 +354,10 @@ class Date
         if (is_null($dtFrom) || is_null($dtTo)) {
             return null;
         }
-        $gmt = new \DateTimeZone('GMT');
         $utc = new \DateTimeZone('UTC');
-        $dtFrom->setTimezone($gmt);
+        $dtFrom->setTimezone($utc);
         $dtFrom = new \DateTime($dtFrom->format('Y-m-d'), $utc);
-        $dtTo->setTimezone($gmt);
+        $dtTo->setTimezone($utc);
         $dtTo = new \DateTime($dtTo->format('Y-m-d'), $utc);
         
         $seconds = $dtTo->getTimestamp() - $dtFrom->getTimestamp();
