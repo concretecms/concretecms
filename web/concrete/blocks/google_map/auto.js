@@ -22,7 +22,7 @@
             return false;
         },
         
-        setupAutocomplete: function () {$('#element').get(0)
+        setupAutocomplete: function () {
             
             var input = $("#ccm-google-map-block-location > input[id=location]").get(0),
                 autocomplete = new google.maps.places.Autocomplete(input),
