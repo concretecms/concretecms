@@ -24,23 +24,23 @@ abstract class AbstractController {
         $this->request = Request::getInstance();
     }
 
-	/** 
+	/**
 	 * Adds an item to the view's header. This item will then be automatically printed out before the <body> section of the page
 	 * @param string $item
 	 * @return void
 	 */
 
-	public function addHeaderItem($item) { 
+	public function addHeaderItem($item) {
 		$v = View::getInstance();
 		$v->addHeaderItem($item);
 	}
 
-	/** 
+	/**
 	 * Adds an item to the view's footer. This item will then be automatically printed out before the </body> section of the page
 	 * @param string $item
 	 * @return void
 	 */
-	public function addFooterItem($item) { 
+	public function addFooterItem($item) {
 		$v = View::getInstance();
 		$v->addFooterItem($item);
 	}
@@ -58,7 +58,7 @@ abstract class AbstractController {
 		foreach($this->helpers as $handle) {
 			$h = Core::make('helper/' . $handle);
 			$helpers[(str_replace('/','_',$handle))] = $h;
-		}		
+		}
 		return $helpers;
 	}
 
@@ -91,7 +91,7 @@ abstract class AbstractController {
 	public function getParameters() {
 		return $this->parameters;
 	}
-	
+
 	public function runAction($action, $parameters = array()) {
 		$this->action = $action;
 		$this->parameters = $parameters;
@@ -103,7 +103,7 @@ abstract class AbstractController {
 	public function on_start() {}
 	public function on_before_render() {}
 
-	/** 
+	/**
 	 * @deprecated
 	 */
 	public function isPost() {
@@ -116,6 +116,7 @@ abstract class AbstractController {
 		$args = func_get_args();
 		$r = call_user_func_array(array('Redirect', 'to'), $args);
 		$r->send();
+        exit;
 	}
 	public function runTask($action, $parameters) {
 		$this->runAction($action, $parameters);
