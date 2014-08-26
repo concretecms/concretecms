@@ -5,6 +5,9 @@
             "url": "https://github.com/mlocati/zend-locale"
         }
     ],
+    "config": {
+        "optimize-autoloader": true
+    },
     "require": {
         "php": ">=5.3.3",
         "doctrine/dbal": "2.4.*",
@@ -36,18 +39,13 @@
         "kertz/twitteroauth": "dev-master",
         "anahkiasen/html-object": "1.4.0",
         "primal/color": "1.0.*@dev",
-        "zf1/zend-exception": "1.12.6",
-        "zf1/zend-loader": "1.12.6",
-        "zf1/zend-validate": "1.12.6",
-        "zf1/zend-translate": "1.12.6",
         "zf1/zend-locale": "1.12.6",
-        "zf1/zend-mime": "1.12.6",
         "zendframework/zend-queue": "dev-master",
         "zendframework/zend-mail": "2.3.1",
         "zendframework/zend-cache": "2.3.1",
         "zendframework/zend-http": "2.3.1",
         "zendframework/zend-feed": "2.3.1",
-        "zendframework/zend-servicemanager": "2.3.1",
+        "zendframework/zend-i18n": "2.3.1",
         "nesbot/carbon": "dev-master",
         "egulias/email-validator": "1.2.0",
         "punic/punic": "dev-master"
