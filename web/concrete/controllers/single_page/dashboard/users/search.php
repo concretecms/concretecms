@@ -371,8 +371,6 @@ class Search extends DashboardPageController
         $obj->text = tc('Default locale', '** Default');
         $obj->value = '';
         $result = array($obj);
-
-        Zend_Locale_Data::setCache(Cache::getLibrary());
         foreach ($languages as $lang) {
             $loc = new Zend_Locale($lang);
             $obj = new stdClass();
