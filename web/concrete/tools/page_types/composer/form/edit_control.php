@@ -44,28 +44,22 @@ if ($cp->canViewPage()) {
 		<form data-edit-set-form-control="<?=$control->getPageTypeComposerFormLayoutSetControlID()?>" action="#" method="post">
 		<div class="form-group">
 			<?=$form->label('ptComposerFormLayoutSetControlCustomLabel', t('Custom Label'))?>
-			<div class="controls">
-				<?=$form->text('ptComposerFormLayoutSetControlCustomLabel', $control->getPageTypeComposerFormLayoutSetControlCustomLabel())?>
-			</div>
+			<?=$form->text('ptComposerFormLayoutSetControlCustomLabel', $control->getPageTypeComposerFormLayoutSetControlCustomLabel())?>
 		</div>
 		<div class="form-group">
 			<?=$form->label('ptComposerFormLayoutSetControlCustomTemplate', t('Custom Template'))?>
-			<div class="controls">
-				<?=$form->select('ptComposerFormLayoutSetControlCustomTemplate', $templates, $control->getPageTypeComposerFormLayoutSetControlCustomTemplate())?>
-			</div>
+			<?=$form->select('ptComposerFormLayoutSetControlCustomTemplate', $templates, $control->getPageTypeComposerFormLayoutSetControlCustomTemplate())?>
 		</div>
 		<div class="form-group">
 			<?=$form->label('ptComposerFormLayoutSetControlDescription', t('Description'))?>
-			<div class="controls">
-				<?=$form->text('ptComposerFormLayoutSetControlDescription', $control->getPageTypeComposerFormLayoutSetControlDescription())?>
-			</div>
+			<?=$form->text('ptComposerFormLayoutSetControlDescription', $control->getPageTypeComposerFormLayoutSetControlDescription())?>
 		</div>
 
 		<? if ($object->pageTypeComposerFormControlSupportsValidation()) { ?>
 		<div class="form-group">
 			<?=$form->label('ptComposerFormLayoutSetControlRequired', t('Required'))?>
-			<div class="controls">
-				<label class="checkbox"><?=$form->checkbox('ptComposerFormLayoutSetControlRequired', 1, $control->isPageTypeComposerFormLayoutSetControlRequired())?> <label><?=t('Yes, require this form element')?></label></label>
+			<div class="checkbox">
+			<label><?=$form->checkbox('ptComposerFormLayoutSetControlRequired', 1, $control->isPageTypeComposerFormLayoutSetControlRequired())?> <?=t('Yes, require this form element')?></label>
 			</div>
 		</div>
 		<? } ?>
