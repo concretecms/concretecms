@@ -1,46 +1,58 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?> 
-<style type="text/css">
-    table#googleMapBlockSetup th {font-weight: bold; text-style: normal; padding-right: 8px; white-space: nowrap; vertical-align:top ; padding-bottom:8px}
-    table#googleMapBlockSetup td{ font-size:12px; vertical-align:top; padding-bottom:8px;}
-    #ccm_googlemap_block_location.notfound { border-color: #b94a48; -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);}
-</style> 
-<div class="ccm-ui">
-    <div class="ccm-block-fields">
-        <table id="googleMapBlockSetup" width="100%" class="table"> 
-            <tr>
-                <th><? echo  t('Map Title')?>: <div class="note">(<? echo t('Optional')?>)</div></th>
-                <td><input id="ccm_googlemap_block_title" name="title" value="<? echo $mapObj->title?>" maxlength="255" type="text" style="width:80%"></td>
-            </tr>	
-            <tr>
-                <th><? echo t('Location')?>:</th>
-                <td>
-                    <input id="ccm_googlemap_block_location" name="location" value="<? echo $mapObj->location?>" maxlength="255" type="text" style="width:80%">
-                    <input id="ccm_googlemap_block_latitude" type="hidden" name="latitude" value="<? echo $mapObj->latitude;?>" />
-                    <input id="ccm_googlemap_block_longitude" type="hidden" name="longitude" value="<? echo $mapObj->longitude;?>" />
-                    <div id="ccm_googlemap_block_note" class="note"><? echo t('Start typing a location (e.g. Apple Store or 235 W 3rd, New York) then click on the correct entry on the list.')?></div>
-                    <div id="map-canvas"></div>
-                </td>
-            </tr>
-            <tr>
-                <th><? echo t('Zoom')?>:</th>
-                <td>
-                    <input id="ccm_googlemap_block_zoom" name="zoom" value="<? echo $mapObj->zoom?>" maxlength="255" type="text" style="width:80%">
-                    <div class="ccm-note"><? echo t('Enter a number from 0 to 21, with 21 being the most zoomed in.')?> </div>
-                </td>
-            </tr>	
-            <tr>
-                <th><? echo t('Map Size')?>:</th>
-                <td>                        
-                    <div style="float: left; margin-right: 20px;">      
-                        <label for="width"><? echo t('Width')?>:</label>        
-                        <input type="text" name="width" value="<? echo ($width != 0) ? $width : '100%'; ?>" style="width: 40px; position: static; margin-right: -4px;">
-                    </div>
-                    <div style="float: left; margin-right: 20px;">
-                        <label for="height"><? echo t('Height')?>:</label>              
-                        <input type="text" name="height" value="<? echo ($height != 0) ? $height : '400px'; ?>" style="width: 40px; position: static; margin-right: -4px;">
-                    </div>
-                </td>
-            </tr>	
-        </table>
+
+<div class="ccm-google-map-block-container">
+    <div class="col-xs-12">
+        <div class="form-group">
+            <? echo $form->label('title', t('Map Title (optional)'));?>
+            <? echo $form->text('title', $mapObj->title);?>
+        </div>
+
+        <div id="ccm-google-map-block-location" class="form-group">
+            <? echo $form->label('location', t('Location'));?>
+            <? echo $form->text('location', $mapObj->location);?>
+            <? echo $form->hidden('latitude', $mapObj->latitude);?>
+            <? echo $form->hidden('longitude', $mapObj->longitude);?>
+            <div id="block_note" class="note"><? echo t('Start typing a location (e.g. Apple Store or 235 W 3rd, New York) then click on the correct entry on the list.')?></div>
+            <div id="map-canvas"></div>	
+        </div>
     </div>
+
+    <div class="col-xs-4">
+        <div class="form-group">
+            <? echo $form->label('zoom', t('Zoom'));?>
+            <? 
+                $zoomArray = array();
+                for($i=0;$i<=21;$i++) {
+                    $zoomArray[$i] = $i;
+                }
+            ?>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-search-plus"></i></span>
+                <? echo $form->select('zoom', $zoomArray, $mapObj->zoom);?>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-4">	
+        <div class="form-group"> 
+            <? echo $form->label('width', t('Map Width'));?>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-arrows-h"></i></span>
+                <? if(is_null($width) || $width == 0) {$width = '100%';};?> 
+                <? echo $form->text('width', $width);?> 
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-4">
+        <div class="form-group"> 
+            <? echo $form->label('height', t('Map Height'));?>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-arrows-v"></i></span>
+                <? if(is_null($height) || $height == 0) {$height = '400px';};?>
+                <? echo $form->text('height', $height); ?>
+            </div>
+        </div>
+    </div>
+
 </div>
