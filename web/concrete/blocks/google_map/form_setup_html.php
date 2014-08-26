@@ -7,12 +7,12 @@
             <? echo $form->text('title', $mapObj->title);?>
         </div>
 
-        <div class="form-group">
+        <div id="ccm-google-map-block-location" class="form-group">
             <? echo $form->label('location', t('Location'));?>
             <? echo $form->text('location', $mapObj->location);?>
             <? echo $form->hidden('latitude', $mapObj->latitude);?>
             <? echo $form->hidden('longitude', $mapObj->longitude);?>
-            <div id="ccm_googlemap_block_note" class="note"><? echo t('Start typing a location (e.g. Apple Store or 235 W 3rd, New York) then click on the correct entry on the list.')?></div>
+            <div id="block_note" class="note"><? echo t('Start typing a location (e.g. Apple Store or 235 W 3rd, New York) then click on the correct entry on the list.')?></div>
             <div id="map-canvas"></div>	
         </div>
     </div>

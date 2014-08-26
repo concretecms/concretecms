@@ -22,12 +22,11 @@
             return false;
         },
         
-        setupAutocomplete: function () {
+        setupAutocomplete: function () {$('#element').get(0)
             
-            var input = (document.getElementById('location')),
+            var input = $("#ccm-google-map-block-location > input[id=location]").get(0),
                 autocomplete = new google.maps.places.Autocomplete(input),
-                note = document.getElementById('ccm_googlemap_block_note');
-            
+                note = $("#ccm-google-map-block-location > #block_note").get(0);
             input.onchange = function () {
                 this.className = 'notfound form-control ccm-input-text';
             };
@@ -51,8 +50,8 @@
                     note.innerHTML = 'The place you entered could not be found.';
                     return;
                 } else {
-                    document.getElementById('latitude').value = place.geometry.location.lat();
-                    document.getElementById('longitude').value = place.geometry.location.lng();
+                    $('#ccm-google-map-block-location > input[id=latitude]').val(place.geometry.location.lat());
+                    $('#ccm-google-map-block-location > input[id=longitude]').val(place.geometry.location.lng());
                     input.className = 'form-control ccm-input-text';
                     note.innerHTML = '';
                 }
