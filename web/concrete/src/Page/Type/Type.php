@@ -369,7 +369,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $node = $node->composer;
         if (isset($node->formlayout->set)) {
             foreach ($node->formlayout->set as $setnode) {
-                $set = $cm->addPageTypeComposerFormLayoutSet((string)$setnode['name']);
+                $set = $cm->addPageTypeComposerFormLayoutSet((string)$setnode['name'],(string)$setnode['description']);
                 if (isset($setnode->control)) {
                     foreach ($setnode->control as $controlnode) {
                         $controltype = PageTypeComposerControlType::getByHandle((string)$controlnode['type']);
@@ -378,6 +378,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
                         $required = (string)$controlnode['required'];
                         $customTemplate = (string)$controlnode['custom-template'];
                         $label = (string)$controlnode['custom-label'];
+                        $description = (string)$controlnode['description'];
                         $outputControlID = (string)$controlnode['output-control-id'];
                         if ($required == '1') {
                             $setcontrol->updateFormLayoutSetControlRequired(true);
@@ -389,6 +390,9 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
                         }
                         if ($label) {
                             $setcontrol->updateFormLayoutSetControlCustomLabel($label);
+                        }
+                        if ($description) {
+                            $setcontrol->updateFormLayoutSetControlDescription($description);
                         }
                         if ($outputControlID) {
                             ContentImporter::addPageTypeComposerOutputControlID($setcontrol, $outputControlID);
@@ -784,7 +788,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
     }
 
-    public function addPageTypeComposerFormLayoutSet($ptComposerFormLayoutSetName)
+    public function addPageTypeComposerFormLayoutSet($ptComposerFormLayoutSetName,$ptComposerFormLayoutSetDescription)
     {
         $db = Loader::db();
         $displayOrder = $db->GetOne(
@@ -795,9 +799,10 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             $displayOrder = 0;
         }
         $db->Execute(
-            'insert into PageTypeComposerFormLayoutSets (ptComposerFormLayoutSetName, ptID, ptComposerFormLayoutSetDisplayOrder) values (?, ?, ?)',
+            'insert into PageTypeComposerFormLayoutSets (ptComposerFormLayoutSetName, ptComposerFormLayoutSetDescription, ptID, ptComposerFormLayoutSetDisplayOrder) values (?, ?, ?, ?)',
             array(
                 $ptComposerFormLayoutSetName,
+                $ptComposerFormLayoutSetDescription,
                 $this->ptID,
                 $displayOrder
             )

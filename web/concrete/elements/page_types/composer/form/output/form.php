@@ -15,6 +15,9 @@ $cmp = new Permissions($pagetype);
 		<? if ($cfl->getPageTypeComposerFormLayoutSetDisplayName()) { ?>
 			<legend><?=$cfl->getPageTypeComposerFormLayoutSetDisplayName()?></legend>
 		<? } ?>
+		<? if ($cfl->getPageTypeComposerFormLayoutSetDisplayDescription()) { ?>
+			<span class="help-block"><?=$cfl->getPageTypeComposerFormLayoutSetDisplayDescription()?></span>
+		<? } ?>
 		<? $controls = PageTypeComposerFormLayoutSetControl::getList($cfl);
 
 		foreach($controls as $con) { 
