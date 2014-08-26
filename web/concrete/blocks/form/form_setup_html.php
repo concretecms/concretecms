@@ -56,12 +56,14 @@ $addSelected = true;
 		</div>
 		<div class="form-group">
 			<label class="control-label"><?=t('Solving a <a href="%s" target="_blank">CAPTCHA</a> Required to Post?', 'http://en.wikipedia.org/wiki/Captcha')?></label>
-			<div>
-			<label class="radio">
+			<div class="radio">
+			<label>
 				<?=$form->radio('displayCaptcha', 1, (int) $miniSurveyInfo['displayCaptcha'])?>
 				<span><?=t('Yes')?></span>
 			</label>
-			<label class="radio">
+			</div>
+			<div class="radio">
+			<label>
 				<?=$form->radio('displayCaptcha', 0, (int) $miniSurveyInfo['displayCaptcha'])?>
 				<span><?=t('No')?></span>
 			</label>
@@ -150,8 +152,8 @@ $addSelected = true;
 
 		<div class="form-group">
 			<label class="control-label"><?=t('Required')?></label>
-			<label class="radio"><?=$form->radio('required', 1)?> <span><?=t('Yes')?></span></label>
-			<label class="radio"><?=$form->radio('required', 0)?> <span><?=t('No')?></span></label>
+			<div class="radio"><label><?=$form->radio('required', 1)?> <?=t('Yes')?></label></div>
+			<div class="radio"><label><?=$form->radio('required', 0)?> <?=t('No')?></label></div>
 		</div>
 
 		<div class="form-group">
@@ -221,8 +223,8 @@ $addSelected = true;
 
 			<div class="form-group">
 				<label class="control-label"><?=t('Required')?></label>
-				<label class="radio"><?=$form->radio('requiredEdit', 1)?> <span><?=t('Yes')?></span></label>
-				<label class="radio"><?=$form->radio('requiredEdit', 0)?> <span><?=t('No')?></span></label>
+				<div class="radio"><label><?=$form->radio('requiredEdit', 1)?> <?=t('Yes')?></label></div>
+				<div class="radio"><label><?=$form->radio('requiredEdit', 0)?> <?=t('No')?></label></div>
 			</div>
 
 			<div class="form-group">
