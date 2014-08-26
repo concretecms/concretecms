@@ -40,9 +40,14 @@
                     cntr.remove();
                 }
             }, 250);
-            
+
+            google.maps.event.addDomListener(input, 'keydown', function(e) {
+                if (e.keyCode == 13) {
+                    e.preventDefault();
+                }
+            });
             google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                
+
                 var place = autocomplete.getPlace();
                 if (!place.geometry) {
                     // Inform the user that the place was not found and return.
@@ -61,7 +66,5 @@
             
         }
     };
-    
-    window.C5GMaps.init();
-    
+
 }());

@@ -56,3 +56,9 @@
     </div>
 
 </div>
+
+<script type="text/javascript">
+$(function() {
+    window.C5GMaps.init();
+});
+</script>
