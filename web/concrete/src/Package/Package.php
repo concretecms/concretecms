@@ -220,7 +220,7 @@ class Package extends Object {
 			}
 			
 			if (file_exists($path . '/' . $locale . '/LC_MESSAGES/messages.mo')) {
-				$translate->addTranslation($path . '/' . $locale . '/LC_MESSAGES/messages.mo', $key);
+				$translate->addTranslationFilePattern('gettext', $path . '/' . $locale, '/LC_MESSAGES/messages.mo');
 			}
 		}
 	}

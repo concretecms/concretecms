@@ -177,12 +177,6 @@ class Localization
             $displayLocale = null;
         }
 
-        /*
-        $cacheLibrary = Cache::getLibrary();
-        if (is_object($cacheLibrary) && is_a($cacheLibrary, '\\Zend_Cache_Core')) {
-            \Zend_Locale_Data::setCache($cacheLibrary);
-        }*/
-
         $displayLocale = $displayLocale?$displayLocale:$locale;
 
         $zendLocale = new \Zend_Locale($locale);
