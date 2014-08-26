@@ -1,16 +1,32 @@
-<?php defined('C5_EXECUTE') or die("Access Denied.");  ?>
-<div class="ccm-tags-display">
-<?php if(strlen($title)) {
-	?><h4><?php echo $title ?></h4><?php
-}
-if($options instanceof \Concrete\Attribute\Select\OptionList && $options->count() > 0) {
-	?><ul class="ccm-tag-list">
-		<?php foreach($options as $opt) {
-			$qs = $akc->field('atSelectOptionID') . '[]=' . $opt->getSelectAttributeOptionID();
-			?><li <?php echo ($selectedOptionID == $opt->getSelectAttributeOptionID()?'class="ccm-tag-selected"':'')?>><? if ($target instanceof Page) { ?>
-				<a href="<?=$navigation->getLinkToCollection($target)?>?<?=$qs?>"><?php echo $opt ?></a><? }  else { echo $opt; }?></li><?php 
-		}?>	
-	</ul>
-<?php } ?>
-	<div style="clear: both"></div>
+<?php
+
+defined('C5_EXECUTE') or die("Access Denied.");
+use Concrete\Attribute\Select\OptionList;
+
+?>
+
+<? if ($options instanceof OptionList && $options->count() > 0): ?>
+
+<div class="ccm-block-tags-wrapper">
+
+    <? if ($title): ?>
+        <div class="ccm-block-tags-header">
+            <h5><?=$title?></h5>
+        </div>
+    <? endif; ?>
+
+    <? foreach($options as $option) { ?>
+
+        <? if ($target) { ?>
+            <a href="<?=$controller->getTagLink($option) ?>">
+                <span class="ccm-block-tags-tag label"><?=$option->getSelectAttributeOptionValue()?></span>
+            </a>
+        <? } else { ?>
+            <span class="ccm-block-tags-tag label"><?=$option->getSelectAttributeOptionValue()?></span>
+        <? } ?>
+    <? } ?>
+
+
 </div>
+
+<? endif; ?>
