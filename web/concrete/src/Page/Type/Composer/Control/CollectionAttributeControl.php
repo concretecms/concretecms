@@ -96,7 +96,7 @@ class CollectionAttributeControl extends Control
         return ($c->getAttribute($ak) == '');
     }
 
-    public function render($label, $customTemplate)
+    public function render($label, $customTemplate, $description)
     {
         $ak = $this->getAttributeKeyObject();
         $env = Environment::get();

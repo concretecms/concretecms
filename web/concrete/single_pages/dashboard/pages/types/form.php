@@ -16,6 +16,12 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 					<?=$form->text('ptComposerFormLayoutSetName')?>
 				</div>
 			</div>
+			<div class="control-group">
+				<?=$form->label('ptComposerFormLayoutSetDescription', tc('Description of a set', 'Set Description'))?>
+				<div class="controls">
+					<?=$form->textarea('ptComposerFormLayoutSetDescription')?>
+				</div>
+			</div>
 		</form>
 		<div class="dialog-buttons">
 			<button class="btn btn-default pull-left" onclick="jQuery.fn.dialog.closeTop()"><?=t('Cancel')?></button>
@@ -63,6 +69,12 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSet as PageTypeComposerFormLayou
 							<?=$form->label('ptComposerFormLayoutSetName', tc('Name of a set', 'Set Name'))?>
 							<div class="controls">
 								<?=$form->text('ptComposerFormLayoutSetName', $set->getPageTypeComposerFormLayoutSetName())?>
+							</div>
+						</div>
+						<div class="control-group">
+							<?=$form->label('ptComposerFormLayoutSetDescription', tc('Description of a set', 'Set Description'))?>
+							<div class="controls">
+								<?=$form->textarea('ptComposerFormLayoutSetDescription', $set->getPageTypeComposerFormLayoutSetDescription())?>
 							</div>
 						</div>
                         <div class="dialog-buttons">
