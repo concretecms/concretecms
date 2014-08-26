@@ -123,9 +123,6 @@ class DispatcherRouteCallback extends RouteCallback {
 		$request->setCurrentPage($c);
 		require(DIR_BASE_CORE . '/bootstrap/process.php');
 		$u = new User();
-		if (STATISTICS_TRACK_PAGE_VIEWS == 1) {
-			$u->recordView($c);
-		}
 
 		## Fire the on_page_view Eventclass
 		$pe = new PageEvent($c);
