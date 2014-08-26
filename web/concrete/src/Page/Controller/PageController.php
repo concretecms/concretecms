@@ -88,6 +88,9 @@ class PageController extends Controller {
     }
 
     public function setupRequestActionAndParameters(Request $request) {
+        if (!is_object($this->c)) {
+            throw new \Exception('No page found.');
+        }
         $task = substr($request->getPath(), strlen($this->c->getCollectionPath()) + 1);
         $task = str_replace('-/', '', $task);
         $taskparts = explode('/', $task);
