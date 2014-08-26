@@ -3,7 +3,7 @@
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>
 
-<h4><?=t('Recent Page Views')?></h3>
+<h4><?=t('Recent Page Views')?></h4>
 
 <table class="table" id="ccm-site-statistics-visits" style="display: none">
 <thead>

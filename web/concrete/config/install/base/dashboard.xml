@@ -174,6 +174,7 @@
                 </attributekey>
             </attributes>
         </page>
+        <!--
         <page name="Statistics" path="/dashboard/reports/statistics" filename="/dashboard/reports/statistics.php"
               pagetype="" description="View your site activity." package="">
             <attributes>
@@ -182,6 +183,7 @@
                 </attributekey>
             </attributes>
         </page>
+        //-->
         <page name="Form Results" path="/dashboard/reports/forms" filename="/dashboard/reports/forms.php" pagetype=""
               description="Get submission data." package="">
             <attributes>
@@ -525,7 +527,7 @@
         </page>
 
         <page name="SEO &amp; Statistics" path="/dashboard/system/seo" filename="/dashboard/system/seo/view.php"
-              pagetype="" description="Enable pretty URLs, statistics and tracking codes." package=""/>
+              pagetype="" description="Enable pretty URLs and tracking codes." package=""/>
         <page name="Pretty URLs" path="/dashboard/system/seo/urls" filename="/dashboard/system/seo/urls.php" pagetype=""
               description="" package="">
             <attributes>
@@ -558,6 +560,7 @@
                 </attributekey>
             </attributes>
         </page>
+        <!--
         <page name="Statistics" path="/dashboard/system/seo/statistics" filename="/dashboard/system/seo/statistics.php"
               pagetype="" description="" package="">
             <attributes>
@@ -566,6 +569,7 @@
                 </attributekey>
             </attributes>
         </page>
+        //-->
         <page name="Search Index" path="/dashboard/system/seo/searchindex"
               filename="/dashboard/system/seo/searchindex.php" pagetype="" description="" package="">
             <attributes>
