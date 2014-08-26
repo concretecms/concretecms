@@ -15,4 +15,3 @@ class Seo extends DashboardPageController {
 		$this->redirect('/dashboard/system/seo/urls');
 	}
 }
-?>
