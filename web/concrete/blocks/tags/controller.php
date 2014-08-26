@@ -136,7 +136,7 @@ class Controller extends BlockController
             $target = \Page::getCurrentPage();
         }
         if ($option) {
-            return \URL::page($target, 'topic', $option->getSelectAttributeOptionDisplayValue());
+            return \URL::page($target, 'tag', strtolower($option->getSelectAttributeOptionDisplayValue()));
         } else {
             return \URL::page($target);
         }
