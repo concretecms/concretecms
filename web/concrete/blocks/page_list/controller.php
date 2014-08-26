@@ -229,10 +229,20 @@ class Controller extends BlockController
     }
 
     public function action_filter_by_topic($topic = false) {
-        $topic = intval($topic);
-        $this->list->filterByTopic($topic);
+        $db = Loader::db();
+        $treeNodeID = $db->GetOne('select treeNodeID from TreeTopicNodes where treeNodeTopicName = ?', array($topic));
+        if ($treeNodeID) {
+            $this->list->filterByTopic(intval($treeNodeID));
+        }
         $this->view();
     }
+
+    public function action_filter_by_tag($tag = false) {
+        $db = Loader::db();
+        $this->list->filterByTags(h($tag));
+        $this->view();
+    }
+
 
     public function action_filter_by_date($year = false, $month = false) {
         $start = false;
@@ -277,6 +287,9 @@ class Controller extends BlockController
     {
         if ($parameters[0] == 'topic') {
             $method = 'action_filter_by_topic';
+            $parameters = array_slice($parameters, 1);
+        } else if ($parameters[0] == 'tag') {
+            $method = 'action_filter_by_tag';
             $parameters = array_slice($parameters, 1);
         } else if (Loader::helper("validation/numbers")->integer($parameters[0])) {
             // then we're going to treat this as a year.

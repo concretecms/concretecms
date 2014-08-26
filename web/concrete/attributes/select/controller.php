@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Attribute\Select;
+use Concrete\Core\Search\ItemList\Database\AttributedItemList;
 use Loader;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Controller as AttributeTypeController;
@@ -417,7 +418,24 @@ class Controller extends AttributeTypeController  {
 		}		
 		return $list;
 	}
-	
+
+    public function filterByAttribute(AttributedItemList $list, $value, $comparison = '=')
+    {
+        if ($value instanceof Option) {
+            $option = $value;
+        } else {
+            $option = Option::getByValue($value);
+        }
+        if (is_object($option)) {
+            $column = 'ak_' . $this->attributeKey->getAttributeKeyHandle();
+            $qb = $list->getQueryObject();
+            $qb->andWhere(
+                $qb->expr()->like($column, ':optionValue')
+            );
+            $qb->setParameter('optionValue', "%\n" . $option->getSelectAttributeOptionValue() . "\n%");
+        }
+    }
+
 	/**
 	 * returns a list of available options optionally filtered by an sql $like statement ex: startswith%
 	 * @param string $like
