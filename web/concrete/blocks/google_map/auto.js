@@ -1,16 +1,6 @@
 (function () {
     "use strict";
-    
-    window.ccmValidateBlockForm = function () {
-        if ($('.notfound').length > 0 || $('#ccm_googlemap_block_location').val().length === 0
-                || $('#ccm_googlemap_block_latitude').val() === ''
-                || $('#ccm_googlemap_block_longitude').val() === '') {
-            window.ccm_addError(ccm_t('location-required'));
-            $('#ccm_googlemap_block_location').addClass('notfound');
-        }
-        return false;
-    };
-    
+ 
     window.C5GMaps = {
         
         pacTimer: null,
@@ -34,17 +24,17 @@
         
         setupAutocomplete: function () {
             
-            var input = (document.getElementById('ccm_googlemap_block_location')),
+            var input = (document.getElementById('location')),
                 autocomplete = new google.maps.places.Autocomplete(input),
                 note = document.getElementById('ccm_googlemap_block_note');
             
             input.onchange = function () {
-                this.className = 'notfound';
+                this.className = 'notfound form-control ccm-input-text';
             };
             
             // Keeps the autocomplete list visible above modal dialogue
             window.C5GMaps.pacTimer = setInterval(function () {
-                var cntr = $('.pac-container'), locBox = $('#ccm_googlemap_block_location');
+                var cntr = $('.pac-container'), locBox = $('#location');
                 cntr.css('z-index', '2000');
                 if (locBox.length === 0) {
                     clearInterval(window.C5GMaps.pacTimer);
@@ -61,9 +51,9 @@
                     note.innerHTML = 'The place you entered could not be found.';
                     return;
                 } else {
-                    document.getElementById('ccm_googlemap_block_latitude').value = place.geometry.location.lat();
-                    document.getElementById('ccm_googlemap_block_longitude').value = place.geometry.location.lng();
-                    input.className = '';
+                    document.getElementById('latitude').value = place.geometry.location.lat();
+                    document.getElementById('longitude').value = place.geometry.location.lng();
+                    input.className = 'form-control ccm-input-text';
                     note.innerHTML = '';
                 }
                 
