@@ -4,7 +4,6 @@ use PageCache;
 use Events;
 use Database as DB;
 use \Zend\Cache\StorageFactory;
-use Zend_Translate;
 use Environment;
 use CacheLocal as ConcreteCacheLocal;
 use Loader;
@@ -24,14 +23,15 @@ class Cache {
                     'adapter' => array(
                         'name' => $adapter,
                         'ttl' => CACHE_LIFETIME
-                    )
-                ));
-                if ($adapter == 'filesystem') {
-                    $cache->setOptions(array(
+                    ),
+                    'options' => array(
                         'cache_dir' => DIR_FILES_CACHE,
                         'file_locking' => false
-                    ));
-                }
+                    ),
+                    'plugins' => array(
+                        'exception_handler' => array('throw_exceptions' => false)
+                    )
+                ));
 			}
 		}
 		return $cache;

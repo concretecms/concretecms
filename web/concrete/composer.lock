@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "664470a7a39c3e8900244239579b3511",
+    "hash": "0c9654fb6114ab43ea75618ec007bcb9",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -1291,12 +1291,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "7aa2b88c702251949940e25018b01e15fb4ed59d"
+                "reference": "2b60366be6dcb9f9cd3e244ab25eb98eaea99551"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/7aa2b88c702251949940e25018b01e15fb4ed59d",
-                "reference": "7aa2b88c702251949940e25018b01e15fb4ed59d",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/2b60366be6dcb9f9cd3e244ab25eb98eaea99551",
+                "reference": "2b60366be6dcb9f9cd3e244ab25eb98eaea99551",
                 "shasum": ""
             },
             "require": {
@@ -1329,7 +1329,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2014-08-25 03:40:56"
+            "time": "2014-08-26 03:18:44"
         },
         {
             "name": "oyejorge/less.php",
@@ -1603,16 +1603,20 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/punic/punic.git",
-                "reference": "e43fd0fde052ea3670de36da01aae067a3cdcef5"
+                "reference": "0e83839ff7b0f3940797e6e798ac5d9b4706ad34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punic/punic/zipball/e43fd0fde052ea3670de36da01aae067a3cdcef5",
-                "reference": "e43fd0fde052ea3670de36da01aae067a3cdcef5",
+                "url": "https://api.github.com/repos/punic/punic/zipball/0e83839ff7b0f3940797e6e798ac5d9b4706ad34",
+                "reference": "0e83839ff7b0f3940797e6e798ac5d9b4706ad34",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3"
+            },
+            "replace": {
+                "punic/calendar": "*",
+                "punic/common": "*"
             },
             "require-dev": {
                 "satooshi/php-coveralls": "dev-master"
@@ -1656,7 +1660,7 @@
                 "translations",
                 "unicode"
             ],
-            "time": "2014-08-25 09:42:38"
+            "time": "2014-08-26 19:58:06"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
@@ -2448,6 +2452,67 @@
             "time": "2014-04-15 14:47:18"
         },
         {
+            "name": "zendframework/zend-i18n",
+            "version": "2.3.1",
+            "target-dir": "Zend/I18n",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/Component_ZendI18n.git",
+                "reference": "d4a47acdb480e11d81432c0fb3431a54ebe4d077"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendI18n/zipball/d4a47acdb480e11d81432c0fb3431a54ebe4d077",
+                "reference": "d4a47acdb480e11d81432c0fb3431a54ebe4d077",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.23",
+                "zendframework/zend-stdlib": "self.version"
+            },
+            "require-dev": {
+                "zendframework/zend-cache": "self.version",
+                "zendframework/zend-config": "self.version",
+                "zendframework/zend-eventmanager": "self.version",
+                "zendframework/zend-filter": "self.version",
+                "zendframework/zend-servicemanager": "self.version",
+                "zendframework/zend-validator": "self.version",
+                "zendframework/zend-view": "self.version"
+            },
+            "suggest": {
+                "ext-intl": "Required for most features of Zend\\I18n; included in default builds of PHP",
+                "zendframework/zend-cache": "Zend\\Cache component",
+                "zendframework/zend-config": "Zend\\Config component",
+                "zendframework/zend-eventmanager": "You should install this package to use the events in the translator",
+                "zendframework/zend-filter": "You should install this package to use the provided filters",
+                "zendframework/zend-resources": "Translation resources",
+                "zendframework/zend-servicemanager": "Zend\\ServiceManager component",
+                "zendframework/zend-validator": "You should install this package to use the provided validators",
+                "zendframework/zend-view": "You should install this package to use the provided view helpers"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.3-dev",
+                    "dev-develop": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Zend\\I18n\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "keywords": [
+                "i18n",
+                "zf2"
+            ],
+            "time": "2014-04-15 15:28:41"
+        },
+        {
             "name": "zendframework/zend-loader",
             "version": "2.3.1",
             "target-dir": "Zend/Loader",
@@ -2955,44 +3020,6 @@
             "time": "2014-05-21 15:17:51"
         },
         {
-            "name": "zf1/zend-loader",
-            "version": "1.12.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zf1/zend-loader.git",
-                "reference": "433adcc69b7c6517495d137f7733983bb2399301"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-loader/zipball/433adcc69b7c6517495d137f7733983bb2399301",
-                "reference": "433adcc69b7c6517495d137f7733983bb2399301",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2.11",
-                "zf1/zend-exception": "self.version"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Zend_Loader": "library/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Zend Framework 1 Loader package",
-            "homepage": "http://framework.zend.com/",
-            "keywords": [
-                "ZF1",
-                "framework",
-                "loader",
-                "zend"
-            ],
-            "time": "2014-05-21 16:06:11"
-        },
-        {
             "name": "zf1/zend-locale",
             "version": "1.12.6",
             "source": {
@@ -3033,133 +3060,9 @@
                 "zf1"
             ],
             "support": {
-                "source": "https://github.com/mlocati/zend-locale/tree/1.12.6"
+                "source": "https://github.com/mlocati/zend-locale/tree/master"
             },
             "time": "2014-08-08 13:45:44"
-        },
-        {
-            "name": "zf1/zend-mime",
-            "version": "1.12.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zf1/zend-mime.git",
-                "reference": "0a1894ef0d4fedc9d895e6c46ae3713198916b1b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-mime/zipball/0a1894ef0d4fedc9d895e6c46ae3713198916b1b",
-                "reference": "0a1894ef0d4fedc9d895e6c46ae3713198916b1b",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2.11",
-                "zf1/zend-exception": "self.version"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Zend_Mime": "library/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Zend Framework 1 Mime package",
-            "homepage": "http://framework.zend.com/",
-            "keywords": [
-                "ZF1",
-                "framework",
-                "mime",
-                "zend"
-            ],
-            "time": "2014-05-21 15:17:49"
-        },
-        {
-            "name": "zf1/zend-translate",
-            "version": "1.12.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zf1/zend-translate.git",
-                "reference": "bef6b0dfdafb3401a60f2fa87987024fa70d925c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-translate/zipball/bef6b0dfdafb3401a60f2fa87987024fa70d925c",
-                "reference": "bef6b0dfdafb3401a60f2fa87987024fa70d925c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2.11",
-                "zf1/zend-exception": "self.version",
-                "zf1/zend-loader": "self.version",
-                "zf1/zend-locale": "self.version",
-                "zf1/zend-xml": "self.version"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Zend_Translate": "library/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Zend Framework 1 Translate package",
-            "homepage": "http://framework.zend.com/",
-            "keywords": [
-                "ZF1",
-                "framework",
-                "translate",
-                "zend"
-            ],
-            "time": "2014-05-21 15:17:49"
-        },
-        {
-            "name": "zf1/zend-validate",
-            "version": "1.12.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zf1/zend-validate.git",
-                "reference": "7ba6a6b33d49b75424fa79a73d45d8f12fd3081d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zf1/zend-validate/zipball/7ba6a6b33d49b75424fa79a73d45d8f12fd3081d",
-                "reference": "7ba6a6b33d49b75424fa79a73d45d8f12fd3081d",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2.11",
-                "zf1/zend-exception": "self.version",
-                "zf1/zend-loader": "self.version",
-                "zf1/zend-locale": "self.version"
-            },
-            "suggest": {
-                "zf1/zend-date": "Used in special situations or with special adapters",
-                "zf1/zend-filter": "Used in special situations or with special adapters",
-                "zf1/zend-registry": "Used in special situations or with special adapters"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Zend_Validate": "library/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Zend Framework 1 Validate package",
-            "homepage": "http://framework.zend.com/",
-            "keywords": [
-                "ZF1",
-                "framework",
-                "validate",
-                "zend"
-            ],
-            "time": "2014-05-21 15:52:57"
         },
         {
             "name": "zf1/zend-xml",
@@ -3200,8 +3103,12 @@
             "time": "2014-05-21 15:52:59"
         }
     ],
-    "packages-dev": [],
-    "aliases": [],
+    "packages-dev": [
+
+    ],
+    "aliases": [
+
+    ],
     "minimum-stability": "stable",
     "stability-flags": {
         "symfony/class-loader": 20,
@@ -3224,5 +3131,7 @@
     "platform": {
         "php": ">=5.3.3"
     },
-    "platform-dev": []
+    "platform-dev": [
+
+    ]
 }

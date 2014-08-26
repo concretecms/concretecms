@@ -2,14 +2,14 @@
 namespace Concrete\Core\Localization;
 
 use Loader;
-use Cache;
 use Events;
+use \Zend\I18n\Translator\Translator;
 use \Punic\Data as PunicData;
+use Cache;
 
 class Localization
 {
-    private static $loc
-    = null;
+    private static $loc = null;
 
     public static function getInstance()
     {
@@ -47,18 +47,6 @@ class Localization
 
     protected $translate;
 
-    public function __construct()
-    {
-        // @todo Once we have Zend Translate swapped out for the new \Zend\i18n\Translator we can re-enable the
-        // cache
-        /*
-        $cache = Cache::getLibrary();
-        if (is_object($cache)) {
-            \Zend_Translate::setCache($cache);
-        }
-        */
-    }
-
     public function setLocale($locale)
     {
         $localeNeededLoading = false;
@@ -78,36 +66,18 @@ class Localization
             return;
         }
 
-        $options = array(
-            'adapter' => 'Zend_Translate_Adapter_Gettext',
-            'content' => $languageDir,
-            'locale'  => $locale,
-            'disableNotices'  => true,
-            'ignore' => array('.', 'messages.po')
-        );
-        if (defined('TRANSLATE_OPTIONS')) {
-            $_options = unserialize(TRANSLATE_OPTIONS);
-            if (is_array($_options)) {
-                $options = array_merge($options, $_options);
-            }
-        }
-
-        if (!isset($this->translate)) {
-            $this->translate = new \Zend_Translate($options);
-            $localeNeededLoading = true;
-        } else {
-            if (!in_array($locale, $this->translate->getList())) {
-                $this->translate->addTranslation($options);
-                $localeNeededLoading = true;
-            }
-            $this->translate->setLocale($locale);
+        $this->translate = new Translator();
+        $this->translate->addTranslationFilePattern('gettext', $languageDir, 'LC_MESSAGES/messages.mo');
+        $this->translate->setLocale($locale);
+        $cache = Cache::getLibrary();
+        if (is_object($cache)) {
+            $this->translate->setCache($cache);
         }
         PunicData::setDefaultLocale($locale);
-        if ($localeNeededLoading) {
-            $event = new \Symfony\Component\EventDispatcher\GenericEvent();
-            $event->setArgument('locale', $locale);
-            $ret = Events::dispatch('on_locale_load', $event);
-        }
+
+        $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+        $event->setArgument('locale', $locale);
+        Events::dispatch('on_locale_load', $event);
     }
 
     public function getLocale()
@@ -122,15 +92,14 @@ class Localization
 
     public function addSiteInterfaceLanguage($language)
     {
-        if (is_object($this->translate)) {
-            $this->translate->addTranslation(DIR_LANGUAGES_SITE_INTERFACE . '/' . $language . '.mo', $language);
-        } else {
+        if (!is_object($this->translate)) {
+            $this->translate = new Translator();
             $cache = Cache::getLibrary();
             if (is_object($cache)) {
-                \Zend_Translate::setCache($cache);
+                $this->translate->setCache($cache);
             }
-            $this->translate = new \Zend_Translate(array('adapter' => 'gettext', 'content' => DIR_LANGUAGES_SITE_INTERFACE . '/' . $language . '.mo', 'locale' => $language, 'disableNotices' => true));
         }
+        $this->translate->addTranslationFilePattern('gettext', DIR_LANGUAGES_SITE_INTERFACE, $language . '.mo');
     }
 
     public static function getTranslate()
@@ -208,10 +177,11 @@ class Localization
             $displayLocale = null;
         }
 
+        /*
         $cacheLibrary = Cache::getLibrary();
         if (is_object($cacheLibrary) && is_a($cacheLibrary, '\\Zend_Cache_Core')) {
             \Zend_Locale_Data::setCache($cacheLibrary);
-        }
+        }*/
 
         $displayLocale = $displayLocale?$displayLocale:$locale;
 
