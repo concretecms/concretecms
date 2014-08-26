@@ -97,6 +97,10 @@
         <attributekey handle="header_extra_content" name="Header Extra Content" package="" searchable="1" indexed="1" type="textarea" category="collection">
             <type mode=""/>
         </attributekey>
+        <attributekey handle="tags" name="Tags" package="" searchable="1" indexed="1" type="select" category="collection">
+            <type allow-multiple-values="1" display-order="display_asc" allow-other-values="1">
+            </type>
+        </attributekey>
         <attributekey handle="is_featured" name="Is Featured" package="" searchable="1" indexed="0" type="boolean" category="collection">
             <type checked=""/>
         </attributekey>
