@@ -54,12 +54,14 @@ class Form extends DashboardPageController {
 		$this->view($set->getPageTypeID());
 		$sec = Loader::helper('security');
 		$name = $sec->sanitizeString($this->post('ptComposerFormLayoutSetName'));
+		$description = $sec->sanitizeString($this->post('ptComposerFormLayoutSetDescription'));
 		if (!$this->token->validate('update_set')) { 
 			$this->error->add(t($this->token->getErrorMessage()));
 		}
 
 		if (!$this->error->has()) {
 			$set->updateFormLayoutSetName($name);
+			$set->updateFormLayoutSetDescription($description);
 			$this->redirect('/dashboard/pages/types/form', $set->getPageTypeID(), 'layout_set_updated');
 		}
 	}
@@ -78,8 +80,9 @@ class Form extends DashboardPageController {
 		$this->view($ptID);
 		$sec = Loader::helper('security');
 		$name = $sec->sanitizeString($this->post('ptComposerFormLayoutSetName'));
+		$description = $sec->sanitizeString($this->post('ptComposerFormLayoutSetDescription'));
 		if ($this->token->validate('add_set')) {
-			$set = $this->pagetype->addPageTypeComposerFormLayoutSet($name);
+			$set = $this->pagetype->addPageTypeComposerFormLayoutSet($name,$description);
 			$this->redirect('/dashboard/pages/types/form', $this->pagetype->getPageTypeID(), 'layout_set_added');
 		}
 	}

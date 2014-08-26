@@ -50,7 +50,6 @@
         "zendframework/zend-servicemanager": "2.3.1",
         "nesbot/carbon": "dev-master",
         "egulias/email-validator": "1.2.0",
-        "punic/common": "dev-master",
-        "punic/calendar": "dev-master"
+        "punic/punic": "dev-master"
     }
 }

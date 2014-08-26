@@ -437,7 +437,7 @@
             <composer>
                 <formlayout>
                     <set name="Page">
-                        <control custom-template="" custom-label="" type="core_page_property" handle="name"/>
+                        <control custom-template="" custom-label="" type="core_page_property" handle="name" description="Give your portfolio project a name."/>
                         <control custom-template="" custom-label="" type="core_page_property" handle="url_slug"/>
                         <control custom-template="" type="core_page_property" handle="publish_target"/>
                     </set>

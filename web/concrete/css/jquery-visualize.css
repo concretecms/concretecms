@@ -1,5 +1,5 @@
 /*plugin styles*/
-.visualize { border: 1px solid #888; position: relative; background: #fafafa; }
+.visualize { border: 1px solid #888; position: relative; box-sizing: content-box; background: #fafafa; }
 .visualize canvas { position: absolute; }
 .visualize ul,.visualize li { margin: 0; padding: 0;}
 
@@ -34,7 +34,7 @@
 /* Light */
 
 /*visualize extension styles*/
-.visualize { padding: 30px 40px 90px; border-radius: 4px; border-color: #afafaf; -moz-border-radius: 4px; -webkit-border-radius: 4px}
+.visualize { padding: 30px 40px 30px 40px; border-radius: 4px; border-color: #afafaf; -moz-border-radius: 4px; -webkit-border-radius: 4px}
 .visualize canvas { border: 1px solid #aaa; margin: -1px; background: #fff; }
 .visualize-labels-x, .visualize-labels-y { top: 30px; left: 40px; z-index: 100; }
 .visualize-pie .visualize-labels { position: absolute; top: 70px; left: 40px; }

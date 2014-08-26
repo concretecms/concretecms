@@ -23,10 +23,16 @@ foreach($customTemplates as $template) {
 if ($cp->canViewPage()) { 
 
 	if ($_POST['task'] == 'edit' && Loader::helper('validation/token')->validate('update_set_control')) {
-		$control->updateFormLayoutSetControlCustomLabel($_POST['ptComposerFormLayoutSetControlCustomLabel']);
-		$control->updateFormLayoutSetControlCustomTemplate($_POST['ptComposerFormLayoutSetControlCustomTemplate']);
+		$sec = Loader::helper('security');
+		$label = $sec->sanitizeString($_POST['ptComposerFormLayoutSetControlCustomLabel']);
+		$template = $sec->sanitizeString($_POST['ptComposerFormLayoutSetControlCustomTemplate']);
+		$description = $sec->sanitizeString($_POST['ptComposerFormLayoutSetControlDescription']);
+		$required = $sec->sanitizeInt($_POST['ptComposerFormLayoutSetControlRequired']);
+		$control->updateFormLayoutSetControlCustomLabel($label);
+		$control->updateFormLayoutSetControlCustomTemplate($template);
+		$control->updateFormLayoutSetControlDescription($description);
 		if ($object->pageTypeComposerFormControlSupportsValidation()) {
-			$control->updateFormLayoutSetControlRequired($_POST['ptComposerFormLayoutSetControlRequired']);
+			$control->updateFormLayoutSetControlRequired($required);
 		}
 		Loader::element('page_types/composer/form/layout_set/control', array('control' => $control));
 		exit;
@@ -38,22 +44,22 @@ if ($cp->canViewPage()) {
 		<form data-edit-set-form-control="<?=$control->getPageTypeComposerFormLayoutSetControlID()?>" action="#" method="post">
 		<div class="form-group">
 			<?=$form->label('ptComposerFormLayoutSetControlCustomLabel', t('Custom Label'))?>
-			<div class="controls">
-				<?=$form->text('ptComposerFormLayoutSetControlCustomLabel', $control->getPageTypeComposerFormLayoutSetControlCustomLabel())?>
-			</div>
+			<?=$form->text('ptComposerFormLayoutSetControlCustomLabel', $control->getPageTypeComposerFormLayoutSetControlCustomLabel())?>
 		</div>
 		<div class="form-group">
 			<?=$form->label('ptComposerFormLayoutSetControlCustomTemplate', t('Custom Template'))?>
-			<div class="controls">
-				<?=$form->select('ptComposerFormLayoutSetControlCustomTemplate', $templates, $control->getPageTypeComposerFormLayoutSetControlCustomTemplate())?>
-			</div>
+			<?=$form->select('ptComposerFormLayoutSetControlCustomTemplate', $templates, $control->getPageTypeComposerFormLayoutSetControlCustomTemplate())?>
+		</div>
+		<div class="form-group">
+			<?=$form->label('ptComposerFormLayoutSetControlDescription', t('Description'))?>
+			<?=$form->text('ptComposerFormLayoutSetControlDescription', $control->getPageTypeComposerFormLayoutSetControlDescription())?>
 		</div>
 
 		<? if ($object->pageTypeComposerFormControlSupportsValidation()) { ?>
 		<div class="form-group">
 			<?=$form->label('ptComposerFormLayoutSetControlRequired', t('Required'))?>
-			<div class="controls">
-				<label class="checkbox"><?=$form->checkbox('ptComposerFormLayoutSetControlRequired', 1, $control->isPageTypeComposerFormLayoutSetControlRequired())?> <label><?=t('Yes, require this form element')?></label></label>
+			<div class="checkbox">
+			<label><?=$form->checkbox('ptComposerFormLayoutSetControlRequired', 1, $control->isPageTypeComposerFormLayoutSetControlRequired())?> <?=t('Yes, require this form element')?></label>
 			</div>
 		</div>
 		<? } ?>
