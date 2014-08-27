@@ -21,7 +21,6 @@
         <blocktype handle="external_form" package=""/>
         <blocktype handle="file" package=""/>
         <blocktype handle="page_attribute_display" package=""/>
-        <blocktype handle="flash_content" package=""/>
         <blocktype handle="form" package=""/>
         <blocktype handle="page_title" package=""/>
         <blocktype handle="feature" package=""/>
@@ -94,7 +93,6 @@
             <blocktype handle="video"/>
             <blocktype handle="youtube"/>
             <blocktype handle="google_map"/>
-            <blocktype handle="flash_content"/>
         </blocktypeset>
     </blocktypesets>
 
