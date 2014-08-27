@@ -3,6 +3,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/mlocati/zend-locale"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/mlocati/zendframework2-i18n"
         }
     ],
     "config": {
