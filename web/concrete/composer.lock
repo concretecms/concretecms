@@ -3019,7 +3019,7 @@
                 "zf1"
             ],
             "support": {
-                "source": "https://github.com/mlocati/zend-locale/tree/1.12.6"
+                "source": "https://github.com/mlocati/zend-locale/tree/master"
             },
             "time": "2014-08-08 13:45:44"
         },
