@@ -1,7 +1,6 @@
 <?
 namespace Concrete\Core\Conversation\Editor;
 use \Michelf\Markdown;
-use Loader;
 class MarkdownEditor extends Editor {
 
 	public function getConversationEditorAssetPointers() {
@@ -12,10 +11,9 @@ class MarkdownEditor extends Editor {
 		$this->outputConversationEditorAddMessageForm();
 	}
 
-	public function formatConversationMessageBody($cnv,$cnvMessageBody) {
-		$text = Loader::helper('text');
+	public function formatConversationMessageBody($cnv,$cnvMessageBody, $config = array()) {
 		$md = Markdown::defaultTransform(htmlentities($cnvMessageBody));
 		$formatted = str_replace(array('&amp;lt','&amp;gt'), array('&lt','&gt'), $md);
-		return parent::formatConversationMessageBody($cnv,$formatted);
+		return parent::formatConversationMessageBody($cnv, $formatted, $config);
 	}
 }

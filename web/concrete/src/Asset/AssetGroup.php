@@ -1,7 +1,8 @@
 <?
 
 namespace Concrete\Core\Asset;
-class AssetGroup {	
+class AssetGroup {
+    /** @var \Concrete\Core\Asset\AssetPointer[] */
 	protected $assetPointers = array();
 	protected $assets = array();
 
