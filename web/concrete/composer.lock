@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "815bc0c73f28fee413a908f26e18b63c",
+    "hash": "3a537283d0ee34a134d0eb0860d8de95",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -2446,13 +2446,13 @@
             "target-dir": "Zend/I18n",
             "source": {
                 "type": "git",
-                "url": "https://github.com/zendframework/Component_ZendI18n.git",
-                "reference": "10f56e0869761d62699782e4dd04eb77262cc353"
+                "url": "https://github.com/mlocati/zendframework2-i18n.git",
+                "reference": "ae6652214b7e6ab3f9a1f597ddb8926bd05d3b06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendI18n/zipball/10f56e0869761d62699782e4dd04eb77262cc353",
-                "reference": "10f56e0869761d62699782e4dd04eb77262cc353",
+                "url": "https://api.github.com/repos/mlocati/zendframework2-i18n/zipball/ae6652214b7e6ab3f9a1f597ddb8926bd05d3b06",
+                "reference": "ae6652214b7e6ab3f9a1f597ddb8926bd05d3b06",
                 "shasum": ""
             },
             "require": {
@@ -2479,15 +2479,19 @@
                     "Zend\\I18n\\": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
+            "description": " ",
             "keywords": [
                 "i18n",
                 "zf2"
             ],
-            "time": "2014-01-04 13:00:19"
+            "support": {
+                "source": "https://github.com/mlocati/zendframework2-i18n/tree/release-2.2.6",
+                "issues": "https://github.com/mlocati/zendframework2-i18n/issues"
+            },
+            "time": "2014-08-27 18:35:23"
         },
         {
             "name": "zendframework/zend-loader",
@@ -3015,7 +3019,7 @@
                 "zf1"
             ],
             "support": {
-                "source": "https://github.com/mlocati/zend-locale/tree/master"
+                "source": "https://github.com/mlocati/zend-locale/tree/1.12.6"
             },
             "time": "2014-08-08 13:45:44"
         },
