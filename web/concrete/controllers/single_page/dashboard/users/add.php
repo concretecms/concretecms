@@ -16,7 +16,7 @@ class Add extends DashboardPageController {
 	public function view() {
 
 		$loc = Localization::getInstance();
-		$locales = Localization::getAvailableInterfaceLanguageDescriptions($loc->activeLocale());
+		$locales = Localization::getAvailableInterfaceLanguageDescriptions();
 		$attribs = UserAttributeKey::getRegistrationList();
 		$assignment = PermissionKey::getByHandle('edit_user_properties')->getMyAssignment();
 		$gl = new GroupList();
