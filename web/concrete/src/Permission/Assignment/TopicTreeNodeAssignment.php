@@ -3,6 +3,7 @@ namespace Concrete\Core\Permission\Assignment;
 use Concrete\Core\Tree\Node\Node;
 use PermissionAccess;
 use \Concrete\Core\Tree\Node\Type\Topic as TopicTreeNode;
+use \Concrete\Core\Tree\Node\Type\TopicCategory as TopicCategoryTreeNode;
 use Loader;
 class TopicTreeNodeAssignment extends TreeNodeAssignment {
 
