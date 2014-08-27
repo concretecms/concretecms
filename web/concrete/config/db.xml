@@ -4347,6 +4347,10 @@
       <notnull/>
       <default value="0000-00-00 00:00:00"/>
     </field>
+    <field name="uLastPasswordChange" type="T">
+      <notnull/>
+      <default value="0000-00-00 00:00:00"/>
+    </field>
     <field name="uHasAvatar" type="I1" size="1">
       <notnull/>
       <default value="0"/>

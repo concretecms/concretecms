@@ -41,6 +41,11 @@ class Login extends PageController
         $this->error->add(t('This user is inactive. Please contact us regarding this account.'));
     }
 
+    public function session_invalidated()
+    {
+        $this->error->add(t('Your session has expired. Please sign in again.'));
+    }
+
     /**
      * Concrete5_Controller_Login::callback
      * Call an AuthenticationTypeController method throw a uri.

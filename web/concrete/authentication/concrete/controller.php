@@ -222,6 +222,9 @@ class Controller extends AuthenticationTypeController
         $user = new User($uName, $uPassword);
         if (!is_object($user) || !($user instanceof User) || $user->isError()) {
             switch ($user->getError()) {
+                case USER_SESSION_EXPIRED:
+                    throw new \Exception(t('Your session has expired. Please sign in again.'));
+                    break;
                 case USER_NON_VALIDATED:
                     throw new \Exception(t(
                                              'This account has not yet been validated. Please check the email associated with this account and follow the link it contains.'));
