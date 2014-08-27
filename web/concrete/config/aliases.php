@@ -63,6 +63,7 @@ return array(
     'PermissionKey' => '\Concrete\Core\Permission\Key\Key',
     'PermissionKeyCategory' => '\Concrete\Core\Permission\Category',
     'PermissionAccess' => '\Concrete\Core\Permission\Access\Access',
+    'PermissionCache' => '\Concrete\Core\Permission\Cache',
     'User' => '\Concrete\Core\User\User',
     'UserInfo' => '\Concrete\Core\User\UserInfo',
     'UserList' => '\Concrete\Core\User\UserList',
