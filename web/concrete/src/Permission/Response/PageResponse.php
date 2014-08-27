@@ -114,6 +114,7 @@ class PageResponse extends Response {
 				return COLLECTION_FORBIDDEN;
 			}
 		}
+        return parent::testForErrors();
 	}
 
 
