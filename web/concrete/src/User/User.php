@@ -13,6 +13,7 @@ use Session;
 use \Hautelook\Phpass\PasswordHash;
 use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Core;
+use Zend\Stdlib\DateTime;
 
 class User extends Object
 {
@@ -25,6 +26,7 @@ class User extends Object
     // an associative array of all access entity objects that are associated with this user.
     protected $accessEntities = array();
     protected $hasher;
+    protected $uLastPasswordChange;
 
     /** Return an User instance given its id (or null if it's not found)
 	* @param int $uID The id of the user
@@ -36,7 +38,7 @@ class User extends Object
     {
         $db = Loader::db();
         $v = array($uID);
-        $q = "SELECT uID, uName, uIsActive, uLastOnline, uTimezone, uDefaultLanguage FROM Users WHERE uID = ? LIMIT 1";
+        $q = "SELECT uID, uName, uIsActive, uLastOnline, uTimezone, uDefaultLanguage, uLastPasswordChange FROM Users WHERE uID = ? LIMIT 1";
         $r = $db->query($q, $v);
         $row = $r ? $r->FetchRow() : null;
         $nu = null;
@@ -50,6 +52,7 @@ class User extends Object
             $nu->uTimezone = $row['uTimezone'];
             $nu->uGroups = $nu->_getUserGroups(true);
             $nu->superUser = ($nu->getUserID() == USER_SUPER_ID);
+            $nu->uLastPasswordChange = $row['uLastPasswordChange'];
             if ($login) {
                 $session = Core::make('session');
                 $session->set('uID', $row['uID']);
@@ -59,7 +62,7 @@ class User extends Object
                 $session->set('uLastOnline', $row['uLastOnline']);
                 $session->set('uTimezone', $row['uTimezone']);
                 $session->set('uDefaultLanguage', $row['uDefaultLanguage']);
-                $session->set('uID', $row['uID']);
+                $session->set('uLastPasswordChange', $row['uLastPasswordChange']);
                 if ($cacheItemsOnLogin) {
                     Loader::helper('concrete/ui')->cacheInterfaceItems();
                 }
@@ -83,29 +86,39 @@ class User extends Object
     {
         $session = Core::make('session');
 
-        return $session->has('uID') && $session->get('uID') > 0 && $session->has('uName') && $session->get('uName') != '';
+        return $session->has('uID') && $session->get('uID') > 0 && $session->has('uName')
+            && $session->get('uName') != '' && $session->has('uLastPasswordChange');
     }
 
     public function checkLogin()
     {
+
+        $session = Core::make('session');
         $aeu = Config::get('ACCESS_ENTITY_UPDATED');
-        if ($aeu && $aeu > Session::get('accessEntitiesUpdated')) {
+        if ($aeu && $aeu > $session->get('accessEntitiesUpdated')) {
             User::refreshUserGroups();
         }
 
-        if (Session::get('uID') > 0) {
+        if ($session->get('uID') > 0) {
             $db = Loader::db();
-            $row = $db->GetRow("select uID, uIsActive from Users where uID = ? and uName = ?", array(Session::get('uID'), Session::get('uName')));
-            $checkUID = $row['uID'];
-            if ($checkUID == Session::get('uID')) {
+            $row = $db->GetRow("select uID, uIsActive, uLastPasswordChange from Users where uID = ? and uName = ?", array($session->get('uID'), $session->get('uName')));
+            $checkUID = (isset($row['uID']))?($row['uID']):(false);
+
+            if ($checkUID == $session->get('uID')) {
                 if (!$row['uIsActive']) {
                     return false;
                 }
-                Session::set('uOnlineCheck', time());
-                if ((Session::get('uOnlineCheck') - Session::get('uLastOnline') > (ONLINE_NOW_TIMEOUT / 2))) {
+
+                if($row['uLastPasswordChange'] > $session->get('uLastPasswordChange')) {
+                    $this->loadError(USER_SESSION_EXPIRED);
+                    return false;
+                }
+
+                $session->set('uOnlineCheck', time());
+                if (($session->get('uOnlineCheck') - $session->get('uLastOnline') > (ONLINE_NOW_TIMEOUT / 2))) {
                     $db = Loader::db();
-                    $db->query("update Users set uLastOnline = ? where uID = ?", array(Session::get('uOnlineCheck'), $this->uID));
-                    Session::set('uLastOnline', Session::get('uOnlineCheck'));
+                    $db->query("update Users set uLastOnline = ? where uID = ?", array($session->get('uOnlineCheck'), $this->uID));
+                    $session->set('uLastOnline', $session->get('uOnlineCheck'));
                 }
 
                 return true;
@@ -131,9 +144,9 @@ class User extends Object
             }
             $v = array($username);
             if (defined('USER_REGISTRATION_WITH_EMAIL_ADDRESS') && USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
-                $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword from Users where uEmail = ?";
+                $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange from Users where uEmail = ?";
             } else {
-                $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword from Users where uName = ?";
+                $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange from Users where uName = ?";
             }
             $db = Loader::db();
             $r = $db->query($q, $v);
@@ -149,6 +162,7 @@ class User extends Object
                     $this->uIsActive = $row['uIsActive'];
                     $this->uTimezone = $row['uTimezone'];
                     $this->uDefaultLanguage = $row['uDefaultLanguage'];
+                    $this->uLastPasswordChange = $row['uLastPasswordChange'];
                     $this->uGroups = $this->_getUserGroups($args[2]);
                     if ($row['uID'] == USER_SUPER_ID) {
                         $this->superUser = true;
@@ -165,6 +179,7 @@ class User extends Object
                         $session->set('uGroups', $this->uGroups);
                         $session->set('uTimezone', $this->uTimezone);
                         $session->set('uDefaultLanguage', $row['uDefaultLanguage']);
+                        $session->set('uLastPasswordChange', $row['uLastPasswordChange']);
                         Loader::helper('concrete/ui')->cacheInterfaceItems();
                     }
                 } elseif ($row['uID'] && !$row['uIsActive']) {
@@ -295,6 +310,11 @@ class User extends Object
     public function getUserTimezone()
     {
         return $this->uTimezone;
+    }
+
+    public function getUserSessionValidSince()
+    {
+        return $this->uLastPasswordChange;
     }
 
     public function setAuthTypeCookie($authType)

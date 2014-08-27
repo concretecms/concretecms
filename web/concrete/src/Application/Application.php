@@ -293,7 +293,13 @@ class Application extends Container
             if (!$valid) {
                 $isActive = $u->isActive();
                 $u->logout();
-                if (!$isActive) {
+                if($u->isError()) {
+                    switch ($u->getError()) {
+                        case USER_SESSION_EXPIRED:
+                            return Redirect::to('/login', 'session_invalidated')->send();
+                            break;
+                    }
+                } elseif (!$isActive) {
                     return Redirect::to('/login', 'account_deactivated')->send();
                 } else {
                     $v = new View('/frontend/user_error');

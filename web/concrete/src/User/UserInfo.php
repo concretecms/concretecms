@@ -128,7 +128,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     private function get($where, $var)
     {
         $db = Loader::db();
-        $q = "select Users.uID, Users.uLastLogin, Users.uLastIP, Users.uIsValidated, Users.uPreviousLogin, Users.uIsFullRecord, Users.uNumLogins, Users.uDateAdded, Users.uIsActive, Users.uDefaultLanguage, Users.uLastOnline, Users.uHasAvatar, Users.uName, Users.uEmail, Users.uPassword, Users.uTimezone from Users " . $where;
+        $q = "select Users.uID, Users.uLastLogin, Users.uLastIP, Users.uIsValidated, Users.uPreviousLogin, Users.uIsFullRecord, Users.uNumLogins, Users.uDateAdded, Users.uIsActive, Users.uDefaultLanguage, Users.uLastOnline, Users.uHasAvatar, Users.uName, Users.uEmail, Users.uPassword, Users.uTimezone, Users.uLastPasswordChange from Users " . $where;
         $r = $db->query($q, array($var));
         if ($r && $r->numRows() > 0) {
             $ui = new UserInfo();
@@ -180,8 +180,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         if (isset($data['uDefaultLanguage']) && $data['uDefaultLanguage'] != '') {
             $uDefaultLanguage = $data['uDefaultLanguage'];
         }
-        $v = array($data['uName'], $data['uEmail'], $hash, $uIsValidated, $uDateAdded, $uIsFullRecord, $uDefaultLanguage, 1);
-        $r = $db->prepare("insert into Users (uName, uEmail, uPassword, uIsValidated, uDateAdded, uIsFullRecord, uDefaultLanguage, uIsActive) values (?, ?, ?, ?, ?, ?, ?, ?)");
+        $v = array($data['uName'], $data['uEmail'], $hash, $uIsValidated, $uDateAdded, $uDateAdded, $uIsFullRecord, $uDefaultLanguage, 1);
+        $r = $db->prepare("insert into Users (uName, uEmail, uPassword, uIsValidated, uDateAdded, uLastPasswordChange, uIsFullRecord, uDefaultLanguage, uIsActive) values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $res = $db->execute($r, $v);
         if ($res) {
             $newUID = $db->Insert_ID();
@@ -204,8 +204,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $dh = Loader::helper('date');
         $uDateAdded = $dh->getSystemDateTime();
 
-        $v = array(USER_SUPER_ID, USER_SUPER, $uEmail, $uPasswordEncrypted, 1, $uDateAdded);
-        $r = $db->prepare("insert into Users (uID, uName, uEmail, uPassword, uIsActive, uDateAdded) values (?, ?, ?, ?, ?, ?)");
+        $v = array(USER_SUPER_ID, USER_SUPER, $uEmail, $uPasswordEncrypted, 1, $uDateAdded, $uDateAdded);
+        $r = $db->prepare("insert into Users (uID, uName, uEmail, uPassword, uIsActive, uDateAdded, uLastPasswordChange) values (?, ?, ?, ?, ?, ?, ?)");
         $res = $db->execute($r, $v);
         if ($res) {
             $newUID = $db->Insert_ID();
@@ -512,11 +512,20 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
             if ($data['uPassword'] != null) {
                 if ($data['uPassword'] == $data['uPasswordConfirm']) {
-                    $v = array($uName, $uEmail, $this->getUserObject()->getUserPasswordHasher()->HashPassword($data['uPassword']), $uHasAvatar, $uTimezone, $uDefaultLanguage, $this->uID);
-                    $r = $db->prepare("update Users set uName = ?, uEmail = ?, uPassword = ?, uHasAvatar = ?, uTimezone = ?, uDefaultLanguage = ? where uID = ?");
+
+                    $dh = Loader::helper('date');
+                    $dateTime = $dh->getSystemDateTime();
+                    $v = array($uName, $uEmail, $this->getUserObject()->getUserPasswordHasher()->HashPassword($data['uPassword']), $uHasAvatar, $uTimezone, $uDefaultLanguage, $dateTime, $this->uID);
+                    $r = $db->prepare("update Users set uName = ?, uEmail = ?, uPassword = ?, uHasAvatar = ?, uTimezone = ?, uDefaultLanguage = ?, uLastPasswordChange = ? where uID = ?");
                     $res = $db->execute($r, $v);
 
                     $testChange = true;
+
+                    $currentUser = new User();
+                    $session = Core::make('session');
+                    if($currentUser->isLoggedIn() && $currentUser->getUserID() == $session->get('uID')) {
+                        $session->set('uLastPasswordChange', $dateTime);
+                    }
 
                 } else {
                     $updateGroups = false;
@@ -656,13 +665,28 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     {
         $db = Loader::db();
         if ($this->uID) {
-            $v = array($this->getUserObject()->getUserPasswordHasher()->HashPassword($newPassword), $this->uID);
-            $q = "update Users set uPassword = ? where uID = ?";
+            $dh = Loader::helper('date');
+            $dateTime = $dh->getSystemDateTime();
+            $v = array(
+                $this->getUserObject()->getUserPasswordHasher()->HashPassword($newPassword),
+                $dateTime,
+                $this->uID
+            );
+            var_dump($dateTime);
+            die();
+            $q = "update Users set uPassword = ?, uLastPasswordChange = ?  where uID = ?";
             $r = $db->prepare($q);
             $res = $db->execute($r, $v);
 
             $ue = new \Concrete\Core\User\Event\UserInfoWithPassword($this);
             $ue->setUserPassword($newPassword);
+
+            $currentUser = new User();
+            $session = Core::make('session');
+            if($currentUser->isLoggedIn() && $currentUser->getUserID() == $session->get('uID')) {
+                $session->set('uLastPasswordChange', $dateTime);
+            }
+
             Events::dispatch('on_user_change_password', $ue);
 
             return $res;
