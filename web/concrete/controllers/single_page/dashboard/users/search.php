@@ -14,8 +14,6 @@ use Permissions;
 use PermissionKey;
 use UserAttributeKey;
 use Localization;
-use Zend_Locale;
-use Zend_Locale_Data;
 use Cache;
 use \Concrete\Controller\Search\Users as SearchUsersController;
 use \Concrete\Core\User\EditResponse as UserEditResponse;
@@ -237,7 +235,6 @@ class Search extends DashboardPageController
                     $this->error->add(t('A username cannot be more than %s characters long.',USER_USERNAME_MAXIMUM));
                 }
 
-
                 if (strlen($username) >= USER_USERNAME_MINIMUM && !Loader::helper('concrete/validation')->username($username)) {
                     if (USER_USERNAME_ALLOW_SPACES) {
                         $this->error->add(t('A username may only contain letters, numbers, spaces, dots (not at the beginning/end), underscores (not at the beginning/end).'));
@@ -372,14 +369,23 @@ class Search extends DashboardPageController
         $obj->value = '';
         $result = array($obj);
         foreach ($languages as $lang) {
-            $loc = new Zend_Locale($lang);
             $obj = new stdClass();
             $obj->value = $lang;
-            $obj->text = Zend_Locale::getTranslation($loc->getLanguage(), 'language', $lang);
+            $obj->text = \Punic\Language::getName($lang);
             $result[] = $obj;
         }
-        Loader::helper('ajax')->sendResult($result);
+        usort($result, function ($a, $b) {
+            if ($a->value === '') {
+                $cmp = -1;
+            } elseif ($b->value === '') {
+                $cmp = 1;
+            } else {
+                $cmp = strcasecmp($a->text, $b->text);
+            }
 
+            return $cmp;
+        });
+        Loader::helper('ajax')->sendResult($result);
     }
 
     public function delete_complete()
