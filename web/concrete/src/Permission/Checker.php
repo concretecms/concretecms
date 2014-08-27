@@ -8,6 +8,7 @@ class Checker {
 
 	public $error;
 
+    /** @var PermissionResponse */
 	protected $response;
 	
 	/** 

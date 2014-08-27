@@ -18,6 +18,7 @@ class CollectionVersionResponse extends Response {
 		} else if (!$this->object->isMostRecent()) {
 			return VERSION_NOT_RECENT;
 		}
+        return parent::testForErrors();
 	}
 
 }
