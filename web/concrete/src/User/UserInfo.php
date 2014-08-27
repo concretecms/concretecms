@@ -672,8 +672,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
                 $dateTime,
                 $this->uID
             );
-            var_dump($dateTime);
-            die();
             $q = "update Users set uPassword = ?, uLastPasswordChange = ?  where uID = ?";
             $r = $db->prepare($q);
             $res = $db->execute($r, $v);
