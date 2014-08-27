@@ -21,10 +21,6 @@ for ($i = 1; $i <= 12; $i++) {
 	$repeatMonths[$i] = $i;
 }
 
-$loc = Localization::getInstance();
-$list = Zend_Locale::getTranslationList('Days', $loc->activeLocale());
-
-
 $pdStartDate = false;
 $pdEndDate = false;
 $pdRepeats = false;
@@ -148,14 +144,12 @@ $dt = Loader::helper('form/date_time');
 <div class="control-group">
 <label class="control-label"><?=t('On')?></label>
 <div class="controls">
-<? 
-$x = 0;
-foreach($list['format']['wide'] as $key => $value) { ?>
-	<label><input <? if (in_array($x, $pdRepeatPeriodWeekDays)) { ?>checked="checked" <? } ?>
-	type="checkbox" name="pdRepeatPeriodWeeksDays[]" value="<?=$x?>" /> <span><?=$value?></span></label>
-	
 <?
-	$x++;
+foreach(\Punic\Calendar::getSortedWeekdays('wide') as $weekDay) {
+	?>
+	<label><input <? if (in_array($weekDay['id'], $pdRepeatPeriodWeekDays)) { ?>checked="checked" <? } ?>
+	type="checkbox" name="pdRepeatPeriodWeeksDays[]" value="<?=$weekDay['id']?>" /> <span><?=h($weekDay['name'])?></span></label>
+	<?
 } ?>
 </div>
 </div>
