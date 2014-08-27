@@ -5,7 +5,7 @@ use \Concrete\Core\Block\BlockController;
 class Controller extends BlockController {
 	protected $btTable = 'btYouTube';
 	protected $btInterfaceWidth = "400";
-	protected $btInterfaceHeight = "210";
+	protected $btInterfaceHeight = "430";
 	protected $btCacheBlockRecord = true;
 	protected $btCacheBlockOutput = true;
 	protected $btCacheBlockOutputOnPost = true;
