@@ -32,6 +32,7 @@ abstract class Editor extends Object
     /** @var int */
     protected $pkgID;
 
+    /** @return \Concrete\Core\Asset\AssetPointer[] */
     abstract public function getConversationEditorAssetPointers();
 
 

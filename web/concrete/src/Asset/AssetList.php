@@ -84,7 +84,11 @@ class AssetList {
 		return $this->assets[$assetType][$assetHandle];
 	}
 
-	public function getAssetGroup($assetGroupHandle) {
+    /**
+     * @param string $assetGroupHandle
+     * @return \Concrete\Core\Asset\AssetGroup
+     */
+    public function getAssetGroup($assetGroupHandle) {
 		return $this->assetGroups[$assetGroupHandle];
 	}
 
