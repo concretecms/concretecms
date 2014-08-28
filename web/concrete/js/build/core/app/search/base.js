@@ -38,6 +38,7 @@
 		this.setupBulkActions();
 		this.setupSort();
 		this.setupPagination();
+        this.setupSelect2();
 		this.setupAdvancedSearch();
 		this.setupCustomizeColumns();
 		this.updateResults(options.result);
@@ -62,7 +63,14 @@
 		})
 	}
 
-	ConcreteAjaxSearch.prototype.createMenu = function($selector) {
+    ConcreteAjaxSearch.prototype.setupSelect2 = function() {
+        var selects = this.$element.find('.select2-select');
+        if (selects.length) {
+            selects.select2();
+        }
+    }
+
+    ConcreteAjaxSearch.prototype.createMenu = function($selector) {
 		$selector.concreteMenu({
 			'menu': $('[data-search-menu=' + $selector.attr('data-launch-search-menu') + ']')
 		});

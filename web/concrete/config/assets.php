@@ -21,6 +21,15 @@ $al->registerGroup('jquery/ui', array(
     array('css', 'jquery/ui')
 ));
 
+// select2
+$al->register('javascript', 'select2', 'js/select2.js', array('minify' => false, 'combine' => false));
+$al->register('css', 'select2', 'css/select2.css', array('minify' => false));
+
+$al->registerGroup('select2', array(
+    array('javascript', 'select2'),
+    array('css', 'select2')
+));
+
 // Underscore
 $al->register('javascript', 'underscore', 'js/underscore.js', array('minify' => false));
 
@@ -249,9 +258,11 @@ $al->register('css', 'core/file-manager', 'css/file-manager.css', array('minify'
 $al->registerGroup('core/file-manager', array(
     array('css', 'core/app'),
     array('css', 'core/file-manager'),
+    array('css', 'select2'),
     array('javascript', 'core/events'),
     array('javascript', 'underscore'),
     array('javascript', 'jquery/ui'),
+    array('javascript', 'select2'),
     array('javascript', 'core/app'),
     array('javascript', 'core/file-manager')
 ));

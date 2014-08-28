@@ -61,14 +61,14 @@ $searchRequest = $flr->getSearchRequest();
 	</ul>
 	</div>
 	<div class="ccm-search-fields-row">
-		<div class="form-group">
+		<div class="form-group form-group-full">
 			<?=$form->label('gID', t('In Group'))?>
 			<?php
             $gl = new GroupList();
             $g1 = $gl->getResults();
             ?>
 			<div class="ccm-search-field-content">
-			<select multiple name="gID[]" class="chosen-select form-control" style="width: 200px">
+			<select multiple name="gID[]" class="select2-select" style="width: 100%">
 				<?php foreach ($g1 as $g) {
                     $gp = new Permissions($g);
                     if ($gp->canSearchUsersInGroup($g)) {

@@ -60,10 +60,10 @@ $req = $flr->getSearchRequest();
     $s1 = FileSet::getMySets();
     if (count($s1) > 0) { ?>
     <div class="ccm-search-fields-row">
-        <div class="form-group">
+        <div class="form-group form-group-full">
         <?=$form->label('fsID', t('File Set'))?>
         <div class="ccm-search-field-content">
-        <select multiple name="fsID[]" class="chosen-select">
+        <select multiple name="fsID[]" class="select2-select" style="width: 100%">
             <optgroup label="<?=t('Sets')?>">
             <?php foreach ($s1 as $s) { ?>
                 <option value="<?=$s->getFileSetID()?>"  <?php if (is_array($req['fsID']) && in_array($s->getFileSetID(), $req['fsID'])) { ?> selected="selected" <?php } ?>><?=wordwrap($s->getFileSetName(), '23', '&shy;', true)?></option>
@@ -83,7 +83,7 @@ $req = $flr->getSearchRequest();
 
 <script type="text/template" data-template="search-field-row">
 <div class="ccm-search-fields-row">
-    <select name="field[]" class="ccm-search-choose-field" data-search-field="files">
+    <select name="field[]" class="ccm-search-choose-field form-control" data-search-field="files">
         <option value=""><?=t('Choose Field')?></option>
         <?php foreach ($searchFields as $key => $value) { ?>
             <option value="<?=$key?>" <% if (typeof(field) != 'undefined' && field.field == '<?=$key?>') { %>selected<% } %> data-search-field-url="<?=URL::to('/ccm/system/search/files/field', $key)?>"><?=$value?></option>
