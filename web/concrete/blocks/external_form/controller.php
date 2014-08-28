@@ -50,51 +50,34 @@ class Controller extends BlockController
         return $filename;
     }
 
-    // we use call so that any methods passed to the custom form block controller,
-    // if they're not implemented here, we attempt to find them in the
-    // controller for that specific custom form block
-
-    public function view()
+    public function isValidControllerTask($method, $parameters = array())
     {
-        $this->set('controller', $this);
+        $class = camelcase(substr($this->filename, 0, strrpos($this->filename, '.php')));
+        $controller = \Core::make('\\Concrete\\Block\\ExternalForm\\Form\\Controller\\' . $class);
+        if (method_exists($controller, $method)) {
+            return true;
+        }
+        return parent::isValidControllerTask($method, $parameters);
+
     }
 
-    public function __call($nm, $a)
+    protected function getController()
     {
-        $cnt = $this->getControllerFile();
-        if (is_object($cnt)) {
-            $cnt->runTask($nm, $a);
-            // set scope items in this controller
-            foreach ($cnt->getSets() as $key => $value) {
-                $this->set($key, $value);
-            }
-        }
+        $class = camelcase(substr($this->filename, 0, strrpos($this->filename, '.php')));
+        return \Core::make('\\Concrete\\Block\\ExternalForm\\Form\\Controller\\' . $class);
     }
 
-    protected function getControllerFile()
+    public function runAction($method, $parameters)
     {
-        if (file_exists(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_PROCESS . '/' . $this->filename)) {
-            $filename = DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_PROCESS . '/' . $this->filename;
-            $class = Object::camelcase(substr($this->filename, 0, strrpos($this->filename, '.php')));
-
-        } else {
-            if (file_exists(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_PROCESS_CORE . '/' . $this->filename)) {
-                $filename = DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_PROCESS_CORE . '/' . $this->filename;
-                $class = Object::camelcase(substr($this->filename, 0, strrpos($this->filename, '.php')));
-            }
+        if (in_array($method, array('add', 'edit'))) {
+            parent::runAction($method, $parameters);
+            return;
         }
 
-        if (isset($filename) && is_file($filename)) {
-            require_once($filename);
-            $class .= 'ExternalFormBlockController';
-            $fp = new $class($this->getBlockObject());
-        }
-
-        if (is_object($fp)) {
-            $fp->on_start();
-            return $fp;
-        } else {
-            print(t('Unable load external form block controller file: %s', $this->filename));
+        $controller = $this->getController();
+        $controller->runAction($method, $parameters);
+        foreach($controller->getSets() as $key => $value) {
+            $this->set($key, $value);
         }
     }
 
@@ -112,12 +95,12 @@ class Controller extends BlockController
         if (file_exists(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL)) {
             $forms = array_merge(
                 $forms,
-                $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL, array('controllers')));
+                $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL, array('controller')));
         }
         if (file_exists(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_CORE)) {
             $forms = array_merge(
                 $forms,
-                $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_CORE, array('controllers')));
+                $fh->getDirectoryContents(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_CORE, array('controller')));
         }
 
         return $forms;
