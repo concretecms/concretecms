@@ -80,7 +80,6 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-form/jquery-form.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/concrete5.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-liveupdate/jquery-liveupdate.js',
-                '<%= DIR_BASE %>/concrete/js/build/vendor/chosen/chosen.jquery.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-pep/jquery-pep.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/retinajs/retinajs.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/base.js',
@@ -115,6 +114,11 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/file-manager/selector.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/file-manager/menu.js'
             ]
+        },
+
+        select2: {
+            dest: '<%= DIR_BASE %>/concrete/js/select2.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/select2/select2.js'
         },
 
         bootstrap_alert: {
@@ -297,6 +301,7 @@ module.exports = function(grunt) {
     var css = {
         '<%= DIR_BASE %>/concrete/css/app.css': '<%= DIR_BASE %>/concrete/css/build/core/app/app.less',
         '<%= DIR_BASE %>/concrete/css/editable-fields.css': '<%= DIR_BASE %>/concrete/css/build/core/editable-fields.less',
+        '<%= DIR_BASE %>/concrete/css/select2.css': '<%= DIR_BASE %>/concrete/css/build/core/select2.less',
         '<%= DIR_BASE %>/concrete/css/jquery-ui.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-ui/jquery-ui.less',
         '<%= DIR_BASE %>/concrete/css/jquery-magnific-popup.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-magnific-popup/jquery-magnific-popup.less',
         '<%= DIR_BASE %>/concrete/css/jquery-rating.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-rating/jquery-rating.less',

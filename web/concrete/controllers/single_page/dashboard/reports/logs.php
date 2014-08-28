@@ -26,7 +26,7 @@ class Logs extends DashboardPageController {
 
 	public function view($page = 0) {
 		$list = new LogList();
-
+        $this->requireAsset('select2');
         $levels = array();
         foreach(Log::getLevels() as $level) {
             $levels[$level] = Log::getLevelDisplayName($level);

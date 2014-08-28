@@ -400,6 +400,8 @@ class Search extends DashboardPageController
             $this->setupUser($uID);
         }
 
+        $this->requireAsset('select2');
+
         $ui = $this->user;
         if (is_object($ui)) {
             $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */

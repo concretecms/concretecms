@@ -72,10 +72,6 @@ var ConcreteToolbar = function() {
 		$('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
 	}
 
-	setupChosen = function() {
-		$('.chosen-select').chosen();
-	}
-
 	setupPanels = function() {
 		$('<div />', {'id': 'ccm-panel-overlay'}).appendTo($(document.body));
         $('[data-launch-panel]').each(function() {
@@ -289,7 +285,6 @@ var ConcreteToolbar = function() {
 				setupIntelligentSearch();
 				setupPanels();
 				setupTooltips();
-				setupChosen();
 				setupPageAlerts();
 				setupHelpNotifications();
                 setupMobileNav();

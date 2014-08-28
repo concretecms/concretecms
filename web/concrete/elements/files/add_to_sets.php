@@ -162,25 +162,6 @@ $(function() {
 
 
 });
-/*
-$(function() {
-	$("#ccm-add-to-set-form").ajaxSubmit(function(resp) {
-		jQuery.fn.dialog.closeTop();
-		jQuery.fn.dialog.hideLoader();		
-		$("#ccm-" + searchInstance + "-advanced-search").ajaxSubmit(function(resp) {
-			$("#ccm-" + searchInstance + "-sets-search-wrapper").load(CCM_TOOLS_PATH + '/files/search_sets_reload', {'searchInstance': searchInstance}, function() {
-				$(".chosen-select").chosen();
-				ccm_parseAdvancedSearchResponse(resp, searchInstance);
-			});
-		});
-	});
-
-
-ccm_alSetupSetsForm = function(searchInstance) {
-
-}
-}
-*/
 
 </script>
 

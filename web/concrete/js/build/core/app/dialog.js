@@ -229,8 +229,6 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
 
     $dialog.find('.launch-tooltip').tooltip({'container': '#ccm-tooltip-holder'});
 
-    $dialog.find('.chosen-select').chosen();
-
     // help handling
     if ($dialog.find('.dialog-help').length > 0) {
         $dialog.find('.dialog-help').hide();

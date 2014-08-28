@@ -10,7 +10,7 @@ $th = Loader::helper('text');
 
     <script type="text/javascript">
         $(function() {
-            $('#level').chosen();
+            $('#level').removeClass('form-control').select2();
         });
     </script>
 
@@ -43,10 +43,10 @@ $th = Loader::helper('text');
             </div>
 
             <div class="ccm-search-fields-row">
-                <div class="form-group" style="width: 95%">
+                <div class="form-group form-group-full">
                     <?=$form->label('level', t('Level'))?>
                     <div class="ccm-search-field-content">
-                        <?=$form->selectMultiple('level', $levels, array_keys($levels), array('style'=>"width:190px"))?>
+                        <?=$form->selectMultiple('level', $levels, array_keys($levels), array('style'=>"width:100%"))?>
                     </div>
                 </div>
             </div>

@@ -3,6 +3,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
 use \Concrete\Core\Page\Type\PublishTarget\Type\Type as PageTypePublishTargetType;
 $form = Loader::helper('form');
 $templates = array();
+$ag = \Concrete\Core\Http\ResponseAssetGroup::get();
+$ag->requireAsset('select2');
 $pagetemplates = PageTemplate::getList();
 foreach($pagetemplates as $pt) {
 	$templates[$pt->getPageTemplateID()] = $pt->getPageTemplateDisplayName();
@@ -66,8 +68,10 @@ if (is_object($pagetype)) {
 
 	<div class="form-group" data-form-row="page-templates">
 		<?=$form->label('ptPageTemplateID', t('Page Templates'))?>
-		<?=$form->selectMultiple('ptPageTemplateID', $templates, $ptPageTemplateID, array('class' => 'span5'))?>
-	</div>
+        <div style="width: 100%">
+    		<?=$form->selectMultiple('ptPageTemplateID', $templates, $ptPageTemplateID, array('style' => 'width: 100%'))?>
+        </div>
+    </div>
 
 	<div class="form-group">
 		<?=$form->label('ptPublishTargetTypeID', t('Publish Method'))?>
@@ -97,7 +101,7 @@ if (is_object($pagetype)) {
 
 <script type="text/javascript">
 $(function() {
-	$('#ptPageTemplateID').chosen();
+	$('#ptPageTemplateID').removeClass('form-control').select2();
 	$('input[name=ptPublishTargetTypeID]').on('click', function() {
 		$('div[data-page-type-publish-target-type-id]').hide();
 		var ptPublishTargetTypeID = $('input[name=ptPublishTargetTypeID]:checked').val();
