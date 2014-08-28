@@ -38,6 +38,7 @@ class Controller extends BlockController {
 
         $this->set('f', $f);
         $this->set('altText',$this->getAltText());
+        $this->set('title',$this->getTitle());
         $this->set('linkURL',$this->getLinkURL());
     }
 
@@ -79,6 +80,7 @@ class Controller extends BlockController {
         return File::getByID($this->fID);
     }
     function getAltText() {return $this->altText;}
+    function getTitle() {return $this->title;}
     function getExternalLink() {return $this->externalLink;}
     function getInternalLinkCID() {return $this->internalLinkCID;}
     function getLinkURL() {
