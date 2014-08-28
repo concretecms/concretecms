@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Permission\Access\Entity;
 use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Permission\Category;
 use Loader;
 use Config;
 use Core;
@@ -63,7 +64,7 @@ class Type extends Object {
 	public static function getList($category = false) {
 		$db = Loader::db();
 		$list = array();
-		if ($category instanceof PermissionKeyCategory) {
+		if ($category instanceof Category) {
 			$r = $db->Execute('select pet.petID from PermissionAccessEntityTypes pet inner join PermissionAccessEntityTypeCategories petc on pet.petID = petc.petID where petc.pkCategoryID = ? order by pet.petID asc', array($category->getPermissionKeyCategoryID()));
 		} else { 
 			$r = $db->Execute('select petID from PermissionAccessEntityTypes order by petID asc');

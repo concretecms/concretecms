@@ -95,6 +95,7 @@ class DateTime
         $id = preg_replace("/[^0-9A-Za-z-]/", "_", $prefix);
         $html = '';
         $disabled = false;
+        $html .= '<div class="form-inline">';
         if ($includeActivation) {
             if ($value) {
                 $activated = 'checked';
@@ -104,7 +105,7 @@ class DateTime
             $html .= '<input type="checkbox" id="' . $id . '_activate" class="ccm-activate-date-time" ccm-date-time-id="' . $id . '" name="' . $_activate . '" ' . $activated . ' />';
         }
 
-        $html .= '<div><span class="ccm-input-date-wrapper form-inline" id="' . $id . '_dw"><input id="' . $id . '_dt_pub" class="form-control ccm-input-date"  ' . $disabled . ' /><input id="' . $id . '_dt" name="' . $_dt . '" type="hidden" ' . $disabled . ' /></span>';
+        $html .= '<div class="form-group"><span class="ccm-input-date-wrapper" id="' . $id . '_dw"><input id="' . $id . '_dt_pub" class="form-control ccm-input-date"  ' . $disabled . ' /><input id="' . $id . '_dt" name="' . $_dt . '" type="hidden" ' . $disabled . ' /></span>';
         $html .= '<span class="ccm-input-time-wrapper form-inline" id="' . $id . '_tw">';
         $html .= '<select class="form-control" id="' . $id . '_h" name="' . $_h . '" ' . $disabled . '>';
 
@@ -149,7 +150,7 @@ class DateTime
             $html .= '</option>';
             $html .= '</select>';
         }
-        $html .= '</span></div>';
+        $html .= '</span></div></div>';
         $jh = Core::make('helper/json'); /* @var $jh \Concrete\Core\Http\Service\Json */
         if ($calendarAutoStart) {
             $html .= '<script type="text/javascript">$(function () {
@@ -221,7 +222,7 @@ EOS;
             $defaultDateJs = '""';
         }
         $html = '';
-        $html .= '<div><span class="ccm-input-date-wrapper" id="' . $id . '_dw"><input id="' . $id . '_pub" class="ccm-input-date"  /><input id="' . $id . '" name="' . $field . '" type="hidden"  /></span></div>';
+        $html .= '<div><span class="ccm-input-date-wrapper" id="' . $id . '_dw"><input id="' . $id . '_pub" class="form-control ccm-input-date"  /><input id="' . $id . '" name="' . $field . '" type="hidden"  /></span></div>';
         $jh = Core::make('helper/json'); /* @var $jh \Concrete\Core\Http\Service\Json */
         if ($calendarAutoStart) {
             $html .= '<script type="text/javascript">$(function () {
