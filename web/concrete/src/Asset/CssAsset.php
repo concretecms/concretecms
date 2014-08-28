@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Core\Asset;
+use HtmlObject\Element;
+
 class CssAsset extends Asset {
 	
 	protected $assetSupportsMinification = true;
@@ -92,6 +94,7 @@ class CssAsset extends Asset {
 			for ($i = 0; $i < count($assets); $i++) {
 				$asset = $assets[$i];
 				$filename .= $asset->getAssetURL();
+                $sourceFiles[] = $asset->getAssetURL();
 			}
 			$filename = sha1($filename);
 			$cacheFile = $directory . '/' . $filename . '.css';
@@ -107,6 +110,7 @@ class CssAsset extends Asset {
 			$asset = new CSSAsset();
 			$asset->setAssetURL(self::getRelativeOutputDirectory() . '/' . $filename . '.css');
 			$asset->setAssetPath($directory . '/' . $filename . '.css');
+            $asset->setCombinedAssetSourceFiles($sourceFiles);
 			return array($asset);
 		}
 		return $assets;
@@ -125,7 +129,19 @@ class CssAsset extends Asset {
 	}
 
 	public function __toString() {
-		return '<link rel="stylesheet" type="text/css" href="' . $this->getAssetURL() . '" />';
-	}
+        $e = new Element('link');
+        $e->rel('stylesheet')->type('text/css')->href($this->getAssetURL());
+        if (count($this->combinedAssetSourceFiles)) {
+            $source = '';
+            foreach($this->combinedAssetSourceFiles as $file) {
+                $source .= $file . ' ';
+            }
+            $source = trim($source);
+            $e->setAttribute('data-source', $source);
+        }
+        return (string) $e;
+    }
+
+
 
 }

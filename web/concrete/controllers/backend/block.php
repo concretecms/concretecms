@@ -11,7 +11,6 @@ class Block extends BackendInterfaceBlockController
     public function render()
     {
         $btc = $this->block->getInstance();
-        $btc->outputAutoHeaderItems();
         $bv = new BlockView($this->block);
         if (isset($_REQUEST['arEnableGridContainer']) && $_REQUEST['arEnableGridContainer'] == 1) {
             $this->area->enableGridContainer();

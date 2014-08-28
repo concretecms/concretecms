@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Core\Asset;
+use HtmlObject\Element;
+
 class JavascriptAsset extends Asset {
 	
 	protected $assetSupportsMinification = true;
@@ -29,9 +31,11 @@ class JavascriptAsset extends Asset {
     protected static function process($assets, $processFunction) {
 		if ($directory = self::getOutputDirectory()) {
 			$filename = '';
+            $sourceFiles = array();
 			for ($i = 0; $i < count($assets); $i++) {
 				$asset = $assets[$i];
 				$filename .= $asset->getAssetURL();
+                $sourceFiles[] = $asset->getAssetURL();
 			}
 			$filename = sha1($filename);
 			$cacheFile = $directory . '/' . $filename . '.js';
@@ -47,6 +51,7 @@ class JavascriptAsset extends Asset {
 			$asset = new JavascriptAsset();
 			$asset->setAssetURL(self::getRelativeOutputDirectory() . '/' . $filename . '.js');
 			$asset->setAssetPath($directory . '/' . $filename . '.js');
+            $asset->setCombinedAssetSourceFiles($sourceFiles);
 			return array($asset);
 		}
 		return $assets;
@@ -67,7 +72,17 @@ class JavascriptAsset extends Asset {
 	public function getAssetType() {return 'javascript';}
 
 	public function __toString() {
-		return '<script type="text/javascript" src="' . $this->getAssetURL() . '"></script>';
+        $e = new Element('script');
+        $e->type('text/javascript')->src($this->getAssetURL());
+        if (count($this->combinedAssetSourceFiles)) {
+            $source = '';
+            foreach($this->combinedAssetSourceFiles as $file) {
+                $source .= $file . ' ';
+            }
+            $source = trim($source);
+            $e->setAttribute('data-source', $source);
+        }
+        return (string) $e;
 	}
 
 }

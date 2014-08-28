@@ -1,87 +1,144 @@
 <?
 namespace Concrete\Core\Asset;
+
 use Environment;
-abstract class Asset {
 
-	protected $assetVersion = '0';
-	protected $assetHandle;
-	protected $local = true;
-	protected $assetURL;
-	protected $assetPath;
-	protected $assetSupportsMinification = false;
-	protected $assetSupportsCombination = false;
-	protected $pkg;
+abstract class Asset
+{
 
-	const ASSET_POSITION_HEADER = 'H';
-	const ASSET_POSITION_FOOTER = 'F';
+    protected $assetVersion = '0';
+    protected $assetHandle;
+    protected $local = true;
+    protected $assetURL;
+    protected $assetPath;
+    protected $assetSupportsMinification = false;
+    protected $assetSupportsCombination = false;
+    protected $pkg;
+    protected $combinedAssetSourceFiles = array();
 
-	abstract public function getAssetDefaultPosition();
-	abstract public function getAssetType();
-	abstract public function minify($assets);
-	abstract public function combine($assets);
-	abstract public function __toString();
+    const ASSET_POSITION_HEADER = 'H';
+    const ASSET_POSITION_FOOTER = 'F';
 
-	public function assetSupportsMinification() { return $this->local && $this->assetSupportsMinification;}
-	public function assetSupportsCombination() { return $this->local && $this->assetSupportsCombination; }
+    abstract public function getAssetDefaultPosition();
 
-	public function setAssetSupportsMinification($minify) {$this->assetSupportsMinification = $minify;}
-	public function setAssetSupportsCombination($combine) {$this->assetSupportsCombination = $combine;}
-	
-	public function getAssetURL() {return $this->assetURL;}
-	public function getAssetPath() {return $this->assetPath;}
+    abstract public function getAssetType();
 
-	public function getAssetHandle() {return $this->assetHandle;}
+    abstract public function minify($assets);
 
-	public function __construct($assetHandle = false) {
-		$this->assetHandle = $assetHandle;
-		$this->position = $this->getAssetDefaultPosition();
-	}
+    abstract public function combine($assets);
 
-	public function getAssetFilename() {
-		return $this->filename;
-	}
+    abstract public function __toString();
 
-	public function setAssetVersion($version) {
-		$this->assetVersion = $version;
-	}
+    public function assetSupportsMinification()
+    {
+        return $this->local && $this->assetSupportsMinification;
+    }
 
-	public function getAssetVersion() {
-		return $this->assetVersion;
-	}
-	
-	public function setAssetPosition($position) {
-		$this->position = $position;
-	}
+    public function assetSupportsCombination()
+    {
+        return $this->local && $this->assetSupportsCombination;
+    }
 
-	public function setPackageObject($pkg) {
-		$this->pkg = $pkg;
-	}
+    public function setAssetSupportsMinification($minify)
+    {
+        $this->assetSupportsMinification = $minify;
+    }
 
-	public function setAssetURL($url) {$this->assetURL = $url;}
-	public function setAssetPath($path) {$this->assetPath = $path;}
+    public function setAssetSupportsCombination($combine)
+    {
+        $this->assetSupportsCombination = $combine;
+    }
 
-	public function getAssetURLPath() {
-		return substr($this->getAssetURL(), 0, strrpos($this->getAssetURL(), '/'));		
-	}
+    public function getAssetURL()
+    {
+        return $this->assetURL;
+    }
 
-	public function isAssetLocal() {return $this->local;}
+    public function getAssetPath()
+    {
+        return $this->assetPath;
+    }
 
-	public function setAssetIsLocal($isLocal) {
-		$this->local = $isLocal;
-	}
+    public function getAssetHandle()
+    {
+        return $this->assetHandle;
+    }
 
-	public function getAssetPosition() {
-		return $this->position;
-	}
+    public function __construct($assetHandle = false)
+    {
+        $this->assetHandle = $assetHandle;
+        $this->position = $this->getAssetDefaultPosition();
+    }
 
-	public function mapAssetLocation($path) {
-		if ($this->isAssetLocal()) {
-			$env = Environment::get();
-			$r = $env->getRecord($path);
-			$this->setAssetPath($r->file);
-			$this->setAssetURL($r->url);
-		} else {
-			$this->setAssetURL($path);
-		}	
-	}
+    public function getAssetFilename()
+    {
+        return $this->filename;
+    }
+
+    public function setAssetVersion($version)
+    {
+        $this->assetVersion = $version;
+    }
+
+    public function setCombinedAssetSourceFiles($paths)
+    {
+        $this->combinedAssetSourceFiles = $paths;
+    }
+
+    public function getAssetVersion()
+    {
+        return $this->assetVersion;
+    }
+
+    public function setAssetPosition($position)
+    {
+        $this->position = $position;
+    }
+
+    public function setPackageObject($pkg)
+    {
+        $this->pkg = $pkg;
+    }
+
+    public function setAssetURL($url)
+    {
+        $this->assetURL = $url;
+    }
+
+    public function setAssetPath($path)
+    {
+        $this->assetPath = $path;
+    }
+
+    public function getAssetURLPath()
+    {
+        return substr($this->getAssetURL(), 0, strrpos($this->getAssetURL(), '/'));
+    }
+
+    public function isAssetLocal()
+    {
+        return $this->local;
+    }
+
+    public function setAssetIsLocal($isLocal)
+    {
+        $this->local = $isLocal;
+    }
+
+    public function getAssetPosition()
+    {
+        return $this->position;
+    }
+
+    public function mapAssetLocation($path)
+    {
+        if ($this->isAssetLocal()) {
+            $env = Environment::get();
+            $r = $env->getRecord($path);
+            $this->setAssetPath($r->file);
+            $this->setAssetURL($r->url);
+        } else {
+            $this->setAssetURL($path);
+        }
+    }
 }

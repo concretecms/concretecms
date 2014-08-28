@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\View;
+use Concrete\Core\Asset\Asset;
 use View as ConcreteView;
 use \Concrete\Core\Asset\CssAsset;
 use \Concrete\Core\Asset\JavascriptAsset;
@@ -34,6 +35,23 @@ class DialogView extends ConcreteView {
 		return $items;
 	}
 
+    protected function getAssetsToOutput()
+    {
+        $ouput = parent::getAssetsToOutput();
+        $return = array();
+        foreach($ouput as $position => $assets) {
+            foreach($assets as $asset) {
+                $asset->setAssetPosition(Asset::ASSET_POSITION_HEADER);
+                $asset->setAssetSupportsMinification(false);
+                $asset->setAssetSupportsCombination(false);
+                $return[$position][] = $asset;
+            }
+        }
+        return $return;
+    }
+
+
+    /*
 	protected function onAfterGetContents() {
 		// now that we have the contents of the tool,
 		// we make sure any require assets get moved into the header
@@ -42,7 +60,10 @@ class DialogView extends ConcreteView {
 		$assets = $r->getRequiredAssetsToOutput();
 		foreach($assets as $asset) {
 			$asset->setAssetPosition(Asset::ASSET_POSITION_HEADER);
+            $asset->setAssetSupportsMinification(false);
+            $asset->setAssetSupportsCombination(false);
 			$this->addOutputAsset($asset);
 		}
 	}
+    */
 }
