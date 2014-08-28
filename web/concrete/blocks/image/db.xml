@@ -31,6 +31,7 @@
 			<default value="0" />
 		</field>
 		<field name="altText" type="C" size="255"/>
+        <field name="title" type="C" size="255"/>
         <index name="fID">
             <col>fID</col>
         </index>

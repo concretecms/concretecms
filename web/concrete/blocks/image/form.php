@@ -63,6 +63,11 @@ if ($forceImageToMatchDimensions && $maxWidth && $maxHeight) {
 	<?= $form->text('altText', $altText, array('style'=>'width: 60%;')); ?>
 </div>
 
+<div class="form-group">
+    <?=$form->label('title', t('Title'))?>
+    <?= $form->text('title', $title, array('style'=>'width: 60%;')); ?>
+</div>
+
 </fieldset>
 
 <fieldset>

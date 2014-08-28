@@ -2,8 +2,12 @@
 
 $tag = Core::make('html/image', array($f))->getTag();
 $tag->addClass('ccm-image-block img-responsive');
-$tag->alt($altText);
-
+if ($altText) {
+    $tag->alt($altText);
+}
+if ($title) {
+    $tag->title($title);
+}
 if ($linkURL):
     print '<a href="' . $linkURL . '">';
 endif;

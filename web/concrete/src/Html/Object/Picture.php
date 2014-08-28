@@ -87,6 +87,15 @@ class Picture extends Element
         }
     }
 
+    public function title($title)
+    {
+        foreach($this->getChildren() as $child) {
+            if ($child instanceof Image || $child instanceof Source) {
+                $child->title($title);
+            }
+        }
+    }
+
     public function addClass($classes)
     {
         $sources = $this->getChildren();
