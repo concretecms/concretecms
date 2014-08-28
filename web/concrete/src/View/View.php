@@ -187,9 +187,15 @@ class View extends AbstractView {
         print '<!--ccm:assets:' . Asset::ASSET_POSITION_FOOTER . '//-->';
     }
 
-    public function postProcessViewContents($contents) {
+    protected function getAssetsToOutput()
+    {
         $responseGroup = ResponseAssetGroup::get();
         $assets = $responseGroup->getAssetsToOutput();
+        return $assets;
+    }
+
+    public function postProcessViewContents($contents) {
+        $assets = $this->getAssetsToOutput();
 
         $contents = $this->replaceAssetPlaceholders($assets, $contents);
 

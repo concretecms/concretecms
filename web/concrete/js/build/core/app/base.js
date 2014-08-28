@@ -35,12 +35,17 @@ ccm_addHeaderItem = function(item, type) {
             hd.appendChild(ss);
         } else {
             if (!($('head').children('link[href*="' + item + '"]').length)) {
-                $('head').append('<link rel="stylesheet" media="screen" type="text/css" href="' + item + qschar + new Date().getTime() + '" />');
+                // we have to also check to make sure it isn't in a data-source attribute.
+                if (!($('head').children('link[data-source~="' + item + '"]').length)) {
+                    $('head').append('<link rel="stylesheet" media="screen" type="text/css" href="' + item + qschar + new Date().getTime() + '" />');
+                }
             }
         }
     } else if (type == 'JAVASCRIPT') {
         if (!($('script[src*="' + item + '"]').length)) {
-            $('head').append('<script type="text/javascript" src="' + item + qschar + new Date().getTime() + '"></script>');
+            if (!($('script[data-source~="' + item + '"]').length)) {
+                $('head').append('<script type="text/javascript" src="' + item + qschar + new Date().getTime() + '"></script>');
+            }
         }
     } else {
         if (!($('head').children(item).length)) {
