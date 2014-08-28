@@ -36,5 +36,24 @@
  * Route::register('/custom/view', '\My\Custom\Controller::view');
  * Route::register('/custom/add', '\My\Custom\Controller::add');
  *
+ * ## Override an Asset
+ *
+ * use \Concrete\Core\Asset\AssetList;
+ * AssetList::getInstance()
+ *     ->getAsset('javascript', 'jquery')
+ *     ->setAssetURL('/path/to/new/jquery.js');
+ *
+ * or, override an asset by providing a newer version.
+ *
+ * use \Concrete\Core\Asset\AssetList;
+ * use \Concrete\Core\Asset\Asset;
+ * $al = AssetList::getInstance();
+ * $al->register(
+ *   'javascript', 'jquery', 'path/to/new/jquery.js',
+ *   array('version' => '2.0', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false)
+ *   );
+ *
+ *
  * ----------------------------------------------------------------------------
  */
+

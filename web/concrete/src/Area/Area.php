@@ -442,7 +442,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
 	public function getHandleList()
     {
         $db = Loader::db();
-        $r = $db->Execute('select distinct arHandle from Areas where arParentID = 0 order by arHandle asc');
+        $r = $db->Execute('select distinct arHandle from Areas where arParentID = 0 and arIsGlobal = 0 order by arHandle asc');
         $handles = array();
         while ($row = $r->FetchRow()) {
             $handles[] = $row['arHandle'];

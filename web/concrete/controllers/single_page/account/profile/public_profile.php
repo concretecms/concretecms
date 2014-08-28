@@ -32,7 +32,6 @@ class PublicProfile extends AccountPageController {
 			$profile = UserInfo::getByID($u->getUserID());
 		} else {
 			$this->set('intro_msg', t('You must sign in order to access this page!'));
-			Loader::controller('/login');
 			$this->render('/login');
 		}
 		if (is_object($profile) && $profile->getUserID() == $u->getUserID()) {

@@ -1,3 +1,23 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>  
 
-<textarea id="ccm-HtmlContent" name="content" style="width: 100%; height: 400px"><?=htmlentities($controllerObj->content, ENT_COMPAT, APP_CHARSET) ?></textarea>
+<div id="ccm-block-html-value"><?=h($content)?></div>
+<textarea style="display: none" id="ccm-block-html-value-textarea" name="content"></textarea>
+
+<style type="text/css">
+    #ccm-block-html-value {
+        width: 100%;
+        border: 1px solid #eee;
+        height: 490px;
+    }
+</style>
+
+<script type="text/javascript">
+    $(function() {
+        var editor = ace.edit("ccm-block-html-value");
+        editor.setTheme("ace/theme/eclipse");
+        editor.getSession().setMode("ace/mode/html");
+        editor.getSession().on('change', function() {
+            $('#ccm-block-html-value-textarea').val(editor.getValue());
+        });
+    });
+</script>

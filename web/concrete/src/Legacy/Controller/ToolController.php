@@ -40,6 +40,7 @@ class ToolController extends Controller {
 			if ($r->exists()) {
 				$v = new DialogView($btHandle . '/' . DIRNAME_TOOLS . '/' . $tool);
 				$v->setViewRootDirectoryName(DIRNAME_BLOCKS);
+				$v->setInnerContentFile($r->file);
 				$this->setViewObject($v);		
 			}
 		}

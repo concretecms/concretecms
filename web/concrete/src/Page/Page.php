@@ -1099,8 +1099,16 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         // so we don't have to query the database separately for every block on the page.
         if (is_null($this->blocksAliasedFromMasterCollection)) {
             $db = Loader::db();
-            $q = 'SELECT bID FROM CollectionVersionBlocks WHERE cID = ? AND isOriginal = 0 AND cvID = ? AND bID IN (SELECT bID FROM CollectionVersionBlocks AS cvb2 WHERE cvb2.cid = ?)';
-            $v = array($this->getCollectionID(), $this->getVersionObject()->getVersionID(), $this->getMasterCollectionID());
+            $q = 'SELECT cvb.bID FROM CollectionVersionBlocks AS cvb
+                    INNER JOIN CollectionVersionBlocks AS cvb2
+                        ON cvb.bID = cvb2.bID
+                            AND cvb2.cID = ?
+                    WHERE cvb.cID = ?
+                        AND cvb.isOriginal = 0
+                        AND cvb.cvID = ?
+                    GROUP BY cvb.bID
+                    ;';
+            $v = array($this->getMasterCollectionID(), $this->getCollectionID(), $this->getVersionObject()->getVersionID());
             $this->blocksAliasedFromMasterCollection = $db->GetCol($q, $v);
         }
         return in_array($b->getBlockID(), $this->blocksAliasedFromMasterCollection);
@@ -1193,23 +1201,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     /**
      * Gets the date a the current version was made public,
-     * if user is specified, returns in the current user's timezone
-     * @param string $mask
-     * @param string $type (system || user)
      * @return string date formated like: 2009-01-01 00:00:00
-    */
-    function getCollectionDatePublic($mask = null, $type='system') {
-        $dh = Loader::helper('date');
-        if(ENABLE_USER_TIMEZONES && $type == 'user') {
-            $cDatePublic = $dh->getLocalDateTime($this->vObj->cvDatePublic);
-        } else {
-            $cDatePublic = $this->vObj->cvDatePublic;
-        }
-        if ($mask == null) {
-            return $cDatePublic;
-        } else {
-            return $dh->date($mask, strtotime($cDatePublic));
-        }
+     */
+    function getCollectionDatePublic() {
+        return $this->vObj->cvDatePublic;
     }
 
     /**
@@ -1787,7 +1782,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         // any areas that were overriding permissions on the current page need to be overriding permissions
         // on the NEW page as well.
         $v = array($permissionsCollectionID);
-        $q = "select * from Areas where cID = ?";
+        $q = "select * from Areas where cID = ? and arOverrideCollectionPermissions";
         $r = $db->query($q, $v);
         while($row = $r->fetchRow()) {
             $v = array($this->cID, $row['arHandle'], $row['arOverrideCollectionPermissions'], $row['arInheritPermissionsFromAreaOnCID'], $row['arIsGlobal']);

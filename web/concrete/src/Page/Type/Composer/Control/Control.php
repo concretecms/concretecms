@@ -19,7 +19,7 @@ abstract class Control extends Object {
 	protected $ptComposerControlRequiredOnThisRequest = false;
 
 	abstract public function getPageTypeComposerControlCustomTemplates();
-	abstract public function render($label, $customTemplate);
+	abstract public function render($label, $customTemplate, $description);
 	abstract public function publishToPage(Page $c, $data, $controls);
 	abstract public function validate();
 	abstract public function getPageTypeComposerControlDraftValue();

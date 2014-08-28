@@ -62,7 +62,7 @@ class ClassLoader  {
         $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Controller\\PageType', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Controller', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_CONTROLLERS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Job', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_JOBS);
-		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Core', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_CLASSES);
+		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()), DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_CLASSES);
 		$symfonyLoader->register();
 	}
 

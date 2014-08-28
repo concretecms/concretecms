@@ -34,30 +34,30 @@
 			var menu = '<div class="ccm-topic-menu ccm-popover-page-menu popover fade popover fade"><div class="arrow"></div><div class="popover-inner">';
 			menu += '<ul class="dropdown-menu">';
 			if (data.canAddTopicCategoryTreeNode) {
-				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=add-category-node]\').ccmtopicstree(\'initAddNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="Add Category" href="' + CCM_DISPATCHER_FILENAME + '/tools/required/tree/node/add/topic_category?treeNodeParentID=' + data.key + '">Add Category<\/a><\/li>';
+				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=add-category-node]\').ccmtopicstree(\'initAddNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="' + ccmi18n_topics.addCategory + '" href="' + CCM_DISPATCHER_FILENAME + '/tools/required/tree/node/add/topic_category?treeNodeParentID=' + data.key + '">' + ccmi18n_topics.addCategory + '<\/a><\/li>';
 			}
 			if (data.canAddTopicTreeNode) {
-				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=add-topic-node]\').ccmtopicstree(\'initAddNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="Add Topic" href="' + CCM_DISPATCHER_FILENAME + '/tools/required/tree/node/add/topic?treeNodeParentID=' + data.key + '">Add Topic<\/a><\/li>';
+				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=add-topic-node]\').ccmtopicstree(\'initAddNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="' + ccmi18n_topics.addTopic + '" href="' + CCM_DISPATCHER_FILENAME + '/tools/required/tree/node/add/topic?treeNodeParentID=' + data.key + '">' + ccmi18n_topics.addTopic + '<\/a><\/li>';
 			}
 
 			if (data.canEditTreeNode && data.treeNodeTypeHandle == 'topic_category') {
-				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=update-category-node]\').ccmtopicstree(\'initUpdateCategoryNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="Edit Category" href="' + CCM_DISPATCHER_FILENAME + '/tools/required/tree/node/edit/topic_category?treeNodeID=' + data.key + '">Edit Category<\/a><\/li>';
-				menu += '<li><a href="#" onclick="$.fn.ccmtopicstree(\'cloneNode\', \'node\', ' + options.treeID + ',' + data.key + ')">Clone Category<\/a><\/li>';
+				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=update-category-node]\').ccmtopicstree(\'initUpdateCategoryNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="' + ccmi18n_topics.editCategory + '" href="' + CCM_DISPATCHER_FILENAME + '/tools/required/tree/node/edit/topic_category?treeNodeID=' + data.key + '">' + ccmi18n_topics.editCategory + '<\/a><\/li>';
+				menu += '<li><a href="#" onclick="$.fn.ccmtopicstree(\'cloneNode\', \'node\', ' + options.treeID + ',' + data.key + ')">' + ccmi18n_topics.cloneCategory + '<\/a><\/li>';
 			}
 
 			if (data.canEditTreeNode && data.treeNodeTypeHandle == 'topic') {
-				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=update-topic-node]\').ccmtopicstree(\'initUpdateTopicNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="Edit Topic" href="' + CCM_DISPATCHER_FILENAME + '/tools/required/tree/node/edit/topic?treeNodeID=' + data.key + '">Edit Topic<\/a><\/li>';
-				menu += '<li><a href="#" onclick="$.fn.ccmtopicstree(\'cloneNode\', \'node\', ' + options.treeID + ',' + data.key + ')">Clone Topic<\/a><\/li>';
+				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=update-topic-node]\').ccmtopicstree(\'initUpdateTopicNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="' + ccmi18n_topics.editTopic + '" href="' + CCM_DISPATCHER_FILENAME + '/tools/required/tree/node/edit/topic?treeNodeID=' + data.key + '">' + ccmi18n_topics.editTopic + '<\/a><\/li>';
+				menu += '<li><a href="#" onclick="$.fn.ccmtopicstree(\'cloneNode\', \'node\', ' + options.treeID + ',' + data.key + ')">' + ccmi18n_topics.cloneTopic + '<\/a><\/li>';
 			}
 
 			if (data.canEditTreeNodePermissions) {
-				menu += '<li><a class="dialog-launch" dialog-width="480" dialog-height="auto" dialog-modal="true" dialog-title="Edit Permissions" href="' + CCM_TOOLS_PATH + '/tree/node/permissions?treeNodeID=' + data.key + '">Edit Permissions<\/a><\/li>';
+				menu += '<li><a class="dialog-launch" dialog-width="480" dialog-height="auto" dialog-modal="true" dialog-title="' + ccmi18n_topics.editPermissions + '" href="' + CCM_TOOLS_PATH + '/tree/node/permissions?treeNodeID=' + data.key + '">' + ccmi18n_topics.editPermissions + '<\/a><\/li>';
 			}
 			if (data.treeNodeParentID > 0 && data.treeNodeTypeHandle == 'topic_category' && data.canDeleteTreeNode) {
-				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=remove-tree-node]\').ccmtopicstree(\'initRemoveNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="Remove" href="' + CCM_TOOLS_PATH + '/tree/node/remove?treeNodeID=' + data.key + '">Delete Category<\/a><\/li>';
+				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=remove-tree-node]\').ccmtopicstree(\'initRemoveNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="' + ccmi18n_topics.deleteCategory + '" href="' + CCM_TOOLS_PATH + '/tree/node/remove?treeNodeID=' + data.key + '">' + ccmi18n_topics.deleteCategory + '<\/a><\/li>';
 			}
 			if (data.treeNodeParentID > 0 && data.treeNodeTypeHandle == 'topic' && data.canDeleteTreeNode) {
-				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=remove-tree-node]\').ccmtopicstree(\'initRemoveNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="Remove" href="' + CCM_TOOLS_PATH + '/tree/node/remove?treeNodeID=' + data.key + '">Delete Topic<\/a><\/li>';
+				menu += '<li><a class="dialog-launch" dialog-width="550" dialog-on-open="$(\'[data-topic-form=remove-tree-node]\').ccmtopicstree(\'initRemoveNodeForm\', ' + options.treeID + ');" dialog-height="auto" dialog-modal="false" dialog-title="' + ccmi18n_topics.deleteTopic + '" href="' + CCM_TOOLS_PATH + '/tree/node/remove?treeNodeID=' + data.key + '">' + ccmi18n_topics.deleteTopic + '<\/a><\/li>';
 			}
 			menu += '</ul></div></div>';
 			var $menu = $(menu);

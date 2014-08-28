@@ -98,28 +98,21 @@ var pageList ={
             pageList.hideLoader();
         });
 	},
-	validate:function(){
-			var failed=0;
 
-			var rssOn=$('#ccm-pagelist-rssSelectorOn');
-			var rssTitle=$('#ccm-pagelist-rssTitle');
-			if( rssOn && rssOn.prop('checked') && rssTitle && rssTitle.val().length==0 ){
-				alert(ccm_t('feed-name'));
-				rssTitle.focus();
-				failed=1;
-			}
-
-			if(failed){
-				ccm_isBlockError=1;
-				return false;
-			}
-			return true;
-	},
     showLoader: function (element) {
         var position = element.position(),
-            group = element.closest('.form-group'),
             top = element.position().top,
-            left = group.position().left + group.width() + 10;
+            group, left;
+
+        if (element.is('input[type=checkbox]')) {
+            group = element.closest('div.checkbox');
+        } else if (element.is('input[type=radio]')) {
+            group = element.closest('div.radio');
+        } else {
+            group = element.closest('div.form-group');
+        }
+
+        left = group.position().left + group.width() + 10;
 
         preview_loader.css({
             left: left,
@@ -130,11 +123,11 @@ var pageList ={
         preview_loader.hide();
     }
 };
-$(function(){ pageList.init(); });
-
-ccmValidateBlockForm = function() { return pageList.validate(); }
 
 Concrete.event.bind('pagelist.edit.open', function() {
+
+    pageList.init();
+
     container = $('div.pagelist-form');
     preview_container = container.find('div.preview');
     preview_loader = container.find('div.loader');

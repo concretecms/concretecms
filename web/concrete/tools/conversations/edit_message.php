@@ -34,6 +34,7 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageID']) && $_P
                         <? $editor->outputConversationEditorReplyMessageForm(); ?>
                         <button type="button" data-post-message-id="<?=$message->getConversationMessageID()?>" data-submit="update-conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Save')?></button>
                         <button type="button" class="pull-right btn btn-default ccm-conversation-attachment-toggle" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
+                        <button type="button" data-post-message-id="<?=$message->getConversationMessageID()?>" data-submit="cancel-update" class="cancel-update pull-right btn btn-small"><?=t('Cancel')?></button>
                         <?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
                         <?php echo $form->hidden('cID', $cID) ?>
                         <?php echo $form->hidden('bID', $bID) ?>

@@ -19,8 +19,9 @@
 	$pk = PermissionKey::getByHandle('access_page_type_permissions');
 	 ?>
 
-    <div class="ccm-dashboard-header-buttons">
-        <a href="<?=$view->url('/dashboard/pages/types/add')?>" class="btn btn-small btn-primary pull-right"><?=t('Add Page Type')?></a>
+    <div class="ccm-dashboard-header-buttons btn-group">
+        <a href="<?=$view->url('/dashboard/pages/types/organize')?>" class="btn btn-default"><?=t('Order &amp; Group')?></a>
+        <a href="<?=$view->url('/dashboard/pages/types/add')?>" class="btn btn-primary"><?=t('Add Page Type')?></a>
     </div>
 
 

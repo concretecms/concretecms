@@ -185,17 +185,8 @@ class Login extends PageController
                 array_unshift($languages, 'en_US');
             }
             $locales = array();
-            \Zend_Locale_Data::setCache(Cache::getLibrary());
             foreach ($languages as $lang) {
-                $loc = new \Zend_Locale($lang);
-                $locales[$lang] = \Zend_Locale::getTranslation($loc->getLanguage(), 'language', $lang);
-                $locRegion = $loc->getRegion();
-                if ($locRegion !== false) {
-                    $locRegionName = $loc->getTranslation($loc->getRegion(), 'country', $lang);
-                    if ($locRegionName !== false) {
-                        $locales[$lang] .= ' (' . $locRegionName . ')';
-                    }
-                }
+                $locales[$lang] = \Punic\Language::getName($lang, $lang);
             }
             asort($locales);
             $locales = array_merge(array('' => tc('Default locale', '** Default')), $locales);

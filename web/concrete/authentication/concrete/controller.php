@@ -90,6 +90,9 @@ class Controller extends AuthenticationTypeController
     {
     }
 
+    /**
+     * Called when a user wants a password reset email sent, is passed in the user's email address.
+     */
     public function forgot_password()
     {
         $loginData['success'] = 0;
@@ -116,13 +119,8 @@ class Controller extends AuthenticationTypeController
             $mh->to($oUser->getUserEmail());
 
             //generate hash that'll be used to authenticate user, allowing them to change their password
-            $h = Loader::helper('validation/identifier');
-            $uHash = $h->generate('UserValidationHashes', 'uHash');
-            $db = Loader::db();
-            $db->Execute("DELETE FROM UserValidationHashes WHERE uID=?", array($oUser->uID));
-            $db->Execute(
-               "insert into UserValidationHashes (uID, uHash, uDateGenerated, type) values (?, ?, ?, ?)",
-               array($oUser->uID, $uHash, time(), intval(UVTYPE_CHANGE_PASSWORD)));
+            $h = new \Concrete\Core\User\ValidationHash;
+            $uHash = $h->add($oUser->uID, intval(UVTYPE_CHANGE_PASSWORD), true);
             $changePassURL = BASE_URL . View::url(
                                             '/login',
                                             'callback',

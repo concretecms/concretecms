@@ -15,6 +15,7 @@ $ptPageTemplateID = array();
 $ptAllowedPageTemplates = 'A';
 $ptDefaultPageTemplateID = 0;
 $ptLaunchInComposer = 0;
+$ptIsFrequentlyAdded = 1;
 $token = 'add_page_type';
 if (is_object($pagetype)) {
 	$token = 'update_page_type';
@@ -23,6 +24,7 @@ if (is_object($pagetype)) {
 	$ptLaunchInComposer = $pagetype->doesPageTypeLaunchInComposer();
 	$ptDefaultPageTemplateID = $pagetype->getPageTypeDefaultPageTemplateID();
 	$ptAllowedPageTemplates = $pagetype->getPageTypeAllowedPageTemplates();
+    $ptIsFrequentlyAdded = $pagetype->isPageTypeFrequentlyAdded();
 	$selectedtemplates = $pagetype->getPageTypeSelectedPageTemplateObjects();
 	foreach($selectedtemplates as $pt) {
 		$ptPageTemplateID[] = $pt->getPageTemplateID();
@@ -47,9 +49,15 @@ if (is_object($pagetype)) {
 	</div>
 
 	<div class="form-group">
-		<?=$form->label('ptLaunchInComposer', t('Launch In Composer'))?>
+		<?=$form->label('ptLaunchInComposer', t('Launch in Composer?'))?>
 		<?=$form->select('ptLaunchInComposer', array('0' => t('No'), '1' => t('Yes')), $ptLaunchInComposer, array('class' => 'span5'))?>
 	</div>
+
+    <div class="form-group">
+        <?=$form->label('ptIsFrequentlyAdded', t('Is this page type frequently added?'))?>
+        <?=$form->select('ptIsFrequentlyAdded', array('0' => t('No'), '1' => t('Yes')), $ptIsFrequentlyAdded, array('class' => 'span5'))?>
+        <div class="help-block"><?=t('Frequently added page types are always visible in the Pages panel.')?></div>
+    </div>
 
 	<div class="form-group">
 		<?=$form->label('ptAllowedPageTemplates', t('Allowed Page Templates'))?>

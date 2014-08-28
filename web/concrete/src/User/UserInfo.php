@@ -784,58 +784,30 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
     /**
      * Gets the date a user was added to the system,
-     * if user is specified, returns in the current user's timezone
-     * @param string $type (system || user)
      * @return string date formated like: 2009-01-01 00:00:00
      */
-    public function getUserDateAdded($type = 'system', $datemask = 'Y-m-d H:i:s')
+    public function getUserDateAdded()
     {
-        $dh = Loader::helper('date');
-        if (ENABLE_USER_TIMEZONES && $type == 'user') {
-            return $dh->getLocalDateTime($this->uDateAdded, $datemask);
-        } else {
-            return $dh->date($datemask, strtotime($this->uDateAdded));
-        }
+        return $this->uDateAdded;
     }
 
-    public function getUserStartDate($type = 'system')
+    public function getUserStartDate()
     {
-        // time-release permissions for users
-        if (ENABLE_USER_TIMEZONES && $type == 'user') {
-            $dh = Loader::helper('date');
-
-            return $dh->getLocalDateTime($this->upStartDate);
-        } else {
-            return $this->upStartDate;
-        }
+        return $this->upStartDate;
     }
 
     /**
      * Gets the date a user was last active on the site
-     * if user is specified, returns in the current user's timezone
-     * @param string $type (system || user)
      * @return string date formated like: 2009-01-01 00:00:00
      */
-    public function getLastOnline($type = 'system')
+    public function getLastOnline()
     {
-        if (ENABLE_USER_TIMEZONES && $type == 'user') {
-            $dh = Loader::helper('date');
-
-            return $dh->getLocalDateTime($this->uLastOnline);
-        } else {
-            return $this->uLastOnline;
-        }
+        return $this->uLastOnline;
     }
 
-    public function getUserEndDate($type = 'system')
+    public function getUserEndDate()
     {
-        if (ENABLE_USER_TIMEZONES && $type == 'user') {
-            $dh = Loader::helper('date');
-
-            return $dh->getLocalDateTime($this->upEndDate);
-        } else {
-            return $this->upEndDate;
-        }
+        return $this->upEndDate;
     }
 
 }

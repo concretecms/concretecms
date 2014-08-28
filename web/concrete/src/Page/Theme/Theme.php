@@ -725,8 +725,12 @@ class Theme extends Object
         } else {
             $src = ASSETS_URL_THEMES_NO_THUMBNAIL;
         }
-        $h = Loader::helper('html');
-        $img = $h->image($src, THEMES_THUMBNAIL_WIDTH, THEMES_THUMBNAIL_HEIGHT, array('class' => 'ccm-icon-theme'));
+        $html = new \HtmlObject\Image();
+        $img = $html->src($src)
+            ->width(THEMES_THUMBNAIL_WIDTH)
+            ->height(THEMES_THUMBNAIL_HEIGHT)
+            ->class('ccm-icon-theme');
+
         return $img;
     }
 

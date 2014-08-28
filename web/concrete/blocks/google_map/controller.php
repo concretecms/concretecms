@@ -7,7 +7,7 @@ class Controller extends BlockController {
 	
 	protected $btTable = 'btGoogleMap';
 	protected $btInterfaceWidth = "400";
-	protected $btInterfaceHeight = "285";
+	protected $btInterfaceHeight = "320";
 	protected $btCacheBlockRecord = true;
 	protected $btCacheBlockOutput = true;
 	protected $btCacheBlockOutputOnPost = true;
@@ -25,8 +25,7 @@ class Controller extends BlockController {
 	public function getBlockTypeDescription() {
 		return t("Enter an address and a Google Map of that location will be placed in your page.");
 	}
-	
-	
+		
 	public function getBlockTypeName() {
 		return t("Google Map");
 	}		
@@ -34,6 +33,10 @@ class Controller extends BlockController {
 	
 	public function validate($args) {
 		$error = Loader::helper('validation/error');
+		
+		if(empty($args['location']) ||  $args['latitude'] === '' || $args['longtitude'] === '') {
+			$error->add(t('You must select a valid location.'));
+		}	
 		
 		if(!is_numeric($args['zoom'])) {
 			$error->add(t('Please enter a zoom number from 0 to 21.'));
@@ -104,11 +107,5 @@ class Controller extends BlockController {
         $args['height'] = $data['height'];
 		parent::save($args);
 	}
-    
-    public function getJavaScriptStrings() {
-      return array(
-         'location-required' => t('You must select a valid location.')
-      );
-   }
-	
+
 }

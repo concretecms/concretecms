@@ -1,10 +1,10 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-$subject = t('A new facebook account has been connected to your %s account, verify within.',SITE);
+$subject = t(/*i18n: %s is the site name*/'A new Facebook account has been connected to your %s account, verify within.', SITE);
 
 $b = array();
 $b[] = t('*** DO NOT REPLY TO THE MESSAGE BELOW. ***');
-$b[] = t('Someone has tried to attach a facebook account to your %s account,',SITE)."\n".t('If this is you, please follow the link below:');
-$b[] = t('Please go to this like to validate: %s',$validateurl);
+$b[] = t('Someone has tried to attach a Facebook account to your %s account,', SITE);
+$b[] = t('If this is you, please go to this link to validate the association: %s', $validateurl);
 
-$body = implode("\n\n",$b);
+$body = implode("\n\n", $b);

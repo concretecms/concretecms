@@ -173,25 +173,36 @@ $form = Loader::helper('form/page_selector');
             <div class="radio">
                 <label>
                     <input type="radio" name="rss" class="rssSelector"
-                           value="0" <?= ($rss ? "" : "checked=\"checked\"") ?>/> <?= t('No') ?>
+                           value="0" <?= (is_object($rssFeed) ? "" : "checked=\"checked\"") ?>/> <?= t('No') ?>
                 </label>
             </div>
             <div class="radio">
                 <label>
                     <input id="ccm-pagelist-rssSelectorOn" type="radio" name="rss" class="rssSelector"
-                           value="1" <?= ($rss ? "checked=\"checked\"" : "") ?>/> <?= t('Yes') ?>
+                           value="1" <?= (is_object($rssFeed) ? "checked=\"checked\"" : "") ?>/> <?= t('Yes') ?>
                 </label>
              </div>
-            <div id="ccm-pagelist-rssDetails" <?= ($rss ? "" : "style=\"display:none;\"") ?>>
-                <div class="form-group">
-                    <label class="control-label"><?= t('RSS Feed Title') ?></label>
-                    <input class="form-control" id="ccm-pagelist-rssTitle" type="text" name="rssTitle"
-                           value="<?= $rssTitle ?>"/>
-                </div>
-                <div class="form-group">
-                    <label class="control-label"><?= t('RSS Feed Description') ?></label>
-                    <textarea name="rssDescription" class="form-control"><?= $rssDescription ?></textarea>
-                </div>
+            <div id="ccm-pagelist-rssDetails" <?= (is_object($rssFeed) ? "" : "style=\"display:none;\"") ?>>
+                <? if (is_object($rssFeed)) { ?>
+                    <?=t('RSS Feed can be found here: <a href="%s" target="_blank">%s</a>', $rssFeed->getFeedURL(), $rssFeed->getFeedURL())?>
+                <? } else { ?>
+                    <div class="form-group">
+                        <label class="control-label"><?= t('RSS Feed Title') ?></label>
+                        <input class="form-control" id="ccm-pagelist-rssTitle" type="text" name="rssTitle"
+                               value=""/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"><?= t('RSS Feed Description') ?></label>
+                        <textarea name="rssDescription" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"><?= t('RSS Feed Location') ?></label>
+                        <div class="input-group">
+                            <span class="input-group-addon"><?=BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME?>/rss/</span>
+                            <input type="text" name="rssHandle" value="" />
+                        </div>
+                    </div>
+                <? } ?>
             </div>
         </div>
 
@@ -284,7 +295,7 @@ $form = Loader::helper('form/page_selector');
             <label class="control-label"><?= t('Use Different Link than Page Name') ?></label>
             <div class="radio">
                 <label>
-                    <input type="radio" name="useButtonForLink" class="rssSelector"
+                    <input type="radio" name="useButtonForLink"
                            value="0" <?= ($useButtonForLink ? "" : "checked=\"checked\"") ?>/> <?= t('No') ?>
                 </label>
             </div>

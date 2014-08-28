@@ -155,7 +155,10 @@ function parseDirectory(main, dirAbs, dirRel, callback) {
 			}
 			else {
 				main.onDirectory(
-					function() {
+					function(skipContents) {
+						if(skipContents) {
+							subDirs[index].skipContents = true;
+						}
 						workOnNextDir(index + 1);
 					},
 					subDirs[index].abs,
@@ -172,6 +175,10 @@ function parseDirectory(main, dirAbs, dirRel, callback) {
 			function parseNextDir(index) {
 				if(index == subDirs.length) {
 					callback();
+					return;
+				}
+				if(subDirs[index].skipContents) {
+					parseNextDir(index + 1);
 					return;
 				}
 				parseDirectory(
@@ -204,7 +211,7 @@ function parseDirectory(main, dirAbs, dirRel, callback) {
 * @property {boolean} recursive Set to true to parse sub-directories [default: true].
 * @property {function} onDirectory A function to be called when sub-directories are found.
 *	It receives the following parameters:
-*		callback: the function to be called to going on with the directory parsing.
+*		callback: the function to be called to going on with the directory parsing (set the parameter to true to skip its contents).
 *		abs: the absolute path of the found directory (for instance: '/etc/apache2/sites-available/default/concrete')
 *		rel: the relative path of the found directory (for instance: '/concrete')
 *		name: the directory name (for instance: 'concrete')
@@ -271,23 +278,6 @@ function mkdirRecursiveSync(dir, mode) {
 	}
 }
 
-/** Synchronously delete a directory and all its content.
-* @param {string} dir The directory to delete
-* @throws Throws an exception in case of errors
-*/
-function rmdirRecursiveSync(dir) {
-	fs.readdirSync(dir).forEach(function(item) {
-		var full = dir + path.sep + item;
-		if(fs.lstatSync(full).isDirectory()) {
-			rmdirRecursiveSync(full);
-		}
-		else {
-			fs.unlinkSync(full);
-		}
-	});
-	fs.rmdirSync(dir);
-}
-
 /** Copy a file asynchronously.
 * @param {string} from The source file
 * @param {string} to The destination file (must not exist)
@@ -338,8 +328,10 @@ function copyFile(from, to, callback) {
 	});
 }
 
+exports.isDirectory = isDirectory;
+exports.isFile = isFile;
+exports.fileExists = fileExists;
 exports.mkdirRecursiveSync = mkdirRecursiveSync;
-exports.rmdirRecursiveSync = rmdirRecursiveSync;
 exports.escapeShellArg = escapeShellArg;
 exports.directoryParser = directoryParser;
 exports.copyFile = copyFile;

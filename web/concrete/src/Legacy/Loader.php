@@ -9,7 +9,10 @@ use View;
  */
 class Loader {
 
-	public static function db() {
+    /**
+     * @return \Concrete\Core\Database\Connection
+     */
+    public static function db() {
 		return Database::getActiveConnection();
 	}
 
@@ -36,5 +39,15 @@ class Loader {
 	public static function library($library, $pkgHandle = false) {
 		return false;
 	}
+
+    public static function controller($item)
+    {
+        if ($item instanceof \Page) {
+            return $item->getController();
+        }
+
+        $controller = '\\Concrete\\Controller\\' . camelcase($item);
+        return new $controller();
+    }
 
 }

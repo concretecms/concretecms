@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Core\Backup;
 
+use Concrete\Core\Page\Feed;
 use Concrete\Core\Sharing\SocialNetwork\Link;
 use Concrete\Core\Tree\Tree;
 use Page;
@@ -106,6 +107,7 @@ class ContentImporter
         $this->importPageTemplates($sx);
         $this->importPageTypesBase($sx);
         $this->importPageStructure($sx);
+        $this->importPageFeeds($sx);
         $this->importPageTypeTargets($sx);
         $this->importPageTypeDefaults($sx);
         $this->importSinglePageContent($sx);
@@ -584,6 +586,40 @@ class ContentImporter
         }
     }
 
+    protected function importPageFeeds(\SimpleXMLElement $sx)
+    {
+        if (isset($sx->pagefeeds)) {
+            foreach ($sx->pagefeeds->feed as $f) {
+                $feed = new Feed();
+                if ($f->parent) {
+                    $feed->setParentID(self::getValue((string) $f->parent));
+                }
+                $feed->setTitle((string) $f->title);
+                $feed->setDescription((string) $f->description);
+                $feed->setHandle((string) $f->handle);
+                if ($f->descendents) {
+                    $feed->setIncludeAllDescendents(true);
+                }
+                if ($f->aliases) {
+                    $feed->setDisplayAliases(true);
+                }
+                if ($f->featured) {
+                    $feed->setDisplayFeaturedOnly(true);
+                }
+                if ($f->pagetype) {
+                    $feed->setPageTypeID(self::getValue((string) $f->pagetype));
+                }
+                $contentType = $f->contenttype;
+                $type = (string) $contentType['type'];
+                if ($type == 'description') {
+                    $feed->displayShortDescriptionContent();
+                } else if ($type == 'area') {
+                    $feed->displayAreaContent((string) $contentType['handle']);
+                }
+                $feed->save();
+            }
+        }
+    }
     protected function importTrees(\SimpleXMLElement $sx)
     {
         if (isset($sx->trees)) {
@@ -966,7 +1002,7 @@ class ContentImporter
     public static function getValue($value)
     {
         if (preg_match(
-            '/\{ccm:export:page:(.*)\}|\{ccm:export:file:(.*)\}|\{ccm:export:image:(.*)\}|\{ccm:export:pagetype:(.*)\}/i',
+            '/\{ccm:export:page:(.*)\}|\{ccm:export:file:(.*)\}|\{ccm:export:image:(.*)\}|\{ccm:export:pagetype:(.*)\}|\{ccm:export:pagefeed:(.*)\}/i',
             $value,
             $matches
         )
@@ -988,6 +1024,10 @@ class ContentImporter
             if ($matches[4]) {
                 $ct = PageType::getByHandle($matches[4]);
                 return $ct->getPageTypeID();
+            }
+            if ($matches[5]) {
+                $pf = Feed::getByHandle($matches[5]);
+                return $pf->getID();
             }
         } else {
             return $value;

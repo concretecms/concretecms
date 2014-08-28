@@ -4,7 +4,7 @@ module.exports = function(grunt, config, parameters, done) {
 	function endForError(e) {
 		if(deleteFolderOnError.length) {
 			try {
-				c5fs.rmdirRecursiveSync(deleteFolderOnError);
+				shell.rm('-rf', deleteFolderOnError);
 			}
 			catch(foo) {
 			}
@@ -14,7 +14,7 @@ module.exports = function(grunt, config, parameters, done) {
 		done(false);
 	}
 	try {
-		var c5fs = require('../libraries/fs'), path = require('path'), fs = require('fs');
+		var c5fs = require('../libraries/fs'), path = require('path'), fs = require('fs'), shell = require('shelljs');
 		var pkg = parameters['package'] || '';
 		if(pkg === '-') {
 			pkg = '';

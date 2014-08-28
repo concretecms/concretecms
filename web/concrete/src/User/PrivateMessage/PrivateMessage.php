@@ -146,13 +146,8 @@ class PrivateMessage extends Object {
 		return $this->authorName;
 	}
 	
-	public function getMessageDateAdded($type = 'system', $mask = false) {
-		if($type == 'user') {
-			$dh = Loader::helper('date');
-			return $dh->getLocalDateTime($this->msgDateCreated, $mask);
-		} else {
-			return $this->msgDateCreated;
-		}
+	public function getMessageDateAdded() {
+		return $this->msgDateCreated;
 	}
 	
 	public function getMessageSubject() {return $this->msgSubject;}

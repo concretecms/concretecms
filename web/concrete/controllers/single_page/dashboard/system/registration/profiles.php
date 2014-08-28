@@ -14,11 +14,25 @@ class Profiles extends DashboardPageController {
 			Config::save('GRAVATAR_FALLBACK', ($this->post('gravatar_fallback')?true:false));
 			Config::save('GRAVATAR_MAX_LEVEL', Loader::helper('security')->sanitizeString($this->post('gravatar_max_level')));
 			Config::save('GRAVATAR_IMAGE_SET', Loader::helper('security')->sanitizeString($this->post('gravatar_image_set')));
-			$message = ($this->post('public_profiles')?t('Public profiles have been enabled'):t('Public profiles have been disabled.'));
-			$this->redirect('/dashboard/system/registration/profiles',$message);
+			// $message = ($this->post('public_profiles')?t('Public profiles have been enabled'):t('Public profiles have been disabled.'));
+            if($this->post('public_profiles')) {
+			    $this->redirect('/dashboard/system/registration/profiles/profiles_enabled');
+            } else {
+                $this->redirect('/dashboard/system/registration/profiles/profiles_disabled');
+            }
 		}
 	}
-	
+
+    public function profiles_enabled(){
+        $this->set('message', t('Public profiles have been enabled'));
+        $this->view();
+    }
+
+    public function profiles_disabled(){
+        $this->set('message', t('Public profiles have been disabled'));
+        $this->view();
+    }
+
 	public function view($message = NULL) {
 		if($message) {
 			$this->set('message',$message);

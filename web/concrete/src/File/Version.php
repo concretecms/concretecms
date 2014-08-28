@@ -348,18 +348,11 @@ class Version
 
     /**
      * Gets the date a file version was added
-     * if user is specified, returns in the current user's timezone
-     * @param string $type (system || user)
      * @return string date formated like: 2009-01-01 00:00:00
      */
-    function getDateAdded($type = 'system')
+    function getDateAdded()
     {
-        if (ENABLE_USER_TIMEZONES && $type == 'user') {
-            $dh = Loader::helper('date');
-            return $dh->getLocalDateTime($this->fvDateAdded);
-        } else {
-            return $this->fvDateAdded;
-        }
+        return $this->fvDateAdded;
     }
 
     public function getExtension()
