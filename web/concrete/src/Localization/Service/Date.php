@@ -3,7 +3,6 @@ namespace Concrete\Core\Localization\Service;
 
 use Request;
 use \Punic\Calendar;
-use Zend_Locale;
 use Cache;
 use Localization;
 use User;
@@ -144,54 +143,63 @@ class Date
     {
         static $cache = array();
         $locale = Localization::activeLocale();
-        if (!array_key_exists($locale, $cache)) {
-            $areaTranslations = array();
-            $localizedTimezones = array();
-            if ($locale != 'en_US') {
-                $localizedTerritoryNames = \Zend_Locale::getTranslationList('Territory', $locale);
-                if (is_array($localizedTerritoryNames)) {
-                    foreach (\Zend_Locale::getTranslationList('Territory', 'en_US') as $territoryID => $territoryEnglishName) {
-                        if (array_key_exists($territoryID, $localizedTerritoryNames)) {
-                            $areaTranslations[$territoryEnglishName] = $localizedTerritoryNames[$territoryID];
-                        }
-                    }
-                }
-                $localizedTimezones = \Zend_Locale::getTranslationList('CityToTimezone', $locale);
-                if (!is_array($localizedTimezones)) {
-                    $localizedTimezones = array();
-                }
-            }
-            $areaTranslations = array_merge($areaTranslations, array(
-                'America' => t('America'),
+        if(array_key_exists($locale, $cache)) {
+            $result = $cache[$locale];
+        } else {
+            $result = array();
+            $continentNames = array(
+                'Africa' => \Punic\Territory::getName('002'),
+                'Asia' => \Punic\Territory::getName('142'),
+                'America' => \Punic\Territory::getName('019'),
+                'Antarctica' => \Punic\Territory::getName('AQ'),
                 'Arctic' => t('Arctic'),
+                'Asia' => \Punic\Territory::getName('142'),
                 'Atlantic' => t('Atlantic Ocean'),
+                'Australia' => \Punic\Territory::getName('AU'),
+                'Europe' => \Punic\Territory::getName('150'),
                 'Indian' => t('Indian Ocean'),
                 'Pacific' => t('Pacific Ocean')
-            ));
-            $timeZones = array();
-            foreach (\DateTimeZone::listIdentifiers()as $timeZoneID) {
-                $timezoneName = $timeZoneID;
-                $p = strpos($timeZoneID, '/');
-                if (($p !== false) && ($p > 0)) {
-                    $area = substr($timeZoneID, 0, $p);
-                    $place = substr($timeZoneID, $p + 1);
-                    if (array_key_exists($area, $areaTranslations)) {
-                        $area = $areaTranslations[$area];
-                    }
-                    if (array_key_exists($timeZoneID, $localizedTimezones)) {
-                        $place = $localizedTimezones[$timeZoneID];
-                    } else {
-                        $place = str_replace('_', ' ', $place);
-                    }
-                    $timezoneName = $area . '/' . $place;
+            );
+            foreach(\DateTimeZone::listIdentifiers() as $timezoneID) {
+                switch($timezoneID) {
+                    case 'UTC':
+                    case 'GMT':
+                        $timezoneName = t('Greenwich Mean Time');
+                        break;
+                    default:
+                        $chunks = explode('/', $timezoneID);
+                        if(array_key_exists($chunks[0], $continentNames)) {
+                            $chunks[0] = $continentNames[$chunks[0]];
+                        }
+                        if(count($chunks) > 0) {
+                            $city = \Punic\Calendar::getTimezoneExemplarCity($timezoneID, false);
+                            if(!strlen($city)) {
+                                switch($timezoneID) {
+                                    case 'Antarctica/South_Pole':
+                                        $city = t('South Pole');
+                                        default:
+                                    case 'America/Montreal':
+                                        $city = t('Montreal');
+                                        break;
+                                    case 'America/Shiprock':
+                                        $city = t('Shiprock');
+                                        break;
+                                }
+                            }
+                            if(strlen($city)) {
+                                $chunks = array($chunks[0], $city);
+                            }
+                        }
+                        $timezoneName = implode('/', $chunks);
+                        break;
                 }
-                $timeZones[$timeZoneID] = $timezoneName;
+                $result[$timezoneID] = $timezoneName;
             }
-            natcasesort($timeZones);
-            $cache[$locale] = $timeZones;
+            natcasesort($result);
+            $cache[$locale] = $result;
         }
 
-        return $cache[$locale];
+        return $result;
     }
 
     /**
