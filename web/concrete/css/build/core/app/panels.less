@@ -67,7 +67,7 @@ div.ccm-panel-transition-slide.ccm-panel-left {
     .transition-transform(cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s);
 
     .ccm-no-csstransforms3d & {
-        display: none;
+        left: -100%;
     }
 }
 
@@ -85,7 +85,7 @@ div.ccm-panel-transition-slide.ccm-panel-right {
     .transition-transform(cubic-bezier(0.190, 1.000, 0.220, 1.000) 0.5s);
 
     .ccm-no-csstransforms3d & {
-        display: none;
+        left: 100%;
     }
 }
 
@@ -93,7 +93,7 @@ div.ccm-panel-left.ccm-panel-transition-slide.ccm-panel-active {
     .translate3d(0, 0, 0);
 
     .ccm-no-csstransforms3d & {
-        display: block;
+        left: 0;
     }
 }
 
@@ -101,7 +101,7 @@ div.ccm-panel-right.ccm-panel-transition-slide.ccm-panel-active {
     .translate3d(0, 0, 0);
 
     .ccm-no-csstransforms3d & {
-        display: block;
+        left: auto;
     }
 }
 
@@ -477,18 +477,33 @@ div#ccm-panel-page, div#ccm-panel-compose-page {
 div.ccm-panel-slide-left {
     .translate3d(-320px, 0, 0);
 
+    .ccm-no-csstransforms3d & {
+        left: -320px;
+    }
 }
 
 div.ccm-panel-slide-right {
     .translate3d(320px, 0, 0);
+
+    .ccm-no-csstransforms3d & {
+        left: 320px;
+    }
 }
 
 div.ccm-panel-content-appearing {
     .translate3d(320px, 0, 0);
+
+    .ccm-no-csstransforms3d & {
+        left: 320px;
+    }
 }
 
 div.ccm-panel-content.ccm-panel-content-visible {
     .translate3d(0px, 0, 0);
+
+    .ccm-no-csstransforms3d & {
+        left: 0;
+    }
 }
 
 a.ccm-panel-back,
