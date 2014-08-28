@@ -45,7 +45,7 @@ class Number
      */
     public function isNumber($string)
     {
-        return \Zend_Locale_Format::isNumber($string, array('locale' => $this->getZendLocale()));
+        return \Punic\Number::isNumber($string);
     }
 
     /**
@@ -55,7 +55,7 @@ class Number
      */
     public function isInteger($string)
     {
-        return \Zend_Locale_Format::isInteger($string, array('locale' => $this->getZendLocale()));
+        return \Punic\Number::isInteger($string);
     }
 
     /**
@@ -88,24 +88,16 @@ class Number
      */
     public function unformat($string, $trim = true, $precision = null)
     {
-        if (is_int($string) || is_float($string)) {
-            return is_numeric($precision) ? round($string, $precision) : $string;
-        }
-        if (!is_string($string)) {
-            return null;
-        }
-        if ($trim) {
-            $string = trim($string);
-        }
-        if (!(strlen($string) && $this->isNumber($string))) {
-            return null;
-        }
-        $options = array('locale' => $this->getZendLocale());
-        if (is_numeric($precision)) {
-            $options['precision'] = $precision;
+        $result = null;
+        $number = \Punic\Number::unformat($string);
+        if(!is_null($number)) {
+            if(is_numeric($precision)) {
+                $number = round($number, $precision);
+            }
+            $result = $number;
         }
 
-        return \Zend_Locale_Format::getNumber($string, $options);
+        return $result;
     }
 
     /**
