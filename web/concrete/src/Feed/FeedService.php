@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Feed;
 
-use SimplePie;
+use \Zend\Feed\Reader\Reader;
 
 class FeedService
 {
@@ -11,16 +11,15 @@ class FeedService
      *
      * @param string $feedurl
      * @param bool   $cache
-     * @return SimplePie
+     * @return Reader
      */
-    public function load($feedurl, $cache = true)
+    public function load($url, $cache = true)
     {
-        $feed = new SimplePie();
-        $feed->set_feed_url($feedurl);
-        $feed->set_cache_location(DIR_FILES_CACHE);
-        if (!$cache) {
-            $feed->enable_cache(false);
+        $library = \Cache::getLibrary();
+        if ($cache) {
+            Reader::setCache($library);
         }
+        $feed = Reader::import($url);
         return $feed;
     }
 

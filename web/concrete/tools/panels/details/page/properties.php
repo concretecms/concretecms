@@ -27,7 +27,7 @@ if (is_object($c) && !$c->isError()) {
 			<div class="form-group">
 				<label for="cName" class="control-label"><?=t('Created Time')?></label>
 				<div>
-					<? print $dt->datetime('cDatePublic', $c->getCollectionDatePublic(null, 'user')); ?>
+					<? print $dt->datetime('cDatePublic', $c->getCollectionDatePublic()); ?>
 				</div>
 			</div>
 			<? } ?>

@@ -26,7 +26,7 @@ class BannedWords extends DashboardPageController {
 
 	public function success() {
 		$this->view();
-		$this->set('message','Updated Banned Words.');
+		$this->set('message',t('Updated Banned Words.'));
 	}
 
 	public function save() {

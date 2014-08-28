@@ -9,6 +9,8 @@ use FileAttributeKey;
 use UserAttributeKey;
 use Page;
 use Database;
+use \ZendQueue\Queue as ZendQueue;
+use \ZendQueue\Message as ZendQueueMessage;
 
 class IndexSearchAll extends QueueableJob
 {
@@ -26,7 +28,7 @@ class IndexSearchAll extends QueueableJob
         return t("Empties the page search index and reindexes all pages.");
     }
 
-    public function start(\Zend_Queue $q)
+    public function start(ZendQueue $q)
     {
         $this->is = new IndexedSearch();
 
@@ -47,14 +49,14 @@ class IndexSearchAll extends QueueableJob
         }
     }
 
-    public function finish(\Zend_Queue $q)
+    public function finish(ZendQueue $q)
     {
         $db = Loader::db();
         $total = $db->GetOne('select count(*) from PageSearchIndex');
         return t('Index updated. %s pages indexed.', $total);
     }
 
-    public function processQueueItem(\Zend_Queue_Message $msg)
+    public function processQueueItem(ZendQueueMessage $msg)
     {
         $c = Page::getByID($msg->body, 'ACTIVE');
         $cv = $c->getVersionObject();

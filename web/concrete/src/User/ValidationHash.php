@@ -2,13 +2,14 @@
 namespace Concrete\Core\User;
 use Loader;
 class ValidationHash {
-		
+
 	/**
 	 * generates a random string
+     * @param int $len
 	 * @return string
 	 */
-	protected static function generate() {
-		return Loader::helper('validation/identifier')->getString(64);
+	protected static function generate($len = 64) {
+		return Loader::helper('validation/identifier')->getString($len);
 	}
 	
 	/**
@@ -30,17 +31,18 @@ class ValidationHash {
 		$db = loader::db();
 		$db->query('DELETE FROM UserValidationHashes WHERE type = ? AND uDateGenerated <= ?', array($type, $lifetime));
 	}
-	
-	
-	/**
-	 * adds a hash to the lookup table for a user and type, removes any other existing hashes for the same user and type
-	 * @param int $uID
-	 * @param int type
-	 * @return string
-	*/
-	public static function add($uID, $type, $singeHashAllowed = false) {
+
+    /**
+     * adds a hash to the lookup table for a user and type, removes any other existing hashes for the same user and type
+     * @param int $uID
+     * @param int $type
+     * @param bool $singeHashAllowed
+     * @param int $hashLength
+     * @return string
+     */
+    public static function add($uID, $type, $singeHashAllowed = false, $hashLength = 64) {
 		self::removeExpired($type);
-		$hash = self::generate();
+		$hash = self::generate($hashLength);
 		$db = Loader::db();
 		if($singeHashAllowed) {
 			$db->Execute("DELETE FROM UserValidationHashes WHERE uID = ? AND type = ?", array($uID, $type));

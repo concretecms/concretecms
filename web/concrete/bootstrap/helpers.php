@@ -16,7 +16,7 @@ function t($text)
     $zt = Localization::getTranslate();
     if (func_num_args() == 1) {
         if (is_object($zt)) {
-            return $zt->_($text);
+            return $zt->translate($text);
         } else {
             return $text;
         }
@@ -26,7 +26,7 @@ function t($text)
         $arg[] = func_get_arg($i);
     }
     if (is_object($zt)) {
-        return vsprintf($zt->_($text), $arg);
+        return vsprintf($zt->translate($text), $arg);
     } else {
         return vsprintf($text, $arg);
     }
@@ -47,7 +47,7 @@ function t2($singular, $plural, $number)
 {
     $zt = Localization::getTranslate();
     if (is_object($zt)) {
-        $translated = $zt->plural($singular, $plural, $number);
+        $translated = $zt->translatePlural($singular, $plural, $number);
     } else {
         $translated = $number == 1 ? $singular : $plural;
     }
@@ -75,7 +75,7 @@ function tc($context, $text)
     $zt = Localization::getTranslate();
     if (is_object($zt)) {
         $msgid = $context . "\x04" . $text;
-        $msgtxt = $zt->_($msgid);
+        $msgtxt = $zt->translate($msgid);
         if ($msgtxt != $msgid) {
             $text = $msgtxt;
         }

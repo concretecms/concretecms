@@ -8,7 +8,7 @@ use Environment;
 use CacheLocal;
 use User;
 use Page;
-use Block;
+use \Concrete\Core\Block\Block;
 use BlockType;
 use URL;
 
@@ -107,7 +107,9 @@ class BlockView extends AbstractView
                 $c = Page::getCurrentPage();
                 if (is_object($b) && is_object($c)) {
                     $a = $b->getBlockAreaObject();
-                    return URL::page($c, $task);
+                    $arguments = func_get_args();
+                    array_unshift($arguments, $c);
+                    return call_user_func_array(array('\Concrete\Core\Routing\URL', 'page'), $arguments);
                 }
             }
         } catch (Exception $e) {
@@ -377,26 +379,24 @@ class BlockView extends AbstractView
             } else {
                 $method = 'view';
             }
-            if ($method == 'view') {
+            $passthru = false;
+            if ($method == 'view' && is_object($this->block)) {
                 $c = Page::getCurrentPage();
                 if (is_object($c)) {
                     $cnt = $c->getController();
-                    $tempParameters = $cnt->getParameters();
-                    $action = $cnt->getAction();
-                    if ($action == 'passthru') {
-                        list($tempMethod, $tempParameters) = $this->controller->getPassThruActionAndParameters($tempParameters);
-                        if ($this->controller->isValidControllerTask($tempMethod, $tempParameters)) {
-                            $method = $tempMethod;
-                            $parameters = $tempParameters;
-                        }
+                    $controller = $cnt->getPassThruBlockController($this->block);
+                    if (is_object($controller)) {
+                        $passthru = true;
+                        $this->controller = $controller;
                     }
                 }
             }
-            if (!$parameters) {
-                $parameters = array();
+
+            $parameters = array();
+            if (!$passthru) {
+                $this->controller->on_start();
+                $this->controller->runAction($method, $parameters);
             }
-            $this->controller->on_start();
-            $this->controller->runAction($method, $parameters);
             $this->controller->on_before_render();
         }
 

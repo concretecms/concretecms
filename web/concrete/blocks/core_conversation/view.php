@@ -23,7 +23,7 @@ if (is_object($conversation)) {
 
 	<script type="text/javascript">
 	$(function() {
-		$('div[data-conversation-id=<?=$conversation->getConversationID()?>]').ccmconversation({
+		$('div[data-conversation-id=<?=$conversation->getConversationID()?>]').concreteConversation({
 			cnvID: <?=$conversation->getConversationID()?>,
 			blockID: <?=$bID?>,
 			cID: <?=$cID?>,

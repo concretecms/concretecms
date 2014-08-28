@@ -87,6 +87,10 @@
     top: 10%;
 }
 
+.ccm-image-slider-title {
+    margin-top:auto;
+}	
+
 .ccm-image-slider-container a.mega-link-overlay {
     position: absolute;
     z-index: 20;

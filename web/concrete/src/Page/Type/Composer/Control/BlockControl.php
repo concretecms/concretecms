@@ -152,7 +152,7 @@ class BlockControl extends Control {
 		return $layoutSetControl;
 	}
 
-	public function render($label, $customTemplate) {
+	public function render($label, $customTemplate, $description) {
 		$obj = $this->getPageTypeComposerControlDraftValue();
 		if (!is_object($obj)) {
 			$obj = $this->getBlockTypeObject();
@@ -176,7 +176,7 @@ class BlockControl extends Control {
 			$template = FILENAME_BLOCK_COMPOSER;
 		}
 
-		$this->inc($template, array('view' => $this, 'control' => $this, 'obj' => $obj));
+		$this->inc($template, array('view' => $this, 'control' => $this, 'obj' => $obj, 'description' => $description));
 	}
 
 	public function inc($file, $args = array()) {

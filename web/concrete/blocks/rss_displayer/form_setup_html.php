@@ -24,15 +24,19 @@ if (!$rssObj->dateFormat) {
     <input name="itemsToDisplay" class="form-control" placeholder="10" value="<?= h($rssObj->itemsToDisplay) ?>"/>
 </div>
 <div class="form-group">
-    <label for="showSummary">
+    <div class="checkbox">
+    <label>
         <input type="checkbox" value="1" name="showSummary"<?= (!!$rssObj->showSummary ? ' checked' : '') ?> />
-        <span><?= t('Include Summary') ?></span>
+        <?= t('Include Summary') ?>
     </label>
+    </div>
 </div>
 <div class="form-group">
-    <label for="showSummary">
+    <div class="checkbox">
+    <label>
         <input type="checkbox" value="1"
                name="launchInNewWindow"<?= (!!$rssObj->launchInNewWindow ? ' checked' : '') ?> />
-        <span><?= t('Open links in a new window') ?></span>
+        <?= t('Open links in a new window') ?>
     </label>
+    </div>
 </div>

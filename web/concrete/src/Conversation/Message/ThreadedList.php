@@ -25,9 +25,9 @@ class ThreadedList extends ItemList {
         $this->sortByDirection = 'asc';
     }
 
-
     public function sortByRating() {
-        $this->sortBy('date', 'asc');
+        $this->sortBy = 'rating';
+        $this->sortByDirection = 'desc';
     }
 
     public function get($num = 0, $offset = 0) {
@@ -75,26 +75,40 @@ class ThreadedList extends ItemList {
         return $messages;
     }
 
+    /**
+     * @param ConversationMessage $a
+     * @param ConversationMessage $b
+     * @return int
+     */
     protected function sortItems($a, $b) {
+
+        $aSortVal = 0; //a sort value for a comparison check for the value of $a
+        $bSortVal = 0; //a sort value for a comparison check for the value of $b
+
         if ($this->sortBy == 'date') {
-            $atime = strtotime($a->getConversationMessageDateTime());
-            $btime = strtotime($b->getConversationMessageDateTime());
-            if ($this->sortByDirection == 'asc') {
-                if ($atime > $btime) {
-                    return 1;
-                } else if ($atime < $btime) {
-                    return -1;
-                } else {
-                    return 0;
-                }
+            $aSortVal = strtotime($a->getConversationMessageDateTime());
+            $bSortVal = strtotime($b->getConversationMessageDateTime());
+        } elseif ($this->sortBy == 'rating') {
+            $aSortVal = $a->getConversationMessagetotalRatingScore();
+            $bSortVal = $b->getConversationMessagetotalRatingScore();
+        }
+
+
+        if ($this->sortByDirection == 'asc') {
+            if ($aSortVal > $bSortVal) {
+                return 1;
+            } else if ($aSortVal < $bSortVal) {
+                return -1;
             } else {
-                if ($atime > $btime) {
-                    return -1;
-                } else if ($atime < $btime) {
-                    return 1;
-                } else {
-                    return 0;
-                }
+                return 0;
+            }
+        } else {
+            if ($aSortVal > $bSortVal) {
+                return -1;
+            } else if ($aSortVal < $bSortVal) {
+                return 1;
+            } else {
+                return 0;
             }
         }
     }

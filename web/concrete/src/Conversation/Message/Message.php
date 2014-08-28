@@ -133,6 +133,7 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
     }
     public function getConversationMessageBodyOutput($dashboardOverride = false)
     {
+        /** @var \Concrete\Core\Conversation\Editor\Editor $editor */
         $editor = ConversationEditor::getActive();
         if ($dashboardOverride) {
             return $this->cnvMessageBody;
@@ -310,21 +311,24 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
     public function getAttachments($cnvMessageID)
     {
         $db = Loader::db();
-        $attachments = $db->Execute('SELECT * FROM ConversationMessageAttachments WHERE cnvMessageID = ?', array(
+        $attachments = $db->GetAll('SELECT * FROM ConversationMessageAttachments WHERE cnvMessageID = ?', array(
             $cnvMessageID
         ));
 
         return $attachments;
     }
 
-    public function getAttachmentByID($cnvMessageAttachmentID)
+    public static function getByAttachmentID($cnvMessageAttachmentID)
     {
         $db = Loader::db();
-        $attachment = $db->Execute('SELECT * FROM ConversationMessageAttachments WHERE cnvMessageAttachmentID = ?', array(
+        $messageID = $db->GetOne('SELECT cnvMessageID FROM ConversationMessageAttachments WHERE cnvMessageAttachmentID = ?', array(
         $cnvMessageAttachmentID
         ));
 
-        return $attachment;
+        if ($messageID) {
+            $message = self::getByID($messageID);
+            return $message;
+        }
     }
 
     public static function add($cnv, $cnvMessageSubject, $cnvMessageBody, $parentMessage = false, $user = false)

@@ -1,16 +1,6 @@
 (function () {
     "use strict";
-    
-    window.ccmValidateBlockForm = function () {
-        if ($('.notfound').length > 0 || $('#ccm_googlemap_block_location').val().length === 0
-                || $('#ccm_googlemap_block_latitude').val() === ''
-                || $('#ccm_googlemap_block_longitude').val() === '') {
-            window.ccm_addError(ccm_t('location-required'));
-            $('#ccm_googlemap_block_location').addClass('notfound');
-        }
-        return false;
-    };
-    
+ 
     window.C5GMaps = {
         
         pacTimer: null,
@@ -34,26 +24,30 @@
         
         setupAutocomplete: function () {
             
-            var input = (document.getElementById('ccm_googlemap_block_location')),
+            var input = $("#ccm-google-map-block-location > input[id=location]").get(0),
                 autocomplete = new google.maps.places.Autocomplete(input),
-                note = document.getElementById('ccm_googlemap_block_note');
-            
+                note = $("#ccm-google-map-block-location > #block_note").get(0);
             input.onchange = function () {
-                this.className = 'notfound';
+                this.className = 'notfound form-control ccm-input-text';
             };
             
             // Keeps the autocomplete list visible above modal dialogue
             window.C5GMaps.pacTimer = setInterval(function () {
-                var cntr = $('.pac-container'), locBox = $('#ccm_googlemap_block_location');
+                var cntr = $('.pac-container'), locBox = $('#location');
                 cntr.css('z-index', '2000');
                 if (locBox.length === 0) {
                     clearInterval(window.C5GMaps.pacTimer);
                     cntr.remove();
                 }
             }, 250);
-            
+
+            google.maps.event.addDomListener(input, 'keydown', function(e) {
+                if (e.keyCode == 13) {
+                    e.preventDefault();
+                }
+            });
             google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                
+
                 var place = autocomplete.getPlace();
                 if (!place.geometry) {
                     // Inform the user that the place was not found and return.
@@ -61,9 +55,9 @@
                     note.innerHTML = 'The place you entered could not be found.';
                     return;
                 } else {
-                    document.getElementById('ccm_googlemap_block_latitude').value = place.geometry.location.lat();
-                    document.getElementById('ccm_googlemap_block_longitude').value = place.geometry.location.lng();
-                    input.className = '';
+                    $('#ccm-google-map-block-location > input[id=latitude]').val(place.geometry.location.lat());
+                    $('#ccm-google-map-block-location > input[id=longitude]').val(place.geometry.location.lng());
+                    input.className = 'form-control ccm-input-text';
                     note.innerHTML = '';
                 }
                 
@@ -72,7 +66,5 @@
             
         }
     };
-    
-    window.C5GMaps.init();
-    
+
 }());

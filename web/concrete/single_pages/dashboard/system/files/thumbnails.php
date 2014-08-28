@@ -109,7 +109,7 @@
     <? foreach($types as $type) { ?>
     <tr>
         <td><a href="<?=$view->action('edit', $type->getID())?>"><?=$type->getHandle()?></a></td>
-        <td><?=$type->getName()?></td>
+        <td><?=$type->getDisplayName()?></td>
         <td><?=$type->getWidth()?></td>
         <td><?=($type->getHeight()) ? $type->getHeight() : '<span class="text-muted">' . t('Automatic') . '</span>' ?></td>
         <td><?=($type->isRequired()) ? t('Yes') : t('No')?></td>

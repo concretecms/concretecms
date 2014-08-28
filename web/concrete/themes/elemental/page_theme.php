@@ -13,6 +13,7 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
         $this->providesAsset('css', 'blocks/date_navigation');
         $this->providesAsset('css', 'blocks/topic_list');
         $this->providesAsset('css', 'blocks/faq');
+        $this->providesAsset('css', 'blocks/tags');
         $this->providesAsset('css', 'core/frontend/*');
         $this->providesAsset('css', 'blocks/feature/templates/hover_description');
 

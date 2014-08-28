@@ -48,7 +48,6 @@ function ConcretePanel(options) {
         this.setupSubPanels();
         this.setupPanelDetails();
         $link.removeClass().addClass('ccm-launch-panel-active');
-        $link.find('.spinner').remove();
         Concrete.event.publish('PanelLoad', {panel: this, element: element});
     };
 
@@ -59,7 +58,6 @@ function ConcretePanel(options) {
             var obj = this;
             var $link = $('a[data-launch-panel=' + this.getIdentifier() + ']');
             $link.removeClass();
-            $link.find('.spinner').remove();
             $('#' + obj.getDOMID()).removeClass('ccm-panel-active');
             $('#ccm-panel-overlay').queue(function () {
                 $(this).removeClass('ccm-panel-translucent');

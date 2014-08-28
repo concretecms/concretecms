@@ -64,6 +64,7 @@ use Page;
 		public function view() {
 			$r = ResponseAssetGroup::get();
 			$r->requireAsset('core/conversation');
+            $r->requireAsset('core/lightbox');
 			$fileSettings = $this->getFileSettings(); 
 			$conversation = $this->getConversationObject();
 			if (is_object($conversation)) {

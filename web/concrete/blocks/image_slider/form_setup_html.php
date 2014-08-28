@@ -39,7 +39,6 @@
                     ConcreteFileManager.getFileDetails(data.fID, function(r) {
                         jQuery.fn.dialog.hideLoader();
                         var file = r.files[0];
-                        console.log(file.resultsThumbnailImg);
                         oldLauncher.html(file.resultsThumbnailImg);
                         oldLauncher.next('.image-fID').val(file.fID)
                     });
@@ -63,7 +62,7 @@
                 image_url: '',
                <?php } ?>
                 link_url: '<?php echo $row['linkURL'] ?>',
-                title: '<?php echo $row['title'] ?>',
+                title: '<?php echo addslashes($row['title']) ?>',
                 description: '<?php echo str_replace(array("\t", "\r", "\n"), "", addslashes($row['description']))?>',
                 sort_order: '<?php echo $row['sortOrder'] ?>'
             }));

@@ -3,12 +3,15 @@
 /**
  * Install
  */
-Route::register('/install', '\Concrete\Controller\Install::view');
-Route::register('/install/select_language', '\Concrete\Controller\Install::select_language');
-Route::register('/install/setup', '\Concrete\Controller\Install::setup');
-Route::register('/install/test_url/{num1}/{num2}', '\Concrete\Controller\Install::test_url');
-Route::register('/install/configure', '\Concrete\Controller\Install::configure');
-Route::register('/install/run_routine/{pkgHandle}/{routine}', '\Concrete\Controller\Install::run_routine');
+if(!defined('CONFIG_FILE_EXISTS') || !CONFIG_FILE_EXISTS) {
+    Route::register('/install', '\Concrete\Controller\Install::view');
+    Route::register('/install/select_language', '\Concrete\Controller\Install::select_language');
+    Route::register('/install/setup', '\Concrete\Controller\Install::setup');
+    Route::register('/install/test_url/{num1}/{num2}', '\Concrete\Controller\Install::test_url');
+    Route::register('/install/configure', '\Concrete\Controller\Install::configure');
+    Route::register('/install/run_routine/{pkgHandle}/{routine}', '\Concrete\Controller\Install::run_routine');
+}
+
 
 /**
  * Tools - legacy
@@ -171,6 +174,7 @@ Route::register('/ccm/system/panels/details/page/composer', '\Concrete\Controlle
 Route::register('/ccm/system/panels/details/page/composer/autosave', '\Concrete\Controller\Panel\Detail\Page\Composer::autosave');
 Route::register('/ccm/system/panels/details/page/composer/publish', '\Concrete\Controller\Panel\Detail\Page\Composer::publish');
 Route::register('/ccm/system/panels/details/page/composer/discard', '\Concrete\Controller\Panel\Detail\Page\Composer::discard');
+Route::register('/ccm/system/panels/details/page/composer/save_and_exit', '\Concrete\Controller\Panel\Detail\Page\Composer::saveAndExit');
 Route::register('/ccm/system/panels/details/page/attributes', '\Concrete\Controller\Panel\Detail\Page\Attributes::view');
 Route::register('/ccm/system/panels/details/page/attributes/submit', '\Concrete\Controller\Panel\Detail\Page\Attributes::submit');
 Route::register('/ccm/system/panels/details/page/attributes/add_attribute', '\Concrete\Controller\Panel\Detail\Page\Attributes::add_attribute');
@@ -179,6 +183,11 @@ Route::register('/ccm/system/panels/details/page/caching/submit', '\Concrete\Con
 Route::register('/ccm/system/panels/details/page/caching/purge', '\Concrete\Controller\Panel\Detail\Page\Caching::purge');
 Route::register('/ccm/system/panels/details/page/permissions', '\Concrete\Controller\Panel\Detail\Page\Permissions::view');
 Route::register('/ccm/system/panels/details/page/permissions/save_simple', '\Concrete\Controller\Panel\Detail\Page\Permissions::save_simple');
+
+/**
+ * RSS Feeds
+ */
+Route::register('/rss/{identifier}', '\Concrete\Controller\Feed::get', 'rss', array('identifier' => '[A-Za-z0-9_/.]+'));
 
 /**
  * Special Dashboard

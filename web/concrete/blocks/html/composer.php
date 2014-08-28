@@ -5,6 +5,9 @@ $form = Loader::helper('form');
 
 <div class="control-group">
 	<label class="control-label"><?=$label?></label>
+	<? if($description): ?>
+	<i class="fa fa-question-circle launch-tooltip" title="" data-original-title="<?=$description?>"></i>
+	<? endif; ?>
 	<div class="controls">
 		<?
 		print $form->textarea($this->field('content'), $content, array(

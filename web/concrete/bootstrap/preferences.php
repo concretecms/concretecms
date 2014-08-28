@@ -111,7 +111,6 @@ define('PAGE_PERMISSION_IDENTIFIER_USE_PERMISSION_COLLECTION_ID',
  * ----------------------------------------------------------------------------
  */
 Config::getOrDefine('SITE', 'concrete5');
-Config::getOrDefine('STATISTICS_TRACK_PAGE_VIEWS', true);
 Config::getOrDefine('ENABLE_PROGRESSIVE_PAGE_REINDEX', true);
 Config::getOrDefine('MAIL_SEND_METHOD', 'PHP_MAIL');
 Config::getOrDefine('SEO_EXCLUDE_WORDS', 'a, an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, since, than, the, this, that, to, up, via, with');

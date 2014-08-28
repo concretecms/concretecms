@@ -66,11 +66,12 @@ class Controller extends BlockController
     }
 
     public function duplicate($newBID) {
+        parent::duplicate($newBID);
         $db = Loader::db();
         $v = array($this->bID);
         $q = 'select * from btImageSliderEntries where bID = ?';
         $r = $db->query($q, $v);
-        foreach($r as $row) {
+        while ($row = $r->FetchRow()) {
             $db->execute('INSERT INTO btImageSliderEntries (bID, fID, linkURL, title, description, sortOrder) values(?,?,?,?,?,?)',
                 array(
                     $newBID,

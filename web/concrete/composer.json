@@ -3,8 +3,15 @@
         {
             "type": "vcs",
             "url": "https://github.com/mlocati/zend-locale"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/mlocati/zendframework2-i18n"
         }
     ],
+    "config": {
+        "optimize-autoloader": true
+    },
     "require": {
         "php": ">=5.3.3",
         "doctrine/dbal": "2.4.*",
@@ -24,7 +31,6 @@
         "tedivm/jshrink": "0.5.*",
         "michelf/php-markdown": "1.4.*@dev",
         "filp/whoops": "1.*",
-        "guzzle/guzzle": ">=3.7.0,<=3.9.9",
         "pagerfanta/pagerfanta": "1.0.2",
         "facebook/php-sdk": "dev-master",
         "htmlawed/htmlawed": "dev-master",
@@ -35,22 +41,17 @@
         "voku/urlify": "1.0.*@dev",
         "dapphp/securimage": "dev-master",
         "kertz/twitteroauth": "dev-master",
-        "simplepie/simplepie": "dev-master",
         "anahkiasen/html-object": "1.4.0",
-        "zf1/zend-exception": "dev-master",
-        "zf1/zend-loader": "dev-master",
-        "zf1/zend-validate": "dev-master",
-        "zf1/zend-xml": "dev-master",
-        "zf1/zend-cache": "dev-master",
-        "zf1/zend-db": "dev-master",
-        "zf1/zend-translate": "dev-master",
-        "zf1/zend-locale": "dev-master",
-        "zf1/zend-currency": "dev-master",
         "primal/color": "1.0.*@dev",
-        "zf1/zend-date": "dev-master",
-        "zf1/zend-queue": "dev-master",
-        "zf1/zend-mime": "dev-master",
-        "zf1/zend-mail": "dev-master",
-        "nesbot/carbon": "dev-master"
+        "zf1/zend-locale": "1.12.6",
+        "zendframework/zend-queue": "dev-master",
+        "zendframework/zend-mail": "2.2.*",
+        "zendframework/zend-cache": "2.2.*",
+        "zendframework/zend-http": "2.2.*",
+        "zendframework/zend-feed": "2.2.*",
+        "zendframework/zend-i18n": "2.2.*",
+        "nesbot/carbon": "dev-master",
+        "egulias/email-validator": "1.2.0",
+        "punic/punic": "dev-master"
     }
 }

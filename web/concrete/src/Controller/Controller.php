@@ -47,6 +47,10 @@ class Controller extends AbstractController {
         parent::__construct();
 		if ($this->viewPath) {
 			$this->view = new View($this->viewPath);
+			if (preg_match('/Concrete\\\Package\\\(.*)\\\Controller/i', get_class($this), $matches)) {
+                $pkgHandle = uncamelcase($matches[1]);
+                $this->view->setPackageHandle($pkgHandle);
+			}
 			$this->view->setController($this);
 		}
 	}

@@ -156,6 +156,13 @@ class BlockType
         $em->persist($bt);
         $em->flush();
 
+        if ($bta->getBlockTypeDefaultSet()) {
+            $set = Set::getByHandle($bta->getBlockTypeDefaultSet());
+            if (is_object($set)) {
+                $set->addBlockType($bt);
+            }
+        }
+
         return $bt;
     }
 

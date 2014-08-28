@@ -81,7 +81,7 @@ abstract class CorePageProperty extends \Concrete\Core\Page\Type\Composer\Contro
 	}
 
 
-	public function render($label, $customTemplate) {
+	public function render($label, $customTemplate, $description) {
 		$env = Environment::get();
 		$form = Loader::helper('form');
 		$set = $this->getPageTypeComposerFormLayoutSetControlObject()->getPageTypeComposerFormLayoutSetObject();

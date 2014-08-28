@@ -98,6 +98,24 @@ class Type
         return $this->ftTypeName;
     }
 
+    /** Returns the display name for this thumbnail type (localized and escaped accordingly to $format)
+     * @param string $format = 'html'
+     *    Escape the result in html format (if $format is 'html').
+     *    If $format is 'text' or any other value, the display name won't be escaped.
+     * @return string
+     */
+    public function getDisplayName($format = 'html')
+    {
+        $value = tc('ThumbnailTypeName', $this->getName());
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
+    }
+
     /**
      * @param mixed $ftTypeWidth
      */

@@ -1,29 +1,26 @@
 <?php
-namespace Concrete\Core\Foundation;
+namespace Concrete\Core\Foundation\Queue;
 use Loader;
+use Database;
+use \ZendQueue\Queue as ZendQueue;
 
 class Queue {
 
 	public static function get($name, $additionalConfig = array()) {
-	
-		$type = 'pdo_mysql';
-		if (!extension_loaded('pdo_mysql')) {
-			$type = 'mysql';
-		}
 
 		$config = array(
-		'name' => $name,
-		'driverOptions' => array(
-		'host'     => DB_SERVER,
-		'username' => DB_USERNAME,
-		'password' => DB_PASSWORD,
-		'dbname'   => DB_DATABASE,
-		'type'     => $type
-		)
+            'name' => $name,
 		);
 
+        $db = Database::get();
+
+        $adapterOptions = array(
+            'connection' => $db
+        );
+
+        $adapter = new DatabaseQueueAdapter($adapterOptions);
 		$config = array_merge($config, $additionalConfig);
-		return new \Zend_Queue('Concrete5', $config);
+		return new ZendQueue($adapter, $config);
 	}
 
 	public static function exists($name) {

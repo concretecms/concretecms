@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Core\Backup;
+use Concrete\Core\Page\Feed;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
 use Concrete\Core\Tree\Tree;
 use Page;
@@ -143,6 +144,8 @@ class ContentExporter {
 
         \Concrete\Core\Sharing\SocialNetwork\Link::exportList($this->x);
 
+        \Concrete\Core\Page\Feed::exportList($this->x);
+
         \Concrete\Core\File\Image\Thumbnail\Type\Type::exportList($this->x);
 
         Config::exportList($this->x);
@@ -244,6 +247,13 @@ class ContentExporter {
 			return '{ccm:export:pagetype:' . $ct->getPageTypeHandle() . '}';
 		}
 	}
+
+    public static function replacePageFeedWithPlaceholder($pfID) {
+        if ($pfID > 0) {
+            $pf = Feed::getByID($pfID);
+            return '{ccm:export:pagefeed:' . $pf->getHandle() . '}';
+        }
+    }
 
     /**
 	 * Removes an item from the export xml registry

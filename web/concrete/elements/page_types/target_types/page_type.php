@@ -13,7 +13,7 @@ if (is_object($pagetype) && $pagetype->getPageTypePublishTargetTypeID() == $type
 }
 ?>
 	<div class="control-group">
-		<?=$form->label('ptID', t('Publish Page Type'))?>
+		<?=$form->label('ptID', t('Publish Beneath Pages of Type'))?>
 		<div class="controls">
 			<?=$form->select('ptID', $types, $ptID)?>
 		</div>

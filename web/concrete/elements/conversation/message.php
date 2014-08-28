@@ -20,7 +20,7 @@ if($dateFormat == 'custom' && $customDateFormat) {
 if (!$message->isConversationMessageApproved()){
 	$class .= ' ccm-conversation-message-flagged';
 }
-$cnvMessageID = $message->cnvMessageID;
+$cnvMessageID = $message->getConversationMessageID();
 $c = Page::getByID($_REQUEST['cID']);
 $cnvMessageURL = urlencode($c->getCollectionLink(true) . '#' . $cnvMessageID);
 
@@ -37,20 +37,15 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 
                 <?php if($canDeleteMessage || $canFlagMessage) { ?>
                     <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider">|</span>
-                    <span class="dropdown ccm-conversation-message-admin-control ">
-                        <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#"><?=t('Edit')?></a>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="drop5">
-                            <? if ($canEditMessage) { ?>
-                                <li><a href="javascript:void(0)" class="admin-edit" data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-load="edit-conversation-message"><?php echo t('Edit') ?></a></li>
-                            <? } ?>
-                            <? if ($canDeleteMessage) { ?>
-                                <li><a href="#" class="admin-delete" data-submit="delete-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Delete')?></a></li>
-                            <? } ?>
-                            <? if ($canFlagMessage) { ?>
-                                <li><a href="#" class="admin-flag" data-submit="flag-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Flag As Spam')?></a></li>
-                            <? } ?>
-                            </ul>
-                    </span>
+                    <? if ($canEditMessage) { ?>
+                        <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider"><a href="javascript:void(0)" class="admin-edit" data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-load="edit-conversation-message"><?php echo t('Edit') ?></a></span>
+                    <? } ?>
+                    <? if ($canDeleteMessage) { ?>
+                        <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider"><a href="#" class="admin-delete" data-submit="delete-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Delete')?></a></span>
+                    <? } ?>
+                    <? if ($canFlagMessage) { ?>
+                        <span class="ccm-conversation-message-admin-control ccm-conversation-message-divider"><a href="#" class="admin-flag" data-submit="flag-conversation-message" data-conversation-message-id="<?=$message->getConversationMessageID()?>"><?=t('Flag As Spam')?></a></span>
+                    <? } ?>
                 <?php } ?>
 
 
@@ -63,8 +58,8 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
 		<div class="ccm-conversation-message-controls">
 			<div class="message-attachments">
 				<?php
-				if(count($message->getAttachments($message->cnvMessageID))) {
-					foreach ($message->getAttachments($message->cnvMessageID) as $attachment) { ?>
+				if(count($message->getAttachments($message->getConversationMessageID()))) {
+					foreach ($message->getAttachments($message->getConversationMessageID()) as $attachment) { ?>
 						<div class="attachment-container">
 						<?php $file = File::getByID($attachment['fID']);
 						if(is_object($file)) {
@@ -104,7 +99,7 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
                     foreach($ratingTypes as $ratingType) { ?>
                         <li><? echo $ratingType->outputRatingTypeHTML();?></li>
                     <? } ?>
-                    <li><span class="ccm-conversation-message-rating-score" data-message-rating="<?=$message->cnvMessageID?>"><?=$message->getConversationMessageTotalRatingScore();?></span></li>
+                    <li><span class="ccm-conversation-message-rating-score" data-message-rating="<?=$message->getConversationMessageID()?>"><?=$message->getConversationMessageTotalRatingScore();?></span></li>
               <? } ?>
               <li class="ccm-conversation-social-share"><span class="ccm-conversation-message-divider">|</span></li>
               <li class="ccm-conversation-social-share">

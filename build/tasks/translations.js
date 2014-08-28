@@ -138,7 +138,7 @@ module.exports = function(grunt, config, parameters, done) {
 	
 	var txProgressLimit = parseFloat(parameters.txProgressLimit);
 	if(isNaN(txProgressLimit)) {
-		txProgressLimit = 95;
+		txProgressLimit = 90;
 	}
 
 	var getAllLocales;
@@ -225,8 +225,8 @@ module.exports = function(grunt, config, parameters, done) {
 				parseLocale(allLocales, localeIndex + 1, callback);
 				return;
 			}
-			locale.poFile = path.join(destinationFolder, 'languages/' + locale.code + '/LC_MESSAGES/messages.po');
-			locale.moFile = path.join(destinationFolder, 'languages/' + locale.code + '/LC_MESSAGES/messages.mo');
+			locale.poFile = path.join(destinationFolder, 'application/languages/' + locale.code + '/LC_MESSAGES/messages.po');
+			locale.moFile = path.join(destinationFolder, 'application/languages/' + locale.code + '/LC_MESSAGES/messages.mo');
 			downloadLocale(locale, function() {
 				compileLocale(
 					locale,

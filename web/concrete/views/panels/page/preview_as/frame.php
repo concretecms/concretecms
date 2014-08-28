@@ -49,26 +49,19 @@
         });
 
         function handleChange() {
-
             var guest_button = form.find('button.guest-button'),
                 user_input = form.find('input.custom-user'),
-                date = form.find('input[type="datetime"]').val(),
-                time = form.find('select.hour').val() + ':' + form.find('select.minute').val(),
-                portion = form.find('select.ampm').val(),
-                now = [date, time, portion].join(' '),
-                now_string;
+                query = {
+                    cID: CCM_CID,
+                    customUser: guest_button.hasClass('active') ? 0 : user_input.val()
+                };
 
-            try {
-                now_string = (new Date(now)).toISOString();
-            } catch (e) {
-                now_string = (new Date()).toISOString();
-            }
-
-            var query = {
-                cID: CCM_CID,
-                date: now_string,
-                customUser: guest_button.hasClass('active') ? 0 : user_input.val()
-            };
+            form.find('input[name],select[name]').each(function() {
+                var $me = $(this), name = $me.attr('name');
+                if(name && (name.indexOf('preview_as_user_datetime_') === 0)) {
+                    query[name] = $me.val();
+                }
+            });
 
             var src = frame.data('src') + "?" + $.param(query);
 

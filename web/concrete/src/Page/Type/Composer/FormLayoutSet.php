@@ -1,12 +1,14 @@
 <?
 namespace Concrete\Core\Page\Type\Composer;
 use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Page\Type\Type;
 use PageType;
 use Loader;
 class FormLayoutSet extends Object {
 
 	public function getPageTypeComposerFormLayoutSetID() {return $this->ptComposerFormLayoutSetID;}
 	public function getPageTypeComposerFormLayoutSetName() {return $this->ptComposerFormLayoutSetName;}
+	public function getPageTypeComposerFormLayoutSetDescription() {return $this->ptComposerFormLayoutSetDescription;}
 	public function getPageTypeComposerFormLayoutSetDisplayOrder() {return $this->ptComposerFormLayoutSetDisplayOrder;}
 	public function getPageTypeID() {return $this->ptID;}
 	public function getPageTypeObject() {return PageType::getByID($this->ptID);}
@@ -24,7 +26,17 @@ class FormLayoutSet extends Object {
 				return $value;
 		}
 	}
-	public static function getList(PageType $pagetype) {
+	public function getPageTypeComposerFormLayoutSetDisplayDescription($format = 'html') {
+		$value = tc('PageTypeComposerFormLayoutSetDescription', $this->ptComposerFormLayoutSetDescription);
+		switch ($format) {
+			case 'html':
+				return h($value);
+			case 'text':
+			default:
+				return $value;
+		}
+	}
+	public static function getList(Type $pagetype) {
 		$db = Loader::db();
 		$ptComposerFormLayoutSetIDs = $db->GetCol('select ptComposerFormLayoutSetID from PageTypeComposerFormLayoutSets where ptID = ? order by ptComposerFormLayoutSetDisplayOrder asc', array($pagetype->getPageTypeID()));
 		$list = array();
@@ -50,6 +62,7 @@ class FormLayoutSet extends Object {
 	public function export($fxml) {
 		$node = $fxml->addChild('set');
 		$node->addAttribute('name', $this->getPageTypeComposerFormLayoutSetName());
+		$node->addAttribute('description', $this->getPageTypeComposerFormLayoutSetDescription());
 		$controls = FormLayoutSetControl::getList($this);
 		foreach($controls as $con) {
 			$con->export($node);
@@ -62,6 +75,14 @@ class FormLayoutSet extends Object {
 			$ptComposerFormLayoutSetName, $this->ptComposerFormLayoutSetID
 		));
 		$this->ptComposerFormLayoutSetName = $ptComposerFormLayoutSetName;
+	}
+
+	public function updateFormLayoutSetDescription($ptComposerFormLayoutSetDescription) {
+		$db = Loader::db();
+		$db->Execute('update PageTypeComposerFormLayoutSets set ptComposerFormLayoutSetDescription = ? where ptComposerFormLayoutSetID = ?', array(
+			$ptComposerFormLayoutSetDescription, $this->ptComposerFormLayoutSetID
+		));
+		$this->ptComposerFormLayoutSetDescription = $ptComposerFormLayoutSetDescription;
 	}
 
 

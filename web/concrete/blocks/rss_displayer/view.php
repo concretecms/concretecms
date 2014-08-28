@@ -1,14 +1,16 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div id="rssSummaryList<?=intval($bID)?>" class="rssSummaryList">
+<div class="ccm-block-rss-displayer-wrapper">
 
 <? if( strlen($title)>0 ){ ?>
-	<div class="rssSummaryListTitle" style="margin-bottom:8px"><?=$title?></div>
+    <div class="ccm-block-rss-displayer-header">
+    	<h5><?=$title?></h5>
+    </div>
 <? } ?>
 
 <? 
 $rssObj=$controller;
-$textHelper = Loader::helper("text"); 
+$textHelper = Loader::helper("text");
 
 if (!$dateFormat) {
 	$dateFormat = t('F jS');
@@ -23,17 +25,17 @@ if( strlen($errorMsg)>0 ){
 		if( intval($itemNumber) >= intval($rssObj->itemsToDisplay) ) break;
 		?>
 		
-		<div class="rssItem">
-			<div class="rssItemTitle"> 
-				<a href="<?= $item->get_permalink(); ?>" <? if($rssObj->launchInNewWindow) echo 'target="_blank"' ?> >
-					<?= $item->get_title(); ?>
+		<div class="ccm-block-rss-displayer-item">
+			<div class="ccm-block-rss-displayer-item-title">
+				<a href="<?= $item->getLink(); ?>" <? if($rssObj->launchInNewWindow) echo 'target="_blank"' ?> >
+					<?= $item->getTitle(); ?>
 				</a>
 			</div>
-			<div class="rssItemDate"><?= $item->get_date($dateFormat); ?></div>
-			<div class="rssItemSummary">
+			<div class="ccm-block-rss-displayer-item-date"><?= $item->getDateCreated()->format($dateFormat); ?></div>
+			<div class="ccm-block-rss-displayer-item-summary">
 				<?
 				if( $rssObj->showSummary ){
-					echo $textHelper->shortText( strip_tags($item->get_description()) );
+					echo $textHelper->shortText( strip_tags($item->getDescription()) );
 				}
 				?>
 			</div>

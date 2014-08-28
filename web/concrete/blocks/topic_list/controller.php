@@ -77,7 +77,11 @@ class Controller extends BlockController
 
     public function action_topic($topic = false)
     {
-        $this->set('selectedTopicID', intval($topic));
+        $db = Loader::db();
+        $treeNodeID = $db->GetOne('select treeNodeID from TreeTopicNodes where treeNodeTopicName = ?', array($topic));
+        if ($treeNodeID) {
+            $this->set('selectedTopicID', intval($treeNodeID));
+        }
         $this->view();
     }
 
@@ -89,7 +93,7 @@ class Controller extends BlockController
             $c = \Page::getCurrentPage();
         }
         if ($topic) {
-            return \URL::page($c, 'topic', $topic->getTreeNodeID());
+            return \URL::page($c, 'topic', strtolower($topic->getTreeNodeDisplayName()));
         } else {
             return \URL::page($c);
         }

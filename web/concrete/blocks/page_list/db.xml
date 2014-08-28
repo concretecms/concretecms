@@ -76,13 +76,9 @@
 		<field name="ptID" type="I2">
 			<unsigned />
 		</field>
-		<field name="rss" type="I">
+		<field name="pfID" type="I">
 			<default value="0"/>
 		</field>
-		<field name="rssTitle" type="C" size="255">
-		</field>
-		<field name="rssDescription" type="X2">
-		</field>		
 		<field name="truncateSummaries" type="I">
 			<default value="0"/>
 		</field>

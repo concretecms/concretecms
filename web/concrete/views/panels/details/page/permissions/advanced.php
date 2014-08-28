@@ -58,12 +58,23 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	</tr>
 	<? } ?>
 	</table>
-	<div class="ccm-panel-detail-form-actions dialog-buttons">
-		<button class="pull-left btn btn-default" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
-		<button class="pull-right btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
-	</div>
 	</form>
 </section>
+
+<div id="ccm-page-permissions-confirm-dialog" style="display: none">
+    <?=t('Changing this setting will affect this page immediately. Are you sure?')?>
+    <div id="dialog-buttons-start">
+        <input type="button" class="btn btn-default pull-left" value="Cancel" onclick="jQuery.fn.dialog.closeTop()" />
+        <input type="button" class="btn btn-primary pull-right" value="Ok" onclick="ccm_pagePermissionsConfirmInheritanceChange()" />
+    </div>
+</div>
+
+<? if ($editPermissions) { ?>
+    <div class="ccm-panel-detail-form-actions dialog-buttons">
+        <button class="pull-left btn btn-default" type="button" data-dialog-action="cancel" data-panel-detail-action="cancel"><?=t('Cancel')?></button>
+        <button class="pull-right btn btn-success" type="button" data-dialog-action="submit" data-panel-detail-action="submit"><?=t('Save Changes')?></button>
+    </div>
+<? } ?>
 
 
 <script type="text/javascript">
@@ -125,7 +136,7 @@ $(function() {
 			element: '#ccm-page-permissions-confirm-dialog',
 			title: '<?=t("Confirm Change")?>',
 			width: 280,
-			height: 100,
+			height: 160,
 			onClose: function() {
 				ccm_pagePermissionsCancelInheritance();
 			}

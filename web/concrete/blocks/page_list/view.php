@@ -1,9 +1,6 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
-$rssUrl = $showRss ? $controller->getRssUrl($b) : '';
 $th = Loader::helper('text');
-//$ih = Loader::helper('image'); //<--uncomment this line if displaying image attributes (see below)
-//Note that $nh (navigation helper) is already loaded for us by the controller (for legacy reasons)
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>
 
@@ -13,9 +10,15 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
         <div class="ccm-block-page-list-header">
             <h5><?=$pageListTitle?></h5>
         </div>
-<? endif; ?>
+    <? endif; ?>
 
-	<?php foreach ($pages as $page):
+    <?php if ($rssUrl): ?>
+        <a href="<?php echo $rssUrl ?>" target="_blank" class="ccm-block-page-list-rss-feed"><i class="fa fa-rss"></i></a>
+    <?php endif; ?>
+
+    <div class="ccm-block-page-list-pages">
+
+    <?php foreach ($pages as $page):
 
 		// Prepare data for each page being listed...
         $buttonClasses = 'ccm-block-page-list-read-more';
@@ -120,14 +123,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
         </div>
 
 	<?php endforeach; ?>
- 
-
-	<?php if ($showRss): ?>
-		<div class="ccm-block-page-list-rss-icon">
-			<a href="<?php echo $rssUrl ?>" target="_blank"><img src="<?php echo $rssIconSrc ?>" width="14" height="14" alt="<?php echo t('RSS Icon') ?>" title="<?php echo t('RSS Feed') ?>" /></a>
-		</div>
-		<link href="<?php echo BASE_URL.$rssUrl ?>" rel="alternate" type="application/rss+xml" title="<?php echo $rssTitle; ?>" />
-	<?php endif; ?>
+    </div>
 
     <? if (count($pages) == 0): ?>
         <div class="ccm-block-page-list-no-pages"><?=$noResultsMessage?></div>

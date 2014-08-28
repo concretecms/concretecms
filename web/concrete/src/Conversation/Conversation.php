@@ -78,7 +78,10 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
 		));
 	}
 
-	public function getConversationMessageUsers() {
+    /**
+     * @return \Concrete\Core\User\UserInfo[]
+     */
+    public function getConversationMessageUsers() {
 		$ml = new ConversationMessageList();
 		$ml->filterByConversation($this);
 		$users = array();
