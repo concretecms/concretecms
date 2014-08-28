@@ -141,10 +141,13 @@ class Localization
      *   "fr_FR" => "Francais (France)"]
      * The result will be sorted by the key.
      * If the $displayLocale is set, the language- and region-names will be returned in that language
-     * @param string $displayLocale Language of the description
+     * @param string|null $displayLocale Language of the description.
+     *                    Set to null to get each locale name in its own language,
+     *                    set to '' to use the current locale,
+     *                    set to a specific locale to get the names in that language
      * @return Array An associative Array with locale as the key and description as content
      */
-    public static function getAvailableInterfaceLanguageDescriptions($displayLocale = null)
+    public static function getAvailableInterfaceLanguageDescriptions($displayLocale = '')
     {
         $languages = self::getAvailableInterfaceLanguages();
         if (count($languages) > 0) {
@@ -152,7 +155,7 @@ class Localization
         }
         $locales = array();
         foreach ($languages as $lang) {
-            $locales[$lang] = self::getLanguageDescription($lang,$displayLocale);
+            $locales[$lang] = self::getLanguageDescription($lang, $displayLocale);
         }
         natcasesort($locales);
 
@@ -163,40 +166,15 @@ class Localization
      * Get the description of a locale consisting of language and region description
      * e.g. "French (France)"
      * @param string $locale Locale that should be described
-     * @param string $displayLocale Language of the description
+     * @param string|null $displayLocale Language of the description.
+     *                    Set to null to get each locale name in its own language,
+     *                    set to '' to use the current locale,
+     *                    set to a specific locale to get the names in that language
      * @return string Description of a language
      */
-    public static function getLanguageDescription($locale, $displayLocale = null)
+    public static function getLanguageDescription($locale, $displayLocale = '')
     {
-        $localeList = \Zend_Locale::getLocaleList();
-        if (! isset($localeList[$locale])) {
-            return $locale;
-        }
-
-        if ($displayLocale !== NULL && (! isset($localeList[$displayLocale]))) {
-            $displayLocale = null;
-        }
-
-        $displayLocale = $displayLocale?$displayLocale:$locale;
-
-        $zendLocale = new \Zend_Locale($locale);
-        $languageName = \Zend_Locale::getTranslation($zendLocale->getLanguage(), 'language', $displayLocale);
-        $description = $languageName;
-        $region = $zendLocale->getRegion();
-        if ($region !== false) {
-            $regionName = \Zend_Locale::getTranslation($region, 'country', $displayLocale);
-            if ($regionName !== false) {
-                $localeData = \Zend_Locale_Data::getList($displayLocale, 'layout');
-                if ($localeData['characters'] == "right-to-left") {
-                    $description = '(' . $languageName . ' (' . $regionName ;
-                } else {
-                    $description = $languageName . ' (' . $regionName . ")";
-                }
-
-            }
-        }
-
-        return $description;
+        return \Punic\Language::getName($locale, is_null($displayLocale) ? $locale : $displayLocale);
     }
 
 }
