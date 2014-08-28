@@ -1,7 +1,11 @@
 <?php
 use Concrete\Core\Attribute\Key\Key;
+use Concrete\Core\Http\ResponseAssetGroup;
 
 defined('C5_EXECUTE') or die('Access denied.');
+
+$r = ResponseAssetGroup::get();
+$r->requireAsset('core/legacy');
 
 $activeAuths = AuthenticationType::getActiveListSorted();
 $form = Loader::helper('form');
