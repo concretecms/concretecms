@@ -148,15 +148,15 @@ class Date
         } else {
             $result = array();
             $continentNames = array(
-                'Africa' => \Punic\Territory::getName('002'),
-                'Asia' => \Punic\Territory::getName('142'),
-                'America' => \Punic\Territory::getName('019'),
-                'Antarctica' => \Punic\Territory::getName('AQ'),
+
+                'Africa' => \Punic\Data::getTerritory('002'),
+                'Asia' => \Punic\Data::getTerritory('142'),
+                'America' => \Punic\Data::getTerritory('019'),
+                'Antarctica' => \Punic\Data::getTerritory('AQ'),
                 'Arctic' => t('Arctic'),
-                'Asia' => \Punic\Territory::getName('142'),
                 'Atlantic' => t('Atlantic Ocean'),
-                'Australia' => \Punic\Territory::getName('AU'),
-                'Europe' => \Punic\Territory::getName('150'),
+                'Australia' => \Punic\Data::getTerritory('AU'),
+                'Europe' => \Punic\Data::getTerritory('150'),
                 'Indian' => t('Indian Ocean'),
                 'Pacific' => t('Pacific Ocean')
             );
@@ -389,7 +389,7 @@ class Date
     {
         return Calendar::formatDate(
             $this->toDateTime($value, $toTimezone),
-            $long ? 'medium' : 'short'
+            $longDate ? 'medium' : 'short'
         );
     }
 
