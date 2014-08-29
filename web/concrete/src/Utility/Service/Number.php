@@ -24,21 +24,6 @@ class Number
     }
 
     /**
-     * Returns the Zend_Locale instance for the current locale.
-     * @return Zend_Locale
-     */
-    protected function getZendLocale()
-    {
-        static $zl;
-        $locale = Localization::activeLocale();
-        if ((!isset($zl)) || ($locale != $zl->toString())) {
-            $zl = new \Zend_Locale($locale);
-        }
-
-        return $zl;
-    }
-
-    /**
      * Checks if a given string is valid representation of a number in the current locale.
      * @return bool
      * @example http://www.concrete5.org/documentation/how-tos/developers/formatting-numbers/ See the Formatting numbers how-to for more details
@@ -67,15 +52,7 @@ class Number
      */
     public function format($number, $precision = null)
     {
-        if (!is_numeric($number)) {
-            return $number;
-        }
-        $options = array('locale' => $this->getZendLocale());
-        if (is_numeric($precision)) {
-            $options['precision'] = $precision;
-        }
-
-        return \Zend_Locale_Format::toNumber($number, $options);
+        return \Punic\Number::format($number, $precision);
     }
 
     /**
