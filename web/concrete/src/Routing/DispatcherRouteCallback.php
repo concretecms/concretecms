@@ -49,7 +49,7 @@ class DispatcherRouteCallback extends RouteCallback {
 		return $this->sendResponse($v, 403);
 	}
 
-	public function execute(Request $request, \Concrete\Core\Routing\Route $route, $parameters) {
+	public function execute(Request $request, \Concrete\Core\Routing\Route $route = null, $parameters = array()) {
 		
 		// figure out where we need to go
 		$c = Page::getFromRequest($request);
