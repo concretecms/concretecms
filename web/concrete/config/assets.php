@@ -23,10 +23,12 @@ $al->registerGroup('jquery/ui', array(
 
 // select2
 $al->register('javascript', 'select2', 'js/select2.js', array('minify' => false, 'combine' => false));
+$al->register('javascript', 'select2_locale', REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_select2_js', array('combine' => false, 'minify' => false, 'local' => false));
 $al->register('css', 'select2', 'css/select2.css', array('minify' => false));
 
 $al->registerGroup('select2', array(
     array('javascript', 'select2'),
+    array('javascript', 'select2_locale'),
     array('css', 'select2')
 ));
 
@@ -263,6 +265,7 @@ $al->registerGroup('core/file-manager', array(
     array('javascript', 'underscore'),
     array('javascript', 'jquery/ui'),
     array('javascript', 'select2'),
+    array('javascript', 'select2_locale'),
     array('javascript', 'core/app'),
     array('javascript', 'core/file-manager')
 ));
