@@ -50,7 +50,8 @@ class Customize extends BackendInterfaceController {
 			$col = $columns->getDefaultSortColumn();	
 			$fileList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
 
-			$ilr = new FileSearchResult($columns, $fileList, URL::to('/search/files/submit'));
+
+			$ilr = new FileSearchResult($columns, $fileList, URL::to('/ccm/system/search/files/submit'));
 			$r = new SearchResponse();
 			$r->setMessage(t('File search columns saved successfully.'));
 			$r->setSearchResult($ilr);

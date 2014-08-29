@@ -46,7 +46,7 @@ class Customize extends BackendInterfaceController {
 			$col = $columns->getDefaultSortColumn();	
 			$userList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
 
-			$ilr = new \Concrete\Core\User\Search\Result\Result($columns, $userList, URL::to('/search/users/submit'));
+			$ilr = new \Concrete\Core\User\Search\Result\Result($columns, $userList, URL::to('/ccm/system/search/users/submit'));
 			$r = new \Concrete\Core\Search\Response();
 			$r->setMessage(t('User search columns saved successfully.'));
 			$r->setSearchResult($ilr);

@@ -50,7 +50,7 @@ class Customize extends BackendInterfaceController {
 			$col = $columns->getDefaultSortColumn();	
 			$pageList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
 
-			$ilr = new PageSearchResult($columns, $pageList, URL::to('/search/pages/submit'));
+			$ilr = new PageSearchResult($columns, $pageList, URL::to('/ccm/system/search/pages/submit'));
 			$r = new SearchResponse();
 			$r->setMessage(t('Page search columns saved successfully.'));
 			$r->setSearchResult($ilr);
