@@ -4,6 +4,7 @@ namespace Concrete\Core\Application;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Foundation\ClassLoader;
+use Concrete\Core\Routing\DispatcherRouteCallback;
 use Core;
 use Database;
 use Environment;
@@ -17,6 +18,7 @@ use Page;
 use Redirect;
 use Request;
 use Route;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use User;
 use View;
@@ -267,17 +269,21 @@ class Application extends Container
             $response = $this->getEarlyDispatchResponse();
         }
         if (!isset($response)) {
-            $this->addRequiredRoutes();
             $collection = Route::getList();
             $context = new \Symfony\Component\Routing\RequestContext();
             $context->fromRequest($request);
             $matcher = new UrlMatcher($collection, $context);
             $path = rtrim($request->getPathInfo(), '/') . '/';
-            $request->attributes->add($matcher->match($path));
-            $matched = $matcher->match($path);
-            $route = $collection->get($matched['_route']);
-            Route::setRequest($request);
-            $response = Route::execute($route, $matched);
+            try {
+                $request->attributes->add($matcher->match($path));
+                $matched = $matcher->match($path);
+                $route = $collection->get($matched['_route']);
+                Route::setRequest($request);
+                $response = Route::execute($route, $matched);
+            } catch(ResourceNotFoundException $e) {
+                $callback = new DispatcherRouteCallback('dispatcher');
+                $response = $callback->execute($request);
+            }
         }
         return $response;
     }
@@ -310,15 +316,6 @@ class Application extends Container
                 }
             }
         }
-    }
-
-    /**
-     *  Adds a few required routes to the dispatcher that must come at the end.
-     */
-    protected function addRequiredRoutes()
-    {
-        Route::register('/', 'dispatcher', 'home');
-        Route::register('{path}', 'dispatcher', 'page', array('path' => '.+'));
     }
 
 }
