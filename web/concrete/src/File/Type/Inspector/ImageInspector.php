@@ -1,12 +1,13 @@
 <?
 namespace Concrete\Core\File\Type\Inspector;
+use Concrete\Core\File\Version;
 use Image;
 use FileAttributeKey;
 use Core;
 
 class ImageInspector extends Inspector {
 
-	public function inspect($fv) {
+	public function inspect(Version $fv) {
 
         $fr = $fv->getFileResource();
         $image = Image::load($fr->read());
