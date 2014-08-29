@@ -182,6 +182,7 @@ $al->registerGroup('core/app', array(
     array('javascript', 'bootstrap/popover'),
     array('javascript', 'jquery/ui'),
     array('javascript', 'core/app'),
+    array('javascript', 'core/legacy'),
     array('css', 'core/app'),
     array('css', 'font-awesome'),
     array('css', 'jquery/ui')
@@ -355,4 +356,13 @@ $al->registerGroup('core/account', array(
     array('javascript', 'bootstrap/dropdown'),
     array('css', 'bootstrap/dropdown'),
     array('css', 'core/account')
+));
+
+// Legacy Browser Support
+$al->register('javascript', 'core/legacy', 'js/legacy.js');
+$al->register('css', 'core/legacy', 'css/legacy.css');
+$al->registerGroup('core/legacy', array(
+    array('javascript', 'jquery'),
+    array('javascript', 'core/legacy'),
+    array('css', 'core/legacy')
 ));

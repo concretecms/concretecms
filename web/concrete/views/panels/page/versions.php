@@ -237,12 +237,12 @@ $(function() {
 			$(this).parent().parent().removeClass('ccm-panel-page-versions-version-checked');
 		}
 		var checkboxes = $('#ccm-panel-page-versions tbody input[type=checkbox]:checked');
-		$('button[data-version-action]').prop('disabled', true);
+		$('button[data-version-action]').addClass('disabled');
 		if (checkboxes.length > 1) {
-			$('button[data-version-action=compare').prop('disabled', false);
+			$('button[data-version-action=compare').removeClass('disabled');
 		}
 		if (checkboxes.length > 0 && !checkboxes.filter('[data-version-active=true]').length) {
-			$('button[data-version-action=delete').prop('disabled', false);
+			$('button[data-version-action=delete]').removeClass('disabled');
 		}
 		ConcretePageVersionList.previewSelectedVersions(checkboxes);
 
@@ -264,15 +264,17 @@ $(function() {
 	});
 
 
-	$('button[data-version-action=delete').on('click', function() {
-		var checkboxes = $('#ccm-panel-page-versions tbody input[type=checkbox]:checked');
-		var cvIDs = [];
-		$.each(checkboxes, function(i, cb) {
-			cvIDs.push({'name': 'cvID[]', 'value': $(cb).val()});
-		});
-		ConcretePageVersionList.sendRequest('<?=$controller->action("delete")?>', cvIDs, function(r) {
-			ConcretePageVersionList.handleVersionRemovalResponse(r);
-		});
+	$('button[data-version-action=delete]').on('click', function() {
+        if (!$(this).hasClass("disabled")) {
+            var checkboxes = $('#ccm-panel-page-versions tbody input[type=checkbox]:checked');
+            var cvIDs = [];
+            $.each(checkboxes, function (i, cb) {
+                cvIDs.push({'name': 'cvID[]', 'value': $(cb).val()});
+            });
+            ConcretePageVersionList.sendRequest('<?=$controller->action("delete")?>', cvIDs, function (r) {
+                ConcretePageVersionList.handleVersionRemovalResponse(r);
+            });
+        }
 	});
 
 });
@@ -286,7 +288,7 @@ $(function() {
 		<thead>
 			<tr>
 				<th><input class="ccm-flat-checkbox" type="checkbox" /></th>
-				<th colspan="3"><!--<button type="button" class="btn-link" data-version-action="compare" disabled><?=t('Compare')?></button>//--><button type="button" class="btn-link" data-version-action="delete" disabled><?=t('Delete')?></button></th>
+				<th colspan="3"><!--<button type="button" class="btn-link" data-version-action="compare" disabled><?=t('Compare')?></button>//--><button type="button" class="btn-link disabled" data-version-action="delete"><?=t('Delete')?></button></th>
 			</tr>
 		</thead>
 		<tbody></tbody>
