@@ -1,12 +1,14 @@
 <?
 
 namespace Concrete\Core\File\Type\Inspector;
+use Concrete\Core\File\Version;
 use Loader;
+use Core;
 use FileAttributeKey;
 
 class FlvInspector extends Inspector {
 	
-	public function inspect($fv) {
+	public function inspect(Version $fv) {
 
 		$at1 = FileAttributeKey::getByHandle('duration');
 		$at2 = FileAttributeKey::getByHandle('width');
@@ -15,7 +17,10 @@ class FlvInspector extends Inspector {
         // we killed $path here because the file might be hosted remotely.
         // @TODO add in support for streams through the $filesystem object.
 
-		$fp = @fopen($path,'r');
+        $cf = Core::make('helper/concrete/file');
+        $fs = $fv->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+        $fp = $fs->readStream($cf->prefix($fv->getPrefix(), $fv->getFileName()));
+
 		@fseek($fp,27);
 		$onMetaData = fread($fp,10);
 		
