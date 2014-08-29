@@ -59,7 +59,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 <? $requestID = mt_rand(100000000,999999999); ?>
 
 <script type="text/template" class="breadcrumb">
-	<% if (parentID > 0) { %>
+	<% if (parentID && parentID > 0) { %>
 	<ol class="breadcrumb">
 	  <li><a href="<%=parentLink%>" target="_blank"><%=parentName%></a></li>
 	  <li class="active"><?=$c->getCollectionName()?></li>
