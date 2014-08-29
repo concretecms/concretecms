@@ -40,7 +40,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 		<ul class="list-unstyled" data-search-column-list="<?=$type?>">
 		<?php foreach ($fldc->getColumns() as $col) { ?>
-			<li data-field-order-column="<?=$col->getColumnKey()?>"><input type="hidden" name="column[]" value="<?=$col->getColumnKey()?>" /><?=$col->getColumnName()?></li>
+			<li style="cursor: move" data-field-order-column="<?=$col->getColumnKey()?>"><input type="hidden" name="column[]" value="<?=$col->getColumnKey()?>" /><?=$col->getColumnName()?></li>
 		<?php } ?>
 		</ul>
 	</fieldset>
