@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Cache\Page;
 
+use Concrete\Core\Page\Page;
+
 class PageCacheRecord {
 
 	public function __construct(Page $c, $content, $lifetime) {

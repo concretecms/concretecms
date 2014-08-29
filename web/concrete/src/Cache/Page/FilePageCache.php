@@ -18,8 +18,8 @@ class FilePageCache extends PageCache {
 	}
 
 	protected function getCacheFile($mixed) {
-		$key = $this->getCacheKey($mixed);
-		$filename = $key . '.cache';
+       	$key = $this->getCacheKey($mixed);
+       	$filename = $key . '.cache';
 		if ($key) {
 			if (strlen($key) == 1) {
 				$dir = DIR_FILES_PAGE_CACHE . '/' . $key;
@@ -60,7 +60,6 @@ class FilePageCache extends PageCache {
 			@mkdir(DIR_FILES_PAGE_CACHE);
 			@touch(DIR_FILES_PAGE_CACHE . '/index.html');
 		}
-
 		$lifetime = $c->getCollectionFullPageCachingLifetimeValue();
 		$file = $this->getCacheFile($c);
 		if ($file) {

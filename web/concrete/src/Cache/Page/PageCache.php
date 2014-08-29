@@ -1,6 +1,7 @@
 <?
 
 namespace Concrete\Core\Cache\Page;
+use Concrete\Core\Http\Response;
 use Request;
 use \Page as ConcretePage;
 use \Concrete\Core\Page\View\PageView;
@@ -14,14 +15,18 @@ abstract class PageCache {
 	static $library;
 
 	public function deliver(PageCacheRecord $record) {
-		if (defined('APP_CHARSET')) {
-			header("Content-Type: text/html; charset=" . APP_CHARSET);
+		$response = new Response();
+        $headers = array();
+        if (defined('APP_CHARSET')) {
+            $headers[] = "Content-Type: text/html; charset=" . APP_CHARSET;
 		}
 		foreach ($record->getCacheRecordHeaders() as $header) {
-			header($header);
+            $headers[] = $header;
 		}
 
-		print($record->getCacheRecordContent());
+        $response->headers->add($headers);
+        $response->setContent($record->getCacheRecordContent());
+        return $response;
 	}
 
 	public static function getLibrary() {
@@ -120,13 +125,13 @@ abstract class PageCache {
 	}
 
 	public function getCacheKey($mixed) {
-		if ($mixed instanceof Page) {
+		if ($mixed instanceof ConcretePage) {
 			if ($mixed->getCollectionPath() != '') {
 				return urlencode(trim($mixed->getCollectionPath(), '/'));
 			} else if ($mixed->getCollectionID() == HOME_CID) {
 				return '!' . HOME_CID;
 			}			
-		} else if ($mixed instanceof Request) {
+		} else if ($mixed instanceof \Concrete\Core\Http\Request) {
 			if ($mixed->getPath() != '') {
 				return urlencode(trim($mixed->getPath(), '/'));
 			} else {

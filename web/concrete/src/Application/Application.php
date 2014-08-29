@@ -2,6 +2,7 @@
 namespace Concrete\Core\Application;
 
 use Concrete\Core\Cache\Page\PageCache;
+use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Foundation\ClassLoader;
 use Core;
 use Database;
@@ -122,7 +123,7 @@ class Application extends Container
     /**
      * Checks to see whether we should deliver a concrete5 response from the page cache
      */
-    public function checkPageCache(Request $request)
+    public function checkPageCache(\Concrete\Core\Http\Request $request)
     {
         $library = PageCache::getLibrary();
         if ($library->shouldCheckCache($request)) {
