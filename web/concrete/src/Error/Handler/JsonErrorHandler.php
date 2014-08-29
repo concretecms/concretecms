@@ -30,7 +30,11 @@ class JsonErrorHandler extends Handler
         );
 
         if (\Whoops\Util\Misc::canSendHeaders()) {
-            header('Content-Type: application/json');
+            if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+                header('Content-Type: application/json; charset=' . APP_CHARSET, true);
+            } else {
+                header('Content-Type: text/plain; charset=' . APP_CHARSET, true);
+            }
         }
 
         echo json_encode($response);
