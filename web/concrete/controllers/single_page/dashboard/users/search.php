@@ -362,6 +362,7 @@ class Search extends DashboardPageController
                 $obj = new stdClass();
                 $obj->value = $timezoneID;
                 $obj->text = $timezoneName;
+                $obj->id = $timezoneName;
                 $result[] = $obj;
             }
         }
