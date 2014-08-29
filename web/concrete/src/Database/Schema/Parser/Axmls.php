@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Database\Schema\Parser;
 
-class Legacy extends XmlParser
+class Axmls extends XmlParser
 {
 
     /**
@@ -15,7 +15,7 @@ class Legacy extends XmlParser
         $schema = new \Doctrine\DBAL\Schema\Schema();
         foreach ($x->table as $t) {
 
-            if ($db->tableExists($t['name'])) {
+            if ($this->ignoreExistingTables && $db->tableExists($t['name'])) {
                 continue;
             }
             $table = $schema->createTable((string)$t['name']);

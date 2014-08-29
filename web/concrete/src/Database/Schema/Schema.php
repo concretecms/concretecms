@@ -19,16 +19,14 @@ class Schema {
 		return $parser->parse($array, $connection);
 	}
 
-	protected static function getSchemaParser(\SimpleXMLElement $sx) {
+	public static function getSchemaParser(\SimpleXMLElement $sx) {
 		switch($sx['version']) {
 			case '0.3':
-				$parser = new \Concrete\Core\Database\Schema\Parser\Legacy($sx);
+				$parser = new \Concrete\Core\Database\Schema\Parser\Axmls($sx);
 				break;
 			default:
-				$parser = new \Concrete\Core\Database\Schema\Parser\Concrete($sx);
-				break;
+                throw new \Exception(t('Invalid schema version found. Expecting 0.3'));
 		}
-
 		return $parser;
 	}
 }

@@ -31,7 +31,6 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btSupportsInlineEdit = false;
     protected $btCopyWhenPropagate = 0;
     protected $btIncludeAll = 0;
-    protected $dbFile = 'db.xml';
     protected $btInterfaceWidth = "400";
     protected $btInterfaceHeight = "400";
     protected $btHasRendered = false;
@@ -93,7 +92,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
             $r->result = true;
             return $r;
         }
-        $ret = Package::installDB($path . '/' . $this->dbFile);
+        $ret = Package::installDB($path . '/' . FILENAME_BLOCK_DB);
         return $ret;
     }
 
