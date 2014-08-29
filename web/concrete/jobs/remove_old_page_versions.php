@@ -20,11 +20,14 @@ class RemoveOldPageVersions extends AbstractJob {
 		$pNum = $pNum < 0 ? 1 : $pNum + 1;
 
 		$pl = new PageList;
+        $pl->ignorePermissions();
 		$pl->setItemsPerPage(3);
+        $pagination = $pl->getPagination();
+        $pages = $pagination->getCurrentPageResults();
+
 		/* probably want to keep a record of pages that have been gone through
 		 * so you don't start from the beginning each time..
 		 */
-		$pages = $pl->getPage($pNum);
 
 		if(!count($pages)) {
 			$cfg->save('OLD_VERSION_JOB_PAGE_NUM',0);
