@@ -389,7 +389,7 @@ class Date
     {
         return Calendar::formatDate(
             $this->toDateTime($value, $toTimezone),
-            $long ? 'medium' : 'short'
+            $longDate ? 'medium' : 'short'
         );
     }
 
