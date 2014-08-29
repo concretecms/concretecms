@@ -3,76 +3,42 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 // now that we're in the specialized content file for this block type, 
 // we'll include this block type's class, and pass the block to it, and get
-// the content	
+// the content
 
-$file = $controller->getFileObject();
-$rel_file_path=$file->getURL();
 ?>
-<div style="text-align:center">
+<div style="text-align:center; margin-top: 20px; margin-bottom: 20px;">
 
 <?
 $c = Page::getCurrentPage();
 $vWidth=intval($controller->width);
 $vHeight=intval($controller->height);
 if ($c->isEditMode()) { ?>
-	<div class="ccm-edit-mode-disabled-item" style="width:<?=$vWidth?>px; height:<?=$vHeight?>px; ">
+	<div class="ccm-edit-mode-disabled-item" style="width:<?=$vWidth?>px; height:<?=$vHeight?>px;  max-width: 100%; ">
 		<div style="padding:8px 0px; padding-top: <?=round($vHeight/2)-10?>px;"><?=t('Content disabled in edit mode.')?></div>
 	</div>
-<? }else{ ?>
-	
-	<?
-	
-	
-	if( strstr(strtolower($file->getFilename()),'.flv') ){   ?>
-		
-		<script type="text/javascript">
-		var flashvars = {};
-		flashvars.flvfile = "<?=$rel_file_path?>";
-		
-		var params = {};
-		params.menu = false;
-		params.wmode="transparent";
-		
-		var attributes = {};
-		
-		swfobject.embedSWF("<?=$this->getBlockURL()?>/videoPlayer.swf", "flv_player_<?=$bID?>", "<?=$controller->width?>", "<?=$controller->height?>", "9.0.0","expressInstall.swf", flashvars, params, attributes);
-		
-		</script>
-		
-		<div class="ccm-flv-player" id="flv_player_<?=$bID?>">
-		<?=t("Loading Video... If you're seeing this message you may not have Flash installed.")?>
-		</div>
-	
-	<? }elseif(  strstr(strtolower($file->getFilename()),'.wmv') || strstr(strtolower($file->getFilename()),'.mpg') ||  strstr(strtolower($file->getFilename()),'.mpeg') ){ ?> 
-		
-		<OBJECT ID="MediaPlayer" WIDTH="<?=$controller->width?>" HEIGHT="<?=$controller->height?>" 
-		CLASSID="CLSID:22D6F312-B0F6-11D0-94AB-0080C74C7E95" STANDBY="Loading Windows Media Player components..." TYPE="application/x-oleobject">
-		<PARAM NAME="FileName" VALUE="<?=$rel_file_path?>">
-		<EMBED TYPE="application/x-mplayer2" pluginspage="http://www.microsoft.com/Windows/MediaPlayer/" SRC="<?=$rel_file_path?>" NAME="MediaPlayer" WIDTH="<?=$controller->width?>" HEIGHT="<?=$controller->height?>" ></EMBED>
-		</OBJECT> 
-		
-	<? }elseif( strstr(strtolower($file->getFilename()),'.avi')  ){ ?>
-	
-		<OBJECT CLASSID="clsid:22d6f312-b0f6-11d0-94ab-0080c74c7e95F" HEIGHT="<?=$controller->height?>" WIDTH="<?=$controller->width?>" NAME="Msshow1" ID="Msshow1" >
-			<PARAM NAME="FileName" VALUE="<?=$rel_file_path?>">
-			<PARAM NAME="autoStart" VALUE="true">
-			<PARAM NAME="showControls" VALUE="false">
-			<PARAM NAME="PlayCount" VALUE="20">
-			<embed src="<?=$rel_file_path?>" height="<?=$controller->height?>" width="<?=$controller->width?>" controller="false" autostart="true" loop=true>
-			</EMBED>
-		</OBJECT>
-		
-	<? }elseif( strstr(strtolower($file->getFilename()),'.mov') || strstr(strtolower($file->getFilename()),'.qt') || strstr(strtolower($file->getFilename()),'.mp4') ){ ?>	
-		
+<? }else if (!$webmURL && !$oggURL && !$mp4URL) { ?>
+    <div class="ccm-edit-mode-disabled-item" style="width:<?=$vWidth?>px; height:<?=$vHeight?>px; max-width: 100%; ">
+		<div style="padding:8px 0px; padding-top: <?=round($vHeight/2)-10?>px;"><?=t('No Video Files Selected.')?></div>
+    </div>
+<?php } else if ($webmURL || $oggURL || $mp4URL){ ?>
+    <video controls="controls" <?php echo $posterURL ? 'poster="'.$posterURL.'"' : '' ?> style="max-width: 100%;">
+        <?php if($webmURL) { ?>
+        <source src="<?php echo $webmURL ?>" type="video/webm" />
+        <?php }
+        if ($oggURL) { ?>
+        <source src="<?php echo $oggURL ?>" type="video/ogg" />
+        <?php }
+        if ($mp4URL) { ?>
+            <source src="<?php echo $mp4URL ?>" type="video/mp4" />
+	    <?php // quicktime player for older IE ?>
 		<object CLASSID="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" width="<?=$controller->width?>" height="<?=$controller->height?>" CODEBASE="http://www.apple.com/qtactivex/qtplugin.cab">
-			<param name="src" value="<?=$rel_file_path?>">
+			<param name="src" value="<?=$mp4URL?>">
 			<param name="autoplay" value="true">
 			<param name="loop" value="false">
 			<param name="controller" value="true">
-			<embed src="<?=$rel_file_path?>" width="<?=$controller->width?>" height="<?=$controller->height?>" autoplay="true" loop="false" controller="true" pluginspage="http://www.apple.com/quicktime/"></embed>
-		</object>	 
-	
-	<? } ?>
-	
+			<embed src="<?=$mp4URL?>" width="<?=$controller->width?>" height="<?=$controller->height?>" autoplay="true" loop="false" controller="true" pluginspage="http://www.apple.com/quicktime/"></embed>
+		</object>
+        <?php } ?>
 <? } ?>
+   </video>
 </div>

@@ -5,17 +5,27 @@
 			<key />
 			<unsigned />
 		</field>
-		<field name="fID" type="I">
-			<unsigned />
-		</field>
+        <field name="webmfID" type="I">
+            <unsigned />
+            <default value="0" />
+        </field>
+        <field name="oggfID" type="I">
+            <unsigned />
+            <default value="0" />
+        </field>
+        <field name="posterfID" type="I">
+            <unsigned />
+            <default value="0" />
+        </field>
+        <field name="mp4fID" type="I">
+            <unsigned />
+            <default value="0" />
+        </field>
 		<field name="width" type="I">
 			<unsigned />
 		</field>
 		<field name="height" type="I">
 			<unsigned />
 		</field>
-        <index name="fID">
-            <col>fID</col>
-        </index>
 	</table>
 </schema>
