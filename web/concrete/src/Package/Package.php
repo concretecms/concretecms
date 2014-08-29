@@ -144,7 +144,7 @@ class Package extends Object {
 		if (!file_exists($xmlFile)) {
 			return false;
 		}
-		
+
 		// currently this is just done from xml
 		$db = Database::get();
 		

@@ -5,6 +5,7 @@ use Block;
 use BlockTypeSet;
 use Cache;
 use Concrete\Core\Block\View\BlockView;
+use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Filesystem\TemplateFile;
 use Concrete\Core\Package\PackageList;
 use Database as DB;
@@ -549,6 +550,7 @@ class BlockType
      */
     public function refresh()
     {
+        $db = DB::get();
         $pkgHandle = false;
         if ($this->pkgID > 0) {
             $pkgHandle = $this->getPackageHandle();
@@ -559,9 +561,25 @@ class BlockType
 
         $this->loadFromController($bta);
 
-        $em = DB::get()->getEntityManager();
+        $em = $db->getEntityManager();
         $em->persist($this);
         $em->flush();
+
+        $env = Environment::get();
+        $r = $env->getRecord(DIRNAME_BLOCKS . '/' . $this->btHandle . '/' . FILENAME_BLOCK_DB, $this->getPackageHandle());
+        if ($r->exists()) {
+            $parser = Schema::getSchemaParser(simplexml_load_file($r->file));
+            $parser->setIgnoreExistingTables(false);
+            $toSchema = $parser->parse($db);
+
+            $fromSchema = $db->getSchemaManager()->createSchema();
+            $comparator = new \Doctrine\DBAL\Schema\Comparator();
+            $schemaDiff = $comparator->compare($fromSchema, $toSchema);
+            $saveQueries = $schemaDiff->toSaveSql($db->getDatabasePlatform());
+            foreach($saveQueries as $query) {
+                $db->query($query);
+            }
+        }
     }
 
     protected function loadFromController($bta)
