@@ -23,25 +23,40 @@ class Controller extends BlockController {
 	 * Used for localization. If we want to localize the name/description we have to include this
 	 */
 	public function getBlockTypeDescription() {
-		return t("Embeds uploaded video into a web page. Supports AVI, WMV, Quicktime/MPEG4 and FLV formats.");
+		return t("Embeds uploaded video into a web page. Supports WebM, Ogg, and Quicktime/MPEG4 formats.");
 	}
 	
 	public function getBlockTypeName() {
 		return t("Video Player");
 	}
 
-	public function getJavaScriptStrings() {
-		return array('flv-required' => t('You must select a valid FLV file.'));
+	function getMp4FileID() {return $this->mp4fID;}
+    function getWebmFileID() {return $this->webmfID;}
+    function getOggFileID() {return $this->oggfID;}
+    function getPosterFileID() {return $this->posterfID;}
+
+	function getMp4FileObject() {
+		return File::getByID($this->mp4fID);
 	}
 
-	function getFileID() {return $this->fID;}
-	function getFileObject() {
-		return File::getByID($this->fID);
-	}
+    function getOggFileObject() {
+        return File::getByID($this->oggfID);
+    }
+
+    function getWebmFileObject() {
+        return File::getByID($this->webmfID);
+    }
+
+    function getPosterFileObject(){
+        return File::getByID($this->posterfID);
+    }
 
 	function save($data) { 
-		$args['fID']    = intval($data['fID']);	
-		$args['width']  = (intval($data['width'])>0)  ? intval($data['width'])  : 425;
+		$args['webmfID']    = (intval($data['webmfID'])>0 ? intval($data['webmfID']) : 0);
+        $args['oggfID']    = (intval($data['oggfID']) > 0 ? intval($data['oggfID']) : 0);
+        $args['mp4fID']    = (intval($data['mp4fID'])>0 ? intval($data['mp4fID']) : 0);
+        $args['posterfID']    = (intval($data['posterfID'])>0 ? intval($data['posterfID']) : 0);
+        $args['width']  = (intval($data['width'])>0)  ? intval($data['width'])  : 425;
 		$args['height'] = (intval($data['height'])>0) ? intval($data['height']) : 334;		
 		
 		parent::save($args);
@@ -49,9 +64,24 @@ class Controller extends BlockController {
 
 	public function view() {
 		$this->requireAsset('swfobject');
+        $mp4File = $this->getMp4FileObject();
+        $webmFile = $this->getWebmFileObject();
+        $posterFile = $this->getPosterFileObject();
+        $oggFile = $this->getOggFileObject();
+        if(is_object($posterFile)) {
+            $this->set('posterURL', $posterFile->getURL());
+        }
+        if(is_object($mp4File)) {
+            $this->set('mp4URL', $mp4File->getURL());
+        }
+        if(is_object($webmFile)) {
+            $this->set('webmURL', $webmFile->getURL());
+        }
+        if(is_object($oggFile)) {
+            $this->set('oggURL', $oggFile->getURL());
+        }
 	}
-	
-	
+
 }
 
 ?>
