@@ -349,13 +349,21 @@ class Search extends DashboardPageController
 
     public function get_timezones()
     {
+        if(array_key_exists('query', $_GET) && is_string($_GET['query'])) {
+            $query = preg_replace('/\s+/', ' ', $_GET['query']);
+        }
+        else {
+            $query = '';
+        }
         $timezones = Loader::helper("date")->getTimezones();
         $result = array();
         foreach ($timezones as $timezoneID => $timezoneName) {
-            $obj = new stdClass();
-            $obj->value = $timezoneID;
-            $obj->text = $timezoneName;
-            $result[] = $obj;
+            if(($query === '') || (stripos($timezoneName, $query) !== false)) {
+                $obj = new stdClass();
+                $obj->value = $timezoneID;
+                $obj->text = $timezoneName;
+                $result[] = $obj;
+            }
         }
         Loader::helper('ajax')->sendResult($result);
     }

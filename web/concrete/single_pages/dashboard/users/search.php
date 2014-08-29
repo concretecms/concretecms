@@ -93,7 +93,7 @@ div[data-container=editable-fields] section {
 				?>
 				<div class="row">
 					<div class="col-md-4"><p><?=t('Timezone')?></p></div>
-					<div class="col-md-8"><p><span <? if ($canEditTimezone) { ?>data-editable-field-type="xeditable" data-source="<?=$view->action('get_timezones')?>" data-url="<?=$view->action('update_timezone', $user->getUserID())?>" data-type="select" data-name="uTimezone" data-value="<?=h($uTimezone)?>"<? } ?>><?=$dh->getTimezoneDisplayName($uTimezone) ?></span></p></div>
+					<div class="col-md-8"><p><span <? if ($canEditTimezone) { ?>data-editable-field-type="xeditable" data-source="<?=$view->action('get_timezones')?>" data-url="<?=$view->action('update_timezone', $user->getUserID())?>" data-type="select2" data-name="uTimezone" data-value="<?=h($uTimezone)?>"<? } ?>><?=$dh->getTimezoneDisplayName($uTimezone) ?></span></p></div>
 				</div>
 			<? } ?>
 			<?
