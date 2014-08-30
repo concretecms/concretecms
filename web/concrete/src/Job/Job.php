@@ -247,7 +247,18 @@ abstract class Job extends Object
 
     protected static function getClassName($jHandle)
     {
-        $className = '\\Concrete\\Job\\' . Loader::helper('text')->camelcase($jHandle);
+        $db = Loader::db();
+        $pkgID = $db->GetOne('select pkgID from Jobs where jHandle = ?', $jHandle);
+        if ($pkgID > 0) {
+            $pkgHandle = PackageList::getHandle($pkgID);
+            if ($pkgHandle) {
+
+                $className = '\\Concrete\\Package\\' . Loader::helper('text')->camelcase($pkgHandle) . '\\Job\\' . Loader::helper('text')->camelcase($jHandle);
+                
+            }
+        } else {
+            $className = '\\Concrete\\Job\\' . Loader::helper('text')->camelcase($jHandle);
+        }
 
         return $className;
     }
@@ -365,8 +376,12 @@ abstract class Job extends Object
 
     public static function installByPackage($jHandle, $pkg)
     {
-        $dir = is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle()) ? DIR_PACKAGES . '/' . $pkg->getPackageHandle() : DIR_PACKAGES_CORE . '/' . $pkg->getPackageHandle();
-        $className = static::getClassName($jHandle);
+        if (isset($pkg)) {
+            $className = '\\Concrete\\Package\\' . Loader::helper('text')->camelcase($pkg->getPackageHandle()) . '\\Job\\' . Loader::helper('text')->camelcase($jHandle);
+        } else {
+            $className = static::getClassName($jHandle);
+        }
+
         if (class_exists($className)) {
             $j = Core::make($className);
             $db = Loader::db();
