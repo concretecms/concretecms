@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d810ccb7e3aa59eaaa64ae4ca56c86b4",
+    "hash": "5ff63368780579df0f10d861254798e0",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -1599,16 +1599,16 @@
         },
         {
             "name": "punic/punic",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/punic/punic.git",
-                "reference": "f2e2f7cf80c3fc40a3ffef31bebcea6b59580e6f"
+                "reference": "a6ab675e81a0cfc1fe5decbb561dab0b97b143eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punic/punic/zipball/f2e2f7cf80c3fc40a3ffef31bebcea6b59580e6f",
-                "reference": "f2e2f7cf80c3fc40a3ffef31bebcea6b59580e6f",
+                "url": "https://api.github.com/repos/punic/punic/zipball/a6ab675e81a0cfc1fe5decbb561dab0b97b143eb",
+                "reference": "a6ab675e81a0cfc1fe5decbb561dab0b97b143eb",
                 "shasum": ""
             },
             "require": {
@@ -1662,7 +1662,7 @@
                 "translations",
                 "unicode"
             ],
-            "time": "2014-08-29 08:08:14"
+            "time": "2014-09-01 12:32:14"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
@@ -2999,8 +2999,7 @@
         "htmlawed/htmlawed": 20,
         "kertz/twitteroauth": 20,
         "primal/color": 20,
-        "zendframework/zend-queue": 20,
-        "punic/punic": 20
+        "zendframework/zend-queue": 20
     },
     "prefer-stable": false,
     "platform": {
