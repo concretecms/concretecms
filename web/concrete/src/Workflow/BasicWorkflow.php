@@ -102,7 +102,8 @@ class BasicWorkflow extends \Concrete\Core\Workflow\Workflow
             '%s Submitted by <strong>%s</strong> on %s.',
             $description,
             $ux->getUserName(),
-            Core::make('helper/date')->formatDateTime($wp->getWorkflowProgressDateAdded(), true);
+            Core::make('helper/date')->formatDateTime($wp->getWorkflowProgressDateAdded(), true)
+        );
     }
 
     public function getWorkflowProgressStatusDescription(WorkflowProgress $wp)
