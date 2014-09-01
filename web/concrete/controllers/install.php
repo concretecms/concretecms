@@ -19,6 +19,7 @@ if (!ini_get('safe_mode')) {
 
 define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;*.pptx;*.kml;*.xml');
 define('ENABLE_ASSET_CACHE', false);
+define('ENABLE_THEME_CSS_CACHE', false);
 
 class Install extends Controller
 {

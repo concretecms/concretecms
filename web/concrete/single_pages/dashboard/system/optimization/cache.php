@@ -21,12 +21,30 @@
     </fieldset>
 
     <fieldset style="margin-bottom: 15px">
+        <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Caches the output of customized theme stylesheets for faster loading. Turn off if you are editing LESS files in your theme directly.')?>"><?=t('Theme CSS Cache.')?></legend>
+
+        <div class="radio">
+            <label>
+                <input type="radio" name="ENABLE_THEME_CSS_CACHE" value="0" <?php if (ENABLE_THEME_CSS_CACHE == false) { ?> checked <?php  } ?> />
+                <span><?=t('Off - Good for active theme development when using LESS files.')?></span>
+            </label>
+        </div>
+
+        <div class="radio">
+            <label>
+                <input type="radio" name="ENABLE_THEME_CSS_CACHE" value="1" <?php  if (ENABLE_THEME_CSS_CACHE == true) { ?> checked <?php  } ?> />
+                <span><?=t('On - Helps speed up a live site.')?></span>
+            </label>
+        </div>
+    </fieldset>
+
+    <fieldset style="margin-bottom: 15px">
         <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Stores the generation of CSS and JavaScript assets')?>"><?=t('CSS and JavaScript Cache')?></legend>
 
         <div class="radio">
             <label>
                 <input type="radio" name="ENABLE_ASSET_CACHE" value="0" <?php if (ENABLE_ASSET_CACHE == false) { ?> checked <?php  } ?> />
-                <span><?=t('Off - Good for active theme and block development.')?></span>
+                <span><?=t('Off - Good for active block and site development.')?></span>
             </label>
         </div>
 

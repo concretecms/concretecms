@@ -25,6 +25,7 @@ Config::getOrDefine('UPLOAD_FILE_EXTENSIONS_ALLOWED','*.flv;*.jpg;*.gif;*.jpeg;*
 Config::getOrDefine('ENABLE_OVERRIDE_CACHE', false);
 Config::getOrDefine('ENABLE_BLOCK_CACHE', false);
 Config::getOrDefine('ENABLE_ASSET_CACHE', false);
+Config::getOrDefine('ENABLE_THEME_CSS_CACHE', false);
 Config::getOrDefine('FULL_PAGE_CACHE_GLOBAL', false);
 Config::getOrDefine('FULL_PAGE_CACHE_LIFETIME', 'default');
 

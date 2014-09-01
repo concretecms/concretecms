@@ -317,7 +317,7 @@ class Theme extends Object
             $stylesheet->setValueList($scl);
         }
         if (!$this->isThemePreviewRequest()) {
-            if (!$stylesheet->outputFileExists() || !ENABLE_ASSET_CACHE) {
+            if (!$stylesheet->outputFileExists() || !ENABLE_THEME_CSS_CACHE) {
                 $stylesheet->output();
             }
         }
