@@ -246,6 +246,7 @@ define('FILENAME_STYLE_CUSTOMIZER_DEFAULT_PRESET_NAME', 'defaults.less');
  */
 defined('DIR_BASE_CORE') or define('DIR_BASE_CORE', realpath(dirname(__FILE__) . '/..'));
 defined('DIR_PACKAGES') or define('DIR_PACKAGES', DIR_BASE . '/packages');
+defined('DIR_DOCTRINE_PROXY_CLASSES') or define('DIR_DOCTRINE_PROXY_CLASSES', DIR_BASE_CORE . '/config/doctrine');
 
 define('DIR_FILES_BLOCK_TYPES', DIR_APPLICATION . '/' . DIRNAME_BLOCKS);
 define('DIR_FILES_BLOCK_TYPES_CORE', DIR_BASE_CORE . '/' . DIRNAME_BLOCKS);
