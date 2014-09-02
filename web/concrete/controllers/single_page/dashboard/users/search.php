@@ -360,9 +360,8 @@ class Search extends DashboardPageController
         foreach ($timezones as $timezoneID => $timezoneName) {
             if(($query === '') || (stripos($timezoneName, $query) !== false)) {
                 $obj = new stdClass();
-                $obj->value = $timezoneID;
+                $obj->id = $timezoneID;
                 $obj->text = $timezoneName;
-                $obj->id = $timezoneName;
                 $result[] = $obj;
             }
         }
