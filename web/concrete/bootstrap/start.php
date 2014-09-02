@@ -22,10 +22,10 @@ use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Support\Facade\Facade;
 use Patchwork\Utf8\Bootup;
 use Concrete\Core\Config\Config as DatabaseConfig;
+use Concrete\Core\Config\Repository as ConfigRepository;
 use Concrete\Core\File\Type\TypeList;
 use Concrete\Core\Config\ConfigLoader;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Config\Repository as ConfigRepository;
 
 /**
  * ----------------------------------------------------------------------------

@@ -14,15 +14,14 @@ use Exception;
 
 class Stacks extends DashboardPageController {
 
-	
 	public function on_start() {
 		parent::on_start();
-		
+
 		$stm = new StackList();
 		$stm->filterByUserAdded();
 		$this->set('useradded', $stm->get());
 	}
-	
+
 	public function view() {
 		$parent = Page::getByPath(STACKS_PAGE_PATH);
 		$cpc = new Permissions($parent);
@@ -45,7 +44,7 @@ class Stacks extends DashboardPageController {
 			$this->error->add(Loader::helper('validation/token')->getErrorMessage());
 		}
 	}
-	
+
 	public function stack_deleted() {
 		$this->set('message', t('Stack deleted successfully'));
 		$this->view();
@@ -148,7 +147,7 @@ class Stacks extends DashboardPageController {
 			throw new Exception(t('Invalid stack'));
 		}
 	}
-	
+
 	public function rename($cID) {
 		$s = Stack::getByID($cID);
 		if (is_object($s)) {
@@ -160,7 +159,7 @@ class Stacks extends DashboardPageController {
 		if (!$sps->canEditPageProperties()) {
 			$this->redirect('/dashboard/blocks/stacks', 'view_details', $cID);
 		}
-		
+
 		if ($this->isPost()) {
 			if (Loader::helper('validation/token')->validate('rename_stack')) {
 				if (Loader::helper('validation/strings')->notempty($stackName = trim($this->post('stackName')))) {
@@ -170,7 +169,7 @@ class Stacks extends DashboardPageController {
 						'cName' => $stackName,
 						'cHandle' => str_replace('-', PAGE_PATH_SEPARATOR, $txt->urlify($stackName))
 					));
-					
+
 					$u = new User();
 					$pkr = new ApproveStackRequest();
 					$pkr->setRequestedPage($s);
@@ -191,13 +190,13 @@ class Stacks extends DashboardPageController {
 			}
 		}
 	}
-	
+
 	public function stack_renamed($cID) {
 		$this->set('message', t('Stack renamed successfully'));
 		$this->view_details($cID);
 		$this->task = 'view_details';
 	}
-	
+
 	public function duplicate($cID) {
 		$s = Stack::getByID($cID);
 		if (is_object($s)) {
@@ -209,7 +208,7 @@ class Stacks extends DashboardPageController {
 		if (!$sps->canMoveOrCopyPage()) {
 			$this->redirect('/dashboard/blocks/stacks', 'view_details', $cID);
 		}
-		
+
 		if ($this->isPost()) {
 			if (Loader::helper('validation/token')->validate('duplicate_stack')) {
 				if (Loader::helper('validation/strings')->notempty($stackName = trim($this->post('stackName'))))  {
@@ -217,7 +216,7 @@ class Stacks extends DashboardPageController {
 					$ns->update(array(
 						'stackName' => $stackName
 					));
-					
+
 					$this->redirect('/dashboard/blocks/stacks', 'stack_duplicated');
 				} else {
 					$this->error->add(t("You must give your stack a name."));
@@ -228,19 +227,19 @@ class Stacks extends DashboardPageController {
 			$name = trim($this->post('name'));
 		}
 	}
-	
+
 	public function stack_duplicated() {
 		$this->set('message', t('Stack duplicated successfully'));
 		$this->view();
 	}
-	
+
 	public function update_order() {
 		$ret = array('success' => false, 'message' => t("Error"));
 		if ($this->isPost() && is_array($stIDs = $this->post('stID'))) {
 			$parent = Page::getByPath(STACKS_PAGE_PATH);
 			$cpc = new Permissions($parent);
 			if ($cpc->canMoveOrCopyPage()) {
-				foreach($stIDs as $displayOrder => $cID) { 
+				foreach($stIDs as $displayOrder => $cID) {
 					$c = Page::getByID($cID);
 					$c->updateDisplayOrder($displayOrder, $cID);
 				}
@@ -251,5 +250,9 @@ class Stacks extends DashboardPageController {
 		echo Loader::helper('json')->encode($ret);
 		exit;
 	}
-	
+
+    public function list_page() {
+        return Redirect::to('/');
+    }
+
 }

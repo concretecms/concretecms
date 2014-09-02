@@ -5,12 +5,12 @@ use Loader;
 class Config extends Object {
 	protected $pkg = false;
 	protected static $store;
-	
+
 	public static function setStore(ConfigStore $store)
 	{
 		self::$store = $store;
 	}
-	
+
 	/**
 	 * @return ConfigStore
 	 */
@@ -21,7 +21,7 @@ class Config extends Object {
 		}
 		return self::$store;
 	}
-	
+
 	public function setPackageObject($pkg) {
 		$this->pkg = $pkg;
 	}
@@ -37,7 +37,7 @@ class Config extends Object {
 		if (isset($this) && is_object($this->pkg)) {
 			$pkgID = $this->pkg->getPackageID();
 		}
-		
+
 		$cv = self::getStore()->get($cfKey, $pkgID);
 
 		if (!$getFullObject) {
@@ -62,8 +62,8 @@ class Config extends Object {
 			$list[] = $pkg->config($key, true);
 		}
 		return $list;
-	}	
-	
+	}
+
 	// Misleading old functionname
 	public function getOrDefine($key, $defaultValue) {
 		return self::getAndDefine($key, $defaultValue);
@@ -129,5 +129,5 @@ class Config extends Object {
 			}
 		}
 	}
-	
+
 }

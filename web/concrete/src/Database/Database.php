@@ -21,12 +21,34 @@ class Database {
 	}
 
 	protected static function createDefaultConnection() {
-		return static::connect(array(
-			'host' => DB_SERVER,
-			'user' => DB_USERNAME,
-			'password' => DB_PASSWORD,
-			'database' => DB_DATABASE
-		));
+        $config = \Core::make('config');
+
+        $connections = $config->get('database.connections');
+        $default = $connections[$config->get('database.default-connection')];
+
+        $drivers = $config->get('database.drivers');
+
+        if (!$default) {
+            $connections = $config->get('site_install.database.connections');
+            $default = $connections[$config->get('site_install.database.default-connection')];
+        }
+        if (isset($drivers[$default['driver']])) {
+            return static::connect(array(
+                                       'host' => $default['server'],
+                                       'user' => $default['username'],
+                                       'password' => $default['password'],
+                                       'database' => $default['database'],
+                                       'driverClass' => $drivers[$default['driver']]
+                                   ));
+        }
+
+        return static::connect(array(
+                                   'host' => $default['server'],
+                                   'user' => $default['username'],
+                                   'password' => $default['password'],
+                                   'database' => $default['database'],
+                                   'driver' => $default['driver']
+                               ));
 	}
 
 	public static function connect($configuration) {
@@ -39,7 +61,7 @@ class Database {
 
 		$config = new Configuration();
 
-		// now we take our sensible defaults and we map them to the 
+		// now we take our sensible defaults and we map them to the
 		// doctrine configuration array.
 		$doctrineConfiguration = $configuration;
 		$doctrineConfiguration['dbname'] = $configuration['database'];
@@ -53,35 +75,35 @@ class Database {
 	}
 
 
-	/** 
+	/**
 	 * @deprecated
 	 */
 	public static function getADOSChema() {
 		return false;
 	}
 
-	/** 
+	/**
 	 * @deprecated
 	 */
 	public function setDebug($_debug) {
 		return false;
 	}
 
-	/** 
+	/**
 	 * @deprecated
 	 */
 	public function getDebug() {
 		return false;
 	}
 
-	/** 
+	/**
 	 * @deprecated
 	 */
 	public function setLogging($log) {
 		return false;
 	}
 
-	/** 
+	/**
 	 * @deprecated
 	 */
 	public static function ensureEncoding() {
