@@ -6,8 +6,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Util\Debug;
 use Doctrine\DBAL\Logging\EchoSQLLogger;
 use FileSet;
+use League\Flysystem\AdapterInterface;
 use Loader;
 use CacheLocal;
+use Core;
 use User;
 use Events;
 use Page;
@@ -47,7 +49,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     protected $fPassword;
 
     /**
-     * @OneToMany(targetEntity="Version", mappedBy="file")
+     * @OneToMany(targetEntity="Version", mappedBy="file", cascade={"persist"})
      * @JoinColumn(name="fID")
      */
     protected $versions;
@@ -343,52 +345,60 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         return $this->fID;
     }
 
-    public function __clone()
-    {
-    }
-
     public function duplicate()
     {
 
         $db = Loader::db();
-
         $em = $db->getEntityManager();
-        $nf = clone $this;
 
+        $versions = $this->versions;
+
+        // duplicate the core file object
+        $nf = clone $this;
         $dh = Loader::helper('date');
         $date = $dh->getSystemDateTime();
-        $this->fDateAdded = new Carbon($date);
-        $this->versions = clone $this->versions;
-        foreach($this->versions as $fv) {
-            $fv->setFile($nf);
-        }
-        $this->fID = null;
+        $nf->fDateAdded = new Carbon($date);
 
         $em->persist($nf);
         $em->flush();
 
-        /*
-        $versions = $db->GetAll('select * from FileVersions where fID = ?', $this->fID);
-        foreach ($versions as $fileversion) {
-            $fileversion['fID'] = $fIDNew;
-            $fileversion['fvActivateDatetime'] = $date;
-            $fileversion['fvDateAdded'] = $date;
-            $r2 = $db->insert('FileVersions', $fileversion);
+        // clear out the versions
+        $nf->versions = new ArrayCollection();
+
+        $fi = Core::make('helper/file');
+        $cf = Core::make('helper/concrete/file');
+        $importer = new Importer();
+        $filesystem = $this->getFileStorageLocationObject()->getFileSystemObject();
+        foreach($versions as $version) {
+            if ($version->isApproved()) {
+                $cloneVersion = clone $version;
+                $cloneVersion->setFile($nf);
+                $prefix = $importer->generatePrefix();
+                $filesystem->write($cf->prefix($prefix, $version->getFilename()), $version->getFileResource()->read(), array(
+                    'visibility' => AdapterInterface::VISIBILITY_PUBLIC,
+                    'mimetype' => Core::make('helper/mime')->mimeFromExtension($fi->getExtension($version->getFilename()))
+                ));
+                $cloneVersion->updateFile($version->getFilename(), $prefix);
+                $nf->versions->add($cloneVersion);
+            }
         }
+
+        $em->persist($nf);
+        $em->flush();
+
 
         $r = $db->Execute('select fvID, akID, avID from FileAttributeValues where fID = ?', array($this->getFileID()));
         while ($row = $r->fetchRow()) {
             $db->Execute(
                 "insert into FileAttributeValues (fID, fvID, akID, avID) values (?, ?, ?, ?)",
                 array(
-                    $fIDNew,
+                    $nf->getFileID(),
                     $row['fvID'],
                     $row['akID'],
                     $row['avID']
                 )
             );
         }
-        */
 
         $v = array($this->fID);
         $q = "select fID, paID, pkID from FilePermissionAssignments where fID = ?";
