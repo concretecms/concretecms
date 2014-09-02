@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Package;
 use Cache;
+use Concrete\Core\Config\ConfigRenderer;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use AuthenticationType;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
@@ -251,13 +252,33 @@ class StartingPointPackage extends BasePackage {
 	}
 
 	public function finish() {
-		rename(DIR_CONFIG_SITE . '/site_install.php', DIR_CONFIG_SITE . '/site.php');
-		@unlink(DIR_CONFIG_SITE . '/site_install_user.php');
-		// remove this line and uncomment the two above when done developing !!
-		//copy(DIR_CONFIG_SITE . '/site_install.php', DIR_CONFIG_SITE . '/site.php');
-		@chmod(DIR_CONFIG_SITE . '/site.php', FILE_PERMISSIONS_MODE);
-		Cache::flush();
 
+
+        $config = \Core::make('config');
+        $site_install = $config->getLoader()->loadStrict(null, 'site_install');
+
+        // Extract database config, and save it to database.php
+        $database = $site_install['database'];
+        unset($site_install['database']);
+
+        $renderer = new ConfigRenderer($database);
+
+        @unlink(DIR_CONFIG_SITE . '/database.php');
+        file_put_contents(DIR_CONFIG_SITE . '/database.php', $renderer->render());
+        @chmod(DIR_CONFIG_SITE . '/database.php', FILE_PERMISSIONS_MODE);
+
+        $renderer = new ConfigRenderer($site_install);
+
+        @unlink(DIR_CONFIG_SITE . '/app.php');
+        file_put_contents(DIR_CONFIG_SITE . '/app.php', $renderer->render());
+        @chmod(DIR_CONFIG_SITE . '/app.php', FILE_PERMISSIONS_MODE);
+
+
+        @unlink(DIR_CONFIG_SITE . '/site_install.php');
+        @unlink(DIR_CONFIG_SITE . '/site_install_user.php');
+
+        $config->clearCache();
+		Cache::flush();
 	}
 
 	public function install_permissions() {

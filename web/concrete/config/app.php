@@ -6,6 +6,7 @@ return array(
 
     'debug'               => false,
     'version'             => '5.7.0b2',
+    'installed'           => true,
 
     /**
      * Core Aliases
@@ -323,10 +324,7 @@ return array(
         /**
          * Special Dashboard
          */
-        '/dashboard/blocks/stacks/list'                                                 => array(
-            function () {
-                return Redirect::to('/');
-            }),
+        '/dashboard/blocks/stacks/list'                                                 => array('\Concrete\Controller\SinglePage\Dashboard\Blocks\Stacks::list_page'),
     ),
 
     /**

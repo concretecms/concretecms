@@ -26,17 +26,7 @@ use View;
 class Application extends Container
 {
 
-    protected $installed = false;
-
-    /**
-     * Initializes concrete5
-     */
-    public function __construct()
-    {
-        if (defined('CONFIG_FILE_EXISTS')) {
-            $this->installed = true;
-        }
-    }
+    protected $installed = null;
 
     /**
      * Turns off the lights.
@@ -119,6 +109,14 @@ class Application extends Container
      */
     public function isInstalled()
     {
+        if ($this->installed === null) {
+            $config = $this->make('config');
+            if (!$config) {
+                return !!(defined('CONFIG_FILE_EXISTS') && CONFIG_FILE_EXISTS);
+            }
+            $this->installed = $config->get('app.installed');
+        }
+
         return $this->installed;
     }
 
