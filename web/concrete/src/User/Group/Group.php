@@ -383,7 +383,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface 
 			$r = $db->prepare("update Groups set gName = ?, gDescription = ? where gID = ?");
 			$res = $db->Execute($r, $v);
 			$group = Group::getByID($this->gID);
-			$group->rescanGroupPath();
+			$group->rescanGroupPathRecursive();
 
 			$ge = new Event($this);
 			Events::dispatch('on_group_update', $ge);
