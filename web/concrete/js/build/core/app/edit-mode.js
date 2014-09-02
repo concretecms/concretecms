@@ -1494,7 +1494,7 @@
             jQuery.fn.dialog.closeAll();
 
             if (!has_add) {
-                $.get(CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add_block/submit', {
+                $.getJSON(CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add_block/submit', {
                     cID: cID,
                     arHandle: area_handle,
                     btID: block_type_id,
@@ -1508,14 +1508,14 @@
                     $.get(CCM_DISPATCHER_FILENAME + '/ccm/system/block/render',
                         {
                             arHandle: area.getHandle(),
-                            cID: response.cID,
+                            cID: cID,
                             bID: response.bID,
                             arEnableGridContainer: arEnableGridContainer
                         }, function (html) {
                             if (dragAreaBlock) {
                                 dragAreaBlock.getContainer().after(html);
                             } else {
-                                area.getElem().append(html);
+                                area.getElem().prepend(html);
                             }
                             $.fn.dialog.hideLoader();
                             _.defer(function () {
