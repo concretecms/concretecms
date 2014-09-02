@@ -59,7 +59,7 @@ class Importer {
 		return $msg;
 	}
 
-	protected function generatePrefix()
+	public function generatePrefix()
     {
 		$prefix = rand(10, 99) . time();
 		return $prefix;
