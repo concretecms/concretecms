@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/concrete5/concrete5-5.7.0.png?label=ready&title=Ready)](https://waffle.io/concrete5/concrete5-5.7.0)
 [![Build Status](https://travis-ci.org/concrete5/concrete5-5.7.0.png?branch=master)](https://travis-ci.org/concrete5/concrete5-5.7.0)
 
 # concrete5 5.7.0 Developer Repository
