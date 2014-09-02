@@ -110,11 +110,11 @@ class Application extends Container
     public function isInstalled()
     {
         if ($this->installed === null) {
-            $config = $this->make('config');
-            if (!$config) {
-                return !!(defined('CONFIG_FILE_EXISTS') && CONFIG_FILE_EXISTS);
+            if (!$this->isShared('config')) {
+                throw new \Exception('Attempting to check install status before application initialization.');
             }
-            $this->installed = $config->get('app.installed');
+
+            $this->installed = $this->make('config')->get('app.installed');
         }
 
         return $this->installed;
