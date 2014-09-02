@@ -22,8 +22,8 @@ class Properties extends BackendInterfaceController {
 	}
 
 	protected function populateFiles() {
-		if (is_array($_REQUEST['item'])) {
-			foreach($_REQUEST['item'] as $fID) {
+		if (is_array($_REQUEST['fID'])) {
+			foreach($_REQUEST['fID'] as $fID) {
 				$f = File::getByID($fID);
 				if (is_object($f) && !$f->isError()) {
 					$this->files[] = $f;

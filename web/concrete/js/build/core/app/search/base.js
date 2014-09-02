@@ -10,7 +10,8 @@
 		options = $.extend({
 			'result': {},
 			'onLoad': false,
-			'onUpdateResults': false
+			'onUpdateResults': false,
+            'bulkParameterName': 'item'
 		}, options);
 		this.$element = $element;
 		this.$results = $element.find('div[data-search-element=results]');
@@ -209,7 +210,7 @@
 			itemIDs = [];
 
 		$.each($items, function(i, checkbox) {
-			itemIDs.push({'name': 'item[]', 'value': $(checkbox).val()});
+			itemIDs.push({'name': cs.options.bulkParameterName + '[]', 'value': $(checkbox).val()});
 		});
 
 		if (type == 'dialog') {
@@ -221,6 +222,21 @@
 				title: $option.attr('data-bulk-action-title')
 			});
 		}
+
+        if (type == 'ajax') {
+            $.concreteAjax({
+                url: $option.attr('data-bulk-action-url'),
+                data: itemIDs,
+                success: function(r) {
+                    if (r.message) {
+                        ConcreteAlert.notify({
+                            'message': r.message,
+                            'title': r.title
+                        });
+                    }
+                }
+            });
+        }
 		cs.publish('SearchBulkActionSelect', {value: value, option: $option, items: $items});
 	}
 

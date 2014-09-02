@@ -10,7 +10,8 @@
         var my = this;
         options = $.extend({
             'mode': 'menu',
-            'uploadElement': 'body'
+            'uploadElement': 'body',
+            'bulkParameterName': 'fID'
         }, options);
 
         my.options = options;

@@ -24,7 +24,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	$('div[data-container=editable-fields]').concreteEditableFieldContainer({
 		data: [
 			<? foreach($files as $f) { ?>
-				{'name': 'item[]', 'value': '<?=$f->getFileID()?>'},
+				{'name': 'fID[]', 'value': '<?=$f->getFileID()?>'},
 			<? } ?>	
 		]
 	});
