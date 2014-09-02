@@ -213,7 +213,7 @@ abstract class Job extends Object
     public static function getJobObjByHandle( $jHandle='', $jobData=array() )
     {
         $jcl = static::jobClassLocations();
-
+        $pkgHandle = null;
         //check for the job file in the various locations
         $db = Loader::db();
         $pkgID = $db->GetOne('select pkgID from Jobs where jHandle = ?', $jHandle);
@@ -231,7 +231,7 @@ abstract class Job extends Object
             //load the file & class, then run the job
             $path=$jobClassLocation.'/'.$jHandle.'.php';
             if ( file_exists($path) ) {
-                $className = static::getClassName($jHandle);
+                $className = static::getClassName($jHandle, $pkgHandle);
                 $j = Core::make($className);
                 $j->jHandle=$jHandle;
                 if (intval($jobData['jID'])>0) {
@@ -245,11 +245,10 @@ abstract class Job extends Object
         return NULL;
     }
 
-    protected static function getClassName($jHandle)
+    protected static function getClassName($jHandle, $pkgHandle = null)
     {
-        $className = '\\Concrete\\Job\\' . Loader::helper('text')->camelcase($jHandle);
-
-        return $className;
+        $class = core_class('Job\\' . camelcase($jHandle), $pkgHandle);
+        return $class;
     }
 
     //Scan job directories for job classes
@@ -365,8 +364,7 @@ abstract class Job extends Object
 
     public static function installByPackage($jHandle, $pkg)
     {
-        $dir = is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle()) ? DIR_PACKAGES . '/' . $pkg->getPackageHandle() : DIR_PACKAGES_CORE . '/' . $pkg->getPackageHandle();
-        $className = static::getClassName($jHandle);
+        $className = static::getClassName($jHandle, $pkg->getPackageHandle());
         if (class_exists($className)) {
             $j = Core::make($className);
             $db = Loader::db();

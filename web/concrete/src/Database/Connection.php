@@ -13,13 +13,7 @@ class Connection extends \Doctrine\DBAL\Connection
     public function getEntityManager()
     {
         if (!isset(static::$entityManager)) {
-            /*
-            $config = Setup::createAnnotationMetadataConfiguration(array(DIR_BASE_CORE . '/' . DIRNAME_CLASSES), true);
-            static::$entityManager = EntityManager::create($conn, $config);
-            */
-
             $conn = $this->getParams();
-
             $config = Setup::createConfiguration(false, DIR_DOCTRINE_PROXY_CLASSES);
             $driverImpl = $config->newDefaultAnnotationDriver(DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
             $config->setMetadataDriverImpl($driverImpl);
