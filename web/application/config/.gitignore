@@ -1,0 +1,2 @@
+*.php
+!install/app.php
