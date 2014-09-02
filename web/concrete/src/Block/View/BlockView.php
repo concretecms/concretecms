@@ -123,10 +123,6 @@ class BlockView extends AbstractView
     public function setupRender()
     {
         $this->runControllerTask();
-        if ($this->outputContent) {
-            $this->viewPerformed = 'view';
-            return false;
-        }
 
         $view = $this->viewToRender;
 
@@ -223,27 +219,24 @@ class BlockView extends AbstractView
 
     public function renderViewContents($scopeItems)
     {
-        if ($this->outputContent) {
-            $this->onBeforeGetContents();
-            print $this->outputContent;
-            $this->onAfterGetContents();
-        } else {
-            extract($scopeItems);
-            if ($this->blockViewHeaderFile) {
-                include($this->blockViewHeaderFile);
-            }
-
-            $this->onBeforeGetContents();
+        extract($scopeItems);
+        if (!$this->outputContent) {
             ob_start();
             include($this->template);
             $this->outputContent = ob_get_contents();
             ob_end_clean();
-            print $this->outputContent;
-            $this->onAfterGetContents();
+        }
 
-            if ($this->blockViewFooterFile) {
-                include($this->blockViewFooterFile);
-            }
+        if ($this->blockViewHeaderFile) {
+            include($this->blockViewHeaderFile);
+        }
+
+        $this->onBeforeGetContents();
+        print $this->outputContent;
+        $this->onAfterGetContents();
+
+        if ($this->blockViewFooterFile) {
+            include($this->blockViewFooterFile);
         }
     }
 
