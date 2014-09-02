@@ -103,6 +103,7 @@ __IDE_SYMBOLS__.php
 /web/concrete/js/select2.js
 
 # CSS
+/web/concrete/css/select2.css
 /web/concrete/css/account.css
 /web/concrete/css/app.css
 /web/concrete/css/conversations.css
