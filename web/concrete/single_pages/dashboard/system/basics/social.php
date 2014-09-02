@@ -18,11 +18,10 @@
     }
     ?>
 
-    <div class="ccm-dashboard-header-buttons">
-        <button data-dialog="delete-link" class="btn btn-danger"><?php echo t("Delete Link")?></button>
-    </div>
-
     <? if (is_object($link)) { ?>
+        <div class="ccm-dashboard-header-buttons">
+            <button data-dialog="delete-link" class="btn btn-danger"><?php echo t("Delete Link")?></button>
+        </div>
 
     <div style="display: none">
         <div id="ccm-dialog-delete-social-link" class="ccm-ui">
