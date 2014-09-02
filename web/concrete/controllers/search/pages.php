@@ -96,7 +96,7 @@ class Pages extends Controller {
 							}
 							if ($req['cParentIDSearchField'] > 0) {
 								if ($req['cParentAll'] == 1) {
-									$pc = Page::getByID($req['cParentIDSearchField']);
+									$pc = \Page::getByID($req['cParentIDSearchField']);
 									$cPath = $pc->getCollectionPath();
 									$this->pageList->filterByPath($cPath);
 								} else {
@@ -230,10 +230,11 @@ class Pages extends Controller {
 				<? $ps = Loader::helper("form/page_selector");
 				print $ps->selectPage('cParentIDSearchField');
 				?>
-				
-				<br/><strong><?=t('Search All Children?')?></strong><br/>
-				<label class="checkbox"><?=$form->radio('cParentAll', 0, false)?> <span><?=t('No')?></span></label>
-				<label class="checkbox"><?=$form->radio('cParentAll', 1, false)?> <span><?=t('Yes')?></span></label>
+				<div>
+                    <div><?=t('Search All Children?')?></div>
+                    <label class="radio-inline"><?=$form->radio('cParentAll', 0, false)?> <?=t('No')?></label>
+                    <label class="radio-inline"><?=$form->radio('cParentAll', 1, false)?> <?=t('Yes')?></label>
+                </div>
 				<? break;
 			case 'num_children': ?>
 				<select name="cChildrenSelect" class="form-control">

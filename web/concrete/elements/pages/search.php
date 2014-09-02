@@ -3,6 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 
 $searchFields = array(
+    'parent' => t('Parent Page'),
     'keywords' => t('Full Page Index'),
     'date_added' => t('Date Added'),
     'theme' => t('Theme'),
