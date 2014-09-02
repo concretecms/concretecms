@@ -24,7 +24,7 @@ if ($_POST['task'] == 'delete_pages') {
 			$page = unserialize($p->body);
 			$c = Page::getByID($page['cID']);
 			if ($c->getCollectionID() > 1) {
-				$pkr = new DeletePagePageWorkflowRequest();
+				$pkr = new \Concrete\Core\Workflow\Request\DeletePageRequest();
 				$pkr->setRequestedPage($c);
 				$pkr->setRequesterUserID($u->getUserID());
 				$u->unloadCollectionEdit($c);
@@ -75,8 +75,6 @@ foreach($pages as $c) {
 	}
 }
 
-$searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
-
 ?>
 <div class="ccm-ui">
 
@@ -86,7 +84,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 
 	<?=t('Are you sure you want to delete the following pages?')?><br/><br/>
 
-	<form id="ccm-<?=$searchInstance?>-delete-form" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/delete">
+	<form data-action="delete-bulk-pages" method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/delete">
 	<?=$form->hidden('task', 'delete_pages')?>
 	<table border="0" cellspacing="0" cellpadding="0" width="100%" class="table table-striped">
 	<tr>
@@ -119,10 +117,28 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 		<? }  ?>
 	</table>
 	</form>
+
+
+    <script type="text/javascript">
+        ccm_sitemapDeletePages = function() {
+            var params = $('form[data-action=delete-bulk-pages]').formToArray(true);
+            ccm_triggerProgressiveOperation(
+                CCM_TOOLS_PATH + '/pages/delete',
+                params,
+                ccmi18n_sitemap.deletePages,
+                function() {
+                    jQuery.fn.dialog.closeAll();
+                    ConcreteEvent.publish('SitemapDeleteRequestComplete');
+                    ConcreteAlert.notify({message: '<?=t('Pages deleted successfully.')?>'});
+                }
+            );
+        }
+    </script>
+
 	<div class="dialog-buttons">
 	<? $ih = Loader::helper('concrete/ui')?>
 	<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left', 'btn')?>
-	<?=$ih->button_js(t('Delete'), 'ccm_sitemapDeletePages(\'' . $searchInstance . '\')', 'right', 'btn error')?>
+	<?=$ih->button_js(t('Delete'), 'ccm_sitemapDeletePages()', 'right', 'btn btn-danger')?>
 	</div>
 		
 	<?
