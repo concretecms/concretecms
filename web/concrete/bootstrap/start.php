@@ -51,7 +51,14 @@ Facade::setFacadeApplication($cms);
 $file_system = new Filesystem();
 $database_config = new DatabaseConfig();
 $file_loader = new ConfigLoader($file_system, $database_config);
-$cms->instance('config', $config = new ConfigRepository($file_loader, 'default'));
+
+$db_config = $file_loader->loadStrict(null, 'database');
+
+$environment = isset($db_config['default-connection']) ? ($cms->isRunThroughCommandLineInterface() ? 'cli' : 'default') : 'install';
+
+$cms->instance('config', $config = new ConfigRepository($file_loader, $environment));
+
+
 
 /**
  * ----------------------------------------------------------------------------
