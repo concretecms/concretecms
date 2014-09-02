@@ -67,7 +67,7 @@ class Files extends Controller {
 		}
 		
 		if ((isset($req['fsIDNone']) && $req['fsIDNone'] == 1) || (is_array($req['fsID']) && in_array(-1, $req['fsID']))) { 
-			$this->fileList->filterBySet(false);
+			$this->fileList->filterByNoSet();
 		} else {
 			if (is_array($req['fsID'])) {
 				foreach($req['fsID'] as $fsID) {
