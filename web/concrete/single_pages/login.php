@@ -186,7 +186,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
             }, 0);
 
 
-
+            <?php if(!defined('WHITE_LABEL_DASHBOARD_BACKGROUND_FEED') && !defined('WHITE_LABEL_DASHBOARD_BACKGROUND_SRC')) { ?>
             $(function () {
                 $.backstretch("<?= DASHBOARD_BACKGROUND_FEED . '/' . $image ?>", {
                     fade: 500
@@ -196,6 +196,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                     console.log(data);
                 });
             });
+            <?php } ?>
             $('ul.nav.nav-tabs > li > a').on('click', function () {
                 var me = $(this);
                 if (me.parent().hasClass('active')) return false;
