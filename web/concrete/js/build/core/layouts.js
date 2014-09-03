@@ -1,7 +1,7 @@
 /**
  * Free-Form Layouts
  */
-(function(global, jQuery) {
+(function (global, jQuery) {
 
     // plugins
     jQuery.fn.concreteLayout = function (options) {
@@ -378,15 +378,12 @@
     ConcreteLayout.prototype._getThemeGridNearestValue = function (value, values) {
         var nearest = null;
         var diff = null;
-        for (var i = 0; i < values.length; i++) {
-            if ((values[i] <= value) || (values[i] >= value)) {
-                var newDiff = Math.abs(value - values[i]);
-                if (diff == null || newDiff < diff) {
-                    nearest = values[i];
-                    diff = newDiff;
-                }
+        $.each(values, function () {
+            if (nearest == null || Math.abs(this - value) < Math.abs(nearest - value)) {
+                nearest = this;
             }
-        }
+        });
+
         return nearest;
     };
 
@@ -403,12 +400,12 @@
             $column = $('#ccm-edit-layout-column-' + i);
             if (i == 0) {
                 // this is the first column so we only get the end
-                breaks.push(parseInt($column.width()));
+                breaks.push(Math.floor($column.width()));
             } else if ((i + 1) == obj.columns) {
-                breaks.push(parseInt($column.position().left));
+                breaks.push(Math.floor($column.position().left));
             } else {
-                breaks.push(parseInt($column.position().left));
-                breaks.push(parseInt($column.width() + $column.position().left));
+                breaks.push(Math.floor($column.position().left));
+                breaks.push(Math.floor($column.width()) + Math.floor($column.position().left));
             }
         }
 
@@ -421,7 +418,7 @@
         var maxColumns = obj.options.maxcolumns;
         var minColumnClass = obj.options.gridColumnClasses[0];
 
-        $('<div />', {'id': obj.options.gridrowtmpid}).appendTo(document.body);
+        $('<div />', {'id': obj.options.gridrowtmpid}).appendTo('#ccm-theme-grid-edit-mode-row-wrapper');
         var columnHTML = '';
         for (i = 1; i <= maxColumns; i++) {
             columnHTML += '<div class="' + minColumnClass + '"></div>'
@@ -429,10 +426,10 @@
         $('#' + obj.options.gridrowtmpid).append(
             $(
                 obj.options.containerstart
-                + obj.options.rowstart
-                + columnHTML
-                + obj.options.rowend
-                + obj.options.containerend
+                    + obj.options.rowstart
+                    + columnHTML
+                    + obj.options.rowend
+                    + obj.options.containerend
             )
         );
         var marginModifier = 0;
@@ -445,13 +442,12 @@
                 }
             }
             // handle the START of every column
-            validStartPoints.push(parseInt($column.position().left + marginModifier));
+            validStartPoints.push(Math.floor($column.position().left + marginModifier));
 
             // handle the END of every column
-            validEndPoints.push(parseInt($column.width() + $column.position().left + marginModifier));
+            validEndPoints.push(Math.floor(Math.floor($column.width()) + Math.floor($column.position().left) + marginModifier));
         }
         $('#' + obj.options.gridrowtmpid).remove();
-
 
         obj.$slider.slider({
             min: 0,
@@ -474,8 +470,21 @@
                     pointsToCheck = validStartPoints;
                 }
 
+                // now we normalize the pointsToCheck – we go through each value in the breaks
+                // array and we ensure that the corresponding value in the pointsToCheck array
+                // actually matches exactly.
+                for (var x = 0; x < breaks.length; x++) {
+                    for (var y = 0; y < pointsToCheck.length; y++) {
+                        var diff = Math.abs(breaks[x] - pointsToCheck[y]);
+                        if (diff <= 2) {
+                            pointsToCheck[y] = breaks[x];
+                        }
+                    }
+                }
+
                 var oldValue = obj.$slider.slider('values', index);
                 var newValue = obj._getThemeGridNearestValue(ui.value, pointsToCheck);
+
                 // now we determine whether we CAN go there or is it going to encroach upon another point.
                 var proceed = true;
                 $.each(ui.values, function (i, value) {
@@ -486,52 +495,55 @@
                     }
                 });
 
+                // now we only proceed if proceed is set to true and the values don't match
+                if (proceed && oldValue == newValue) {
+                    proceed = false;
+                }
+
                 if (proceed) {
                     obj.$slider.slider('values', index, newValue);
-                    if (oldValue != newValue) {
-                        if ((index % 2) == 0) {
-                            var i = Math.floor(index / 2);
-                            // we are a righthand handle
-                            $innercolumn = $('#ccm-edit-layout-column-' + i);
-                            var span = parseInt($innercolumn.attr('data-span'));
-                            var $offsetcolumn = $innercolumn.nextAll('.ccm-theme-grid-column:first');
-                            var offset = $offsetcolumn.attr('data-offset');
-                            if (offset) {
-                                offset = parseInt(offset);
-                            } else {
-                                offset = 0;
-                            }
-                            if (newValue > oldValue) { // we are making the column bigger
-                                span++;
-                                offset--;
-                            } else {
-                                span--;
-                                offset++;
-                            }
+                    if ((index % 2) == 0) {
+                        var i = Math.floor(index / 2);
+                        // we are a righthand handle
+                        $innercolumn = $('#ccm-edit-layout-column-' + i);
+                        var span = parseInt($innercolumn.attr('data-span'));
+                        var $offsetcolumn = $innercolumn.nextAll('.ccm-theme-grid-column:first');
+                        var offset = $offsetcolumn.attr('data-offset');
+                        if (offset) {
+                            offset = parseInt(offset);
                         } else {
-                            // we are a righthand handle
-                            var i = Math.ceil(index / 2);
-                            $innercolumn = $('#ccm-edit-layout-column-' + i);
-                            var span = parseInt($innercolumn.attr('data-span'));
-                            var $offsetcolumn = $innercolumn;
-                            var offset = $offsetcolumn.attr('data-offset');
-                            if (offset) {
-                                offset = parseInt(offset);
-                            } else {
-                                offset = 0;
-                            }
-                            if (newValue < oldValue) { // we are making the column bigger
-                                span++;
-                                offset--;
-                            } else {
-                                span--;
-                                offset++;
-                            }
+                            offset = 0;
                         }
-                        $offsetcolumn.attr('data-offset', offset);
-                        $innercolumn.attr('data-span', span);
-                        obj._redrawThemeGrid();
+                        if (newValue > oldValue) { // we are making the column bigger
+                            span++;
+                            offset--;
+                        } else {
+                            span--;
+                            offset++;
+                        }
+                    } else {
+                        // we are a righthand handle
+                        var i = Math.ceil(index / 2);
+                        $innercolumn = $('#ccm-edit-layout-column-' + i);
+                        var span = parseInt($innercolumn.attr('data-span'));
+                        var $offsetcolumn = $innercolumn;
+                        var offset = $offsetcolumn.attr('data-offset');
+                        if (offset) {
+                            offset = parseInt(offset);
+                        } else {
+                            offset = 0;
+                        }
+                        if (newValue < oldValue) { // we are making the column bigger
+                            span++;
+                            offset--;
+                        } else {
+                            span--;
+                            offset++;
+                        }
                     }
+                    $offsetcolumn.attr('data-offset', offset);
+                    $innercolumn.attr('data-span', span);
+                    obj._redrawThemeGrid();
                 }
                 return false;
 
