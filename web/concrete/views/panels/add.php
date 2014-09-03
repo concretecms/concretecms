@@ -25,10 +25,11 @@ defined('C5_EXECUTE') or die("Access Denied.");
                        <? if ($tab == 'stacks') { ?>data-panel-accordion-tab-selected="true" <? } ?>><?=
                         t(
                             'Stacks') ?></a></li>
+                <? /*
                 <li><a data-panel-accordion-tab="tiles"
                        <? if ($tab == 'tiles') { ?>data-panel-accordion-tab-selected="true" <? } ?>><?=
                         t(
-                            'Gathering Tiles') ?></a></li>
+                            'Gathering Tiles') ?></a></li> */?>
             </ul>
         </nav>
     </div>
