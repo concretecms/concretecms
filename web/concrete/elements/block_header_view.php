@@ -108,7 +108,7 @@ if ($showMenu) {
     <? } ?>
 
         <ul class="ccm-edit-mode-inline-commands ccm-ui">
-            <? if ($p->canEditBlock() && $btw->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY && (!$a->isGlobalArea())) {  ?>
+            <? if ($p->canEditBlock() && $btw->getBlockTypeHandle() != BLOCK_HANDLE_LAYOUT_PROXY) {  ?>
                 <li><a data-inline-command="move-block" href="#"><i class="fa fa-arrows"></i></a></li>
             <? } ?>
         </ul>
