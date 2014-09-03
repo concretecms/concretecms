@@ -25,8 +25,11 @@ Route::register('/tools/{tool}', '\Concrete\Core\Legacy\Controller\ToolControlle
 Route::register('/ccm/system/dialogs/page/delete', '\Concrete\Controller\Dialog\Page\Delete::view');
 Route::register('/ccm/system/dialogs/page/delete_from_sitemap', '\Concrete\Controller\Dialog\Page\Delete::viewFromSitemap');
 Route::register('/ccm/system/dialogs/page/delete/submit', '\Concrete\Controller\Dialog\Page\Delete::submit');
-Route::register('/ccm/system/dialogs/area/layout/presets/submit/{arLayoutID}', '\Concrete\Controller\Dialog\Area\Layout\Presets::submit');
-Route::register('/ccm/system/dialogs/area/layout/presets/{arLayoutID}/{token}', '\Concrete\Controller\Dialog\Area\Layout\Presets::view');
+Route::register('/ccm/system/dialogs/area/layout/presets/manage/', '\Concrete\Controller\Dialog\Area\Layout\Presets\Manage::view');
+Route::register('/ccm/system/dialogs/area/layout/presets/manage/delete', '\Concrete\Controller\Dialog\Area\Layout\Presets\Manage::delete');
+Route::register('/ccm/system/dialogs/area/layout/presets/get/{arLayoutPresetID}', '\Concrete\Controller\Dialog\Area\Layout\Presets::getPresetData');
+Route::register('/ccm/system/dialogs/area/layout/presets/{arLayoutID}/submit', '\Concrete\Controller\Dialog\Area\Layout\Presets::submit');
+Route::register('/ccm/system/dialogs/area/layout/presets/{arLayoutID}', '\Concrete\Controller\Dialog\Area\Layout\Presets::view');
 Route::register('/ccm/system/dialogs/page/bulk/properties', '\Concrete\Controller\Dialog\Page\Bulk\Properties::view');
 Route::register('/ccm/system/dialogs/page/bulk/properties/update_attribute', '\Concrete\Controller\Dialog\Page\Bulk\Properties::updateAttribute');
 Route::register('/ccm/system/dialogs/page/bulk/properties/clear_attribute', '\Concrete\Controller\Dialog\Page\Bulk\Properties::clearAttribute');

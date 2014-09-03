@@ -3,38 +3,18 @@
  */
 
 // plugins
-jQuery.fn.ccmlayout = function(options) {
+jQuery.fn.concreteLayout = function(options) {
 	return this.each(function()	{
 		var $obj = $(this);
-		var data = $obj.data('ccmlayout');
+		var data = $obj.data('concreteLayout');
 		if (!data) {
-			$obj.data('ccmlayout', (data = new CCMLayout(this, options)));
+			$obj.data('concreteLayout', (data = new ConcreteLayout(this, options)));
 		}
 	});
 };
 
-jQuery.fn.ccmlayoutpresetdelete = function(options) {
-	return this.each(function()	{
-		$(this).on('click', function() {
-			var arLayoutPresetID = $(this).attr('data-area-layout-preset-id');
-			jQuery.fn.dialog.showLoader();
-			var url = CCM_TOOLS_PATH + '/area/layout_presets?arLayoutPresetID=' + arLayoutPresetID + '&task=submit_delete&ccm_token=' + options.token;
-			$.get(url, function(r) {
-				jQuery.fn.dialog.replaceTop(r);
-				$('.delete-area-layout-preset').ccmlayoutpresetdelete(options);
-				var url = CCM_TOOLS_PATH + '/area/layout_presets?task=get_list_json&ccm_token=' + options.token;
-				$.getJSON(url, function(r) {
-					var data = $(options.selector).data('ccmlayout');
-					data._updatePresets(r);
-					jQuery.fn.dialog.hideLoader();
-				});
-			});
-		});
-	});
-};
-
 // initialization
-var CCMLayout = function(element, options) {
+var ConcreteLayout = function(element, options) {
 	this.options = $.extend({
 		'toolbar': '#ccm-layouts-toolbar',
 		'btnsave': '#ccm-layouts-save-button',
@@ -57,7 +37,7 @@ var CCMLayout = function(element, options) {
 };
 
 // private methods
-CCMLayout.prototype._setupDOM = function() {
+ConcreteLayout.prototype._setupDOM = function() {
 	// form list items
 	this.$formviews = this.$toolbar.find('li[data-grid-form-view]');
 	this.$formviewcustom = this.$toolbar.find('li[data-grid-form-view=custom]');
@@ -81,7 +61,7 @@ CCMLayout.prototype._setupDOM = function() {
 	this.$slider = false;
 };
 
-CCMLayout.prototype._setupFormSaveAndCancel = function() {
+ConcreteLayout.prototype._setupFormSaveAndCancel = function() {
 	var obj = this;
 	this.$cancelbtn.unbind().on('click', function() {
 		obj.$toolbar.remove();
@@ -102,13 +82,13 @@ CCMLayout.prototype._setupFormSaveAndCancel = function() {
 	});
 };
 
-CCMLayout.prototype._rescanAreasInPage = function(e, data) {
+ConcreteLayout.prototype._rescanAreasInPage = function(e, data) {
 	var editor = Concrete.getEditMode();
 	editor.reset();
 	editor.scanBlocks();
 };
 
-CCMLayout.prototype._setupToolbarView = function() {
+ConcreteLayout.prototype._setupToolbarView = function() {
 	var obj = this;
 	this.$formviews.each(function(i) {
 		if ($(this).attr('data-grid-form-view') != obj.options.formview) {
@@ -117,7 +97,7 @@ CCMLayout.prototype._setupToolbarView = function() {
 	});
 };
 
-CCMLayout.prototype._updateChooseTypeForm = function() {
+ConcreteLayout.prototype._updateChooseTypeForm = function() {
 	var typeval = this.$selectgridtype.find('option:selected').val();
 	var obj = this;
 	switch(typeval) {
@@ -134,7 +114,7 @@ CCMLayout.prototype._updateChooseTypeForm = function() {
 		default: // a preset
 			var arLayoutPresetID = typeval;
 			jQuery.fn.dialog.showLoader();
-			var url = CCM_TOOLS_PATH + '/area/layout_presets?arLayoutPresetID=' + arLayoutPresetID + '&task=get_area_layout&ccm_token=' + CCM_SECURITY_TOKEN;
+			var url = CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/area/layout/presets/get/' + arLayoutPresetID;
 			$.getJSON(url, function(r) {
 				obj.$formviewthemegrid.hide();
 				obj.$formviewcustom.hide();
@@ -177,7 +157,7 @@ CCMLayout.prototype._updateChooseTypeForm = function() {
 };
 
 
-CCMLayout.prototype._setupFormEvents = function() {
+ConcreteLayout.prototype._setupFormEvents = function() {
 	var obj = this;
 	this.$selectcolumnscustom.on('keyup', function() {
 		obj._updateCustomView();
@@ -207,7 +187,7 @@ CCMLayout.prototype._setupFormEvents = function() {
 	});
 }
 
-CCMLayout.prototype.buildThemeGridGrid = function() {
+ConcreteLayout.prototype.buildThemeGridGrid = function() {
 	this.$element.html('');
 
 	var row = this.options.rowstart;
@@ -226,7 +206,7 @@ CCMLayout.prototype.buildThemeGridGrid = function() {
 	this.$element.append(row);
 }
 
-CCMLayout.prototype._updateThemeGridView = function(presetLoad) {
+ConcreteLayout.prototype._updateThemeGridView = function(presetLoad) {
 
 	if (!presetLoad) {
 		this.$selectgridtype.find('option[value=TG]').prop('selected', true);
@@ -249,7 +229,7 @@ CCMLayout.prototype._updateThemeGridView = function(presetLoad) {
 	}
 }
 
-CCMLayout.prototype._buildThemeGridGridFromPresetColumns = function(arLayoutColumns) {
+ConcreteLayout.prototype._buildThemeGridGridFromPresetColumns = function(arLayoutColumns) {
 	this.$element.html('');
 	var obj = this;
 	var row = this.options.rowstart;
@@ -277,7 +257,7 @@ CCMLayout.prototype._buildThemeGridGridFromPresetColumns = function(arLayoutColu
 }
 
 // This actually takes care of drawing the grid.
-CCMLayout.prototype._updateCustomView = function(presetLoad) {
+ConcreteLayout.prototype._updateCustomView = function(presetLoad) {
 	// if it's presetLoad, that means we're updating the view from the first time
 	// after loading a preset. In which case we don't switch away from presets in the gridtype dropdown
 	// Otherwise, we DO switch away to show that we're not going to use that preset.
@@ -357,7 +337,7 @@ CCMLayout.prototype._updateCustomView = function(presetLoad) {
 	}
 }
 
-CCMLayout.prototype._resetSlider = function() {
+ConcreteLayout.prototype._resetSlider = function() {
 	if (this.$slider) {
 		this.$slider.slider('destroy');
 		this.$slider = false;
@@ -368,7 +348,7 @@ CCMLayout.prototype._resetSlider = function() {
 	}
 }
 
-CCMLayout.prototype._getThemeGridColumnSpan = function(totalColumns) {
+ConcreteLayout.prototype._getThemeGridColumnSpan = function(totalColumns) {
 	var rowspan = Math.ceil(this.maxcolumns / totalColumns);
 	// create the starting array
 	var spanArray = [];
@@ -390,7 +370,7 @@ CCMLayout.prototype._getThemeGridColumnSpan = function(totalColumns) {
 	return cssclasses;
 }
 
-CCMLayout.prototype._getThemeGridNearestValue = function(value, values) {
+ConcreteLayout.prototype._getThemeGridNearestValue = function(value, values) {
 	var nearest = null;
 	var diff = null;
 	for (var i = 0; i < values.length; i++) {
@@ -405,7 +385,7 @@ CCMLayout.prototype._getThemeGridNearestValue = function(value, values) {
 	return nearest;
 }
 
-CCMLayout.prototype._showThemeGridSlider = function() {
+ConcreteLayout.prototype._showThemeGridSlider = function() {
 
 	var obj = this;
 
@@ -554,7 +534,7 @@ CCMLayout.prototype._showThemeGridSlider = function() {
 	});
 }
 
-CCMLayout.prototype._redrawThemeGrid = function() {
+ConcreteLayout.prototype._redrawThemeGrid = function() {
 	var obj = this;
 	obj.$element.find('.ccm-theme-grid-offset-column').remove();
 	$.each(obj.$element.find('.ccm-theme-grid-column'), function(i, col) {
@@ -578,7 +558,7 @@ CCMLayout.prototype._redrawThemeGrid = function() {
 	});
 }
 
-CCMLayout.prototype._showCustomSlider = function() {
+ConcreteLayout.prototype._showCustomSlider = function() {
 
 	this.$slider = $('#ccm-area-layout-active-control-bar');
 	this.$slider.css('height', '6px');
