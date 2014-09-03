@@ -119,7 +119,7 @@ $(function() {
 		});
 	});
 
-	$('#ccm-layouts-edit-mode').ccmlayout({
+	$('#ccm-layouts-edit-mode').concreteLayout({
 		'editing': <?=$editing?>,
 		'supportsgrid': '<?=$enableThemeGrid?>',
 		<? if ($enableThemeGrid) { ?>
