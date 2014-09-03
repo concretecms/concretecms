@@ -94,6 +94,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
         <?php if ($includeEntryText): ?>
             <div class="ccm-block-page-list-page-entry-text">
 
+                <? if ($includeName): ?>
                 <div class="ccm-block-page-list-title">
                     <? if ($useButtonForLink) { ?>
                         <?php echo $title; ?>
@@ -101,6 +102,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                         <a href="<?php echo $url ?>" target="<?php echo $target ?>"><?php echo $title ?></a>
                     <? } ?>
                 </div>
+                <? endif; ?>
 
                 <? if ($includeDate): ?>
                     <div class="ccm-block-page-list-date"><?=$date?></div>
