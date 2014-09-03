@@ -517,6 +517,7 @@
                 </attributekey>
             </attributes>
         </page>
+        <!--
         <page name="Interface Preferences" path="/dashboard/system/basics/images"
               filename="/dashboard/system/basics/images.php" pagetype="" description="" package="">
             <attributes>
@@ -525,6 +526,7 @@
                 </attributekey>
             </attributes>
         </page>
+         //-->
 
         <page name="SEO &amp; Statistics" path="/dashboard/system/seo" filename="/dashboard/system/seo/view.php"
               pagetype="" description="Enable pretty URLs and tracking codes." package=""/>
