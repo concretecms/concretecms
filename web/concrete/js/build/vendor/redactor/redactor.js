@@ -2942,7 +2942,10 @@
         buttonRemove: function (key)
         {
             var $btn = this.buttonGet(key);
-            $btn.remove();
+            /* concrete5 */
+            // $btn.remove();
+            $btn.parent().remove();
+            /* end concrete5 */
         },
         buttonActiveObserver: function(e, btnName)
         {

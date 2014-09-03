@@ -34,6 +34,19 @@ RedactorPlugins.concrete5 = {
 
     styles: [],
 
+    createButton: function(dropdown) {
+        if (!dropdown) {
+            var dropdown = [];
+        }
+        var plugin = this;
+        plugin.buttonRemove('styles');
+        if (plugin.buttonGet('formatting').length) {
+            plugin.buttonAddAfter('formatting','styles', plugin.opts.curLang.customStyles, false, dropdown);
+        } else {
+            plugin.buttonAdd('styles', plugin.opts.curLang.customStyles, false, dropdown);
+        }
+    },
+
     init: function() {
 
         var plugin = this;
@@ -71,6 +84,8 @@ RedactorPlugins.concrete5 = {
                 });
 
                 var dropdown = {};
+                var button = plugin.buttonGet('styles');
+
                 plugin.styles = response.classes;
                 jQuery.each(response.classes, function(i, s)
                 {
@@ -78,9 +93,12 @@ RedactorPlugins.concrete5 = {
                 });
 
                 dropdown['remove'] = { title: ccmi18n_redactor.remove_style, callback: function() { plugin.resetCustomFormat(); }};
-                (plugin.buttonGet('formatting').length) ? plugin.buttonAddAfter('formatting','styles', plugin.opts.curLang.customStyles, false, dropdown) : plugin.buttonAdd('styles', plugin.opts.curLang.customStyles, false, dropdown);
+                plugin.createButton(dropdown);
+
             }
         });
+        plugin.createButton();
+
     },
 
     setCustomFormat: function (s)
