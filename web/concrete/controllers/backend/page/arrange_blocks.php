@@ -7,6 +7,7 @@ use Concrete\Controller\Backend\UserInterface\Page;
 use Concrete\Core\Page\EditResponse as PageEditResponse;
 use Loader;
 use Permissions;
+use Stack;
 
 class ArrangeBlocks extends Page
 {
@@ -31,6 +32,46 @@ class ArrangeBlocks extends Page
         if ($sourceAreaID != $destinationAreaID) {
             $affectedAreaIDs[] = $destinationAreaID;
         }
+
+        $source_area = Area::get($nvc, Area::getAreaHandleFromID($sourceAreaID));
+        $destination_area = Area::get($this->page, Area::getAreaHandleFromID($destinationAreaID));
+
+        if ($source_area->isGlobalArea() || $destination_area->isGlobalArea()) {
+
+            // If the source_area is the only global area
+            if ($source_area->isGlobalArea() && !$destination_area->isGlobalArea()) {
+                $cp = new Permissions($nvc);
+                if ($cp->canViewPageVersions()) {
+                    $stack = Stack::getByName($source_area->getAreaHandle());
+                } else {
+                    $stack = Stack::getByName($source_area->getAreaHandle(), 'ACTIVE');
+                }
+                $block = Block::getByID($_POST['block'], $stack, Area::get($stack, STACKS_AREA_NAME));
+                $block->move($nvc, Area::get($nvc, STACKS_AREA_NAME));
+            }
+
+            if ($destination_area->isGlobalArea()) {
+                $cp = new Permissions($nvc);
+                if ($cp->canViewPageVersions()) {
+                    $stack = Stack::getByName($destination_area->getAreaHandle());
+                } else {
+                    $stack = Stack::getByName($destination_area->getAreaHandle(), 'ACTIVE');
+                }
+                // If the source area is global, we need to get the block from there rather than from the view controller
+                if ($source_area->isGlobalArea()) {
+                    if ($cp->canViewPageVersions()) {
+                        $source_stack = Stack::getByName($source_area->getAreaHandle());
+                    } else {
+                        $source_stack = Stack::getByName($source_area->getAreaHandle(), 'ACTIVE');
+                    }
+                    $block = Block::getByID($_POST['block'], $source_stack, Area::get($source_stack, STACKS_AREA_NAME));
+                } else {
+                    $block = Block::getByID($_POST['block'], $this->page, $source_area);
+                }
+                $block->move($stack->getVersionToModify(), Area::get($stack, STACKS_AREA_NAME));
+            }
+        }
+
         if (PERMISSIONS_MODEL == 'advanced') {
             // first, we check to see if we have permissions to edit the area contents for the source area.
             $arHandle = Area::getAreaHandleFromID($sourceAreaID);
