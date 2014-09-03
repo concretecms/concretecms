@@ -192,8 +192,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                     fade: 500
                 });
                 $.getJSON('<?= BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '/tools/required/dashboard/get_image_data' ?>', { image: '<?= $image ?>' }, function (data) {
-                    console.log($('div.background-credit').children().attr('href', data.link).text(data.author.join()));
-                    console.log(data);
+                    $('div.background-credit').children().attr('href', data.link).text(data.author.join());
                 });
             });
             <?php } ?>
