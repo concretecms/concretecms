@@ -11,8 +11,8 @@ abstract class WorkflowKey extends Key {
 			return array();
 		}
 		$paa->setWorkflowProgressObject($wp);
-		$included = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_INCLUDE);
-		$excluded = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_EXCLUDE);
+		$included = $this->getAccessListItems(self::ACCESS_TYPE_INCLUDE);
+		$excluded = $this->getAccessListItems(self::ACCESS_TYPE_EXCLUDE);
 		$included = PermissionDuration::filterByActive($included);
 		$excluded = PermissionDuration::filterByActive($excluded);
 		$users = array();

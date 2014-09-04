@@ -8,6 +8,7 @@ use CacheLocal;
 use GroupTree;
 use GroupTreeNode;
 use Environment;
+use UserList;
 use Events;
 use \Concrete\Core\Package\PackageList;
 
