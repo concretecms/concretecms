@@ -180,7 +180,8 @@
                         elem.find('#ccm-block-form').concreteAjaxBlockForm({
                             'task': 'add',
                             'btSupportsInlineAdd': true,
-                            'dragAreaBlockID': dragAreaBlockID
+                            'dragAreaBlockID': dragAreaBlockID,
+                            dragArea: selected
                         });
                     });
                     my.loadInlineEditModeToolbars($container.find('div[data-container=inline-toolbar]'));
@@ -1539,7 +1540,8 @@
                         $(function () {
                             $('#ccm-block-form').concreteAjaxBlockForm({
                                 'task': 'add',
-                                'dragAreaBlockID': dragAreaBlockID
+                                'dragAreaBlockID': dragAreaBlockID,
+                                dragArea: drag_area
                             });
                         });
                     },
