@@ -3,18 +3,17 @@ namespace Concrete\Core\Localization\Service;
 
 use Request;
 use \Punic\Calendar;
-use Cache;
 use Localization;
 use User;
 
 class Date
 {
     /**
-	 * Gets the date time for the local time zone/area if user timezones are enabled, if not returns system datetime
-	 * @param string $systemDateTime
-	 * @param string $format
-	 * @return string $datetime
-	 */
+     * Gets the date time for the local time zone/area if user timezones are enabled, if not returns system datetime
+     * @param string $systemDateTime
+     * @param null|string $mask
+     * @return string $datetime
+     */
     public function getLocalDateTime($systemDateTime = 'now', $mask = null)
     {
         if (!isset($mask) || !strlen($mask)) {
@@ -27,7 +26,7 @@ class Date
         }
 
         if (!isset($systemDateTime) || !strlen($systemDateTime)) {
-            return NULL; // if passed a null value, pass it back
+            return null; // if passed a null value, pass it back
         } elseif (strlen($systemDateTime)) {
             $datetime = new \DateTime($systemDateTime);
         } else {
@@ -52,11 +51,11 @@ class Date
     }
 
     /**
-	 * Converts a user entered datetime to the system datetime
-	 * @param string $userDateTime
-	 * @param string $systemDateTime
-	 * @return string $datetime
-	 */
+     * Converts a user entered datetime to the system datetime
+     * @param string $userDateTime
+     * @param null|string $mask
+     * @return string $datetime
+     */
     public function getSystemDateTime($userDateTime = 'now', $mask = null)
     {
         if (!isset($mask) || !strlen($mask)) {
@@ -68,13 +67,13 @@ class Date
         }
 
         if (!isset($userDateTime) || !strlen($userDateTime)) {
-            return NULL; // if passed a null value, pass it back
+            return null; // if passed a null value, pass it back
         }
         $datetime = new \DateTime($userDateTime);
 
         if (defined('APP_TIMEZONE')) {
             $tz = new \DateTimeZone(APP_TIMEZONE_SERVER);
-            $datetime = new \DateTime($userDateTime,$tz); // create the in the user's timezone
+            $datetime = new \DateTime($userDateTime, $tz); // create the in the user's timezone
             $stz = new \DateTimeZone(date_default_timezone_get()); // grab the default timezone
             $datetime->setTimeZone($stz); // convert the datetime object to the current timezone
         }
@@ -85,7 +84,7 @@ class Date
                 $utz = $u->getUserTimezone();
                 if ($utz) {
                     $tz = new \DateTimeZone($utz);
-                    $datetime = new \DateTime($userDateTime,$tz); // create the in the user's timezone
+                    $datetime = new \DateTime($userDateTime, $tz); // create the in the user's timezone
 
                     $stz = new \DateTimeZone(date_default_timezone_get()); // grab the default timezone
                     $datetime->setTimeZone($stz); // convert the datetime object to the current timezone
@@ -100,11 +99,11 @@ class Date
     }
 
     /**
-	 * Gets the localized date according to a specific mask
-	 * @param \DateTime $datetime A PHP \DateTime Object
-	 * @param string $mask
-	 * @return string
-	 */
+     * Gets the localized date according to a specific mask
+     * @param \DateTime $datetime A PHP \DateTime Object
+     * @param string $mask
+     * @return string
+     */
     public function dateTimeFormatLocal($datetime, $mask)
     {
         return Calendar::format(
@@ -114,11 +113,11 @@ class Date
     }
 
     /**
-	 * Subsitute for the native date() function that adds localized date support
-	 * @param string $mask
-	 * @param int $timestamp
-	 * @return string
-	 */
+     * Subsitute for the native date() function that adds localized date support
+     * @param string $mask
+     * @param bool|int $timestamp
+     * @return string
+     */
     public function date($mask, $timestamp = false)
     {
         if ($timestamp === false) {
@@ -135,15 +134,15 @@ class Date
     }
 
     /**
-	 * Returns a keyed array of timezone identifiers
-	 * @return array
-	 * @see http://www.php.net/datetimezone.listidentifiers.php
-	 */
+     * Returns a keyed array of timezone identifiers
+     * @return array
+     * @see http://www.php.net/datetimezone.listidentifiers.php
+     */
     public function getTimezones()
     {
         static $cache = array();
         $locale = Localization::activeLocale();
-        if(array_key_exists($locale, $cache)) {
+        if (array_key_exists($locale, $cache)) {
             $result = $cache[$locale];
         } else {
             $result = array();
@@ -153,31 +152,31 @@ class Date
                 'America' => \Punic\Territory::getName('019'),
                 'Antarctica' => \Punic\Territory::getName('AQ'),
                 'Arctic' => t('Arctic'),
-                'Asia' => \Punic\Territory::getName('142'),
                 'Atlantic' => t('Atlantic Ocean'),
                 'Australia' => \Punic\Territory::getName('AU'),
                 'Europe' => \Punic\Territory::getName('150'),
                 'Indian' => t('Indian Ocean'),
                 'Pacific' => t('Pacific Ocean')
             );
-            foreach(\DateTimeZone::listIdentifiers() as $timezoneID) {
-                switch($timezoneID) {
+            foreach (\DateTimeZone::listIdentifiers() as $timezoneID) {
+                switch ($timezoneID) {
                     case 'UTC':
                     case 'GMT':
                         $timezoneName = t('Greenwich Mean Time');
                         break;
                     default:
                         $chunks = explode('/', $timezoneID);
-                        if(array_key_exists($chunks[0], $continentNames)) {
+                        if (array_key_exists($chunks[0], $continentNames)) {
                             $chunks[0] = $continentNames[$chunks[0]];
                         }
-                        if(count($chunks) > 0) {
+                        if (count($chunks) > 0) {
                             $city = \Punic\Calendar::getTimezoneExemplarCity($timezoneID, false);
-                            if(!strlen($city)) {
-                                switch($timezoneID) {
+                            if (!strlen($city)) {
+                                switch ($timezoneID) {
                                     case 'Antarctica/South_Pole':
                                         $city = t('South Pole');
-                                        default:
+                                        break;
+                                    default:
                                     case 'America/Montreal':
                                         $city = t('Montreal');
                                         break;
@@ -186,7 +185,7 @@ class Date
                                         break;
                                 }
                             }
-                            if(strlen($city)) {
+                            if (strlen($city)) {
                                 $chunks = array($chunks[0], $city);
                             }
                         }
@@ -268,7 +267,7 @@ class Date
         } elseif ($minutes > 0) {
             $description = t2('%d minute', '%d minutes', $minutes, $minutes);
             if ($precise) {
-                $description .= ', '.t2('%d second', '%d seconds', $seconds, $seconds);
+                $description .= ', ' . t2('%d second', '%d seconds', $seconds, $seconds);
             }
         } else {
             $description = t2('%d second', '%d seconds', $seconds, $seconds);
@@ -367,7 +366,7 @@ class Date
         $dtFrom = new \DateTime($dtFrom->format('Y-m-d'), $utc);
         $dtTo->setTimezone($utc);
         $dtTo = new \DateTime($dtTo->format('Y-m-d'), $utc);
-        
+
         $seconds = $dtTo->getTimestamp() - $dtFrom->getTimestamp();
 
         return round($seconds / 86400);
@@ -500,11 +499,20 @@ class Date
         $days = $this->getDeltaDays('now', $dtDate, $timezone);
         switch ($days) {
             case 0:
-                return t(/*i18n: %s is a time */ 'Today at %s', $this->formatTime($dtDate, $withSeconds, $timezone));
+                return t( /*i18n: %s is a time */
+                    'Today at %s',
+                    $this->formatTime($dtDate, $withSeconds, $timezone)
+                );
             case 1:
-                return t(/*i18n: %s is a time */ 'Tomorrow at %s', $this->formatTime($dtDate, $withSeconds, $timezone));
+                return t( /*i18n: %s is a time */
+                    'Tomorrow at %s',
+                    $this->formatTime($dtDate, $withSeconds, $timezone)
+                );
             case -1:
-                return t(/*i18n: %s is a time */ 'Yesterday at %s', $this->formatTime($dtDate, $withSeconds, $timezone));
+                return t( /*i18n: %s is a time */
+                    'Yesterday at %s',
+                    $this->formatTime($dtDate, $withSeconds, $timezone)
+                );
             default:
                 return $this->formatDateTime($dtDate, $longDate, $withSeconds);
         }
@@ -539,23 +547,24 @@ class Date
     {
         $phpFormat = (is_string($relatedPHPFormat) && strlen($relatedPHPFormat)) ?
             $relatedPHPFormat :
-            t(/*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y')
-        ;
+            t( /*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */
+                'n/j/Y'
+            );
         // Special chars that need to be escaped in the DatePicker format string
         $datepickerSpecials = array('d', 'o', 'D', 'm', 'M', 'y', '@', '!', '\'');
         // Map from php to DatePicker format
         $map = array(
-                'j' => 'd',
-                'd' => 'dd',
-                'z' => 'o',
-                'D' => 'D',
-                'l' => 'DD',
-                'n' => 'm',
-                'm' => 'mm',
-                'M' => 'M',
-                'F' => 'MM',
-                'y' => 'y',
-                'Y' => 'yy'
+            'j' => 'd',
+            'd' => 'dd',
+            'z' => 'o',
+            'D' => 'D',
+            'l' => 'DD',
+            'n' => 'm',
+            'm' => 'mm',
+            'M' => 'M',
+            'F' => 'MM',
+            'y' => 'y',
+            'Y' => 'yy'
         );
         $datepickerFormat = '';
         $escaped = false;
