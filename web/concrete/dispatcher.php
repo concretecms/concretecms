@@ -21,7 +21,7 @@ require __DIR__ . '/bootstrap/configure.php';
  * Include all autoloaders
  * ----------------------------------------------------------------------------
  */
-require __DIR__ . '/bootstrap/autoload.php';
+require DIR_APPLICATION . '/bootstrap/autoload.php';
 
 
 
@@ -31,7 +31,6 @@ require __DIR__ . '/bootstrap/autoload.php';
  * ----------------------------------------------------------------------------
  */
 $cms = require __DIR__ . '/bootstrap/start.php';
-
 
 
 
