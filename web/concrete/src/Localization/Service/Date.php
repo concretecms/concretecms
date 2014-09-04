@@ -600,8 +600,7 @@ class Date
      */
     public function getTimeFormat()
     {
-        /*i18n: can be 12 or 24 */
-        $timeFormat = tc('Time format', '12');
+        $timeFormat = tc(/*i18n: can be 12 or 24 */'Time format', '12');
         switch ($timeFormat) {
             case '24':
                 return 24;
