@@ -3,6 +3,7 @@ namespace Concrete\Core\Session;
 use \Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 use \Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use \Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 use Core;
 
 class Session {
@@ -12,8 +13,21 @@ class Session {
 		if ($app->isRunThroughCommandLineInterface()) {
 			$storage = new MockArraySessionStorage();
 		} else {
-			$storage = new NativeSessionStorage();
-			$options = array(
+            if (SESSION_HANDLER == 'database') {
+                $db = \Database::get();
+                $storage = new NativeSessionStorage(array(),
+                    new PdoSessionHandler($db->getWrappedConnection(), array(
+                            'db_table' => 'Sessions',
+                            'db_id_col' => 'sessionID',
+                            'db_data_col' => 'sessionValue',
+                            'db_time_col' => 'sessionTime'
+                        )
+                    )
+                );
+            } else {
+                $storage = new NativeSessionStorage();
+            }
+            $options = array(
 				'cookie_path' => DIR_REL . '/',
 				'cookie_lifetime' => 0,
 				'cookie_secure' => false,

@@ -514,6 +514,7 @@ defined('AVATAR_WIDTH') or define('AVATAR_WIDTH', '80');
 defined('AVATAR_HEIGHT') or define('AVATAR_HEIGHT', '80');
 defined('AVATAR_NONE') or define('AVATAR_NONE', ASSETS_URL_IMAGES . '/avatar_none.png');
 defined('SESSION') or define('SESSION', 'CONCRETE5');
+defined('SESSION_HANDLER') or define('SESSION_HANDLER', 'file'); // could be 'database' as well
 defined('USER_DELETED_CONVERSATION_ID') or define('USER_DELETED_CONVERSATION_ID', 0);
 defined('PASSWORD_HASH_PORTABLE') or define('PASSWORD_HASH_PORTABLE', false);
 defined('PASSWORD_HASH_COST_LOG2') or define('PASSWORD_HASH_COST_LOG2', 12);
