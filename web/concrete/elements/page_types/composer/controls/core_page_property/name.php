@@ -13,19 +13,19 @@ defined('C5_EXECUTE') or die("Access Denied.");
 </div>
 
 <script type="text/javascript">
-var ccm_composerAddPageTimer = false;
+var concreteComposerAddPageTimer = false;
 $(function() {
 	$('div[data-composer-field=name] input').on('keyup', function() {
 		var val = $(this).val();
 		var frm = $(this);
-		clearTimeout(ccm_composerAddPageTimer);
-		ccm_composerAddPageTimer = setTimeout(function() {
-			$('#ccm-url-slug-loader').show();
+		clearTimeout(concreteComposerAddPageTimer);
+        concreteComposerAddPageTimer = setTimeout(function() {
+            $('.ccm-composer-url-slug-loading').show();
 			$.post('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/pages/url_slug', {
 				'token': '<?=Loader::helper('validation/token')->generate('get_url_slug')?>',
 				'name': val
 			}, function(r) {
-				$('#ccm-url-slug-loader').hide();
+                $('.ccm-composer-url-slug-loading').hide();
 				$('div[data-composer-field=url_slug] input').val(r);
 			});
 		}, 150);
