@@ -41,7 +41,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                     <? if ($c->isEditMode()) { ?>
                         <li class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit"><i
                                 class="fa fa-pencil mobile-leading-icon"></i><a data-toolbar-action="check-in"
-                                                                                <? if ($vo->isNew()) { ?>href="javascript:void(0)"
+                                                                                <? if ($vo->isNew() && !$c->isMasterCollection()) { ?>href="javascript:void(0)"
                                                                                 data-launch-panel="check-in"><?php echo t(
                                     'Save Changes') ?><?
                                 } else {
@@ -190,6 +190,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
         </li>
     <? } ?>
 
+        <? if (!$c->isMasterCollection()) { ?>
         <li class="pull-left hidden-xs">
             <a href="#" data-launch-panel="page"
                data-panel-url="<?= URL::to('/ccm/system/panels/page') ?>"
@@ -200,6 +201,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 </span>
             </a>
         </li>
+        <? } ?>
     <?
     }
 
