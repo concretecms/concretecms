@@ -7,7 +7,7 @@ defined('C5_EXECUTE') or die('Access denied.');
 $r = ResponseAssetGroup::get();
 $r->requireAsset('core/legacy');
 
-$activeAuths = AuthenticationType::getActiveListSorted();
+$activeAuths = AuthenticationType::getList(true, true);
 $form = Loader::helper('form');
 
 $active = null;

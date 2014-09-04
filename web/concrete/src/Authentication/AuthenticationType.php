@@ -12,6 +12,14 @@ use Package;
 
 class AuthenticationType extends Object
 {
+    /** @var Controller */
+    public $controller;
+    protected $authTypeID;
+    protected $authTypeName;
+    protected $authTypeHandle;
+    protected $authTypeDisplayOrder;
+    protected $authTypeIsEnabled;
+    protected $pkgID;
 
     public static function getListSorted()
     {
@@ -19,16 +27,18 @@ class AuthenticationType extends Object
     }
 
     /**
-     * AuthenticationType::getList
-     * Return a raw list of authentication types, sorted by either installed order or display order.
-     *
-     * @param bool $sorted true: Sort by installed order, false: Sort by display order
+     * Return a raw list of authentication types
+     * @param bool $sorted true: Sort by display order, false: sort by install order
+     * @param bool $activeOnly true: include only active types, false: include active and inactive types
+     * @return array
      */
-    public static function getList($sorted = false)
+    public static function getList($sorted = false, $activeOnly = false)
     {
         $list = array();
         $db = Loader::db();
-        $q = $db->query("SELECT * FROM AuthenticationTypes" . ($sorted ? " ORDER BY authTypeDisplayOrder" : ""));
+        $q = $db->query("SELECT * FROM AuthenticationTypes"
+            . ($activeOnly ? " WHERE authTypeIsEnabled=1 " : "")
+            . " ORDER BY " . ($sorted ? "authTypeDisplayOrder" : "authTypeID"));
         while ($row = $q->fetchRow()) {
             $list[] = AuthenticationType::load($row);
         }
@@ -36,10 +46,19 @@ class AuthenticationType extends Object
     }
 
     /**
-     * AuthenticationType::load
      * Load an AuthenticationType from an array.
-     *
-     * @param array $arr Array of raw sql data.
+     * @param array $arr should be an array of the following key/value pairs to create an object from:
+     * <pre>
+     * array(
+     *     'authTypeID' => int,
+     *     'authTypeHandle' => string,
+     *     'authTypeName' => string,
+     *     'authTypeDisplayOrder' => int,
+     *     'authTypeIsEnabled' => tinyint,
+     *     'pkgID' => int
+     * )
+     * </pre>
+     * @return bool|\Concrete\Core\Authentication\AuthenticationType
      */
     public static function load($arr)
     {
@@ -47,11 +66,10 @@ class AuthenticationType extends Object
             'authTypeID',
             'authTypeName',
             'authTypeHandle',
-            'authTypeHandle',
-            'authTypeName',
             'authTypeDisplayOrder',
             'authTypeIsEnabled',
-            'pkgID');
+            'pkgID'
+        );
         $obj = new AuthenticationType;
         foreach ($extract as $key) {
             if (!isset($arr[$key])) {
@@ -64,7 +82,6 @@ class AuthenticationType extends Object
     }
 
     /**
-     * AuthenticationType::loadController
      * Load the AuthenticationTypeController into the AuthenticationType
      */
     protected function loadController()
@@ -86,34 +103,10 @@ class AuthenticationType extends Object
         return PackageList::getHandle($this->pkgID);
     }
 
-    public static function getActiveListSorted()
-    {
-        return AuthenticationType::getActiveList(true);
-    }
-
     /**
-     * AuthenticationType::getActiveList
-     * Return a raw list of /ACTIVE/ authentication types, sorted by either installed order or display order.
-     *
-     * @param bool $sorted true: Sort by installed order, false: Sort by display order
-     */
-    public static function getActiveList($sorted = false)
-    {
-        $list = array();
-        $db = Loader::db();
-        $q = $db->query(
-                "SELECT * FROM AuthenticationTypes WHERE authTypeIsEnabled=1" . ($sorted ? " ORDER BY authTypeDisplayOrder" : ""));
-        while ($row = $q->fetchRow()) {
-            $list[] = AuthenticationType::load($row);
-        }
-        return $list;
-    }
-
-    /**
-     * AuthenticationType::getListByPackage
-     * Return a list of AuthenticationTypes that are associated with a specific package.
-     *
+     * Return an array of AuthenticationTypes that are associated with a specific package.
      * @param Package $pkg
+     * @return AuthenticationType[]
      */
     public static function getListByPackage(Package $pkg)
     {
@@ -124,18 +117,16 @@ class AuthenticationType extends Object
         while ($row = $q->FetchRow()) {
             $list[] = AuthenticationType::load($row);
         }
-        $r->Close();
         return $list;
     }
 
     /**
-     * AuthenticationType::add
-     *
-     * @param    string $atHandle New AuthenticationType handle
-     * @param    string $atName   New AuthenticationType name, expect this to be presented with "%s Authentication Type"
-     * @param    int $order       Order int, used to order the display of AuthenticationTypes
-     * @param    Package $pkg     Package object to which this AuthenticationType is associated.
-     * @return    AuthenticationType    Returns a loaded authentication type.
+     * @param string $atHandle New AuthenticationType handle
+     * @param string $atName New AuthenticationType name, expect this to be presented with "%s Authentication Type"
+     * @param int $order Order int, used to order the display of AuthenticationTypes
+     * @param bool|\Package $pkg Package object to which this AuthenticationType is associated.
+     * @throws \Exception
+     * @return AuthenticationType Returns a loaded authentication type.
      */
     public static function add($atHandle, $atName, $order = 0, $pkg = false)
     {
@@ -157,8 +148,7 @@ class AuthenticationType extends Object
         $db->Execute(
            'INSERT INTO AuthenticationTypes (authTypeHandle, authTypeName, authTypeIsEnabled, authTypeDisplayOrder, pkgID) values (?, ?, ?, ?, ?)',
            array($atHandle, $atName, 1, intval($order), $pkgID));
-        $id = $db->Insert_ID();
-        $est = AuthenticationType::getByID($id);
+        $est = AuthenticationType::getByHandle($atHandle);
         $r = $est->mapAuthenticationTypeFilePath(FILENAME_AUTHENTICATION_DB);
         if ($r->exists()) {
             Package::installDB($r->file);
@@ -168,10 +158,10 @@ class AuthenticationType extends Object
     }
 
     /**
-     * AuthenticationType::getByHandle
      * Return loaded AuthenticationType with the given handle.
-     *
      * @param string $atHandle AuthenticationType handle.
+     * @throws \Exception when an invalid handle is provided
+     * @return AuthenticationType
      */
     public static function getByHandle($atHandle)
     {
@@ -185,8 +175,10 @@ class AuthenticationType extends Object
     }
 
     /**
+     * Return loaded AuthenticationType with the given ID.
      * @param int $authTypeID
-     * @return Concrete5_Model_AuthenticationType
+     * @throws \Exception
+     * @return AuthenticationType
      */
     public static function getByID($authTypeID)
     {
@@ -305,22 +297,21 @@ class AuthenticationType extends Object
     }
 
     /**
-     * AuthenticationType::getAuthenticationTypeFilePath
      * Return the path to a file, this is always BASE_URL.DIR_REL.FILE
      *
      * @param string $_file the relative path to the file.
+     * @return bool|string
      */
     public function  getAuthenticationTypeFilePath($_file)
     {
         $f = $this->mapAuthenticationTypeFilePath($_file);
         if ($f->exists()) {
-            return $r->url;
+            return $f->url;
         }
         return false;
     }
 
     /**
-     * AuthenticationType::mapAuthenticationTypeFilePath
      * Return the first existing file path in this order:
      *  - /models/authentication/types/HANDLE
      *  - /packages/PKGHANDLE/authentication/types/HANDLE
@@ -345,7 +336,6 @@ class AuthenticationType extends Object
     }
 
     /**
-     * AuthenticationType::renderTypeForm
      * Render the settings form for this type.
      * Settings forms are expected to handle their own submissions and redirect to the appropriate page.
      * Otherwise, if the method exists, all $_REQUEST variables with the arrangement: HANDLE[]
@@ -368,7 +358,6 @@ class AuthenticationType extends Object
     }
 
     /**
-     * AuthenticationType::renderForm
      * Render the login form for this authentication type.
      *
      * @param string $element
@@ -396,7 +385,6 @@ class AuthenticationType extends Object
     }
 
     /**
-     * AuthenticationType::renderHook
      * Render the hook form for saving the profile settings.
      * All settings are expected to be saved by each individual authentication type
      */
