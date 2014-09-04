@@ -108,7 +108,7 @@ class MailImporter extends Object {
 		}
 		
 		if ($miEncryption == '') {
-			$miEncryption == null;
+			$miEncryption = null;
 		}
 		
 		if (!$miConnectionMethod) {
@@ -149,7 +149,7 @@ class MailImporter extends Object {
 		}
 		
 		if ($miEncryption == '') {
-			$miEncryption == null;
+			$miEncryption = null;
 		}
 
 		$db->Execute('update MailImporters set miServer = ?, miUsername = ?, miPassword = ?, miEncryption = ?, miIsEnabled = ?, miEmail = ?, miPort = ?, miConnectionMethod = ? where miID = ?', 
