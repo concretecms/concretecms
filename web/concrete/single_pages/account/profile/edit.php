@@ -46,7 +46,7 @@ $(function() {
 		</fieldset>
 	<?php  } ?>
 	<?php
-	$ats = AuthenticationType::getActiveListSorted();
+	$ats = AuthenticationType::getList(true, true);
 	$count = 0;
 	$displayAts = array();
 	foreach ($ats as $at) {

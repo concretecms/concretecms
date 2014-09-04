@@ -188,7 +188,8 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     protected function save()
     {
         $em = Database::get()->getEntityManager();
-        $em->persist($this)->flush();
+        $em->persist($this);
+        $em->flush();
     }
 
     public function setFileStorageLocation(StorageLocation $newLocation)
@@ -249,8 +250,6 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     {
         $db = Loader::db();
         $db->Execute("delete from FilePermissionAssignments where fID = ?", array($this->fID));
-        $this->fOverrideSetPermissions = (bool)$fOverrideSetPermissions;
-        $this->save();
         if ($fOverrideSetPermissions) {
             $permissions = PermissionKey::getList('file');
             foreach ($permissions as $pk) {
@@ -258,6 +257,8 @@ class File implements \Concrete\Core\Permission\ObjectInterface
                 $pk->copyFromFileSetToFile();
             }
         }
+        $this->fOverrideSetPermissions = (bool)$fOverrideSetPermissions;
+        $this->save();
     }
 
 
