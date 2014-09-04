@@ -907,6 +907,25 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
+     * Returns the urlencode path for a page from path string
+     * @param string $path
+     * @return string $path
+     */
+    public static function getEncodePath($path)
+    {
+        if(mb_strpos($path,"/") !== false){
+            $path = explode("/",$path);
+            $path = array_map("rawurlencode",$path);
+            $newPath = implode("/",$path);
+        }else if(is_null($path)){
+            $newPath = NULL;
+        }else{
+            $newPath = rawurlencode($path);
+        }
+        return str_replace('%21','!',$newPath);
+    }
+
+    /**
      * Returns the PagePath object for the current page.
      */
     public function getCollectionPathObject()
