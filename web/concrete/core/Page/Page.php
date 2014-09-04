@@ -159,10 +159,14 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $env = Environment::get();
 
         if ($this->getPageTypeID() > 0) {
-            $ptHandle = $this->getPageTypeHandle();
-            $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES . '/' . $ptHandle . '.php', $this->getPackageHandle());
-            $prefix = $r->override ? true : $this->getPackageHandle();
-            $class = core_class('Controller\\PageType\\' . camelcase($ptHandle), $prefix);
+            /*
+            $ptHandle = $mixed->getPageTypeHandle();
+            $path = self::pageTypeControllerPath($ptHandle, $mixed->getPackageHandle());
+            if ($path) {
+                require_once($path);
+                $class = Object::camelcase($ptHandle) . 'PageTypeController';
+            }
+            */
         } else if ($this->isGeneratedCollection()) {
             $file = $this->getCollectionFilename();
             $r = $env->getRecord(DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_CONTROLLERS . $file, $this->getPackageHandle());
@@ -302,6 +306,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                      array($area_handle, $this->getCollectionID(), $this->getVersionID(), $moved_block_id));
         $db->execute('UPDATE CollectionVersionBlocks SET arHandle = ?  WHERE cID = ? and cvID = ? and bID = ?',
                      array($area_handle, $this->getCollectionID(), $this->getVersionID(), $moved_block_id));
+
 
         $update_query = "UPDATE CollectionVersionBlocks SET cbDisplayOrder = CASE bID";
         $when_statements = array();
@@ -854,10 +859,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
         $p->addAttribute('filename', $this->getCollectionFilename());
         $p->addAttribute('pagetype', $this->getPageTypeHandle());
-        $template = PageTemplate::getByID($this->getPageTemplateID());
-        if (is_object($template)) {
-            $p->addAttribute('template', $template->getPageTemplateHandle());
-        }
         $ui = UserInfo::getByID($this->getCollectionUserID());
         if (!is_object($ui)) {
             $ui = UserInfo::getByID(USER_SUPER_ID);
@@ -883,7 +884,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         $db = Loader::db();
-        $r = $db->Execute('select arHandle from Areas where cID = ? and arIsGlobal = 0 and arParentID = 0', array($this->getCollectionID()));
+        $r = $db->Execute('select arHandle from Areas where cID = ? and arIsGlobal = 0', array($this->getCollectionID()));
         while ($row = $r->FetchRow()) {
             $ax = Area::get($this, $row['arHandle']);
             $ax->export($p, $this);
@@ -903,26 +904,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @return string
      */
     function getCollectionPath() {
-        return $this->cPath;
-    }
-
-    /**
-     * Returns the urlencode path for a page from path string
-     * @param string $path
-     * @return string $path
-     */
-    public static function getEncodePath($path)
-    {
-        if(mb_strpos($path,"/") !== false){
-            $path = explode("/",$path);
-            $path = array_map("rawurlencode",$path);
-            $newPath = implode("/",$path);
-        }else if(is_null($path)){
-            $newPath = NULL;
-        }else{
-            $newPath = rawurlencode($path);
-        }
-        return str_replace('%21','!',$newPath);
+		return self::getEncodePath($this->cPath);
     }
 
     /**
@@ -937,6 +919,24 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         ));
         return $path;
     }
+
+	/**
+	 * Returns the urlencode path for a page from path string
+	 * @param string $path
+	 * @return string $path
+	 */	
+	public static function getEncodePath($path){
+	    if(mb_strpos($path,"/") !== false){
+	      $path = explode("/",$path);
+	      $path = array_map("rawurlencode",$path);
+	      $newPath = implode("/",$path);
+	    }else if(is_null($path)){
+          $newPath = NULL;
+	    }else{
+	      $newPath = rawurlencode($path);
+	    } 
+	    return str_replace('%21','!',$newPath);
+	}
 
     /**
      * Adds a non-canonical page path to the current page.
@@ -1013,7 +1013,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public static function getCollectionPathFromID($cID) {
         $db = Loader::db();
         $path = $db->GetOne("select cPath from PagePaths inner join CollectionVersions on (PagePaths.cID = CollectionVersions.cID and CollectionVersions.cvIsApproved = 1) where PagePaths.cID = ? order by PagePaths.ppIsCanonical desc", array($cID));
-        return $path;
+        return self::getEncodePath($path);
     }
 
     /**
@@ -1118,16 +1118,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         // so we don't have to query the database separately for every block on the page.
         if (is_null($this->blocksAliasedFromMasterCollection)) {
             $db = Loader::db();
-            $q = 'SELECT cvb.bID FROM CollectionVersionBlocks AS cvb
-                    INNER JOIN CollectionVersionBlocks AS cvb2
-                        ON cvb.bID = cvb2.bID
-                            AND cvb2.cID = ?
-                    WHERE cvb.cID = ?
-                        AND cvb.isOriginal = 0
-                        AND cvb.cvID = ?
-                    GROUP BY cvb.bID
-                    ;';
-            $v = array($this->getMasterCollectionID(), $this->getCollectionID(), $this->getVersionObject()->getVersionID());
+            $q = 'SELECT bID FROM CollectionVersionBlocks WHERE cID = ? AND isOriginal = 0 AND cvID = ? AND bID IN (SELECT bID FROM CollectionVersionBlocks AS cvb2 WHERE cvb2.cid = ?)';
+            $v = array($this->getCollectionID(), $this->getVersionObject()->getVersionID(), $this->getMasterCollectionID());
             $this->blocksAliasedFromMasterCollection = $db->GetCol($q, $v);
         }
         return in_array($b->getBlockID(), $this->blocksAliasedFromMasterCollection);
@@ -1144,9 +1136,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             } else {
                 $this->themeObject = PageTheme::getByID($this->vObj->pThemeID);
             }
-        }
-        if (!$this->themeObject) {
-            $this->themeObject = PageTheme::getSiteTheme();
         }
         return $this->themeObject;
     }
@@ -1220,10 +1209,23 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     /**
      * Gets the date a the current version was made public,
+     * if user is specified, returns in the current user's timezone
+     * @param string $mask
+     * @param string $type (system || user)
      * @return string date formated like: 2009-01-01 00:00:00
-     */
-    function getCollectionDatePublic() {
-        return $this->vObj->cvDatePublic;
+    */
+    function getCollectionDatePublic($mask = null, $type='system') {
+        $dh = Loader::helper('date');
+        if(ENABLE_USER_TIMEZONES && $type == 'user') {
+            $cDatePublic = $dh->getLocalDateTime($this->vObj->cvDatePublic);
+        } else {
+            $cDatePublic = $this->vObj->cvDatePublic;
+        }
+        if ($mask == null) {
+            return $cDatePublic;
+        } else {
+            return $dh->date($mask, strtotime($cDatePublic));
+        }
     }
 
     /**
@@ -1518,16 +1520,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $scc;
     }
 
-    public function getPageWrapperClass()
-    {
-        $pt = $this->getPageTypeObject();
-        $classes = array('ccm-page');
-        if (is_object($pt)) {
-            $classes[] = 'page-type-' . str_replace('_', '-', $pt->getPageTypeHandle());
-        }
-        return implode(' ', $classes);
-    }
-
     public function writePageThemeCustomizations() {
         $theme = $this->getCollectionThemeObject();
         if (is_object($theme) && $theme->isThemeCustomizable()) {
@@ -1599,9 +1591,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $pTemplateID = $data['pTemplateID'];
         }
 
-        if (!$cDatePublic) {
-            $cDatePublic = Core::make('helper/date')->getLocalDateTime();
-        }
         $txt = Loader::helper('text');
         if (!isset($data['cHandle']) && ($this->getCollectionHandle() != '')) {
             $cHandle = $this->getCollectionHandle();
@@ -1696,6 +1685,58 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $pe = new Event($this);
         Events::dispatch('on_page_update', $pe);
     }
+
+    /*
+    public function rescanPagePaths($newPaths) {
+        $db = Loader::db();
+        $txt = Loader::helper('text');
+
+        // First, get the list of page paths from the DB.
+        $ppaths = $this->getPagePaths();
+
+        // Second, reset all of their cPath values to null.
+        $paths = array();
+        foreach ($ppaths as $ppath) {
+            if (!$ppath['ppIsCanonical']) {
+                $paths[$ppath['ppID']] = null;
+            }
+        }
+
+        // Third, fill in the cPath values from the user updated data.
+        foreach ($newPaths as $key=>$val) {
+            if (!empty($val)) {
+                // Auto-prepend a slash if one is missing.
+                $val = trim($val, '/');
+                $pathSegments = explode('/', $val);
+                $newVal = '/';
+                foreach($pathSegments as $pathSegment) {
+                    $newVal .= $pathSegment . '/';
+                }
+                $newVal = substr($newVal, 0, strlen($newVal) - 1);
+                $newVal = str_replace('-', PAGE_PATH_SEPARATOR, $newVal);
+
+                $paths[$key] = $newVal;
+            }
+        }
+
+        // Fourth, delete, update, or insert page paths as necessary.
+        foreach ($paths as $key=>$val) {
+            if (empty($val)) {
+                $v = array($this->cID, $key);
+                $q = "delete from PagePaths where cID = ? and ppID = ?";
+            } else if (is_numeric($key)) {
+                $val = $this->uniquifyPagePath($val);
+                $v = array($val, $this->cID, $key);
+                $q = "update PagePaths set cPath = ?, ppIsCanonical = 0 where cID = ? and ppID = ?";
+            } else {
+                $val = $this->uniquifyPagePath($val);
+                $v = array($this->cID, $val);
+                $q = "insert into PagePaths (cID, cPath, ppIsCanonical) values (?, ?, 0)";
+            }
+            $r = $db->query($q, $v);
+        }
+    }
+    */
 
     function clearPagePermissions() {
         $db = Loader::db();
@@ -1801,7 +1842,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         // any areas that were overriding permissions on the current page need to be overriding permissions
         // on the NEW page as well.
         $v = array($permissionsCollectionID);
-        $q = "select * from Areas where cID = ? and arOverrideCollectionPermissions";
+        $q = "select * from Areas where cID = ?";
         $r = $db->query($q, $v);
         while($row = $r->fetchRow()) {
             $v = array($this->cID, $row['arHandle'], $row['arOverrideCollectionPermissions'], $row['arInheritPermissionsFromAreaOnCID'], $row['arIsGlobal']);
@@ -1847,22 +1888,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $r2 = $db->query($q2);
             $this->updateGroupsSubCollection($cParentIDString);
         }
-    }
-
-
-    public function addBlock($bt, $a, $data)
-    {
-        $b = parent::addBlock($bt, $a, $data);
-        $btHandle = $bt->getBlockTypeHandle();
-        $theme = $this->getCollectionThemeObject();
-        if ($btHandle && $theme) {
-            $templates = $theme->getThemeDefaultBlockTemplates();
-            if (count($templates) && isset($templates[$btHandle])) {
-                $template = $templates[$btHandle];
-                $b->updateBlockInformation(array('bFilename' => $template));
-            }
-        }
-        return $b;
     }
 
     function move($nc) {
@@ -2157,14 +2182,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $suffix = 0;
             while ($proceed != true) {
                 $newPath = ($suffix == 0) ? $pathString : $pathString . PAGE_PATH_SEPARATOR . $suffix;
-                $q = $em->createQuery("select p from Concrete\Core\Page\PagePath p
-                    where p.cPath = ?1 and p.cID <> ?2");
-
-                $q->setParameter(1, $newPath);
-                $q->setParameter(2, $this->getCollectionID());
-                $result = $q->getResult();
-
-                if (!is_object($result[0])) {
+                $path = $em->getRepository('\Concrete\Core\Page\PagePath')->findOneBy(
+                    array('cPath' => $newPath)
+                );
+                if (!is_object($path)) {
                     $proceed = true;
                 } else {
                     $suffix++;
@@ -2663,7 +2684,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     public function setPageDraftTargetParentPageID($cParentID) {
         $db = Loader::db();
-        $cParentID = intval($cParentID);
         $db->Execute('update Pages set cDraftTargetParentPageID = ? where cID = ?', array($cParentID, $this->cID));
         $this->cDraftTargetParentPageID = $cParentID;
     }
