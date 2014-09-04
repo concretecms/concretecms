@@ -1,191 +1,169 @@
-<?php
+<?
 namespace Concrete\Core\Cache;
-use PageCache;
-use Events;
-use Database as DB;
 use \Zend\Cache\StorageFactory;
-use Environment;
-use CacheLocal as ConcreteCacheLocal;
-use Loader;
 
-class Cache {
+class Cache
+{
+    /** @var \Zend\Cache\|\Zend\Cache\Storage\StorageInterface */
+    private $provider = null;
+    private $enabled = true;
 
-	public static function key($type, $id) {
+    /**
+     * Returns a cache key
+     * @param string $type Prefix of the cache entry
+     * @param string $id ID of the cache entry
+     * @return string The cache key
+     */
+    public static function key($type, $id)
+    {
 		return md5($type . $id);
 	}
 
-	public static function getLibrary() {
-		static $cache;
-		if (!isset($cache) && defined('DIR_FILES_CACHE')) {
-			if (is_dir(DIR_FILES_CACHE) && is_writable(DIR_FILES_CACHE)) {
-                $adapter = (defined('CACHE_LIBRARY')) ? CACHE_LIBRARY : 'filesystem';
-                $cache = StorageFactory::factory(array(
-                    'adapter' => array(
-                        'name' => $adapter,
-                        'ttl' => CACHE_LIFETIME
-                    ),
-                    'options' => array(
-                        'cache_dir' => DIR_FILES_CACHE,
-                        'file_locking' => false
-                    ),
-                    'plugins' => array(
-                        'exception_handler' => array('throw_exceptions' => false)
-                    )
-                ));
-			}
-		}
-		return $cache;
+    /**
+     * /**
+     * Returns the cache provider. The cache will be initialized if it is not yet
+     * @return \Zend\Cache\|\Zend\Cache\Storage\StorageInterface
+     */
+    public function getProvider()
+    {
+        if ($this->provider === null) {
+            // cache provider has not yet been initialized
+            $adapter = (defined('CACHE_LIBRARY')) ? CACHE_LIBRARY : 'filesystem';
+            $this->provider = StorageFactory::factory(array(
+                'adapter' => array(
+                    'name' => $adapter,
+                    'ttl' => CACHE_LIFETIME
+                ),
+                'options' => array(
+                    'cache_dir' => DIR_FILES_CACHE,
+                    'file_locking' => false
+                ),
+                'plugins' => array(
+                    'exception_handler' => array('throw_exceptions' => false)
+                )
+            ));
+        }
+
+        return $this->provider;
+    }
+
+    public function disableCache()
+    {
+        $this->enabled = false;
+    }
+
+    public function enableCache()
+    {
+        $this->enabled = true;
+    }
+	
+	public function disableLocalCache()
+    {
+		CacheLocal::get()->enabled = false;
+	}
+	public function enableLocalCache()
+    {
+		CacheLocal::get()->enabled = true;
 	}
 
-	public function startup() {
-		$cache = Cache::getLibrary();
-	}
+    public function set($type, $id, $obj, $expire = false)
+    {
+        // todo need to handle expire time
 
-	public function disableCache() {
-		$ca = Cache::getLibrary();
-		if (is_object($ca)) {
-			$ca->setCaching(false);
-		}
-	}
+        $key = Cache::key($type, $id);
+        $set = true;
 
-	public function enableCache() {
-		$ca = Cache::getLibrary();
-		if (is_object($ca)) {
-            $ca->setCaching(true);
-		}
-	}
+        // cache it locally
+        $loc = CacheLocal::get();
+        if ($loc->enabled || $this->enabled) {
+            if (is_object($obj)) {
+                $r = clone $obj;
+            } else {
+                $r = $obj;
+            }
 
-	public function disableLocalCache() {
-		ConcreteCacheLocal::get()->enabled = false;
-	}
-	public function enableLocalCache() {
-		ConcreteCacheLocal::get()->enabled = true;
-	}
+            if ($loc->enabled) {
+                $loc->cache[$key] = $r;
+            }
 
-	/**
-	 * Inserts or updates an item to the cache
-	 * the cache must always be enabled for (getting remote data, etc..)
-	 */
-	public function set($type, $id, $obj) {
-		$loc = ConcreteCacheLocal::get();
-		if ($loc->enabled) {
-			if (is_object($obj)) {
-				$r = clone $obj;
-			} else {
-				$r = $obj;
-			}
-			$loc->cache[Cache::key($type, $id)] = $r;
-		}
-		$cache = Cache::getLibrary();
-		if (!$cache) {
-			return false;
-		}
-		$cache->setItem(Cache::key($type, $id), $obj);
-	}
+            if ($this->enabled) {
+                $set = $this->getProvider()->setItem($key, $r);
+            }
+        }
 
-	/**
-	 * Retrieves an item from the cache
-	 */
-	public function get($type, $id, $mustBeNewerThan = false) {
-		$loc = ConcreteCacheLocal::get();
-		$key = Cache::key($type, $id);
-		if ($loc->enabled && array_key_exists($key, $loc->cache)) {
-			return $loc->cache[$key];
-		}
+        return $set;
+    }
 
-		$cache = Cache::getLibrary();
-		if (!$cache) {
-			if ($loc->enabled) {
-				$loc->cache[$key] = false;
-			}
-			return false;
-		}
+    public function get($type, $id, $mustBeNewerThan = false) {
+        $loc = CacheLocal::get();
+        $key = Cache::key($type, $id);
+        if ($loc->enabled && array_key_exists($key, $loc->cache)) {
+            return $loc->cache[$key];
+        }
 
-		// if mustBeNewerThan is set, we check the cache mtime
-		// if mustBeNewerThan is newer than that time, we relinquish
-		if ($mustBeNewerThan != false) {
-			$metadata = $cache->getMetadatas($key);
-			if ($metadata['mtime'] < $mustBeNewerThan) {
-				// clear cache record and return false
-				Cache::getLibrary()->remove($key);
-				if ($loc->enabled) {
-					$loc->cache[$key] = false;
-				}
-				return false;
-			}
-		}
+        if ($this->enabled) {
+            // todo expired cache items
+            return $this->getProvider()->getItem($key);
+        }
 
-		$loaded = $cache->getItem($key);
-		if ($loc->enabled) {
-			$loc->cache[$key] = $loaded;
-		}
-		return $loaded;
-	}
+        return false;
+    }
 
-	/**
+    /**
+     * Checks if an item is in the cache
+     * @param $type
+     * @param $id
+     * @param bool $mustBeNewerThan
+     * @return bool
+     */
+    public function has($type, $id, $mustBeNewerThan = false)
+    {
+        $loc = CacheLocal::get();
+        $key = Cache::key($type, $id);
+        if ($loc->enabled && array_key_exists($key, $loc->cache)) {
+            return true;
+        }
+
+        if ($this->enabled) {
+            // todo expired cache items
+            return $this->getProvider()->hasItem($key);
+        }
+
+        return false;
+    }
+	
+	/** 
 	 * Removes an item from the cache
-	 */
+	 */	
 	public function delete($type, $id){
-		$cache = \Cache::getLibrary();
-		if ($cache) {
-			$cache->removeItem(\Cache::key($type, $id));
+        $success = true;
+        $key = Cache::key($type, $id);
+
+		if ($this->enabled) {
+			$success = $this->getProvider()->removeItem($key);
 		}
 
-		$loc = ConcreteCacheLocal::get();
-		if ($loc->enabled && isset($loc->cache[Cache::key($type, $id)])) {
-			unset($loc->cache[Cache::key($type, $id)]);
+		$loc = CacheLocal::get();
+		if ($loc->enabled && isset($loc->cache[$key])) {
+			unset($loc->cache[$key]);
 		}
+
+        return $success;
 	}
-
-	/**
+	
+	/** 
 	 * Completely flushes the cache
-	 */
-	public function flush() {
-		$db = DB::get();
+	 */	
+	public function flush()
+    {
+        $loc = CacheLocal::get();
+        if ($loc->enabled) {
+            $loc->flush();
+        }
 
-		// flush the CSS cache
-		if (is_dir(DIR_FILES_CACHE . '/' . DIRNAME_CSS)) {
-			$fh = Loader::helper('file');
-			$fh->removeAll(DIR_FILES_CACHE . '/' . DIRNAME_CSS);
-		}
-
-		// flush the JS cache
-		if (is_dir(DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT)) {
-			$fh = Loader::helper('file');
-			$fh->removeAll(DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT);
-		}
-
-		$pageCache = PageCache::getLibrary();
-		if (is_object($pageCache)) {
-			$pageCache->flush();
-		}
-
-		if ($db->tableExists('Config')) {
-			// clear the environment overrides cache
-			$env = Environment::get();
-			$env->clearOverrideCache();
-
-			if(in_array('btCachedBlockRecord', $db->MetaColumnNames('Blocks'))) {
-				$db->Execute('update Blocks set btCachedBlockRecord = null');
-			}
-			if ($db->tableExists('CollectionVersionBlocksOutputCache')) {
-				$db->Execute('truncate table CollectionVersionBlocksOutputCache');
-			}
-		}
-
-		$loc = ConcreteCacheLocal::get();
-		$loc->cache = array();
-
-		$cache = Cache::getLibrary();
-		if ($cache) {
-			$cache->flush();
-		}
-
-		$event = new \Symfony\Component\EventDispatcher\GenericEvent();
-		$event->setArgument('cache', $cache);
-		$ret = Events::dispatch('on_cache_flush', $event);
-
-		return true;
-	}
-
+        if ($this->enabled) {
+            // todo flush
+        }
+    }
+		
 }
