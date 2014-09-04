@@ -5195,5 +5195,20 @@
     </field>
   </table>
 
+    <table name="Sessions">
+        <field name="sessionID" type="C" size="255">
+            <notnull />
+            <KEY/>
+        </field>
+        <field name="sessionValue" type="X">
+            <notnull />
+        </field>
+        <field name="sessionTime" type="I" size="11">
+            <UNSIGNED/>
+            <notnull />
+        </field>
+    </table>
 
-  </schema>
+
+
+</schema>

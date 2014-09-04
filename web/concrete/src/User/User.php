@@ -365,8 +365,7 @@ class User extends Object
         if (!$hard) {
             Session::clear();
         } else {
-            @session_unset();
-            @session_destroy();
+            Session::invalidate();
         }
 
         Events::dispatch('on_user_logout');
