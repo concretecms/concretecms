@@ -1,8 +1,8 @@
 <?
 namespace Concrete\Core\Permission\Assignment;
+use Concrete\Core\File\Set\Set;
 use PermissionAccess;
 use Loader;
-use FileSet;
 use \Concrete\Core\File\File;
 class FileAssignment extends Assignment {
 
@@ -21,7 +21,7 @@ class FileAssignment extends Assignment {
 
 	public function getPermissionAccessObject() {
 		$db = Loader::db();
-		if ($this->permissionObjectToCheck instanceof File) { 
+		if ($this->permissionObjectToCheck instanceof File) {
  			$r = $db->GetCol('select paID from FilePermissionAssignments where fID = ? and pkID = ?', array(
  			$this->permissionObject->getFileID(), $this->pk->getPermissionKeyID()
  			));
@@ -34,7 +34,7 @@ class FileAssignment extends Assignment {
 			$r = $db->GetCol('select distinct paID from FileSetPermissionAssignments where fsID in (' . implode(',', $sets) . ') and pkID = ? ' . $filterString, array(
 				$inheritedPKID
 			));
-		} else if ($this->permissionObjectToCheck instanceof FileSet && isset($this->inheritedPermissions[$this->pk->getPermissionKeyHandle()])) { 
+		} else if ($this->permissionObjectToCheck instanceof Set && isset($this->inheritedPermissions[$this->pk->getPermissionKeyHandle()])) {
 			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPermissions[$this->pk->getPermissionKeyHandle()]));
 			$r = $db->GetCol('select distinct paID from FileSetPermissionAssignments where fsID = ? and pkID = ?', array(
 				$this->permissionObjectToCheck->getFileSetID(), $inheritedPKID
