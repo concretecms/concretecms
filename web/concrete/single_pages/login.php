@@ -48,12 +48,6 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                         ?>
                     </select>
 
-                <?php
-                } else {
-                    $auth = $activeAuths[0];
-                    ?>
-                    <?= $auth->getAuthenticationTypeIconHTML() ?>
-                    <span><?= $auth->getAuthenticationTypeName() ?></span>
                     <?php
                 }
                 ?>
