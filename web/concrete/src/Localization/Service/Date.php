@@ -11,7 +11,7 @@ class Date
     /**
      * Gets the date time for the local time zone/area if user timezones are enabled, if not returns system datetime
      * @param string $systemDateTime
-     * @param null $mask
+     * @param null|string $mask
      * @return string $datetime
      */
     public function getLocalDateTime($systemDateTime = 'now', $mask = null)
