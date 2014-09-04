@@ -17,7 +17,6 @@ class Settings extends DashboardPageController {
 		else {
 			$fileAccessFileTypes = $helperFile->unserializeUploadFileExtensions($fileAccessFileTypes);
 		}
-		$fileAccessFileTypes = join(', ',$fileAccessFileTypes);
 		$this->set('file_access_file_types', $fileAccessFileTypes);
 		$this->set('maxFileSizeGuest', Config::get('CONVERSATIONS_MAX_FILE_SIZE_GUEST'));
 		$this->set('maxFileSizeRegistered', Config::get('CONVERSATIONS_MAX_FILE_SIZE_REGISTERED'));

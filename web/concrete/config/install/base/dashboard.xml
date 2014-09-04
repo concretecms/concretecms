@@ -779,6 +779,15 @@
                 </attributekey>
             </attributes>
         </page>
+        <page name="Settings" path="/dashboard/system/conversations/settings"
+              filename="/dashboard/system/conversations/settings/view.php" pagetype=""
+              description="" package="">
+            <attributes>
+                <attributekey handle="meta_keywords">
+                    <value>conversations</value>
+                </attributekey>
+            </attributes>
+        </page>
         <page name="Conversations Editor" path="/dashboard/system/conversations/editor"
               filename="/dashboard/system/conversations/editor.php" pagetype="" description="" package="">
             <attributes>
