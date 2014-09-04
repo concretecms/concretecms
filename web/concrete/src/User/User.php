@@ -13,6 +13,7 @@ use Session;
 use \Hautelook\Phpass\PasswordHash;
 use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;
 use Core;
+use Group;
 use Zend\Stdlib\DateTime;
 
 class User extends Object
@@ -482,39 +483,15 @@ class User extends Object
                 $ug[REGISTERED_GROUP_ID] = REGISTERED_GROUP_ID;
 
                 $uID = $this->uID;
-                $q = "select Groups.gID, Groups.gName, Groups.gUserExpirationIsEnabled, Groups.gUserExpirationSetDateTime, Groups.gUserExpirationInterval, Groups.gUserExpirationAction, Groups.gUserExpirationMethod, UserGroups.ugEntered from UserGroups inner join Groups on (UserGroups.gID = Groups.gID) where UserGroups.uID = '$uID'";
-                $r = $db->query($q);
-                if ($r) {
-                    while ($row = $r->fetchRow()) {
-                        $expire = false;
-                        if ($row['gUserExpirationIsEnabled']) {
-                            switch ($row['gUserExpirationMethod']) {
-                                case 'SET_TIME':
-                                    if (time() > strtotime($row['gUserExpirationSetDateTime'])) {
-                                        $expire = true;
-                                    }
-                                    break;
-                                case 'INTERVAL':
-                                    if (time() > strtotime($row['ugEntered']) + ($row['gUserExpirationInterval'] * 60)) {
-                                        $expire = true;
-                                    }
-                                    break;
-                            }
-                        }
-
-                        if ($expire) {
-                            if ($row['gUserExpirationAction'] == 'REMOVE' || $row['gUserExpirationAction'] == 'REMOVE_DEACTIVATE') {
-                                $db->Execute('delete from UserGroups where uID = ? and gID = ?', array($uID, $row['gID']));
-                            }
-                            if ($row['gUserExpirationAction'] == 'DEACTIVATE' || $row['gUserExpirationAction'] == 'REMOVE_DEACTIVATE') {
-                                $db->Execute('update Users set uIsActive = 0 where uID = ?', array($uID));
-                            }
-                        } else {
-                            $ug[$row['gID']] = $row['gName'];
-                        }
-
+                $q = "select gID from UserGroups where uID = ?";
+                $r = $db->query($q, array($uID));
+                while ($row = $r->fetch()) {
+                    $g = Group::getByID($row['gID']);
+                    if ($g->isUserExpired($this)) {
+                        $this->exitGroup($g);
+                    } else {
+                        $ug[$row['gID']] = $row['gName'];
                     }
-                    $r->free();
                 }
             }
 

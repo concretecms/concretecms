@@ -77,6 +77,7 @@ class Users extends Controller {
 			$this->userList->addToQuery("left join UserGroups ugRequired on ugRequired.uID = u.uID ");
 			$this->userList->filter(false, '(ugRequired.gID in (' . implode(',', $gIDs) . ') or ugRequired.gID is null)');
 		}
+        */
 		
 		$filterGIDs = array();
 		if (isset($req['gID']) && is_array($req['gID'])) {
@@ -93,7 +94,6 @@ class Users extends Controller {
 		foreach($filterGIDs as $gID) {
 			$this->userList->filterByGroupID($gID);
 		}
-		*/
 
 		if (is_array($req['field'])) {
 			foreach($req['field'] as $i => $item) {

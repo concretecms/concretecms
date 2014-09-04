@@ -35,6 +35,12 @@ class GroupList extends DatabaseItemList
         $this->query->setParameter('keywords', '%' . $keywords . '%');
     }
 
+    public function filterByExpirable()
+    {
+        $this->query->andWhere('gUserExpirationIsEnabled', ':gUserExpirationIsEnabled');
+        $this->query->setParameter('gUserExpirationIsEnabled', 1);
+    }
+
     /**
      * Only return groups the user has the ability to assign.
      */
