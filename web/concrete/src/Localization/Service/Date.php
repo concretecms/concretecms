@@ -53,7 +53,7 @@ class Date
     /**
      * Converts a user entered datetime to the system datetime
      * @param string $userDateTime
-     * @param null $mask
+     * @param null|string $mask
      * @return string $datetime
      */
     public function getSystemDateTime($userDateTime = 'now', $mask = null)
