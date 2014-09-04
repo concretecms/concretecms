@@ -15,11 +15,10 @@ class UserInfoResponse extends Response {
 		}
 
 		$groups = $u->getUserGroups();
-		if (count($groups) == 2) {
-			// guest and registered
-			return true;
-		}
-		
+
+        // note, this will require users to have access to search
+        // "registered users" explicitly
+
 		foreach($groups as $gID => $gName) {
 			$g = Group::getByID($gID);
 			if (is_object($g)) {
