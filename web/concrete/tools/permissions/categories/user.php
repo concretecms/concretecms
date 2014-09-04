@@ -32,7 +32,7 @@ if ($p->canAccessTaskPermissions()) {
 
 	if ($_REQUEST['task'] == 'display_access_cell' && Loader::helper("validation/token")->validate('display_access_cell')) {
 		$pk = UserPermissionKey::getByID($_REQUEST['pkID']);
-		$pa = UserPermissionAccess::getByID($_REQUEST['paID'], $pk);
+		$pa = PermissionAccess::getByID($_REQUEST['paID'], $pk);
 		Loader::element('permission/labels', array('pk' => $pk, 'pa' => $pa));
 	}
 	
