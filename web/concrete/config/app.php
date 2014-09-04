@@ -75,6 +75,7 @@ return array(
         'PermissionKey'                        => '\Concrete\Core\Permission\Key\Key',
         'PermissionKeyCategory'                => '\Concrete\Core\Permission\Category',
         'PermissionAccess'                     => '\Concrete\Core\Permission\Access\Access',
+        'PermissionCache'                      => '\Concrete\Core\Permission\Cache',
         'User'                                 => '\Concrete\Core\User\User',
         'UserInfo'                             => '\Concrete\Core\User\UserInfo',
         'UserList'                             => '\Concrete\Core\User\UserList',
@@ -148,8 +149,13 @@ return array(
         '/ccm/system/dialogs/page/delete'                                               => array('\Concrete\Controller\Dialog\Page\Delete::view'),
         '/ccm/system/dialogs/page/delete_from_sitemap'                                  => array('\Concrete\Controller\Dialog\Page\Delete::viewFromSitemap'),
         '/ccm/system/dialogs/page/delete/submit'                                        => array('\Concrete\Controller\Dialog\Page\Delete::submit'),
-        '/ccm/system/dialogs/area/layout/presets/submit/{arLayoutID}'                   => array('\Concrete\Controller\Dialog\Area\Layout\Presets::submit'),
-        '/ccm/system/dialogs/area/layout/presets/{arLayoutID}/{token}'                  => array('\Concrete\Controller\Dialog\Area\Layout\Presets::view'),
+
+        '/ccm/system/dialogs/area/layout/presets/manage/'                               =>  array('\Concrete\Controller\Dialog\Area\Layout\Presets\Manage::view'),
+        '/ccm/system/dialogs/area/layout/presets/manage/delete'                         => array('\Concrete\Controller\Dialog\Area\Layout\Presets\Manage::delete'),
+        '/ccm/system/dialogs/area/layout/presets/get/{arLayoutPresetID}'                => array('\Concrete\Controller\Dialog\Area\Layout\Presets::getPresetData'),
+        '/ccm/system/dialogs/area/layout/presets/{arLayoutID}/submit'                   => array('\Concrete\Controller\Dialog\Area\Layout\Presets::submit'),
+        '/ccm/system/dialogs/area/layout/presets/{arLayoutID}'                          => array('\Concrete\Controller\Dialog\Area\Layout\Presets::view'),
+
         '/ccm/system/dialogs/page/bulk/properties'                                      => array('\Concrete\Controller\Dialog\Page\Bulk\Properties::view'),
         '/ccm/system/dialogs/page/bulk/properties/update_attribute'                     => array('\Concrete\Controller\Dialog\Page\Bulk\Properties::updateAttribute'),
         '/ccm/system/dialogs/page/bulk/properties/clear_attribute'                      => array('\Concrete\Controller\Dialog\Page\Bulk\Properties::clearAttribute'),
@@ -403,6 +409,18 @@ return array(
             array('css', 'css/jquery-ui.css', array('minify' => false))
         ),
 
+        'select2' => array(
+            array('javascript', 'js/select2.js', array('minify' => false, 'combine' => false)),
+            array('css', 'css/select2.css', array('minify' => false))
+        ),
+
+        'select2_locale' => array(
+            array('javascript', REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_select2_js', array(
+                'combine' => false,
+                'minify' => false,
+                'local' => false))
+        ),
+
         'underscore' => array(
             array('javascript', 'js/underscore.js', array('minify' => false))
         ),
@@ -615,6 +633,11 @@ return array(
         'core/account' => array(
             array('javascript', 'js/accounts.js'),
             array('css', 'css/account.css')
+        ),
+
+        'core/legacy' => array(
+            array('javascript', 'js/legacy.js'),
+            array('css', 'css/legacy.css')
         )
     ),
 
@@ -624,6 +647,14 @@ return array(
             array(
                 array('javascript', 'jquery/ui'),
                 array('css', 'jquery/ui'),
+            )
+        ),
+
+        'select2' => array(
+            array(
+                array('javascript', 'select2'),
+                array('javascript', 'select2_locale'),
+                array('css', 'select2')
             )
         ),
 
@@ -658,6 +689,7 @@ return array(
                 array('javascript', 'underscore'),
                 array('javascript', 'core/colorpicker'),
                 array('javascript', 'core/app'),
+                array('javascript', 'core/legacy'),
                 array('javascript', 'core/file-manager'),
                 array('javascript', 'core/style-customizer'),
                 array('css', 'core/app'),
@@ -707,6 +739,7 @@ return array(
                 array('javascript', 'bootstrap/popover'),
                 array('javascript', 'jquery/ui'),
                 array('javascript', 'core/app'),
+                array('javascript', 'core/legacy'),
                 array('css', 'core/app'),
                 array('css', 'font-awesome'),
                 array('css', 'jquery/ui')
@@ -763,9 +796,12 @@ return array(
             array(
                 array('css', 'core/app'),
                 array('css', 'core/file-manager'),
+                array('css', 'select2'),
                 array('javascript', 'core/events'),
                 array('javascript', 'underscore'),
                 array('javascript', 'jquery/ui'),
+                array('javascript', 'select2'),
+                array('javascript', 'select2_locale'),
                 array('javascript', 'core/app'),
                 array('javascript', 'core/file-manager')
             )
@@ -850,6 +886,14 @@ return array(
                 array('javascript', 'bootstrap/dropdown'),
                 array('css', 'bootstrap/dropdown'),
                 array('css', 'core/account')
+            )
+        ),
+
+        'core/legacy' => array(
+            array(
+                array('javascript', 'jquery'),
+                array('javascript', 'core/legacy'),
+                array('css', 'core/legacy')
             )
         )
     )
