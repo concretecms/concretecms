@@ -54,6 +54,5 @@
  *   array('version' => '2.0', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => false)
  *   );
  *
- *
  * ----------------------------------------------------------------------------
  */

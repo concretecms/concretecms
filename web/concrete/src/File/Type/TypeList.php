@@ -54,6 +54,15 @@ class TypeList {
 		}
 	}
 
+    public function defineMultiple(array $types)
+    {
+        foreach ($types as $type_name => $type_settings) {
+            array_splice($type_settings, 1, 0, $type_name);
+
+            call_user_func_array(array($this, 'define'), $type_settings);
+        }
+    }
+
 	public function defineImporterAttribute($akHandle, $akName, $akType, $akIsEditable) {
 		$obj = new \stdClass;
 		$obj->akHandle = $akHandle;
@@ -62,6 +71,14 @@ class TypeList {
 		$obj->akIsEditable = $akIsEditable;
 		$this->importerAttributes[$akHandle] = $obj;
 	}
+
+    public function defineImporterAttributeMultiple(array $importer_attributes)
+    {
+        foreach ($importer_attributes as $attribute_name => $attribute_settings) {
+            array_unshift($attribute_settings, $attribute_name);
+            call_user_func_array(array($this, 'defineImporterAttribute'), $attribute_settings);
+        }
+    }
 
 	public function getImporterAttribute($akHandle) {
 		$ftl = static::getInstance();

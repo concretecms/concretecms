@@ -1,7 +1,27 @@
 <?php
+
+use Concrete\Core\Application\Application;
+
 /**
- * Created by PhpStorm.
- * User: korvin
- * Date: 9/4/14
- * Time: 2:28 PM
+ * ----------------------------------------------------------------------------
+ * Instantiate concrete5
+ * ----------------------------------------------------------------------------
  */
+$app = new Application();
+
+/**
+ * ----------------------------------------------------------------------------
+ * Detect the environment based on the hostname of the server
+ * ----------------------------------------------------------------------------
+ */
+$app->detectEnvironment(
+    array(
+        'local' => array(
+            'hostname'
+        ),
+        'production' => array(
+            'live.site'
+        )
+    ));
+
+return $app;
