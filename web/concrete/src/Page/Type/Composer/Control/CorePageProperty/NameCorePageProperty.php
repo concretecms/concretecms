@@ -13,7 +13,17 @@ class NameCorePageProperty extends CorePageProperty {
 	}
 
 	public function publishToPage(Page $c, $data, $controls) {
+        $slug = array_filter($controls, function($item) {
+            if ($item instanceof UrlSlugCorePageProperty) {
+                return true;
+            }
+            return false;
+        });
 		$this->addPageTypeComposerControlRequestValue('cName', $data['name']);
+        if (!count($slug)) {
+            $txt = new \URLify();
+            $this->addPageTypeComposerControlRequestValue('cHandle', $txt->filter($data['name']));
+        }
 		parent::publishToPage($c, $data, $controls);
 	}
 
