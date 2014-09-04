@@ -1,6 +1,6 @@
 <?php defined('C5_EXECUTE') or die('Access denied.');
 
-$activeAuths = AuthenticationType::getActiveListSorted();
+$activeAuths = AuthenticationType::getList(true, true);
 $form = Loader::helper('form');
 ?>
 <style>

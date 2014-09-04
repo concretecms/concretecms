@@ -9,6 +9,7 @@ abstract class AuthenticationTypeController extends Controller implements Authen
 	protected $authenticationType;
 
     abstract public function getAuthenticationTypeIconHTML();
+    abstract public function view();
 
 	public function __construct(AuthenticationType $type) {
 		$this->authenticationType = $type;
