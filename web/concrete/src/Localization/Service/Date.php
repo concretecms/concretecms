@@ -114,11 +114,11 @@ class Date
     }
 
     /**
-	 * Subsitute for the native date() function that adds localized date support
-	 * @param string $mask
-	 * @param int $timestamp
-	 * @return string
-	 */
+     * Subsitute for the native date() function that adds localized date support
+     * @param string $mask
+     * @param bool|int $timestamp
+     * @return string
+     */
     public function date($mask, $timestamp = false)
     {
         if ($timestamp === false) {
@@ -153,7 +153,6 @@ class Date
                 'America' => \Punic\Territory::getName('019'),
                 'Antarctica' => \Punic\Territory::getName('AQ'),
                 'Arctic' => t('Arctic'),
-                'Asia' => \Punic\Territory::getName('142'),
                 'Atlantic' => t('Atlantic Ocean'),
                 'Australia' => \Punic\Territory::getName('AU'),
                 'Europe' => \Punic\Territory::getName('150'),
@@ -177,7 +176,8 @@ class Date
                                 switch($timezoneID) {
                                     case 'Antarctica/South_Pole':
                                         $city = t('South Pole');
-                                        default:
+                                        break;
+                                    default:
                                     case 'America/Montreal':
                                         $city = t('Montreal');
                                         break;
