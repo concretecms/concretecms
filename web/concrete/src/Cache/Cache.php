@@ -66,7 +66,7 @@ class Cache {
 	 * Inserts or updates an item to the cache
 	 * the cache must always be enabled for (getting remote data, etc..)
 	 */
-	public function set($type, $id, $obj, $expire = false) {
+	public function set($type, $id, $obj) {
 		$loc = ConcreteCacheLocal::get();
 		if ($loc->enabled) {
 			if (is_object($obj)) {
@@ -80,7 +80,7 @@ class Cache {
 		if (!$cache) {
 			return false;
 		}
-		$cache->save($obj, Cache::key($type, $id), array($type), $expire);
+		$cache->setItem(Cache::key($type, $id), $obj);
 	}
 
 	/**
@@ -115,7 +115,7 @@ class Cache {
 			}
 		}
 
-		$loaded = $cache->load($key);
+		$loaded = $cache->getItem($key);
 		if ($loc->enabled) {
 			$loc->cache[$key] = $loaded;
 		}

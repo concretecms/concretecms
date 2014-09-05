@@ -42,7 +42,7 @@ defined('CONFIG_FILE') or define('CONFIG_FILE', DIR_CONFIG_SITE . '/site.php');
  */
 define('ENABLE_MARKETPLACE_SUPPORT', false);
 define('ENABLE_APP_NEWS_OVERLAY', false);
-define('ENABLE_APP_NEWS', false);
+define('ENABLE_APP_NEWS', true);
 
 
 
