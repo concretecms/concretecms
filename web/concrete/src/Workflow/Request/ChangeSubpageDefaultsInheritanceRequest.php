@@ -49,11 +49,11 @@ class ChangeSubpageDefaultsInheritanceRequest extends PageRequest {
 	}
 
 	public function getWorkflowRequestApproveButtonClass() {
-		return 'success';
+		return 'btn-success';
 	}
 
 	public function getWorkflowRequestApproveButtonInnerButtonRightHTML() {
-		return '<i class="icon-white icon-thumbs-up"></i>';
+		return '<i class="fa fa-thumbs-o-up"></i>';
 	}
 
 	public function getWorkflowRequestApproveButtonText() {

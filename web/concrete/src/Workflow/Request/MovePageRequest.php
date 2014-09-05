@@ -55,7 +55,7 @@ class MovePageRequest extends PageRequest {
 	}
 
 	public function getWorkflowRequestApproveButtonInnerButtonRightHTML() {
-		return '<i class="icon-white icon-share-alt"></i>';
+		return '<i class="fa fa-share-alt"></i>';
 	}
 
 	public function getWorkflowRequestApproveButtonText() {
