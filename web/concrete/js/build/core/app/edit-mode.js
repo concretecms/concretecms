@@ -127,12 +127,12 @@
                     {name: 'arEnableGridContainer', value: arEnableGridContainer},
                     {name: 'arHandle', value: area.getHandle()},
                     {name: 'btID', value: btID}
-                ], dragAreaBlock, dragAreaBlockID, elem;
+                ], dragAreaBlock, dragAreaBlockID, after;
             if (selected) {
-                elem = selected.getElem();
+                after = selected.getElem();
                 dragAreaBlock = selected.getBlock();
             } else {
-                elem = area.getElem();
+                after = area.getElem().children().last();
                 dragAreaBlock = data.dragAreaBlock;
             }
 
@@ -173,11 +173,14 @@
                 url: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add_block',
                 data: postData,
                 success: function (r) {
-                    var $container = $('<div id="a' + area.getId() + '-bt' + btID + '" class="ccm-block-edit-inline-active">' + r + '</div>');
-                    elem.addClass("ccm-area-edit-inline-active");
-                    elem.append($container);
+                    var elem = $(r);
+                    var $container = $('<div class="ccm-block-edit-inline-active"></div>');
+                    $container.attr('id', 'a' + area.getId() + '-bt' + btID).append(elem);
+
+                    area.getElem().addClass("ccm-area-edit-inline-active");
+                    after.after($container);
                     $(function () {
-                        elem.find('#ccm-block-form').concreteAjaxBlockForm({
+                        $container.find('#ccm-block-form').concreteAjaxBlockForm({
                             'task': 'add',
                             'btSupportsInlineAdd': true,
                             'dragAreaBlockID': dragAreaBlockID,
@@ -223,6 +226,9 @@
             scroll_buffer = 100;
 
         function scrollLoop(block, element, amount, step, test, scroll_method, axis) {
+            if (!my.getDragging()) {
+                return;
+            }
             if (test.call()) {
                 scrolling = true;
                 var pos_start = scroll_method.call(element),
@@ -368,7 +374,8 @@
             blocks: [],
             editMode: edit_mode,
             maximumBlocks: parseInt(elem.data('maximumBlocks'), 10),
-            blockTypes: elem.data('accepts-block-types').split(' ')
+            blockTypes: elem.data('accepts-block-types').split(' '),
+            blockContainer: elem.children('.ccm-area-block-list')
         });
         my.id = my.getId();
         my.setTotalBlocks(0); // we also need to update the DOM which this does.
@@ -383,6 +390,9 @@
     var Block = Concrete.Block = function Block(elem, edit_mode, peper) {
         var my = this;
         elem.data('Concrete.block', my);
+        if (!elem.closest('.ccm-area-block-list')) {
+            alert('orphan block.');
+        }
         Concrete.createGetterSetters.call(my, {
             id: elem.data('block-id'),
             handle: elem.data('block-type-handle'),
@@ -912,7 +922,7 @@
                 }
                 elem = $('<div class="ccm-area-drag-area"/>');
                 drag_area = new DragArea(elem, my, block);
-                my.getElem().prepend(elem);
+                my.getBlockContainer().prepend(elem);
             } else {
                 elem = $('<div class="ccm-area-drag-area"/>');
                 drag_area = new DragArea(elem, my, block);
@@ -1013,7 +1023,7 @@
                     if (after_block) {
                         after_block.getContainer().after(html);
                     } else {
-                        area.getElem().prepend(html);
+                        area.getBlockContainer().prepend(html);
                     }
                     $.fn.dialog.hideLoader();
                     _.defer(function () {
@@ -1516,7 +1526,7 @@
                             if (dragAreaBlock) {
                                 dragAreaBlock.getContainer().after(html);
                             } else {
-                                area.getElem().prepend(html);
+                                area.getBlockContainer().prepend(html);
                             }
                             $.fn.dialog.hideLoader();
                             _.defer(function () {
