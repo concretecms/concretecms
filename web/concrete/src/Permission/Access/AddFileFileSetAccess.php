@@ -1,6 +1,7 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Access;
-use \Concrete\Core\Permission\Duration as PermissionDuration;
+
+use \Concrete\Core\Permission\Key\FileSetKey as FileSetPermissionKey;
 use Loader;
 
 class AddFileFileSetAccess extends FileSetAccess {
@@ -38,38 +39,38 @@ class AddFileFileSetAccess extends FileSetAccess {
 		}
 		return $newPA;
 	}
-	
+
 	public function save($args) {
 		parent::save();
 		$db = Loader::db();
 		$db->Execute('delete from FileSetPermissionFileTypeAccessList where paID = ?', array($this->getPermissionAccessID()));
 		$db->Execute('delete from FileSetPermissionFileTypeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
-		if (is_array($args['fileTypesIncluded'])) { 
+		if (is_array($args['fileTypesIncluded'])) {
 			foreach($args['fileTypesIncluded'] as $peID => $permission) {
 				$v = array($this->getPermissionAccessID(), $peID, $permission);
 				$db->Execute('insert into FileSetPermissionFileTypeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
 			}
 		}
-		
-		if (is_array($args['fileTypesExcluded'])) { 
+
+		if (is_array($args['fileTypesExcluded'])) {
 			foreach($args['fileTypesExcluded'] as $peID => $permission) {
 				$v = array($this->getPermissionAccessID(), $peID, $permission);
 				$db->Execute('insert into FileSetPermissionFileTypeAccessList (paID, peID, permission) values (?, ?, ?)', $v);
 			}
 		}
 
-		if (is_array($args['extensionInclude'])) { 
+		if (is_array($args['extensionInclude'])) {
 			foreach($args['extensionInclude'] as $peID => $extensions) {
-				foreach($extensions as $extension) { 
+				foreach($extensions as $extension) {
 					$v = array($this->getPermissionAccessID(), $peID, $extension);
 					$db->Execute('insert into FileSetPermissionFileTypeAccessListCustom (paID, peID, extension) values (?, ?, ?)', $v);
 				}
 			}
 		}
 
-		if (is_array($args['extensionExclude'])) { 
+		if (is_array($args['extensionExclude'])) {
 			foreach($args['extensionExclude'] as $peID => $extensions) {
-				foreach($extensions as $extension) { 
+				foreach($extensions as $extension) {
 					$v = array($this->getPermissionAccessID(), $peID, $extension);
 					$db->Execute('insert into FileSetPermissionFileTypeAccessListCustom (paID, peID, extension) values (?, ?, ?)', $v);
 				}
