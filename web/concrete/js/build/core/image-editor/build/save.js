@@ -2,6 +2,8 @@ im.save = function saveImage() {
     im.fire('ChangeActiveAction');
     im.fire('ImageEditorWillSave');
 
+    $.fn.dialog.showLoader();
+
     im.stage.toDataURL({
         callback: function (data) {
             var fake_canvas = $('<img />').addClass('fake_canvas').appendTo(im.editorContext.children('.Editor'));
@@ -45,9 +47,11 @@ im.save = function saveImage() {
                         fID: im.fileId,
                         imgData: url
                     }), function (res) {
+                        $.fn.dialog.hideLoader();
                         var result = JSON.parse(res);
                         if (result.error === 1) {
                             alert(result.message);
+                            $('button.save[disabled]').attr('disabled', false);
                         } else if (result.error === 0) {
                             im.fire('ImageEditorDidSave', _.extend(im.saveData, {
                                 fID: im.fileId,
