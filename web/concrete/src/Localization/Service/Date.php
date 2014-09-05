@@ -599,12 +599,6 @@ class Date
      */
     public function getTimeFormat()
     {
-        $timeFormat = tc(/*i18n: can be 12 or 24 */'Time format', '12');
-        switch ($timeFormat) {
-            case '24':
-                return 24;
-            default:
-                return 12;
-        }
+        return \Punic\Calendar::has12HoursClock() ? 12 : 24;
     }
 }
