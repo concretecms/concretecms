@@ -473,12 +473,13 @@ class Date
      *     <li>'app' for the app's timezone</li>
      *     <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
+     * @param string $fromTimezone The original timezone of $value (useful only if $value is a string like '2000-12-31 23:59'); it accepts the same values as $toTimezone.
      * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
      */
-    public function formatCustom($format, $value = 'now', $toTimezone = 'user')
+    public function formatCustom($format, $value = 'now', $toTimezone = 'user', $fromTimezone = 'system')
     {
-        return Calendar::formatEx(
-            $this->toDateTime($value, $toTimezone),
+        return Calendar::format(
+            $this->toDateTime($value, $toTimezone, $fromTimezone),
             Calendar::convertPhpToIsoFormat($format)
         );
     }
