@@ -105,17 +105,25 @@ class Date
 
     /**
      * Returns the display name of a timezone
-     * @param string $timezone The standard name of a timezone
+     * @param string|\DateTimeZone|\DataTime $timezone The timezone for which you want the localized display name
      * @return string
      */
     public function getTimezoneDisplayName($timezone)
     {
         $displayName = '';
-        if (is_string($timezone) && strlen($timezone)) {
+        if (is_object($timezone)) {
+            if ($timezone instanceof \DateTimeZone) {
+                $displayName = $timezone->getName();
+            } elseif ($timezone instanceof \DateTime) {
+                $displayName = $timezone->getTimezone()->getName();
+            }
+        } elseif (is_string($timezone)) {
             $displayName = $timezone;
+        }
+        if (strlen($displayName) > 0) {
             $timezones = $this->getTimezones();
-            if (array_key_exists($timezone, $timezones)) {
-                $displayName = $timezones[$timezone];
+            if (array_key_exists($displayName, $timezones)) {
+                $displayName = $timezones[$displayName];
             }
         }
 
