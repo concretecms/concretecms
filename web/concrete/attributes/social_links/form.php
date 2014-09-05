@@ -33,3 +33,5 @@ use \Concrete\Core\Sharing\SocialNetwork\Service as Service; ?>
 <div>
 	<button type="button" class="btn btn-small btn-primary ccm-social-link-attribute-add-service"><?=t("Add Link")?> <i class="fa fa-plus"></i></button>
 </div>
+
+<script type="text/javascript">$(function() { ConcreteSocialLinksAttribute.init(); });</script>

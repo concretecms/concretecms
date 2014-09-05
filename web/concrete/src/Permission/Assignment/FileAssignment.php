@@ -3,6 +3,7 @@ namespace Concrete\Core\Permission\Assignment;
 use Concrete\Core\File\Set\Set;
 use PermissionAccess;
 use Loader;
+use FileSet;
 use \Concrete\Core\File\File;
 class FileAssignment extends Assignment {
 

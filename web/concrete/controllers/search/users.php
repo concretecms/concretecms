@@ -75,7 +75,14 @@ class Users extends Controller {
 				}
 			}
 			$this->userList->getQueryObject()->leftJoin("u", "UserGroups", "ugRequired", "ugRequired.uID = u.uID");
-            $this->userList->getQueryObject()->andwhere('ugRequired.gID in (' . implode(',', $gIDs) . ')');
+            $groups = 'ugRequired.gID in (' . implode(',', $gIDs) . ')';
+            $gg = Group::getByID(REGISTERED_GROUP_ID);
+            $ggp = new Permissions($gg);
+            if ($ggp->canSearchUsersInGroup()) {
+                $null = 'ugRequired.gID is null';
+            }
+            $expr = $this->userList->getQueryObject()->expr()->orX($groups, $null);
+            $this->userList->getQueryObject()->andwhere($expr);
 		}
 
 		$filterGIDs = array();

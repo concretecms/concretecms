@@ -46,27 +46,6 @@ class Controller extends AttributeTypeController  {
 		return $services;
 	}
 	
-	protected function getServiceLink ($serviceInfo) {
-		/*
-		$link = '';
-		$services = ServiceList::get();
-		foreach($services as $s) {
-			if ($s[0] == $service) {
-				$link = $s[3];
-			}
-		}
-		$link .= $serviceInfo;
-		return $link;
-		*/
-
-		$link = $serviceInfo;
-		if (strpos($link, 'http://') === 0 || strpos($link, 'https://') === 0) {
-			return $link;
-		} else {
-			return 'http://' . $link;
-		}
-	}
-
 	public function deleteKey() {
 		$db = Loader::db();
 		$arr = $this->attributeKey->getAttributeValueIDList();
@@ -79,19 +58,7 @@ class Controller extends AttributeTypeController  {
 		$db = Loader::db();
 		$db->Execute('delete from atSocialLinks where avID = ?', array($this->getAttributeValueID()));
 	}
-	
-	protected function getServiceName($service, $serviceInfo) {
-		$services = ServiceList::get();
-		foreach($services as $s) {
-			if ($s->getHandle() == $service) {
-				if ($service == 'wthree') {
-					return $serviceInfo;
-				}
-				return $s->getName();
-			}
-		}
-	}
-	
+
 	public function getDisplayValue() {
 		$html = '';
 		$services = $this->getValue();
@@ -99,17 +66,18 @@ class Controller extends AttributeTypeController  {
 			$env = Environment::get();
 			$url = $env->getURL(DIRNAME_ATTRIBUTES . '/social_links/view.css');
 			$this->addHeaderItem(Loader::helper('html')->css($url));
-			$html .=  '<div class="ccm-social-link-attribute-display">';
+			$html .=  '<span class="ccm-social-link-attribute-display">';
 			foreach($services as $service => $serviceInfo) {
-                if(is_object(Service::getByHandle($service))) {
-                    $iconHtml = Service::getByHandle($service)->getServiceIconHTML();
+                $serviceObject = Service::getByHandle($service);
+                if (is_object($serviceObject)) {
+                    $iconHtml = $serviceObject->getServiceIconHTML();
                 }
-				$html .= '<div class="ccm-social-link-service">';
-				$html .=  '<div class="ccm-social-link-service-icon"><a href="' . $this->getServiceLink($serviceInfo) . '">'.$iconHtml.'</a></div>';
-				$html .=  '<div class="ccm-social-link-service-info"><a href="' . $this->getServiceLink($serviceInfo) . '">' . $this->getServiceName($service, $serviceInfo) . '</a></div>';
-				$html .=  '</div>';
+				$html .= '<span class="ccm-social-link-service">';
+				$html .=  '<span class="ccm-social-link-service-icon"><a href="' . filter_var($serviceInfo, FILTER_VALIDATE_URL) . '">'.$iconHtml.'</a></span>';
+				$html .=  '<span class="ccm-social-link-service-info"><a href="' . filter_var($serviceInfo, FILTER_VALIDATE_URL) . '">' . $serviceObject->getName() . '</a></span>';
+				$html .=  '</span>';
 			}
-			$html .=  '</div>';		
+			$html .=  '</span>';
 		}
 		return $html;
 	}
