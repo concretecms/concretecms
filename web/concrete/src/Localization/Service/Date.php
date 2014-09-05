@@ -16,24 +16,33 @@ class Date
     const DB_FORMAT = 'Y-m-d H:i:s';
 
     /**
-     * Subsitute for the native date() function that adds localized date support
-     * @param string $mask
-     * @param bool|int $timestamp
+     * Subsitute for the native date() function that adds localized date support.
+     * Use *ONLY* if really needed: you may want to use some of the formatDate/Time methods.
+     * If you're not working with timestamps you may want to use the formatCustom method.
+     * @param string $mask The PHP format mask
+     * @param bool|int $timestamp Use false for the current date/time, otherwise a valid Unix timestamp.
      * @return string
+     * @see http://php.net/manual/function.date.php
      */
-    public function date($mask, $timestamp = false)
+    public function date($mask, $timestamp = false, $toTimezone = 'system')
     {
         if ($timestamp === false) {
             $timestamp = time();
         }
-        if (Localization::activeLocale() == 'en_US') {
-            return date($mask, $timestamp);
+        $result = '';
+        $datetime = $this->toDateTime($timestamp, $toTimezone);
+        if (is_object($datetime)) {
+            if (Localization::activeLocale() == 'en_US') {
+                $result = $datetime->format($mask);
+            } else {
+                $result = Calendar::format(
+                    $datetime,
+                    Calendar::convertPhpToIsoFormat($mask)
+                );
+            }
         }
 
-        return Calendar::formatEx(
-            $timestamp,
-            Calendar::convertPhpToIsoFormat($mask)
-        );
+        return $result;
     }
 
     /**
