@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Workflow\Request;
 use Workflow;
 use Loader;
@@ -15,14 +15,14 @@ use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 use \Concrete\Core\Permission\Set as PermissionSet;
 
 class ChangePagePermissionsRequest extends PageRequest {
-	
+
 	protected $wrStatusNum = 30;
 
 	public function __construct() {
 		$pk = PermissionKey::getByHandle('edit_page_permissions');
 		parent::__construct($pk);
 	}
-	
+
 	public function setPagePermissionSet(PermissionSet $set) {
 		$this->permissionSet = $set;
 	}
@@ -41,23 +41,23 @@ class ChangePagePermissionsRequest extends PageRequest {
 		$d->setShortStatus(t("Permission Changes"));
 		return $d;
 	}
-	
+
 	public function getWorkflowRequestStyleClass() {
 		return 'info';
 	}
-	
+
 	public function getWorkflowRequestApproveButtonClass() {
 		return 'success';
 	}
-	
+
 	public function getWorkflowRequestApproveButtonInnerButtonRightHTML() {
 		return '<i class="icon-white icon-thumbs-up"></i>';
-	}		
-	
+	}
+
 	public function getWorkflowRequestApproveButtonText() {
 		return t('Change Permissions');
 	}
-	
+
 	public function getWorkflowRequestAdditionalActions(WorkflowProgress $wp) {
 		$buttons = array();
 		$w = $wp->getWorkflowObject();
@@ -79,7 +79,7 @@ class ChangePagePermissionsRequest extends PageRequest {
 	public function approve(WorkflowProgress $wp) {
 		$c = Page::getByID($this->getRequestedPageID());
 		$ps = $this->getPagePermissionSet();
-		$assignments = $ps->getPermissionAssignments();		
+		$assignments = $ps->getPermissionAssignments();
 		foreach($assignments as $pkID => $paID) {
 			$pk = PermissionKey::getByID($pkID);
 			$pk->setPermissionObject($c);
@@ -89,8 +89,8 @@ class ChangePagePermissionsRequest extends PageRequest {
 				$pa = PermissionAccess::getByID($paID, $pk);
 				if (is_object($pa)) {
 					$pt->assignPermissionAccess($pa);
-				}			
-			}			
+				}
+			}
 		}
 		$c->refreshCache();
 		$wpr = new WorkflowProgressResponse();
@@ -98,5 +98,5 @@ class ChangePagePermissionsRequest extends PageRequest {
 		return $wpr;
 	}
 
-	
+
 }

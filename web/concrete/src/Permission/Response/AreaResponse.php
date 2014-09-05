@@ -1,8 +1,8 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Response;
 use User;
 class AreaResponse extends Response {
-	
+
 	// legacy support
 	public function canRead() { return $this->validate('view_area'); }
 	public function canWrite() { return $this->validate('edit_area_contents'); }
@@ -20,25 +20,25 @@ class AreaResponse extends Response {
 		return $pk->validate($bt);
 	}
 
-	
+
 	// convenience function
 	public function canViewAreaControls() {
 		$u = new User();
 		if ($u->isSuperUser()) {
 			return true;
 		}
-		
+
 		if (
 		$this->canEditAreaContents() ||
-		$this->canEditAreaPermissions() || 
+		$this->canEditAreaPermissions() ||
 		$this->canAddBlockToArea() ||
 		$this->canAddStackToArea() ||
 		$this->canAddLayoutToArea()) {
 			return true;
-		} else { 
+		} else {
 			return false;
 		}
 	}
 
-	
+
 }

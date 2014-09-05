@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Page\Collection\Version;
 use Loader;
 use \Concrete\Core\Foundation\Object;

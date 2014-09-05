@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Search\Result;
 class ItemColumn {
 

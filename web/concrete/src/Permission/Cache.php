@@ -1,17 +1,17 @@
-<?
+<?php
 namespace Concrete\Core\Permission;
 use PermissionKey;
 use CacheLocal;
 use \Concrete\Core\Permission\Response\Response as PermissionResponse;
 
 class Cache {
-	
+
 	static $enabled = true;
 
 	public static function disable() {
 		static::$enabled = false;
 	}
-	
+
 	public static function getResponse($object) {
 		if (!static::$enabled) {
 			return false;
@@ -59,7 +59,7 @@ class Cache {
 			$cl->cache[$identifier] = $obj;
 		}
 	}
-	
+
 	public static function validate(PermissionKey $pk) {
 		if (!static::$enabled) {
 			return -1;
@@ -68,7 +68,7 @@ class Cache {
 		if (!$cl->enabled) {
 			return -1;
 		}
-		
+
 		$object = $pk->getPermissionObject();
 		if (is_object($object)) {
 			$identifier = 'pk:' . $pk->getPermissionKeyHandle() . ':' . $object->getPermissionObjectIdentifier();
@@ -98,7 +98,7 @@ class Cache {
 			$cl->cache[$identifier] = $valid;
 		}
 	}
-	
+
 	public static function addAccessObject(PermissionKey $pk, $object, $pa) {
 		if (!static::$enabled) {
 			return false;
@@ -134,7 +134,7 @@ class Cache {
 		}
 		return false;
 	}
-	
+
 
 
 

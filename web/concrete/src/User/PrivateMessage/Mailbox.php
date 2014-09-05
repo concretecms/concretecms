@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\User\PrivateMessage;
 use \Concrete\Core\Foundation\Object;
 use Loader;

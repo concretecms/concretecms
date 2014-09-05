@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Access\ListItem;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Permission\Access\Entity\Entity as PermissionAccessEntity;

@@ -1,12 +1,12 @@
-<?
+<?php
 namespace Concrete\Core\Encryption;
 class EncryptionService {
 
-	/** 
+	/**
 	 * Takes encrypted text and decrypts it.
 	 * @param string $text
 	 * @return string $text
-	 */ 
+	 */
     static public function decrypt($text)
     {
         if (function_exists('mcrypt_decrypt')) {
@@ -17,8 +17,8 @@ class EncryptionService {
         }
         return $text;
     }
-    
-	/** 
+
+	/**
 	 * Takes un-encrypted text and encrypts it.
 	 * @param string $text
 	 * @return string $text
@@ -33,12 +33,12 @@ class EncryptionService {
         }
         return $text;
     }
-    
-	/** 
+
+	/**
 	 * Function to see if mcrypt is installed
 	 * @return bool
 	 */
-	
+
 	public function isAvailable() {
 		return function_exists('mcrypt_encrypt');
 	}

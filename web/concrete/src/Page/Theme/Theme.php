@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Page\Theme;
 
 use \Concrete\Core\Http\ResponseAssetGroup;

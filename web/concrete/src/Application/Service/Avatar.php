@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Concrete\Core\Application\Service;
 use Concrete\Core\File\StorageLocation\StorageLocation;
@@ -13,7 +13,7 @@ class Avatar {
 	* @return string $str
 	*/
 
-	function outputUserAvatar($uo, $suppressNone = false, $aspectRatio = 1.0) {	
+	function outputUserAvatar($uo, $suppressNone = false, $aspectRatio = 1.0) {
 		if (is_object($uo)) {
 			$ati = $this->getAuthTypeImagePath($uo);
             $width = AVATAR_WIDTH * $aspectRatio;

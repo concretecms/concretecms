@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Cache;
 use PageCache;
 use Events;
@@ -9,11 +9,11 @@ use CacheLocal as ConcreteCacheLocal;
 use Loader;
 
 class Cache {
-	
+
 	public static function key($type, $id) {
 		return md5($type . $id);
 	}
-	
+
 	public static function getLibrary() {
 		static $cache;
 		if (!isset($cache) && defined('DIR_FILES_CACHE')) {
@@ -36,36 +36,36 @@ class Cache {
 		}
 		return $cache;
 	}
-	
+
 	public function startup() {
 		$cache = Cache::getLibrary();
 	}
-	
+
 	public function disableCache() {
 		$ca = Cache::getLibrary();
 		if (is_object($ca)) {
 			$ca->setCaching(false);
 		}
 	}
-	
+
 	public function enableCache() {
 		$ca = Cache::getLibrary();
 		if (is_object($ca)) {
             $ca->setCaching(true);
 		}
 	}
-	
+
 	public function disableLocalCache() {
 		ConcreteCacheLocal::get()->enabled = false;
 	}
 	public function enableLocalCache() {
 		ConcreteCacheLocal::get()->enabled = true;
 	}
-	
-	/** 
+
+	/**
 	 * Inserts or updates an item to the cache
 	 * the cache must always be enabled for (getting remote data, etc..)
-	 */	
+	 */
 	public function set($type, $id, $obj, $expire = false) {
 		$loc = ConcreteCacheLocal::get();
 		if ($loc->enabled) {
@@ -82,17 +82,17 @@ class Cache {
 		}
 		$cache->save($obj, Cache::key($type, $id), array($type), $expire);
 	}
-	
-	/** 
+
+	/**
 	 * Retrieves an item from the cache
-	 */	
+	 */
 	public function get($type, $id, $mustBeNewerThan = false) {
 		$loc = ConcreteCacheLocal::get();
 		$key = Cache::key($type, $id);
 		if ($loc->enabled && array_key_exists($key, $loc->cache)) {
 			return $loc->cache[$key];
 		}
-			
+
 		$cache = Cache::getLibrary();
 		if (!$cache) {
 			if ($loc->enabled) {
@@ -100,7 +100,7 @@ class Cache {
 			}
 			return false;
 		}
-		
+
 		// if mustBeNewerThan is set, we check the cache mtime
 		// if mustBeNewerThan is newer than that time, we relinquish
 		if ($mustBeNewerThan != false) {
@@ -114,17 +114,17 @@ class Cache {
 				return false;
 			}
 		}
-		
+
 		$loaded = $cache->load($key);
 		if ($loc->enabled) {
 			$loc->cache[$key] = $loaded;
 		}
 		return $loaded;
 	}
-	
-	/** 
+
+	/**
 	 * Removes an item from the cache
-	 */	
+	 */
 	public function delete($type, $id){
 		$cache = \Cache::getLibrary();
 		if ($cache) {
@@ -136,10 +136,10 @@ class Cache {
 			unset($loc->cache[Cache::key($type, $id)]);
 		}
 	}
-	
-	/** 
+
+	/**
 	 * Completely flushes the cache
-	 */	
+	 */
 	public function flush() {
 		$db = DB::get();
 
@@ -154,12 +154,12 @@ class Cache {
 			$fh = Loader::helper('file');
 			$fh->removeAll(DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT);
 		}
-		
+
 		$pageCache = PageCache::getLibrary();
 		if (is_object($pageCache)) {
 			$pageCache->flush();
 		}
-		
+
 		if ($db->tableExists('Config')) {
 			// clear the environment overrides cache
 			$env = Environment::get();
@@ -172,7 +172,7 @@ class Cache {
 				$db->Execute('truncate table CollectionVersionBlocksOutputCache');
 			}
 		}
-		
+
 		$loc = ConcreteCacheLocal::get();
 		$loc->cache = array();
 
@@ -187,5 +187,5 @@ class Cache {
 
 		return true;
 	}
-		
+
 }

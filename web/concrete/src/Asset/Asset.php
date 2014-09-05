@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Asset;
 
 use Environment;

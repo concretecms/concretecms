@@ -1,11 +1,11 @@
-<?
+<?php
 
 namespace Concrete\Core\View;
 use View as CoreView;
 use Environment;
 
 class ErrorView extends CoreView {
-	
+
 	protected $error;
 
 	protected function constructView($error) {

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Block\BlockType;
 use Loader;
 use Environment;
@@ -29,18 +29,18 @@ class BlockTypeList extends DatabaseItemList {
 		$r = parent::get( $itemsToGet, intval($offset));
 		$blocktypes = array();
 		foreach($r as $row) {
-			$bt = ConcreteBlockType::getByID($row['btID']);			
+			$bt = ConcreteBlockType::getByID($row['btID']);
 			if (is_object($bt)) {
 				$blocktypes[] = $bt;
 			}
 		}
 		return $blocktypes;
 	}
-	
+
 	public function filterByPackage(Package $pkg) {
 		$this->filter('pkgID', $pkg->getPackageID());
 	}
-	
+
 	/**
 	 * @todo comment this one
 	 * @param string $xml
@@ -67,19 +67,19 @@ class BlockTypeList extends DatabaseItemList {
 		$blockTypes = $btl->get();
 		return $blockTypes;
 	}
-	
+
 	/**
 	 * Gets a list of block types that are not installed, used to get blocks that can be installed
 	 * This function only surveys the web/blocks directory - it's not looking at the package level.
-	 * @return BlockType[] 
+	 * @return BlockType[]
 	 */
 	public static function getAvailableList() {
 		$blocktypes = array();
 		$dir = DIR_FILES_BLOCK_TYPES;
 		$db = Loader::db();
-		
+
 		$btHandles = $db->GetCol("select btHandle from BlockTypes order by btDisplayOrder asc, btName asc, btID asc");
-		
+
 		$aDir = array();
 		if (is_dir($dir)) {
 			$handle = opendir($dir);
@@ -106,22 +106,22 @@ class BlockTypeList extends DatabaseItemList {
 
 						$blocktypes[] = $bt;
 					}
-				}				
+				}
 			}
 		}
-		
+
 		return $blocktypes;
 	}
 
 	/**
 	 * gets a list of installed BlockTypes
 	 * @return BlockType[]
-	 */	
+	 */
 	public static function getInstalledList() {
 		$btl = new static();
 		return $btl->get();
 	}
-	
+
 	public static function resetBlockTypeDisplayOrder($column = 'btID') {
 		$db = Loader::db();
 		$ca = new Cache();
@@ -140,5 +140,5 @@ class BlockTypeList extends DatabaseItemList {
 		}
 		$ca->delete('blockTypeList', false);
 	}
-	
+
 }

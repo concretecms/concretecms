@@ -1,6 +1,6 @@
-<?
+<?php
 namespace Concrete\Core\Foundation;
-class ClassAliasList {	
+class ClassAliasList {
 
 	private static $loc = null;
 	public $aliases = array();

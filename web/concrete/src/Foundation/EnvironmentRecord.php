@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Concrete\Core\Foundation;
 
@@ -18,7 +18,7 @@ namespace Concrete\Core\Foundation;
  */
 
 class EnvironmentRecord {
-	
+
 	public $override;
 	public $file;
 	public $url;

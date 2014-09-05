@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Feature\Category;
 use Loader;
 class GatheringItemCategory extends Category {
@@ -8,5 +8,5 @@ class GatheringItemCategory extends Category {
 		$num = $db->GetOne('select count(gaiID) as total from GatheringItemFeatureAssignments where faID = ?', array($fa->getFeatureAssignmentID()));
 		return $num > 0;
 	}
-		
+
 }

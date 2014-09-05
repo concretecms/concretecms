@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Page\Workflow\Progress;
 class Page {
 
@@ -6,8 +6,8 @@ class Page {
 		$this->page = $p;
 		$this->wp = $wp;
 	}
-	
+
 	public function getPageObject() {return $this->page;}
 	public function getWorkflowProgressObject() {return $this->wp;}
-	
+
 }

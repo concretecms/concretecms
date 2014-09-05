@@ -1,11 +1,11 @@
-<?
+<?php
 namespace Concrete\Core\Page;
 use Loader;
 use Concrete\Core\Foundation\Object;
 class Statistics {
-	
+
 	/**
-	 * Gets total page views across the entire site. 
+	 * Gets total page views across the entire site.
 	 * @param date $date
 	 * @return int
 	 */
@@ -61,7 +61,7 @@ class Statistics {
 	}
 
 
-	/** 
+	/**
 	 * For a particular page ID, grabs all the pages of this page, and increments the cTotalChildren number for them
 	 */
 	public static function incrementParents($cID) {
@@ -77,7 +77,7 @@ class Statistics {
 
 	}
 
-	/** 
+	/**
 	 * For a particular page ID, grabs all the pages of this page, and decrements the cTotalChildren number for them
 	 */
 	public static function decrementParents($cID) {
@@ -98,11 +98,11 @@ class Statistics {
 
 	}
 
-	/** 
-	 * Returns the total number of pages created for a given date 
+	/**
+	 * Returns the total number of pages created for a given date
 	 */
 	public static function getTotalPagesCreated($date) {
-		$db = Loader::db();	
+		$db = Loader::db();
 		$num = $db->GetOne('select count(Pages.cID) from Pages inner join Collections on Pages.cID = Collections.cID where cDateAdded >= ? and cDateAdded <= ? and cIsSystemPage = 0 and cIsTemplate = 0', array($date . ' 00:00:00', $date . ' 23:59:59'));
 		return $num;
 	}

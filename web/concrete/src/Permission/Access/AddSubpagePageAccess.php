@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Access;
 use \Concrete\Core\Permission\Duration as PermissionDuration;
 use Loader;
@@ -25,8 +25,8 @@ class AddSubpagePageAccess extends PageAccess {
 	public function removeListItem(PermissionAccessEntity $pe) {
 		parent::removeListItem($pe);
 		$db = Loader::db();
-		$db->Execute('delete from PagePermissionPageTypeAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));	
-		$db->Execute('delete from PagePermissionPageTypeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));	
+		$db->Execute('delete from PagePermissionPageTypeAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
+		$db->Execute('delete from PagePermissionPageTypeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $this->getPermissionAccessID()));
 	}
 
 	public function save($args) {
@@ -34,7 +34,7 @@ class AddSubpagePageAccess extends PageAccess {
 		$db = Loader::db();
 		$db->Execute('delete from PagePermissionPageTypeAccessList where paID = ?', array($this->getPermissionAccessID()));
 		$db->Execute('delete from PagePermissionPageTypeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
-		if (is_array($args['pageTypesIncluded'])) { 
+		if (is_array($args['pageTypesIncluded'])) {
 			foreach($args['pageTypesIncluded'] as $peID => $permission) {
 				$ext = 0;
 				if (!empty($args['allowExternalLinksIncluded'][$peID])) {
@@ -44,8 +44,8 @@ class AddSubpagePageAccess extends PageAccess {
 				$db->Execute('insert into PagePermissionPageTypeAccessList (paID, peID, permission, externalLink) values (?, ?, ?, ?)', $v);
 			}
 		}
-		
-		if (is_array($args['pageTypesExcluded'])) { 
+
+		if (is_array($args['pageTypesExcluded'])) {
 			foreach($args['pageTypesExcluded'] as $peID => $permission) {
 				$ext = 0;
 				if (!empty($args['allowExternalLinksExcluded'][$peID])) {
@@ -56,18 +56,18 @@ class AddSubpagePageAccess extends PageAccess {
 			}
 		}
 
-		if (is_array($args['ptIDInclude'])) { 
+		if (is_array($args['ptIDInclude'])) {
 			foreach($args['ptIDInclude'] as $peID => $ptIDs) {
-				foreach($ptIDs as $ptID) { 
+				foreach($ptIDs as $ptID) {
 					$v = array($this->getPermissionAccessID(), $peID, $ptID);
 					$db->Execute('insert into PagePermissionPageTypeAccessListCustom (paID, peID, ptID) values (?, ?, ?)', $v);
 				}
 			}
 		}
 
-		if (is_array($args['ptIDExclude'])) { 
+		if (is_array($args['ptIDExclude'])) {
 			foreach($args['ptIDExclude'] as $peID => $ptIDs) {
-				foreach($ptIDs as $ptID) { 
+				foreach($ptIDs as $ptID) {
 					$v = array($this->getPermissionAccessID(), $peID, $ptID);
 					$db->Execute('insert into PagePermissionPageTypeAccessListCustom (paID, peID, ptID) values (?, ?, ?)', $v);
 				}
@@ -84,7 +84,7 @@ class AddSubpagePageAccess extends PageAccess {
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
 			$prow = $db->GetRow('select permission, externalLink from PagePermissionPageTypeAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
-			if (is_array($prow) && $prow['permission']) { 
+			if (is_array($prow) && $prow['permission']) {
 				$l->setPageTypesAllowedPermission($prow['permission']);
 				$l->setAllowExternalLinks($prow['externalLink']);
 				$permission = $prow['permission'];
@@ -95,7 +95,7 @@ class AddSubpagePageAccess extends PageAccess {
 				$l->setPageTypesAllowedPermission('N');
 				$l->setAllowExternalLinks(0);
 			}
-			if ($permission == 'C') { 
+			if ($permission == 'C') {
 				$ptIDs = $db->GetCol('select ptID from PagePermissionPageTypeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
 				$l->setPageTypesAllowedArray($ptIDs);
 			}

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Validation\BannedWord;
 class Service {
 
@@ -106,7 +106,7 @@ class Service {
 			$out++;
 			$string = substr($string, 0, $start).
 				  $word;
-	
+
 			}
 		}
 		if(strlen($this->errorMsg) && !$this->errorMsgDisplayed) {

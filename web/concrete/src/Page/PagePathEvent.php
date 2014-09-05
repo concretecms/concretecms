@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Page;
 use \Symfony\Component\EventDispatcher\Event as AbstractEvent;
 

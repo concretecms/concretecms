@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Assignment;
 use Concrete\Core\File\Set\Set;
 use PermissionAccess;
@@ -7,7 +7,7 @@ use \Concrete\Core\File\File;
 class FileAssignment extends Assignment {
 
 	protected $permissionObjectToCheck;
-	
+
 	protected $inheritedPermissions = array(
 		'view_file' => 'view_file_set_file',
 		'view_file_in_file_manager' => 'search_file_set',
@@ -17,7 +17,7 @@ class FileAssignment extends Assignment {
 		'edit_file_permissions' => 'edit_file_set_permissions',
 		'delete_file' => 'delete_file_set_files'
 	);
-	
+
 
 	public function getPermissionAccessObject() {
 		$db = Loader::db();
@@ -42,7 +42,7 @@ class FileAssignment extends Assignment {
 		} else {
 			return false;
 		}
-		
+
 		if (count($r) == 1) {
 			$permID = $r[0];
 		}
@@ -65,7 +65,7 @@ class FileAssignment extends Assignment {
 
 	public function setPermissionObject(File $f) {
 		$this->permissionObject = $f;
-		
+
 		if ($f->overrideFileSetPermissions()) {
 			$this->permissionObjectToCheck = $f;
 		} else {
@@ -78,7 +78,7 @@ class FileAssignment extends Assignment {
 			}
 			if (count($permsets) > 0) {
 				$this->permissionObjectToCheck = $permsets;
-			} else { 
+			} else {
 				$fs = FileSet::getGlobal();
 				$this->permissionObjectToCheck = $fs;
 			}
@@ -90,14 +90,14 @@ class FileAssignment extends Assignment {
 		$db = Loader::db();
 		$db->Execute('update FilePermissionAssignments set paID = 0 where pkID = ? and fID = ?', array($this->pk->getPermissionKeyID(), $this->permissionObject->getFileID()));
 	}
-	
+
 	public function assignPermissionAccess(PermissionAccess $pa) {
 		$db = Loader::db();
 		$db->Replace('FilePermissionAssignments', array('fID' => $this->getPermissionObject()->getFileID(), 'paID' => $pa->getPermissionAccessID(), 'pkID' => $this->pk->getPermissionKeyID()), array('fID', 'pkID'), true);
 		$pa->markAsInUse();
 	}
-	
-	
+
+
 	public function getPermissionKeyToolsURL($task = false) {
 		return parent::getPermissionKeyToolsURL($task) . '&fID=' . $this->getPermissionObject()->getFileID();
 	}
