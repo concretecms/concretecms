@@ -37,7 +37,7 @@ class Date
     }
 
     /**
-     * Returns a keyed array of timezone identifiers
+     * Returns a keyed array of timezone identifiers (keys are the standard PHP timezone names, values are the localized timezone names)
      * @return array
      * @see http://www.php.net/datetimezone.listidentifiers.php
      */
