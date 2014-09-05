@@ -12,7 +12,7 @@
 <? } ?>
 
 <? if ($updates > 0) { ?>
-	<p><span class="label"><?=t('Add-On Updates')?></span> 
+	<p><span class="label"><?=t('Add-On Updates')?></span>
 	<? if ($updates == 1) { ?>
 		<?=t('There is currently <strong>1</strong> update available.')?>
 	<? } else { ?>

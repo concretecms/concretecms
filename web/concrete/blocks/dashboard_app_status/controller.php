@@ -37,11 +37,11 @@ use \Concrete\Core\Block\BlockController;
 			$updates = 0;
 			$local = array();
 			$remote = array();
-			if ($tp->canInstallPackages()) { 
+			if ($tp->canInstallPackages()) {
 				$local = Package::getLocalUpgradeablePackages();
 				$remote = Package::getRemotelyUpgradeablePackages();
 			}
-			
+
 			// now we strip out any dupes for the total
 			$updates = 0;
 			$localHandles = array();
