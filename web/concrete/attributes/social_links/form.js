@@ -5,28 +5,28 @@ $(function() {
 			appendTo($('.ccm-social-link-attribute-wrapper')).
 			find('input').
 			val('').
-			parent().
+			closest('.ccm-social-link-attribute').
 			find('select').
 			trigger('change');
 		$('button.ccm-social-link-attribute-remove-line').show();
 		$('button.ccm-social-link-attribute-remove-line:first').hide();
 	});
 	$('.ccm-social-link-attribute-wrapper').on('click', 'button.ccm-social-link-attribute-remove-line', function() {
-		$(this).parent().remove();
+		$(this).closest('.ccm-social-link-attribute').remove();
 	});
 	$('.ccm-social-link-attribute-wrapper').on('change', 'select', function() {
 		var opt = $($(this).find(':selected'));
-		
+		var $parentContainer = $(this).closest('.ccm-social-link-attribute');
 		$('button.ccm-social-link-attribute-remove-line').show();
 		$('button.ccm-social-link-attribute-remove-line:first').hide();
-					
-		$(this).parent().find('input').attr('placeholder', opt.attr('data-placeholder-text'));
-		$(this).parent().
+
+		$parentContainer.
 			find('.ccm-social-link-service-text-wrapper').
 			addClass('input-prepend').
 			find('.ccm-social-link-service-add-on-wrapper').show().
-			find('img').
-			attr('src', CCM_IMAGE_PATH + "/icons/social/" + opt.val() + ".png");
+			find('.add-on i').
+			removeClass().
+            addClass('fa fa-'+opt.attr('data-icon'));
 
 	});
 	$('.ccm-social-link-attribute-wrapper select').trigger('change');
