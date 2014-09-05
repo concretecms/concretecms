@@ -340,7 +340,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 
                             <form method="post" action="<?= $wl->getWorkflowProgressFormAction() ?>"
                                   id="ccm-notification-page-alert-form-<?= $i ?>">
-                                <i class="fa fa-info-circle"></i>
+                                <i class="ccm-notification-icon fa fa-info-circle"></i>
 
                                 <div class="ccm-notification-inner">
                                     <p><?= $wf->getWorkflowProgressCurrentDescription($wl) ?></p>
