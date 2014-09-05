@@ -176,7 +176,6 @@ class Date
                                     case 'Antarctica/South_Pole':
                                         $city = t('South Pole');
                                         break;
-                                    default:
                                     case 'America/Montreal':
                                         $city = t('Montreal');
                                         break;
