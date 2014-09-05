@@ -317,7 +317,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $subject = ($subject == '') ? t('(No Subject)') : $subject;
         $db = Loader::db();
         $dt = Loader::helper('date');
-        $v = array($this->getUserID(), $dt->getLocalDateTime(), $subject, $text, $recipient->getUserID());
+        $v = array($this->getUserID(), $dt->getOverridableNow(), $subject, $text, $recipient->getUserID());
         $db->Execute('insert into UserPrivateMessages (uAuthorID, msgDateCreated, msgSubject, msgBody, uToID) values (?, ?, ?, ?, ?)', $v);
 
         $msgID = $db->Insert_ID();
