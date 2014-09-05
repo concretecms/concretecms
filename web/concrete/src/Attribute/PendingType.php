@@ -14,7 +14,7 @@ class PendingType extends Type {
 			$contents = $dh->getDirectoryContents(DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES);
 			foreach($contents as $atHandle) {
 				if (!in_array($atHandle, $atHandles)) {
-					$available[] = PendingAttributeType::getByHandle($atHandle);
+					$available[] = static::getByHandle($atHandle);
 				}
 			}
 		}
@@ -24,7 +24,7 @@ class PendingType extends Type {
 	public static function getByHandle($atHandle) {
 		$th = Loader::helper('text');
 		if (file_exists(DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES . '/' .  $atHandle)) {
-			$at = new PendingAttributeType();
+			$at = new static();
 			$at->atID = 0;
 			$at->atHandle = $atHandle;
 			$at->atName = $th->unhandle($atHandle);
@@ -33,7 +33,7 @@ class PendingType extends Type {
 	}
 	
 	public function install() {
-		$at = parent::add($this->atHandle, $this->atName);
+		parent::add($this->atHandle, $this->atName);
 	}
 
 }
