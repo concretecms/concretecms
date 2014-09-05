@@ -333,11 +333,12 @@ class Date
      *    <li>'app' for the app's timezone</li>
      *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
+     * @param string $fromTimezone The original timezone of $value (useful only if $value is a string like '2000-12-31 23:59'); it accepts the same values as $toTimezone.
      * @return \DateTime|null Returns the \DateTime instance (or null if $value couldn't be parsed)
      */
-    public function toDateTime($value = 'now', $toTimezone = 'system')
+    public function toDateTime($value = 'now', $toTimezone = 'system', $fromTimezone = 'system')
     {
-        return Calendar::toDateTime($value, $this->getTimezone($toTimezone));
+        return Calendar::toDateTime($value, $this->getTimezone($toTimezone), $this->getTimezone($fromTimezone));
     }
 
     /**
