@@ -7,7 +7,7 @@ $ih = Loader::helper('concrete/ui');
 $nh = Loader::helper('navigation');
 /* @var $text TextHelper */
 $text = Loader::helper('text');
-/* @var $dh DateHelper */
+/* @var $dh \Concrete\Core\Localization\Service\Date */
 $dh = Loader::helper('date');
 /* @var $urlhelper UrlHelper */
 $urlhelper = Loader::helper('url');
@@ -247,8 +247,7 @@ else {
                 <tbody>
                 <? foreach ($answerSets as $answerSetId => $answerSet): { ?>
                     <tr>
-                        <td>
-                            <?= $dh->getSystemDateTime($answerSet['created']) ?></td>
+                        <td><?= $dh->formatCustom($dh::DB_FORMAT, $answerSet['created']) ?></td>
                         <td><?
                             if ($answerSet['uID'] > 0) {
                                 $ui = UserInfo::getByID($answerSet['uID']);

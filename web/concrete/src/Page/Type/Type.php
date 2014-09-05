@@ -245,7 +245,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         if (!$cID) {
             // we create one.
             $dh = Loader::helper('date');
-            $cDate = $dh->getSystemDateTime();
+            $cDate = $dh->getOverridableNow();
             $data['pTemplateID'] = $template->getPageTemplateID();
             $cobj = Collection::addCollection($data);
             $cID = $cobj->getCollectionID();

@@ -372,7 +372,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $dh = Loader::helper('date');
 
-        $q = "select cIsCheckedOut, UNIX_TIMESTAMP('" . $dh->getSystemDateTime() . "') - UNIX_TIMESTAMP(cCheckedOutDatetimeLastEdit) as timeout from Pages where cID = '{$this->cID}'";
+        $q = "select cIsCheckedOut, " . $dh->getOverridableNow(true) . " - UNIX_TIMESTAMP(cCheckedOutDatetimeLastEdit) as timeout from Pages where cID = '{$this->cID}'";
         $r = $db->query($q);
         if ($r) {
             $row = $r->fetchRow();
@@ -564,8 +564,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         $dh = Loader::helper('date');
 
-        $cDate = $dh->getSystemDateTime();
-        $cDatePublic = $dh->getSystemDateTime();
+        $cDate = $dh->getOverridableNow();
+        $cDatePublic = $dh->getOverridableNow();
         $handle = $this->getCollectionHandle();
 
         $_cParentID = $c->getCollectionID();
@@ -636,8 +636,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cParentID = $this->getCollectionID();
         $uID = $u->getUserID();
 
-        $cDate = $dh->getSystemDateTime();
-        $cDatePublic = $dh->getSystemDateTime();
+        $cDate = $dh->getOverridableNow();
+        $cDatePublic = $dh->getOverridableNow();
         $handle = $this->getCollectionHandle();
 
         // make the handle out of the title
@@ -1874,7 +1874,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
         PageStatistics::decrementParents($cID);
 
-        $cDateModified = $dh->getSystemDateTime();
+        $cDateModified = $dh->getOverridableNow();
 //      if ($this->getPermissionsCollectionID() != $this->getCollectionID() && $this->getPermissionsCollectionID() != $this->getMasterCollectionID()) {
         if ($this->getPermissionsCollectionID() != $this->getCollectionID()) {
             // implicitly, we're set to inherit the permissions of wherever we are in the site.
@@ -1965,7 +1965,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $uID = $this->getCollectionUserID();
         }
         $dh = Loader::helper('date');
-        $cDate = $dh->getSystemDateTime();
+        $cDate = $dh->getOverridableNow();
 
         $cobj = parent::getByID($this->cID);
         // create new name
@@ -2416,8 +2416,8 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $cobj = parent::addCollection($data);
         $cID = $cobj->getCollectionID();
 
-        $cDate = $dh->getSystemDateTime();
-        $cDatePublic = $dh->getSystemDateTime();
+        $cDate = $dh->getOverridableNow();
+        $cDatePublic = $dh->getOverridableNow();
 
         $v = array($cID, $cParentID, $uID, 'OVERRIDE', 1, 1, 0);
         $q = "insert into Pages (cID, cParentID, uID, cInheritPermissionsFrom, cOverrideTemplatePermissions, cInheritPermissionsFromCID, cDisplayOrder) values (?, ?, ?, ?, ?, ?, ?)";
@@ -2473,7 +2473,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $handle = str_replace('-', PAGE_PATH_SEPARATOR, $handle);
         $data['handle'] = $handle;
         $dh = Loader::helper('date');
-        $cDate = $dh->getSystemDateTime();
+        $cDate = $dh->getOverridableNow();
         $cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : null;
 
         $ptID = 0;
