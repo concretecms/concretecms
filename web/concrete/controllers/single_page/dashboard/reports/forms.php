@@ -27,6 +27,7 @@ class Forms extends DashboardPageController
     public function csv()
     {
         $dateHelper = Loader::helper('date');
+        /* @var $dateHelper \Concrete\Core\Localization\Service\Date */
 
         $this->pageSize = 0;
         $this->loadSurveyResponses();
@@ -69,7 +70,7 @@ class Forms extends DashboardPageController
         // write the data
         foreach ($answerSets as $answerSet) {
             $row = array();
-            $row[] = $dateHelper->getSystemDateTime($answerSet['created']);
+            $row[] = $dateHelper->formatCustom($dateHelper::DB_FORMAT, $answerSet['created']);
 
             if ($answerSet['uID'] > 0) {
                 $ui = UserInfo::getByID($answerSet['uID']);

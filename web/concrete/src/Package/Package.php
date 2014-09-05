@@ -674,7 +674,7 @@ class Package extends Object {
 		PackageList::refreshCache();
 		$db = Loader::db();
 		$dh = Loader::helper('date');
-		$v = array($this->getPackageName(), $this->getPackageDescription(), $this->getPackageVersion(), $this->getPackageHandle(), 1, $dh->getSystemDateTime());
+		$v = array($this->getPackageName(), $this->getPackageDescription(), $this->getPackageVersion(), $this->getPackageHandle(), 1, $dh->getOverridableNow());
 		$db->query("insert into Packages (pkgName, pkgDescription, pkgVersion, pkgHandle, pkgIsInstalled, pkgDateInstalled) values (?, ?, ?, ?, ?, ?)", $v);
 		
 		$pkg = Package::getByID($db->Insert_ID());
