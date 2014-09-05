@@ -17,6 +17,9 @@
                     ccm_triggerSelectUser(data.uID, data.uName);
                 });
             });
-        }
+        };
+        Concrete.event.bind('UserSearchDialogSelectUser.core', function(event, data) {
+            ccm_triggerSelectUser(data.uID, data.uName);
+        });
     }());
 </script>
