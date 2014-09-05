@@ -311,7 +311,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 
 		// first we update a collection updated record
 		$dh = Loader::helper('date');
-		$db->query('update Collections set cDateModified = ? where cID = ?', array($dh->toDB('now'), $cID));
+		$db->query('update Collections set cDateModified = ? where cID = ?', array($dh->getOverridableNow(), $cID));
 
 		// first we remove approval for all versions of this collection
 		$v = array($cID);
