@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Search\ItemList;
 abstract class EntityItemList extends ItemList
 {

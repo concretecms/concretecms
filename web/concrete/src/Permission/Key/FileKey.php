@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Key;
 
 use Concrete\Core\Permission\Access\Access;

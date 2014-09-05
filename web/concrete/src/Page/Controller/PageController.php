@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Page\Controller;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;

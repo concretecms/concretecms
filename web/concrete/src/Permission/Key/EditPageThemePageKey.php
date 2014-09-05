@@ -1,10 +1,10 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Key;
 use Loader;
 use User;
 use \Concrete\Core\Permission\Duration as PermissionDuration;
 class EditPageThemePageKey extends PageKey  {
-	
+
 	protected function getAllowedThemeIDs() {
 
 		$u = new User();
@@ -12,12 +12,12 @@ class EditPageThemePageKey extends PageKey  {
 		if (!is_object($pae)) {
 			return array();
 		}
-		
+
 		$accessEntities = $u->getUserAccessEntityObjects();
 		$accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
 		$list = $this->getAccessListItems(PageKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
-		
+
 		$db = Loader::db();
 		$allpThemeIDs = $db->GetCol('select pThemeID from PageThemes order by pThemeID asc');
 		$pThemeIDs = array();
@@ -28,7 +28,7 @@ class EditPageThemePageKey extends PageKey  {
 			if ($l->getThemesAllowedPermission() == 'C') {
 				if ($l->getAccessType() == PageKey::ACCESS_TYPE_EXCLUDE) {
 					$pThemeIDs = array_values(array_diff($pThemeIDs, $l->getThemesAllowedArray()));
-				} else { 
+				} else {
 					$pThemeIDs = array_unique(array_merge($pThemeIDs, $l->getThemesAllowedArray()));
 				}
 			}
@@ -36,10 +36,10 @@ class EditPageThemePageKey extends PageKey  {
 				$pThemeIDs = $allpThemeIDs;
 			}
 		}
-		
+
 		return $pThemeIDs;
 	}
-	
+
 	public function validate($theme = false) {
 		$u = new User();
 		if ($u->isSuperUser()) {
@@ -53,6 +53,6 @@ class EditPageThemePageKey extends PageKey  {
 			return count($themes) > 0;
 		}
 	}
-	
-	
+
+
 }

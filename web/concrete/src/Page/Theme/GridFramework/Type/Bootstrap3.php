@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Page\Theme\GridFramework\Type;
 
 use Loader;

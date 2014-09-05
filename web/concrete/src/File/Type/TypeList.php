@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Concrete\Core\File\Type;
 use Loader;
@@ -23,7 +23,7 @@ use Loader;
  */
 use \Concrete\Core\File\Type\Type as FileType;
 class TypeList {
-	
+
 	public static function getInstance() {
 		static $instance;
 		if (!isset($instance)) {
@@ -32,10 +32,10 @@ class TypeList {
 		}
 		return $instance;
 	}
-	
+
 	protected $types = array();
 	protected $importerAttributes = array();
-	
+
 	public function define($extension, $name, $type, $customImporter = false, $inlineFileViewer = false, $editor = false, $pkgHandle = false) {
 		$ext = explode(',', $extension);
 		foreach($ext as $e) {
@@ -50,27 +50,27 @@ class TypeList {
 			$this->types[$e] = $ft;
 		}
 	}
-	
+
 	public function defineImporterAttribute($akHandle, $akName, $akType, $akIsEditable) {
 		$obj = new \stdClass;
 		$obj->akHandle = $akHandle;
 		$obj->akName = $akName;
 		$obj->akType = $akType;
-		$obj->akIsEditable = $akIsEditable;		
+		$obj->akIsEditable = $akIsEditable;
 		$this->importerAttributes[$akHandle] = $obj;
 	}
-	
+
 	public function getImporterAttribute($akHandle) {
 		$ftl = static::getInstance();
 		return $ftl->importerAttributes[$akHandle];
 	}
-		
-	/** 
+
+	/**
 	 * Can take an extension or a filename
 	 * Returns any registered information we have for the particular file type, based on its registration
 	 */
 	public static function getType($ext) {
-		$ftl = static::getInstance();	
+		$ftl = static::getInstance();
 		if (strpos($ext, '.') !== false) {
 			// filename
 			$h = Loader::helper('file');

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Conversation;
 use Concrete\Core\Search\PermissionableListItemInterface;
 use Loader;

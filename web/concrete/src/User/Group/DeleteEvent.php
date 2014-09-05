@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\User\Group;
 
 class DeleteEvent extends Event {

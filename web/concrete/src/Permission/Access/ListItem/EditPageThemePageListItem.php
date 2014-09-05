@@ -1,7 +1,7 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Access\ListItem;
 class EditPageThemePageListItem extends PageListItem {
-	
+
 	protected $customThemeArray = array();
 	protected $themesAllowedPermission = 'N';
 
@@ -17,5 +17,5 @@ class EditPageThemePageListItem extends PageListItem {
 	public function getThemesAllowedArray() {
 		return $this->customThemeArray;
 	}
-	
+
 }

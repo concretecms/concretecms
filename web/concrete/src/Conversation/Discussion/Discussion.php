@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Conversation\Discussion;
 use Loader;
 use \Concrete\Core\Foundation\Object;

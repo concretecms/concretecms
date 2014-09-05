@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Workflow\Progress;
 use \Concrete\Core\Foundation\Object;
 use Loader;
@@ -14,7 +14,7 @@ class Category extends Object {
 			return $pkc;
 		}
 	}
-	
+
 	public static function getByHandle($wpCategoryHandle) {
 		$db = Loader::db();
 		$row = $db->GetRow('select wpCategoryID, wpCategoryHandle, pkgID from WorkflowProgressCategories where wpCategoryHandle = ?', array($wpCategoryHandle));
@@ -24,17 +24,17 @@ class Category extends Object {
 			return $pkc;
 		}
 	}
-	
+
 	public static function exportList($xml) {
-		$attribs = self::getList();		
+		$attribs = self::getList();
 		$axml = $xml->addChild('workflowprogresscategories');
 		foreach($attribs as $pkc) {
 			$acat = $axml->addChild('category');
 			$acat->addAttribute('handle', $pkc->getWorkflowProgressCategoryHandle());
 			$acat->addAttribute('package', $pkc->getPackageHandle());
-		}		
+		}
 	}
-	
+
 	public static function getListByPackage($pkg) {
 		$db = Loader::db();
 		$list = array();
@@ -44,7 +44,7 @@ class Category extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
+	}
 
 	public function getWorkflowProgressCategoryID() {return $this->wpCategoryID;}
 	public function getWorkflowProgressCategoryHandle() {return $this->wpCategoryHandle;}
@@ -55,12 +55,12 @@ class Category extends Object {
 		$class = '\\Concrete\\Core\\Workflow\\Progress\\' . Loader::helper('text')->camelcase($this->wpCategoryHandle) . 'Progress';
 		return call_user_func_array(array($class, $method), $arguments);
 	}
-	
+
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from WorkflowProgressCategories where wpCategoryID = ?', array($this->wpCategoryID));
 	}
-	
+
 	public static function getList() {
 		$db = Loader::db();
 		$cats = array();
@@ -70,7 +70,7 @@ class Category extends Object {
 		}
 		return $cats;
 	}
-	
+
 	public static function add($wpCategoryHandle, $pkg = false) {
 		$db = Loader::db();
 		if (is_object($pkg)) {
@@ -78,10 +78,10 @@ class Category extends Object {
 		}
 		$db->Execute('insert into WorkflowProgressCategories (wpCategoryHandle, pkgID) values (?, ?)', array($wpCategoryHandle, $pkgID));
 		$id = $db->Insert_ID();
-		
+
 		return static::getByID($id);
 	}
-	
+
 
 
 }

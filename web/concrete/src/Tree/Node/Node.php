@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Tree\Node;
 use \Concrete\Core\Foundation\Object;
 use Concrete\Core\Tree\Tree;

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Feature;
 use \Concrete\Core\Foundation\Object;
 use Loader;
@@ -30,7 +30,7 @@ class Feature extends Object {
 			return $fe;
 		}
 	}
-	
+
 	public static function getByHandle($feHandle) {
 		$db = Loader::db();
 		$row = $db->GetRow('select feID, feScore, feHandle, feHasCustomClass, pkgID from Features where feHandle = ?', array($feHandle));
@@ -58,7 +58,7 @@ class Feature extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
+	}
 
 	public static function getList() {
 		$db = Loader::db();
@@ -72,8 +72,8 @@ class Feature extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
-	
+	}
+
 	public function getFeatureID() {return $this->feID;}
 	public function getFeatureHandle() {return $this->feHandle;}
 	public function getFeatureName() {return Loader::helper('text')->unhandle($this->feHandle);}
@@ -96,10 +96,10 @@ class Feature extends Object {
 		} else {
 			$feHasCustomClass = 0;
 		}
-	
+
 		$db->Execute('insert into Features (feHandle, feScore, feHasCustomClass, pkgID) values (?, ?, ?, ?)', array($feHandle, $feScore, $feHasCustomClass, $pkgID));
 		$id = $db->Insert_ID();
-		
+
 		$fe = static::getByID($id);
 		return $fe;
 	}
@@ -136,6 +136,6 @@ class Feature extends Object {
 		$db = Loader::db();
 		$db->Execute('delete from Features where feID = ?', array($this->feID));
 	}
-	
-		
+
+
 }

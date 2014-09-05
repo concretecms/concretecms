@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Job;
 use \Symfony\Component\EventDispatcher\Event as AbstractEvent;
 

@@ -1,7 +1,7 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Access\ListItem;
 class AddBlockToAreaAreaListItem extends AreaListItem {
-	
+
 	protected $customBlockTypeArray = array();
 	protected $blockTypesAllowedPermission = 'N';
 
@@ -17,6 +17,6 @@ class AddBlockToAreaAreaListItem extends AreaListItem {
 	public function getBlockTypesAllowedArray() {
 		return $this->customBlockTypeArray;
 	}
-	
-	
+
+
 }

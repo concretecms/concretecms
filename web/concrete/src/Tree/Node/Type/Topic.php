@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Tree\Node\Type;
 use Concrete\Core\Tree\Node\Node as TreeNode;
 use Loader;
@@ -9,7 +9,7 @@ class Topic extends TreeNode {
 	}
 
 	public function getPermissionAssignmentClassName() {
-		return '\\Concrete\\Core\\Permission\\Assignment\\TopicTreeNodeAssignment';	
+		return '\\Concrete\\Core\\Permission\\Assignment\\TopicTreeNodeAssignment';
 	}
 	public function getPermissionObjectKeyCategoryHandle() {
 		return 'topic_tree_node';

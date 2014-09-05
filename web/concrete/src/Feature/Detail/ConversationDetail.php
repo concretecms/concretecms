@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Feature\Detail;
 use Concrete\Core\Feature\Assignment\Assignment;
 use Concrete\Core\Conversation\Conversation;
@@ -15,7 +15,7 @@ class ConversationDetail extends Detail {
 	public function getConversationObject() {return Conversation::getByID($this->cnvID);}
 
 	public function handleFeatureAssignment(Assignment $fa) {
-		// we ALSO write the information into a table. 
+		// we ALSO write the information into a table.
 		// Yes, this is duplication of data but we need to join in the DB at times
 		$db = Database::get();
 		$db->Execute('insert into ConversationFeatureDetailAssignments (faID, cnvID) values (?, ?)', array(

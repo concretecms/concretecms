@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Form\Service\Widget;
 use UserInfo;
 use URL;

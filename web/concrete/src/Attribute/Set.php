@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Attribute;
 use \Concrete\Core\Foundation\Object;
 use Loader;
@@ -16,7 +16,7 @@ class Set extends Object {
 			return $akc;
 		}
 	}
-	
+
 	public static function getByHandle($asHandle) {
 		$db = Loader::db();
 		$row = $db->GetRow('select asID, asHandle, pkgID, asName, akCategoryID, asIsLocked from AttributeSets where asHandle = ?', array($asHandle));
@@ -36,8 +36,8 @@ class Set extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
-	
+	}
+
 	public function getAttributeSetID() {return $this->asID;}
 	public function getAttributeSetHandle() {return $this->asHandle;}
 	public function getAttributeSetName() {return $this->asName;}
@@ -74,7 +74,7 @@ class Set extends Object {
 		$db = Loader::db();
 		$db->Execute("update AttributeSets set asHandle = ? where asID = ?", array($asHandle, $this->asID));
 	}
-	
+
 	public function addKey($ak) {
 		$db = Loader::db();
 		$no = $db->GetOne("select count(akID) from AttributeSetKeys where akID = ? and asID = ?", array($ak->getAttributeKeyID(), $this->getAttributeSetID()));
@@ -84,12 +84,12 @@ class Set extends Object {
 			$db->Execute('insert into AttributeSetKeys (asID, akID, displayOrder) values (?, ?, ?)', array($this->getAttributeSetID(), $ak->getAttributeKeyID(), $do));
 		}
 	}
-	
+
 	public function clearAttributeKeys() {
 		$db = Loader::db();
 		$db->Execute('delete from AttributeSetKeys where asID = ?', array($this->asID));
 	}
-	
+
 	public function export($axml) {
 		$category = AttributeKeyCategory::getByID($this->getAttributeSetKeyCategoryID())->getAttributeKeyCategoryHandle();
 		$akey = $axml->addChild('attributeset');
@@ -129,16 +129,16 @@ class Set extends Object {
 				$keys[] = $ak;
 			}
 		}
-		return $keys;		
+		return $keys;
 	}
-	
+
 	public function contains($ak) {
 		$db = Loader::db();
 		$r = $db->GetOne('select count(akID) from AttributeSetKeys where asID = ? and akID = ?', array($this->getAttributeSetID(), $ak->getAttributeKeyID()));
 		return $r > 0;
-	}	
-	
-	/** 
+	}
+
+	/**
 	 * Removes an attribute set and sets all keys within to have a set ID of 0.
 	 */
 	public function delete() {
@@ -146,13 +146,13 @@ class Set extends Object {
 		$db->Execute('delete from AttributeSets where asID = ?', array($this->getAttributeSetID()));
 		$db->Execute('delete from AttributeSetKeys where asID = ?', array($this->getAttributeSetID()));
 	}
-	
+
 	public function deleteKey($ak) {
 		$db = Loader::db();
 		$db->Execute('delete from AttributeSetKeys where asID = ? and akID = ?', array($this->getAttributeSetID(), $ak->getAttributeKeyID()));
 		$this->rescanDisplayOrder();
 	}
-	
+
 	protected function rescanDisplayOrder() {
 		$db = Loader::db();
 		$do = 1;
@@ -172,5 +172,5 @@ class Set extends Object {
 	}
 
 
-		
+
 }

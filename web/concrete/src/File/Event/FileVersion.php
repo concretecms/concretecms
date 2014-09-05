@@ -1,18 +1,22 @@
-<?
+<?php
 namespace Concrete\Core\File\Event;
-use \Symfony\Component\EventDispatcher\Event as AbstractEvent;
-use \Concrete\Core\File\Version;
 
-class FileVersion extends AbstractEvent {
+use Concrete\Core\File\Version;
+use Symfony\Component\EventDispatcher\Event as AbstractEvent;
 
-	protected $fv;
+class FileVersion extends AbstractEvent
+{
 
-	public function __construct(Version $fv) {
-		$this->fv = $fv;
-	}
+    protected $fv;
 
-	public function getFileVersionObject() {
-		return $this->fv;
-	}
+    public function __construct(Version $fv)
+    {
+        $this->fv = $fv;
+    }
+
+    public function getFileVersionObject()
+    {
+        return $this->fv;
+    }
 
 }

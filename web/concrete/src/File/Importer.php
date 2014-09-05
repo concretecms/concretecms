@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\File;
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use League\Flysystem\AdapterInterface;
@@ -7,8 +7,8 @@ use \File as ConcreteFile;
 use Core;
 
 class Importer {
-	
-	/** 
+
+	/**
 	 * PHP error constants - these match those founds in $_FILES[$field]['error] if it exists
 	 */
 	const E_PHP_FILE_ERROR_DEFAULT = 0;
@@ -16,8 +16,8 @@ class Importer {
 	const E_PHP_FILE_EXCEEDS_HTML_MAX_FILE_SIZE = 2;
 	const E_PHP_FILE_PARTIAL_UPLOAD = 3;
 	const E_PHP_NO_FILE = 4;
-	
-	/** 
+
+	/**
 	 * concrete5 internal error constants
 	 */
 	const E_FILE_INVALID_EXTENSION = 10;
@@ -25,7 +25,7 @@ class Importer {
 	const E_FILE_UNABLE_TO_STORE = 12;
     const E_FILE_INVALID_STORAGE_LOCATION = 13;
 
-	/** 
+	/**
 	 * Returns a text string explaining the error that was passed
 	 */
 	public function getErrorMessage($code) {
@@ -48,12 +48,12 @@ class Importer {
 			case Importer::E_PHP_FILE_EXCEEDS_UPLOAD_MAX_FILESIZE:
 				$msg = t('Uploaded file is too large. The current value of upload_max_filesize is %s', ini_get('upload_max_filesize'));
 				break;
-			case Importer::E_FILE_UNABLE_TO_STORE:			
+			case Importer::E_FILE_UNABLE_TO_STORE:
 				$msg = t('Unable to copy file to storage directory. Please check permissions on your upload directory and ensure they can be written to by your web server.');
 				break;
 			case Importer::E_PHP_FILE_ERROR_DEFAULT:
 			default:
-				$msg = t("An unknown error occurred while uploading the file. Please check that file uploads are enabled, and that your file does not exceed the size of the post_max_size or upload_max_filesize variables.\n\nFile Uploads: %s\nMax Upload File Size: %s\nPost Max Size: %s", ini_get('file_uploads'), ini_get('upload_max_filesize'), ini_get('post_max_size'));			
+				$msg = t("An unknown error occurred while uploading the file. Please check that file uploads are enabled, and that your file does not exceed the size of the post_max_size or upload_max_filesize variables.\n\nFile Uploads: %s\nMax Upload File Size: %s\nPost Max Size: %s", ini_get('file_uploads'), ini_get('upload_max_filesize'), ini_get('post_max_size'));
 				break;
 		}
 		return $msg;
@@ -76,22 +76,22 @@ class Importer {
 	 * @return number Error Code | \Concrete\Core\File\Version
 	 */
 	public function import($pointer, $filename = false, $fr = false) {
-		
+
 		if ($filename == false) {
 			// determine filename from $pointer
 			$filename = basename($pointer);
 		}
-		
+
 		$fh = Loader::helper('validation/file');
 		$fi = Loader::helper('file');
         $cf = Core::make('helper/concrete/file');
 		$sanitizedFilename = $fi->sanitize($filename);
-		
+
 		// test if file is valid, else return FileImporter::E_FILE_INVALID
 		if (!$fh->file($pointer)) {
 			return Importer::E_FILE_INVALID;
 		}
-		
+
 		if (!$fh->extension($filename)) {
 			return Importer::E_FILE_INVALID_EXTENSION;
 		}

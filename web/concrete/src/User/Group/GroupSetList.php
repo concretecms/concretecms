@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\User\Group;
 use \Concrete\Core\Legacy\DatabaseItemList;
 

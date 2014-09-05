@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Application\Service\Dashboard;
 use Loader;
 use PageList;
@@ -39,7 +39,7 @@ class Sitemap {
 
 	function getSubNodes($cID) {
 		$db = Loader::db();
-		
+
 		$obj = new stdClass;
 		$pl = new PageList();
 		$pl->sortByDisplayOrder();
@@ -55,7 +55,7 @@ class Sitemap {
 		} else {
 			$results = $pl->getPagination()->setMaxPerPage(SITEMAP_PAGES_LIMIT)->getCurrentPageResults();
 		}
-		
+
 		$nodes = array();
 		foreach($results as $c) {
 			$n = $this->getNode($c);
@@ -98,7 +98,7 @@ class Sitemap {
 			$cID = $cItem->getCollectionID();
 			$c = $cItem;
 		}
-		
+
 		$cp = new Permissions($c);
 		$canEditPageProperties = $cp->canEditPageProperties();
 		$canEditPageSpeedSettings = $cp->canEditPageSpeedSettings();
@@ -108,7 +108,7 @@ class Sitemap {
 		$canDeletePage = $cp->canDeletePage();
 		$canAddSubpages = $cp->canAddSubpage();
 		$canAddExternalLinks = $cp->canAddExternalLink();
-		
+
 		$nodeOpen = false;
 		$openNodeArray = explode(',', str_replace('_', '', $_COOKIE['ConcreteSitemap-expand']));
 		if (is_array($openNodeArray)) {
@@ -116,19 +116,19 @@ class Sitemap {
 				$nodeOpen = true;
 			}
 		}
-		
+
 		$cls = ($c->getNumChildren() > 0) ? "folder" : "file";
 		$leaf = ($c->getNumChildren() > 0) ? false : true;
 		$numSubpages = ($c->getNumChildren()  > 0) ? $c->getNumChildren()  : '';
-		
+
 		$cvName = ($c->getCollectionName()) ? $c->getCollectionName() : '(No Title)';
 		$cvName = ($c->isSystemPage()) ? t($cvName) : $cvName;
-		
+
 		$ct = PageType::getByID($c->getPageTypeID());
 		$isInTrash = $c->isInTrash();
-		
+
 		$isTrash = $c->getCollectionPath() == TRASH_PAGE_PATH;
-		if ($isTrash || $isInTrash) { 
+		if ($isTrash || $isInTrash) {
 			$pk = PermissionKey::getByHandle('empty_trash');
 			if (!$pk->validate()) {
 				return false;
@@ -205,7 +205,7 @@ class Sitemap {
 			// We open another level
 			$node->children = $this->getSubNodes($cID, $level, false, $autoOpenNodes);
 		}
-		
+
 		return $node;
 	}
 

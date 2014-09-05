@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Page\Type\PublishTarget\Configuration;
 use Loader;
 use \Concrete\Core\Foundation\Object;
@@ -33,5 +33,5 @@ class Configuration extends Object {
 	public function getPageTypePublishTargetConfiguredTargetParentPageID() {
 		return 0;
 	}
-	
+
 }

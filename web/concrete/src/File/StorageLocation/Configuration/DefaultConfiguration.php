@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\File\StorageLocation\Configuration;
 
 class DefaultConfiguration extends LocalConfiguration

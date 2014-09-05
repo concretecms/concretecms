@@ -1,21 +1,21 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Key;
 use Loader;
 use User;
 use \Concrete\Core\Permission\Duration as PermissionDuration;
 class AddSubpagePageKey extends PageKey  {
-	
+
 	public function canAddExternalLink() {
 		$u = new User();
 		if ($u->isSuperUser()) {
 			return true;
 		}
-		
+
 		$pae = $this->getPermissionAccessObject();
 		if (!is_object($pae)) {
 			return array();
 		}
-		
+
 		$accessEntities = $u->getUserAccessEntityObjects();
 		$accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
 		$list = $this->getAccessListItems(PageKey::ACCESS_TYPE_ALL, $accessEntities);
@@ -29,7 +29,7 @@ class AddSubpagePageKey extends PageKey  {
 		}
 		return $canAddLinks;
 	}
-	
+
 	protected function getAllowedPageTypeIDs() {
 
 		$u = new User();
@@ -37,12 +37,12 @@ class AddSubpagePageKey extends PageKey  {
 		if (!is_object($pae)) {
 			return array();
 		}
-		
+
 		$accessEntities = $u->getUserAccessEntityObjects();
 		$accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
 		$list = $this->getAccessListItems(PageKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
-		
+
 		$db = Loader::db();
 		$ptIDs = array();
 		if (count($list) > 0) {
@@ -54,7 +54,7 @@ class AddSubpagePageKey extends PageKey  {
 				if ($l->getPageTypesAllowedPermission() == 'C') {
 					if ($l->getAccessType() == PageKey::ACCESS_TYPE_EXCLUDE) {
 						$ptIDs = array_values(array_diff($ptIDs, $l->getPageTypesAllowedArray()));
-					} else { 
+					} else {
 						$ptIDs = array_unique(array_merge($ptIDs, $l->getPageTypesAllowedArray()));
 					}
 				}
@@ -63,10 +63,10 @@ class AddSubpagePageKey extends PageKey  {
 				}
 			}
 		}
-				
+
 		return $ptIDs;
 	}
-	
+
 	public function validate($ct = false) {
 		$u = new User();
 		if ($u->isSuperUser()) {
@@ -80,7 +80,7 @@ class AddSubpagePageKey extends PageKey  {
 			return count($types) > 0;
 		}
 	}
-	
 
-	
+
+
 }

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Workflow;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
@@ -12,14 +12,14 @@ use \Concrete\Core\Workflow\Request\Request as WorkflowRequest;
  * @license    http://www.concrete5.org/license/     MIT License
  *
  */
-abstract class Workflow extends Object implements \Concrete\Core\Permission\ObjectInterface {  
-	
+abstract class Workflow extends Object implements \Concrete\Core\Permission\ObjectInterface {
+
 	protected $wfID = 0;
 	protected $allowedTasks = array('cancel', 'approve');
 	protected $restrictedToPermissionKeyHandles = array();
-	
+
 	public function getAllowedTasks() {return $this->allowedTasks;}
-	
+
 	public function getWorkflowID() {return $this->wfID;}
 	public function getWorkflowName() {return $this->wfName;}
 	public function getWorkflowTypeObject() {
@@ -34,12 +34,12 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 	}
 
 	public function getPermissionAssignmentClassName() {
-		return '\\Concrete\\Core\\Permission\\Assignment\\WorkflowAssignment';	
+		return '\\Concrete\\Core\\Permission\\Assignment\\WorkflowAssignment';
 	}
 	public function getPermissionObjectKeyCategoryHandle() {
 		return 'page';
 	}
-	
+
 	public function getPermissionObjectIdentifier() {
 		return $this->getWorkflowID();
 	}
@@ -67,12 +67,12 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 	// we do this so that we can order things by most important, etc...
 	public function getWorkflowProgressCurrentStatusNum(WorkflowProgress $wp) {
 		$req = $wp->getWorkflowRequestObject();
-		if (is_object($req)) { 
+		if (is_object($req)) {
 			return $req->getWorkflowRequestStatusNum();
 		}
 	}
-	
-	
+
+
 	public static function getList() {
 		$workflows = array();
 		$db = Loader::db();
@@ -81,11 +81,11 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 			$wf = static::getByID($row['wfID']);
 			if (is_object($wf)) {
 				$workflows[] = $wf;
-			}	
+			}
 		}
 		return $workflows;
 	}
-	
+
 	public static function add(Type $wt, $name) {
 		$db = Loader::db();
 		$wfID = $db->getOne('SELECT wfID FROM Workflows WHERE wfName=?',array($name));
@@ -95,24 +95,24 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 		}
 		return self::getByID($wfID);
 	}
-	
+
 	protected function load($wfID) {
 		$db = Loader::db();
 		$r = $db->GetRow('select Workflows.* from Workflows where Workflows.wfID = ?', array($wfID));
 		$this->setPropertiesFromArray($r);
 	}
-	
+
 	public static function getByID($wfID) {
 		$db = Loader::db();
 		$r = $db->GetRow('select WorkflowTypes.wftHandle, WorkflowTypes.pkgID from Workflows inner join WorkflowTypes on Workflows.wftID = WorkflowTypes.wftID where Workflows.wfID = ?', array($wfID));
-		if ($r['wftHandle']) { 
+		if ($r['wftHandle']) {
             $class = '\\Concrete\\Core\\Workflow\\' . Loader::helper('text')->camelcase($r['wftHandle']) . 'Workflow';
 			if (!class_exists($class)) {
 	            $class = '\\Concrete\\Core\\Workflow\\Workflow';
 			}
 			$obj = Core::make($class);
 			$obj->load($wfID);
-			if ($obj->getWorkflowID() > 0) { 
+			if ($obj->getWorkflowID() > 0) {
 				$obj->loadDetails();
 				return $obj;
 			}
@@ -126,12 +126,12 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 		$url .= '?wfID=' . $this->getWorkflowID() . '&task=' . $task . '&' . Loader::helper('validation/token')->getParameter($task);
 		return $url;
 	}
-	
+
 	public function updateName($wfName) {
 		$db = Loader::db();
 		$db->Execute('update Workflows set wfName = ? where wfID = ?', array($wfName, $this->wfID));
 	}
-	
+
 	abstract public function start(WorkflowProgress $wp);
 	abstract public function getWorkflowProgressActions(WorkflowProgress $wp);
 	abstract public function getWorkflowProgressCurrentDescription(WorkflowProgress $wp);
@@ -139,7 +139,7 @@ abstract class Workflow extends Object implements \Concrete\Core\Permission\Obje
 	abstract public function canApproveWorkflowProgressObject(WorkflowProgress $wp);
 	abstract public function updateDetails($vars);
 	abstract public function loadDetails();
-	
+
 	public function getPermissionAccessObject() {
 		return false;
 	}

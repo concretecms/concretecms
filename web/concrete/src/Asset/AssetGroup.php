@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Concrete\Core\Asset;
 class AssetGroup {
@@ -43,5 +43,5 @@ class AssetGroup {
 	public function getAssetPointers() {
 		return $this->assetPointers;
 	}
-	
+
 }

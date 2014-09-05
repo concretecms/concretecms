@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Workflow\Request;
 use Workflow;
 use Loader;
@@ -14,7 +14,7 @@ use URL;
 use \Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 class DeletePageRequest extends PageRequest {
-	
+
 	protected $wrStatusNum = 100;
 
 	public function __construct() {
@@ -36,19 +36,19 @@ class DeletePageRequest extends PageRequest {
 		$d->setShortStatus(t("Pending Delete"));
 		return $d;
 	}
-	
+
 	public function getWorkflowRequestStyleClass() {
 		return 'danger';
 	}
-	
+
 	public function getWorkflowRequestApproveButtonClass() {
 		return 'btn-danger';
 	}
 
 	public function getWorkflowRequestApproveButtonInnerButtonRightHTML() {
 		return '<i class="icon-white icon-trash"></i>';
-	}	
-	
+	}
+
 	public function getWorkflowRequestApproveButtonText() {
 		return t('Approve Delete');
 	}
@@ -74,5 +74,5 @@ class DeletePageRequest extends PageRequest {
 		return $wpr;
 	}
 
-	
+
 }

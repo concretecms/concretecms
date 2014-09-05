@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Routing;
 use Loader;
 use Page;
@@ -25,9 +25,9 @@ class URL {
 		if ((!URL_REWRITING_ALL) || !defined('URL_REWRITING_ALL')) {
 			$dispatcher = '/' . DISPATCHER_FILENAME;
 		}
-		
+
 		$path = trim($path, '/');
-		
+
 		// if a query string appears in this variable, then we just pass it through as is
 		if (strpos($path, '?') > -1) {
 			return DIR_REL . $dispatcher. '/' . $path;
@@ -37,21 +37,21 @@ class URL {
 				$_path .= '/';
 			}
 		}
-		
+
 		if ($action != null) {
-			$_path .= $action;			
+			$_path .= $action;
 			$args = func_get_args();
 			if (count($args) > 2) {
 				for ($i = 2; $i < count($args); $i++){
 					$_path .= '/' . $args[$i];
 				}
 			}
-			
+
 			if (strpos($_path, '?') === false) {
 				$_path .= '/';
 			}
 		}
-		
+
 		if (!URL_USE_TRAILING_SLASH) {
 			$_path = rtrim($_path, '/');
 		}

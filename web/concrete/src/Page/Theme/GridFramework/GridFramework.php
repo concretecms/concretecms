@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Page\Theme\GridFramework;
 use Loader;
 use Core;
@@ -20,7 +20,7 @@ abstract class GridFramework {
 		$classes = $this->getPageThemeGridFrameworkColumnClasses();
 		return count($classes);
 	}
-	
+
 	public function hasPageThemeGridFrameworkOffsetClasses() {
 		$classes = $this->getPageThemeGridFrameworkColumnClasses();
 		return count($classes) > 0;

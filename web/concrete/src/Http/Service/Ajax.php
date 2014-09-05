@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Http\Service;
 use Loader;
 class Ajax {
@@ -18,7 +18,7 @@ class Ajax {
         echo Loader::helper('json')->encode($result);
         die();
     }
-    
+
     /** Sends an error to the client and ends the execution.
     * @param string|Exception $result The error to send to the client.
     */

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Legacy\Controller;
 use Controller;
 use Environment;
@@ -9,7 +9,7 @@ class ToolController extends Controller {
 	public function getTheme() {
 		return false;
 	}
-	
+
 	public function display($tool) {
 		$env = Environment::get();
 		$query = false;
@@ -27,7 +27,7 @@ class ToolController extends Controller {
 		if ($query) {
 			$v = new DialogView($query);
 			$v->setViewRootDirectoryName(DIRNAME_TOOLS);
-			$this->setViewObject($v);		
+			$this->setViewObject($v);
 		}
 	}
 
@@ -41,7 +41,7 @@ class ToolController extends Controller {
 				$v = new DialogView($btHandle . '/' . DIRNAME_TOOLS . '/' . $tool);
 				$v->setViewRootDirectoryName(DIRNAME_BLOCKS);
 				$v->setInnerContentFile($r->file);
-				$this->setViewObject($v);		
+				$this->setViewObject($v);
 			}
 		}
 	}

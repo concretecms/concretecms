@@ -1,16 +1,19 @@
-<?
+<?php
 namespace Concrete\Core\File\Event;
 
-class DuplicateFile extends File {
+class DuplicateFile extends File
+{
 
-	protected $newFile;
+    protected $newFile;
 
-	public function setNewFileObject($newFile) {
-		$this->newFile = $newFile;
-	}
+    public function setNewFileObject($newFile)
+    {
+        $this->newFile = $newFile;
+    }
 
-	public function getNewFileObject() {
-		return $this->newFile;
-	}
+    public function getNewFileObject()
+    {
+        return $this->newFile;
+    }
 
 }

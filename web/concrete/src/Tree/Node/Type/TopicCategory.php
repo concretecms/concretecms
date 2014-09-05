@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Tree\Node\Type;
 use Permissions;
 class TopicCategory extends Category {
@@ -8,7 +8,7 @@ class TopicCategory extends Category {
 	}
 
 	public function getPermissionAssignmentClassName() {
-		return '\\Concrete\\Core\\Permission\\Assignment\\TopicCategoryTreeNodeAssignment';	
+		return '\\Concrete\\Core\\Permission\\Assignment\\TopicCategoryTreeNodeAssignment';
 	}
 	public function getPermissionObjectKeyCategoryHandle() {
 		return 'topic_category_tree_node';

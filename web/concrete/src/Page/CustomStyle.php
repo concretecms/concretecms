@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Page;
 
 use \Concrete\Core\StyleCustomizer\Style\ValueList;

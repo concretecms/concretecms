@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\User\Search\Result;
 use \Concrete\Core\Search\Result\Result as SearchResult;
 class Result extends SearchResult {

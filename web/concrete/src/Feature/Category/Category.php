@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Feature\Category;
 use \Concrete\Core\Foundation\Object;
 use Loader;
@@ -7,7 +7,7 @@ use Core;
 abstract class Category extends Object {
 
 	abstract public function assignmentIsInUse(\Concrete\Core\Feature\Assignment\Assignment $fa);
-	
+
 	public static function getByID($fcID) {
 		$db = Loader::db();
 		$row = $db->GetRow('select fcID, fcHandle, pkgID from FeatureCategories where fcID = ?', array($fcID));
@@ -18,7 +18,7 @@ abstract class Category extends Object {
 			return $fe;
 		}
 	}
-	
+
 	public static function getByHandle($fcHandle) {
 		$db = Loader::db();
 		$row = $db->GetRow('select fcID, fcHandle, pkgID from FeatureCategories where fcHandle = ?', array($fcHandle));
@@ -42,7 +42,7 @@ abstract class Category extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
+	}
 
 	public static function getList() {
 		$db = Loader::db();
@@ -56,8 +56,8 @@ abstract class Category extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
-	
+	}
+
 	public function getFeatureCategoryID() {return $this->fcID;}
 	public function getFeatureCategoryHandle() {return $this->fcHandle;}
 	public function getPackageID() {return $this->pkgID;}
@@ -69,10 +69,10 @@ abstract class Category extends Object {
 		if (is_object($pkg)) {
 			$pkgID = $pkg->getPackageID();
 		}
-	
+
 		$db->Execute('insert into FeatureCategories (fcHandle, pkgID) values (?, ?)', array($fcHandle, $pkgID));
 		$id = $db->Insert_ID();
-		
+
 		$fe = static::getByID($id);
 		return $fe;
 	}
@@ -105,6 +105,6 @@ abstract class Category extends Object {
 		$db = Loader::db();
 		$db->Execute('delete from FeatureCategories where fcID = ?', array($this->fcID));
 	}
-	
-		
+
+
 }

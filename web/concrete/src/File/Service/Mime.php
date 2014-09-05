@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\File\Service;
 class Mime {
 
@@ -93,9 +93,9 @@ class Mime {
 		}
 		return false;
 	}
-	
-	/** 
-	 * Converts a known mime-type into it's common file extension. 
+
+	/**
+	 * Converts a known mime-type into it's common file extension.
 	 * Returns the first match from $mime_types_and_extensions
 	 * @param string $mimeType
 	 * @return string|boolean extension string or false
@@ -105,6 +105,6 @@ class Mime {
 		$mime = array_search($mimeType, self::$mime_types_and_extensions);
 		return $mime;
 	}
-	
+
 }
 ?>
