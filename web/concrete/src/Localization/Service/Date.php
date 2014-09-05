@@ -16,6 +16,30 @@ class Date
     const DB_FORMAT = 'Y-m-d H:i:s';
 
     /**
+     * Convert any date/time representation to a string that can be used in DB queries.
+     * @param string|int|\DateTime $value It can be:<ul>
+     *    <li>the special value 'now' (default) to return the current date/time</li>
+     *    <li>a \DateTime instance</li>
+     *    <li>a string parsable by strtotime (the $fromTimezone timezone is used)</li>
+     *    <li>a timestamp</li>
+     * </ul>
+     * @param string $fromTimezone The timezone where $value is defined (useful only if $value is a date/time representation without a timezone, like for instance '2000-12-31 23:59:59').<br />
+     * Special values are:<ul>
+     *    <li>'system' (default) for the current system timezone</li>
+     *    <li>'user' for the user's timezone</li>
+     *    <li>'app' for the app's timezone</li>
+     *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
+     * </ul>
+    * @param string Returns the date/time representation (an empty string if $value is empty)
+     */
+    public function toDB($value = 'now', $fromTimezone = 'system')
+    {
+        $datetime = $this->toDateTime($value, 'system', $fromTimezone);
+
+        return is_object($datetime) ? $datetime->format(static::DB_FORMAT) : '';
+    }
+
+    /**
      * Subsitute for the native date() function that adds localized date support.
      * Use *ONLY* if really needed: you may want to use some of the formatDate/Time methods.
      * If you're not working with timestamps you may want to use the formatCustom method.
@@ -268,7 +292,7 @@ class Date
      * @param string|\DateTime|int $value It can be:<ul>
      *    <li>the special value 'now' (default) to return the current date/time</li>
      *    <li>a \DateTime instance</li>
-     *    <li>a string parsable by strtotime (the current system timezone is used)</li>
+     *    <li>a string parsable by strtotime (the $fromTimezone timezone is used)</li>
      *    <li>a timestamp</li>
      * </ul>
      * @param string $toTimezone The timezone to set. Special values are:<ul>
