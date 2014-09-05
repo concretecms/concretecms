@@ -25,7 +25,7 @@ class BasicData {
 	
 	public function markCompleted($u) {
 		$db = Loader::db();
-		$this->wpDateCompleted = Loader::helper('date')->getLocalDateTime();
+		$this->wpDateCompleted = Loader::helper('date')->getOverridableNow();
 		$this->uIDCompleted = $u->getUserID();
 		$db->update('BasicWorkflowProgressData', array('wpDateCompleted' => $this->wpDateCompleted, 'uIDCompleted' => $this->uIDCompleted), array('wpID' => $this->wpID));
 	}

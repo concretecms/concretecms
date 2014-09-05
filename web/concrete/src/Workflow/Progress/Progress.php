@@ -85,7 +85,7 @@ abstract class Progress extends Object {
 	 */
 	public static function add($wpCategoryHandle, Workflow $wf, WorkflowRequest $wr) {
 		$db = Loader::db();
-		$wpDateAdded = Loader::helper('date')->getLocalDateTime();
+		$wpDateAdded = Loader::helper('date')->getOverridableNow();
 		$wpCategoryID = $db->GetOne('select wpCategoryID from WorkflowProgressCategories where wpCategoryHandle = ?', array($wpCategoryHandle));
 		$db->Execute('insert into WorkflowProgress (wfID, wrID, wpDateAdded, wpCategoryID) values (?, ?, ?, ?)', array(
 			$wf->getWorkflowID(), $wr->getWorkflowRequestID(), $wpDateAdded, $wpCategoryID
@@ -144,7 +144,7 @@ abstract class Progress extends Object {
 	public function updateOnAction(Workflow $wf) {
 		$db = Loader::db();
 		$num = $wf->getWorkflowProgressCurrentStatusNum($this);
-		$time = Loader::helper('date')->getLocalDateTime();
+		$time = Loader::helper('date')->getOverridableNow();
 		$db->Execute('update WorkflowProgress set wpDateLastAction = ?, wpCurrentStatus = ? where wpID = ?', array($time, $num, $this->wpID));
 	}
 	

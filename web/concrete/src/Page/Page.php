@@ -1600,7 +1600,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         if (!$cDatePublic) {
-            $cDatePublic = Core::make('helper/date')->getLocalDateTime();
+            $cDatePublic = Core::make('helper/date')->getOverridableNow();
         }
         $txt = Loader::helper('text');
         if (!isset($data['cHandle']) && ($this->getCollectionHandle() != '')) {
