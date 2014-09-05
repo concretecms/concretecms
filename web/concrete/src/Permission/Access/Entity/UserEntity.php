@@ -22,7 +22,7 @@ class UserEntity extends Entity
                 'SELECT peID FROM PermissionAccessEntityUsers WHERE uID = ?',
                 array($user->getUserID()));
             if ($peID > 0) {
-                $entity = PermissionAccessEntity::getByID($peID);
+                $entity = \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
                 if (is_object($entity)) {
                     $entities[] = $entity;
                 }
