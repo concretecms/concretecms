@@ -196,7 +196,7 @@ class Date
      * </ul>
      * @return string
      */
-    public function getTimezone($timezone)
+    public function getTimezoneID($timezone)
     {
         switch ($timezone) {
             case 'system':
@@ -222,12 +222,36 @@ class Date
                 if ($tz) {
                     $timezone = $tz;
                 } else {
-                    $timezone = $this->getTimezone('app');
+                    $timezone = $this->getTimezoneID('app');
                 }
                 break;
         }
 
         return $timezone;
+    }
+
+    /**
+     * Returns a \DateTimeZone instance for a specified timezone identifier
+     * @param string $timezone The timezone to retrieve. Special values are:<ul>
+     *    <li>'system' (default) for the current system timezone</li>
+     *    <li>'user' for the user's timezone</li>
+     *    <li>'app' for the app's timezone</li>
+     *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
+     * </ul>
+     * @return \DateTimeZone|null Returns null if $timezone is invalid or the \DateTimeZone corresponding to $timezone
+     */
+    public function getTimezone($timezone)
+    {
+        $tz = null;
+        $phpTimezone = $this->getTimezoneID($timezone);
+        if (is_string($phpTimezone) && strlen($phpTimezone)) {
+            try {
+                $tz = new \DateTimeZone($phpTimezone);
+            } catch (\Exception $x) {
+            }
+        }
+
+        return $tz;
     }
 
     /**
