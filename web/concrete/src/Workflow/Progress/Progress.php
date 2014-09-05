@@ -52,6 +52,11 @@ abstract class Progress extends Object {
 	 */
 	public function getWorkflowProgressID() {return $this->wpID;}
 
+    /**
+     * Gets the ID of the progress object
+     */
+    public function getWorkflowProgressCategoryHandle() {return $this->wpCategoryHandle;}
+
 	/**
 	 * Get the category ID
 	 */
@@ -177,7 +182,7 @@ abstract class Progress extends Object {
 	abstract function loadDetails();
 
 	public function getWorkflowProgressHistoryObjectByID($wphID) {
-		$class = get_class($this) . 'History';
+		$class = '\\Concrete\\Core\\Workflow\\Progress\\' . camelcase($this->getWorkflowProgressCategoryHandle()) . 'History';
 		$db = Loader::db();
 		$row = $db->GetRow('select * from WorkflowProgressHistory where wphID = ?', array($wphID));
 		if (is_array($row) && ($row['wphID'])) {
