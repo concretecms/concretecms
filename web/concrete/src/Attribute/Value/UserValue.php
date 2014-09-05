@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Attribute\Value;
 use Loader;
 class UserValue extends Value {
@@ -28,7 +28,7 @@ class UserValue extends Value {
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from UserAttributeValues where uID = ? and akID = ? and avID = ?', array(
-			$this->u->getUserID(), 
+			$this->u->getUserID(),
 			$this->attributeKey->getAttributeKeyID(),
 			$this->getAttributeValueID()
 		));

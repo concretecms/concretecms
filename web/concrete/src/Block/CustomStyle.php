@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Block;
 use Concrete\Core\StyleCustomizer\Inline\CustomStyle as AbstractCustomStyle;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;

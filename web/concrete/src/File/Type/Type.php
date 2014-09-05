@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\File\Type;
 
 use Loader;

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Search\Column;
 use Loader;
 use Concrete\Core\Search\Result\Result;
@@ -11,7 +11,7 @@ class Column {
 			return call_user_func(array($obj, $this->callback));
 		}
 	}
-	
+
 	public function getColumnKey() {return $this->columnKey;}
 	public function getColumnName() {return $this->columnName;}
 	public function getColumnDefaultSortDirection() {return $this->defaultSortDirection;}

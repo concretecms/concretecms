@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Search\Result;
 use \Concrete\Core\Search\Column\Column as DatabaseItemListColumn;
 use Core;
@@ -44,7 +44,7 @@ class Column {
 
 	public function setColumnSortURL($url) {
 		$this->sortURL = $url;
-	} 
+	}
 
 	public function getColumnSortURL() {
 		return $this->sortURL;

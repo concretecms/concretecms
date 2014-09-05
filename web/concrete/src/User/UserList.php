@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\User;
 
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Workflow\Request;
 use Workflow;
 use Loader;
@@ -30,5 +30,5 @@ class ApproveStackRequest extends ApprovePageRequest {
 		return $wpr;
 	}
 
-	
+
 }

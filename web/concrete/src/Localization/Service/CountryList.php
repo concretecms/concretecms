@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Localization\Service;
 
 use Localization;
@@ -9,7 +9,7 @@ class CountryList {
 	protected $countries = array();
 
 	public function __construct() {
-		
+
 		$countries = \Punic\Territory::getCountries();
 		unset(
 			// Fake countries

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Page\Collection\Version;
 
 class Event extends \Concrete\Core\Page\Event {
@@ -10,5 +10,5 @@ class Event extends \Concrete\Core\Page\Event {
 	public function getCollectionVersionObject() {
 		return $this->version;
 	}
-	
+
 }

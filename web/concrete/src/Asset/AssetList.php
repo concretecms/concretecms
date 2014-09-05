@@ -1,9 +1,9 @@
-<?
+<?php
 
 namespace Concrete\Core\Asset;
 use Concrete\Core\Foundation\Object as Object;
 
-class AssetList {	
+class AssetList {
 	private static $loc = null;
 	public $assets = array();
 	public $assetGroups = array();

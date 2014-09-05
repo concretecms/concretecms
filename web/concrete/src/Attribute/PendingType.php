@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Attribute;
 use \Concrete\Core\Foundation\Object;
 use Loader;
@@ -7,7 +7,7 @@ class PendingType extends Type {
 	public static function getList() {
 		$db = Loader::db();
 		$atHandles = $db->GetCol("select atHandle from AttributeTypes");
-		
+
 		$dh = Loader::helper('file');
 		$available = array();
 		if (is_dir(DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES)) {
@@ -31,7 +31,7 @@ class PendingType extends Type {
 			return $at;
 		}
 	}
-	
+
 	public function install() {
 		parent::add($this->atHandle, $this->atName);
 	}

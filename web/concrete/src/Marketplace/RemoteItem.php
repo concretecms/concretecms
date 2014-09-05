@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Marketplace;
 use Cache;
 use Loader;
@@ -6,13 +6,13 @@ use Config;
 use \Concrete\Core\Foundation\Object;
 class RemoteItem extends Object {
 
-	protected $price=0.00;	
+	protected $price=0.00;
 	protected $remoteCID=0;
 	protected $remoteURL='';
 	protected $remoteFileURL='';
 	protected $remoteIconURL='';
 	protected $isLicensedToSite = false;
-	
+
 	public function setPropertiesFromJSONObject($obj) {
 		foreach($obj as $prop => $value) {
 			$this->{$prop} = $value;
@@ -34,7 +34,7 @@ class RemoteItem extends Object {
 		}
 	}
 	public function getMarketplaceItemVersionForThisSite() {return $this->siteLatestAvailableVersion;}
-	
+
 	public function getAverageRating() {return $this->rating;}
 	public function getVersionHistory() {return $this->versionHistory;}
 	public function getTotalRatings() {
@@ -68,17 +68,17 @@ class RemoteItem extends Object {
 		if ($this->price == '' || $this->price == '0' || $this->price == '0.00') {
 			return false;
 		} else if ($this->isLicensedToSite()) {
-			return false;	
+			return false;
 		} else {
 			return true;
 		}
 	}
-	
+
 	public function getVersion() {return $this->pkgVersion;}
-	
+
 	public function downloadUpdate() {
 		$pkg = Package::getByHandle($this->getHandle());
-		
+
 		$fileURL = $this->getRemoteFileURL();
 		if (empty($fileURL)) {
 			return array(Package::E_PACKAGE_NOT_FOUND);
@@ -90,14 +90,14 @@ class RemoteItem extends Object {
 		} else if ($file == Package::E_PACKAGE_SAVE) {
 			return array($file);
 		}
-		
+
 		$r = $pkg->backup();
 		if (is_array($r)) {
 			return $r;
 		}
-			
+
 		try {
-			
+
 			$am = new PackageArchive($this->getHandle());
 			$am->install($file, true);
 		} catch (Exception $e) {
@@ -116,15 +116,15 @@ class RemoteItem extends Object {
 		} else if ($file == Package::E_PACKAGE_INVALID_APP_VERSION) {
 			return array($file);
 		}
-	
+
 		try {
-			
+
 			$am = new PackageArchive($this->getHandle());
 			$am->install($file, true);
 		} catch (Exception $e) {
 			return array($e->getMessage());
 		}
-	
+
 		if ($install) {
 			$tests = Package::testForInstall($this->getHandle());
 			if (is_array($tests)) {
@@ -139,7 +139,7 @@ class RemoteItem extends Object {
 			}
 		}
 	}
-	
+
 	public function enableFreeLicense() {
 		$fh = Loader::helper('file');
 		$csToken = Config::get('MARKETPLACE_SITE_TOKEN');
@@ -147,11 +147,11 @@ class RemoteItem extends Object {
 		$url = MARKETPLACE_ITEM_FREE_LICENSE_WS."?mpID=" . $this->mpID . "&csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
 		$fh->getContents($url);
 	}
-	
+
 	protected static function getRemotePackageObject($method, $identifier) {
 		$fh = Loader::helper('file');
 
-		// Retrieve the URL contents 
+		// Retrieve the URL contents
 		$csToken = Config::get('MARKETPLACE_SITE_TOKEN');
 		$csiURL = urlencode(BASE_URL . DIR_REL);
 		$url = MARKETPLACE_ITEM_INFORMATION_WS."?" . $method . "=" . $identifier . "&csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
@@ -166,16 +166,16 @@ class RemoteItem extends Object {
 				if ($mi->getMarketplaceItemID() > 0) {
 					return $mi;
 				}
-			} 
+			}
 		} catch (Exception $e) {
 			throw new Exception(t('Unable to connect to marketplace to retrieve item'));
 		}
 	}
-	
+
 	public static function getByHandle($mpHandle) {
 		return RemoteItem::getRemotePackageObject('mpHandle', $mpHandle);
 	}
-	
+
 	public static function getByID($mpID) {
 		return RemoteItem::getRemotePackageObject('mpID', $mpID);
 	}

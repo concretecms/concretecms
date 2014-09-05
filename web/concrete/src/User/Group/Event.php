@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\User\Group;
 use \Symfony\Component\EventDispatcher\Event as AbstractEvent;
 

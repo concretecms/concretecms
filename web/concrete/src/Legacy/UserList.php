@@ -1,10 +1,10 @@
-<?
+<?php
 namespace Concrete\Core\Legacy;
 use \Concrete\Core\Legacy\DatabaseItemList;
 use UserAttributeKey;
 /**
  * An object that allows a filtered list of users to be returned.
- * @package Files 
+ * @package Files
  * @author Tony Trupp <tony@concrete5.org>
  * @category Concrete
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
@@ -12,35 +12,35 @@ use UserAttributeKey;
  *
  */
 
-class UserList extends DatabaseItemList { 
+class UserList extends DatabaseItemList {
 
 	protected $attributeFilters = array();
 	protected $autoSortColumns = array('uName', 'uEmail', 'uDateAdded', 'uLastLogin', 'uNumLogins', 'uLastOnline');
 	protected $itemsPerPage = 10;
 	protected $attributeClass = 'UserAttributeKey';
-	
+
 	public $showInactiveUsers;
 	public $showInvalidatedUsers=0;
 	public $searchAgainstEmail=0;
-	
+
 	//Filter by uName
 	public function filterByUserName($username) {
 		$this->filter('u.uName', $username, '=');
 	}
-	
+
 	public function filterByKeywords($keywords) {
 		$db = Loader::db();
 		$qkeywords = $db->quote('%' . $keywords . '%');
 		$keys = UserAttributeKey::getSearchableIndexedList();
-		$emailSearchStr=' OR u.uEmail like '.$qkeywords.' ';	
+		$emailSearchStr=' OR u.uEmail like '.$qkeywords.' ';
 		$attribsStr = '';
 		foreach ($keys as $ak) {
-			$cnt = $ak->getController();			
+			$cnt = $ak->getController();
 			$attribsStr.=' OR ' . $cnt->searchKeywords($keywords);
 		}
 		$this->filter(false, '( u.uName like ' . $qkeywords . $emailSearchStr . $attribsStr . ')');
 	}
-	
+
 	/**
 	 * filters the user list for only users within the provided group.  Accepts an instance of a group object or a string group name
 	 * @param Group|string $group
@@ -52,7 +52,7 @@ class UserList extends DatabaseItemList {
 			$group = Group::getByName($group);
 		}
 		$tbl='ug_'.$group->getGroupID();
-		$this->addToQuery("left join UserGroups $tbl on {$tbl}.uID = u.uID ");	
+		$this->addToQuery("left join UserGroups $tbl on {$tbl}.uID = u.uID ");
 		if ($inGroup) {
 			$this->filter(false, "{$tbl}.gID=".intval($group->getGroupID()) );
 		} else {
@@ -69,34 +69,34 @@ class UserList extends DatabaseItemList {
 		$this->filter('u.uID',$uID,'!=');
 	}
 
-	public function filterByGroupID($gID){ 
+	public function filterByGroupID($gID){
 		if (!Loader::helper('validation/numbers')->integer($gID)) {
 			$gID = 0;
-		}		
+		}
 		$tbl='ug_'.$gID;
-		$this->addToQuery("left join UserGroups $tbl on {$tbl}.uID = u.uID ");			
+		$this->addToQuery("left join UserGroups $tbl on {$tbl}.uID = u.uID ");
 		$this->filter(false, "{$tbl}.gID=".$gID);
 	}
 
 	public function filterByDateAdded($date, $comparison = '=') {
 		$this->filter('u.uDateAdded', $date, $comparison);
 	}
-	
+
 	/**
 	 * Returns an array of userInfo objects based on current filter settings
 	 * @return UserInfo[]
 	 */
 	public function get($itemsToGet = 100, $offset = 0) {
-		$userInfos = array(); 
+		$userInfos = array();
 		$this->createQuery();
 		$r = parent::get( $itemsToGet, intval($offset));
 		foreach($r as $row) {
-			$ui = UserInfo::getByID($row['uID']);			
+			$ui = UserInfo::getByID($row['uID']);
 			$userInfos[] = $ui;
 		}
 		return $userInfos;
 	}
-	
+
 	/**
 	 * similar to get except it returns an array of userIDs
 	 * much faster than getting a UserInfo object for each result if all you need is the user's id
@@ -110,18 +110,18 @@ class UserList extends DatabaseItemList {
 			$userIDs[] = $row['uID'];
 		}
 		return $userIDs;
-	}	
-	
-	public function getTotal(){ 
+	}
+
+	public function getTotal(){
 		$this->createQuery();
 		return parent::getTotal();
-	}	
-	
+	}
+
 	public function filterByIsActive($val) {
 		$this->showInactiveUsers = $val;
 		$this->filter('u.uIsActive', $val);
-	}	
-	
+	}
+
 	//this was added because calling both getTotal() and get() was duplicating some of the query components
 	protected function createQuery(){
 		if(!$this->queryCreated){
@@ -131,8 +131,8 @@ class UserList extends DatabaseItemList {
 			$this->setupAttributeFilters("left join UserSearchIndexAttributes on (UserSearchIndexAttributes.uID = u.uID)");
 			$this->queryCreated=1;
 		}
-	}	
-	
+	}
+
 	protected function setBaseQuery() {
 		$this->setQuery('SELECT DISTINCT u.uID, u.uName FROM Users u ');
 	}
@@ -147,7 +147,7 @@ class UserList extends DatabaseItemList {
 			} else {
 				$this->filterByAttribute($attrib, $a[0]);
 			}
-		}			
+		}
 	}
 
 }

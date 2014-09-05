@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Attribute\Key;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Attribute\Set as AttributeSet;
@@ -9,7 +9,7 @@ class Category extends Object {
 	const ASET_ALLOW_NONE = 0;
 	const ASET_ALLOW_SINGLE = 1;
 	const ASET_ALLOW_MULTIPLE = 2;
-	
+
 	public static function getByID($akCategoryID) {
 		$db = Loader::db();
 		$row = $db->GetRow('select akCategoryID, akCategoryHandle, akCategoryAllowSets, pkgID from AttributeKeyCategories where akCategoryID = ?', array($akCategoryID));
@@ -19,7 +19,7 @@ class Category extends Object {
 			return $akc;
 		}
 	}
-	
+
 	public static function getByHandle($akCategoryHandle) {
 		$db = Loader::db();
 		$row = $db->GetRow('select akCategoryID, akCategoryHandle, akCategoryAllowSets, pkgID from AttributeKeyCategories where akCategoryHandle = ?', array($akCategoryHandle));
@@ -29,7 +29,7 @@ class Category extends Object {
 			return $akc;
 		}
 	}
-	
+
 	public function handleExists($akHandle) {
 		$db = Loader::db();
 		$r = $db->GetOne("select count(akID) from AttributeKeys where akHandle = ? and akCategoryID = ?", array($akHandle, $this->akCategoryID));
@@ -37,16 +37,16 @@ class Category extends Object {
 	}
 
 	public static function exportList($xml) {
-		$attribs = self::getList();		
+		$attribs = self::getList();
 		$axml = $xml->addChild('attributecategories');
 		foreach($attribs as $akc) {
 			$acat = $axml->addChild('category');
 			$acat->addAttribute('handle', $akc->getAttributeKeyCategoryHandle());
 			$acat->addAttribute('allow-sets', $akc->allowAttributeSets());
 			$acat->addAttribute('package', $akc->getPackageHandle());
-		}		
+		}
 	}
-	
+
 	public function getAttributeKeyByHandle($akHandle) {
 		$txt = Loader::helper('text');
 		$className = '\\Concrete\\Core\\Attribute\\Key\\' . $txt->camelcase($this->akCategoryHandle) . 'Key';
@@ -69,8 +69,8 @@ class Category extends Object {
 		while ($row = $r->FetchRow()) {
 			$keys[] = $cat->getAttributeKeyByID($row['akID']);
 		}
-		return $keys;		
-	}	
+		return $keys;
+	}
 
 	public static function getListByPackage($pkg) {
 		$db = Loader::db();
@@ -81,8 +81,8 @@ class Category extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
-	
+	}
+
 	public function getAttributeKeyCategoryID() {return $this->akCategoryID;}
 	public function getAttributeKeyCategoryHandle() {return $this->akCategoryHandle;}
 	public function getPackageID() {return $this->pkgID;}
@@ -93,7 +93,7 @@ class Category extends Object {
 		$db->Execute('update AttributeKeyCategories set akCategoryAllowSets = ? where akCategoryID = ?', array($val, $this->akCategoryID));
 		$this->akCategoryAllowSets = $val;
 	}
-	
+
 	public function getAttributeSets() {
 		$db = Loader::db();
 		$r = $db->Execute('select asID from AttributeSets where akCategoryID = ? order by asDisplayOrder asc, asID asc', array($this->akCategoryID));
@@ -103,12 +103,12 @@ class Category extends Object {
 		}
 		return $sets;
 	}
-	
+
 	public function clearAttributeKeyCategoryColumnHeaders() {
 		$db = Loader::db();
 		$db->Execute('update AttributeKeys set akIsColumnHeader = 0 where akCategoryID = ?', array($this->akCategoryID));
 	}
-	
+
 	public function associateAttributeKeyType($at) {
 		if (!$this->hasAttributeKeyTypeAssociated($at)) {
 			$db = Loader::db();
@@ -121,13 +121,13 @@ class Category extends Object {
 		$r = $db->getOne('select atID from AttributeTypeCategories where atID = ? and akCategoryID = ?', array($at->getAttributeTypeID(), $this->akCategoryID));
 		return (boolean) $r;
 	}
-	
+
 	public function clearAttributeKeyCategoryTypes() {
 		$db = Loader::db();
 		$db->Execute('delete from AttributeTypeCategories where akCategoryID = ?', array($this->akCategoryID));
 	}
 
-	/** 
+	/**
 	 * note, this does not remove anything but the direct data associated with the category
 	 */
 	public function delete() {
@@ -137,7 +137,7 @@ class Category extends Object {
 		$this->rescanSetDisplayOrder();
 		$db->Execute('delete from AttributeKeyCategories where akCategoryID = ?', array($this->akCategoryID));
 	}
-	
+
 	public static function getList() {
 		$db = Loader::db();
 		$cats = array();
@@ -147,7 +147,7 @@ class Category extends Object {
 		}
 		return $cats;
 	}
-	
+
 	public static function add($akCategoryHandle, $akCategoryAllowSets = 0, $pkg = false) {
 		$db = Loader::db();
 		if (is_object($pkg)) {
@@ -155,12 +155,12 @@ class Category extends Object {
 		}
 		$db->Execute('insert into AttributeKeyCategories (akCategoryHandle, akCategoryAllowSets, pkgID) values (?, ?, ?)', array($akCategoryHandle, $akCategoryAllowSets, $pkgID));
 		$id = $db->Insert_ID();
-		
+
 		$txt = Loader::helper("text");
 		$class = '\\Concrete\\Core\\Attribute\\Key\\' . $txt->camelcase($akCategoryHandle). 'Key';
 		$obj = new $class;
 		$obj->createIndexedSearchTable();
-		
+
 		return static::getByID($id);
 	}
 
@@ -177,15 +177,15 @@ class Category extends Object {
 				$asDisplayOrder = $db->GetOne('select max(asDisplayOrder) from AttributeSets where akCategoryID = ?', array($this->akCategoryID));
 				$asDisplayOrder++;
 			}
-			
+
 			$db->Execute('insert into AttributeSets (asHandle, asName, akCategoryID, asIsLocked, asDisplayOrder, pkgID) values (?, ?, ?, ?, ?,?)', array($asHandle, $asName, $this->akCategoryID, $asIsLocked, $asDisplayOrder, $pkgID));
 			$id = $db->Insert_ID();
-			
+
 			$as = AttributeSet::getByID($id);
 			return $as;
 		}
 	}
-	
+
 	protected function rescanSetDisplayOrder() {
 		$db = Loader::db();
 		$do = 1;
@@ -203,5 +203,5 @@ class Category extends Object {
 			$db->query("update AttributeSets set asDisplayOrder = {$i} where akCategoryID = ? and asID = ?", $v);
 		}
 	}
-	
+
 }

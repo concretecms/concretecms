@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Key;
 use \Concrete\Core\Permission\Duration as PermissionDuration;
 use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
@@ -19,15 +19,15 @@ abstract class WorkflowKey extends Key {
 		$usersExcluded = array();
 		foreach($included as $inc) {
 			$pae = $inc->getAccessEntityObject();
-			$users = array_merge($users, $pae->getAccessEntityUsers($paa));	
+			$users = array_merge($users, $pae->getAccessEntityUsers($paa));
 		}
 		$users = array_unique($users);
 
 		foreach($excluded as $inc) {
 			$pae = $inc->getAccessEntityObject();
-			$usersExcluded = array_merge($usersExcluded, $pae->getAccessEntityUsers());	
+			$usersExcluded = array_merge($usersExcluded, $pae->getAccessEntityUsers());
 		}
 		$users = array_diff($users, $usersExcluded);
-		return $users;	
+		return $users;
 	}
 }

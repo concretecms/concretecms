@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Block\View;
 
 use Concrete\Core\View\AbstractView;
@@ -406,4 +406,3 @@ class BlockView extends AbstractView
     }
 
 }
-	

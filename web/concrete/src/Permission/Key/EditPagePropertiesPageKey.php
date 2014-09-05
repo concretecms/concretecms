@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Key;
 use Loader;
 use \Concrete\Core\Permission\Duration as PermissionDuration;
@@ -14,7 +14,7 @@ class EditPagePropertiesPageKey extends PageKey  {
 	public function getMyAssignment() {
 		$u = new User();
 		$asl = new \Concrete\Core\Permission\Access\ListItem\EditPagePropertiesPageListItem();
-		
+
 
 		if ($u->isSuperUser()) {
 			$asl->setAllowEditName(1);
@@ -26,7 +26,7 @@ class EditPagePropertiesPageKey extends PageKey  {
 			$asl->setAttributesAllowedPermission('A');
 			return $asl;
 		}
-		
+
 		$pae = $this->getPermissionAccessObject();
 		if (!is_object($pae)) {
 			return $asl;
@@ -37,7 +37,7 @@ class EditPagePropertiesPageKey extends PageKey  {
 		$list = $pae->getAccessListItems(PageKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
 		$properties = array();
-		
+
 		$excluded = array();
 		$akIDs = array();
 		$u = new User();
@@ -60,8 +60,8 @@ class EditPagePropertiesPageKey extends PageKey  {
 			}
 			if ($l->allowEditPaths() && (!in_array('paths', $excluded))) {
 				$asl->setAllowEditPaths(1);
-			}		
-			
+			}
+
 			if ($l->getAccessType() == PageKey::ACCESS_TYPE_EXCLUDE && !$l->allowEditName()) {
 				$asl->setAllowEditName(0);
 				$excluded[] = 'name';
@@ -92,7 +92,7 @@ class EditPagePropertiesPageKey extends PageKey  {
 				$asl->setAttributesAllowedPermission('C');
 				if ($l->getAccessType() == PageKey::ACCESS_TYPE_EXCLUDE) {
 					$akIDs = array_values(array_diff($akIDs, $l->getAttributesAllowedArray()));
-				} else { 
+				} else {
 					$akIDs = array_unique(array_merge($akIDs, $l->getAttributesAllowedArray()));
 				}
 			}
@@ -101,8 +101,8 @@ class EditPagePropertiesPageKey extends PageKey  {
 				$akIDs = $allAKIDs;
 				$asl->setAttributesAllowedPermission('A');
 			}
-		}	
-		
+		}
+
 		$asl->setAttributesAllowedArray($akIDs);
 		return $asl;
 	}
@@ -123,22 +123,22 @@ class EditPagePropertiesPageKey extends PageKey  {
 					return true;
 				} else {
 					return false;
-				}				
+				}
 			}
 		}
 
 		if (
-			$asl->allowEditName() || 
-			$asl->allowEditDescription() || 
-			$asl->allowEditDateTime() || 
-			$asl->allowEditUserID() || 
-			$asl->allowEditPaths() || 
+			$asl->allowEditName() ||
+			$asl->allowEditDescription() ||
+			$asl->allowEditDateTime() ||
+			$asl->allowEditUserID() ||
+			$asl->allowEditPaths() ||
 			($asl->getAttributesAllowedPermission() == 'A' || ($asl->getAttributesAllowedPermission() == 'C' && count($asl->getAttributesAllowedArray() > 0)))) {
 				return true;
 		} else {
 			return false;
 		}
 	}
-	
-	
+
+
 }

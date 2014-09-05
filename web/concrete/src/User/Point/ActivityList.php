@@ -1,17 +1,17 @@
-<?
+<?php
 namespace Concrete\Core\User\Point;
 use \Concrete\Core\Legacy\DatabaseItemList;
 use Loader;
 class ActivityList extends DatabaseItemList {
-	
+
 	protected $itemsPerPage = 50;
-	
+
 	public function __construct() {
 		$this->setQuery('select sum(upPoints) as total, upuID from UserPointHistory inner join UserPointActions on UserPointHistory.upaID = UserPointActions.upaID');
 		$this->groupBy('upuID');
 		$this->sortBy('total', 'desc');
 	}
-	
+
 	public function filterByTimePeriod($period) {
 		$ts = date('Y-m-d H:i:s', strtotime($period));
 		$this->filter('timestamp', $ts, '>=');
@@ -25,9 +25,9 @@ class ActivityList extends DatabaseItemList {
 	}
 
 	public function filterByAction($upaID) {
-		$this->filter('upaID',$upaID);	
+		$this->filter('upaID',$upaID);
 	}
 
 
-	
+
 }

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Attribute\Value;
 use Loader;
 class FileValue extends Value {
@@ -16,7 +16,7 @@ class FileValue extends Value {
 	public function getFile() {
 		return $this->f;
 	}
-	
+
 	public static function getByID($avID) {
 		$fav = new static();
 		$fav->load($avID);
@@ -28,7 +28,7 @@ class FileValue extends Value {
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from FileAttributeValues where fID = ? and fvID = ? and akID = ? and avID = ?', array(
-			$this->f->getFileID(), 
+			$this->f->getFileID(),
 			$this->f->getFileVersionID(),
 			$this->attributeKey->getAttributeKeyID(),
 			$this->getAttributeValueID()

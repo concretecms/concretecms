@@ -1,7 +1,7 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Access\ListItem;
 class ViewUserAttributesUserListItem extends UserListItem {
-	
+
 	protected $customAttributeArray = array();
 	protected $attributesAllowedPermission = 'N';
 
@@ -17,6 +17,6 @@ class ViewUserAttributesUserListItem extends UserListItem {
 	public function getAttributesAllowedArray() {
 		return $this->customAttributeArray;
 	}
-	
-	
+
+
 }

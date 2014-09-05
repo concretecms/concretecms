@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Feature\Assignment;
 use Loader;
 use \Concrete\Core\Feature\Feature;
@@ -69,5 +69,5 @@ class CollectionVersionAssignment extends Assignment {
 
 
 
-		
+
 }

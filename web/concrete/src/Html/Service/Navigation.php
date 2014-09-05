@@ -1,17 +1,17 @@
-<?
+<?php
 namespace Concrete\Core\Html\Service;
 use Loader;
 use Page;
 
 class Navigation {
 
-	/** 
+	/**
 	 * Returns a link to a page
 	 * @param Page $cObj
 	 * @return string $link
 	 */
 	public function getLinkToCollection(&$cObj, $appendBaseURL = false, $ignoreUrlRewriting = false) {
-		// basically returns a link to a collection, based on whether or we have 
+		// basically returns a link to a collection, based on whether or we have
 		// mod_rewrite enabled, and the collection has a path
 		$dispatcher = '';
 		if (!defined('URL_REWRITING_ALL') || URL_REWRITING_ALL == false) {
@@ -23,7 +23,7 @@ class Navigation {
 			$link = $cObj->getCollectionPointerExternalLink();
 			return $link;
 		}
-		
+
 		if ($cObj->getCollectionPath() != null) {
 			$link = DIR_REL . $dispatcher . $cObj->getCollectionPath() . '/';
 		} else {
@@ -34,7 +34,7 @@ class Navigation {
 				$link = DIR_REL . '/';
 			}
 		}
-		
+
 		if ($appendBaseURL) {
 			$link = BASE_URL . $link;
 		}
@@ -45,8 +45,8 @@ class Navigation {
 
 		return $link;
 	}
-	
-	/** 
+
+	/**
 	 * Returns an array of collections as a breadcrumb to the current page
 	 * @param Page $c
 	 * @return array $cArray
@@ -71,7 +71,7 @@ class Navigation {
 
 		return $cArray;
 	}
-	
+
 	/**
 	 * Returns the URL of a collection so that it can be clicked on
 	 * @param Page $cObj

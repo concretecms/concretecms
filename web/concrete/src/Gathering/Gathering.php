@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Gathering;
 use Loader;
 use \Concrete\Core\Foundation\Object;
@@ -15,7 +15,7 @@ class Gathering extends Object implements \Concrete\Core\Permission\ObjectInterf
 	}
 
 	public function getPermissionAssignmentClassName() {
-		return '\\Concrete\\Core\\Permission\\Assignment\\GatheringAssignment';	
+		return '\\Concrete\\Core\\Permission\\Assignment\\GatheringAssignment';
 	}
 	public function getPermissionObjectKeyCategoryHandle() {
 		return 'gathering';
@@ -99,7 +99,7 @@ class Gathering extends Object implements \Concrete\Core\Permission\ObjectInterf
 		return $newag;
 	}
 
-	/** 
+	/**
 	 * Runs through all active gathering data sources, creates GatheringItem objects
 	 */
 	public function generateGatheringItems() {

@@ -1,14 +1,14 @@
-<?
+<?php
 namespace Concrete\Core\Updater;
 use Loader;
 use Marketplace;
 class Archive {
-	
+
 	/**
 	 * The directory where this archive will be unzipped
 	 */
 	protected $targetDirectory = "/dev/null";
-	
+
 	public function __construct() {
 		$this->f = Loader::helper('file');
 	}
@@ -33,7 +33,7 @@ class Archive {
 	 * Unzips a file at a directory level by concatenating ".zip" onto the end of it.
 	 * <code>
 	 * 	unzip("/path/to/files/themes/mytheme") // will unzip "mytheme.zip"
-	 * </code> 
+	 * </code>
 	 * @param string $directory
 	 * @return string $directory
 	 */
@@ -47,7 +47,7 @@ class Archive {
             return $fh->getTemporaryDirectory() . '/' . $directory;
         }
 	}
-	
+
 	/**
 	 * Returns either the directory (if the archive itself contains files at the first level) or the subdirectory if, like
 	 * many archiving programs, we the zip archive is a directory, THEN a list of files.
@@ -58,19 +58,19 @@ class Archive {
 		// this is necessary to either get the current directory if there are files in it, or the subdirectory if,
 		// like most archiving programs, the zip archive is a directory, THEN a list of files.
 		$files = $this->f->getDirectoryContents($dir);
-		
+
 		// strip out items in directories that we know aren't valid
-		
+
 		if (count($files) == 1 && is_dir($dir . '/' . $files[0])) {
 			return $dir . '/' . $files[0];
 		} else {
 			return $dir;
-		}	
+		}
 	}
 
 	/**
 	 * Installs a zip file from the passed directory
-	 * @todo This is theme-specific - it really ought to be moved to the page_theme_archive class, at least most it. 
+	 * @todo This is theme-specific - it really ought to be moved to the page_theme_archive class, at least most it.
 	 * @param string $zipfile
 	 * @return base directory into which the zipfile was unzipped
 	 */

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Gathering\Item\Template;
 use \Concrete\Core\Foundation\Object;
 use Loader;
@@ -25,7 +25,7 @@ class Type extends Object {
 		$gaItemTemplateTypeList = CacheLocal::getEntry('gaItemTemplateTypeList', false);
 		if ($gaItemTemplateTypeList != false) {
 			return $gaItemTemplateTypeList;
-		}		
+		}
 
 		$db = Loader::db();
 		$list = array();
@@ -37,12 +37,12 @@ class Type extends Object {
 				$list[] = $type;
 			}
 		}
-		
+
 		$r->Close();
 		CacheLocal::set('gaItemTemplateTypeList', false, $list);
 		return $list;
 	}
-	
+
 	public static function exportList($xml) {
 		$agtypes = static::getList();
 		$db = Loader::db();
@@ -53,12 +53,12 @@ class Type extends Object {
 			$atype->addAttribute('package', $wt->getPackageHandle());
 		}
 	}
-	
+
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute("delete from GatheringItemTemplateTypes where gatTypeID = ?", array($this->gatTypeID));
 	}
-	
+
 	public static function getListByPackage($pkg) {
 		$db = Loader::db();
 		$list = array();
@@ -71,13 +71,13 @@ class Type extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
-	
+	}
+
 	public function getPackageID() { return $this->pkgID;}
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
 	}
-	
+
 	public static function getByHandle($gatTypeHandle) {
 		$db = Loader::db();
 		$gatTypeID = $db->GetOne('select gatTypeID from GatheringItemTemplateTypes where gatTypeHandle = ?', array($gatTypeHandle));
@@ -85,7 +85,7 @@ class Type extends Object {
 			return self::getByID($gatTypeID);
 		}
 	}
-	
+
 	public static function add($gatTypeHandle, $pkg = false) {
 		$pkgID = 0;
 		if (is_object($pkg)) {
@@ -97,5 +97,5 @@ class Type extends Object {
 		$est = static::getByID($id);
 		return $est;
 	}
-	
+
 }

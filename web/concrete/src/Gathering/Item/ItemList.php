@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Gathering\Item;
 use Loader;
 use Concrete\Core\Legacy\DatabaseItemList;
@@ -25,7 +25,7 @@ class ItemList extends DatabaseItemList {
 	}
 
 	public function get($itemsToGet = 10000, $offset = 0) {
-		$items = array(); 
+		$items = array();
 		$r = parent::get($itemsToGet, intval($offset));
 		foreach($r as $row) {
 			$ag = GatheringItem::getByID($row['gaiID']);

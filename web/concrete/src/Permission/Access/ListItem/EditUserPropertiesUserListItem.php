@@ -1,8 +1,8 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Access\ListItem;
 use Loader;
 class EditUserPropertiesUserListItem extends UserListItem {
-	
+
 	protected $customAttributeKeyArray = array();
 	protected $attributesAllowedPermission = 'N';
 	protected $allowEditUName = 0;
@@ -24,11 +24,11 @@ class EditUserPropertiesUserListItem extends UserListItem {
 	public function getAttributesAllowedArray() {
 		return $this->customAttributeKeyArray;
 	}
-	
+
 	public function setAllowEditUserName($allow) {
 		$this->allowEditUName = $allow;
 	}
-	
+
 	public function allowEditUserName() {
 		return $this->allowEditUName;
 	}
@@ -36,7 +36,7 @@ class EditUserPropertiesUserListItem extends UserListItem {
 	public function setAllowEditEmail($allow) {
 		$this->allowEditUEmail = $allow;
 	}
-	
+
 	public function allowEditEmail() {
 		return $this->allowEditUEmail;
 	}
@@ -44,7 +44,7 @@ class EditUserPropertiesUserListItem extends UserListItem {
 	public function setAllowEditPassword($allow) {
 		$this->allowEditUPassword = $allow;
 	}
-	
+
 	public function allowEditPassword() {
 		return $this->allowEditUPassword;
 	}
@@ -52,15 +52,15 @@ class EditUserPropertiesUserListItem extends UserListItem {
 	public function setAllowEditAvatar($allow) {
 		$this->allowEditUAvatar = $allow;
 	}
-	
+
 	public function allowEditAvatar() {
 		return $this->allowEditUAvatar;
 	}
-	
+
 	public function setAllowEditTimezone($allow) {
 		$this->allowEditUTimezone = $allow;
 	}
-	
+
 	public function allowEditTimezone() {
 		return $this->allowEditUTimezone;
 	}
@@ -68,10 +68,10 @@ class EditUserPropertiesUserListItem extends UserListItem {
 	public function setAllowEditDefaultLanguage($allow) {
 		$this->allowEditUDefaultLanguage = $allow;
 	}
-	
+
 	public function allowEditDefaultLanguage() {
 		return $this->allowEditUDefaultLanguage;
 	}
-	
-	
+
+
 }

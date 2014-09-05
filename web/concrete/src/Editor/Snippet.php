@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Editor;
 use Loader;
 use \Concrete\Core\Foundation\Object;
@@ -6,7 +6,7 @@ use \Concrete\Core\Package\PackageList;
 use Core;
 abstract class Snippet extends Object {
 
-	/** 
+	/**
 	 * Required for snippets to work
 	 */
 	abstract public function replace();
@@ -19,7 +19,7 @@ abstract class Snippet extends Object {
 		return PackageList::getHandle($this->pkgID);
 	}
 	public function getPackageObject() {return Package::getByID($this->pkgID);}
-	
+
 	public function findAndReplace($text) {
 		$r = preg_replace_callback('/\<span[^>]*data-scsHandle="' . $this->scsHandle . '">[^<]*<\/span>/is', array($this, 'replace'), $text);
 		return $r;
@@ -40,7 +40,7 @@ abstract class Snippet extends Object {
 			return $sc;
 		}
 	}
-	
+
 	public static function add($scsHandle, $scsName, $pkg = false) {
 		$pkgID = 0;
 		if (is_object($pkg)) {
@@ -50,12 +50,12 @@ abstract class Snippet extends Object {
 		$db->Execute('insert into SystemContentEditorSnippets (scsHandle, scsName, pkgID) values (?, ?, ?)', array($scsHandle, $scsName, $pkgID));
 		return static::getByHandle($scsHandle);
 	}
-	
+
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from SystemContentEditorSnippets where scsHandle = ?', array($this->scsHandle));
 	}
-	
+
 	public function activate() {
 		$db = Loader::db();
 		$db->Execute('update SystemContentEditorSnippets set scsIsActive = 1 where scsHandle = ?', array($this->scsHandle));
@@ -65,7 +65,7 @@ abstract class Snippet extends Object {
 		$db = Loader::db();
 		$db->Execute('update SystemContentEditorSnippets set scsIsActive = 0 where scsHandle = ?', array($this->scsHandle));
 	}
-	
+
 	public static function getList() {
 		$db = Loader::db();
 		$scsHandles = $db->GetCol('select scsHandle from SystemContentEditorSnippets order by scsHandle asc');
@@ -98,7 +98,7 @@ abstract class Snippet extends Object {
 		}
 		return $libraries;
 	}
-	
+
 	public static function exportList($xml) {
 		$list = self::getList();
 		$nxml = $xml->addChild('systemcontenteditorsnippets');
@@ -111,7 +111,7 @@ abstract class Snippet extends Object {
 			$type->addAttribute('activated', $sc->isSystemContentEditorSnippetActive());
 		}
 	}
-	
-	
+
+
 
 }

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Key;
 use \Concrete\Core\Foundation\Object;
 use Loader;
@@ -12,11 +12,11 @@ use \Concrete\Core\Permission\Cache as PermissionCache;
 use Environment;
 use Core;
 abstract class Key extends Object {
-	
+
 	const ACCESS_TYPE_INCLUDE = 10;
 	const ACCESS_TYPE_EXCLUDE = -1;
 	const ACCESS_TYPE_ALL = 0;
-	
+
 	public function getSupportedAccessTypes() {
 		$types = array(
 			self::ACCESS_TYPE_INCLUDE => t('Included'),
@@ -24,18 +24,18 @@ abstract class Key extends Object {
 		);
 		return $types;
 	}
-	
-	/** 
+
+	/**
 	 * Returns whether a permission key can start a workflow
 	 */
 	public function canPermissionKeyTriggerWorkflow() {return $this->pkCanTriggerWorkflow;}
 
-	/** 
+	/**
 	 * Returns whether a permission key has a custom class.
 	 */
 	public function permissionKeyHasCustomClass() {return $this->pkHasCustomClass;}
-	
-	/** 
+
+	/**
 	 * Returns the name for this permission key
 	 */
 	public function getPermissionKeyName() { return $this->pkName;}
@@ -57,12 +57,12 @@ abstract class Key extends Object {
 		}
 	}
 
-	/** 
+	/**
 	 * Returns the handle for this permission key
 	 */
 	public function getPermissionKeyHandle() { return $this->pkHandle;}
 
-	/** 
+	/**
 	 * Returns the description for this permission key
 	 */
 	public function getPermissionKeyDescription() { return $this->pkDescription;}
@@ -84,17 +84,17 @@ abstract class Key extends Object {
 		}
 	}
 
-	/** 
+	/**
 	 * Returns the ID for this permission key
 	 */
 	public function getPermissionKeyID() {return $this->pkID;}
 	public function getPermissionKeyCategoryID() {return $this->pkCategoryID;}
 	public function getPermissionKeyCategoryHandle() {return $this->pkCategoryHandle;}
-	
+
 	public function setPermissionObject($object) {
 		$this->permissionObject = $object;
 	}
-	
+
 	public function getPermissionObjectToCheck() {
 		if (is_object($this->permissionObjectToCheck)) {
 			return $this->permissionObjectToCheck;
@@ -102,7 +102,7 @@ abstract class Key extends Object {
 			return $this->permissionObject;
 		}
 	}
-	
+
 	public function getPermissionObject() {
 		return $this->permissionObject;
 	}
@@ -133,31 +133,31 @@ abstract class Key extends Object {
 		$txt = Loader::helper('text');
 		$r = $db->GetRow('select pkID, pkName, pkDescription, pkHandle, pkCategoryHandle, pkCanTriggerWorkflow, pkHasCustomClass, PermissionKeys.pkCategoryID, pkCategoryHandle, PermissionKeys.pkgID from PermissionKeys inner join PermissionKeyCategories on PermissionKeyCategories.pkCategoryID = PermissionKeys.pkCategoryID where ' . $loadBy . ' = ?', array($key));
 		$class = '\\Concrete\\Core\\Permission\\Key\\' . $txt->camelcase($r['pkCategoryHandle']) . 'Key';
-		if (!is_array($r) && (!$r['pkID'])) { 
+		if (!is_array($r) && (!$r['pkID'])) {
 			return false;
 		}
 
 		if ($r['pkHasCustomClass']) {
 			$class = '\\Concrete\\Core\\Permission\\Key\\' . $txt->camelcase($r['pkHandle'] . '_' . $r['pkCategoryHandle']) . 'Key';
 		}
-				
+
 		$pk = Core::make($class);
 		$pk->setPropertiesFromArray($r);
 		return $pk;
 	}
-	
+
 	public function hasCustomOptionsForm() {
 		$env = Environment::get();
 		$file = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_PERMISSIONS . '/' . DIRNAME_KEYS . '/' . $this->pkHandle . '.php', $this->getPackageHandle());
 		return file_exists($file);
 	}
-	
+
 	public function getPackageID() { return $this->pkgID;}
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
 	}
 
-	/** 
+	/**
 	 * Returns a list of all permissions of this category
 	 */
 	public static function getList($pkCategoryHandle, $filters = array()) {
@@ -177,7 +177,7 @@ abstract class Key extends Object {
 		$r->Close();
 		return $list;
 	}
-	
+
 	public function export($axml) {
 		$category = PermissionKeyCategory::getByID($this->pkCategoryID)->getPermissionKeyCategoryHandle();
 		$pkey = $axml->addChild('permissionkey');
@@ -200,8 +200,8 @@ abstract class Key extends Object {
 			}
 		}
 	}
-	
-	/** 
+
+	/**
 	 * Note, this queries both the pkgID found on the PermissionKeys table AND any permission keys of a special type
 	 * installed by that package, and any in categories by that package.
 	 */
@@ -224,8 +224,8 @@ abstract class Key extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
-	
+	}
+
 	public static function import(\SimpleXMLElement $pk) {
 		$pkCategoryHandle = $pk['category'];
 		$pkg = false;
@@ -259,21 +259,21 @@ abstract class Key extends Object {
 		}
 		return $keys[$pkHandle];
 	}
-	
-	/** 
-	 * Adds an permission key. 
+
+	/**
+	 * Adds an permission key.
 	 */
 	public static function add($pkCategoryHandle, $pkHandle, $pkName, $pkDescription, $pkCanTriggerWorkflow, $pkHasCustomClass, $pkg = false) {
-		
+
 		$vn = Loader::helper('validation/numbers');
 		$txt = Loader::helper('text');
 		$pkgID = 0;
 		$db = Loader::db();
-		
+
 		if (is_object($pkg)) {
 			$pkgID = $pkg->getPackageID();
 		}
-		
+
 		if ($pkCanTriggerWorkflow) {
 			$pkCanTriggerWorkflow = 1;
 		} else {
@@ -288,7 +288,7 @@ abstract class Key extends Object {
 		$pkCategoryID = $db->GetOne("select pkCategoryID from PermissionKeyCategories where pkCategoryHandle = ?", array($pkCategoryHandle));
 		$a = array($pkHandle, $pkName, $pkDescription, $pkCategoryID, $pkCanTriggerWorkflow, $pkHasCustomClass, $pkgID);
 		$r = $db->query("insert into PermissionKeys (pkHandle, pkName, pkDescription, pkCategoryID, pkCanTriggerWorkflow, pkHasCustomClass, pkgID) values (?, ?, ?, ?, ?, ?, ?)", $a);
-		
+
 		if ($r) {
 			$pkID = $db->Insert_ID();
 			$keys = self::loadAll();
@@ -296,14 +296,14 @@ abstract class Key extends Object {
 		}
 	}
 
-	/** 
+	/**
 	 * @access private
 	 * legacy support
 	 */
 	public function can() {
 		return $this->validate();
 	}
-	
+
 	public function validate() {
 		$u = new User();
 		if ($u->isSuperUser()) {
@@ -321,7 +321,7 @@ abstract class Key extends Object {
 		} else {
 			$valid = false;
 		}
-		
+
 		PermissionCache::addValidate($this, $valid);
 		return $valid;
 	}
@@ -331,8 +331,8 @@ abstract class Key extends Object {
 		$db->Execute('delete from PermissionKeys where pkID = ?', array($this->getPermissionKeyID()));
 		self::loadAll();
 	}
-	
-	
+
+
 	/**
 	 * A shortcut for grabbing the current assignment and passing into that object
 	 */
@@ -340,7 +340,7 @@ abstract class Key extends Object {
 		$args = func_get_args();
 		$obj = $this->getPermissionAccessObject();
 		if (is_object($obj)) {
-			return call_user_func_array(array($obj, 'getAccessListItems'), $args);		
+			return call_user_func_array(array($obj, 'getAccessListItems'), $args);
 		} else {
 			return array();
 		}
@@ -357,12 +357,12 @@ abstract class Key extends Object {
 		$targ->setPermissionKeyObject($this);
 		return $targ;
 	}
-	
+
 	public function getPermissionAccessObject() {
 		$targ = $this->getPermissionAssignmentObject();
 		return $targ->getPermissionAccessObject();
 	}
-	
+
 	public function getPermissionAccessID() {
 		$pa = $this->getPermissionAccessObject();
 		if (is_object($pa)) {
@@ -374,6 +374,6 @@ abstract class Key extends Object {
 		// by default we don't. but tasks do
 	}
 
-	
+
 
 }

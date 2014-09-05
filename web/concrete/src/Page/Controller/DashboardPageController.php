@@ -1,9 +1,9 @@
-<?
+<?php
 namespace Concrete\Core\Page\Controller;
 use Loader;
 class DashboardPageController extends PageController {
-	
-	protected $error; 
+
+	protected $error;
 	public $token;
 	protected $helpers = array('form');
 
@@ -26,7 +26,7 @@ class DashboardPageController extends PageController {
         }
         $this->set('hideDashboardPanel', $hideDashboardPanel);
     }
-	
+
 	public function on_before_render() {
 		$pageTitle = $this->get('pageTitle');
 		if (!$pageTitle) {

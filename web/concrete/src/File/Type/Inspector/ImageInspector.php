@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\File\Type\Inspector;
 use Concrete\Core\File\Version;
 use Image;

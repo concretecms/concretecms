@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Application\Service;
 use PageType;
 use \Concrete\Core\Http\ResponseAssetGroup;

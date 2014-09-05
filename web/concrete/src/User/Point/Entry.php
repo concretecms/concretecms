@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\User\Point;
 use Loader;
 use \Concrete\Core\User\UserInfo;
@@ -10,7 +10,7 @@ class Entry {
 	public $upaID = 0;
 	public $upPoints;
 	public $timestamp;
-	
+
 	public function load($upID) {
 		$db = Loader::db();
 		$row = $db->GetRow('select * from UserPointHistory where upID = ?', array($upID));
@@ -46,36 +46,36 @@ class Entry {
 			));
 		}
 	}
-	
+
 	public function delete() {
 		$db = Loader::db();
 		$db->delete('UserPointHistory', array('upID' => $this->upID));
 	}
-	
+
 	public function	getUserPointEntryID() {
 		return $this->upID;
 	}
-	
+
 	public function	getUserPointEntryActionID() {
 		return $this->upaID;
 	}
-	
+
 	public function	getUserPointEntryActionObject() {
 		return UserPointAction::getByID($this->getUserPointEntryActionID());
 	}
-	
+
 	public function	getUserPointEntryValue() {
 		return $this->upPoints;
-	}	
-	
+	}
+
 	public function	getUserPointEntryTimestamp() {
 		return $this->timestamp;
 	} // - returns unix timestamp stored in the timestamp column
-	
+
 	public function	getUserPointEntryDateTime() {
 		return $this->timestamp;
 	} // - returns it in a nicely formatted way
-	
+
 	public function getUserPointEntryUserID() {
 		return $this->upuID;
 	}
@@ -91,7 +91,7 @@ class Entry {
 		$ui = UserInfo::getByID($this->upuID);
 		return $ui;
 	}
-	
+
 	public static function getTotal($ui) {
 		$db = Loader::db();
 		$cnt = $db->GetOne('select sum(upPoints) as total from UserPointHistory where upuID = ?', array($ui->getUserID()));
