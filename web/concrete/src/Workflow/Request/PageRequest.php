@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Workflow\Request;
 use Loader;
 use Page;
@@ -12,12 +12,12 @@ use \Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 use \Concrete\Core\Workflow\Progress\PageProgress as PageWorkflowProgress;
 
-abstract class PageRequest extends Request {  
-	
+abstract class PageRequest extends Request {
+
 	public function setRequestedPage($c) {
 		$this->cID = $c->getCollectionID();
 	}
-	
+
 	public function getRequestedPageID() {
 		return $this->cID;
 	}
@@ -29,13 +29,13 @@ abstract class PageRequest extends Request {
 		$c = Page::getByID($this->cID, 'RECENT');
 		return $c->getVersionID();
 	}
-	
+
 	public function setRequestedPageVersionID($cvID) {
 		$this->cvID = $cvID;
 	}
-	
+
 	public function addWorkflowProgress(\Concrete\Core\Workflow\Workflow $wf) {
-		
+
 		$pwp = PageWorkflowProgress::add($wf, $this);
 		$r = $pwp->start();
 		$pwp->setWorkflowProgressResponseObject($r);
@@ -55,7 +55,7 @@ abstract class PageRequest extends Request {
 		$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
 		return $wpr;
 	}
-	
+
 }
 
 

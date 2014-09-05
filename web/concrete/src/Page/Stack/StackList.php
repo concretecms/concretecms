@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Page\Stack;
 use Loader;
 use Concrete\Core\Legacy\PageList;
@@ -15,7 +15,7 @@ class StackList extends PageList {
 		$this->filterByParentID($c->getCollectionID());
 		$this->sortBy('p1.cDisplayOrder', 'asc');
 	}
-	
+
 	public function filterByGlobalAreas() {
 		$this->filter('stType', Stack::ST_TYPE_GLOBAL_AREA);
 	}
@@ -23,7 +23,7 @@ class StackList extends PageList {
 	public function filterByUserAdded() {
 		$this->filter('stType', Stack::ST_TYPE_USER_ADDED);
 	}
-	
+
 	public static function export(\SimpleXMLElement $x) {
 		$db = Loader::db();
 		$r = $db->Execute('select stName, cID, stType from Stacks order by stName asc');
@@ -41,9 +41,9 @@ class StackList extends PageList {
 	public function get($itemsToGet = 0, $offset = 0) {
 		if ($this->getQuery() == '') {
 			$this->setBaseQuery();
-		}		
+		}
 		$stacks = array();
-		$this->setItemsPerPage($itemsToGet);		
+		$this->setItemsPerPage($itemsToGet);
 		$r = DatabaseItemList::get($itemsToGet, $offset);
 		foreach($r as $row) {
 			$s = Stack::getByID($row['cID'], 'RECENT');
@@ -53,5 +53,5 @@ class StackList extends PageList {
 	}
 
 
-	
+
 }

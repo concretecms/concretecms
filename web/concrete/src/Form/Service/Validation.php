@@ -1,8 +1,8 @@
-<?
+<?php
 namespace Concrete\Core\Form\Service;
 use Loader;
 /**
- * 
+ *
  * @package Helpers
  * @subpackage Validation
  * @author Andrew Embler <andrew@concrete5.org>
@@ -18,15 +18,15 @@ use Loader;
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */
- 
- 	class Validation {	
-		
+
+ 	class Validation {
+
 		protected $fields = array();
 		protected $fieldsInvalid = array();
 		protected $data = array();
 		protected $files = array();
 		protected $error;
-		
+
 		/**
 		 * @access private
 		 */
@@ -44,9 +44,9 @@ use Loader;
 		public function __construct() {
 			$this->error = Loader::helper('validation/error');
 		}
-		
-		
-		/** 
+
+
+		/**
 		 * Adds a test to a field to ensure that, if set, it is a valid uploaded image.
 		 * @param string $field
 		 * @param string $errorMsg
@@ -57,8 +57,8 @@ use Loader;
 			$const = ($emptyIsOk) ? self::VALID_UPLOADED_IMAGE : self::VALID_UPLOADED_IMAGE_REQUIRED;
 			$this->addRequired($field, $errorMsg, $const);
 		}
-		
-		/** 
+
+		/**
 		 * Adds a test to a field to ensure that, if set, it is a valid uploaded file.
 		 * @param string $field
 		 * @param string $errorMsg
@@ -69,8 +69,8 @@ use Loader;
 			$const = ($emptyIsOk) ? self::VALID_UPLOADED_FILE : self::VALID_UPLOADED_FILE_REQUIRED;
 			$this->addRequired($field, $errorMsg, $const);
 		}
-		
-		/** 
+
+		/**
 		 * Adds a required field and tests that it is integer only
 		 * @param string $field
 		 * @param string $errorMsg
@@ -82,7 +82,7 @@ use Loader;
 			$this->addRequired($field, $errorMsg, $const);
 		}
 
-		/** 
+		/**
 		 * Adds a required field to the form helper object. This will then be typically used in conjunction with the test() method to see
 		 * if the test is passed
 		 * @param string $field
@@ -97,7 +97,7 @@ use Loader;
 			$obj->validate = $validate;
 			$this->fields[] = $obj;
 		}
-		
+
 		public function addRequiredToken($value, $errorMsg = null) {
 			$obj = new \stdClass;
 		 	$vt = Loader::helper('validation/token');
@@ -106,8 +106,8 @@ use Loader;
 			$obj->validate = self::VALID_TOKEN;
 			$this->fields[] = $obj;
 		}
-		
-		/** 
+
+		/**
 		 * Adds a required email address to the suite of tests to be run.
 		 * @param string $field
 		 * @param string $errorMsg
@@ -116,15 +116,15 @@ use Loader;
 		public function addRequiredEmail($field, $errorMsg = null) {
 			$this->addRequired($field, $errorMsg, self::VALID_EMAIL);
 		}
-		
+
 		/**
-		 * Sets the data files array 
+		 * Sets the data files array
 		 */
 		public function setFiles() {
 			$this->files = $_FILES;
 		}
-		
-		/** 
+
+		/**
 		 * An associative array that we setup to validate against. Typical usage is $val->setData($_POST);
 		 * @param array $data
 		 * @return void
@@ -132,24 +132,24 @@ use Loader;
 		public function setData($data) {
 			$this->data = $data;
 		}
-		
-		/** 
+
+		/**
 		 * @access private
 		 */
 		protected function setErrorsFromInvalidFields() {
 			foreach($this->fieldsInvalid as $f) {
-				$this->error->add($f->message);	
+				$this->error->add($f->message);
 			}
 		}
-		
-		
+
+
 		public function invalidate($message) {
 			$f = new \stdClass;
 			$f->message = $message;
 			$this->fieldsInvalid[] = $f;
 		}
-		
-		/** 
+
+		/**
 		 * After the validation error helper has been setup, the test() method ensures that all fields that require validation
 		 * pass. Returns the number of invalid fields (0 = success)
 		 * @return int
@@ -158,12 +158,12 @@ use Loader;
 			$val = Loader::helper('validation/strings');
 			$num = Loader::helper('validation/numbers');
 			$fil = Loader::helper('validation/file');
-			
+
 			// loop through all the fields in the array, and run whatever validation
 			// the validate parameter says is required
 			foreach($this->fields as $f) {
 				$validate = $f->validate;
-				$field = $f->field;				
+				$field = $f->field;
 				switch($validate) {
 					case self::VALID_NOT_EMPTY:
 						if (!$val->notempty($this->data[$field])) {
@@ -213,15 +213,15 @@ use Loader;
 						break;
 				}
 			}
-			
+
 			$this->setErrorsFromInvalidFields();
 			return count($this->fieldsInvalid) == 0;
 		}
-		
-		/** 
-		 * Gets the error object. 
+
+		/**
+		 * Gets the error object.
 		 * <code>
-		 *     if ($val->test() > 0) { 
+		 *     if ($val->test() > 0) {
 		 *         $e = $val->getError();
 		 *     }
 		 * </code>
@@ -230,7 +230,7 @@ use Loader;
 		public function getError() {
 			return $this->error;
 		}
-	
+
 	}
-	
+
 ?>

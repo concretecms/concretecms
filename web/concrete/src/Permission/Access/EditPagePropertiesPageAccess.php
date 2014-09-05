@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Access;
 use \Concrete\Core\Permission\Duration as PermissionDuration;
 use Loader;
@@ -10,7 +10,7 @@ class EditPagePropertiesPageAccess extends PageAccess {
 		$db = Loader::db();
 		$r = $db->Execute('select * from PagePermissionPropertyAccessList where paID = ?', array($this->getPermissionAccessID()));
 		while ($row = $r->FetchRow()) {
-			$v = array($row['peID'], $newPA->getPermissionAccessID(), 
+			$v = array($row['peID'], $newPA->getPermissionAccessID(),
 			$row['attributePermission'],
 			$row['name'],
 			$row['publicDateTime'],
@@ -33,7 +33,7 @@ class EditPagePropertiesPageAccess extends PageAccess {
 		$db = Loader::db();
 		$db->Execute('delete from PagePermissionPropertyAccessList where paID = ?', array($this->getPermissionAccessID()));
 		$db->Execute('delete from PagePermissionPropertyAttributeAccessListCustom where paID = ?', array($this->getPermissionAccessID()));
-		if (is_array($args['propertiesIncluded'])) { 
+		if (is_array($args['propertiesIncluded'])) {
 			foreach($args['propertiesIncluded'] as $peID => $attributePermission) {
 				$allowEditName = 0;
 				$allowEditDateTime = 0;
@@ -59,8 +59,8 @@ class EditPagePropertiesPageAccess extends PageAccess {
 				$db->Execute('insert into PagePermissionPropertyAccessList (paID, peID, attributePermission, name, publicDateTime, uID, description, paths) values (?, ?, ?, ?, ?, ?, ?, ?)', $v);
 			}
 		}
-		
-		if (is_array($args['propertiesExcluded'])) { 
+
+		if (is_array($args['propertiesExcluded'])) {
 			foreach($args['propertiesExcluded'] as $peID => $attributePermission) {
 				$allowEditNameExcluded = 0;
 				$allowEditDateTimeExcluded = 0;
@@ -87,18 +87,18 @@ class EditPagePropertiesPageAccess extends PageAccess {
 			}
 		}
 
-		if (is_array($args['akIDInclude'])) { 
+		if (is_array($args['akIDInclude'])) {
 			foreach($args['akIDInclude'] as $peID => $akIDs) {
-				foreach($akIDs as $akID) { 
+				foreach($akIDs as $akID) {
 					$v = array($this->getPermissionAccessID(), $peID, $akID);
 					$db->Execute('insert into PagePermissionPropertyAttributeAccessListCustom (paID, peID, akID) values (?, ?, ?)', $v);
 				}
 			}
 		}
 
-		if (is_array($args['akIDExclude'])) { 
+		if (is_array($args['akIDExclude'])) {
 			foreach($args['akIDExclude'] as $peID => $akIDs) {
-				foreach($akIDs as $akID) { 
+				foreach($akIDs as $akID) {
 					$v = array($this->getPermissionAccessID(), $peID, $akID);
 					$db->Execute('insert into PagePermissionPropertyAttributeAccessListCustom (paID, peID, akID) values (?, ?, ?)', $v);
 				}
@@ -106,7 +106,7 @@ class EditPagePropertiesPageAccess extends PageAccess {
 		}
 
 	}
-	
+
 	public function getAccessListItems($accessType = PagePermissionKey::ACCESS_TYPE_INCLUDE, $filterEntities = array()) {
 		$db = Loader::db();
 		$list = parent::getAccessListItems($accessType, $filterEntities);
@@ -114,7 +114,7 @@ class EditPagePropertiesPageAccess extends PageAccess {
 		foreach($list as $l) {
 			$pe = $l->getAccessEntityObject();
 			$prow = $db->GetRow('select attributePermission, name, publicDateTime, uID, description, paths from PagePermissionPropertyAccessList where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
-			if (is_array($prow) && $prow['attributePermission']) { 
+			if (is_array($prow) && $prow['attributePermission']) {
 				$l->setAttributesAllowedPermission($prow['attributePermission']);
 				$l->setAllowEditName($prow['name']);
 				$l->setAllowEditDateTime($prow['publicDateTime']);
@@ -137,12 +137,12 @@ class EditPagePropertiesPageAccess extends PageAccess {
 				$l->setAllowEditDescription(0);
 				$l->setAllowEditPaths(0);
 			}
-			if ($attributePermission == 'C') { 
+			if ($attributePermission == 'C') {
 				$akIDs = $db->GetCol('select akID from PagePermissionPropertyAttributeAccessListCustom where peID = ? and paID = ?', array($pe->getAccessEntityID(), $l->getPermissionAccessID()));
 				$l->setAttributesAllowedArray($akIDs);
 			}
 		}
 		return $list;
 	}
-	
+
 }

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Workflow\HistoryEntry;
 class BasicHistoryEntry extends HistoryEntry {
 
@@ -12,7 +12,7 @@ class BasicHistoryEntry extends HistoryEntry {
 			case 'cancel':
 				$d = t('Denied by %s', $ux->getUserName());
 				break;
-		}		
+		}
 		if ($this->getWorkflowStepComments()) {
 			$d .= t(' with the comments "%s"', $this->getWorkflowStepComments());
 		}

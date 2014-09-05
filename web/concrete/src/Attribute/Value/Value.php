@@ -1,11 +1,11 @@
-<?
+<?php
 namespace Concrete\Core\Attribute\Value;
 use \Concrete\Core\Foundation\Object;
 use Loader;
 class Value extends Object {
-	
+
 	protected $attributeType;
-	
+
 	public static function getByID($avID) {
 		$av = new static();
 		$av->load($avID);
@@ -13,7 +13,7 @@ class Value extends Object {
 			return $av;
 		}
 	}
-	
+
 	protected function load($avID) {
 		$db = Loader::db();
 		$row = $db->GetRow("select avID, akID, uID, avDateAdded, atID from AttributeValues where avID = ?", array($avID));
@@ -32,7 +32,7 @@ class Value extends Object {
 			unset($this->attributeType);
 		}
 	}
-	
+
 	public function getValue($mode = false) {
 		if ($mode != false) {
 			$th = Loader::helper('text');
@@ -43,8 +43,8 @@ class Value extends Object {
 					return $this->attributeType->controller->{$method}();
 				}
 			}
-		}		
-		return $this->attributeType->controller->getValue();		
+		}
+		return $this->attributeType->controller->getValue();
 	}
 
 	public function getSearchIndexValue() {
@@ -54,13 +54,13 @@ class Value extends Object {
 			return $this->attributeType->controller->getValue();
 		}
 	}
-	
+
 	public function delete() {
 		$this->attributeType->controller->deleteValue();
-		$db = Loader::db();	
+		$db = Loader::db();
 		$db->Execute('delete from AttributeValues where avID = ?', $this->getAttributeValueID());
 	}
-	
+
 	public function getAttributeKey() {
 		return $this->attributeKey;
 	}
@@ -76,5 +76,5 @@ class Value extends Object {
 		$ato = \Concrete\Core\Attribute\Type::getByID($this->atID);
 		return $ato;
 	}
-	
+
 }

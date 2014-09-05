@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Concrete\Core\Cache\Page;
 use Concrete\Core\Http\Response;
@@ -35,9 +35,9 @@ abstract class PageCache {
 			PageCache::$library = new $class();
 		}
 		return PageCache::$library;
-	}	
+	}
 
-	/** 
+	/**
 	 * Note: can't use the User object directly because it might query the database
 	 */
 	public function shouldCheckCache(Request $req) {
@@ -86,7 +86,7 @@ abstract class PageCache {
 				return false;
 			}
 		}
-		
+
 		if (!$c->getCollectionFullPageCaching()) {
 			return false;
 		}
@@ -99,7 +99,7 @@ abstract class PageCache {
 			if ((is_object($v->controller) && (!$v->controller->supportsPageCache())) || (!is_object($v->controller))) {
 				return false;
 			}
-		}	
+		}
 
 		if ($c->getCollectionFullPageCaching() == 1 || FULL_PAGE_CACHE_GLOBAL === 'all') {
 			// this cache page at the page level
@@ -108,7 +108,7 @@ abstract class PageCache {
 		}
 
 		if (FULL_PAGE_CACHE_GLOBAL !== 'blocks') {
-			// we are NOT specifically caching this page, and we don't 
+			// we are NOT specifically caching this page, and we don't
 			return false;
 		}
 
@@ -130,13 +130,13 @@ abstract class PageCache {
 				return urlencode(trim($mixed->getCollectionPath(), '/'));
 			} else if ($mixed->getCollectionID() == HOME_CID) {
 				return '!' . HOME_CID;
-			}			
+			}
 		} else if ($mixed instanceof \Concrete\Core\Http\Request) {
 			if ($mixed->getPath() != '') {
 				return urlencode(trim($mixed->getPath(), '/'));
 			} else {
 				return '!' . HOME_CID;
-			}			
+			}
 		} else if ($mixed instanceof PageCacheRecord) {
 			return $mixed->getCacheRecordKey();
 		}

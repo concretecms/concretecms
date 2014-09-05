@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Concrete\Core\Error;
 use Loader;
@@ -9,7 +9,7 @@ class Error {
 	protected $error = array();
 	public $helperAlwaysCreateNewInstance = true;
 
-	/** 
+	/**
 	 * Adds an error object or exception to the internal error array
 	 * @param Exception | string $e
 	 * @return void
@@ -25,16 +25,16 @@ class Error {
 			$this->error[] = $e;
 		}
 	}
-	
-	/** 
+
+	/**
 	 * Returns a list of errors in the error helper
 	 * @return array
 	 */
 	public function getList() {
 		return $this->error;
 	}
-	
-	/** 
+
+	/**
 	 * Returns whether or not this error helper has more than one error registered within it.
 	 * @return bool
 	 */
@@ -42,7 +42,7 @@ class Error {
 		return (count($this->error) > 0);
 	}
 
-	/** 
+	/**
 	 * Outputs the HTML of an error list, with the correct style attributes/classes. This is a convenience method.
 	 */
 	public function output() {
@@ -55,7 +55,7 @@ class Error {
 		}
 	}
 
-	/** 
+	/**
 	 * Outputs the the error as a JSON object.
 	 */
 	public function outputJSON() {

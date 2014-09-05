@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Page\Type\Composer;
 use \Concrete\Core\Foundation\Object;
 use Concrete\Core\Page\Type\Type;

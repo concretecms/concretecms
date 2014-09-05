@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Page\Search\Result;
 
 use \Concrete\Core\Search\Result\Item as SearchResultItem;
@@ -22,7 +22,7 @@ class Item extends SearchResultItem {
 
 	protected function populateDetails($item) {
 		$this->cID = $item->getCollectionID();
-		$cp = new Permissions($item);        
+		$cp = new Permissions($item);
 		$this->canEditPageProperties = $cp->canEditPageProperties();
 		$this->canEditPageSpeedSettings = $cp->canEditPageSpeedSettings();
 		$this->canEditPagePermissions = $cp->canEditPagePermissions();

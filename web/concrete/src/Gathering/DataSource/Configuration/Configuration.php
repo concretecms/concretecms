@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Gathering\DataSource\Configuration;
 use Loader;
 use \Concrete\Core\Foundation\Object;
@@ -54,5 +54,5 @@ class Configuration extends Object {
 		$db = Loader::db();
 		$db->Execute('delete from GatheringConfiguredDataSources where gcsID = ?', array($this->gcsID));
 	}
-		
+
 }

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Logging;
 use \Concrete\Core\Legacy\DatabaseItemList;
 use Database;

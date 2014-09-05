@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Feature\Detail;
 use Loader;
 class ImageDetail extends Detail {
@@ -33,7 +33,7 @@ class ImageDetail extends Detail {
 		}
 
 		// no suggestion
-		return 0;	
+		return 0;
 	}
 
 	public function getGatheringItemSuggestedSlotWidth() {
@@ -44,7 +44,7 @@ class ImageDetail extends Detail {
 		}
 
 		// no suggestion
-		return 0;	
+		return 0;
 
 	}
 }

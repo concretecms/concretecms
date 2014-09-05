@@ -1,7 +1,7 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Access\ListItem;
 class AddFileFileSetListItem extends FileSetListItem {
-	
+
 	protected $customFileTypesArray = array();
 	protected $fileTypesAllowedPermission = 'N';
 
@@ -17,6 +17,6 @@ class AddFileFileSetListItem extends FileSetListItem {
 	public function getFileTypesAllowedArray() {
 		return $this->customFileTypesArray;
 	}
-	
-	
+
+
 }

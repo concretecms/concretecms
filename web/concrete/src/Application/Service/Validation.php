@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Application\Service;
 use Loader;
 /**
@@ -19,8 +19,8 @@ use Loader;
  */
 
 	class Validation {
-	
-		/** 
+
+		/**
 		 * Checks whether a passed username is unique or if a user of this name already exists
 		 * @param string $uName
 		 * @return bool
@@ -53,9 +53,9 @@ use Loader;
 			}
 		}
 
-	
+
 		/**
-		 * Returns true if this is a valid password. 
+		 * Returns true if this is a valid password.
 		 */
 		public function password($pass) {
 			if (strlen($pass) < USER_PASSWORD_MINIMUM) {
@@ -64,12 +64,12 @@ use Loader;
 			if (strlen($pass) > USER_PASSWORD_MAXIMUM) {
 				return false;
 			}
-			
+
 			return true;
 		}
-			
+
 		/**
-		 * Returns true if this is a valid username. 
+		 * Returns true if this is a valid username.
 		 * Valid usernames can only contain letters, numbers, dots (only in the middle), underscores (only in the middle) and optionally single spaces
 		 * @return bool
 		*/
@@ -100,5 +100,5 @@ use Loader;
 			}
 			return true;
 		}
-	
+
 	}

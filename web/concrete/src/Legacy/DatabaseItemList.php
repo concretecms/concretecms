@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Legacy;
 class DatabaseItemList extends ItemList {
 
@@ -7,33 +7,33 @@ class DatabaseItemList extends ItemList {
 	protected $debug = false;
 	protected $filters = array();
 	protected $sortByString = '';
-	protected $groupByString = '';  
-	protected $havingString = '';  
+	protected $groupByString = '';
+	protected $havingString = '';
 	protected $autoSortColumns = array();
 	protected $userPostQuery = '';
-	
+
 	public function getTotal() {
 		if ($this->total == -1) {
 			$db = Loader::db();
 			$arr = $this->executeBase(); // returns an associated array of query/placeholder values
 			$r = $db->Execute($arr);
 			$this->total = $r->NumRows();
-		}		
+		}
 		return $this->total;
 	}
-	
+
 	public function debug($dbg = true) {
 		$this->debug = $dbg;
 	}
-	
+
 	protected function setQuery($query) {
 		$this->query = $query . ' ';
 	}
-	
+
 	protected function getQuery() {
 		return $this->query;
 	}
-	
+
 	public function addToQuery($query) {
 		$this->userQuery .= $query . ' ';
 	}
@@ -46,7 +46,7 @@ class DatabaseItemList extends ItemList {
 			}
 		}
 	}
-	
+
 	protected function executeBase() {
 		$db = Loader::db();
 		$q = $this->query . $this->userQuery . ' where 1=1 ';
@@ -79,34 +79,34 @@ class DatabaseItemList extends ItemList {
 					} else {
 						$q .= 'and 1 = 2 ';
 					}
-				} else { 
+				} else {
 					$comp = (is_null($value) && stripos($comp, 'is') === false) ? (($comp == '!=' || $comp == '<>') ? 'IS NOT' : 'IS') : $comp;
 					$q .= 'and ' . $column . ' ' . $comp . ' ' . $db->quote($value) . ' ';
 				}
 			}
 		}
-		
+
 		if ($this->userPostQuery != '') {
 			$q .= ' ' . $this->userPostQuery . ' ';
 		}
-		
+
 		if ($this->groupByString != '') {
 			$q .= 'group by ' . $this->groupByString . ' ';
-		}		
+		}
 
 		if ($this->havingString != '') {
 			$q .= 'having ' . $this->havingString . ' ';
-		}		
-		
+		}
+
 		return $q;
 	}
-	
+
 	protected function setupSortByString() {
 		if ($this->sortByString == '' && $this->sortBy != '') {
 			$this->sortByString = $this->sortBy . ' ' . $this->sortByDirection;
 		}
 	}
-	
+
 	protected function setupAttributeSort() {
 		if (is_callable(array($this->attributeClass, 'getList'))) {
 			$l = call_user_func(array($this->attributeClass, 'getList'));
@@ -118,8 +118,8 @@ class DatabaseItemList extends ItemList {
 			}
 		}
 	}
-	
-	/** 
+
+	/**
 	 * Returns an array of whatever objects extends this class (e.g. PageList returns a list of pages).
 	 */
 	public function get($itemsToGet = 0, $offset = 0) {
@@ -128,29 +128,29 @@ class DatabaseItemList extends ItemList {
 		$this->setupAttributeSort();
 		$this->setupAutoSort();
 		$this->setupSortByString();
-		
+
 		if ($this->sortByString != '') {
 			$q .= 'order by ' . $this->sortByString . ' ';
-		}	
+		}
 		if ($this->itemsPerPage > 0 && (intval($itemsToGet) || intval($offset)) ) {
 			$q .= 'limit ' . $offset . ',' . $itemsToGet . ' ';
 		}
-		
+
 		$db = Loader::db();
-		if ($this->debug) { 
+		if ($this->debug) {
 			Database::setDebug(true);
 		}
-		//echo $q.'<br>'; 
+		//echo $q.'<br>';
 		$resp = $db->GetAll($q);
-		if ($this->debug) { 
+		if ($this->debug) {
 			Database::setDebug(false);
 		}
-		
+
 		$this->start = $offset;
 		return $resp;
 	}
-	
-	/** 
+
+	/**
 	 * Adds a filter to this item list
 	 */
 	public function filter($column, $value, $comparison = '=') {
@@ -163,14 +163,14 @@ class DatabaseItemList extends ItemList {
 				}
 			}
 		}
-		
+
 		if ($foundFilterIndex > -1) {
 			$this->filters[$foundFilterIndex] = array($column, $value, $comparison);
 		} else {
 			$this->filters[] = array($column, $value, $comparison);
 		}
 	}
-	
+
 	public function getSearchResultsClass($field) {
 		if ($field instanceof AttributeKey) {
 			$field = 'ak_' . $field->getAttributeKeyHandle();
@@ -184,13 +184,13 @@ class DatabaseItemList extends ItemList {
 		}
 		parent::sortBy($key, $dir);
 	}
-	
+
 	public function groupBy($key) {
 		if ($key instanceof AttributeKey) {
 			$key = 'ak_' . $key->getAttributeKeyHandle();
 		}
 		$this->groupByString = $key;
-	}	
+	}
 
 	public function having($column, $value, $comparison = '=') {
 		if ($column == false) {
@@ -199,15 +199,15 @@ class DatabaseItemList extends ItemList {
 			$this->havingString = $column . ' ' . $comparison . ' ' . $value;
 		}
 	}
-	
+
 	public function getSortByURL($column, $dir = 'asc', $baseURL = false, $additionalVars = array()) {
 		if ($column instanceof AttributeKey) {
 			$column = 'ak_' . $column->getAttributeKeyHandle();
 		}
 		return parent::getSortByURL($column, $dir, $baseURL, $additionalVars);
 	}
-	
-	protected function setupAttributeFilters($join) {		
+
+	protected function setupAttributeFilters($join) {
 		$i = 1;
 		$this->addToQuery($join);
 		foreach($this->attributeFilters as $caf) {
@@ -221,5 +221,5 @@ class DatabaseItemList extends ItemList {
 		}
 		$this->attributeFilters[] = array('ak_' . $column, $value, $comparison);
 	}
-	
+
 }

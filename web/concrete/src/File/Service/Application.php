@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Concrete\Core\File\Service;
 use Concrete\Core\File\StorageLocation\StorageLocation;
@@ -48,18 +48,18 @@ class Application {
 	 * '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.mp4;*.mp3;*.qt;*.ppt;*.kml'
 	 * @param array $types
 	 * @return string
-	 */	
+	 */
 	public function serializeUploadFileExtensions($types){
 		$serialized = '';
 		$types = preg_replace('{[^a-z0-9]}i','',$types);
-		foreach ($types as $type) {				
+		foreach ($types as $type) {
 			$serialized .= '*.'.$type.';';
 		}
 		//removing trailing ; unclear if multiupload will choke on that or not
 		$serialized = substr ($serialized, 0, strlen($serialized)-1);
-		return $serialized;			
+		return $serialized;
 	}
-	
+
 	/**
 	 * Unserializes an array of strings from format suitable for multi-uploader
 	 *
@@ -67,15 +67,15 @@ class Application {
 	 * '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.mp4;*.mp3;*.qt;*.ppt;*.kml'
 	 * @param string $types
 	 * @return array
-	 */					
+	 */
 	public function unSerializeUploadFileExtensions($types){
 		//split by semi-colon
 		$types = preg_split('{;}',$types,null,PREG_SPLIT_NO_EMPTY);
 		$types = preg_replace('{[^a-z0-9]}i','',$types);
 		return $types;
-	}		
-	
-	/** 
+	}
+
+	/**
 	 * Returns an array of all allowed file extensions within the system
 	 */
 	public function getAllowedFileExtensions() {

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Utility\Service;
 class Xml {
 
@@ -9,6 +9,6 @@ class Xml {
 		$node->appendChild($no->createCDataSection($content));
 		return $node;
 	}
-	
-	
+
+
 }

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Gathering\Item\Template;
 use Concrete\Core\Feature\Assignment\GatheringItemAssignment;
 use Concrete\Core\Feature\Feature;
@@ -37,7 +37,7 @@ abstract class Template extends Object {
 			return $agt;
 		}
 	}
-	
+
 	public static function getByHandle($gatHandle) {
 		$db = Loader::db();
 		$row = $db->GetRow('select gatID from GatheringItemTemplates where gatHandle = ?', array($gatHandle));
@@ -58,7 +58,7 @@ abstract class Template extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
+	}
 
 	public static function getListByType(\Concrete\Core\Gathering\Item\Template\Type $type) {
 		$db = Loader::db();
@@ -72,7 +72,7 @@ abstract class Template extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
+	}
 
 	public static function getList() {
 		$db = Loader::db();
@@ -86,8 +86,8 @@ abstract class Template extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
-	
+	}
+
 	public function getGatheringItemTemplateID() {return $this->gatID;}
 	public function getGatheringItemTemplateHandle() {return $this->gatHandle;}
 	public function getGatheringItemTemplateName() {return $this->gatName;}
@@ -118,7 +118,7 @@ abstract class Template extends Object {
 		return $path;
 	}
 
-	/** 
+	/**
 	 * This method is called by GatheringItem when setting defaults
 	 */
 	public function getGatheringItemTemplateSlotWidth(GatheringItem $item) {
@@ -200,7 +200,7 @@ abstract class Template extends Object {
 				$features[] = $fe;
 			}
 		}
-		return $features;		
+		return $features;
 	}
 
 	public static function add(\Concrete\Core\Gathering\Item\Template\Type $type, $gatHandle, $gatName, $gatFixedSlotWidth, $gatFixedSlotHeight, $gatHasCustomClass = false, $gatForceDefault = false, $pkg = false) {
@@ -212,7 +212,7 @@ abstract class Template extends Object {
 
 		$db->Execute('insert into GatheringItemTemplates (gatTypeID, gatHandle, gatName, gatFixedSlotWidth, gatFixedSlotHeight, gatHasCustomClass, gatForceDefault, pkgID) values (?, ?, ?, ?, ?, ?, ?, ?)', array($type->getGatheringItemTemplateTypeID(), $gatHandle, $gatName, $gatFixedSlotWidth, $gatFixedSlotHeight, intval($gatHasCustomClass), intval($gatForceDefault), $pkgID));
 		$id = $db->Insert_ID();
-		
+
 		$agt = static::getByID($id);
 		return $agt;
 	}
@@ -275,6 +275,6 @@ abstract class Template extends Object {
 		}
 		return $data;
 	}
-	
-		
+
+
 }

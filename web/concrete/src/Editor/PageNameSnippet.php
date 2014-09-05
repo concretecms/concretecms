@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Editor;
 use Loader;
 use Page;
@@ -11,7 +11,7 @@ class PageNameSnippet extends Snippet {
 			return $c->getCollectionName();
 		}
 	}
-	
-	
+
+
 
 }

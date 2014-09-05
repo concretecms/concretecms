@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Concrete\Core\Package;
 class StartingPointInstallRoutine {
