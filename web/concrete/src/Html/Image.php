@@ -42,8 +42,10 @@ class Image
             $sources = array();
             foreach($this->theme->getThemeResponsiveImageMap() as $thumbnail => $width) {
                 $type = \Concrete\Core\File\Image\Thumbnail\Type\Type::getByHandle($thumbnail);
-                $src = $f->getThumbnailURL($type->getBaseVersion());
-                $sources[] = array('src' => $src, 'width' => $width);
+                if($type != NULL) {
+                    $src = $f->getThumbnailURL($type->getBaseVersion());
+                    $sources[] = array('src' => $src, 'width' => $width);
+                }
                 if ($width == 0) {
                     $fallbackSrc = $src;
                 }
