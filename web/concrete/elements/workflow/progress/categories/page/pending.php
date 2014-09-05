@@ -41,10 +41,10 @@ $noitems = true;
 		$br = '';
 		$bl = '';
 		if ($act->getWorkflowProgressActionStyleInnerButtonLeftHTML()) {
-			$bl = $act->getWorkflowProgressActionStyleInnerButtonLeftHTML() . ' ';
+			$bl = $act->getWorkflowProgressActionStyleInnerButtonLeftHTML() . '&nbsp;&nbsp;';
 		}
 		if ($act->getWorkflowProgressActionStyleInnerButtonRightHTML()) {
-			$br = ' ' . $act->getWorkflowProgressActionStyleInnerButtonRightHTML();
+			$br = '&nbsp;&nbsp;' . $act->getWorkflowProgressActionStyleInnerButtonRightHTML();
 		}
 		if ($act->getWorkflowProgressActionURL() != '') {
 			print '<a href="' . $act->getWorkflowProgressActionURL() . '&source=dashboard" ' . $attribs . ' class="btn btn-mini ' . $act->getWorkflowProgressActionStyleClass() . '">' . $bl . $act->getWorkflowProgressActionLabel() . $br . '</a> ';
