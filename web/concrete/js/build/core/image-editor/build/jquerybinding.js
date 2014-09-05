@@ -50,6 +50,7 @@ $.fn.ImageEditor = function (settings) {
     });
 
     $('div.controls > div.controlscontainer', context).children('div.save').children('button.save').click(function () {
+        $(this).attr('disabled', true);
         im.save();
     }).end().children('button.cancel').click(function () {
         if (confirm(ccmi18n_imageeditor.areYouSure))
