@@ -39,10 +39,8 @@ class Image
                 $c = \Page::getCurrentPage();
                 $this->theme = $c->getCollectionThemeObject();
             }
-
             $sources = array();
             $fallbackSrc = $f->getRelativePath();
-
             foreach($this->theme->getThemeResponsiveImageMap() as $thumbnail => $width) {
                 $type = \Concrete\Core\File\Image\Thumbnail\Type\Type::getByHandle($thumbnail);
                 if($type != NULL) {
