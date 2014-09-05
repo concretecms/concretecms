@@ -332,7 +332,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
         if ($canViewToolbar) {
             ?>
             <? if (is_array($workflowList) && count($workflowList) > 0) { ?>
-                <div id="ccm-notification-page-alert" class="ccm-notification ccm-notification-info">
+                <div id="ccm-notification-page-alert-workflow" class="ccm-notification ccm-notification-info">
                     <div class="ccm-notification-inner-wrapper">
                         <? foreach ($workflowList as $i => $wl) { ?>
                             <? $wr = $wl->getWorkflowRequestObject();
@@ -346,7 +346,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                     <p><?= $wf->getWorkflowProgressCurrentDescription($wl) ?></p>
                                     <? $actions = $wl->getWorkflowProgressActions(); ?>
                                     <? if (count($actions) > 0) { ?>
-                                        <div class="ccm-notification-inner-buttons">
+                                        <div class="btn-group">
                                             <? foreach ($actions as $act) { ?>
                                                 <? if ($act->getWorkflowProgressActionURL() != '') { ?>
                                                     <a href="<?= $act->getWorkflowProgressActionURL() ?>"
