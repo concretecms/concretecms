@@ -40,6 +40,23 @@ class Date
     }
 
     /**
+     * Return the date/time representation for now, that can be overridden by a custom request when viewing pages in a moment specified by administrators (custom request date/time).
+     * @param bool $asTimestamp Set to true to retrieve the Unix timestamp, false to retrieve the string representation (eg '2000-12-31 23:59:59')
+     * @return string|int
+     */
+    public function getOverridableNow($asTimestamp = false)
+    {
+        $req = Request::getInstance();
+        if ($req->hasCustomRequestUser() && $req->getCustomRequestDateTime()) {
+            $timestamp = strtotime($req->getCustomRequestDateTime());
+        } else {
+            $timestamp = time();
+        }
+
+        return $asTimestamp ? $timestamp : date(static::DB_FORMAT, $timestamp);
+    }
+
+    /**
      * Subsitute for the native date() function that adds localized date support.
      * Use *ONLY* if really needed: you may want to use some of the formatDate/Time methods.
      * If you're not working with timestamps you may want to use the formatCustom method.
