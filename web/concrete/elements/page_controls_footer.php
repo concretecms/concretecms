@@ -264,7 +264,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                             title="<?= t('Add Pages and Navigate Your Site') ?>"
                                             data-launch-panel="sitemap">
                 <i class="fa fa-files-o"></i>
-                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings">
+                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page">
                     <?= tc('toolbar', 'Add Page') ?>
                 </span>
             </a>
