@@ -80,7 +80,7 @@ if(!$dateFormat) {
 		<?=$form->text('itemsPerPage', $itemsPerPage, array('class' => 'span1'))?>
 	</div>
 	<div class="form-group">
-		<label class="control-label"><?=t('Add new messages')?></label>
+		<label class="control-label"><?=t('Add New Messages')?></label>
 		<div class="radio">
 			<label>
 			<?=$form->radio('insertNewMessages', 'top', $insertNewMessages)?>
