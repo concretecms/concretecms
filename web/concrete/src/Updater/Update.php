@@ -53,11 +53,14 @@ class Update {
 
 	public static function getApplicationUpdateInformation()
     {
-        $r = Cache::get('APP_UPDATE_INFO', false);
-        if (!is_object($r)) {
-            $r = static::getLatestAvailableUpdate();
+        /** @var \Concrete\Core\Cache\Cache $cache */
+        $cache = Core::make('cache');
+        $r = $cache->getItem('APP_UPDATE_INFO');
+        if ($r->isMiss()) {
+            $r->lock();
+            $r->set(static::getLatestAvailableUpdate());
         }
-        return $r;
+        return $r->get();
     }
 
 	protected static function getLatestAvailableUpdate() {
@@ -99,7 +102,6 @@ class Update {
 				$obj->url = (string) $xml->url;
 				$obj->date = (string) $xml->date;
 			}
-			Cache::set('APP_UPDATE_INFO', false, $obj);
 
 		} else {
 			$obj->version = APP_VERSION;

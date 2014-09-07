@@ -190,7 +190,7 @@ class IndexedSearch
         $pnum = Collection::reindexPendingPages();
         $num = $num + $pnum;
 
-        Cache::enableLocalCache();
+        Core::make('cache/local')->enable();
         $result = new stdClass;
         $result->count = $num;
         return $result;
