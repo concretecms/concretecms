@@ -1,11 +1,12 @@
 <?
 
 namespace Concrete\Core\Cache;
+use Core;
+
 class CacheLocal {
 
 	public $cache = array();
 	public $enabled = true; // disabled because of weird annoying race conditions. This will slow things down but only if you don't have zend cache active.
-
 
     /**
      * Creates a cache key based on the group and id by running it through md5
@@ -19,7 +20,7 @@ class CacheLocal {
     }
 
 	public function getEntries() {
-		return $this->cache;
+		return array();
 	}
 
 	public static function get() {
@@ -32,39 +33,43 @@ class CacheLocal {
 	}
 
 	public static function getEntry($type, $id) {
-		$loc = CacheLocal::get();
-		$key = self::key($type, $id);
-		if ($loc->enabled && array_key_exists($key, $loc->cache)) {
-			return $loc->cache[$key];
-		}
+        /** @var \Concrete\Core\Cache\Cache $cache */
+        $cache = Core::make('cache/local');
+        if ($cache->isEnabled()) {
+            $item = $cache->getItem($type . '/' . $id);
+            if (!$item->isMiss()) {
+                return $item->get();
+            }
+        }
 	}
 
 	public static function flush() {
-		$loc = CacheLocal::get();
-		$loc->cache = array();
+        /** @var \Concrete\Core\Cache\Cache $cache */
+        $cache = Core::make('cache/local');
+        $cache->flush();
 	}
 
 	public static function delete($type, $id) {
-		$loc = CacheLocal::get();
-		$key = self::key($type, $id);
-		if ($loc->enabled && array_key_exists($key, $loc->cache)) {
-			unset($loc->cache[$key]);
-		}
+        /** @var \Concrete\Core\Cache\Cache $cache */
+        $cache = Core::make('cache/local');
+        if ($cache->isEnabled()) {
+            $cache->delete($type . '/' . $id);
+        }
 	}
 
 	public static function set($type, $id, $object) {
-		$loc = CacheLocal::get();
-		if (!$loc->enabled) {
-			return false;
-		}
+        /** @var \Concrete\Core\Cache\Cache $cache */
+        $cache = Core::make('cache/local');
 
-		$key = self::key($type, $id);
-		if (is_object($object)) {
-			$r = clone $object;
-		} else {
-			$r = $object;
-		}
+        if (!$cache->isEnabled()) {
+            return false;
+        }
 
-		$loc->cache[$key] = $r;
+        $item = $cache->getItem($type . '/' . $id);
+        if (is_object($object)) {
+            $item->set(clone $object);
+        } else {
+            $item->set($object);
+        }
 	}
 }
