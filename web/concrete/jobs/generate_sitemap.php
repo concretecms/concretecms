@@ -1,7 +1,7 @@
 <?
 namespace Concrete\Job;
+use Core;
 use \Job as AbstractJob;
-use Cache;
 use Loader;
 use PermissionKey;
 use Group;
@@ -37,8 +37,8 @@ class GenerateSitemap extends AbstractJob {
 	* @throws Exception Throws an exception in case of errors.
 	*/
 	public function run() {
-		Cache::disableCache();
-		Cache::disableLocalCache();
+        Core::make('cache')->disable();
+        Core::make('cache/local')->disable();
 		try {
 			$db = Loader::db();
 			$instances = array(
