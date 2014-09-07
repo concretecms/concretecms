@@ -1,169 +1,83 @@
 <?
 namespace Concrete\Core\Cache;
-use \Zend\Cache\StorageFactory;
+
+use Stash\Driver\Composite;
+use Stash\Driver\Ephemeral;
+use Stash\Driver\FileSystem;
+use Stash\Pool;
 
 class Cache
 {
-    /** @var \Zend\Cache\|\Zend\Cache\Storage\StorageInterface */
-    private $provider = null;
-    private $enabled = true;
+    /** @var Pool */
+    private $pool = null;
 
     /**
-     * Returns a cache key
-     * @param string $type Prefix of the cache entry
-     * @param string $id ID of the cache entry
+     * Creates a cache key based on the group and id by running it through md5
+     * @param string $group Name of the cache group
+     * @param string $id Name of the cache item ID
      * @return string The cache key
      */
-    public static function key($type, $id)
+    public static function getKey($group, $id)
     {
-		return md5($type . $id);
-	}
-
-    /**
-     * /**
-     * Returns the cache provider. The cache will be initialized if it is not yet
-     * @return \Zend\Cache\|\Zend\Cache\Storage\StorageInterface
-     */
-    public function getProvider()
-    {
-        if ($this->provider === null) {
-            // cache provider has not yet been initialized
-            $adapter = (defined('CACHE_LIBRARY')) ? CACHE_LIBRARY : 'filesystem';
-            $this->provider = StorageFactory::factory(array(
-                'adapter' => array(
-                    'name' => $adapter,
-                    'ttl' => CACHE_LIFETIME
-                ),
-                'options' => array(
-                    'cache_dir' => DIR_FILES_CACHE,
-                    'file_locking' => false
-                ),
-                'plugins' => array(
-                    'exception_handler' => array('throw_exceptions' => false)
-                )
-            ));
-        }
-
-        return $this->provider;
-    }
-
-    public function disableCache()
-    {
-        $this->enabled = false;
-    }
-
-    public function enableCache()
-    {
-        $this->enabled = true;
-    }
-	
-	public function disableLocalCache()
-    {
-		CacheLocal::get()->enabled = false;
-	}
-	public function enableLocalCache()
-    {
-		CacheLocal::get()->enabled = true;
-	}
-
-    public function set($type, $id, $obj, $expire = false)
-    {
-        // todo need to handle expire time
-
-        $key = Cache::key($type, $id);
-        $set = true;
-
-        // cache it locally
-        $loc = CacheLocal::get();
-        if ($loc->enabled || $this->enabled) {
-            if (is_object($obj)) {
-                $r = clone $obj;
-            } else {
-                $r = $obj;
-            }
-
-            if ($loc->enabled) {
-                $loc->cache[$key] = $r;
-            }
-
-            if ($this->enabled) {
-                $set = $this->getProvider()->setItem($key, $r);
-            }
-        }
-
-        return $set;
-    }
-
-    public function get($type, $id, $mustBeNewerThan = false) {
-        $loc = CacheLocal::get();
-        $key = Cache::key($type, $id);
-        if ($loc->enabled && array_key_exists($key, $loc->cache)) {
-            return $loc->cache[$key];
-        }
-
-        if ($this->enabled) {
-            // todo expired cache items
-            return $this->getProvider()->getItem($key);
-        }
-
-        return false;
+        return md5($group . $id);
     }
 
     /**
-     * Checks if an item is in the cache
-     * @param $type
-     * @param $id
-     * @param bool $mustBeNewerThan
-     * @return bool
+     * Returns the cache pool. If the cache pool is not yet initialized it is initialized.
+     * @return Pool
      */
-    public function has($type, $id, $mustBeNewerThan = false)
+    public function getPool()
     {
-        $loc = CacheLocal::get();
-        $key = Cache::key($type, $id);
-        if ($loc->enabled && array_key_exists($key, $loc->cache)) {
-            return true;
+        if ($this->pool === null) {
+            // cache pool has not yet been initialized
+            // todo make this configurable
+            $drivers = array();
+            $drivers[] = new Ephemeral();
+            $drivers[] = new FileSystem();
+
+            $driver = new Composite(array('drivers' => $drivers));
+
+            $this->pool = new Pool($driver);
         }
 
-        if ($this->enabled) {
-            // todo expired cache items
-            return $this->getProvider()->hasItem($key);
-        }
-
-        return false;
+        return $this->pool;
     }
-	
-	/** 
-	 * Removes an item from the cache
-	 */	
-	public function delete($type, $id){
-        $success = true;
-        $key = Cache::key($type, $id);
 
-		if ($this->enabled) {
-			$success = $this->getProvider()->removeItem($key);
-		}
-
-		$loc = CacheLocal::get();
-		if ($loc->enabled && isset($loc->cache[$key])) {
-			unset($loc->cache[$key]);
-		}
-
-        return $success;
-	}
-	
-	/** 
-	 * Completely flushes the cache
-	 */	
-	public function flush()
+    /**
+     * Deletes an item from the cache
+     * @param string $key Name of the cache item ID
+     * @return bool True if deleted, false if not
+     */
+    public function delete($key)
     {
-        $loc = CacheLocal::get();
-        if ($loc->enabled) {
-            $loc->flush();
-        }
-
-        if ($this->enabled) {
-            // todo flush
-        }
+        return $this->getPool()->getItem($key)->clear();
     }
-		
+
+    /**
+     * Checks if an item exists in the cache
+     * @param string $key Name of the cache item ID
+     * @return bool True if exists, false if not
+     */
+    public function exists($key)
+    {
+        return !$this->getPool()->getItem()->isMiss($key);
+    }
+
+    /**
+     * Removes all values from the cache
+     */
+    public function flush()
+    {
+        return $this->getPool()->flush();
+    }
+
+    /**
+     * Gets a value from the cache
+     * @param string $key Name of the cache item ID
+     * @return \Stash\Interfaces\ItemInterface
+     */
+    public function getItem($key)
+    {
+        return $this->getPool()->getItem($key);
+    }
 }

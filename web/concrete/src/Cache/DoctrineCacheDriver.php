@@ -12,8 +12,12 @@ use Core;
  */
 class DoctrineCacheDriver extends CacheProvider
 {
+    /** @var Cache  */
     private $c5Cache = null;
-    
+
+    /**
+     * @return Cache
+     */
     private function getC5Cache()
     {
         if ($this->c5Cache === null) {
@@ -28,7 +32,8 @@ class DoctrineCacheDriver extends CacheProvider
      */
     protected function doFetch($id)
     {
-        return $this->getC5Cache()->get('doctrine', $id);
+        $item = $this->getC5Cache()->getItem('doctrine/' . $id);
+        return $item->isMiss() ? false : $item->get();
     }
 
     /**
@@ -36,7 +41,7 @@ class DoctrineCacheDriver extends CacheProvider
      */
     protected function doContains($id)
     {
-        return $this->getC5Cache()->has('doctrine', 'id');
+        return $this->getC5Cache()->exists('doctrine/' . $id);
     }
 
     /**
@@ -45,9 +50,9 @@ class DoctrineCacheDriver extends CacheProvider
     protected function doSave($id, $data, $lifeTime = 0)
     {
         if ($lifeTime === 0) {
-            $lifeTime = false;
+            $lifeTime = null;
         }
-        return $this->getC5Cache()->set('doctrine', $id, $data, $lifeTime);
+        return $this->getC5Cache()->getItem('doctrine/' . $id)->set($data, $lifeTime);
     }
 
     /**
@@ -55,7 +60,7 @@ class DoctrineCacheDriver extends CacheProvider
      */
     protected function doDelete($id)
     {
-        return $this->getC5Cache()->delete('doctrine', $id);
+        return $this->getC5Cache()->delete('doctrine/' . $id);
     }
 
     /**
