@@ -564,7 +564,7 @@
 						obj.$replyholder.appendTo(obj.$element);
 						obj.$replyholder.hide();
                         obj.$replyholder.find(".conversation-editor").val('');
-                        obj.$replyholder.find(".redactor_conversation_editor_" + json.cnvID).redactor('set', '');
+                        obj.$replyholder.find(".redactor_conversation_editor_" + obj.options.cnvID).redactor('set', '');
 					} else {
 						if (obj.options.insertNewMessages == 'bottom') {
 							obj.$messages.append(html);
@@ -572,6 +572,8 @@
 							obj.$messages.prepend(html);
 						}
 						obj.$element.find('.ccm-conversation-no-messages').hide();
+                        obj.$newmessageform.find(".conversation-editor").val('');
+                        obj.$newmessageform.find(".redactor_conversation_editor_" + obj.options.cnvID).redactor('set', '');
 					}
 					obj.publish('conversationAddMessageFromJSON',{json:json,form:$form});
 					obj.updateCount();
