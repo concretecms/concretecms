@@ -2,8 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Seo;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
-use Loader;
-use \Concrete\Core\Cache\Cache as Cache;
+use Core;
 
 class Codes extends DashboardPageController {
 
@@ -19,7 +18,7 @@ class Codes extends DashboardPageController {
 			if ($this->token->validate('update_tracking_code')) {
 					Config::save('SITE_TRACKING_CODE', $this->post('tracking_code'));
 					Config::save('SITE_TRACKING_CODE_POSITION', $this->post('tracking_code_position'));
-					Cache::flush();
+                    Core::make('cache')->flush();
 					$this->redirect('/dashboard/system/seo/codes', 'saved');
 			} else {
 				$this->error->add($this->token->getErrorMessage());

@@ -12,17 +12,6 @@ class Cache
     private $pool = null;
 
     /**
-     * Creates a cache key based on the group and id by running it through md5
-     * @param string $group Name of the cache group
-     * @param string $id Name of the cache item ID
-     * @return string The cache key
-     */
-    public static function getKey($group, $id)
-    {
-        return md5($group . $id);
-    }
-
-    /**
      * Returns the cache pool. If the cache pool is not yet initialized it is initialized.
      * @return Pool
      */
