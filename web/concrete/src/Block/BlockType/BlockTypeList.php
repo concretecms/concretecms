@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Block\BlockType;
+use Core;
 use Loader;
 use Environment;
 use CacheLocal;
@@ -124,7 +125,8 @@ class BlockTypeList extends DatabaseItemList {
 
 	public static function resetBlockTypeDisplayOrder($column = 'btID') {
 		$db = Loader::db();
-		$ca = new Cache();
+        /** @var \Concrete\Core\Cache\Cache $cache */
+        $cache = Core::make('cache');
 		$stmt = $db->Prepare("UPDATE BlockTypes SET btDisplayOrder = ? WHERE btID = ?");
 		$btDisplayOrder = 1;
 		$blockTypes = $db->GetArray("SELECT btID, btHandle, btIsInternal FROM BlockTypes ORDER BY {$column} ASC");
@@ -135,10 +137,10 @@ class BlockTypeList extends DatabaseItemList {
 				$db->Execute($stmt, array($btDisplayOrder, $bt['btID']));
 				$btDisplayOrder++;
 			}
-			$ca->delete('blockTypeByID', $bt['btID']);
-			$ca->delete('blockTypeByHandle', $bt['btHandle']);
+			$cache->delete('blockTypeByID/' .$bt['btID']);
+			$cache->delete('blockTypeByHandle/' . $bt['btHandle']);
 		}
-		$ca->delete('blockTypeList', false);
+		$cache->delete('blockTypeList');
 	}
 
 }

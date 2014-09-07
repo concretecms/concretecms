@@ -155,7 +155,6 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             if ($c != null || $a != null) {
                 CacheLocal::set('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle, $b);
             } else {
-                $ca = new Cache();
                 CacheLocal::set('block', $bID, $b);
             }
             return $b;
