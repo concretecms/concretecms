@@ -12,6 +12,8 @@ use \Concrete\Core\Foundation\Service\Provider as ServiceProvider;
 class CacheServiceProvider extends ServiceProvider
 {
     public function register() {
-        $this->app->singleton('cache', '\Concrete\Core\Cache\Cache');
+        $this->app->singleton('cache', '\Concrete\Core\Cache\Level\ObjectCache');
+        $this->app->singleton('cache/local', '\Concrete\Core\Cache\Level\LocalCache');
+        $this->app->singleton('cache/page', '\Concrete\Core\Cache\Level\PageCache');
     }
 } 

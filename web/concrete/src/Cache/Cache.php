@@ -1,36 +1,23 @@
 <?
 namespace Concrete\Core\Cache;
 
-use Stash\Driver\Composite;
-use Stash\Driver\Ephemeral;
-use Stash\Driver\FileSystem;
 use Stash\Pool;
 
-class Cache
+abstract class Cache
 {
     /** @var Pool */
-    private $pool = null;
+    public $pool = null;
+    public $enabled = false;
+
+    public function __construct() {
+        $this->init();
+    }
 
     /**
-     * Returns the cache pool. If the cache pool is not yet initialized it is initialized.
-     * @return Pool
+     * Initializes the cache by setting up the cache pool and enabling the cache
+     * @return void
      */
-    public function getPool()
-    {
-        if ($this->pool === null) {
-            // cache pool has not yet been initialized
-            // todo make this configurable
-            $drivers = array();
-            $drivers[] = new Ephemeral();
-            $drivers[] = new FileSystem();
-
-            $driver = new Composite(array('drivers' => $drivers));
-
-            $this->pool = new Pool($driver);
-        }
-
-        return $this->pool;
-    }
+    abstract protected function init();
 
     /**
      * Deletes an item from the cache
@@ -39,7 +26,7 @@ class Cache
      */
     public function delete($key)
     {
-        return $this->getPool()->getItem($key)->clear();
+        return $this->pool->getItem($key)->clear();
     }
 
     /**
@@ -49,7 +36,7 @@ class Cache
      */
     public function exists($key)
     {
-        return !$this->getPool()->getItem()->isMiss($key);
+        return !$this->pool->getItem()->isMiss($key);
     }
 
     /**
@@ -57,7 +44,7 @@ class Cache
      */
     public function flush()
     {
-        return $this->getPool()->flush();
+        return $this->pool->flush();
     }
 
     /**
@@ -67,6 +54,21 @@ class Cache
      */
     public function getItem($key)
     {
-        return $this->getPool()->getItem($key);
+        return $this->pool->getItem($key);
+    }
+
+    public function enable()
+    {
+        $this->enabled = true;
+    }
+
+    public function disable()
+    {
+        $this->enabled = false;
+    }
+
+    public function isEnabled()
+    {
+        return $this->enabled;
     }
 }
