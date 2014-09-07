@@ -8,6 +8,7 @@ use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Filesystem\TemplateFile;
 use Concrete\Core\Package\PackageList;
+use Core;
 use Database as DB;
 use Environment;
 use Loader;
@@ -537,10 +538,11 @@ class BlockType
         $db->Execute($sql, $vals);
 
         // now we remove the block type from cache
-        $ca = new Cache();
-        $ca->delete('blockTypeByID', $this->btID);
-        $ca->delete('blockTypeByHandle', $this->btHandle);
-        $ca->delete('blockTypeList', false);
+        /** @var \Concrete\Core\Cache\Cache $cache */
+        $cache = Core::make('cache');
+        $cache->delete('blockTypeByID/' . $this->btID);
+        $cache->delete('blockTypeByHandle/' . $this->btHandle);
+        $cache->delete('blockTypeList');
     }
 
     /**
