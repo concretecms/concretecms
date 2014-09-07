@@ -95,10 +95,12 @@ class Localization
     {
         if (!is_object($this->translate)) {
             $this->translate = new Translator();
+            // todo zend cache
+            /*
             $cache = Cache::getLibrary();
             if (is_object($cache)) {
                 $this->translate->setCache($cache);
-            }
+            }*/
         }
         $this->translate->addTranslationFilePattern('gettext', DIR_LANGUAGES_SITE_INTERFACE, $language . '.mo');
     }

@@ -4,7 +4,7 @@ exit;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 if (isset($_POST['ttask']) && $_POST['ttask'] == 'preview_theme_customization') {
- 	Cache::set('preview_theme_style', $_REQUEST['themeID'], $_POST, 30);
+    Core::make('cache')->getItem('preview_theme_style/' . $_REQUEST['themeID'])->set($_POST, 30);
 }
 
 $previewCID=intval($_REQUEST['previewCID']);

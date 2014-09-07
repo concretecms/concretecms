@@ -134,7 +134,7 @@ class Backup extends DashboardPageController {
 		
 		//reset perms for security! 
 		chmod(DIR_FILES_BACKUPS . '/'. $file, 000);
-		Cache::flush();
+        Core::make('cache')->flush();
 		$this->redirect('/dashboard/system/backup/backup', 'restoration_successful');
 	}
 

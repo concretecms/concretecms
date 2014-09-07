@@ -4,6 +4,7 @@ namespace Concrete\Controller;
 use Cache;
 use Concrete\Core\Localization\Localization as Localization;
 use Controller;
+use Core;
 use Database as DB;
 use Exception;
 use Hautelook\Phpass\PasswordHash;
@@ -146,8 +147,8 @@ class Install extends Controller
             $loc = Localization::changeLocale($_POST['locale']);
             $this->set('locale', $_POST['locale']);
         }
-        Cache::disableCache();
-        Cache::disableLocalCache();
+        Core::make('cache')->disable();
+        Core::make('cache/local')->disable();
         $this->setRequiredItems();
         $this->setOptionalItems();
 
