@@ -69,10 +69,11 @@ class Localization
         $this->translate = new Translator();
         $this->translate->addTranslationFilePattern('gettext', $languageDir, 'LC_MESSAGES/messages.mo');
         $this->translate->setLocale($locale);
-        $cache = Cache::getLibrary();
+        // todo get caching back in here
+        /*$cache = Cache::getLibrary();
         if (is_object($cache)) {
             $this->translate->setCache($cache);
-        }
+        }*/
         PunicData::setDefaultLocale($locale);
 
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();
