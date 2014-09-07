@@ -36,7 +36,7 @@ class CacheLocal {
         /** @var \Concrete\Core\Cache\Cache $cache */
         $cache = Core::make('cache/local');
         if ($cache->isEnabled()) {
-            $item = $cache->getItem($type . '/' . $id);
+            $item = $cache->getItem('/' . $type . '/' . $id);
             if (!$item->isMiss()) {
                 return $item->get();
             }
@@ -53,7 +53,7 @@ class CacheLocal {
         /** @var \Concrete\Core\Cache\Cache $cache */
         $cache = Core::make('cache/local');
         if ($cache->isEnabled()) {
-            $cache->delete($type . '/' . $id);
+            $cache->delete('/' . $type . '/' . $id);
         }
 	}
 
@@ -65,7 +65,7 @@ class CacheLocal {
             return false;
         }
 
-        $item = $cache->getItem($type . '/' . $id);
+        $item = $cache->getItem('/' . $type . '/' . $id);
         if (is_object($object)) {
             $item->set(clone $object);
         } else {
