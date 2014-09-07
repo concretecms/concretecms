@@ -11,7 +11,6 @@ class LocalCache extends Cache
 {
     protected function init()
     {
-        // todo move to config
         $this->pool = new Pool(new Ephemeral());
         $this->enable();
     }
