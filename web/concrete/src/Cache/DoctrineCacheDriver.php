@@ -32,6 +32,9 @@ class DoctrineCacheDriver extends CacheProvider
      */
     protected function doFetch($id)
     {
+        if (!$this->getC5Cache()->isEnabled()) {
+            return false;
+        }
         $item = $this->getC5Cache()->getItem('doctrine/' . $id);
         return $item->isMiss() ? false : $item->get();
     }
@@ -41,6 +44,9 @@ class DoctrineCacheDriver extends CacheProvider
      */
     protected function doContains($id)
     {
+        if (!$this->getC5Cache()->isEnabled()) {
+            return false;
+        }
         return $this->getC5Cache()->exists('doctrine/' . $id);
     }
 
@@ -49,6 +55,9 @@ class DoctrineCacheDriver extends CacheProvider
      */
     protected function doSave($id, $data, $lifeTime = 0)
     {
+        if (!$this->getC5Cache()->isEnabled()) {
+            return false;
+        }
         if ($lifeTime === 0) {
             $lifeTime = null;
         }
@@ -60,6 +69,9 @@ class DoctrineCacheDriver extends CacheProvider
      */
     protected function doDelete($id)
     {
+        if (!$this->getC5Cache()->isEnabled()) {
+            return false;
+        }
         return $this->getC5Cache()->delete('doctrine/' . $id);
     }
 
@@ -68,6 +80,9 @@ class DoctrineCacheDriver extends CacheProvider
      */
     protected function doFlush()
     {
+        if (!$this->getC5Cache()->isEnabled()) {
+            return false;
+        }
         return $this->getC5Cache()->flush();
     }
 
