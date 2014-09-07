@@ -16,7 +16,7 @@ class CacheLocal {
      */
     public static function key($group, $id)
     {
-        return md5($group) . '/' . md5($id);
+        return $group . '/' . $id;
     }
 
 	public function getEntries() {
@@ -36,7 +36,7 @@ class CacheLocal {
         /** @var \Concrete\Core\Cache\Cache $cache */
         $cache = Core::make('cache/local');
         if ($cache->isEnabled()) {
-            $item = $cache->getItem(md5($type) . '/' . md5($id));
+            $item = $cache->getItem($type . '/' . str_replace('/', '_', $id));
             if (!$item->isMiss()) {
                 return $item->get();
             }
@@ -53,7 +53,7 @@ class CacheLocal {
         /** @var \Concrete\Core\Cache\Cache $cache */
         $cache = Core::make('cache/local');
         if ($cache->isEnabled()) {
-            $cache->delete(md5($type) . '/' . md5($id));
+            $cache->delete($type . '/' . str_replace('/', '_', $id));
         }
 	}
 
@@ -65,7 +65,7 @@ class CacheLocal {
             return false;
         }
 
-        $item = $cache->getItem(md5($type) . '/' . md5($id));
+        $item = $cache->getItem($type . '/' . str_replace('/', '_', $id));
         if (is_object($object)) {
             $item->set(clone $object);
         } else {
