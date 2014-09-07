@@ -15,10 +15,11 @@ class FeedService
      */
     public function load($url, $cache = true)
     {
-        $library = \Cache::getLibrary();
+        // todo zend cache
+        /*$library = \Cache::getLibrary();
         if ($cache) {
             Reader::setCache($library);
-        }
+        }*/
         $feed = Reader::import($url);
         return $feed;
     }

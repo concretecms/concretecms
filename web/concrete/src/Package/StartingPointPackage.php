@@ -6,6 +6,7 @@ use Cache;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use AuthenticationType;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
+use Core;
 use Loader;
 use Package as BasePackage;
 use GroupTree;
@@ -278,7 +279,7 @@ class StartingPointPackage extends BasePackage
 
     public function make_directories()
     {
-        Cache::flush();
+        Core::make('cache')->flush();
 
         if (!is_dir(DIR_FILES_CACHE)) {
             mkdir(DIR_FILES_CACHE, DIRECTORY_PERMISSIONS_MODE);

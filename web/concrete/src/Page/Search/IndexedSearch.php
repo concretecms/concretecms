@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Page\Search;
 
+use Core;
 use Loader;
 use Config;
 use Cache;
@@ -152,7 +153,7 @@ class IndexedSearch
      */
     public function reindexAll($fullReindex = false)
     {
-        Cache::disableLocalCache();
+        Core::make('cache/local')->disable();
 
         $db = Loader::db();
 
