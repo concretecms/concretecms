@@ -563,6 +563,8 @@
 						$parent.after(html);
 						obj.$replyholder.appendTo(obj.$element);
 						obj.$replyholder.hide();
+                        obj.$replyholder.find(".conversation-editor").val('');
+                        obj.$replyholder.find(".redactor_conversation_editor_" + json.cnvID).redactor('set', '');
 					} else {
 						if (obj.options.insertNewMessages == 'bottom') {
 							obj.$messages.append(html);
