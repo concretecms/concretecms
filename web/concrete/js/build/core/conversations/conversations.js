@@ -387,6 +387,17 @@
                     }
                 });
             });
+            obj.$element.on('click.cnv', 'a.share-popup', function() {
+                var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
+                var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
+                var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+                var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+                var left = ((width / 2) - (300)) + dualScreenLeft;
+                var top = ((height / 2) - (125)) + dualScreenTop;
+                window.open($(this).attr('href'), 'cnvSocialShare','left:' + left + ',top:' + top + ',height=250,width=600,toolbar=no,status=no');
+
+                return false;
+            });
             obj.$element.on('click.cnv', 'a.share-permalink', function() {
                 var $link = $(this);
                 var permalink = $(this).attr('rel');
