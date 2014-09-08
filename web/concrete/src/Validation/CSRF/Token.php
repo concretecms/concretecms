@@ -91,6 +91,7 @@ class Token
             $now = time();
 
             if (substr($compHash, strpos($compHash, ':') + 1) == $hash) {
+
                 $diff = $now - $time;
                 //hash is only valid if $diff is less than VALID_HASH_TIME_RECORD
                 return $diff <= static::VALID_HASH_TIME_THRESHOLD;

@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Backup;
 
-use Concrete\Controller\Frontend\Upgrade;
+use Concrete\Controller\Upgrade;
 use Concrete\Core\Page\Controller\DashboardPageController;
 use Concrete\Core\Updater\ApplicationUpdate;
 use Concrete\Core\Updater\Archive;
@@ -42,18 +42,18 @@ class Update extends DashboardPageController
 
     public function on_start()
     {
+        parent::on_start();
         $this->error = Loader::helper('validation/error');
-
-        id(new Upgrade())->secCheck();
-    }
-
-    public function on_before_render()
-    {
-        $this->set('error', $this->error);
+        id(new Upgrade())->checkSecurity();
     }
 
     public function download_update()
     {
+        $p = new \Permissions();
+        if (!$p->canUpgrade()) {
+            return false;
+        }
+
         $vt = Loader::helper('validation/token');
         if (!$vt->validate('download_update')) {
             $this->error->add($vt->getErrorMessage());
@@ -70,17 +70,17 @@ class Update extends DashboardPageController
             $remote = \Concrete\Core\Updater\Update::getApplicationUpdateInformation();
             if (is_object($remote)) {
                 // try to download
-                $r = Marketplace::downloadRemoteFile($remote->url);
-                if (empty($r) || $r == Package::E_PACKAGE_DOWNLOAD) {
-                    $response = array(Package::E_PACKAGE_DOWNLOAD);
+                $r = \Marketplace::downloadRemoteFile($remote->url);
+                if (empty($r) || $r == \Package::E_PACKAGE_DOWNLOAD) {
+                    $response = array(\Package::E_PACKAGE_DOWNLOAD);
                 } else {
-                    if ($r == Package::E_PACKAGE_SAVE) {
+                    if ($r == \Package::E_PACKAGE_SAVE) {
                         $response = array($r);
                     }
                 }
 
                 if (isset($response)) {
-                    $errors = Package::mapError($response);
+                    $errors = \Package::mapError($response);
                     foreach ($errors as $e) {
                         $this->error->add($e);
                     }
@@ -105,31 +105,41 @@ class Update extends DashboardPageController
 
     function view()
     {
-        $upd = new \Concrete\Core\Updater\Update();
-        $updates = $upd->getLocalAvailableUpdates();
-        $remote = $upd->getApplicationUpdateInformation();
-        $this->set('updates', $updates);
-        if (is_object($remote) && version_compare($remote->version, APP_VERSION, '>')) {
-            // loop through local updates
-            $downloadableUpgradeAvailable = true;
-            foreach ($updates as $upd) {
-                if ($upd->getUpdateVersion() == $remote->version) {
-                    // we have a LOCAL version ready to install that is the same, so we abort
-                    $downloadableUpgradeAvailable = false;
-                    $this->set('showDownloadBox', false);
-                    break;
-                }
-            }
+        $p = new \Permissions();
+        if ($p->canUpgrade()) {
 
-            $this->set('downloadableUpgradeAvailable', $downloadableUpgradeAvailable);
-            $this->set('update', $remote);
-        } else {
-            $this->set('downloadableUpgradeAvailable', false);
+            $upd = new \Concrete\Core\Updater\Update();
+            $updates = $upd->getLocalAvailableUpdates();
+            $remote = $upd->getApplicationUpdateInformation();
+            $this->set('updates', $updates);
+            if (is_object($remote) && version_compare($remote->version, APP_VERSION, '>')) {
+                // loop through local updates
+                $downloadableUpgradeAvailable = true;
+                foreach ($updates as $upd) {
+                    if ($upd->getUpdateVersion() == $remote->version) {
+                        // we have a LOCAL version ready to install that is the same, so we abort
+                        $downloadableUpgradeAvailable = false;
+                        $this->set('showDownloadBox', false);
+                        break;
+                    }
+                }
+
+                $this->set('downloadableUpgradeAvailable', $downloadableUpgradeAvailable);
+                $this->set('update', $remote);
+            } else {
+                $this->set('downloadableUpgradeAvailable', false);
+            }
+            $this->set('canUpgrade', true);
         }
     }
 
     public function do_update()
     {
+
+        $p = new \Permissions();
+        if (!$p->canUpgrade()) {
+            return false;
+        }
         $updateVersion = $this->post('updateVersion');
         if (!$updateVersion) {
             $this->error->add(t('Invalid version'));
@@ -158,7 +168,8 @@ class Update extends DashboardPageController
                         break;
                 }
             } else {
-                header('Location: ' . BASE_URL . REL_DIR_FILES_TOOLS_REQUIRED . '/upgrade?source=dashboard_update');
+                $token = Loader::helper("validation/token");
+                \Redirect::to('/ccm/system/upgrade/submit?ccm_token=' . $token->generate('Concrete\Controller\Upgrade'))->send();
                 exit;
             }
         }

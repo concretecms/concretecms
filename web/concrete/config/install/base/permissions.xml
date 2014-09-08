@@ -138,6 +138,12 @@
         <permissionkey handle="sudo" name="Sign in as User" package="" category="user">
         </permissionkey>
 
+        <permissionkey handle="upgrade" name="Upgrade concrete5" package="" category="admin">
+            <access>
+                <group name="Administrators"/>
+            </access>
+        </permissionkey>
+
         <permissionkey handle="access_group_search" name="Access Group Search" package="" category="user">
             <access>
                 <group name="Administrators"/>
