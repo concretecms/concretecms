@@ -44,7 +44,7 @@ class SymbolGenerator {
      * @return mixed|string
      */
     public function render($eol = PHP_EOL, $padding = '    ') {
-        $rendered = "<?php{$eol}namespace {{$eol}    die('Intended for use with IDE symbol matching only.');{$eol}";
+        $rendered = "<?php{$eol}namespace {{$eol}{$padding}die('Intended for use with IDE symbol matching only.');{$eol}";
         foreach ($this->classes as $class) {
             $rendered_class = explode($eol, $class->render($eol, $padding));
             $rendered .= $eol . implode($eol, array_map(function($val) use ($padding) {
