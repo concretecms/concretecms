@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Page;
-use \Symfony\Component\EventDispatcher\Event as AbstractEvent;
+use \Symfony\Component\EventDispatcher\GenericEvent;
 use User;
 
-class Event extends AbstractEvent {
+class Event extends GenericEvent {
 
 	protected $page;
 	protected $user;
