@@ -39,7 +39,7 @@ if (!$tp->canInstallPackages()) { ?>
 			<p><?=t('No updates for your add-ons are available.')?></p>
 		<? } else { ?>
 
-			<table class="table table-striped">
+			<table class="table update-addons-table">
 			<? foreach($pkgRemote as $pkg) { 
 
 				$rpkg = MarketplaceRemoteItem::getByHandle($pkg->getPackageHandle());
@@ -88,7 +88,7 @@ if (!$tp->canInstallPackages()) { ?>
 					<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?></h3><p><?=$pkg->getPackageDescription()?></p>
 					<p><strong><?=t('New Version: %s. Upgrading from: %s.', $pkg->getPackageVersion(), $pkg->getPackageCurrentlyInstalledVersion())?></strong></p>
 					</td>
-					<td class="ccm-marketplace-list-install-button"><?=$ch->button(t("Update Add-On"), View::url('/dashboard/extend/update', 'do_update', $pkg->getPackageHandle()), "", "primary")?></td>					
+					<td class="ccm-marketplace-list-install-button"><?=$ch->button(t("Update Add-On"), View::url('/dashboard/extend/update', 'do_update', $pkg->getPackageHandle()), "", "btn-primary")?></td>
 				</tr>
 				<tr>
 					<td colspan="2" style="border-top: 0px">
