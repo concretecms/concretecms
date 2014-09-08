@@ -33,7 +33,8 @@ if (!$frontendPageID) {
     $backLink = DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $frontendPageID;
 }
 
-
+$show_titles = !!Config::get('ACCESSIBILITY_SHOW_TOOLBAR_TITLES');
+$large_font = !!Config::get('ACCESSIBILITY_INCREASE_TOOLBAR_FONT_SIZE');
 
 ?>
 
@@ -60,14 +61,42 @@ if (!$frontendPageID) {
             </ul>
         </div>
     </div>
-<div id="ccm-toolbar">
+<div id="ccm-toolbar" class="<?= $show_titles ? 'titles' : '' ?> <?= $large_font ? 'large-font' : '' ?>">
     <ul>
         <li class="ccm-logo pull-left"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></span></li>
-        <li class="ccm-toolbar-account pull-left"><a href="<?=$backLink?>"><i class="fa fa-arrow-left"></i></a>
-        <li class="pull-right hidden-xs"><a href="<?=URL::to('/dashboard')?>" data-launch-panel="dashboard" <? if (!$hideDashboardPanel) { ?>class="ccm-launch-panel-active" <? } ?> data-panel-url="<?=URL::to('/system/panels/dashboard')?>"><i class="fa fa-sliders"></i></a>
-        <li class="pull-right hidden-xs"><a href="#" data-panel-url="<?=URL::to('/system/panels/sitemap')?>" data-launch-panel="sitemap"><i class="fa fa-files-o"></i></a></li>
-        <li class="ccm-toolbar-search pull-right hidden-xs"><i class="fa fa-search"></i> <input type="search" id="ccm-nav-intelligent-search" tabindex="1" /></li>
-        <li class="pull-right ccm-toolbar-mobile-menu-button visible-xs hidden-sm hidden-md hidden-lg"><i class="fa fa-bars"></i></li>
+        <li class="ccm-toolbar-account pull-left">
+            <a href="<?=$backLink?>">
+                <i class="fa fa-arrow-left"></i>
+                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-return">
+                    <?= tc('toolbar', 'Return to Website') ?>
+                </span>
+            </a>
+        </li>
+        <li class="pull-right hidden-xs">
+            <a href="<?=URL::to('/dashboard')?>"
+                data-launch-panel="dashboard" <? if (!$hideDashboardPanel) { ?>class="ccm-launch-panel-active" <? } ?>
+                data-panel-url="<?=URL::to('/system/panels/dashboard')?>">
+                <i class="fa fa-sliders"></i>
+                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings">
+                    <?= tc('toolbar', 'Site Settings') ?>
+                </span>
+            </a>
+        </li>
+        <li class="pull-right hidden-xs">
+            <a href="#" data-panel-url="<?=URL::to('/system/panels/sitemap')?>" data-launch-panel="sitemap">
+                <i class="fa fa-files-o"></i>
+                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page">
+                    <?= tc('toolbar', 'Add Page') ?>
+                </span>
+            </a>
+        </li>
+        <li class="ccm-toolbar-search pull-right hidden-xs">
+            <i class="fa fa-search"></i>
+            <input type="search" id="ccm-nav-intelligent-search" tabindex="1" />
+        </li>
+        <li class="pull-right ccm-toolbar-mobile-menu-button visible-xs hidden-sm hidden-md hidden-lg">
+            <i class="fa fa-bars"></i>
+        </li>
     </ul>
 </div>
 <?
