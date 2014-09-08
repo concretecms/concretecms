@@ -15,76 +15,66 @@ class ConfigRenderer {
     }
 
     protected function renderString($array, $eol = PHP_EOL, $spacer = '    ') {
-        $rendered = $this->renderArrayRecursive($array, $spacer);
-        $string = implode($eol, array_map(function($val) use ($spacer) {
-            if (substr($val, strlen($val) - 1, 1) != '(') {
-                return $spacer . $val . ',';
-            }
-            return $spacer . $val;
-        }, $rendered));
+        $rendered = $this->renderRecursive($array, $eol, $spacer);
 
-        return "<?php\n\nreturn array(\n" . $string . "\n);\n";
+        return "<?php\n\nreturn " . $rendered . ";\n";
     }
 
-    protected function renderArrayRecursive($array, $spacer = '    ') {
-        $result = array();
+    protected function renderRecursive(array $array, $eol = PHP_EOL, $spacer = '    ', $depth = 1) {
+        $results = array();
+
+        $scalars = array();
         $arrays = array();
 
         $associative = false;
         $expect = 0;
+
         foreach ($array as $key => $value) {
             if ($key !== $expect++) {
                 $associative = true;
-                break;
+            }
+            if (is_array($value)) {
+                $arrays[] = array($key, $value);
+            } elseif (is_scalar($value)) {
+                $scalars[] = array($key, $value);
+            } else {
+                throw new \Exception('Invalid configuration type, configuration supports array and scalar values only.');
             }
         }
 
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                $arrays[] = array($key, $value);
-            } else if (is_scalar($value)) {
-                if (is_bool($value)) {
-                    $bool = $value ? 'true' : 'false';
-                    if ($associative) {
-                        $result[] = '"' . addslashes($key) . '" => ' . $bool;
-                    } else {
-                        $result[] = $bool;
-                    }
-                } elseif (is_string($value)) {
-                    if ($associative) {
-                        $result[] = '"' . addslashes($key) . '" => "' . addslashes($value) . '"';
-                    } else {
-                        $result[] = '"' . addslashes($value) . '"';
-                    }
-                } else {
-                    if (is_numeric($value)) {
-                        if ($associative) {
-                            $result[] = '"' . addslashes($key) . '" => ' . $value;
-                        } else {
-                            $result[] = $value;
-                        }
-                    }
-                }
-            } else if (is_callable($value)) {
-                throw new \Exception('Cannot write to config file, because it contains types that cannot be rendered.');
+        $space = str_repeat($spacer, $depth);
+        foreach ($scalars as $scalar) {
+            list($key, $value) = $scalar;
+
+            if (is_string($value)) {
+                $clean_value = '"' . addslashes($value) . '"';
+            } elseif (is_bool($value)) {
+                $clean_value = $value ? 'true' : 'false';
+            } else {
+                $clean_value = $value;
+            }
+
+            if ($associative) {
+                $results[] = $space . '"' . addslashes($key) . '" => ' . $clean_value;
+            } else {
+                $results[] = $space . $clean_value;
             }
         }
 
         foreach ($arrays as $array) {
             list($key, $value) = $array;
-            if ($associative) {
-                $result[] = '"' . addslashes($key) . '" => array(';
-            } else {
-                $result[] = 'array(';
-            }
+            $rendered = $this->renderRecursive($value, $eol, $spacer, $depth + 1);
 
-            foreach ($this->renderArrayRecursive($value) as $line) {
-                $result[] = $spacer . $line;
+            if ($associative) {
+                $results[] = $space . '"' . addslashes($key) . '" => ' . $rendered;
+            } else {
+                $results[] = $space . $rendered;
             }
-            $result[] = ')';
         }
 
-        return $result;
+        return 'array(' . $eol .
+                    implode(',' . $eol, $results) . $eol .
+                ($depth ? str_repeat($spacer, $depth - 1) : '') . ')';
     }
 
 }
