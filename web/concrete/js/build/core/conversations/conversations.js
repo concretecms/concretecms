@@ -97,6 +97,11 @@
                     var oldobj = window.obj;
                     window.obj = obj;
                     obj.$element.empty().append(r);
+                    var hash = window.location.hash.match(/^#cnv([0-9]+)Message[0-9]+$/);
+                    if (hash !== null && hash[1] == obj.options.cnvID) {
+                        var target = $('a' + window.location.hash).offset();
+                        $('html, body').animate({scrollTop: target.top}, 800, 'linear');
+                    }
                     window.obj = oldobj;
                     obj.attachBindings();
                     obj.publish('conversationLoaded');
@@ -589,7 +594,7 @@
                     }
                     obj.publish('conversationAddMessageFromJSON',{json:json,form:$form});
                     obj.updateCount();
-                     var target = $('a#cnvMessage' + json.cnvMessageID).offset();
+                    var target = $('a#cnv' + obj.options.cnvID + 'Message' + json.cnvMessageID).offset();
                      $('.dropdown-toggle').dropdown();
                      $('html, body').animate({scrollTop: target.top}, 800, 'linear');
                 }
