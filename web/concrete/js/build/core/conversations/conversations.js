@@ -97,6 +97,11 @@
                     var oldobj = window.obj;
                     window.obj = obj;
                     obj.$element.empty().append(r);
+                    var hash = window.location.hash.match(/^#cnv([0-9]+)Message[0-9]+$/);
+                    if (hash !== null && hash[1] == obj.options.cnvID) {
+                        var target = $('a' + window.location.hash).offset();
+                        $('html, body').animate({scrollTop: target.top}, 800, 'linear');
+                    }
                     window.obj = oldobj;
                     obj.attachBindings();
                     obj.publish('conversationLoaded');
@@ -571,26 +576,26 @@
                 success: function(html) {
                     var $parent = $('div[data-conversation-message-id=' + json.cnvMessageParentID + ']');
 
-if ($parent.length) {
-$parent.after(html);
-obj.$replyholder.appendTo(obj.$element);
-obj.$replyholder.hide();
-} else {
-if (obj.options.insertNewMessages == 'bottom') {
-obj.$messages.append(html);
-} else {
-obj.$messages.prepend(html);
-}
-obj.$element.find('.ccm-conversation-no-messages').hide();
-}
-obj.publish('conversationAddMessageFromJSON',{json:json,form:$form});
-obj.updateCount();
-     var target = $('a#cnvMessage' + json.cnvMessageID).offset();
-     $('.dropdown-toggle').dropdown();
-     $('html, body').animate({scrollTop: target.top}, 800, 'linear');
-}
-});
-},
+                    if ($parent.length) {
+                        $parent.after(html);
+                        obj.$replyholder.appendTo(obj.$element);
+                        obj.$replyholder.hide();
+                    } else {
+                        if (obj.options.insertNewMessages == 'bottom') {
+                            obj.$messages.append(html);
+                        } else {
+                            obj.$messages.prepend(html);
+                        }
+                        obj.$element.find('.ccm-conversation-no-messages').hide();
+                    }
+                    obj.publish('conversationAddMessageFromJSON',{json:json,form:$form});
+                    obj.updateCount();
+                    var target = $('a#cnv' + obj.options.cnvID + 'Message' + json.cnvMessageID).offset();
+                    $('.dropdown-toggle').dropdown();
+                    $('html, body').animate({scrollTop: target.top}, 800, 'linear');
+                }
+            });
+        },
         updateMessageFromJSON: function($form, json) {
             var obj = this;
             var enablePosting = (obj.options.posttoken != '') ? 1 : 0;
