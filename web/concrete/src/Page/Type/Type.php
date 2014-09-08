@@ -148,6 +148,11 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         $c->activate();
         $u->unloadCollectionEdit($c);
         CacheLocal::flush();
+
+        $ev = new Event($c);
+        $ev->setPageType($this);
+        $ev->setUser($u);
+        \Events::dispatch('on_page_type_publish', $ev);
     }
 
     public function savePageTypeComposerForm(Page $c)
@@ -197,6 +202,12 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
             $oc->setPageObject($c);
             $controls[] = $oc;
         }
+
+        $ev = new Event($c);
+        $ev->setPageType($this);
+        $ev->setArgument('controls', $controls);
+        \Events::dispatch('on_page_type_save_composer_form', $ev);
+
         return $controls;
     }
 
@@ -862,4 +873,22 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         return $p;
     }
 
+    public function renderComposerOutputForm($page = null)
+    {
+
+        $env = \Environment::get();
+        $rec = $env->getRecord(
+            DIRNAME_ELEMENTS . '/' . DIRNAME_PAGE_TYPES . '/composer/form/output/form/' . $this->getPageTypeHandle() . '.php',
+            $this->getPackageHandle()
+        );
+        if ($rec->exists()) {
+            $pagetype = $this;
+            include($rec->file);
+        } else {
+            Loader::element('page_types/composer/form/output/form', array(
+                'pagetype' => $this,
+                'page' => $page
+            ));
+        }
+    }
 }
