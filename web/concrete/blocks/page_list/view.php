@@ -1,6 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $th = Loader::helper('text');
+$c = Page::getCurrentPage();
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>
 
@@ -137,3 +138,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 <?php if ($showPagination): ?>
     <?php echo $pagination;?>
 <?php endif; ?>
+
+<? if ( $c->isEditMode() && $controller->isBlockEmpty()): ?>
+    <div class="ccm-edit-mode-disabled-item"><?=t('Empty Page List Block.')?></div>
+<? endif; ?>
