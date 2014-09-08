@@ -25,8 +25,12 @@ class Image
      * @param \File $f
      * @param null $usePictureTag
      */
-    public function __construct(\File $f, $usePictureTag = null)
+    public function __construct(\File $f = null, $usePictureTag = null)
     {
+        if (!is_object($f)) {
+            return false;
+        }
+
         if (isset($usePictureTag)) {
             $this->usePictureTag = $usePictureTag;
         } else {

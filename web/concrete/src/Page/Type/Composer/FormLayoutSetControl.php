@@ -142,6 +142,9 @@ class FormLayoutSetControl extends Object {
 		$this->ptComposerFormLayoutSetControlDescription = $description;
 	}
 
+    /*
+     * @return \Concrete\Core\Page\Type\Composer\OutputControl
+     */
 	public function getPageTypeComposerOutputControlObject(PageTemplate $pt) {
 		$db = Loader::db();
 		$ptComposerOutputControlID = $db->GetOne('select ptComposerOutputControlID from PageTypeComposerOutputControls where ptComposerFormLayoutSetControlID = ? and pTemplateID = ?', array($this->ptComposerFormLayoutSetControlID, $pt->getPageTemplateID()));
