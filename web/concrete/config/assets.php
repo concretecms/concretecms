@@ -330,6 +330,7 @@ $al->register('javascript', 'core/conversation', 'js/conversations.js');
 $al->register('css', 'core/conversation', 'css/conversations.css');
 $al->registerGroup('core/conversation', array(
     array('javascript', 'jquery'),
+    array('javascript', 'jquery/ui'),
     array('javascript', 'underscore'),
     array('javascript', 'dropzone'),
     array('javascript', 'bootstrap/dropdown'),
@@ -337,7 +338,8 @@ $al->registerGroup('core/conversation', array(
     array('javascript', 'core/conversation'),
     array('css', 'core/conversation'),
     array('css', 'font-awesome'),
-    array('css', 'bootstrap/dropdown')
+    array('css', 'bootstrap/dropdown'),
+    array('css', 'jquery/ui')
 ), true);
 
 // Lightbox
