@@ -115,6 +115,8 @@ Route::register('/ccm/system/block/render/', '\Concrete\Controller\Backend\Block
 Route::register('/ccm/system/css/page/{cID}/{cvID}/{stylesheet}', '\Concrete\Controller\Frontend\Stylesheet::page');
 Route::register('/ccm/system/css/layout/{bID}', '\Concrete\Controller\Frontend\Stylesheet::layout');
 Route::register('/ccm/system/backend/editor_data/', '\Concrete\Controller\Backend\EditorData::view');
+Route::register('/ccm/system/upgrade/', '\Concrete\Controller\Upgrade::view');
+Route::register('/ccm/system/upgrade/submit', '\Concrete\Controller\Upgrade::submit');
 
 /**
  * General Attribute
