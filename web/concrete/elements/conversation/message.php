@@ -21,13 +21,14 @@ if (!$message->isConversationMessageApproved()){
 	$class .= ' ccm-conversation-message-flagged';
 }
 $cnvMessageID = $message->getConversationMessageID();
+$cnvID = $message->getConversationID();
 $c = Page::getByID($_REQUEST['cID']);
-$cnvMessageURL = urlencode($c->getCollectionLink(true) . '#' . $cnvMessageID);
+$cnvMessageURL = urlencode($c->getCollectionLink(true) . '#cnv' . $cnvID . 'Message' . $cnvMessageID);
 
 if ((!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) || $message->conversationMessageHasActiveChildren()) {
 	?>
 	<div data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-conversation-message-level="<?=$message->getConversationMessageLevel()?>" class="<?=$class?>">
-		<a id="cnvMessage<?=$cnvMessageID?>" />
+		<a id="cnv<?=$cnvID?>Message<?=$cnvMessageID?>"></a>
 		<div class="ccm-conversation-message-user">
 			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
 			<div class="ccm-conversation-message-byline">
