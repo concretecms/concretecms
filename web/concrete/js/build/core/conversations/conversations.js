@@ -97,14 +97,11 @@
                     var oldobj = window.obj;
                     window.obj = obj;
                     obj.$element.empty().append(r);
-<<<<<<< HEAD
                     var hash = window.location.hash.match(/^#cnv([0-9]+)Message[0-9]+$/);
                     if (hash !== null && hash[1] == obj.options.cnvID) {
                         var target = $('a' + window.location.hash).offset();
                         $('html, body').animate({scrollTop: target.top}, 800, 'linear');
                     }
-=======
->>>>>>> acc6a63c97005cb3905972efb1bfa21ec2510b68
                     window.obj = oldobj;
                     obj.attachBindings();
                     obj.publish('conversationLoaded');
@@ -326,11 +323,11 @@
 
             obj.$element.on('click.cnv', '.image-popover-hover', function() {
                 $.magnificPopup.open({
-                  items: {
-                    src: $(this).attr('data-full-image'), // can be a HTML string, jQuery object, or CSS selector
-                    type: 'image',
-                    verticalFit: true
-                  }
+                    items: {
+                        src: $(this).attr('data-full-image'), // can be a HTML string, jQuery object, or CSS selector
+                        type: 'image',
+                        verticalFit: true
+                    }
                 });
             });
 
@@ -395,7 +392,6 @@
                     }
                 });
             });
-<<<<<<< HEAD
             obj.$element.on('click.cnv', 'a.share-popup', function() {
                 var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : screen.left;
                 var dualScreenTop = window.screenTop != undefined ? window.screenTop : screen.top;
@@ -407,20 +403,13 @@
 
                 return false;
             });
-=======
->>>>>>> acc6a63c97005cb3905972efb1bfa21ec2510b68
             obj.$element.on('click.cnv', 'a.share-permalink', function() {
                 var $link = $(this);
                 var permalink = $(this).attr('rel');
                 obj.$permalinkdialog = obj.$permalinkholder.clone();
-<<<<<<< HEAD
                 var $textarea = $('<textarea readonly>').text(decodeURIComponent(permalink));
                 obj.$permalinkdialog.append($textarea);
                 $textarea.click(function() {
-=======
-                obj.$permalinkdialog.append('<textarea>'+permalink+'</textarea>');
-                obj.$permalinkdialog.find('textarea').click(function() {
->>>>>>> acc6a63c97005cb3905972efb1bfa21ec2510b68
                     var $this = $(this);
                     $this.select();
                     window.setTimeout(function() {
@@ -493,9 +482,9 @@
             var obj = this;
             var formArray = [
                 {
-                'name': 'cnvMessageID',
-                'value': msgID
-              },
+                    'name': 'cnvMessageID',
+                    'value': msgID
+                },
                 {
                     'name': 'cID',
                     'value': this.options.cID
@@ -591,11 +580,8 @@
                         $parent.after(html);
                         obj.$replyholder.appendTo(obj.$element);
                         obj.$replyholder.hide();
-<<<<<<< HEAD
-=======
                         obj.$replyholder.find(".conversation-editor").val('');
                         obj.$replyholder.find(".redactor_conversation_editor_" + obj.options.cnvID).redactor('set', '');
->>>>>>> acc6a63c97005cb3905972efb1bfa21ec2510b68
                     } else {
                         if (obj.options.insertNewMessages == 'bottom') {
                             obj.$messages.append(html);
@@ -603,23 +589,14 @@
                             obj.$messages.prepend(html);
                         }
                         obj.$element.find('.ccm-conversation-no-messages').hide();
-<<<<<<< HEAD
+                        obj.$newmessageform.find(".conversation-editor").val('');
+                        obj.$newmessageform.find(".redactor_conversation_editor_" + obj.options.cnvID).redactor('set', '');
                     }
                     obj.publish('conversationAddMessageFromJSON',{json:json,form:$form});
                     obj.updateCount();
                     var target = $('a#cnv' + obj.options.cnvID + 'Message' + json.cnvMessageID).offset();
                     $('.dropdown-toggle').dropdown();
                     $('html, body').animate({scrollTop: target.top}, 800, 'linear');
-=======
-                        obj.$newmessageform.find(".conversation-editor").val('');
-                        obj.$newmessageform.find(".redactor_conversation_editor_" + obj.options.cnvID).redactor('set', '');
-                    }
-                    obj.publish('conversationAddMessageFromJSON',{json:json,form:$form});
-                    obj.updateCount();
-                     var target = $('a#cnvMessage' + json.cnvMessageID).offset();
-                     $('.dropdown-toggle').dropdown();
-                     $('html, body').animate({scrollTop: target.top}, 800, 'linear');
->>>>>>> acc6a63c97005cb3905972efb1bfa21ec2510b68
                 }
             });
         },
@@ -754,13 +731,13 @@
                         $('input[rel="'+ $(this).attr('rel') +'"]').remove();
                     });
                     /*
-                    $('form.dropzone').each(function(){
-                        var d = $(this).data('dropzone');
-                        $.each(d.files,function(k,v){
-                            d.removeFile(v);
-                        });
-                    });
-                    */
+                     $('form.dropzone').each(function(){
+                     var d = $(this).data('dropzone');
+                     $.each(d.files,function(k,v){
+                     d.removeFile(v);
+                     });
+                     });
+                     */
                     obj.updateMessageFromJSON($form, r);
                     obj.publish('conversationSubmitForm',{form:$form,response:r});
                 },
@@ -802,11 +779,11 @@
 
                     var r = document.selection.createRange();
                     if (r == null) {
-                    return 0;
+                        return 0;
                     }
 
                     var re = elem.createTextRange(),
-                    rc = re.duplicate();
+                        rc = re.duplicate();
                     re.moveToBookmark(r.getBookmark());
                     rc.setEndPoint('EndToStart', re);
 
