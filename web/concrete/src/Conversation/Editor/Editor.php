@@ -239,7 +239,7 @@ abstract class Editor extends Object
         $cnvMessageBody = $htmlHelper->noFollowHref($cnvMessageBody);
         if (isset($config['htmlawed'])) {
 
-            $default = array('safe' => 1, 'elements' => 'span, em, b, i, p, strike, font, br, div');
+            $default = array('safe' => 1, 'elements' => 'strong, em, strike, a');
             $conf = array_merge($default, (array)$config['htmlawed']);
             $lawed = htmLawed($cnvMessageBody, $conf);
         } else {
