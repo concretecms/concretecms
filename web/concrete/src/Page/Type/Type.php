@@ -385,7 +385,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
                     foreach ($setnode->control as $controlnode) {
                         $controltype = PageTypeComposerControlType::getByHandle((string)$controlnode['type']);
                         $control = $controltype->configureFromImport($controlnode);
-                        $setcontrol = $control->addToPageTypeComposerFormLayoutSet($set);
+                        $setcontrol = $control->addToPageTypeComposerFormLayoutSet($set, true);
                         $required = (string)$controlnode['required'];
                         $customTemplate = (string)$controlnode['custom-template'];
                         $label = (string)$controlnode['custom-label'];
