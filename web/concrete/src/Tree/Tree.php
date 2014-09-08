@@ -179,7 +179,7 @@ abstract class Tree extends Object
     protected static function add(\Concrete\Core\Tree\Node\Node $rootNode)
     {
         $db = Loader::db();
-        $date = Loader::helper('date')->getSystemDateTime();
+        $date = Loader::helper('date')->getOverridableNow();
         $treeTypeHandle = Loader::helper('text')->uncamelcase(strrchr(get_called_class(), '\\'));
         $type = TreeType::getByHandle($treeTypeHandle);
         $db->Execute('insert into Trees (treeDateAdded, rootTreeNodeID, treeTypeID) values (?, ?, ?)', array(

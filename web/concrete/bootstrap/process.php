@@ -749,7 +749,7 @@ if (isset($_POST['processCollection']) && $_POST['processCollection'] && $valt->
 
                 $data = $_POST;
                 $data['cvIsApproved'] = 0;
-                $data['cDatePublic'] = $dh->getSystemDateTime($dt->translate('cDatePublic'));
+                $data['cDatePublic'] = $dt->translate('cDatePublic');
 
                 $nc = $c->add($ct, $data);
 
