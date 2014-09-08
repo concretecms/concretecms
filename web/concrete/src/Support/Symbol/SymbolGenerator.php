@@ -38,22 +38,25 @@ class SymbolGenerator {
 
     /**
      * Render the classes.
-     * @return string
+     *
+     * @param string $eol
+     * @param string $padding
+     * @return mixed|string
      */
-    public function render() {
-        $rendered = "<?php\nnamespace {\n    die('Intended for use with IDE symbol matching only.');\n";
+    public function render($eol = PHP_EOL, $padding = '    ') {
+        $rendered = "<?php{$eol}namespace {{$eol}{$padding}die('Intended for use with IDE symbol matching only.');{$eol}";
         foreach ($this->classes as $class) {
-            $rendered_class = explode("\n", $class->render());
-            $rendered .= "\n" . implode("\n", array_map(function($val) {
+            $rendered_class = explode($eol, $class->render($eol, $padding));
+            $rendered .= $eol . implode($eol, array_map(function($val) use ($padding) {
                                              if (substr($val, 0, 1) === '*') {
-                                                 return '     ' . $val;
+                                                 return $padding . $val;
                                              }
-                                             return '    ' . $val;
+                                             return  $padding . $val;
                                          }, $rendered_class));
         }
-        $rendered .= "\n}\n";
-        $rendered = implode("\n", array_map("rtrim", explode("\n", $rendered)));
-        $rendered = preg_replace("~\n{2,}~", "\n\n", $rendered);
+        $rendered .= "{$eol}}{$eol}";
+        $rendered = implode($eol, array_map("rtrim", explode($eol, $rendered)));
+        $rendered = preg_replace("~{$eol}{2,}~", "{$eol}{$eol}", $rendered);
         return $rendered;
     }
 
