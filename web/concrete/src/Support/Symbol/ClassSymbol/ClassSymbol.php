@@ -47,16 +47,10 @@ class ClassSymbol {
         $this->alias = $alias;
         $this->comment = $this->reflectionClass->getDocComment();
         if (substr($fqn, 0, 29) === '\Concrete\Core\Support\Facade') {
-            $new_fqn = $fqn::getFacadeAccessor();
-            if (!class_exists($new_fqn)) {
-                $list = ClassAliasList::getInstance();
-                $aliases = $list->getRegisteredAliases();
-                $new_fqn = $aliases[$fqn];
-            }
-            if (class_exists($new_fqn)) {
-                $this->reflectionClass = new ReflectionClass($new_fqn);
-                $this->fqn = $new_fqn;
-            }
+            $obj = $fqn::getFacadeRoot();
+
+            $this->reflectionClass = new ReflectionClass($obj);
+            $this->fqn = $this->reflectionClass->getName();
         }
 
         $this->resolveMethods();
