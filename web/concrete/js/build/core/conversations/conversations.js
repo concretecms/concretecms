@@ -402,8 +402,9 @@
                 var $link = $(this);
                 var permalink = $(this).attr('rel');
                 obj.$permalinkdialog = obj.$permalinkholder.clone();
-                obj.$permalinkdialog.append('<textarea>'+permalink+'</textarea>');
-                obj.$permalinkdialog.find('textarea').click(function() {
+                var $textarea = $('<textarea readonly>').text(decodeURIComponent(permalink));
+                obj.$permalinkdialog.append($textarea);
+                $textarea.click(function() {
                     var $this = $(this);
                     $this.select();
                     window.setTimeout(function() {
