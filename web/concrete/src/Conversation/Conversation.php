@@ -102,7 +102,7 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
 
 	public static function add() {
 		$db = Loader::db();
-		$date = Loader::helper('date')->getSystemDateTime();
+		$date = Loader::helper('date')->getOverridableNow();
 		$r = $db->Execute('insert into Conversations (cnvDateCreated, cnvDateLastMessage) values (?, ?)', array($date, $date));
 		return static::getByID($db->Insert_ID());
 	}

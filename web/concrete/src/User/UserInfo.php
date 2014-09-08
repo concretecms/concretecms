@@ -155,7 +155,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $options = is_array($options) ? $options : array();
         $db = Loader::db();
         $dh = Loader::helper('date');
-        $uDateAdded = $dh->getSystemDateTime();
+        $uDateAdded = $dh->getOverridableNow();
         $hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
 
         if ($data['uIsValidated'] == 1) {
@@ -202,7 +202,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     {
         $db = Loader::db();
         $dh = Loader::helper('date');
-        $uDateAdded = $dh->getSystemDateTime();
+        $uDateAdded = $dh->getOverridableNow();
 
         $v = array(USER_SUPER_ID, USER_SUPER, $uEmail, $uPasswordEncrypted, 1, $uDateAdded, $uDateAdded);
         $r = $db->prepare("insert into Users (uID, uName, uEmail, uPassword, uIsActive, uDateAdded, uLastPasswordChange) values (?, ?, ?, ?, ?, ?, ?)");
@@ -317,7 +317,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $subject = ($subject == '') ? t('(No Subject)') : $subject;
         $db = Loader::db();
         $dt = Loader::helper('date');
-        $v = array($this->getUserID(), $dt->getLocalDateTime(), $subject, $text, $recipient->getUserID());
+        $v = array($this->getUserID(), $dt->getOverridableNow(), $subject, $text, $recipient->getUserID());
         $db->Execute('insert into UserPrivateMessages (uAuthorID, msgDateCreated, msgSubject, msgBody, uToID) values (?, ?, ?, ?, ?)', $v);
 
         $msgID = $db->Insert_ID();
@@ -514,7 +514,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
                 if ($data['uPassword'] == $data['uPasswordConfirm']) {
 
                     $dh = Loader::helper('date');
-                    $dateTime = $dh->getSystemDateTime();
+                    $dateTime = $dh->getOverridableNow();
                     $v = array($uName, $uEmail, $this->getUserObject()->getUserPasswordHasher()->HashPassword($data['uPassword']), $uHasAvatar, $uTimezone, $uDefaultLanguage, $dateTime, $this->uID);
                     $r = $db->prepare("update Users set uName = ?, uEmail = ?, uPassword = ?, uHasAvatar = ?, uTimezone = ?, uDefaultLanguage = ?, uLastPasswordChange = ? where uID = ?");
                     $res = $db->execute($r, $v);
@@ -572,7 +572,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
         $dh = Loader::helper('date');
 
-        $datetime = $dh->getSystemDateTime();
+        $datetime = $dh->getOverridableNow();
         if (is_array($groupArray)) {
             foreach ($groupArray as $gID) {
                 $key = array_search($gID, $existingGIDArray);
@@ -666,7 +666,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $db = Loader::db();
         if ($this->uID) {
             $dh = Loader::helper('date');
-            $dateTime = $dh->getSystemDateTime();
+            $dateTime = $dh->getOverridableNow();
             $v = array(
                 $this->getUserObject()->getUserPasswordHasher()->HashPassword($newPassword),
                 $dateTime,
