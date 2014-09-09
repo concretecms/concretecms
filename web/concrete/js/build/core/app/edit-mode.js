@@ -393,6 +393,11 @@
         if (!elem.closest('.ccm-area-block-list')) {
             alert('orphan block.');
         }
+
+        if (!elem.find('.ccm-block-cover').length) {
+            $('<div/>').addClass('ccm-block-cover').appendTo(elem);
+        }
+
         Concrete.createGetterSetters.call(my, {
             id: elem.data('block-id'),
             handle: elem.data('block-type-handle'),
@@ -1093,21 +1098,20 @@
             if (menuHandle !== 'none') {
 
                 my.menu = new ConcreteMenu(elem, {
-                    'handle': 'this',
                     'highlightClassName': 'ccm-block-highlight',
                     'menuActiveClass': 'ccm-block-highlight',
-                    'menu': $('div.ccm-edit-mode-block-menu', my.getElem())
+                    'menu': $menuElem
                 });
 
-                $menuElem.find('a[data-menu-action=edit_inline]').unbind().on('click', function (event) {
+                $menuElem.find('a[data-menu-action=edit_inline]').unbind('click.core').on('click.core', function (event) {
                     Concrete.event.fire('EditModeBlockEditInline', {block: my, event: event});
                 });
 
-                $menuElem.find('a[data-menu-action=block_scrapbook]').unbind().on('click', function (event) {
+                $menuElem.find('a[data-menu-action=block_scrapbook]').unbind('click.core').on('click.core', function (event) {
                     Concrete.event.fire('EditModeBlockAddToClipboard', {block: my, event: event});
                 });
 
-                $menuElem.find('a[data-menu-action=delete_block]').unbind().on('click', function (event) {
+                $menuElem.find('a[data-menu-action=delete_block]').unbind('click.core').on('click.core', function (event) {
                     Concrete.event.fire('EditModeBlockDelete', {
                         message: $(this).attr('data-menu-delete-message'),
                         block: my,
@@ -1115,7 +1119,7 @@
                     });
                 });
 
-                $menuElem.find('a[data-menu-action=block_design]').unbind().on('click', function (e) {
+                $menuElem.find('a[data-menu-action=block_design]').unbind('click.core').on('click.core', function (e) {
                     e.preventDefault();
                     Concrete.event.fire('EditModeBlockEditInline', {
                         block: my, event: e, action: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/block/design'
