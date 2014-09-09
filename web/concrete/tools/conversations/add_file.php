@@ -1,4 +1,4 @@
-<?php defined('C5_EXECUTE') or die("Access Denied."); 
+<?php defined('C5_EXECUTE') or die("Access Denied.");
 $val = Loader::helper('validation/token');
 $helperFile = Loader::helper('concrete/file');
 $file = new stdClass(); // json return value holder
@@ -7,7 +7,7 @@ $pageObj = Page::getByID($_POST['cID']);
 $areaObj = Area::get($pageObj, $_POST['blockAreaHandle']);
 $blockObj = Block::getByID($_POST['bID'], $pageObj, $areaObj);
 $file->timestamp = $_POST['timestamp'];
-// --  validation --  // 
+// --  validation --  //
 
 $tokenValidation = $val->validate('add_conversations_file');
 
@@ -32,7 +32,7 @@ if(!is_object($blockObj) || $blockObj->getBlockTypeHandle() != 'core_conversatio
 	$errorStr = implode(', ', $error);
 	$file->error = $errorStr . '.';
 	echo Loader::helper('json')->encode($file);
-	exit; 
+	exit;
 }
 
 $p = new Permissions($blockObj);
@@ -49,29 +49,29 @@ $blockRegisteredQuantityOverride = $blockObj->getController()->maxFilesRegistere
 $blockGuestQuantityOverride = $blockObj->getController()->maxFilesGuest;
 
 if ($u->isRegistered()) {
-	if($blockRegisteredSizeOverride > 0) { // if block overrides for registered exist, use them instead of global. 
+	if($blockRegisteredSizeOverride > 0) { // if block overrides for registered exist, use them instead of global.
 		$maxFileSize = $blockRegisteredSizeOverride;
 	} else {
-		$maxFileSize = Config::get('CONVERSATIONS_MAX_FILES_REGISTERED');
+		$maxFileSize = Config::get('conversations.files.guest.max_size');
 	}
-	
+
 	if($blockRegisteredQuantityOverride > 0) {
 		$maxQuantity = $blockRegisteredQuantityOverride;
 	} else {
-		$maxQuantity = Config::get('CONVERSATIONS_MAX_FILES_REGISTERED');
+		$maxQuantity = Config::get('conversations.files.registered.max');
 	}
-	 
+
 } else {
-	if($blockGuestSizeOverride > 0) {  // if block overrides for guest exist, use them instead of global. 
+	if($blockGuestSizeOverride > 0) {  // if block overrides for guest exist, use them instead of global.
 		 $maxFileSize =  $blockGuestSizeOverride;
 	} else {
-		$maxFileSize = Config::get('CONVERSATIONS_MAX_FILE_SIZE_GUEST');
+		$maxFileSize = Config::get('conversations.files.guest.max_size');
 	}
-	
-	if($blockGuestQuantityOverride > 0) {  // if block overrides for guest exist, use them instead of global. 
+
+	if($blockGuestQuantityOverride > 0) {  // if block overrides for guest exist, use them instead of global.
 		 $maxQuantity =  $blockGuestQuantityOverride;
 	} else {
-		$maxQuantity = Config::get('CONVERSATIONS_MAX_FILES_GUEST');
+		$maxQuantity = Config::get('conversations.files.guest.max');
 	}
 }
 
@@ -85,14 +85,14 @@ if($maxQuantity > 0 && ($_POST['fileCount']) > $maxQuantity) {
 	$error[] = t('Attachment limit reached');
 }
 
-// check filetype extension and overrides 
+// check filetype extension and overrides
 
 
 $blockExtensionsOverride = $blockObj->getController()->fileExtensions;
 if($blockExtensionsOverride) {
 	$extensionList = $blockExtensionsOverride;
 } else {
-	$extensionList = Config::get('CONVERSATIONS_ALLOWED_FILE_TYPES');
+	$extensionList = Config::get('conversations.files.allowed_types');
 }
 
 $extensionList = $helperFile->unserializeUploadFileExtensions($extensionList);
@@ -118,7 +118,7 @@ if(count($error) > 0) {  // send in the errors
 	exit;
 }
 
-// -- end intitial validation -- // 
+// -- end intitial validation -- //
 
 
 // begin file import

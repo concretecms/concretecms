@@ -22,7 +22,7 @@ class IndexedSearch
 
     public function getSearchableAreaAction()
     {
-        $action = Config::get('SEARCH_INDEX_AREA_METHOD');
+        $action = Config::get('concrete.misc.search_index_area_method');
         if (!strlen($action)) {
             $action = 'blacklist';
         }
@@ -31,7 +31,7 @@ class IndexedSearch
 
     public function getSavedSearchableAreas()
     {
-        $areas = Config::get('SEARCH_INDEX_AREA_LIST');
+        $areas = Config::get('concrete.misc.search_index_area_method');
         $areas = unserialize($areas);
         if (!is_array($areas)) {
             $areas = array();

@@ -29,8 +29,8 @@ use stdClass;
 class UserInterface {
 
 	static $menuItems = array();
-	
-	/** 
+
+	/**
 	 * Generates a submit button in the Concrete style
 	 * @param string $text The text of the button
 	 * @param string $formID The form this button will submit
@@ -45,7 +45,7 @@ class UserInterface {
 		} else if ($buttonAlign == 'left') {
 			$innerClass .= ' pull-left';
 		}
-		
+
 		if (!$formID) {
 			$formID = 'button';
 		}
@@ -55,8 +55,8 @@ class UserInterface {
 		}
 		return '<input type="submit" class="btn ' . $innerClass . '" value="' . $text . '" id="ccm-submit-' . $formID . '" name="ccm-submit-' . $formID . '" ' . $align . ' ' . $argsstr . ' />';
 	}
-	
-	/** 
+
+	/**
 	 * Generates a simple link button in the Concrete style
 	 * @param string $text The text of the button
 	 * @param string $href
@@ -65,7 +65,7 @@ class UserInterface {
 	 * @param array $args Extra args passed to the link
 	 * @return string
 	 */
-	public function button($text, $href, $buttonAlign = 'right', $innerClass = null, $args = array()) { 
+	public function button($text, $href, $buttonAlign = 'right', $innerClass = null, $args = array()) {
 		if ($buttonAlign == 'right') {
 			$innerClass .= ' pull-right';
 		} else if ($buttonAlign == 'left') {
@@ -78,7 +78,7 @@ class UserInterface {
 		return '<a href="'.$href.'" class="btn btn-default '.$innerClass.'" '.$argsstr.'>'.$text.'</a>';
 	}
 
-	/** 
+	/**
 	 * Generates a JavaScript function button in the Concrete style
 	 * @param string $text The text of the button
 	 * @param string $onclick
@@ -99,15 +99,15 @@ class UserInterface {
 		}
 		return '<input type="button" class="btn btn-default ' . $innerClass . '" value="' . $text . '" onclick="' . $onclick . '" ' . $align . ' ' . $argsstr . ' />';
 	}
-	
-	/** 
+
+	/**
 	 * Outputs button text passed as arguments with a special Concrete wrapper for positioning
 	 * <code>
 	 *    $bh->buttons($myButton1, $myButton2, $myButton3);
 	 * </code>
 	 * @param string $buttonHTML
 	 * @return string
-	 */	
+	 */
 	public function buttons($buttons = null) {
 		if (!is_array($buttons)) {
 			$buttons = func_get_args();
@@ -118,8 +118,8 @@ class UserInterface {
 		}
 		$html .= '</div>';
 		return $html;
-	}	
-	
+	}
+
 	public function getQuickNavigationLinkHTML($c) {
 		$cnt = Loader::controller($c);
 		if (method_exists($cnt, 'getQuickNavigationLinkHTML')) {
@@ -128,19 +128,19 @@ class UserInterface {
 			return '<a href="' . Loader::helper('navigation')->getLinkToCollection($c) . '">' . $c->getCollectionName() . '</a>';
 		}
 	}
-	
+
 	public function showWhiteLabelMessage() {
 		return ((defined('WHITE_LABEL_LOGO_SRC') && WHITE_LABEL_LOGO_SRC != '')  || file_exists(DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/logo_menu.png'));
 	}
-	
+
 	public function getToolbarLogoSRC() {
-		if (defined('WHITE_LABEL_APP_NAME')) { 
+		if (defined('WHITE_LABEL_APP_NAME')) {
 			$alt = WHITE_LABEL_APP_NAME;
 		}
 		if (!$alt) {
 			$alt = 'concrete5';
 		}
-		if (defined('WHITE_LABEL_LOGO_SRC')) { 
+		if (defined('WHITE_LABEL_LOGO_SRC')) {
 			$src = WHITE_LABEL_LOGO_SRC;
 		}
 		if (!$src) {
@@ -156,7 +156,7 @@ class UserInterface {
 		}
 		return '<img id="ccm-logo" src="' . $src . '" ' . $dimensions . ' alt="' . $alt . '" title="' . $alt . '" />';
 	}
-	
+
 	public function showNewsflowOverlay() {
 		$tp = new \TaskPermission();
 		$c = Page::getCurrentPage();
@@ -166,11 +166,11 @@ class UserInterface {
 			if ($nf == 'FIRSTRUN') {
 				return false;
 			}
-			
-			if (Config::get('SITE_MAINTENANCE_MODE')) {
+
+			if (Config::get('concrete.maintenance_mode')) {
 				return false;
 			}
-				
+
 			if (!$nf) {
 				return true;
 			}
@@ -180,21 +180,21 @@ class UserInterface {
 		}
 		return false;
 	}
-		
+
 	public function clearInterfaceItemsCache() {
 		$u = new ConcreteUser();
 		if ($u->isRegistered()) {
 			Session::remove('dashboardMenus');
 		}
 	}
-	
+
 	public function cacheInterfaceItems() {
 		$u = new ConcreteUser();
 		if ($u->isRegistered()) {
 			Loader::helper('concrete/dashboard')->getIntelligentSearchMenu();
 		}
 	}
-	
+
 	public function pagetabs($tabs) {
 		$tcn = rand(0, getrandmax());
 
@@ -204,11 +204,11 @@ class UserInterface {
 			if (is_array($t)) {
 				$name = $t[1];
 				$_c = $t[0];
-			} else { 
+			} else {
 				$_c = $t;
 				$name = $t->getCollectionName();
 			}
-	
+
 			$href = Loader::helper('navigation')->getLinkToCollection($_c);
 			$active = false;
 			if (is_object($c) && $c->getCollectionID() == $_c->getCollectionID()) {
@@ -219,7 +219,7 @@ class UserInterface {
 		$html .= '</ul>';
 		return $html;
 	}
-	
+
 	public function tabs($tabs, $jstabs = true, $callback = 'ccm_activateTabBar') {
 		$tcn = rand(0, getrandmax());
 
@@ -234,7 +234,7 @@ class UserInterface {
 			$html .= '<li class="' . ((isset($t[2]) && $t[2] == true) ? 'active' : ''). '"><a href="' . $href . '" data-tab="' . $dt . '">' . $t[1] . '</a></li>';
 		}
 		$html .= '</ul>';
-		if ($jstabs) { 
+		if ($jstabs) {
 			$html .= '<script type="text/javascript">$(function() { ' . $callback . '($(\'#ccm-tabs-' . $tcn . '\'));});</script>';
 		}
 		return $html;
@@ -271,9 +271,9 @@ class UserInterface {
             $messageText = '<h3>' . $arguments['message'] . '</h3>';
         }
 
-        if (count($arguments['buttons']) > 0) { 
+        if (count($arguments['buttons']) > 0) {
         	$messageText .= '<div class="ccm-notification-inner-buttons">';
-        	foreach($arguments['buttons'] as $button) { 
+        	foreach($arguments['buttons'] as $button) {
         		$messageText .= $button;
         	}
         	$messageText .= '</div>';

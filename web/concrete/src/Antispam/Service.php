@@ -1,19 +1,19 @@
 <?
 namespace Concrete\Core\Antispam;
 class Service {
-	
+
 	protected $controller = false;
-	
+
 	public function __construct() {
-		
+
 		$library = Library::getActive();
-		if (is_object($library)) { 
+		if (is_object($library)) {
 			$this->controller = $library->getController();
 		}
-	}		
-	
+	}
+
 	public function getWhitelistGroup() {
-		return Group::getByID(Config::get('SPAM_WHITELIST_GROUP'));
+		return Group::getByID(Config::get('concrete.spam.whitelist_group'));
 	}
 
 	public function report($content, $ui, $ip, $ua, $additionalArgs = array()) {
@@ -32,7 +32,7 @@ class Service {
 	}
 
 	public function check($content, $type, $additionalArgs = array(), $user = false) {
-		if ($this->controller) { 
+		if ($this->controller) {
 			if (!$user) {
 				$user = new User;
 			}
@@ -61,11 +61,11 @@ class Service {
 				return true;
 			} else {
 				$c = Page::getCurrentPage();
-				if (is_object($c)) { 
+				if (is_object($c)) {
 					$logText .= t('URL: %s', Loader::helper('navigation')->getLinkToCollection($c, true));
 					$logText .= "\n";
 				}
-				if ($u->isRegistered()) { 
+				if ($u->isRegistered()) {
 					$logText .= t('User: %s (ID %s)', $u->getUserName(), $u->getUserID());
 					$logText .= "\n";
 				}
@@ -74,13 +74,13 @@ class Service {
 				foreach($args as $key => $value) {
 					$logText .= Loader::helper('text')->unhandle($key) . ': ' . $value . "\n";
 				}
-				
-				if (Config::get('ANTISPAM_LOG_SPAM')) {
+
+				if (Config::get('concrete.log.spam')) {
 					Log::addEntry($logText, t('spam'));
 				}
-				if (Config::get('ANTISPAM_NOTIFY_EMAIL') != '') {
+				if (Config::get('concrete.spam.notify_email') != '') {
 					$mh = Loader::helper('mail');
-					$mh->to(Config::get('ANTISPAM_NOTIFY_EMAIL'));
+					$mh->to(Config::get('concrete.spam.notify_email'));
 					$mh->addParameter('content', $logText);
 					$mh->load('spam_detected');
 					$mh->sendMail();
@@ -91,12 +91,11 @@ class Service {
 			return true; // return true if it passes the test
 		}
 	}
-	
+
 	public function __call($nm, $args) {
-		if (method_exists($this->controller, $nm)) { 
+		if (method_exists($this->controller, $nm)) {
 			return call_user_func_array(array($this->controller, $nm), $args);
 		}
 	}
-	
-	
+
 }

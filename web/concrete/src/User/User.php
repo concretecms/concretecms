@@ -94,7 +94,7 @@ class User extends Object
     {
 
         $session = Core::make('session');
-        $aeu = Config::get('ACCESS_ENTITY_UPDATED');
+        $aeu = Config::get('concrete.misc.access_entity_updated');
         if ($aeu && $aeu > $session->get('accessEntitiesUpdated')) {
             User::refreshUserGroups();
         }
@@ -433,10 +433,8 @@ class User extends Object
     {
         if ($this->getUserDefaultLanguage() != '') {
             return $this->getUserDefaultLanguage();
-        } elseif (defined('LOCALE')) {
-            return LOCALE;
         } else {
-            return SITE_LOCALE;
+            return Config::get('concrete.locale');
         }
     }
 
