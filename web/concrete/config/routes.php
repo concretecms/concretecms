@@ -77,6 +77,10 @@ Route::register('/ccm/system/dialogs/block/design/reset', '\Concrete\Controller\
 Route::register('/ccm/system/dialogs/area/design/', '\Concrete\Controller\Dialog\Area\Design::view');
 Route::register('/ccm/system/dialogs/area/design/submit', '\Concrete\Controller\Dialog\Area\Design::submit');
 Route::register('/ccm/system/dialogs/area/design/reset', '\Concrete\Controller\Dialog\Area\Design::reset');
+Route::register('/ccm/system/dialogs/add_page', '\Concrete\Controller\Dialog\AddPage::view');
+Route::register('/ccm/system/dialogs/add_page/submit', '\Concrete\Controller\Dialog\AddPage::submit');
+Route::register('/ccm/system/dialogs/external_link', '\Concrete\Controller\Dialog\ExternalLink::view');
+Route::register('/ccm/system/dialogs/external_link/save', '\Concrete\Controller\Dialog\ExternalLink::save');
 
 /**
  * Files
