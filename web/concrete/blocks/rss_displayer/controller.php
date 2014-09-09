@@ -50,14 +50,14 @@ class Controller extends BlockController
         try {
             $channel = $fp->load($this->url);
             $i = 0;
-            foreach($channel as $post) {
+            foreach ($channel as $post) {
                 $posts[] = $post;
                 if (($i + 1) == intval($this->itemsToDisplay)) {
                     break;
                 }
                 $i++;
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->set('errorMsg', $e->getMessage());
         }
 
@@ -83,14 +83,14 @@ class Controller extends BlockController
         try {
             $channel = $fp->load($this->url);
             $i = 0;
-            foreach($channel as $post) {
+            foreach ($channel as $post) {
                 $posts[] = $post;
                 if (($i + 1) == intval($this->itemsToDisplay)) {
                     break;
                 }
                 $i++;
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
 
         }
 
@@ -98,6 +98,7 @@ class Controller extends BlockController
         foreach ($posts as $item) {
             $searchContent .= $item->getTitle() . ' ' . strip_tags($item->getDescription()) . ' ';
         }
+
         return $searchContent;
     }
 
