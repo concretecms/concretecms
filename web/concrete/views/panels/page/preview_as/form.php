@@ -6,7 +6,9 @@ $fdh = Core::make('helper/form/date_time'); /* @var $fdh \Concrete\Core\Form\Ser
         <a href="" data-panel-navigation="back" class="ccm-panel-back">
             <span class="fa fa-chevron-left"></span>
         </a>
-        <?=t('View as User')?>
+        <a href="" data-panel-navigation="back">
+          <?=t('View as User')?>
+        </a>
     </header>
     <form class="preview-panel-form form-horizontal">
         <div class="ccm-panel-content-inner" id="ccm-menu-page-attributes-list">
@@ -57,7 +59,7 @@ $fdh = Core::make('helper/form/date_time'); /* @var $fdh \Concrete\Core\Form\Ser
 			e.preventDefault();
 			return false;
 		});
-	 
+
 	});
 }(jQuery));
 </script>

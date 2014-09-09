@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 <script type="text/javascript">
-	
+
 </script>
 <script type="text/template" class="tbody">
 <% _.each(cv.versions, function(cv) { %>
@@ -279,11 +279,11 @@ $(function() {
 
 });
 
-</script>				
+</script>
 
 
 <section id="ccm-panel-page-versions" class="ccm-ui">
-	<header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="fa fa-chevron-left"></span></a> <?=t('Versions')?></header>
+	<header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="fa fa-chevron-left"></span></a> <a href="" data-panel-navigation="back"><?=t('Versions')?></a></header>
 	<table class="table">
 		<thead>
 			<tr>
