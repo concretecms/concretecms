@@ -166,7 +166,7 @@ if ($successMessage) {
 		print $js->encode($json);
 
 	} else {
-		print '<div class="error">' . $error . '</div><div class="dialog-buttons"><a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" id="ccm-exit-drag-request" class="ccm-button-left btn">' . t('Cancel') . '</a></div>';
+		print '<div class="error">' . $error . '</div><div class="dialog-buttons"><a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" id="ccm-exit-drag-request" class="ccm-button-left btn btn-default">' . t('Cancel') . '</a></div>';
 	}
 	exit;
 }
@@ -223,11 +223,11 @@ if ($successMessage) {
 	
 	<div class="dialog-buttons">
 	<? if ($_REQUEST['sitemap_mode'] == 'move_copy_delete') { ?>
-		<a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" id="ccm-exit-drag-request" title="<?=t('Choose Page')?>" class="pull-left btn btn-hover-danger"><?=t('Cancel')?></a>
+		<a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" id="ccm-exit-drag-request" title="<?=t('Choose Page')?>" class="pull-left btn btn-default"><?=t('Cancel')?></a>
 	<? } else { ?>
-		<a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" class="pull-left btn btn-hover-danger"><?=t('Cancel')?></a>
+		<a href="javascript:void(0)" onclick="$.fn.dialog.closeTop()" class="pull-left btn btn-default"><?=t('Cancel')?></a>
 	<? } ?>
-	<a href="javascript:void(0)" onclick="ConcreteSitemap.submitDragRequest()" class="pull-right btn btn-primary"><span><?=t('Go')?></span></a>
+	<a href="javascript:void(0)" onclick="ConcreteSitemap.submitDragRequest()" class="pull-right btn btn-primary"><?=t('Go')?></a>
 	</div>
 	
 	<div class="ccm-spacer">&nbsp;</div>
