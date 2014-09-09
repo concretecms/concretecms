@@ -71,6 +71,7 @@
 			var maxFiles = (obj.options.maxFiles);
 			var maxFileSize = (obj.options.MaxFileSize);
 			var fileExtensions = (obj.options.fileExtensions);
+            var attachmentsEnabled = (obj.options.attachmentsEnabled);
 
 			if (obj.options.method == 'ajax') {
 				$.post(CCM_TOOLS_PATH + '/conversations/view_ajax', {
@@ -422,7 +423,10 @@
 				return false;
 			});
 
-			obj.$element.concreteConversationAttachments(obj);
+			if(obj.options.attachmentsEnabled) { // only bring in the attachments if they're enabled
+                obj.$element.concreteConversationAttachments(obj);
+            }
+
 			$('.dropdown-toggle').dropdown();
 		},
 		handlePostError: function($form, messages) {

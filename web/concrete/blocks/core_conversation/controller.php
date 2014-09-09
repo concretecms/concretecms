@@ -82,40 +82,49 @@ use Page;
 				$this->set('maxFileSizeGuest', $fileSettings['maxFileSizeGuest']);
 				$this->set('maxFileSizeRegistered', $fileSettings['maxFileSizeRegistered']);
 				$this->set('fileExtensions', $fileSettings['fileExtensions']);
+                $this->set('attachmentsEnabled', $fileSettings['attachmentsEnabled']);
 			}
 		}
 		
 		public function getFileSettings(){
+            $conversation = $this->getConversationObject();
+
 			$helperFile = Loader::helper('concrete/file');
-			if($this->maxFilesGuest > 0) {
-				$maxFilesGuest = $this->maxFilesGuest;
+			if($conversation->getConversationMaxFilesGuest() > 0 && $conversation->getConversationAttachmentOverridesEnabled()) {
+				$maxFilesGuest = $conversation->getConversationMaxFilesGuest();
 			} else {
 				$maxFilesGuest = Config::get('CONVERSATIONS_MAX_FILES_GUEST') ? Config::get('CONVERSATIONS_MAX_FILES_GUEST') : 3;
 			}
 			
-			if($this->maxFilesRegistered > 0) {
+			if($this->maxFilesRegistered > 0 && $conversation->getConversationAttachmentOverridesEnabled()) {
 				$maxFilesRegistered = $this->maxFilesRegistered;
 			} else {
 				$maxFilesRegistered = Config::get('CONVERSATIONS_MAX_FILES_REGISTERED') ? Config::get('CONVERSATIONS_MAX_FILES_REGISTERED') : 6;
 			}
 			
-			if($this->maxFileSizeGuest > 0) {
+			if($this->maxFileSizeGuest > 0 && $conversation->getConversationAttachmentOverridesEnabled()) {
 				$maxFileSizeGuest = $this->maxFileSizeGuest;
 			} else {
 				$maxFileSizeGuest = Config::get('CONVERSATIONS_MAX_FILE_SIZE_GUEST') ? Config::get('CONVERSATIONS_MAX_FILE_SIZE_GUEST') : 3;
 			}
 			
-			if($this->maxFileSizeRegistered > 0) {
+			if($this->maxFileSizeRegistered > 0 && $conversation->getConversationAttachmentOverridesEnabled()) {
 				$maxFileSizeRegistered = $this->maxFileSizeRegistered;
 			} else {
 				$maxFileSizeRegistered = Config::get('CONVERSATIONS_MAX_FILE_SIZE_REGISTERED') ? Config::get('CONVERSATIONS_MAX_FILE_SIZE_REGISTERED') : 10;
 			}
 			
-			if($this->fileExtensions) {
+			if($this->fileExtensions && $conversation->getConversationAttachmentOverridesEnabled()) {
 				$fileExtensions = $this->fileExtensions;
 			} else {
 				$fileExtensions = Config::get('CONVERSATIONS_ALLOWED_FILE_TYPES') ? Config::get('CONVERSATIONS_ALLOWED_FILE_TYPES') : '*.jpg;*.png;*.gif;*.doc';
 			}
+
+            if($conversation->getConversationAttachmentsEnabled() > 0 && $conversation->getConversationAttachmentOverridesEnabled()) {
+                $attachmentsEnabled =$conversation->getConversationAttachmentsEnabled();
+            } else {
+                Config::get('CONVERSATIONS_ATTACHMENTS_ENABLED') ? Config::get('CONVERSATIONS_ATTACHMENTS_ENABLED') : 1;
+            }
 			
 			$fileExtensions = implode(',', $helperFile->unserializeUploadFileExtensions($fileExtensions)); //unserialize and implode extensions into comma separated string
 			
@@ -125,6 +134,7 @@ use Page;
 			$fileSettings['maxFilesGuest'] = $maxFilesGuest;
 			$fileSettings['maxFilesRegistered'] = $maxFilesRegistered;
 			$fileSettings['fileExtensions'] = $fileExtensions;
+            $fileSettings['attachmentsEnabled'] = $attachmentsEnabled;
 			
 			return $fileSettings;
 		}
@@ -157,31 +167,37 @@ use Page;
 				$conversation = Conversation::getByID($cnvID);
 			}
 			$values = $post;
+            if (!$values['attachmentOverridesEnabled']) {
+                $conversation->setConversationAttachmentOverridesEnabled(intval($values['attachmentOverridesEnabled']));
+            }
 			if (!$values['itemsPerPage']) {
 				$values['itemsPerPage'] = 0;
 			}
 			if (!$values['maxFilesGuest']) {
-				$values['maxFilesGuest'] = 0;
+				$conversation->setConversationMaxFilesGuest(intval($values['maxFilesGuest']));
 			}
 			if (!$values['maxFilesRegistered']) {
-				$values['maxFilesRegistered'] = 0;
+                $conversation->setConversationMaxFilesRegistered(intval($values['maxFilesRegistered']));
 			}
 			if (!$values['maxFileSizeGuest']) {
-				$values['maxFileSizeGuest'] = 0;
+                $conversation->setConversationMaxFileSizeGuest(intval($values['maxFileSizeGuest']));
 			}
 			if (!$values['maxFileSizeRegistered']) {
-				$values['maxFileSizeRegistered'] = 0;
+                $conversation->setConversationMaxFilesRegistered(intval($values['maxFileSizeRegistered']));
 			}
 			if (!$values['enableOrdering']) {
 				$values['enableOrdering'] = 0;
 			}
+            if (!$values['attachmentsEnabled']) {
+                $conversation->setConversationAttachmentsEnabled(intval($values['attachmentsEnabled']));
+            }
 			if (!$values['enableCommentRating']) {
 				$values['enableCommentRating'] = 0;
 			}
 			
 			if ($values['fileExtensions']) {
 				$receivedExtensions = preg_split('{,}',strtolower($values['fileExtensions']),null,PREG_SPLIT_NO_EMPTY);
-				$values['fileExtensions'] = $helperFile->serializeUploadFileExtensions($receivedExtensions);
+				$conversation->setConversationFileExtensions($helperFile->serializeUploadFileExtensions($receivedExtensions));
 			}
 			
 			 
