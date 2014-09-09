@@ -42,5 +42,8 @@ $form = Loader::helper('form');
         <a href="<?=View::url('/login', 'concrete', 'forgot_password')?>" class="btn pull-right"><?= t('Forgot Password') ?></a>
     </div>
 
+    <script type="text/javascript">
+        document.querySelector('input[name=uName]').focus();
+    </script>
     <?php Loader::helper('validation/token')->output('login_' . $this->getAuthenticationTypeHandle()); ?>
 </form>
