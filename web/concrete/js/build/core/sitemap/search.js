@@ -6,10 +6,9 @@
     'use strict';
 
     function ConcretePageAjaxSearch($element, options) {
-        'use strict';
         var my = this;
         options = $.extend({
-            'mode': 'menu',
+            'mode': 'menu'
         }, options);
 
         my.options = options;
@@ -60,13 +59,15 @@
     }
 
     ConcretePageAjaxSearch.prototype.handleSelectedBulkAction = function (value, type, $option, $items) {
-        if (value == 'movecopy') {
+        if (value == 'movecopy' || value == 'Move/Copy') {
             var url, my = this, itemIDs = [];
             $.each($items, function (i, checkbox) {
                 itemIDs.push($(checkbox).val());
             });
 
-            ConcreteEvent.subscribe('SitemapSelectPage', function (e, data) {
+            ConcreteEvent.unsubscribe('SitemapSelectPage.search');
+            ConcreteEvent.subscribe('SitemapSelectPage.search', function (e, data) {
+                Concrete.event.unsubscribe(e);
                 url = CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request?origCID=' + itemIDs.join(',') + '&destCID=' + data.cID;
                 $.fn.dialog.open({
                     width: 350,
@@ -75,9 +76,8 @@
                     title: ccmi18n_sitemap.moveCopyPage
                 });
             });
-        } else {
-            ConcreteAjaxSearch.prototype.handleSelectedBulkAction.call(this, value, type, $option, $items);
         }
+        ConcreteAjaxSearch.prototype.handleSelectedBulkAction.call(this, value, type, $option, $items);
     }
 
     ConcreteAjaxSearch.prototype.createMenu = function ($selector) {
