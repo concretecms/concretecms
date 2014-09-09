@@ -13,10 +13,10 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
 	public function getConversationDateCreated() {return $this->cnvDateCreated;}
 	public function getConversationDateLastMessage() {return $this->cnvDateLastMessage;}
 	public function getConversationMessagesTotal() {return intval($this->cnvMessagesTotal);}
-    public function getConversationMaxFileSizeGuest() { return intval($this->cnvGuestMaxFileSize);}
-    public function getConversationMaxFileSizeRegistered() { return intval($this->cnvRegisteredMaxFileSize);}
-    public function getConversationMaxFilesGuest() { return intval($this->cnvGuestMaxFiles);}
-    public function getConversationMaxFilesRegistered() { return intval($this->cnvRegisteredMaxFiles);}
+    public function getConversationMaxFileSizeGuest() { return intval($this->cnvMaxFileSizeGuest);}
+    public function getConversationMaxFileSizeRegistered() { return intval($this->cnvMaxFileSizeRegistered);}
+    public function getConversationMaxFilesGuest() { return intval($this->cnvMaxFilesGuest);}
+    public function getConversationMaxFilesRegistered() { return intval($this->cnvMaxFilesRegistered);}
     public function getConversationFileExtensions() { return intval($this->cnvFileExtensions);}
     public function getConversationAttachmentOverridesEnabled() { return intval($this->cnvAttachmentOverridesEnabled);}
     public function getConversationAttachmentsEnabled() { return intval($this->cnvAttachmentsEnabled);}
@@ -48,7 +48,8 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
 
     public static function getByID($cnvID) {
 		$db = Loader::db();
-		$r = $db->GetRow('select cnvID, cID, cnvDateCreated, cnvDateLastMessage, cnvMessagesTotal from Conversations where cnvID = ?', array($cnvID));
+		$r = $db->GetRow('select cnvID, cID, cnvDateCreated, cnvDateLastMessage, cnvMessagesTotal, cnvAttachmentsEnabled, cnvAttachmentOverridesEnabled,
+		cnvFileExtensions, cnvMaxFileSizeRegistered, cnvMaxFileSizeGuest, cnvMaxFilesRegistered, cnvMaxFilesGuest, cnvOverrideGlobalPermissions from Conversations where cnvID = ?', array($cnvID));
 		if (is_array($r) && $r['cnvID'] == $cnvID) {
 			$cnv = new static;
 			$cnv->setPropertiesFromArray($r);
@@ -120,29 +121,29 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
         $db->Execute('update Conversations set cnvAttachmentOverridesEnabled = ? where cnvID = ?', array(intval($cnvAttachmentOverridesEnabled), $this->getConversationID()));
     }
 
-    public function setConversationAttachmentEnabled($cnvAttachmentsEnabled) {
+    public function setConversationAttachmentsEnabled($cnvAttachmentsEnabled) {
         $db = Loader::db();
         $db->Execute('update Conversations set cnvAttachmentsEnabled = ? where cnvID = ?', array(intval($cnvAttachmentsEnabled), $this->getConversationID()));
     }
 
     public function setConversationMaxFileSizeGuest($cnvMaxFileSizeGuest) {
         $db = Loader::db();
-        $db->Execute('update Conversations set cnvFileSizeGuest = ? where cnvID = ?', array(intval($cnvMaxFileSizeGuest), $this->getConversationID()));
+        $db->Execute('update Conversations set cnvMaxFileSizeGuest = ? where cnvID = ?', array(intval($cnvMaxFileSizeGuest), $this->getConversationID()));
     }
 
     public function setConversationMaxFileSizeRegistered($cnvMaxFileSizeRegistered) {
         $db = Loader::db();
-        $db->Execute('update Conversations set cnvFileSizeRegistered = ? where cnvID = ?', array(intval($cnvMaxFileSizeRegistered), $this->getConversationID()));
+        $db->Execute('update Conversations set cnvMaxFileSizeRegistered = ? where cnvID = ?', array(intval($cnvMaxFileSizeRegistered), $this->getConversationID()));
     }
 
     public function setConversationMaxFilesGuest($cnvMaxFilesGuest) {
         $db = Loader::db();
-        $db->Execute('update Conversations set cnvFilesGuest = ? where cnvID = ?', array(intval($cnvMaxFilesGuest), $this->getConversationID()));
+        $db->Execute('update Conversations set cnvMaxFilesGuest = ? where cnvID = ?', array(intval($cnvMaxFilesGuest), $this->getConversationID()));
     }
 
     public function setConversationMaxFilesRegistered($cnvMaxFilesRegistered) {
         $db = Loader::db();
-        $db->Execute('update Conversations set cnvFilesRegistered = ? where cnvID = ?', array(intval($cnvMaxFilesRegistered), $this->getConversationID()));
+        $db->Execute('update Conversations set cnvMaxFilesRegistered = ? where cnvID = ?', array(intval($cnvMaxFilesRegistered), $this->getConversationID()));
     }
 
     public function setConversationFileExtensions($cnvFileExtensions) {

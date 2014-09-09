@@ -1,8 +1,8 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>  
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?
 
 $helperFile = Loader::helper('concrete/file');
-if($fileExtensions) {  // format file extensions for viewing and editing. 
+if($fileExtensions) {  // format file extensions for viewing and editing.
 	$fileExtensions = $helperFile->unserializeUploadFileExtensions($fileExtensions);
 	$fileExtensions = implode(',', $fileExtensions);
 }
@@ -172,13 +172,13 @@ if(!$dateFormat) {
 
         <div class="checkbox">
             <label class="control-label">
-            <?=$form->checkbox('attachmentsEnabled', 1, $attachmentsEnabled)?><?=t('Enable Attachment')?>
+            <?=$form->checkbox('attachmentsEnabled', 1, $attachmentsEnabled)?><?=t('Enable Attachments')?>
             </label>
         </div>
     </div>
     <div class="form-group attachment-overrides">
 		<label class="control-label"><?=t('Max Attachment Size for Guest Users. (MB)')?></label>
-		<div class="controls">		
+		<div class="controls">
 			<?=$form->text('maxFileSizeGuest', $maxFileSizeGuest > 0 ? $maxFileSizeGuest : '')?>
 		</div>
 	</div>

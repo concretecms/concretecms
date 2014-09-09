@@ -45,7 +45,8 @@ if (is_object($conversation)) {
 			fileExtensions: '<?=$fileExtensions?>',
 			maxFileSize: '<?=$maxFileSize?>',
 			maxFiles: '<?=$maxFiles?>',
-            attachmentsEnabled: '<?=$attachmentsEnabled?>'
+            attachmentsEnabled: '<?=$attachmentsEnabled?>',
+            attachmentOverridesEnabled: '<?=attachmentOverridesEnabled?>'
 		});
 	});
 	</script>

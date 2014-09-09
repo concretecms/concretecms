@@ -676,7 +676,7 @@
     <field name="cnvAttachmentOverridesEnabled" type="I1">
       <unsigned />
       <notnull />
-      <default value="1" />
+      <default value="0" />
     </field>
     <field name="cnvMaxFilesGuest" type="I">
       <default value="0" />
