@@ -2,9 +2,10 @@
 namespace Concrete\Core\Conversation\Message;
 use Loader;
 use Concrete\Core\Conversation\Conversation;
+use Concrete\Core\Conversation\FlagType\FlagType;
 use \Concrete\Core\Legacy\DatabaseItemList;
 class MessageList extends DatabaseItemList {
-
+    protected $autoSortColumns = array('cnvMessageDateCreated');
 	protected $sortBy = 'cnvMessageDateCreated';
 	protected $sortByDirection = 'asc';
 	protected $cnvID;
@@ -21,7 +22,7 @@ class MessageList extends DatabaseItemList {
 		$this->sortBy('cnvMessageDateCreated', 'desc');
 	}
 
-	public function filterByFlag(ConversationFlagType $type) {
+	public function filterByFlag(FlagType $type) {
 		$this->addToQuery('inner join ConversationFlaggedMessages cnf on cnvm.cnvMessageID = cnf.cnvMessageID');
 		$this->filter('cnf.cnvMessageFlagTypeID', $type->getConversationFlagTypeID());
 	}

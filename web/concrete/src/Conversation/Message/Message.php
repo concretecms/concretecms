@@ -298,6 +298,7 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
                 $f->getFileID()
             ));
         }
+        // associate with non-pending file set.
     }
 
     public function removeFile($cnvMessageAttachmentID)
@@ -306,6 +307,7 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
         $db->Execute('DELETE FROM ConversationMessageAttachments WHERE cnvMessageAttachmentID = ?', array(
             $cnvMessageAttachmentID
         ));
+        // remove from file manager.
     }
 
     public function getAttachments($cnvMessageID)

@@ -44,7 +44,8 @@ if (is_object($conversation)) {
 			blockAreaHandle: '<?=$blockAreaHandle ?>',
 			fileExtensions: '<?=$fileExtensions?>',
 			maxFileSize: '<?=$maxFileSize?>',
-			maxFiles: '<?=$maxFiles?>'
+			maxFiles: '<?=$maxFiles?>',
+            attachmentsEnabled: '<?=$attachmentsEnabled?>'
 		});
 	});
 	</script>

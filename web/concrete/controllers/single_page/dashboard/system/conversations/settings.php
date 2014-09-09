@@ -44,6 +44,9 @@ class Settings extends DashboardPageController {
 		if($this->post('maxFilesGuest')){
 			Config::save('CONVERSATIONS_MAX_FILES_REGISTERED', $this->post('maxFilesRegistered')) ;
 		}
+        if ($this->post('attachmentsEnabled')) {
+            Config::save('CONVERSATIONS_ATTACHMENTS_ENABLED', $this->post('attachmentsEnabled'));
+        }
 		if ($this->post('fileExtensions')){
 			$types = preg_split('{,}',$this->post('fileExtensions'),null,PREG_SPLIT_NO_EMPTY);
 			$types = $helper_file->serializeUploadFileExtensions($types);

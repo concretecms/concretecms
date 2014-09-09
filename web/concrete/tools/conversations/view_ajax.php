@@ -79,7 +79,8 @@ if (is_object($cnv)) {
 		'enableCommentRating' => $_POST['enableCommentRating'],
 		'dateFormat' => $_POST['dateFormat'], 
 		'customDateFormat' => $_POST['customDateFormat'],
-		'blockAreaHandle' => $_POST['blockAreaHandle']
+		'blockAreaHandle' => $_POST['blockAreaHandle'],
+        'attachmentsEnabled' => $cnv->getConversationAttachmentsEnabled()
 	);
 	Loader::element('conversation/display', $args);
 }
