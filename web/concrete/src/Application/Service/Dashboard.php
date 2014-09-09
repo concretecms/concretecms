@@ -211,9 +211,9 @@ class Dashboard {
 			}
 		} else {
 			$obj->checkData = true;
-			$imageSetting = Config::get('DASHBOARD_BACKGROUND_IMAGE');
+			$imageSetting = Config::get('concrete.misc.dashboard_background_image');
 			if ($imageSetting == 'custom') {
-				$fo = File::getByID(Config::get('DASHBOARD_BACKGROUND_IMAGE_CUSTOM_FILE_ID'));
+				$fo = File::getByID(Config::get('concrete.misc.dashboard_background_image_fid'));
 				if (is_object($fo)) {
 					$image = $fo->getRelativePath();
 				}

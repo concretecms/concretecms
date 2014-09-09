@@ -114,10 +114,10 @@ if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES && $u->isRegistered(
 	$v->addFooterItem('<script type="text/javascript">$(function() { ccm_enableUserProfileMenu(); });</script>');
 }
 
-$favIconFID=intval(Config::get('FAVICON_FID'));
-$appleIconFID =intval(Config::get('IPHONE_HOME_SCREEN_THUMBNAIL_FID'));
-$modernIconFID = intval(Config::get('MODERN_TILE_THUMBNAIL_FID'));
-$modernIconBGColor = strval(Config::get('MODERN_TILE_THUMBNAIL_BGCOLOR'));
+$favIconFID=intval(Config::get('concrete.misc.favicon_fid'));
+$appleIconFID =intval(Config::get('concrete.misc.iphone_home_screen_thumbnail_fid'));
+$modernIconFID = intval(Config::get('concrete.misc.modern_tile_thumbnail_fid'));
+$modernIconBGColor = strval(Config::get('concrete.misc.modern_tile_thumbnail_bgcolor'));
 
 if($favIconFID) {
 	$f = File::getByID($favIconFID); ?>
@@ -156,8 +156,8 @@ if (is_object($cp)) {
 
 $v = View::getInstance();
 $v->markHeaderAssetPosition();
-$_trackingCodePosition = Config::get('SITE_TRACKING_CODE_POSITION');
+$_trackingCodePosition = Config::get('concrete.seo.tracking.code_position');
 if (empty($disableTrackingCode) && $_trackingCodePosition === 'top') {
-	echo Config::get('SITE_TRACKING_CODE');
+	echo Config::get('concrete.seo.tracking.code');
 }
 echo $c->getCollectionAttributeValue('header_extra_content');

@@ -69,7 +69,7 @@ class ConversationMessageAuthorEntity extends Entity
         if (!$peID) {
             $db->Execute("insert into PermissionAccessEntities (petID) values(?)", array($petID));
             $peID = $db->Insert_ID();
-            Config::save('ACCESS_ENTITY_UPDATED', time());
+            Config::save('concrete.misc.access_entity_updated', time());
         }
         return \Concrete\Core\Permission\Access\Entity\Entity::getByID($peID);
     }

@@ -24,8 +24,8 @@ class Searchindex extends DashboardPageController{
 					if (!is_array($areas)) {
 						$areas = array();
 					}
-					Config::save('SEARCH_INDEX_AREA_LIST', serialize($areas));
-					Config::save('SEARCH_INDEX_AREA_METHOD', Loader::helper('security')->sanitizeString($this->post('SEARCH_INDEX_AREA_METHOD')));
+					Config::save('concrete.misc.search_index_area_list', serialize($areas));
+					Config::save('concrete.misc.search_index_area_method', Loader::helper('security')->sanitizeString($this->post('SEARCH_INDEX_AREA_METHOD')));
 					$this->redirect('/dashboard/system/seo/searchindex', 'updated');
 				} else {
 					$this->set('error', array($this->token->getErrorMessage()));

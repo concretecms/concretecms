@@ -5,7 +5,7 @@
  * Logging preferences.
  * ----------------------------------------------------------------------------
  */
-Config::getOrDefine('SITE_DEBUG_LEVEL', DEBUG_DISPLAY_ERRORS);
+Config::getOrDefine('concrete.debug.level', DEBUG_DISPLAY_ERRORS);
 
 /**
  * ----------------------------------------------------------------------------
@@ -14,8 +14,9 @@ Config::getOrDefine('SITE_DEBUG_LEVEL', DEBUG_DISPLAY_ERRORS);
  */
 
 /* -- Allowed extensions -- */
-define('UPLOAD_FILE_EXTENSIONS_CONFIGURABLE', !defined('UPLOAD_FILE_EXTENSIONS_ALLOWED'));
-Config::getOrDefine('UPLOAD_FILE_EXTENSIONS_ALLOWED','*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.3gp;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;*.pptx;*.kml;*.xml;*.svg;*.webm;*.ogg;*.ogv');
+Config::getOrDefine(
+    'concrete.upload.extensions',
+    '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.3gp;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;*.pptx;*.kml;*.xml;*.svg;*.webm;*.ogg;*.ogv');
 
 /**
  * ----------------------------------------------------------------------------
@@ -34,8 +35,8 @@ Config::getOrDefine('FULL_PAGE_CACHE_LIFETIME', 'default');
  * Logging settings.
  * ----------------------------------------------------------------------------
  */
-Config::getOrDefine('ENABLE_LOG_EMAILS', true);
-Config::getOrDefine('ENABLE_LOG_ERRORS', true);
+Config::getOrDefine('concrete.log.emails', true);
+Config::getOrDefine('concrete.log.errors', true);
 
 /**
  * ----------------------------------------------------------------------------
@@ -88,7 +89,7 @@ Config::getOrDefine('REGISTRATION_TYPE', 'disabled');
 define('ENABLE_REGISTRATION', REGISTRATION_TYPE != 'disabled');
 
 /** -- Profile settings -- **/
-Config::getOrDefine('ENABLE_USER_TIMEZONES', false);
+Config::getOrDefine('concrete.misc.user_timezones', false);
 
 
 

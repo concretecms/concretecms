@@ -2555,7 +2555,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $lifetime = 31536000; // 1 year
         } else {
             if (FULL_PAGE_CACHE_LIFETIME == 'custom') {
-                $lifetime = Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM') * 60;
+                $lifetime = Config::get('concrete.cache.full_page_lifetime_value') * 60;
             } else if (FULL_PAGE_CACHE_LIFETIME == 'forever') {
                 $lifetime = 31536000; // 1 year
             } else {

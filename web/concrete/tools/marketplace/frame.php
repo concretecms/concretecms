@@ -1,13 +1,13 @@
 <?  defined('C5_EXECUTE') or die("Access Denied.");
 
 $tp = new TaskPermission();
-if ($tp->canInstallPackages()) { 
+if ($tp->canInstallPackages()) {
 	$mi = Marketplace::getInstance();
-	if ($_REQUEST['complete']) { 
-	
-		Config::save('MARKETPLACE_SITE_TOKEN', $_POST['csToken']);
-		Config::save('MARKETPLACE_SITE_URL_TOKEN', $_POST['csURLToken']);
-	
+	if ($_REQUEST['complete']) {
+
+		Config::set('concrete.marketplace.token', $_POST['csToken']);
+		Config::set('concrete.marketplace.url_token', $_POST['csURLToken']);
+
 		?>
 		<script type="text/javascript">
 			<? if ($_REQUEST['task'] == 'get') { ?>

@@ -49,8 +49,7 @@ Facade::setFacadeApplication($cms);
  * ----------------------------------------------------------------------------
  */
 $file_system = new Filesystem();
-$database_config = new DatabaseConfig();
-$file_loader = new ConfigLoader($file_system, $database_config);
+$file_loader = new ConfigLoader($file_system);
 
 $db_config = $file_loader->loadStrict(null, 'database');
 
@@ -196,7 +195,7 @@ if (file_exists(DIR_CONFIG_SITE)) {
  * Start localization library.
  * ----------------------------------------------------------------------------
  */
-Config::getOrDefine('SITE_LOCALE', 'en_US');
+Config::getOrDefine('concrete.locale', 'en_US');
 $u = new User();
 $lan = $u->getUserLanguageToDisplay();
 $loc = Localization::getInstance();
@@ -239,7 +238,6 @@ PermissionKey::loadAll();
  * ----------------------------------------------------------------------------
  */
 $response = $cms->dispatch($request);
-
 /**
  * ----------------------------------------------------------------------------
  * Send it to the user

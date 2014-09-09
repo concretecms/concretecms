@@ -34,7 +34,7 @@ if ($downloadableUpgradeAvailable) {
 
     </form>
     <script>
-        $('header.ccm-dashboard-page-header').children().text('<?= t('Currently Running %s', config::get('SITE_APP_VERSION')) ?>');
+        $('header.ccm-dashboard-page-header').children().text('<?= t('Currently Running %s', config::get('concrete.version')) ?>');
     </script>
     <?= $h->getDashboardPaneFooterWrapper(); ?>
 <?
@@ -57,7 +57,7 @@ if ($downloadableUpgradeAvailable) {
                     'An update is available. Click below to update to <strong>%s</strong>.',
                     $updates[0]->getUpdateVersion()) ?>
             </p>
-            <span class="label"><?= t('Current Version %s', config::get('SITE_APP_VERSION')) ?></span>
+            <span class="label"><?= t('Current Version %s', config::get('concrete.version')) ?></span>
 
             <div class="ccm-dashboard-form-actions-wrapper">
                 <div class="ccm-dashboard-form-actions">
@@ -69,7 +69,7 @@ if ($downloadableUpgradeAvailable) {
             </div>
         <? } else { ?>
             <p><?= t('Several updates are available. Please choose the desired update from the list below.') ?></p>
-            <span class="label"><?= t('Current Version') ?> <?= config::get('SITE_APP_VERSION') ?></span>
+            <span class="label"><?= t('Current Version') ?> <?= config::get('concrete.version') ?></span>
             <form method="post" class="form" action="<?= $view->action('do_update') ?>" id="ccm-update-form">
                 <?php
                 $checked = true;
@@ -102,7 +102,7 @@ if ($downloadableUpgradeAvailable) {
         <?= $h->getDashboardPaneHeaderWrapper(t('Update concrete5'), false, 'span8 offset2'); ?>
         <a href="<?= $view->action('check_for_updates') ?>" class="btn" style="float: right"><?= t(
                 'Check For Updates') ?></a>
-        <h2><?= t('Currently Running %s', config::get('SITE_APP_VERSION')) ?></h2>
+        <h2><?= t('Currently Running %s', config::get('concrete.version')) ?></h2>
         <div class="clearfix">
         </div>
         <br/>

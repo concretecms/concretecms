@@ -263,10 +263,6 @@ class Install extends Controller
         if (file_exists(DIR_CONFIG_SITE . '/site_install_user.php')) {
             unlink(DIR_CONFIG_SITE . '/site_install_user.php');
         }
-
-        file_put_contents(
-            DIR_CONFIG_SITE . '/app.php',
-            "<?php\n\nreturn require(__DIR__ . '/../../install/config/app.php');");
     }
 
     public function configure()

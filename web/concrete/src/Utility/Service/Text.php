@@ -14,7 +14,7 @@ use Config;
 use Loader;
 use DOMDocument;
 
-class Text { 
+class Text {
 
 	/** Takes text and converts it to an ASCII-only string (characters with code between 32 and 127, plus \t, \n and \r).
 	* @param string $text The text to be converted.
@@ -39,16 +39,16 @@ class Text {
 		return $text;
 	}
 
-	/** 
+	/**
 	 * @access private
 	 * @param string $handle
 	 * @return string $handle
 	 */
 	public function sanitizeFileSystem($handle) {
 		return $this->urlify($handle, PAGE_PATH_SEGMENT_MAX_LENGTH, '', false);
-	}	
-	
-	/** 
+	}
+
+	/**
 	 * Takes text and returns it in the "lowercase-and-dashed-with-no-punctuation" format
 	 * @param string $handle
 	 * @param int $maxlength=PAGE_PATH_SEGMENT_MAX_LENGTH Max number of characters of the return value
@@ -59,7 +59,7 @@ class Text {
 	public function urlify($handle, $maxlength = PAGE_PATH_SEGMENT_MAX_LENGTH, $locale = '', $removeExcludedWords = true) {
 		$text = strtolower(str_replace(array("\r", "\n", "\t"), ' ', $this->asciify($handle, $locale)));
 		if($removeExcludedWords) {
-			$excludeSeoWords = Config::get('SEO_EXCLUDE_WORDS');
+			$excludeSeoWords = Config::get('concrete.seo.exclude_words');
 			if(is_string($excludeSeoWords)) {
 				if(strlen($excludeSeoWords)) {
 					$remove_list = explode(',', $excludeSeoWords);
@@ -84,16 +84,16 @@ class Text {
 		$text = strtolower ($text);							// convert to lowercase
 		return trim(substr($text, 0, $maxlength), '-');	// trim to first $maxlength chars
 	}
-		
 
-	/** 
+
+	/**
 	 * Strips tags and optionally reduces string to specified length.
 	 * @param string $string
 	 * @param int $maxlength
 	 * @param string $allowed
 	 * @return string
 	 */
-	function sanitize($string, $maxlength = 0, $allowed = '') {	
+	function sanitize($string, $maxlength = 0, $allowed = '') {
             $text = trim(strip_tags($string, $allowed));
 		if ($maxlength > 0) {
 			if (function_exists('mb_substr')) {
@@ -118,7 +118,7 @@ class Text {
 		return preg_replace($regex, '', $email);
 	}
 
-	/** 
+	/**
 	 * Leaves only characters that are alpha-numeric
 	 * @param string $text
 	 * @return string
@@ -126,16 +126,16 @@ class Text {
 	public function alphanum($string) {
 		return preg_replace('/[^A-Za-z0-9]/', '', $string);
 	}
-	
+
 	/**
 	 * always use in place of htmlentites(), so it works with different langugages
 	 * @param string $v
 	 * @return string
 	 */
 	public function entities($v){
-		return htmlentities( $v, ENT_COMPAT, APP_CHARSET); 
+		return htmlentities( $v, ENT_COMPAT, APP_CHARSET);
 	}
-	
+
 	/** Decodes html-encoded entities (for instance: from '&gt;' to '>')
 	* @param string $v
 	* @return string
@@ -144,14 +144,14 @@ class Text {
 		return html_entity_decode($v, ENT_QUOTES, APP_CHARSET);
 	}
 
-	/** 
+	/**
 	 * A concrete5 specific version of htmlspecialchars(). Double encoding is OFF, and the character set is set to your site's.
 	 */
 	public function specialchars($v) {
 		return htmlspecialchars($v, ENT_COMPAT, APP_CHARSET, false);
 	}
-	 
-	 
+
+
 	/**
 	 * An alias for shorten()
 	 * @param string $textStr
@@ -162,29 +162,29 @@ class Text {
 	public function shorten($textStr, $numChars = 255, $tail = '…') {
 		return $this->shortText($textStr, $numChars, $tail);
 	}
-	
-	/** 
+
+	/**
 	 * Like sanitize, but requiring a certain number characters, and assuming a tail
 	 * @param string $textStr
 	 * @param int $numChars
 	 * @param string $tail
 	 * @return string $textStr
-	 */	
+	 */
 	function shortText($textStr, $numChars=255, $tail='…') {
 		if (intval($numChars)==0) $numChars=255;
 		$textStr=strip_tags($textStr);
 		if (function_exists('mb_substr') && function_exists('mb_strlen')) {
-			if (mb_strlen($textStr, APP_CHARSET) > $numChars) { 
+			if (mb_strlen($textStr, APP_CHARSET) > $numChars) {
 				$textStr = mb_substr($textStr, 0, $numChars, APP_CHARSET) . $tail;
 			}
 		} else {
-			if (strlen($textStr) > $numChars) { 
+			if (strlen($textStr) > $numChars) {
 				$textStr = substr($textStr, 0, $numChars) . $tail;
 			}
 		}
-		return $textStr;			
+		return $textStr;
 	}
-        
+
 	/**
 	* Shortens and sanitizes a string but only cuts at word boundaries
 	* @param string $textStr
@@ -195,13 +195,13 @@ class Text {
 		if (intval($numChars)==0) $numChars=255;
 		$textStr=strip_tags($textStr);
 		if (function_exists('mb_substr')) {
-			if (mb_strlen($textStr, APP_CHARSET) > $numChars) { 
+			if (mb_strlen($textStr, APP_CHARSET) > $numChars) {
 				$textStr=preg_replace('/\s+?(\S+)?$/', '', mb_substr($textStr, 0, $numChars + 1, APP_CHARSET));
 				// this is needed if the shortened string consists of one single word
 				$textStr = mb_substr($textStr, 0, $numChars, APP_CHARSET). $tail;
 			}
 		} else {
-			if (strlen($textStr) > $numChars) { 
+			if (strlen($textStr) > $numChars) {
 				$textStr = preg_replace('/\s+?(\S+)?$/', '', substr($textStr, 0, $numChars + 1));
 				$textStr = substr($textStr, 0, $numChars). $tail;
 			}
@@ -209,8 +209,8 @@ class Text {
 		return $textStr;
 	}
 
-	
-	
+
+
 	/**
 	 * Takes a string and turns it into the CamelCase or StudlyCaps version
 	 * @param string $string
@@ -219,8 +219,8 @@ class Text {
 	public function camelcase($string) {
 		return Object::camelcase($string);
 	}
-	
-	/** 
+
+	/**
 	 * Scans passed text and automatically hyperlinks any URL inside it
 	 * @param string $input
 	 * @param int $newWindow
@@ -231,22 +231,22 @@ class Text {
 		$output = preg_replace("/(http:\/\/|https:\/\/|(www\.))(([^\s<]{4,80})[^\s<]*)/", '<a href="http://$2$3" '.$target.' rel="nofollow">http://$2$4</a>', $input);
 		return ($output);
 	}
-	
-	/** 
+
+	/**
 	 * automatically add hyperlinks to any twitter style @usernames in a string
 	 * @param string $input
 	 * @param int $newWindow
 	 * @param int $withSearch
 	 * @return string $output
-	 */	
+	 */
 	public function twitterAutolink($input,$newWindow=0,$withSearch=0) {
 		$target=($newWindow)?' target="_blank" ':'';
     	$output = preg_replace('/([\.|\,|\:|\¡|\¿|\>|\{|\(]?)@{1}(\w*)([\.|\,|\:|\!|\?|\>|\}|\)]?)\s/i', "$1<a href=\"http://twitter.com/$2\" ".$target." class=\"twitter-username\">@$2</a>$3 ", $input);
-		if($withSearch) 
-			$output = preg_replace('/([\.|\,|\:|\¡|\¿|\>|\{|\(]?)#{1}(\w*)([\.|\,|\:|\!|\?|\>|\}|\)]?)\s/i', "$1<a href=\"http://search.twitter.com/search?q=%23$2\" ".$target." class=\"twitter-search\">#$2</a>$3 ", $input);		
+		if($withSearch)
+			$output = preg_replace('/([\.|\,|\:|\¡|\¿|\>|\{|\(]?)#{1}(\w*)([\.|\,|\:|\!|\?|\>|\}|\)]?)\s/i', "$1<a href=\"http://search.twitter.com/search?q=%23$2\" ".$target." class=\"twitter-search\">#$2</a>$3 ", $input);
     	return $output;
-	}  
-	
+	}
+
 	/**
 	 * Runs a number of text functions, including autolink, nl2br, strip_tags. Assumes that you want simple
 	 * text comments but with a few niceties.
@@ -259,8 +259,8 @@ class Text {
 		$output = nl2br($output);
 		return $output;
 	}
-	
-	/** 
+
+	/**
 	 * A wrapper for PHP's fnmatch() function, which some installations don't have.
 	 * @param string $pattern
 	 * @param string $string
@@ -273,8 +273,8 @@ class Text {
 			return fnmatch($pattern, $string);
 		}
 	}
-	
-	/** 
+
+	/**
 	 * Determines whether a string matches a particular pattern.
 	 * @author Laravel Framework
 	 */
@@ -299,7 +299,7 @@ class Text {
 		return (bool) preg_match('#^'.$pattern.'#', $value);
 	}
 
-	/** 
+	/**
 	 * Takes a CamelCase string and turns it into camel_case
 	 * @param string $string
 	 * @return string
@@ -307,7 +307,7 @@ class Text {
 	public function uncamelcase($string) {
 		return Object::uncamelcase($string);
 	}
-	
+
 	/**
 	 * Takes a handle-based string like "blah_blah" or "blah-blah" or "blah/blah" and turns it into "Blah Blah"
 	 * @param string $string
@@ -318,13 +318,13 @@ class Text {
 		return $r1;
 	}
 
-	/** 
+	/**
 	 * Takes a string and turns it into a handle.
 	 */
 	public function handle($handle, $leaveSlashes=false) {
 		return $this->sanitizeFileSystem($handle, $leaveSlashes=false);
 	}
-	
+
 	/**
 	 * alias of shortenTextWord()
 	 * @param string $textStr
@@ -336,23 +336,23 @@ class Text {
 		return $this->shortenTextWord($textStr, $numChars, $tail);
 	}
 
-	
+
 	/**
 	 * Strips out non-alpha-numeric characters
 	 * @param string $val
 	 * @return string
 	 */
-	public function filterNonAlphaNum($val){ 
+	public function filterNonAlphaNum($val){
 		return preg_replace('/[^[:alnum:]]/', '', $val);
 	}
-	
-	/** 
+
+	/**
 	 * Highlights a string within a string with the class ccm-highlight-search
 	 * @param string $value
 	 * @param string $searchString
 	 * @return string
 	 */
-	 
+
 	public function highlightSearch($value, $searchString) {
 		if (strlen($value) < 1 || strlen($searchString) < 1) {
 		    return $value;
@@ -363,12 +363,12 @@ class Text {
 		}
 		return $value;
 	}
-	
-	/** 
+
+	/**
 	 * Formats a passed XML string nicely
 	 * @param string $xml
 	 */
-	public function formatXML($xml) {  
+	public function formatXML($xml) {
         $dom = new DOMDocument;
 		$dom->preserveWhiteSpace = false;
 		$dom->loadXML($xml);
@@ -376,7 +376,7 @@ class Text {
 		return $dom->saveXml();
 	}
 
-	/** 
+	/**
 	 * Appends a SimpleXMLElement to a SimpleXMLElement
 	 */
 	public function appendXML($root, $new) {
@@ -388,5 +388,5 @@ class Text {
 			$this->appendXML($node, $ch);
 		}
 	}
-	
+
 }

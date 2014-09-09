@@ -25,7 +25,7 @@ class Antispam extends DashboardPageController {
 		}
 		$this->groups = $groups;
 		$this->set('groups',$groups);
-		$this->set('whitelistGroup',Config::get('SPAM_WHITELIST_GROUP'));
+		$this->set('whitelistGroup',Config::get('concrete.spam.whitelist_group'));
 	}
 
 	public function saved() {
@@ -39,7 +39,7 @@ class Antispam extends DashboardPageController {
 			$this->error->add('Invalid Group');
 			return;
 		}
-		Config::save('SPAM_WHITELIST_GROUP', $_POST['group_id']);
+		Config::save('concrete.spam.whitelist_group', $_POST['group_id']);
 	}
 
 	public function update_library() {
@@ -49,8 +49,8 @@ class Antispam extends DashboardPageController {
 				$scl = SystemAntispamLibrary::getByHandle($this->post('activeLibrary'));
 				if (is_object($scl)) {
 					$scl->activate();
-					Config::save('ANTISPAM_NOTIFY_EMAIL', $this->post('ANTISPAM_NOTIFY_EMAIL'));
-					Config::save('ANTISPAM_LOG_SPAM', $this->post('ANTISPAM_LOG_SPAM'));
+					Config::save('concrete.spam.notify_email', $this->post('ANTISPAM_NOTIFY_EMAIL'));
+					Config::save('concrete.log.spam', $this->post('ANTISPAM_LOG_SPAM'));
 					if ($scl->hasOptionsForm() && $this->post('ccm-submit-submit')) {
 						$controller = $scl->getController();
 						$controller->saveOptions($this->post());

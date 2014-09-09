@@ -28,11 +28,11 @@ use Page;
 		protected $btFeatures = array(
 			'conversation'
 		);
-		
+
 		public function getBlockTypeDescription() {
 			return t("Displays conversations on a page.");
 		}
-		
+
 		public function getBlockTypeName() {
 			return t("Conversation");
 		}
@@ -40,7 +40,7 @@ use Page;
 		public function getConversationFeatureDetailConversationObject() {
 			return $this->getConversationObject();
 		}
-		
+
 		public function getConversationObject() {
 			if (!isset($this->conversation)) {
 				// i don't know why this->cnvid isn't sticky in some cases, leading us to query
@@ -65,7 +65,7 @@ use Page;
 			$r = ResponseAssetGroup::get();
 			$r->requireAsset('core/conversation');
             $r->requireAsset('core/lightbox');
-			$fileSettings = $this->getFileSettings(); 
+			$fileSettings = $this->getFileSettings();
 			$conversation = $this->getConversationObject();
 			if (is_object($conversation)) {
 				$this->set('conversation', $conversation);
@@ -84,51 +84,51 @@ use Page;
 				$this->set('fileExtensions', $fileSettings['fileExtensions']);
 			}
 		}
-		
+
 		public function getFileSettings(){
 			$helperFile = Loader::helper('concrete/file');
 			if($this->maxFilesGuest > 0) {
 				$maxFilesGuest = $this->maxFilesGuest;
 			} else {
-				$maxFilesGuest = Config::get('CONVERSATIONS_MAX_FILES_GUEST') ? Config::get('CONVERSATIONS_MAX_FILES_GUEST') : 3;
+				$maxFilesGuest = Config::get('conversations.files.guest.max', 3);
 			}
-			
+
 			if($this->maxFilesRegistered > 0) {
 				$maxFilesRegistered = $this->maxFilesRegistered;
 			} else {
-				$maxFilesRegistered = Config::get('CONVERSATIONS_MAX_FILES_REGISTERED') ? Config::get('CONVERSATIONS_MAX_FILES_REGISTERED') : 6;
+				$maxFilesRegistered = Config::get('conversations.files.registered.max', 6);
 			}
-			
+
 			if($this->maxFileSizeGuest > 0) {
 				$maxFileSizeGuest = $this->maxFileSizeGuest;
 			} else {
-				$maxFileSizeGuest = Config::get('CONVERSATIONS_MAX_FILE_SIZE_GUEST') ? Config::get('CONVERSATIONS_MAX_FILE_SIZE_GUEST') : 3;
+				$maxFileSizeGuest = Config::get('conversations.files.guest.max_size', 3);
 			}
-			
+
 			if($this->maxFileSizeRegistered > 0) {
 				$maxFileSizeRegistered = $this->maxFileSizeRegistered;
 			} else {
-				$maxFileSizeRegistered = Config::get('CONVERSATIONS_MAX_FILE_SIZE_REGISTERED') ? Config::get('CONVERSATIONS_MAX_FILE_SIZE_REGISTERED') : 10;
+				$maxFileSizeRegistered = Config::get('conversations.files.registered.max_size', 10);
 			}
-			
+
 			if($this->fileExtensions) {
 				$fileExtensions = $this->fileExtensions;
 			} else {
-				$fileExtensions = Config::get('CONVERSATIONS_ALLOWED_FILE_TYPES') ? Config::get('CONVERSATIONS_ALLOWED_FILE_TYPES') : '*.jpg;*.png;*.gif;*.doc';
+				$fileExtensions = Config::get('conversations.files.allowed_types', '*.jpg;*.png;*.gif;*.doc');
 			}
-			
+
 			$fileExtensions = implode(',', $helperFile->unserializeUploadFileExtensions($fileExtensions)); //unserialize and implode extensions into comma separated string
-			
+
 			$fileSettings = array();
 			$fileSettings['maxFileSizeRegistered'] = $maxFileSizeRegistered;
 			$fileSettings['maxFileSizeGuest'] = $maxFileSizeGuest;
 			$fileSettings['maxFilesGuest'] = $maxFilesGuest;
 			$fileSettings['maxFilesRegistered'] = $maxFilesRegistered;
 			$fileSettings['fileExtensions'] = $fileExtensions;
-			
+
 			return $fileSettings;
 		}
-		
+
 
 		public function getActiveUsers($lower=false) {
 			$cnv = $this->getConversationObject();
@@ -178,15 +178,15 @@ use Page;
 			if (!$values['enableCommentRating']) {
 				$values['enableCommentRating'] = 0;
 			}
-			
+
 			if ($values['fileExtensions']) {
 				$receivedExtensions = preg_split('{,}',strtolower($values['fileExtensions']),null,PREG_SPLIT_NO_EMPTY);
 				$values['fileExtensions'] = $helperFile->serializeUploadFileExtensions($receivedExtensions);
 			}
-			
-			 
+
+
 			$values['cnvID'] = $conversation->getConversationID();
 			parent::save($values);
 		}
-		
+
 	}
