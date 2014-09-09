@@ -359,29 +359,19 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public function getGroupAutomationController()
     {
-        $handle = Loader::helper('text')->handle($this->getGroupName());
-        $handle = str_replace("-", "_", $handle);
-        $env = Environment::get();
-        $path = $env->getPath(
-            DIRNAME_LIBRARIES . '/' . DIRNAME_GROUP . '/' . DIRNAME_GROUP_AUTOMATION . '/' . $handle . '.php',
-            $this->getPackageHandle()
-        );
-        require_once($path);
-        $class = Loader::helper('text')->camelcase($handle) . 'GroupAutomationController';
-        $cl = new $class($this);
-        return $cl;
+        $class = $this->getGroupAutomationControllerClass();
+        $c = \Core::make($class, array($this));
+        return $c;
     }
 
-    public function getGroupAutomationControllerFile()
+    public function getGroupAutomationControllerClass()
     {
-        $handle = Loader::helper('text')->handle($this->getGroupName());
-        $handle = str_replace("-", "_", $handle);
-        $env = Environment::get();
-        $path = $env->getPath(
-            DIRNAME_LIBRARIES . '/' . DIRNAME_GROUP . '/' . DIRNAME_GROUP_AUTOMATION . '/' . $handle . '.php',
-            $this->getPackageHandle()
-        );
-        return $path;
+        $ts = \Core::make('helper/text');
+        $env = \Environment::get();
+        $r = $env->getRecord(DIRNAME_CLASSES . '/User/Group/AutomatedGroup/' . camelcase($ts->handle($this->getGroupName())) . '.php');
+        $prefix = $r->override ? true : $this->getPackageHandle();
+        $class = core_class('\\Core\\User\\Group\\AutomatedGroup\\' . camelcase($ts->handle($this->getGroupName())), $prefix);
+        return $class;
     }
 
     public function getGroupBadgeImageObject()

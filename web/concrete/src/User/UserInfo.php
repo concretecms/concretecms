@@ -142,9 +142,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
     }
 
-    const ADD_OPTIONS_NOHASH        = 0;
-    const ADD_OPTIONS_SKIP_CALLBACK    = 1;
-
     /**
      * @param array $data
      * @param array | false $options
@@ -173,9 +170,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         }
 
         $password_to_insert = $data['uPassword'];
-        if (!in_array(self::ADD_OPTIONS_NOHASH, $options)) {
-            $hash = $hasher->HashPassword($password_to_insert);
-        }
+        $hash = $hasher->HashPassword($password_to_insert);
 
         if (isset($data['uDefaultLanguage']) && $data['uDefaultLanguage'] != '') {
             $uDefaultLanguage = $data['uDefaultLanguage'];
@@ -187,11 +182,19 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             $newUID = $db->Insert_ID();
             $ui = UserInfo::getByID($newUID);
 
-            if (is_object($ui) && !in_array(self::ADD_OPTIONS_SKIP_CALLBACK,$options)) {
+            if (is_object($ui)) {
                 // run any internal event we have for user add
                 $ue = new \Concrete\Core\User\Event\UserInfoWithPassword($ui);
                 $ue->setUserPassword($data['uPassword']);
                 Events::dispatch('on_user_add', $ue);
+            }
+
+            $uo = $ui->getUserObject();
+            $groupControllers = \Group::getAutomatedOnRegisterGroupControllers($uo);
+            foreach($groupControllers as $ga) {
+                if ($ga->check($uo)) {
+                    $uo->enterGroup($ga->getGroupObject());
+                }
             }
 
             return $ui;
