@@ -27,11 +27,10 @@ class ControllerRouteCallback extends RouteCallback {
 			// note, our RedirectResponse doesn't extend Response, it extends symfony2 response
 			return $response;
 		}
-
 		$view = $controller->getViewObject();
 		if (is_object($view)) {
 			$view->setController($controller);
-			if (isset($view) && $view instanceof View) {
+			if (isset($view) && $view instanceof \Concrete\Core\View\AbstractView) {
 				$content = $view->render();
 			}
 		}

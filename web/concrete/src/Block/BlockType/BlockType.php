@@ -650,7 +650,7 @@ class BlockType
 
         $btID = $this->btID;
         $dh = Loader::helper('date');
-        $bDate = $dh->getSystemDateTime();
+        $bDate = $dh->getOverridableNow();
         $bIsActive = (isset($this->btActiveWhenAdded) && $this->btActiveWhenAdded == 1) ? 1 : 0;
 
         $v = array($bName, $bDate, $bDate, $bIsActive, $btID, $uID);

@@ -515,7 +515,7 @@ class User extends Object
                 $db->Replace('UserGroups', array(
                     'uID' => $this->getUserID(),
                     'gID' => $g->getGroupID(),
-                    'ugEntered' => $dt->getSystemDateTime()
+                    'ugEntered' => $dt->getOverridableNow()
                 ),
                 array('uID', 'gID'), true);
 
@@ -600,7 +600,7 @@ class User extends Object
                 Session::set('editCID', $cID);
                 $uID = $this->getUserID();
                 $dh = Loader::helper('date');
-                $datetime = $dh->getSystemDateTime();
+                $datetime = $dh->getOverridableNow();
                 $q2 = "update Pages set cIsCheckedOut = 1, cCheckedOutUID = '{$uID}', cCheckedOutDatetime = '{$datetime}', cCheckedOutDatetimeLastEdit = '{$datetime}' where cID = '{$cID}'";
                 $r2 = $db->query($q2);
 
@@ -664,7 +664,7 @@ class User extends Object
             $cID = $c->getCollectionID();
 
             $dh = Loader::helper('date');
-            $datetime = $dh->getSystemDateTime();
+            $datetime = $dh->getOverridableNow();
 
             $q = "update Pages set cCheckedOutDatetimeLastEdit = '{$datetime}' where cID = '{$cID}'";
             $r = $db->query($q);

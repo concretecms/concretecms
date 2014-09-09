@@ -369,7 +369,7 @@ abstract class Job extends Object
             $j = Core::make($className);
             $db = Loader::db();
             $db->Execute('insert into Jobs (jName, jDescription, jDateInstalled, jNotUninstallable, jHandle, pkgID) values (?, ?, ?, ?, ?, ?)',
-                array($j->getJobName(), $j->getJobDescription(), Loader::helper('date')->getLocalDateTime(), 0, $jHandle, $pkg->getPackageID()));
+                array($j->getJobName(), $j->getJobDescription(), Loader::helper('date')->getOverridableNow(), 0, $jHandle, $pkg->getPackageID()));
 
             $je = new Event($j);
             Events::dispatch('on_job_install', $je);

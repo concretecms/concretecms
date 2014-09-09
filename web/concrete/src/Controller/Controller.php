@@ -13,7 +13,7 @@ class Controller extends AbstractController {
 	protected $theme;
 	protected $controllerActionPath;
 
-	public function setViewObject(View $view) {
+	public function setViewObject(\Concrete\Core\View\AbstractView $view) {
 		$this->view = $view;
 	}
 
@@ -32,6 +32,10 @@ class Controller extends AbstractController {
 				return $tmpTheme[0];
 			}
 		}
+
+        if (isset($this->theme)) {
+            return $this->theme;
+        }
 	}
 
 	public function getControllerActionPath() {

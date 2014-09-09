@@ -216,6 +216,12 @@ class UserList extends DatabaseItemList
         $this->filterByGroup($group);
     }
 
+    public function filterByNoGroup()
+    {
+        $this->query->leftJoin('u', 'UserGroups', 'ugex', 'u.uID = ugex.uID');
+        $this->query->andWhere('ugex.gID is null');
+    }
+
     public function sortByUserID()
     {
         $this->query->orderBy('u.uID', 'asc');

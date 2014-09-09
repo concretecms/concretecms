@@ -371,5 +371,26 @@ class Controller extends BlockController
 
     }
 
-}
+    public function isBlockEmpty()
+    {
+        $pages = $this->get('pages');
+        if ($this->pageListTitle) {
+            return false;
+        }
+        if (count($pages) == 0) {
+            if ($this->noResultsMessage) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            if ($this->includeName || $this->includeDate || $this->displayThumbnail || $this->includeDescription || $this->useButtonForLink) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
 
+}

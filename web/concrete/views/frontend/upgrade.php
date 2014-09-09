@@ -1,6 +1,6 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <div class="row">
-<div class="span10 offset1">
+<div class="col-sm-10 col-sm-offset-1">
 
 <div class="page-header">
 	<h1><?=t('Upgrade concrete5')?></h1>
@@ -23,9 +23,9 @@
 <p>	<?=t('To proceed with the upgrade, click below.')?></p>
 
 
-	<form method="post" action="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/upgrade.php">
+	<form method="post" action="<?=$controller->action('submit')?>">
 	<div class="well" style="text-align: right">
-	<input type="submit" name="do_upgrade" class="ccm-input-submit btn primary" value="<?=t('Upgrade')?> &gt;"  />
+	<input type="submit" name="do_upgrade" class="btn btn-primary" value="<?=t('Upgrade')?>"  />
 	</div>
 	</form>
 
@@ -34,7 +34,7 @@
 <? } else { ?>
 
 	<div class="well" style="text-align: left">
-	    <a href="<?=DIR_REL?>/" class="btn"><?=t('Back to Home')?></a>
+	    <a href="<?=DIR_REL?>/" class="btn btn-default"><?=t('Back to Home')?></a>
   	</div>
 	
 	<?php if(!isset($hide_force) || !$hide_force) { ?>
