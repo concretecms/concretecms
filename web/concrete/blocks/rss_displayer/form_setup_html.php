@@ -1,8 +1,7 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
 
-if (!$rssObj->dateFormat) {
-    $rssObj->dateFormat = t('F jS');
-}
+/* @var $form \Concrete\Core\Form\Service\Form */
+
 ?>
 <div class="form-group">
     <?= $form->label('url', t('Feed URL')) ?>
@@ -17,8 +16,48 @@ if (!$rssObj->dateFormat) {
 </div>
 <div class="form-group">
     <?= $form->label('dateFormat', t('Date Format')) ?>
-    <input name="dateFormat" class="form-control" placeholder="Date Format" value="<?= h($rssObj->dateFormat) ?>"/>
+    <?php
+    $dateFormats = $rssObj->getDefaultDateTimeFormats();
+    $dateFormats[':custom:'] = t('Custom date/time format');
+    $standardDateFormat = $rssObj->dateFormat;
+    $customDateFormat = '';
+    if(!$standardDateFormat) {
+        reset($dateFormats);
+        $standardDateFormat = key($dateFormats);
+    }
+    if(!array_key_exists($standardDateFormat, $dateFormats)) {
+        $customDateFormat = $standardDateFormat;
+        $standardDateFormat = ':custom:';
+    }
+    echo $form->select('standardDateFormat', $dateFormats, $standardDateFormat);
+    ?>
 </div>
+<?php
+$now = new \DateTime();
+foreach(array_keys($dateFormats) as $dateFormat) {
+    ?><div class="form-group ccm-dateFormat-case" data-format="<?php echo h($dateFormat) ?>" style="display: none"><?php
+        switch($dateFormat) {
+            case ':custom:':
+                echo $form->label('customDateFormat', t('Custom date format'));
+                echo $form->text('customDateFormat', $customDateFormat);
+                ?><a href="http://php.net/manual/function.date.php" target="_blank"><?php echo t('See the PHP manual')?></a><?php
+                break;
+            default:
+                echo $form->label('', t('Example'));
+                ?><div class="form-control"><?php echo h($rssObj->formatDateTime($now, $dateFormat)); ?></div><?php
+                break;
+        }
+    ?></div><?php
+}
+?>
+<script>$(document).ready(function() {
+	function update() {
+		console.log($('#standardDateFormat').val());
+		$('.ccm-dateFormat-case').hide().filter('[data-format="' + $('#standardDateFormat').val() + '"]').show();
+	}
+	$('#standardDateFormat').on('change', function() { update(); });
+	update();
+});</script>
 <div class="form-group">
     <?= $form->label('itemsToDisplay', t('Items to Show')) ?>
     <input name="itemsToDisplay" class="form-control" placeholder="10" value="<?= h($rssObj->itemsToDisplay) ?>"/>
