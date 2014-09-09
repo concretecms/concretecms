@@ -42,6 +42,11 @@ class Sitemap {
 
 		$obj = new stdClass;
 		$pl = new PageList();
+        $pl->setPermissionsChecker(function($page) {
+            $cp = new \Permissions($page);
+            return $cp->canViewPageInSitemap();
+        });
+        $pl->includeAliases();
 		$pl->sortByDisplayOrder();
 		if ($this->includeSystemPages()) {
 			$pl->includeSystemPages();
@@ -53,7 +58,7 @@ class Sitemap {
 		if ($cID == 1) {
 			$results = $pl->getResults();
 		} else {
-			$results = $pl->getPagination()->setMaxPerPage(SITEMAP_PAGES_LIMIT)->getCurrentPageResults();
+    		$results = $pl->getPagination()->setMaxPerPage(SITEMAP_PAGES_LIMIT)->getCurrentPageResults();
 		}
 
 		$nodes = array();

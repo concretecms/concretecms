@@ -821,6 +821,16 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         return PageTypeComposerFormLayoutSet::getByID($db->Insert_ID());
     }
 
+    /**
+     * Returns true if pages of the current type are allowed beneath the passed parent page.
+     * @param \Concrete\Core\Page\Page $page
+     */
+    public function canPublishPageTypeBeneathPage(\Concrete\Core\Page\Page $page)
+    {
+        $target = $this->getPageTypePublishTargetObject();
+        return $target->canPublishPageTypeBeneathTarget($this, $page);
+    }
+
     public function validateCreateDraftRequest($pt)
     {
         $e = Loader::helper('validation/error');

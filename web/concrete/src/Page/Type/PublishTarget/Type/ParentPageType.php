@@ -1,7 +1,7 @@
 <?php 
 namespace Concrete\Core\Page\Type\PublishTarget\Type;
 use Loader;
-use PageType;
+use Concrete\Core\Page\Type\Type as PageType;
 use Page;
 
 use \Concrete\Core\Page\Type\PublishTarget\Configuration\ParentPageConfiguration;

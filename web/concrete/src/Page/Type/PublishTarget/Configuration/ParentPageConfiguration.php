@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Page\Type\PublishTarget\Configuration;
+use Concrete\Core\Page\Type\Type;
 use Loader;
 use Page;
 class ParentPageConfiguration extends Configuration {
@@ -33,6 +34,11 @@ class ParentPageConfiguration extends Configuration {
 			$target->addAttribute('path', $c->getCollectionPath());
 		}
 	}
+
+    public function canPublishPageTypeBeneathTarget(Type $pagetype, \Concrete\Core\Page\Page $page)
+    {
+        return $page->getCollectionID() == $this->getParentPageID();
+    }
 
 
 }

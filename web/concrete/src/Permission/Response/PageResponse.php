@@ -27,12 +27,36 @@ class PageResponse extends Response
 
     public function canRead()
     {
-        return $this->validate('view_page');
+        return $this->canViewPage();
     }
 
     public function canAddSubContent()
     {
         return $this->validate('add_subpage');
+    }
+
+    public function canViewPageInSitemap()
+    {
+        if (PERMISSIONS_MODEL != 'simple') {
+
+            if ($this->object->isExternalLink()) {
+                return true;
+            }
+
+            $pk = $this->category->getPermissionKeyByHandle('view_page_in_sitemap');
+            $pk->setPermissionObject($this->object);
+            return $pk->validate();
+        }
+        return $this->canViewPage();
+    }
+
+
+    public function canViewPage()
+    {
+        if ($this->object->isExternalLink()) {
+            return true;
+        }
+        return $this->validate('view_page');
     }
 
     public function canAddSubpages()
@@ -84,16 +108,6 @@ class PageResponse extends Response
             }
         }
         return false;
-    }
-
-    public function canViewPageInSitemap()
-    {
-        if (PERMISSIONS_MODEL != 'simple') {
-            $pk = $this->category->getPermissionKeyByHandle('view_page_in_sitemap');
-            $pk->setPermissionObject($this->object);
-            return $pk->validate();
-        }
-        return $this->canViewPage();
     }
 
     public function canEditPageProperties($obj = false)
