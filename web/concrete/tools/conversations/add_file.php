@@ -1,5 +1,5 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-use Conversation;
+use \Concrete\Core\Conversation\Conversation as Conversation;
 $val = Loader::helper('validation/token');
 $helperFile = Loader::helper('concrete/file');
 $file = new stdClass(); // json return value holder
@@ -7,7 +7,7 @@ $error = array();
 $pageObj = Page::getByID($_POST['cID']);
 $areaObj = Area::get($pageObj, $_POST['blockAreaHandle']);
 $blockObj = Block::getByID($_POST['bID'], $pageObj, $areaObj);
-$conversation = Conversation::getByID($blockObj->controller->cnvID);
+$conversation = Conversation::getByID($blockObj->getController()->cnvID);
 
 if(!(is_object($conversation))) {
     $error[] = t('Invalid Conversation.');
@@ -15,7 +15,6 @@ if(!(is_object($conversation))) {
     echo Loader::helper('json')->encode($file);
     exit;
 }
-
 if($conversation->getConversationAttachmentOverridesEnabled() > 0) { // check individual conversation for allowing attachments.
     if($conversation->getConversationAttachmentsEnabled != 1) {
         $error[] = t('This conversation does not allow file attachments.');
@@ -23,7 +22,7 @@ if($conversation->getConversationAttachmentOverridesEnabled() > 0) { // check in
         echo Loader::helper('json')->encode($file);
         exit;
     }
-} else if(Config::get('CONVERSATIONS_MAX_FILES_REGISTERED') != 1) { // check global config settings for whether or not file attachments should be allowed.
+} else if(Config::get('CONVERSATIONS_ATTACHMENTS_ENABLED') != 1) { // check global config settings for whether or not file attachments should be allowed.
     $error[] = t('This conversation does not allow file attachments.');
     $file->error = $error;
     echo Loader::helper('json')->encode($file);
@@ -163,4 +162,3 @@ if(!$fv instanceof FileVersion) {
 	$file->timestamp = $_POST['timestamp'];
 	}
 echo Loader::helper('json')->encode($file);
-?>

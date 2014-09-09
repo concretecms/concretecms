@@ -9,7 +9,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Conv
 			<p style="margin-bottom: 25px; color: #aaa; display: block;" class="small"><?php echo t('Note: These settings can be overridden in the block edit form for individual conversations.') ?></p>
             <div class="form-group">
                 <label class="control-label"><?=t('Enable Attachments')?></label>
-                <?=$form->checkbox('attachmentsEnabled', $attachmentsEnabled)?>
+                <?=$form->checkbox('attachmentsEnabled', 1, $attachmentsEnabled)?>
             </div>
 			<div class="form-group">
 				<label class="control-label"><?=t('Max Attachment Size for Guest Users. (MB)')?></label>
