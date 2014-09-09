@@ -60,7 +60,7 @@ if (isset($blockTypes[$bt->getBlockTypeHandle()])) {
 if (isset($help) && !$bt->supportsInlineEdit()) { ?>
 	<div class="dialog-help" id="ccm-menu-help-content"><? 
 		if (is_array($help)) { 
-			print $help[0] . '<br><br><a href="' . $help[1] . '" class="btn small" target="_blank">' . t('Learn More') . '</a>';
+			print $help[0] . '<br><br><a href="' . $help[1] . '" target="_blank">' . t('Learn More') . '</a>';
 		} else {
 			print $help;
 		}
