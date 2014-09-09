@@ -3,6 +3,7 @@ namespace Concrete\Block\RssDisplayer;
 
 use Concrete\Core\Block\BlockController;
 use Loader;
+use Core;
 
 class Controller extends BlockController
 {
@@ -42,6 +43,72 @@ class Controller extends BlockController
         );
     }
 
+    public function getDefaultDateTimeFormats()
+    {
+        return array(
+            ':longDate:' => t('Full date'),
+            ':shortDate:' => t('Short date'),
+            ':longTime:' => t('Time with seconds'),
+            ':shortTime:' => t('Time without seconds'),
+            ':longDate:longTime:' => t('Full date and time with seconds'),
+            ':longDate:shortTime:' => t('Full date and time without seconds'),
+            ':shortDate:longTime:' => t('Short date and time with seconds'),
+            ':shortDate:shortTime:' => t('Short date and time without seconds'),
+        );
+    }
+
+    /**
+     * Format a \DateTime instance accordingly to $format
+     * @param \DateTime|null $date
+     * @param string|bool $format Set to true (default) to use the default format
+     */
+    public function formatDateTime($date, $format = true)
+    {
+        $result = '';
+        if(is_a($date, '\\DateTime')) {
+            if($format === true) {
+                $format = $this->dateFormat;
+                if (!$format) {
+                    $formats = $this->getDefaultDateTimeFormats();
+                    reset($formats);
+                    $format = key($formats);
+                }
+            }
+            $dh = Core::make('helper/date');
+            /* @var $dh \Concrete\Core\Localization\Service\Date */
+            switch($format) {
+                case ':shortDate:shortTime:':
+                    $result = $dh->formatDateTime($date, false, false);
+                    break;
+                case ':shortDate:longTime:':
+                    $result = $dh->formatDateTime($date, false, true);
+                    break;
+                case ':longDate:shortTime:':
+                    $result = $dh->formatDateTime($date, true, false);
+                    break;
+                case ':longDate:longTime:':
+                    $result = $dh->formatDateTime($date, true, true);
+                    break;
+                case ':shortDate:':
+                    $result = $dh->formatDate($date, false);
+                    break;
+                case ':longDate:':
+                    $result = $dh->formatDate($date, true);
+                    break;
+                case ':shortTime:':
+                    $result = $dh->formatTime($date, false);
+                    break;
+                case ':longTime:':
+                    $result = $dh->formatTime($date, true);
+                    break;
+                default:
+                    $result = $dh->formatCustom($format, $date);
+            }
+        }
+
+        return $result;
+    }
+
     public function view()
     {
         $fp = Loader::helper("feed");
@@ -73,6 +140,14 @@ class Controller extends BlockController
         $args['showSummary'] = ($data['showSummary'] == 1) ? 1 : 0;
         $args['launchInNewWindow'] = ($data['launchInNewWindow'] == 1) ? 1 : 0;
         $args['title'] = isset($data['title']) ? $data['title'] : '';
+        switch($data['standardDateFormat']) {
+            case ':custom:':
+                $args['dateFormat'] = $data['customDateFormat'];
+                break;
+            default:
+                $args['dateFormat'] = $data['standardDateFormat'];
+                break;
+        }
         parent::save($args);
     }
 
