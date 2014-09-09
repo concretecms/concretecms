@@ -37,8 +37,12 @@ class ConfigRenderer {
                 $arrays[] = array($key, $value);
             } elseif (is_scalar($value)) {
                 $scalars[] = array($key, $value);
+            } elseif (is_null($value)) {
+                $scalars[] = array($key, $value);
             } else {
-                throw new \Exception('Invalid configuration type, configuration supports array and scalar values only.');
+                $type = gettype($value);
+                throw new \Exception(
+                    'Invalid configuration type "' . $type . '", configuration supports array and scalar values only.');
             }
         }
 
@@ -50,6 +54,8 @@ class ConfigRenderer {
                 $clean_value = '"' . addslashes($value) . '"';
             } elseif (is_bool($value)) {
                 $clean_value = $value ? 'true' : 'false';
+            } elseif (is_null($value)) {
+                $clean_value = 'null';
             } else {
                 $clean_value = $value;
             }
