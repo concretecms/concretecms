@@ -21,13 +21,14 @@ if (!$message->isConversationMessageApproved()){
 	$class .= ' ccm-conversation-message-flagged';
 }
 $cnvMessageID = $message->getConversationMessageID();
+$cnvID = $message->getConversationID();
 $c = Page::getByID($_REQUEST['cID']);
-$cnvMessageURL = urlencode($c->getCollectionLink(true) . '#' . $cnvMessageID);
+$cnvMessageURL = urlencode($c->getCollectionLink(true) . '#cnv' . $cnvID . 'Message' . $cnvMessageID);
 
 if ((!$message->isConversationMessageDeleted() && $message->isConversationMessageApproved()) || $message->conversationMessageHasActiveChildren()) {
 	?>
 	<div data-conversation-message-id="<?=$message->getConversationMessageID()?>" data-conversation-message-level="<?=$message->getConversationMessageLevel()?>" class="<?=$class?>">
-		<a id="cnvMessage<?=$cnvMessageID?>" />
+		<a id="cnv<?=$cnvID?>Message<?=$cnvMessageID?>"></a>
 		<div class="ccm-conversation-message-user">
 			<div class="ccm-conversation-avatar"><? print Loader::helper('concrete/avatar')->outputUserAvatar($ui)?></div>
 			<div class="ccm-conversation-message-byline">
@@ -103,10 +104,10 @@ if ((!$message->isConversationMessageDeleted() && $message->isConversationMessag
               <? } ?>
               <li class="ccm-conversation-social-share"><span class="ccm-conversation-message-divider">|</span></li>
               <li class="ccm-conversation-social-share">
-                  <a class="ccm-conversation-message-control-icon" href="http://twitter.com/intent/tweet?url=<?php echo $cnvMessageURL?>" title="<?=t('Share message URL on Twitter.')?>"><i class="fa fa-twitter"></i></a>
+                  <a class="ccm-conversation-message-control-icon share-popup" href="http://twitter.com/intent/tweet?url=<?php echo $cnvMessageURL?>" title="<?=t('Share message URL on Twitter.')?>"><i class="fa fa-twitter"></i></a>
               </li>
               <li class="ccm-conversation-social-share">
-                  <a class="ccm-conversation-message-control-icon" href="http://www.facebook.com/sharer.php?u=<?php echo $cnvMessageURL?>" title="<?=t('Share message URL on Facebook.')?>"><i class="fa fa-facebook"></i></a>
+                  <a class="ccm-conversation-message-control-icon share-popup" href="http://www.facebook.com/sharer.php?u=<?php echo $cnvMessageURL?>" title="<?=t('Share message URL on Facebook.')?>"><i class="fa fa-facebook"></i></a>
               </li>
               <li class="ccm-conversation-social-share">
                   <a class="ccm-conversation-message-control-icon share-permalink" data-message-id= "<?php echo $messageID ?>" rel="<?php echo $cnvMessageURL ?>"  title="<?=t('Get message URL.')?>" data-dialog-title="<?php echo t('Link') ?>"  href="#"><i class="fa fa-link"></i></a>

@@ -1,6 +1,7 @@
 <?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $th = Loader::helper('text');
+$c = Page::getCurrentPage();
 ?>
 
 <div class="ccm-block-page-list-thumbnail-grid-wrapper">
@@ -80,3 +81,7 @@ $th = Loader::helper('text');
 <?php if ($showPagination): ?>
     <?php echo $pagination;?>
 <?php endif; ?>
+
+<? if ( $c->isEditMode() && $controller->isBlockEmpty()): ?>
+    <div class="ccm-edit-mode-disabled-item"><?=t('Empty Page List Block.')?></div>
+<? endif; ?>

@@ -12,12 +12,8 @@ $form = Loader::helper('form/page_selector');
         </fieldset>
 
         <div class="form-group">
-            <label class='control-label'><?= t('Display') ?></label>
-
-            <div class="input-group">
-                <input type="text" name="num" value="<?= $num ?>" class="form-control">
-                <span class="input-group-addon"> <?= t('Pages') ?></span>
-            </div>
+            <label class='control-label'><?= t('Number of Pages to Display') ?></label>
+            <input type="text" name="num" value="<?= $num ?>" class="form-control">
         </div>
 
         <div class="form-group">

@@ -32,7 +32,7 @@ class DateTime
             }
             $value .= ' ' . substr("0$h", -2) . ':' . substr("0$m", -2);
             try {
-                $date = new \DateTime($value, new \DateTimeZone($dh->getTimezone('user')));
+                $date = new \DateTime($value, $dh->getTimezone('user'));
             } catch (Exception $foo) {
             }
         } elseif (isset($arr[$field])) {
@@ -41,7 +41,7 @@ class DateTime
                 return '';
             }
             try {
-                $date = new \DateTime($value, new \DateTimeZone($dh->getTimezone('system')));
+                $date = new \DateTime($value, $dh->getTimezone('system'));
             } catch (Exception $foo) {
             }
         }

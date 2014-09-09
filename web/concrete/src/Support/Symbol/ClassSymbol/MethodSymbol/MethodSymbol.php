@@ -11,18 +11,21 @@ class MethodSymbol
 
     /**
      * The method handle.
+     *
      * @var string
      */
     protected $handle;
 
     /**
      * The parameters.
+     *
      * @var \ReflectionParameter[]
      */
     protected $parameters = array();
 
     /**
      * The docblock
+     *
      * @var string
      */
     protected $comment;
@@ -39,15 +42,18 @@ class MethodSymbol
 
     /**
      * Render the Method
+     *
+     * @param string $eol
+     * @param string $padding
      * @return string
      */
-    public function render()
+    public function render($eol = PHP_EOL, $padding = '    ')
     {
         $method = $this->reflectionMethod;
         if ($method->isPrivate() || substr($method->getName(), 0, 2) === '__' || $method->isAbstract()) {
             return '';
         }
-        $rendered = "\n" . implode("\n", array_map(trim, explode("\n", $method->getDocComment()))) . "\n";
+        $rendered = $eol . implode($eol, array_map(trim, explode($eol, $method->getDocComment()))) . $eol;
         $visibility = \Reflection::getModifierNames($method->getModifiers());
         $visibility[] = 'static';
         $rendered .= implode(' ', array_unique($visibility)) . ' function ' . $this->handle . '(';
@@ -118,17 +124,16 @@ class MethodSymbol
             $params[] = $param;
             $calling_params[] = '$' . $parameter->getName();
         }
-        $rendered .= implode(', ', $params) . ")\n{\n";
-        $rendered .= '    // ' . $method->getDeclaringClass()->getName() . '::' . $method->getName() . "();\n";
-        $rendered .= '    return ' .
-            $method->getDeclaringClass()->getName() .
-            '::' .
-            $method->getName() .
-            '(' .
-            implode(', ', $calling_params) .
-            ');';
+        $rendered .= implode(', ', $params) . "){$eol}{{$eol}";
+        $class_name = $method->getDeclaringClass()->getName();
+        if ($method->isStatic()) {
+            $rendered .= "{$padding}return {$class_name}::{$method->getName()}(" . implode(', ', $calling_params) . ");";
+        } else {
+            $rendered .= "{$padding}/** @var {$class_name} \$instance */{$eol}";
+            $rendered .= "{$padding}return \$instance->{$method->getName()}(" . implode(', ', $calling_params) . ");";
+        }
 
-        $rendered .= "\n}\n";
+        $rendered .= "{$eol}}{$eol}";
 
         return $rendered;
     }

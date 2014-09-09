@@ -66,7 +66,7 @@ class Duration extends Object
 
     public function isActive()
     {
-        $now = strtotime(Loader::helper('date')->getLocalDateTime());
+        $now = Loader::helper('date')->getOverridableNow(true);
         if (!$this->repeats()) {
             $isActive = true;
             if ($this->getStartDate() != '' && strtotime($this->getStartDate()) > $now) {

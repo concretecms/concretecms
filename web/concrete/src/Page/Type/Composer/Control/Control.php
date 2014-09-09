@@ -100,7 +100,11 @@ abstract class Control extends Object {
 		return $args['ptComposer'][$this->ptComposerFormLayoutSetControlObject->getPageTypeComposerFormLayoutSetControlID()];
 	}
 
-	public function addToPageTypeComposerFormLayoutSet(PageTypeComposerFormLayoutSet $set) {
+    /**
+     * @param PageTypeComposerFormLayoutSet $set
+     * @return \Concrete\Core\Page\Type\Composer\FormLayoutSetControl
+     */
+    public function addToPageTypeComposerFormLayoutSet(PageTypeComposerFormLayoutSet $set) {
 		$db = Loader::db();
 		$displayOrder = $db->GetOne('select count(ptComposerFormLayoutSetControlID) from PageTypeComposerFormLayoutSetControls where ptComposerFormLayoutSetID = ?', array($set->getPageTypeComposerFormLayoutSetID()));
 		if (!$displayOrder) {
