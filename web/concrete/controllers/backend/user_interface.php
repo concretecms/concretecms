@@ -33,6 +33,9 @@ abstract class UserInterface extends Controller {
 			$this->error->add(Loader::helper('validation/token')->getErrorMessage());
 			return false;
 		}
+        if (!$this->canAccess()) {
+            return false;
+        }
 		return true;
 	}
 

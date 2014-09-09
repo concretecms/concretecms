@@ -1,5 +1,7 @@
 <?php 
 namespace Concrete\Core\Page\Type\PublishTarget\Configuration;
+use Concrete\Core\Page\Page;
+use Concrete\Core\Page\Type\Type;
 use Loader;
 use PageType;
 class PageTypeConfiguration extends Configuration {
@@ -21,5 +23,10 @@ class PageTypeConfiguration extends Configuration {
 			$target->addAttribute('pagetype', $ct->getPageTypeHandle());
 		}
 	}
-	
+
+    public function canPublishPageTypeBeneathTarget(Type $pagetype, Page $page)
+    {
+        return $page->getPageTypeID() == $this->getPageTypeID();
+    }
+
 }

@@ -12,7 +12,7 @@ class Sitemap extends BackendInterfacePageController {
     protected $otherPageTypes = array();
 
 	protected function canAccess() {
-		return $this->canViewSitemap || count($this->pagetypes) > 0;
+		return $this->canViewSitemap || count($this->frequentPageTypes) > 0 || count($this->otherPageTypes) > 0;
 	}
 
 	public function view() {
