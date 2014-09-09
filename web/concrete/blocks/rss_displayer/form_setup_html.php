@@ -1,5 +1,5 @@
-<?php
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
 if (!$rssObj->dateFormat) {
     $rssObj->dateFormat = t('F jS');
 }
@@ -25,18 +25,18 @@ if (!$rssObj->dateFormat) {
 </div>
 <div class="form-group">
     <div class="checkbox">
-    <label>
-        <input type="checkbox" value="1" name="showSummary"<?= (!!$rssObj->showSummary ? ' checked' : '') ?> />
-        <?= t('Include Summary') ?>
-    </label>
+        <label>
+            <input type="checkbox" value="1" name="showSummary"<?= (!!$rssObj->showSummary ? ' checked' : '') ?> />
+            <?= t('Include Summary') ?>
+        </label>
     </div>
 </div>
 <div class="form-group">
     <div class="checkbox">
-    <label>
-        <input type="checkbox" value="1"
+        <label>
+            <input type="checkbox" value="1"
                name="launchInNewWindow"<?= (!!$rssObj->launchInNewWindow ? ' checked' : '') ?> />
-        <?= t('Open links in a new window') ?>
-    </label>
+            <?= t('Open links in a new window') ?>
+        </label>
     </div>
 </div>
