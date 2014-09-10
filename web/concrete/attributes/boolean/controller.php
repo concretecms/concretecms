@@ -68,13 +68,13 @@ class Controller extends AttributeTypeController  {
 		}
 		
 		$cb = Loader::helper('form')->checkbox($this->field('value'), 1, $checked);
-		print $cb . ' <span>' . t('Yes') . '</span>';
+		print $cb . ' <span>' . $this->attributeKey->getAttributeKeyDisplayName() .  '</span>';
 	}
 	
 	public function composer() {
-		print '<label class="checkbox">';
+		print '<div class="checkbox"><label>';
 		$this->form();
-		print '</label>';
+		print '</label></div>';
 	}
 	
 	public function search() {

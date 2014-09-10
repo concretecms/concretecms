@@ -32,14 +32,18 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Profile" path="/account/profile" filename="/account/view.php" pagetype="" description="" package="" />
-        <page name="Edit Profile" path="/account/profile/edit" filename="/account/profile/edit.php" pagetype="" description="" package="" />
-        <page name="Profile Picture" path="/account/profile/avatar" filename="/account/profile/avatar.php" pagetype="" description="" package="" />
-        <page name="View Profile" path="/account/profile/public_profile" filename="/account/profile/public_profile.php" pagetype="" description="" package="" />
-        <page name="Messages" path="/account/messages" filename="/account/messages/view.php" pagetype="" description="" package="" />
+        <page name="Edit Profile" path="/account/edit_profile" filename="/account/edit_profile.php" pagetype="" description="Edit your user profile and change password." package="" />
+        <page name="Profile Picture" path="/account/avatar" filename="/account/avatar.php" pagetype="" description="Specify a new image attached to posts or edits." package="" />
+        <page name="Messages" path="/account/messages" filename="/account/messages/view.php" pagetype="" description="Inbox for site-specific messages." package="" />
         <page name="Inbox" path="/account/messages/inbox" filename="/account/messages/inbox.php" pagetype="" description="" package="" />
-        <page name="Members" path="/account/members" filename="/account/members/view.php" pagetype="" description="" package="" />
-        <page name="Directory" path="/account/members/directory" filename="/account/members/directory.php" pagetype="" description="" package=""/>
+
+        <page name="Members" path="/members" filename="/members/view.php" pagetype="" description="" package="">
+        </page>
+        <page name="View Profile" path="/members/profile" filename="/members/profile.php" pagetype="" description="" package="" />
+        <!--
+        <page name="Directory" path="/members/directory" filename="/members/directory.php" pagetype="" description="" package=""/>
+        //-->
+
         <page name="Page Not Found" path="/page_not_found" filename="/page_not_found.php" pagetype="" description="" package="" root="true" >
             <area name="Main"/>
         </page>

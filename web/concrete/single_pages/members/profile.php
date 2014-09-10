@@ -13,12 +13,12 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 <div id="ccm-profile-controls">
 	<? if ($canEdit) { ?>
 		<div class="btn-group">
-			<a href="<?=$view->url('/account/profile/edit')?>" class="btn btn-mini"><i class="icon-cog"></i> <?=t('Edit')?></a>
-			<a href="<?=$view->url('/account')?>" class="btn btn-mini"><i class="icon-home"></i> <?=t('Home')?></a>
+			<a href="<?=$view->url('/account/edit_profile')?>" class="btn btn-sm btn-default"><i class="fa fa-cog"></i> <?=t('Edit')?></a>
+			<a href="<?=$view->url('/')?>" class="btn btn-sm btn-default"><i class="fa fa-home"></i> <?=t('Home')?></a>
 		</div>
 	<? } else { ?>
 		<? if ($profile->getAttribute('profile_private_messages_enabled')) { ?>
-			<a href="<?=$view->url('/account/messages/inbox', 'write', $profile->getUserID())?>" class="btn btn-mini"><i class="icon-user"></i> <?=t('Connect')?></a>
+			<a href="<?=$view->url('/account/messages/inbox', 'write', $profile->getUserID())?>" class="btn btn-sm btn-default"><i class="fa-user fa"></i> <?=t('Connect')?></a>
 		<? } ?>
 	<? } ?>
 </div>

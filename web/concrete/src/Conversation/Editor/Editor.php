@@ -252,7 +252,7 @@ abstract class Editor extends Object
             foreach ($users as $user) {
                 $needle[] = "@" . $user->getUserName();
                 $haystack[] = "<a href='" . View::url(
-                        '/account/profile/public_profile',
+                        '/members/profile',
                         'view',
                         $user->getUserID()
                     ) . "'>@" . $user->getUserName() . "</a>";

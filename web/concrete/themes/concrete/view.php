@@ -22,7 +22,6 @@ if (is_object($c)) {
 } else { 
 	$this->markHeaderAssetPosition();
 }
-
 ?>
 </head>
 <body>

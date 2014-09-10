@@ -530,7 +530,7 @@ class User extends Object
                     $ui = CoreUserInfo::getByID($this->getUserID());
                     $mh->addParameter('badgeName', $g->getGroupName());
                     $mh->addParameter('uDisplayName', $ui->getUserDisplayName());
-                    $mh->addParameter('uProfileURL', BASE_URL . View::url('/account/profile/public_profile', 'view', $this->getUserID()));
+                    $mh->addParameter('uProfileURL', BASE_URL . View::url('/members/profile', 'view', $this->getUserID()));
                     $mh->to($ui->getUserEmail());
                     $mh->load('won_badge');
                     $mh->sendMail();
