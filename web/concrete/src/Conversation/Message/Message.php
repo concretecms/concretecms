@@ -4,6 +4,7 @@ namespace Concrete\Core\Conversation\Message;
 use Concrete\Core\Conversation\FlagType\FlagType;
 use Concrete\Core\Conversation\Rating\Type;
 use File;
+use FileSet;
 use Core;
 use Loader;
 use Conversation;
@@ -297,6 +298,10 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
                 $this->getConversationMessageID(),
                 $f->getFileID()
             ));
+            $fs = FileSet::createAndGetSet(CONVERSATION_MESSAGE_ATTACHMENTS_FILE_SET, FileSet::TYPE_PUBLIC, USER_SUPER_ID);
+            $fsToRemove = FileSet::createAndGetSet(CONVERSATION_MESSAGE_ATTACHMENTS_PENDING_FILE_SET, FileSet::TYPE_PUBLIC, USER_SUPER_ID);
+            $fs->addFileToSet($f);
+            $fsToRemove->removeFileFromSet($f);
         }
         // associate with non-pending file set.
     }
