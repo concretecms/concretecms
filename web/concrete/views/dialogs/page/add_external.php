@@ -5,17 +5,17 @@
 
         <div class="form-group">
             <label class="control-label"><?=t('Name')?></label>
-            <input type="text" name="name" class="form-control" />
+            <input type="text" name="name" value="<?=$name?>" class="form-control" />
         </div>
 
         <div class="form-group">
             <label class="control-label"><?=t('URL')?></label>
-            <input type="text" name="link" class="form-control" />
+            <input type="text" name="link" value="<?=$link?>" class="form-control" />
         </div>
 
         <div class="form-group">
             <div class="checkbox">
-                <label><input type="checkbox" name="openInNewWindow" value="1"  />
+                <label><input type="checkbox" <? if ($openInNewWindow) { ?>checked<? } ?> name="openInNewWindow" value="1"  />
                     <?=t('Open Link in New Window')?></label>
         </div>
 

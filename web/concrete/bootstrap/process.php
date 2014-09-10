@@ -10,6 +10,9 @@ use Concrete\Core\Page\Stack\Pile\PileContent;
 # _process makes sure that they're handled correctly
 
 // if we don't have a valid token we die
+
+// ATTENTION! This file is legacy and needs to die. We are moving it's various pieces into
+// controllers.
 $valt = Loader::helper('validation/token');
 $token = '&' . $valt->getParameter();
 
@@ -382,6 +385,7 @@ if (isset($_GET['atask']) && $_GET['atask'] && $valt->validate()) {
 if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
 
     switch ($_REQUEST['ctask']) {
+        /*
         case 'remove-alias':
             if ($cp->canDeletePage()) {
                 $redir = $c->removeThisAlias();
@@ -405,6 +409,7 @@ if (isset($_REQUEST['ctask']) && $_REQUEST['ctask'] && $valt->validate()) {
                 }
             }
             break;
+        */
         case 'check-out-add-block':
         case 'check-out':
         case 'check-out-first':

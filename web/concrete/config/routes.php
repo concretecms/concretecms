@@ -81,6 +81,10 @@ Route::register('/ccm/system/dialogs/page/add', '\Concrete\Controller\Dialog\Pag
 Route::register('/ccm/system/dialogs/page/add/submit', '\Concrete\Controller\Dialog\Page\Add::submit');
 Route::register('/ccm/system/dialogs/page/add_external', '\Concrete\Controller\Dialog\Page\AddExternal::view');
 Route::register('/ccm/system/dialogs/page/add_external/submit', '\Concrete\Controller\Dialog\Page\AddExternal::submit');
+Route::register('/ccm/system/dialogs/page/delete_alias', '\Concrete\Controller\Dialog\Page\DeleteAlias::view');
+Route::register('/ccm/system/dialogs/page/delete_alias/submit', '\Concrete\Controller\Dialog\Page\DeleteAlias::submit');
+Route::register('/ccm/system/dialogs/page/edit_external', '\Concrete\Controller\Dialog\Page\EditExternal::view');
+Route::register('/ccm/system/dialogs/page/edit_external/submit', '\Concrete\Controller\Dialog\Page\EditExternal::submit');
 
 /**
  * Files
