@@ -12,10 +12,6 @@
 $rssObj=$controller;
 $textHelper = Loader::helper("text");
 
-if (!$dateFormat) {
-	$dateFormat = t('F jS');
-}
-
 if( strlen($errorMsg)>0 ){
 	echo $errorMsg;
 }else{
@@ -31,7 +27,7 @@ if( strlen($errorMsg)>0 ){
 					<?= $item->getTitle(); ?>
 				</a>
 			</div>
-			<div class="ccm-block-rss-displayer-item-date"><?= $item->getDateCreated()->format($dateFormat); ?></div>
+			<div class="ccm-block-rss-displayer-item-date"><?= h($this->controller->formatDateTime($item->getDateCreated())); ?></div>
 			<div class="ccm-block-rss-displayer-item-summary">
 				<?
 				if( $rssObj->showSummary ){

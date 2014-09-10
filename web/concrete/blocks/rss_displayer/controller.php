@@ -3,6 +3,7 @@ namespace Concrete\Block\RssDisplayer;
 
 use Concrete\Core\Block\BlockController;
 use Loader;
+use Core;
 
 class Controller extends BlockController
 {
@@ -42,6 +43,79 @@ class Controller extends BlockController
         );
     }
 
+    public function getDefaultDateTimeFormats()
+    {
+        $formats = array(
+            ':longDate:',
+            ':shortDate:',
+            ':longTime:',
+            ':shortTime:',
+            ':longDate:longTime:',
+            ':longDate:shortTime:',
+            ':shortDate:longTime:',
+            ':shortDate:shortTime:'
+        );
+        $now = new \DateTime();
+        $result = array();
+        foreach ($formats as $format) {
+            $result[$format] = $this->formatDateTime($now, $format);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Format a \DateTime instance accordingly to $format
+     * @param \DateTime|null $date
+     * @param string|bool $format Set to true (default) to use the default format
+     */
+    public function formatDateTime($date, $format = true)
+    {
+        $result = '';
+        if (is_a($date, '\\DateTime')) {
+            if ($format === true) {
+                $format = $this->dateFormat;
+                if (!$format) {
+                    $formats = $this->getDefaultDateTimeFormats();
+                    reset($formats);
+                    $format = key($formats);
+                }
+            }
+            $dh = Core::make('helper/date');
+            /* @var $dh \Concrete\Core\Localization\Service\Date */
+            switch ($format) {
+                case ':shortDate:shortTime:':
+                    $result = $dh->formatDateTime($date, false, false);
+                    break;
+                case ':shortDate:longTime:':
+                    $result = $dh->formatDateTime($date, false, true);
+                    break;
+                case ':longDate:shortTime:':
+                    $result = $dh->formatDateTime($date, true, false);
+                    break;
+                case ':longDate:longTime:':
+                    $result = $dh->formatDateTime($date, true, true);
+                    break;
+                case ':shortDate:':
+                    $result = $dh->formatDate($date, false);
+                    break;
+                case ':longDate:':
+                    $result = $dh->formatDate($date, true);
+                    break;
+                case ':shortTime:':
+                    $result = $dh->formatTime($date, false);
+                    break;
+                case ':longTime:':
+                    $result = $dh->formatTime($date, true);
+                    break;
+                default:
+                    $result = $dh->formatCustom($format, $date);
+            }
+        }
+
+        return $result;
+    }
+
     public function view()
     {
         $fp = Loader::helper("feed");
@@ -50,14 +124,14 @@ class Controller extends BlockController
         try {
             $channel = $fp->load($this->url);
             $i = 0;
-            foreach($channel as $post) {
+            foreach ($channel as $post) {
                 $posts[] = $post;
                 if (($i + 1) == intval($this->itemsToDisplay)) {
                     break;
                 }
                 $i++;
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->set('errorMsg', $e->getMessage());
         }
 
@@ -73,6 +147,14 @@ class Controller extends BlockController
         $args['showSummary'] = ($data['showSummary'] == 1) ? 1 : 0;
         $args['launchInNewWindow'] = ($data['launchInNewWindow'] == 1) ? 1 : 0;
         $args['title'] = isset($data['title']) ? $data['title'] : '';
+        switch ($data['standardDateFormat']) {
+            case ':custom:':
+                $args['dateFormat'] = $data['customDateFormat'];
+                break;
+            default:
+                $args['dateFormat'] = $data['standardDateFormat'];
+                break;
+        }
         parent::save($args);
     }
 
@@ -83,14 +165,14 @@ class Controller extends BlockController
         try {
             $channel = $fp->load($this->url);
             $i = 0;
-            foreach($channel as $post) {
+            foreach ($channel as $post) {
                 $posts[] = $post;
                 if (($i + 1) == intval($this->itemsToDisplay)) {
                     break;
                 }
                 $i++;
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
 
         }
 
@@ -98,6 +180,7 @@ class Controller extends BlockController
         foreach ($posts as $item) {
             $searchContent .= $item->getTitle() . ' ' . strip_tags($item->getDescription()) . ' ';
         }
+
         return $searchContent;
     }
 
