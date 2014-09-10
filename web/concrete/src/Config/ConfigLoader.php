@@ -15,23 +15,6 @@ class ConfigLoader extends FileLoader
 
     public function load($environment, $group, $namespace = null)
     {
-        /**
-         * Custom loading for the concrete group. This file is written to dynamically when configuration values change.
-         */
-        if (is_null($namespace)) {
-            return array_replace_recursive(
-                (array)$this->loadStrict('generated_overrides', $group, $namespace),
-                array_replace_recursive(
-                    (array)$this->loadStrict($environment, $group, 'core'),
-                    (array)$this->loadStrict($environment, $group, $namespace)
-                )
-            );
-        }
-        return $this->loadStrict($environment, $group, $namespace);
-    }
-
-    public function loadStrict($environment, $group, $namespace = null)
-    {
         $items = array();
 
         // First we'll get the root configuration path for the environment which is
@@ -43,13 +26,29 @@ class ConfigLoader extends FileLoader
             return $items;
         }
 
-        // First we'll get the main configuration file for the groups. Once we have
-        // that we can check for any environment specific files, which will get
-        // merged on top of the main arrays to make the environments cascade.
-        $file = "{$path}/{$group}.php";
+        if ($namespace === null) {
+            // No namespace, let's load up the concrete config first.
+            $items = parent::load($environment, $group, 'core');
 
-        if ($this->files->exists($file)) {
-            $items = (array)$this->files->getRequire($file);
+            $file = "{$path}/generated_overrides/{$group}.php";
+            if ($this->files->exists($file)) {
+                $items = $this->mergeEnvironment($items, $file);
+            }
+
+            $file = "{$path}/{$group}.php";
+
+            if ($this->files->exists($file)) {
+                $items = $this->mergeEnvironment($items, $file);
+            }
+        } else {
+            // First we'll get the main configuration file for the groups. Once we have
+            // that we can check for any environment specific files, which will get
+            // merged on top of the main arrays to make the environments cascade.
+            $file = "{$path}/{$group}.php";
+
+            if ($this->files->exists($file)) {
+                $items = (array)$this->files->getRequire($file);
+            }
         }
 
         // Finally we're ready to check for the environment specific configuration

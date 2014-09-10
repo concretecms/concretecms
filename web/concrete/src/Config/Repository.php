@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Core\Config;
 
-use Illuminate\Filesystem\Filesystem;
-
 class Repository extends \Illuminate\Config\Repository
 {
 
@@ -11,7 +9,25 @@ class Repository extends \Illuminate\Config\Repository
      */
     protected $loader;
 
-    public function save($key, $value) {
+    public function clear($key)
+    {
+        $this->set($key, null);
+    }
+
+    public function getOrSet($key, $value)
+    {
+        $val = $this->get($key, $this);
+
+        if ($val === $this) {
+            $this->save($key, $value);
+            $val = $value;
+        }
+
+        return $val;
+    }
+
+    public function save($key, $value)
+    {
         $this->set($key, $value);
 
         list($namespace, $group, $item) = $this->parseKey($key);
@@ -37,21 +53,6 @@ class Repository extends \Illuminate\Config\Repository
         $file_system->put($file, $renderer->render());
 
         parent::set($key, $value);
-    }
-
-    public function clear($key) {
-        $this->set($key, null);
-    }
-
-    public function getOrSet($key, $value) {
-        $val = $this->get($key, $this);
-
-        if ($val === $this) {
-            $this->save($key, $value);
-            $val = $value;
-        }
-
-        return $val;
     }
 
     public function clearCache()

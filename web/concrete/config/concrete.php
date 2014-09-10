@@ -3,7 +3,7 @@
 return array(
 
     /**
-     * Current ission
+     * Current Version
      *
      * @var string
      */
