@@ -218,12 +218,17 @@
 			});
 
             ConcreteEvent.unsubscribe('SitemapDragRequestComplete.sitemap');
-			ConcreteEvent.subscribe('SitemapDragRequestComplete.sitemap', function(e) {
+			ConcreteEvent.subscribe('SitemapDragRequestComplete.sitemap', function(e, data) {
 				var reloadNode = destNode.parent;
 				if (dragMode == 'over') {
 					reloadNode = destNode;
 				}
 				reloadNode.removeChildren();
+                if (data.task == 'MOVE') {
+                    console.log('sup');
+                    node.remove();
+                }
+
 				my.reloadNode(reloadNode, function() {
 					if (!destNode.bExpanded) {
 						destNode.expand(true);
