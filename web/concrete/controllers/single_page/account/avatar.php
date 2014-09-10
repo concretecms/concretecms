@@ -1,6 +1,6 @@
 <?
-namespace Concrete\Controller\SinglePage\Account\Profile;
-use \Concrete\Controller\SinglePage\Account\Profile\Edit as AccountProfileEditPageController;
+namespace Concrete\Controller\SinglePage\Account;
+use \Concrete\Controller\SinglePage\Account\EditProfile as AccountProfileEditPageController;
 use Loader;
 
 class Avatar extends AccountProfileEditPageController {
@@ -28,7 +28,7 @@ class Avatar extends AccountProfileEditPageController {
             $profile->updateUserAvatar($image);
         }
 
-		$this->redirect('/account/profile/avatar', 'saved');
+		$this->redirect('/account/avatar', 'saved');
 	}
 	
 	public function saved() {
@@ -47,7 +47,7 @@ class Avatar extends AccountProfileEditPageController {
 		$av = $this->get('av');
 		
 		$av->removeAvatar($profile);
-		$this->redirect('/account/profile/avatar', 'deleted');
+		$this->redirect('/account/avatar', 'deleted');
 	}
 
 }

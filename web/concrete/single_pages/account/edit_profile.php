@@ -7,7 +7,7 @@ $(function() {
 </script>
 
 <div class="row">
-<div class="span10 offset1">
+<div class="col-sm-offset-1 col-sm-10">
 
 	<h1 class="page-header"><?=t('Edit Profile')?></h1>
 
@@ -18,21 +18,17 @@ $(function() {
 	?>
 		<fieldset>
 		<legend><?=t('Basic Information')?></legend>
-		<div class="control-group">
+		<div class="form-group">
 			<?php echo $form->label('uEmail', t('Email'))?>
-			<div class="controls">
-				<?php echo $form->text('uEmail',$profile->getUserEmail())?>					
-			</div>
+    		<?php echo $form->text('uEmail',$profile->getUserEmail())?>
 		</div>
 		<?php  if(ENABLE_USER_TIMEZONES) { ?>
-			<div class="control-group">
+            <div class="form-group">
 				<?php echo  $form->label('uTimezone', t('Time Zone'))?>
-				<div class="controls">
-				<?php echo  $form->select('uTimezone', 
+				<?php echo  $form->select('uTimezone',
 					Core::make('helper/date')->getTimezones(), 
 					($profile->getUserTimezone()?$profile->getUserTimezone():date_default_timezone_get())
 			); ?>
-				</div>
 			</div>
 		<?php  } ?>               
 		<?php 
@@ -68,27 +64,26 @@ $(function() {
 		<?php
 	}
 	?>
+        <br/>
 	<fieldset>
-	<legend><?=t('Change Password')?></legend>
-	<div class="control-group">
-		<?php echo $form->label('uPasswordNew', t('New Password'))?>
-		<div class="controls">
-			<?php echo $form->password('uPasswordNew')?>
-			<a href="javascript:void(0)" title="<?=t("Leave blank to keep current password.")?>"><i class="icon-question-sign"></i></a>
+    	<legend><?=t('Change Password')?></legend>
+        <div class="form-group">
+            <?php echo $form->label('uPasswordNew', t('New Password'))?>
+            <?php echo $form->password('uPasswordNew')?>
+            <a href="javascript:void(0)" title="<?=t("Leave blank to keep current password.")?>"><i class="icon-question-sign"></i></a>
 		</div>
-	</div>
-	
-	<div class="control-group">
-		<?php echo $form->label('uPasswordNewConfirm', t('Confirm New Password'))?>
-		<div class="controls">
-			<?php echo $form->password('uPasswordNewConfirm')?>
-		</div>
-	</div>
+
+        <div class="form-group">
+            <?php echo $form->label('uPasswordNewConfirm', t('Confirm New Password'))?>
+            <div class="controls">
+                <?php echo $form->password('uPasswordNewConfirm')?>
+            </div>
+        </div>
 	
 	</fieldset>
-	
+
 	<div class="form-actions">
-		<a href="<?=DIR_REL?>/" class="btn" /><?=t('Back to Home')?></a>
+		<a href="<?=URL::to('/account')?>" class="btn btn-default" /><?=t('Back to Account')?></a>
 		<input type="submit" name="save" value="<?=t('Save')?>" class="btn btn-primary pull-right" />
 	</div>
 	

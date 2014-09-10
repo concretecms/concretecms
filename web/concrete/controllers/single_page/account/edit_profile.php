@@ -1,5 +1,5 @@
 <?
-namespace Concrete\Controller\SinglePage\Account\Profile;
+namespace Concrete\Controller\SinglePage\Account;
 use \Concrete\Core\Page\Controller\AccountPageController;
 use UserInfo;
 use Exception;
@@ -9,7 +9,7 @@ use Loader;
 use User;
 use UserAttributeKey;
 
-class Edit extends AccountPageController {
+class EditProfile extends AccountPageController {
 
 	public function view() {
 		$u = new User();
@@ -55,7 +55,6 @@ class Edit extends AccountPageController {
 		$vsh = Loader::helper('validation/strings');
 		$cvh = Loader::helper('concrete/validation');
 		$valt = Loader::helper('validation/token');
-		$e = Loader::helper('validation/error');
 
 		$data = $this->post();
 
@@ -64,15 +63,15 @@ class Edit extends AccountPageController {
 		*/
 		//token
 		if(!$valt->validate('profile_edit')) {
-			$e->add($valt->getErrorMessage());
+			$this->error->add($valt->getErrorMessage());
 		}
 
 		// validate the user's email
 		$email = $this->post('uEmail');
 		if (!$vsh->email($email)) {
-			$e->add(t('Invalid email address provided.'));
+            $this->error->add(t('Invalid email address provided.'));
 		} else if (!$cvh->isUniqueEmail($email) && $ui->getUserEmail() != $email) {
-			$e->add(t("The email address '%s' is already in use. Please choose another.",$email));
+            $this->error->add(t("The email address '%s' is already in use. Please choose another.",$email));
 		}
 
 
@@ -82,16 +81,16 @@ class Edit extends AccountPageController {
 			$passwordNewConfirm = $data['uPasswordNewConfirm'];
 
 			if ((strlen($passwordNew) < USER_PASSWORD_MINIMUM) || (strlen($passwordNew) > USER_PASSWORD_MAXIMUM)) {
-				$e->add(t('A password must be between %s and %s characters', USER_PASSWORD_MINIMUM, USER_PASSWORD_MAXIMUM));
+                $this->error->add(t('A password must be between %s and %s characters', USER_PASSWORD_MINIMUM, USER_PASSWORD_MAXIMUM));
 			}
 
 			if (strlen($passwordNew) >= USER_PASSWORD_MINIMUM && !$cvh->password($passwordNew)) {
-				$e->add(t('A password may not contain ", \', >, <, or any spaces.'));
+                $this->error->add(t('A password may not contain ", \', >, <, or any spaces.'));
 			}
 
 			if ($passwordNew) {
 				if ($passwordNew != $passwordNewConfirm) {
-					$e->add(t('The two passwords provided do not match.'));
+                    $this->error->add(t('The two passwords provided do not match.'));
 				}
 			}
 			$data['uPasswordConfirm'] = $passwordNew;
@@ -104,14 +103,14 @@ class Edit extends AccountPageController {
 			if ($uak->isAttributeKeyRequiredOnProfile()) {
 				$e1 = $uak->validateAttributeForm();
 				if ($e1 == false) {
-					$e->add(t('The field "%s" is required', $uak->getAttributeKeyDisplayName()));
+                    $this->error->add(t('The field "%s" is required', $uak->getAttributeKeyDisplayName()));
 				} else if ($e1 instanceof \Concrete\Core\Error\Error) {
-					$e->add($e1);
+                    $this->error->add($e1);
 				}
 			}
 		}
 
-		if (!$e->has()) {
+		if (!$this->error->has()) {
 			$data['uEmail'] = $email;
 			if(ENABLE_USER_TIMEZONES) {
 				$data['uTimezone'] = $this->post('uTimezone');
@@ -122,9 +121,7 @@ class Edit extends AccountPageController {
 			foreach($aks as $uak) {
 				$uak->saveAttributeForm($ui);
 			}
-			$this->redirect("/account/profile/public_profile", "save_complete");
-		} else {
-			$this->set('error', $e);
+			$this->redirect("/account", "save_complete");
 		}
 	}
 }
