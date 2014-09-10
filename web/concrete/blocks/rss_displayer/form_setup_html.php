@@ -5,7 +5,7 @@
 ?>
 <div class="form-group">
     <?= $form->label('url', t('Feed URL')) ?>
-    <input name="url" class="form-control" placeholder="Feed URL" value="<?= h($rssObj->url) ?>"/>
+    <input name="url" class="form-control" placeholder="Feed URL" value="<?= h($rssObj->url) ?>" type="text" required="required" />
 </div>
 <div class="form-group">
     <label for="title">
@@ -33,31 +33,19 @@
     ?>
 </div>
 <?php
-$now = new \DateTime();
-foreach(array_keys($dateFormats) as $dateFormat) {
-    ?><div class="form-group ccm-dateFormat-case" data-format="<?php echo h($dateFormat) ?>" style="display: none"><?php
-        switch($dateFormat) {
-            case ':custom:':
-                echo $form->label('customDateFormat', t('Custom date format'));
-                echo $form->text('customDateFormat', $customDateFormat);
-                ?><a href="http://php.net/manual/function.date.php" target="_blank"><?php echo t('See the PHP manual')?></a><?php
-                break;
-            default:
-                echo $form->label('', t('Example'));
-                ?><div class="form-control"><?php echo h($rssObj->formatDateTime($now, $dateFormat)); ?></div><?php
-                break;
-        }
-    ?></div><?php
-}
-?>
-<script>$(document).ready(function() {
+?><div class="form-group"<?php echo ($standardDateFormat === ':custom:') ? '' : ' style="display: none"'; ?>>
+    <?php echo $form->label('customDateFormat', t('Custom date format')); ?>
+    <?php echo $form->text('customDateFormat', $customDateFormat); ?>
+    <a href="http://php.net/manual/function.date.php" target="_blank"><?php echo t('See the PHP manual')?></a><?php
+?></div>
+<script>
+$(document).ready(function() {
 	function update() {
-		console.log($('#standardDateFormat').val());
-		$('.ccm-dateFormat-case').hide().filter('[data-format="' + $('#standardDateFormat').val() + '"]').show();
+		$('#customDateFormat').closest('div.form-group')[($('#standardDateFormat').val() === ':custom:') ? 'show' : 'hide']('fast');
 	}
 	$('#standardDateFormat').on('change', function() { update(); });
-	update();
-});</script>
+});
+</script>
 <div class="form-group">
     <?= $form->label('itemsToDisplay', t('Items to Show')) ?>
     <input name="itemsToDisplay" class="form-control" placeholder="10" value="<?= h($rssObj->itemsToDisplay) ?>"/>

@@ -45,16 +45,23 @@ class Controller extends BlockController
 
     public function getDefaultDateTimeFormats()
     {
-        return array(
-            ':longDate:' => t('Full date'),
-            ':shortDate:' => t('Short date'),
-            ':longTime:' => t('Time with seconds'),
-            ':shortTime:' => t('Time without seconds'),
-            ':longDate:longTime:' => t('Full date and time with seconds'),
-            ':longDate:shortTime:' => t('Full date and time without seconds'),
-            ':shortDate:longTime:' => t('Short date and time with seconds'),
-            ':shortDate:shortTime:' => t('Short date and time without seconds'),
+        $formats = array(
+            ':longDate:',
+            ':shortDate:',
+            ':longTime:',
+            ':shortTime:',
+            ':longDate:longTime:',
+            ':longDate:shortTime:',
+            ':shortDate:longTime:',
+            ':shortDate:shortTime:'
         );
+        $now = new \DateTime();
+        $result = array();
+        foreach ($formats as $format) {
+            $result[$format] = $this->formatDateTime($now, $format);
+        }
+
+        return $result;
     }
 
     /**
@@ -65,8 +72,8 @@ class Controller extends BlockController
     public function formatDateTime($date, $format = true)
     {
         $result = '';
-        if(is_a($date, '\\DateTime')) {
-            if($format === true) {
+        if (is_a($date, '\\DateTime')) {
+            if ($format === true) {
                 $format = $this->dateFormat;
                 if (!$format) {
                     $formats = $this->getDefaultDateTimeFormats();
@@ -76,7 +83,7 @@ class Controller extends BlockController
             }
             $dh = Core::make('helper/date');
             /* @var $dh \Concrete\Core\Localization\Service\Date */
-            switch($format) {
+            switch ($format) {
                 case ':shortDate:shortTime:':
                     $result = $dh->formatDateTime($date, false, false);
                     break;
@@ -140,7 +147,7 @@ class Controller extends BlockController
         $args['showSummary'] = ($data['showSummary'] == 1) ? 1 : 0;
         $args['launchInNewWindow'] = ($data['launchInNewWindow'] == 1) ? 1 : 0;
         $args['title'] = isset($data['title']) ? $data['title'] : '';
-        switch($data['standardDateFormat']) {
+        switch ($data['standardDateFormat']) {
             case ':custom:':
                 $args['dateFormat'] = $data['customDateFormat'];
                 break;
