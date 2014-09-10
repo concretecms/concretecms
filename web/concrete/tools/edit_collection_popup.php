@@ -13,20 +13,8 @@ $canViewPane = false;
 $additionalArgs = array();
 
 switch($_GET['ctask']) {
-	case 'edit_metadata':
-		$toolSection = "collection_metadata";
-		$canViewPane = $cp->canEditPageProperties();
-		break;
-	case 'edit_speed_settings':
-		$toolSection = "collection_speed_settings";
-		$canViewPane = $cp->canEditPageSpeedSettings();
-		break;
 	case 'edit_permissions':
-		if (PERMISSIONS_MODEL == 'simple') {
-			$toolSection = 'collection_permissions_simple';
-		} else {
-			$toolSection = "permission/lists/collection";
-		}
+        $toolSection = "permission/lists/collection";
 		$canViewPane = $cp->canEditPagePermissions();
 		break;
 	case 'set_advanced_permissions':
@@ -41,37 +29,6 @@ switch($_GET['ctask']) {
 		$toolSection = "collection_timed_permission_list";
 		$canViewPane = ($cp->canPreviewPageAsUser() && PERMISSIONS_MODEL == 'advanced');
 		break;
-	case 'mcd':
-		$toolSection = "collection_mcd";
-		$canViewPane = $cp->canMoveOrCopyPage();
-		$divID = "ccm-collection-mcd";
-		break;
-	case 'delete':
-		$toolSection = "collection_delete";
-		$canViewPane = $cp->canDeletePage();
-		break;
-	case 'set_theme':
-		$toolSection = "collection_theme";
-		$divID = 'ccm-edit-collection-design';
-		$canViewPane = ($cp->canEditPageTheme() || $cp->canEditPageTemplate());
-		break;
-	case 'add_external':
-		$toolSection = "collection_add_external";
-		$divID = 'ccm-edit-collection-external';
-		$canViewPane = $cp->canAddExternalLink();
-		break;
-	case 'delete_external':
-		$toolSection = "collection_delete_external";
-		$divID = 'ccm-delete-collection-external';
-		$cparent = Page::getByID($c->getCollectionParentID(), "RECENT");
-		$cparentP = new Permissions($cparent);
-		$canViewPane = $cparentP->canWrite();
-		break;
-	case 'edit_external':
-		$toolSection = "collection_edit_external";
-		$divID = 'ccm-edit-collection-external';
-		$canViewPane = $cp->canEditPageProperties();
-		break;
 }
 
 if (!isset($divID)) {
@@ -82,11 +39,6 @@ if (!$canViewPane) {
 	die(t("Access Denied."));
 }
 
-?>
-
-<? if ($_REQUEST['toppane'] == 1) {
-	Loader::element('pane_header', array('c'=>$c));
-}
 ?>
 
 <div id="<?=$divID?>">
@@ -121,7 +73,3 @@ if ($error) {
 <div class="ccm-spacer">&nbsp;</div>
 
 </div>
-
-<? if ($_REQUEST['toppane'] == 1) { ?>
-	<? Loader::element('pane_footer', array('c'=>$c)); ?>
-<? } ?>
