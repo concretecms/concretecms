@@ -1,8 +1,8 @@
-<? defined('C5_EXECUTE') or die("Access Denied."); ?>  
+<? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <?
 
 $helperFile = Loader::helper('concrete/file');
-if($fileExtensions) {  // format file extensions for viewing and editing. 
+if($fileExtensions) {  // format file extensions for viewing and editing.
 	$fileExtensions = $helperFile->unserializeUploadFileExtensions($fileExtensions);
 	$fileExtensions = implode(',', $fileExtensions);
 }
@@ -16,6 +16,8 @@ if ($controller->getTask() == 'add') {
 	$enableCommentRating = 1;
 	$displayPostingForm = 'top';
 	$addMessageLabel = t('Add Message');
+    $attachmentOverridesEnabled = 0;
+    $attachmentsEnabled = 1;
 }
 if(!$dateFormat) {
 	$dateFormat = 'default';
@@ -158,32 +160,47 @@ if(!$dateFormat) {
 </fieldset>
 <fieldset>
 	<legend><?=t('File Attachment Management')?></legend>
-	<p class="muted"><?php echo t('Note: Entering values here will override global conversations file attachment settings for this block. Leave blank to use global settings.') ?></p>
-	<div class="form-group">
+	<p class="text-muted"><?php echo t('Note: Entering values here will override global conversations file attachment settings for this block if you enable Attachment Overrides for this Conversation.') ?></p>
+    <div class="form-group">
+        <div class="checkbox">
+            <label class="control-label">
+            <?=$form->checkbox('attachmentOverridesEnabled', 1, $attachmentOverridesEnabled)?><?=t('Enable Attachment Overrides')?>
+            </label>
+        </div>
+    </div>
+    <div class="form-group attachment-overrides">
+
+        <div class="checkbox">
+            <label class="control-label">
+            <?=$form->checkbox('attachmentsEnabled', 1, $attachmentsEnabled)?><?=t('Enable Attachments')?>
+            </label>
+        </div>
+    </div>
+    <div class="form-group attachment-overrides">
 		<label class="control-label"><?=t('Max Attachment Size for Guest Users. (MB)')?></label>
-		<div class="controls">		
+		<div class="controls">
 			<?=$form->text('maxFileSizeGuest', $maxFileSizeGuest > 0 ? $maxFileSizeGuest : '')?>
 		</div>
 	</div>
-	<div class="form-group">
+	<div class="form-group attachment-overrides">
 		<label class="control-label"><?=t('Max Attachment Size for Registered Users. (MB)')?></label>
 		<div class="controls">
 			<?=$form->text('maxFileSizeRegistered', $maxFileSizeRegistered > 0 ? $maxFileSizeRegistered : '')?>
 		</div>
 	</div>
-	<div class="form-group">
+	<div class="form-group attachment-overrides">
 		<label class="control-label"><?=t('Max Attachments Per Message for Guest Users.')?></label>
 		<div class="controls">
 			<?=$form->text('maxFilesGuest', $maxFilesGuest > 0 ? $maxFilesGuest : '')?>
 		</div>
 	</div>
-	<div class="form-group">
+	<div class="form-group attachment-overrides">
 		<label class="control-label"><?=t('Max Attachments Per Message for Registered Users')?></label>
 		<div class="controls">
 			<?=$form->text('maxFilesRegistered', $maxFilesRegistered > 0 ?  $maxFilesRegistered : '')?>
 		</div>
 	</div>
-	<div class="form-group">
+	<div class="form-group attachment-overrides">
 		<label class="control-label"><?=t('Allowed File Extensions (Comma separated, no periods).')?></label>
 		<div class="controls">
 			<?=$form->textarea('fileExtensions', $fileExtensions)?>
@@ -202,5 +219,15 @@ $(function() {
 			$('div[data-row=itemsPerPage]').hide();
 		}
 	}).trigger('change');
+    $('input[name=attachmentOverridesEnabled]').on('change', function() {
+        var ao = $('input[name=attachmentOverridesEnabled]:checked');
+        if (ao.val() == 1) {
+            $('.attachment-overrides input, .attachment-overrides textarea').prop('disabled', false);
+            $('.attachment-overrides label').removeClass('text-muted');
+        } else {
+            $('.attachment-overrides input, .attachment-overrides textarea').prop('disabled', true);
+            $('.attachment-overrides label').addClass('text-muted');
+        }
+    }).trigger('change');
 });
 </script>

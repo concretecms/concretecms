@@ -13,6 +13,14 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
 	public function getConversationDateCreated() {return $this->cnvDateCreated;}
 	public function getConversationDateLastMessage() {return $this->cnvDateLastMessage;}
 	public function getConversationMessagesTotal() {return intval($this->cnvMessagesTotal);}
+    public function getConversationMaxFileSizeGuest() { return intval($this->cnvMaxFileSizeGuest);}
+    public function getConversationMaxFileSizeRegistered() { return intval($this->cnvMaxFileSizeRegistered);}
+    public function getConversationMaxFilesGuest() { return intval($this->cnvMaxFilesGuest);}
+    public function getConversationMaxFilesRegistered() { return intval($this->cnvMaxFilesRegistered);}
+    public function getConversationFileExtensions() { return intval($this->cnvFileExtensions);}
+    public function getConversationAttachmentOverridesEnabled() { return intval($this->cnvAttachmentOverridesEnabled);}
+    public function getConversationAttachmentsEnabled() { return intval($this->cnvAttachmentsEnabled);}
+
     public function overrideGlobalPermissions()
     {
         return $this->cnvOverrideGlobalPermissions;
@@ -40,7 +48,8 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
 
     public static function getByID($cnvID) {
 		$db = Loader::db();
-		$r = $db->GetRow('select cnvID, cID, cnvDateCreated, cnvDateLastMessage, cnvMessagesTotal from Conversations where cnvID = ?', array($cnvID));
+		$r = $db->GetRow('select cnvID, cID, cnvDateCreated, cnvDateLastMessage, cnvMessagesTotal, cnvAttachmentsEnabled, cnvAttachmentOverridesEnabled,
+		cnvFileExtensions, cnvMaxFileSizeRegistered, cnvMaxFileSizeGuest, cnvMaxFilesRegistered, cnvMaxFilesGuest, cnvOverrideGlobalPermissions from Conversations where cnvID = ?', array($cnvID));
 		if (is_array($r) && $r['cnvID'] == $cnvID) {
 			$cnv = new static;
 			$cnv->setPropertiesFromArray($r);
@@ -106,6 +115,43 @@ class Conversation extends Object implements \Concrete\Core\Permission\ObjectInt
 		$r = $db->Execute('insert into Conversations (cnvDateCreated, cnvDateLastMessage) values (?, ?)', array($date, $date));
 		return static::getByID($db->Insert_ID());
 	}
+
+    public function setConversationAttachmentOverridesEnabled($cnvAttachmentOverridesEnabled) {
+        $db = Loader::db();
+        $db->Execute('update Conversations set cnvAttachmentOverridesEnabled = ? where cnvID = ?', array(intval($cnvAttachmentOverridesEnabled), $this->getConversationID()));
+    }
+
+    public function setConversationAttachmentsEnabled($cnvAttachmentsEnabled) {
+        $db = Loader::db();
+        $db->Execute('update Conversations set cnvAttachmentsEnabled = ? where cnvID = ?', array(intval($cnvAttachmentsEnabled), $this->getConversationID()));
+    }
+
+    public function setConversationMaxFileSizeGuest($cnvMaxFileSizeGuest) {
+        $db = Loader::db();
+        $db->Execute('update Conversations set cnvMaxFileSizeGuest = ? where cnvID = ?', array(intval($cnvMaxFileSizeGuest), $this->getConversationID()));
+    }
+
+    public function setConversationMaxFileSizeRegistered($cnvMaxFileSizeRegistered) {
+        $db = Loader::db();
+        $db->Execute('update Conversations set cnvMaxFileSizeRegistered = ? where cnvID = ?', array(intval($cnvMaxFileSizeRegistered), $this->getConversationID()));
+    }
+
+    public function setConversationMaxFilesGuest($cnvMaxFilesGuest) {
+        $db = Loader::db();
+        $db->Execute('update Conversations set cnvMaxFilesGuest = ? where cnvID = ?', array(intval($cnvMaxFilesGuest), $this->getConversationID()));
+    }
+
+    public function setConversationMaxFilesRegistered($cnvMaxFilesRegistered) {
+        $db = Loader::db();
+        $db->Execute('update Conversations set cnvMaxFilesRegistered = ? where cnvID = ?', array(intval($cnvMaxFilesRegistered), $this->getConversationID()));
+    }
+
+    public function setConversationFileExtensions($cnvFileExtensions) {
+        $db = Loader::db();
+        $db->Execute('update Conversations set cnvFileExtensions = ? where cnvID = ?', array(intval($cnvFileExtensions), $this->getConversationID()));
+    }
+
+
 
 
 }
