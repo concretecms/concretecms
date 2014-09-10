@@ -20,18 +20,19 @@
 
         Concrete.createGetterSetters.call(my, {
             dragging: false,
+            active: true,
             areas: [],
-            blocks: [],
             selectedCache: [],
             selectedThreshold: 5,
             dragAreaBlacklist: []
         });
 
-        Concrete.event.bind('PanelLoad', function editModePanelOpenEventHandler(event, data) {
+
+        my.bindEvent('PanelLoad', function editModePanelOpenEventHandler(event, data) {
             my.panelOpened(data.panel, data.element);
         });
 
-        Concrete.event.bind('EditModeBlockEditInline', function (event, data) {
+        my.bindEvent('EditModeBlockEditInline', function (event, data) {
             var block = data.block,
                 area = block.getArea(),
                 action = (data.action) ? data.action : CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/block/edit',
@@ -59,38 +60,37 @@
                 }
             }
 
-            Concrete.event
-                .unbind('EditModeExitInline.editmode')
-                .bind('EditModeExitInline.editmode', function (e, event_data) {
-                    Concrete.event.unbind(e);
-                    e.stopPropagation();
-                    var action = CCM_DISPATCHER_FILENAME + '/ccm/system/block/render',
-                        data = {
-                            cID: block.getCID(),
-                            arEnableGridContainer: arEnableGridContainer,
-                            bID: block.getId(),
-                            arHandle: area.getHandle()
-                        };
+            Concrete.event.unbind('EditModeExitInline.editmode');
+            my.bindEvent('EditModeExitInline.editmode', function (e, event_data) {
+                Concrete.event.unbind(e);
+                e.stopPropagation();
+                var action = CCM_DISPATCHER_FILENAME + '/ccm/system/block/render',
+                    data = {
+                        cID: block.getCID(),
+                        arEnableGridContainer: arEnableGridContainer,
+                        bID: block.getId(),
+                        arHandle: area.getHandle()
+                    };
 
-                    $.fn.dialog.showLoader();
+                $.fn.dialog.showLoader();
 
-                    if (!event_data || !event_data.action || event_data.action !== 'save_inline') {
-                        $.get(action, data,
-                            function (r) {
-                                var newBlock = block.replace(r);
-                                _.defer(function () {
-                                    ConcreteEvent.fire('EditModeExitInlineComplete', {
-                                        block: newBlock
-                                    });
-                                    my.destroyInlineEditModeToolbars();
-                                    _.defer(function () {
-                                        my.scanBlocks();
-                                    });
+                if (!event_data || !event_data.action || event_data.action !== 'save_inline') {
+                    $.get(action, data,
+                        function (r) {
+                            var newBlock = block.replace(r);
+                            _.defer(function () {
+                                ConcreteEvent.fire('EditModeExitInlineComplete', {
+                                    block: newBlock
                                 });
-                            }
-                        );
-                    }
-                });
+                                my.destroyInlineEditModeToolbars();
+                                _.defer(function () {
+                                    my.scanBlocks();
+                                });
+                            });
+                        }
+                    );
+                }
+            });
 
 //            ConcreteMenuManager.disable();
             ConcreteToolbar.disable();
@@ -115,7 +115,7 @@
             });
         });
 
-        Concrete.event.bind('EditModeBlockAddInline', function (event, data) {
+        my.bindEvent('EditModeBlockAddInline', function (event, data) {
             var area = data.area,
                 selected = data.selected,
                 btID = data.btID,
@@ -154,11 +154,11 @@
             }
 
             var saved = false;
-            Concrete.event.bind('EditModeExitInlineSaved', function (e) {
+            my.bindEvent('EditModeExitInlineSaved', function (e) {
                 Concrete.event.unbind(e);
                 saved = true;
             });
-            Concrete.event.bind('EditModeExitInline', function (e) {
+            my.bindEvent('EditModeExitInline', function (e) {
                 Concrete.event.unsubscribe(e);
                 if (saved) {
                     return;
@@ -213,7 +213,7 @@
             });
         });
 
-        Concrete.event.bind('EditModeBlockDelete', function (event, data) {
+        my.bindEvent('EditModeBlockDelete', function (event, data) {
             var block = data.block;
             block.delete(data.message);
             ConcreteEvent.fire('EditModeBlockDeleteComplete', {
@@ -250,7 +250,7 @@
             }
         }
 
-        Concrete.event.bind('EditModeBlockDrag', _.throttle(function editModeEditModeBlockDragEventHandler(event, data) {
+        my.bindEvent('EditModeBlockDrag', _.throttle(function editModeEditModeBlockDragEventHandler(event, data) {
             if (!my.getDragging()) {
                 return;
             }
@@ -259,7 +259,7 @@
                 contenders;
 
             if (block instanceof Layout) {
-                areas = [_(areas).find(function(a) {
+                areas = [_(areas).find(function (a) {
                     return block.getArea() === a;
                 })];
             }
@@ -298,13 +298,13 @@
 
         }, 250, {trailing: false}));
 
-        Concrete.event.bind('EditModeBlockDragStop', function editModeEditModeBlockDragStopEventHandler() {
+        my.bindEvent('EditModeBlockDragStop', function editModeEditModeBlockDragStopEventHandler() {
             Concrete.event.fire('EditModeContenders', []);
             Concrete.event.fire('EditModeSelectableContender');
-            my.setDragging(false);
+            my.scanBlocks();
         });
 
-        Concrete.event.bind('EditModeBlockMove', function editModeEditModeBlockMoveEventHandler(e, data) {
+        my.bindEvent('EditModeBlockMove', function editModeEditModeBlockMoveEventHandler(e, data) {
             var block = data.block,
                 targetArea = data.targetArea,
                 sourceArea = data.sourceArea,
@@ -337,7 +337,7 @@
 
         });
 
-        Concrete.event.bind('EditModeBlockDragStart', function editModeEditModeBlockDragStartEventHandler() {
+        my.bindEvent('EditModeBlockDragStart', function editModeEditModeBlockDragStartEventHandler() {
             my.setDragging(true);
         });
 
@@ -366,6 +366,7 @@
 
         Concrete.createGetterSetters.call(my, {
             id: elem.data('area-id'),
+            active: true,
             blockTemplate: _(elem.children('script[role=area-block-wrapper]').html()).template(),
             elem: elem,
             totalBlocks: 0,
@@ -380,7 +381,6 @@
         });
         my.id = my.getId();
         my.setTotalBlocks(0); // we also need to update the DOM which this does.
-        my.addDragArea();
     };
 
     /**
@@ -391,9 +391,6 @@
     var Block = Concrete.Block = function Block(elem, edit_mode, peper) {
         var my = this;
         elem.data('Concrete.block', my);
-        if (!elem.closest('.ccm-area-block-list')) {
-            alert('orphan block.');
-        }
 
         if (!elem.children('.ccm-block-cover').length) {
             $('<div/>').addClass('ccm-block-cover').appendTo(elem);
@@ -401,6 +398,7 @@
 
         Concrete.createGetterSetters.call(my, {
             id: elem.data('block-id'),
+            active: true,
             handle: elem.data('block-type-handle'),
             areaId: elem.data('area-id'),
             cID: elem.data('cid'),
@@ -445,7 +443,7 @@
 
         my.bindMenu();
 
-        Concrete.event.bind('EditModeSelectableContender', function (e, data) {
+        my.bindEvent('EditModeSelectableContender', function (e, data) {
             if (my.getDragging() && data instanceof DragArea) {
                 my.setSelected(data);
             } else {
@@ -485,8 +483,7 @@
 
     var Layout = Concrete.Layout = function Layout(elem, edit_mode) {
         var my = this;
-        Concrete.event.unbind('EditModeInlineEditLoaded.editmode');
-        Concrete.event.bind('EditModeInlineEditLoaded.editmode', function(e, data) {
+        my.bindEvent('EditModeInlineEditLoaded.editmode', function (e, data) {
             if (data.block === my) {
                 my.bindDrag();
             }
@@ -507,6 +504,7 @@
 
         Concrete.createGetterSetters.call(my, {
             block: block,
+            active: true,
             elem: elem,
             area: area,
             isContender: false,
@@ -514,23 +512,37 @@
             animationLength: 500
         });
 
-        Concrete.event.bind('EditModeContenders', function (e, data) {
-            var drag_areas = data;
-            my.setIsContender(_.contains(drag_areas, my));
+        my.bindEvent('EditModeContenders', function (e, data) {
+            my.setIsContender(_.contains(data, my));
         });
 
-        Concrete.event.bind('EditModeSelectableContender', function (e, data) {
+        my.bindEvent('EditModeSelectableContender', function (e, data) {
             my.setIsSelectable(data === my);
         });
     };
 
     EditMode.prototype = {
 
+        bindEvent: function editModeBindEvent(event, handler) {
+            var my = this, proxy = function () {
+                if (!my.getActive()) {
+                    Concrete.event.unbind(event);
+                    return;
+                }
+                handler.apply(this, _(arguments).toArray());
+            };
+
+            return Concrete.event.bind(event, proxy);
+        },
+
         reset: function () {
             var my = this;
+
+            _(my.getAreas()).each(function (area) {
+                area.destroy();
+            });
+
             my.setAttr('areas', []);
-            my.setAttr('blocks', []);
-            $('.ccm-area-drag-area').remove();
         },
 
         scanBlocks: function editModeScanBlocks() {
@@ -542,6 +554,7 @@
                 area.scanBlocks();
                 my.addArea(area);
             });
+
             _.invoke(my.getAreas(), 'bindMenu');
         },
 
@@ -641,14 +654,14 @@
             my.getAreas().push(area);
         },
 
-        /**
-         * Add block to the blocks
-         * @param block
-         */
-        addBlock: function editModeAddBlock(block) {
-            var my = this;
+        getBlocks: function editModeGetBlocks() {
+            var blocks = [];
 
-            my.getBlocks().push(block);
+            _(this.getAreas()).each(function (area) {
+                blocks.push(area.getBlocks());
+            });
+
+            return _(blocks).flatten();
         },
 
         destroyInlineEditModeToolbars: function () {
@@ -710,12 +723,45 @@
 
     Area.prototype = {
 
+        /**
+         * Handle unbinding.
+         */
+        destroy: function areaDestroy() {
+            var my = this;
+            if (my.getAttr('menu')) {
+                my.getAttr('menu').destroy();
+            }
+
+            my.reset();
+            this.setAttr('active', false);
+        },
+
+        reset: function areaReset() {
+            var my = this;
+            _(my.getDragAreas()).each(function (drag_area) {
+                drag_area.destroy();
+            });
+
+            _(my.getBlocks()).each(function (block) {
+                block.destroy();
+            });
+
+            my.setBlocks([]);
+            my.setDragAreas([]);
+
+            my.setTotalBlocks(0);
+        },
+
+        bindEvent: function areaBindEvent(event, handler) {
+            return EditMode.prototype.bindEvent.apply(this, _(arguments).toArray());
+        },
+
         scanBlocks: function areaScanBlocks() {
             var my = this, type, block, editmode = my.getEditMode();
 
+            my.reset();
+            my.addDragArea(null);
             // Remove existing blocks from the editmode block list.
-            editmode.setBlocks(_(editmode.getBlocks()).without(my.getBlocks()));
-            my.setBlocks([]);
 
             $('div.ccm-block-edit[data-area-id=' + my.getId() + ']', this.getElem()).each(function () {
                 var me = $(this), handle = me.data('block-type-handle');
@@ -728,7 +774,6 @@
 
                 block = new type(me, my);
                 my.addBlock(block);
-                editmode.addBlock(block);
             });
         },
 
@@ -742,7 +787,7 @@
             return $('[data-area-menu=area-menu-a' + my.getId() + ']');
         },
 
-        bindMenu: function () {
+        bindMenu: function areaBindMenu() {
             var my = this,
                 elem = my.getElem(),
                 totalBlocks = my.getTotalBlocks(),
@@ -754,15 +799,15 @@
             } else {
                 menuHandle = 'div[data-area-menu-handle=' + my.getId() + ']';
             }
-            if (my.menu) {
-                my.menu.destroy();
+            if (my.getAttr('menu')) {
+                my.getAttr('menu').destroy();
             }
-            my.menu = new ConcreteMenu(elem, {
+            my.setAttr('menu', new ConcreteMenu(elem, {
                 'handle': menuHandle,
                 'highlightClassName': 'ccm-area-highlight',
                 'menuActiveClass': 'ccm-area-highlight',
                 'menu': $('[data-area-menu=' + elem.attr('data-launch-area-menu') + ']')
-            });
+            }));
 
             $menuElem.find('a[data-menu-action=add-inline]')
                 .off('click.edit-mode')
@@ -810,7 +855,7 @@
                         'cID': CCM_CID
                     };
 
-                    Concrete.event.bind('EditModeExitInline', function (e) {
+                    my.bindEvent('EditModeExitInline', function (e) {
                         Concrete.event.unsubscribe(e);
                         my.getEditMode().destroyInlineEditModeToolbars();
                     });
@@ -848,6 +893,7 @@
             this.setAttr('totalBlocks', totalBlocks);
             this.getElem().attr('data-total-blocks', totalBlocks);
         },
+
         /**
          * Add to specific index, pipes to addBlock
          * @param  {Block}   block Block to add
@@ -963,6 +1009,19 @@
     };
 
     Block.prototype = {
+
+        /**
+         * This is fired when the object is destroyed and needs to be unbound.
+         */
+        destroy: function blockDestroy() {
+            this.getPeper().unbind();
+            $.pep.unbind(this.getPeper());
+            this.setAttr('active', false);
+        },
+
+        bindEvent: function blockBindEvent(event, handler) {
+            return EditMode.prototype.bindEvent.apply(this, _(arguments).toArray());
+        },
 
         getContainer: function blockGetActualElement() {
             var current = this.getElem();
@@ -1100,11 +1159,11 @@
 
             if (menuHandle !== 'none') {
 
-                my.menu = new ConcreteMenu(elem, {
+                my.setAttr('menu', new ConcreteMenu(elem, {
                     'highlightClassName': 'ccm-block-highlight',
                     'menuActiveClass': 'ccm-block-highlight',
                     'menu': $menuElem
-                });
+                }));
 
                 $menuElem.find('a[data-menu-action=edit_inline]').unbind('click.core').on('click.core', function (event) {
                     Concrete.event.fire('EditModeBlockEditInline', {block: my, event: event});
@@ -1731,12 +1790,14 @@
         bindDrag: function layoutBindDrag() {
             var my = this,
                 peper = $('a[data-layout-command="move-block"]').parent();
+
             $.pep.unbind(peper);
             peper.pep(my.getPepSettings());
         },
 
         addToDragArea: function layoutAddToDragArea() {
             Concrete.Block.prototype.addToDragArea.apply(this, _.toArray(arguments));
+
             var container = $('#ccm-inline-toolbar-container');
             container.css({
                 top: this.getElem().offset().top - container.outerHeight() - 5
@@ -1746,6 +1807,22 @@
     }).defaults(Block.prototype);
 
     DragArea.prototype = {
+
+        destroy: function dragAreaDestroy() {
+            var my = this;
+
+            my.getElem().remove();
+            my.setAttr('active', false);
+        },
+
+        bindEvent: function dragAreaBindEvent(event, handler) {
+            return EditMode.prototype.bindEvent.apply(this, _(arguments).toArray());
+        },
+
+        getActive: function dragAreaGetActive() {
+            // If Area is inactive, this has to be inactive.
+            return this.getArea().getActive() && this.getAttr('active');
+        },
 
         /**
          * Is DragArea selectable
@@ -1829,6 +1906,7 @@
 
             return Math.sqrt(Math.pow(Math.abs(block_center.x - my_center.x), 2) + Math.pow(Math.abs(block_center.y - my_center.y), 2));
         }
+
     };
 
 }(window, jQuery, _, Concrete));
