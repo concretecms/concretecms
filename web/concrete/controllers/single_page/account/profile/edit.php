@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Controller\SinglePage\Account\Profile;
 use \Concrete\Core\Page\Controller\AccountPageController;
+use Config;
 use UserInfo;
 use Exception;
 use \Concrete\Core\Authentication\AuthenticationType;
@@ -113,7 +114,7 @@ class Edit extends AccountPageController {
 
 		if (!$e->has()) {
 			$data['uEmail'] = $email;
-			if(ENABLE_USER_TIMEZONES) {
+			if(Config::get('concrete.misc.user_timezones')) {
 				$data['uTimezone'] = $this->post('uTimezone');
 			}
 

@@ -66,15 +66,15 @@ class Blacklist extends DashboardPageController {
 
 			//configs from top part form
 			$ip_ban_lock_ip_enable = (1 == $this->post('ip_ban_lock_ip_enable')) ? 1 : 0;
-			Config::save('IP_BAN_LOCK_IP_ENABLE',$ip_ban_lock_ip_enable);
-			Config::save('IP_BAN_LOCK_IP_ATTEMPTS',$this->post('ip_ban_lock_ip_attempts'));
-			Config::Save('IP_BAN_LOCK_IP_TIME',$this->post('ip_ban_lock_ip_time'));
+			Config::save('concrete.security.ban.ip.enabled',$ip_ban_lock_ip_enable);
+			Config::save('concrete.security.ban.ip.attempts',$this->post('ip_ban_lock_ip_attempts'));
+			Config::Save('concrete.security.ban.ip.time',$this->post('ip_ban_lock_ip_time'));
 
 			if (self::IP_BAN_LOCK_IP_HOW_LONG_TYPE_FOREVER != $this->post('ip_ban_lock_ip_how_long_type')) {
-				Config::Save('IP_BAN_LOCK_IP_HOW_LONG_MIN',$this->post('ip_ban_lock_ip_how_long_min'));
+				Config::Save('concrete.security.ban.ip.length',$this->post('ip_ban_lock_ip_how_long_min'));
 			}
 			else {
-				Config::Save('IP_BAN_LOCK_IP_HOW_LONG_MIN',0);
+				Config::Save('concrete.security.ban.ip.length',0);
 			}
 
 			//ip table actions
@@ -145,11 +145,11 @@ class Blacklist extends DashboardPageController {
 	public function view() {
 		//IP Address Blacklist
 
-		$ip_ban_enable_lock_ip_after 	= Config::get('IP_BAN_LOCK_IP_ENABLE');
+		$ip_ban_enable_lock_ip_after 	= Config::get('concrete.security.ban.ip.enabled');
 		$ip_ban_enable_lock_ip_after	= ($ip_ban_enable_lock_ip_after == 1) ? 1 : 0;
-		$ip_ban_lock_ip_after_attempts 	= Config::get('IP_BAN_LOCK_IP_ATTEMPTS');
-		$ip_ban_lock_ip_after_time		= Config::get('IP_BAN_LOCK_IP_TIME');
-		$ip_ban_lock_ip_how_long_min	= Config::get('IP_BAN_LOCK_IP_HOW_LONG_MIN') ? Config::get('IP_BAN_LOCK_IP_HOW_LONG_MIN') : '';
+		$ip_ban_lock_ip_after_attempts 	= Config::get('concrete.security.ban.ip.attempts');
+		$ip_ban_lock_ip_after_time		= Config::get('concrete.security.ban.ip.time');
+		$ip_ban_lock_ip_how_long_min	= Config::get('concrete.security.ban.ip.length', '');
 		if(!$ip_ban_lock_ip_how_long_min){
 			$ip_ban_lock_ip_how_long_type = self::IP_BAN_LOCK_IP_HOW_LONG_TYPE_FOREVER;
 		}

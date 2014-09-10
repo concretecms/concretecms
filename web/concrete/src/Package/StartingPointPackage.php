@@ -296,11 +296,10 @@ class StartingPointPackage extends BasePackage {
 		$fs->assignPermissions($g1, array('view_file_set_file'));
 		$fs->assignPermissions($g3, array('view_file_set_file', 'search_file_set', 'edit_file_set_file_properties', 'edit_file_set_file_contents', 'copy_file_set_files', 'edit_file_set_permissions', 'delete_file_set_files', 'delete_file_set', 'add_file'));
 		if (defined('SITE_INSTALL_LOCALE') && SITE_INSTALL_LOCALE != '' && SITE_INSTALL_LOCALE != 'en_US') {
-			Config::save('SITE_LOCALE', SITE_INSTALL_LOCALE);
+			Config::save('concrete.locale', SITE_INSTALL_LOCALE);
 		}
-		Config::save('SITE', SITE);
-		Config::save('SITE_APP_VERSION', APP_VERSION);
-		Config::save('SITE_INSTALLED_APP_VERSION', APP_VERSION);
+		Config::save('concrete.site', SITE);
+		Config::save('concrete.version', APP_VERSION);
 
 		$u = new User();
 		$u->saveConfig('NEWSFLOW_LAST_VIEWED', 'FIRSTRUN');
@@ -317,9 +316,9 @@ class StartingPointPackage extends BasePackage {
 		$dashboard = Page::getByPath('/dashboard', "RECENT");
 		$dashboard->assignPermissions($g3, array('view_page'));
 
-		Config::save('SECURITY_TOKEN_JOBS', Loader::helper('validation/identifier')->getString(64));
-		Config::save('SECURITY_TOKEN_ENCRYPTION', Loader::helper('validation/identifier')->getString(64));
-		Config::save('SECURITY_TOKEN_VALIDATION', Loader::helper('validation/identifier')->getString(64));
+		Config::save('concrete.security.token.jobs', Loader::helper('validation/identifier')->getString(64));
+		Config::save('concrete.security.token.encryption', Loader::helper('validation/identifier')->getString(64));
+		Config::save('concrete.security.token.validation', Loader::helper('validation/identifier')->getString(64));
 
 		// group permissions
 		$tree = GroupTree::get();

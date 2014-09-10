@@ -110,10 +110,10 @@ if ($config['reinstall'] === 'yes' && is_file(DIR_BASE . '/config/site.php')) {
 }
 if (file_exists(DIR_BASE . '/config/site.php')) {
 	die("ERROR: concrete5 is already installed.\n");
-}		
+}
 
 
-/** 
+/**
  * ----------------------------------------------------------------------------
  * Set required constants, including directory names, attempt to include site configuration file with database
  * information, attempt to determine if we ought to skip to an updated core, etc...
@@ -151,7 +151,7 @@ if ($config['reinstall'] === 'yes') {
 		}
 		$dirf = $target . '/files/';
 		// Remove Directory once Files have been removed (If Exists)
-		if (is_dir($path) && $path !== $dirf) rmdir($path); 
+		if (is_dir($path) && $path !== $dirf) rmdir($path);
 	}
 
 	removeDemoFiles($target . '/files/');
@@ -211,7 +211,7 @@ if (version_compare($APP_VERSION, APP_VERSION_CLI_MINIMUM, '<')) {
 if ($e->has()) {
 	foreach($e->getList() as $ei) {
 		print "ERROR: " . $ei . "\n";
-	}	
+	}
 	die;
 }
 
@@ -220,7 +220,7 @@ $cnt->configure($e);
 if ($e->has()) {
 	foreach($e->getList() as $ei) {
 		print "ERROR: " . $ei . "\n";
-	}	
+	}
 } else {
 	$spl = StartingPointPackage::getClass($config['starting-point']);
 	require(DIR_CONFIG_SITE . '/site_install.php');
@@ -233,7 +233,7 @@ if ($e->has()) {
 			call_user_func(array($spl, $r->getMethod()));
 		}
 	} catch(Exception $ex) {
-		print "ERROR: " . $ex->getMessage() . "\n";		
+		print "ERROR: " . $ex->getMessage() . "\n";
 		$cnt->reset();
 	}
 
@@ -249,7 +249,7 @@ if ($e->has()) {
 	}
 
 	if (!isset($ex)) {
-		Config::save('SEEN_INTRODUCTION', 1);
+        config::save('concrete.misc.seen_introduction', true);
 		print "Installation Complete!\n";
 	}
 
