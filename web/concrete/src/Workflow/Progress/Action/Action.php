@@ -1,8 +1,8 @@
-<?
+<?php
 namespace Concrete\Core\Workflow\Progress\Action;
 use \Concrete\Core\Foundation\Object;
-class Action extends Object {  
-	
+class Action extends Object {
+
 	protected $wrActionStyleClass = '';
 	protected $wrActionStyleInnerButtonLeft = '';
 	protected $wrActionStyleInnerButtonRight = '';
@@ -10,7 +10,7 @@ class Action extends Object {
 	protected $wrActionOnClick = '';
 	protected $wrActionURL = '';
 	protected $wrActionExtraButtonParameters = array();
-	
+
 	public function setWorkflowProgressActionStyleClass($class) {
 		$this->wrActionStyleClass = $class;
 	}
@@ -22,10 +22,10 @@ class Action extends Object {
 	}
 	public function setWorkflowProgressActionLabel($label) {
 		$this->wrActionLabel = $label;
-	}	
+	}
 	public function setWorkflowProgressActionTask($wrActionTask) {
 		$this->wrActionTask = $wrActionTask;
-	}	
+	}
 	public function setWorkflowProgressActionURL($wrActionURL) {
 		$this->wrActionURL = $wrActionURL;
 	}
@@ -33,11 +33,11 @@ class Action extends Object {
 	public function addWorkflowProgressActionButtonParameter($key, $value) {
 		$this->wrActionExtraButtonParameters[$key] = $value;
 	}
-	
+
 	public function getWorkflowProgressActionExtraButtonParameters() {
 		return $this->wrActionExtraButtonParameters;
 	}
-	
+
 	public function getWorkflowProgressActionStyleClass() {
 		return $this->wrActionStyleClass;
 	}
@@ -55,5 +55,5 @@ class Action extends Object {
 	}
 	public function getWorkflowProgressActionURL() {
 		return $this->wrActionURL;
-	}	
+	}
 }

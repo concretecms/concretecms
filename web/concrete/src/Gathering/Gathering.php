@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Gathering;
 use Loader;
 use \Concrete\Core\Foundation\Object;
@@ -15,7 +15,7 @@ class Gathering extends Object implements \Concrete\Core\Permission\ObjectInterf
 	}
 
 	public function getPermissionAssignmentClassName() {
-		return '\\Concrete\\Core\\Permission\\Assignment\\GatheringAssignment';	
+		return '\\Concrete\\Core\\Permission\\Assignment\\GatheringAssignment';
 	}
 	public function getPermissionObjectKeyCategoryHandle() {
 		return 'gathering';
@@ -46,7 +46,7 @@ class Gathering extends Object implements \Concrete\Core\Permission\ObjectInterf
 
 	public static function add() {
 		$db = Loader::db();
-		$date = Loader::helper('date')->getSystemDateTime();
+		$date = Loader::helper('date')->getOverridableNow();
 		$r = $db->Execute('insert into Gatherings (gaDateCreated) values (?)', array($date));
 		return Gathering::getByID($db->Insert_ID());
 	}
@@ -99,7 +99,7 @@ class Gathering extends Object implements \Concrete\Core\Permission\ObjectInterf
 		return $newag;
 	}
 
-	/** 
+	/**
 	 * Runs through all active gathering data sources, creates GatheringItem objects
 	 */
 	public function generateGatheringItems() {
@@ -128,7 +128,7 @@ class Gathering extends Object implements \Concrete\Core\Permission\ObjectInterf
 			$agiBatchDisplayOrder++;
 		}
 
-		$date = Loader::helper('date')->getSystemDateTime();
+		$date = Loader::helper('date')->getOverridableNow();
 		$db->Execute('update Gatherings set gaDateLastUpdated = ? where gaID = ?', array($date, $this->gaID));
 
 	}

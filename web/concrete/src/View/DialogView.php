@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\View;
 use Concrete\Core\Asset\Asset;
 use View as ConcreteView;
@@ -7,7 +7,7 @@ use \Concrete\Core\Asset\JavascriptAsset;
 use User;
 
 class DialogView extends ConcreteView {
-	
+
 	protected function onBeforeGetContents() {
 		$this->markHeaderAssetPosition();
 	}
@@ -15,11 +15,11 @@ class DialogView extends ConcreteView {
 	public function outputAssetIntoView($item) {
 		$str = '';
 		if ($item instanceof CssAsset) {
-			$str .= '<script type="text/javascript">';	
+			$str .= '<script type="text/javascript">';
 			$str .= 'ccm_addHeaderItem("' . $item->getAssetURL() . '", "CSS")';
 			$str .= '</script>';
 		} else if ($item instanceof JavascriptAsset) {
-			$str .= '<script type="text/javascript">';	
+			$str .= '<script type="text/javascript">';
 			$str .= 'ccm_addHeaderItem("' . $item->getAssetURL() . '", "JAVASCRIPT")';
 			$str .= '</script>';
 		} else {

@@ -1,17 +1,19 @@
-<?
+<?php
 namespace Concrete\Core\File\Event;
-use User;
 
-class FileAccess extends FileVersion {
+class FileAccess extends FileVersion
+{
 
-	protected $u;
+    protected $u;
 
-	public function setUserObject($u) {
-		$this->u = $u;
-	}
+    public function setUserObject($u)
+    {
+        $this->u = $u;
+    }
 
-	public function getUserObject() {
-		return $this->u;
-	}
+    public function getUserObject()
+    {
+        return $this->u;
+    }
 
 }

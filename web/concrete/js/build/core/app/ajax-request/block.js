@@ -12,6 +12,7 @@
             'iframe': true,
             'task': false,
             'dragAreaBlockID': false,
+            dragArea: null,
             'bID': false
         }, options);
         my.options = options;
@@ -45,26 +46,21 @@
                 arEnableGridContainer: arEnableGridContainer
             }, function (r) {
 
+                var block;
+
                 ConcreteToolbar.disableDirectExit();
                 jQuery.fn.dialog.hideLoader();
 
                 if (my.options.task == 'add') {
-                    var $area = area.getElem();
+                    var $area = area.getElem(), $elem = $(r);
 
-
-                    if (my.options.dragAreaBlockID) {
-                        // we are adding this block AFTER this other block.
-                        var $block = $area.find('div[data-block-id=' + my.options.dragAreaBlockID + ']');
-                        $block.closest('div[data-container=block]').next('.ccm-area-drag-area').after(r);
+                    if (my.options.dragArea) {
+                        my.options.dragArea.getElem().after($elem);
                     } else {
-                        $area.children('.ccm-area-block-list').prepend(r);
+                        $area.children('.ccm-area-block-list').prepend($elem);
                     }
-                    var block = new Concrete.Block($('[data-block-id=' + resp.bID + ']'), editor);
-                    area.addBlock(block);
-                    if (area.getTotalBlocks() == 1) {
-                        // we have to destroy the old menu and create it anew
-                        area.bindMenu();
-                    }
+                    Concrete.getEditMode().scanBlocks();
+
                     ConcreteAlert.notify({
                         'message': ccmi18n.addBlockMsg,
                         'title': ccmi18n.addBlock
@@ -84,7 +80,7 @@
 
                 } else {
                     // remove old block from area
-                    var block = area.getBlockByID(my.options.bID);
+                    block = area.getBlockByID(my.options.bID);
                     var newBlock = block.replace(r);
                     ConcreteAlert.notify({
                         'message': ccmi18n.updateBlockMsg,
@@ -106,14 +102,14 @@
 
             });
         }
-    }
+    };
 
     // jQuery Plugin
     $.fn.concreteAjaxBlockForm = function (options) {
         return $.each($(this), function (i, obj) {
             new ConcreteAjaxBlockForm($(this), options);
         });
-    }
+    };
 
     global.ConcreteAjaxBlockForm = ConcreteAjaxBlockForm;
 

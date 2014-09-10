@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\StyleCustomizer\Inline;
 use Concrete\Core\Backup\ContentExporter;
 use Concrete\Core\Backup\ContentImporter;

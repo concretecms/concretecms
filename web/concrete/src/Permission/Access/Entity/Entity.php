@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Access\Entity;
 use \Concrete\Core\Foundation\Object;
 use Loader;
@@ -6,7 +6,7 @@ use PermissionAccess;
 use CacheLocal;
 use Core;
 abstract class Entity extends Object {
-	
+
 	public function getAccessEntityTypeID() {return $this->petID;}
 	public function getAccessEntityTypeObject() {
 		return Type::getByID($this->petID);
@@ -17,11 +17,11 @@ abstract class Entity extends Object {
 	abstract public function getAccessEntityUsers(PermissionAccess $pa);
 	abstract public function getAccessEntityTypeLinkHTML();
 	abstract public static function getAccessEntitiesForUser($user);
-	
+
 	public function validate(PermissionAccess $pae) {
-		return true;	
+		return true;
 	}
-	
+
 	final static function getByID($peID) {
 		$obj = CacheLocal::getEntry('permission_access_entity', $peID);
 		if ($obj instanceof PermissionAccessEntity) {
@@ -34,7 +34,7 @@ abstract class Entity extends Object {
 			if (!is_object($pt)) {
 				return false;
 			}
-			
+
 			$className = '\\Concrete\\Core\\Permission\\Access\\Entity\\' . Loader::helper('text')->camelcase($pt->getAccessEntityTypeHandle()) . 'Entity';
 			$obj = Core::make($className);
 			$r['petHandle'] = $pt->getAccessEntityTypeHandle();
@@ -44,13 +44,13 @@ abstract class Entity extends Object {
 		CacheLocal::set('permission_access_entity', $peID, $obj);
 		return $obj;
 	}
-	
+
 	public static function getForUser($user) {
 		$entities = array();
 		$db = Loader::db();
 		$types = Type::getList();
 		foreach($types as $t) {
-			$entities = array_merge($entities, $t->getAccessEntitiesForUser($user));			
+			$entities = array_merge($entities, $t->getAccessEntitiesForUser($user));
 		}
 		return $entities;
 	}

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Page\Workflow\Progress;
 use \Concrete\Core\Legacy\PageList as PageList;
 use Loader;
@@ -7,9 +7,9 @@ use Permissions;
 use \Concrete\Core\Page\Page as ConcretePage;
 use \Concrete\Core\Legacy\DatabaseItemList;
 class ProgressList extends PageList {
-	
+
 	protected $autoSortColumns = array('wpDateLastAction', 'cvName', 'wpCurrentStatus');
-	
+
 	public function __construct() {
 		$this->includeInactivePages();
 		$this->includeSystemPages();
@@ -26,7 +26,7 @@ class ProgressList extends PageList {
 		foreach($_pages as $row) {
 			$c = ConcretePage::getByID($row['cID']);
 			$cp = new Permissions($c);
-			if ($cp->canViewPageVersions()) { 
+			if ($cp->canViewPageVersions()) {
 				$c->loadVersionObject('RECENT');
 			} else {
 				$c->loadVersionObject('ACTIVE');

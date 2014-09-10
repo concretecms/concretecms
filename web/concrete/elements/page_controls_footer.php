@@ -41,7 +41,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                     <? if ($c->isEditMode()) { ?>
                         <li class="ccm-toolbar-page-edit-mode-active ccm-toolbar-page-edit"><i
                                 class="fa fa-pencil mobile-leading-icon"></i><a data-toolbar-action="check-in"
-                                                                                <? if ($vo->isNew()) { ?>href="javascript:void(0)"
+                                                                                <? if ($vo->isNew() && !$c->isMasterCollection()) { ?>href="javascript:void(0)"
                                                                                 data-launch-panel="check-in"><?php echo t(
                                     'Save Changes') ?><?
                                 } else {
@@ -190,6 +190,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
         </li>
     <? } ?>
 
+        <? if (!$c->isMasterCollection()) { ?>
         <li class="pull-left hidden-xs">
             <a href="#" data-launch-panel="page"
                data-panel-url="<?= URL::to('/ccm/system/panels/page') ?>"
@@ -200,6 +201,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 </span>
             </a>
         </li>
+        <? } ?>
     <?
     }
 
@@ -262,7 +264,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                             title="<?= t('Add Pages and Navigate Your Site') ?>"
                                             data-launch-panel="sitemap">
                 <i class="fa fa-files-o"></i>
-                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings">
+                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page">
                     <?= tc('toolbar', 'Add Page') ?>
                 </span>
             </a>
@@ -330,7 +332,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
         if ($canViewToolbar) {
             ?>
             <? if (is_array($workflowList) && count($workflowList) > 0) { ?>
-                <div id="ccm-notification-page-alert" class="ccm-notification ccm-notification-info">
+                <div id="ccm-notification-page-alert-workflow" class="ccm-notification ccm-notification-info">
                     <div class="ccm-notification-inner-wrapper">
                         <? foreach ($workflowList as $i => $wl) { ?>
                             <? $wr = $wl->getWorkflowRequestObject();
@@ -338,13 +340,13 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 
                             <form method="post" action="<?= $wl->getWorkflowProgressFormAction() ?>"
                                   id="ccm-notification-page-alert-form-<?= $i ?>">
-                                <i class="fa fa-info-circle"></i>
+                                <i class="ccm-notification-icon fa fa-info-circle"></i>
 
                                 <div class="ccm-notification-inner">
                                     <p><?= $wf->getWorkflowProgressCurrentDescription($wl) ?></p>
                                     <? $actions = $wl->getWorkflowProgressActions(); ?>
                                     <? if (count($actions) > 0) { ?>
-                                        <div class="ccm-notification-inner-buttons">
+                                        <div class="btn-group">
                                             <? foreach ($actions as $act) { ?>
                                                 <? if ($act->getWorkflowProgressActionURL() != '') { ?>
                                                     <a href="<?= $act->getWorkflowProgressActionURL() ?>"

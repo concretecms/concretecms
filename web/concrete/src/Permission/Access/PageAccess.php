@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Access;
 use Loader;
 class PageAccess extends Access {
@@ -7,7 +7,7 @@ class PageAccess extends Access {
 		// we do this because these five items are known to be OK for caching permissions against
 		// page IDs (well file_uploader is unrelated but we still need to check for it or it will trip this check.)
 		// if these are the only things included in your site then you should be able to use permissionsCollectionID for
-		// checking permissions against, which will dramatically improve performance. 
+		// checking permissions against, which will dramatically improve performance.
 		// If you have any custom access entities though you won't be able to use this.
 		// Obviously a better way of doing this would be to retrieve all access entity types, run through each and see whether
 		// they support it but this is better for performance.

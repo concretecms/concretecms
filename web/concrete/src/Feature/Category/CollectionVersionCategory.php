@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Feature\Category;
 use Loader;
 class CollectionVersionCategory extends Category {
@@ -8,5 +8,5 @@ class CollectionVersionCategory extends Category {
 		$num = $db->GetOne('select count(faID) from CollectionVersionFeatureAssignments where faID = ?', array($fa->getFeatureAssignmentID()));
 		return $num > 0;
 	}
-		
+
 }

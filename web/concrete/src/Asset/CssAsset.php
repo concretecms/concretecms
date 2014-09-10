@@ -1,9 +1,9 @@
-<?
+<?php
 namespace Concrete\Core\Asset;
 use HtmlObject\Element;
 
 class CssAsset extends Asset {
-	
+
 	protected $assetSupportsMinification = true;
 	protected $assetSupportsCombination = true;
 
@@ -106,7 +106,7 @@ class CssAsset extends Asset {
 				}
 				@file_put_contents($cacheFile, $css);
 			}
-			
+
 			$asset = new CSSAsset();
 			$asset->setAssetURL(self::getRelativeOutputDirectory() . '/' . $filename . '.css');
 			$asset->setAssetPath($directory . '/' . $filename . '.css');

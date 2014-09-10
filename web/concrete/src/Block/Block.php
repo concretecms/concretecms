@@ -465,7 +465,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
         $db = Loader::db();
         $dh = Loader::helper('date');
-        $bDateModified = $dh->getSystemDateTime();
+        $bDateModified = $dh->getOverridableNow();
         $bID = $this->bID;
 
         $v = array($bDateModified, $bID);
@@ -726,7 +726,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             return false;
         }
 
-        $bDate = $dh->getSystemDateTime();
+        $bDate = $dh->getOverridableNow();
         $v = array($this->bName, $bDate, $bDate, $this->bFilename, $this->btID, $this->uID);
         $q = "insert into Blocks (bName, bDateAdded, bDateModified, bFilename, btID, uID) values (?, ?, ?, ?, ?, ?)";
         $r = $db->prepare($q);
@@ -1216,7 +1216,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         // this is the function that updates a block's information, like its block filename, and block name
         $db = Loader::db();
         $dh = Loader::helper('date');
-        $dt = $dh->getSystemDateTime();
+        $dt = $dh->getOverridableNow();
 
         $bName = $this->bName;
         $bFilename = $this->bFilename;

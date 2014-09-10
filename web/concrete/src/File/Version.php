@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\File;
 
 use Carbon\Carbon;
@@ -132,7 +132,7 @@ class Version
 
         $db = Loader::db();
         $dh = Loader::helper('date');
-        $date = new Carbon($dh->getSystemDateTime());
+        $date = new Carbon($dh->getOverridableNow());
 
         $fv = new static();
         $fv->fvFilename = $filename;

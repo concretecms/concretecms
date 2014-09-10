@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Marketplace;
 use Cache;
 use Loader;

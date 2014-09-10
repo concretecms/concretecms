@@ -1,17 +1,17 @@
 <?php
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Attributes;
+use Concrete\Core\Attribute\Key\Category;
+use Concrete\Core\Attribute\PendingType;
+use Concrete\Core\Attribute\Type;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
 use Loader;
-use \Concrete\Core\Attribute\PendingAttributeType;
-use AttributeType;
-use AttributeKeyCategory;
 
 class Types extends DashboardPageController {
 	
 	public function add_attribute_type() {
-		$pat = PendingAttributeType::getByHandle($this->post('atHandle'));
+		$pat = PendingType::getByHandle($this->post('atHandle'));
 		if (is_object($pat)) {
 			$pat->install();
 		}
@@ -19,12 +19,12 @@ class Types extends DashboardPageController {
 	}
 
 	public function save_attribute_type_associations() {
-		$list = AttributeKeyCategory::getList();
+		$list = Category::getList();
 		foreach($list as $cat) {
 			$cat->clearAttributeKeyCategoryTypes();
 			if (is_array($this->post($cat->getAttributeKeyCategoryHandle()))) {
 				foreach($this->post($cat->getAttributeKeyCategoryHandle()) as $id) {
-					$type = AttributeType::getByID($id);
+					$type = Type::getByID($id);
 					$cat->associateAttributeKeyType($type);
 				}
 			}

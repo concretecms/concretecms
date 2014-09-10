@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\User;
 use UserInfo as ConcreteUserInfo;
 use stdclass;
@@ -25,6 +25,6 @@ class EditResponse extends \Concrete\Core\Application\EditResponse {
 		}
 		return $o;
 	}
-	
+
 
 }

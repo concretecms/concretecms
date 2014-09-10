@@ -1,5 +1,7 @@
 <?php 
 namespace Concrete\Core\User\Group;
+use Concrete\Core\User\User;
+
 abstract class GroupAutomationController {
 
 	/** 

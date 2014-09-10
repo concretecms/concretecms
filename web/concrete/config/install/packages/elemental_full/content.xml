@@ -123,6 +123,7 @@
                 <formlayout>
                     <set name="Post Details">
                         <control custom-template="" custom-label="Entry Name" type="core_page_property" handle="name"/>
+                        <control custom-template="" custom-label="" type="core_page_property" handle="url_slug"/>
                         <control custom-template="" custom-label="Short Description" type="core_page_property" handle="description"/>
                         <control custom-template="" type="core_page_property" handle="publish_target"/>
                         <control custom-template="" custom-label="Topics" type="collection_attribute" handle="blog_entry_topics"/>

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Tree;
 use \Concrete\Core\Foundation\Object;
 use Loader;
@@ -23,11 +23,11 @@ class TreeType extends Object {
 		if (is_object($pkg)) {
 			$pkgID = $pkg->getPackageID();
 		}
-		
+
 		$r = $db->query("insert into TreeTypes (treeTypeHandle, pkgID) values (?, ?)", array(
 			$treeTypeHandle, $pkgID
 		));
-		
+
 		$treeTypeID = $db->Insert_ID();
 		return TreeType::getByID($treeTypeID);
 	}
@@ -75,6 +75,6 @@ class TreeType extends Object {
 
 		$r->Close();
 		return $list;
-	}	
+	}
 
 }

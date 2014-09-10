@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Updater;
 use Loader;
 use Marketplace;

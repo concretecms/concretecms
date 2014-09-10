@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Search\Result;
 use \Concrete\Core\Search\Column\Set;
 use \Concrete\Core\Search\ItemList\ItemList;

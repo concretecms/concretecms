@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Key;
 use Loader;
 use User;
@@ -17,14 +17,14 @@ class AddBlockBlockTypeKey extends BlockTypeKey  {
 		$accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
 		$list = $this->getAccessListItems(PermissionKey::ACCESS_TYPE_ALL, $accessEntities);
 		$list = PermissionDuration::filterByActive($list);
-		
+
 		$db = Loader::db();
 		$btIDs = array();
 		if (count($list) > 0) {
 			$dsh = Loader::helper('concrete/dashboard');
 			if ($dsh->inDashboard()) {
 				$allBTIDs = $db->GetCol('select btID from BlockTypes');
-			} else { 
+			} else {
 				$allBTIDs = $db->GetCol('select btID from BlockTypes where btIsInternal = 0');
 			}
 			foreach($list as $l) {
@@ -34,7 +34,7 @@ class AddBlockBlockTypeKey extends BlockTypeKey  {
 				if ($l->getBlockTypesAllowedPermission() == 'C') {
 					if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_EXCLUDE) {
 						$btIDs = array_values(array_diff($btIDs, $l->getBlockTypesAllowedArray()));
-					} else { 
+					} else {
 						$btIDs = array_unique(array_merge($btIDs, $l->getBlockTypesAllowedArray()));
 					}
 				}
@@ -43,10 +43,10 @@ class AddBlockBlockTypeKey extends BlockTypeKey  {
 				}
 			}
 		}
-				
+
 		return $btIDs;
 	}
-	
+
 	public function validate($bt = false) {
 		$u = new User();
 		if ($u->isSuperUser()) {
@@ -59,7 +59,7 @@ class AddBlockBlockTypeKey extends BlockTypeKey  {
 		} else {
 			return count($types) > 0;
 		}
-	}	
+	}
 
-	
+
 }

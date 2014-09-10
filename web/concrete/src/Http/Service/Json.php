@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Http\Service;
 /**
  * @package Helpers
@@ -17,19 +17,19 @@ namespace Concrete\Core\Http\Service;
  * @license    http://www.concrete5.org/license/     MIT License
  */
 class Json {
-	
-	/** 
+
+	/**
 	 * Decodes a JSON string into a php variable
 	 * @param string $string
-	 * @param bool $assoc [default: false] When true, returned objects will be converted into associative arrays, when false they'll be converted into stdClass instances. 
+	 * @param bool $assoc [default: false] When true, returned objects will be converted into associative arrays, when false they'll be converted into stdClass instances.
 	 * @return mixed
 	 */
 	public function decode($string, $assoc = false) {
 		return json_decode($string, $assoc);
 	}
-	
-	
-	/** 
+
+
+	/**
 	 * Encodes a data structure into a JSON string
 	 * @param mixed $mixed
 	 * @return string
@@ -37,7 +37,7 @@ class Json {
 	public function encode($mixed) {
 		return json_encode($mixed);
 	}
-	
+
 
 
 }

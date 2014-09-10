@@ -31,9 +31,9 @@ class Users extends Controller {
 	}
 
 	public function search() {
-		$dh = Loader::helper('concrete/dashboard/sitemap');
-		if (!$dh->canRead()) {
-			return false;
+		$dh = Loader::helper('concrete/user');
+		if (!$dh->canAccessUserSearchInterface()) {
+            throw new \Exception(t('Access Denied.'));
 		}
 		
 		if ($_REQUEST['submitSearch']) {
@@ -63,7 +63,7 @@ class Users extends Controller {
 		}
 		
 		$u = new User();
-        /*
+
 		if (!$u->isSuperUser()) {
 			$gIDs = array(-1);
 			$gs = new GroupList();
@@ -74,10 +74,17 @@ class Users extends Controller {
 					$gIDs[] = $g->getGroupID();
 				}
 			}
-			$this->userList->addToQuery("left join UserGroups ugRequired on ugRequired.uID = u.uID ");
-			$this->userList->filter(false, '(ugRequired.gID in (' . implode(',', $gIDs) . ') or ugRequired.gID is null)');
+			$this->userList->getQueryObject()->leftJoin("u", "UserGroups", "ugRequired", "ugRequired.uID = u.uID");
+            $groups = 'ugRequired.gID in (' . implode(',', $gIDs) . ')';
+            $gg = Group::getByID(REGISTERED_GROUP_ID);
+            $ggp = new Permissions($gg);
+            if ($ggp->canSearchUsersInGroup()) {
+                $null = 'ugRequired.gID is null';
+            }
+            $expr = $this->userList->getQueryObject()->expr()->orX($groups, $null);
+            $this->userList->getQueryObject()->andwhere($expr);
 		}
-		
+
 		$filterGIDs = array();
 		if (isset($req['gID']) && is_array($req['gID'])) {
 			foreach($req['gID'] as $gID) {
@@ -93,7 +100,6 @@ class Users extends Controller {
 		foreach($filterGIDs as $gID) {
 			$this->userList->filterByGroupID($gID);
 		}
-		*/
 
 		if (is_array($req['field'])) {
 			foreach($req['field'] as $i => $item) {

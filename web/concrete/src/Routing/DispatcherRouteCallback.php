@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Routing;
 use \Concrete\Core\Page\Event as PageEvent;
 use Request;

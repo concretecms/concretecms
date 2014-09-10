@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Assignment;
 use Concrete\Core\Tree\Node\Node;
 use PermissionAccess;
@@ -13,7 +13,7 @@ class TopicTreeNodeAssignment extends TreeNodeAssignment {
 
 	public function setPermissionObject(TopicTreeNode $node) {
 		$this->permissionObject = $node;
-		
+
 		if ($node->overrideParentTreeNodePermissions()) {
 			$this->permissionObjectToCheck = $node;
 		} else {
@@ -26,7 +26,7 @@ class TopicTreeNodeAssignment extends TreeNodeAssignment {
 		$db = Loader::db();
 		if ($this->permissionObjectToCheck instanceof TopicTreeNode) {
 			$pa = parent::getPermissionAccessObject();
- 		} else if ($this->permissionObjectToCheck instanceof TopicCategoryTreeNode && isset($this->inheritedPermissions[$this->pk->getPermissionKeyHandle()])) { 
+ 		} else if ($this->permissionObjectToCheck instanceof TopicCategoryTreeNode && isset($this->inheritedPermissions[$this->pk->getPermissionKeyHandle()])) {
 			$inheritedPKID = $db->GetOne('select pkID from PermissionKeys where pkHandle = ?', array($this->inheritedPermissions[$this->pk->getPermissionKeyHandle()]));
 	 		$r = $db->GetOne('select paID from TreeNodePermissionAssignments where treeNodeID = ? and pkID = ?', array(
 	 			$this->permissionObjectToCheck->getTreeNodePermissionsNodeID(), $inheritedPKID
@@ -35,7 +35,7 @@ class TopicTreeNodeAssignment extends TreeNodeAssignment {
 		} else {
 			return false;
 		}
-		
+
 		return $pa;
 
 	}

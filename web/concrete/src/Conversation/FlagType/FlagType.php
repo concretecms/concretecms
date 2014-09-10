@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Conversation\FlagType;
 use Loader;
 use \Concrete\Core\Foundation\Object;

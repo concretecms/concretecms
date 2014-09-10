@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Attribute\Key;
 use \Concrete\Core\Attribute\Type as AttributeType;
 use Loader;
@@ -33,28 +33,28 @@ class UserKey extends Key {
 		}
 		return $avl;
 	}
-	
+
 	public function getAttributeKeyDisplayOrder() {return $this->displayOrder;}
 
-	
+
 	public function load($akID) {
 		parent::load($akID);
 		$db = Loader::db();
 		$row = $db->GetRow("select uakProfileDisplay, uakMemberListDisplay, displayOrder, uakProfileEdit, uakProfileEditRequired, uakRegisterEdit, uakRegisterEditRequired, uakIsActive from UserAttributeKeys where akID = ?", array($akID));
 		$this->setPropertiesFromArray($row);
 	}
-	
+
 	public function getAttributeValue($avID, $method = 'getValue') {
 		$av = UserAttributeValue::getByID($avID);
 		$av->setAttributeKey($this);
 		return $av->{$method}();
 	}
-	
+
 	public static function getByID($akID) {
 		$ak = new static();
 		$ak->load($akID);
 		if ($ak->getAttributeKeyID() > 0) {
-			return $ak;	
+			return $ak;
 		}
 	}
 
@@ -67,10 +67,10 @@ class UserKey extends Key {
 		}
 		$ak = -1;
 		$db = Loader::db();
-		
-		$q = "SELECT ak.akID 
+
+		$q = "SELECT ak.akID
 			FROM AttributeKeys ak
-			INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID 
+			INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID
 			WHERE ak.akHandle = ?
 			AND akc.akCategoryHandle = 'user'";
 		$akID = $db->GetOne($q, array($akHandle));
@@ -103,8 +103,8 @@ class UserKey extends Key {
 			$pkg = Package::getByHandle($ak['package']);
 		}
 		$akn = static::add($type, array(
-			'akHandle' => $ak['handle'], 
-			'akName' => $ak['name'], 
+			'akHandle' => $ak['handle'],
+			'akName' => $ak['name'],
 			'akIsSearchableIndexed' => $ak['indexed'],
 			'akIsSearchable' => $ak['searchable'],
 			'uakProfileDisplay' => $ak['profile-displayed'],
@@ -118,7 +118,7 @@ class UserKey extends Key {
 		$akn->getController()->importKey($ak);
 
 	}
-	
+
 	public function isAttributeKeyDisplayedOnProfile() {
 		return $this->uakProfileDisplay;
 	}
@@ -134,21 +134,21 @@ class UserKey extends Key {
 	public function isAttributeKeyRequiredOnRegister() {
 		return $this->uakRegisterEditRequired;
 	}
-	
+
 	public function isAttributeKeyDisplayedOnMemberList() {
 		return $this->uakMemberListDisplay;
 	}
-	
+
 	public function isAttributeKeyActive() {
 		return $this->uakIsActive;
 	}
-		
+
 	public function activate() {
 		$db = Loader::db();
 		$this->refreshCache();
 		$db->Execute('update UserAttributeKeys set uakIsActive = 1 where akID = ?', array($this->akID));
 	}
-	
+
 	public function deactivate() {
 		$db = Loader::db();
 		$this->refreshCache();
@@ -156,7 +156,7 @@ class UserKey extends Key {
 	}
 
 	public static function getList() {
-		$list = parent::getList('user');	
+		$list = parent::getList('user');
 		usort($list, function($a, $b) {
 			if ($a->getAttributeKeyDisplayOrder() == $b->getAttributeKeyDisplayOrder()) {
 				return 0;
@@ -176,23 +176,23 @@ class UserKey extends Key {
 		$db = Loader::db();
 		$v = array($uo->getUserID(), $this->getAttributeKeyID(), $av->getAttributeValueID());
 		$db->Replace('UserAttributeValues', array(
-			'uID' => $uo->getUserID(), 
-			'akID' => $this->getAttributeKeyID(), 
+			'uID' => $uo->getUserID(),
+			'akID' => $this->getAttributeKeyID(),
 			'avID' => $av->getAttributeValueID()
 		), array('uID', 'akID'));
-		
+
 		$uo->reindex();
 		unset($uo);
 	}
-	
+
 	public static function add($type, $args, $pkg = false) {
 
 		CacheLocal::delete('user_attribute_key_by_handle', $args['akHandle']);
 
 		$ak = parent::add('user', $type, $args, $pkg);
-		
+
 		extract($args);
-		
+
 		if ($uakProfileDisplay != 1) {
 			$uakProfileDisplay = 0;
 		}
@@ -211,13 +211,13 @@ class UserKey extends Key {
 		if ($uakRegisterEditRequired != 1) {
 			$uakRegisterEditRequired = 0;
 		}
-		
+
 		if (isset($uakIsActive) && (!$uakIsActive)) {
 			$uakIsActive = 0;
 		} else {
 			$uakIsActive = 1;
 		}
-		
+
 		$db = Loader::db();
 		$displayOrder = $db->GetOne('select max(displayOrder) from UserAttributeKeys');
 		if (!$displayOrder) {
@@ -226,12 +226,12 @@ class UserKey extends Key {
 		$displayOrder++;
 		$v = array($ak->getAttributeKeyID(), $uakProfileDisplay, $uakMemberListDisplay, $uakProfileEdit, $uakProfileEditRequired, $uakRegisterEdit, $uakRegisterEditRequired, $displayOrder, $uakIsActive);
 		$db->Execute('insert into UserAttributeKeys (akID, uakProfileDisplay, uakMemberListDisplay, uakProfileEdit, uakProfileEditRequired, uakRegisterEdit, uakRegisterEditRequired, displayOrder, uakIsActive) values (?, ?, ?, ?, ?, ?, ?, ?, ?)', $v);
-		
+
 		$nak = new static();
 		$nak->load($ak->getAttributeKeyID());
 		return $nak;
 	}
-	
+
 	public function update($args) {
 		$ak = parent::update($args);
 
@@ -259,9 +259,9 @@ class UserKey extends Key {
 		$v = array($uakProfileDisplay, $uakMemberListDisplay, $uakProfileEdit, $uakProfileEditRequired, $uakRegisterEdit, $uakRegisterEditRequired, $ak->getAttributeKeyID());
 		$db->Execute('update UserAttributeKeys set uakProfileDisplay = ?, uakMemberListDisplay = ?, uakProfileEdit= ?, uakProfileEditRequired = ?, uakRegisterEdit = ?, uakRegisterEditRequired = ? where akID = ?', $v);
 	}
-	
-	
-	
+
+
+
 	public function delete() {
 		parent::delete();
 		$db = Loader::db();
@@ -274,28 +274,28 @@ class UserKey extends Key {
 	}
 
 	public static function getColumnHeaderList() {
-		return parent::getList('user', array('akIsColumnHeader' => 1));	
+		return parent::getList('user', array('akIsColumnHeader' => 1));
 	}
 	public static function getEditableList() {
-		return parent::getList('user', array('akIsEditable' => 1));	
+		return parent::getList('user', array('akIsEditable' => 1));
 	}
 	public static function getSearchableList() {
-		return parent::getList('user', array('akIsSearchable' => 1));	
+		return parent::getList('user', array('akIsSearchable' => 1));
 	}
 	public static function getSearchableIndexedList() {
-		return parent::getList('user', array('akIsSearchableIndexed' => 1));	
+		return parent::getList('user', array('akIsSearchableIndexed' => 1));
 	}
 	public static function getImporterList() {
-		return parent::getList('user', array('akIsAutoCreated' => 1));	
+		return parent::getList('user', array('akIsAutoCreated' => 1));
 	}
-	
+
 	public static function getPublicProfileList() {
 		$tattribs = self::getList();
 		$attribs = array();
 		foreach($tattribs as $uak) {
 			if ((!$uak->isAttributeKeyDisplayedOnProfile()) || (!$uak->isAttributeKeyActive())) {
 				continue;
-			}			
+			}
 			$attribs[] = $uak;
 		}
 		unset($tattribs);
@@ -308,7 +308,7 @@ class UserKey extends Key {
 		foreach($tattribs as $uak) {
 			if ((!$uak->isAttributeKeyEditableOnRegister()) || (!$uak->isAttributeKeyActive())) {
 				continue;
-			}			
+			}
 			$attribs[] = $uak;
 		}
 		unset($tattribs);
@@ -321,28 +321,28 @@ class UserKey extends Key {
 		foreach($tattribs as $uak) {
 			if ((!$uak->isAttributeKeyDisplayedOnMemberList()) || (!$uak->isAttributeKeyActive())) {
 				continue;
-			}			
+			}
 			$attribs[] = $uak;
 		}
 		unset($tattribs);
 		return $attribs;
 	}
-	
+
 	public static function getEditableInProfileList() {
 		$tattribs = self::getList();
 		$attribs = array();
 		foreach($tattribs as $uak) {
 			if ((!$uak->isAttributeKeyEditableOnProfile()) || (!$uak->isAttributeKeyActive())) {
 				continue;
-			}			
+			}
 			$attribs[] = $uak;
 		}
 		unset($tattribs);
 		return $attribs;
 	}
-	
+
 	public static function getUserAddedList() {
-		return parent::getList('user', array('akIsAutoCreated' => 0));	
+		return parent::getList('user', array('akIsAutoCreated' => 0));
 	}
 
 
@@ -350,7 +350,7 @@ class UserKey extends Key {
 		$db = Loader::db();
 		for ($i = 0; $i < count($uats); $i++) {
 			$uak = static::getByID($uats[$i]);
-			$uak->refreshCache();			
+			$uak->refreshCache();
 			$v = array($uats[$i]);
 			$db->query("update UserAttributeKeys set displayOrder = {$i} where akID = ?", $v);
 		}

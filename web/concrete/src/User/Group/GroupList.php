@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\User\Group;
 
 use Concrete\Core\Search\ItemList\Database\ItemList as DatabaseItemList;
@@ -33,6 +33,12 @@ class GroupList extends DatabaseItemList
         $expr = $this->query->expr();
         $this->query->andWhere(call_user_func_array(array($expr, 'orX'), $expressions));
         $this->query->setParameter('keywords', '%' . $keywords . '%');
+    }
+
+    public function filterByExpirable()
+    {
+        $this->query->andWhere('gUserExpirationIsEnabled', ':gUserExpirationIsEnabled');
+        $this->query->setParameter('gUserExpirationIsEnabled', 1);
     }
 
     /**

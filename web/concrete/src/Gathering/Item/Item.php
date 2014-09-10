@@ -236,7 +236,7 @@ abstract class Item extends Object
         $gaiSlotHeight = 1
     ) {
         $db = Loader::db();
-        $gaiDateTimeCreated = Loader::helper('date')->getSystemDateTime();
+        $gaiDateTimeCreated = Loader::helper('date')->getOverridableNow();
         $r = $db->Execute(
             'insert into GatheringItems (gaID, gasID, gaiDateTimeCreated, gaiPublicDateTime, gaiTitle, gaiKey, gaiSlotWidth, gaiSlotHeight) values (?, ?, ?, ?, ?, ?, ?, ?)',
             array(

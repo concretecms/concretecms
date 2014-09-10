@@ -69,4 +69,4 @@ class Pagination extends Pagerfanta
         }
         return $return;
     }
-} 
+}

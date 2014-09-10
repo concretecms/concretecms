@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Logging;
 use \Symfony\Component\EventDispatcher\Event as AbstractEvent;
 

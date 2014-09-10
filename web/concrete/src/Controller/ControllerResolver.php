@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Concrete\Core\Controller;
 use Concrete\Core\Foundation\ClassLoader;

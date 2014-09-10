@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Feature\Assignment;
 use \Concrete\Core\Foundation\Object;
 use Loader;
@@ -12,7 +12,7 @@ abstract class Assignment extends Object {
 	abstract public static function getList($mixed);
 	abstract public static function getFeature($feHandle, $mixed);
 	abstract public static function add(Feature $fe, FeatureDetail $fd, $mixed);
-	
+
 	public static function addAssignment(Feature $fe, FeatureCategory $fc, FeatureDetail $fd, $mixed) {
 		$db = Loader::db();
 		$db->Execute('insert into FeatureAssignments (fcID, feID, fdObject) values (?, ?, ?)', array(
@@ -34,7 +34,7 @@ abstract class Assignment extends Object {
 				break;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -45,7 +45,7 @@ abstract class Assignment extends Object {
 	public function getFeatureDetailHandle() {
 		return $this->feHandle;
 	}
-	
+
 	public static function getByID($faID, $mixed) {
 		$db = Loader::db();
 		$r = $db->GetRow('select faID, fa.fcID, fdObject, fa.feID, fe.feHandle, fc.fcHandle from FeatureAssignments fa inner join FeatureCategories fc on fa.fcID = fc.fcID inner join Features fe on fa.feID = fe.feID where faID = ?', array($faID));
@@ -64,5 +64,5 @@ abstract class Assignment extends Object {
 		$db->Execute('delete from FeatureAssignments where faID = ?', array($this->getFeatureAssignmentID()));
 	}
 
-		
+
 }

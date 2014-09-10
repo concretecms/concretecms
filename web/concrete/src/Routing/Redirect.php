@@ -28,7 +28,11 @@ class Redirect {
 	 * Redirect to a page
 	 */
 	public static function page(Page $c, $code = 302, $headers = array()) {
-		$url = BASE_URL . URL::to($c->getCollectionPath());
+        if ($c->getCollectionPath()) {
+    		$url = BASE_URL . URL::to($c->getCollectionPath());
+        } else {
+            $url = BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID();
+        }
 		$r = static::createRedirectResponse($url, $code, $headers);
 		return $r;
 	}

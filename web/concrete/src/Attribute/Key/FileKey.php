@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Attribute\Key;
 use Loader;
 use Package;
@@ -21,9 +21,9 @@ class FileKey extends Key {
 		),
 		'primary' => array('fID')
 	);
-	
-	/** 
-	 * Returns an attribute value list of attributes and values (duh) which a collection version can store 
+
+	/**
+	 * Returns an attribute value list of attributes and values (duh) which a collection version can store
 	 * against its object.
 	 * @return AttributeValueList
 	 */
@@ -37,10 +37,10 @@ class FileKey extends Key {
 				$value = $ak->getAttributeValue($val['avID'], $method);
 				$avl->addAttributeValue($ak, $value);
 			}
-		}		
+		}
 		return $avl;
 	}
-	
+
 	public function getAttributeValue($avID, $method = 'getValue') {
 		$av = FileAttributeValue::getByID($avID);
 		if (is_object($av)) {
@@ -56,7 +56,7 @@ class FileKey extends Key {
 		} else if ($ak == -1) {
 			return false;
 		}
-		
+
 		$ak = -1;
 		$db = Loader::db();
 		$q = "SELECT ak.akID FROM AttributeKeys ak INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID  WHERE ak.akHandle = ? AND akc.akCategoryHandle = 'file'";
@@ -90,24 +90,24 @@ class FileKey extends Key {
 		$ak = new static();
 		$ak->load($akID);
 		if ($ak->getAttributeKeyID() > 0) {
-			return $ak;	
+			return $ak;
 		}
 	}
-	
+
 
 	public static function getList() {
-		return parent::getList('file');	
+		return parent::getList('file');
 	}
 
 	public static function getSearchableList() {
-		return parent::getList('file', array('akIsSearchable' => 1));	
+		return parent::getList('file', array('akIsSearchable' => 1));
 	}
 	public static function getSearchableIndexedList() {
-		return parent::getList('file', array('akIsSearchableIndexed' => 1));	
+		return parent::getList('file', array('akIsSearchableIndexed' => 1));
 	}
 
 	public static function getImporterList($fv = false) {
-		$list = parent::getList('file', array('akIsAutoCreated' => 1));	
+		$list = parent::getList('file', array('akIsAutoCreated' => 1));
 		if ($fv == false) {
 			return $list;
 		}
@@ -123,16 +123,16 @@ class FileKey extends Key {
 	}
 
 	public static function getUserAddedList() {
-		return parent::getList('file', array('akIsAutoCreated' => 0));	
+		return parent::getList('file', array('akIsAutoCreated' => 0));
 	}
-	
-	/** 
-	 * @access private 
+
+	/**
+	 * @access private
 	 */
 	public static function get($akID) {
 		return static::getByID($akID);
 	}
-	
+
 	protected function saveAttribute($f, $value = false) {
 		// We check a cID/cvID/akID combo, and if that particular combination has an attribute value ID that
 		// is NOT in use anywhere else on the same cID, cvID, akID combo, we use it (so we reuse IDs)
@@ -141,9 +141,9 @@ class FileKey extends Key {
 		parent::saveAttribute($av, $value);
 		$db = Loader::db();
 		$db->Replace('FileAttributeValues', array(
-			'fID' => $f->getFileID(), 
-			'fvID' => $f->getFileVersionID(), 
-			'akID' => $this->getAttributeKeyID(), 
+			'fID' => $f->getFileID(),
+			'fvID' => $f->getFileVersionID(),
+			'akID' => $this->getAttributeKeyID(),
 			'avID' => $av->getAttributeValueID()
 		), array('fID', 'fvID', 'akID'));
 		$f->logVersionUpdate(FileVersion::UT_EXTENDED_ATTRIBUTE, $this->getAttributeKeyID());
@@ -159,12 +159,12 @@ class FileKey extends Key {
 		$ak = parent::add('file', $at, $args, $pkg);
 		return $ak;
 	}
-	
+
 	public static function getColumnHeaderList() {
-		return parent::getList('file', array('akIsColumnHeader' => 1));	
+		return parent::getList('file', array('akIsColumnHeader' => 1));
 	}
 
-	
+
 	public function delete() {
 		parent::delete();
 		$db = Loader::db();

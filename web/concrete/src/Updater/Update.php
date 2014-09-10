@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Updater;
 use Loader;
 use Marketplace;
@@ -50,7 +50,7 @@ class Update {
 		return $versionNum;
 	}
 
-	public function getApplicationUpdateInformation()
+	public static function getApplicationUpdateInformation()
     {
         $r = Cache::get('APP_UPDATE_INFO', false);
         if (!is_object($r)) {
@@ -98,7 +98,6 @@ class Update {
 				$obj->url = (string) $xml->url;
 				$obj->date = (string) $xml->date;
 			}
-
 			Cache::set('APP_UPDATE_INFO', false, $obj);
 
 		} else {
@@ -127,6 +126,9 @@ class Update {
 				}
 			}
 		}
+        usort($updates, function($a, $b) {
+            return version_compare($a->getUpdateVersion(), $b->getUpdateVersion());
+        });
 		return $updates;
 	}
 

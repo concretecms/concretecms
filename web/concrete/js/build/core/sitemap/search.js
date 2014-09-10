@@ -6,10 +6,9 @@
     'use strict';
 
     function ConcretePageAjaxSearch($element, options) {
-        'use strict';
         var my = this;
         options = $.extend({
-            'mode': 'menu',
+            'mode': 'menu'
         }, options);
 
         my.options = options;
@@ -60,13 +59,15 @@
     }
 
     ConcretePageAjaxSearch.prototype.handleSelectedBulkAction = function (value, type, $option, $items) {
-        if (value == 'movecopy') {
+        if (value == 'movecopy' || value == 'Move/Copy') {
             var url, my = this, itemIDs = [];
             $.each($items, function (i, checkbox) {
                 itemIDs.push($(checkbox).val());
             });
 
-            ConcreteEvent.subscribe('SitemapSelectPage', function (e, data) {
+            ConcreteEvent.unsubscribe('SitemapSelectPage.search');
+            ConcreteEvent.subscribe('SitemapSelectPage.search', function (e, data) {
+                Concrete.event.unsubscribe(e);
                 url = CCM_TOOLS_PATH + '/dashboard/sitemap_drag_request?origCID=' + itemIDs.join(',') + '&destCID=' + data.cID;
                 $.fn.dialog.open({
                     width: 350,
@@ -75,9 +76,8 @@
                     title: ccmi18n_sitemap.moveCopyPage
                 });
             });
-        } else {
-            ConcreteAjaxSearch.prototype.handleSelectedBulkAction.call(this, value, type, $option, $items);
         }
+        ConcreteAjaxSearch.prototype.handleSelectedBulkAction.call(this, value, type, $option, $items);
     }
 
     ConcreteAjaxSearch.prototype.createMenu = function ($selector) {
@@ -100,10 +100,10 @@
                 '<% } else if (item.cAlias == \'LINK\' || item.cAlias == \'POINTER\') { %>' +
                 '<li><a onclick="window.location.href=\'' + CCM_DISPATCHER_FILENAME + '?cID=<%=item.cID%>\'" href="javascript:void(0)">' + ccmi18n_sitemap.visitExternalLink + '</a></li>' +
                 '<% if (item.cAlias == \'LINK\' && item.canEditProperties) { %>' +
-                '<li><a dialog-width="350" dialog-height="170" dialog-title="' + ccmi18n_sitemap.editExternalLink + '" dialog-modal="false" dialog-append-buttons="true" href="' + CCM_TOOLS_PATH + '/edit_collection_popup?rel=SITEMAP&cID=<%=item.cID%>&ctask=edit_external">' + ccmi18n_sitemap.editExternalLink + '</a></li>' +
+                '<li><a dialog-width="350" dialog-height="170" dialog-title="' + ccmi18n_sitemap.editExternalLink + '" dialog-modal="false" dialog-append-buttons="true" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add_external?cID=<%=item.cID%>">' + ccmi18n_sitemap.editExternalLink + '</a></li>' +
                 '<% } %>' +
                 '<% if (item.canDelete) { %>' +
-                '<li><a dialog-width="360" dialog-height="150" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.deleteExternalLink + '" href="' + CCM_TOOLS_PATH + '/edit_collection_popup?rel=SITEMAP&cID=<%=item.cID%>&ctask=delete_external">' + ccmi18n_sitemap.deleteExternalLink + '</a></li>' +
+                '<li><a dialog-width="360" dialog-height="150" dialog-modal="false" dialog-title="' + ccmi18n_sitemap.deleteExternalLink + '" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/delete_external?cID=<%=item.cID%>' + ccmi18n_sitemap.deleteExternalLink + '</a></li>' +
                 '<% } %>' +
                 '<% } else { %>' +
                 '<li><a href="#" data-action="visit">' + ccmi18n_sitemap.visitPage + '</a></li>' +
@@ -142,10 +142,15 @@
                 '<li><a href="' + CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/search/?selectedSearchField[]=parent&cParentAll=1&cParentIDSearchField=<%=item.cID%>">' + ccmi18n_sitemap.searchPages + '</a></li>' +
                 '<li><a href="' + CCM_DISPATCHER_FILENAME + '/dashboard/sitemap/explore/-/<%=item.cID%>">' + ccmi18n_sitemap.explorePages + '</a></li>' +
                 '<% } %>' +
-                //'<% if (item.canAddExternalLinks) { %>' +
-                //	'<li class="divider"></li>' +
-                //	'<li><a class="dialog-launch" dialog-width="350" dialog-modal="false" dialog-height="260" dialog-title="' + ccmi18n_sitemap.addExternalLink + '" dialog-modal="false" href="' + CCM_TOOLS_PATH + '/edit_collection_popup?rel=SITEMAP&cID=<%=item.cID%>&ctask=add_external">' + ccmi18n_sitemap.addExternalLink + '</a></li>' +
-                //'<% } %>' +
+                '<% if (item.canAddExternalLinks || item.canAddSubpages) { %>' +
+                	'<li class="divider"></li>' +
+                    '<% if (item.canAddSubpages > 0) { %>' +
+                        '<li><a class="dialog-launch" dialog-width="350" dialog-modal="false" dialog-height="260" dialog-title="' + ccmi18n_sitemap.addPage + '" dialog-modal="false" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add?cID=<%=item.cID%>">' + ccmi18n_sitemap.addPage + '</a></li>' +
+                    '<% } %>' +
+                    '<% if (item.canAddExternalLinks > 0) { %>' +
+                    	'<li><a class="dialog-launch" dialog-width="350" dialog-modal="false" dialog-height="260" dialog-title="' + ccmi18n_sitemap.addExternalLink + '" dialog-modal="false" href="' + CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add_external?cID=<%=item.cID%>">' + ccmi18n_sitemap.addExternalLink + '</a></li>' +
+                    '<% } %>' +
+                '<% } %>' +
                 '<% } %>' +
                 '</ul></div></div>';
         }

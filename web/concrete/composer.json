@@ -16,6 +16,7 @@
         "symfony/routing": "2.5.*",
         "symfony/http-kernel": "2.5.*",
         "doctrine/orm": "2.4",
+        "doctrine/migrations": "1.0.*@dev",
         "league/flysystem": "0.4.*",
         "symfony/event-dispatcher": "2.5.*",
         "symfony/serializer": "2.5.*",
@@ -48,6 +49,6 @@
         "zendframework/zend-i18n": "2.2.*",
         "nesbot/carbon": "1.11.*",
         "egulias/email-validator": "1.2.0",
-        "punic/punic": "1.0.*"
+        "punic/punic": "~1.0.2"
     }
 }

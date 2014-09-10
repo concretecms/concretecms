@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Workflow\Request;
 use Workflow;
 use Loader;
@@ -12,23 +12,23 @@ use Events;
 use \Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 class MovePageRequest extends PageRequest {
-	
+
 	protected $targetCID;
 	protected $wrStatusNum = 50;
-	
+
 	public function __construct() {
 		$pk = PermissionKey::getByHandle('move_or_copy_page');
 		parent::__construct($pk);
 	}
-	
+
 	public function setRequestedTargetPage($c) {
 		$this->targetCID = $c->getCollectionID();
 	}
-	
+
 	public function getRequestedTargetPageID() {
 		return $this->targetCID;
-	}	
-	
+	}
+
 	public function setSaveOldPagePath($r) {
 		$this->saveOldPagePath = $r;
 	}
@@ -55,9 +55,9 @@ class MovePageRequest extends PageRequest {
 	}
 
 	public function getWorkflowRequestApproveButtonInnerButtonRightHTML() {
-		return '<i class="icon-white icon-share-alt"></i>';
-	}	
-	
+		return '<i class="fa fa-share-alt"></i>';
+	}
+
 	public function getWorkflowRequestApproveButtonText() {
 		return t('Approve Move');
 	}
@@ -65,7 +65,7 @@ class MovePageRequest extends PageRequest {
 	public function approve(WorkflowProgress $wp) {
 		$c = Page::getByID($this->getRequestedPageID());
 		$dc = Page::getByID($this->targetCID);
-		if (is_object($c) && is_object($dc) && (!$c->isError()) && (!$dc->isError())) { 
+		if (is_object($c) && is_object($dc) && (!$c->isError()) && (!$dc->isError())) {
 			if ($c->canMoveCopyTo($dc)) {
 				if ($this->saveOldPagePath) {
 					$nc2 = $c->move($dc, true);

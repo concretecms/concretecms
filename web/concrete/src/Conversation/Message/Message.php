@@ -334,7 +334,7 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
     public static function add($cnv, $cnvMessageSubject, $cnvMessageBody, $parentMessage = false, $user = false)
     {
         $db = Loader::db();
-        $date = Loader::helper('date')->getSystemDateTime();
+        $date = Loader::helper('date')->getOverridableNow();
         $uID = 0;
 
         if (is_object($user)) {

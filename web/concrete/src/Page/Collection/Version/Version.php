@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Page\Collection\Version;
 use Loader;
 use \Concrete\Core\Foundation\Object;
@@ -172,7 +172,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 			$cvIsNew = 0;
 		}
 		$dh = Loader::helper('date');
-		$v = array($this->cID, $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getSystemDateTime(), $versionComments, $u->getUserID(), $cvIsNew, $this->pThemeID, $this->pTemplateID);
+		$v = array($this->cID, $newVID, $c->getCollectionName(), $c->getCollectionHandle(), $c->getCollectionDescription(), $c->getCollectionDatePublic(), $dh->getOverridableNow(), $versionComments, $u->getUserID(), $cvIsNew, $this->pThemeID, $this->pTemplateID);
 		$q = "insert into CollectionVersions (cID, cvID, cvName, cvHandle, cvDescription, cvDatePublic, cvDateCreated, cvComments, cvAuthorUID, cvIsNew, pThemeID, pTemplateID)
 			values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -232,7 +232,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 
 		// update a collection updated record
 		$dh = Loader::helper('date');
-		$db->query('update Collections set cDateModified = ? where cID = ?', array($dh->getLocalDateTime(), $cID));
+		$db->query('update Collections set cDateModified = ? where cID = ?', array($dh->getOverridableNow(), $cID));
 
 		// first we remove approval for the other version of this collection
 		$v = array($cID);
@@ -311,7 +311,7 @@ class Version extends Object implements \Concrete\Core\Permission\ObjectInterfac
 
 		// first we update a collection updated record
 		$dh = Loader::helper('date');
-		$db->query('update Collections set cDateModified = ? where cID = ?', array($dh->getLocalDateTime(), $cID));
+		$db->query('update Collections set cDateModified = ? where cID = ?', array($dh->getOverridableNow(), $cID));
 
 		// first we remove approval for all versions of this collection
 		$v = array($cID);

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Activity;
 
 use Concrete\Core\Http\Service\Json;

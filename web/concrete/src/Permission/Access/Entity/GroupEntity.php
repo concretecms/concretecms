@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Access\Entity;
 use Loader;
 use Group;

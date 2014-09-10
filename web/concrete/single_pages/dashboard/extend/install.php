@@ -76,14 +76,13 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 		<? } ?>
 		<br/>
 
-		<div class="clearfix">
-		<h3><?=t('Move package to trash directory on server?')?></h3>
-		<ul class="inputs-list">
-		<li><label><?=Loader::helper('form')->checkbox('pkgMoveToTrash', 1)?>
-		<span><?=t('Yes, remove the package\'s directory from the installation directory.')?></span></label>
-		</li>
-		</ul>
-		</div>
+		<div class="form-group">
+            <h3><?=t('Move package to trash directory on server?')?></h3>
+                <div class="checkbox">
+                <label><?=Loader::helper('form')->checkbox('pkgMoveToTrash', 1)?>
+                <span><?=t('Yes, remove the package\'s directory from the installation directory.')?></span></label>
+                </div>
+        </div>
 		
 		
 		<? @Loader::packageElement('dashboard/uninstall', $pkg->getPackageHandle()); ?>
@@ -91,7 +90,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 		
 </div>
 <div class="ccm-pane-footer">
-<? print $ch->submit(t('Uninstall'), 'ccm-uninstall-form', 'right', 'error'); ?>
+<? print $ch->submit(t('Uninstall'), 'ccm-uninstall-form', 'right', 'btn-danger'); ?>
 <? print $ch->button(t('Cancel'), $view->url('/dashboard/extend/install', 'inspect_package', $pkg->getPackageID()), ''); ?>
 </div>
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper()?>
@@ -192,15 +191,13 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			
 			if (count($blocks) > 0) { ?>
 				<h5><?=$pkg->getPackageItemsCategoryDisplayName('block_types')?></h5>
-				<ul>
+				<div class="form-group">
 				<? foreach($blocks as $bt) {
 					$btIcon = $ci->getBlockTypeIconURL($bt);?>
-					<li>
 						<a href="<?=$view->url('/dashboard/blocks/types', 'inspect', $bt->getBlockTypeID())?>"><?=t($bt->getBlockTypeName())?></a>
 						<div class="ccm-block-type-description"  id="ccm-bt-help<?=$bt->getBlockTypeID()?>"><?=t($bt->getBlockTypeDescription())?></div>
-					</li>
 				<? } ?>
-				</ul>
+				</div>
 
 			<? } ?>
 
@@ -208,9 +205,9 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			<div class="ccm-pane-footer">
 			<? $tp = new TaskPermission();
 			if ($tp->canUninstallPackages()) {  ?>
-				<? print $ch->button(t('Uninstall Package'), $view->url('/dashboard/extend/install', 'uninstall', $pkg->getPackageID()), 'right'); ?>
+				<? print $ch->button(t('Uninstall Package'), $view->url('/dashboard/extend/install', 'uninstall', $pkg->getPackageID()), 'right', 'btn-danger'); ?>
 			<? } ?>
-				<a href="<?=$view->url('/dashboard/extend/install')?>" class="btn"><?=t('Back to Add Functionality')?></a>			
+				<a href="<?=$view->url('/dashboard/extend/install')?>" class=" btn btn-default"><?=t('Back to Add Functionality')?></a>
 			</div>
 			<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
 	<?
