@@ -101,6 +101,13 @@ return array(
     'cache' => array(
 
         /**
+         * Lifetime
+         *
+         * @var int Seconds
+         */
+        'lifetime' => 21600,
+
+        /**
          * Cache overrides
          *
          * @var bool
@@ -131,7 +138,7 @@ return array(
         /**
          * Cache full page
          *
-         * @var bool
+         * @var bool|string (block|all)
          */
         'pages' => false,
 
@@ -215,11 +222,16 @@ return array(
         'token' => null,
 
         /**
-         * Marketplace Site Token
+         * Marketplace Site url Token
          *
          * @var null|string
          */
         'site_token' => null,
+
+        /**
+         * Enable intelligent search integration
+         */
+        'intelligent_search' => false
     ),
 
     /**

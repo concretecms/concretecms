@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Routing;
+use Config;
 use Loader;
 use Page;
 use Concrete\Core\Routing\Router;
@@ -22,7 +23,7 @@ class URL {
 		}
 
 		$dispatcher = '';
-		if ((!URL_REWRITING_ALL) || !defined('URL_REWRITING_ALL')) {
+		if (!Config::get('concrete.seo.url_rewriting')) {
 			$dispatcher = '/' . DISPATCHER_FILENAME;
 		}
 

@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Controller\SinglePage\Account\Profile;
 use \Concrete\Core\Page\Controller\AccountPageController;
+use Config;
 use Loader;
 use User;
 use UserInfo;
@@ -14,7 +15,7 @@ class PublicProfile extends AccountPageController {
 	}
 
 	public function view($userID = 0) {
-		if(!ENABLE_USER_PROFILES) {
+		if(!Config::get('concrete.user.profiles_enabled')) {
 			header("HTTP/1.0 404 Not Found");
 			$this->render("/page_not_found");
 		}

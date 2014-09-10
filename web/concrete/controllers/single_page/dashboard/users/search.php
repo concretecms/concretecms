@@ -223,7 +223,7 @@ class Search extends DashboardPageController
         $this->setupUser($uID);
         if ($this->canEditUserName) {
             $username = $this->post('value');
-            if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) {
+            if (!Config::get('concrete.user.registration.email_registration')) {
                 if (!Loader::helper('validation/token')->validate()) {
                     $this->error->add(Loader::helper('validation/token')->getErrorMessage());
                 }

@@ -109,7 +109,7 @@ var CCM_REL = "<?php echo DIR_REL?>";
 
 $v = View::getInstance();
 
-if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES && $u->isRegistered()) {
+if (Config::get('concrete.user.profiles_enabled') && $u->isRegistered()) {
 	$v->requireAsset('core/account');
 	$v->addFooterItem('<script type="text/javascript">$(function() { ccm_enableUserProfileMenu(); });</script>');
 }

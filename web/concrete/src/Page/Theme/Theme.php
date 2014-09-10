@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Theme;
 
 use \Concrete\Core\Http\ResponseAssetGroup;
+use Config;
 use Loader;
 use Page;
 use Environment;
@@ -317,7 +318,7 @@ class Theme extends Object
             $stylesheet->setValueList($scl);
         }
         if (!$this->isThemePreviewRequest()) {
-            if (!$stylesheet->outputFileExists() || !ENABLE_THEME_CSS_CACHE) {
+            if (!$stylesheet->outputFileExists() || !Config::get('concrete.cache.theme_css')) {
                 $stylesheet->output();
             }
         }

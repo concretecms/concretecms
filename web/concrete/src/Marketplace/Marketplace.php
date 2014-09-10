@@ -21,12 +21,12 @@ class Marketplace
 
     public function __construct()
     {
-        if (defined('ENABLE_MARKETPLACE_SUPPORT') && ENABLE_MARKETPLACE_SUPPORT == false) {
+        if (Config::get('concrete.marketplace.enabled')) {
             $this->connectionError = Marketplace::E_MARKETPLACE_SUPPORT_MANUALLY_DISABLED;
             return;
         }
 
-        $csToken = Config::get('MARKETPLACE_SITE_TOKEN');
+        $csToken = Config::get('concrete.marketplace.token');
         if ($csToken != '') {
 
             $fh = Loader::helper('file');
@@ -42,8 +42,8 @@ class Marketplace
                     $this->connectionError = $r;
 
                     if ($this->connectionError == Marketplace::E_DELETED_SITE_TOKEN) {
-                        Config::clear('MARKETPLACE_SITE_TOKEN');
-                        Config::clear('MARKETPLACE_SITE_URL_TOKEN');
+                        Config::clear('concrete.marketplace.token');
+                        Config::clear('concrete.marketplace.site_token');
                     }
                 } else {
                     $this->isConnected = false;
@@ -112,7 +112,7 @@ class Marketplace
         }
 
         // Retrieve the URL contents
-        $csToken = Config::get('MARKETPLACE_SITE_TOKEN');
+        $csToken = Config::get('concrete.marketplace.token');
         $csiURL = urlencode(BASE_URL . DIR_REL);
         $url = MARKETPLACE_PURCHASES_LIST_WS . "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
         $json = $fh->getContents($url);
@@ -158,7 +158,7 @@ class Marketplace
 
     public function getSitePageURL()
     {
-        $token = Config::get('MARKETPLACE_SITE_URL_TOKEN');
+        $token = Config::get('concrete.marketplace.site_token');
         return MARKETPLACE_BASE_URL_SITE_PAGE . '/' . $token;
     }
 
@@ -243,7 +243,7 @@ class Marketplace
 
     public function getSiteToken()
     {
-        $token = Config::get('MARKETPLACE_SITE_TOKEN');
+        $token = Config::get('concrete.marketplace.token');
         return $token;
     }
 

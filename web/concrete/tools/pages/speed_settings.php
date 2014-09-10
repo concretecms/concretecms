@@ -90,7 +90,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 
 		<? $form = Loader::helper('form');?>
 		<?
-		switch(FULL_PAGE_CACHE_GLOBAL) {
+		switch(Config::get('concrete.cache.pages')) {
 			case 'blocks':
 				$globalSetting = t('cache page if all blocks support it.');
 				$enableCache = 1;
@@ -104,9 +104,9 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 				$enableCache = 0;
 				break;
 		}
-		switch(FULL_PAGE_CACHE_LIFETIME) {
+		switch(Config::get('concrete.cache.full_page_lifetime')) {
 			case 'default':
-				$globalSettingLifetime = t('%s minutes', CACHE_LIFETIME / 60);
+				$globalSettingLifetime = t('%s minutes', Config::get('concrete.cache.lifetime') / 60);
 				break;
 			case 'custom':
 				$custom = Config::get('concrete.cache.full_page_lifetime_value');
@@ -154,7 +154,7 @@ $searchInstance = Loader::helper('text')->entities($_REQUEST['searchInstance']);
 			<?=t('Use global setting - %s', $globalSettingLifetime)?>
 			</span></label></li>
 			<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'default', $cCacheFullPageContentOverrideLifetime)?>
-			<?=t('Default - %s minutes', CACHE_LIFETIME / 60)?>
+			<?=t('Default - %s minutes', Config::get('concrete.cache.lifetime') / 60)?>
 			</span></label></li>
 			<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'forever', $cCacheFullPageContentOverrideLifetime)?>
 			<?=t('Until manually cleared')?>

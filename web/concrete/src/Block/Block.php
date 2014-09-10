@@ -13,6 +13,7 @@ use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVe
 use Concrete\Core\Foundation\Object;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
+use Config;
 use Loader;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Page;
@@ -424,7 +425,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public function getInstance()
     {
-        if (ENABLE_BLOCK_CACHE && $this->instance->cacheBlockRecord() && is_object(
+        if (Config::get('concrete.cache.blocks') && $this->instance->cacheBlockRecord() && is_object(
                 $this->instance->getBlockControllerData())
         ) {
             $this->instance->__construct();

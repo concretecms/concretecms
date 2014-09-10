@@ -144,7 +144,7 @@ class User extends Object
                 Session::remove('accessEntities');
             }
             $v = array($username);
-            if (defined('USER_REGISTRATION_WITH_EMAIL_ADDRESS') && USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
+            if (Config::get('concrete.user.registration.email_registration')) {
                 $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange from Users where uEmail = ?";
             } else {
                 $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange from Users where uName = ?";

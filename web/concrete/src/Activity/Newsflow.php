@@ -28,7 +28,7 @@ class Newsflow
 
     public function __construct()
     {
-        if (defined('ENABLE_APP_NEWS') && ENABLE_APP_NEWS == false) {
+        if (!Config::get('concrete.core.news')) {
             $this->connectionError = Newsflow::E_NEWSFLOW_SUPPORT_MANUALLY_DISABLED;
             return;
         }

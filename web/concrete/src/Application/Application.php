@@ -6,6 +6,7 @@ use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Foundation\ClassLoader;
 use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Routing\DispatcherRouteCallback;
+use Config;
 use Core;
 use Database;
 use Environment;
@@ -42,13 +43,11 @@ class Application extends Container
                 $db->close();
             }
         }
-        if (defined('ENABLE_OVERRIDE_CACHE') && ENABLE_OVERRIDE_CACHE) {
+        if (Config::get('concrete.cache.overrides')) {
             Environment::saveCachedEnvironmentObject();
         } else {
-            if (defined('ENABLE_OVERRIDE_CACHE') && (!ENABLE_OVERRIDE_CACHE)) {
-                $env = Environment::get();
-                $env->clearOverrideCache();
-            }
+            $env = Environment::get();
+            $env->clearOverrideCache();
         }
         exit;
     }
@@ -116,7 +115,7 @@ class Application extends Container
                 throw new \Exception('Attempting to check install status before application initialization.');
             }
 
-            $this->installed = $this->make('config')->get('app.installed');
+            $this->installed = $this->make('config')->get('concrete.installed');
         }
 
         return $this->installed;
@@ -223,7 +222,7 @@ class Application extends Container
                 $redirect .= '/';
             }
             if ($pathInfo != $redirect) {
-                $dispatcher = URL_REWRITING || URL_REWRITING_ALL ? '' : '/' . DISPATCHER_FILENAME;
+                $dispatcher = Config::get('concrete.seo.url_rewriting') ? '' : '/' . DISPATCHER_FILENAME;
                 Redirect::url(
                         BASE_URL . DIR_REL . $dispatcher . '/' . $path . ($r->getQueryString(
                         ) ? '?' . $r->getQueryString() : '')

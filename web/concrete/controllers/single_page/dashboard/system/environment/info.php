@@ -102,9 +102,9 @@ class Info extends DashboardPageController
         $environmentMessage = "# concrete5 Cache Settings\n";
         $environmentMessage .= sprintf("Block Cache - %s\n", Config::get('concrete.cache.blocks') ? 'On' : 'Off');
         $environmentMessage .= sprintf("Overrides Cache - %s\n", Config::get('concrete.cache.overrides') ? 'On' : 'Off');
-        $environmentMessage .= sprintf("Full Page Caching - %s\n", (Config::get('concrete.cache.pages') == 'blocks' ? 'On - If blocks on the particular page allow it.' : (FULL_PAGE_CACHE_GLOBAL == 'all' ? 'On - In all cases.': 'Off')));
+        $environmentMessage .= sprintf("Full Page Caching - %s\n", (Config::get('concrete.cache.pages') == 'blocks' ? 'On - If blocks on the particular page allow it.' : (Config::get('concrete.cache.pages') == 'all' ? 'On - In all cases.': 'Off')));
         if (Config::get('concrete.cache.full_page_lifetime')) {
-            $environmentMessage .= sprintf("Full Page Cache Lifetime - %s\n", (Config::get('concrete.cache.full_page_lifetime') == 'default' ? sprintf('Every %s (default setting).', Loader::helper('date')->describeInterval(CACHE_LIFETIME)) : (FULL_PAGE_CACHE_LIFETIME == 'forever' ? 'Only when manually removed or the cache is cleared.': sprintf('Every %s minutes.', Config::get('concrete.cache.full_page_lifetime_value')))));
+            $environmentMessage .= sprintf("Full Page Cache Lifetime - %s\n", (Config::get('concrete.cache.full_page_lifetime') == 'default' ? sprintf('Every %s (default setting).', Loader::helper('date')->describeInterval(Config::get('concrete.cache.lifetime'))) : (Config::get('concrete.cache.full_page_lifetime') == 'forever' ? 'Only when manually removed or the cache is cleared.': sprintf('Every %s minutes.', Config::get('concrete.cache.full_page_lifetime_value')))));
         }
         $environmentMessage .= "\n";
         print $environmentMessage;
