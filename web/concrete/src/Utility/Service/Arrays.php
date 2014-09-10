@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Utility\Service;
 
 class Arrays {
@@ -12,7 +12,7 @@ class Arrays {
 	public function get(array $array, $keys, $default = null)
 	{
 		$keys = $this->parseKeys($keys);
-		
+
 		if (is_array($array) && $keys) {
 			$key = array_shift($keys);
 			if (array_key_exists($key, $array)) {
@@ -20,7 +20,7 @@ class Arrays {
 				if (!$keys) {
 					return $value;
 				}
-				
+
 				if (is_array($value)) {
 					return $this->get($value, $keys, $default);
 				}
@@ -28,7 +28,7 @@ class Arrays {
 		}
 		return $default;
 	}
-	
+
 	/**
 	 * Sets a value in an (multidimensional) array, creating the arrays recursivly
 	 * @param array $array
@@ -38,10 +38,10 @@ class Arrays {
 	public function set(array $array, $keys, $value)
 	{
 		$keys = $this->parseKeys($keys);
-		
+
 		if ($keys) {
 			$key = array_shift($keys);
-			
+
 			// This is the last key we've shifted
 			if (!$keys) {
 				$array[$key] = $value;
@@ -57,7 +57,7 @@ class Arrays {
 		}
 		return $array;
 	}
-	
+
 	/**
 	 * Turns the string keys into an array of keys
 	 * @param string|array $keys
@@ -80,20 +80,20 @@ class Arrays {
 	 * Takes a multidimensional array and flattens it
 	 * @param array $array
 	 * @return array
-	 */	
-	public function flatten(array $array) { 
+	 */
+	public function flatten(array $array) {
 		$tmp = array();
-		foreach($array as $a) { 
-			if(is_array($a)) { 
-				$tmp = array_merge($tmp, array_flat($a)); 
-			} else { 
-				$tmp[] = $a; 
-			} 
-		} 
-		return $tmp; 
-	} 
+		foreach($array as $a) {
+			if(is_array($a)) {
+				$tmp = array_merge($tmp, array_flat($a));
+			} else {
+				$tmp[] = $a;
+			}
+		}
+		return $tmp;
+	}
 
-	/** 
+	/**
 	 * Returns whether $a is a proper subset of $b
 	 */
 	public function subset($a, $b) {

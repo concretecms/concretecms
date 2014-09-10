@@ -117,8 +117,8 @@ if (isset($group)) { ?>
     
     		<div class="alert alert-info">
     			<?
-    			$path = $group->getGroupAutomationControllerFile();
-    			print t('Make sure a code file exists at %s', str_replace(array(DIR_APPLICATION, DIR_BASE_CORE), '', $path));
+    			$path = $group->getGroupAutomationControllerClass();
+    			print t('Make sure an automation group controller exists at %s', $path);
     			?>
     		</div>
     	</div>

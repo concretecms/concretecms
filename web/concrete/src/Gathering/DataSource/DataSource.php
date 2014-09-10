@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Gathering\DataSource;
 use Loader;
 use Core;
@@ -9,7 +9,7 @@ abstract class DataSource extends Object {
 
 	abstract public function createConfigurationObject(Gathering $ga, $post);
 	abstract public function createGatheringItems(GatheringDataSourceConfiguration $configuration);
-	
+
 	protected $optionFormKey = '_gas_';
 
 	public function configure(Gathering $ga, $post) {
@@ -32,7 +32,7 @@ abstract class DataSource extends Object {
 			return $gas;
 		}
 	}
-	
+
 	public function setOptionFormKey($key) {
 		$this->optionFormKey = $key;
 	}
@@ -69,7 +69,7 @@ abstract class DataSource extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
+	}
 
 	public static function getList() {
 		$db = Loader::db();
@@ -83,8 +83,8 @@ abstract class DataSource extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
-	
+	}
+
 	public function getGatheringDataSourceID() {return $this->gasID;}
 	public function getGatheringDataSourceHandle() {return $this->gasHandle;}
 	public function getGatheringDataSourceName() {return $this->gasName;}
@@ -95,7 +95,7 @@ abstract class DataSource extends Object {
 		$file = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_GATHERING . '/' . DIRNAME_GATHERING_DATA_SOURCES . '/' . $this->gasHandle . '/' . FILENAME_GATHERING_DATA_SOURCE_OPTIONS, $this->getPackageHandle());
 		return $file;
 	}
-	
+
 
 	public function updateGatheringDataSourceName($gasName) {
 		$this->gasName = $gasName;
@@ -108,7 +108,7 @@ abstract class DataSource extends Object {
 		$db = Loader::db();
 		$db->Execute("update GatheringDataSources set gasHandle = ? where gasID = ?", array($gasHandle, $this->gasID));
 	}
-	
+
 	public static function add($gasHandle, $gasName, $pkg = false) {
 		$db = Loader::db();
 		$pkgID = 0;
@@ -121,10 +121,10 @@ abstract class DataSource extends Object {
 			$gasDisplayOrder = $db->GetOne('select max(gasDisplayOrder) from GatheringDataSources');
 			$gasDisplayOrder++;
 		}
-		
+
 		$db->Execute('insert into GatheringDataSources (gasHandle, gasName, gasDisplayOrder, pkgID) values (?, ?, ?, ?)', array($gasHandle, $gasName, $gasDisplayOrder, $pkgID));
 		$id = $db->Insert_ID();
-		
+
 		$gas = static::getByID($id);
 		return $gas;
 	}
@@ -158,6 +158,6 @@ abstract class DataSource extends Object {
 		$db = Loader::db();
 		$db->Execute('delete from GatheringDataSources where gasID = ?', array($this->gasID));
 	}
-	
-		
+
+
 }

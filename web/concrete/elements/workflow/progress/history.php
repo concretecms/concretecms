@@ -2,7 +2,7 @@
 
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 
-$records = WorkflowProgressHistory::getList($wp);
+$records = \Concrete\Core\Workflow\Progress\History::getList($wp);
 foreach($records as $r) { ?>
 	
 	<div>

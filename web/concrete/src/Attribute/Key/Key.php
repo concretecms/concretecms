@@ -731,7 +731,7 @@ class Key extends Object
         $u = new User();
         $dh = Loader::helper('date');
         $uID = $u->isRegistered() ? $u->getUserID() : 0;
-        $avDate = $dh->getLocalDateTime();
+        $avDate = $dh->getOverridableNow();
         $v = array($this->atID, $this->akID, $uID, $avDate);
         $db->Execute('insert into AttributeValues (atID, akID,  uID, avDateAdded) values (?, ?, ?, ?)', $v);
         $avID = $db->Insert_ID();

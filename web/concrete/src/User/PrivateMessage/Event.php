@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\User\PrivateMessage;
 use \Symfony\Component\EventDispatcher\Event as AbstractEvent;
 

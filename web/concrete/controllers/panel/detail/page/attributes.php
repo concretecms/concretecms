@@ -85,7 +85,7 @@ class Attributes extends BackendInterfacePageController
             if ($asl->allowEditDateTime()) {
                 $dt = Loader::helper('form/date_time');
                 $dh = Loader::helper('date');
-                $data['cDatePublic'] = $dh->getSystemDateTime($dt->translate('cDatePublic'));
+                $data['cDatePublic'] = $dt->translate('cDatePublic');
             }
             if ($asl->allowEditUserID()) {
                 $data['uID'] = $_POST['uID'];

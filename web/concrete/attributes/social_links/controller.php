@@ -1,25 +1,14 @@
 <?
 namespace Concrete\Attribute\SocialLinks;
 use Loader;
+use Environment;
 use \Concrete\Core\Foundation\Object;
+use \Concrete\Core\Sharing\SocialNetwork\ServiceList as ServiceList;
+use \Concrete\Core\Sharing\SocialNetwork\Service as Service;
 use \Concrete\Core\Attribute\Controller as AttributeTypeController;
 
 class Controller extends AttributeTypeController  {
 
-	
-	public function getServices() {
-		$services = array(
-			array('facebook', 'Facebook', t('http://facebook.com/username')),
-			array('twitter', 'Twitter', t('http://twitter.com/username')),
-			array('pinterest', 'Pinterest', t('http://pinterest.com/username')),
-			array('youtube', 'Youtube', t('Youtube channel or profile URL.')),
-			array('google-plus', 'Google Plus', t('Google Plus profile URL.')),
-			array('flickr', 'Flickr', t('Enter your Flickr Profile URL.')),
-			array('myspace', 'MySpace'),
-			array('wthree', 'Other')
-		);
-		return $services;	
-	}
 	
 	public function saveForm($data) {
 		if (!is_array($data['service'])) {
@@ -39,6 +28,7 @@ class Controller extends AttributeTypeController  {
 		$db->Execute('delete from atSocialLinks where avID = ?', array($this->getAttributeValueID()));
 		foreach($values as $service => $serviceInfo) {
 			if ($serviceInfo) {
+                $serviceInfo = filter_var($serviceInfo, FILTER_SANITIZE_URL);
 				$service = Loader::helper('text')->entities($service);
 				$serviceInfo = Loader::helper('text')->entities($serviceInfo);			
 				$db->Execute('insert into atSocialLinks (avID, service, serviceInfo) values (?, ?, ?)', array($this->getAttributeValueID(), $service, $serviceInfo));
@@ -56,27 +46,6 @@ class Controller extends AttributeTypeController  {
 		return $services;
 	}
 	
-	protected function getServiceLink($service, $serviceInfo) {
-		/*
-		$link = '';
-		$services = $this->getServices();
-		foreach($services as $s) {
-			if ($s[0] == $service) {
-				$link = $s[3];
-			}
-		}
-		$link .= $serviceInfo;
-		return $link;
-		*/
-
-		$link = $serviceInfo;
-		if (strpos($link, 'http://') === 0 || strpos($link, 'https://') === 0) {
-			return $link;
-		} else {
-			return 'http://' . $link;
-		}
-	}
-
 	public function deleteKey() {
 		$db = Loader::db();
 		$arr = $this->attributeKey->getAttributeValueIDList();
@@ -89,19 +58,7 @@ class Controller extends AttributeTypeController  {
 		$db = Loader::db();
 		$db->Execute('delete from atSocialLinks where avID = ?', array($this->getAttributeValueID()));
 	}
-	
-	protected function getServiceName($service, $serviceInfo) {
-		$services = $this->getServices();
-		foreach($services as $s) {
-			if ($s[0] == $service) {
-				if ($service == 'wthree') {
-					return $serviceInfo;
-				}
-				return $s[1];
-			}
-		}
-	}
-	
+
 	public function getDisplayValue() {
 		$html = '';
 		$services = $this->getValue();
@@ -109,15 +66,18 @@ class Controller extends AttributeTypeController  {
 			$env = Environment::get();
 			$url = $env->getURL(DIRNAME_ATTRIBUTES . '/social_links/view.css');
 			$this->addHeaderItem(Loader::helper('html')->css($url));
-			$html .=  '<div class="ccm-social-link-attribute-display">';
+			$html .=  '<span class="ccm-social-link-attribute-display">';
 			foreach($services as $service => $serviceInfo) {
-				$html .= '<div class="ccm-social-link-service">';
-				$icon = $service;
-				$html .=  '<div class="ccm-social-link-service-icon"><a href="' . $this->getServiceLink($service, $serviceInfo) . '"><img src="' . ASSETS_URL_IMAGES . '/icons/social/' . $service . '.png" width="16" height="16" /></a></div>';
-				$html .=  '<div class="ccm-social-link-service-info"><a href="' . $this->getServiceLink($service, $serviceInfo) . '">' . $this->getServiceName($service, $serviceInfo) . '</a></div>';
-				$html .=  '</div>';
+                $serviceObject = Service::getByHandle($service);
+                if (is_object($serviceObject)) {
+                    $iconHtml = $serviceObject->getServiceIconHTML();
+                }
+				$html .= '<span class="ccm-social-link-service">';
+				$html .=  '<span class="ccm-social-link-service-icon"><a href="' . filter_var($serviceInfo, FILTER_VALIDATE_URL) . '">'.$iconHtml.'</a></span>';
+				$html .=  '<span class="ccm-social-link-service-info"><a href="' . filter_var($serviceInfo, FILTER_VALIDATE_URL) . '">' . $serviceObject->getName() . '</a></span>';
+				$html .=  '</span>';
 			}
-			$html .=  '</div>';		
+			$html .=  '</span>';
 		}
 		return $html;
 	}
@@ -138,6 +98,6 @@ class Controller extends AttributeTypeController  {
 			$data['serviceInfo'][] = '';
 		}
 		$this->set('data', $data);
-		$this->set('services', $this->getServices());
+		$this->set('services', ServiceList::get());
 	}
 }

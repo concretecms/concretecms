@@ -78,7 +78,7 @@ class IndexedSearch
     {
         $db = Loader::db();
         if (is_object($page) && ($page instanceof Collection) && ($page->getAttribute('exclude_search_index') != 1)) {
-            $datetime = Loader::helper('date')->getSystemDateTime();
+            $datetime = Loader::helper('date')->getOverridableNow();
             $db->Replace(
                 'PageSearchIndex',
                 array(

@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Concrete\Core\Asset;
 use Concrete\Core\Foundation\Object as Object;

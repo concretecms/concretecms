@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Foundation;
 /**
  * @package Core
@@ -24,11 +24,11 @@ class Environment {
 	protected $overridesScanned = false;
 	protected $cachedOverrides = array();
 	protected $autoLoaded = false;
-	
+
 	public static function get() {
 		static $env;
 		if (!isset($env)) {
-			if (file_exists(DIR_FILES_CACHE . '/' . FILENAME_ENVIRONMENT_CACHE)) { 
+			if (file_exists(DIR_FILES_CACHE . '/' . FILENAME_ENVIRONMENT_CACHE)) {
 				$r = @file_get_contents(DIR_FILES_CACHE . '/' . FILENAME_ENVIRONMENT_CACHE);
 				if ($r) {
 					$en = @unserialize($r);
@@ -43,7 +43,7 @@ class Environment {
 		}
 		return $env;
 	}
-	
+
 	public static function saveCachedEnvironmentObject() {
 		if (!file_exists(DIR_FILES_CACHE . '/' . FILENAME_ENVIRONMENT_CACHE)) {
 			$env = new Environment();
@@ -62,34 +62,34 @@ class Environment {
 	 * @access private
 	 */
 	protected $ignoreFiles = array('__MACOSX');
-	
+
 	public function reset() {
 		$this->ignoreFiles = array('__MACOSX');
 	}
-	
-	
-	/** 
+
+
+	/**
 	 * Builds a list of all overrides
 	 */
 	protected function getOverrides() {
 
-		$check = array(DIR_FILES_BLOCK_TYPES, DIR_FILES_CONTROLLERS, DIR_FILES_ELEMENTS, 
+		$check = array(DIR_FILES_BLOCK_TYPES, DIR_FILES_CONTROLLERS, DIR_FILES_ELEMENTS,
 			DIR_APPLICATION . '/' . DIRNAME_ATTRIBUTES, DIR_APPLICATION . '/' . DIRNAME_AUTHENTICATION,
 			DIR_FILES_JOBS, DIR_APPLICATION . '/' . DIRNAME_CSS, DIR_APPLICATION . '/' . DIRNAME_JAVASCRIPT, DIR_APPLICATION . '/' . DIRNAME_LANGUAGES,
-			DIR_FILES_EMAIL_TEMPLATES, DIR_FILES_CONTENT, DIR_FILES_THEMES, DIR_FILES_TOOLS, DIR_APPLICATION . '/' . DIRNAME_PAGE_TYPES);
+			DIR_FILES_EMAIL_TEMPLATES, DIR_FILES_CONTENT, DIR_FILES_THEMES, DIR_FILES_TOOLS, DIR_APPLICATION . '/' . DIRNAME_PAGE_TYPES, DIR_APPLICATION . '/' . DIRNAME_CLASSES);
 		foreach($check as $loc) {
 			if (is_dir($loc)) {
 				$contents = $this->getDirectoryContents($loc, array(), true);
 				foreach($contents as $f) {
 					$item = str_replace(DIR_APPLICATION . '/', '', $f);
-					$item = str_replace(DIR_BASE . '/', '', $item);				
+					$item = str_replace(DIR_BASE . '/', '', $item);
 					$this->coreOverrides[] = $item;
 				}
 			}
 
 		}
 
-		if (is_dir(DIR_PACKAGES_CORE)) { 
+		if (is_dir(DIR_PACKAGES_CORE)) {
 			$this->corePackages = $this->getDirectoryContents(DIR_PACKAGES_CORE);
 		}
 
@@ -110,7 +110,7 @@ class Environment {
 						}
 						$aDir[] = preg_replace("/\/\//si", "/", $file);
 					} else {
-						if ($recursive) { 
+						if ($recursive) {
 							$file = $dir . "/" . $file;
 						}
 						$aDir[] = preg_replace("/\/\//si", "/", $file);
@@ -120,29 +120,29 @@ class Environment {
 			closedir($handle);
 		}
 		return $aDir;
-	
+
 	}
-	
+
 	public function overrideCoreByPackage($segment, $pkgOrHandle) {
 		$pkgHandle = is_object($pkgOrHandle) ? $pkgOrHandle->getPackageHandle() : $pkgOrHandle;
-		$this->coreOverridesByPackage[$segment] = $pkgHandle;	
+		$this->coreOverridesByPackage[$segment] = $pkgHandle;
 	}
-	
+
 	public function getRecord($segment, $pkgHandle = false) {
 		if(is_object($pkgHandle)) {
 			$pkgHandle = $pkgHandle->getPackageHandle();
 		} else {
 			$pkgHandle = (string)$pkgHandle;
 		}
-		
+
 		if (!$this->overridesScanned) {
 			$this->getOverrides();
-		}	
+		}
 
 		if (isset($this->cachedOverrides[$segment][$pkgHandle])) {
 			return $this->cachedOverrides[$segment][$pkgHandle];
 		}
-		
+
 		$obj = new EnvironmentRecord();
 
 		if (!in_array($segment, $this->coreOverrides) && !$pkgHandle && !array_key_exists($segment, $this->coreOverridesByPackage)) {
@@ -152,21 +152,21 @@ class Environment {
 			$this->cachedOverrides[$segment][''] = $obj;
 			return $obj;
 		}
-			
+
 		if (in_array($segment, $this->coreOverrides)) {
 			$obj->file = DIR_APPLICATION . '/' . $segment;
 			$obj->url = REL_DIR_APPLICATION . '/' . $segment;
 			$obj->override = true;
 			$this->cachedOverrides[$segment][''] = $obj;
 			return $obj;
-		} 
+		}
 
 		if (array_key_exists($segment, $this->coreOverridesByPackage)) {
 			$pkgHandle = $this->coreOverridesByPackage[$segment];
-		}		
+		}
 
 		if (!in_array($pkgHandle, $this->corePackages)) {
-			$dirp = DIR_PACKAGES . '/' . $pkgHandle;		
+			$dirp = DIR_PACKAGES . '/' . $pkgHandle;
 			$obj->url = DIR_REL . '/' . DIRNAME_PACKAGES. '/' . $pkgHandle . '/' . $segment;
 		} else {
 			$dirp = DIR_PACKAGES_CORE . '/' . $pkgHandle;
@@ -175,10 +175,10 @@ class Environment {
 		$obj->file = $dirp . '/' . $segment;
 		$obj->override = false;
 		$this->cachedOverrides[$segment][$pkgHandle] = $obj;
-		return $obj;		
+		return $obj;
 	}
 
-	/** 
+	/**
 	 * Bypasses overrides cache to get record
 	 */
 	public function getUncachedRecord($segment, $pkgHandle = false) {
@@ -207,21 +207,21 @@ class Environment {
 		}
 		return $obj;
 	}
-	
-	/** 
+
+	/**
 	 * Returns a full path to the subpath segment. Returns false if not found
 	 */
 	public function getPath($subpath, $pkgIdentifier = false) {
 		$r = $this->getRecord($subpath, $pkgIdentifier);
-		return $r->file;	
+		return $r->file;
 	}
-	
-	/** 
+
+	/**
 	 * Returns  a public URL to the subpath item. Returns false if not found
 	 */
 	public function getURL($subpath, $pkgIdentifier = false) {
 		$r = $this->getRecord($subpath, $pkgIdentifier);
-		return $r->url;		
+		return $r->url;
 	}
 
 }

@@ -127,12 +127,12 @@
                     {name: 'arEnableGridContainer', value: arEnableGridContainer},
                     {name: 'arHandle', value: area.getHandle()},
                     {name: 'btID', value: btID}
-                ], dragAreaBlock, dragAreaBlockID, elem;
+                ], dragAreaBlock, dragAreaBlockID, after;
             if (selected) {
-                elem = selected.getElem();
+                after = selected.getElem();
                 dragAreaBlock = selected.getBlock();
             } else {
-                elem = area.getElem();
+                after = area.getElem().children().last();
                 dragAreaBlock = data.dragAreaBlock;
             }
 
@@ -173,14 +173,18 @@
                 url: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/page/add_block',
                 data: postData,
                 success: function (r) {
-                    var $container = $('<div id="a' + area.getId() + '-bt' + btID + '" class="ccm-block-edit-inline-active">' + r + '</div>');
-                    elem.addClass("ccm-area-edit-inline-active");
-                    elem.append($container);
+                    var elem = $(r);
+                    var $container = $('<div class="ccm-block-edit-inline-active"></div>');
+                    $container.attr('id', 'a' + area.getId() + '-bt' + btID).append(elem);
+
+                    area.getElem().addClass("ccm-area-edit-inline-active");
+                    after.after($container);
                     $(function () {
-                        elem.find('#ccm-block-form').concreteAjaxBlockForm({
+                        $container.find('#ccm-block-form').concreteAjaxBlockForm({
                             'task': 'add',
                             'btSupportsInlineAdd': true,
-                            'dragAreaBlockID': dragAreaBlockID
+                            'dragAreaBlockID': dragAreaBlockID,
+                            dragArea: selected
                         });
                     });
                     my.loadInlineEditModeToolbars($container.find('div[data-container=inline-toolbar]'));
@@ -222,6 +226,9 @@
             scroll_buffer = 100;
 
         function scrollLoop(block, element, amount, step, test, scroll_method, axis) {
+            if (!my.getDragging()) {
+                return;
+            }
             if (test.call()) {
                 scrolling = true;
                 var pos_start = scroll_method.call(element),
@@ -367,7 +374,8 @@
             blocks: [],
             editMode: edit_mode,
             maximumBlocks: parseInt(elem.data('maximumBlocks'), 10),
-            blockTypes: elem.data('accepts-block-types').split(' ')
+            blockTypes: elem.data('accepts-block-types').split(' '),
+            blockContainer: elem.children('.ccm-area-block-list')
         });
         my.id = my.getId();
         my.setTotalBlocks(0); // we also need to update the DOM which this does.
@@ -382,6 +390,14 @@
     var Block = Concrete.Block = function Block(elem, edit_mode, peper) {
         var my = this;
         elem.data('Concrete.block', my);
+        if (!elem.closest('.ccm-area-block-list')) {
+            alert('orphan block.');
+        }
+
+        if (!elem.find('.ccm-block-cover').length) {
+            $('<div/>').addClass('ccm-block-cover').appendTo(elem);
+        }
+
         Concrete.createGetterSetters.call(my, {
             id: elem.data('block-id'),
             handle: elem.data('block-type-handle'),
@@ -911,7 +927,7 @@
                 }
                 elem = $('<div class="ccm-area-drag-area"/>');
                 drag_area = new DragArea(elem, my, block);
-                my.getElem().prepend(elem);
+                my.getBlockContainer().prepend(elem);
             } else {
                 elem = $('<div class="ccm-area-drag-area"/>');
                 drag_area = new DragArea(elem, my, block);
@@ -1012,7 +1028,7 @@
                     if (after_block) {
                         after_block.getContainer().after(html);
                     } else {
-                        area.getElem().prepend(html);
+                        area.getBlockContainer().prepend(html);
                     }
                     $.fn.dialog.hideLoader();
                     _.defer(function () {
@@ -1082,21 +1098,20 @@
             if (menuHandle !== 'none') {
 
                 my.menu = new ConcreteMenu(elem, {
-                    'handle': 'this',
                     'highlightClassName': 'ccm-block-highlight',
                     'menuActiveClass': 'ccm-block-highlight',
-                    'menu': $('div.ccm-edit-mode-block-menu', my.getElem())
+                    'menu': $menuElem
                 });
 
-                $menuElem.find('a[data-menu-action=edit_inline]').unbind().on('click', function (event) {
+                $menuElem.find('a[data-menu-action=edit_inline]').unbind('click.core').on('click.core', function (event) {
                     Concrete.event.fire('EditModeBlockEditInline', {block: my, event: event});
                 });
 
-                $menuElem.find('a[data-menu-action=block_scrapbook]').unbind().on('click', function (event) {
+                $menuElem.find('a[data-menu-action=block_scrapbook]').unbind('click.core').on('click.core', function (event) {
                     Concrete.event.fire('EditModeBlockAddToClipboard', {block: my, event: event});
                 });
 
-                $menuElem.find('a[data-menu-action=delete_block]').unbind().on('click', function (event) {
+                $menuElem.find('a[data-menu-action=delete_block]').unbind('click.core').on('click.core', function (event) {
                     Concrete.event.fire('EditModeBlockDelete', {
                         message: $(this).attr('data-menu-delete-message'),
                         block: my,
@@ -1104,7 +1119,7 @@
                     });
                 });
 
-                $menuElem.find('a[data-menu-action=block_design]').unbind().on('click', function (e) {
+                $menuElem.find('a[data-menu-action=block_design]').unbind('click.core').on('click.core', function (e) {
                     e.preventDefault();
                     Concrete.event.fire('EditModeBlockEditInline', {
                         block: my, event: e, action: CCM_DISPATCHER_FILENAME + '/ccm/system/dialogs/block/design'
@@ -1515,7 +1530,7 @@
                             if (dragAreaBlock) {
                                 dragAreaBlock.getContainer().after(html);
                             } else {
-                                area.getElem().prepend(html);
+                                area.getBlockContainer().prepend(html);
                             }
                             $.fn.dialog.hideLoader();
                             _.defer(function () {
@@ -1539,7 +1554,8 @@
                         $(function () {
                             $('#ccm-block-form').concreteAjaxBlockForm({
                                 'task': 'add',
-                                'dragAreaBlockID': dragAreaBlockID
+                                'dragAreaBlockID': dragAreaBlockID,
+                                dragArea: drag_area
                             });
                         });
                     },

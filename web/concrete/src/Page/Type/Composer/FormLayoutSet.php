@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Page\Type\Composer;
 use \Concrete\Core\Foundation\Object;
 use Concrete\Core\Page\Type\Type;
@@ -11,7 +11,11 @@ class FormLayoutSet extends Object {
 	public function getPageTypeComposerFormLayoutSetDescription() {return $this->ptComposerFormLayoutSetDescription;}
 	public function getPageTypeComposerFormLayoutSetDisplayOrder() {return $this->ptComposerFormLayoutSetDisplayOrder;}
 	public function getPageTypeID() {return $this->ptID;}
-	public function getPageTypeObject() {return PageType::getByID($this->ptID);}
+
+    /**
+     * @return \Concrete\Core\Page\Type\Type
+     */
+    public function getPageTypeObject() {return PageType::getByID($this->ptID);}
 	/** Returns the display name for this instance (localized and escaped accordingly to $format)
 	* @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
 	* @return string

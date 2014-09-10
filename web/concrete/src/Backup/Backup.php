@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Backup;
 use Loader;
 class Backup {

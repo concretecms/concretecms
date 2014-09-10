@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Functions useful for working with text.
  * @package Helpers

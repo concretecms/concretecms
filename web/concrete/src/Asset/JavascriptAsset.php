@@ -1,9 +1,9 @@
-<?
+<?php
 namespace Concrete\Core\Asset;
 use HtmlObject\Element;
 
 class JavascriptAsset extends Asset {
-	
+
 	protected $assetSupportsMinification = true;
 	protected $assetSupportsCombination = true;
 
@@ -47,7 +47,7 @@ class JavascriptAsset extends Asset {
 				}
 				@file_put_contents($cacheFile, $js);
 			}
-			
+
 			$asset = new JavascriptAsset();
 			$asset->setAssetURL(self::getRelativeOutputDirectory() . '/' . $filename . '.js');
 			$asset->setAssetPath($directory . '/' . $filename . '.js');

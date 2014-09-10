@@ -98,11 +98,16 @@ abstract class Column extends Object {
 
 	public function delete() {
 		$db = Loader::db();
-		$area = $this->getAreaObject();
-		if ($area instanceof SubArea) {
-			$area->delete();
-		}
-		$db->Execute("delete from AreaLayoutColumns where arLayoutColumnID = ?", array($this->arLayoutColumnID));
+        $db->Execute("delete from AreaLayoutColumns where arLayoutColumnID = ?", array($this->arLayoutColumnID));
+
+        // now we check to see if this area id is in use anywhere else. If it isn't we delete the sub area.
+        $r = $db->GetOne('select count(arLayoutColumnID) from AreaLayoutColumns where arID = ?', array($this->arID));
+        if ($r < 1) {
+            $area = $this->getAreaObject();
+            if ($area instanceof SubArea) {
+                $area->delete();
+            }
+        }
 	}
 
 }

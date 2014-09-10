@@ -167,16 +167,6 @@ class Controller extends BlockController
         $this->set('showPagination', $showPagination);
     }
 
-    // this doesn't work yet
-    /*
-    public function on_page_view() {
-        if ($this->rss) {
-            $b = $this->getBlockObject();
-            $this->addHeaderItem('<link href="' . $this->getRssUrl($b) . '"  rel="alternate" type="application/rss+xml" title="' . $this->rssTitle . '" />');
-        }
-    }
-    */
-
     public function add()
     {
 
@@ -366,9 +356,13 @@ class Controller extends BlockController
             $pf->save();
             $args['pfID'] = $pf->getID();
         } else if ($this->pfID && !$args['rss']) {
-            $pf = Feed::getByID($this->pfID);
-            if (is_object($pf)) {
-                $pf->delete();
+            // let's make sure this isn't in use elsewhere.
+            $cnt = $db->GetOne('select count(pfID) from btPageList where pfID = ?', array($this->pfID));
+            if ($cnt == 1) { // this is the last one, so we delete
+                $pf = Feed::getByID($this->pfID);
+                if (is_object($pf)) {
+                    $pf->delete();
+                }
             }
             $args['pfID'] = 0;
         }
@@ -377,5 +371,26 @@ class Controller extends BlockController
 
     }
 
-}
+    public function isBlockEmpty()
+    {
+        $pages = $this->get('pages');
+        if ($this->pageListTitle) {
+            return false;
+        }
+        if (count($pages) == 0) {
+            if ($this->noResultsMessage) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            if ($this->includeName || $this->includeDate || $this->displayThumbnail || $this->includeDescription || $this->useButtonForLink) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
 
+}

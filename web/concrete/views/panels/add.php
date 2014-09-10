@@ -219,8 +219,8 @@ switch ($tab) {
                         </div>
                     </div>
                     <div class="delete">
-                        <button class="ccm-delete-clipboard-item pull-right btn btn-sm btn-danger">
-                            <i class="fa fa-trash-o"></i>
+                        <button class="ccm-delete-clipboard-item pull-right btn btn-sm btn-link">
+                            <?= t('Delete') ?>
                         </button>
                     </div>
                 </div>
@@ -230,20 +230,18 @@ switch ($tab) {
             <script>
                 $('button.ccm-delete-clipboard-item').unbind().click(function(e) {
                     e.preventDefault();
-                    if (confirm('Really delete this clipboard item?')) {
-                        var me = $(this),
-                            item = me.closest('.ccm-panel-add-clipboard-block-item');
+                    var me = $(this),
+                        item = me.closest('.ccm-panel-add-clipboard-block-item');
 
-                        $.post(CCM_TOOLS_PATH + '/pile_manager', {
-                            task: 'delete',
-                            pcID: item.data('pcid'),
-                            cID: item.data('cid')
-                        }, function() {
-                            item.remove();
-                        }).fail(function(data) {
-                            alert("<?= t('An error occured while deleting this item:') ?>\n" + data.responseJSON.errors.join("\n"));
-                        });
-                    }
+                    $.post(CCM_TOOLS_PATH + '/pile_manager', {
+                        task: 'delete',
+                        pcID: item.data('pcid'),
+                        cID: item.data('cid')
+                    }, function() {
+                        item.remove();
+                    }).fail(function(data) {
+                        alert("<?= t('An error occured while deleting this item:') ?>\n" + data.responseJSON.errors.join("\n"));
+                    });
                     return false;
                 });
             </script>

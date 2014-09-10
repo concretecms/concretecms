@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Attribute;
 use View as ConcreteView;
 use Loader;
@@ -8,7 +8,7 @@ use Environment;
 use \Concrete\Core\View\AbstractView;
 
 class View extends AbstractView {
-	
+
 	protected $attributeValue;
 	protected $attributeKey;
 	protected $attributeType;
@@ -36,7 +36,7 @@ class View extends AbstractView {
 		if (is_object($attributeKey)) {
 			$this->controller->set('akID', $this->attributeKey->getAttributeKeyID());
 		}
-	}		
+	}
 
 	public function start($state) {
 		$this->viewToRender = $state;
@@ -51,14 +51,14 @@ class View extends AbstractView {
 		$js = $this->attributeType->getAttributeTypeFileURL($this->viewToRender . '.js');
 		$css = $this->attributeType->getAttributeTypeFileURL($this->viewToRender . '.css');
 		$html = Loader::helper('html');
-		if ($js != false) { 
+		if ($js != false) {
 			$this->addOutputAsset($html->javascript($js));
 		}
-		if ($css != false) { 
+		if ($css != false) {
 			$this->addOutputAsset($html->css($css));
 		}
 	}
-	
+
 	public function setupRender() {
 		$this->runControllerTask();
 		$atHandle = $this->attributeType->getAttributeTypeHandle();
@@ -88,7 +88,7 @@ class View extends AbstractView {
 		$this->controller->runAction($action);
 		$this->controller->on_before_render();
 	}
-	
+
 	public function action($action) {
 		$uh = Loader::helper('concrete/urls');
 		$a = func_get_args();
@@ -103,7 +103,7 @@ class View extends AbstractView {
 		$url .= '&action=' . $action . $args;
 		return $url;
 	}
-	
+
 	public function finishRender($contents) {
 		print $contents;
 	}

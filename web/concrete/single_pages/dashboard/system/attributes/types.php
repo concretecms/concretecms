@@ -31,13 +31,13 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Attr
 	</table>
 	<div class="well clearfix">
 	<?
-	$b1 = $interface->submit(t('Save'), 'attribute_type_associations_form', 'right', 'primary');
+	$b1 = $interface->submit(t('Save'), 'attribute_type_associations_form', 'right', 'btn-primary');
 	print $b1;
 	?>
 	</div>
 </form>
 
-<h3><?=t('Custom Attribute Types')?></h3>
+<h4><?=t('Custom Attribute Types')?></h4>
 <?
 $ch = Loader::helper('concrete/ui');
 $types = PendingAttributeType::getList(); ?>
@@ -47,12 +47,19 @@ $types = PendingAttributeType::getList(); ?>
 	<ul class="item-select-list">
 		<? foreach($types as $at) { ?>
 			<li>
-				<form id="attribute_type_install_form_<?=$at->getAttributeTypeHandle()?>" style="margin: 0px" method="post" action="<?=$view->action('add_attribute_type')?>">
-					<?
-					print $form->hidden("atHandle", $at->getAttributeTypeHandle());
-					?>
-					<p style="background-image: url(<?=$at->getAttributeTypeIconSRC()?>)" class="ccm-block-type-inner"><?=$ch->submit(t("Install"), 'submit', 'right', 'small')?><?=$at->getAttributeTypeDisplayName()?></p>
-				</form>
+					<span>
+		        		<form id="attribute_type_install_form_<?=$at->getAttributeTypeHandle()?>" style="margin: 0px" method="post" action="<?=$view->action('add_attribute_type')?>">
+                            <?
+                            print $form->hidden("atHandle", $at->getAttributeTypeHandle());
+                            ?>
+                        <img src="<?=$at->getAttributeTypeIconSRC()?>" />
+
+                        <?=$at->getAttributeTypeDisplayName()?>
+
+                        <?=$ch->submit(t("Install"), 'submit', 'right', 'btn-default btn-xs')?>
+                        </form>
+
+                    </span>
 			</li>
 		<? } ?>
 	</ul>

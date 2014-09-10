@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Page;
 use \Page as CorePage;
 use Loader;
@@ -32,7 +32,7 @@ class Single {
 		}
 		return $singlePages;
 	}
-		
+
  	public static function sanitizePath($path) {
 		//takes a damn cpath and returns no first slash, and no more than 1 intermediate slash in
 		// the middle at any point
@@ -46,12 +46,12 @@ class Single {
 		}
 		return $node;
 	}
-	
+
 	public static function getPathToNode($node, $pkg) {
 		$node = static::sanitizePath($node);
 		// checks to see whether a passed $node is a static content node
 		// (static content nodes exist within the views directory)
-		
+
 		// first, we look to see if the exact path exists (plus .php)
 		$pathToFile = null;
 		if (is_object($pkg)) {
@@ -60,7 +60,7 @@ class Single {
 			} else {
 				$dirp = DIR_PACKAGES_CORE . '/' . $pkg->getPackageHandle();
 			}
-			
+
 			$file1 = $dirp . '/' . DIRNAME_PAGES . '/' . $node . '/' . FILENAME_COLLECTION_VIEW;
 			$file2 = $dirp . '/' . DIRNAME_PAGES . '/' . $node . '.php';
 		} else {
@@ -79,23 +79,23 @@ class Single {
 		} else if (isset($file4) && file_exists($file4)) {
 			$pathToFile = "/{$node}.php";
 		}
-		
+
 		if (!$pathToFile) {
 			$pathToFile = false;
 		}
-				
+
 		return $pathToFile;
 
 	}
-	
+
 	public static function refresh(CorePage $c) {
 		// takes a generated collection and refreshes it - updates its path, it's cDateModified
 		// it's name, it's permissions
-		
+
 		if (!$c->isGeneratedCollection()) {
 			return false;
 		}
-		
+
 		$pkg = Package::getByID($c->getPackageID());
 		$currentPath = $c->getCollectionPath();
 		$pathToFile = static::getPathToNode($currentPath, $pkg);
@@ -105,8 +105,8 @@ class Single {
 		$data = array();
 		$data['cName'] = $txt->unhandle($c->getCollectionHandle());
 		$data['cFilename'] = $pathToFile;
-		
-		$c->update($data);	
+
+		$c->update($data);
 		$env = Environment::get();
 		$env->clearOverrideCache();
 
@@ -116,45 +116,45 @@ class Single {
 		$c = Page::getByID($cID, $version);
 		return $c;
 	}
-	
-	/* 
+
+	/*
 	 * Adds a new single page at the given path, optionally specify a Package
 	 * @param string $cPath
 	 * @param Package $pkg
 	 * @return Page
 	 */
 	public static function add($cPath, $pkg = null) {
-		// if we get to this point, we create a special collection 
+		// if we get to this point, we create a special collection
 		// without a specific type. This collection has a special cFilename that
 		// points to the passed node
 		$db = Loader::db();
 		$txt = Loader::helper('text');
 		Loader::helper('concrete/ui')->clearInterfaceItemsCache();
-		
+
 		// trim off a leading / if there is one
 		$cPath = trim($cPath, '/');
-		
-		// now we grab the parent collection, if there is a static one. 
-		
+
+		// now we grab the parent collection, if there is a static one.
+
 		$pages = explode('/', $cPath);
-		
+
 		// instantiate the home collection so we have someplace to add these to
 		$parent = CorePage::getByID(1);
-		
+
 		// now we iterate through the pages  to ensure that they exist in the system before adding the new guy
-		
+
 		$pathPrefix = '';
-		
+
 		for ($i = 0; $i < count($pages); $i++) {
 			$currentPath = $pathPrefix . $pages[$i];
-			
+
 			$pathToFile = static::getPathToNode($currentPath, $pkg);
 
 			// check to see if a page at this point in the tree exists
 			$c = CorePage::getByPath("/" . $currentPath);
 			if ($c->isError() && $c->getError() == COLLECTION_NOT_FOUND) {
 				// create the page at that point in the tree
-			
+
 				$data = array();
 				$data['handle'] = $pages[$i];
 				$data['name'] = $txt->unhandle($data['handle']);
@@ -163,24 +163,24 @@ class Single {
 				if ($pkg != null) {
 					$data['pkgID'] = $pkg->getPackageID();
 				}
-				
-				$newC = $parent->addStatic($data);	
+
+				$newC = $parent->addStatic($data);
 				$parent = $newC;
-				
-				
+
+
 			} else {
 				$parent = $c;
-			}				
-			
+			}
+
 			$pathPrefix = $currentPath . '/';
 		}
 		$env = Environment::get();
 		$env->clearOverrideCache();
 		return $newC;
-		
+
 	}
-	
-	// returns all pages in the site that are "single" 
+
+	// returns all pages in the site that are "single"
 	public static function getList() {
 		$db = Loader::db();
 		$r = $db->query("select Pages.cID from Pages inner join Collections on Pages.cID = Collections.cID where cFilename is not null order by cDateModified desc");
@@ -192,5 +192,5 @@ class Single {
 		return $pages;
 	}
 
-	
+
 }

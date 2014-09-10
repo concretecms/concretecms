@@ -12,6 +12,7 @@ var ConcreteToolbar = function() {
     $searchResults.css('right', $(window).width() - $searchInput.offset().left - $searchResults.width() - 1);
 
 	setupHelpNotifications = function() {
+        $('.ccm-notification .dialog-launch').dialog();
 		$(document.body).on('click', 'a[data-dismiss]', function() {
 			var action = ($(this).attr('data-dismiss') == 'help-all') ? 'all' : 'this';
 			$(this).parentsUntil('.ccm-notification-help').parent().queue(function() {
@@ -40,8 +41,7 @@ var ConcreteToolbar = function() {
 	setupPageAlerts = function() {
 		$(document.body).on('click', 'a[data-dismiss-alert=page-alert]', function(e) {
 			e.stopPropagation();
-
-			$('#ccm-notification-page-alert').queue(function() {
+			$('.ccm-notification').queue(function() {
 				$(this).addClass('animated fadeOut');
 				$(this).dequeue();
 			}).delay(500).queue(function() {

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\User;
 
 use Concrete\Core\Search\ItemList\Database\AttributedItemList as DatabaseItemList;
@@ -214,6 +214,12 @@ class UserList extends DatabaseItemList
     {
         $group = Group::getByID($gID);
         $this->filterByGroup($group);
+    }
+
+    public function filterByNoGroup()
+    {
+        $this->query->leftJoin('u', 'UserGroups', 'ugex', 'u.uID = ugex.uID');
+        $this->query->andWhere('ugex.gID is null');
     }
 
     public function sortByUserID()

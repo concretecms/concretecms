@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Backup;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Page\Type\Composer\FormLayoutSetControl;
@@ -49,11 +49,11 @@ use FileList;
 use ZipArchive;
 
 class ContentExporter {
-	
+
 	protected $x; // the xml object for export
 	protected static $mcBlockIDs = array();
 	protected static $ptComposerOutputControlIDs = array();
-	
+
 	public function run() {
 		$this->x = new SimpleXMLElement("<concrete5-cif></concrete5-cif>");
 		$this->x->addAttribute('version', '1.0');
@@ -97,23 +97,23 @@ class ContentExporter {
 
 		// now theme
 		PageTheme::exportList($this->x);
-		
+
 		// now packages
 		PackageList::export($this->x);
 
 		// permission access entity types
 		PermissionAccessEntityType::exportList($this->x);
-		
+
 		// now task permissions
 		PermissionKey::exportList($this->x);
 
 		// workflow types
 		WorkflowType::exportList($this->x);
-		
+
 		// now jobs
-		
+
 		Job::exportList($this->x);
-		
+
 		// now single pages
 		$singlepages = $this->x->addChild("singlepages");
 		$db = Loader::db();
@@ -121,12 +121,12 @@ class ContentExporter {
 		while($row = $r->FetchRow()) {
 			$pc = Page::getByID($row['cID'], 'RECENT');
 			$pc->export($singlepages);
-		}		
-		
+		}
+
 		// now stacks/global areas
-		
+
 		StackList::export($this->x);
-		
+
 		// now content pages
 		$pages = $this->x->addChild("pages");
 		$db = Loader::db();
@@ -137,9 +137,9 @@ class ContentExporter {
                 continue;
             }
 			$pc->export($pages);
-		}		
-		
-				
+		}
+
+
 		SystemCaptchaLibrary::exportList($this->x);
 
         \Concrete\Core\Sharing\SocialNetwork\Link::exportList($this->x);
@@ -153,11 +153,11 @@ class ContentExporter {
         Tree::exportList($this->x);
 
 	}
-	
+
 	public static function addMasterCollectionBlockID($b, $id) {
 		self::$mcBlockIDs[$b->getBlockID()] = $id;
 	}
-	
+
 	public static function getMasterCollectionTemporaryBlockID($b) {
 		if (isset(self::$mcBlockIDs[$b->getBlockID()])) {
 			return self::$mcBlockIDs[$b->getBlockID()];
@@ -167,13 +167,13 @@ class ContentExporter {
 	public static function addPageTypeComposerOutputControlID(FormLayoutSetControl $control, $id) {
 		self::$ptComposerOutputControlIDs[$control->getPageTypeComposerFormLayoutSetControlID()] = $id;
 	}
-	
+
 	public static function getPageTypeComposerOutputControlTemporaryID(FormLayoutSetControl $control) {
 		if (isset(self::$ptComposerOutputControlIDs[$control->getPageTypeComposerFormLayoutSetControlID()])) {
 			return self::$ptComposerOutputControlIDs[$control->getPageTypeComposerFormLayoutSetControlID()];
 		}
-	}	
-	
+	}
+
 	public function output() {
 		$xml = $this->x->asXML();
 
@@ -184,7 +184,7 @@ class ContentExporter {
 
 	public function getFilesArchive()
     {
-		
+
 		$vh = Loader::helper("validation/identifier");
 		$archive = $vh->getString();
 
@@ -212,35 +212,35 @@ class ContentExporter {
 
 		return $archive;
 	}
-	
+
 	public static function replacePageWithPlaceHolder($cID) {
-		if ($cID > 0) { 
+		if ($cID > 0) {
 			$c = Page::getByID($cID);
 			return '{ccm:export:page:' . $c->getCollectionPath() . '}';
 		}
 	}
 
 	public static function replaceFileWithPlaceHolder($fID) {
-		if ($fID > 0) { 
+		if ($fID > 0) {
 			$f = File::getByID($fID);
 			return '{ccm:export:file:' . $f->getFileName() . '}';
 		}
 	}
 
 	public static function replacePageWithPlaceHolderInMatch($cID) {
-		if ($cID[1] > 0) { 
+		if ($cID[1] > 0) {
 			$cID = $cID[1];
 			return self::replacePageWithPlaceHolder($cID);
 		}
 	}
 
 	public static function replaceFileWithPlaceHolderInMatch($fID) {
-		if ($fID[1] > 0) { 
+		if ($fID[1] > 0) {
 			$fID = $fID[1];
 			return self::replaceFileWithPlaceHolder($fID);
 		}
 	}
-	
+
 	public static function replacePageTypeWithPlaceHolder($ptID) {
 		if ($ptID > 0) {
 			$ct = PageType::getByID($ptID);
@@ -261,14 +261,14 @@ class ContentExporter {
 	public function removeItem($parent, $node, $handle) {
 		$query = '//'.$node.'[@handle=\''.$handle.'\' or @package=\''.$handle.'\']';
 		$r = $this->x->xpath($query);
-		if ($r && isset($r[0]) && $r[0] instanceof SimpleXMLElement) {		
+		if ($r && isset($r[0]) && $r[0] instanceof SimpleXMLElement) {
 			$dom = dom_import_simplexml($r[0]);
 			$dom->parentNode->removeChild($dom);
 		}
 
 		$query = '//'.$parent;
 		$r = $this->x->xpath($query);
-		if ($r && isset($r[0]) && $r[0] instanceof SimpleXMLElement) {		
+		if ($r && isset($r[0]) && $r[0] instanceof SimpleXMLElement) {
 			$dom = dom_import_simplexml($r[0]);
 			if ($dom->childNodes->length < 1) {
 				$dom->parentNode->removeChild($dom);

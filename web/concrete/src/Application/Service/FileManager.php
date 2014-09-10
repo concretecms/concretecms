@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Concrete\Core\Application\Service;
 use View;
@@ -8,8 +8,8 @@ use File;
 class FileManager {
 
 
-	/** 
-	 * Sets up a file field for use with a block. 
+	/**
+	 * Sets up a file field for use with a block.
 	 * @param string $id The ID of your form field
 	 * @param string $postname The name of your database column into which you'd like to save the file ID
 	 * @param string $chooseText
@@ -17,13 +17,13 @@ class FileManager {
 	 * return string $html
 	 */
 	public function file($id, $postname, $chooseText, $bf = null, $filterArgs = array()) {
-	
+
 		$selectedDisplay = 'none';
 		$resetDisplay = 'block';
 		$fileID = 0;
 		$v = View::getInstance();
 		$v->requireAsset('core/file-manager');
-		
+
 		/**
 		 * If $_POST[$postname] is a valid File ID
 		 * use that file
@@ -36,7 +36,7 @@ class FileManager {
 				$bf = $postFile;
 			}
 		}
-		
+
 		if (is_object($bf) && (!$bf->isError()) && $bf->getFileID() > 0) {
 			$fileID = $bf->getFileID();
 		}
@@ -58,11 +58,11 @@ class FileManager {
 EOL;
 /*
 		$html = '<div id="' . $id . '-fm-selected" class="ccm-file-selected-wrapper">';
-		
+
 		$html .= '<div class="ccm-file-manager-select" id="' . $id . '-fm-display" ccm-file-manager-field="' . $id . '" style="display: ' . $resetDisplay . '">';
 		$html .= '<a href="javascript:void(0)" onclick="ccm_chooseAsset=false; ccm_alLaunchSelectorFileManager(\'' . $id . '\')">' . $chooseText . '</a>';
 		$html .= '</div><input id="' . $id . '-fm-value" type="hidden" name="' . $postname . '" value="' . $fileID . '" />';
-		$html .= '<script type="text/javascript">$(function() { 
+		$html .= '<script type="text/javascript">$(function() {
 		if (is_object($bf) && (!$bf->isError()) && $bf->getFileID() > 0) {
 			$html .= '<script type="text/javascript">$(function() { ccm_triggerSelectFile(' . $fileID . ', \'' . $id . '\'); });</script>';
 		}
@@ -70,8 +70,8 @@ EOL;
 
 		return $html;
 	}
-	
-	/** 
+
+	/**
 	 * Sets up an image to be chosen for use with a block.
 	 * @param string $id The ID of your form field
 	 * @param string $postname The name of your database column into which you'd like to save the file ID

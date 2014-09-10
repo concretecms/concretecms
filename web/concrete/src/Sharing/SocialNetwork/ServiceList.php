@@ -23,7 +23,8 @@ class ServiceList
             array('steam', 'Steam', 'steam'),
             array('vine', 'Vine', 'vine'),
             array('stumbleupon', 'Stumbleupon', 'stumbleupon'),
-            array('skype', 'Skype', 'skype')
+            array('skype', 'Skype', 'skype'),
+            array('personal_website', 'Personal Website', 'external-link')
         );
     }
 

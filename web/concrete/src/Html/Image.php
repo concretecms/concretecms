@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Html;
 
 class Image
@@ -25,8 +25,12 @@ class Image
      * @param \File $f
      * @param null $usePictureTag
      */
-    public function __construct(\File $f, $usePictureTag = null)
+    public function __construct(\File $f = null, $usePictureTag = null)
     {
+        if (!is_object($f)) {
+            return false;
+        }
+
         if (isset($usePictureTag)) {
             $this->usePictureTag = $usePictureTag;
         } else {
@@ -40,12 +44,15 @@ class Image
                 $this->theme = $c->getCollectionThemeObject();
             }
             $sources = array();
+            $fallbackSrc = $f->getRelativePath();
             foreach($this->theme->getThemeResponsiveImageMap() as $thumbnail => $width) {
                 $type = \Concrete\Core\File\Image\Thumbnail\Type\Type::getByHandle($thumbnail);
-                $src = $f->getThumbnailURL($type->getBaseVersion());
-                $sources[] = array('src' => $src, 'width' => $width);
-                if ($width == 0) {
-                    $fallbackSrc = $src;
+                if($type != NULL) {
+                    $src = $f->getThumbnailURL($type->getBaseVersion());
+                    $sources[] = array('src' => $src, 'width' => $width);
+                    if ($width == 0) {
+                        $fallbackSrc = $src;
+                    }
                 }
             }
             $this->tag = \Concrete\Core\Html\Object\Picture::create($sources, $fallbackSrc);

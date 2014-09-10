@@ -74,17 +74,12 @@ Loader::element('permission/access/list', array('pkCategoryHandle' => $pkCategor
 	?>
 		
 	<div id="ccm-tab-content-workflow" class="ccm-tab-content">
-			<h3><?=t('Attach a workflow to this permission?')?></h3>
-			<div class="clearfix">
-			<label><?=t('Workflow')?></label>
-			<div class="input">
-			<ul class="inputs-list">
+			<div class="form-group">
+    			<label class="control-label"><?=t('Attach Workflow to this Permission')?></label>
 				<? foreach($workflows as $wf) { ?>
-					<li><label><input type="checkbox" name="wfID[]" value="<?=$wf->getWorkflowID()?>" <? if (count($wf->getRestrictedToPermissionKeyHandles()) > 0 && (!in_array($permissionKey->getPermissionKeyHandle(), $wf->getRestrictedToPermissionKeyHandles()))) { ?> disabled="disabled" <? } ?>
-					<? if (in_array($wf->getWorkflowID(), $workflowIDs)) { ?> checked="checked" <? } ?> /> <span><?=$wf->getWorkflowName()?></span></label></li>
+					<div class="checkbox"><label><input type="checkbox" name="wfID[]" value="<?=$wf->getWorkflowID()?>" <? if (count($wf->getRestrictedToPermissionKeyHandles()) > 0 && (!in_array($permissionKey->getPermissionKeyHandle(), $wf->getRestrictedToPermissionKeyHandles()))) { ?> disabled="disabled" <? } ?>
+					<? if (in_array($wf->getWorkflowID(), $workflowIDs)) { ?> checked="checked" <? } ?> /> <?=$wf->getWorkflowName()?></label></div>
 				<? } ?>
-			</ul>
-			</div>
 			</div>
 	</div>
 <? } ?>

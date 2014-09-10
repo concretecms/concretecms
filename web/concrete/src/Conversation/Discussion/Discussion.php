@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Conversation\Discussion;
 use Loader;
 use \Concrete\Core\Foundation\Object;
@@ -12,7 +12,7 @@ class Discussion extends Object {
 			$ptID = 0;
 		}
 		$cID = $c->getCollectionID();
-		$date = Loader::helper('date')->getSystemDateTime();
+		$date = Loader::helper('date')->getOverridableNow();
 		$r = $db->Execute('insert into ConversationDiscussions (cnvDiscussionDateCreated, cID) values (?, ?)', array($date, $cID));
 		return static::getByID($db->Insert_ID());
 	}

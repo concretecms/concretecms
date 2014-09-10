@@ -84,7 +84,7 @@ class Collection extends Object
     {
         $db = Loader::db();
         $dh = Loader::helper('date');
-        $cDate = $dh->getSystemDateTime();
+        $cDate = $dh->getOverridableNow();
         $cDatePublic = ($data['cDatePublic']) ? $data['cDatePublic'] : $cDate;
 
         if (isset($data['cID'])) {
@@ -956,7 +956,7 @@ class Collection extends Object
         // marks this collection as newly modified
         $db = Loader::db();
         $dh = Loader::helper('date');
-        $cDateModified = $dh->getSystemDateTime();
+        $cDateModified = $dh->getOverridableNow();
 
         $v = array($cDateModified, $this->cID);
         $q = "update Collections set cDateModified = ? where cID = ?";
@@ -1000,7 +1000,7 @@ class Collection extends Object
     {
         $db = Loader::db();
         $dh = Loader::helper('date');
-        $cDate = $dh->getSystemDateTime();
+        $cDate = $dh->getOverridableNow();
 
         $v = array($cDate, $cDate, $this->cHandle);
         $r = $db->query("insert into Collections (cDateAdded, cDateModified, cHandle) values (?, ?, ?)", $v);

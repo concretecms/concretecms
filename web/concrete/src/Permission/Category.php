@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Permission;
 use \Concrete\Core\Foundation\Object;
 use Loader;
@@ -26,7 +26,7 @@ class Category extends Object {
 			self::$categories[$pkc->getPermissionKeyCategoryHandle()] = $pkc;
 		}
 	}
-	
+
 	public static function getByHandle($pkCategoryHandle) {
 		if (!self::$categories) {
 			self::populateCategories();
@@ -34,7 +34,7 @@ class Category extends Object {
 
 		return array_key_exists($pkCategoryHandle, self::$categories) ? self::$categories[$pkCategoryHandle] : false;
 	}
-	
+
 	public function handleExists($pkHandle) {
 		$db = Loader::db();
 		$r = $db->GetOne("select count(pkID) from PermissionKeys where pkHandle = ?", array($pkHandle));
@@ -42,15 +42,15 @@ class Category extends Object {
 	}
 
 	public static function exportList($xml) {
-		$attribs = self::getList();		
+		$attribs = self::getList();
 		$axml = $xml->addChild('permissioncategories');
 		foreach($attribs as $pkc) {
 			$acat = $axml->addChild('category');
 			$acat->addAttribute('handle', $pkc->getPermissionKeyCategoryHandle());
 			$acat->addAttribute('package', $pkc->getPackageHandle());
-		}		
+		}
 	}
-	
+
 	public static function getListByPackage($pkg) {
 		$db = Loader::db();
 		$list = array();
@@ -60,7 +60,7 @@ class Category extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
+	}
 
 	public function getPermissionKeyByHandle($pkHandle) {
 		$txt = Loader::helper('text');
@@ -75,7 +75,7 @@ class Category extends Object {
 		$ak = call_user_func(array($className, 'getByID'), $pkID);
 		return $ak;
 	}
-	
+
 	public function getToolsURL($task = false) {
 		if (!$task) {
 			$task = 'save_permission';
@@ -109,12 +109,12 @@ class Category extends Object {
 			));
 		}
 	}
-	
+
 	public function clearAccessEntityTypeCategories() {
 		$db = Loader::db();
 		$db->Execute('delete from PermissionAccessEntityTypeCategories where pkCategoryID = ?', $this->pkCategoryID);
 	}
-	
+
 	public static function getList() {
 		$db = Loader::db();
 		$cats = array();
@@ -124,7 +124,7 @@ class Category extends Object {
 		}
 		return $cats;
 	}
-	
+
 	public static function add($pkCategoryHandle, $pkg = false) {
 		$db = Loader::db();
 		if (is_object($pkg)) {
@@ -132,11 +132,11 @@ class Category extends Object {
 		}
 		$db->Execute('insert into PermissionKeyCategories (pkCategoryHandle, pkgID) values (?, ?)', array($pkCategoryHandle, $pkgID));
 		$id = $db->Insert_ID();
-		
+
 		self::$categories = array();
 		return static::getByID($id);
 	}
-	
+
 
 
 }

@@ -1,6 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied.");
 
 $navItems = $controller->getNavItems();
+$c = Page::getCurrentPage();
 
 /**
  * The $navItems variable is an array of objects, each representing a nav menu item.
@@ -110,20 +111,24 @@ foreach ($navItems as $ni) {
 
 //*** Step 2 of 2: Output menu HTML ***/
 
-echo '<ul class="nav">'; //opens the top-level menu
+if (count($navItems) > 0) {
+    echo '<ul class="nav">'; //opens the top-level menu
 
-foreach ($navItems as $ni) {
+    foreach ($navItems as $ni) {
 
-	echo '<li class="' . $ni->classes . '">'; //opens a nav item
-	$name = (isset($translate) && $translate == true) ? t($ni->name) : $ni->name;
-	echo '<a href="' . $ni->url . '" target="' . $ni->target . '" class="' . $ni->classes . '">' . $name . '</a>';
+        echo '<li class="' . $ni->classes . '">'; //opens a nav item
+        $name = (isset($translate) && $translate == true) ? t($ni->name) : $ni->name;
+        echo '<a href="' . $ni->url . '" target="' . $ni->target . '" class="' . $ni->classes . '">' . $name . '</a>';
 
-	if ($ni->hasSubmenu) {
-		echo '<ul>'; //opens a dropdown sub-menu
-	} else {
-		echo '</li>'; //closes a nav item
-		echo str_repeat('</ul></li>', $ni->subDepth); //closes dropdown sub-menu(s) and their top-level nav item(s)
-	}
-}
+        if ($ni->hasSubmenu) {
+            echo '<ul>'; //opens a dropdown sub-menu
+        } else {
+            echo '</li>'; //closes a nav item
+            echo str_repeat('</ul></li>', $ni->subDepth); //closes dropdown sub-menu(s) and their top-level nav item(s)
+        }
+    }
 
-echo '</ul>'; //closes the top-level menu
+    echo '</ul>'; //closes the top-level menu
+} else if (is_object($c) && $c->isEditMode()) { ?>
+    <div class="ccm-edit-mode-disabled-item"><?=t('Empty Auto-Nav Block.')?></div>
+<? }

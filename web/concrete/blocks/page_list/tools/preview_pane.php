@@ -1,6 +1,7 @@
 <?php
 use Concrete\Block\PageList\Controller;
-
+$request = Request::getInstance();
+$request->setCurrentPage(Page::getByID($_REQUEST['cID']));
 $previewMode = true;
 $nh = Loader::helper('navigation');
 $controller = new Controller();
@@ -17,9 +18,13 @@ $controller->ptID = $_REQUEST['ptID'];
 $controller->rss = $_REQUEST['rss'];
 $controller->displayFeaturedOnly = $_REQUEST['displayFeaturedOnly'];
 $controller->displayAliases = $_REQUEST['displayAliases'];
+$controller->paginate = !!$_REQUEST['paginate'];
 $controller->on_start();
+$controller->add();
 $controller->view();
 $pages = $controller->get('pages');
+
+extract($controller->getSets());
 
 require(dirname(__FILE__) . '/../view.php');
 exit;

@@ -1,17 +1,17 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Response;
 use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use PermissionKey;
 use Group;
 class BlockResponse extends Response {
-	
+
 	// legacy support
 	public function canRead() { return $this->validate('view_block'); }
 	public function canWrite() { return $this->validate('edit_block'); }
 	public function canDeleteBlock() { return $this->validate('delete_block'); }
 	public function canAdmin() { return $this->validate('edit_block_permissions'); }
 	public function canAdminBlock() { return $this->validate('edit_block_permissions'); }
-	
+
 	public function canViewEditInterface() {
 		return ($this->canEditBlock() ||
 			$this->canEditBlockCustomTemplate() ||
@@ -19,9 +19,9 @@ class BlockResponse extends Response {
 			$this->canEditBlockDesign() ||
 			$this->canEditBlockPermissions() ||
 			$this->canScheduleGuestAccess()
-		);	
+		);
 	}
-	
+
 	public function canGuestsViewThisBlock() {
 		$pk = PermissionKey::getByHandle('view_block');
 		$pk->setPermissionObject($this->getPermissionObject());
@@ -37,7 +37,7 @@ class BlockResponse extends Response {
 				$valid = false;
 			}
 		}
-		
-		return $valid;		
+
+		return $valid;
 	}
 }

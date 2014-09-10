@@ -1,18 +1,22 @@
-<?
+<?php
 namespace Concrete\Core\File\Event;
-use \Symfony\Component\EventDispatcher\Event as AbstractEvent;
-use \Concrete\Core\File\File as ConcreteFile;
 
-class File extends AbstractEvent {
+use Concrete\Core\File\File as ConcreteFile;
+use Symfony\Component\EventDispatcher\Event as AbstractEvent;
 
-	protected $f;
+class File extends AbstractEvent
+{
 
-	public function __construct(ConcreteFile $f) {
-		$this->f = $f;
-	}
+    protected $f;
 
-	public function getFileObject() {
-		return $this->f;
-	}
+    public function __construct(ConcreteFile $f)
+    {
+        $this->f = $f;
+    }
+
+    public function getFileObject()
+    {
+        return $this->f;
+    }
 
 }

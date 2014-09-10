@@ -1,12 +1,12 @@
-<?
+<?php
 namespace Concrete\Core\Workflow\Progress;
 use Loader;
 use Page;
 use \Concrete\Core\Workflow\Workflow;
 use \Concrete\Core\Workflow\Request\PageRequest as PageWorkflowRequest;
 
-class PageProgress extends Progress {  
-	
+class PageProgress extends Progress {
+
 	protected $cID;
 
 	public static function add(Workflow $wf, PageWorkflowRequest $wr) {
@@ -16,19 +16,19 @@ class PageProgress extends Progress {
 		$wp->cID = $wr->getRequestedPageID();
 		return $wp;
 	}
-	
+
 	public function loadDetails() {
 		$db = Loader::db();
 		$row = $db->GetRow('select cID from PageWorkflowProgress where wpID = ?', array($this->wpID));
-		$this->setPropertiesFromArray($row);		
+		$this->setPropertiesFromArray($row);
 	}
-	
+
 	public function delete() {
 		parent::delete();
 		$db = Loader::db();
 		$db->Execute('delete from PageWorkflowProgress where wpID = ?', array($this->wpID));
 	}
-	
+
 	public static function getList(Page $c, $filters = array('wpIsCompleted' => 0), $sortBy = 'wpDateAdded asc') {
 		$db = Loader::db();
 		$filter = '';
@@ -57,6 +57,6 @@ class PageProgress extends Progress {
 		$list->sortBy('wpDateLastAction', 'desc');
 		return $list;
 	}
-	
-	
+
+
 }

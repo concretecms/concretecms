@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Block\BlockType;
 use \Concrete\Core\Foundation\Object;
 use Loader;
@@ -16,7 +16,7 @@ class Set extends Object {
 			return $akc;
 		}
 	}
-	
+
 	public static function getByHandle($btsHandle) {
 		$db = Loader::db();
 		$row = $db->GetRow('select btsID, btsHandle, pkgID, btsName from BlockTypeSets where btsHandle = ?', array($btsHandle));
@@ -36,7 +36,7 @@ class Set extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
+	}
 
 	public static function getList() {
 		$db = Loader::db();
@@ -47,14 +47,14 @@ class Set extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
-	
+	}
+
 	public function getBlockTypeSetID() {return $this->btsID;}
 	public function getBlockTypeSetHandle() {return $this->btsHandle;}
 	public function getBlockTypeSetName() {return $this->btsName;}
 	public function getPackageID() {return $this->pkgID;}
 	public function getPackageHandle() {return PackageList::getHandle($this->pkgID);}
-	
+
 	/** Returns the display name for this instance (localized and escaped accordingly to $format)
 	* @param string $format = 'html' Escape the result in html format (if $format is 'html'). If $format is 'text' or any other value, the display name won't be escaped.
 	* @return string
@@ -81,7 +81,7 @@ class Set extends Object {
 		$db = Loader::db();
 		$db->Execute("update BlockTypeSets set btsHandle = ? where btsID = ?", array($btsHandle, $this->btsID));
 	}
-	
+
 	public function addBlockType(BlockType $bt) {
 		$db = Loader::db();
 		$no = $db->GetOne("select count(btID) from BlockTypeSetBlockTypes where btID = ? and btsID = ?", array($bt->getBlockTypeID(), $this->getBlockTypeSetID()));
@@ -96,7 +96,7 @@ class Set extends Object {
 			$db->Execute('insert into BlockTypeSetBlockTypes (btsID, btID, displayOrder) values (?, ?, ?)', array($this->getBlockTypeSetID(), $bt->getBlockTypeID(), $displayOrder));
 		}
 	}
-	
+
 	public function clearBlockTypes() {
 		$db = Loader::db();
 		$db->Execute('delete from BlockTypeSetBlockTypes where btsID = ?', array($this->btsID));
@@ -114,10 +114,10 @@ class Set extends Object {
 			$btsDisplayOrder = $db->GetOne('select max(btsDisplayOrder) from BlockTypeSets');
 			$btsDisplayOrder++;
 		}
-		
+
 		$db->Execute('insert into BlockTypeSets (btsHandle, btsName, pkgID) values (?, ?, ?)', array($btsHandle, $btsName, $pkgID));
 		$id = $db->Insert_ID();
-		
+
 		$bs = static::getByID($id);
 		return $bs;
 	}
@@ -159,7 +159,7 @@ class Set extends Object {
 				$types[] = $bt;
 			}
 		}
-		return $types;		
+		return $types;
 	}
 
 	public function get() {
@@ -172,27 +172,27 @@ class Set extends Object {
 				$types[] = $bt;
 			}
 		}
-		return $types;		
+		return $types;
 	}
-	
+
 	public function contains($bt) {
 		$db = Loader::db();
 		$r = $db->GetOne('select count(*) from BlockTypeSetBlockTypes where btsID = ? and btID = ?', array($this->getBlockTypeSetID(), $bt->getBlockTypeID()));
 		return $r > 0;
-	}	
-	
+	}
+
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute('delete from BlockTypeSets where btsID = ?', array($this->getBlockTypeSetID()));
 		$db->Execute('delete from BlockTypeSetBlockTypes where btsID = ?', array($this->getBlockTypeSetID()));
 	}
-	
+
 	public function deleteKey($bt) {
 		$db = Loader::db();
 		$db->Execute('delete from BlockTypeSetBlockTypes where btsID = ? and btID = ?', array($this->getBlockTypeSetID(), $bt->getBlockTypeID()));
 		$this->rescanDisplayOrder();
 	}
-	
+
 	protected function rescanDisplayOrder() {
 		$db = Loader::db();
 		$do = 1;
@@ -202,5 +202,5 @@ class Set extends Object {
 			$do++;
 		}
 	}
-		
+
 }

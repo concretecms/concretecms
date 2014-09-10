@@ -1,15 +1,15 @@
-<?
+<?php
 namespace Concrete\Core\Search\Column;
 use Loader;
 class Set {
-	
+
 	protected $columns = array();
 	protected $defaultSortColumn;
-	
+
 	public function addColumn($col) {
 		$this->columns[] = $col;
 	}
-	
+
 	public function __wakeup() {
 		$i = 0;
 		foreach($this->columns as $col) {
@@ -20,9 +20,9 @@ class Set {
 				}
 			}
 			$i++;
-		}		
+		}
 	}
-	
+
 	public function getSortableColumns() {
 		$tmp = array();
 		$columns = $this->getColumns();
@@ -39,7 +39,7 @@ class Set {
 		}
 		$this->defaultSortColumn = $col;
 	}
-	
+
 	public function getDefaultSortColumn() {
 		return $this->defaultSortColumn;
 	}
@@ -51,7 +51,7 @@ class Set {
 		} else {
 			foreach($this->columns as $col) {
 				if ($col->getColumnKey() == $key) {
-					return $col;			
+					return $col;
 				}
 			}
 		}

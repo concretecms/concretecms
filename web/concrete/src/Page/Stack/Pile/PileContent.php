@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Page\Stack\Pile;
 use Loader;
 use \Concrete\Core\Foundation\Object;

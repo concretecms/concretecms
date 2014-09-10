@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\User\Point;
 use \Concrete\Core\Legacy\DatabaseItemList;
 use Loader;
@@ -9,12 +9,12 @@ class EntryList extends DatabaseItemList {
 
 	protected $autoSortColumns = array('uName', 'upaName', 'upPoints', 'timestamp');
 
-	public function __construct() 
+	public function __construct()
 	{
 		$this->setBaseQuery();
 	}
-	
-	protected function setBaseQuery() 
+
+	protected function setBaseQuery()
 	{
 		$this->setQuery('SELECT UserPointHistory.upID
 			FROM UserPointHistory
@@ -24,27 +24,27 @@ class EntryList extends DatabaseItemList {
 		');
 	}
 
-	
+
 	/**
 	 * @param int $gID
 	 * @return void
 	 */
-	public function filterByGroupID($gID) 
+	public function filterByGroupID($gID)
 	{
-		$this->filter('UserPointActions.gBadgeID',$gID);	
+		$this->filter('UserPointActions.gBadgeID',$gID);
 	}
-	
+
 	/**
 	 * @param string $uName
 	 * @return void
 	 */
-	public function filterByUserName($uName) 
+	public function filterByUserName($uName)
 	{
-		$this->filter('Users.uName',$uName);	
+		$this->filter('Users.uName',$uName);
 	}
 
-	
-	public function filterByUserPointActionName($upaName) 
+
+	public function filterByUserPointActionName($upaName)
 	{
 		$db = Loader::db();
 		$this->filter(false,"UserPointActions.upaName LIKE ".$db->quote('%'.$upaName.'%'));
@@ -54,12 +54,12 @@ class EntryList extends DatabaseItemList {
 	 * @param int $uID
 	 * @return void
 	 */
-	public function filterByUserID($uID) 
+	public function filterByUserID($uID)
 	{
 		$this->filter('UserPointHistory.upuID',$upaTypeID);
 	}
 
-	public function get($items = 0, $offset = 0) 
+	public function get($items = 0, $offset = 0)
 	{
 		$resp = parent::get($items, $offset);
 		$entries = array();
@@ -70,5 +70,5 @@ class EntryList extends DatabaseItemList {
 		}
 		return $entries;
 	}
-	
+
 }

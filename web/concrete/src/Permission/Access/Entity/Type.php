@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Access\Entity;
 use \Concrete\Core\Foundation\Object;
 use Concrete\Core\Permission\Category;
@@ -43,13 +43,13 @@ class Type extends Object {
 			return $wt;
 		}
 	}
-	
+
 	public function __call($method, $args) {
 		$obj = Core::make($this->getAccessEntityTypeClass());
 		$o = new $obj();
 		return call_user_func_array(array($obj, $method), $args);
 	}
-	
+
 	public function getAccessEntityTypeToolsURL($task = false) {
 		if (!$task) {
 			$task = 'process';
@@ -66,14 +66,14 @@ class Type extends Object {
 		$list = array();
 		if ($category instanceof Category) {
 			$r = $db->Execute('select pet.petID from PermissionAccessEntityTypes pet inner join PermissionAccessEntityTypeCategories petc on pet.petID = petc.petID where petc.pkCategoryID = ? order by pet.petID asc', array($category->getPermissionKeyCategoryID()));
-		} else { 
+		} else {
 			$r = $db->Execute('select petID from PermissionAccessEntityTypes order by petID asc');
 		}
-		
+
 		while ($row = $r->FetchRow()) {
 			$list[] = static::getByID($row['petID']);
 		}
-		
+
 		$r->Close();
 		return $list;
 	}
@@ -82,7 +82,7 @@ class Type extends Object {
 	public function getPackageHandle() {
 		return PackageList::getHandle($this->pkgID);
 	}
-	
+
 	public static function exportList($xml) {
 		$ptypes = static::getList();
 		$db = Loader::db();
@@ -101,12 +101,12 @@ class Type extends Object {
 			}
 		}
 	}
-	
+
 	public function delete() {
 		$db = Loader::db();
 		$db->Execute("delete from PermissionAccessEntityTypes where petID = ?", array($this->petID));
 	}
-	
+
 	public static function getListByPackage($pkg) {
 		$db = Loader::db();
 		$list = array();
@@ -116,8 +116,8 @@ class Type extends Object {
 		}
 		$r->Close();
 		return $list;
-	}	
-	
+	}
+
 	public static function getByHandle($petHandle) {
 		$db = Loader::db();
 		$petID = $db->GetOne('select petID from PermissionAccessEntityTypes where petHandle = ?', array($petHandle));
@@ -125,7 +125,7 @@ class Type extends Object {
 			return self::getByID($petID);
 		}
 	}
-	
+
 	public static function add($petHandle, $petName, $pkg = false) {
 		$pkgID = 0;
 		if (is_object($pkg)) {
@@ -137,5 +137,5 @@ class Type extends Object {
 		$est = static::getByID($id);
 		return $est;
 	}
-	
+
 }

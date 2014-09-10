@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Feature\Assignment;
 use \Concrete\Core\Feature\Feature;
 use \Concrete\Core\Feature\Category\Category as FeatureCategory;

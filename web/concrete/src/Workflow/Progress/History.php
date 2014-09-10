@@ -1,16 +1,19 @@
-<?
+<?php
 namespace Concrete\Core\Workflow\Progress;
 use \Concrete\Core\Foundation\Object;
+use Concrete\Core\Workflow\Request\Request;
 use Loader;
-class History extends Object {  
+use UserInfo;
+
+class History extends Object {
 
 	public function getWorkflowProgressHistoryTimestamp() {return $this->timestamp;}
 	public function getWorkflowProgressHistoryID() {return $this->wphID;}
 	public function getWorkflowProgressID() {return $this->wpID;}
 	public function getWorkflowProgressHistoryInnerObject() {return $this->object;}
-	
+
 	public function getWorkflowProgressHistoryDescription() {
-		if ($this->object instanceof WorkflowRequest) {
+		if ($this->object instanceof Request) {
 			$d = $this->object->getWorkflowRequestDescriptionObject();
 			$ui = UserInfo::getByID($this->object->getRequesterUserID());
 			return $d->getDescription() . ' ' . t('Originally requested by %s.', $ui->getUserName());
@@ -20,8 +23,8 @@ class History extends Object {
 			return $d;
 		}
 	}
-	
-	public static function getList(WorkflowProgress $wp) {
+
+	public static function getList(Progress $wp) {
 		$db = Loader::db();
 		$r = $db->Execute('select wphID from WorkflowProgressHistory where wpID = ? order by timestamp desc', array($wp->getWorkflowProgressID()));
 		$list = array();

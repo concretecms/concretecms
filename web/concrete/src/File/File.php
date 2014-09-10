@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\File;
 
 use Carbon\Carbon;
@@ -357,7 +357,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         // duplicate the core file object
         $nf = clone $this;
         $dh = Loader::helper('date');
-        $date = $dh->getSystemDateTime();
+        $date = $dh->getOverridableNow();
         $nf->fDateAdded = new Carbon($date);
 
         $em->persist($nf);
@@ -421,7 +421,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
     {
         $db = Loader::db();
         $dh = Loader::helper('date');
-        $date = $dh->getSystemDateTime();
+        $date = $dh->getOverridableNow();
 
         if (!is_object($fsl)) {
             $fsl = StorageLocation::getDefault();

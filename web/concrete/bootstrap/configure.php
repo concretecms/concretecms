@@ -37,22 +37,12 @@ defined('CONFIG_FILE') or define('CONFIG_FILE', DIR_CONFIG_SITE . '/site.php');
 
 /**
  * ----------------------------------------------------------------------------
- * Developer preview constants.
- * ----------------------------------------------------------------------------
- */
-define('ENABLE_MARKETPLACE_SUPPORT', false);
-define('ENABLE_APP_NEWS_OVERLAY', false);
-define('ENABLE_APP_NEWS', false);
-
-
-
-/**
- * ----------------------------------------------------------------------------
  * Now we test to see if we have a valid site configuration file. If not, we're
  * going to need to render install.
  * ----------------------------------------------------------------------------
  */
-if (file_exists(CONFIG_FILE)) define('CONFIG_FILE_EXISTS', true) and include(CONFIG_FILE);
+if (!defined('APP_UPDATED_PASSTHRU')
+&& file_exists(CONFIG_FILE)) define('CONFIG_FILE_EXISTS', true) and include(CONFIG_FILE);
 
 
 
@@ -75,6 +65,16 @@ if (defined('DIRNAME_CORE_UPDATED') && (!defined('APP_UPDATED_PASSTHRU'))) {
     }
     exit;
 }
+
+
+/**
+ * ----------------------------------------------------------------------------
+ * Developer preview constants.
+ * ----------------------------------------------------------------------------
+ */
+define('ENABLE_MARKETPLACE_SUPPORT', false);
+define('ENABLE_APP_NEWS_OVERLAY', false);
+define('ENABLE_APP_NEWS', true);
 
 
 

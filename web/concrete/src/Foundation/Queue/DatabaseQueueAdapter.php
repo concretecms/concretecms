@@ -162,8 +162,7 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
         try {
             if ( $maxMessages > 0 ) { // ZF-7666 LIMIT 0 clause not included.
                 $this->db->beginTransaction();
-
-                $statement = $this->db->prepare('select * from QueueMessages where queue_id = ? and handle is null or timeout + ' . (int) $timeout . ' < ' . (int) $microtime . ' limit ' . $maxMessages);
+                $statement = $this->db->prepare('select * from QueueMessages where queue_id = ? and handle is null or timeout + ' . (int) $timeout . ' < ' . (int) $microtime . ' limit ' . $maxMessages . ' for update');
                 $statement->bindValue(1, $this->getQueueId($queue->getName()));
                 $r = $statement->execute();
 
@@ -172,7 +171,7 @@ class DatabaseQueueAdapter extends \ZendQueue\Adapter\AbstractAdapter
                     $data['handle'] = md5(uniqid(rand(), true));
 
                     // update the database
-                    $count = $this->db->executeUpdate('update QueueMessages set handle = ?, timeout = ? where message_id = ? and handle is null or timeout + ' . (int)$timeout . ' < ' . (int) $microtime,
+                    $count = $this->db->executeUpdate('update QueueMessages set handle = ?, timeout = ? where message_id = ? and (handle is null or timeout + ' . (int)$timeout . ' < ' . (int) $microtime . ')',
                         array($data['handle'], $microtime, $data['message_id']));
 
                     // we check count to make sure no other thread has gotten

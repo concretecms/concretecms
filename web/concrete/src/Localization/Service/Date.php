@@ -3,147 +3,99 @@ namespace Concrete\Core\Localization\Service;
 
 use Request;
 use \Punic\Calendar;
-use Cache;
 use Localization;
 use User;
 
 class Date
 {
     /**
-	 * Gets the date time for the local time zone/area if user timezones are enabled, if not returns system datetime
-	 * @param string $systemDateTime
-	 * @param string $format
-	 * @return string $datetime
-	 */
-    public function getLocalDateTime($systemDateTime = 'now', $mask = null)
-    {
-        if (!isset($mask) || !strlen($mask)) {
-            $mask = 'Y-m-d H:i:s';
-        }
+     * The PHP date/time format string to be used when dealing with the database.
+     * @var string
+     * @see http://php.net/manual/function.date.php
+     */
+    const DB_FORMAT = 'Y-m-d H:i:s';
 
+    /**
+     * Convert any date/time representation to a string that can be used in DB queries.
+     * @param string|int|\DateTime $value It can be:<ul>
+     *    <li>the special value 'now' (default) to return the current date/time</li>
+     *    <li>a \DateTime instance</li>
+     *    <li>a string parsable by strtotime (the $fromTimezone timezone is used)</li>
+     *    <li>a timestamp</li>
+     * </ul>
+     * @param string $fromTimezone The timezone where $value is defined (useful only if $value is a date/time representation without a timezone, like for instance '2000-12-31 23:59:59').<br />
+     * Special values are:<ul>
+     *    <li>'system' (default) for the current system timezone</li>
+     *    <li>'user' for the user's timezone</li>
+     *    <li>'app' for the app's timezone</li>
+     *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
+     * </ul>
+    * @param string Returns the date/time representation (an empty string if $value is empty)
+     */
+    public function toDB($value = 'now', $fromTimezone = 'system')
+    {
+        $datetime = $this->toDateTime($value, 'system', $fromTimezone);
+
+        return is_object($datetime) ? $datetime->format(static::DB_FORMAT) : '';
+    }
+
+    /**
+     * Return the date/time representation for now, that can be overridden by a custom request when viewing pages in a moment specified by administrators (custom request date/time).
+     * @param bool $asTimestamp Set to true to retrieve the Unix timestamp, false to retrieve the string representation (eg '2000-12-31 23:59:59')
+     * @return string|int
+     */
+    public function getOverridableNow($asTimestamp = false)
+    {
         $req = Request::getInstance();
         if ($req->hasCustomRequestUser() && $req->getCustomRequestDateTime()) {
-            return date($mask, strtotime($req->getCustomRequestDateTime()));
+            $timestamp = strtotime($req->getCustomRequestDateTime());
+        } else {
+            $timestamp = time();
         }
 
-        if (!isset($systemDateTime) || !strlen($systemDateTime)) {
-            return NULL; // if passed a null value, pass it back
-        } elseif (strlen($systemDateTime)) {
-            $datetime = new \DateTime($systemDateTime);
-        } else {
-            $datetime = new \DateTime();
-        }
-
-        if (defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) {
-            $u = new User();
-            if ($u && $u->isRegistered()) {
-                $utz = $u->getUserTimezone();
-                if ($utz) {
-                    $tz = new \DateTimeZone($utz);
-                    $datetime->setTimezone($tz);
-                }
-            }
-        }
-        if (Localization::activeLocale() != 'en_US') {
-            return $this->dateTimeFormatLocal($datetime, $mask);
-        } else {
-            return $datetime->format($mask);
-        }
+        return $asTimestamp ? $timestamp : date(static::DB_FORMAT, $timestamp);
     }
 
     /**
-	 * Converts a user entered datetime to the system datetime
-	 * @param string $userDateTime
-	 * @param string $systemDateTime
-	 * @return string $datetime
-	 */
-    public function getSystemDateTime($userDateTime = 'now', $mask = null)
-    {
-        if (!isset($mask) || !strlen($mask)) {
-            $mask = 'Y-m-d H:i:s';
-        }
-        $req = Request::getInstance();
-        if ($req->hasCustomRequestUser()) {
-            return date($mask, strtotime($req->getCustomRequestDateTime()));
-        }
-
-        if (!isset($userDateTime) || !strlen($userDateTime)) {
-            return NULL; // if passed a null value, pass it back
-        }
-        $datetime = new \DateTime($userDateTime);
-
-        if (defined('APP_TIMEZONE')) {
-            $tz = new \DateTimeZone(APP_TIMEZONE_SERVER);
-            $datetime = new \DateTime($userDateTime,$tz); // create the in the user's timezone
-            $stz = new \DateTimeZone(date_default_timezone_get()); // grab the default timezone
-            $datetime->setTimeZone($stz); // convert the datetime object to the current timezone
-        }
-
-        if (defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) {
-            $u = new User();
-            if ($u && $u->isRegistered()) {
-                $utz = $u->getUserTimezone();
-                if ($utz) {
-                    $tz = new \DateTimeZone($utz);
-                    $datetime = new \DateTime($userDateTime,$tz); // create the in the user's timezone
-
-                    $stz = new \DateTimeZone(date_default_timezone_get()); // grab the default timezone
-                    $datetime->setTimeZone($stz); // convert the datetime object to the current timezone
-                }
-            }
-        }
-        if (Localization::activeLocale() != 'en_US') {
-            return $this->dateTimeFormatLocal($datetime, $mask);
-        } else {
-            return $datetime->format($mask);
-        }
-    }
-
-    /**
-	 * Gets the localized date according to a specific mask
-	 * @param \DateTime $datetime A PHP \DateTime Object
-	 * @param string $mask
-	 * @return string
-	 */
-    public function dateTimeFormatLocal($datetime, $mask)
-    {
-        return Calendar::format(
-            $datetime,
-            Calendar::convertPhpToIsoFormat($mask)
-        );
-    }
-
-    /**
-	 * Subsitute for the native date() function that adds localized date support
-	 * @param string $mask
-	 * @param int $timestamp
-	 * @return string
-	 */
-    public function date($mask, $timestamp = false)
+     * Subsitute for the native date() function that adds localized date support.
+     * Use *ONLY* if really needed: you may want to use some of the formatDate/Time methods.
+     * If you're not working with timestamps you may want to use the formatCustom method.
+     * @param string $mask The PHP format mask
+     * @param bool|int $timestamp Use false for the current date/time, otherwise a valid Unix timestamp.
+     * @return string
+     * @see http://php.net/manual/function.date.php
+     */
+    public function date($mask, $timestamp = false, $toTimezone = 'system')
     {
         if ($timestamp === false) {
             $timestamp = time();
         }
-        if (Localization::activeLocale() == 'en_US') {
-            return date($mask, $timestamp);
+        $result = '';
+        $datetime = $this->toDateTime($timestamp, $toTimezone);
+        if (is_object($datetime)) {
+            if (Localization::activeLocale() == 'en_US') {
+                $result = $datetime->format($mask);
+            } else {
+                $result = Calendar::format(
+                    $datetime,
+                    Calendar::convertPhpToIsoFormat($mask)
+                );
+            }
         }
 
-        return Calendar::formatEx(
-            $timestamp,
-            Calendar::convertPhpToIsoFormat($mask)
-        );
+        return $result;
     }
 
     /**
-	 * Returns a keyed array of timezone identifiers
-	 * @return array
-	 * @see http://www.php.net/datetimezone.listidentifiers.php
-	 */
+     * Returns a keyed array of timezone identifiers (keys are the standard PHP timezone names, values are the localized timezone names)
+     * @return array
+     * @see http://www.php.net/datetimezone.listidentifiers.php
+     */
     public function getTimezones()
     {
         static $cache = array();
         $locale = Localization::activeLocale();
-        if(array_key_exists($locale, $cache)) {
+        if (array_key_exists($locale, $cache)) {
             $result = $cache[$locale];
         } else {
             $result = array();
@@ -153,31 +105,30 @@ class Date
                 'America' => \Punic\Territory::getName('019'),
                 'Antarctica' => \Punic\Territory::getName('AQ'),
                 'Arctic' => t('Arctic'),
-                'Asia' => \Punic\Territory::getName('142'),
                 'Atlantic' => t('Atlantic Ocean'),
                 'Australia' => \Punic\Territory::getName('AU'),
                 'Europe' => \Punic\Territory::getName('150'),
                 'Indian' => t('Indian Ocean'),
                 'Pacific' => t('Pacific Ocean')
             );
-            foreach(\DateTimeZone::listIdentifiers() as $timezoneID) {
-                switch($timezoneID) {
+            foreach (\DateTimeZone::listIdentifiers() as $timezoneID) {
+                switch ($timezoneID) {
                     case 'UTC':
                     case 'GMT':
                         $timezoneName = t('Greenwich Mean Time');
                         break;
                     default:
                         $chunks = explode('/', $timezoneID);
-                        if(array_key_exists($chunks[0], $continentNames)) {
+                        if (array_key_exists($chunks[0], $continentNames)) {
                             $chunks[0] = $continentNames[$chunks[0]];
                         }
-                        if(count($chunks) > 0) {
+                        if (count($chunks) > 0) {
                             $city = \Punic\Calendar::getTimezoneExemplarCity($timezoneID, false);
-                            if(!strlen($city)) {
-                                switch($timezoneID) {
+                            if (!strlen($city)) {
+                                switch ($timezoneID) {
                                     case 'Antarctica/South_Pole':
                                         $city = t('South Pole');
-                                        default:
+                                        break;
                                     case 'America/Montreal':
                                         $city = t('Montreal');
                                         break;
@@ -186,7 +137,7 @@ class Date
                                         break;
                                 }
                             }
-                            if(strlen($city)) {
+                            if (strlen($city)) {
                                 $chunks = array($chunks[0], $city);
                             }
                         }
@@ -204,17 +155,25 @@ class Date
 
     /**
      * Returns the display name of a timezone
-     * @param string $timezone The standard name of a timezone
+     * @param string|\DateTimeZone|\DataTime $timezone The timezone for which you want the localized display name
      * @return string
      */
     public function getTimezoneDisplayName($timezone)
     {
         $displayName = '';
-        if (is_string($timezone) && strlen($timezone)) {
+        if (is_object($timezone)) {
+            if ($timezone instanceof \DateTimeZone) {
+                $displayName = $timezone->getName();
+            } elseif ($timezone instanceof \DateTime) {
+                $displayName = $timezone->getTimezone()->getName();
+            }
+        } elseif (is_string($timezone)) {
             $displayName = $timezone;
+        }
+        if (strlen($displayName) > 0) {
             $timezones = $this->getTimezones();
-            if (array_key_exists($timezone, $timezones)) {
-                $displayName = $timezones[$timezone];
+            if (array_key_exists($displayName, $timezones)) {
+                $displayName = $timezones[$displayName];
             }
         }
 
@@ -268,7 +227,7 @@ class Date
         } elseif ($minutes > 0) {
             $description = t2('%d minute', '%d minutes', $minutes, $minutes);
             if ($precise) {
-                $description .= ', '.t2('%d second', '%d seconds', $seconds, $seconds);
+                $description .= ', ' . t2('%d second', '%d seconds', $seconds, $seconds);
             }
         } else {
             $description = t2('%d second', '%d seconds', $seconds, $seconds);
@@ -287,7 +246,7 @@ class Date
      * </ul>
      * @return string
      */
-    public function getTimezone($timezone)
+    public function getTimezoneID($timezone)
     {
         switch ($timezone) {
             case 'system':
@@ -313,7 +272,7 @@ class Date
                 if ($tz) {
                     $timezone = $tz;
                 } else {
-                    $timezone = $this->getTimezone('app');
+                    $timezone = $this->getTimezoneID('app');
                 }
                 break;
         }
@@ -322,11 +281,35 @@ class Date
     }
 
     /**
+     * Returns a \DateTimeZone instance for a specified timezone identifier
+     * @param string $timezone The timezone to retrieve. Special values are:<ul>
+     *    <li>'system' (default) for the current system timezone</li>
+     *    <li>'user' for the user's timezone</li>
+     *    <li>'app' for the app's timezone</li>
+     *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
+     * </ul>
+     * @return \DateTimeZone|null Returns null if $timezone is invalid or the \DateTimeZone corresponding to $timezone
+     */
+    public function getTimezone($timezone)
+    {
+        $tz = null;
+        $phpTimezone = $this->getTimezoneID($timezone);
+        if (is_string($phpTimezone) && strlen($phpTimezone)) {
+            try {
+                $tz = new \DateTimeZone($phpTimezone);
+            } catch (\Exception $x) {
+            }
+        }
+
+        return $tz;
+    }
+
+    /**
      * Convert a date to a \DateTime instance.
      * @param string|\DateTime|int $value It can be:<ul>
      *    <li>the special value 'now' (default) to return the current date/time</li>
      *    <li>a \DateTime instance</li>
-     *    <li>a string parsable by strtotime (the current system timezone is used)</li>
+     *    <li>a string parsable by strtotime (the $fromTimezone timezone is used)</li>
      *    <li>a timestamp</li>
      * </ul>
      * @param string $toTimezone The timezone to set. Special values are:<ul>
@@ -335,11 +318,12 @@ class Date
      *    <li>'app' for the app's timezone</li>
      *    <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
+     * @param string $fromTimezone The original timezone of $value (useful only if $value is a string like '2000-12-31 23:59'); it accepts the same values as $toTimezone.
      * @return \DateTime|null Returns the \DateTime instance (or null if $value couldn't be parsed)
      */
-    public function toDateTime($value = 'now', $toTimezone = 'system')
+    public function toDateTime($value = 'now', $toTimezone = 'system', $fromTimezone = 'system')
     {
-        return Calendar::toDateTime($value, $this->getTimezone($toTimezone));
+        return Calendar::toDateTime($value, $this->getTimezone($toTimezone), $this->getTimezone($fromTimezone));
     }
 
     /**
@@ -367,7 +351,7 @@ class Date
         $dtFrom = new \DateTime($dtFrom->format('Y-m-d'), $utc);
         $dtTo->setTimezone($utc);
         $dtTo = new \DateTime($dtTo->format('Y-m-d'), $utc);
-        
+
         $seconds = $dtTo->getTimestamp() - $dtFrom->getTimestamp();
 
         return round($seconds / 86400);
@@ -441,6 +425,7 @@ class Date
                 $format = 'short|short|short';
             }
         }
+
         return Calendar::formatDateTime(
             $this->toDateTime($value, $toTimezone),
             $format
@@ -500,11 +485,20 @@ class Date
         $days = $this->getDeltaDays('now', $dtDate, $timezone);
         switch ($days) {
             case 0:
-                return t(/*i18n: %s is a time */ 'Today at %s', $this->formatTime($dtDate, $withSeconds, $timezone));
+                return t( /*i18n: %s is a time */
+                    'Today at %s',
+                    $this->formatTime($dtDate, $withSeconds, $timezone)
+                );
             case 1:
-                return t(/*i18n: %s is a time */ 'Tomorrow at %s', $this->formatTime($dtDate, $withSeconds, $timezone));
+                return t( /*i18n: %s is a time */
+                    'Tomorrow at %s',
+                    $this->formatTime($dtDate, $withSeconds, $timezone)
+                );
             case -1:
-                return t(/*i18n: %s is a time */ 'Yesterday at %s', $this->formatTime($dtDate, $withSeconds, $timezone));
+                return t( /*i18n: %s is a time */
+                    'Yesterday at %s',
+                    $this->formatTime($dtDate, $withSeconds, $timezone)
+                );
             default:
                 return $this->formatDateTime($dtDate, $longDate, $withSeconds);
         }
@@ -520,12 +514,13 @@ class Date
      *     <li>'app' for the app's timezone</li>
      *     <li>Other values: one of the PHP supported time zones (see http://us1.php.net/manual/en/timezones.php )</li>
      * </ul>
+     * @param string $fromTimezone The original timezone of $value (useful only if $value is a string like '2000-12-31 23:59'); it accepts the same values as $toTimezone.
      * @return string Returns an empty string if $value couldn't be parsed, the localized string otherwise
      */
-    public function formatCustom($format, $value = 'now', $toTimezone = 'user')
+    public function formatCustom($format, $value = 'now', $toTimezone = 'user', $fromTimezone = 'system')
     {
-        return Calendar::formatEx(
-            $this->toDateTime($value, $toTimezone),
+        return Calendar::format(
+            $this->toDateTime($value, $toTimezone, $fromTimezone),
             Calendar::convertPhpToIsoFormat($format)
         );
     }
@@ -539,23 +534,24 @@ class Date
     {
         $phpFormat = (is_string($relatedPHPFormat) && strlen($relatedPHPFormat)) ?
             $relatedPHPFormat :
-            t(/*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */ 'n/j/Y')
-        ;
+            t( /*i18n: Short date format: see http://www.php.net/manual/en/function.date.php */
+                'n/j/Y'
+            );
         // Special chars that need to be escaped in the DatePicker format string
         $datepickerSpecials = array('d', 'o', 'D', 'm', 'M', 'y', '@', '!', '\'');
         // Map from php to DatePicker format
         $map = array(
-                'j' => 'd',
-                'd' => 'dd',
-                'z' => 'o',
-                'D' => 'D',
-                'l' => 'DD',
-                'n' => 'm',
-                'm' => 'mm',
-                'M' => 'M',
-                'F' => 'MM',
-                'y' => 'y',
-                'Y' => 'yy'
+            'j' => 'd',
+            'd' => 'dd',
+            'z' => 'o',
+            'D' => 'D',
+            'l' => 'DD',
+            'n' => 'm',
+            'm' => 'mm',
+            'M' => 'M',
+            'F' => 'MM',
+            'y' => 'y',
+            'Y' => 'yy'
         );
         $datepickerFormat = '';
         $escaped = false;
@@ -591,12 +587,93 @@ class Date
      */
     public function getTimeFormat()
     {
-        $timeFormat = tc(/*i18n: can be 12 or 24 */'Time format', '12');
-        switch ($timeFormat) {
-            case '24':
-                return 24;
-            default:
-                return 12;
+        return \Punic\Calendar::has12HoursClock() ? 12 : 24;
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getLocalDateTime($systemDateTime = 'now', $mask = null)
+    {
+        if (!isset($mask) || !strlen($mask)) {
+            $mask = static::DB_FORMAT;
+        }
+
+        if (!isset($systemDateTime) || !strlen($systemDateTime)) {
+            return null; // if passed a null value, pass it back
+        } elseif (strlen($systemDateTime)) {
+            $datetime = new \DateTime($systemDateTime);
+        } else {
+            $datetime = new \DateTime();
+        }
+
+        if (defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) {
+            $u = new User();
+            if ($u && $u->isRegistered()) {
+                $utz = $u->getUserTimezone();
+                if ($utz) {
+                    $tz = new \DateTimeZone($utz);
+                    $datetime->setTimezone($tz);
+                }
+            }
+        }
+        if (Localization::activeLocale() != 'en_US') {
+            return $this->dateTimeFormatLocal($datetime, $mask);
+        } else {
+            return $datetime->format($mask);
         }
     }
+
+    /**
+     * @deprecated
+     */
+    public function getSystemDateTime($userDateTime = 'now', $mask = null)
+    {
+        if (!isset($mask) || !strlen($mask)) {
+            $mask = static::DB_FORMAT;
+        }
+
+        if (!isset($userDateTime) || !strlen($userDateTime)) {
+            return null; // if passed a null value, pass it back
+        }
+        $datetime = new \DateTime($userDateTime);
+
+        if (defined('APP_TIMEZONE')) {
+            $tz = new \DateTimeZone(APP_TIMEZONE_SERVER);
+            $datetime = new \DateTime($userDateTime, $tz); // create the in the user's timezone
+            $stz = new \DateTimeZone(date_default_timezone_get()); // grab the default timezone
+            $datetime->setTimeZone($stz); // convert the datetime object to the current timezone
+        }
+
+        if (defined('ENABLE_USER_TIMEZONES') && ENABLE_USER_TIMEZONES) {
+            $u = new User();
+            if ($u && $u->isRegistered()) {
+                $utz = $u->getUserTimezone();
+                if ($utz) {
+                    $tz = new \DateTimeZone($utz);
+                    $datetime = new \DateTime($userDateTime, $tz); // create the in the user's timezone
+
+                    $stz = new \DateTimeZone(date_default_timezone_get()); // grab the default timezone
+                    $datetime->setTimeZone($stz); // convert the datetime object to the current timezone
+                }
+            }
+        }
+        if (Localization::activeLocale() != 'en_US') {
+            return $this->dateTimeFormatLocal($datetime, $mask);
+        } else {
+            return $datetime->format($mask);
+        }
+    }
+
+    /**
+     * @deprecated
+     */
+    public function dateTimeFormatLocal($datetime, $mask)
+    {
+        return Calendar::format(
+            $datetime,
+            Calendar::convertPhpToIsoFormat($mask)
+        );
+    }
+
 }

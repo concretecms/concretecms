@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\File\StorageLocation\Configuration;
 use Concrete\Core\Error\Error;
 use \League\Flysystem\Adapter\Local;

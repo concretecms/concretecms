@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Workflow\Request;
 use Workflow;
 use Loader;
@@ -12,14 +12,14 @@ use Events;
 use \Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 class ChangePagePermissionsInheritanceRequest extends PageRequest {
-	
+
 	protected $wrStatusNum = 30;
 
 	public function __construct() {
 		$pk = PermissionKey::getByHandle('edit_page_permissions');
 		parent::__construct($pk);
 	}
-	
+
 	public function setPagePermissionsInheritance($inheritance) {
 		$this->inheritance = $inheritance;
 	}
@@ -38,23 +38,23 @@ class ChangePagePermissionsInheritanceRequest extends PageRequest {
 		$d->setShortStatus(t("Permission Inheritance Changes"));
 		return $d;
 	}
-	
+
 	public function getWorkflowRequestStyleClass() {
 		return 'info';
 	}
-	
+
 	public function getWorkflowRequestApproveButtonClass() {
-		return 'success';
+		return 'btn-success';
 	}
-	
+
 	public function getWorkflowRequestApproveButtonInnerButtonRightHTML() {
-		return '<i class="icon-white icon-thumbs-up"></i>';
-	}		
-	
+		return '<i class="fa fa-thumbs-o-up"></i>';
+	}
+
 	public function getWorkflowRequestApproveButtonText() {
 		return t('Change Inheritance');
 	}
-	
+
 	public function approve(WorkflowProgress $wp) {
 		$c = Page::getByID($this->getRequestedPageID());
 		switch($this->inheritance) {
@@ -67,11 +67,11 @@ class ChangePagePermissionsInheritanceRequest extends PageRequest {
 			default:
 				$c->setPermissionsToManualOverride();
 				break;
-		}			
+		}
 		$wpr = new WorkflowProgressResponse();
 		$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
 		return $wpr;
 	}
 
-	
+
 }

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Assignment;
 use PermissionAccess;
 use \Concrete\Core\Permission\Cache as PermissionCache;
@@ -39,7 +39,7 @@ class PageAssignment extends Assignment {
 		$pa->markAsInUse();
 		PermissionCache::clearAccessObject($this->pk, $this->getPermissionObject());
 	}
-		
+
 	public function getPermissionKeyToolsURL($task = false) {
 		$pageArray = $this->pk->getMultiplePageArray();
 		if (is_array($pageArray) && count($pageArray) > 0) {
@@ -52,6 +52,6 @@ class PageAssignment extends Assignment {
 			return parent::getPermissionKeyToolsURL($task) . '&cID=' . $this->getPermissionObject()->getCollectionID();
 		}
 	}
-	
-	
+
+
 }

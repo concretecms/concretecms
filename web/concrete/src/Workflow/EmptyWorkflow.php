@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Workflow;
 use \Concrete\Core\Foundation\Object;
 use \Concrete\Core\Workflow\Progress\Progress as WorkflowProgress;
@@ -13,7 +13,7 @@ class EmptyWorkflow extends ConcreteWorkflow {
 	}
 	public function updateDetails($vars) {}
 	public function loadDetails() {}
-	
+
 	public function canApproveWorkflowProgressObject(WorkflowProgress $wp) {
 		return false;
 	}

@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Permission\Key;
 use Loader;
 use User;
@@ -13,7 +13,7 @@ class ViewUserAttributesUserKey extends UserKey  {
 			$list = $this->getAccessListItems(UserKey::ACCESS_TYPE_ALL, $accessEntities);
 			$list = PermissionDuration::filterByActive($list);
 		}
-		
+
 		$db = Loader::db();
 		$allakIDs = $db->GetCol('select akID from UserAttributeKeys');
 		$akIDs = array();
@@ -24,7 +24,7 @@ class ViewUserAttributesUserKey extends UserKey  {
 			if ($l->getAttributesAllowedPermission() == 'C') {
 				if ($l->getAccessType() == PermissionKey::ACCESS_TYPE_EXCLUDE) {
 					$akIDs = array_values(array_diff($akIDs, $l->getAttributesAllowedArray()));
-				} else { 
+				} else {
 					$akIDs = array_unique(array_merge($akIDs, $l->getAttributesAllowedArray()));
 				}
 			}
@@ -32,11 +32,11 @@ class ViewUserAttributesUserKey extends UserKey  {
 				$akIDs = $allakIDs;
 			}
 		}
-		
+
 		return $akIDs;
 	}
-	
-	
+
+
 	public function getMyAssignment() {
 		$u = new User();
 		$asl = new ViewUserAttributesUserPermissionAssignment();
@@ -49,7 +49,7 @@ class ViewUserAttributesUserKey extends UserKey  {
 		if (!is_object($pae)) {
 			return $asl;
 		}
-		
+
 		$accessEntities = $u->getUserAccessEntityObjects();
 		$accessEntities = $pae->validateAndFilterAccessEntities($accessEntities);
 		$list = $this->getAccessListItems(UserKey::ACCESS_TYPE_ALL, $accessEntities);
@@ -67,12 +67,12 @@ class ViewUserAttributesUserKey extends UserKey  {
 			if ($l->getAttributesAllowedPermission() == 'A') {
 				$asl->setAttributesAllowedPermission('A');
 			}
-		}	
-		
+		}
+
 		$asl->setAttributesAllowedArray($this->getAllowedAttributeKeyIDs($list));
 		return $asl;
 	}
-	
+
 	public function validate($obj = false) {
 		$u = new User();
 		if ($u->isSuperUser()) {
@@ -90,7 +90,7 @@ class ViewUserAttributesUserKey extends UserKey  {
 		} else {
 			return count($types) > 0;
 		}
-	}	
+	}
 
-	
+
 }

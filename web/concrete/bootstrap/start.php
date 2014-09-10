@@ -243,6 +243,7 @@ $response = $cms->dispatch($request);
  * Send it to the user
  * ----------------------------------------------------------------------------
  */
+
 $response->send();
 
 /**

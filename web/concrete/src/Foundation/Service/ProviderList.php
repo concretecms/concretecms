@@ -1,14 +1,14 @@
-<?
+<?php
 namespace Concrete\Core\Foundation\Service;
 use \Concrete\Core\Application\Application;
 
-class ProviderList {	
+class ProviderList {
 
 	public function __construct(Application $app) {
 		$this->app = $app;
 	}
 
-	/** 
+	/**
 	 * Loads and registers a class ServiceProvider class.
 	 * @param  string $class
 	 * @return void
@@ -29,7 +29,7 @@ class ProviderList {
 		}
 	}
 
-	/** 
+	/**
 	 * We are not allowed to serialize $this->app
 	 */
 	public function __sleep() {

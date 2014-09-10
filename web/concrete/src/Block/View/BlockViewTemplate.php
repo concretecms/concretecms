@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Block\View;
 use Loader;
 use Environment;
@@ -13,18 +13,18 @@ use \Concrete\Core\Asset\CSSAsset;
 class BlockViewTemplate {
 
 	protected $basePath = '';
-	
+
 	protected $bFilename;
 	protected $btHandle;
 	protected $obj;
 	protected $baseURL;
 	protected $checkAssets = true;
 	protected $itemsToCheck = array(
-		'CSS' => 'view.css', 
+		'CSS' => 'view.css',
 		'JAVASCRIPT' => 'view.js'
 	);
 	protected $render = FILENAME_BLOCK_VIEW;
-	
+
 	public function __construct($obj) {
 		$this->btHandle = $obj->getBlockTypeHandle();
 		$this->obj = $obj;
@@ -33,11 +33,11 @@ class BlockViewTemplate {
 		}
 		$this->computeView();
 	}
-	
+
 	protected function computeView() {
 		$bFilename = $this->bFilename;
 		$obj = $this->obj;
-		
+
 		// if we've passed in "templates/" as the first part, we strip that off.
 		if (strpos($bFilename, 'templates/') === 0) {
 			$bFilename = substr($bFilename, 10);
@@ -90,10 +90,10 @@ class BlockViewTemplate {
 					} else if (is_dir(DIR_PACKAGES_CORE . '/'. $pkg->getPackageHandle())) {
 						$d = DIR_PACKAGES_CORE . '/'. $pkg->getPackageHandle();
 					}
-					
+
 					if ($d != '') {
 						$baseStub = (is_dir(DIR_PACKAGES . '/' . $pkg->getPackageHandle())) ? DIR_REL . '/' . DIRNAME_PACKAGES . '/'. $pkg->getPackageHandle() : ASSETS_URL . '/'. DIRNAME_PACKAGES . '/' . $pkg->getPackageHandle();
-						
+
 						if (is_file($d . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $bFilename)) {
 							$template = $d . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $bFilename;
 							$this->baseURL = ASSETS_URL . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
@@ -107,14 +107,14 @@ class BlockViewTemplate {
 							$this->baseURL = $baseStub . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . DIRNAME_BLOCK_TEMPLATES . '/' . $bFilename;
 						}
 					}
-					
+
 					if ($this->baseURL != '') {
 						continue;
 					}
-					
+
 				}
 			}
-			
+
 		} else if (file_exists(DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '.php')) {
 			$template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '.php';
 			$bv = new BlockView($obj);
@@ -124,7 +124,7 @@ class BlockViewTemplate {
 			$template = DIR_FILES_BLOCK_TYPES . '/' . $obj->getBlockTypeHandle() . '/' . $this->render;
 			$this->baseURL = REL_DIR_APPLICATION . '/' . DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle();
 		}
-		
+
 		if (!isset($template)) {
 			$bv = new BlockView($obj);
 			$template = $bv->getBlockPath($this->render) . '/' . $this->render;
@@ -136,15 +136,15 @@ class BlockViewTemplate {
 		}
 		$this->template = $template;
 	}
-	
-	
+
+
 	public function getBasePath() {return $this->basePath;}
 	public function getBaseURL() {return $this->baseURL;}
 	public function setBlockCustomTemplate($bFilename) {
 		$this->bFilename = $bFilename;
 		$this->computeView();
 	}
-	
+
 	public function setBlockCustomRender($renderFilename) {
 		// if we've passed in "templates/" as the first part, we strip that off.
 		if (strpos($renderFilename, 'templates/') === 0) {
@@ -155,12 +155,12 @@ class BlockViewTemplate {
 		}
 		$this->computeView();
 	}
-	
-	
+
+
 	public function getTemplate() {
 		return $this->template;
 	}
-	
+
 	public function registerTemplateAssets() {
 		$items = array();
 		$h = Loader::helper("html");
@@ -225,4 +225,3 @@ class BlockViewTemplate {
 
 
 }
-	

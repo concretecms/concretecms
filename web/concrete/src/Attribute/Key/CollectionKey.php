@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Attribute\Key;
 use Loader;
 use Package;
@@ -39,14 +39,14 @@ class CollectionKey extends Key {
     }
 
 	public static function getColumnHeaderList() {
-		return parent::getList('collection', array('akIsColumnHeader' => 1));	
+		return parent::getList('collection', array('akIsColumnHeader' => 1));
 	}
 	public static function getSearchableIndexedList() {
-		return parent::getList('collection', array('akIsSearchableIndexed' => 1));	
+		return parent::getList('collection', array('akIsSearchableIndexed' => 1));
 	}
 
 	public static function getSearchableList() {
-		return parent::getList('collection', array('akIsSearchable' => 1));	
+		return parent::getList('collection', array('akIsSearchable' => 1));
 	}
 
 	public function getAttributeValue($avID, $method = 'getValue') {
@@ -59,12 +59,12 @@ class CollectionKey extends Key {
 			return $value;
 		}
 	}
-	
+
 	public static function getByID($akID) {
 		$ak = new static();
 		$ak->load($akID);
 		if ($ak->getAttributeKeyID() > 0) {
-			return $ak;	
+			return $ak;
 		}
 	}
 
@@ -75,7 +75,7 @@ class CollectionKey extends Key {
 		} else if ($ak == -1) {
 			return false;
 		}
-		
+
 		$ak = new static();
 		$ak->load($akHandle, 'akHandle');
 		if ($ak->getAttributeKeyID() < 1) {
@@ -90,11 +90,11 @@ class CollectionKey extends Key {
 
 		return $ak;
 	}
-	
+
 	public static function getList() {
-		return parent::getList('collection');	
+		return parent::getList('collection');
 	}
-	
+
 	protected function saveAttribute($nvc, $value = false) {
 		// We check a cID/cvID/akID combo, and if that particular combination has an attribute value ID that
 		// is NOT in use anywhere else on the same cID, cvID, akID combo, we use it (so we reuse IDs)
@@ -104,14 +104,14 @@ class CollectionKey extends Key {
 		$db = Loader::db();
 		$v = array($nvc->getCollectionID(), $nvc->getVersionID(), $this->getAttributeKeyID(), $av->getAttributeValueID());
 		$db->Replace('CollectionAttributeValues', array(
-			'cID' => $nvc->getCollectionID(), 
-			'cvID' => $nvc->getVersionID(), 
-			'akID' => $this->getAttributeKeyID(), 
+			'cID' => $nvc->getCollectionID(),
+			'cvID' => $nvc->getVersionID(),
+			'akID' => $this->getAttributeKeyID(),
 			'avID' => $av->getAttributeValueID()
 		), array('cID', 'cvID', 'akID'));
 		unset($av);
 	}
-	
+
 	public static function add($at, $args, $pkg = false) {
 
 		// legacy check
@@ -127,7 +127,7 @@ class CollectionKey extends Key {
 		$ak = parent::add('collection', $at, $args, $pkg);
 		return $ak;
 	}
-	
+
 	public function delete() {
 		parent::delete();
 		$db = Loader::db();
