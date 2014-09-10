@@ -101,7 +101,9 @@ class CssAsset extends Asset {
 			if (!file_exists($cacheFile)) {
 				$css = '';
 				foreach($assets as $asset) {
-					$css .= file_get_contents($asset->getAssetPath()) . "\n\n";
+                    if ($asset->getAssetPath()) {
+                        $css .= file_get_contents($asset->getAssetPath()) . "\n\n";
+                    }
 					$css = $processFunction($css, $asset->getAssetURLPath(), self::getRelativeOutputDirectory());
 				}
 				@file_put_contents($cacheFile, $css);
