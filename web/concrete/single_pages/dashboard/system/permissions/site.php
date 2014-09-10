@@ -19,20 +19,26 @@ $form = Loader::helper('form');
     <fieldset>
 	<legend style="margin-bottom: 0px"><?=t('Viewing Permissions')?></legend>
 	<div class="form-group">
-        <label class="radio">
-		    <?=$form->radio('view', 'ANYONE', $guestCanRead)?> 
+        <div class="radio">
+            <label>
+		    <?=$form->radio('view', 'ANYONE', $guestCanRead)?>
 		    <span><?=t('Public')?> - <?=t('Anyone may view the website.')?></span>
-        </label>
+                </label>
+        </div>
 		 
-        <label class="radio">
-            <?=$form->radio('view', 'USERS', $registeredCanRead)?> 
+        <div class="radio">
+            <label>
+            <?=$form->radio('view', 'USERS', $registeredCanRead)?>
             <span><?=t('Members')?> - <?=t('Only registered users may view the website.')?></span>
-        </label>
+            </label>
+        </div>
 
-		<label class="radio">
+		<div class="radio">
+            <label>
 			<?=$form->radio('view', 'PRIVATE', !$guestCanRead && !$registeredCanRead)?>
 			<span><?=t('Private')?> - <?=t('Only the administrative group may view the website.')?></span>
-		</label>
+            </label>
+		</div>
     </div>
     </fieldset>
     
