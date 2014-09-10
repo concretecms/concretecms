@@ -86,7 +86,6 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/ajax-request/base.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/ajax-request/form.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/ajax-request/block.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode.js',
                 '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-cookie/jquery-cookie.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/panels.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/dialog.js',
@@ -102,7 +101,18 @@ module.exports = function(grunt) {
                 '<%= DIR_BASE %>/concrete/js/build/core/app/custom-style.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/tabs.js',
                 '<%= DIR_BASE %>/concrete/js/build/core/app/toolbar.js',
-                '<%= DIR_BASE %>/concrete/js/build/core/app/themes.js'
+                '<%= DIR_BASE %>/concrete/js/build/core/app/themes.js',
+
+                // Edit Mode
+                '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/editmode.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/block.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/area.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/layout.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/dragarea.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/stack.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/blocktype.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/duplicateblock.js',
+                '<%= DIR_BASE %>/concrete/js/build/core/app/edit-mode/stackblock.js'
             ]
         },
         filemanager: {
