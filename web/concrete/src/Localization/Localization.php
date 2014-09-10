@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Localization;
 
+use Concrete\Core\Cache\Adapter\ZendCacheDriver;
 use Loader;
 use Events;
 use \Zend\I18n\Translator\Translator;
@@ -69,11 +70,7 @@ class Localization
         $this->translate = new Translator();
         $this->translate->addTranslationFilePattern('gettext', $languageDir, 'LC_MESSAGES/messages.mo');
         $this->translate->setLocale($locale);
-        // todo get caching back in here
-        /*$cache = Cache::getLibrary();
-        if (is_object($cache)) {
-            $this->translate->setCache($cache);
-        }*/
+        $this->translate->setCache(new ZendCacheDriver());
         PunicData::setDefaultLocale($locale);
 
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();
@@ -95,12 +92,7 @@ class Localization
     {
         if (!is_object($this->translate)) {
             $this->translate = new Translator();
-            // todo zend cache
-            /*
-            $cache = Cache::getLibrary();
-            if (is_object($cache)) {
-                $this->translate->setCache($cache);
-            }*/
+            $this->translate->setCache(new ZendCacheDriver());
         }
         $this->translate->addTranslationFilePattern('gettext', DIR_LANGUAGES_SITE_INTERFACE, $language . '.mo');
     }
