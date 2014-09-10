@@ -38,7 +38,7 @@ class Controller extends AuthenticationTypeController
             $uname = (Config::get('concrete.user.registration.email_registration') ? 'Email' : 'Username');
             $msg = t( /*i18n %s is the site name*/
                     '<h2>Oh No!</h2>This Facebook account isn\'t tied to any account of %1$s!',
-                    h(SITE)) . '<br />';
+                    h(Config::get('concrete.site'))) . '<br />';
             if (Config::get('concrete.user.registration.email_registration')) {
                 $msg .= t(
                     'Please login with your Email and Password and then use the Facebook login to tie them together.');
@@ -53,7 +53,7 @@ class Controller extends AuthenticationTypeController
         } else if ($status == 4) {
             throw new \Exception(t( /*i18n %s is the site name*/
                                      'This Facebook account is already attached to your %s account.',
-                                     h(SITE)));
+                                     h(Config::get('concrete.site'))));
         } else {
             if ($status == 5) {
                 throw new \Exception(t(

@@ -8,7 +8,7 @@ use Loader;
 class Name extends DashboardPageController {
 
 	public function view() {
-		$this->set('site', h(SITE));
+		$this->set('site', h(Config::get('concrete.site')));
 	}
 
 	public function sitename_saved() {

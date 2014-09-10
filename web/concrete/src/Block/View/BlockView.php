@@ -2,6 +2,7 @@
 namespace Concrete\Core\Block\View;
 
 use Concrete\Core\View\AbstractView;
+use Config;
 use Loader;
 use Area;
 use Environment;

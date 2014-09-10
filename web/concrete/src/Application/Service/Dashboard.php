@@ -1,6 +1,7 @@
 <?php
 
 namespace Concrete\Core\Application\Service;
+use Config;
 use Loader;
 use Page;
 use URL;

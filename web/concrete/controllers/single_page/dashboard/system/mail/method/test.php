@@ -36,7 +36,7 @@ class Test extends DashboardPageController {
 				/* @var $mail MailHelper */
 				$mail = Loader::helper('mail');
 				$mail->setTesting(true);
-				$mail->setSubject(t(/*i18n: %s is the site name*/'Test message from %s', SITE));
+				$mail->setSubject(t(/*i18n: %s is the site name*/'Test message from %s', Config::get('concrete.site')));
 				$mail->to($mailRecipient);
 				$body = t('This is a test message.');
 				$body .= "\n\n" . t('Configuration:');
