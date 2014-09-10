@@ -13,8 +13,8 @@ $workflowList = \Concrete\Core\Workflow\Progress\PageProgress::getList($c);
 
 $canViewToolbar = $cp->canViewToolbar();
 
-$show_titles = !!Config::get('ACCESSIBILITY_SHOW_TOOLBAR_TITLES');
-$large_font = !!Config::get('ACCESSIBILITY_INCREASE_TOOLBAR_FONT_SIZE');
+$show_titles = !!Config::get('concrete.accessibility.toolbar_titles');
+$large_font = !!Config::get('concrete.accessibility.toolbar_large_font');
 
 if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
 

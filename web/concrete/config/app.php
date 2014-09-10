@@ -5,8 +5,6 @@ use Concrete\Core\File\Type\Type as FileType;
 return array(
 
     'debug'               => false,
-    'version'             => '5.7.0b2',
-    'installed'           => true,
 
     /**
      * Core Aliases
@@ -33,7 +31,6 @@ return array(
         'Controller'                           => '\Concrete\Core\Controller\Controller',
         'PageController'                       => '\Concrete\Core\Page\Controller\PageController',
         'SinglePage'                           => '\Concrete\Core\Page\Single',
-        'Config'                               => '\Concrete\Core\Config\Config',
         'PageType'                             => '\Concrete\Core\Page\Type\Type',
         'PageTemplate'                         => '\Concrete\Core\Page\Template',
         'PageTheme'                            => '\Concrete\Core\Page\Theme\Theme',
@@ -124,6 +121,7 @@ return array(
         'Route'    => '\Concrete\Core\Support\Facade\Route',
         'Log'      => '\Concrete\Core\Support\Facade\Log',
         'Image'    => '\Concrete\Core\Support\Facade\Image',
+        'Config'   => '\Concrete\Core\Support\Facade\Config'
     ),
 
     /**

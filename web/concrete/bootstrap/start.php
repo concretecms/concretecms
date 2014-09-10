@@ -32,7 +32,7 @@ use Illuminate\Filesystem\Filesystem;
  * Instantiate concrete5.
  * ----------------------------------------------------------------------------
  */
-$cms = new Application();
+$cms = require DIR_APPLICATION . '/bootstrap/start.php';
 $cms->instance('app', $cms);
 
 /**
@@ -49,14 +49,16 @@ Facade::setFacadeApplication($cms);
  * ----------------------------------------------------------------------------
  */
 $file_system = new Filesystem();
-$database_config = new DatabaseConfig();
-$file_loader = new ConfigLoader($file_system, $database_config);
+$file_loader = new ConfigLoader($file_system);
 
 $db_config = $file_loader->loadStrict(null, 'database');
 
-$environment = isset($db_config['default-connection']) ? ($cms->isRunThroughCommandLineInterface() ? 'cli' : 'default') : 'install';
+$environment = $cms->environment();
+$cms->detectEnvironment(function() use ($db_config, $environment) {
+    return isset($db_config['default-connection']) ? $environment : 'install';
+});
 
-$cms->instance('config', $config = new ConfigRepository($file_loader, $environment));
+$cms->instance('config', $config = new ConfigRepository($file_loader, $cms->environment()));
 
 
 
@@ -104,47 +106,17 @@ Bootup::initAll();
  * Registries for theme paths, assets, routes and file types.
  * ----------------------------------------------------------------------------
  */
-$assets = $config->get('app.assets', array());
 $asset_list = AssetList::getInstance();
 
-foreach ($assets as $asset_handle => $asset_types) {
-    foreach ($asset_types as $asset_type => $asset_settings) {
-        array_splice($asset_settings, 1, 0, $asset_handle);
-        call_user_func_array(array($asset_list, 'register'), $asset_settings);
-    }
-}
+$asset_list->registerMultiple($config->get('app.assets', array()));
+$asset_list->registerGroupMultiple($config->get('app.asset_groups', array()));
 
-$asset_groups = $config->get('app.asset_groups', array());
-foreach ($asset_groups as $group_handle => $group_setting) {
-    array_unshift($group_setting, $group_handle);
-    call_user_func_array(array($asset_list, 'registerGroup'), $group_setting);
-}
-
-$theme_paths = $config->get('app.theme_paths');
-foreach ($theme_paths as $route => $theme) {
-    Route::setThemeByRoute($route, $theme);
-}
-
-$routes = $config->get('app.routes');
-
-foreach ($routes as $route => $route_settings) {
-    array_unshift($route_settings, $route);
-    call_user_func_array(array('Route', 'register'), $route_settings);
-}
+Route::registerMultiple($config->get('app.routes'));
+Route::setThemesByRoutes($config->get('app.theme_paths', array()));
 
 $type_list = TypeList::getInstance();
-$file_types = $config->get('app.file_types');
-foreach ($file_types as $type_name => $type_settings) {
-    array_splice($type_settings, 1, 0, $type_name);
-
-    call_user_func_array(array($type_list, 'define'), $type_settings);
-}
-
-$importer_attributes = $config->get('app.importer_attributes');
-foreach ($importer_attributes as $attribute_name => $attribute_settings) {
-    array_unshift($attribute_settings, $attribute_name);
-    call_user_func_array(array($type_list, 'defineImporterAttribute'), $attribute_settings);
-}
+$type_list->defineMultiple($config->get('app.file_types', array()));
+$type_list->defineImporterAttributeMultiple($config->get('app.importer_attributes', array()));
 
 /**
  * ----------------------------------------------------------------------------
@@ -154,6 +126,13 @@ foreach ($importer_attributes as $attribute_name => $attribute_settings) {
 if ($cms->isRunThroughCommandLineInterface()) {
     return $cms;
 }
+
+/**
+ * ----------------------------------------------------------------------------
+ * If not through CLI, load up the application/bootstrap/app.php
+ */
+@include DIR_APPLICATION . '/bootstrap/app.php';
+
 
 /**
  * ----------------------------------------------------------------------------
@@ -216,7 +195,7 @@ if (file_exists(DIR_CONFIG_SITE)) {
  * Start localization library.
  * ----------------------------------------------------------------------------
  */
-Config::getOrDefine('SITE_LOCALE', 'en_US');
+Config::getOrDefine('concrete.locale', 'en_US');
 $u = new User();
 $lan = $u->getUserLanguageToDisplay();
 $loc = Localization::getInstance();
@@ -259,7 +238,6 @@ PermissionKey::loadAll();
  * ----------------------------------------------------------------------------
  */
 $response = $cms->dispatch($request);
-
 /**
  * ----------------------------------------------------------------------------
  * Send it to the user

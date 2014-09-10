@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Conversations;
 
@@ -14,7 +14,7 @@ class BannedWords extends DashboardPageController {
 
 	public function view() {
 		$this->set('bannedWords',$this->getBannedWords());
-		$this->set('bannedListEnabled',Config::get('CONVERSATION_DISALLOW_BANNED_WORDS'));
+		$this->set('bannedListEnabled',Config::get('conversation.banned_words'));
 	}
 
 	public function getBannedWords() {
@@ -36,7 +36,7 @@ class BannedWords extends DashboardPageController {
 		foreach ($this->post('banned_word') as $bw) {
 			BannedWord::add($bw);
 		}
-		Config::save('CONVERSATION_DISALLOW_BANNED_WORDS',!!$this->post('banned_list_enabled'));
+		Config::save('conversation.banned_words',!!$this->post('banned_list_enabled'));
 		$this->view();
 		$this->redirect('dashboard/system/conversations/bannedwords/success');
 	}

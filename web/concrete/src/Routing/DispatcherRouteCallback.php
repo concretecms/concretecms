@@ -12,7 +12,7 @@ use Permissions;
 use Response;
 
 class DispatcherRouteCallback extends RouteCallback {
-	
+
 	protected function sendResponse(View $v, $code = 200) {
 		$contents = $v->render();
 		$response = new Response($contents, $code);
@@ -50,7 +50,7 @@ class DispatcherRouteCallback extends RouteCallback {
 	}
 
 	public function execute(Request $request, \Concrete\Core\Routing\Route $route = null, $parameters = array()) {
-		
+
 		// figure out where we need to go
 		$c = Page::getFromRequest($request);
 		if ($c->isError() && $c->getError() == COLLECTION_NOT_FOUND) {
@@ -69,10 +69,10 @@ class DispatcherRouteCallback extends RouteCallback {
 				$c = $home;
 			}
 		}
-		
+
 		// maintenance mode
 		if ((!$c->isAdminArea()) && ($c->getCollectionPath() != '/login')) {
-			$smm = Config::get('SITE_MAINTENANCE_MODE');
+			$smm = Config::get('concrete.maintenance_mode');
 			if ($smm == 1 && ($_SERVER['REQUEST_METHOD'] != 'POST' || Loader::helper('validation/token')->validate() == false)) {
 				$v = new View('/frontend/maintenance_mode');
 				$v->setViewTheme(VIEW_CORE_THEME);

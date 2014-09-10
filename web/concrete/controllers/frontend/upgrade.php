@@ -31,7 +31,7 @@ class Upgrade extends Controller
         $this->secCheck();
         // if you just reverted, but didn't manually clear out your files - cache would be a prob here.
         Cache::disableLocalCache();
-        $this->site_version = Config::get('SITE_APP_VERSION');
+        $this->site_version = Config::get('concrete.version');
         Database::ensureEncoding();
     }
 
@@ -178,7 +178,7 @@ class Upgrade extends Controller
             $completeMessage .= '<div class="alert-message block-message success"><p>' . t(
                     'Upgrade to <b>%s</b> complete!',
                     APP_VERSION) . '</p></div>';
-            Config::save('SITE_APP_VERSION', APP_VERSION);
+            Config::set('concrete.version', APP_VERSION);
         }
         $this->set('completeMessage', $completeMessage);
         $this->set('status', $message);
