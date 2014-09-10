@@ -51,7 +51,7 @@ Facade::setFacadeApplication($cms);
 $file_system = new Filesystem();
 $file_loader = new ConfigLoader($file_system);
 
-$db_config = $file_loader->loadStrict(null, 'database');
+$db_config = @include DIR_APPLICATION . '/config/database.php';
 
 $environment = $cms->environment();
 $cms->detectEnvironment(function() use ($db_config, $environment) {
@@ -59,7 +59,6 @@ $cms->detectEnvironment(function() use ($db_config, $environment) {
 });
 
 $cms->instance('config', $config = new ConfigRepository($file_loader, $cms->environment()));
-
 
 
 /**

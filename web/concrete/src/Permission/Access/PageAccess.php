@@ -1,6 +1,6 @@
 <?php
 namespace Concrete\Core\Permission\Access;
-use Loader;
+use Database;
 class PageAccess extends Access {
 
 	public static function usePermissionCollectionIDForIdentifier() {
@@ -12,15 +12,14 @@ class PageAccess extends Access {
 		// Obviously a better way of doing this would be to retrieve all access entity types, run through each and see whether
 		// they support it but this is better for performance.
 		try {
-			$db = Loader::db();
 			$q = "select pal.paID from PermissionAccessList pal inner join PermissionAccessEntities pae on pal.peID = pae.peID inner join PermissionAccessEntityTypes paet on pae.petID = paet.petID  where paet.petHandle not in ('group', 'user', 'group_set', 'group_combination', 'file_uploader')";
-			$paID = $db->GetOne($q);
+			$paID = Database::GetOne($q);
 			if ($paID) {
 				return false;
 			} else {
 				return true;
 			}
-		} catch(Exception $e) {
+		} catch(\Exception $e) {
 			return false;
 		}
 	}
