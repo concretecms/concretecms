@@ -255,7 +255,7 @@ class StartingPointPackage extends BasePackage {
 
 
         $config = \Core::make('config');
-        $site_install = $config->getLoader()->loadStrict(null, 'site_install');
+        $site_install = $config->getLoader()->load(null, 'site_install');
 
         // Extract database config, and save it to database.php
         $database = $site_install['database'];
