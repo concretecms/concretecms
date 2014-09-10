@@ -47,12 +47,12 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
 
 		//Other useful page data...
-		
+
 
 		//$last_edited_by = $page->getVersionObject()->getVersionAuthorUserName();
-		
+
 		//$original_author = Page::getByID($page->getCollectionID(), 1)->getVersionObject()->getVersionAuthorUserName();
-		
+
 		/* CUSTOM ATTRIBUTE EXAMPLES:
 		 * $example_value = $page->getAttribute('example_attribute_handle');
 		 *
@@ -74,7 +74,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 		 * 2) Output the image tag below like this:
 		 * 	    <img src="<?php echo $img_src ?>" width="<?php echo $img_width ?>" height="<?php echo $img_height ?>" alt="" />
 		 */
-		
+
 		/* End data preparation. */
 
 		/* The HTML from here through "endforeach" is repeated for every item in the list... */ ?>
@@ -139,6 +139,6 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     <?php echo $pagination;?>
 <?php endif; ?>
 
-<? if ( $c->isEditMode() && $controller->isBlockEmpty()): ?>
+<? if ( $c->isEditMode() && !count($pages)): ?>
     <div class="ccm-edit-mode-disabled-item"><?=t('Empty Page List Block.')?></div>
 <? endif; ?>
