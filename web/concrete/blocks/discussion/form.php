@@ -43,14 +43,18 @@ foreach($pagetypes as $pt) {
 	<div class="control-group">
 		<label class="control-label"><?=t('Enable New Topics')?></label>
 		<div class="controls">
-			<label class="radio">
+            <div class="radio">
+			<label>
 				<?=$form->radio('enableNewTopics', 1, $enableNewTopics)?>
 				<span><?=t('Yes, this conversation is open and new topics can be posted.')?></span>
 			</label>
-			<label class="radio">
+            </div>
+            <div class="radio">
+			<label>
 				<?=$form->radio('enableNewTopics', 0, $enableNewTopics)?>
 				<span><?=t('No, posting is disabled.')?></span>
 			</label>
+            </div>
 		</div>
 	</div>
 	<div class="control-group" data-row="enableNewConversations">

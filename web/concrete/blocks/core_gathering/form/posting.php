@@ -15,14 +15,18 @@ foreach($pagetypes as $pt) {
 	<div class="control-group">
 		<label class="control-label"><?=t('Enable New Topics')?></label>
 		<div class="controls">
-			<label class="radio">
+			<div class="radio">
+                <label>
 				<?=$form->radio('enablePostingFromGathering', 0, $enablePostingFromGathering)?>
 				<span><?=t('No, posting is disabled.')?></span>
-			</label>
-			<label class="radio">
+                </label>
+			</div>
+			<div class="radio">
+                <label>
 				<?=$form->radio('enablePostingFromGathering', 1, $enablePostingFromGathering)?>
 				<span><?=t('Yes, this gathering can be posted to the front-end.')?></span>
-			</label>
+                    </label>
+			</div>
 		</div>
 	</div>
 	<div class="control-group" data-row="enablePostingFromGathering">

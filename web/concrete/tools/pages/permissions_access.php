@@ -140,8 +140,8 @@ if ($_REQUEST['task'] == 'remove') {
 			<div class="control-group">
 				<label class="control-label"><?=t('Permissions Should')?></label>
 				<div class="controls">
-				<label class="radio"><input type="radio" name="paReplaceAll" value="add" checked="checked" /> <span><?=t("Add To Existing Permissions")?></span></label>
-				<label class="radio"><input type="radio" name="paReplaceAll" value="replace" /> <span><?=t("Replace Permissions")?></span></label>
+				<div class="radio"><label><input type="radio" name="paReplaceAll" value="add" checked="checked" /> <span><?=t("Add To Existing Permissions")?></span></label></div>
+				<div class="radio"><label><input type="radio" name="paReplaceAll" value="replace" /> <span><?=t("Replace Permissions")?></span></label></div>
 				</div>
 			</div>
 			</div>

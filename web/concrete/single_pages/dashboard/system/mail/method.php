@@ -12,8 +12,8 @@ $form = Loader::helper('form');
 	<fieldset>
 	<div class="control-group">
 	<div class="controls">
-	<label class="radio"><?=$form->radio('MAIL_SEND_METHOD', 'PHP_MAIL', MAIL_SEND_METHOD)?> <span><?=t('Default PHP Mail Function')?></span></label>
-	<label class="radio"><?=$form->radio('MAIL_SEND_METHOD', 'SMTP', MAIL_SEND_METHOD)?> <span><?=t('External SMTP Server')?></span></label>
+	<div class="radio"><label><?=$form->radio('MAIL_SEND_METHOD', 'PHP_MAIL', MAIL_SEND_METHOD)?> <span><?=t('Default PHP Mail Function')?></span></label></div>
+    <div class="radio"><label><?=$form->radio('MAIL_SEND_METHOD', 'SMTP', MAIL_SEND_METHOD)?> <span><?=t('External SMTP Server')?></span></label></div>
 	</div>
 	</div>
 	</fieldset>
