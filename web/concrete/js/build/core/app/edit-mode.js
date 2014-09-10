@@ -95,7 +95,7 @@
 //            ConcreteMenuManager.disable();
             ConcreteToolbar.disable();
             $('div.ccm-area').addClass('ccm-area-inline-edit-disabled');
-            
+
             $container.addClass('ccm-block-edit-inline-active');
 
             $.ajax({
@@ -395,7 +395,7 @@
             alert('orphan block.');
         }
 
-        if (!elem.find('.ccm-block-cover').length) {
+        if (!elem.children('.ccm-block-cover').length) {
             $('<div/>').addClass('ccm-block-cover').appendTo(elem);
         }
 
@@ -492,6 +492,8 @@
             }
         });
         Block.call(my, elem, edit_mode, $());
+
+        elem.children('.ccm-block-cover').remove();
     };
 
     /**
