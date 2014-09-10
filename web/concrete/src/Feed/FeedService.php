@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Feed;
 
+use Concrete\Core\Cache\Adapter\ZendCacheDriver;
 use \Zend\Feed\Reader\Reader;
 
 class FeedService
@@ -15,11 +16,9 @@ class FeedService
      */
     public function load($url, $cache = true)
     {
-        // todo zend cache
-        /*$library = \Cache::getLibrary();
         if ($cache) {
-            Reader::setCache($library);
-        }*/
+            Reader::setCache(new ZendCacheDriver());
+        }
         $feed = Reader::import($url);
         return $feed;
     }
