@@ -21,7 +21,7 @@ require __DIR__ . '/bootstrap/configure.php';
  * Include all autoloaders
  * ----------------------------------------------------------------------------
  */
-require DIR_APPLICATION . '/bootstrap/autoload.php';
+require __DIR__ . '/bootstrap/autoload.php';
 
 
 
