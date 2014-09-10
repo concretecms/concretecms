@@ -5,6 +5,6 @@ use \Concrete\Core\Page\Controller\DashboardPageController;
 class Conversations extends DashboardPageController {
 
 	public function view() {
-		$this->redirect('/dashboard/system/conversations/editor');
+		$this->redirect('/dashboard/system/conversations/settings');
 	}
 }
