@@ -3,13 +3,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 
 <script type="text/template" class="attribute">
-	<div class="form-group <% if (pending) { %>ccm-page-attribute-adding<% } %>" data-attribute-key-id="<%=akID%>">
-		<a href="javascript:void(0)" data-remove-attribute-key="<%=akID%>"><i class="fa fa-minus-circle"></i></a>
-		<label class="control-label"><%=label%></label>
+	<div class="form-group <% if (atv.pending) { %>ccm-page-attribute-adding<% } %>" data-attribute-key-id="<%=atv.akID%>">
+		<a href="javascript:void(0)" data-remove-attribute-key="<%=atv.akID%>"><i class="fa fa-minus-circle"></i></a>
+		<label class="control-label"><%=atv.label%></label>
 		<div>
-			<%=content%>
+			<%=atv.content%>
 		</div>
-		<input type="hidden" name="selectedAKIDs[]" value="<%=akID%>" />
+		<input type="hidden" name="selectedAKIDs[]" value="<%=atv.akID%>" />
 	</div>
 </script>
 
@@ -68,9 +68,12 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <script type="text/javascript">
 
+_.templateSettings.variable = "atv";
+
 var renderAttribute = _.template(
     $('script.attribute').html()
 );
+
 
 
 ConcretePageAttributesDetail = {
