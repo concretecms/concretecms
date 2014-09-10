@@ -2325,19 +2325,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         return $db->GetOne('select content from PageSearchIndex where cID = ?', array($this->cID));
     }
 
-    function getCollectionAction() {
-        $cID = $this->cID;
-        $valt = Loader::helper('validation/token');
-        $token = $valt->getParameter();
-        if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' && defined('BASE_URL_SSL')) {
-            $str = BASE_URL_SSL . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&" . $token;
-        } else {
-            $str = BASE_URL . DIR_REL . "/" . DISPATCHER_FILENAME . "?cID={$cID}&" . $token;
-        }
-        return $str;
-    }
-
-
     function _associateMasterCollectionBlocks($newCID, $masterCID) {
         $mc = Page::getByID($masterCID, 'ACTIVE');
         $nc = Page::getByID($newCID, 'RECENT');
