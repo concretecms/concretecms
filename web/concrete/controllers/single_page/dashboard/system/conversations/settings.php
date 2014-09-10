@@ -23,6 +23,7 @@ class Settings extends DashboardPageController {
 		$this->set('maxFilesGuest', Config::get('CONVERSATIONS_MAX_FILES_GUEST'));
 		$this->set('maxFilesRegistered', Config::get('CONVERSATIONS_MAX_FILES_REGISTERED'));
 		$this->set('fileExtensions', implode(',', $fileAccessFileTypes));
+        $this->set('attachmentsEnabled', intval(Config::get('CONVERSATIONS_ATTACHMENTS_ENABLED')));
 	}
 
 	public function success() {
@@ -44,6 +45,11 @@ class Settings extends DashboardPageController {
 		if($this->post('maxFilesGuest')){
 			Config::save('CONVERSATIONS_MAX_FILES_REGISTERED', $this->post('maxFilesRegistered')) ;
 		}
+        if ($this->post('attachmentsEnabled')) {
+            Config::save('CONVERSATIONS_ATTACHMENTS_ENABLED', 1);
+        } else {
+            Config::save('CONVERSATIONS_ATTACHMENTS_ENABLED', 0);
+        }
 		if ($this->post('fileExtensions')){
 			$types = preg_split('{,}',$this->post('fileExtensions'),null,PREG_SPLIT_NO_EMPTY);
 			$types = $helper_file->serializeUploadFileExtensions($types);

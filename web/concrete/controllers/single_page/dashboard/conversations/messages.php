@@ -3,9 +3,10 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Conversations;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Loader;
-use ConversationFlagType;
+use stdClass;
+use \Concrete\Core\Conversation\FlagType\FlagType as ConversationFlagType;
 use \Concrete\Core\Conversation\FlagType\FlagTypeList as ConversationFlagTypeList;
-use \Concrete\Core\Conversation\Message as ConversationMessage;
+use \Concrete\Core\Conversation\Message\Message as ConversationMessage;
 use \Concrete\Core\Conversation\Message\MessageList as ConversationMessageList;
 
 class Messages extends DashboardPageController {
