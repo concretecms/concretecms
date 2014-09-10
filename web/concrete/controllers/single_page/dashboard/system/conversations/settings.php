@@ -24,9 +24,44 @@ class Settings extends DashboardPageController {
 		$this->set('maxFilesRegistered', Config::get('CONVERSATIONS_MAX_FILES_REGISTERED'));
 		$this->set('fileExtensions', implode(',', $fileAccessFileTypes));
         $this->set('attachmentsEnabled', intval(Config::get('CONVERSATIONS_ATTACHMENTS_ENABLED')));
+        $this->loadEditors();
 	}
 
-	public function success() {
+    protected function loadEditors()
+    {
+        $db = Loader::db();
+        $q = $db->executeQuery('SELECT * FROM ConversationEditors');
+        $editors = array();
+        $active = false;
+        while ($row = $q->fetch()) {
+            if ($row['cnvEditorIsActive'] == 1) {
+                $active = $row['cnvEditorHandle'];
+            }
+            $editors[$row['cnvEditorHandle']] = tc('ConversationEditorName', $row['cnvEditorName']);
+        }
+        $q->closeCursor();
+        if (!$active) {
+            $active = array_pop(array_reverse($editors));
+        }
+        $this->set('active', $active);
+        $this->set('editors', $editors);
+        $this->editors = $editors;
+    }
+
+    protected function saveEditors()
+    {
+        $this->loadEditors();
+        $active = $this->post('activeEditor');
+        $db = Loader::db();
+        if (!isset($this->editors[$active])) {
+            $this->redirect('/dashboard/system/conversations/editor/error');
+            return;
+        }
+        $db->executeQuery('UPDATE ConversationEditors SET cnvEditorIsActive=0');
+        $db->executeQuery('UPDATE ConversationEditors SET cnvEditorIsActive=1 WHERE cnvEditorHandle=?', array($active));
+    }
+
+    public function success() {
 		$this->view();
 		$this->set('message','Updated conversations settings.');
 	}
@@ -54,7 +89,8 @@ class Settings extends DashboardPageController {
 			$types = preg_split('{,}',$this->post('fileExtensions'),null,PREG_SPLIT_NO_EMPTY);
 			$types = $helper_file->serializeUploadFileExtensions($types);
 			Config::save('CONVERSATIONS_ALLOWED_FILE_TYPES',$types);
-		} 
+		}
+        $this->saveEditors();
 		$this->success();
 	}
 

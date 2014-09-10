@@ -32,6 +32,13 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Conv
     			<?=$form->textarea('fileExtensions', $fileExtensions)?>
 			</div>
 		</fieldset>
+    <fieldset>
+        <legend><?=t('Editor')?></legend>
+        <div class="form-group">
+            <?=$form->label('activeEditor', t('Active Conversation Editor'))?>
+            <?=Loader::helper('form')->select('activeEditor', $editors, $active);?>
+        </div>
+    </fieldset>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
 		    <button class='btn btn-primary pull-right'><?php echo t('Save'); ?></button>
