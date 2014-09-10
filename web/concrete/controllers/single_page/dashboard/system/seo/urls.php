@@ -57,9 +57,9 @@ class Urls extends DashboardPageController {
 		$this->set('intRewriting', $intRewriting);
 
 		if($strStatus == 'rewriting_saved'){
-			if(URL_REWRITING && !$blnHtu){
+			if(Config::get('concrete.seo.url_rewriting') && !$blnHtu){
 				$this->set('message', t('URL rewriting enabled. You need to update .htaccess by hand.'));
-			}elseif(URL_REWRITING && $blnHtu){
+			}elseif(Config::get('concrete.seo.url_rewriting') && $blnHtu){
 				$this->set('message', t('URL rewriting enabled. We were able to automatically update .htaccess file.'));
 			}else{
 				$this->set('message', t('URL rewriting disabled.'));

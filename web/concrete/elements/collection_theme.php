@@ -26,7 +26,7 @@ if (!$cp->canEditPageType() && !$cp->canEditPageTheme()) {
 $cnt = 0;
 for ($i = 0; $i < count($ctArray); $i++) {
 	$ct = $ctArray[$i];
-	if ($c->getCollectionID() == 1 || $parentCP->canAddSubCollection($ct)) { 
+	if ($c->getCollectionID() == 1 || $parentCP->canAddSubCollection($ct)) {
 		$cnt++;
 	}
 }
@@ -46,7 +46,7 @@ if ($plID == 0) {
 	<input type="hidden" name="rel" value="<?=$_REQUEST['rel']?>" />
 
 
-	<? 
+	<?
 	if (!$cp->canEditPageType()) { ?>
 
 		<h3><?=t('Choose a Page Type')?></h3>
@@ -55,15 +55,15 @@ if ($plID == 0) {
 		</p>
 		<br/><br/>
 
-	<?	
-	
+	<?
+
 	} else if ($c->isMasterCollection()) { ?>
 		<h3><?=t('Choose a Page Type')?></h3>
 		<p>
 		<?=t("This is the defaults page for the %s page type. You cannot change it.", $c->getPageTypeName()); ?>
 		</p>
 		<br/><br/>
-	
+
 	<? } else if ($c->isGeneratedCollection()) { ?>
 	<h3><?=t('Choose a Page Type')?></h3>
 	<p><?=t("This page is a single page, which means it doesn't have a page type associated with it."); ?></p>
@@ -78,69 +78,69 @@ if ($plID == 0) {
 
 		<div class="ccm-scroller-inner">
 			<ul id="ccm-select-page-type" style="width: <?=$cnt * 132?>px">
-				<? 
-				foreach($ctArray as $ct) { 
-					if ($c->getCollectionID() == 1 || $parentCP->canAddSubCollection($ct)) { 
-					?>		
+				<?
+				foreach($ctArray as $ct) {
+					if ($c->getCollectionID() == 1 || $parentCP->canAddSubCollection($ct)) {
+					?>
 					<? $class = ($ct->getPageTypeID() == $ctID) ? 'ccm-item-selected' : ''; ?>
-			
+
 					<li class="<?=$class?>"><a href="javascript:void(0)" ccm-page-type-id="<?=$ct->getPageTypeID()?>"><?=$ct->getPageTypeIconImage();?></a><span><?=$ct->getPageTypeName()?></span>
 					</li>
-				<? } 
-				
+				<? }
+
 				}?>
 			</ul>
 		</div>
 	</div>
 
 	<? } ?>
-	
-	<? if(ENABLE_MARKETPLACE_SUPPORT){ ?>
+
+	<? if(Config::get('concrete.marketplace.enabled')){ ?>
 		<a href="javascript:void(0)" onclick="ccm_openThemeLauncher()" class="btn pull-right"><?=t("Get More Themes")?></a>
 	<? } ?>
 
 	<h3 ><?=t('Themes')?></h3>
-	
+
 	<? if ($cp->canEditPageTheme()) { ?>
 
 	<div class="ccm-scroller" current-page="1" current-pos="0" num-pages="<?=ceil(count($tArray)/4)?>">
 		<a href="javascript:void(0)" class="ccm-scroller-l"><img src="<?=ASSETS_URL_IMAGES?>/button_scroller_l.png" width="28" height="79" alt="l" /></a>
 		<a href="javascript:void(0)" class="ccm-scroller-r"><img src="<?=ASSETS_URL_IMAGES?>/button_scroller_r.png" width="28" height="79" alt="l" /></a>
-		
+
 		<div class="ccm-scroller-inner">
 			<ul id="ccm-select-theme" style="width: <?=count($tArray) * 132?>px">
 			<? foreach($tArray as $t) { ?>
-			
+
 				<? $class = ($t->getThemeID() == $plID) ? 'ccm-item-selected' : ''; ?>
 				<li class="<?=$class?> themeWrap">
-				
+
 					<a href="javascript:void(0)" ccm-theme-id="<?=$t->getThemeID()?>"><?=$t->getThemeThumbnail()?></a>
 						<? if ($t->getThemeID() != $plID) { ?><a title="<?=t('Preview')?>" onclick="ccm_previewInternalTheme(<?=$c->getCollectionID()?>, <?=intval($t->getThemeID())?>,'<?=addslashes(str_replace(array("\r","\n",'\n'),'',$t->getThemeDisplayName())) ?>')" href="javascript:void(0)" class="preview">
 						<img src="<?=ASSETS_URL_IMAGES?>/icons/magnifying.png" alt="<?=t('Preview')?>" class="ccm-preview" /></a><? } ?>
 					<div class="ccm-theme-name" ><?=$t->getThemeDisplayName()?></div>
-			
+
 				</li>
 			<? } ?>
 			</ul>
 		</div>
 	</div>
 	<? } else { ?>
-	
+
 	<p><?=t("You do not have access to change this page's theme."); ?></p>
 
 	<? } ?>
-	
+
 	<div class="dialog-buttons">
 		<a href="javascript:void(0)" onclick="jQuery.fn.dialog.closeTop()" class="pull-left btn"><?=t('Cancel')?></a>
 		<a href="javascript:void(0)" onclick="$('form[name=ccmThemeForm]').submit()" class="btn btn-primary pull-right"><?=t('Save')?></a>
-	</div>	
+	</div>
 	<input type="hidden" name="update_theme" value="1" class="accept">
 	<input type="hidden" name="processCollection" value="1">
 
 	<div class="ccm-spacer">&nbsp;</div>
 </form>
 </div>
-	
+
 
 <script type="text/javascript">
 

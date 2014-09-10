@@ -39,7 +39,7 @@ class Profiles extends DashboardPageController {
 		}
     $this->token = Loader::helper('validation/token');
 
-    $this->set('public_profiles',ENABLE_USER_PROFILES);
+    $this->set('public_profiles',Config::get('concrete.user.profiles_enabled'));
     $this->set('gravatar_fallback', Config::get('concrete.user.gravatar.enabled'));
     $this->set('gravatar_max_level', Config::get('concrete.user.gravatar.max_level'));
     $this->set('gravatar_level_options', array('g' => 'G', 'pg' => 'PG', 'r' => 'R', 'x' => 'X'));

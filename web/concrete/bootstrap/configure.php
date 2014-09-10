@@ -310,8 +310,6 @@ defined('FILENAME_ENVIRONMENT_CACHE') or define('FILENAME_ENVIRONMENT_CACHE', 'e
 defined('DIR_FILES_PAGE_CACHE') or define('DIR_FILES_PAGE_CACHE', DIR_FILES_CACHE . '/pages');
 defined('PAGE_CACHE_LIBRARY') or define('PAGE_CACHE_LIBRARY', 'file');
 defined('CACHE_ID') or define('CACHE_ID', md5(str_replace(array('https://', 'http://'), '', BASE_URL) . DIR_REL));
-defined('CACHE_LIFETIME') or define('CACHE_LIFETIME', 21600); // 6 hours
-
 
 
 /**

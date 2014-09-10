@@ -169,7 +169,7 @@ class Login extends PageController
     {
         $this->error = Loader::helper('validation/error');
         $this->set('valt', Loader::helper('validation/token'));
-        if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
+        if (Config::get('concrete.user.registration.email_registration')) {
             $this->set('uNameLabel', t('Email Address'));
         } else {
             $this->set('uNameLabel', t('Username'));
@@ -245,7 +245,7 @@ class Login extends PageController
                 $login_redirect_mode = Config::get('concrete.misc.login_redirect');
 
                 //redirect to user profile
-                if ($login_redirect_mode == 'PROFILE' && ENABLE_USER_PROFILES) {
+                if ($login_redirect_mode == 'PROFILE' && Config::get('concrete.user.profiles_enabled')) {
                     $rUrl = View::url('/profile', $u->getUserID());
                     break;
                 }

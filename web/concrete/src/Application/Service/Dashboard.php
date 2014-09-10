@@ -341,7 +341,7 @@ class Dashboard {
 				</ul>
 				</div>
 
-				<? if (ENABLE_INTELLIGENT_SEARCH_HELP) { ?>
+				<? if (Config::get('concrete.core.intelligent_search_help')) { ?>
 				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-offsite">
 				<h1><?=t('Help')?></h1>
                 <div class="loader">
@@ -355,7 +355,7 @@ class Dashboard {
 				</div>
 				<? } ?>
 
-				<? if (ENABLE_INTELLIGENT_SEARCH_MARKETPLACE) { ?>
+				<? if (Config::get('concrete.marketplace.intelligent_search')) { ?>
 				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-offsite">
 				<h1><?=t('Add-Ons')?></h1>
                 <div class="loader">

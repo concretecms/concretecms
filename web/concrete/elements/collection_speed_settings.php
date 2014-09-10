@@ -64,7 +64,7 @@ if ($_REQUEST['reload_and_remove_cache']) {
 
 		<? $form = Loader::helper('form');?>
 		<?
-		switch(FULL_PAGE_CACHE_GLOBAL) {
+		switch(Config::get('concrete.cache.pages')) {
 			case 'blocks':
 				$globalSetting = t('cache page if all blocks support it.');
 				$enableCache = 1;
@@ -78,9 +78,9 @@ if ($_REQUEST['reload_and_remove_cache']) {
 				$enableCache = 0;
 				break;
 		}
-		switch(FULL_PAGE_CACHE_LIFETIME) {
+		switch(Config::get('concrete.cache.full_page_lifetime')) {
 			case 'default':
-				$globalSettingLifetime = Loader::helper('date')->describeInterval(CACHE_LIFETIME);
+				$globalSettingLifetime = Loader::helper('date')->describeInterval(Config::get('concrete.cache.lifetime'));
 				break;
 			case 'custom':
 				$globalSettingLifetime = Loader::helper('date')->describeInterval(Config::get('concrete.cache.full_page_lifetime_value'));

@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\Cache\Page;
 use Concrete\Core\Http\Response;
+use Config;
 use Request;
 use \Page as ConcretePage;
 use \Concrete\Core\Page\View\PageView;
@@ -101,13 +102,13 @@ abstract class PageCache {
 			}
 		}
 
-		if ($c->getCollectionFullPageCaching() == 1 || FULL_PAGE_CACHE_GLOBAL === 'all') {
+		if ($c->getCollectionFullPageCaching() == 1 || Config::get('concrete.cache.pages') === 'all') {
 			// this cache page at the page level
 			// this overrides any global settings
 			return true;
 		}
 
-		if (FULL_PAGE_CACHE_GLOBAL !== 'blocks') {
+		if (Config::get('concrete.cache.pages') !== 'blocks') {
 			// we are NOT specifically caching this page, and we don't
 			return false;
 		}

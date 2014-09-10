@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Cache;
+use Config;
 use PageCache;
 use Events;
 use Database as DB;
@@ -22,7 +23,7 @@ class Cache {
                 $cache = StorageFactory::factory(array(
                     'adapter' => array(
                         'name' => $adapter,
-                        'ttl' => CACHE_LIFETIME
+                        'ttl' => Config::get('concrete.cache.lifetime')
                     ),
                     'options' => array(
                         'cache_dir' => DIR_FILES_CACHE,

@@ -2567,18 +2567,18 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     public function getCollectionFullPageCachingLifetimeValue() {
         if ($this->cCacheFullPageContentOverrideLifetime == 'default') {
-            $lifetime = CACHE_LIFETIME;
+            $lifetime = Config::get('concrete.cache.lifetime');
         } else if ($this->cCacheFullPageContentOverrideLifetime == 'custom') {
             $lifetime = $this->cCacheFullPageContentLifetimeCustom * 60;
         } else if ($this->cCacheFullPageContentOverrideLifetime == 'forever') {
             $lifetime = 31536000; // 1 year
         } else {
-            if (FULL_PAGE_CACHE_LIFETIME == 'custom') {
+            if (Config::get('concrete.cache.full_page_lifetime') == 'custom') {
                 $lifetime = Config::get('concrete.cache.full_page_lifetime_value') * 60;
-            } else if (FULL_PAGE_CACHE_LIFETIME == 'forever') {
+            } else if (Config::get('concrete.cache.full_page_lifetime') == 'forever') {
                 $lifetime = 31536000; // 1 year
             } else {
-                $lifetime = CACHE_LIFETIME;
+                $lifetime = Config::get('concrete.cache.lifetime');
             }
         }
 

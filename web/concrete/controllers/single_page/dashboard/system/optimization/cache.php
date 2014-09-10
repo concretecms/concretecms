@@ -22,10 +22,10 @@ class Cache extends DashboardPageController {
 				$eac = $this->post('ENABLE_ASSET_CACHE') == 1 ? 1 : 0;
                 $tcc = $this->post('ENABLE_THEME_CSS_CACHE') == 1 ? 1 : 0;
                 ConcreteCache::flush();
-				Config::save('concrete.cache.blocks', $eca);
-				Config::save('concrete.cache.assets', $eac);
-                Config::save('concrete.cache.theme_css', $tcc);
-				Config::save('concrete.cache.overrides', $eoc);
+				Config::save('concrete.cache.blocks', !!$eca);
+				Config::save('concrete.cache.assets', !!$eac);
+                Config::save('concrete.cache.theme_css', !!$tcc);
+				Config::save('concrete.cache.overrides', !!$eoc);
 				Config::save('concrete.cache.pages', $this->post('FULL_PAGE_CACHE_GLOBAL'));
 				Config::save('concrete.cache.full_page_liftetime', $this->post('FULL_PAGE_CACHE_LIFETIME'));
 				Config::save('concrete.cache.full_page_lifetime_value', $this->post('FULL_PAGE_CACHE_LIFETIME_CUSTOM'));

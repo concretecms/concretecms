@@ -69,12 +69,12 @@ class Open extends DashboardPageController
         }
         $this->token = Loader::helper('validation/token');
 
-        $this->set('email_as_username', USER_REGISTRATION_WITH_EMAIL_ADDRESS);
-        $this->set('registration_type', REGISTRATION_TYPE);
-        $this->set('user_timezones', ENABLE_USER_TIMEZONES);
-        $this->set('enable_registration_captcha', ENABLE_REGISTRATION_CAPTCHA);
-        $this->set('register_notification', REGISTER_NOTIFICATION);
-        $this->set('register_notification_email', EMAIL_ADDRESS_REGISTER_NOTIFICATION);
+        $this->set('email_as_username', Config::get('concrete.user.registration.email_registration'));
+        $this->set('registration_type', Config::get('concrete.user.registration.type'));
+        $this->set('user_timezones', Config::get('concrete.user.timezones_enabled'));
+        $this->set('enable_registration_captcha', Config::get('concrete.user.registration.captcha'));
+        $this->set('register_notification', !!Config::get('concrete.user.registration.notification'));
+        $this->set('register_notification_email', Config::get('concrete.user.registration.notification'));
     }
 
 }

@@ -157,7 +157,7 @@ $alreadyActiveMessage = t('This theme is currently active on your site.');
 
 	<? } // END 'IF AVAILABLE' CHECK ?>
 
-    <? if (ENABLE_MARKETPLACE_SUPPORT == true) { ?>
+    <? if (Config::get('concrete.marketplace.enabled') == true) { ?>
 
 	<div class="well" style="padding:10px 20px;">
         <h3><?=t('Want more themes?')?></h3>

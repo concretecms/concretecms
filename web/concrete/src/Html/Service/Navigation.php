@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Html\Service;
+use Config;
 use Loader;
 use Page;
 
@@ -14,8 +15,8 @@ class Navigation {
 		// basically returns a link to a collection, based on whether or we have
 		// mod_rewrite enabled, and the collection has a path
 		$dispatcher = '';
-		if (!defined('URL_REWRITING_ALL') || URL_REWRITING_ALL == false) {
-			if ((!URL_REWRITING) || $ignoreUrlRewriting) {
+		if (!Config::get('concrete.seo.url_rewriting')) {
+			if ((!Config::get('concrete.seo.url_rewriting')) || $ignoreUrlRewriting) {
 				$dispatcher = '/' . DISPATCHER_FILENAME;
 			}
 		}

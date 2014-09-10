@@ -331,7 +331,7 @@ class BlockView extends AbstractView
     protected function useBlockCache()
     {
         $u = new User();
-        if ($this->viewToRender == 'view' && ENABLE_BLOCK_CACHE && $this->controller->cacheBlockOutput(
+        if ($this->viewToRender == 'view' && Config::get('concrete.cache.blocks') && $this->controller->cacheBlockOutput(
             ) && ($this->block instanceof Block)
         ) {
             if ((!$u->isRegistered() || ($this->controller->cacheBlockOutputForRegisteredUsers())) &&
