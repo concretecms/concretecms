@@ -28,12 +28,12 @@ class Repository extends \Illuminate\Config\Repository
         $file = "{$path}/{$group}.php";
         $current = array();
         if ($file_system->exists($file)) {
-            $current = $file_system->getRequire($file);
+            $current[$group] = $file_system->getRequire($file);
         }
 
         array_set($current, $key, $value);
 
-        $renderer = new ConfigRenderer($current['concrete']);
+        $renderer = new ConfigRenderer($current[$group]);
         $file_system->put($file, $renderer->render());
 
         parent::set($key, $value);
