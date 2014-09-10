@@ -1,8 +1,9 @@
 <?php
 
-namespace Concrete\Core\Cache;
+namespace Concrete\Core\Cache\Adapter;
 
 
+use Concrete\Core\Cache\Cache;
 use Doctrine\Common\Cache\CacheProvider;
 use Core;
 
