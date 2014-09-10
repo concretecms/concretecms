@@ -82,7 +82,7 @@ EOL;
 		$v->addFooterItem('<script type="text/javascript">$(function() { jQuery.datepicker.setDefaults({dateFormat: \'yy-mm-dd\'}); });</script>');
 	}
 	if (!Config::get('SEEN_INTRODUCTION')) {
-		$v->addHeaderItem('<script type="text/javascript">$(function() { ccm_showAppIntroduction(); });</script>');
+		$v->addFooterItem('<script type="text/javascript">$(function() { ccm_showAppIntroduction(); });</script>');
 		Config::save('SEEN_INTRODUCTION', 1);
 	}
 }
