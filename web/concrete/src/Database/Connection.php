@@ -1,6 +1,6 @@
 <?php
 namespace Concrete\Core\Database;
-use Concrete\Core\Cache\DoctrineCacheDriver;
+use Concrete\Core\Cache\Adapter\DoctrineCacheDriver;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 
