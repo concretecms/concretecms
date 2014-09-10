@@ -2,6 +2,8 @@
 namespace Concrete\Controller;
 
 use Cache;
+use Concrete\Core\Config\ConfigRenderer;
+use Core;
 use Concrete\Core\Localization\Localization as Localization;
 use Controller;
 use Database as DB;
@@ -23,6 +25,9 @@ define('ENABLE_THEME_CSS_CACHE', false);
 
 class Install extends Controller
 {
+
+    protected $fp;
+    protected $fpu;
 
     public $helpers = array('form', 'html');
 
@@ -151,7 +156,7 @@ class Install extends Controller
         $this->setRequiredItems();
         $this->setOptionalItems();
 
-        if (file_exists(DIR_CONFIG_SITE . '/site.php')) {
+        if (\Core::isInstalled()) {
             throw new Exception(t('concrete5 is already installed.'));
         }
         if (!isset($_COOKIE['CONCRETE5_INSTALL_TEST'])) {
@@ -238,7 +243,7 @@ class Install extends Controller
             $js->error = false;
         } catch (Exception $e) {
             $js->error = true;
-            $js->message = $e->getMessage();
+            $js->message = $e->getTraceAsString();
             $this->reset();
         }
         print $jsx->encode($js);
@@ -257,10 +262,6 @@ class Install extends Controller
         }
         if (file_exists(DIR_CONFIG_SITE . '/site_install_user.php')) {
             unlink(DIR_CONFIG_SITE . '/site_install_user.php');
-        }
-
-        if (file_exists(DIR_CONFIG_SITE . '/site.php')) {
-            unlink(DIR_CONFIG_SITE . '/site.php');
         }
     }
 
@@ -302,24 +303,29 @@ class Install extends Controller
                 $this->fp = @fopen(DIR_CONFIG_SITE . '/site_install.php', 'w+');
                 $this->fpu = @fopen(DIR_CONFIG_SITE . '/site_install_user.php', 'w+');
                 if ($this->fp) {
-                    $configuration = "<?php\n";
-                    $configuration .= "define('DB_SERVER', '" . addslashes($_POST['DB_SERVER']) . "');\n";
-                    $configuration .= "define('DB_USERNAME', '" . addslashes($_POST['DB_USERNAME']) . "');\n";
-                    $configuration .= "define('DB_PASSWORD', '" . addslashes($_POST['DB_PASSWORD']) . "');\n";
-                    $configuration .= "define('DB_DATABASE', '" . addslashes($_POST['DB_DATABASE']) . "');\n";
-                    if (isset($setPermissionsModel)) {
-                        $configuration .= "define('PERMISSIONS_MODEL', '" . addslashes($setPermissionsModel) . "');\n";
-                    }
-                    if (is_array($_POST['SITE_CONFIG'])) {
-                        foreach ($_POST['SITE_CONFIG'] as $key => $value) {
-                            $configuration .= "define('" . $key . "', '" . $value . "');\n";
-                        }
-                    }
-                    $res = fwrite($this->fp, $configuration);
+
+                    $config = (array)$_POST['SITE_CONFIG'];
+                    $config['database'] = array(
+                        'default-connection' => 'concrete',
+                        'connections' => array(
+                            'concrete' => array(
+                                'driver' => 'c5_pdo_mysql',
+                                'server' => $_POST['DB_SERVER'],
+                                'database' => $_POST['DB_DATABASE'],
+                                'username' => $_POST['DB_USERNAME'],
+                                'password' => $_POST['DB_PASSWORD']
+                            )
+                        )
+                    );
+
+
+                    $renderer = new ConfigRenderer($config);
+                    fwrite($this->fp, $renderer->render());
+
                     fclose($this->fp);
                     chmod(DIR_CONFIG_SITE . '/site_install.php', 0700);
                 } else {
-                    throw new Exception(t('Unable to open config/site.php for writing.'));
+                    throw new Exception(t('Unable to open config/app.php for writing.'));
                 }
 
                 if ($this->fpu) {

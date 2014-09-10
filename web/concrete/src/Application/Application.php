@@ -4,6 +4,7 @@ namespace Concrete\Core\Application;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Foundation\ClassLoader;
+use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Routing\DispatcherRouteCallback;
 use Core;
 use Database;
@@ -26,17 +27,8 @@ use View;
 class Application extends Container
 {
 
-    protected $installed = false;
-
-    /**
-     * Initializes concrete5
-     */
-    public function __construct()
-    {
-        if (defined('CONFIG_FILE_EXISTS')) {
-            $this->installed = true;
-        }
-    }
+    protected $installed = null;
+    protected $environment = null;
 
     /**
      * Turns off the lights.
@@ -119,6 +111,14 @@ class Application extends Container
      */
     public function isInstalled()
     {
+        if ($this->installed === null) {
+            if (!$this->isShared('config')) {
+                throw new \Exception('Attempting to check install status before application initialization.');
+            }
+
+            $this->installed = $this->make('config')->get('app.installed');
+        }
+
         return $this->installed;
     }
 
@@ -316,6 +316,38 @@ class Application extends Container
                 }
             }
         }
+    }
+
+    /**
+     * Get or check the current application environment.
+     *
+     * @param  mixed
+     * @return string|bool
+     */
+    public function environment()
+    {
+        if (count(func_get_args()) > 0)
+        {
+            return in_array($this->environment, func_get_args());
+        }
+        else
+        {
+            return $this->environment;
+        }
+    }
+
+    /**
+     * Detect the application's current environment.
+     *
+     * @param  array|string|Callable  $environments
+     * @return string
+     */
+    public function detectEnvironment($environments)
+    {
+        $args = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
+
+        $detector = new EnvironmentDetector();
+        return $this->environment = $detector->detect($environments, $args);
     }
 
 }

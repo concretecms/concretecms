@@ -1,6 +1,6 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
-if ($_REQUEST['reload_and_remove_cache']) { 
+if ($_REQUEST['reload_and_remove_cache']) {
 	$cache = PageCache::getLibrary();
 	$cache->purge($c);
 }
@@ -15,8 +15,8 @@ if ($_REQUEST['reload_and_remove_cache']) {
 
 <form method="post" id="ccmSpeedSettingsForm" action="<?=$c->getCollectionAction()?>">
 
-	<script type="text/javascript"> 
-		
+	<script type="text/javascript">
+
 		ccm_settingsSetupCacheForm = function(reset) {
 			var obj = $('input[name=cCacheFullPageContent]:checked');
 			if (obj.attr('enable-cache') == 1) {
@@ -36,11 +36,11 @@ if ($_REQUEST['reload_and_remove_cache']) {
 			}
 
 		}
-		
+
 		$(function() {
 			$('#ccm-button-remove-page-from-cache').on('click', function() {
 				jQuery.fn.dialog.showLoader();
-				$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?cID=<?=$c->getCollectionID()?>&ctask=edit_speed_settings&reload_and_remove_cache=1', function(r) { 
+				$.get('<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_collection_popup?cID=<?=$c->getCollectionID()?>&ctask=edit_speed_settings&reload_and_remove_cache=1', function(r) {
 					jQuery.fn.dialog.replaceTop(r);
 					jQuery.fn.dialog.hideLoader();
 				});
@@ -60,7 +60,7 @@ if ($_REQUEST['reload_and_remove_cache']) {
 			$('#ccmSpeedSettingsForm').concreteAjaxForm();
 		});
 	</script>
-	
+
 
 		<? $form = Loader::helper('form');?>
 		<?
@@ -83,7 +83,7 @@ if ($_REQUEST['reload_and_remove_cache']) {
 				$globalSettingLifetime = Loader::helper('date')->describeInterval(CACHE_LIFETIME);
 				break;
 			case 'custom':
-				$globalSettingLifetime = Loader::helper('date')->describeInterval(Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM'));
+				$globalSettingLifetime = Loader::helper('date')->describeInterval(Config::get('concrete.cache.full_page_lifetime_value'));
 				break;
 			case 'forever':
 				$globalSettingLifetime = t('Until manually cleared');
@@ -130,16 +130,16 @@ if ($_REQUEST['reload_and_remove_cache']) {
 		</li>
 		</ul>
 		</div>
-		
+
 		</div>
-		
+
 		<div class="clearfix">
 		<label><?=t('Cache for how long?')?></label>
-		
+
 		<div class="ccm-properties-cache-lifetime input">
 		<ul class="inputs-list">
 			<? $val = ($c->getCollectionFullPageCachingLifetimeCustomValue() > 0 && $c->getCollectionFullPageCachingLifetime()) ? $c->getCollectionFullPageCachingLifetimeCustomValue() : ''; ?>
-			<li><label><span><input type="radio" name="cCacheFullPageContentOverrideLifetime" value="0" <? if ($c->getCollectionFullPageCachingLifetime() == '0') { ?> checked="checked" <? } ?> /> 
+			<li><label><span><input type="radio" name="cCacheFullPageContentOverrideLifetime" value="0" <? if ($c->getCollectionFullPageCachingLifetime() == '0') { ?> checked="checked" <? } ?> />
 			<?=t('Use global setting - %s', $globalSettingLifetime)?>
 			</span></label></li>
 			<li><label><span><?=$form->radio('cCacheFullPageContentOverrideLifetime', 'forever', $c->getCollectionFullPageCachingLifetime())?>
@@ -154,8 +154,8 @@ if ($_REQUEST['reload_and_remove_cache']) {
 			</li>
 		</ul>
 		</div>
-	</div>	
-	
+	</div>
+
 	<input type="hidden" name="update_speed_settings" value="1" />
 	<input type="hidden" name="processCollection" value="1">
 </form>

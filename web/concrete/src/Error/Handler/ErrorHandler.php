@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Core\Error\Handler;
 
-use Concrete\Core\Config\Config;
+use Config;
 use Concrete\Core\Logging\Logger;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Database;
@@ -23,7 +23,7 @@ class ErrorHandler extends PrettyPageHandler
     public function handle()
     {
         $this->setPageTitle("concrete5 has encountered an issue.");
-        if (defined('ENABLE_LOG_ERRORS') && ENABLE_LOG_ERRORS) {
+        if (Config::get('concrete.log.errors')) {
             try {
                 $e = $this->getInspector()->getException();
                 $db = Database::get();
@@ -42,7 +42,7 @@ class ErrorHandler extends PrettyPageHandler
             } catch (Exception $e) {}
         }
 
-        $debug = intval(defined('SITE_DEBUG_LEVEL') ? SITE_DEBUG_LEVEL : Config::get('SITE_DEBUG_LEVEL'), 10);
+        $debug = Config::get('concrete.debug.level', 0);
         if ($debug === DEBUG_DISPLAY_ERRORS) {
             $this->addDetails();
             return parent::handle();
@@ -68,7 +68,7 @@ class ErrorHandler extends PrettyPageHandler
              'Concrete5',
              array(
                  'Version'           => APP_VERSION,
-                 'Installed Version' => Config::get('SITE_INSTALLED_APP_VERSION')
+                 'Installed Version' => Config::get('app.version')
              )
         );
 
@@ -76,12 +76,12 @@ class ErrorHandler extends PrettyPageHandler
          * Cache
          */
         $this->addDataTable(
-             'Cache',
+             'Preferences',
              array(
-                 'Block Cache'        => ENABLE_BLOCK_CACHE ? 'ON' : 'OFF',
-                 'Overrides Cache'    => ENABLE_OVERRIDE_CACHE ? 'ON' : 'OFF',
-                 'Full Page'          => FULL_PAGE_CACHE_GLOBAL ? 'ON' : 'OFF',
-                 'Full Page Lifetime' => defined('FULL_PAGE_CACHE_LIFETIME') ? FULL_PAGE_CACHE_LIFETIME : 'Default',
+                 'Block Cache'        => Config::get('concrete.cache.blocks') ? 'ON' : 'OFF',
+                 'Overrides Cache'    => Config::get('concrete.cache.overrides') ? 'ON' : 'OFF',
+                 'Full Page'          => Config::get('concrete.cache.pages') ? 'ON' : 'OFF',
+                 'Full Page Lifetime' => Config::get('concrete.cache.full_page_lifetime', 'default')
              )
         );
 

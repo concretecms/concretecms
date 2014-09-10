@@ -13,17 +13,17 @@ class Open extends DashboardPageController
     public function update_registration_type()
     {
         if ($this->isPost()) {
-            Config::save('USER_REGISTRATION_WITH_EMAIL_ADDRESS', ($this->post('email_as_username') ? true : false));
+            Config::save('concrete.user.registration.email_registration', ($this->post('email_as_username') ? true : false));
 
-            Config::save('REGISTRATION_TYPE', $this->post('registration_type'));
-            Config::save('ENABLE_REGISTRATION_CAPTCHA', ($this->post('enable_registration_captcha')) ? true : false);
+            Config::save('concrete.user.registration.type', $this->post('registration_type'));
+            Config::save('concrete.user.registration.captcha', ($this->post('enable_registration_captcha')) ? true : false);
 
             switch ($this->post('registration_type')) {
                 case "enabled":
-                    Config::save('ENABLE_REGISTRATION', true);
-                    Config::save('USER_VALIDATE_EMAIL', false);
-                    Config::save('USER_REGISTRATION_APPROVAL_REQUIRED', false);
-                    Config::save('REGISTER_NOTIFICATION', $this->post('register_notification'));
+                    Config::save('concrete.user.registration.enabled', true);
+                    Config::save('concrete.user.registration.validate_email', false);
+                    Config::save('concrete.user.registration.approval', false);
+                    Config::save('concrete.user.registration.notification', $this->post('register_notification'));
                     Config::save(
                         'EMAIL_ADDRESS_REGISTER_NOTIFICATION',
                         Loader::helper('security')->sanitizeString(
@@ -31,10 +31,10 @@ class Open extends DashboardPageController
                     break;
 
                 case "validate_email":
-                    Config::save('ENABLE_REGISTRATION', true);
-                    Config::save('USER_VALIDATE_EMAIL', true);
-                    Config::save('USER_REGISTRATION_APPROVAL_REQUIRED', false);
-                    Config::save('REGISTER_NOTIFICATION', $this->post('register_notification'));
+                    Config::save('concrete.user.registration.enabled', true);
+                    Config::save('concrete.user.registration.validate_email', true);
+                    Config::save('concrete.user.registration.approval', false);
+                    Config::save('concrete.user.registration.notification', $this->post('register_notification'));
                     Config::save(
                         'EMAIL_ADDRESS_REGISTER_NOTIFICATION',
                         Loader::helper('security')->sanitizeString(
@@ -42,22 +42,21 @@ class Open extends DashboardPageController
                     break;
 
                 case "manual_approve":
-                    Config::save('ENABLE_REGISTRATION', true);
-                    Config::save('USER_REGISTRATION_APPROVAL_REQUIRED', true);
-                    Config::save('USER_VALIDATE_EMAIL', false);
-                    Config::save('REGISTER_NOTIFICATION', $this->post('register_notification'));
+                    Config::save('concrete.user.registration.enabled', true);
+                    Config::save('concrete.user.registration.approval', true);
+                    Config::save('concrete.user.registration.validate_email', false);
                     Config::save(
-                        'EMAIL_ADDRESS_REGISTER_NOTIFICATION',
+                        'concrete.user.registration.notification',
                         Loader::helper('security')->sanitizeString(
                             $this->post('register_notification_email')));
                     break;
 
                 default: // disabled
-                    Config::save('ENABLE_REGISTRATION', false);
-                    Config::save('REGISTER_NOTIFICATION', false);
+                    Config::save('concrete.user.registration.enabled', false);
+                    Config::save('concrete.user.registration.notification', false);
                     break;
             }
-            Config::save('REGISTRATION_TYPE', $this->post('registration_type'));
+            Config::save('concrete.user.registration.type', $this->post('registration_type'));
 
             $this->redirect('/dashboard/system/registration/open', 1);
         }

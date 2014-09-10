@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Backup;
 
+use Concrete\Core\Config\ConfigStore;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Sharing\SocialNetwork\Link;
 use Concrete\Core\Tree\Tree;
@@ -45,7 +46,6 @@ use \Concrete\Core\ImageEditor\Filter as SystemImageEditorFilter;
 use \Concrete\Core\ImageEditor\Component as SystemImageEditorComponent;
 use \Concrete\Core\Conversation\FlagType\FlagType as ConversationFlagType;
 use \Concrete\Core\Validation\BannedWord\BannedWord as BannedWord;
-use \Concrete\Core\Config\ConfigStore;
 use FileImporter;
 use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFormLayoutSetControl;
 

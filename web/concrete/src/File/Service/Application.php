@@ -2,6 +2,7 @@
 
 namespace Concrete\Core\File\Service;
 use Concrete\Core\File\StorageLocation\StorageLocation;
+use Config;
 use Loader;
 class Application {
 
@@ -79,7 +80,7 @@ class Application {
 	 * Returns an array of all allowed file extensions within the system
 	 */
 	public function getAllowedFileExtensions() {
-		$arr = $this->unserializeUploadFileExtensions(UPLOAD_FILE_EXTENSIONS_ALLOWED);
+		$arr = $this->unserializeUploadFileExtensions(Config::get('concrete.upload.extensions'));
 		sort($arr);
 		return $arr;
 	}

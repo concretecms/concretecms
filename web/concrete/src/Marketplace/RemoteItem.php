@@ -142,7 +142,7 @@ class RemoteItem extends Object {
 
 	public function enableFreeLicense() {
 		$fh = Loader::helper('file');
-		$csToken = Config::get('MARKETPLACE_SITE_TOKEN');
+		$csToken = Config::get('concrete.marketplace.token');
 		$csiURL = urlencode(BASE_URL . DIR_REL);
 		$url = MARKETPLACE_ITEM_FREE_LICENSE_WS."?mpID=" . $this->mpID . "&csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
 		$fh->getContents($url);
@@ -152,7 +152,7 @@ class RemoteItem extends Object {
 		$fh = Loader::helper('file');
 
 		// Retrieve the URL contents
-		$csToken = Config::get('MARKETPLACE_SITE_TOKEN');
+		$csToken = Config::get('concrete.marketplace.token');
 		$csiURL = urlencode(BASE_URL . DIR_REL);
 		$url = MARKETPLACE_ITEM_INFORMATION_WS."?" . $method . "=" . $identifier . "&csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
 		$json = $fh->getContents($url);

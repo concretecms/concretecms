@@ -10,7 +10,8 @@ class JsonErrorHandler extends Handler
 
     public function handle()
     {
-        $debug = intval(defined('SITE_DEBUG_LEVEL') ? SITE_DEBUG_LEVEL : Config::get('SITE_DEBUG_LEVEL'), 10);
+        $debug = Config::get('concrete.debug.level', 0);
+
         if ($debug !== DEBUG_DISPLAY_ERRORS) {
             return Handler::DONE;
         }

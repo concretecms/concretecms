@@ -1,7 +1,7 @@
 <? defined('C5_EXECUTE') or die("Access Denied."); ?>
 <form method="post" class="ccm-dashboard-content-form" action="<?=$view->url('/dashboard/system/optimization/cache', 'update_cache')?>">
     <?=$this->controller->token->output('update_cache')?>
-        
+
     <fieldset style="margin-bottom: 15px">
     <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Stores the output of blocks which support block caching')?>"><?=t('Block Cache')?></legend>
 
@@ -95,7 +95,7 @@
                 <input type="radio" name="FULL_PAGE_CACHE_GLOBAL" value="all" <?php  if (FULL_PAGE_CACHE_GLOBAL == 'all') { ?> checked <?php  } ?> />
                 <span><?=t('On - In all cases.')?></span>
             </label>
-        </div>    
+        </div>
     </fieldset>
 
     <fieldset>
@@ -120,7 +120,7 @@
                 <input type="radio" name="FULL_PAGE_CACHE_LIFETIME" value="custom" style="margin-bottom:1px; vertical-align:text-bottom;" <?php if (FULL_PAGE_CACHE_LIFETIME == 'custom') { ?> checked <?php  } ?> />
                 <span>
                     <?=t('Every ')?>
-                    <input type="text" name="FULL_PAGE_CACHE_LIFETIME_CUSTOM" value="<?= h(Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM')) ?>" size="4" />
+                    <input type="text" name="FULL_PAGE_CACHE_LIFETIME_CUSTOM" value="<?= h(Config::get('concrete.cache.full_page_lifetime_value')) ?>" size="4" />
                     <?=t(' minutes.')?>
                 </span>
             </label>
@@ -150,13 +150,13 @@
 		} else {
 			$('input[name=FULL_PAGE_CACHE_LIFETIME_CUSTOM]').attr('disabled', true);
 			$('input[name=FULL_PAGE_CACHE_LIFETIME_CUSTOM]').val('');
-		}			
+		}
 	}
-	
-	$(function(){ 
-		$("input[name='CONTENTS_TXT_EDITOR_MODE']").each(function(i,el){ 
+
+	$(function(){
+		$("input[name='CONTENTS_TXT_EDITOR_MODE']").each(function(i,el){
 			el.onchange=function(){isTxtEditorModeCustom();}
-		})	 	
+		})
 		$("input[name=ENABLE_CACHE]").click(function() {
 			ccm_settingsSetupCacheForm();
 		});

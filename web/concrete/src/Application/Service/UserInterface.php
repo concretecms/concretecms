@@ -167,7 +167,7 @@ class UserInterface {
 				return false;
 			}
 
-			if (Config::get('SITE_MAINTENANCE_MODE')) {
+			if (Config::get('concrete.maintenance_mode')) {
 				return false;
 			}
 

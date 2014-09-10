@@ -59,7 +59,7 @@ class Text {
 	public function urlify($handle, $maxlength = PAGE_PATH_SEGMENT_MAX_LENGTH, $locale = '', $removeExcludedWords = true) {
 		$text = strtolower(str_replace(array("\r", "\n", "\t"), ' ', $this->asciify($handle, $locale)));
 		if($removeExcludedWords) {
-			$excludeSeoWords = Config::get('SEO_EXCLUDE_WORDS');
+			$excludeSeoWords = Config::get('concrete.seo.exclude_words');
 			if(is_string($excludeSeoWords)) {
 				if(strlen($excludeSeoWords)) {
 					$remove_list = explode(',', $excludeSeoWords);

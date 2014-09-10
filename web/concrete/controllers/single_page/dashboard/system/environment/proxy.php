@@ -5,37 +5,37 @@ use Config;
 use Loader;
 
 class Proxy extends DashboardPageController {
-	
+
 	public function view() {
-		$httpProxyHost = Config::get('HTTP_PROXY_HOST');
+		$httpProxyHost = Config::get('concrete.proxy.host');
 		//Log::addEntry('Proxy Host view config: ' . $httpProxyHost);
-		$httpProxyPort = Config::get('HTTP_PROXY_PORT');
-		$httpProxyUser = Config::get('HTTP_PROXY_USER');
-		$httpProxyPwd = Config::get('HTTP_PROXY_PWD');
+		$httpProxyPort = Config::get('concrete.proxy.port');
+		$httpProxyUser = Config::get('concrete.proxy.user');
+		$httpProxyPwd = Config::get('concrete.proxy.password');
 		$this->set('http_proxy_host', $httpProxyHost);
 		$this->set('http_proxy_port', $httpProxyPort);
 		$this->set('http_proxy_user', $httpProxyUser);
 		$this->set('http_proxy_pwd', $httpProxyPwd);
 	}
-	
+
 	public function update_proxy() {
 		if ($this->token->validate("update_proxy")) {
 			if ($this->isPost()) {
 				//Log::addEntry('Proxy Host: ' . $this->post('http_proxy_host'));
-				Config::save('HTTP_PROXY_HOST', $this->post('http_proxy_host'));
-				Config::save('HTTP_PROXY_PORT', $this->post('http_proxy_port'));
-				Config::save('HTTP_PROXY_USER', $this->post('http_proxy_user'));
-				Config::save('HTTP_PROXY_PWD', $this->post('http_proxy_pwd'));
-				//Log::addEntry('Proxy Host config: ' . Config::get('HTTP_PROXY_HOST'));
+				Config::save('concrete.proxy.host', $this->post('http_proxy_host'));
+				Config::save('concrete.proxy.port', $this->post('http_proxy_port'));
+				Config::save('concrete.proxy.user', $this->post('http_proxy_user'));
+				Config::save('concrete.proxy.password', $this->post('http_proxy_pwd'));
+				//Log::addEntry('Proxy Host config: ' . Config::get('concrete.proxy.host'));
 				$this->redirect('/dashboard/system/environment/proxy', 'proxy_saved');
 			}
 		} else {
 			$this->set('error', array($this->token->getErrorMessage()));
 		}
 	}
-	
+
 	public function proxy_saved(){
 		$this->set('message', t('Proxy configuration saved.'));
 		$this->view();
-	}	
+	}
 }

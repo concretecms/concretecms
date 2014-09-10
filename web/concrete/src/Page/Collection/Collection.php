@@ -43,7 +43,7 @@ class Collection extends Object
             $pc->reindex(false, true);
             $num++;
         }
-        Config::save('DO_PAGE_REINDEX_CHECK', false);
+        Config::save('concrete.misc.do_page_reindex_check', false);
         return $num;
     }
 
@@ -389,7 +389,7 @@ class Collection extends Object
 
         } else {
             $db = Loader::db();
-            Config::save('DO_PAGE_REINDEX_CHECK', true);
+            Config::save('concrete.misc.do_page_reindex_check', true);
             $db->Replace(
                'PageSearchIndex',
                array('cID' => $this->getCollectionID(), 'cRequiresReindex' => 1),

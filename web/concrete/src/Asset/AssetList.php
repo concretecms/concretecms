@@ -51,6 +51,16 @@ class AssetList {
 		return $o;
 	}
 
+    public function registerMultiple(array $assets)
+    {
+        foreach ($assets as $asset_handle => $asset_types) {
+            foreach ($asset_types as $asset_type => $asset_settings) {
+                array_splice($asset_settings, 1, 0, $asset_handle);
+                call_user_func_array(array($this, 'register'), $asset_settings);
+            }
+        }
+    }
+
 	public function registerAsset(Asset $asset) {
 		// we have to check and see if the asset already exists.
 		// If it exists, we only replace it if our current asset has a later version
@@ -79,6 +89,14 @@ class AssetList {
 		}
 		$this->assetGroups[$assetGroupHandle] = $group;
 	}
+
+    public function registerGroupMultiple(array $asset_groups)
+    {
+        foreach ($asset_groups as $group_handle => $group_setting) {
+            array_unshift($group_setting, $group_handle);
+            call_user_func_array(array($this, 'registerGroup'), $group_setting);
+        }
+    }
 
 	public function getAsset($assetType, $assetHandle) {
 		return $this->assets[$assetType][$assetHandle];

@@ -37,7 +37,7 @@ if ($canUpgrade) {
 
         </form>
         <script>
-            $('header.ccm-dashboard-page-header').children().text('<?= t('Currently Running %s', config::get('SITE_APP_VERSION')) ?>');
+            $('header.ccm-dashboard-page-header').children().text('<?= t('Currently Running %s', config::get('concrete.version')) ?>');
         </script>
     <?
     } else {
@@ -58,7 +58,7 @@ if ($canUpgrade) {
                         'An update is available. Click below to update to <strong>%s</strong>.',
                         $updates[0]->getUpdateVersion()) ?>
                 </p>
-                <span class="label"><?= t('Current Version %s', config::get('SITE_APP_VERSION')) ?></span>
+                <span class="label"><?= t('Current Version %s', config::get('concrete.version')) ?></span>
 
                 <div class="ccm-dashboard-form-actions-wrapper">
                     <div class="ccm-dashboard-form-actions">
@@ -70,7 +70,7 @@ if ($canUpgrade) {
                 </div>
             <? } else { ?>
                 <p><?= t('Several updates are available. Please choose the desired update from the list below.') ?></p>
-                <span class="label"><?= t('Current Version') ?> <?= config::get('SITE_APP_VERSION') ?></span>
+                <span class="label"><?= t('Current Version') ?> <?= config::get('concrete.version') ?></span>
                 <form method="post" class="form" action="<?= $view->action('do_update') ?>" id="ccm-update-form">
                     <?php
                     $checked = true;
@@ -106,7 +106,7 @@ if ($canUpgrade) {
                 </a>
             </div>
 
-            <div class="alert alert-info"><?= t('Currently Running %s', config::get('SITE_APP_VERSION')) ?></div>
+            <div class="alert alert-info"><?= t('Currently Running %s', config::get('concrete.version')) ?></div>
 
             <p><?= t('No updates available.') ?></p>
 

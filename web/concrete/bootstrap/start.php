@@ -15,18 +15,24 @@ if (basename($_SERVER['PHP_SELF']) == DISPATCHER_FILENAME_CORE) {
  * ----------------------------------------------------------------------------
  */
 use Concrete\Core\Application\Application;
+use Concrete\Core\Asset\AssetList;
 use Concrete\Core\Foundation\ClassAliasList;
 use Concrete\Core\Foundation\Service\ProviderList;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Support\Facade\Facade;
 use Patchwork\Utf8\Bootup;
+use Concrete\Core\Config\Config as DatabaseConfig;
+use Concrete\Core\Config\Repository as ConfigRepository;
+use Concrete\Core\File\Type\TypeList;
+use Concrete\Core\Config\ConfigLoader;
+use Illuminate\Filesystem\Filesystem;
 
 /**
  * ----------------------------------------------------------------------------
  * Instantiate concrete5.
  * ----------------------------------------------------------------------------
  */
-$cms = new Application();
+$cms = require DIR_APPLICATION . '/bootstrap/start.php';
 $cms->instance('app', $cms);
 
 /**
@@ -39,12 +45,38 @@ Facade::setFacadeApplication($cms);
 
 /**
  * ----------------------------------------------------------------------------
+ * Enable Config
+ * ----------------------------------------------------------------------------
+ */
+$file_system = new Filesystem();
+$file_loader = new ConfigLoader($file_system);
+
+$db_config = $file_loader->loadStrict(null, 'database');
+
+$environment = $cms->environment();
+$cms->detectEnvironment(function() use ($db_config, $environment) {
+    return isset($db_config['default-connection']) ? $environment : 'install';
+});
+
+$cms->instance('config', $config = new ConfigRepository($file_loader, $cms->environment()));
+
+
+
+/**
+ * ----------------------------------------------------------------------------
+ * Get App version number
+ * ----------------------------------------------------------------------------
+ */
+define('APP_VERSION', $config->get('app.version'));
+
+/**
+ * ----------------------------------------------------------------------------
  * Setup core classes aliases.
  * ----------------------------------------------------------------------------
  */
 $list = ClassAliasList::getInstance();
-$list->registerMultiple(require DIR_BASE_CORE . '/config/aliases.php');
-$list->registerMultiple(require DIR_BASE_CORE . '/config/facades.php');
+$list->registerMultiple($config->get('app.aliases'));
+$list->registerMultiple($config->get('app.facades'));
 
 /**
  * ----------------------------------------------------------------------------
@@ -52,7 +84,7 @@ $list->registerMultiple(require DIR_BASE_CORE . '/config/facades.php');
  * ----------------------------------------------------------------------------
  */
 $list = new ProviderList($cms);
-$list->registerProviders(require DIR_BASE_CORE . '/config/services.php');
+$list->registerProviders($config->get('app.providers'));
 
 /**
  * ----------------------------------------------------------------------------
@@ -74,10 +106,17 @@ Bootup::initAll();
  * Registries for theme paths, assets, routes and file types.
  * ----------------------------------------------------------------------------
  */
-require DIR_BASE_CORE . '/config/theme_paths.php';
-require DIR_BASE_CORE . '/config/assets.php';
-require DIR_BASE_CORE . '/config/routes.php';
-require DIR_BASE_CORE . '/config/file_types.php';
+$asset_list = AssetList::getInstance();
+
+$asset_list->registerMultiple($config->get('app.assets', array()));
+$asset_list->registerGroupMultiple($config->get('app.asset_groups', array()));
+
+Route::registerMultiple($config->get('app.routes'));
+Route::setThemesByRoutes($config->get('app.theme_paths', array()));
+
+$type_list = TypeList::getInstance();
+$type_list->defineMultiple($config->get('app.file_types', array()));
+$type_list->defineImporterAttributeMultiple($config->get('app.importer_attributes', array()));
 
 /**
  * ----------------------------------------------------------------------------
@@ -87,6 +126,13 @@ require DIR_BASE_CORE . '/config/file_types.php';
 if ($cms->isRunThroughCommandLineInterface()) {
     return $cms;
 }
+
+/**
+ * ----------------------------------------------------------------------------
+ * If not through CLI, load up the application/bootstrap/app.php
+ */
+@include DIR_APPLICATION . '/bootstrap/app.php';
+
 
 /**
  * ----------------------------------------------------------------------------
@@ -149,7 +195,7 @@ if (file_exists(DIR_CONFIG_SITE)) {
  * Start localization library.
  * ----------------------------------------------------------------------------
  */
-Config::getOrDefine('SITE_LOCALE', 'en_US');
+Config::getOrDefine('concrete.locale', 'en_US');
 $u = new User();
 $lan = $u->getUserLanguageToDisplay();
 $loc = Localization::getInstance();
@@ -192,7 +238,6 @@ PermissionKey::loadAll();
  * ----------------------------------------------------------------------------
  */
 $response = $cms->dispatch($request);
-
 /**
  * ----------------------------------------------------------------------------
  * Send it to the user
