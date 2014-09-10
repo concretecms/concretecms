@@ -195,7 +195,6 @@ if (file_exists(DIR_CONFIG_SITE)) {
  * Start localization library.
  * ----------------------------------------------------------------------------
  */
-Config::getOrDefine('concrete.locale', 'en_US');
 $u = new User();
 $lan = $u->getUserLanguageToDisplay();
 $loc = Localization::getInstance();

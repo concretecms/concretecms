@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Support\Facade;
+
 /**
  * Adapted and included from Laravel's Support Facade class.
  */
@@ -100,6 +101,9 @@ abstract class Facade {
 	{
 		$instance = static::resolveFacadeInstance(static::getFacadeAccessor());
 
+        if (!method_exists($instance, $method)) {
+            throw new \Exception('Invalid Method.');
+        }
 		switch (count($args))
 		{
 			case 0:

@@ -24,7 +24,7 @@ if (is_object($c)) {
 			if($c->isSystemPage()) {
 				$pageTitle = t($pageTitle);
 			}
-			$pageTitle = sprintf(PAGE_TITLE_FORMAT, SITE, $pageTitle);
+			$pageTitle = sprintf(PAGE_TITLE_FORMAT, Config::get('concrete.site'), $pageTitle);
 		}
 	}
 	$pageDescription = (!isset($pageDescription) || !$pageDescription) ? $c->getCollectionDescription() : $pageDescription;
