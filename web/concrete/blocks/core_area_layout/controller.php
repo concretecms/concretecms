@@ -226,6 +226,7 @@ class Controller extends BlockController
                 $asset = new CSSAsset();
                 $asset->setAssetURL(URL::to('/ccm/system/css/layout', $this->bID));
                 $asset->setAssetSupportsMinification(false);
+                $asset->setAssetSupportsCombination(false);
                 $this->requireAsset($asset);
                 $this->render('view');
             }
