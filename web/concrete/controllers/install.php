@@ -309,7 +309,8 @@ class Install extends Controller
                                 'server' => $_POST['DB_SERVER'],
                                 'database' => $_POST['DB_DATABASE'],
                                 'username' => $_POST['DB_USERNAME'],
-                                'password' => $_POST['DB_PASSWORD']
+                                'password' => $_POST['DB_PASSWORD'],
+                                'charset' => 'utf8'
                             )
                         )
                     );

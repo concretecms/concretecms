@@ -73,10 +73,11 @@ $cms->instance('config', $config = new ConfigRepository($file_loader, $file_save
 
 /**
  * ----------------------------------------------------------------------------
- * Get App version number.
+ * Legacy Definitions
  * ----------------------------------------------------------------------------
  */
-define('APP_VERSION', $config->get('app.version'));
+define('APP_VERSION', $config->get('concrete.version'));
+define('APP_CHARSET', $config->get('concrete.charset'));
 
 /**
  * ----------------------------------------------------------------------------

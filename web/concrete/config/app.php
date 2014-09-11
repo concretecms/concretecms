@@ -5,6 +5,7 @@ use Concrete\Core\File\Type\Type as FileType;
 return array(
 
     'debug'               => false,
+    'namespace'           => 'Application',
 
     /**
      * Core Aliases

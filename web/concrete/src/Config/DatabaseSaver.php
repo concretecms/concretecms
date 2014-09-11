@@ -18,20 +18,31 @@ class DatabaseSaver implements SaverInterface
      */
     public function save($item, $value, $environment, $group, $namespace = null)
     {
+        if (is_array($value)) {
+
+            foreach ($value as $key => $val) {
+                $key = ($item ? $item . '.' : '') . $key;
+
+                $this->save($key, $val, $environment, $group, $namespace);
+            }
+            return;
+        }
         $db = Database::getActiveConnection();
 
         $query = $db->createQueryBuilder();
 
         $query->update('Config', 'c')
               ->set('configValue', $query->expr()->literal($value))
-              ->where($query->expr()->comparison('configItem', '=', $query->expr()->literal($item)))
-              ->andWhere($query->expr()->comparison('configGroup', '=', $query->expr()->literal($group)));
+              ->where($query->expr()->comparison('configGroup', '=', $query->expr()->literal($group)));
+
+        if ($item) {
+            $query->andWhere($query->expr()->comparison('configItem', '=', $query->expr()->literal($item)));
+        }
 
         if ($namespace) {
-            $query->andWhere('namespace = ?')
-                  ->setParameter(2, $namespace);
+            $query->andWhere($query->expr()->comparison('configNamespace', '=', $query->expr()->literal($namespace)));
         }
-        
+
         if (!$query->execute()) {
             try {
                 $query = "INSERT INTO Config (configItem, configValue, configGroup, configNamespace) VALUES (?, ?, ?, ?)";

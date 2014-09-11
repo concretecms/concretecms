@@ -7,7 +7,7 @@ class Repository extends \Illuminate\Config\Repository
 {
 
     /**
-     * @var FileSaverInterface
+     * @var SaverInterface
      */
     protected $saver;
 
@@ -77,6 +77,10 @@ class Repository extends \Illuminate\Config\Repository
     public function clearCache()
     {
         $this->items = array();
+    }
+
+    public function clearNamespace($namespace) {
+        $this->loader->clearNamespace($namespace);
     }
 
 }

@@ -14,11 +14,15 @@ use stdClass;
 class IndexedSearch
 {
 
-    public $searchBatchSize = PAGE_SEARCH_INDEX_BATCH_SIZE;
+    public $searchBatchSize;
     public $searchReindexTimeout = PAGE_SEARCH_INDEX_LIFETIME;
 
     private $cPathSections = array();
     private $searchableAreaNames;
+
+    public function __construct() {
+        $this->searchBatchSize = Config::get('concrete.limits.page_search_index_batch');
+    }
 
     public function getSearchableAreaAction()
     {

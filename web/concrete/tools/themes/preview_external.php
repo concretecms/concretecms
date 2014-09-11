@@ -28,7 +28,8 @@ if ($mi->isConnected() && $tp->canInstallPackages()) {
 			}
 		}
 
-		curl_setopt($curl_handle, CURLOPT_URL, MARKETPLACE_THEME_PREVIEW_URL);
+        $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.theme_preview');
+		curl_setopt($curl_handle, CURLOPT_URL, $url);
 		curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $postStr);
 		//curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, $timeout);
 		curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);

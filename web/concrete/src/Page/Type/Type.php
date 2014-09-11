@@ -857,7 +857,7 @@ class Type extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
         $db = Loader::db();
         $ptID = $this->getPageTypeID();
-        $parent = Page::getByPath(PAGE_DRAFTS_PAGE_PATH);
+        $parent = Page::getByPath(\Config::get('concrete.paths.drafts'));
         $data = array('cvIsApproved' => 0);
         $p = $parent->add($this, $data, $pt);
         $p->deactivate();

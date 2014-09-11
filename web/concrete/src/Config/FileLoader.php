@@ -3,7 +3,7 @@ namespace Concrete\Core\Config;
 
 use Illuminate\Filesystem\Filesystem;
 
-class FileLoader extends \Illuminate\Config\FileLoader
+class FileLoader extends \Illuminate\Config\FileLoader implements LoaderInterface
 {
 
     public function __construct(Filesystem $files)
@@ -61,4 +61,13 @@ class FileLoader extends \Illuminate\Config\FileLoader
 
         return $items;
     }
+
+    public function clearNamespace($namespace)
+    {
+        $path = $this->getPath($namespace);
+        if ($path !== $this->getPath(null) && $this->files->isDirectory($namespace)) {
+            $this->files->deleteDirectory($path);
+        }
+    }
+
 }

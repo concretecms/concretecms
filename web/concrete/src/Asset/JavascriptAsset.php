@@ -12,17 +12,17 @@ class JavascriptAsset extends Asset {
 	}
 
 	public function getRelativeOutputDirectory() {
-		return REL_DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT;
+		return Config::get('files.cache.directory') . '/' . DIRNAME_JAVASCRIPT;
 	}
 
 	protected static function getOutputDirectory() {
-		if (!file_exists(DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT)) {
-			$proceed = @mkdir(DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT);
+		if (!file_exists(Config::get('files.cache.directory') . '/' . DIRNAME_JAVASCRIPT)) {
+			$proceed = @mkdir(Config::get('files.cache.directory') . '/' . DIRNAME_JAVASCRIPT);
 		} else {
 			$proceed = true;
 		}
 		if ($proceed) {
-			return DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT;
+			return Config::get('files.cache.directory') . '/' . DIRNAME_JAVASCRIPT;
 		} else {
 			return false;
 		}

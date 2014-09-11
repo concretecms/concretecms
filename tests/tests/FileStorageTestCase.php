@@ -53,16 +53,16 @@ abstract class FileStorageTestCase extends ConcreteDatabaseTestCase {
         $thumbnailType = new \Concrete\Core\File\Image\Thumbnail\Type\Type();
         $thumbnailType->requireType();
         $thumbnailType->setName(t('File Manager Thumbnails'));
-        $thumbnailType->setHandle(FILE_MANAGER_LISTING_THUMBNAIL_HANDLE);
-        $thumbnailType->setWidth(FILE_MANAGER_LISTING_THUMBNAIL_WIDTH);
-        $thumbnailType->setHeight(FILE_MANAGER_LISTING_THUMBNAIL_HEIGHT);
+        $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_listing.handle'));
+        $thumbnailType->setWidth(Config::get('concrete.icons.file_manager_listing.width'));
+        $thumbnailType->setHeight(Config::get('concrete.icons.file_manager_listing.height'));
         $thumbnailType->save();
 
         $thumbnailType = new \Concrete\Core\File\Image\Thumbnail\Type\Type();
         $thumbnailType->requireType();
         $thumbnailType->setName(t('File Manager Detail Thumbnails'));
-        $thumbnailType->setHandle(FILE_MANAGER_DETAIL_THUMBNAIL_HANDLE);
-        $thumbnailType->setWidth(FILE_MANAGER_DETAIL_THUMBNAIL_WIDTH);
+        $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_detail.handle'));
+        $thumbnailType->setWidth(Config::get('concrete.icons.file_manager_detail.width'));
         $thumbnailType->save();
 
         $this->cleanup();

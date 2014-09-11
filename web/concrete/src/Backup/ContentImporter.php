@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Backup;
 
-use Concrete\Core\Config\ConfigStore;
 use Concrete\Core\Page\Feed;
 use Concrete\Core\Sharing\SocialNetwork\Link;
 use Concrete\Core\Tree\Tree;
@@ -721,14 +720,27 @@ class ContentImporter
     protected function importConfigValues(\SimpleXMLElement $sx)
     {
         if (isset($sx->config)) {
-            $db = Loader::db();
-            $configstore = new ConfigStore($db);
             foreach ($sx->config->children() as $key) {
                 $pkg = static::getPackageObject($key['package']);
                 if (is_object($pkg)) {
-                    $configstore->set($key->getName(), (string)$key, $pkg->getPackageID());
+                    \Config::save($pkg->getPackageHandle() . '::' . $key->getName(), (string)$key);
                 } else {
-                    $configstore->set($key->getName(), (string)$key);
+                    \Config::save($key->getName(), (string)$key);
+                }
+            }
+        }
+    }
+
+    protected function importDatabaseConfigValues(\SimpleXMLElement $sx)
+    {
+        if (isset($sx->databaseconfig)) {
+            $config = \Core::make('database_config');
+            foreach ($sx->databaseconfig->children() as $key) {
+                $pkg = static::getPackageObject($key['package']);
+                if (is_object($pkg)) {
+                    $config->save($pkg->getPackageHandle() . '::' . $key->getName(), (string)$key);
+                } else {
+                    $config->save($key->getName(), (string)$key);
                 }
             }
         }

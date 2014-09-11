@@ -11,7 +11,7 @@ $isEmptyTrash = false;
 if ($_POST['process']) {
 	$obj = new stdClass;
 	$js = Loader::helper('json');
-	$messages = $q->receive(DELETE_PAGES_LIMIT);
+	$messages = $q->receive(Config::get('concrete.limits.sitemap_pages'));
 	foreach($messages as $key => $p) {
 		// delete the page here
 		$page = unserialize($p->body);
@@ -19,7 +19,7 @@ if ($_POST['process']) {
 		$c->delete();
 		$q->deleteMessage($p);
 	}
-	$obj->totalItems = $q->count();	
+	$obj->totalItems = $q->count();
 	if ($q->count() == 0) {
 		$q->deleteQueue('delete_page');
 	}
@@ -27,12 +27,12 @@ if ($_POST['process']) {
 	exit;
 } else if ($q->count() == 0) {
 	$c = Page::getByID($_REQUEST['cID']);
-	if ($c->getCollectionPath() == TRASH_PAGE_PATH) {
+	if ($c->getCollectionPath() == Config::get('concrete.paths.trash')) {
 		$isEmptyTrash = true;
 	}
-	if (is_object($c) && !$c->isError()) { 
+	if (is_object($c) && !$c->isError()) {
 		$cp = new Permissions($c);
-		if ($cp->canDeletePage()) { 
+		if ($cp->canDeletePage()) {
 			$c->queueForDeletion();
 		}
 	}

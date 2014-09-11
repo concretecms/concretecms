@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Application\Service\Dashboard;
+use Config;
 use Loader;
 use PageList;
 use TaskPermission;
@@ -58,7 +59,7 @@ class Sitemap {
 		if ($cID == 1) {
 			$results = $pl->getResults();
 		} else {
-    		$results = $pl->getPagination()->setMaxPerPage(SITEMAP_PAGES_LIMIT)->getCurrentPageResults();
+    		$results = $pl->getPagination()->setMaxPerPage(Config::get('concrete.limits.sitemap_pages'))->getCurrentPageResults();
 		}
 
 		$nodes = array();
@@ -69,7 +70,7 @@ class Sitemap {
 			}
 		}
         $total = count($results);
-		if ($total > SITEMAP_PAGES_LIMIT) {
+		if ($total > Config::get('concrete.limits.sitemap_pages')) {
 			if ($this->displayNodePagination) {
 
 				$n = new stdClass;
@@ -87,7 +88,7 @@ class Sitemap {
 				$n->active = false;
 				$n->focus = false;
 				$n->unselectable = true;
-				$n->title = ' ' . t('%s more to display. <strong>View all &gt;</strong>', $total - SITEMAP_PAGES_LIMIT);
+				$n->title = ' ' . t('%s more to display. <strong>View all &gt;</strong>', $total - Config::get('concrete.limits.sitemap_pages'));
 				$n->href = \URL::to('/dashboard/sitemap/explore/', $cID);
 				$nodes[] = $n;
 			}
@@ -132,7 +133,7 @@ class Sitemap {
 		$ct = PageType::getByID($c->getPageTypeID());
 		$isInTrash = $c->isInTrash();
 
-		$isTrash = $c->getCollectionPath() == TRASH_PAGE_PATH;
+		$isTrash = $c->getCollectionPath() == Config::get('concrete.paths.trash');
 		if ($isTrash || $isInTrash) {
 			$pk = PermissionKey::getByHandle('empty_trash');
 			if (!$pk->validate()) {

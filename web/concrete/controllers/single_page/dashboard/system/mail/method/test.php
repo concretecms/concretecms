@@ -10,7 +10,7 @@ class Test extends DashboardPageController {
 
 	public function successful($mailRecipient) {
 		$this->set('mailRecipient', $mailRecipient);
-		$this->set("message", t('The test email has been successfully sent to %s.', $mailRecipient) . "\n" . t('You will receive a test message from %s', EMAIL_DEFAULT_FROM_ADDRESS));
+		$this->set("message", t('The test email has been successfully sent to %s.', $mailRecipient) . "\n" . t('You will receive a test message from %s', Config::get('concrete.email.default.address')));
 	}
 
 	public function do_test() {
