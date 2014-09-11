@@ -1,5 +1,7 @@
 <?
 namespace Concrete\Block\Autonav;
+use Loader;
+
 /**
  * An object used by the Autonav Block to display navigation items in a tree
  *
@@ -86,17 +88,10 @@ namespace Concrete\Block\Autonav;
 		 * @return string $url
 		 */
 		function getURL() {
-			$dispatcher = '';
-			if (!URL_REWRITING) {
-				$dispatcher = '/' . DISPATCHER_FILENAME;
-			}
 			if ($this->cPointerExternalLink != '') {
-				$link = $this->cPointerExternalLink;
+				$link = Loader::helper('text')->getEncodedPath($this->cPointerExternalLink);
 			} else if ($this->cPath) {
-				$link = DIR_REL . $dispatcher . $this->cPath;
-				if (URL_USE_TRAILING_SLASH) {
-					$link .= '/';
-				}
+			    $link = $this->cPath;
 			} else if ($this->cID == HOME_CID) {
 				$link = DIR_REL . '/';
 			} else {
@@ -110,7 +105,7 @@ namespace Concrete\Block\Autonav;
 		 * @return string
 		 */
 		function getName() {
-			return $this->cvName;
+			return Loader::helper('text')->entities($this->cvName);
 		}
 		
 		/**
