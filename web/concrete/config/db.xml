@@ -2050,7 +2050,30 @@
       <col>cDateAdded</col>
     </index>
   </table>
-  <table name="Config">
+
+
+
+    <table name="Config">
+        <field name="configItem" type="C" size="255">
+            <key/>
+        </field>
+        <field name="configValue" type="X2" />
+        <field name="configGroup" type="C" size="255" />
+        <field name="configNamespace" type="C" size="255" />
+
+        <index name="configItem">
+            <col>configItem</col>
+        </index>
+        <index name="configGroup">
+            <col>configGroup</col>
+        </index>
+        <index name="configNamespace">
+            <col>configNamespace</col>
+        </index>
+    </table>
+
+
+  <table name="ConfigStore">
     <field name="cfKey" type="C" size="64">
       <key/>
     </field>

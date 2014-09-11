@@ -8,6 +8,9 @@ class Database {
 	protected static $activeConnection = false;
 	protected static $connections = array();
 
+    /**
+     * @return \Doctrine\DBAL\Connection
+     */
 	public static function getActiveConnection() {
 		if (!static::$activeConnection) {
 			static::$connections['default'] = static::createDefaultConnection();

@@ -10,7 +10,7 @@ class TextTest extends ConcreteDatabaseTestCase
     protected $object;
 
     protected $fixtures = array();
-    protected $tables = array('Config');
+    protected $tables = array('ConfigStore');
 
     /**
      * Sets up the fixture, for example, opens a network connection.

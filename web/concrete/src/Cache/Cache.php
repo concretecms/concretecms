@@ -161,7 +161,7 @@ class Cache {
 			$pageCache->flush();
 		}
 
-		if ($db->tableExists('Config')) {
+		if ($db->tableExists('ConfigStore')) {
 			// clear the environment overrides cache
 			$env = Environment::get();
 			$env->clearOverrideCache();

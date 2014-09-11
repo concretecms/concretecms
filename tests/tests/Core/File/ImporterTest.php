@@ -24,7 +24,7 @@ class ImporterTest extends \FileStorageTestCase {
             'FilePermissionAssignments',
             'AttributeKeyCategories',
             'AttributeTypes',
-            'Config',
+            'ConfigStore',
             'AttributeKeys',
             'AttributeValues',
             'atNumber',

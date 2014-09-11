@@ -16,6 +16,9 @@ if (basename($_SERVER['PHP_SELF']) == DISPATCHER_FILENAME_CORE) {
  */
 use Concrete\Core\Application\Application;
 use Concrete\Core\Asset\AssetList;
+use Concrete\Core\Config\DatabaseLoader;
+use Concrete\Core\Config\DatabaseSaver;
+use Concrete\Core\Config\FileSaver;
 use Concrete\Core\Foundation\ClassAliasList;
 use Concrete\Core\Foundation\Service\ProviderList;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
@@ -24,7 +27,7 @@ use Patchwork\Utf8\Bootup;
 use Concrete\Core\Config\Config as DatabaseConfig;
 use Concrete\Core\Config\Repository as ConfigRepository;
 use Concrete\Core\File\Type\TypeList;
-use Concrete\Core\Config\ConfigLoader;
+use Concrete\Core\Config\FileLoader;
 use Illuminate\Filesystem\Filesystem;
 
 /**
@@ -45,11 +48,9 @@ Facade::setFacadeApplication($cms);
 
 /**
  * ----------------------------------------------------------------------------
- * Enable Config
+ * Add install environment detection
  * ----------------------------------------------------------------------------
  */
-$file_system = new Filesystem();
-$file_loader = new ConfigLoader($file_system);
 
 $db_config = @include DIR_APPLICATION . '/config/database.php';
 
@@ -58,12 +59,21 @@ $cms->detectEnvironment(function() use ($db_config, $environment) {
     return isset($db_config['default-connection']) ? $environment : 'install';
 });
 
-$cms->instance('config', $config = new ConfigRepository($file_loader, $cms->environment()));
-
 
 /**
  * ----------------------------------------------------------------------------
- * Get App version number
+ * Enable Filesystem Config.
+ * ----------------------------------------------------------------------------
+ */
+
+$file_system = new Filesystem();
+$file_loader = new FileLoader($file_system);
+$file_saver = new FileSaver($file_system);
+$cms->instance('config', $config = new ConfigRepository($file_loader, $file_saver, $cms->environment()));
+
+/**
+ * ----------------------------------------------------------------------------
+ * Get App version number.
  * ----------------------------------------------------------------------------
  */
 define('APP_VERSION', $config->get('app.version'));
@@ -76,6 +86,18 @@ define('APP_VERSION', $config->get('app.version'));
 $list = ClassAliasList::getInstance();
 $list->registerMultiple($config->get('app.aliases'));
 $list->registerMultiple($config->get('app.facades'));
+
+/**
+ * ----------------------------------------------------------------------------
+ * Set up Database Config.
+ * ----------------------------------------------------------------------------
+ */
+
+$database_loader = new DatabaseLoader();
+$database_saver = new DatabaseSaver();
+
+$cms->instance('database_config', $database_config = new ConfigRepository($database_loader, $database_saver, $cms->environment()));
+
 
 /**
  * ----------------------------------------------------------------------------
