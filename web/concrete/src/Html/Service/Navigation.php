@@ -26,7 +26,7 @@ class Navigation {
 
 		if ($cObj->getCollectionPath() != null) {
 		    $txt = Loader::helper('text');
-			$link = DIR_REL . $dispatcher . $txt->getEncodedPath($cObj->getCollectionPath()) . '/';
+			$link = DIR_REL . $dispatcher . $txt->encodePath($cObj->getCollectionPath()) . '/';
 		} else {
 			$_cID = ($cObj->getCollectionPointerID() > 0) ? $cObj->getCollectionPointerOriginalID() : $cObj->getCollectionID();
 			if ($_cID > 1) {

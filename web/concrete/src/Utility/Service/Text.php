@@ -111,7 +111,7 @@ class Text {
      * @param string $path
      * @return string $path
      */
-    public static function getEncodedPath($path)
+    public static function encodePath($path)
     {
         if (UTF8::strpos($path, '/') !== false) {
             $path = explode('/', $path);
