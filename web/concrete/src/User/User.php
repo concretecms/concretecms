@@ -155,7 +155,7 @@ class User extends Object
                 $row = $r->fetchRow();
                 $pw_is_valid_legacy = (defined('PASSWORD_SALT') && User::legacyEncryptPassword($password) == $row['uPassword']);
                 $pw_is_valid = $pw_is_valid_legacy || $this->getUserPasswordHasher()->checkPassword($password, $row['uPassword']);
-                if ($row['uID'] && $row['uIsValidated'] === '0' && defined('USER_VALIDATE_EMAIL') && USER_VALIDATE_EMAIL == TRUE) {
+                if ($row['uID'] && $row['uIsValidated'] === '0' && \Config::get('concrete.user.registration.validate_email')) {
                     $this->loadError(USER_NON_VALIDATED);
                 } elseif ($row['uID'] && $row['uIsActive'] && $pw_is_valid) {
                     $this->uID = $row['uID'];

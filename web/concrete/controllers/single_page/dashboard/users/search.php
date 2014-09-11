@@ -103,8 +103,8 @@ class Search extends DashboardPageController
                     $mh = Loader::helper('mail');
                     $mh->to($this->user->getUserEmail());
                     $mh->load('user_registered_approval_complete');
-                    if (defined('EMAIL_ADDRESS_REGISTER_NOTIFICATION_FROM')) {
-                        $mh->from(EMAIL_ADDRESS_REGISTER_NOTIFICATION_FROM, t('Website Registration Notification'));
+                    if (\Config::get('concrete.user.registration.notification_email')) {
+                        $mh->from(\Config::get('concrete.user.registration.notification_email'), t('Website Registration Notification'));
                     } else {
                         $adminUser = UserInfo::getByID(USER_SUPER_ID);
                         $mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));
