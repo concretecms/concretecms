@@ -906,25 +906,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * Returns the urlencode path for a page from path string
-     * @param string $path
-     * @return string $path
-     */
-    public static function getEncodePath($path)
-    {
-        if(mb_strpos($path,"/") !== false){
-            $path = explode("/",$path);
-            $path = array_map("rawurlencode",$path);
-            $newPath = implode("/",$path);
-        }else if(is_null($path)){
-            $newPath = NULL;
-        }else{
-            $newPath = rawurlencode($path);
-        }
-        return str_replace('%21','!',$newPath);
-    }
-
-    /**
      * Returns the PagePath object for the current page.
      */
     public function getCollectionPathObject()
@@ -1609,7 +1590,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $cHandle = $txt->urlify($cName);
             $cHandle = str_replace('-', PAGE_PATH_SEPARATOR, $cHandle);
         } else {
-            $cHandle = $data['cHandle']; // we DON'T run urlify
+            $cHandle = $txt->slugSafeString($data['cHandle']); // we DON'T run urlify
             $cHandle = str_replace('-', PAGE_PATH_SEPARATOR, $cHandle);
         }
         $cName = $txt->sanitize($cName);
@@ -2443,7 +2424,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             // make the handle out of the title
             $handle = $txt->urlify($data['name']);
         } else {
-            $handle = $data['cHandle']; // we take it as it comes.
+            $handle = $txt->slugSafeString($data['cHandle']); // we take it as it comes.
         }
         $handle = str_replace('-', PAGE_PATH_SEPARATOR, $handle);
         $data['handle'] = $handle;
