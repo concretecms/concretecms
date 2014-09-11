@@ -313,13 +313,13 @@
 
             // Modified transformie polyfill
             if (element.filters && !!element.filters['DXImageTransform.Microsoft.Matrix']) {
-                var matrix = {
+                var matrix_shim = {
                     elements: _(matrix).groupBy(function(v, key) { return Math.floor(key / 3); })
                 };
-                element.filters['DXImageTransform.Microsoft.Matrix'].M11 = matrix.elements[0][0];
-                element.filters['DXImageTransform.Microsoft.Matrix'].M12 = matrix.elements[0][1];
-                element.filters['DXImageTransform.Microsoft.Matrix'].M21 = matrix.elements[1][0];
-                element.filters['DXImageTransform.Microsoft.Matrix'].M22 = matrix.elements[1][1];
+                element.filters['DXImageTransform.Microsoft.Matrix'].M11 = matrix_shim.elements[0][0];
+                element.filters['DXImageTransform.Microsoft.Matrix'].M12 = matrix_shim.elements[0][1];
+                element.filters['DXImageTransform.Microsoft.Matrix'].M21 = matrix_shim.elements[1][0];
+                element.filters['DXImageTransform.Microsoft.Matrix'].M22 = matrix_shim.elements[1][1];
                 element.style.left = -(element.offsetWidth / 2) + (element.clientWidth / 2) + 'px';
                 element.style.top = -(element.offsetHeight / 2) + (element.clientHeight / 2) + 'px';
             }
