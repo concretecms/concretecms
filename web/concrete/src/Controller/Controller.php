@@ -1,7 +1,7 @@
 <?php
 
 namespace Concrete\Core\Controller;
-use Concrete\Core\Config\ConfigRenderer;
+use Concrete\Core\Config\Renderer;
 use Illuminate\Config\Repository;
 use Request;
 use PageTheme;

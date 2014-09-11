@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Config;
 
-class ConfigRenderer {
+class Renderer {
 
     protected $config = null;
 

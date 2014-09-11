@@ -2,7 +2,7 @@
 namespace Concrete\Controller;
 
 use Cache;
-use Concrete\Core\Config\ConfigRenderer;
+use Concrete\Core\Config\Renderer;
 use Core;
 use Concrete\Core\Localization\Localization as Localization;
 use Controller;
@@ -315,7 +315,7 @@ class Install extends Controller
                     );
 
 
-                    $renderer = new ConfigRenderer($config);
+                    $renderer = new Renderer($config);
                     fwrite($this->fp, $renderer->render());
 
                     fclose($this->fp);

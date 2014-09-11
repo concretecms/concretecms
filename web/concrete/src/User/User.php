@@ -633,7 +633,7 @@ class User extends Object
     {
         if ($this->isRegistered()) {
             $db = Loader::db();
-            $val = $db->GetOne("select cfValue from Config where uID = ? and cfKey = ?", array($this->getUserID(), $cfKey));
+            $val = $db->GetOne("select cfValue from ConfigStore where uID = ? and cfKey = ?", array($this->getUserID(), $cfKey));
 
             return $val;
         }
@@ -652,7 +652,7 @@ class User extends Object
     public function saveConfig($cfKey, $cfValue)
     {
         $db = Loader::db();
-        $db->Replace('Config', array('cfKey' => $cfKey, 'cfValue' => $cfValue, 'uID' => $this->getUserID()), array('cfKey', 'uID'), true);
+        $db->Replace('ConfigStore', array('cfKey' => $cfKey, 'cfValue' => $cfValue, 'uID' => $this->getUserID()), array('cfKey', 'uID'), true);
     }
 
     public function refreshCollectionEdit(&$c)

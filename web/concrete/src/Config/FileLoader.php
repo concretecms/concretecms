@@ -1,10 +1,9 @@
 <?php
 namespace Concrete\Core\Config;
 
-use Illuminate\Config\FileLoader;
 use Illuminate\Filesystem\Filesystem;
 
-class ConfigLoader extends FileLoader
+class FileLoader extends \Illuminate\Config\FileLoader
 {
 
     public function __construct(Filesystem $files)

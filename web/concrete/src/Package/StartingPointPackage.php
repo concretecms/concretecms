@@ -2,7 +2,7 @@
 
 namespace Concrete\Core\Package;
 use Cache;
-use Concrete\Core\Config\ConfigRenderer;
+use Concrete\Core\Config\Renderer;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use AuthenticationType;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
@@ -253,21 +253,20 @@ class StartingPointPackage extends BasePackage {
 
 	public function finish() {
 
-
         $config = \Core::make('config');
-        $site_install = $config->getLoader()->loadStrict(null, 'site_install');
+        $site_install = $config->getLoader()->load(null, 'site_install');
 
         // Extract database config, and save it to database.php
         $database = $site_install['database'];
         unset($site_install['database']);
 
-        $renderer = new ConfigRenderer($database);
+        $renderer = new Renderer($database);
 
         @unlink(DIR_CONFIG_SITE . '/database.php');
         file_put_contents(DIR_CONFIG_SITE . '/database.php', $renderer->render());
         @chmod(DIR_CONFIG_SITE . '/database.php', FILE_PERMISSIONS_MODE);
 
-        $renderer = new ConfigRenderer($site_install);
+        $renderer = new Renderer($site_install);
 
         @unlink(DIR_CONFIG_SITE . '/app.php');
         file_put_contents(DIR_CONFIG_SITE . '/app.php', $renderer->render());
