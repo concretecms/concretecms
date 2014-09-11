@@ -39,5 +39,4 @@
 
     });
 
-
 }(window, jQuery, _, Concrete));

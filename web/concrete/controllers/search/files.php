@@ -173,6 +173,7 @@ class Files extends Controller {
 				<?=$form->text('size_from', $searchRequest['size_from'], array('style' => 'width:  60px'))?>
 				<?=t('to')?>
 				<?=$form->text('size_to', $searchRequest['size_to'], array('style' => 'width: 60px'))?>
+                <?=t('KB')?>
 				<? break;
 			case 'type':
 				$t1 = FileType::getUsedTypeList();

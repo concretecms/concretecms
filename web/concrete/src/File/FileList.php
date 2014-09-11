@@ -23,7 +23,6 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     protected $autoSortColumns = array(
         'fv.fvFilename',
-        'fv.fvAuthorName',
         'fv.fvTitle',
         'f.fDateAdded',
         'fv.fvDateAdded',

@@ -59,7 +59,7 @@ var ccmAttributesHelper={
 		var newRowEl=document.createElement('div');
 		newRowEl.innerHTML=template.innerHTML.replace(/template_clean/ig,ts).replace(/template/ig,val);
 		newRowEl.id="akSelectValueWrap_"+ts;
-		newRowEl.className='akSelectValueWrap';
+		newRowEl.className='akSelectValueWrap akSelectValueWrapSortable';
 		$('#attributeValuesWrap').append(newRowEl);		
 		newValF.val(''); 
 	},
