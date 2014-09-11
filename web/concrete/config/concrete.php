@@ -7,43 +7,44 @@ return array(
      *
      * @var string
      */
-    'version'          => '5.7.0b2',
+    'version'           => '5.7.0b2',
+    'version_installed' => '5.7.0b2',
 
     /**
      * Installation status
      *
      * @var bool
      */
-    'installed'        => true,
+    'installed'         => true,
 
     /**
      * The current Site Name
      *
      * @var string concrete.core.site
      */
-    'site'             => 'concrete5',
+    'site'              => 'concrete5',
 
     /**
      * The current Locale
      */
-    'locale'           => 'en_US',
+    'locale'            => 'en_US',
 
     /**
      * The current Charset
      */
-    'charset'          => 'UTF-8',
+    'charset'           => 'UTF-8',
 
     /**
      * Maintenance mode
      */
-    'maintenance_mode' => false,
+    'maintenance_mode'  => false,
 
     /**
      * ------------------------------------------------------------------------
      * Debug settings
      * ------------------------------------------------------------------------
      */
-    'debug'            => array(
+    'debug'             => array(
 
         /**
          * Site debug level
@@ -59,7 +60,7 @@ return array(
      * Proxy Settings
      * ------------------------------------------------------------------------
      */
-    'proxy'            => array(
+    'proxy'             => array(
         'host'     => null,
         'port'     => null,
         'user'     => null,
@@ -71,7 +72,7 @@ return array(
      * File upload settings
      * ------------------------------------------------------------------------
      */
-    'upload'           => array(
+    'upload'            => array(
 
         /**
          * Allowed file extensions
@@ -88,7 +89,7 @@ return array(
      * Mail settings
      * ------------------------------------------------------------------------
      */
-    'mail'             => array(
+    'mail'              => array(
         'method'  => 'PHP_MAIL',
         'methods' => array(
             'smtp' => array(
@@ -106,7 +107,7 @@ return array(
      * Cache settings
      * ------------------------------------------------------------------------
      */
-    'cache'            => array(
+    'cache'             => array(
 
         /**
          * Enabled
@@ -179,7 +180,7 @@ return array(
      * Logging settings
      * ------------------------------------------------------------------------
      */
-    'log'              => array(
+    'log'               => array(
 
         /**
          * Log emails
@@ -202,7 +203,7 @@ return array(
          */
         'spam'   => false
     ),
-    'jobs'             => array(
+    'jobs'              => array(
 
         'enable_scheduling' => true
 
@@ -213,7 +214,7 @@ return array(
      * Email settings
      * ------------------------------------------------------------------------
      */
-    'email'            => array(
+    'email'             => array(
 
         /**
          * Enable emails
@@ -235,7 +236,7 @@ return array(
      * Marketplace settings
      * ------------------------------------------------------------------------
      */
-    'marketplace'      => array(
+    'marketplace'       => array(
         /**
          * Enable marketplace integration
          *
@@ -268,7 +269,7 @@ return array(
      * Various core settings
      * ------------------------------------------------------------------------
      */
-    'core'             => array(
+    'core'              => array(
 
         /**
          * Provide help within the intelligent search
@@ -297,7 +298,7 @@ return array(
      * Miscellaneous settings
      * --------------------------------------------------------------------
      */
-    'misc'             => array(
+    'misc'              => array(
         'user_timezones'                => false,
         'progressive_page_reindex'      => true,
         'mobile_theme_id'               => 0,
@@ -310,14 +311,14 @@ return array(
         'enable_auto_update_packages'   => false,
         'app_version_display_in_header' => true
     ),
-    'paths'            => array(
+    'paths'             => array(
         'trash'  => '/!trash',
         'drafts' => '/!drafts'
     ),
-    'conversations'    => array(
+    'conversations'     => array(
         'attachments_pending_file_set' => 'Conversation Messages (Pending)',
     ),
-    'files'            => array(
+    'files'             => array(
         'cache' => array(
             'directory'   => DIR_FILES_UPLOADED_STANDARD . '/cache',
             'page'        => array(
@@ -329,7 +330,7 @@ return array(
             )
         )
     ),
-    'icons'            => array(
+    'icons'             => array(
         'page_template'        => array(
             'width'  => 120,
             'height' => 90
@@ -353,7 +354,7 @@ return array(
             'default' => ASSETS_URL_IMAGES . '/avatar_none.png'
         )
     ),
-    'sitemap_xml'      => array(
+    'sitemap_xml'       => array(
         'file'      => 'sitemap.xml',
         'frequency' => 'weekly',
         'priority'  => 0.5,
@@ -365,7 +366,7 @@ return array(
      * Accessibility
      * ------------------------------------------------------------------------
      */
-    'accessibility'    => array(
+    'accessibility'     => array(
         /**
          * Show titles in the concrete5 toolbars
          *
@@ -386,7 +387,7 @@ return array(
      * Internationalization
      * ------------------------------------------------------------------------
      */
-    'i18n'             => array(
+    'i18n'              => array(
 
         /**
          * Enable internationalization
@@ -401,7 +402,7 @@ return array(
         'choose_language_login' => false
 
     ),
-    'urls'             => array(
+    'urls'              => array(
         'concrete5'              => 'http://www.concrete5.org',
         'concrete5_secure'       => 'https://www.concrete5.org',
         'newsflow'               => 'http://newsflow.concrete5.org',
@@ -432,7 +433,7 @@ return array(
      * White labeling.
      * ------------------------------------------------------------------------
      */
-    'white_label'      => array(
+    'white_label'       => array(
 
         /**
          * Custom Logo source path relative to the public directory.
@@ -455,18 +456,16 @@ return array(
          */
         'dashboard_background' => null
     ),
-
     'session'           => array(
 
-        'name' => 'CONCRETE5',
-        'handler' => 'file',
+        'name'         => 'CONCRETE5',
+        'handler'      => 'file',
         'max_lifetime' => 7200,
-
-        'cookie' => array(
-            'path' => '',
+        'cookie'       => array(
+            'path'     => '',
             'lifetime' => 7200,
-            'domain' => '',
-            'secure' => false,
+            'domain'   => '',
+            'secure'   => false,
             'httponly' => false
         )
     ),
@@ -476,7 +475,7 @@ return array(
      * User information and registration settings.
      * ------------------------------------------------------------------------
      */
-    'user'             => array(
+    'user'              => array(
         /**
          * --------------------------------------------------------------------
          * Registration settings.
@@ -566,10 +565,9 @@ return array(
          * @var bool
          */
         'timezones_enabled' => false,
-
         'username'          => array(
-            'maximum' => 64,
-            'minimum' => 3,
+            'maximum'      => 64,
+            'minimum'      => 3,
             'allow_spaces' => false
 
         ),
@@ -591,7 +589,7 @@ return array(
      * Spam
      * ------------------------------------------------------------------------
      */
-    'spam'             => array(
+    'spam'              => array(
         /**
          * Whitelist group ID
          *
@@ -612,7 +610,7 @@ return array(
      * Security
      * ------------------------------------------------------------------------
      */
-    'security'         => array(
+    'security'          => array(
         'ban'   => array(
             'ip' => array(
 
@@ -646,7 +644,7 @@ return array(
      * Permissions and behaviors toggles.
      * ------------------------------------------------------------------------
      */
-    'permissions'      => array(
+    'permissions'       => array(
         /**
          * Forward to login if access is denied
          *
@@ -688,25 +686,25 @@ return array(
      * SEO Settings
      * ------------------------------------------------------------------------
      */
-    'seo'              => array(
+    'seo'               => array(
 
-        'tracking'       => array(
+        'tracking'             => array(
             /**
              * User defined tracking code
              *
              * @var string
              */
-            'code'                 => '',
+            'code'          => '',
 
             /**
              * Tracking code position
              *
              * @var string (top|bottom)
              */
-            'code_position'        => 'bottom'
+            'code_position' => 'bottom'
 
         ),
-        'exclude_words'  => 'a, an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, ' .
+        'exclude_words'        => 'a, an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, ' .
             'since, than, the, this, that, to, up, via, with',
 
         /**
@@ -717,8 +715,8 @@ return array(
          *
          * @var bool
          */
-        'url_rewriting'  => false,
-        'trailing_slash' => false,
+        'url_rewriting'        => false,
+        'trailing_slash'       => false,
         'title_format'         => '%1$s :: %2$s',
         'page_path_separator'  => '-',
         'group_name_separator' => ' / ',
@@ -731,10 +729,10 @@ return array(
      * Statistics Settings
      * ------------------------------------------------------------------------
      */
-    'statistics'       => array(
+    'statistics'        => array(
         'track_page_views' => true
     ),
-    'limits'           => array(
+    'limits'            => array(
         'sitemap_pages'           => 100,
         'delete_pages'            => 10,
         'copy_pages'              => 10,
