@@ -17,6 +17,19 @@ use Zend\Cache\Storage\StorageInterface;
  */
 class ZendCacheDriver extends AbstractAdapter implements StorageInterface
 {
+    /**
+     * @var string Name of the cache being used
+     */
+    private $cacheName;
+
+    /**
+     * @param string $cacheName Name of the cache being used. Defaults to cache.
+     */
+    public function __construct($cacheName = 'cache') {
+        parent::__construct();
+
+        $this->cacheName = $cacheName;
+    }
 
     /**
      * Internal method to get an item.
@@ -30,7 +43,7 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface
     protected function internalGetItem(& $normalizedKey, & $success = null, & $casToken = null)
     {
         /** @var Cache $cache  */
-        $cache = Core::make('cache');
+        $cache = Core::make($this->cacheName);
         $item = $cache->getItem('zend/' . $normalizedKey);
         if ($item->isMiss()) {
             $success = false;
@@ -52,7 +65,7 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface
     protected function internalSetItem(& $normalizedKey, & $value)
     {
         /** @var Cache $cache  */
-        $cache = Core::make('cache');
+        $cache = Core::make($this->cacheName);
         $item = $cache->getItem('zend/' . $normalizedKey);
         return $item->set($value);
     }
@@ -67,7 +80,7 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface
     protected function internalRemoveItem(& $normalizedKey)
     {
         /** @var Cache $cache  */
-        $cache = Core::make('cache');
+        $cache = Core::make($this->cacheName);
         $item = $cache->getItem('zend/' . $normalizedKey);
         return $item->clear();
     }

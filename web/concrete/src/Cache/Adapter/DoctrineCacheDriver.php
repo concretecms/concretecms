@@ -15,6 +15,17 @@ class DoctrineCacheDriver extends CacheProvider
 {
     /** @var Cache  */
     private $c5Cache = null;
+    /**
+     * @var string Name of the cache being used
+     */
+    private $cacheName;
+
+    /**
+     * @param string $cacheName Name of the cache being used. Defaults to cache.
+     */
+    public function __construct($cacheName = 'cache') {
+        $this->cacheName = $cacheName;
+    }
 
     /**
      * @return Cache
@@ -22,7 +33,7 @@ class DoctrineCacheDriver extends CacheProvider
     private function getC5Cache()
     {
         if ($this->c5Cache === null) {
-            $this->c5Cache = Core::make('cache');
+            $this->c5Cache = Core::make($this->cacheName);
         }
         
         return $this->c5Cache;
