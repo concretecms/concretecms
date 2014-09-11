@@ -37,11 +37,15 @@ class Service {
 				$user = new User;
 			}
 			$wlg = $this->getWhitelistGroup();
-			if ($wlg instanceOf Group && $u->inGroup($wlg)) {
+			if ($wlg instanceOf Group && $user->inGroup($wlg)) {
 				// Never spam if user is in the whitelist
 				return true;
 			}
-			$args['ip_address'] = Loader::helper('validation/ip')->getRequestIP();
+
+            /** @var \Concrete\Core\Permission\IPService $iph */
+            $iph = Core::make('helper/validation/ip');
+            $ip = $iph->getRequestIP();
+			$args['ip_address'] = ($ip === false)?(''):($ip->getIp($ip::FORMAT_IP_STRING));
 			$args['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
 			$args['content'] = $content;
 			foreach($additionalArgs as $key => $value) {
@@ -60,6 +64,7 @@ class Service {
 			if ($r) {
 				return true;
 			} else {
+                $logText = '';
 				$c = Page::getCurrentPage();
 				if (is_object($c)) {
 					$logText .= t('URL: %s', Loader::helper('navigation')->getLinkToCollection($c, true));

@@ -4,7 +4,7 @@ use \Concrete\Core\Page\Controller\PageController;
 use Loader;
 use User;
 use UserInfo;
-use Exception;
+use UserAttributeKey;
 
 class Register extends PageController {
 
@@ -45,7 +45,7 @@ class Register extends PageController {
 		$username = preg_replace("/ +/", " ", $username);
 		
 		
-		if (!$ip->check()) {
+		if ($ip->isBanned()) {
 			$e->add($ip->getErrorMessage());
 		}		
 		
@@ -238,7 +238,7 @@ class Register extends PageController {
 			$ip->logSignupRequest();
 			if ($ip->signupRequestThreshholdReached()) {
 				$ip->createIPBan();
-			}		
+			}
 			$this->set('error', $e);
 			$registerData['errors'] = $e->getList();
 		}

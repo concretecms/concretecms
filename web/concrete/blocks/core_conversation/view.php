@@ -2,8 +2,9 @@
 $paginate = ($paginate) ? 'true' : 'false';
 $itemsPerPage = ($paginate) ? $itemsPerPage : -1;
 $blockAreaHandle = $this->block->getAreaHandle();
-$iph = Loader::helper('validation/ip');
-$commentRatingIP = ip2long($iph->getRequestIP());
+/** @var \Concrete\Core\Permission\IPService $iph */
+$iph = Core::make('helper/validation/ip');
+$commentRatingIP = $iph->getRequestIP()->getIp();
 $u = new User();
 if ($u->isLoggedIn()) {
     $uID = $u->getUserID();
