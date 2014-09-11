@@ -5,6 +5,10 @@ $c = Page::getCurrentPage();
 $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service\Date */
 ?>
 
+<? if ( $c->isEditMode() && $controller->isBlockEmpty()) { ?>
+    <div class="ccm-edit-mode-disabled-item"><?=t('Empty Page List Block.')?></div>
+<? } else { ?>
+
 <div class="ccm-block-page-list-wrapper">
 
     <?php if ($pageListTitle): ?>
@@ -139,6 +143,4 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     <?php echo $pagination;?>
 <?php endif; ?>
 
-<? if ( $c->isEditMode() && !count($pages)): ?>
-    <div class="ccm-edit-mode-disabled-item"><?=t('Empty Page List Block.')?></div>
-<? endif; ?>
+<? } ?>
