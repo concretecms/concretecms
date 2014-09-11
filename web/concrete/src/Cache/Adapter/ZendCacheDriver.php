@@ -8,6 +8,7 @@ use Core;
 use Zend\Cache\Exception;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
 use Zend\Cache\Storage\StorageInterface;
+use Zend\Cache\Storage\FlushableInterface;
 
 /**
  * Class ZendCacheDriver
@@ -15,7 +16,7 @@ use Zend\Cache\Storage\StorageInterface;
  *
  * @package Concrete\Core\Cache\Adapter
  */
-class ZendCacheDriver extends AbstractAdapter implements StorageInterface
+class ZendCacheDriver extends AbstractAdapter implements StorageInterface, FlushableInterface
 {
     /**
      * @var string Name of the cache being used
@@ -83,5 +84,15 @@ class ZendCacheDriver extends AbstractAdapter implements StorageInterface
         $cache = Core::make($this->cacheName);
         $item = $cache->getItem('zend/' . $normalizedKey);
         return $item->clear();
+    }
+
+    /**
+     * Flush the whole storage
+     *
+     * @return bool
+     */
+    public function flush()
+    {
+        return Core::make($this->cacheName)->flush();
     }
 }
