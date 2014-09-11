@@ -32,8 +32,8 @@ abstract class Cache
      */
     protected function loadConfig($level)
     {
-        $drivers = [];
-        $driversBuild = [];
+        $drivers = array();
+        $driversBuild = array();
 
         $constants = array_keys(get_defined_constants());
 
