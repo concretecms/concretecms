@@ -49,7 +49,7 @@ class IPAddress {
         }elseif($format === self::FORMAT_HEX) {
             return $this->ipHex;
         } elseif($format === self::FORMAT_IP_STRING) {
-            return inet_ntop(hex2bin($this->ipHex));
+            return inet_ntop($this->hex2bin($this->ipHex));
         }
         throw new \Exception('Invalid IP format');
     }
