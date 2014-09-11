@@ -250,8 +250,8 @@ class Messages extends DashboardPageController {
 		$response = new stdClass();
 		$message = ConversationMessage::getByID($this->post('messageID'));
 		if(is_object($message)) {
-			$targetIP = $message->cnvMessageSubmitIP;
-			$ip->createIPBan(long2ip($targetIP), true);
+			$targetIP = $message->getConversationMessageSubmitIP();
+			$ip->createIPBan($targetIP, true);
 			$response->success = t('IP successfully banned.');
 			echo $json->encode($response);
 			exit;

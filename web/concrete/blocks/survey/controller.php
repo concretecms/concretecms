@@ -106,11 +106,15 @@ class Controller extends BlockController
                     $duID = $u->getUserID();
                 }
 
+                /** @var \Concrete\Core\Permission\IPService $iph */
+                $iph = Core::make('helper/validation/ip');
+                $ip = $iph->getRequestIP();
+                $ip = ($ip === false)?(''):($ip->getIp($ip::FORMAT_IP_STRING));
                 $v = array(
                     $_REQUEST['optionID'],
                     $this->bID,
                     $duID,
-                    Loader::helper('validation/ip')->getRequestIP(),
+                    $ip,
                     $this->cID);
                 $q = "INSERT INTO btSurveyResults (optionID, bID, uID, ipAddress, cID) VALUES (?, ?, ?, ?, ?)";
                 $db->query($q, $v);

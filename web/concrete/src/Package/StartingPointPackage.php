@@ -222,6 +222,8 @@ class StartingPointPackage extends BasePackage
 
         $db->Execute('alter table PagePaths add index (`cPath` (255))');
         $db->Execute('alter table Groups add index (`gPath` (255))');
+        $db->Execute('CREATE INDEX ipFrom ON signuprequests (ipFrom(32))');
+        $db->Execute('CREATE UNIQUE INDEX ips ON userbannedips (ipFrom(32), ipTo(32))');
         $db->Execute(
             'alter table QueueMessages add FOREIGN KEY (`queue_id`) REFERENCES `Queues` (`queue_id`) ON DELETE CASCADE ON UPDATE CASCADE'
         );
