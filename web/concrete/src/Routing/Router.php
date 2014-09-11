@@ -73,7 +73,9 @@ class Router {
 
     public function setThemesbyRoutes(array $routes)
     {
-
+        foreach($routes as $route => $theme) {
+            $this->setThemeByRoute($route, $theme);
+        }
     }
 
 	/**
