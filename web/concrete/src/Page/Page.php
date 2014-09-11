@@ -945,7 +945,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $db = Loader::db();
         $em = $db->getEntityManager();
         $path = new \Concrete\Core\Page\PagePath();
-        $path->setPagePath($cPath);
+        $path->setPagePath('/' . trim($cPath, '/'));
         $path->setPageObject($this);
         $em->persist($path);
         if ($commit) {
