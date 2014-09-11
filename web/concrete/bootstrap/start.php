@@ -98,7 +98,7 @@ $list->registerMultiple($config->get('app.facades'));
 $database_loader = new DatabaseLoader();
 $database_saver = new DatabaseSaver();
 
-$cms->instance('database_config', $database_config = new ConfigRepository($database_loader, $database_saver, $cms->environment()));
+$cms->instance('config/database', $database_config = new ConfigRepository($database_loader, $database_saver, $cms->environment()));
 
 /**
  * ----------------------------------------------------------------------------
