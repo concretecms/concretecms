@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Session;
 
+use Config;
 use \Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
 use \Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use \Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -30,7 +31,7 @@ class Session
             } else {
                 $storage = new NativeSessionStorage();
             }
-            $options = Config::get('concrete.sesssion.cookie');
+            $options = Config::get('concrete.session.cookie');
             $options['gc_max_lifetime'] = \Config::get('concrete.session.max_lifetime');
             $storage->setOptions($options);
         }
