@@ -64,6 +64,11 @@ class Package extends Object {
 	protected $REL_DIR_PACKAGES = REL_DIR_PACKAGES;
 	protected $backedUpFname = '';
 
+
+    public function __construct() {
+        $this->registerConfigNamespace();
+    }
+
 	public function getRelativePath() {
 		$dirp = (is_dir($this->DIR_PACKAGES . '/' . $this->getPackageHandle())) ? $this->REL_DIR_PACKAGES : $this->REL_DIR_PACKAGES_CORE;
 		return $dirp . '/' . $this->pkgHandle;
@@ -654,6 +659,13 @@ class Package extends Object {
 			return $pkg;
 		}
 	}
+
+    /**
+     * Called to enable package specific configuration
+     */
+    public function registerConfigNamespace() {
+        \Config::addNamespace($this->getPackageHandle(), $this->getPackagePath() . '/config');
+    }
 
 	/**
 	 * @return Package
