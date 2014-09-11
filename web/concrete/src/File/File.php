@@ -413,7 +413,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
         foreach($nf->getVersionList() as $v) {
             $v->refreshAttributes();
         }
-        
+
         $fe = new \Concrete\Core\File\Event\DuplicateFile($this);
         $fe->setNewFileObject($nf);
         Events::dispatch('on_file_duplicate', $fe);
