@@ -30,14 +30,8 @@ class Session
             } else {
                 $storage = new NativeSessionStorage();
             }
-            $options = array(
-                'cookie_path' => DIR_REL . '/',
-                'cookie_lifetime' => 0,
-                'cookie_secure' => false,
-                'cookie_httponly' => true,
-                'gc_maxlifetime' => \Config::get('concrete.session.max_lifetime')
-            );
-            //$options = \Config::get('concrete.sesssion.cookie');
+            $options = Config::get('concrete.sesssion.cookie');
+            $options['gc_max_lifetime'] = \Config::get('concrete.session.max_lifetime');
             $storage->setOptions($options);
         }
 
