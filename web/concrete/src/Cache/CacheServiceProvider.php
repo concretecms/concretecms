@@ -14,6 +14,6 @@ class CacheServiceProvider extends ServiceProvider
     public function register() {
         $this->app->singleton('cache', '\Concrete\Core\Cache\Level\ObjectCache');
         $this->app->singleton('cache/request', '\Concrete\Core\Cache\Level\RequestCache');
-        $this->app->singleton('cache/page', '\Concrete\Core\Cache\Level\PageCache');
+        $this->app->singleton('cache/expensive', '\Concrete\Core\Cache\Level\ExpensiveCache');
     }
 } 
