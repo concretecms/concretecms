@@ -88,7 +88,24 @@ class PageController extends Controller {
     }
 
     public function setupRequestActionAndParameters(Request $request) {
-        $task = substr($request->getPath(), strlen($this->c->getCollectionPath()) + 1);
+        if (substr($request->getPath(), 0, strlen($this->c->getCollectionPath()) + 1) == $this->c->getCollectionPath()) {
+            $task = substr($request->getPath(), strlen($this->c->getCollectionPath()) + 1);
+        } else {
+            // must be a sub path
+            $possiblePaths = $this->c->getAdditionalPagePaths();
+            $task = null;
+            $iterator = new \ArrayIterator($possiblePaths);
+            while ($task === null && $iterator->valid()) {
+                $current = $iterator->current();
+                if (substr($request->getPath(), 0, strlen($current->getPagePath()) + 1) == $current->getPagePath()) {
+                    $task = substr($request->getPath(), strlen($current->getPagePath()) + 1);
+                }
+
+                $iterator->next();
+            }
+        }
+
+
         $task = str_replace('-/', '', $task);
         $taskparts = explode('/', $task);
         if (isset($taskparts[0]) && $taskparts[0] != '') {
