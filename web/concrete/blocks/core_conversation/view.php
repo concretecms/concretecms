@@ -41,6 +41,7 @@ if (is_object($conversation)) {
 			commentRatingUserID: <?=$uID?>,
 			commentRatingIP: '<?=$commentRatingIP?>',
 			dateFormat: '<?=$dateFormat?>',
+            customDateFormat: '<?=$customDateFormat?>',
 			blockAreaHandle: '<?=$blockAreaHandle ?>',
 			fileExtensions: '<?=$fileExtensions?>',
 			maxFileSize: '<?=$maxFileSize?>',
