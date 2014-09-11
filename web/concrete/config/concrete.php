@@ -109,6 +109,14 @@ return array(
     'cache'            => array(
 
         /**
+         * Enabled
+         *
+         * @var bool
+         */
+        'enabled' => true,
+
+
+        /**
          * Lifetime
          *
          * @var int Seconds
