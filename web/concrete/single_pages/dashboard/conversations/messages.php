@@ -11,7 +11,7 @@ $ip = Loader::helper('validation/ip'); ?>
 <div class="ccm-dashboard-content-full">
 
     <div data-search-element="wrapper">
-        <form role="form" data-search-form="logs" action="<?=$controller->action('bulk_update')?>" class="form-inline ccm-search-fields">
+        <form role="form" data-search-form="logs" action="<?=$controller->action('view')?>" class="form-inline ccm-search-fields">
             <div class="ccm-search-fields-row">
                 <div class="form-group">
                     <?=$form->label('keywords', t('Search'))?>
@@ -24,20 +24,21 @@ $ip = Loader::helper('validation/ip'); ?>
                     </div>
                 </div>
             </div>
-            <div class="ccm-search-fields-row">
+            <?php /* <div class="ccm-search-fields-row">
                 <div class="form-group">
                     <?=$form->label('cmpMessageFilter', t('Filter by Flag'))?>
                     <div class="ccm-search-field-content">
                         <?=$form->select('cmpMessageFilter', array('any'=>t('** Any')), $cmpFilterTypes) ?>
                     </div>
                 </div>
-            </div>
+            </div>  */ ?>
 
             <div class="ccm-search-fields-row">
                 <div class="form-group form-group-full">
                     <?=$form->label('cmpMessageSort', t('Sort By'))?>
                     <div class="ccm-search-field-content">
                         <?=$form->select('cmpMessageSort', $cmpSortTypes)?>
+                        <button class="btn btn-primary" type="submit"><?php echo t('Search') ?></button>
                     </div>
                 </div>
             </div>
@@ -53,12 +54,18 @@ $ip = Loader::helper('validation/ip'); ?>
                 <tr>
                     <th><span><?=t('Message')?></span></th>
                     <th><span><?=t('Posted')?></span></th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php if (count($messages) > 0) {
                     foreach($messages as $msg) {
+                        $cnv = $msg->getConversationObject();
+                        if(is_object($cnv)) {
+                            $page = $cnv->getConversationPageObject();
+                        }
                         $msgID = $msg->getConversationMessageID();
+                        $cnvID = $cnv->getConversationID();
                         if(!$msg->isConversationMessageApproved() && !$msg->isConversationMessageDeleted()) {
                             $pendingClass = "pending";
                         } else {
@@ -77,13 +84,12 @@ $ip = Loader::helper('validation/ip'); ?>
                         }
                         $ui = $msg->getConversationMessageUserObject(); ?>
                         <tr>
-                            <td><?=$form->checkbox('cnvMessageID[]', $msg->getConversationMessageID())?></td>
+                            <!-- <td><?=$form->checkbox('cnvMessageID[]', $msg->getConversationMessageID())?></td> -->
                             <td class="message-cell">
                                 <div class="ccm-conversation-message-summary">
                                     <div class="message-output">
                                         <?=$msg->getConversationMessageBodyOutput(true)?>
                                     </div>
-                                    <a href="#" data-open-text="<?php echo t('View full message.') ?>" data-close-text="<?php echo t('Minimize message') ?>" class="read-all truncated btn"><?php echo t('View full message') ?></a>
                                     <?php if($flagClass) { ?>
                                         <p class="message-status"><?php echo t('Message is flagged as spam.') ?></p>
                                     <?php } ?>
@@ -106,13 +112,13 @@ $ip = Loader::helper('validation/ip'); ?>
                                     ?></p>
 
                                 <?
-                                $cnv = $msg->getConversationObject();
-                                if(is_object($cnv)) {
-                                    $page = $cnv->getConversationPageObject();
-                                    if (is_object($page)) { ?>
-                                        <div><a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>"><?=$page->getCollectionPath()?></a></div>
-                                    <? }
-                                } ?>
+
+                                if (is_object($page)) { ?>
+                                    <div><a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>"><?=$page->getCollectionPath()?></a></div>
+                                <? } ?>
+                            </td>
+                            <td>
+                                <a href="<?=Loader::helper('navigation')->getLinkToCollection($page)?>#cnv<?php echo $cnvID ?>Message<?php echo $msgID ?>" data-open-text="<?php echo t('View full message.') ?>" data-close-text="<?php echo t('Minimize message') ?>" class="read-all truncated btn"><i class="fa fa-share"></i></a>
                             </td>
                             <td class="hidden-actions">
                                 <div class="message-actions message-actions<?php echo $msgID ?>" data-id="<?php echo $msgID ?>">
