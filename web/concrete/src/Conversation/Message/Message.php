@@ -386,9 +386,6 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
         }
 
         $this->cnvIsMessageDeleted = true;
-        //$this->cnvMessageSubject = null;
-        //$this->cnvMessageBody = null;
-        // $this->uID = USER_DELETED_CONVERSATION_ID;
     }
 
     public function restore()
@@ -404,9 +401,6 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
         }
 
         $this->cnvIsMessageDeleted = false;
-        //$this->cnvMessageSubject = null;
-        //$this->cnvMessageBody = null;
-        // $this->uID = USER_DELETED_CONVERSATION_ID;
     }
 
 }

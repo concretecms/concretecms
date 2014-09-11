@@ -328,9 +328,9 @@ class User extends Object
             implode(':', $cookie),
             time() + USER_FOREVER_COOKIE_LIFETIME,
             DIR_REL . '/',
-            defined('SESSION_COOKIE_PARAM_DOMAIN') ? SESSION_COOKIE_PARAM_DOMAIN : '',
-            defined('SESSION_COOKIE_PARAM_SECURE') ? SESSION_COOKIE_PARAM_SECURE : false,
-            defined('SESSION_COOKIE_PARAM_HTTPONLY') ? SESSION_COOKIE_PARAM_HTTPONLY : false
+            \Config::get('concrete.session.cookie.domain'),
+            \Config::get('concrete.session.cookie.secure'),
+            \Config::get('concrete.session.cookie.httponly')
         );
     }
 
@@ -373,9 +373,9 @@ class User extends Object
 
         if (isset($_COOKIE['ccmUserHash']) && $_COOKIE['ccmUserHash']) {
             setcookie("ccmUserHash", "", 315532800, DIR_REL . '/',
-            (defined('SESSION_COOKIE_PARAM_DOMAIN')?SESSION_COOKIE_PARAM_DOMAIN:''),
-            (defined('SESSION_COOKIE_PARAM_SECURE')?SESSION_COOKIE_PARAM_SECURE:false),
-            (defined('SESSION_COOKIE_PARAM_HTTPONLY')?SESSION_COOKIE_PARAM_HTTPONLY:false));
+            \Config::get('concrete.session.cookie.domain'),
+            \Config::get('concrete.session.cookie.secure'),
+            \Config::get('concrete.session.cookie.httponly'));
         }
     }
 
@@ -691,7 +691,7 @@ class User extends Object
         if (isset($this->hasher)) {
             return $this->hasher;
         }
-        $this->hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
+        $this->hasher = new PasswordHash(\Config::get('concrete.user.password.hash_cost_log2'), \Config::get('concrete.user.password.hash_portable'));
 
         return $this->hasher;
     }
