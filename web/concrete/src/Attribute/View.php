@@ -13,6 +13,7 @@ class View extends AbstractView {
 	protected $attributeKey;
 	protected $attributeType;
 	protected $attributePkgHandle;
+    protected $initialViewToRender;
 	protected $viewToRender;
 
 	protected function getValue() {return $this->attributeValue;}
@@ -39,10 +40,11 @@ class View extends AbstractView {
 	}
 
 	public function start($state) {
-		$this->viewToRender = $state;
+		$this->initialViewToRender = $state;
+        $this->viewToRender = $state;
         $env = Environment::get();
         $r = $env->getRecord(DIRNAME_ATTRIBUTES . '/' . $atHandle . '/' . $this->viewToRender . '.php', $this->attributePkgHandle);
-        if ($this->viewToRender == 'composer' && !$r->exists()) {
+        if ($this->initialViewToRender == 'composer' && !$r->exists()) {
             $this->viewToRender = 'form';
         }
 	}
@@ -81,8 +83,8 @@ class View extends AbstractView {
 
 	public function runControllerTask() {
 		$this->controller->on_start();
-        $action = $this->viewToRender;
-        if ($action == 'composer') {
+        $action = $this->initialViewToRender;
+        if ($action == 'composer' && !method_exists($this->controller, 'composer')) {
             $action = 'form';
         }
 		$this->controller->runAction($action);

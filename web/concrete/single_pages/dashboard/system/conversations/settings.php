@@ -7,6 +7,10 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Conv
 		<fieldset>
 			<legend><?php echo t('Attachment Settings'); ?></legend>
 			<p style="margin-bottom: 25px; color: #aaa; display: block;" class="small"><?php echo t('Note: These settings can be overridden in the block edit form for individual conversations.') ?></p>
+            <div class="form-group">
+                <label class="control-label"><?=t('Enable Attachments')?></label>
+                <?=$form->checkbox('attachmentsEnabled', 1, $attachmentsEnabled)?>
+            </div>
 			<div class="form-group">
 				<label class="control-label"><?=t('Max Attachment Size for Guest Users. (MB)')?></label>
 				<?=$form->text('maxFileSizeGuest', $maxFileSizeGuest > 0 ? $maxFileSizeGuest : '')?>
@@ -28,6 +32,13 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Conv
     			<?=$form->textarea('fileExtensions', $fileExtensions)?>
 			</div>
 		</fieldset>
+    <fieldset>
+        <legend><?=t('Editor')?></legend>
+        <div class="form-group">
+            <?=$form->label('activeEditor', t('Active Conversation Editor'))?>
+            <?=Loader::helper('form')->select('activeEditor', $editors, $active);?>
+        </div>
+    </fieldset>
     <div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
 		    <button class='btn btn-primary pull-right'><?php echo t('Save'); ?></button>

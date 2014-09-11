@@ -4,7 +4,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 ?>
 
 <div class="row">
-<div class="span10 offset1">
+<div class="col-sm-10 col-sm-offset-1">
 
 <div class="page-header">
 <h1><?=t("Private Messages")?></h1>
@@ -19,8 +19,8 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 			), false)?>
 
     		<div id="ccm-private-message-detail">
-				<a href="<?=$view->url('/account/profile/public_profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$av->outputUserAvatar($msg->getMessageRelevantUserObject())?></a>
-				<a href="<?=$view->url('/account/profile/public_profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
+				<a href="<?=$view->url('/members/profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$av->outputUserAvatar($msg->getMessageRelevantUserObject())?></a>
+				<a href="<?=$view->url('/members/profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
 
 				<div id="ccm-private-message-actions">
 
@@ -93,8 +93,8 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 
 					<tr>
 						<td class="ccm-profile-message-from">
-						<a href="<?=$view->url('/account/profile/public_profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$av->outputUserAvatar($msg->getMessageRelevantUserObject())?></a>
-						<a href="<?=$view->url('/account/profile/public_profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
+						<a href="<?=$view->url('/members/profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$av->outputUserAvatar($msg->getMessageRelevantUserObject())?></a>
+						<a href="<?=$view->url('/members/profile', 'view', $msg->getMessageRelevantUserID())?>"><?=$msg->getMessageRelevantUserName()?></a>
 						</td>
 						<td class="ccm-profile-messages-item-name"><a href="<?=$view->url('/account/messages/inbox', 'view_message', $mailbox, $msg->getMessageID())?>"><?=$msg->getFormattedMessageSubject()?></a></td>
 						<td style="white-space: nowrap"><?=$dh->formatDateTime($msg->getMessageDateAdded(), true)?></td>
@@ -120,14 +120,14 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     		case 'reply_complete': ?>
 
     		<div class="alert alert-success"><?=t('Reply Sent.')?></div>
-    		<a href="<?=$view->url('/account/messages/inbox', 'view_message', $box, $msgID)?>" class="btn"><?=t('Back to Message')?></a>
+    		<a href="<?=$view->url('/account/messages/inbox', 'view_message', $box, $msgID)?>" class="btn btn-default"><?=t('Back to Message')?></a>
 
     		<?
     			break;
     		case 'send_complete': ?>
 
     		<div class="alert alert-success"><?=t('Message Sent.')?></div>
-    		<a href="<?=$view->url('/account/profile/public_profile', 'view', $recipient->getUserID())?>" class="btn"><?=t('Back to Profile')?></a>
+    		<a href="<?=$view->url('/members/profile', 'view', $recipient->getUserID())?>" class="btn btn-default"><?=t('Back to Profile')?></a>
 
     		<?
     			break;
@@ -142,7 +142,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     		case 'write': ?>
 
 			<div id="ccm-profile-message-compose">
-				<form method="post" action="<?=$view->action('send')?>" class="form-horizontal">
+				<form method="post" action="<?=$view->action('send')?>">
 
 				<?=$form->hidden("uID", $recipient->getUserID())?>
 				<? if ($this->controller->getTask() == 'reply') { ?>
@@ -155,35 +155,27 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
 				}
 				?>
 
-				<h3><?=t('Send a Private Message')?></h3>
+				<h4><?=t('Send a Private Message')?></h4>
 
-				<div class="control-group">
+				<div class="form-group">
 					<label class="control-label"><?=t("To")?></label>
-					<div class="controls">
-						<input disabled="disabled" type="text" value="<?=$recipient->getUserName()?>" class="span5" />
-					</div>
+					<input disabled="disabled" class="form-control" type="text" value="<?=$recipient->getUserName()?>" class="span5" />
 				</div>
 
-				<div class="control-group">
+				<div class="form-group">
 					<?=$form->label('subject', t('Subject'))?>
-					<div class="controls">
-						<?=$form->text('msgSubject', $subject, array('class' => 'span5'))?>
-					</div>
+					<?=$form->text('msgSubject', $subject, array('class' => 'span5'))?>
 				</div>
 
-				<div class="control-group">
+				<div class="form-group">
 					<?=$form->label('body', t('Message'))?>
-					<div class="controls">
-						<?=$form->textarea('msgBody', $msgBody, array('rows'=>8, 'class' => 'span5'))?>
-					</div>
+					<?=$form->textarea('msgBody', $msgBody, array('rows'=>8, 'class' => 'span5'))?>
 				</div>
 
-				<div class="well">
-					<?=$form->submit('button_submit', t('Send Message'), array('class' => 'pull-right btn-primary'))?>
-					<?=$form->submit('button_cancel', t('Cancel'), array('onclick' => 'window.location.href=\'' . $backURL . '\'; return false'))?>
-				</div>
+                <?=$form->submit('button_submit', t('Send Message'), array('class' => 'pull-right btn btn-primary'))?>
+                <?=$form->submit('button_cancel', t('Cancel'), array('class' => 'btn-default', 'onclick' => 'window.location.href=\'' . $backURL . '\'; return false'))?>
 
-				<?=$vt->output('validate_send_message');?>
+				<?=$valt->output('validate_send_message');?>
 
 				</form>
 

@@ -322,7 +322,9 @@ function ConcretePanel(options) {
                 var $inner = $clg.find('.list-group-item-collapse-wrapper');
                 var menuID = $clg.attr('data-panel-menu-id');
                 var $title = $clg.find('.list-group-item-collapse span');
-                var height = $inner.height();
+                $inner.css({ position: "absolute", visibility: "hidden", display: "block" });
+                var height = $inner.outerHeight();
+                $inner.css({position: 'static', 'visibility': 'visible', display: 'none'});
                 if ($clg.hasClass('ccm-panel-list-group-item-expanded')) {
                     $title.text(ccmi18n.expand);
                     Concrete.event.publish('PanelCollapsibleListGroupCollapse', menuID);
@@ -348,7 +350,7 @@ function ConcretePanel(options) {
                         }).
                         delay(5).
                         queue(function () {
-                            $(this).css('height', height);
+                            $(this).css('height', 'auto');
                             $(this).dequeue();
                         });
                 }

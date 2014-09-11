@@ -80,8 +80,6 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <script type="text/javascript">
 
-_.templateSettings.variable = "";
-
 var renderBreadcrumb = _.template(
     $('script.breadcrumb').html()
 );

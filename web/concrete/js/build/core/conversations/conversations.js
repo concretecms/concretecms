@@ -71,6 +71,8 @@
             var maxFiles = (obj.options.maxFiles);
             var maxFileSize = (obj.options.MaxFileSize);
             var fileExtensions = (obj.options.fileExtensions);
+            var attachmentsEnabled = (obj.options.attachmentsEnabled);
+            var attachmentOverridesEnabled = (obj.options.attachmentOverridesEnabled);
 
             if (obj.options.method == 'ajax') {
                 $.post(CCM_TOOLS_PATH + '/conversations/view_ajax', {
@@ -91,7 +93,9 @@
                     'commentRatingIP':     commentRatingIP,
                     'dateFormat':          dateFormat,
                     'customDateFormat':    customDateFormat,
-                    'blockAreaHandle' :    blockAreaHandle
+                    'blockAreaHandle' :    blockAreaHandle,
+                    'attachmentsEnabled':  attachmentsEnabled,
+                    'attachmentOverridesEnabled' : attachmentOverridesEnabled
 
                 }, function(r) {
                     var oldobj = window.obj;
@@ -312,7 +316,9 @@
                     'enableCommentRating': obj.options.enableCommentRating,
                     'dateFormat':          obj.options.dateFormat,
                     'customDateFormat':    obj.options.customDateFormat,
-                    'blockAreaHandle':     obj.options.blockAreaHandle
+                    'blockAreaHandle':     obj.options.blockAreaHandle,
+                    'attachmentsEnabled':  obj.options.attachmentsEnabled,
+                    'attachmentOverridesEnabled': obj.options.attachmentOverridesEnabled
 
                 }, function(r) {
                     obj.$replyholder.appendTo(obj.$element);
@@ -349,7 +355,9 @@
                     'orderBy':             obj.$sortselect.val(),
                     'enableCommentRating': obj.options.enableCommentRating,
                     'dateFormat':          obj.options.dateFormat,
-                    'customDateFormat':    obj.options.customDateFormat
+                    'customDateFormat':    obj.options.customDateFormat,
+                    'attachmentsEnabled':  obj.options.attachmentsEnabled,
+                    'attachmentOverridesEnabled': obj.options.attachmentOverridesEnabled
                 };
 
                 $.ajax({
@@ -438,8 +446,9 @@
                 }
                 return false;
             });
-
-            obj.$element.concreteConversationAttachments(obj);
+            if(obj.options.attachmentsEnabled > 0) {
+                obj.$element.concreteConversationAttachments(obj);
+            }
             $('.dropdown-toggle').dropdown();
         },
         handlePostError: function($form, messages) {

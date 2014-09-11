@@ -68,11 +68,14 @@ class MovePageRequest extends PageRequest {
 		if (is_object($c) && is_object($dc) && (!$c->isError()) && (!$dc->isError())) {
 			if ($c->canMoveCopyTo($dc)) {
 				if ($this->saveOldPagePath) {
-					$nc2 = $c->move($dc, true);
-				} else {
-					$nc2 = $c->move($dc);
-				}
-				$wpr = new WorkflowProgressResponse();
+				    // retain old page path.
+                    $path = $c->getCollectionPathObject();
+                    if (is_object($path)) {
+                        $c->addAdditionalPagePath($path->getPagePath());
+                    }
+                }
+                $nc2 = $c->move($dc);
+                $wpr = new WorkflowProgressResponse();
 				$wpr->setWorkflowProgressResponseURL(BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $c->getCollectionID());
 				return $wpr;
 			}

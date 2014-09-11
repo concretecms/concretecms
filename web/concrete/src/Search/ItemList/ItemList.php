@@ -2,6 +2,7 @@
 namespace Concrete\Core\Search\ItemList;
 
 use Concrete\Core\Search\StickyRequest;
+use Pagerfanta\Exception\OutOfRangeCurrentPageException;
 
 abstract class ItemList
 {
@@ -118,7 +119,11 @@ abstract class ItemList
         $query = \Request::getInstance()->query;
         if ($query->has($this->getQueryPaginationPageParameter())) {
             $page = intval($query->get($this->getQueryPaginationPageParameter()));
-            $pagination->setCurrentPage($page);
+            try {
+                $pagination->setCurrentPage($page);
+            } catch (OutOfRangeCurrentPageException $e) {
+                $pagination->setCurrentPage(1);
+            }
         }
         return $pagination;
     }

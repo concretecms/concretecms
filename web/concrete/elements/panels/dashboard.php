@@ -32,7 +32,7 @@ foreach($parents as $pc) {
 
 	
 	<div class="ccm-panel-dashboard-footer">
-		<p><?=t('Logged in as %s', $ui->getUserDisplayName());?>.</p>
+		<p><?=t('Logged in as <a href="%s">%s</a>', URL::to('/account'), $ui->getUserDisplayName());?>. </p>
 		<a href="<?=URL::to('/login', 'logout', Loader::helper('validation/token')->generate('logout'))?>"><?=t('Sign Out.')?></a>
 	</div>
 </section>

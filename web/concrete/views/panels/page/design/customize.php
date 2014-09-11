@@ -6,7 +6,7 @@ $pk = PermissionKey::getByHandle('customize_themes');
 
 <section id="ccm-panel-page-design-customize">
     <form data-form="panel-page-design-customize" target="ccm-page-preview-frame" method="post" action="<?=$controller->action("preview", $theme->getThemeID())?>">
-    <header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="fa fa-chevron-left"></span></a> <?=t('Customize Theme')?></header>
+    <header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="fa fa-chevron-left"></span></a> <a href="" data-panel-navigation="back"><?=t('Customize Theme')?></a></header>
 
     <div class="ccm-panel-content-inner">
 

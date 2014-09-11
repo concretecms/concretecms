@@ -788,14 +788,6 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Conversations Editor" path="/dashboard/system/conversations/editor"
-              filename="/dashboard/system/conversations/editor.php" pagetype="" description="" package="">
-            <attributes>
-                <attributekey handle="meta_keywords">
-                    <value>conversations editor, editor</value>
-                </attributekey>
-            </attributes>
-        </page>
         <page name="Community Points" path="/dashboard/system/conversations/points"
               filename="/dashboard/system/conversations/points.php" pagetype="" description="" package="">
             <attributes>
