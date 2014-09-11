@@ -17,7 +17,7 @@ class FeedService
     public function load($url, $cache = true)
     {
         if ($cache) {
-            Reader::setCache(new ZendCacheDriver());
+            Reader::setCache(new ZendCacheDriver('cache/expensive'));
         }
         $feed = Reader::import($url);
         return $feed;
