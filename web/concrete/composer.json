@@ -36,7 +36,6 @@
         "sunra/php-simple-html-dom-parser": "1.5.0",
         "hautelook/phpass": "0.3.*",
         "voku/urlify": "1.0.1-stable",
-        "voku/portable-utf8": "dev-master",
         "dapphp/securimage": "3.5.*",
         "kertz/twitteroauth": "dev-master",
         "anahkiasen/html-object": "1.4.0",
