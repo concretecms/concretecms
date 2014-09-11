@@ -1,13 +1,17 @@
 <?
 namespace Concrete\Core\Cache;
 
+use Stash\Driver\BlackHole;
 use Stash\Pool;
 
 abstract class Cache
 {
     /** @var Pool */
-    public $pool = null;
-    public $enabled = false;
+    protected $pool = null;
+    /** @var bool */
+    protected $enabled = false;
+    /** @var \Stash\Interfaces\DriverInterface */
+    protected $driver = null;
 
     public function __construct() {
         $this->init();
@@ -26,7 +30,11 @@ abstract class Cache
      */
     public function delete($key)
     {
-        return $this->pool->getItem($key)->clear();
+        if ($this->enabled) {
+            return $this->pool->getItem($key)->clear();
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -36,7 +44,11 @@ abstract class Cache
      */
     public function exists($key)
     {
-        return !$this->pool->getItem()->isMiss($key);
+        if ($this->enabled) {
+            return !$this->pool->getItem()->isMiss($key);
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -57,16 +69,32 @@ abstract class Cache
         return $this->pool->getItem($key);
     }
 
+    /**
+     * Enables the cache
+     */
     public function enable()
     {
+        $this->pool->setDriver($this->driver);
         $this->enabled = true;
     }
 
+    /**
+     * Disables the cache
+     */
     public function disable()
     {
+        // save the current driver if not yet black hole so it can be restored on enable()
+        if (!($this->pool->getDriver() instanceof BlackHole)) {
+            $this->driver = $this->pool->getDriver();
+        }
+        $this->pool->setDriver(new BlackHole());
         $this->enabled = false;
     }
 
+    /**
+     * Returns true if the cache is enabled, false if not
+     * @return bool
+     */
     public function isEnabled()
     {
         return $this->enabled;
