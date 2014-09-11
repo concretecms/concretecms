@@ -45,7 +45,7 @@ class Register extends PageController {
 		$username = preg_replace("/ +/", " ", $username);
 		
 		
-		if (!$ip->isBanned()) {
+		if ($ip->isBanned()) {
 			$e->add($ip->getErrorMessage());
 		}		
 		

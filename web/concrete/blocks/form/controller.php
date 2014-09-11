@@ -241,7 +241,7 @@ class Controller extends BlockController {
 		$ip = Loader::helper('validation/ip');
 		$this->view();
 		
-		if (!$ip->isBanned()) {
+		if ($ip->isBanned()) {
 			$this->set('invalidIP', $ip->getErrorMessage());			
 			return;
 		}	

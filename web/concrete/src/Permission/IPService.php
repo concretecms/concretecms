@@ -47,7 +47,7 @@ class IPService {
      * @param IPAddress $ip
      * @return bool
      */
-    protected function checkForManualPermBan(IPAddress $ip){
+    protected function existsManualPermBan(IPAddress $ip){
 		return $this->isBanned($ip, ' AND isManual = ? AND expires = ? ',Array(1,'0000-00-00 00:00:00'));
 	}
 
@@ -121,7 +121,7 @@ class IPService {
 			$db	= Loader::db();
 
 			//If there's a permanent ban, obey its setting otherwise set up a temporary ban
-			if ($this->checkForManualPermBan($ip)) {
+			if ($this->existsManualPermBan($ip)) {
 				$db->StartTrans();
 				$q 	= 'DELETE FROM UserBannedIPs WHERE ipFrom = ? AND ipTo = ? AND isManual = ?';
 				$v  = Array($ip->getIp(),0, 0);
