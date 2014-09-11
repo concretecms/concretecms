@@ -54,14 +54,20 @@ if (!defined('APP_UPDATED_PASSTHRU')
  * immeditely and proceed into the updated core.
  * ----------------------------------------------------------------------------
  */
-if (defined('DIRNAME_CORE_UPDATED') && (!defined('APP_UPDATED_PASSTHRU'))) {
+
+$update_file = DIR_CONFIG_SITE . '/update.php';
+$updates = array();
+if (file_exists($update_file)) {
+    $updates = (array) include $update_file;
+}
+if (!defined('APP_UPDATED_PASSTHRU') && isset($updates['core'])) {
     define('APP_UPDATED_PASSTHRU', true);
-    if (is_dir(DIR_BASE . '/' . DIRNAME_UPDATES . '/' . DIRNAME_CORE_UPDATED)) {
-        require(DIR_BASE . '/' . DIRNAME_UPDATES . '/' . DIRNAME_CORE_UPDATED . '/' . DIRNAME_CORE . '/' . 'dispatcher.php');
-    } else if(file_exists(DIRNAME_UPDATES . '/' . DIRNAME_CORE_UPDATED . '/' . DIRNAME_CORE . '/' . 'dispatcher.php')){
-        require(DIRNAME_UPDATES . '/' . DIRNAME_CORE_UPDATED . '/' . DIRNAME_CORE . '/' . 'dispatcher.php');
+    if (is_dir(DIR_BASE . '/' . DIRNAME_UPDATES . '/' . $updates['core'])) {
+        require(DIR_BASE . '/' . DIRNAME_UPDATES . '/' . $updates['core'] . '/' . DIRNAME_CORE . '/' . 'dispatcher.php');
+    } else if(file_exists(DIRNAME_UPDATES . '/' . $updates['core'] . '/' . DIRNAME_CORE . '/' . 'dispatcher.php')){
+        require(DIRNAME_UPDATES . '/' . $updates['core'] . '/' . DIRNAME_CORE . '/' . 'dispatcher.php');
     } else {
-        die(sprintf('Invalid "%s" defined. Please remove it from %s.','DIRNAME_CORE_UPDATED', CONFIG_FILE));
+        die(sprintf('Invalid "%s" defined. Please remove it from %s.','update.core', CONFIG_FILE));
     }
     exit;
 }
@@ -285,8 +291,8 @@ define('DIR_LANGUAGES_SITE_INTERFACE', DIR_LANGUAGES . '/' . DIRNAME_LANGUAGES_S
  * Assets (Images, JS, etc....) URLs
  * ----------------------------------------------------------------------------
  */
-if (defined('DIRNAME_CORE_UPDATED')) {
-    $ap = DIR_REL . '/' . DIRNAME_UPDATES . '/' . DIRNAME_CORE_UPDATED . '/' . DIRNAME_CORE;
+if (defined('APP_UPDATED_PASSTHRU') && APP_UPDATED_PASSTHRU) {
+    $ap = DIR_REL . '/' . DIRNAME_UPDATES . '/' . $updates['core'] . '/' . DIRNAME_CORE;
 } else {
     $ap = DIR_REL . '/' . DIRNAME_CORE;
 }

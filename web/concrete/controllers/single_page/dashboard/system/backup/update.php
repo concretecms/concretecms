@@ -169,7 +169,7 @@ class Update extends DashboardPageController
                 }
             } else {
                 $token = Loader::helper("validation/token");
-                \Redirect::to('/ccm/system/upgrade/submit?ccm_token=' . $token->generate('Concrete\Controller\Upgrade'))->send();
+                \Redirect::to('/dashboard/system/backup/update')->send();
                 exit;
             }
         }

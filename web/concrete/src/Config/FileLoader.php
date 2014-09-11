@@ -9,7 +9,7 @@ class FileLoader extends \Illuminate\Config\FileLoader implements LoaderInterfac
     public function __construct(Filesystem $files)
     {
         parent::__construct($files, DIR_APPLICATION . '/config');
-        $this->addNamespace('core', DIR_BASE . '/concrete/config');
+        $this->addNamespace('core', DIR_BASE_CORE . '/config');
     }
 
     public function load($environment, $group, $namespace = null)

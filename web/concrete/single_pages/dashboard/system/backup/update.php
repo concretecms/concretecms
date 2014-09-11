@@ -3,7 +3,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 $h = Loader::helper('concrete/dashboard');
 $ih = Loader::helper('concrete/ui');
 $form = Loader::helper('form');
-
+$view = View::getInstance();
 if ($canUpgrade) {
 
     if ($downloadableUpgradeAvailable) {
@@ -62,7 +62,7 @@ if ($canUpgrade) {
 
                 <div class="ccm-dashboard-form-actions-wrapper">
                     <div class="ccm-dashboard-form-actions">
-                        <form method="post" action="<?= $updateAction ?>" id="ccm-update-form">
+                        <form method="post" action="<?= $view->action('do_update') ?>" id="ccm-update-form">
                             <input type="hidden" name="updateVersion" value="<?= $updates[0]->getUpdateVersion() ?>"/>
                             <?= $ih->submit(t('Update'), 'maintenance-mode-form', 'right', 'btn-primary') ?>
                         </form>
