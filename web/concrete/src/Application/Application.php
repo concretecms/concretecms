@@ -189,11 +189,11 @@ class Application extends Container
             $perm = $this->make('helper/file')->getCreateFilePermissions()->dir;
             $perm ? define('DIRECTORY_PERMISSIONS_MODE', $perm) : define('DIRECTORY_PERMISSIONS_MODE', 0775);
         }
-        if (defined('DIR_FILES_CACHE') && !is_dir(DIR_FILES_CACHE)) {
-            @mkdir(DIR_FILES_CACHE);
-            @chmod(DIR_FILES_CACHE, DIRECTORY_PERMISSIONS_MODE);
-            @touch(DIR_FILES_CACHE . '/index.html');
-            @chmod(DIR_FILES_CACHE . '/index.html', FILE_PERMISSIONS_MODE);
+        if (!is_dir(Config::get('files.cache.directory'))) {
+            @mkdir(Config::get('files.cache.directory'));
+            @chmod(Config::get('files.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
+            @touch(Config::get('files.cache.directory') . '/index.html');
+            @chmod(Config::get('files.cache.directory') . '/index.html', FILE_PERMISSIONS_MODE);
         }
     }
 

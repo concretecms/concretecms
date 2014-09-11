@@ -40,8 +40,12 @@ class Theme extends Object
     const THEME_CUSTOMIZABLE_STYLESHEET_EXTENSION = ".less";
     const FILENAME_TYPOGRAPHY_CSS = "typography.css";
 
-    protected $stylesheetCachePath = DIR_FILES_CACHE;
+    protected $stylesheetCachePath;
     protected $stylesheetCacheRelativePath = REL_DIR_FILES_CACHE;
+
+    public function __construct() {
+        $this->setStylesheetCachePath(Config::get('files.cache.directory'));
+    }
 
     public static function getGlobalList()
     {
@@ -249,7 +253,7 @@ class Theme extends Object
     public function enablePreviewRequest()
     {
         $this->setStylesheetCacheRelativePath(REL_DIR_FILES_CACHE . '/preview');
-        $this->setStylesheetCachePath(DIR_FILES_CACHE . '/preview');
+        $this->setStylesheetCachePath(Config::get('files.cache.directory') . '/preview');
         $this->pThemeIsPreview = true;
     }
 
@@ -728,8 +732,8 @@ class Theme extends Object
         }
         $html = new \HtmlObject\Image();
         $img = $html->src($src)
-            ->width(THEMES_THUMBNAIL_WIDTH)
-            ->height(THEMES_THUMBNAIL_HEIGHT)
+            ->width(\Config::get('concrete.icons.theme_thumbnail.width'))
+            ->height(\Config::get('concrete.icons.theme_thumbnail.height'))
             ->class('ccm-icon-theme');
 
         return $img;

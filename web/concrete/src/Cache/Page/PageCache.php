@@ -32,7 +32,7 @@ abstract class PageCache {
 
 	public static function getLibrary() {
 		if (!PageCache::$library) {
-			$class = '\\Concrete\\Core\\Cache\\Page\\' . Loader::helper('text')->camelcase(PAGE_CACHE_LIBRARY) . 'PageCache';
+			$class = '\\Concrete\\Core\\Cache\\Page\\' . Loader::helper('text')->camelcase(Config::get('files.cache.page.file')) . 'PageCache';
 			PageCache::$library = new $class();
 		}
 		return PageCache::$library;

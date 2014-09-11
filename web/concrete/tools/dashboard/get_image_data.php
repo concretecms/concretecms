@@ -9,7 +9,7 @@ if (DASHBOARD_BACKGROUND_INFO != false) {
 		if (!$imageData) {
 			// call out to the server to grab the data
 			$cfToken = Marketplace::getSiteToken();
-			$imageData = Loader::helper('file')->getContents(DASHBOARD_BACKGROUND_INFO . '?image=' . $_REQUEST['image'] . '&cfToken=' . $cfToken);
+			$imageData = Loader::helper('file')->getContents(Config::get('concrete.urls.background_info') . '?image=' . $_REQUEST['image'] . '&cfToken=' . $cfToken);
 			Cache::set('dashboard_image_data', $_REQUEST['image'], $imageData);
 		}
 	}

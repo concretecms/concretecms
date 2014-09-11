@@ -404,8 +404,8 @@ class Service
                 }
             }
             if (!isset($from)) {
-                $from = array(EMAIL_DEFAULT_FROM_ADDRESS, EMAIL_DEFAULT_FROM_NAME);
-                $fromStr = EMAIL_DEFAULT_FROM_ADDRESS;
+                $from = array(Config::get('concrete.email.default.address'), Config::get('concrete.email.name'));
+                $fromStr = Config::get('concrete.email.default.address');
             }
 
             // The currently included Zend library has a bug in setReplyTo that

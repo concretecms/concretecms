@@ -29,6 +29,11 @@ return array(
     'locale' => 'en_US',
 
     /**
+     * The current Charset
+     */
+    'charset' => 'UTF-8',
+
+    /**
      * Maintenance mode
      */
     'maintenance_mode' => false,
@@ -154,7 +159,10 @@ return array(
          *
          * @var int
          */
-        'full_page_lifetime_value' => null
+        'full_page_lifetime_value' => null,
+
+        'identifier' => md5(str_replace(array('https://', 'http://'), '', BASE_URL) . DIR_REL),
+
     ),
 
     /**
@@ -198,7 +206,12 @@ return array(
          *
          * @var bool
          */
-        'enabled' => true
+        'enabled' => true,
+
+        'default' => array(
+            'address' => 'concrete5-noreply@' . str_replace(array('http://www.', 'https://www.', 'http://', 'https://'), '', BASE_URL),
+            'name' => ''
+        )
     ),
 
     /**
@@ -276,6 +289,41 @@ return array(
         'seen_introduction' => false
     ),
 
+    'paths' => array(
+        'trash' => '/!trash',
+        'drafts' => '/!drafts'
+    ),
+
+    'icons' => array(
+        'page_template' => array(
+            'width' => 120,
+            'height' => 90
+        ),
+
+        'theme_thumbnail' => array(
+            'width' => 120,
+            'height' => 90
+        ),
+
+        'file_manager_listing' => array(
+            'handle' => 'file_manager_listing',
+            'width' => 60,
+            'height' => 60
+        ),
+
+        'file_manager_detail' => array(
+            'handle' => 'file_manager_detail',
+            'width' => 400
+        ),
+    ),
+
+    'sitemap_xml' => array(
+        'file' => 'sitemap.xml',
+        'frequency' => 'weekly',
+        'priority' => 0.5,
+        'base_url' => BASE_URL
+    ),
+
     /**
      * ------------------------------------------------------------------------
      * Accessibility
@@ -318,6 +366,34 @@ return array(
 
     ),
 
+    'urls' => array(
+        'concrete5' => 'http://www.concrete5.org',
+        'concrete5_secure' => 'https://www.concrete5.org',
+        'newsflow' => 'http://newsflow.concrete5.org',
+        'background_feed' => '//backgroundimages.concrete5.org/wallpaper',
+        'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
+        'background_info' => 'http://backgroundimages.concrete5.org/get_image_data.php',
+
+        'paths' => array(
+            'menu_help_service' => '/tools/get_remote_help_list/',
+            'theme_preview' => '/tools/preview_theme/',
+            'site_page' => '/private/sites',
+            'slot_content' => '/tools/slot_content/',
+
+            'marketplace' => array(
+                'connect' => '/marketplace/connect',
+                'connect_success' => '/marketplace/connect/-/connected',
+                'connect_validate' => '/marketplace/connect/-/validate',
+                'connect_new_token' => '/marketplace/connect/-/generate_token',
+                'checkout' => '/cart/-/add/',
+                'purchases' => '/marketplace/connect/-/get_available_licenses',
+                'item_information' => '/marketplace/connect/-/get_item_information',
+                'item_free_license' => '/marketplace/connect/-/enable_free_license',
+                'remote_item_list' => '/marketplace/'
+            )
+        )
+    ),
+
     /**
      * ------------------------------------------------------------------------
      * White labeling.
@@ -337,8 +413,14 @@ return array(
          *
          * @var bool|string The name
          */
-        'name' => false
+        'name' => false,
 
+        /**
+         * Dashboard background image url
+         *
+         * @var null|string
+         */
+        'dashboard_background' => null
     ),
 
     /**
@@ -546,7 +628,14 @@ return array(
              *
              * @var string (top|bottom)
              */
-            'code_position' => 'bottom'
+            'code_position' => 'bottom',
+
+            'title_format' => '%1$s :: %2$s',
+            'page_path_separator' => '-',
+            'group_name_separator' => ' / ',
+            'segment_max_length' => 128,
+            'paging_string' => 'ccm_paging_p',
+
         ),
 
         'exclude_words' => 'a, an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, ' .
@@ -571,5 +660,13 @@ return array(
      */
     'statistics' => array(
         'track_page_views' => true
+    ),
+
+    'limits' => array(
+        'sitemap_pages' => 100,
+        'delete_pages' => 10,
+        'copy_pages' => 10,
+        'page_search_index_batch' => 200,
+        'job_queue_batch' => 10
     )
 );

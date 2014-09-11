@@ -41,7 +41,8 @@ class Database {
                                        'user' => $default['username'],
                                        'password' => $default['password'],
                                        'database' => $default['database'],
-                                       'driverClass' => $drivers[$default['driver']]
+                                       'charset' => $default['charset'],
+                                       'driverClass' => $drivers[$default['driver']],
                                    ));
         }
 
@@ -50,6 +51,7 @@ class Database {
                                    'user' => $default['username'],
                                    'password' => $default['password'],
                                    'database' => $default['database'],
+                                   'charset' => $default['charset'],
                                    'driver' => $default['driver']
                                ));
 	}
@@ -57,7 +59,7 @@ class Database {
 	public static function connect($configuration) {
 		$defaults = array(
 			'host' => 'localhost',
-			'charset' => DB_CHARSET
+			'charset' => 'utf8'
 		);
 		// overwrite all the defaults with the arguments
 		$configuration = array_merge($defaults, $configuration);

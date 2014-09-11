@@ -3,7 +3,6 @@ namespace Concrete\Core\Config;
 
 use Concrete\Core\Database\Database;
 use Concrete\Core\Database\Driver\PDOStatement;
-use Illuminate\Config\LoaderInterface;
 
 class DatabaseLoader implements LoaderInterface
 {
@@ -114,6 +113,19 @@ class DatabaseLoader implements LoaderInterface
     public function cascadePackage($environment, $package, $group, $items)
     {
         // TODO: Implement cascadePackage() method.
+    }
+
+    public function clearNamespace($namespace)
+    {
+        if ($namespace) {
+            $db = Database::getActiveConnection();
+
+            $query = $db->createQueryBuilder();
+            $query
+                ->delete('Config', 'c')
+                ->where($query->expr()->comparison('configNamespace', '=', $query->expr()->literal($namespace)));
+
+        }
     }
 
 }

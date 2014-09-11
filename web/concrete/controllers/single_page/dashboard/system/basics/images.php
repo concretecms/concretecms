@@ -31,10 +31,8 @@ class Images extends DashboardPageController {
 	public function save_interface_settings() {
 		if ($this->token->validate("save_interface_settings")) {
 			if ($this->isPost()) {
-				if (!defined('WHITE_LABEL_DASHBOARD_BACKGROUND_FEED') && !defined('WHITE_LABEL_DASHBOARD_BACKGROUND_SRC')) {
-					Config::save('concrete.misc.dashboard_background_image', $this->post('DASHBOARD_BACKGROUND_IMAGE'));
-					Config::save('concrete.misc.dashboard_background_image_fid', $this->post('DASHBOARD_BACKGROUND_IMAGE_CUSTOM_FILE_ID'));
-				}
+                Config::save('concrete.misc.dashboard_background_image', $this->post('DASHBOARD_BACKGROUND_IMAGE'));
+                Config::save('concrete.misc.dashboard_background_image_fid', $this->post('DASHBOARD_BACKGROUND_IMAGE_CUSTOM_FILE_ID'));
 				$this->redirect('/dashboard/system/basics/images', 'settings_saved');
 			}
 		} else {

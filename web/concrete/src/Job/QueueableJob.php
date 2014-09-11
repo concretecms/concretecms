@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Job;
+use Config;
 use \Job as AbstractJob;
 use Loader;
 use Environment;
@@ -31,12 +32,16 @@ use \ZendQueue\Message as ZendQueueMessage;
 abstract class QueueableJob extends AbstractJob {
 
 	// optional queue functions
-	protected $jQueueBatchSize = JOB_QUEUE_BATCH_SIZE;
+	protected $jQueueBatchSize;
 	public function getJobQueueBatchSize() {return $this->jQueueBatchSize;}
 	abstract public function start(ZendQueue $q);
 	abstract public function finish(ZendQueue $q);
 	abstract public function processQueueItem(ZendQueueMessage $msg);
 	public function run() {}
+
+    public function __construct() {
+        $this->jQueueBatchSize = Config::get('concrete.limits.job_queue.batch');
+    }
 
 	public function getQueueObject() {
 		return Queue::get('job_' . $this->getJobHandle(), array('timeout' => 1));

@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Blocks;
 use Concrete\Core\Page\Collection\Version\Version;
 use \Concrete\Core\Page\Controller\DashboardPageController;
+use Config;
 use StackList, Stack;
 use Page;
 use Permissions;
@@ -167,7 +168,7 @@ class Stacks extends DashboardPageController {
 					$v = $s->getVersionToModify();
 					$v->update(array(
 						'cName' => $stackName,
-						'cHandle' => str_replace('-', PAGE_PATH_SEPARATOR, $txt->urlify($stackName))
+						'cHandle' => str_replace('-', Config::get('concrete.seo.page_path_separator'), $txt->urlify($stackName))
 					));
 
 					$u = new User();

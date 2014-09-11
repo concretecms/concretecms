@@ -2,71 +2,6 @@
 
 /* THINGS TO PUT INTO CONFIG */
 
-defined('NAMESPACE_SEGMENT_APPLICATION') or define('NAMESPACE_SEGMENT_APPLICATION', 'Application');
-defined('DIR_DOCTRINE_PROXY_CLASSES') or define('DIR_DOCTRINE_PROXY_CLASSES', DIR_BASE_CORE . '/config/doctrine');
-/**
- * ----------------------------------------------------------------------------
- * Cache defaults
- * ----------------------------------------------------------------------------
- */
-defined('DIR_FILES_CACHE') or define('DIR_FILES_CACHE', DIR_FILES_UPLOADED_STANDARD . '/cache');
-defined('FILENAME_ENVIRONMENT_CACHE') or define('FILENAME_ENVIRONMENT_CACHE', 'environment.cache');
-defined('DIR_FILES_PAGE_CACHE') or define('DIR_FILES_PAGE_CACHE', DIR_FILES_CACHE . '/pages');
-defined('PAGE_CACHE_LIBRARY') or define('PAGE_CACHE_LIBRARY', 'file');
-defined('CACHE_ID') or define('CACHE_ID', md5(str_replace(array('https://', 'http://'), '', BASE_URL) . DIR_REL));
-
-/**
- * ----------------------------------------------------------------------------
- * Email Defaults
- * ----------------------------------------------------------------------------
- */
-defined('ENABLE_EMAILS') or define('ENABLE_EMAILS', true);
-defined('EMAIL_DEFAULT_FROM_ADDRESS') or define('EMAIL_DEFAULT_FROM_ADDRESS',
-    'concrete5-noreply@' . str_replace(array('http://www.', 'https://www.', 'http://', 'https://'), '', BASE_URL)
-);
-defined('EMAIL_DEFAULT_FROM_NAME') or define('EMAIL_DEFAULT_FROM_NAME', '');
-
-
-defined('SITEMAP_PAGES_LIMIT') or define('SITEMAP_PAGES_LIMIT', 100);
-defined('DELETE_PAGES_LIMIT') or define('DELETE_PAGES_LIMIT', 10);
-defined('COPY_PAGES_LIMIT') or define('COPY_PAGES_LIMIT', 10);
-defined('PAGE_SEARCH_INDEX_BATCH_SIZE') or define('PAGE_SEARCH_INDEX_BATCH_SIZE', 200);
-defined('JOB_QUEUE_BATCH_SIZE') or define('JOB_QUEUE_BATCH_SIZE', 10);
-
-defined('APP_CHARSET') or define('APP_CHARSET', 'UTF-8');
-defined('DB_CHARSET') or define('DB_CHARSET', 'utf8');
-
-defined('CONCRETE5_ORG_URL') or define('CONCRETE5_ORG_URL', 'http://www.concrete5.org');
-defined('CONCRETE5_ORG_URL_SECURE') or define('CONCRETE5_ORG_URL_SECURE', 'https://www.concrete5.org');
-defined('NEWSFLOW_URL') or define('NEWSFLOW_URL', 'http://newsflow.concrete5.org');
-defined('MENU_HELP_SERVICE_URL') or define('MENU_HELP_SERVICE_URL', CONCRETE5_ORG_URL . '/tools/get_remote_help_list/');
-defined('MARKETPLACE_THEME_PREVIEW_URL') or define('MARKETPLACE_THEME_PREVIEW_URL', CONCRETE5_ORG_URL . '/tools/preview_theme/');
-
-defined('PAGE_TITLE_FORMAT') or define('PAGE_TITLE_FORMAT', '%1$s :: %2$s');
-defined('PAGE_PATH_SEPARATOR') or define('PAGE_PATH_SEPARATOR', '-');
-defined('GROUP_DISPLAY_NAME_SEPARATOR') or define('GROUP_DISPLAY_NAME_SEPARATOR', ' / ');
-defined('PAGE_PATH_SEGMENT_MAX_LENGTH') or define('PAGE_PATH_SEGMENT_MAX_LENGTH', '128');
-defined('PAGING_STRING') or define('PAGING_STRING', 'ccm_paging_p');
-defined('TRASH_PAGE_PATH') or define('TRASH_PAGE_PATH', '/!trash');
-defined('PAGE_DRAFTS_PAGE_PATH') or define('PAGE_DRAFTS_PAGE_PATH', '/!drafts');
-
-/* -- Icon Sizes -- */
-defined('PAGE_TEMPLATE_ICON_WIDTH') or define('PAGE_TEMPLATE_ICON_WIDTH', 120);
-defined('PAGE_TEMPLATE_ICON_HEIGHT') or define('PAGE_TEMPLATE_ICON_HEIGHT', 90);
-defined('THEMES_THUMBNAIL_WIDTH') or define('THEMES_THUMBNAIL_WIDTH', 120);
-defined('THEMES_THUMBNAIL_HEIGHT') or define('THEMES_THUMBNAIL_HEIGHT', 90);
-defined('FILE_MANAGER_LISTING_THUMBNAIL_HANDLE') or define('FILE_MANAGER_LISTING_THUMBNAIL_HANDLE', 'file_manager_listing');
-defined('FILE_MANAGER_LISTING_THUMBNAIL_WIDTH') or define('FILE_MANAGER_LISTING_THUMBNAIL_WIDTH', '60');
-defined('FILE_MANAGER_LISTING_THUMBNAIL_HEIGHT') or define('FILE_MANAGER_LISTING_THUMBNAIL_HEIGHT', '60');
-defined('FILE_MANAGER_DETAIL_THUMBNAIL_HANDLE') or define('FILE_MANAGER_DETAIL_THUMBNAIL_HANDLE', 'file_manager_detail');
-defined('FILE_MANAGER_DETAIL_THUMBNAIL_WIDTH') or define('FILE_MANAGER_DETAIL_THUMBNAIL_WIDTH', '400');
-
-/* -- Sitemap.xml -- */
-defined('SITEMAPXML_FILE') or define('SITEMAPXML_FILE', 'sitemap.xml');
-defined('SITEMAPXML_DEFAULT_CHANGEFREQ') or define('SITEMAPXML_DEFAULT_CHANGEFREQ', 'weekly');
-defined('SITEMAPXML_DEFAULT_PRIORITY') or define('SITEMAPXML_DEFAULT_PRIORITY', 0.5);
-defined('SITEMAPXML_BASE_URL') or define('SITEMAPXML_BASE_URL', BASE_URL);
-
 /* -- Miscellaneous Behavior -- */
 defined('SITEMAP_APPROVE_IMMEDIATELY') or define('SITEMAP_APPROVE_IMMEDIATELY', true);
 defined('ENABLE_TRANSLATE_LOCALE_EN_US') or define('ENABLE_TRANSLATE_LOCALE_EN_US', false);
@@ -478,29 +413,6 @@ define('STACKS_PAGE_TYPE', 'core_stack');
 define('APP_VERSION_LATEST_THRESHOLD', 172800); // Every 2 days we check for the latest version (this is seconds)
 define('APP_VERSION_LATEST_WS', 'http://www.concrete5.org/tools/get_latest_version_number');
 define('APP_VERSION_LATEST_DOWNLOAD', 'http://www.concrete5.org/download/');
-
-
-
-/**
- * ----------------------------------------------------------------------------
- * Marketplace URL for in-site add-on browsing, installation
- * ----------------------------------------------------------------------------
- */
-define('MARKETPLACE_BASE_URL_SITE_PAGE', CONCRETE5_ORG_URL.'/private/sites');
-define('NEWSFLOW_SLOT_CONTENT_URL', NEWSFLOW_URL . '/tools/slot_content/');
-define('MARKETPLACE_URL_CONNECT', CONCRETE5_ORG_URL.'/marketplace/connect');
-define('MARKETPLACE_URL_CONNECT_SUCCESS', CONCRETE5_ORG_URL.'/marketplace/connect/-/connected');
-define('MARKETPLACE_URL_CHECKOUT', CONCRETE5_ORG_URL_SECURE.'/cart/-/add/');
-define('MARKETPLACE_URL_CONNECT_VALIDATE', CONCRETE5_ORG_URL.'/marketplace/connect/-/validate');
-define('MARKETPLACE_PURCHASES_LIST_WS', CONCRETE5_ORG_URL . '/marketplace/connect/-/get_available_licenses');
-define('MARKETPLACE_ITEM_INFORMATION_WS', CONCRETE5_ORG_URL . '/marketplace/connect/-/get_item_information');
-define('MARKETPLACE_ITEM_FREE_LICENSE_WS', CONCRETE5_ORG_URL . '/marketplace/connect/-/enable_free_license');
-define('MARKETPLACE_URL_CONNECT_TOKEN_NEW', CONCRETE5_ORG_URL.'/marketplace/connect/-/generate_token');
-define('MARKETPLACE_REMOTE_ITEM_LIST_WS', CONCRETE5_ORG_URL.'/marketplace/');
-define('DASHBOARD_BACKGROUND_FEED', '//backgroundimages.concrete5.org/wallpaper');
-define('DASHBOARD_BACKGROUND_FEED_SECURE', 'https://backgroundimages.concrete5.org/wallpaper');
-define('DASHBOARD_BACKGROUND_INFO', 'http://backgroundimages.concrete5.org/get_image_data.php');
-
 
 
 /**

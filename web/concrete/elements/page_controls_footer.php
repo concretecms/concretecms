@@ -244,7 +244,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
         ?>
         <li class="pull-left" id="ccm-white-label-message"><?= t(
                 'Powered by <a href="%s">concrete5</a>.',
-                CONCRETE5_ORG_URL) ?></li>
+                Config::get('concrete.urls.concrete5')) ?></li>
     <? } ?>
         <li class="pull-right ccm-toolbar-mobile-menu-button visible-xs hidden-sm hidden-md hidden-lg">
             <i class="fa fa-bars fa-2"></i>

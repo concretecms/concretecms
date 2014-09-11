@@ -203,10 +203,8 @@ class Dashboard {
 		$obj->checkData = false;
 		$obj->displayCaption = false;
 
-		if (defined('WHITE_LABEL_DASHBOARD_BACKGROUND_FEED') && WHITE_LABEL_DASHBOARD_BACKGROUND_FEED != '') {
-			$image = WHITE_LABEL_DASHBOARD_BACKGROUND_FEED . '/' . $filename;
-		} else if (defined('WHITE_LABEL_DASHBOARD_BACKGROUND_SRC') && WHITE_LABEL_DASHBOARD_BACKGROUND_SRC != '') {
-			$image = WHITE_LABEL_DASHBOARD_BACKGROUND_SRC;
+		if (Config::get('concrete.white_label.dashboard_background')) {
+			$image = Config::get('concrete.white_label.dashboard_background');
 			if ($image == 'none') {
 				$image = '';
 			}
@@ -222,9 +220,9 @@ class Dashboard {
 				$image = '';
 			} else {
 				if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) {
-					$image = DASHBOARD_BACKGROUND_FEED_SECURE . '/' . $filename;
+					$image = Config::get('concrete.urls.background_feed_secure') . '/' . $filename;
 				} else {
-					$image = DASHBOARD_BACKGROUND_FEED . '/' . $filename;
+					$image = Config::get('concrete.urls.background_feed') . '/' . $filename;
 				}
 				$obj->displayCaption = true;
 			}

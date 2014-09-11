@@ -152,16 +152,16 @@ class StartingPointPackage extends BasePackage {
         $thumbnailType = new Type();
         $thumbnailType->requireType();
         $thumbnailType->setName(tc('ThumbnailTypeName', 'File Manager Thumbnails'));
-        $thumbnailType->setHandle(FILE_MANAGER_LISTING_THUMBNAIL_HANDLE);
-        $thumbnailType->setWidth(FILE_MANAGER_LISTING_THUMBNAIL_WIDTH);
-        $thumbnailType->setHeight(FILE_MANAGER_LISTING_THUMBNAIL_HEIGHT);
+        $thumbnailType->setHandle(\Config::get('concrete.icons.file_manager_listing.handle'));
+        $thumbnailType->setWidth(\Config::get('concrete.icons.file_manager_listing.width'));
+        $thumbnailType->setHeight(\Config::get('concrete.icons.file_manager_listing.height'));
         $thumbnailType->save();
 
         $thumbnailType = new Type();
         $thumbnailType->requireType();
         $thumbnailType->setName(tc('ThumbnailTypeName', 'File Manager Detail Thumbnails'));
-        $thumbnailType->setHandle(FILE_MANAGER_DETAIL_THUMBNAIL_HANDLE);
-        $thumbnailType->setWidth(FILE_MANAGER_DETAIL_THUMBNAIL_WIDTH);
+        $thumbnailType->setHandle(\Config::get('concrete.icons.file_manager_detail.handle'));
+        $thumbnailType->setWidth(\Config::get('concrete.icons.file_manager_detail.width'));
         $thumbnailType->save();
 
 		if (is_dir($this->getPackagePath() . '/files')) {
@@ -239,9 +239,9 @@ class StartingPointPackage extends BasePackage {
 	public function make_directories() {
 		Cache::flush();
 
-        if (!is_dir(DIR_FILES_CACHE)) {
-            mkdir(DIR_FILES_CACHE, DIRECTORY_PERMISSIONS_MODE);
-            chmod(DIR_FILES_CACHE, DIRECTORY_PERMISSIONS_MODE);
+        if (!is_dir(Config::get('files.cache.directory'))) {
+            mkdir(Config::get('files.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
+            chmod(Config::get('files.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
         }
 
         if (!is_dir(DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_INCOMING)) {
