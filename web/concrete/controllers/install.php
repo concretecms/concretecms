@@ -147,8 +147,7 @@ class Install extends Controller
             $loc = Localization::changeLocale($_POST['locale']);
             $this->set('locale', $_POST['locale']);
         }
-        Core::make('cache')->disable();
-        Core::make('cache/local')->disable();
+        Cache::disableAll();
         $this->setRequiredItems();
         $this->setOptionalItems();
 

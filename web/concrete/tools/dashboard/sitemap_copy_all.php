@@ -7,7 +7,7 @@ if (!$dh->canRead()) {
 
 // we have to do this otherwise permissions pointers aren't correct
 // (cInheritPermissionsFromCID on parent nodes)
-Core::make('cache/local')->disable();
+Core::make('cache/request')->disable();
 
 $q = Queue::get('copy_page');
 $includeParent = true;
