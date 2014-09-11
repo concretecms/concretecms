@@ -3,6 +3,7 @@ namespace Concrete\Core\Cache;
 
 use Core;
 use Stash\Driver\BlackHole;
+use Stash\Driver\Composite;
 use Stash\Pool;
 
 abstract class Cache
@@ -23,6 +24,78 @@ abstract class Cache
      * @return void
      */
     abstract protected function init();
+
+    /**
+     * Loads the composite driver from constants
+     * @param $level
+     * @return \Stash\Interfaces\DriverInterface
+     */
+    protected function loadConfig($level)
+    {
+        $drivers = [];
+        $driversBuild = [];
+
+        $constants = array_keys(get_defined_constants());
+
+        foreach ($constants as $constant) {
+            if (preg_match('/^CACHE_' . strtoupper($level) . '(?:_([0-9]+))?_DRIVER$/', $constant, $matches) === 1) {
+                if (isset($matches[1])) {
+                    $index = $matches[1];
+                } else {
+                    $index = 0;
+                }
+                $driversBuild[$index]['driver'] = constant($constant);
+            } elseif (preg_match('/^CACHE_' . strtoupper($level) . '(?:_([0-9]+))?_OPTION_(.*)$/', $constant, $matches) === 1) {
+                if (isset($matches[1])) {
+                    $index = $matches[1];
+                } else {
+                    $index = 0;
+                }
+
+                $options = explode('__', $matches[2]);
+
+                if (!isset($driversBuild[$index])) {
+                    $driversBuild[$index] = array();
+                }
+
+                if (!isset($driversBuild[$index]['options'])) {
+                    $driversBuild[$index]['options'] = array();
+                }
+
+                $optionsBuild = &$driversBuild[$index]['options'];
+                for ($i = 0; $i < count($options); $i++) {
+                    if (!isset($optionsBuild[$options[$i]])) {
+                        $optionsBuild[$options[$i]] = array();
+                    }
+                    $optionsBuild = &$optionsBuild[$options[$i]];
+                }
+                $optionsBuild = constant($constant);
+            }
+        }
+
+        ksort($driversBuild);
+
+        foreach ($driversBuild as $driverBuild) {
+            $tempDriver = new $driverBuild['driver']();
+            if (isset($driverBuild['options'])) {
+                $tempDriver->setOptions($driverBuild['options']);
+            }
+
+            $drivers[] = $tempDriver;
+        }
+
+        $numDrivers = count($drivers);
+        if ($numDrivers > 1) {
+            $driver = new Composite();
+            $driver->setOptions(array('drivers' => $drivers));
+        } elseif ($numDrivers === 1) {
+            $driver = $drivers[0];
+        } else {
+            $driver = new BlackHole();
+        }
+
+        return $driver;
+    }
 
     /**
      * Deletes an item from the cache

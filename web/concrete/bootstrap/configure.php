@@ -312,7 +312,16 @@ defined('PAGE_CACHE_LIBRARY') or define('PAGE_CACHE_LIBRARY', 'file');
 defined('CACHE_ID') or define('CACHE_ID', md5(str_replace(array('https://', 'http://'), '', BASE_URL) . DIR_REL));
 defined('CACHE_LIFETIME') or define('CACHE_LIFETIME', 21600); // 6 hours
 
+if (!defined('CACHE_EXPENSIVE_0_DRIVER') || !defined('CACHE_EXPENSIVE_DRIVER')) {
+    define('CACHE_EXPENSIVE_0_DRIVER', '\Stash\Driver\Ephemeral');
 
+    if (!defined('CACHE_EXPENSIVE_1_DRIVER')) {
+        define('CACHE_EXPENSIVE_1_DRIVER', '\Stash\Driver\FileSystem');
+        defined('CACHE_EXPENSIVE_1_OPTION_path') or define('CACHE_EXPENSIVE_1_OPTION_path', DIR_FILES_CACHE);
+    }
+}
+
+defined('CACHE_OBJECT_0_DRIVER') or define('CACHE_OBJECT_0_DRIVER', '\Stash\Driver\Ephemeral');
 
 /**
  * ----------------------------------------------------------------------------
