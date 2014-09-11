@@ -15,10 +15,15 @@ class ObjectCache extends Cache
     {
         // todo move to config
         $drivers = array(
-            new Ephemeral(),
-            new FileSystem(array('path' => DIR_FILES_CACHE))
+            new Ephemeral()
         );
-        $this->pool = new Pool(new Composite(array('drivers' => $drivers)));
+        $fsDriver = new FileSystem();
+        $fsDriver->setOptions(array('path' => DIR_FILES_CACHE));
+        $drivers[] = $fsDriver;
+
+        $driver = new Composite();
+        $driver->setOptions(array('drivers' => $drivers));
+        $this->pool = new Pool($driver);
         $this->enable();
     }
 } 
