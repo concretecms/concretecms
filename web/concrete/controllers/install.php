@@ -326,7 +326,7 @@ class Install extends Controller
                 }
 
                 if ($this->fpu) {
-                    $hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
+                    $hasher = new PasswordHash(\Config::get('concrete.user.password.hash_cost_log2'), \Config::get('concrete.user.password.hash_portable'));
                     $configuration = "<?php\n";
                     $configuration .= "define('INSTALL_USER_EMAIL', '" . $_POST['uEmail'] . "');\n";
                     $configuration .= "define('INSTALL_USER_PASSWORD_HASH', '" . $hasher->HashPassword(

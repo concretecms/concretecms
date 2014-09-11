@@ -101,7 +101,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
         <div class="form-group">
             <?=$form->label('gBadgeCommunityPointValue', t('Community Points'))?>
             <div class="controls">
-                <?=$form->text('gBadgeCommunityPointValue', GROUP_BADGE_DEFAULT_POINT_VALUE, array('class' => 'span1'))?>
+                <?=$form->text('gBadgeCommunityPointValue', \Config::get('concrete.user.group.badge.default_point_value'), array('class' => 'span1'))?>
             </div>
         </div>
 

@@ -222,7 +222,7 @@ class StartingPointPackage extends BasePackage {
 		// insert admin user into the user table
 		if (defined('INSTALL_USER_PASSWORD')) {
 
-			$hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
+			$hasher = new PasswordHash(\Config::get('concrete.user.password.hash_cost_log2'), \Config::get('concrete.user.password.hash_portable'));
 			$uPassword = INSTALL_USER_PASSWORD;
 			$uPasswordEncrypted = $hasher->HashPassword($uPassword);
 		} else {

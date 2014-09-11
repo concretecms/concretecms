@@ -153,7 +153,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $db = Loader::db();
         $dh = Loader::helper('date');
         $uDateAdded = $dh->getOverridableNow();
-        $hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
+        $hasher = new PasswordHash(\Config::get('concrete.user.password.hash_cost_log2'), \Config::get('concrete.user.password.hash_portable'));
 
         if ($data['uIsValidated'] == 1) {
             $uIsValidated = 1;

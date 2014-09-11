@@ -16,7 +16,7 @@ class Session
         if ($app->isRunThroughCommandLineInterface()) {
             $storage = new MockArraySessionStorage();
         } else {
-            if (SESSION_HANDLER == 'database') {
+            if (\Config::get('concrete.session.handler') == 'database') {
                 $db = \Database::get();
                 $storage = new NativeSessionStorage(array(),
                     new PdoSessionHandler($db->getWrappedConnection(), array(
@@ -35,28 +35,14 @@ class Session
                 'cookie_lifetime' => 0,
                 'cookie_secure' => false,
                 'cookie_httponly' => true,
-                'gc_maxlifetime' => SESSION_MAX_LIFETIME
+                'gc_maxlifetime' => \Config::get('concrete.session.max_lifetime')
             );
-            if (defined('SESSION_COOKIE_PARAM_PATH') && SESSION_COOKIE_PARAM_PATH) {
-                $options['cookie_path'] = SESSION_COOKIE_PARAM_PATH;
-            }
-            if (defined('SESSION_COOKIE_PARAM_LIFETIME') && SESSION_COOKIE_PARAM_LIFETIME) {
-                $options['cookie_lifetime'] = SESSION_COOKIE_PARAM_LIFETIME;
-            }
-            if (defined('SESSION_COOKIE_PARAM_DOMAIN') && SESSION_COOKIE_PARAM_DOMAIN) {
-                $options['cookie_domain'] = SESSION_COOKIE_PARAM_DOMAIN;
-            }
-            if (defined('SESSION_COOKIE_PARAM_SECURE') && SESSION_COOKIE_PARAM_SECURE) {
-                $options['cookie_secure'] = SESSION_COOKIE_PARAM_SECURE;
-            }
-            if (defined('SESSION_COOKIE_PARAM_HTTPONLY') && SESSION_COOKIE_PARAM_HTTPONLY) {
-                $options['cookie_httponly'] = SESSION_COOKIE_PARAM_HTTPONLY;
-            }
+            $options = Config::get('concrete.sesssion.cookie');
             $storage->setOptions($options);
         }
 
         $session = new SymfonySession($storage);
-        $session->setName(SESSION);
+        $session->setName(\Config::get('concrete.session.name'));
 
         static::testSessionFixation($session);
         return $session;
