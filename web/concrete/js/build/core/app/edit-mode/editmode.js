@@ -154,8 +154,8 @@
 
                 $.fn.dialog.showLoader();
 
-                if (area.menu) {
-                    area.menu.destroy();
+                if (area.getMenu()) {
+                    area.getMenu().destroy();
                 }
 
                 var saved = false;
