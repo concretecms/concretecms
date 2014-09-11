@@ -25,7 +25,7 @@ class Open extends DashboardPageController
                     Config::save('concrete.user.registration.approval', false);
                     Config::save('concrete.user.registration.notification', $this->post('register_notification'));
                     Config::save(
-                        'EMAIL_ADDRESS_REGISTER_NOTIFICATION',
+                        'concrete.user.registration.notification_email',
                         Loader::helper('security')->sanitizeString(
                             $this->post('register_notification_email')));
                     break;
@@ -36,7 +36,7 @@ class Open extends DashboardPageController
                     Config::save('concrete.user.registration.approval', false);
                     Config::save('concrete.user.registration.notification', $this->post('register_notification'));
                     Config::save(
-                        'EMAIL_ADDRESS_REGISTER_NOTIFICATION',
+                        'concrete.user.registration.notification_email',
                         Loader::helper('security')->sanitizeString(
                             $this->post('register_notification_email')));
                     break;
@@ -45,8 +45,9 @@ class Open extends DashboardPageController
                     Config::save('concrete.user.registration.enabled', true);
                     Config::save('concrete.user.registration.approval', true);
                     Config::save('concrete.user.registration.validate_email', false);
-                    Config::save(
-                        'concrete.user.registration.notification',
+                   Config::save('concrete.user.registration.notification', $this->post('register_notification'));
+                   Config::save(
+                        'concrete.user.registration.notification_email',
                         Loader::helper('security')->sanitizeString(
                             $this->post('register_notification_email')));
                     break;
@@ -68,13 +69,16 @@ class Open extends DashboardPageController
             $this->set('message', t('Registration settings have been saved.'));
         }
         $this->token = Loader::helper('validation/token');
-
+        $type =  Config::get('concrete.user.registration.type');
+		if (!$type) {
+			$type = 'disabled';
+		}
         $this->set('email_as_username', Config::get('concrete.user.registration.email_registration'));
-        $this->set('registration_type', Config::get('concrete.user.registration.type'));
+        $this->set('registration_type', $type);
         $this->set('user_timezones', Config::get('concrete.user.timezones_enabled'));
         $this->set('enable_registration_captcha', Config::get('concrete.user.registration.captcha'));
         $this->set('register_notification', !!Config::get('concrete.user.registration.notification'));
-        $this->set('register_notification_email', Config::get('concrete.user.registration.notification'));
+        $this->set('register_notification_email', Config::get('concrete.user.registration.notification_email'));
     }
 
 }

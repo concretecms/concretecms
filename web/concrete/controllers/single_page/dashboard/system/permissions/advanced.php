@@ -6,7 +6,7 @@ class Advanced extends DashboardPageController {
 
 	public function enable_advanced_permissions() {
 		if ($this->token->validate("enable_advanced_permissions")) {
-			Config::save('permissions.model', 'advanced');
+			Config::save('concrete.permissions_model', 'advanced');
 			$this->redirect('/dashboard/system/permissions/advanced', 'permissions_enabled');
 		} else {
 			$this->error->add($this->token->getErrorMessage());
