@@ -2,39 +2,39 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 ?>
 <script type="text/javascript">
-	
+
 </script>
 <script type="text/template" class="tbody">
-<% _.each(cv.versions, function(cv) { %>
+<% _.each(versions, function(cv) { %>
 	 <%=templateRow(cv) %>
 <% }); %>
 </script>
 
 <script type="text/template" class="version">
-	<tr <% if (cv.cvIsApproved == 1) { %> class="ccm-panel-page-version-approved" <% } %>>
-		<td><input class="ccm-flat-checkbox" type="checkbox" name="cvID[]" value="<%-cv.cvID%>" data-version-active="<%-cv.cvIsApproved == 1%>" /></td>
-		<td><span class="ccm-panel-page-versions-version-id"><%-cv.cvID%></span></td>
+	<tr <% if (cvIsApproved == 1) { %> class="ccm-panel-page-version-approved" <% } %>>
+		<td><input class="ccm-flat-checkbox" type="checkbox" name="cvID[]" value="<%-cvID%>" data-version-active="<%-cvIsApproved == 1%>" /></td>
+		<td><span class="ccm-panel-page-versions-version-id"><%-cvID%></span></td>
 		<td class="ccm-panel-page-versions-details">
-			<p><span class="ccm-panel-page-versions-version-timestamp"><%-cv.cvDateVersionCreated%></span></p>
-			<p><%-cv.cvAuthorUserName%></p>
-			<% if (cv.cvComments) { %>
-				<p><small><%-cv.cvComments%></small></p>
+			<p><span class="ccm-panel-page-versions-version-timestamp"><%-cvDateVersionCreated%></span></p>
+			<p><%-cvAuthorUserName%></p>
+			<% if (cvComments) { %>
+				<p><small><%-cvComments%></small></p>
 			<% } %>
 		</td>
 		<td>
-			<% if (cv.cvIsApproved == 1) { %>
+			<% if (cvIsApproved == 1) { %>
 				<i class="fa fa-ok" title="<?=t('This is the approved page version.')?>"></i>
 			<% } %>
-			<a href="#" class="ccm-panel-page-versions-version-menu" data-launch-versions-menu="ccm-panel-page-versions-version-menu-<%-cv.cvID%>"><i class="fa fa-share"></i></a>
-			<div class="ccm-popover-inverse popover fade" data-menu="ccm-panel-page-versions-version-menu-<%-cv.cvID%>">
+			<a href="#" class="ccm-panel-page-versions-version-menu" data-launch-versions-menu="ccm-panel-page-versions-version-menu-<%-cvID%>"><i class="fa fa-share"></i></a>
+			<div class="ccm-popover-inverse popover fade" data-menu="ccm-panel-page-versions-version-menu-<%-cvID%>">
 				<div class="popover-inner">
 				<ul class="dropdown-menu">
-					<li><% if (cv.cvIsApproved == 1) { %><span><?=t('Approve')?></span><% } else { %><a href="#" data-version-menu-task="approve" data-version-id="<%-cv.cvID%>"><?=t('Approve')?></a><% } %></li>
-					<li><a href="#" data-version-menu-task="duplicate" data-version-id="<%-cv.cvID%>"><?=t('Duplicate')?></a></li>
+					<li><% if (cvIsApproved == 1) { %><span><?=t('Approve')?></span><% } else { %><a href="#" data-version-menu-task="approve" data-version-id="<%-cvID%>"><?=t('Approve')?></a><% } %></li>
+					<li><a href="#" data-version-menu-task="duplicate" data-version-id="<%-cvID%>"><?=t('Duplicate')?></a></li>
 					<li class="divider"></li>
-					<li><a href="#" data-version-menu-task="new-page" data-version-id="<%-cv.cvID%>"><?=t('New Page')?></a></li>
-					<% if (cv.cpCanDeletePageVersions) { %>
-						<li><% if (cv.cvIsApproved == 1) { %><span><?=t('Delete')?></span><% } else { %><a href="#" data-version-menu-task="delete" data-version-id="<%-cv.cvID%>"><?=t('Delete')?></a><% } %></li>
+					<li><a href="#" data-version-menu-task="new-page" data-version-id="<%-cvID%>"><?=t('New Page')?></a></li>
+					<% if (cpCanDeletePageVersions) { %>
+						<li><% if (cvIsApproved == 1) { %><span><?=t('Delete')?></span><% } else { %><a href="#" data-version-menu-task="delete" data-version-id="<%-cvID%>"><?=t('Delete')?></a><% } %></li>
 					<% } %>
 				</ul>
 				</div>
@@ -47,13 +47,13 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	<tr>
 		<td colspan="4">
 			<ul class="pager">
-				<% if (cv.hasPreviousPage == '1') { %>
-					<li><a href="#" data-version-navigation="<%=cv.previousPageNum%>"><?=t('&larr; Newer')?></a></li>
+				<% if (hasPreviousPage == '1') { %>
+					<li><a href="#" data-version-navigation="<%=previousPageNum%>"><?=t('&larr; Newer')?></a></li>
 				<% } else { %>
 					<li class="disabled"><a href="#"><?=t('&larr; Newer')?></a></li>
 				<% } %>
-				<% if (cv.hasNextPage == '1') { %>
-					<li><a href="#" data-version-navigation="<%=cv.nextPageNum%>"><?=t('Older &rarr;')?></a></li>
+				<% if (hasNextPage == '1') { %>
+					<li><a href="#" data-version-navigation="<%=nextPageNum%>"><?=t('Older &rarr;')?></a></li>
 				<% } else { %>
 					<li class="disabled"><a href="#"><?=t('Older &rarr;')?></a></li>
 				<% } %>
@@ -187,8 +187,6 @@ var ConcretePageVersionList = {
 
 }
 
-_.templateSettings.variable = "cv";
-
 var templateBody = _.template(
     $('script.tbody').html()
 );
@@ -279,11 +277,11 @@ $(function() {
 
 });
 
-</script>				
+</script>
 
 
 <section id="ccm-panel-page-versions" class="ccm-ui">
-	<header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="fa fa-chevron-left"></span></a> <?=t('Versions')?></header>
+	<header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="fa fa-chevron-left"></span></a> <a href="" data-panel-navigation="back"><?=t('Versions')?></a></header>
 	<table class="table">
 		<thead>
 			<tr>

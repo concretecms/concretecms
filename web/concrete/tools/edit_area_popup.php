@@ -29,8 +29,6 @@ if (!$cp->canEditPageContents()) {
 
 $args = array('c'=>$c, 'a' => $a, 'cp' => $cp, 'ap' => $ap, 'token' => $token);
 
-Loader::element("dialog_header");
-
 if ($a->isGlobalArea()) {
 	echo '<div class="ccm-ui"><div class="alert-message block-message warning">';
 	echo t('This is a global area. Content added here will be visible on every page that contains this area.');
@@ -71,6 +69,4 @@ if (!$canViewPane) {
 
 ?>
 
-<? Loader::element($toolSection, $args);
-
- Loader::element("dialog_footer"); ?>
+<? Loader::element($toolSection, $args); ?>

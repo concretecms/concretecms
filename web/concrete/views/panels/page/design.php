@@ -7,7 +7,8 @@ defined('C5_EXECUTE') or die("Access Denied.");
     <input type="hidden" name="processCollection" value="1">
 
 
-    <header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="fa fa-chevron-left"></span></a> <?=t('Design')?></header>
+    <header><a href="" data-panel-navigation="back" class="ccm-panel-back"><span class="fa fa-chevron-left"></span></a> <a href="" data-panel-navigation="back"><?=t('Design')?></a></header>
+
 
     <div class="ccm-panel-content-inner">
 

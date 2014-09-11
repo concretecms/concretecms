@@ -13,8 +13,8 @@
         	</div>
         	
         	<div class="form-group">
-        		<label class="radio"><?=$form->radio('tracking_code_position', 'top', $tracking_code_position)?> <span><?=t('Header of the page')?></span></label>
-        	    <label class="radio"><?=$form->radio('tracking_code_position', 'bottom', $tracking_code_position)?> <span><?=t('Footer of the page')?></span></label>
+        		<div class="radio"><label><?=$form->radio('tracking_code_position', 'top', $tracking_code_position)?> <span><?=t('Header of the page')?></span></label></div>
+        	    <div class="radio"><label><?=$form->radio('tracking_code_position', 'bottom', $tracking_code_position)?> <span><?=t('Footer of the page')?></span></label></div>
         	</div>
         	
             <div class="ccm-dashboard-form-actions-wrapper">

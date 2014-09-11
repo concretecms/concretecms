@@ -6,6 +6,7 @@ use \Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
 use \Concrete\Core\User\PrivateMessage\PrivateMessage as UserPrivateMessage;
 use UserInfo;
 use Loader;
+use View;
 use Core;
 use User;
 
@@ -124,7 +125,7 @@ class Inbox extends AccountPageController
     public function write($uID)
     {
         $this->validateUser($uID);
-        $this->set('backURL', View::url('/account/profile/public_profile', 'view', $uID));
+        $this->set('backURL', View::url('/members/profile', 'view', $uID));
     }
 
     public function reply($boxID, $msgID)

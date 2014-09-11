@@ -73,6 +73,7 @@ var renderAttribute = _.template(
 );
 
 
+
 ConcretePageAttributesDetail = {
 
 	removeAttributeKey: function(akID) {

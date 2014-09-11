@@ -28,9 +28,12 @@ $form = Loader::helper('form');
 				<?php echo $form->hidden('cID', $cID) ?>
 				<?php echo $form->hidden('bID', $bID) ?>
 				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-submit btn-primary"><?=t('Submit')?></button>
-				<button type="button" class="pull-right btn btn-default ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
-			</div>
+                <?php if ($attachmentsEnabled) { ?>
+				    <button type="button" class="pull-right btn btn-default ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
+			    <?php } ?>
+            </div>
 			</form>
+            <?php if($attachmentsEnabled) { ?>
 			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload">
 					<div class="ccm-conversation-errors alert alert-danger"></div>
@@ -40,6 +43,7 @@ $form = Loader::helper('form');
 					<?php echo $form->hidden('bID', $bID) ?>
 				</form>
 			</div>
+            <?php } ?>
 		</div>
 
 		<div class="ccm-conversation-add-reply">
@@ -52,9 +56,12 @@ $form = Loader::helper('form');
 				<?php echo $form->hidden('cID', $cID) ?>
 				<?php echo $form->hidden('bID', $bID) ?>	
 				<button type="btn btn-primary" data-submit="conversation-message" class="pull-right btn btn-primary"><?=t('Reply')?> </button>
-				<button type="button" class="pull-right btn btn-default ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
-			</div>
+                <?php if ($attachmentsEnabled) { ?>
+                    <button type="button" class="pull-right btn btn-default ccm-conversation-attachment-toggle" href="#" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
+			    <?php } ?>
+            </div>
 			</form>
+            <?php if($attachmentsEnabled) { ?>
 			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload-reply">
 					<div class="ccm-conversation-errors alert alert-danger"></div>
@@ -64,6 +71,7 @@ $form = Loader::helper('form');
 					<?php echo $form->hidden('bID', $bID) ?>
 				</form>
 			</div>
+            <?php } ?>
 		</div>
 	<? } else { ?>
 		<p><?=t('Adding new posts is disabled for this conversation.')?></p>
@@ -128,12 +136,15 @@ $form = Loader::helper('form');
 				<div class="ccm-conversation-errors alert alert-danger"></div>
 				<? $editor->outputConversationEditorAddMessageForm(); ?>
 				<button type="button" data-post-parent-id="0" data-submit="conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Reply')?> </button>
-				<button type="button" class="ccm-conversation-attachment-toggle" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
+				<?php if ($attachmentsEnabled) { ?>
+                    <button type="button" class="ccm-conversation-attachment-toggle" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
+                <?php } ?>
 				<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
 				<?php echo $form->hidden('cID', $cID) ?>
 				<?php echo $form->hidden('bID', $bID) ?>	
 			</div>
 			</form>
+            <?php if($attachmentsEnabled) { ?>
 			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload">
 					<div class="ccm-conversation-errors alert alert-danger"></div>
@@ -143,6 +154,7 @@ $form = Loader::helper('form');
 					<?php echo $form->hidden('bID', $bID) ?>		
 				</form>
 			</div>
+            <?php } ?>
 		</div>
 
 		<div class="ccm-conversation-add-reply" >
@@ -152,12 +164,15 @@ $form = Loader::helper('form');
 				<div class="ccm-conversation-errors alert alert-danger"></div>
 				<? $editor->outputConversationEditorReplyMessageForm(); ?>
 				<button type="button" data-submit="conversation-message" class="pull-right btn btn-primary btn-small"><?=t('Reply')?></button>
-				<button type="button" class="ccm-conversation-attachment-toggle" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
+                <?php if ($attachmentsEnabled) { ?>
+				    <button type="button" class="ccm-conversation-attachment-toggle" title="<?php echo t('Attach Files'); ?>"><i class="fa fa-image"></i></button>
+                <?php } ?>
 				<?php echo $form->hidden('blockAreaHandle', $blockAreaHandle) ?>
 				<?php echo $form->hidden('cID', $cID) ?>
 				<?php echo $form->hidden('bID', $bID) ?>	
 			</div>
 			</form>
+            <?php if ($attachmentsEnabled) { ?>
 			<div class="ccm-conversation-attachment-container">
 				<form action="<?php echo Loader::helper('concrete/urls')->getToolsURL('conversations/add_file');?>" class="dropzone" id="file-upload-reply">
 					<div class="ccm-conversation-errors alert alert-danger"></div>
@@ -167,6 +182,7 @@ $form = Loader::helper('form');
 					<?php echo $form->hidden('bID', $bID) ?>		
 				</form>
 			</div>
+            <?php } ?>
 		</div>
 	<? } else { ?>
 		<p><?=t('Adding new posts is disabled for this conversation.')?></p>

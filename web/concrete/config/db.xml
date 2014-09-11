@@ -660,6 +660,11 @@
       <unsigned/>
       <default value="0" />
     </field>
+    <field name="cnvAttachmentsEnabled" type="I1">
+      <unsigned />
+      <notnull />
+      <default value="1" />
+    </field>
     <field name="cnvMessagesTotal" type="I" size="10">
       <default value="0" />
       <unsigned/>
@@ -667,6 +672,25 @@
     <field name="cnvOverrideGlobalPermissions" type="I" size="I1">
       <unsigned/>
       <default value="0" />
+    </field>
+    <field name="cnvAttachmentOverridesEnabled" type="I1">
+      <unsigned />
+      <notnull />
+      <default value="0" />
+    </field>
+    <field name="cnvMaxFilesGuest" type="I">
+      <default value="0" />
+    </field>
+    <field name="cnvMaxFilesRegistered" type="I">
+      <default value="0" />
+    </field>
+    <field name="cnvMaxFileSizeGuest" type="I">
+      <default value="0" />
+    </field>
+    <field name="cnvMaxFileSizeRegistered" type="I">
+      <default value="0" />
+    </field>
+    <field name="cnvFileExtensions" type="X">
     </field>
     <index name="cID">
         <col>cID</col>

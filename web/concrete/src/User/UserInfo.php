@@ -3,9 +3,13 @@ namespace Concrete\Core\User;
 
 use Concrete\Core\File\StorageLocation\StorageLocation;
 use \Concrete\Core\Foundation\Object;
+use Concrete\Core\User\PrivateMessage\Limit;
+use Concrete\Core\User\PrivateMessage\Mailbox as UserPrivateMessageMailbox;
 use Imagine\Image\ImageInterface;
 use League\Flysystem\AdapterInterface;
+use Concrete\Core\Mail\Importer\MailImporter;
 use Loader;
+use View;
 use Events;
 use User as ConcreteUser;
 use UserAttributeKey;
@@ -304,8 +308,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
     public function sendPrivateMessage($recipient, $subject, $text, $inReplyTo = false)
     {
-        if (UserPrivateMessageLimit::isOverLimit($this->getUserID())) {
-            return UserPrivateMessageLimit::getErrorObject();
+        if (Limit::isOverLimit($this->getUserID())) {
+            return Limit::getErrorObject();
         }
         $antispam = Loader::helper('validation/antispam');
         $messageText = t('Subject: %s', $subject);
@@ -327,9 +331,9 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
         if ($msgID > 0) {
             // we add the private message to the sent box of the sender, and the inbox of the recipient
-            $v = array($db->Insert_ID(), $this->getUserID(), $this->getUserID(), UserPrivateMessageMailbox::MBTYPE_SENT, 0, 1);
+            $v = array($msgID, $this->getUserID(), $this->getUserID(), UserPrivateMessageMailbox::MBTYPE_SENT, 0, 1);
             $db->Execute('insert into UserPrivateMessagesTo (msgID, uID, uAuthorID, msgMailboxID, msgIsNew, msgIsUnread) values (?, ?, ?, ?, ?, ?)', $v);
-            $v = array($db->Insert_ID(), $recipient->getUserID(), $this->getUserID(), UserPrivateMessageMailbox::MBTYPE_INBOX, 1, 1);
+            $v = array($msgID, $recipient->getUserID(), $this->getUserID(), UserPrivateMessageMailbox::MBTYPE_INBOX, 1, 1);
             $db->Execute('insert into UserPrivateMessagesTo (msgID, uID, uAuthorID, msgMailboxID, msgIsNew, msgIsUnread) values (?, ?, ?, ?, ?, ?)', $v);
         }
 
@@ -345,7 +349,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
             $mh->addParameter('msgBody', $text);
             $mh->addParameter('msgAuthor', $this->getUserName());
             $mh->addParameter('msgDateCreated', $msgDateCreated);
-            $mh->addParameter('profileURL', BASE_URL . View::url('/account/profile/public_profile', 'view', $this->getUserID()));
+            $mh->addParameter('profileURL', BASE_URL . View::url('/members/profile', 'view', $this->getUserID()));
             $mh->addParameter('profilePreferencesURL', BASE_URL . View::url('/account/profile/edit'));
             $mh->to($recipient->getUserEmail());
 

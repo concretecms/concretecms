@@ -94,7 +94,7 @@ if ($_POST['task'] == 'set_location') {
 <?
 $locations = FileStorageLocation::getList();
 foreach($locations as $fsl) { ?>
-    <label class="radio"><?=$form->radio('fslID', $fsl->getID(), $f->getStorageLocationID() == $fsl->getID()) ?> <?=$fsl->getName()?></label>
+    <div class="radio"><label><?=$form->radio('fslID', $fsl->getID(), $f->getStorageLocationID() == $fsl->getID()) ?> <?=$fsl->getName()?></label></div>
 <? } ?>
 </form>
 
