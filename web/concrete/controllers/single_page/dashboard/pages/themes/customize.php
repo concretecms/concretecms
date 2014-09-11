@@ -4,7 +4,6 @@ use \Concrete\Core\Page\Controller\DashboardPageController;
 use Core;
 use PageTheme;
 use Loader;
-use Cache;
 use View;
 class Customize extends DashboardPageController {
 

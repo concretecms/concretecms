@@ -1,6 +1,5 @@
 <?php
 namespace Concrete\Core\Marketplace;
-use Cache;
 use Loader;
 use Config;
 use \Concrete\Core\Foundation\Object;
