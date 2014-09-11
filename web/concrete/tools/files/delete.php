@@ -34,8 +34,8 @@ if ($_POST['task'] == 'delete_files') {
 $form = Loader::helper('form');
 
 $files = array();
-if (is_array($_REQUEST['item'])) {
-	foreach($_REQUEST['item'] as $fID) {
+if (is_array($_REQUEST['fID'])) {
+	foreach($_REQUEST['fID'] as $fID) {
 		$files[] = File::getByID($fID);
 	}
 } else {
