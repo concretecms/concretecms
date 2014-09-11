@@ -454,12 +454,13 @@ return array(
 		
 		'name' => 'CONCRETE5',
 		'handler' => 'file',
-		'max_lifetime' => 7200
+		'max_lifetime' => 7200,
+		
 		'cookie' => array(
-			'path' = '',
+			'path' => '',
 			'lifetime' => 7200,
 			'domain' => '',
-			'secure' => false
+			'secure' => false,
 			'httponly' => false
 		)
 	),
@@ -559,11 +560,11 @@ return array(
          *
          * @var bool
          */
-        'timezones_enabled' => false
+        'timezones_enabled' => false,
         
         'username'			=> array(
-    		'maximum' => 64
-    		'minimum' => 3		
+    		'maximum' => 64,
+    		'minimum' => 3,
 	        'allow_spaces' => false
         ),
         
