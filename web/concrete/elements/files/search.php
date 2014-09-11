@@ -10,10 +10,6 @@ $searchFields = array(
     'added_to' => t('Added to Page')
 );
 
-if (PERMISSIONS_MODEL != 'simple') {
-    $searchFields['permissions_inheritance'] = t('Permissions Inheritance');
-}
-
 $searchFieldAttributes = FileAttributeKey::getSearchableList();
 foreach ($searchFieldAttributes as $ak) {
     $searchFields[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
