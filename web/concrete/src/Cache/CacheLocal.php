@@ -17,7 +17,11 @@ class CacheLocal
      */
     public static function key($group, $id)
     {
-        return $group . '/' . $id;
+        if (!empty($id)) {
+            return $group . '/' . $id;
+        } else {
+            return $group;
+        }
     }
 
 	public static function get() {
@@ -33,7 +37,7 @@ class CacheLocal
         /** @var \Concrete\Core\Cache\Cache $cache */
         $cache = Core::make('cache/request');
         if ($cache->isEnabled()) {
-            $item = $cache->getItem($type . '/' . str_replace('/', '_', $id));
+            $item = $cache->getItem(self::key($type, $id));
             if (!$item->isMiss()) {
                 return $item->get();
             }
@@ -50,7 +54,7 @@ class CacheLocal
         /** @var \Concrete\Core\Cache\Cache $cache */
         $cache = Core::make('cache/request');
         if ($cache->isEnabled()) {
-            $cache->delete($type . '/' . str_replace('/', '_', $id));
+            $cache->delete(self::key($type, $id));
         }
 	}
 
@@ -62,6 +66,6 @@ class CacheLocal
             return false;
         }
 
-        return $cache->getItem($type . '/' . str_replace('/', '_', $id))->set($object);
+        return $cache->getItem(self::key($type, $id))->set($object);
 	}
 }
