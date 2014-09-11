@@ -48,6 +48,16 @@ class FileLoader extends \Illuminate\Config\FileLoader implements LoaderInterfac
             if ($this->files->exists($file)) {
                 $items = (array)$this->files->getRequire($file);
             }
+
+            $file = "{$path}/generated_overrides/{$namespace}/{$group}.php";
+            if ($this->files->exists($file)) {
+                $items = $this->mergeEnvironment($items, $file);
+            }
+
+            $file = "{$path}/{$namespace}/{$group}.php";
+            if ($this->files->exists($file)) {
+                $items = $this->mergeEnvironment($items, $file);
+            }
         }
 
         // Finally we're ready to check for the environment specific configuration
