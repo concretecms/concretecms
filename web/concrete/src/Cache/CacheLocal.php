@@ -18,9 +18,9 @@ class CacheLocal
     public static function key($group, $id)
     {
         if (!empty($id)) {
-            return $group . '/' . $id;
+            return trim($group, '/') . '/' . trim($id, '/');
         } else {
-            return $group;
+            return trim($group, '/');
         }
     }
 
