@@ -13,7 +13,7 @@ class JavascriptAsset extends Asset {
 	}
 
 	public function getRelativeOutputDirectory() {
-		return Config::get('concrete.files.cache.directory') . '/' . DIRNAME_JAVASCRIPT;
+		return REL_DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT;
 	}
 
 	protected static function getOutputDirectory() {
