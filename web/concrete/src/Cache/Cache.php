@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Concrete\Core\Cache;
 
 use Stash\Driver\BlackHole;
