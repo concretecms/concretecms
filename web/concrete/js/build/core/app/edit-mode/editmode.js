@@ -361,15 +361,9 @@
         },
 
         bindEvent: function editModeBindEvent(event, handler) {
-            var my = this, proxy = function () {
-                if (!my.getActive()) {
-                    Concrete.event.unbind(event);
-                    return;
-                }
-                handler.apply(this, _(arguments).toArray());
-            };
+            var my = this;
 
-            return Concrete.event.bind(event, proxy);
+            return Concrete.event.bind(event, handler);
         },
 
         reset: function () {
