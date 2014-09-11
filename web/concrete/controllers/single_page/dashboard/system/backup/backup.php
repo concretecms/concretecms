@@ -5,7 +5,6 @@ use Config;
 use Loader;
 use TaskPermission;
 use Exception;
-use Cache;
 use \Concrete\Core\Backup\Backup as ConcreteBackup;
 
 class Backup extends DashboardPageController { 	 

@@ -6,7 +6,6 @@ use Environment;
 use CacheLocal;
 use BlockType as ConcreteBlockType;
 use Package;
-use Cache;
 use \Concrete\Core\Legacy\DatabaseItemList;
 
 class BlockTypeList extends DatabaseItemList {

@@ -6,7 +6,6 @@ use Loader;
 use Events;
 use \Zend\I18n\Translator\Translator;
 use \Punic\Data as PunicData;
-use Cache;
 
 class Localization
 {

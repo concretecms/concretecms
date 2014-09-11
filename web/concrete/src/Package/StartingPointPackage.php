@@ -2,7 +2,6 @@
 
 namespace Concrete\Core\Package;
 
-use Cache;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use AuthenticationType;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;

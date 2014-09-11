@@ -1,10 +1,9 @@
 <?php
 namespace Concrete\Controller;
 
-use Cache;
+use Concrete\Core\Cache\Cache;
 use Concrete\Core\Localization\Localization as Localization;
 use Controller;
-use Core;
 use Database as DB;
 use Exception;
 use Hautelook\Phpass\PasswordHash;

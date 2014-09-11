@@ -3,7 +3,6 @@ namespace Concrete\Core\Block\BlockType;
 
 use Block;
 use BlockTypeSet;
-use Cache;
 use Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Database\Schema\Schema;
 use Concrete\Core\Filesystem\TemplateFile;
