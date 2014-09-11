@@ -81,10 +81,12 @@ class DispatcherRouteCallback extends RouteCallback {
 		}
 
 		// Check to see whether this is an external alias or a header 301 redirect. If so we go there.
+		/*
 		if (($request->getPath() != '') && ($request->getPath() != $c->getCollectionPath())) {
 			// canonnical paths do not match requested path
 			return Redirect::page($c, 301);
 		}
+		*/
 
 		if ($c->getCollectionPointerExternalLink() != '') {
 			return Redirect::url($c->getCollectionPointerExternalLink(), 301)->send();
