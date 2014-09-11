@@ -37,7 +37,7 @@ class Session
                 'cookie_httponly' => true,
                 'gc_maxlifetime' => \Config::get('concrete.session.max_lifetime')
             );
-            $options = Config::get('concrete.sesssion.cookie');
+            //$options = \Config::get('concrete.sesssion.cookie');
             $storage->setOptions($options);
         }
 
