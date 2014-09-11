@@ -10,7 +10,7 @@ if (!$fp->canAccessFileManager()) {
     die(t("Unable to access the file manager."));
 }
 
-$items = Request::request('item');
+$items = Request::request('fID');
 if (Request::request('task') == 'duplicate_multiple_files') {
     $json['error'] = false;
 
