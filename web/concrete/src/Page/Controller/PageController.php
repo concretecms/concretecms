@@ -183,6 +183,7 @@ class PageController extends Controller {
                     $this->setPassThruBlockController($b, $controller);
                 }
             }
+
             if (!$valid) {
                 // finally, we check additional page paths.
                 $paths = $this->getPageObject()->getAdditionalPagePaths();
