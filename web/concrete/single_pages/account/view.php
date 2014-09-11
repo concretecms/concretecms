@@ -29,7 +29,7 @@ $(function() {
             <hr/>
             <div>
                 <a href="<?=URL::to('/members/profile')?>"><?=t("View Public Profile")?></a>
-                <p><?=t('View your public user profile and the information your sharing.')?></p>
+                <p><?=t('View your public user profile and the information you are sharing.')?></p>
             </div>
 
 
