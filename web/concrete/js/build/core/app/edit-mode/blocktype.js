@@ -101,10 +101,13 @@
 
                     onOpen: function () {
                         $(function () {
+                            var placeholder = $('<div style="display:none" />');
+                            drag_area.getElem().after(placeholder);
                             $('#ccm-block-form').concreteAjaxBlockForm({
                                 'task': 'add',
                                 'dragAreaBlockID': dragAreaBlockID,
-                                dragArea: drag_area
+                                dragArea: drag_area,
+                                placeholder: placeholder
                             });
                         });
                     },
