@@ -15,7 +15,7 @@ class Connection extends \Doctrine\DBAL\Connection
     {
         if (!isset(static::$entityManager)) {
             $conn = $this->getParams();
-            $config = Setup::createConfiguration(false, DIR_DOCTRINE_PROXY_CLASSES, new DoctrineCacheDriver());
+            $config = Setup::createConfiguration(false, DIR_DOCTRINE_PROXY_CLASSES, new DoctrineCacheDriver('expensive'));
             $driverImpl = $config->newDefaultAnnotationDriver(DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
             $config->setMetadataDriverImpl($driverImpl);
             static::$entityManager = EntityManager::create($conn, $config);
