@@ -89,7 +89,7 @@ return array(
      * ------------------------------------------------------------------------
      */
     'mail'             => array(
-        'method'  => 'smtp',
+        'method'  => 'PHP_MAIL',
         'methods' => array(
             'smtp' => array(
                 'server'     => '',
@@ -195,6 +195,12 @@ return array(
          */
         'spam'   => false
     ),
+    
+    'jobs' 				=> array(
+    	
+    	'enable_scheduling' => true    
+    
+    ),
 
     /**
      * ------------------------------------------------------------------------
@@ -288,7 +294,6 @@ return array(
     'misc'             => array(
         'user_timezones'                                    => false,
         'progressive_page_reindex'                          => true,
-        'mail_send_method'                                  => 'PHP_MAIL',
         'mobile_theme_id'                                   => 0,
         'seen_introduction'                                 => false,
         'sitemap_approve_immediately'                       => true,
@@ -297,12 +302,14 @@ return array(
         'enable_trash_can'                                  => true,
         'enable_auto_update_core'                           => false,
         'enable_auto_update_packages'                       => false,
-        'app_version_display_in_header'                     => true,
-        'conversation_message_attachments_pending_file_set' => 'Conversation Messages (Pending)',
+        'app_version_display_in_header'                     => true
     ),
     'paths'            => array(
         'trash'  => '/!trash',
         'drafts' => '/!drafts'
+    ),
+    'conversations' => array(
+        'attachments_pending_file_set' => 'Conversation Messages (Pending)',
     ),
     'files'            => array(
         'cache' => array(
@@ -442,7 +449,21 @@ return array(
          */
         'dashboard_background' => null
     ),
-
+	
+	'session'		 	=> array(
+		
+		'name' => 'CONCRETE5',
+		'handler' => 'file',
+		'max_lifetime' => 7200
+		'cookie' => array(
+			'path' = '',
+			'lifetime' => 7200,
+			'domain' => '',
+			'secure' => false
+			'httponly' => false
+		)
+	),
+	
     /**
      * ------------------------------------------------------------------------
      * User information and registration settings.
@@ -516,7 +537,16 @@ return array(
             'max_level' => 0,
             'image_set' => 0
         ),
-
+		
+		'group' 			=> array(
+			
+			'badge'				=> array(
+				
+				'default_point_value' => 50			
+			)
+		
+		),
+		
         /**
          * Enable public user profiles
          *
@@ -530,6 +560,25 @@ return array(
          * @var bool
          */
         'timezones_enabled' => false
+        
+        'username'			=> array(
+    		'maximum' => 64
+    		'minimum' => 3		
+	        'allow_spaces' => false
+        ),
+        
+        'password' 			=> array(
+        	'maximum' => 128,
+        	'minimum' => 5,
+        	'hash_portable' => false,
+        	'hash_cost_log2' => 12
+        ),
+        
+        'private_messages' => array(
+        	'throttle_max' => 20,
+        	'throttle_max_timespan' => 15 // minutes        
+        )
+        
     ),
 
     /**

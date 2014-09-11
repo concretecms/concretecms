@@ -54,16 +54,16 @@ class Add extends DashboardPageController {
 			$this->error->add(t("The email address '%s' is already in use. Please choose another.",$_POST['uEmail']));
 		}
 
-		if (strlen($username) < USER_USERNAME_MINIMUM) {
-			$this->error->add(t('A username must be at least %s characters long.',USER_USERNAME_MINIMUM));
+		if (strlen($username) < \Config::get('concrete.user.username.minimum')) {
+			$this->error->add(t('A username must be at least %s characters long.', \Config::get('concrete.user.username.minimum')));
 		}
 
-		if (strlen($username) > USER_USERNAME_MAXIMUM) {
-			$this->error->add(t('A username cannot be more than %s characters long.',USER_USERNAME_MAXIMUM));
+		if (strlen($username) > \Config::get('concrete.user.username.maximum')) {
+			$this->error->add(t('A username cannot be more than %s characters long.',\Config::get('concrete.user.username.maximum')));
 		}
 
-		if (strlen($username) >= USER_USERNAME_MINIMUM && !$valc->username($username)) {
-			if(USER_USERNAME_ALLOW_SPACES) {
+		if (strlen($username) >= \Config::get('concrete.user.username.minimum') && !$valc->username($username)) {
+			if(\Config::get('concrete.user.username.allow_spaces')) {
 				$this->error->add(t('A username may only contain letters, numbers, spaces, dots (not at the beginning/end), underscores (not at the beginning/end).'));
 			} else {
 				$this->error->add(t('A username may only contain letters numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'));
@@ -79,11 +79,11 @@ class Add extends DashboardPageController {
 		}
 
 
-		if ((strlen($password) < USER_PASSWORD_MINIMUM) || (strlen($password) > USER_PASSWORD_MAXIMUM)) {
-			$this->error->add(t('A password must be between %s and %s characters',USER_PASSWORD_MINIMUM,USER_PASSWORD_MAXIMUM));
+		if ((strlen($password) < \Config::get('concrete.user.password.minimum')) || (strlen($password) >  \Config::get('concrete.user.password.maximum'))) {
+			$this->error->add(t('A password must be between %s and %s characters',\Config::get('concrete.user.password.minimum'), \Config::get('concrete.user.password.maximum')));
 		}
 
-		if (strlen($password) >= USER_PASSWORD_MINIMUM && !$valc->password($password)) {
+		if (strlen($password) >= \Config::get('concrete.user.password.minimum') && !$valc->password($password)) {
 			$this->error->add(t('A password may not contain ", \', >, <, or any spaces.'));
 		}
 

@@ -1,30 +1,5 @@
 <?php
 
-/* THINGS TO PUT INTO CONFIG */
-/* -- Users -- */
-defined('USER_USERNAME_MINIMUM') or define('USER_USERNAME_MINIMUM', 3);
-defined('USER_USERNAME_MAXIMUM') or define('USER_USERNAME_MAXIMUM', 64);
-defined('USER_PASSWORD_MINIMUM') or define('USER_PASSWORD_MINIMUM', 5);
-defined('USER_PASSWORD_MAXIMUM') or define('USER_PASSWORD_MAXIMUM', 128);
-defined('USER_USERNAME_ALLOW_SPACES') or define('USER_USERNAME_ALLOW_SPACES', false);
-defined('GROUP_BADGE_DEFAULT_POINT_VALUE') or define('GROUP_BADGE_DEFAULT_POINT_VALUE', 50);
-defined('NEWSFLOW_VIEWED_THRESHOLD') or define('NEWSFLOW_VIEWED_THRESHOLD', 86400); // once a day
-defined('SESSION') or define('SESSION', 'CONCRETE5');
-defined('SESSION_HANDLER') or define('SESSION_HANDLER', 'file'); // could be 'database' as well
-defined('USER_DELETED_CONVERSATION_ID') or define('USER_DELETED_CONVERSATION_ID', 0);
-defined('PASSWORD_HASH_PORTABLE') or define('PASSWORD_HASH_PORTABLE', false);
-defined('PASSWORD_HASH_COST_LOG2') or define('PASSWORD_HASH_COST_LOG2', 12);
-defined('USER_PRIVATE_MESSAGE_MAX') or define('USER_PRIVATE_MESSAGE_MAX', 20);
-defined('USER_PRIVATE_MESSAGE_MAX_TIME_SPAN') or define('USER_PRIVATE_MESSAGE_MAX_TIME_SPAN', '15'); // minutes;
-
-/* -- Jobs -- */
-defined('ENABLE_JOB_SCHEDULING') or define('ENABLE_JOB_SCHEDULING', true);
-
-
-/* END THINGS TO PUT INTO CONFIG. keep everything below as is in the file.
-NOTE ! Some of the things below and perhaps some of the things above depend on each other so we might have to coordinate.  */
-
-
 if (version_compare(phpversion(), '5.3.3') < 0) {
     die("concrete5 requires PHP 5.3.3+ to run.\n");
 }
@@ -416,13 +391,13 @@ define('USER_SUPER_ID', 1);
 define('GUEST_GROUP_ID', '1');
 define('REGISTERED_GROUP_ID', '2');
 define('ADMIN_GROUP_ID', '3');
-define('SESSION_MAX_LIFETIME', 7200); // 2 hours
 define('USER_FOREVER_COOKIE_LIFETIME', 1209600); // 14 days
 define('USER_CHANGE_PASSWORD_URL_LIFETIME',  7200);
 define('ONLINE_NOW_TIMEOUT', 300);
 define('UVTYPE_REGISTER', 0);
 define('UVTYPE_CHANGE_PASSWORD', 1);
 define('UVTYPE_LOGIN_FOREVER', 2);
+define('NEWSFLOW_VIEWED_THRESHOLD', 86400); // once a day
 
 /* -- Pages -- */
 define('CHECKOUT_TIMEOUT', 300); // # in seconds.

@@ -65,17 +65,17 @@ class Register extends PageController {
 
 		if ($this->displayUserName) {
 
-			if (strlen($username) < USER_USERNAME_MINIMUM) {
-				$e->add(t('A username must be at least %s characters long.', USER_USERNAME_MINIMUM));
+			if (strlen($username) < \Config::get('concrete.user.username.minimum')) {
+				$e->add(t('A username must be at least %s characters long.', \Config::get('concrete.user.username.minimum')));
 			}
 
-			if (strlen($username) > USER_USERNAME_MAXIMUM) {
-				$e->add(t('A username cannot be more than %s characters long.', USER_USERNAME_MAXIMUM));
+			if (strlen($username) > \Config::get('concrete.user.username.maximum')) {
+				$e->add(t('A username cannot be more than %s characters long.', \Config::get('concrete.user.username.maximum')));
 			}
 
 
-			if (strlen($username) >= USER_USERNAME_MINIMUM && !$valc->username($username)) {
-				if(USER_USERNAME_ALLOW_SPACES) {
+			if (strlen($username) >= \Config::get('concrete.user.username.minimum') && !$valc->username($username)) {
+				if(\Config::get('concrete.user.username.allow_spaces')) {
 					$e->add(t('A username may only contain letters, numbers and spaces.'));
 				} else {
 					$e->add(t('A username may only contain letters or numbers.'));
@@ -93,11 +93,11 @@ class Register extends PageController {
 		}
 
 		/*
-		if ((strlen($password) < USER_PASSWORD_MINIMUM) || (strlen($password) > USER_PASSWORD_MAXIMUM)) {
-			$e->add(t('A password must be between %s and %s characters', USER_PASSWORD_MINIMUM, USER_PASSWORD_MAXIMUM));
+		if ((strlen($password) < \Config::get('concrete.user.password.minimum')) || (strlen($password) >  \Config::get('concrete.user.password.maximum'))) {
+			$e->add(t('A password must be between %s and %s characters', \Config::get('concrete.user.password.minimum'),  \Config::get('concrete.user.password.maximum')));
 		}
 
-		if (strlen($password) >= USER_PASSWORD_MINIMUM && !$valc->password($password)) {
+		if (strlen($password) >= \Config::get('concrete.user.password.minimum') && !$valc->password($password)) {
 			$e->add(t('A password may not contain ", \', >, <, or any spaces.'));
 		}
 		*/
