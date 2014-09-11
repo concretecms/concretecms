@@ -111,7 +111,6 @@ function getAttributeOptionHTML($v){
 
 
 </fieldset>
-<? //if ($akSelectOptionDisplayOrder == 'display_asc') { ?>
 <script type="text/javascript">
 //<![CDATA[
 $(function() {
@@ -119,4 +118,3 @@ $(function() {
 });
 //]]>
 </script>
-<? //} ?>
