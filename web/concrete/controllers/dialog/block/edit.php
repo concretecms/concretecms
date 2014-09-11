@@ -27,7 +27,6 @@ class Edit extends BackendInterfaceBlockController
 
     public function submit()
     {
-        //Core::make('cache/request')->disable();
         if ($this->validateAction() && $this->canAccess()) {
 
             $c = $this->page;
