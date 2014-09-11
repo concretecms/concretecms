@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Core\Page\Search;
 
+use Concrete\Core\Cache\Cache;
 use Core;
 use Loader;
 use Config;
-use Cache;
 use PageList;
 use Collection;
 use Area;
@@ -153,7 +153,7 @@ class IndexedSearch
      */
     public function reindexAll($fullReindex = false)
     {
-        Core::make('cache/local')->disable();
+        Cache::disableAll();
 
         $db = Loader::db();
 
@@ -190,7 +190,7 @@ class IndexedSearch
         $pnum = Collection::reindexPendingPages();
         $num = $num + $pnum;
 
-        Core::make('cache/local')->enable();
+        Cache::enableAll();
         $result = new stdClass;
         $result->count = $num;
         return $result;

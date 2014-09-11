@@ -1,8 +1,7 @@
 <?
 namespace Concrete\Job;
-use Core;
+use Concrete\Core\Cache\Cache;
 use \Job as AbstractJob;
-use Cache;
 use \Concrete\Core\Page\Search\IndexedSearch;
 class IndexSearch extends AbstractJob {
 
@@ -17,7 +16,7 @@ class IndexSearch extends AbstractJob {
 	}
 
 	public function run() {
-        Core::make('cache')->disable();
+        Cache::disableAll();
 
 		$is = new IndexedSearch();
 		if ($_GET['force'] == 1) {

@@ -1,9 +1,9 @@
 <?php
 namespace Concrete\Core\Updater;
+use Concrete\Core\Cache\Cache;
 use Core;
 use Loader;
 use Marketplace;
-use Cache;
 use Config;
 use Localization;
 class Update {
@@ -12,9 +12,9 @@ class Update {
 		$d = Loader::helper('date');
 		// first, we check session
 		$queryWS = false;
-        Core::make('cache')->disable();
+        Cache::disableAll();
 		$vNum = Config::get('APP_VERSION_LATEST', true);
-        Core::make('cache')->enable();
+        Cache::enableAll();
 		if (is_object($vNum)) {
 			$seconds = strtotime($vNum->timestamp);
 			$version = $vNum->value;
