@@ -4,6 +4,7 @@ namespace Concrete\Controller\Dialog\Block;
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
 use Concrete\Core\Block\View\BlockView;
 use BlockType;
+use Concrete\Core\Cache\Cache;
 
 class Edit extends BackendInterfaceBlockController
 {
@@ -25,6 +26,7 @@ class Edit extends BackendInterfaceBlockController
 
     public function submit()
     {
+        Cache::disableAll();
         if ($this->validateAction() && $this->canAccess()) {
 
             $c = $this->page;
