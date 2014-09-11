@@ -16,7 +16,7 @@ div[data-container=editable-fields] section {
 <form action="<?=$view->action('update_status', $user->getUserID())?>" method="post">
 <?=Loader::helper('validation/token')->output()?>
 <div class="ccm-dashboard-header-buttons btn-group">
-	<? if (USER_VALIDATE_EMAIL == true && $canActivateUser) { ?>
+	<? if (Config::get('concrete.user.registration.validate_email') == true && $canActivateUser) { ?>
 		<? if ($user->isValidated() < 1) { ?>
 		<button type="submit" name="task" value="validate" class="btn btn-default"><?=t('Mark Email as Valid')?></button>
 		<? } ?>
@@ -104,7 +104,7 @@ div[data-container=editable-fields] section {
 				<div class="col-md-8"><p><span <? if ($canEditLanguage) { ?>data-editable-field-type="xeditable" data-source="<?=$view->action('get_languages')?>" data-url="<?=$view->action('update_language', $user->getUserID())?>" data-type="select" data-name="uDefaultLanguage"<? } ?>><?=$user->getUserDefaultLanguage();?></span></p></div>
 			</div>
 			<? } ?>
-			<? if (USER_VALIDATE_EMAIL) { ?>
+			<? if (Config::get('concrete.user.registration.validate_email')) { ?>
 				<div class="row">
 					<div class="col-md-4"><p><?=t('Full Record')?></p></div>
 					<div class="col-md-8"><p><?= ($user->isFullRecord()) ? "Yes" : "No" ?></p></div>

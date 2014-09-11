@@ -22,7 +22,7 @@ switch($_GET['ctask']) {
 		$canViewPane = $cp->canEditPageSpeedSettings();
 		break;
 	case 'edit_permissions':
-		if (PERMISSIONS_MODEL == 'simple') {
+		if (Config::get('concrete.permissions_model') == 'simple') {
 			$toolSection = 'collection_permissions_simple';
 		} else {
 			$toolSection = "permission/lists/collection";
@@ -35,11 +35,11 @@ switch($_GET['ctask']) {
 		break;
 	case 'preview_page_as_user':
 		$toolSection = "collection_preview_as_user";
-		$canViewPane = ($cp->canPreviewPageAsUser() && PERMISSIONS_MODEL == 'advanced');
+		$canViewPane = ($cp->canPreviewPageAsUser() && Config::get('concrete.permissions_model') == 'advanced');
 		break;
 	case 'view_timed_permission_list':
 		$toolSection = "collection_timed_permission_list";
-		$canViewPane = ($cp->canPreviewPageAsUser() && PERMISSIONS_MODEL == 'advanced');
+		$canViewPane = ($cp->canPreviewPageAsUser() && Config::get('concrete.permissions_model') == 'advanced');
 		break;
 	case 'mcd':
 		$toolSection = "collection_mcd";

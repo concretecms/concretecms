@@ -60,7 +60,7 @@ class Service
         $response['mail'] = new Message();
         $response['mail']->setEncoding(APP_CHARSET);
 
-        if (MAIL_SEND_METHOD == "SMTP") {
+        if (Config::get('concrete.mail.method') == "SMTP") {
             $config = array(
                 'host' => Config::get('concrete.mail.methods.smtp.server'),
             );
