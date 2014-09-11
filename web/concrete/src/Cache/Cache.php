@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Cache;
 
+use Core;
 use Stash\Driver\BlackHole;
 use Stash\Pool;
 
@@ -100,5 +101,25 @@ abstract class Cache
     public function isEnabled()
     {
         return $this->enabled;
+    }
+
+    /**
+     * Disables all cache levels
+     */
+    public static function disableAll()
+    {
+        Core::make('cache/request')->disable();
+        Core::make('cache/expensive')->disable();
+        Core::make('cache')->disable();
+    }
+
+    /**
+     * Enables all cache levels
+     */
+    public static function enableAll()
+    {
+        Core::make('cache/request')->enable();
+        Core::make('cache/expensive')->enable();
+        Core::make('cache')->enable();
     }
 }
