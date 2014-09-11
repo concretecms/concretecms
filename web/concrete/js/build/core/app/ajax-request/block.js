@@ -43,7 +43,8 @@
                 arHandle: area.getHandle(),
                 cID: cID,
                 bID: resp.bID,
-                arEnableGridContainer: arEnableGridContainer
+                arEnableGridContainer: arEnableGridContainer,
+                placeholder: ''
             }, function (r) {
 
                 var block;
@@ -53,13 +54,18 @@
 
                 if (my.options.task == 'add') {
                     var $area = area.getElem(), $elem = $(r);
+                    block = new Concrete.Block($elem, Concrete.getEditMode());
 
-                    if (my.options.dragArea) {
-                        my.options.dragArea.getElem().after($elem);
+                    if (my.options.btHandle === 'core_area_layout') {
+                        $area.children('.ccm-area-block-list').append($elem);
                     } else {
-                        $area.children('.ccm-area-block-list').prepend($elem);
+                        var placeholder = $(my.options.placeholder);
+                        if (placeholder.length) {
+                            placeholder.replaceWith($elem);
+                        } else {
+                            $area.children('.ccm-area-block-list').prepend($elem);
+                        }
                     }
-                    Concrete.getEditMode().scanBlocks();
 
                     ConcreteAlert.notify({
                         'message': ccmi18n.addBlockMsg,

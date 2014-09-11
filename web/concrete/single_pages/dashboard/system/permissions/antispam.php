@@ -53,13 +53,12 @@
 		<p><?=t('You have no anti-spam libraries installed.')?></p>
 	<? } ?>
 
-<? if (is_object($activeLibrary) && $activeLibrary->hasOptionsForm()) { ?>
 	<div class="ccm-dashboard-form-actions-wrapper">
         <div class="ccm-dashboard-form-actions">
-		    <?=Loader::helper('concrete/ui')->submit(t('Save Additional Settings'), 'submit', 'right', 'btn-primary')?>
+		    <?=Loader::helper('concrete/ui')->submit(t('Save'), 'submit', 'right', 'btn-primary')?>
         </div>
 	</div>
-<? } ?>
+
 </form>
 
 <script type="text/javascript">

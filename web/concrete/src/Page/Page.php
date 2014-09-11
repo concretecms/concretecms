@@ -586,7 +586,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $r = $db->prepare($q);
 
         $res = $db->execute($r, $v);
-        $newCID = $db->Insert_ID();
 
         PageStatistics::incrementParents($newCID);
 
@@ -945,7 +944,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $db = Loader::db();
         $em = $db->getEntityManager();
         $path = new \Concrete\Core\Page\PagePath();
-        $path->setPagePath($cPath);
+        $path->setPagePath('/' . trim($cPath, '/'));
         $path->setPageObject($this);
         $em->persist($path);
         if ($commit) {
@@ -1580,7 +1579,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $cCacheFullPageContent = $data['cCacheFullPageContent'];
         }
         if (isset($data['cCacheFullPageContentLifetimeCustom'])) {
-            $cCacheFullPageContentLifetimeCustom = $data['cCacheFullPageContentLifetimeCustom'];
+            $cCacheFullPageContentLifetimeCustom = intval($data['cCacheFullPageContentLifetimeCustom']);
         }
         if (isset($data['cCacheFullPageContentOverrideLifetime'])) {
             $cCacheFullPageContentOverrideLifetime = $data['cCacheFullPageContentOverrideLifetime'];

@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Controller;
 use Concrete\Core\Block\Block;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Routing\Redirect;
 use Page;
 use Request;
 use Loader;
@@ -180,6 +181,17 @@ class PageController extends Controller {
 
                     // then, we need to save the persisted data that may have been set.
                     $this->setPassThruBlockController($b, $controller);
+                }
+            }
+
+            if (!$valid) {
+                // finally, we check additional page paths.
+                $paths = $this->getPageObject()->getAdditionalPagePaths();
+                foreach($paths as $path) {
+                    if ($path->getPagePath() == $this->request->getPath()) {
+                        // This is an additional page path to a page. We 301 redirect.
+                        return Redirect::page($this->getPageObject(), 301);
+                    }
                 }
             }
         }

@@ -65,6 +65,10 @@ class Antispam extends DashboardPageController {
 		} else {
 			$this->error->add(Loader::helper('validation/token')->getErrorMessage());
 		}
-		$this->view();
+        if($this->error->has()) {
+            $this->view();
+        } else {
+            $this->redirect('/dashboard/system/permissions/antispam', 'saved');
+        }
 	}
 }

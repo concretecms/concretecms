@@ -338,7 +338,11 @@ class Version
 
     public function getAuthorName()
     {
-        return $this->fvAuthorName;
+        $ui = \UserInfo::getByID($this->fvAuthorUID);
+        if (is_object($ui)) {
+            return $ui->getUserDisplayName();
+        }
+        return t('(Unknown)');
     }
 
     public function getAuthorUserID()

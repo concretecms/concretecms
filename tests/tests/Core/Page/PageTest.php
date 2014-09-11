@@ -66,13 +66,10 @@ class PageTest extends PageTestCase {
     }
 
     public function testSinglePagesController() {
-        $reportsPage = SinglePage::add('/dashboard/reports');
-        $reportsPage = Page::getByPath('/dashboard/reports');
-        ob_start();
-        // want to not display the redirect that comes from reports.
+        $reportsPage = SinglePage::add('/dashboard/reports/surveys');
+        $reportsPage = Page::getByPath('/dashboard/reports/surveys');
         $controller = $reportsPage->getController();
-        ob_end_clean();
-        $this->assertInstanceOf('\Concrete\Controller\SinglePage\Dashboard\Reports', $controller);
+        $this->assertInstanceOf('\Concrete\Controller\SinglePage\Dashboard\Reports\Surveys', $controller);
     }
 
     public function testSystemPageBoolean()
@@ -193,11 +190,11 @@ class PageTest extends PageTestCase {
         $this->assertEquals(3, $page2->getNumChildren());
         $this->assertEquals(1, $page4->getNumChildren()); // direct children.
 
-        $page = Page::getByPath('/page-4/page-2/subpage-a/page-1');
+        $page = Page::getByPath('/page-4/page-2/subpage/page-1');
         $this->assertFalse($page->isError());
         $pagePath = $page->getCollectionPathObject();
         $this->assertInstanceOf('\Concrete\Core\Page\PagePath', $pagePath);
-        $this->assertEquals('/page-4/page-2/subpage-a/page-1', $pagePath->getPagePath());
+        $this->assertEquals('/page-4/page-2/subpage/page-1', $pagePath->getPagePath());
         $this->assertTrue($pagePath->isPagePathCanonical());
     }
 }
