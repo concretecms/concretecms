@@ -58,7 +58,7 @@ class Text {
 	 */
 	public function urlify($handle, $maxlength = null, $locale = '', $removeExcludedWords = true) {
         if ($maxlength === null) {
-            $maxlength Config::get('concrete.seo.segment_max_length');
+            $maxlength = Config::get('concrete.seo.segment_max_length');
         }
 		$text = strtolower(str_replace(array("\r", "\n", "\t"), ' ', $this->asciify($handle, $locale)));
 		if($removeExcludedWords) {

@@ -152,7 +152,7 @@ class Application extends Container
                 if (is_object($pkg)) {
                     $cl->registerPackage($pkg);
                     // handle updates
-                    if (ENABLE_AUTO_UPDATE_PACKAGES) {
+                    if (Config::get('concrete.misc.enable_auto_update_packages')) {
                         $pkgInstalledVersion = $p->getPackageVersion();
                         $pkgFileVersion = $pkg->getPackageVersion();
                         if (version_compare($pkgFileVersion, $pkgInstalledVersion, '>')) {
@@ -189,11 +189,11 @@ class Application extends Container
             $perm = $this->make('helper/file')->getCreateFilePermissions()->dir;
             $perm ? define('DIRECTORY_PERMISSIONS_MODE', $perm) : define('DIRECTORY_PERMISSIONS_MODE', 0775);
         }
-        if (!is_dir(Config::get('files.cache.directory'))) {
-            @mkdir(Config::get('files.cache.directory'));
-            @chmod(Config::get('files.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
-            @touch(Config::get('files.cache.directory') . '/index.html');
-            @chmod(Config::get('files.cache.directory') . '/index.html', FILE_PERMISSIONS_MODE);
+        if (!is_dir(Config::get('concrete.files.cache.directory'))) {
+            @mkdir(Config::get('concrete.files.cache.directory'));
+            @chmod(Config::get('concrete.files.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
+            @touch(Config::get('concrete.files.cache.directory') . '/index.html');
+            @chmod(Config::get('concrete.files.cache.directory') . '/index.html', FILE_PERMISSIONS_MODE);
         }
     }
 
@@ -218,7 +218,7 @@ class Application extends Container
         if (strlen($pathInfo) > 1) {
             $path = trim($pathInfo, '/');
             $redirect = '/' . $path;
-            if (URL_USE_TRAILING_SLASH) {
+            if (Config::get('concrete.seo.trailing_slash')) {
                 $redirect .= '/';
             }
             if ($pathInfo != $redirect) {

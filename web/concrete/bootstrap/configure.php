@@ -1,20 +1,6 @@
 <?php
 
 /* THINGS TO PUT INTO CONFIG */
-
-/* -- Miscellaneous Behavior -- */
-defined('SITEMAP_APPROVE_IMMEDIATELY') or define('SITEMAP_APPROVE_IMMEDIATELY', true);
-defined('ENABLE_TRANSLATE_LOCALE_EN_US') or define('ENABLE_TRANSLATE_LOCALE_EN_US', false);
-defined('PAGE_SEARCH_INDEX_LIFETIME') or define('PAGE_SEARCH_INDEX_LIFETIME', 259200);
-defined('ENABLE_TRASH_CAN') or define('ENABLE_TRASH_CAN', true);
-defined('URL_USE_TRAILING_SLASH') or define('URL_USE_TRAILING_SLASH', false);
-defined('ENABLE_AUTO_UPDATE_CORE') or define('ENABLE_AUTO_UPDATE_CORE', false);
-defined('ENABLE_AUTO_UPDATE_PACKAGES') or define('ENABLE_AUTO_UPDATE_PACKAGES', false);
-defined('APP_VERSION_DISPLAY_IN_HEADER') or define('APP_VERSION_DISPLAY_IN_HEADER', true);
-
-/* -- File Sets -- */
-defined('CONVERSATION_MESSAGE_ATTACHMENTS_PENDING_FILE_SET') or define('CONVERSATION_MESSAGE_ATTACHMENTS_PENDING_FILE_SET', 'Conversation Messages (Pending)');
-
 /* -- Users -- */
 defined('USER_USERNAME_MINIMUM') or define('USER_USERNAME_MINIMUM', 3);
 defined('USER_USERNAME_MAXIMUM') or define('USER_USERNAME_MAXIMUM', 64);
@@ -23,9 +9,6 @@ defined('USER_PASSWORD_MAXIMUM') or define('USER_PASSWORD_MAXIMUM', 128);
 defined('USER_USERNAME_ALLOW_SPACES') or define('USER_USERNAME_ALLOW_SPACES', false);
 defined('GROUP_BADGE_DEFAULT_POINT_VALUE') or define('GROUP_BADGE_DEFAULT_POINT_VALUE', 50);
 defined('NEWSFLOW_VIEWED_THRESHOLD') or define('NEWSFLOW_VIEWED_THRESHOLD', 86400); // once a day
-defined('AVATAR_WIDTH') or define('AVATAR_WIDTH', '80');
-defined('AVATAR_HEIGHT') or define('AVATAR_HEIGHT', '80');
-defined('AVATAR_NONE') or define('AVATAR_NONE', ASSETS_URL_IMAGES . '/avatar_none.png');
 defined('SESSION') or define('SESSION', 'CONCRETE5');
 defined('SESSION_HANDLER') or define('SESSION_HANDLER', 'file'); // could be 'database' as well
 defined('USER_DELETED_CONVERSATION_ID') or define('USER_DELETED_CONVERSATION_ID', 0);

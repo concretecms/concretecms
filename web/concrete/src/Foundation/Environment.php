@@ -29,8 +29,8 @@ class Environment {
 	public static function get() {
 		static $env;
 		if (!isset($env)) {
-			if (file_exists(Config::get('files.cache.directory') . '/' . Config::get('files.cache.environment.file'))) {
-				$r = @file_get_contents(Config::get('files.cache.directory') . '/' . Config::get('files.cache.environment.file'));
+			if (file_exists(Config::get('concrete.files.cache.directory') . '/' . Config::get('concrete.files.cache.environment.file'))) {
+				$r = @file_get_contents(Config::get('concrete.files.cache.directory') . '/' . Config::get('concrete.files.cache.environment.file'));
 				if ($r) {
 					$en = @unserialize($r);
 					if ($en instanceof Environment) {
@@ -46,15 +46,15 @@ class Environment {
 	}
 
 	public static function saveCachedEnvironmentObject() {
-		if (!file_exists(Config::get('files.cache.directory') . '/' . Config::get('files.cache.environment.file'))) {
+		if (!file_exists(Config::get('concrete.files.cache.directory') . '/' . Config::get('concrete.files.cache.environment.file'))) {
 			$env = new Environment();
 			$env->getOverrides();
-			@file_put_contents(Config::get('files.cache.directory') . '/' . Config::get('files.cache.environment.file'), serialize($env));
+			@file_put_contents(Config::get('concrete.files.cache.directory') . '/' . Config::get('concrete.files.cache.environment.file'), serialize($env));
 		}
 	}
 
 	public function clearOverrideCache() {
-		@unlink(Config::get('files.cache.directory') . '/' . Config::get('files.cache.environment.file'));
+		@unlink(Config::get('concrete.files.cache.directory') . '/' . Config::get('concrete.files.cache.environment.file'));
 		$this->overridesScanned = false;
 	}
 

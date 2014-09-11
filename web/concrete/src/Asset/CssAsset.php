@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Asset;
 use HtmlObject\Element;
+use Config;
 
 class CssAsset extends Asset {
 
@@ -14,17 +15,17 @@ class CssAsset extends Asset {
 	public function getAssetType() {return 'css';}
 
 	protected static function getRelativeOutputDirectory() {
-		return Config::get('files.cache.directory') . '/' . DIRNAME_CSS;
+		return Config::get('concrete.files.cache.directory') . '/' . DIRNAME_CSS;
 	}
 
 	protected static function getOutputDirectory() {
-		if (!file_exists(Config::get('files.cache.directory') . '/' . DIRNAME_CSS)) {
-			$proceed = @mkdir(Config::get('files.cache.directory') . '/' . DIRNAME_CSS);
+		if (!file_exists(Config::get('concrete.files.cache.directory') . '/' . DIRNAME_CSS)) {
+			$proceed = @mkdir(Config::get('concrete.files.cache.directory') . '/' . DIRNAME_CSS);
 		} else {
 			$proceed = true;
 		}
 		if ($proceed) {
-			return Config::get('files.cache.directory') . '/' . DIRNAME_CSS;
+			return Config::get('concrete.files.cache.directory') . '/' . DIRNAME_CSS;
 		} else {
 			return false;
 		}

@@ -764,7 +764,7 @@ if (isset($_POST['processCollection']) && $_POST['processCollection'] && $valt->
 
                     if ($_POST['rel'] == 'SITEMAP') {
                         $u = new User();
-                        if ($cp->canApprovePageVersions() && SITEMAP_APPROVE_IMMEDIATELY) {
+                        if ($cp->canApprovePageVersions() && Config::get('concrete.misc.sitemap_approve_immediately')) {
                             $pkr = new ApprovePagePageWorkflowRequest();
                             $pkr->setRequestedPage($nc);
                             $v = CollectionVersion::get($nc, "RECENT");

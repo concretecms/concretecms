@@ -34,15 +34,15 @@ $(function() {
 <? }  else if ($numChildren > 0 && !$u->isSuperUser()) { ?>
 		<div class="error alert-message"><?=t('Before you can delete this page, you must delete all of its child pages.')?></div>
 		<div class="dialog-buttons"><input type="button" class="btn" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" /></div>
-		
-	<? } else { 
+
+	<? } else {
 
 		$request_rel = $securityHelper->sanitizeString($_REQUEST['rel']);
 		?>
-		
+
 		<div class="ccm-buttons">
 
-		<form method="post" id="ccmDeletePageForm" action="<?=$c->getCollectionAction()?>">	
+		<form method="post" id="ccmDeletePageForm" action="<?=$c->getCollectionAction()?>">
 			<input type="hidden" name="rel" value="<?php echo h($request_rel); ?>" />
 
 			<div class="dialog-buttons"><input type="button" class="btn btn-default pull-left" value="<?=t('Cancel')?>" onclick="jQuery.fn.dialog.closeTop()" />
@@ -56,27 +56,27 @@ $(function() {
 		<? if ($u->isSuperUser() && $numChildren > 0) { ?>
 			<h5><?=t2('This will remove %s child page.', 'This will remove %s child pages.', $numChildren, $numChildren)?></h5>
 		<? } ?>
-		
-		<? if (ENABLE_TRASH_CAN) { ?>
+
+		<? if (Config::get('concrete.misc.enable_trash_can')) { ?>
 			<p><?=t('Deleted pages are moved to the trash can in the sitemap.')?></p>
 		<? } else { ?>
 			<p><?=t('This cannot be undone.')?></p>
 		<? } ?>
-		
+
 			<input type="hidden" name="cID" value="<?=$c->getCollectionID()?>">
 			<input type="hidden" name="ctask" value="delete">
 			<input type="hidden" name="processCollection" value="1" />
 
-			<?php 
+			<?php
 			$display_mode = $securityHelper->sanitizeString($_REQUEST['display_mode']);
 			$instance_id = $securityHelper->sanitizeInt($_REQUEST['instance_id']);
 			$select_mode = $securityHelper->sanitizeString($_REQUEST['select_mode']);
-			?>			
+			?>
 			<input type="hidden" name="display_mode" value="<?php echo h($display_mode); ?>" />
 			<input type="hidden" name="select_mode" value="<?php echo h($select_mode); ?>" />
 		</form>
 		</div>
-		
+
 	<? }
 ?>
 </div>

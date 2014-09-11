@@ -79,7 +79,14 @@ class ClassLoader  {
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Job', DIR_BASE_CORE . '/' . DIRNAME_JOBS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
 
-        $namespace = \Config::get('app.namespace');
+        $namespace = 'Application';
+        $app_config_path = DIR_APPLICATION . '/config/app.php';
+        if (file_exists($app_config_path)) {
+            $app_config = require $app_config_path;
+            if (isset($app_config['namespace'])) {
+                $namespace = $app_config['namespace'];
+            }
+        }
         $symfonyLoader->addPrefix($namespace . '\\StartingPointPackage', DIR_APPLICATION . '/config/install/' . DIRNAME_PACKAGES);
 		$symfonyLoader->addPrefix($namespace . '\\Attribute', DIR_APPLICATION. '/' . DIRNAME_ATTRIBUTES);
 		$symfonyLoader->addPrefix($namespace . '\\Authentication', DIR_APPLICATION . '/' . DIRNAME_AUTHENTICATION);

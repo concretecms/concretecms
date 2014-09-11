@@ -76,6 +76,7 @@ $cms->instance('config', $config = new ConfigRepository($file_loader, $file_save
  * Legacy Definitions
  * ----------------------------------------------------------------------------
  */
+
 define('APP_VERSION', $config->get('concrete.version'));
 define('APP_CHARSET', $config->get('concrete.charset'));
 
@@ -200,14 +201,6 @@ if ($response) {
  */
 require DIR_BASE_CORE . '/bootstrap/preprocess.php';
 
-/**
- * ----------------------------------------------------------------------------
- * Include our local config/app.php for any customizations, events, etc...
- * ----------------------------------------------------------------------------
- */
-if (file_exists(DIR_CONFIG_SITE)) {
-    include DIR_CONFIG_SITE . '/app.php';
-}
 
 /**
  * ----------------------------------------------------------------------------

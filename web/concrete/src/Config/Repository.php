@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Core\Config;
 
-use Illuminate\Config\LoaderInterface;
-
 class Repository extends \Illuminate\Config\Repository
 {
 

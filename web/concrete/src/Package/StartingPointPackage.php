@@ -239,9 +239,9 @@ class StartingPointPackage extends BasePackage {
 	public function make_directories() {
 		Cache::flush();
 
-        if (!is_dir(Config::get('files.cache.directory'))) {
-            mkdir(Config::get('files.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
-            chmod(Config::get('files.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
+        if (!is_dir(Config::get('concrete.files.cache.directory'))) {
+            mkdir(Config::get('concrete.files.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
+            chmod(Config::get('concrete.files.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
         }
 
         if (!is_dir(DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_INCOMING)) {

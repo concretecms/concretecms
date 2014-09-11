@@ -18,7 +18,7 @@ class Cache {
 	public static function getLibrary() {
 		static $cache;
 		if (!isset($cache) && defined('DIR_FILES_CACHE')) {
-			if (is_dir(Config::get('files.cache.directory')) && is_writable(Config::get('files.cache.directory'))) {
+			if (is_dir(Config::get('concrete.files.cache.directory')) && is_writable(Config::get('concrete.files.cache.directory'))) {
                 $adapter = (defined('CACHE_LIBRARY')) ? CACHE_LIBRARY : 'filesystem';
                 $cache = StorageFactory::factory(array(
                     'adapter' => array(
@@ -26,7 +26,7 @@ class Cache {
                         'ttl' => Config::get('concrete.cache.lifetime')
                     ),
                     'options' => array(
-                        'cache_dir' => Config::get('files.cache.directory'),
+                        'cache_dir' => Config::get('concrete.files.cache.directory'),
                         'file_locking' => false
                     ),
                     'plugins' => array(
@@ -145,15 +145,15 @@ class Cache {
 		$db = DB::get();
 
 		// flush the CSS cache
-		if (is_dir(Config::get('files.cache.directory') . '/' . DIRNAME_CSS)) {
+		if (is_dir(Config::get('concrete.files.cache.directory') . '/' . DIRNAME_CSS)) {
 			$fh = Loader::helper('file');
-			$fh->removeAll(Config::get('files.cache.directory') . '/' . DIRNAME_CSS);
+			$fh->removeAll(Config::get('concrete.files.cache.directory') . '/' . DIRNAME_CSS);
 		}
 
 		// flush the JS cache
-		if (is_dir(Config::get('files.cache.directory') . '/' . DIRNAME_JAVASCRIPT)) {
+		if (is_dir(Config::get('concrete.files.cache.directory') . '/' . DIRNAME_JAVASCRIPT)) {
 			$fh = Loader::helper('file');
-			$fh->removeAll(Config::get('files.cache.directory') . '/' . DIRNAME_JAVASCRIPT);
+			$fh->removeAll(Config::get('concrete.files.cache.directory') . '/' . DIRNAME_JAVASCRIPT);
 		}
 
 		$pageCache = PageCache::getLibrary();

@@ -53,7 +53,7 @@ class URL {
 			}
 		}
 
-		if (!URL_USE_TRAILING_SLASH) {
+		if (!Config::get('concrete.seo.trailing_slash')) {
 			$_path = rtrim($_path, '/');
 		}
 		return $_path;
