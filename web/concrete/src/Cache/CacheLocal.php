@@ -66,6 +66,10 @@ class CacheLocal
             return false;
         }
 
+        if (is_object($object)) {
+            $object = clone $object;
+        }
+
         return $cache->getItem(self::key($type, $id))->set($object);
 	}
 }
