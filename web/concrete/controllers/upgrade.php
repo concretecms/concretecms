@@ -23,7 +23,7 @@ class Upgrade extends BackendUserInterfaceController
         $this->view = new View('/frontend/upgrade');
         $this->setTheme('concrete');
 
-        $this->siteVersion = \Config::get('SITE_APP_VERSION');
+        $this->siteVersion = \Config::get('concrete.version_installed');
         $this->checkSecurity();
         \Cache::disableLocalCache();
     }
@@ -57,7 +57,7 @@ class Upgrade extends BackendUserInterfaceController
                     $migration->execute('up');
                 }
                 $this->set('success', t('Upgrade to <b>%s</b> complete!', APP_VERSION));
-                \Config::save('SITE_APP_VERSION', APP_VERSION);
+                \Config::save('concrete.version_installed', APP_VERSION);
             } catch (\Exception $e) {
                 $this->set('error', $e);
             }
