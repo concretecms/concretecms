@@ -45,7 +45,6 @@
             }
 
             my.reset();
-            this.setAttr('active', false);
         },
 
         reset: function areaReset() {
