@@ -5,6 +5,7 @@ use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockCont
 use Concrete\Core\Block\View\BlockView;
 use BlockType;
 use Concrete\Core\Cache\Cache;
+use Core;
 
 class Edit extends BackendInterfaceBlockController
 {
@@ -26,7 +27,7 @@ class Edit extends BackendInterfaceBlockController
 
     public function submit()
     {
-        Cache::disableAll();
+        //Core::make('cache/request')->disable();
         if ($this->validateAction() && $this->canAccess()) {
 
             $c = $this->page;
