@@ -15,7 +15,7 @@ class CssAsset extends Asset {
 	public function getAssetType() {return 'css';}
 
 	protected static function getRelativeOutputDirectory() {
-		return Config::get('concrete.files.cache.directory') . '/' . DIRNAME_CSS;
+		return REL_DIR_FILES_CACHE . '/' . DIRNAME_CSS;
 	}
 
 	protected static function getOutputDirectory() {
