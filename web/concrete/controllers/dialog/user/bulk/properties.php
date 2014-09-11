@@ -7,6 +7,7 @@ use Permissions;
 use \Concrete\Core\User\EditResponse as UserEditResponse;
 use UserAttributeKey;
 use Loader;
+use UserInfo;
 
 class Properties extends BackendInterfaceController {
 
@@ -65,7 +66,7 @@ class Properties extends BackendInterfaceController {
 
 	public function updateAttribute() {
 		$ur = new UserEditResponse();
-		$ak = UserAttributeKey::get($_REQUEST['name']);
+		$ak = UserAttributeKey::getByID($_REQUEST['name']);
 		if ($this->validateAction()) {
 			$this->populateUsers();
 			if ($this->canEdit && in_array($ak->getAttributeKeyID(), $this->allowedEditAttributes)) {
@@ -86,7 +87,7 @@ class Properties extends BackendInterfaceController {
 
 	public function clearAttribute() {
 		$ur = new UserEditResponse();
-		$ak = UserAttributeKey::get($_REQUEST['akID']);
+		$ak = UserAttributeKey::getByID($_REQUEST['akID']);
 		if ($this->validateAction()) {
 			$this->populateUsers();
 			if ($this->canEdit && in_array($ak->getAttributeKeyID(), $this->allowedEditAttributes)) {
