@@ -54,8 +54,8 @@
                     $container = block.getElem(),
                     prop;
 
-                if (block.menu) {
-                    block.menu.destroy();
+                if (block.getMenu()) {
+                    block.getMenu().destroy();
                 }
                 if (data.postData) {
                     for (prop in data.postData) {
