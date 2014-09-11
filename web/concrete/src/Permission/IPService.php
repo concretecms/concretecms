@@ -23,18 +23,18 @@ class IPService {
 		FROM UserBannedIPs
 		WHERE
 		(
-			(ipFrom = ? AND ipTo IS NULL)
+			(ipFrom = ? AND ipTo = 0)
 			OR
 			(ipFrom <= ? AND ipTo >= ?)
 		)
-		AND (expires = '0000-00-00 00:00:00' OR expires > now())
+		AND (expires = '0000-00-00 00:00:00' OR expires > ?)
 		";
 
 		if($extraParamString !== false){
 			$q .= $extraParamString;
 		}
 
-		$v = array($ip->getIp(), $ip->getIp(), $ip->getIp());
+		$v = array($ip->getIp(), $ip->getIp(), $ip->getIp(), date('Y-m-d H:i:s'));
 		$v = array_merge($v,$extraParamValues);
 
 		$rs 	= $db->Execute($q,$v);
@@ -93,11 +93,11 @@ class IPService {
 			$threshold_attempts  = Config::get('IP_BAN_LOCK_IP_ATTEMPTS');
 			$threshhold_seconds = Config::get('IP_BAN_LOCK_IP_TIME');
 			$ip = $this->getRequestIP();
-			$q = 'SELECT count(ipFrom) as count
+			$q = 'SELECT count(*) as count
 			FROM SignupRequests
 			WHERE ipFrom = ?
-			AND date_access > DATE_SUB(now(), INTERVAL ? SECOND)';
-			$v = Array($ip->getIp(), $threshhold_seconds);
+			AND date_access > DATE_SUB(?, INTERVAL ? SECOND)';
+			$v = Array($ip->getIp(), date('Y-m-d H:i:s'), $threshhold_seconds);
 
 			$rs = $db->execute($q,$v);
 			$row = $rs->fetchRow();
@@ -121,7 +121,7 @@ class IPService {
 			$db	= Loader::db();
 
 			//If there's a permanent ban, obey its setting otherwise set up a temporary ban
-			if ($this->existsManualPermBan($ip)) {
+			if (!$this->existsManualPermBan($ip)) {
 				$db->StartTrans();
 				$q 	= 'DELETE FROM UserBannedIPs WHERE ipFrom = ? AND ipTo = ? AND isManual = ?';
 				$v  = Array($ip->getIp(),0, 0);
