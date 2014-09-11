@@ -238,7 +238,7 @@ class Register extends PageController {
 			$ip->logSignupRequest();
 			if ($ip->signupRequestThreshholdReached()) {
 				$ip->createIPBan();
-			}		
+			}
 			$this->set('error', $e);
 			$registerData['errors'] = $e->getList();
 		}
