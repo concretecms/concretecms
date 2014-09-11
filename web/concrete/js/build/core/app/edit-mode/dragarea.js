@@ -39,7 +39,6 @@
             var my = this;
 
             my.getElem().remove();
-            my.setAttr('active', false);
         },
 
         bindEvent: function dragAreaBindEvent(event, handler) {

@@ -287,9 +287,9 @@ function ConcretePanel(options) {
             $('button[data-panel-detail-action=cancel]').on('click', function () {
                 obj.closePanelDetail();
             });
+            $content.find('[data-panel-detail-form]').concreteAjaxForm();
             $('button[data-panel-detail-action=submit]').on('click', function () {
-
-                $('[data-panel-detail-form]').concreteAjaxForm().submit();
+                $('[data-panel-detail-form]').submit();
             });
         }
     };

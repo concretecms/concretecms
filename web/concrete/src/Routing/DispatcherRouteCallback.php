@@ -80,14 +80,6 @@ class DispatcherRouteCallback extends RouteCallback {
 			}
 		}
 
-		// Check to see whether this is an external alias or a header 301 redirect. If so we go there.
-		/*
-		if (($request->getPath() != '') && ($request->getPath() != $c->getCollectionPath())) {
-			// canonnical paths do not match requested path
-			return Redirect::page($c, 301);
-		}
-		*/
-
 		if ($c->getCollectionPointerExternalLink() != '') {
 			return Redirect::url($c->getCollectionPointerExternalLink(), 301)->send();
 		}
@@ -132,7 +124,10 @@ class DispatcherRouteCallback extends RouteCallback {
 		$controller = $c->getPageController();
 		$controller->on_start();
 		$controller->setupRequestActionAndParameters($request);
-        if (!$controller->validateRequest()) {
+        $response = $controller->validateRequest();
+        if ($response instanceof \Concrete\Core\Http\Response) {
+            return $response;
+        } else if ($response == false) {
             return $this->sendPageNotFound($request);
         }
         $requestTask = $controller->getRequestAction();

@@ -32,6 +32,6 @@ class AutonavTest extends BlockTypeTestCase {
 	);
 
 	protected $expectedOutput = array(
-		'empty' => '<ul class="nav"></ul>'
+		'empty' => ''
 	);
 }

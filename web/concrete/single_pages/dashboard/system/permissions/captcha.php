@@ -2,7 +2,6 @@
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Captcha Settings'), false, 'span10 offset1', (!is_object($activeCaptcha) || (!$activeCaptcha->hasOptionsForm())))?>
 <form method="post" id="site-form" action="<?=$view->action('update_captcha')?>">
 <? if (is_object($activeCaptcha) && $activeCaptcha->hasOptionsForm()) { ?>
-	<div class="ccm-pane-body">
 <? } ?>
 <?=$this->controller->token->output('update_captcha')?>
 	<? if (count($captchas) > 0) { ?>
@@ -36,10 +35,11 @@
 		<p><?=t('You have no captcha libraries installed.')?></p>
 	<? } ?>
 
-<? if (is_object($activeCaptcha) && $activeCaptcha->hasOptionsForm()) { ?>
-	</div>
-	<div class="ccm-pane-footer">
-		<?=Loader::helper('concrete/ui')->submit(t('Save Additional Settings'), 'submit', 'right', 'primary')?>
+<? if (is_object($activeCaptcha)) { ?>
+    <div class="ccm-dashboard-form-actions-wrapper">
+        <div class="ccm-dashboard-form-actions">
+		<?=Loader::helper('concrete/ui')->submit(t('Save'), 'submit', 'right', 'btn-primary')?>
+        </div>
 	</div>
 <? } ?>	
 
@@ -53,5 +53,3 @@ $(function() {
 	});
 });
 </script>
-
-<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper((!is_object($activeCaptcha) || (!$activeCaptcha->hasOptionsForm())));?>
