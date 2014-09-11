@@ -57,7 +57,11 @@
                     if (my.options.dragArea) {
                         my.options.dragArea.getElem().after($elem);
                     } else {
-                        $area.children('.ccm-area-block-list').prepend($elem);
+                        if (my.options.btHandle === 'core_area_layout') {
+                            $area.children('.ccm-area-block-list').append($elem);
+                        } else {
+                            $area.children('.ccm-area-block-list').prepend($elem);
+                        }
                     }
                     Concrete.getEditMode().scanBlocks();
 

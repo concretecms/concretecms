@@ -131,10 +131,11 @@
                     Concrete.event.fire('EditModeBlockAddInline', {
                         area: my,
                         cID: CCM_CID,
-                        btID: $(this).attr('data-block-type-id'),
+                        btID: $(this).data('block-type-id'),
                         arGridMaximumColumns: $(this).attr('data-area-grid-maximum-columns'),
                         event: e,
-                        dragAreaBlock: dragAreaLastBlock
+                        dragAreaBlock: dragAreaLastBlock,
+                        btHandle: $(this).data('block-type-handle')
                     });
                     return false;
                 });

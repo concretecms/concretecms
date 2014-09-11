@@ -32,7 +32,7 @@
             }
 
             _.defer(function () {
-                Concrete.event.fire('EditModeBlockDragStop', {block: my, pep: pep, event: event});
+                Concrete.event.fire('EditModeBlockDragStop', { block: my, pep: pep, event: event });
             });
 
             my.getDragger().remove();
