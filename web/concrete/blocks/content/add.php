@@ -1,5 +1,8 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+$fp = FilePermissions::getGlobal();
+$tp = new TaskPermission();
+
 ?>
 
 <div id="redactor-edit-content"></div>
@@ -12,6 +15,11 @@ var CCM_EDITOR_SECURITY_TOKEN = "<?=Loader::helper('validation/token')->generate
 $(function() {
 	$('#redactor-content').redactor({
         minHeight: '300',
+        'concrete5': {
+            filemanager: <?=$fp->canAccessFileManager()?>,
+            sitemap: <?=$tp->canAccessSitemap()?>,
+            lightbox: true
+        },
 		'plugins': [
             'fontcolor', 'concrete5inline', 'concrete5'
 		]
