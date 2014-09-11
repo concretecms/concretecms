@@ -312,11 +312,10 @@
             }).get(0);
 
             // Modified transformie polyfill
-            if (element.filters) {
-                if (!element.filters['DXImageTransform.Microsoft.Matrix']) {
-                    element.style.filter = (element.style.filter ? '' : ' ' ) + 'progid:DXImageTransform.Microsoft.Matrix(sizingMethod=\'auto expand\')';
-                }
-
+            if (element.filters && !!element.filters['DXImageTransform.Microsoft.Matrix']) {
+                var matrix = {
+                    elements: _(matrix).groupBy(function(v, key) { return Math.floor(key / 3); })
+                };
                 element.filters['DXImageTransform.Microsoft.Matrix'].M11 = matrix.elements[0][0];
                 element.filters['DXImageTransform.Microsoft.Matrix'].M12 = matrix.elements[0][1];
                 element.filters['DXImageTransform.Microsoft.Matrix'].M21 = matrix.elements[1][0];
