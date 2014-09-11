@@ -15,8 +15,8 @@ function getAttributeOptionHTML($v){
 		?>
 		<div id="akSelectValueDisplay_<?=$akSelectValueID?>" >
 			<div class="rightCol">
-				<input class="btn" type="button" onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Edit')?>" />
-				<input class="btn" type="button" onClick="ccmAttributesHelper.deleteValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Delete')?>" />
+				<input class="btn btn-primary" type="button" onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Edit')?>" />
+				<input class="btn btn-danger" type="button" onClick="ccmAttributesHelper.deleteValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Delete')?>" />
 			</div>			
 			<span onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueID)?>')" id="akSelectValueStatic_<?=$akSelectValueID?>" class="leftCol"><?=$akSelectValue ?></span>
 		</div>
@@ -28,11 +28,11 @@ function getAttributeOptionHTML($v){
 				<? } else { ?>
 					<input id="akSelectValueNewOption_<?=$akSelectValueID?>" name="akSelectValueNewOption_<?=$akSelectValueID?>" type="hidden" value="<?=$akSelectValueID?>" />
 				<? } ?>
-				<input id="akSelectValueField_<?php echo $akSelectValueID?>" onkeypress="ccmAttributesHelper.keydownHandler(event);" class="akSelectValueField" data-select-value-id="<?php echo $akSelectValueID; ?>" name="akSelectValue_<?php echo $akSelectValueID?>" type="text" value="<?php echo $akSelectValue?>" size="20" />
+				<input id="akSelectValueField_<?php echo $akSelectValueID?>" onkeypress="ccmAttributesHelper.keydownHandler(event);" class="akSelectValueField form-control" data-select-value-id="<?php echo $akSelectValueID; ?>" name="akSelectValue_<?php echo $akSelectValueID?>" type="text" value="<?php echo $akSelectValue?>" size="40" />
 			</span>		
 			<div class="rightCol">
-				<input class="btn" type="button" onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Cancel')?>" />
-				<input class="btn" type="button" onClick="ccmAttributesHelper.changeValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Save')?>" />
+				<input class="btn btn-default" type="button" onClick="ccmAttributesHelper.editValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Cancel')?>" />
+				<input class="btn btn-success" type="button" onClick="ccmAttributesHelper.changeValue('<?=addslashes($akSelectValueID)?>')" value="<?=t('Save')?>" />
 			</div>		
 		</div>	
 		<div class="ccm-spacer">&nbsp;</div>
@@ -41,28 +41,27 @@ function getAttributeOptionHTML($v){
 <fieldset>
 <legend><?=t('Select Options')?></legend>
 
-<div class="clearfix">
-<label><?=t("Multiple Values")?></label>
-<div class="input">
-<ul class="inputs-list">
-<li><label><?=$form->checkbox('akSelectAllowMultipleValues', 1, $akSelectAllowMultipleValues)?> <span><?=t('Allow multiple options to be chosen.')?></span></label></li>
-</ul>
-</div>
-</div>
-
-<div class="clearfix">
-<label><?=t("User Submissions")?></label>
-<div class="input">
-<ul class="inputs-list">
-<li><label><?=$form->checkbox('akSelectAllowOtherValues', 1, $akSelectAllowOtherValues)?> <span><?=t('Allow users to add to this list.')?></span></label></li>
-</ul>
-</div>
+<div class="form-group">
+    <label><?=t("Multiple Values")?></label>
+    <div class="checkbox">
+        <label>
+            <?=$form->checkbox('akSelectAllowMultipleValues', 1, $akSelectAllowMultipleValues)?> <span><?=t('Allow multiple options to be chosen.')?></span>
+        </label>
+    </div>
 </div>
 
-<div class="clearfix">
+<div class="form-group">
+    <label><?=t("User Submissions")?></label>
+    <div class="checkbox">
+        <label>
+            <?=$form->checkbox('akSelectAllowOtherValues', 1, $akSelectAllowOtherValues)?> <span><?=t('Allow users to add to this list.')?></span>
+        </label>
+    </div>
+</div>
+
+<div class="form-group">
 <label for="akSelectOptionDisplayOrder"><?=t("Option Order")?></label>
-<div class="input">
-	<? 
+	<?
 	$displayOrderOptions = array(
 		'display_asc' => t('Display Order'),
 		'alpha_asc' => t('Alphabetical'),
@@ -71,7 +70,6 @@ function getAttributeOptionHTML($v){
 	?>
 
 	<?=$form->select('akSelectOptionDisplayOrder', $displayOrderOptions, $akSelectOptionDisplayOrder)?>
-</div>
 </div>
 
 <div class="clearfix">
@@ -88,7 +86,7 @@ function getAttributeOptionHTML($v){
 			$akSelectValueID = $v->getSelectAttributeOptionID();
 		}
 		?>
-		<div id="akSelectValueWrap_<?=$akSelectValueID?>" class="akSelectValueWrap <? if ($akSelectOptionDisplayOrder == 'display_asc') { ?> akSelectValueWrapSortable <? } ?>">
+		<div id="akSelectValueWrap_<?=$akSelectValueID?>" class="akSelectValueWrap akSelectValueWrapSortable">
 			<?=getAttributeOptionHTML( $v )?>
 		</div>
 	<? } ?>
@@ -98,13 +96,13 @@ function getAttributeOptionHTML($v){
 		<?=getAttributeOptionHTML('TEMPLATE') ?>
 	</div>
 	
-	<div id="addAttributeValueWrap"> 
-		<input id="akSelectValueFieldNew" name="akSelectValueNew" type="text" value="<?=$defaultNewOptionNm ?>" size="40" class="faint" 
+	<div id="addAttributeValueWrap" class="form-inline">
+		<input id="akSelectValueFieldNew" name="akSelectValueNew" type="text" value="<?=$defaultNewOptionNm ?>" size="40"  class="form-control"
 		onfocus="ccmAttributesHelper.clrInitTxt(this,'<?=$defaultNewOptionNm ?>','faint',0)" 
 		onblur="ccmAttributesHelper.clrInitTxt(this,'<?=$defaultNewOptionNm ?>','faint',1)"
 		onkeypress="ccmAttributesHelper.keydownHandler(event);"
 		 /> 
-		<input class="btn" type="button" onClick="ccmAttributesHelper.saveNewOption(); $('#ccm-attribute-key-form').unbind()" value="<?=t('Add') ?>" />
+		<input class="btn btn-primary" type="button" onClick="ccmAttributesHelper.saveNewOption(); $('#ccm-attribute-key-form').unbind()" value="<?=t('Add') ?>" />
 	</div>
 	</div>
 
@@ -113,7 +111,7 @@ function getAttributeOptionHTML($v){
 
 
 </fieldset>
-<? if ($akSelectOptionDisplayOrder == 'display_asc') { ?>
+<? //if ($akSelectOptionDisplayOrder == 'display_asc') { ?>
 <script type="text/javascript">
 //<![CDATA[
 $(function() {
@@ -121,4 +119,4 @@ $(function() {
 });
 //]]>
 </script>
-<? } ?>
+<? //} ?>
