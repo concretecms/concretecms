@@ -15,12 +15,13 @@ class IndexedSearch
 {
 
     public $searchBatchSize;
-    public $searchReindexTimeout = PAGE_SEARCH_INDEX_LIFETIME;
+    public $searchReindexTimeout;
 
     private $cPathSections = array();
     private $searchableAreaNames;
 
     public function __construct() {
+        $this->searchReindexTimeout = Config::get('concrete.misc.page_search_index_lifetime');
         $this->searchBatchSize = Config::get('concrete.limits.page_search_index_batch');
     }
 

@@ -40,7 +40,7 @@ class Navigation {
 			$link = BASE_URL . $link;
 		}
 
-		if (!URL_USE_TRAILING_SLASH && $link != '/') {
+		if (!Config::get('concrete.seo.trailing_slash') && $link != '/') {
 			$link = rtrim($link, '/');
 		}
 

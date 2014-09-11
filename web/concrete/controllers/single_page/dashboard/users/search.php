@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
 use \Concrete\Core\Page\Controller\DashboardPageController;
+use Config;
 use Imagine\Image\Box;
 use Loader;
 use Exception;
@@ -32,7 +33,10 @@ class Search extends DashboardPageController
             $av = Loader::helper('concrete/avatar');
             if (is_uploaded_file($_FILES['avatar']['tmp_name']) ) {
                 $image = \Image::open($_FILES['avatar']['tmp_name']);
-                $image = $image->thumbnail(new Box(AVATAR_WIDTH, AVATAR_HEIGHT));
+                $image = $image->thumbnail(new Box(
+                                               Config::get('concrete.icons.user_avatar.width'),
+                                               Config::get('concrete.icons.user_avatar.height')
+                                           ));
                 $this->user->updateUserAvatar($image);
             } else {
                 if ($_POST['task'] == 'clear') {

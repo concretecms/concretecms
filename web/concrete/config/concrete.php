@@ -7,31 +7,31 @@ return array(
      *
      * @var string
      */
-    'version'             => '5.7.0b2',
+    'version'          => '5.7.0b2',
 
     /**
      * Installation status
      *
      * @var bool
      */
-    'installed'           => true,
+    'installed'        => true,
 
     /**
      * The current Site Name
      *
      * @var string concrete.core.site
      */
-    'site' => 'concrete5',
+    'site'             => 'concrete5',
 
     /**
      * The current Locale
      */
-    'locale' => 'en_US',
+    'locale'           => 'en_US',
 
     /**
      * The current Charset
      */
-    'charset' => 'UTF-8',
+    'charset'          => 'UTF-8',
 
     /**
      * Maintenance mode
@@ -43,24 +43,26 @@ return array(
      * Debug settings
      * ------------------------------------------------------------------------
      */
-    'debug' => array(
+    'debug'            => array(
 
         /**
          * Site debug level
+         *
          * @var int
          */
         'level' => 1
 
     ),
+
     /**
      * ------------------------------------------------------------------------
      * Proxy Settings
      * ------------------------------------------------------------------------
      */
-    'proxy' => array(
-        'host' => null,
-        'port' => null,
-        'user' => null,
+    'proxy'            => array(
+        'host'     => null,
+        'port'     => null,
+        'user'     => null,
         'password' => null
     ),
 
@@ -69,7 +71,7 @@ return array(
      * File upload settings
      * ------------------------------------------------------------------------
      */
-    'upload' => array(
+    'upload'           => array(
 
         /**
          * Allowed file extensions
@@ -80,19 +82,20 @@ return array(
             '*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.3gp;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;' .
             '*.pptx;*.kml;*.xml;*.svg;*.webm;*.ogg;*.ogv'
     ),
+
     /**
      * ------------------------------------------------------------------------
      * Mail settings
      * ------------------------------------------------------------------------
      */
-    'mail' => array(
-        'method' => 'smtp',
+    'mail'             => array(
+        'method'  => 'smtp',
         'methods' => array(
             'smtp' => array(
-                'server' => '',
-                'port' => '',
-                'username' => '',
-                'password' => '',
+                'server'     => '',
+                'port'       => '',
+                'username'   => '',
+                'password'   => '',
                 'encryption' => ''
             )
         )
@@ -103,56 +106,56 @@ return array(
      * Cache settings
      * ------------------------------------------------------------------------
      */
-    'cache' => array(
+    'cache'            => array(
 
         /**
          * Lifetime
          *
          * @var int Seconds
          */
-        'lifetime' => 21600,
+        'lifetime'                 => 21600,
 
         /**
          * Cache overrides
          *
          * @var bool
          */
-        'overrides' => false,
+        'overrides'                => false,
 
         /**
          * Cache Blocks
          *
          * @var bool
          */
-        'blocks' => false,
+        'blocks'                   => false,
 
         /**
          * Cache Assets
          *
          * @var bool
          */
-        'assets' => false,
+        'assets'                   => false,
 
         /**
          * Cache Theme CSS/JS
          *
          * @var bool
          */
-        'theme_css' => false,
+        'theme_css'                => false,
 
         /**
          * Cache full page
          *
          * @var bool|string (block|all)
          */
-        'pages' => false,
+        'pages'                    => false,
 
         /**
          * How long to cache full page
          *
          * @var string
          */
-        'full_page_lifetime' => 'default',
+        'full_page_lifetime'       => 'default',
 
         /**
          * Custom lifetime value, only used if concrete.cache.full_page_lifetime is 'custom'
@@ -160,8 +163,7 @@ return array(
          * @var int
          */
         'full_page_lifetime_value' => null,
-
-        'identifier' => md5(str_replace(array('https://', 'http://'), '', BASE_URL) . DIR_REL),
+        'identifier'               => md5(str_replace(array('https://', 'http://'), '', BASE_URL) . DIR_REL),
 
     ),
 
@@ -170,7 +172,7 @@ return array(
      * Logging settings
      * ------------------------------------------------------------------------
      */
-    'log' => array(
+    'log'              => array(
 
         /**
          * Log emails
@@ -191,7 +193,7 @@ return array(
          *
          * @var bool
          */
-        'spam' => false
+        'spam'   => false
     ),
 
     /**
@@ -199,7 +201,7 @@ return array(
      * Email settings
      * ------------------------------------------------------------------------
      */
-    'email' => array(
+    'email'            => array(
 
         /**
          * Enable emails
@@ -207,10 +209,12 @@ return array(
          * @var bool
          */
         'enabled' => true,
-
         'default' => array(
-            'address' => 'concrete5-noreply@' . str_replace(array('http://www.', 'https://www.', 'http://', 'https://'), '', BASE_URL),
-            'name' => ''
+            'address' => 'concrete5-noreply@' . str_replace(
+                    array('http://www.', 'https://www.', 'http://', 'https://'),
+                    '',
+                    BASE_URL),
+            'name'    => ''
         )
     ),
 
@@ -219,27 +223,27 @@ return array(
      * Marketplace settings
      * ------------------------------------------------------------------------
      */
-    'marketplace' => array(
+    'marketplace'      => array(
         /**
          * Enable marketplace integration
          *
          * @var bool
          */
-        'enabled' => true,
+        'enabled'            => true,
 
         /**
          * Marketplace Token
          *
          * @var null|string
          */
-        'token' => null,
+        'token'              => null,
 
         /**
          * Marketplace Site url Token
          *
          * @var null|string
          */
-        'site_token' => null,
+        'site_token'         => null,
 
         /**
          * Enable intelligent search integration
@@ -252,7 +256,7 @@ return array(
      * Various core settings
      * ------------------------------------------------------------------------
      */
-    'core' => array(
+    'core'             => array(
 
         /**
          * Provide help within the intelligent search
@@ -266,14 +270,14 @@ return array(
          *
          * @var bool concrete.core.news_overlay
          */
-        'news_overlay' => true,
+        'news_overlay'            => true,
 
         /**
          * Enable concrete5 news within your site
          *
          * @var bool concrete.core.news
          */
-        'news' => true,
+        'news'                    => true,
     ),
 
     /**
@@ -281,47 +285,66 @@ return array(
      * Miscellaneous settings
      * --------------------------------------------------------------------
      */
-    'misc' => array(
-        'user_timezones' => false,
-        'progressive_page_reindex' => true,
-        'mail_send_method' => 'PHP_MAIL',
-        'mobile_theme_id' => 0,
-        'seen_introduction' => false
+    'misc'             => array(
+        'user_timezones'                                    => false,
+        'progressive_page_reindex'                          => true,
+        'mail_send_method'                                  => 'PHP_MAIL',
+        'mobile_theme_id'                                   => 0,
+        'seen_introduction'                                 => false,
+        'sitemap_approve_immediately'                       => true,
+        'enable_translate_locale_en_us'                     => false,
+        'page_search_index_lifetime'                        => 259200,
+        'enable_trash_can'                                  => true,
+        'enable_auto_update_core'                           => false,
+        'enable_auto_update_packages'                       => false,
+        'app_version_display_in_header'                     => true,
+        'conversation_message_attachments_pending_file_set' => 'Conversation Messages (Pending)',
     ),
-
-    'paths' => array(
-        'trash' => '/!trash',
+    'paths'            => array(
+        'trash'  => '/!trash',
         'drafts' => '/!drafts'
     ),
-
-    'icons' => array(
-        'page_template' => array(
-            'width' => 120,
+    'files'            => array(
+        'cache' => array(
+            'directory'   => DIR_FILES_UPLOADED_STANDARD . '/cache',
+            'page'        => array(
+                'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache/pages',
+                'file'      => 'file',
+            ),
+            'environment' => array(
+                'file' => 'environment.cache'
+            )
+        )
+    ),
+    'icons'            => array(
+        'page_template'        => array(
+            'width'  => 120,
             'height' => 90
         ),
-
-        'theme_thumbnail' => array(
-            'width' => 120,
+        'theme_thumbnail'      => array(
+            'width'  => 120,
             'height' => 90
         ),
-
         'file_manager_listing' => array(
             'handle' => 'file_manager_listing',
-            'width' => 60,
+            'width'  => 60,
             'height' => 60
         ),
-
-        'file_manager_detail' => array(
+        'file_manager_detail'  => array(
             'handle' => 'file_manager_detail',
-            'width' => 400
+            'width'  => 400
         ),
+        'user_avatar'          => array(
+            'width'   => 80,
+            'height'  => 80,
+            'default' => ASSETS_URL_IMAGES . '/avatar_none.png'
+        )
     ),
-
-    'sitemap_xml' => array(
-        'file' => 'sitemap.xml',
+    'sitemap_xml'      => array(
+        'file'      => 'sitemap.xml',
         'frequency' => 'weekly',
-        'priority' => 0.5,
-        'base_url' => BASE_URL
+        'priority'  => 0.5,
+        'base_url'  => BASE_URL
     ),
 
     /**
@@ -329,13 +352,13 @@ return array(
      * Accessibility
      * ------------------------------------------------------------------------
      */
-    'accessibility' => array(
+    'accessibility'    => array(
         /**
          * Show titles in the concrete5 toolbars
          *
          * @var bool
          */
-        'toolbar_titles' => false,
+        'toolbar_titles'     => false,
 
         /**
          * Increase the font size in the concrete5 toolbars
@@ -350,12 +373,12 @@ return array(
      * Internationalization
      * ------------------------------------------------------------------------
      */
-    'i18n' => array(
+    'i18n'             => array(
 
         /**
          * Enable internationalization
          */
-        'enabled' => true,
+        'enabled'               => true,
 
         /**
          * Allow users to choose language on login
@@ -365,31 +388,28 @@ return array(
         'choose_language_login' => false
 
     ),
-
-    'urls' => array(
-        'concrete5' => 'http://www.concrete5.org',
-        'concrete5_secure' => 'https://www.concrete5.org',
-        'newsflow' => 'http://newsflow.concrete5.org',
-        'background_feed' => '//backgroundimages.concrete5.org/wallpaper',
+    'urls'             => array(
+        'concrete5'              => 'http://www.concrete5.org',
+        'concrete5_secure'       => 'https://www.concrete5.org',
+        'newsflow'               => 'http://newsflow.concrete5.org',
+        'background_feed'        => '//backgroundimages.concrete5.org/wallpaper',
         'background_feed_secure' => 'https://backgroundimages.concrete5.org/wallpaper',
-        'background_info' => 'http://backgroundimages.concrete5.org/get_image_data.php',
-
-        'paths' => array(
+        'background_info'        => 'http://backgroundimages.concrete5.org/get_image_data.php',
+        'paths'                  => array(
             'menu_help_service' => '/tools/get_remote_help_list/',
-            'theme_preview' => '/tools/preview_theme/',
-            'site_page' => '/private/sites',
-            'slot_content' => '/tools/slot_content/',
-
-            'marketplace' => array(
-                'connect' => '/marketplace/connect',
-                'connect_success' => '/marketplace/connect/-/connected',
-                'connect_validate' => '/marketplace/connect/-/validate',
+            'theme_preview'     => '/tools/preview_theme/',
+            'site_page'         => '/private/sites',
+            'slot_content'      => '/tools/slot_content/',
+            'marketplace'       => array(
+                'connect'           => '/marketplace/connect',
+                'connect_success'   => '/marketplace/connect/-/connected',
+                'connect_validate'  => '/marketplace/connect/-/validate',
                 'connect_new_token' => '/marketplace/connect/-/generate_token',
-                'checkout' => '/cart/-/add/',
-                'purchases' => '/marketplace/connect/-/get_available_licenses',
-                'item_information' => '/marketplace/connect/-/get_item_information',
+                'checkout'          => '/cart/-/add/',
+                'purchases'         => '/marketplace/connect/-/get_available_licenses',
+                'item_information'  => '/marketplace/connect/-/get_item_information',
                 'item_free_license' => '/marketplace/connect/-/enable_free_license',
-                'remote_item_list' => '/marketplace/'
+                'remote_item_list'  => '/marketplace/'
             )
         )
     ),
@@ -399,21 +419,21 @@ return array(
      * White labeling.
      * ------------------------------------------------------------------------
      */
-    'white_label' => array(
+    'white_label'      => array(
 
         /**
          * Custom Logo source path relative to the public directory.
          *
          * @var bool|string The logo path
          */
-        'logo' => false,
+        'logo'                 => false,
 
         /**
          * Custom Name
          *
          * @var bool|string The name
          */
-        'name' => false,
+        'name'                 => false,
 
         /**
          * Dashboard background image url
@@ -428,34 +448,34 @@ return array(
      * User information and registration settings.
      * ------------------------------------------------------------------------
      */
-    'user' => array(
+    'user'             => array(
         /**
          * --------------------------------------------------------------------
          * Registration settings.
          * --------------------------------------------------------------------
          */
-        'registration' => array(
+        'registration'      => array(
 
             /**
              * Registration
              *
              * @var bool
              */
-            'enabled' => false,
+            'enabled'            => false,
 
             /**
              * Registration type
              *
              * @var string The type (disabled|enabled|validate_email|manual_approve)
              */
-            'type' => 'disabled',
+            'type'               => 'disabled',
 
             /**
              * Enable Registration Captcha
              *
              * @var bool
              */
-            'captcha' => true,
+            'captcha'            => true,
 
             /**
              * Use emails instead of usernames to log in
@@ -469,29 +489,30 @@ return array(
              *
              * @var bool
              */
-            'validate_email' => false,
+            'validate_email'     => false,
 
             /**
              * Admins approve each registration
              *
              * @var bool
              */
-            'approval' => false,
+            'approval'           => false,
 
             /**
              * Send notifications after successful registration.
              *
              * @var bool|string Email to notify
              */
-            'notification' => false
+            'notification'       => false
         ),
+
         /**
          * --------------------------------------------------------------------
          * Gravatar Settings
          * --------------------------------------------------------------------
          */
-        'gravatar' => array(
-            'enabled' => false,
+        'gravatar'          => array(
+            'enabled'   => false,
             'max_level' => 0,
             'image_set' => 0
         ),
@@ -501,7 +522,7 @@ return array(
          *
          * @var bool
          */
-        'profiles_enabled' => false,
+        'profiles_enabled'  => false,
 
         /**
          * Enable user timezones
@@ -516,7 +537,7 @@ return array(
      * Spam
      * ------------------------------------------------------------------------
      */
-    'spam' => array(
+    'spam'             => array(
         /**
          * Whitelist group ID
          *
@@ -529,7 +550,7 @@ return array(
          *
          * @var string
          */
-        'notify_email' => ''
+        'notify_email'    => ''
     ),
 
     /**
@@ -537,11 +558,11 @@ return array(
      * Security
      * ------------------------------------------------------------------------
      */
-    'security' => array(
-        'ban' => array(
+    'security'         => array(
+        'ban'   => array(
             'ip' => array(
 
-                'enabled' => true,
+                'enabled'  => true,
 
                 /**
                  * Maximum attempts
@@ -551,17 +572,17 @@ return array(
                 /**
                  * Threshold time
                  */
-                'time' => 300,
+                'time'     => 300,
 
                 /**
                  * Ban length in minutes
                  */
-                'length' => 10
+                'length'   => 10
             )
         ),
         'token' => array(
             'encryption' => '',
-            'jobs' => '',
+            'jobs'       => '',
             'validation' => ''
         )
     ),
@@ -571,41 +592,41 @@ return array(
      * Permissions and behaviors toggles.
      * ------------------------------------------------------------------------
      */
-    'permissions' => array(
+    'permissions'      => array(
         /**
          * Forward to login if access is denied
          *
          * @var bool
          */
-        'forward_to_login' => true,
+        'forward_to_login'              => true,
 
         /**
          * Permission model
          *
          * @var string The permission model (simple|advanced)
          */
-        'model' => 'simple',
+        'model'                         => 'simple',
 
         /**
          * Allow area/layout specific permissions in edit mode
          *
          * @var bool
          */
-        'enable_area' => true,
+        'enable_area'                   => true,
 
         /**
          * Allow custom design
          *
          * @var bool
          */
-        'enable_custom_design' => true,
+        'enable_custom_design'          => true,
 
         /**
          * Use collection ID for page permission identifier
          *
          * @var bool
          */
-        'page_permission_collection_id' => \Concrete\Core\Permission\Access\PageAccess::usePermissionCollectionIDForIdentifier()
+        'page_permission_collection_id' => true
     ),
 
     /**
@@ -613,32 +634,30 @@ return array(
      * SEO Settings
      * ------------------------------------------------------------------------
      */
-    'seo' => array (
+    'seo'              => array(
 
-        'tracking' => array(
+        'tracking'       => array(
             /**
              * User defined tracking code
              *
              * @var string
              */
-            'code' => '',
+            'code'                 => '',
 
             /**
              * Tracking code position
              *
              * @var string (top|bottom)
              */
-            'code_position' => 'bottom',
-
-            'title_format' => '%1$s :: %2$s',
-            'page_path_separator' => '-',
+            'code_position'        => 'bottom',
+            'title_format'         => '%1$s :: %2$s',
+            'page_path_separator'  => '-',
             'group_name_separator' => ' / ',
-            'segment_max_length' => 128,
-            'paging_string' => 'ccm_paging_p',
+            'segment_max_length'   => 128,
+            'paging_string'        => 'ccm_paging_p',
 
         ),
-
-        'exclude_words' => 'a, an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, ' .
+        'exclude_words'  => 'a, an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, ' .
             'since, than, the, this, that, to, up, via, with',
 
         /**
@@ -649,7 +668,8 @@ return array(
          *
          * @var bool
          */
-        'url_rewriting' => false,
+        'url_rewriting'  => false,
+        'trailing_slash' => false
 
     ),
 
@@ -658,15 +678,14 @@ return array(
      * Statistics Settings
      * ------------------------------------------------------------------------
      */
-    'statistics' => array(
+    'statistics'       => array(
         'track_page_views' => true
     ),
-
-    'limits' => array(
-        'sitemap_pages' => 100,
-        'delete_pages' => 10,
-        'copy_pages' => 10,
+    'limits'           => array(
+        'sitemap_pages'           => 100,
+        'delete_pages'            => 10,
+        'copy_pages'              => 10,
         'page_search_index_batch' => 200,
-        'job_queue_batch' => 10
+        'job_queue_batch'         => 10
     )
 );

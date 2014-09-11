@@ -10,6 +10,7 @@ use Permissions;
 use URL;
 use User;
 use View;
+use Config;
 
 class PageView extends View
 {
@@ -116,7 +117,7 @@ class PageView extends View
         }
 
         $env = Environment::get();
-        $output = Config::get('files.cache.directory') . '/pages/' . $this->c->getCollectionID() . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle();
+        $output = Config::get('concrete.files.cache.directory') . '/pages/' . $this->c->getCollectionID() . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle();
         $relative = REL_DIR_FILES_CACHE . '/pages/' . $this->c->getCollectionID() . '/' . DIRNAME_CSS . '/' . $this->getThemeHandle();
         $r = $env->getRecord(
             DIRNAME_THEMES . '/' . $this->themeObject->getThemeHandle() . '/' . DIRNAME_CSS . '/' . $stylesheet,

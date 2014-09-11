@@ -29,7 +29,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 			<strong><?=t2('This will remove %s child page.', 'This will remove %s child pages.', $numChildren, $numChildren)?></strong>
 		<? } ?>
 
-		<? if (ENABLE_TRASH_CAN) { ?>
+		<? if (Config::get('concrete.misc.enable_trash_can')) { ?>
 			<p><?=t('Deleted pages are moved to the trash can in the sitemap.')?></p>
 		<? } else { ?>
 			<p><?=t('This cannot be undone.')?></p>

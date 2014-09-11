@@ -97,7 +97,7 @@ use Config;
 				$link = $this->cPointerExternalLink;
 			} else if ($this->cPath) {
 				$link = DIR_REL . $dispatcher . $this->cPath;
-				if (URL_USE_TRAILING_SLASH) {
+				if (Config::get('concrete.seo.trailing_slash')) {
 					$link .= '/';
 				}
 			} else if ($this->cID == HOME_CID) {

@@ -98,17 +98,17 @@ class ImageHelper
                 . '.' . $fh->getExtension($obj);
         }
 
-        if (!file_exists(Config::get('files.cache.directory') . '/' . $filename)) {
+        if (!file_exists(Config::get('concrete.files.cache.directory') . '/' . $filename)) {
             // create image there
             $this->create($image,
-                          Config::get('files.cache.directory') . '/' . $filename,
+                          Config::get('concrete.files.cache.directory') . '/' . $filename,
                 $maxWidth,
                 $maxHeight,
                 $crop);
         }
 
         $src = REL_DIR_FILES_CACHE . '/' . $filename;
-        $abspath = Config::get('files.cache.directory') . '/' . $filename;
+        $abspath = Config::get('concrete.files.cache.directory') . '/' . $filename;
         $thumb = new \stdClass;
         if (isset($abspath) && file_exists($abspath)) {
             $thumb->src = $src;

@@ -72,7 +72,7 @@ if($c->getCollectionAttributeValue('exclude_search_index')) { ?>
     <meta name="robots" content="noindex" />
 <?php } ?>
 <?php
-if (defined('APP_VERSION_DISPLAY_IN_HEADER') && APP_VERSION_DISPLAY_IN_HEADER) {
+if (Config::get('concrete.misc.app_version_display_in_header')) {
     echo '<meta name="generator" content="concrete5 - ' . APP_VERSION . '" />';
 }
 else {
