@@ -1580,7 +1580,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $cCacheFullPageContent = $data['cCacheFullPageContent'];
         }
         if (isset($data['cCacheFullPageContentLifetimeCustom'])) {
-            $cCacheFullPageContentLifetimeCustom = $data['cCacheFullPageContentLifetimeCustom'];
+            $cCacheFullPageContentLifetimeCustom = intval($data['cCacheFullPageContentLifetimeCustom']);
         }
         if (isset($data['cCacheFullPageContentOverrideLifetime'])) {
             $cCacheFullPageContentOverrideLifetime = $data['cCacheFullPageContentOverrideLifetime'];
