@@ -13,6 +13,7 @@ use \Concrete\Core\Foundation\Object;
 use Config;
 use Loader;
 use DOMDocument;
+use \voku\helper\UTF8;
 
 class Text {
 
@@ -84,6 +85,46 @@ class Text {
 		$text = strtolower ($text);							// convert to lowercase
 		return trim(substr($text, 0, $maxlength), '-');	// trim to first $maxlength chars
 	}
+	
+	
+    /**
+     * cleanup UTF-8 string and remove unsafe characters for URL slug
+     * 
+     * @see http://pageconfig.com/post/portable-utf8 about Portable UTF-8 library
+     * @param string $handle
+     * @return string $handle
+     */
+    public function slugSafeString($handle)
+    {
+        $handle = UTF8::cleanup($handle,true);
+        if (UTF8::pcre_utf8_support() === true) {
+            $handle = preg_replace('/[^\\p{L}\\p{Nd}\-_]+/u', '-', $handle);
+        } else {
+            $handle = preg_replace('/[\>\<\+\?\&\"\'\/\\\:\s\-\#\%\=]+/', '-', $handle);
+        }
+        return $handle;
+    }
+
+    /**
+     * URL-encodes collection path
+     * 
+     * @param string $path
+     * @return string $path
+     */
+    public static function getEncodedPath($path)
+    {
+        if (UTF8::strpos($path, '/') !== false) {
+            $path = explode('/', $path);
+            $path = array_map('rawurlencode', $path);
+            $newPath = implode('/', $path);
+        } else if (is_null($path)) {
+            $newPath = NULL;
+        } else {
+            $newPath = rawurlencode($path);
+        }
+        $path = str_replace('%21','!', $newPath);
+        return $path;
+    }
 
 
 	/**
