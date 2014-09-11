@@ -631,6 +631,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $db = Loader::db();
         $dh = Loader::helper('date');
         $dt = Loader::helper('text');
+        $ds = Loader::helper('security');
         $u = new User();
 
         $cParentID = $this->getCollectionID();
@@ -641,6 +642,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $handle = $this->getCollectionHandle();
 
         // make the handle out of the title
+        $cLink = $ds->sanitizeURL($cLink);
         $handle = $dt->urlify($cLink);
         $data['handle'] = $handle;
         $data['name'] = $cName;
