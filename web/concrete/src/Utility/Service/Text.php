@@ -95,6 +95,7 @@ class Text {
     public function slugSafeString($handle)
     {
         $handle = preg_replace('/[^\\p{L}\\p{Nd}\-_]+/u', ' ', $handle); // remove unneeded chars
+        $handle = trim($handle);
         return preg_replace('/[-\s]+/', '-', $handle); // convert spaces to hyphens
     }
 
