@@ -20,10 +20,6 @@ class CacheLocal
         return $group . '/' . $id;
     }
 
-	public function getEntries() {
-		return array();
-	}
-
 	public static function get() {
 		static $instance;
 		if (!isset($instance)) {
