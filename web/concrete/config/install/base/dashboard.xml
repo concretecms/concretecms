@@ -357,9 +357,6 @@
                 <attributekey handle="meta_keywords">
                     <value>stacks, reusable content, scrapbook, copy, paste, paste block, copy block, site name, logo</value>
                 </attributekey>
-                <attributekey handle="icon_dashboard">
-                    <value>fa fa-th</value>
-                </attributekey>
             </attributes>
 
         </page>
