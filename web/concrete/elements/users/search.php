@@ -56,7 +56,7 @@ $searchRequest = $flr->getSearchRequest();
 		</div>
 	</div>
 	<ul class="ccm-search-form-advanced list-inline">
-		<li><a href="#" data-search-toggle="advanced"><?=t('Advanced Search')?></a>
+		<li><a href="#" data-search-toggle="advanced"><?=t('Add Advanced Search Filter')?></a>
 		<li><a href="#" data-search-toggle="customize" data-search-column-customize-url="<?=URL::to('/ccm/system/dialogs/user/search/customize')?>"><?=t('Customize Results')?></a>
 	</ul>
 	</div>
