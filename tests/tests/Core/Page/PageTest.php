@@ -66,13 +66,10 @@ class PageTest extends PageTestCase {
     }
 
     public function testSinglePagesController() {
-        $reportsPage = SinglePage::add('/dashboard/reports');
-        $reportsPage = Page::getByPath('/dashboard/reports');
-        ob_start();
-        // want to not display the redirect that comes from reports.
+        $reportsPage = SinglePage::add('/dashboard/reports/surveys');
+        $reportsPage = Page::getByPath('/dashboard/reports/surveys');
         $controller = $reportsPage->getController();
-        ob_end_clean();
-        $this->assertInstanceOf('\Concrete\Controller\SinglePage\Dashboard\Reports', $controller);
+        $this->assertInstanceOf('\Concrete\Controller\SinglePage\Dashboard\Reports\Surveys', $controller);
     }
 
     public function testSystemPageBoolean()
