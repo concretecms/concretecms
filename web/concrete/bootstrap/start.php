@@ -98,7 +98,6 @@ $database_saver = new DatabaseSaver();
 
 $cms->instance('database_config', $database_config = new ConfigRepository($database_loader, $database_saver, $cms->environment()));
 
-
 /**
  * ----------------------------------------------------------------------------
  * Setup the core service groups.

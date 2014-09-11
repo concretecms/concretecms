@@ -3,7 +3,8 @@ namespace Concrete\Core\Config;
 
 use Concrete\Core\Database\Database;
 
-class DatabaseSaver implements SaverInterface {
+class DatabaseSaver implements SaverInterface
+{
 
     /**
      * Save config item
@@ -21,21 +22,17 @@ class DatabaseSaver implements SaverInterface {
 
         $query = $db->createQueryBuilder();
 
-
-
-
         $query->update('Config', 'c')
-            ->set('configValue', $query->expr()->literal($value))
-            ->where($query->expr()->comparison('configItem', '=', $query->expr()->literal($item)))
-            ->andWhere($query->expr()->comparison('configGroup', '=', $query->expr()->literal($group)));
+              ->set('configValue', $query->expr()->literal($value))
+              ->where($query->expr()->comparison('configItem', '=', $query->expr()->literal($item)))
+              ->andWhere($query->expr()->comparison('configGroup', '=', $query->expr()->literal($group)));
 
         if ($namespace) {
             $query->andWhere('namespace = ?')
-                ->setParameter(2, $namespace);
+                  ->setParameter(2, $namespace);
         }
-
-        var_dump($query->execute());
-        if (!$success) {
+        
+        if (!$query->execute()) {
             try {
                 $query = "INSERT INTO Config (configItem, configValue, configGroup, configNamespace) VALUES (?, ?, ?, ?)";
                 $db->executeQuery(
