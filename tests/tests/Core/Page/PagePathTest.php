@@ -66,7 +66,7 @@ class PagePathTest extends PageTestCase {
             ));
 
         $path = $newpage->getCollectionPathObject();
-        $this->assertEquals($path->getPagePath(), '/test-page/another-page-for-testing');
+        $this->assertEquals('/test-page/another-page-testing', $path->getPagePath());
         $this->assertEquals($path->isPagePathCanonical(), true);
     }
 
