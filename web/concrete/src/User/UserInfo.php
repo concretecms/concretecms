@@ -744,7 +744,8 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
 
     public function getLastIPAddress()
     {
-        return long2ip($this->uLastIP);
+        $ip = new \Concrete\Core\Utility\IPAddress($this->uLastIP, true);
+        return $ip->getIp($ip::FORMAT_IP_STRING);
     }
 
     public function getPreviousLogin()

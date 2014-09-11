@@ -154,7 +154,7 @@ $ip = Loader::helper('validation/ip'); ?>
                                             <?php }?>
                                         </li>
                                         <li>
-                                            <?php if($ip->check(long2ip($msg->cnvMessageSubmitIP))) { ?>
+                                            <?php if(!$ip->isBanned($msg->getConversationMessageSubmitIP())) { ?>
                                                 <a class = "block-ip" data-rel-message-id="<?php echo $msgID ?>" href="#"><?php echo t('Block user IP Address') ?></a>
                                             <?php } else { ?>
                                                 <span class="inactive"><?php echo t('IP Banned') ?></span>
