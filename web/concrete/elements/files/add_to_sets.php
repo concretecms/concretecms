@@ -24,8 +24,8 @@ $s1 = FileSet::getMySets();
 $files = array();
 $extensions = array();
 
-if (is_array($_REQUEST['item'])) {
-	foreach($_REQUEST['item'] as $fID) {
+if (is_array($_REQUEST['fID'])) {
+	foreach($_REQUEST['fID'] as $fID) {
 		$f = File::getByID($fID);
 		$fp = new Permissions($f);
 		if ($fp->canViewFile()) {
@@ -169,7 +169,7 @@ $(function() {
 	<form method="post" class="form-stacked" data-dialog-form="file-sets" id="ccm-add-to-set-form" action="<?=Loader::helper('concrete/urls')->getToolsURL('files/add_to')?>">
 	<?=$form->hidden('task', 'add_to_sets')?>
 	<? foreach($files as $f) { ?>
-		<input type="hidden" name="item[]" value="<?=$f->getFileID();?>" />
+		<input type="hidden" name="fID[]" value="<?=$f->getFileID();?>" />
 	<? } ?>
 
 <? } ?>
