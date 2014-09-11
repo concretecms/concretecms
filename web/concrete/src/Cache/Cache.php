@@ -74,7 +74,9 @@ abstract class Cache
      */
     public function enable()
     {
-        $this->pool->setDriver($this->driver);
+        if ($this->driver !== null) {
+            $this->pool->setDriver($this->driver);
+        }
         $this->enabled = true;
     }
 
