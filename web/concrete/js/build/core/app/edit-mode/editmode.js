@@ -54,8 +54,8 @@
                     $container = block.getElem(),
                     prop;
 
-                if (block.getMenu()) {
-                    block.getMenu().destroy();
+                if (block.getAttr('menu')) {
+                    block.getAttr('menu').destroy();
                 }
                 if (data.postData) {
                     for (prop in data.postData) {
@@ -154,8 +154,8 @@
 
                 $.fn.dialog.showLoader();
 
-                if (area.getMenu()) {
-                    area.getMenu().destroy();
+                if (area.getAttr('menu')) {
+                    area.getAttr('menu').destroy();
                 }
 
                 var saved = false;
