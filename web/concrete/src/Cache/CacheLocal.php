@@ -3,11 +3,12 @@
 namespace Concrete\Core\Cache;
 use Core;
 
-class CacheLocal {
-
-	public $cache = array();
-	public $enabled = true; // disabled because of weird annoying race conditions. This will slow things down but only if you don't have zend cache active.
-
+/**
+ * @deprecated
+ * @package Concrete\Core\Cache
+ */
+class CacheLocal
+{
     /**
      * Creates a cache key based on the group and id by running it through md5
      * @param string $group Name of the cache group
@@ -34,7 +35,7 @@ class CacheLocal {
 
 	public static function getEntry($type, $id) {
         /** @var \Concrete\Core\Cache\Cache $cache */
-        $cache = Core::make('cache/local');
+        $cache = Core::make('cache/request');
         if ($cache->isEnabled()) {
             $item = $cache->getItem($type . '/' . str_replace('/', '_', $id));
             if (!$item->isMiss()) {
@@ -45,13 +46,13 @@ class CacheLocal {
 
 	public static function flush() {
         /** @var \Concrete\Core\Cache\Cache $cache */
-        $cache = Core::make('cache/local');
+        $cache = Core::make('cache/request');
         $cache->flush();
 	}
 
 	public static function delete($type, $id) {
         /** @var \Concrete\Core\Cache\Cache $cache */
-        $cache = Core::make('cache/local');
+        $cache = Core::make('cache/request');
         if ($cache->isEnabled()) {
             $cache->delete($type . '/' . str_replace('/', '_', $id));
         }
@@ -59,17 +60,12 @@ class CacheLocal {
 
 	public static function set($type, $id, $object) {
         /** @var \Concrete\Core\Cache\Cache $cache */
-        $cache = Core::make('cache/local');
+        $cache = Core::make('cache/request');
 
         if (!$cache->isEnabled()) {
             return false;
         }
 
-        $item = $cache->getItem($type . '/' . str_replace('/', '_', $id));
-        if (is_object($object)) {
-            $item->set(clone $object);
-        } else {
-            $item->set($object);
-        }
+        return $cache->getItem($type . '/' . str_replace('/', '_', $id))->set($object);
 	}
 }
