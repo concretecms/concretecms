@@ -201,14 +201,6 @@ $loc->setLocale($lan);
 
 /**
  * ----------------------------------------------------------------------------
- * Load database-backed preferences, including items stored in the Config
- * object, localization stuff and dates.
- * ----------------------------------------------------------------------------
- */
-require DIR_BASE_CORE . '/bootstrap/preferences.php';
-
-/**
- * ----------------------------------------------------------------------------
  * Redirect user based on their trailing or non-trailing slash. Must come after
  * preferences because we use the pretty URLs preference.
  * ----------------------------------------------------------------------------

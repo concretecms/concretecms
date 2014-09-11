@@ -14,7 +14,7 @@ class Register extends PageController {
 	protected $displayUserName = true;
 
 	public function on_start() {
-		if(!ENABLE_REGISTRATION) {
+		if(!in_array(Config::get('concrete.user.registration.type'), array('validate_email', 'enabled', 'manual_approve'))) {
             $this->render('/page_not_found');
  		}
 		$u = new User();
@@ -138,10 +138,10 @@ class Register extends PageController {
 					$uak->saveAttributeForm($process);
 				}
 
-				if (REGISTER_NOTIFICATION) { //do we notify someone if a new user is added?
+				if (\Config::get('concrete.user.registration.notification')) { //do we notify someone if a new user is added?
 					$mh = Loader::helper('mail');
-					if(EMAIL_ADDRESS_REGISTER_NOTIFICATION) {
-						$mh->to(EMAIL_ADDRESS_REGISTER_NOTIFICATION);
+					if(\Config::get('concrete.user.registration.notification_email')) {
+						$mh->to(\Config::get('concrete.user.registration.notification_email'));
 					} else {
 						$adminUser = UserInfo::getByID(USER_SUPER_ID);
 						if (is_object($adminUser)) {
@@ -160,8 +160,8 @@ class Register extends PageController {
 					}
 					$mh->addParameter('attribs', $attribValues);
 
-					if (defined('EMAIL_ADDRESS_REGISTER_NOTIFICATION_FROM')) {
-						$mh->from(EMAIL_ADDRESS_REGISTER_NOTIFICATION_FROM,  t('Website Registration Notification'));
+					if (\Config::get('concrete.user.registration.notification_email')) {
+						$mh->from(\Config::get('concrete.user.registration.notification_email'),  t('Website Registration Notification'));
 					} else {
 						$adminUser = UserInfo::getByID(USER_SUPER_ID);
 						if (is_object($adminUser)) {
@@ -210,7 +210,7 @@ class Register extends PageController {
 
                     $u->logout();
 
-				} else if(defined('USER_REGISTRATION_APPROVAL_REQUIRED') && USER_REGISTRATION_APPROVAL_REQUIRED) {
+				} else if(\Concrete::config('concrete.user.registration.approval')) {
 					$ui = UserInfo::getByID($u->getUserID());
 					$ui->deactivate();
 					//$this->redirect('/register', 'register_pending', $rcID);

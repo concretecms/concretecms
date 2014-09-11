@@ -352,7 +352,7 @@ class Collection extends Object
         if ($this->isAlias()) {
             return false;
         }
-        if ($actuallyDoReindex || ENABLE_PROGRESSIVE_PAGE_REINDEX == false) {
+        if ($actuallyDoReindex || Config::get('concrete.page.search.always_reindex') == true) {
             $db = Loader::db();
             $attribs = CollectionAttributeKey::getAttributes(
                 $this->getCollectionID(),

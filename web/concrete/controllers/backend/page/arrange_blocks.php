@@ -7,6 +7,7 @@ use Concrete\Controller\Backend\UserInterface\Page;
 use Concrete\Core\Page\EditResponse as PageEditResponse;
 use Loader;
 use Permissions;
+use Config;
 use Stack;
 
 class ArrangeBlocks extends Page
@@ -33,7 +34,7 @@ class ArrangeBlocks extends Page
             $affectedAreaIDs[] = $destinationAreaID;
         }
 
-        if (PERMISSIONS_MODEL == 'advanced') {
+        if (Config::get('concrete.permissions_model') == 'advanced') {
             // first, we check to see if we have permissions to edit the area contents for the source area.
             $arHandle = Area::getAreaHandleFromID($sourceAreaID);
             $ar = Area::getOrCreate($nvc, $arHandle);

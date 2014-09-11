@@ -45,7 +45,7 @@ class Excluded extends DashboardPageController {
 			$remove_list = Urlify::$remove_list;
 		}
 		$this->set('SEO_EXCLUDE_WORDS_ARRAY', $remove_list);
-		$this->set('SEO_EXCLUDE_WORDS',SEO_EXCLUDE_WORDS);
+		$this->set('SEO_EXCLUDE_WORDS',Config::get('concrete.seo.exclude_words'));
 	}
 
 }
