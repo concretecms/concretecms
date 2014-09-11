@@ -70,21 +70,9 @@
 
     function RetinaImagePath(path, at_2x_path) {
         this.path = path || '';
+        this.perform_check = false;
         if (typeof at_2x_path !== 'undefined' && at_2x_path !== null) {
             this.at_2x_path = at_2x_path;
-            this.perform_check = false;
-        } else {
-            if (undefined !== document.createElement) {
-                var locationObject = document.createElement('a');
-                locationObject.href = this.path;
-                locationObject.pathname = locationObject.pathname.replace(regexMatch, suffixReplace);
-                this.at_2x_path = locationObject.href;
-            } else {
-                var parts = this.path.split('?');
-                parts[0] = parts[0].replace(regexMatch, suffixReplace);
-                this.at_2x_path = parts.join('?');
-            }
-            this.perform_check = true;
         }
     }
 
@@ -99,6 +87,9 @@
     RetinaImagePath.prototype.check_2x_variant = function(callback) {
         var http, that = this;
         if (this.is_external()) {
+            return callback(false);
+        } else if (this.at_2x_path === undefined) {
+            // Concrete5 change, if it's undefined we don't need to resolve it.
             return callback(false);
         } else if (!this.perform_check && typeof this.at_2x_path !== 'undefined' && this.at_2x_path !== null) {
             return callback(true);

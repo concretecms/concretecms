@@ -34,6 +34,7 @@ $searchRequest = $flr->getSearchRequest();
 			<?php if ($ek->validate()) { ?>
 				<option data-bulk-action-type="dialog" data-bulk-action-title="<?=t('Edit Properties')?>" data-bulk-action-url="<?=URL::to('/ccm/system/dialogs/user/bulk/properties')?>" data-bulk-action-dialog-width="630" data-bulk-action-dialog-height="450"><?=t('Edit Properties')?></option>
 			<?php } ?>
+			<? /*
 			<?php if ($ik->validate()) { ?>
 				<option value="activate"><?=t('Activate')?></option>
 				<option value="deactivate"><?=t('Deactivate')?></option>
@@ -43,6 +44,7 @@ $searchRequest = $flr->getSearchRequest();
 			<?php if ($dk->validate()) { ?>
 			<option value="delete"><?=t('Delete')?></option>
 			<?php } ?>
+ */ ?>
 			<?php if ($mode == 'choose_multiple') { ?>
 				<option value="choose"><?=t('Choose')?></option>
 			<?php } ?>
