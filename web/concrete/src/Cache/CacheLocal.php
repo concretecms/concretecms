@@ -6,6 +6,10 @@ class CacheLocal {
 	public $cache = array();
 	public $enabled = true; // disabled because of weird annoying race conditions. This will slow things down but only if you don't have zend cache active.
 
+    public function __construct() {
+        $this->enabled = \Config::get('concrete.cache.enabled');
+    }
+
 	public function getEntries() {
 		return $this->cache;
 	}
