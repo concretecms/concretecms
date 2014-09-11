@@ -57,7 +57,7 @@ class Application extends Container
      */
     protected function handleScheduledJobs()
     {
-        if (ENABLE_JOB_SCHEDULING) {
+        if (\Config::get('concrete.jobs.enable_scheduling')) {
             $c = Page::getCurrentPage();
             if ($c instanceof Page && !$c->isAdminArea()) {
                 // check for non dashboard page

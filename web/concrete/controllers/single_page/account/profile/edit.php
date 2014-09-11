@@ -82,11 +82,11 @@ class Edit extends AccountPageController {
 			$passwordNew = $data['uPasswordNew'];
 			$passwordNewConfirm = $data['uPasswordNewConfirm'];
 
-			if ((strlen($passwordNew) < USER_PASSWORD_MINIMUM) || (strlen($passwordNew) > USER_PASSWORD_MAXIMUM)) {
-				$e->add(t('A password must be between %s and %s characters', USER_PASSWORD_MINIMUM, USER_PASSWORD_MAXIMUM));
+			if ((strlen($passwordNew) < \Config::get('concrete.user.password.minimum')) || (strlen($passwordNew) >  \Config::get('concrete.user.password.maximum'))) {
+				$e->add(t('A password must be between %s and %s characters', \Config::get('concrete.user.password.minimum'),  \Config::get('concrete.user.password.maximum')));
 			}
 
-			if (strlen($passwordNew) >= USER_PASSWORD_MINIMUM && !$cvh->password($passwordNew)) {
+			if (strlen($passwordNew) >= \Config::get('concrete.user.password.minimum') && !$cvh->password($passwordNew)) {
 				$e->add(t('A password may not contain ", \', >, <, or any spaces.'));
 			}
 

@@ -129,7 +129,7 @@ if(!$fv instanceof FileVersion) {
 	$file->error = $fi->getErrorMessage($fv);
 	$file->timestamp = $_POST['timestamp'];
 } else {
-    $file_set = Config::get('concrete.misc.conversation_message_attachments_pending_file_set');
+    $file_set = Config::get('concrete.conversations.attachments_pending_file_set');
 	$fs = FileSet::getByName($file_set);
 	if (!is_object($fs)) {
 		$fs = FileSet::createAndGetSet($file_set, FileSet::TYPE_PUBLIC, USER_SUPER_ID);
