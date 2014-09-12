@@ -597,7 +597,7 @@ return array(
             array('javascript', 'js/lightbox.js')
         ),
         'core/account'             => array(
-            array('javascript', 'js/accounts.js'),
+            array('javascript', 'js/account.js'),
             array('css', 'css/account.css')
         ),
         'core/legacy'              => array(
