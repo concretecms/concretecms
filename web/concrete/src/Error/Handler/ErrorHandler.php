@@ -43,7 +43,7 @@ class ErrorHandler extends PrettyPageHandler
         }
 
         $debug = Config::get('concrete.debug.level', 0);
-        if ($debug === DEBUG_DISPLAY_ERRORS) {
+        if ($debug == DEBUG_DISPLAY_ERRORS) {
             $this->addDetails();
             return parent::handle();
         }
