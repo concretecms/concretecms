@@ -108,7 +108,7 @@ return array(
         '\Concrete\Core\Http\HttpServiceProvider',
         '\Concrete\Core\Events\EventsServiceProvider',
         '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
-        '\Concrete\Core\Logging\LoggingServiceProvider'
+        '\Concrete\Core\Logging\LoggingServiceProvider',
         '\Concrete\Core\Cache\CacheServiceProvider'
     ),
 

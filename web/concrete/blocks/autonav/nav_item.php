@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Block\Autonav;
+use Loader;
 /**
  * An object used by the Autonav Block to display navigation items in a tree
  *
