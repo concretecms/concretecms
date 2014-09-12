@@ -8,6 +8,7 @@ use Events;
 use PageTheme;
 use Page;
 use Loader;
+use Config;
 
 class View extends AbstractView {
 
@@ -207,7 +208,7 @@ class View extends AbstractView {
 
     protected function postProcessAssets($assets) {
         $c = Page::getCurrentPage();
-        if (!ENABLE_ASSET_CACHE) {
+        if (!Config::get('concrete.cache.assets')) {
             return $assets;
         }
 
