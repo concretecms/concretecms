@@ -106,8 +106,8 @@ class Search extends DashboardPageController
                     $mh = Loader::helper('mail');
                     $mh->to($this->user->getUserEmail());
                     $mh->load('user_registered_approval_complete');
-                    if (\Config::get('concrete.user.registration.notification_email')) {
-                        $mh->from(\Config::get('concrete.user.registration.notification_email'), t('Website Registration Notification'));
+                    if (Config::get('concrete.user.registration.notification_email')) {
+                        $mh->from(Config::get('concrete.user.registration.notification_email'), t('Website Registration Notification'));
                     } else {
                         $adminUser = UserInfo::getByID(USER_SUPER_ID);
                         $mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));
@@ -230,16 +230,16 @@ class Search extends DashboardPageController
                 if (!Loader::helper('validation/token')->validate()) {
                     $this->error->add(Loader::helper('validation/token')->getErrorMessage());
                 }
-                if (strlen($username) < \Config::get('concrete.user.username.minimum')) {
-                    $this->error->add(t('A username must be at least %s characters long.',\Config::get('concrete.user.username.minimum')));
+                if (strlen($username) < Config::get('concrete.user.username.minimum')) {
+                    $this->error->add(t('A username must be at least %s characters long.',Config::get('concrete.user.username.minimum')));
                 }
 
-                if (strlen($username) > \Config::get('concrete.user.username.maximum')) {
-                    $this->error->add(t('A username cannot be more than %s characters long.',\Config::get('concrete.user.username.maximum')));
+                if (strlen($username) > Config::get('concrete.user.username.maximum')) {
+                    $this->error->add(t('A username cannot be more than %s characters long.',Config::get('concrete.user.username.maximum')));
                 }
 
-                if (strlen($username) >= \Config::get('concrete.user.username.minimum') && !Loader::helper('concrete/validation')->username($username)) {
-                    if (\Config::get('concrete.user.username.allow_spaces') {
+                if (strlen($username) >= Config::get('concrete.user.username.minimum') && !Loader::helper('concrete/validation')->username($username)) {
+                    if (Config::get('concrete.user.username.allow_spaces')) {
                         $this->error->add(t('A username may only contain letters, numbers, spaces, dots (not at the beginning/end), underscores (not at the beginning/end).'));
                     } else {
                         $this->error->add(t('A username may only contain letters numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'));
@@ -322,13 +322,13 @@ class Search extends DashboardPageController
         if ($this->canEditPassword) {
             $password = $this->post('uPassword');
             $passwordConfirm = $this->post('uPasswordConfirm');
-            if ((strlen($password) < \Config::get('concrete.user.password.minimum')) || (strlen($password) > \Config::get('concrete.user.password.maximum'))) {
-                $this->error->add( t('A password must be between %s and %s characters',\Config::get('concrete.user.password.minimum'), \Config::get('concrete.user.password.maximum')));
+            if ((strlen($password) < Config::get('concrete.user.password.minimum')) || (strlen($password) > Config::get('concrete.user.password.maximum'))) {
+                $this->error->add( t('A password must be between %s and %s characters',Config::get('concrete.user.password.minimum'), Config::get('concrete.user.password.maximum')));
             }
             if (!Loader::helper('validation/token')->validate('change_password')) {
                 $this->error->add(Loader::helper('validation/token')->getErrorMessage());
             }
-            if (strlen($password) >= \Config::get('concrete.user.password.minimum') && !Loader::helper('concrete/validation')->password($password)) {
+            if (strlen($password) >= Config::get('concrete.user.password.minimum') && !Loader::helper('concrete/validation')->password($password)) {
                 $this->error->add(t('A password may not contain ", \', >, <, or any spaces.'));
             }
 
