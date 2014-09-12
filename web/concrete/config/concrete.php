@@ -211,6 +211,11 @@ return array(
 
     ),
 
+    'design'            => array(
+        'enable_custom' => true,
+        'enable_layouts' => true
+    ),
+
     /**
      * ------------------------------------------------------------------------
      * Logging settings
@@ -684,20 +689,6 @@ return array(
          * @var string The permission model (simple|advanced)
          */
         'model'                         => 'simple',
-
-        /**
-         * Allow area/layout specific permissions in edit mode
-         *
-         * @var bool
-         */
-        'enable_area'                   => true,
-
-        /**
-         * Allow custom design
-         *
-         * @var bool
-         */
-        'enable_custom_design'          => true,
 
         /**
          * Use collection ID for page permission identifier
