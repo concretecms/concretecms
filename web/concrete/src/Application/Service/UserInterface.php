@@ -248,9 +248,10 @@ class UserInterface {
 		if ($exception) {
 			$o->content .= $exception->getTraceAsString();
 		}
-		$ve = new ErrorView($o);
-		$response = $ve->render($o);
-		print $response;
+
+        \Response::closeOutputBuffers(1, false);
+        $ve = new ErrorView($o);
+        \Response::create($ve->render($o))->send();
 	}
 
 	public function notify($arguments) {
