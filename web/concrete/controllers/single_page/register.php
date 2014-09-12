@@ -65,17 +65,17 @@ class Register extends PageController {
 
 		if ($this->displayUserName) {
 
-			if (strlen($username) < \Config::get('concrete.user.username.minimum')) {
-				$e->add(t('A username must be at least %s characters long.', \Config::get('concrete.user.username.minimum')));
+			if (strlen($username) < Config::get('concrete.user.username.minimum')) {
+				$e->add(t('A username must be at least %s characters long.', Config::get('concrete.user.username.minimum')));
 			}
 
-			if (strlen($username) > \Config::get('concrete.user.username.maximum')) {
-				$e->add(t('A username cannot be more than %s characters long.', \Config::get('concrete.user.username.maximum')));
+			if (strlen($username) > Config::get('concrete.user.username.maximum')) {
+				$e->add(t('A username cannot be more than %s characters long.', Config::get('concrete.user.username.maximum')));
 			}
 
 
-			if (strlen($username) >= \Config::get('concrete.user.username.minimum') && !$valc->username($username)) {
-				if(\Config::get('concrete.user.username.allow_spaces')) {
+			if (strlen($username) >= Config::get('concrete.user.username.minimum') && !$valc->username($username)) {
+				if(Config::get('concrete.user.username.allow_spaces')) {
 					$e->add(t('A username may only contain letters, numbers and spaces.'));
 				} else {
 					$e->add(t('A username may only contain letters or numbers.'));
@@ -93,11 +93,11 @@ class Register extends PageController {
 		}
 
 		/*
-		if ((strlen($password) < \Config::get('concrete.user.password.minimum')) || (strlen($password) >  \Config::get('concrete.user.password.maximum'))) {
-			$e->add(t('A password must be between %s and %s characters', \Config::get('concrete.user.password.minimum'),  \Config::get('concrete.user.password.maximum')));
+		if ((strlen($password) < Config::get('concrete.user.password.minimum')) || (strlen($password) >  Config::get('concrete.user.password.maximum'))) {
+			$e->add(t('A password must be between %s and %s characters', Config::get('concrete.user.password.minimum'),  Config::get('concrete.user.password.maximum')));
 		}
 
-		if (strlen($password) >= \Config::get('concrete.user.password.minimum') && !$valc->password($password)) {
+		if (strlen($password) >= Config::get('concrete.user.password.minimum') && !$valc->password($password)) {
 			$e->add(t('A password may not contain ", \', >, <, or any spaces.'));
 		}
 		*/
@@ -138,10 +138,10 @@ class Register extends PageController {
 					$uak->saveAttributeForm($process);
 				}
 
-				if (\Config::get('concrete.user.registration.notification')) { //do we notify someone if a new user is added?
+				if (Config::get('concrete.user.registration.notification')) { //do we notify someone if a new user is added?
 					$mh = Loader::helper('mail');
-					if(\Config::get('concrete.user.registration.notification_email')) {
-						$mh->to(\Config::get('concrete.user.registration.notification_email'));
+					if(Config::get('concrete.user.registration.notification_email')) {
+						$mh->to(Config::get('concrete.user.registration.notification_email'));
 					} else {
 						$adminUser = UserInfo::getByID(USER_SUPER_ID);
 						if (is_object($adminUser)) {
@@ -160,8 +160,8 @@ class Register extends PageController {
 					}
 					$mh->addParameter('attribs', $attribValues);
 
-					if (\Config::get('concrete.user.registration.notification_email')) {
-						$mh->from(\Config::get('concrete.user.registration.notification_email'),  t('Website Registration Notification'));
+					if (Config::get('concrete.user.registration.notification_email')) {
+						$mh->from(Config::get('concrete.user.registration.notification_email'),  t('Website Registration Notification'));
 					} else {
 						$adminUser = UserInfo::getByID(USER_SUPER_ID);
 						if (is_object($adminUser)) {
@@ -210,7 +210,7 @@ class Register extends PageController {
 
                     $u->logout();
 
-				} else if(\Concrete::config('concrete.user.registration.approval')) {
+				} else if(Config::get('concrete.user.registration.approval')) {
 					$ui = UserInfo::getByID($u->getUserID());
 					$ui->deactivate();
 					//$this->redirect('/register', 'register_pending', $rcID);
