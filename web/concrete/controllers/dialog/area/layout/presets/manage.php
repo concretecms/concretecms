@@ -5,6 +5,7 @@ use Concrete\Controller\Dialog\Area\Layout\Presets;
 use Concrete\Core\Area\Layout\Layout;
 use Concrete\Core\Area\Layout\Preset;
 use Concrete\Core\Page\EditResponse;
+use Exception;
 
 class Manage extends Presets
 {

@@ -12,6 +12,7 @@ use \Concrete\Core\Workflow\Request\DeletePageRequest;
 use \Concrete\Core\Workflow\Request\ApproveStackRequest;
 use View;
 use Exception;
+use Redirect;
 
 class Stacks extends DashboardPageController {
 
