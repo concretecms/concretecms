@@ -2,6 +2,7 @@
 namespace Concrete\Core\Cache;
 
 use Core;
+use Config;
 use Stash\Driver\BlackHole;
 use Stash\Driver\Composite;
 use Stash\Pool;
@@ -33,55 +34,21 @@ abstract class Cache
     protected function loadConfig($level)
     {
         $drivers = array();
-        $driversBuild = array();
+        /** @var array $driversConfig */
+        $driversConfig = Config::get('concrete.cache.drivers');
 
-        $constants = array_keys(get_defined_constants());
 
-        foreach ($constants as $constant) {
-            if (preg_match('/^CACHE_' . strtoupper($level) . '(?:_([0-9]+))?_DRIVER$/', $constant, $matches) === 1) {
-                if (isset($matches[1])) {
-                    $index = $matches[1];
-                } else {
-                    $index = 0;
-                }
-                $driversBuild[$index]['driver'] = constant($constant);
-            } elseif (preg_match('/^CACHE_' . strtoupper($level) . '(?:_([0-9]+))?_OPTION_(.*)$/', $constant, $matches) === 1) {
-                if (isset($matches[1])) {
-                    $index = $matches[1];
-                } else {
-                    $index = 0;
+        if(isset($driversConfig[$level])) {
+            ksort($driversConfig[$level]);
+
+            foreach ($driversConfig[$level] as $driverBuild) {
+                $tempDriver = new $driverBuild['class']();
+                if (isset($driverBuild['options'])) {
+                    $tempDriver->setOptions($driverBuild['options']);
                 }
 
-                $options = explode('__', $matches[2]);
-
-                if (!isset($driversBuild[$index])) {
-                    $driversBuild[$index] = array();
-                }
-
-                if (!isset($driversBuild[$index]['options'])) {
-                    $driversBuild[$index]['options'] = array();
-                }
-
-                $optionsBuild = &$driversBuild[$index]['options'];
-                for ($i = 0; $i < count($options); $i++) {
-                    if (!isset($optionsBuild[$options[$i]])) {
-                        $optionsBuild[$options[$i]] = array();
-                    }
-                    $optionsBuild = &$optionsBuild[$options[$i]];
-                }
-                $optionsBuild = constant($constant);
+                $drivers[] = $tempDriver;
             }
-        }
-
-        ksort($driversBuild);
-
-        foreach ($driversBuild as $driverBuild) {
-            $tempDriver = new $driverBuild['driver']();
-            if (isset($driverBuild['options'])) {
-                $tempDriver->setOptions($driverBuild['options']);
-            }
-
-            $drivers[] = $tempDriver;
         }
 
         $numDrivers = count($drivers);
