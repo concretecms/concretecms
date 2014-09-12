@@ -2,10 +2,10 @@
 
 namespace Concrete\Core\Package;
 
-use Cache;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use AuthenticationType;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
+use Core;
 use Loader;
 use Package as BasePackage;
 use GroupTree;
@@ -280,7 +280,7 @@ class StartingPointPackage extends BasePackage
 
     public function make_directories()
     {
-        Cache::flush();
+        Core::make('cache')->flush();
 
         if (!is_dir(DIR_FILES_CACHE)) {
             mkdir(DIR_FILES_CACHE, DIRECTORY_PERMISSIONS_MODE);
@@ -301,7 +301,7 @@ class StartingPointPackage extends BasePackage
         // remove this line and uncomment the two above when done developing !!
         //copy(DIR_CONFIG_SITE . '/site_install.php', DIR_CONFIG_SITE . '/site.php');
         @chmod(DIR_CONFIG_SITE . '/site.php', FILE_PERMISSIONS_MODE);
-        Cache::flush();
+        Core::make('cache')->flush();
 
     }
 

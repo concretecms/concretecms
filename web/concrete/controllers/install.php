@@ -1,7 +1,7 @@
 <?php
 namespace Concrete\Controller;
 
-use Cache;
+use Concrete\Core\Cache\Cache;
 use Concrete\Core\Localization\Localization as Localization;
 use Controller;
 use Database as DB;
@@ -146,8 +146,7 @@ class Install extends Controller
             $loc = Localization::changeLocale($_POST['locale']);
             $this->set('locale', $_POST['locale']);
         }
-        Cache::disableCache();
-        Cache::disableLocalCache();
+        Cache::disableAll();
         $this->setRequiredItems();
         $this->setOptionalItems();
 
