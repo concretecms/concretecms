@@ -12,7 +12,7 @@ $v = View::getInstance();
 $v->requireAsset('dashboard');
 $v->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>');
 $v->addFooterItem('<script type="text/javascript">$(function() { ConcreteToolbar.start(); });</script>');
-if (Config::get('concrete.misc.enabled_progressive_page_reindex') && Config::get('concrete.misc.do_page_reindex_check')) {
+if (Config::get('concrete.misc.enable_progressive_page_reindex') && Config::get('concrete.misc.do_page_reindex_check')) {
     $v->addFooterItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
 }
 if (Localization::activeLanguage() != 'en') {
