@@ -31,11 +31,11 @@ if (!$bObj->vHeight) {
 <div class="form-group">
     <label><?=t('Video Player')?></label>
         <div class="radio">
-            <label><input type="radio" name="vPlayer" value="1" <?=($bObj->vPlayer)?'checked':''?> /> <?=t('iFrame - Works in more devices')?></label>
+            <label><input type="radio" name="vPlayer" value="1" <?=($bObj->vPlayer)?'checked':''?> /> <?=t('iframe - Works on more devices')?></label>
         </div>
     <div class="radio">
         <label>
-            <input type="radio" name="vPlayer" value="0" <?=(!$bObj->vPlayer)?'checked':''?> /> <?=t('Flash Embed - Legacy method')?>
+            <input type="radio" name="vPlayer" value="0" <?=(!$bObj->vPlayer)?'checked':''?> /> <?=t('Flash embed - Legacy method')?>
         </label>
     </div>
 </div>
