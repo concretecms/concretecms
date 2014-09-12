@@ -140,7 +140,8 @@ module.exports = function(grunt, config, parameters, done) {
 	try {
 		var c5fs = require('../../libraries/fs'),
 			fs = require('fs'),
-			shell = require('shelljs');
+			shell = require('shelljs'),
+			path = require('path');
 		var parser = new c5fs.directoryParser(workFolder);
 		parser.excludeDirectoriesByName = [];
 		parser.excludeFilesByName = [];
@@ -171,9 +172,31 @@ module.exports = function(grunt, config, parameters, done) {
 				endForError(error);
 				return;
 			}
+			var classmapFile = path.join(workFolder, 'concrete/vendor/composer/autoload_classmap.php');
+			if(c5fs.isFile(classmapFile)) {
+				process.stdout.write('Removing lines from Composer classmap:\n');
+				var classmapLines = fs.readFileSync(classmapFile, 'utf8').replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n'),
+					linesRemoved = 0;
+				remove.dir.byPath.forEach(function(dir) {
+					var m = dir.match(/^\/concrete\/vendor\/(.+)$/);
+					if(!m) {
+						return;
+					}
+					var removeLinesWith = '=> $vendorDir . \'/' + m[1] + '/';
+					for(i = classmapLines.length - 1; i >= 0; i--) {
+						if((classmapLines[i].indexOf(removeLinesWith) >= 0) && /^\s*'[^']+' => \$vendorDir . '/.test(classmapLines[i])) {
+							process.stdout.write(classmapLines[i] + '\n');
+							classmapLines.splice(i, 1);
+							linesRemoved++;
+						}
+					}
+				});
+				if(linesRemoved > 0) {
+					fs.writeFileSync(classmapFile, classmapLines.join('\n'), 'utf8');
+				}
+			}
 			done();
 		});
-			// cleanFiles = [".DS_Store", ".git", ".gitignore"],
 	}
 	catch(e) {
 		endForError(e);
