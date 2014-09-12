@@ -9,7 +9,7 @@ use Loader;
 class Timezone extends DashboardPageController {
 
      public function view(){
-          $this->set('user_timezones',ENABLE_USER_TIMEZONES);
+          $this->set('user_timezones',Config::get('concrete.misc.user_timezones'));
      }
 
      public function timezone_saved() {
