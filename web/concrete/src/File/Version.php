@@ -578,7 +578,9 @@ class Version
 
         $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
         $fre = $this->getFileResource();
-        $fsl->delete($fre->getPath());
+        if ($fsl->has($fre->getPath())) {
+            $fsl->delete($fre->getPath());
+        }
     }
 
     /**
