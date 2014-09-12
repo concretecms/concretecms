@@ -5,14 +5,14 @@
 ?>
 <div class="form-group">
     <?= $form->label('url', t('Feed URL')) ?>
-    <input name="url" class="form-control" placeholder="Feed URL" value="<?= h($rssObj->url) ?>" type="text" required="required" />
+    <input name="url" class="form-control" placeholder="<?= h(t('Feed URL')) ?>" value="<?= h($rssObj->url) ?>" type="text" required="required" />
 </div>
 <div class="form-group">
     <label for="title">
         <?= t('Feed Title') ?>
         <span class="help-block" style="font-weight: normal;display: inline">(<?= t('Optional') ?>)</span>
     </label>
-    <input name="title" class="form-control" placeholder="Feed Title" value="<?= h($rssObj->title) ?>"/>
+    <input name="title" class="form-control" placeholder="<?= h(t('Feed Title')) ?>" value="<?= h($rssObj->title) ?>"/>
 </div>
 <div class="form-group">
     <?= $form->label('dateFormat', t('Date Format')) ?>
