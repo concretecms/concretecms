@@ -19,7 +19,7 @@ if($_SERVER['REQUEST_METHOD'] == "GET" && $_GET['mode'] == "get_path") {
 } elseif(isset($_POST['thumbnail']) && strlen($_POST['thumbnail'])) {
 	$thumb = base64_decode($_POST['thumbnail']);
 
-	$file_path = Config::get('concrete.files.cache.directory') . "/composer_".$id->getString().".jpg";
+	$file_path = Config::get('concrete.cache.directory') . "/composer_".$id->getString().".jpg";
 
 	$fp = fopen($file_path,"w");
 	if($fp) {

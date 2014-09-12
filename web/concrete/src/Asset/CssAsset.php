@@ -19,13 +19,13 @@ class CssAsset extends Asset {
 	}
 
 	protected static function getOutputDirectory() {
-		if (!file_exists(Config::get('concrete.files.cache.directory') . '/' . DIRNAME_CSS)) {
-			$proceed = @mkdir(Config::get('concrete.files.cache.directory') . '/' . DIRNAME_CSS);
+		if (!file_exists(Config::get('concrete.cache.directory') . '/' . DIRNAME_CSS)) {
+			$proceed = @mkdir(Config::get('concrete.cache.directory') . '/' . DIRNAME_CSS);
 		} else {
 			$proceed = true;
 		}
 		if ($proceed) {
-			return Config::get('concrete.files.cache.directory') . '/' . DIRNAME_CSS;
+			return Config::get('concrete.cache.directory') . '/' . DIRNAME_CSS;
 		} else {
 			return false;
 		}

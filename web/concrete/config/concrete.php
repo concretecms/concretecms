@@ -173,6 +173,16 @@ return array(
         'full_page_lifetime_value' => null,
         'identifier'               => md5(str_replace(array('https://', 'http://'), '', BASE_URL) . DIR_REL),
 
+
+        'directory'   => DIR_FILES_UPLOADED_STANDARD . '/cache',
+        'page'        => array(
+            'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache/pages',
+            'adapter'      => 'file',
+        ),
+        'environment' => array(
+            'file' => 'environment.cache'
+        )
+
     ),
 
     /**
@@ -319,18 +329,6 @@ return array(
         'attachments_pending_file_set' => 'Conversation Messages (Pending)',
         'attachments_file_set'         => 'Conversation Messages',
         'attachments_enabled'          => true
-    ),
-    'files'             => array(
-        'cache' => array(
-            'directory'   => DIR_FILES_UPLOADED_STANDARD . '/cache',
-            'page'        => array(
-                'directory' => DIR_FILES_UPLOADED_STANDARD . '/cache/pages',
-                'file'      => 'file',
-            ),
-            'environment' => array(
-                'file' => 'environment.cache'
-            )
-        )
     ),
     'icons'             => array(
         'page_template'        => array(
