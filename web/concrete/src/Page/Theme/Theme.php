@@ -44,7 +44,7 @@ class Theme extends Object
     protected $stylesheetCacheRelativePath = REL_DIR_FILES_CACHE;
 
     public function __construct() {
-        $this->setStylesheetCachePath(Config::get('concrete.files.cache.directory'));
+        $this->setStylesheetCachePath(Config::get('concrete.cache.directory'));
     }
 
     public static function getGlobalList()
@@ -253,7 +253,7 @@ class Theme extends Object
     public function enablePreviewRequest()
     {
         $this->setStylesheetCacheRelativePath(REL_DIR_FILES_CACHE . '/preview');
-        $this->setStylesheetCachePath(Config::get('concrete.files.cache.directory') . '/preview');
+        $this->setStylesheetCachePath(Config::get('concrete.cache.directory') . '/preview');
         $this->pThemeIsPreview = true;
     }
 

@@ -1518,7 +1518,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $scl = $style->getValueList();
             }
 
-            $theme->setStylesheetCachePath(Config::get('concrete.files.cache.directory') . '/pages/' . $this->getCollectionID());
+            $theme->setStylesheetCachePath(Config::get('concrete.cache.directory') . '/pages/' . $this->getCollectionID());
             $theme->setStylesheetCacheRelativePath(REL_DIR_FILES_CACHE . '/pages/' . $this->getCollectionID());
             $sheets = $theme->getThemeCustomizableStyleSheets();
             foreach($sheets as $sheet) {

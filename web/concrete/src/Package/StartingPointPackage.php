@@ -245,9 +245,9 @@ class StartingPointPackage extends BasePackage {
     {
         Core::make('cache')->flush();
 
-        if (!is_dir(Config::get('concrete.files.cache.directory'))) {
-            mkdir(Config::get('concrete.files.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
-            chmod(Config::get('concrete.files.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
+        if (!is_dir(Config::get('concrete.cache.directory'))) {
+            mkdir(Config::get('concrete.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
+            chmod(Config::get('concrete.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
         }
 
         if (!is_dir(DIR_FILES_UPLOADED_STANDARD . REL_DIR_FILES_INCOMING)) {
