@@ -3,8 +3,8 @@ namespace Concrete\Core\Cache;
 
 use Core;
 use Config;
+use Doctrine\ORM\Query\Expr\Composite;
 use Stash\Driver\BlackHole;
-use Stash\Driver\Composite;
 use Stash\Pool;
 
 abstract class Cache
@@ -34,28 +34,26 @@ abstract class Cache
     protected function loadConfig($level)
     {
         $drivers = array();
-        /** @var array $driversConfig */
-        $driversConfig = Config::get('concrete.cache.drivers');
+        $level_config = Config::get("concrete.cache.levels.{$level}", array());
 
+        if (isset($level_config['drivers'])) {
+            foreach ($level_config['drivers'] as $driver_build) {
+                if (class_exists($driver_build['class'])) {
+                    $temp_driver = new $driver_build['class']();
+                    if (isset($driver_build['options'])) {
+                        $temp_driver->setOptions($driver_build['options']);
+                    }
 
-        if(isset($driversConfig[$level])) {
-            ksort($driversConfig[$level]);
-
-            foreach ($driversConfig[$level] as $driverBuild) {
-                $tempDriver = new $driverBuild['class']();
-                if (isset($driverBuild['options'])) {
-                    $tempDriver->setOptions($driverBuild['options']);
+                    $drivers[] = $temp_driver;
                 }
-
-                $drivers[] = $tempDriver;
             }
         }
 
-        $numDrivers = count($drivers);
-        if ($numDrivers > 1) {
+        $count = count($drivers);
+        if ($count > 1) {
             $driver = new Composite();
             $driver->setOptions(array('drivers' => $drivers));
-        } elseif ($numDrivers === 1) {
+        } elseif ($count === 1) {
             $driver = $drivers[0];
         } else {
             $driver = new BlackHole();
