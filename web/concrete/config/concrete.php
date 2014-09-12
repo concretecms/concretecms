@@ -185,12 +185,12 @@ return array(
 
         'drivers' => array(
             'expensive' => array(
-                '0' => array(
+                array(
                     'class' => '\Stash\Driver\Ephemeral',
                     'options' => array()
                 ),
 
-                '1' => array(
+                array(
                     'class' => '\Stash\Driver\FileSystem',
                     'options' => array(
                         'path' => DIR_FILES_UPLOADED_STANDARD . '/cache'
@@ -198,7 +198,7 @@ return array(
                 ),
             ),
             'object' => array(
-                '0' => array(
+                array(
                     'class' => '\Stash\Driver\Ephemeral',
                     'options' => array()
                 )
