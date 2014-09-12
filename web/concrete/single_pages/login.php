@@ -23,7 +23,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
 ?>
 <style>
     body {
-        background: url("/concrete/images/bg_login.png");
+        background: url("<?= ASSETS_URL_IMAGES ?>/bg_login.png");
     }
 </style>
 <div class="login-page">
