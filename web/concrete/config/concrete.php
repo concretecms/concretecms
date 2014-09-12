@@ -733,6 +733,8 @@ return array(
          * @var bool
          */
         'url_rewriting'        => false,
+        'url_rewriting_all'        => false,
+        'redirect_to_base_url' => false,
         'trailing_slash'       => false,
         'title_format'         => '%1$s :: %2$s',
         'page_path_separator'  => '-',
