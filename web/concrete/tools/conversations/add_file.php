@@ -16,13 +16,13 @@ if(!(is_object($conversation))) {
     exit;
 }
 if($conversation->getConversationAttachmentOverridesEnabled() > 0) { // check individual conversation for allowing attachments.
-    if($conversation->getConversationAttachmentsEnabled != 1) {
+    if($conversation->getConversationAttachmentsEnabled() != 1) {
         $error[] = t('This conversation does not allow file attachments.');
         $file->error = $error;
         echo Loader::helper('json')->encode($file);
         exit;
     }
-} else if(!!Config::get('concrete.conversations.attachments_enabled')) { // check global config settings for whether or not file attachments should be allowed.
+} else if(!Config::get('concrete.conversations.attachments_enabled')) { // check global config settings for whether or not file attachments should be allowed.
     $error[] = t('This conversation does not allow file attachments.');
     $file->error = $error;
     echo Loader::helper('json')->encode($file);
