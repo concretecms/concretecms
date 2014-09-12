@@ -1,8 +1,9 @@
 <?php
 namespace Concrete\Core\Updater;
+use Concrete\Core\Cache\Cache;
+use Core;
 use Loader;
 use Marketplace;
-use Cache;
 use Config;
 use Localization;
 class Update {
@@ -11,9 +12,9 @@ class Update {
 		$d = Loader::helper('date');
 		// first, we check session
 		$queryWS = false;
-		Cache::disableCache();
+        Cache::disableAll();
 		$vNum = Config::get('APP_VERSION_LATEST', true);
-		Cache::enableCache();
+        Cache::enableAll();
 		if (is_object($vNum)) {
 			$seconds = strtotime($vNum->timestamp);
 			$version = $vNum->value;
@@ -52,11 +53,14 @@ class Update {
 
 	public static function getApplicationUpdateInformation()
     {
-        $r = Cache::get('APP_UPDATE_INFO', false);
-        if (!is_object($r)) {
-            $r = static::getLatestAvailableUpdate();
+        /** @var \Concrete\Core\Cache\Cache $cache */
+        $cache = Core::make('cache');
+        $r = $cache->getItem('APP_UPDATE_INFO');
+        if ($r->isMiss()) {
+            $r->lock();
+            $r->set(static::getLatestAvailableUpdate());
         }
-        return $r;
+        return $r->get();
     }
 
 	protected static function getLatestAvailableUpdate() {
@@ -98,7 +102,6 @@ class Update {
 				$obj->url = (string) $xml->url;
 				$obj->date = (string) $xml->date;
 			}
-			Cache::set('APP_UPDATE_INFO', false, $obj);
 
 		} else {
 			$obj->version = APP_VERSION;

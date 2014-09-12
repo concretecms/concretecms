@@ -1,9 +1,7 @@
 <?
 namespace Concrete\Controller\SinglePage\Dashboard\System\Optimization;
 use \Concrete\Core\Page\Controller\DashboardPageController;
-use Config;
-use Loader;
-use Cache;
+use Core;
 
 class Clearcache extends DashboardPageController {
 	
@@ -15,7 +13,8 @@ class Clearcache extends DashboardPageController {
 	public function do_clear() {
 		if ($this->token->validate("clear_cache")) {
 			if ($this->isPost()) {
-				Cache::flush();
+                Core::make('cache')->flush();
+                Core::make('cache/expensive')->flush();
 				$this->redirect('/dashboard/system/optimization/clearcache', 'cache_cleared');
 			}
 		} else {
