@@ -3,8 +3,8 @@ namespace Concrete\Core\Cache;
 
 use Core;
 use Config;
-use Doctrine\ORM\Query\Expr\Composite;
 use Stash\Driver\BlackHole;
+use Stash\Driver\Composite;
 use Stash\Pool;
 
 abstract class Cache
