@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Controller;
 
+use Concrete\Core\Cache\Cache;
 use Concrete\Core\View\View;
 use Concrete\Controller\Backend\UserInterface as BackendUserInterfaceController;
 
@@ -25,7 +26,7 @@ class Upgrade extends BackendUserInterfaceController
 
         $this->siteVersion = \Config::get('SITE_APP_VERSION');
         $this->checkSecurity();
-        \Cache::disableLocalCache();
+        Cache::disableAll();
     }
 
     public function checkSecurity()
