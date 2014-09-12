@@ -25,7 +25,7 @@ class Upgrade extends BackendUserInterfaceController
 
         $this->siteVersion = \Config::get('concrete.version_installed');
         $this->checkSecurity();
-        \Cache::disableLocalCache();
+        \Cache::disableAll();
     }
 
     public function checkSecurity()
