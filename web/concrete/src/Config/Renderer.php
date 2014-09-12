@@ -51,7 +51,7 @@ class Renderer {
             list($key, $value) = $scalar;
 
             if (is_string($value)) {
-                $clean_value = '"' . addslashes($value) . '"';
+                $clean_value = json_encode($value, JSON_UNESCAPED_SLASHES);
             } elseif (is_bool($value)) {
                 $clean_value = $value ? 'true' : 'false';
             } elseif (is_null($value)) {
@@ -61,7 +61,7 @@ class Renderer {
             }
 
             if ($associative) {
-                $results[] = $space . '"' . addslashes($key) . '" => ' . $clean_value;
+                $results[] = $space . json_encode($key, JSON_UNESCAPED_SLASHES) . ' => ' . $clean_value;
             } else {
                 $results[] = $space . $clean_value;
             }
@@ -72,7 +72,7 @@ class Renderer {
             $rendered = $this->renderRecursive($value, $eol, $spacer, $depth + 1);
 
             if ($associative) {
-                $results[] = $space . '"' . addslashes($key) . '" => ' . $rendered;
+                $results[] = $space . json_encode($key, JSON_UNESCAPED_SLASHES) . ' => ' . $rendered;
             } else {
                 $results[] = $space . $rendered;
             }
