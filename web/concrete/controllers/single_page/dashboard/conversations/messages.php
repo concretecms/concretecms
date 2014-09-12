@@ -40,6 +40,7 @@ class Messages extends DashboardPageController {
 				case 'unapproved':
 					$ml->filterByUnapproved();
 					$ml->filterByNotDeleted();
+                    break;
 				default: // flag
 					$flagtype = ConversationFlagType::getByHandle($_REQUEST['cmpMessageFilter']);
 					if (is_object($flagtype)){
