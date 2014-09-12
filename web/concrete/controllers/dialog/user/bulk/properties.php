@@ -1,5 +1,6 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\User\Bulk;
+
 use \Concrete\Controller\Backend\UserInterface as BackendInterfaceController;
 use PermissionKey;
 use \Concrete\Core\Http\ResponseAssetGroup;
@@ -8,6 +9,7 @@ use \Concrete\Core\User\EditResponse as UserEditResponse;
 use UserAttributeKey;
 use Loader;
 use UserInfo;
+use Exception;
 
 class Properties extends BackendInterfaceController {
 

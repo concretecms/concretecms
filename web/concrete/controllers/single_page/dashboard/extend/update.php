@@ -1,6 +1,6 @@
-<?
-
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
+
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use TaskPermission;
 use Package;
@@ -8,6 +8,7 @@ use Marketplace;
 use \Concrete\Core\Marketplace\RemoteItem as MarketplaceRemoteItem;
 use Localization;
 use Loader;
+use Exception;
 
 class Update extends DashboardPageController {
 	

@@ -9,7 +9,6 @@ use Loader;
 
 use \Concrete\Core\Area\Layout\Preset as AreaLayoutPreset;
 use \Concrete\Core\Area\Layout\Layout as AreaLayout;
-use \Concrete\Core\Page\EditReponse as PageEditResponse;
 
 class Presets extends BackendInterfaceController
 {

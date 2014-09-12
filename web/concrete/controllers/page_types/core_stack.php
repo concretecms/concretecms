@@ -1,9 +1,12 @@
-<?
+<?php
 namespace Concrete\Controller\PageType;
+
 use Concrete\Core\Page\Controller\PageTypeController;
+use Loader;
 use Page;
 use Permissions;
 use View;
+
 class CoreStack extends PageTypeController {
 
 
