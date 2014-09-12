@@ -235,10 +235,28 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
     public function rateMessage(Type $ratingType, $commentRatingIP, $commentRatingUserID, $post = array())
     {
         $db = Loader::db();
-        $cnvRatingTypeID = $db->GetOne('SELECT * FROM ConversationRatingTypes WHERE cnvRatingTypeHandle = ?', array($ratingType->cnvRatingTypeHandle));
-        $db->Execute('INSERT INTO ConversationMessageRatings (cnvMessageID, cnvRatingTypeID, cnvMessageRatingIP, timestamp, uID) VALUES (?, ?, ?, ?, ?)', array($this->getConversationMessageID(), $cnvRatingTypeID, $commentRatingIP, date('Y-m-d H:i:s'), $commentRatingUserID));
-        $ratingType->adjustConversationMessageRatingTotalScore($this);
+        if (!$this->hasRatedMessage($ratingType, $commentRatingUserID)) {
+            $cnvRatingTypeID = $db->GetOne('SELECT * FROM ConversationRatingTypes WHERE cnvRatingTypeHandle = ?', array($ratingType->cnvRatingTypeHandle));
+            $db->Execute('INSERT INTO ConversationMessageRatings (cnvMessageID, cnvRatingTypeID, cnvMessageRatingIP, timestamp, uID) VALUES (?, ?, ?, ?, ?)', array($this->getConversationMessageID(), $cnvRatingTypeID, $commentRatingIP, date('Y-m-d H:i:s'), $commentRatingUserID));
+            $ratingType->adjustConversationMessageRatingTotalScore($this);
+        }
     }
+
+    public function hasRatedMessage(Type $ratingType, $user)
+    {
+        if (is_object($user)) {
+            $uID = $user->getUserID();
+        } else {
+            $uID = $user;
+        }
+
+        $db = Loader::db();
+        $cnt = $db->GetOne('select count(cnvMessageID) from ConversationMessageRatings where uID = ? and cnvRatingTypeID = ?', array(
+            $uID, $ratingType->getRatingTypeID()
+        ));
+        return $cnt > 0;
+    }
+
     public function getConversationMessageRating(Type $ratingType)
     {
         $db = Loader::db();

@@ -875,10 +875,7 @@
             <default value="0" />
             <unsigned />
         </field>
-    <field name="cnvMessageRatingIP" type="I8" size="10">
-      <notnull/>
-      <default value="0"/>
-    </field>
+      <field name="cnvMessageRatingIP" type="B" size="32" />
     <field name="timestamp" type="T" />
     <field name="uID" type="I" size="10">
         <notnull />
