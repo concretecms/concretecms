@@ -12,6 +12,7 @@ use Response;
 use View;
 use User;
 use Concrete\Core\Workflow\Request\ApprovePageRequest;
+use Config;
 
 class Design extends BackendUIPageController {
 
