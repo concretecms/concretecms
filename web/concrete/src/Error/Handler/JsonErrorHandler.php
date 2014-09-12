@@ -12,7 +12,7 @@ class JsonErrorHandler extends Handler
     {
         $debug = Config::get('concrete.debug.level', 0);
 
-        if ($debug !== DEBUG_DISPLAY_ERRORS) {
+        if ($debug != DEBUG_DISPLAY_ERRORS) {
             return Handler::DONE;
         }
 
