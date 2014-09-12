@@ -33,7 +33,7 @@ class Test extends DashboardPageController {
 		}
 		else {
 			try {
-				/* @var $mail MailHelper */
+				/* @var $mail \Concrete\Core\Mail\Service */
 				$mail = Loader::helper('mail');
 				$mail->setTesting(true);
 				$mail->setSubject(t(/*i18n: %s is the site name*/'Test message from %s', Config::get('concrete.site')));

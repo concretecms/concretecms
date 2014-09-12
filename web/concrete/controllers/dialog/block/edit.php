@@ -6,6 +6,7 @@ use Concrete\Core\Block\View\BlockView;
 use BlockType;
 use Concrete\Core\Cache\Cache;
 use Core;
+use Area;
 
 class Edit extends BackendInterfaceBlockController
 {

@@ -1,8 +1,10 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\File\Thumbnails;
 use \Concrete\Controller\Backend\UserInterface\File as BackendInterfaceFileController;
 use \Concrete\Core\File\EditResponse as FileEditResponse;
 use Concrete\Core\File\Type\Type;
+use Exception;
+use Permissions;
 
 class Edit extends BackendInterfaceFileController {
 

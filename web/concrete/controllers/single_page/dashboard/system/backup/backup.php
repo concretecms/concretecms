@@ -1,7 +1,7 @@
 <?php 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Backup;
 use \Concrete\Core\Page\Controller\DashboardPageController;
-use Config;
+use Core;
 use Loader;
 use TaskPermission;
 use Exception;
