@@ -92,8 +92,6 @@ define('NAMESPACE_SEGMENT_VENDOR', 'Concrete');
  * Base URL, Relative Directory and URL rewriting
  * ----------------------------------------------------------------------------
  */
-defined('REDIRECT_TO_BASE_URL') or define('REDIRECT_TO_BASE_URL', false);
-defined('URL_REWRITING_ALL') or define('URL_REWRITING_ALL', false);
 if (!defined('BASE_URL')) {
     if(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) {
         define('BASE_URL', 'https://' . $_SERVER['HTTP_HOST']);
@@ -319,13 +317,8 @@ define('REL_DIR_LANGUAGES_SITE_INTERFACE', REL_DIR_APPLICATION . '/' . DIRNAME_L
  * Relative paths to tools. Passes through concrete5.
  * ----------------------------------------------------------------------------
  */
-if (URL_REWRITING_ALL == true) {
-    define('REL_DIR_FILES_TOOLS', DIR_REL . '/tools');
-    define('REL_DIR_FILES_TOOLS_REQUIRED', DIR_REL . '/tools/required'); // front-end
-} else {
-    define('REL_DIR_FILES_TOOLS', DIR_REL . '/' . DISPATCHER_FILENAME . '/tools');
-    define('REL_DIR_FILES_TOOLS_REQUIRED', DIR_REL . '/' . DISPATCHER_FILENAME . '/tools/required'); // front-end
-}
+define('REL_DIR_FILES_TOOLS', DIR_REL . '/' . DISPATCHER_FILENAME . '/tools');
+define('REL_DIR_FILES_TOOLS_REQUIRED', DIR_REL . '/' . DISPATCHER_FILENAME . '/tools/required'); // front-end
 define('REL_DIR_FILES_TOOLS_BLOCKS', REL_DIR_FILES_TOOLS . '/blocks'); // this maps to the /tools/ directory in the blocks subdir
 define('REL_DIR_FILES_TOOLS_PACKAGES', REL_DIR_FILES_TOOLS . '/packages');
 

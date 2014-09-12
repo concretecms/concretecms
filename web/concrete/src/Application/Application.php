@@ -236,7 +236,7 @@ class Application extends Container
      */
     public function handleBaseURLRedirection()
     {
-        if (REDIRECT_TO_BASE_URL) {
+        if (Config::get('concrete.seo.redirect_to_base_url')) {
             $protocol = 'http://';
             $base_url = BASE_URL;
             if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) {

@@ -23,7 +23,7 @@ class URL {
 		}
 
 		$dispatcher = '';
-		if (!Config::get('concrete.seo.url_rewriting')) {
+		if (!Config::get('concrete.seo.url_rewriting_all')) {
 			$dispatcher = '/' . DISPATCHER_FILENAME;
 		}
 
