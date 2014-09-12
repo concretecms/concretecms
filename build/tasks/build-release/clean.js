@@ -13,7 +13,6 @@ module.exports = function(grunt, config, parameters, done) {
 				'.scrutinizer.yml',
 				'.travis.yml',
 				'build.properties.dev',
-				'composer.lock',
 			],
 			byPath: [
 				'/concrete/vendor/dapphp/securimage/example_form.ajax.php',
@@ -40,7 +39,7 @@ module.exports = function(grunt, config, parameters, done) {
 			],
 			byRX: [
 				/^\/concrete\/vendor\/.*\/(changelog|change_log|upgrade|upgrading|readme|contributing|history|roadmap)(\.(font|src))?\.(md|mdown|markdown|txt)$/i,
-				/^\/concrete\/vendor\/.*\/composer\.json(\.hhvm)?$/,
+				/^\/concrete\/vendor\/.*\/composer\.(lock|json)(\.hhvm)?$/,
 				/^\/concrete\/vendor\/.*\/phpunit\.(xml|xml\.dist|dist\.xml)(\.hhvm)?$/,
 				/^\/concrete\/vendor\/.*\/build\.(xml|properties)(\.dist)?$/,
 				/^\/concrete\/vendor\/.*\/UPGRADE_TO_\w+$/,
