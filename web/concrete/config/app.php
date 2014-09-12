@@ -6,6 +6,7 @@ return array(
 
     'debug'               => false,
     'namespace'           => 'Application',
+
     /**
      * Core Aliases
      */
@@ -86,6 +87,7 @@ return array(
         'TaskPermission'                       => '\Concrete\Core\Legacy\TaskPermission',
         'FilePermissions'                      => '\Concrete\Core\Legacy\FilePermissions'
     ),
+
     /**
      * Core Providers
      */
@@ -108,6 +110,7 @@ return array(
         '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
         '\Concrete\Core\Logging\LoggingServiceProvider'
     ),
+
     /**
      * Core Facades
      */
@@ -121,6 +124,7 @@ return array(
         'Image'    => '\Concrete\Core\Support\Facade\Image',
         'Config'   => '\Concrete\Core\Support\Facade\Config'
     ),
+
     /**
      * Core Routes
      */
@@ -137,6 +141,7 @@ return array(
             '\Concrete\Core\Legacy\Controller\ToolController::display',
             'tool',
             array('tool' => '[A-Za-z0-9_/.]+')),
+
         /**
          * Dialog
          */
@@ -203,6 +208,7 @@ return array(
         "/ccm/system/dialogs/page/delete_alias/submit"                                  => array('\Concrete\Controller\Dialog\Page\DeleteAlias::submit'),
         "/ccm/system/dialogs/page/edit_external"                                        => array('\Concrete\Controller\Dialog\Page\EditExternal::view'),
         "/ccm/system/dialogs/page/edit_external/submit"                                 => array('\Concrete\Controller\Dialog\Page\EditExternal::submit'),
+
         /**
          * Files
          */
@@ -213,11 +219,13 @@ return array(
         "/ccm/system/file/get_json"                                                     => array('\Concrete\Controller\Backend\File::getJSON'),
         "/ccm/system/file/duplicate"                                                    => array('\Concrete\Controller\Backend\File::duplicate'),
         "/ccm/system/file/upload"                                                       => array('\Concrete\Controller\Backend\File::upload'),
+
         /**
          * Users
          */
         "/ccm/system/user/add_group"                                                    => array('\Concrete\Controller\Backend\User::addGroup'),
         "/ccm/system/user/remove_group"                                                 => array('\Concrete\Controller\Backend\User::removeGroup'),
+
         /**
          * Page actions - non UI
          */
@@ -225,10 +233,12 @@ return array(
         "/ccm/system/page/create/{ptID}"                                                => array('\Concrete\Controller\Backend\Page::create'),
         "/ccm/system/page/create/{ptID}/{parentID}"                                     => array('\Concrete\Controller\Backend\Page::create'),
         "/ccm/system/page/arrange_blocks/"                                              => array('\Concrete\Controller\Backend\Page\ArrangeBlocks::arrange'),
+
         /**
          * Block actions - non UI
          */
         "/ccm/system/block/render/"                                                     => array('\Concrete\Controller\Backend\Block::render'),
+
         /**
          * Misc
          */
@@ -237,11 +247,13 @@ return array(
         "/ccm/system/backend/editor_data/"                                              => array('\Concrete\Controller\Backend\EditorData::view'),
         "/ccm/system/upgrade/"                                                          => array('\Concrete\Controller\Upgrade::view'),
         "/ccm/system/upgrade/submit"                                                    => array('\Concrete\Controller\Upgrade::submit'),
+
         /**
          * General Attribute
          */
         "/ccm/system/attribute/attribute_sort/set"                                      => array('\Concrete\Controller\Backend\AttributeSort::set'),
         "/ccm/system/attribute/attribute_sort/user"                                     => array('\Concrete\Controller\Backend\AttributeSort::user'),
+
         /**
          * Search Routes
          */
@@ -252,6 +264,7 @@ return array(
         "/ccm/system/search/users/submit"                                               => array('\Concrete\Controller\Search\Users::submit'),
         "/ccm/system/search/users/field/{field}"                                        => array('\Concrete\Controller\Search\Users::field'),
         "/ccm/system/search/groups/submit"                                              => array('\Concrete\Controller\Search\Groups::submit'),
+
         /**
          * Panels - top level
          */
@@ -280,6 +293,7 @@ return array(
         "/ccm/system/panels/page/preview_as_user"                                       => array('\Concrete\Controller\Panel\Page\PreviewAsUser::view'),
         "/ccm/system/panels/page/preview_as_user/preview"                               => array('\Concrete\Controller\Panel\Page\PreviewAsUser::frame_page'),
         "/ccm/system/panels/page/preview_as_user/render"                                => array('\Concrete\Controller\Panel\Page\PreviewAsUser::preview_page'),
+
         /**
          * Panel Details
          */
@@ -303,6 +317,7 @@ return array(
         "/ccm/system/panels/details/page/caching/purge"                                 => array('\Concrete\Controller\Panel\Detail\Page\Caching::purge'),
         "/ccm/system/panels/details/page/permissions"                                   => array('\Concrete\Controller\Panel\Detail\Page\Permissions::view'),
         "/ccm/system/panels/details/page/permissions/save_simple"                       => array('\Concrete\Controller\Panel\Detail\Page\Permissions::save_simple'),
+
         /**
          * RSS Feeds
          */
@@ -310,11 +325,13 @@ return array(
             '\Concrete\Controller\Feed::get',
             'rss',
             array('identifier' => '[A-Za-z0-9_/.]+')),
+
         /**
          * Special Dashboard
          */
         "/dashboard/blocks/stacks/list"                                                 => array('\Concrete\Controller\SinglePage\Dashboard\Blocks\Stacks::list_page'),
     ),
+
     /**
      * Route themes
      */
@@ -329,6 +346,7 @@ return array(
         '/maintenance_mode' => VIEW_CORE_THEME,
         '/upgrade'          => VIEW_CORE_THEME
     ),
+
     /**
      * File Types
      */
@@ -372,6 +390,7 @@ return array(
         t('OGG Video')      => array('ogv', FileType::T_VIDEO),
         t('WebM')           => array('webm', FileType::T_VIDEO)
     ),
+
     /**
      * Importer Attributes
      */
@@ -380,6 +399,7 @@ return array(
         'height'   => array('Height', 'NUMBER', false),
         'duration' => array('Duration', 'NUMBER', false)
     ),
+
     /**
      * Assets
      */
