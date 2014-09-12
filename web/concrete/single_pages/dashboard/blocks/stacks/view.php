@@ -114,16 +114,17 @@ if ($controller->getTask() == 'view_details') {
         }
 
         $(function() {
-            var editor = new Concrete.EditMode({notify: false}),
-                area = editor.getAreaByID(<?=$a->getAreaID()?>);
+            var editor = new Concrete.EditMode({notify: false});
 
             ConcreteEvent.on('ClipboardAddBlock', function(event, data) {
+                var area = editor.getAreaByID(<?=$a->getAreaID()?>);
                 block = new Concrete.DuplicateBlock(data.$launcher, editor);
                 block.addToDragArea(_.last(area.getDragAreas()));
                 return false;
             });
 
             ConcreteEvent.on('AddBlockListAddBlock', function(event, data) {
+                var area = editor.getAreaByID(<?=$a->getAreaID()?>);
                 blockType = new Concrete.BlockType(data.$launcher, editor);
                 blockType.addToDragArea(_.last(area.getDragAreas()));
                 return false;
