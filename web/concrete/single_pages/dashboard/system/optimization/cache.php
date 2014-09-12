@@ -78,7 +78,7 @@
         <legend style="display: inline-block; margin-bottom: 0; width: auto; font-size: 14px; font-weight: bold" class="launch-tooltip" data-placement="right" title="<?=t('Stores the output of an entire page')?>"><?=t('Full Page Caching')?></legend>
         <div class="radio">
             <label>
-                <input type="radio" name="FULL_PAGE_CACHE_GLOBAL" value="0" <?php  if (Config::get('concrete.cache.pages')) { ?> checked <?php  } ?> />
+                <input type="radio" name="FULL_PAGE_CACHE_GLOBAL" value="0" <?php  if (!Config::get('concrete.cache.pages')) { ?> checked <?php  } ?> />
                 <span><?=t('Off - Turn it on by hand for specific pages.')?></span>
             </label>
         </div>
