@@ -12,7 +12,7 @@ $v = View::getInstance();
 $v->requireAsset('dashboard');
 $v->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>');
 $v->addFooterItem('<script type="text/javascript">$(function() { ConcreteToolbar.start(); });</script>');
-if (ENABLE_PROGRESSIVE_PAGE_REINDEX && Config::get('DO_PAGE_REINDEX_CHECK')) {
+if (Config::get('concrete.misc.enabled_progressive_page_reindex') && Config::get('concrete.misc.do_page_reindex_check')) {
     $v->addFooterItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
 }
 if (Localization::activeLanguage() != 'en') {
@@ -33,8 +33,8 @@ if (!$frontendPageID) {
     $backLink = DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=' . $frontendPageID;
 }
 
-$show_titles = !!Config::get('ACCESSIBILITY_SHOW_TOOLBAR_TITLES');
-$large_font = !!Config::get('ACCESSIBILITY_INCREASE_TOOLBAR_FONT_SIZE');
+$show_titles = !!Config::get('concrete.accessibility.toolbar_titles');
+$large_font = !!Config::get('concrete.accessibility.toolbar_large_font');
 
 ?>
 

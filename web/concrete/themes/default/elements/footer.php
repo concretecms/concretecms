@@ -7,8 +7,8 @@
 			<?
 			$u = new User();
 			if ($u->isRegistered()) { ?>
-				<? 
-				if (Config::get("ENABLE_USER_PROFILES")) {
+				<?
+				if (Config::get("concrete.user.profiles_enabled")) {
 					$userName = '<a href="' . $view->url('/profile') . '">' . $u->getUserName() . '</a>';
 				} else {
 					$userName = $u->getUserName();
@@ -18,7 +18,7 @@
 			<? } else { ?>
 				<span class="sign-in"><a href="<?=$view->url('/login')?>"><?=t('Sign In to Edit this Site')?></a></span>
 			<? } ?>
-            
+
 	</div>
 
 </div>

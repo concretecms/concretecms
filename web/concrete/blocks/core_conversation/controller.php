@@ -28,11 +28,11 @@ use Page;
 		protected $btFeatures = array(
 			'conversation'
 		);
-		
+
 		public function getBlockTypeDescription() {
 			return t("Displays conversations on a page.");
 		}
-		
+
 		public function getBlockTypeName() {
 			return t("Conversation");
 		}
@@ -40,7 +40,7 @@ use Page;
 		public function getConversationFeatureDetailConversationObject() {
 			return $this->getConversationObject();
 		}
-		
+
 		public function getConversationObject() {
 			if (!isset($this->conversation)) {
 				// i don't know why this->cnvid isn't sticky in some cases, leading us to query
@@ -73,7 +73,6 @@ use Page;
         }
 
 		public function view() {
-
 			$r = ResponseAssetGroup::get();
 			$r->requireAsset('core/conversation');
             $r->requireAsset('core/lightbox');
@@ -98,14 +97,14 @@ use Page;
                 $this->set('attachmentOverridesEnabled', $fileSettings['attachmentOverridesEnabled']);
 			}
 		}
-		
+
 		public function getFileSettings(){
             $conversation = $this->getConversationObject();
 			$helperFile = Loader::helper('concrete/file');
 			if($conversation->getConversationMaxFilesGuest() > 0 && $conversation->getConversationAttachmentOverridesEnabled()  > 0) {
 				$maxFilesGuest = $conversation->getConversationMaxFilesGuest();
 			} else {
-				$maxFilesGuest = Config::get('CONVERSATIONS_MAX_FILES_GUEST') ? Config::get('CONVERSATIONS_MAX_FILES_GUEST') : 3;
+				$maxFilesGuest = Config::get('conversations.files.guest.max', 3);
 			}
             if($conversation->getConversationAttachmentOverridesEnabled() > 0) {
 
@@ -115,35 +114,35 @@ use Page;
 			if($conversation->getConversationMaxFilesRegistered() > 0 && $conversation->getConversationAttachmentOverridesEnabled()  > 0) {
 				$maxFilesRegistered = $conversation->getConversationMaxFilesRegistered();
 			} else {
-				$maxFilesRegistered = Config::get('CONVERSATIONS_MAX_FILES_REGISTERED') ? Config::get('CONVERSATIONS_MAX_FILES_REGISTERED') : 6;
+				$maxFilesRegistered = Config::get('conversations.files.registered.max', 6);
 			}
-			
+
 			if($conversation->getConversationMaxFileSizeGuest() > 0 && $conversation->getConversationAttachmentOverridesEnabled()  > 0) {
 				$maxFileSizeGuest = $conversation->getConversationMaxFileSizeGuest();
 			} else {
-				$maxFileSizeGuest = Config::get('CONVERSATIONS_MAX_FILE_SIZE_GUEST') ? Config::get('CONVERSATIONS_MAX_FILE_SIZE_GUEST') : 3;
+				$maxFileSizeGuest = Config::get('conversations.files.guest.max_size', 3);
 			}
-			
+
 			if($conversation->getConversationMaxFileSizeRegistered() > 0 && $conversation->getConversationAttachmentOverridesEnabled()  > 0) {
 				$maxFileSizeRegistered = $conversation->getConversationMaxFileSizeRegistered();
 			} else {
-				$maxFileSizeRegistered = Config::get('CONVERSATIONS_MAX_FILE_SIZE_REGISTERED') ? Config::get('CONVERSATIONS_MAX_FILE_SIZE_REGISTERED') : 10;
+				$maxFileSizeRegistered = Config::get('conversations.files.registered.max_size', 10);
 			}
-			
+
 			if($conversation->getConversationFileExtensions() && $conversation->getConversationAttachmentOverridesEnabled()  > 0) {
 				$fileExtensions = $conversation->getConversationFileExtensions();
 			} else {
-				$fileExtensions = Config::get('CONVERSATIONS_ALLOWED_FILE_TYPES') ? Config::get('CONVERSATIONS_ALLOWED_FILE_TYPES') : '*.jpg;*.png;*.gif;*.doc';
+				$fileExtensions = Config::get('conversations.files.allowed_types', '*.jpg;*.png;*.gif;*.doc');
 			}
 
             if($conversation->getConversationAttachmentOverridesEnabled() > 0) {
                 $attachmentsEnabled = $conversation->getConversationAttachmentsEnabled();
             } else {
-                $attachmentsEnabled = is_numeric(Config::get('CONVERSATIONS_ATTACHMENTS_ENABLED')) ? Config::get('CONVERSATIONS_ATTACHMENTS_ENABLED') : 1;
+                $attachmentsEnabled = is_numeric(Config::get('concrete.conversations.attachments_enabled')) ? Config::get('concrete.conversations.attachments_enabled') : 1;
             }
-			
+
 			$fileExtensions = implode(',', $helperFile->unserializeUploadFileExtensions($fileExtensions)); //unserialize and implode extensions into comma separated string
-			
+
 			$fileSettings = array();
 			$fileSettings['maxFileSizeRegistered'] = $maxFileSizeRegistered;
 			$fileSettings['maxFileSizeGuest'] = $maxFileSizeGuest;
@@ -152,10 +151,9 @@ use Page;
 			$fileSettings['fileExtensions'] = $fileExtensions;
             $fileSettings['attachmentsEnabled'] = $attachmentsEnabled;
             $fileSettings['attachmentOverridesEnabled'] = $attachmentOverridesEnabled;
-			
+
 			return $fileSettings;
 		}
-		
 
 		public function getActiveUsers($lower=false) {
 			$cnv = $this->getConversationObject();
@@ -216,15 +214,14 @@ use Page;
 			if (!$values['enableCommentRating']) {
 				$values['enableCommentRating'] = 0;
 			}
-			
+
 			if ($values['fileExtensions']) {
 				$receivedExtensions = preg_split('{,}',strtolower($values['fileExtensions']),null,PREG_SPLIT_NO_EMPTY);
 				$conversation->setConversationFileExtensions($helperFile->serializeUploadFileExtensions($receivedExtensions));
 			}
-			
-			 
+
 			$values['cnvID'] = $conversation->getConversationID();
 			parent::save($values);
 		}
-		
+
 	}

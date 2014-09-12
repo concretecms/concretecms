@@ -45,7 +45,7 @@ class Text {
 	 * @return string $handle
 	 */
 	public function sanitizeFileSystem($handle) {
-		return $this->urlify($handle, PAGE_PATH_SEGMENT_MAX_LENGTH, '', false);
+		return $this->urlify($handle, Config::get('concrete.seo.segment_max_length'), '', false);
 	}
 
 	/**
@@ -56,10 +56,13 @@ class Text {
 	 * @param bool $removeExcludedWords=true Set to true to remove excluded words, false to allow them.
 	 * @return string $handle
 	 */
-	public function urlify($handle, $maxlength = PAGE_PATH_SEGMENT_MAX_LENGTH, $locale = '', $removeExcludedWords = true) {
+	public function urlify($handle, $maxlength = null, $locale = '', $removeExcludedWords = true) {
+        if ($maxlength === null) {
+            $maxlength = Config::get('concrete.seo.segment_max_length');
+        }
 		$text = strtolower(str_replace(array("\r", "\n", "\t"), ' ', $this->asciify($handle, $locale)));
 		if($removeExcludedWords) {
-			$excludeSeoWords = Config::get('SEO_EXCLUDE_WORDS');
+			$excludeSeoWords = Config::get('concrete.seo.exclude_words');
 			if(is_string($excludeSeoWords)) {
 				if(strlen($excludeSeoWords)) {
 					$remove_list = explode(',', $excludeSeoWords);

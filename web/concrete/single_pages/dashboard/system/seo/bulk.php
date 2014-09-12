@@ -142,7 +142,7 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
                             <label><?php echo t('Meta Title'); ?></label>
                             <?php $seoPageTitle = $cobj->getCollectionName();
                             $seoPageTitle = htmlspecialchars($seoPageTitle, ENT_COMPAT, APP_CHARSET);
-                            $autoTitle = sprintf(PAGE_TITLE_FORMAT, SITE, $seoPageTitle);
+                            $autoTitle = sprintf(Config::get('concrete.seo.title_format'), SITE, $seoPageTitle);
                             $titleInfo = array('title' => $cID);
                             if(strlen($cobj->getAttribute('meta_title')) <= 0) {
                                 $titleInfo[style] = 'background: whiteSmoke';

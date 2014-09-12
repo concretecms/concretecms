@@ -180,9 +180,9 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
             }, 0);
 
 
-            <?php if(!defined('WHITE_LABEL_DASHBOARD_BACKGROUND_FEED') && !defined('WHITE_LABEL_DASHBOARD_BACKGROUND_SRC')) { ?>
+            <?php if(!Config::get('concrete.white_label.background_image') !== 'none') { ?>
             $(function () {
-                $.backstretch("<?= DASHBOARD_BACKGROUND_FEED . '/' . $image ?>", {
+                $.backstretch("<?= Config::get('concrete.urls.background_feed') . '/' . $image ?>", {
                     fade: 500
                 });
                 $.getJSON('<?= BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '/tools/required/dashboard/get_image_data' ?>', { image: '<?= $image ?>' }, function (data) {

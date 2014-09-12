@@ -1,23 +1,23 @@
 <?php defined('C5_EXECUTE') or die("Access Denied.");
-do { 
-	
-	if (!(defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES)) {
+do {
+
+	if (!Config::get('concrete.user.profiles_enabled')) {
 		break;
 	}
-	
+
 	$u = new User();
 	if (!$u->isRegistered()) {
 		 break;
 	}
-	
+
 	$account = Page::getByPath('/account');
 	if (!is_object($account) || $account->isError()) {
-		 break; 
+		 break;
 	}
-	
+
 	$cp = new Permissions($account);
 	if(!$cp->canRead()) {
-		break; 
+		break;
 	}
 ?>
 
@@ -34,10 +34,10 @@ do {
 		$nc = Page::getByID($cID, 'ACTIVE');
 		$ncp = new Permissions($nc);
 		if ($ncp->canRead() && (!$nc->getAttribute('exclude_nav'))) {
-			$categories[] = $nc;	
+			$categories[] = $nc;
 		}
 	}
-	
+
 	foreach($categories as $cc) { ?>
 		<li class="nav-header"><?=$cc->getCollectionName()?></li>
 <?
@@ -46,16 +46,16 @@ do {
 			$nc = Page::getByID($cID, 'ACTIVE');
 			$ncp = new Permissions($nc);
 			if ($ncp->canRead() && (!$nc->getAttribute('exclude_nav'))) { ?>
-				
+
 				<li><a href="<?=Loader::helper('navigation')->getLinkToCollection($nc)?>"><?=$nc->getCollectionName()?></a></li>
-			
+
 			<?
 
 			}
 		}
 	}
 	?>
-	
+
 	<li class="divider"></li>
 	<li><a href="<?=DIR_REL?>/"><i class="icon-home"></i> <?=t("Home")?></a></li>
 	<li><a href="<?=$view->url('/login', 'logout', Loader::helper('validation/token')->generate('logout'))?>"><i class="icon-remove"></i> <?=t("Sign Out")?></a></li>

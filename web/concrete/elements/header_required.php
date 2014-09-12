@@ -24,7 +24,7 @@ if (is_object($c)) {
 			if($c->isSystemPage()) {
 				$pageTitle = t($pageTitle);
 			}
-			$pageTitle = sprintf(PAGE_TITLE_FORMAT, SITE, $pageTitle);
+			$pageTitle = sprintf(Config::get('concrete.seo.title_format'), Config::get('concrete.site'), $pageTitle);
 		}
 	}
 	$pageDescription = (!isset($pageDescription) || !$pageDescription) ? $c->getCollectionDescription() : $pageDescription;
@@ -72,7 +72,7 @@ if($c->getCollectionAttributeValue('exclude_search_index')) { ?>
     <meta name="robots" content="noindex" />
 <?php } ?>
 <?php
-if (defined('APP_VERSION_DISPLAY_IN_HEADER') && APP_VERSION_DISPLAY_IN_HEADER) {
+if (Config::get('concrete.misc.app_version_display_in_header')) {
     echo '<meta name="generator" content="concrete5 - ' . APP_VERSION . '" />';
 }
 else {
@@ -109,15 +109,15 @@ var CCM_REL = "<?php echo DIR_REL?>";
 
 $v = View::getInstance();
 
-if (defined('ENABLE_USER_PROFILES') && ENABLE_USER_PROFILES && $u->isRegistered()) {
+if (Config::get('concrete.user.profiles_enabled') && $u->isRegistered()) {
 	$v->requireAsset('core/account');
 	$v->addFooterItem('<script type="text/javascript">$(function() { ccm_enableUserProfileMenu(); });</script>');
 }
 
-$favIconFID=intval(Config::get('FAVICON_FID'));
-$appleIconFID =intval(Config::get('IPHONE_HOME_SCREEN_THUMBNAIL_FID'));
-$modernIconFID = intval(Config::get('MODERN_TILE_THUMBNAIL_FID'));
-$modernIconBGColor = strval(Config::get('MODERN_TILE_THUMBNAIL_BGCOLOR'));
+$favIconFID=intval(Config::get('concrete.misc.favicon_fid'));
+$appleIconFID =intval(Config::get('concrete.misc.iphone_home_screen_thumbnail_fid'));
+$modernIconFID = intval(Config::get('concrete.misc.modern_tile_thumbnail_fid'));
+$modernIconBGColor = strval(Config::get('concrete.misc.modern_tile_thumbnail_bgcolor'));
 
 if($favIconFID) {
 	$f = File::getByID($favIconFID); ?>
@@ -156,8 +156,8 @@ if (is_object($cp)) {
 
 $v = View::getInstance();
 $v->markHeaderAssetPosition();
-$_trackingCodePosition = Config::get('SITE_TRACKING_CODE_POSITION');
+$_trackingCodePosition = Config::get('concrete.seo.tracking.code_position');
 if (empty($disableTrackingCode) && $_trackingCodePosition === 'top') {
-	echo Config::get('SITE_TRACKING_CODE');
+	echo Config::get('concrete.seo.tracking.code');
 }
 echo $c->getCollectionAttributeValue('header_extra_content');

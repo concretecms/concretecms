@@ -15,13 +15,13 @@ if (isset($group)) { ?>
 
 	$delConfirmJS = t('Are you sure you want to permanently remove this group?');
 	if($u->isSuperUser() == false){ ?>
-		<?=t('You must be logged in as %s to remove groups.', USER_SUPER)?>			
-	<? }else{ ?>   
+		<?=t('You must be logged in as %s to remove groups.', USER_SUPER)?>
+	<? }else{ ?>
 
 	<script type="text/javascript">
 	deleteGroup = function() {
-		if (confirm('<?=$delConfirmJS?>')) { 
-			location.href = "<?=$view->url('/dashboard/users/groups', 'delete', $group->getGroupID(), $valt->generate('delete_group_' . $group->getGroupID() ))?>";				
+		if (confirm('<?=$delConfirmJS?>')) {
+			location.href = "<?=$view->url('/dashboard/users/groups', 'delete', $group->getGroupID(), $valt->generate('delete_group_' . $group->getGroupID() ))?>";
 		}
 	}
 	</script>
@@ -34,34 +34,34 @@ if (isset($group)) { ?>
 	        <label for="gName"><?=t('Name')?></label>
 	        <input type="text" name="gName" id="gName" class="form-control" value="<?=Loader::helper('text')->entities($group->getGroupName())?>" />
 	    </div>
-	    
+
 	    <div class="form-group">
-	        <label for="gDescription"><?=t('Description')?></label>	        
+	        <label for="gDescription"><?=t('Description')?></label>
 	        <textarea name="gDescription" id="gDescription" rows="6" class="form-control"><?=Loader::helper("text")->entities($group->getGroupDescription())?></textarea>
 	    </div>
     </fieldset>
 
-	<? if (ENABLE_USER_PROFILES) { ?>
-	
+	<? if (Config::get('concrete.user.profiles_enabled')) { ?>
+
 	<fieldset>
         <div class="form-group">
             <div class="checkbox">
                 <label>
-                <?=$form->checkbox('gIsBadge', 1, $group->isGroupBadge())?>	
+                <?=$form->checkbox('gIsBadge', 1, $group->isGroupBadge())?>
                 <span><?=t('This group is a badge.')?> <i class="fa fa-question-circle launch-tooltip" title="<?=t('Badges are publicly viewable in user profiles, and display pictures and a custom description. Badges can be automatically assigned or given out by administrators.')?>"></i> </span>
                 </label>
             </div>
         </div>
-		
+
         <div id="gUserBadgeOptions" style="display: none">
 		    <div class="form-group">
 			    <label for="gBadgeFID"><?=t('Image')?></label>
-                
+
                     <?
                         $af = Loader::helper('concrete/asset_library');
         				print $af->image('gBadgeFID', 'gBadgeFID', t('Choose Badge Image'), $group->getGroupBadgeImageObject());
                     ?>
-                
+
             </div>
 
             <div class="form-group">
@@ -86,13 +86,13 @@ if (isset($group)) { ?>
                 <span><?=t('This group is automatically entered.')?> <i class="fa fa-question-circle launch-tooltip" title="<?=t("Automated Groups aren't assigned by administrators. They are checked against code at certain times that determines whether users should enter them.")?>"></i> </span>
                 </label>
             </div>
-		
+
 		</div>
-		
+
     	<div id="gAutomationOptions" style="display: none">
     		<div class="form-group">
     		    <label><?=t('Check Group')?></label>
-    		    
+
     		    <div class="checkbox">
                     <label>
     				<?=$form->checkbox('gCheckAutomationOnRegister', 1, $group->checkGroupAutomationOnRegister())?>
@@ -106,7 +106,7 @@ if (isset($group)) { ?>
     				<span><?=t('When a user signs in.')?></span>
                     </label>
     			</div>
-    			
+
     			<div class="checkbox">
                     <label>
     				<?=$form->checkbox('gCheckAutomationOnJobRun', 1, $group->checkGroupAutomationOnJobRun())?>
@@ -114,7 +114,7 @@ if (isset($group)) { ?>
                     </label>
     			</div>
     		</div>
-    
+
     		<div class="alert alert-info">
     			<?
     			$path = $group->getGroupAutomationControllerClass();
@@ -129,21 +129,21 @@ if (isset($group)) { ?>
     		<?=$form->checkbox('gUserExpirationIsEnabled', 1, $group->isGroupExpirationEnabled())?>
     		<span><?=t('Automatically remove users from this group')?></span></label></div>
     	</div>
-	
+
     	<div class="form-group">
     		<?=$form->select("gUserExpirationMethod", array(
     		    'SET_TIME' => t('at a specific date and time'),
     			'INTERVAL' => t('once a certain amount of time has passed')
-            ), $group->getGroupExpirationMethod(), array('disabled' => true, 'class' => 'form-control'));?>	
-    	</div>	
-	
+            ), $group->getGroupExpirationMethod(), array('disabled' => true, 'class' => 'form-control'));?>
+    	</div>
+
     	<div id="gUserExpirationSetTimeOptions" style="display: none">
     	    <div class="form-group">
     	        <label for="gUserExpirationSetDateTime"><?=t('Expiration Date')?></label>
                 <?=$date->datetime('gUserExpirationSetDateTime', $group->getGroupExpirationDateTime())?>
             </div>
     	</div>
-	
+
     	<div id="gUserExpirationIntervalOptions" style="display: none">
     	    <div class="form-group">
                 <label for=""><?=t('Accounts expire after')?></label>
@@ -154,7 +154,7 @@ if (isset($group)) { ?>
                     		<th><?=t('Hours')?></th>
                     		<th><?=t('Minutes')?></th>
                     	</tr>
-    
+
                         <tr>
                             <?
                             	$days = $group->getGroupExpirationIntervalDays();
@@ -162,7 +162,7 @@ if (isset($group)) { ?>
                             	$minutes = $group->getGroupExpirationIntervalMinutes();
                             	$style = 'width: 60px';
                         	?>
-                        	
+
                         	<td valign="top">
                         	    <?=$form->text('gUserExpirationIntervalDays', $days, array('style' => $style))?>
                         	</td>
@@ -177,7 +177,7 @@ if (isset($group)) { ?>
                 </div>
             </div>
     	</div>
-	
+
     	<div id="gUserExpirationAction" style="display: none">
     	    <div class="form-group">
     	        <label for="gUserExpirationAction"><?=t('Expiration Action')?></label>
@@ -185,19 +185,19 @@ if (isset($group)) { ?>
                         'REMOVE' => t('Remove the user from this group'),
                         'DEACTIVATE' => t('Deactivate the user account'),
                         'REMOVE_DEACTIVATE' => t('Remove the user from the group and deactivate the account')
-                ), $group->getGroupExpirationAction(), 
-                array('class' => 'form-control'));?>	
+                ), $group->getGroupExpirationAction(),
+                array('class' => 'form-control'));?>
             </div>
     	</div>
-	
+
         <input type="hidden" name="gID" value="<?=$group->getGroupID()?>" />
 	</fieldset>
-	
+
 	<div class="ccm-dashboard-form-actions-wrapper">
-        <div class="ccm-dashboard-form-actions">    
+        <div class="ccm-dashboard-form-actions">
             <a href="<?=$view->url('/dashboard/users/groups')?>" class="btn btn-default pull-left"><?=t('Cancel')?></a>
             <button class="btn pull-right btn-primary" style="margin-left: 10px" type="submit"><?=t('Update Group')?></button>
-            
+
             <?php if ($u->isSuperUser()) { ?>
                 <?php print $ih->button_js(t('Delete'), "deleteGroup()", 'right', 'btn-danger');?>
             <?php } ?>
@@ -216,14 +216,14 @@ ccm_checkGroupExpirationOptions = function() {
 				$("#gUserExpirationSetTimeOptions").show();
 				$("#gUserExpirationIntervalOptions").hide();
 				break;
-			case 'INTERVAL': 
+			case 'INTERVAL':
 				$("#gUserExpirationSetTimeOptions").hide();
 				$("#gUserExpirationIntervalOptions").show();
-				break;				
+				break;
 		}
 		$("#gUserExpirationAction").show();
 	} else {
-		sel.attr('disabled', true);	
+		sel.attr('disabled', true);
 		$("#gUserExpirationSetTimeOptions").hide();
 		$("#gUserExpirationIntervalOptions").hide();
 		$("#gUserExpirationAction").hide();

@@ -42,7 +42,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <input type="hidden" name="pThemeID" value="<?=$selectedTheme->getThemeID()?>" />
 
             <div class="list-group-item list-group-item-header"><?=t('Theme')?>
-            <? if (ENABLE_MARKETPLACE_SUPPORT) { ?>
+            <? if (Config::get('concrete.marketplace.enabled')) { ?>
                 <div class="ccm-marketplace-btn-wrapper">
                 <button onclick="ccm_openThemeLauncher()" class="btn-ccm-marketplace btn btn-large"><?=t("Install More Themes")?></button>
                 </div>

@@ -6,6 +6,7 @@ use \Concrete\Core\File\StorageLocation\StorageLocation;
 use \Concrete\Core\File\Importer;
 use \Concrete\Core\Attribute\Type as AttributeType;
 use \Concrete\Core\Attribute\Key\FileKey;
+use Config;
 use Core;
 use \Concrete\Core\Attribute\Key\Category;
 
@@ -23,14 +24,14 @@ class ImporterTest extends \FileStorageTestCase {
             'FilePermissionAssignments',
             'AttributeKeyCategories',
             'AttributeTypes',
-            'Config',
+            'ConfigStore',
             'AttributeKeys',
             'AttributeValues',
             'atNumber',
             'FileVersionLog'
         ));
         parent::setUp();
-        define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.txt;*.jpg;*.jpeg;*.png');
+        Config::set('concrete.upload.extensions', '*.txt;*.jpg;*.jpeg;*.png');
 
         $category = Category::add('file');
         $number = AttributeType::add('number', 'Number');
@@ -335,4 +336,3 @@ class ImporterTest extends \FileStorageTestCase {
 
     }
 }
- 

@@ -51,9 +51,9 @@ class User {
 
 		$valc = Loader::helper('concrete/validation');
 
-		if ((strlen($password) < USER_PASSWORD_MINIMUM) || (strlen($password) > USER_PASSWORD_MAXIMUM)) {
+		if ((strlen($password) < \Config::get('concrete.user.password.minimum')) || (strlen($password) >  \Config::get('concrete.user.password.maximum'))) {
 			if($errorObj)
-				$errorObj->add( t('A password must be between %s and %s characters', USER_PASSWORD_MINIMUM, USER_PASSWORD_MAXIMUM) );
+				$errorObj->add( t('A password must be between %s and %s characters', \Config::get('concrete.user.password.minimum'),  \Config::get('concrete.user.password.maximum')) );
 			$invalid=1;
 		}
 

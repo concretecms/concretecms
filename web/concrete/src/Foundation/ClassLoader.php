@@ -79,15 +79,23 @@ class ClassLoader  {
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Job', DIR_BASE_CORE . '/' . DIRNAME_JOBS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Core', DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
 
-        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\StartingPointPackage', DIR_APPLICATION . '/config/install/' . DIRNAME_PACKAGES);
-		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Attribute', DIR_APPLICATION. '/' . DIRNAME_ATTRIBUTES);
-		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Authentication', DIR_APPLICATION . '/' . DIRNAME_AUTHENTICATION);
-		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Block', DIR_APPLICATION . '/' . DIRNAME_BLOCKS);
-		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Theme', DIR_APPLICATION . '/' . DIRNAME_THEMES);
-        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Controller\\PageType', DIR_APPLICATION . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
-		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Controller', DIR_APPLICATION . '/' . DIRNAME_CONTROLLERS);
-		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Job', DIR_APPLICATION . '/' . DIRNAME_JOBS);
-		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_APPLICATION . '\\Core', DIR_APPLICATION . '/' . DIRNAME_CLASSES);
+        $namespace = 'Application';
+        $app_config_path = DIR_APPLICATION . '/config/app.php';
+        if (file_exists($app_config_path)) {
+            $app_config = require $app_config_path;
+            if (isset($app_config['namespace'])) {
+                $namespace = $app_config['namespace'];
+            }
+        }
+        $symfonyLoader->addPrefix($namespace . '\\StartingPointPackage', DIR_APPLICATION . '/config/install/' . DIRNAME_PACKAGES);
+		$symfonyLoader->addPrefix($namespace . '\\Attribute', DIR_APPLICATION. '/' . DIRNAME_ATTRIBUTES);
+		$symfonyLoader->addPrefix($namespace . '\\Authentication', DIR_APPLICATION . '/' . DIRNAME_AUTHENTICATION);
+		$symfonyLoader->addPrefix($namespace . '\\Block', DIR_APPLICATION . '/' . DIRNAME_BLOCKS);
+		$symfonyLoader->addPrefix($namespace . '\\Theme', DIR_APPLICATION . '/' . DIRNAME_THEMES);
+        $symfonyLoader->addPrefix($namespace . '\\Controller\\PageType', DIR_APPLICATION . '/' . DIRNAME_CONTROLLERS . '/' . DIRNAME_PAGE_TYPES);
+		$symfonyLoader->addPrefix($namespace . '\\Controller', DIR_APPLICATION . '/' . DIRNAME_CONTROLLERS);
+		$symfonyLoader->addPrefix($namespace . '\\Job', DIR_APPLICATION . '/' . DIRNAME_JOBS);
+		$symfonyLoader->addPrefix($namespace . '\\Core', DIR_APPLICATION . '/' . DIRNAME_CLASSES);
 
 		$symfonyLoader->register();
 	}

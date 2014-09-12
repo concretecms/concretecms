@@ -7,20 +7,20 @@
 </div>
 </div>
 
-<? 
+<?
 $attribs = UserAttributeKey::getRegistrationList();
 
 if($success) { ?>
 <div class="row">
 <div class="span10 offset1">
-<?	switch($success) { 
-		case "registered": 
+<?	switch($success) {
+		case "registered":
 			?>
 			<p><strong><?=$successMsg ?></strong><br/><br/>
 			<a href="<?=$view->url('/')?>"><?=t('Return to Home')?></a></p>
-			<? 
+			<?
 		break;
-		case "validate": 
+		case "validate":
 			?>
 			<p><?=$successMsg[0] ?></p>
 			<p><?=$successMsg[1] ?></p>
@@ -36,7 +36,7 @@ if($success) { ?>
 	} ?>
 </div>
 </div>
-<? 
+<?
 } else { ?>
 	<form method="post" action="<?=$view->url('/register', 'do_register')?>" class="form-horizontal">
 		<div class="row">
@@ -44,7 +44,7 @@ if($success) { ?>
 				<fieldset>
 					<legend><?=t('Your Details')?></legend>
 					<?php
-					if ($displayUserName) { 
+					if ($displayUserName) {
 						?>
 						<div class="control-group">
 							<?=$form->label('uName',t('Username'))?>
@@ -95,19 +95,19 @@ if($success) { ?>
 			</div>
 			<?php
 		}
-		if (ENABLE_REGISTRATION_CAPTCHA) {
+		if (Config::get('concrete.user.registration.captcha')) {
 			?>
 			<div class="row">
 				<div class="span10 offset1 ">
 
 					<div class="control-group">
 						<?php
-						$captcha = Loader::helper('validation/captcha');			
+						$captcha = Loader::helper('validation/captcha');
 						echo $captcha->label();
 						?>
 						<div class="controls">
 							<?php
-							$captcha->showInput(); 
+							$captcha->showInput();
 							$captcha->display();
 							?>
 						</div>
@@ -115,7 +115,7 @@ if($success) { ?>
 
 				</div>
 			</div>
-				
+
 		<? } ?>
 		<div class="row">
 			<div class="span10 offset1">

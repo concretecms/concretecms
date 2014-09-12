@@ -4,7 +4,9 @@ namespace Concrete\Core\Application;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Foundation\ClassLoader;
+use Concrete\Core\Foundation\EnvironmentDetector;
 use Concrete\Core\Routing\DispatcherRouteCallback;
+use Config;
 use Core;
 use Database;
 use Environment;
@@ -26,17 +28,8 @@ use View;
 class Application extends Container
 {
 
-    protected $installed = false;
-
-    /**
-     * Initializes concrete5
-     */
-    public function __construct()
-    {
-        if (defined('CONFIG_FILE_EXISTS')) {
-            $this->installed = true;
-        }
-    }
+    protected $installed = null;
+    protected $environment = null;
 
     /**
      * Turns off the lights.
@@ -50,13 +43,11 @@ class Application extends Container
                 $db->close();
             }
         }
-        if (defined('ENABLE_OVERRIDE_CACHE') && ENABLE_OVERRIDE_CACHE) {
+        if (Config::get('concrete.cache.overrides')) {
             Environment::saveCachedEnvironmentObject();
         } else {
-            if (defined('ENABLE_OVERRIDE_CACHE') && (!ENABLE_OVERRIDE_CACHE)) {
-                $env = Environment::get();
-                $env->clearOverrideCache();
-            }
+            $env = Environment::get();
+            $env->clearOverrideCache();
         }
         exit;
     }
@@ -66,7 +57,7 @@ class Application extends Container
      */
     protected function handleScheduledJobs()
     {
-        if (ENABLE_JOB_SCHEDULING) {
+        if (\Config::get('concrete.jobs.enable_scheduling')) {
             $c = Page::getCurrentPage();
             if ($c instanceof Page && !$c->isAdminArea()) {
                 // check for non dashboard page
@@ -119,6 +110,14 @@ class Application extends Container
      */
     public function isInstalled()
     {
+        if ($this->installed === null) {
+            if (!$this->isShared('config')) {
+                throw new \Exception('Attempting to check install status before application initialization.');
+            }
+
+            $this->installed = $this->make('config')->get('concrete.installed');
+        }
+
         return $this->installed;
     }
 
@@ -153,7 +152,7 @@ class Application extends Container
                 if (is_object($pkg)) {
                     $cl->registerPackage($pkg);
                     // handle updates
-                    if (ENABLE_AUTO_UPDATE_PACKAGES) {
+                    if (Config::get('concrete.misc.enable_auto_update_packages')) {
                         $pkgInstalledVersion = $p->getPackageVersion();
                         $pkgFileVersion = $pkg->getPackageVersion();
                         if (version_compare($pkgFileVersion, $pkgInstalledVersion, '>')) {
@@ -190,11 +189,11 @@ class Application extends Container
             $perm = $this->make('helper/file')->getCreateFilePermissions()->dir;
             $perm ? define('DIRECTORY_PERMISSIONS_MODE', $perm) : define('DIRECTORY_PERMISSIONS_MODE', 0775);
         }
-        if (defined('DIR_FILES_CACHE') && !is_dir(DIR_FILES_CACHE)) {
-            @mkdir(DIR_FILES_CACHE);
-            @chmod(DIR_FILES_CACHE, DIRECTORY_PERMISSIONS_MODE);
-            @touch(DIR_FILES_CACHE . '/index.html');
-            @chmod(DIR_FILES_CACHE . '/index.html', FILE_PERMISSIONS_MODE);
+        if (!is_dir(Config::get('concrete.files.cache.directory'))) {
+            @mkdir(Config::get('concrete.files.cache.directory'));
+            @chmod(Config::get('concrete.files.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
+            @touch(Config::get('concrete.files.cache.directory') . '/index.html');
+            @chmod(Config::get('concrete.files.cache.directory') . '/index.html', FILE_PERMISSIONS_MODE);
         }
     }
 
@@ -219,11 +218,11 @@ class Application extends Container
         if (strlen($pathInfo) > 1) {
             $path = trim($pathInfo, '/');
             $redirect = '/' . $path;
-            if (URL_USE_TRAILING_SLASH) {
+            if (Config::get('concrete.seo.trailing_slash')) {
                 $redirect .= '/';
             }
             if ($pathInfo != $redirect) {
-                $dispatcher = URL_REWRITING || URL_REWRITING_ALL ? '' : '/' . DISPATCHER_FILENAME;
+                $dispatcher = Config::get('concrete.seo.url_rewriting') ? '' : '/' . DISPATCHER_FILENAME;
                 Redirect::url(
                         BASE_URL . DIR_REL . $dispatcher . '/' . $path . ($r->getQueryString(
                         ) ? '?' . $r->getQueryString() : '')
@@ -316,6 +315,38 @@ class Application extends Container
                 }
             }
         }
+    }
+
+    /**
+     * Get or check the current application environment.
+     *
+     * @param  mixed
+     * @return string|bool
+     */
+    public function environment()
+    {
+        if (count(func_get_args()) > 0)
+        {
+            return in_array($this->environment, func_get_args());
+        }
+        else
+        {
+            return $this->environment;
+        }
+    }
+
+    /**
+     * Detect the application's current environment.
+     *
+     * @param  array|string|Callable  $environments
+     * @return string
+     */
+    public function detectEnvironment($environments)
+    {
+        $args = isset($_SERVER['argv']) ? $_SERVER['argv'] : null;
+
+        $detector = new EnvironmentDetector();
+        return $this->environment = $detector->detect($environments, $args);
     }
 
 }

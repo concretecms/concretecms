@@ -10,7 +10,7 @@ class ItemList {
 	protected $start = 0;
 	protected $sortBy;
 	protected $sortByDirection;
-	protected $queryStringPagingVariable = PAGING_STRING;
+	protected $queryStringPagingVariable;
 	protected $queryStringSortVariable = 'ccm_order_by';
 	protected $queryStringSortDirectionVariable = 'ccm_order_dir';
 	protected $enableStickySearchRequest = false;
@@ -23,6 +23,10 @@ class ItemList {
 		}
 		$this->enableStickySearchRequest = true;
 	}
+
+    public function __construct() {
+        $this->queryStringPagingVariable = \Config::get('concrete.seo.paging_string');
+    }
 
 	public function getQueryStringPagingVariable() {
 		return $this->queryStringPagingVariable;

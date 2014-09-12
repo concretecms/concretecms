@@ -6,7 +6,7 @@
 <h1 class="page-header"><?=t('User Avatar')?></h1>
 <p><?php echo t('Change the picture attached to my posts.')?></p>
 
-		<div id="profile-avatar"> 	
+		<div id="profile-avatar">
 			<?php echo t('You need the Adobe Flash plugin installed on your computer to upload and crop your user profile picture.')?>
 			<br /><br />
 			<a href="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash">Download the Flash Player here</a>.
@@ -14,14 +14,14 @@
 		<? if ($profile->hasAvatar()) { ?>
 			<br/><br/>
 			<a href="<?php echo $view->action('delete')?>" class="btn btn-danger"><?php echo t('Remove your user avatar')?> <i class="icon-trash icon-white"></i></a>
-		<? } ?>	
-			
+		<? } ?>
+
 		<script type="text/javascript">
-		ThumbnailBuilder_onSaveCompleted = function() { 
+		ThumbnailBuilder_onSaveCompleted = function() {
 			window.location.href="<?php echo $view->url('/account/avatar', 'saved')?>";
 		};
 
-		/* <?php /* flashvars - options for the avatar/thumb picker  
+		/* <?php /* flashvars - options for the avatar/thumb picker
 		upload -- whether to enable or disable the upload button (default is "true")
 		webcam -- whether to enable or disable the webcam button (default is "true")
 		format -- whether to use "jpg", "png" or "auto" when encoding (default is "auto")
@@ -36,22 +36,22 @@
 		backgroundColor -- the color to use when tinting the background of the editor (default is 0xFFFFFF)
 		tint -- the amount of strength to apply when tinting the background of the editor (default is 0)
 		*/ ?> */
-		
-		$(function(){   
-			var params = { 
+
+		$(function(){
+			var params = {
 				bgcolor: "#ffffff",
 				wmode:  "transparent",
-				quality:  "high" 
+				quality:  "high"
 			};
 			var flashvars = {
-				width: '<?php echo AVATAR_WIDTH?>',
-				height: '<?php echo AVATAR_HEIGHT?>',
+				width: '<?php echo Config::get('concrete.icons.user_avatar.width') ?>',
+				height: '<?php echo Config::get('concrete.icons.user_avatar.height') ?>',
 				image: '<?php echo $av->getImagePath($profile)?>',
 				save: "<?php echo $view->action('save_thumb')?>"
 			};
 			swfobject.embedSWF ("<?php echo ASSETS_URL_JAVASCRIPT?>/thumbnail-editor-3.swf", "profile-avatar", "500", "400", "10,0,0,0", "includes/expressInstall.swf", flashvars, params);
-	
-			
+
+
 	   });
 		</script>
 

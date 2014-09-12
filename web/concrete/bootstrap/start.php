@@ -15,18 +15,27 @@ if (basename($_SERVER['PHP_SELF']) == DISPATCHER_FILENAME_CORE) {
  * ----------------------------------------------------------------------------
  */
 use Concrete\Core\Application\Application;
+use Concrete\Core\Asset\AssetList;
+use Concrete\Core\Config\DatabaseLoader;
+use Concrete\Core\Config\DatabaseSaver;
+use Concrete\Core\Config\FileSaver;
 use Concrete\Core\Foundation\ClassAliasList;
 use Concrete\Core\Foundation\Service\ProviderList;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Support\Facade\Facade;
 use Patchwork\Utf8\Bootup;
+use Concrete\Core\Config\Config as DatabaseConfig;
+use Concrete\Core\Config\Repository as ConfigRepository;
+use Concrete\Core\File\Type\TypeList;
+use Concrete\Core\Config\FileLoader;
+use Illuminate\Filesystem\Filesystem;
 
 /**
  * ----------------------------------------------------------------------------
  * Instantiate concrete5.
  * ----------------------------------------------------------------------------
  */
-$cms = new Application();
+$cms = require DIR_APPLICATION . '/bootstrap/start.php';
 $cms->instance('app', $cms);
 
 /**
@@ -39,12 +48,57 @@ Facade::setFacadeApplication($cms);
 
 /**
  * ----------------------------------------------------------------------------
+ * Add install environment detection
+ * ----------------------------------------------------------------------------
+ */
+
+$db_config = @include DIR_APPLICATION . '/config/database.php';
+
+$environment = $cms->environment();
+$cms->detectEnvironment(function() use ($db_config, $environment) {
+    return isset($db_config['default-connection']) ? $environment : 'install';
+});
+
+
+/**
+ * ----------------------------------------------------------------------------
+ * Enable Filesystem Config.
+ * ----------------------------------------------------------------------------
+ */
+
+$file_system = new Filesystem();
+$file_loader = new FileLoader($file_system);
+$file_saver = new FileSaver($file_system);
+$cms->instance('config', $config = new ConfigRepository($file_loader, $file_saver, $cms->environment()));
+
+/**
+ * ----------------------------------------------------------------------------
+ * Legacy Definitions
+ * ----------------------------------------------------------------------------
+ */
+
+define('APP_VERSION', $config->get('concrete.version'));
+define('APP_CHARSET', $config->get('concrete.charset'));
+
+/**
+ * ----------------------------------------------------------------------------
  * Setup core classes aliases.
  * ----------------------------------------------------------------------------
  */
 $list = ClassAliasList::getInstance();
-$list->registerMultiple(require DIR_BASE_CORE . '/config/aliases.php');
-$list->registerMultiple(require DIR_BASE_CORE . '/config/facades.php');
+$list->registerMultiple($config->get('app.aliases'));
+$list->registerMultiple($config->get('app.facades'));
+
+/**
+ * ----------------------------------------------------------------------------
+ * Set up Database Config.
+ * ----------------------------------------------------------------------------
+ */
+
+$database_loader = new DatabaseLoader();
+$database_saver = new DatabaseSaver();
+
+$cms->instance('config/database', $database_config = new ConfigRepository($database_loader, $database_saver, $cms->environment()));
 
 /**
  * ----------------------------------------------------------------------------
@@ -52,7 +106,7 @@ $list->registerMultiple(require DIR_BASE_CORE . '/config/facades.php');
  * ----------------------------------------------------------------------------
  */
 $list = new ProviderList($cms);
-$list->registerProviders(require DIR_BASE_CORE . '/config/services.php');
+$list->registerProviders($config->get('app.providers'));
 
 /**
  * ----------------------------------------------------------------------------
@@ -74,10 +128,17 @@ Bootup::initAll();
  * Registries for theme paths, assets, routes and file types.
  * ----------------------------------------------------------------------------
  */
-require DIR_BASE_CORE . '/config/theme_paths.php';
-require DIR_BASE_CORE . '/config/assets.php';
-require DIR_BASE_CORE . '/config/routes.php';
-require DIR_BASE_CORE . '/config/file_types.php';
+$asset_list = AssetList::getInstance();
+
+$asset_list->registerMultiple($config->get('app.assets', array()));
+$asset_list->registerGroupMultiple($config->get('app.asset_groups', array()));
+
+Route::registerMultiple($config->get('app.routes'));
+Route::setThemesByRoutes($config->get('app.theme_paths', array()));
+
+$type_list = TypeList::getInstance();
+$type_list->defineMultiple($config->get('app.file_types', array()));
+$type_list->defineImporterAttributeMultiple($config->get('app.importer_attributes', array()));
 
 /**
  * ----------------------------------------------------------------------------
@@ -87,6 +148,13 @@ require DIR_BASE_CORE . '/config/file_types.php';
 if ($cms->isRunThroughCommandLineInterface()) {
     return $cms;
 }
+
+/**
+ * ----------------------------------------------------------------------------
+ * If not through CLI, load up the application/bootstrap/app.php
+ */
+@include DIR_APPLICATION . '/bootstrap/app.php';
+
 
 /**
  * ----------------------------------------------------------------------------
@@ -133,14 +201,6 @@ if ($response) {
  */
 require DIR_BASE_CORE . '/bootstrap/preprocess.php';
 
-/**
- * ----------------------------------------------------------------------------
- * Include our local config/app.php for any customizations, events, etc...
- * ----------------------------------------------------------------------------
- */
-if (file_exists(DIR_CONFIG_SITE)) {
-    include DIR_CONFIG_SITE . '/app.php';
-}
 
 /**
  * ----------------------------------------------------------------------------
@@ -149,19 +209,10 @@ if (file_exists(DIR_CONFIG_SITE)) {
  * Start localization library.
  * ----------------------------------------------------------------------------
  */
-Config::getOrDefine('SITE_LOCALE', 'en_US');
 $u = new User();
 $lan = $u->getUserLanguageToDisplay();
 $loc = Localization::getInstance();
 $loc->setLocale($lan);
-
-/**
- * ----------------------------------------------------------------------------
- * Load database-backed preferences, including items stored in the Config
- * object, localization stuff and dates.
- * ----------------------------------------------------------------------------
- */
-require DIR_BASE_CORE . '/bootstrap/preferences.php';
 
 /**
  * ----------------------------------------------------------------------------
@@ -192,7 +243,6 @@ PermissionKey::loadAll();
  * ----------------------------------------------------------------------------
  */
 $response = $cms->dispatch($request);
-
 /**
  * ----------------------------------------------------------------------------
  * Send it to the user

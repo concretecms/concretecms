@@ -68,7 +68,7 @@ class GroupSetEntity extends Entity {
 			array($petID, $gs->getGroupSetID()));
 		if (!$peID) {
 			$db->Execute("insert into PermissionAccessEntities (petID) values(?)", array($petID));
-			Config::save('ACCESS_ENTITY_UPDATED', time());
+			Config::save('concrete.misc.access_entity_updated', time());
 			$peID = $db->Insert_ID();
 			$db->Execute('insert into PermissionAccessEntityGroupSets (peID, gsID) values (?, ?)', array($peID, $gs->getGroupSetID()));
 		}

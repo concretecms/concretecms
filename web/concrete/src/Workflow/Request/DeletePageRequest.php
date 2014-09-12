@@ -64,7 +64,7 @@ class DeletePageRequest extends PageRequest {
 		}
 
 		$cParentID = $c->getCollectionParentID();
-		if (ENABLE_TRASH_CAN) {
+		if (Config::get('concrete.misc.enable_trash_can')) {
 			$c->moveToTrash();
 		} else {
 			$c->delete();

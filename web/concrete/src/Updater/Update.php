@@ -12,7 +12,7 @@ class Update {
 		// first, we check session
 		$queryWS = false;
 		Cache::disableCache();
-		$vNum = Config::get('APP_VERSION_LATEST', true);
+		$vNum = Config::get('concrete.misc.latest_version', true);
 		Cache::enableCache();
 		if (is_object($vNum)) {
 			$seconds = strtotime($vNum->timestamp);
@@ -40,10 +40,10 @@ class Update {
 			$versionNum = $update->version;
 
 			if ($versionNum) {
-				Config::save('APP_VERSION_LATEST', $versionNum);
+				Config::save('concrete.misc.latest_version', $versionNum);
 			} else {
 				// we don't know so we're going to assume we're it
-				Config::save('APP_VERSION_LATEST', APP_VERSION);
+				Config::save('concrete.misc.latest_version', APP_VERSION);
 			}
 		}
 
@@ -69,13 +69,13 @@ class Update {
 			$curl_handle = @curl_init();
 
 			// Check to see if there are proxy settings
-			if (Config::get('HTTP_PROXY_HOST') != null) {
-				@curl_setopt($curl_handle, CURLOPT_PROXY, Config::get('HTTP_PROXY_HOST'));
-				@curl_setopt($curl_handle, CURLOPT_PROXYPORT, Config::get('HTTP_PROXY_PORT'));
+			if (Config::get('concrete.proxy.host') != null) {
+				@curl_setopt($curl_handle, CURLOPT_PROXY, Config::get('concrete.proxy.host'));
+				@curl_setopt($curl_handle, CURLOPT_PROXYPORT, Config::get('concrete.proxy.port'));
 
 				// Check if there is a username/password to access the proxy
-				if (Config::get('HTTP_PROXY_USER') != null) {
-					@curl_setopt($curl_handle, CURLOPT_PROXYUSERPWD, Config::get('HTTP_PROXY_USER') . ':' . Config::get('HTTP_PROXY_PWD'));
+				if (Config::get('concrete.proxy.user') != null) {
+					@curl_setopt($curl_handle, CURLOPT_PROXYUSERPWD, Config::get('concrete.proxy.user') . ':' . Config::get('concrete.proxy.password'));
 				}
 			}
 

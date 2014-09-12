@@ -1,6 +1,8 @@
 <?php
 
 namespace Concrete\Core\Controller;
+use Concrete\Core\Config\Renderer;
+use Illuminate\Config\Repository;
 use Request;
 use PageTheme;
 use View;
@@ -73,6 +75,5 @@ class Controller extends AbstractController {
 		$ret = call_user_func_array(array($this->view, 'url'), $a);
 		return $ret;
 	}
-
 
 }

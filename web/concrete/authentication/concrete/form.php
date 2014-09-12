@@ -10,7 +10,7 @@ $form = Loader::helper('form');
     </div>
     <div class="form-group">
         <input name="uName" class="form-control col-sm-12"
-               placeholder="<?=USER_REGISTRATION_WITH_EMAIL_ADDRESS ? t('Email Address') : t('Username')?>" />
+               placeholder="<?=Config::get('concrete.user.registration.email_registration') ? t('Email Address') : t('Username')?>" />
     </div>
 
     <div class="form-group">

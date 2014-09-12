@@ -16,8 +16,8 @@ class Avatar {
 	function outputUserAvatar($uo, $suppressNone = false, $aspectRatio = 1.0) {
 		if (is_object($uo)) {
 			$ati = $this->getAuthTypeImagePath($uo);
-            $width = AVATAR_WIDTH * $aspectRatio;
-            $height = AVATAR_HEIGHT * $aspectRatio;
+            $width = Config::get('concrete.icons.user_avatar.width') * $aspectRatio;
+            $height = Config::get('concrete.icons.user_avatar.height') * $aspectRatio;
 
 			if ($uo->hasAvatar()) {
                 $src = $this->getImagePath($uo);
@@ -32,8 +32,12 @@ class Avatar {
 			}
 		}
 
-		if(Config::get('GRAVATAR_FALLBACK')) {
-		  return $this->get_gravatar( $uo->getUserEmail(), AVATAR_WIDTH, Config::get('GRAVATAR_IMAGE_SET'), Config::get('GRAVATAR_MAX_LEVEL'), true, $atts = array('alt' => $uo->getUserName()) );
+		if(Config::get('concrete.user.gravatar.enabled')) {
+		  return $this->get_gravatar( $uo->getUserEmail(),
+                                      Config::get('concrete.icons.user_avatar.width'),
+                                      Config::get('concrete.user.gravatar.image_set'),
+                                      Config::get('concrete.user.gravatar.max_level'),
+                                      true, $atts = array('alt' => $uo->getUserName()) );
 		}
 
 		if (!$suppressNone) {
@@ -83,7 +87,9 @@ class Avatar {
 	* @return string $str
 	*/
 	function outputNoAvatar($aspectRatio = 1.0) {
-		$str = '<img class="u-avatar" src="' . AVATAR_NONE . '" width="' . AVATAR_WIDTH*$aspectRatio . '" height="' . AVATAR_HEIGHT*$aspectRatio . '" alt="" />';
+		$str = '<img class="u-avatar" src="' . Config::get('concrete.icons.user_avatar.default') .
+            '" width="' . Config::get('concrete.icons.user_avatar.width') * $aspectRatio . '" height="' .
+            Config::get('concrete.icons.user_avatar.height') * $aspectRatio . '" alt="" />';
 		return $str;
 	}
 
