@@ -124,7 +124,7 @@ if (!$tp->canInstallPackages()) { ?>
 
 			<?=Loader::element('dashboard/marketplace_connect_failed');?>
 
-		<? } else if ($tp->canInstallPackages() && ENABLE_MARKETPLACE_SUPPORT == true) { ?>
+		<? } else if ($tp->canInstallPackages() && Config::get('concrete.marketplace.enabled') == true) { ?>
 
 			<div class="well" style="padding:10px 20px;">
 				<h3><?=t('Connect to Community')?></h3>

@@ -28,7 +28,7 @@ class Newsflow
 
     public function __construct()
     {
-        if (!Config::get('concrete.core.news')) {
+        if (!Config::get('concrete.external.news')) {
             $this->connectionError = Newsflow::E_NEWSFLOW_SUPPORT_MANUALLY_DISABLED;
             return;
         }

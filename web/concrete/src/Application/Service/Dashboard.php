@@ -341,7 +341,7 @@ class Dashboard {
 				</ul>
 				</div>
 
-				<? if (Config::get('concrete.core.intelligent_search_help')) { ?>
+				<? if (Config::get('concrete.external.intelligent_search_help')) { ?>
 				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-offsite">
 				<h1><?=t('Help')?></h1>
                 <div class="loader">
