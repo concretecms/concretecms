@@ -82,7 +82,8 @@ abstract class Job extends Object
     {
         // this is a little tricky. We have TWO ways of doing this
         // 1. Does the security token for jobs md5 correctly? If so, good.
-        $val = Config::get('concrete.security.token.jobs') . ':' . DIRNAME_JOBS;
+
+        $val = \Core::make('config/database')->get('concrete.security.token.jobs') . ':' . DIRNAME_JOBS;
         if (md5($val) == $auth) {
             return true;
         }
@@ -90,7 +91,7 @@ abstract class Job extends Object
 
     public static function generateAuth()
     {
-        $val = Config::get('concrete.security.token.jobs') . ':' . DIRNAME_JOBS;
+        $val = \Core::make('config/database')->get('concrete.security.token.jobs') . ':' . DIRNAME_JOBS;
 
         return md5($val);
     }
