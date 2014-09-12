@@ -768,7 +768,7 @@
                         <data table="btContentLocal">
                             <record>
                                 <content>
-                                    <![CDATA[<p>© 2014 Elemental Theme               <a href="">Privacy</a>          <a href="">Legal</a></p>]]></content>
+                                    <![CDATA[<p>© 2014 Elemental Theme</p>]]></content>
                             </record>
                         </data>
                     </block>
@@ -782,7 +782,7 @@
                         <data table="btContentLocal">
                             <record>
                                 <content>
-                                    <![CDATA[<p><a href="">Monthly Newsletter</a></p><p><a href="">FAQ / Help</a></p><p><a href="">Case Studies</a></p><p><a href="">Select Client List</a></p><p><a href="">Another Link</a></p><p></p>]]></content>
+                                    <![CDATA[<p><a href="/team/faq">FAQ / Help</a></p><p><a href="/portfolio">Case Studies</a></p><p><a href="/blog">Blog</a></p><p><a href="/">Another Link</a></p><p></p>]]></content>
                             </record>
                         </data>
                     </block>
