@@ -14,7 +14,7 @@
 
         addToDragArea: function StackBlockAddToDragArea(drag_area) {
             var my = this, elem = my.getElem(),
-                block_type_id = elem    .data('btid'),
+                block_type_id = elem.data('btid'),
                 area = drag_area.getArea(),
                 area_handle = area.getHandle(),
                 dragAreaBlockID = 0,
