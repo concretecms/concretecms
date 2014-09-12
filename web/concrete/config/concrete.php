@@ -181,6 +181,27 @@ return array(
         ),
         'environment' => array(
             'file' => 'environment.cache'
+        ),
+
+        'drivers' => array(
+            'expensive' => array(
+                '0' => array(
+                    'class' => '\Stash\Driver\Ephemeral',
+                    'options' => array()
+                ),
+
+                '1' => array(
+                    'class' => '\Stash\Driver\FileSystem',
+                    'options' => array(
+                        'path' => DIR_FILES_UPLOADED_STANDARD . '/cache'
+                    )
+                ),
+            ),
+            'object' => array(
+                '0' => array(
+                    'class' => '\Stash\Driver\Ephemeral'
+                )
+            )
         )
 
     ),
