@@ -8,10 +8,11 @@ $c = Page::getByID($_REQUEST['cID'], "ACTIVE");
 $bt = BlockType::getByHandle('autonav');
 $bt->controller->collection = $c;
 $bt->controller->orderBy = $_REQUEST['orderBy'];
+$bt->controller->cID = $_REQUEST['cID'];
 $bt->controller->displayPages = $_REQUEST['displayPages'];
 $bt->controller->displaySubPages = $_REQUEST['displaySubPages'];
 $bt->controller->displaySubPageLevels = $_REQUEST['displaySubPageLevels'];
-    $bt->controller->displaySubPageLevelsNum = $_REQUEST['displaySubPageLevelsNum'];
+$bt->controller->displaySubPageLevelsNum = $_REQUEST['displaySubPageLevelsNum'];
 $bt->controller->displayUnavailablePages = $_REQUEST['displayUnavailablePages'];
 
 if ($bt->controller->displayPages == "custom") {

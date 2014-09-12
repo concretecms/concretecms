@@ -13,7 +13,7 @@ class URL {
 
 	public static function page(Page $c, $action = false) {
 		$args = func_get_args();
-		$args[0] = $c->getCollectionPath();
+		$args[0] = Loader::helper('text')->encodePath($c->getCollectionPath());
 		return call_user_func_array(array('\Concrete\Core\Routing\URL', 'to'), $args);
 	}
 

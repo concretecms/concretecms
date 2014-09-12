@@ -49,6 +49,7 @@
         "zendframework/zend-i18n": "2.2.*",
         "nesbot/carbon": "1.11.*",
         "egulias/email-validator": "1.2.0",
-        "punic/punic": "~1.0.2"
+        "punic/punic": "~1.0.2",
+        "tedivm/stash": "0.12.1"
     }
 }

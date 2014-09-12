@@ -87,6 +87,42 @@ class Text {
 		$text = strtolower ($text);							// convert to lowercase
 		return trim(substr($text, 0, $maxlength), '-');	// trim to first $maxlength chars
 	}
+	
+	
+    /**
+     * Remove unsafe characters for URL slug
+     * 
+     * @param string $handle
+     * @param int $maxlength=PAGE_PATH_SEGMENT_MAX_LENGTH Max number of characters of the return value
+     * @return string $handle
+     */
+    public function slugSafeString($handle, $maxlength = PAGE_PATH_SEGMENT_MAX_LENGTH)
+    {
+        $handle = preg_replace('/[^\\p{L}\\p{Nd}\-_]+/u', ' ', $handle); // remove unneeded chars
+        $handle = preg_replace('/[-\s]+/', '-', $handle); // convert spaces to hyphens
+        return trim(\Patchwork\Utf8::substr($handle, 0, $maxlength), '-'); // trim to first $maxlength chars
+    }
+
+    /**
+     * URL-encodes collection path
+     * 
+     * @param string $path
+     * @return string $path
+     */
+    public static function encodePath($path)
+    {
+        if (mb_strpos($path, '/') !== false) {
+            $path = explode('/', $path);
+            $path = array_map('rawurlencode', $path);
+            $newPath = implode('/', $path);
+        } else if (is_null($path)) {
+            $newPath = NULL;
+        } else {
+            $newPath = rawurlencode($path);
+        }
+        $path = str_replace('%21','!', $newPath);
+        return $path;
+    }
 
 
 	/**

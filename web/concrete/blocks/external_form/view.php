@@ -1,4 +1,6 @@
 <?
 	defined('C5_EXECUTE') or die("Access Denied.");
-	include($controller->getExternalFormFilenamePath());
-?>
+$path = $controller->getExternalFormFilenamePath();
+if ($path) {
+    include($path);
+}

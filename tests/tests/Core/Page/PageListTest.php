@@ -220,7 +220,7 @@ class PageListTest extends \PageTestCase {
         $nl->includeAliases();
         $nl->filterByNumberOfChildren(1, '>=');
         $results = $nl->getTotalResults();
-        $this->assertEquals(5, $results);
+        $this->assertEquals(6, $results);
     }
 
     public function testFilterByActiveAndSystem()

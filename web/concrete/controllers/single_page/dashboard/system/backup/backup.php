@@ -5,7 +5,6 @@ use Config;
 use Loader;
 use TaskPermission;
 use Exception;
-use Cache;
 use \Concrete\Core\Backup\Backup as ConcreteBackup;
 
 class Backup extends DashboardPageController { 	 
@@ -134,7 +133,7 @@ class Backup extends DashboardPageController {
 		
 		//reset perms for security! 
 		chmod(DIR_FILES_BACKUPS . '/'. $file, 000);
-		Cache::flush();
+        Core::make('cache')->flush();
 		$this->redirect('/dashboard/system/backup/backup', 'restoration_successful');
 	}
 
