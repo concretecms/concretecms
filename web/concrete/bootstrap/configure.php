@@ -72,7 +72,6 @@ if (!defined('APP_UPDATED_PASSTHRU') && isset($updates['core'])) {
     exit;
 }
 
-
 /**
  * ----------------------------------------------------------------------------
  * Developer preview constants.

@@ -310,7 +310,7 @@ return array(
      */
     'misc'              => array(
         'user_timezones'                => false,
-        'progressive_page_reindex'      => true,
+        'enable_progressive_page_reindex'      => true,
         'mobile_theme_id'               => 0,
         'seen_introduction'             => false,
         'sitemap_approve_immediately'   => true,
