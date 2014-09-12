@@ -3,6 +3,7 @@ namespace Concrete\Core\User\Group;
 
 use \Concrete\Core\Foundation\Object;
 use Concrete\Core\User\User;
+use Config;
 use Loader;
 use CacheLocal;
 use GroupTree;
