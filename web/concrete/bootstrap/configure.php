@@ -456,7 +456,7 @@ ini_set('include_path', DIR_BASE_CORE . DIRECTORY_SEPARATOR . DIRNAME_VENDOR . P
  * Load some helper functions
  * ----------------------------------------------------------------------------
  */
-require __DIR__ . '/helpers.php';
+require dirname(__FILE__) . '/helpers.php';
 
 
 
