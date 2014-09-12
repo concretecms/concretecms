@@ -128,14 +128,14 @@ return array(
          *
          * @var bool
          */
-        'overrides'                => false,
+        'overrides'                => true,
 
         /**
          * Cache Blocks
          *
          * @var bool
          */
-        'blocks'                   => false,
+        'blocks'                   => true,
 
         /**
          * Cache Assets
@@ -149,7 +149,7 @@ return array(
          *
          * @var bool
          */
-        'theme_css'                => false,
+        'theme_css'                => true,
 
         /**
          * Cache full page
