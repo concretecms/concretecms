@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
+use Core;
 use Loader;
 use PermissionKey;
 use TaskPermission;

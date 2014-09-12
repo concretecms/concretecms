@@ -4,6 +4,7 @@ namespace Concrete\Controller\Dialog\Page;
 use Area;
 use Block;
 use BlockType;
+use Collection;
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Block\View\BlockView;
 use Exception;
