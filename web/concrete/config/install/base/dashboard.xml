@@ -906,12 +906,14 @@
         <pagetype handle="core_stack" name="Stack" internal="1" package=""/>
         <pagetype handle="dashboard_primary_five" name="Dashboard Primary + Five" internal="1" package=""/>
         <pagetype handle="dashboard_header_four_col" name="Dashboard Header + Four Column" internal="1" package=""/>
+        <pagetype handle="dashboard_full" name="Dashboard Full" internal="1" package=""/>
     </pagetypes>
 
     <pagetemplates>
         <pagetemplate handle="core_stack" name="Stack" internal="1" package=""/>
         <pagetemplate handle="dashboard_primary_five" name="Dashboard Primary + Five" internal="1" package=""/>
         <pagetemplate handle="dashboard_header_four_col" name="Dashboard Header + Four Column" internal="1" package=""/>
+        <pagetemplate handle="dashboard_full" name="Dashboard Full" internal="1" package=""/>
     </pagetemplates>
     <pages>
         <page name="Welcome to concrete5" path="/dashboard/welcome" filename=""
@@ -927,7 +929,9 @@
                 <block type="content" name="">
                     <data table="btContentLocal">
                         <record>
-                            <content><![CDATA[<iframe width="560" height="315" src="//www.youtube.com/embed/mLjvlHF_hjw" frameborder="0" allowfullscreen></iframe>]]></content>
+                            <content><![CDATA[<div style="padding: 40px; text-align: center">
+<iframe width="853" height="480" src="//www.youtube.com/embed/mLjvlHF_hjw" frameborder="0" allowfullscreen></iframe>
+                                    </div>]]></content>
                         </record>
                     </data>
                 </block>
