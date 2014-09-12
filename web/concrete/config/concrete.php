@@ -252,7 +252,7 @@ return array(
          *
          * @var bool
          */
-        'enabled'            => true,
+        'enabled'            => false,
 
         /**
          * Marketplace Token
@@ -276,29 +276,29 @@ return array(
 
     /**
      * ------------------------------------------------------------------------
-     * Various core settings
+     * Getting external news and help from concrete5.org
      * ------------------------------------------------------------------------
      */
-    'core'              => array(
+    'external'              => array(
 
         /**
          * Provide help within the intelligent search
          *
-         * @var bool concrete.core.intelligent_search_help
+         * @var bool concrete.external.intelligent_search_help
          */
         'intelligent_search_help' => true,
 
         /**
          * Display an overlay with up-to-date news from concrete5
          *
-         * @var bool concrete.core.news_overlay
+         * @var bool concrete.external.news_overlay
          */
         'news_overlay'            => true,
 
         /**
          * Enable concrete5 news within your site
          *
-         * @var bool concrete.core.news
+         * @var bool concrete.external.news
          */
         'news'                    => true,
     ),

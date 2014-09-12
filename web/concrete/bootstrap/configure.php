@@ -72,15 +72,6 @@ if (!defined('APP_UPDATED_PASSTHRU') && isset($updates['core'])) {
     exit;
 }
 
-/**
- * ----------------------------------------------------------------------------
- * Developer preview constants.
- * ----------------------------------------------------------------------------
- */
-define('ENABLE_MARKETPLACE_SUPPORT', false);
-define('ENABLE_APP_NEWS_OVERLAY', false);
-define('ENABLE_APP_NEWS', true);
-
 
 
 /**
