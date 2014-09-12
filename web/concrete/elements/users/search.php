@@ -7,7 +7,7 @@ $searchFields = array(
     'is_active' => t('Activated Users')
 );
 
-if (Config::get('concrete.permissions_model') == 'advanced') {
+if (Config::get('concrete.permissions.model') == 'advanced') {
     $searchFields['group_set'] = t('Group Set');
 }
 

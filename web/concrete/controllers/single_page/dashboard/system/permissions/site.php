@@ -14,7 +14,7 @@ use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccess
 class Site extends DashboardPageController {
 	public function view() {
 		$editAccess = array();
-		if (Config::get('concrete.permissions_model') != 'simple') {
+		if (Config::get('concrete.permissions.model') != 'simple') {
 			return;
 		}
 

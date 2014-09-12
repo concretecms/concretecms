@@ -21,7 +21,7 @@ class Permissions extends BackendInterfacePageController {
 	}
 
 	public function view() {
-		if (Config::get('concrete.permissions_model') != 'simple') {
+		if (Config::get('concrete.permissions.model') != 'simple') {
 			$this->setViewObject(new View('/panels/details/page/permissions/advanced'));
 			$this->set('editPermissions', false);
 			if ($this->page->getCollectionInheritance() == 'OVERRIDE') { 
