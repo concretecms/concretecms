@@ -3,6 +3,7 @@
 namespace Concrete\Core\Application\Service;
 use Config;
 use Loader;
+use File;
 use Page;
 use URL;
 use Localization;

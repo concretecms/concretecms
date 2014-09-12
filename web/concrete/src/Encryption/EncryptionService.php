@@ -1,5 +1,8 @@
 <?php
 namespace Concrete\Core\Encryption;
+
+use Config;
+
 class EncryptionService {
 
 	/**
