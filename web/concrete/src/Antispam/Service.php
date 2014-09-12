@@ -1,6 +1,15 @@
 <?php
 namespace Concrete\Core\Antispam;
 
+use Config;
+use Core;
+use Group;
+use Loader;
+use Log;
+use Page;
+use User;
+use UserInfo;
+
 class Service
 {
 
