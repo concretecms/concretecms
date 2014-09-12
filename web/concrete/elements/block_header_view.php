@@ -71,8 +71,8 @@ if ($showMenu) {
         }
     }
     $canDesign = ($p->canEditBlockDesign() && Config::get('concrete.design.enable_custom') == true);
-    $canModifyGroups = ($p->canEditBlockPermissions() && Config::get('concrete.permissions_model') != 'simple' && (!$a->isGlobalArea()));
-    $canScheduleGuestAccess = (Config::get('concrete.permissions_model') != 'simple' && $p->canGuestsViewThisBlock() && $p->canScheduleGuestAccess() && (!$a->isGlobalArea()));
+    $canModifyGroups = ($p->canEditBlockPermissions() && Config::get('concrete.permissions.model') != 'simple' && (!$a->isGlobalArea()));
+    $canScheduleGuestAccess = (Config::get('concrete.permissions.model') != 'simple' && $p->canGuestsViewThisBlock() && $p->canScheduleGuestAccess() && (!$a->isGlobalArea()));
     $canAliasBlockOut = ($c->isMasterCollection());
     if ($canAliasBlockOut) {
         $ct = PageType::getByID($c->getPageTypeID());

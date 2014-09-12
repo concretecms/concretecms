@@ -38,7 +38,7 @@
 			</div>
 
 			<?
-			if (Config::get('concrete.permissions_model') != 'simple') {
+			if (Config::get('concrete.permissions.model') != 'simple') {
 				if ($fsp->canEditFileSetPermissions()) { ?>
 			
                     <div class="form-group">

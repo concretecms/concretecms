@@ -52,7 +52,7 @@ if ($controller->getTask() == 'view_details') {
         <? if ($cpc->canEditPageProperties()) { ?>
             <li><a href="<?=$view->action('rename', $stack->getCollectionID())?>"><?=t('Rename')?></a></li>
         <? } ?>
-        <? if ($cpc->canEditPagePermissions() && Config::get('concrete.permissions_model') == 'advanced') { ?>
+        <? if ($cpc->canEditPagePermissions() && Config::get('concrete.permissions.model') == 'advanced') { ?>
             <li><a dialog-width="580" class="dialog-launch" dialog-append-buttons="true" dialog-height="420" dialog-title="<?=t('Stack Permissions')?>" id="stackPermissions" href="<?=REL_DIR_FILES_TOOLS_REQUIRED?>/edit_area_popup?cID=<?=$stack->getCollectionID()?>&arHandle=<?=STACKS_AREA_NAME?>&atask=groups"><?=t('Permissions')?></a></li>
         <? } ?>
 

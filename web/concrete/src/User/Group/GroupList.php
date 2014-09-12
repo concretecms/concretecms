@@ -47,7 +47,7 @@ class GroupList extends DatabaseItemList
      */
     public function filterByAssignable()
     {
-        if (Config::get('concrete.permissions_model') != 'simple') {
+        if (Config::get('concrete.permissions.model') != 'simple') {
             // there's gotta be a more reasonable way than this but right now i'm not sure what that is.
             $excludeGroupIDs = array(GUEST_GROUP_ID, REGISTERED_GROUP_ID);
             $db = Loader::db();

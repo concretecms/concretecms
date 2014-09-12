@@ -33,7 +33,7 @@ class PreviewAsUser extends Controller
         }
 
         $permissions = new Permissions($page);
-        if ($permissions->canPreviewPageAsUser() && $permissions->canRead() && Config::get('concrete.permissions_model') == 'advanced') {
+        if ($permissions->canPreviewPageAsUser() && $permissions->canRead() && Config::get('concrete.permissions.model') == 'advanced') {
 
             /** @var Request $request */
             $request = Request::getInstance();

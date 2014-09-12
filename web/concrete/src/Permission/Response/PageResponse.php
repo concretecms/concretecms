@@ -38,7 +38,7 @@ class PageResponse extends Response
 
     public function canViewPageInSitemap()
     {
-        if (Config::get('concrete.permissions_model') != 'simple') {
+        if (Config::get('concrete.permissions.model') != 'simple') {
 
             if ($this->object->isExternalLink()) {
                 return true;

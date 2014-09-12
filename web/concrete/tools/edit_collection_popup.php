@@ -23,11 +23,11 @@ switch($_GET['ctask']) {
 		break;
 	case 'preview_page_as_user':
 		$toolSection = "collection_preview_as_user";
-		$canViewPane = ($cp->canPreviewPageAsUser() && Config::get('concrete.permissions_model') == 'advanced');
+		$canViewPane = ($cp->canPreviewPageAsUser() && Config::get('concrete.permissions.model') == 'advanced');
 		break;
 	case 'view_timed_permission_list':
 		$toolSection = "collection_timed_permission_list";
-		$canViewPane = ($cp->canPreviewPageAsUser() && Config::get('concrete.permissions_model') == 'advanced');
+		$canViewPane = ($cp->canPreviewPageAsUser() && Config::get('concrete.permissions.model') == 'advanced');
 		break;
 }
 
