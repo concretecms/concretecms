@@ -66,7 +66,7 @@ class Stacks extends DashboardPageController {
 						// we only get this response if we have skipped workflows and jumped straight in to an approve() step.
 						$this->redirect('/dashboard/blocks/stacks', 'stack_deleted');
 					} else {
-						$this->redirect('/dashboard/blocks/stacks', 'view_details', $cID, 'delete_saved');
+						$this->redirect('/dashboard/blocks/stacks', 'view_details', $s->cID, 'delete_saved');
 					}
 				} else {
 					$this->error->add(t('You do not have access to delete this stack.'));
