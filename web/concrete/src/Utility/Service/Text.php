@@ -93,10 +93,10 @@ class Text {
      * Remove unsafe characters for URL slug
      * 
      * @param string $handle
-     * @param int $maxlength=PAGE_PATH_SEGMENT_MAX_LENGTH Max number of characters of the return value
+     * @param int $maxlength= Max number of characters of the return value
      * @return string $handle
      */
-    public function slugSafeString($handle, $maxlength = PAGE_PATH_SEGMENT_MAX_LENGTH)
+    public function slugSafeString($handle, $maxlength = 128)
     {
         $handle = preg_replace('/[^\\p{L}\\p{Nd}\-_]+/u', ' ', $handle); // remove unneeded chars
         $handle = preg_replace('/[-\s]+/', '-', $handle); // convert spaces to hyphens

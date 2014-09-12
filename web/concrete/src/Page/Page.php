@@ -2427,6 +2427,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         } else {
             $handle = $txt->slugSafeString($data['cHandle']); // we take it as it comes.
         }
+
         $handle = str_replace('-', Config::get('concrete.seo.page_path_separator'), $handle);
         $data['handle'] = $handle;
         $dh = Loader::helper('date');
