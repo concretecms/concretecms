@@ -627,6 +627,11 @@ return array(
                 array('css', 'jquery/rating')
             )
         ),
+        'ace'         => array(
+            array(
+                array('javascript', 'ace')
+            )
+        ),
         'core/colorpicker'         => array(
             array(
                 array('javascript', 'jquery'),
