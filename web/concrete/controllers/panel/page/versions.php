@@ -12,6 +12,7 @@ use PageEditResponse;
 use \Concrete\Core\Workflow\Request\ApprovePageRequest as ApprovePagePageWorkflowRequest;
 use \Concrete\Core\Page\Collection\Version\VersionList;
 use User;
+use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
 
 class Versions extends BackendInterfacePageController {
 
