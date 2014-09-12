@@ -5,6 +5,7 @@ use Concrete\Core\Block\BlockController;
 use Loader;
 use Page;
 use User;
+use Core;
 
 class Controller extends BlockController
 {
