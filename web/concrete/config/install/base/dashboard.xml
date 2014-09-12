@@ -916,85 +916,18 @@
     <pages>
         <page name="Welcome to concrete5" path="/dashboard/welcome" filename=""
               description="Learn about how to use concrete5, how to develop for concrete5, and get general help."
-              template="dashboard_header_four_col">
+              template="dashboard_full">
             <attributes>
                 <attributekey handle="exclude_nav">
                     <value><![CDATA[1]]></value>
                 </attributekey>
             </attributes>
-            <area name="Header">
+            <area name="Main">
                 <blocks>
                 <block type="content" name="">
                     <data table="btContentLocal">
                         <record>
-                            <content><![CDATA[	<div id="newsflow-header-first-run"><h1>Welcome to concrete5.</h1>
-						<h4 class="text-primary">It's easy to edit content and add pages using in-context editing.</h4></div>
-						]]></content>
-                        </record>
-                    </data>
-                </block>
-                </blocks>
-            </area>
-            <area name="Column 1">
-                <blocks>
-                <block type="content" name="">
-                    <data table="btContentLocal">
-                        <record>
-                            <content><![CDATA[<div class="newsflow-column-first-run">
-							<h5 class="text-primary">Building Your Own Site</h5>
-							<p>Editing with concrete5 is a breeze. Just point and click to make changes.</p>
-							</div>
-        					<p style="text-align: center"><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/editors')" class="btn btn-primary">Editor's Guide</a></p>
-							]]></content>
-                        </record>
-                    </data>
-                </block>
-                </blocks>
-            </area>
-            <area name="Column 2">
-                <blocks>
-                <block type="content" name="">
-                    <data table="btContentLocal">
-                        <record>
-                            <content><![CDATA[<div class="newsflow-column-first-run">
-							<h5 class="text-primary">Developing Applications</h5>
-							<p>If you’re comfortable in PHP concrete5 should be a breeze to learn. Take a few moments to understand the architecture.</p>
-							</div>
-							<p style="text-align: center"><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/developers')" class="btn btn-primary">Developer's Guide</a></p>
-							]]></content>
-                        </record>
-                    </data>
-                </block>
-                </blocks>
-            </area>
-            <area name="Column 3">
-                <blocks>
-                <block type="content" name="">
-                    <data table="btContentLocal">
-                        <record>
-                            <content><![CDATA[<div class="newsflow-column-first-run">
-							<h5 class="text-primary">Designing Websites</h5>
-							<p>Good with CSS and HTML? You can easily theme anything with concrete5.</p>
-							</div>
-							<p style="text-align: center"><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/designers')" class="btn btn-primary">Designer's Guide</a></p>
-							]]></content>
-                        </record>
-                    </data>
-                </block>
-                </blocks>
-            </area>
-            <area name="Column 4">
-                <blocks>
-                <block type="content" name="">
-                    <data table="btContentLocal">
-                        <record>
-                            <content><![CDATA[
-						<div class="newsflow-column-first-run">
-						<h5 class="text-primary">Business Background</h5>
-						<p>Worried about license structures, white-labeling or why concrete5 is a good choice for your agency?</p>
-						</div>
-						<p style="text-align: center"><a href="javascript:void(0)" onclick="ccm_getNewsflowByPath('/welcome/executives')" class="btn btn-primary">Executive's Guide</a></p>
-						]]></content>
+                            <content><![CDATA[<iframe width="560" height="315" src="//www.youtube.com/embed/mLjvlHF_hjw" frameborder="0" allowfullscreen></iframe>]]></content>
                         </record>
                     </data>
                 </block>
