@@ -45,8 +45,6 @@ require $DIR_BASE_CORE . '/bootstrap/autoload.php';
  */
 $cms = require $DIR_BASE_CORE . '/bootstrap/start.php';
 
-
-
 /**
  * Kill this because it plays hell with phpunit.
  */

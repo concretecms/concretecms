@@ -148,8 +148,6 @@ class ContentExporter {
 
         \Concrete\Core\File\Image\Thumbnail\Type\Type::exportList($this->x);
 
-        Config::exportList($this->x);
-
         Tree::exportList($this->x);
 
 	}
