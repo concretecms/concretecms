@@ -10,20 +10,18 @@ class JsonErrorHandler extends Handler
 
     public function handle()
     {
-        $debug = Config::get('concrete.debug.level', 0);
-
-        if ($debug != DEBUG_DISPLAY_ERRORS) {
-            return Handler::DONE;
-        }
-
         if (!$this->isAjaxRequest()) {
             return Handler::DONE;
         }
 
         $error = Formatter::formatExceptionAsDataArray(
             $this->getInspector(),
-            true
+            !!Config::get('concrete.debug.level')
         );
+
+        if (!Config::get('concrete.debug.level')) {
+            $error['file'] = substr($error['file'], strlen(DIR_BASE));
+        }
 
         $response = array(
             'error'  => $error,

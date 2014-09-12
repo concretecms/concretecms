@@ -43,7 +43,7 @@ class ErrorHandler extends PrettyPageHandler
         }
 
         $debug = Config::get('concrete.debug.level', 0);
-        if ($debug == DEBUG_DISPLAY_ERRORS) {
+        if ($debug) {
             $this->addDetails();
             return parent::handle();
         }
@@ -54,6 +54,7 @@ class ErrorHandler extends PrettyPageHandler
         );
         Core::shutdown();
 
+        return self::QUIT;
     }
 
     /**
@@ -68,22 +69,14 @@ class ErrorHandler extends PrettyPageHandler
              'Concrete5',
              array(
                  'Version'           => APP_VERSION,
-                 'Installed Version' => Config::get('app.version')
+                 'Installed Version' => Config::get('concrete.version_installed')
              )
         );
 
         /**
-         * Cache
+         * Config
          */
-        $this->addDataTable(
-             'Preferences',
-             array(
-                 'Block Cache'        => Config::get('concrete.cache.blocks') ? 'ON' : 'OFF',
-                 'Overrides Cache'    => Config::get('concrete.cache.overrides') ? 'ON' : 'OFF',
-                 'Full Page'          => Config::get('concrete.cache.pages') ? 'ON' : 'OFF',
-                 'Full Page Lifetime' => Config::get('concrete.cache.full_page_lifetime', 'default')
-             )
-        );
+        $this->addDataTable('Concrete Configuration', $this->flatConfig(Config::get('concrete'), 'concrete'));
 
         /**
          * Installed Packages
@@ -98,6 +91,19 @@ class ErrorHandler extends PrettyPageHandler
         }
 
         $this->addDataTable('Installed Packages', $packages);
+    }
+
+    protected function flatConfig(array $config, $group) {
+        $flat = array();
+        foreach ($config as $key => $value) {
+            if (is_array($value)) {
+                $flat = array_merge($flat, $this->flatConfig($value, "{$group}.{$key}"));
+            } else {
+                $flat["{$group}.{$key}"] = $value;
+            }
+        }
+
+        return $flat;
     }
 
 }
