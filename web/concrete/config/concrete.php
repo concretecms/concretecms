@@ -199,7 +199,8 @@ return array(
             ),
             'object' => array(
                 '0' => array(
-                    'class' => '\Stash\Driver\Ephemeral'
+                    'class' => '\Stash\Driver\Ephemeral',
+                    'options' => array()
                 )
             )
         )
