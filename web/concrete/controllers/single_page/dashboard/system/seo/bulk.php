@@ -35,7 +35,7 @@ class Bulk extends DashboardPageController {
         	 $c->setAttribute('meta_title',trim($this->post('meta_title')));
 		}
 
-		if (trim(htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET)) != trim($this->post('meta_description')) && $this->post('meta_description'))  {
+		if (trim(htmlspecialchars($c->getCollectionDescription(), ENT_COMPAT, APP_CHARSET)) != trim($this->post('meta_description')) && $this->post('meta_description'))  {
         	$c->setAttribute('meta_description', trim($this->post('meta_description')));
 		}
     	$c->setAttribute('meta_keywords',$this->post('meta_keywords'));
