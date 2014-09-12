@@ -10,6 +10,7 @@ use League\Flysystem\AdapterInterface;
 use Concrete\Core\Mail\Importer\MailImporter;
 use Loader;
 use View;
+use Config;
 use Events;
 use User as ConcreteUser;
 use UserAttributeKey;
@@ -157,7 +158,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $db = Loader::db();
         $dh = Loader::helper('date');
         $uDateAdded = $dh->getOverridableNow();
-        $hasher = new PasswordHash(\Config::get('concrete.user.password.hash_cost_log2'), \Config::get('concrete.user.password.hash_portable'));
+        $hasher = new PasswordHash(Config::get('concrete.user.password.hash_cost_log2'), Config::get('concrete.user.password.hash_portable'));
 
         if ($data['uIsValidated'] == 1) {
             $uIsValidated = 1;
@@ -630,7 +631,7 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     public function register($data)
     {
         // slightly different than add. this is public facing
-		if (\Config::get('concrete.user.registration.validate_email')) {
+		if (Config::get('concrete.user.registration.validate_email')) {
 			$data['uIsValidated'] = 0;
 		}
         $ui = UserInfo::add($data);

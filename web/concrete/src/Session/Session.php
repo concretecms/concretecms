@@ -17,7 +17,7 @@ class Session
         if ($app->isRunThroughCommandLineInterface()) {
             $storage = new MockArraySessionStorage();
         } else {
-            if (\Config::get('concrete.session.handler') == 'database') {
+            if (Config::get('concrete.session.handler') == 'database') {
                 $db = \Database::get();
                 $storage = new NativeSessionStorage(array(),
                     new PdoSessionHandler($db->getWrappedConnection(), array(
@@ -32,12 +32,12 @@ class Session
                 $storage = new NativeSessionStorage();
             }
             $options = Config::get('concrete.session.cookie');
-            $options['gc_max_lifetime'] = \Config::get('concrete.session.max_lifetime');
+            $options['gc_max_lifetime'] = Config::get('concrete.session.max_lifetime');
             $storage->setOptions($options);
         }
 
         $session = new SymfonySession($storage);
-        $session->setName(\Config::get('concrete.session.name'));
+        $session->setName(Config::get('concrete.session.name'));
 
         static::testSessionFixation($session);
         return $session;

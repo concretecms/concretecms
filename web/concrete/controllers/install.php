@@ -7,6 +7,7 @@ use Core;
 use Concrete\Core\Localization\Localization as Localization;
 use Controller;
 use Database as DB;
+use Config;
 use Exception;
 use Hautelook\Phpass\PasswordHash;
 use Loader;
@@ -325,7 +326,7 @@ class Install extends Controller
                 }
 
                 if ($this->fpu) {
-                    $hasher = new PasswordHash(\Config::get('concrete.user.password.hash_cost_log2'), \Config::get('concrete.user.password.hash_portable'));
+                    $hasher = new PasswordHash(Config::get('concrete.user.password.hash_cost_log2'), Config::get('concrete.user.password.hash_portable'));
                     $configuration = "<?php\n";
                     $configuration .= "define('INSTALL_USER_EMAIL', '" . $_POST['uEmail'] . "');\n";
                     $configuration .= "define('INSTALL_USER_PASSWORD_HASH', '" . $hasher->HashPassword(

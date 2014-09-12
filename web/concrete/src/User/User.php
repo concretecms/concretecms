@@ -155,7 +155,7 @@ class User extends Object
                 $row = $r->fetchRow();
                 $pw_is_valid_legacy = (defined('PASSWORD_SALT') && User::legacyEncryptPassword($password) == $row['uPassword']);
                 $pw_is_valid = $pw_is_valid_legacy || $this->getUserPasswordHasher()->checkPassword($password, $row['uPassword']);
-                if ($row['uID'] && $row['uIsValidated'] === '0' && \Config::get('concrete.user.registration.validate_email')) {
+                if ($row['uID'] && $row['uIsValidated'] === '0' && Config::get('concrete.user.registration.validate_email')) {
                     $this->loadError(USER_NON_VALIDATED);
                 } elseif ($row['uID'] && $row['uIsActive'] && $pw_is_valid) {
                     $this->uID = $row['uID'];
@@ -328,9 +328,9 @@ class User extends Object
             implode(':', $cookie),
             time() + USER_FOREVER_COOKIE_LIFETIME,
             DIR_REL . '/',
-            \Config::get('concrete.session.cookie.domain'),
-            \Config::get('concrete.session.cookie.secure'),
-            \Config::get('concrete.session.cookie.httponly')
+            Config::get('concrete.session.cookie.domain'),
+            Config::get('concrete.session.cookie.secure'),
+            Config::get('concrete.session.cookie.httponly')
         );
     }
 
@@ -373,9 +373,9 @@ class User extends Object
 
         if (isset($_COOKIE['ccmUserHash']) && $_COOKIE['ccmUserHash']) {
             setcookie("ccmUserHash", "", 315532800, DIR_REL . '/',
-            \Config::get('concrete.session.cookie.domain'),
-            \Config::get('concrete.session.cookie.secure'),
-            \Config::get('concrete.session.cookie.httponly'));
+            Config::get('concrete.session.cookie.domain'),
+            Config::get('concrete.session.cookie.secure'),
+            Config::get('concrete.session.cookie.httponly'));
         }
     }
 
@@ -691,7 +691,7 @@ class User extends Object
         if (isset($this->hasher)) {
             return $this->hasher;
         }
-        $this->hasher = new PasswordHash(\Config::get('concrete.user.password.hash_cost_log2'), \Config::get('concrete.user.password.hash_portable'));
+        $this->hasher = new PasswordHash(Config::get('concrete.user.password.hash_cost_log2'), Config::get('concrete.user.password.hash_portable'));
 
         return $this->hasher;
     }

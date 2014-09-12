@@ -153,16 +153,16 @@ class StartingPointPackage extends BasePackage {
         $thumbnailType = new Type();
         $thumbnailType->requireType();
         $thumbnailType->setName(tc('ThumbnailTypeName', 'File Manager Thumbnails'));
-        $thumbnailType->setHandle(\Config::get('concrete.icons.file_manager_listing.handle'));
-        $thumbnailType->setWidth(\Config::get('concrete.icons.file_manager_listing.width'));
-        $thumbnailType->setHeight(\Config::get('concrete.icons.file_manager_listing.height'));
+        $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_listing.handle'));
+        $thumbnailType->setWidth(Config::get('concrete.icons.file_manager_listing.width'));
+        $thumbnailType->setHeight(Config::get('concrete.icons.file_manager_listing.height'));
         $thumbnailType->save();
 
         $thumbnailType = new Type();
         $thumbnailType->requireType();
         $thumbnailType->setName(tc('ThumbnailTypeName', 'File Manager Detail Thumbnails'));
-        $thumbnailType->setHandle(\Config::get('concrete.icons.file_manager_detail.handle'));
-        $thumbnailType->setWidth(\Config::get('concrete.icons.file_manager_detail.width'));
+        $thumbnailType->setHandle(Config::get('concrete.icons.file_manager_detail.handle'));
+        $thumbnailType->setWidth(Config::get('concrete.icons.file_manager_detail.width'));
         $thumbnailType->save();
 
 		if (is_dir($this->getPackagePath() . '/files')) {
@@ -227,7 +227,7 @@ class StartingPointPackage extends BasePackage {
 		// insert admin user into the user table
 		if (defined('INSTALL_USER_PASSWORD')) {
 
-			$hasher = new PasswordHash(\Config::get('concrete.user.password.hash_cost_log2'), \Config::get('concrete.user.password.hash_portable'));
+			$hasher = new PasswordHash(Config::get('concrete.user.password.hash_cost_log2'), Config::get('concrete.user.password.hash_portable'));
 			$uPassword = INSTALL_USER_PASSWORD;
 			$uPasswordEncrypted = $hasher->HashPassword($uPassword);
 		} else {
