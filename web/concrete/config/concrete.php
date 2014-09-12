@@ -657,11 +657,6 @@ return array(
                  */
                 'length'   => 10
             )
-        ),
-        'token' => array(
-            'encryption' => '',
-            'jobs'       => '',
-            'validation' => ''
         )
     ),
 
