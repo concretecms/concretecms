@@ -5,6 +5,7 @@ use Permissions;
 use Page;
 use Loader;
 use Core;
+use Config;
 use CollectionVersion;
 use \Concrete\Core\Page\Collection\Version\EditResponse as PageEditVersionResponse;
 use PageEditResponse;
@@ -78,7 +79,7 @@ class Versions extends BackendInterfacePageController {
                 $c->loadVersionObject($_REQUEST['cvID']);
                 $nc = $c->cloneVersion(t('New Page Created From Version'));
                 $v = $nc->getVersionObject();
-                $drafts = Page::getByPath(\Config::get('concrete.paths.drafts'));
+                $drafts = Page::getByPath(Config::get('concrete.paths.drafts'));
                 $nc = $c->duplicate($drafts);
                 $nc->deactivate();
                 $nc->move($drafts);

@@ -732,8 +732,8 @@ class Theme extends Object
         }
         $html = new \HtmlObject\Image();
         $img = $html->src($src)
-            ->width(\Config::get('concrete.icons.theme_thumbnail.width'))
-            ->height(\Config::get('concrete.icons.theme_thumbnail.height'))
+            ->width(Config::get('concrete.icons.theme_thumbnail.width'))
+            ->height(Config::get('concrete.icons.theme_thumbnail.height'))
             ->class('ccm-icon-theme');
 
         return $img;

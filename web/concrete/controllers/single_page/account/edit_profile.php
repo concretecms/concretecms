@@ -81,11 +81,11 @@ class EditProfile extends AccountPageController {
 			$passwordNew = $data['uPasswordNew'];
 			$passwordNewConfirm = $data['uPasswordNewConfirm'];
 
-			if ((strlen($passwordNew) < \Config::get('concrete.user.password.minimum')) || (strlen($passwordNew) >  \Config::get('concrete.user.password.maximum'))) {
-				$this->error->add(t('A password must be between %s and %s characters', \Config::get('concrete.user.password.minimum'),  \Config::get('concrete.user.password.maximum')));
+			if ((strlen($passwordNew) < Config::get('concrete.user.password.minimum')) || (strlen($passwordNew) >  Config::get('concrete.user.password.maximum'))) {
+				$this->error->add(t('A password must be between %s and %s characters', Config::get('concrete.user.password.minimum'),  Config::get('concrete.user.password.maximum')));
 			}
 
-			if (strlen($passwordNew) >= \Config::get('concrete.user.password.minimum') && !$cvh->password($passwordNew)) {
+			if (strlen($passwordNew) >= Config::get('concrete.user.password.minimum') && !$cvh->password($passwordNew)) {
 				$this->error->add(t('A password may not contain ", \', >, <, or any spaces.'));
 			}
 
