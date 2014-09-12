@@ -90,13 +90,14 @@ class Text {
      * Remove unsafe characters for URL slug
      * 
      * @param string $handle
+     * @param int $maxlength=PAGE_PATH_SEGMENT_MAX_LENGTH Max number of characters of the return value
      * @return string $handle
      */
-    public function slugSafeString($handle)
+    public function slugSafeString($handle, $maxlength = PAGE_PATH_SEGMENT_MAX_LENGTH)
     {
         $handle = preg_replace('/[^\\p{L}\\p{Nd}\-_]+/u', ' ', $handle); // remove unneeded chars
-        $handle = trim($handle);
-        return preg_replace('/[-\s]+/', '-', $handle); // convert spaces to hyphens
+        $handle = preg_replace('/[-\s]+/', '-', $handle); // convert spaces to hyphens
+        return trim(\Patchwork\Utf8::substr($handle, 0, $maxlength), '-'); // trim to first $maxlength chars
     }
 
     /**
