@@ -320,9 +320,10 @@ class StartingPointPackage extends BasePackage {
 		$dashboard = Page::getByPath('/dashboard', "RECENT");
 		$dashboard->assignPermissions($g3, array('view_page'));
 
-		Config::save('concrete.security.token.jobs', Loader::helper('validation/identifier')->getString(64));
-		Config::save('concrete.security.token.encryption', Loader::helper('validation/identifier')->getString(64));
-		Config::save('concrete.security.token.validation', Loader::helper('validation/identifier')->getString(64));
+        $config = \Core::make('config/database');
+        $config->save('concrete.security.token.jobs', Loader::helper('validation/identifier')->getString(64));
+        $config->save('concrete.security.token.encryption', Loader::helper('validation/identifier')->getString(64));
+        $config->save('concrete.security.token.validation', Loader::helper('validation/identifier')->getString(64));
 
 		// group permissions
 		$tree = GroupTree::get();
