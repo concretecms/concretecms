@@ -107,6 +107,8 @@ class Controller extends BlockController {
 			$resultsPage = Page::getById($this->postTo_cID);
 			$resultsURL = $resultsPage->cPath;
 		}
+		
+		$resultsURL = Loader::helper('text')->encodePath($resultsURL);
 
 		$this->set('resultTargetURL', $resultsURL);
 

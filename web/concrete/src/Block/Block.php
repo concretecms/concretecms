@@ -3,7 +3,6 @@ namespace Concrete\Core\Block;
 
 use Area;
 use BlockType;
-use Cache;
 use CacheLocal;
 use Concrete\Core\Area\SubArea;
 use Concrete\Core\Backup\ContentExporter;
@@ -156,7 +155,6 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             if ($c != null || $a != null) {
                 CacheLocal::set('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle, $b);
             } else {
-                $ca = new Cache();
                 CacheLocal::set('block', $bID, $b);
             }
             return $b;

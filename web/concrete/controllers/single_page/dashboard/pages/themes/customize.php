@@ -1,9 +1,9 @@
 <?
 namespace Concrete\Controller\SinglePage\Dashboard\Pages\Themes;
 use \Concrete\Core\Page\Controller\DashboardPageController;
+use Core;
 use PageTheme;
 use Loader;
-use Cache;
 use View;
 class Customize extends DashboardPageController {
 
@@ -19,7 +19,7 @@ class Customize extends DashboardPageController {
 			$this->set('t', $pt);
 			$this->set('styles', $styles);
 			$this->set('themeID', $themeID);
-		 	Cache::delete('preview_theme_style', $themeID);
+            Core::make('cache')->delete('preview_theme_style/' . $themeID);
 		}
 		$subnav = array(
 			array(View::url('/dashboard/pages/themes/'), '&lt; ' . t('Return to Themes'))

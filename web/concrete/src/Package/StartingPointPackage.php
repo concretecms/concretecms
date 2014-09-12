@@ -6,6 +6,7 @@ use Concrete\Core\Config\Renderer;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use AuthenticationType;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
+use Core;
 use Loader;
 use Package as BasePackage;
 use GroupTree;
@@ -195,10 +196,14 @@ class StartingPointPackage extends BasePackage {
 	protected function indexAdditionalDatabaseFields() {
 		$db = Loader::db();
 
-		$db->Execute('alter table PagePaths add index (`cPath` (255))');
-		$db->Execute('alter table Groups add index (`gPath` (255))');
-		$db->Execute('alter table QueueMessages add FOREIGN KEY (`queue_id`) REFERENCES `Queues` (`queue_id`) ON DELETE CASCADE ON UPDATE CASCADE');
-	}
+        $db->Execute('alter table PagePaths add index (`cPath` (255))');
+        $db->Execute('alter table Groups add index (`gPath` (255))');
+        $db->Execute('CREATE INDEX ipFrom ON SignupRequests (ipFrom(32))');
+        $db->Execute('CREATE UNIQUE INDEX ips ON UserBannedIPs (ipFrom(32), ipTo(32))');
+        $db->Execute(
+            'alter table QueueMessages add FOREIGN KEY (`queue_id`) REFERENCES `Queues` (`queue_id`) ON DELETE CASCADE ON UPDATE CASCADE'
+        );
+    }
 
 	public function add_users() {
 		// Firstly, install the core authentication types
@@ -236,8 +241,9 @@ class StartingPointPackage extends BasePackage {
 		UserPointAction::add('won_badge', t('Won a Badge'), 5, false, true);
 	}
 
-	public function make_directories() {
-		Cache::flush();
+    public function make_directories()
+    {
+        Core::make('cache')->flush();
 
         if (!is_dir(Config::get('concrete.files.cache.directory'))) {
             mkdir(Config::get('concrete.files.cache.directory'), DIRECTORY_PERMISSIONS_MODE);
@@ -277,7 +283,7 @@ class StartingPointPackage extends BasePackage {
         @unlink(DIR_CONFIG_SITE . '/site_install_user.php');
 
         $config->clearCache();
-		Cache::flush();
+        Core::make('cache')->flush();
 	}
 
 	public function install_permissions() {

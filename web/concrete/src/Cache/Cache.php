@@ -1,192 +1,198 @@
 <?php
 namespace Concrete\Core\Cache;
-use Config;
-use PageCache;
-use Events;
-use Database as DB;
-use \Zend\Cache\StorageFactory;
-use Environment;
-use CacheLocal as ConcreteCacheLocal;
-use Loader;
 
-class Cache {
+use Core;
+use Stash\Driver\BlackHole;
+use Stash\Driver\Composite;
+use Stash\Pool;
 
-	public static function key($type, $id) {
-		return md5($type . $id);
-	}
+abstract class Cache
+{
+    /** @var Pool */
+    protected $pool = null;
+    /** @var bool */
+    protected $enabled = false;
+    /** @var \Stash\Interfaces\DriverInterface */
+    protected $driver = null;
 
-	public static function getLibrary() {
-		static $cache;
-		if (!isset($cache) && defined('DIR_FILES_CACHE')) {
-			if (is_dir(Config::get('concrete.files.cache.directory')) && is_writable(Config::get('concrete.files.cache.directory'))) {
-                $adapter = (defined('CACHE_LIBRARY')) ? CACHE_LIBRARY : 'filesystem';
-                $cache = StorageFactory::factory(array(
-                    'adapter' => array(
-                        'name' => $adapter,
-                        'ttl' => Config::get('concrete.cache.lifetime')
-                    ),
-                    'options' => array(
-                        'cache_dir' => Config::get('concrete.files.cache.directory'),
-                        'file_locking' => false
-                    ),
-                    'plugins' => array(
-                        'exception_handler' => array('throw_exceptions' => false)
-                    )
-                ));
-			}
-		}
-		return $cache;
-	}
+    public function __construct() {
+        $this->init();
+    }
 
-	public function startup() {
-		$cache = Cache::getLibrary();
-	}
+    /**
+     * Initializes the cache by setting up the cache pool and enabling the cache
+     * @return void
+     */
+    abstract protected function init();
 
-	public function disableCache() {
-		$ca = Cache::getLibrary();
-		if (is_object($ca)) {
-			$ca->setCaching(false);
-		}
-	}
+    /**
+     * Loads the composite driver from constants
+     * @param $level
+     * @return \Stash\Interfaces\DriverInterface
+     */
+    protected function loadConfig($level)
+    {
+        $drivers = array();
+        $driversBuild = array();
 
-	public function enableCache() {
-		$ca = Cache::getLibrary();
-		if (is_object($ca)) {
-            $ca->setCaching(true);
-		}
-	}
+        $constants = array_keys(get_defined_constants());
 
-	public function disableLocalCache() {
-		ConcreteCacheLocal::get()->enabled = false;
-	}
-	public function enableLocalCache() {
-		ConcreteCacheLocal::get()->enabled = true;
-	}
+        foreach ($constants as $constant) {
+            if (preg_match('/^CACHE_' . strtoupper($level) . '(?:_([0-9]+))?_DRIVER$/', $constant, $matches) === 1) {
+                if (isset($matches[1])) {
+                    $index = $matches[1];
+                } else {
+                    $index = 0;
+                }
+                $driversBuild[$index]['driver'] = constant($constant);
+            } elseif (preg_match('/^CACHE_' . strtoupper($level) . '(?:_([0-9]+))?_OPTION_(.*)$/', $constant, $matches) === 1) {
+                if (isset($matches[1])) {
+                    $index = $matches[1];
+                } else {
+                    $index = 0;
+                }
 
-	/**
-	 * Inserts or updates an item to the cache
-	 * the cache must always be enabled for (getting remote data, etc..)
-	 */
-	public function set($type, $id, $obj) {
-		$loc = ConcreteCacheLocal::get();
-		if ($loc->enabled) {
-			if (is_object($obj)) {
-				$r = clone $obj;
-			} else {
-				$r = $obj;
-			}
-			$loc->cache[Cache::key($type, $id)] = $r;
-		}
-		$cache = Cache::getLibrary();
-		if (!$cache) {
-			return false;
-		}
-		$cache->setItem(Cache::key($type, $id), $obj);
-	}
+                $options = explode('__', $matches[2]);
 
-	/**
-	 * Retrieves an item from the cache
-	 */
-	public function get($type, $id, $mustBeNewerThan = false) {
-		$loc = ConcreteCacheLocal::get();
-		$key = Cache::key($type, $id);
-		if ($loc->enabled && array_key_exists($key, $loc->cache)) {
-			return $loc->cache[$key];
-		}
+                if (!isset($driversBuild[$index])) {
+                    $driversBuild[$index] = array();
+                }
 
-		$cache = Cache::getLibrary();
-		if (!$cache) {
-			if ($loc->enabled) {
-				$loc->cache[$key] = false;
-			}
-			return false;
-		}
+                if (!isset($driversBuild[$index]['options'])) {
+                    $driversBuild[$index]['options'] = array();
+                }
 
-		// if mustBeNewerThan is set, we check the cache mtime
-		// if mustBeNewerThan is newer than that time, we relinquish
-		if ($mustBeNewerThan != false) {
-			$metadata = $cache->getMetadatas($key);
-			if ($metadata['mtime'] < $mustBeNewerThan) {
-				// clear cache record and return false
-				Cache::getLibrary()->remove($key);
-				if ($loc->enabled) {
-					$loc->cache[$key] = false;
-				}
-				return false;
-			}
-		}
+                $optionsBuild = &$driversBuild[$index]['options'];
+                for ($i = 0; $i < count($options); $i++) {
+                    if (!isset($optionsBuild[$options[$i]])) {
+                        $optionsBuild[$options[$i]] = array();
+                    }
+                    $optionsBuild = &$optionsBuild[$options[$i]];
+                }
+                $optionsBuild = constant($constant);
+            }
+        }
 
-		$loaded = $cache->getItem($key);
-		if ($loc->enabled) {
-			$loc->cache[$key] = $loaded;
-		}
-		return $loaded;
-	}
+        ksort($driversBuild);
 
-	/**
-	 * Removes an item from the cache
-	 */
-	public function delete($type, $id){
-		$cache = \Cache::getLibrary();
-		if ($cache) {
-			$cache->removeItem(\Cache::key($type, $id));
-		}
+        foreach ($driversBuild as $driverBuild) {
+            $tempDriver = new $driverBuild['driver']();
+            if (isset($driverBuild['options'])) {
+                $tempDriver->setOptions($driverBuild['options']);
+            }
 
-		$loc = ConcreteCacheLocal::get();
-		if ($loc->enabled && isset($loc->cache[Cache::key($type, $id)])) {
-			unset($loc->cache[Cache::key($type, $id)]);
-		}
-	}
+            $drivers[] = $tempDriver;
+        }
 
-	/**
-	 * Completely flushes the cache
-	 */
-	public function flush() {
-		$db = DB::get();
+        $numDrivers = count($drivers);
+        if ($numDrivers > 1) {
+            $driver = new Composite();
+            $driver->setOptions(array('drivers' => $drivers));
+        } elseif ($numDrivers === 1) {
+            $driver = $drivers[0];
+        } else {
+            $driver = new BlackHole();
+        }
 
-		// flush the CSS cache
-		if (is_dir(Config::get('concrete.files.cache.directory') . '/' . DIRNAME_CSS)) {
-			$fh = Loader::helper('file');
-			$fh->removeAll(Config::get('concrete.files.cache.directory') . '/' . DIRNAME_CSS);
-		}
+        return $driver;
+    }
 
-		// flush the JS cache
-		if (is_dir(Config::get('concrete.files.cache.directory') . '/' . DIRNAME_JAVASCRIPT)) {
-			$fh = Loader::helper('file');
-			$fh->removeAll(Config::get('concrete.files.cache.directory') . '/' . DIRNAME_JAVASCRIPT);
-		}
+    /**
+     * Deletes an item from the cache
+     * @param string $key Name of the cache item ID
+     * @return bool True if deleted, false if not
+     */
+    public function delete($key)
+    {
+        if ($this->enabled) {
+            return $this->pool->getItem($key)->clear();
+        } else {
+            return false;
+        }
+    }
 
-		$pageCache = PageCache::getLibrary();
-		if (is_object($pageCache)) {
-			$pageCache->flush();
-		}
+    /**
+     * Checks if an item exists in the cache
+     * @param string $key Name of the cache item ID
+     * @return bool True if exists, false if not
+     */
+    public function exists($key)
+    {
+        if ($this->enabled) {
+            return !$this->pool->getItem()->isMiss($key);
+        } else {
+            return false;
+        }
+    }
 
-		if ($db->tableExists('ConfigStore')) {
-			// clear the environment overrides cache
-			$env = Environment::get();
-			$env->clearOverrideCache();
+    /**
+     * Removes all values from the cache
+     */
+    public function flush()
+    {
+        return $this->pool->flush();
+    }
 
-			if(in_array('btCachedBlockRecord', $db->MetaColumnNames('Blocks'))) {
-				$db->Execute('update Blocks set btCachedBlockRecord = null');
-			}
-			if ($db->tableExists('CollectionVersionBlocksOutputCache')) {
-				$db->Execute('truncate table CollectionVersionBlocksOutputCache');
-			}
-		}
+    /**
+     * Gets a value from the cache
+     * @param string $key Name of the cache item ID
+     * @return \Stash\Interfaces\ItemInterface
+     */
+    public function getItem($key)
+    {
+        return $this->pool->getItem($key);
+    }
 
-		$loc = ConcreteCacheLocal::get();
-		$loc->cache = array();
+    /**
+     * Enables the cache
+     */
+    public function enable()
+    {
+        if ($this->driver !== null) {
+            $this->pool->setDriver($this->driver);
+        }
+        $this->enabled = true;
+    }
 
-		$cache = Cache::getLibrary();
-		if ($cache) {
-			$cache->flush();
-		}
+    /**
+     * Disables the cache
+     */
+    public function disable()
+    {
+        // save the current driver if not yet black hole so it can be restored on enable()
+        if (!($this->pool->getDriver() instanceof BlackHole)) {
+            $this->driver = $this->pool->getDriver();
+        }
+        $this->pool->setDriver(new BlackHole());
+        $this->enabled = false;
+    }
 
-		$event = new \Symfony\Component\EventDispatcher\GenericEvent();
-		$event->setArgument('cache', $cache);
-		$ret = Events::dispatch('on_cache_flush', $event);
+    /**
+     * Returns true if the cache is enabled, false if not
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
 
-		return true;
-	}
+    /**
+     * Disables all cache levels
+     */
+    public static function disableAll()
+    {
+        Core::make('cache/request')->disable();
+        Core::make('cache/expensive')->disable();
+        Core::make('cache')->disable();
+    }
 
+    /**
+     * Enables all cache levels
+     */
+    public static function enableAll()
+    {
+        Core::make('cache/request')->enable();
+        Core::make('cache/expensive')->enable();
+        Core::make('cache')->enable();
+    }
 }

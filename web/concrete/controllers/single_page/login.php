@@ -1,9 +1,6 @@
 <?php
 namespace Concrete\Controller\SinglePage;
 
-use Cache;
-use Concrete\Core\Asset\Asset;
-use Concrete\Core\Asset\AssetGroup;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
 use Config;

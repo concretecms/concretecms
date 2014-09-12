@@ -181,6 +181,9 @@ class Axmls extends XmlParser
         if ($type == 'N') {
             return 'decimal';
         }
+        if ($type == 'B') {
+            return 'blob';
+        }
     }
 
 }

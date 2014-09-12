@@ -40,31 +40,46 @@ class Controller extends BlockController
 
     function getExternalFormFilenamePath()
     {
-        if (file_exists(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL . '/' . $this->filename)) {
-            $filename = DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL . '/' . $this->filename;
-        } else {
-            if (file_exists(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_CORE . '/' . $this->filename)) {
-                $filename = DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_CORE . '/' . $this->filename;
+        if ($this->filename) {
+            if (file_exists(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL . '/' . $this->filename)) {
+                $filename = DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL . '/' . $this->filename;
+            } else {
+                if (file_exists(DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_CORE . '/' . $this->filename)) {
+                    $filename = DIR_FILES_BLOCK_TYPES_FORMS_EXTERNAL_CORE . '/' . $this->filename;
+                }
             }
         }
-        return $filename;
+        if ($filename) {
+            return $filename;
+        }
     }
 
     public function isValidControllerTask($method, $parameters = array())
     {
-        $class = camelcase(substr($this->filename, 0, strrpos($this->filename, '.php')));
-        $controller = \Core::make('\\Concrete\\Block\\ExternalForm\\Form\\Controller\\' . $class);
-        if (method_exists($controller, $method)) {
-            return true;
+        $controller = $this->getController();
+        if ($controller) {
+            if (method_exists($controller, $method)) {
+                return true;
+            }
+            return parent::isValidControllerTask($method, $parameters);
         }
-        return parent::isValidControllerTask($method, $parameters);
+    }
 
+    public function validate($args)
+    {
+        $e = \Core::make('helper/validation/error');
+        if (!$args['filename']) {
+            $e->add(t('You must specify an external form.'));
+        }
+        return $e;
     }
 
     protected function getController()
     {
-        $class = camelcase(substr($this->filename, 0, strrpos($this->filename, '.php')));
-        return \Core::make('\\Concrete\\Block\\ExternalForm\\Form\\Controller\\' . $class);
+        try {
+            $class = camelcase(substr($this->filename, 0, strrpos($this->filename, '.php')));
+            return \Core::make('\\Concrete\\Block\\ExternalForm\\Form\\Controller\\' . $class);
+        } catch (\Exception $e) {}
     }
 
     public function runAction($method, $parameters)
@@ -75,9 +90,11 @@ class Controller extends BlockController
         }
 
         $controller = $this->getController();
-        $controller->runAction($method, $parameters);
-        foreach($controller->getSets() as $key => $value) {
-            $this->set($key, $value);
+        if ($controller) {
+            $controller->runAction($method, $parameters);
+            foreach($controller->getSets() as $key => $value) {
+                $this->set($key, $value);
+            }
         }
     }
 

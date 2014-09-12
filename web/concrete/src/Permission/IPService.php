@@ -2,22 +2,24 @@
 namespace Concrete\Core\Permission;
 
 use Loader;
+use Concrete\Core\Utility\IPAddress;
+use Config;
+use Concrete\Core\User\UserBannedIp;
+use Zend\Stdlib\DateTime;
 
-class IPService
-{
-
+class IPService {
 
     /**
-     * Checks if an IP has been banned
-     * @param type $ip if 127.0.0.1 form (as opposed to int)
-     * @return boolean
+     * @param bool|IPAddress $ip
+     * @param bool $extraParamString
+     * @param array $extraParamValues
+     * @return bool
      */
-    public function check($ip = false, $extraParamString = false, $extraParamValues = array())
-    {
-        $ip = ($ip) ? $ip : $this->getRequestIP();
-        $db = Loader::db();
-        //do ip check
-        $q = 'SELECT count(expires) as count
+    public function isBanned($ip=false, $extraParamString=false, $extraParamValues=array()) {
+		$ip = ($ip instanceof IPAddress) ? $ip : $this->getRequestIP();
+		$db = Loader::db();
+		//do ip check
+		$q = "SELECT count(expires) as count
 		FROM UserBannedIPs
 		WHERE
 		(
@@ -25,79 +27,52 @@ class IPService
 			OR
 			(ipFrom <= ? AND ipTo >= ?)
 		)
-		AND (expires = 0 OR expires > UNIX_TIMESTAMP(now()))
-		';
+		AND (expires = '0000-00-00 00:00:00' OR expires > ?)
+		";
 
         if ($extraParamString !== false) {
             $q .= $extraParamString;
         }
 
-        $ip_as_long = ip2long($ip);
-        $v = array($ip_as_long, $ip_as_long, $ip_as_long);
-        $v = array_merge($v, $extraParamValues);
+		$v = array($ip->getIp(), $ip->getIp(), $ip->getIp(), date('Y-m-d H:i:s'));
+		$v = array_merge($v,$extraParamValues);
 
         $rs = $db->Execute($q, $v);
         $row = $rs->fetchRow();
 
-        return ($row['count'] > 0) ? false : true;
-    }
+		return ($row['count'] > 0) ? true : false;
+	}
 
-    protected function checkForManualPermBan($ip = false)
-    {
-        return $this->check($ip, ' AND isManual = ? AND expires = ? ', Array(1, 0));
-    }
-
-    /** Checks if an IPv4 address belongs to a private network.
-     * @param string $ip The IP address to check.
-     * @return bool Returns true if $ip belongs to a private network, false if it's a public IP address.
+    /**
+     * @param IPAddress $ip
+     * @return bool
      */
-    public function isPrivateIP($ip)
-    {
-        if (empty($ip)) {
-            return false;
-        }
-        if (
-            (strpos($ip, '10.') === 0)
-            ||
-            (strpos($ip, '192.168.') === 0)
-            ||
-            (preg_match('/^172\.(\d+)\./', $ip, $m) && (intval($m[1]) >= 16) && (intval($m[1]) <= 31))
-        ) {
-            return true;
-        }
-        return false;
-    }
+    protected function existsManualPermBan(IPAddress $ip){
+		return $this->isBanned($ip, ' AND isManual = ? AND expires = ? ',Array(1,'0000-00-00 00:00:00'));
+	}
 
-    /** Returns the client IP address (or an empty string if it can't be found).
-     * @return string
-     */
-    public function getRequestIP()
-    {
-        $result = '';
-        foreach (array(
-                     'HTTP_CLIENT_IP',
-                     'HTTP_X_FORWARDED_FOR',
-                     'HTTP_X_FORWARDED',
-                     'HTTP_X_CLUSTER_CLIENT_IP',
-                     'HTTP_FORWARDED_FOR',
-                     'HTTP_FORWARDED',
-                     'REMOTE_ADDR'
-                 ) as $index) {
-            if (array_key_exists($index, $_SERVER) && is_string($_SERVER[$index])) {
-                foreach (explode(',', $_SERVER[$index]) as $ip) {
-                    $ip = trim($ip);
-                    if (strlen($ip)) {
-                        if ($this->isPrivateIP($ip)) {
-                            $result = $ip;
-                        } else {
-                            return $ip;
-                        }
-                    }
-                }
-            }
-        }
-        return $result;
-    }
+	/** Returns an IPAddress object if one was found, or false if not
+	* @return false|IPAddress
+	*/
+	public function getRequestIP() {
+		$result = false;
+		foreach(array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $index) {
+			if(array_key_exists($index, $_SERVER) && is_string($_SERVER[$index])) {
+				foreach(explode(',', $_SERVER[$index]) as $ip) {
+					$ip = trim($ip);
+					if(strlen($ip)) {
+                        $ip = new IPAddress($ip);
+						if($ip->isPrivate()) {
+							$result = $ip;
+						} else {
+							return $ip;
+						}
+					}
+				}
+			}
+		}
+		return $result;
+	}
 
     public function getErrorMessage()
     {
@@ -110,26 +85,23 @@ class IPService
     {
 
         if (Config::get('concrete.security.ban.ip.enabled') == 1) {
-            $db = Loader::db();
-            $db->insert(
-                'SignupRequests',
-                array('date_access' => date('Y-m-d H:i:s'), 'ipFrom' => ip2long($this->getRequestIP()))
-            );
-        }
-    }
+			$db = Loader::db();
+            $ip = $this->getRequestIP();
+			$db->insert('SignupRequests', array('date_access' => date('Y-m-d H:i:s'), 'ipFrom' => $ip->getIp()));
+		}
+	}
 
-    public function signupRequestThreshholdReached($ignoreConfig = false)
-    {
+	public function signupRequestThreshholdReached($ignoreConfig=false) {
         if ($ignoreConfig || Config::get('concrete.security.ban.ip.enabled') == 1) {
-            $db = Loader::db();
+			$db = Loader::db();
             $threshold_attempts = Config::get('concrete.security.ban.ip.attempts');
             $threshhold_seconds = Config::get('concrete.security.ban.ip.time');
-            $ip = ip2long($this->getRequestIP());
-            $q = 'SELECT count(ipFrom) as count
+			$ip = $this->getRequestIP();
+			$q = 'SELECT count(*) as count
 			FROM SignupRequests
 			WHERE ipFrom = ?
-			AND UNIX_TIMESTAMP(date_access) > (UNIX_TIMESTAMP(now()) - ?)';
-            $v = Array($ip, $threshhold_seconds);
+			AND date_access > DATE_SUB(?, INTERVAL ? SECOND)';
+			$v = Array($ip->getIp(), date('Y-m-d H:i:s'), $threshhold_seconds);
 
             $rs = $db->execute($q, $v);
             $row = $rs->fetchRow();
@@ -141,35 +113,39 @@ class IPService
         }
     }
 
-    public function createIPBan($ip = false, $ignoreConfig = false)
-    {
+    /**
+     * @param bool|IPAddress $ip
+     * @param bool $ignoreConfig
+     */
+    public function createIPBan($ip=false,$ignoreConfig=false) {
         if ($ignoreConfig || Config::get('concrete.security.ban.ip.enabled') == 1) {
-            $ip = ($ip) ? $ip : $this->getRequestIP();
-            $ip = ip2long($ip);
+			$ip = ($ip instanceof IPAddress) ? $ip : $this->getRequestIP();
 
-            //IP_BAN_LOCK_IP_HOW_LONG_MIN of 0 or undefined  means forever
-            $timeOffset = Config::get('concrete.security.ban.ip.length');
-            $timeOffset = $timeOffset ? ($timeOffset * 60) : 0;
-            $time = $timeOffset ? time() + $timeOffset : 0;
+			$db	= Loader::db();
 
-            $db = Loader::db();
+			//If there's a permanent ban, obey its setting otherwise set up a temporary ban
+			if (!$this->existsManualPermBan($ip)) {
+				$db->StartTrans();
+				$q 	= 'DELETE FROM UserBannedIPs WHERE ipFrom = ? AND ipTo = ? AND isManual = ?';
+				$v  = Array($ip->getIp(),0, 0);
+				$db->execute($q,$v);
 
 
-            //delete before inserting .. catching a duplicate (1062) doesn't
-            //seem to be working in all enviornments.  If there's a permanant ban,
-            //obey its setting
-            if ($this->checkForManualPermBan(long2ip($ip), true)) {
-                $db->StartTrans();
-                //check if there's a manual ban
+                //IP_BAN_LOCK_IP_HOW_LONG_MIN of 0 or undefined  means forever
+                $timeOffset = Config::get('concrete.security.ban.ip.length');
+                $timeOffset = $timeOffset ? ($timeOffset)  : 0;
+                if($timeOffset !== 0) {
+                    $banUntil = new \DateTime();
+                    $banUntil->modify('+'.$timeOffset.' minutes');
+                    $banUntil = $banUntil->format('Y-m-d H:i:s');
+                } else {
+                    $banUntil = '0000-00-00 00:00:00';
+                }
 
-                $q = 'DELETE FROM UserBannedIPs WHERE ipFrom = ? AND ipTo = 0 AND isManual = 0';
-                $v = Array($ip, 0);
-                $db->execute($q, $v);
-
-                $q = 'INSERT INTO UserBannedIPs (ipFrom,ipTo,banCode,expires,isManual) ';
-                $q .= 'VALUES (?,?,?,?,?)';
-                $v = array($ip, 0, UserBannedIp::IP_BAN_CODE_REGISTRATION_THROTTLE, $time, 0);
-                $db->execute($q, $v);
+				$q	=  'INSERT INTO UserBannedIPs (ipFrom,ipTo,banCode,expires,isManual) ';
+				$q  .= 'VALUES (?,?,?,?,?)';
+				$v  = array($ip->getIp(),0,UserBannedIp::IP_BAN_CODE_REGISTRATION_THROTTLE,$banUntil,0);
+				$db->execute($q,$v);
 
                 $db->CompleteTrans();
             }

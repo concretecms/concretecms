@@ -248,11 +248,11 @@ class User extends Object
     {
         $db = Loader::db();
         $uLastLogin = $db->getOne("select uLastLogin from Users where uID = ?", array($this->uID));
-        $ip = ip2long(Loader::helper('validation/ip')->getRequestIP());
-        if (empty($ip)) {
-            $ip = 0;
-        }
-        $db->query("update Users set uLastIP = ?, uLastLogin = ?, uPreviousLogin = ?, uNumLogins = uNumLogins + 1 where uID = ?", array($ip, time(), $uLastLogin, $this->uID));
+
+        /** @var \Concrete\Core\Permission\IPService $iph */
+        $iph = Core::make('helper/validation/ip');
+        $ip = $iph->getRequestIP();
+        $db->query("update Users set uLastIP = ?, uLastLogin = ?, uPreviousLogin = ?, uNumLogins = uNumLogins + 1 where uID = ?", array(($ip === false)?(''):($ip->getIp()), time(), $uLastLogin, $this->uID));
     }
 
     public function recordView($c)

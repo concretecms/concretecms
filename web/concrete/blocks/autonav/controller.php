@@ -410,7 +410,7 @@ class Controller extends BlockController
                 $niRow['cvName'] = $tc1->getCollectionName();
                 $niRow['cID'] = HOME_CID;
                 $niRow['cvDescription'] = $tc1->getCollectionDescription();
-                $niRow['cPath'] = $tc1->getCollectionPath();
+                $niRow['cPath'] = Loader::helper('navigation')->getLinkToCollection($tc1);
 
                 $ni = new NavItem($niRow, 0);
                 $ni->setCollectionObject($tc1);
@@ -544,7 +544,7 @@ class Controller extends BlockController
                         $niRow['cvName'] = $tc->getCollectionName();
                         $niRow['cID'] = $row['cID'];
                         $niRow['cvDescription'] = $tc->getCollectionDescription();
-                        $niRow['cPath'] = $tc->getCollectionPath();
+                        $niRow['cPath'] = Loader::helper('navigation')->getLinkToCollection($tc);
                         $niRow['cPointerExternalLink'] = $tc->getCollectionPointerExternalLink();
                         $niRow['cPointerExternalLinkNewWindow'] = $tc->openCollectionPointerExternalLinkInNewWindow();
                         $dateKey = strtotime($tc->getCollectionDatePublic());

@@ -13,6 +13,7 @@ use ConversationEditor;
 use \Concrete\Core\Foundation\Object;
 use User;
 use UserInfo;
+use Concrete\Core\Utility\IPAddress;
 
 class Message extends Object implements \Concrete\Core\Permission\ObjectInterface
 {
@@ -23,7 +24,7 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
     public function getConversationEditorID() {return $this->cnvEditorID;}
     public function getConversationMessageLevel() {return $this->cnvMessageLevel;}
     public function getConversationMessageParentID() {return $this->cnvMessageParentID;}
-    public function getConversationMessageSubmitIP() {return long2ip($this->cnvMessageSubmitIP);}
+    public function getConversationMessageSubmitIP() {return new IPAddress($this->cnvMessageSubmitIP, true);}
     public function getConversationMessageSubmitUserAgent() { return $this->cnvMessageSubmitUserAgent;}
     public function isConversationMessageDeleted() {return $this->cnvIsMessageDeleted;}
     public function isConversationMessageFlagged() {return (count($this->getConversationMessageFlagTypes()) > 0);}
@@ -369,8 +370,11 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
         $editor = ConversationEditor::getActive();
         $cnvEditorID = $editor->getConversationEditorID();
 
+        /** @var \Concrete\Core\Permission\IPService $iph */
+        $iph = Core::make('helper/validation/ip');
+        $ip = $iph->getRequestIP();
         $r = $db->Execute('insert into ConversationMessages (cnvMessageSubject, cnvMessageBody, cnvMessageDateCreated, cnvMessageParentID, cnvEditorID, cnvMessageLevel, cnvID, uID, cnvMessageSubmitIP, cnvMessageSubmitUserAgent) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                          array($cnvMessageSubject, $cnvMessageBody, $date, $cnvMessageParentID, $cnvEditorID, $cnvMessageLevel, $cnvID, $uID, ip2long(Loader::Helper('validation/ip')->getRequestIP()), $_SERVER['HTTP_USER_AGENT']));
+                          array($cnvMessageSubject, $cnvMessageBody, $date, $cnvMessageParentID, $cnvEditorID, $cnvMessageLevel, $cnvID, $uID, ($ip === false)?(''):($ip->getIp()), $_SERVER['HTTP_USER_AGENT']));
 
         $cnvMessageID = $db->Insert_ID();
 

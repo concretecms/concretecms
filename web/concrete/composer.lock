@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "46227f26d94a3ef095c39d29dbbcd35d",
+    "hash": "dbc4e3c415695efa0bfefce3a35e25b1",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -2454,6 +2454,60 @@
                 "minifier"
             ],
             "time": "2014-01-14 22:23:53"
+        },
+        {
+            "name": "tedivm/stash",
+            "version": "v0.12.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tedious/Stash.git",
+                "reference": "4d76935edae27bd9ed9e87f839efd5af4a8015d1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tedious/Stash/zipball/4d76935edae27bd9ed9e87f839efd5af4a8015d1",
+                "reference": "4d76935edae27bd9ed9e87f839efd5af4a8015d1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "fabpot/php-cs-fixer": "0.4.0",
+                "phpunit/phpunit": "4.0.*",
+                "satooshi/php-coveralls": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Stash\\": "src/Stash/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Robert Hafner",
+                    "email": "tedivm@tedivm.com"
+                },
+                {
+                    "name": "Josh Hall-Bachner",
+                    "email": "charlequin@gmail.com"
+                }
+            ],
+            "description": "The place to keep your cache.",
+            "homepage": "http://github.com/tedious/Stash",
+            "keywords": [
+                "apc",
+                "cache",
+                "caching",
+                "memcached",
+                "redis",
+                "sessions"
+            ],
+            "time": "2014-05-31 15:54:45"
         },
         {
             "name": "voku/urlify",
