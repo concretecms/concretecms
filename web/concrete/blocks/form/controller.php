@@ -14,7 +14,7 @@ class Controller extends BlockController {
 	public $btInterfaceHeight = '430';
 	public $thankyouMsg='';
 	public $noSubmitFormRedirect=0;
-	
+    protected $btCacheBlockRecord = false;
 	protected $btExportTables = array('btForm', 'btFormQuestions');
 	protected $btExportPageColumns = array('redirectCID');
 	protected $lastAnswerSetId=0;
