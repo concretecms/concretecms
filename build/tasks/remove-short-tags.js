@@ -1,5 +1,5 @@
 module.exports = function(grunt, config, parameters, done) {
-	var deleteFolderOnError = '';
+	var deleteFolderOnError = '', listFile = null;
 
 	function endForError(e) {
 		if(deleteFolderOnError.length) {
@@ -10,11 +10,21 @@ module.exports = function(grunt, config, parameters, done) {
 			}
 			deleteFolderOnError = '';
 		}
+		if(listFile && listFile.fd) {
+			try {
+				fs.closeSync(listFile.fd);
+				listFile.fd = null;
+			}
+			catch(foo) {
+			}
+		}
 		process.stderr.write(e.message || e);
 		done(false);
 	}
 	try {
-		var c5fs = require('../libraries/fs'), path = require('path'), fs = require('fs'), shell = require('shelljs');
+		var c5fs = require('../libraries/fs'), path = require('path'), fs = require('fs'), shell = require('shelljs'), temp = require('temp');
+		temp.track();
+		var listFile = temp.openSync();
 		var pkg = parameters['package'] || '';
 		if(pkg === '-') {
 			pkg = '';
@@ -74,8 +84,7 @@ module.exports = function(grunt, config, parameters, done) {
 			destinationFolder = '';
 		}
 		// Determine the script that will convert from short to long tags for each file.
-		var shortTagRemover = parameters.shortTagRemover ? parameters.shortTagRemover : ('php -d short_open_tag=On ' + c5fs.escapeShellArg(path.join(__dirname, '../libraries/short-tags-remover.php')));
-		var exec = require('child_process').exec;
+		var spawn = require('child_process').spawn;
 		// Let's start!
 		var parser = new c5fs.directoryParser(sourceFolder);
 		parser.excludeFilesByName.push('.gitignore');
@@ -117,31 +126,59 @@ module.exports = function(grunt, config, parameters, done) {
 				});
 				return;
 			}
-			var cmd = shortTagRemover + ' ' + c5fs.escapeShellArg(abs);
+			var line = abs;
 			if(destinationFolder) {
-				cmd += ' ' + c5fs.escapeShellArg(path.join(destinationFolder, rel));
+				line += "\t" + path.join(destinationFolder, rel);
 			}
-			process.stdout.write('Processing ' + rel + '... ');
-			exec(
-				cmd,
-				{},
-				function(error) {
-					if(error) {
-						endForError(error);
-					}
-					else {
-						process.stdout.write('done.\n');
-						cb();
-					}
-				}
-			);
+			fs.writeSync(listFile.fd, line + "\n");
+			cb();
 		};
+		if(!destinationFolder) {
+			process.stdout.write('Listing files... ');
+		}
 		parser.start(function(error) {
 			if(error) {
 				endForError(error);
 			}
 			else {
-				done(true);
+				if(!destinationFolder) {
+					process.stdout.write('done.\n');
+				}
+				fs.closeSync(listFile.fd);
+				listFile.fd = null;
+				var removerError = null;
+				try {
+					var remover;
+					if(parameters.shortTagRemover) {
+						remover = spawn(parameters.shortTagRemover, ['--list', listFile.path]);
+					}
+					else {
+						remover = spawn('php', ['-d', 'short_open_tag=On', path.join(__dirname, '../libraries/short-tags-remover.php'), '--list', listFile.path]);
+					}
+					remover.stdout.on('data', function (data) {
+						process.stdout.write(data);
+					});
+					remover.stderr.on('data', function (data) {
+						process.stdout.write(data);
+					});
+					remover.on('error', function(err) {
+						removerError = err;
+						endForError(removerError);
+					});
+					remover.on('exit', function(code) {
+						if(removerError !== null) {
+							return;
+						}
+						if(code !== 0) {
+							endForError('child process exited with code ' + code);							
+							return;
+						}
+						done(true);
+					});
+				}
+				catch(e) {
+					endForError(e);
+				}
 			}
 		});
 	}
