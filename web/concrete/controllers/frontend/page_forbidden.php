@@ -9,7 +9,7 @@ class PageForbidden extends Controller {
 
 	public function view() {
 		$u = new User();
-		if (!$u->isRegistered() && FORBIDDEN_SHOW_LOGIN) { //if they are not logged in, and we show guests the login...
+        if (!$u->isRegistered()) { //if they are not logged in, and we show guests the login...
 			$this->redirect('/login');
 		}
 	}

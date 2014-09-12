@@ -152,7 +152,7 @@ class Application extends Container
                 if (is_object($pkg)) {
                     $cl->registerPackage($pkg);
                     // handle updates
-                    if (Config::get('concrete.misc.enable_auto_update_packages')) {
+                    if (Config::get('concrete.updates.enable_auto_update_packages')) {
                         $pkgInstalledVersion = $p->getPackageVersion();
                         $pkgFileVersion = $pkg->getPackageVersion();
                         if (version_compare($pkgFileVersion, $pkgInstalledVersion, '>')) {

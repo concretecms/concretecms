@@ -343,9 +343,14 @@ return array(
         'enable_translate_locale_en_us' => false,
         'page_search_index_lifetime'    => 259200,
         'enable_trash_can'              => true,
+        'app_version_display_in_header' => true
+    ),
+
+    'updates' => array(
+
         'enable_auto_update_core'       => false,
         'enable_auto_update_packages'   => false,
-        'app_version_display_in_header' => true
+        'enable_permissions_protection' => true
     ),
     'paths'             => array(
         'trash'  => '/!trash',

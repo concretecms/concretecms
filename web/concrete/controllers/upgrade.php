@@ -3,13 +3,14 @@ namespace Concrete\Controller;
 
 use Concrete\Core\View\View;
 use Concrete\Controller\Backend\UserInterface as BackendUserInterfaceController;
+use Config;
 
 class Upgrade extends BackendUserInterfaceController
 {
     public function canAccess()
     {
-        if (ENABLE_UPDATE_PERMISSIONS_PROTECTION === false) {
-            return true; // we have turned this on temporarily which means anyone even non-logged-in users can run update.
+        if (!Config::get('concrete.updates.enable_permissions_protection')) {
+            return true; // we have turned this off temporarily which means anyone even non-logged-in users can run update.
         }
 
         $p = new \Permissions();
