@@ -56,7 +56,7 @@ class Properties extends BackendInterfaceController {
 
 	public function updateAttribute() {
 		$pr = new PageEditResponse();
-		$ak = CollectionAttributeKey::get($_REQUEST['name']);
+		$ak = CollectionAttributeKey::getByID($_REQUEST['name']);
 		if ($this->validateAction()) {
 			$this->populatePages();
 			if ($this->canEdit) {
@@ -77,7 +77,7 @@ class Properties extends BackendInterfaceController {
 
 	public function clearAttribute() {
 		$pr = new PageEditResponse();
-		$ak = CollectionAttributeKey::get($_REQUEST['akID']);
+		$ak = CollectionAttributeKey::getByID($_REQUEST['akID']);
 		if ($this->validateAction()) {
 			$this->populatePages();
 			if ($this->canEdit) {
