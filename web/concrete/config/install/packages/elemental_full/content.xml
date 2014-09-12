@@ -1165,7 +1165,7 @@
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<p style="text-align: center"><span class="title-caps">Satisfied Customers</span></p>]]></content>
+                                <content><![CDATA[<p style="text-align: center"><span class="title-caps">Customizable footer area with accent class.</span></p>]]></content>
                             </record>
                         </data>
                     </block>
