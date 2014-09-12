@@ -207,7 +207,7 @@ class Template
     public function getPageTemplateIconImage()
     {
         $src = REL_DIR_FILES_PAGE_TEMPLATE_ICONS . '/' . $this->pTemplateIcon;
-        $iconImg = '<img src="' . $src . '" height="' . PAGE_TEMPLATE_ICON_HEIGHT . '" width="' . PAGE_TEMPLATE_ICON_WIDTH . '" alt="' . $this->getPageTemplateDisplayName(
+        $iconImg = '<img src="' . $src . '" height="' . \Config::get('concrete.icons.page_template.height') . '" width="' . \Config::get('concrete.icons.page_template.width') . '" alt="' . $this->getPageTemplateDisplayName(
             ) . '" title="' . $this->getPageTemplateDisplayName() . '" />';
         return $iconImg;
     }

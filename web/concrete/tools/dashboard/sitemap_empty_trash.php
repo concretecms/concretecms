@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 defined('C5_EXECUTE') or die("Access Denied.");
 $pk = PermissionKey::getByHandle('empty_trash');
@@ -6,7 +6,7 @@ if (!$pk->validate()) {
 	die(t("Access Denied."));
 }
 
-$trash = Page::getByPath(TRASH_PAGE_PATH);
+$trash = Page::getByPath(Config::get('concrete.paths.trash'));
 $i = 0;
 if (is_object($trash) && !$trash->isError()) {
 	$pl = new PageList();
@@ -18,7 +18,7 @@ if (is_object($trash) && !$trash->isError()) {
 		$cp = new Permissions($pc);
 		if ($cp->canDeletePage()) {
 			$i++;
-			$pc->delete();			
+			$pc->delete();
 		}
 	}
 }

@@ -18,7 +18,7 @@ if ($_POST['task'] == 'delete_pages') {
 	if ($_POST['process']) {
 		$obj = new stdClass;
 		$js = Loader::helper('json');
-		$messages = $q->receive(DELETE_PAGES_LIMIT);
+		$messages = $q->receive(Config::get('concrete.limits.sitemap_pages'));
 		foreach($messages as $key => $p) {
 			// delete the page here
 			$page = unserialize($p->body);
@@ -32,7 +32,7 @@ if ($_POST['task'] == 'delete_pages') {
 			}
 			$q->deleteMessage($p);
 		}
-		$obj->totalItems = $q->count();	
+		$obj->totalItems = $q->count();
 		if ($q->count() == 0) {
 			$q->deleteQueue('delete_page_request');
 		}
@@ -68,7 +68,7 @@ if (is_array($_REQUEST['item'])) {
 }
 
 $pcnt = 0;
-foreach($pages as $c) { 
+foreach($pages as $c) {
 	$cp = new Permissions($c);
 	if ($cp->canDeletePage()) {
 		$pcnt++;
@@ -93,14 +93,14 @@ foreach($pages as $c) {
 		<th><?=t('Date Added')?></th>
 		<th><?=t('Author')?></th>
 	</tr>
-	
-	<? foreach($pages as $c) { 
+
+	<? foreach($pages as $c) {
 		$cp = new Permissions($c);
 		$c->loadVersionObject();
 		if ($cp->canDeletePage() && $c->getCollectionID() > 1) { ?>
-		
-		<?=$form->hidden('cID[]', $c->getCollectionID())?>		
-		
+
+		<?=$form->hidden('cID[]', $c->getCollectionID())?>
+
 		<tr>
 			<td class="ccm-page-list-name"><?=$c->getCollectionName()?></td>
 			<td><?=$c->getPageTypeName()?></td>
@@ -111,9 +111,9 @@ foreach($pages as $c) {
 					print $ui->getUserName();
 				}
 			}?></td>
-		
+
 		</tr>
-		
+
 		<? }  ?>
 	</table>
 	</form>
@@ -140,9 +140,9 @@ foreach($pages as $c) {
 	<?=$ih->button_js(t('Cancel'), 'jQuery.fn.dialog.closeTop()', 'left', 'btn')?>
 	<?=$ih->button_js(t('Delete'), 'ccm_sitemapDeletePages()', 'right', 'btn btn-danger')?>
 	</div>
-		
+
 	<?
-	
+
 }
 ?>
 </div>

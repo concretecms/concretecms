@@ -1,5 +1,11 @@
-<?
-defined('C5_EXECUTE') or die("Access Denied."); ?>
+<?php
+defined('C5_EXECUTE') or die("Access Denied.");
+
+$install_config = Config::get('install_overrides');
+if ($install_config) {
+    $_POST = $install_config;
+}
+?>
 
 <style type="text/css">@import "<?=ASSETS_URL_CSS?>/views/install.css";</style>
 <script type="text/javascript" src="<?=ASSETS_URL_JAVASCRIPT?>/bootstrap/tooltip.js"></script>
@@ -66,7 +72,7 @@ $(function() {
 <div class="col-sm-10 col-sm-offset-1">
 <div class="page-header">
 <h1><?=t('Install concrete5')?></h1>
-<p><?=t('Version %s', APP_VERSION)?></p>
+<p><?=t('Version %s', Config::get('concrete.version'))?></p>
 </div>
 </div>
 </div>
@@ -124,7 +130,7 @@ $(function() {
 
 <div class="page-header">
 <h1><?=t('Install concrete5')?></h1>
-<p><?=t('Version %s', APP_VERSION)?></p>
+<p><?=t('Version %s', Config::get('concrete.version'))?></p>
 </div>
 
 </div>
@@ -316,7 +322,7 @@ $(function() {
 <div class="col-sm-10 col-sm-offset-1">
 <div class="page-header">
 	<h1><?=t('Install concrete5')?></h1>
-	<p><?=t('Version %s', APP_VERSION)?></p>
+	<p><?=t('Version %s', Config::get('concrete.version'))?></p>
 </div>
 
 <h3><?=t('Testing Required Items')?></h3>
@@ -465,7 +471,7 @@ $(function() {
 <div class="col-sm-8 col-sm-offset-2">
 <div class="page-header">
 	<h1><?=t('Install concrete5')?></h1>
-	<p><?=t('Version %s', APP_VERSION)?></p>
+	<p><?=t('Version %s', Config::get('concrete.version'))?></p>
 </div>
 </div>
 </div>

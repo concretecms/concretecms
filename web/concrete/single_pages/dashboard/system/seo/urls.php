@@ -17,7 +17,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 <?php
                 // Show the placeholder textarea with the mod_rewrite rules if pretty urls enabled
                 // NOTE: The contents of the textarea are not saved
-                if(URL_REWRITING){
+                if(Config::get('concrete.seo.url_rewriting')){
                     echo '
                 <div class="clearfix"><label>' . t('Code for your .htaccess file') . '</label>
                 <textarea style="width:98%; max-width:98%; min-width:98%; height:150px; min-height:150px; max-height:300px;" onclick="this.select()">' . $strRules . '</textarea></div>';

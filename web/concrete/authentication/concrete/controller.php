@@ -2,6 +2,7 @@
 namespace Concrete\Authentication\Concrete;
 
 use Concrete\Core\Authentication\AuthenticationTypeController;
+use Config;
 use Exception;
 use Loader;
 use User;
@@ -111,7 +112,7 @@ class Controller extends AuthenticationTypeController
 
             $mh = Loader::helper('mail');
             //$mh->addParameter('uPassword', $oUser->resetUserPassword());
-            if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
+            if (Config::get('concrete.user.registration.email_registration')) {
                 $mh->addParameter('uName', $oUser->getUserEmail());
             } else {
                 $mh->addParameter('uName', $oUser->getUserName());
@@ -182,7 +183,7 @@ class Controller extends AuthenticationTypeController
                         $this->set('passwordChanged', true);
 
                         $u = $ui->getUserObject();
-                        if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
+                        if (Config::get('concrete.user.registration.email_registration')) {
                             $_POST['uName'] = $ui->getUserEmail();
                         } else {
                             $_POST['uName'] = $u->getUserName();
@@ -230,7 +231,7 @@ class Controller extends AuthenticationTypeController
                                              'This account has not yet been validated. Please check the email associated with this account and follow the link it contains.'));
                     break;
                 case USER_INVALID:
-                    if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
+                    if (Config::get('concrete.user.registration.email_registration')) {
                         throw new \Exception(t('Invalid email address or password.'));
                     } else {
                         throw new \Exception(t('Invalid username or password.'));

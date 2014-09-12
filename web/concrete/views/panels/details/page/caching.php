@@ -2,7 +2,7 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $form = Loader::helper('form');
-switch(FULL_PAGE_CACHE_GLOBAL) {
+switch(Config::get('concrete.cache.pages')) {
 	case 'blocks':
 		$globalSetting = t('cache page if all blocks support it.');
 		$enableCache = 1;
@@ -16,12 +16,12 @@ switch(FULL_PAGE_CACHE_GLOBAL) {
 		$enableCache = 0;
 		break;
 }
-switch(FULL_PAGE_CACHE_LIFETIME) {
+switch(Config::get('concrete.cache.full_page_lifetime')) {
 	case 'default':
-		$globalSettingLifetime = Loader::helper('date')->describeInterval(CACHE_LIFETIME);
+		$globalSettingLifetime = Loader::helper('date')->describeInterval(Config::get('concrete.cache.lifetime'));
 		break;
 	case 'custom':
-		$globalSettingLifetime = Loader::helper('date')->describeInterval(Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM'));
+		$globalSettingLifetime = Loader::helper('date')->describeInterval(Config::get('concrete.cache.full_page_lifetime_value'));
 		break;
 	case 'forever':
 		$globalSettingLifetime = t('Until manually cleared');
@@ -60,13 +60,13 @@ switch(FULL_PAGE_CACHE_LIFETIME) {
 		<hr/>
 
 		<p class="lead"><?=t('Cache for how long?')?></p>
-		
+
 		<div class="ccm-properties-cache-lifetime input">
 		<? $val = ($c->getCollectionFullPageCachingLifetimeCustomValue() > 0 && $c->getCollectionFullPageCachingLifetime()) ? $c->getCollectionFullPageCachingLifetimeCustomValue() : ''; ?>
 
 		<div class="radio">
 		<label>
-			<input type="radio" name="cCacheFullPageContentOverrideLifetime" value="0" <? if ($c->getCollectionFullPageCachingLifetime() == '0') { ?> checked="checked" <? } ?> /> 
+			<input type="radio" name="cCacheFullPageContentOverrideLifetime" value="0" <? if ($c->getCollectionFullPageCachingLifetime() == '0') { ?> checked="checked" <? } ?> />
 			<?=t('Use global setting - %s', $globalSettingLifetime)?>
 		</label>
 		</div>
@@ -86,7 +86,7 @@ switch(FULL_PAGE_CACHE_LIFETIME) {
 		</div>
 
 		<div class="form-group form-inline" style="margin-left: 40px"><?=$form->text('cCacheFullPageContentLifetimeCustom', $val, array('style' => 'width: 40px'))?> <?=t('minutes')?></div>
-		
+
 		</div>
 
 		<hr/>
@@ -117,7 +117,7 @@ switch(FULL_PAGE_CACHE_LIFETIME) {
 
 </section>
 
-<script type="text/javascript"> 
+<script type="text/javascript">
 	ccm_settingsSetupCacheForm = function(reset) {
 		var obj = $('input[name=cCacheFullPageContent]:checked');
 		if (obj.attr('enable-cache') == 1) {
@@ -135,11 +135,11 @@ switch(FULL_PAGE_CACHE_LIFETIME) {
 				$('input[name=cCacheFullPageContentLifetimeCustom]').val('');
 			}
 		}
-	}	
+	}
 	$(function() {
 		$('#ccm-button-remove-page-from-cache').on('click', function() {
 			jQuery.fn.dialog.showLoader();
-			$.getJSON('<?=$controller->action("purge")?>', function(r) { 
+			$.getJSON('<?=$controller->action("purge")?>', function(r) {
 				jQuery.fn.dialog.hideLoader();
 				ConcreteAlert.notify({
 				'message': r.message

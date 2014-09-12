@@ -20,7 +20,7 @@ use \Concrete\Core\Block\BlockController;
 		public function getBlockTypeDescription() {
 			return t("Places a conversation message into a page.");
 		}
-		
+
 		public function getBlockTypeName() {
 			return t("Conversation Message");
 		}
@@ -43,10 +43,10 @@ use \Concrete\Core\Block\BlockController;
 				$ve->add(t('Your message cannot be empty.'));
 			}
 
-			if (Config::get('CONVERSATION_DISALLOW_BANNED_WORDS') && (
+			if (Config::get('conversation.banned_words') && (
 				Loader::helper('validation/banned_words')->hasBannedWords($data['cnvMessageSubject']) ||
 				Loader::helper('validation/banned_words')->hasBannedWords($data['cnvMessageBody']))) {
-				$ve->add(t('Banned words detected.'));	
+				$ve->add(t('Banned words detected.'));
 			}
 			return $ve;
 		}
@@ -98,5 +98,5 @@ use \Concrete\Core\Block\BlockController;
 			$message = $this->getConversationMessageObject();
 			return $message->getConversationMessageSubject();
 		}
-		
+
 	}

@@ -62,7 +62,7 @@ if (Loader::helper('validation/numbers')->integer($_POST['cnvMessageParentID']) 
 	}
 }
 
-if (Config::get('CONVERSATION_DISALLOW_BANNED_WORDS') && Loader::helper('validation/banned_words')->hasBannedWords($_POST['cnvMessageBody'])) {
+if (Config::get('conversation.banned_words') && Loader::helper('validation/banned_words')->hasBannedWords($_POST['cnvMessageBody'])) {
 	$ve->add(t('Banned words detected.'));
 }
 

@@ -58,10 +58,10 @@ use Loader;
 		 * Returns true if this is a valid password.
 		 */
 		public function password($pass) {
-			if (strlen($pass) < USER_PASSWORD_MINIMUM) {
+			if (strlen($pass) < \Config::get('concrete.user.password.minimum')) {
 				return false;
 			}
-			if (strlen($pass) > USER_PASSWORD_MAXIMUM) {
+			if (strlen($pass) >  \Config::get('concrete.user.password.maximum')) {
 				return false;
 			}
 
@@ -75,14 +75,14 @@ use Loader;
 		*/
 		public function username($username) {
 			$username = trim($username);
-			if (strlen($username) < USER_USERNAME_MINIMUM) {
+			if (strlen($username) < \Config::get('concrete.user.username.minimum')) {
 				return false;
 			}
-			if (strlen($username) > USER_USERNAME_MAXIMUM) {
+			if (strlen($username) > \Config::get('concrete.user.username.maximum')) {
 				return false;
 			}
 			$rxBoundary = '[A-Za-z0-9]';
-			if(USER_USERNAME_ALLOW_SPACES) {
+			if(\Config::get('concrete.user.username.allow_spaces')) {
 				$rxMiddle = '[A-Za-z0-9_. ]';
 			}
 			else {

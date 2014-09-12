@@ -15,35 +15,35 @@
 			$activeHandle = $activeLibrary->getSystemAntispamLibraryHandle();
 		}
 		?>
-		
+
 		<?=$form->select('activeLibrary', $libraries, $activeHandle, array('class' => 'form-control'))?>
 		</div>
-		
+
 		<? if (is_object($activeLibrary)) {
 			if ($activeLibrary->hasOptionsForm()) {
-				if ($activeLibrary->getPackageID() > 0) { 
+				if ($activeLibrary->getPackageID() > 0) {
 					Loader::packageElement('system/antispam/' . $activeLibrary->getSystemAntispamLibraryHandle() . '/form', $activeLibrary->getPackageHandle());
 				} else {
 					Loader::element('system/antispam/' . $activeLibrary->getSystemAntispamLibraryHandle() . '/form');
 				}
-				
+
 				?>
-				
+
 				<div class="form-group">
                 <label><?= t('Log settings') ?></label>
                     <div class="checkbox">
-                        <?=t('Log entries marked as spam.')?><label><?=$form->checkbox('ANTISPAM_LOG_SPAM', 1, Config::get('ANTISPAM_LOG_SPAM'))?></label>
+                        <?=t('Log entries marked as spam.')?><label><?=$form->checkbox('ANTISPAM_LOG_SPAM', 1, Config::get('concrete.log.spam'))?></label>
                     </div>
 					<span class="help-block"><?=t('Logged entries can be found in <a href="%s" style="color: #bfbfbf; text-decoration: underline">Dashboard > Reports > Logs</a>', $view->url('/dashboard/reports/logs'))?></span>
 				</div>
 
 				<div class="form-group">
                     <label><?=t('Email Notification')?> </label>
-					<?=$form->text('ANTISPAM_NOTIFY_EMAIL', Config::get('ANTISPAM_NOTIFY_EMAIL'))?>
+					<?=$form->text('ANTISPAM_NOTIFY_EMAIL', Config::get('concrete.spam.notify_email'))?>
 				    <span class="help-block"><?=t('Any email address in this box will be notified when spam is detected.')?></span>
 				</div>
-				
-				
+
+
 				<?
 			}
 		} ?>

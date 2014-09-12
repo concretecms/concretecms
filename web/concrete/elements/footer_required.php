@@ -5,9 +5,9 @@ $cp = new Permissions($c);
 
 Loader::element('page_controls_footer', array('cp' => $cp, 'c' => $c));
 
-$_trackingCodePosition = Config::get('SITE_TRACKING_CODE_POSITION');
+$_trackingCodePosition = Config::get('concrete.seo.tracking.code_position');
 if (empty($disableTrackingCode) && (empty($_trackingCodePosition) || $_trackingCodePosition === 'bottom')) {
-	echo Config::get('SITE_TRACKING_CODE');
+	echo Config::get('concrete.seo.tracking.code');
 }
 
 $v = View::getInstance();
@@ -15,4 +15,3 @@ print $v->markFooterAssetPosition();
 
 // user profile menu
 Loader::element('account/menu');
-?>

@@ -46,6 +46,14 @@ class Router {
 		$this->collection->add($rtHandle, $route);
 	}
 
+    public function registerMultiple(array $routes)
+    {
+        foreach ($routes as $route => $route_settings) {
+            array_unshift($route_settings, $route);
+            call_user_func_array(array($this, 'register'), $route_settings);
+        }
+    }
+
 	public function execute(Route $route, $parameters) {
 		$callback = $route->getCallback();
 		$response = $callback->execute($this->request, $route, $parameters);
@@ -62,6 +70,13 @@ class Router {
 	public function setThemeByRoute($path, $theme = NULL, $wrapper = FILENAME_THEMES_VIEW) {
 		$this->themePaths[$path] = array($theme, $wrapper);
 	}
+
+    public function setThemesbyRoutes(array $routes)
+    {
+        foreach($routes as $route => $theme) {
+            $this->setThemeByRoute($route, $theme);
+        }
+    }
 
 	/**
 	 * This grabs the theme for a particular path, if one exists in the themePaths array

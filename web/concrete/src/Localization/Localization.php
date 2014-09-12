@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Localization;
 
+use Config;
 use Loader;
 use Events;
 use \Zend\I18n\Translator\Translator;
@@ -50,7 +51,7 @@ class Localization
     public function setLocale($locale)
     {
         $localeNeededLoading = false;
-        if (($locale == 'en_US') && (!ENABLE_TRANSLATE_LOCALE_EN_US)) {
+        if (($locale == 'en_US') && (!Config::get('concrete.misc.enable_translate_locale_en_us'))) {
             if (isset($this->translate)) {
                 unset($this->translate);
             }

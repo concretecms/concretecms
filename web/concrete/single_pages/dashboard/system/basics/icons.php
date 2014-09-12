@@ -6,7 +6,7 @@
         <legend><?=t('Favicon')?></legend>
             <div class="help-block"><?=t('Your image should be 16x16 pixels, and should be a gif or a png with a .ico file extension.')?></div>
             <?
-            $faviconFID = intval(Config::get('FAVICON_FID'));
+            $faviconFID = intval(Config::get('concrete.misc.favicon_fid'));
             $f = File::getByID($faviconFID);
             ?>
             <div class="form-group">
@@ -28,7 +28,7 @@
         <legend><?=t('iPhone Thumbnail')?></legend>
         <div class="help-block"><?=t('iPhone home screen icons should be 57x57 and be in the .png format.')?></div>
         <?
-        $iosHomeFID=intval(Config::get('IPHONE_HOME_SCREEN_THUMBNAIL_FID'));
+        $iosHomeFID=intval(Config::get('concrete.misc.iphone_home_screen_thumbnail_fid'));
         $f = File::getByID($iosHomeFID);
         ?>
         <div class="form-group">
@@ -51,9 +51,9 @@
         <legend><?php echo t('Windows 8 Thumbnail'); ?></legend>
         <div class="help-block"><?=t('Windows 8 start screen tiles should be 144x144 and be in the .png format.'); ?></div>
         <?
-        $modernThumbFID = intval(Config::get('MODERN_TILE_THUMBNAIL_FID'));
+        $modernThumbFID = intval(Config::get('concrete.misc.modern_tile_thumbnail_fid'));
         $f = File::getByID($modernThumbFID);
-        $modernThumbBG = strval(Config::get('MODERN_TILE_THUMBNAIL_BGCOLOR'));
+        $modernThumbBG = strval(Config::get('concrete.misc.modern_tile_thumbnail_bgcolor'));
         ?>
         <div class="form-group">
             <div class="col-md-6">

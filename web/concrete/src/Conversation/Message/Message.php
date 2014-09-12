@@ -3,6 +3,7 @@ namespace Concrete\Core\Conversation\Message;
 
 use Concrete\Core\Conversation\FlagType\FlagType;
 use Concrete\Core\Conversation\Rating\Type;
+use Config;
 use File;
 use FileSet;
 use Core;
@@ -298,8 +299,8 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
                 $this->getConversationMessageID(),
                 $f->getFileID()
             ));
-            $fs = FileSet::createAndGetSet(CONVERSATION_MESSAGE_ATTACHMENTS_FILE_SET, FileSet::TYPE_PUBLIC, USER_SUPER_ID);
-            $fsToRemove = FileSet::createAndGetSet(CONVERSATION_MESSAGE_ATTACHMENTS_PENDING_FILE_SET, FileSet::TYPE_PUBLIC, USER_SUPER_ID);
+            $fs = FileSet::createAndGetSet(Config::get('concrete.conversations.attachments_file_set'), FileSet::TYPE_PUBLIC, USER_SUPER_ID);
+            $fsToRemove = FileSet::createAndGetSet(Config::get('concrete.conversations.attachments_pending_file_set'), FileSet::TYPE_PUBLIC, USER_SUPER_ID);
             $fs->addFileToSet($f);
             $fsToRemove->removeFileFromSet($f);
         }
@@ -393,9 +394,6 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
         }
 
         $this->cnvIsMessageDeleted = true;
-        //$this->cnvMessageSubject = null;
-        //$this->cnvMessageBody = null;
-        // $this->uID = USER_DELETED_CONVERSATION_ID;
     }
 
     public function restore()
@@ -411,9 +409,6 @@ class Message extends Object implements \Concrete\Core\Permission\ObjectInterfac
         }
 
         $this->cnvIsMessageDeleted = false;
-        //$this->cnvMessageSubject = null;
-        //$this->cnvMessageBody = null;
-        // $this->uID = USER_DELETED_CONVERSATION_ID;
     }
 
 }

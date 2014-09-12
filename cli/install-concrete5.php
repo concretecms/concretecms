@@ -16,7 +16,7 @@ $helpText = <<<EOT
         --core=<core location>             Location of the core concrete5 files
         --reinstall=<no/yes>               If already installed at the target location
                                            Delete current install and reinstall
-        --demo-username=<username>         Additional user username
+        --demo-usernameinvalid =<username>         Additional user username
         --demo-password=<password>         Additional user password
         --demo-email=<email>               Additional user email
         --config=<file>                    Use configuration file for installation
@@ -66,17 +66,17 @@ if (array_key_exists('help', $args)) {
 	exit;
 }
 
-$config = array();
+$cliconfig = array();
 if (array_key_exists('config', $args)) {
 	if (!file_exists($args['config'])) {
 		die("ERROR: Config file not found.\n");
 	}
 	include($args['config']);
 }
-$config = array_merge($defaults, $config, $args);
+$cliconfig = array_merge($defaults, $cliconfig, $args);
 
-if ($config['target']) {
-	$target = $config['target'];
+if ($cliconfig['target']) {
+	$target = $cliconfig['target'];
 	if (substr($target, 0, 1) !== '/') {
 		$target = realpath(dirname(__FILE__) . '/' . $target);
 	}
@@ -88,32 +88,30 @@ if ($config['target']) {
 	define('DIR_BASE', dirname(__FILE__));
 }
 
-if ($config['core']) {
-	if (substr($config['core'], 0, 1) == '/') {
-		$corePath = $config['core'];
+if ($cliconfig['core']) {
+	if (substr($cliconfig['core'], 0, 1) == '/') {
+		$corePath = $cliconfig['core'];
 	} else {
-		$corePath = dirname(__FILE__) . '/' . $config['core'];
+		$corePath = dirname(__FILE__) . '/' . $cliconfig['core'];
 	}
 } elseif (file_exists(dirname(__FILE__) . '/' . 'install-concrete5-conf.php')) {
 		$corePath = dirname(__FILE__) . '/' . 'install-concrete5-conf.php';
 } else {
 	$corePath = DIR_BASE . '/concrete';
 }
-if (!file_exists($corePath . '/config/version.php')) {
+if (!file_exists($corePath . '/config/concrete.php')) {
 	die("ERROR: Invalid concrete5 core.\n");
-} else {
-	include($corePath . '/config/version.php');
 }
 
-if ($config['reinstall'] === 'yes' && is_file(DIR_BASE . '/config/site.php')) {
+if ($cliconfig['reinstall'] === 'yes' && is_file(DIR_BASE . '/config/site.php')) {
 	unlink(DIR_BASE . '/config/site.php');
 }
 if (file_exists(DIR_BASE . '/config/site.php')) {
 	die("ERROR: concrete5 is already installed.\n");
-}		
+}
 
 
-/** 
+/**
  * ----------------------------------------------------------------------------
  * Set required constants, including directory names, attempt to include site configuration file with database
  * information, attempt to determine if we ought to skip to an updated core, etc...
@@ -139,7 +137,7 @@ require $corePath . '/bootstrap/autoload.php';
  */
 $cms = require $corePath . '/bootstrap/start.php';
 
-if ($config['reinstall'] === 'yes') {
+if ($cliconfig['reinstall'] === 'yes') {
 
 	// Remove all files from the files directory
 	function removeDemoFiles($path) {
@@ -151,16 +149,16 @@ if ($config['reinstall'] === 'yes') {
 		}
 		$dirf = $target . '/files/';
 		// Remove Directory once Files have been removed (If Exists)
-		if (is_dir($path) && $path !== $dirf) rmdir($path); 
+		if (is_dir($path) && $path !== $dirf) rmdir($path);
 	}
 
 	removeDemoFiles($target . '/files/');
 
 	$db = Database::connect(array(
-		'host' => $config['db-server'],
-		'user' => $config['db-username'],
-		'password' => $config['db-password'],
-		'database' => $config['db-database']
+		'host' => $cliconfig['db-server'],
+		'user' => $cliconfig['db-username'],
+		'password' => $cliconfig['db-password'],
+		'database' => $cliconfig['db-database']
 	));
 
 	$tables = $db->MetaTables();
@@ -193,25 +191,20 @@ if (is_object($fileWriteErrors)) {
 	$e->add($fileWriteErrors);
 }
 
-$_POST['SAMPLE_CONTENT'] = $config['starting-point'];
-$_POST['DB_SERVER'] = $config['db-server'];
-$_POST['DB_USERNAME'] = $config['db-username'];
-$_POST['DB_PASSWORD'] = $config['db-password'];
-$_POST['DB_DATABASE'] = $config['db-database'];
-$_POST['SITE'] = $config['site'];
-$_POST['uPassword'] = $config['admin-password'];
-$_POST['uPasswordConfirm'] = $config['admin-password'];
-$_POST['uEmail'] = $config['admin-email'];
-
-if (version_compare($APP_VERSION, APP_VERSION_CLI_MINIMUM, '<')) {
-	$e->add('Your version of concrete5 must be at least ' . APP_VERSION_CLI_MINIMUM . ' to use this installer.');
-}
-
+$_POST['SAMPLE_CONTENT'] = $cliconfig['starting-point'];
+$_POST['DB_SERVER'] = $cliconfig['db-server'];
+$_POST['DB_USERNAME'] = $cliconfig['db-username'];
+$_POST['DB_PASSWORD'] = $cliconfig['db-password'];
+$_POST['DB_DATABASE'] = $cliconfig['db-database'];
+$_POST['SITE'] = $cliconfig['site'];
+$_POST['uPassword'] = $cliconfig['admin-password'];
+$_POST['uPasswordConfirm'] = $cliconfig['admin-password'];
+$_POST['uEmail'] = $cliconfig['admin-email'];
 
 if ($e->has()) {
 	foreach($e->getList() as $ei) {
 		print "ERROR: " . $ei . "\n";
-	}	
+	}
 	die;
 }
 
@@ -220,9 +213,10 @@ $cnt->configure($e);
 if ($e->has()) {
 	foreach($e->getList() as $ei) {
 		print "ERROR: " . $ei . "\n";
-	}	
+	}
 } else {
-	$spl = StartingPointPackage::getClass($config['starting-point']);
+
+	$spl = StartingPointPackage::getClass($cliconfig['starting-point']);
 	require(DIR_CONFIG_SITE . '/site_install.php');
 	require(DIR_CONFIG_SITE . '/site_install_user.php');
 	$routines = $spl->getInstallRoutines();
@@ -233,23 +227,23 @@ if ($e->has()) {
 			call_user_func(array($spl, $r->getMethod()));
 		}
 	} catch(Exception $ex) {
-		print "ERROR: " . $ex->getMessage() . "\n";		
+		print "ERROR: " . $ex->getMessage() . "\n";
 		$cnt->reset();
 	}
 
-	if ($config['demo-username']) {
+	if ($cliconfig['demo-username']) {
 		print "Adding demo user\n";
 		UserInfo::add(array(
-			'uName'            => $config['demo-username'],
-			'uEmail'           => $config['demo-email'],
-			'uPassword'        => $config['demo-password']
+			'uName'            => $cliconfig['demo-username'],
+			'uEmail'           => $cliconfig['demo-email'],
+			'uPassword'        => $cliconfig['demo-password']
 		))->getUserObject()->enterGroup(
 			Group::getByID(ADMIN_GROUP_ID)
 		);
 	}
 
 	if (!isset($ex)) {
-		Config::save('SEEN_INTRODUCTION', 1);
+        config::save('concrete.misc.seen_introduction', true);
 		print "Installation Complete!\n";
 	}
 

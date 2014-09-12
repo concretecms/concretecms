@@ -6,7 +6,7 @@ $html = Loader::helper('html');
 $dh = Loader::helper('concrete/dashboard');
 
 if (isset($cp)) {
-	if ($cp->canViewToolbar()) { 
+	if ($cp->canViewToolbar()) {
 
 ?>
 
@@ -26,7 +26,7 @@ $v = View::getInstance();
 if (!$dh->inDashboard()) {
 
 	$v->requireAsset('core/app');
-	
+
 	$editMode = $c->isEditMode();
 	$tools = REL_DIR_FILES_TOOLS_REQUIRED;
 	if ($c->isEditMode()) {
@@ -63,7 +63,7 @@ EOL;
 
 	$v->addFooterItem($js);
 
-	if (ENABLE_PROGRESSIVE_PAGE_REINDEX && Config::get('DO_PAGE_REINDEX_CHECK')) {
+	if (Config::get('concrete.misc.enable_progressive_page_reindex') && Config::get('concrete.misc.do_page_reindex_check')) {
 		$v->addFooterItem('<script type="text/javascript">$(function() { ccm_doPageReindexing(); });</script>');
 	}
 	$cih = Loader::helper('concrete/ui');
@@ -81,12 +81,12 @@ EOL;
 		}
 		$v->addFooterItem('<script type="text/javascript">$(function() { jQuery.datepicker.setDefaults({dateFormat: \'yy-mm-dd\'}); });</script>');
 	}
-	if (!Config::get('SEEN_INTRODUCTION')) {
+	if (!Config::get('concrete.misc.seen_introduction')) {
 		$v->addFooterItem('<script type="text/javascript">$(function() { ccm_showAppIntroduction(); });</script>');
-		Config::save('SEEN_INTRODUCTION', 1);
+		Config::save('concrete.misc.seen_introduction', true);
 	}
 }
 
 	}
-	
+
 }

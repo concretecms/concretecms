@@ -9,7 +9,7 @@ abstract class PageTestCase extends ConcreteDatabaseTestCase {
         'PageTemplates', 'Collections', 'CollectionVersions', 'CollectionVersionFeatureAssignments',
         'CollectionAttributeValues', 'CollectionVersionBlockStyles', 'CollectionVersionThemeCustomStyles',
         'CollectionVersionRelatedEdits', 'CollectionVersionAreaStyles',
-        'PagePermissionAssignments', 'CollectionVersionBlocks', 'Areas', 'PageSearchIndex', 'Config',
+        'PagePermissionAssignments', 'CollectionVersionBlocks', 'Areas', 'PageSearchIndex', 'ConfigStore',
         'GatheringDataSources', 'Logs', 'AttributeKeyCategories'); // so brutal
 
     protected function setUp() {
