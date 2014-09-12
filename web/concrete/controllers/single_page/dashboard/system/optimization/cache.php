@@ -28,7 +28,7 @@ class Cache extends DashboardPageController {
                 Config::save('concrete.cache.theme_css', !!$tcc);
 				Config::save('concrete.cache.overrides', !!$eoc);
 				Config::save('concrete.cache.pages', $this->post('FULL_PAGE_CACHE_GLOBAL'));
-				Config::save('concrete.cache.full_page_liftetime', $this->post('FULL_PAGE_CACHE_LIFETIME'));
+				Config::save('concrete.cache.full_page_lifetime', $this->post('FULL_PAGE_CACHE_LIFETIME'));
 				Config::save('concrete.cache.full_page_lifetime_value', $this->post('FULL_PAGE_CACHE_LIFETIME_CUSTOM'));
 				$this->redirect('/dashboard/system/optimization/cache', 'cache_updated');
 			}

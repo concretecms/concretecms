@@ -7,8 +7,8 @@ return array(
      *
      * @var string
      */
-    'version'           => '5.7.0b2',
-    'version_installed' => '5.7.0b2',
+    'version'           => '5.7.0',
+    'version_installed' => '5.7.0',
 
     /**
      * Installation status
