@@ -482,7 +482,7 @@ class Package extends Object {
 			}
 		}
         \Config::clearNamespace($this->getPackageHandle());
-        \Core::make('database_config')->clearNamespace($this->getPackageHandle());
+        \Core::make('config/database')->clearNamespace($this->getPackageHandle());
 
 		$db->Execute("delete from Packages where pkgID = ?", array($this->pkgID));
 	}

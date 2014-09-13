@@ -734,7 +734,7 @@ class ContentImporter
     protected function importDatabaseConfigValues(\SimpleXMLElement $sx)
     {
         if (isset($sx->databaseconfig)) {
-            $config = \Core::make('database_config');
+            $config = \Core::make('config/database');
             foreach ($sx->databaseconfig->children() as $key) {
                 $pkg = static::getPackageObject($key['package']);
                 if (is_object($pkg)) {
