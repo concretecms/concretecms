@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Application;
 use Loader;
+use Core;
 use stdClass;
 class EditResponse {
 
@@ -24,7 +25,7 @@ class EditResponse {
 		} else {
 			$this->error = Loader::helper('validation/error');
 		}
-		$this->time = date('F d, Y g:i A');
+		$this->time = Core::make('helper/date')->toDB();
 	}
 
 	public function setError($error) {

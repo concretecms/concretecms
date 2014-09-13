@@ -7,6 +7,7 @@ use View;
 use Loader;
 use PageTemplate;
 use User;
+use Core;
 
 class Composer extends BackendInterfacePageController {
 
@@ -30,7 +31,7 @@ class Composer extends BackendInterfacePageController {
 		$r = $this->save();
 		$ptr = $r[0];
 		if (!$ptr->error->has()) {
-			$ptr->setMessage(t('Page saved on %s', $ptr->time));
+			$ptr->setMessage(t('Page saved on %s', Core::make('helper/date')->formatDateTime($ptr->time, true, true)));
 		}
 		$ptr->outputJSON();
 	}
