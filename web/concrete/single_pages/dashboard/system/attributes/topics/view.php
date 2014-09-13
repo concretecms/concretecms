@@ -1,5 +1,6 @@
-<?
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php defined('C5_EXECUTE') or die("Access Denied.");
+
+$jh = Core::make('helper/json');
 ?>
 
 <nav class="navbar navbar-default">
@@ -45,7 +46,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
                 element: '#ccm-dialog-delete-topic-tree',
                 modal: true,
                 width: 320,
-                title: '<?=t("Delete Topic Tree")?>',
+                title: <?=$jh->encode(t("Delete Topic Tree"))?>,
                 height: 'auto'
             });
         });
