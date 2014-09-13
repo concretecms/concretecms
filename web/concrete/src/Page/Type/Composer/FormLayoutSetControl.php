@@ -22,6 +22,28 @@ class FormLayoutSetControl extends Object
     public function getPageTypeComposerFormLayoutSetControlDescription() {return $this->ptComposerFormLayoutSetControlDescription;}
     public function isPageTypeComposerFormLayoutSetControlRequired() {return $this->ptComposerFormLayoutSetControlRequired;}
 
+    public function getPageTypeComposerFormLayoutSetControlCustomDisplayLabel($format = 'html')
+    {
+        $value = tc('PageTypeComposerFormLayoutSetControlCustomLabel', $this->getPageTypeComposerFormLayoutSetControlCustomLabel());
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
+    }
+    public function getPageTypeComposerFormLayoutSetControlDisplayDescription($format = 'html')
+    {
+        $value = tc('PageTypeComposerFormLayoutSetControlDescription', $this->getPageTypeComposerFormLayoutSetControlDescription());
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
+    }
     public function setPageObject($page)
     {
         $this->page = $page;
@@ -32,7 +54,7 @@ class FormLayoutSetControl extends Object
         $control = $this->getPageTypeComposerControlObject();
         $control->setPageTypeComposerFormLayoutSetControlObject($this);
         $control->setPageObject($this->page);
-        $control->render($this->getPageTypeComposerControlLabel(), $this->getPageTypeComposerFormLayoutSetControlCustomTemplate(), $this->getPageTypeComposerFormLayoutSetControlDescription());
+        $control->render($this->getPageTypeComposerControlDisplayLabel(), $this->getPageTypeComposerFormLayoutSetControlCustomTemplate(), $this->getPageTypeComposerFormLayoutSetControlDisplayDescription());
     }
 
     public function getPageTypeComposerControlLabel()
@@ -44,6 +66,16 @@ class FormLayoutSetControl extends Object
 
             return $control->getPageTypeComposerControlName();
         }
+    }
+    public function getPageTypeComposerControlDisplayLabel($format = 'html')
+    {
+        $result = $this->getPageTypeComposerFormLayoutSetControlCustomDisplayLabel($format);
+        if (!$result) {
+            $control = $this->getPageTypeComposerControlObject();
+            $result = $control->getPageTypeComposerControlDisplayName($format);
+        }
+
+        return $result;
     }
 
     public function ensureOutputControlExists()
