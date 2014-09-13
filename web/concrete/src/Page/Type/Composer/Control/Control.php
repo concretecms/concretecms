@@ -64,6 +64,17 @@ abstract class Control extends Object
     {
         return $this->ptComposerControlName;
     }
+    public function getPageTypeComposerControlDisplayName($format = 'html')
+    {
+        $value = tc('PageTypeComposerControlName', $this->getPageTypeComposerControlName());
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
+    }
 
     public function setPageTypeComposerControlIconSRC($ptComposerControlIconSRC)
     {
