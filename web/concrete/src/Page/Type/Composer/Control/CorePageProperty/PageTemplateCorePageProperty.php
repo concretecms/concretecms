@@ -8,7 +8,7 @@ class PageTemplateCorePageProperty extends CorePageProperty
     public function __construct()
     {
         $this->setCorePagePropertyHandle('page_template');
-        $this->setPageTypeComposerControlName(t('Page Template'));
+        $this->setPageTypeComposerControlName(tc('PageTypeComposerControlName', 'Page Template'));
         $this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/attributes/select/icon.png');
     }
 

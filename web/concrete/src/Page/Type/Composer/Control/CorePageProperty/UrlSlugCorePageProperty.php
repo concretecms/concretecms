@@ -9,7 +9,7 @@ class UrlSlugCorePageProperty extends CorePageProperty
     public function __construct()
     {
         $this->setCorePagePropertyHandle('url_slug');
-        $this->setPageTypeComposerControlName(t('URL Slug'));
+        $this->setPageTypeComposerControlName(tc('PageTypeComposerControlName', 'URL Slug'));
         $this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/attributes/text/icon.png');
     }
 
