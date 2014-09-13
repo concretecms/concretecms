@@ -9,7 +9,7 @@ class UserCorePageProperty extends CorePageProperty
     public function __construct()
     {
         $this->setCorePagePropertyHandle('user');
-        $this->setPageTypeComposerControlName(t('User'));
+        $this->setPageTypeComposerControlName(tc('PageTypeComposerControlName', 'User'));
         $this->setPageTypeComposerControlIconSRC(ASSETS_URL . '/attributes/text/icon.png');
     }
 
