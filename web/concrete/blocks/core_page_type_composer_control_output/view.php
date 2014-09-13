@@ -10,7 +10,7 @@
 		?>
 	<div class="ccm-ui">
 		<div class="alert alert-info">
-			<?=t('The %s page type composer form element will output its contents here (Block ID %s)', $cc->getPageTypeComposerControlName(), $b->getBlockID())?>
+			<?=t('The %s page type composer form element will output its contents here (Block ID %s)', $cc->getPageTypeComposerControlDisplayName(), $b->getBlockID())?>
 		</div>
 	</div>
 	<? } ?>
