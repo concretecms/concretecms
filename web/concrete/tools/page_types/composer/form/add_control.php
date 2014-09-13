@@ -29,7 +29,7 @@ if ($cp->canViewPage()) {
 	$types = PageTypeComposerControlType::getList();
 	for ($i = 0; $i < count($types); $i++) {
 		$type = $types[$i];
-		$tabs[] = array($type->getPageTypeComposerControlTypeHandle(), $type->getPageTypeComposerControlTypeName(), $i == 0);
+		$tabs[] = array($type->getPageTypeComposerControlTypeHandle(), $type->getPageTypeComposerControlTypeDisplayName(), $i == 0);
 	}
 
 	print $ih->tabs($tabs);

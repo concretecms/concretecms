@@ -382,7 +382,7 @@ class Package extends Object
         } elseif ($item instanceof BlockTypeSet) {
             return $item->getBlockTypeSetDisplayName();
         } elseif ($item instanceof PageTypeComposerControlType) {
-            return $item->getPageTypeComposerControlTypeName();
+            return $item->getPageTypeComposerControlTypeDisplayName();
         } elseif ($item instanceof PageTypePublishTargetType) {
             return $item->getPageTypePublishTargetTypeDisplayName();
         } elseif ($item instanceof PageType) {

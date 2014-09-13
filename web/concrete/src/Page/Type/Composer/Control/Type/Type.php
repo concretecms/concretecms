@@ -14,6 +14,17 @@ abstract class Type extends Object
 
     public function controlTypeSupportsOutputControl() {return false;}
     public function getPageTypeComposerControlTypeName() {return $this->ptComposerControlTypeName;}
+    public function getPageTypeComposerControlTypeDisplayName($format = 'html')
+    {
+        $value = tc('PageTypeComposerControlTypeName', $this->getPageTypeComposerControlTypeName());
+        switch ($format) {
+            case 'html':
+                return h($value);
+            case 'text':
+            default:
+                return $value;
+        }
+    }
     public function getPageTypeComposerControlTypeHandle() {return $this->ptComposerControlTypeHandle;}
     public function getPageTypeComposerControlTypeID() { return $this->ptComposerControlTypeID;}
     public function getPackageID() { return $this->pkgID;}
