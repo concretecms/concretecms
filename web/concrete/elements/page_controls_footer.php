@@ -254,7 +254,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                              title="<?= t('Dashboard – Change Site-wide Settings') ?>">
                 <i class="fa fa-sliders"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings">
-                    <?= tc('toolbar', 'Site Settings') ?>
+                    <?= tc('toolbar', 'Dashboard') ?>
                 </span>
 
             </a>
