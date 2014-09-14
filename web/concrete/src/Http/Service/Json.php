@@ -16,9 +16,9 @@ namespace Concrete\Core\Http\Service;
  * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */
-class Json {
-
-	/**
+class Json
+{
+    /**
 	 * Decodes a JSON string into a php variable
 	 * @param string $string
 	 * @param bool $assoc [default: false] When true, returned objects will be converted into associative arrays, when false they'll be converted into stdClass instances.
@@ -27,12 +27,12 @@ class Json {
 	 * @return mixed
 	 * @link http://php.net/manual/function.json-decode.php
 	 */
-	public function decode($string, $assoc = false, $depth = 512, $options = 0) {
-		return json_decode($string, $assoc, $depth, $options);
-	}
+    public function decode($string, $assoc = false, $depth = 512, $options = 0)
+    {
+        return json_decode($string, $assoc, $depth, $options);
+    }
 
-
-	/**
+    /**
 	 * Encodes a data structure into a JSON string
 	 * @param mixed $mixed
 	 * @param int $options [default: 0] Bitmask of JSON encode options.
@@ -40,10 +40,9 @@ class Json {
 	 * @return string
 	 * @link http://php.net/manual/function.json-encode.php
 	 */
-	public function encode($mixed, $options = 0, $depth = 512) {
-		return json_encode($mixed, $options, $depth);
-	}
-
-
+    public function encode($mixed, $options = 0, $depth = 512)
+    {
+        return json_encode($mixed, $options, $depth);
+    }
 
 }
