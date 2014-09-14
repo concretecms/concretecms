@@ -24,7 +24,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 <div class="ccm-page-type-composer-form-layout-control-set-control-inner">
 	<?
-	print $control->getPageTypeComposerControlLabel();
+	print $control->getPageTypeComposerControlDisplayLabel();
 	?>
 </div>
 </div>

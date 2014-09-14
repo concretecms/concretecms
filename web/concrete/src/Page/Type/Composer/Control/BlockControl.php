@@ -203,7 +203,7 @@ class BlockControl extends Control {
 		$controller = $obj->getController();
 		extract($controller->getSets());
 		extract($controller->getHelperObjects());
-		$label = $this->getPageTypeComposerFormLayoutSetControlObject()->getPageTypeComposerControlLabel();
+		$label = $this->getPageTypeComposerFormLayoutSetControlObject()->getPageTypeComposerControlDisplayLabel();
 		$env = Environment::get();
 		include($env->getPath(DIRNAME_BLOCKS . '/' . $obj->getBlockTypeHandle() . '/' . $file));
 	}

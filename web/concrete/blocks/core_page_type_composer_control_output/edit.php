@@ -12,7 +12,7 @@ use \Concrete\Core\Page\Type\Composer\FormLayoutSetControl as PageTypeComposerFo
 	foreach($controls as $control) {
 		$fls = PageTypeComposerFormLayoutSetControl::getByID($control->getPageTypeComposerFormLayoutSetControlID());
 		$cc = $fls->getPageTypeComposerControlObject();
-		$values[$control->getPageTypeComposerOutputControlID()] = $cc->getPageTypeComposerControlName();
+		$values[$control->getPageTypeComposerOutputControlID()] = $cc->getPageTypeComposerControlDisplayName();
 	}
 	$form = Loader::helper('form');
 ?>

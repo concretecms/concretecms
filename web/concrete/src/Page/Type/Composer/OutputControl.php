@@ -65,7 +65,7 @@ class OutputControl extends Object {
 
 	public function getPageTypeComposerControlOutputLabel() {
 		$control = PageTypeComposerFormLayoutSetControl::getByID($this->ptComposerFormLayoutSetControlID);
-		return $control->getPageTypeComposerControlLabel();
+		return $control->getPageTypeComposerControlDisplayLabel();
 	}
 
 }
