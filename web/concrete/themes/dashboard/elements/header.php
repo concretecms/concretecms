@@ -78,7 +78,7 @@ $large_font = !!Config::get('concrete.accessibility.toolbar_large_font');
                 data-panel-url="<?=URL::to('/system/panels/dashboard')?>">
                 <i class="fa fa-sliders"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings">
-                    <?= tc('toolbar', 'Site Settings') ?>
+                    <?= tc('toolbar', 'Dashboard') ?>
                 </span>
             </a>
         </li>
