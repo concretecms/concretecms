@@ -23,7 +23,7 @@ module.exports = {
 	// A list of locales. If empty then all the Transifex locales are retrieved.
 	txLocales: [],
 	// The minimum translation progress of locales (percentage).
-	// Default value: 95%
-	txProgressLimit: 95
+	// Default value: 90%
+	txProgressLimit: 90
 
 };
