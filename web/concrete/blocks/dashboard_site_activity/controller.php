@@ -42,7 +42,8 @@ class Controller extends BlockController
             }
         }
         $this->set('totalFormSubmissions', FormBlockStatistics::getTotalSubmissions());
-        $this->set('totalFormSubmissionsToday', FormBlockStatistics::getTotalSubmissions(date('Y-m-d')));
+        $now = new \DateTime('now', $dh->getTimezone('user'));
+        $this->set('totalFormSubmissionsToday', FormBlockStatistics::getTotalSubmissions($now->format('Y-m-d')));
     }
 
 }
