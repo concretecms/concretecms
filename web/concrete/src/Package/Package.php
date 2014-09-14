@@ -107,7 +107,7 @@ class Package extends Object {
 		return $this->pkgCurrentVersion;
 	}
 
-	protected $appVersionRequired = '5.0.0';
+	protected $appVersionRequired = '5.7.0';
 	protected $pkgAllowsFullContentSwap = false;
 
 	const E_PACKAGE_NOT_FOUND = 1;
