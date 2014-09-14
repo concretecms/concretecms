@@ -2,17 +2,57 @@
 namespace Concrete\Block\Form;
 
 use Loader;
+use Core;
 
 class Statistics
 {
-    public static function getTotalSubmissions($date = null)
+    /**
+     * Gets the total number of submissions
+     * @param string $date Set to a specific day (eg '2014-09-14') to retrieve the submissions in that day.
+     * @param string $dateTimezone The timezone of the $date parameter (acceptable values: 'user', 'system', 'app' or any valid PHP timezone identifier)
+     * @return int
+     */
+    public static function getTotalSubmissions($date = null, $dateTimezone = 'user')
     {
-        $db = Loader::db();
-        if ($date != null) {
-            return $db->GetOne("select count(asID) from btFormAnswerSet where DATE_FORMAT(created, '%Y-%m-%d') = ?", array($date));
+        if ($date) {
+           return static::getTotalSubmissionsBetween("$date 00:00:00", "$date 23:59:59", $dateTimezone);
         } else {
-            return $db->GetOne("select count(asID) from btFormAnswerSet");
+           return static::getTotalSubmissionsBetween();
         }
+    }
+    /**
+     * Gets the total number of submissions in specific date/time ranges
+     * @param string|int|\DateTime $fromDate The start of the period (if empty: from ever). Inclusive. Example: '2014-09-14 08:00:00'.
+     * @param string|int|\DateTime $toDate The end of the period (if empty: for ever). Inclusive. Example: '2014-09-14 08:00:00'.
+     * @param string $dateTimezone The timezone of the $dateFrom and $dateTo parameter (acceptable values: 'user', 'system', 'app' or any valid PHP timezone identifier)
+     * @return number
+     */
+    public static function getTotalSubmissionsBetween($fromDate = null, $toDate = null, $datesTimezone = 'user')
+    {
+        $dh = Core::make('helper/date');
+        /* @var $dh \Concrete\Core\Localization\Service\Date */
+        if ($fromDate) {
+            $fromDate = $dh->toDB($fromDate, $datesTimezone);
+        }
+        if ($toDate) {
+            $toDate = $dh->toDB($toDate, $datesTimezone);
+        }
+        $where = '';
+        $q = array();
+        if ($fromDate && $toDate) {
+            $where = ' where created between ? and ?';
+            $q[] = $fromDate;
+            $q[] = $toDate;
+        } elseif ($fromDate) {
+            $where = ' where created >= ?';
+            $q[] = $fromDate;
+        } elseif ($toDate) {
+            $where = ' where created <= ?';
+            $q[] = $toDate;
+        }
+        $count = Loader::db()->GetOne('select count(asID) from btFormAnswerSet' . $where, $q);
+
+        return empty($count) ? 0 : intval($count);
     }
 
     public static function loadSurveys($MiniSurvey)
