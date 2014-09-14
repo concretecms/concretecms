@@ -84,7 +84,12 @@ class Version
      * @Column(type="string")
      */
     protected $fvTitle = null;
-
+    
+    /**
+     * @Column(type="text")
+     */
+    protected $fvDescription = null;
+    
     /**
      * @Column(type="string")
      */
