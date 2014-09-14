@@ -37,7 +37,9 @@ if (is_object($c)) {
         $styleObject = $c->getCustomStyleObject();
     } else {
         $pt = $c->getCollectionThemeObject();
-        $styleObject = $pt->getThemeCustomStyleObject();
+        if (is_object($pt)) {
+            $styleObject = $pt->getThemeCustomStyleObject();
+        }
     }
 
     if (is_object($styleObject)) {

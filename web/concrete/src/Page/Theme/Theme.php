@@ -427,9 +427,9 @@ class Theme extends Object
         $env = Environment::get();
         if ($row['pThemeID']) {
             if ($row['pThemeHasCustomClass']) {
-
-                $r = $env->getRecord(DIRNAME_THEMES . '/' . $row['pThemeHandle'] . '/' . FILENAME_THEMES_CLASS);
-                $prefix = $r->override ? true : $row['pkgHandle'];
+                $pkgHandle = PackageList::getHandle($row['pkgID']);
+                $r = $env->getRecord(DIRNAME_THEMES . '/' . $row['pThemeHandle'] . '/' . FILENAME_THEMES_CLASS, $pkgHandle);
+                $prefix = $r->override ? true : $pkgHandle;
                 $class = core_class(
                     'Theme\\' .
                     Loader::helper('text')->camelcase($row['pThemeHandle']) .

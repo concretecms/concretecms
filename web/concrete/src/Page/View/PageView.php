@@ -63,7 +63,7 @@ class PageView extends View
                     $this->setViewTemplate(
                         $env->getPath(
                             DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW,
-                            $this->themePkgHandle));
+                            $this->pkgHandle));
                 }
                 $this->setInnerContentFile(
                     $env->getPath(DIRNAME_PAGES . '/' . $cFilename, $this->c->getPackageHandle()));
@@ -74,31 +74,31 @@ class PageView extends View
             if ($pt) {
                 $rec = $env->getRecord(
                     DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle() . '.php',
-                    $this->themePkgHandle);
+                    $this->pkgHandle);
             }
             if ($rec && $rec->exists()) {
                 $this->setViewTemplate(
                     $env->getPath(
                         DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $pt->getPageTemplateHandle() . '.php',
-                        $this->themePkgHandle));
+                        $this->pkgHandle));
             } else {
                 $rec = $env->getRecord(
                     DIRNAME_PAGE_TYPES . '/' . $this->c->getPageTypeHandle() . '.php',
-                    $this->themePkgHandle);
+                    $this->pkgHandle);
                 if ($rec->exists()) {
                     $this->setInnerContentFile(
                         $env->getPath(
                             DIRNAME_PAGE_TYPES . '/' . $this->c->getPageTypeHandle() . '.php',
-                            $this->themePkgHandle));
+                            $this->pkgHandle));
                     $this->setViewTemplate(
                         $env->getPath(
                             DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_VIEW,
-                            $this->themePkgHandle));
+                            $this->pkgHandle));
                 } else {
                     $this->setViewTemplate(
                         $env->getPath(
                             DIRNAME_THEMES . '/' . $this->themeHandle . '/' . FILENAME_THEMES_DEFAULT,
-                            $this->themePkgHandle));
+                            $this->pkgHandle));
                 }
             }
         }
