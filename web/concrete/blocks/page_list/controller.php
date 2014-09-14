@@ -121,6 +121,7 @@ class Controller extends BlockController
                 $this->list->filterByParentID($cParentID);
             }
         }
+
         return $this->list;
     }
 
@@ -210,7 +211,7 @@ class Controller extends BlockController
     protected function loadKeys()
     {
         $keys = CollectionKey::getList();
-        foreach($keys as $ak) {
+        foreach ($keys as $ak) {
             if ($ak->getAttributeTypeHandle() == 'topics') {
                 $attributeKeys[] = $ak;
             }
@@ -218,7 +219,8 @@ class Controller extends BlockController
         $this->set('attributeKeys', $attributeKeys);
     }
 
-    public function action_filter_by_topic($topic = false) {
+    public function action_filter_by_topic($topic = false)
+    {
         $db = Loader::db();
         $treeNodeID = $db->GetOne('select treeNodeID from TreeTopicNodes where treeNodeTopicName = ?', array($topic));
         if ($treeNodeID) {
@@ -227,14 +229,15 @@ class Controller extends BlockController
         $this->view();
     }
 
-    public function action_filter_by_tag($tag = false) {
+    public function action_filter_by_tag($tag = false)
+    {
         $db = Loader::db();
         $this->list->filterByTags(h($tag));
         $this->view();
     }
 
-
-    public function action_filter_by_date($year = false, $month = false) {
+    public function action_filter_by_date($year = false, $month = false)
+    {
         $start = false;
         $end = false;
         if ($year && $month) {
@@ -270,6 +273,7 @@ class Controller extends BlockController
                 $e->add(t('Your RSS feed must have a valid description.'));
             }
         }
+
         return $e;
     }
 
@@ -278,10 +282,10 @@ class Controller extends BlockController
         if ($parameters[0] == 'topic') {
             $method = 'action_filter_by_topic';
             $parameters = array_slice($parameters, 1);
-        } else if ($parameters[0] == 'tag') {
+        } elseif ($parameters[0] == 'tag') {
             $method = 'action_filter_by_tag';
             $parameters = array_slice($parameters, 1);
-        } else if (Loader::helper("validation/numbers")->integer($parameters[0])) {
+        } elseif (Loader::helper("validation/numbers")->integer($parameters[0])) {
             // then we're going to treat this as a year.
             $method = 'action_filter_by_date';
             $parameters[0] = intval($parameters[0]);
@@ -302,7 +306,7 @@ class Controller extends BlockController
         return parent::isValidControllerTask($method, $parameters);
     }
 
-    function save($args)
+    public function save($args)
     {
         // If we've gotten to the process() function for this class, we assume that we're in
         // the clear, as far as permissions are concerned (since we check permissions at several
@@ -355,7 +359,7 @@ class Controller extends BlockController
             $pf->displayShortDescriptionContent();
             $pf->save();
             $args['pfID'] = $pf->getID();
-        } else if ($this->pfID && !$args['rss']) {
+        } elseif ($this->pfID && !$args['rss']) {
             // let's make sure this isn't in use elsewhere.
             $cnt = $db->GetOne('select count(pfID) from btPageList where pfID = ?', array($this->pfID));
             if ($cnt == 1) { // this is the last one, so we delete
@@ -390,6 +394,7 @@ class Controller extends BlockController
                 return true;
             }
         }
+
         return false;
     }
 
