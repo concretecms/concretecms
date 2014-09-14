@@ -25,6 +25,7 @@ class Json {
 	 * @param int $depth [default: 512] User specified recursion depth.
 	 * @param int $options [default: 0] Bitmask of JSON decode options.
 	 * @return mixed
+	 * @link http://php.net/manual/function.json-decode.php
 	 */
 	public function decode($string, $assoc = false, $depth = 512, $options = 0) {
 		return json_decode($string, $assoc, $depth, $options);
@@ -37,6 +38,7 @@ class Json {
 	 * @param int $options [default: 0] Bitmask of JSON encode options.
 	 * @param int $depth [default: 512] User specified recursion depth.
 	 * @return string
+	 * @link http://php.net/manual/function.json-encode.php
 	 */
 	public function encode($mixed, $options = 0, $depth = 512) {
 		return json_encode($mixed, $options, $depth);
