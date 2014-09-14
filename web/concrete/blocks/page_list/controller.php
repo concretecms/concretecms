@@ -236,21 +236,28 @@ class Controller extends BlockController
         $this->view();
     }
 
-    public function action_filter_by_date($year = false, $month = false)
+    public function action_filter_by_date($year = false, $month = false, $timezone = 'user')
     {
-        $start = false;
-        $end = false;
-        if ($year && $month) {
-            $last = date('t', strtotime($year . '-' . $month . '-01'));
-            $start = date('Y-m-d H:i:s', strtotime($year . '-' . $month . '-01 00:00:00'));
-            $end = date('Y-m-d H:i:s', strtotime($year . '-' . $month . '-' . $last . ' 23:59:59'));
-        } else {
-            $start = date('Y-m-d H:i:s', strtotime($year . '-01-01 00:00:00'));
-            $end = date('Y-m-d H:i:s', strtotime($year . '-12-31 23:59:59'));
+        if (is_numeric($year)) {
+            $year = (($year < 0) ? '-' : '') . str_pad(abs($year), 4, '0', STR_PAD_LEFT);
+            if ($month) {
+                $month = str_pad($month, 2, '0', STR_PAD_LEFT);
+                $lastDayInMonth = date('t', strtotime("$year-$month-01"));
+                $start = "$year-$month-01 00:00:00";
+                $end = "$year-$month-$lastDayInMonth 23:59:59";
+            } else {
+                $start = "$year-01-01 00:00:00";
+                $end = "$year-12-31 23:59:59";
+            }
+            if ($timezone !== 'system') {
+                $dh = Core::make('helper/date');
+                /* @var $dh \Concrete\Core\Localization\Service\Date */
+                $start = $dh->toDB($start, $timezone);
+                $end = $dh->toDB($start, $end);
+            }
+            $this->list->filterByPublicDate($start, '>=');
+            $this->list->filterByPublicDate($end, '<=');
         }
-
-        $this->list->filterByPublicDate($start, '>=');
-        $this->list->filterByPublicDate($end, '<=');
         $this->view();
     }
 
