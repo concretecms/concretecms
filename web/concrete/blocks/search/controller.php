@@ -182,9 +182,20 @@ class Controller extends BlockController
         }
 
         if (isset($_REQUEST['month']) && isset($_REQUEST['year'])) {
-            $month = strtotime($_REQUEST['year'] . '-' . $_REQUEST['month'] . '-01');
-            $month = date('Y-m-', $month);
-            $ipl->filterByPublicDate($month . '%', 'like');
+            $year = @intval($year);
+            $month = abs(@intval($month));
+            if(strlen(abs($year)) < 4) {
+                $year = (($year < 0) ? '-' : '') . str_pad($year, 4, '0', STR_PAD_LEFT);
+            }
+            if($month < 12) {
+                $month = str_pad($month, 2, '0', STR_PAD_LEFT);
+            }
+            $daysInMonth = date('t', "$year-$month-01");
+            /* @var $dh \Concrete\Core\Localization\Service\Date */
+            $start = $dh->toDB("$year-$month-01 00:00:00", 'user')
+            $end = $dh->toDB("$year-$month-$daysInMonth 23:59:59", 'user')
+            $ipl->filterByPublicDate($start, '>=');
+            $ipl->filterByPublicDate($end, '<=');
             $aksearch = true;
         }
 
