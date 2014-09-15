@@ -36,13 +36,13 @@ class Controller extends BlockController {
 		
 		// this is kind of a hack
 		if ($this->slot == 'C') { 
-            $ni = false;
-            try
-            {
-                // in case we are not connected $ni will throw an exception ...
-                $ni = $newsflow->getEditionByPath('/newsflow');
-            }
-            catch ( \Exception $e ) {}
+			$ni = false;
+			try
+			{
+				// in case we are not connected $ni will throw an exception ...
+				$ni = $newsflow->getEditionByPath('/newsflow');
+			}
+			catch ( \Exception $e ) {}
 			if ($ni !== false) {
 				$this->set('editionTitle', $ni->getTitle());
 				$this->set('editionDescription', $ni->getDescription());
