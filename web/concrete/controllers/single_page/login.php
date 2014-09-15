@@ -3,6 +3,7 @@ namespace Concrete\Controller\SinglePage;
 
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
+use Concrete\Core\Routing\RedirectResponse;
 use Config;
 use Events;
 use Loader;
@@ -243,7 +244,7 @@ class Login extends PageController
 
                 //redirect to user profile
                 if ($login_redirect_mode == 'PROFILE' && Config::get('concrete.user.profiles_enabled')) {
-                    $rUrl = View::url('/profile', $u->getUserID());
+                    $rUrl = View::url('/members/profile/', $u->getUserID());
                     break;
                 }
 
@@ -261,7 +262,9 @@ class Login extends PageController
             } while (false);
 
             if ($rUrl) {
-                $this->redirect($rUrl);
+                $r = new RedirectResponse($rUrl);
+                $r->send();
+                exit;
             } else {
                 $this->redirect('/');
             }
