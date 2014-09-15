@@ -207,13 +207,13 @@ class Pages extends Controller
                 print $form->text('keywords', $searchRequest['keywords'], array('style' => 'width: 120px'));
                 break;
             case 'date_public':
-                echo $wdt->datetime('date_public_from', $wdt->translate('date_public_from')) . t('to') . $wdt->datetime('date_public_to', $wdt->translate('date_public_to'));
+                echo $wdt->datetime('date_public_from', $wdt->translate('date_public_from', $searchRequest)) . t('to') . $wdt->datetime('date_public_to', $wdt->translate('date_public_to', $searchRequest));
                 break;
             case 'date_added':
-                echo $wdt->datetime('date_added_from', $wdt->translate('date_added_from')) . t('to') . $wdt->datetime('date_added_to', $wdt->translate('date_added_to'));
+                echo $wdt->datetime('date_added_from', $wdt->translate('date_added_from', $searchRequest)) . t('to') . $wdt->datetime('date_added_to', $wdt->translate('date_added_to', $searchRequest));
                 break;
             case 'last_modified':
-                echo $wdt->datetime('last_modified_from', $wdt->translate('last_modified_from')) . t('to') . $wdt->datetime('last_modified_to', $wdt->translate('last_modified_to'));
+                echo $wdt->datetime('last_modified_from', $wdt->translate('last_modified_from', $searchRequest)) . t('to') . $wdt->datetime('last_modified_to', $wdt->translate('last_modified_to', $searchRequest));
                 break;
             case 'owner': ?>
                 <?=$form->text('owner', array('class'=>'span5'))?>
