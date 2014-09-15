@@ -103,10 +103,10 @@ if (!file_exists($corePath . '/config/concrete.php')) {
 	die("ERROR: Invalid concrete5 core.\n");
 }
 
-if ($cliconfig['reinstall'] === 'yes' && is_file(DIR_BASE . '/config/site.php')) {
-	unlink(DIR_BASE . '/config/site.php');
+if ($cliconfig['reinstall'] === 'yes' && is_file(DIR_BASE . '/application/config/database.php')) {
+	unlink(DIR_BASE . '/application/config/database.php');
 }
-if (file_exists(DIR_BASE . '/config/site.php')) {
+if (file_exists(DIR_BASE . '/application/config/database.php')) {
 	die("ERROR: concrete5 is already installed.\n");
 }
 
