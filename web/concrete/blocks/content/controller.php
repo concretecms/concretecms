@@ -20,7 +20,7 @@ use Sunra\PhpSimple\HtmlDomParser;
  *
  */
 	class Controller extends BlockController {
-		
+
 		protected $btTable = 'btContentLocal';
 		protected $btInterfaceWidth = "600";
 		protected $btInterfaceHeight = "465";
@@ -35,20 +35,20 @@ use Sunra\PhpSimple\HtmlDomParser;
 		public function getBlockTypeDescription() {
 			return t("HTML/WYSIWYG Editor Content.");
 		}
-		
+
 		public function getBlockTypeName() {
 			return t("Content");
 		}
-		
+
 		function getContent() {
 			$content = $this->translateFrom($this->content);
-			return $content;				
+			return $content;
 		}
-		
+
 		public function getSearchableContent(){
 			return $this->content;
 		}
-		
+
 		function br2nl($str) {
 			$str = str_replace("\r\n", "\n", $str);
 			$str = str_replace("<br />\n", "\n", $str);
@@ -63,10 +63,10 @@ use Sunra\PhpSimple\HtmlDomParser;
             }
             $this->set('content', $content);
         }
-		
+
 		function getContentEditMode() {
 			$content = $this->translateFromEditMode($this->content);
-			return $content;				
+			return $content;
 		}
 
 		public function add() {
@@ -102,7 +102,7 @@ use Sunra\PhpSimple\HtmlDomParser;
             }
 
             $content = preg_replace_callback(
-				'/\{ccm:export:page:(.*)\}/i',
+				'/\{ccm:export:page:(.+?)\}/i',
 				array('static', 'replacePagePlaceHolderOnImport'),
 				$content);
 
@@ -110,21 +110,21 @@ use Sunra\PhpSimple\HtmlDomParser;
 
 			$content = preg_replace_callback(
 				'/\{ccm:export:file:(.*)\}/i',
-				array('static', 'replaceFilePlaceHolderOnImport'),				
+				array('static', 'replaceFilePlaceHolderOnImport'),
 				$content);
 
 			$content = preg_replace_callback(
 				'/\{ccm:export:define:(.*)\}/i',
-				array('static', 'replaceDefineOnImport'),				
+				array('static', 'replaceDefineOnImport'),
 				$content);
 
-			$args['content'] = $content;			
+			$args['content'] = $content;
 			return $args;
 		}
-		
+
 		public static function replacePagePlaceHolderOnImport($match) {
 			$cPath = $match[1];
-			if ($cPath) { 
+			if ($cPath) {
 				$pc = Page::getByPath($cPath);
 				return '{CCM:CID_' . $pc->getCollectionID() . '}';
 			} else {
@@ -146,9 +146,9 @@ use Sunra\PhpSimple\HtmlDomParser;
 			$fID = $db->GetOne('select fID from FileVersions where fvFilename = ?', array($filename));
 			return '{CCM:FID_DL_' . $fID . '}';
 		}
-		
-		public function export(\SimpleXMLElement $blockNode) {			
-			
+
+		public function export(\SimpleXMLElement $blockNode) {
+
 			$data = $blockNode->addChild('data');
 			$data->addAttribute('table', $this->btTable);
 			$record = $data->addChild('record');
@@ -189,7 +189,7 @@ use Sunra\PhpSimple\HtmlDomParser;
 
 		function translateFromEditMode($text) {
 			// now we add in support for the links
-			
+
 			$text = preg_replace(
 				'/{CCM:CID_([0-9]+)}/i',
 				BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '?cID=\\1',
@@ -211,13 +211,13 @@ use Sunra\PhpSimple\HtmlDomParser;
 
 			$text = preg_replace_callback(
 				'/{CCM:FID_DL_([0-9]+)}/i',
-				array('static', 'replaceDownloadFileIDInEditMode'),				
+				array('static', 'replaceDownloadFileIDInEditMode'),
 				$text);
-			
+
 
 			return $text;
 		}
-		
+
 		function translateFrom($text) {
 
             $text = preg_replace(
@@ -231,10 +231,10 @@ use Sunra\PhpSimple\HtmlDomParser;
             );
 
             // now we add in support for the links
-			
+
 			$text = preg_replace_callback(
 				'/{CCM:CID_([0-9]+)}/i',
-				array('static', 'replaceCollectionID'),				
+				array('static', 'replaceCollectionID'),
 				$text);
 
 			// now we add in support for the files that we view inline
@@ -263,12 +263,12 @@ use Sunra\PhpSimple\HtmlDomParser;
             }
 
 			// now files we download
-			
+
 			$text = preg_replace_callback(
 				'/{CCM:FID_DL_([0-9]+)}/i',
-				array('static', 'replaceDownloadFileID'),				
+				array('static', 'replaceDownloadFileID'),
 				$text);
-			
+
 			// snippets
 			$snippets = Snippet::getActiveList();
 			foreach($snippets as $sn) {
@@ -276,7 +276,7 @@ use Sunra\PhpSimple\HtmlDomParser;
 			}
 			return $text;
 		}
-		
+
 		private function replaceDownloadFileID($match) {
 			$fID = $match[1];
 			if ($fID > 0) {
@@ -295,7 +295,7 @@ use Sunra\PhpSimple\HtmlDomParser;
 				return URL::to('/download_file', 'view', $fID);
 			}
 		}
-		
+
 		private function replaceCollectionID($match) {
 			$cID = $match[1];
 			if ($cID > 0) {
@@ -303,7 +303,7 @@ use Sunra\PhpSimple\HtmlDomParser;
 				return Loader::helper("navigation")->getLinkToCollection($c);
 			}
 		}
-		
+
 		function translateTo($text) {
 			// keep links valid
 			if (!defined('BASE_URL') || BASE_URL == '') {
@@ -317,7 +317,7 @@ use Sunra\PhpSimple\HtmlDomParser;
 			$url4 = str_replace('-', '\-', $url4);
 			$text = preg_replace(
 				array(
-					'/' . $url1 . '\?cID=([0-9]+)/i', 
+					'/' . $url1 . '\?cID=([0-9]+)/i',
 					'/' . $url4 . '\/([0-9]+)/i',
 					'/' . $url2 . '/i'),
 				array(
@@ -349,12 +349,12 @@ use Sunra\PhpSimple\HtmlDomParser;
 
 			return $text;
 		}
-		
+
 		function save($args) {
 			$args['content'] = $this->translateTo($args['content']);
 			parent::save($args);
 		}
-		
+
 	}
-	
+
 ?>
