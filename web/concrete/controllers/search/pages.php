@@ -119,28 +119,29 @@ class Pages extends Controller
                             $wdt = Loader::helper('form/date_time');
                             /* @var $wdt \Concrete\Core\Form\Service\Widget\DateTime */
                             $dateFrom = $wdt->translate('date_public_from', $req);
-                            if($dateFrom) {
+                            if ($dateFrom) {
                                 $this->pageList->filterByPublicDate($dateFrom, '>=');
                             }
                             $dateTo = $wdt->translate('date_public_to', $req);
                             if ($dateTo != '') {
-                                if(preg_match('/^(.+\\d+:\\d+):00$/', $dateTo, $m)) {
+                                if (preg_match('/^(.+\\d+:\\d+):00$/', $dateTo, $m)) {
                                     $dateTo = $m[1] . ':59';
                                 }
                                 $this->pageList->filterByPublicDate($dateTo, '<=');
                             }
                             break;
                         case "last_modified":
-                            $dateFrom = $req['last_modified_from'];
-                            $dateTo = $req['last_modified_to'];
-                            if ($dateFrom != '') {
-                                $dateFrom = date('Y-m-d', strtotime($dateFrom));
+                            $wdt = Loader::helper('form/date_time');
+                            /* @var $wdt \Concrete\Core\Form\Service\Widget\DateTime */
+                            $dateFrom = $wdt->translate('last_modified_from', $req);
+                            if ($dateFrom) {
                                 $this->pageList->filterByDateLastModified($dateFrom, '>=');
-                                $dateFrom .= ' 00:00:00';
                             }
-                            if ($dateTo != '') {
-                                $dateTo = date('Y-m-d', strtotime($dateTo));
-                                $dateTo .= ' 23:59:59';
+                            $dateTo = $wdt->translate('last_modified_to', $req);
+                            if ($dateTo) {
+                                if (preg_match('/^(.+\\d+:\\d+):00$/', $dateTo, $m)) {
+                                    $dateTo = $m[1] . ':59';
+                                }
                                 $this->pageList->filterByDateLastModified($dateTo, '<=');
                             }
                             break;
@@ -213,11 +214,9 @@ class Pages extends Controller
                 <?=t('to')?>
                 <?=$form->text('date_added_to', array('style' => 'width: 86px'))?>
                 <?php break;
-            case 'last_modified': ?>
-                <?=$form->text('last_modified_from', array('style' => 'width: 86px'))?>
-                <?=t('to')?>
-                <?=$form->text('last_modified_to', array('style' => 'width: 86px'))?>
-                <?php break;
+            case 'last_modified':
+                echo $wdt->datetime('last_modified_from', $wdt->translate('last_modified_from')) . t('to') . $wdt->datetime('last_modified_to', $wdt->translate('last_modified_to'));
+                break;
             case 'owner': ?>
                 <?=$form->text('owner', array('class'=>'span5'))?>
                 <?php break;
