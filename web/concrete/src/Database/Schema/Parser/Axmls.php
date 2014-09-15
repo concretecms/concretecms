@@ -81,7 +81,7 @@ class Axmls extends XmlParser
 
     protected function _getColumnOptions(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $column)
     {
-        $type = (string)$column['type'];
+        $type = strtoupper((string)$column['type']);
         $size = (string)$column['size'];
         $options = array();
         if ($size) {
@@ -130,7 +130,7 @@ class Axmls extends XmlParser
 
     protected function _getColumnType(\SimpleXMLElement $column)
     {
-        $type = (string)$column['type'];
+        $type = strtoupper((string)$column['type']);
         $size = (string)$column['size'];
         if ($type == 'L') {
             return 'boolean';
