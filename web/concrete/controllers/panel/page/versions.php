@@ -153,7 +153,7 @@ class Versions extends BackendInterfacePageController {
 				$pkr->setRequestedVersionID($v->getVersionID());
 				$pkr->setRequesterUserID($u->getUserID());
 				$response = $pkr->trigger();
-				if ($response instanceof WorkflowProgressResponse) {
+				if (!($response instanceof WorkflowProgressResponse)) {
 					// we are deferred
 					$r->setMessage(t('<strong>Request Saved.</strong> You must complete the workflow before this change is active.'));
 				} else {
