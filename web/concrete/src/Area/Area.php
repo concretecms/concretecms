@@ -99,6 +99,9 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
                     $pt = $c->getCollectionThemeObject();
                     if (is_object($pt)) {
                         $gf = $pt->getThemeGridFrameworkObject();
+                        if (!is_object($gf)) {
+                            throw new \Exception(t('No grid framework found. Grid area methods require a valid grid framework defined in a PageTheme class.'));
+                        }
                         $this->arGridMaximumColumns = $gf->getPageThemeGridFrameworkNumColumns();
                     }
                 }
