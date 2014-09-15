@@ -199,7 +199,7 @@ class Files extends Controller
                 print $form->select('extension', $extensions, $searchRequest['extensions'], array('style' => 'width: 120px'));
                 break;
             case 'date_added':
-                echo $wdt->datetime('date_added_from', $wdt->translate('date_added_from')) . t('to') . $wdt->datetime('date_added_to', $wdt->translate('date_added_to'));
+                echo $wdt->datetime('date_added_from', $wdt->translate('date_added_from', $searchRequest)) . t('to') . $wdt->datetime('date_added_to', $wdt->translate('date_added_to', $searchRequest));
                 break;
             case 'added_to': ?>
                 <?php $ps = Loader::helper("form/page_selector");
