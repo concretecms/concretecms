@@ -171,8 +171,7 @@ class FileList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function filterByDateAdded($date, $comparison = '=')
     {
-        $this->query->andWhere('f.fDateAdded ' . $comparison . ' :fDateAdded');
-        $this->query->setParameter('fDateAdded', $date);
+        $this->query->andWhere($this->query->expr()->comparison('f.fDateAdded', $comparison, $this->query->createNamedParameter($date)));
     }
 
     public function filterByOriginalPageID($ocID)
