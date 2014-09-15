@@ -102,17 +102,17 @@ use Sunra\PhpSimple\HtmlDomParser;
             }
 
             $content = preg_replace_callback(
-				'/\{ccm:export:page:(.+?)\}/i',
+				'/\{ccm:export:page:(.*?)\}/i',
 				array('static', 'replacePagePlaceHolderOnImport'),
 				$content);
 
 			$content = preg_replace_callback(
-				'/\{ccm:export:file:(.+?)\}/i',
+				'/\{ccm:export:file:(.*?)\}/i',
 				array('static', 'replaceFilePlaceHolderOnImport'),
 				$content);
 
 			$content = preg_replace_callback(
-				'/\{ccm:export:define:(.+?)\}/i',
+				'/\{ccm:export:define:(.*?)\}/i',
 				array('static', 'replaceDefineOnImport'),
 				$content);
 

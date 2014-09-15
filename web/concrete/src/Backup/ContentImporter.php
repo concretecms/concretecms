@@ -1014,11 +1014,11 @@ class ContentImporter
     public static function getValue($value)
     {
         if (preg_match(
-            '/\{ccm:export:page:(.+?)\}|' .
-            '\{ccm:export:file:(.+?)\}|' .
-            '\{ccm:export:image:(.+?)\}|' .
-            '\{ccm:export:pagetype:(.+?)\}|' .
-            '\{ccm:export:pagefeed:(.+?)\}/i',
+            '/\{ccm:export:page:(.*?)\}|' .
+            '\{ccm:export:file:(.*?)\}|' .
+            '\{ccm:export:image:(.*?)\}|' .
+            '\{ccm:export:pagetype:(.*?)\}|' .
+            '\{ccm:export:pagefeed:(.*?)\}/i',
             $value,
             $matches
         )
