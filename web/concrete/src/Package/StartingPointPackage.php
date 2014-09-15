@@ -75,7 +75,16 @@ class StartingPointPackage extends BasePackage {
 		$blocks = $c->getBlocks();
 		foreach($blocks as $b) {
 			$bi = $b->getInstance();
-			$bi->setupAndRun('view');
+                        try
+                        {
+                            $bi->setupAndRun('view');
+                        }
+                        catch ( \Exception $e )
+                        {
+                            // ignoring NewsFlow (will throw exceptions on local installations anyway)
+                            if ( $bi->getBlockObject()->getBlockTypeHandle() != "dashboard_newsflow_latest" ) throw( $e );
+                            
+                        }
 		}
 	 Loader::helper('concrete/ui')->cacheInterfaceItems();
 	}
