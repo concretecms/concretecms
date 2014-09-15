@@ -142,7 +142,7 @@ class Controller extends BlockController
         }
         $args['topicAttributeKeyHandle'] = (string) $blockNode->data->topicAttributeKeyHandle;
         if ($page) {
-            if (preg_match('/\{ccm:export:page:(.*)\}/i', $page, $matches)) {
+            if (preg_match('/\{ccm:export:page:(.*?)\}/i', $page, $matches)) {
                 $c = \Page::getByPath($matches[1]);
                 $args['externalTarget'] = 1;
                 $args['cParentID'] = $c->getCollectionID();
