@@ -266,8 +266,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function filterByDateLastModified($date, $comparison = '=')
     {
-        $this->query->andWhere($this->query->expr()->comparison('c.cDateModified', $comparison, ':cDateModified'));
-        $this->query->setParameter('cDateModified', $date);
+        $this->query->andWhere($this->query->expr()->comparison('c.cDateModified', $comparison, $this->query->createNamedParameter($date)));
     }
 
     /**
