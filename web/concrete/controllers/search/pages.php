@@ -206,7 +206,7 @@ class Pages extends Controller
                 print $form->text('keywords', $searchRequest['keywords'], array('style' => 'width: 120px'));
                 break;
             case 'date_public':
-                echo $wdt->datetime('date_public_from') . t('to') . $wdt->datetime('date_public_to');
+                echo $wdt->datetime('date_public_from', $wdt->translate('date_public_from')) . t('to') . $wdt->datetime('date_public_to', $wdt->translate('date_public_to'));
                 break;
             case 'date_added': ?>
                 <?=$form->text('date_added_from', array('style' => 'width: 86px'))?>
