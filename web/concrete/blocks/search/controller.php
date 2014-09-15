@@ -6,6 +6,7 @@ use CollectionAttributeKey;
 use \Concrete\Core\Page\PageList;
 use \Concrete\Core\Block\BlockController;
 use Page;
+use Core;
 
 class Controller extends BlockController
 {
@@ -182,18 +183,19 @@ class Controller extends BlockController
         }
 
         if (isset($_REQUEST['month']) && isset($_REQUEST['year'])) {
-            $year = @intval($year);
-            $month = abs(@intval($month));
-            if(strlen(abs($year)) < 4) {
+            $year = @intval($_REQUEST['year']);
+            $month = abs(@intval($_REQUEST['month']));
+            if (strlen(abs($year)) < 4) {
                 $year = (($year < 0) ? '-' : '') . str_pad($year, 4, '0', STR_PAD_LEFT);
             }
-            if($month < 12) {
+            if ($month < 12) {
                 $month = str_pad($month, 2, '0', STR_PAD_LEFT);
             }
-            $daysInMonth = date('t', "$year-$month-01");
+            $daysInMonth = date('t', strtotime("$year-$month-01"));
+            $dh = Core::make('helper/date');
             /* @var $dh \Concrete\Core\Localization\Service\Date */
-            $start = $dh->toDB("$year-$month-01 00:00:00", 'user')
-            $end = $dh->toDB("$year-$month-$daysInMonth 23:59:59", 'user')
+            $start = $dh->toDB("$year-$month-01 00:00:00", 'user');
+            $end = $dh->toDB("$year-$month-$daysInMonth 23:59:59", 'user');
             $ipl->filterByPublicDate($start, '>=');
             $ipl->filterByPublicDate($end, '<=');
             $aksearch = true;
