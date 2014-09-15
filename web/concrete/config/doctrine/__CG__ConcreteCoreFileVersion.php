@@ -64,10 +64,10 @@ class Version extends \Concrete\Core\File\Version implements \Doctrine\ORM\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'file', 'fvID', 'fvFilename', 'fvPrefix', 'fvDateAdded', 'fvActivateDateTime', 'fvIsApproved', 'fvAuthorUID', 'fvSize', 'fvApproverUID', 'fvTitle', 'fvExtension', 'fvType', 'fvTags', 'fvHasListingThumbnail', 'fvHasDetailThumbnail', 'attributes');
+            return array('__isInitialized__', 'file', 'fvID', 'fvFilename', 'fvPrefix', 'fvDateAdded', 'fvActivateDateTime', 'fvIsApproved', 'fvAuthorUID', 'fvSize', 'fvApproverUID', 'fvTitle', 'fvDescription', 'fvExtension', 'fvType', 'fvTags', 'fvHasListingThumbnail', 'fvHasDetailThumbnail', 'attributes');
         }
 
-        return array('__isInitialized__', 'file', 'fvID', 'fvFilename', 'fvPrefix', 'fvDateAdded', 'fvActivateDateTime', 'fvIsApproved', 'fvAuthorUID', 'fvSize', 'fvApproverUID', 'fvTitle', 'fvExtension', 'fvType', 'fvTags', 'fvHasListingThumbnail', 'fvHasDetailThumbnail', 'attributes');
+        return array('__isInitialized__', 'file', 'fvID', 'fvFilename', 'fvPrefix', 'fvDateAdded', 'fvActivateDateTime', 'fvIsApproved', 'fvAuthorUID', 'fvSize', 'fvApproverUID', 'fvTitle', 'fvDescription', 'fvExtension', 'fvType', 'fvTags', 'fvHasListingThumbnail', 'fvHasDetailThumbnail', 'attributes');
     }
 
     /**

@@ -93,13 +93,11 @@ class File extends \Concrete\Core\File\File implements \Doctrine\ORM\Proxy\Proxy
     }
 
     /**
-     * {@inheritDoc}
+     * 
      */
     public function __clone()
     {
         $this->__cloner__ && $this->__cloner__->__invoke($this, '__clone', array());
-
-        parent::__clone();
     }
 
     /**

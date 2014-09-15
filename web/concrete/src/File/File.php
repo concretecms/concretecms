@@ -26,9 +26,6 @@ use PermissionKey;
 class File implements \Concrete\Core\Permission\ObjectInterface
 {
 
-    /**
-     * Create a new version every 300 seconds.
-     */
     const CREATE_NEW_VERSION_THRESHOLD = 300;
 
 
@@ -505,7 +502,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
         $versions = $this->getVersionList();
         foreach ($versions as $fv) {
-            $fv->delete();
+            $fv->delete(true);
         }
 
         // now from the DB

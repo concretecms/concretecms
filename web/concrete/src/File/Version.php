@@ -6,6 +6,7 @@ use Concrete\Core\File\Image\Thumbnail\Thumbnail;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
 use League\Flysystem\AdapterInterface;
+use League\Flysystem\FileNotFoundException;
 use Loader;
 use \File as ConcreteFile;
 use \Concrete\Core\File\Type\TypeList as FileTypeList;
@@ -511,6 +512,7 @@ class Version
     {
         $tags = self::cleanTags($tags);
         $this->fvTags = $tags;
+        $this->save();
         $this->logVersionUpdate(self::UT_TAGS);
         $fe = new \Concrete\Core\File\Event\FileVersion($this);
         Events::dispatch('on_file_version_update_tags', $fe);
@@ -564,7 +566,7 @@ class Version
     /**
      * Removes a version of a file. Note, does NOT remove the file because we don't know where the file might elsewhere be used/referenced.
      */
-    public function delete()
+    public function delete($deleteFilesAndThumbnails = false)
     {
 
         $db = Loader::db();
@@ -577,14 +579,18 @@ class Version
 
         $types = Type::getVersionList();
 
-        foreach($types as $type) {
-            $this->deleteThumbnail($type);
-        }
+        if ($deleteFilesAndThumbnails) {
+            try {
+                foreach($types as $type) {
+                    $this->deleteThumbnail($type);
+                }
 
-        $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
-        $fre = $this->getFileResource();
-        if ($fsl->has($fre->getPath())) {
-            $fsl->delete($fre->getPath());
+                $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+                $fre = $this->getFileResource();
+                if ($fsl->has($fre->getPath())) {
+                    $fsl->delete($fre->getPath());
+                }
+            } catch(FileNotFoundException $e) {}
         }
     }
 
