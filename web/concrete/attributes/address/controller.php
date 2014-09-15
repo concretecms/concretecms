@@ -327,13 +327,13 @@ class Controller extends AttributeTypeController
         $db = Loader::db();
         $row = $db->GetRow(
             'select akHasCustomCountries, akDefaultCountry from atAddressSettings where akID = ?',
-            $ak->getAttributeKeyID()
+            array($ak->getAttributeKeyID())
         );
         $countries = array();
         if ($row['akHasCustomCountries'] == 1) {
             $countries = $db->GetCol(
                 'select country from atAddressCustomCountries where akID = ?',
-                $ak->getAttributeKeyID()
+                array($ak->getAttributeKeyID())
             );
         }
         $this->akHasCustomCountries = $row['akHasCustomCountries'];
