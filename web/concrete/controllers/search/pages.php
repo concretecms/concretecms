@@ -146,20 +146,20 @@ class Pages extends Controller
                             }
                             break;
                         case "date_added":
-                            $dateFrom = $req['date_added_from'];
-                            $dateTo = $req['date_added_to'];
-                            if ($dateFrom != '') {
-                                $dateFrom = date('Y-m-d', strtotime($dateFrom));
+                            $wdt = Loader::helper('form/date_time');
+                            /* @var $wdt \Concrete\Core\Form\Service\Widget\DateTime */
+                            $dateFrom = $wdt->translate('date_added_from', $req);
+                            if ($dateFrom) {
                                 $this->pageList->filterByDateAdded($dateFrom, '>=');
-                                $dateFrom .= ' 00:00:00';
                             }
-                            if ($dateTo != '') {
-                                $dateTo = date('Y-m-d', strtotime($dateTo));
-                                $dateTo .= ' 23:59:59';
+                            $dateTo = $wdt->translate('date_added_to', $req);
+                            if ($dateTo) {
+                                if (preg_match('/^(.+\\d+:\\d+):00$/', $dateTo, $m)) {
+                                    $dateTo = $m[1] . ':59';
+                                }
                                 $this->pageList->filterByDateAdded($dateTo, '<=');
                             }
                             break;
-
                         default:
                             $akID = $item;
                             $fak = CollectionAttributeKey::getByID($akID);
@@ -209,11 +209,9 @@ class Pages extends Controller
             case 'date_public':
                 echo $wdt->datetime('date_public_from', $wdt->translate('date_public_from')) . t('to') . $wdt->datetime('date_public_to', $wdt->translate('date_public_to'));
                 break;
-            case 'date_added': ?>
-                <?=$form->text('date_added_from', array('style' => 'width: 86px'))?>
-                <?=t('to')?>
-                <?=$form->text('date_added_to', array('style' => 'width: 86px'))?>
-                <?php break;
+            case 'date_added':
+                echo $wdt->datetime('date_added_from', $wdt->translate('date_added_from')) . t('to') . $wdt->datetime('date_added_to', $wdt->translate('date_added_to'));
+                break;
             case 'last_modified':
                 echo $wdt->datetime('last_modified_from', $wdt->translate('last_modified_from')) . t('to') . $wdt->datetime('last_modified_to', $wdt->translate('last_modified_to'));
                 break;
