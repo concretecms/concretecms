@@ -117,17 +117,17 @@ class Users extends Controller
                             }
                             break;
                         case "date_added":
-                            $dateFrom = $_REQUEST['date_from'];
-                            $dateTo = $_REQUEST['date_to'];
-                            if ($dateFrom != '') {
-                                $dateFrom = date('Y-m-d', strtotime($dateFrom));
+                            $wdt = Loader::helper('form/date_time');
+                            /* @var $wdt \Concrete\Core\Form\Service\Widget\DateTime */
+                            $dateFrom = $wdt->translate('date_added_from', $_REQUEST);
+                            if ($dateFrom) {
                                 $this->userList->filterByDateAdded($dateFrom, '>=');
-                                $dateFrom .= ' 00:00:00';
                             }
-                            if ($dateTo != '') {
-                                $dateTo = date('Y-m-d', strtotime($dateTo));
-                                $dateTo .= ' 23:59:59';
-
+                            $dateTo = $wdt->translate('date_added_to', $_REQUEST);
+                            if ($dateTo) {
+                                if (preg_match('/^(.+\\d+:\\d+):00$/', $dateTo, $m)) {
+                                    $dateTo = $m[1] . ':59';
+                                }
                                 $this->userList->filterByDateAdded($dateTo, '<=');
                             }
                             break;
@@ -182,13 +182,13 @@ class Users extends Controller
         $r->field = $field;
         $searchRequest = $this->searchRequest->getSearchRequest();
         $form = Loader::helper('form');
+        $wdt = Loader::helper('form/date_time');
+        /* @var $wdt \Concrete\Core\Form\Service\Widget\DateTime */
         ob_start();
         switch ($field) {
-            case 'date_added': ?>
-                <?=$form->text('date_from', array('style' => 'width: 86px'))?>
-                <?=t('to')?>
-                <?=$form->text('date_to', array('style' => 'width: 86px'))?>
-                <?php break;
+            case 'date_added':
+                echo $wdt->datetime('date_added_from', $wdt->translate('date_added_from')) . t('to') . $wdt->datetime('date_added_to', $wdt->translate('date_added_to'));
+                break;
             case 'is_active':
                 print $form->select('active', array('0' => t('Inactive Users'), '1' => t('Active Users')), array('style' => 'vertical-align: middle'));
                 break;
