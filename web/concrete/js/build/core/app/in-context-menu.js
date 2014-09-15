@@ -166,30 +166,24 @@
             var mwidth = $menu.width(),
                 mheight = $menu.height(); // have to do this after you show the element
 
-            if ($(window).height() < (e.clientY + mheight + 30)) {
-                posY = posY - mheight - 10;
-                posX = posX - (mwidth / 2);
-                $menu.removeClass('bottom');
-                $menu.addClass('top');
+
+            var position = 'bottom';
+            if ($(window).height() < (e.clientY + mheight + 30)) { // Can't be bottom!
+
+                if (e.clientY < mheight + 30) { // Can't be top!
+                    position = 'right';
+                    posY -= mheight / 2;
+                    posX += 10;
+                } else {
+                    position = 'top';
+                    posY = posY - mheight - 10;
+                    posX = posX - (mwidth / 2);
+                }
             } else {
                 posX = posX - (mwidth / 2);
-                posY = posY + 10;
-                $menu.removeClass('top');
-                $menu.addClass('bottom');
             }
 
-            var bodyWidth = $('body').innerWidth();
-            if (posX < 0) {
-                // menu is falling off the left side of the screen
-                $menu.find(".arrow").css({'left': Math.abs(posX + (mwidth / 2) - 6) + 'px'});
-                posX = 4;
-            } else if (posX + mwidth > bodyWidth) {
-                // menu is falling off the right side of the screen
-                $menu.find(".arrow").css({'left': (mwidth - (bodyWidth - e.pageX) + 4) + 'px'});
-                posX = bodyWidth.innerWidth() - mwidth - 4;
-            } else {
-                $menu.find(".arrow").css({'left': '50%'});
-            }
+            $menu.removeClass('top bottom left right').addClass(position);
 
             $menu.css({'top': posY + 'px', 'left': posX + 'px'});
             _.defer(function () {
