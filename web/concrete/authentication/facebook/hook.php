@@ -19,17 +19,17 @@
 				<?php
 				if ($uinf['email']) {
 					?>
-					<p><strong>Email:</strong> <?=$uinf['email']?></p>
+					<p><strong><?php echo t('Email')?>:</strong> <?=$uinf['email']?></p>
 					<?php
 				}
 				if ($uinf['gender']) {
 					?>
-					<p><strong>Gender:</strong> <?=$uinf['gender']?></p>
+					<p><strong><?php echo t('Gender')?>:</strong> <?=$uinf['gender']?></p>
 					<?php
 				}
 				if ($age) {
 					?>
-					<p><strong>Age:</strong> <?=$age?></p>
+					<p><strong><?php echo t('Age')?>:</strong> <?=$age?></p>
 					<?php
 				} ?>
 			</div>
@@ -38,8 +38,8 @@
 			(function($){
 				"use Strict";
 				$('button.detachFacebook').click(function(){
-					$.post("<?=View::url('/login','callback','facebook','detachUser')?>",function(msg) {
-						$('div.facebookProfileDiv > div.facebookUserInfo').empty().append($('<p/>').text('Successfully detached account.'));
+					$.post("<?=View::url('/account/profile/edit','callback','facebook','detachUser')?>",function(msg) {
+						$('div.facebookProfileDiv > div.facebookUserInfo').empty().append($('<p/>').text('<?php echo addslashes(t("Successfully detached account."))?>'));
 						window.location.reload();
 					});
 					return false;
@@ -61,7 +61,7 @@
 				</center>
 				<script type="text/javascript">
 					$('button.authFacebookLogin').click(function(){
-						var login = window.open('<?=$loginUrl?>','Login with Facebook',"width=500,height=300");
+						var login = window.open('<?=$loginUrl?>','<?php echo addslashes(t("Login with Facebook"))?>',"width=500,height=300");
 						(login.focus && login.focus());
 
 						function loginStatus() {

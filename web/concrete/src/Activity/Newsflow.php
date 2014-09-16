@@ -98,7 +98,7 @@ class Newsflow
         if ($this->slots === null) {
             $fileService = new File();
             $cfToken = Marketplace::getSiteToken();
-            $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.slot_content');
+            $url = Config::get('concrete.urls.newsflow') . Config::get('concrete.urls.paths.newsflow_slot_content');
             $path = $url . '?cfToken=' . rawurlencode($cfToken);
             $response = $fileService->getContents($path);
             $nsi = new NewsflowSlotItem();
