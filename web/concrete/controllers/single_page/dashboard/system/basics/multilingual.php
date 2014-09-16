@@ -15,6 +15,7 @@ class Multilingual extends DashboardPageController {
 		$this->set('LANGUAGE_CHOOSE_ON_LOGIN', Config::get('concrete.i18n.choose_language_login'));
 		$this->set('LANGUAGE_MULTILINGUAL_CONTENT_ENABLED', Config::get('concrete.i18n.enabled'));
 		$this->set('interfacelocales', $locales);
+		$this->set('SITE_LOCALE', Config::get('concrete.locale'));
 	}
 
 	public function on_start() {
