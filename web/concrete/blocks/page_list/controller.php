@@ -209,6 +209,8 @@ class Controller extends BlockController
 
     protected function loadKeys()
     {
+        $attributeKeys = array();
+        
         $keys = CollectionKey::getList();
         foreach($keys as $ak) {
             if ($ak->getAttributeTypeHandle() == 'topics') {
