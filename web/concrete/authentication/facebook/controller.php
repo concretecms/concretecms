@@ -87,7 +87,7 @@ class Controller extends AuthenticationTypeController
         $this->set('form', Loader::helper('form'));
         $this->set('u', $u);
         $this->view();
-        $this->set('statusURI', View::url("/account/profile/edit", "callback", "facebook", "status"));
+        $this->set('statusURI', View::url("/login", "callback", "facebook", "status"));
     }
 
     public function view()

@@ -38,7 +38,7 @@
 			(function($){
 				"use Strict";
 				$('button.detachFacebook').click(function(){
-					$.post("<?=View::url('/account/profile/edit','callback','facebook','detachUser')?>",function(msg) {
+					$.post("<?=View::url('/login','callback','facebook','detachUser')?>",function(msg) {
 						$('div.facebookProfileDiv > div.facebookUserInfo').empty().append($('<p/>').text('Successfully detached account.'));
 						window.location.reload();
 					});
