@@ -146,7 +146,9 @@ class Application extends Container
         $pla = \Concrete\Core\Package\PackageList::get();
         $pl = $pla->getPackages();
         $cl = ClassLoader::getInstance();
+        /** @var \Package[] $pl */
         foreach ($pl as $p) {
+            $p->registerConfigNamespace();
             if ($p->isPackageInstalled()) {
                 $pkg = Package::getClass($p->getPackageHandle());
                 if (is_object($pkg)) {

@@ -45,16 +45,18 @@ class FileLoader extends \Illuminate\Config\FileLoader implements LoaderInterfac
             // merged on top of the main arrays to make the environments cascade.
             $file = "{$path}/{$group}.php";
 
+            $root_path = $this->getPath(null);
+
             if ($this->files->exists($file)) {
                 $items = (array)$this->files->getRequire($file);
             }
 
-            $file = "{$path}/generated_overrides/{$namespace}/{$group}.php";
+            $file = "{$root_path}/generated_overrides/{$namespace}/{$group}.php";
             if ($this->files->exists($file)) {
                 $items = $this->mergeEnvironment($items, $file);
             }
 
-            $file = "{$path}/{$namespace}/{$group}.php";
+            $file = "{$root_path}/{$namespace}/{$group}.php";
             if ($this->files->exists($file)) {
                 $items = $this->mergeEnvironment($items, $file);
             }
