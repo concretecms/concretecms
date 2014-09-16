@@ -17,7 +17,7 @@ class EncryptionService {
             $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
             $len = mcrypt_get_key_size(MCRYPT_XTEA, MCRYPT_MODE_ECB);
 
-            /** @var \Concrete\Core\Config\Repository $config */
+            /** @var \Concrete\Core\Config\Repository\Repository $config */
             $config = \Core::make('config/database');
             $text = trim(mcrypt_decrypt(MCRYPT_XTEA, substr($config->get('concrete.security.token.encryption'), 0, $len), base64_decode($text), MCRYPT_MODE_ECB, $iv));
         }
@@ -36,7 +36,7 @@ class EncryptionService {
             $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
             $len = mcrypt_get_key_size(MCRYPT_XTEA, MCRYPT_MODE_ECB);
 
-            /** @var \Concrete\Core\Config\Repository $config */
+            /** @var \Concrete\Core\Config\Repository\Repository $config */
             $config = \Core::make('config/database');
             $text = base64_encode(mcrypt_encrypt(MCRYPT_XTEA, substr($config->get('concrete.security.token.encryption'), 0, $len), $text, MCRYPT_MODE_ECB, $iv));
         }
