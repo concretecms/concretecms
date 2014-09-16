@@ -57,6 +57,7 @@ use \Concrete\Core\Database\Schema\Schema;
 use Environment;
 use \Concrete\Core\Package\PackageList;
 use Localization;
+use \Concrete\Core\Config\NamespacedRepository;
 
 class Package extends Object
 {
@@ -65,6 +66,7 @@ class Package extends Object
     protected $REL_DIR_PACKAGES_CORE = REL_DIR_PACKAGES_CORE;
     protected $REL_DIR_PACKAGES = REL_DIR_PACKAGES;
     protected $backedUpFname = '';
+    protected $config = null;
 
     public function __construct()
     {
@@ -82,6 +84,12 @@ class Package extends Object
     public function getPackageName() {return t($this->pkgName);}
     public function getPackageDescription() {return t($this->pkgDescription);}
     public function getPackageHandle() {return $this->pkgHandle;}
+
+    public function getConfig()
+    {
+        if ( is_null( $this->config ) ) $this->config = NamespacedRepository::getRepositoryForPackage( $this->getPackageHandle() );
+        return $this->config;
+    }
 
     /**
 	 * Gets the date the package was added to the system,
