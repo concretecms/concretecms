@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Package;
 
+use Concrete\Core\Config\Repository\Liaison;
 use Page;
 use Stack;
 use SinglePage;
@@ -66,10 +67,15 @@ class Package extends Object
     protected $REL_DIR_PACKAGES = REL_DIR_PACKAGES;
     protected $backedUpFname = '';
 
-    public function __construct()
-    {
-        $this->registerConfigNamespace();
-    }
+    /**
+     * @var \Concrete\Core\Config\Repository\Liaison
+     */
+    protected $config;
+
+    /**
+     * @var \Concrete\Core\Config\Repository\Liaison
+     */
+    protected $fileConfig;
 
     public function getRelativePath()
     {
@@ -699,7 +705,30 @@ class Package extends Object
      */
     public function registerConfigNamespace()
     {
-        \Config::addNamespace($this->getPackageHandle(), $this->getPackagePath() . '/config');
+        \Core::make('config')
+            ->package($this->getPackageHandle(), $this->getPackagePath() . '/config');
+    }
+
+    /**
+     * @return \Concrete\Core\Config\Repository\Liaison
+     */
+    public function getConfig()
+    {
+        if (!$this->config) {
+            $this->config = new Liaison(\Core::make('config/database'), $this->getPackageHandle());
+        }
+        return $this->config;
+    }
+
+    /**
+     * @return \Concrete\Core\Config\Repository\Liaison
+     */
+    public function getFileConfig()
+    {
+        if (!$this->fileConfig) {
+            $this->fileConfig = new Liaison(\Core::make('config'), $this->getPackageHandle());
+        }
+        return $this->fileConfig;
     }
 
     /**
@@ -766,6 +795,7 @@ class Package extends Object
         while ($row = $r->fetchRow()) {
             $pkg = new Package();
             $pkg->setPropertiesFromArray($row);
+
             $pkgArray[] = $pkg;
         }
 
