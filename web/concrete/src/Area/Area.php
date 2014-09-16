@@ -27,13 +27,6 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
     public $maximumBlocks = -1; //
 
     /**
-     * sets a custom template for all blocks in the area
-     * @see Area::getCustomTemplates()
-     * @var array
-     */
-    public $customTemplateArray = array();
-
-    /**
      * @var boolean
      */
     protected $showControls = -1;
@@ -209,25 +202,6 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
 	public function getAreaHandle()
     {
         return $this->arHandle;
-    }
-
-	/**
-     * returns an array of custom templates
-     * @return array
-     */
-	public function getCustomTemplates()
-    {
-        return $this->customTemplateArray;
-    }
-
-	/**
-     * sets a custom block template for blocks of a type specified by the btHandle
-     * @param string $btHandle handle for the block type
-     * @param string $view string identifying the block template ex: 'templates/breadcrumb.php'
-     */
-	public function setCustomTemplate($btHandle, $view)
-    {
-        $this->customTemplateArray[$btHandle] = $view;
     }
 
 	/**
@@ -809,5 +783,19 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
             $this->rescanSubAreaPermissions();
         }
     }
+
+    /**
+     * @deprecated
+     * This no longer functions. This functionality is now located at the theme level.
+     * sets a custom block template for blocks of a type specified by the btHandle
+     * @param string $btHandle handle for the block type
+     * @param string $view string identifying the block template ex: 'templates/breadcrumb.php'
+     */
+    public function setCustomTemplate($btHandle, $view)
+    {
+        $this->customTemplateArray[$btHandle] = $view;
+    }
+
+
 
 }

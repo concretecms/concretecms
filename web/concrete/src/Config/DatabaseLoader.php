@@ -112,7 +112,7 @@ class DatabaseLoader implements LoaderInterface
      */
     public function cascadePackage($environment, $package, $group, $items)
     {
-        // TODO: Implement cascadePackage() method.
+        return $items;
     }
 
     public function clearNamespace($namespace)
