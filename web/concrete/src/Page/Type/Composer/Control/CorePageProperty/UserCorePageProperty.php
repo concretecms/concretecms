@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Type\Composer\Control\CorePageProperty;
 use Loader;
 use UserInfo;
+use Concrete\Core\Page\Page;
 
 class UserCorePageProperty extends CorePageProperty {
 	
