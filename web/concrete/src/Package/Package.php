@@ -710,9 +710,19 @@ class Package extends Object
     }
 
     /**
+     * Get the standard database config liaison
      * @return \Concrete\Core\Config\Repository\Liaison
      */
     public function getConfig()
+    {
+        return $this->getDatabaseConfig();
+    }
+
+    /**
+     * Get the standard database config liaison
+     * @return \Concrete\Core\Config\Repository\Liaison
+     */
+    public function getDatabaseConfig()
     {
         if (!$this->config) {
             $this->config = new Liaison(\Core::make('config/database'), $this->getPackageHandle());
@@ -721,6 +731,7 @@ class Package extends Object
     }
 
     /**
+     * Get the standard filesystem config liaison
      * @return \Concrete\Core\Config\Repository\Liaison
      */
     public function getFileConfig()
