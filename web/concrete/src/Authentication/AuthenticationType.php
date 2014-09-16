@@ -367,9 +367,9 @@ class AuthenticationType extends Object
     {
         $this->controller->requireAsset('javascript', 'backstretch');
 
-        $form = $this->mapAuthenticationTypeFilePath($element . '.php');
-        if (!$form->exists()) {
-            $form = $this->mapAuthenticationTypeFilePath('form.php');
+        $form_element = $this->mapAuthenticationTypeFilePath($element . '.php');
+        if (!$form_element->exists()) {
+            $form_element = $this->mapAuthenticationTypeFilePath('form.php');
         }
         ob_start();
         if (method_exists($this->controller, $element)) {
@@ -378,7 +378,7 @@ class AuthenticationType extends Object
             $this->controller->view();
         }
         extract(array_merge($params, $this->controller->getSets()));
-        require_once($form->file);
+        require_once($form_element->file);
         $out = ob_get_contents();
         ob_end_clean();
         echo $out;
@@ -390,12 +390,12 @@ class AuthenticationType extends Object
      */
     public function renderHook()
     {
-        $form = $this->mapAuthenticationTypeFilePath('hook.php');
-        if ($form->exists()) {
+        $form_hook = $this->mapAuthenticationTypeFilePath('hook.php');
+        if ($form_hook->exists()) {
             ob_start();
             $this->controller->hook();
             extract($this->controller->getSets());
-            require_once($form->file);
+            require_once($form_hook->file);
             $out = ob_get_contents();
             ob_end_clean();
             echo $out;
