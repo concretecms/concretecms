@@ -5,7 +5,7 @@
 <button class="btn btn-block btn-success authFacebookLogin"><?= t('Log in with Facebook') ?></button>
 <script type="text/javascript">
     $('button.authFacebookLogin').click(function () {
-        var login = window.open('<?=$loginUrl?>', 'Log in with Facebook', 'width=500,height=300');
+        var login = window.open('<?=$loginUrl?>', '<?php echo addslashes(t('Log in with Facebook'))?>', 'width=500,height=300');
         (login.focus && login.focus());
 
         function loginStatus() {
