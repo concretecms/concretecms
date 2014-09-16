@@ -8,7 +8,7 @@ $this->inc('elements/header.php', array('enableEditing' => true));
 <? $this->inc('elements/header_newsflow.php'); ?>
 <table class="newsflow-layout">
 <tr>
-	<td class="newsflow-em1" style="width: 66%" colspan="2" rowspan="2">
+	<td class="newsflow-em1" style="width: 66%" rowspan="3">
 	<div id="ccm-dashboard-welcome-back">
 	<? $a = new Area('Primary'); $a->display($c); ?>
 	</div>
@@ -19,8 +19,6 @@ $this->inc('elements/header.php', array('enableEditing' => true));
 	<td style="width: 34%"><? $a = new Area('Secondary 2'); $a->display($c); ?></td>
 </tr>
 <tr>
-	<td style="width: 33%"><? $a = new Area('Secondary 3'); $a->display($c); ?></td>
-	<td style="width: 33%"><? $a = new Area('Secondary 4'); $a->display($c); ?></td>
 	<td style="width: 34%"><? $a = new Area('Secondary 5'); $a->display($c); ?></td>
 </tr>
 </table>
