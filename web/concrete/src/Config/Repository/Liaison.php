@@ -96,4 +96,36 @@ class Liaison
         $this->repository->clear($this->transformKey($key));
     }
 
+    /**
+     * @return Repository
+     */
+    public function getRepository()
+    {
+        return $this->repository;
+    }
+
+    /**
+     * @param Repository $repository
+     */
+    public function setRepository($repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultNamespace()
+    {
+        return $this->default_namespace;
+    }
+
+    /**
+     * @param string $default_namespace
+     */
+    public function setDefaultNamespace($default_namespace)
+    {
+        $this->default_namespace = $default_namespace;
+    }
+
 }
