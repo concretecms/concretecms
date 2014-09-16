@@ -25,7 +25,7 @@
         <div class="form-group">
             <?=$form->label('SITE_LOCALE', t('Default Language'))?>
             <div class="checkbox">
-                <?=$form->select('SITE_LOCALE', $interfacelocales, SITE_LOCALE, $args);?>
+                <?=$form->select('SITE_LOCALE', $interfacelocales, $SITE_LOCALE, $args);?>
             </div>
         </div>
 
