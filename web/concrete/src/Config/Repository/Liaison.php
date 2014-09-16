@@ -1,6 +1,11 @@
 <?php
 namespace Concrete\Core\Config\Repository;
 
+/**
+ * Class Liaison
+ *
+ * @package Concrete\Core\Config\Repository
+ */
 class Liaison
 {
 
@@ -26,6 +31,10 @@ class Liaison
         $this->repository = $repository;
     }
 
+    /**
+     * @param $key
+     * @return string
+     */
     protected function transformKey($key)
     {
         list($namespace, $group, $item) = $this->repository->parseKey($key);
@@ -41,26 +50,47 @@ class Liaison
         return $collection;
     }
 
+    /**
+     * @param $key
+     * @return bool
+     */
     public function has($key)
     {
         return $this->repository->has($this->transformKey($key));
     }
 
+    /**
+     * @param      $key
+     * @param null $default
+     * @return mixed
+     */
     public function get($key, $default = null)
     {
         return $this->repository->get($this->transformKey($key), $default);
     }
 
+    /**
+     * @param $key
+     * @param $value
+     * @return bool
+     */
     public function save($key, $value)
     {
         return $this->repository->save($this->transformKey($key), $value);
     }
 
+    /**
+     * @param $key
+     * @param $value
+     */
     public function set($key, $value)
     {
         $this->repository->set($this->transformKey($key), $value);
     }
 
+    /**
+     * @param $key
+     */
     public function clear($key)
     {
         $this->repository->clear($this->transformKey($key));
