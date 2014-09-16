@@ -1,5 +1,8 @@
 <?php
-namespace Concrete\Core\Config;
+namespace Concrete\Core\Config\Repository;
+
+use Concrete\Core\Config\LoaderInterface;
+use Concrete\Core\Config\SaverInterface;
 
 class Repository extends \Illuminate\Config\Repository
 {
@@ -10,6 +13,11 @@ class Repository extends \Illuminate\Config\Repository
     protected $saver;
 
     /**
+     * @var LoaderInterface
+     */
+    protected $loader;
+
+    /**
      * Clear specific key
      *
      * @param string $key
@@ -17,25 +25,6 @@ class Repository extends \Illuminate\Config\Repository
     public function clear($key)
     {
         $this->set($key, null);
-    }
-
-    /**
-     * Get a value, if it's not set, save the passed value
-     *
-     * @param string $key
-     * @param mixed  $value
-     * @return mixed
-     */
-    public function getOrSet($key, $value)
-    {
-        $val = $this->get($key, $this);
-
-        if ($val === $this) {
-            $this->save($key, $value);
-            return $value;
-        }
-
-        return $val;
     }
 
     /**
@@ -79,6 +68,19 @@ class Repository extends \Illuminate\Config\Repository
 
     public function clearNamespace($namespace) {
         $this->loader->clearNamespace($namespace);
+    }
+
+    /**
+     * @return SaverInterface
+     */
+    public function getSaver()
+    {
+        return $this->saver;
+    }
+
+    protected function getPackageNamespace($package, $namespace)
+    {
+        return $namespace ?: $package;
     }
 
 }
