@@ -14,6 +14,7 @@ $helpText = <<<EOT
         --target=<target location>         Target location of the install
         --site=<site name>                 Name of the site
         --core=<core location>             Location of the core concrete5 files
+        --default-locale=<locale id>       The default site locale (eg en_US)
         --reinstall=<no/yes>               If already installed at the target location
                                            Delete current install and reinstall
         --demo-usernameinvalid =<username>         Additional user username
@@ -50,6 +51,7 @@ $defaults = array(
 	'target' => '',
 	'site' => 'concrete5 Site',
 	'core' => '',
+	'default-locale' => '',
 	'reinstall' => 'no',
 	'demo-username' => 'demo',
 	'demo-password' => '12345',
@@ -101,6 +103,28 @@ if ($cliconfig['core']) {
 }
 if (!is_file($corePath . '/config/concrete.php')) {
 	die("ERROR: Invalid concrete5 core.\n");
+}
+
+$availableLocales = array_filter(scandir(DIR_BASE . '/application/languages'), function($item) {
+	if(strpos($item, '.') === 0) {
+	  	return false;
+	}
+	$fullPath = DIR_BASE . '/application/languages/' . $item;
+	if(!is_dir($fullPath)) {
+		return false;
+	}
+	if(!is_file($fullPath . '/LC_MESSAGES/messages.mo')) {
+		return false;
+	}
+	return true;
+});
+if ($cliconfig['default-locale']) {
+	if ($cliconfig['default-locale'] === 'en_US') {
+		$cliconfig['default-locale'] = '';
+	}
+	elseif(!in_array($cliconfig['default-locale'], $availableLocales, true)) {
+		die("ERROR: '{$cliconfig['default-locale']}' is not a valid locale identifiers.\nAvailable locales: " . ($availableLocales ? implode(', ', $availableLocales) : 'no locale found') . ".\n");
+	}
 }
 
 if ($cliconfig['reinstall'] === 'yes' && is_file(DIR_BASE . '/application/config/database.php')) {
@@ -230,6 +254,10 @@ if ($e->has()) {
 		print "ERROR: " . $ex->getMessage() . "\n";
 		$cnt->reset();
 	}
+	
+	if ($cliconfig['default-locale']) {
+		\Config::save('concrete.locale', $cliconfig['default-locale']);
+	}
 
 	if ($cliconfig['demo-username']) {
 		print "Adding demo user\n";
@@ -243,9 +271,7 @@ if ($e->has()) {
 	}
 
 	if (!isset($ex)) {
-        config::save('concrete.misc.seen_introduction', true);
+        \Config::save('concrete.misc.seen_introduction', true);
 		print "Installation Complete!\n";
 	}
-
-
 }
