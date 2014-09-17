@@ -1,31 +1,47 @@
 <?php
-namespace Concrete\Core\Database;
+namespace Concrete\Core\Database\Connection;
+
 use Concrete\Core\Cache\Adapter\DoctrineCacheDriver;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 
 class Connection extends \Doctrine\DBAL\Connection
 {
-    static $entityManager;
+
+    /** @var EntityManager */
+    protected $entityManager;
 
     /**
-     * Returns the entity manager for use with Doctrine ORM
+     * @return EntityManager
      */
     public function getEntityManager()
     {
-        if (!isset(static::$entityManager)) {
-            $conn = $this->getParams();
-            $config = Setup::createConfiguration(false, \Config::get('database.proxy_classes'), new DoctrineCacheDriver('cache/expensive'));
-            $driverImpl = $config->newDefaultAnnotationDriver(DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
-            $config->setMetadataDriverImpl($driverImpl);
-            static::$entityManager = EntityManager::create($conn, $config);
+        if (!$this->entityManager) {
+            $this->entityManager = $this->createEntityManager();
         }
+        return $this->entityManager;
+    }
 
-        return static::$entityManager;
+    /**
+     * @return EntityManager
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function createEntityManager()
+    {
+
+        $config = Setup::createConfiguration(
+            false,
+            \Config::get('database.proxy_classes'),
+            new DoctrineCacheDriver('cache/expensive'));
+        $driverImpl = $config->newDefaultAnnotationDriver(DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
+        $config->setMetadataDriverImpl($driverImpl);
+
+        return EntityManager::create($this, $config);
     }
 
     /**
      * Returns true if a table exists – is NOT case sensitive.
+     *
      * @return boolean
      */
     public function tableExists($tableName)
@@ -61,6 +77,7 @@ class Connection extends \Doctrine\DBAL\Connection
             return call_user_func_array('parent::query', $args);
         }
     }
+
     /**
      * @deprecated
      * alias to old ADODB method
@@ -242,6 +259,7 @@ class Connection extends \Doctrine\DBAL\Connection
 
         return true;
     }
+
     /**
      * @deprecated Alias to old ADODB method
      */
@@ -261,6 +279,7 @@ class Connection extends \Doctrine\DBAL\Connection
 
         return true;
     }
+
     /**
      * @deprecated Alias to old ADODB method
      */
@@ -280,6 +299,7 @@ class Connection extends \Doctrine\DBAL\Connection
 
         return true;
     }
+
     /**
      * @deprecated Alias to old ADODB method
      */

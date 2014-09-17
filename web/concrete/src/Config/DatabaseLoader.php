@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Config;
 
-use Concrete\Core\Database\Database;
 use Concrete\Core\Database\Driver\PDOStatement;
 
 class DatabaseLoader implements LoaderInterface
@@ -19,7 +18,7 @@ class DatabaseLoader implements LoaderInterface
     {
         $result = array();
 
-        $db = Database::getActiveConnection();
+        $db = \Database::getActiveConnection();
         $query = $db->createQueryBuilder();
 
         $query
