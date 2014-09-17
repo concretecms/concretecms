@@ -1,11 +1,13 @@
 <?php
 namespace Concrete\Core\Database;
+
 use Concrete\Core\Cache\Adapter\DoctrineCacheDriver;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 
 class Connection extends \Doctrine\DBAL\Connection
 {
+
     static $entityManager;
 
     /**
@@ -15,7 +17,10 @@ class Connection extends \Doctrine\DBAL\Connection
     {
         if (!isset(static::$entityManager)) {
             $conn = $this->getParams();
-            $config = Setup::createConfiguration(false, \Config::get('database.proxy_classes'), new DoctrineCacheDriver('cache/expensive'));
+            $config = Setup::createConfiguration(
+                false,
+                \Config::get('database.proxy_classes'),
+                new DoctrineCacheDriver('cache/expensive'));
             $driverImpl = $config->newDefaultAnnotationDriver(DIR_BASE_CORE . '/' . DIRNAME_CLASSES);
             $config->setMetadataDriverImpl($driverImpl);
             static::$entityManager = EntityManager::create($conn, $config);
@@ -26,6 +31,7 @@ class Connection extends \Doctrine\DBAL\Connection
 
     /**
      * Returns true if a table exists – is NOT case sensitive.
+     *
      * @return boolean
      */
     public function tableExists($tableName)
@@ -61,6 +67,7 @@ class Connection extends \Doctrine\DBAL\Connection
             return call_user_func_array('parent::query', $args);
         }
     }
+
     /**
      * @deprecated
      * alias to old ADODB method
@@ -242,6 +249,7 @@ class Connection extends \Doctrine\DBAL\Connection
 
         return true;
     }
+
     /**
      * @deprecated Alias to old ADODB method
      */
@@ -261,6 +269,7 @@ class Connection extends \Doctrine\DBAL\Connection
 
         return true;
     }
+
     /**
      * @deprecated Alias to old ADODB method
      */
@@ -280,6 +289,7 @@ class Connection extends \Doctrine\DBAL\Connection
 
         return true;
     }
+
     /**
      * @deprecated Alias to old ADODB method
      */
