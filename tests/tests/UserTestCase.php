@@ -1,5 +1,4 @@
 <?php
-define('ENABLE_BLOCK_CACHE', false);
 use Concrete\Core\Attribute\Key\Category;
 abstract class UserTestCase extends ConcreteDatabaseTestCase {
 

@@ -4,7 +4,7 @@ use Concrete\Core\Attribute\Key\CollectionKey;
 use Concrete\Core\Attribute\Key\Category;
 
 abstract class AttributeTestCase extends ConcreteDatabaseTestCase {
-	
+
 	protected $fixtures = array();
     protected $tables = array(
         'AttributeKeys',

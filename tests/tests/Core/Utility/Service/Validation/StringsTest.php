@@ -38,7 +38,7 @@ class StringsTest extends ConcreteDatabaseTestCase
             array(false, 'example.com', false),
             array(false, 'notvalid@', false),
             array(false, 'A@b@c@example.com', false),
-            array(false,'a"b(c)d,e:f;g<h>i[j\k]l@example.com', false),
+            array(false, 'a"b(c)d,e:f;g<h>i[j\k]l@example.com', false),
             array(false, 'just"not"right@example.com', false),
             array(false, 'this is"not\allowed@example.com', false),
             array(false, 'this\ still\"not\\allowed@example.com', false),

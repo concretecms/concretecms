@@ -32,19 +32,23 @@ class DatabaseTest extends ConcreteDatabaseTestcase {
 
 
 	public function testValidConnection() {
-		$connection = Database::connect(array(
-			'database' => DB_DATABASE,
-			'user' => DB_USERNAME,
-			'password' => DB_PASSWORD,
-			'host' => DB_SERVER
-		));
+
+
+        $config = \Config::get('database');
+        $connection_config = $config['connections'][$config['default-connection']];
+        $connection = Database::connect(array(
+                'host' => $connection_config['server'],
+                'user' => $connection_config['username'],
+                'password' => $connection_config['password'],
+                'database' => $connection_config['database']
+            ));
 
 		try {
 			$errorCode = $connection->errorCode();
 			$this->assertTrue($errorCode == 0);
 		} catch(PDOException $e) {
 			$this->fail('Unable to connect to the database.');
-		}	
+		}
 	}
 
 	public function testActiveLazyLoadConnection() {
@@ -82,7 +86,7 @@ class DatabaseTest extends ConcreteDatabaseTestcase {
     }
 
 	public function testLegacyConcreteApi() {
-		
+
 		$db = Loader::db();
 
 		$q = "select * from Users";
