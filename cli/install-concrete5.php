@@ -21,8 +21,8 @@ $helpText = <<<EOT
         --demo-email=<email>               Additional user email
         --config=<file>                    Use configuration file for installation
 
-    Requires minimum version 5.5.1 of concrete5
-    Report bugs to <https://github.com/concrete5/concrete5-cli>
+    Requires minimum version 5.7.0 of concrete5
+    Report bugs to <https://github.com/concrete5/concrete5-5.7.0>
     For use with the concrete5 CMS <http://www.concrete5.org>
 
 EOT;
