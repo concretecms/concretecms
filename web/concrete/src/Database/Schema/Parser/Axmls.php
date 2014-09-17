@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Database\Schema\Parser;
 
 class Axmls extends XmlParser
@@ -78,14 +77,13 @@ class Axmls extends XmlParser
         }
     }
 
-
     protected function _getColumnOptions(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $column)
     {
         $type = strtoupper((string)$column['type']);
         $size = (string)$column['size'];
         $options = array();
         if ($size) {
-            if(in_array($type, array('N','F'))){
+            if (in_array($type, array('N', 'F'))) {
                 $precision = explode('.', $size);
                 $options['precision'] = $precision[0];
                 $options['scale'] = $precision[1];
