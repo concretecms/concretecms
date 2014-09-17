@@ -85,7 +85,7 @@ if ($cliconfig['target']) {
 	}
 	define('DIR_BASE', $target);
 } else {
-	define('DIR_BASE', dirname(__FILE__));
+	define('DIR_BASE', dirname(dirname(__FILE__)) . '/web');
 }
 
 if ($cliconfig['core']) {
