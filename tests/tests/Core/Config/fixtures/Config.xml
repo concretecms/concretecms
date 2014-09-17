@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<mysqldump xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <database name="concrete5_tests">
+        <table_data name="Config">
+            <row>
+                <field name="configItem">namespaced.namespaced</field>
+                <field name="configValue">namespaced</field>
+                <field name="configGroup">namespaced</field>
+                <field name="configNamespace">namespaced</field>
+            </row>
+            <row>
+                <field name="configItem">test.test</field>
+                <field name="configValue">test</field>
+                <field name="configGroup">test</field>
+                <field name="configNamespace" />
+            </row>
+        </table_data>
+    </database>
+</mysqldump>

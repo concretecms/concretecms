@@ -1,8 +1,7 @@
 <?php
 use Concrete\Core\Attribute\Key\Category;
+class CollectionAttributeTest extends \AttributeTestCase {
 
-class CollectionAttributeTest extends AttributeTestCase {
-	
 	protected $fixtures = array();
     protected $category;
     protected $keys = array(

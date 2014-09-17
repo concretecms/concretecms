@@ -1,6 +1,7 @@
 <?php
 class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase {
 
+    /** @var PHPUnit_Extensions_Database_DB_DefaultDatabaseConnection */
 	private $conn = null;
 	protected $tables = array();
 
@@ -21,19 +22,18 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase {
 
 	public function getConnection() {
 	    if ($this->conn === null) {
-	        try {
-	        	$db = Database::connect(
-	        	array(
-					'host' => DB_SERVER,
-					'user' => DB_USERNAME,
-					'password' => DB_PASSWORD,
-					'database' => DB_DATABASE
-				));
-	            $this->conn = $this->createDefaultDBConnection($db->getWrappedConnection(), 'test');
-	            $this->db = $db;
-	        } catch (PDOException $e) {
-	            echo $e->getMessage();
-	        }
+            $config = \Config::get('database');
+            $connection_config = $config['connections'][$config['default-connection']];
+            $db = Database::connect(
+            array(
+                'host' => $connection_config['server'],
+                'user' => $connection_config['username'],
+                'password' => $connection_config['password'],
+                'database' => $connection_config['database']
+            ));
+            $this->conn = $this->createDefaultDBConnection($db->getWrappedConnection(), 'test');
+            $this->db = $db;
+
 	    }
 	    return $this->conn;
 	}
@@ -68,15 +68,15 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase {
 		$reflectionClass = new ReflectionClass(get_called_class());
 		$fixturePath = dirname($reflectionClass->getFilename()) . DIRECTORY_SEPARATOR . 'fixtures';
 		$compositeDs = new PHPUnit_Extensions_Database_DataSet_CompositeDataSet(array());
-	
-		foreach ($fixtures as $fixture) {
+
+		foreach ((array)$fixtures as $fixture) {
 			$path = $fixturePath . DIRECTORY_SEPARATOR . "$fixture.xml";
 			$ds = $this->createMySQLXMLDataSet($path);
 			$compositeDs->addDataSet($ds);
 		}
 		return $compositeDs;
 	}
-	
+
 
 	public function tearDown() {
 		if (count($this->tables)) {
@@ -88,8 +88,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase {
 			}
 		}
 
-		$allTables =
-		$this->getDataSet($this->fixtures)->getTableNames();
+		$allTables = $this->getDataSet($this->fixtures)->getTableNames();
 		foreach ($allTables as $table) {
 			// drop table
 			$conn = $this->getConnection();
@@ -99,6 +98,10 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase {
 
         $db = Loader::db();
         $db->getEntityManager()->clear();
+
+        if ($this->conn) {
+            $this->conn->close();
+        }
 
         parent::tearDown();
 	}

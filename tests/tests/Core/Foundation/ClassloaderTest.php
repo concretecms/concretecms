@@ -7,7 +7,7 @@ use Core;
 use Environment;
 
 class ClassloaderTest extends \PHPUnit_Framework_TestCase {
-	
+
 	protected function setUp() {
 		$this->obj = \Concrete\Core\Foundation\Classloader::getInstance();
 	}
@@ -39,8 +39,8 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testOverrideableCoreClassesCore() {
-		$c = new \Cache();
-		$this->assertTrue($c instanceof \Concrete\Core\Cache\Cache);
+		$c = new \Page();
+		$this->assertTrue($c instanceof \Concrete\Core\Page\Page);
 	}
 
 	public function testRouteController() {
@@ -104,7 +104,7 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 		$root = dirname(DIR_BASE_CORE . '../');
 		mkdir($root . '/application/blocks/core_area_layout/', 0777, true);
 		copy(dirname(__FILE__) . '/fixtures/CoreAreaLayoutController.php', $root . '/application/blocks/core_area_layout/controller.php');
-		
+
 		$bt = new \BlockType();
 		$bt->setBlockTypeHandle('core_area_layout');
 		$class = $bt->getBlockTypeClass();
@@ -147,7 +147,7 @@ class ClassloaderTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue($vh instanceof \Concrete\Core\Error\Error);
 	}
 
-	
 
-	
+
+
 }
