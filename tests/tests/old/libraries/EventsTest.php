@@ -1,4 +1,5 @@
 <?php
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 /**
  * Test class for Events.
@@ -16,7 +17,7 @@ class EventsTest extends PHPUnit_Framework_TestCase {
 	 * This method is called before a test is executed.
 	 */
 	protected function setUp() {
-		$this->object = new Events;
+		$this->object = \Events::getFacadeRoot();
 	}
 
 	/**
@@ -70,31 +71,33 @@ class EventsTest extends PHPUnit_Framework_TestCase {
 	public function testFire() {
 		$observer = new EventsTestObserver();
 
-		$this->object->extend('fire', $observer, 'invoke', null);
-		$this->object->fire('dontfire', array('a' => 1, 'b' => 2));
+        $this->object->addListener('fire', array($observer, 'invoke'));
+
+        $event = new GenericEvent('dontfire', array('a' => 1, 'b' => 2));
+        $this->object->dispatch('dontfire');
+
 		$this->assertEquals(0, $observer->invoked);
 
-		$this->object->fire('fire', array('a' => 18, 'b' => 81));
+        $event = new GenericEvent('fire', array('a' => 18, 'b' => 81));
+        $this->object->dispatch('fire', $event);
+
 		$this->assertEquals(1, $observer->invoked);
-		$this->assertEquals(81, $observer->lastArgs['b']);
-		
+        $this->assertEquals('81', $observer->event['b']);
 	}
 
 }
 
 class EventsTestObserver {
 	public $invoked = 0;
-	public $lastArgs = array();
+    public $event;
 
-	public function invoke($args) {
+	public function invoke($event) {
 		$this->invoked++;
-		$this->lastArgs = $args;
+        $this->event = $event;
 	}
 
 	public function reset() {
 		$this->invoked = 0;
-		$this->lastArgs = array();
 	}
 }
 
-?>

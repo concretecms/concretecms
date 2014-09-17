@@ -25,50 +25,26 @@ class FileLoader extends \Illuminate\Config\FileLoader implements LoaderInterfac
             return $items;
         }
 
+        $paths = array();
         if ($namespace === null) {
             // No namespace, let's load up the concrete config first.
             $items = parent::load($environment, $group, 'core');
 
-            $file = "{$path}/generated_overrides/{$group}.php";
-            if ($this->files->exists($file)) {
-                $items = $this->mergeEnvironment($items, $file);
-            }
-
-            $file = "{$path}/{$group}.php";
-
-            if ($this->files->exists($file)) {
-                $items = $this->mergeEnvironment($items, $file);
-            }
+            $paths = array(
+                "{$path}/generated_overrides/{$group}.php",
+                "{$path}/{$group}.php",
+                "{$path}/{$environment}/{$group}.php");
         } else {
-            // First we'll get the main configuration file for the groups. Once we have
-            // that we can check for any environment specific files, which will get
-            // merged on top of the main arrays to make the environments cascade.
-            $file = "{$path}/{$group}.php";
-
-            $root_path = $this->getPath(null);
-
-            if ($this->files->exists($file)) {
-                $items = (array)$this->files->getRequire($file);
-            }
-
-            $file = "{$root_path}/generated_overrides/{$namespace}/{$group}.php";
-            if ($this->files->exists($file)) {
-                $items = $this->mergeEnvironment($items, $file);
-            }
-
-            $file = "{$root_path}/{$namespace}/{$group}.php";
-            if ($this->files->exists($file)) {
-                $items = $this->mergeEnvironment($items, $file);
-            }
+            $paths = array(
+                "{$this->defaultPath}/generated_overrides/{$namespace}/{$group}.php",
+                "{$path}/{$group}.php",
+                "{$this->defaultPath}/{$environment}/{$namespace}/{$group}.php");
         }
 
-        // Finally we're ready to check for the environment specific configuration
-        // file which will be merged on top of the main arrays so that they get
-        // precedence over them if we are currently in an environments setup.
-        $file = "{$path}/{$environment}/{$group}.php";
-
-        if ($this->files->exists($file)) {
-            $items = $this->mergeEnvironment($items, $file);
+        foreach ($paths as $file) {
+            if ($this->files->exists($file)) {
+                $items = $this->mergeEnvironment($items, $file);
+            }
         }
 
         return $items;
