@@ -68,7 +68,7 @@ if (array_key_exists('help', $args)) {
 
 $cliconfig = array();
 if (array_key_exists('config', $args)) {
-	if (!file_exists($args['config'])) {
+	if (!is_file($args['config'])) {
 		die("ERROR: Config file not found.\n");
 	}
 	include($args['config']);
@@ -80,7 +80,7 @@ if ($cliconfig['target']) {
 	if (substr($target, 0, 1) !== '/') {
 		$target = realpath(dirname(__FILE__) . '/' . $target);
 	}
-	if (!file_exists($target)) {
+	if (!is_dir($target)) {
 		die("ERROR: Target location not found.\n");
 	}
 	define('DIR_BASE', $target);
@@ -94,19 +94,19 @@ if ($cliconfig['core']) {
 	} else {
 		$corePath = dirname(__FILE__) . '/' . $cliconfig['core'];
 	}
-} elseif (file_exists(dirname(__FILE__) . '/' . 'install-concrete5-conf.php')) {
+} elseif (is_file(dirname(__FILE__) . '/' . 'install-concrete5-conf.php')) {
 		$corePath = dirname(__FILE__) . '/' . 'install-concrete5-conf.php';
 } else {
 	$corePath = DIR_BASE . '/concrete';
 }
-if (!file_exists($corePath . '/config/concrete.php')) {
+if (!is_file($corePath . '/config/concrete.php')) {
 	die("ERROR: Invalid concrete5 core.\n");
 }
 
 if ($cliconfig['reinstall'] === 'yes' && is_file(DIR_BASE . '/application/config/database.php')) {
 	unlink(DIR_BASE . '/application/config/database.php');
 }
-if (file_exists(DIR_BASE . '/application/config/database.php')) {
+if (is_file(DIR_BASE . '/application/config/database.php')) {
 	die("ERROR: concrete5 is already installed.\n");
 }
 
