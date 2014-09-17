@@ -1,5 +1,5 @@
 <?php
-define('ENABLE_BLOCK_CACHE', false);
+
 use \Concrete\Core\Block\View\BlockView;
 use Concrete\Core\Attribute\Key\Category;
 abstract class PageTestCase extends ConcreteDatabaseTestCase {

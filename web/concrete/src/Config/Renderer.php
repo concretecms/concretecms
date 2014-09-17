@@ -41,7 +41,7 @@ class Renderer {
                 $scalars[] = array($key, $value);
             } else {
                 $type = gettype($value);
-                throw new \Exception(
+                throw new RendererInvalidTypeException(
                     'Invalid configuration type "' . $type . '", configuration supports array and scalar values only.');
             }
         }

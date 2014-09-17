@@ -1,5 +1,4 @@
 <?php
-
 use \Concrete\Core\File\StorageLocation\Type\Type;
 use \Concrete\Core\File\StorageLocation\StorageLocation;
 
