@@ -23,6 +23,23 @@ class ErrorHandler extends PrettyPageHandler
     public function handle()
     {
         $this->setPageTitle("concrete5 has encountered an issue.");
+
+        $result = self::QUIT;
+
+        $debug = Config::get('concrete.debug.level', 0);
+        if ($debug) {
+            $this->addDetails();
+            $result = parent::handle();
+        } else {
+            Core::make('helper/concrete/ui')->renderError(
+                t('An unexpected error occurred.'),
+                t('An error occurred while processing this request.')
+            );
+        }
+
+        Core::shutdown();
+        exit;
+
         if (Config::get('concrete.log.errors')) {
             try {
                 $e = $this->getInspector()->getException();
@@ -30,31 +47,17 @@ class ErrorHandler extends PrettyPageHandler
                 if ($db->isConnected()) {
                     $l = new Logger(LOG_TYPE_EXCEPTIONS);
                     $l->emergency(
-                      t('Exception Occurred: ') . sprintf(
-                          "%s:%d %s (%d)\n",
-                          $e->getFile(),
-                          $e->getLine(),
-                          $e->getMessage(),
-                          $e->getCode()
-                      ), array($e)
+                        t('Exception Occurred: ') . sprintf(
+                            "%s:%d %s (%d)\n",
+                            $e->getFile(),
+                            $e->getLine(),
+                            $e->getMessage(),
+                            $e->getCode()
+                        ), array($e)
                     );
                 }
             } catch (Exception $e) {}
         }
-
-        $debug = Config::get('concrete.debug.level', 0);
-        if ($debug) {
-            $this->addDetails();
-            return parent::handle();
-        }
-
-        Core::make('helper/concrete/ui')->renderError(
-            t('An unexpected error occurred.'),
-            t('An error occurred while processing this request.')
-        );
-        Core::shutdown();
-
-        return self::QUIT;
     }
 
     /**
@@ -77,20 +80,6 @@ class ErrorHandler extends PrettyPageHandler
          * Config
          */
         $this->addDataTable('Concrete Configuration', $this->flatConfig(Config::get('concrete'), 'concrete'));
-
-        /**
-         * Installed Packages
-         */
-        $pla = PackageList::get();
-        $pl = $pla->getPackages();
-        $packages = array();
-        foreach ($pl as $p) {
-            if ($p->isPackageInstalled()) {
-                $packages[$p->getPackageName()] = $p->getPackageVersion();
-            }
-        }
-
-        $this->addDataTable('Installed Packages', $packages);
     }
 
     protected function flatConfig(array $config, $group) {
