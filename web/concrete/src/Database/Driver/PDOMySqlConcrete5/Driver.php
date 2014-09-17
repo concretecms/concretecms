@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Core\Database\Driver\PDOMySqlConcrete5;
 
+use Concrete\Core\Database\Connection\PDOConnection;
+
 /**
  * PDO MySql driver.
  *
@@ -11,7 +13,7 @@ class Driver extends \Doctrine\DBAL\Driver\PDOMySql\Driver
 
     public function connect(array $params, $username = null, $password = null, array $driverOptions = array())
     {
-        $conn = new \Concrete\Core\Database\Driver\PDOConnection(
+        $conn = new PDOConnection(
             $this->_constructPdoDsn($params),
             $username,
             $password,
@@ -31,14 +33,14 @@ class Driver extends \Doctrine\DBAL\Driver\PDOMySql\Driver
     private function _constructPdoDsn(array $params)
     {
         $dsn = 'mysql:';
-        if (isset($params['host']) && $params['host'] != '') {
+        if (isset($params['server']) && $params['server'] != '') {
             $dsn .= 'host=' . $params['host'] . ';';
         }
         if (isset($params['port'])) {
             $dsn .= 'port=' . $params['port'] . ';';
         }
-        if (isset($params['dbname'])) {
-            $dsn .= 'dbname=' . $params['dbname'] . ';';
+        if (isset($params['database'])) {
+            $dsn .= 'dbname=' . $params['database'] . ';';
         }
         if (isset($params['unix_socket'])) {
             $dsn .= 'unix_socket=' . $params['unix_socket'] . ';';
