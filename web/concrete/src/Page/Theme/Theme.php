@@ -480,7 +480,7 @@ class Theme extends Object
         foreach ($templateList as $pt) {
             $pts[] = $pt->getPageTemplateHandle();
         }
-
+        $files = array();
         $filesTmp = $dh->getDirectoryContents($this->pThemeDirectory);
         foreach ($filesTmp as $f) {
             if (strrchr($f, '.') == static::THEME_EXTENSION) {
