@@ -83,29 +83,16 @@ class Install extends Controller
             $e->add($this->getDBErrorMsg());
         } else {
 
-            // attempt to connect to the database
-            if (defined('DB_SERVER')) {
-                $db = DB::connect(
-                    array(
-                        'host'     => DB_SERVER,
-                        'user'     => DB_USERNAME,
-                        'password' => DB_PASSWORD,
-                        'database' => DB_DATABASE
-                    ));
-                $DB_SERVER = DB_SERVER;
-                $DB_DATABASE = DB_DATABASE;
-            } else {
-                $db = DB::connect(
-                    array(
-                        'host'     => $_POST['DB_SERVER'],
-                        'user'     => $_POST['DB_USERNAME'],
-                        'password' => $_POST['DB_PASSWORD'],
-                        'database' => $_POST['DB_DATABASE']
-                    ));
+            $db = \Database::getFactory()->createConnection(
+                array(
+                    'host'     => $_POST['DB_SERVER'],
+                    'user'     => $_POST['DB_USERNAME'],
+                    'password' => $_POST['DB_PASSWORD'],
+                    'database' => $_POST['DB_DATABASE']
+                ));
 
-                $DB_SERVER = $_POST['DB_SERVER'];
-                $DB_DATABASE = $_POST['DB_DATABASE'];
-            }
+            $DB_SERVER = $_POST['DB_SERVER'];
+            $DB_DATABASE = $_POST['DB_DATABASE'];
 
             if ($DB_SERVER && $DB_DATABASE) {
                 if (!$db) {
