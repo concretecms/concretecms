@@ -1,8 +1,8 @@
 <?php
-define('ENABLE_BLOCK_CACHE', false);
 use \Concrete\Core\Block\View\BlockView;
+
 abstract class BlockTypeTestCase extends ConcreteDatabaseTestCase {
-	
+
 	protected $fixtures = array();
 	protected $tables = array('BlockTypes', 'Blocks', 'Pages', 'CollectionVersionBlocks', 'Collections', 'PagePaths');
 
