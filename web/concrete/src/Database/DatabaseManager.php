@@ -38,8 +38,8 @@ class DatabaseManager
     /**
      * Create a new database manager instance.
      *
-     * @param Application       $app
-     * @param ConnectionFactory $factory
+     * @param Application                                          $app
+     * @param \Concrete\Core\Database\Connection\ConnectionFactory $factory
      */
     public function __construct(Application $app, \Concrete\Core\Database\Connection\ConnectionFactory $factory)
     {
