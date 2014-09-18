@@ -16,7 +16,7 @@ class DatabaseSaverTest extends ConcreteDatabaseTestCase
         $this->saver = new DatabaseSaver();
     }
 
-    public function testSavingConfig()
+    public function testSave()
     {
         $group = md5(time() . uniqid());
         $item = 'this.is.the.test.key';
@@ -33,6 +33,33 @@ class DatabaseSaverTest extends ConcreteDatabaseTestCase
         $saved_value = array_shift($array);
 
         $this->assertEquals($value, $saved_value, "Failed to save.");
+    }
+
+    public function testSavingArray() {
+        $array = array(
+            'test' => true,
+            'test2' => true
+        );
+
+        $this->saver->save('testing', $array, '', 'test');
+
+        $db = Database::getActiveConnection();
+        $result = $db->executeQuery(
+            'SELECT configValue FROM Config WHERE configItem=? AND configGroup=?',
+            array('testing.test', 'test'));
+
+        $array = (array)$result->fetch();
+        $saved_value1 = array_shift($array);
+
+        $result = $db->executeQuery(
+            'SELECT configValue FROM Config WHERE configItem=? AND configGroup=?',
+            array('testing.test', 'test'));
+
+        $array = (array)$result->fetch();
+        $saved_value2 = array_shift($array);
+
+
+        $this->assertTrue($saved_value1 === $saved_value2 && !!$saved_value1 == true, 'Failed to save array.');
     }
 
     public function testSavingNamespacedConfig()

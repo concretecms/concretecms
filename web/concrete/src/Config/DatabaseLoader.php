@@ -93,11 +93,11 @@ class DatabaseLoader implements LoaderInterface
         $results = $db->createQueryBuilder()
             ->select('configNamespace')
             ->from('Config', 'c')
-            ->where('configNamespace != null')
+            ->where('configNamespace IS NOT NULL')
             ->groupBy('configNamespace')
             ->execute();
 
-        return $results->fetchAll();
+        return array_map('array_shift', $results->fetchAll());
     }
 
     /**
