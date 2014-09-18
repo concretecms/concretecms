@@ -24,10 +24,10 @@
     var apisecret = $('#apisecret');
     if(apisecret.attr('type') == 'password') {
       apisecret.attr('type', 'text');
-      button.html('<?php echo addslashes(t('Hide secret'))?>');
+      button.html('<?php echo addslashes(t('Hide secret key'))?>');
     } else {
       apisecret.attr('type', 'password');
-      button.html('<?php echo addslashes(t('Show secret'))?>');
+      button.html('<?php echo addslashes(t('Show secret key'))?>');
     }
   });
 </script>
