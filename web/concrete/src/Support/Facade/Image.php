@@ -14,9 +14,7 @@ class Image extends Facade
                 $v['versionString'],
                 'ImageMagick %s %04d-%02d-%02d %s %s');
 
-            if (version_compare($version, '6.2.9') < 1) {
-                return 'image/gd';
-            } else {
+            if (version_compare($version, '6.2.9') >= 0) {
                 return 'image/imagick';
             }
         }
