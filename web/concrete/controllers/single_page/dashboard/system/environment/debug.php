@@ -37,6 +37,7 @@ class Debug extends DashboardPageController
 
     public function debug_example()
     {
+        \Config::set('concrete.log.errors', false);
         \Config::set('concrete.debug.display_errors', true);
         \Config::set('concrete.debug.detail', 'debug');
 
@@ -47,6 +48,7 @@ class Debug extends DashboardPageController
 
     public function message_example()
     {
+        \Config::set('concrete.log.errors', false);
         \Config::set('concrete.debug.display_errors', true);
         \Config::set('concrete.debug.detail', 'message');
 
@@ -57,6 +59,7 @@ class Debug extends DashboardPageController
 
     public function disabled_example()
     {
+        \Config::set('concrete.log.errors', false);
         \Config::set('concrete.debug.display_errors', false);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'debug_example';
 

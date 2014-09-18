@@ -1,8 +1,6 @@
 <?php
 namespace Concrete\Core\Config;
 
-use Concrete\Core\Database\Database;
-
 class DatabaseSaver implements SaverInterface
 {
 
@@ -27,10 +25,8 @@ class DatabaseSaver implements SaverInterface
             }
             return;
         }
-        $db = Database::getActiveConnection();
 
-        $query = $db->createQueryBuilder();
-
+        $query = \Database::createQueryBuilder();
         $query->update('Config', 'c')
               ->set('configValue', $query->expr()->literal($value))
               ->where($query->expr()->comparison('configGroup', '=', $query->expr()->literal($group)));
@@ -46,7 +42,7 @@ class DatabaseSaver implements SaverInterface
         if (!$query->execute()) {
             try {
                 $query = "INSERT INTO Config (configItem, configValue, configGroup, configNamespace) VALUES (?, ?, ?, ?)";
-                $db->executeQuery(
+                \Database::executeQuery(
                     $query,
                     array(
                         $item,

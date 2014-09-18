@@ -1,5 +1,7 @@
 #!/usr/bin/env php
 <?php
+use Concrete\Core\Database\Connection\ConnectionFactory;
+
 $helpText = <<<EOT
     Usage: install-concrete5.php [OPTION]...
     install concrete5 from the shell
@@ -174,7 +176,7 @@ if ($cliconfig['reinstall'] === 'yes') {
 
     removeDemoFiles($target . '/files/');
 
-    $db = Database::connect(array(
+    $db = Database::getFactory()->createConnection(array(
         'host' => $cliconfig['db-server'],
         'user' => $cliconfig['db-username'],
         'password' => $cliconfig['db-password'],

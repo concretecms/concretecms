@@ -24,7 +24,7 @@ class ConcreteDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase {
 	    if ($this->conn === null) {
             $config = \Config::get('database');
             $connection_config = $config['connections'][$config['default-connection']];
-            $db = Database::connect(
+            $db = Database::getFactory()->createConnection(
             array(
                 'host' => $connection_config['server'],
                 'user' => $connection_config['username'],
