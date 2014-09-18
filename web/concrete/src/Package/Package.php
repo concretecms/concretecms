@@ -219,11 +219,12 @@ class Package extends Object
     {
         // loads and instantiates the object
         $class = '\\Concrete\\Package\\' . camelcase($pkgHandle) . '\\Controller';
-        if (class_exists($class)) {
+        try {
             $cl = Core::make($class);
-
-            return $cl;
+        } catch(\ReflectionException $ex) {
+            throw new \Exception(t('Unable to load class for package %s. Please double-check that a valid controller.php exists and that the package has been updated for concrete5 5.7', $pkgHandle));
         }
+        return $cl;
     }
 
     /**
@@ -902,9 +903,11 @@ class Package extends Object
             $packagesTemp = array();
             // get package objects from the file system
             foreach ($packages as $p) {
-                $pkg = static::getClass($p);
-                if (!empty($pkg)) {
-                    $packagesTemp[] = $pkg;
+                if (file_exists(DIR_PACKAGES . '/' . $p . '/' . FILENAME_CONTROLLER)) {
+                    $pkg = static::getClass($p);
+                    if (!empty($pkg)) {
+                        $packagesTemp[] = $pkg;
+                    }
                 }
             }
             $packages = $packagesTemp;
