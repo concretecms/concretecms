@@ -8,14 +8,17 @@ class Image extends Facade
     {
 
         if (class_exists('Imagick')) {
-            $imagick = new \Imagick();
-            $v = $imagick->getVersion();
-            list($version, $year, $month, $day, $q, $website) = sscanf(
-                $v['versionString'],
-                'ImageMagick %s %04d-%02d-%02d %s %s');
+            try {
+                $imagick = new \Imagick();
+                $v = $imagick->getVersion();
+                list($version, $year, $month, $day, $q, $website) = sscanf(
+                    $v['versionString'],
+                    'ImageMagick %s %04d-%02d-%02d %s %s');
 
-            if (version_compare($version, '6.2.9') >= 0) {
-                return 'image/imagick';
+                if (version_compare($version, '6.2.9') >= 0) {
+                    return 'image/imagick';
+                }
+            } catch (\Exception $foo) {
             }
         }
 
