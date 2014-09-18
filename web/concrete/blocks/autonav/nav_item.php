@@ -104,7 +104,7 @@ use Loader;
 		 * @return string
 		 */
 		function getName() {
-			return Loader::helper('text')->entities($this->cvName);
+			return $this->cvName;
 		}
 
 		/**
