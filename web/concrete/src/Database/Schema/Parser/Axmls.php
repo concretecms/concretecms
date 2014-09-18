@@ -1,5 +1,4 @@
 <?php
-
 namespace Concrete\Core\Database\Schema\Parser;
 
 class Axmls extends XmlParser
@@ -9,7 +8,7 @@ class Axmls extends XmlParser
      * Transforms the XML from Adodb XML into
      * Doctrine DBAL Schema
      */
-    public function parse(\Concrete\Core\Database\Connection $db)
+    public function parse(\Concrete\Core\Database\Connection\Connection $db)
     {
         $x = $this->rawXML;
         $schema = new \Doctrine\DBAL\Schema\Schema();
@@ -35,8 +34,11 @@ class Axmls extends XmlParser
         return $schema;
     }
 
-    protected function _setTableOpts(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $table, $schemaTable)
-    {
+    protected function _setTableOpts(
+        \Concrete\Core\Database\Connection\Connection $db,
+        \SimpleXMLElement $table,
+        $schemaTable
+    ) {
         if ($table->opt) {
             $opt = $table->opt->__toString();
             if ($opt == 'ENGINE=MYISAM') {
@@ -45,8 +47,11 @@ class Axmls extends XmlParser
         }
     }
 
-    protected function _setPrimaryKeys(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $table, $schemaTable)
-    {
+    protected function _setPrimaryKeys(
+        \Concrete\Core\Database\Connection\Connection $db,
+        \SimpleXMLElement $table,
+        $schemaTable
+    ) {
         $primaryKeys = array();
         foreach ($table->field as $column) {
             if ($column->autoincrement || $column->AUTOINCREMENT || $column->key || $column->KEY) {
@@ -58,8 +63,11 @@ class Axmls extends XmlParser
         }
     }
 
-    protected function _setIndexes(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $table, $schemaTable)
-    {
+    protected function _setIndexes(
+        \Concrete\Core\Database\Connection\Connection $db,
+        \SimpleXMLElement $table,
+        $schemaTable
+    ) {
         foreach ($table->index as $index) {
             $name = (string)$index['name'];
             $fields = array();
@@ -78,14 +86,13 @@ class Axmls extends XmlParser
         }
     }
 
-
-    protected function _getColumnOptions(\Concrete\Core\Database\Connection $db, \SimpleXMLElement $column)
+    protected function _getColumnOptions(\Concrete\Core\Database\Connection\Connection $db, \SimpleXMLElement $column)
     {
         $type = strtoupper((string)$column['type']);
         $size = (string)$column['size'];
         $options = array();
         if ($size) {
-            if(in_array($type, array('N','F'))){
+            if (in_array($type, array('N', 'F'))) {
                 $precision = explode('.', $size);
                 $options['precision'] = $precision[0];
                 $options['scale'] = $precision[1];
