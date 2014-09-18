@@ -247,7 +247,7 @@ class DatabaseManager
     /**
      * Return all of the created connections.
      *
-     * @return array
+     * @return \Doctrine\DBAL\Connection[]
      */
     public function getConnections()
     {
