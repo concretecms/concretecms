@@ -3,6 +3,7 @@ namespace Concrete\Block\Autonav;
 
 use Concrete\Core\Block\BlockController;
 use Loader;
+use Core;
 use Page;
 use Permissions;
 
@@ -266,7 +267,10 @@ class Controller extends BlockController
             //Package up all the data
             $navItem = new \stdClass();
             $navItem->url = $pageLink;
-            $navItem->name = $ni->getName();
+            $translate = $this->get('translate');
+            $name = (isset($translate) && $translate == true) ? t($ni->getName()) : $ni->getName();
+            $text = Core::make('helper/text');
+            $navItem->name = $text->entities($name);
             $navItem->target = $target;
             $navItem->level = $current_level + 1; //make this 1-based instead of 0-based (more human-friendly)
             $navItem->subDepth = $levels_between_this_and_next;
