@@ -9,7 +9,7 @@
     <div class="input-group">
       <?=$form->password('apisecret', $apisecret)?>
       <span class="input-group-btn">
-        <button id="showsecret" class="btn btn-warning" type="button"><?php echo t('Show secret')?></button>
+        <button id="showsecret" class="btn btn-warning" type="button"><?php echo t('Show secret key')?></button>
       </span>
     </div>
 </div>
