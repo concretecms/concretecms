@@ -45,14 +45,19 @@ return array(
      * ------------------------------------------------------------------------
      */
     'debug'             => array(
+        /**
+         * Display errors
+         *
+         * @var bool
+         */
+        'display_errors' => false,
 
         /**
          * Site debug level
          *
-         * @var int
+         * @var string (message|debug)
          */
-        'level' => 0
-
+        'details'        => 'message'
     ),
 
     /**
