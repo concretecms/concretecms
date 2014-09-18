@@ -3,20 +3,38 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=<?=APP_CHARSET?>" />
-<!-- insert CSS for Default Concrete Theme //-->
-<style type="text/css">@import "<?=ASSETS_URL_CSS?>/app.css";</style>
-
+    <link rel="stylesheet" type="text/css" href="<?=DIR_REL?>/concrete/themes/concrete/main.css" />
+    <?
+    $view->requireAsset('core/app');
+    $view->requireAsset('css', 'bootstrap');
+    $view->requireAsset('css', 'font-awesome');
+    $view->requireAsset('javascript', 'jquery');
+    $view->requireAsset('javascript', 'bootstrap/alert');
+    $view->requireAsset('javascript', 'bootstrap/transition');
+    $view->markHeaderAssetPosition();
+    ?>
 </head>
-<body>
+<body class="ccm-ui">
 
-<div id="ccm-logo"><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></div>
-
-<div id="ccm-theme-wrapper" class="ccm-ui">
-<?				Loader::element('error_fatal', array('innerContent' => $innerContent, 
-					'titleContent' => $titleContent));
-?>
-<p><a href="<?=BASE_URL.DIR_REL?>" class="btn"><?=t('&lt; Back to Home')?></a></p>
+<div id="ccm-toolbar">
+    <ul>
+        <li class="ccm-logo"><span><?=Loader::helper('concrete/ui')->getToolbarLogoSRC()?></span></li>
+    </ul>
 </div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-1">
+            <br/><br/><br/>
+            <?
+                Loader::element('error_fatal', array('innerContent' => $innerContent, 'titleContent' => $titleContent));
+            ?>
+            <p><a href="<?=BASE_URL.DIR_REL?>" class="btn btn-default"><?=t('&lt; Back to Home')?></a></p>
+        </div>
+    </div>
+</div>
+
+<? Loader::element('footer_required'); ?>
 
 </body>
 </html>

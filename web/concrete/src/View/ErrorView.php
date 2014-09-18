@@ -25,8 +25,12 @@ class ErrorView extends CoreView {
 
 	public function onBeforeGetContents() {}
 
-	public function getScopeItems() {
-		return array('innerContent' => $this->error->content, 'titleContent' => $this->error->title);
-	}
+    public function getScopeItems()
+    {
+        $items = parent::getScopeItems();
+        $items['innerContent'] = $this->error->content;
+        $items['titleContent'] = $this->error->title;
+        return $items;
+    }
 
 }
