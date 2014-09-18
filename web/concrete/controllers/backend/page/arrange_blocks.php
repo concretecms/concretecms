@@ -5,9 +5,9 @@ use Area;
 use Block;
 use Concrete\Controller\Backend\UserInterface\Page;
 use Concrete\Core\Page\EditResponse as PageEditResponse;
+use Config;
 use Loader;
 use Permissions;
-use Config;
 use Stack;
 
 class ArrangeBlocks extends Page
@@ -69,7 +69,9 @@ class ArrangeBlocks extends Page
         $source_area = Area::get($nvc, Area::getAreaHandleFromID($sourceAreaID));
         $destination_area = Area::get($this->page, Area::getAreaHandleFromID($destinationAreaID));
 
-        if ($source_area->isGlobalArea() || $destination_area->isGlobalArea()) {
+        if ($sourceAreaID !== $destinationAreaID &&
+            ($source_area->isGlobalArea() || $destination_area->isGlobalArea())
+        ) {
 
             // If the source_area is the only global area
             if ($source_area->isGlobalArea() && !$destination_area->isGlobalArea()) {
