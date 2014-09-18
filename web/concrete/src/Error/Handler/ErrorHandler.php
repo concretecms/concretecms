@@ -1,10 +1,10 @@
 <?php
 namespace Concrete\Core\Error\Handler;
 
-use Config;
 use Concrete\Core\Logging\Logger;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\Support\Facade\Database;
+use Config;
 use Core;
 use Whoops\Example\Exception;
 use Whoops\Handler\PrettyPageHandler;
@@ -22,10 +22,10 @@ class ErrorHandler extends PrettyPageHandler
      */
     public function handle()
     {
+        $e = $this->getInspector()->getException();
         $this->setPageTitle("concrete5 has encountered an issue.");
         if (Config::get('concrete.log.errors')) {
             try {
-                $e = $this->getInspector()->getException();
                 $db = Database::get();
                 if ($db->isConnected()) {
                     $l = new Logger(LOG_TYPE_EXCEPTIONS);
@@ -42,15 +42,21 @@ class ErrorHandler extends PrettyPageHandler
             } catch (Exception $e) {}
         }
 
-        $debug = Config::get('concrete.debug.level', 0);
-        if ($debug) {
-            $this->addDetails();
-            return parent::handle();
+        $display = Config::get('concrete.debug.display_errors', false);
+
+        $detail = Config::get('concrete.debug.detail', 'message');
+        $error = t('An error occurred while processing this request.');
+        if ($display) {
+            if ($detail === 'debug') {
+                $this->addDetails();
+                return parent::handle();
+            }
+            $error = $e->getMessage();
         }
 
         Core::make('helper/concrete/ui')->renderError(
             t('An unexpected error occurred.'),
-            t('An error occurred while processing this request.')
+            $error
         );
         Core::shutdown();
 

@@ -4,6 +4,7 @@ namespace Concrete\Core\Error\Handler;
 use Config;
 use Whoops\Exception\Formatter;
 use Whoops\Handler\Handler;
+use Whoops\Util\Misc;
 
 class JsonErrorHandler extends Handler
 {
@@ -14,13 +15,21 @@ class JsonErrorHandler extends Handler
             return Handler::DONE;
         }
 
-        $error = Formatter::formatExceptionAsDataArray(
-            $this->getInspector(),
-            !!Config::get('concrete.debug.level')
-        );
+        $display = Config::get('concrete.debug.display_errors');
 
-        if (!Config::get('concrete.debug.level')) {
-            $error['file'] = substr($error['file'], strlen(DIR_BASE));
+        if (!$display) {
+            $error = array('message' => t('An error occurred while processing this request.'));
+        } else {
+            $detail = Config::get('concrete.debug.detail', 'message');
+            if ($detail !== 'debug') {
+                $e = $this->getInspector()->getException();
+                $error = array('message' => $e->getMessage());
+            } else {
+                $error = Formatter::formatExceptionAsDataArray(
+                    $this->getInspector(),
+                    true
+                );
+            }
         }
 
         $response = array(
@@ -28,7 +37,7 @@ class JsonErrorHandler extends Handler
             'errors' => array($error['message'])
         );
 
-        if (\Whoops\Util\Misc::canSendHeaders()) {
+        if (Misc::canSendHeaders()) {
             if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
                 header('Content-Type: application/json; charset=' . APP_CHARSET, true);
             } else {
