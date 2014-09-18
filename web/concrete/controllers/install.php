@@ -163,7 +163,7 @@ class Install extends Controller
     private function setRequiredItems()
     {
         $this->set('imageTest', function_exists('imagecreatetruecolor'));
-        $this->set('mysqlTest', extension_loaded('PDO'));
+        $this->set('mysqlTest', extension_loaded('pdo_mysql'));
         $this->set('jsonTest', extension_loaded('json'));
         $this->set('xmlTest', function_exists('xml_parse') && function_exists('simplexml_load_file'));
         $this->set('fileWriteTest', $this->testFileWritePermissions());
