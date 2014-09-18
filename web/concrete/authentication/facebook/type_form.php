@@ -9,7 +9,7 @@
     <div class="input-group">
       <?=$form->password('apisecret', $apisecret)?>
       <span class="input-group-btn">
-        <button id="showsecret" class="btn btn-warning" type="button"><?php echo t('Show secret')?></button>
+        <button id="showsecret" class="btn btn-warning" type="button"><?php echo t('Show secret key')?></button>
       </span>
     </div>
 </div>
@@ -24,10 +24,10 @@
     var apisecret = $('#apisecret');
     if(apisecret.attr('type') == 'password') {
       apisecret.attr('type', 'text');
-      button.html('<?php echo addslashes(t('Hide secret'))?>');
+      button.html('<?php echo addslashes(t('Hide secret key'))?>');
     } else {
       apisecret.attr('type', 'password');
-      button.html('<?php echo addslashes(t('Show secret'))?>');
+      button.html('<?php echo addslashes(t('Show secret key'))?>');
     }
   });
 </script>
