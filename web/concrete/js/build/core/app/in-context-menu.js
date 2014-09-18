@@ -163,29 +163,65 @@
                 $container.addClass(options.menuContainerClass);
             }
             $menu.css('opacity', 0).show();
+
             var mwidth = $menu.width(),
-                mheight = $menu.height(); // have to do this after you show the element
+                mheight = $menu.height(),
+                wheight = $(window).height(),
+                wwidth = $(window).width(),
+                hshift = mwidth / 2 - 5,
+                vshift = mheight / 2 - 5;
 
+            var available = ['bottom', 'top', 'right', 'left'], all = available.slice(0);
 
-            var position = 'bottom';
-            if ($(window).height() < (e.clientY + mheight + 30)) { // Can't be bottom!
-
-                if (e.clientY < mheight + 30) { // Can't be top!
-                    position = 'right';
-                    posY -= mheight / 2;
-                    posX += 10;
-                } else {
-                    position = 'top';
-                    posY = posY - mheight - 10;
-                    posX = posX - (mwidth / 2);
-                }
-            } else {
-                posX = posX - (mwidth / 2);
+            if (e.clientX < mwidth + 30) {
+                available = _(available).without('left');
+            }
+            if (wwidth < (e.clientX + mwidth + 30)) {
+                available = _(available).without('right');
+            }
+            if (wheight < (e.clientY + mheight + 30)) {
+                available = _(available).without('bottom');
+            }
+            if (e.clientY < mheight + 30) {
+                available = _(available).without('top');
             }
 
-            $menu.removeClass('top bottom left right').addClass(position);
+            if (wwidth < e.clientX + hshift ||
+                e.clientX < hshift) {
+                available = _(available).without('top', 'bottom');
+            }
 
-            $menu.css({'top': posY + 'px', 'left': posX + 'px'});
+            if (wheight < e.clientY + vshift ||
+                e.clientY < vshift) {
+                available = _(available).without('left', 'right');
+            }
+
+
+            var placement = available.shift();
+            $menu.removeClass(all).addClass(placement);
+
+            e.pageX -= 2;
+            e.pageY -= 2;
+            switch (placement) {
+                case 'left':
+                    posX = e.pageX - mwidth;
+                    posY = e.pageY - mheight / 2;
+                    break;
+                case 'right':
+                    posX = e.pageX;
+                    posY = e.pageY - mheight / 2;
+                    break;
+                case 'top':
+                    posY = e.pageY - mheight;
+                    posX = e.pageX - (mwidth / 2);
+                    break;
+                case 'bottom':
+                    posY = e.pageY;
+                    posX = e.pageX - (mwidth / 2);
+                    break;
+            }
+
+            $menu.css({'top': posY, 'left': posX});
             _.defer(function () {
                 $menu.css('opacity', 1);
             });
