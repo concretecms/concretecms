@@ -160,7 +160,6 @@ $cms = require $corePath . '/bootstrap/start.php';
 
 if ($cliconfig['reinstall'] === 'yes') {
 
-<<<<<<< HEAD
     // Remove all files from the files directory
     function removeDemoFiles($path)
     {
