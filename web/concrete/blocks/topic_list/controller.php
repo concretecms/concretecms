@@ -50,6 +50,7 @@ class Controller extends BlockController
         }
         $trees = $tt->getList();
         $keys = CollectionKey::getList();
+        $attributeKeys = array();
         foreach ($keys as $ak) {
             if ($ak->getAttributeTypeHandle() == 'topics') {
                 $attributeKeys[] = $ak;

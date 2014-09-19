@@ -264,6 +264,16 @@ class Controller extends AttributeTypeController
         $this->set('parentNode', $this->akTopicParentNodeID);
     }
 
+    public function validateKey($data)
+    {
+        $e = parent::validateKey($data);
+        if (!$data['akTopicParentNodeID'] || !$data['akTopicTreeID']) {
+            $e->add(t('You must specify a valid topic tree parent node ID and topic tree ID.'));
+        }
+        return $e;
+
+    }
+
     public function validateForm($data)
     {
         // TODO: form validation
