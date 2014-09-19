@@ -201,6 +201,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @return bool
      */
     public function isEditMode() {
+        if ($this->getCollectionPath() == STACKS_LISTING_PAGE_PATH) {
+            return true;
+        }
+        if ($this->getPageTypeHandle() == STACKS_PAGE_TYPE) {
+            return true;
+        }
         return $this->isCheckedOutByMe();
     }
 
