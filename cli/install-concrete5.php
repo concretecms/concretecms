@@ -158,6 +158,17 @@ require $corePath . '/bootstrap/autoload.php';
  */
 $cms = require $corePath . '/bootstrap/start.php';
 
+\Database::extend('install', function() use ($cliconfig) {
+    return Database::getFactory()->createConnection(array(
+                                                 'host' => $cliconfig['db-server'],
+                                                 'user' => $cliconfig['db-username'],
+                                                 'password' => $cliconfig['db-password'],
+                                                 'database' => $cliconfig['db-database']
+                                             ));
+});
+\Database::setDefaultConnection('install');
+$cms['config']['database.connections.install'] = array();
+
 if ($cliconfig['reinstall'] === 'yes') {
 
     // Remove all files from the files directory
@@ -176,12 +187,7 @@ if ($cliconfig['reinstall'] === 'yes') {
 
     removeDemoFiles($target . '/files/');
 
-    $db = Database::getFactory()->createConnection(array(
-        'host' => $cliconfig['db-server'],
-        'user' => $cliconfig['db-username'],
-        'password' => $cliconfig['db-password'],
-        'database' => $cliconfig['db-database']
-    ));
+    $db = Database::connection();
 
     $tables = $db->MetaTables();
     $sm = $db->getSchemaManager();
@@ -212,6 +218,8 @@ if (!$cnt->get('phpVtest')) {
 if (is_object($fileWriteErrors)) {
     $e->add($fileWriteErrors);
 }
+
+
 
 $_POST['SAMPLE_CONTENT'] = $cliconfig['starting-point'];
 $_POST['DB_SERVER'] = $cliconfig['db-server'];
