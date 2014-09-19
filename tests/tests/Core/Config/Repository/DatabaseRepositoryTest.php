@@ -3,7 +3,7 @@ use Concrete\Core\Config\DatabaseLoader;
 use Concrete\Core\Config\DatabaseSaver;
 use Concrete\Core\Config\Repository\Repository;
 
-class DatabaseTest extends \ConcreteDatabaseTestCase
+class DatabaseRepositoryTest extends \ConcreteDatabaseTestCase
 {
 
     /** @var Repository */
