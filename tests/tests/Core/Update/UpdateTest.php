@@ -12,7 +12,7 @@ class UpdateTest extends ConcreteDatabaseTestCase {
         $sm = $db->getSchemaManager();
 
         $directory = dirname(__FILE__) . '/fixtures/';
-        $configuration = new \Concrete\Core\Updater\Migrations\Configuration();
+        $configuration = new \Concrete\Core\Updater\Migrations\Configuration(false);
         $configuration->setMigrationsDirectory($directory);
         $configuration->registerMigrationsFromDirectory($directory);
         $migrations = $configuration->getMigrations();
