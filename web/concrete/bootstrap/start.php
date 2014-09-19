@@ -14,20 +14,20 @@ if (basename($_SERVER['PHP_SELF']) == DISPATCHER_FILENAME_CORE) {
  * Import relevant classes.
  * ----------------------------------------------------------------------------
  */
-use Concrete\Core\Application\Application;
 use Concrete\Core\Asset\AssetList;
+use Concrete\Core\Authentication\Authenticator;
 use Concrete\Core\Config\DatabaseLoader;
 use Concrete\Core\Config\DatabaseSaver;
+use Concrete\Core\Config\FileLoader;
 use Concrete\Core\Config\FileSaver;
+use Concrete\Core\Config\Repository\Repository as ConfigRepository;
+use Concrete\Core\File\Type\TypeList;
 use Concrete\Core\Foundation\ClassAliasList;
 use Concrete\Core\Foundation\Service\ProviderList;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Concrete\Core\Support\Facade\Facade;
-use Patchwork\Utf8\Bootup;
-use Concrete\Core\Config\Repository\Repository as ConfigRepository;
-use Concrete\Core\File\Type\TypeList;
-use Concrete\Core\Config\FileLoader;
 use Illuminate\Filesystem\Filesystem;
+use Patchwork\Utf8\Bootup;
 
 /**
  * ----------------------------------------------------------------------------
@@ -44,6 +44,13 @@ $cms->instance('app', $cms);
  * ----------------------------------------------------------------------------
  */
 Facade::setFacadeApplication($cms);
+
+/**
+ * ----------------------------------------------------------------------------
+ * Set up authentication instance
+ * ----------------------------------------------------------------------------
+ */
+$cms->instance('auth', new Authenticator($cms));
 
 /**
  * ----------------------------------------------------------------------------
@@ -64,7 +71,6 @@ $cms->detectEnvironment(function() use ($db_config, $environment) {
  * Enable Filesystem Config.
  * ----------------------------------------------------------------------------
  */
-
 $file_system = new Filesystem();
 $file_loader = new FileLoader($file_system);
 $file_saver = new FileSaver($file_system);
@@ -75,7 +81,6 @@ $cms->instance('config', $config = new ConfigRepository($file_loader, $file_save
  * Legacy Definitions
  * ----------------------------------------------------------------------------
  */
-
 define('APP_VERSION', $config->get('concrete.version'));
 define('APP_CHARSET', $config->get('concrete.charset'));
 
