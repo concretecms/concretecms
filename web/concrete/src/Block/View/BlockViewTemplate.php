@@ -197,19 +197,19 @@ class BlockViewTemplate {
 			if (count($css) > 0) {
 				foreach($css as $i) {
 					if(substr($i,-4)=='.css') {
-                        $identifier = substr($this->basePath, strpos($this->basePath, 'blocks'), -4);
+                        $identifier = substr($this->basePath, strpos($this->basePath, 'blocks')) . '/' . $i;
 						$asset = new CSSAsset($identifier);
 						$asset->setAssetURL($this->getBaseURL() . '/' . DIRNAME_CSS . '/' . $i);
 						$asset->setAssetPath($this->basePath . '/' . DIRNAME_CSS . '/' . $i);
 						$al->registerAsset($asset);
-						$v->requireAsset('css', 'blocks/'. $identifier);
+						$v->requireAsset('css', $identifier);
 					}
 				}
 			}
 			if (count($js) > 0) {
 				foreach($js as $i) {
 					if (substr($i,-3)=='.js') {
-                        $identifier = substr($this->basePath, strpos($this->basePath, 'blocks'), -4);
+                        $identifier = substr($this->basePath, strpos($this->basePath, 'blocks')) . '/' . $i;
 						$asset = new JavascriptAsset($identifier);
 						$asset->setAssetURL($this->getBaseURL() . '/' . DIRNAME_JAVASCRIPT . '/' . $i);
 						$asset->setAssetPath($this->basePath . '/' . DIRNAME_JAVASCRIPT . '/' . $i);
