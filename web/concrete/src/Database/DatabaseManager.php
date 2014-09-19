@@ -239,7 +239,7 @@ class DatabaseManager
      * @param  callable $resolver
      * @return void
      */
-    public function extend($name, callable $resolver)
+    public function extend($name, $resolver)
     {
         $this->extensions[$name] = $resolver;
     }
