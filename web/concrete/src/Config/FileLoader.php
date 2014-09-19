@@ -58,4 +58,13 @@ class FileLoader extends \Illuminate\Config\FileLoader implements LoaderInterfac
         }
     }
 
+    protected function getPath($namespace)
+    {
+        $path = parent::getPath($namespace);
+        if (!$path) {
+            $path = "{$this->defaultPath}/{$namespace}";
+        }
+        return $path;
+    }
+
 }
