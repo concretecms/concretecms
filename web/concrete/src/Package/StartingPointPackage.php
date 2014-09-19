@@ -6,6 +6,7 @@ use Concrete\Core\Config\Renderer;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use AuthenticationType;
 use Concrete\Core\Permission\Access\Entity\ConversationMessageAuthorEntity;
+use Concrete\Core\Updater\Migrations\Configuration;
 use Core;
 use Loader;
 use Package as BasePackage;
@@ -188,7 +189,12 @@ class StartingPointPackage extends BasePackage {
 		try {
 			Package::installDB($installDirectory . '/db.xml');
 			$this->indexAdditionalDatabaseFields();
-		} catch (Exception $e) {
+
+            $configuration = new Configuration();
+            $version = $configuration->getVersion(Config::get('concrete.version_db'));
+            $version->markMigrated();
+
+        } catch (Exception $e) {
 			throw new Exception(t('Unable to install database: %s', $db->ErrorMsg()));
 		}
 	}
