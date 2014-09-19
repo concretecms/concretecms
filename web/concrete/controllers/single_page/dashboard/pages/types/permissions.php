@@ -26,7 +26,7 @@ class Permissions extends DashboardPageController {
 		if (Loader::helper('validation/token')->validate('save_permissions')) {
 			$tp = new TaskPermission();
 			if ($tp->canAccessPageTypePermissions()) {
-				$permissions = PermissionKey::getList('pagetype');
+				$permissions = PermissionKey::getList('page_type');
 				foreach($permissions as $pk) {
 					$pk->setPermissionObject($this->pagetype);
 					$paID = $_POST['pkID'][$pk->getPermissionKeyID()];
