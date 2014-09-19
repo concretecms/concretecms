@@ -1,10 +1,21 @@
 <?php
-
 namespace Concrete\Core\Application\Service\UserInterface;
+
 use Controller;
 use \Concrete\Core\Foundation\Object;
+use Events;
+use Loader;
 
 class Menu {
+	
+	/**
+	 * Fires the on_menu_item_get event for adding custom navbar icons
+	 */
+	public function __construct(){
+                $event = new \Symfony\Component\EventDispatcher\GenericEvent();
+                $event->setArgument('view', $this);
+                Events::dispatch('on_menu_item_get', $event);
+    	}
 
 	protected $pageHeaderMenuItems = array();
 
@@ -125,7 +136,7 @@ class MenuItem {
 		}
 
 		if (isset($file)) {
-			$obj = new stdClass;
+			$obj = (object) 'menu';/* stdClass not parsing correctly with laravel. */
 			$obj->file = $file;
 			$obj->url = $url;
 			return $obj;
