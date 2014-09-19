@@ -107,7 +107,8 @@ switch ($tab) {
                                 </div>
                                 <div class="block-content">
                                     <?php
-                                    $block->display()
+                                    $bv = new \Concrete\Core\Block\View\BlockView($block);
+                                    $bv->render('scrapbook');
                                     ?>
                                 </div>
                                 <div class="block-handle"></div>
@@ -211,7 +212,8 @@ switch ($tab) {
 
                                 <div class="block-content">
                                     <?php
-                                    $block->display()
+                                    $bv = new \Concrete\Core\Block\View\BlockView($block);
+                                    $bv->render('scrapbook');
                                     ?>
                                 </div>
                                 <div class="block-handle"></div>
