@@ -4,7 +4,7 @@ namespace Concrete\Controller\Dialog\Page;
 use Area;
 use Block;
 use BlockType;
-use Collection;
+use Concrete\Core\Page\Collection\Collection;
 use Concrete\Controller\Backend\UserInterface\Page as BackendInterfacePageController;
 use Concrete\Core\Block\View\BlockView;
 use Exception;
@@ -86,7 +86,7 @@ class AddBlock extends BackendInterfacePageController
                     $nb = $nvc->addBlock($bt, $this->areaToModify, $data);
                 } else {
                     // if we apply to all, then we don't worry about a new version of the page
-                    $nb = $cx->addBlock($bt, $this->areaToModify, $data);
+                    $nb = $this->pageToModify->addBlock($bt, $this->areaToModify, $data);
                 }
 
                 if ($this->area->isGlobalArea() && $nvc instanceof Collection) {
