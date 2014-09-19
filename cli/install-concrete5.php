@@ -159,12 +159,12 @@ require $corePath . '/bootstrap/autoload.php';
 $cms = require $corePath . '/bootstrap/start.php';
 
 \Database::extend('install', function() use ($cliconfig) {
-    return Database::getFactory()->createConnection(array(
-                                                 'host' => $cliconfig['db-server'],
-                                                 'user' => $cliconfig['db-username'],
-                                                 'password' => $cliconfig['db-password'],
-                                                 'database' => $cliconfig['db-database']
-                                             ));
+    return \Database::getFactory()->createConnection(array(
+        'host' => $cliconfig['db-server'],
+        'user' => $cliconfig['db-username'],
+        'password' => $cliconfig['db-password'],
+        'database' => $cliconfig['db-database']
+    ));
 });
 \Database::setDefaultConnection('install');
 $cms['config']['database.connections.install'] = array();
