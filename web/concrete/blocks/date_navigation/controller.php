@@ -14,9 +14,6 @@ class Controller extends BlockController
     public $helpers = array('form');
 
     protected $btInterfaceWidth = 400;
-    protected $btCacheBlockOutput = true;
-    protected $btCacheBlockOutputOnPost = true;
-    protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btInterfaceHeight = 450;
     protected $btExportPageColumns = array('cParentID', 'cTargetID');
     protected $btExportPageTypeColumns = array('ptID');

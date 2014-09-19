@@ -255,7 +255,7 @@ class Controller extends BlockController
                 $dh = Core::make('helper/date');
                 /* @var $dh \Concrete\Core\Localization\Service\Date */
                 $start = $dh->toDB($start, $timezone);
-                $end = $dh->toDB($start, $end);
+                $end = $dh->toDB($end, $timezone);
             }
             $this->list->filterByPublicDate($start, '>=');
             $this->list->filterByPublicDate($end, '<=');
