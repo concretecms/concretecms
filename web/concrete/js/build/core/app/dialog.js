@@ -238,10 +238,37 @@ jQuery.fn.dialog.activateDialogContents = function($dialog) {
         } else {
             var helpText = 'Help';
         }
-        $dialog.parent().find('.ui-dialog-titlebar').addClass('ccm-ui').append('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"><i class="fa fa-info-circle"></i></button>');
-        $dialog.parent().find('.ui-dialog-titlebar .ccm-menu-help-trigger').popover({content: function() {
-            return helpContent;
-        }, placement: 'bottom', html: true, container: '#ccm-tooltip-holder', trigger: 'click'});
+        var button = $('<button class="ui-dialog-titlebar-help ccm-menu-help-trigger"><i class="fa fa-info-circle"></i></button>'),
+            container = $('#ccm-tooltip-holder');
+        $dialog.parent().find('.ui-dialog-titlebar').addClass('ccm-ui').append(button);
+        button.popover({
+            content: function() {
+                return helpContent;
+            },
+            placement: 'bottom',
+            html: true,
+            container: container,
+            trigger: 'click'
+        });
+        button.on('shown.bs.popover', function() {
+            var binding = function() {
+                button.popover('hide', button);
+                binding = $.noop;
+            };
+
+            button.on('hide.bs.popover', function(event) {
+                button.unbind(event);
+                binding = $.noop;
+            });
+
+            $('body').mousedown(function(e) {
+                if ($(e.target).closest(container).length || $(e.target).closest(button).length) {
+                    return;
+                }
+                $(this).unbind(e);
+                binding();
+            });
+        });
     }
 }
 
