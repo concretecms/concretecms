@@ -134,7 +134,11 @@ abstract class Asset
     {
         if ($this->isAssetLocal()) {
             $env = Environment::get();
-            $r = $env->getRecord($path);
+            $pkgHandle = false;
+            if (is_object($this->pkg)) {
+                $pkgHandle = $this->pkg->getPackageHandle();
+            }
+            $r = $env->getRecord($path, $pkgHandle);
             $this->setAssetPath($r->file);
             $this->setAssetURL($r->url);
         } else {
