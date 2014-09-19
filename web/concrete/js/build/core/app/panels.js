@@ -205,6 +205,7 @@ function ConcretePanel(options) {
         if (!this.detail) {
             return false;
         }
+        html.removeClass('ccm-panel-detail-open');
         $('.ccm-panel-detail').remove();
         $('.ccm-panel-detail-form-actions').remove();
         $('.ccm-page').removeClass().addClass('ccm-page');
