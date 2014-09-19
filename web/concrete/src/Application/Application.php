@@ -36,11 +36,13 @@ class Application extends Container
      */
     public function shutdown()
     {
+        \Events::dispatch('on_shutdown');
+
         if ($this->isInstalled()) {
             $this->handleScheduledJobs();
-            $db = Database::get();
-            if ($db->isConnected()) {
-                $db->close();
+
+            foreach (\Database::getConnections() as $connection) {
+                $connection->close();
             }
         }
         if (Config::get('concrete.cache.overrides')) {
