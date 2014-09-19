@@ -4,7 +4,7 @@ use Concrete\Core\Config\FileSaver;
 use Concrete\Core\Config\Repository\Repository;
 use Illuminate\Filesystem\Filesystem;
 
-class FileTest extends \ConcreteDatabaseTestCase
+class FileRepositoryTest extends \ConcreteDatabaseTestCase
 {
 
     /** @var Filesystem */
