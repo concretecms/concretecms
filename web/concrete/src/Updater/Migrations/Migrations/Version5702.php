@@ -9,9 +9,6 @@ use Concrete\Core\Permission\Category;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
-/**
- * Auto-generated Migration: Please modify to your needs!
- */
 class Version5702 extends AbstractMigration
 {
     public function getName()
