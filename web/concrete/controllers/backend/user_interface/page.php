@@ -41,7 +41,7 @@ abstract class Page extends \Concrete\Controller\Backend\UserInterface
 
     public function action()
     {
-        if ($this->page->isAlias()) {
+        if ($this->page->getCollectionPointerOriginalID()) {
             $cID = $this->page->getCollectionPointerOriginalID();
         } else {
             $cID = $this->page->getCollectionID();
