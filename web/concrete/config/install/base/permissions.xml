@@ -357,6 +357,7 @@
         <permissionaccessentitytype handle="page_owner" name="Page Owner" package="">
             <categories>
                 <category handle="page" />
+                <category handle="page_type" />
             </categories>
         </permissionaccessentitytype>
         <permissionaccessentitytype handle="file_uploader" name="File Uploader" package="">
