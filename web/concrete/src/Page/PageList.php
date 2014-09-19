@@ -137,6 +137,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
             $query->andWhere('p.cIsSystemPage = :cIsSystemPage');
             $query->setParameter('cIsSystemPage', false);
         }
+
         return $query;
     }
 
@@ -145,12 +146,12 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         $u = new \User();
         if ($this->permissionsChecker == -1) {
             $query = $this->deliverQueryObject();
+
             return $query->select('count(distinct p.cID)')->setMaxResults(1)->execute()->fetchColumn();
         } else {
             return -1; // unknown
         }
     }
-
 
     protected function createPaginationObject()
     {
@@ -163,6 +164,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         } else {
             $pagination = new PermissionablePagination($this);
         }
+
         return $pagination;
     }
 
@@ -183,6 +185,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
             if (isset($queryRow['cIndexScore'])) {
                 $c->setPageIndexScore($queryRow['cIndexScore']);
             }
+
             return $c;
         }
     }
@@ -198,6 +201,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
         }
 
         $cp = new \Permissions($mixed);
+
         return $cp->canViewPage();
     }
 
@@ -234,8 +238,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function filterByDateAdded($date, $comparison = '=')
     {
-        $this->query->andWhere($this->query->expr()->comparison('c.cDateAdded', $comparison, ':cDateAdded'));
-        $this->query->setParameter('cDateAdded', $date);
+        $this->query->andWhere($this->query->expr()->comparison('c.cDateAdded', $comparison, $this->query->createNamedParameter($date)));
     }
 
     /**
@@ -266,8 +269,7 @@ class PageList extends DatabaseItemList implements PermissionableListItemInterfa
      */
     public function filterByDateLastModified($date, $comparison = '=')
     {
-        $this->query->andWhere($this->query->expr()->comparison('c.cDateModified', $comparison, ':cDateModified'));
-        $this->query->setParameter('cDateModified', $date);
+        $this->query->andWhere($this->query->expr()->comparison('c.cDateModified', $comparison, $this->query->createNamedParameter($date)));
     }
 
     /**
