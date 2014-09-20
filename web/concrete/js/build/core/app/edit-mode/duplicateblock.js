@@ -9,6 +9,7 @@
     DuplicateBlock.prototype = _.extend(Object.create(Concrete.Block.prototype), {
 
         init: function duplicateBlockInit(elem, edit_mode) {
+            var my = this;
             Concrete.Block.prototype.init.call(my, elem, edit_mode, elem.find('.block-content'));
         },
 

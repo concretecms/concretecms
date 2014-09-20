@@ -26,9 +26,6 @@ use PermissionKey;
 class File implements \Concrete\Core\Permission\ObjectInterface
 {
 
-    /**
-     * Create a new version every 300 seconds.
-     */
     const CREATE_NEW_VERSION_THRESHOLD = 300;
 
 
@@ -410,6 +407,10 @@ class File implements \Concrete\Core\Permission\ObjectInterface
             $db->query($q, $v);
         }
 
+        foreach($nf->getVersionList() as $v) {
+            $v->refreshAttributes();
+        }
+
         $fe = new \Concrete\Core\File\Event\DuplicateFile($this);
         $fe->setNewFileObject($nf);
         Events::dispatch('on_file_duplicate', $fe);
@@ -501,7 +502,7 @@ class File implements \Concrete\Core\Permission\ObjectInterface
 
         $versions = $this->getVersionList();
         foreach ($versions as $fv) {
-            $fv->delete();
+            $fv->delete(true);
         }
 
         // now from the DB

@@ -33,9 +33,9 @@ $class = 'ccm-area-footer';
 	<div class="popover-inner">
 	<ul class="dropdown-menu">
 	<?
-		$showAreaDesign = ($ap->canEditAreaDesign() && ENABLE_CUSTOM_DESIGN == true);
-		$showAreaLayouts = ($ap->canAddLayoutToArea() && ENABLE_AREA_LAYOUTS == true);
-		$canEditAreaPermissions = ($ap->canEditAreaPermissions() && PERMISSIONS_MODEL != 'simple' && (!$a->isGlobalArea()));
+		$showAreaDesign = ($ap->canEditAreaDesign() && Config::get('concrete.design.enable_custom') == true);
+		$showAreaLayouts = ($ap->canAddLayoutToArea() && Config::get('concrete.design.enable_layouts') == true);
+		$canEditAreaPermissions = ($ap->canEditAreaPermissions() && Config::get('concrete.permissions.model') != 'simple' && (!$a->isGlobalArea()));
 	?>
 
 	<? if ($showAreaDesign || $showAreaLayouts) { ?>

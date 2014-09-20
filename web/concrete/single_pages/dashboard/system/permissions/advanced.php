@@ -5,7 +5,7 @@ $form = Loader::helper('form');
 ?>
 <form id="permissions-form" action="<?php echo $view->action('enable_advanced_permissions')?>" method="post">
 <?php echo Loader::helper('validation/token')->output('enable_advanced_permissions')?>
-<? if (PERMISSIONS_MODEL != 'simple') { ?>
+<? if (Config::get('concrete.permissions.model') != 'simple') { ?>
     <p><?=t('Advanced permissions are turned on.')?></p>
 <? } else { ?>
     <p><?=t('Advanced permissions are turned off. Enable them below.')?></p>
@@ -15,7 +15,7 @@ $form = Loader::helper('form');
     </div>
 <? } ?>
 
-<? if (PERMISSIONS_MODEL == 'simple') { ?>
+<? if (Config::get('concrete.permissions.model') == 'simple') { ?>
 <div class="ccm-dashboard-form-actions-wrapper">
     <div class="ccm-dashboard-form-actions">
 <?php

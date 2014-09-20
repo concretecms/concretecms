@@ -4,32 +4,40 @@ namespace Concrete\Core\Error\Handler;
 use Config;
 use Whoops\Exception\Formatter;
 use Whoops\Handler\Handler;
+use Whoops\Util\Misc;
 
 class JsonErrorHandler extends Handler
 {
 
     public function handle()
     {
-        $debug = intval(defined('SITE_DEBUG_LEVEL') ? SITE_DEBUG_LEVEL : Config::get('SITE_DEBUG_LEVEL'), 10);
-        if ($debug !== DEBUG_DISPLAY_ERRORS) {
-            return Handler::DONE;
-        }
-
         if (!$this->isAjaxRequest()) {
             return Handler::DONE;
         }
 
-        $error = Formatter::formatExceptionAsDataArray(
-            $this->getInspector(),
-            true
-        );
+        $display = Config::get('concrete.debug.display_errors');
+
+        if (!$display) {
+            $error = array('message' => t('An error occurred while processing this request.'));
+        } else {
+            $detail = Config::get('concrete.debug.detail', 'message');
+            if ($detail !== 'debug') {
+                $e = $this->getInspector()->getException();
+                $error = array('message' => $e->getMessage());
+            } else {
+                $error = Formatter::formatExceptionAsDataArray(
+                    $this->getInspector(),
+                    true
+                );
+            }
+        }
 
         $response = array(
             'error'  => $error,
             'errors' => array($error['message'])
         );
 
-        if (\Whoops\Util\Misc::canSendHeaders()) {
+        if (Misc::canSendHeaders()) {
             if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
                 header('Content-Type: application/json; charset=' . APP_CHARSET, true);
             } else {

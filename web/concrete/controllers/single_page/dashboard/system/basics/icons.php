@@ -26,15 +26,15 @@ class Icons extends DashboardPageController {
 	}
 
 	public function favicon_removed() {
-		$this->set('message', t("Icon removed successfully."));	
+		$this->set('message', t("Icon removed successfully."));
 	}
 
 	public function iphone_icon_saved() {
-		$this->set('message', t("iPhone icon updated successfully."));	
+		$this->set('message', t("iPhone icon updated successfully."));
 	}
 
 	public function iphone_icon_removed() {
-		$this->set('message', t("iPhone icon removed successfully."));	
+		$this->set('message', t("iPhone icon removed successfully."));
 	}
 
 	public function modern_icon_saved() {
@@ -52,13 +52,13 @@ class Icons extends DashboardPageController {
             $modernThumbBG = $S->sanitizeString($this->post('modernThumbBG'));
             $result = "modern_icon_saved";
             if($modernThumbFID) {
-                Config::save('MODERN_TILE_THUMBNAIL_FID', $modernThumbFID);
+                Config::save('concrete.misc.modern_tile_thumbnail_fid', $modernThumbFID);
 			} else {
-                Config::save('MODERN_TILE_THUMBNAIL_FID', 0);
+                Config::save('concrete.misc.modern_tile_thumbnail_fid', 0);
                 $result = 'modern_icon_removed';
 			}
 
-            Config::save('MODERN_TILE_THUMBNAIL_BGCOLOR', $modernThumbBG);
+            Config::save('concrete.misc.modern_tile_thumbnail_bgcolor', $modernThumbBG);
 
             $this->redirect('/dashboard/system/basics/icons/', $result);
 		}
@@ -74,10 +74,10 @@ class Icons extends DashboardPageController {
             $faviconFID = $S->sanitizeInt($this->post('iosHomeFID'));
 
 			if($faviconFID){
-				Config::save('IPHONE_HOME_SCREEN_THUMBNAIL_FID', $faviconFID);
+				Config::save('concrete.misc.iphone_home_screen_thumbnail_fid', $faviconFID);
                 $this->redirect('/dashboard/system/basics/icons/', 'iphone_icon_saved');
             } else {
-                Config::save('IPHONE_HOME_SCREEN_THUMBNAIL_FID', 0);
+                Config::save('concrete.misc.iphone_home_screen_thumbnail_fid', 0);
                 $this->redirect('/dashboard/system/basics/icons/', 'iphone_icon_removed');
             }
 
@@ -85,17 +85,17 @@ class Icons extends DashboardPageController {
 			$this->set('error', array($this->token->getErrorMessage()));
 		}
 	}
-	
+
 	function update_favicon(){
 		if ($this->token->validate("update_favicon")) {
             $S = Core::make('helper/security');
             $faviconFID = $S->sanitizeInt($this->post('faviconFID'));
 
             if($faviconFID) {
-                Config::save('FAVICON_FID', $faviconFID);
+                Config::save('concrete.misc.favicon_fid', $faviconFID);
                 $this->redirect('/dashboard/system/basics/icons/', 'favicon_saved');
             } else {
-                Config::save('FAVICON_FID',0);
+                Config::save('concrete.misc.favicon_fid',0);
                 $this->redirect('/dashboard/system/basics/icons/', 'favicon_removed');
             }
 		} else {

@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Page\Controller;
+use Config;
 use Loader;
 use Page;
 class AccountPageController extends PageController {

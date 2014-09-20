@@ -21,6 +21,11 @@ $image = date('Ymd') . '.jpg';
 
 $attribute_mode = (isset($required_attributes) && count($required_attributes));
 ?>
+<style>
+    body {
+        background: url("<?= ASSETS_URL_IMAGES ?>/bg_login.png");
+    }
+</style>
 <div class="login-page">
     <div class="col-sm-6 col-sm-offset-3 login-title">
         <span><?= !$attribute_mode ? t('Sign into your website.') : t('Required Attributes') ?></span>
@@ -118,7 +123,7 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
             </div>
         </div>
     </div>
-    <div class="background-credit">
+    <div class="background-credit" style="display:none">
         <?= t('Photo Credit:') ?>
         <a href="#" style="pull-right"></a>
     </div>
@@ -168,7 +173,6 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                     fontSize: last,
                     lineHeight: ''
                 });
-
                 var fade_div = $('<div/>').css({
                     position: 'absolute',
                     top: 0,
@@ -176,17 +180,35 @@ $attribute_mode = (isset($required_attributes) && count($required_attributes));
                     width: '100%'
                 }).prependTo('body').height(title.offset().top + title.outerHeight() + 50);
 
-                fade_div.append($('<img/>').css({ width: '100%', height: '100%' }).attr('src', '<?= DIR_REL ?>/concrete/images/login_fade.png'));
+                fade_div.hide()
+                    .append(
+                    $('<img/>')
+                        .css({ width: '100%', height: '100%' })
+                        .attr('src', '<?= DIR_REL ?>/concrete/images/login_fade.png'))
+                    .fadeIn();
             }, 0);
 
 
-            <?php if(!defined('WHITE_LABEL_DASHBOARD_BACKGROUND_FEED') && !defined('WHITE_LABEL_DASHBOARD_BACKGROUND_SRC')) { ?>
+            <?php if(!Config::get('concrete.white_label.background_image') !== 'none') { ?>
             $(function () {
-                $.backstretch("<?= DASHBOARD_BACKGROUND_FEED . '/' . $image ?>", {
-                    fade: 500
-                });
+                var shown = false, info;
                 $.getJSON('<?= BASE_URL . DIR_REL . '/' . DISPATCHER_FILENAME . '/tools/required/dashboard/get_image_data' ?>', { image: '<?= $image ?>' }, function (data) {
-                    $('div.background-credit').children().attr('href', data.link).text(data.author.join());
+                    if (shown) {
+                        $('div.background-credit').fadeIn().children().attr('href', data.link).text(data.author.join());
+                    } else {
+                        info = data;
+                    }
+                });
+                $(window).on('backstretch.show', function() {
+                    shown = true;
+
+                    if (info) {
+                        $('div.background-credit').fadeIn().children().attr('href', info.link).text(info.author.join());
+                    }
+
+                });
+                $.backstretch("<?= Config::get('concrete.urls.background_feed') . '/' . $image ?>", {
+                    fade: 500
                 });
             });
             <?php } ?>

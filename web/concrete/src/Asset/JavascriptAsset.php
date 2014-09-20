@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Asset;
 use HtmlObject\Element;
+use Config;
 
 class JavascriptAsset extends Asset {
 
@@ -16,13 +17,13 @@ class JavascriptAsset extends Asset {
 	}
 
 	protected static function getOutputDirectory() {
-		if (!file_exists(DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT)) {
-			$proceed = @mkdir(DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT);
+		if (!file_exists(Config::get('concrete.cache.directory') . '/' . DIRNAME_JAVASCRIPT)) {
+			$proceed = @mkdir(Config::get('concrete.cache.directory') . '/' . DIRNAME_JAVASCRIPT);
 		} else {
 			$proceed = true;
 		}
 		if ($proceed) {
-			return DIR_FILES_CACHE . '/' . DIRNAME_JAVASCRIPT;
+			return Config::get('concrete.cache.directory') . '/' . DIRNAME_JAVASCRIPT;
 		} else {
 			return false;
 		}

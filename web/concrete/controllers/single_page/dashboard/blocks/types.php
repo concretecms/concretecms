@@ -7,6 +7,7 @@ use BlockTypeList;
 use Block;
 use BlockType;
 use TaskPermission;
+use Exception;
 
 class Types extends DashboardPageController {
 

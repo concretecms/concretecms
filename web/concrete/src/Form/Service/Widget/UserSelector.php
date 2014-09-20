@@ -29,19 +29,21 @@ class UserSelector {
 			$html .= $ui->getUserName();
 		}
 		$html .= '</strong></div>';
-		$html .= '<a class="ccm-sitemap-select-item" id="ccm-user-selector-' . $fieldName . '" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="' . URL::to('/ccm/system/dialogs/user/search') . '">' . t('Select User') . '</a>';
-		$html .= '<input type="hidden" name="' . $fieldName . '" value="' . $selectedUID . '">';
+        $identifier = new \Concrete\Core\Utility\Service\Identifier();
+        $selector = $identifier->getString(32);
+		$html .= '<a class="ccm-sitemap-select-item" data-form-user-selector="' . $selector . '" dialog-append-buttons="true" dialog-width="90%" dialog-height="70%" dialog-modal="false" dialog-title="' . t('Choose User') . '" href="' . URL::to('/ccm/system/dialogs/user/search') . '">' . t('Select User') . '</a>';
+		$html .= '<input type="hidden" data-form-user-selector-input="' . $selector . '" name="' . $fieldName . '" value="' . $selectedUID . '">';
 		$html .= '</div>';
 		$html .= <<<EOL
 <script type="text/javascript">
 $(function() {
-	$("#ccm-user-selector-{$fieldName}").dialog();
-	$("#ccm-user-selector-{$fieldName}").on('click', function() {
+	$("a[data-form-user-selector={$selector}]").dialog();
+	$("a[data-form-user-selector={$selector}]").on('click', function() {
 		var selector = $(this);
 		ConcreteEvent.unsubscribe('UserSearchDialogSelectUser.core');
 		ConcreteEvent.subscribe('UserSearchDialogSelectUser.core', function(e, data) {
 			var par = selector.parent().find('.ccm-summary-selected-item-label'),
-				pari = selector.parent().find('[name={$fieldName}]');
+				pari = selector.parent().find('[data-form-user-selector-input={$selector}]');
 			par.html(data.uName);
 			pari.val(data.uID);
 			e.stopPropagation();

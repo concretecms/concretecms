@@ -6,6 +6,7 @@ use \Concrete\Core\Permission\Key\PageKey as PagePermissionKey;
 use PermissionKey;
 use Loader;
 use GroupList;
+use Config;
 use PermissionAccess;
 use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
 use Group;
@@ -20,7 +21,7 @@ class Permissions extends BackendInterfacePageController {
 	}
 
 	public function view() {
-		if (PERMISSIONS_MODEL != 'simple') {
+		if (Config::get('concrete.permissions.model') != 'simple') {
 			$this->setViewObject(new View('/panels/details/page/permissions/advanced'));
 			$this->set('editPermissions', false);
 			if ($this->page->getCollectionInheritance() == 'OVERRIDE') { 

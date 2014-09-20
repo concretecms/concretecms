@@ -20,7 +20,7 @@ class ContentFileTranslateTest extends FileStorageTestCase {
             'FilePermissionAssignments',
             'AttributeKeyCategories',
             'AttributeTypes',
-            'Config',
+            'ConfigStore',
             'AttributeKeys',
             'SystemContentEditorSnippets',
             'AttributeValues',

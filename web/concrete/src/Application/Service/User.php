@@ -2,24 +2,7 @@
 namespace Concrete\Core\Application\Service;
 use Loader;
 use TaskPermission;
-
-/**
- * @access private
- * @package Helpers
- * @category Concrete
- * @author Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- */
-
-/**
- * @access private
- * @package Helpers
- * @category Concrete
- * @author Andrew Embler <andrew@concrete5.org>
- * @copyright  Copyright (c) 2003-2008 Concrete5. (http://www.concrete5.org)
- * @license    http://www.concrete5.org/license/     MIT License
- */
+use Config;
 
 defined('C5_EXECUTE') or die("Access Denied.");
 class User {
@@ -51,9 +34,9 @@ class User {
 
 		$valc = Loader::helper('concrete/validation');
 
-		if ((strlen($password) < USER_PASSWORD_MINIMUM) || (strlen($password) > USER_PASSWORD_MAXIMUM)) {
+		if ((strlen($password) < Config::get('concrete.user.password.minimum')) || (strlen($password) >  Config::get('concrete.user.password.maximum'))) {
 			if($errorObj)
-				$errorObj->add( t('A password must be between %s and %s characters', USER_PASSWORD_MINIMUM, USER_PASSWORD_MAXIMUM) );
+				$errorObj->add( t('A password must be between %s and %s characters', Config::get('concrete.user.password.minimum'),  Config::get('concrete.user.password.maximum')) );
 			$invalid=1;
 		}
 

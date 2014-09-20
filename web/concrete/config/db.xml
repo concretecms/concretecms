@@ -763,11 +763,7 @@
       <DEFAULT value="0"/>
       <UNSIGNED/>
   </field>
-    <field name="cnvMessageSubmitIP" type="I" size="10">
-      <NOTNULL/>
-      <DEFAULT value="0"/>
-      <UNSIGNED/>
-    </field>
+    <field name="cnvMessageSubmitIP" type="B" size="32" />
     <field name="cnvMessageSubmitUserAgent" type="X2" />
     <field name="cnvMessageLevel" type="I" size="10">
       <NOTNULL/>
@@ -879,10 +875,7 @@
             <default value="0" />
             <unsigned />
         </field>
-    <field name="cnvMessageRatingIP" type="I8" size="10">
-      <notnull/>
-      <default value="0"/>
-    </field>
+      <field name="cnvMessageRatingIP" type="B" size="32" />
     <field name="timestamp" type="T" />
     <field name="uID" type="I" size="10">
         <notnull />
@@ -2074,7 +2067,30 @@
       <col>cDateAdded</col>
     </index>
   </table>
-  <table name="Config">
+
+
+
+    <table name="Config">
+        <field name="configItem" type="C" size="255">
+            <key/>
+        </field>
+        <field name="configValue" type="X2" />
+        <field name="configGroup" type="C" size="255" />
+        <field name="configNamespace" type="C" size="255" />
+
+        <index name="configItem">
+            <col>configItem</col>
+        </index>
+        <index name="configGroup">
+            <col>configGroup</col>
+        </index>
+        <index name="configNamespace">
+            <col>configNamespace</col>
+        </index>
+    </table>
+
+
+  <table name="ConfigStore">
     <field name="cfKey" type="C" size="64">
       <key/>
     </field>
@@ -4135,14 +4151,15 @@
     </index>
   </table>
   <table name="UserBannedIPs">
-    <field name="ipFrom" type="I" size="10">
-      <key/>
-      <default value="0"/>
+    <field name="id" type="I" size="11">
+        <key/>
+        <autoincrement/>
+        <unsigned/>
+    </field>
+    <field name="ipFrom" type="B" size="32">
       <unsigned/>
     </field>
-    <field name="ipTo" type="I" size="10">
-      <key/>
-      <default value="0"/>
+    <field name="ipTo" type="B" size="32">
       <unsigned/>
     </field>
     <field name="banCode" type="I" size="1">
@@ -4150,21 +4167,14 @@
       <default value="1"/>
       <unsigned/>
     </field>
-    <field name="expires" type="I" size="10">
+    <field name="expires" type="T">
+        <notnull/>
+        <default value="0000-00-00 00:00:00"/>
+    </field>
+    <field name="isManual" type="I1" size="1">
       <notnull/>
       <default value="0"/>
-      <unsigned/>
     </field>
-    <field name="isManual" type="I" size="1">
-      <notnull/>
-      <default value="0"/>
-    </field>
-    <index name="ipFrom">
-      <col>ipFrom</col>
-    </index>
-    <index name="ipTo">
-      <col>ipTo</col>
-    </index>
   </table>
   <table name="UserGroups">
     <field name="uID" type="I" size="10">
@@ -4389,10 +4399,7 @@
       <default value="0"/>
       <unsigned/>
     </field>
-    <field name="uLastIP" type="I8" size="10">
-      <notnull/>
-      <default value="0"/>
-    </field>
+    <field name="uLastIP" type="B" size="32" />
     <field name="uPreviousLogin" type="I" size="10">
       <default value="0"/>
       <unsigned/>
@@ -4422,18 +4429,11 @@
       <key/>
       <autoincrement/>
     </field>
-    <field name="ipFrom" type="I" size="10">
-      <notnull/>
-      <default value="0"/>
-      <unsigned/>
-    </field>
+    <field name="ipFrom" type="B" size="32" />
     <field name="date_access" type="T">
       <notnull/>
       <deftimestamp/>
     </field>
-    <index name="index_ipFrom">
-      <col>ipFrom</col>
-    </index>
   </table>
   <table name="FilePermissionAssignments">
     <field name="fID" type="I" size="10">

@@ -25,7 +25,7 @@ $(function() {
         <? } ?>
 
 
-        <? if (ENABLE_USER_PROFILES) { ?>
+        <? if (Config::get('concrete.user.profiles_enabled')) { ?>
             <hr/>
             <div>
                 <a href="<?=URL::to('/members/profile')?>"><?=t("View Public Profile")?></a>

@@ -289,16 +289,16 @@ class File
                 $curl_handle = curl_init();
 
                 // Check to see if there are proxy settings
-                if (Config::get('HTTP_PROXY_HOST') != null) {
-                    @curl_setopt($curl_handle, CURLOPT_PROXY, Config::get('HTTP_PROXY_HOST'));
-                    @curl_setopt($curl_handle, CURLOPT_PROXYPORT, Config::get('HTTP_PROXY_PORT'));
+                if (Config::get('concrete.proxy.host') != null) {
+                    @curl_setopt($curl_handle, CURLOPT_PROXY, Config::get('concrete.proxy.host'));
+                    @curl_setopt($curl_handle, CURLOPT_PROXYPORT, Config::get('concrete.proxy.port'));
 
                     // Check if there is a username/password to access the proxy
-                    if (Config::get('HTTP_PROXY_USER') != null) {
+                    if (Config::get('concrete.proxy.user') != null) {
                         @curl_setopt(
                             $curl_handle,
                             CURLOPT_PROXYUSERPWD,
-                            Config::get('HTTP_PROXY_USER') . ':' . Config::get('HTTP_PROXY_PWD'));
+                            Config::get('concrete.proxy.user') . ':' . Config::get('concrete.proxy.password'));
                     }
                 }
 

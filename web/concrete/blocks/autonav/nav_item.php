@@ -1,5 +1,6 @@
 <?
 namespace Concrete\Block\Autonav;
+use Loader;
 /**
  * An object used by the Autonav Block to display navigation items in a tree
  *
@@ -16,10 +17,10 @@ namespace Concrete\Block\Autonav;
 		protected $isActive = false;
 		protected $_c;
 		public $hasChildren = false;
-		
+
 		/**
-		 * Instantiates an Autonav Block Item. 
-		 * @param array $itemInfo 
+		 * Instantiates an Autonav Block Item.
+		 * @param array $itemInfo
 		 * @param int $level
 		 */
 		function __construct($itemInfo, $level = 1) {
@@ -34,7 +35,7 @@ namespace Concrete\Block\Autonav;
 
 			return $this;
 		}
-		
+
 		/**
 		 * Returns the number of children below this current nav item
 		 * @return int
@@ -42,9 +43,9 @@ namespace Concrete\Block\Autonav;
 		function hasChildren() {
 			return $this->hasChildren;
 		}
-		
+
 		/**
-		 * Determines whether this nav item is the current page the user is on. 
+		 * Determines whether this nav item is the current page the user is on.
 		 * @param Page $page The page object for the current page
 		 * @return bool
 		 */
@@ -63,7 +64,7 @@ namespace Concrete\Block\Autonav;
 			return $this->cvDescription;
 		}
 
-		/** 
+		/**
 		 * Returns a target for the nav item
 		 */
 		public function getTarget() {
@@ -72,31 +73,24 @@ namespace Concrete\Block\Autonav;
 					return '_blank';
 				}
 			}
-			
+
 			$_c = $this->getCollectionObject();
 			if (is_object($_c)) {
 				return $_c->getAttribute('nav_target');
 			}
-			
+
 			return '';
 		}
-		
-		/** 
+
+		/**
 		 * Gets a URL that will take the user to this particular page. Checks against URL_REWRITING, the page's path, etc..
 		 * @return string $url
 		 */
 		function getURL() {
-			$dispatcher = '';
-			if (!URL_REWRITING) {
-				$dispatcher = '/' . DISPATCHER_FILENAME;
-			}
 			if ($this->cPointerExternalLink != '') {
-				$link = $this->cPointerExternalLink;
+				$link = Loader::helper('text')->encodePath($this->cPointerExternalLink);
 			} else if ($this->cPath) {
-				$link = DIR_REL . $dispatcher . $this->cPath;
-				if (URL_USE_TRAILING_SLASH) {
-					$link .= '/';
-				}
+			    $link = $this->cPath;
 			} else if ($this->cID == HOME_CID) {
 				$link = DIR_REL . '/';
 			} else {
@@ -104,7 +98,7 @@ namespace Concrete\Block\Autonav;
 			}
 			return $link;
 		}
-		
+
 		/**
 		 * Gets the name of the page or link.
 		 * @return string
@@ -112,7 +106,7 @@ namespace Concrete\Block\Autonav;
 		function getName() {
 			return $this->cvName;
 		}
-		
+
 		/**
 		 * Gets the pageID for the navigation item.
 		 * @return int
@@ -120,8 +114,8 @@ namespace Concrete\Block\Autonav;
 		function getCollectionID() {
 			return $this->cID;
 		}
-		
-		
+
+
 		/**
 		 * Gets the current level at the nav tree that we're at.
 		 * @return int
@@ -129,8 +123,8 @@ namespace Concrete\Block\Autonav;
 		function getLevel() {
 			return $this->level;
 		}
-		
-		/** 
+
+		/**
 		 * Sets the collection Object of the navigation item to the passed object
 		 * @param Page $obj
 		 * @return void
@@ -138,7 +132,7 @@ namespace Concrete\Block\Autonav;
 		function setCollectionObject(&$obj) {
 			$this->_c = $obj;
 		}
-		
+
 		/**
 		 * Gets the collection Object of the navigation item
 		 * @return Page

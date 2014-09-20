@@ -5,7 +5,7 @@ use Doctrine\DBAL\Migrations\Configuration\Configuration as DoctrineMigrationCon
 
 class Configuration extends DoctrineMigrationConfiguration
 {
-    public function __construct()
+    public function __construct($registerMigrations = true)
     {
         $db = \Database::get();
         parent::__construct($db);
@@ -13,7 +13,9 @@ class Configuration extends DoctrineMigrationConfiguration
         $this->setName(t('concrete5 Migrations'));
         $this->setMigrationsNamespace(('\Concrete\Core\Updater\Migrations\Migrations'));
         $this->setMigrationsDirectory($directory);
-        $this->registerMigrationsFromDirectory($directory);
+        if ($registerMigrations) {
+            $this->registerMigrationsFromDirectory($directory);
+        }
         $this->setMigrationsTableName('SystemDatabaseMigrations');
     }
 }

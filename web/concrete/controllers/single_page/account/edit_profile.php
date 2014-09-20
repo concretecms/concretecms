@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Controller\SinglePage\Account;
 use \Concrete\Core\Page\Controller\AccountPageController;
+use Config;
 use UserInfo;
 use Exception;
 use \Concrete\Core\Authentication\AuthenticationType;
@@ -80,12 +81,12 @@ class EditProfile extends AccountPageController {
 			$passwordNew = $data['uPasswordNew'];
 			$passwordNewConfirm = $data['uPasswordNewConfirm'];
 
-			if ((strlen($passwordNew) < USER_PASSWORD_MINIMUM) || (strlen($passwordNew) > USER_PASSWORD_MAXIMUM)) {
-                $this->error->add(t('A password must be between %s and %s characters', USER_PASSWORD_MINIMUM, USER_PASSWORD_MAXIMUM));
+			if ((strlen($passwordNew) < Config::get('concrete.user.password.minimum')) || (strlen($passwordNew) >  Config::get('concrete.user.password.maximum'))) {
+				$this->error->add(t('A password must be between %s and %s characters', Config::get('concrete.user.password.minimum'),  Config::get('concrete.user.password.maximum')));
 			}
 
-			if (strlen($passwordNew) >= USER_PASSWORD_MINIMUM && !$cvh->password($passwordNew)) {
-                $this->error->add(t('A password may not contain ", \', >, <, or any spaces.'));
+			if (strlen($passwordNew) >= Config::get('concrete.user.password.minimum') && !$cvh->password($passwordNew)) {
+				$this->error->add(t('A password may not contain ", \', >, <, or any spaces.'));
 			}
 
 			if ($passwordNew) {
@@ -112,7 +113,7 @@ class EditProfile extends AccountPageController {
 
 		if (!$this->error->has()) {
 			$data['uEmail'] = $email;
-			if(ENABLE_USER_TIMEZONES) {
+			if(Config::get('concrete.misc.user_timezones')) {
 				$data['uTimezone'] = $this->post('uTimezone');
 			}
 

@@ -5,9 +5,9 @@ $ih = Loader::helper('concrete/ui');
 echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Single Pages'), false);?>
 	<div class="clearfix">
 		<h4><?php echo t('Add Single Page')?></h4>
-		<?php if(URL_REWRITING == true || URL_REWRITING_ALL == true) {
+		<?php if(Config::get('concrete.seo.url_rewriting')) {
 			$base = BASE_URL.DIR_REL;
-		} else { 
+		} else {
 			$base = BASE_URL.DIR_REL.'/'.DISPATCHER_FILENAME;
 		}?>
 		<form class="form-inline" method="post" id="add_static_page_form" action="<?php echo $view->url('/dashboard/pages/single')?>">
@@ -38,8 +38,8 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sing
 					</td>
 				</tr>
 			<?php } else { ?>
-		
-				<?php foreach ($generated as $p) { 
+
+				<?php foreach ($generated as $p) {
 					$cp = new Permissions($p);
 					if ($p->getPackageID() > 0) {
 						$package = Package::getByID($p->getPackageID());
@@ -64,6 +64,6 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Sing
 
 			} ?>
 		</table>
-		
+
 	</div>
 <?php echo Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false);

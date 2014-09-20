@@ -12,6 +12,7 @@ use Response;
 use View;
 use User;
 use Concrete\Core\Workflow\Request\ApprovePageRequest;
+use Config;
 
 class Design extends BackendUIPageController {
 
@@ -117,22 +118,22 @@ class Design extends BackendUIPageController {
 			$c = $this->page;
 
 			$pl = false;
-			if ($_POST['pThemeID']) { 
+			if ($_POST['pThemeID']) {
 				$pl = PageTheme::getByID($_POST['pThemeID']);
 			}
-			$nvc = $c->getVersionToModify();				
+			$nvc = $c->getVersionToModify();
 			$data = array();
-			if (is_object($pl)) { 
+			if (is_object($pl)) {
 				$nvc->setTheme($pl);
 			}
 
 			if (!$c->isGeneratedCollection()) {
-			
+
 				if ($_POST['pTemplateID'] && $cp->canEditPageTemplate()) {
 					// now we have to check to see if you're allowed to update this page to this page type.
 					// We do this by checking to see whether the PARENT page allows you to add this page type here.
 					// if this is the home page then we assume you are good
-					
+
 					$template = PageTemplate::getByID($_POST['pTemplateID']);
 					$proceed = true;
 					$pagetype = $c->getPageTypeObject();
@@ -145,15 +146,15 @@ class Design extends BackendUIPageController {
 					if ($proceed) {
 						$data['pTemplateID'] = $_POST['pTemplateID'];
 						$nvc->update($data);
-					}						
-				}				
+					}
+				}
 			}
 
 			$r = new PageEditResponse();
 			$r->setPage($c);
             if ($this->request->request->get('sitemap')) {
                 $r->setMessage(t('Page template and theme updated successfully.'));
-                if ($this->permissions->canApprovePageVersions() && SITEMAP_APPROVE_IMMEDIATELY) {
+                if ($this->permissions->canApprovePageVersions() && Config::get('concrete.misc.sitemap_approve_immediately')) {
                     $pkr = new ApprovePageRequest();
                     $u = new User();
                     $pkr->setRequestedPage($this->page);

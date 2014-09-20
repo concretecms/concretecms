@@ -107,7 +107,8 @@ switch ($tab) {
                                 </div>
                                 <div class="block-content">
                                     <?php
-                                    $block->display()
+                                    $bv = new \Concrete\Core\Block\View\BlockView($block);
+                                    $bv->render('scrapbook');
                                     ?>
                                 </div>
                                 <div class="block-handle"></div>
@@ -211,7 +212,8 @@ switch ($tab) {
 
                                 <div class="block-content">
                                     <?php
-                                    $block->display()
+                                    $bv = new \Concrete\Core\Block\View\BlockView($block);
+                                    $bv->render('scrapbook');
                                     ?>
                                 </div>
                                 <div class="block-handle"></div>
@@ -281,35 +283,42 @@ switch ($tab) {
                         <ul>
 
                             <? $blocktypes = $types[$set->getBlockTypeSetName()];
-                            foreach ($blocktypes as $bt) {
+                            if (!$blocktypes) {
+                                $blocktypes = array();
+                            }
+                            if (count($blocktypes)) {
+                                foreach ($blocktypes as $bt) {
 
-                                $btIcon = $ci->getBlockTypeIconURL($bt);
+                                    $btIcon = $ci->getBlockTypeIconURL($bt);
 
-                                ?>
+                                    ?>
 
-                                <li>
-                                    <a
-                                        data-panel-add-block-drag-item="block"
-                                        class="ccm-panel-add-block-draggable-block-type"
-                                        data-cID="<?= $c->getCollectionID() ?>"
-                                        data-block-type-handle="<?= $bt->getBlockTypeHandle() ?>"
-                                        data-dialog-title="<?= t('Add %s', t($bt->getBlockTypeName())) ?>"
-                                        data-dialog-width="<?= $bt->getBlockTypeInterfaceWidth() ?>"
-                                        data-dialog-height="<?= $bt->getBlockTypeInterfaceHeight() ?>"
-                                        data-has-add-template="<?= $bt->hasAddTemplate() ?>"
-                                        data-supports-inline-add="<?= $bt->supportsInlineAdd() ?>"
-                                        data-btID="<?= $bt->getBlockTypeID() ?>"
-                                        data-dragging-avatar="<?=
-                                        h(
-                                            '<p><img src="' . $btIcon . '" /><span>' . t(
-                                                $bt->getBlockTypeName()) . '</span></p>') ?>"
-                                        title="<?= t($bt->getBlockTypeName()) ?>"
-                                        href="javascript:void(0)"
-                                        >
-                                        <p><img src="<?= $btIcon ?>"/><span><?= t($bt->getBlockTypeName()) ?></span></p>
-                                    </a>
-                                </li>
+                                    <li>
+                                        <a
+                                            data-panel-add-block-drag-item="block"
+                                            class="ccm-panel-add-block-draggable-block-type"
+                                            data-cID="<?= $c->getCollectionID() ?>"
+                                            data-block-type-handle="<?= $bt->getBlockTypeHandle() ?>"
+                                            data-dialog-title="<?= t('Add %s', t($bt->getBlockTypeName())) ?>"
+                                            data-dialog-width="<?= $bt->getBlockTypeInterfaceWidth() ?>"
+                                            data-dialog-height="<?= $bt->getBlockTypeInterfaceHeight() ?>"
+                                            data-has-add-template="<?= $bt->hasAddTemplate() ?>"
+                                            data-supports-inline-add="<?= $bt->supportsInlineAdd() ?>"
+                                            data-btID="<?= $bt->getBlockTypeID() ?>"
+                                            data-dragging-avatar="<?=
+                                            h(
+                                                '<p><img src="' . $btIcon . '" /><span>' . t(
+                                                    $bt->getBlockTypeName()) . '</span></p>') ?>"
+                                            title="<?= t($bt->getBlockTypeName()) ?>"
+                                            href="javascript:void(0)"
+                                            >
+                                            <p><img src="<?= $btIcon ?>"/><span><?= t($bt->getBlockTypeName()) ?></span></p>
+                                        </a>
+                                    </li>
 
+                                <? } ?>
+                            <? } else { ?>
+                                <p><?=t('No block types available.')?></p>
                             <? } ?>
                         </ul>
                     </div>

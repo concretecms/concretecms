@@ -41,7 +41,7 @@ class UserEntity extends Entity
         if (!$peID) {
             $db->Execute("INSERT INTO PermissionAccessEntities (petID) VALUES(?)", array($petID));
             $peID = $db->Insert_ID();
-            Config::save('ACCESS_ENTITY_UPDATED', time());
+            Config::save('concrete.misc.access_entity_updated', time());
             $db->Execute(
                 'INSERT INTO PermissionAccessEntityUsers (peID, uID) VALUES (?, ?)',
                 array($peID, $ui->getUserID()));

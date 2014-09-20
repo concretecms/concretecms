@@ -768,7 +768,7 @@
                         <data table="btContentLocal">
                             <record>
                                 <content>
-                                    <![CDATA[<p>© 2014 Elemental Theme               <a href="">Privacy</a>          <a href="">Legal</a></p>]]></content>
+                                    <![CDATA[<p>© 2014 Elemental Theme</p>]]></content>
                             </record>
                         </data>
                     </block>
@@ -782,7 +782,12 @@
                         <data table="btContentLocal">
                             <record>
                                 <content>
-                                    <![CDATA[<p><a href="">Monthly Newsletter</a></p><p><a href="">FAQ / Help</a></p><p><a href="">Case Studies</a></p><p><a href="">Select Client List</a></p><p><a href="">Another Link</a></p><p></p>]]></content>
+                                    <![CDATA[
+                                    <p><a href="{ccm:export:page:/team/faq}">FAQ / Help</a></p>
+                                    <p><a href="{ccm:export:page:/portfolio}">Case Studies</a></p>
+                                    <p><a href="{ccm:export:page:/blog}">Blog</a></p>
+                                    <p><a href="{ccm:export:page:}">Another Link</a></p>
+                                    ]]></content>
                             </record>
                         </data>
                     </block>
@@ -792,10 +797,10 @@
         <stack name="Footer Site Title" type="global_area">
             <area name="Main">
                 <blocks>
-                    <block type="html" name="">
+                    <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<a href="/" id="footer-site-title">Elemental</a>]]></content>
+                                <content><![CDATA[<a href="{ccm:export:page:}" id="footer-site-title">Elemental</a>]]></content>
                             </record>
                         </data>
                     </block>
@@ -854,10 +859,10 @@
         <stack name="Header Site Title" type="global_area">
             <area name="Main">
                 <blocks>
-                    <block type="html" name="">
+                    <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<a href="/" id="header-site-title">Elemental</a>]]></content>
+                                <content><![CDATA[<a href="{ccm:export:page:}" id="header-site-title">Elemental</a>]]></content>
                             </record>
                         </data>
                     </block>
@@ -1165,7 +1170,7 @@
                     <block type="content" name="">
                         <data table="btContentLocal">
                             <record>
-                                <content><![CDATA[<p style="text-align: center"><span class="title-caps">Satisfied Customers</span></p>]]></content>
+                                <content><![CDATA[<p style="text-align: center"><span class="title-caps">Customizable footer area with accent class.</span></p>]]></content>
                             </record>
                         </data>
                     </block>

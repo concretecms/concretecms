@@ -205,6 +205,7 @@ function ConcretePanel(options) {
         if (!this.detail) {
             return false;
         }
+        html.removeClass('ccm-panel-detail-open');
         $('.ccm-panel-detail').remove();
         $('.ccm-panel-detail-form-actions').remove();
         $('.ccm-page').removeClass().addClass('ccm-page');
@@ -287,9 +288,9 @@ function ConcretePanel(options) {
             $('button[data-panel-detail-action=cancel]').on('click', function () {
                 obj.closePanelDetail();
             });
+            $content.find('[data-panel-detail-form]').concreteAjaxForm();
             $('button[data-panel-detail-action=submit]').on('click', function () {
-
-                $('[data-panel-detail-form]').concreteAjaxForm().submit();
+                $('[data-panel-detail-form]').submit();
             });
         }
     };

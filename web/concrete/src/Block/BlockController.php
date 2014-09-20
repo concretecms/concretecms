@@ -9,6 +9,7 @@ use Concrete\Core\Controller;
 use Concrete\Core\Feature\Feature;
 use Concrete\Core\Legacy\BlockRecord;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
+use Config;
 use Events;
 use Loader;
 use Package;
@@ -142,7 +143,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
                 }
             }
             $this->record->Replace();
-            if ($this->cacheBlockRecord() && ENABLE_BLOCK_CACHE) {
+            if ($this->cacheBlockRecord() && Config::get('concrete.cache.blocks')) {
                 $record = serialize($this->record);
                 $db = Loader::db();
                 $db->Execute('update Blocks set btCachedBlockRecord = ? where bID = ?', array($record, $this->bID));
@@ -243,13 +244,13 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected function load()
     {
         if ($this->btTable) {
-            if ($this->btCacheBlockRecord && $this->btCachedBlockRecord && ENABLE_BLOCK_CACHE) {
+            if ($this->btCacheBlockRecord && $this->btCachedBlockRecord && Config::get('concrete.cache.blocks')) {
                 $this->record = unserialize($this->btCachedBlockRecord);
             } else {
                 $this->record = new BlockRecord($this->btTable);
                 $this->record->bID = $this->bID;
                 $this->record->Load('bID=' . $this->bID);
-                if ($this->btCacheBlockRecord && ENABLE_BLOCK_CACHE) {
+                if ($this->btCacheBlockRecord && Config::get('concrete.cache.blocks')) {
                     // this is the first time we're loading
                     $record = serialize($this->record);
                     $db = Loader::db();

@@ -25,15 +25,7 @@ composer.phar
 /web/concrete/packages/*
 
 # more stuff
-/web/application/css/*
-/web/application/js/*
-/web/application/blocks/*
 /web/application/languages/*
-/web/application/tools/*
-/web/application/controllers/*
-/web/application/single_pages/*
-/web/application/models/*
-/web/application/views/*
 
 # ignore sitemap.xml
 /web/sitemap.xml

@@ -3,6 +3,7 @@ namespace Concrete\Core\User\Group;
 
 use \Concrete\Core\Foundation\Object;
 use Concrete\Core\User\User;
+use Config;
 use Loader;
 use CacheLocal;
 use GroupTree;
@@ -283,7 +284,7 @@ class Group extends Object implements \Concrete\Core\Permission\ObjectInterface
             }
             foreach ($parentGroups as $pg) {
                 $return .= h(tc('GroupName', $pg->getGroupName()));
-                $return .= ' ' . GROUP_DISPLAY_NAME_SEPARATOR . ' ';
+                $return .= ' ' . Config::get('concrete.seo.group_name_separator') . ' ';
             }
             $return = trim($return);
             if ($includeHTML) {

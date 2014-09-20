@@ -4,6 +4,7 @@ namespace Concrete\Core\User\Group;
 use Concrete\Core\Search\ItemList\Database\ItemList as DatabaseItemList;
 use Concrete\Core\Search\Pagination\Pagination;
 use Loader;
+use Config;
 use Pagerfanta\Adapter\DoctrineDbalAdapter;
 use Permissions;
 
@@ -46,7 +47,7 @@ class GroupList extends DatabaseItemList
      */
     public function filterByAssignable()
     {
-        if (PERMISSIONS_MODEL != 'simple') {
+        if (Config::get('concrete.permissions.model') != 'simple') {
             // there's gotta be a more reasonable way than this but right now i'm not sure what that is.
             $excludeGroupIDs = array(GUEST_GROUP_ID, REGISTERED_GROUP_ID);
             $db = Loader::db();

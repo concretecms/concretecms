@@ -203,8 +203,7 @@ class UserList extends DatabaseItemList
      */
     public function filterByDateAdded($date, $comparison = '=')
     {
-        $this->query->andWhere($this->query->expr()->comparison('u.uDateAdded', $comparison, ':uDateAdded'));
-        $this->query->setParameter('uDateAdded', $date);
+        $this->query->andWhere($this->query->expr()->comparison('u.uDateAdded', $comparison, $this->query->createNamedParameter($date)));
     }
 
     /**

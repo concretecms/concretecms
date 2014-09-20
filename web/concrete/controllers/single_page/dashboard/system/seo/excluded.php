@@ -7,17 +7,17 @@ use Loader;
 use URLify;
 
 class Excluded extends DashboardPageController {
-		
+
 	public function save() {
-		Config::save('SEO_EXCLUDE_WORDS',Loader::helper('security')->sanitizeString($this->post('SEO_EXCLUDE_WORDS')));
+		Config::save('concrete.seo.exclude_words',Loader::helper('security')->sanitizeString($this->post('SEO_EXCLUDE_WORDS')));
 		$this->redirect('/dashboard/system/seo/excluded', 'saved');
 	}
 
 	public function reset() {
-		Config::clear("SEO_EXCLUDE_WORDS");
+		Config::clear("concrete.seo.exclude_words");
 		$this->redirect('/dashboard/system/seo/excluded', 'reset_complete');
 	}
-	
+
 	public function view($message = false) {
 		if ($message) {
 			switch($message) {
@@ -30,7 +30,7 @@ class Excluded extends DashboardPageController {
 			}
 		}
 		$this->set('SEO_EXCLUDE_WORDS_ORIGINAL_ARRAY', Urlify::$remove_list);
-		$excludeSeoWords = Config::get('SEO_EXCLUDE_WORDS');
+		$excludeSeoWords = Config::get('concrete.seo.exclude_words');
 		if(is_string($excludeSeoWords)) {
 			if(strlen($excludeSeoWords)) {
 				$remove_list = explode(',', $excludeSeoWords);
@@ -45,7 +45,7 @@ class Excluded extends DashboardPageController {
 			$remove_list = Urlify::$remove_list;
 		}
 		$this->set('SEO_EXCLUDE_WORDS_ARRAY', $remove_list);
-		$this->set('SEO_EXCLUDE_WORDS',SEO_EXCLUDE_WORDS);
+		$this->set('SEO_EXCLUDE_WORDS',Config::get('concrete.seo.exclude_words'));
 	}
 
 }

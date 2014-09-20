@@ -95,7 +95,7 @@ class User extends Object
     {
 
         $session = Core::make('session');
-        $aeu = Config::get('ACCESS_ENTITY_UPDATED');
+        $aeu = Config::get('concrete.misc.access_entity_updated');
         if ($aeu && $aeu > $session->get('accessEntitiesUpdated')) {
             User::refreshUserGroups();
         }
@@ -144,7 +144,7 @@ class User extends Object
                 Session::remove('accessEntities');
             }
             $v = array($username);
-            if (defined('USER_REGISTRATION_WITH_EMAIL_ADDRESS') && USER_REGISTRATION_WITH_EMAIL_ADDRESS == true) {
+            if (Config::get('concrete.user.registration.email_registration')) {
                 $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange from Users where uEmail = ?";
             } else {
                 $q = "select uID, uName, uIsActive, uIsValidated, uTimezone, uDefaultLanguage, uPassword, uLastPasswordChange from Users where uName = ?";
@@ -155,7 +155,7 @@ class User extends Object
                 $row = $r->fetchRow();
                 $pw_is_valid_legacy = (defined('PASSWORD_SALT') && User::legacyEncryptPassword($password) == $row['uPassword']);
                 $pw_is_valid = $pw_is_valid_legacy || $this->getUserPasswordHasher()->checkPassword($password, $row['uPassword']);
-                if ($row['uID'] && $row['uIsValidated'] === '0' && defined('USER_VALIDATE_EMAIL') && USER_VALIDATE_EMAIL == TRUE) {
+                if ($row['uID'] && $row['uIsValidated'] === '0' && Config::get('concrete.user.registration.validate_email')) {
                     $this->loadError(USER_NON_VALIDATED);
                 } elseif ($row['uID'] && $row['uIsActive'] && $pw_is_valid) {
                     $this->uID = $row['uID'];
@@ -248,11 +248,11 @@ class User extends Object
     {
         $db = Loader::db();
         $uLastLogin = $db->getOne("select uLastLogin from Users where uID = ?", array($this->uID));
-        $ip = ip2long(Loader::helper('validation/ip')->getRequestIP());
-        if (empty($ip)) {
-            $ip = 0;
-        }
-        $db->query("update Users set uLastIP = ?, uLastLogin = ?, uPreviousLogin = ?, uNumLogins = uNumLogins + 1 where uID = ?", array($ip, time(), $uLastLogin, $this->uID));
+
+        /** @var \Concrete\Core\Permission\IPService $iph */
+        $iph = Core::make('helper/validation/ip');
+        $ip = $iph->getRequestIP();
+        $db->query("update Users set uLastIP = ?, uLastLogin = ?, uPreviousLogin = ?, uNumLogins = uNumLogins + 1 where uID = ?", array(($ip === false)?(''):($ip->getIp()), time(), $uLastLogin, $this->uID));
     }
 
     public function recordView($c)
@@ -328,9 +328,9 @@ class User extends Object
             implode(':', $cookie),
             time() + USER_FOREVER_COOKIE_LIFETIME,
             DIR_REL . '/',
-            defined('SESSION_COOKIE_PARAM_DOMAIN') ? SESSION_COOKIE_PARAM_DOMAIN : '',
-            defined('SESSION_COOKIE_PARAM_SECURE') ? SESSION_COOKIE_PARAM_SECURE : false,
-            defined('SESSION_COOKIE_PARAM_HTTPONLY') ? SESSION_COOKIE_PARAM_HTTPONLY : false
+            Config::get('concrete.session.cookie.domain'),
+            Config::get('concrete.session.cookie.secure'),
+            Config::get('concrete.session.cookie.httponly')
         );
     }
 
@@ -373,9 +373,9 @@ class User extends Object
 
         if (isset($_COOKIE['ccmUserHash']) && $_COOKIE['ccmUserHash']) {
             setcookie("ccmUserHash", "", 315532800, DIR_REL . '/',
-            (defined('SESSION_COOKIE_PARAM_DOMAIN')?SESSION_COOKIE_PARAM_DOMAIN:''),
-            (defined('SESSION_COOKIE_PARAM_SECURE')?SESSION_COOKIE_PARAM_SECURE:false),
-            (defined('SESSION_COOKIE_PARAM_HTTPONLY')?SESSION_COOKIE_PARAM_HTTPONLY:false));
+            Config::get('concrete.session.cookie.domain'),
+            Config::get('concrete.session.cookie.secure'),
+            Config::get('concrete.session.cookie.httponly'));
         }
     }
 
@@ -434,10 +434,8 @@ class User extends Object
     {
         if ($this->getUserDefaultLanguage() != '') {
             return $this->getUserDefaultLanguage();
-        } elseif (defined('LOCALE')) {
-            return LOCALE;
         } else {
-            return SITE_LOCALE;
+            return Config::get('concrete.locale');
         }
     }
 
@@ -635,7 +633,7 @@ class User extends Object
     {
         if ($this->isRegistered()) {
             $db = Loader::db();
-            $val = $db->GetOne("select cfValue from Config where uID = ? and cfKey = ?", array($this->getUserID(), $cfKey));
+            $val = $db->GetOne("select cfValue from ConfigStore where uID = ? and cfKey = ?", array($this->getUserID(), $cfKey));
 
             return $val;
         }
@@ -654,7 +652,7 @@ class User extends Object
     public function saveConfig($cfKey, $cfValue)
     {
         $db = Loader::db();
-        $db->Replace('Config', array('cfKey' => $cfKey, 'cfValue' => $cfValue, 'uID' => $this->getUserID()), array('cfKey', 'uID'), true);
+        $db->Replace('ConfigStore', array('cfKey' => $cfKey, 'cfValue' => $cfValue, 'uID' => $this->getUserID()), array('cfKey', 'uID'), true);
     }
 
     public function refreshCollectionEdit(&$c)
@@ -693,7 +691,7 @@ class User extends Object
         if (isset($this->hasher)) {
             return $this->hasher;
         }
-        $this->hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
+        $this->hasher = new PasswordHash(Config::get('concrete.user.password.hash_cost_log2'), Config::get('concrete.user.password.hash_portable'));
 
         return $this->hasher;
     }

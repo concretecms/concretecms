@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Concrete\Controller\SinglePage\Dashboard\System\Conversations;
 use \Concrete\Core\Page\Controller\DashboardPageController;
@@ -9,21 +9,21 @@ class Settings extends DashboardPageController {
 
 	public function view() {
 		$helperFile = Loader::helper('concrete/file');
-		$fileAccessFileTypes = Config::get('CONVERSATIONS_ALLOWED_FILE_TYPES');
+		$fileAccessFileTypes = Config::get('conversations.files.allowed_types');
 		//is nothing's been defined, display the constant value
 		if (!$fileAccessFileTypes) {
-			$fileAccessFileTypes = $helperFile->unserializeUploadFileExtensions(UPLOAD_FILE_EXTENSIONS_ALLOWED);
+			$fileAccessFileTypes = $helperFile->unserializeUploadFileExtensions(Config::get('concrete.upload.extensions'));
 		}
 		else {
 			$fileAccessFileTypes = $helperFile->unserializeUploadFileExtensions($fileAccessFileTypes);
 		}
 		$this->set('file_access_file_types', $fileAccessFileTypes);
-		$this->set('maxFileSizeGuest', Config::get('CONVERSATIONS_MAX_FILE_SIZE_GUEST'));
-		$this->set('maxFileSizeRegistered', Config::get('CONVERSATIONS_MAX_FILE_SIZE_REGISTERED'));
-		$this->set('maxFilesGuest', Config::get('CONVERSATIONS_MAX_FILES_GUEST'));
-		$this->set('maxFilesRegistered', Config::get('CONVERSATIONS_MAX_FILES_REGISTERED'));
+		$this->set('maxFileSizeGuest', Config::get('conversations.files.guest.max_size'));
+		$this->set('maxFileSizeRegistered', Config::get('conversations.files.registered.max_size'));
+		$this->set('maxFilesGuest', Config::get('conversations.files.guest.max'));
+		$this->set('maxFilesRegistered', Config::get('conversations.files.registered.max'));
 		$this->set('fileExtensions', implode(',', $fileAccessFileTypes));
-        $this->set('attachmentsEnabled', intval(Config::get('CONVERSATIONS_ATTACHMENTS_ENABLED')));
+        $this->set('attachmentsEnabled', intval(Config::get('concrete.conversations.attachments_enabled')));
         $this->loadEditors();
 	}
 
@@ -69,26 +69,22 @@ class Settings extends DashboardPageController {
 	public function save() {
 		$helper_file = Loader::helper('concrete/file');
 		if ($this->post('maxFileSizeGuest')) {
-			Config::save('CONVERSATIONS_MAX_FILE_SIZE_GUEST', $this->post('maxFileSizeGuest')); 
+			Config::save('conversations.files.guest.max_size', $this->post('maxFileSizeGuest'));
 		}
 		if($this->post('maxFileSizeRegistered')){
-			Config::save('CONVERSATIONS_MAX_FILE_SIZE_REGISTERED', $this->post('maxFileSizeRegistered'));
+			Config::save('conversations.files.registered.max_size', $this->post('maxFileSizeRegistered'));
 		}
 		if($this->post('maxFilesGuest')) {
-			Config::save('CONVERSATIONS_MAX_FILES_GUEST', $this->post('maxFilesGuest'));
+			Config::save('conversations.files.guest.max', $this->post('maxFilesGuest'));
 		}
 		if($this->post('maxFilesGuest')){
-			Config::save('CONVERSATIONS_MAX_FILES_REGISTERED', $this->post('maxFilesRegistered')) ;
+			Config::save('conversations.files.registered.max', $this->post('maxFilesRegistered')) ;
 		}
-        if ($this->post('attachmentsEnabled')) {
-            Config::save('CONVERSATIONS_ATTACHMENTS_ENABLED', 1);
-        } else {
-            Config::save('CONVERSATIONS_ATTACHMENTS_ENABLED', 0);
-        }
+        Config::save('concrete.conversations.attachments_enabled', !!$this->post('attachmentsEnabled'));
 		if ($this->post('fileExtensions')){
 			$types = preg_split('{,}',$this->post('fileExtensions'),null,PREG_SPLIT_NO_EMPTY);
 			$types = $helper_file->serializeUploadFileExtensions($types);
-			Config::save('CONVERSATIONS_ALLOWED_FILE_TYPES',$types);
+			Config::save('conversations.files.allowed_types',$types);
 		}
         $this->saveEditors();
 		$this->success();

@@ -7,6 +7,8 @@ use Loader;
 class Add extends BackendInterfacePageController {
 
 	protected $viewPath = '/dialogs/page/add';
+    protected $frequentPageTypes = array();
+    protected $otherPageTypes = array();
 
 	protected function canAccess() {
 		return $this->permissions->canAddSubpages();

@@ -6,6 +6,7 @@ namespace Concrete\Core\Foundation;
  * @copyright  Copyright (c) 2003-2012 Concrete5. (http://www.concrete5.org)
  * @license    http://www.concrete5.org/license/     MIT License
  */
+use Config;
 
 /**
  * Useful functions for getting paths for concrete5 items.
@@ -28,8 +29,8 @@ class Environment {
 	public static function get() {
 		static $env;
 		if (!isset($env)) {
-			if (file_exists(DIR_FILES_CACHE . '/' . FILENAME_ENVIRONMENT_CACHE)) {
-				$r = @file_get_contents(DIR_FILES_CACHE . '/' . FILENAME_ENVIRONMENT_CACHE);
+			if (file_exists(Config::get('concrete.cache.directory') . '/' . Config::get('concrete.cache.environment.file'))) {
+				$r = @file_get_contents(Config::get('concrete.cache.directory') . '/' . Config::get('concrete.cache.environment.file'));
 				if ($r) {
 					$en = @unserialize($r);
 					if ($en instanceof Environment) {
@@ -45,15 +46,15 @@ class Environment {
 	}
 
 	public static function saveCachedEnvironmentObject() {
-		if (!file_exists(DIR_FILES_CACHE . '/' . FILENAME_ENVIRONMENT_CACHE)) {
+		if (!file_exists(Config::get('concrete.cache.directory') . '/' . Config::get('concrete.cache.environment.file'))) {
 			$env = new Environment();
 			$env->getOverrides();
-			@file_put_contents(DIR_FILES_CACHE . '/' . FILENAME_ENVIRONMENT_CACHE, serialize($env));
+			@file_put_contents(Config::get('concrete.cache.directory') . '/' . Config::get('concrete.cache.environment.file'), serialize($env));
 		}
 	}
 
 	public function clearOverrideCache() {
-		@unlink(DIR_FILES_CACHE . '/' . FILENAME_ENVIRONMENT_CACHE);
+		@unlink(Config::get('concrete.cache.directory') . '/' . Config::get('concrete.cache.environment.file'));
 		$this->overridesScanned = false;
 	}
 

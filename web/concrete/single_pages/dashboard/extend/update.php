@@ -10,11 +10,11 @@ if ($tp->canInstallPackages()) {
 
 $pkgRemote = array();
 $pkgLocal = array();
-if (ENABLE_MARKETPLACE_SUPPORT && is_object($mi)) {
-	if ($mi->isConnected()) { 
+if (Config::get('concrete.marketplace.enabled') && is_object($mi)) {
+	if ($mi->isConnected()) {
 		$pkgArray = Package::getInstalledList();
 		foreach($pkgArray as $pkg) {
-			if ($pkg->isPackageInstalled() && version_compare($pkg->getPackageVersion(), $pkg->getPackageVersionUpdateAvailable(), '<')) { 
+			if ($pkg->isPackageInstalled() && version_compare($pkg->getPackageVersion(), $pkg->getPackageVersionUpdateAvailable(), '<')) {
 				$pkgRemote[] = $pkg;
 			}
 		}
@@ -40,11 +40,11 @@ if (!$tp->canInstallPackages()) { ?>
 		<? } else { ?>
 
 			<table class="table update-addons-table">
-			<? foreach($pkgRemote as $pkg) { 
+			<? foreach($pkgRemote as $pkg) {
 
 				$rpkg = MarketplaceRemoteItem::getByHandle($pkg->getPackageHandle());
 			?>
-			
+
 				<tr>
 					<td class="ccm-marketplace-list-thumbnail" rowspan="2"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
 					<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?></h3><p><?=$pkg->getPackageDescription()?></p>
@@ -54,7 +54,7 @@ if (!$tp->canInstallPackages()) { ?>
 					<? if (!is_object($rpkg)) { ?>
 						<td class="ccm-marketplace-list-install-button"><input class="btn" disabled="disabled" type="button" value="<?=t('More Information')?>" /> <input class="btn primary" disabled="disabled" type="button" value="<?=t('Download and Install')?>" />
 					<? } else { ?>
-						<td class="ccm-marketplace-list-install-button"><a class="btn" target="_blank" href="<?=$rpkg->getRemoteURL()?>"><?=t('More Information')?></a> <?=$ch->button(t("Download and Install"), View::url('/dashboard/extend/update', 'prepare_remote_upgrade', $rpkg->getMarketplaceItemID()), "", "primary")?></td>					
+						<td class="ccm-marketplace-list-install-button"><a class="btn" target="_blank" href="<?=$rpkg->getRemoteURL()?>"><?=t('More Information')?></a> <?=$ch->button(t("Download and Install"), View::url('/dashboard/extend/update', 'prepare_remote_upgrade', $rpkg->getMarketplaceItemID()), "", "primary")?></td>
 					<? } ?>
 				</tr>
 				<? if (is_object($rpkg)) { ?>
@@ -78,11 +78,11 @@ if (!$tp->canInstallPackages()) { ?>
 						<div class="block-message alert-message error"><p><?=t('Unable to locate this add-on on concrete5.org')?></p></div>
 					</td>
 				</tr>
-				<? } ?>		
+				<? } ?>
 			<? }
-			
+
 			foreach($pkgLocal as $pkg) { ?>
-			
+
 				<tr>
 					<td class="ccm-marketplace-list-thumbnail" rowspan="2"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
 					<td class="ccm-addon-list-description"><h3><?=$pkg->getPackageName()?></h3><p><?=$pkg->getPackageDescription()?></p>
@@ -104,11 +104,11 @@ if (!$tp->canInstallPackages()) { ?>
 						<? } ?>
 					</td>
 				</tr>
-				
-			<? } ?>		
-			
+
+			<? } ?>
+
 			</table>
-			
+
 		<? } ?>
 
 <? } ?>
@@ -119,19 +119,19 @@ if (!$tp->canInstallPackages()) { ?>
 			<h3><?=t("Project Page")?></h3>
 			<p><?=t('Your site is currently connected to the concrete5 community. Your project page URL is:')?><br/>
 			<a href="<?=$mi->getSitePageURL()?>"><?=$mi->getSitePageURL()?></a></p>
-		
+
 		<? } else if (is_object($mi) && $mi->hasConnectionError()) { ?>
-			
+
 			<?=Loader::element('dashboard/marketplace_connect_failed');?>
-		
-		<? } else if ($tp->canInstallPackages() && ENABLE_MARKETPLACE_SUPPORT == true) { ?>
+
+		<? } else if ($tp->canInstallPackages() && Config::get('concrete.marketplace.enabled') == true) { ?>
 
 			<div class="well" style="padding:10px 20px;">
 				<h3><?=t('Connect to Community')?></h3>
 				<p><?=t('Your site is not connected to the concrete5 community. Connecting lets you easily extend a site with themes and add-ons. Connecting enables automatic updates.')?></p>
 				<p><a class="btn success" href="<?=$view->url('/dashboard/extend/connect', 'register_step1')?>"><?=t("Connect to Community")?></a></p>
 			</div>
-		
+
 		<? } ?>
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper();?>

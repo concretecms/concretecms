@@ -110,7 +110,12 @@ class Category extends Object {
 		}
 	}
 
-	public function clearAccessEntityTypeCategories() {
+    public function deassociateAccessEntityType(\Concrete\Core\Permission\Access\Entity\Type $pt) {
+        $db = Loader::db();
+        $db->delete('PermissionAccessEntityTypeCategories', array('petID' => $pt->getAccessEntityTypeID(), 'pkCategoryID' => $this->getPermissionKeyCategoryID()));
+    }
+
+    public function clearAccessEntityTypeCategories() {
 		$db = Loader::db();
 		$db->Execute('delete from PermissionAccessEntityTypeCategories where pkCategoryID = ?', $this->pkCategoryID);
 	}

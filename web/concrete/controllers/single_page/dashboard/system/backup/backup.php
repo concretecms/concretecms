@@ -1,21 +1,20 @@
-<?php 
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Backup;
 use \Concrete\Core\Page\Controller\DashboardPageController;
-use Config;
+use Core;
 use Loader;
 use TaskPermission;
 use Exception;
-use Cache;
 use \Concrete\Core\Backup\Backup as ConcreteBackup;
 
-class Backup extends DashboardPageController { 	 
+class Backup extends DashboardPageController {
 
 	public function run_backup() {
         if($this->token->validate('run_backup')) {
 
             //@TODO this backup stuff needs to be reworked since we're not using adodb anymore
-            throw new Exception(t('This has not been implemented in 5.7'));
-
+            $this->set('message', 'This has not been implemented in 5.7');
+            return;
 
             $encrypt = ($this->post('useEncryption')?1:0);
             $tp = new TaskPermission();
@@ -35,7 +34,7 @@ class Backup extends DashboardPageController {
 
 	public function view() {
 		$tp = new TaskPermission();
-		if ($tp->canBackup()) {		
+		if ($tp->canBackup()) {
 			$fh = Loader::helper('file');
 			$arr_bckups = @$fh->getDirectoryContents(DIR_FILES_BACKUPS);
 			$arr_backupfileinfo = Array();
@@ -48,16 +47,16 @@ class Backup extends DashboardPageController {
 			 }
 			 $this->set('backups',$arr_backupfileinfo);
 			}
-		
+
 		}
 	}
-	
+
 	public function download($file) {
 		$tp = new TaskPermission();
 		  if (!$tp->canBackup()) {
 			return false;
 		}
-		
+
 		if (file_exists(DIR_FILES_BACKUPS . '/'. $file)) {
 			chmod(DIR_FILES_BACKUPS . '/'. $file, 0666);
 			if (file_exists(DIR_FILES_BACKUPS . '/' . $file)) {
@@ -71,7 +70,7 @@ class Backup extends DashboardPageController {
 			$this->view();
 		}
 	}
-	
+
 	public function delete_backup() {
 		$tp = new TaskPermission();
 		  if (!$tp->canBackup()) {
@@ -103,8 +102,8 @@ class Backup extends DashboardPageController {
 
 		$file = basename(realpath(DIR_FILES_BACKUPS . '/' . $this->post('backup_file')));
 		$fh = Loader::helper('file');
-		
-		$db = Loader::db(); 
+
+		$db = Loader::db();
 		if (!file_exists(DIR_FILES_BACKUPS . '/'. $file)) {
 			throw new Exception(t('Invalid backup file specified.'));
 		}
@@ -116,25 +115,25 @@ class Backup extends DashboardPageController {
 			return false;
 		}
 		$crypt = Loader::helper('encryption');
-		if ( !preg_match('/INSERT/m',$str_restSql) && !preg_match('/CREATE/m',$str_restSql) ) {	
+		if ( !preg_match('/INSERT/m',$str_restSql) && !preg_match('/CREATE/m',$str_restSql) ) {
 			$str_restSql = $crypt->decrypt($str_restSql);
 		}
 		$arr_sqlStmts = explode("\n\n",$str_restSql);
 
 		foreach ($arr_sqlStmts as $str_stmt) {
-			if (trim($str_stmt) != "") { 
+			if (trim($str_stmt) != "") {
 				$res_restoration = $db->execute($str_stmt);
-				if (!$res_restoration) { 
+				if (!$res_restoration) {
 					$this->error->add(t("There was an error trying to restore the database. Affected query: %s", $str_stmt));
 					$this->view();
 					return false;
 				}
-			}		
+			}
 		}
-		
-		//reset perms for security! 
+
+		//reset perms for security!
 		chmod(DIR_FILES_BACKUPS . '/'. $file, 000);
-		Cache::flush();
+        Core::make('cache')->flush();
 		$this->redirect('/dashboard/system/backup/backup', 'restoration_successful');
 	}
 

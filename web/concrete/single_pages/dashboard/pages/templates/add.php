@@ -2,13 +2,13 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 ?>
-  
-	
+
+
     <form method="post" class="form-horizontal" id="add_page_template" action="<?=$view->url('/dashboard/pages/templates/add', 'add_page_template')?>">
     <?=$this->controller->token->output('add_page_template')?>
     <?=$form->hidden('task', 'add'); ?>
-	
-    
+
+
     <div class="form-group">
         <label for="pTemplateName" class="col-md-2 control-label"><?=t('Name')?></label>
         <div class="col-md-10">
@@ -31,7 +31,7 @@ $form = Loader::helper('form');
         $i = 0;
         foreach($icons as $ic) { ?>
           <div class="col-sm-2">
-            <label style="text-align: center">
+            <label style="display:block;text-align: center">
                  <img src="<?=REL_DIR_FILES_PAGE_TEMPLATE_ICONS.'/'.$ic;?>" class="img-responsive" style="vertical-align: middle" />
                  <?=$form->radio('pTemplateIcon', $ic, $i == 0)?>
             </label>
@@ -46,5 +46,5 @@ $form = Loader::helper('form');
         <a href="<?=$view->url('/dashboard/pages/templates')?>" class="btn btn-default pull-left"><?=t("Cancel")?></a>
         <button type="submit" class="btn pull-right btn-primary"><?=t('Add')?></button>
     </div>
-    </div>    
+    </div>
     </form>

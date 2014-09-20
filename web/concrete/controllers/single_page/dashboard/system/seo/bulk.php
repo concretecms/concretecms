@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Concrete\Controller\SinglePage\Dashboard\System\Seo;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
@@ -7,9 +7,9 @@ use Page;
 use \Concrete\Core\Page\PageList;
 
 class Bulk extends DashboardPageController {
-	
+
 	public $helpers = array('form', 'concrete/ui');
-	
+
 	public function view() {
 		$html = Loader::helper('html');
 		$pageList = $this->getRequestedSearchResults();
@@ -25,17 +25,17 @@ class Bulk extends DashboardPageController {
 			$this->set('pagination', $paginationView);
    		}
 	}
-	
+
 	public function saveRecord() {
 		$text = Loader::helper('text');
         $success = t('success');
         $cID = $this->post('cID');
         $c = Page::getByID($cID);
-        if (trim(sprintf(PAGE_TITLE_FORMAT, SITE, $c->getCollectionName())) != trim($this->post('meta_title')) && $this->post('meta_title')) {
+        if (trim(sprintf(Config::get('concrete.seo.title_format'), Config::get('concrete.site'), $c->getCollectionName())) != trim($this->post('meta_title')) && $this->post('meta_title')) {
         	 $c->setAttribute('meta_title',trim($this->post('meta_title')));
 		}
 
-		if (trim(htmlspecialchars($pageDescription, ENT_COMPAT, APP_CHARSET)) != trim($this->post('meta_description')) && $this->post('meta_description'))  {
+		if (trim(htmlspecialchars($c->getCollectionDescription(), ENT_COMPAT, APP_CHARSET)) != trim($this->post('meta_description')) && $this->post('meta_description'))  {
         	$c->setAttribute('meta_description', trim($this->post('meta_description')));
 		}
     	$c->setAttribute('meta_keywords',$this->post('meta_keywords'));
@@ -53,12 +53,12 @@ class Bulk extends DashboardPageController {
      * @return bool|PageList
      */
     public function getRequestedSearchResults() {
-	
+
 		$dh = Loader::helper('concrete/dashboard/sitemap');
 		if (!$dh->canRead()) {
 			return false;
 		}
-		
+
 		$pageList = new PageList();
 
 		if ($_REQUEST['submit_search']) {
@@ -69,9 +69,9 @@ class Bulk extends DashboardPageController {
 		$pageList->displayUnapprovedPages();
 
 		$pageList->sortBy('cDateModified', 'desc');
-			
+
 		$cvName = htmlentities($req['cvName'], ENT_QUOTES, APP_CHARSET);
-		
+
 		if ($cvName != '') {
 			$pageList->filterByName($cvName);
 		}
@@ -103,17 +103,16 @@ class Bulk extends DashboardPageController {
 			$this->set('keywordCheck', true);
 			$parentDialogOpen = 1;
 		}
-		
+
 		if ($_REQUEST['noDescription'] == 1){
 			$pageList->filter('CollectionSearchIndexAttributes.ak_meta_description', NULL ,'=');
 			$this->set('descCheck', true);
 			$parentDialogOpen = 1;
 		}
-		
+
 		$this->set('searchRequest', $req);
 		$this->set('parentDialogOpen', $parentDialogOpen);
-		
+
 		return $pageList;
 	}
 }
-	

@@ -1,7 +1,9 @@
 <?php
 
 namespace Concrete\Core\Application\Service;
+use Config;
 use Loader;
+use File;
 use Page;
 use URL;
 use Localization;
@@ -202,18 +204,16 @@ class Dashboard {
 		$obj->checkData = false;
 		$obj->displayCaption = false;
 
-		if (defined('WHITE_LABEL_DASHBOARD_BACKGROUND_FEED') && WHITE_LABEL_DASHBOARD_BACKGROUND_FEED != '') {
-			$image = WHITE_LABEL_DASHBOARD_BACKGROUND_FEED . '/' . $filename;
-		} else if (defined('WHITE_LABEL_DASHBOARD_BACKGROUND_SRC') && WHITE_LABEL_DASHBOARD_BACKGROUND_SRC != '') {
-			$image = WHITE_LABEL_DASHBOARD_BACKGROUND_SRC;
+		if (Config::get('concrete.white_label.dashboard_background')) {
+			$image = Config::get('concrete.white_label.dashboard_background');
 			if ($image == 'none') {
 				$image = '';
 			}
 		} else {
 			$obj->checkData = true;
-			$imageSetting = Config::get('DASHBOARD_BACKGROUND_IMAGE');
+			$imageSetting = Config::get('concrete.misc.dashboard_background_image');
 			if ($imageSetting == 'custom') {
-				$fo = File::getByID(Config::get('DASHBOARD_BACKGROUND_IMAGE_CUSTOM_FILE_ID'));
+				$fo = File::getByID(Config::get('concrete.misc.dashboard_background_image_fid'));
 				if (is_object($fo)) {
 					$image = $fo->getRelativePath();
 				}
@@ -221,9 +221,9 @@ class Dashboard {
 				$image = '';
 			} else {
 				if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on')) {
-					$image = DASHBOARD_BACKGROUND_FEED_SECURE . '/' . $filename;
+					$image = Config::get('concrete.urls.background_feed_secure') . '/' . $filename;
 				} else {
-					$image = DASHBOARD_BACKGROUND_FEED . '/' . $filename;
+					$image = Config::get('concrete.urls.background_feed') . '/' . $filename;
 				}
 				$obj->displayCaption = true;
 			}
@@ -341,7 +341,7 @@ class Dashboard {
 				</ul>
 				</div>
 
-				<? if (ENABLE_INTELLIGENT_SEARCH_HELP) { ?>
+				<? if (Config::get('concrete.external.intelligent_search_help')) { ?>
 				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-offsite">
 				<h1><?=t('Help')?></h1>
                 <div class="loader">
@@ -355,7 +355,7 @@ class Dashboard {
 				</div>
 				<? } ?>
 
-				<? if (ENABLE_INTELLIGENT_SEARCH_MARKETPLACE) { ?>
+				<? if (Config::get('concrete.marketplace.intelligent_search')) { ?>
 				<div class="ccm-intelligent-search-results-module ccm-intelligent-search-results-module-offsite">
 				<h1><?=t('Add-Ons')?></h1>
                 <div class="loader">

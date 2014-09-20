@@ -17,8 +17,12 @@ class Pagination {
 	public $classCurrent='currentPage active';
 	public $URL=''; //%pageNum% for page number
 	public $jsFunctionCall='';
-	public $queryStringPagingVariable = PAGING_STRING;
+	public $queryStringPagingVariable;
 	public $additionalVars = array();
+
+    public function __construct() {
+        $this->queryStringPagingVariable = \Config::get('concrete.seo.paging_string');
+    }
 
 	public function reset() {
 		$this->current_page=0;	//Zero Based
@@ -33,7 +37,7 @@ class Pagination {
 		$this->classCurrent='currentPage active';
 		$this->URL	='';
 		$this->jsFunctionCall='';
-		$this->queryStringPagingVariable = PAGING_STRING;
+		$this->queryStringPagingVariable = \Config::get('concrete.seo.paging_string');
 		$this->additionalVars = array();
 	}
 

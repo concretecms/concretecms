@@ -1,11 +1,11 @@
 <?php
 namespace Concrete\Core\Localization;
-
+use Config;
+use Concrete\Core\Cache\Adapter\ZendCacheDriver;
 use Loader;
 use Events;
 use \Zend\I18n\Translator\Translator;
 use \Punic\Data as PunicData;
-use Cache;
 
 class Localization
 {
@@ -50,7 +50,7 @@ class Localization
     public function setLocale($locale)
     {
         $localeNeededLoading = false;
-        if (($locale == 'en_US') && (!ENABLE_TRANSLATE_LOCALE_EN_US)) {
+        if (($locale == 'en_US') && (!Config::get('concrete.misc.enable_translate_locale_en_us'))) {
             if (isset($this->translate)) {
                 unset($this->translate);
             }
@@ -69,10 +69,7 @@ class Localization
         $this->translate = new Translator();
         $this->translate->addTranslationFilePattern('gettext', $languageDir, 'LC_MESSAGES/messages.mo');
         $this->translate->setLocale($locale);
-        $cache = Cache::getLibrary();
-        if (is_object($cache)) {
-            $this->translate->setCache($cache);
-        }
+        $this->translate->setCache(new ZendCacheDriver('cache/expensive'));
         PunicData::setDefaultLocale($locale);
 
         $event = new \Symfony\Component\EventDispatcher\GenericEvent();
@@ -94,10 +91,7 @@ class Localization
     {
         if (!is_object($this->translate)) {
             $this->translate = new Translator();
-            $cache = Cache::getLibrary();
-            if (is_object($cache)) {
-                $this->translate->setCache($cache);
-            }
+            $this->translate->setCache(new ZendCacheDriver('cache/expensive'));
         }
         $this->translate->addTranslationFilePattern('gettext', DIR_LANGUAGES_SITE_INTERFACE, $language . '.mo');
     }

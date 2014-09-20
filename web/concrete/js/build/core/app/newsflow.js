@@ -3,6 +3,7 @@ ccm_closeNewsflow = function(r) {
 	$ovl.fadeOut(300, 'easeOutExpo');
 	$('.ui-widget-overlay').fadeOut(300, 'easeOutExpo', function() {
 		$(this).remove();
+        $ovl.remove();
 	});
 }
 

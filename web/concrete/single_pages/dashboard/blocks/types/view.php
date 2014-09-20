@@ -64,7 +64,7 @@
 		<p><?=t('No custom block types are awaiting installation.')?></p>
 	<? } ?>
 
-    <? if (ENABLE_MARKETPLACE_SUPPORT == true) { ?>
+    <? if (Config::get('concrete.marketplace.enabled') == true) { ?>
     <div class="alert alert-info">
         <a class="btn btn-success btn-xs pull-right" href="<?=$view->url('/dashboard/extend/add-ons')?>"><?=t("More Add-ons")?></a>
         <p><?=t('Browse our marketplace of add-ons to extend your site!')?></p>
@@ -75,7 +75,7 @@
 
 	<h3><?=t('Installed Block Types')?></h3>
 	<ul id="ccm-block-type-list-installed" class="item-select-list ccm-block-type-sortable-list">
-		<? foreach($normalBlockTypes as $bt) { 
+		<? foreach($normalBlockTypes as $bt) {
 			$btIcon = $ci->getBlockTypeIconURL($bt);
 			$btID = $bt->getBlockTypeID();
 			?>
@@ -87,17 +87,17 @@
 
 	<h3><?=t('Internal Block Types')?></h3>
     <ul class="item-select-list">
-		<? foreach($internalBlockTypes as $bt) { 
+		<? foreach($internalBlockTypes as $bt) {
 			$btIcon = $ci->getBlockTypeIconURL($bt);
-			?>	
+			?>
 			<li>
                 <a href="<?=$view->action('inspect', $bt->getBlockTypeID())?>"><img src="<?=$btIcon?>" /> <?=t($bt->getBlockTypeName())?></a>
 			</li>
 		<? } ?>
 	</ul>
-	
-	
+
+
 
 </div>
-	
+
 <? } ?>

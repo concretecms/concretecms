@@ -3,6 +3,7 @@ namespace Concrete\Core\Page\Stack;
 
 use Area;
 use CacheLocal;
+use Config;
 use Loader;
 use Page;
 use PageType;
@@ -167,7 +168,7 @@ class Stack extends Page
         if (isset($data['stackName'])) {
             $txt = Loader::helper('text');
             $data['cName'] = $data['stackName'];
-            $data['cHandle'] = str_replace('-', PAGE_PATH_SEPARATOR, $txt->urlify($data['stackName']));
+            $data['cHandle'] = str_replace('-', Config::get('concrete.seo.page_path_separator'), $txt->urlify($data['stackName']));
         }
         $worked = parent::update($data);
 

@@ -64,34 +64,13 @@ class Controller extends BlockController
         return $links;
     }
 
-    /*
-    public function export(\SimpleXMLElement $blockNode)
-    {
-        foreach($this->getSelectedLinks() as $link) {
-            $linkNode = $blockNode->addChild('link');
-            $linkNode->addAttribute('service', $link->getServiceObject()->getHandle());
-        }
-    }
-
-    public function getImportData($blockNode)
-    {
-
-        $args = array();
-        foreach($blockNode->link as $link) {
-            $link = Link::getByServiceHandle((string) $link['service']);
-            $args['slID'][] = $link->getID();
-        }
-        return $args;
-    }
-
     public function duplicate($newBlockID)
     {
         $db = Database::get();
-        foreach($this->getSelectedLinks() as $link) {
-            $db->insert('btSocialLinks', array('bID' => $newBlockID, 'slID' => $link->getID(), 'displayOrder' => $this->displayOrder));
+        foreach($this->getSelectedServices() as $service) {
+            $db->insert('btShareThisPage', array('bID' => $newBlockID, 'service' => $service->getHandle(), 'displayOrder' => $this->displayOrder));
         }
     }
-    */
 
     public function validate()
     {

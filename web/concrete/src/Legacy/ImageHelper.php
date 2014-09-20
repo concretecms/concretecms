@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Legacy;
 
+use Config;
 use Image;
 use \Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
@@ -97,17 +98,17 @@ class ImageHelper
                 . '.' . $fh->getExtension($obj);
         }
 
-        if (!file_exists(DIR_FILES_CACHE . '/' . $filename)) {
+        if (!file_exists(Config::get('concrete.cache.directory') . '/' . $filename)) {
             // create image there
             $this->create($image,
-                DIR_FILES_CACHE . '/' . $filename,
+                          Config::get('concrete.cache.directory') . '/' . $filename,
                 $maxWidth,
                 $maxHeight,
                 $crop);
         }
 
         $src = REL_DIR_FILES_CACHE . '/' . $filename;
-        $abspath = DIR_FILES_CACHE . '/' . $filename;
+        $abspath = Config::get('concrete.cache.directory') . '/' . $filename;
         $thumb = new \stdClass;
         if (isset($abspath) && file_exists($abspath)) {
             $thumb->src = $src;

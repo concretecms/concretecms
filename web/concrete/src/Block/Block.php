@@ -3,7 +3,6 @@ namespace Concrete\Core\Block;
 
 use Area;
 use BlockType;
-use Cache;
 use CacheLocal;
 use Concrete\Core\Area\SubArea;
 use Concrete\Core\Backup\ContentExporter;
@@ -13,6 +12,7 @@ use Concrete\Core\Feature\Assignment\CollectionVersionAssignment as CollectionVe
 use Concrete\Core\Foundation\Object;
 use Concrete\Core\Package\PackageList;
 use Concrete\Core\StyleCustomizer\Inline\StyleSet;
+use Config;
 use Loader;
 use Concrete\Core\Permission\Key\Key as PermissionKey;
 use Page;
@@ -155,7 +155,6 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             if ($c != null || $a != null) {
                 CacheLocal::set('block', $bID . ':' . $cID . ':' . $cvID . ':' . $arHandle, $b);
             } else {
-                $ca = new Cache();
                 CacheLocal::set('block', $bID, $b);
             }
             return $b;
@@ -424,7 +423,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public function getInstance()
     {
-        if (ENABLE_BLOCK_CACHE && $this->instance->cacheBlockRecord() && is_object(
+        if (Config::get('concrete.cache.blocks') && $this->instance->cacheBlockRecord() && is_object(
                 $this->instance->getBlockControllerData())
         ) {
             $this->instance->__construct();

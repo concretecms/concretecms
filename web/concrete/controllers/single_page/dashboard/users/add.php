@@ -1,6 +1,7 @@
 <?
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 use \Concrete\Core\Page\Controller\DashboardPageController;
+use Config;
 use Imagine\Image\Box;
 use Loader;
 use UserInfo;
@@ -39,59 +40,59 @@ class Add extends DashboardPageController {
 		$vals = Loader::helper('validation/strings');
 		$valt = Loader::helper('validation/token');
 		$valc = Loader::helper('concrete/validation');
-		
-		
+
+
 		$username = trim($_POST['uName']);
 		$username = preg_replace("/\s+/", " ", $username);
-		$_POST['uName'] = $username;	
-		
+		$_POST['uName'] = $username;
+
 		$password = $_POST['uPassword'];
-		
+
 		if (!$vals->email($_POST['uEmail'])) {
 			$this->error->add(t('Invalid email address provided.'));
 		} else if (!$valc->isUniqueEmail($_POST['uEmail'])) {
 			$this->error->add(t("The email address '%s' is already in use. Please choose another.",$_POST['uEmail']));
 		}
-		
-		if (strlen($username) < USER_USERNAME_MINIMUM) {
-			$this->error->add(t('A username must be at least %s characters long.',USER_USERNAME_MINIMUM));
+
+		if (strlen($username) < Config::get('concrete.user.username.minimum')) {
+			$this->error->add(t('A username must be at least %s characters long.', Config::get('concrete.user.username.minimum')));
 		}
-	
-		if (strlen($username) > USER_USERNAME_MAXIMUM) {
-			$this->error->add(t('A username cannot be more than %s characters long.',USER_USERNAME_MAXIMUM));
+
+		if (strlen($username) > Config::get('concrete.user.username.maximum')) {
+			$this->error->add(t('A username cannot be more than %s characters long.',Config::get('concrete.user.username.maximum')));
 		}
-	
-		if (strlen($username) >= USER_USERNAME_MINIMUM && !$valc->username($username)) {
-			if(USER_USERNAME_ALLOW_SPACES) {
+
+		if (strlen($username) >= Config::get('concrete.user.username.minimum') && !$valc->username($username)) {
+			if(Config::get('concrete.user.username.allow_spaces')) {
 				$this->error->add(t('A username may only contain letters, numbers, spaces, dots (not at the beginning/end), underscores (not at the beginning/end).'));
 			} else {
 				$this->error->add(t('A username may only contain letters numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'));
 			}
 		}
-	
+
 		if (!$valc->isUniqueUsername($username)) {
 			$this->error->add(t("The username '%s' already exists. Please choose another",$username));
-		}		
-	
+		}
+
 		if ($username == USER_SUPER) {
 			$this->error->add(t('Invalid Username'));
 		}
-	
-		
-		if ((strlen($password) < USER_PASSWORD_MINIMUM) || (strlen($password) > USER_PASSWORD_MAXIMUM)) {
-			$this->error->add(t('A password must be between %s and %s characters',USER_PASSWORD_MINIMUM,USER_PASSWORD_MAXIMUM));
+
+
+		if ((strlen($password) < Config::get('concrete.user.password.minimum')) || (strlen($password) >  Config::get('concrete.user.password.maximum'))) {
+			$this->error->add(t('A password must be between %s and %s characters',Config::get('concrete.user.password.minimum'), Config::get('concrete.user.password.maximum')));
 		}
-			
-		if (strlen($password) >= USER_PASSWORD_MINIMUM && !$valc->password($password)) {
+
+		if (strlen($password) >= Config::get('concrete.user.password.minimum') && !$valc->password($password)) {
 			$this->error->add(t('A password may not contain ", \', >, <, or any spaces.'));
 		}
-	
+
 		if (!$valt->validate('submit')) {
 			$this->error->add($valt->getErrorMessage());
 		}
-	
+
 		$aks = UserAttributeKey::getRegistrationList();
-	
+
 		foreach($aks as $uak) {
 			if ($uak->isAttributeKeyRequiredOnRegister()) {
 				$e1 = $uak->validateAttributeForm();
@@ -102,25 +103,28 @@ class Add extends DashboardPageController {
 				}
 			}
 		}
-		
+
 		if (!$this->error->has()) {
 			// do the registration
 			$data = array('uName' => $username, 'uPassword' => $password, 'uEmail' => $_POST['uEmail'], 'uDefaultLanguage' => $_POST['uDefaultLanguage']);
 			$uo = UserInfo::add($data);
-			
+
 			if (is_object($uo)) {
-				
-				$av = Loader::helper('concrete/avatar'); 
+
+				$av = Loader::helper('concrete/avatar');
 				if ($assignment->allowEditAvatar()) {
 					if (is_uploaded_file($_FILES['uAvatar']['tmp_name'])) {
                         $image = \Image::open($_FILES['uAvatar']['tmp_name']);
-                        $image = $image->thumbnail(new Box(AVATAR_WIDTH, AVATAR_HEIGHT));
+                        $image = $image->thumbnail(new Box(
+                                                       Config::get('concrete.icons.user_avatar.width'),
+                                                       Config::get('concrete.icons.user_avatar.height')
+                                                   ));
                         $uo->updateUserAvatar($image);
 					}
 				}
-				
+
 				foreach($aks as $uak) {
-					if (in_array($uak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) { 
+					if (in_array($uak->getAttributeKeyID(), $assignment->getAttributesAllowedArray())) {
 						$uak->saveAttributeForm($uo);
 					}
 				}
@@ -143,7 +147,7 @@ class Add extends DashboardPageController {
 				$this->error->add(t('An error occurred while trying to create the account.'));
 				$this->set('error',$this->error);
 			}
-			
+
 		} else {
 			$this->view();
 		}
