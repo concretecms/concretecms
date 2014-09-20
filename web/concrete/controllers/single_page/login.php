@@ -3,6 +3,7 @@ namespace Concrete\Controller\SinglePage;
 
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
+use Concrete\Core\Authentication\Events\Authentication;
 use Concrete\Core\Routing\RedirectResponse;
 use Config;
 use Events;
@@ -64,8 +65,20 @@ class Login extends PageController
      * @throws \Concrete\Core\Authentication\AuthenticationTypeFailureException
      * @throws \Exception
      */
-    public function callback($type, $method = 'callback', $a = null, $b = null, $c = null, $d = null, $e = null, $f = null, $g = null, $h = null, $i = null, $j = null)
-    {
+    public function callback(
+        $type,
+        $method = 'callback',
+        $a = null,
+        $b = null,
+        $c = null,
+        $d = null,
+        $e = null,
+        $f = null,
+        $g = null,
+        $h = null,
+        $i = null,
+        $j = null
+    ) {
         $at = AuthenticationType::getByHandle($type);
         if ($at) {
             $this->set('authType', $at);
@@ -99,7 +112,7 @@ class Login extends PageController
      * Concrete5_Controller_Login::authenticate
      * Authenticate the user using a specific authentication type.
      *
-     * @param $type    AuthenticationType handle
+     * @param $type    string handle
      */
     public function authenticate($type = '')
     {
@@ -109,8 +122,7 @@ class Login extends PageController
         } else {
             try {
                 $at = AuthenticationType::getByHandle($type);
-                $at->controller->authenticate();
-                $this->finishAuthentication($at);
+                \Core::make('auth')->authenticate($at);
             } catch (\exception $e) {
                 $this->error->add($e->getMessage());
             }
@@ -118,16 +130,15 @@ class Login extends PageController
         $this->view();
     }
 
-    public function finishAuthentication(AuthenticationType $type)
+    protected function finishAuthentication(AuthenticationType $type, User $user)
     {
         $db = Loader::db();
-        $u = new User();
-        if ($u->getUserID() == 1 && $type->getAuthenticationTypeHandle() != 'concrete') {
-            $u->logout();
+        if ($user->getUserID() == 1 && $type->getAuthenticationTypeHandle() != 'concrete') {
+            $user->logout();
             throw new \Exception(t('You can only identify as the admin user using the concrete login.'));
         }
 
-        $ui = UserInfo::getByID($u->getUserID());
+        $ui = UserInfo::getByID($user->getUserID());
         $aks = UserAttributeKey::getRegistrationList();
 
         $unfilled = array_values(
@@ -138,33 +149,48 @@ class Login extends PageController
                 }));
 
         if (count($unfilled)) {
-            $u->logout(false);
+            $user->logout(false);
 
             if (!$this->error) {
                 $this->on_start();
             }
 
             $this->set('required_attributes', $unfilled);
-            $this->set('u', $u);
+            $this->set('u', $user);
 
-            Session::set('uRequiredAttributeUser', $u->getUserID());
+            Session::set('uRequiredAttributeUser', $user->getUserID());
             Session::set('uRequiredAttributeUserAuthenticationType', $type->getAuthenticationTypeHandle());
 
             $this->view();
-            echo $this->getViewObject()->render();
+
+            \Response::closeOutputBuffers(1, false);
+            $response = new \Response($this->getViewObject()->render());
+            $response->send();
             exit;
         }
 
-        $u->setLastAuthType($type);
+        $user->setLastAuthType($type);
 
-        $ue = new \Concrete\Core\User\Event\User($u);
+        $ue = new \Concrete\Core\User\Event\User($user);
         Events::dispatch('on_user_login', $ue);
 
         $this->chooseRedirect();
     }
 
+    protected function handleAuthenticationComplete(Authentication $event)
+    {
+        $this->finishAuthentication($event->getType(), $event->getUser());
+    }
+
     public function on_start()
     {
+        $self = $this;
+        \Events::addListener(
+            'on_authentication_complete',
+            function ($event) use ($self) {
+                $self->handleAuthenticationComplete($event);
+            });
+
         $this->error = Loader::helper('validation/error');
         $this->set('valt', Loader::helper('validation/token'));
         if (Config::get('concrete.user.registration.email_registration')) {
@@ -279,9 +305,15 @@ class Login extends PageController
         $this->requireAsset('javascript', 'backstretch');
         $this->set('authTypeParams', $this->getSets());
         if (strlen($type)) {
-            $at = AuthenticationType::getByHandle($type);
-            $this->set('authType', $at);
-            $this->set('authTypeElement', $element);
+            try {
+                $at = AuthenticationType::getByHandle($type);
+                if ($at) {
+                    $this->set('authType', $at);
+                    $this->set('authTypeElement', $element);
+                }
+            } catch (\Exception $e) {
+                $this->redirect('/login');
+            }
         }
     }
 
@@ -327,7 +359,7 @@ class Login extends PageController
                 }
             }
 
-            $this->finishAuthentication($at);
+            $this->finishAuthentication($at, $u);
         } catch (\Exception $e) {
             $this->error->add($e->getMessage());
         }

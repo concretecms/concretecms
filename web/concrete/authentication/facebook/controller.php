@@ -214,6 +214,7 @@ class Controller extends AuthenticationTypeController
             $this->updateFacebookUserInfo();
             $this->setSession(3); // Good to go.
         }
+        \Response::closeOutputBuffers(1, false);
         exit; // just in case.
     }
 
