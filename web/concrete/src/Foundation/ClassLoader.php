@@ -56,6 +56,7 @@ class ClassLoader  {
 	public function registerPackage(Package $pkg) {
 		$symfonyLoader = new SymfonyClassloader();
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Attribute', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_ATTRIBUTES);
+        $symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\MenuItem', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_MENU_ITEMS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Authentication', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_AUTHENTICATION);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Block', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_BLOCKS);
 		$symfonyLoader->addPrefix(NAMESPACE_SEGMENT_VENDOR . '\\Package\\' . camelcase($pkg->getPackageHandle()) . '\\Theme', DIR_PACKAGES . '/' . $pkg->getPackageHandle() . '/' . DIRNAME_THEMES);

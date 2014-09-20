@@ -141,6 +141,14 @@ function core_class($class, $prefix = false)
     return $class;
 }
 
+function overrideable_core_class($class, $path, $pkgHandle = null)
+{
+    $env = \Environment::get();
+    $r = $env->getRecord($path);
+    $prefix = $r->override ? true : $pkgHandle;
+    return core_class($class, $prefix);
+}
+
 /**
  * Returns $string in CamelCase
  *

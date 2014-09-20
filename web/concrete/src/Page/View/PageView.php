@@ -159,12 +159,6 @@ class PageView extends View
                 $u = new User();
                 $u->markPreviousFrontendPage($this->c);
             }
-            $ih = Loader::helper('concrete/ui/menu');
-            $interfaceItems = $ih->getPageHeaderMenuItems();
-            foreach ($interfaceItems as $item) {
-                $controller = $item->getController();
-                $controller->outputAutoHeaderItems();
-            }
         }
     }
 

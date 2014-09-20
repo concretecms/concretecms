@@ -125,6 +125,7 @@ define('DIRNAME_VIEWS', 'views');
 define('DIRNAME_PACKAGES', 'packages');
 define('DIRNAME_MODELS', 'models');
 define('DIRNAME_ATTRIBUTES', 'attributes');
+define('DIRNAME_MENU_ITEMS', 'menu_items');
 define('DIRNAME_AUTHENTICATION', 'authentication');
 define('DIRNAME_LIBRARIES', 'libraries');
 define('DIRNAME_RESPONSE', 'response');
