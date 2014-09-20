@@ -24,6 +24,7 @@ return array(
         'FileAttributeKey'                     => '\Concrete\Core\Attribute\Key\FileKey',
         'UserAttributeKey'                     => '\Concrete\Core\Attribute\Key\UserKey',
         'AttributeSet'                         => '\Concrete\Core\Attribute\Set',
+        'Asset'                                => '\Concrete\Core\Asset\Asset',
         'AssetList'                            => '\Concrete\Core\Asset\AssetList',
         'Router'                               => '\Concrete\Core\Routing\Router',
         'RedirectResponse'                     => '\Concrete\Core\Routing\RedirectResponse',
