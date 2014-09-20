@@ -117,7 +117,7 @@ $seoSet = AttributeSet::getByHandle('seo');
         <?php
         }
 
-        if ($cp->canPreviewPageAsUser() && PERMISSIONS_MODEL == 'advanced') {
+        if ($cp->canPreviewPageAsUser() && Config::get('concrete.permissions.model') == 'advanced') {
             ?>
             <li>
                 <a href="#" data-launch-sub-panel-url="<?= URL::to('/ccm/system/panels/page/preview_as_user') ?>"

@@ -50,7 +50,6 @@ function reloadPreview(event) {
     if (!url) {
         url = $("input[name=autonavPreviewPane]").val();
     }
-
     orderBy = $("select[name=orderBy]", container).val();
     displayPages = $("select[name=displayPages]", container).val();
     displaySubPages = $("select[name=displaySubPages]", container).val();
@@ -111,11 +110,9 @@ Concrete.event.bind('autonav.edit.open', function() {
     });
 });
 
-Concrete.event.bind('ConcreteSitemap, ConcreteSitemapPageSearch', function() {
-    Concrete.event.bind('SitemapSelectPage', function() {
-        _.defer(function() {
-            reloadPreview();
-            autonav.showLoader($("#ccm-autonav-page-selector", container));
-        });
+ConcreteEvent.subscribe('SitemapSelectPage', function(){
+    _.defer(function() {
+        reloadPreview();
+        autonav.showLoader($("#ccm-autonav-page-selector", container));
     });
 });

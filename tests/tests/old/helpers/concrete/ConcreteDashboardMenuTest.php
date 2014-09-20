@@ -23,9 +23,7 @@ class ConcreteDashboardMenuTest extends PHPUnit_Framework_TestCase {
      * This method is called after a test is executed.
      */
 	 public function testClasses() {
-		 $this->assertTrue($this->object instanceof ConcreteDashboardHelper);
-		 $this->assertTrue(class_exists('ConcreteDashboardMenu'));
-		 $this->assertTrue(class_exists('ConcreteDashboardDefaultMenu'));
+		 $this->assertTrue($this->object instanceof Concrete\Core\Application\Service\Dashboard);
 	 }
 
     /**
@@ -33,7 +31,7 @@ class ConcreteDashboardMenuTest extends PHPUnit_Framework_TestCase {
      * This method is called after a test is executed.
      */
     protected function tearDown() {
-        
+
     }
 
     /**

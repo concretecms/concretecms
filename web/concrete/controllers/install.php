@@ -1,10 +1,13 @@
 <?php
 namespace Concrete\Controller;
 
-use Cache;
+use Concrete\Core\Cache\Cache;
+use Concrete\Core\Config\Renderer;
+use Core;
 use Concrete\Core\Localization\Localization as Localization;
 use Controller;
 use Database as DB;
+use Config;
 use Exception;
 use Hautelook\Phpass\PasswordHash;
 use Loader;
@@ -17,12 +20,11 @@ if (!ini_get('safe_mode')) {
     @set_time_limit(1000);
 }
 
-define('UPLOAD_FILE_EXTENSIONS_ALLOWED', '*.flv;*.jpg;*.gif;*.jpeg;*.ico;*.docx;*.xla;*.png;*.psd;*.swf;*.doc;*.txt;*.xls;*.xlsx;*.csv;*.pdf;*.tiff;*.rtf;*.m4a;*.mov;*.wmv;*.mpeg;*.mpg;*.wav;*.avi;*.m4v;*.mp4;*.mp3;*.qt;*.ppt;*.pptx;*.kml;*.xml');
-define('ENABLE_ASSET_CACHE', false);
-define('ENABLE_THEME_CSS_CACHE', false);
-
 class Install extends Controller
 {
+
+    protected $fp;
+    protected $fpu;
 
     public $helpers = array('form', 'html');
 
@@ -81,29 +83,16 @@ class Install extends Controller
             $e->add($this->getDBErrorMsg());
         } else {
 
-            // attempt to connect to the database
-            if (defined('DB_SERVER')) {
-                $db = DB::connect(
-                    array(
-                        'host'     => DB_SERVER,
-                        'user'     => DB_USERNAME,
-                        'password' => DB_PASSWORD,
-                        'database' => DB_DATABASE
-                    ));
-                $DB_SERVER = DB_SERVER;
-                $DB_DATABASE = DB_DATABASE;
-            } else {
-                $db = DB::connect(
-                    array(
-                        'host'     => $_POST['DB_SERVER'],
-                        'user'     => $_POST['DB_USERNAME'],
-                        'password' => $_POST['DB_PASSWORD'],
-                        'database' => $_POST['DB_DATABASE']
-                    ));
+            $db = \Database::getFactory()->createConnection(
+                array(
+                    'host'     => $_POST['DB_SERVER'],
+                    'user'     => $_POST['DB_USERNAME'],
+                    'password' => $_POST['DB_PASSWORD'],
+                    'database' => $_POST['DB_DATABASE']
+                ));
 
-                $DB_SERVER = $_POST['DB_SERVER'];
-                $DB_DATABASE = $_POST['DB_DATABASE'];
-            }
+            $DB_SERVER = $_POST['DB_SERVER'];
+            $DB_DATABASE = $_POST['DB_DATABASE'];
 
             if ($DB_SERVER && $DB_DATABASE) {
                 if (!$db) {
@@ -146,12 +135,11 @@ class Install extends Controller
             $loc = Localization::changeLocale($_POST['locale']);
             $this->set('locale', $_POST['locale']);
         }
-        Cache::disableCache();
-        Cache::disableLocalCache();
+        Cache::disableAll();
         $this->setRequiredItems();
         $this->setOptionalItems();
 
-        if (file_exists(DIR_CONFIG_SITE . '/site.php')) {
+        if (\Core::isInstalled()) {
             throw new Exception(t('concrete5 is already installed.'));
         }
         if (!isset($_COOKIE['CONCRETE5_INSTALL_TEST'])) {
@@ -162,7 +150,7 @@ class Install extends Controller
     private function setRequiredItems()
     {
         $this->set('imageTest', function_exists('imagecreatetruecolor'));
-        $this->set('mysqlTest', extension_loaded('PDO'));
+        $this->set('mysqlTest', extension_loaded('pdo_mysql'));
         $this->set('jsonTest', extension_loaded('json'));
         $this->set('xmlTest', function_exists('xml_parse') && function_exists('simplexml_load_file'));
         $this->set('fileWriteTest', $this->testFileWritePermissions());
@@ -238,7 +226,7 @@ class Install extends Controller
             $js->error = false;
         } catch (Exception $e) {
             $js->error = true;
-            $js->message = $e->getMessage();
+            $js->message = $e->getTraceAsString();
             $this->reset();
         }
         print $jsx->encode($js);
@@ -257,10 +245,6 @@ class Install extends Controller
         }
         if (file_exists(DIR_CONFIG_SITE . '/site_install_user.php')) {
             unlink(DIR_CONFIG_SITE . '/site_install_user.php');
-        }
-
-        if (file_exists(DIR_CONFIG_SITE . '/site.php')) {
-            unlink(DIR_CONFIG_SITE . '/site.php');
         }
     }
 
@@ -302,28 +286,34 @@ class Install extends Controller
                 $this->fp = @fopen(DIR_CONFIG_SITE . '/site_install.php', 'w+');
                 $this->fpu = @fopen(DIR_CONFIG_SITE . '/site_install_user.php', 'w+');
                 if ($this->fp) {
-                    $configuration = "<?php\n";
-                    $configuration .= "define('DB_SERVER', '" . addslashes($_POST['DB_SERVER']) . "');\n";
-                    $configuration .= "define('DB_USERNAME', '" . addslashes($_POST['DB_USERNAME']) . "');\n";
-                    $configuration .= "define('DB_PASSWORD', '" . addslashes($_POST['DB_PASSWORD']) . "');\n";
-                    $configuration .= "define('DB_DATABASE', '" . addslashes($_POST['DB_DATABASE']) . "');\n";
-                    if (isset($setPermissionsModel)) {
-                        $configuration .= "define('PERMISSIONS_MODEL', '" . addslashes($setPermissionsModel) . "');\n";
-                    }
-                    if (is_array($_POST['SITE_CONFIG'])) {
-                        foreach ($_POST['SITE_CONFIG'] as $key => $value) {
-                            $configuration .= "define('" . $key . "', '" . $value . "');\n";
-                        }
-                    }
-                    $res = fwrite($this->fp, $configuration);
+
+                    $config = (array)$_POST['SITE_CONFIG'];
+                    $config['database'] = array(
+                        'default-connection' => 'concrete',
+                        'connections' => array(
+                            'concrete' => array(
+                                'driver' => 'c5_pdo_mysql',
+                                'server' => $_POST['DB_SERVER'],
+                                'database' => $_POST['DB_DATABASE'],
+                                'username' => $_POST['DB_USERNAME'],
+                                'password' => $_POST['DB_PASSWORD'],
+                                'charset' => 'utf8'
+                            )
+                        )
+                    );
+
+
+                    $renderer = new Renderer($config);
+                    fwrite($this->fp, $renderer->render());
+
                     fclose($this->fp);
                     chmod(DIR_CONFIG_SITE . '/site_install.php', 0700);
                 } else {
-                    throw new Exception(t('Unable to open config/site.php for writing.'));
+                    throw new Exception(t('Unable to open config/app.php for writing.'));
                 }
 
                 if ($this->fpu) {
-                    $hasher = new PasswordHash(PASSWORD_HASH_COST_LOG2, PASSWORD_HASH_PORTABLE);
+                    $hasher = new PasswordHash(Config::get('concrete.user.password.hash_cost_log2'), Config::get('concrete.user.password.hash_portable'));
                     $configuration = "<?php\n";
                     $configuration .= "define('INSTALL_USER_EMAIL', '" . $_POST['uEmail'] . "');\n";
                     $configuration .= "define('INSTALL_USER_PASSWORD_HASH', '" . $hasher->HashPassword(

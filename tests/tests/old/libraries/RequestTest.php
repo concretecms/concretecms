@@ -16,7 +16,7 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 	 * This method is called before a test is executed.
 	 */
 	protected function setUp() {
-		
+
 	}
 
 	public static function  setUpBeforeClass() {
@@ -52,19 +52,19 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$files[] = 'subdir/a.file.with.dots.php';
 		$files[] = 'sub.dir.with.dots/a.file.with.dots';
 		$files[] = 'sub.dir.with.dots/a.file.with.dots.php';
-		
+
 		foreach ($files as $file) {
-		
+
 			$block = new Request('tools/blocks/block_handle/' . $file);
 			$this->assertEquals('BLOCK_TOOL', $block->getIncludeType());
 			$this->assertEquals('block_handle', $block->getBlock());
 			$this->assertEquals($file . (substr($file, -3) == 'php' ? '' : '.php'), $block->getFilename());
-			
+
 			$package = new Request('tools/packages/package_handle/' . $file);
 			$this->assertEquals('PACKAGE_TOOL', $package->getIncludeType());
 			$this->assertEquals('package_handle', $package->getPackageHandle());
 			$this->assertEquals($file . (substr($file, -3) == 'php' ? '' : '.php'), $package->getFilename());
-			
+
 			$core = new Request('tools/required/' . $file);
 			$this->assertEquals('CONCRETE_TOOL', $core->getIncludeType());
 			$this->assertEquals($file . (substr($file, -3) == 'php' ? '' : '.php'), $core->getFilename());
@@ -88,35 +88,15 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$files[] = 'subdir/a.file.with.dots.css';
 		$files[] = 'sub.dir.with.dots/a.file.with.dots';
 		$files[] = 'sub.dir.with.dots/a.file.with.dots.css';
-	
+
 		foreach ($files as $file) {
-		
+
 			$css = new Request('tools/css/themes/theme_handle/' . $file);
 			$this->assertEquals('CONCRETE_TOOL', $css->getIncludeType());
 			$this->assertEquals('theme_handle', $css->getAuxiliaryData()->theme);
 			$this->assertEquals($file . (substr($file, -3) == 'css' ? '' : '.css'), $css->getAuxiliaryData()->file);
 		}
 
-	}
-
-	public function testParsePathFromRequest() {
-		//this requires a bleeding edge version of request.php (2011-07-08) that allows us to test different paths
-
-		//key is path, expected return request path is the value
-		$testPaths = array('/' => '',
-							DISPATCHER_FILENAME => '',
-							DISPATCHER_FILENAME . '/post' => 'post',
-							DISPATCHER_FILENAME . '/blog/post' => 'blog/post'
-						);
-
-		foreach ($testPaths as $path => $file) {
-			$_SERVER['ORIG_PATH_INFO'] = DIR_REL . '/' . $path;
-
-			$req = Request::get();
-			$this->assertEquals($file, $req->getRequestPath());
-		}
-
-		
 	}
 
 	/**

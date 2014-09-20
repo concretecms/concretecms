@@ -15,12 +15,17 @@ class WhoopsServiceProvider extends Provider
         if (function_exists('ini_set')) {
             ini_set('display_errors', 0);
         }
+
         $run = new Run;
 
         $handler = new ErrorHandler();
+        $run->pushHandler($handler);
+
         $json_handler = new JsonErrorHandler();
         $cli_handler = new PlainTextHandler();
         $cli_handler->onlyForCommandLine(true);
+        $cli_handler->addTraceFunctionArgsToOutput(true);
+        $cli_handler->addTraceToOutput(true);
 
         $run->pushHandler($handler);
         $run->pushHandler($json_handler);

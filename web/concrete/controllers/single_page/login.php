@@ -1,11 +1,9 @@
 <?php
 namespace Concrete\Controller\SinglePage;
 
-use Cache;
-use Concrete\Core\Asset\Asset;
-use Concrete\Core\Asset\AssetGroup;
 use Concrete\Core\Authentication\AuthenticationType;
 use Concrete\Core\Authentication\AuthenticationTypeFailureException;
+use Concrete\Core\Routing\RedirectResponse;
 use Config;
 use Events;
 use Loader;
@@ -169,7 +167,7 @@ class Login extends PageController
     {
         $this->error = Loader::helper('validation/error');
         $this->set('valt', Loader::helper('validation/token'));
-        if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
+        if (Config::get('concrete.user.registration.email_registration')) {
             $this->set('uNameLabel', t('Email Address'));
         } else {
             $this->set('uNameLabel', t('Username'));
@@ -184,7 +182,7 @@ class Login extends PageController
 
         $languages = array();
         $locales = array();
-        if (Config::get('LANGUAGE_CHOOSE_ON_LOGIN')) {
+        if (Config::get('concrete.i18n.choose_language_login')) {
             $languages = Localization::getAvailableInterfaceLanguages();
             if (count($languages) > 0) {
                 array_unshift($languages, 'en_US');
@@ -235,23 +233,23 @@ class Login extends PageController
                 $dash = Page::getByPath("/dashboard", "RECENT");
                 $dbp = new Permissions($dash);
                 //should administrator be redirected to dashboard?  defaults to yes if not set.
-                $adminToDash = intval(Config::get('LOGIN_ADMIN_TO_DASHBOARD'));
+                $adminToDash = intval(Config::get('concrete.misc.login_admin_to_dashboard'));
                 if ($dbp->canRead() && $adminToDash) {
                     $rUrl = $navigation->getLinkToCollection($rc);
                     break;
                 }
 
                 //options set in dashboard/users/registration
-                $login_redirect_mode = Config::get('LOGIN_REDIRECT');
+                $login_redirect_mode = Config::get('concrete.misc.login_redirect');
 
                 //redirect to user profile
-                if ($login_redirect_mode == 'PROFILE' && ENABLE_USER_PROFILES) {
-                    $rUrl = View::url('/profile', $u->getUserID());
+                if ($login_redirect_mode == 'PROFILE' && Config::get('concrete.user.profiles_enabled')) {
+                    $rUrl = View::url('/members/profile/', $u->getUserID());
                     break;
                 }
 
                 //redirect to custom page
-                $login_redirect_cid = intval(Config::get('LOGIN_REDIRECT_CID'));
+                $login_redirect_cid = intval(Config::get('concrete.misc.login_redirect_cid'));
                 if ($login_redirect_mode == 'CUSTOM' && $login_redirect_cid > 0) {
                     $rc = Page::getByID($login_redirect_cid);
                     if ($rc instanceof Page && !$rc->isError()) {
@@ -264,7 +262,9 @@ class Login extends PageController
             } while (false);
 
             if ($rUrl) {
-                $this->redirect($rUrl);
+                $r = new RedirectResponse($rUrl);
+                $r->send();
+                exit;
             } else {
                 $this->redirect('/');
             }

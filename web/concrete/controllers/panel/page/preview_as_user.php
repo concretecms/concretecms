@@ -10,6 +10,7 @@ use Request;
 use UserInfo;
 use View;
 use Core;
+use Config;
 
 class PreviewAsUser extends Controller
 {
@@ -32,7 +33,7 @@ class PreviewAsUser extends Controller
         }
 
         $permissions = new Permissions($page);
-        if ($permissions->canPreviewPageAsUser() && $permissions->canRead() && PERMISSIONS_MODEL == 'advanced') {
+        if ($permissions->canPreviewPageAsUser() && $permissions->canRead() && Config::get('concrete.permissions.model') == 'advanced') {
 
             /** @var Request $request */
             $request = Request::getInstance();

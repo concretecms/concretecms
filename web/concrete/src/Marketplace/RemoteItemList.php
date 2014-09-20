@@ -1,7 +1,6 @@
 <?php
 namespace Concrete\Core\Marketplace;
 
-use Cache;
 use Loader;
 use Config;
 use \Concrete\Core\Legacy\ItemList;
@@ -16,7 +15,7 @@ class RemoteItemList extends ItemList
 
     public static function getItemSets($type)
     {
-        $url = MARKETPLACE_REMOTE_ITEM_LIST_WS;
+        $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.remote_item_list');
         $url .= $type . '/-/get_remote_item_sets';
         $contents = Loader::helper("file")->getContents($url);
         $sets = array();
@@ -99,7 +98,8 @@ class RemoteItemList extends ItemList
 
         $uh = Loader::helper('url');
 
-        $url = $uh->buildQuery(MARKETPLACE_REMOTE_ITEM_LIST_WS . $this->type . '/-/get_remote_list', $params);
+        $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.remote_item_list');
+        $url = $uh->buildQuery($url . $this->type . '/-/get_remote_list', $params);
         $r = Loader::helper('file')->getContents($url);
         $r2 = @Loader::helper('json')->decode($r);
 

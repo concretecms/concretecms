@@ -1,47 +1,51 @@
 <?php  defined('C5_EXECUTE') or die("Access Denied."); ?>
 
-<div class="ccm-block-topic-list-wrapper">
+<? if (is_object($tree)) { ?>
 
-    <div class="ccm-block-topic-list-header">
-        <h5><?=$title?></h5>
-    </div>
-<?
-if ($mode == 'S'):
-    $node = $tree->getRootTreeNodeObject();
-    $node->populateChildren();
-    if (is_object($node)) {
-        $walk = function($node) use (&$walk, &$view, $selectedTopicID) {
-            print '<ul class="ccm-block-topic-list-list">';
-            foreach($node->getChildNodes() as $topic) {
-                if ($topic instanceof \Concrete\Core\Tree\Node\Type\TopicCategory) { ?>
-                    <li><?=$topic->getTreeNodeDisplayName()?></li>
-                <? } else { ?>
-                    <li><a href="<?=$view->controller->getTopicLink($topic)?>"
-                            <? if (isset($selectedTopicID) && $selectedTopicID == $topic->getTreeNodeID()) { ?>
-                                class="ccm-block-topic-list-topic-selected"
-                            <? } ?> ><?=$topic->getTreeNodeDisplayName()?></a></li>
-                <? } ?>
-                <? $walk($topic); ?>
-            <? }
-            print '</ul>';
-        };
-        $walk($node);
-    }
+    <div class="ccm-block-topic-list-wrapper">
 
-endif;
+        <div class="ccm-block-topic-list-header">
+            <h5><?=$title?></h5>
+        </div>
+    <?
+    if ($mode == 'S'):
+        $node = $tree->getRootTreeNodeObject();
+        $node->populateChildren();
+        if (is_object($node)) {
+            $walk = function($node) use (&$walk, &$view, $selectedTopicID) {
+                print '<ul class="ccm-block-topic-list-list">';
+                foreach($node->getChildNodes() as $topic) {
+                    if ($topic instanceof \Concrete\Core\Tree\Node\Type\TopicCategory) { ?>
+                        <li><?=$topic->getTreeNodeDisplayName()?></li>
+                    <? } else { ?>
+                        <li><a href="<?=$view->controller->getTopicLink($topic)?>"
+                                <? if (isset($selectedTopicID) && $selectedTopicID == $topic->getTreeNodeID()) { ?>
+                                    class="ccm-block-topic-list-topic-selected"
+                                <? } ?> ><?=$topic->getTreeNodeDisplayName()?></a></li>
+                    <? } ?>
+                    <? $walk($topic); ?>
+                <? }
+                print '</ul>';
+            };
+            $walk($node);
+        }
 
-if ($mode == 'P'): ?>
+    endif;
 
-    <? if (count($topics)) { ?>
-        <ul class="ccm-block-topic-list-page-topics">
-        <? foreach($topics as $topic) { ?>
-            <li><a href="<?=$view->controller->getTopicLink($topic)?>"><?=$topic->getTreeNodeDisplayName()?></a></li>
+    if ($mode == 'P'): ?>
+
+        <? if (count($topics)) { ?>
+            <ul class="ccm-block-topic-list-page-topics">
+            <? foreach($topics as $topic) { ?>
+                <li><a href="<?=$view->controller->getTopicLink($topic)?>"><?=$topic->getTreeNodeDisplayName()?></a></li>
+            <? } ?>
+            </ul>
+        <? } else { ?>
+            <?=t('No topics.')?>
         <? } ?>
-        </ul>
-    <? } else { ?>
-        <?=t('No topics.')?>
-    <? } ?>
 
-<? endif; ?>
+    <? endif; ?>
 
-</div>
+    </div>
+
+<? } ?>

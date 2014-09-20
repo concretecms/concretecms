@@ -10,7 +10,15 @@ abstract class Type extends Object {
 	abstract public function outputRatingTypeHTML();
 	abstract public function adjustConversationMessageRatingTotalScore(Message $message);
 	abstract public function rateMessage();
-	
+	public function getRatingTypeHandle()
+    {
+        return $this->cnvRatingTypeHandle;
+    }
+    public function getRatingTypeID()
+    {
+        return $this->cnvRatingTypeID;
+    }
+
 	/** Returns the list of all conversation rating types
 	* @return array[Type]
 	*/

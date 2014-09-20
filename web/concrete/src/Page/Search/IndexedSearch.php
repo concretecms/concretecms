@@ -1,9 +1,10 @@
 <?php
 namespace Concrete\Core\Page\Search;
 
+use Concrete\Core\Cache\Cache;
+use Core;
 use Loader;
 use Config;
-use Cache;
 use PageList;
 use Collection;
 use Area;
@@ -14,15 +15,20 @@ use stdClass;
 class IndexedSearch
 {
 
-    public $searchBatchSize = PAGE_SEARCH_INDEX_BATCH_SIZE;
-    public $searchReindexTimeout = PAGE_SEARCH_INDEX_LIFETIME;
+    public $searchBatchSize;
+    public $searchReindexTimeout;
 
     private $cPathSections = array();
     private $searchableAreaNames;
 
+    public function __construct() {
+        $this->searchReindexTimeout = Config::get('concrete.misc.page_search_index_lifetime');
+        $this->searchBatchSize = Config::get('concrete.limits.page_search_index_batch');
+    }
+
     public function getSearchableAreaAction()
     {
-        $action = Config::get('SEARCH_INDEX_AREA_METHOD');
+        $action = Config::get('concrete.misc.search_index_area_method');
         if (!strlen($action)) {
             $action = 'blacklist';
         }
@@ -31,7 +37,7 @@ class IndexedSearch
 
     public function getSavedSearchableAreas()
     {
-        $areas = Config::get('SEARCH_INDEX_AREA_LIST');
+        $areas = Config::get('concrete.misc.search_index_area_list');
         $areas = unserialize($areas);
         if (!is_array($areas)) {
             $areas = array();
@@ -152,7 +158,7 @@ class IndexedSearch
      */
     public function reindexAll($fullReindex = false)
     {
-        Cache::disableLocalCache();
+        Cache::disableAll();
 
         $db = Loader::db();
 
@@ -189,7 +195,7 @@ class IndexedSearch
         $pnum = Collection::reindexPendingPages();
         $num = $num + $pnum;
 
-        Cache::enableLocalCache();
+        Cache::enableAll();
         $result = new stdClass;
         $result->count = $num;
         return $result;

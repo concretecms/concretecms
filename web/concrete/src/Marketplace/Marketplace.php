@@ -21,17 +21,17 @@ class Marketplace
 
     public function __construct()
     {
-        if (defined('ENABLE_MARKETPLACE_SUPPORT') && ENABLE_MARKETPLACE_SUPPORT == false) {
+        if (Config::get('concrete.marketplace.enabled')) {
             $this->connectionError = Marketplace::E_MARKETPLACE_SUPPORT_MANUALLY_DISABLED;
             return;
         }
 
-        $csToken = Config::get('MARKETPLACE_SITE_TOKEN');
+        $csToken = Config::get('concrete.marketplace.token');
         if ($csToken != '') {
 
             $fh = Loader::helper('file');
             $csiURL = urlencode(BASE_URL . DIR_REL);
-            $url = MARKETPLACE_URL_CONNECT_VALIDATE . "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
+            $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.connect_validate') . "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
             $vn = Loader::helper('validation/numbers');
             $r = $fh->getContents($url);
             if ($r == false) {
@@ -42,8 +42,8 @@ class Marketplace
                     $this->connectionError = $r;
 
                     if ($this->connectionError == Marketplace::E_DELETED_SITE_TOKEN) {
-                        Config::clear('MARKETPLACE_SITE_TOKEN');
-                        Config::clear('MARKETPLACE_SITE_URL_TOKEN');
+                        Config::clear('concrete.marketplace.token');
+                        Config::clear('concrete.marketplace.site_token');
                     }
                 } else {
                     $this->isConnected = false;
@@ -112,9 +112,10 @@ class Marketplace
         }
 
         // Retrieve the URL contents
-        $csToken = Config::get('MARKETPLACE_SITE_TOKEN');
+        $csToken = Config::get('concrete.marketplace.token');
         $csiURL = urlencode(BASE_URL . DIR_REL);
-        $url = MARKETPLACE_PURCHASES_LIST_WS . "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
+        $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.purchases');
+        $url .= "?csToken={$csToken}&csiURL=" . $csiURL . "&csiVersion=" . APP_VERSION;
         $json = $fh->getContents($url);
 
         $addons = array();
@@ -158,8 +159,9 @@ class Marketplace
 
     public function getSitePageURL()
     {
-        $token = Config::get('MARKETPLACE_SITE_URL_TOKEN');
-        return MARKETPLACE_BASE_URL_SITE_PAGE . '/' . $token;
+        $token = Config::get('concrete.marketplace.site_token');
+        $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.site_page');
+        return $url . '/' . $token;
     }
 
     public function getMarketplaceFrame($width = '100%', $height = '300', $completeURL = false, $connectMethod = 'view')
@@ -187,14 +189,14 @@ class Marketplace
                     // new connection
                     $csToken = Marketplace::generateSiteToken();
                 }
-                $url = MARKETPLACE_URL_CONNECT . '/-/' . $connectMethod;
+                $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.connect') . '/-/' . $connectMethod;
                 $url = $url . '?ts=' . time() . '&csiBaseURL=' . $csiBaseURL . '&csiURL=' . $csiURL . '&csToken=' . $csToken . '&csReferrer=' . $csReferrer . '&csName=' . htmlspecialchars(
                         SITE,
                         ENT_QUOTES,
                         APP_CHARSET);
             } else {
                 $csiBaseURL = urlencode(BASE_URL);
-                $url = MARKETPLACE_URL_CONNECT_SUCCESS . '?csToken=' . $this->getSiteToken() . '&csiBaseURL=' . $csiBaseURL;
+                $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.connect_success') . '?csToken=' . $this->getSiteToken() . '&csiBaseURL=' . $csiBaseURL;
             }
             if ($csToken == false && !$this->isConnected()) {
                 return '<div class="ccm-error">' . t(
@@ -212,7 +214,7 @@ class Marketplace
 						$("#ccm-marketplace-frame-' . $time . '").attr("height", eh);
 					}
 
-					}, \'' . CONCRETE5_ORG_URL . '\');
+					}, \'' . Config::get('concrete.urls.concrete5') . '\');
 				});
 				</script>';
                 $ifr .= '<iframe class="ccm-marketplace-frame-connect" id="ccm-marketplace-frame-' . $time . '" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';
@@ -237,13 +239,13 @@ class Marketplace
     public function generateSiteToken()
     {
         $fh = Loader::helper('file');
-        $token = $fh->getContents(MARKETPLACE_URL_CONNECT_TOKEN_NEW);
+        $token = $fh->getContents(Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.marketplace.connect_new_token'));
         return $token;
     }
 
     public function getSiteToken()
     {
-        $token = Config::get('MARKETPLACE_SITE_TOKEN');
+        $token = Config::get('concrete.marketplace.token');
         return $token;
     }
 
@@ -256,7 +258,7 @@ class Marketplace
                     'Unable to get information about this product.') . '</div>';
             }
             if ($this->isConnected()) {
-                $url = MARKETPLACE_URL_CHECKOUT;
+                $url = Config::get('concrete.urls.concrete5_secure') . Config::get('concrete.urls.paths.marketplace.checkout');
                 $csiURL = urlencode(BASE_URL . DIR_REL);
                 $csiBaseURL = urlencode(BASE_URL);
                 $csToken = $this->getSiteToken();
@@ -274,7 +276,7 @@ class Marketplace
 					$("#ccm-marketplace-frame-' . $time . '").attr("height", eh);
 				}
 
-				}, \'' . CONCRETE5_ORG_URL_SECURE . '\');
+				}, \'' . Config::get('concrete.urls.concrete5_secure') . '\');
 			});
 			</script>';
             $ifr .= '<iframe class="ccm-marketplace-frame" id="ccm-marketplace-frame-' . $time . '" class="ccm-marketplace-frame" frameborder="0" width="' . $width . '" height="' . $height . '" src="' . $url . '"></iframe>';

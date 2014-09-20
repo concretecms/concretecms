@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Routing;
+use Config;
 use Loader;
 use Page;
 use Concrete\Core\Routing\Router;
@@ -12,7 +13,7 @@ class URL {
 
 	public static function page(Page $c, $action = false) {
 		$args = func_get_args();
-		$args[0] = $c->getCollectionPath();
+		$args[0] = Loader::helper('text')->encodePath($c->getCollectionPath());
 		return call_user_func_array(array('\Concrete\Core\Routing\URL', 'to'), $args);
 	}
 
@@ -22,7 +23,7 @@ class URL {
 		}
 
 		$dispatcher = '';
-		if ((!URL_REWRITING_ALL) || !defined('URL_REWRITING_ALL')) {
+		if (!Config::get('concrete.seo.url_rewriting_all')) {
 			$dispatcher = '/' . DISPATCHER_FILENAME;
 		}
 
@@ -52,7 +53,7 @@ class URL {
 			}
 		}
 
-		if (!URL_USE_TRAILING_SLASH) {
+		if (!Config::get('concrete.seo.trailing_slash')) {
 			$_path = rtrim($_path, '/');
 		}
 		return $_path;

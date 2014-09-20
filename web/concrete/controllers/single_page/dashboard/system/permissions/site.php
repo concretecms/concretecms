@@ -2,12 +2,12 @@
 namespace Concrete\Controller\SinglePage\Dashboard\System\Permissions;
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use Config;
+use Core;
 use Loader;
 use PermissionKey;
 use TaskPermission;
 use PermissionAccess;
 use GroupList;
-use Cache;
 use Page;
 use Group;
 use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccessEntity;
@@ -15,7 +15,7 @@ use \Concrete\Core\Permission\Access\Entity\GroupEntity as GroupPermissionAccess
 class Site extends DashboardPageController {
 	public function view() {
 		$editAccess = array();
-		if (PERMISSIONS_MODEL != 'simple') {
+		if (Config::get('concrete.permissions.model') != 'simple') {
 			return;
 		}
 
@@ -134,7 +134,7 @@ class Site extends DashboardPageController {
 				}
 				$pt->assignPermissionAccess($pa);
 
-				Cache::flush();
+                Core::make('cache')->flush();
 				$this->redirect('/dashboard/system/permissions/site/', 'saved');
 			} else {
 				$this->error->add($this->token->getErrorMessage());

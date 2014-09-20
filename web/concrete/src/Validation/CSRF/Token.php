@@ -53,7 +53,8 @@ class Token
         if ($time == null) {
             $time = time();
         }
-        $hash = $time . ':' . md5($time . ':' . $uID . ':' . $action . ':' . Config::get('SECURITY_TOKEN_VALIDATION'));
+        $config = \Core::make('config/database');
+        $hash = $time . ':' . md5($time . ':' . $uID . ':' . $action . ':' . $config->get('concrete.security.token.validation'));
         return $hash;
     }
 

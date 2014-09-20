@@ -189,7 +189,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         // this is a hack but it's a really good one for performance
         // if the permission access entity for page owner exists in the database, then we return the collection ID. Otherwise, we just return the permission collection id
         // this is because page owner is the ONLY thing that makes it so we can't use getPermissionsCollectionID, and for most sites that will DRAMATICALLY reduce the number of queries.
-        if (PAGE_PERMISSION_IDENTIFIER_USE_PERMISSION_COLLECTION_ID) {
+        if (\Concrete\Core\Permission\Access\PageAccess::usePermissionCollectionIDForIdentifier()) {
             return $this->getPermissionsCollectionID();
         } else {
             return $this->getCollectionID();
@@ -201,6 +201,12 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      * @return bool
      */
     public function isEditMode() {
+        if ($this->getCollectionPath() == STACKS_LISTING_PAGE_PATH) {
+            return true;
+        }
+        if ($this->getPageTypeHandle() == STACKS_PAGE_TYPE) {
+            return true;
+        }
         return $this->isCheckedOutByMe();
     }
 
@@ -461,7 +467,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public static function getDrafts() {
         $db = Loader::db();
         $u = new User();
-        $nc = Page::getByPath(PAGE_DRAFTS_PAGE_PATH);
+        $nc = Page::getByPath(Config::get('concrete.paths.drafts'));
         $r = $db->Execute('select Pages.cID from Pages inner join Collections c on Pages.cID = c.cID where uID = ? and cParentID = ? order by cDateAdded desc', array($u->getUserID(), $nc->getCollectionID()));
         $pages = array();
         while ($row = $r->FetchRow()) {
@@ -475,7 +481,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     public function isPageDraft() {
         $db = Loader::db();
-        $nc = Page::getByPath(PAGE_DRAFTS_PAGE_PATH);
+        $nc = Page::getByPath(Config::get('concrete.paths.drafts'));
         return $this->getCollectionParentID() == $nc->getCollectionID();
     }
 
@@ -586,7 +592,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $r = $db->prepare($q);
 
         $res = $db->execute($r, $v);
-        $newCID = $db->Insert_ID();
 
         PageStatistics::incrementParents($newCID);
 
@@ -631,6 +636,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $db = Loader::db();
         $dh = Loader::helper('date');
         $dt = Loader::helper('text');
+        $ds = Loader::helper('security');
         $u = new User();
 
         $cParentID = $this->getCollectionID();
@@ -641,6 +647,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         $handle = $this->getCollectionHandle();
 
         // make the handle out of the title
+        $cLink = $ds->sanitizeURL($cLink);
         $handle = $dt->urlify($cLink);
         $data['handle'] = $handle;
         $data['name'] = $cName;
@@ -804,7 +811,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     public function queueForDeletion() {
         $pages = array();
         $includeThisPage = true;
-        if ($this->getCollectionPath() == TRASH_PAGE_PATH) {
+        if ($this->getCollectionPath() == Config::get('concrete.paths.trash')) {
             // we're in the trash. we can't delete the trash. we're skipping over the trash node.
             $includeThisPage = false;
         }
@@ -903,25 +910,6 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
      */
     function getCollectionPath() {
         return $this->cPath;
-    }
-
-    /**
-     * Returns the urlencode path for a page from path string
-     * @param string $path
-     * @return string $path
-     */
-    public static function getEncodePath($path)
-    {
-        if(mb_strpos($path,"/") !== false){
-            $path = explode("/",$path);
-            $path = array_map("rawurlencode",$path);
-            $newPath = implode("/",$path);
-        }else if(is_null($path)){
-            $newPath = NULL;
-        }else{
-            $newPath = rawurlencode($path);
-        }
-        return str_replace('%21','!',$newPath);
     }
 
     /**
@@ -1455,7 +1443,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
             $txt = Loader::helper('text');
             $cHandle = $txt->urlify($name);
-            $cHandle = str_replace('-', PAGE_PATH_SEPARATOR, $cHandle);
+            $cHandle = str_replace('-', Config::get('concrete.seo.page_path_separator'), $cHandle);
 
             $db->Execute('update CollectionVersions set cvName = ?, cvHandle = ? where cID = ? and cvID = ?', array($name, $cHandle, $this->getCollectionID(), $cvID));
 
@@ -1536,7 +1524,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
                 $scl = $style->getValueList();
             }
 
-            $theme->setStylesheetCachePath(DIR_FILES_CACHE . '/pages/' . $this->getCollectionID());
+            $theme->setStylesheetCachePath(Config::get('concrete.cache.directory') . '/pages/' . $this->getCollectionID());
             $theme->setStylesheetCacheRelativePath(REL_DIR_FILES_CACHE . '/pages/' . $this->getCollectionID());
             $sheets = $theme->getThemeCustomizableStyleSheets();
             foreach($sheets as $sheet) {
@@ -1580,7 +1568,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $cCacheFullPageContent = $data['cCacheFullPageContent'];
         }
         if (isset($data['cCacheFullPageContentLifetimeCustom'])) {
-            $cCacheFullPageContentLifetimeCustom = $data['cCacheFullPageContentLifetimeCustom'];
+            $cCacheFullPageContentLifetimeCustom = intval($data['cCacheFullPageContentLifetimeCustom']);
         }
         if (isset($data['cCacheFullPageContentOverrideLifetime'])) {
             $cCacheFullPageContentOverrideLifetime = $data['cCacheFullPageContentOverrideLifetime'];
@@ -1607,10 +1595,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
         } else if (!$data['cHandle']) {
             // make the handle out of the title
             $cHandle = $txt->urlify($cName);
-            $cHandle = str_replace('-', PAGE_PATH_SEPARATOR, $cHandle);
+            $cHandle = str_replace('-', Config::get('concrete.seo.page_path_separator'), $cHandle);
         } else {
-            $cHandle = $data['cHandle']; // we DON'T run urlify
-            $cHandle = str_replace('-', PAGE_PATH_SEPARATOR, $cHandle);
+            $cHandle = $txt->slugSafeString($data['cHandle']); // we DON'T run urlify
+            $cHandle = str_replace('-', Config::get('concrete.seo.page_path_separator'), $cHandle);
         }
         $cName = $txt->sanitize($cName);
 
@@ -2110,7 +2098,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             return false;
         }
 
-        $trash = Page::getByPath(TRASH_PAGE_PATH);
+        $trash = Page::getByPath(Config::get('concrete.paths.trash'));
         Log::addEntry(t('Page "%s" at path "%s" Moved to trash', $this->getCollectionName(), $this->getCollectionPath()),t('Page Action'));
         $this->move($trash);
         $this->deactivate();
@@ -2155,7 +2143,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             $proceed = false;
             $suffix = 0;
             while ($proceed != true) {
-                $newPath = ($suffix == 0) ? $pathString : $pathString . PAGE_PATH_SEPARATOR . $suffix;
+                $newPath = ($suffix == 0) ? $pathString : $pathString . Config::get('concrete.seo.page_path_separator') . $suffix;
                 $q = $em->createQuery("select p from Concrete\Core\Page\PagePath p
                     where p.cPath = ?1 and p.cID <> ?2");
 
@@ -2279,7 +2267,7 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     public function isInTrash() {
-        return $this->getCollectionPath() != TRASH_PAGE_PATH && strpos($this->getCollectionPath(), TRASH_PAGE_PATH) === 0;
+        return $this->getCollectionPath() != Config::get('concrete.paths.trash') && strpos($this->getCollectionPath(), Config::get('concrete.paths.trash')) === 0;
     }
 
     public function moveToRoot() {
@@ -2443,9 +2431,10 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
             // make the handle out of the title
             $handle = $txt->urlify($data['name']);
         } else {
-            $handle = $data['cHandle']; // we take it as it comes.
+            $handle = $txt->slugSafeString($data['cHandle']); // we take it as it comes.
         }
-        $handle = str_replace('-', PAGE_PATH_SEPARATOR, $handle);
+
+        $handle = str_replace('-', Config::get('concrete.seo.page_path_separator'), $handle);
         $data['handle'] = $handle;
         $dh = Loader::helper('date');
         $cDate = $dh->getOverridableNow();
@@ -2542,18 +2531,18 @@ class Page extends Collection implements \Concrete\Core\Permission\ObjectInterfa
 
     public function getCollectionFullPageCachingLifetimeValue() {
         if ($this->cCacheFullPageContentOverrideLifetime == 'default') {
-            $lifetime = CACHE_LIFETIME;
+            $lifetime = Config::get('concrete.cache.lifetime');
         } else if ($this->cCacheFullPageContentOverrideLifetime == 'custom') {
             $lifetime = $this->cCacheFullPageContentLifetimeCustom * 60;
         } else if ($this->cCacheFullPageContentOverrideLifetime == 'forever') {
             $lifetime = 31536000; // 1 year
         } else {
-            if (FULL_PAGE_CACHE_LIFETIME == 'custom') {
-                $lifetime = Config::get('FULL_PAGE_CACHE_LIFETIME_CUSTOM') * 60;
-            } else if (FULL_PAGE_CACHE_LIFETIME == 'forever') {
+            if (Config::get('concrete.cache.full_page_lifetime') == 'custom') {
+                $lifetime = Config::get('concrete.cache.full_page_lifetime_value') * 60;
+            } else if (Config::get('concrete.cache.full_page_lifetime') == 'forever') {
                 $lifetime = 31536000; // 1 year
             } else {
-                $lifetime = CACHE_LIFETIME;
+                $lifetime = Config::get('concrete.cache.lifetime');
             }
         }
 

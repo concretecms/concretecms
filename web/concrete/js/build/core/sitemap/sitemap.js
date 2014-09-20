@@ -223,11 +223,10 @@
 				if (dragMode == 'over') {
 					reloadNode = destNode;
 				}
-				reloadNode.removeChildren();
                 if (data.task == 'MOVE') {
-                    console.log('sup');
                     node.remove();
                 }
+				reloadNode.removeChildren();
 
 				my.reloadNode(reloadNode, function() {
 					if (!destNode.bExpanded) {

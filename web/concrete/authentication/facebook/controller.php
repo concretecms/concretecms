@@ -2,6 +2,7 @@
 namespace Concrete\Authentication\Facebook;
 
 use Concrete\Core\Authentication\AuthenticationTypeController;
+use Config;
 use Loader;
 use Session;
 use User;
@@ -34,11 +35,11 @@ class Controller extends AuthenticationTypeController
         $status = Session::get('authFacebookStatus');
         Session::remove('authFacebookStatus');
         if ($status == 1) {
-            $uname = (USER_REGISTRATION_WITH_EMAIL_ADDRESS ? 'Email' : 'Username');
+            $uname = (Config::get('concrete.user.registration.email_registration') ? 'Email' : 'Username');
             $msg = t( /*i18n %s is the site name*/
                     '<h2>Oh No!</h2>This Facebook account isn\'t tied to any account of %1$s!',
-                    h(SITE)) . '<br />';
-            if (USER_REGISTRATION_WITH_EMAIL_ADDRESS) {
+                    h(Config::get('concrete.site'))) . '<br />';
+            if (Config::get('concrete.user.registration.email_registration')) {
                 $msg .= t(
                     'Please login with your Email and Password and then use the Facebook login to tie them together.');
             } else {
@@ -52,7 +53,7 @@ class Controller extends AuthenticationTypeController
         } else if ($status == 4) {
             throw new \Exception(t( /*i18n %s is the site name*/
                                      'This Facebook account is already attached to your %s account.',
-                                     h(SITE)));
+                                     h(Config::get('concrete.site'))));
         } else {
             if ($status == 5) {
                 throw new \Exception(t(
@@ -86,7 +87,7 @@ class Controller extends AuthenticationTypeController
         $this->set('form', Loader::helper('form'));
         $this->set('u', $u);
         $this->view();
-        $this->set('statusURI', View::url("/account/profile/edit", "callback", "facebook", "status"));
+        $this->set('statusURI', View::url("/login", "callback", "facebook", "status"));
     }
 
     public function view()

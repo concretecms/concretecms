@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Theme;
 
 use \Concrete\Core\Http\ResponseAssetGroup;
+use Config;
 use Loader;
 use Page;
 use Environment;
@@ -39,8 +40,12 @@ class Theme extends Object
     const THEME_CUSTOMIZABLE_STYLESHEET_EXTENSION = ".less";
     const FILENAME_TYPOGRAPHY_CSS = "typography.css";
 
-    protected $stylesheetCachePath = DIR_FILES_CACHE;
+    protected $stylesheetCachePath;
     protected $stylesheetCacheRelativePath = REL_DIR_FILES_CACHE;
+
+    public function __construct() {
+        $this->setStylesheetCachePath(Config::get('concrete.cache.directory'));
+    }
 
     public static function getGlobalList()
     {
@@ -248,7 +253,7 @@ class Theme extends Object
     public function enablePreviewRequest()
     {
         $this->setStylesheetCacheRelativePath(REL_DIR_FILES_CACHE . '/preview');
-        $this->setStylesheetCachePath(DIR_FILES_CACHE . '/preview');
+        $this->setStylesheetCachePath(Config::get('concrete.cache.directory') . '/preview');
         $this->pThemeIsPreview = true;
     }
 
@@ -317,7 +322,7 @@ class Theme extends Object
             $stylesheet->setValueList($scl);
         }
         if (!$this->isThemePreviewRequest()) {
-            if (!$stylesheet->outputFileExists() || !ENABLE_THEME_CSS_CACHE) {
+            if (!$stylesheet->outputFileExists() || !Config::get('concrete.cache.theme_css')) {
                 $stylesheet->output();
             }
         }
@@ -422,9 +427,9 @@ class Theme extends Object
         $env = Environment::get();
         if ($row['pThemeID']) {
             if ($row['pThemeHasCustomClass']) {
-
-                $r = $env->getRecord(DIRNAME_THEMES . '/' . $row['pThemeHandle'] . '/' . FILENAME_THEMES_CLASS);
-                $prefix = $r->override ? true : $row['pkgHandle'];
+                $pkgHandle = PackageList::getHandle($row['pkgID']);
+                $r = $env->getRecord(DIRNAME_THEMES . '/' . $row['pThemeHandle'] . '/' . FILENAME_THEMES_CLASS, $pkgHandle);
+                $prefix = $r->override ? true : $pkgHandle;
                 $class = core_class(
                     'Theme\\' .
                     Loader::helper('text')->camelcase($row['pThemeHandle']) .
@@ -475,7 +480,7 @@ class Theme extends Object
         foreach ($templateList as $pt) {
             $pts[] = $pt->getPageTemplateHandle();
         }
-
+        $files = array();
         $filesTmp = $dh->getDirectoryContents($this->pThemeDirectory);
         foreach ($filesTmp as $f) {
             if (strrchr($f, '.') == static::THEME_EXTENSION) {
@@ -727,8 +732,8 @@ class Theme extends Object
         }
         $html = new \HtmlObject\Image();
         $img = $html->src($src)
-            ->width(THEMES_THUMBNAIL_WIDTH)
-            ->height(THEMES_THUMBNAIL_HEIGHT)
+            ->width(Config::get('concrete.icons.theme_thumbnail.width'))
+            ->height(Config::get('concrete.icons.theme_thumbnail.height'))
             ->class('ccm-icon-theme');
 
         return $img;

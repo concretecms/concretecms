@@ -1,8 +1,10 @@
-<?
+<?php
 namespace Concrete\Controller\Dialog\File\Thumbnails;
 use \Concrete\Controller\Backend\UserInterface\File as BackendInterfaceFileController;
 use \Concrete\Core\File\EditResponse as FileEditResponse;
 use Concrete\Core\File\Type\Type;
+use Exception;
+use Permissions;
 
 class Edit extends BackendInterfaceFileController {
 
@@ -21,12 +23,11 @@ class Edit extends BackendInterfaceFileController {
 		if ($this->validateAction()) {
 			$fp = new Permissions($this->file);
 			if ($fp->canEditFileProperties()) {
-				$fv = $this->file->getVersionToModify();
+				$this->file->getVersionToModify();
 
 				$sr = new FileEditResponse();
 				$sr->setFile($this->file);
 				$sr->setMessage(t('File updated successfully.'));
-				$sr->setAdditionalDataAttribute('value', $value);
 				$sr->outputJSON();
 
 

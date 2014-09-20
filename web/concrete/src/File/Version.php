@@ -6,6 +6,7 @@ use Concrete\Core\File\Image\Thumbnail\Thumbnail;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Image\Thumbnail\Type\Version as ThumbnailTypeVersion;
 use League\Flysystem\AdapterInterface;
+use League\Flysystem\FileNotFoundException;
 use Loader;
 use \File as ConcreteFile;
 use \Concrete\Core\File\Type\TypeList as FileTypeList;
@@ -84,7 +85,12 @@ class Version
      * @Column(type="string")
      */
     protected $fvTitle = null;
-
+    
+    /**
+     * @Column(type="text")
+     */
+    protected $fvDescription = null;
+    
     /**
      * @Column(type="string")
      */
@@ -506,6 +512,7 @@ class Version
     {
         $tags = self::cleanTags($tags);
         $this->fvTags = $tags;
+        $this->save();
         $this->logVersionUpdate(self::UT_TAGS);
         $fe = new \Concrete\Core\File\Event\FileVersion($this);
         Events::dispatch('on_file_version_update_tags', $fe);
@@ -559,7 +566,7 @@ class Version
     /**
      * Removes a version of a file. Note, does NOT remove the file because we don't know where the file might elsewhere be used/referenced.
      */
-    public function delete()
+    public function delete($deleteFilesAndThumbnails = false)
     {
 
         $db = Loader::db();
@@ -572,13 +579,19 @@ class Version
 
         $types = Type::getVersionList();
 
-        foreach($types as $type) {
-            $this->deleteThumbnail($type);
-        }
+        if ($deleteFilesAndThumbnails) {
+            try {
+                foreach($types as $type) {
+                    $this->deleteThumbnail($type);
+                }
 
-        $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
-        $fre = $this->getFileResource();
-        $fsl->delete($fre->getPath());
+                $fsl = $this->getFile()->getFileStorageLocationObject()->getFileSystemObject();
+                $fre = $this->getFileResource();
+                if ($fsl->has($fre->getPath())) {
+                    $fsl->delete($fre->getPath());
+                }
+            } catch(FileNotFoundException $e) {}
+        }
     }
 
     /**
@@ -780,11 +793,11 @@ class Version
                 )
             );
 
-            if ($type->getHandle() == FILE_MANAGER_LISTING_THUMBNAIL_HANDLE) {
+            if ($type->getHandle() == \Config::get('concrete.icons.file_manager_listing.handle')) {
                 $this->fvHasListingThumbnail = true;
             }
 
-            if ($type->getHandle() == FILE_MANAGER_DETAIL_THUMBNAIL_HANDLE) {
+            if ($type->getHandle() == \Config::get('concrete.icons.file_manager_detail.handle')) {
                 $this->fvHasDetailThumbnail = true;
             }
 
@@ -811,7 +824,7 @@ class Version
     public function getListingThumbnailImage()
     {
         if ($this->fvHasListingThumbnail) {
-            $type = Type::getByHandle(FILE_MANAGER_LISTING_THUMBNAIL_HANDLE);
+            $type = Type::getByHandle(\Config::get('concrete.icons.file_manager_listing.handle'));
             $baseSrc = $this->getThumbnailURL($type->getBaseVersion());
             $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
             return '<img src="' . $baseSrc . '" data-at2x="' . $doubledSrc . '" />';
@@ -823,7 +836,7 @@ class Version
     public function getDetailThumbnailImage()
     {
         if ($this->fvHasDetailThumbnail) {
-            $type = Type::getByHandle(FILE_MANAGER_DETAIL_THUMBNAIL_HANDLE);
+            $type = Type::getByHandle(\Config::get('concrete.icons.file_manager_detail.handle'));
             $baseSrc = $this->getThumbnailURL($type->getBaseVersion());
             $doubledSrc = $this->getThumbnailURL($type->getDoubledVersion());
             return '<img src="' . $baseSrc . '" data-at2x="' . $doubledSrc . '" />';

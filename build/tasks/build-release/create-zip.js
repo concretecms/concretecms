@@ -20,8 +20,10 @@ module.exports = function(grunt, config, parameters, done) {
 			shell = require('shelljs'),
 			c5fs = require('../../libraries/fs');
 		process.stdout.write('Determining concrete5 version... ');
-		var str = fs.readFileSync(path.join(workFolder, 'web/concrete/config/version.php'), 'utf8');
-		var version = str.match(/\$APP_VERSION[ \t]*=[ \t]*['"](.+)['"]/);
+		var str = fs.readFileSync(path.join(workFolder, 'web/concrete/config/concrete.php'), 'utf8');
+		// Remove comments and new lines
+		str = str.replace(/\/\/.*?($|\r|\n)/g, '').replace(/[\r\n]/g, ' ').replace(/\/\*.*?\*\//g, '');
+		var version = str.match(/["']version["']\s*=>\s*['"](.*?)['"]/);
 		if (!version) {
 			endForError('$APP_VERSION not found');
 			return;

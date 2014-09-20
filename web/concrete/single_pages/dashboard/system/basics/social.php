@@ -10,11 +10,13 @@
     $ssHandle = '';
     $action = $view->action('add_link');
     $token = 'add_link';
+    $buttonText = t('Add');
     if (is_object($link)) {
         $url = $link->getURL();
         $ssHandle = $link->getServiceHandle();
         $action = $view->action('edit_link', $link->getID());
         $token = 'edit_link';
+        $buttonText = t('Save');
     }
     ?>
 
@@ -73,7 +75,7 @@
         <div class="ccm-dashboard-form-actions-wrapper">
             <div class="ccm-dashboard-form-actions">
                 <a href="<?=URL::to('/dashboard/system/basics/social')?>" class="btn btn-default pull-left"><?=t("Cancel")?></a>
-                <button class="pull-right btn btn-success" type="submit" ><?=t('Add')?></button>
+                <button class="pull-right btn btn-success" type="submit" ><?=$buttonText?></button>
             </div>
         </div>
 

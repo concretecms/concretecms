@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\File;
+use Config;
 use Loader;
 /**
  * @package Helpers
@@ -64,7 +65,7 @@ class ValidationService {
 		if(isset($extensions) && is_array($extensions) && count($extensions)) {
 			$allowed_extensions = $extensions;
 		} else { // pull from constants
-			$extensions_string = strtolower(str_replace(array("*","."),"",UPLOAD_FILE_EXTENSIONS_ALLOWED));
+			$extensions_string = strtolower(str_replace(array("*","."), "", Config::get('concrete.upload.extensions')));
 			$allowed_extensions = explode(";",$extensions_string);
 		}
 		return in_array($ext,$allowed_extensions);

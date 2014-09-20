@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Updater;
+use Concrete\Core\Config\Renderer;
 use Loader;
 use Marketplace;
 class ApplicationUpdate {
@@ -25,24 +26,21 @@ class ApplicationUpdate {
 	 * Writes the core pointer into config/site.php
 	 */
 	public function apply() {
-		if (!is_writable(CONFIG_FILE)) {
-			return self::E_UPDATE_WRITE_CONFIG;
-		}
 
-		$configFile = CONFIG_FILE;
-		$contents = Loader::helper('file')->getContents($configFile);
-		$contents = trim($contents);
-		// remove any instances of app pointer
+        $updates = array();
+        $update_file = DIR_CONFIG_SITE . '/update.php';
+        if (file_exists($update_file)) {
+            if (!is_writable($update_file)) {
+                return self::E_UPDATE_WRITE_CONFIG;
+            }
+            $updates = (array) include $update_file;
+        }
 
-		$contents = preg_replace("/define\('DIRNAME_CORE_UPDATED', '(.+)'\);/i", "", $contents);
+        $updates['core'] = $this->getUpdateIdentifier();
+        \Config::clear('concrete.version');
 
-		file_put_contents($configFile, $contents);
-
-		if (substr($contents, -2) == '?>') {
-			file_put_contents($configFile, "<" . "?" . "p" . "hp define('DIRNAME_CORE_UPDATED', '" . $this->getUpdateIdentifier() . "');?>", FILE_APPEND);
-		} else {
-			file_put_contents($configFile, "?><" . "?" . "p" . "hp define('DIRNAME_CORE_UPDATED', '" . $this->getUpdateIdentifier() . "');?>", FILE_APPEND);
-		}
+        $renderer = new Renderer($updates);
+        file_put_contents($update_file, $renderer->render());
 
 		return true;
 	}
@@ -52,16 +50,15 @@ class ApplicationUpdate {
      * @return static
      */
     public static function get($dir) {
-		$APP_VERSION = false;
-		// given a directory, we figure out what version of the system this is
-		$version = DIR_CORE_UPDATES . '/' . $dir . '/' . DIRNAME_CORE . '/config/version.php';
-		@include($version);
-		if ($APP_VERSION != false) {
-			$obj = new ApplicationUpdate();
-			$obj->version = $APP_VERSION;
-			$obj->identifier = $dir;
-			return $obj;
-		}
+        $version_file = DIR_CORE_UPDATES . "/{$dir}/" . DIRNAME_CORE . '/config/concrete.php';
+
+        $concrete = @include($version_file);
+        if ($concrete['version'] != false) {
+            $obj = new ApplicationUpdate();
+            $obj->version = $concrete['version'];
+            $obj->identifier = $dir;
+            return $obj;
+        }
 	}
 
 }

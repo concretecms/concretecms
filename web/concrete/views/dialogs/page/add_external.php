@@ -5,12 +5,12 @@
 
         <div class="form-group">
             <label class="control-label"><?=t('Name')?></label>
-            <input type="text" name="name" value="<?=$name?>" class="form-control" />
+            <input type="text" name="name" value="<?=h($name)?>" class="form-control" />
         </div>
 
         <div class="form-group">
             <label class="control-label"><?=t('URL')?></label>
-            <input type="text" name="link" value="<?=$link?>" class="form-control" />
+            <input type="text" name="link" value="<?=h($link)?>" class="form-control" />
         </div>
 
         <div class="form-group">

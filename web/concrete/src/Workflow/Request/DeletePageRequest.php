@@ -1,5 +1,7 @@
 <?php
 namespace Concrete\Core\Workflow\Request;
+
+use Config;
 use Workflow;
 use Loader;
 use Page;
@@ -13,6 +15,7 @@ use Events;
 use URL;
 use \Concrete\Core\Workflow\Progress\Action\Action as WorkflowProgressAction;
 use \Concrete\Core\Workflow\Progress\Response as WorkflowProgressResponse;
+
 class DeletePageRequest extends PageRequest {
 
 	protected $wrStatusNum = 100;
@@ -64,7 +67,7 @@ class DeletePageRequest extends PageRequest {
 		}
 
 		$cParentID = $c->getCollectionParentID();
-		if (ENABLE_TRASH_CAN) {
+		if (Config::get('concrete.misc.enable_trash_can')) {
 			$c->moveToTrash();
 		} else {
 			$c->delete();

@@ -130,18 +130,18 @@ class UserInterface {
 	}
 
 	public function showWhiteLabelMessage() {
-		return ((defined('WHITE_LABEL_LOGO_SRC') && WHITE_LABEL_LOGO_SRC != '')  || file_exists(DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/logo_menu.png'));
+		return (Config::get('concrete.white_label.logo') || file_exists(DIR_APPLICATION . '/' . DIRNAME_IMAGES . '/logo_menu.png'));
 	}
 
 	public function getToolbarLogoSRC() {
-		if (defined('WHITE_LABEL_APP_NAME')) {
-			$alt = WHITE_LABEL_APP_NAME;
+		if (Config::get('concrete.white_label.name')) {
+			$alt = Config::get('concrete.white_label.name');
 		}
 		if (!$alt) {
 			$alt = 'concrete5';
 		}
-		if (defined('WHITE_LABEL_LOGO_SRC')) {
-			$src = WHITE_LABEL_LOGO_SRC;
+		if (Config::get('concrete.white_label.logo')) {
+			$src = Config::get('concrete.white_label.logo');
 		}
 		if (!$src) {
 			$filename = 'logo.png';
@@ -160,14 +160,14 @@ class UserInterface {
 	public function showNewsflowOverlay() {
 		$tp = new \TaskPermission();
 		$c = Page::getCurrentPage();
-        if ((!defined(MOBILE_THEME_IS_ACTIVE) || MOBILE_THEME_IS_ACTIVE == false) && ENABLE_APP_NEWS_OVERLAY == true && $tp->canViewNewsflow() && $c->getCollectionPath() != '/dashboard/news') {
+        if ((!defined(MOBILE_THEME_IS_ACTIVE) || MOBILE_THEME_IS_ACTIVE == false) && Config::get('concrete.external.news_overlay') && $tp->canViewNewsflow() && $c->getCollectionPath() != '/dashboard/news') {
 			$u = new ConcreteUser;
 			$nf = $u->config('NEWSFLOW_LAST_VIEWED');
 			if ($nf == 'FIRSTRUN') {
 				return false;
 			}
 
-			if (Config::get('SITE_MAINTENANCE_MODE')) {
+			if (Config::get('concrete.maintenance_mode')) {
 				return false;
 			}
 
@@ -248,9 +248,10 @@ class UserInterface {
 		if ($exception) {
 			$o->content .= $exception->getTraceAsString();
 		}
-		$ve = new ErrorView($o);
-		$response = $ve->render($o);
-		print $response;
+
+        \Response::closeOutputBuffers(1, false);
+        $ve = new ErrorView($o);
+        \Response::create($ve->render($o))->send();
 	}
 
 	public function notify($arguments) {

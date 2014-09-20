@@ -112,23 +112,6 @@ class Help
             '/page/caching' => t('Full page caching can dramatically improve page speed for pages that don\'t need to have absolutely up-to-the-minute content.')
         );
 
-        // displays views 3 -> 6
-        $msgTxt = t('Need some help?')
-            . '<br/>'
-            . t(
-                'We noticed you\'ve been in this area a few times recently. There\'s additional themes you can buy <a href="%1$s" target="_blank">here</a>, or you can get custom design services from our <a href="%2$s" target="_blank">partners</a>.',
-                'http://www.concrete5.org/marketplace/themes',
-                'http://enterprise.concrete5.com/'
-               )
-        ;
-        $panels['/page/design'][] = HelpMessage::get('/page/design', $msgTxt, 3, 6);
-
-        // default message
-        $msgTxt = t("<b>Welcome to customizing themes!</b><br/>Watch this tutorial for guidance.<br/><br/>")
-            . '<div style="text-align: center"; padding: 20px;"><a style="margin: 10px;" href="http://www.youtube.com/watch?v=pischKK2uHQ" target="_blank"><img src="http://www.concrete5.org/files/6413/9067/3863/video_button.png" /></a></div>'
-        ;
-        $panels['/page/design'][] = HelpMessage::get('/page/design', $msgTxt);
-
         return $panels;
     }
 

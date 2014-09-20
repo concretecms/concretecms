@@ -24,7 +24,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 	<? if ($u->isSuperUser()) {
 		$disabled = ''; ?>
 	<div class="alert-message warning"><p><?=t('This will clear your home page, uploaded files and any content pages out of your site completely. It will completely reset your site and any content you have added will be lost.')?></p></div>
-	<? } else { 
+	<? } else {
 		$disabled = 'disabled';?>
 	<div class="alert-message info"><p><?=t('Only the %s user may reset the site\'s content.', USER_SUPER)?></p></div>
 	<? } ?>
@@ -55,15 +55,15 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Uninstall Package'), false, 'span10 offset1', false);?>
 <div class="ccm-pane-body">
-	
+
 	<?=$valt->output('uninstall')?>
 	<input type="hidden" name="pkgID" value="<?=$pkg->getPackageID()?>" />
-	
+
 	<h3><?=t('Items To Uninstall')?></h3>
-	
+
 	<p><?=t('Uninstalling %s will remove the following data from your system.', $pkg->getPackageName())?></p>
-		
-		<? foreach($items as $k => $itemArray) { 
+
+		<? foreach($items as $k => $itemArray) {
 			if (count($itemArray) == 0) {
 				continue;
 			}
@@ -72,7 +72,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			<? foreach($itemArray as $item) { ?>
 				<?=$pkg->getItemName($item)?><br/>
 			<? } ?>
-				
+
 		<? } ?>
 		<br/>
 
@@ -83,11 +83,11 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
                 <span><?=t('Yes, remove the package\'s directory from the installation directory.')?></span></label>
                 </div>
         </div>
-		
-		
+
+
 		<? @Loader::packageElement('dashboard/uninstall', $pkg->getPackageHandle()); ?>
-				
-		
+
+
 </div>
 <div class="ccm-pane-footer">
 <? print $ch->submit(t('Uninstall'), 'ccm-uninstall-form', 'right', 'btn-danger'); ?>
@@ -96,27 +96,27 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 <?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper()?>
 </form>
 
-<? 
-} else { 
+<?
+} else {
 
 	function sortAvailableArray($obj1, $obj2) {
 		$name1 = $obj1->getPackageName();
 		$name2 = $obj2->getPackageName();
 		return strcasecmp($name1, $name2);
 	}
-	
+
 	// grab the total numbers of updates.
-	// this consists of 
+	// this consists of
 	// 1. All packages that have greater pkgAvailableVersions than pkgVersion
 	// 2. All packages that have greater pkgVersion than getPackageCurrentlyInstalledVersion
 	$local = array();
 	$remote = array();
 	$pkgAvailableArray = array();
-	if ($tp->canInstallPackages()) { 
+	if ($tp->canInstallPackages()) {
 		$local = Package::getLocalUpgradeablePackages();
 		$remote = Package::getRemotelyUpgradeablePackages();
 	}
-	
+
 	// now we strip out any dupes for the total
 	$updates = 0;
 	$localHandles = array();
@@ -129,29 +129,29 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			$updates++;
 		}
 	}
-	if ($tp->canInstallPackages()) { 
+	if ($tp->canInstallPackages()) {
 		foreach(Package::getAvailablePackages() as $_pkg) {
 			$_pkg->setupPackageLocalization();
 			$pkgAvailableArray[] = $_pkg;
 		}
 	}
-	
+
 
 	$thisURL = $view->url('/dashboard/extend/install');
 	$availableArray = $pkgAvailableArray;
 	usort($availableArray, 'sortAvailableArray');
-	
+
 	/* Load featured add-ons from the marketplace.
 	 */
-	
+
 	$db = Loader::db();
-	
-	if(ENABLE_MARKETPLACE_SUPPORT && $tp->canInstallPackages()){
-		$purchasedBlocksSource = Marketplace::getAvailableMarketplaceItems();		
+
+	if(Config::get('concrete.marketplace.enabled') && $tp->canInstallPackages()){
+		$purchasedBlocksSource = Marketplace::getAvailableMarketplaceItems();
 	}else{
 		$purchasedBlocksSource = array();
 	}
-	
+
 	$skipHandles = array();
 	foreach($availableArray as $ava) {
 		foreach($purchasedBlocksSource as $pi) {
@@ -160,35 +160,35 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			}
 		}
 	}
-	
+
 	$purchasedBlocks = array();
 	foreach($purchasedBlocksSource as $pb) {
 		if (!in_array($pb->getHandle(), $skipHandles)) {
 			$purchasedBlocks[] = $pb;
 		}
 	}
-	
-	
+
+
 	if (is_object($pkg)) { ?>
-	
+
 		<?=Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper(t('Inspect Package'), false, 'span10 offset1', false);?>
-		
+
 		<div class="ccm-pane-body">
 			<table class="table table-bordered table-striped">
 			<tr>
 				<td class="ccm-marketplace-list-thumbnail"><img src="<?=$ci->getPackageIconURL($pkg)?>" /></td>
 				<td class="ccm-addon-list-description" style="width: 100%"><h3><?=$pkg->getPackageName()?> - <?=$pkg->getPackageVersion()?></h3><?=$pkg->getPackageDescription()?></td>
-			</tr>				
+			</tr>
 			</table>
-		
+
 			<?
-			
+
 			$items = $pkg->getPackageItems();
 			$blocks = array();
 			if (isset($items['block_types']) && is_array($items['block_types'])) {
 				$blocks = $items['block_types'];
 			}
-			
+
 			if (count($blocks) > 0) { ?>
 				<h5><?=$pkg->getPackageItemsCategoryDisplayName('block_types')?></h5>
 				<div class="form-group">
@@ -211,11 +211,11 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			</div>
 			<?=Loader::helper('concrete/dashboard')->getDashboardPaneFooterWrapper(false)?>
 	<?
-	
+
 	 } else { ?>
-					
+
 		<? if (is_object($installedPKG) && $installedPKG->hasInstallPostScreen()) { ?>
-	
+
 			<div style="display: none">
 			<div id="ccm-install-post-notes"><div class="ccm-ui"><?=Loader::element('dashboard/install_post', false, $installedPKG->getPackageHandle())?>
 			<div class="dialog-buttons">
@@ -224,15 +224,15 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			</div>
 			</div>
 			</div>
-			
+
 			<script type="text/javascript">
-			$(function() { 
+			$(function() {
 				$('#ccm-install-post-notes').dialog({width: 500, modal: true, height: 400, title: "<?=t('Installation Notes')?>", buttons:[{}], 'open': function() {
 					$(this).parent().find('.ui-dialog-buttonpane').addClass("ccm-ui").html('');
 					$(this).find('.dialog-buttons').appendTo($(this).parent().find('.ui-dialog-buttonpane'));
 					$(this).find('.dialog-buttons').remove();
 				}});
-			});	
+			});
 			</script>
 		<? } ?>
 
@@ -247,11 +247,11 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			<? } ?>
 			</div>
 		<? } ?>
-	
-		
+
+
 		<h3><?=t('Currently Installed')?></h3>
 		<? if (count($pkgArray) > 0) { ?>
-			
+
 			<?	foreach ($pkgArray as $pkg) { ?>
 				<div class="media">
 					<div class="pull-left"><img style="width: 49px" src="<?=$ci->getPackageIconURL($pkg)?>" class"media-object" /></div>
@@ -263,7 +263,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 				</div>
 			<? } ?>
 
-		<? } else { ?>		
+		<? } else { ?>
 			<p><?=t('No packages have been installed.')?></p>
 		<? } ?>
 
@@ -271,13 +271,13 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 			<hr/>
 			<h3><?=t('Awaiting Installation')?></h3>
 		<? if (count($availableArray) == 0 && count($purchasedBlocks) == 0) { ?>
-			
+
 			<? if (!$mi->isConnected()) { ?>
 				<p><?=t('Nothing currently available to install.')?></p>
 			<? } ?>
-			
+
 		<? } else { ?>
-	
+
 			<? foreach ($purchasedBlocks as $pb) {
 				$file = $pb->getRemoteFileURL();
 				if (!empty($file)) {?>
@@ -305,25 +305,25 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 				</div>
 
 			<? } ?>
-	
-	
+
+
 			<? } ?>
-		
+
 		<?
 		if (is_object($mi) && $mi->isConnected()) { ?>
 
 		<hr/>
-			
+
 			<h3><?=t("Project Page")?></h3>
 			<p><?=t('Your site is currently connected to the concrete5 community. Your project page URL is:')?><br/>
 			<a href="<?=$mi->getSitePageURL()?>"><?=$mi->getSitePageURL()?></a></p>
 
 		<? } else if (is_object($mi) && $mi->hasConnectionError()) { ?>
-			
-			<?=Loader::element('dashboard/marketplace_connect_failed');?>
-		
 
-		<? } else if ($tp->canInstallPackages() && ENABLE_MARKETPLACE_SUPPORT == true) { ?>
+			<?=Loader::element('dashboard/marketplace_connect_failed');?>
+
+
+		<? } else if ($tp->canInstallPackages() && Config::get('concrete.marketplace.enabled') == true) { ?>
 
 			<hr/>
 
@@ -332,9 +332,9 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 				<p><?=t('Your site is not connected to the concrete5 community. Connecting lets you easily extend a site with themes and add-ons.')?></p>
 				<p><a class="btn btn-primary pull-right" href="<?=$view->url('/dashboard/extend/connect', 'register_step1')?>"><?=t("Connect to Community")?></a></p>
 			</div>
-		
+
 		<? } ?>
 	<? } ?>
-<? } 
+<? }
 
 } ?>

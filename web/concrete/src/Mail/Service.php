@@ -60,13 +60,13 @@ class Service
         $response['mail'] = new Message();
         $response['mail']->setEncoding(APP_CHARSET);
 
-        if (MAIL_SEND_METHOD == "SMTP") {
+        if (Config::get('concrete.mail.method') == "SMTP") {
             $config = array(
-                'host' => Config::get('MAIL_SEND_METHOD_SMTP_SERVER'),
+                'host' => Config::get('concrete.mail.methods.smtp.server'),
             );
 
-            $username = Config::get('MAIL_SEND_METHOD_SMTP_USERNAME');
-            $password = Config::get('MAIL_SEND_METHOD_SMTP_PASSWORD');
+            $username = Config::get('concrete.mail.methods.smtp.username');
+            $password = Config::get('concrete.mail.methods.smtp.password');
             if ($username != '') {
                 $config['connection_class'] = 'login';
                 $config['connection_config'] = array();
@@ -74,12 +74,12 @@ class Service
                 $config['connection_config']['password'] = $password;
             }
 
-            $port = Config::get('MAIL_SEND_METHOD_SMTP_PORT');
+            $port = Config::get('concrete.mail.methods.smtp.port', '');
             if ($port != '') {
                 $config['port'] = $port;
             }
 
-            $encr = Config::get('MAIL_SEND_METHOD_SMTP_ENCRYPTION');
+            $encr = Config::get('concrete.mail.methods.smtp.encryption', '');
             if ($encr != '') {
                 $config['ssl'] = $encr;
             }
@@ -391,7 +391,7 @@ class Service
         $fromStr = $this->generateEmailStrings($_from);
         $toStr = $this->generateEmailStrings($this->to);
         $replyStr = $this->generateEmailStrings($this->replyto);
-        if (ENABLE_EMAILS) {
+        if (Config::get('concrete.email.enabled')) {
 
             $zendMailData = self::getMailerObject();
 
@@ -404,8 +404,8 @@ class Service
                 }
             }
             if (!isset($from)) {
-                $from = array(EMAIL_DEFAULT_FROM_ADDRESS, EMAIL_DEFAULT_FROM_NAME);
-                $fromStr = EMAIL_DEFAULT_FROM_ADDRESS;
+                $from = array(Config::get('concrete.email.default.address'), Config::get('concrete.email.name'));
+                $fromStr = Config::get('concrete.email.default.address');
             }
 
             // The currently included Zend library has a bug in setReplyTo that
@@ -473,7 +473,7 @@ class Service
                 $l = new GroupLogger(LOG_TYPE_EXCEPTIONS, Logger::CRITICAL);
                 $l->write(t('Mail Exception Occurred. Unable to send mail: ') . $e->getMessage());
                 $l->write($e->getTraceAsString());
-                if (ENABLE_LOG_EMAILS) {
+                if (Config::get('concrete.log.emails')) {
                     $l->write(t('Template Used') . ': ' . $this->template);
                     $l->write(t('To') . ': ' . $toStr);
                     $l->write(t('From') . ': ' . $fromStr);
@@ -488,9 +488,9 @@ class Service
         }
 
         // add email to log
-        if (ENABLE_LOG_EMAILS && !$this->getTesting()) {
+        if (Config::get('concrete.log.emails') && !$this->getTesting()) {
             $l = new GroupLogger(LOG_TYPE_EMAILS, Logger::INFO);
-            if (ENABLE_EMAILS) {
+            if (Config::get('concrete.email.enabled')) {
                 $l->write('**' . t('EMAILS ARE ENABLED. THIS EMAIL WAS SENT TO mail()') . '**');
             } else {
                 $l->write('**' . t('EMAILS ARE DISABLED. THIS EMAIL WAS LOGGED BUT NOT SENT') . '**');

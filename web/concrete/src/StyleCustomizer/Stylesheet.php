@@ -1,5 +1,8 @@
 <?php
 namespace Concrete\Core\StyleCustomizer;
+
+use Config;
+
 class Stylesheet {
 
     protected $file; // full path to stylesheet e.g. /full/path/to/concrete/themes/greek_yogurt/css/main.less
@@ -27,7 +30,7 @@ class Stylesheet {
      * @return string CSS
      */
     public function getCss($valueList = false) {
-        $parser = new \Less_Parser(array('cache_dir' => DIR_FILES_CACHE, 'compress' => true));
+        $parser = new \Less_Parser(array('cache_dir' => Config::get('concrete.cache.directory'), 'compress' => true));
         $parser = $parser->parseFile($this->file, $this->sourceUriRoot);
         if (isset($this->valueList) && $this->valueList instanceof \Concrete\Core\StyleCustomizer\Style\ValueList) {
             $variables = array();

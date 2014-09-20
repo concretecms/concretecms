@@ -2,6 +2,7 @@
 namespace Concrete\Core\User\PrivateMessage;
 use Loader;
 use DateTime;
+use Config;
 class Limit {
 	/**
 	 * checks to see if a user has exceeded their limit for sending private messages
@@ -9,16 +10,16 @@ class Limit {
 	 * @return boolean
 	*/
 	public function isOverLimit($uID){
-		if(USER_PRIVATE_MESSAGE_MAX == 0) { return false; }
-		if(USER_PRIVATE_MESSAGE_MAX_TIME_SPAN == 0) { return false; }
+		if(Config::get('concrete.user.private_messages.throttle_max') == 0) { return false; }
+		if(Config::get('concrete.user.private_messages.throttle_max_timespan') == 0) { return false; }
 		$db = Loader::db();
 		$dt = new DateTime();
-		$dt->modify('-'.USER_PRIVATE_MESSAGE_MAX_TIME_SPAN.' minutes');
+		$dt->modify('-'.Config::get('concrete.user.private_messages.throttle_max_timespan').' minutes');
 		$v = array($uID, $dt->format('Y-m-d H:i:s'));
 		$q = "SELECT COUNT(msgID) as sent_count FROM UserPrivateMessages WHERE uAuthorID = ? AND msgDateCreated >= ?";
 		$count = $db->getOne($q,$v);
 
-		if($count > USER_PRIVATE_MESSAGE_MAX) {
+		if($count > Config::get('concrete.user.private_messages.throttle_max')) {
 			self::notifyAdmin($uID);
 			return true;
 		} else {
@@ -28,7 +29,7 @@ class Limit {
 
 	public function getErrorObject() {
 		$ve = Loader::helper('validation/error');
-		$ve->add(t('You may not send more than %s messages in %s minutes', USER_PRIVATE_MESSAGE_MAX, USER_PRIVATE_MESSAGE_MAX_TIME_SPAN));
+		$ve->add(t('You may not send more than %s messages in %s minutes', Config::get('concrete.user.private_messages.throttle_max'), Config::get('concrete.user.private_messages.throttle_max_timespan')));
 		return $ve;
 	}
 
@@ -41,7 +42,7 @@ class Limit {
 
 		$admin = UserInfo::getByID(USER_SUPER_ID);
 
-		Log::addEntry(t("User: %s has tried to send more than %s private messages within %s minutes", $offender->getUserName(), USER_PRIVATE_MESSAGE_MAX, USER_PRIVATE_MESSAGE_MAX_TIME_SPAN),t('warning'));
+		Log::addEntry(t("User: %s has tried to send more than %s private messages within %s minutes", $offender->getUserName(), Config::get('concrete.user.private_messages.throttle_max'), Config::get('concrete.user.private_messages.throttle_max_timespan')),t('warning'));
 
 		Loader::helper('mail');
 		$mh = new MailHelper();

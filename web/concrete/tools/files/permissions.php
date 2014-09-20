@@ -39,16 +39,16 @@ if ($_POST['task'] == 'set_location') {
 <div class="ccm-ui" id="ccm-file-permissions-dialog-wrapper">
 
 <ul class="nav nav-tabs" id="ccm-file-permissions-tabs">
-	<? if (PERMISSIONS_MODEL != 'simple') { ?>
+	<? if (Config::get('concrete.permissions.model') != 'simple') { ?>
 		<li class="active"><a href="javascript:void(0)" id="ccm-file-permissions-advanced"><?=t('Permissions')?></a></li>
 	<? } ?>
-	<li <? if (PERMISSIONS_MODEL == 'simple') { ?> class="active" <? } ?>><a href="javascript:void(0)" id="ccm-file-password"><?=t('Protect with Password')?></a></li>
+	<li <? if (Config::get('concrete.permissions.model') == 'simple') { ?> class="active" <? } ?>><a href="javascript:void(0)" id="ccm-file-password"><?=t('Protect with Password')?></a></li>
 	<li><a href="javascript:void(0)" id="ccm-file-storage"><?=t('Storage Location')?></a></li>
 </ul>
 
 <div class="clearfix"></div>
 
-<? if (PERMISSIONS_MODEL != 'simple') { ?>
+<? if (Config::get('concrete.permissions.model') != 'simple') { ?>
 
 <div id="ccm-file-permissions-advanced-tab">
 
@@ -57,7 +57,7 @@ if ($_POST['task'] == 'set_location') {
 </div>
 <? } ?>
 
-<div id="ccm-file-password-tab" <? if (PERMISSIONS_MODEL != 'simple') { ?> style="display: none" <? } ?>>
+<div id="ccm-file-password-tab" <? if (Config::get('concrete.permissions.model') != 'simple') { ?> style="display: none" <? } ?>>
 <br/>
 
 <h4><?=t('Requires Password to Access')?></h4>
@@ -137,7 +137,7 @@ ccm_filePermissionsSetupButtons = function() {
 var ccm_fpActiveTab;
 
 $(function() {
-<? if (PERMISSIONS_MODEL == 'simple') { ?>
+<? if (Config::get('concrete.permissions.model') == 'simple') { ?>
 	ccm_fpActiveTab = "ccm-file-password";
 <? } else { ?>
 	ccm_fpActiveTab = "ccm-file-permissions-advanced";

@@ -9,7 +9,7 @@ if (Loader::helper('validation/token')->validate('get_url_slug', $_REQUEST['toke
 		}
 	}
 	$text = Loader::helper('text');
-	$name = $text->urlify($_REQUEST['name'], PAGE_PATH_SEGMENT_MAX_LENGTH, $lang);
+	$name = $text->urlify($_REQUEST['name'], Config::get('concrete.seo.segment_max_length'), $lang);
 
 	echo $name;
 }

@@ -8,23 +8,23 @@ class ConfigStore {
 	 * @var Database
 	 */
 	protected $db;
-	
+
 	/**
 	 * @var array
 	 */
 	protected $rows;
-	
+
 	public function __construct() {
 		$this->load();
 	}
-	
+
 	protected function load() {
 		$this->rows = array();
 		$this->db = Loader::db();
 		if (!$this->db) {
 			return;
 		}
-		$r = $this->db->Execute('select * from Config where uID = 0 order by cfKey asc');
+		$r = $this->db->Execute('select * from ConfigStore where uID = 0 order by cfKey asc');
 		while ($row = $r->FetchRow()) {
 			if (!$row['pkgID']) {
 				$row['pkgID'] = 0;
@@ -33,18 +33,9 @@ class ConfigStore {
 		}
 		$r->Close();
 	}
-	
-	protected function rowToConfigValue($row)
-	{
-		$cv = new ConfigValue();
-		$cv->key = $row['cfKey'];
-		$cv->value = isset($row['cfValue']) ? $row['cfValue'] : '';
-		$cv->timestamp = isset($row['timestamp']) ? $row['timestamp'] : '';
-		return $cv;
-	}
-	
+
 	/**
-	 * Get a config item 
+	 * Get a config item
 	 * @param string $cfKey
 	 * @param int $pkgID optional
 	 * @return ConfigValue|void
@@ -61,7 +52,7 @@ class ConfigStore {
 		}
 		return null;
 	}
-	
+
 	public function getListByPackage($pkgID) {
 		$list = array();
 		foreach ($this->rows as $row) {
@@ -71,7 +62,7 @@ class ConfigStore {
 		}
 		return $list;
 	}
-	
+
 	public function set($cfKey, $cfValue, $pkgID = 0) {
 		$timestamp = date('Y-m-d H:i:s');
 		if ($pkgID < 1) {
@@ -88,19 +79,19 @@ class ConfigStore {
 		if (!$db) {
 			return;
 		}
-		
+
 		$db->query(
-			"replace into Config (cfKey, timestamp, cfValue, pkgID) values (?, ?, ?, ?)",
+			"replace into ConfigStore (cfKey, timestamp, cfValue, pkgID) values (?, ?, ?, ?)",
 			array($cfKey, $timestamp, $cfValue, $pkgID)
 		);
 	}
-	
+
 	public function delete($cfKey, $pkgID = null) {
 		$db = Loader::db();
 		if ($pkgID > 0) {
 			unset($this->rows["{$cfKey}.{$pkgID}"]);
 			$db->query(
-				"delete from Config where cfKey = ? and pkgID = ?",
+				"delete from ConfigStore where cfKey = ? and pkgID = ?",
 				array($cfKey, $pkgID)
 			);
 		} else {
@@ -110,10 +101,10 @@ class ConfigStore {
 				}
 			}
 			$db->query(
-				"delete from Config where cfKey = ?",
+				"delete from ConfigStore where cfKey = ?",
 				array($cfKey)
 			);
 		}
 	}
-	
+
 }

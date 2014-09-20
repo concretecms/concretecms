@@ -220,13 +220,13 @@ class PageListTest extends \PageTestCase {
         $nl->includeAliases();
         $nl->filterByNumberOfChildren(1, '>=');
         $results = $nl->getTotalResults();
-        $this->assertEquals(5, $results);
+        $this->assertEquals(6, $results);
     }
 
     public function testFilterByActiveAndSystem()
     {
 
-        \SinglePage::add(TRASH_PAGE_PATH);
+        \SinglePage::add(Config::get('concrete.paths.trash'));
 
         $c = Page::getByPath('/test-page-2');
         $c->moveToTrash();
@@ -357,4 +357,3 @@ class PageListTest extends \PageTestCase {
 
 
 }
- 

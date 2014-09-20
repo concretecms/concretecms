@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Core\Html\Service;
+use Config;
 use Loader;
 use Page;
 
@@ -14,8 +15,8 @@ class Navigation {
 		// basically returns a link to a collection, based on whether or we have
 		// mod_rewrite enabled, and the collection has a path
 		$dispatcher = '';
-		if (!defined('URL_REWRITING_ALL') || URL_REWRITING_ALL == false) {
-			if ((!URL_REWRITING) || $ignoreUrlRewriting) {
+		if (!Config::get('concrete.seo.url_rewriting_all')) {
+			if ((!Config::get('concrete.seo.url_rewriting')) || $ignoreUrlRewriting) {
 				$dispatcher = '/' . DISPATCHER_FILENAME;
 			}
 		}
@@ -25,7 +26,8 @@ class Navigation {
 		}
 
 		if ($cObj->getCollectionPath() != null) {
-			$link = DIR_REL . $dispatcher . $cObj->getCollectionPath() . '/';
+		    $txt = Loader::helper('text');
+			$link = DIR_REL . $dispatcher . $txt->encodePath($cObj->getCollectionPath()) . '/';
 		} else {
 			$_cID = ($cObj->getCollectionPointerID() > 0) ? $cObj->getCollectionPointerOriginalID() : $cObj->getCollectionID();
 			if ($_cID > 1) {
@@ -39,7 +41,7 @@ class Navigation {
 			$link = BASE_URL . $link;
 		}
 
-		if (!URL_USE_TRAILING_SLASH && $link != '/') {
+		if (!Config::get('concrete.seo.trailing_slash') && $link != '/') {
 			$link = rtrim($link, '/');
 		}
 

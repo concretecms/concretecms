@@ -38,14 +38,14 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
     <div class="groups-tree" style="width: 460px" data-groups-tree="<?=$tree->getTreeID()?>">
     </div>
     <?=$form->hidden('gParentNodeID')?>
-    
+
     <script type="text/javascript">
     $(function() {
        $('[data-groups-tree=<?=$tree->getTreeID()?>]').concreteGroupsTree({
           'treeID': '<?=$tree->getTreeID()?>',
           'chooseNodeInForm': 'single',
 		  'enableDragAndDrop': false,
-          <? if ($this->controller->isPost()) { ?> 
+          <? if ($this->controller->isPost()) { ?>
              'selectNodesByKey': [<?=intval($_POST['gParentNodeID'])?>]
           <? } else {
           	if (is_object($rootNode)) { ?>
@@ -62,12 +62,12 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
           }
        });
     });
-    </script> 
+    </script>
 </div>
 </div>
 
 </fieldset>
-<? if (ENABLE_USER_PROFILES) { ?>
+<? if (Config::get('concrete.user.profiles_enabled')) { ?>
 <fieldset>
 	<div class="form-group">
         <div class="checkbox">
@@ -77,7 +77,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
             </label>
         </div>
 	</div>
-	
+
     <div id="gUserBadgeOptions" style="display: none">
         <div class="form-group">
             <label class="control-label"><?=t('Image')?></label>
@@ -101,7 +101,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
         <div class="form-group">
             <?=$form->label('gBadgeCommunityPointValue', t('Community Points'))?>
             <div class="controls">
-                <?=$form->text('gBadgeCommunityPointValue', GROUP_BADGE_DEFAULT_POINT_VALUE, array('class' => 'span1'))?>
+                <?=$form->text('gBadgeCommunityPointValue', Config::get('concrete.user.group.badge.default_point_value'), array('class' => 'span1'))?>
             </div>
         </div>
 
@@ -120,7 +120,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
             </label>
         </div>
 	</div>
-	
+
 <div id="gAutomationOptions" style="display: none">
 	<div class="form-group">
         <label><?=t('Check Group')?></label>
@@ -153,14 +153,14 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
             <?=t('Automatically remove users from this group.')?>
         </label>
 	</div>
-	
+
 	<div class="controls" style="">
 	<?=$form->select("gUserExpirationMethod", array(
 		'SET_TIME' => t('at a specific date and time'),
 			'INTERVAL' => t('once a certain amount of time has passed')
-		
+
 	), array('disabled' => true, 'class'=>'form-control'));?>
-	</div>	
+	</div>
 </div>
 
 <div id="gUserExpirationSetTimeOptions" style="display: none">
@@ -179,7 +179,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 	<th><?=t('Hours')?></th>
 	<th><?=t('Minutes')?></th>
 </tr>
-<tr>	
+<tr>
 <td>
 <?=$form->text('gUserExpirationIntervalDays', array('style' => $style, 'class' => 'span1'))?>
 </td>
@@ -204,7 +204,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 	'DEACTIVATE' => t('Deactivate the user account'),
 	'REMOVE_DEACTIVATE' => t('Remove the user from the group and deactivate the account')
 
-));?>	
+));?>
 </div>
 </div>
 </div>
@@ -219,7 +219,7 @@ $registeredGroupNode = GroupTreeNode::getTreeNodeByGroupID(REGISTERED_GROUP_ID);
 </div>
 
 
-</form>	
+</form>
 
 <script type="text/javascript">
 ccm_checkGroupExpirationOptions = function() {
@@ -232,14 +232,14 @@ ccm_checkGroupExpirationOptions = function() {
 				$("#gUserExpirationSetTimeOptions").show();
 				$("#gUserExpirationIntervalOptions").hide();
 				break;
-			case 'INTERVAL': 
+			case 'INTERVAL':
 				$("#gUserExpirationSetTimeOptions").hide();
 				$("#gUserExpirationIntervalOptions").show();
-				break;				
+				break;
 		}
 		$("#gUserExpirationAction").show();
 	} else {
-		sel.attr('disabled', true);	
+		sel.attr('disabled', true);
 		$("#gUserExpirationSetTimeOptions").hide();
 		$("#gUserExpirationIntervalOptions").hide();
 		$("#gUserExpirationAction").hide();

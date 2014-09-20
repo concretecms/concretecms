@@ -3,7 +3,7 @@
 
 <?=Loader::helper('validation/token')->output('save_interface_settings')?>
 
-<? if (!defined('WHITE_LABEL_DASHBOARD_BACKGROUND_FEED') && !defined('WHITE_LABEL_DASHBOARD_BACKGROUND_SRC')) { ?>
+<? if (!Config::get('concrete.white_label.background_image')) { ?>
 
 <div class="form-group">
     <label class="control-label"><?=t('Background Image')?></label>
@@ -20,7 +20,7 @@
 <script type="text/javascript">
 $(function() {
 	$("input[name=DASHBOARD_BACKGROUND_IMAGE]").change(function() {
-		if ($("input[name=DASHBOARD_BACKGROUND_IMAGE]:checked").val() == 'custom') { 
+		if ($("input[name=DASHBOARD_BACKGROUND_IMAGE]:checked").val() == 'custom') {
 			$("#custom-background-image").show();
 		} else {
 			$("#custom-background-image").hide();

@@ -17,9 +17,6 @@ class Controller extends BlockController
     public $helpers = array('form');
 
     protected $btInterfaceWidth = 400;
-    protected $btCacheBlockOutput = true;
-    protected $btCacheBlockOutputOnPost = true;
-    protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btInterfaceHeight = 400;
     protected $btTable = 'btTopicList';
 
@@ -50,6 +47,7 @@ class Controller extends BlockController
         }
         $trees = $tt->getList();
         $keys = CollectionKey::getList();
+        $attributeKeys = array();
         foreach ($keys as $ak) {
             if ($ak->getAttributeTypeHandle() == 'topics') {
                 $attributeKeys[] = $ak;
@@ -142,7 +140,7 @@ class Controller extends BlockController
         }
         $args['topicAttributeKeyHandle'] = (string) $blockNode->data->topicAttributeKeyHandle;
         if ($page) {
-            if (preg_match('/\{ccm:export:page:(.*)\}/i', $page, $matches)) {
+            if (preg_match('/\{ccm:export:page:(.*?)\}/i', $page, $matches)) {
                 $c = \Page::getByPath($matches[1]);
                 $args['externalTarget'] = 1;
                 $args['cParentID'] = $c->getCollectionID();

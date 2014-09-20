@@ -12,11 +12,25 @@ module.exports = function(grunt, config, parameters, done) {
 				'.php_cs',
 				'.scrutinizer.yml',
 				'.travis.yml',
+				'build.properties.dev',
 				'composer.lock',
 			],
 			byPath: [
+				'/concrete/vendor/dapphp/securimage/example_form.ajax.php',
+				'/concrete/vendor/dapphp/securimage/example_form.php',
+				'/concrete/vendor/doctrine/migrations/package.php',
+				'/concrete/vendor/doctrine/migrations/phar-cli-stub.php',
+				'/concrete/vendor/htmlawed/htmlawed/htmLawedTest.php',
 				'/concrete/vendor/imagine/imagine/lib/Imagine/resources/Adobe/Color Profile Bundling License_10.15.08.pdf',
 				'/concrete/vendor/imagine/imagine/lib/Imagine/resources/Adobe/Profile Information.pdf',
+				'/concrete/vendor/kertz/twitteroauth/callback.php',
+				'/concrete/vendor/kertz/twitteroauth/clearsessions.php',
+				'/concrete/vendor/kertz/twitteroauth/config-sample.php',
+				'/concrete/vendor/kertz/twitteroauth/connect.php',
+				'/concrete/vendor/kertz/twitteroauth/html.inc',
+				'/concrete/vendor/kertz/twitteroauth/index.php',
+				'/concrete/vendor/kertz/twitteroauth/redirect.php',
+				'/concrete/vendor/kertz/twitteroauth/test.php',
 				'/concrete/vendor/league/flysystem/phpunit.php',
 				'/concrete/vendor/nesbot/carbon/readme.php',
 				'/concrete/vendor/simplepie/simplepie/db.sql',
@@ -26,8 +40,8 @@ module.exports = function(grunt, config, parameters, done) {
 			],
 			byRX: [
 				/^\/concrete\/vendor\/.*\/(changelog|change_log|upgrade|upgrading|readme|contributing|history|roadmap)(\.(font|src))?\.(md|mdown|markdown|txt)$/i,
-				/^\/concrete\/vendor\/.*\/composer\.json$/,
-				/^\/concrete\/vendor\/.*\/phpunit\.(xml|xml\.dist|dist\.xml)$/,
+				/^\/concrete\/vendor\/.*\/composer\.json(\.hhvm)?$/,
+				/^\/concrete\/vendor\/.*\/phpunit\.(xml|xml\.dist|dist\.xml)(\.hhvm)?$/,
 				/^\/concrete\/vendor\/.*\/build\.(xml|properties)(\.dist)?$/,
 				/^\/concrete\/vendor\/.*\/UPGRADE_TO_\w+$/,
 				/^\/concrete\/vendor\/.*\/UPGRADE$/i,
@@ -51,8 +65,11 @@ module.exports = function(grunt, config, parameters, done) {
 				'/concrete/vendor/doctrine/common/tests',
 				'/concrete/vendor/doctrine/dbal/bin',
 				'/concrete/vendor/doctrine/inflector/tests',
+				'/concrete/vendor/doctrine/migrations/tests',
 				'/concrete/vendor/doctrine/orm/bin',
 				'/concrete/vendor/doctrine/orm/docs',
+				'/concrete/vendor/egulias/email-validator/documentation',
+				'/concrete/vendor/egulias/email-validator/tests',
 				'/concrete/vendor/facebook/php-sdk/examples',
 				'/concrete/vendor/facebook/php-sdk/tests',
 				'/concrete/vendor/filp/whoops/docs',
@@ -87,12 +104,15 @@ module.exports = function(grunt, config, parameters, done) {
 				'/concrete/vendor/sunra/php-simple-html-dom-parser/Src/Sunra/PhpSimple/simplehtmldom_1_5/testcase',
 				'/concrete/vendor/symfony/class-loader/Symfony/Component/ClassLoader/Tests',
 				'/concrete/vendor/symfony/console/Symfony/Component/Console/Tests',
+				'/concrete/vendor/symfony/debug/Symfony/Component/Debug/Tests',
 				'/concrete/vendor/symfony/event-dispatcher/Symfony/Component/EventDispatcher/Tests',
+				'/concrete/vendor/symfony/finder/Symfony/Component/Finder/Tests',
 				'/concrete/vendor/symfony/http-foundation/Symfony/Component/HttpFoundation/Tests',
 				'/concrete/vendor/symfony/http-kernel/Symfony/Component/HttpKernel/Tests',
 				'/concrete/vendor/symfony/routing/Symfony/Component/Routing/Tests',
 				'/concrete/vendor/symfony/serializer/Symfony/Component/Serializer/Tests',
 				'/concrete/vendor/tedivm/jshrink/tests',
+				'/concrete/vendor/tedivm/stash/tests',
 				'/concrete/vendor/voku/urlify/tests',
 			],
 			byRX: [
@@ -120,7 +140,8 @@ module.exports = function(grunt, config, parameters, done) {
 	try {
 		var c5fs = require('../../libraries/fs'),
 			fs = require('fs'),
-			shell = require('shelljs');
+			shell = require('shelljs'),
+			path = require('path');
 		var parser = new c5fs.directoryParser(workFolder);
 		parser.excludeDirectoriesByName = [];
 		parser.excludeFilesByName = [];
@@ -151,9 +172,31 @@ module.exports = function(grunt, config, parameters, done) {
 				endForError(error);
 				return;
 			}
+			var classmapFile = path.join(workFolder, 'concrete/vendor/composer/autoload_classmap.php');
+			if(c5fs.isFile(classmapFile)) {
+				process.stdout.write('Removing lines from Composer classmap:\n');
+				var classmapLines = fs.readFileSync(classmapFile, 'utf8').replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n'),
+					linesRemoved = 0;
+				remove.dir.byPath.forEach(function(dir) {
+					var m = dir.match(/^\/concrete\/vendor\/(.+)$/);
+					if(!m) {
+						return;
+					}
+					var removeLinesWith = '=> $vendorDir . \'/' + m[1] + '/';
+					for(i = classmapLines.length - 1; i >= 0; i--) {
+						if((classmapLines[i].indexOf(removeLinesWith) >= 0) && /^\s*'[^']+' => \$vendorDir . '/.test(classmapLines[i])) {
+							process.stdout.write(classmapLines[i] + '\n');
+							classmapLines.splice(i, 1);
+							linesRemoved++;
+						}
+					}
+				});
+				if(linesRemoved > 0) {
+					fs.writeFileSync(classmapFile, classmapLines.join('\n'), 'utf8');
+				}
+			}
 			done();
 		});
-			// cleanFiles = [".DS_Store", ".git", ".gitignore"],
 	}
 	catch(e) {
 		endForError(e);

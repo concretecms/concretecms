@@ -1,7 +1,9 @@
 <?
 namespace Concrete\Job;
+use Concrete\Core\Cache\Cache;
+use Core;
+use Config;
 use \Job as AbstractJob;
-use Cache;
 use Loader;
 use PermissionKey;
 use Group;
@@ -37,8 +39,7 @@ class GenerateSitemap extends AbstractJob {
 	* @throws Exception Throws an exception in case of errors.
 	*/
 	public function run() {
-		Cache::disableCache();
-		Cache::disableLocalCache();
+        Cache::disableAll();
 		try {
 			$db = Loader::db();
 			$instances = array(
@@ -66,7 +67,7 @@ class GenerateSitemap extends AbstractJob {
 			$dom = dom_import_simplexml($xmlDoc)->ownerDocument;
 			$dom->formatOutput = true;
 			$addedPages = count($xmlDoc->url);
-			$relName = ltrim(SITEMAPXML_FILE, '\\/');
+			$relName = ltrim(Config::get('concrete.sitemap_xml.file'), '\\/');
 			$osName = rtrim(DIR_BASE, '\\/') . '/' . $relName;
 			$urlName = rtrim(BASE_URL . DIR_REL, '\\/') . '/' . $relName;
 			if(!file_exists($osName)) {
@@ -140,10 +141,10 @@ class GenerateSitemap extends AbstractJob {
 		$changefreq = $page->getAttribute($instances['ak_sitemap_changefreq']);
 		$priority = $page->getAttribute($instances['ak_sitemap_priority']);
 		$xmlNode = $xmlDoc->addChild('url');
-		$xmlNode->addChild('loc', SITEMAPXML_BASE_URL . $instances['navigation']->getLinkToCollection($page));
+		$xmlNode->addChild('loc', Config::get('concrete.sitemap_xml.base_url') . $instances['navigation']->getLinkToCollection($page));
 		$xmlNode->addChild('lastmod', $lastmod->format(DateTime::ATOM));
-		$xmlNode->addChild('changefreq', empty($changefreq) ? SITEMAPXML_DEFAULT_CHANGEFREQ : $changefreq);
-		$xmlNode->addChild('priority', is_numeric($priority) ? $priority : SITEMAPXML_DEFAULT_PRIORITY);
+		$xmlNode->addChild('changefreq', empty($changefreq) ? Config::get('concrete.sitemap_xml.frequency') : $changefreq);
+		$xmlNode->addChild('priority', is_numeric($priority) ? $priority : Config::get('concrete.sitemap_xml.priority'));
 
 		$event = new \Symfony\Component\EventDispatcher\GenericEvent();
 		$event->setArgument('xmlNode', $xmlNode);

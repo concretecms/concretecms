@@ -1,8 +1,11 @@
 <?php
 namespace Concrete\Controller\SinglePage\Dashboard\Workflow;
+
 use \Concrete\Core\Page\Controller\DashboardPageController;
 use View;
 use \Concrete\Core\Workflow\Progress\Category as WorkflowProgressCategory;
+use Loader;
+
 class Me extends DashboardPageController {
 
 	protected $wpCategoryHandleActive = 'page';

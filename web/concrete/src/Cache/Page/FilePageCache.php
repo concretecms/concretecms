@@ -1,6 +1,7 @@
 <?php
 
 namespace Concrete\Core\Cache\Page;
+use Config;
 use \Page as ConcretePage;
 use Loader;
 
@@ -22,11 +23,11 @@ class FilePageCache extends PageCache {
        	$filename = $key . '.cache';
 		if ($key) {
 			if (strlen($key) == 1) {
-				$dir = DIR_FILES_PAGE_CACHE . '/' . $key;
+				$dir = Config::get('concrete.cache.page.directory') . '/' . $key;
 			} else if (strlen($key) == 2) {
-				$dir = DIR_FILES_PAGE_CACHE . '/' . $key[0] . '/' . $key[1];
+				$dir = Config::get('concrete.cache.page.directory') . '/' . $key[0] . '/' . $key[1];
 			} else {
-				$dir = DIR_FILES_PAGE_CACHE . '/' . $key[0] . '/' . $key[1] . '/' . $key[2];
+				$dir = Config::get('concrete.cache.page.directory') . '/' . $key[0] . '/' . $key[1] . '/' . $key[2];
 			}
 			if ($dir && (!is_dir($dir))) {
 				@mkdir($dir, DIRECTORY_PERMISSIONS_MODE, true);
@@ -45,7 +46,7 @@ class FilePageCache extends PageCache {
 
 	public function flush() {
 		$fh = Loader::helper('file');
-		$fh->removeAll(DIR_FILES_PAGE_CACHE);
+		$fh->removeAll(Config::get('concrete.cache.page.directory'));
 	}
 
 	public function purge(ConcretePage $c) {
@@ -56,9 +57,9 @@ class FilePageCache extends PageCache {
 	}
 
 	public function set(ConcretePage $c, $content) {
-		if (!is_dir(DIR_FILES_PAGE_CACHE)) {
-			@mkdir(DIR_FILES_PAGE_CACHE);
-			@touch(DIR_FILES_PAGE_CACHE . '/index.html');
+		if (!is_dir(Config::get('concrete.cache.page.directory'))) {
+			@mkdir(Config::get('concrete.cache.page.directory'));
+			@touch(Config::get('concrete.cache.page.directory') . '/index.html');
 		}
 		$lifetime = $c->getCollectionFullPageCachingLifetimeValue();
 		$file = $this->getCacheFile($c);

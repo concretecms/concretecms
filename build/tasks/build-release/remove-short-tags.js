@@ -5,10 +5,10 @@ module.exports = function(grunt, config, parameters, done) {
 		done(false);
 	}
 	try {
-        var buildParameters = require('util')._extend({}, parameters);
-        buildParameters = parameters;
-        buildParameters.source = workFolder;
-        require('../remove-short-tags.js')(grunt, config, buildParameters, done);
+		var buildParameters = require('util')._extend({}, parameters);
+		buildParameters = parameters;
+		buildParameters.source = workFolder;
+		require('../remove-short-tags.js')(grunt, config, buildParameters, done);
 	}
 	catch(e) {
 		endForError(e);

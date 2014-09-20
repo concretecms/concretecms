@@ -3,13 +3,14 @@ namespace Concrete\Controller;
 
 use Concrete\Core\View\View;
 use Concrete\Controller\Backend\UserInterface as BackendUserInterfaceController;
+use Config;
 
 class Upgrade extends BackendUserInterfaceController
 {
     public function canAccess()
     {
-        if (ENABLE_UPDATE_PERMISSIONS_PROTECTION === false) {
-            return true; // we have turned this on temporarily which means anyone even non-logged-in users can run update.
+        if (!Config::get('concrete.updates.enable_permissions_protection')) {
+            return true; // we have turned this off temporarily which means anyone even non-logged-in users can run update.
         }
 
         $p = new \Permissions();
@@ -23,9 +24,9 @@ class Upgrade extends BackendUserInterfaceController
         $this->view = new View('/frontend/upgrade');
         $this->setTheme('concrete');
 
-        $this->siteVersion = \Config::get('SITE_APP_VERSION');
+        $this->siteVersion = \Config::get('concrete.version_installed');
         $this->checkSecurity();
-        \Cache::disableLocalCache();
+        \Cache::disableAll();
     }
 
     public function checkSecurity()
@@ -57,7 +58,7 @@ class Upgrade extends BackendUserInterfaceController
                     $migration->execute('up');
                 }
                 $this->set('success', t('Upgrade to <b>%s</b> complete!', APP_VERSION));
-                \Config::save('SITE_APP_VERSION', APP_VERSION);
+                \Config::save('concrete.version_installed', APP_VERSION);
             } catch (\Exception $e) {
                 $this->set('error', $e);
             }

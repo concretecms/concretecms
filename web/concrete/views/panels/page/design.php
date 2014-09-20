@@ -42,7 +42,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <input type="hidden" name="pThemeID" value="<?=$selectedTheme->getThemeID()?>" />
 
             <div class="list-group-item list-group-item-header"><?=t('Theme')?>
-            <? if (ENABLE_MARKETPLACE_SUPPORT) { ?>
+            <? if (Config::get('concrete.marketplace.enabled')) { ?>
                 <div class="ccm-marketplace-btn-wrapper">
                 <button onclick="ccm_openThemeLauncher()" class="btn-ccm-marketplace btn btn-large"><?=t("Install More Themes")?></button>
                 </div>
@@ -59,8 +59,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
                     <span><i><?=$th->getThemeThumbnail()?>
                         <? if ($th->isThemeCustomizable()) { ?>
                         <span class="ccm-page-design-theme-customize">
-                            <?=t('Customize')?>
-                            <a href="#" data-launch-panel-detail="page-design-customize" data-panel-detail-url="<?=URL::to('/ccm/system/panels/details/page/preview')?>" data-launch-sub-panel-url="<?=URL::to('/ccm/system/panels/page/design/customize', $th->getThemeID())?>"><i class="fa fa-share"></i></a>
+                            <a href="#" data-launch-panel-detail="page-design-customize" data-panel-detail-url="<?=URL::to('/ccm/system/panels/details/page/preview')?>" data-launch-sub-panel-url="<?=URL::to('/ccm/system/panels/page/design/customize', $th->getThemeID())?>">
+                                <?=t('Customize')?>
+                                <i class="fa fa-share"></i>
+                            </a>
                         </span>
                         <? } ?>
                     </i>

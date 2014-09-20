@@ -41,8 +41,10 @@ class Social extends DashboardPageController
         }
 
         $ssHandle = $this->request->request->get('ssHandle');
+        $existingLink = false;
         if ($ssHandle) {
             $service = Service::getByHandle($ssHandle);
+            $existingLink = Link::getByServiceHandle($ssHandle);
         }
         $sec = Core::make('helper/security');
         $url = $sec->sanitizeURL($this->request->request->get('url'));
@@ -52,14 +54,17 @@ class Social extends DashboardPageController
         if (!is_object($service)) {
             $this->error->add(t('You must choose a service.'));
         }
-        return array($ssHandle, $url);
+        return array($ssHandle, $url, $existingLink);
     }
 
     public function add_link()
     {
         $r = $this->validatePageRequest('add_link');
+        list($ssHandle, $url, $existingLink) = $r;
+        if ($existingLink) {
+            $this->error->add(t('This social link already exists.'));
+        }
         if (!$this->error->has()) {
-            list($ssHandle, $url) = $r;
             $link = new Link();
             $link->setServiceHandle($ssHandle);
             $link->setURL($url);
@@ -97,9 +102,11 @@ class Social extends DashboardPageController
     {
         $r = $this->validatePageRequest('edit_link');
         $this->edit($slID);
+        list($ssHandle, $url, $existingLink) = $r;
+        if ($existingLink && $existingLink->getID() != $slID) {
+            $this->error->add(t('This social link already exists.'));
+        }
         if (!$this->error->has()) {
-
-            list($ssHandle, $url) = $r;
             $link = $this->socialLink;
             $link->setServiceHandle($ssHandle);
             $link->setURL($url);

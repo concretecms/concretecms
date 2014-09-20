@@ -5,6 +5,28 @@ class UpdateTest extends ConcreteDatabaseTestCase {
     protected $fixtures = array();
     protected $tables = array('Logs', 'BlockTypes', 'CollectionVersionBlocks', 'Widgets', 'Blocks', 'SystemDatabaseMigrations', 'Files');
 
+    public function testCurrentMigration()
+    {
+        $directory = dirname(__FILE__) . '/fixtures/';
+        $configuration = new \Concrete\Core\Updater\Migrations\Configuration(false);
+        $configuration->setMigrationsDirectory($directory);
+        $configuration->registerMigrationsFromDirectory($directory);
+
+        $version = $configuration->getCurrentVersion();
+        $this->assertEquals('0', $version);
+
+        $version = $configuration->getVersion(20140908071333);
+        $this->assertInstanceOf('\Doctrine\DBAL\Migrations\Version', $version);
+        $version->markMigrated();
+
+        $version = $configuration->getCurrentVersion();
+        $this->assertNotEquals('0', $version);
+        $this->assertEquals('20140908071333', $version);
+        $version = $configuration->getVersion($version);
+        $this->assertInstanceOf('\Doctrine\DBAL\Migrations\Version', $version);
+        $this->assertEquals('20140908071333', $version->getVersion());
+    }
+
     public function testUpdate()
     {
         $db = Database::get();
@@ -12,7 +34,7 @@ class UpdateTest extends ConcreteDatabaseTestCase {
         $sm = $db->getSchemaManager();
 
         $directory = dirname(__FILE__) . '/fixtures/';
-        $configuration = new \Concrete\Core\Updater\Migrations\Configuration();
+        $configuration = new \Concrete\Core\Updater\Migrations\Configuration(false);
         $configuration->setMigrationsDirectory($directory);
         $configuration->registerMigrationsFromDirectory($directory);
         $migrations = $configuration->getMigrations();

@@ -1,15 +1,16 @@
 <?
 namespace Concrete\Controller\SinglePage\Dashboard\System\Mail\Method;
 use \Concrete\Core\Page\Controller\DashboardPageController;
+use Config;
 use Loader;
 use Exception;
 
 class Test extends DashboardPageController {
 	protected $sendUndefinedTasksToView = false;
-	
+
 	public function successful($mailRecipient) {
 		$this->set('mailRecipient', $mailRecipient);
-		$this->set("message", t('The test email has been successfully sent to %s.', $mailRecipient) . "\n" . t('You will receive a test message from %s', EMAIL_DEFAULT_FROM_ADDRESS));
+		$this->set("message", t('The test email has been successfully sent to %s.', $mailRecipient) . "\n" . t('You will receive a test message from %s', Config::get('concrete.email.default.address')));
 	}
 
 	public function do_test() {
@@ -21,7 +22,7 @@ class Test extends DashboardPageController {
 		if(!is_string($mailRecipient)) {
 			$mailRecipient = '';
 		}
-		if(!ENABLE_EMAILS) {
+		if(!Config::get('concrete.email.enabled')) {
 			$this->error->add(t('The mail system is disabled.'));
 		}
 		elseif(!strlen($mailRecipient)) {
@@ -32,24 +33,24 @@ class Test extends DashboardPageController {
 		}
 		else {
 			try {
-				/* @var $mail MailHelper */
+				/* @var $mail \Concrete\Core\Mail\Service */
 				$mail = Loader::helper('mail');
 				$mail->setTesting(true);
-				$mail->setSubject(t(/*i18n: %s is the site name*/'Test message from %s', SITE));
+				$mail->setSubject(t(/*i18n: %s is the site name*/'Test message from %s', Config::get('concrete.site')));
 				$mail->to($mailRecipient);
 				$body = t('This is a test message.');
 				$body .= "\n\n" . t('Configuration:');
-				$body .= "\n- " . t('Send mail method: %s', MAIL_SEND_METHOD);
-				switch(MAIL_SEND_METHOD) {
-					case 'SMTP':
-						$body .= "\n- " . t('SMTP Server: %s', Config::get('MAIL_SEND_METHOD_SMTP_SERVER'));
-						$body .= "\n- " . t('SMTP Port: %s', (Config::get('MAIL_SEND_METHOD_SMTP_PORT') == '') ? tc('SMTP Port', 'default'): Config::get('MAIL_SEND_METHOD_SMTP_PORT'));
-						$body .= "\n- " . t('SMTP Encryption: %s', (Config::get('MAIL_SEND_METHOD_SMTP_ENCRYPTION') == '') ? tc('SMTP Encryption', 'none'): Config::get('MAIL_SEND_METHOD_SMTP_ENCRYPTION'));
-						if(Config::get('MAIL_SEND_METHOD_SMTP_USERNAME') == '') {
+				$body .= "\n- " . t('Send mail method: %s', Config::get('concrete.mail.method'));
+				switch(Config::get('concrete.mail.method')) {
+					case 'smtp':
+						$body .= "\n- " . t('SMTP Server: %s', Config::get('concrete.mail.methods.smtp.server'));
+						$body .= "\n- " . t('SMTP Port: %s', Config::get('concrete.mail.methods.smtp.port', tc('SMTP Port', 'default')));
+						$body .= "\n- " . t('SMTP Encryption: %s', Config::get('concrete.mail.methods.smtp.encryption', tc('SMTP Encryption', 'none')));
+						if(!Config::get('concrete.mail.methods.smtp.username')) {
 							$body .= "\n- " . t('SMTP Authentication: none');
 						}
 						else {
-							$body .= "\n- " . t('SMTP Username: %s', Config::get('MAIL_SEND_METHOD_SMTP_USERNAME'));
+							$body .= "\n- " . t('SMTP Username: %s', Config::get('concrete.mail.methods.smtp.username'));
 							$body .= "\n- " . t('SMTP Password: %s', tc('Password', '<hidden>'));
 						}
 						break;

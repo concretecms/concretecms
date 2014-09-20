@@ -8,6 +8,7 @@ use Group;
 use PermissionKey;
 use Permissions;
 use Area;
+use Config;
 use Session;
 use TaskPermission;
 
@@ -37,7 +38,7 @@ class PageResponse extends Response
 
     public function canViewPageInSitemap()
     {
-        if (PERMISSIONS_MODEL != 'simple') {
+        if (Config::get('concrete.permissions.model') != 'simple') {
 
             if ($this->object->isExternalLink()) {
                 return true;

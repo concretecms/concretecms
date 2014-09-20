@@ -1,14 +1,28 @@
 <?php
 
 namespace Concrete\Core\Cache;
-class CacheLocal {
+use Core;
 
-	public $cache = array();
-	public $enabled = true; // disabled because of weird annoying race conditions. This will slow things down but only if you don't have zend cache active.
-
-	public function getEntries() {
-		return $this->cache;
-	}
+/**
+ * @deprecated
+ * @package Concrete\Core\Cache
+ */
+class CacheLocal
+{
+    /**
+     * Creates a cache key based on the group and id by running it through md5
+     * @param string $group Name of the cache group
+     * @param string $id Name of the cache item ID
+     * @return string The cache key
+     */
+    public static function key($group, $id)
+    {
+        if (!empty($id)) {
+            return trim($group, '/') . '/' . trim($id, '/');
+        } else {
+            return trim($group, '/');
+        }
+    }
 
 	public static function get() {
 		static $instance;
@@ -20,39 +34,42 @@ class CacheLocal {
 	}
 
 	public static function getEntry($type, $id) {
-		$loc = CacheLocal::get();
-		$key = Cache::key($type, $id);
-		if ($loc->enabled && array_key_exists($key, $loc->cache)) {
-			return $loc->cache[$key];
-		}
+        /** @var \Concrete\Core\Cache\Cache $cache */
+        $cache = Core::make('cache/request');
+        if ($cache->isEnabled()) {
+            $item = $cache->getItem(self::key($type, $id));
+            if (!$item->isMiss()) {
+                return $item->get();
+            }
+        }
 	}
 
 	public static function flush() {
-		$loc = CacheLocal::get();
-		$loc->cache = array();
+        /** @var \Concrete\Core\Cache\Cache $cache */
+        $cache = Core::make('cache/request');
+        $cache->flush();
 	}
 
 	public static function delete($type, $id) {
-		$loc = CacheLocal::get();
-		$key = Cache::key($type, $id);
-		if ($loc->enabled && array_key_exists($key, $loc->cache)) {
-			unset($loc->cache[$key]);
-		}
+        /** @var \Concrete\Core\Cache\Cache $cache */
+        $cache = Core::make('cache/request');
+        if ($cache->isEnabled()) {
+            $cache->delete(self::key($type, $id));
+        }
 	}
 
 	public static function set($type, $id, $object) {
-		$loc = CacheLocal::get();
-		if (!$loc->enabled) {
-			return false;
-		}
+        /** @var \Concrete\Core\Cache\Cache $cache */
+        $cache = Core::make('cache/request');
 
-		$key = Cache::key($type, $id);
-		if (is_object($object)) {
-			$r = clone $object;
-		} else {
-			$r = $object;
-		}
+        if (!$cache->isEnabled()) {
+            return false;
+        }
 
-		$loc->cache[$key] = $r;
+        if (is_object($object)) {
+            $object = clone $object;
+        }
+
+        return $cache->getItem(self::key($type, $id))->set($object);
 	}
 }

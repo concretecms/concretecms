@@ -77,7 +77,7 @@
 <? } else { ?>
     <div class="row">
         <div class="col-md-12">
-        <? if (PERMISSIONS_MODEL == 'advanced') { ?>
+        <? if (Config::get('concrete.permissions.model') == 'advanced') { ?>
             <div>
                 <?php if (count($groupSets) > 0) { ?>
 

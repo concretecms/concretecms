@@ -4,6 +4,9 @@ namespace Concrete\Controller\Dialog\Block;
 use Concrete\Controller\Backend\UserInterface\Block as BackendInterfaceBlockController;
 use Concrete\Core\Block\View\BlockView;
 use BlockType;
+use Concrete\Core\Cache\Cache;
+use Core;
+use Area;
 
 class Edit extends BackendInterfaceBlockController
 {

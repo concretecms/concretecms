@@ -2,6 +2,7 @@
 namespace Concrete\Controller\SinglePage\Dashboard\Users;
 
 use \Concrete\Core\Page\Controller\DashboardPageController;
+use Config;
 use Imagine\Image\Box;
 use Loader;
 use Exception;
@@ -14,7 +15,6 @@ use Permissions;
 use PermissionKey;
 use UserAttributeKey;
 use Localization;
-use Cache;
 use \Concrete\Controller\Search\Users as SearchUsersController;
 use \Concrete\Core\User\EditResponse as UserEditResponse;
 
@@ -32,7 +32,10 @@ class Search extends DashboardPageController
             $av = Loader::helper('concrete/avatar');
             if (is_uploaded_file($_FILES['avatar']['tmp_name']) ) {
                 $image = \Image::open($_FILES['avatar']['tmp_name']);
-                $image = $image->thumbnail(new Box(AVATAR_WIDTH, AVATAR_HEIGHT));
+                $image = $image->thumbnail(new Box(
+                                               Config::get('concrete.icons.user_avatar.width'),
+                                               Config::get('concrete.icons.user_avatar.height')
+                                           ));
                 $this->user->updateUserAvatar($image);
             } else {
                 if ($_POST['task'] == 'clear') {
@@ -103,8 +106,8 @@ class Search extends DashboardPageController
                     $mh = Loader::helper('mail');
                     $mh->to($this->user->getUserEmail());
                     $mh->load('user_registered_approval_complete');
-                    if (defined('EMAIL_ADDRESS_REGISTER_NOTIFICATION_FROM')) {
-                        $mh->from(EMAIL_ADDRESS_REGISTER_NOTIFICATION_FROM, t('Website Registration Notification'));
+                    if (Config::get('concrete.user.registration.notification_email')) {
+                        $mh->from(Config::get('concrete.user.registration.notification_email'), t('Website Registration Notification'));
                     } else {
                         $adminUser = UserInfo::getByID(USER_SUPER_ID);
                         $mh->from($adminUser->getUserEmail(), t('Website Registration Notification'));
@@ -223,20 +226,20 @@ class Search extends DashboardPageController
         $this->setupUser($uID);
         if ($this->canEditUserName) {
             $username = $this->post('value');
-            if (USER_REGISTRATION_WITH_EMAIL_ADDRESS == false) {
+            if (!Config::get('concrete.user.registration.email_registration')) {
                 if (!Loader::helper('validation/token')->validate()) {
                     $this->error->add(Loader::helper('validation/token')->getErrorMessage());
                 }
-                if (strlen($username) < USER_USERNAME_MINIMUM) {
-                    $this->error->add(t('A username must be at least %s characters long.',USER_USERNAME_MINIMUM));
+                if (strlen($username) < Config::get('concrete.user.username.minimum')) {
+                    $this->error->add(t('A username must be at least %s characters long.',Config::get('concrete.user.username.minimum')));
                 }
 
-                if (strlen($username) > USER_USERNAME_MAXIMUM) {
-                    $this->error->add(t('A username cannot be more than %s characters long.',USER_USERNAME_MAXIMUM));
+                if (strlen($username) > Config::get('concrete.user.username.maximum')) {
+                    $this->error->add(t('A username cannot be more than %s characters long.',Config::get('concrete.user.username.maximum')));
                 }
 
-                if (strlen($username) >= USER_USERNAME_MINIMUM && !Loader::helper('concrete/validation')->username($username)) {
-                    if (USER_USERNAME_ALLOW_SPACES) {
+                if (strlen($username) >= Config::get('concrete.user.username.minimum') && !Loader::helper('concrete/validation')->username($username)) {
+                    if (Config::get('concrete.user.username.allow_spaces')) {
                         $this->error->add(t('A username may only contain letters, numbers, spaces, dots (not at the beginning/end), underscores (not at the beginning/end).'));
                     } else {
                         $this->error->add(t('A username may only contain letters numbers, dots (not at the beginning/end), underscores (not at the beginning/end).'));
@@ -319,13 +322,13 @@ class Search extends DashboardPageController
         if ($this->canEditPassword) {
             $password = $this->post('uPassword');
             $passwordConfirm = $this->post('uPasswordConfirm');
-            if ((strlen($password) < USER_PASSWORD_MINIMUM) || (strlen($password) > USER_PASSWORD_MAXIMUM)) {
-                $this->error->add( t('A password must be between %s and %s characters',USER_PASSWORD_MINIMUM,USER_PASSWORD_MAXIMUM));
+            if ((strlen($password) < Config::get('concrete.user.password.minimum')) || (strlen($password) > Config::get('concrete.user.password.maximum'))) {
+                $this->error->add( t('A password must be between %s and %s characters',Config::get('concrete.user.password.minimum'), Config::get('concrete.user.password.maximum')));
             }
             if (!Loader::helper('validation/token')->validate('change_password')) {
                 $this->error->add(Loader::helper('validation/token')->getErrorMessage());
             }
-            if (strlen($password) >= USER_PASSWORD_MINIMUM && !Loader::helper('concrete/validation')->password($password)) {
+            if (strlen($password) >= Config::get('concrete.user.password.minimum') && !Loader::helper('concrete/validation')->password($password)) {
                 $this->error->add(t('A password may not contain ", \', >, <, or any spaces.'));
             }
 

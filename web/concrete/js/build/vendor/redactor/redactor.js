@@ -148,7 +148,12 @@
             clipboardUploadUrl: false, // url
 
             dnbImageTypes: ['image/png', 'image/jpeg', 'image/gif'], // or false
-
+			concrete5: {
+				filemanager: false,
+				sitemap: false,
+				lightbox: false
+			},
+			
             s3: false,
             uploadFields: false,
 
@@ -6477,39 +6482,54 @@
                 }, 200);
 
                 /* concrete5 */
-                $('a[data-action=choose-file-from-file-manager]').on('click', function(e) {
-                    e.preventDefault();
-                    ConcreteFileManager.launchDialog(function(data) {
-                        jQuery.fn.dialog.showLoader();
-                        ConcreteFileManager.getFileDetails(data.fID, function(r) {
-                            jQuery.fn.dialog.hideLoader();
-                            var file = r.files[0];
-                            $('#redactor_link_url').val(file.urlDownload);
+				if (this.opts.concrete5.filemanager) {
+                    $('a[data-action=choose-file-from-file-manager]').on('click', function(e) {
+                        e.preventDefault();
+                        ConcreteFileManager.launchDialog(function(data) {
+                            jQuery.fn.dialog.showLoader();
+                            ConcreteFileManager.getFileDetails(data.fID, function(r) {
+                                jQuery.fn.dialog.hideLoader();
+                                var file = r.files[0];
+                                $('#redactor_link_url').val(file.urlDownload);
+                            });
                         });
                     });
-                });
-
+                } else {
+                    $('a[data-action=choose-file-from-file-manager]').parent().remove();
+                }
+				
+				if (!this.opts.concrete5.lightbox) {
+					$('div.form-group[data-option-feature=lightbox]').hide();
+				}
+				
                 /* concrete5 */
-                $('a[data-action=choose-link-from-sitemap]').on('click', function(e) {
-                    e.preventDefault();
-                    jQuery.fn.dialog.open({
-                        width: '90%',
-                        height: '70%',
-                        modal: false,
-                        title: ccmi18n_sitemap.choosePage,
-                        href: CCM_TOOLS_PATH + '/sitemap_search_selector'
+				if (this.opts.concrete5.sitemap) {
+                    $('a[data-action=choose-link-from-sitemap]').on('click', function(e) {
+                        e.preventDefault();
+                        jQuery.fn.dialog.open({
+                            width: '90%',
+                            height: '70%',
+                            modal: false,
+                            title: ccmi18n_sitemap.choosePage,
+                            href: CCM_TOOLS_PATH + '/sitemap_search_selector'
+                        });
+                        ConcreteEvent.unsubscribe('SitemapSelectPage');
+                        ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
+                            jQuery.fn.dialog.closeTop();
+                            var url = CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + data.cID;
+                            $('#redactor_link_url').val(url);
+                        });
+
                     });
-                    ConcreteEvent.unsubscribe('SitemapSelectPage');
-                    ConcreteEvent.subscribe('SitemapSelectPage', function(e, data) {
-                        jQuery.fn.dialog.closeTop();
-                        var url = CCM_BASE_URL + CCM_DISPATCHER_FILENAME + '?cID=' + data.cID;
-                        $('#redactor_link_url').val(url);
-                    });
+                } else {
+                    $('a[data-action=choose-link-from-sitemap]').parent().remove();
+                }
+	
+				if (!this.opts.concrete5.sitemap && !this.opts.concrete5.filemanager) {
+					$('#redactor_link_url').parent().removeClass();
+                }
 
-                });
-
-
-            }, this);
+                }, this);
 
             this.modalInit(this.opts.curLang.link, this.opts.modal_link, 460, callback);
 
@@ -7542,7 +7562,7 @@
                     + '<input type="text" class="form-control" id="redactor_link_url_text" />'
                     + '</div>'
                     /* concrete5 */
-                    + '<div class="form-group">'
+                    + '<div class="form-group" data-option-feature="lightbox">'
                     + '<div class="checkbox">'
                     + '<label>'
                     + '<input type="checkbox" id="redactor_link_lightbox" />'
