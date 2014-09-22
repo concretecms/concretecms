@@ -47,7 +47,7 @@ class Controller extends BlockController
         if (!$highlight) {
             $text = Loader::helper('text')->shorten($fulltext, 180);
             if (strlen($fulltext) > 180) {
-                $text . '&hellip;<wbr>';
+                $text .= '&hellip;<wbr>';
             }
 
             return $text;

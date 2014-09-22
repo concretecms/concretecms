@@ -1,4 +1,4 @@
-<?
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 
 $content = $controller->getContent();
@@ -8,4 +8,3 @@ foreach($forbiddenTags as $forbiddenTag){
 	$content=preg_replace("~<".$forbiddenTag."[^>]*>~i","",$content);
 }
 echo ''.$content; 	
-?>
