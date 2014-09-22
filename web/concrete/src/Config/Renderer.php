@@ -2,25 +2,35 @@
 
 namespace Concrete\Core\Config;
 
-class Renderer {
+class Renderer
+{
 
     protected $config = null;
 
-    public function __construct(array $config) {
+    public function __construct(array $config)
+    {
         $this->config = $config;
     }
 
-    public function render($eol = PHP_EOL, $spacer = '    ') {
-        return $this->renderString($this->config, $eol, $spacer);
+    public function render($eol = PHP_EOL, $spacer = '    ', $header = "<?php\n\nreturn ", $footer = ";\n")
+    {
+        return $this->renderString($this->config, $eol, $spacer, $header, $footer);
     }
 
-    protected function renderString($array, $eol = PHP_EOL, $spacer = '    ') {
+    protected function renderString(
+        $array,
+        $eol = PHP_EOL,
+        $spacer = '    ',
+        $header = "<?php\n\nreturn ",
+        $footer = ";\n"
+    ) {
         $rendered = $this->renderRecursive($array, $eol, $spacer);
 
-        return "<?php\n\nreturn " . $rendered . ";\n";
+        return $header . $rendered . $footer;
     }
 
-    protected function renderRecursive(array $array, $eol = PHP_EOL, $spacer = '    ', $depth = 1) {
+    protected function renderRecursive(array $array, $eol = PHP_EOL, $spacer = '    ', $depth = 1)
+    {
         $results = array();
 
         $scalars = array();
@@ -79,8 +89,8 @@ class Renderer {
         }
 
         return 'array(' . $eol .
-                    implode(',' . $eol, $results) . $eol .
-                ($depth ? str_repeat($spacer, $depth - 1) : '') . ')';
+        implode(',' . $eol, $results) . $eol .
+        ($depth ? str_repeat($spacer, $depth - 1) : '') . ')';
     }
 
 }

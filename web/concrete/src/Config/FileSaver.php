@@ -29,7 +29,9 @@ class FileSaver implements SaverInterface
             $this->files->makeDirectory($path, 0777);
         }
 
+        $ns_string = 'null';
         if ($namespace) {
+            $ns_string = $namespace;
             $path = "{$path}/{$namespace}";
 
             if (!$this->files->exists($path)) {
@@ -50,7 +52,25 @@ class FileSaver implements SaverInterface
         array_set($current, $item, $value);
 
         $renderer = new Renderer($current);
-        return $this->files->put($file, $renderer->render()) !== false;
+
+        $header = array(
+            "<?php",
+            "",
+            "/**",
+            " * -----------------------------------------------------------------------------",
+            " * Generated " . date(DATE_ATOM),
+            "",
+            " * @item      {$item}",
+            " * @group     {$group}",
+            " * @namespace {$ns_string}",
+            " * -----------------------------------------------------------------------------",
+            " */",
+            "return "
+        );
+
+
+        $rendered = $renderer->render(PHP_EOL, '    ', implode(PHP_EOL, $header));
+        return $this->files->put($file, $rendered) !== false;
 
     }
 
