@@ -112,12 +112,20 @@
             if (my.getAttr('menu')) {
                 my.getAttr('menu').destroy();
             }
-            my.setAttr('menu', new ConcreteMenu(elem, {
+
+            var menu_config = {
                 'handle': menuHandle,
                 'highlightClassName': 'ccm-area-highlight',
                 'menuActiveClass': 'ccm-area-highlight',
                 'menu': $('[data-area-menu=' + elem.attr('data-launch-area-menu') + ']')
-            }));
+            };
+
+            if (my.getElem().hasClass('ccm-global-area')) {
+                menu_config.menuActiveClass += " ccm-global-area-highlight";
+                menu_config.highlightClassName += " ccm-global-area-highlight";
+            }
+
+            my.setAttr('menu', new ConcreteMenu(elem, menu_config));
 
             $menuElem.find('a[data-menu-action=add-inline]')
                 .off('click.edit-mode')
