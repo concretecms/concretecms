@@ -49,6 +49,7 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
     protected $btDefaultSet;
     protected $btFeatures = array();
     protected $btFeatureObjects;
+    protected $btDisableView = false;
     protected $identifier;
 
     public function getIdentifier()
@@ -431,6 +432,21 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         }
 
         return false;
+    }
+
+    public function disableBlockView()
+    {
+      $this->btDisableView = true;
+    }
+
+    public function enableBlockView()
+    {
+      $this->btDisableView = false;
+    }
+
+    public function showBlockView()
+    {
+      return !$this->btDisableView;
     }
 
     public function cacheBlockOutput()

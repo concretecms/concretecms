@@ -689,18 +689,22 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
 
         foreach ($blocksToDisplay as $b) {
-            $bv = new BlockView($b);
-            $bv->setAreaObject($this);
-            $p = new Permissions($b);
-            if ($p->canViewBlock()) {
-                if (!$c->isEditMode()) {
-                    echo $this->enclosingStart;
-                }
-                $bv->render('view');
-                if (!$c->isEditMode()) {
-                    echo $this->enclosingEnd;
-                }
+          $bv = new BlockView($b);
+          $bv->setAreaObject($this);
+          $p = new Permissions($b);
+          if ($p->canViewBlock()) {
+            if($b->getController()->showBlockView() || $c->isEditMode()) {
+              if (!$c->isEditMode()) {
+                echo $this->enclosingStart;
+              }
+              $bv->render('view');
+              if (!$c->isEditMode()) {
+                echo $this->enclosingEnd;
+              }
+            } else {
+              $b->getController()->view();//we still want to call this even if we arn't showing anything
             }
+          }
         }
 
         if ($this->showControls && $c->isEditMode() && $ap->canViewAreaControls()) {
