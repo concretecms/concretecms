@@ -245,7 +245,12 @@ use Sunra\PhpSimple\HtmlDomParser;
                     $style = $picture->style;
                     $fo = \File::getByID($fID);
                     if (is_object($fo)) {
-                        $image = new \Concrete\Core\Html\Image($fo);
+                        if ($style) {
+                            $image = new \Concrete\Core\Html\Image($fo, false);
+                            $image->getTag()->width(false)->height(false);
+                        } else {
+                            $image = new \Concrete\Core\Html\Image($fo);
+                        }
                         $tag = $image->getTag();
                         if ($alt) {
                             $tag->alt($alt);
