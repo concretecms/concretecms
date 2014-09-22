@@ -215,6 +215,7 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
         }
 
         // exclude the area layout proxy block from counting.
+        $this->load($c);
         $db = Loader::db();
         $r = $db->GetOne(
             'select count(b.bID) from CollectionVersionBlocks cvb inner join Blocks b on cvb.bID = b.bID inner join BlockTypes bt on b.btID = bt.btID where cID = ? and cvID = ? and arHandle = ? and btHandle <> ?',
