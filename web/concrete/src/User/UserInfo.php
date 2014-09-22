@@ -88,17 +88,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
     }
 
     /**
-     * Returns a user object by open ID. Does not log a user in.
-     * @param string $uOpenID
-     * @return UserInfo
-     */
-    public function getByOpenID($uOpenID)
-    {
-        return UserInfo::get('inner join UserOpenIDs on Users.uID = UserOpenIDs.uID where uOpenID = ?', $uOpenID);
-    }
-
-
-    /**
      * @param string $uHash
      * @param boolean $unredeemedHashesOnly
      * @return UserInfo
@@ -255,7 +244,6 @@ class UserInfo extends Object implements \Concrete\Core\Permission\ObjectInterfa
         $r = $db->query("DELETE FROM UserSearchIndexAttributes WHERE uID = ?",array(intval($this->uID)) );
 
         $r = $db->query("DELETE FROM UserGroups WHERE uID = ?",array(intval($this->uID)) );
-        $r = $db->query("DELETE FROM UserOpenIDs WHERE uID = ?",array(intval($this->uID)));
         $r = $db->query("DELETE FROM Users WHERE uID = ?",array(intval($this->uID)));
         $r = $db->query("DELETE FROM UserValidationHashes WHERE uID = ?",array(intval($this->uID)));
 
