@@ -55,5 +55,11 @@
 	   });
 		</script>
 
+    <br/>
+
+    <div class="form-actions">
+        <a href="<?=URL::to('/account')?>" class="btn btn-default" /><?=t('Back to Account')?></a>
+    </div>
+
 </div>
 </div>
