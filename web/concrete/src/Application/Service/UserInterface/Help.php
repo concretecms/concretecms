@@ -184,7 +184,7 @@ class Help
             <i class="ccm-notification-icon fa fa-info-circle"></i>
             <div class="ccm-notification-inner dialog-help">{$message}</div>
             <div class="ccm-notification-actions">
-                <a href="#" data-help-notification-identifier="{$identifier}" data-help-notification-type="{$type}" data-dismiss="help-single">{$ok}</a><a href="#" data-help-notification-identifier="{$identifier}" data-help-notification-type="{$type}" data-dismiss="help-all">{$hideAll}</a>
+                <a href="#" data-help-notification-identifier="{$identifier}" class="ccm-notification-actions-dismiss-single" data-help-notification-type="{$type}" data-dismiss="help-single">{$ok}</a><a href="#" data-help-notification-identifier="{$identifier}" data-help-notification-type="{$type}" data-dismiss="help-all">{$hideAll}</a>
             </div>
         </div>
 EOT;
