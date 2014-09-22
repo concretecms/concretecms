@@ -16,13 +16,29 @@ class Menu
      * </code>
      */
     public function addPageHeaderMenuItem(
-        $menuItemID,
-        $menuItemName,
-        $positionInMenu,
-        $linkAttributes,
-        $pkgHandle = false
+        $menuItemControllerHandle,
+        $pkgHandle = false,
+        $options = array()
     ) {
-        $obj = new Item($menuItemID, $menuItemName, $positionInMenu, $linkAttributes, $pkgHandle);
+
+        $defaults = array(
+            'icon' => 'share',
+            'label' => false,
+            'position' => 'right',
+            'href' => false,
+            'linkAttributes' => array()
+        );
+
+        $options = array_merge($defaults, $options);
+
+        $obj = new Item($menuItemControllerHandle, $pkgHandle);
+        $obj->setLabel($options['label']);
+        $obj->setPosition($options['position']);
+        $obj->setIcon($options['icon']);
+        if ($options['href']) {
+            $obj->setLink($options['href']);
+        }
+        $obj->setLinkAttributes($options['linkAttributes']);
         $this->pageHeaderMenuItems[] = $obj;
     }
 
