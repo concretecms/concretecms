@@ -397,14 +397,14 @@ class Controller extends BlockController
                 return true;
             }
         } else {
-            if ($this->includeName || $this->includeDate || $this->displayThumbnail || $this->includeDescription || $this->useButtonForLink) {
+            if ($this->includeName || $this->includeDate || $this->displayThumbnail
+                || $this->includeDescription || $this->useButtonForLink
+            ) {
                 return false;
             } else {
                 return true;
             }
         }
-
-        return false;
     }
 
 }

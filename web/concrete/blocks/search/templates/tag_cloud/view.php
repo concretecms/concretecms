@@ -27,8 +27,8 @@
 	
 	
 	function setFontPx($weight) {
-		$tagMinFontPx = '10';
-		$tagMaxFontPx = '24';
+		$tagMinFontPx = 10;
+		$tagMaxFontPx = 24;
 
 		
 		$em = ($weight * ($tagMaxFontPx - $tagMinFontPx)) + $tagMinFontPx;

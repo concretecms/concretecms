@@ -9,4 +9,3 @@ $controller->loopSequence=1;
 $controller->orderBy='display_asc';
 
 $this->inc('/form_setup_html.php', array('controller'=>$controller));
-?>
