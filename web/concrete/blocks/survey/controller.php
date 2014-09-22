@@ -77,7 +77,7 @@ class Controller extends BlockController
         $q = "DELETE FROM btSurveyResults WHERE bID = ?";
         $db->query($q, $v);
 
-        return parent::delete();
+        parent::delete();
     }
 
     function action_form_save_vote()
