@@ -494,7 +494,7 @@ class Controller extends BlockController {
 		
 		//delete left over answers
 		$strandedAnswerIDs = $db->getAll('SELECT fa.aID FROM `btFormAnswers` AS fa LEFT JOIN btFormQuestions as fq ON fq.msqID=fa.msqID WHERE fq.msqID IS NULL');
-		foreach($strandedAnswerIDs as $strandedAnswerIDs)
+		foreach($strandedAnswerIDs as $strandedAnswer)
 			$db->query('DELETE FROM `btFormAnswers` WHERE aID='.intval($strandedAnswer['aID']));
 			
 		//delete the left over answer sets
