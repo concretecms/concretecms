@@ -16,15 +16,18 @@ use Redirect;
 
 class Stacks extends DashboardPageController {
 
-	public function on_start() {
-		parent::on_start();
-
-		$stm = new StackList();
-		$stm->filterByUserAdded();
-		$this->set('useradded', $stm->get());
-	}
+    public function view_global_areas()
+    {
+        $stm = new StackList();
+        $stm->filterByGlobalAreas();
+        $this->set('stacks', $stm->get());
+    }
 
 	public function view() {
+        $stm = new StackList();
+        $stm->filterByUserAdded();
+        $this->set('stacks', $stm->get());
+
 		$parent = Page::getByPath(STACKS_PAGE_PATH);
 		$cpc = new Permissions($parent);
 		if ($cpc->canMoveOrCopyPage()) {

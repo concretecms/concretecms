@@ -199,9 +199,9 @@ if ($controller->getTask() == 'view_details') {
 
 <? } else { ?>
 
-    <? if (count($useradded) > 0) { ?>
+    <? if (count($stacks) > 0) { ?>
         <ul class="item-select-list" id="ccm-stack-list">
-        <? foreach($useradded as $st) {
+        <? foreach($stacks as $st) {
             $sv = CollectionVersion::get($st, 'ACTIVE');
             ?>
 
@@ -216,15 +216,32 @@ if ($controller->getTask() == 'view_details') {
         <?
     } else {
         print '<p>';
-        print t('No stacks have been added.');
+        if ($controller->getTask() == 'view_global_areas') {
+            print t('No global areas have been added.');
+        } else {
+            print t('No stacks have been added.');
+        }
         print '</p>';
     }
     ?>
 
 
-
     <div class="ccm-dashboard-header-buttons">
-        <a href="javascript:void(0)" data-dialog="add-stack" class="btn btn-primary"><?=t("Add Stack")?></a>
+        <button type="button" class="btn btn-default" data-toggle="dropdown">
+            <? if ($controller->getTask() == 'view_global_areas') { ?>
+                <?=t('View Global Areas')?>
+            <? } else { ?>
+                <?=t('View Stacks')?>
+            <? } ?>
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li><a href="<?=$controller->action('view')?>"><?=t('View Stacks')?></a></li>
+            <li><a href="<?=$controller->action('view_global_areas')?>"><?=t('View Global Areas')?></a></li>
+        </ul>
+        <? if ($controller->getTask() != 'view_global_areas') { ?>
+            <a href="javascript:void(0)" data-dialog="add-stack" class="btn btn-primary"><?=t("Add Stack")?></a>
+        <? } ?>
     </div>
 
     <div style="display: none">
