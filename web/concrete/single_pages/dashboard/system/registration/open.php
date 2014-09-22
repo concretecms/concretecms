@@ -79,13 +79,6 @@ $h = Loader::helper('concrete/ui');
                 </div>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="enable_openID" value="1"
-                               style="" <?php echo ($enable_openID) ? 'checked' : '' ?> />
-                        <span><?php echo t('Enable OpenID') ?></span>
-                    </label>
-                </div>
-                <div class="checkbox">
-                    <label>
                         <input type="checkbox" name="email_as_username" value="1"
                                style="" <?php echo ($email_as_username) ? 'checked' : '' ?> />
                         <span><?php echo t('Use emails for login') ?></span>
