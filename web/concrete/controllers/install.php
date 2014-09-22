@@ -147,13 +147,48 @@ class Install extends Controller
         }
     }
 
+    /**
+     * Nice and elegant function for converting memory. Thanks to @lightness races in orbit on Stackoverflow.
+     * @param $val
+     * @return int|string
+     */
+    protected function getBytes($val)
+    {
+        $val = trim($val);
+        $last = strtolower($val[strlen($val)-1]);
+        switch($last) {
+            // The 'G' modifier is available since PHP 5.1.0
+            case 'g':
+                $val *= 1024;
+            case 'm':
+                $val *= 1024;
+            case 'k':
+                $val *= 1024;
+        }
+
+        return $val;
+    }
+
     private function setRequiredItems()
     {
-        $this->set('imageTest', function_exists('imagecreatetruecolor'));
+        $this->set('imageTest', function_exists('imagecreatetruecolor') || class_exists('Imagick'));
         $this->set('mysqlTest', extension_loaded('pdo_mysql'));
+        $this->set('i18nTest', function_exists('ctype_lower'));
         $this->set('jsonTest', extension_loaded('json'));
         $this->set('xmlTest', function_exists('xml_parse') && function_exists('simplexml_load_file'));
         $this->set('fileWriteTest', $this->testFileWritePermissions());
+        $this->set('finfoTest', function_exists('finfo_open'));
+
+        $val = $this->getBytes(ini_get('memory_limit'));
+        $this->set('memoryBytes', $val);
+        if ($val < 25165824) {
+            $this->set('memoryTest', -1);
+        } else if ($val > 67108864) {
+            $this->set('memoryTest', 1);
+        } else {
+            $this->set('memoryTest', 0);
+        }
+
         $phpVmin = '5.3.3';
         if (version_compare(PHP_VERSION, $phpVmin, '>=')) {
             $phpVtest = true;
@@ -198,7 +233,8 @@ class Install extends Controller
     public function passedRequiredItems()
     {
         if ($this->get('imageTest') && $this->get('mysqlTest') && $this->get('fileWriteTest') && $this->get(
-                'xmlTest') && $this->get('phpVtest')
+                'xmlTest') && $this->get('phpVtest') && $this->get('i18nTest') && $this->get('finfoTest')
+            && $this->get('memoryTest') !== -1
         ) {
             return true;
         }

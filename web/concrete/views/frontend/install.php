@@ -364,18 +364,23 @@ $(function() {
 	<td><? if (!$jsonTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('You must enable PHP\'s JSON support. This should be enabled by default in PHP 5.2 and above.')?>"></i><? } ?></td>
 </tr>
 
+<tr>
+    <td><? if ($finfoTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
+    <td width="100%"><?=t('File Info Extension')?></td>
+    <td><? if (!$finfoTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('You must enable PHP\'s Fileinfo Extension.')?>"></i><? } ?></td>
+</tr>
+
 </table>
 
 </div>
 <div class="col-sm-5">
 
 <table class="table table-striped requirements-table">
-
 <tr>
 	<td><? if ($imageTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
 	<td width="100%"><?=t('Image Manipulation Available')?>
 	</td>
-	<td><? if (!$imageTest) { ?><i class="fa fa-question-circlee launch-tooltip" title="<?=t('concrete5 requires GD library 2.0.1 or greater')?>"></i><? } ?></td>
+	<td><? if (!$imageTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('concrete5 requires GD library 2.0.1 or Imagick and ImageMagick 6.2.9 or greater.')?>"></i><? } ?></td>
 </tr>
 <tr>
 	<td><? if ($xmlTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
@@ -395,8 +400,12 @@ $(function() {
 	</td>
 	<td><i id="ccm-test-cookies-enabled-tooltip" class="fa fa-question-circle launch-tooltip" title="<?=t('Cookies must be enabled in your browser to install concrete5.')?>"></i></td>
 </tr>
-
-</tbody>
+<tr>
+    <td><? if ($i18nTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
+    <td width="100%"><?=t('Internationalization Support')?>
+    </td>
+    <td><? if (!$i18nTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('You must enable ctype support in your copy of PHP.')?>"></i><? } ?></td>
+</tr>
 </table>
 
 </div>
@@ -441,6 +450,52 @@ $(function() {
 </div>
 
 </div>
+
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-1">
+
+            <h3><?=t('Memory Requirements')?></h3>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-1">
+
+            <table class="table table-striped requirements-table">
+                <tbody>
+                <tr>
+                    <td>
+                        <? if ($memoryTest === -1) { ?>
+                            <i class="fa fa-exclamation-circle"></i>
+                        <? } else if ($memoryTest === 1) { ?>
+                            <i class="fa fa-check"></i>
+                        <? } else { ?>
+                            <i class="fa fa-warning"></i>
+                        <? } ?>
+                    </td>
+                    <td width="100%">
+                        <? if ($memoryTest === -1) { ?>
+                            <span class="text-danger"><?=t('concrete5 will not install with less than 24MB of RAM.
+                            Your memory limit is currently %sMB. Please increase your memory_limit using ini_set.', round(Core::make('helper/number')->formatSize($memoryBytes, 'MB'), 2))?>
+                            </span>
+                        <? } ?>
+                        <? if ($memoryTest === 0) { ?>
+                            <span class="text-warning"><?=t('concrete5 runs best with at least 64MB of RAM.
+                            Your memory limit is currently %sMB. You may experience problems uploading and resizing large images, and may have to install concrete5 without sample content.', round(Core::make('helper/number')->formatSize($memoryBytes, 'MB'), 2))?></span>
+                        <? } ?>
+                        <? if ($memoryTest === 1) { ?>
+                            <span class="text-success"><?=t('concrete5 runs best with at least 64MB of RAM.
+                            Your memory limit is currently %sMB.', round(Core::make('helper/number')->formatSize($memoryBytes, 'MB'), 2))?></span>
+                        <? } ?>
+
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+    </div>
 
 <div class="row">
 <div class="col-sm-10 col-sm-offset-1">
