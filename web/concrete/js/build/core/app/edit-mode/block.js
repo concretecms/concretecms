@@ -65,8 +65,6 @@
                 place: false
             });
 
-            my.bindMenu();
-
             my.bindEvent('EditModeSelectableContender', function (e, data) {
                 if (my.getDragging() && data instanceof Concrete.DragArea) {
                     my.setSelected(data);
@@ -135,10 +133,7 @@
                 drag_area.getArea().addBlockToIndex(my, 0);
             }
             my.getPeper().pep(my.getPepSettings());
-            if (targetArea.getTotalBlocks() === 1) {
-                // we have to destroy the old menu and create it anew
-                targetArea.bindMenu();
-            }
+
             my.getEditMode().scanBlocks();
             Concrete.event.fire('EditModeBlockMove', {
                 block: my,
@@ -233,11 +228,18 @@
 
             if (menuHandle !== 'none') {
 
-                my.setAttr('menu', new ConcreteMenu(elem, {
+                var menu_config = {
                     'highlightClassName': 'ccm-block-highlight',
                     'menuActiveClass': 'ccm-block-highlight',
                     'menu': $menuElem
-                }));
+                };
+
+                if (my.getArea() && my.getArea().getElem().hasClass('ccm-global-area')) {
+                    menu_config.menuActiveClass += " ccm-global-area-block-highlight";
+                    menu_config.highlightClassName += " ccm-global-area-block-highlight";
+                }
+
+                my.setAttr('menu', new ConcreteMenu(elem, menu_config));
 
                 $menuElem.find('a[data-menu-action=edit_inline]').unbind('click.core').on('click.core', function (event) {
                     Concrete.event.fire('EditModeBlockEditInline', {block: my, event: event});
@@ -274,6 +276,8 @@
                 href += '&arHandle=' + encodeURIComponent(area.getHandle()) + '&bID=' + my.getId();
                 $(this).attr('href', href).dialog();
             });
+
+            my.bindMenu();
         },
 
         /**
