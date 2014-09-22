@@ -257,6 +257,7 @@
             _.defer(function () {
                 my.$element.removeClass(my.options.menuActiveClass);
                 my.$element.parents('*').slice(0, 3).removeClass(my.options.menuActiveParentClass);
+                global.$highlighter.removeClass();
                 global.$container.removeClass().addClass('ccm-ui').html('');
             });
 
