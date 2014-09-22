@@ -132,10 +132,12 @@ div.ccm-area-footer {
   left: 0px;
   padding-top: 15px;
   z-index: @index-level-in-context-area-handle;
+  padding-left: 20px;
+  white-space: nowrap;
+  max-width: 100%;
 
   div.ccm-area-footer-handle {
     display: inline-block;
-    margin-left: 20px;
     border-left: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
     border-right: 1px solid #ccc;
@@ -144,6 +146,13 @@ div.ccm-area-footer {
     height: 35px;
     font-size: @baseFontSize !important;
     background-color: #f5f5f5;
+    max-width: 100%;
+
+    > span {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      display: block;
+    }
 
     i {
       vertical-align: middle;
