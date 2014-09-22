@@ -235,7 +235,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
         $cnt = $ih->getController();
         if ($cnt->displayItem()) {
             ?>
-            <li class="pull-left"><?= $cnt->getMenuLinkHTML() ?></li>
+            <li class="pull-left"><?= $cnt->getMenuItemLinkElement() ?></li>
         <?
         }
     }
@@ -279,7 +279,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
             $cnt = $ih->getController();
             if ($cnt->displayItem()) {
                 ?>
-                <li class="pull-right"><?= $cnt->getMenuLinkHTML() ?></li>
+                <li class="pull-right"><?= $cnt->getMenuItemLinkElement() ?></li>
             <?
             }
         }
