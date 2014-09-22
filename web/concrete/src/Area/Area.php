@@ -702,7 +702,9 @@ class Area extends Object implements \Concrete\Core\Permission\ObjectInterface
                 echo $this->enclosingEnd;
               }
             } else {
-              $b->getController()->view();//we still want to call this even if we arn't showing anything
+              ob_start();
+              $bv->render('view');
+              ob_end_clean();
             }
           }
         }
