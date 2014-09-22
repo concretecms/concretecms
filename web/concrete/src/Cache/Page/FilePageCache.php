@@ -19,16 +19,11 @@ class FilePageCache extends PageCache {
 	}
 
 	protected function getCacheFile($mixed) {
-       	$key = $this->getCacheKey($mixed);
-       	$filename = $key . '.cache';
+		$key = $this->getCacheKey($mixed);
 		if ($key) {
-			if (strlen($key) == 1) {
-				$dir = Config::get('concrete.cache.page.directory') . '/' . $key;
-			} else if (strlen($key) == 2) {
-				$dir = Config::get('concrete.cache.page.directory') . '/' . $key[0] . '/' . $key[1];
-			} else {
-				$dir = Config::get('concrete.cache.page.directory') . '/' . $key[0] . '/' . $key[1] . '/' . $key[2];
-			}
+			$key = hash('sha256',$key);
+			$filename = $key . '.cache';
+			$dir = Config::get('concrete.cache.page.directory') . '/' . $key[0] . '/' . $key[1] . '/' . $key[2];
 			if ($dir && (!is_dir($dir))) {
 				@mkdir($dir, DIRECTORY_PERMISSIONS_MODE, true);
 			}
