@@ -13,7 +13,7 @@ class Backup extends DashboardPageController {
         if($this->token->validate('run_backup')) {
 
             //@TODO this backup stuff needs to be reworked since we're not using adodb anymore
-            $this->set('message', 'This has not been implemented in 5.7');
+            $this->set('message', t('This has not been implemented in 5.7'));
             return;
 
             $encrypt = ($this->post('useEncryption')?1:0);
