@@ -69,7 +69,9 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     			break;
     		case 'view_mailbox': ?>
 
-			<?=Loader::helper('concrete/ui')->tabs(array(
+                <a href="<?=URL::to('/account')?>" class="btn btn-default pull-right" /><?=t('Back to Account')?></a>
+
+                <?=Loader::helper('concrete/ui')->tabs(array(
 				array($view->action('view_mailbox', 'inbox'), t('Inbox'), $mailbox == 'inbox'),
 				array($view->action('view_mailbox', 'sent'), t('Sent'), $mailbox == 'sent')
 			), false)?>
@@ -216,7 +218,11 @@ $dh = Core::make('helper/date'); /* @var $dh \Concrete\Core\Localization\Service
     			</tr>
     			</table>
 
-    		<?
+                <div class="form-actions">
+                    <a href="<?=URL::to('/account')?>" class="btn btn-default" /><?=t('Back to Account')?></a>
+                </div>
+
+            <?
     			break;
     	} ?>
 
