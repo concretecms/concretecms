@@ -52,4 +52,4 @@ if ($c->isEditMode()) { ?>
             t = window.setInterval(function(){startWhenVisible();},100);
         }
     });
-</script>');
+</script>

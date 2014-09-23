@@ -369,7 +369,6 @@ class BlockView extends AbstractView
         if ($this->useBlockCache()) {
             $this->outputContent = $this->block->getBlockCachedOutput($this->area);
             $this->controller->registerViewAssets($this->outputContent);
-
         }
 
         if (!$this->outputContent) {
