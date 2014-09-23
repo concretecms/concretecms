@@ -21,7 +21,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
 		<button type="button" data-dialog-action="submit" class="btn btn-danger pull-right"><?=t('Delete')?></button>
 		</div>
 
-		<? if($c->isSystemPage()) { ?>
+		<? if($c->isSystemPage() && !$c->isPageDraft()) { ?>
 			<div class="alert alert-danger"><?php echo t('Warning! This is a system page. Deleting it could potentially break your site. Please proceed with caution.') ?></div>
 		<? } ?>
 		<p><?=t('Are you sure you wish to delete this page?')?></p>
