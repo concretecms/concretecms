@@ -16,8 +16,7 @@ class PageTheme extends \Concrete\Core\Page\Theme\Theme {
         $this->providesAsset('css', 'blocks/tags');
         $this->providesAsset('css', 'core/frontend/*');
         $this->providesAsset('css', 'blocks/feature/templates/hover_description');
-
-//        $this->requireAsset('css', 'font-awesome');
+        $this->requireAsset('css', 'font-awesome');
         $this->requireAsset('javascript', 'jquery');
         $this->requireAsset('javascript', 'picturefill');
 	}
