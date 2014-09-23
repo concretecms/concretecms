@@ -118,8 +118,17 @@ class Login extends PageController
         $this->view();
     }
 
-    public function finishAuthentication(AuthenticationType $type)
+    /**
+     * @param AuthenticationType $type Required
+     * @throws \Exception
+     */
+    public function finishAuthentication(/* AuthenticationType */
+        $type = null
+    )
     {
+        if (!$type || !($type instanceof AuthenticationType)) {
+            return $this->view();
+        }
         $db = Loader::db();
         $u = new User();
         if ($u->getUserID() == 1 && $type->getAuthenticationTypeHandle() != 'concrete') {
