@@ -72,10 +72,12 @@ use Page;
             $this->set('attachmentOverridesEnabled', $fileSettings['attachmentOverridesEnabled'] > 0 ? $fileSettings['attachmentOverridesEnabled'] : '');
         }
 
+        public function registerViewAssets()
+        {
+            $this->requireAsset('core/conversation');
+            $this->requireAsset('core/lightbox');
+        }
 		public function view() {
-			$r = ResponseAssetGroup::get();
-			$r->requireAsset('core/conversation');
-            $r->requireAsset('core/lightbox');
 			$fileSettings = $this->getFileSettings();
 			$conversation = $this->getConversationObject();
 			if (is_object($conversation)) {

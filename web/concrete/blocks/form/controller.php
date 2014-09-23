@@ -81,7 +81,9 @@ class Controller extends BlockController {
 		$JQUIFieldCount = Loader::db()->GetOne($sql, $vals);
 		return (bool)$JQUIFieldCount;
 	}
-	
+
+    // we are not using registerViewAssets because this block doesn't support caching
+    // and we have some block record things we need to check.
 	public function view() {
 		if ($this->viewRequiresJqueryUI()) {
 			$this->requireAsset('css', 'jquery/ui');

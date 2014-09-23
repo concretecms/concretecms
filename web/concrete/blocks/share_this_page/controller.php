@@ -125,9 +125,13 @@ class Controller extends BlockController
         $db->delete('btShareThisPage', array('bID' => $this->bID));
     }
 
-    public function view()
+    public function registerViewAssets()
     {
         $this->requireAsset('css', 'font-awesome');
+    }
+
+    public function view()
+    {
         $selected = $this->getSelectedServices();
         $this->set('selected', $selected);
     }

@@ -30,9 +30,15 @@ class Controller extends BlockController
         return t("Feature");
     }
 
-    public function on_start()
+    public function registerViewAssets()
     {
         $this->requireAsset('css', 'font-awesome');
+        if (is_object($this->block) && $this->block->getBlockFilename() == 'hover_description') {
+            // this isn't great but it's the only way to do this and still make block
+            // output caching available to this block.
+            $this->requireAsset('javascript', 'bootstrap/tooltip');
+            $this->requireAsset('css', 'bootstrap/tooltip');
+        }
     }
 
     public function add()
@@ -63,6 +69,7 @@ class Controller extends BlockController
 
     public function edit()
     {
+        $this->requireAsset('css', 'font-awesome');
         $classes = $this->getIconClasses();
 
         // let's clean them up

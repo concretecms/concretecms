@@ -23,10 +23,15 @@ class Controller extends BlockController {
 		return $this->discussion;
 	}
 
-	public function view() {
+    public function registerViewAssets()
+    {
+        $this->requireAsset('core/conversation');
+        $this->requireAsset('css', 'core/frontend/pagination');
+    }
+
+    public function view() {
 		$discussion = $this->getConversationDiscussionObject();
 		if (is_object($discussion)) {
-			$this->requireAsset('core/conversation');
 			$this->set('discussion', $discussion);
 			if ($this->enableNewTopics && $this->ptID) {
 				$pt = PageType::getByID($this->ptID);
@@ -53,7 +58,6 @@ class Controller extends BlockController {
 			}
 			if ($this->itemsPerPage > 0) {
 				$dl->setItemsPerPage($this->itemsPerPage);
-				$this->requireAsset('css', 'core/frontend/pagination');
 			}
 			$pages = $dl->getPage();
 			$this->set('reqOrderBy', $orderBy);

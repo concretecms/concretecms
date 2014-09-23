@@ -96,6 +96,26 @@ class BlockType
     }
 
     /**
+     * Clears output and record caches.
+     */
+    public static function clearCache()
+    {
+        $db = DB::get();
+        $r = $db->MetaTables();
+
+        if (in_array('Config', $r)) {
+
+            if(in_array('btCachedBlockRecord', $db->MetaColumnNames('Blocks'))) {
+                $db->Execute('update Blocks set btCachedBlockRecord = null');
+            }
+            if (in_array('CollectionVersionBlocksOutputCache', $r)) {
+                $db->Execute('truncate table CollectionVersionBlocksOutputCache');
+            }
+
+        }
+    }
+
+    /**
      * Retrieves a BlockType object based on its btID
      *
      * @return BlockType

@@ -60,10 +60,14 @@ class Controller extends BlockController {
 		$args['height'] = (intval($data['height'])>0) ? intval($data['height']) : 334;		
 		
 		parent::save($args);
-	}				
+	}
+
+    public function registerViewAssets()
+    {
+        $this->requireAsset('swfobject');
+    }
 
 	public function view() {
-		$this->requireAsset('swfobject');
         $mp4File = $this->getMp4FileObject();
         $webmFile = $this->getWebmFileObject();
         $posterFile = $this->getPosterFileObject();

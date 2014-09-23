@@ -26,9 +26,12 @@ use \Concrete\Core\Block\BlockController;
 			return t("Gathering Display");
 		}
 
-		public function view() {
-			$r = ResponseAssetGroup::get();
-			$r->requireAsset('core/gathering');
+        public function registerViewAssets()
+        {
+            $this->requireAsset('core/gathering');
+        }
+
+        public function view() {
 			Loader::helper('overlay')->init(false);
 			$gathering = Gathering::getByID($this->gaID);
 			if (is_object($gathering)) {
