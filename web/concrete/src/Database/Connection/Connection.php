@@ -19,6 +19,7 @@ class Connection extends \Doctrine\DBAL\Connection
         if (!$this->entityManager) {
             $this->entityManager = $this->createEntityManager();
         }
+
         return $this->entityManager;
     }
 
@@ -71,11 +72,23 @@ class Connection extends \Doctrine\DBAL\Connection
     public function query()
     {
         $args = func_get_args();
-        if (isset($args) && isset($args[1]) && (is_string($args[1]) || is_array($args[1]))) {
-            return $this->executeQuery($args[0], $args[1]);
-        } else {
-            return call_user_func_array('parent::query', $args);
+        switch (func_num_args()) {
+            case 1:
+                $result = parent::query($args[0]);
+                break;
+            case 2:
+                if (is_string($args[1]) || is_array($args[1])) {
+                    $result = $this->executeQuery($args[0], $args[1]);
+                } else {
+                    $result = parent::query($args[0], $args[1]);
+                }
+                break;
+            default:
+                $result = call_user_func_array('parent::query', $args);
+                break;
         }
+
+        return $result;
     }
 
     /**
