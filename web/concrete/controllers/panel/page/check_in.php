@@ -22,7 +22,7 @@ class CheckIn extends BackendInterfacePageController
 
     public function canAccess()
     {
-        return $this->permissions->canApprovePageVersions() || $this->permissions->canViewPageVersions();
+        return $this->permissions->canApprovePageVersions() || $this->permissions->canEditPageContents();
     }
 
     public function __construct()

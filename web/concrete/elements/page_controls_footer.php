@@ -54,7 +54,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                         '/ccm/system/panels/page/check_in') ?>"><?php echo t(
                                         'Save Changes') ?><?
                                 } ?></a></li>
-                    <? } else { ?>
+                    <? } else if ($permissions->canEditPageContents()) { ?>
                         <li class="ccm-toolbar-page-edit"><i class="fa fa-pencil mobile-leading-icon"></i><a
                                 data-toolbar-action="check-out"
                                 href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $c->getCollectionID() ?>&ctask=check-out<?= $token ?>"><?php echo t(
@@ -63,7 +63,11 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                     <li class="parent-ul"><i class="fa fa-cog mobile-leading-icon"></i><a href="#"><?php echo t(
                                 'Page Properties') ?><i class="fa fa-caret-down"></i></a>
                         <ul class="list-unstyled">
-                            <? if ($permissions->canEditPageProperties()) { ?>
+                            <? if ($permissions->canEditPageProperties() ||
+                                $permissions->canEditPageTheme() ||
+                                $permissions->canEditPageTemplate() ||
+                                $permissions->canDeletePage() ||
+                                $permissions->canEditPagePermissions()) { ?>
                                 <li><a class="dialog-launch" dialog-width="640" dialog-height="360"
                                        dialog-modal="false" dialog-title="<?= t('SEO') ?>" href="<?= URL::to(
                                         '/ccm/system/panels/details/page/seo') ?>?cID=<?= $cID ?>"><?= t(
@@ -128,6 +132,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                         </ul>
                     </li>
                 <?php } ?>
+                <? if ($dh->canRead()) { ?>
                 <li class="parent-ul"><i class="fa fa-sliders mobile-leading-icon"></i><a
                         href="<?= URL::to('/dashboard') ?>"><?php echo t('Dashboard') ?><i
                             class="fa fa-caret-down"></i></a>
@@ -152,6 +157,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                                     'System & Settings'); ?></a></li>
                     </ul>
                 </li>
+                <? } ?>
             </ul>
         </div>
     </div>
@@ -177,7 +183,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 </span>
             </a>
         </li>
-    <? } else { ?>
+    <? } else if ($permissions->canEditPageContents()) { ?>
         <li class="ccm-toolbar-page-edit pull-left hidden-xs">
             <a data-toolbar-action="check-out"
                href="<?= DIR_REL ?>/<?= DISPATCHER_FILENAME ?>?cID=<?= $c->getCollectionID() ?>&ctask=check-out<?= $token ?>"
@@ -190,7 +196,12 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
         </li>
     <? } ?>
 
-        <? if (!$c->isMasterCollection()) { ?>
+        <? if (!$c->isMasterCollection() && (
+                $permissions->canEditPageProperties() ||
+                $permissions->canEditPageTheme() ||
+                $permissions->canEditPageTemplate() ||
+                $permissions->canDeletePage() ||
+                $permissions->canEditPagePermissions())) { ?>
         <li class="pull-left hidden-xs">
             <a href="#" data-launch-panel="page"
                data-panel-url="<?= URL::to('/ccm/system/panels/page') ?>"
@@ -249,6 +260,7 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
         <li class="pull-right ccm-toolbar-mobile-menu-button visible-xs hidden-sm hidden-md hidden-lg">
             <i class="fa fa-bars fa-2"></i>
         </li>
+        <? if ($dh->canRead()) { ?>
         <li class="pull-right hidden-xs ">
             <a href="<?= URL::to('/dashboard') ?>" data-launch-panel="dashboard"
                                              title="<?= t('Dashboard – Change Site-wide Settings') ?>">
@@ -258,7 +270,16 @@ if (isset($cp) && $canViewToolbar && (!$dh->inDashboard())) {
                 </span>
 
             </a>
-
+        </li>
+        <? } else { ?>
+            <li class="pull-right hidden-xs ">
+                <a href="<?=URL::to('/login', 'logout', Loader::helper('validation/token')->generate('logout'))?>" title="<?=t('Sign Out')?>"><i class="fa fa-sign-out"></i>
+                <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-site-settings">
+                    <?= tc('toolbar', 'Sign Out') ?>
+                </span>
+                </a>
+            </li>
+        <? } ?>
         <li class="pull-right hidden-xs">
             <a href="#" data-panel-url="<?= URL::to('/ccm/system/panels/sitemap') ?>"
                                             title="<?= t('Add Pages and Navigate Your Site') ?>"
