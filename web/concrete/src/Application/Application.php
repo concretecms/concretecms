@@ -1,6 +1,7 @@
 <?php
 namespace Concrete\Core\Application;
 
+use Concrete\Core\Block\BlockType\BlockType;
 use Concrete\Core\Cache\Page\PageCache;
 use Concrete\Core\Cache\Page\PageCacheRecord;
 use Concrete\Core\Foundation\ClassLoader;
@@ -52,6 +53,33 @@ class Application extends Container
             $env->clearOverrideCache();
         }
         exit;
+    }
+
+    /**
+     * Utility method for clearing all application caches.
+     */
+    public function clearCaches()
+    {
+        Core::make('cache')->flush();
+        Core::make('cache/expensive')->flush();
+
+        // flush the CSS cache
+        if (is_dir(DIR_FILES_CACHE . '/' . DIRNAME_CSS)) {
+            $fh = Loader::helper("file");
+            $fh->removeAll(DIR_FILES_CACHE . '/' . DIRNAME_CSS);
+        }
+
+        $pageCache = PageCache::getLibrary();
+        if (is_object($pageCache)) {
+            $pageCache->flush();
+        }
+
+        // clear the environment overrides cache
+        $env = \Environment::get();
+        $env->clearOverrideCache();
+
+        // clear block type cache
+        BlockType::clearCache();
     }
 
     /**

@@ -52,6 +52,10 @@ class Upgrade extends BackendUserInterfaceController
         if ($this->validateAction()) {
 
             try {
+
+                $cms = Core::make('app');
+                $cms->clearCaches();
+
                 $configuration = new \Concrete\Core\Updater\Migrations\Configuration();
                 $migrations = $configuration->getMigrationsToExecute('up', $configuration->getLatestVersion());
                 foreach($migrations as $migration) {

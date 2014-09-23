@@ -2409,7 +2409,7 @@
                                         <data table="btContentLocal">
                                             <record>
                                                 <content>
-                                                    <![CDATA[<h5>Headquarters</h5><p>1234 SE Street View<br>Suite 301<br>Portland, OR 98101</p><h5>HOURS</h5><p> <strong>M-F</strong>:  10 AM - 7 PM<br><strong>Sat</strong>: Noon - Midnight<br><strong>Sun</strong>: Closed</p>]]></content>
+                                                    <![CDATA[<h5>Headquarters</h5><p>1234 SE Street View<br>Suite 301<br>Portland, OR 98101</p><h5>HOURS</h5><p> <strong>M-F</strong>:  10 AM - 7 PM<br><strong>Sat</strong>: Noon - Midnight<br><strong>Sun</strong>: Closed</p>]]></content>
                                             </record>
                                         </data>
                                     </block>
