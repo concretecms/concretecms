@@ -14,7 +14,7 @@ namespace Concrete\Core\Validation;
 class SanitizeService {
 
     public function sanitizeString($string) {
-        return filter_var($string, FILTER_SANITIZE_STRING);
+        return filter_var($string, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
     }
 
     public function sanitizeInt($int) {
