@@ -44,6 +44,7 @@ if ($_REQUEST['displaySingleLevel']) {
 	if (is_object($parent) && !$parent->isError()) {
 		$n = $dh->getNode($parent->getCollectionID());
 		$n->icon = 	ASSETS_URL_IMAGES . '/dashboard/sitemap/up.png';
+        $n->displaySingleLevel = true;
 
 		$p = $dh->getNode($cParentID);
 		$p->children = $dh->getSubNodes($cParentID);
