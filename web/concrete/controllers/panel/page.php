@@ -5,7 +5,12 @@ class Page extends BackendInterfacePageController {
 
 	protected $viewPath = '/panels/page';
 	public function canAccess() {
-		return $this->permissions->canEditPageContents();
+        $permissions = $this->permissions;
+        return ($permissions->canEditPageProperties() ||
+        $permissions->canEditPageTheme() ||
+        $permissions->canEditPageTemplate() ||
+        $permissions->canDeletePage() ||
+        $permissions->canEditPagePermissions());
 	}
 
 	public function view() {}
