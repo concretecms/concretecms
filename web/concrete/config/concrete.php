@@ -58,7 +58,7 @@ return array(
          *
          * @var string (message|debug)
          */
-        'details'        => 'message'
+        'detail'        => 'message'
     ),
 
     /**
