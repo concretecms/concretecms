@@ -22,7 +22,10 @@ class Cache extends DashboardPageController {
 				$eoc = $this->post('ENABLE_OVERRIDE_CACHE') == 1 ? 1 : 0;
 				$eac = $this->post('ENABLE_ASSET_CACHE') == 1 ? 1 : 0;
                 $tcc = $this->post('ENABLE_THEME_CSS_CACHE') == 1 ? 1 : 0;
-                Core::make('cache')->flush();
+
+                $cms = Core::make('app');
+                $cms->clearCaches();
+
 				Config::save('concrete.cache.blocks', !!$eca);
 				Config::save('concrete.cache.assets', !!$eac);
                 Config::save('concrete.cache.theme_css', !!$tcc);
