@@ -57,12 +57,16 @@ class Controller extends BlockController
         $this->set('rows', $query);
     }
 
+    public function registerViewAssets()
+    {
+        $this->requireAsset('javascript', 'jquery');
+    }
+
     public function view()
     {
         $db = Loader::db();
         $query = $db->GetAll('SELECT * from btImageSliderEntries WHERE bID = ? ORDER BY sortOrder', array($this->bID));
         $this->set('rows', $query);
-        $this->requireAsset('javascript', 'jquery');
     }
 
     public function duplicate($newBID) {

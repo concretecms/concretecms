@@ -232,6 +232,8 @@ class BlockView extends AbstractView
             include($this->blockViewHeaderFile);
         }
 
+        $this->controller->registerViewAssets($this->outputContent);
+
         $this->onBeforeGetContents();
         print $this->outputContent;
         $this->onAfterGetContents();
@@ -363,8 +365,11 @@ class BlockView extends AbstractView
 
     public function runControllerTask()
     {
+
         if ($this->useBlockCache()) {
             $this->outputContent = $this->block->getBlockCachedOutput($this->area);
+            $this->controller->registerViewAssets($this->outputContent);
+
         }
 
         if (!$this->outputContent) {

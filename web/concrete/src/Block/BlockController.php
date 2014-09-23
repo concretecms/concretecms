@@ -546,6 +546,10 @@ class BlockController extends \Concrete\Core\Controller\AbstractController
         }
     }
 
+    public function registerViewAssets()
+    {
+    }
+
     public function setupAndRun($method)
     {
         if ($method) {

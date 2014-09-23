@@ -29,7 +29,7 @@ use Sunra\PhpSimple\HtmlDomParser;
 		protected $btCacheBlockOutputOnPost = true;
 		protected $btSupportsInlineEdit = true;
 		protected $btSupportsInlineAdd = true;
-		protected $btCacheBlockOutputForRegisteredUsers = true;
+		protected $btCacheBlockOutputForRegisteredUsers = false;
 		protected $btCacheBlockOutputLifetime = 0; //until manually updated or cleared
 
 		public function getBlockTypeDescription() {
@@ -55,13 +55,16 @@ use Sunra\PhpSimple\HtmlDomParser;
 			return $str;
 		}
 
-        public function view()
+        public function registerViewAssets($outputContent)
         {
-            $content = $this->getContent();
-            if (preg_match('/data-concrete5-link-launch/i', $content)) {
+            if (preg_match('/data-concrete5-link-launch/i', $outputContent)) {
                 $this->requireAsset('core/lightbox');
             }
-            $this->set('content', $content);
+        }
+
+        public function view()
+        {
+            $this->set('content', $this->getContent());
         }
 
 		function getContentEditMode() {

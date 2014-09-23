@@ -161,12 +161,16 @@ class Controller extends BlockController {
 				}
 			}
 		}
+
+        public function registerViewAssets()
+        {
+            $this->requireAsset('core/gathering');
+        }
+
 		public function view() {
 			if ($this->gaID) {
 				$gathering = Gathering::getByID($this->gaID);
 				if (is_object($gathering)) {
-					$r = ResponseAssetGroup::get();
-					$r->requireAsset('core/gathering');
 					Loader::helper('overlay')->init(false);
 					if ($this->enablePostingFromGathering && $this->ptID) {
 						$pt = PageType::getByID($this->ptID);
