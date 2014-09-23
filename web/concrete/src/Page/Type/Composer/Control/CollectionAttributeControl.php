@@ -34,7 +34,9 @@ class CollectionAttributeControl extends Control
     public function removePageTypeComposerControlFromPage()
     {
         $ak = $this->getAttributeKeyObject();
-        $this->page->clearAttribute($ak);
+        if (is_object($ak)) {
+            $this->page->clearAttribute($ak);
+        }
     }
 
     public function getAttributeKeyObject()
@@ -59,7 +61,7 @@ class CollectionAttributeControl extends Control
     public function canPageTypeComposerControlSetPageName()
     {
         $ak = $this->getAttributeKeyObject();
-        if ($ak->getAttributeKeyHandle() == 'meta_title') {
+        if (is_object($ak) && $ak->getAttributeKeyHandle() == 'meta_title') {
             return true;
         }
 
@@ -69,8 +71,9 @@ class CollectionAttributeControl extends Control
     public function getPageTypeComposerControlPageNameValue(Page $c)
     {
         $ak = $this->getAttributeKeyObject();
-
-        return $c->getAttribute($ak->getAttributeKeyHandle());
+        if (is_object($ak)) {
+            return $c->getAttribute($ak->getAttributeKeyHandle());
+        }
     }
 
     public function getPageTypeComposerControlDraftValue()
@@ -78,8 +81,9 @@ class CollectionAttributeControl extends Control
         if (is_object($this->page)) {
             $ak = $this->getAttributeKeyObject();
             $c = $this->page;
-
-            return $c->getAttributeValueObject($ak);
+            if (is_object($ak)) {
+                return $c->getAttributeValueObject($ak);
+            }
         }
     }
 
@@ -92,6 +96,9 @@ class CollectionAttributeControl extends Control
     {
         $ak = $this->getAttributeKeyObject();
         $c = $this->page;
+        if (!is_object($ak)) {
+            return true;
+        }
 
         return ($c->getAttribute($ak) == '');
     }
@@ -99,29 +106,37 @@ class CollectionAttributeControl extends Control
     public function render($label, $customTemplate, $description)
     {
         $ak = $this->getAttributeKeyObject();
-        $env = Environment::get();
-        $set = $this->getPageTypeComposerFormLayoutSetControlObject()->getPageTypeComposerFormLayoutSetObject();
-        $control = $this;
-        $template = $env->getPath(DIRNAME_ELEMENTS . '/' . DIRNAME_PAGE_TYPES . '/' . DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_ELEMENTS_CONTROLS . '/' . $this->ptComposerControlTypeHandle . '.php');
-        include $template;
+        if (is_object($ak)) {
+            $env = Environment::get();
+            $set = $this->getPageTypeComposerFormLayoutSetControlObject()->getPageTypeComposerFormLayoutSetObject();
+            $control = $this;
+            $template = $env->getPath(
+                DIRNAME_ELEMENTS . '/' . DIRNAME_PAGE_TYPES . '/' . DIRNAME_COMPOSER . '/' . DIRNAME_COMPOSER_ELEMENTS_CONTROLS . '/' . $this->ptComposerControlTypeHandle . '.php'
+            );
+            include $template;
+        }
     }
 
     public function publishToPage(Page $c, $data, $controls)
     {
         // the data for this actually doesn't come from $data. Attributes have their own way of gettin data.
         $ak = $this->getAttributeKeyObject();
-        $ak->saveAttributeForm($c);
+        if (is_object($ak)) {
+            $ak->saveAttributeForm($c);
+        }
     }
 
     public function validate()
     {
         $ak = $this->getAttributeKeyObject();
-        $value = $this->page->getAttribute($ak);
-        if (!$value) {
-            $e = Loader::helper('validation/error');
-            $e->add(t('The field "%s" is required', $ak->getAttributeKeyDisplayName()));
+        if (is_object($ak)) {
+            $value = $this->page->getAttribute($ak);
+            if (!$value) {
+                $e = Loader::helper('validation/error');
+                $e->add(t('The field "%s" is required', $ak->getAttributeKeyDisplayName()));
 
-            return $e;
+                return $e;
+            }
         }
     }
 
