@@ -140,7 +140,7 @@ class Theme extends Object
     {
         $dirt = $dir . '/' . $handle;
         if (is_dir($dirt)) {
-            $res = static::getThemeNameAndDescription($dirt, $pkgHandle);
+            $res = static::getThemeNameAndDescription($dirt, $handle, $pkgHandle);
 
             $th = new static();
             $th->pThemeHandle = $handle;
@@ -535,12 +535,11 @@ class Theme extends Object
         return $files;
     }
 
-    private static function getThemeNameAndDescription($dir, $pkgHandle = '')
+    private static function getThemeNameAndDescription($dir, $pThemeHandle, $pkgHandle = '')
     {
         $res = new \stdClass();
         $res->pName = '';
         $res->pDescription = '';
-        $res->pHandle = array_pop(explode('/', trim(str_replace('\\', '/', $dir), '/')));
         $res->pError = '';
         if (file_exists($dir . '/' . FILENAME_THEMES_DESCRIPTION)) {
             $con = file($dir . '/' . FILENAME_THEMES_DESCRIPTION);
@@ -550,7 +549,13 @@ class Theme extends Object
         $pageThemeFile = $dir . '/' . FILENAME_THEMES_CLASS;
         if (is_file($pageThemeFile)) {
             try {
-                $className = '\\Application\\Theme\\' . camelcase($res->pHandle) . '\\PageTheme';
+                $pkgHandle = PackageList::getHandle($row['pkgID']);
+                if (strlen($pkgHandle)) {
+                    $className = '\\Concrete\\Package\\' . camelcase($pkgHandle);
+                } else {
+                    $className = '\\Application';
+                }
+                $className .= '\\Theme\\' . camelcase($pThemeHandle) . '\\PageTheme';
                 if (!class_exists($className, false)) {
                     include_once $pageThemeFile;
                 }
@@ -605,6 +610,7 @@ class Theme extends Object
 
     protected static function install($dir, $pThemeHandle, $pkgID)
     {
+        $result = null;
         if (is_dir($dir)) {
             $pkg = null;
             if ($pkgID) {
@@ -615,22 +621,26 @@ class Theme extends Object
             if ($cnt > 0) {
                 throw new Exception(static::E_THEME_INSTALLED);
             }
-            $res = static::getThemeNameAndDescription($dir, is_object($pkg) ? $pkg->getPackageHandle() : '');
-            $pThemeName = $res->pThemeName;
-            $pThemeDescription = $res->pThemeDescription;
-            $db->query(
-                "insert into PageThemes (pThemeHandle, pThemeName, pThemeDescription, pkgID) values (?, ?, ?, ?)",
-                array($pThemeHandle, $pThemeName, $pThemeDescription, $pkgID)
-            );
+            $res = static::getThemeNameAndDescription($dir, $pThemeHandle, is_object($pkg) ? $pkg->getPackageHandle() : '');
+            if (strlen($res->pError) === 0) {
+                $pThemeName = $res->pThemeName;
+                $pThemeDescription = $res->pThemeDescription;
+                $db->query(
+                    "insert into PageThemes (pThemeHandle, pThemeName, pThemeDescription, pkgID) values (?, ?, ?, ?)",
+                    array($pThemeHandle, $pThemeName, $pThemeDescription, $pkgID)
+                );
 
-            $env = Environment::get();
-            $env->clearOverrideCache();
+                $env = Environment::get();
+                $env->clearOverrideCache();
 
-            $pt = static::getByID($db->Insert_ID());
-            $pt->updateThemeCustomClass();
+                $pt = static::getByID($db->Insert_ID());
+                $pt->updateThemeCustomClass();
 
-            return $pt;
+                $result = $pt;
+            }
         }
+
+        return $result;
     }
 
     public function updateThemeCustomClass()
