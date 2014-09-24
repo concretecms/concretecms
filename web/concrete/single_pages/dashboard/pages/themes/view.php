@@ -99,9 +99,13 @@ if (isset($activate_confirm)) {
                     <td width="100%" style="vertical-align:middle;">
                         <p class="ccm-themes-name"><strong><?=$t->getThemeDisplayName()?></strong></p>
                         <p class="ccm-themes-description"><em><?=$t->getThemeDisplayDescription()?></em></p>
-                        <div class="ccm-themes-button-row clearfix">
-                            <?=$bt->button(t("Install"), $view->url('/dashboard/pages/themes','install',$t->getThemeHandle()),'left','primary');?>
-                        </div>
+                        <div class="ccm-themes-button-row clearfix"><?php
+                            if(strlen($t->error) > 0) {
+                                ?><div class="alert alert-danger" role="alert"><?php echo nl2br(h($t->error)); ?></div><?php
+                            } else {
+                                echo $bt->button(t('Install'), $view->url('/dashboard/pages/themes', 'install', $t->getThemeHandle()), 'left', 'primary');
+                            }
+                        ?></div>
                     </td>
                 </tr>
             <?php } ?>
