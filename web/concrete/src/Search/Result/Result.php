@@ -95,12 +95,19 @@ class Result
         if ($this->pagination->haveToPaginate()) {
             $view = new TwitterBootstrap3View();
             $result = $this;
-            $html = $view->render($this->pagination, function ($page) use ($result) {
-                $list = $result->getItemListObject();
+            $html = $view->render(
+                $this->pagination,
+                function ($page) use ($result) {
+                    $list = $result->getItemListObject();
 
-                return $result->getBaseURL() . '?'
-                . $list->getQueryPaginationPageParameter() . '=' . $page;
-            });
+                    return $result->getBaseURL() . '?' . $list->getQueryPaginationPageParameter() . '=' . $page;
+                },
+                array(
+                    'prev_message' => tc('Pagination', '&larr; Previous'),
+                    'next_message' => tc('Pagination', 'Next &rarr;'),
+                    'active_suffix' => '<span class="sr-only">' . tc('Pagination', '(current)') . '</span>'
+                )
+            );
         }
         $obj->paginationTemplate = $html;
         $obj->fields = $this->fields;
