@@ -310,6 +310,7 @@ class StartingPointPackage extends BasePackage {
 			Config::save('concrete.locale', SITE_INSTALL_LOCALE);
 		}
 		Config::save('concrete.site', SITE);
+        Config::save('concrete.version_installed', APP_VERSION);
 
 		$u = new User();
 		$u->saveConfig('NEWSFLOW_LAST_VIEWED', 'FIRSTRUN');
