@@ -136,17 +136,20 @@ class Theme extends Object
 
     }
 
-    public static function getByFileHandle($handle, $dir = DIR_FILES_THEMES)
+    public static function getByFileHandle($handle, $dir = DIR_FILES_THEMES, $pkgHandle = '')
     {
         $dirt = $dir . '/' . $handle;
         if (is_dir($dirt)) {
-            $res = static::getThemeNameAndDescription($dirt);
+            $res = static::getThemeNameAndDescription($dirt, $pkgHandle);
 
             $th = new static();
             $th->pThemeHandle = $handle;
             $th->pThemeDirectory = $dirt;
             $th->pThemeName = $res->pThemeName;
             $th->pThemeDescription = $res->pThemeDescription;
+            if (strlen($res->pError) > 0) {
+                $th->error = $res->pError;
+            }
             switch ($dir) {
                 case DIR_FILES_THEMES:
                     $th->pThemeURL = DIR_REL . '/' . DIRNAME_APPLICATION . '/' . DIRNAME_THEMES . '/' . $handle;
@@ -532,15 +535,50 @@ class Theme extends Object
         return $files;
     }
 
-    private static function getThemeNameAndDescription($dir)
+    private static function getThemeNameAndDescription($dir, $pkgHandle = '')
     {
         $res = new \stdClass();
-        $res->ptName = '';
-        $res->ptDescription = '';
+        $res->pName = '';
+        $res->pDescription = '';
+        $res->pHandle = array_pop(explode('/', trim(str_replace('\\', '/', $dir), '/')));
+        $res->pError = '';
         if (file_exists($dir . '/' . FILENAME_THEMES_DESCRIPTION)) {
             $con = file($dir . '/' . FILENAME_THEMES_DESCRIPTION);
             $res->pThemeName = trim($con[0]);
             $res->pThemeDescription = trim($con[1]);
+        }
+        $pageThemeFile = $dir . '/' . FILENAME_THEMES_CLASS;
+        if (is_file($pageThemeFile)) {
+            try {
+                $className = '\\Application\\Theme\\' . camelcase($res->pHandle) . '\\PageTheme';
+                if (!class_exists($className, false)) {
+                    include_once $pageThemeFile;
+                }
+                if (!class_exists($className, false)) {
+                    $res->pError = t(/*i18n: %1$s is a filename, %2$s is a PHP class name */'The theme file %1$s does not defines the class %2$s', FILENAME_THEMES_CLASS, ltrim($className, '\\'));
+                } else {
+                    $instance = new $className();
+                    $extensionOf = '\\Concrete\\Core\\Page\\Theme\\Theme';
+                    if (!is_a($instance, $extensionOf)) {
+                        $res->pError = t(/*i18n: %1$s is a filename, %2$s and %3$s are PHP class names */'The theme file %1$s should define a %1$s class that extends the class %2$s', FILENAME_THEMES_CLASS, ltrim($className, '\\'), ltrim($extensionOf, '\\'));
+                    } else {
+                        if (method_exists($instance, 'getThemeName')) {
+                            $s = $instance->getThemeName();
+                            if (strlen($s) > 0) {
+                                $res->pThemeName = $s;
+                            }
+                        }
+                        if (method_exists($instance, 'getThemeDescription')) {
+                            $s = $instance->getThemeDescription();
+                            if (strlen($s) > 0) {
+                                $res->pThemeDescription = $s;
+                            }
+                        }
+                    }
+                }
+            } catch (\Exception $x) {
+                $res->pError = $x->getMessage();
+            }
         }
 
         return $res;
@@ -568,12 +606,16 @@ class Theme extends Object
     protected static function install($dir, $pThemeHandle, $pkgID)
     {
         if (is_dir($dir)) {
+            $pkg = null;
+            if ($pkgID) {
+                $pkg = \Concrete\Core\Package\Package::getByID($pkgID);
+            }
             $db = Loader::db();
             $cnt = $db->getOne("select count(pThemeID) from PageThemes where pThemeHandle = ?", array($pThemeHandle));
             if ($cnt > 0) {
                 throw new Exception(static::E_THEME_INSTALLED);
             }
-            $res = static::getThemeNameAndDescription($dir);
+            $res = static::getThemeNameAndDescription($dir, is_object($pkg) ? $pkg->getPackageHandle() : '');
             $pThemeName = $res->pThemeName;
             $pThemeDescription = $res->pThemeDescription;
             $db->query(
