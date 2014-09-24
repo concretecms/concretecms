@@ -47,9 +47,8 @@ class DatabaseManager
         $this->factory = $factory;
 
         if ($this->app['config']['site_install.database']) {
-            $this->app['config']['database'] = array_replace_recursive(
-                $this->app['config']['site_install.database'],
-                $this->app['config']['database']);        }
+            $this->app['config']['database'] = $this->app['config']['site_install.database'];
+        }
     }
 
     /**
