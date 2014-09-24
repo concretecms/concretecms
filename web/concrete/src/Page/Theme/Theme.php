@@ -43,7 +43,8 @@ class Theme extends Object
     protected $stylesheetCachePath;
     protected $stylesheetCacheRelativePath = REL_DIR_FILES_CACHE;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->setStylesheetCachePath(Config::get('concrete.cache.directory'));
     }
 
@@ -75,12 +76,14 @@ class Theme extends Object
             $pl = static::getByID($row['pThemeID']);
             $themes[] = $pl;
         }
+
         return $themes;
     }
 
     public static function getInstalledHandles()
     {
         $db = Loader::db();
+
         return $db->GetCol("select pThemeHandle from PageThemes");
     }
 
@@ -128,6 +131,7 @@ class Theme extends Object
             }
             $themes = $themesTemp;
         }
+
         return $themes;
 
     }
@@ -138,7 +142,7 @@ class Theme extends Object
         if (is_dir($dirt)) {
             $res = static::getThemeNameAndDescription($dirt);
 
-            $th = new static;
+            $th = new static();
             $th->pThemeHandle = $handle;
             $th->pThemeDirectory = $dirt;
             $th->pThemeName = $res->pThemeName;
@@ -148,6 +152,7 @@ class Theme extends Object
                     $th->pThemeURL = DIR_REL . '/' . DIRNAME_APPLICATION . '/' . DIRNAME_THEMES . '/' . $handle;
                     break;
             }
+
             return $th;
         }
     }
@@ -164,6 +169,7 @@ class Theme extends Object
             DIRNAME_THEMES . '/' . $this->getThemeHandle() . '/' . DIRNAME_CSS . '/' . FILENAME_STYLE_CUSTOMIZER_STYLES,
             $this->getPackageHandle()
         );
+
         return $r->exists();
     }
 
@@ -182,6 +188,7 @@ class Theme extends Object
             );
             $this->styleList = \Concrete\Core\StyleCustomizer\StyleList::loadFromXMLFile($r->file);
         }
+
         return $this->styleList;
     }
 
@@ -203,11 +210,11 @@ class Theme extends Object
                     $this->getPackageHandle()
                 );
                 $preset = Preset::getFromFile($file->file, $urlroot);
+
                 return $preset;
             }
         }
     }
-
 
     /**
      * Gets all presets available to this theme.
@@ -247,6 +254,7 @@ class Theme extends Object
                 }
             }
         );
+
         return $presets;
     }
 
@@ -290,6 +298,7 @@ class Theme extends Object
                 }
             }
         }
+
         return $sheets;
     }
 
@@ -304,6 +313,7 @@ class Theme extends Object
         );
 
         $stylesheet = new \Concrete\Core\StyleCustomizer\Stylesheet($stylesheet, $r->file, $r->url, $output, $relative);
+
         return $stylesheet;
     }
 
@@ -330,6 +340,7 @@ class Theme extends Object
         if ($this->isThemePreviewRequest()) {
             $path .= '?ts=' . time();
         }
+
         return $path;
     }
 
@@ -346,10 +357,10 @@ class Theme extends Object
             $o->setValueListID($row['scvlID']);
             $o->setPresetHandle($row['preset']);
             $o->setCustomCssRecordID($row['sccRecordID']);
+
             return $o;
         }
     }
-
 
     public function setCustomStyleObject(
         \Concrete\Core\StyleCustomizer\Style\ValueList $valueList,
@@ -390,6 +401,7 @@ class Theme extends Object
         $scc->setValueListID($valueList->getValueListID());
         $scc->setPresetHandle($preset);
         $scc->setCustomCssRecordID($sccRecordID);
+
         return $scc;
     }
 
@@ -402,6 +414,7 @@ class Theme extends Object
         $where = 'pThemeHandle = ?';
         $args = array($pThemeHandle);
         $pt = static::populateThemeQuery($where, $args);
+
         return $pt;
     }
 
@@ -414,6 +427,7 @@ class Theme extends Object
         $where = 'pThemeID = ?';
         $args = array($pThemeID);
         $pt = static::populateThemeQuery($where, $args);
+
         return $pt;
     }
 
@@ -443,6 +457,7 @@ class Theme extends Object
             $pkgHandle = $pl->getPackageHandle();
             $pl->pThemeDirectory = $env->getPath(DIRNAME_THEMES . '/' . $row['pThemeHandle'], $pkgHandle);
             $pl->pThemeURL = $env->getURL(DIRNAME_THEMES . '/' . $row['pThemeHandle'], $pkgHandle);
+
             return $pl;
         }
     }
@@ -466,6 +481,7 @@ class Theme extends Object
             }
         }
         $l = static::install($dir, $pThemeHandle, $pkgID);
+
         return $l;
     }
 
@@ -488,7 +504,7 @@ class Theme extends Object
 
                 if ($f == FILENAME_THEMES_VIEW) {
                     $type = PageThemeFile::TFTYPE_VIEW;
-                } else if ($f == FILENAME_THEMES_CLASS) {
+                } elseif ($f == FILENAME_THEMES_CLASS) {
                     $type = PageThemeFile::TFTYPE_PAGE_CLASS;
                 } else {
                     if ($f == FILENAME_THEMES_DEFAULT) {
@@ -518,7 +534,7 @@ class Theme extends Object
 
     private static function getThemeNameAndDescription($dir)
     {
-        $res = new \stdClass;
+        $res = new \stdClass();
         $res->ptName = '';
         $res->ptDescription = '';
         if (file_exists($dir . '/' . FILENAME_THEMES_DESCRIPTION)) {
@@ -526,6 +542,7 @@ class Theme extends Object
             $res->pThemeName = trim($con[0]);
             $res->pThemeDescription = trim($con[1]);
         }
+
         return $res;
     }
 
@@ -569,6 +586,7 @@ class Theme extends Object
 
             $pt = static::getByID($db->Insert_ID());
             $pt->updateThemeCustomClass();
+
             return $pt;
         }
     }
@@ -751,6 +769,7 @@ class Theme extends Object
     public static function getSiteTheme()
     {
         $c = Page::getByID(HOME_CID);
+
         return static::getByID($c->getCollectionThemeID());
     }
 
@@ -762,7 +781,6 @@ class Theme extends Object
         $env = Environment::get();
         $env->clearOverrideCache();
     }
-
 
     /**
      * Special items meant to be extended by custom theme classes
@@ -786,6 +804,7 @@ class Theme extends Object
     {
         if ($this->pThemeGridFrameworkHandle) {
             $pTheme = GridFramework::getByHandle($this->pThemeGridFrameworkHandle);
+
             return $pTheme;
         }
     }
