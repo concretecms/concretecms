@@ -39,7 +39,7 @@
 	
 	<?php if(!isset($hide_force) || !$hide_force) { ?>
         <p>
-        <?=t('<a href="%s">Click here</a> if you would like to re-run this script.', DIR_REL . '/' . DISPATCHER_FILENAME . '/tools/required/upgrade?force=1')?>
+        <?=t('<a href="%s">Click here</a> if you would like to re-run this script.', DIR_REL . '/' . DISPATCHER_FILENAME . '/ccm/system/upgrade?force=1')?>
         </p>
     <? } ?>
 <? } ?>
