@@ -26,7 +26,7 @@ if (is_object($f)) {
 <? } ?>
 <script>
 $(function() {
-    $('.bID-<?php echo $bID;?>')
+    $('.bID-<?php print $bID;?>')
         .mouseover(function(e){$(this).attr("src", '<?php print $imgPath["hover"];?>');})
         .mouseout(function(e){$(this).attr("src", '<?php print $imgPath["default"];?>');});
 });
