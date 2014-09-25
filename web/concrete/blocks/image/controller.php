@@ -9,10 +9,10 @@ class Controller extends BlockController {
     protected $btInterfaceWidth = 400;
     protected $btInterfaceHeight = 550;
     protected $btTable = 'btContentImage';
-    //protected $btCacheBlockRecord = true;
-    //protected $btCacheBlockOutput = true;
-    //protected $btCacheBlockOutputOnPost = true;
-    //protected $btCacheBlockOutputForRegisteredUsers = true;
+    protected $btCacheBlockRecord = true;
+    protected $btCacheBlockOutput = true;
+    protected $btCacheBlockOutputOnPost = true;
+    protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btWrapperClass = 'ccm-ui';
     protected $btExportFileColumns = array('fID','fOnstateID');
     protected $btFeatures = array(
