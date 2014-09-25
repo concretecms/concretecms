@@ -9,10 +9,10 @@ class Controller extends BlockController {
     protected $btInterfaceWidth = 400;
     protected $btInterfaceHeight = 550;
     protected $btTable = 'btContentImage';
-    protected $btCacheBlockRecord = true;
-    protected $btCacheBlockOutput = true;
-    protected $btCacheBlockOutputOnPost = true;
-    protected $btCacheBlockOutputForRegisteredUsers = true;
+    //protected $btCacheBlockRecord = true;
+    //protected $btCacheBlockOutput = true;
+    //protected $btCacheBlockOutputOnPost = true;
+    //protected $btCacheBlockOutputForRegisteredUsers = true;
     protected $btWrapperClass = 'ccm-ui';
     protected $btExportFileColumns = array('fID','fOnstateID');
     protected $btFeatures = array(
@@ -34,6 +34,15 @@ class Controller extends BlockController {
         $f = File::getByID($this->fID);
         if (!is_object($f) || !$f->getFileID()) {
             return false;
+        }
+
+        // onState image available
+        $foS = $this->getFileOnstateObject();
+        if (is_object($foS)) {
+            $imgPath = array();
+            $imgPath['hover'] = File::getRelativePathFromID($this->fOnstateID);
+            $imgPath['default'] = File::getRelativePathFromID($this->fID);
+            $this->set('imgPath', $imgPath);
         }
 
         $this->set('f', $f);
