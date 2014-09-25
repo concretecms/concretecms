@@ -3,7 +3,7 @@
 $c = Page::getCurrentPage();
 if (is_object($f)) {
     $tag = Core::make('html/image', array($f))->getTag();
-    $tag->addClass('ccm-image-block img-responsive');
+    $tag->addClass('ccm-image-block img-responsive bID-'.$bID);
     if ($altText) {
         $tag->alt($altText);
     }
@@ -24,3 +24,10 @@ if (is_object($f)) {
     <div class="ccm-edit-mode-disabled-item"><?=t('Empty Image Block.')?></div>
 
 <? } ?>
+<script>
+$(function() {
+    $('.bID-<?php echo $bID;?>')
+        .mouseover(function(e){$(this).attr("src", '<?php print $imgPath["hover"];?>');})
+        .mouseout(function(e){$(this).attr("src", '<?php print $imgPath["default"];?>');});
+});
+</script>
