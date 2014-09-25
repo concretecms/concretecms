@@ -24,6 +24,8 @@ if (is_object($f)) {
     <div class="ccm-edit-mode-disabled-item"><?=t('Empty Image Block.')?></div>
 
 <? } ?>
+
+<?php if(is_object($foS)) { ?>	
 <script>
 $(function() {
     $('.bID-<?php print $bID;?>')
@@ -31,3 +33,4 @@ $(function() {
         .mouseout(function(e){$(this).attr("src", '<?php print $imgPath["default"];?>');});
 });
 </script>
+<?php } ?>
