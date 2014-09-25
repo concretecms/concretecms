@@ -515,7 +515,8 @@ $(function() {
 </div>
 
 <div class="alert alert-info">
-<?=t('Having trouble? Check the <a href="%s">installation help forums</a>, or <a href="%s">have us host a copy</a> for you.', 'http://www.concrete5.org/community/forums/installation', 'http://www.concrete5.org/services/hosting')?>
+<? $install_forum_url = tc('InstallationHelpForums', 'http://www.concrete5.org/community/forums/installation')?>
+<?=t('Having trouble? Check the <a href="%s">installation help forums</a>, or <a href="%s">have us host a copy</a> for you.', $install_forum_url, 'http://www.concrete5.org/services/hosting')?>
 </div>
 </div>
 </div>
