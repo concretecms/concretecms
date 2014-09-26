@@ -424,7 +424,7 @@
                 </attributekey>
             </attributes>
         </page>
-        <!--
+
         <page name="Connect to the Community" path="/dashboard/extend/connect" filename="/dashboard/extend/connect.php"
               pagetype="" description="Connect to the concrete5 community." package="">
             <attributes>
@@ -449,7 +449,7 @@
                 </attributekey>
             </attributes>
         </page>
-        //-->
+
         <page name="System &amp; Settings" path="/dashboard/system" filename="/dashboard/system/view.php" pagetype=""
               description="Secure and setup your site." package="">
             <attributes>

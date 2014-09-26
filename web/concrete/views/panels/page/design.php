@@ -44,7 +44,7 @@ defined('C5_EXECUTE') or die("Access Denied.");
             <div class="list-group-item list-group-item-header"><?=t('Theme')?>
             <? if (Config::get('concrete.marketplace.enabled')) { ?>
                 <div class="ccm-marketplace-btn-wrapper">
-                <button onclick="ccm_openThemeLauncher()" class="btn-ccm-marketplace btn btn-large"><?=t("Install More Themes")?></button>
+                <a href="<?=URL::to('/dashboard/extend/themes')?>" class="btn-ccm-marketplace btn btn-large"><?=t("Install More Themes")?></a>
                 </div>
             <? } ?>
             </div>
