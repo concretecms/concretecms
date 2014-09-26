@@ -2071,9 +2071,7 @@
 
 
     <table name="Config">
-        <field name="configItem" type="C" size="255">
-            <key/>
-        </field>
+        <field name="configItem" type="C" size="255" />
         <field name="configValue" type="X2" />
         <field name="configGroup" type="C" size="255" />
         <field name="configNamespace" type="C" size="255" />
