@@ -314,7 +314,7 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 
 		<hr/>
 
-			<h3><?=t("Project Page")?></h3>
+			<h4><?=t("Project Page")?></h4>
 			<p><?=t('Your site is currently connected to the concrete5 community. Your project page URL is:')?><br/>
 			<a href="<?=$mi->getSitePageURL()?>"><?=$mi->getSitePageURL()?></a></p>
 

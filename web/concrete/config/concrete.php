@@ -308,7 +308,12 @@ return array(
         /**
          * Enable intelligent search integration
          */
-        'intelligent_search' => true
+        'intelligent_search' => true,
+
+        /**
+         * Log requests
+         */
+        'log_requests' => false
     ),
 
     /**

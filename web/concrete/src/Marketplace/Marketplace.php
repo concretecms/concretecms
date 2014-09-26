@@ -44,7 +44,7 @@ class Marketplace
 
                     if ($this->connectionError == Marketplace::E_DELETED_SITE_TOKEN) {
                         $dbConfig->clear('concrete.marketplace.token');
-                        $dbConfig->clear('concrete.marketplace.site_token');
+                        $dbConfig->clear('concrete.marketplace.url_token');
                     }
                 } else {
                     $this->isConnected = false;
@@ -163,7 +163,7 @@ class Marketplace
     public function getSitePageURL()
     {
         $dbConfig = \Core::make('config/database');
-        $token = $dbConfig->get('concrete.marketplace.site_token');
+        $token = $dbConfig->get('concrete.marketplace.url_token');
         $url = Config::get('concrete.urls.concrete5') . Config::get('concrete.urls.paths.site_page');
         return $url . '/' . $token;
     }

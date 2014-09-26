@@ -2,6 +2,11 @@
 !function (global, $, _) {
     'use strict';
 
+    var ConcreteMarketplace = function()
+    {
+
+    }
+
     ConcreteMarketplace.prototype = {
 
         testConnection: function(onComplete, task, mpID)
