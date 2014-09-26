@@ -289,7 +289,7 @@ return array(
          *
          * @var bool
          */
-        'enabled'            => false,
+        'enabled'            => true,
 
         /**
          * Marketplace Token
@@ -308,7 +308,7 @@ return array(
         /**
          * Enable intelligent search integration
          */
-        'intelligent_search' => false
+        'intelligent_search' => true
     ),
 
     /**
