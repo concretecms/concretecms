@@ -431,6 +431,9 @@
                 <attributekey handle="meta_keywords">
                     <value>concrete5.org, my account, marketplace</value>
                 </attributekey>
+                <attributekey handle="exclude_nav">
+                    <value><![CDATA[1]]></value>
+                </attributekey>
             </attributes>
         </page>
         <page name="Get More Themes" path="/dashboard/extend/themes" filename="/dashboard/extend/themes.php" pagetype=""
@@ -441,7 +444,7 @@
                 </attributekey>
             </attributes>
         </page>
-        <page name="Get More Add-Ons" path="/dashboard/extend/add-ons" filename="/dashboard/extend/add_ons.php"
+        <page name="Get More Add-Ons" path="/dashboard/extend/addons" filename="/dashboard/extend/addons.php"
               pagetype="" description="Download add-ons from concrete5.org." package="">
             <attributes>
                 <attributekey handle="meta_keywords">

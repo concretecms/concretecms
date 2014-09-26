@@ -1,23 +1,27 @@
 <?
 
 namespace Concrete\Controller\SinglePage\Dashboard\Extend;
-use \Concrete\Core\Page\Controller\DashboardPageController;
+use \Concrete\Core\Page\Controller\MarketplaceDashboardPageController;
 use TaskPermission;
 use Marketplace;
 use \Concrete\Core\Marketplace\RemoteItemList as MarketplaceRemoteItemList;
 use Loader;
 
-class Addons extends DashboardPageController {
-	
-	public function on_start() {
-		$this->error = Loader::helper('validation/error');
-	}
-	
+class Addons extends MarketplaceDashboardPageController {
+
+    public function getMarketplaceType()
+    {
+        return 'addons';
+    }
+
+
 	public function view() {
 
 		$tp = new TaskPermission();
 		$mi = Marketplace::getInstance();
-		if ($mi->isConnected() && $tp->canInstallPackages()) { 
+		if ($mi->isConnected() && $tp->canInstallPackages()) {
+
+            /*
 			
 			
 			$mri = new MarketplaceRemoteItemList();
@@ -89,6 +93,7 @@ class Addons extends DashboardPageController {
 			$this->set('sets', $setsel);
 			$this->set('pagination', $mri->getPagination());
 			$this->set('type', $what);
+            */
 		} else {
 			$this->redirect('/dashboard/extend/connect');
 		}
