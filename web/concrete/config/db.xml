@@ -2068,8 +2068,6 @@
     </index>
   </table>
 
-
-
     <table name="Config">
         <field name="configItem" type="C" size="255" />
         <field name="configValue" type="X2" />
