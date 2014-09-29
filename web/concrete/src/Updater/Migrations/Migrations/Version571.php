@@ -15,6 +15,7 @@ class Version571 extends AbstractMigration
     public function up(Schema $schema)
     {
         /** @todo Remove key from Config table */
+        /** @todo Add marketplace single pages */
     }
 
     public function down(Schema $schema)
