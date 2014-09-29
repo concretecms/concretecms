@@ -34,12 +34,19 @@ abstract class Type extends Object {
 				return $value;
 		}
 	}
+	
 	public static function getByID($ptPublishTargetTypeID) {
 		$db = Loader::db();
 		$r = $db->GetRow('select ptPublishTargetTypeID, ptPublishTargetTypeHandle, ptPublishTargetTypeName, pkgID from PageTypePublishTargetTypes where ptPublishTargetTypeID = ?', array($ptPublishTargetTypeID));
 		if (is_array($r) && $r['ptPublishTargetTypeHandle']) {
 			$txt = Loader::helper('text');
-			$class = '\\Concrete\\Core\\Page\\Type\\PublishTarget\\Type\\' . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type';
+            if($r['pkgID']){
+                $pkg = Package::getByID($r['pkgID'])->getPackageHandle();
+                $class = '\\Concrete\\Package\\'.ucwords($pkg).'\\Controller\\Page\\Type\\PublishTarget\\Type\\' .
+                    $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type';
+            }else{
+                $class = '\\Concrete\\Core\\Page\\Type\\PublishTarget\\Type\\' . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type';
+            }
 			$sc = Core::make($class);
 			$sc->setPropertiesFromArray($r);
 			return $sc;
@@ -51,7 +58,13 @@ abstract class Type extends Object {
 		$r = $db->GetRow('select ptPublishTargetTypeID, ptPublishTargetTypeHandle, ptPublishTargetTypeName, pkgID from PageTypePublishTargetTypes where ptPublishTargetTypeHandle = ?', array($ptPublishTargetTypeHandle));
 		if (is_array($r) && $r['ptPublishTargetTypeHandle']) {
 			$txt = Loader::helper('text');
-			$class = '\\Concrete\\Core\\Page\\Type\\PublishTarget\\Type\\' . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type';
+            if($r['pkgID']){
+                $pkg = Package::getByID($r['pkgID'])->getPackageHandle();
+                $class = '\\Concrete\\Package\\'.ucwords($pkg).'\\Controller\\Page\\Type\\PublishTarget\\Type\\' .
+                    $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type';
+            }else{
+			    $class = '\\Concrete\\Core\\Page\\Type\\PublishTarget\\Type\\' . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type';
+            }
 			$sc = Core::make($class);
 			$sc->setPropertiesFromArray($r);
 			return $sc;
