@@ -39,4 +39,30 @@ class DatabaseRepositoryTest extends \ConcreteDatabaseTestCase
         $this->assertEquals($namespace, $this->repository->get($key, false));
     }
 
+    public function testSaveMultiple()
+    {
+        $tests = array(
+            'namespace::group.test.key',
+            'namespace::group2.test.key',
+            'namespace2::group.test.key',
+            'namespace2::group2.test.key',
+            'group.test.key',
+            'group2.test.key',
+            'group.new.key',
+            'group2.new.key'
+        );
+        $values = array();
+
+        foreach ($tests as $test) {
+            $this->repository->save($test, $values[] = uniqid($test));
+        }
+
+        foreach ($tests as $test) {
+            $this->assertEquals(
+                array_shift($values),
+                $this->repository->get($test),
+                "Failed test verification for key '{$test}'.");
+        }
+    }
+
 }
