@@ -8,7 +8,7 @@ class DatabaseLoaderTest extends ConcreteDatabaseTestCase
     protected $loader;
 
     protected $tables = array('Config');
-    protected $fixtures = array('Config');
+    protected $fixtures = array();
 
     public function setUp()
     {
@@ -18,16 +18,19 @@ class DatabaseLoaderTest extends ConcreteDatabaseTestCase
 
     public function testLoadingConfig()
     {
+        \Core::make('config/database')->save('test.test.test', $string = uniqid());
         $array = $this->loader->load('test', 'test');
-        $this->assertEquals('test', array_get($array, 'test.test'), 'Failed to read config value from the database.');
+        $this->assertEquals($string, array_get($array, 'test.test'), 'Failed to read config value from the database.');
     }
 
     public function testLoadingNamespacedConfig()
     {
+        \Core::make('config/database')->save('namespaced::namespaced.namespaced.namespaced', $value = uniqid());
+
         $array = $this->loader->load('namespaced', 'namespaced', 'namespaced');
 
         $this->assertEquals(
-            'namespaced',
+            $value,
             array_get($array, 'namespaced.namespaced'),
             'Failed to read namespaced config value from the database.');
     }
@@ -38,7 +41,13 @@ class DatabaseLoaderTest extends ConcreteDatabaseTestCase
         $exists_before = $this->loader->exists($group);
 
         $db = \Database::getActiveConnection();
-        $db->insert('Config', array('configItem' => $group, 'configValue' => 1, 'configGroup' => $group));
+        $db->insert(
+            'Config',
+            array(
+                'configItem'      => $group,
+                'configValue'     => 1,
+                'configGroup'     => $group,
+                'configNamespace' => ''));
 
         $exists_after = $this->loader->exists($group);
 

@@ -6,13 +6,16 @@ use Pagerfanta\Adapter\AdapterInterface;
 use Pagerfanta\Pagerfanta;
 use Core;
 use Page;
+
 class Pagination extends Pagerfanta
 {
     /** @var \Concrete\Core\Search\ItemList\ItemList  */
     protected $list;
 
-    public function __construct(AbstractItemList $itemList, AdapterInterface $adapter) {
+    public function __construct(AbstractItemList $itemList, AdapterInterface $adapter)
+    {
         $this->list = $itemList;
+
         return parent::__construct($adapter);
     }
 
@@ -41,13 +44,20 @@ class Pagination extends Pagerfanta
     public function renderDefaultView()
     {
         $v = Core::make('pagination/view');
-        $c = Page::getCurrentPage();
         $list = $this->list;
-        $html = $v->render($this, function($page) use ($list) {
-            $qs = Core::make('helper/url');
-            $url = $qs->setVariable($list->getQueryPaginationPageParameter(), $page);
-            return $url;
-        });
+        $html = $v->render(
+            $this,
+            function ($page) use ($list) {
+                $qs = Core::make('helper/url');
+                $url = $qs->setVariable($list->getQueryPaginationPageParameter(), $page);
+                return $url;
+            },
+            array(
+                'prev_message' => tc('Pagination', '&larr; Previous'),
+                'next_message' => tc('Pagination', 'Next &rarr;'),
+                'active_suffix' => '<span class="sr-only">' . tc('Pagination', '(current)') . '</span>'
+            )
+        );
         return $html;
     }
 
@@ -60,12 +70,13 @@ class Pagination extends Pagerfanta
         $this->list->debugStop();
 
         $return = array();
-        foreach($results as $result) {
+        foreach ($results as $result) {
             $r = $this->list->getResult($result);
             if ($r != null) {
                 $return[] = $r;
             }
         }
+
         return $return;
     }
 }

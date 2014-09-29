@@ -183,7 +183,7 @@ class Install extends Controller
         $this->set('memoryBytes', $val);
         if ($val < 25165824) {
             $this->set('memoryTest', -1);
-        } else if ($val > 67108864) {
+        } else if ($val >= 67108864) {
             $this->set('memoryTest', 1);
         } else {
             $this->set('memoryTest', 0);

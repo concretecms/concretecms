@@ -35,9 +35,7 @@ class DatabaseSaver implements SaverInterface
             $query->andWhere($query->expr()->comparison('configItem', '=', $query->expr()->literal($item)));
         }
 
-        if ($namespace) {
-            $query->andWhere($query->expr()->comparison('configNamespace', '=', $query->expr()->literal($namespace)));
-        }
+        $query->andWhere($query->expr()->comparison('configNamespace', '=', $query->expr()->literal($namespace ?: '')));
 
         if (!$query->execute()) {
             try {
@@ -48,7 +46,7 @@ class DatabaseSaver implements SaverInterface
                         $item,
                         $value,
                         $group,
-                        $namespace
+                        $namespace ?: ''
                     ));
             } catch (\Exception $e) {
                 // This happens when the update succeeded, but didn't actually change anything on the row.
