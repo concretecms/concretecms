@@ -9,11 +9,13 @@ abstract class MarketplaceDashboardPageController extends DashboardPageControlle
 {
 
     abstract public function getMarketplaceType();
+    abstract public function getMarketplaceDefaultHeading();
 
 	public function view()
     {
         $this->setThemeViewTemplate('marketplace.php');
         $this->set('type', $this->getMarketplaceType());
+        $this->set('heading', $this->getMarketplaceDefaultHeading());
 
 		$tp = new TaskPermission();
 		$mi = Marketplace::getInstance();
@@ -25,9 +27,14 @@ abstract class MarketplaceDashboardPageController extends DashboardPageControlle
 			$sets = MarketplaceRemoteItemList::getItemSets('themes');
 
 			$setsel = array('' => t('All Items'), 'FEATURED' => t('Featured Items'));
+            $req = $this->request->query;
 			if (is_array($sets)) {
 				foreach($sets as $s) {
 					$setsel[$s->getMarketplaceRemoteSetID()] = $s->getMarketplaceRemoteSetName();
+                    if ($req->has('marketplaceRemoteItemSetID') && $req->get('marketplaceRemoteItemSetID') ==
+                        $s->getMarketplaceRemoteSetID()) {
+                        $this->set('heading', $s->getMarketplaceRemoteSetName());
+                    }
 				}
 			}
 

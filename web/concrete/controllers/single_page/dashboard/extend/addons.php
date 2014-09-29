@@ -14,6 +14,10 @@ class Addons extends MarketplaceDashboardPageController {
         return 'addons';
     }
 
+    public function getMarketplaceDefaultHeading()
+    {
+        return 'Add-Ons';
+    }
 
 
 }
