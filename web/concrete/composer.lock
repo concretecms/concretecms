@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "87adf086b6110c8d09bcf0ff459243c3",
+    "hash": "257a7425ca9b27d7142b90cca37485d2",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -1800,16 +1800,16 @@
         },
         {
             "name": "punic/punic",
-            "version": "1.0.2",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/punic/punic.git",
-                "reference": "783f2f7e09a810e4a0fc2feca497ce14329e67f0"
+                "reference": "b4a06d4ad15040b18ec5db4491fc8ed8aa42874c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/punic/punic/zipball/783f2f7e09a810e4a0fc2feca497ce14329e67f0",
-                "reference": "783f2f7e09a810e4a0fc2feca497ce14329e67f0",
+                "url": "https://api.github.com/repos/punic/punic/zipball/b4a06d4ad15040b18ec5db4491fc8ed8aa42874c",
+                "reference": "b4a06d4ad15040b18ec5db4491fc8ed8aa42874c",
                 "shasum": ""
             },
             "require": {
@@ -1820,8 +1820,7 @@
                 "punic/common": "*"
             },
             "require-dev": {
-                "apigen/apigen": "2.*",
-                "nette/nette": "2.1.*",
+                "apigen/apigen": "~2.8.2",
                 "satooshi/php-coveralls": "dev-master"
             },
             "type": "library",
@@ -1863,7 +1862,7 @@
                 "translations",
                 "unicode"
             ],
-            "time": "2014-09-05 06:20:43"
+            "time": "2014-09-25 08:53:54"
         },
         {
             "name": "sunra/php-simple-html-dom-parser",
