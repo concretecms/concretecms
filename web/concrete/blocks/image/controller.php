@@ -30,6 +30,13 @@ class Controller extends BlockController {
         return t("Image");
     }
 
+    public function registerViewAssets() {
+        // Ensure we have JQuery if we have an onState image
+        if(is_object($this->getFileOnstateObject())) {
+            $this->requireAsset('javascript', 'jquery');
+        }
+    }
+
     public function view() {
         $f = File::getByID($this->fID);
         if (!is_object($f) || !$f->getFileID()) {
