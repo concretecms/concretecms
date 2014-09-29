@@ -52,7 +52,7 @@ class Composer extends BackendInterfacePageController {
 		$outputControls = $r[2];
 
 		$c = $this->page;
-		$e = Loader::helper('validation/error');
+        $e = $ptr->error;
 		if (!$c->getPageDraftTargetParentPageID()) {
 			$e->add(t('You must choose a page to publish this page beneath.'));
 		} else {
@@ -110,6 +110,7 @@ class Composer extends BackendInterfacePageController {
 			$pt = $pagetype->getPageTypeDefaultPageTemplateObject();
 		}
 		$e = $pagetype->validateCreateDraftRequest($pt);
+        $outputControls = array();
 		if (!$e->has()) {
 			$c = $c->getVersionToModify();
             $this->page = $c;
@@ -124,6 +125,7 @@ class Composer extends BackendInterfacePageController {
 			$c->setPageDraftTargetParentPageID($targetPageID);
 			$outputControls = $pagetype->savePageTypeComposerForm($c);
 		}
+        $ptr->setError($e);
 		return array($ptr, $pagetype, $outputControls);
 	}
 
