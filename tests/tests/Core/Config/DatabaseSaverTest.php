@@ -35,6 +35,35 @@ class DatabaseSaverTest extends ConcreteDatabaseTestCase
         $this->assertEquals($value, $saved_value, "Failed to save.");
     }
 
+    public function testSaveNonUnique()
+    {
+        $group1 = $value1 = md5(time() . uniqid());
+        $group2 = $value2 = md5(time() . uniqid());
+        $item = 'this.is.the.test.key';
+
+        $this->saver->save($item, $value1, 'testing', $group1);
+        $this->saver->save($item, $value2, 'testing', $group2);
+
+        $db = Database::getActiveConnection();
+        $result = $db->executeQuery(
+            'SELECT configValue FROM Config WHERE configItem=? AND configGroup=?',
+            array($item, $group1));
+
+        $array = (array)$result->fetch();
+        $saved_value = array_shift($array);
+
+        $this->assertEquals($value1, $saved_value, "Failed to save.");
+
+        $result = $db->executeQuery(
+            'SELECT configValue FROM Config WHERE configItem=? AND configGroup=?',
+            array($item, $group2));
+
+        $array = (array)$result->fetch();
+        $saved_value = array_shift($array);
+
+        $this->assertEquals($value2, $saved_value, "Failed to save.");
+    }
+
     public function testSavingArray() {
         $array = array(
             'test' => true,
