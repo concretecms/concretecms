@@ -30,6 +30,8 @@ div#ccm-dashboard-content {
     }
 
     padding: 0px;
+    margin-left: -95px;
+    margin-right: -20px;
 
     div.ccm-marketplace-search {
       padding: 0px 0px 0px 95px;
@@ -107,4 +109,43 @@ div#ccm-dashboard-content {
   }
 
 
+  div#ccm-marketplace-wrapper {
+
+    header.ccm-marketplace-list {
+
+      margin-bottom: 20px;
+      padding-bottom: 40px;
+      background-color: #f7f7f7;
+      margin-left: -95px;
+      margin-right: -20px;
+      border-bottom: 1px solid #dfdfdf;
+      padding-top: 40px;
+      padding-left: 95px;
+
+      h1 {
+        font-weight: lighter;
+        font-size: 32px;
+      }
+
+      div.ccm-marketplace-sort {
+        nav {
+          .ccm-ui.list-unstyled();
+          li {
+            float: left;
+            margin-right: 40px;
+
+            a {
+              color: #0099ff;
+              &.active {
+                color: #aaa;
+              }
+            }
+          }
+          .clearfix();
+        }
+      }
+
+
+    }
+  }
 }
