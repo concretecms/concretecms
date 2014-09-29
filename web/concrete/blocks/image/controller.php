@@ -30,10 +30,27 @@ class Controller extends BlockController {
         return t("Image");
     }
 
+    public function registerViewAssets() {
+        // Ensure we have JQuery if we have an onState image
+        if(is_object($this->getFileOnstateObject())) {
+            $this->requireAsset('javascript', 'jquery');
+        }
+    }
+
     public function view() {
         $f = File::getByID($this->fID);
         if (!is_object($f) || !$f->getFileID()) {
             return false;
+        }
+
+        // onState image available
+        $foS = $this->getFileOnstateObject();
+        if (is_object($foS)) {
+            $imgPath = array();
+            $imgPath['hover'] = File::getRelativePathFromID($this->fOnstateID);
+            $imgPath['default'] = File::getRelativePathFromID($this->fID);
+            $this->set('imgPath', $imgPath);
+            $this->set('foS', $foS);
         }
 
         $this->set('f', $f);
