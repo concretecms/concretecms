@@ -12,7 +12,7 @@
 			displayNodePagination: false,
 			cParentID: 0,
 			includeSystemPages: false,
-			displaySingleLevel: false,
+            displaySingleLevel: false
 		}, options);
 		my.options = options;
 		my.$element = $element;
@@ -48,6 +48,9 @@
 			}
     		$(my.$element).addClass('ccm-tree-sitemap');
     		$(my.$element).dynatree({
+                onQueryExpand: function () {
+                    (my.options.onQueryExpand || $.noop).apply(this, arguments);
+                },
 				autoFocus: false,
 				cookieId: 'ConcreteSitemap',
 				cookie: {
@@ -107,7 +110,9 @@
 						}
 					} else if (node.data.href) {
 						window.location.href = node.data.href;
-					}
+                    } else if (node.data.displaySingleLevel) {
+                        my.displaySingleLevel(node);
+                    }
 				},
 				fx: {height: 'toggle', duration: 200},
 				dnd: {
@@ -268,6 +273,8 @@
     		var my = this,
     			options = my.options,
     			minExpandLevel = (node.data.cID == 1) ? 2 : 3;
+
+            (my.options.onDisplaySingleLevel || $.noop).call(this, node);
 
     		var root = my.$element.dynatree('getRoot');
 			$(node.li).closest('[data-sitemap=container]').dynatree('option', 'minExpandLevel', minExpandLevel);
