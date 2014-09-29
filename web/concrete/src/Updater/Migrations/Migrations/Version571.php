@@ -15,6 +15,7 @@ class Version571 extends AbstractMigration
     public function up(Schema $schema)
     {
         /** @todo Remove key from Config table */
+        /** @remove exclude nav from flat view in dashboard */
     }
 
     public function down(Schema $schema)
