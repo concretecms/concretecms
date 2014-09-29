@@ -23,6 +23,7 @@ class DatabaseRepositoryTest extends \ConcreteDatabaseTestCase
         $key = "{$group}.{$item}";
 
         $this->repository->save($key, $group);
+        $this->repository->clearCache();
         $this->assertEquals($group, $this->repository->get($key, false));
     }
 
@@ -34,6 +35,7 @@ class DatabaseRepositoryTest extends \ConcreteDatabaseTestCase
         $key = "{$namespace}::{$group}.{$item}";
 
         $this->repository->save($key, $namespace);
+        $this->repository->clearCache();
         $this->assertEquals($namespace, $this->repository->get($key, false));
     }
 
