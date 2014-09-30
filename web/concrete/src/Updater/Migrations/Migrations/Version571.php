@@ -15,6 +15,7 @@ class Version571 extends AbstractMigration
     public function up(Schema $schema)
     {
         /** @todo Remove key from Config table */
+        /** @todo refresh CollectionVersionBlocks, CollectionVersionBlocksCacheSettings tables */
     }
 
     public function down(Schema $schema)
