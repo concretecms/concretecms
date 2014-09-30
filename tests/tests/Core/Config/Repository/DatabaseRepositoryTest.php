@@ -57,6 +57,7 @@ class DatabaseRepositoryTest extends \ConcreteDatabaseTestCase
             $this->repository->save($test, $values[] = uniqid($test));
         }
 
+        $this->repository->clearCache();
         foreach ($tests as $test) {
             $this->assertEquals(
                 array_shift($values),

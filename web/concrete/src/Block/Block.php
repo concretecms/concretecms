@@ -1036,9 +1036,6 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
             $q = "delete from CollectionVersionBlocks where bID = ?";
             $r = $db->query($q, array($bID));
 
-            $q = "delete from ComposerContentLayout where bID = ?";
-            $r = $db->query($q, array($bID));
-
             $q = "delete from BlockPermissionAssignments where bID = ?";
             $r = $db->query($q, array($bID));
 
