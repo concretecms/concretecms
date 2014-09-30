@@ -23,6 +23,24 @@ class DatabaseLoaderTest extends ConcreteDatabaseTestCase
         $this->assertEquals($string, array_get($array, 'test.test'), 'Failed to read config value from the database.');
     }
 
+    public function testLoadingLegacyConfig()
+    {
+        \Database::query('ALTER TABLE Config DROP PRIMARY KEY');
+        \Database::query('ALTER TABLE Config MODIFY COLUMN configNamespace VARCHAR (255)');
+        \Database::insert(
+            'Config',
+            array(
+                'configItem'      => 'test',
+                'configValue'     => $value = uniqid(),
+                'configGroup'     => 'testing',
+                'configNamespace' => null
+            ));
+
+        $array = $this->loader->load('test', 'testing');
+
+        $this->assertEquals($value, array_get($array, 'test'));
+    }
+
     public function testLoadingNamespacedConfig()
     {
         \Core::make('config/database')->save('namespaced::namespaced.namespaced.namespaced', $value = uniqid());
