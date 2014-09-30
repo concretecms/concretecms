@@ -15,19 +15,23 @@ class Version5704 extends AbstractMigration
 
     public function up(Schema $schema)
     {
-        $config = $schema->getTable('Config');
-        $fromConfig = clone $config;
-        $db = \Database::get();
-        $platform = $db->getDatabasePlatform();
-        $config->dropPrimaryKey();
-        $config->setPrimaryKey(array('configNamespace', 'configGroup', 'configItem'));
-        $comparator = new Comparator();
-        $diff = $comparator->diffTable($fromConfig, $config);
-        $sql = $platform->getAlterTableSQL($diff);
-        if (is_array($sql) && count($sql)) {
-            foreach ($sql as $q) {
-                $db->query($q);
+        try {
+            $config = $schema->getTable('Config');
+            $fromConfig = clone $config;
+            $db = \Database::get();
+            $platform = $db->getDatabasePlatform();
+            $config->dropPrimaryKey();
+            $config->setPrimaryKey(array('configNamespace', 'configGroup', 'configItem'));
+            $comparator = new Comparator();
+            $diff = $comparator->diffTable($fromConfig, $config);
+            $sql = $platform->getAlterTableSQL($diff);
+            if (is_array($sql) && count($sql)) {
+                foreach ($sql as $q) {
+                    $db->query($q);
+                }
             }
+        } catch(\Exception $e) {
+
         }
     }
 
