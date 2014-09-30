@@ -24,7 +24,14 @@ class RemoteItem extends Object {
 	public function getName(){ return $this->name; }
 	public function getDescription() {return $this->description;}
 	public function getBody() {return $this->bodyContent;}
-	public function getPrice(){ return sprintf("%.2f",floatval($this->price)); }
+    public function getPrice() {return $this->price;}
+	public function getDisplayPrice(){
+		if ($this->price == '' || $this->price == '0' || $this->price == '0.00') {
+            return t('Free');
+        } else {
+            return sprintf("$%.2f",floatval($this->price));
+        }
+    }
 	public function getScreenshots() {
 		if (is_array($this->screenshots)) {
 			return $this->screenshots;
