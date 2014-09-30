@@ -38,17 +38,40 @@ abstract class MarketplaceDashboardPageController extends DashboardPageControlle
 				}
 			}
 
+            switch($this->request->query->get('ccm_order_by')) {
+                case 'recent':
+                case 'rating':
+                    $mri->sortBy($this->request->query->get('ccm_order_by'));
+                    $this->set('sort', $this->request->query->get('ccm_order_by'));
+                    break;
+                case 'price':
+                    $mri->sortBy('price_low');
+                    $this->set('sort', 'price');
+                    break;
+                default:
+                    $mri->sortBy('recommended');
+                    $this->set('sort', 'recommended');
+                    break;
+            }
+
+            $mri->setIncludeInstalledItems(false);
+			if (isset($_REQUEST['marketplaceRemoteItemSetID'])) {
+				$set = $_REQUEST['marketplaceRemoteItemSetID'];
+			}
+
+    		//$mri->filterByCompatibility(1);
+			if (isset($_REQUEST['keywords']) && $_REQUEST['keywords']) {
+				$keywords = h($_REQUEST['keywords']);
+				$mri->filterByKeywords($keywords);
+                $this->set('keywords', $keywords);
+			}
+
+			$mri->setType($this->getMarketplaceType());
+			$mri->execute();
+
+            $items = $mri->getPage();
+
             /*
-
-			$sortBy = array(
-				'' => t('Recommended'),
-				'popular' => t('Popular'),
-				'recent' => t('Recently Added'),
-				'rating' => t('Highest Rated'),
-				'price_low' => t('Price: Low to High'),
-				'price_high' => t('Price: High to Low')
-			);
-
 
 			$mri->setIncludeInstalledItems(false);
 			if (isset($_REQUEST['marketplaceRemoteItemSetID'])) {
@@ -92,14 +115,16 @@ abstract class MarketplaceDashboardPageController extends DashboardPageControlle
 
 			$this->set('sortBy', $sortBy);
 			$this->set('selectedSet', $set);
-			$this->set('list', $mri);
 			$this->set('items', $items);
 			$this->set('form', Loader::helper('form'));
 			$this->set('pagination', $mri->getPagination());
 			$this->set('type', $what);
             */
 
+			$this->set('pagination', $mri->getPagination());
+			$this->set('items', $items);
    			$this->set('sets', $setsel);
+			$this->set('list', $mri);
 
 		} else {
 			$this->redirect('/dashboard/extend/connect');
