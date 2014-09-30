@@ -12,7 +12,7 @@ class Themes extends MarketplaceDashboardPageController {
 
     public function getMarketplaceDefaultHeading()
     {
-        return 'Themes';
+        return t('Themes');
     }
 
 
