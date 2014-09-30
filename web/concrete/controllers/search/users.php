@@ -196,7 +196,7 @@ class Users extends Controller
                 $gsl = new GroupSetList();
                 $groupsets = array();
                 foreach ($gsl->get() as $gs) {
-                    $groupsets[$gs->getGroupSetID()] = $gs->getGroupSetName();
+                    $groupsets[$gs->getGroupSetID()] = $gs->getGroupSetDisplayName();
                 }
                 print $form->select('gsID', $groupsets);
                 break;
