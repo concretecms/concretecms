@@ -15,6 +15,8 @@ class Version5704 extends AbstractMigration
 
     public function up(Schema $schema)
     {
+        \Database::query('UPDATE Config SET configNamespace="" WHERE configNamespace IS NULL');
+
         $config = $schema->getTable('Config');
         $fromConfig = clone $config;
         $db = \Database::get();
