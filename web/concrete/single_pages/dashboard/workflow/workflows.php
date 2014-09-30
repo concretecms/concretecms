@@ -93,7 +93,7 @@
 	
 	<ul class="item-select-list">
 	<? foreach($workflows as $workflow) { ?>
-		<li><a href="<?=$view->url('/dashboard/workflow/workflows', 'view_detail', $workflow->getWorkflowID())?>"><i class="fa fa-exchange"></i> <?=$workflow->getWorkflowName()?></a></li>
+		<li><a href="<?=$view->url('/dashboard/workflow/workflows', 'view_detail', $workflow->getWorkflowID())?>"><i class="fa fa-exchange"></i> <?=$workflow->getWorkflowDisplayName()?></a></li>
 	<? } ?>
 	</ul>
 
