@@ -5,13 +5,13 @@ if (count($items)) { ?>
 
     <? foreach($items as $mi) { ?>
 
-        <div class="ccm-marketplace-list-item-theme">
-            <div class="ccm-marketplace-list-item-theme-thumbnail"><?
+        <div class="ccm-marketplace-list-item">
+            <div class="ccm-marketplace-list-item-theme-thumbnail"><a href="<?=$this->action('view_detail', $mi->getMarketplaceItemID())?>"><?
                 $thumb = $mi->getLargeThumbnail();
                 printf('<img src="%s">', $thumb->src);
-                ?></div>
+                ?></a></div>
             <div class="ccm-marketplace-list-item-theme-description">
-                <h2><?=$mi->getName()?></h2>
+                <h2><a href="<?=$this->action('view_detail', $mi->getMarketplaceItemID())?>"><?=$mi->getName()?></a></h2>
                     <p><?=$mi->getDescription()?></p>
             </div>
             <div class="ccm-marketplace-list-item-theme-price">
@@ -24,5 +24,9 @@ if (count($items)) { ?>
     <?=$list->displayPagingV2()?>
 
 <? } else { ?>
-    <p><?=t('No results.')?></p>
+   <div class="ccm-marketplace-list-item">
+   <div class="ccm-marketplace-list-item-theme-description">
+    <p><?=t('No themes found.')?></p>
+    </div>
+    </div>
 <? } ?>
