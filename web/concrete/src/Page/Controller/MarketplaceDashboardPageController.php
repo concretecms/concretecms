@@ -39,8 +39,8 @@ abstract class MarketplaceDashboardPageController extends DashboardPageControlle
 			}
 
             switch($this->request->query->get('ccm_order_by')) {
-                case 'recent':
                 case 'rating':
+                case 'skill_level':
                     $mri->sortBy($this->request->query->get('ccm_order_by'));
                     $this->set('sort', $this->request->query->get('ccm_order_by'));
                     break;
@@ -49,8 +49,8 @@ abstract class MarketplaceDashboardPageController extends DashboardPageControlle
                     $this->set('sort', 'price');
                     break;
                 default:
-                    $mri->sortBy('recommended');
-                    $this->set('sort', 'recommended');
+                    $mri->sortBy('recent');
+                    $this->set('sort', 'recent');
                     break;
             }
 
@@ -59,7 +59,7 @@ abstract class MarketplaceDashboardPageController extends DashboardPageControlle
 				$set = $_REQUEST['marketplaceRemoteItemSetID'];
 			}
 
-    		//$mri->filterByCompatibility(1);
+    		$mri->filterByCompatibility(1);
 			if (isset($_REQUEST['keywords']) && $_REQUEST['keywords']) {
 				$keywords = h($_REQUEST['keywords']);
 				$mri->filterByKeywords($keywords);

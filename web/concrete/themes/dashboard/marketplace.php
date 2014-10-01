@@ -19,7 +19,6 @@ $this->inc('elements/header.php'); ?>
             <i class="fa fa-search"></i>
             <input type="search" name="keywords" value="<?=$keywords?>" />
         </div>
-        <a href="" class="ccm-marketplace-search-advanced"><?=t('Advanced Search')?></a>
     </div>
     </form>
 </header>
@@ -29,10 +28,10 @@ $this->inc('elements/header.php'); ?>
     <h1><?=$heading?></h1>
     <div class="ccm-marketplace-sort">
         <nav>
-        <li><a href="<?=$list->getSortByURL('recommended')?>" <? if ($sort == 'recommended') { ?>class="active"<? } ?>><?=t('Recommended')?></a></li>
         <li><a href="<?=$list->getSortByURL('recent')?>" <? if ($sort == 'recent') { ?>class="active"<? } ?>><?=t('Recent')?></a></li>
         <li><a href="<?=$list->getSortByURL('price')?>" <? if ($sort == 'price') { ?>class="active"<? } ?>><?=t('Price')?></a></li>
         <li><a href="<?=$list->getSortByURL('rating')?>" <? if ($sort == 'rating') { ?>class="active"<? } ?>><?=t('Rating')?></a></li>
+        <li><a href="<?=$list->getSortByURL('skill_level')?>" <? if ($sort == 'skill_level') { ?>class="active"<? } ?>><?=t('Skill Level')?></a></li>
         </nav>
     </div>
 </header>
@@ -41,5 +40,6 @@ $this->inc('elements/header.php'); ?>
 <? print $innerContent; ?>
 
 </div>
+
 
 <? $this->inc('elements/footer.php');
