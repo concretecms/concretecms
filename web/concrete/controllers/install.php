@@ -262,7 +262,7 @@ class Install extends Controller
             $js->error = false;
         } catch (Exception $e) {
             $js->error = true;
-            $js->message = $e->getTraceAsString();
+            $js->message = tc('InstallError', '%s.<br><br>Trace:<br>%s', $e->getMessage(), $e->getTraceAsString());
             $this->reset();
         }
         print $jsx->encode($js);
