@@ -3,8 +3,8 @@ namespace Concrete\Core\StyleCustomizer;
 
 use Config;
 
-class Stylesheet {
-
+class Stylesheet
+{
     protected $file; // full path to stylesheet e.g. /full/path/to/concrete/themes/greek_yogurt/css/main.less
     protected $sourceUriRoot; // root of source. e.g. /concrete/themes/greek_yogurt/
     protected $outputDirectory; // e.g /full/path/to/files/cache/themes/greek_yogurt/css/main.css"
@@ -13,7 +13,8 @@ class Stylesheet {
 
     protected $valueList;
 
-    public function __construct($stylesheet, $file, $sourceUriRoot, $outputDirectory, $relativeOutputDirectory) {
+    public function __construct($stylesheet, $file, $sourceUriRoot, $outputDirectory, $relativeOutputDirectory)
+    {
         $this->stylesheet = $stylesheet;
         $this->file = $file;
         $this->sourceUriRoot = $sourceUriRoot;
@@ -21,7 +22,8 @@ class Stylesheet {
         $this->relativeOutputDirectory = $relativeOutputDirectory;
     }
 
-    public function setValueList(\Concrete\Core\StyleCustomizer\Style\ValueList $valueList) {
+    public function setValueList(\Concrete\Core\StyleCustomizer\Style\ValueList $valueList)
+    {
         $this->valueList = $valueList;
     }
     /**
@@ -29,21 +31,24 @@ class Stylesheet {
      * injected into the stylesheet
      * @return string CSS
      */
-    public function getCss() {
+    public function getCss()
+    {
         $parser = new \Less_Parser(array('cache_dir' => Config::get('concrete.cache.directory'), 'compress' => true));
         $parser = $parser->parseFile($this->file, $this->sourceUriRoot);
         if (isset($this->valueList) && $this->valueList instanceof \Concrete\Core\StyleCustomizer\Style\ValueList) {
             $variables = array();
-            foreach($this->valueList->getValues() as $value) {
+            foreach ($this->valueList->getValues() as $value) {
                 $variables = array_merge($value->toLessVariablesArray(), $variables);
             }
             $parser->ModifyVars($variables);
         }
         $css = $parser->getCss();
+
         return $css;
     }
 
-    public function output() {
+    public function output()
+    {
         $css = $this->getCss();
         $path = dirname($this->getOutputPath());
         if (!file_exists($path)) {
@@ -52,19 +57,23 @@ class Stylesheet {
         file_put_contents($this->getOutputPath(), $css);
     }
 
-    public function clearOutputFile() {
+    public function clearOutputFile()
+    {
         @unlink($this->getOutputPath());
     }
 
-    public function outputFileExists() {
+    public function outputFileExists()
+    {
         return file_exists($this->getOutputPath());
     }
 
-    public function getOutputPath() {
+    public function getOutputPath()
+    {
         return $this->outputDirectory . '/' . str_replace('.less', '.css', $this->stylesheet);
     }
 
-    public function getOutputRelativePath() {
+    public function getOutputRelativePath()
+    {
         return $this->relativeOutputDirectory . '/' . str_replace('.less', '.css', $this->stylesheet);
     }
 
