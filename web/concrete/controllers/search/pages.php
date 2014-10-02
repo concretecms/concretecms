@@ -219,14 +219,14 @@ class Pages extends Controller
                 $html .= $form->text('owner', array('class'=>'span5'));
                 break;
             case 'permissions_inheritance':
-				$html .= '<select name="cInheritPermissionsFrom" class="form-control">';
-                	$html .= '<option value="PARENT"' . ($searchRequest['cInheritPermissionsFrom'] == 'PARENT' ? ' selected' : '') . '>' . t('Parent Page') . '</option>';
-					$html .= '<option value="TEMPLATE"' . ($searchRequest['cInheritPermissionsFrom'] == 'TEMPLATE' ? ' selected' : '') . '>' . t('Page Type') . '</option>';
-                	$html .= '<option value="OVERRIDE"' . ($searchRequest['cInheritPermissionsFrom'] == 'OVERRIDE' ? ' selected' : '') . '>' . t('Itself (Override)') . '</option>';
+                $html .= '<select name="cInheritPermissionsFrom" class="form-control">';
+                    $html .= '<option value="PARENT"' . ($searchRequest['cInheritPermissionsFrom'] == 'PARENT' ? ' selected' : '') . '>' . t('Parent Page') . '</option>';
+                    $html .= '<option value="TEMPLATE"' . ($searchRequest['cInheritPermissionsFrom'] == 'TEMPLATE' ? ' selected' : '') . '>' . t('Page Type') . '</option>';
+                    $html .= '<option value="OVERRIDE"' . ($searchRequest['cInheritPermissionsFrom'] == 'OVERRIDE' ? ' selected' : '') . '>' . t('Itself (Override)') . '</option>';
                 $html .= '</select>';
                 break;
             case 'version_status': 
-				$html .= '<div class="radio"><label>' . $form->radio('cvIsApproved', 0, false) . '<span>' . t('Unapproved') . '</span></label></div>';
+                $html .= '<div class="radio"><label>' . $form->radio('cvIsApproved', 0, false) . '<span>' . t('Unapproved') . '</span></label></div>';
                 $html .= '<div class="radio"><label>' . $form->radio('cvIsApproved', 1, false) . '<span>' . t('Approved') . '</span></label></div>';
                 break;
             case 'parent': 
@@ -250,7 +250,7 @@ class Pages extends Controller
                 $html .= '<select name="pThemeID" class="form-control">';
                 $themes = PageTheme::getList();
                 foreach ($themes as $pt) { 
-                	$html .= '<option value="' . $pt->getThemeID() . '" ' . ($pt->getThemeID() == $searchRequest['pThemeID'] ? ' selected' : '') . '>' . $pt->getThemeName() . '</option>';
+                    $html .= '<option value="' . $pt->getThemeID() . '" ' . ($pt->getThemeID() == $searchRequest['pThemeID'] ? ' selected' : '') . '>' . $pt->getThemeName() . '</option>';
                 }
                 $html .= '</select>';
                 break;
@@ -277,24 +277,24 @@ class Pages extends Controller
     {
         return $this->fields;
     }
-	
-	public static function getSearchFields() {
-		$r = array(
-			'parent' => t('Parent Page'),
-			'keywords' => t('Full Page Index'),
-			'date_added' => t('Date Added'),
-			'theme' => t('Theme'),
-			'last_modified' => t('Last Modified'),
-			'date_public' => t('Public Date'),
-			'owner' => t('Page Owner'),
-			'num_children' => t('# Children'),
-			'version_status' => t('Approved Version')
-		);
-		$sfa = CollectionAttributeKey::getSearchableList();
-		foreach ($sfa as $ak) {
-			$r[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
-		}
-		return $r;
-	}
+    
+    public static function getSearchFields() {
+        $r = array(
+            'parent' => t('Parent Page'),
+            'keywords' => t('Full Page Index'),
+            'date_added' => t('Date Added'),
+            'theme' => t('Theme'),
+            'last_modified' => t('Last Modified'),
+            'date_public' => t('Public Date'),
+            'owner' => t('Page Owner'),
+            'num_children' => t('# Children'),
+            'version_status' => t('Approved Version')
+        );
+        $sfa = CollectionAttributeKey::getSearchableList();
+        foreach ($sfa as $ak) {
+            $r[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
+        }
+        return $r;
+    }
 
 }
