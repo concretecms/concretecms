@@ -184,13 +184,13 @@ class Users extends Controller
         $form = Loader::helper('form');
         $wdt = Loader::helper('form/date_time');
         /* @var $wdt \Concrete\Core\Form\Service\Widget\DateTime */
-        ob_start();
+        $html = '';
         switch ($field) {
             case 'date_added':
-                echo $wdt->datetime('date_added_from', $wdt->translate('date_added_from', $searchRequest)) . t('to') . $wdt->datetime('date_added_to', $wdt->translate('date_added_to', $searchRequest));
+                $html .= $wdt->datetime('date_added_from', $wdt->translate('date_added_from', $searchRequest)) . t('to') . $wdt->datetime('date_added_to', $wdt->translate('date_added_to', $searchRequest));
                 break;
             case 'is_active':
-                print $form->select('active', array('0' => t('Inactive Users'), '1' => t('Active Users')), array('style' => 'vertical-align: middle'));
+                $html .= $form->select('active', array('0' => t('Inactive Users'), '1' => t('Active Users')), array('style' => 'vertical-align: middle'));
                 break;
             case 'group_set':
                 $gsl = new GroupSetList();
@@ -198,18 +198,16 @@ class Users extends Controller
                 foreach ($gsl->get() as $gs) {
                     $groupsets[$gs->getGroupSetID()] = $gs->getGroupSetName();
                 }
-                print $form->select('gsID', $groupsets);
+                $html .= $form->select('gsID', $groupsets);
                 break;
             default:
                 if (Loader::helper('validation/numbers')->integer($field)) {
                     $ak = UserAttributeKey::getByID($field);
-                    $ak->render('search');
+                    $html .= $ak->render('search', NULL, TRUE);
                 }
                 break;
         }
-        $contents = ob_get_contents();
-        ob_end_clean();
-        $r->html = $contents;
+        $r->html = $html;
 
         return $r;
     }
@@ -225,5 +223,17 @@ class Users extends Controller
     {
         return $this->fields;
     }
+	
+	public static function getSearchFields() {
+		$r = array(
+			'date_added' => t('Registered Between'),
+			'is_active' => t('Activated Users')
+		);
+		$sfa = UserAttributeKey::getSearchableList();
+		foreach ($sfa as $ak) {
+			$r[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
+		}
+		return $r;
+	}
 
 }
