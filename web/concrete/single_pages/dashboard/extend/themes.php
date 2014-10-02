@@ -1,7 +1,9 @@
 <?
 defined('C5_EXECUTE') or die("Access Denied.");
+if ($controller->getTask() == 'view_detail') { ?>
 
-if (count($items)) { ?>
+
+<? } else if (count($items)) { ?>
 
     <? foreach($items as $mi) { ?>
 
