@@ -12,7 +12,6 @@ $this->inc('elements/header.php'); ?>
             <li><a href="<?=$controller->action('view')?>"><i class="fa fa-chevron-left"></i> <?=t('Back')?></a></li>
             </nav>
         </div>
-
     <? } else { ?>
         <form action="<?=$controller->action('view')?>" method="get">
             <input type="hidden" name="ccm_order_by" value="<?=$sort?>" />

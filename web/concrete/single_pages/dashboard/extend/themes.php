@@ -4,24 +4,35 @@ if ($controller->getTask() == 'view_detail') { ?>
 
 
     <div class="ccm-marketplace-detail-theme-slideshow-wrapper">
-    <div class="ccm-marketplace-detail-theme-slideshow">
-        <?
-        $screenshots = $item->getSlideshow();
-        $detailShots = $item->getScreenshots();
-        ?>
-        <ul data-slideshow="marketplace-theme">
-            <?php foreach($screenshots as $i => $image) {
-                $detail = $detailShots[$i]; ?>
-                <li><a href="<?=$detail->src?>"><img src="<?=$image->src?>" /></a></li>
-            <? } ?>
-        </ul>
-    </div>
+        <div class="ccm-marketplace-detail-theme-slideshow">
+            <?
+            $screenshots = $item->getSlideshow();
+            $detailShots = $item->getScreenshots();
+            ?>
+            <ul data-slideshow="marketplace-theme">
+                <?php foreach($screenshots as $i => $image) {
+                    $detail = $detailShots[$i]; ?>
+                    <li><a href="<?=$detail->src?>"><img src="<?=$image->src?>" /></a></li>
+                <? } ?>
+            </ul>
+        </div>
         <div class="ccm-marketplace-detail-theme-slideshow-nav">
             <nav>
                 <li><a href="#" data-navigation="marketplace-slideshow-previous"><i class="fa fa-chevron-left"></i></a></li>
                 <li><a href="#" data-navigation="marketplace-slideshow-next"><i class="fa fa-chevron-right"></i></a></li>
                 <li><a href="#" data-launch="marketplace-slideshow-gallery"><i class="fa fa-image"></i></a></li>
             </nav>
+        </div>
+
+        <div class="ccm-marketplace-detail-theme-details">
+            <h2><?=$item->getName()?></h2>
+            <div><i class="<?=$item->getSkillLevelClassName()?>"></i> <?=$item->getSkillLevelDisplayName()?></div>
+
+            <div class="ccm-marketplace-detail-buy">
+                <div class="btn-group">
+                    <button class="btn btn-price" style="background-color: #1888d3"><?=$item->getDisplayPrice()?></button>
+                    <button class="btn btn-description"><? if ($item->purchaseRequired()) { ?><?=t('Purchase')?><? } else { ?><?=t('Download')?><? } ?></button>
+                </div>
         </div>
     </div>
 

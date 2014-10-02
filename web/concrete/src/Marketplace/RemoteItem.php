@@ -25,6 +25,32 @@ class RemoteItem extends Object {
 	public function getDescription() {return $this->description;}
 	public function getBody() {return $this->bodyContent;}
     public function getPrice() {return $this->price;}
+    public function getSkillLevel() {return $this->skillLevel;}
+    public function getSkillLevelClassName() {
+        switch($this->getSkillLevel()) {
+            case 'beginner':
+                return 'fa fa-cog ccm-marketplace-skill-level-beginner';
+            case 'intermediate':
+                return 'fa fa-cog ccm-marketplace-skill-level-intermediate';
+            case 'advanced':
+                return 'fa fa-cog ccm-marketplace-skill-level-advanced';
+            case 'bleeding_edge':
+                return 'fa fa-cogs ccm-marketplace-skill-level-bleeding-edge';
+        }
+    }
+    public function getSkillLevelDisplayName() {
+        switch($this->getSkillLevel()) {
+            case 'beginner':
+                return t('Beginner');
+            case 'intermediate':
+                return t('Intermediate');
+            case 'advanced':
+                return t('Advanced');
+            case 'bleeding_edge':
+                return t('Bleeding Edge/Developer');
+        }
+    }
+
 	public function getDisplayPrice(){
 		if ($this->price == '' || $this->price == '0' || $this->price == '0.00') {
             return t('Free');
