@@ -5,25 +5,36 @@ $this->inc('elements/header.php'); ?>
 <div id="ccm-marketplace-wrapper">
 
 <header class="ccm-marketplace">
-    <form action="<?=$controller->action('view')?>" method="get">
-        <input type="hidden" name="ccm_order_by" value="<?=$sort?>" />
-    <div class="ccm-marketplace-types">
-        <nav>
-        <li><a href="<?=URL::to('/dashboard/extend/themes')?>" <? if ($type == 'themes') { ?>class="active"<? } ?>><?=t('Themes')?></a></li>
-        <li><a href="<?=URL::to('/dashboard/extend/addons')?>" <? if ($type == 'addons') { ?>class="active"<? } ?>><?=t('Add-Ons')?></a></li>
-        </nav>
-    </div>
-    <div class="ccm-marketplace-search">
-    	<?=$form->select('marketplaceRemoteItemSetID', $sets, $selectedSet, array('style' => 'width: 150px'))?>
-        <div class="ccm-marketplace-search-input">
-            <i class="fa fa-search"></i>
-            <input type="search" name="keywords" value="<?=$keywords?>" />
+
+    <? if ($controller->getTask() == 'view_detail') { ?>
+        <div class="ccm-marketplace-types">
+            <nav>
+            <li><a href="<?=$controller->action('view')?>"><i class="fa fa-chevron-left"></i> <?=t('Back')?></a></li>
+            </nav>
         </div>
-    </div>
-    </form>
+
+    <? } else { ?>
+        <form action="<?=$controller->action('view')?>" method="get">
+            <input type="hidden" name="ccm_order_by" value="<?=$sort?>" />
+        <div class="ccm-marketplace-types">
+            <nav>
+            <li><a href="<?=URL::to('/dashboard/extend/themes')?>" <? if ($type == 'themes') { ?>class="active"<? } ?>><?=t('Themes')?></a></li>
+            <li><a href="<?=URL::to('/dashboard/extend/addons')?>" <? if ($type == 'addons') { ?>class="active"<? } ?>><?=t('Add-Ons')?></a></li>
+            </nav>
+        </div>
+        <div class="ccm-marketplace-search">
+            <?=$form->select('marketplaceRemoteItemSetID', $sets, $selectedSet, array('style' => 'width: 150px'))?>
+            <div class="ccm-marketplace-search-input">
+                <i class="fa fa-search"></i>
+                <input type="search" name="keywords" value="<?=$keywords?>" />
+            </div>
+        </div>
+        </form>
+    <? } ?>
 </header>
 
 
+<? if ($controller->getTask() != 'view_detail') { ?>
 <header class="ccm-marketplace-list">
     <h1><?=$heading?></h1>
     <div class="ccm-marketplace-sort">
@@ -35,6 +46,8 @@ $this->inc('elements/header.php'); ?>
         </nav>
     </div>
 </header>
+
+<? } ?>
 
 
 <? print $innerContent; ?>

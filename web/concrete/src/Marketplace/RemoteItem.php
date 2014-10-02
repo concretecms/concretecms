@@ -183,10 +183,20 @@ class RemoteItem extends Object {
 		}
 	}
 
+    /**
+     * @return \Concrete\Core\Marketplace\RemoteItem;
+     * @param $mpID
+     * @throws Exception
+     */
 	public static function getByHandle($mpHandle) {
 		return RemoteItem::getRemotePackageObject('mpHandle', $mpHandle);
 	}
 
+    /**
+     * @return \Concrete\Core\Marketplace\RemoteItem;
+     * @param $mpID
+     * @throws Exception
+     */
 	public static function getByID($mpID) {
 		return RemoteItem::getRemotePackageObject('mpID', $mpID);
 	}
