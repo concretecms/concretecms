@@ -23,6 +23,13 @@ if (!ini_get('safe_mode')) {
 class Install extends Controller
 {
 
+    /**
+     * This is to check if comments are being stripped
+     * Doctrine ORM depends on comments not being stripped
+     * @var int
+     */
+    protected $docCommentCanary = 1;
+
     protected $fp;
     protected $fpu;
 
@@ -178,6 +185,9 @@ class Install extends Controller
         $this->set('xmlTest', function_exists('xml_parse') && function_exists('simplexml_load_file'));
         $this->set('fileWriteTest', $this->testFileWritePermissions());
         $this->set('finfoTest', function_exists('finfo_open'));
+        $rf = new \ReflectionObject($this);
+        $rp = $rf->getProperty('docCommentCanary');
+        $this->set('docCommentTest', (bool) $rp->getDocComment());
 
         $val = $this->getBytes(ini_get('memory_limit'));
         $this->set('memoryBytes', $val);
@@ -234,7 +244,7 @@ class Install extends Controller
     {
         if ($this->get('imageTest') && $this->get('mysqlTest') && $this->get('fileWriteTest') && $this->get(
                 'xmlTest') && $this->get('phpVtest') && $this->get('i18nTest') && $this->get('finfoTest')
-            && $this->get('memoryTest') !== -1
+            && $this->get('memoryTest') !== -1 && $this->get('docCommentTest')
         ) {
             return true;
         }
