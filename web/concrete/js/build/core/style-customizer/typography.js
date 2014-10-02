@@ -8,6 +8,17 @@
 (function(global, $) {
     'use strict';
 
+    function ConcreteFontFamily(display, css) {
+        if (this instanceof ConcreteFontFamily === false) {
+            return new ConcreteFontFamily(display, css);
+        }
+        this.display = display;
+        this.css = css;
+    }
+    ConcreteFontFamily.prototype.toString = function() {
+        return this.display;
+    };
+
     function ConcreteTypographySelector($element, options) {
         var my = this, $field, $slider;
         options = $.extend({
@@ -52,7 +63,7 @@
         });
 
         my.$fontMenu.on('change', function() {
-            var font = $(this).val();
+            var font = my.fonts[$(this).val()];
             $(this).css('font-family', font);
         });
 
@@ -62,11 +73,21 @@
 
         // set defaults
         if (my.options.fontFamily != -1) {
-            my.setValue('font-family', my.options.fontFamily);
-            if (_.indexOf(my.fonts, my.options.fontFamily) < 0) {
-                my.$fontMenu.append($('<option>', {'value': my.options.fontFamily, 'text': my.options.fontFamily}));
+            var fontFamilyName = my.options.fontFamily.split(',')[0].replace("'", '').replace("'", '');
+            if (typeof my.fonts[fontFamilyName] === 'undefined') {
+                my.fonts[fontFamilyName] = new ConcreteFontFamily(
+                    fontFamilyName,
+                    my.options.fontFamily
+                );
+                my.$fontMenu.append($('<option>', {
+                    'value': fontFamilyName,
+                    'text': fontFamilyName
+                }));
             }
-            my.$fontMenu.val(my.options.fontFamily);
+
+            my.setValue('font-family', my.fonts[fontFamilyName].css);
+            my.$fontMenu.val(fontFamilyName);
+            my.$fontMenu.css('font-family', my.font[fontFamilyName].css);
         } else {
             my.$widget.find('[data-wrapper=fontFamily]').remove();
             my.$element.find('[data-wrapper=fontFamily]').remove();
@@ -172,7 +193,19 @@
 
     ConcreteTypographySelector.prototype = Object.create(ConcreteStyleCustomizerPalette.prototype);
 
-    ConcreteTypographySelector.prototype.fonts = ['Arial','Helvetica', 'Georgia', 'Verdana', 'Trebuchet MS', 'Book Antiqua', 'Tahoma', 'Times New Roman', 'Courier New', 'Arial Black', 'Comic Sans MS'];
+    ConcreteTypographySelector.prototype.fonts = {
+        'Arial': new ConcreteFontFamily('Arial', 'Arial, sans-serif'),
+        'Helvetica': new ConcreteFontFamily('Helvetica', 'Helvetica, sans-serif'),
+        'Georgia': new ConcreteFontFamily('Georgia', 'Georgia, serif'),
+        'Verdana': new ConcreteFontFamily('Verdana', 'Verdana, sans-serif'),
+        'Trebuchet MS': new ConcreteFontFamily('Trebuchet MS', 'Trebuchet MS, sans-serif'),
+        'Book Antiqua': new ConcreteFontFamily('Book Antiqua', 'Book Antiqua, serif'),
+        'Tahoma': new ConcreteFontFamily('Tahoma', 'Tahoma, sans-serif'),
+        'Times New Roman': new ConcreteFontFamily('Times New Roman', 'Times New Roman, serif'),
+        'Courier New': new ConcreteFontFamily('Courier New', 'Courier New, monospace'),
+        'Arial Black': new ConcreteFontFamily('Arial Black', 'Arial Black, sans-serif'),
+        'Comic Sans MS': new ConcreteFontFamily('Comic Sans MS', 'Comic Sans MS, sans-serif')
+    };
     ConcreteTypographySelector.prototype.chooseTemplate = '<span class="ccm-style-customizer-display-swatch" data-launch="style-customizer-palette">' +
         '<div data-wrapper="fontFamily"><input type="hidden" name="<%=options.inputName%>[font-family]" data-style-customizer-input="font-family" /></div>' +
         '<div data-wrapper="color"><input type="hidden" name="<%=options.inputName%>[color]" data-style-customizer-input="color" /></div>' +
@@ -233,7 +266,7 @@
 
     ConcreteTypographySelector.prototype.save = function (e) {
         var my = this;
-        my.setValue('font-family', my.$fontMenu.val());
+        my.setValue('font-family', my.fonts[my.$fontMenu.val()].css);
         my.setValue('color', my.$widget.find('input[data-style-customizer-field=color]').spectrum('get'));
         my.setValue('italic', my.$widget.find('input[data-style-customizer-field=italic]').is(':checked') ? '1' : 0);
         my.setValue('underline', my.$widget.find('input[data-style-customizer-field=underline]').is(':checked') ? '1' : 0);
