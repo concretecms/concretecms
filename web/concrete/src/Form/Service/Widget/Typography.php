@@ -1,21 +1,19 @@
 <?php
 namespace Concrete\Core\Form\Service\Widget;
-use Loader;
 use View;
-use Request;
-class Typography {
-
-
+class Typography
+{
     /**
      * Creates form fields and JavaScript includes to add a font picker widget.
      * <code>
      *     $dh->output('background-color', '#f00');
      * </code>
      * @param string $inputName
-     * @param array $value
-     * @param array $options
+     * @param array  $value
+     * @param array  $options
      */
-    public function output($inputName, $value = array(), $options = array()) {
+    public function output($inputName, $value = array(), $options = array())
+    {
         $view = View::getInstance();
         $view->requireAsset('core/style-customizer');
 
@@ -25,10 +23,9 @@ class Typography {
 
         print '<span class="ccm-style-customizer-display-swatch-wrapper" data-font-selector="' . $inputName . '"></span>';
         print "<script type=\"text/javascript\">";
-        print "$(function() { $('span[data-font-selector={$inputName}]').concreteTypographySelector({$strOptions}); })";
+        print "$(function () { $('span[data-font-selector={$inputName}]').concreteTypographySelector({$strOptions}); })";
         print "</script>";
 
     }
-
 
 }
