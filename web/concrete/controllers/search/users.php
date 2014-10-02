@@ -223,17 +223,17 @@ class Users extends Controller
     {
         return $this->fields;
     }
-	
-	public static function getSearchFields() {
-		$r = array(
-			'date_added' => t('Registered Between'),
-			'is_active' => t('Activated Users')
-		);
-		$sfa = UserAttributeKey::getSearchableList();
-		foreach ($sfa as $ak) {
-			$r[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
-		}
-		return $r;
-	}
+    
+    public static function getSearchFields() {
+        $r = array(
+            'date_added' => t('Registered Between'),
+            'is_active' => t('Activated Users')
+        );
+        $sfa = UserAttributeKey::getSearchableList();
+        foreach ($sfa as $ak) {
+            $r[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
+        }
+        return $r;
+    }
 
 }
