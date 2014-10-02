@@ -180,7 +180,7 @@ class Axmls extends XmlParser
             return 'text';
         }
         if ($type == 'C2') {
-            return 'text';
+            return 'string';
         }
         if ($type == 'X2') {
             return 'text';
