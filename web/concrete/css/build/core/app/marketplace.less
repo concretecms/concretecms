@@ -223,3 +223,48 @@ div#ccm-dashboard-content {
     }
   }
 }
+
+div.ccm-marketplace-detail-theme-slideshow-wrapper {
+  margin: 0px -20px 0px -95px;
+
+  .rslides {
+    margin-bottom: 0px;
+    li {
+      height: 320px;
+      overflow: hidden;
+      position: relative;
+
+      img {
+        position: absolute;
+        top:-100%; left:0; right: 0; bottom:-100%;
+        margin: auto;
+      }
+    }
+  }
+  .rslides_nav {
+    visibility: hidden;
+  }
+
+  div.ccm-marketplace-detail-theme-slideshow-nav {
+    nav {
+      .ccm-ui.list-unstyled();
+      padding-right: 25px;
+      background-color: #f7f7f7;
+      li {
+        display: inline-block;
+
+      }
+
+      text-align: right;
+
+      a {
+        display: block;
+        &:hover {
+          color: #189df6;
+        }
+        padding: 25px 25px 25px 25px;
+        color: #7e8991;
+      }
+    }
+  }
+}
