@@ -87,7 +87,7 @@
 
             my.setValue('font-family', my.fonts[fontFamilyName].css);
             my.$fontMenu.val(fontFamilyName);
-            my.$fontMenu.css('font-family', my.font[fontFamilyName].css);
+            my.$fontMenu.css('font-family', my.fonts[fontFamilyName].css);
         } else {
             my.$widget.find('[data-wrapper=fontFamily]').remove();
             my.$element.find('[data-wrapper=fontFamily]').remove();
