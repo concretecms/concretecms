@@ -11,13 +11,11 @@ class Typography {
      * <code>
      *     $dh->output('background-color', '#f00');
      * </code>
-     * @param string $fieldFormName
-     * @param string $fieldLabel
-     * @param string $value
-     * @param bool $includeJavaScript
+     * @param string $inputName
+     * @param array $value
+     * @param array $options
      */
     public function output($inputName, $value = array(), $options = array()) {
-        $html = '';
         $view = View::getInstance();
         $view->requireAsset('core/style-customizer');
 
