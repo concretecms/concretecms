@@ -15,11 +15,11 @@ $(function() {
         <? foreach($pages as $p) { ?>
             <hr/>
             <div>
-                <a href="<?=$p->getCollectionLink()?>"><?=$p->getCollectionName()?></a>
+                <a href="<?=$p->getCollectionLink()?>"><?=h(t($p->getCollectionName()))?></a>
                 <?
                 $description = $p->getCollectionDescription();
                 if ($description) { ?>
-                    <p><?=$description?></p>
+                    <p><?=h(t($description))?></p>
                 <? } ?>
             </div>
         <? } ?>
