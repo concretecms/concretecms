@@ -39,6 +39,13 @@ class RemoteItem extends Object {
 			return array();
 		}
 	}
+	public function getSlideshow() {
+		if (is_array($this->slideshowImages)) {
+			return $this->slideshowImages;
+		} else {
+			return array();
+		}
+	}
 	public function getMarketplaceItemVersionForThisSite() {return $this->siteLatestAvailableVersion;}
 
 	public function getAverageRating() {return $this->rating;}

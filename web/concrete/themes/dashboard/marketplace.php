@@ -7,7 +7,7 @@ $this->inc('elements/header.php'); ?>
 <header class="ccm-marketplace">
 
     <? if ($controller->getTask() == 'view_detail') { ?>
-        <div class="ccm-marketplace-types">
+        <div class="ccm-marketplace-nav">
             <nav>
             <li><a href="<?=$controller->action('view')?>"><i class="fa fa-chevron-left"></i> <?=t('Back')?></a></li>
             </nav>
@@ -16,7 +16,7 @@ $this->inc('elements/header.php'); ?>
     <? } else { ?>
         <form action="<?=$controller->action('view')?>" method="get">
             <input type="hidden" name="ccm_order_by" value="<?=$sort?>" />
-        <div class="ccm-marketplace-types">
+        <div class="ccm-marketplace-nav">
             <nav>
             <li><a href="<?=URL::to('/dashboard/extend/themes')?>" <? if ($type == 'themes') { ?>class="active"<? } ?>><?=t('Themes')?></a></li>
             <li><a href="<?=URL::to('/dashboard/extend/addons')?>" <? if ($type == 'addons') { ?>class="active"<? } ?>><?=t('Add-Ons')?></a></li>
