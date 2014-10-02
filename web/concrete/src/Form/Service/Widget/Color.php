@@ -11,13 +11,11 @@ class Color {
      * <code>
      *     $dh->output('background-color', '#f00');
      * </code>
-     * @param string $fieldFormName
-     * @param string $fieldLabel
-     * @param string $value
-     * @param bool $includeJavaScript
+     * @param string $inputName
+     * @param value $string
+     * @param array $options
      */
     public function output($inputName, $value = null, $options = array()) {
-        $html = '';
         $view = View::getInstance();
         $view->requireAsset('core/colorpicker');
         $form = Loader::helper('form');
