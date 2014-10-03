@@ -118,7 +118,11 @@ class Library extends Object {
 	 * Returns the controller class for the currently selected captcha library
 	 */
 	public function getController() {
-		$class = '\\Concrete\\Core\\Captcha\\' . Loader::helper('text')->camelcase($this->sclHandle) . 'Controller';
+        $class = overrideable_core_class('Core\\Captcha\\'
+            . Loader::helper('text')->camelcase($this->sclHandle) . 'Controller', DIRNAME_CLASSES . '/Captcha/'
+            . Loader::helper('text')->camelcase($this->sclHandle) . 'Controller.php',
+            $this->getPackageHandle()
+        );
 		$cl = Core::make($class);
 		return $cl;
 	}
