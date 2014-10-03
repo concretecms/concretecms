@@ -19,12 +19,11 @@ class GroupSets extends DashboardPageController {
 	
 	public function add_set() {
 		if ($this->token->validate('add_set')) { 
-			if (!trim($this->post('gsName'))) { 
-				$this->error->add(t("Specify a name for your group set."));
-			}
 			$gsName = trim($this->post('gsName'));
-			if (!Loader::helper('validation/strings')->alphanum($gsName, true)) {
-				$this->error->add(t('Set Names must only include alphanumerics and spaces.'));
+			if (!$gsName) { 
+				$this->error->add(t("Specify a name for your group set."));
+			} else if (preg_match('/[<>{};?"`]/i', $gsName)) {
+				$this->error->add(t('Invalid characters in group set name.'));
 			}
 			if (!$this->error->has()) {
 				$gs = GroupSet::add($gsName);
