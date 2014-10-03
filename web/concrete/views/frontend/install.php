@@ -407,9 +407,9 @@ $(function() {
     <td><? if (!$i18nTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('You must enable ctype support in your copy of PHP.')?>"></i><? } ?></td>
 </tr>
 <tr>
-    <td><? if ($docCommentTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-excalmation-circle"></i><? } ?></td>
-    <td width="100%"><?=t('Doc Comment Support')?>
-    <td><? if (!$docCommentTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('concrete5 is not compatible with opcode caches that strip PHP comments. Older versions of eAccelerator can have this issue.')?>"></td><? } ?></td>
+    <td><? if ($docCommentTest) { ?><i class="fa fa-check"></i><? } else { ?><i class="fa fa-exclamation-circle"></i><? } ?></td>
+    <td width="100%"><?=t('PHP Comments Preserved')?>
+    <td><? if (!$docCommentTest) { ?><i class="fa fa-question-circle launch-tooltip" title="<?=t('concrete5 is not compatible with opcode caches that strip PHP comments. Certain configurations of eAccelerator and Zend opcode caching may use this behavior, and it must be disabled.')?>"></td><? } ?></td>
 </tr>
 </table>
 
