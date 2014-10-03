@@ -3,21 +3,19 @@ namespace Concrete\Core\Form\Service\Widget;
 use Loader;
 use View;
 use Request;
-class Color {
-
-
+class Color
+{
     /**
      * Creates form fields and JavaScript includes to add a color picker widget.
      * <code>
      *     $dh->output('background-color', '#f00');
      * </code>
-     * @param string $fieldFormName
-     * @param string $fieldLabel
-     * @param string $value
-     * @param bool $includeJavaScript
+     * @param string $inputName
+     * @param value  $string
+     * @param array  $options
      */
-    public function output($inputName, $value = null, $options = array()) {
-        $html = '';
+    public function output($inputName, $value = null, $options = array())
+    {
         $view = View::getInstance();
         $view->requireAsset('core/colorpicker');
         $form = Loader::helper('form');
@@ -39,9 +37,8 @@ class Color {
 
         print "<input type=\"text\" name=\"{$inputName}\" value=\"{$value}\" id=\"ccm-colorpicker-{$inputName}\" />";
         print "<script type=\"text/javascript\">";
-        print "$(function() { $('#ccm-colorpicker-{$inputName}').spectrum({$strOptions}); })";
+        print "$(function () { $('#ccm-colorpicker-{$inputName}').spectrum({$strOptions}); })";
         print "</script>";
     }
-
 
 }
