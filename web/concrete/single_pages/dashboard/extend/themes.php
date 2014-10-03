@@ -33,6 +33,23 @@ if ($controller->getTask() == 'view_detail') { ?>
                     <button class="btn btn-price" style="background-color: #1888d3"><?=$item->getDisplayPrice()?></button>
                     <button class="btn btn-description"><? if ($item->purchaseRequired()) { ?><?=t('Purchase')?><? } else { ?><?=t('Download')?><? } ?></button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ccm-marketplace-detail-theme-columns">
+        <div class="row">
+            <div class="col-md-4">
+                <ul class="list-group">
+                    <li class="list-group-item"><?=Loader::helper('rating')->outputDisplay($item->getAverageRating())?>
+                    <?=t2('%d review', '%d reviews', $item->getTotalRatings(), $item->getTotalRatings())?>
+                    <? if ($item->getTotalRatings() > 0) { ?>
+                        <a href="<?=$item->getRemoteReviewsURL()?>" target="_blank" class="ccm-marketplace-detail-reviews-link"><?=t('Read Reviews')?></a>
+                    <? } ?>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-8">alskdfjlaskfjd</div>
         </div>
     </div>
 

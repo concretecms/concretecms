@@ -111,8 +111,6 @@ div#ccm-dashboard-content {
 
   div#ccm-marketplace-wrapper {
 
-    position: relative;
-
     header.ccm-marketplace-list {
 
       margin-bottom: 0px;
@@ -228,6 +226,7 @@ div#ccm-dashboard-content {
 
 div.ccm-marketplace-detail-theme-slideshow-wrapper {
   margin: 0px -20px 0px -95px;
+  position: relative;
 
   .rslides {
     margin-bottom: 0px;
@@ -271,12 +270,18 @@ div.ccm-marketplace-detail-theme-slideshow-wrapper {
   }
 }
 
+div.ccm-marketplace-detail-theme-columns {
+  clear: both;
+  margin-top: 40px;
+  width: 800px;
+}
+
 .ccm-marketplace-detail-theme-details {
   position: absolute;
   bottom: -10px;
   width: 370px;
   padding: 40px 40px 40px 40px;
-  left: 0px;
+  left: 95px;
   background-color: #fff;
   .box-shadow(0px 0px 10px 0px #888);
   z-index: 5;
