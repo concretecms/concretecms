@@ -42,9 +42,12 @@ if ($controller->getTask() == 'view_detail') { ?>
             <div class="col-md-4">
                 <ul class="list-group">
                     <li class="list-group-item"><?=Loader::helper('rating')->outputDisplay($item->getAverageRating())?>
+                    <? if ($item->getTotalRatings() > 0) { ?>
+                        <a href="<?=$item->getRemoteReviewsURL()?>" target="_blank" class="ccm-marketplace-detail-reviews-link">
+                    <? } ?>
                     <?=t2('%d review', '%d reviews', $item->getTotalRatings(), $item->getTotalRatings())?>
                     <? if ($item->getTotalRatings() > 0) { ?>
-                        <a href="<?=$item->getRemoteReviewsURL()?>" target="_blank" class="ccm-marketplace-detail-reviews-link"><?=t('Read Reviews')?></a>
+                        </a>
                     <? } ?>
                     </li>
                 </ul>
