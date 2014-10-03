@@ -443,10 +443,6 @@ return array(
         'picturefill'              => array(
             array('javascript', 'js/picturefill.js', array('minify' => false))
         ),
-        'jquery/rating'            => array(
-            array('javascript', 'js/jquery.rating.js'),
-            array('css', 'css/jquery-rating.css')
-        ),
         'spectrum'                 => array(
             array('javascript', 'js/spectrum.js', array('minify' => false)),
             array('css', 'css/spectrum.css', array('minify' => false))
@@ -460,6 +456,10 @@ return array(
         'core/style-customizer'    => array(
             array('javascript', 'js/style-customizer.js', array('minify' => false)),
             array('css', 'css/style-customizer.css', array('minify' => false))
+        ),
+        'jquery/awesome-rating'                 => array(
+            array('javascript', 'js/jquery-awesome-rating.js', array('minify' => false)),
+            array('css', 'css/jquery-awesome-rating.css', array('minify' => false))
         ),
         'jquery/fileupload'        => array(
             array('javascript', 'js/jquery-fileupload.js')
@@ -621,13 +621,6 @@ return array(
                 array('css', 'select2')
             )
         ),
-        'jquery/rating'            => array(
-            array(
-                array('javascript', 'jquery/metadata'),
-                array('javascript', 'jquery/rating'),
-                array('css', 'jquery/rating')
-            )
-        ),
         'ace'         => array(
             array(
                 array('javascript', 'ace')
@@ -644,6 +637,14 @@ return array(
         'font-awesome'             => array(
             array(
                 array('css', 'font-awesome')
+            )
+        ),
+        'core/rating'            => array(
+            array(
+                array('javascript', 'jquery'),
+                array('javascript', 'jquery/awesome-rating'),
+                array('css', 'font-awesome'),
+                array('css', 'jquery/awesome-rating')
             )
         ),
         'core/style-customizer'    => array(

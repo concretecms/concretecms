@@ -282,6 +282,10 @@ module.exports = function(grunt) {
             dest: '<%= DIR_BASE %>/concrete/js/dashboard.js',
             src: '<%= DIR_BASE %>/concrete/js/build/core/dashboard.js'
         },
+        ccm_awesome_rating: {
+            dest: '<%= DIR_BASE %>/concrete/js/jquery-awesome-rating.js',
+            src: '<%= DIR_BASE %>/concrete/js/build/vendor/jquery-awesome-rating/jquery-awesome-rating.js'
+        },
         dynatree: {
             dest: '<%= DIR_BASE %>/concrete/js/dynatree.js',
             src: '<%= DIR_BASE %>/concrete/js/build/vendor/dynatree/dynatree.js'
@@ -322,7 +326,7 @@ module.exports = function(grunt) {
         '<%= DIR_BASE %>/concrete/css/select2.css': '<%= DIR_BASE %>/concrete/css/build/core/select2.less',
         '<%= DIR_BASE %>/concrete/css/jquery-ui.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-ui/jquery-ui.less',
         '<%= DIR_BASE %>/concrete/css/jquery-magnific-popup.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-magnific-popup/jquery-magnific-popup.less',
-        '<%= DIR_BASE %>/concrete/css/jquery-rating.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-rating/jquery-rating.less',
+        '<%= DIR_BASE %>/concrete/css/jquery-awesome-rating.css': '<%= DIR_BASE %>/concrete/css/build/vendor/jquery-awesome-rating/jquery-awesome-rating.less',
         '<%= DIR_BASE %>/concrete/themes/dashboard/main.css': '<%= DIR_BASE %>/concrete/css/build/themes/dashboard/main.less',
         '<%= DIR_BASE %>/concrete/css/style-customizer.css': '<%= DIR_BASE %>/concrete/css/build/core/style-customizer.less',
         '<%= DIR_BASE %>/concrete/css/font-awesome.css': '<%= DIR_BASE %>/concrete/css/build/vendor/font-awesome/font-awesome.less',
