@@ -51,7 +51,7 @@ class PageView extends View
         if ($this->c->getPageTypeID() == 0 && $this->c->getCollectionFilename()) {
             $cFilename = trim($this->c->getCollectionFilename(), '/');
             // if we have this exact template in the theme, we use that as the outer wrapper and we don't do an inner content file
-            $r = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $cFilename);
+            $r = $env->getRecord(DIRNAME_THEMES . '/' . $this->themeHandle . '/' . $cFilename, $this->pkgHandle);
             if ($r->exists()) {
                 $this->setViewTemplate($r->file);
             } else {
