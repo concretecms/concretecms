@@ -100,7 +100,7 @@ $req = $flr->getSearchRequest();
     <td class="ccm-file-manager-search-results-thumbnail"><%=file.resultsThumbnailImg%></td>
     <% for (i = 0; i < file.columns.length; i++) {
         var column = file.columns[i]; %>
-        <td><%=column.value%></td>
+        <td><%-column.value%></td>
     <% } %>
 </tr>
 <% }); %>
@@ -133,9 +133,9 @@ $req = $flr->getSearchRequest();
     for (i = 0; i < columns.length; i++) {
         var column = columns[i];
         if (column.isColumnSortable) { %>
-            <th class="<%=column.className%>"><a href="<%=column.sortURL%>"><%=column.title%></a></th>
+            <th class="<%=column.className%>"><a href="<%=column.sortURL%>"><%-column.title%></a></th>
         <% } else { %>
-            <th><span><%=column.title%></span></th>
+            <th><span><%-column.title%></span></th>
         <% } %>
     <% } %>
 </tr>
