@@ -110,7 +110,11 @@ return array(
         'core_events'       => '\Concrete\Core\Events\EventsServiceProvider',
         'core_whoops'       => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
         'core_logging'      => '\Concrete\Core\Logging\LoggingServiceProvider',
-        'core_cache'        => '\Concrete\Core\Cache\CacheServiceProvider'
+        'core_cache'        => '\Concrete\Core\Cache\CacheServiceProvider',
+
+        // Authentication
+        'core_oauth'        => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
+        'core_auth_twitter' => '\Concrete\Core\Authentication\Type\Twitter\ServiceProvider'
     ),
 
     /**
