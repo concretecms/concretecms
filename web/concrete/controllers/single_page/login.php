@@ -109,8 +109,10 @@ class Login extends PageController
         } else {
             try {
                 $at = AuthenticationType::getByHandle($type);
-                $at->controller->authenticate();
-                $this->finishAuthentication($at);
+                $user = $at->controller->authenticate();
+                if ($user && $user->isLoggedIn()) {
+                    $this->finishAuthentication($at);
+                }
             } catch (\exception $e) {
                 $this->error->add($e->getMessage());
             }
