@@ -5,17 +5,20 @@ use User;
 
 Interface AuthenticationTypeControllerInterface
 {
+
     /**
      * Method used to verify the user and log them in.
-     * No return value, this method should either throw an exception or log the user in.
+     * Returning user will cause finishAuthentication to run, otherwise it's expected that the subclass manage completion.
+     *
      * @throws AuthenticationTypeFailureException
-     * @return void
+     * @return \User|null
      */
     public function authenticate();
 
     /**
      * Method used to clean up.
      * This method must be defined, if it isn't needed, leave it blank.
+     *
      * @param \User $u
      * @return void
      */
@@ -40,7 +43,7 @@ Interface AuthenticationTypeControllerInterface
     /**
      * Verify cookie hash to identify user.
      *
-     * @param $u User object requesting verification.
+     * @param        $u User object requesting verification.
      * @param string $hash
      * @return bool returns true if the hash is valid, false if not
      */
@@ -48,6 +51,7 @@ Interface AuthenticationTypeControllerInterface
 
     /**
      * tasks to finalize authentication, call on login events etc
+     *
      * @param \User $u
      * @return void
      */

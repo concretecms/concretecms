@@ -14,6 +14,11 @@ class Controller extends AuthenticationTypeController
 
     public $apiMethods = array('callback', 'status', 'detachUser');
 
+    public function getHandle()
+    {
+        return 'facebook';
+    }
+
     public function authenticate()
     {
         if ($post['uMaintainLogin']) {

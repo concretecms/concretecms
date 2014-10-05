@@ -14,6 +14,11 @@ class Controller extends AuthenticationTypeController
 
     public $apiMethods = array('forgot_password', 'change_password');
 
+    public function getHandle()
+    {
+        return 'concrete';
+    }
+
     public function deauthenticate(User $u)
     {
         list($uID, $authType, $hash) = explode(':', $_COOKIE['ccmAuthUserHash']);
@@ -245,7 +250,8 @@ class Controller extends AuthenticationTypeController
         if ($post['uMaintainLogin']) {
             $user->setAuthTypeCookie('concrete');
         }
-        $this->completeAuthentication($user);
+
+        return $user;
     }
 
 }
