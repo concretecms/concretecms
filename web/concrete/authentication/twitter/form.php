@@ -16,13 +16,13 @@ $user = new User;
 if ($user->isLoggedIn()) {
     ?>
     <a href="<?= \URL::to('/system/authentication/twitter/attempt_attach'); ?>">
-        Attach a twitter account
+        <?php echo t('Attach a twitter account')?>
     </a>
     <?php
 } else {
     ?>
     <a href="<?= \URL::to('/system/authentication/twitter/attempt_auth'); ?>">
-        Login With Twitter
+        <?php echo t('Login With Twitter')?>
     </a>
     <?php
 }
