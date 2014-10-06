@@ -92,14 +92,6 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 
 } else {
 
-    function sortAvailableArray($obj1, $obj2)
-    {
-        $name1 = $obj1->getPackageName();
-        $name2 = $obj2->getPackageName();
-
-        return strcasecmp($name1, $name2);
-    }
-
     // grab the total numbers of updates.
     // this consists of
     // 1. All packages that have greater pkgAvailableVersions than pkgVersion
@@ -133,7 +125,9 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
 
     $thisURL = $view->url('/dashboard/extend/install');
     $availableArray = $pkgAvailableArray;
-    usort($availableArray, 'sortAvailableArray');
+    usort($availableArray, function($a, $b) {
+        return strcasecmp($a->getPackageName(), $b->getPackageName());
+    });
 
     /* Load featured add-ons from the marketplace.
      */
