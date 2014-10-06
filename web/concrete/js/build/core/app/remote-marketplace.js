@@ -2,13 +2,8 @@
 !function (global, $, _) {
     'use strict';
 
-    var ConcreteMarketplace = function()
-    {
-
-    }
-
-    ConcreteMarketplace.prototype = {
-
+    var ConcreteMarketplace = {
+        /*
         testConnection: function(onComplete, task, mpID)
         {
             var mpIDStr = '';
@@ -52,7 +47,7 @@
                     height: 640
                 });
             }, 'get_item_details', mpID);
-        },
+        },*/
 
         purchaseOrDownload: function(args)
         {
@@ -71,7 +66,7 @@
             jQuery.fn.dialog.showLoader();
             // first, we check our local install to ensure that we're connected to the
             // marketplace, etc..
-            params = {'mpID': mpID};
+            var params = {'mpID': mpID};
             $.getJSON(CCM_TOOLS_PATH + '/marketplace/connect', params, function(resp) {
                 jQuery.fn.dialog.hideLoader();
                 if (resp.isConnected) {
@@ -109,5 +104,6 @@
     }
 
 
+    global.ConcreteMarketplace = ConcreteMarketplace;
 
 }(window, jQuery, _);
