@@ -419,7 +419,7 @@ return array(
             array('css', 'css/jquery-ui.css', array('minify' => false))
         ),
         'jquery/touch-punch'              => array(
-            array('javascript', 'js/jquery.ui.touch-punch.js')
+            array('javascript', 'js/jquery-ui-touch-punch.js')
         ),
         'select2'                  => array(
             array('javascript', 'js/select2.js', array('minify' => false, 'combine' => false)),
