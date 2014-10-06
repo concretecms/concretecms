@@ -50,9 +50,15 @@ if ($controller->getTask() == 'view_detail') { ?>
                         </a>
                     <? } ?>
                     </li>
+                    <? if ($item->getExampleURL()) { ?>
+                        <li class="list-group-item"><a href="<?=$item->getExampleURL()?>" target="_blank"><?=t('Live Example')?></a></li>
+                    <? } ?>
+                    <li class="list-group-item"><a href="<?=$item->getRemoteHelpURL()?>" target="_blank"><i class="fa fa-comment"></i> <?=t('Get Help')?></a></li>
                 </ul>
             </div>
-            <div class="col-md-8">alskdfjlaskfjd</div>
+            <div class="col-md-8">
+                <?=$item->getBody()?>
+            </div>
         </div>
     </div>
 

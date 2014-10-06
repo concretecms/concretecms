@@ -26,6 +26,7 @@ class RemoteItem extends Object {
 	public function getBody() {return $this->bodyContent;}
     public function getPrice() {return $this->price;}
     public function getSkillLevel() {return $this->skillLevel;}
+    public function getExampleURL() {return $this->exampleURL;}
     public function getSkillLevelClassName() {
         switch($this->getSkillLevel()) {
             case 'beginner':
@@ -97,6 +98,7 @@ class RemoteItem extends Object {
 		}
 	}
 	public function getRemoteURL(){ return $this->url; }
+	public function getRemoteHelpURL(){ return $this->helpURL; }
 	public function getProductBlockID() {return $this->productBlockID;}
 	public function getFivePackProductBlockID() {return $this->fivePackProductBlockID;}
 	public function getRemoteFileURL(){ return $this->file; }

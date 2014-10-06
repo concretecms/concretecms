@@ -25,11 +25,15 @@ abstract class MarketplaceDashboardPageController extends DashboardPageControlle
             $mpID = intval($mpID);
             $this->requireAsset('core/lightbox');
             $item = RemoteItem::getByID($mpID);
-            $types = $item->getMarketplaceItemType() . 's';
-            if ($types == $this->getMarketplaceType()) {
-                $this->set('item', $item);
+            if (is_object($item)) {
+                $types = $item->getMarketplaceItemType() . 's';
+                if ($types == $this->getMarketplaceType()) {
+                    $this->set('item', $item);
+                } else {
+                    $this->redirect('/dashboard/extend/connect');
+                }
             } else {
-			    $this->redirect('/dashboard/extend/connect');
+                throw new \Exception(t('Invalid marketplace item object.'));
             }
         } else {
 			$this->redirect('/dashboard/extend/connect');
