@@ -516,6 +516,13 @@ class Package extends Object
         \Core::make('config/database')->clearNamespace($this->getPackageHandle());
 
         $db->Execute("delete from Packages where pkgID = ?", array($this->pkgID));
+        $translate = Localization::getTranslate();
+        if(is_object($translate)) {
+            $cache = $translate->getCache();
+            if(is_object($cache) && method_exists($cache, 'flush')) {
+                $cache->flush();
+            }
+        }
     }
 
     protected function validateClearSiteContents($options)
