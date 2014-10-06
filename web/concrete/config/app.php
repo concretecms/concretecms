@@ -113,8 +113,9 @@ return array(
         'core_cache'        => '\Concrete\Core\Cache\CacheServiceProvider',
 
         // Authentication
-        'core_oauth'        => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
-        'core_auth_twitter' => '\Concrete\Core\Authentication\Type\Twitter\ServiceProvider'
+        'core_oauth'          => '\Concrete\Core\Authentication\Type\OAuth\ServiceProvider',
+        'core_auth_twitter'   => '\Concrete\Core\Authentication\Type\Twitter\ServiceProvider',
+        'core_auth_community' => '\Concrete\Core\Authentication\Type\Community\ServiceProvider'
     ),
 
     /**

@@ -3,6 +3,7 @@ namespace Concrete\Core\Authentication\Type\OAuth;
 
 use Concrete\Core\Authentication\AuthenticationTypeController;
 use OAuth\Common\Exception\Exception;
+use OAuth\Common\Service\AbstractService;
 use OAuth\UserData\Extractor\Extractor;
 
 abstract class GenericOauthTypeController extends AuthenticationTypeController
@@ -13,10 +14,12 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     /**
      * @var \OAuth\Common\Service\AbstractService
      */
-    public $service;
+    protected $service;
 
-    /** @type Extractor */
-    public $extractor;
+    /**
+     * @var Extractor
+     */
+    protected $extractor;
 
     public function __construct()
     {
@@ -38,7 +41,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
     }
 
     /**
-     * @return \OAuth\Common\Service\AbstractService
+     * @return AbstractService
      */
     abstract public function getService();
 
@@ -55,6 +58,13 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
      * @return bool
      */
     abstract public function supportsEmailResolution();
+
+    /**
+     * @return Array
+     */
+    public function getAdditionalRequestParameters() {
+        return array();
+    }
 
     /**
      * @param \User $user
@@ -171,14 +181,15 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
             $first_name = strrev($reversed_first_name);
             $last_name = strrev($reversed_last_name);
-
         }
 
-        if ($first_name || $last_name) {
-            $username = preg_replace('/^[a-z0-9\_]/i', '_', $first_name . ' ' . $last_name);
+        if ($extractor->supportsUsername()) {
+            $username = $extractor->getUsername();
+        } elseif ($first_name || $last_name) {
+            $username = preg_replace('/[^a-z0-9\_]/', '_', strtolower($first_name . ' ' . $last_name));
             $username = trim('_', preg_replace('/_{2,}/', '_', $username));
         } else {
-            $username = preg_replace('/^[a-z0-9\_]/i', '_', substr($email, 0, strpos($email, '@')));
+            $username = preg_replace('/[^a-zA-Z0-9\_]/i', '_', strtolower(substr($email, 0, strpos($email, '@'))));
             $username = trim('_', preg_replace('/_{2,}/', '_', $username));
         }
 
@@ -200,8 +211,21 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
 
         $user_info = \UserInfo::add($data);
 
-        $user_info->setAttribute('first_name', $first_name);
-        $user_info->setAttribute('last_name', $last_name);
+        if (!$user_info) {
+            throw new Exception('Unable to create new account.');
+        }
+
+        $key = \UserAttributeKey::getByHandle('first_name');
+        if ($key) {
+            $user_info->setAttribute($key, $first_name);
+        }
+
+        $key = \UserAttributeKey::getByHandle('last_name');
+        if ($key) {
+            $user_info->setAttribute($key, $last_name);
+        }
+
+        \User::loginByUserID($user_info->getUserID());
 
         $this->bindUser($user = \User::getByUserID($user_info->getUserID()), $extractor->getUniqueId());
         return $user;
@@ -242,7 +266,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         if ($error) {
             $this->markError($error);
         }
-        id(new \RedirectResponse(\URL::to('/login/callback/twitter/handle_error')))->send();
+        id(new \RedirectResponse(\URL::to('/login/callback/' . $this->getHandle() . '/handle_error')))->send();
     }
 
     public function markError($error)
@@ -266,12 +290,12 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         if ($message) {
             $this->markSuccess($message);
         }
-        id(new \RedirectResponse(\URL::to('/login/callback/twitter/handle_success')))->send();
+        id(new \RedirectResponse(\URL::to('/login/callback/' . $this->getHandle() . '/handle_success')))->send();
     }
 
-    public function markSuccess($error)
+    public function markSuccess($message)
     {
-        \Session::set('oauth_last_message', $error);
+        \Session::set('oauth_last_message', $message);
     }
 
     /**
