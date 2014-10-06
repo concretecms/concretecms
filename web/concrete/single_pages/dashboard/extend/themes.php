@@ -28,7 +28,7 @@ if ($controller->getTask() == 'view_detail') { ?>
             <h2><?=$item->getName()?></h2>
             <div><i class="<?=$item->getSkillLevelClassName()?>"></i> <?=$item->getSkillLevelDisplayName()?></div>
 
-            <div class="ccm-marketplace-detail-buy">
+            <div class="ccm-marketplace-detail-theme-buy">
                 <div class="btn-group">
                     <button class="btn btn-price" style="background-color: #1888d3"><?=$item->getDisplayPrice()?></button>
                     <button class="btn btn-description"><? if ($item->purchaseRequired()) { ?><?=t('Purchase')?><? } else { ?><?=t('Download')?><? } ?></button>
@@ -37,7 +37,7 @@ if ($controller->getTask() == 'view_detail') { ?>
         </div>
     </div>
 
-    <div class="ccm-marketplace-detail-theme-columns">
+    <div class="ccm-marketplace-detail-columns">
         <div class="row">
             <div class="col-md-4">
                 <ul class="list-group">
@@ -56,7 +56,7 @@ if ($controller->getTask() == 'view_detail') { ?>
                     <li class="list-group-item"><a href="<?=$item->getRemoteHelpURL()?>" target="_blank"><i class="fa fa-comment"></i> <?=t('Get Help')?></a></li>
                 </ul>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-7 col-md-offset-1">
                 <?=$item->getBody()?>
             </div>
         </div>
