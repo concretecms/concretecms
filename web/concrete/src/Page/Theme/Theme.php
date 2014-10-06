@@ -538,8 +538,8 @@ class Theme extends Object
     private static function getThemeNameAndDescription($dir, $pThemeHandle, $pkgHandle = '')
     {
         $res = new \stdClass();
-        $res->pName = '';
-        $res->pDescription = '';
+        $res->pThemeName = '';
+        $res->pThemeDescription = '';
         $res->pError = '';
         if (file_exists($dir . '/' . FILENAME_THEMES_DESCRIPTION)) {
             $con = file($dir . '/' . FILENAME_THEMES_DESCRIPTION);
@@ -549,17 +549,32 @@ class Theme extends Object
         $pageThemeFile = $dir . '/' . FILENAME_THEMES_CLASS;
         if (is_file($pageThemeFile)) {
             try {
+                $cn .= '\\Theme\\' . camelcase($pThemeHandle) . '\\PageTheme';
+                $classNames = array();
                 if (strlen($pkgHandle)) {
-                    $className = '\\Concrete\\Package\\' . camelcase($pkgHandle);
+                    $classNames[] = '\\Concrete\\Package\\' . camelcase($pkgHandle) . $cn;
                 } else {
-                    $className = '\\Application';
+                    $classNames[] = '\\Application' . $cn;
+                    $classNames[] = '\\Concrete' . $cn;
                 }
-                $className .= '\\Theme\\' . camelcase($pThemeHandle) . '\\PageTheme';
-                if (!class_exists($className, false)) {
+                $className = null;
+                foreach ($classNames as $cn) {
+                    if (class_exists($cn, false)) {
+                        $className = $cn;
+                        break;
+                    }
+                }
+                if (is_null($className)) {
                     include_once $pageThemeFile;
+                    foreach ($classNames as $cn) {
+                        if (class_exists($cn, false)) {
+                            $className = $cn;
+                            break;
+                        }
+                    }
                 }
-                if (!class_exists($className, false)) {
-                    $res->pError = t(/*i18n: %1$s is a filename, %2$s is a PHP class name */'The theme file %1$s does not defines the class %2$s', FILENAME_THEMES_CLASS, ltrim($className, '\\'));
+                if (is_null($className)) {
+                    $res->pError = t(/*i18n: %1$s is a filename, %2$s is a PHP class name */'The theme file %1$s does not defines the class %2$s', FILENAME_THEMES_CLASS, ltrim($classNames[0], '\\'));
                 } else {
                     $instance = new $className();
                     $extensionOf = '\\Concrete\\Core\\Page\\Theme\\Theme';
