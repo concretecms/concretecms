@@ -54,8 +54,8 @@ class Model {
 			}
 		}
 		$db->Replace($this->_table, $data, $primaryKeys);
+		$this->setAutoincrementColumn();
 		return 1;
-
 	}
 
 	protected function getPrimaryKeys() {
@@ -70,6 +70,17 @@ class Model {
 		}
 		return $primaryKeys;
 	}
+	
+	protected function setAutoIncrementColumn() {
+		$db = Loader::db();
+		$sm = $db->getSchemaManager();
+		$details = $sm->listTableDetails($this->_table);
+		foreach($details->getColumns() as $name => $column) {
+			if($column->getAutoincrement() && property_exists($this, $name)) {
+				$this->$name = $db->lastInsertId();
+			}
+		}		
+	}
 
 	public function Insert() {
 		$db = Loader::db();
@@ -81,7 +92,7 @@ class Model {
 			}
 		}
 		$db->insert($this->_table, $data);
-
+		$this->setAutoincrementColumn();
 	}
 
 	public function Delete() {
