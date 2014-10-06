@@ -111,15 +111,17 @@ class Versions extends BackendInterfacePageController {
 				$versions = 0;
 				$r = new PageEditVersionResponse();
 				$r->setPage($c);
-				foreach($_POST['cvID'] as $cvID) {
-					$versions++;
-					$v = CollectionVersion::get($c, $cvID);
-					if (is_object($v)) {
-						if (!$v->isApproved()) {
-							$r->addCollectionVersion($v);
-							$v->delete();
-						}
-					}
+				if(is_array($_POST['cvID'])) {
+    				foreach($_POST['cvID'] as $cvID) {
+    					$versions++;
+    					$v = CollectionVersion::get($c, $cvID);
+    					if (is_object($v)) {
+    						if (!$v->isApproved()) {
+    							$r->addCollectionVersion($v);
+    							$v->delete();
+    						}
+    					}
+    				}
 				}
 				$r->setMessage(t2('%s version deleted successfully', '%s versions deleted successfully.', count($r->getCollectionVersions())));
 			} else {
