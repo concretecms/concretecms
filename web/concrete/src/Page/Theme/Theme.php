@@ -549,7 +549,6 @@ class Theme extends Object
         $pageThemeFile = $dir . '/' . FILENAME_THEMES_CLASS;
         if (is_file($pageThemeFile)) {
             try {
-                $pkgHandle = PackageList::getHandle($row['pkgID']);
                 if (strlen($pkgHandle)) {
                     $className = '\\Concrete\\Package\\' . camelcase($pkgHandle);
                 } else {
