@@ -67,7 +67,7 @@ if (!defined('APP_UPDATED_PASSTHRU') && isset($updates['core'])) {
     } else if(file_exists(DIRNAME_UPDATES . '/' . $updates['core'] . '/' . DIRNAME_CORE . '/' . 'dispatcher.php')){
         require(DIRNAME_UPDATES . '/' . $updates['core'] . '/' . DIRNAME_CORE . '/' . 'dispatcher.php');
     } else {
-        die(sprintf('Invalid "%s" defined. Please remove it from %s.','update.core', CONFIG_FILE));
+        die(sprintf('Invalid "%s" defined. Please remove it from %s.','update.core', $update_file));
     }
     exit;
 }
