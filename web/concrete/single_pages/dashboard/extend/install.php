@@ -121,6 +121,15 @@ if ($this->controller->getTask() == 'install_package' && $showInstallOptionsScre
             $_pkg->setupPackageLocalization();
             $pkgAvailableArray[] = $_pkg;
         }
+        if(count($pkgAvailableArray) > 0) {
+            $translate = Localization::getTranslate();
+            if(is_object($translate)) {
+                $cache = $translate->getCache();
+                if(is_object($cache) && method_exists($cache, 'flush')) {
+                    $cache->flush();
+                }
+            }
+        }
     }
 
     $thisURL = $view->url('/dashboard/extend/install');
