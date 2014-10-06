@@ -213,10 +213,14 @@ class StartingPointPackage extends BasePackage {
 
 	public function add_users() {
 		// Firstly, install the core authentication types
-		$cba = AuthenticationType::add('concrete', 'Standard');
-		$fba = AuthenticationType::add('facebook', 'Facebook');
+		$cba = AuthenticationType::add('concrete',  'Standard');
+        $coa = AuthenticationType::add('community', 'Community');
+		$fba = AuthenticationType::add('facebook',  'Facebook');
+        $twa = AuthenticationType::add('twitter',   'Twitter');
 
 		$fba->disable();
+        $twa->disable();
+        $coa->disable();
 
 		\Concrete\Core\Tree\TreeType::add('group');
 		\Concrete\Core\Tree\Node\NodeType::add('group');
