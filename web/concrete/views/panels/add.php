@@ -360,7 +360,14 @@ switch ($tab) {
                         </ul>
 
                     </div>
+
                 <? } ?>
+
+            <? if (Config::get('concrete.marketplace.enabled')) { ?>
+                <div class="ccm-marketplace-btn-wrapper">
+                <button type="button" onclick="window.location.href='<?=URL::to('/dashboard/extend/addons')?>'" class="btn-info btn-block btn btn-large"><?=t("Get More Blocks")?></button>
+                </div>
+            <? } ?>
 
             </div>
 
