@@ -269,9 +269,11 @@ $(function() {
             $.each(checkboxes, function (i, cb) {
                 cvIDs.push({'name': 'cvID[]', 'value': $(cb).val()});
             });
-            ConcretePageVersionList.sendRequest('<?=$controller->action("delete")?>', cvIDs, function (r) {
-                ConcretePageVersionList.handleVersionRemovalResponse(r);
-            });
+            if(cvIDs.length > 0) {
+                ConcretePageVersionList.sendRequest('<?=$controller->action("delete")?>', cvIDs, function (r) {
+                    ConcretePageVersionList.handleVersionRemovalResponse(r);
+                });
+            }
         }
 	});
 
