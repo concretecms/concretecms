@@ -128,9 +128,7 @@
 
             my.refreshStyles(resp);
 
-            editor.destroyInlineEditModeToolbars();
-
-            ConcreteEvent.fire('EditModeExitInlineComplete', {
+            ConcreteEvent.fire('EditModeExitInline', {
                 block: newBlock
             });
         });
