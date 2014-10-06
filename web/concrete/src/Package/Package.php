@@ -221,9 +221,10 @@ class Package extends Object
         $class = '\\Concrete\\Package\\' . camelcase($pkgHandle) . '\\Controller';
         try {
             $cl = Core::make($class);
-        } catch(\ReflectionException $ex) {
+        } catch (\ReflectionException $ex) {
             throw new \Exception(t('Unable to load class for package %s. Please double-check that a valid controller.php exists and that the package has been updated for concrete5 5.7', $pkgHandle));
         }
+
         return $cl;
     }
 
@@ -515,6 +516,7 @@ class Package extends Object
         \Core::make('config/database')->clearNamespace($this->getPackageHandle());
 
         $db->Execute("delete from Packages where pkgID = ?", array($this->pkgID));
+        Localization::clearCache();
     }
 
     protected function validateClearSiteContents($options)
@@ -728,6 +730,7 @@ class Package extends Object
         if (!$this->config) {
             $this->config = new Liaison(\Core::make('config/database'), $this->getPackageHandle());
         }
+
         return $this->config;
     }
 
@@ -740,6 +743,7 @@ class Package extends Object
         if (!$this->fileConfig) {
             $this->fileConfig = new Liaison(\Core::make('config'), $this->getPackageHandle());
         }
+
         return $this->fileConfig;
     }
 
@@ -761,6 +765,7 @@ class Package extends Object
         Package::installDB($pkg->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
         $env = Environment::get();
         $env->clearOverrideCache();
+        Localization::clearCache();
 
         return $pkg;
     }
@@ -790,6 +795,7 @@ class Package extends Object
                 $item->refresh();
             }
         }
+        Localization::clearCache();
     }
 
     public static function getInstalledHandles()
