@@ -1,6 +1,8 @@
 <?php
 namespace Concrete\Authentication\Twitter;
 
+defined('C5_EXECUTE') or die('Access Denied');
+
 use Concrete\Core\Authentication\Type\OAuth\OAuth1a\GenericOauth1aTypeController;
 use OAuth\OAuth1\Service\Twitter;
 
