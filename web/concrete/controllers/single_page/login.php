@@ -64,8 +64,11 @@ class Login extends PageController
      * @throws \Concrete\Core\Authentication\AuthenticationTypeFailureException
      * @throws \Exception
      */
-    public function callback($type, $method = 'callback', $a = null, $b = null, $c = null, $d = null, $e = null, $f = null, $g = null, $h = null, $i = null, $j = null)
+    public function callback($type=null, $method = 'callback', $a = null, $b = null, $c = null, $d = null, $e = null, $f = null, $g = null, $h = null, $i = null, $j = null)
     {
+        if (!$type) {
+            return $this->view();
+        }
         $at = AuthenticationType::getByHandle($type);
         if ($at) {
             $this->set('authType', $at);
