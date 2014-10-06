@@ -22,7 +22,7 @@ if ($user->isLoggedIn()) {
 } else {
     ?>
     <a href="<?= \URL::to('/system/authentication/twitter/attempt_auth'); ?>">
-        <?php echo t('Login With Twitter')?>
+        <?php echo t('Log in With Twitter')?>
     </a>
     <?php
 }
