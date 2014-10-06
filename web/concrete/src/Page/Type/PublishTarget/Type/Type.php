@@ -71,12 +71,10 @@ abstract class Type extends Object
         );
         if (is_array($r) && $r['ptPublishTargetTypeHandle']) {
             $txt = Loader::helper('text');
-            if ($r['pkgID']) {
-                $pkg = Package::getByID($r['pkgID'])->getPackageHandle();
-                $class = '\\Concrete\\Package\\' . ucwords($pkg) . '\\Controller\\Page\\Type\\PublishTarget\\Type\\' . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type';
-            } else {
-                $class = '\\Concrete\\Core\\Page\\Type\\PublishTarget\\Type\\' . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type';
-            }
+            $class = overrideable_core_class('Core\\Page\\Type\\PublishTarget\\Type\\'
+                . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type', DIRNAME_CLASSES . '/Page/Type/PublishTarget/Type/'
+                . $txt->camelcase($r['ptPublishTargetTypeHandle']) . '.php', PackageList::getHandle($r['pkgID']));
+
             $sc = Core::make($class);
             $sc->setPropertiesFromArray($r);
             return $sc;
@@ -91,12 +89,10 @@ abstract class Type extends Object
         );
         if (is_array($r) && $r['ptPublishTargetTypeHandle']) {
             $txt = Loader::helper('text');
-            if ($r['pkgID']) {
-                $pkg = Package::getByID($r['pkgID'])->getPackageHandle();
-                $class = '\\Concrete\\Package\\' . ucwords($pkg) . '\\Controller\\Page\\Type\\PublishTarget\\Type\\' . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type';
-            } else {
-                $class = '\\Concrete\\Core\\Page\\Type\\PublishTarget\\Type\\' . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type';
-            }
+            $class = overrideable_core_class('Core\\Page\\Type\\PublishTarget\\Type\\'
+                . $txt->camelcase($r['ptPublishTargetTypeHandle']) . 'Type', DIRNAME_CLASSES . '/Page/Type/PublishTarget/Type/'
+                . $txt->camelcase($r['ptPublishTargetTypeHandle']) . '.php', PackageList::getHandle($r['pkgID']));
+
             $sc = Core::make($class);
             $sc->setPropertiesFromArray($r);
             return $sc;
