@@ -59,9 +59,9 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
 
     public function handle_attach_attempt()
     {
-        $token = $this->getService()->requestRequestToken();
-        $url = $this->getService()->getAuthorizationUri(array('oauth_token' => $token->getRequestToken()));
-        id(new RedirectResponse((string)$url))->send();
+        $url = $this->getService()->getAuthorizationUri($this->getAdditionalRequestParameters());
+
+        id(new RedirectResponse((string) $url))->send();
         exit;
     }
 
@@ -72,12 +72,14 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
             id(new RedirectResponse(\URL::to('')))->send();
             exit;
         }
-
-        $token = \Request::getInstance()->get('oauth_token');
-        $verifier = \Request::getInstance()->get('oauth_verifier');
-
-        $token = $this->getService()->requestAccessToken($token, $verifier);
-
+        
+        try {
+            $code = \Request::getInstance()->get('code');
+            $token = $this->getService()->requestAccessToken($code);
+        } catch (TokenResponseException $e) {
+            $this->showError('Failed authentication: ' . $e->getMessage());
+            exit;
+        }
         if ($token) {
             if ($this->bindUser($user, $this->getExtractor(true)->getUniqueId())) {
                 $this->showSuccess('Successfully attached.');
