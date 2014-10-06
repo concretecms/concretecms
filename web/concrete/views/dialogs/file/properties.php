@@ -38,7 +38,7 @@ if (!$previewMode) {
 </div>
 <div class="row">
 	<div class="col-md-3"><p><?=t('Filename')?></p></div>
-	<div class="col-md-9"><p><?=$fv->getFileName()?></p></div>
+	<div class="col-md-9"><p><?=h($fv->getFileName())?></p></div>
 </div>
 <?
 $url = $fv->getURL();
@@ -94,15 +94,15 @@ if (is_object($fsl)) { ?>
 <? } ?>
 <div class="row">
 	<div class="col-md-3"><p><?=t('Title')?></p></div>
-	<div class="col-md-9"><p><span <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable" data-type="text" data-name="fvTitle"<? } ?>><?=$fv->getTitle()?></span></p></div>
+	<div class="col-md-9"><p><span <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable" data-type="text" data-name="fvTitle"<? } ?>><?=h($fv->getTitle())?></span></p></div>
 </div>
 <div class="row">
 	<div class="col-md-3"><p><?=t('Description')?></p></div>
-	<div class="col-md-9"><p><span <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable" data-type="textarea" data-name="fvDescription"<? } ?>><?=$fv->getDescription()?></span></p></div>
+	<div class="col-md-9"><p><span <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable" data-type="textarea" data-name="fvDescription"<? } ?>><?=h($fv->getDescription())?></span></p></div>
 </div>
 <div class="row">
 	<div class="col-md-3"><p><?=t('Tags')?></p></div>
-	<div class="col-md-9"><p><span <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable" data-type="textarea" data-name="fvTags"<? } ?>><?=$fv->getTags()?></span></p></div>
+	<div class="col-md-9"><p><span <? if ($fp->canEditFileProperties()) { ?>data-editable-field-type="xeditable" data-type="textarea" data-name="fvTags"<? } ?>><?=h($fv->getTags())?></span></p></div>
 </div>
 </section>
 

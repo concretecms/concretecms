@@ -97,6 +97,7 @@ var ConcretePageVersionList = {
 	},
 
 	handleVersionRemovalResponse: function(r) {
+		$('button[data-version-action]').addClass('disabled');
 		for (i = 0; i < r.versions.length; i++) {
 			var $row = $('input[type=checkbox][value=' + r.versions[i].cvID + ']').parent().parent();
 			$row.queue(function() {
@@ -269,9 +270,11 @@ $(function() {
             $.each(checkboxes, function (i, cb) {
                 cvIDs.push({'name': 'cvID[]', 'value': $(cb).val()});
             });
-            ConcretePageVersionList.sendRequest('<?=$controller->action("delete")?>', cvIDs, function (r) {
-                ConcretePageVersionList.handleVersionRemovalResponse(r);
-            });
+            if(cvIDs.length > 0) {
+                ConcretePageVersionList.sendRequest('<?=$controller->action("delete")?>', cvIDs, function (r) {
+                    ConcretePageVersionList.handleVersionRemovalResponse(r);
+                });
+            }
         }
 	});
 
