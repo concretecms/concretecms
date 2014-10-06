@@ -74,7 +74,7 @@ class Controller extends BlockController
     public function delete()
     {
         $db = Loader::db();
-        $db->execute('DELETE from btFaqEntriesWHERE bID = ?', array($this->bID));
+        $db->execute('DELETE from btFaqEntries WHERE bID = ?', array($this->bID));
         parent::delete();
     }
 
