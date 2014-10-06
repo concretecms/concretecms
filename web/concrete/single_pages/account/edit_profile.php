@@ -43,20 +43,13 @@ $(function() {
 	<?php  } ?>
 	<?php
 	$ats = AuthenticationType::getList(true, true);
-	$count = 0;
-	$displayAts = array();
-	foreach ($ats as $at) {
-		if (method_exists($at->controller, 'hook')) {
-			$count++;
-			$displayAts[] = $at;
-		}
-	}
+	$count = count($ats);
 	if ($count) {
 		?>
 		<fieldset>
 			<legend><?=t('Authentication Types')?></legend>
 			<?php
-			foreach ($displayAts as $at) {
+			foreach ($ats as $at) {
 				$at->renderHook();
 			}
 			?>
