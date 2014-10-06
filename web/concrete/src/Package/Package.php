@@ -221,9 +221,10 @@ class Package extends Object
         $class = '\\Concrete\\Package\\' . camelcase($pkgHandle) . '\\Controller';
         try {
             $cl = Core::make($class);
-        } catch(\ReflectionException $ex) {
+        } catch (\ReflectionException $ex) {
             throw new \Exception(t('Unable to load class for package %s. Please double-check that a valid controller.php exists and that the package has been updated for concrete5 5.7', $pkgHandle));
         }
+
         return $cl;
     }
 
@@ -728,6 +729,7 @@ class Package extends Object
         if (!$this->config) {
             $this->config = new Liaison(\Core::make('config/database'), $this->getPackageHandle());
         }
+
         return $this->config;
     }
 
@@ -740,6 +742,7 @@ class Package extends Object
         if (!$this->fileConfig) {
             $this->fileConfig = new Liaison(\Core::make('config'), $this->getPackageHandle());
         }
+
         return $this->fileConfig;
     }
 
