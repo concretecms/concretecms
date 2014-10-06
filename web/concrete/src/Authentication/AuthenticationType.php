@@ -393,7 +393,10 @@ class AuthenticationType extends Object
         $form_hook = $this->mapAuthenticationTypeFilePath('hook.php');
         if ($form_hook->exists()) {
             ob_start();
-            $this->controller->hook();
+            if(method_exists($this->controller, 'hook'))
+            {
+                $this->controller->hook();
+            }
             extract($this->controller->getSets());
             require_once($form_hook->file);
             $out = ob_get_contents();
