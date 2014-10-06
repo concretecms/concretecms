@@ -15,13 +15,13 @@ $user = new User;
 if ($user->isLoggedIn()) {
     ?>
     <a href="<?= \URL::to('/system/authentication/community/attempt_attach'); ?>">
-        Attach a community account
+        <?= t('Attach a community account') ?>
     </a>
     <?php
 } else {
     ?>
     <a href="<?= \URL::to('/system/authentication/community/attempt_auth'); ?>">
-        Login With community
+        <?= t('Log in With community') ?>
     </a>
     <?php
 }

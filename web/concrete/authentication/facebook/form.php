@@ -1,22 +1,28 @@
-<?php defined('C5_EXECUTE') or die('Access denied.') ?>
-<?php if (isset($message)) { ?>
-    <div class="alert alert-success" role="alert"><?= $message ?></div>
-<? } ?>
-<button class="btn btn-block btn-success authFacebookLogin"><?= t('Log in with Facebook') ?></button>
-<script type="text/javascript">
-    $('button.authFacebookLogin').click(function () {
-        var login = window.open('<?=$loginUrl?>', '<?php echo addslashes(t('Log in with Facebook'))?>', 'width=500,height=300');
-        (login.focus && login.focus());
+<?php
+defined('C5_EXECUTE') or die('Access Denied');
+if (isset($error)) {
+    ?>
+    <div class="alert alert-danger"><?= $error ?></div>
+    <?php
+}
+if (isset($message)) {
+    ?>
+    <div class="alert alert-success"><?= $message ?></div>
+<?php
+}
 
-        function loginStatus() {
-            if (login.closed) {
-                window.location.href = '<?=$statusURI?>';
-                return;
-            }
-            setTimeout(loginStatus, 500);
-        }
+$user = new User;
 
-        loginStatus();
-        return false;
-    });
-</script>
+if ($user->isLoggedIn()) {
+    ?>
+    <a href="<?= \URL::to('/system/authentication/facebook/attempt_attach'); ?>">
+        <?php echo t('Attach a Facebook account')?>
+    </a>
+    <?php
+} else {
+    ?>
+    <a href="<?= \URL::to('/system/authentication/facebook/attempt_auth'); ?>">
+        <?php echo t('Log in With Facebook')?>
+    </a>
+    <?php
+}

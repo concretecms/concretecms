@@ -75,11 +75,11 @@ class Login extends PageController
             $this->set('authType', $at);
         }
         if (!method_exists($at->controller, $method)) {
-            throw new \Exception(t('Invalid method.'));
+            return $this->view();
         }
         if ($method != 'callback') {
             if (!is_array($at->controller->apiMethods) || !in_array($method, $at->controller->apiMethods)) {
-                throw new \Exception(t("Invalid method."));
+                return $this->view();
             }
         }
         try {
