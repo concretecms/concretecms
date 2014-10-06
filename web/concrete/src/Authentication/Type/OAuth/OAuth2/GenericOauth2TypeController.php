@@ -46,6 +46,8 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
                     $this->showError(
                         'No local user account associated with this user, please log in with a local account and connect your account from your user profile.');
                 }
+            } catch (LoginException $e) {
+                $this->showError($e->getMessage());
             } catch (Exception $e) {
                 $this->showError($e->getMessage());
             } catch (\Exception $e) {
@@ -72,7 +74,7 @@ abstract class GenericOauth2TypeController extends GenericOauthTypeController
             id(new RedirectResponse(\URL::to('')))->send();
             exit;
         }
-        
+
         try {
             $code = \Request::getInstance()->get('code');
             $token = $this->getService()->requestAccessToken($code);

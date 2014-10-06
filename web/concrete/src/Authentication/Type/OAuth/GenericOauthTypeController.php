@@ -128,7 +128,7 @@ abstract class GenericOauthTypeController extends AuthenticationTypeController
         if ($extractor->supportsEmail() && $user = \UserInfo::getByEmail($extractor->getEmail())) {
             if ($user && !$user->isError()) {
                 if ($this->supportsEmailResolution()) {
-                    $user = \User::loginByUserID($user_id);
+                    $user = \User::loginByUserID($user->getUserID());
                     return $user;
                 } else {
                     throw new Exception('Email is already in use.');
