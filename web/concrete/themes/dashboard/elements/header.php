@@ -21,6 +21,7 @@ if (Localization::activeLanguage() != 'en') {
 
 $valt = Loader::helper('validation/token');
 //require(DIR_FILES_ELEMENTS_CORE . '/header_required.php');
+$v->addHeaderItem('<meta name="viewport" content="width=device-width, initial-scale=1">');
 $v->addHeaderItem($disp);
 Loader::element('header_required', array('disableTrackingCode' => true));
 $v->addFooterItem('<script type="text/javascript">$(function() { ConcreteDashboard.start(); });</script>');
