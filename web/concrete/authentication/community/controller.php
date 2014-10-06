@@ -7,21 +7,11 @@ use Concrete\Core\Authentication\Type\OAuth\OAuth2\GenericOauth2TypeController;
 class Controller extends GenericOauth2TypeController
 {
 
-    /**
-     * Twitter doesn't give us the users email.
-     *
-     * @return bool
-     */
     public function supportsRegistration()
     {
         return true;
     }
 
-    /**
-     * Twitter doesn't give us the users email.
-     *
-     * @return bool
-     */
     public function supportsEmailResolution()
     {
         return true;
