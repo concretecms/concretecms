@@ -516,13 +516,7 @@ class Package extends Object
         \Core::make('config/database')->clearNamespace($this->getPackageHandle());
 
         $db->Execute("delete from Packages where pkgID = ?", array($this->pkgID));
-        $translate = Localization::getTranslate();
-        if(is_object($translate)) {
-            $cache = $translate->getCache();
-            if(is_object($cache) && method_exists($cache, 'flush')) {
-                $cache->flush();
-            }
-        }
+        Localization::clearCache();
     }
 
     protected function validateClearSiteContents($options)
@@ -771,6 +765,7 @@ class Package extends Object
         Package::installDB($pkg->getPackagePath() . '/' . FILENAME_PACKAGE_DB);
         $env = Environment::get();
         $env->clearOverrideCache();
+        Localization::clearCache();
 
         return $pkg;
     }
@@ -800,13 +795,7 @@ class Package extends Object
                 $item->refresh();
             }
         }
-        $translate = Localization::getTranslate();
-        if(is_object($translate)) {
-            $cache = $translate->getCache();
-            if(is_object($cache) && method_exists($cache, 'flush')) {
-                $cache->flush();
-            }
-        }
+        Localization::clearCache();
     }
 
     public static function getInstalledHandles()

@@ -130,13 +130,6 @@ class Install extends DashboardPageController
                             if ($currentLocale != 'en_US') {
                                 Localization::changeLocale($currentLocale);
                             }
-                            $translate = Localization::getTranslate();
-                            if(is_object($translate)) {
-                                $cache = $translate->getCache();
-                                if(is_object($cache) && method_exists($cache, 'flush')) {
-                                    $cache->flush();
-                                }
-                            }
                             $pkg = Package::getByHandle($p->getPackageHandle());
                             $this->redirect('/dashboard/extend/install', 'package_installed', $pkg->getPackageID());
                         } catch (Exception $e) {
