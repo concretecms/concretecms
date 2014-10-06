@@ -21,6 +21,7 @@ if (Localization::activeLanguage() != 'en') {
 
 $valt = Loader::helper('validation/token');
 //require(DIR_FILES_ELEMENTS_CORE . '/header_required.php');
+$v->addHeaderItem('<meta name="viewport" content="width=device-width, initial-scale=1">');
 $v->addHeaderItem($disp);
 Loader::element('header_required', array('disableTrackingCode' => true));
 $v->addFooterItem('<script type="text/javascript">$(function() { ConcreteDashboard.start(); });</script>');
@@ -42,7 +43,7 @@ $large_font = !!Config::get('concrete.accessibility.toolbar_large_font');
 <body>
 
 <div id="ccm-dashboard-page" class="ccm-ui">
-    <div class="ccm-mobile-menu-overlay ccm-mobile-menu-overlay-dashboard hidden-md hidden-lg hidden-sm">
+    <div class="ccm-mobile-menu-overlay ccm-mobile-menu-overlay-dashboard hidden-md hidden-lg">
         <div class="ccm-mobile-menu-main">
             <ul class="ccm-mobile-menu-entries">
                 <li><i class="fa fa-sliders mobile-leading-icon"></i><a href="<?=URL::to('/dashboard')?>"><?php echo t('Dashboard') ?><i class="fa fa-caret-down"></i></a>
@@ -72,7 +73,7 @@ $large_font = !!Config::get('concrete.accessibility.toolbar_large_font');
                 </span>
             </a>
         </li>
-        <li class="pull-right hidden-xs">
+        <li class="pull-right hidden-xs hidden-sm">
             <a href="<?=URL::to('/dashboard')?>"
                 data-launch-panel="dashboard" <? if (!$hideDashboardPanel) { ?>class="ccm-launch-panel-active" <? } ?>
                 data-panel-url="<?=URL::to('/system/panels/dashboard')?>">
@@ -82,7 +83,7 @@ $large_font = !!Config::get('concrete.accessibility.toolbar_large_font');
                 </span>
             </a>
         </li>
-        <li class="pull-right hidden-xs">
+        <li class="pull-right hidden-xs hidden-sm">
             <a href="#" data-panel-url="<?=URL::to('/system/panels/sitemap')?>" data-launch-panel="sitemap">
                 <i class="fa fa-files-o"></i>
                 <span class="ccm-toolbar-accessibility-title ccm-toolbar-accessibility-title-add-page">
@@ -90,11 +91,11 @@ $large_font = !!Config::get('concrete.accessibility.toolbar_large_font');
                 </span>
             </a>
         </li>
-        <li class="ccm-toolbar-search pull-right hidden-xs">
+        <li class="ccm-toolbar-search pull-right hidden-xs hidden-sm">
             <i class="fa fa-search"></i>
             <input type="search" id="ccm-nav-intelligent-search" tabindex="1" />
         </li>
-        <li class="pull-right ccm-toolbar-mobile-menu-button visible-xs hidden-sm hidden-md hidden-lg">
+        <li class="pull-right ccm-toolbar-mobile-menu-button visible-xs visible-sm hidden-md hidden-lg">
             <i class="fa fa-bars"></i>
         </li>
     </ul>
@@ -105,7 +106,7 @@ print $dh->getIntelligentSearchMenu();
 
 if (!$hideDashboardPanel) { ?>
 
-<div id="ccm-panel-dashboard" class="hidden-xs ccm-panel ccm-panel-right ccm-panel-transition-slide ccm-panel-active ccm-panel-loaded">
+<div id="ccm-panel-dashboard" class="hidden-xs hidden-sm ccm-panel ccm-panel-right ccm-panel-transition-slide ccm-panel-active ccm-panel-loaded">
     <div class="ccm-panel-content-wrapper ccm-ui">
         <div class="ccm-panel-content ccm-panel-content-visible">
 <?
