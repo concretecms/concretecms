@@ -35,15 +35,15 @@ abstract class GenericOauth1aTypeController extends GenericOauthTypeController
                     $this->completeAuthentication($user);
                 } else {
                     $this->showError(
-                        'No local user account associated with this user, please log in with a local account and connect your account from your user profile.');
+                        t('No local user account associated with this user, please log in with a local account and connect your account from your user profile.'));
                 }
             } catch (Exception $e) {
                 $this->showError($e->getMessage());
             } catch (\Exception $e) {
-                $this->showError('An unexpected error occurred.');
+                $this->showError(t('An unexpected error occurred.'));
             }
         } else {
-            $this->showError('Failed to complete authentication.');
+            $this->showError(t('Failed to complete authentication.'));
         }
         exit;
     }
@@ -71,11 +71,11 @@ abstract class GenericOauth1aTypeController extends GenericOauthTypeController
 
         if ($token) {
             if ($this->bindUser($user, $this->getExtractor(true)->getUniqueId())) {
-                $this->showSuccess('Successfully attached.');
+                $this->showSuccess(t('Successfully attached.'));
                 exit;
             }
         }
-        $this->showError('Unable to attach user.');
+        $this->showError(t('Unable to attach user.'));
         exit;
     }
 
