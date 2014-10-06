@@ -76,7 +76,10 @@ class Model {
 		$sm = $db->getSchemaManager();
 		$details = $sm->listTableDetails($this->_table);
 		foreach($details->getColumns() as $name => $column) {
-			if($column->getAutoincrement() && property_exists($this, $name)) {
+			if($column->getAutoincrement() &&
+				property_exists($this, $name) &&
+				empty($this->$name)
+			) {
 				$this->$name = $db->lastInsertId();
 			}
 		}		
