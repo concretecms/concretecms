@@ -37,6 +37,13 @@
  * Route::register('/custom/view', '\My\Custom\Controller::view');
  * Route::register('/custom/add', '\My\Custom\Controller::add');
  *
+ * ## Pass some route parameters
+ *
+ * Route::register('/test/{foo}/{bar}', function($foo, $bar) {
+ *  print 'Here is foo: ' . $foo . ' and bar: ' . $bar;
+ * });
+ *
+ *
  * ## Override an Asset
  *
  * use \Concrete\Core\Asset\AssetList;
