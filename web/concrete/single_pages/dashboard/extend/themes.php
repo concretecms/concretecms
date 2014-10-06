@@ -30,8 +30,8 @@ if ($controller->getTask() == 'view_detail') { ?>
 
             <div class="ccm-marketplace-detail-theme-buy">
                 <div class="btn-group">
-                    <button class="btn btn-price" style="background-color: #1888d3"><?=$item->getDisplayPrice()?></button>
-                    <button class="btn btn-description"><? if ($item->purchaseRequired()) { ?><?=t('Purchase')?><? } else { ?><?=t('Download')?><? } ?></button>
+                    <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$item->getMarketplaceItemID()?>})" class="btn btn-price" style="background-color: #1888d3"><?=$item->getDisplayPrice()?></button>
+                    <button onclick="ConcreteMarketplace.purchaseOrDownload({mpID: <?=$item->getMarketplaceItemID()?>})" class="btn btn-description"><? if ($item->purchaseRequired()) { ?><?=t('Purchase')?><? } else { ?><?=t('Download')?><? } ?></button>
                 </div>
             </div>
         </div>
