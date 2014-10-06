@@ -97,6 +97,7 @@ var ConcretePageVersionList = {
 	},
 
 	handleVersionRemovalResponse: function(r) {
+		$('button[data-version-action]').addClass('disabled');
 		for (i = 0; i < r.versions.length; i++) {
 			var $row = $('input[type=checkbox][value=' + r.versions[i].cvID + ']').parent().parent();
 			$row.queue(function() {
