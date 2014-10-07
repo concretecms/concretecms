@@ -4,6 +4,7 @@ use PermissionAccess;
 use Loader;
 use \Concrete\Core\Area\Area;
 use Stack;
+use \Concrete\Core\Area\SubArea;
 use PermissionKey;
 
 class AreaAssignment extends Assignment {

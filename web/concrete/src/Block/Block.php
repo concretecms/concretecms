@@ -26,6 +26,7 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
     protected $issID;
     protected $proxyBlock = false;
     protected $bActionCID;
+    protected $cacheSettings;
 
     public static function populateManually($blockInfo, $c, $a)
     {
@@ -643,9 +644,35 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
 
     public function getBlockCacheSettingsObject()
     {
-        $c = $this->getBlockCollectionObject();
-        $settings = CacheSettings::get($c->getCollectionID(), $c->getVersionID(), $this->getAreaHandle(), $this->getBlockID());
-        return $settings;
+        if (!isset($this->cacheSettings)) {
+            $this->cacheSettings = CacheSettings::get($this);
+        }
+
+        return $this->cacheSettings;
+    }
+
+    public function cacheBlockOutput()
+    {
+        $settings = $this->getBlockCacheSettingsObject();
+        return $settings->cacheBlockOutput();
+    }
+
+    public function cacheBlockOutputOnPost()
+    {
+        $settings = $this->getBlockCacheSettingsObject();
+        return $settings->cacheBlockOutputOnPost();
+    }
+
+    public function cacheBlockOutputForRegisteredUsers()
+    {
+        $settings = $this->getBlockCacheSettingsObject();
+        return $settings->cacheBlockOutputForRegisteredUsers();
+    }
+
+    public function getBlockOutputCacheLifetime()
+    {
+        $settings = $this->getBlockCacheSettingsObject();
+        return $settings->getBlockOutputCacheLifetime();
     }
 
     public function getCustomStyleSetID()
@@ -1350,12 +1377,10 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
                 }
                 if ($this->overrideBlockTypeCacheSettings()) {
                     $settings = $this->getBlockCacheSettingsObject();
-                    if (is_object($settings)) {
-                        $blockNode['cache-output'] = $settings->cacheBlockOutput();
-                        $blockNode['cache-output-lifetime'] = $settings->getBlockOutputCacheLifetime();
-                        $blockNode['cache-output-on-post'] = $settings->cacheBlockOutputOnPost();
-                        $blockNode['cache-output-for-registered-users'] = $settings->cacheBlockOutputForRegisteredUsers();
-                    }
+                    $blockNode['cache-output'] = $settings->cacheBlockOutput();
+                    $blockNode['cache-output-lifetime'] = $settings->getBlockOutputCacheLifetime();
+                    $blockNode['cache-output-on-post'] = $settings->cacheBlockOutputOnPost();
+                    $blockNode['cache-output-for-registered-users'] = $settings->cacheBlockOutputForRegisteredUsers();
                 }
                 $bc = $this->getInstance();
                 $bc->export($blockNode);

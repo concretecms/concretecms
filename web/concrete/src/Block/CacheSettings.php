@@ -11,24 +11,45 @@ class CacheSettings
     protected $btCacheBlockOutput = false;
     protected $btCacheBlockOutputLifetime = 0;
 
-    public static function get($cID, $cvID, $arHandle, $bID)
+    public static function get(Block $b)
     {
-        $db = Database::get();
-        $r = $db->GetRow('select * from CollectionVersionBlocksCacheSettings where
-          cID = ? and cvID = ? and arHandle = ? and bID = ?',
-            array(
-                $cID, $cvID, $arHandle, $bID
-            )
-        );
+        if ($b->overrideBlockTypeCacheSettings()) {
+            $c = $b->getBlockCollectionObject();
+            $cID = $c->getCollectionID();
+            $cvID = $c->getVersionID();
+            $arHandle = $b->getAreaHandle();
+            $bID = $b->getBlockID();
 
-        if ($r['bID']) {
+
+            $db = Database::get();
+            $r = $db->GetRow('select * from CollectionVersionBlocksCacheSettings where
+              cID = ? and cvID = ? and arHandle = ? and bID = ?',
+                array(
+                    $cID, $cvID, $arHandle, $bID
+                )
+            );
+
+            if ($r['bID']) {
+                $o = new static();
+                $o->btCacheBlockOutput = (bool) $r['btCacheBlockOutput'];
+                $o->btCacheBlockOutputOnPost = (bool) $r['btCacheBlockOutputOnPost'];
+                $o->btCacheBlockOutputForRegisteredUsers = (bool) $r['btCacheBlockOutputForRegisteredUsers'];
+                $o->btCacheBlockOutputLifetime = $r['btCacheBlockOutputLifetime'];
+            }
+        } else if ($controller = $b->getController()) {
             $o = new static();
-            $o->btCacheBlockOutput = (bool) $r['btCacheBlockOutput'];
-            $o->btCacheBlockOutputOnPost = (bool) $r['btCacheBlockOutputOnPost'];
-            $o->btCacheBlockOutputForRegisteredUsers = (bool) $r['btCacheBlockOutputForRegisteredUsers'];
-            $o->btCacheBlockOutputLifetime = $r['btCacheBlockOutputLifetime'];
-            return $o;
+            $o->btCacheBlockOutput = $controller->cacheBlockOutput();
+            $o->btCacheBlockOutputOnPost = $controller->cacheBlockOutputOnPost();
+            $o->btCacheBlockOutputForRegisteredUsers = $controller->cacheBlockOutputForRegisteredUsers();
+            $o->btCacheBlockOutputLifetime = $controller->getBlockTypeCacheOutputLifetime();
+        } else {
+            $o = new static();
+            $o->btCacheBlockOutput = false;
+            $o->btCacheBlockOutputOnPost = false;
+            $o->btCacheBlockOutputForRegisteredUsers = false;
+            $o->btCacheBlockOutputLifetime = false;
         }
+        return $o;
     }
 
     public function cacheBlockOutput()

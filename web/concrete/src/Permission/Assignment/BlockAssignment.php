@@ -2,8 +2,9 @@
 namespace Concrete\Core\Permission\Assignment;
 use PermissionAccess;
 use Loader;
-use Block;
+use \Concrete\Core\Block\Block;
 use Area;
+use \Concrete\Core\Area\SubArea;
 use PermissionKey;
 use Page;
 
@@ -17,6 +18,8 @@ class BlockAssignment extends Assignment {
 		'edit_block_design' => 'edit_area_contents',
 		'edit_block_permissions' => 'edit_area_permissions',
 		'schedule_guest_access' => 'schedule_area_contents_guest_access',
+		'edit_block_name' => 'edit_area_contents',
+		'edit_block_cache_settings' => 'edit_area_contents',
 		'delete_block' => 'delete_area_contents'
 	);
 	protected $inheritedPagePermissions = array(
@@ -25,6 +28,8 @@ class BlockAssignment extends Assignment {
 		'edit_block_custom_template' => 'edit_page_contents',
 		'edit_block_design' => 'edit_page_contents',
 		'edit_block_permissions' => 'edit_page_permissions',
+		'edit_block_name' => 'edit_page_contents',
+		'edit_block_cache_settings' => 'edit_page_contents',
 		'schedule_guest_access' => 'schedule_page_contents_guest_access',
 		'delete_block' => 'edit_page_contents'
 	);
