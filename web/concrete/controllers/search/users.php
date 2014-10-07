@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Controller\Search;
+
 use Concrete\Core\Search\StickyRequest;
 use Concrete\Core\User\Group\GroupSetList;
 use Controller;
@@ -203,7 +204,7 @@ class Users extends Controller
             default:
                 if (Loader::helper('validation/numbers')->integer($field)) {
                     $ak = UserAttributeKey::getByID($field);
-                    $html .= $ak->render('search', NULL, TRUE);
+                    $html .= $ak->render('search', null, true);
                 }
                 break;
         }
@@ -223,8 +224,9 @@ class Users extends Controller
     {
         return $this->fields;
     }
-    
-    public static function getSearchFields() {
+
+    public static function getSearchFields()
+    {
         $r = array(
             'date_added' => t('Registered Between'),
             'is_active' => t('Activated Users')
@@ -233,6 +235,7 @@ class Users extends Controller
         foreach ($sfa as $ak) {
             $r[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
         }
+
         return $r;
     }
 

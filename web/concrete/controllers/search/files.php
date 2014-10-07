@@ -1,5 +1,6 @@
 <?php
 namespace Concrete\Controller\Search;
+
 use Controller;
 use FileList;
 use \Concrete\Core\Search\StickyRequest;
@@ -14,24 +15,26 @@ use Concrete\Core\File\Type\Type as FileType;
 use FilePermissions;
 use stdClass;
 
-class Files extends Controller {
-
+class Files extends Controller
+{
     protected $fields = array();
 
     /** @var \Concrete\Core\File\FileList */
     protected $fileList;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->searchRequest = new StickyRequest('files');
         $this->fileList = new FileList($this->searchRequest);
     }
 
-    public function search() {
+    public function search()
+    {
         $cp = FilePermissions::getGlobal();
         if (!$cp->canSearchFiles()) {
             return false;
         }
-        
+
         if ($_REQUEST['submitSearch']) {
             $this->searchRequest->resetSearchRequest();
         }
@@ -57,7 +60,6 @@ class Files extends Controller {
         }
         $keywords = htmlentities($req['fKeywords'], ENT_QUOTES, APP_CHARSET);
 
-
         if ($keywords != '') {
             $this->fileList->filterByKeywords($keywords);
         }
@@ -65,22 +67,22 @@ class Files extends Controller {
         if ($req['numResults']) {
             $this->fileList->setItemsPerPage(intval($req['numResults']));
         }
-        
-        if ((isset($req['fsIDNone']) && $req['fsIDNone'] == 1) || (is_array($req['fsID']) && in_array(-1, $req['fsID']))) { 
+
+        if ((isset($req['fsIDNone']) && $req['fsIDNone'] == 1) || (is_array($req['fsID']) && in_array(-1, $req['fsID']))) {
             $this->fileList->filterByNoSet();
         } else {
             if (is_array($req['fsID'])) {
-                foreach($req['fsID'] as $fsID) {
+                foreach ($req['fsID'] as $fsID) {
                     $fs = FileSet::getByID($fsID);
                     $this->fileList->filterBySet($fs);
                 }
-            } else if (isset($req['fsID']) && $req['fsID'] != '' && $req['fsID'] > 0) {
+            } elseif (isset($req['fsID']) && $req['fsID'] != '' && $req['fsID'] > 0) {
                 $set = $req['fsID'];
                 $fs = FileSet::getByID($set);
                 $this->fileList->filterBySet($fs);
             }
         }
-        
+
         if (isset($req['fType']) && $req['fType'] != '') {
             $type = $req['fType'];
             $this->fileList->filterByType($type);
@@ -90,14 +92,14 @@ class Files extends Controller {
             $ext = $_GET['fExtension'];
             $fileList->filterByExtension($ext);
         }
-        
+
         $selectedSets = array();
         if (is_array($req['field'])) {
-            foreach($req['field'] as $i => $item) {
+            foreach ($req['field'] as $i => $item) {
                 $this->fields[] = $this->getField($item);
                 // due to the way the form is setup, index will always be one more than the arrays
                 if ($item != '') {
-                    switch($item) {
+                    switch ($item) {
                         case "extension":
                             $extension = $req['extension'];
                             $this->fileList->filterByExtension($extension);
@@ -117,14 +119,14 @@ class Files extends Controller {
                             if ($dateTo != '') {
                                 $dateTo = date('Y-m-d', strtotime($dateTo));
                                 $dateTo .= ' 23:59:59';
-                                
+
                                 $this->fileList->filterByDateAdded($dateTo, '<=');
                             }
                             break;
                         case 'added_to':
                             $ocID = $req['ocIDSearchField'];
                             if ($ocID > 0) {
-                                $this->fileList->filterByOriginalPageID($ocID);                            
+                                $this->fileList->filterByOriginalPageID($ocID);
                             }
                             break;
                         case "size":
@@ -153,21 +155,24 @@ class Files extends Controller {
         $this->result = $ilr;
     }
 
-    public function getSearchResultObject() {
+    public function getSearchResultObject()
+    {
         return $this->result;
     }
 
-    public function field($field) {
+    public function field($field)
+    {
         $r = $this->getField($field);
         Loader::helper('ajax')->sendResult($r);
     }
 
-    protected function getField($field) {
-        $r = new stdClass;
+    protected function getField($field)
+    {
+        $r = new stdClass();
         $r->field = $field;
         $searchRequest = $this->searchRequest->getSearchRequest();
         $html = '';
-        switch($field) {
+        switch ($field) {
             case 'size':
                 $form = Loader::helper('form');
                 $html .= $form->text('size_from', $searchRequest['size_from'], array('style' => 'width:  60px'));
@@ -179,7 +184,7 @@ class Files extends Controller {
                 $form = Loader::helper('form');
                 $t1 = FileType::getUsedTypeList();
                 $types = array();
-                foreach($t1 as $value) {
+                foreach ($t1 as $value) {
                     $types[$value] = FileType::getGenericTypeText($value);
                 }
                 $html .= $form->select('type', $types, $searchRequest['type'], array('style' => 'width: 120px'));
@@ -188,9 +193,9 @@ class Files extends Controller {
                 $form = Loader::helper('form');
                 $ext1 = FileType::getUsedExtensionList();
                 $extensions = array();
-                foreach($ext1 as $value) {
+                foreach ($ext1 as $value) {
                     $extensions[$value] = $value;
-                }                
+                }
                 $html .= $form->select('extension', $extensions, $searchRequest['extensions'], array('style' => 'width: 120px'));
                 break;
             case 'date_added':
@@ -203,28 +208,32 @@ class Files extends Controller {
                 $ps = Loader::helper("form/page_selector");
                 $html .= $ps->selectPage('ocIDSearchField');
                 break;
-            default: 
+            default:
                 if (Loader::helper('validation/numbers')->integer($field)) {
                     $ak = FileAttributeKey::getByID($field);
-                    $html .= $ak->render('search', NULL, TRUE);
+                    $html .= $ak->render('search', null, true);
                 }
                 break;
         }
         $r->html = $html;
+
         return $r;
     }
-    
-    public function submit() {
+
+    public function submit()
+    {
         $this->search();
         $result = $this->result;
         Loader::helper('ajax')->sendResult($this->result->getJSONObject());
     }
 
-    public function getFields() {
-        return $this->fields;        
+    public function getFields()
+    {
+        return $this->fields;
     }
 
-    public static function getSearchFields() {
+    public static function getSearchFields()
+    {
         $r = array(
             'size' => t('Size'),
             'type' => t('Type'),
@@ -236,8 +245,8 @@ class Files extends Controller {
         foreach ($sfa as $ak) {
             $r[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
         }
+
         return $r;
     }
-    
-}
 
+}
