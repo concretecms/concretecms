@@ -88,7 +88,7 @@ $form = Loader::helper('form');
 			<td><?=$mi->isMailImporterEnabled() ? t('Yes') : t('No')?></td>
 			<td width="60"><?
 				print $ih->button(t('Edit'), $view->url('/dashboard/system/mail/importers', 'edit_importer', $mi->getMailImporterID()), 'left', 'btn-xs');
-			?>
+			?></td>
 		</tr>
 	<? } ?>
 	</table>

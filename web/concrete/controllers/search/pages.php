@@ -201,70 +201,67 @@ class Pages extends Controller
         $form = Loader::helper('form');
         $wdt = Loader::helper('form/date_time');
         /* @var $wdt \Concrete\Core\Form\Service\Widget\DateTime */
-        ob_start();
+        $html = '';
         switch ($field) {
             case 'keywords':
-                print $form->text('keywords', $searchRequest['keywords'], array('style' => 'width: 120px'));
+                $html .= $form->text('keywords', $searchRequest['keywords'], array('style' => 'width: 120px'));
                 break;
             case 'date_public':
-                echo $wdt->datetime('date_public_from', $wdt->translate('date_public_from', $searchRequest)) . t('to') . $wdt->datetime('date_public_to', $wdt->translate('date_public_to', $searchRequest));
+                $html .= $wdt->datetime('date_public_from', $wdt->translate('date_public_from', $searchRequest)) . t('to') . $wdt->datetime('date_public_to', $wdt->translate('date_public_to', $searchRequest));
                 break;
             case 'date_added':
-                echo $wdt->datetime('date_added_from', $wdt->translate('date_added_from', $searchRequest)) . t('to') . $wdt->datetime('date_added_to', $wdt->translate('date_added_to', $searchRequest));
+                $html .= $wdt->datetime('date_added_from', $wdt->translate('date_added_from', $searchRequest)) . t('to') . $wdt->datetime('date_added_to', $wdt->translate('date_added_to', $searchRequest));
                 break;
             case 'last_modified':
-                echo $wdt->datetime('last_modified_from', $wdt->translate('last_modified_from', $searchRequest)) . t('to') . $wdt->datetime('last_modified_to', $wdt->translate('last_modified_to', $searchRequest));
+                $html .= $wdt->datetime('last_modified_from', $wdt->translate('last_modified_from', $searchRequest)) . t('to') . $wdt->datetime('last_modified_to', $wdt->translate('last_modified_to', $searchRequest));
                 break;
-            case 'owner': ?>
-                <?=$form->text('owner', array('class'=>'span5'))?>
-                <?php break;
-            case 'permissions_inheritance': ?>
-                <select name="cInheritPermissionsFrom" class="form-control">
-                    <option value="PARENT"<?php if ($searchRequest['cInheritPermissionsFrom'] == 'PARENT') { ?> selected <?php } ?>><?=t('Parent Page')?></option>
-                    <option value="TEMPLATE" <?php if ($searchRequest['cInheritPermissionsFrom'] == 'TEMPLATE') { ?> selected <?php } ?>><?=t('Page Type')?></option>
-                <option value="OVERRIDE"<?php if ($searchRequest['cInheritPermissionsFrom'] == 'OVERRIDE') { ?> selected <?php } ?>><?=t('Itself (Override)')?></option>
-                </select>
-                <?php break;
-            case 'version_status': ?>
-                <div class="radio"><label><?=$form->radio('cvIsApproved', 0, false)?> <span><?=t('Unapproved')?></span></label></div>
-                <div class="radio"><label><?=$form->radio('cvIsApproved', 1, false)?> <span><?=t('Approved')?></span></label></div>
-                <?php break;
-            case 'parent': ?>
-                <?php $ps = Loader::helper("form/page_selector");
-                print $ps->selectPage('cParentIDSearchField');
-                ?>
-                <div>
-                    <div><?=t('Search All Children?')?></div>
-                    <label class="radio-inline"><?=$form->radio('cParentAll', 0, false)?> <?=t('No')?></label>
-                    <label class="radio-inline"><?=$form->radio('cParentAll', 1, false)?> <?=t('Yes')?></label>
-                </div>
-                <?php break;
-            case 'num_children': ?>
-                <select name="cChildrenSelect" class="form-control">
-                    <option value="gt"<?php if ($searchRequest['cChildrenSelect'] == 'gt') { ?> selected <?php } ?>><?=t('More Than')?></option>
-                    <option value="eq" <?php if ($searchRequest['cChildrenSelect'] == 'eq') { ?> selected <?php } ?>><?=t('Equal To')?></option>
-                    <option value="lt"<?php if ($searchRequest['cChildrenSelect'] == 'lt') { ?> selected <?php } ?>><?=t('Fewer Than')?></option>
-                </select>
-                <input type="text" name="cChildren" class="form-control" value="<?=$searchRequest['cChildren']?>" />
-                <?php break;
-            case 'theme': ?>
-                <select name="pThemeID" class="form-control">
-                    <?php $themes = PageTheme::getList(); ?>
-                    <?php foreach ($themes as $pt) { ?>
-                        <option value="<?=$pt->getThemeID()?>" <?php if ($pt->getThemeID() == $searchRequest['pThemeID']) { ?> selected<?php } ?>><?=$pt->getThemeName()?></option>
-                    <?php } ?>
-                </select>
-                <?php break;
+            case 'owner': 
+                $html .= $form->text('owner', array('class'=>'span5'));
+                break;
+            case 'permissions_inheritance':
+                $html .= '<select name="cInheritPermissionsFrom" class="form-control">';
+                    $html .= '<option value="PARENT"' . ($searchRequest['cInheritPermissionsFrom'] == 'PARENT' ? ' selected' : '') . '>' . t('Parent Page') . '</option>';
+                    $html .= '<option value="TEMPLATE"' . ($searchRequest['cInheritPermissionsFrom'] == 'TEMPLATE' ? ' selected' : '') . '>' . t('Page Type') . '</option>';
+                    $html .= '<option value="OVERRIDE"' . ($searchRequest['cInheritPermissionsFrom'] == 'OVERRIDE' ? ' selected' : '') . '>' . t('Itself (Override)') . '</option>';
+                $html .= '</select>';
+                break;
+            case 'version_status': 
+                $html .= '<div class="radio"><label>' . $form->radio('cvIsApproved', 0, false) . '<span>' . t('Unapproved') . '</span></label></div>';
+                $html .= '<div class="radio"><label>' . $form->radio('cvIsApproved', 1, false) . '<span>' . t('Approved') . '</span></label></div>';
+                break;
+            case 'parent': 
+                $ps = Loader::helper("form/page_selector");
+                $html .= $ps->selectPage('cParentIDSearchField');
+                $html .= '<div>';
+                    $html .= '<div>' . t('Search All Children?') . '</div>';
+                    $html .= '<label class="radio-inline">' . $form->radio('cParentAll', 0, false) . ' ' . t('No') . '</label>';
+                    $html .= '<label class="radio-inline">' . $form->radio('cParentAll', 1, false) . ' ' . t('Yes') . '</label>';
+                $html .= '</div>';
+                break;
+            case 'num_children': 
+                $html .= '<select name="cChildrenSelect" class="form-control">';
+                    $html .= '<option value="gt"' . ($searchRequest['cChildrenSelect'] == 'gt' ? ' selected' : '') . '>' . t('More Than') . '</option>';
+                    $html .= '<option value="eq"' . ($searchRequest['cChildrenSelect'] == 'eq' ? ' selected' : '') . '>' . t('Equal To') . '</option>';
+                    $html .= '<option value="lt"' . ($searchRequest['cChildrenSelect'] == 'lt' ? ' selected' : '') . '>' . t('Fewer Than') . '</option>';
+                $html .= '</select>';
+                $html .= '<input type="text" name="cChildren" class="form-control" value="' . $searchRequest['cChildren'] . '" />';
+                break;
+            case 'theme': 
+                $html .= '<select name="pThemeID" class="form-control">';
+                $themes = PageTheme::getList();
+                foreach ($themes as $pt) { 
+                    $html .= '<option value="' . $pt->getThemeID() . '" ' . ($pt->getThemeID() == $searchRequest['pThemeID'] ? ' selected' : '') . '>' . $pt->getThemeName() . '</option>';
+                }
+                $html .= '</select>';
+                break;
             default:
                 if (Loader::helper('validation/numbers')->integer($field)) {
                     $ak = CollectionAttributeKey::getByID($field);
-                    $ak->render('search');
+                    $html .= $ak->render('search', NULL, TRUE);
                 }
                 break;
         }
-        $contents = ob_get_contents();
-        ob_end_clean();
-        $r->html = $contents;
+        $r->html = $html;
 
         return $r;
     }
@@ -279,6 +276,25 @@ class Pages extends Controller
     public function getFields()
     {
         return $this->fields;
+    }
+    
+    public static function getSearchFields() {
+        $r = array(
+            'parent' => t('Parent Page'),
+            'keywords' => t('Full Page Index'),
+            'date_added' => t('Date Added'),
+            'theme' => t('Theme'),
+            'last_modified' => t('Last Modified'),
+            'date_public' => t('Public Date'),
+            'owner' => t('Page Owner'),
+            'num_children' => t('# Children'),
+            'version_status' => t('Approved Version')
+        );
+        $sfa = CollectionAttributeKey::getSearchableList();
+        foreach ($sfa as $ak) {
+            $r[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
+        }
+        return $r;
     }
 
 }
