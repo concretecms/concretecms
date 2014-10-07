@@ -31,20 +31,6 @@ defined('DIRNAME_CORE') or define('DIRNAME_CORE', 'concrete');
 defined('DIR_BASE') or define('DIR_BASE', dirname($_SERVER['SCRIPT_FILENAME']));
 defined('DIR_APPLICATION') or define('DIR_APPLICATION', DIR_BASE . '/' . DIRNAME_APPLICATION);
 defined('DIR_CONFIG_SITE') or define('DIR_CONFIG_SITE', DIR_APPLICATION . '/config');
-defined('CONFIG_FILE') or define('CONFIG_FILE', DIR_CONFIG_SITE . '/site.php');
-
-
-
-/**
- * ----------------------------------------------------------------------------
- * Now we test to see if we have a valid site configuration file. If not, we're
- * going to need to render install.
- * ----------------------------------------------------------------------------
- */
-if (!defined('APP_UPDATED_PASSTHRU')
-&& file_exists(CONFIG_FILE)) define('CONFIG_FILE_EXISTS', true) and include(CONFIG_FILE);
-
-
 
 /**
  * ----------------------------------------------------------------------------
