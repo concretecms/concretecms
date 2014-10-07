@@ -30,35 +30,6 @@ class Design extends BackendInterfaceBlockController {
         $pr->outputJSON();
     }
 
-    protected function getBlockToEdit()
-    {
-        $ax = $this->area;
-        $cx = $this->page;
-        if ($this->area->isGlobalArea()) {
-            $ax = STACKS_AREA_NAME;
-            $cx = \Stack::getByName($_REQUEST['arHandle']);
-        }
-
-
-        $b = \Block::getByID($_REQUEST['bID'], $cx, $ax);
-        $nvc = $cx->getVersionToModify();
-        if ($this->area->isGlobalArea()) {
-            $xvc = $this->page->getVersionToModify(); // we need to create a new version of THIS page as well.
-            $xvc->relateVersionEdits($nvc);
-        }
-
-        $b->loadNewCollection($nvc);
-
-        //if this block is being changed, make sure it's a new version of the block.
-        if ($b->isAlias()) {
-            $nb = $b->duplicate($nvc);
-            $b->deleteBlock();
-            $b = $nb;
-        }
-
-        return $b;
-    }
-
     public function submit()
     {
         if ($this->validateAction() && $this->canAccess()) {
@@ -104,7 +75,6 @@ class Design extends BackendInterfaceBlockController {
             if ($this->permissions->canEditBlockCustomTemplate()) {
                 $data = array();
                 $data['bFilename'] = $r['bFilename'];
-                $data['bName'] = $r['bName'];
                 $b->updateBlockInformation($data);
             }
 

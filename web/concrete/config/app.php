@@ -196,6 +196,8 @@ return array(
         "/ccm/system/dialogs/block/permissions/guest_access/"                           => array('\Concrete\Controller\Dialog\Block\Permissions\GuestAccess::__construct'),
         "/ccm/system/dialogs/block/aliasing/"                                           => array('\Concrete\Controller\Dialog\Block\Aliasing::view'),
         "/ccm/system/dialogs/block/aliasing/submit"                                     => array('\Concrete\Controller\Dialog\Block\Aliasing::submit'),
+        "/ccm/system/dialogs/block/cache/"                                              => array('\Concrete\Controller\Dialog\Block\Cache::view'),
+        "/ccm/system/dialogs/block/cache/submit"                                        => array('\Concrete\Controller\Dialog\Block\Cache::submit'),
         "/ccm/system/dialogs/block/design/"                                             => array('\Concrete\Controller\Dialog\Block\Design::view'),
         "/ccm/system/dialogs/block/design/submit"                                       => array('\Concrete\Controller\Dialog\Block\Design::submit'),
         "/ccm/system/dialogs/block/design/reset"                                        => array('\Concrete\Controller\Dialog\Block\Design::reset'),

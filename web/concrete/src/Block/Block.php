@@ -519,25 +519,6 @@ class Block extends Object implements \Concrete\Core\Permission\ObjectInterface
         $db->query($q, array($this->bID));
     }
 
-    function updateBlockName($name, $force = 0)
-    {
-        // this function allows children blocks to change the name of the block. This is useful
-        // for the block search functionality - a content local block can make the block name
-        // the fix 30 characters of the content field, for example. This only works if no name has
-        // been assigned to the block already. If one has, then we disregard.
-        $db = Loader::db();
-        if (!$this->bName || $force == 1) {
-            if (strlen($name) > 60) {
-                $name = substr($name, 0, 60) . '...';
-            }
-            $v = array(htmlspecialchars($name), $this->bID);
-            $q = "UPDATE Blocks SET bName = ? WHERE bID = ?";
-            $r = $db->query($q, $v);
-            //$res = $db->execute($r, $v);
-            $this->bName = $name;
-        }
-    }
-
     function alias($c)
     {
 
