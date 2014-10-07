@@ -295,6 +295,7 @@ class Pages extends Controller
         foreach ($sfa as $ak) {
             $r[$ak->getAttributeKeyID()] = $ak->getAttributeKeyDisplayName();
         }
+        natcasesort($r);
 
         return $r;
     }
