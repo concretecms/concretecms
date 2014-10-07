@@ -114,9 +114,6 @@
             arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0,
             action = CCM_DISPATCHER_FILENAME + '/ccm/system/block/render';
 
-        if (block.getId() != parseInt(resp.bID)) {
-            block.id = parseInt(resp.bID);
-        }
         $.get(action, {
             arHandle: area.getHandle(),
             cID: resp.cID,
