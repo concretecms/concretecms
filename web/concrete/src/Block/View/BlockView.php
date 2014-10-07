@@ -26,6 +26,7 @@ class BlockView extends AbstractView
     protected $viewToRender = false;
     protected $viewPerformed = false;
     protected $showControls = true;
+    protected $didPullFromOutputCache = false;
 
     protected function constructView($mixed)
     {
@@ -334,11 +335,11 @@ class BlockView extends AbstractView
     protected function useBlockCache()
     {
         $u = new User();
-        if ($this->viewToRender == 'view' && Config::get('concrete.cache.blocks') && $this->controller->cacheBlockOutput(
-            ) && ($this->block instanceof Block)
+        if ($this->viewToRender == 'view' && Config::get('concrete.cache.blocks') && $this->block instanceof Block
+            && $this->block->cacheBlockOutput()
         ) {
-            if ((!$u->isRegistered() || ($this->controller->cacheBlockOutputForRegisteredUsers())) &&
-                (($_SERVER['REQUEST_METHOD'] != 'POST' || ($this->controller->cacheBlockOutputOnPost() == true)))
+            if ((!$u->isRegistered() || ($this->block->cacheBlockOutputForRegisteredUsers())) &&
+                (($_SERVER['REQUEST_METHOD'] != 'POST' || ($this->block->cacheBlockOutputOnPost() == true)))
             ) {
                 return true;
             }
@@ -353,10 +354,10 @@ class BlockView extends AbstractView
 
     public function finishRender($contents)
     {
-        if ($this->useBlockCache()) {
+        if ($this->useBlockCache() && !$this->didPullFromOutputCache) {
             $this->block->setBlockCachedOutput(
                 $this->outputContent,
-                $this->controller->getBlockTypeCacheOutputLifetime(),
+                $this->block->getBlockOutputCacheLifetime(),
                 $this->area
             );
         }
@@ -367,11 +368,13 @@ class BlockView extends AbstractView
     {
 
         if ($this->useBlockCache()) {
+            $this->didPullFromOutputCache = true;
             $this->outputContent = $this->block->getBlockCachedOutput($this->area);
             $this->controller->registerViewAssets($this->outputContent);
         }
 
         if (!$this->outputContent) {
+            $this->didPullFromOutputCache = false;
             if (in_array($this->viewToRender, array('view', 'add', 'edit', 'composer'))) {
                 $method = $this->viewToRender;
             } else {
