@@ -42,6 +42,7 @@ class PageView extends View
     public function setCustomPageTheme(PageTheme $pt)
     {
         $this->themeObject = $pt;
+        $this->pkgHandle = $pt->getPackageHandle();
     }
 
     public function setupRender()
