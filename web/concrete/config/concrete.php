@@ -31,6 +31,11 @@ return array(
     'locale'            => 'en_US',
 
     /**
+     * The site timezone
+     */
+    'timezone'          => null,
+
+    /**
      * The current Charset
      */
     'charset'           => 'UTF-8',
