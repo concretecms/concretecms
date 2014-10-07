@@ -114,6 +114,9 @@
             arEnableGridContainer = area.getEnableGridContainer() ? 1 : 0,
             action = CCM_DISPATCHER_FILENAME + '/ccm/system/block/render';
 
+        if (block.getId() != parseInt(resp.bID)) {
+            block.id = parseInt(resp.bID);
+        }
         $.get(action, {
             arHandle: area.getHandle(),
             cID: resp.cID,
@@ -127,10 +130,17 @@
             });
 
             my.refreshStyles(resp);
-
             ConcreteEvent.fire('EditModeExitInline', {
+                action: 'save_inline',
                 block: newBlock
             });
+            ConcreteEvent.fire('EditModeExitInlineComplete', {
+                block: newBlock
+            });
+            $.fn.dialog.hideLoader();
+            editor.destroyInlineEditModeToolbars();
+            editor.scanBlocks();
+
         });
     }
 
