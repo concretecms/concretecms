@@ -2,6 +2,7 @@
 namespace Concrete\Core\Page\Stack;
 
 use Area;
+use GlobalArea;
 use CacheLocal;
 use Config;
 use Loader;
