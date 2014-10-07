@@ -93,24 +93,24 @@ return array(
      * Core Providers
      */
     'providers'           => array(
-        '\Concrete\Core\File\FileServiceProvider',
-        '\Concrete\Core\Encryption\EncryptionServiceProvider',
-        '\Concrete\Core\Validation\ValidationServiceProvider',
-        '\Concrete\Core\Localization\LocalizationServiceProvider',
-        '\Concrete\Core\Feed\FeedServiceProvider',
-        '\Concrete\Core\Html\HtmlServiceProvider',
-        '\Concrete\Core\Search\PaginationServiceProvider',
-        '\Concrete\Core\Mail\MailServiceProvider',
-        '\Concrete\Core\Application\ApplicationServiceProvider',
-        '\Concrete\Core\Utility\UtilityServiceProvider',
-        '\Concrete\Core\Database\DatabaseServiceProvider',
-        '\Concrete\Core\Form\FormServiceProvider',
-        '\Concrete\Core\Session\SessionServiceProvider',
-        '\Concrete\Core\Http\HttpServiceProvider',
-        '\Concrete\Core\Events\EventsServiceProvider',
-        '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
-        '\Concrete\Core\Logging\LoggingServiceProvider',
-        '\Concrete\Core\Cache\CacheServiceProvider'
+        'core_file'         => '\Concrete\Core\File\FileServiceProvider',
+        'core_encryption'   => '\Concrete\Core\Encryption\EncryptionServiceProvider',
+        'core_validation'   => '\Concrete\Core\Validation\ValidationServiceProvider',
+        'core_localization' => '\Concrete\Core\Localization\LocalizationServiceProvider',
+        'core_feed'         => '\Concrete\Core\Feed\FeedServiceProvider',
+        'core_html'         => '\Concrete\Core\Html\HtmlServiceProvider',
+        'core_pagination'   => '\Concrete\Core\Search\PaginationServiceProvider',
+        'core_mail'         => '\Concrete\Core\Mail\MailServiceProvider',
+        'core_application'  => '\Concrete\Core\Application\ApplicationServiceProvider',
+        'core_utility'      => '\Concrete\Core\Utility\UtilityServiceProvider',
+        'core_database'     => '\Concrete\Core\Database\DatabaseServiceProvider',
+        'core_form'         => '\Concrete\Core\Form\FormServiceProvider',
+        'core_session'      => '\Concrete\Core\Session\SessionServiceProvider',
+        'core_http'         => '\Concrete\Core\Http\HttpServiceProvider',
+        'core_events'       => '\Concrete\Core\Events\EventsServiceProvider',
+        'core_whoops'       => '\Concrete\Core\Error\Provider\WhoopsServiceProvider',
+        'core_logging'      => '\Concrete\Core\Logging\LoggingServiceProvider',
+        'core_cache'        => '\Concrete\Core\Cache\CacheServiceProvider'
     ),
 
     /**
@@ -417,6 +417,9 @@ return array(
         'jquery/ui'                => array(
             array('javascript', 'js/jquery-ui.js', array('minify' => false, 'combine' => false)),
             array('css', 'css/jquery-ui.css', array('minify' => false))
+        ),
+        'jquery/touch-punch'              => array(
+            array('javascript', 'js/jquery-ui-touch-punch.js')
         ),
         'select2'                  => array(
             array('javascript', 'js/select2.js', array('minify' => false, 'combine' => false)),
@@ -732,6 +735,7 @@ return array(
             array(
                 array('javascript', 'jquery'),
                 array('javascript', 'jquery/ui'),
+                array('javascript', 'jquery/touch-punch'),
                 array('javascript', 'underscore'),
                 array('javascript', 'dashboard'),
                 array('javascript', 'core/events'),
